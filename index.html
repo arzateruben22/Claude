@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taqueria Los Güeros — Anaheim, CA</title>
+  <meta name="description" content="Taqueria Los Güeros — a family taqueria on La Palma Avenue in Anaheim. Handmade tortillas, fire-kissed asada, tacos, burritos, and mulitas. Order for pickup or book catering.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='18' r='10' fill='%23E8A356'/%3E%3Cpath d='M16 3c3 4-2 5 0 9-4-1-6-5 0-9z' fill='%23A93B2A'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="nav" id="top">
+    <a class="nav-brand" href="#top">Los Güeros<span class="nav-brand-sub">Taqueria · Anaheim</span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#carta">La Carta</a>
+      <a href="#historia">Nuestra Historia</a>
+      <a href="#catering">Catering</a>
+      <a href="#visitanos">Visítanos</a>
+    </nav>
+    <!-- TODO: point at the real ordering link (DoorDash / Toast / phone) -->
+    <a class="btn btn-solid nav-cta" href="#visitanos">Ordena <span lang="en">· Order</span></a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#carta">La Carta</a>
+    <a href="#historia">Nuestra Historia</a>
+    <a href="#catering">Catering</a>
+    <a href="#visitanos">Visítanos</a>
+    <a class="btn btn-solid" href="#visitanos">Ordena · Order</a>
+  </div>
+
+  <main>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="eyebrow hero-eyebrow">Taqueria Los Güeros · Anaheim, California</p>
+        <h1 class="hero-title" lang="es">
+          <span class="line"><span class="line-inner">La noche</span></span>
+          <span class="line"><span class="line-inner"><em>sabe mejor.</em></span></span>
+        </h1>
+        <p class="hero-sub">The night tastes better. Handmade tortillas, fire-kissed asada,
+        and the warm glow of a neighborhood taqueria on La Palma Avenue.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#visitanos">Ordena ahora <span lang="en">— Order now</span></a>
+          <a class="btn btn-ghost" href="#carta">Ver la carta <span lang="en">— See the menu</span></a>
+        </div>
+      </div>
+      <a class="hero-scroll" href="#historia" aria-label="Scroll to our story">
+        <span lang="es">Baja un poquito</span>
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none" aria-hidden="true"><path d="M7 1v16m0 0l-5-5m5 5l5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+
+    <!-- ═══════════════ HISTORIA ═══════════════ -->
+    <section class="section" id="historia">
+      <div class="section-inner grid-2">
+        <div data-reveal>
+          <p class="eyebrow">Nuestra Historia <span lang="en">· Our Story</span></p>
+          <h2 class="display" lang="es">Tortillas a mano, fuego lento, y la puerta siempre abierta.</h2>
+        </div>
+        <div class="story-copy" data-reveal>
+          <p>Los Güeros is a family-run taqueria on La Palma Avenue in Anaheim. We do
+          things the slow way on purpose: tortillas pressed by hand, meats over open
+          flame, salsas made every morning in the molcajete.</p>
+          <p>Come for a quick taco at the counter or bring the whole family. Either way,
+          you eat well — <em lang="es">como debe ser</em>.</p>
+          <ul class="story-marks" role="list">
+            <li><span class="mark-num">01</span>Tortillas hechas a mano <span class="mark-en" lang="en">handmade daily</span></li>
+            <li><span class="mark-num">02</span>Carnes al carbón <span class="mark-en" lang="en">fire-grilled meats</span></li>
+            <li><span class="mark-num">03</span>Salsas de molcajete <span class="mark-en" lang="en">fresh every morning</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ LA CARTA ═══════════════ -->
+    <section class="section section-carta" id="carta">
+      <div class="section-inner">
+        <div class="carta-head" data-reveal>
+          <p class="eyebrow">La Carta <span lang="en">· The Menu</span></p>
+          <h2 class="display">De la lumbre <em>a tu mesa.</em></h2>
+          <p class="section-sub">From the fire to your table. Everything below is made to
+          order — ask at the counter for today's specials.</p>
+        </div>
+
+        <div class="carta-grid">
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Tacos <span class="carta-group-price">$3.25 c/u</span></h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">charred steak, onion, cilantro</span></span><span class="dots"></span><span class="price">3.25</span></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">marinated pork, pineapple</span></span><span class="dots"></span><span class="price">3.25</span></li>
+              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">slow-braised pork, crisped edges</span></span><span class="dots"></span><span class="price">3.25</span></li>
+              <li class="carta-row"><span class="dish"><strong>Pollo Asado</strong><span class="dish-desc">citrus-grilled chicken</span></span><span class="dots"></span><span class="price">3.25</span></li>
+              <li class="carta-row"><span class="dish"><strong>Lengua</strong><span class="dish-desc">tender braised beef tongue</span></span><span class="dots"></span><span class="price">3.75</span></li>
+            </ul>
+          </div>
+
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Burritos</h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">rice, beans, salsa, guacamole</span></span><span class="dots"></span><span class="price">11.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>California</strong><span class="dish-desc">asada, fries, cheese, crema</span></span><span class="dots"></span><span class="price">12.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">rice, beans, onion, cilantro</span></span><span class="dots"></span><span class="price">11.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>Bean &amp; Cheese</strong><span class="dish-desc">refritos, melted jack</span></span><span class="dots"></span><span class="price">8.50</span></li>
+            </ul>
+          </div>
+
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Mulitas</h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">grilled tortillas, melted cheese</span></span><span class="dots"></span><span class="price">5.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">with pineapple &amp; crema</span></span><span class="dots"></span><span class="price">5.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">with pickled onion</span></span><span class="dots"></span><span class="price">5.50</span></li>
+            </ul>
+          </div>
+
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Para Tomar <span class="carta-group-en" lang="en">· Drinks</span></h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>Horchata</strong><span class="dish-desc">cinnamon rice, made in-house</span></span><span class="dots"></span><span class="price">3.75</span></li>
+              <li class="carta-row"><span class="dish"><strong>Agua de Jamaica</strong><span class="dish-desc">hibiscus, not too sweet</span></span><span class="dots"></span><span class="price">3.75</span></li>
+              <li class="carta-row"><span class="dish"><strong>Tamarindo</strong><span class="dish-desc">tart tamarind agua fresca</span></span><span class="dots"></span><span class="price">3.75</span></li>
+              <li class="carta-row"><span class="dish"><strong>Mexican Coke</strong><span class="dish-desc">glass bottle, real sugar</span></span><span class="dots"></span><span class="price">3.00</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="carta-note" data-reveal>La carta completa te espera en el mostrador —
+        <span lang="en">the full menu is waiting at the counter. Prices shown are a sample and may change.</span></p>
+      </div>
+    </section>
+
+    <!-- ═══════════════ CATERING ═══════════════ -->
+    <section class="section section-catering" id="catering">
+      <div class="section-inner grid-2">
+        <div data-reveal>
+          <p class="eyebrow">Fiestas y Catering</p>
+          <h2 class="display">Llevamos la taqueria <em>a tu fiesta.</em></h2>
+          <p class="section-sub">We bring the taqueria to your party. Weddings,
+          quinceañeras, office lunches, backyard birthdays — we set up the grill, you
+          enjoy your guests. Taco bars from 20 to 200 people.</p>
+          <ul class="story-marks" role="list">
+            <li><span class="mark-num">01</span>Taquero en vivo <span class="mark-en" lang="en">live taco service</span></li>
+            <li><span class="mark-num">02</span>Salsas y complementos <span class="mark-en" lang="en">full salsa bar included</span></li>
+            <li><span class="mark-num">03</span>Presupuesto en 24 horas <span class="mark-en" lang="en">quote within a day</span></li>
+          </ul>
+        </div>
+        <form class="catering-form" data-reveal novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat-name">Nombre <span lang="en">· Name</span></label>
+              <input id="cat-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="cat-phone">Teléfono <span lang="en">· Phone</span></label>
+              <input id="cat-phone" name="phone" type="tel" autocomplete="tel" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat-date">Fecha del evento <span lang="en">· Date</span></label>
+              <input id="cat-date" name="date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="cat-guests">Invitados <span lang="en">· Guests</span></label>
+              <input id="cat-guests" name="guests" type="number" min="10" max="500" placeholder="50">
+            </div>
+          </div>
+          <div class="field">
+            <label for="cat-notes">Cuéntanos de tu evento <span lang="en">· Tell us about your event</span></label>
+            <textarea id="cat-notes" name="notes" rows="4"></textarea>
+            <p class="field-help">Where it is, what you're celebrating, anything special.</p>
+          </div>
+          <button class="btn btn-solid" type="submit">Enviar solicitud <span lang="en">— Send request</span></button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VISÍTANOS ═══════════════ -->
+    <section class="section section-visit" id="visitanos">
+      <div class="section-inner">
+        <div class="visit-head" data-reveal>
+          <p class="eyebrow">Visítanos <span lang="en">· Find Us</span></p>
+          <h2 class="display">Aquí te esperamos, <em>güero.</em></h2>
+        </div>
+        <div class="visit-grid">
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Dirección <span lang="en">· Address</span></h3>
+            <p class="visit-big">628 W La Palma Ave<br>Anaheim, CA 92801</p>
+            <a class="btn btn-ghost" href="https://maps.google.com/?q=628+W+La+Palma+Ave,+Anaheim,+CA+92801" target="_blank" rel="noopener">Cómo llegar <span lang="en">— Get directions</span></a>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Horario <span lang="en">· Hours</span></h3>
+            <ul class="hours" role="list">
+              <li><span>Lunes – Jueves</span><span class="dots"></span><span>9:00 am – 9:00 pm</span></li>
+              <li><span>Viernes – Sábado</span><span class="dots"></span><span>9:00 am – 10:00 pm</span></li>
+              <li><span>Domingo</span><span class="dots"></span><span>9:00 am – 8:00 pm</span></li>
+            </ul>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Para Llevar <span lang="en">· Takeout</span></h3>
+            <p>Call ahead and your order is ready when you are.</p>
+            <!-- TODO: real phone number -->
+            <a class="visit-big visit-phone" href="tel:+17145550000">(714) 555-0000</a>
+            <p class="visit-fine">Delivery via your favorite app coming soon.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-brand">Taqueria Los Güeros</p>
+      <p class="footer-line" lang="es">La noche sabe mejor.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#carta">La Carta</a>
+        <a href="#historia">Historia</a>
+        <a href="#catering">Catering</a>
+        <a href="#visitanos">Visítanos</a>
+      </nav>
+      <p class="footer-fine">© <span id="year">2026</span> Taqueria Los Güeros · 628 W La Palma Ave, Anaheim, CA</p>
+    </div>
+  </footer>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
