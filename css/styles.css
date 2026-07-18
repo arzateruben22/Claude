@@ -272,9 +272,11 @@ em { font-style: italic; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 7rem clamp(1.25rem, 5vw, 3rem) 5rem;
+  /* bottom padding reserves room for the .hero-scroll cue */
+  padding: 7rem clamp(1.25rem, 5vw, 3rem) 8.5rem;
   overflow: hidden;
 }
+
 
 .hero-media {
   position: absolute;
@@ -380,6 +382,12 @@ em { font-style: italic; }
 @keyframes nudge {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(5px); }
+}
+
+/* short windows: give the content the room instead of the cue */
+@media (max-height: 720px) {
+  .hero { padding-bottom: 5rem; }
+  .hero-scroll { display: none; }
 }
 
 /* ─── Sections ─── */
