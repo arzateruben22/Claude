@@ -59,6 +59,21 @@
     status.textContent = "Opening your email app… If nothing happens, write to " + CATERING_EMAIL + ".";
   });
 
+  /* ── Hero video: pause for reduced motion or data saver ── */
+  var video = document.querySelector(".hero-video");
+  if (video) {
+    var rmQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var applyMotionPref = function () {
+      if (rmQuery.matches || (navigator.connection && navigator.connection.saveData)) {
+        video.pause();
+      } else {
+        video.play().catch(function () {});
+      }
+    };
+    applyMotionPref();
+    if (rmQuery.addEventListener) rmQuery.addEventListener("change", applyMotionPref);
+  }
+
   /* ── Motion (GSAP + ScrollTrigger) ── */
   if (typeof gsap === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);
@@ -69,6 +84,7 @@
     /* Hero entrance */
     var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
     intro
+      .from(".hero-media", { opacity: 0, duration: 1.8, ease: "power2.out" }, 0)
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out" }, 0)
       .from(".hero-eyebrow", { opacity: 0, y: 14, duration: 0.7 }, 0.25)
       .from(".hero-title .line-inner", { yPercent: 115, duration: 1.0, stagger: 0.14 }, 0.35)
