@@ -651,22 +651,16 @@ em { font-style: italic; }
   align-items: start;
 }
 
-/* ─── Entropy panel (js/entropy.js) ─── */
+/* ─── Entropy tile (js/entropy.js) — lives mid-grid in Services ─── */
 
 .entropy-panel {
-  margin-top: var(--space-5);
-  background: var(--porcelain);
-  border: 1px solid var(--panel-edge-soft);
-  border-radius: 18px;
-  padding: var(--space-4);
-  box-shadow: 0 2px 14px rgba(90, 62, 78, 0.05);
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: var(--space-3);
+  background: var(--porcelain);
 }
 
-.entropy-canvas { display: block; max-width: 100%; }
+.entropy-canvas { display: block; }
 
 .entropy-caption {
   margin: 0;
@@ -818,6 +812,30 @@ em { font-style: italic; }
 }
 
 .add-to-cart { padding: 0.7rem 1.3rem; }
+
+/* the gift certificate rides full-width under the grid */
+.product-card--wide {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  grid-template-rows: auto auto 1fr;
+  column-gap: var(--space-4);
+  align-items: start;
+}
+
+.product-card--wide .product-visual {
+  grid-row: 1 / 4;
+  aspect-ratio: auto;
+  align-self: stretch;
+  min-height: 200px;
+  margin-bottom: 0;
+}
+
+.product-card--wide .product-foot {
+  align-self: end;
+  justify-content: flex-start;
+  gap: var(--space-4);
+}
 
 .shop-note {
   margin: var(--space-6) auto 0;
@@ -1679,6 +1697,13 @@ em { font-style: italic; }
 
 @media (max-width: 600px) {
   .shop-grid { grid-template-columns: 1fr; }
+  .product-card--wide { display: flex; flex-direction: column; }
+  .product-card--wide .product-visual {
+    aspect-ratio: 4 / 3;
+    align-self: auto;
+    width: 100%;
+    margin-bottom: var(--space-4);
+  }
 }
 
 @media (max-width: 480px) {

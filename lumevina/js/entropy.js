@@ -39,7 +39,9 @@
 
   var init = function () {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    size = Math.max(240, Math.min(panel.clientWidth, 420));
+    var cs = getComputedStyle(panel);
+    var pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+    size = Math.max(220, Math.min(panel.clientWidth - pad, 420));
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     canvas.style.width = size + "px";
