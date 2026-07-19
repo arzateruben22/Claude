@@ -485,7 +485,7 @@ a { color: inherit; }
 .cell-a { grid-area: a; aspect-ratio: 4 / 5; }
 .cell-b { grid-area: b; aspect-ratio: 4 / 5; }
 .cell-c { grid-area: c; }
-.cell-d { grid-area: d; aspect-ratio: 16 / 8; }
+.cell-d { grid-area: d; }
 
 .cell img {
   position: absolute;
@@ -500,7 +500,12 @@ a { color: inherit; }
 .cell-a img { object-position: 50% 20%; }
 .cell-b img { object-position: 50% 74%; }
 .cell-c img { object-position: 38% 50%; }
-.cell-d img { object-position: 50% 36%; }
+/* The payoff frame shows the whole shot — no crop */
+.cell-d img {
+  position: static;
+  width: 100%;
+  height: auto;
+}
 
 .cell figcaption {
   position: absolute;
@@ -569,6 +574,63 @@ a { color: inherit; }
   .plans-grid { grid-template-columns: 1fr; max-width: 34rem; }
 }
 
+/* ── Pay toggle (pay in full / split it) ────────────────────── */
+
+.pay-toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 20rem;
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px;
+  margin: 0 0 2rem;
+}
+.pt-btn {
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: 0;
+  color: var(--steel);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: color 250ms ease;
+}
+.pt-btn.is-on { color: #16130e; }
+.pt-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: var(--orange);
+  border-radius: 999px;
+  transition: transform 300ms ease;
+}
+.pay-toggle.split .pt-thumb { transform: translateX(calc(100% + 0px)); }
+
+/* Rolling numbers when the mode or plan changes */
+.plan-amount, .plan-bar-amount {
+  display: inline-block;
+  transition: transform 130ms ease, opacity 130ms ease;
+}
+.roll-out { transform: translateY(-0.45em); opacity: 0; }
+.roll-in { animation: roll-in 170ms ease-out; }
+@keyframes roll-in {
+  from { transform: translateY(0.45em); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plan-amount, .plan-bar-amount, .pt-thumb { transition: none; }
+  .roll-in { animation: none; }
+}
+
 .plan {
   display: flex;
   flex-direction: column;
@@ -576,7 +638,39 @@ a { color: inherit; }
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: clamp(1.5rem, 3vw, 2.25rem);
+  position: relative;
+  cursor: pointer;
+  transition: border-color 250ms ease;
 }
+
+/* Radio ring + dot, top-right — filled when the plan is selected */
+.plan::before {
+  content: "";
+  position: absolute;
+  top: 1.3rem;
+  right: 1.3rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  transition: border-color 250ms ease;
+}
+.plan::after {
+  content: "";
+  position: absolute;
+  top: calc(1.3rem + 5px);
+  right: calc(1.3rem + 5px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+.plan.is-selected { border-color: var(--orange); }
+.plan.is-selected::before { border-color: var(--orange); }
+.plan.is-selected::after { opacity: 1; }
+.plan-featured.is-selected { border-color: var(--orange); }
 
 /* The middle tier reads light-on-dark, like the printed sheet it comes from. */
 .plan-featured {
@@ -588,6 +682,7 @@ a { color: inherit; }
 .plan-featured .plan-per,
 .plan-featured .plan-spec dt,
 .plan-featured .plan-best,
+.plan-featured .plan-split-note,
 .plan-featured .plan-num { color: #5d5e63; }
 .plan-featured .plan-spec div { border-color: #d4d1c9; }
 
@@ -618,6 +713,17 @@ a { color: inherit; }
 }
 .plan-price .mono { font-size: 2.3rem; line-height: 1; }
 .plan-per { font-size: 0.85rem; color: var(--steel); }
+
+.plan-split-note {
+  display: none;
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--steel);
+}
+.plans-grid.split .plan-split-note {
+  display: block;
+  animation: roll-in 200ms ease-out;
+}
 
 .plan-spec { margin: 0 0 1.4rem; }
 .plan-spec div {
@@ -650,6 +756,51 @@ a { color: inherit; }
 .plan-cta {
   margin-top: auto;
   justify-content: center;
+}
+
+/* ── Sticky book bar (mobile) — one CTA that follows the choice ── */
+
+.plan-bar { display: none; }
+
+@media (max-width: 1000px) {
+  .plan-cta { display: none; }
+  .plan-bar {
+    position: sticky;
+    bottom: 0.75rem;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 0.8rem 0.8rem 0.8rem 1.2rem;
+    background: color-mix(in srgb, var(--night) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    max-width: 34rem;
+  }
+  .plan-bar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+  .plan-bar-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .plan-bar-price { font-size: 0.85rem; color: var(--steel); }
+  .plan-bar-amount { color: var(--bone); }
+  .plan-bar-cta {
+    flex-shrink: 0;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+  }
 }
 
 .plans-includes {

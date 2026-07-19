@@ -27,6 +27,89 @@
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
+  /* ── Plans: tap to select, pay-in-full / split toggle ────── */
+  /* Ported from a React pricing component: animated selection
+     ring, sliding toggle thumb, and rolling price numbers. */
+  (function () {
+    var grid = document.querySelector(".plans-grid");
+    var toggle = document.querySelector(".pay-toggle");
+    if (!grid || !toggle) return;
+
+    var plans = [].slice.call(grid.querySelectorAll(".plan"));
+    var bar = document.querySelector(".plan-bar");
+    var barName = bar && bar.querySelector(".plan-bar-name");
+    var barAmount = bar && bar.querySelector(".plan-bar-amount");
+    var barPer = bar && bar.querySelector(".plan-bar-per");
+    var barCta = bar && bar.querySelector(".plan-bar-cta");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var mode = "full";
+    var selected = grid.querySelector(".plan-featured") || plans[0];
+
+    function fmt(n) {
+      return "$" + Number(n).toLocaleString("en-US");
+    }
+
+    function roll(el, text) {
+      if (!el || el.textContent === text) return;
+      if (reduce) { el.textContent = text; return; }
+      el.classList.remove("roll-in");
+      el.classList.add("roll-out");
+      window.setTimeout(function () {
+        el.textContent = text;
+        el.classList.remove("roll-out");
+        el.classList.add("roll-in");
+      }, 130);
+    }
+
+    function apply() {
+      grid.classList.toggle("split", mode === "split");
+      plans.forEach(function (p) {
+        roll(p.querySelector(".plan-amount"), fmt(p.dataset[mode]));
+        p.querySelector(".plan-per").textContent =
+          mode === "split" ? "today" : "/ month";
+        var on = p === selected;
+        p.classList.toggle("is-selected", on);
+        p.setAttribute("aria-checked", String(on));
+      });
+      if (bar) {
+        barName.textContent = selected.dataset.name;
+        roll(barAmount, fmt(selected.dataset[mode]));
+        barPer.textContent = mode === "split" ? "today" : "/ month";
+        barCta.textContent = "Book " + selected.dataset.name;
+      }
+    }
+
+    plans.forEach(function (p) {
+      p.addEventListener("click", function () {
+        selected = p;
+        apply();
+      });
+      p.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          selected = p;
+          apply();
+        }
+      });
+    });
+
+    toggle.addEventListener("click", function (e) {
+      var btn = e.target.closest(".pt-btn");
+      if (!btn) return;
+      mode = btn.dataset.mode;
+      toggle.classList.toggle("split", mode === "split");
+      [].forEach.call(toggle.querySelectorAll(".pt-btn"), function (b) {
+        var on = b === btn;
+        b.classList.toggle("is-on", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+      apply();
+    });
+
+    apply();
+  })();
+
   /* ── Reactive glow waves ─────────────────────────────────── */
   /* Orange/gold light trails across the hero that ease toward the
      cursor. Ported from a canvas wave hero into plain JS. */

@@ -171,13 +171,21 @@
           no long-term contract.</p>
         </div>
 
-        <div class="plans-grid">
-          <article class="plan" data-reveal>
+        <div class="pay-toggle" data-reveal role="group" aria-label="How you'd like to pay">
+          <button type="button" class="pt-btn is-on" data-mode="full" aria-pressed="true">Pay in full</button>
+          <button type="button" class="pt-btn" data-mode="split" aria-pressed="false">Split it</button>
+          <span class="pt-thumb" aria-hidden="true"></span>
+        </div>
+
+        <div class="plans-grid" role="radiogroup" aria-label="Choose a plan">
+          <article class="plan" data-reveal role="radio" tabindex="0" aria-checked="false"
+                   data-name="Foundation" data-full="399" data-split="199">
             <header class="plan-head">
               <p class="plan-num mono">01</p>
               <h3>Foundation</h3>
               <p class="plan-tag">Structure and a real starting point.</p>
-              <p class="plan-price"><span class="mono">$399</span><span class="plan-per">/ month</span></p>
+              <p class="plan-price"><span class="mono plan-amount">$399</span><span class="plan-per">/ month</span></p>
+              <p class="plan-split-note">then 2 weekly payments of $100 — same $399 month, nothing extra</p>
             </header>
             <dl class="plan-spec">
               <div><dt class="mono">Training</dt><dd><strong>1 private session / week</strong> — 4 a month, one-on-one, trained beside you at your intensity.</dd></div>
@@ -189,12 +197,14 @@
             <a class="btn btn-ghost plan-cta" href="tel:+17143533126">Book Foundation</a>
           </article>
 
-          <article class="plan plan-featured" data-reveal>
+          <article class="plan plan-featured" data-reveal role="radio" tabindex="0" aria-checked="true"
+                   data-name="Momentum" data-full="749" data-split="375">
             <header class="plan-head">
               <p class="plan-num mono">02</p>
               <h3>Momentum</h3>
               <p class="plan-tag">For the client who's serious about visible change.</p>
-              <p class="plan-price"><span class="mono">$749</span><span class="plan-per">/ month</span></p>
+              <p class="plan-price"><span class="mono plan-amount">$749</span><span class="plan-per">/ month</span></p>
+              <p class="plan-split-note">then 2 weekly payments of $187 — same $749 month, nothing extra</p>
             </header>
             <dl class="plan-spec">
               <div><dt class="mono">Training</dt><dd><strong>2 private sessions / week</strong> — 8 a month, one-on-one, trained beside you at your intensity.</dd></div>
@@ -206,12 +216,14 @@
             <a class="btn btn-solid plan-cta" href="tel:+17143533126">Book Momentum</a>
           </article>
 
-          <article class="plan" data-reveal>
+          <article class="plan" data-reveal role="radio" tabindex="0" aria-checked="false"
+                   data-name="All-Access" data-full="1299" data-split="649">
             <header class="plan-head">
               <p class="plan-num mono">03</p>
               <h3>All-Access</h3>
               <p class="plan-tag">The full transformation, no friction.</p>
-              <p class="plan-price"><span class="mono">$1,299</span><span class="plan-per">/ month</span></p>
+              <p class="plan-price"><span class="mono plan-amount">$1,299</span><span class="plan-per">/ month</span></p>
+              <p class="plan-split-note">then 2 weekly payments of $325 — same $1,299 month, nothing extra</p>
             </header>
             <dl class="plan-spec">
               <div><dt class="mono">Training</dt><dd><strong>3 private sessions / week</strong> — 12 a month, one-on-one, trained beside you at your intensity.</dd></div>
@@ -222,6 +234,14 @@
             visible change with a coach fully in their corner.</p>
             <a class="btn btn-ghost plan-cta" href="tel:+17143533126">Book All-Access</a>
           </article>
+        </div>
+
+        <div class="plan-bar">
+          <div class="plan-bar-info">
+            <span class="plan-bar-name">Momentum</span>
+            <span class="plan-bar-price mono"><span class="plan-bar-amount">$749</span> <span class="plan-bar-per">/ month</span></span>
+          </div>
+          <a class="btn btn-solid plan-bar-cta" href="tel:+17143533126">Book Momentum</a>
         </div>
 
         <ul class="plans-includes" role="list" data-reveal>
@@ -263,6 +283,13 @@
             <summary>Where do we train?</summary>
             <p>A private gym in Anaheim — one-on-one, no crowd, no waiting on equipment.
             You get the address when you book your first session.</p>
+          </details>
+          <details>
+            <summary>Do I have to pay it all upfront?</summary>
+            <p>No. Every plan can be split: about half to get started, then two weekly
+            payments across your first two weeks of training. Same total, nothing
+            extra — Foundation, for example, is $199 to start, then two payments
+            of $100. Flip the "Split it" switch above the plans to see your numbers.</p>
           </details>
           <details>
             <summary>Am I locked into a contract?</summary>
