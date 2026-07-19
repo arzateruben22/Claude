@@ -275,8 +275,33 @@ a { color: inherit; }
 /* ── Hero ───────────────────────────────────────────────────── */
 
 .hero {
+  position: relative;
   padding: clamp(3rem, 9vh, 6.5rem) var(--pad-x) var(--section-gap);
+  overflow: hidden;
 }
+
+/* The stadium-night photo sits behind everything and dissolves into the
+   page's black at every edge, so it reads as atmosphere, not a banner. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+}
+.hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  opacity: 0.6;
+}
+.hero-bg-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--night) 4%, rgba(16, 17, 20, 0.78) 45%, rgba(16, 17, 20, 0.35) 100%),
+    linear-gradient(180deg, rgba(16, 17, 20, 0.65) 0%, rgba(16, 17, 20, 0.1) 45%, var(--night) 97%);
+}
+
+.hero-grid { position: relative; }
 
 .hero-grid {
   max-width: 76rem;
@@ -327,7 +352,8 @@ a { color: inherit; }
 /* ── Signature: one month, three ways ───────────────────────── */
 
 .months {
-  background: var(--panel);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: clamp(1.25rem, 2.5vw, 2rem);
@@ -426,31 +452,93 @@ a { color: inherit; }
 .story-copy { color: var(--steel); max-width: 33rem; }
 .story-copy p:first-child { color: var(--bone); }
 
-/* ── Coach photo ────────────────────────────────────────────── */
+/* ── The growth mosaic ──────────────────────────────────────── */
+/* Four frames, in order: day one → the day job → the work → now.
+   The gym shot runs tall; "now" runs full width — the payoff frame. */
 
-.coach-photo { margin: 0; }
-.coach-photo-placeholder {
-  aspect-ratio: 4 / 5;
-  border: 2px dashed var(--line);
+.mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "a c"
+    "b c"
+    "d d";
+  gap: 6px;
+}
+.cell {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
   border-radius: 10px;
   background: var(--panel);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  text-align: center;
-  padding: 2rem;
-  color: var(--steel);
-  font-size: 0.9rem;
 }
-.coach-photo-placeholder .mono { font-size: 0.8rem; color: var(--bone); }
-.coach-photo figcaption {
-  margin-top: 0.8rem;
-  font-size: 0.75rem;
+.cell-a { grid-area: a; aspect-ratio: 4 / 5; }
+.cell-b { grid-area: b; aspect-ratio: 4 / 5; }
+.cell-c { grid-area: c; }
+.cell-d { grid-area: d; aspect-ratio: 16 / 8; }
+
+.cell img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+.cell:hover img { transform: scale(1.04); }
+/* Keep faces in frame on the crops that need it */
+.cell-a img { object-position: 50% 20%; }
+.cell-d img { object-position: 50% 26%; }
+
+.cell figcaption {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: color-mix(in srgb, var(--night) 82%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+.cap-num {
+  font-size: 0.66rem;
+  color: var(--orange);
+}
+
+/* Until a photo lands in media/, its cell shows as a labeled slot */
+.cell.missing img { display: none; }
+.cell.missing {
+  border: 2px dashed var(--line);
+  background: var(--panel);
+  min-height: 9rem;
+}
+.cell.missing::before {
+  content: attr(data-file);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
   color: var(--steel);
+  padding-bottom: 2.2rem;
+}
+
+.mosaic-line {
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+  text-align: right;
 }
 
 /* ── Plans ──────────────────────────────────────────────────── */
@@ -595,42 +683,6 @@ a { color: inherit; }
 }
 .guarantee p:last-child { margin: 0; font-size: 1.02rem; }
 
-/* ── Results ────────────────────────────────────────────────── */
-
-.proof-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: 2rem;
-  margin-top: 2.5rem;
-  max-width: 56rem;
-}
-.proof { margin: 0; }
-.proof-pair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-}
-.proof-ph {
-  aspect-ratio: 3 / 4;
-  background: var(--panel);
-  border: 2px dashed var(--line);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--steel);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-.proof figcaption {
-  margin-top: 0.7rem;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--steel);
-}
-
 /* ── FAQ ────────────────────────────────────────────────────── */
 
 .section-faq { background: var(--panel); }
@@ -731,7 +783,6 @@ a { color: inherit; }
     <nav class="nav-links" aria-label="Main">
       <a href="#coach">The Coach</a>
       <a href="#plans">Plans</a>
-      <a href="#results">Results</a>
       <a href="#faq">FAQ</a>
     </nav>
     <a class="btn btn-solid nav-cta" href="tel:+17143533126">Book now</a>
@@ -743,7 +794,6 @@ a { color: inherit; }
   <div class="mobile-menu" id="mobile-menu" hidden>
     <a href="#coach">The Coach</a>
     <a href="#plans">Plans</a>
-    <a href="#results">Results</a>
     <a href="#faq">FAQ</a>
     <a class="btn btn-solid" href="tel:+17143533126">Book now — (714) 353-3126</a>
   </div>
@@ -752,6 +802,14 @@ a { color: inherit; }
 
     <!-- ═══════════════ HERO ═══════════════ -->
     <section class="hero">
+      <!-- The Benz outside Angel Stadium — drop the photo at media/stadium.jpg
+           and it fades seamlessly into the page's black. Until then the hero
+           stays solid night. -->
+      <div class="hero-bg" aria-hidden="true">
+        <img src="media/stadium.jpg" alt="" loading="eager"
+             onerror="this.parentNode.style.display='none'">
+        <div class="hero-bg-veil"></div>
+      </div>
       <div class="hero-grid">
         <div class="hero-inner">
           <p class="eyebrow hero-eyebrow" data-load><span class="mono tag">SchFLR</span> Private gym · One-on-one · Anaheim, CA</p>
@@ -829,15 +887,37 @@ a { color: inherit; }
             put in actually pays out.</p>
           </div>
         </div>
-        <figure class="coach-photo" data-reveal>
-          <!-- TODO: drop a photo at media/coach.jpg and swap this placeholder:
-               <img src="media/coach.jpg" alt="Ruben Arzate training in the gym"> -->
-          <div class="coach-photo-placeholder" aria-hidden="true">
-            <span class="mono">media/coach.jpg</span>
-            <span>Your photo goes here — mid-session in the gym, like the shots on your About page.</span>
+        <!-- The growth mosaic. Drop the four photos in media/ with these names
+             and each cell fills in automatically:
+               media/day-one.jpg  — bathroom mirror, where it started
+               media/day-job.jpg  — safety vest selfie, the grind years
+               media/the-work.jpg — incline pressing the 100s
+               media/now.jpg      — fitting-room mirror, current shape -->
+        <div class="mosaic-wrap" data-reveal>
+          <div class="mosaic">
+            <figure class="cell cell-a" data-file="media/day-one.jpg">
+              <img src="media/day-one.jpg" alt="Ruben at the very start — a bathroom mirror photo from day one"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">01</span>Day one</figcaption>
+            </figure>
+            <figure class="cell cell-b" data-file="media/day-job.jpg">
+              <img src="media/day-job.jpg" alt="Ruben in a safety vest on the job — the years before coaching"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">02</span>The day job</figcaption>
+            </figure>
+            <figure class="cell cell-c" data-file="media/the-work.jpg">
+              <img src="media/the-work.jpg" alt="Ruben incline-pressing 100-pound dumbbells in the gym"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">03</span>The work</figcaption>
+            </figure>
+            <figure class="cell cell-d" data-file="media/now.jpg">
+              <img src="media/now.jpg" alt="Ruben now — lean and built, mirror photo"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">04</span>Now</figcaption>
+            </figure>
           </div>
-          <figcaption class="mono">Ruben Arzate · SchFLR</figcaption>
-        </figure>
+          <p class="mosaic-line mono">The mirror doesn't lie · The work, documented</p>
+        </div>
       </div>
     </section>
 
@@ -922,36 +1002,6 @@ a { color: inherit; }
       </div>
     </section>
 
-    <!-- ═══════════════ RESULTS ═══════════════ -->
-    <section class="section section-results" id="results">
-      <div class="section-inner">
-        <div data-reveal>
-          <p class="eyebrow">Results</p>
-          <h2 class="display">The mirror <span class="accent">doesn't lie.</span></h2>
-          <p class="section-sub">The work, documented.</p>
-        </div>
-        <div class="proof-grid">
-          <!-- TODO: drop your before/after shots at media/proof-1-before.jpg etc. and
-               swap each placeholder for:
-               <img src="media/proof-1-before.jpg" alt="Before: ..."> -->
-          <figure class="proof" data-reveal>
-            <div class="proof-pair">
-              <div class="proof-ph" aria-hidden="true"><span class="mono">before</span></div>
-              <div class="proof-ph" aria-hidden="true"><span class="mono">after</span></div>
-            </div>
-            <figcaption class="mono">My own run — where SchFLR started</figcaption>
-          </figure>
-          <figure class="proof" data-reveal>
-            <div class="proof-pair">
-              <div class="proof-ph" aria-hidden="true"><span class="mono">before</span></div>
-              <div class="proof-ph" aria-hidden="true"><span class="mono">after</span></div>
-            </div>
-            <figcaption class="mono">Client result · add name &amp; timeframe</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
     <!-- ═══════════════ FAQ ═══════════════ -->
     <section class="section section-faq" id="faq">
       <div class="section-inner grid-2">
@@ -998,7 +1048,6 @@ a { color: inherit; }
       <nav class="footer-nav" aria-label="Footer">
         <a href="#coach">The Coach</a>
         <a href="#plans">Plans</a>
-        <a href="#results">Results</a>
         <a href="#faq">FAQ</a>
       </nav>
       <!-- TODO: add your Instagram / socials here if you want them public -->

@@ -29,18 +29,31 @@ Pulled from the original SchFLR Squarespace site:
 - Contact info: (714) 353-3126 and arzateruben22@gmail.com — every
   "Book" button is a tap-to-call link.
 
+## Photos
+
+Five photos power the page. Drop them in `media/` with these exact names and
+every slot fills in automatically (no HTML edits needed):
+
+| File | The shot |
+|------|----------|
+| `media/stadium.jpg` | Black Benz outside Angel Stadium at night — hero background |
+| `media/day-one.jpg` | Bathroom-mirror photo from the very start |
+| `media/day-job.jpg` | Safety-vest work selfie — the grind years |
+| `media/the-work.jpg` | Incline-pressing the 100s at the gym |
+| `media/now.jpg` | Fitting-room mirror photo — current shape |
+
+The first is the hero atmosphere (it fades into the page's black); the other
+four are the growth mosaic in "The Coach" section, in story order. Until a
+file exists, its slot renders as a labeled dashed panel. After adding photos,
+rerun `python3 build-artifact.py` to refresh the single-file bundle.
+
 ## Things to fill in before launch
 
-Search `index.html` for `TODO`:
-
-1. **Coach photo** — add `media/coach.jpg` and swap the placeholder in the
-   "The Coach" section for the `<img>` tag in the comment next to it.
-2. **Before/after photos** — the Results section has two placeholder pairs;
-   drop your transformation shots in `media/` and swap them in.
-3. **Booking link** — buttons currently call (714) 353-3126. If you set up
+1. **Photos** — see above.
+2. **Booking link** — buttons currently call (714) 353-3126. If you set up
    online scheduling (Squarespace Scheduling, Calendly), point the `href`s
    there instead.
-4. **Socials** — there's a TODO in the footer if you want Instagram public.
+3. **Socials** — there's a TODO in the footer if you want Instagram public.
 
 ## The hero calendar
 

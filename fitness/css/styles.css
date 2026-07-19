@@ -273,8 +273,33 @@ a { color: inherit; }
 /* ── Hero ───────────────────────────────────────────────────── */
 
 .hero {
+  position: relative;
   padding: clamp(3rem, 9vh, 6.5rem) var(--pad-x) var(--section-gap);
+  overflow: hidden;
 }
+
+/* The stadium-night photo sits behind everything and dissolves into the
+   page's black at every edge, so it reads as atmosphere, not a banner. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+}
+.hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  opacity: 0.6;
+}
+.hero-bg-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--night) 4%, rgba(16, 17, 20, 0.78) 45%, rgba(16, 17, 20, 0.35) 100%),
+    linear-gradient(180deg, rgba(16, 17, 20, 0.65) 0%, rgba(16, 17, 20, 0.1) 45%, var(--night) 97%);
+}
+
+.hero-grid { position: relative; }
 
 .hero-grid {
   max-width: 76rem;
@@ -325,7 +350,8 @@ a { color: inherit; }
 /* ── Signature: one month, three ways ───────────────────────── */
 
 .months {
-  background: var(--panel);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: clamp(1.25rem, 2.5vw, 2rem);
@@ -424,31 +450,93 @@ a { color: inherit; }
 .story-copy { color: var(--steel); max-width: 33rem; }
 .story-copy p:first-child { color: var(--bone); }
 
-/* ── Coach photo ────────────────────────────────────────────── */
+/* ── The growth mosaic ──────────────────────────────────────── */
+/* Four frames, in order: day one → the day job → the work → now.
+   The gym shot runs tall; "now" runs full width — the payoff frame. */
 
-.coach-photo { margin: 0; }
-.coach-photo-placeholder {
-  aspect-ratio: 4 / 5;
-  border: 2px dashed var(--line);
+.mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "a c"
+    "b c"
+    "d d";
+  gap: 6px;
+}
+.cell {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
   border-radius: 10px;
   background: var(--panel);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  text-align: center;
-  padding: 2rem;
-  color: var(--steel);
-  font-size: 0.9rem;
 }
-.coach-photo-placeholder .mono { font-size: 0.8rem; color: var(--bone); }
-.coach-photo figcaption {
-  margin-top: 0.8rem;
-  font-size: 0.75rem;
+.cell-a { grid-area: a; aspect-ratio: 4 / 5; }
+.cell-b { grid-area: b; aspect-ratio: 4 / 5; }
+.cell-c { grid-area: c; }
+.cell-d { grid-area: d; aspect-ratio: 16 / 8; }
+
+.cell img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+.cell:hover img { transform: scale(1.04); }
+/* Keep faces in frame on the crops that need it */
+.cell-a img { object-position: 50% 20%; }
+.cell-d img { object-position: 50% 26%; }
+
+.cell figcaption {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: color-mix(in srgb, var(--night) 82%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.28rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+.cap-num {
+  font-size: 0.66rem;
+  color: var(--orange);
+}
+
+/* Until a photo lands in media/, its cell shows as a labeled slot */
+.cell.missing img { display: none; }
+.cell.missing {
+  border: 2px dashed var(--line);
+  background: var(--panel);
+  min-height: 9rem;
+}
+.cell.missing::before {
+  content: attr(data-file);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
   color: var(--steel);
+  padding-bottom: 2.2rem;
+}
+
+.mosaic-line {
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+  text-align: right;
 }
 
 /* ── Plans ──────────────────────────────────────────────────── */
@@ -592,42 +680,6 @@ a { color: inherit; }
   color: var(--gold);
 }
 .guarantee p:last-child { margin: 0; font-size: 1.02rem; }
-
-/* ── Results ────────────────────────────────────────────────── */
-
-.proof-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: 2rem;
-  margin-top: 2.5rem;
-  max-width: 56rem;
-}
-.proof { margin: 0; }
-.proof-pair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-}
-.proof-ph {
-  aspect-ratio: 3 / 4;
-  background: var(--panel);
-  border: 2px dashed var(--line);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--steel);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-.proof figcaption {
-  margin-top: 0.7rem;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--steel);
-}
 
 /* ── FAQ ────────────────────────────────────────────────────── */
 

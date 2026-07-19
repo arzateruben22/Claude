@@ -17,7 +17,6 @@
     <nav class="nav-links" aria-label="Main">
       <a href="#coach">The Coach</a>
       <a href="#plans">Plans</a>
-      <a href="#results">Results</a>
       <a href="#faq">FAQ</a>
     </nav>
     <a class="btn btn-solid nav-cta" href="tel:+17143533126">Book now</a>
@@ -29,7 +28,6 @@
   <div class="mobile-menu" id="mobile-menu" hidden>
     <a href="#coach">The Coach</a>
     <a href="#plans">Plans</a>
-    <a href="#results">Results</a>
     <a href="#faq">FAQ</a>
     <a class="btn btn-solid" href="tel:+17143533126">Book now — (714) 353-3126</a>
   </div>
@@ -38,6 +36,14 @@
 
     <!-- ═══════════════ HERO ═══════════════ -->
     <section class="hero">
+      <!-- The Benz outside Angel Stadium — drop the photo at media/stadium.jpg
+           and it fades seamlessly into the page's black. Until then the hero
+           stays solid night. -->
+      <div class="hero-bg" aria-hidden="true">
+        <img src="media/stadium.jpg" alt="" loading="eager"
+             onerror="this.parentNode.style.display='none'">
+        <div class="hero-bg-veil"></div>
+      </div>
       <div class="hero-grid">
         <div class="hero-inner">
           <p class="eyebrow hero-eyebrow" data-load><span class="mono tag">SchFLR</span> Private gym · One-on-one · Anaheim, CA</p>
@@ -115,15 +121,37 @@
             put in actually pays out.</p>
           </div>
         </div>
-        <figure class="coach-photo" data-reveal>
-          <!-- TODO: drop a photo at media/coach.jpg and swap this placeholder:
-               <img src="media/coach.jpg" alt="Ruben Arzate training in the gym"> -->
-          <div class="coach-photo-placeholder" aria-hidden="true">
-            <span class="mono">media/coach.jpg</span>
-            <span>Your photo goes here — mid-session in the gym, like the shots on your About page.</span>
+        <!-- The growth mosaic. Drop the four photos in media/ with these names
+             and each cell fills in automatically:
+               media/day-one.jpg  — bathroom mirror, where it started
+               media/day-job.jpg  — safety vest selfie, the grind years
+               media/the-work.jpg — incline pressing the 100s
+               media/now.jpg      — fitting-room mirror, current shape -->
+        <div class="mosaic-wrap" data-reveal>
+          <div class="mosaic">
+            <figure class="cell cell-a" data-file="media/day-one.jpg">
+              <img src="media/day-one.jpg" alt="Ruben at the very start — a bathroom mirror photo from day one"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">01</span>Day one</figcaption>
+            </figure>
+            <figure class="cell cell-b" data-file="media/day-job.jpg">
+              <img src="media/day-job.jpg" alt="Ruben in a safety vest on the job — the years before coaching"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">02</span>The day job</figcaption>
+            </figure>
+            <figure class="cell cell-c" data-file="media/the-work.jpg">
+              <img src="media/the-work.jpg" alt="Ruben incline-pressing 100-pound dumbbells in the gym"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">03</span>The work</figcaption>
+            </figure>
+            <figure class="cell cell-d" data-file="media/now.jpg">
+              <img src="media/now.jpg" alt="Ruben now — lean and built, mirror photo"
+                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+              <figcaption><span class="cap-num mono">04</span>Now</figcaption>
+            </figure>
           </div>
-          <figcaption class="mono">Ruben Arzate · SchFLR</figcaption>
-        </figure>
+          <p class="mosaic-line mono">The mirror doesn't lie · The work, documented</p>
+        </div>
       </div>
     </section>
 
@@ -208,36 +236,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════ RESULTS ═══════════════ -->
-    <section class="section section-results" id="results">
-      <div class="section-inner">
-        <div data-reveal>
-          <p class="eyebrow">Results</p>
-          <h2 class="display">The mirror <span class="accent">doesn't lie.</span></h2>
-          <p class="section-sub">The work, documented.</p>
-        </div>
-        <div class="proof-grid">
-          <!-- TODO: drop your before/after shots at media/proof-1-before.jpg etc. and
-               swap each placeholder for:
-               <img src="media/proof-1-before.jpg" alt="Before: ..."> -->
-          <figure class="proof" data-reveal>
-            <div class="proof-pair">
-              <div class="proof-ph" aria-hidden="true"><span class="mono">before</span></div>
-              <div class="proof-ph" aria-hidden="true"><span class="mono">after</span></div>
-            </div>
-            <figcaption class="mono">My own run — where SchFLR started</figcaption>
-          </figure>
-          <figure class="proof" data-reveal>
-            <div class="proof-pair">
-              <div class="proof-ph" aria-hidden="true"><span class="mono">before</span></div>
-              <div class="proof-ph" aria-hidden="true"><span class="mono">after</span></div>
-            </div>
-            <figcaption class="mono">Client result · add name &amp; timeframe</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
     <!-- ═══════════════ FAQ ═══════════════ -->
     <section class="section section-faq" id="faq">
       <div class="section-inner grid-2">
@@ -284,7 +282,6 @@
       <nav class="footer-nav" aria-label="Footer">
         <a href="#coach">The Coach</a>
         <a href="#plans">Plans</a>
-        <a href="#results">Results</a>
         <a href="#faq">FAQ</a>
       </nav>
       <!-- TODO: add your Instagram / socials here if you want them public -->
