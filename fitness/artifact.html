@@ -522,6 +522,17 @@ a { color: inherit; }
     "d d";
   gap: 6px;
 }
+
+/* Desktop: compact mosaic, centered beside the story so the two columns
+   end together — the proof ring is where photos get to be big */
+@media (min-width: 901px) {
+  #coach .grid-2 { align-items: center; }
+  .mosaic-wrap {
+    width: 100%;
+    max-width: 29rem;
+    justify-self: end;
+  }
+}
 .cell {
   margin: 0;
   position: relative;
