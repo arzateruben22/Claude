@@ -291,12 +291,24 @@ a { color: inherit; }
   object-position: 50% 38%;
   opacity: 0.6;
 }
+@media (max-width: 900px) {
+  .hero-bg img { opacity: 0.38; }
+}
 .hero-bg-veil {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(90deg, var(--night) 4%, rgba(16, 17, 20, 0.78) 45%, rgba(16, 17, 20, 0.35) 100%),
     linear-gradient(180deg, rgba(16, 17, 20, 0.65) 0%, rgba(16, 17, 20, 0.1) 45%, var(--night) 97%);
+}
+
+.hero-waves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .hero-grid { position: relative; }
@@ -486,7 +498,8 @@ a { color: inherit; }
 .cell:hover img { transform: scale(1.04); }
 /* Keep faces in frame on the crops that need it */
 .cell-a img { object-position: 50% 20%; }
-.cell-d img { object-position: 50% 26%; }
+.cell-b img { object-position: 50% 74%; }
+.cell-d img { object-position: 50% 64%; }
 
 .cell figcaption {
   position: absolute;
