@@ -87,7 +87,10 @@
         <p class="hero-sub">Bespoke facials and results-driven skincare in a serene,
         rose-lit studio. Book your visit — or send the gift of glow.</p>
         <div class="hero-actions">
-          <a class="btn btn-solid" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">Book an appointment</a>
+          <a class="btn-mb" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">
+            <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
+            <span class="btn btn-solid btn-mb-inner">Book an appointment</span>
+          </a>
           <a class="btn btn-ghost" href="#services">Shop gift certificates</a>
         </div>
         <ul class="hero-features" role="list">
@@ -274,6 +277,18 @@
     <div class="footer-inner">
       <p class="footer-brand">Lumevina</p>
       <p class="footer-line">Aesthetics Spa · Where glow begins.</p>
+      <!-- TODO: point Instagram/Facebook at the spa's real profiles -->
+      <div class="footer-social">
+        <a class="social-btn" href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Lumevina on Instagram">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
+        </a>
+        <a class="social-btn" href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Lumevina on Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a class="social-btn" href="mailto:hello@lumevina.com" aria-label="Email Lumevina">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+        </a>
+      </div>
       <nav class="footer-nav" aria-label="Footer">
         <a href="#spa">The Spa</a>
         <a href="#services">Services</a>
@@ -348,7 +363,10 @@
                 placeholder="123" maxlength="4" required>
             </div>
           </div>
-          <button class="btn btn-solid checkout-pay" type="submit">Pay now</button>
+          <button class="btn-mb checkout-pay" type="submit">
+            <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
+            <span class="btn btn-solid btn-mb-inner">Pay now</span>
+          </button>
           <p class="form-status checkout-status" role="alert"></p>
         </form>
       </div>
@@ -369,6 +387,7 @@
   <script src="js/liquid-metal.js"></script>
   <script src="js/dither-cards.js"></script>
   <script src="js/morphing-light.js"></script>
+  <script src="js/moving-border.js"></script>
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
 </body>

@@ -86,7 +86,7 @@
       .from(".hero-badge", { opacity: 0, y: 14, duration: 0.7 }, 0.3)
       .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.35)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.95)
-      .from(".hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.1)
+      .from(".hero-actions > *", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.1)
       .from(".hero-features", { opacity: 0, y: 24, duration: 0.9 }, 1.25)
       .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 1.0)
       .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.4)

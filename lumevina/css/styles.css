@@ -171,6 +171,72 @@ em { font-style: italic; }
 
 .btn-ghost:hover { border-color: var(--plum); color: var(--plum); background: rgba(165, 121, 139, 0.08); }
 
+/* ─── Moving-border button (js/moving-border.js) ─── */
+
+.btn-mb {
+  position: relative;
+  display: inline-block;
+  padding: 2px;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(165, 121, 139, 0.28);
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+  transition: box-shadow 220ms ease;
+}
+
+.btn-mb:hover { box-shadow: 0 6px 26px rgba(125, 84, 104, 0.32); }
+
+.btn-mb-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+}
+
+.btn-mb-border svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.btn-mb-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(rgba(255, 244, 235, 0.95) 30%,
+      rgba(201, 162, 180, 0.6) 45%, transparent 62%);
+}
+
+.btn-mb-inner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* the traveling glow reads through the 2px ring; keep the surface
+   almost solid so the label stays crisp */
+.btn-mb .btn-solid {
+  background: rgba(165, 121, 139, 0.94);
+}
+
+.btn-mb .btn-solid:hover {
+  background: var(--plum);
+  transform: none;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-mb-glow { display: none; }
+}
+
 /* ─── Nav ─── */
 
 .nav {
@@ -766,8 +832,12 @@ em { font-style: italic; }
 
 .section-journal {
   border-top: 1px solid var(--ink-15);
+  /* faint 24px grid over the linen ground (shadcn hero-block motif) */
   background:
-    radial-gradient(80% 70% at 80% 20%, rgba(217, 185, 163, 0.12), transparent 60%);
+    radial-gradient(80% 70% at 80% 20%, rgba(217, 185, 163, 0.12), transparent 60%),
+    linear-gradient(to right, rgba(125, 84, 104, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(125, 84, 104, 0.05) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
 }
 
 .journal-inner {
@@ -849,6 +919,35 @@ em { font-style: italic; }
   color: var(--mauve);
   margin-bottom: var(--space-4);
 }
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(165, 121, 139, 0.12);
+  color: var(--plum);
+  transition: background-color 200ms ease, color 200ms ease,
+              transform 200ms ease, box-shadow 200ms ease;
+}
+
+.social-btn:hover {
+  background: var(--mauve);
+  color: #fff;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 6px 18px rgba(125, 84, 104, 0.28);
+}
+
+.social-btn:active { transform: scale(0.95); }
 
 .footer-nav {
   display: flex;
@@ -1162,7 +1261,7 @@ em { font-style: italic; }
 
 @media (max-width: 480px) {
   .field-row { grid-template-columns: 1fr; }
-  .hero-actions .btn { width: 100%; text-align: center; }
+  .hero-actions .btn, .hero-actions .btn-mb { width: 100%; text-align: center; }
   .product-foot { flex-direction: column; align-items: stretch; text-align: center; }
 }
 
