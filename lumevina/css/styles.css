@@ -233,6 +233,20 @@ em { font-style: italic; }
   box-shadow: none;
 }
 
+/* ghost variant: the ring reads as the button border, the surface
+   stays linen so the glow only travels the rim */
+.btn-mb--ghost { background: rgba(165, 121, 139, 0.45); }
+
+.btn-mb--ghost .btn-ghost {
+  border-color: transparent;
+  background: rgba(247, 241, 235, 0.96);
+}
+
+.btn-mb--ghost .btn-ghost:hover {
+  background: var(--linen);
+  color: var(--plum);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .btn-mb-glow { display: none; }
 }
@@ -505,6 +519,7 @@ em { font-style: italic; }
   display: flex;
   gap: var(--space-3);
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
 }
 
@@ -533,7 +548,7 @@ em { font-style: italic; }
 /* giant wordmark along the bottom of the hero */
 .hero-wordmark {
   position: absolute;
-  bottom: -0.14em;
+  bottom: 0.1em;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
