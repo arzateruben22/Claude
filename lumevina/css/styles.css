@@ -171,6 +171,36 @@ em { font-style: italic; }
 
 .btn-ghost:hover { border-color: var(--plum); color: var(--plum); background: rgba(165, 121, 139, 0.08); }
 
+/* ─── Cursor aura (js/cursor-aura.js) ─── */
+
+.cursor-aura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 130;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  will-change: transform;
+}
+
+.cursor-aura.visible { opacity: 1; }
+
+.cursor-aura-dot {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+      rgba(165, 121, 139, 0.35),
+      rgba(201, 162, 180, 0.16) 55%,
+      transparent 75%);
+  mix-blend-mode: multiply;
+  transition: transform 250ms ease;
+}
+
+.cursor-aura.is-active .cursor-aura-dot { transform: scale(1.8); }
+
 /* ─── Moving-border button (js/moving-border.js) ─── */
 
 .btn-mb {

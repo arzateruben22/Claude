@@ -42,6 +42,10 @@
     "void main(){",
     "  vec2 uv = (gl_FragCoord.xy - 0.5 * u_res) / min(u_res.x, u_res.y);",
     "  float t = u_time * 0.06;",
+    /* LivingNebula-style lens: the field bends around the pointer */
+    "  vec2 m = u_mouse * u_res / (2.0 * min(u_res.x, u_res.y));",
+    "  float md = length(uv - m);",
+    "  uv += (uv - m) / max(md, 0.001) / (md * 50.0 + 1.0) * smoothstep(0.3, 0.0, md);",
     "  vec2 q = vec2(fbm(uv * 1.6 + u_mouse * 0.25 + t), fbm(uv * 1.6 - t * 0.7 - u_mouse * 0.2));",
     "  vec2 r = vec2(fbm(uv * 2.2 + q * 1.8 + vec2(1.7, 9.2) + t * 1.2),",
     "                fbm(uv * 2.2 + q * 1.8 + vec2(8.3, 2.8) - t));",
