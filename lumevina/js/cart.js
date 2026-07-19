@@ -1,4 +1,4 @@
-/* Sensoria — cart & demo checkout
+/* Lumevina Aesthetics Spa — cart & demo checkout
    Client-side only: the cart persists to localStorage and the
    checkout is a DEMO — it validates the card locally and never
    sends anything anywhere. For real payments, POST the cart to
@@ -8,7 +8,7 @@
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "sensoria_cart";
+  var STORAGE_KEY = "lumevina_cart";
 
   /* cart: { [id]: { id, name, price, qty } } */
   var cart = {};
@@ -372,7 +372,7 @@
 
     /* Demo only — a real store would POST the cart to a server here
        and confirm a Stripe PaymentIntent before showing success. */
-    var orderId = "SEN-" + Date.now().toString(36).toUpperCase();
+    var orderId = "LUM-" + Date.now().toString(36).toUpperCase();
     orderIdEl.textContent = orderId;
     formView.hidden = true;
     successView.hidden = false;

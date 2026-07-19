@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumevina Aesthetics Spa</title>
+  <meta name="description" content="Lumevina Aesthetics Spa — bespoke facials and results-driven skincare in a serene studio. Book your visit or send the gift of glow.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%23a5798b' stroke-width='1.6'/%3E%3Cpath d='M16 16c0-3 4-3 4 0s-4 5-6 2c-2-4 2-8 6-7' fill='none' stroke='%23a5798b' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="nav" id="top">
+    <a class="nav-brand" href="#top">Lumevina<span class="nav-brand-sub">Aesthetics Spa</span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#spa">The Spa</a>
+      <a href="#services">Services</a>
+      <a href="#ritual">Ritual</a>
+      <a href="#journal">Journal</a>
+    </nav>
+    <a class="btn btn-solid nav-book" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">Book now</a>
+    <button class="btn btn-ghost nav-cart" type="button" aria-label="Open cart, 0 items">
+      Cart · <span class="nav-cart-count">0</span>
+    </button>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#spa">The Spa</a>
+    <a href="#services">Services</a>
+    <a href="#ritual">Ritual</a>
+    <a href="#journal">Journal</a>
+    <a class="btn btn-solid" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">Book now</a>
+    <button class="btn btn-ghost mobile-cart" type="button">Cart · <span class="nav-cart-count">0</span></button>
+  </div>
+
+  <main>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-glow hero-glow-alt" aria-hidden="true"></div>
+      <div class="hero-inner">
+
+        <!-- Lumevina mark: circle, profile line, roses — inline so the
+             wordmark renders in the page's Cormorant Garamond -->
+        <svg class="hero-logo" viewBox="0 0 360 240" role="img" aria-label="Lumevina Aesthetics Spa">
+          <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="192" cy="120" r="98" stroke-width="1.1" opacity="0.55"/>
+            <!-- profile: hairline → brow → nose → lips → chin → neck -->
+            <path stroke-width="1.3" opacity="0.85" d="M238 44
+              C216 50 205 68 204 84
+              C203 92 200 98 195 104
+              L203 107
+              C200 112 198 115 200 118
+              C204 121 203 124 201 127
+              C199 130 200 133 205 134
+              C211 135 214 139 212 145
+              C210 152 215 158 226 157
+              C232 157 237 160 240 166
+              C243 173 242 182 238 190"/>
+            <!-- hair sweep -->
+            <path stroke-width="1.1" opacity="0.6" d="M238 44
+              C258 40 276 50 282 66 C287 80 283 94 274 102
+              C280 112 280 124 273 132"/>
+            <!-- rose, crown -->
+            <path stroke-width="1.2" opacity="0.8" d="M262 40 c5 -2 9 2 8 7 c-1 6 -9 7 -13 2 c-4 -6 0 -13 8 -15 c9 -2 17 4 16 13 c-1 10 -11 15 -20 12"/>
+            <path stroke-width="1" opacity="0.55" d="M246 30 c4 -6 12 -8 18 -5 M284 38 c6 3 9 9 8 15"/>
+            <!-- rose, nape -->
+            <path stroke-width="1.2" opacity="0.8" d="M272 146 c4 -1 7 2 6 6 c-1 5 -8 5 -10 1 c-3 -5 1 -10 7 -11 c7 -2 13 3 12 10 c-1 8 -9 12 -16 9"/>
+          </g>
+          <text class="logo-word" x="118" y="128" text-anchor="middle">LUMEVINA</text>
+          <text class="logo-sub" x="118" y="150" text-anchor="middle">AESTHETICS SPA</text>
+        </svg>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="line-inner">Radiance,</span></span>
+          <span class="line"><span class="line-inner"><em>beautifully restored.</em></span></span>
+        </h1>
+        <p class="hero-sub">Bespoke facials and results-driven skincare in a serene,
+        rose-lit studio. Book your visit — or send the gift of glow.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">Book an appointment</a>
+          <a class="btn btn-ghost" href="#services">Shop gift certificates</a>
+        </div>
+      </div>
+      <p class="hero-wordmark" aria-hidden="true">LUMEVINA</p>
+      <a class="hero-scroll" href="#spa" aria-label="Scroll to the spa">
+        <span>Scroll down</span>
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none" aria-hidden="true"><path d="M7 1v16m0 0l-5-5m5 5l5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+
+    <!-- ═══════════════ THE SPA ═══════════════ -->
+    <section class="section" id="spa">
+      <div class="section-inner grid-2">
+        <div data-reveal>
+          <p class="eyebrow">The Spa</p>
+          <h2 class="display">Skincare that <em>honors your skin.</em></h2>
+        </div>
+        <div class="story-copy" data-reveal>
+          <p>Lumevina begins with a conversation, not a menu. Every treatment starts
+          with a close look at your skin — its history, its sensitivities, what it's
+          asking for right now — and becomes a facial built just for you.</p>
+          <p>Medical-grade actives, unhurried hands, and a room that lets your
+          shoulders finally drop. <em>This is skincare as care.</em></p>
+          <ul class="story-marks" role="list">
+            <li><span class="mark-num">01</span>Personal skin consultation <span class="mark-alt">every single visit</span></li>
+            <li><span class="mark-num">02</span>Medical-grade actives <span class="mark-alt">clinically dosed</span></li>
+            <li><span class="mark-num">03</span>Rituals tuned to you <span class="mark-alt">never off the shelf</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ SERVICES ═══════════════ -->
+    <section class="section section-shop" id="services">
+      <div class="section-inner">
+        <div class="shop-head" data-reveal>
+          <p class="eyebrow">Services &amp; Gift Certificates</p>
+          <h2 class="display">Your glow, <em>ready to gift.</em></h2>
+          <p class="section-sub">Add a gift certificate to your cart below — or book
+          your own appointment instantly through
+          <a class="inline-link" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">our online scheduler</a>.</p>
+        </div>
+
+        <div class="shop-grid">
+          <article class="product-card" data-reveal>
+            <div class="product-visual visual-ageless" aria-hidden="true"><span class="product-orb"></span></div>
+            <h3 class="product-name">Ageless Grace Facial</h3>
+            <p class="product-desc">Our signature lifting facial — peptides, sculpting massage, and LED light therapy.</p>
+            <div class="product-foot">
+              <span class="product-price">$230</span>
+              <button class="btn btn-solid add-to-cart" type="button"
+                data-id="ageless-grace-facial" data-name="Ageless Grace Facial" data-price="230">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-reveal>
+            <div class="product-visual visual-custom" aria-hidden="true"><span class="product-orb"></span></div>
+            <h3 class="product-name">Lumevina Custom Facial</h3>
+            <p class="product-desc">A facial composed for your skin on the day — consultation, actives, and glow.</p>
+            <div class="product-foot">
+              <span class="product-price">$180</span>
+              <button class="btn btn-solid add-to-cart" type="button"
+                data-id="lumevina-custom-facial" data-name="Lumevina Custom Facial" data-price="180">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-reveal>
+            <div class="product-visual visual-dermaplane" aria-hidden="true"><span class="product-orb"></span></div>
+            <h3 class="product-name">Hydro-Glow Dermaplane</h3>
+            <p class="product-desc">Gentle exfoliation and deep hydration — petal-soft skin with a lit-from-within finish.</p>
+            <div class="product-foot">
+              <span class="product-price">$150</span>
+              <button class="btn btn-solid add-to-cart" type="button"
+                data-id="hydro-glow-dermaplane" data-name="Hydro-Glow Dermaplane" data-price="150">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-reveal>
+            <div class="product-visual visual-peel" aria-hidden="true"><span class="product-orb"></span></div>
+            <h3 class="product-name">Radiance Peel</h3>
+            <p class="product-desc">A professional-strength peel calibrated to your skin — brighter in one visit.</p>
+            <div class="product-foot">
+              <span class="product-price">$140</span>
+              <button class="btn btn-solid add-to-cart" type="button"
+                data-id="radiance-peel" data-name="Radiance Peel" data-price="140">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-reveal>
+            <div class="product-visual visual-lash" aria-hidden="true"><span class="product-orb"></span></div>
+            <h3 class="product-name">Lash &amp; Brow Ritual</h3>
+            <p class="product-desc">Lift, tint, and shape — wake up framed, no makeup required.</p>
+            <div class="product-foot">
+              <span class="product-price">$95</span>
+              <button class="btn btn-solid add-to-cart" type="button"
+                data-id="lash-brow-ritual" data-name="Lash &amp; Brow Ritual" data-price="95">Add to cart</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-reveal>
+            <div class="product-visual visual-gift" aria-hidden="true"><span class="product-orb"></span></div>
+            <h3 class="product-name">Gift Certificate</h3>
+            <p class="product-desc">The gift of glow — a $100 certificate toward any Lumevina treatment.</p>
+            <div class="product-foot">
+              <span class="product-price">$100</span>
+              <button class="btn btn-solid add-to-cart" type="button"
+                data-id="gift-certificate-100" data-name="Gift Certificate ($100)" data-price="100">Add to cart</button>
+            </div>
+          </article>
+        </div>
+
+        <p class="shop-note" data-reveal>Certificates never expire and can be applied to any
+        treatment. Prefer a date on the books right away?
+        <a class="inline-link" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">Book online</a>.</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════ RITUAL ═══════════════ -->
+    <section class="section section-ritual" id="ritual">
+      <div class="section-inner">
+        <div class="ritual-head" data-reveal>
+          <p class="eyebrow">The Ritual</p>
+          <h2 class="display">Three steps to <em>your best skin.</em></h2>
+        </div>
+        <div class="ritual-grid">
+          <div class="ritual-card" data-reveal>
+            <p class="ritual-step">01 · Consult</p>
+            <h3 class="ritual-card-title">We listen first</h3>
+            <p>Every visit opens with a skin consultation — your history, your goals,
+            and what your skin is telling us today.</p>
+          </div>
+          <div class="ritual-card" data-reveal>
+            <p class="ritual-step">02 · Customize</p>
+            <h3 class="ritual-card-title">Composed for you</h3>
+            <p>Your esthetician builds the treatment in the room — actives, techniques,
+            and finishing care chosen for your skin alone.</p>
+          </div>
+          <div class="ritual-card" data-reveal>
+            <p class="ritual-step">03 · Glow</p>
+            <h3 class="ritual-card-title">Leave luminous</h3>
+            <p>You leave with visible results and a simple home ritual — and your next
+            visit builds on the last.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ JOURNAL / NEWSLETTER ═══════════════ -->
+    <section class="section section-journal" id="journal">
+      <div class="section-inner journal-inner">
+        <div data-reveal>
+          <p class="eyebrow">The Journal</p>
+          <h2 class="display">Spa notes, <em>monthly.</em></h2>
+          <p class="section-sub">Skin science without the jargon — seasonal skincare,
+          treatment spotlights, and first access to new offerings.</p>
+        </div>
+        <form class="newsletter-form" data-reveal novalidate>
+          <div class="field">
+            <label for="nl-email">Email address</label>
+            <input id="nl-email" name="email" type="email" autocomplete="email"
+              placeholder="you@example.com" required>
+          </div>
+          <button class="btn btn-solid" type="submit">Join the journal</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-brand">Lumevina</p>
+      <p class="footer-line">Aesthetics Spa · Where glow begins.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#spa">The Spa</a>
+        <a href="#services">Services</a>
+        <a href="#ritual">Ritual</a>
+        <a href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">Book Online</a>
+      </nav>
+      <p class="footer-fine">© <span id="year">2026</span> Lumevina Aesthetics Spa · Demo storefront — no real payments are processed.</p>
+    </div>
+  </footer>
+
+  <!-- ═══════════════ CART DRAWER ═══════════════ -->
+  <div class="cart-overlay" hidden></div>
+  <aside class="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping cart" aria-hidden="true" tabindex="-1">
+    <div class="cart-head">
+      <h2 class="cart-title">Your ritual</h2>
+      <button class="cart-close" type="button" aria-label="Close cart">×</button>
+    </div>
+    <p class="cart-empty">Your cart is empty — the gift of glow starts in <a href="#services">services</a>.</p>
+    <ul class="cart-items" role="list"></ul>
+    <div class="cart-foot">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span class="cart-subtotal-value">$0.00</span>
+      </div>
+      <p class="cart-fine">Demo store — no real charges. To purchase for real, use
+        <a class="inline-link" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">our online catalog</a>.</p>
+      <button class="btn btn-solid cart-checkout" type="button" disabled>Checkout</button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════ CHECKOUT MODAL ═══════════════ -->
+  <div class="checkout-overlay" hidden></div>
+  <div class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true" tabindex="-1">
+    <div class="checkout-inner">
+      <button class="checkout-close" type="button" aria-label="Close checkout">×</button>
+
+      <div class="checkout-form-view">
+        <h2 class="checkout-title" id="checkout-title">Checkout</h2>
+        <p class="checkout-demo-note">Demo checkout — no card is charged and no data leaves your browser.</p>
+
+        <div class="checkout-summary">
+          <ul class="checkout-lines" role="list"></ul>
+          <div class="checkout-total">
+            <span>Total</span>
+            <span class="checkout-total-value">$0.00</span>
+          </div>
+        </div>
+
+        <form class="checkout-form" novalidate>
+          <div class="field">
+            <label for="co-name">Name on card</label>
+            <input id="co-name" name="name" type="text" autocomplete="cc-name" required>
+          </div>
+          <div class="field">
+            <label for="co-email">Email for receipt</label>
+            <input id="co-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="co-card">Card number</label>
+            <input id="co-card" name="card" type="text" inputmode="numeric" autocomplete="cc-number"
+              placeholder="4242 4242 4242 4242" maxlength="19" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="co-expiry">Expiry</label>
+              <input id="co-expiry" name="expiry" type="text" inputmode="numeric" autocomplete="cc-exp"
+                placeholder="MM/YY" maxlength="5" required>
+            </div>
+            <div class="field">
+              <label for="co-cvc">CVC</label>
+              <input id="co-cvc" name="cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                placeholder="123" maxlength="4" required>
+            </div>
+          </div>
+          <button class="btn btn-solid checkout-pay" type="submit">Pay now</button>
+          <p class="form-status checkout-status" role="alert"></p>
+        </form>
+      </div>
+
+      <div class="checkout-success" hidden>
+        <p class="success-glyph" aria-hidden="true">✨</p>
+        <h2 class="checkout-title">Payment received</h2>
+        <p class="success-sub">Your gift of glow is on its way ✨</p>
+        <p class="success-order">Order <span class="success-order-id"></span></p>
+        <p class="checkout-demo-note">This was a demo — nothing was charged.</p>
+        <button class="btn btn-ghost checkout-done" type="button">Back to Lumevina</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>

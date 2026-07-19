@@ -1,4 +1,4 @@
-/* Sensoria — interactions & motion
+/* Lumevina Aesthetics Spa — interactions & motion
    All entrance states are set from JS so the page is fully
    readable with JavaScript disabled. Cart logic lives in cart.js. */
 
@@ -41,7 +41,7 @@
     e.preventDefault();
     var status = form.querySelector(".form-status");
     if (!form.reportValidity()) return;
-    status.textContent = "You're in — the next issue lands in your inbox ✨";
+    status.textContent = "You're on the list — spa notes arrive monthly ✨";
     form.reset();
   });
 
@@ -56,7 +56,7 @@
     var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
     intro
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
-      .from(".hero-eyebrow", { opacity: 0, y: 14, duration: 0.7 }, 0.25)
+      .from(".hero-logo", { opacity: 0, y: 14, scale: 0.96, duration: 1.0, ease: "power2.out" }, 0.2)
       .from(".hero-title .line-inner", { yPercent: 115, duration: 1.0, stagger: 0.14 }, 0.35)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.85)
       .from(".hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.0)
