@@ -898,6 +898,111 @@ em { font-style: italic; }
   margin-bottom: var(--space-3);
 }
 
+/* ─── Policies accordion ─── */
+
+.section-policies {
+  background:
+    radial-gradient(80% 60% at 20% 10%, rgba(201, 162, 180, 0.08), transparent 60%),
+    var(--porcelain);
+  border-top: 1px solid var(--ink-15);
+}
+
+.policies-head { text-align: center; }
+.policies-head .section-sub { margin-left: auto; margin-right: auto; }
+
+.policies-list {
+  max-width: 46rem;
+  margin: var(--space-5) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.policy {
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(90, 62, 78, 0.05);
+  overflow: hidden;
+  transition: border-color 250ms ease;
+}
+
+.policy[open] { border-color: rgba(165, 121, 139, 0.4); }
+
+.policy summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 1.1rem var(--space-4);
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--plum);
+  transition: background-color 200ms ease;
+}
+
+.policy summary::-webkit-details-marker { display: none; }
+
+.policy summary:hover { background: rgba(165, 121, 139, 0.06); }
+
+.policy-num {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--mauve);
+}
+
+.policy-chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--mauve);
+  transition: transform 300ms ease;
+}
+
+.policy[open] .policy-chevron { transform: rotate(180deg); }
+
+.policy-body {
+  padding: 0 var(--space-4) var(--space-4);
+  color: var(--ink-60);
+  font-size: 0.95rem;
+}
+
+.policy[open] .policy-body { animation: policy-in 300ms ease; }
+
+@keyframes policy-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.policy-body p { margin: 0; }
+
+.policy-body ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.policy-body li::marker { color: var(--mauve); }
+
+.policy-body strong { color: var(--ink); font-weight: 500; }
+
+.policies-note {
+  margin: var(--space-5) auto 0;
+  max-width: 36rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink-35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .policy[open] .policy-body { animation: none; }
+}
+
 /* ─── Connect / stacked cards ─── */
 
 .section-connect {
