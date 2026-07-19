@@ -545,11 +545,17 @@ a { color: inherit; }
 .cell-a img { object-position: 50% 20%; }
 .cell-b img { object-position: 50% 74%; }
 .cell-c img { object-position: 38% 50%; }
-/* The payoff frame shows the whole shot — no crop */
-.cell-d img {
-  position: static;
-  width: 100%;
-  height: auto;
+/* The payoff frame: on phones it shows the whole shot; on desktop it
+   takes a wide cinematic crop so the section stays level with the story */
+.cell-d { aspect-ratio: 16 / 9; }
+.cell-d img { object-position: 50% 34%; }
+@media (max-width: 900px) {
+  .cell-d { aspect-ratio: auto; }
+  .cell-d img {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
 }
 
 .cell figcaption {
@@ -663,6 +669,20 @@ a { color: inherit; }
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+}
+.ring-face figcaption {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 0.18rem 0.55rem;
+  background: color-mix(in srgb, var(--night) 80%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bone);
 }
 
 .ring-hint {
