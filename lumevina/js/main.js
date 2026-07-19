@@ -51,17 +51,45 @@
 
   var mm = gsap.matchMedia();
 
+  /* Split the headline into per-letter spans (Woven Light-style
+     reveal). The h1 keeps an aria-label so the split is invisible
+     to screen readers. */
+  var splitChars = function (root) {
+    var walk = function (node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          child.textContent.split("").forEach(function (ch) {
+            var s = document.createElement("span");
+            s.className = "char";
+            s.textContent = ch === " " ? " " : ch;
+            frag.appendChild(s);
+          });
+          node.replaceChild(frag, child);
+        } else if (child.nodeType === 1) {
+          walk(child);
+        }
+      });
+    };
+    document.querySelectorAll(root).forEach(walk);
+  };
+
   mm.add("(prefers-reduced-motion: no-preference)", function () {
+    splitChars(".hero-title .line-inner");
+
     /* Hero entrance */
     var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
     intro
+      .from(".hero-liquid", { opacity: 0, duration: 1.8, ease: "power2.out" }, 0)
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
       .from(".hero-logo", { opacity: 0, y: 14, scale: 0.96, duration: 1.0, ease: "power2.out" }, 0.2)
-      .from(".hero-title .line-inner", { yPercent: 115, duration: 1.0, stagger: 0.14 }, 0.35)
-      .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.85)
-      .from(".hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.0)
-      .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 0.9)
-      .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.3)
+      .from(".hero-badge", { opacity: 0, y: 14, duration: 0.7 }, 0.3)
+      .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.35)
+      .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.95)
+      .from(".hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.1)
+      .from(".hero-features", { opacity: 0, y: 24, duration: 0.9 }, 1.25)
+      .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 1.0)
+      .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.4)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.5);
 
     /* Wordmark drifts as you leave the hero */
