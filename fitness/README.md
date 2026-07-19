@@ -38,7 +38,7 @@ every slot fills in automatically (no HTML edits needed):
 |------|----------|
 | `media/stadium.jpg` | Black Benz outside Angel Stadium at night — hero background |
 | `media/beginning.jpg` | Bathroom-mirror photo from near the start |
-| `media/grind.jpg` | Safety-vest work selfie — the grind years |
+| `media/grind.jpg` | Safety-vest work selfie — rock bottom, the tile job |
 | `media/dec-2022.jpg` | Fitting-room mirror photo, December 2022 |
 | `media/the-100s.jpg` | Incline-pressing the 100s — most recent |
 
