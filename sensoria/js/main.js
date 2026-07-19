@@ -1,0 +1,93 @@
+/* Sensoria — interactions & motion
+   All entrance states are set from JS so the page is fully
+   readable with JavaScript disabled. Cart logic lives in cart.js. */
+
+(function () {
+  "use strict";
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ── Nav ── */
+  var nav = document.querySelector(".nav");
+  var onScroll = function () {
+    nav.classList.toggle("scrolled", window.scrollY > 24);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  var toggle = document.querySelector(".nav-toggle");
+  var mobileMenu = document.getElementById("mobile-menu");
+  var setMenu = function (open) {
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    mobileMenu.hidden = !open;
+    document.body.style.overflow = open ? "hidden" : "";
+  };
+  setMenu(false);
+  toggle.addEventListener("click", function () {
+    setMenu(toggle.getAttribute("aria-expanded") !== "true");
+  });
+  mobileMenu.addEventListener("click", function (e) {
+    if (e.target.closest("a")) setMenu(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !mobileMenu.hidden) setMenu(false);
+  });
+
+  /* ── Newsletter form → client-side thanks ── */
+  /* TODO: wire to your email service (Mailchimp / Buttondown / Formspree). */
+  var form = document.querySelector(".newsletter-form");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var status = form.querySelector(".form-status");
+    if (!form.reportValidity()) return;
+    status.textContent = "You're in — the next issue lands in your inbox ✨";
+    form.reset();
+  });
+
+  /* ── Motion (GSAP + ScrollTrigger) ── */
+  if (typeof gsap === "undefined") return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  var mm = gsap.matchMedia();
+
+  mm.add("(prefers-reduced-motion: no-preference)", function () {
+    /* Hero entrance */
+    var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+    intro
+      .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
+      .from(".hero-eyebrow", { opacity: 0, y: 14, duration: 0.7 }, 0.25)
+      .from(".hero-title .line-inner", { yPercent: 115, duration: 1.0, stagger: 0.14 }, 0.35)
+      .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.85)
+      .from(".hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.0)
+      .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 0.9)
+      .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.3)
+      .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.5);
+
+    /* Wordmark drifts as you leave the hero */
+    gsap.to(".hero-wordmark", {
+      yPercent: 22,
+      opacity: 0.3,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    /* Section reveals */
+    gsap.utils.toArray("[data-reveal]").forEach(function (el) {
+      gsap.from(el, {
+        opacity: 0,
+        y: 28,
+        duration: 0.9,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 82%" }
+      });
+    });
+
+    return function () {};
+  });
+})();
