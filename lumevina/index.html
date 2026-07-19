@@ -398,6 +398,18 @@
           </details>
         </div>
 
+        <!-- Desktop: the accordion folds into this cursor-interactive shelf
+             (js/policy-panels.js); on touch/narrow/reduced-motion the
+             accordion above remains -->
+        <div class="policies-stage" aria-hidden="false">
+          <div class="policies-scene"></div>
+        </div>
+        <p class="policies-hint" aria-hidden="true">Move your cursor · click a card for details</p>
+        <div class="policy-detail" role="region" aria-live="polite" aria-label="Selected policy">
+          <h3 class="policy-detail-title"></h3>
+          <div class="policy-detail-body"></div>
+        </div>
+
         <p class="policies-note" data-reveal>By booking, you confirm you've read the
         policies above and completed all required intake forms.</p>
       </div>
@@ -606,6 +618,7 @@
   <script src="js/entropy.js"></script>
   <script src="js/stacked-cards.js"></script>
   <script src="js/cursor-aura.js"></script>
+  <script src="js/policy-panels.js"></script>
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
 </body>

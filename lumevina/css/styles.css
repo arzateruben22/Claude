@@ -991,6 +991,128 @@ em { font-style: italic; }
 
 .policy-body strong { color: var(--ink); font-weight: 500; }
 
+/* ─── Policies shelf (js/policy-panels.js) ─── */
+
+/* hidden until the script confirms a desktop cursor environment */
+.policies-stage, .policies-hint, .policy-detail { display: none; }
+
+.section-policies.has-shelf .policies-list { display: none; }
+
+.section-policies.has-shelf .policies-stage {
+  display: block;
+  position: relative;
+  height: 380px;
+  margin-top: var(--space-5);
+  perspective: 1500px;
+}
+
+.policies-scene {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.policy-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.3rem;
+  padding: 1rem;
+  border: 1px solid rgba(125, 84, 104, 0.22);
+  border-radius: 14px;
+  box-shadow: 0 12px 34px rgba(90, 62, 78, 0.14);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transform-origin: bottom center;
+  transition: border-color 250ms ease, box-shadow 250ms ease;
+}
+
+.policy-panel:hover { border-color: rgba(125, 84, 104, 0.45); }
+
+.policy-panel.selected {
+  border-color: var(--plum);
+  box-shadow: 0 16px 40px rgba(125, 84, 104, 0.3);
+}
+
+.panel-num {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--plum);
+  opacity: 0.75;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--plum);
+}
+
+/* one soft tint per policy, all from the spa palette */
+.panel-tint-1 { background: linear-gradient(160deg, #f4e3ea, #e2c7d3); }
+.panel-tint-2 { background: linear-gradient(160deg, #f6ebef, #e6cfd9); }
+.panel-tint-3 { background: linear-gradient(160deg, #f2dde0, #ecd0c4); }
+.panel-tint-4 { background: linear-gradient(160deg, #f7efe6, #ecdcc8); }
+.panel-tint-5 { background: linear-gradient(160deg, #f0e6f0, #ded4e1); }
+.panel-tint-6 { background: linear-gradient(160deg, #ece4ea, #d6c6d2); }
+.panel-tint-7 { background: linear-gradient(160deg, #ebf1e7, #d9e6d2); }
+.panel-tint-8 { background: linear-gradient(160deg, #efe0e6, #dbc0cd); }
+
+.section-policies.has-shelf .policies-hint {
+  display: block;
+  margin: var(--space-3) auto 0;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-35);
+}
+
+.section-policies.has-shelf .policy-detail {
+  display: block;
+  max-width: 46rem;
+  margin: var(--space-4) auto 0;
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(90, 62, 78, 0.05);
+  padding: var(--space-4);
+}
+
+.policy-detail.show { animation: policy-in 300ms ease; }
+
+.policy-detail-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: var(--space-3);
+}
+
+.policy-detail-body { color: var(--ink-60); font-size: 0.95rem; }
+
+.policy-detail-body p { margin: 0; }
+
+.policy-detail-body ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.policy-detail-body li::marker { color: var(--mauve); }
+
+.policy-detail-body strong { color: var(--ink); font-weight: 500; }
+
 .policies-note {
   margin: var(--space-5) auto 0;
   max-width: 36rem;
