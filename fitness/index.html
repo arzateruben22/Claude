@@ -16,6 +16,7 @@
     <a class="nav-brand" href="#top">SchFLR<span class="nav-brand-sub">Ruben Arzate · Personal Training</span></a>
     <nav class="nav-links" aria-label="Main">
       <a href="#coach">The Coach</a>
+      <a href="#proof">Proof</a>
       <a href="#plans">Plans</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -27,6 +28,7 @@
 
   <div class="mobile-menu" id="mobile-menu" hidden>
     <a href="#coach">The Coach</a>
+    <a href="#proof">Proof</a>
     <a href="#plans">Plans</a>
     <a href="#faq">FAQ</a>
     <a class="btn btn-solid" href="tel:+17143533126">Book now — (714) 353-3126</a>
@@ -40,8 +42,12 @@
            and it fades seamlessly into the page's black. Until then the hero
            stays solid night. -->
       <div class="hero-bg" aria-hidden="true">
-        <img src="media/stadium.jpg" alt="" loading="eager"
-             onerror="this.parentNode.style.display='none'">
+        <!-- Phones get a brightened crop centered on the Benz -->
+        <picture>
+          <source media="(max-width: 900px)" srcset="media/stadium-mobile.jpg">
+          <img src="media/stadium.jpg" alt="" loading="eager"
+               onerror="this.closest('.hero-bg').style.display='none'">
+        </picture>
         <div class="hero-bg-veil"></div>
       </div>
       <!-- Reactive glow waves — orange/gold light trails that follow the cursor -->
@@ -154,6 +160,49 @@
         </div>
       </div>
     </section>
+
+    <!-- ═══════════════ PROOF RING ═══════════════ -->
+    <section class="section section-proof" id="proof">
+      <div class="section-inner">
+        <div data-reveal>
+          <p class="eyebrow">Client Proof</p>
+          <h2 class="display">Not just <span class="accent">my mirror.</span></h2>
+          <p class="section-sub">My first client is my little brother — his run gets
+          documented the same way mine was. Drag the ring, tap a photo to look closer.</p>
+        </div>
+        <!-- Client photos: drop media/client-1.jpg … client-4.jpg in and they
+             join the ring automatically; missing files are skipped. -->
+        <div class="ring-wrap" data-reveal>
+          <div class="ring-stage">
+            <div class="ring" id="proof-ring">
+              <figure class="ring-face"><img src="media/beginning.jpg" alt="Ruben at the beginning" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/client-1.jpg" alt="Client progress — photo 1" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/dec-2022.jpg" alt="Ruben in December 2022" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/client-2.jpg" alt="Client progress — photo 2" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/the-100s.jpg" alt="Ruben pressing the 100s" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/client-3.jpg" alt="Client progress — photo 3" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/client-4.jpg" alt="Client progress — photo 4" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/client-5.jpg" alt="Client progress — photo 5" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+              <figure class="ring-face"><img src="media/client-6.jpg" alt="Client progress — photo 6" loading="lazy"
+                onerror="this.closest('.ring-face').classList.add('gone'); window.__ringLayout && window.__ringLayout()"></figure>
+            </div>
+          </div>
+          <p class="ring-hint mono">Drag to spin · tap to enlarge</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <img src="" alt="Enlarged progress photo">
+    </div>
 
     <!-- ═══════════════ PLANS ═══════════════ -->
     <section class="section section-plans" id="plans">
@@ -308,6 +357,7 @@
       <p class="footer-line">No head start. Just the work.</p>
       <nav class="footer-nav" aria-label="Footer">
         <a href="#coach">The Coach</a>
+        <a href="#proof">Proof</a>
         <a href="#plans">Plans</a>
         <a href="#faq">FAQ</a>
       </nav>

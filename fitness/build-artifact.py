@@ -28,6 +28,8 @@ def inline_media(m):
     return m.group(0)
 
 html = re.sub(r'src="(media/[^"]+)"', inline_media, html)
+html = re.sub(r'srcset="(media/[^"]+)"',
+              lambda m: inline_media(m).replace('src="', 'srcset="', 1), html)
 
 body = html.split('<body>', 1)[1].rsplit('</body>', 1)[0]
 body = re.sub(r'\s*<script src="[^"]+"></script>', '', body)

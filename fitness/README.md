@@ -41,6 +41,8 @@ every slot fills in automatically (no HTML edits needed):
 | `media/grind.jpg` | Safety-vest work selfie — rock bottom, the tile job |
 | `media/dec-2022.jpg` | Fitting-room mirror photo, December 2022 |
 | `media/the-100s.jpg` | Incline-pressing the 100s — most recent |
+| `media/stadium-mobile.jpg` | Brightened, car-centered crop used on phones (auto-generated from stadium.jpg) |
+| `media/client-1.jpg` … `client-4.jpg` | Client progress shots — they join the proof ring automatically; missing ones are skipped |
 
 The first is the hero atmosphere (it fades into the page's black); the other
 four are the growth mosaic in "The Coach" section, in chronological order.

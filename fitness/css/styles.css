@@ -284,6 +284,11 @@ a { color: inherit; }
   position: absolute;
   inset: 0;
 }
+.hero-bg picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .hero-bg img {
   width: 100%;
   height: 100%;
@@ -291,15 +296,21 @@ a { color: inherit; }
   object-position: 50% 38%;
   opacity: 0.82;
 }
-/* On phones the photo is the hero — brighter image, mostly-vertical veil */
+/* On phones the photo is the hero: a brightened, car-centered crop that
+   fills the first screen instead of stretching over the whole section */
 @media (max-width: 900px) {
+  .hero-bg {
+    inset: auto 0 auto 0;
+    top: 0;
+    height: min(108svh, 940px);
+  }
   .hero-bg img {
-    opacity: 0.72;
-    object-position: 50% 30%;
+    opacity: 0.92;
+    object-position: 46% 62%;
   }
   .hero-bg-veil {
     background:
-      linear-gradient(180deg, rgba(16, 17, 20, 0.6) 0%, rgba(16, 17, 20, 0.22) 38%, rgba(16, 17, 20, 0.06) 62%, var(--night) 97%);
+      linear-gradient(180deg, rgba(16, 17, 20, 0.55) 0%, rgba(16, 17, 20, 0.15) 30%, rgba(16, 17, 20, 0.02) 55%, rgba(16, 17, 20, 0.25) 80%, var(--night) 99%);
   }
 }
 .hero-bg-veil {
@@ -606,6 +617,89 @@ a { color: inherit; }
 }
 @media (max-width: 1000px) {
   .plans-grid { grid-template-columns: 1fr; max-width: 34rem; }
+}
+
+/* ── Proof ring — draggable 3D photo carousel ───────────────── */
+
+.section-proof { overflow: hidden; }
+
+.ring-wrap { margin-top: clamp(1.5rem, 6vw, 4.5rem); }
+
+.ring-stage {
+  height: clamp(340px, 48vh, 440px);
+  perspective: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ring-stage.dragging { cursor: grabbing; }
+
+.ring {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.ring-face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.ring-face.gone { display: none; }
+.ring-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.ring-hint {
+  margin: 1.1rem 0 0;
+  text-align: center;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 5vw, 3rem);
+  background: rgba(10, 10, 13, 0.88);
+  backdrop-filter: blur(10px);
+  cursor: zoom-out;
+}
+.lightbox[hidden] { display: none; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: lightbox-in 220ms ease-out;
+}
+@keyframes lightbox-in {
+  from { transform: scale(0.88); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox img { animation: none; }
 }
 
 /* ── Pay toggle (pay in full / split it) ────────────────────── */

@@ -128,6 +128,110 @@
     apply();
   })();
 
+  /* ── Proof ring — 3D photo carousel ──────────────────────── */
+  /* Ported from a React/framer-motion 3D carousel: photos on a
+     cylinder, drag to spin with inertia, tap to enlarge. */
+  (function () {
+    var ring = document.getElementById("proof-ring");
+    var stage = ring && ring.parentElement;
+    var lightbox = document.getElementById("lightbox");
+    if (!ring || !stage) return;
+
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var faces = [].slice.call(ring.querySelectorAll(".ring-face"));
+    var rot = 0;
+    var vel = 0;
+    var IDLE = reduce ? 0 : -0.012;   // slow ambient spin, deg per ms
+    var dragging = false;
+    var lastX = 0;
+    var lastT = 0;
+    var moved = 0;
+    var lastFrame = 0;
+
+    function live() {
+      return faces.filter(function (f) { return !f.classList.contains("gone"); });
+    }
+
+    function layout() {
+      var l = live();
+      if (!l.length) {
+        var section = document.getElementById("proof");
+        if (section) section.style.display = "none";
+        return;
+      }
+      var fw = window.innerWidth < 640 ? 180 : 240;
+      var radius = Math.round((fw * l.length) / (2 * Math.PI) * 1.18);
+      l.forEach(function (f, i) {
+        f.style.width = fw + "px";
+        f.style.marginLeft = -(fw / 2) + "px";
+        f.style.marginTop = -(fw * 4 / 3 / 2) + "px";
+        f.style.transform =
+          "rotateY(" + (i * 360 / l.length) + "deg) translateZ(" + radius + "px)";
+      });
+    }
+    window.__ringLayout = layout;
+    layout();
+    window.addEventListener("resize", layout);
+
+    function frame(t) {
+      var dt = lastFrame ? Math.min(t - lastFrame, 48) : 16;
+      lastFrame = t;
+      if (!dragging && (lightbox === null || lightbox.hidden)) {
+        vel += (IDLE - vel) * 0.02;
+        rot += vel * dt;
+      }
+      ring.style.transform = "rotateY(" + rot + "deg)";
+      window.requestAnimationFrame(frame);
+    }
+    window.requestAnimationFrame(frame);
+
+    stage.addEventListener("pointerdown", function (e) {
+      dragging = true;
+      moved = 0;
+      lastX = e.clientX;
+      lastT = performance.now();
+      stage.classList.add("dragging");
+      stage.setPointerCapture(e.pointerId);
+    });
+    stage.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - lastX;
+      var now = performance.now();
+      moved += Math.abs(dx);
+      rot += dx * 0.28;
+      vel = (dx * 0.28) / Math.max(now - lastT, 1);
+      lastX = e.clientX;
+      lastT = now;
+    });
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      stage.classList.remove("dragging");
+      /* a tap (not a drag) on a face opens the lightbox */
+      if (moved < 8 && lightbox) {
+        var el = document.elementFromPoint(e.clientX, e.clientY);
+        var face = el && el.closest(".ring-face");
+        if (face) {
+          var img = face.querySelector("img");
+          lightbox.querySelector("img").src = img.currentSrc || img.src;
+          lightbox.hidden = false;
+        }
+      }
+    }
+    stage.addEventListener("pointerup", endDrag);
+    stage.addEventListener("pointercancel", function () {
+      dragging = false;
+      stage.classList.remove("dragging");
+    });
+
+    if (lightbox) {
+      lightbox.addEventListener("click", function () { lightbox.hidden = true; });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") lightbox.hidden = true;
+      });
+    }
+  })();
+
   /* ── Reactive glow waves ─────────────────────────────────── */
   /* Orange/gold light trails across the hero that ease toward the
      cursor. Ported from a canvas wave hero into plain JS. */
