@@ -35,6 +35,21 @@
     var toggle = document.querySelector(".pay-toggle");
     if (!grid || !toggle) return;
 
+    /* TODO(Stripe): paste your Payment Link URLs here. Create them at
+       dashboard.stripe.com → Payment Links (see fitness/README.md for the
+       5-minute walkthrough). Leave "" and the button falls back to a call. */
+    var STRIPE_LINKS = {
+      "Foundation": { full: "", split: "" },
+      "Momentum":   { full: "", split: "" },
+      "All-Access": { full: "", split: "" }
+    };
+    var PHONE_HREF = "tel:+17143533126";
+
+    function bookHref(name, mode) {
+      var links = STRIPE_LINKS[name] || {};
+      return links[mode] || PHONE_HREF;
+    }
+
     var plans = [].slice.call(grid.querySelectorAll(".plan"));
     var bar = document.querySelector(".plan-bar");
     var barName = bar && bar.querySelector(".plan-bar-name");
@@ -68,6 +83,8 @@
         roll(p.querySelector(".plan-amount"), fmt(p.dataset[mode]));
         p.querySelector(".plan-per").textContent =
           mode === "split" ? "today" : "/ month";
+        var cta = p.querySelector(".plan-cta");
+        if (cta) cta.href = bookHref(p.dataset.name, mode);
         var on = p === selected;
         p.classList.toggle("is-selected", on);
         p.setAttribute("aria-checked", String(on));
@@ -77,6 +94,7 @@
         roll(barAmount, fmt(selected.dataset[mode]));
         barPer.textContent = mode === "split" ? "today" : "/ month";
         barCta.textContent = "Book " + selected.dataset.name;
+        barCta.href = bookHref(selected.dataset.name, mode);
       }
     }
 
@@ -231,9 +249,10 @@
   var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
 
   intro
-    .fromTo(".hero-title .line-inner",
-      { yPercent: 110, opacity: 1 },
-      { yPercent: 0, duration: 0.9, stagger: 0.12 }, 0.1)
+    .fromTo(".hero-title .w",
+      { y: 26, opacity: 0, scale: 0.9, filter: "blur(10px)" },
+      { y: 0, opacity: 1, scale: 1, filter: "blur(0px)",
+        duration: 0.7, stagger: 0.12, ease: "power2.out" }, 0.1)
     .fromTo("[data-load]",
       { y: 18, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.6, stagger: 0.1 }, 0.5)
@@ -243,6 +262,17 @@
     .fromTo(".month-grid span.on",
       { opacity: 0, scale: 0.4 },
       { opacity: 1, scale: 1, duration: 0.3, stagger: 0.05, ease: "back.out(2)" }, 1.0);
+
+  /* Tap ripple — a quick orange ring wherever the page is clicked */
+  document.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    var r = document.createElement("span");
+    r.className = "tap-ripple";
+    r.style.left = e.clientX + "px";
+    r.style.top = e.clientY + "px";
+    document.body.appendChild(r);
+    window.setTimeout(function () { r.remove(); }, 700);
+  });
 
   /* Scroll reveals */
   gsap.utils.toArray("[data-reveal]").forEach(function (el) {

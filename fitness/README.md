@@ -48,13 +48,38 @@ Until a file exists, its slot renders as a labeled dashed panel. After
 changing photos, rerun `python3 build-artifact.py` to refresh the
 single-file bundle.
 
+## Connecting Stripe (5 minutes per link)
+
+The Book buttons are wired for Stripe Payment Links. Open `js/main.js`,
+find `STRIPE_LINKS`, and paste one URL per tier per payment mode. Any slot
+left `""` keeps the tap-to-call fallback.
+
+Creating the links at <https://dashboard.stripe.com> → **Payment Links**
+→ **+ New**:
+
+1. **Pay-in-full links (3)** — new product per tier ("Momentum — Monthly
+   Coaching"), price $399 / $749 / $1,299, billing **Recurring, monthly**.
+   The client subscribes and it renews until cancelled — matches
+   "month to month, cancel anytime."
+2. **Split links (3)** — Stripe Payment Links can't do 50/25/25
+   automatically, so create a **one-time** link for the start amount
+   ($199 / $375 / $649, name it "Momentum — Week 1 start"), and collect
+   the two weekly payments with **Stripe Invoicing** (Dashboard →
+   Invoices → send to the client's email; takes a minute each). Tip:
+   in the link settings turn on "Collect customers' phone numbers" so
+   you can text them.
+3. Optional: in each link's payment-method settings enable **Klarna /
+   Afterpay** — buyers get automatic installments without you managing
+   anything.
+
+Test each link in an incognito tab, then paste the URLs into
+`STRIPE_LINKS` and rerun `python3 build-artifact.py`.
+
 ## Things to fill in before launch
 
-1. **Photos** — see above.
-2. **Booking link** — buttons currently call (714) 353-3126. If you set up
-   online scheduling (Squarespace Scheduling, Calendly), point the `href`s
-   there instead.
-3. **Socials** — there's a TODO in the footer if you want Instagram public.
+1. **Stripe links** — see above; buttons fall back to calling
+   (714) 353-3126 until then.
+2. **Socials** — there's a TODO in the footer if you want Instagram public.
 
 ## The hero calendar
 

@@ -293,8 +293,16 @@ a { color: inherit; }
   object-position: 50% 38%;
   opacity: 0.82;
 }
+/* On phones the photo is the hero — brighter image, mostly-vertical veil */
 @media (max-width: 900px) {
-  .hero-bg img { opacity: 0.5; }
+  .hero-bg img {
+    opacity: 0.72;
+    object-position: 50% 30%;
+  }
+  .hero-bg-veil {
+    background:
+      linear-gradient(180deg, rgba(16, 17, 20, 0.6) 0%, rgba(16, 17, 20, 0.22) 38%, rgba(16, 17, 20, 0.06) 62%, var(--night) 97%);
+  }
 }
 .hero-bg-veil {
   position: absolute;
@@ -345,8 +353,34 @@ a { color: inherit; }
   letter-spacing: 0.005em;
   margin: 0 0 1.5rem;
 }
-.hero-title .line { display: block; overflow: hidden; }
-.hero-title .line-inner { display: inline-block; }
+.hero-title .line { display: block; }
+.hero-title .w {
+  display: inline-block;
+  transition: text-shadow 300ms ease, transform 300ms ease;
+}
+.hero-title .w:hover {
+  text-shadow: 0 0 26px rgba(249, 115, 22, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Tap / click ripple */
+.tap-ripple {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(249, 115, 22, 0.7);
+  transform: translate(-50%, -50%) scale(0.4);
+  pointer-events: none;
+  z-index: 9999;
+  animation: tap-ripple 650ms ease-out forwards;
+}
+@keyframes tap-ripple {
+  to {
+    transform: translate(-50%, -50%) scale(5);
+    opacity: 0;
+  }
+}
 
 .hero-sub {
   max-width: 30rem;
@@ -935,7 +969,7 @@ a { color: inherit; }
 
 @media (prefers-reduced-motion: no-preference) {
   .js-motion [data-reveal],
-  .js-motion .hero-title .line-inner,
+  .js-motion .hero-title .w,
   .js-motion [data-load],
   .js-motion .month-grid span { opacity: 0; }
 }
@@ -981,8 +1015,8 @@ a { color: inherit; }
         <div class="hero-inner">
           <p class="eyebrow hero-eyebrow" data-load><span class="mono tag">SchFLR</span> Private gym · One-on-one · Anaheim, CA</p>
           <h1 class="hero-title">
-            <span class="line"><span class="line-inner">No head start.</span></span>
-            <span class="line"><span class="line-inner accent">Just the work.</span></span>
+            <span class="line"><span class="w">No</span> <span class="w">head</span> <span class="w">start.</span></span>
+            <span class="line accent"><span class="w">Just</span> <span class="w">the</span> <span class="w">work.</span></span>
           </h1>
           <p class="hero-sub" data-load>One-on-one training in a private Anaheim gym. Your plan,
           your nutrition, and a coach beside you — not on the sidelines. Month to month,
@@ -1039,23 +1073,18 @@ a { color: inherit; }
           <p class="eyebrow">The Coach</p>
           <h2 class="display">Started <span class="accent">from zero.</span></h2>
           <div class="story-copy">
-            <p>I wasn't an athlete. After high school I had no momentum — no school, no
-            money, no real direction. Video games were the only place I felt progress,
-            because leveling up was the fastest way to see myself getting somewhere.
-            Then one day I walked into a gym, and everything clicked. Real progress.
-            Progress you carry with you.</p>
-            <p>I understood something from day one: the more you put in, the more you
-            get out. Two sessions a week is 8 in a month. Six a week is 24 — that's two
-            entire weeks of work someone else simply doesn't have, in the same month,
-            on the same calendar.</p>
+            <p>I wasn't an athlete. After high school I had no momentum — no school,
+            no money, no direction. The only place I felt progress was video games.
+            Then I walked into a gym, and everything clicked: real progress, the kind
+            you carry with you.</p>
+            <p>From day one I understood the math. The more you put in, the more you
+            get out. Two sessions a week is 8 in a month. Six is 24 — two entire
+            weeks of work someone else simply doesn't have, on the same calendar.</p>
             <p>The safety vest in that photo? Hauling tile — the worst job I've had,
-            and the bottom I started from. The Benz parked outside Angel Stadium at
-            the top of this page is the same kid, a few thousand honest sessions
-            later. That's what the work buys.</p>
-            <p>That's why I coach the way I do. I know what it's like to start from
-            zero — no background, no roadmap, nothing but the decision to show up. If I
-            can build from there, so can you. My job is to make sure every session you
-            put in actually pays out.</p>
+            and the bottom I started from. The Benz outside Angel Stadium at the top
+            of this page is the same kid, a few thousand honest sessions later. I
+            built this from zero, and so can you — my job is to make sure every
+            session you put in pays out.</p>
           </div>
         </div>
         <!-- The growth mosaic, in real chronological order:
@@ -1316,6 +1345,21 @@ a { color: inherit; }
     var toggle = document.querySelector(".pay-toggle");
     if (!grid || !toggle) return;
 
+    /* TODO(Stripe): paste your Payment Link URLs here. Create them at
+       dashboard.stripe.com → Payment Links (see fitness/README.md for the
+       5-minute walkthrough). Leave "" and the button falls back to a call. */
+    var STRIPE_LINKS = {
+      "Foundation": { full: "", split: "" },
+      "Momentum":   { full: "", split: "" },
+      "All-Access": { full: "", split: "" }
+    };
+    var PHONE_HREF = "tel:+17143533126";
+
+    function bookHref(name, mode) {
+      var links = STRIPE_LINKS[name] || {};
+      return links[mode] || PHONE_HREF;
+    }
+
     var plans = [].slice.call(grid.querySelectorAll(".plan"));
     var bar = document.querySelector(".plan-bar");
     var barName = bar && bar.querySelector(".plan-bar-name");
@@ -1349,6 +1393,8 @@ a { color: inherit; }
         roll(p.querySelector(".plan-amount"), fmt(p.dataset[mode]));
         p.querySelector(".plan-per").textContent =
           mode === "split" ? "today" : "/ month";
+        var cta = p.querySelector(".plan-cta");
+        if (cta) cta.href = bookHref(p.dataset.name, mode);
         var on = p === selected;
         p.classList.toggle("is-selected", on);
         p.setAttribute("aria-checked", String(on));
@@ -1358,6 +1404,7 @@ a { color: inherit; }
         roll(barAmount, fmt(selected.dataset[mode]));
         barPer.textContent = mode === "split" ? "today" : "/ month";
         barCta.textContent = "Book " + selected.dataset.name;
+        barCta.href = bookHref(selected.dataset.name, mode);
       }
     }
 
@@ -1512,9 +1559,10 @@ a { color: inherit; }
   var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
 
   intro
-    .fromTo(".hero-title .line-inner",
-      { yPercent: 110, opacity: 1 },
-      { yPercent: 0, duration: 0.9, stagger: 0.12 }, 0.1)
+    .fromTo(".hero-title .w",
+      { y: 26, opacity: 0, scale: 0.9, filter: "blur(10px)" },
+      { y: 0, opacity: 1, scale: 1, filter: "blur(0px)",
+        duration: 0.7, stagger: 0.12, ease: "power2.out" }, 0.1)
     .fromTo("[data-load]",
       { y: 18, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.6, stagger: 0.1 }, 0.5)
@@ -1524,6 +1572,17 @@ a { color: inherit; }
     .fromTo(".month-grid span.on",
       { opacity: 0, scale: 0.4 },
       { opacity: 1, scale: 1, duration: 0.3, stagger: 0.05, ease: "back.out(2)" }, 1.0);
+
+  /* Tap ripple — a quick orange ring wherever the page is clicked */
+  document.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    var r = document.createElement("span");
+    r.className = "tap-ripple";
+    r.style.left = e.clientX + "px";
+    r.style.top = e.clientY + "px";
+    document.body.appendChild(r);
+    window.setTimeout(function () { r.remove(); }, 700);
+  });
 
   /* Scroll reveals */
   gsap.utils.toArray("[data-reveal]").forEach(function (el) {

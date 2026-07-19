@@ -291,8 +291,16 @@ a { color: inherit; }
   object-position: 50% 38%;
   opacity: 0.82;
 }
+/* On phones the photo is the hero — brighter image, mostly-vertical veil */
 @media (max-width: 900px) {
-  .hero-bg img { opacity: 0.5; }
+  .hero-bg img {
+    opacity: 0.72;
+    object-position: 50% 30%;
+  }
+  .hero-bg-veil {
+    background:
+      linear-gradient(180deg, rgba(16, 17, 20, 0.6) 0%, rgba(16, 17, 20, 0.22) 38%, rgba(16, 17, 20, 0.06) 62%, var(--night) 97%);
+  }
 }
 .hero-bg-veil {
   position: absolute;
@@ -343,8 +351,34 @@ a { color: inherit; }
   letter-spacing: 0.005em;
   margin: 0 0 1.5rem;
 }
-.hero-title .line { display: block; overflow: hidden; }
-.hero-title .line-inner { display: inline-block; }
+.hero-title .line { display: block; }
+.hero-title .w {
+  display: inline-block;
+  transition: text-shadow 300ms ease, transform 300ms ease;
+}
+.hero-title .w:hover {
+  text-shadow: 0 0 26px rgba(249, 115, 22, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Tap / click ripple */
+.tap-ripple {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(249, 115, 22, 0.7);
+  transform: translate(-50%, -50%) scale(0.4);
+  pointer-events: none;
+  z-index: 9999;
+  animation: tap-ripple 650ms ease-out forwards;
+}
+@keyframes tap-ripple {
+  to {
+    transform: translate(-50%, -50%) scale(5);
+    opacity: 0;
+  }
+}
 
 .hero-sub {
   max-width: 30rem;
@@ -933,7 +967,7 @@ a { color: inherit; }
 
 @media (prefers-reduced-motion: no-preference) {
   .js-motion [data-reveal],
-  .js-motion .hero-title .line-inner,
+  .js-motion .hero-title .w,
   .js-motion [data-load],
   .js-motion .month-grid span { opacity: 0; }
 }
