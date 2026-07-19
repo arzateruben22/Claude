@@ -1,0 +1,4 @@
+# Only blur_faces.py needs these. detect_highlights.py and build_montage.py
+# use the Python standard library + ffmpeg only.
+opencv-python>=4.8
+numpy>=1.24

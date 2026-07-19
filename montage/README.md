@@ -70,6 +70,47 @@ you go over.
 
 ---
 
+## 3b. Blur faces & license plates (nightlife / public footage)
+
+Footage of strangers in clubs and on the street is the highest-risk category
+for takedowns and consent complaints. `blur_faces.py` auto-detects and obscures
+faces and plates. **Detection isn't perfect — always eyeball the output before
+posting.**
+
+One-time setup:
+```bash
+pip install -r requirements.txt      # opencv-python + numpy
+```
+
+Where to run it (two workflows):
+
+- **Max quality** — blur each **raw clip**, then build the montage from the
+  blurred clips (the montage re-encode becomes the only lossy pass):
+  ```bash
+  python3 blur_faces.py clips/club1.mp4 -o clips/club1_blur.mp4 --plates
+  # then point highlights.txt at the *_blur.mp4 files
+  ```
+- **Fastest** — build the montage first, then blur the finished master
+  (only ~1–2 min of footage to process):
+  ```bash
+  python3 blur_faces.py miami_ep1.mp4 -o miami_ep1_clean.mp4 --plates
+  ```
+
+Useful flags:
+| flag | what it does | default |
+|------|--------------|---------|
+| `--plates` | also blur license plates | off |
+| `--no-faces` | don't blur faces (e.g. plates only) | faces on |
+| `--mode pixelate` | pixelate instead of gaussian blur | blur |
+| `--strength 45` | heavier blur / blockier pixelation | 45 |
+| `--min-face 0.03` | catch smaller/farther faces | 0.05 |
+| `--neighbors 4` | looser detection (more hits, more false positives) | 5 |
+| `--detect-every 3` | detect every N frames, hold between (speed) | 3 |
+
+If it misses faces, lower `--min-face` and `--neighbors`. Note: Haar detection
+(bundled, zero-download) can miss steeply angled faces — for a stronger detector
+we can swap in a DNN model later.
+
 ## 4. Render
 
 **Vertical (TikTok / Reels / Shorts) with a music bed:**
@@ -122,12 +163,14 @@ publish right:
 
 - `detect_highlights.py` — scans clips, proposes candidate moments → `highlights.txt`
 - `build_montage.py` — renders the montage from an edit list
+- `blur_faces.py` — auto-blurs faces & license plates (needs `requirements.txt`)
 - `highlights.example.txt` — the edit-list format, annotated
+- `requirements.txt` — pip deps for `blur_faces.py` only
 
 ## What this does NOT do (yet)
 
 - It doesn't "watch" and judge highlights for you — detection is a hint, you decide.
 - No true musical beat-sync (cuts land where *you* set them). Set your in/out
   points on the beat if you want that feel.
-- No automatic face/plate blurring — mind consent and platform rules for
-  nightlife footage of strangers.
+- Blurring uses bundled Haar detectors — fast and offline, but can miss steeply
+  angled faces. Review output before posting; a DNN detector can be added later.
