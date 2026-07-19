@@ -621,6 +621,18 @@ em { font-style: italic; }
   justify-content: center;
 }
 
+/* dithered shader canvas (js/dither-cards.js); the gradient + orb
+   underneath are the no-WebGL2 fallback */
+.product-visual canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.product-visual.has-dither .product-orb { display: none; }
+
 /* the "bottle": a soft luminous orb on each blush gradient field */
 .product-orb {
   width: 38%;
