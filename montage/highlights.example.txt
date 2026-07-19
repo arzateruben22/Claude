@@ -1,0 +1,20 @@
+# Montage edit list — the format build_montage.py reads.
+#
+# One clip per line:   filepath | start | end | caption
+#   - times: SS  |  MM:SS  |  HH:MM:SS(.ms)   e.g. 45  or  2:18  or  1:02:03.5
+#   - caption is optional; leave it blank for no on-screen text
+#   - '#' starts a comment; blank lines are ignored
+#   - order top-to-bottom = order in the final montage
+#
+# Render it with, e.g.:
+#   python3 build_montage.py highlights.example.txt --vertical --music track.mp3
+#
+# --- example: a "POV Nightlife: Miami" opener ------------------------------
+
+clips/drive.mp4      | 0:12    | 0:17    | MIAMI
+clips/drive.mp4      | 1:04    | 1:08    |
+clips/gym.mp4        | 0:40    | 0:46    | FULL ROM
+clips/walkup.mp4     | 0:03    | 0:08    |
+clips/club1.mp4      | 2:10    | 2:16    | LINK UP
+clips/club2.mp4      | 0:22    | 0:28    |
+clips/drive.mp4      | 3:30    | 3:36    | PART 2 LOADING
