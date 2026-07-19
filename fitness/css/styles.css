@@ -289,17 +289,17 @@ a { color: inherit; }
   height: 100%;
   object-fit: cover;
   object-position: 50% 38%;
-  opacity: 0.6;
+  opacity: 0.82;
 }
 @media (max-width: 900px) {
-  .hero-bg img { opacity: 0.38; }
+  .hero-bg img { opacity: 0.5; }
 }
 .hero-bg-veil {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--night) 4%, rgba(16, 17, 20, 0.78) 45%, rgba(16, 17, 20, 0.35) 100%),
-    linear-gradient(180deg, rgba(16, 17, 20, 0.65) 0%, rgba(16, 17, 20, 0.1) 45%, var(--night) 97%);
+    linear-gradient(90deg, var(--night) 0%, rgba(16, 17, 20, 0.6) 38%, rgba(16, 17, 20, 0.12) 100%),
+    linear-gradient(180deg, rgba(16, 17, 20, 0.5) 0%, rgba(16, 17, 20, 0.04) 45%, var(--night) 97%);
 }
 
 .hero-waves {
@@ -499,7 +499,8 @@ a { color: inherit; }
 /* Keep faces in frame on the crops that need it */
 .cell-a img { object-position: 50% 20%; }
 .cell-b img { object-position: 50% 74%; }
-.cell-d img { object-position: 50% 64%; }
+.cell-c img { object-position: 38% 50%; }
+.cell-d img { object-position: 50% 36%; }
 
 .cell figcaption {
   position: absolute;

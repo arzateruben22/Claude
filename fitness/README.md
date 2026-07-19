@@ -37,15 +37,16 @@ every slot fills in automatically (no HTML edits needed):
 | File | The shot |
 |------|----------|
 | `media/stadium.jpg` | Black Benz outside Angel Stadium at night — hero background |
-| `media/day-one.jpg` | Bathroom-mirror photo from the very start |
-| `media/day-job.jpg` | Safety-vest work selfie — the grind years |
-| `media/the-work.jpg` | Incline-pressing the 100s at the gym |
-| `media/now.jpg` | Fitting-room mirror photo — current shape |
+| `media/beginning.jpg` | Bathroom-mirror photo from near the start |
+| `media/grind.jpg` | Safety-vest work selfie — the grind years |
+| `media/dec-2022.jpg` | Fitting-room mirror photo, December 2022 |
+| `media/the-100s.jpg` | Incline-pressing the 100s — most recent |
 
 The first is the hero atmosphere (it fades into the page's black); the other
-four are the growth mosaic in "The Coach" section, in story order. Until a
-file exists, its slot renders as a labeled dashed panel. After adding photos,
-rerun `python3 build-artifact.py` to refresh the single-file bundle.
+four are the growth mosaic in "The Coach" section, in chronological order.
+Until a file exists, its slot renders as a labeled dashed panel. After
+changing photos, rerun `python3 build-artifact.py` to refresh the
+single-file bundle.
 
 ## Things to fill in before launch
 
