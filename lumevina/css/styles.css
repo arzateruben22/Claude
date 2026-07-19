@@ -606,6 +606,31 @@ em { font-style: italic; }
   align-items: start;
 }
 
+/* ─── Entropy panel (js/entropy.js) ─── */
+
+.entropy-panel {
+  margin-top: var(--space-5);
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 18px;
+  padding: var(--space-4);
+  box-shadow: 0 2px 14px rgba(90, 62, 78, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.entropy-canvas { display: block; max-width: 100%; }
+
+.entropy-caption {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--ink-35);
+  text-align: center;
+}
+
 .story-copy { color: var(--ink-60); padding-top: 0.5rem; }
 .story-copy em { color: var(--plum); }
 
