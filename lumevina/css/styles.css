@@ -693,6 +693,39 @@ em { font-style: italic; }
 
 /* ─── Ritual ─── */
 
+.section-ritual {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-ritual .section-inner { position: relative; z-index: 1; }
+
+/* morphing light shader canvas (js/morphing-light.js) */
+.ritual-light {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ritual-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      var(--linen) 0%,
+      rgba(247, 241, 235, 0.25) 25%,
+      rgba(247, 241, 235, 0.25) 75%,
+      var(--linen) 100%);
+}
+
+/* let the light breathe through the cards when the shader is live */
+.section-ritual.has-light .ritual-card {
+  background: rgba(253, 250, 246, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 .ritual-head { text-align: center; }
 
 .ritual-grid {
