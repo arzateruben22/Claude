@@ -198,7 +198,9 @@
     drawer.classList.remove("open");
     drawer.setAttribute("aria-hidden", "true");
     overlay.hidden = true;
-    document.body.style.overflow = "";
+    /* keep scroll locked if the mobile menu is still open underneath */
+    var mm = document.getElementById("mobile-menu");
+    document.body.style.overflow = (mm && !mm.hidden) ? "hidden" : "";
     if (lastFocus) lastFocus.focus();
   };
 

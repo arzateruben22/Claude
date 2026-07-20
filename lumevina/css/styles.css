@@ -390,6 +390,14 @@ em { font-style: italic; }
   align-items: center;
   justify-content: center;
   gap: var(--space-4);
+  /* keep the stack clear of the fixed header (brand / cart / ×) */
+  padding: calc(5.5rem + env(safe-area-inset-top, 0px)) 1.5rem 2.5rem;
+  overflow-y: auto;
+}
+
+@media (max-height: 700px) {
+  .mobile-menu { gap: var(--space-3); justify-content: flex-start; }
+  .mobile-menu a { font-size: 1.5rem; }
 }
 
 .mobile-menu a {
