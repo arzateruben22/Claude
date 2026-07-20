@@ -27,7 +27,11 @@ Search `index.html` and `js/main.js` for `TODO`:
 
 ## Online ordering
 
-The menu has add-to-order buttons feeding an order drawer with:
+The menu has add-to-order buttons feeding an order drawer. Adding a dish
+opens a popover with a quantity stepper, salsa cups (roja/verde, max 3
+per item in any mix, tracked per line), and a remove-ingredients list
+driven by each button's `data-ingredients` attribute in `index.html`.
+The drawer includes:
 
 - **Pickup** — ASAP (~20 min) or a scheduled time slot. Slots are generated
   from `OPEN_HOURS` in `js/main.js` (15-minute steps, last order 30 minutes

@@ -19,6 +19,14 @@
       <a href="#historia">Our Story</a>
       <a href="#catering">Catering</a>
       <a href="#visitanos">Visit Us</a>
+      <details class="nav-drop">
+        <summary>Connect<svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="nav-drop-menu">
+          <a href="https://www.instagram.com/taquerialosgueros/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.yelp.com/biz/taqueria-los-gueros-anaheim" target="_blank" rel="noopener">Yelp</a>
+          <a href="https://maps.google.com/?q=628+W+La+Palma+Ave,+Anaheim,+CA+92801" target="_blank" rel="noopener">Get directions</a>
+        </div>
+      </details>
     </nav>
     <!-- TODO: point at the real ordering link (DoorDash / Toast / phone) -->
     <a class="btn btn-solid nav-cta js-open-order" href="#carta">Order <span lang="es">· Ordena</span></a>
@@ -32,6 +40,10 @@
     <a href="#historia">Our Story</a>
     <a href="#catering">Catering</a>
     <a href="#visitanos">Visit Us</a>
+    <div class="mobile-social">
+      <a href="https://www.instagram.com/taquerialosgueros/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.yelp.com/biz/taqueria-los-gueros-anaheim" target="_blank" rel="noopener">Yelp</a>
+    </div>
     <a class="btn btn-solid js-open-order" href="#carta">Order · Ordena</a>
   </div>
 
@@ -100,20 +112,20 @@
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Tacos <span class="carta-group-price">$3.25 each</span></h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">charred steak, onion, cilantro</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Asada taco" data-price="3.25" aria-label="Add Asada taco to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">marinated pork, pineapple</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Al Pastor taco" data-price="3.25" aria-label="Add Al Pastor taco to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">slow-braised pork, crisped edges</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Carnitas taco" data-price="3.25" aria-label="Add Carnitas taco to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Pollo Asado</strong><span class="dish-desc">citrus-grilled chicken</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Pollo Asado taco" data-price="3.25" aria-label="Add Pollo Asado taco to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Lengua</strong><span class="dish-desc">tender braised beef tongue</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Lengua taco" data-price="3.75" aria-label="Add Lengua taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">charred steak, onion, cilantro</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Asada taco" data-price="3.25" data-ingredients="onions, cilantro" aria-label="Add Asada taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">marinated pork, pineapple</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Al Pastor taco" data-price="3.25" data-ingredients="onions, cilantro, pineapple" aria-label="Add Al Pastor taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">slow-braised pork, crisped edges</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Carnitas taco" data-price="3.25" data-ingredients="onions, cilantro" aria-label="Add Carnitas taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Pollo Asado</strong><span class="dish-desc">citrus-grilled chicken</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Pollo Asado taco" data-price="3.25" data-ingredients="onions, cilantro" aria-label="Add Pollo Asado taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Lengua</strong><span class="dish-desc">tender braised beef tongue</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Lengua taco" data-price="3.75" data-ingredients="onions, cilantro" aria-label="Add Lengua taco to your order">+</button></li>
             </ul>
           </div>
 
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Burritos</h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">rice, beans, salsa, guacamole</span></span><span class="dots"></span><span class="price">11.50</span><button class="add-btn" type="button" data-name="Asada burrito" data-price="11.50" aria-label="Add Asada burrito to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>California</strong><span class="dish-desc">asada, fries, cheese, crema</span></span><span class="dots"></span><span class="price">12.50</span><button class="add-btn" type="button" data-name="California burrito" data-price="12.50" aria-label="Add California burrito to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">rice, beans, onion, cilantro</span></span><span class="dots"></span><span class="price">11.50</span><button class="add-btn" type="button" data-name="Al Pastor burrito" data-price="11.50" aria-label="Add Al Pastor burrito to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">rice, beans, salsa, guacamole</span></span><span class="dots"></span><span class="price">11.50</span><button class="add-btn" type="button" data-name="Asada burrito" data-price="11.50" data-ingredients="rice, beans, salsa, guacamole" aria-label="Add Asada burrito to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>California</strong><span class="dish-desc">asada, fries, cheese, crema</span></span><span class="dots"></span><span class="price">12.50</span><button class="add-btn" type="button" data-name="California burrito" data-price="12.50" data-ingredients="fries, cheese, crema" aria-label="Add California burrito to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">rice, beans, onion, cilantro</span></span><span class="dots"></span><span class="price">11.50</span><button class="add-btn" type="button" data-name="Al Pastor burrito" data-price="11.50" data-ingredients="rice, beans, onions, cilantro" aria-label="Add Al Pastor burrito to your order">+</button></li>
               <li class="carta-row"><span class="dish"><strong>Bean &amp; Cheese</strong><span class="dish-desc">refritos, melted jack</span></span><span class="dots"></span><span class="price">8.50</span><button class="add-btn" type="button" data-name="Bean &amp; Cheese burrito" data-price="8.50" aria-label="Add Bean and Cheese burrito to your order">+</button></li>
             </ul>
           </div>
@@ -121,9 +133,9 @@
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Mulitas</h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">grilled tortillas, melted cheese</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Asada mulita" data-price="5.50" aria-label="Add Asada mulita to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">with pineapple &amp; crema</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Al Pastor mulita" data-price="5.50" aria-label="Add Al Pastor mulita to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">with pickled onion</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Carnitas mulita" data-price="5.50" aria-label="Add Carnitas mulita to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">grilled tortillas, melted cheese</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Asada mulita" data-price="5.50" data-ingredients="onions, cilantro" aria-label="Add Asada mulita to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">with pineapple &amp; crema</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Al Pastor mulita" data-price="5.50" data-ingredients="pineapple, crema" aria-label="Add Al Pastor mulita to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">with pickled onion</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Carnitas mulita" data-price="5.50" data-ingredients="pickled onion" aria-label="Add Carnitas mulita to your order">+</button></li>
             </ul>
           </div>
 
@@ -313,6 +325,14 @@
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
     </header>
+    <div class="addon-row addon-qty-row">
+      <span class="addon-name">How many <span class="addon-hint" lang="es">cuántos</span></span>
+      <div class="stepper">
+        <button class="qty-btn" type="button" data-qty-step="-1" aria-label="One less">−</button>
+        <span class="addon-count" data-count="qty">1</span>
+        <button class="qty-btn" type="button" data-qty-step="1" aria-label="One more">+</button>
+      </div>
+    </div>
     <p class="addon-sub">Salsa cups <span lang="es">· salsitas</span> — up to 3 per item, on the house.</p>
     <div class="addon-row">
       <span class="salsa-dot salsa-dot-roja" aria-hidden="true"></span>
@@ -333,6 +353,10 @@
       </div>
     </div>
     <p class="addon-meter" aria-live="polite">0 of 3 cups</p>
+    <details class="addon-remove">
+      <summary>Remove ingredients <span lang="es">· sin ingredientes</span></summary>
+      <div class="addon-remove-list"></div>
+    </details>
     <button class="btn btn-solid addon-add" type="button">Add to order</button>
   </div>
 
@@ -348,6 +372,11 @@
         <a href="#catering">Catering</a>
         <a href="#visitanos">Visit Us</a>
       </nav>
+      <p class="footer-social">
+        <a href="https://www.instagram.com/taquerialosgueros/" target="_blank" rel="noopener">Instagram</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://www.yelp.com/biz/taqueria-los-gueros-anaheim" target="_blank" rel="noopener">Yelp</a>
+      </p>
       <p class="footer-fine">© <span id="year">2026</span> Taqueria Los Güeros · 628 W La Palma Ave, Anaheim, CA</p>
     </div>
   </footer>

@@ -187,15 +187,20 @@
     it.name = it.name || k;
     it.r = it.r || 0;
     it.g = it.g || 0;
+    it.removed = Array.isArray(it.removed) ? it.removed : [];
   });
 
-  var keyOf = function (name, r, g) {
-    return r || g ? name + "|" + r + "r" + g + "g" : name;
+  var keyOf = function (name, r, g, removed) {
+    var k = name;
+    if (r || g) k += "|" + r + "r" + g + "g";
+    if (removed && removed.length) k += "|no:" + removed.slice().sort().join(",");
+    return k;
   };
-  var salsaLabel = function (it) {
+  var lineNote = function (it) {
     var parts = [];
     if (it.r) parts.push(it.r + " roja");
     if (it.g) parts.push(it.g + " verde");
+    (it.removed || []).forEach(function (x) { parts.push("no " + x); });
     return parts.join(", ");
   };
   var money = function (n) { return "$" + n.toFixed(2); };
@@ -337,11 +342,11 @@
       var nameWrap = document.createElement("span");
       nameWrap.className = "order-item-name";
       nameWrap.textContent = it.name;
-      var salsa = salsaLabel(it);
-      if (salsa) {
+      var noteText = lineNote(it);
+      if (noteText) {
         var note = document.createElement("span");
         note.className = "order-item-salsa";
-        note.textContent = salsa;
+        note.textContent = noteText;
         nameWrap.appendChild(note);
       }
       li.appendChild(nameWrap);
@@ -383,35 +388,61 @@
     toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
   };
 
-  var addLine = function (name, price, r, g) {
-    var k = keyOf(name, r, g);
-    if (!cart[k]) cart[k] = { name: name, price: price, qty: 0, r: r, g: g };
-    cart[k].qty += 1;
+  var addLine = function (name, price, r, g, removed, qty) {
+    removed = removed || [];
+    qty = qty || 1;
+    var k = keyOf(name, r, g, removed);
+    if (!cart[k]) cart[k] = { name: name, price: price, qty: 0, r: r, g: g, removed: removed };
+    cart[k].qty += qty;
     render();
-    var salsa = salsaLabel(cart[k]);
-    showToast("Added " + name + (salsa ? " · " + salsa : ""));
+    var note = lineNote(cart[k]);
+    showToast("Added " + (qty > 1 ? qty + "× " : "") + name + (note ? " · " + note : ""));
   };
 
-  /* ── Salsa add-on popover ── */
+  /* ── Add-on popover: quantity, salsas, remove-ingredients ── */
 
-  var addonState = { name: "", price: 0, r: 0, g: 0 };
+  var addonState = { name: "", price: 0, qty: 1, r: 0, g: 0 };
+  var removeList = addonPop.querySelector(".addon-remove-list");
+  var removeDetails = addonPop.querySelector(".addon-remove");
 
   var renderAddon = function () {
     var total = addonState.r + addonState.g;
+    addonPop.querySelector('[data-count="qty"]').textContent = addonState.qty;
     addonPop.querySelector('[data-count="r"]').textContent = addonState.r;
     addonPop.querySelector('[data-count="g"]').textContent = addonState.g;
     addonPop.querySelector(".addon-meter").textContent =
-      total === 0 ? "No salsa — that's okay too" : total + " of " + MAX_SALSA + " cups";
-    addonPop.querySelectorAll(".stepper .qty-btn").forEach(function (b) {
+      total === 0 ? "No salsa — that's okay too" : total + " of " + MAX_SALSA + " cups each";
+    addonPop.querySelectorAll(".stepper .qty-btn[data-salsa]").forEach(function (b) {
       var s = b.dataset.salsa;
       var step = Number(b.dataset.step);
       b.disabled = step > 0 ? total >= MAX_SALSA : addonState[s] <= 0;
     });
+    addonPop.querySelector('[data-qty-step="-1"]').disabled = addonState.qty <= 1;
+    addonPop.querySelector(".addon-add").textContent =
+      "Add" + (addonState.qty > 1 ? " " + addonState.qty : "") +
+      " — " + money(addonState.price * addonState.qty);
   };
 
-  var openAddon = function (name, price) {
-    addonState = { name: name, price: price, r: 0, g: 0 };
-    addonPop.querySelector(".addon-title").textContent = name + " — " + money(price);
+  var openAddon = function (name, price, ingredients) {
+    addonState = { name: name, price: price, qty: 1, r: 0, g: 0 };
+    addonPop.querySelector(".addon-title").textContent = name;
+
+    removeList.innerHTML = "";
+    removeDetails.hidden = !ingredients.length;
+    removeDetails.open = false;
+    ingredients.forEach(function (ing) {
+      var label = document.createElement("label");
+      label.className = "remove-opt";
+      var box = document.createElement("input");
+      box.type = "checkbox";
+      box.value = ing;
+      var text = document.createElement("span");
+      text.textContent = "No " + ing;
+      label.appendChild(box);
+      label.appendChild(text);
+      removeList.appendChild(label);
+    });
+
     addonPop.hidden = false;
     addonOverlay.hidden = false;
     requestAnimationFrame(function () {
@@ -429,7 +460,13 @@
   };
 
   addonPop.addEventListener("click", function (e) {
-    var step = e.target.closest(".stepper .qty-btn");
+    var qtyStep = e.target.closest("[data-qty-step]");
+    if (qtyStep) {
+      addonState.qty = Math.max(1, Math.min(20, addonState.qty + Number(qtyStep.dataset.qtyStep)));
+      renderAddon();
+      return;
+    }
+    var step = e.target.closest(".stepper .qty-btn[data-salsa]");
     if (step) {
       var s = step.dataset.salsa;
       var next = addonState[s] + Number(step.dataset.step);
@@ -439,13 +476,24 @@
       return;
     }
     if (e.target.closest(".addon-add")) {
-      addLine(addonState.name, addonState.price, addonState.r, addonState.g);
+      var removed = [].map.call(removeList.querySelectorAll("input:checked"), function (b) {
+        return b.value;
+      });
+      addLine(addonState.name, addonState.price, addonState.r, addonState.g, removed, addonState.qty);
       closeAddon();
       return;
     }
     if (e.target.closest(".addon-close")) closeAddon();
   });
   addonOverlay.addEventListener("click", closeAddon);
+
+  /* ── Connect dropdown: close when clicking elsewhere ── */
+
+  document.addEventListener("click", function (e) {
+    document.querySelectorAll(".nav-drop[open]").forEach(function (d) {
+      if (!d.contains(e.target)) d.removeAttribute("open");
+    });
+  });
 
   /* ── Cart actions (page menu + quick-add rows share .add-btn) ── */
 
@@ -455,9 +503,11 @@
       var name = add.getAttribute("data-name");
       var price = Number(add.getAttribute("data-price"));
       if (add.getAttribute("data-addons") === "no") {
-        addLine(name, price, 0, 0);
+        addLine(name, price, 0, 0, [], 1);
       } else {
-        openAddon(name, price);
+        var ingredients = (add.getAttribute("data-ingredients") || "")
+          .split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+        openAddon(name, price, ingredients);
       }
       return;
     }
@@ -549,8 +599,8 @@
     var lines = [(isDelivery ? "DELIVERY" : "PICKUP") + " order — " + name, "When: " + when, ""];
     Object.keys(cart).forEach(function (k) {
       var it = cart[k];
-      var salsa = salsaLabel(it);
-      lines.push(it.qty + "x " + it.name + (salsa ? " (" + salsa + ")" : "") +
+      var note = lineNote(it);
+      lines.push(it.qty + "x " + it.name + (note ? " (" + note + ")" : "") +
         " — " + money(it.price * it.qty));
     });
     lines.push("", "Total items: " + count(),

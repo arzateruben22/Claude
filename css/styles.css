@@ -216,6 +216,55 @@ em { font-style: italic; }
 
 .nav-links a:hover { color: var(--flame); }
 
+.nav-drop { position: relative; }
+
+.nav-drop summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-60);
+  padding: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 200ms ease;
+}
+
+.nav-drop summary::-webkit-details-marker { display: none; }
+.nav-drop summary:hover, .nav-drop[open] summary { color: var(--flame); }
+.nav-drop[open] summary svg { transform: rotate(180deg); }
+.nav-drop summary svg { transition: transform 200ms ease; }
+
+.nav-drop-menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  min-width: 11rem;
+  background: var(--soot);
+  border: 1px solid var(--soot-edge);
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-drop-menu a {
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--cream-60);
+  padding: 0.65rem 0.8rem;
+  border-radius: 8px;
+  transition: color 200ms ease, background-color 200ms ease;
+}
+
+.nav-drop-menu a:hover { color: var(--flame); background: rgba(232, 163, 86, 0.08); }
+
 .nav-cta { padding: 0.7rem 1.4rem; }
 
 .nav-toggle {
@@ -260,6 +309,20 @@ em { font-style: italic; }
 }
 
 .mobile-menu .btn { font-family: var(--font-body); font-size: 0.8125rem; margin-top: var(--space-3); }
+
+.mobile-social { display: flex; gap: var(--space-4); }
+
+.mobile-social a {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-60);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.mobile-social a:hover { color: var(--flame); }
 
 /* ─── Hero ─── */
 
@@ -673,6 +736,25 @@ em { font-style: italic; }
 }
 
 .footer-nav a:hover { color: var(--flame); }
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: var(--space-4);
+  font-size: 0.8125rem;
+  color: var(--cream-35);
+}
+
+.footer-social a {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--cream-60);
+  transition: color 200ms ease;
+}
+
+.footer-social a:hover { color: var(--flame); }
 
 .footer-fine { font-size: 0.8125rem; color: var(--cream-35); margin: 0; }
 
@@ -1123,6 +1205,79 @@ em { font-style: italic; }
 }
 
 .addon-add { width: 100%; }
+
+.addon-qty-row { border-top: 0; padding-top: 0; }
+
+.addon-remove {
+  margin-bottom: 1rem;
+  border-top: 1px solid var(--cream-15);
+}
+
+.addon-remove[hidden] { display: none; }
+
+.addon-remove summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.7rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: color 200ms ease;
+}
+
+.addon-remove summary::-webkit-details-marker { display: none; }
+.addon-remove summary:hover { color: var(--flame); }
+.addon-remove summary [lang="es"] { font-weight: 300; color: var(--cream-35); margin-left: 0.4rem; }
+
+.addon-remove summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--cream-35);
+  font-weight: 300;
+  transition: transform 200ms ease;
+}
+
+.addon-remove[open] summary::after { transform: rotate(45deg); }
+
+.addon-remove-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 0.9rem;
+}
+
+.remove-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--soot-edge);
+  border-radius: 999px;
+  background: var(--ink);
+  font-size: 0.82rem;
+  color: var(--cream-60);
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.remove-opt:hover { border-color: var(--cream-35); }
+
+.remove-opt input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.remove-opt:has(input:checked) {
+  border-color: var(--flame);
+  color: var(--flame);
+}
+
+.remove-opt:has(input:focus-visible) {
+  outline: 2px solid var(--flame);
+  outline-offset: 2px;
+}
 
 @media (max-width: 480px) {
   .addon-pop {
