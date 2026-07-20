@@ -624,6 +624,12 @@
     payStatus.textContent = "";
     /* referral code: first visit only */
     refField.hidden = loadBookings().length > 0;
+    /* signed-in clients skip retyping name & email */
+    var acct = window.LumevinaAccount && window.LumevinaAccount.current();
+    if (acct) {
+      if (!nameInput.value) nameInput.value = acct.name || "";
+      if (!emailInput.value) emailInput.value = acct.email || "";
+    }
     formView.hidden = false;
     payView.hidden = true;
     successView.hidden = true;

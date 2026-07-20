@@ -2811,6 +2811,194 @@ em { font-style: italic; }
 
 .rw-history-empty { color: var(--ink-35); font-style: italic; }
 
+/* ─── My Lumevina (account) ─── */
+
+.nav-account { display: inline-flex; align-items: center; }
+
+.nav-account svg { display: block; }
+
+.account-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(68, 54, 64, 0.38);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.account-overlay[hidden] { display: none; }
+
+.account-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  pointer-events: none;
+}
+
+.account-modal[aria-hidden="true"] { display: none; }
+
+.account-inner {
+  position: relative;
+  pointer-events: auto;
+  width: min(28rem, 100%);
+  max-height: min(44rem, 92vh);
+  overflow-y: auto;
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.account-close {
+  position: absolute;
+  top: 0.9rem; right: 0.9rem;
+  font: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  background: none;
+  border: 0;
+  color: var(--ink-60);
+  cursor: pointer;
+  padding: 0.35rem;
+}
+
+.acct-out[hidden], .acct-in[hidden] { display: none; }
+
+.acct-intro {
+  font-size: 0.9rem;
+  color: var(--ink-60);
+  margin-bottom: var(--space-4);
+}
+
+.acct-signin { width: 100%; text-align: center; }
+
+.acct-fine {
+  font-size: 0.78rem;
+  color: var(--ink-35);
+  margin-top: var(--space-2);
+}
+
+.acct-status { color: #b3402f; }
+
+.acct-greeting {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--plum);
+  margin-bottom: 0.2rem;
+}
+
+.acct-since {
+  font-size: 0.8125rem;
+  color: var(--ink-35);
+  margin-bottom: var(--space-4);
+}
+
+.acct-glow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.acct-glow-line { display: flex; align-items: baseline; gap: 0.5rem; }
+
+.acct-points {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--plum);
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-glow-label { color: var(--mauve); font-size: 0.85rem; }
+
+.acct-open-rewards { padding: 0.55rem 1.1rem; }
+
+.acct-bookings {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.acct-booking {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: var(--space-3) var(--space-4);
+}
+
+.acct-bk-when {
+  font-size: 0.875rem;
+  color: var(--plum);
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-bk-what { font-size: 0.9rem; color: var(--ink); }
+
+.acct-bk-meta { font-size: 0.78rem; color: var(--ink-35); }
+
+.acct-bk-cancel {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+  font: inherit;
+  font-size: 0.78rem;
+  color: var(--mauve);
+  background: none;
+  border: 1px solid var(--panel-edge);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.acct-bk-cancel:hover:not(:disabled) { border-color: var(--mauve); color: var(--plum); }
+
+.acct-bk-cancel:disabled {
+  cursor: default;
+  color: var(--ink-35);
+  border-color: transparent;
+  padding-left: 0;
+}
+
+.acct-none { font-size: 0.875rem; color: var(--ink-35); font-style: italic; }
+
+.acct-book { width: 100%; text-align: center; margin-bottom: var(--space-4); }
+
+.acct-ref {
+  font-size: 0.875rem;
+  color: var(--ink-60);
+  margin-bottom: var(--space-4);
+}
+
+.acct-ref .acct-ref-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  color: var(--plum);
+  background: rgba(165, 121, 139, 0.1);
+  border-radius: 8px;
+  padding: 0.2rem 0.55rem;
+}
+
+.acct-signout { width: 100%; text-align: center; }
+
 /* ─── Glow Rewards / app teaser section ─── */
 
 .section-app {
@@ -2878,8 +3066,8 @@ em { font-style: italic; }
   .sector-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ritual-grid { grid-template-columns: 1fr; }
   .nav-links, .nav-book { display: none; }
-  .nav-rewards { margin-left: auto; }
-  .nav-cart { margin-left: 0; }
+  .nav-account { margin-left: auto; }
+  .nav-rewards, .nav-cart { margin-left: 0; }
   .app-perks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .nav-toggle { display: flex; }
   .section { padding-top: var(--space-6); padding-bottom: var(--space-6); }
@@ -2896,6 +3084,7 @@ em { font-style: italic; }
   .hero-actions .btn, .hero-actions .btn-mb { width: 100%; text-align: center; }
   .product-foot { flex-direction: column; align-items: stretch; text-align: center; }
   .nav-rewards, .nav-cart { padding: 0.55rem 0.85rem; }
+  .nav-account { padding: 0.55rem 0.7rem; }
 }
 
 /* ─── Reduced motion ─── */

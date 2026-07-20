@@ -22,6 +22,10 @@
       <a href="#journal">Journal</a>
     </nav>
     <a class="btn btn-solid nav-book" data-open-booking href="#services">Book now</a>
+    <button class="btn btn-ghost nav-account" type="button" data-open-account
+      aria-label="Open My Lumevina">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
     <button class="btn btn-ghost nav-rewards" type="button" data-open-rewards
       aria-label="Open Glow Rewards">
       ✦ <span class="rw-count">0</span>
@@ -43,6 +47,7 @@
     <a class="btn btn-solid" data-open-booking href="#services">Book now</a>
     <button class="btn btn-ghost mobile-cart" type="button">Cart · <span class="nav-cart-count">0</span></button>
     <button class="btn btn-ghost" type="button" data-open-rewards>Glow Rewards · ✦ <span class="rw-count">0</span></button>
+    <button class="btn btn-ghost" type="button" data-open-account>My Lumevina</button>
   </div>
 
   <main>
@@ -887,7 +892,8 @@
         <a href="#gift">E-Gift Cards</a>
         <a data-open-booking href="#services">Book Online</a>
       </nav>
-      <p class="footer-fine">© <span id="year">2026</span> Lumevina Aesthetics Spa · Woodland Hills, CA · Demo storefront — no real payments are processed.</p>
+      <p class="footer-fine">© <span id="year">2026</span> Lumevina Aesthetics Spa · Woodland Hills, CA ·
+        <a class="inline-link" href="privacy.html">Privacy</a> · Demo storefront — no real payments are processed.</p>
     </div>
   </footer>
 
@@ -1114,6 +1120,58 @@
     </div>
   </div>
 
+  <!-- ═══════════════ MY LUMEVINA (ACCOUNT) MODAL ═══════════════ -->
+  <div class="account-overlay" hidden></div>
+  <div class="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-title" aria-hidden="true" tabindex="-1">
+    <div class="account-inner">
+      <button class="account-close" type="button" aria-label="Close account">×</button>
+      <h2 class="booking-title" id="account-title">My Lumevina</h2>
+
+      <!-- signed out: magic-link sign in (demo — see js/account.js) -->
+      <div class="acct-out">
+        <p class="acct-intro">Sign in to keep your Glow Points, see your upcoming
+        appointments, and share your referral code — booking as a guest always
+        stays available.</p>
+        <div class="field">
+          <label for="acct-name">Name</label>
+          <input id="acct-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="acct-email">Email</label>
+          <input id="acct-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <button class="btn btn-solid acct-signin" type="button">Send my sign-in link</button>
+        <p class="acct-fine">We'll email you a one-tap sign-in link — no password to
+        remember. Demo mode signs you in right away.</p>
+        <p class="form-status acct-status" role="alert"></p>
+      </div>
+
+      <!-- signed in: points, bookings, referral -->
+      <div class="acct-in" hidden>
+        <p class="acct-greeting"></p>
+        <p class="acct-since"></p>
+
+        <div class="acct-glow">
+          <div class="acct-glow-line">
+            <span class="acct-points">0</span>
+            <span class="acct-glow-label">Glow Points ✦</span>
+          </div>
+          <button class="btn btn-ghost acct-open-rewards" type="button">Open Glow Rewards</button>
+        </div>
+
+        <p class="booking-label">Upcoming appointments</p>
+        <ul class="acct-bookings" role="list"></ul>
+        <button class="btn btn-solid acct-book" type="button">Book an appointment</button>
+
+        <p class="booking-label">Your referral code</p>
+        <p class="acct-ref"><code class="acct-ref-code"></code> — a friend's first visit
+        earns you 150 ✦ ($15) once it's complete.</p>
+
+        <button class="btn btn-ghost acct-signout" type="button">Sign out</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══════════════ GLOW REWARDS MODAL ═══════════════ -->
   <div class="rewards-overlay" hidden></div>
   <div class="rewards-modal" role="dialog" aria-modal="true" aria-labelledby="rewards-title" aria-hidden="true" tabindex="-1">
@@ -1173,6 +1231,7 @@
   <script src="js/vendor/ScrollTrigger.min.js"></script>
   <script src="js/payments.js"></script>
   <script src="js/rewards.js"></script>
+  <script src="js/account.js"></script>
   <script src="js/liquid-metal.js"></script>
   <script src="js/dither-cards.js"></script>
   <script src="js/morphing-light.js"></script>

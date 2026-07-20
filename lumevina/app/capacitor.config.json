@@ -1,0 +1,14 @@
+{
+  "appId": "com.lumevina.spa",
+  "appName": "Lumevina",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#f7f1eb"
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "lumevina-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumevina Aesthetics Spa — iOS app shell (Capacitor) wrapping the site in lumevina/",
+  "scripts": {
+    "build": "node copy-site.js",
+    "sync": "node copy-site.js && npx cap sync",
+    "ios": "npx cap open ios",
+    "assets": "npx @capacitor/assets generate --assetPath resources --ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/haptics": "^7.0.0",
+    "@capacitor/push-notifications": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  }
+}

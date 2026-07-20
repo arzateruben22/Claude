@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Lumevina app icon: the studio mark on warm linen -->
+  <defs>
+    <radialGradient id="bg" cx="38%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#fdfaf6"/>
+      <stop offset="55%" stop-color="#f7f1eb"/>
+      <stop offset="100%" stop-color="#eeD9d6"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <g fill="none" stroke="#7d5468" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="512" cy="512" r="330" stroke-width="10" opacity="0.5"/>
+    <!-- profile: hairline → brow → nose → lips → chin → neck -->
+    <path stroke-width="14" opacity="0.9" d="M645 300
+      C585 316 555 366 552 410
+      C549 432 541 448 527 464
+      L549 472
+      C541 486 536 494 541 502
+      C536 512 533 520 538 528
+      C547 540 562 542 576 538
+      C590 560 596 590 588 622
+      C580 656 588 686 610 710"/>
+    <!-- rose spirals -->
+    <path stroke-width="9" opacity="0.75" stroke="#a5798b" d="M400 668
+      c-20 -8 -28 -32 -14 -48 c12 -14 36 -12 44 4 c7 14 -4 30 -20 30
+      c-11 0 -18 -9 -15 -19"/>
+    <path stroke-width="8" opacity="0.6" stroke="#a5798b" d="M448 726
+      c-16 -6 -22 -26 -11 -38 c10 -11 29 -9 35 3 c5 11 -3 24 -16 24"/>
+  </g>
+  <!-- four-point glow sparkle -->
+  <path fill="#a5798b" opacity="0.8" d="M700 630
+    C705 652 712 659 734 664 C712 669 705 676 700 698
+    C695 676 688 669 666 664 C688 659 695 652 700 630 Z"/>
+</svg>
