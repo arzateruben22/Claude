@@ -399,4 +399,16 @@
     b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn.nextSibling);
   });
+
+  /* Site-wide Book links open this calendar instead of navigating;
+     their hrefs still point at the Acuity catalog as the
+     no-JavaScript fallback. */
+  document.querySelectorAll("[data-open-booking]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  window.LumevinaBooking = { open: openModal };
 })();
