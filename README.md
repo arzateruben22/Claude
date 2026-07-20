@@ -55,6 +55,21 @@ replace the `sendOrder` email handoff with a POS / payment integration
 (Square, Stripe Checkout, or Toast) — the order payload is already
 assembled as structured lines at that point.
 
+## Installable app & Puntos Güeros rewards
+
+The site is a PWA: `manifest.webmanifest` + `sw.js` (offline cache —
+bump `CACHE` in `sw.js` when deploying asset changes) + `icons/`.
+On Android/desktop Chrome an Install button appears in the Rewards
+section; on iPhone the section shows Share → "Add to Home Screen"
+instructions, and the installed app runs full-screen with its own icon.
+
+Points (config at the top of the rewards block in `js/main.js`):
+1 punto per $1 ordered, doubled on Tuesdays, +25 welcome puntos on
+install. Rewards (REWARDS array) claim into the cart as $0 lines —
+one per order — and puntos deduct/earn when the order is sent.
+Balances live in the customer's browser localStorage (digital
+punch-card); syncing across devices needs a backend/POS integration.
+
 ## Editing the menu
 
 Each dish is one `<li class="carta-row">` in the La Carta section — copy a row,

@@ -6,6 +6,12 @@
   <title>Taqueria Los Güeros — Anaheim, CA</title>
   <meta name="description" content="Taqueria Los Güeros — a family taqueria on La Palma Avenue in Anaheim. Handmade tortillas, fire-kissed asada, tacos, burritos, and mulitas. Order for pickup or book catering.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='18' r='10' fill='%23E8A356'/%3E%3Cpath d='M16 3c3 4-2 5 0 9-4-1-6-5 0-9z' fill='%23A93B2A'/%3E%3C/svg%3E">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#100c09">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Los Güeros">
   <link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
@@ -16,6 +22,7 @@
     <a class="nav-brand" href="#top">Los Güeros<span class="nav-brand-sub">Taqueria · Anaheim</span></a>
     <nav class="nav-links" aria-label="Main">
       <a href="#carta">Menu</a>
+      <a href="#rewards">Rewards</a>
       <a href="#historia">Our Story</a>
       <a href="#catering">Catering</a>
       <a href="#visitanos">Visit Us</a>
@@ -37,6 +44,7 @@
 
   <div class="mobile-menu" id="mobile-menu" hidden>
     <a href="#carta">Menu</a>
+    <a href="#rewards">Rewards</a>
     <a href="#historia">Our Story</a>
     <a href="#catering">Catering</a>
     <a href="#visitanos">Visit Us</a>
@@ -199,6 +207,44 @@
           <button class="btn btn-solid" type="submit">Send request <span lang="es">— Enviar solicitud</span></button>
           <p class="form-status" role="status" aria-live="polite"></p>
         </form>
+      </div>
+    </section>
+
+    <!-- ═══════════════ PUNTOS GÜEROS (rewards + app) ═══════════════ -->
+    <section class="section section-rewards" id="rewards">
+      <div class="section-inner">
+        <div class="rewards-head" data-reveal>
+          <p class="eyebrow">Puntos Güeros <span lang="es">· Rewards</span></p>
+          <h2 class="display">Loyalty tastes like <em>free tacos.</em></h2>
+          <p class="section-sub"><em lang="es">Cada peso cuenta.</em> Earn 1 punto for every
+          dollar you order here — Tuesdays pay double. Claim rewards straight into your order.</p>
+        </div>
+        <div class="rewards-grid">
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Your puntos <span lang="es">· tus puntos</span></h3>
+            <p class="puntos-big"><span class="puntos-count">0</span> puntos</p>
+            <p class="tuesday-badge" hidden>Double puntos today — <span lang="es">¡es martes!</span></p>
+            <p class="rewards-fine">Saved on this phone like a punch card — your balance updates
+            every time you order.</p>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Claim with puntos</h3>
+            <ul class="rewards-rows" role="list"></ul>
+            <p class="rewards-fine">One reward per order — it drops into your cart free.</p>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Get the app <span lang="es">· la app</span></h3>
+            <ul class="install-perks" role="list">
+              <li><strong>+25 welcome puntos</strong> when you add it</li>
+              <li>Order in two taps from your home screen</li>
+              <li>New offers land in the app first</li>
+            </ul>
+            <button class="btn btn-solid install-btn" type="button" hidden>Install the app</button>
+            <p class="install-note" hidden>On iPhone: tap <strong>Share</strong>, then
+            <strong>"Add to Home Screen"</strong> — Los Güeros installs like any app.</p>
+            <p class="install-done" hidden>You're in the app — puntos active. <span lang="es">¡Órale!</span></p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -393,6 +439,7 @@
       <p class="footer-line" lang="es">La noche sabe mejor.</p>
       <nav class="footer-nav" aria-label="Footer">
         <a href="#carta">Menu</a>
+        <a href="#rewards">Rewards</a>
         <a href="#historia">Our Story</a>
         <a href="#catering">Catering</a>
         <a href="#visitanos">Visit Us</a>

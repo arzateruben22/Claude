@@ -499,6 +499,7 @@
     addressField.hidden = mode() !== "delivery";
     renderSlots();
     renderPayment();
+    renderRewards();
     try { localStorage.setItem("lg-order", JSON.stringify(cart)); } catch (e) {}
   };
 
@@ -639,11 +640,125 @@
     if (qty) {
       var k = qty.dataset.key;
       if (cart[k]) {
+        /* reward lines are one per order — they can be removed, not stacked */
+        if (cart[k].rewardCost && Number(qty.dataset.delta) > 0) return;
         cart[k].qty += Number(qty.dataset.delta);
         if (cart[k].qty <= 0) delete cart[k];
         render();
       }
     }
+  });
+
+  /* ── Puntos Güeros: points, rewards, installable app ──
+     Points are stored on this device (punch-card style) until a
+     backend/POS integration exists. Earn 1 punto per $1, double on
+     Tuesdays. Rewards drop into the cart as $0 lines and deduct
+     puntos when the order is sent. */
+
+  var PUNTOS_PER_DOLLAR = 1;
+  var TUESDAY_MULTIPLIER = 2;
+  var INSTALL_BONUS = 25;
+  var REWARDS = [
+    { id: "agua", name: "Agua fresca, on us", cost: 50, item: "Reward: Agua Fresca" },
+    { id: "taco", name: "Free taco — any kind", cost: 100, item: "Reward: Taco" },
+    { id: "mulita", name: "Free mulita", cost: 150, item: "Reward: Mulita" },
+    { id: "burrito", name: "Free burrito", cost: 250, item: "Reward: Burrito" }
+  ];
+
+  var isTuesday = new Date().getDay() === 2;
+  var getPts = function () { return Number(localStorage.getItem("lg-puntos") || 0) || 0; };
+  var setPts = function (n) {
+    try { localStorage.setItem("lg-puntos", String(Math.max(0, Math.round(n)))); } catch (e) {}
+    renderRewards();
+  };
+  var cartRewardCost = function () {
+    return Object.keys(cart).reduce(function (sum, k) {
+      return sum + (cart[k].rewardCost || 0);
+    }, 0);
+  };
+  var hasReward = function () { return cartRewardCost() > 0; };
+
+  var rewardsRows = document.querySelector(".rewards-rows");
+  var renderRewards = function () {
+    if (!rewardsRows) return;
+    document.querySelectorAll(".puntos-count").forEach(function (el) {
+      el.textContent = getPts();
+    });
+    var tb = document.querySelector(".tuesday-badge");
+    if (tb) tb.hidden = !isTuesday;
+    rewardsRows.innerHTML = "";
+    REWARDS.forEach(function (r) {
+      var li = document.createElement("li");
+      li.className = "rewards-row";
+      var name = document.createElement("span");
+      name.className = "rewards-row-name";
+      name.textContent = r.name;
+      var cost = document.createElement("span");
+      cost.className = "rewards-row-cost";
+      cost.textContent = r.cost + " pts";
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "rewards-claim";
+      btn.textContent = "Claim";
+      btn.disabled = getPts() < r.cost || hasReward();
+      btn.addEventListener("click", function () {
+        if (getPts() < r.cost || hasReward()) return;
+        cart["reward:" + r.id] = {
+          name: r.item, price: 0, qty: 1, r: 0, g: 0, removed: [],
+          rewardCost: r.cost, rewardId: r.id
+        };
+        render();
+        showToast("Reward added to your order");
+        openPanel();
+      });
+      li.appendChild(name);
+      li.appendChild(cost);
+      li.appendChild(btn);
+      rewardsRows.appendChild(li);
+    });
+  };
+
+  /* ── Installable app (PWA) ── */
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+
+  var installBtn = document.querySelector(".install-btn");
+  var installNote = document.querySelector(".install-note");
+  var installDone = document.querySelector(".install-done");
+  var grantInstallBonus = function () {
+    if (localStorage.getItem("lg-install-bonus")) return;
+    try { localStorage.setItem("lg-install-bonus", "1"); } catch (e) {}
+    setPts(getPts() + INSTALL_BONUS);
+    showToast("+" + INSTALL_BONUS + " welcome puntos");
+  };
+  var standalone = window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  if (standalone) {
+    if (installDone) installDone.hidden = false;
+    grantInstallBonus();
+  } else if (isIOS) {
+    if (installNote) installNote.hidden = false;
+  }
+
+  var deferredInstall = null;
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredInstall = e;
+    if (!standalone && installBtn) { installBtn.hidden = false; if (installNote) installNote.hidden = true; }
+  });
+  if (installBtn) {
+    installBtn.addEventListener("click", function () {
+      if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; }
+    });
+  }
+  window.addEventListener("appinstalled", function () {
+    if (installBtn) installBtn.hidden = true;
+    if (installDone) installDone.hidden = false;
+    grantInstallBonus();
   });
 
   /* ── Clear all (two taps: arm, then confirm) ── */
@@ -766,6 +881,11 @@
         return;
       }
     }
+    if (cartRewardCost() > getPts()) {
+      statusEl.classList.add("error");
+      statusEl.textContent = "Not enough puntos for that reward — remove it or keep earning.";
+      return;
+    }
 
     var payMethod = payMethods().filter(function (m) { return m.id === selectedPay; })[0];
     var link = payLink(selectedPay);
@@ -777,10 +897,16 @@
       (link ? " — customer opened the payment page for " + money(subtotal()) + ", confirm receipt" : "") +
       (selectedPay === "card-form" ? " — TEST MODE, no charge processed" : ""));
 
+    var redeemed = cartRewardCost();
+    var earned = Math.floor(subtotal() * PUNTOS_PER_DOLLAR * (isTuesday ? TUESDAY_MULTIPLIER : 1));
+    lines.push("Puntos: " + (redeemed ? "-" + redeemed + " redeemed, " : "") +
+      "+" + earned + " earned" + (isTuesday ? " (double Tuesday)" : ""));
+
     if (link) window.open(link, "_blank", "noopener");
     window.location.href = "mailto:" + ORDER_EMAIL +
       "?subject=" + encodeURIComponent((isDelivery ? "Delivery" : "Pickup") + " order — " + name) +
       "&body=" + encodeURIComponent(lines.join("\n"));
+    setPts(getPts() - redeemed + earned);
     statusEl.textContent = link
       ? "Payment page opened in a new tab — finish paying there, and send the order email so we can confirm."
       : "Opening your email app to send the order — we'll text you to confirm.";

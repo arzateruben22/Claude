@@ -696,6 +696,113 @@ em { font-style: italic; }
 
 .hours li span:last-child { font-variant-numeric: tabular-nums; color: var(--cream); }
 
+/* ─── Puntos Güeros (rewards + app) ─── */
+
+.section-rewards {
+  background:
+    radial-gradient(90% 60% at 50% 100%, rgba(232, 163, 86, 0.05), transparent 60%),
+    var(--soot);
+  border-top: 1px solid var(--cream-15);
+  border-bottom: 1px solid var(--cream-15);
+}
+
+.rewards-head { text-align: center; }
+.rewards-head .section-sub { margin-left: auto; margin-right: auto; }
+
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.rewards-grid .visit-card { background: var(--ink); }
+
+.puntos-big {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: var(--flame);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.puntos-big .puntos-count { font-variant-numeric: tabular-nums; }
+
+.tuesday-badge {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(179, 64, 47, 0.6);
+  color: var(--chile);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tuesday-badge[hidden] { display: none; }
+
+.rewards-fine { font-size: 0.82rem; color: var(--cream-35) !important; margin: 0; }
+
+.rewards-rows { list-style: none; margin: 0; padding: 0; width: 100%; }
+
+.rewards-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--cream-15);
+}
+
+.rewards-row:last-child { border-bottom: 0; }
+.rewards-row-name { flex: 1; font-size: 0.92rem; color: var(--cream); }
+
+.rewards-row-cost {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  color: var(--flame);
+  letter-spacing: 0.06em;
+}
+
+.rewards-claim {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--cream-35);
+  background: transparent;
+  color: var(--cream);
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, opacity 200ms ease;
+}
+
+.rewards-claim:hover:not(:disabled) { border-color: var(--flame); color: var(--flame); }
+.rewards-claim:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.install-perks { list-style: none; margin: 0; padding: 0; }
+
+.install-perks li {
+  padding: 0.45rem 0;
+  font-size: 0.92rem;
+  color: var(--cream-60);
+}
+
+.install-perks strong { color: var(--flame); font-weight: 500; }
+
+.install-note, .install-done { font-size: 0.85rem; color: var(--cream-60); margin: 0; }
+.install-note[hidden], .install-done[hidden], .install-btn[hidden] { display: none; }
+.install-done { color: var(--flame); }
+.install-btn { align-self: flex-start; }
+
+@media (max-width: 900px) {
+  .rewards-grid { grid-template-columns: 1fr; }
+}
+
 /* ─── Footer ─── */
 
 .footer {
