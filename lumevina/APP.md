@@ -114,8 +114,13 @@ the mystery petal.
 
 ## 7. After launch
 
-- [ ] Announce in the app teaser section on the site (swap "coming soon" for
-      the App Store badge + link).
+- [ ] Go live on the site: the Glow Rewards section already shows a
+      "Coming soon to the App Store" badge — wrap it in a link to your App
+      Store page (`https://apps.apple.com/app/id...` from App Store Connect)
+      and change the top line to "Download on the", or swap it for Apple's
+      official badge artwork from
+      [developer.apple.com/app-store/marketing/guidelines](https://developer.apple.com/app-store/marketing/guidelines/)
+      (the HTML comment above the badge in index.html has the steps).
 - [ ] Post the referral codes push on Instagram (@lumevina).
 - [ ] Watch Supabase's table editor for the first real bookings, and Stripe's
       dashboard for deposits.
