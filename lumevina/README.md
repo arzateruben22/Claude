@@ -18,13 +18,15 @@ GitHub Pages, cPanel) — or just open `index.html` in a browser.
 
 ## Booking, scheduler & payments
 
-- **Book now** buttons link to the real Acuity Scheduling catalog:
-  `https://app.acuityscheduling.com/catalog/d3692663` — confirmed
-  appointments and real purchases happen there today.
+- **All Book buttons and links open the site's own scheduler** — no
+  external scheduling links remain. (E-gift cards still link to the
+  Squarespace gift-certificate catalog, which the scheduler doesn't
+  cover.)
 - **The scheduler** (`js/booking.js`) opens from every service's Book
-  button: Tue–Sun, 8 AM–6 PM, 12–12:30 lunch, 30/60-minute slots, and a
-  **required 50% deposit** collected in step two of the modal. Requests
-  persist in `localStorage` (key `lumevina_bookings`).
+  button and the site-wide `data-open-booking` links: Tue–Sun,
+  8 AM–6 PM, 12–12:30 lunch, 30/60-minute slots, and a **required 50%
+  deposit** collected in step two of the modal. Requests persist in
+  `localStorage` (key `lumevina_bookings`).
 - **The cart** (`js/cart.js`) persists in `localStorage` (key
   `lumevina_cart`) with its own checkout.
 - Both checkouts run on **one shared payment engine**:

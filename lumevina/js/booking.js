@@ -16,7 +16,6 @@
 (function () {
   "use strict";
 
-  var ACUITY = "https://app.acuityscheduling.com/catalog/d3692663";
   var STORAGE_KEY = "lumevina_bookings";
 
   var OPEN_MIN = 8 * 60;      /* 8:00 AM  */
