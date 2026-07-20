@@ -77,6 +77,14 @@ Creating the links at <https://dashboard.stripe.com> → **Payment Links**
 Test each link in an incognito tab, then paste the URLs into
 `STRIPE_LINKS` and rerun `python3 build-artifact.py`.
 
+## The scheduler
+
+The "Lock in session one" section lets a visitor pick a day and time and
+sends the request as a prefilled text to (714) 353-3126, including their
+chosen plan and payment mode. Edit availability at the top of the
+scheduler block in `js/main.js`: `OPEN_DAYS` (0 = Sunday), `SLOT_TIMES`,
+and `DAYS_AHEAD`. Plan buttons without a Stripe link scroll here.
+
 ## Things to fill in before launch
 
 1. **Stripe links** — see above; buttons fall back to calling

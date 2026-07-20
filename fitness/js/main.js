@@ -47,7 +47,8 @@
 
     function bookHref(name, mode) {
       var links = STRIPE_LINKS[name] || {};
-      return links[mode] || PHONE_HREF;
+      /* no Stripe link yet → send them to the scheduler section */
+      return links[mode] || "#book";
     }
 
     var plans = [].slice.call(grid.querySelectorAll(".plan"));
@@ -96,6 +97,13 @@
         barCta.textContent = "Book " + selected.dataset.name;
         barCta.href = bookHref(selected.dataset.name, mode);
       }
+      /* let the scheduler read the current choice */
+      window.__planState = {
+        name: selected.dataset.name,
+        mode: mode,
+        price: fmt(selected.dataset[mode]) + (mode === "split" ? " today" : "/mo")
+      };
+      document.dispatchEvent(new CustomEvent("planchange"));
     }
 
     plans.forEach(function (p) {
@@ -126,6 +134,106 @@
     });
 
     apply();
+  })();
+
+  /* ── Scheduler — pick a day + time, send as a text ───────── */
+  (function () {
+    var daysEl = document.querySelector(".book-days");
+    var slotsEl = document.querySelector(".book-slots");
+    if (!daysEl || !slotsEl) return;
+
+    /* TODO: edit your real availability here */
+    var OPEN_DAYS = [1, 2, 3, 4, 5, 6];          // Mon–Sat (0 = Sunday off)
+    var SLOT_TIMES = ["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM",
+                      "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM"];
+    var DAYS_AHEAD = 14;
+    var PHONE = "+17143533126";
+
+    var summary = document.querySelector(".book-summary");
+    var send = document.querySelector(".book-send");
+    var planName = document.querySelector(".book-plan-name");
+    var planPrice = document.querySelector(".book-plan-price");
+    var picked = { day: null, label: "", time: "" };
+
+    var WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    for (var i = 1; i <= DAYS_AHEAD; i++) {
+      var d = new Date();
+      d.setDate(d.getDate() + i);
+      if (OPEN_DAYS.indexOf(d.getDay()) === -1) continue;
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip-day";
+      b.setAttribute("role", "option");
+      b.innerHTML = '<span class="mono">' + WD[d.getDay()].toUpperCase() +
+        "</span>" + d.getDate() + '<span class="chip-mo mono">' +
+        MO[d.getMonth()] + "</span>";
+      b.dataset.label = WD[d.getDay()] + " " + MO[d.getMonth()] + " " + d.getDate();
+      daysEl.appendChild(b);
+    }
+
+    SLOT_TIMES.forEach(function (t) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip-slot mono";
+      b.setAttribute("role", "option");
+      b.textContent = t;
+      slotsEl.appendChild(b);
+    });
+
+    function refreshPlan() {
+      var p = window.__planState;
+      if (p && planName) {
+        planName.textContent = p.name;
+        planPrice.textContent = p.price;
+      }
+    }
+    document.addEventListener("planchange", refreshPlan);
+    refreshPlan();
+
+    function update() {
+      var ready = picked.label && picked.time;
+      send.classList.toggle("is-disabled", !ready);
+      if (!ready) {
+        summary.textContent = "Choose a day and time above.";
+        return;
+      }
+      var p = window.__planState || { name: "Momentum", price: "" };
+      summary.textContent = p.name + " · " + picked.label + " · " + picked.time;
+      var msg = "Hi Ruben — I want the " + p.name + " plan (" + p.price +
+        "). Can we do my first session " + picked.label + " at " + picked.time + "?";
+      /* the "?&" form works on both iOS and Android */
+      send.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(msg);
+    }
+
+    daysEl.addEventListener("click", function (e) {
+      var b = e.target.closest(".chip-day");
+      if (!b) return;
+      [].forEach.call(daysEl.children, function (c) {
+        c.classList.toggle("is-on", c === b);
+        c.setAttribute("aria-selected", String(c === b));
+      });
+      picked.label = b.dataset.label;
+      update();
+    });
+    slotsEl.addEventListener("click", function (e) {
+      var b = e.target.closest(".chip-slot");
+      if (!b) return;
+      [].forEach.call(slotsEl.children, function (c) {
+        c.classList.toggle("is-on", c === b);
+        c.setAttribute("aria-selected", String(c === b));
+      });
+      picked.time = b.textContent;
+      update();
+    });
+    send.addEventListener("click", function (e) {
+      if (send.classList.contains("is-disabled")) {
+        e.preventDefault();
+        summary.textContent = "Pick a day and a time first — then send.";
+      }
+    });
   })();
 
   /* ── Proof ring — 3D photo carousel ──────────────────────── */

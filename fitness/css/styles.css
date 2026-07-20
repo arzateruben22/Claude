@@ -1005,6 +1005,117 @@ a { color: inherit; }
 }
 .guarantee p:last-child { margin: 0; font-size: 1.02rem; }
 
+/* ── Schedule ───────────────────────────────────────────────── */
+
+.book-panel {
+  margin-top: 2rem;
+  max-width: 44rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.book-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1rem;
+  margin-bottom: 0.4rem;
+}
+.book-plan { margin: 0; display: flex; align-items: baseline; gap: 0.6rem; }
+.book-plan-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.book-plan-price { font-size: 0.8rem; color: var(--steel); }
+
+.book-label {
+  margin: 1.2rem 0 0.6rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--steel);
+}
+
+.book-days {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+.chip-day {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 58px;
+  padding: 0.55rem 0.6rem;
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+.chip-day .mono, .chip-mo { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--steel); }
+.chip-day.is-on {
+  border-color: var(--orange);
+  background: color-mix(in srgb, var(--orange) 14%, var(--night));
+}
+.chip-day.is-on .mono { color: var(--orange); }
+
+.book-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip-slot {
+  padding: 0.5rem 0.85rem;
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--bone);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease;
+}
+.chip-slot.is-on {
+  border-color: var(--orange);
+  background: var(--orange);
+  color: #16130e;
+}
+
+.book-summary {
+  margin: 1.4rem 0 1rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.book-send { width: 100%; justify-content: center; }
+.book-send.is-disabled { opacity: 0.45; cursor: not-allowed; }
+
+.book-alt {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--steel);
+  text-align: center;
+}
+
 /* ── FAQ ────────────────────────────────────────────────────── */
 
 .section-faq { background: var(--panel); }
