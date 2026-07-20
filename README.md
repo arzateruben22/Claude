@@ -25,6 +25,51 @@ Search `index.html` and `js/main.js` for `TODO`:
    email; for direct submissions, wire it to a service like Formspree).
 4. **Hours & prices** — sample values; edit them directly in `index.html`.
 
+## Online ordering
+
+The menu has add-to-order buttons feeding an order drawer. Adding a dish
+opens a popover with a quantity stepper, salsa cups (roja/verde, max 3
+per item in any mix, tracked per line), and a remove-ingredients list
+driven by each button's `data-ingredients` attribute in `index.html`.
+The drawer includes:
+
+- **Pickup** — ASAP (~20 min) or a scheduled time slot. Slots are generated
+  from `OPEN_HOURS` in `js/main.js` (15-minute steps, last order 30 minutes
+  before close). Keep `OPEN_HOURS` in sync with the hours shown on the page.
+- **Delivery** — locked until the subtotal reaches `DELIVERY_MIN` ($50),
+  card payment only, 45-minute lead time, requires an address.
+
+Every order must be paid when it is placed — there is no pay-at-counter
+option. While no processor is connected, the checkout shows a built-in
+card form in TEST MODE: it formats and validates card fields but only
+accepts the universal test card 4242 4242 4242 4242, transmits and
+stores nothing, and marks the order email "TEST MODE, no charge
+processed". Filling in `PAYMENT_LINKS.stripe` (top of the ordering
+section in `js/main.js`) replaces it with real Stripe checkout;
+`paypalMe`/`venmo` handles add pay-now options with the exact total.
+Delivery additionally offers card-to-the-driver at the door.
+
+Orders are composed into a prefilled email to `ORDER_EMAIL` (top of the
+ordering section in `js/main.js`). To take real card payments online,
+replace the `sendOrder` email handoff with a POS / payment integration
+(Square, Stripe Checkout, or Toast) — the order payload is already
+assembled as structured lines at that point.
+
+## Installable app & Puntos Güeros rewards
+
+The site is a PWA: `manifest.webmanifest` + `sw.js` (offline cache —
+bump `CACHE` in `sw.js` when deploying asset changes) + `icons/`.
+On Android/desktop Chrome an Install button appears in the Rewards
+section; on iPhone the section shows Share → "Add to Home Screen"
+instructions, and the installed app runs full-screen with its own icon.
+
+Points (config at the top of the rewards block in `js/main.js`):
+1 punto per $1 ordered, doubled on Tuesdays, +25 welcome puntos on
+install. Rewards (REWARDS array) claim into the cart as $0 lines —
+one per order — and puntos deduct/earn when the order is sent.
+Balances live in the customer's browser localStorage (digital
+punch-card); syncing across devices needs a backend/POS integration.
+
 ## Editing the menu
 
 Each dish is one `<li class="carta-row">` in the La Carta section — copy a row,
