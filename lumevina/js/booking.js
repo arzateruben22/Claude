@@ -153,8 +153,8 @@
     var n = slotsFor(state.service.dur).length;
     metaEl.textContent = state.service.dur + " min · up to " + n +
       " appointments a day · Tue–Sun, 8:00 AM–6:00 PM · lunch 12:00–12:30";
-    confirmBtn.textContent = "Continue to deposit · " +
-      pay.money(depositFor(state.service));
+    confirmBtn.querySelector(".btn-mb-inner").textContent =
+      "Continue to deposit · " + pay.money(depositFor(state.service));
   };
 
   var renderDays = function () {
@@ -317,7 +317,8 @@
       payLines.appendChild(li);
     });
     depositAmtEl.textContent = pay.money(deposit);
-    payBtn.textContent = "Pay deposit · " + pay.money(deposit);
+    payBtn.querySelector(".btn-mb-inner").textContent =
+      "Pay deposit · " + pay.money(deposit);
     if (!cardNameInput.value) cardNameInput.value = nameInput.value.trim();
 
     formView.hidden = true;

@@ -219,6 +219,8 @@ em { font-style: italic; }
 
 .btn-mb:hover { box-shadow: 0 6px 26px rgba(125, 84, 104, 0.32); }
 
+.btn-mb:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
 .btn-mb-border {
   position: absolute;
   inset: 0;
