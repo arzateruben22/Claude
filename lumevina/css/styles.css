@@ -2094,6 +2094,14 @@ em { font-style: italic; }
   color: var(--ink-35);
   text-align: right;
   padding-top: 0.35rem;
+  white-space: nowrap;
+}
+
+/* projected times (no slot locked in yet) read a touch softer */
+.mini-time-proj {
+  color: var(--mauve);
+  opacity: 0.75;
+  font-style: italic;
 }
 
 .mini-block {

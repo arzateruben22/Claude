@@ -184,13 +184,29 @@
   };
 
   /* ── Rendering ── */
-  var fmtDur = function (m) {
-    return Math.floor(m / 60) + ":" + String(m % 60).padStart(2, "0");
+
+  /* earliest bookable start for the current day & session length —
+     it anchors the rail's clock times before a slot is chosen */
+  var projectedStart = function () {
+    if (!state.dayKey || !state.services.length) return OPEN_MIN;
+    var dur = totalDur();
+    var todayKey = dateKey(new Date());
+    var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+    var userSet = userBusyCells(state.dayKey);
+    var starts = candidateStarts(dur);
+    for (var i = 0; i < starts.length; i++) {
+      var t = starts[i];
+      if (state.dayKey === todayKey && t <= nowMins) continue;
+      if (blockFree(state.dayKey, t, dur, userSet)) return t;
+    }
+    return OPEN_MIN;
   };
 
   /* the session builder is a mini calendar: services stack as
-     proportional back-to-back blocks; labels show offsets while
-     composing and flip to real clock times once a slot is picked */
+     proportional back-to-back blocks with a clock start time beside
+     each one — projected from the day's earliest opening while
+     composing (1:00 PM, then 1:30 PM, then 2:30 PM…), locked to the
+     chosen time once a slot is picked */
   var renderChips = function () {
     chipsEl.textContent = "";
     if (!state.services.length) {
@@ -200,15 +216,15 @@
       chipsEl.appendChild(none);
       return;
     }
+    var projected = state.slot === null;
+    var anchor = projected ? projectedStart() : state.slot;
     var offset = 0;
     state.services.forEach(function (s, i) {
       var row = document.createElement("div");
       row.className = "mini-row";
       var time = document.createElement("span");
-      time.className = "mini-time";
-      time.textContent = state.slot !== null
-        ? fmtTime(state.slot + offset)
-        : (offset === 0 ? "start" : "+" + fmtDur(offset));
+      time.className = "mini-time" + (projected ? " mini-time-proj" : "");
+      time.textContent = fmtTime(anchor + offset);
       var block = document.createElement("div");
       block.className = "mini-block tl-tint-" + ((i % 5) + 1);
       block.style.minHeight = (s.dur * 0.6 + 16) + "px";
@@ -241,15 +257,13 @@
     var endRow = document.createElement("div");
     endRow.className = "mini-row mini-end";
     var endTime = document.createElement("span");
-    endTime.className = "mini-time";
-    endTime.textContent = state.slot !== null
-      ? fmtTime(state.slot + offset)
-      : "+" + fmtDur(offset);
+    endTime.className = "mini-time" + (projected ? " mini-time-proj" : "");
+    endTime.textContent = fmtTime(anchor + offset);
     var endLbl = document.createElement("span");
     endLbl.className = "mini-meta";
-    endLbl.textContent = state.slot !== null
-      ? "session ends — you float out ✨"
-      : "session ends · pick a day & time below";
+    endLbl.textContent = projected
+      ? "session ends · earliest opening shown — pick your time below"
+      : "session ends — you float out ✨";
     endRow.appendChild(endTime);
     endRow.appendChild(endLbl);
     chipsEl.appendChild(endRow);
@@ -300,6 +314,8 @@
         state.slot = null;
         renderDays();
         renderSlots();
+        renderChips();
+        renderPreview();
       });
       daysEl.appendChild(chip);
       shown++;
@@ -395,9 +411,9 @@
   };
 
   var renderAll = function () {
+    renderDays();      /* first — projected rail times need the day */
     renderChips();
     renderMeta();
-    renderDays();
     renderSlots();
     renderPreview();
   };
