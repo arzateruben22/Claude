@@ -25,6 +25,22 @@ Search `index.html` and `js/main.js` for `TODO`:
    email; for direct submissions, wire it to a service like Formspree).
 4. **Hours & prices** — sample values; edit them directly in `index.html`.
 
+## Online ordering
+
+The menu has add-to-order buttons feeding an order drawer with:
+
+- **Pickup** — ASAP (~20 min) or a scheduled time slot. Slots are generated
+  from `OPEN_HOURS` in `js/main.js` (15-minute steps, last order 30 minutes
+  before close). Keep `OPEN_HOURS` in sync with the hours shown on the page.
+- **Delivery** — locked until the subtotal reaches `DELIVERY_MIN` ($50),
+  card payment only, 45-minute lead time, requires an address.
+
+Orders are composed into a prefilled email to `ORDER_EMAIL` (top of the
+ordering section in `js/main.js`). To take real card payments online,
+replace the `sendOrder` email handoff with a POS / payment integration
+(Square, Stripe Checkout, or Toast) — the order payload is already
+assembled as structured lines at that point.
+
 ## Editing the menu
 
 Each dish is one `<li class="carta-row">` in the La Carta section — copy a row,

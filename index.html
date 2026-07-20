@@ -21,7 +21,7 @@
       <a href="#visitanos">Visit Us</a>
     </nav>
     <!-- TODO: point at the real ordering link (DoorDash / Toast / phone) -->
-    <a class="btn btn-solid nav-cta" href="#visitanos">Order <span lang="es">· Ordena</span></a>
+    <a class="btn btn-solid nav-cta js-open-order" href="#carta">Order <span lang="es">· Ordena</span></a>
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span>
     </button>
@@ -32,7 +32,7 @@
     <a href="#historia">Our Story</a>
     <a href="#catering">Catering</a>
     <a href="#visitanos">Visit Us</a>
-    <a class="btn btn-solid" href="#visitanos">Order · Ordena</a>
+    <a class="btn btn-solid js-open-order" href="#carta">Order · Ordena</a>
   </div>
 
   <main>
@@ -54,7 +54,7 @@
         <p class="hero-sub"><em lang="es">La noche sabe mejor.</em> Handmade tortillas,
         fire-kissed asada, and the warm glow of a neighborhood taqueria on La Palma Avenue.</p>
         <div class="hero-actions">
-          <a class="btn btn-solid" href="#visitanos">Order now <span lang="es">— Ordena ahora</span></a>
+          <a class="btn btn-solid" href="#carta">Order now <span lang="es">— Ordena ahora</span></a>
           <a class="btn btn-ghost" href="#carta">See the menu <span lang="es">— La carta</span></a>
         </div>
       </div>
@@ -100,40 +100,40 @@
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Tacos <span class="carta-group-price">$3.25 each</span></h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">charred steak, onion, cilantro</span></span><span class="dots"></span><span class="price">3.25</span></li>
-              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">marinated pork, pineapple</span></span><span class="dots"></span><span class="price">3.25</span></li>
-              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">slow-braised pork, crisped edges</span></span><span class="dots"></span><span class="price">3.25</span></li>
-              <li class="carta-row"><span class="dish"><strong>Pollo Asado</strong><span class="dish-desc">citrus-grilled chicken</span></span><span class="dots"></span><span class="price">3.25</span></li>
-              <li class="carta-row"><span class="dish"><strong>Lengua</strong><span class="dish-desc">tender braised beef tongue</span></span><span class="dots"></span><span class="price">3.75</span></li>
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">charred steak, onion, cilantro</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Asada taco" data-price="3.25" aria-label="Add Asada taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">marinated pork, pineapple</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Al Pastor taco" data-price="3.25" aria-label="Add Al Pastor taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">slow-braised pork, crisped edges</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Carnitas taco" data-price="3.25" aria-label="Add Carnitas taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Pollo Asado</strong><span class="dish-desc">citrus-grilled chicken</span></span><span class="dots"></span><span class="price">3.25</span><button class="add-btn" type="button" data-name="Pollo Asado taco" data-price="3.25" aria-label="Add Pollo Asado taco to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Lengua</strong><span class="dish-desc">tender braised beef tongue</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Lengua taco" data-price="3.75" aria-label="Add Lengua taco to your order">+</button></li>
             </ul>
           </div>
 
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Burritos</h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">rice, beans, salsa, guacamole</span></span><span class="dots"></span><span class="price">11.50</span></li>
-              <li class="carta-row"><span class="dish"><strong>California</strong><span class="dish-desc">asada, fries, cheese, crema</span></span><span class="dots"></span><span class="price">12.50</span></li>
-              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">rice, beans, onion, cilantro</span></span><span class="dots"></span><span class="price">11.50</span></li>
-              <li class="carta-row"><span class="dish"><strong>Bean &amp; Cheese</strong><span class="dish-desc">refritos, melted jack</span></span><span class="dots"></span><span class="price">8.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">rice, beans, salsa, guacamole</span></span><span class="dots"></span><span class="price">11.50</span><button class="add-btn" type="button" data-name="Asada burrito" data-price="11.50" aria-label="Add Asada burrito to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>California</strong><span class="dish-desc">asada, fries, cheese, crema</span></span><span class="dots"></span><span class="price">12.50</span><button class="add-btn" type="button" data-name="California burrito" data-price="12.50" aria-label="Add California burrito to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">rice, beans, onion, cilantro</span></span><span class="dots"></span><span class="price">11.50</span><button class="add-btn" type="button" data-name="Al Pastor burrito" data-price="11.50" aria-label="Add Al Pastor burrito to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Bean &amp; Cheese</strong><span class="dish-desc">refritos, melted jack</span></span><span class="dots"></span><span class="price">8.50</span><button class="add-btn" type="button" data-name="Bean &amp; Cheese burrito" data-price="8.50" aria-label="Add Bean and Cheese burrito to your order">+</button></li>
             </ul>
           </div>
 
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Mulitas</h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">grilled tortillas, melted cheese</span></span><span class="dots"></span><span class="price">5.50</span></li>
-              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">with pineapple &amp; crema</span></span><span class="dots"></span><span class="price">5.50</span></li>
-              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">with pickled onion</span></span><span class="dots"></span><span class="price">5.50</span></li>
+              <li class="carta-row"><span class="dish"><strong>Asada</strong><span class="dish-desc">grilled tortillas, melted cheese</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Asada mulita" data-price="5.50" aria-label="Add Asada mulita to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Al Pastor</strong><span class="dish-desc">with pineapple &amp; crema</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Al Pastor mulita" data-price="5.50" aria-label="Add Al Pastor mulita to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Carnitas</strong><span class="dish-desc">with pickled onion</span></span><span class="dots"></span><span class="price">5.50</span><button class="add-btn" type="button" data-name="Carnitas mulita" data-price="5.50" aria-label="Add Carnitas mulita to your order">+</button></li>
             </ul>
           </div>
 
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Drinks <span class="carta-group-alt" lang="es">· Para Tomar</span></h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Horchata</strong><span class="dish-desc">cinnamon rice, made in-house</span></span><span class="dots"></span><span class="price">3.75</span></li>
-              <li class="carta-row"><span class="dish"><strong>Agua de Jamaica</strong><span class="dish-desc">hibiscus, not too sweet</span></span><span class="dots"></span><span class="price">3.75</span></li>
-              <li class="carta-row"><span class="dish"><strong>Tamarindo</strong><span class="dish-desc">tart tamarind agua fresca</span></span><span class="dots"></span><span class="price">3.75</span></li>
-              <li class="carta-row"><span class="dish"><strong>Mexican Coke</strong><span class="dish-desc">glass bottle, real sugar</span></span><span class="dots"></span><span class="price">3.00</span></li>
+              <li class="carta-row"><span class="dish"><strong>Horchata</strong><span class="dish-desc">cinnamon rice, made in-house</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Horchata" data-price="3.75" aria-label="Add Horchata to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Agua de Jamaica</strong><span class="dish-desc">hibiscus, not too sweet</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Agua de Jamaica" data-price="3.75" aria-label="Add Agua de Jamaica to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Tamarindo</strong><span class="dish-desc">tart tamarind agua fresca</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Tamarindo" data-price="3.75" aria-label="Add Tamarindo to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Mexican Coke</strong><span class="dish-desc">glass bottle, real sugar</span></span><span class="dots"></span><span class="price">3.00</span><button class="add-btn" type="button" data-name="Mexican Coke" data-price="3.00" aria-label="Add Mexican Coke to your order">+</button></li>
             </ul>
           </div>
         </div>
@@ -222,6 +222,86 @@
       </div>
     </section>
   </main>
+
+  <!-- ═══════════════ ORDERING ═══════════════ -->
+  <button class="order-fab" type="button" aria-label="Open your order" hidden>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span class="order-fab-count" aria-hidden="true">0</span>
+  </button>
+
+  <div class="order-overlay" hidden></div>
+
+  <aside class="order-panel" id="order-panel" role="dialog" aria-modal="true" aria-label="Your order" hidden>
+    <header class="order-head">
+      <h2 class="order-title">Your order <span lang="es">· tu orden</span></h2>
+      <button class="order-close" type="button" aria-label="Close order panel">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+
+    <div class="order-empty">
+      <p>Nothing here yet.</p>
+      <button class="btn btn-ghost order-browse" type="button">See the menu <span lang="es">— la carta</span></button>
+    </div>
+
+    <div class="order-filled" hidden>
+      <ul class="order-items" role="list"></ul>
+
+      <p class="order-subtotal-row"><span>Subtotal <span class="order-fine">plus tax</span></span><strong class="order-subtotal">$0.00</strong></p>
+
+      <fieldset class="fulfill">
+        <legend class="fulfill-legend">How do you want it?</legend>
+        <div class="fulfill-toggle">
+          <label class="fulfill-opt"><input type="radio" name="fulfill" value="pickup" checked>
+            <span>Pickup <span lang="es">· para llevar</span></span></label>
+          <label class="fulfill-opt"><input type="radio" name="fulfill" value="delivery">
+            <span>Delivery <span lang="es">· a domicilio</span></span></label>
+        </div>
+      </fieldset>
+
+      <div class="deliver-gate">
+        <div class="gate-bar" aria-hidden="true"><span class="gate-fill"></span></div>
+        <p class="gate-text" aria-live="polite"></p>
+      </div>
+
+      <div class="slot-picker">
+        <div class="field-row">
+          <div class="field">
+            <label for="order-day">Day <span lang="es">· día</span></label>
+            <select id="order-day"></select>
+          </div>
+          <div class="field">
+            <label for="order-time">Time <span lang="es">· hora</span></label>
+            <select id="order-time"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="order-name">Name <span lang="es">· nombre</span></label>
+          <input id="order-name" type="text" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="order-phone">Phone <span lang="es">· teléfono</span></label>
+          <input id="order-phone" type="tel" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="field order-address-field" hidden>
+        <label for="order-address">Delivery address <span lang="es">· dirección</span></label>
+        <input id="order-address" type="text" autocomplete="street-address" placeholder="Street, city, zip">
+        <p class="field-help">We deliver nearby in Anaheim. Card payment only at the door.</p>
+      </div>
+
+      <button class="btn btn-solid order-send" type="button">Send order <span lang="es">— enviar orden</span></button>
+      <p class="order-status" role="status" aria-live="polite"></p>
+      <p class="order-fine order-terms">Pickup: pay at the counter, card or cash. Delivery: $50 minimum,
+      card only at the door. We'll text you to confirm your order.</p>
+    </div>
+  </aside>
+
+  <p class="add-toast" role="status" aria-live="polite"></p>
 
   <footer class="footer">
     <div class="footer-inner">
