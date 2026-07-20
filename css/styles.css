@@ -947,6 +947,197 @@ em { font-style: italic; }
 
 .order-terms { margin-top: var(--space-3); line-height: 1.5; }
 
+.order-item-name { display: flex; flex-direction: column; }
+
+.order-item-salsa {
+  font-size: 0.78rem;
+  color: var(--cream-35);
+  font-style: italic;
+}
+
+.order-count { color: var(--cream-35); font-size: 0.85rem; }
+
+/* ── Quick-add menu inside the drawer ── */
+
+.quick-add {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--flame-soft);
+}
+
+.quick-add-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.quick-add-title [lang="es"] {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cream-35);
+}
+
+.quick-groups details { border-bottom: 1px solid var(--cream-15); }
+
+.quick-groups summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.8rem 0;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  transition: color 200ms ease;
+}
+
+.quick-groups summary::-webkit-details-marker { display: none; }
+.quick-groups summary:hover { color: var(--flame); }
+
+.quick-groups summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--cream-35);
+  font-weight: 300;
+  transition: transform 200ms ease;
+}
+
+.quick-groups details[open] summary::after { transform: rotate(45deg); }
+
+.quick-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0 0.45rem 0.5rem;
+}
+
+.quick-name { flex: 1; font-size: 0.92rem; color: var(--cream-60); }
+.quick-price { font-variant-numeric: tabular-nums; font-size: 0.88rem; color: var(--flame); }
+.quick-row .add-btn { width: 1.6rem; height: 1.6rem; font-size: 0.95rem; margin: 0; }
+.quick-groups details > .quick-row:last-child { padding-bottom: 0.8rem; }
+
+/* ── Salsa add-on popover ── */
+
+.addon-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 64;
+  background: rgba(16, 12, 9, 0.6);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.addon-overlay.open { opacity: 1; }
+.addon-overlay[hidden] { display: none; }
+
+.addon-pop {
+  position: fixed;
+  z-index: 65;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -46%);
+  width: min(22rem, calc(100vw - 2rem));
+  background: var(--soot);
+  border: 1px solid var(--soot-edge);
+  border-radius: 16px;
+  padding: 1.4rem 1.4rem 1.6rem;
+  opacity: 0;
+  transition: opacity 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.addon-pop.open { opacity: 1; transform: translate(-50%, -50%); }
+.addon-pop[hidden] { display: none; }
+
+.addon-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.addon-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.addon-close {
+  background: none;
+  border: 0;
+  color: var(--cream-60);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 200ms ease;
+}
+
+.addon-close:hover { color: var(--flame); }
+
+.addon-sub { font-size: 0.85rem; color: var(--cream-60); margin-bottom: var(--space-3); }
+
+.addon-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--cream-15);
+}
+
+.salsa-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.salsa-dot-roja { background: var(--chile); }
+.salsa-dot-verde { background: #7e9160; }
+
+.addon-name { flex: 1; font-weight: 400; display: flex; flex-direction: column; }
+.addon-hint { font-size: 0.78rem; color: var(--cream-35); }
+
+.stepper { display: flex; align-items: center; gap: 0.55rem; }
+
+.stepper .qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.addon-count {
+  min-width: 1.2rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.addon-meter {
+  font-size: 0.82rem;
+  color: var(--flame);
+  text-align: center;
+  margin: 0.6rem 0 1rem;
+  min-height: 1.2em;
+}
+
+.addon-add { width: 100%; }
+
+@media (max-width: 480px) {
+  .addon-pop {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    transform: translate(0, 8%);
+    border-radius: 16px 16px 0 0;
+    padding-bottom: max(1.6rem, env(safe-area-inset-bottom));
+  }
+  .addon-pop.open { transform: translate(0, 0); }
+}
+
 .add-toast {
   position: fixed;
   left: 50%;

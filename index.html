@@ -54,7 +54,7 @@
         <p class="hero-sub"><em lang="es">La noche sabe mejor.</em> Handmade tortillas,
         fire-kissed asada, and the warm glow of a neighborhood taqueria on La Palma Avenue.</p>
         <div class="hero-actions">
-          <a class="btn btn-solid" href="#carta">Order now <span lang="es">— Ordena ahora</span></a>
+          <a class="btn btn-solid js-open-order" href="#carta">Order now <span lang="es">— Ordena ahora</span></a>
           <a class="btn btn-ghost" href="#carta">See the menu <span lang="es">— La carta</span></a>
         </div>
       </div>
@@ -130,10 +130,10 @@
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Drinks <span class="carta-group-alt" lang="es">· Para Tomar</span></h3>
             <ul class="carta-list" role="list">
-              <li class="carta-row"><span class="dish"><strong>Horchata</strong><span class="dish-desc">cinnamon rice, made in-house</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Horchata" data-price="3.75" aria-label="Add Horchata to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Agua de Jamaica</strong><span class="dish-desc">hibiscus, not too sweet</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Agua de Jamaica" data-price="3.75" aria-label="Add Agua de Jamaica to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Tamarindo</strong><span class="dish-desc">tart tamarind agua fresca</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Tamarindo" data-price="3.75" aria-label="Add Tamarindo to your order">+</button></li>
-              <li class="carta-row"><span class="dish"><strong>Mexican Coke</strong><span class="dish-desc">glass bottle, real sugar</span></span><span class="dots"></span><span class="price">3.00</span><button class="add-btn" type="button" data-name="Mexican Coke" data-price="3.00" aria-label="Add Mexican Coke to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Horchata</strong><span class="dish-desc">cinnamon rice, made in-house</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Horchata" data-price="3.75" data-addons="no" aria-label="Add Horchata to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Agua de Jamaica</strong><span class="dish-desc">hibiscus, not too sweet</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Agua de Jamaica" data-price="3.75" data-addons="no" aria-label="Add Agua de Jamaica to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Tamarindo</strong><span class="dish-desc">tart tamarind agua fresca</span></span><span class="dots"></span><span class="price">3.75</span><button class="add-btn" type="button" data-name="Tamarindo" data-price="3.75" data-addons="no" aria-label="Add Tamarindo to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>Mexican Coke</strong><span class="dish-desc">glass bottle, real sugar</span></span><span class="dots"></span><span class="price">3.00</span><button class="add-btn" type="button" data-name="Mexican Coke" data-price="3.00" data-addons="no" aria-label="Add Mexican Coke to your order">+</button></li>
             </ul>
           </div>
         </div>
@@ -240,14 +240,13 @@
     </header>
 
     <div class="order-empty">
-      <p>Nothing here yet.</p>
-      <button class="btn btn-ghost order-browse" type="button">See the menu <span lang="es">— la carta</span></button>
+      <p>Your order is empty — add something from the menu below.</p>
     </div>
 
     <div class="order-filled" hidden>
       <ul class="order-items" role="list"></ul>
 
-      <p class="order-subtotal-row"><span>Subtotal <span class="order-fine">plus tax</span></span><strong class="order-subtotal">$0.00</strong></p>
+      <p class="order-subtotal-row"><span>Subtotal <span class="order-count"></span> <span class="order-fine">plus tax</span></span><strong class="order-subtotal">$0.00</strong></p>
 
       <fieldset class="fulfill">
         <legend class="fulfill-legend">How do you want it?</legend>
@@ -299,7 +298,43 @@
       <p class="order-fine order-terms">Pickup: pay at the counter, card or cash. Delivery: $50 minimum,
       card only at the door. We'll text you to confirm your order.</p>
     </div>
+
+    <section class="quick-add" aria-label="Add from the menu">
+      <h3 class="quick-add-title">The menu <span lang="es">· añade más</span></h3>
+      <div class="quick-groups"></div>
+    </section>
   </aside>
+
+  <div class="addon-overlay" hidden></div>
+  <div class="addon-pop" role="dialog" aria-modal="true" aria-labelledby="addon-title" hidden>
+    <header class="addon-head">
+      <h3 class="addon-title" id="addon-title">Add to order</h3>
+      <button class="addon-close" type="button" aria-label="Close without adding">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <p class="addon-sub">Salsa cups <span lang="es">· salsitas</span> — up to 3 per item, on the house.</p>
+    <div class="addon-row">
+      <span class="salsa-dot salsa-dot-roja" aria-hidden="true"></span>
+      <span class="addon-name">Salsa Roja <span class="addon-hint">smoky árbol</span></span>
+      <div class="stepper">
+        <button class="qty-btn" type="button" data-salsa="r" data-step="-1" aria-label="One less red salsa">−</button>
+        <span class="addon-count" data-count="r">0</span>
+        <button class="qty-btn" type="button" data-salsa="r" data-step="1" aria-label="One more red salsa">+</button>
+      </div>
+    </div>
+    <div class="addon-row">
+      <span class="salsa-dot salsa-dot-verde" aria-hidden="true"></span>
+      <span class="addon-name">Salsa Verde <span class="addon-hint">tomatillo, bright</span></span>
+      <div class="stepper">
+        <button class="qty-btn" type="button" data-salsa="g" data-step="-1" aria-label="One less green salsa">−</button>
+        <span class="addon-count" data-count="g">0</span>
+        <button class="qty-btn" type="button" data-salsa="g" data-step="1" aria-label="One more green salsa">+</button>
+      </div>
+    </div>
+    <p class="addon-meter" aria-live="polite">0 of 3 cups</p>
+    <button class="btn btn-solid addon-add" type="button">Add to order</button>
+  </div>
 
   <p class="add-toast" role="status" aria-live="polite"></p>
 
