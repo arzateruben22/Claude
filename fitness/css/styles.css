@@ -1044,6 +1044,48 @@ a { color: inherit; }
   color: var(--steel);
 }
 
+.book-tiers, .book-pay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip-tier, .chip-pay {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--bone);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+.chip-tier-price { font-size: 0.68rem; color: var(--steel); letter-spacing: 0.04em; }
+.chip-tier.is-on, .chip-pay.is-on {
+  border-color: var(--orange);
+  background: color-mix(in srgb, var(--orange) 14%, var(--night));
+}
+.chip-tier.is-on .chip-tier-price { color: var(--orange); }
+.chip-pay {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  border-radius: 999px;
+}
+
+.book-label-note {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  color: var(--steel);
+}
+
 .book-days {
   display: flex;
   gap: 8px;
@@ -1106,8 +1148,27 @@ a { color: inherit; }
   color: var(--steel);
 }
 
-.book-send { width: 100%; justify-content: center; }
-.book-send.is-disabled { opacity: 0.45; cursor: not-allowed; }
+.book-actions { display: flex; flex-direction: column; gap: 0.9rem; }
+.book-actions [hidden] { display: none; }
+.book-send, .book-pay-btn { width: 100%; justify-content: center; }
+.book-send.is-disabled, .book-pay-btn.is-disabled { opacity: 0.45; cursor: not-allowed; }
+
+.book-confirm {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.book-paid-note { margin: 0; font-size: 0.9rem; color: var(--steel); }
+.book-fallback-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--steel);
+  text-align: center;
+}
 
 .book-alt {
   margin: 1rem 0 0;

@@ -38,7 +38,7 @@
     /* TODO(Stripe): paste your Payment Link URLs here. Create them at
        dashboard.stripe.com → Payment Links (see fitness/README.md for the
        5-minute walkthrough). Leave "" and the button falls back to a call. */
-    var STRIPE_LINKS = {
+    var STRIPE_LINKS = window.STRIPE_LINKS || {
       "Foundation": { full: "", split: "" },
       "Momentum":   { full: "", split: "" },
       "All-Access": { full: "", split: "" }
@@ -120,40 +120,62 @@
       });
     });
 
-    toggle.addEventListener("click", function (e) {
-      var btn = e.target.closest(".pt-btn");
-      if (!btn) return;
-      mode = btn.dataset.mode;
+    function setMode(newMode) {
+      mode = newMode;
       toggle.classList.toggle("split", mode === "split");
       [].forEach.call(toggle.querySelectorAll(".pt-btn"), function (b) {
-        var on = b === btn;
+        var on = b.dataset.mode === mode;
         b.classList.toggle("is-on", on);
         b.setAttribute("aria-pressed", String(on));
       });
       apply();
+    }
+
+    toggle.addEventListener("click", function (e) {
+      var btn = e.target.closest(".pt-btn");
+      if (btn) setMode(btn.dataset.mode);
     });
+
+    /* shared hooks for the scheduler */
+    window.__setPlan = function (name, newMode) {
+      var match = plans.filter(function (p) { return p.dataset.name === name; })[0];
+      if (match) selected = match;
+      setMode(newMode || mode);
+    };
+    window.__stripeLink = function (name, m) {
+      return (STRIPE_LINKS[name] || {})[m] || "";
+    };
+    window.__planData = function (name, m) {
+      var match = plans.filter(function (p) { return p.dataset.name === name; })[0];
+      return match ? fmt(match.dataset[m]) + (m === "split" ? " today" : "/mo") : "";
+    };
 
     apply();
   })();
 
-  /* ── Scheduler — pick a day + time, send as a text ───────── */
+  /* ── Scheduler — configure, pay, then text the slot ──────── */
   (function () {
     var daysEl = document.querySelector(".book-days");
     var slotsEl = document.querySelector(".book-slots");
     if (!daysEl || !slotsEl) return;
 
-    /* TODO: edit your real availability here */
+    /* TODO: edit your real availability here.
+       Evenings only, 90-minute sessions — two slots a night. */
     var OPEN_DAYS = [1, 2, 3, 4, 5, 6];          // Mon–Sat (0 = Sunday off)
-    var SLOT_TIMES = ["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM",
-                      "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM"];
+    var SLOT_TIMES = ["6:00 – 7:30 PM", "9:00 – 10:30 PM"];
     var DAYS_AHEAD = 14;
     var PHONE = "+17143533126";
 
     var summary = document.querySelector(".book-summary");
-    var send = document.querySelector(".book-send");
-    var planName = document.querySelector(".book-plan-name");
-    var planPrice = document.querySelector(".book-plan-price");
+    var payBtn = document.querySelector(".book-pay-btn");
+    var confirmBox = document.querySelector(".book-confirm");
+    var sendPaid = confirmBox.querySelector(".book-send");
+    var sendFallback = document.querySelector(".book-send-fallback");
+    var fallbackNote = document.querySelector(".book-fallback-note");
+    var tiersEl = document.querySelector(".book-tiers");
+    var payEl = document.querySelector(".book-pay");
     var picked = { day: null, label: "", time: "" };
+    var paymentOpened = false;
 
     var WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     var MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -183,30 +205,88 @@
       slotsEl.appendChild(b);
     });
 
+    /* keep the panel's tier / pay chips in sync with the plans section */
     function refreshPlan() {
-      var p = window.__planState;
-      if (p && planName) {
-        planName.textContent = p.name;
-        planPrice.textContent = p.price;
-      }
+      var p = window.__planState || { name: "Momentum", mode: "full", price: "" };
+      [].forEach.call(tiersEl.children, function (c) {
+        var on = c.dataset.name === p.name;
+        c.classList.toggle("is-on", on);
+        c.setAttribute("aria-pressed", String(on));
+        var priceEl = c.querySelector(".chip-tier-price");
+        if (priceEl && window.__planData) {
+          priceEl.textContent = window.__planData(c.dataset.name, p.mode);
+        }
+      });
+      [].forEach.call(payEl.children, function (c) {
+        var on = c.dataset.mode === p.mode;
+        c.classList.toggle("is-on", on);
+        c.setAttribute("aria-pressed", String(on));
+      });
+      paymentOpened = false;
+      update();
     }
     document.addEventListener("planchange", refreshPlan);
-    refreshPlan();
+
+    tiersEl.addEventListener("click", function (e) {
+      var b = e.target.closest(".chip-tier");
+      if (b && window.__setPlan) window.__setPlan(b.dataset.name);
+    });
+    payEl.addEventListener("click", function (e) {
+      var b = e.target.closest(".chip-pay");
+      if (b && window.__setPlan) {
+        var p = window.__planState || { name: "Momentum" };
+        window.__setPlan(p.name, b.dataset.mode);
+      }
+    });
 
     function update() {
+      var p = window.__planState || { name: "Momentum", mode: "full", price: "" };
       var ready = picked.label && picked.time;
-      send.classList.toggle("is-disabled", !ready);
+      var link = window.__stripeLink ? window.__stripeLink(p.name, p.mode) : "";
+
+      /* payment-first when a Stripe link exists; text-to-book until then */
+      payBtn.hidden = !link;
+      sendFallback.hidden = !!link;
+      fallbackNote.hidden = !!link;
+      confirmBox.hidden = !link || !paymentOpened;
+
+      payBtn.classList.toggle("is-disabled", !ready);
+      sendPaid.classList.toggle("is-disabled", !ready);
+      sendFallback.classList.toggle("is-disabled", !ready);
+
       if (!ready) {
         summary.textContent = "Choose a day and time above.";
         return;
       }
-      var p = window.__planState || { name: "Momentum", price: "" };
-      summary.textContent = p.name + " · " + picked.label + " · " + picked.time;
-      var msg = "Hi Ruben — I want the " + p.name + " plan (" + p.price +
-        "). Can we do my first session " + picked.label + " at " + picked.time + "?";
-      /* the "?&" form works on both iOS and Android */
-      send.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(msg);
+      summary.textContent = p.name + " · " + p.price + " · " +
+        picked.label + " · " + picked.time;
+
+      if (link) {
+        payBtn.href = link;
+        payBtn.textContent = paymentOpened
+          ? "Reopen payment — " + p.price
+          : "Continue to payment — " + p.price;
+        var paidMsg = "Hi Ruben — I just paid on Stripe for the " + p.name +
+          " plan (" + p.price + "). My first session: " + picked.label +
+          ", " + picked.time + ".";
+        sendPaid.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(paidMsg);
+      } else {
+        var msg = "Hi Ruben — I want the " + p.name + " plan (" + p.price +
+          "). Can we do my first session " + picked.label + ", " + picked.time + "?";
+        /* the "?&" form works on both iOS and Android */
+        sendFallback.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(msg);
+      }
     }
+
+    payBtn.addEventListener("click", function (e) {
+      if (payBtn.classList.contains("is-disabled")) {
+        e.preventDefault();
+        summary.textContent = "Pick a day and a time first — then pay.";
+        return;
+      }
+      paymentOpened = true;
+      update();
+    });
 
     daysEl.addEventListener("click", function (e) {
       var b = e.target.closest(".chip-day");
@@ -228,12 +308,16 @@
       picked.time = b.textContent;
       update();
     });
-    send.addEventListener("click", function (e) {
-      if (send.classList.contains("is-disabled")) {
-        e.preventDefault();
-        summary.textContent = "Pick a day and a time first — then send.";
-      }
+    [sendPaid, sendFallback].forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        if (btn.classList.contains("is-disabled")) {
+          e.preventDefault();
+          summary.textContent = "Pick a day and a time first — then send.";
+        }
+      });
     });
+
+    refreshPlan();
   })();
 
   /* ── Proof ring — 3D photo carousel ──────────────────────── */

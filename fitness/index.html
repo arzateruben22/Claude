@@ -309,21 +309,41 @@
         <div data-reveal>
           <p class="eyebrow">Schedule</p>
           <h2 class="display">Lock in <span class="accent">session one.</span></h2>
-          <p class="section-sub">Pick a day and a time. It sends me a text with your
-          plan and slot — I confirm within the hour and it's yours.</p>
+          <p class="section-sub">Every session runs a full 90 minutes, evenings only —
+          two slots a night. Set your tier, pay to hold it, and text me your slot.</p>
         </div>
         <div class="book-panel" data-reveal>
-          <div class="book-head">
-            <p class="book-label mono">Your plan</p>
-            <p class="book-plan"><span class="book-plan-name">Momentum</span>
-            <span class="book-plan-price mono"></span></p>
+          <p class="book-label mono">Your tier</p>
+          <div class="book-tiers" role="radiogroup" aria-label="Choose a tier">
+            <button type="button" class="chip-tier" data-name="Foundation">Foundation<span class="mono chip-tier-price"></span></button>
+            <button type="button" class="chip-tier is-on" data-name="Momentum">Momentum<span class="mono chip-tier-price"></span></button>
+            <button type="button" class="chip-tier" data-name="All-Access">All-Access<span class="mono chip-tier-price"></span></button>
+          </div>
+          <p class="book-label mono">How you pay</p>
+          <div class="book-pay" role="radiogroup" aria-label="Payment style">
+            <button type="button" class="chip-pay is-on" data-mode="full">Pay in full</button>
+            <button type="button" class="chip-pay" data-mode="split">Split it</button>
           </div>
           <p class="book-label mono">Pick a day</p>
           <div class="book-days" role="listbox" aria-label="Available days"></div>
-          <p class="book-label mono">Pick a time</p>
+          <p class="book-label mono">Pick a time <span class="book-label-note">· 90-minute sessions</span></p>
           <div class="book-slots" role="listbox" aria-label="Available times"></div>
           <p class="book-summary mono" aria-live="polite">Choose a day and time above.</p>
-          <a class="btn btn-solid book-send is-disabled" href="sms:+17143533126">Text this slot to Ruben</a>
+
+          <!-- Payment-first flow. Activates by itself once STRIPE_LINKS in
+               js/main.js has real Payment Link URLs; until then it falls back
+               to text-to-book. -->
+          <div class="book-actions">
+            <a class="btn btn-solid book-pay-btn is-disabled" href="#" target="_blank" rel="noopener" hidden>Continue to payment</a>
+            <div class="book-confirm" hidden>
+              <p class="book-paid-note">Payment done? Send the text and the slot is
+              locked — I confirm within the hour.</p>
+              <a class="btn btn-solid book-send is-disabled" href="sms:+17143533126">I paid — text my slot</a>
+            </div>
+            <a class="btn btn-solid book-send book-send-fallback is-disabled" href="sms:+17143533126">Text this slot to Ruben</a>
+            <p class="book-fallback-note">Card payment at booking launches soon —
+            for now your slot is confirmed by text.</p>
+          </div>
           <p class="book-alt">No texting on this device?
           <a class="text-link" href="mailto:arzateruben22@gmail.com?subject=Session%20request">Email the request</a>
           or call <a class="text-link" href="tel:+17143533126">(714) 353-3126</a>.</p>
