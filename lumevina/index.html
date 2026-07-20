@@ -711,6 +711,55 @@
     </div>
   </aside>
 
+  <!-- ═══════════════ BOOKING MODAL ═══════════════ -->
+  <div class="booking-overlay" hidden></div>
+  <div class="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-title" aria-hidden="true" tabindex="-1">
+    <div class="booking-inner">
+      <button class="booking-close" type="button" aria-label="Close booking">×</button>
+
+      <div class="booking-form-view">
+        <h2 class="booking-title" id="booking-title">Book an appointment</h2>
+        <p class="booking-demo-note">Demo scheduler — confirmed, deposit-backed bookings happen on
+          <a class="inline-link" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">our online scheduler</a>.</p>
+
+        <div class="field">
+          <label for="bk-service">Service</label>
+          <select id="bk-service" name="service"></select>
+        </div>
+        <p class="booking-meta"></p>
+
+        <p class="booking-label">Pick a day</p>
+        <div class="booking-days"></div>
+
+        <p class="booking-label">Pick a time</p>
+        <div class="booking-slots"></div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="bk-name">Name</label>
+            <input id="bk-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="bk-email">Email</label>
+            <input id="bk-email" name="email" type="email" autocomplete="email" required>
+          </div>
+        </div>
+        <button class="btn btn-solid booking-confirm" type="button">Request appointment</button>
+        <p class="form-status booking-status" role="alert"></p>
+      </div>
+
+      <div class="booking-success" hidden>
+        <p class="success-glyph" aria-hidden="true">🌹</p>
+        <h2 class="booking-title">Appointment requested</h2>
+        <p class="booking-summary"></p>
+        <p class="success-sub">A deposit is required to secure every appointment — see our
+        policies. This was a demo request; for a confirmed time, use
+        <a class="inline-link" href="https://app.acuityscheduling.com/catalog/d3692663" target="_blank" rel="noopener">the online scheduler</a>.</p>
+        <button class="btn btn-ghost booking-done" type="button">Back to Lumevina</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══════════════ CHECKOUT MODAL ═══════════════ -->
   <div class="checkout-overlay" hidden></div>
   <div class="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title" aria-hidden="true" tabindex="-1">
@@ -784,6 +833,7 @@
   <script src="js/stacked-cards.js"></script>
   <script src="js/cursor-aura.js"></script>
   <script src="js/policy-panels.js"></script>
+  <script src="js/booking.js"></script>
   <script src="js/shuffle-stack.js"></script>
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
