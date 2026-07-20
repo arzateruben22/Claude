@@ -308,6 +308,24 @@
       <fieldset class="pay">
         <legend class="fulfill-legend">Payment <span lang="es">· pago</span> <span class="pay-required">required</span></legend>
         <div class="pay-options"></div>
+        <div class="card-fields" hidden>
+          <div class="field">
+            <label for="card-number">Card number</label>
+            <input id="card-number" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="card-exp">Expiry</label>
+              <input id="card-exp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="field">
+              <label for="card-cvc">CVC</label>
+              <input id="card-cvc" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+            </div>
+          </div>
+          <p class="card-note">Test mode until our card processor is connected — use test card
+          4242 4242 4242 4242 with any future date. No real card is charged or stored.</p>
+        </div>
       </fieldset>
 
       <button class="btn btn-solid order-send" type="button">Send order <span lang="es">— enviar orden</span></button>

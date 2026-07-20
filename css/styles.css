@@ -1104,6 +1104,25 @@ em { font-style: italic; }
 .pay-opt-text strong { font-weight: 500; font-size: 0.92rem; }
 .pay-opt-text small { font-size: 0.78rem; color: var(--cream-35); }
 
+.card-fields {
+  margin-top: var(--space-3);
+  padding: 1rem;
+  border: 1px solid var(--soot-edge);
+  border-radius: 12px;
+  background: rgba(16, 12, 9, 0.5);
+}
+
+.card-fields[hidden] { display: none; }
+
+.card-fields input { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+.card-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--flame);
+  line-height: 1.5;
+}
+
 .order-send { width: 100%; margin-top: var(--space-4); }
 
 .order-status { margin: var(--space-3) 0 0; font-size: 0.9rem; color: var(--flame); min-height: 1.4em; }

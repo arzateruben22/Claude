@@ -40,11 +40,13 @@ The drawer includes:
   card payment only, 45-minute lead time, requires an address.
 
 Every order must be paid when it is placed — there is no pay-at-counter
-option. Online payment methods come from `PAYMENT_LINKS` at the top of
-the ordering section in `js/main.js` (a paypal.me handle, Venmo
-username, or Stripe Payment Link); they appear automatically with the
-exact order total prefilled. Until at least one is filled in, pickup
-ordering shows a "payment being connected" notice and stays disabled.
+option. While no processor is connected, the checkout shows a built-in
+card form in TEST MODE: it formats and validates card fields but only
+accepts the universal test card 4242 4242 4242 4242, transmits and
+stores nothing, and marks the order email "TEST MODE, no charge
+processed". Filling in `PAYMENT_LINKS.stripe` (top of the ordering
+section in `js/main.js`) replaces it with real Stripe checkout;
+`paypalMe`/`venmo` handles add pay-now options with the exact total.
 Delivery additionally offers card-to-the-driver at the door.
 
 Orders are composed into a prefilled email to `ORDER_EMAIL` (top of the

@@ -233,11 +233,16 @@
   var selectedPay = null;
 
   /* Every order is prepaid online; delivery may also pay the driver by
-     card. There is deliberately no pay-at-counter option. */
+     card. There is deliberately no pay-at-counter option.
+     The built-in card form runs in TEST MODE (accepts only the 4242
+     test card, transmits nothing) until PAYMENT_LINKS.stripe is set —
+     then it is replaced by the real Stripe checkout option. */
   var payMethods = function () {
     var m = [];
     if (PAYMENT_LINKS.stripe) {
       m.push({ id: "card-online", label: "Card online", hint: "secure checkout, pay now" });
+    } else {
+      m.push({ id: "card-form", label: "Card", hint: "test mode — no real charge yet" });
     }
     if (PAYMENT_LINKS.paypalMe) {
       m.push({ id: "paypal", label: "PayPal", hint: "pay now, exact total" });
@@ -259,9 +264,44 @@
     return null;
   };
 
+  var cardFields = panel.querySelector(".card-fields");
+  var cardNumber = document.getElementById("card-number");
+  var cardExp = document.getElementById("card-exp");
+  var cardCvc = document.getElementById("card-cvc");
+  var TEST_CARD = "4242424242424242";
+
+  /* Format as you type: 4-digit groups, auto slash in expiry */
+  cardNumber.addEventListener("input", function () {
+    var d = cardNumber.value.replace(/\D/g, "").slice(0, 16);
+    cardNumber.value = d.replace(/(\d{4})(?=\d)/g, "$1 ");
+  });
+  cardExp.addEventListener("input", function () {
+    var d = cardExp.value.replace(/\D/g, "").slice(0, 4);
+    cardExp.value = d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2) : d;
+  });
+  cardCvc.addEventListener("input", function () {
+    cardCvc.value = cardCvc.value.replace(/\D/g, "").slice(0, 4);
+  });
+
+  /* Card data is validated locally and never stored or transmitted. */
+  var validateCard = function () {
+    var num = cardNumber.value.replace(/\D/g, "");
+    if (num !== TEST_CARD) {
+      return "Test mode: only test card 4242 4242 4242 4242 works until our card processor is connected.";
+    }
+    var m = cardExp.value.match(/^(\d{2})\/(\d{2})$/);
+    if (!m || Number(m[1]) < 1 || Number(m[1]) > 12) return "Enter the card expiry as MM/YY.";
+    var now = new Date();
+    var expEnd = new Date(2000 + Number(m[2]), Number(m[1]), 1);
+    if (expEnd <= now) return "That card expiry is in the past.";
+    if (!/^\d{3,4}$/.test(cardCvc.value)) return "Enter the 3-digit CVC.";
+    return null;
+  };
+
   var renderPayment = function () {
     var methods = payMethods();
     if (!methods.some(function (m) { return m.id === selectedPay; })) selectedPay = null;
+    cardFields.hidden = selectedPay !== "card-form";
     payOptions.innerHTML = "";
     if (!methods.length) {
       var note = document.createElement("p");
@@ -281,6 +321,7 @@
       input.addEventListener("change", function () {
         selectedPay = m.id;
         payOptions.classList.remove("pay-missing");
+        cardFields.hidden = selectedPay !== "card-form";
       });
       var text = document.createElement("span");
       text.className = "pay-opt-text";
@@ -694,6 +735,15 @@
       lines.push(it.qty + "x " + it.name + (note ? " (" + note + ")" : "") +
         " — " + money(it.price * it.qty));
     });
+    if (selectedPay === "card-form") {
+      var cardError = validateCard();
+      if (cardError) {
+        statusEl.classList.add("error");
+        statusEl.textContent = cardError;
+        return;
+      }
+    }
+
     var payMethod = payMethods().filter(function (m) { return m.id === selectedPay; })[0];
     var link = payLink(selectedPay);
 
@@ -701,7 +751,8 @@
       "Subtotal: " + money(subtotal()) + " (plus tax)", "Phone: " + phone);
     if (isDelivery) lines.push("Address: " + address);
     lines.push("Payment: " + payMethod.label.toUpperCase() +
-      (link ? " — customer opened the payment page for " + money(subtotal()) + ", confirm receipt" : ""));
+      (link ? " — customer opened the payment page for " + money(subtotal()) + ", confirm receipt" : "") +
+      (selectedPay === "card-form" ? " — TEST MODE, no charge processed" : ""));
 
     if (link) window.open(link, "_blank", "noopener");
     window.location.href = "mailto:" + ORDER_EMAIL +
