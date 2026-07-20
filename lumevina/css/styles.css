@@ -702,6 +702,50 @@ em { font-style: italic; }
 
 .mark-alt { margin-left: auto; color: var(--ink-35); font-weight: 300; font-size: 0.9rem; font-style: italic; }
 
+/* ─── Press link (The Spa) ─── */
+
+.press-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(90, 62, 78, 0.05);
+  text-decoration: none;
+  transition: border-color 250ms ease, transform 250ms ease;
+}
+
+.press-link:hover {
+  border-color: rgba(165, 121, 139, 0.45);
+  transform: translateY(-2px);
+}
+
+.press-eyebrow {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.press-text {
+  font-size: 0.9rem;
+  color: var(--ink-60);
+  min-width: 0;
+}
+
+.press-arrow {
+  margin-left: auto;
+  color: var(--plum);
+  transition: transform 250ms ease;
+}
+
+.press-link:hover .press-arrow { transform: translateX(4px); }
+
 /* ─── Services ─── */
 
 .section-shop {
@@ -1004,6 +1048,36 @@ em { font-style: italic; }
 }
 
 .wax-add:hover { background: var(--mauve); color: #fff; }
+
+/* ─── Take the studio home (shop lines) ─── */
+
+.shelf-band {
+  margin-top: var(--space-7);
+  text-align: center;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--ink-15);
+}
+
+.shelf-label {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: var(--space-2);
+}
+
+.shelf-copy {
+  font-size: 0.95rem;
+  color: var(--ink-60);
+  margin-bottom: var(--space-4);
+}
+
+.shelf-links {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
 
 .shop-note {
   margin: var(--space-6) auto 0;
