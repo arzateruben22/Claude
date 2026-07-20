@@ -349,7 +349,7 @@ em { font-style: italic; }
 
 .nav-book, .nav-cart { padding: 0.7rem 1.4rem; }
 
-.nav-cart { font-variant-numeric: tabular-nums; }
+.nav-cart { font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .nav-cart.bump { animation: cart-bump 400ms ease; }
 
@@ -3108,6 +3108,7 @@ a.appstore-badge:hover { transform: translateY(-2px); }
   .sector-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ritual-grid { grid-template-columns: 1fr; }
   .nav-links, .nav-book { display: none; }
+  .nav { gap: 0.8rem; }
   .nav-account { margin-left: auto; }
   .nav-rewards, .nav-cart { margin-left: 0; }
   .app-perks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -3119,14 +3120,20 @@ a.appstore-badge:hover { transform: translateY(-2px); }
   .shop-grid { grid-template-columns: 1fr; }
   .sector-grid { grid-template-columns: 1fr; }
   .app-perks { grid-template-columns: 1fr; }
+  /* phones: the row can't seat four pills — the account button lives
+     in the menu ("My Lumevina"), the rest compact and breathe */
+  .nav { gap: 0.55rem; padding-left: 1rem; padding-right: 1rem; }
+  .nav-account { display: none; }
+  .nav-rewards { margin-left: auto; }
+  .nav-brand { font-size: 1.3rem; }
+  .nav-rewards, .nav-cart { padding: 0.55rem 0.85rem; font-size: 0.75rem; }
 }
 
 @media (max-width: 480px) {
   .field-row { grid-template-columns: 1fr; }
   .hero-actions .btn, .hero-actions .btn-mb { width: 100%; text-align: center; }
   .product-foot { flex-direction: column; align-items: stretch; text-align: center; }
-  .nav-rewards, .nav-cart { padding: 0.55rem 0.85rem; }
-  .nav-account { padding: 0.55rem 0.7rem; }
+  .nav-rewards, .nav-cart { padding: 0.5rem 0.7rem; }
 }
 
 /* ─── Reduced motion ─── */
