@@ -19,9 +19,8 @@ GitHub Pages, cPanel) — or just open `index.html` in a browser.
 ## Booking, scheduler & payments
 
 - **All Book buttons and links open the site's own scheduler** — no
-  external scheduling links remain. (E-gift cards still link to the
-  Squarespace gift-certificate catalog, which the scheduler doesn't
-  cover.)
+  external scheduling links remain anywhere; e-gift certificates sell
+  through the site's own cart.
 - **The scheduler** (`js/booking.js`) opens from every service's Book
   button and the site-wide `data-open-booking` links: Tue–Sun,
   8 AM–6 PM, 12–12:30 lunch, 30/60-minute slots, and a **required 50%
