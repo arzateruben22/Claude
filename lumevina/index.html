@@ -822,9 +822,15 @@
         checkout. Demo mode — no card is charged until payments go live.</p>
 
         <div class="field">
-          <label for="bk-service">Service</label>
-          <select id="bk-service" name="service"></select>
+          <label for="bk-service">Services</label>
+          <div class="booking-service-row">
+            <select id="bk-service" name="service"></select>
+            <button class="booking-add" type="button" aria-label="Add this service to the session">+ Add</button>
+          </div>
+          <p class="field-help">Booking more than one? Pick a service and tap + Add —
+          they'll be scheduled back to back.</p>
         </div>
+        <div class="booking-chips" aria-label="Services in this session"></div>
         <p class="booking-meta"></p>
 
         <p class="booking-label">Pick a day</p>

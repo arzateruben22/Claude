@@ -1,26 +1,29 @@
 /* Lumevina — appointment scheduler
-   A client-side booking calendar for every service except gift
-   certificates. Hours: Tuesday–Sunday, 8:00 AM–6:00 PM, with a
-   12:00–12:30 lunch break. Each service books in rough 30- or
-   60-minute slots; the day's capacity is computed from that
-   (60 min → 9 appointments, 30 min → 19).
+   Client-side booking for every service except gift certificates,
+   including MULTI-SERVICE sessions: add several services (say, a
+   Brazilian wax + custom facial) and they book back-to-back as one
+   block. Hours Tuesday–Sunday, 8:00 AM–6:00 PM, lunch 12:00–12:30.
 
-   "Availability" is a DEMO: a deterministic seed marks some slots
-   taken so days look real, and your own requests persist in
-   localStorage — but no request leaves the browser. Confirmed,
-   deposit-backed booking happens on the Acuity scheduler, which
-   the modal links to.
-   // TODO: for real availability, replace seededBooked/localStorage
-   // with your scheduler's API. */
+   The day is a grid of 30-minute cells; each service occupies its
+   rough duration (30 or 60 min) and a session needs consecutive
+   free cells that never cross lunch. Capacity per day follows from
+   the session length. A 50% deposit of the session total is
+   collected in step two via the shared payment engine
+   (js/payments.js — see its STRIPE INTEGRATION POINT).
+
+   "Availability" is a labeled demo: a deterministic seed marks
+   some cells busy so days look real, and the visitor's own
+   bookings persist in localStorage and block those cells. */
 
 (function () {
   "use strict";
 
   var STORAGE_KEY = "lumevina_bookings";
 
-  var OPEN_MIN = 8 * 60;      /* 8:00 AM  */
-  var CLOSE_MIN = 18 * 60;    /* 6:00 PM  */
-  var LUNCH_START = 12 * 60;  /* 12:00    */
+  var CELL = 30;
+  var OPEN_MIN = 8 * 60;
+  var CLOSE_MIN = 18 * 60;
+  var LUNCH_START = 12 * 60;
   var LUNCH_END = 12 * 60 + 30;
 
   /* rough 30-minute services; everything else books at 60 */
@@ -60,6 +63,8 @@
   var formView = modal.querySelector(".booking-form-view");
   var successView = modal.querySelector(".booking-success");
   var select = modal.querySelector("#bk-service");
+  var addBtn = modal.querySelector(".booking-add");
+  var chipsEl = modal.querySelector(".booking-chips");
   var metaEl = modal.querySelector(".booking-meta");
   var daysEl = modal.querySelector(".booking-days");
   var slotsEl = modal.querySelector(".booking-slots");
@@ -82,8 +87,6 @@
   var cvcInput = modal.querySelector("#bk-cvc");
   pay.bindCardFields(cardInput, expiryInput, cvcInput);
 
-  var depositFor = function (s) { return s.price / 2; };
-
   services.forEach(function (s) {
     var opt = document.createElement("option");
     opt.value = s.id;
@@ -91,18 +94,25 @@
     select.appendChild(opt);
   });
 
-  /* ── Slot math ── */
-  var slotsFor = function (dur) {
-    var out = [];
-    var t = OPEN_MIN;
-    while (t + dur <= CLOSE_MIN) {
-      if (t < LUNCH_END && t + dur > LUNCH_START) { t = LUNCH_END; continue; }
-      out.push(t);
-      t += dur;
-    }
-    return out;
+  /* ── Session state ── */
+  var state = {
+    services: [byId["new-client-consultation"] || services[0]],
+    dayKey: null,
+    slot: null
+  };
+  select.value = state.services[0].id;
+
+  var totalDur = function () {
+    return state.services.reduce(function (a, s) { return a + s.dur; }, 0);
   };
 
+  var totalPrice = function () {
+    return state.services.reduce(function (a, s) { return a + s.price; }, 0);
+  };
+
+  var depositDue = function () { return totalPrice() / 2; };
+
+  /* ── Time helpers ── */
   var fmtTime = function (mins) {
     var h = Math.floor(mins / 60);
     var m = mins % 60;
@@ -117,14 +127,14 @@
       String(d.getDate()).padStart(2, "0");
   };
 
-  /* deterministic pseudo-availability so days look realistically busy */
-  var seededBooked = function (dayKey, serviceDur, mins) {
-    var str = dayKey + ":" + serviceDur + ":" + mins;
+  /* deterministic pseudo-availability, per 30-minute cell */
+  var cellSeedBusy = function (dayKey, cell) {
+    var str = dayKey + ":c:" + cell;
     var h = 0;
     for (var i = 0; i < str.length; i++) {
       h = (h * 31 + str.charCodeAt(i)) >>> 0;
     }
-    return (h % 100) < 28;
+    return (h % 100) < 22;
   };
 
   var loadBookings = function () {
@@ -139,27 +149,88 @@
     catch (err) { /* private mode */ }
   };
 
-  var isTaken = function (dayKey, mins) {
-    return loadBookings().some(function (b) {
-      return b.date === dayKey && b.time === mins;
+  /* cells occupied by the visitor's own bookings on a given day */
+  var userBusyCells = function (dayKey) {
+    var set = {};
+    loadBookings().forEach(function (b) {
+      if (b.date !== dayKey) return;
+      var d = b.dur ||
+        (byId[b.service] ? byId[b.service].dur : 60);
+      for (var t = b.time; t < b.time + d; t += CELL) set[t] = true;
+    });
+    return set;
+  };
+
+  var overlapsLunch = function (start, dur) {
+    return start < LUNCH_END && start + dur > LUNCH_START;
+  };
+
+  /* a session block fits if every cell is open and lunch is clear */
+  var blockFree = function (dayKey, start, dur, userSet) {
+    if (overlapsLunch(start, dur)) return false;
+    for (var t = start; t < start + dur; t += CELL) {
+      if (cellSeedBusy(dayKey, t) || userSet[t]) return false;
+    }
+    return true;
+  };
+
+  var candidateStarts = function (dur) {
+    var out = [];
+    for (var t = OPEN_MIN; t + dur <= CLOSE_MIN; t += CELL) {
+      if (overlapsLunch(t, dur)) continue;
+      out.push(t);
+    }
+    return out;
+  };
+
+  var dayCapacity = function (dur) {
+    /* how many sessions of this length fit mathematically:
+       morning block 8–12, afternoon block 12:30–6 */
+    var morning = Math.floor((LUNCH_START - OPEN_MIN) / dur);
+    var afternoon = Math.floor((CLOSE_MIN - LUNCH_END) / dur);
+    return morning + afternoon;
+  };
+
+  /* ── Rendering ── */
+  var renderChips = function () {
+    chipsEl.textContent = "";
+    state.services.forEach(function (s, i) {
+      var chip = document.createElement("span");
+      chip.className = "bk-chip";
+      var label = document.createElement("span");
+      label.textContent = s.name + " · " + s.dur + " min";
+      chip.appendChild(label);
+      var x = document.createElement("button");
+      x.type = "button";
+      x.className = "bk-chip-x";
+      x.textContent = "×";
+      x.setAttribute("aria-label", "Remove " + s.name + " from this session");
+      x.addEventListener("click", function () {
+        state.services.splice(i, 1);
+        state.slot = null;
+        renderAll();
+      });
+      chip.appendChild(x);
+      chipsEl.appendChild(chip);
     });
   };
 
-  /* ── State + rendering ── */
-  var state = {
-    /* generic Book buttons open on the new-client flagship */
-    service: byId["new-client-consultation"] || services[0],
-    dayKey: null,
-    slot: null
-  };
-  select.value = state.service.id;
-
   var renderMeta = function () {
-    var n = slotsFor(state.service.dur).length;
-    metaEl.textContent = state.service.dur + " min · up to " + n +
-      " appointments a day · Tue–Sun, 8:00 AM–6:00 PM · lunch 12:00–12:30";
+    var n = state.services.length;
+    if (!n) {
+      metaEl.textContent = "Add at least one service to build your session.";
+      confirmBtn.querySelector(".btn-mb-inner").textContent = "Continue to deposit";
+      return;
+    }
+    var dur = totalDur();
+    metaEl.textContent =
+      (n > 1 ? n + " services, back to back · " : "") +
+      dur + " min · " + pay.money(totalPrice()) +
+      " · up to " + dayCapacity(dur) + " session" +
+      (dayCapacity(dur) === 1 ? "" : "s") +
+      " a day · Tue–Sun, 8:00 AM–6:00 PM · lunch 12:00–12:30";
     confirmBtn.querySelector(".btn-mb-inner").textContent =
-      "Continue to deposit · " + pay.money(depositFor(state.service));
+      "Continue to deposit · " + pay.money(depositDue());
   };
 
   var renderDays = function () {
@@ -201,18 +272,26 @@
 
   var renderSlots = function () {
     slotsEl.textContent = "";
+    if (!state.services.length) {
+      var empty = document.createElement("p");
+      empty.className = "booking-open-note";
+      empty.textContent = "Pick a service above to see available times.";
+      slotsEl.appendChild(empty);
+      return;
+    }
+    var dur = totalDur();
     var todayKey = dateKey(new Date());
     var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+    var userSet = userBusyCells(state.dayKey);
     var open = 0;
-    slotsFor(state.service.dur).forEach(function (mins) {
+    candidateStarts(dur).forEach(function (mins) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "slot-btn";
       btn.textContent = fmtTime(mins);
       var past = state.dayKey === todayKey && mins <= nowMins;
-      var taken = seededBooked(state.dayKey, state.service.dur, mins) ||
-        isTaken(state.dayKey, mins);
-      if (past || taken) {
+      var free = blockFree(state.dayKey, mins, dur, userSet);
+      if (past || !free) {
         btn.disabled = true;
         btn.classList.add("taken");
       } else {
@@ -230,21 +309,39 @@
     });
     var note = document.createElement("p");
     note.className = "booking-open-note";
-    note.textContent = open + " opening" + (open === 1 ? "" : "s") + " left this day";
+    note.textContent = open + " opening" + (open === 1 ? "" : "s") +
+      " for this " + dur + "-minute session";
     slotsEl.appendChild(note);
   };
 
   var renderAll = function () {
+    renderChips();
     renderMeta();
     renderDays();
     renderSlots();
   };
 
-  select.addEventListener("change", function () {
-    state.service = byId[select.value];
+  /* ── Session building ── */
+  var addService = function (id) {
+    var s = byId[id];
+    if (!s) return;
+    var already = state.services.some(function (x) { return x.id === s.id; });
+    if (already) {
+      statusEl.textContent = s.name + " is already in this session.";
+      return;
+    }
+    state.services.push(s);
     state.slot = null;
+    statusEl.textContent = "";
     renderAll();
+  };
+
+  addBtn.addEventListener("click", function () {
+    addService(select.value);
   });
+
+  /* the select is purely a picker — the chips are the session;
+     + Add appends, × on a chip removes */
 
   /* ── Open / close ── */
   var lastFocus = null;
@@ -252,7 +349,7 @@
   var openModal = function (serviceId) {
     lastFocus = document.activeElement;
     if (serviceId && byId[serviceId]) {
-      state.service = byId[serviceId];
+      state.services = [byId[serviceId]];
       select.value = serviceId;
     }
     state.slot = null;
@@ -292,8 +389,13 @@
     });
   };
 
+  var sessionName = function () {
+    return state.services.map(function (s) { return s.name; }).join(" + ");
+  };
+
   confirmBtn.addEventListener("click", function () {
     var problems = [];
+    if (!state.services.length) problems.push("at least one service");
     if (!state.slot) problems.push("a time slot");
     if (!nameInput.value.trim()) problems.push("your name");
     if (!emailInput.value.trim() || !emailInput.checkValidity()) {
@@ -304,14 +406,15 @@
       return;
     }
 
-    var s = state.service;
-    var deposit = depositFor(s);
+    var deposit = depositDue();
     payLines.textContent = "";
-    [
-      [s.name, pay.money(s.price)],
-      [whenText() + " · " + fmtTime(state.slot) + " (" + s.dur + " min)", ""],
-      ["Balance due at appointment", pay.money(s.price - deposit)]
-    ].forEach(function (row) {
+    var rows = state.services.map(function (s) {
+      return [s.name + " (" + s.dur + " min)", pay.money(s.price)];
+    });
+    rows.push([whenText() + " · " + fmtTime(state.slot) + " – " +
+      fmtTime(state.slot + totalDur()), ""]);
+    rows.push(["Balance due at appointment", pay.money(totalPrice() - deposit)]);
+    rows.forEach(function (row) {
       var li = document.createElement("li");
       var label = document.createElement("span");
       label.textContent = row[0];
@@ -349,13 +452,12 @@
       return;
     }
 
-    var s = state.service;
-    var deposit = depositFor(s);
+    var deposit = depositDue();
     payBtn.disabled = true;
     payStatus.textContent = "Processing…";
     pay.process({
       amount: deposit,
-      description: "50% deposit — " + s.name + " (" + state.dayKey + ")"
+      description: "50% deposit — " + sessionName() + " (" + state.dayKey + ")"
     }, function (err, result) {
       payBtn.disabled = false;
       if (err) {
@@ -366,15 +468,16 @@
       saveBooking({
         date: state.dayKey,
         time: state.slot,
-        service: s.id,
+        dur: totalDur(),
+        services: state.services.map(function (s) { return s.id; }),
         order: result.id,
         deposit: deposit
       });
-      summaryEl.textContent = s.name + " · " + whenText() + " · " +
-        fmtTime(state.slot) + " (" + s.dur + " min)";
+      summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
+        fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());
       modal.querySelector(".booking-paid").textContent =
         "Deposit paid: " + pay.money(deposit) + " · Balance due: " +
-        pay.money(s.price - deposit);
+        pay.money(totalPrice() - deposit);
       modal.querySelector(".booking-order-id").textContent = result.id;
       payView.hidden = true;
       successView.hidden = false;
@@ -405,10 +508,7 @@
     btn.parentNode.insertBefore(b, btn.nextSibling);
   });
 
-  /* Site-wide Book links open this calendar instead of navigating;
-     their hrefs still point at the Acuity catalog as the
-     no-JavaScript fallback. Delegated at the document level so the
-     intercept holds regardless of load order or DOM changes. */
+  /* Site-wide Book links open this calendar instead of navigating */
   document.addEventListener("click", function (e) {
     var el = e.target && e.target.closest &&
       e.target.closest("[data-open-booking]");
