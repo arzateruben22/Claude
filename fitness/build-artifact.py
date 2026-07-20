@@ -12,6 +12,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 html = open('index.html').read()
 css = open('css/styles.css').read()
 js = open('js/main.js').read()
+live = open('js/booking-live.js').read()
 gsap = open('js/vendor/gsap.min.js').read()
 st = open('js/vendor/ScrollTrigger.min.js').read()
 
@@ -36,6 +37,7 @@ body = re.sub(r'\s*<script src="[^"]+"></script>', '', body)
 title = re.search(r'<title>(.*?)</title>', html).group(1)
 
 out = f'<title>{title}</title>\n<style>\n{css}\n</style>\n{body}\n'
-out += f'<script>{gsap}</script>\n<script>{st}</script>\n<script>\n{js}\n</script>\n'
+out += f'<script>{gsap}</script>\n<script>{st}</script>\n'
+out += f'<script>\n{live}\n</script>\n<script>\n{js}\n</script>\n'
 open('artifact.html', 'w').write(out)
 print('artifact.html bytes:', len(out))

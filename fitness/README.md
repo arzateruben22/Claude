@@ -85,6 +85,24 @@ chosen plan and payment mode. Edit availability at the top of the
 scheduler block in `js/main.js`: `OPEN_DAYS` (0 = Sunday), `SLOT_TIMES`,
 and `DAYS_AHEAD`. Plan buttons without a Stripe link scroll here.
 
+## Going fully live (Stripe + Supabase)
+
+`js/booking-live.js` is the Lumevina calendar engine ported for SchFLR.
+It sleeps until configured; the full setup (SQL table, security
+policies, where the keys go) is written step-by-step in that file's
+header comment. Once `SUPABASE_URL` + `SUPABASE_ANON_KEY` are pasted
+there and `STRIPE_LINKS` is filled in `main.js`:
+
+- booked slots show struck-through and unclickable for every visitor,
+- "I paid — text my slot" writes a pending booking that closes the
+  slot instantly,
+- you confirm or cancel bookings from the Supabase table editor
+  (cancelled slots reopen on their own).
+
+Note: `tel:`/`sms:` buttons are blocked inside the Claude preview
+frame's sandbox; the site detects that and shows a copyable contact
+card instead. On real hosting the buttons dial/text natively.
+
 ## Things to fill in before launch
 
 1. **Stripe links** — see above; buttons fall back to calling

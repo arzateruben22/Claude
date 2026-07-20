@@ -27,6 +27,64 @@
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
+  /* ── Contact fallback inside sandboxed previews ──────────── */
+  /* The artifact preview iframe blocks tel:/sms:/mailto: links.
+     When embedded, show a copyable contact card instead. */
+  var EMBEDDED = window.self !== window.top;
+  if (EMBEDDED) {
+    var card = null;
+    function contactCard(number, message) {
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "contact-card";
+        card.innerHTML =
+          '<div class="contact-card-inner">' +
+          '<p class="contact-card-title mono">Preview mode — copy &amp; send</p>' +
+          '<p class="contact-card-num mono"></p>' +
+          '<p class="contact-card-msg"></p>' +
+          '<div class="contact-card-btns">' +
+          '<button type="button" class="btn btn-solid" data-copy="num">Copy number</button>' +
+          '<button type="button" class="btn btn-ghost" data-copy="msg">Copy message</button>' +
+          '<button type="button" class="btn btn-ghost" data-copy="close">Close</button>' +
+          "</div></div>";
+        document.body.appendChild(card);
+        card.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-copy]");
+          if (!b && e.target === card) { card.hidden = true; return; }
+          if (!b) return;
+          if (b.dataset.copy === "close") { card.hidden = true; return; }
+          var text = b.dataset.copy === "num"
+            ? card.querySelector(".contact-card-num").textContent
+            : card.querySelector(".contact-card-msg").textContent;
+          if (navigator.clipboard) navigator.clipboard.writeText(text);
+          b.textContent = "Copied!";
+          window.setTimeout(function () {
+            b.textContent = b.dataset.copy === "num" ? "Copy number" : "Copy message";
+          }, 1200);
+        });
+      }
+      card.querySelector(".contact-card-num").textContent = number;
+      var msgEl = card.querySelector(".contact-card-msg");
+      msgEl.textContent = message || "";
+      msgEl.hidden = !message;
+      card.querySelector('[data-copy="msg"]').hidden = !message;
+      card.hidden = false;
+    }
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest('a[href^="tel:"], a[href^="sms:"], a[href^="mailto:"]');
+      if (!a || a.classList.contains("is-disabled")) return;
+      e.preventDefault();
+      var href = a.getAttribute("href");
+      if (href.indexOf("mailto:") === 0) {
+        contactCard("arzateruben22@gmail.com", "");
+        return;
+      }
+      var num = "(714) 353-3126";
+      var m = href.match(/body=([^&]*)/);
+      contactCard(num, m ? decodeURIComponent(m[1]) : "");
+    });
+  }
+
   /* ── Brand → smooth scroll home ──────────────────────────── */
   document.addEventListener("click", function (e) {
     var a = e.target.closest('a[href="#top"]');
@@ -207,6 +265,9 @@
         MO[d.getMonth()] + "</span>";
       b.dataset.label = WD[d.getDay()] + " " + MO[d.getMonth()] + " " + d.getDate();
       b.dataset.dow = String(d.getDay());
+      b.dataset.key = d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
       daysEl.appendChild(b);
     }
 
@@ -323,13 +384,15 @@
         c.setAttribute("aria-selected", String(c === b));
       });
       picked.label = b.dataset.label;
+      picked.key = b.dataset.key;
       picked.time = "";
       renderSlots(Number(b.dataset.dow));
+      if (window.__bookingLive) window.__bookingLive.markTaken(picked.key, slotsEl);
       update();
     });
     slotsEl.addEventListener("click", function (e) {
       var b = e.target.closest(".chip-slot");
-      if (!b) return;
+      if (!b || b.classList.contains("is-taken")) return;
       [].forEach.call(slotsEl.children, function (c) {
         c.classList.toggle("is-on", c === b);
         c.setAttribute("aria-selected", String(c === b));
@@ -342,6 +405,14 @@
         if (btn.classList.contains("is-disabled")) {
           e.preventDefault();
           summary.textContent = "Pick a day and a time first — then send.";
+          return;
+        }
+        /* live mode: close the slot for everyone the moment they commit */
+        if (btn === sendPaid && window.__bookingLive && picked.key) {
+          var p = window.__planState || { name: "Momentum", mode: "full" };
+          window.__bookingLive.record({
+            day: picked.key, slot: picked.time, plan: p.name, mode: p.mode
+          });
         }
       });
     });

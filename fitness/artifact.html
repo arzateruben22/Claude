@@ -1187,6 +1187,57 @@ a { color: inherit; }
   text-align: center;
 }
 
+/* ── Contact card (sandboxed-preview fallback) ──────────────── */
+
+.contact-card {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(10, 10, 13, 0.7);
+  backdrop-filter: blur(6px);
+}
+.contact-card[hidden] { display: none; }
+.contact-card-inner {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.contact-card-title {
+  margin: 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--orange);
+}
+.contact-card-num { margin: 0; font-size: 1.5rem; }
+.contact-card-msg {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--steel);
+  border-left: 3px solid var(--line);
+  padding-left: 0.8rem;
+}
+.contact-card-msg[hidden] { display: none; }
+.contact-card-btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.contact-card-btns .btn { flex: 1; justify-content: center; padding: 0.6rem 0.9rem; font-size: 0.85rem; }
+.contact-card-btns [hidden] { display: none; }
+
+.chip-slot.is-taken {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
 /* ── FAQ ────────────────────────────────────────────────────── */
 
 .section-faq { background: var(--panel); }
@@ -1710,6 +1761,120 @@ a { color: inherit; }
 
 </script>
 <script>
+/* SchFLR — live availability engine
+   ─────────────────────────────────────────────────────────────
+   Ported from the Lumevina booking system: the same day-key /
+   busy-slot calendar formula, with Supabase as the store instead
+   of Lumevina's demo localStorage.
+
+   DORMANT until configured. To go live:
+
+   1. Create a free project at https://supabase.com
+   2. In the SQL editor, run:
+
+        create table bookings (
+          id uuid primary key default gen_random_uuid(),
+          day text not null,          -- "2026-07-22" (dateKey format)
+          slot text not null,         -- "6:00 – 7:30 PM"
+          plan text not null,         -- "Momentum"
+          pay_mode text not null,     -- "full" | "split"
+          status text not null default 'pending',  -- pending | confirmed | cancelled
+          created_at timestamptz default now(),
+          unique (day, slot)
+        );
+        alter table bookings enable row level security;
+        create policy "public can read booked slots"
+          on bookings for select using (true);
+        create policy "public can request a booking"
+          on bookings for insert with check (status = 'pending');
+
+   3. Paste your project URL and anon key below (Settings → API).
+   4. Also fill STRIPE_LINKS in main.js — the payment-first flow
+      and this live calendar switch on together.
+
+   You confirm/cancel bookings from the Supabase table editor (set
+   status). Cancelled slots reopen automatically.
+   ───────────────────────────────────────────────────────────── */
+
+(function () {
+  "use strict";
+
+  var CONFIG = {
+    SUPABASE_URL: "",        // e.g. "https://abcdefgh.supabase.co"
+    SUPABASE_ANON_KEY: "",   // the public "anon" key — safe to ship
+    TABLE: "bookings"
+  };
+
+  if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) return; // dormant
+
+  var HEADERS = {
+    apikey: CONFIG.SUPABASE_ANON_KEY,
+    Authorization: "Bearer " + CONFIG.SUPABASE_ANON_KEY,
+    "Content-Type": "application/json"
+  };
+  var BASE = CONFIG.SUPABASE_URL + "/rest/v1/" + CONFIG.TABLE;
+
+  /* dateKey — same formula as Lumevina */
+  function dateKey(d) {
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+
+  /* taken = Set of "day|slot" for pending + confirmed bookings */
+  var taken = new Set();
+
+  function refresh() {
+    var today = dateKey(new Date());
+    return fetch(BASE + "?select=day,slot,status&day=gte." + today +
+        "&status=neq.cancelled", { headers: HEADERS })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (rows) {
+        taken = new Set(rows.map(function (b) { return b.day + "|" + b.slot; }));
+        /* re-mark whatever day is currently rendered */
+        var open = document.querySelector(".book-days .chip-day.is-on");
+        if (open) {
+          window.__bookingLive.markTaken(open.dataset.key,
+            document.querySelector(".book-slots"));
+        }
+      })
+      .catch(function () {});
+  }
+
+  window.__bookingLive = {
+    dateKey: dateKey,
+
+    /* disable slot chips that are already booked for this day */
+    markTaken: function (dayKey, slotsEl) {
+      if (!dayKey || !slotsEl) return;
+      [].forEach.call(slotsEl.querySelectorAll(".chip-slot"), function (chip) {
+        var isTaken = taken.has(dayKey + "|" + chip.textContent);
+        chip.classList.toggle("is-taken", isTaken);
+        chip.disabled = isTaken;
+        if (isTaken) chip.classList.remove("is-on");
+      });
+    },
+
+    /* write a pending booking the moment the client says they've paid */
+    record: function (b) {
+      taken.add(b.day + "|" + b.slot); // optimistic — slot closes instantly
+      return fetch(BASE, {
+        method: "POST",
+        headers: HEADERS,
+        body: JSON.stringify({
+          day: b.day, slot: b.slot, plan: b.plan,
+          pay_mode: b.mode, status: "pending"
+        })
+      }).catch(function () {});
+    }
+  };
+
+  refresh();
+  window.setInterval(refresh, 60 * 1000); // stay fresh while the page is open
+})();
+
+</script>
+<script>
 /* SchFLR — nav, mobile menu, GSAP motion */
 
 (function () {
@@ -1738,6 +1903,64 @@ a { color: inherit; }
   /* ── Footer year ─────────────────────────────────────────── */
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
+
+  /* ── Contact fallback inside sandboxed previews ──────────── */
+  /* The artifact preview iframe blocks tel:/sms:/mailto: links.
+     When embedded, show a copyable contact card instead. */
+  var EMBEDDED = window.self !== window.top;
+  if (EMBEDDED) {
+    var card = null;
+    function contactCard(number, message) {
+      if (!card) {
+        card = document.createElement("div");
+        card.className = "contact-card";
+        card.innerHTML =
+          '<div class="contact-card-inner">' +
+          '<p class="contact-card-title mono">Preview mode — copy &amp; send</p>' +
+          '<p class="contact-card-num mono"></p>' +
+          '<p class="contact-card-msg"></p>' +
+          '<div class="contact-card-btns">' +
+          '<button type="button" class="btn btn-solid" data-copy="num">Copy number</button>' +
+          '<button type="button" class="btn btn-ghost" data-copy="msg">Copy message</button>' +
+          '<button type="button" class="btn btn-ghost" data-copy="close">Close</button>' +
+          "</div></div>";
+        document.body.appendChild(card);
+        card.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-copy]");
+          if (!b && e.target === card) { card.hidden = true; return; }
+          if (!b) return;
+          if (b.dataset.copy === "close") { card.hidden = true; return; }
+          var text = b.dataset.copy === "num"
+            ? card.querySelector(".contact-card-num").textContent
+            : card.querySelector(".contact-card-msg").textContent;
+          if (navigator.clipboard) navigator.clipboard.writeText(text);
+          b.textContent = "Copied!";
+          window.setTimeout(function () {
+            b.textContent = b.dataset.copy === "num" ? "Copy number" : "Copy message";
+          }, 1200);
+        });
+      }
+      card.querySelector(".contact-card-num").textContent = number;
+      var msgEl = card.querySelector(".contact-card-msg");
+      msgEl.textContent = message || "";
+      msgEl.hidden = !message;
+      card.querySelector('[data-copy="msg"]').hidden = !message;
+      card.hidden = false;
+    }
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest('a[href^="tel:"], a[href^="sms:"], a[href^="mailto:"]');
+      if (!a || a.classList.contains("is-disabled")) return;
+      e.preventDefault();
+      var href = a.getAttribute("href");
+      if (href.indexOf("mailto:") === 0) {
+        contactCard("arzateruben22@gmail.com", "");
+        return;
+      }
+      var num = "(714) 353-3126";
+      var m = href.match(/body=([^&]*)/);
+      contactCard(num, m ? decodeURIComponent(m[1]) : "");
+    });
+  }
 
   /* ── Brand → smooth scroll home ──────────────────────────── */
   document.addEventListener("click", function (e) {
@@ -1919,6 +2142,9 @@ a { color: inherit; }
         MO[d.getMonth()] + "</span>";
       b.dataset.label = WD[d.getDay()] + " " + MO[d.getMonth()] + " " + d.getDate();
       b.dataset.dow = String(d.getDay());
+      b.dataset.key = d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
       daysEl.appendChild(b);
     }
 
@@ -2035,13 +2261,15 @@ a { color: inherit; }
         c.setAttribute("aria-selected", String(c === b));
       });
       picked.label = b.dataset.label;
+      picked.key = b.dataset.key;
       picked.time = "";
       renderSlots(Number(b.dataset.dow));
+      if (window.__bookingLive) window.__bookingLive.markTaken(picked.key, slotsEl);
       update();
     });
     slotsEl.addEventListener("click", function (e) {
       var b = e.target.closest(".chip-slot");
-      if (!b) return;
+      if (!b || b.classList.contains("is-taken")) return;
       [].forEach.call(slotsEl.children, function (c) {
         c.classList.toggle("is-on", c === b);
         c.setAttribute("aria-selected", String(c === b));
@@ -2054,6 +2282,14 @@ a { color: inherit; }
         if (btn.classList.contains("is-disabled")) {
           e.preventDefault();
           summary.textContent = "Pick a day and a time first — then send.";
+          return;
+        }
+        /* live mode: close the slot for everyone the moment they commit */
+        if (btn === sendPaid && window.__bookingLive && picked.key) {
+          var p = window.__planState || { name: "Momentum", mode: "full" };
+          window.__bookingLive.record({
+            day: picked.key, slot: picked.time, plan: p.name, mode: p.mode
+          });
         }
       });
     });

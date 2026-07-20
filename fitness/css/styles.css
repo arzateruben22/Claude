@@ -1185,6 +1185,57 @@ a { color: inherit; }
   text-align: center;
 }
 
+/* ── Contact card (sandboxed-preview fallback) ──────────────── */
+
+.contact-card {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(10, 10, 13, 0.7);
+  backdrop-filter: blur(6px);
+}
+.contact-card[hidden] { display: none; }
+.contact-card-inner {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.contact-card-title {
+  margin: 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--orange);
+}
+.contact-card-num { margin: 0; font-size: 1.5rem; }
+.contact-card-msg {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--steel);
+  border-left: 3px solid var(--line);
+  padding-left: 0.8rem;
+}
+.contact-card-msg[hidden] { display: none; }
+.contact-card-btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.contact-card-btns .btn { flex: 1; justify-content: center; padding: 0.6rem 0.9rem; font-size: 0.85rem; }
+.contact-card-btns [hidden] { display: none; }
+
+.chip-slot.is-taken {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
 /* ── FAQ ────────────────────────────────────────────────────── */
 
 .section-faq { background: var(--panel); }
