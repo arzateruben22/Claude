@@ -278,12 +278,48 @@
         <!-- ─── The Full Menu (complete catalog) ─── -->
         <div class="wax-menu">
           <div class="wax-head" data-reveal>
-            <h3 class="wax-title">The Full Menu</h3>
-            <p class="wax-sub">Every service on the books — facials, peels, the acne program,
-            consultations, and waxing head to toe. Tap + to add any of them to your cart.</p>
+            <h3 class="wax-title">Explore Every Service</h3>
+            <p class="wax-sub">Six sectors, every treatment inside. Tap a sector to open its
+            menu — then + to add to your cart, or the calendar to book.</p>
           </div>
-          <div class="wax-groups">
-            <div class="wax-group" data-reveal>
+
+          <!-- big sectors pop in on scroll; tap to unfold the subsector menu -->
+          <div class="sector-grid">
+            <button class="sector-btn panel-tint-1" type="button" data-sector="facials" aria-expanded="false">
+              <span class="sector-name">Facials</span>
+              <span class="sector-sub">6 services · from $30</span>
+              <svg class="sector-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sector-btn panel-tint-3" type="button" data-sector="peels" aria-expanded="false">
+              <span class="sector-name">Peels</span>
+              <span class="sector-sub">4 treatments · from $210</span>
+              <svg class="sector-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sector-btn panel-tint-5" type="button" data-sector="back" aria-expanded="false">
+              <span class="sector-name">Back Facials</span>
+              <span class="sector-sub">2 treatments · from $130</span>
+              <svg class="sector-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sector-btn panel-tint-7" type="button" data-sector="acne" aria-expanded="false">
+              <span class="sector-name">Acne Program</span>
+              <span class="sector-sub">3 treatments · from $110</span>
+              <svg class="sector-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sector-btn panel-tint-2" type="button" data-sector="consult" aria-expanded="false">
+              <span class="sector-name">Consultations</span>
+              <span class="sector-sub">2 options · $50</span>
+              <svg class="sector-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sector-btn panel-tint-8" type="button" data-sector="waxing" aria-expanded="false">
+              <span class="sector-name">Waxing</span>
+              <span class="sector-sub">25 services · from $8</span>
+              <svg class="sector-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <div class="sector-panels">
+            <div class="sector-panel" data-sector="facials" hidden>
+            <div class="wax-group">
               <h4 class="wax-group-title">Facials</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>New Clients Start Here</strong><span class="wax-desc">Consultation, routine review, and a fully customized facial.</span></span><span class="dots"></span><span class="wax-price">$200</span><button class="wax-add add-to-cart" type="button" data-id="new-client-consultation" data-name="New Client Consultation + Treatment" data-price="200" aria-label="Add New Client Consultation and Treatment to cart">+</button></li>
@@ -295,7 +331,10 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            </div>
+
+            <div class="sector-panel" data-sector="peels" hidden>
+            <div class="wax-group">
               <h4 class="wax-group-title">Peels</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>Light Chemical Peel</strong><span class="wax-desc">New + existing clients — sun damage, fine lines, acne scars. Series recommended; aftercare products purchased first.</span></span><span class="dots"></span><span class="wax-price">$210</span><button class="wax-add add-to-cart" type="button" data-id="light-chemical-peel" data-name="Light Chemical Peel" data-price="210" aria-label="Add Light Chemical Peel to cart">+</button></li>
@@ -305,7 +344,10 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            </div>
+
+            <div class="sector-panel" data-sector="back" hidden>
+            <div class="wax-group">
               <h4 class="wax-group-title">Back Facials</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>Back Facial · Full</strong><span class="wax-desc">Blackheads, acne, blemishes — steamy double cleanse, extractions, LED or high frequency. DM for a customized plan.</span></span><span class="dots"></span><span class="wax-price">$170</span><button class="wax-add add-to-cart" type="button" data-id="back-facial-full" data-name="Back Facial - Full" data-price="170" aria-label="Add Full Back Facial to cart">+</button></li>
@@ -313,7 +355,10 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            </div>
+
+            <div class="sector-panel" data-sector="acne" hidden>
+            <div class="wax-group">
               <h4 class="wax-group-title">Acne Program</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>New Client Consultation + Treatment</strong><span class="wax-desc">A personalized plan with Face Reality — the #1 acne line. Best results with biweekly visits + home care; monthly works too.</span></span><span class="dots"></span><span class="wax-price">$210</span><button class="wax-add add-to-cart" type="button" data-id="new-client-consultation-acne" data-name="New Client Consultation + Treatment (Acne Program)" data-price="210" aria-label="Add Acne Program consultation to cart">+</button></li>
@@ -322,7 +367,10 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            </div>
+
+            <div class="sector-panel" data-sector="consult" hidden>
+            <div class="wax-group">
               <h4 class="wax-group-title">Consultations</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>Virtual Consultation</strong><span class="wax-desc">A deep dive into your skin type, concerns, and goals, with a custom plan + product picks. Mondays only — please reach out before booking.</span></span><span class="dots"></span><span class="wax-price">$50</span><button class="wax-add add-to-cart" type="button" data-id="virtual-consultation" data-name="Virtual Consultation" data-price="50" aria-label="Add Virtual Consultation to cart">+</button></li>
@@ -330,7 +378,12 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            </div>
+
+            <!-- waxing keeps its own subsectors: face, body, brazilian & bikini -->
+            <div class="sector-panel" data-sector="waxing" hidden>
+            <div class="wax-groups">
+            <div class="wax-group">
               <h4 class="wax-group-title">Face Wax</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>Brow Wax + Tweeze</strong></span><span class="dots"></span><span class="wax-price">$25</span><button class="wax-add add-to-cart" type="button" data-id="brow-wax-tweeze" data-name="Brow Wax + Tweeze" data-price="25" aria-label="Add Brow Wax + Tweeze to cart">+</button></li>
@@ -344,7 +397,7 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            <div class="wax-group">
               <h4 class="wax-group-title">Body Wax</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>Underarm Wax</strong></span><span class="dots"></span><span class="wax-price">$20</span><button class="wax-add add-to-cart" type="button" data-id="underarm-wax" data-name="Underarm Wax" data-price="20" aria-label="Add Underarm Wax to cart">+</button></li>
@@ -360,7 +413,7 @@
               </ul>
             </div>
 
-            <div class="wax-group" data-reveal>
+            <div class="wax-group">
               <h4 class="wax-group-title">Brazilian &amp; Bikini</h4>
               <ul class="wax-list" role="list">
                 <li class="wax-row"><span class="wax-item"><strong>Bikini Line Wax</strong><span class="wax-desc">Just outside the underwear line — about four fingers out.</span></span><span class="dots"></span><span class="wax-price">$30</span><button class="wax-add add-to-cart" type="button" data-id="bikini-line-wax" data-name="Bikini Line Wax" data-price="30" aria-label="Add Bikini Line Wax to cart">+</button></li>
@@ -371,6 +424,8 @@
                 <li class="wax-row"><span class="wax-item"><strong>Inner Thigh Add-On</strong><span class="wax-desc">For hair extending past the bikini line — pairs with any Brazilian.</span></span><span class="dots"></span><span class="wax-price">$25</span><button class="wax-add add-to-cart" type="button" data-id="inner-thigh-add-on" data-name="Inner Thigh Add-On" data-price="25" aria-label="Add Inner Thigh Add-On to cart">+</button></li>
                 <li class="wax-row"><span class="wax-item"><strong>Wax Wednesday</strong><span class="wax-desc">$10 off your Brazilian — Wednesdays only, please.</span></span><span class="dots"></span><span class="wax-price">$65</span><button class="wax-add add-to-cart" type="button" data-id="wax-wednesday" data-name="Wax Wednesday (Brazilian)" data-price="65" aria-label="Add Wax Wednesday to cart">+</button></li>
               </ul>
+            </div>
+            </div>
             </div>
           </div>
         </div>
@@ -995,6 +1050,7 @@
   <script src="js/stacked-cards.js"></script>
   <script src="js/cursor-aura.js"></script>
   <script src="js/policy-panels.js"></script>
+  <script src="js/sectors.js"></script>
   <script src="js/booking.js"></script>
   <script src="js/shuffle-stack.js"></script>
   <script src="js/main.js"></script>

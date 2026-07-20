@@ -989,11 +989,87 @@ em { font-style: italic; }
   margin: 0 auto;
 }
 
+/* big sectors that pop in on scroll */
+.sector-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.sector-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  text-align: left;
+  font: inherit;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(90, 62, 78, 0.08);
+  cursor: pointer;
+  transition: transform 250ms ease, box-shadow 250ms ease,
+              border-color 250ms ease;
+}
+
+.sector-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(125, 84, 104, 0.16);
+}
+
+.sector-btn.active {
+  border-color: var(--plum);
+  box-shadow: 0 12px 30px rgba(125, 84, 104, 0.22);
+}
+
+.sector-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--plum);
+  line-height: 1.1;
+}
+
+.sector-sub {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.sector-chev {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.3rem;
+  color: var(--plum);
+  transition: transform 300ms ease;
+}
+
+.sector-btn.active .sector-chev { transform: rotate(180deg); }
+
+/* subsector panels */
+.sector-panels { margin-top: var(--space-4); }
+
+.sector-panel[hidden] { display: none; }
+
+.sector-panel {
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 16px;
+  box-shadow: 0 2px 14px rgba(90, 62, 78, 0.05);
+  padding: var(--space-4) clamp(1.25rem, 3vw, 2.5rem);
+  animation: policy-in 300ms ease;
+}
+
+.sector-panel .wax-group { margin: 0; }
+
 .wax-groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-5) clamp(2rem, 4vw, 4rem);
-  margin-top: var(--space-5);
 }
 
 .wax-group-title {
@@ -2430,6 +2506,7 @@ em { font-style: italic; }
   .journal-inner { grid-template-columns: 1fr; }
   .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .wax-groups { grid-template-columns: 1fr; }
+  .sector-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ritual-grid { grid-template-columns: 1fr; }
   .nav-links, .nav-book { display: none; }
   .nav-cart { margin-left: auto; }
@@ -2439,6 +2516,7 @@ em { font-style: italic; }
 
 @media (max-width: 600px) {
   .shop-grid { grid-template-columns: 1fr; }
+  .sector-grid { grid-template-columns: 1fr; }
   .product-card--wide { display: flex; flex-direction: column; }
   .product-card--wide .product-visual {
     aspect-ratio: 4 / 3;

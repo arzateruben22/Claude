@@ -105,6 +105,19 @@
       }
     });
 
+    /* Service sectors pop up one by one as you scroll to them */
+    if (document.querySelector(".sector-grid")) {
+      gsap.from(".sector-btn", {
+        opacity: 0,
+        y: 26,
+        scale: 0.94,
+        duration: 0.55,
+        ease: "back.out(1.4)",
+        stagger: 0.08,
+        scrollTrigger: { trigger: ".sector-grid", start: "top 82%" }
+      });
+    }
+
     /* Section reveals */
     gsap.utils.toArray("[data-reveal]").forEach(function (el) {
       gsap.from(el, {
