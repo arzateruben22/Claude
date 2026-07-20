@@ -74,7 +74,6 @@
   var statusEl = modal.querySelector(".booking-status");
   var summaryEl = modal.querySelector(".booking-summary");
   var previewEl = modal.querySelector(".session-preview");
-  var timelineEl = modal.querySelector(".session-timeline");
   var costsEl = modal.querySelector(".session-costs");
 
   var pay = window.LumevinaPayments;
@@ -195,17 +194,46 @@
   };
 
   /* ── Rendering ── */
+  var fmtDur = function (m) {
+    return Math.floor(m / 60) + ":" + String(m % 60).padStart(2, "0");
+  };
+
+  /* the session builder is a mini calendar: services stack as
+     proportional back-to-back blocks; labels show offsets while
+     composing and flip to real clock times once a slot is picked */
   var renderChips = function () {
     chipsEl.textContent = "";
+    if (!state.services.length) {
+      var none = document.createElement("p");
+      none.className = "mini-empty";
+      none.textContent = "No services yet — pick one above and tap + Add.";
+      chipsEl.appendChild(none);
+      return;
+    }
+    var offset = 0;
     state.services.forEach(function (s, i) {
-      var chip = document.createElement("span");
-      chip.className = "bk-chip";
-      var label = document.createElement("span");
-      label.textContent = s.name + " · " + s.dur + " min";
-      chip.appendChild(label);
+      var row = document.createElement("div");
+      row.className = "mini-row";
+      var time = document.createElement("span");
+      time.className = "mini-time";
+      time.textContent = state.slot !== null
+        ? fmtTime(state.slot + offset)
+        : (offset === 0 ? "start" : "+" + fmtDur(offset));
+      var block = document.createElement("div");
+      block.className = "mini-block tl-tint-" + ((i % 5) + 1);
+      block.style.minHeight = (s.dur * 0.6 + 16) + "px";
+      var info = document.createElement("span");
+      info.className = "mini-info";
+      var nm = document.createElement("strong");
+      nm.textContent = s.name;
+      var meta = document.createElement("span");
+      meta.className = "mini-meta";
+      meta.textContent = s.dur + " min · " + pay.money(s.price);
+      info.appendChild(nm);
+      info.appendChild(meta);
       var x = document.createElement("button");
       x.type = "button";
-      x.className = "bk-chip-x";
+      x.className = "mini-x";
       x.textContent = "×";
       x.setAttribute("aria-label", "Remove " + s.name + " from this session");
       x.addEventListener("click", function () {
@@ -213,9 +241,28 @@
         state.slot = null;
         renderAll();
       });
-      chip.appendChild(x);
-      chipsEl.appendChild(chip);
+      block.appendChild(info);
+      block.appendChild(x);
+      row.appendChild(time);
+      row.appendChild(block);
+      chipsEl.appendChild(row);
+      offset += s.dur;
     });
+    var endRow = document.createElement("div");
+    endRow.className = "mini-row mini-end";
+    var endTime = document.createElement("span");
+    endTime.className = "mini-time";
+    endTime.textContent = state.slot !== null
+      ? fmtTime(state.slot + offset)
+      : "+" + fmtDur(offset);
+    var endLbl = document.createElement("span");
+    endLbl.className = "mini-meta";
+    endLbl.textContent = state.slot !== null
+      ? "session ends — you float out ✨"
+      : "session ends · pick a day & time below";
+    endRow.appendChild(endTime);
+    endRow.appendChild(endLbl);
+    chipsEl.appendChild(endRow);
   };
 
   var renderMeta = function () {
@@ -310,6 +357,7 @@
           /* tap the selected time again to release the block */
           state.slot = (state.slot === mins) ? null : mins;
           statusEl.textContent = "";
+          renderChips();
           renderSlots();
           renderPreview();
         });
@@ -327,49 +375,14 @@
     slotsEl.appendChild(note);
   };
 
-  /* agenda-style preview: the services stacked at the chosen time,
-     block heights proportional to duration, with the money summary */
+  /* money summary once a time is chosen — the mini calendar above
+     carries the timeline */
   var renderPreview = function () {
     if (state.slot === null || !state.services.length) {
       previewEl.hidden = true;
       return;
     }
     previewEl.hidden = false;
-
-    timelineEl.textContent = "";
-    var t = state.slot;
-    state.services.forEach(function (s, i) {
-      var row = document.createElement("div");
-      row.className = "tl-row";
-      var time = document.createElement("span");
-      time.className = "tl-time";
-      time.textContent = fmtTime(t);
-      var block = document.createElement("div");
-      block.className = "tl-block tl-tint-" + ((i % 5) + 1);
-      block.style.minHeight = (s.dur * 1.4) + "px";
-      var nm = document.createElement("strong");
-      nm.textContent = s.name;
-      var meta = document.createElement("span");
-      meta.className = "tl-meta";
-      meta.textContent = s.dur + " min · " + pay.money(s.price);
-      block.appendChild(nm);
-      block.appendChild(meta);
-      row.appendChild(time);
-      row.appendChild(block);
-      timelineEl.appendChild(row);
-      t += s.dur;
-    });
-    var endRow = document.createElement("div");
-    endRow.className = "tl-row tl-end";
-    var endTime = document.createElement("span");
-    endTime.className = "tl-time";
-    endTime.textContent = fmtTime(t);
-    var endLbl = document.createElement("span");
-    endLbl.className = "tl-meta";
-    endLbl.textContent = "you float out ✨";
-    endRow.appendChild(endTime);
-    endRow.appendChild(endLbl);
-    timelineEl.appendChild(endRow);
 
     costsEl.textContent = "";
     var addRow = function (label, value, cls) {

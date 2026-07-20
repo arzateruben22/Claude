@@ -1979,37 +1979,82 @@ em { font-style: italic; }
   margin: 0.35rem 0 0;
 }
 
+/* the session builder: a mini calendar of back-to-back blocks */
 .booking-chips {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 5px;
   margin-bottom: var(--space-3);
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
 }
 
-.bk-chip {
-  display: inline-flex;
+.mini-empty {
+  font-size: 0.8rem;
+  color: var(--ink-35);
+  margin: 0;
+}
+
+.mini-row {
+  display: grid;
+  grid-template-columns: 3.8rem minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.mini-time {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-35);
+  text-align: right;
+  padding-top: 0.35rem;
+}
+
+.mini-block {
+  border-left: 3px solid;
+  border-radius: 8px;
+  padding: 0.4rem 0.7rem;
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8125rem;
-  color: var(--plum);
-  background: rgba(165, 121, 139, 0.12);
-  border: 1px solid var(--panel-edge);
-  border-radius: 999px;
-  padding: 0.35rem 0.8rem;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
-.bk-chip-x {
+.mini-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.mini-info strong {
+  font-weight: 500;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: var(--plum);
+}
+
+.mini-meta { font-size: 0.72rem; color: var(--ink-60); }
+
+.mini-x {
   background: none;
   border: 0;
-  padding: 0 0.1rem;
-  font-size: 1rem;
+  padding: 0.2rem 0.3rem;
+  font-size: 1.1rem;
   line-height: 1;
   color: var(--mauve);
   cursor: pointer;
+  flex-shrink: 0;
   transition: color 200ms ease;
 }
 
-.bk-chip-x:hover { color: var(--plum); }
+.mini-x:hover { color: var(--plum); }
+
+.mini-end { align-items: center; }
+.mini-end .mini-time { padding-top: 0; }
+.mini-end .mini-meta { font-style: italic; color: var(--ink-35); }
 
 .booking-meta {
   font-size: 0.8125rem;
