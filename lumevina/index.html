@@ -86,8 +86,8 @@
           <span class="line" aria-hidden="true"><span class="line-inner">Radiance,</span></span>
           <span class="line" aria-hidden="true"><span class="line-inner"><em>beautifully restored.</em></span></span>
         </h1>
-        <p class="hero-sub">Bespoke facials and results-driven skincare in a serene,
-        rose-lit studio. Book your visit — or send the gift of glow.</p>
+        <p class="hero-sub">Bespoke facials and results-driven skincare.
+        Book your visit — or send the gift of glow.</p>
         <div class="hero-actions">
           <a class="btn-mb" data-open-booking href="#services">
             <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
@@ -221,11 +221,6 @@
             </div>
           </div>
 
-          <div class="product-card entropy-panel" data-reveal>
-            <canvas class="entropy-canvas" aria-hidden="true"></canvas>
-            <p class="entropy-caption">Order and chaos — your skin knows the difference.</p>
-          </div>
-
           <!-- Wax options shuffle as a card stack (js/shuffle-stack.js) -->
           <div class="product-card shuffle-tile" data-reveal>
             <div class="shuffle-head">
@@ -261,7 +256,7 @@
             </div>
           </div>
 
-          <article class="product-card product-card--wide" id="gift" data-reveal>
+          <article class="product-card" id="gift" data-reveal>
             <div class="product-visual visual-gift" aria-hidden="true"
               data-shape="dots" data-front="#7e9678" data-back="#e3eedd"><span class="product-orb"></span></div>
             <h3 class="product-name">E-Gift Certificate</h3>
@@ -877,13 +872,16 @@
         checkout. Demo mode — no card is charged until payments go live.</p>
 
         <div class="field">
-          <label for="bk-service">Services</label>
-          <div class="booking-service-row">
-            <select id="bk-service" name="service"></select>
-            <button class="booking-add" type="button" aria-label="Add this service to the session">+ Add</button>
+          <span class="booking-label" id="bk-services-label">Services</span>
+          <!-- floating action picker: sectors → subsectors → treatment -->
+          <div class="fam" aria-labelledby="bk-services-label">
+            <button class="fam-trigger" type="button" aria-expanded="false" aria-haspopup="true">
+              <span class="fam-plus" aria-hidden="true">+</span> Add a service
+            </button>
+            <div class="fam-menu" hidden></div>
           </div>
-          <p class="field-help">Booking more than one? Pick a service and tap + Add —
-          they'll be scheduled back to back.</p>
+          <p class="field-help">Choose a sector, then your treatment — add as many as
+          you like and they'll schedule back to back.</p>
         </div>
         <div class="booking-chips" aria-label="Services in this session"></div>
         <p class="booking-meta"></p>
@@ -1046,7 +1044,6 @@
   <script src="js/dither-cards.js"></script>
   <script src="js/morphing-light.js"></script>
   <script src="js/moving-border.js"></script>
-  <script src="js/entropy.js"></script>
   <script src="js/stacked-cards.js"></script>
   <script src="js/cursor-aura.js"></script>
   <script src="js/policy-panels.js"></script>

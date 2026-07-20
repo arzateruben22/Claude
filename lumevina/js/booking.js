@@ -62,8 +62,6 @@
   if (!overlay || !modal) return;
   var formView = modal.querySelector(".booking-form-view");
   var successView = modal.querySelector(".booking-success");
-  var select = modal.querySelector("#bk-service");
-  var addBtn = modal.querySelector(".booking-add");
   var chipsEl = modal.querySelector(".booking-chips");
   var metaEl = modal.querySelector(".booking-meta");
   var daysEl = modal.querySelector(".booking-days");
@@ -89,20 +87,12 @@
   var cvcInput = modal.querySelector("#bk-cvc");
   pay.bindCardFields(cardInput, expiryInput, cvcInput);
 
-  services.forEach(function (s) {
-    var opt = document.createElement("option");
-    opt.value = s.id;
-    opt.textContent = s.name + " — $" + s.price;
-    select.appendChild(opt);
-  });
-
   /* ── Session state ── */
   var state = {
     services: [byId["new-client-consultation"] || services[0]],
     dayKey: null,
     slot: null
   };
-  select.value = state.services[0].id;
 
   var totalDur = function () {
     return state.services.reduce(function (a, s) { return a + s.dur; }, 0);
@@ -427,12 +417,115 @@
     renderAll();
   };
 
-  addBtn.addEventListener("click", function () {
-    addService(select.value);
-  });
+  /* ── Floating action service picker (sectors → subsectors) ── */
+  var SECTORS = [
+    { name: "Facials", ids: ["new-client-consultation", "lumevina-custom-facial",
+      "ageless-grace-facial", "custom-facial-dermaplaning", "couples-facial",
+      "after-hours-facial"] },
+    { name: "Peels", ids: ["light-chemical-peel", "medium-chemical-peel",
+      "biorepeel-1", "biorepeel-3"] },
+    { name: "Back Facials", ids: ["back-facial-full", "back-facial-half"] },
+    { name: "Acne Program", ids: ["new-client-consultation-acne",
+      "monthly-acne-treatment", "biweekly-acne-treatment"] },
+    { name: "Consultations", ids: ["virtual-consultation", "in-person-consultation"] },
+    { name: "Waxing", subs: [
+      { name: "Face Wax", ids: ["brow-wax-tweeze", "upper-lip-wax", "full-face-wax",
+        "full-face-wax-cooling-mask", "sideburn-wax", "hairline-wax", "nose-wax",
+        "nostril-wax"] },
+      { name: "Body Wax", ids: ["underarm-wax", "full-arm-wax", "half-arm-wax",
+        "full-back-wax", "half-back-wax", "full-leg-wax", "half-leg-wax",
+        "full-stomach-wax", "stomach-strip-wax", "full-butt-wax"] },
+      { name: "Brazilian & Bikini", ids: ["bikini-line-wax", "extended-bikini-line",
+        "brazilian-wax", "first-time-brazilian", "brazilian-wax-mini-vajacial",
+        "inner-thigh-add-on", "wax-wednesday"] }
+    ] }
+  ];
 
-  /* the select is purely a picker — the chips are the session;
-     + Add appends, × on a chip removes */
+  var famEl = modal.querySelector(".fam");
+  var famTrigger = modal.querySelector(".fam-trigger");
+  var famMenu = modal.querySelector(".fam-menu");
+  var famPath = [];
+
+  var famItem = function (i, label, sub, onClick, extraClass) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "fam-item" + (extraClass ? " " + extraClass : "");
+    b.style.setProperty("--i", i);
+    var l = document.createElement("span");
+    l.className = "fam-item-label";
+    l.textContent = label;
+    b.appendChild(l);
+    if (sub) {
+      var s = document.createElement("span");
+      s.className = "fam-item-sub";
+      s.textContent = sub;
+      b.appendChild(s);
+    }
+    b.addEventListener("click", onClick);
+    return b;
+  };
+
+  var famLevel = function () {
+    if (!famPath.length) return { nodes: SECTORS, services: null };
+    var sector = SECTORS[famPath[0]];
+    if (sector.subs) {
+      if (famPath.length === 1) return { nodes: sector.subs, services: null };
+      return { nodes: null, services: sector.subs[famPath[1]].ids };
+    }
+    return { nodes: null, services: sector.ids };
+  };
+
+  var renderFam = function () {
+    famMenu.textContent = "";
+    var level = famLevel();
+    var i = 0;
+    if (famPath.length) {
+      famMenu.appendChild(famItem(i++, "← Back", null, function () {
+        famPath.pop();
+        renderFam();
+      }, "fam-back"));
+    }
+    if (level.nodes) {
+      level.nodes.forEach(function (node, idx) {
+        var count = node.subs
+          ? node.subs.reduce(function (a, s) { return a + s.ids.length; }, 0)
+          : node.ids.length;
+        famMenu.appendChild(famItem(i++, node.name,
+          count + (count === 1 ? " option" : " options"), function () {
+            famPath.push(idx);
+            renderFam();
+          }));
+      });
+    } else {
+      level.services.forEach(function (id) {
+        var s = byId[id];
+        if (!s) return;
+        famMenu.appendChild(famItem(i++, s.name,
+          s.dur + " min · $" + s.price, function () {
+            addService(id);
+            closeFam();
+          }, "fam-service"));
+      });
+    }
+  };
+
+  var openFam = function () {
+    famPath = [];
+    renderFam();
+    famMenu.hidden = false;
+    famEl.classList.add("open");
+    famTrigger.setAttribute("aria-expanded", "true");
+  };
+
+  var closeFam = function () {
+    famMenu.hidden = true;
+    famEl.classList.remove("open");
+    famTrigger.setAttribute("aria-expanded", "false");
+  };
+
+  famTrigger.addEventListener("click", function () {
+    if (famEl.classList.contains("open")) closeFam(); else openFam();
+  });
 
   /* ── Open / close ── */
   var lastFocus = null;
@@ -441,8 +534,8 @@
     lastFocus = document.activeElement;
     if (serviceId && byId[serviceId]) {
       state.services = [byId[serviceId]];
-      select.value = serviceId;
     }
+    closeFam();
     state.slot = null;
     statusEl.textContent = "";
     payStatus.textContent = "";
@@ -468,6 +561,7 @@
   overlay.addEventListener("click", closeModal);
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") {
+      if (famEl.classList.contains("open")) { closeFam(); return; }
       closeModal();
     }
   });
