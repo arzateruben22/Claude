@@ -1022,7 +1022,80 @@ em { font-style: italic; }
 
 .order-panel .field input { width: 100%; }
 
-.order-send { width: 100%; margin-top: var(--space-2); }
+.pay { border: 0; margin: var(--space-4) 0 0; padding: 0; }
+
+.pay-required {
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--chile);
+  border: 1px solid rgba(179, 64, 47, 0.5);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.pay-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-radius: 12px;
+  transition: box-shadow 250ms ease;
+}
+
+.pay-options.pay-missing { box-shadow: 0 0 0 1px var(--chile); padding: 0.5rem; }
+
+.pay-opt {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--soot-edge);
+  border-radius: 12px;
+  background: var(--ink);
+  cursor: pointer;
+  transition: border-color 200ms ease;
+}
+
+.pay-opt:hover { border-color: var(--cream-35); }
+
+.pay-opt input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1px solid var(--cream-35);
+  border-radius: 50%;
+  margin: 0;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: border-color 200ms ease;
+}
+
+.pay-opt input::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--flame);
+  transform: scale(0);
+  transition: transform 180ms ease;
+}
+
+.pay-opt input:checked { border-color: var(--flame); }
+.pay-opt input:checked::before { transform: scale(1); }
+.pay-opt input:focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; }
+
+.pay-opt:has(input:checked) { border-color: var(--flame); }
+
+.pay-opt-text { display: flex; flex-direction: column; gap: 0.1rem; }
+.pay-opt-text strong { font-weight: 500; font-size: 0.92rem; }
+.pay-opt-text small { font-size: 0.78rem; color: var(--cream-35); }
+
+.order-send { width: 100%; margin-top: var(--space-4); }
 
 .order-status { margin: var(--space-3) 0 0; font-size: 0.9rem; color: var(--flame); min-height: 1.4em; }
 .order-status.error { color: #e0705c; }

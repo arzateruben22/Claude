@@ -144,6 +144,12 @@
   "use strict";
 
   var ORDER_EMAIL = "hola@losguerosanaheim.com";
+  /* TODO: fill in any of these to enable online prepayment — the option
+     appears automatically with the exact order total prefilled.
+     paypalMe: your paypal.me handle, e.g. "losgueros"
+     venmo: your Venmo username, e.g. "losgueros-anaheim"
+     stripe: a Stripe Payment Link URL (customer enters the amount) */
+  var PAYMENT_LINKS = { paypalMe: "", venmo: "", stripe: "" };
   var DELIVERY_MIN = 50;            /* dollars, delivery unlocks here */
   var PICKUP_LEAD_MIN = 20;         /* minutes until earliest pickup */
   var DELIVERY_LEAD_MIN = 45;       /* minutes until earliest delivery */
@@ -213,6 +219,68 @@
     return Object.keys(cart).reduce(function (sum, k) { return sum + cart[k].qty; }, 0);
   };
   var mode = function () { return deliveryRadio.checked ? "delivery" : "pickup"; };
+
+  /* ── Payment methods (selection is mandatory before sending) ── */
+
+  var payOptions = panel.querySelector(".pay-options");
+  var selectedPay = null;
+
+  var payMethods = function () {
+    var m = [];
+    if (PAYMENT_LINKS.stripe) {
+      m.push({ id: "card-online", label: "Card online", hint: "secure checkout, pay now" });
+    }
+    if (PAYMENT_LINKS.paypalMe) {
+      m.push({ id: "paypal", label: "PayPal", hint: "pay now, exact total" });
+    }
+    if (PAYMENT_LINKS.venmo) {
+      m.push({ id: "venmo", label: "Venmo", hint: "pay now, exact total" });
+    }
+    if (mode() === "delivery") {
+      m.push({ id: "card-door", label: "Card at the door", hint: "our driver brings a reader" });
+    } else {
+      m.push({ id: "counter", label: "Card or cash at the counter", hint: "pay at pickup" });
+    }
+    return m;
+  };
+
+  var payLink = function (id) {
+    var amt = subtotal().toFixed(2);
+    if (id === "paypal") return "https://paypal.me/" + PAYMENT_LINKS.paypalMe + "/" + amt;
+    if (id === "venmo") return "https://venmo.com/" + PAYMENT_LINKS.venmo + "?txn=pay&amount=" + amt;
+    if (id === "card-online") return PAYMENT_LINKS.stripe;
+    return null;
+  };
+
+  var renderPayment = function () {
+    var methods = payMethods();
+    if (!methods.some(function (m) { return m.id === selectedPay; })) selectedPay = null;
+    payOptions.innerHTML = "";
+    methods.forEach(function (m) {
+      var label = document.createElement("label");
+      label.className = "pay-opt";
+      var input = document.createElement("input");
+      input.type = "radio";
+      input.name = "payment";
+      input.value = m.id;
+      input.checked = m.id === selectedPay;
+      input.addEventListener("change", function () {
+        selectedPay = m.id;
+        payOptions.classList.remove("pay-missing");
+      });
+      var text = document.createElement("span");
+      text.className = "pay-opt-text";
+      var title = document.createElement("strong");
+      title.textContent = m.label;
+      var hint = document.createElement("small");
+      hint.textContent = m.hint;
+      text.appendChild(title);
+      text.appendChild(hint);
+      label.appendChild(input);
+      label.appendChild(text);
+      payOptions.appendChild(label);
+    });
+  };
 
   /* ── Quick-add menu inside the drawer, built from the page's menu ── */
 
@@ -375,6 +443,7 @@
 
     addressField.hidden = mode() !== "delivery";
     renderSlots();
+    renderPayment();
     try { localStorage.setItem("lg-order", JSON.stringify(cart)); } catch (e) {}
   };
 
@@ -587,6 +656,12 @@
       statusEl.textContent = "Delivery needs a " + money(DELIVERY_MIN) + " minimum — add a bit more.";
       return;
     }
+    if (!selectedPay) {
+      payOptions.classList.add("pay-missing");
+      statusEl.classList.add("error");
+      statusEl.textContent = "Choose how you're paying before sending your order.";
+      return;
+    }
 
     var when;
     if (timeSel.value === "asap") {
@@ -603,18 +678,22 @@
       lines.push(it.qty + "x " + it.name + (note ? " (" + note + ")" : "") +
         " — " + money(it.price * it.qty));
     });
+    var payMethod = payMethods().filter(function (m) { return m.id === selectedPay; })[0];
+    var link = payLink(selectedPay);
+
     lines.push("", "Total items: " + count(),
       "Subtotal: " + money(subtotal()) + " (plus tax)", "Phone: " + phone);
-    if (isDelivery) {
-      lines.push("Address: " + address, "Payment: CARD ONLY at the door");
-    } else {
-      lines.push("Payment: at the counter (card or cash)");
-    }
+    if (isDelivery) lines.push("Address: " + address);
+    lines.push("Payment: " + payMethod.label.toUpperCase() +
+      (link ? " — customer opened the payment page for " + money(subtotal()) + ", confirm receipt" : ""));
 
+    if (link) window.open(link, "_blank", "noopener");
     window.location.href = "mailto:" + ORDER_EMAIL +
       "?subject=" + encodeURIComponent((isDelivery ? "Delivery" : "Pickup") + " order — " + name) +
       "&body=" + encodeURIComponent(lines.join("\n"));
-    statusEl.textContent = "Opening your email app to send the order — we'll text you to confirm.";
+    statusEl.textContent = link
+      ? "Payment page opened in a new tab — finish paying there, and send the order email so we can confirm."
+      : "Opening your email app to send the order — we'll text you to confirm.";
   });
 
   render();

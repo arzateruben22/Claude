@@ -39,6 +39,13 @@ The drawer includes:
 - **Delivery** — locked until the subtotal reaches `DELIVERY_MIN` ($50),
   card payment only, 45-minute lead time, requires an address.
 
+Choosing a payment method is mandatory before an order can be sent.
+Pickup offers "card or cash at the counter"; delivery offers "card at
+the door". To enable online prepayment, fill in `PAYMENT_LINKS` at the
+top of the ordering section in `js/main.js` (a paypal.me handle, Venmo
+username, or Stripe Payment Link) — those options then appear
+automatically with the exact order total prefilled.
+
 Orders are composed into a prefilled email to `ORDER_EMAIL` (top of the
 ordering section in `js/main.js`). To take real card payments online,
 replace the `sendOrder` email handoff with a POS / payment integration
