@@ -1,4 +1,4 @@
-# Lumevina Aesthetics Spa — Website
+# Lumevina — Website
 
 A single-page, ivory-and-mauve storefront for Lumevina Aesthetics Spa.
 No build step: static HTML + CSS + vanilla JS, with GSAP for scroll
