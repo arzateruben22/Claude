@@ -73,6 +73,9 @@
   var confirmBtn = modal.querySelector(".booking-confirm");
   var statusEl = modal.querySelector(".booking-status");
   var summaryEl = modal.querySelector(".booking-summary");
+  var previewEl = modal.querySelector(".session-preview");
+  var timelineEl = modal.querySelector(".session-timeline");
+  var costsEl = modal.querySelector(".session-costs");
 
   var pay = window.LumevinaPayments;
   var payView = modal.querySelector(".booking-pay-view");
@@ -302,6 +305,7 @@
             b.classList.toggle("selected", b === btn);
           });
           statusEl.textContent = "";
+          renderPreview();
         });
       }
       if (state.slot === mins && !btn.disabled) btn.classList.add("selected");
@@ -314,11 +318,76 @@
     slotsEl.appendChild(note);
   };
 
+  /* agenda-style preview: the services stacked at the chosen time,
+     block heights proportional to duration, with the money summary */
+  var renderPreview = function () {
+    if (state.slot === null || !state.services.length) {
+      previewEl.hidden = true;
+      return;
+    }
+    previewEl.hidden = false;
+
+    timelineEl.textContent = "";
+    var t = state.slot;
+    state.services.forEach(function (s, i) {
+      var row = document.createElement("div");
+      row.className = "tl-row";
+      var time = document.createElement("span");
+      time.className = "tl-time";
+      time.textContent = fmtTime(t);
+      var block = document.createElement("div");
+      block.className = "tl-block tl-tint-" + ((i % 5) + 1);
+      block.style.minHeight = (s.dur * 1.4) + "px";
+      var nm = document.createElement("strong");
+      nm.textContent = s.name;
+      var meta = document.createElement("span");
+      meta.className = "tl-meta";
+      meta.textContent = s.dur + " min · " + pay.money(s.price);
+      block.appendChild(nm);
+      block.appendChild(meta);
+      row.appendChild(time);
+      row.appendChild(block);
+      timelineEl.appendChild(row);
+      t += s.dur;
+    });
+    var endRow = document.createElement("div");
+    endRow.className = "tl-row tl-end";
+    var endTime = document.createElement("span");
+    endTime.className = "tl-time";
+    endTime.textContent = fmtTime(t);
+    var endLbl = document.createElement("span");
+    endLbl.className = "tl-meta";
+    endLbl.textContent = "you float out ✨";
+    endRow.appendChild(endTime);
+    endRow.appendChild(endLbl);
+    timelineEl.appendChild(endRow);
+
+    costsEl.textContent = "";
+    var addRow = function (label, value, cls) {
+      var li = document.createElement("li");
+      if (cls) li.className = cls;
+      var l = document.createElement("span");
+      l.textContent = label;
+      var v = document.createElement("span");
+      v.textContent = value;
+      li.appendChild(l);
+      li.appendChild(v);
+      costsEl.appendChild(li);
+    };
+    state.services.forEach(function (s) {
+      addRow(s.name, pay.money(s.price));
+    });
+    addRow("Total", pay.money(totalPrice()), "sc-total");
+    addRow("Due now — 50% deposit", pay.money(depositDue()), "sc-due");
+    addRow("Due in person at your visit", pay.money(totalPrice() - depositDue()), "sc-rest");
+  };
+
   var renderAll = function () {
     renderChips();
     renderMeta();
     renderDays();
     renderSlots();
+    renderPreview();
   };
 
   /* ── Session building ── */
