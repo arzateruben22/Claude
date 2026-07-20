@@ -402,12 +402,14 @@
 
   /* Site-wide Book links open this calendar instead of navigating;
      their hrefs still point at the Acuity catalog as the
-     no-JavaScript fallback. */
-  document.querySelectorAll("[data-open-booking]").forEach(function (el) {
-    el.addEventListener("click", function (e) {
-      e.preventDefault();
-      openModal();
-    });
+     no-JavaScript fallback. Delegated at the document level so the
+     intercept holds regardless of load order or DOM changes. */
+  document.addEventListener("click", function (e) {
+    var el = e.target && e.target.closest &&
+      e.target.closest("[data-open-booking]");
+    if (!el) return;
+    e.preventDefault();
+    openModal();
   });
 
   window.LumevinaBooking = { open: openModal };
