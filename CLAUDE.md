@@ -5,7 +5,9 @@ This repository is both a live site and the studio template:
 - **Repo root** = the production site for **Taqueria Los Güeros** (Anaheim
   taco shop): candlelit single-page site with video hero, online ordering,
   salsa add-ons, mandatory payment (test mode until Stripe is connected),
-  Puntos Güeros rewards, and PWA install. Deployed via GitHub Pages from
+  Puntos Güeros rewards with membership sign-up/log-in and order history
+  (all on-device until a backend exists), and PWA install with an App
+  Store coming-soon card. Deployed via GitHub Pages from
   `main`. Do not re-theme it — its identity (espresso `#100C09`, amber
   `#E8A356`, Cormorant Garamond + Jost, English-first with Spanish accents)
   belongs to that client.

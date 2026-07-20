@@ -510,6 +510,16 @@
     renderSlots();
     renderPayment();
     renderRewards();
+    renderMember();
+
+    /* members get their checkout details prefilled */
+    var m = getMember();
+    if (m) {
+      var nameInput = document.getElementById("order-name");
+      var phoneInput = document.getElementById("order-phone");
+      if (nameInput && !nameInput.value) nameInput.value = m.name;
+      if (phoneInput && !phoneInput.value) phoneInput.value = m.phone;
+    }
     try { localStorage.setItem("lg-order", JSON.stringify(cart)); } catch (e) {}
   };
 
@@ -668,6 +678,7 @@
   var PUNTOS_PER_DOLLAR = 1;
   var TUESDAY_MULTIPLIER = 2;
   var INSTALL_BONUS = 25;
+  var SIGNUP_BONUS = 50;
   var REWARDS = [
     { id: "agua", name: "Agua fresca, on us", cost: 50, item: "Reward: Agua Fresca" },
     { id: "taco", name: "Free taco — any kind", cost: 100, item: "Reward: Taco" },
@@ -687,6 +698,131 @@
     }, 0);
   };
   var hasReward = function () { return cartRewardCost() > 0; };
+
+  /* ── Membership (on-device until a backend exists) ──
+     Sign up = name + phone saved locally with a one-time welcome bonus.
+     Log in = matches the member saved on this device; cross-device
+     accounts require the future backend (Supabase/POS) integration. */
+
+  /* The account stays on the device; logging out only ends the session. */
+  var getAccount = function () {
+    try { return JSON.parse(localStorage.getItem("lg-member") || "null"); } catch (e) { return null; }
+  };
+  var getMember = function () {
+    var a = getAccount();
+    return a && localStorage.getItem("lg-member-in") === "1" ? a : null;
+  };
+  var memberPop = document.querySelector(".member-pop");
+  var memberOverlay = document.querySelector(".member-overlay");
+  var memberTab = "login";
+  var normPhone = function (s) { return (s || "").replace(/\D/g, ""); };
+
+  var renderMember = function () {
+    var m = getMember();
+    var hello = document.querySelector(".member-hello");
+    var cta = document.querySelector(".member-cta");
+    if (hello) {
+      hello.hidden = !m;
+      if (m) hello.querySelector(".member-hello-name").textContent = m.name.split(" ")[0];
+    }
+    if (cta) cta.hidden = !!m;
+    document.querySelectorAll(".order-member-line").forEach(function (el) {
+      el.hidden = !!m;
+    });
+  };
+
+  var setMemberTab = function (tab) {
+    memberTab = tab;
+    memberPop.querySelectorAll(".member-tab").forEach(function (b) {
+      b.classList.toggle("active", b.dataset.tab === tab);
+    });
+    memberPop.querySelector(".member-name-field").hidden = tab !== "signup";
+    memberPop.querySelector(".member-signup-help").hidden = tab !== "signup";
+    memberPop.querySelector(".member-submit").textContent =
+      tab === "signup" ? "Sign up — +" + SIGNUP_BONUS + " puntos" : "Log in";
+    memberPop.querySelector(".member-status").textContent = "";
+  };
+
+  var openMember = function (tab) {
+    setMemberTab(tab);
+    memberPop.hidden = false;
+    memberOverlay.hidden = false;
+    requestAnimationFrame(function () {
+      memberPop.classList.add("open");
+      memberOverlay.classList.add("open");
+    });
+    document.getElementById(tab === "signup" ? "member-name" : "member-phone").focus();
+  };
+
+  var closeMember = function () {
+    memberPop.classList.remove("open");
+    memberOverlay.classList.remove("open");
+    setTimeout(function () { memberPop.hidden = true; memberOverlay.hidden = true; }, 250);
+  };
+
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".member-open-login")) { openMember("login"); return; }
+    if (e.target.closest(".member-open-signup")) { openMember("signup"); return; }
+    if (e.target.closest(".member-logout")) {
+      try { localStorage.removeItem("lg-member-in"); } catch (err) {}
+      renderMember();
+      showToast("Logged out — your puntos stay safe on this phone");
+    }
+  });
+  memberPop.querySelectorAll(".member-tab").forEach(function (b) {
+    b.addEventListener("click", function () { setMemberTab(b.dataset.tab); });
+  });
+  memberPop.querySelector(".member-close").addEventListener("click", closeMember);
+  memberOverlay.addEventListener("click", closeMember);
+
+  memberPop.querySelector(".member-submit").addEventListener("click", function () {
+    var status = memberPop.querySelector(".member-status");
+    var name = document.getElementById("member-name").value.trim();
+    var phone = normPhone(document.getElementById("member-phone").value);
+    status.classList.remove("error");
+    if (phone.length < 10) {
+      status.classList.add("error");
+      status.textContent = "Enter a 10-digit phone number.";
+      return;
+    }
+    var existing = getAccount();
+    if (memberTab === "signup") {
+      if (!name) {
+        status.classList.add("error");
+        status.textContent = "Add your name so we know who the tacos are for.";
+        return;
+      }
+      if (existing && normPhone(existing.phone) !== phone) {
+        status.classList.add("error");
+        status.textContent = "This phone already has a member (" + existing.name + "). Log out first.";
+        return;
+      }
+      var isNew = !existing;
+      try {
+        localStorage.setItem("lg-member", JSON.stringify({ name: name, phone: phone }));
+        localStorage.setItem("lg-member-in", "1");
+      } catch (e) {}
+      if (isNew && !localStorage.getItem("lg-signup-bonus")) {
+        try { localStorage.setItem("lg-signup-bonus", "1"); } catch (e) {}
+        setPts(getPts() + SIGNUP_BONUS);
+        showToast("+" + SIGNUP_BONUS + " puntos de bienvenida, " + name.split(" ")[0]);
+      } else {
+        showToast("Welcome back, " + name.split(" ")[0]);
+      }
+      renderMember();
+      closeMember();
+    } else {
+      if (existing && normPhone(existing.phone) === phone) {
+        try { localStorage.setItem("lg-member-in", "1"); } catch (e) {}
+        showToast("Welcome back, " + existing.name.split(" ")[0]);
+        renderMember();
+        closeMember();
+      } else {
+        status.classList.add("error");
+        status.textContent = "No membership found on this device. Accounts sync across devices once the app is live — sign up here to start earning on this phone.";
+      }
+    }
+  });
 
   /* ── Order history (stored on this device) ── */
 
@@ -837,6 +973,7 @@
   panel.querySelector(".order-close").addEventListener("click", closePanel);
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
+    if (!memberPop.hidden) { closeMember(); return; }
     if (!addonPop.hidden) { closeAddon(); return; }
     if (!panel.hidden) closePanel();
   });

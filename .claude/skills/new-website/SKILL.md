@@ -64,7 +64,9 @@ Proven pieces in this repo — copy the pattern, swap tokens/content:
 | Time-slot scheduler | `OPEN_HOURS`, `slotsFor` | Keep in sync with displayed hours |
 | Catering/inquiry form → mailto | `.catering-form` | Swap email; suggest Formspree for real inboxes |
 | PWA kit (installable app) | `manifest.webmanifest`, `sw.js`, `icons/`, install block in `js/main.js` | Regenerate icons from the new brand mark; bump `CACHE` per deploy |
-| Points/rewards system | Puntos block in ordering IIFE + `#rewards` section | Weight cheap rewards toward high-margin items |
+| Points/rewards system | Puntos block in ordering IIFE + `#rewards` section | Weight cheap rewards toward high-margin items; earn preview in cart; on-device order history |
+| Membership (log in / sign up + welcome bonus) | member block in ordering IIFE + `.member-pop` markup | `SIGNUP_BONUS` config; on-device until a backend (Supabase/POS) exists — swap the storage layer, keep the UI |
+| App Store coming-soon card | `.appstore-badge` card in `#rewards` | Home-screen installs still grant `INSTALL_BONUS` |
 | Clear-all with two-tap confirm | `.order-clear` | |
 
 ## Step 4 — Build standards (non-negotiable)

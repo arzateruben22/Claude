@@ -784,6 +784,90 @@ em { font-style: italic; }
 .rewards-claim:hover:not(:disabled) { border-color: var(--flame); color: var(--flame); }
 .rewards-claim:disabled { opacity: 0.35; cursor: not-allowed; }
 
+/* ── Membership ── */
+
+.member-hello { margin: 0; font-size: 0.95rem; color: var(--cream); }
+.member-hello [lang="es"] { color: var(--cream-35); font-size: 0.8rem; }
+.member-hello[hidden], .member-cta[hidden], .order-member-line[hidden] { display: none; }
+
+.member-logout {
+  background: none;
+  border: 0;
+  padding: 0.2rem 0.4rem;
+  color: var(--cream-35);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.member-logout:hover { color: var(--flame); }
+
+.member-cta { display: flex; flex-direction: column; gap: 0.6rem; }
+.member-cta .btn { align-self: flex-start; padding: 0.7rem 1.3rem; }
+
+.member-pitch { margin: 0; font-size: 0.85rem; color: var(--cream-60); }
+.member-pitch strong { color: var(--flame); font-weight: 500; }
+
+.member-open-signup {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--flame);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.member-open-signup:hover { color: #f0b26b; }
+
+.order-member-line { margin: -0.4rem 0 var(--space-4); }
+
+.order-member-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--cream-35);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.order-member-btn:hover { color: var(--flame); }
+
+.member-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: var(--space-3);
+}
+
+.member-tab {
+  padding: 0.6rem 0.5rem;
+  border: 1px solid var(--soot-edge);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream-60);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.member-tab.active { background: var(--flame); border-color: var(--flame); color: var(--ink); }
+
+.member-pop .member-status { margin-bottom: var(--space-3); }
+.member-pop .btn { width: 100%; }
+.member-name-field[hidden], .member-signup-help[hidden] { display: none; }
+
 .appstore-badge {
   align-self: flex-start;
   margin: 0;

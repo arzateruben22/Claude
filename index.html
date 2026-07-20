@@ -226,6 +226,15 @@
             <p class="tuesday-badge" hidden>Double puntos today — <span lang="es">¡es martes!</span></p>
             <p class="rewards-fine">Saved on this phone like a punch card — your balance updates
             every time you order.</p>
+            <p class="member-hello" hidden>Hola, <strong class="member-hello-name"></strong>
+              <span lang="es">· miembro</span>
+              <button class="member-logout" type="button">log out</button></p>
+            <div class="member-cta">
+              <button class="btn btn-ghost member-open-login" type="button">Already a member? Log in</button>
+              <p class="member-pitch">Not a member yet?
+                <button class="member-open-signup" type="button">Sign up</button> and get
+                <strong>+50 puntos</strong> — your first agua fresca is on us.</p>
+            </div>
             <details class="order-history">
               <summary>Order history <span lang="es">· historial</span></summary>
               <ul class="history-list" role="list"></ul>
@@ -313,6 +322,7 @@
 
       <p class="order-subtotal-row"><span>Subtotal <span class="order-count"></span> <span class="order-fine">plus tax</span></span><strong class="order-subtotal">$0.00</strong></p>
       <p class="order-earn">This order earns <strong class="order-earn-pts">+0 puntos</strong><span class="order-earn-tues" hidden> — <span lang="es">¡martes doble!</span></span></p>
+      <p class="order-member-line"><button class="member-open-login order-member-btn" type="button">Member? Log in for your puntos</button></p>
 
       <fieldset class="fulfill">
         <legend class="fulfill-legend">How do you want it?</legend>
@@ -435,6 +445,33 @@
       <div class="addon-remove-list"></div>
     </details>
     <button class="btn btn-solid addon-add" type="button">Add to order</button>
+  </div>
+
+  <div class="addon-overlay member-overlay" hidden></div>
+  <div class="addon-pop member-pop" role="dialog" aria-modal="true" aria-labelledby="member-title" hidden>
+    <header class="addon-head">
+      <h3 class="addon-title" id="member-title">Puntos Güeros</h3>
+      <button class="addon-close member-close" type="button" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <div class="member-tabs" role="tablist">
+      <button class="member-tab active" type="button" data-tab="login">Log in</button>
+      <button class="member-tab" type="button" data-tab="signup">Sign up</button>
+    </div>
+    <div class="field member-name-field" hidden>
+      <label for="member-name">Name <span lang="es">· nombre</span></label>
+      <input id="member-name" type="text" autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="member-phone">Phone <span lang="es">· teléfono</span></label>
+      <input id="member-phone" type="tel" autocomplete="tel" inputmode="tel">
+      <p class="field-help member-signup-help" hidden>+50 welcome puntos the moment you join.</p>
+    </div>
+    <button class="btn btn-solid member-submit" type="button">Log in</button>
+    <p class="order-status member-status" role="status" aria-live="polite"></p>
+    <p class="order-fine">Memberships save on this phone for now — accounts that follow you
+    across devices arrive with the app.</p>
   </div>
 
   <p class="add-toast" role="status" aria-live="polite"></p>
