@@ -1161,6 +1161,112 @@ a { color: inherit; }
 .book-send, .book-pay-btn { width: 100%; justify-content: center; }
 .book-send.is-disabled, .book-pay-btn.is-disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* Demo card checkout — Lumevina's deposit view, SchFLR style */
+.book-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.book-back {
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.book-card .book-label { margin: 0; }
+.book-lines { border-top: 1px solid var(--line); }
+.book-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+  color: var(--steel);
+}
+.book-lines li span:last-child {
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: right;
+}
+.book-lines .book-line-total span { color: var(--orange); font-weight: 600; }
+.book-demo-note { margin: 0; font-size: 0.78rem; color: var(--steel); }
+
+.bfield { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
+.bfield-row { display: flex; gap: 0.9rem; }
+.bfield label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+.bfield input {
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  width: 100%;
+}
+.bfield input:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
+  border-color: var(--orange);
+}
+.book-pay-status { margin: 0; font-size: 0.78rem; color: #e05c4a; min-height: 1em; }
+
+.book-success {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--plate-green, #2e7d46);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: center;
+}
+.book-success-glyph {
+  margin: 0;
+  width: 44px;
+  height: 44px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2e7d46;
+  color: #fff;
+  font-size: 1.3rem;
+}
+.book-success-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.book-success-sum { margin: 0; font-size: 0.8rem; color: var(--bone); }
+.book-success-order { margin: 0; font-size: 0.72rem; color: var(--steel); }
+.book-success .book-paid-note { text-align: center; }
+
+.book-skip {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--steel);
+  text-align: center;
+}
+
 .book-confirm {
   border: 1px solid var(--line);
   border-left: 4px solid var(--gold);

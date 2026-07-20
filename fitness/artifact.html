@@ -1163,6 +1163,112 @@ a { color: inherit; }
 .book-send, .book-pay-btn { width: 100%; justify-content: center; }
 .book-send.is-disabled, .book-pay-btn.is-disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* Demo card checkout — Lumevina's deposit view, SchFLR style */
+.book-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.book-back {
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.book-card .book-label { margin: 0; }
+.book-lines { border-top: 1px solid var(--line); }
+.book-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.9rem;
+  color: var(--steel);
+}
+.book-lines li span:last-child {
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: right;
+}
+.book-lines .book-line-total span { color: var(--orange); font-weight: 600; }
+.book-demo-note { margin: 0; font-size: 0.78rem; color: var(--steel); }
+
+.bfield { display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
+.bfield-row { display: flex; gap: 0.9rem; }
+.bfield label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+}
+.bfield input {
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  width: 100%;
+}
+.bfield input:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
+  border-color: var(--orange);
+}
+.book-pay-status { margin: 0; font-size: 0.78rem; color: #e05c4a; min-height: 1em; }
+
+.book-success {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--plate-green, #2e7d46);
+  border-radius: 0 12px 12px 0;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: center;
+}
+.book-success-glyph {
+  margin: 0;
+  width: 44px;
+  height: 44px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2e7d46;
+  color: #fff;
+  font-size: 1.3rem;
+}
+.book-success-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.book-success-sum { margin: 0; font-size: 0.8rem; color: var(--bone); }
+.book-success-order { margin: 0; font-size: 0.72rem; color: var(--steel); }
+.book-success .book-paid-note { text-align: center; }
+
+.book-skip {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--steel);
+  text-align: center;
+}
+
 .book-confirm {
   border: 1px solid var(--line);
   border-left: 4px solid var(--gold);
@@ -1656,15 +1762,58 @@ a { color: inherit; }
                js/main.js has real Payment Link URLs; until then it falls back
                to text-to-book. -->
           <div class="book-actions">
+            <!-- Real Stripe flow — takes over automatically once STRIPE_LINKS
+                 in js/main.js holds live Payment Link URLs -->
             <a class="btn btn-solid book-pay-btn is-disabled" href="#" target="_blank" rel="noopener" hidden>Continue to payment</a>
             <div class="book-confirm" hidden>
               <p class="book-paid-note">Payment done? Send the text and the slot is
               locked — I confirm within the hour.</p>
               <a class="btn btn-solid book-send is-disabled" href="sms:+17143533126">I paid — text my slot</a>
             </div>
-            <a class="btn btn-solid book-send book-send-fallback is-disabled" href="sms:+17143533126">Text this slot to Ruben</a>
-            <p class="book-fallback-note">Card payment at booking launches soon —
-            for now your slot is confirmed by text.</p>
+
+            <!-- Demo checkout (ported from Lumevina) — until Stripe connects -->
+            <a class="btn btn-solid book-demo-btn is-disabled" href="#">Continue to payment</a>
+            <div class="book-card" hidden>
+              <button type="button" class="book-back text-link">&larr; Back to the calendar</button>
+              <p class="book-label mono">Secure your slot</p>
+              <ul class="book-lines" role="list"></ul>
+              <p class="book-demo-note">Demo mode — no card is charged until Stripe
+              payments go live.</p>
+              <div class="bfield">
+                <label for="bk-card-name">Name on card</label>
+                <input id="bk-card-name" type="text" autocomplete="cc-name">
+              </div>
+              <div class="bfield">
+                <label for="bk-card-num">Card number</label>
+                <input id="bk-card-num" type="text" inputmode="numeric" autocomplete="cc-number"
+                  placeholder="4242 4242 4242 4242" maxlength="19">
+              </div>
+              <div class="bfield-row">
+                <div class="bfield">
+                  <label for="bk-exp">Expiry</label>
+                  <input id="bk-exp" type="text" inputmode="numeric" autocomplete="cc-exp"
+                    placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="bfield">
+                  <label for="bk-cvc">CVC</label>
+                  <input id="bk-cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                    placeholder="123" maxlength="4">
+                </div>
+              </div>
+              <button type="button" class="btn btn-solid book-pay-now">Pay</button>
+              <p class="book-pay-status mono" role="alert"></p>
+            </div>
+            <div class="book-success" hidden>
+              <p class="book-success-glyph" aria-hidden="true">&#10003;</p>
+              <p class="book-success-title">Slot held</p>
+              <p class="book-success-sum mono"></p>
+              <p class="book-success-order mono"></p>
+              <p class="book-paid-note">Last step — send the text so I know it's you.
+              I confirm within the hour.</p>
+              <a class="btn btn-solid book-send book-send-done" href="sms:+17143533126">Text my booking to Ruben</a>
+            </div>
+            <p class="book-skip">Prefer to skip the card?
+            <a class="text-link book-send-fallback" href="sms:+17143533126">Text your slot directly</a>.</p>
           </div>
           <p class="book-alt">No texting on this device?
           <a class="text-link" href="mailto:arzateruben22@gmail.com?subject=Session%20request">Email the request</a>
@@ -2119,11 +2268,31 @@ a { color: inherit; }
     var confirmBox = document.querySelector(".book-confirm");
     var sendPaid = confirmBox.querySelector(".book-send");
     var sendFallback = document.querySelector(".book-send-fallback");
-    var fallbackNote = document.querySelector(".book-fallback-note");
     var tiersEl = document.querySelector(".book-tiers");
     var payEl = document.querySelector(".book-pay");
-    var picked = { day: null, label: "", time: "" };
+    var demoBtn = document.querySelector(".book-demo-btn");
+    var cardBox = document.querySelector(".book-card");
+    var successBox = document.querySelector(".book-success");
+    var skipLine = document.querySelector(".book-skip");
+    var linesEl = cardBox.querySelector(".book-lines");
+    var payNow = cardBox.querySelector(".book-pay-now");
+    var payStatus = cardBox.querySelector(".book-pay-status");
+    var cardName = document.getElementById("bk-card-name");
+    var cardNum = document.getElementById("bk-card-num");
+    var cardExp = document.getElementById("bk-exp");
+    var cardCvc = document.getElementById("bk-cvc");
+    var sendDone = successBox.querySelector(".book-send-done");
+    var picked = { day: null, label: "", time: "", key: "" };
     var paymentOpened = false;
+    var flow = "idle"; // idle | card | done
+
+    function resetFlow() {
+      if (flow === "idle") return;
+      flow = "idle";
+      payStatus.textContent = "";
+      payNow.disabled = false;
+      payNow.textContent = "Pay";
+    }
 
     var WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     var MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -2188,6 +2357,7 @@ a { color: inherit; }
         c.setAttribute("aria-pressed", String(on));
       });
       paymentOpened = false;
+      resetFlow();
       update();
     }
     document.addEventListener("planchange", refreshPlan);
@@ -2208,16 +2378,19 @@ a { color: inherit; }
       var p = window.__planState || { name: "Momentum", mode: "full", price: "" };
       var ready = picked.label && picked.time;
       var link = window.__stripeLink ? window.__stripeLink(p.name, p.mode) : "";
+      var stripeMode = !!link;
 
-      /* payment-first when a Stripe link exists; text-to-book until then */
-      payBtn.hidden = !link;
-      sendFallback.hidden = !!link;
-      fallbackNote.hidden = !!link;
-      confirmBox.hidden = !link || !paymentOpened;
+      /* real Stripe flow when links exist; demo card checkout until then */
+      payBtn.hidden = !stripeMode;
+      confirmBox.hidden = !stripeMode || !paymentOpened;
+      demoBtn.hidden = stripeMode || flow !== "idle";
+      cardBox.hidden = stripeMode || flow !== "card";
+      successBox.hidden = stripeMode || flow !== "done";
+      skipLine.hidden = stripeMode || flow === "done";
 
       payBtn.classList.toggle("is-disabled", !ready);
       sendPaid.classList.toggle("is-disabled", !ready);
-      sendFallback.classList.toggle("is-disabled", !ready);
+      demoBtn.classList.toggle("is-disabled", !ready);
 
       if (!ready) {
         summary.textContent = "Choose a day and time above.";
@@ -2226,7 +2399,7 @@ a { color: inherit; }
       summary.textContent = p.name + " · " + p.price + " · " +
         picked.label + " · " + picked.time;
 
-      if (link) {
+      if (stripeMode) {
         payBtn.href = link;
         payBtn.textContent = paymentOpened
           ? "Reopen payment — " + p.price
@@ -2236,12 +2409,101 @@ a { color: inherit; }
           ", " + picked.time + ".";
         sendPaid.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(paidMsg);
       } else {
+        demoBtn.textContent = "Continue to payment — " + p.price;
         var msg = "Hi Ruben — I want the " + p.name + " plan (" + p.price +
           "). Can we do my first session " + picked.label + ", " + picked.time + "?";
         /* the "?&" form works on both iOS and Android */
         sendFallback.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(msg);
       }
     }
+
+    /* ── Demo card checkout (Lumevina's deposit flow, SchFLR style) ── */
+    function luhn(s) {
+      var sum = 0, alt = false;
+      for (var i = s.length - 1; i >= 0; i--) {
+        var n = +s[i];
+        if (alt) { n *= 2; if (n > 9) n -= 9; }
+        sum += n;
+        alt = !alt;
+      }
+      return s.length >= 15 && sum % 10 === 0;
+    }
+    function expiryOk(v) {
+      var m = v.match(/^(0[1-9]|1[0-2])\/(\d\d)$/);
+      if (!m) return false;
+      var now = new Date();
+      return (2000 + +m[2]) * 12 + (+m[1] - 1) >=
+             now.getFullYear() * 12 + now.getMonth();
+    }
+    cardNum.addEventListener("input", function () {
+      var d = cardNum.value.replace(/\D/g, "").slice(0, 16);
+      cardNum.value = d.replace(/(.{4})/g, "$1 ").trim();
+    });
+    cardExp.addEventListener("input", function () {
+      var d = cardExp.value.replace(/\D/g, "").slice(0, 4);
+      cardExp.value = d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2) : d;
+    });
+    cardCvc.addEventListener("input", function () {
+      cardCvc.value = cardCvc.value.replace(/\D/g, "").slice(0, 4);
+    });
+
+    demoBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (demoBtn.classList.contains("is-disabled")) {
+        summary.textContent = "Pick a day and a time first — then pay.";
+        return;
+      }
+      var p = window.__planState;
+      var splitNote = p.mode === "split"
+        ? '<li><span>Then 2 weekly payments</span><span>auto-reminder</span></li>' : "";
+      linesEl.innerHTML =
+        "<li><span>" + p.name + " — first month</span><span>" + p.price + "</span></li>" +
+        "<li><span>First session</span><span>" + picked.label + " · " + picked.time + "</span></li>" +
+        splitNote +
+        '<li class="book-line-total"><span>Due now</span><span>' + p.price + "</span></li>";
+      flow = "card";
+      update();
+      cardBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
+    cardBox.querySelector(".book-back").addEventListener("click", function () {
+      resetFlow();
+      update();
+    });
+
+    payNow.addEventListener("click", function () {
+      var digits = cardNum.value.replace(/\s/g, "");
+      var fail =
+        !cardName.value.trim() ? "Add the name on the card." :
+        !luhn(digits) ? "That card number doesn't check out." :
+        !expiryOk(cardExp.value) ? "Check the expiry date." :
+        cardCvc.value.length < 3 ? "Check the CVC." : "";
+      if (fail) { payStatus.textContent = fail; return; }
+      payStatus.textContent = "";
+      payNow.disabled = true;
+      payNow.textContent = "Processing…";
+      window.setTimeout(function () {
+        var p = window.__planState;
+        var order = "SCHFLR-" +
+          Math.random().toString(36).slice(2, 6).toUpperCase();
+        successBox.querySelector(".book-success-sum").textContent =
+          p.name + " · " + picked.label + " · " + picked.time;
+        successBox.querySelector(".book-success-order").textContent =
+          "Order " + order + " · " + p.price + " (demo — not charged)";
+        var doneMsg = "Hi Ruben — I booked the " + p.name + " plan (" + p.price +
+          "). First session: " + picked.label + ", " + picked.time +
+          ". Order " + order + ".";
+        sendDone.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(doneMsg);
+        if (window.__bookingLive && picked.key) {
+          window.__bookingLive.record({
+            day: picked.key, slot: picked.time, plan: p.name, mode: p.mode
+          });
+        }
+        flow = "done";
+        payNow.disabled = false;
+        payNow.textContent = "Pay";
+        update();
+      }, 900);
+    });
 
     payBtn.addEventListener("click", function (e) {
       if (payBtn.classList.contains("is-disabled")) {
@@ -2265,6 +2527,7 @@ a { color: inherit; }
       picked.time = "";
       renderSlots(Number(b.dataset.dow));
       if (window.__bookingLive) window.__bookingLive.markTaken(picked.key, slotsEl);
+      resetFlow();
       update();
     });
     slotsEl.addEventListener("click", function (e) {
@@ -2275,6 +2538,7 @@ a { color: inherit; }
         c.setAttribute("aria-selected", String(c === b));
       });
       picked.time = b.textContent;
+      resetFlow();
       update();
     });
     [sendPaid, sendFallback].forEach(function (btn) {

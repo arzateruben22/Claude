@@ -335,15 +335,58 @@
                js/main.js has real Payment Link URLs; until then it falls back
                to text-to-book. -->
           <div class="book-actions">
+            <!-- Real Stripe flow — takes over automatically once STRIPE_LINKS
+                 in js/main.js holds live Payment Link URLs -->
             <a class="btn btn-solid book-pay-btn is-disabled" href="#" target="_blank" rel="noopener" hidden>Continue to payment</a>
             <div class="book-confirm" hidden>
               <p class="book-paid-note">Payment done? Send the text and the slot is
               locked — I confirm within the hour.</p>
               <a class="btn btn-solid book-send is-disabled" href="sms:+17143533126">I paid — text my slot</a>
             </div>
-            <a class="btn btn-solid book-send book-send-fallback is-disabled" href="sms:+17143533126">Text this slot to Ruben</a>
-            <p class="book-fallback-note">Card payment at booking launches soon —
-            for now your slot is confirmed by text.</p>
+
+            <!-- Demo checkout (ported from Lumevina) — until Stripe connects -->
+            <a class="btn btn-solid book-demo-btn is-disabled" href="#">Continue to payment</a>
+            <div class="book-card" hidden>
+              <button type="button" class="book-back text-link">&larr; Back to the calendar</button>
+              <p class="book-label mono">Secure your slot</p>
+              <ul class="book-lines" role="list"></ul>
+              <p class="book-demo-note">Demo mode — no card is charged until Stripe
+              payments go live.</p>
+              <div class="bfield">
+                <label for="bk-card-name">Name on card</label>
+                <input id="bk-card-name" type="text" autocomplete="cc-name">
+              </div>
+              <div class="bfield">
+                <label for="bk-card-num">Card number</label>
+                <input id="bk-card-num" type="text" inputmode="numeric" autocomplete="cc-number"
+                  placeholder="4242 4242 4242 4242" maxlength="19">
+              </div>
+              <div class="bfield-row">
+                <div class="bfield">
+                  <label for="bk-exp">Expiry</label>
+                  <input id="bk-exp" type="text" inputmode="numeric" autocomplete="cc-exp"
+                    placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="bfield">
+                  <label for="bk-cvc">CVC</label>
+                  <input id="bk-cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                    placeholder="123" maxlength="4">
+                </div>
+              </div>
+              <button type="button" class="btn btn-solid book-pay-now">Pay</button>
+              <p class="book-pay-status mono" role="alert"></p>
+            </div>
+            <div class="book-success" hidden>
+              <p class="book-success-glyph" aria-hidden="true">&#10003;</p>
+              <p class="book-success-title">Slot held</p>
+              <p class="book-success-sum mono"></p>
+              <p class="book-success-order mono"></p>
+              <p class="book-paid-note">Last step — send the text so I know it's you.
+              I confirm within the hour.</p>
+              <a class="btn btn-solid book-send book-send-done" href="sms:+17143533126">Text my booking to Ruben</a>
+            </div>
+            <p class="book-skip">Prefer to skip the card?
+            <a class="text-link book-send-fallback" href="sms:+17143533126">Text your slot directly</a>.</p>
           </div>
           <p class="book-alt">No texting on this device?
           <a class="text-link" href="mailto:arzateruben22@gmail.com?subject=Session%20request">Email the request</a>

@@ -242,11 +242,31 @@
     var confirmBox = document.querySelector(".book-confirm");
     var sendPaid = confirmBox.querySelector(".book-send");
     var sendFallback = document.querySelector(".book-send-fallback");
-    var fallbackNote = document.querySelector(".book-fallback-note");
     var tiersEl = document.querySelector(".book-tiers");
     var payEl = document.querySelector(".book-pay");
-    var picked = { day: null, label: "", time: "" };
+    var demoBtn = document.querySelector(".book-demo-btn");
+    var cardBox = document.querySelector(".book-card");
+    var successBox = document.querySelector(".book-success");
+    var skipLine = document.querySelector(".book-skip");
+    var linesEl = cardBox.querySelector(".book-lines");
+    var payNow = cardBox.querySelector(".book-pay-now");
+    var payStatus = cardBox.querySelector(".book-pay-status");
+    var cardName = document.getElementById("bk-card-name");
+    var cardNum = document.getElementById("bk-card-num");
+    var cardExp = document.getElementById("bk-exp");
+    var cardCvc = document.getElementById("bk-cvc");
+    var sendDone = successBox.querySelector(".book-send-done");
+    var picked = { day: null, label: "", time: "", key: "" };
     var paymentOpened = false;
+    var flow = "idle"; // idle | card | done
+
+    function resetFlow() {
+      if (flow === "idle") return;
+      flow = "idle";
+      payStatus.textContent = "";
+      payNow.disabled = false;
+      payNow.textContent = "Pay";
+    }
 
     var WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     var MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -311,6 +331,7 @@
         c.setAttribute("aria-pressed", String(on));
       });
       paymentOpened = false;
+      resetFlow();
       update();
     }
     document.addEventListener("planchange", refreshPlan);
@@ -331,16 +352,19 @@
       var p = window.__planState || { name: "Momentum", mode: "full", price: "" };
       var ready = picked.label && picked.time;
       var link = window.__stripeLink ? window.__stripeLink(p.name, p.mode) : "";
+      var stripeMode = !!link;
 
-      /* payment-first when a Stripe link exists; text-to-book until then */
-      payBtn.hidden = !link;
-      sendFallback.hidden = !!link;
-      fallbackNote.hidden = !!link;
-      confirmBox.hidden = !link || !paymentOpened;
+      /* real Stripe flow when links exist; demo card checkout until then */
+      payBtn.hidden = !stripeMode;
+      confirmBox.hidden = !stripeMode || !paymentOpened;
+      demoBtn.hidden = stripeMode || flow !== "idle";
+      cardBox.hidden = stripeMode || flow !== "card";
+      successBox.hidden = stripeMode || flow !== "done";
+      skipLine.hidden = stripeMode || flow === "done";
 
       payBtn.classList.toggle("is-disabled", !ready);
       sendPaid.classList.toggle("is-disabled", !ready);
-      sendFallback.classList.toggle("is-disabled", !ready);
+      demoBtn.classList.toggle("is-disabled", !ready);
 
       if (!ready) {
         summary.textContent = "Choose a day and time above.";
@@ -349,7 +373,7 @@
       summary.textContent = p.name + " · " + p.price + " · " +
         picked.label + " · " + picked.time;
 
-      if (link) {
+      if (stripeMode) {
         payBtn.href = link;
         payBtn.textContent = paymentOpened
           ? "Reopen payment — " + p.price
@@ -359,12 +383,101 @@
           ", " + picked.time + ".";
         sendPaid.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(paidMsg);
       } else {
+        demoBtn.textContent = "Continue to payment — " + p.price;
         var msg = "Hi Ruben — I want the " + p.name + " plan (" + p.price +
           "). Can we do my first session " + picked.label + ", " + picked.time + "?";
         /* the "?&" form works on both iOS and Android */
         sendFallback.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(msg);
       }
     }
+
+    /* ── Demo card checkout (Lumevina's deposit flow, SchFLR style) ── */
+    function luhn(s) {
+      var sum = 0, alt = false;
+      for (var i = s.length - 1; i >= 0; i--) {
+        var n = +s[i];
+        if (alt) { n *= 2; if (n > 9) n -= 9; }
+        sum += n;
+        alt = !alt;
+      }
+      return s.length >= 15 && sum % 10 === 0;
+    }
+    function expiryOk(v) {
+      var m = v.match(/^(0[1-9]|1[0-2])\/(\d\d)$/);
+      if (!m) return false;
+      var now = new Date();
+      return (2000 + +m[2]) * 12 + (+m[1] - 1) >=
+             now.getFullYear() * 12 + now.getMonth();
+    }
+    cardNum.addEventListener("input", function () {
+      var d = cardNum.value.replace(/\D/g, "").slice(0, 16);
+      cardNum.value = d.replace(/(.{4})/g, "$1 ").trim();
+    });
+    cardExp.addEventListener("input", function () {
+      var d = cardExp.value.replace(/\D/g, "").slice(0, 4);
+      cardExp.value = d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2) : d;
+    });
+    cardCvc.addEventListener("input", function () {
+      cardCvc.value = cardCvc.value.replace(/\D/g, "").slice(0, 4);
+    });
+
+    demoBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (demoBtn.classList.contains("is-disabled")) {
+        summary.textContent = "Pick a day and a time first — then pay.";
+        return;
+      }
+      var p = window.__planState;
+      var splitNote = p.mode === "split"
+        ? '<li><span>Then 2 weekly payments</span><span>auto-reminder</span></li>' : "";
+      linesEl.innerHTML =
+        "<li><span>" + p.name + " — first month</span><span>" + p.price + "</span></li>" +
+        "<li><span>First session</span><span>" + picked.label + " · " + picked.time + "</span></li>" +
+        splitNote +
+        '<li class="book-line-total"><span>Due now</span><span>' + p.price + "</span></li>";
+      flow = "card";
+      update();
+      cardBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
+    cardBox.querySelector(".book-back").addEventListener("click", function () {
+      resetFlow();
+      update();
+    });
+
+    payNow.addEventListener("click", function () {
+      var digits = cardNum.value.replace(/\s/g, "");
+      var fail =
+        !cardName.value.trim() ? "Add the name on the card." :
+        !luhn(digits) ? "That card number doesn't check out." :
+        !expiryOk(cardExp.value) ? "Check the expiry date." :
+        cardCvc.value.length < 3 ? "Check the CVC." : "";
+      if (fail) { payStatus.textContent = fail; return; }
+      payStatus.textContent = "";
+      payNow.disabled = true;
+      payNow.textContent = "Processing…";
+      window.setTimeout(function () {
+        var p = window.__planState;
+        var order = "SCHFLR-" +
+          Math.random().toString(36).slice(2, 6).toUpperCase();
+        successBox.querySelector(".book-success-sum").textContent =
+          p.name + " · " + picked.label + " · " + picked.time;
+        successBox.querySelector(".book-success-order").textContent =
+          "Order " + order + " · " + p.price + " (demo — not charged)";
+        var doneMsg = "Hi Ruben — I booked the " + p.name + " plan (" + p.price +
+          "). First session: " + picked.label + ", " + picked.time +
+          ". Order " + order + ".";
+        sendDone.href = "sms:" + PHONE + "?&body=" + encodeURIComponent(doneMsg);
+        if (window.__bookingLive && picked.key) {
+          window.__bookingLive.record({
+            day: picked.key, slot: picked.time, plan: p.name, mode: p.mode
+          });
+        }
+        flow = "done";
+        payNow.disabled = false;
+        payNow.textContent = "Pay";
+        update();
+      }, 900);
+    });
 
     payBtn.addEventListener("click", function (e) {
       if (payBtn.classList.contains("is-disabled")) {
@@ -388,6 +501,7 @@
       picked.time = "";
       renderSlots(Number(b.dataset.dow));
       if (window.__bookingLive) window.__bookingLive.markTaken(picked.key, slotsEl);
+      resetFlow();
       update();
     });
     slotsEl.addEventListener("click", function (e) {
@@ -398,6 +512,7 @@
         c.setAttribute("aria-selected", String(c === b));
       });
       picked.time = b.textContent;
+      resetFlow();
       update();
     });
     [sendPaid, sendFallback].forEach(function (btn) {
