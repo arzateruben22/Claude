@@ -1508,9 +1508,11 @@ em { font-style: italic; }
 .stack-text span {
   font-size: 0.875rem;
   color: var(--ink-60);
+  line-height: 1.4;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .stack-hint {
