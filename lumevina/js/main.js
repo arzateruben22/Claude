@@ -83,7 +83,6 @@
       .from(".hero-liquid", { opacity: 0, duration: 1.8, ease: "power2.out" }, 0)
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
       .from(".hero-logo", { opacity: 0, y: 14, scale: 0.96, duration: 1.0, ease: "power2.out" }, 0.2)
-      .from(".hero-badge", { opacity: 0, y: 14, duration: 0.7 }, 0.3)
       .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.35)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.95)
       .from(".hero-actions > *", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.1)
