@@ -2110,6 +2110,14 @@ em { font-style: italic; }
   background: transparent;
 }
 
+/* inside the visitor's own selected session block */
+.slot-btn.held {
+  background: rgba(165, 121, 139, 0.14);
+  border-color: transparent;
+  color: var(--ink-35);
+  cursor: not-allowed;
+}
+
 .booking-open-note {
   grid-column: 1 / -1;
   margin: 0.25rem 0 0;

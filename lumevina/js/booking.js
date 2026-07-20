@@ -294,21 +294,30 @@
       btn.textContent = fmtTime(mins);
       var past = state.dayKey === todayKey && mins <= nowMins;
       var free = blockFree(state.dayKey, mins, dur, userSet);
+      /* a chosen time holds its whole block: any start that would
+         cross it greys out until the session ends */
+      var heldBySelection = state.slot !== null && mins !== state.slot &&
+        mins < state.slot + dur && state.slot < mins + dur;
       if (past || !free) {
         btn.disabled = true;
         btn.classList.add("taken");
+      } else if (heldBySelection) {
+        btn.disabled = true;
+        btn.classList.add("held");
       } else {
         open++;
         btn.addEventListener("click", function () {
-          state.slot = mins;
-          slotsEl.querySelectorAll(".slot-btn").forEach(function (b) {
-            b.classList.toggle("selected", b === btn);
-          });
+          /* tap the selected time again to release the block */
+          state.slot = (state.slot === mins) ? null : mins;
           statusEl.textContent = "";
+          renderSlots();
           renderPreview();
         });
       }
-      if (state.slot === mins && !btn.disabled) btn.classList.add("selected");
+      if (state.slot === mins && !btn.disabled) {
+        btn.classList.add("selected");
+        btn.title = "Tap again to unselect";
+      }
       slotsEl.appendChild(btn);
     });
     var note = document.createElement("p");
