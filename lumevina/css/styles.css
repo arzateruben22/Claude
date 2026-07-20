@@ -573,9 +573,11 @@ em { font-style: italic; }
   bottom: 0.1em;
 }
 
-/* desktop: sit the letters just below the features strip */
+/* desktop: the letters sit fully visible below the features strip,
+   with the hero reserving enough room that nothing clips */
 @media (min-width: 901px) {
-  .hero-wordmark { bottom: -0.14em; }
+  .hero { padding-bottom: 11.5rem; }
+  .hero-wordmark { bottom: 0.05em; }
 }
 
 .hero-wordmark {
