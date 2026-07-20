@@ -934,6 +934,23 @@ em { font-style: italic; }
 .qty-btn:hover { border-color: var(--flame); color: var(--flame); }
 .order-item-qty { min-width: 1.4rem; text-align: center; font-variant-numeric: tabular-nums; }
 
+.order-clear {
+  display: block;
+  margin: 0.15rem 0 var(--space-3) auto;
+  background: none;
+  border: 0;
+  padding: 0.35rem 0;
+  color: var(--cream-35);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.order-clear:hover, .order-clear.armed { color: #e0705c; }
+.order-clear.armed { font-weight: 500; }
+
 .order-subtotal-row {
   display: flex;
   justify-content: space-between;

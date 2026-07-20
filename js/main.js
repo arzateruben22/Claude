@@ -646,6 +646,29 @@
     }
   });
 
+  /* ── Clear all (two taps: arm, then confirm) ── */
+
+  var clearBtn = panel.querySelector(".order-clear");
+  var clearTimer = null;
+  var resetClear = function () {
+    clearTimeout(clearTimer);
+    clearTimer = null;
+    clearBtn.classList.remove("armed");
+    clearBtn.innerHTML = 'Clear all <span lang="es">· vaciar orden</span>';
+  };
+  clearBtn.addEventListener("click", function () {
+    if (!clearTimer) {
+      clearBtn.classList.add("armed");
+      clearBtn.textContent = "Tap again to clear everything";
+      clearTimer = setTimeout(resetClear, 3500);
+    } else {
+      cart = {};
+      resetClear();
+      render();
+      showToast("Order cleared");
+    }
+  });
+
   /* ── Panel open/close ── */
 
   var lastFocus = null;
