@@ -1,0 +1,10 @@
+# Netlify config for the SchFLR site.
+# Serves the fitness/ folder as the site root — no build step needed.
+[build]
+  publish = "fitness"
+
+# Everything is a single page; send unknown paths back to it.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
