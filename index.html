@@ -226,6 +226,11 @@
             <p class="tuesday-badge" hidden>Double puntos today — <span lang="es">¡es martes!</span></p>
             <p class="rewards-fine">Saved on this phone like a punch card — your balance updates
             every time you order.</p>
+            <details class="order-history">
+              <summary>Order history <span lang="es">· historial</span></summary>
+              <ul class="history-list" role="list"></ul>
+              <p class="history-empty rewards-fine">No orders yet — your history saves on this phone.</p>
+            </details>
           </div>
           <div class="visit-card" data-reveal>
             <h3 class="visit-card-title">Claim with puntos</h3>
@@ -233,16 +238,16 @@
             <p class="rewards-fine">One reward per order — it drops into your cart free.</p>
           </div>
           <div class="visit-card" data-reveal>
-            <h3 class="visit-card-title">Get the app <span lang="es">· la app</span></h3>
+            <h3 class="visit-card-title">The app <span lang="es">· la app</span></h3>
+            <p class="appstore-badge">Coming soon to the App&nbsp;Store</p>
             <ul class="install-perks" role="list">
-              <li><strong>+25 welcome puntos</strong> when you add it</li>
+              <li><strong>+25 welcome puntos</strong> for early birds</li>
               <li>Order in two taps from your home screen</li>
               <li>New offers land in the app first</li>
             </ul>
-            <button class="btn btn-solid install-btn" type="button" hidden>Install the app</button>
-            <p class="install-note" hidden>On iPhone: tap <strong>Share</strong>, then
-            <strong>"Add to Home Screen"</strong> — Los Güeros installs like any app.</p>
-            <p class="install-done" hidden>You're in the app — puntos active. <span lang="es">¡Órale!</span></p>
+            <p class="install-note">Can't wait? Open this site in Safari and tap
+            <strong>Share → "Add to Home Screen"</strong> — Los Güeros works like an
+            app today, puntos included.</p>
           </div>
         </div>
       </div>
@@ -307,6 +312,7 @@
       <button class="order-clear" type="button">Clear all <span lang="es">· vaciar orden</span></button>
 
       <p class="order-subtotal-row"><span>Subtotal <span class="order-count"></span> <span class="order-fine">plus tax</span></span><strong class="order-subtotal">$0.00</strong></p>
+      <p class="order-earn">This order earns <strong class="order-earn-pts">+0 puntos</strong><span class="order-earn-tues" hidden> — <span lang="es">¡martes doble!</span></span></p>
 
       <fieldset class="fulfill">
         <legend class="fulfill-legend">How do you want it?</legend>

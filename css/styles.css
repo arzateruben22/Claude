@@ -784,6 +784,73 @@ em { font-style: italic; }
 .rewards-claim:hover:not(:disabled) { border-color: var(--flame); color: var(--flame); }
 .rewards-claim:disabled { opacity: 0.35; cursor: not-allowed; }
 
+.appstore-badge {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--flame-soft);
+  border-radius: 999px;
+  color: var(--flame);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.order-earn {
+  margin: -0.6rem 0 var(--space-4);
+  font-size: 0.85rem;
+  color: var(--cream-60);
+}
+
+.order-earn[hidden] { display: none; }
+.order-earn strong { color: var(--flame); font-weight: 500; }
+.order-earn-tues { color: var(--chile); }
+
+.order-history { width: 100%; border-top: 1px solid var(--cream-15); margin-top: 0.4rem; }
+
+.order-history summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.7rem 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: color 200ms ease;
+}
+
+.order-history summary::-webkit-details-marker { display: none; }
+.order-history summary:hover { color: var(--flame); }
+.order-history summary [lang="es"] { font-weight: 300; color: var(--cream-35); margin-left: 0.4rem; }
+
+.order-history summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--cream-35);
+  font-weight: 300;
+  transition: transform 200ms ease;
+}
+
+.order-history[open] summary::after { transform: rotate(45deg); }
+
+.history-list { list-style: none; margin: 0; padding: 0; }
+
+.history-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.1rem 0.6rem;
+  padding: 0.55rem 0;
+  border-top: 1px solid var(--cream-15);
+  font-size: 0.85rem;
+}
+
+.history-top { color: var(--cream); }
+.history-pts { color: var(--flame); font-variant-numeric: tabular-nums; }
+.history-items { grid-column: 1 / -1; color: var(--cream-35); font-size: 0.78rem; }
+.history-empty { padding: 0.4rem 0 0.7rem; }
+.history-empty[hidden] { display: none; }
+
 .install-perks { list-style: none; margin: 0; padding: 0; }
 
 .install-perks li {

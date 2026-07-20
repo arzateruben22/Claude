@@ -497,6 +497,16 @@
     }
 
     addressField.hidden = mode() !== "delivery";
+
+    /* "This order earns +X puntos" preview */
+    var earnEl = panel.querySelector(".order-earn");
+    if (earnEl) {
+      var willEarn = Math.floor(sub * PUNTOS_PER_DOLLAR * (isTuesday ? TUESDAY_MULTIPLIER : 1));
+      earnEl.hidden = n === 0;
+      earnEl.querySelector(".order-earn-pts").textContent = "+" + willEarn + " puntos";
+      earnEl.querySelector(".order-earn-tues").hidden = !isTuesday;
+    }
+
     renderSlots();
     renderPayment();
     renderRewards();
@@ -678,6 +688,44 @@
   };
   var hasReward = function () { return cartRewardCost() > 0; };
 
+  /* ── Order history (stored on this device) ── */
+
+  var getHistory = function () {
+    try { return JSON.parse(localStorage.getItem("lg-history") || "[]"); } catch (e) { return []; }
+  };
+  var addHistory = function (entry) {
+    var h = getHistory();
+    h.unshift(entry);
+    try { localStorage.setItem("lg-history", JSON.stringify(h.slice(0, 20))); } catch (e) {}
+    renderHistory();
+  };
+  var historyList = document.querySelector(".history-list");
+  var renderHistory = function () {
+    if (!historyList) return;
+    var h = getHistory();
+    document.querySelector(".history-empty").hidden = h.length > 0;
+    historyList.innerHTML = "";
+    h.slice(0, 10).forEach(function (o) {
+      var li = document.createElement("li");
+      li.className = "history-row";
+      var top = document.createElement("span");
+      top.className = "history-top";
+      var dt = new Date(o.d);
+      top.textContent = dt.toLocaleDateString("en-US", { month: "short", day: "numeric" }) +
+        " · " + o.mode + " · " + money(o.total);
+      var pts = document.createElement("span");
+      pts.className = "history-pts";
+      pts.textContent = "+" + o.earned + " pts";
+      var items = document.createElement("span");
+      items.className = "history-items";
+      items.textContent = o.items;
+      li.appendChild(top);
+      li.appendChild(pts);
+      li.appendChild(items);
+      historyList.appendChild(li);
+    });
+  };
+
   var rewardsRows = document.querySelector(".rewards-rows");
   var renderRewards = function () {
     if (!rewardsRows) return;
@@ -724,9 +772,8 @@
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 
-  var installBtn = document.querySelector(".install-btn");
-  var installNote = document.querySelector(".install-note");
-  var installDone = document.querySelector(".install-done");
+  /* Home-screen installs still earn the welcome bonus; the App Store
+     listing is announced as coming soon in the rewards section. */
   var grantInstallBonus = function () {
     if (localStorage.getItem("lg-install-bonus")) return;
     try { localStorage.setItem("lg-install-bonus", "1"); } catch (e) {}
@@ -735,31 +782,8 @@
   };
   var standalone = window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
-  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-
-  if (standalone) {
-    if (installDone) installDone.hidden = false;
-    grantInstallBonus();
-  } else if (isIOS) {
-    if (installNote) installNote.hidden = false;
-  }
-
-  var deferredInstall = null;
-  window.addEventListener("beforeinstallprompt", function (e) {
-    e.preventDefault();
-    deferredInstall = e;
-    if (!standalone && installBtn) { installBtn.hidden = false; if (installNote) installNote.hidden = true; }
-  });
-  if (installBtn) {
-    installBtn.addEventListener("click", function () {
-      if (deferredInstall) { deferredInstall.prompt(); deferredInstall = null; }
-    });
-  }
-  window.addEventListener("appinstalled", function () {
-    if (installBtn) installBtn.hidden = true;
-    if (installDone) installDone.hidden = false;
-    grantInstallBonus();
-  });
+  if (standalone) grantInstallBonus();
+  window.addEventListener("appinstalled", grantInstallBonus);
 
   /* ── Clear all (two taps: arm, then confirm) ── */
 
@@ -907,10 +931,20 @@
       "?subject=" + encodeURIComponent((isDelivery ? "Delivery" : "Pickup") + " order — " + name) +
       "&body=" + encodeURIComponent(lines.join("\n"));
     setPts(getPts() - redeemed + earned);
+    addHistory({
+      d: Date.now(),
+      mode: isDelivery ? "Delivery" : "Pickup",
+      total: subtotal(),
+      earned: earned,
+      items: Object.keys(cart).map(function (k) {
+        return cart[k].qty + "× " + cart[k].name;
+      }).join(", ")
+    });
     statusEl.textContent = link
       ? "Payment page opened in a new tab — finish paying there, and send the order email so we can confirm."
       : "Opening your email app to send the order — we'll text you to confirm.";
   });
 
   render();
+  renderHistory();
 })();
