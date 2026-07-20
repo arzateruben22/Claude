@@ -1046,6 +1046,15 @@ em { font-style: italic; }
 
 .pay-options.pay-missing { box-shadow: 0 0 0 1px var(--chile); padding: 0.5rem; }
 
+.pay-note {
+  margin: 0;
+  padding: 0.85rem 0.95rem;
+  border: 1px dashed var(--cream-35);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  color: var(--cream-60);
+}
+
 .pay-opt {
   display: flex;
   align-items: center;

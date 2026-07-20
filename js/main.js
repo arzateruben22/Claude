@@ -15,6 +15,13 @@
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
 
+  /* Brand mark scrolls smoothly back to the top */
+  document.querySelector(".nav-brand").addEventListener("click", function (e) {
+    e.preventDefault();
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+  });
+
   var toggle = document.querySelector(".nav-toggle");
   var mobileMenu = document.getElementById("mobile-menu");
   var setMenu = function (open) {
@@ -225,6 +232,8 @@
   var payOptions = panel.querySelector(".pay-options");
   var selectedPay = null;
 
+  /* Every order is prepaid online; delivery may also pay the driver by
+     card. There is deliberately no pay-at-counter option. */
   var payMethods = function () {
     var m = [];
     if (PAYMENT_LINKS.stripe) {
@@ -238,8 +247,6 @@
     }
     if (mode() === "delivery") {
       m.push({ id: "card-door", label: "Card at the door", hint: "our driver brings a reader" });
-    } else {
-      m.push({ id: "counter", label: "Card or cash at the counter", hint: "pay at pickup" });
     }
     return m;
   };
@@ -256,6 +263,13 @@
     var methods = payMethods();
     if (!methods.some(function (m) { return m.id === selectedPay; })) selectedPay = null;
     payOptions.innerHTML = "";
+    if (!methods.length) {
+      var note = document.createElement("p");
+      note.className = "pay-note";
+      note.textContent = "Online payment is being connected — pickup ordering opens the moment it's live. Call us to order today.";
+      payOptions.appendChild(note);
+      return;
+    }
     methods.forEach(function (m) {
       var label = document.createElement("label");
       label.className = "pay-opt";
@@ -659,7 +673,9 @@
     if (!selectedPay) {
       payOptions.classList.add("pay-missing");
       statusEl.classList.add("error");
-      statusEl.textContent = "Choose how you're paying before sending your order.";
+      statusEl.textContent = payMethods().length
+        ? "Choose how you're paying before sending your order."
+        : "Online payment isn't connected yet — call us to place your order.";
       return;
     }
 
