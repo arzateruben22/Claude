@@ -22,6 +22,10 @@
       <a href="#journal">Journal</a>
     </nav>
     <a class="btn btn-solid nav-book" data-open-booking href="#services">Book now</a>
+    <button class="btn btn-ghost nav-rewards" type="button" data-open-rewards
+      aria-label="Open Glow Rewards">
+      ✦ <span class="rw-count">0</span>
+    </button>
     <button class="btn btn-ghost nav-cart" type="button" aria-label="Open cart, 0 items">
       Cart · <span class="nav-cart-count">0</span>
     </button>
@@ -38,6 +42,7 @@
     <a href="#journal">Journal</a>
     <a class="btn btn-solid" data-open-booking href="#services">Book now</a>
     <button class="btn btn-ghost mobile-cart" type="button">Cart · <span class="nav-cart-count">0</span></button>
+    <button class="btn btn-ghost" type="button" data-open-rewards>Glow Rewards · ✦ <span class="rw-count">0</span></button>
   </div>
 
   <main>
@@ -790,6 +795,53 @@
       </div>
     </section>
 
+    <!-- ═══════════════ GLOW REWARDS / APP TEASER ═══════════════ -->
+    <section class="section section-app" id="rewards">
+      <div class="section-inner">
+        <div class="app-head" data-reveal>
+          <p class="eyebrow">Glow Rewards</p>
+          <h2 class="display">Every visit <em>gives back.</em></h2>
+          <p class="section-sub">Earn Glow Points on every deposit and gift — live on this
+          site today, and soon in the Lumevina app for iPhone, where your points carry
+          over and the best perks live.</p>
+        </div>
+        <div class="app-perks" data-reveal>
+          <div class="app-perk">
+            <span class="app-perk-glyph" aria-hidden="true">✦</span>
+            <h3>Glow Points</h3>
+            <p>1 point per $1 on deposits and gifts — every 100 points is $10 off a
+            future visit. Double points on Wax Wednesday, +25 when you rebook within
+            five weeks.</p>
+          </div>
+          <div class="app-perk">
+            <span class="app-perk-glyph" aria-hidden="true">⚡</span>
+            <h3>Flash openings</h3>
+            <p>One starred time each day books at 10% off. In the app, freed-up slots
+            go out as push notifications first — first tap wins the opening.</p>
+          </div>
+          <div class="app-perk">
+            <span class="app-perk-glyph" aria-hidden="true">🎂</span>
+            <h3>Refer &amp; celebrate</h3>
+            <p>Your referral code earns you 150 points ($15) when a friend completes
+            their first appointment — and your birthday month carries a +50 point
+            bonus, every year.</p>
+          </div>
+          <div class="app-perk">
+            <span class="app-perk-glyph" aria-hidden="true">🌹</span>
+            <h3>Mystery petal</h3>
+            <p>After each confirmed appointment, tap the rose for a small surprise —
+            bonus points, sometimes a full bloom.</p>
+          </div>
+        </div>
+        <p class="app-note" data-reveal>
+          <button class="inline-link app-note-link" type="button" data-open-rewards>Check your
+          Glow Points balance</button> — earning starts with your very first deposit.
+          The Lumevina app brings Apple&nbsp;Pay deposits in two taps, and every point
+          you earn here follows you in.
+        </p>
+      </div>
+    </section>
+
     <!-- ═══════════════ JOURNAL / NEWSLETTER ═══════════════ -->
     <section class="section section-journal" id="journal">
       <div class="section-inner journal-inner">
@@ -908,6 +960,12 @@
             <input id="bk-email" name="email" type="email" autocomplete="email" required>
           </div>
         </div>
+        <!-- first visit only: a friend's Glow Rewards referral code -->
+        <div class="field rw-ref-field" hidden>
+          <label for="bk-ref">Referral code <span class="rw-ref-opt">(optional — first visit)</span></label>
+          <input id="bk-ref" name="ref" type="text" autocomplete="off"
+            placeholder="GLOW-XXXX" maxlength="12">
+        </div>
         <button class="btn-mb booking-confirm" type="button">
           <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
           <span class="btn btn-solid btn-mb-inner">Continue to deposit</span>
@@ -930,6 +988,13 @@
             <span class="checkout-total-value booking-deposit-amt"></span>
           </div>
         </div>
+
+        <!-- Glow Rewards redemption — shown once the client has a full
+             reward block; points cover up to half of a deposit -->
+        <label class="rw-redeem" hidden>
+          <input type="checkbox" id="bk-use-points">
+          <span class="rw-redeem-text"></span>
+        </label>
 
         <div class="field">
           <label for="bk-card-name">Name on card</label>
@@ -965,6 +1030,18 @@
         <p class="booking-summary"></p>
         <p class="booking-paid"></p>
         <p class="success-order">Order <span class="booking-order-id"></span></p>
+        <p class="rw-earned" hidden></p>
+        <p class="rw-ref-note" hidden></p>
+
+        <!-- mystery petal: one tap, one small surprise per booking -->
+        <div class="petal">
+          <button class="petal-btn" type="button">
+            <span class="petal-rose" aria-hidden="true">🌹</span>
+            Tap the rose — a little something extra
+          </button>
+          <p class="petal-result" role="status" aria-live="polite" hidden></p>
+        </div>
+
         <p class="success-sub">Your deposit goes toward your total — the balance is due at
         your visit (cash preferred, card with a fee). A confirmation email is on its way.
         Demo mode: no card was charged.</p>
@@ -1030,15 +1107,72 @@
         <h2 class="checkout-title">Payment received</h2>
         <p class="success-sub">Your gift of glow is on its way ✨</p>
         <p class="success-order">Order <span class="success-order-id"></span></p>
+        <p class="rw-earned rw-earned-cart" hidden></p>
         <p class="checkout-demo-note">This was a demo — nothing was charged.</p>
         <button class="btn btn-ghost checkout-done" type="button">Back to Lumevina</button>
       </div>
     </div>
   </div>
 
+  <!-- ═══════════════ GLOW REWARDS MODAL ═══════════════ -->
+  <div class="rewards-overlay" hidden></div>
+  <div class="rewards-modal" role="dialog" aria-modal="true" aria-labelledby="rewards-title" aria-hidden="true" tabindex="-1">
+    <div class="rewards-inner">
+      <button class="rewards-close" type="button" aria-label="Close rewards">×</button>
+      <h2 class="booking-title" id="rewards-title">Glow Rewards</h2>
+
+      <div class="rw-balance">
+        <span class="rw-balance-num">0</span>
+        <span class="rw-balance-label">Glow Points ✦</span>
+      </div>
+      <div class="rw-bar" aria-hidden="true"><span class="rw-bar-fill"></span></div>
+      <p class="rw-progress-note"></p>
+
+      <p class="booking-label">How to earn</p>
+      <ul class="rw-rules" role="list">
+        <li><span aria-hidden="true">✦</span> 1 point per $1 on deposits &amp; gifts paid here</li>
+        <li><span aria-hidden="true">✦✦</span> Double points on Wax Wednesday sessions</li>
+        <li><span aria-hidden="true">↻</span> +25 points when you rebook within 5 weeks</li>
+        <li><span aria-hidden="true">⚡</span> The starred flash opening each day is 10% off</li>
+        <li><span aria-hidden="true">🎂</span> +50 points once a year in your birthday month</li>
+        <li><span aria-hidden="true">✉</span> 150 points when a referred friend completes their first visit</li>
+        <li><span aria-hidden="true">🌹</span> Mystery petal after every confirmed booking</li>
+      </ul>
+      <p class="rw-fine">100 points = $10 off · points cover up to half of any deposit.</p>
+
+      <p class="booking-label">Your perks</p>
+      <div class="rw-perk-box">
+        <div class="rw-ref-row">
+          <span class="rw-ref-label">Referral code</span>
+          <code class="rw-ref-code"></code>
+          <button class="btn btn-ghost rw-copy" type="button">Copy</button>
+        </div>
+        <p class="rw-fine">Share it — you earn 150 ✦ ($15) when a friend completes
+        their first appointment.</p>
+        <div class="rw-bday-row">
+          <label for="rw-bmonth">Birthday month</label>
+          <select id="rw-bmonth">
+            <option value="">Choose…</option>
+            <option value="0">January</option><option value="1">February</option>
+            <option value="2">March</option><option value="3">April</option>
+            <option value="4">May</option><option value="5">June</option>
+            <option value="6">July</option><option value="7">August</option>
+            <option value="8">September</option><option value="9">October</option>
+            <option value="10">November</option><option value="11">December</option>
+          </select>
+        </div>
+        <p class="rw-fine">+50 ✦ on one booking during your birthday month, every year.</p>
+      </div>
+
+      <p class="booking-label">Recent activity</p>
+      <ul class="rw-history" role="list"></ul>
+    </div>
+  </div>
+
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
   <script src="js/payments.js"></script>
+  <script src="js/rewards.js"></script>
   <script src="js/liquid-metal.js"></script>
   <script src="js/dither-cards.js"></script>
   <script src="js/morphing-light.js"></script>

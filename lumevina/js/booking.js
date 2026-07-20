@@ -87,6 +87,19 @@
   var cvcInput = modal.querySelector("#bk-cvc");
   pay.bindCardFields(cardInput, expiryInput, cvcInput);
 
+  /* Glow Rewards (js/rewards.js): earning, redemption, petal */
+  var rw = window.LumevinaRewards;
+  var redeemRow = modal.querySelector(".rw-redeem");
+  var redeemCheck = modal.querySelector("#bk-use-points");
+  var redeemText = modal.querySelector(".rw-redeem-text");
+  var earnedEl = modal.querySelector(".rw-earned");
+  var refNoteEl = modal.querySelector(".rw-ref-note");
+  var refField = modal.querySelector(".rw-ref-field");
+  var refInput = modal.querySelector("#bk-ref");
+  var petalBtn = modal.querySelector(".petal-btn");
+  var petalResult = modal.querySelector(".petal-result");
+  var pendingBlocks = 0;
+
   /* ── Session state ── */
   var state = {
     services: [byId["new-client-consultation"] || services[0]],
@@ -102,7 +115,43 @@
     return state.services.reduce(function (a, s) { return a + s.price; }, 0);
   };
 
-  var depositDue = function () { return totalPrice() / 2; };
+  /* ── Flash opening: one starred time per day at 10% off ──
+     On the site it's the ⚡ slot below; in the app the same freed
+     slots go out as push notifications (see Glow Rewards). */
+  var FLASH_OFF = 0.10;
+
+  var flashStart = function () {
+    if (!state.dayKey || !state.services.length) return null;
+    var dur = totalDur();
+    var todayKey = dateKey(new Date());
+    var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+    var userSet = userBusyCells(state.dayKey);
+    var opts = candidateStarts(dur).filter(function (t) {
+      if (state.dayKey === todayKey && t <= nowMins) return false;
+      return blockFree(state.dayKey, t, dur, userSet);
+    });
+    if (!opts.length) return null;
+    var str = state.dayKey + ":flash";
+    var h = 0;
+    for (var i = 0; i < str.length; i++) {
+      h = (h * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return opts[h % opts.length];
+  };
+
+  var flashActive = function () {
+    return state.slot !== null && state.slot === flashStart();
+  };
+
+  var flashDiscount = function () {
+    return flashActive()
+      ? Math.round(totalPrice() * FLASH_OFF * 100) / 100
+      : 0;
+  };
+
+  var sessionTotal = function () { return totalPrice() - flashDiscount(); };
+
+  var depositDue = function () { return sessionTotal() / 2; };
 
   /* ── Time helpers ── */
   var fmtTime = function (mins) {
@@ -339,12 +388,13 @@
     var todayKey = dateKey(new Date());
     var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
     var userSet = userBusyCells(state.dayKey);
+    var fs = flashStart();
     var open = 0;
     candidateStarts(dur).forEach(function (mins) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "slot-btn";
-      btn.textContent = fmtTime(mins);
+      btn.textContent = (mins === fs ? "⚡ " : "") + fmtTime(mins);
       var past = state.dayKey === todayKey && mins <= nowMins;
       var free = blockFree(state.dayKey, mins, dur, userSet);
       /* a chosen time holds its whole block: any start that would
@@ -368,6 +418,10 @@
           renderPreview();
         });
       }
+      if (mins === fs && !btn.disabled) {
+        btn.classList.add("flash");
+        btn.title = "Flash opening — 10% off this session";
+      }
       if (state.slot === mins && !btn.disabled) {
         btn.classList.add("selected");
         btn.title = "Tap again to unselect";
@@ -377,7 +431,8 @@
     var note = document.createElement("p");
     note.className = "booking-open-note";
     note.textContent = open + " opening" + (open === 1 ? "" : "s") +
-      " for this " + dur + "-minute session";
+      " for this " + dur + "-minute session" +
+      (fs !== null ? " · ⚡ the starred time books at 10% off" : "");
     slotsEl.appendChild(note);
   };
 
@@ -405,9 +460,21 @@
     state.services.forEach(function (s) {
       addRow(s.name, pay.money(s.price));
     });
-    addRow("Total", pay.money(totalPrice()), "sc-total");
+    if (flashDiscount() > 0) {
+      addRow("⚡ Flash opening — 10% off", "−" + pay.money(flashDiscount()), "sc-flash");
+    }
+    addRow("Total", pay.money(sessionTotal()), "sc-total");
     addRow("Due now — 50% deposit", pay.money(depositDue()), "sc-due");
-    addRow("Due in person at your visit", pay.money(totalPrice() - depositDue()), "sc-rest");
+    addRow("Due in person at your visit", pay.money(sessionTotal() - depositDue()), "sc-rest");
+    if (rw) {
+      var q = rw.quote(depositDue(), {
+        dayKey: state.dayKey,
+        serviceIds: state.services.map(function (s) { return s.id; })
+      });
+      addRow("✦ Glow Points on this deposit" +
+        (q.notes.length ? " — " + q.notes.join(", ") : ""),
+        "+" + q.points + " ✦", "sc-earn");
+    }
   };
 
   var renderAll = function () {
@@ -555,6 +622,8 @@
     state.slot = null;
     statusEl.textContent = "";
     payStatus.textContent = "";
+    /* referral code: first visit only */
+    refField.hidden = loadBookings().length > 0;
     formView.hidden = false;
     payView.hidden = true;
     successView.hidden = true;
@@ -594,6 +663,28 @@
     return state.services.map(function (s) { return s.name; }).join(" + ");
   };
 
+  var chargeNow = function () {
+    var off = (rw && redeemCheck.checked) ? pendingBlocks * rw.blockValue : 0;
+    return Math.max(0, depositDue() - off);
+  };
+
+  var updatePayAmount = function () {
+    depositAmtEl.textContent = pay.money(chargeNow());
+    payBtn.querySelector(".btn-mb-inner").textContent =
+      "Pay deposit · " + pay.money(chargeNow());
+  };
+
+  redeemCheck.addEventListener("change", updatePayAmount);
+
+  petalBtn.addEventListener("click", function () {
+    if (petalBtn.disabled || !rw) return;
+    var pick = rw.petalReveal();
+    petalBtn.disabled = true;
+    petalResult.textContent = "🌹 " + pick.label + " — balance " +
+      rw.points() + " ✦";
+    petalResult.hidden = false;
+  });
+
   confirmBtn.addEventListener("click", function () {
     var problems = [];
     if (!state.services.length) problems.push("at least one service");
@@ -612,9 +703,12 @@
     var rows = state.services.map(function (s) {
       return [s.name + " (" + s.dur + " min)", pay.money(s.price)];
     });
+    if (flashDiscount() > 0) {
+      rows.push(["⚡ Flash opening — 10% off", "−" + pay.money(flashDiscount())]);
+    }
     rows.push([whenText() + " · " + fmtTime(state.slot) + " – " +
       fmtTime(state.slot + totalDur()), ""]);
-    rows.push(["Balance due at appointment", pay.money(totalPrice() - deposit)]);
+    rows.push(["Balance due at appointment", pay.money(sessionTotal() - deposit)]);
     rows.forEach(function (row) {
       var li = document.createElement("li");
       var label = document.createElement("span");
@@ -625,9 +719,17 @@
       li.appendChild(amount);
       payLines.appendChild(li);
     });
-    depositAmtEl.textContent = pay.money(deposit);
-    payBtn.querySelector(".btn-mb-inner").textContent =
-      "Pay deposit · " + pay.money(deposit);
+
+    /* Glow Points may cover up to half the deposit */
+    pendingBlocks = rw ? rw.redeemableBlocks(deposit) : 0;
+    redeemCheck.checked = false;
+    redeemRow.hidden = pendingBlocks < 1;
+    if (pendingBlocks >= 1) {
+      redeemText.textContent = "Use " + (pendingBlocks * rw.blockPoints) +
+        " ✦ for " + pay.money(pendingBlocks * rw.blockValue) +
+        " off this deposit (you have " + rw.points() + " ✦)";
+    }
+    updatePayAmount();
     if (!cardNameInput.value) cardNameInput.value = nameInput.value.trim();
 
     formView.hidden = true;
@@ -654,10 +756,14 @@
     }
 
     var deposit = depositDue();
+    var redeemedPts = (rw && redeemCheck.checked)
+      ? pendingBlocks * rw.blockPoints : 0;
+    var charge = chargeNow();
+    var firstVisit = !refField.hidden;
     payBtn.disabled = true;
     payStatus.textContent = "Processing…";
     pay.process({
-      amount: deposit,
+      amount: charge,
       description: "50% deposit — " + sessionName() + " (" + state.dayKey + ")"
     }, function (err, result) {
       payBtn.disabled = false;
@@ -672,14 +778,43 @@
         dur: totalDur(),
         services: state.services.map(function (s) { return s.id; }),
         order: result.id,
-        deposit: deposit
+        deposit: deposit,
+        paid: charge,
+        flash: flashActive()
       });
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());
       modal.querySelector(".booking-paid").textContent =
-        "Deposit paid: " + pay.money(deposit) + " · Balance due: " +
-        pay.money(totalPrice() - deposit);
+        "Deposit paid: " + pay.money(charge) +
+        (redeemedPts ? " (" + redeemedPts + " ✦ applied)" : "") +
+        " · Balance due: " + pay.money(sessionTotal() - deposit);
       modal.querySelector(".booking-order-id").textContent = result.id;
+
+      /* Glow Rewards: spend the redemption, earn on what was paid */
+      if (rw) {
+        if (redeemedPts) rw.spend(redeemedPts, "Redeemed on deposit");
+        var q = rw.award(charge, {
+          dayKey: state.dayKey,
+          serviceIds: state.services.map(function (s) { return s.id; })
+        }, "Deposit — " + sessionName());
+        earnedEl.textContent = "✦ +" + q.points + " Glow Points earned" +
+          (q.notes.length ? " (" + q.notes.join(", ") + ")" : "") +
+          " · balance " + rw.points() + " ✦";
+        earnedEl.hidden = false;
+      }
+      var code = refInput.value.trim().toUpperCase();
+      if (firstVisit && code && rw && code !== rw.refCode()) {
+        refNoteEl.textContent = "✉ Referral code " + code +
+          " received — your friend earns " + rw.referralBonus +
+          " ✦ ($15) once your visit is complete.";
+        refNoteEl.hidden = false;
+      } else {
+        refNoteEl.hidden = true;
+      }
+      petalBtn.disabled = false;
+      petalResult.hidden = true;
+      petalResult.textContent = "";
+
       payView.hidden = true;
       successView.hidden = false;
       modal.querySelector(".booking-done").focus();

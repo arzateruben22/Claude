@@ -332,9 +332,10 @@
     /* Processing runs through the shared engine — see the Stripe
        integration notes at the top of js/payments.js. */
     var payBtn = checkoutForm.querySelector(".checkout-pay");
+    var total = subtotal();
     payBtn.disabled = true;
     checkoutStatus.textContent = "Processing…";
-    pay.process({ amount: subtotal(), description: "Lumevina order" },
+    pay.process({ amount: total, description: "Lumevina order" },
       function (err, result) {
         payBtn.disabled = false;
         if (err) {
@@ -343,6 +344,17 @@
         }
         checkoutStatus.textContent = "";
         orderIdEl.textContent = result.id;
+
+        /* Glow Rewards: gifts & orders earn 1 ✦ per $1 */
+        var rw = window.LumevinaRewards;
+        var earnedEl = modal.querySelector(".rw-earned-cart");
+        if (rw && earnedEl) {
+          var q = rw.award(total, {}, "Lumevina order");
+          earnedEl.textContent = "✦ +" + q.points +
+            " Glow Points earned · balance " + rw.points() + " ✦";
+          earnedEl.hidden = false;
+        }
+
         formView.hidden = true;
         successView.hidden = false;
         checkoutForm.reset();
