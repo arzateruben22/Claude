@@ -1124,6 +1124,14 @@ a { color: inherit; }
   flex-wrap: wrap;
   gap: 8px;
 }
+.book-slots-hint {
+  margin: 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+  padding: 0.5rem 0;
+}
 .chip-slot {
   padding: 0.5rem 0.85rem;
   background: var(--night);

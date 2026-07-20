@@ -27,6 +27,15 @@
   var year = document.getElementById("year");
   if (year) year.textContent = String(new Date().getFullYear());
 
+  /* ── Brand → smooth scroll home ──────────────────────────── */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href="#top"]');
+    if (!a) return;
+    e.preventDefault();
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  });
+
   /* ── Plans: tap to select, pay-in-full / split toggle ────── */
   /* Ported from a React pricing component: animated selection
      ring, sliding toggle thumb, and rolling price numbers. */
@@ -159,11 +168,15 @@
     var slotsEl = document.querySelector(".book-slots");
     if (!daysEl || !slotsEl) return;
 
-    /* TODO: edit your real availability here.
-       Evenings only, 90-minute sessions — two slots a night. */
+    /* TODO: edit your real availability here. 90-minute sessions;
+       one session per week, so the calendar shows a rolling 7 days. */
     var OPEN_DAYS = [1, 2, 3, 4, 5, 6];          // Mon–Sat (0 = Sunday off)
-    var SLOT_TIMES = ["6:00 – 7:30 PM", "9:00 – 10:30 PM"];
-    var DAYS_AHEAD = 14;
+    var SLOTS_BY_DAY = {
+      weekday: ["6:00 – 7:30 PM", "7:30 – 9:00 PM", "9:00 – 10:30 PM"],
+      saturday: ["10:00 – 11:30 AM", "11:30 AM – 1:00 PM", "1:00 – 2:30 PM",
+                 "2:30 – 4:00 PM", "4:00 – 5:30 PM", "5:30 – 7:00 PM"]
+    };
+    var DAYS_AHEAD = 7;
     var PHONE = "+17143533126";
 
     var summary = document.querySelector(".book-summary");
@@ -193,17 +206,31 @@
         "</span>" + d.getDate() + '<span class="chip-mo mono">' +
         MO[d.getMonth()] + "</span>";
       b.dataset.label = WD[d.getDay()] + " " + MO[d.getMonth()] + " " + d.getDate();
+      b.dataset.dow = String(d.getDay());
       daysEl.appendChild(b);
     }
 
-    SLOT_TIMES.forEach(function (t) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "chip-slot mono";
-      b.setAttribute("role", "option");
-      b.textContent = t;
-      slotsEl.appendChild(b);
-    });
+    /* time slots depend on the chosen day (weeknights vs Saturday) */
+    function renderSlots(dow) {
+      slotsEl.innerHTML = "";
+      if (dow === null) {
+        var hint = document.createElement("p");
+        hint.className = "book-slots-hint mono";
+        hint.textContent = "Pick a day first";
+        slotsEl.appendChild(hint);
+        return;
+      }
+      var times = dow === 6 ? SLOTS_BY_DAY.saturday : SLOTS_BY_DAY.weekday;
+      times.forEach(function (t) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "chip-slot mono";
+        b.setAttribute("role", "option");
+        b.textContent = t;
+        slotsEl.appendChild(b);
+      });
+    }
+    renderSlots(null);
 
     /* keep the panel's tier / pay chips in sync with the plans section */
     function refreshPlan() {
@@ -296,6 +323,8 @@
         c.setAttribute("aria-selected", String(c === b));
       });
       picked.label = b.dataset.label;
+      picked.time = "";
+      renderSlots(Number(b.dataset.dow));
       update();
     });
     slotsEl.addEventListener("click", function (e) {
