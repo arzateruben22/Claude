@@ -2014,6 +2014,32 @@ em { font-style: italic; }
 
 .booking-confirm { width: 100%; text-align: center; }
 
+.booking-pay-view[hidden] { display: none; }
+
+.booking-back {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-bottom: var(--space-3);
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--mauve);
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.booking-back:hover { color: var(--plum); }
+
+.booking-pay { width: 100%; text-align: center; }
+
+.booking-paid {
+  font-size: 0.95rem;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.booking-order-id { color: var(--plum); font-weight: 400; }
+
 .booking-status { color: #b3402f; }
 
 .booking-summary {

@@ -281,53 +281,12 @@
     else if (drawerOpen()) closeDrawer();
   });
 
-  /* ── Card field formatting ── */
+  /* ── Card fields (shared engine: js/payments.js) ── */
+  var pay = window.LumevinaPayments;
   var cardInput = checkoutForm.elements.card;
   var expiryInput = checkoutForm.elements.expiry;
   var cvcInput = checkoutForm.elements.cvc;
-
-  cardInput.addEventListener("input", function () {
-    var digits = cardInput.value.replace(/\D/g, "").slice(0, 16);
-    cardInput.value = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
-  });
-
-  expiryInput.addEventListener("input", function () {
-    var digits = expiryInput.value.replace(/\D/g, "").slice(0, 4);
-    expiryInput.value = digits.length > 2
-      ? digits.slice(0, 2) + "/" + digits.slice(2)
-      : digits;
-  });
-
-  cvcInput.addEventListener("input", function () {
-    cvcInput.value = cvcInput.value.replace(/\D/g, "").slice(0, 4);
-  });
-
-  /* ── Validation ── */
-  var luhnValid = function (digits) {
-    var sum = 0;
-    var double = false;
-    for (var i = digits.length - 1; i >= 0; i--) {
-      var d = Number(digits[i]);
-      if (double) {
-        d *= 2;
-        if (d > 9) d -= 9;
-      }
-      sum += d;
-      double = !double;
-    }
-    return sum % 10 === 0;
-  };
-
-  var expiryValid = function (value) {
-    var m = value.match(/^(\d{2})\/(\d{2})$/);
-    if (!m) return false;
-    var month = Number(m[1]);
-    if (month < 1 || month > 12) return false;
-    var year = 2000 + Number(m[2]);
-    var now = new Date();
-    return year > now.getFullYear() ||
-      (year === now.getFullYear() && month >= now.getMonth() + 1);
-  };
+  pay.bindCardFields(cardInput, expiryInput, cvcInput);
 
   var validateCheckout = function () {
     var problems = [];
@@ -344,17 +303,15 @@
     mark(emailInput, !emailOk);
     if (!emailOk) problems.push("a valid email");
 
-    var cardDigits = cardInput.value.replace(/\D/g, "");
-    var cardOk = cardDigits.length >= 13 && cardDigits.length <= 16 &&
-      luhnValid(cardDigits);
+    var cardOk = pay.cardValid(cardInput.value);
     mark(cardInput, !cardOk);
     if (!cardOk) problems.push("a valid card number");
 
-    var expOk = expiryValid(expiryInput.value);
+    var expOk = pay.expiryValid(expiryInput.value);
     mark(expiryInput, !expOk);
     if (!expOk) problems.push("a future expiry (MM/YY)");
 
-    var cvcOk = /^\d{3,4}$/.test(cvcInput.value);
+    var cvcOk = pay.cvcValid(cvcInput.value);
     mark(cvcInput, !cvcOk);
     if (!cvcOk) problems.push("a 3–4 digit CVC");
 
@@ -370,15 +327,26 @@
       return;
     }
 
-    /* Demo only — a real store would POST the cart to a server here
-       and confirm a Stripe PaymentIntent before showing success. */
-    var orderId = "LUM-" + Date.now().toString(36).toUpperCase();
-    orderIdEl.textContent = orderId;
-    formView.hidden = true;
-    successView.hidden = false;
-    checkoutForm.reset();
-    clearCart();
-    modal.querySelector(".checkout-done").focus();
+    /* Processing runs through the shared engine — see the Stripe
+       integration notes at the top of js/payments.js. */
+    var payBtn = checkoutForm.querySelector(".checkout-pay");
+    payBtn.disabled = true;
+    checkoutStatus.textContent = "Processing…";
+    pay.process({ amount: subtotal(), description: "Lumevina order" },
+      function (err, result) {
+        payBtn.disabled = false;
+        if (err) {
+          checkoutStatus.textContent = "Payment failed — please try again.";
+          return;
+        }
+        checkoutStatus.textContent = "";
+        orderIdEl.textContent = result.id;
+        formView.hidden = true;
+        successView.hidden = false;
+        checkoutForm.reset();
+        clearCart();
+        modal.querySelector(".checkout-done").focus();
+      });
   });
 
   /* ── Boot ── */

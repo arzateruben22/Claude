@@ -70,6 +70,21 @@
   var statusEl = modal.querySelector(".booking-status");
   var summaryEl = modal.querySelector(".booking-summary");
 
+  var pay = window.LumevinaPayments;
+  var payView = modal.querySelector(".booking-pay-view");
+  var payLines = modal.querySelector(".booking-lines");
+  var depositAmtEl = modal.querySelector(".booking-deposit-amt");
+  var payBtn = modal.querySelector(".booking-pay");
+  var payStatus = modal.querySelector(".booking-pay-status");
+  var backBtn = modal.querySelector(".booking-back");
+  var cardNameInput = modal.querySelector("#bk-card-name");
+  var cardInput = modal.querySelector("#bk-card");
+  var expiryInput = modal.querySelector("#bk-expiry");
+  var cvcInput = modal.querySelector("#bk-cvc");
+  pay.bindCardFields(cardInput, expiryInput, cvcInput);
+
+  var depositFor = function (s) { return s.price / 2; };
+
   services.forEach(function (s) {
     var opt = document.createElement("option");
     opt.value = s.id;
@@ -138,6 +153,8 @@
     var n = slotsFor(state.service.dur).length;
     metaEl.textContent = state.service.dur + " min · up to " + n +
       " appointments a day · Tue–Sun, 8:00 AM–6:00 PM · lunch 12:00–12:30";
+    confirmBtn.textContent = "Continue to deposit · " +
+      pay.money(depositFor(state.service));
   };
 
   var renderDays = function () {
@@ -235,7 +252,9 @@
     }
     state.slot = null;
     statusEl.textContent = "";
+    payStatus.textContent = "";
     formView.hidden = false;
+    payView.hidden = true;
     successView.hidden = true;
     renderAll();
     modal.setAttribute("aria-hidden", "false");
@@ -260,7 +279,14 @@
     }
   });
 
-  /* ── Confirm ── */
+  /* ── Step 1 → 2: on to the 50% deposit ── */
+  var whenText = function () {
+    var d = new Date(state.dayKey + "T00:00:00");
+    return d.toLocaleDateString("en-US", {
+      weekday: "long", month: "long", day: "numeric"
+    });
+  };
+
   confirmBtn.addEventListener("click", function () {
     var problems = [];
     if (!state.slot) problems.push("a time slot");
@@ -272,17 +298,82 @@
       statusEl.textContent = "Please choose: " + problems.join(", ") + ".";
       return;
     }
-    saveBooking({ date: state.dayKey, time: state.slot, service: state.service.id });
 
-    var d = new Date(state.dayKey + "T00:00:00");
-    var when = d.toLocaleDateString("en-US", {
-      weekday: "long", month: "long", day: "numeric"
+    var s = state.service;
+    var deposit = depositFor(s);
+    payLines.textContent = "";
+    [
+      [s.name, pay.money(s.price)],
+      [whenText() + " · " + fmtTime(state.slot) + " (" + s.dur + " min)", ""],
+      ["Balance due at appointment", pay.money(s.price - deposit)]
+    ].forEach(function (row) {
+      var li = document.createElement("li");
+      var label = document.createElement("span");
+      label.textContent = row[0];
+      var amount = document.createElement("span");
+      amount.textContent = row[1];
+      li.appendChild(label);
+      li.appendChild(amount);
+      payLines.appendChild(li);
     });
-    summaryEl.textContent = state.service.name + " · " + when + " · " +
-      fmtTime(state.slot) + " (" + state.service.dur + " min)";
+    depositAmtEl.textContent = pay.money(deposit);
+    payBtn.textContent = "Pay deposit · " + pay.money(deposit);
+    if (!cardNameInput.value) cardNameInput.value = nameInput.value.trim();
+
     formView.hidden = true;
-    successView.hidden = false;
-    modal.querySelector(".booking-done").focus();
+    payView.hidden = false;
+    payStatus.textContent = "";
+    cardInput.focus();
+  });
+
+  backBtn.addEventListener("click", function () {
+    payView.hidden = true;
+    formView.hidden = false;
+  });
+
+  /* ── Step 2: pay the deposit (shared engine, Stripe-ready) ── */
+  payBtn.addEventListener("click", function () {
+    var problems = [];
+    if (!cardNameInput.value.trim()) problems.push("the name on the card");
+    if (!pay.cardValid(cardInput.value)) problems.push("a valid card number");
+    if (!pay.expiryValid(expiryInput.value)) problems.push("a future expiry (MM/YY)");
+    if (!pay.cvcValid(cvcInput.value)) problems.push("a 3–4 digit CVC");
+    if (problems.length) {
+      payStatus.textContent = "Please check: " + problems.join(", ") + ".";
+      return;
+    }
+
+    var s = state.service;
+    var deposit = depositFor(s);
+    payBtn.disabled = true;
+    payStatus.textContent = "Processing…";
+    pay.process({
+      amount: deposit,
+      description: "50% deposit — " + s.name + " (" + state.dayKey + ")"
+    }, function (err, result) {
+      payBtn.disabled = false;
+      if (err) {
+        payStatus.textContent = "Payment failed — please try again.";
+        return;
+      }
+      payStatus.textContent = "";
+      saveBooking({
+        date: state.dayKey,
+        time: state.slot,
+        service: s.id,
+        order: result.id,
+        deposit: deposit
+      });
+      summaryEl.textContent = s.name + " · " + whenText() + " · " +
+        fmtTime(state.slot) + " (" + s.dur + " min)";
+      modal.querySelector(".booking-paid").textContent =
+        "Deposit paid: " + pay.money(deposit) + " · Balance due: " +
+        pay.money(s.price - deposit);
+      modal.querySelector(".booking-order-id").textContent = result.id;
+      payView.hidden = true;
+      successView.hidden = false;
+      modal.querySelector(".booking-done").focus();
+    });
   });
 
   /* ── Book buttons, injected next to every add-to-cart ── */

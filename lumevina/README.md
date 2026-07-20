@@ -16,28 +16,37 @@ GitHub Pages, cPanel) — or just open `index.html` in a browser.
 | `js/vendor/` | GSAP 3.12.5 + ScrollTrigger (self-hosted) |
 | `fonts/` | Cormorant Garamond + Jost (self-hosted woff2) |
 
-## Booking (real) vs. cart (demo)
+## Booking, scheduler & payments
 
 - **Book now** buttons link to the real Acuity Scheduling catalog:
-  `https://app.acuityscheduling.com/catalog/d3692663` — appointments and
-  real purchases happen there.
-- **Add to cart** buttons on the site are a demo storefront: the cart
-  persists in `localStorage` (key `lumevina_cart`) and the checkout
-  validates card fields locally (Luhn, expiry, CVC) but **no payment is
-  processed and no data leaves the browser**. The footer, cart, and
-  checkout all say so, and the cart links back to the Acuity catalog for
-  real purchases.
+  `https://app.acuityscheduling.com/catalog/d3692663` — confirmed
+  appointments and real purchases happen there today.
+- **The scheduler** (`js/booking.js`) opens from every service's Book
+  button: Tue–Sun, 8 AM–6 PM, 12–12:30 lunch, 30/60-minute slots, and a
+  **required 50% deposit** collected in step two of the modal. Requests
+  persist in `localStorage` (key `lumevina_bookings`).
+- **The cart** (`js/cart.js`) persists in `localStorage` (key
+  `lumevina_cart`) with its own checkout.
+- Both checkouts run on **one shared payment engine**:
+  `js/payments.js`. It owns card formatting, Luhn/expiry/CVC validation,
+  and `process()` — currently a labeled **demo** that charges nothing and
+  sends nothing off the browser.
 
-### Swapping in real payments
+### Going live with Stripe (one file)
 
-Search `js/cart.js` for `TODO`. Options:
+Everything is staged so real payments are a single swap — see the
+`STRIPE INTEGRATION POINT` comment at the top of `js/payments.js`:
 
-1. Keep sending purchases through the Acuity catalog (zero code — already
-   linked everywhere).
-2. Stripe: `POST` the cart to your server, create a **PaymentIntent**
-   server-side (secret keys never go in this repo), confirm with Stripe.js
-   Elements, then show the success view.
-3. Stripe **Payment Links** — per-item links, no server code.
+1. Create a Stripe account and a tiny server endpoint
+   (`POST /create-payment-intent`) that creates a **PaymentIntent** with
+   the amount — the secret key lives only on that server.
+2. Add Stripe.js Elements on the client and replace
+   `LumevinaPayments.process()` with `stripe.confirmCardPayment(...)`.
+3. Done — the cart checkout **and** the booking deposit both go live at
+   once, and Apple Pay / Google Pay come free with Elements.
+
+Zero-server alternative: Stripe **Payment Links** per service/deposit, or
+keep routing everything through the Acuity catalog (already linked).
 
 ## Editing services
 
