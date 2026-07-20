@@ -1512,6 +1512,38 @@ em { font-style: italic; }
   pointer-events: auto;
 }
 
+/* ─── Face tools (Beautology Lab) ─── */
+
+.section-tools {
+  background:
+    radial-gradient(70% 60% at 85% 25%, rgba(201, 162, 180, 0.1), transparent 60%);
+}
+
+.section-tools .grid-2 { align-items: center; }
+
+.tools-cover {
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--panel-edge-soft);
+  box-shadow: 0 10px 34px rgba(90, 62, 78, 0.14);
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.tools-cover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(125, 84, 104, 0.22);
+}
+
+.tools-cover svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 700ms ease;
+}
+
+.tools-cover:hover svg { transform: scale(1.04); }
+
 /* ─── Journal / newsletter ─── */
 
 .section-journal {
