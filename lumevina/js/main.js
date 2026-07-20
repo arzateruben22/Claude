@@ -104,15 +104,17 @@
       }
     });
 
-    /* Service sectors pop up one by one as you scroll to them */
+    /* Service sectors rise in one by one as you scroll to them.
+       No scale/overshoot: mid-stagger the row must stay aligned, and
+       clearProps guarantees the resting grid is pure CSS layout. */
     if (document.querySelector(".sector-grid")) {
       gsap.from(".sector-btn", {
         opacity: 0,
-        y: 26,
-        scale: 0.94,
-        duration: 0.55,
-        ease: "back.out(1.4)",
-        stagger: 0.08,
+        y: 18,
+        duration: 0.5,
+        ease: "power2.out",
+        stagger: 0.06,
+        clearProps: "transform,opacity",
         scrollTrigger: { trigger: ".sector-grid", start: "top 82%" }
       });
     }

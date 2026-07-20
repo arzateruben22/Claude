@@ -571,6 +571,14 @@ em { font-style: italic; }
 .hero-wordmark {
   position: absolute;
   bottom: 0.1em;
+}
+
+/* desktop: sit the letters just below the features strip */
+@media (min-width: 901px) {
+  .hero-wordmark { bottom: -0.14em; }
+}
+
+.hero-wordmark {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
