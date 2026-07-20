@@ -1147,7 +1147,8 @@
       <div class="acct-out">
         <p class="acct-intro">Sign in to keep your Glow Points, see your upcoming
         appointments, and share your referral code — booking as a guest always
-        stays available.</p>
+        stays available. Your first sign-in comes with <strong>50 ✦ on the
+        house</strong>.</p>
         <div class="field">
           <label for="acct-name">Name</label>
           <input id="acct-name" name="name" type="text" autocomplete="name" required>
@@ -1166,6 +1167,7 @@
       <div class="acct-in" hidden>
         <p class="acct-greeting"></p>
         <p class="acct-since"></p>
+        <p class="acct-welcome" hidden></p>
 
         <div class="acct-glow">
           <div class="acct-glow-line">
@@ -1201,6 +1203,13 @@
       </div>
       <div class="rw-bar" aria-hidden="true"><span class="rw-bar-fill"></span></div>
       <p class="rw-progress-note"></p>
+
+      <!-- signed-out visitors: the welcome bonus (50 ✦ on first sign-in) -->
+      <div class="rw-signup" hidden>
+        <p>New to Glow Rewards? <strong>Sign in and take 50 ✦ on us</strong> —
+        that's halfway to your first $10 off.</p>
+        <button class="btn btn-solid rw-signup-btn" type="button">Sign in · claim 50 ✦</button>
+      </div>
 
       <p class="booking-label">How to earn</p>
       <ul class="rw-rules" role="list">

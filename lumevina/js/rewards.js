@@ -25,13 +25,15 @@
   var STREAK_BONUS = 25;
   var BIRTHDAY_BONUS = 50;
   var REFERRAL_BONUS = 150;
+  var WELCOME_BONUS = 50;  /* first sign-in, once per ledger */
 
   var money = function (n) { return "$" + n.toFixed(2); };
 
   /* ── Ledger ── */
   var data = {
     points: 0, history: [], lastVisit: null,
-    birthMonth: null, birthdayClaimed: null, refCode: null
+    birthMonth: null, birthdayClaimed: null, refCode: null,
+    welcomeClaimed: false
   };
 
   var load = function () {
@@ -44,6 +46,7 @@
         if (isFinite(raw.birthMonth)) data.birthMonth = Number(raw.birthMonth);
         if (isFinite(raw.birthdayClaimed)) data.birthdayClaimed = Number(raw.birthdayClaimed);
         if (typeof raw.refCode === "string") data.refCode = raw.refCode;
+      if (raw.welcomeClaimed) data.welcomeClaimed = true;
       }
     } catch (err) { /* corrupt storage: start fresh */ }
     if (!data.refCode) {
@@ -128,6 +131,14 @@
     return Math.max(0, Math.min(byPoints, byDeposit));
   };
 
+  /* ── Welcome bonus: claimed by the first sign-in ── */
+  var claimWelcome = function () {
+    if (data.welcomeClaimed) return 0;
+    data.welcomeClaimed = true;
+    record(WELCOME_BONUS, "Welcome to Glow Rewards");
+    return WELCOME_BONUS;
+  };
+
   /* ── Mystery petal ── */
   var PETALS = [
     { pts: 10, label: "10 bonus petals of glow" },
@@ -174,6 +185,10 @@
     var bday = modal.querySelector("#rw-bmonth");
     bday.value = data.birthMonth === null ? "" : String(data.birthMonth);
 
+    /* signed-out nudge: the welcome bonus, front and center */
+    var acct = window.LumevinaAccount && window.LumevinaAccount.current();
+    modal.querySelector(".rw-signup").hidden = !!acct || data.welcomeClaimed;
+
     var hist = modal.querySelector(".rw-history");
     hist.textContent = "";
     if (!data.history.length) {
@@ -215,6 +230,10 @@
   };
 
   if (modal) {
+    modal.querySelector(".rw-signup-btn").addEventListener("click", function () {
+      closeModal();
+      if (window.LumevinaAccount) window.LumevinaAccount.open();
+    });
     modal.querySelector("#rw-bmonth").addEventListener("change", function () {
       data.birthMonth = this.value === "" ? null : Number(this.value);
       data.birthdayClaimed = null;
@@ -263,6 +282,8 @@
     blockPoints: BLOCK_POINTS,
     blockValue: BLOCK_VALUE,
     referralBonus: REFERRAL_BONUS,
+    welcomeBonus: WELCOME_BONUS,
+    claimWelcome: claimWelcome,
     refCode: function () { return data.refCode; },
     petalReveal: petalReveal,
     open: openModal

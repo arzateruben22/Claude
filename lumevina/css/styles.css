@@ -2712,6 +2712,38 @@ em { font-style: italic; }
   color: var(--ink-60);
 }
 
+/* signed-out welcome-bonus nudge */
+.rw-signup {
+  background: rgba(230, 189, 178, 0.18);
+  border: 1px dashed var(--rose);
+  border-radius: 12px;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.rw-signup[hidden] { display: none; }
+
+.rw-signup p {
+  font-size: 0.875rem;
+  color: var(--ink-60);
+  margin-bottom: 0.7rem;
+}
+
+.rw-signup strong { color: var(--plum); font-weight: 500; }
+
+.rw-signup-btn { width: 100%; text-align: center; }
+
+.acct-welcome {
+  color: var(--plum);
+  font-size: 0.9rem;
+  background: rgba(230, 189, 178, 0.18);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: var(--space-3);
+}
+
+.acct-welcome[hidden] { display: none; }
+
 .rw-rules {
   list-style: none;
   margin: 0 0 0.5rem;

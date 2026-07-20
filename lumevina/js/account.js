@@ -80,6 +80,7 @@
   var statusEl = modal.querySelector(".acct-status");
   var greetEl = modal.querySelector(".acct-greeting");
   var sinceEl = modal.querySelector(".acct-since");
+  var welcomeEl = modal.querySelector(".acct-welcome");
   var pointsEl = modal.querySelector(".acct-points");
   var refEl = modal.querySelector(".acct-ref-code");
   var listEl = modal.querySelector(".acct-bookings");
@@ -159,6 +160,7 @@
     var signedIn = !!session;
     outView.hidden = signedIn;
     inView.hidden = !signedIn;
+    welcomeEl.hidden = true;
     if (!signedIn) return;
 
     var first = (session.name || "").split(" ")[0] || "glow-getter";
@@ -225,6 +227,14 @@
       session = { name: name, email: email, since: Date.now() };
       save();
       render();
+      /* first sign-in on this device claims the welcome bonus */
+      var bonus = rw() ? rw().claimWelcome() : 0;
+      if (bonus) {
+        welcomeEl.textContent = "✦ " + bonus + " welcome points added — " +
+          "you're halfway to your first $10 reward.";
+        welcomeEl.hidden = false;
+        pointsEl.textContent = String(rw().points());
+      }
     }, 900);
   });
 
