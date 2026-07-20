@@ -146,7 +146,13 @@
   };
 
   /* ── State + rendering ── */
-  var state = { service: services[0], dayKey: null, slot: null };
+  var state = {
+    /* generic Book buttons open on the new-client flagship */
+    service: byId["new-client-consultation"] || services[0],
+    dayKey: null,
+    slot: null
+  };
+  select.value = state.service.id;
 
   var renderMeta = function () {
     var n = slotsFor(state.service.dur).length;
