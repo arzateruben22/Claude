@@ -3,6 +3,24 @@
 (function () {
   "use strict";
 
+  /* ── Intro label — stacked-shadow wordmark, once per visit ── */
+  var introActive = false;
+  (function () {
+    var introEl = document.getElementById("intro");
+    if (!introEl) return;
+    var reduceIntro = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var seen = false;
+    try { seen = sessionStorage.getItem("schflr-intro") === "1"; } catch (e) {}
+    if (reduceIntro || seen) {
+      introEl.classList.add("is-done");
+      return;
+    }
+    introActive = true;
+    try { sessionStorage.setItem("schflr-intro", "1"); } catch (e) {}
+    window.setTimeout(function () { introEl.classList.add("leaving"); }, 1200);
+    window.setTimeout(function () { introEl.classList.add("is-done"); }, 1720);
+  })();
+
   /* ── Mobile menu ─────────────────────────────────────────── */
   var toggle = document.querySelector(".nav-toggle");
   var menu = document.getElementById("mobile-menu");
@@ -757,7 +775,11 @@
 
   /* Page-load sequence: headline rises, copy fades, then the
      month calendars fill in — session squares landing last. */
-  var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+  /* if the intro label is playing, the hero reveal waits for the handoff */
+  var intro = gsap.timeline({
+    delay: introActive ? 1.05 : 0,
+    defaults: { ease: "power3.out" }
+  });
 
   intro
     .fromTo(".hero-title .w",

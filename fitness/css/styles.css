@@ -88,6 +88,51 @@ a { color: inherit; }
 }
 .accent { color: var(--orange); }
 
+/* ── Intro label (TextRewind port) ──────────────────────────── */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--night);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.intro.is-done { display: none; }
+
+.intro-word {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  font-size: clamp(3.5rem, 16vw, 9rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--bone);
+  opacity: 0;
+  animation: intro-word 1.05s cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+}
+@keyframes intro-word {
+  0% { opacity: 0; transform: translateY(28px) scale(0.92); text-shadow: none; }
+  40% { opacity: 1; transform: none; text-shadow: none; }
+  60% { text-shadow: 0.045em 0.045em 0 var(--orange); }
+  75% { text-shadow: 0.045em 0.045em 0 var(--orange),
+                     0.09em 0.09em 0 var(--orange-deep); }
+  88% { text-shadow: 0.045em 0.045em 0 var(--orange),
+                     0.09em 0.09em 0 var(--orange-deep),
+                     0.135em 0.135em 0 var(--gold); }
+  100% { opacity: 1; transform: none;
+         text-shadow: 0.045em 0.045em 0 var(--orange),
+                      0.09em 0.09em 0 var(--orange-deep),
+                      0.135em 0.135em 0 var(--gold),
+                      0.3em 0.3em 0.14em rgba(249, 115, 22, 0.35); }
+}
+
+.intro.leaving { animation: intro-leave 500ms ease forwards; }
+@keyframes intro-leave {
+  to { opacity: 0; }
+}
+
 /* ── Type roles ─────────────────────────────────────────────── */
 
 .display {
