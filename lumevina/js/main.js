@@ -103,16 +103,20 @@
       .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.4)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.5);
 
-    /* Wordmark drifts as you leave the hero */
+    /* Wordmark drifts as you leave the hero. Only the drift is scrubbed
+       — opacity stays at its resting 0.3 (a scrubbed opacity here made
+       the scrub capture a wrong start value and flicker on first
+       scroll). invalidateOnRefresh recomputes cleanly after the font
+       loads / the intro lifts. */
     gsap.to(".hero-wordmark", {
       yPercent: 22,
-      opacity: 0.3,
       ease: "none",
       scrollTrigger: {
         trigger: ".hero",
         start: "top top",
         end: "bottom top",
-        scrub: true
+        scrub: true,
+        invalidateOnRefresh: true
       }
     });
 
