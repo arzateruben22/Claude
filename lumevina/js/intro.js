@@ -62,7 +62,7 @@
     window.removeEventListener("touchmove", onWheel, { passive: true });
     intro.classList.add("intro-out");
     document.body.classList.remove("intro-lock");
-    setTimeout(function () { intro.classList.add("intro-done"); }, 950);
+    setTimeout(function () { intro.classList.add("intro-done"); }, 820);
   };
 
   var onKey = function () { dismiss(); };
@@ -74,5 +74,5 @@
   window.addEventListener("touchmove", onWheel, { passive: true });
 
   /* auto-lift if they just want to watch it breathe */
-  timers.push(setTimeout(function () { dismiss(); }, 3800));
+  timers.push(setTimeout(function () { dismiss(); }, 3200));
 })();

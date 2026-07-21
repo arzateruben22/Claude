@@ -307,6 +307,7 @@ em { font-style: italic; }
   opacity: 0;
   transform: translateY(-2%);
   pointer-events: none;
+  transition: opacity 780ms ease, transform 780ms ease;
 }
 
 .intro.intro-done { display: none; }
@@ -322,7 +323,7 @@ body.intro-lock { overflow: hidden; }
   opacity: 0;
   stroke-dasharray: 6 6;
   stroke-dashoffset: 1000;
-  animation: intro-grid-draw 2.4s ease-out forwards;
+  animation: intro-grid-draw 2s ease-out forwards;
 }
 
 @keyframes intro-grid-draw {
@@ -359,13 +360,13 @@ body.intro-lock { overflow: hidden; }
   height: auto;
   color: var(--mauve);
   opacity: 0;
-  animation: intro-appear 1.4s ease-out forwards;
+  animation: intro-appear 1.15s ease-out forwards;
   animation-delay: 0.1s;
 }
 
 .intro-word { opacity: 0; will-change: opacity, transform, filter; }
 
-.intro-word.intro-anim { animation: intro-appear 0.9s ease-out forwards; }
+.intro-word.intro-anim { animation: intro-appear 0.75s ease-out forwards; }
 
 .intro-mark-word {
   font-family: var(--font-display);
@@ -402,7 +403,7 @@ body.intro-lock { overflow: hidden; }
   opacity: 0;
 }
 
-.intro-enter.intro-anim { animation: intro-pulse 2.6s ease-in-out infinite; animation-delay: 2s; }
+.intro-enter.intro-anim { animation: intro-pulse 2.6s ease-in-out infinite; animation-delay: 0.3s; }
 
 @keyframes intro-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.7; } }
 
