@@ -92,6 +92,7 @@ Deno.serve(async (req) => {
     deposit_cents: depositCents,
     points_redeemed: redeemed,
     flash,
+    source: body.source === "app" || body.source === "admin" ? body.source : "web",
   }).select().single();
 
   if (error) {

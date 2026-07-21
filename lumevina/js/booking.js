@@ -786,7 +786,11 @@
         order: result.id,
         deposit: deposit,
         paid: charge,
-        flash: flashActive()
+        flash: flashActive(),
+        /* stamp where the booking came from — 'app' inside the
+           Capacitor shell, 'web' in a browser. Powers the app-vs-web
+           split in the owner dashboard, captured from booking #1. */
+        source: window.Capacitor ? "app" : "web"
       });
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());

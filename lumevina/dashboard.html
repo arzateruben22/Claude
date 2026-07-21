@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumevina — Owner Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📊%3C/text%3E%3C/svg%3E">
+  <style>
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: normal; src: url("fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: italic; src: url("fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; src: url("fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Jost"; font-weight: 300; src: url("fonts/jost-latin-300-normal.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Jost"; font-weight: 400; src: url("fonts/jost-latin-400-normal.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Jost"; font-weight: 500; src: url("fonts/jost-latin-500-normal.woff2") format("woff2"); font-display: swap; }
+
+    :root {
+      --ground: #f4ede6; --panel: #fdfaf6; --card: #ffffff;
+      --ink: #443640; --ink-70: #5f4f59; --ink-45: #8a7a83; --ink-25: #b6a9b0;
+      --plum: #7d5468; --mauve: #a5798b; --edge: rgba(68,54,64,0.1);
+      --data: #9c3f68; --data-soft: rgba(156,63,104,0.14);
+      --alt: #c17a3f; --base: #b6a9b0; --grid: rgba(68,54,64,0.07);
+      --good: #4f7d5e; --font-d: "Cormorant Garamond", Georgia, serif;
+      --font-b: "Jost", system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--ground); color: var(--ink); font-family: var(--font-b);
+      font-weight: 300; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 76rem; margin: 0 auto; padding: 2.5rem clamp(1rem, 4vw, 2.5rem) 4rem; }
+
+    header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+      gap: 1rem; margin-bottom: 0.4rem; }
+    .brand { font-family: var(--font-d); font-weight: 600; font-size: 1.9rem; color: var(--plum);
+      line-height: 1; }
+    .brand small { display: block; font-family: var(--font-b); font-weight: 400; font-size: 0.62rem;
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-45); margin-top: 0.35rem; }
+    .period { font-size: 0.8rem; color: var(--ink-45); text-align: right; }
+    .period strong { color: var(--ink-70); font-weight: 500; }
+    .demo-tag { display: inline-block; margin: 0.9rem 0 2rem; font-size: 0.72rem; letter-spacing: 0.06em;
+      color: var(--plum); background: var(--data-soft); border: 1px dashed rgba(156,63,104,0.4);
+      border-radius: 999px; padding: 0.35rem 0.9rem; }
+
+    h2 { font-family: var(--font-d); font-weight: 600; font-size: 1.35rem; color: var(--ink);
+      margin-bottom: 0.15rem; }
+    .sub { font-size: 0.8rem; color: var(--ink-45); margin-bottom: 1.1rem; }
+
+    /* KPI tiles */
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2.4rem; }
+    .kpi { background: var(--card); border: 1px solid var(--edge); border-radius: 16px;
+      padding: 1.2rem 1.3rem; box-shadow: 0 3px 14px rgba(90,62,78,0.05); }
+    .kpi-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-45); }
+    .kpi-val { font-family: var(--font-d); font-weight: 600; font-size: 2.25rem; line-height: 1.05;
+      color: var(--plum); font-variant-numeric: tabular-nums; margin: 0.35rem 0 0.15rem; }
+    .kpi-note { font-size: 0.78rem; color: var(--ink-45); }
+    .kpi-note .up { color: var(--good); font-weight: 500; }
+    .kpi-note .down { color: var(--good); font-weight: 500; }
+
+    .grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.4rem; margin-bottom: 1.4rem; }
+    .card { background: var(--card); border: 1px solid var(--edge); border-radius: 16px;
+      padding: 1.4rem 1.5rem; box-shadow: 0 3px 14px rgba(90,62,78,0.05); position: relative; }
+
+    .legend { display: flex; gap: 1.1rem; font-size: 0.76rem; color: var(--ink-70); margin-bottom: 0.6rem; }
+    .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+
+    svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .axis-lbl { font-family: var(--font-b); font-weight: 400; font-size: 10px; fill: var(--ink-45); }
+    .val-lbl { font-family: var(--font-b); font-weight: 500; font-size: 11px; fill: var(--ink); }
+
+    /* tooltip */
+    .tip { position: fixed; pointer-events: none; z-index: 20; background: var(--ink); color: #fdfaf6;
+      font-size: 0.74rem; padding: 0.4rem 0.6rem; border-radius: 8px; opacity: 0; transition: opacity 120ms;
+      white-space: nowrap; box-shadow: 0 6px 18px rgba(20,12,18,0.3); }
+    .tip strong { font-weight: 500; }
+
+    /* rewards mini-stats */
+    .mini { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+    .mini div { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
+      padding: 0.85rem 1rem; }
+    .mini .m-val { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
+      font-variant-numeric: tabular-nums; }
+    .mini .m-lbl { font-size: 0.72rem; color: var(--ink-45); }
+
+    .proof { background: linear-gradient(135deg, rgba(156,63,104,0.09), rgba(193,122,63,0.08));
+      border: 1px solid var(--edge); border-radius: 16px; padding: 1.5rem 1.7rem; margin-top: 1.4rem; }
+    .proof h2 { margin-bottom: 0.5rem; }
+    .proof p { font-size: 0.9rem; color: var(--ink-70); max-width: 54rem; }
+    .proof strong { color: var(--plum); font-weight: 500; }
+
+    .foot { margin-top: 2.5rem; font-size: 0.76rem; color: var(--ink-45); text-align: center; }
+
+    @media (max-width: 860px) {
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .grid2 { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .kpi, .card { transition: transform 200ms ease; }
+    }
+  </style>
+</head>
+<body data-palette="#9c3f68,#c17a3f">
+  <div class="wrap">
+    <header>
+      <div class="brand">Lumevina<small>Owner Dashboard</small></div>
+      <div class="period">Reporting period<br><strong id="period-range">Jan – Sep 2026</strong></div>
+    </header>
+    <span class="demo-tag">Sample data — a preview of your live command center once bookings run through the site &amp; app</span>
+
+    <h2>This month at a glance</h2>
+    <p class="sub">September 2026, compared with the month before.</p>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Revenue, month by month</h2>
+        <p class="sub">Deposits + product sales. The dashed line marks your website launch.</p>
+        <div id="chart-revenue"></div>
+      </div>
+      <div class="card">
+        <h2>Rebooking rate</h2>
+        <p class="sub">Share of clients who return — before vs after Glow Rewards.</p>
+        <div id="chart-retention"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Where bookings come from</h2>
+        <p class="sub">Website vs app, since the app launched.</p>
+        <div class="legend">
+          <span><i class="swatch" style="background:#9c3f68"></i> App</span>
+          <span><i class="swatch" style="background:#c17a3f"></i> Website</span>
+        </div>
+        <div id="chart-source"></div>
+      </div>
+      <div class="card">
+        <h2>Glow Rewards engagement</h2>
+        <p class="sub">Loyalty is what turns first visits into regulars.</p>
+        <div class="mini" id="rewards"></div>
+        <p class="sub" style="margin:1rem 0 0">No-shows fell to <strong style="color:var(--good)">6%</strong>
+        (from 18%) — deposits at booking are doing the work.</p>
+      </div>
+    </div>
+
+    <div class="proof">
+      <h2>Why this sells</h2>
+      <p>These are the numbers other beauty pros will pay to reproduce: <strong>rebooking
+      nearly doubled</strong>, <strong>no-shows cut by two-thirds</strong>, and a growing share
+      of bookings coming through an app you own outright. When these are your <em>real</em>
+      figures over a few months, this screen becomes the whole pitch — proof beats promises.</p>
+    </div>
+
+    <p class="foot">Lumevina Aesthetics Spa · figures shown are illustrative sample data ·
+    the live version reads from your bookings, Stripe, and Glow Rewards.</p>
+  </div>
+
+  <div class="tip" id="tip"></div>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
+    var revenue = [8200, 8600, 8100, 8900, 9800, 11200, 12600, 13900, 15400];
+    var launchIdx = 4; /* May — website live */
+    /* app-era months (app launched Jun): [app, web] booking counts */
+    var srcMonths = ["May","Jun","Jul","Aug","Sep"];
+    var srcApp    = [0, 14, 28, 41, 53];
+    var srcWeb    = [55, 48, 42, 36, 32];
+
+    var NS = "http://www.w3.org/2000/svg";
+    var tip = document.getElementById("tip");
+    var money = function (n) { return "$" + n.toLocaleString("en-US"); };
+    function el(t, a) {
+      var e = document.createElementNS(NS, t);
+      for (var k in a) if (a.hasOwnProperty(k)) e.setAttribute(k, a[k]);
+      return e;
+    }
+    function showTip(html, ev) {
+      tip.innerHTML = html;
+      tip.style.opacity = "1";
+      tip.style.left = (ev.clientX + 14) + "px";
+      tip.style.top = (ev.clientY - 10) + "px";
+    }
+    function hideTip() { tip.style.opacity = "0"; }
+
+    /* ── KPI tiles ── */
+    var kpis = [
+      { label: "Revenue · Sep", val: "$15,400", note: '<span class="up">▲ 11%</span> vs Aug' },
+      { label: "Bookings · Sep", val: "85", note: '<span class="up">▲ 10%</span> vs Aug' },
+      { label: "Rebooking rate", val: "68%", note: '<span class="up">▲</span> up from 35% pre-launch' },
+      { label: "No-show rate", val: "6%", note: '<span class="down">▼</span> down from 18%' }
+    ];
+    var kbox = document.getElementById("kpis");
+    kpis.forEach(function (k) {
+      var d = document.createElement("div");
+      d.className = "kpi";
+      d.innerHTML = '<div class="kpi-label">' + k.label + '</div>' +
+        '<div class="kpi-val">' + k.val + '</div>' +
+        '<div class="kpi-note">' + k.note + '</div>';
+      kbox.appendChild(d);
+    });
+
+    /* ── Revenue area chart ── */
+    (function () {
+      var W = 560, H = 240, P = { t: 18, r: 16, b: 28, l: 46 };
+      var iw = W - P.l - P.r, ih = H - P.t - P.b;
+      var max = 16000, n = revenue.length;
+      var x = function (i) { return P.l + (n === 1 ? 0 : i / (n - 1) * iw); };
+      var y = function (v) { return P.t + ih - (v / max) * ih; };
+      var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img",
+        "aria-label": "Monthly revenue rising from $8,200 in January to $15,400 in September" });
+
+      /* gridlines + y labels */
+      [0, 4000, 8000, 12000, 16000].forEach(function (g) {
+        svg.appendChild(el("line", { x1: P.l, x2: W - P.r, y1: y(g), y2: y(g),
+          stroke: "var(--grid)", "stroke-width": 1 }));
+        var t = el("text", { x: P.l - 8, y: y(g) + 3, "text-anchor": "end", class: "axis-lbl" });
+        t.textContent = "$" + (g / 1000) + "k"; svg.appendChild(t);
+      });
+      /* area + line */
+      var dLine = "", dArea = "";
+      revenue.forEach(function (v, i) {
+        dLine += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1) + " ";
+      });
+      dArea = dLine + "L" + x(n - 1) + " " + y(0) + " L" + x(0) + " " + y(0) + " Z";
+      svg.appendChild(el("path", { d: dArea, fill: "var(--data-soft)" }));
+      svg.appendChild(el("path", { d: dLine, fill: "none", stroke: "var(--data)",
+        "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+      /* launch marker */
+      svg.appendChild(el("line", { x1: x(launchIdx), x2: x(launchIdx), y1: P.t, y2: P.t + ih,
+        stroke: "var(--mauve)", "stroke-width": 1, "stroke-dasharray": "3 3" }));
+      var lt = el("text", { x: x(launchIdx) + 4, y: P.t + 10, class: "axis-lbl", fill: "var(--mauve)" });
+      lt.textContent = "site live"; svg.appendChild(lt);
+      /* x labels + hover dots */
+      revenue.forEach(function (v, i) {
+        var t = el("text", { x: x(i), y: H - 8, "text-anchor": "middle", class: "axis-lbl" });
+        t.textContent = months[i]; svg.appendChild(t);
+        var dot = el("circle", { cx: x(i), cy: y(v), r: 9, fill: "transparent", style: "cursor:pointer" });
+        dot.addEventListener("mousemove", function (ev) {
+          showTip("<strong>" + months[i] + "</strong> · " + money(v), ev); });
+        dot.addEventListener("mouseleave", hideTip);
+        svg.appendChild(dot);
+        svg.appendChild(el("circle", { cx: x(i), cy: y(v), r: 2.6, fill: "var(--data)" }));
+      });
+      document.getElementById("chart-revenue").appendChild(svg);
+    })();
+
+    /* ── Retention before/after bars ── */
+    (function () {
+      var W = 360, H = 240, P = { t: 22, r: 16, b: 34, l: 16 };
+      var iw = W - P.l - P.r, ih = H - P.t - P.b;
+      var data = [{ k: "Before", v: 35, c: "var(--base)" }, { k: "After", v: 68, c: "var(--data)" }];
+      var bw = 92, gap = (iw - bw * 2) / 3;
+      var y = function (v) { return P.t + ih - (v / 100) * ih; };
+      var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img",
+        "aria-label": "Rebooking rate rose from 35% before to 68% after Glow Rewards" });
+      [0, 25, 50, 75, 100].forEach(function (g) {
+        svg.appendChild(el("line", { x1: P.l, x2: W - P.r, y1: y(g), y2: y(g),
+          stroke: "var(--grid)", "stroke-width": 1 }));
+      });
+      data.forEach(function (d, i) {
+        var bx = P.l + gap + i * (bw + gap);
+        var bh = ih - (y(d.v) - P.t);
+        var rect = el("rect", { x: bx, y: y(d.v), width: bw, height: bh, rx: 6, fill: d.c,
+          style: "cursor:pointer" });
+        rect.addEventListener("mousemove", function (ev) {
+          showTip("<strong>" + d.k + "</strong> · " + d.v + "% rebook", ev); });
+        rect.addEventListener("mouseleave", hideTip);
+        svg.appendChild(rect);
+        var vl = el("text", { x: bx + bw / 2, y: y(d.v) - 8, "text-anchor": "middle", class: "val-lbl" });
+        vl.textContent = d.v + "%"; svg.appendChild(vl);
+        var kl = el("text", { x: bx + bw / 2, y: H - 12, "text-anchor": "middle", class: "axis-lbl" });
+        kl.textContent = d.k; svg.appendChild(kl);
+      });
+      /* industry avg reference */
+      var refY = y(35);
+      var rl = el("text", { x: W - P.r, y: refY - 5, "text-anchor": "end", class: "axis-lbl",
+        fill: "var(--ink-45)" });
+      rl.textContent = "≈ industry avg"; svg.appendChild(rl);
+      document.getElementById("chart-retention").appendChild(svg);
+    })();
+
+    /* ── Bookings by source (stacked bars) ── */
+    (function () {
+      var W = 560, H = 230, P = { t: 16, r: 14, b: 28, l: 34 };
+      var iw = W - P.l - P.r, ih = H - P.t - P.b;
+      var n = srcMonths.length, max = 90;
+      var bw = 46, step = iw / n;
+      var y = function (v) { return P.t + ih - (v / max) * ih; };
+      var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img",
+        "aria-label": "Bookings by source each month; app share grows from 0 to 53 of 85" });
+      [0, 30, 60, 90].forEach(function (g) {
+        svg.appendChild(el("line", { x1: P.l, x2: W - P.r, y1: y(g), y2: y(g),
+          stroke: "var(--grid)", "stroke-width": 1 }));
+        var t = el("text", { x: P.l - 7, y: y(g) + 3, "text-anchor": "end", class: "axis-lbl" });
+        t.textContent = g; svg.appendChild(t);
+      });
+      srcMonths.forEach(function (m, i) {
+        var cx = P.l + step * i + (step - bw) / 2;
+        var web = srcWeb[i], app = srcApp[i], total = web + app;
+        var webH = (web / max) * ih, appH = (app / max) * ih;
+        var yWeb = P.t + ih - webH;
+        /* website (bottom) */
+        var rw = el("rect", { x: cx, y: yWeb, width: bw, height: Math.max(0, webH - 2), rx: 4,
+          fill: "var(--alt)", style: "cursor:pointer" });
+        rw.addEventListener("mousemove", function (ev) {
+          showTip("<strong>" + m + "</strong> · Website " + web, ev); });
+        rw.addEventListener("mouseleave", hideTip);
+        svg.appendChild(rw);
+        /* app (top) — 2px surface gap above web */
+        if (app > 0) {
+          var yApp = yWeb - appH - 2;
+          var ra = el("rect", { x: cx, y: yApp, width: bw, height: Math.max(0, appH), rx: 4,
+            fill: "var(--data)", style: "cursor:pointer" });
+          ra.addEventListener("mousemove", function (ev) {
+            showTip("<strong>" + m + "</strong> · App " + app, ev); });
+          ra.addEventListener("mouseleave", hideTip);
+          svg.appendChild(ra);
+        }
+        var tl = el("text", { x: cx + bw / 2, y: (app > 0 ? yWeb - appH - 8 : yWeb - 6),
+          "text-anchor": "middle", class: "val-lbl" });
+        tl.textContent = total; svg.appendChild(tl);
+        var ml = el("text", { x: cx + bw / 2, y: H - 9, "text-anchor": "middle", class: "axis-lbl" });
+        ml.textContent = m; svg.appendChild(ml);
+      });
+      document.getElementById("chart-source").appendChild(svg);
+    })();
+
+    /* ── Rewards mini-stats ── */
+    var rewards = [
+      { v: "214", l: "Glow Rewards members" },
+      { v: "24.6k", l: "points earned" },
+      { v: "8,900", l: "points redeemed" },
+      { v: "22", l: "flash slots filled" }
+    ];
+    var rbox = document.getElementById("rewards");
+    rewards.forEach(function (r) {
+      var d = document.createElement("div");
+      d.innerHTML = '<div class="m-val">' + r.v + '</div><div class="m-lbl">' + r.l + '</div>';
+      rbox.appendChild(d);
+    });
+  })();
+  </script>
+</body>
+</html>

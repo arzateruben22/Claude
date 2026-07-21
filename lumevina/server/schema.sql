@@ -38,6 +38,9 @@ create table bookings (
   paid_cents int,                  -- what was actually charged (after points)
   points_redeemed int not null default 0,
   flash boolean not null default false,
+  source text not null default 'web'  -- 'web' | 'app' | 'admin' — powers the
+    check (source in ('web', 'app', 'admin')),  -- app-vs-web split in the
+                                     -- owner dashboard; captured from booking #1
   stripe_payment_intent text,
   status text not null default 'pending'
     check (status in ('pending', 'held', 'completed', 'cancelled', 'no_show')),
