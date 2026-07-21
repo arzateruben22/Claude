@@ -92,12 +92,18 @@ a { color: inherit; }
 
 /* ── Dotted surface — ambient particle floor ────────────────── */
 
-.dots-surface {
-  position: fixed;
+[data-dot-floor] { position: relative; }
+.dots-floor {
+  position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   opacity: 0.75;
+}
+[data-dot-floor] > .section-inner,
+[data-dot-floor] > .footer-inner {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Intro label (TextRewind port) ──────────────────────────── */
@@ -1797,7 +1803,7 @@ a { color: inherit; }
     </section>
 
     <!-- ═══════════════ PROOF RING ═══════════════ -->
-    <section class="section section-proof" id="proof">
+    <section class="section section-proof" id="proof" data-dot-floor>
       <div class="section-inner">
         <div data-reveal>
           <p class="eyebrow">Client Proof</p>
@@ -1942,7 +1948,7 @@ a { color: inherit; }
     </section>
 
     <!-- ═══════════════ SCHEDULE ═══════════════ -->
-    <section class="section section-book" id="book">
+    <section class="section section-book" id="book" data-dot-floor>
       <div class="section-inner">
         <div data-reveal>
           <p class="eyebrow">Schedule</p>
@@ -2079,7 +2085,7 @@ a { color: inherit; }
     </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer" data-dot-floor>
     <div class="footer-inner">
       <p class="footer-brand">SchFLR</p>
       <p class="footer-line">No head start. Just the work.</p>
@@ -2349,25 +2355,33 @@ a { color: inherit; }
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
 
-  /* ── Dotted surface — waving particle floor behind the page ── */
-  /* Ported from a three.js DottedSurface component; same sine-wave
-     grid, projected by hand on a 2D canvas — no library needed. */
+  /* ── Dotted surface — waving particle floors (DottedSurface port) ── */
+  /* One floor per dark section instead of a fixed viewport layer:
+     the artifact preview stretches the iframe to full page height,
+     which breaks viewport-fixed backdrops — per-section canvases
+     render identically everywhere, including phones. */
   (function () {
-    var canvas = document.createElement("canvas");
-    canvas.className = "dots-surface";
-    document.body.appendChild(canvas);
-    var ctx = canvas.getContext("2d");
-    if (!ctx) { canvas.remove(); return; }
-
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var W, H;
+    var floors = [];
+    [].forEach.call(document.querySelectorAll("[data-dot-floor]"), function (host) {
+      var canvas = document.createElement("canvas");
+      canvas.className = "dots-floor";
+      host.prepend(canvas);
+      var ctx = canvas.getContext("2d");
+      if (!ctx) { canvas.remove(); return; }
+      floors.push({ host: host, canvas: canvas, ctx: ctx, visible: true, W: 0, H: 0 });
+    });
+    if (!floors.length) return;
+
     function resize() {
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      floors.forEach(function (f) {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        f.W = f.host.clientWidth;
+        f.H = f.host.clientHeight;
+        f.canvas.width = Math.max(1, f.W * dpr);
+        f.canvas.height = Math.max(1, f.H * dpr);
+        f.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      });
     }
     resize();
     window.addEventListener("resize", resize);
@@ -2376,32 +2390,46 @@ a { color: inherit; }
     var FOV = 700;
     var t = 0;
 
-    function draw() {
-      ctx.clearRect(0, 0, W, H);
-      var AX = W < 640 ? 26 : 42;
+    function drawFloor(f) {
+      var ctx = f.ctx;
+      ctx.clearRect(0, 0, f.W, f.H);
+      var small = f.W < 640;
+      var AX = small ? 30 : 42;
       var AY = 30;
+      var horizon = f.H * 0.42;
+      /* fit the wave band inside the section, whatever its height */
+      var k = Math.min(1, (f.H - horizon) / 380);
       for (var ix = 0; ix < AX; ix++) {
         for (var iy = 0; iy < AY; iy++) {
           var x = ix * SEP - (AX * SEP) / 2;
           var y = Math.sin((ix + t) * 0.3) * 50 + Math.sin((iy + t) * 0.5) * 50;
           var s = FOV / (FOV + iy * SEP + 400);
-          var sx = W / 2 + x * s;
-          var sy = H * 0.56 + (250 + y) * s;
-          if (sx < -4 || sx > W + 4) continue;
-          var size = 3 * s + 0.5;
-          ctx.fillStyle = "rgba(236, 234, 228," + (0.4 * s + 0.05).toFixed(3) + ")";
+          var sx = f.W / 2 + x * s;
+          var sy = horizon + (250 + y) * s * k;
+          if (sx < -4 || sx > f.W + 4 || sy > f.H + 4) continue;
+          var size = (small ? 3.4 : 3) * s + 0.6;
+          var a = (small ? 0.55 : 0.4) * s + (small ? 0.08 : 0.05);
+          ctx.fillStyle = "rgba(236, 234, 228," + a.toFixed(3) + ")";
           ctx.fillRect(sx, sy, size, size);
         }
       }
-      t += 0.05;
+    }
+
+    if ("IntersectionObserver" in window) {
+      floors.forEach(function (f) {
+        new IntersectionObserver(function (entries) {
+          f.visible = entries[0].isIntersecting;
+        }).observe(f.host);
+      });
     }
 
     if (reduce) {
       t = 1.7;
-      draw(); // one still frame
+      floors.forEach(drawFloor); // one still frame each
     } else {
       (function frame() {
-        draw();
+        floors.forEach(function (f) { if (f.visible) drawFloor(f); });
+        t += 0.05;
         window.requestAnimationFrame(frame);
       })();
     }

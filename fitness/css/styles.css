@@ -90,12 +90,18 @@ a { color: inherit; }
 
 /* ── Dotted surface — ambient particle floor ────────────────── */
 
-.dots-surface {
-  position: fixed;
+[data-dot-floor] { position: relative; }
+.dots-floor {
+  position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   opacity: 0.75;
+}
+[data-dot-floor] > .section-inner,
+[data-dot-floor] > .footer-inner {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Intro label (TextRewind port) ──────────────────────────── */
