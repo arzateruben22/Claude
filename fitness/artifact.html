@@ -626,14 +626,17 @@ a { color: inherit; }
   }
 }
 
-/* Dot-pattern frame around the story photos (DotPattern port):
-   hairline border, dot-grid field, orange corner marks */
-.mosaic-wrap {
+/* Dot-pattern plates (DotPattern port): hairline border, dot-grid
+   field, orange corner marks — shared by the story and its photos */
+.dot-plate {
   position: relative;
   border: 1px solid var(--line);
   padding: clamp(10px, 2vw, 16px);
   background-image: radial-gradient(rgba(236, 234, 228, 0.13) 1px, transparent 1.5px);
   background-size: 12px 12px;
+}
+.story-plate {
+  padding: clamp(1.2rem, 3.5vw, 2.2rem);
 }
 .frame-sq {
   position: absolute;
@@ -1657,7 +1660,11 @@ a { color: inherit; }
     <!-- ═══════════════ THE COACH ═══════════════ -->
     <section class="section" id="coach">
       <div class="section-inner grid-2">
-        <div data-reveal>
+        <div class="dot-plate story-plate" data-reveal>
+          <span class="frame-sq sq-tl" aria-hidden="true"></span>
+          <span class="frame-sq sq-tr" aria-hidden="true"></span>
+          <span class="frame-sq sq-bl" aria-hidden="true"></span>
+          <span class="frame-sq sq-br" aria-hidden="true"></span>
           <p class="eyebrow">The Coach</p>
           <h2 class="display">Started <span class="accent">from zero.</span></h2>
           <div class="story-copy">
@@ -1679,7 +1686,7 @@ a { color: inherit; }
                media/grind.jpg     — safety vest selfie, the grind years
                media/dec-2022.jpg  — fitting-room mirror, December 2022
                media/the-100s.jpg  — incline pressing the 100s, most recent -->
-        <div class="mosaic-wrap" data-reveal>
+        <div class="mosaic-wrap dot-plate" data-reveal>
           <span class="frame-sq sq-tl" aria-hidden="true"></span>
           <span class="frame-sq sq-tr" aria-hidden="true"></span>
           <span class="frame-sq sq-bl" aria-hidden="true"></span>

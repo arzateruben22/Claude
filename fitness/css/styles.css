@@ -624,14 +624,17 @@ a { color: inherit; }
   }
 }
 
-/* Dot-pattern frame around the story photos (DotPattern port):
-   hairline border, dot-grid field, orange corner marks */
-.mosaic-wrap {
+/* Dot-pattern plates (DotPattern port): hairline border, dot-grid
+   field, orange corner marks — shared by the story and its photos */
+.dot-plate {
   position: relative;
   border: 1px solid var(--line);
   padding: clamp(10px, 2vw, 16px);
   background-image: radial-gradient(rgba(236, 234, 228, 0.13) 1px, transparent 1.5px);
   background-size: 12px 12px;
+}
+.story-plate {
+  padding: clamp(1.2rem, 3.5vw, 2.2rem);
 }
 .frame-sq {
   position: absolute;
