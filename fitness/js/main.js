@@ -198,7 +198,13 @@
     if (!host) return;
     var NS = "http://www.w3.org/2000/svg";
     var small = window.innerWidth < 640;
-    var count = small ? 18 : 30;
+    var count = small ? 22 : 30;
+    /* phones show fewer, thinner paths at a distance — brighten and
+       thicken them so the sweep reads clearly on a small screen */
+    var baseA = small ? 0.11 : 0.05;
+    var stepA = small ? 0.02 : 0.014;
+    var baseW = small ? 1.1 : 0.6;
+    var stepW = small ? 0.09 : 0.05;
 
     var wrap = document.createElement("div");
     wrap.className = "flow-paths";
@@ -223,8 +229,8 @@
         p.setAttribute("pathLength", "1");
         /* warm hue: orange fading to gold with depth */
         var hue = side === 0 ? "249,115,22" : "201,162,39";
-        p.setAttribute("stroke", "rgba(" + hue + "," + (0.05 + i * 0.014).toFixed(3) + ")");
-        p.setAttribute("stroke-width", (0.6 + i * 0.05).toFixed(2));
+        p.setAttribute("stroke", "rgba(" + hue + "," + (baseA + i * stepA).toFixed(3) + ")");
+        p.setAttribute("stroke-width", (baseW + i * stepW).toFixed(2));
         p.setAttribute("stroke-dasharray", "0.55 0.45");
         p.style.strokeDashoffset = (i % 5) * -0.2;
         p.style.animationDuration = (20 + Math.random() * 12).toFixed(1) + "s";
