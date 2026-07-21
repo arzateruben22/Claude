@@ -88,6 +88,16 @@ a { color: inherit; }
 }
 .accent { color: var(--orange); }
 
+/* ── Dotted surface — ambient particle floor ────────────────── */
+
+.dots-surface {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
 /* ── Intro label (TextRewind port) ──────────────────────────── */
 
 .intro {

@@ -112,6 +112,64 @@
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
 
+  /* ── Dotted surface — waving particle floor behind the page ── */
+  /* Ported from a three.js DottedSurface component; same sine-wave
+     grid, projected by hand on a 2D canvas — no library needed. */
+  (function () {
+    var canvas = document.createElement("canvas");
+    canvas.className = "dots-surface";
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext("2d");
+    if (!ctx) { canvas.remove(); return; }
+
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var W, H;
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    var SEP = 150;
+    var FOV = 700;
+    var t = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      var AX = W < 640 ? 26 : 42;
+      var AY = 30;
+      for (var ix = 0; ix < AX; ix++) {
+        for (var iy = 0; iy < AY; iy++) {
+          var x = ix * SEP - (AX * SEP) / 2;
+          var y = Math.sin((ix + t) * 0.3) * 50 + Math.sin((iy + t) * 0.5) * 50;
+          var s = FOV / (FOV + iy * SEP + 400);
+          var sx = W / 2 + x * s;
+          var sy = H * 0.56 + (250 + y) * s;
+          if (sx < -4 || sx > W + 4) continue;
+          var size = 3 * s + 0.5;
+          ctx.fillStyle = "rgba(236, 234, 228," + (0.4 * s + 0.05).toFixed(3) + ")";
+          ctx.fillRect(sx, sy, size, size);
+        }
+      }
+      t += 0.05;
+    }
+
+    if (reduce) {
+      t = 1.7;
+      draw(); // one still frame
+    } else {
+      (function frame() {
+        draw();
+        window.requestAnimationFrame(frame);
+      })();
+    }
+  })();
+
   /* ── Coach shader — drifting ember-dust field (WebGL) ────── */
   /* Fragment shader by Matthias Hurrle (@atzedent), ported from a
      React shader-hero component. Follows the cursor with a slow
