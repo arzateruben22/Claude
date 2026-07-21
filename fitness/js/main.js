@@ -123,7 +123,8 @@
       host.prepend(canvas);
       var ctx = canvas.getContext("2d");
       if (!ctx) { canvas.remove(); return; }
-      floors.push({ host: host, canvas: canvas, ctx: ctx, visible: true, W: 0, H: 0 });
+      var intensity = host.getAttribute("data-dot-floor") === "strong" ? 1.9 : 1;
+      floors.push({ host: host, canvas: canvas, ctx: ctx, visible: true, W: 0, H: 0, intensity: intensity });
     });
     if (!floors.length) return;
 
@@ -161,9 +162,9 @@
           var sx = f.W / 2 + x * s;
           var sy = horizon + (250 + y) * s * k;
           if (sx < -4 || sx > f.W + 4 || sy > f.H + 4) continue;
-          var size = (small ? 3.4 : 3) * s + 0.6;
-          var a = (small ? 0.55 : 0.4) * s + (small ? 0.08 : 0.05);
-          ctx.fillStyle = "rgba(236, 234, 228," + a.toFixed(3) + ")";
+          var size = ((small ? 3.4 : 3) * s + 0.6) * (f.intensity > 1 ? 1.3 : 1);
+          var a = ((small ? 0.55 : 0.4) * s + (small ? 0.08 : 0.05)) * f.intensity;
+          ctx.fillStyle = "rgba(236, 234, 228," + Math.min(a, 0.9).toFixed(3) + ")";
           ctx.fillRect(sx, sy, size, size);
         }
       }

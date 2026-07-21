@@ -1249,10 +1249,18 @@ a { color: inherit; }
 
 /* ── Schedule ───────────────────────────────────────────────── */
 
+/* even dot grid across the whole section — the waving floor adds
+   motion on top, this keeps the grid obvious behind the panel too */
+.section-book {
+  background-image: radial-gradient(rgba(236, 234, 228, 0.12) 1px, transparent 1.7px);
+  background-size: 15px 15px;
+}
+
 .book-panel {
   margin-top: 2rem;
   max-width: 44rem;
-  background: var(--panel);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  backdrop-filter: blur(3px);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: clamp(1.25rem, 3vw, 2rem);
