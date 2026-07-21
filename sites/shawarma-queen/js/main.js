@@ -1065,3 +1065,131 @@
   render();
   renderHistory();
 })();
+
+/* ── Open-late band: WebGL ember fluid ──
+   Procedural-noise fluid with warm chromatic glints (pomegranate / gold /
+   cream) over a plum-black ground — charcoal-glow atmosphere for the
+   "open till 3:30 am" section. Ported to plain WebGL; runs only while the
+   band is on screen, and stands down for prefers-reduced-motion (the CSS
+   ember gradient shows instead). */
+
+(function () {
+  "use strict";
+
+  var host = document.querySelector(".latenight");
+  var canvas = document.querySelector(".latenight-canvas");
+  if (!host || !canvas) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var gl = canvas.getContext("webgl", { antialias: true });
+  if (!gl) return;
+
+  var VS = [
+    "attribute vec2 position;",
+    "varying vec2 vUv;",
+    "void main(){ vUv=(position+1.0)*0.5; gl_Position=vec4(position,0.0,1.0); }"
+  ].join("\n");
+
+  var FS = [
+    "precision highp float;",
+    "uniform vec2 u_resolution;",
+    "uniform float u_time;",
+    "uniform float u_flowStrength;",
+    "uniform float u_grain;",
+    "uniform float u_contrast;",
+    "uniform float u_speed;",
+    "varying vec2 vUv;",
+    "float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453123); }",
+    "float noise(vec2 p){ vec2 i=floor(p); vec2 f=fract(p); vec2 u=f*f*(3.0-2.0*f);",
+    "  return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x), mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x),u.y); }",
+    "float fbm(vec2 p){ float v=0.0; float a=0.5; mat2 rot=mat2(cos(0.5),sin(0.5),-sin(0.5),cos(0.5));",
+    "  for(int i=0;i<4;i++){ v+=a*noise(p); p=rot*p*2.0; a*=0.5; } return v; }",
+    "void main(){",
+    "  vec2 uv=vUv; float t=u_time*u_speed;",
+    "  vec2 p=(uv-0.5)*vec2(u_resolution.x/u_resolution.y,1.0)*2.0;",
+    "  float baseNoise=fbm(p*0.8+t*0.2);",
+    "  float fluid=fbm(p*1.2+baseNoise*u_flowStrength+t*0.3);",
+    "  float eps=0.01;",
+    "  float nx=fbm(p+vec2(eps,0.0)+baseNoise*u_flowStrength+t*0.3)-fluid;",
+    "  float ny=fbm(p+vec2(0.0,eps)+baseNoise*u_flowStrength+t*0.3)-fluid;",
+    "  vec3 normal=normalize(vec3(nx,ny,eps*1.5));",
+    "  vec3 lightDir=normalize(vec3(1.0,1.0,0.8)); vec3 viewDir=vec3(0.0,0.0,1.0);",
+    "  vec3 halfVector=normalize(lightDir+viewDir);",
+    "  vec3 color=vec3(0.0); float glintIntensity=64.0;",
+    "  float specR=pow(max(dot(normalize(vec3(nx+0.005,ny,eps*1.5)),halfVector),0.0),glintIntensity);",
+    "  float specG=pow(max(dot(normal,halfVector),0.0),glintIntensity);",
+    "  float specB=pow(max(dot(normalize(vec3(nx-0.005,ny,eps*1.5)),halfVector),0.0),glintIntensity);",
+    "  vec3 cPome=vec3(0.93,0.26,0.40); vec3 cGold=vec3(0.96,0.71,0.24); vec3 cCream=vec3(0.97,0.93,0.87);",
+    "  vec3 specular=(specR*cPome + specG*cGold + specB*cCream)*1.7;",
+    "  color+=specular;",
+    "  color=mix(vec3(0.5),color,u_contrast);",
+    "  color+=vec3(0.055,0.02,0.09);",  // plum-black ground instead of pure black
+    "  float vig=smoothstep(1.8,0.2,length(uv-0.5)); color*=vig;",
+    "  color+=(hash(uv+t)-0.5)*u_grain;",
+    "  gl_FragColor=vec4(clamp(color,0.0,1.0),1.0);",
+    "}"
+  ].join("\n");
+
+  var compile = function (type, src) {
+    var s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  };
+  var prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, "position");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  var U = {
+    res: gl.getUniformLocation(prog, "u_resolution"),
+    time: gl.getUniformLocation(prog, "u_time"),
+    flow: gl.getUniformLocation(prog, "u_flowStrength"),
+    grain: gl.getUniformLocation(prog, "u_grain"),
+    contrast: gl.getUniformLocation(prog, "u_contrast"),
+    speed: gl.getUniformLocation(prog, "u_speed")
+  };
+
+  var resize = function () {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = host.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.floor(r.width * dpr));
+    canvas.height = Math.max(1, Math.floor(r.height * dpr));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(U.res, canvas.width, canvas.height);
+  };
+  resize();
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(host);
+  else window.addEventListener("resize", resize);
+
+  var start = null, raf = null;
+  var frame = function (now) {
+    if (start === null) start = now;
+    gl.uniform1f(U.time, (now - start) / 1000);
+    gl.uniform1f(U.flow, 0.85);
+    gl.uniform1f(U.grain, 0.05);
+    gl.uniform1f(U.contrast, 1.06);
+    gl.uniform1f(U.speed, 0.3);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    raf = requestAnimationFrame(frame);
+  };
+  var play = function () { if (raf === null) { raf = requestAnimationFrame(frame); canvas.classList.add("on"); } };
+  var pause = function () { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } };
+
+  if (window.IntersectionObserver) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) play(); else pause(); });
+    }, { threshold: 0.04 }).observe(host);
+  } else {
+    play();
+  }
+})();
