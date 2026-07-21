@@ -62,6 +62,9 @@
     window.removeEventListener("touchmove", onWheel, { passive: true });
     intro.classList.add("intro-out");
     document.body.classList.remove("intro-lock");
+    /* positions were measured while scroll was locked — recompute now
+       that the page is scrollable, so the first scroll is accurate */
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
     setTimeout(function () { intro.classList.add("intro-done"); }, 820);
   };
 

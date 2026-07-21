@@ -310,6 +310,12 @@ em { font-style: italic; }
   transition: opacity 780ms ease, transform 780ms ease;
 }
 
+/* strip the heavy blur/grid/motes the instant we start lifting, so the
+   fade-out doesn't composite over the hero's first scroll */
+.intro.intro-out .intro-glow,
+.intro.intro-out .intro-grid,
+.intro.intro-out .intro-float { display: none; }
+
 .intro.intro-done { display: none; }
 
 /* scroll lock via class so main.js's inline overflow reset can't clobber it */
@@ -744,6 +750,9 @@ body.intro-lock { overflow: hidden; }
   opacity: 0.3;
   pointer-events: none;
   user-select: none;
+  /* promote to its own layer so the scroll scrub composites the
+     gradient-in-text instead of repainting it on the first scroll */
+  will-change: transform, opacity;
 }
 
 .hero-scroll {

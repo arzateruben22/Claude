@@ -142,6 +142,14 @@
       });
     });
 
+    /* The giant wordmark is Cormorant Garamond; its size — and so the
+       scrub's start/end — isn't final until the webfont loads. Recompute
+       once fonts are ready so the first scroll isn't measured off a
+       fallback face (the cause of first-scroll jank). */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+    }
+
     return function () {};
   });
 })();
