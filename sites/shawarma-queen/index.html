@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shawarma Queen — Anaheim, CA · Grilled to Perfection</title>
+  <meta name="description" content="Shawarma Queen — beef & chicken shawarma grilled to perfection in Anaheim, CA. 12″ and 24″ wraps and combos, Garlic, Boom & Queen sauces. Open late every night until 3:30 AM. Order pickup or delivery and earn Crown Rewards.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 26h20l-2-13-6 5-2-9-2 9-6-5-2 13z' fill='%23F5B63D'/%3E%3Ccircle cx='16' cy='7' r='2.4' fill='%23EE4266'/%3E%3C/svg%3E">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#17081f">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Shawarma Queen">
+  <link rel="preload" href="fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/figtree-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="nav" id="top">
+    <a class="nav-brand" href="#top" aria-label="Shawarma Queen — home">
+      <svg class="crown" width="30" height="24" viewBox="0 0 30 24" fill="none" aria-hidden="true">
+        <path d="M3 21h24l-2.4-14-6.6 5.4L15 2l-3 10.4L5.4 7 3 21z" fill="currentColor"/>
+        <circle cx="15" cy="3" r="2.2" fill="#EE4266"/>
+      </svg>
+      <span class="nav-brand-text">Shawarma Queen<span class="nav-brand-sub">Anaheim · Open Late</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#carta">Menu</a>
+      <a href="#court">The Court</a>
+      <a href="#rewards">Rewards</a>
+      <a href="#historia">Our Story</a>
+      <a href="#visitanos">Visit Us</a>
+      <details class="nav-drop">
+        <summary>Connect<svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+        <div class="nav-drop-menu">
+          <!-- TODO: confirm the real social handles -->
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.yelp.com/biz/shawarma-queen-anaheim" target="_blank" rel="noopener">Yelp</a>
+          <a href="https://maps.google.com/?q=430+S+Euclid+St,+Anaheim,+CA+92802" target="_blank" rel="noopener">Get directions</a>
+        </div>
+      </details>
+    </nav>
+    <a class="btn btn-solid nav-cta js-open-order" href="#carta">Order</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <a href="#carta">Menu</a>
+    <a href="#court">The Court</a>
+    <a href="#rewards">Rewards</a>
+    <a href="#historia">Our Story</a>
+    <a href="#visitanos">Visit Us</a>
+    <div class="mobile-social">
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.yelp.com/biz/shawarma-queen-anaheim" target="_blank" rel="noopener">Yelp</a>
+    </div>
+    <a class="btn btn-solid js-open-order" href="#carta">Order now</a>
+  </div>
+
+  <main>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <span class="hero-glow"></span>
+      </div>
+      <div class="hero-inner">
+        <p class="eyebrow hero-eyebrow">Shawarma Queen · Anaheim, California</p>
+        <h1 class="hero-title">
+          <span class="line"><span class="line-inner">Made for kings</span></span>
+          <span class="line"><span class="line-inner"><em>&amp; queens.</em></span></span>
+        </h1>
+        <p class="hero-sub"><em>Grilled to perfection.</em> Beef &amp; chicken shawarma carved to
+        order, stacked in a 12″ or 24″ wrap and crowned with garlic. Open late — every night till
+        <strong>3:30&nbsp;am</strong>.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid js-open-order" href="#carta">Order now <span class="tl">— pickup or delivery</span></a>
+          <a class="btn btn-ghost" href="#carta">See the menu</a>
+        </div>
+        <!-- TODO: keep the rating figures in sync with the live Yelp page -->
+        <a class="hero-rating" href="https://www.yelp.com/biz/shawarma-queen-anaheim" target="_blank" rel="noopener" aria-label="Rated 4.5 stars on Yelp">
+          <span class="stars" aria-hidden="true">
+            <svg width="108" height="18" viewBox="0 0 108 18" fill="none">
+              <defs>
+                <linearGradient id="star-partial" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="50%" stop-color="#F5B63D"/>
+                  <stop offset="50%" stop-color="rgba(247,237,222,0.25)"/>
+                </linearGradient>
+              </defs>
+              <path d="M9 1l2.35 4.9 5.36.7-3.94 3.7.99 5.3L9 13.05 4.24 15.6l.99-5.3L1.29 6.6l5.36-.7L9 1z" fill="#F5B63D"/>
+              <path d="M31.5 1l2.35 4.9 5.36.7-3.94 3.7.99 5.3-4.76-2.55-4.76 2.55.99-5.3-3.94-3.7 5.36-.7L31.5 1z" fill="#F5B63D"/>
+              <path d="M54 1l2.35 4.9 5.36.7-3.94 3.7.99 5.3L54 13.05l-4.76 2.55.99-5.3-3.94-3.7 5.36-.7L54 1z" fill="#F5B63D"/>
+              <path d="M76.5 1l2.35 4.9 5.36.7-3.94 3.7.99 5.3-4.76-2.55-4.76 2.55.99-5.3-3.94-3.7 5.36-.7L76.5 1z" fill="#F5B63D"/>
+              <path d="M99 1l2.35 4.9 5.36.7-3.94 3.7.99 5.3L99 13.05l-4.76 2.55.99-5.3-3.94-3.7 5.36-.7L99 1z" fill="url(#star-partial)"/>
+            </svg>
+          </span>
+          <span class="hero-rating-text"><strong>4.5</strong> on Yelp · Open till 3:30 am</span>
+        </a>
+      </div>
+
+      <div class="hero-figure" aria-hidden="true">
+        <svg class="hero-spit" viewBox="0 0 240 340" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A crowned shawarma spit">
+          <defs>
+            <linearGradient id="meat" x1="60" y1="60" x2="180" y2="280" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#F5B63D"/>
+              <stop offset="0.5" stop-color="#D97A3A"/>
+              <stop offset="1" stop-color="#A8324B"/>
+            </linearGradient>
+            <radialGradient id="emberGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#EE4266" stop-opacity="0.55"/>
+              <stop offset="1" stop-color="#EE4266" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <ellipse class="spit-ember" cx="120" cy="300" rx="92" ry="30" fill="url(#emberGlow)"/>
+
+          <rect x="117" y="40" width="6" height="270" rx="3" fill="#E9DCC7"/>
+          <circle cx="120" cy="40" r="6" fill="#E9DCC7"/>
+
+          <path d="M84 58h72l-7 -30 -19 15 -10 -28 -10 28 -19 -15 7 30z" fill="#F5B63D"/>
+          <circle cx="120" cy="24" r="4.4" fill="#EE4266"/>
+          <circle cx="88" cy="30" r="3.4" fill="#EE4266"/>
+          <circle cx="152" cy="30" r="3.4" fill="#EE4266"/>
+
+          <g class="spit-meat">
+            <path d="M120 66c33 12 52 60 52 118 0 44-20 88-52 104-32-16-52-60-52-104 0-58 19-106 52-118z" fill="url(#meat)"/>
+            <g stroke="#7C2440" stroke-opacity="0.45" stroke-width="2" fill="none" stroke-linecap="round">
+              <path d="M74 116c30 10 62 10 92 0"/>
+              <path d="M70 150c33 12 67 12 100 0"/>
+              <path d="M69 186c34 12 68 12 102 0"/>
+              <path d="M72 222c31 11 65 11 96 0"/>
+              <path d="M80 256c26 9 54 9 80 0"/>
+            </g>
+            <path d="M150 120c12 30 12 78 0 130" stroke="#FFD98A" stroke-opacity="0.5" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <path d="M78 300h84c-4 12-20 20-42 20s-38-8-42-20z" fill="#2A1140" stroke="#38204A" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <a class="hero-scroll" href="#historia" aria-label="Scroll to our story">
+        <span>Scroll</span>
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none" aria-hidden="true"><path d="M7 1v16m0 0l-5-5m5 5l5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+
+    <!-- ═══════════════ OUR STORY ═══════════════ -->
+    <section class="section" id="historia">
+      <div class="section-inner grid-2">
+        <div data-reveal>
+          <p class="eyebrow">Our Story <span class="tl">· Grilled to perfection</span></p>
+          <h2 class="display">Two spits, one crown, <em>and the last light on Euclid.</em></h2>
+        </div>
+        <div class="story-copy" data-reveal>
+          <p>Shawarma Queen does one thing and wears the crown for it: beef and chicken turned slowly
+          on the spit, shaved thin off the edges, and rolled to order. Twelve inches or a full
+          twenty-four — you decide how hungry you are.</p>
+          <p>We open when the day winds down and stay lit long after the rest of the block goes dark —
+          <em>every night until 3:30&nbsp;am.</em></p>
+          <ul class="story-marks" role="list">
+            <li><span class="mark-num">01</span>Grilled to perfection, carved to order <span class="mark-alt tl">made fresh</span></li>
+            <li><span class="mark-num">02</span>12″ or 24″ — your call <span class="mark-alt tl">wrap or combo</span></li>
+            <li><span class="mark-num">03</span>Garlic, Boom &amp; Queen sauces <span class="mark-alt tl">pick your sauce</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ THE COURT (gallery) ═══════════════ -->
+    <section class="section section-court" id="court">
+      <div class="section-inner">
+        <div class="court-head" data-reveal>
+          <p class="eyebrow">The Court <span class="tl">· Signatures</span></p>
+          <h2 class="display">The plates that <em>wear the crown.</em></h2>
+          <p class="section-sub">A short, sharp menu done right — here's what the regulars order at 1&nbsp;am.</p>
+        </div>
+        <!-- TODO: drop real dish photography behind each card (set as a background image);
+             the gradient tiles are placeholders. -->
+        <div class="court-grid">
+          <article class="court-card" data-reveal style="--tile:linear-gradient(150deg,#5a1e2e,#a8324b)">
+            <span class="court-tag hot">House favorite</span>
+            <h3 class="court-card-title">12″ Beef Shawarma</h3>
+            <p class="court-card-desc">Charred beef, shaved thin, garlic, pickles — rolled tight.</p>
+          </article>
+          <article class="court-card" data-reveal style="--tile:linear-gradient(150deg,#5a3a12,#c98a2b)">
+            <span class="court-tag">Best seller</span>
+            <h3 class="court-card-title">12″ Chicken Shawarma</h3>
+            <p class="court-card-desc">Juicy chicken and a river of garlic in every bite.</p>
+          </article>
+          <article class="court-card" data-reveal style="--tile:linear-gradient(150deg,#3a1630,#7c2a55)">
+            <span class="court-tag">To share</span>
+            <h3 class="court-card-title">24″ Combo</h3>
+            <p class="court-card-desc">Two feet of shawarma, fries, coleslaw, garlic &amp; pickles.</p>
+          </article>
+          <article class="court-card" data-reveal style="--tile:linear-gradient(150deg,#4a2410,#b8632a)">
+            <span class="court-tag">Both worlds</span>
+            <h3 class="court-card-title">Mix Combo</h3>
+            <p class="court-card-desc">Beef and chicken together, loaded with the works.</p>
+          </article>
+          <article class="court-card" data-reveal style="--tile:linear-gradient(150deg,#7a2a1a,#e05a35)">
+            <span class="court-tag hot">+$1</span>
+            <h3 class="court-card-title">Boom Sauce</h3>
+            <p class="court-card-desc">Spicy mayo with cheese — turn the heat all the way up.</p>
+          </article>
+          <article class="court-card" data-reveal style="--tile:linear-gradient(150deg,#3a2a12,#c9a23b)">
+            <span class="court-tag">+$1</span>
+            <h3 class="court-card-title">Queen Sauce</h3>
+            <p class="court-card-desc">Mild garlic with cheese — the one they named the place for.</p>
+          </article>
+        </div>
+        <p class="court-note" data-reveal>Hungry yet? <a href="#carta">Jump to the full menu →</a></p>
+      </div>
+    </section>
+
+    <!-- ═══════════════ THE MENU ═══════════════ -->
+    <section class="section section-carta" id="carta">
+      <div class="section-inner">
+        <div class="carta-head" data-reveal>
+          <p class="eyebrow">The Menu <span class="tl">· Grilled to perfection</span></p>
+          <h2 class="display">Beef or chicken. <em>12″ or 24″.</em></h2>
+          <p class="section-sub">Tap the <strong>+</strong> to build your order and pick your sauce.
+          Combos come with French fries, coleslaw, garlic sauce &amp; mixed pickles.</p>
+        </div>
+
+        <div class="carta-grid">
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Beef <span class="carta-group-alt">charcoal-dark, shaved thin</span></h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>12″ Beef Shawarma Wrap</strong><span class="dish-desc">beef, garlic, pickles — rolled to order</span></span><span class="dots"></span><span class="price">$14</span><button class="add-btn" type="button" data-name="12″ Beef Shawarma Wrap" data-price="14" data-ingredients="pickles, onions" aria-label="Add 12 inch Beef Shawarma Wrap to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>12″ Beef Shawarma Combo</strong><span class="dish-desc">fries, coleslaw, garlic sauce, mixed pickles</span></span><span class="dots"></span><span class="price">$19</span><button class="add-btn" type="button" data-name="12″ Beef Shawarma Combo" data-price="19" data-ingredients="coleslaw, mixed pickles" aria-label="Add 12 inch Beef Shawarma Combo to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>24″ Beef Shawarma Combo</strong><span class="dish-desc">two feet, fries, coleslaw, garlic, pickles</span></span><span class="dots"></span><span class="price">$25</span><button class="add-btn" type="button" data-name="24″ Beef Shawarma Combo" data-price="25" data-ingredients="coleslaw, mixed pickles" aria-label="Add 24 inch Beef Shawarma Combo to your order">+</button></li>
+            </ul>
+          </div>
+
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Chicken <span class="carta-group-alt">juicy, garlic-soaked</span></h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>12″ Chicken Shawarma Wrap</strong><span class="dish-desc">chicken, garlic, pickles — rolled to order</span></span><span class="dots"></span><span class="price">$13</span><button class="add-btn" type="button" data-name="12″ Chicken Shawarma Wrap" data-price="13" data-ingredients="pickles, onions" aria-label="Add 12 inch Chicken Shawarma Wrap to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>12″ Chicken Shawarma Combo</strong><span class="dish-desc">fries, coleslaw, garlic sauce, mixed pickles</span></span><span class="dots"></span><span class="price">$18</span><button class="add-btn" type="button" data-name="12″ Chicken Shawarma Combo" data-price="18" data-ingredients="coleslaw, mixed pickles" aria-label="Add 12 inch Chicken Shawarma Combo to your order">+</button></li>
+              <li class="carta-row"><span class="dish"><strong>24″ Chicken Shawarma Combo</strong><span class="dish-desc">two feet, fries, coleslaw, garlic, pickles</span></span><span class="dots"></span><span class="price">$24</span><button class="add-btn" type="button" data-name="24″ Chicken Shawarma Combo" data-price="24" data-ingredients="coleslaw, mixed pickles" aria-label="Add 24 inch Chicken Shawarma Combo to your order">+</button></li>
+            </ul>
+          </div>
+
+          <div class="carta-group" data-reveal>
+            <h3 class="carta-group-title">Mix <span class="carta-group-alt">best of both</span></h3>
+            <ul class="carta-list" role="list">
+              <li class="carta-row"><span class="dish"><strong>Mix Combo</strong><span class="dish-desc">beef &amp; chicken, fries, coleslaw, garlic, pickles</span></span><span class="dots"></span><span class="price">$26</span><button class="add-btn" type="button" data-name="Mix Combo" data-price="26" data-ingredients="coleslaw, mixed pickles" aria-label="Add Mix Combo to your order">+</button></li>
+            </ul>
+          </div>
+
+          <div class="carta-group sauce-band" data-reveal>
+            <h3 class="carta-group-title">Pick Your Sauce <span class="carta-group-alt">on every wrap</span></h3>
+            <ul class="sauce-list" role="list">
+              <li class="sauce-item"><span class="salsa-dot sauce-garlic" aria-hidden="true"></span><span class="sauce-info"><strong>Garlic</strong><span class="dish-desc">traditional white garlic</span></span><span class="sauce-tag">included</span></li>
+              <li class="sauce-item"><span class="salsa-dot sauce-boom" aria-hidden="true"></span><span class="sauce-info"><strong>Boom</strong><span class="dish-desc">spicy mayo with cheese</span></span><span class="sauce-tag up">+$1</span></li>
+              <li class="sauce-item"><span class="salsa-dot sauce-queen" aria-hidden="true"></span><span class="sauce-info"><strong>Queen</strong><span class="dish-desc">mild garlic with cheese</span></span><span class="sauce-tag up">+$1</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="carta-note" data-reveal>Grilled to perfection, made for kings &amp; queens.
+        <!-- TODO: confirm final prices, tax, and any items not shown on the board. --></p>
+      </div>
+    </section>
+
+    <!-- ═══════════════ CATERING ═══════════════ -->
+    <section class="section section-catering" id="catering">
+      <div class="section-inner grid-2">
+        <div data-reveal>
+          <p class="eyebrow">Parties &amp; Catering <span class="tl">· For the whole court</span></p>
+          <h2 class="display">Feed the whole kingdom <em>with the spit.</em></h2>
+          <p class="section-sub">Late-night parties, game nights, office lunches, graduations — we roll
+          shawarma platters and combo trays for 15 to 200 guests. Tell us the date and we'll quote it.</p>
+          <ul class="story-marks" role="list">
+            <li><span class="mark-num">01</span>Beef, chicken &amp; mix trays <span class="mark-alt tl">any size</span></li>
+            <li><span class="mark-num">02</span>Garlic, Boom &amp; Queen sauces <span class="mark-alt tl">on the side</span></li>
+            <li><span class="mark-num">03</span>Quote within a day <span class="mark-alt tl">24-hour reply</span></li>
+          </ul>
+        </div>
+        <form class="catering-form" data-reveal novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat-name">Name</label>
+              <input id="cat-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="cat-phone">Phone</label>
+              <input id="cat-phone" name="phone" type="tel" autocomplete="tel" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat-date">Event date</label>
+              <input id="cat-date" name="date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="cat-guests">Guests</label>
+              <input id="cat-guests" name="guests" type="number" min="10" max="500" placeholder="50">
+            </div>
+          </div>
+          <div class="field">
+            <label for="cat-notes">Tell us about your event</label>
+            <textarea id="cat-notes" name="notes" rows="4"></textarea>
+            <p class="field-help">Where it is, what you're celebrating, anything special.</p>
+          </div>
+          <button class="btn btn-solid" type="submit">Send request</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ═══════════════ CROWN REWARDS ═══════════════ -->
+    <section class="section section-rewards" id="rewards">
+      <div class="section-inner">
+        <div class="rewards-head" data-reveal>
+          <p class="eyebrow">Crown Rewards <span class="tl">· Loyalty</span></p>
+          <h2 class="display">Every order earns you <em>a seat at the table.</em></h2>
+          <p class="section-sub">Collect 1 <strong>crown</strong> for every dollar — Tuesdays pay double.
+          Claim crowns straight into your next order.</p>
+        </div>
+        <div class="rewards-grid">
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Your crowns</h3>
+            <p class="puntos-big"><span class="puntos-count">0</span> crowns</p>
+            <p class="tuesday-badge" hidden>Double crowns today — it's Tuesday!</p>
+            <p class="rewards-fine">Saved on this phone like a loyalty card — your balance updates
+            every time you order.</p>
+            <p class="member-hello" hidden>Ahlan, <strong class="member-hello-name"></strong>
+              <span class="tl">· member</span>
+              <button class="member-logout" type="button">log out</button></p>
+            <div class="member-cta">
+              <button class="btn btn-ghost member-open-login" type="button">Already a member? Log in</button>
+              <p class="member-pitch">New here?
+                <button class="member-open-signup" type="button">Sign up</button> for
+                <strong>+50 crowns</strong> — a premium sauce on your first order is on us.</p>
+            </div>
+            <details class="order-history">
+              <summary>Order history <span class="tl">· past orders</span></summary>
+              <ul class="history-list" role="list"></ul>
+              <p class="history-empty rewards-fine">No orders yet — your history saves on this phone.</p>
+            </details>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Claim with crowns</h3>
+            <ul class="rewards-rows" role="list"></ul>
+            <p class="rewards-fine">One reward per order — it drops into your cart free.</p>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">The app <span class="tl">· install it</span></h3>
+            <p class="appstore-badge">Coming soon to the App&nbsp;Store</p>
+            <ul class="install-perks" role="list">
+              <li><strong>+25 welcome crowns</strong> for early birds</li>
+              <li>Order in two taps from your home screen</li>
+              <li>Late-night offers land in the app first</li>
+            </ul>
+            <p class="install-note">Can't wait? Open this site in Safari and tap
+            <strong>Share → "Add to Home Screen"</strong> — Shawarma Queen works like an
+            app today, crowns included.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VISIT ═══════════════ -->
+    <section class="section section-visit" id="visitanos">
+      <div class="section-inner">
+        <div class="visit-head" data-reveal>
+          <p class="eyebrow">Find Us <span class="tl">· Visit</span></p>
+          <h2 class="display">The last light <em>on Euclid Street.</em></h2>
+        </div>
+        <div class="visit-grid">
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Address</h3>
+            <p class="visit-big">430 S Euclid St<br>Anaheim, CA 92802</p>
+            <a class="btn btn-ghost" href="https://maps.google.com/?q=430+S+Euclid+St,+Anaheim,+CA+92802" target="_blank" rel="noopener">Get directions <span class="tl">— maps</span></a>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Hours</h3>
+            <ul class="hours" role="list">
+              <li><span>Every day</span><span class="dots"></span><span>11:00 am – <span class="late">3:30 am</span></span></li>
+              <li><span>Kitchen</span><span class="dots"></span><span>grilling till close</span></li>
+              <li><span>Late-night</span><span class="dots"></span><span>we're your 2 am plan</span></li>
+            </ul>
+          </div>
+          <div class="visit-card" data-reveal>
+            <h3 class="visit-card-title">Takeout</h3>
+            <p>Call ahead and your shawarma is ready when you are.</p>
+            <!-- TODO: confirm the phone number -->
+            <a class="visit-big visit-phone" href="tel:+17143889460">(714) 388-9460</a>
+            <p class="visit-fine">Pickup &amp; nearby delivery both in the order drawer.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════ ORDERING ═══════════════ -->
+  <button class="order-fab" type="button" aria-label="Open your order" hidden>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span class="order-fab-count" aria-hidden="true">0</span>
+  </button>
+
+  <div class="order-overlay" hidden></div>
+
+  <aside class="order-panel" id="order-panel" role="dialog" aria-modal="true" aria-label="Your order" hidden>
+    <header class="order-head">
+      <h2 class="order-title">Your order <span class="tl">· cart</span></h2>
+      <button class="order-close" type="button" aria-label="Close order panel">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+
+    <div class="order-empty">
+      <p>Your order is empty — add something from the menu below.</p>
+    </div>
+
+    <div class="order-filled" hidden>
+      <ul class="order-items" role="list"></ul>
+
+      <button class="order-clear" type="button">Clear all <span class="tl">· empty cart</span></button>
+
+      <p class="order-subtotal-row"><span>Subtotal <span class="order-count"></span> <span class="order-fine">plus tax</span></span><strong class="order-subtotal">$0.00</strong></p>
+      <p class="order-earn">This order earns <strong class="order-earn-pts">+0 crowns</strong><span class="order-earn-tues" hidden> — double Tuesday!</span></p>
+      <p class="order-member-line"><button class="member-open-login order-member-btn" type="button">Member? Log in for your crowns</button></p>
+
+      <fieldset class="fulfill">
+        <legend class="fulfill-legend">How do you want it?</legend>
+        <div class="fulfill-toggle">
+          <label class="fulfill-opt"><input type="radio" name="fulfill" value="pickup" checked>
+            <span>Pickup <span class="tl">· takeout</span></span></label>
+          <label class="fulfill-opt"><input type="radio" name="fulfill" value="delivery">
+            <span>Delivery <span class="tl">· nearby</span></span></label>
+        </div>
+      </fieldset>
+
+      <div class="deliver-gate">
+        <div class="gate-bar" aria-hidden="true"><span class="gate-fill"></span></div>
+        <p class="gate-text" aria-live="polite"></p>
+      </div>
+
+      <div class="slot-picker">
+        <div class="field-row">
+          <div class="field">
+            <label for="order-day">Day</label>
+            <select id="order-day"></select>
+          </div>
+          <div class="field">
+            <label for="order-time">Time</label>
+            <select id="order-time"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="order-name">Name</label>
+          <input id="order-name" type="text" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="order-phone">Phone</label>
+          <input id="order-phone" type="tel" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="field order-address-field" hidden>
+        <label for="order-address">Delivery address</label>
+        <input id="order-address" type="text" autocomplete="street-address" placeholder="Street, city, zip">
+        <p class="field-help">We deliver nearby in Anaheim. Card payment only.</p>
+      </div>
+
+      <fieldset class="pay">
+        <legend class="fulfill-legend">Payment <span class="pay-required">required</span></legend>
+        <div class="pay-options"></div>
+        <div class="card-fields" hidden>
+          <div class="field">
+            <label for="card-number">Card number</label>
+            <input id="card-number" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="card-exp">Expiry</label>
+              <input id="card-exp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="field">
+              <label for="card-cvc">CVC</label>
+              <input id="card-cvc" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+            </div>
+          </div>
+          <p class="card-note">Test mode until our card processor is connected — use test card
+          4242 4242 4242 4242 with any future date. No real card is charged or stored.</p>
+        </div>
+      </fieldset>
+
+      <button class="btn btn-solid order-send" type="button">Send order</button>
+      <p class="order-status" role="status" aria-live="polite"></p>
+      <p class="order-fine order-terms">Payment is required to place your order. Delivery: $25 minimum,
+      card only. We'll text you to confirm — message and data rates may apply; reply STOP to opt out.</p>
+    </div>
+
+    <section class="quick-add" aria-label="Add from the menu">
+      <h3 class="quick-add-title">The menu <span class="tl">· add more</span></h3>
+      <div class="quick-groups"></div>
+    </section>
+  </aside>
+
+  <div class="addon-overlay" hidden></div>
+  <div class="addon-pop" role="dialog" aria-modal="true" aria-labelledby="addon-title" hidden>
+    <header class="addon-head">
+      <h3 class="addon-title" id="addon-title">Add to order</h3>
+      <button class="addon-close" type="button" aria-label="Close without adding">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <div class="addon-row addon-qty-row">
+      <span class="addon-name">How many</span>
+      <div class="stepper">
+        <button class="qty-btn" type="button" data-qty-step="-1" aria-label="One less">−</button>
+        <span class="addon-count" data-count="qty">1</span>
+        <button class="qty-btn" type="button" data-qty-step="1" aria-label="One more">+</button>
+      </div>
+    </div>
+    <p class="addon-sub">Pick your sauce <span class="tl">· Garlic's on the house</span></p>
+    <div class="addon-sauce" role="radiogroup" aria-label="Pick your sauce">
+      <label class="sauce-opt">
+        <input type="radio" name="sq-sauce" value="Garlic" checked>
+        <span class="salsa-dot sauce-garlic" aria-hidden="true"></span>
+        <span class="addon-name">Garlic <span class="addon-hint">traditional white garlic</span></span>
+        <span class="sauce-up">included</span>
+      </label>
+      <label class="sauce-opt">
+        <input type="radio" name="sq-sauce" value="Boom">
+        <span class="salsa-dot sauce-boom" aria-hidden="true"></span>
+        <span class="addon-name">Boom <span class="addon-hint">spicy mayo with cheese</span></span>
+        <span class="sauce-up">+$1</span>
+      </label>
+      <label class="sauce-opt">
+        <input type="radio" name="sq-sauce" value="Queen">
+        <span class="salsa-dot sauce-queen" aria-hidden="true"></span>
+        <span class="addon-name">Queen <span class="addon-hint">mild garlic with cheese</span></span>
+        <span class="sauce-up">+$1</span>
+      </label>
+    </div>
+    <details class="addon-remove">
+      <summary>Hold ingredients <span class="tl">· make it yours</span></summary>
+      <div class="addon-remove-list"></div>
+    </details>
+    <button class="btn btn-solid addon-add" type="button">Add to order</button>
+  </div>
+
+  <div class="addon-overlay member-overlay" hidden></div>
+  <div class="addon-pop member-pop" role="dialog" aria-modal="true" aria-labelledby="member-title" hidden>
+    <header class="addon-head">
+      <h3 class="addon-title" id="member-title">Crown Rewards</h3>
+      <button class="addon-close member-close" type="button" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <div class="member-tabs" role="tablist">
+      <button class="member-tab active" type="button" data-tab="login">Log in</button>
+      <button class="member-tab" type="button" data-tab="signup">Sign up</button>
+    </div>
+    <div class="field member-name-field" hidden>
+      <label for="member-name">Name</label>
+      <input id="member-name" type="text" autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="member-phone">Phone</label>
+      <input id="member-phone" type="tel" autocomplete="tel" inputmode="tel">
+      <p class="field-help member-signup-help" hidden>+50 welcome crowns the moment you join.</p>
+    </div>
+    <button class="btn btn-solid member-submit" type="button">Log in</button>
+    <p class="order-status member-status" role="status" aria-live="polite"></p>
+    <p class="order-fine">By signing up you agree to receive order and rewards texts from
+    Shawarma Queen. Message and data rates may apply; reply STOP anytime to opt out.
+    Memberships save on this phone for now — accounts that follow you across devices
+    arrive with the app.</p>
+  </div>
+
+  <p class="add-toast" role="status" aria-live="polite"></p>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-brand"><svg class="crown" width="26" height="20" viewBox="0 0 30 24" fill="none" aria-hidden="true"><path d="M3 21h24l-2.4-14-6.6 5.4L15 2l-3 10.4L5.4 7 3 21z" fill="currentColor"/></svg>Shawarma Queen</p>
+      <p class="footer-line">Made for kings &amp; queens.</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#carta">Menu</a>
+        <a href="#court">The Court</a>
+        <a href="#rewards">Rewards</a>
+        <a href="#historia">Our Story</a>
+        <a href="#visitanos">Visit Us</a>
+      </nav>
+      <p class="footer-social">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://www.yelp.com/biz/shawarma-queen-anaheim" target="_blank" rel="noopener">Yelp</a>
+      </p>
+      <p class="footer-fine">© <span id="year">2026</span> Shawarma Queen · 430 S Euclid St, Anaheim, CA · Open till 3:30 am</p>
+    </div>
+  </footer>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
