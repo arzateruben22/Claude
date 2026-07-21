@@ -1062,6 +1062,16 @@
       : "Opening your email app to send the order — we'll text you to confirm.";
   });
 
+  /* Tiny public hook so other UI (the radial menu) can drop items into the
+     cart through the same flow the menu buttons use. */
+  window.SQOrder = {
+    add: function (name, price, ingredients, addons) {
+      if (addons === false) addLine(name, Number(price), "", [], 1);
+      else openAddon(name, Number(price), ingredients || []);
+    },
+    open: openPanel
+  };
+
   render();
   renderHistory();
 })();
@@ -1191,5 +1201,129 @@
     }, { threshold: 0.04 }).observe(host);
   } else {
     play();
+  }
+})();
+
+/* ── Dock-style magnify on the top nav (pointer + desktop only) ── */
+
+(function () {
+  "use strict";
+  var nav = document.querySelector(".nav-dock");
+  if (!nav) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  var items = [].slice.call(nav.querySelectorAll("a, .nav-drop summary"));
+  var MAXS = 1.24, RANGE = 100;
+  nav.addEventListener("mousemove", function (e) {
+    items.forEach(function (it) {
+      var r = it.getBoundingClientRect();
+      var d = Math.abs(e.clientX - (r.left + r.width / 2));
+      var s = 1 + (MAXS - 1) * Math.max(0, 1 - d / RANGE);
+      it.style.setProperty("--scale", s.toFixed(3));
+    });
+  });
+  nav.addEventListener("mouseleave", function () {
+    items.forEach(function (it) { it.style.setProperty("--scale", "1"); });
+  });
+})();
+
+/* ── The Court: interactive radial menu ──
+   Nodes orbit the crown; tap one to load it into the center, then "Add to
+   order" drops it into the cart through the shared SQOrder hook (which opens
+   the pick-your-sauce step). Rotation pauses on selection and while off
+   screen, and holds still for prefers-reduced-motion (still fully clickable). */
+
+(function () {
+  "use strict";
+  var orbit = document.getElementById("court-orbit");
+  if (!orbit) return;
+  var nodes = [].slice.call(orbit.querySelectorAll(".court-node"));
+  if (!nodes.length) return;
+
+  var coreDefault = orbit.querySelector(".court-core-default");
+  var coreActive = orbit.querySelector(".court-core-active");
+  var elTag = coreActive.querySelector(".court-core-tag");
+  var elTitle = coreActive.querySelector(".court-core-title");
+  var elPrice = coreActive.querySelector(".court-core-price");
+  var elDesc = coreActive.querySelector(".court-core-desc");
+  var addBtn = coreActive.querySelector(".court-add");
+
+  var N = nodes.length;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var rotation = 0, selected = null, raf = null, last = 0;
+
+  var place = function () {
+    for (var i = 0; i < N; i++) {
+      var node = nodes[i];
+      var ang = ((i * 360 / N) + rotation) * Math.PI / 180;
+      var oy = Math.sin(ang);
+      node.style.setProperty("--ox", Math.cos(ang).toFixed(4));
+      node.style.setProperty("--oy", oy.toFixed(4));
+      var depth = (oy + 1) / 2;
+      node.style.opacity = (node === selected ? 1 : (0.55 + 0.45 * depth)).toFixed(3);
+      node.style.zIndex = String(node === selected ? 60 : Math.round(10 + 20 * depth));
+    }
+  };
+
+  var frame = function (now) {
+    var dt = last ? (now - last) / 1000 : 0;
+    last = now;
+    if (!selected) rotation = (rotation + dt * 6) % 360;
+    place();
+    raf = requestAnimationFrame(frame);
+  };
+  var start = function () { if (raf === null && !reduced) { last = 0; raf = requestAnimationFrame(frame); } };
+  var stop = function () { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } };
+
+  var showItem = function (node) {
+    selected = node;
+    nodes.forEach(function (nn) { nn.classList.toggle("is-active", nn === node); });
+    elTag.textContent = node.getAttribute("data-tag") || "";
+    elTitle.textContent = node.getAttribute("data-name");
+    elPrice.textContent = "$" + node.getAttribute("data-price");
+    elDesc.textContent = node.getAttribute("data-desc") || "";
+    coreDefault.hidden = true;
+    coreActive.hidden = false;
+    place();
+  };
+  var clearItem = function () {
+    selected = null;
+    nodes.forEach(function (nn) { nn.classList.remove("is-active"); });
+    coreActive.hidden = true;
+    coreDefault.hidden = false;
+  };
+
+  nodes.forEach(function (node) {
+    node.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (selected === node) clearItem();
+      else showItem(node);
+    });
+  });
+
+  addBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    if (!selected || !window.SQOrder) return;
+    var ing = (selected.getAttribute("data-ingredients") || "")
+      .split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    window.SQOrder.add(selected.getAttribute("data-name"), selected.getAttribute("data-price"), ing, true);
+  });
+
+  orbit.addEventListener("click", function (e) {
+    if (e.target === orbit || (e.target.classList && e.target.classList.contains("court-ring"))) clearItem();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && selected) clearItem();
+  });
+
+  place();
+  if (reduced) return;
+
+  if (window.IntersectionObserver) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.05 }).observe(orbit);
+  } else {
+    start();
   }
 })();

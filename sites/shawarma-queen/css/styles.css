@@ -348,6 +348,24 @@ em { font-style: italic; }
 
 .mobile-social a:hover { color: var(--gold); }
 
+/* ── Dock-style top nav: icons + proximity magnify ── */
+
+.nav-dock a,
+.nav-dock .nav-drop summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  transform-origin: center bottom;
+  transform: translateY(calc((var(--scale, 1) - 1) * -5px)) scale(var(--scale, 1));
+  transition: transform 190ms cubic-bezier(0.22, 1, 0.36, 1), color 200ms ease;
+  will-change: transform;
+}
+
+.nav-dock-ico { display: inline-flex; width: 1.02em; height: 1.02em; flex-shrink: 0; color: var(--gold); }
+.nav-dock-ico svg { width: 100%; height: 100%; display: block; }
+.nav-links a:hover .nav-dock-ico, .nav-drop summary:hover .nav-dock-ico { color: var(--gold-bright); }
+.nav-chevron { margin-left: 0.1rem; }
+
 /* ─── Hero ─── */
 
 .hero {
@@ -1776,14 +1794,14 @@ em { font-style: italic; }
 
 .sauce-tag.up { color: var(--pome); }
 
-/* ── The Court: orbiting signatures (a counter-rotating ring) ── */
+/* ── The Court: interactive radial menu (click a dish → add it) ── */
 
-.court-orbit-wrap { display: flex; justify-content: center; margin: var(--space-6) 0 var(--space-5); }
+.court-orbit-wrap { display: flex; justify-content: center; margin: var(--space-6) 0 var(--space-4); }
 
 .court-orbit {
-  --chip: 60px;
+  --node: 62px;
   position: relative;
-  width: clamp(280px, 44vw, 460px);
+  width: clamp(300px, 46vw, 480px);
   aspect-ratio: 1;
   border-radius: 50%;
   background:
@@ -1791,59 +1809,113 @@ em { font-style: italic; }
     rgba(42, 16, 64, 0.45);
   border: 1px solid var(--plum-edge);
   box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.45), 0 24px 60px rgba(0, 0, 0, 0.35);
+  touch-action: manipulation;
 }
 
-/* the ring turns one way… */
-.court-ring { position: absolute; inset: 0; animation: court-spin 46s linear infinite; }
+.court-ring { position: absolute; inset: 0; }
 
-/* …each chip turns back the same amount, so the glyph stays upright */
-.court-chip {
+/* an orbiting, clickable menu node */
+.court-node {
   position: absolute;
-  width: var(--chip);
-  height: var(--chip);
-  top: calc(50% - var(--chip) / 2 + var(--ty));
-  left: calc(50% - var(--chip) / 2 + var(--tx));
+  left: calc(50% + var(--ox, 0) * 34%);
+  top: calc(50% + var(--oy, 0) * 34%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-body);
+  color: var(--cream-60);
+  transition: opacity 220ms ease;
+}
+
+.court-node-dot {
+  width: var(--node);
+  height: var(--node);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   border: 2px solid rgba(23, 8, 31, 0.55);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  animation: court-spin-rev 46s linear infinite;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease;
 }
 
-.court-chip svg { width: 26px; height: 26px; }
+.court-node-dot svg { width: 26px; height: 26px; }
 
-.chip-gold  { background: var(--gold);       color: var(--night); }
-.chip-pome  { background: var(--pome);       color: #fff; }
-.chip-cream { background: var(--cream);      color: var(--night); }
-.chip-plum  { background: var(--plum-edge);  color: var(--gold); }
-.chip-night { background: var(--night);      color: var(--gold); border-color: var(--gold-soft); }
+.court-node-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+  transition: color 200ms ease;
+}
 
-.court-core { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.node-beef .court-node-dot    { background: var(--pome);  color: #fff; }
+.node-chicken .court-node-dot { background: var(--gold);  color: var(--night); }
+.node-mix .court-node-dot     { background: var(--cream); color: var(--night); }
+
+.court-node:hover .court-node-dot { transform: scale(1.12); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
+.court-node:hover .court-node-label { color: var(--cream); }
+.court-node:focus-visible { outline: none; }
+.court-node:focus-visible .court-node-dot { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.court-node.is-active .court-node-dot { transform: scale(1.25); box-shadow: 0 0 0 3px var(--gold), 0 10px 28px rgba(0, 0, 0, 0.55); }
+.court-node.is-active .court-node-label { color: var(--gold); }
+
+/* center detail core (default crown ↔ selected-item panel) */
+.court-core { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 40; pointer-events: none; }
 
 .court-core-inner {
-  width: 46%;
-  height: 46%;
+  width: 50%;
+  height: 50%;
   border-radius: 50%;
   background: radial-gradient(closest-side, var(--plum), var(--night));
   border: 1px solid var(--gold-soft);
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
   text-align: center;
-  padding: 0.5rem;
+  padding: 0.6rem;
+  pointer-events: auto;
 }
 
 .court-core .crown { color: var(--gold); margin-bottom: 0.1rem; }
-.court-core-name { font-family: var(--font-display); font-size: clamp(0.95rem, 2.6vw, 1.45rem); line-height: 1.02; color: var(--cream); }
-.court-core-sub { font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
+.court-core-default, .court-core-active { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; }
+.court-core-default[hidden], .court-core-active[hidden] { display: none; }
+.court-core-name { font-family: var(--font-display); font-size: clamp(0.95rem, 2.6vw, 1.4rem); line-height: 1.02; color: var(--cream); }
+.court-core-sub { font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
 
-@keyframes court-spin { to { transform: rotate(360deg); } }
-@keyframes court-spin-rev { to { transform: rotate(-360deg); } }
+.court-core-tag { font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+.court-core-title { font-family: var(--font-display); font-size: clamp(0.95rem, 2.5vw, 1.3rem); line-height: 1.05; color: var(--cream); }
+.court-core-price { font-variant-numeric: tabular-nums; color: var(--gold); font-weight: 700; font-size: 0.95rem; }
+.court-core-desc { font-size: 0.66rem; color: var(--cream-60); line-height: 1.35; max-width: 12rem; }
+
+.court-add {
+  margin-top: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 0;
+  background: var(--gold);
+  color: var(--night);
+  cursor: pointer;
+  transition: background-color 200ms ease, transform 200ms ease;
+}
+
+.court-add:hover { background: var(--gold-bright); transform: translateY(-1px); }
+
+.court-hint { text-align: center; font-size: 0.85rem; color: var(--cream-35); margin: 0 auto var(--space-4); }
 
 .court-legend {
   display: flex;
@@ -1859,7 +1931,7 @@ em { font-style: italic; }
 .court-legend li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--cream-60); }
 .court-legend .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15); }
 
-@media (max-width: 560px) { .court-orbit { --chip: 48px; } }
+@media (max-width: 560px) { .court-orbit { --node: 50px; } .court-node-label { font-size: 0.66rem; } }
 
 /* ── Open-late band: WebGL ember fluid ── */
 
@@ -1920,7 +1992,6 @@ em { font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-glow, .hero-scroll svg, .spit-meat, .spit-ember,
-  .court-ring, .court-chip { animation: none; }
+  .hero-glow, .hero-scroll svg, .spit-meat, .spit-ember { animation: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
