@@ -933,4 +933,35 @@
         scrollTrigger: { trigger: el, start: "top 85%" }
       });
   });
+
+  /* Zoom parallax on the coach mosaic (ported from a scroll-zoom
+     component): the grid zooms into focus as the section arrives,
+     while each frame drifts at its own depth speed. */
+  gsap.fromTo(".mosaic",
+    { scale: 0.9, transformOrigin: "50% 30%" },
+    {
+      scale: 1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#coach",
+        start: "top 92%",
+        end: "center 55%",
+        scrub: true
+      }
+    });
+  [[".cell-a", 34], [".cell-b", -26], [".cell-c", 52], [".cell-d", -20]]
+    .forEach(function (pair) {
+      gsap.fromTo(pair[0],
+        { y: pair[1] },
+        {
+          y: -pair[1] * 0.7,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#coach",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+    });
 })();
