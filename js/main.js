@@ -97,6 +97,7 @@
       .from(".hero-title .line-inner", { yPercent: 115, duration: 1.0, stagger: 0.14 }, 0.35)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.85)
       .from(".hero-actions .btn", { opacity: 0, y: 14, duration: 0.6, stagger: 0.1 }, 1.0)
+      .from(".hero-rating", { opacity: 0, y: 12, duration: 0.6 }, 1.2)
       .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.3)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.5);
 
