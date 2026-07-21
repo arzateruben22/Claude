@@ -2855,6 +2855,75 @@ em { font-style: italic; }
 
 .rw-history-empty { color: var(--ink-35); font-style: italic; }
 
+/* ─── Link preview (desktop hover, js/link-preview.js) ─── */
+
+.lp-card {
+  position: fixed;
+  z-index: 95;
+  width: 15rem;
+  padding: 0.95rem 1.1rem 0.8rem 1.3rem;
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge);
+  border-radius: 14px;
+  box-shadow: 0 18px 44px rgba(68, 54, 64, 0.24);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 2px)) scale(0.82);
+  transform-origin: bottom center;
+  transition: opacity 170ms ease,
+              transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  --lp-accent: var(--mauve);
+}
+
+.lp-card.show {
+  opacity: 1;
+  transform: translate(-50%, calc(-100% - 12px)) scale(1);
+}
+
+.lp-accent {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--lp-accent);
+}
+
+.lp-motif {
+  position: absolute;
+  top: 0.7rem; right: 0.7rem;
+  color: var(--lp-accent);
+  opacity: 0.24;
+}
+
+.lp-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--plum);
+  line-height: 1.1;
+}
+
+.lp-desc {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ink-60);
+  margin-top: 0.15rem;
+}
+
+.lp-foot {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-top: 0.6rem;
+}
+
+.lp-tint-1 { --lp-accent: var(--plum); }
+.lp-tint-2 { --lp-accent: var(--rose); }
+.lp-tint-3 { --lp-accent: var(--sand); }
+
 /* ─── My Lumevina (account) ─── */
 
 .nav-account { display: inline-flex; align-items: center; }
