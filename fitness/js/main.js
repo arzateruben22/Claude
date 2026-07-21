@@ -284,6 +284,107 @@
     }
   })();
 
+  /* ── Story card fan (CardStack port) ─────────────────────── */
+  /* Fanned deck of the four timeline photos: click, swipe, or
+     arrow through; auto-advances the story until touched. */
+  (function () {
+    var fan = document.getElementById("story-fan");
+    var dotsEl = document.querySelector(".fan-dots");
+    if (!fan || !dotsEl) return;
+
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var active = 0;
+    var hovering = false;
+    var timer = null;
+
+    function cards() {
+      return [].filter.call(fan.children, function (c) {
+        return !c.classList.contains("gone");
+      });
+    }
+
+    function layout() {
+      var list = cards();
+      var n = list.length;
+      if (!n) { fan.parentElement.style.display = "none"; return; }
+      if (active >= n) active = n - 1;
+      var w = fan.clientWidth;
+      var cardW = Math.min(250, Math.max(180, w * 0.3));
+      var spacing = Math.max(44, Math.min(80, (w - cardW) / 3.2));
+      list.forEach(function (c, i) {
+        var off = i - active;
+        var abs = Math.abs(off);
+        c.style.transform =
+          "translateX(" + off * spacing + "px)" +
+          " translateY(" + (abs * 10 - (off === 0 ? 16 : 0)) + "px)" +
+          " translateZ(" + (-abs * 90) + "px)" +
+          " rotateZ(" + off * 8 + "deg)" +
+          " rotateX(" + (off === 0 ? 0 : 8) + "deg)" +
+          " scale(" + (off === 0 ? 1.04 : 0.93) + ")";
+        c.style.zIndex = String(100 - abs);
+        c.classList.toggle("is-active", off === 0);
+      });
+      [].forEach.call(dotsEl.children, function (d, i) {
+        d.classList.toggle("is-on", i === active);
+      });
+    }
+
+    /* square nav dots */
+    cards().forEach(function (c, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "fan-dot";
+      b.setAttribute("aria-label", "Photo " + (i + 1));
+      b.addEventListener("click", function () { setActive(i, true); });
+      dotsEl.appendChild(b);
+    });
+
+    function setActive(i, byUser) {
+      var n = cards().length;
+      active = ((i % n) + n) % n;
+      if (byUser) stopAuto();
+      layout();
+    }
+
+    fan.addEventListener("click", function (e) {
+      var card = e.target.closest(".fan-card");
+      if (!card) return;
+      var i = cards().indexOf(card);
+      if (i > -1 && i !== active) setActive(i, true);
+    });
+    fan.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") { e.preventDefault(); setActive(active - 1, true); }
+      if (e.key === "ArrowRight") { e.preventDefault(); setActive(active + 1, true); }
+    });
+
+    /* swipe on the deck */
+    var downX = null;
+    fan.addEventListener("pointerdown", function (e) { downX = e.clientX; });
+    fan.addEventListener("pointerup", function (e) {
+      if (downX === null) return;
+      var dx = e.clientX - downX;
+      downX = null;
+      if (dx > 48) setActive(active - 1, true);
+      else if (dx < -48) setActive(active + 1, true);
+    });
+
+    /* walk the timeline until the visitor takes over */
+    function stopAuto() {
+      if (timer) { window.clearInterval(timer); timer = null; }
+    }
+    if (!reduce) {
+      fan.addEventListener("pointerenter", function () { hovering = true; });
+      fan.addEventListener("pointerleave", function () { hovering = false; });
+      timer = window.setInterval(function () {
+        if (!hovering) setActive(active + 1, false);
+      }, 3200);
+    }
+
+    window.addEventListener("resize", layout);
+    window.__fanLayout = layout;
+    layout();
+  })();
+
   /* ── Plans: tap to select, pay-in-full / split toggle ────── */
   /* Ported from a React pricing component: animated selection
      ring, sliding toggle thumb, and rolling price numbers. */
@@ -992,11 +1093,10 @@
       });
   });
 
-  /* Zoom parallax on the coach mosaic (ported from a scroll-zoom
-     component): the grid zooms into focus as the section arrives,
-     while each frame drifts at its own depth speed. */
-  gsap.fromTo(".mosaic",
-    { scale: 0.9, transformOrigin: "50% 30%" },
+  /* Zoom parallax (scroll-zoom port): the card fan zooms into
+     focus as the coach section scrolls in. */
+  gsap.fromTo(".card-fan",
+    { scale: 0.9, transformOrigin: "50% 80%" },
     {
       scale: 1,
       ease: "none",
@@ -1006,20 +1106,5 @@
         end: "center 55%",
         scrub: true
       }
-    });
-  [[".cell-a", 34], [".cell-b", -26], [".cell-c", 52], [".cell-d", -20]]
-    .forEach(function (pair) {
-      gsap.fromTo(pair[0],
-        { y: pair[1] },
-        {
-          y: -pair[1] * 0.7,
-          ease: "none",
-          scrollTrigger: {
-            trigger: "#coach",
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
-          }
-        });
     });
 })();

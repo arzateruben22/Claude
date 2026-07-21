@@ -694,7 +694,8 @@ a { color: inherit; }
   }
 }
 
-.cell figcaption {
+.cell figcaption,
+.fan-card figcaption {
   position: absolute;
   left: 10px;
   bottom: 10px;
@@ -704,7 +705,7 @@ a { color: inherit; }
   background: color-mix(in srgb, var(--night) 82%, transparent);
   backdrop-filter: blur(6px);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 2px;
   padding: 0.28rem 0.75rem;
   font-size: 0.72rem;
   font-weight: 500;
@@ -735,6 +736,65 @@ a { color: inherit; }
   color: var(--steel);
   padding-bottom: 2.2rem;
 }
+
+/* ── Fanned card stack (CardStack port) — the story timeline ── */
+
+.card-fan {
+  position: relative;
+  height: clamp(320px, 46vw, 400px);
+  perspective: 1000px;
+  outline: none;
+  touch-action: pan-y;
+}
+.card-fan:focus-visible { outline: 3px solid var(--orange); outline-offset: 4px; }
+
+.fan-card {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  width: clamp(180px, 30vw, 250px);
+  aspect-ratio: 3 / 4;
+  margin: 0 0 0 calc(clamp(180px, 30vw, 250px) / -2);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  transform-origin: 50% 100%;
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1), border-color 300ms ease;
+  cursor: pointer;
+}
+.fan-card.is-active { border-color: color-mix(in srgb, var(--orange) 55%, var(--line)); cursor: default; }
+.fan-card.gone { display: none; }
+.fan-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fan-card { transition: none; }
+}
+
+/* square dots — geometric, echoing the plate corner marks */
+.fan-dots {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 0.9rem;
+}
+.fan-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 250ms ease, border-color 250ms ease;
+}
+.fan-dot.is-on { background: var(--orange); border-color: var(--orange); }
 
 .mosaic-line {
   margin: 0.8rem 0 0.1rem;
@@ -794,10 +854,11 @@ a { color: inherit; }
   left: 0;
   margin: 0;
   aspect-ratio: 3 / 4;
-  border-radius: 10px;
+  border-radius: 2px;
   overflow: hidden;
+  border: 1px solid var(--line);
   background: var(--panel);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
 }
 .ring-face.gone { display: none; }
 .ring-face img {
@@ -813,7 +874,7 @@ a { color: inherit; }
   padding: 0.18rem 0.55rem;
   background: color-mix(in srgb, var(--night) 80%, transparent);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 2px;
   font-size: 0.6rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -846,7 +907,7 @@ a { color: inherit; }
 .lightbox img {
   max-width: 100%;
   max-height: 100%;
-  border-radius: 12px;
+  border-radius: 2px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   animation: lightbox-in 220ms ease-out;
 }

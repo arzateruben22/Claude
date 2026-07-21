@@ -149,28 +149,35 @@
           <span class="frame-sq sq-tr" aria-hidden="true"></span>
           <span class="frame-sq sq-bl" aria-hidden="true"></span>
           <span class="frame-sq sq-br" aria-hidden="true"></span>
-          <div class="mosaic">
-            <figure class="cell cell-a" data-file="media/beginning.jpg">
+          <!-- Fanned card stack — click, swipe, or arrow through the timeline -->
+          <div class="card-fan" id="story-fan" tabindex="0" role="group"
+               aria-label="Progress photos — use left and right arrows to browse">
+            <figure class="fan-card">
               <img src="media/beginning.jpg" alt="Ruben near the start — a bathroom mirror photo from the beginning"
-                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+                   loading="lazy" style="object-position: 50% 20%"
+                   onerror="this.closest('.fan-card').classList.add('gone')">
               <figcaption><span class="cap-num mono">01</span>The beginning</figcaption>
             </figure>
-            <figure class="cell cell-b" data-file="media/grind.jpg">
+            <figure class="fan-card">
               <img src="media/grind.jpg" alt="Ruben in a safety vest at Arizona Tile — rock bottom, before the gym"
-                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+                   loading="lazy" style="object-position: 50% 74%"
+                   onerror="this.closest('.fan-card').classList.add('gone')">
               <figcaption><span class="cap-num mono">02</span>Rock bottom</figcaption>
             </figure>
-            <figure class="cell cell-c" data-file="media/dec-2022.jpg">
+            <figure class="fan-card">
               <img src="media/dec-2022.jpg" alt="Ruben in December 2022 — visibly leaner and built, mirror photo"
-                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+                   loading="lazy" style="object-position: 38% 50%"
+                   onerror="this.closest('.fan-card').classList.add('gone')">
               <figcaption><span class="cap-num mono">03</span>December 2022</figcaption>
             </figure>
-            <figure class="cell cell-d" data-file="media/the-100s.jpg">
+            <figure class="fan-card">
               <img src="media/the-100s.jpg" alt="Ruben now — incline-pressing 100-pound dumbbells in the gym"
-                   loading="lazy" onerror="this.closest('.cell').classList.add('missing')">
+                   loading="lazy" style="object-position: 50% 35%"
+                   onerror="this.closest('.fan-card').classList.add('gone')">
               <figcaption><span class="cap-num mono">04</span>Now</figcaption>
             </figure>
           </div>
+          <div class="fan-dots"></div>
           <p class="mosaic-line mono">The mirror doesn't lie · The work, documented</p>
         </div>
       </div>
