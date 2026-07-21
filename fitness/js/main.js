@@ -112,6 +112,120 @@
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   });
 
+  /* ── Coach shader — drifting ember-dust field (WebGL) ────── */
+  /* Fragment shader by Matthias Hurrle (@atzedent), ported from a
+     React shader-hero component. Follows the cursor with a slow
+     parallax drift; renders at half resolution and pauses offscreen. */
+  (function () {
+    var section = document.getElementById("coach");
+    if (!section) return;
+    var canvas = document.createElement("canvas");
+    canvas.className = "coach-shader";
+    section.prepend(canvas);
+    var gl = canvas.getContext("webgl2");
+    if (!gl) { canvas.remove(); return; }
+
+    var FRAG = "#version 300 es\n" +
+      "precision highp float;\n" +
+      "out vec4 O;uniform vec2 resolution;uniform float time;uniform vec2 touch;\n" +
+      "#define FC gl_FragCoord.xy\n#define T time\n#define R resolution\n" +
+      "#define MN min(R.x,R.y)\n" +
+      "float rnd(vec2 p){p=fract(p*vec2(12.9898,78.233));p+=dot(p,p+34.56);return fract(p.x*p.y);}\n" +
+      "float noise(in vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);float a=rnd(i),b=rnd(i+vec2(1,0)),c=rnd(i+vec2(0,1)),d=rnd(i+1.);return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);}\n" +
+      "float fbm(vec2 p){float t=.0,a=1.;mat2 m=mat2(1.,-.5,.2,1.2);for(int i=0;i<5;i++){t+=a*noise(p);p*=2.*m;a*=.5;}return t;}\n" +
+      "float clouds(vec2 p){float d=1.,t=.0;for(float i=.0;i<3.;i++){float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);t=mix(t,d,a);d=a;p*=2./(i+1.);}return t;}\n" +
+      "void main(void){vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);vec3 col=vec3(0);\n" +
+      "float bg=clouds(vec2(st.x+T*.5,-st.y));\n" +
+      "uv*=1.-.3*(sin(T*.2)*.5+.5);uv+=.35*touch;\n" +
+      "for(float i=1.;i<12.;i++){uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.5+.1*uv.x);\n" +
+      "vec2 p=uv;float d=length(p);col+=.00125/d*(cos(sin(i)*vec3(1,2,3))+1.);\n" +
+      "float b=noise(i+p+bg*1.731);col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));\n" +
+      "col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);}O=vec4(col,1);}";
+
+    function compile(type, src) {
+      var s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
+    }
+    var vs = compile(gl.VERTEX_SHADER,
+      "#version 300 es\nprecision highp float;in vec4 position;void main(){gl_Position=position;}");
+    var fs = compile(gl.FRAGMENT_SHADER, FRAG);
+    if (!vs || !fs) { canvas.remove(); return; }
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { canvas.remove(); return; }
+
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER,
+      new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+    var pos = gl.getAttribLocation(prog, "position");
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+    var uRes = gl.getUniformLocation(prog, "resolution");
+    var uTime = gl.getUniformLocation(prog, "time");
+    var uTouch = gl.getUniformLocation(prog, "touch");
+
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var SCALE = 0.5;
+    var touch = [0, 0];
+    var target = [0, 0];
+    var visible = true;
+    var rafId = null;
+
+    function resize() {
+      canvas.width = Math.max(1, section.clientWidth * SCALE);
+      canvas.height = Math.max(1, section.clientHeight * SCALE);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    section.addEventListener("pointermove", function (e) {
+      var r = section.getBoundingClientRect();
+      target = [
+        (e.clientX - r.left) / r.width - 0.5,
+        0.5 - (e.clientY - r.top) / r.height
+      ];
+    });
+
+    function draw(t) {
+      touch[0] += (target[0] - touch[0]) * 0.04;
+      touch[1] += (target[1] - touch[1]) * 0.04;
+      gl.useProgram(prog);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, t);
+      gl.uniform2f(uTouch, touch[0], touch[1]);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    function frame(now) {
+      draw(now * 0.001);
+      rafId = window.requestAnimationFrame(frame);
+    }
+    function start() {
+      if (rafId === null && visible) rafId = window.requestAnimationFrame(frame);
+    }
+    function stop() {
+      if (rafId !== null) { window.cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    if (reduce) {
+      draw(20); // one calm, still frame
+    } else {
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          if (visible) start(); else stop();
+        }).observe(section);
+      }
+      start();
+    }
+  })();
+
   /* ── Plans: tap to select, pay-in-full / split toggle ────── */
   /* Ported from a React pricing component: animated selection
      ring, sliding toggle thumb, and rolling price numbers. */

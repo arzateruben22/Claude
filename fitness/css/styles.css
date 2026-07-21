@@ -581,6 +581,24 @@ a { color: inherit; }
 .story-copy { color: var(--steel); max-width: 33rem; }
 .story-copy p:first-child { color: var(--bone); }
 
+/* ── Coach shader canvas — ember dust behind the story ──────── */
+
+#coach {
+  position: relative;
+  overflow: hidden;
+}
+#coach .section-inner { position: relative; }
+.coach-shader {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 15%, #000 85%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 15%, #000 85%, transparent 100%);
+}
+
 /* ── The growth mosaic ──────────────────────────────────────── */
 /* Four frames, in order: day one → the day job → the work → now.
    The gym shot runs tall; "now" runs full width — the payoff frame. */
