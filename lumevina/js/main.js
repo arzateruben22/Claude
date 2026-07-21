@@ -15,6 +15,18 @@
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
 
+  /* Brand → glide back to the top. The #top target is the fixed nav,
+     which some browsers treat as always in view and won't scroll to,
+     so drive it explicitly (honoring reduced-motion). */
+  var brand = document.querySelector(".nav-brand");
+  if (brand) {
+    brand.addEventListener("click", function (e) {
+      e.preventDefault();
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    });
+  }
+
   var toggle = document.querySelector(".nav-toggle");
   var mobileMenu = document.getElementById("mobile-menu");
   var setMenu = function (open) {
