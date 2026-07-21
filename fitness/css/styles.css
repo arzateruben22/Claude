@@ -619,10 +619,30 @@ a { color: inherit; }
   #coach .grid-2 { align-items: center; }
   .mosaic-wrap {
     width: 100%;
-    max-width: 29rem;
+    max-width: 30rem;
     justify-self: end;
   }
 }
+
+/* Dot-pattern frame around the story photos (DotPattern port):
+   hairline border, dot-grid field, orange corner marks */
+.mosaic-wrap {
+  position: relative;
+  border: 1px solid var(--line);
+  padding: clamp(10px, 2vw, 16px);
+  background-image: radial-gradient(rgba(236, 234, 228, 0.13) 1px, transparent 1.5px);
+  background-size: 12px 12px;
+}
+.frame-sq {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--orange);
+}
+.sq-tl { top: -5px; left: -5px; }
+.sq-tr { top: -5px; right: -5px; }
+.sq-bl { bottom: -5px; left: -5px; }
+.sq-br { bottom: -5px; right: -5px; }
 .cell {
   margin: 0;
   position: relative;
@@ -704,7 +724,7 @@ a { color: inherit; }
 }
 
 .mosaic-line {
-  margin: 0.9rem 0 0;
+  margin: 0.8rem 0 0.1rem;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
