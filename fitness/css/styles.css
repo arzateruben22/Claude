@@ -449,39 +449,32 @@ a { color: inherit; }
   gap: 0.9rem;
 }
 
-/* ── ANAHEIM — skyline-filled display word (ImageText port) ─── */
+/* ── Night skyline band along the hero's horizon ────────────── */
 
-.city-word {
-  margin-top: clamp(2.5rem, 8vh, 5.5rem);
-  text-align: center;
+.city-skyline {
+  margin-top: clamp(2.5rem, 8vh, 5rem);
+  height: clamp(170px, 30vh, 320px);
   pointer-events: none;
-}
-.city-word-text {
-  display: inline-block;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(4rem, 14.5vw, 12.5rem);
-  line-height: 0.9;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(236, 234, 228, 0.07);
   background-image: url("../media/skyline.jpg");
-  background-size: 165% auto;
-  background-position: 0% 74%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: city-pan 26s linear infinite;
+  background-size: auto 135%;
+  background-position: 0% 20%;
+  opacity: 0.85;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 32%, #000 72%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 32%, #000 72%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-composite: intersect;
+  animation: city-pan 70s linear infinite alternate;
 }
 @keyframes city-pan {
-  0% { background-position: 0% 74%; }
-  50% { background-position: 100% 74%; }
-  100% { background-position: 0% 74%; }
+  from { background-position: 0% 20%; }
+  to { background-position: 100% 20%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .city-word-text {
+  .city-skyline {
     animation: none;
-    background-position: 50% 74%;
+    background-position: 50% 20%;
   }
 }
 
