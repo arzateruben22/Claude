@@ -421,6 +421,35 @@ em { font-style: italic; }
   flex-wrap: wrap;
 }
 
+.hero-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: var(--space-5);
+  text-decoration: none;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(16, 12, 9, 0.55);
+  border: 1px solid var(--cream-15);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color 200ms ease;
+}
+
+.hero-rating:hover { border-color: var(--flame-soft); }
+.hero-rating:hover .hero-rating-text { color: var(--flame); }
+.stars { display: flex; }
+
+.hero-rating-text {
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream-60);
+  transition: color 200ms ease;
+}
+
+.hero-rating-text strong { color: var(--cream); font-weight: 500; }
+
 .hero-scroll {
   position: absolute;
   bottom: 2rem;
