@@ -20,6 +20,16 @@ for name in os.listdir('fonts'):
     b64 = base64.b64encode(open(f'fonts/{name}', 'rb').read()).decode()
     css = css.replace(f'../fonts/{name}', f'data:font/woff2;base64,{b64}')
 
+def inline_css_media(m):
+    path = 'media/' + m.group(1)
+    if os.path.exists(path):
+        ext = path.rsplit('.', 1)[-1].lower().replace('jpg', 'jpeg')
+        b64 = base64.b64encode(open(path, 'rb').read()).decode()
+        return f'url("data:image/{ext};base64,{b64}")'
+    return m.group(0)
+
+css = re.sub(r'url\("\.\./media/([^"]+)"\)', inline_css_media, css)
+
 def inline_media(m):
     path = m.group(1)
     if os.path.exists(path):

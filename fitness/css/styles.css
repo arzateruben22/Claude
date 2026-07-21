@@ -449,6 +449,42 @@ a { color: inherit; }
   gap: 0.9rem;
 }
 
+/* ── ANAHEIM — skyline-filled display word (ImageText port) ─── */
+
+.city-word {
+  margin-top: clamp(2.5rem, 8vh, 5.5rem);
+  text-align: center;
+  pointer-events: none;
+}
+.city-word-text {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(4rem, 14.5vw, 12.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(236, 234, 228, 0.07);
+  background-image: url("../media/skyline.jpg");
+  background-size: 165% auto;
+  background-position: 0% 74%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: city-pan 26s linear infinite;
+}
+@keyframes city-pan {
+  0% { background-position: 0% 74%; }
+  50% { background-position: 100% 74%; }
+  100% { background-position: 0% 74%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .city-word-text {
+    animation: none;
+    background-position: 50% 74%;
+  }
+}
+
 /* ── Signature: one month, three ways ───────────────────────── */
 
 .months {
