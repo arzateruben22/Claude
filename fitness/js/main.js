@@ -189,6 +189,61 @@
     }
   })();
 
+  /* ── Flowing background paths (BackgroundPaths port) ──────── */
+  /* Sweeping curved strokes that travel along their length. Ported
+     from a framer-motion component to static SVG + CSS dash flow,
+     recolored warm for SchFLR. */
+  (function () {
+    var host = document.querySelector("[data-flow-paths]");
+    if (!host) return;
+    var NS = "http://www.w3.org/2000/svg";
+    var small = window.innerWidth < 640;
+    var count = small ? 18 : 30;
+
+    var wrap = document.createElement("div");
+    wrap.className = "flow-paths";
+    wrap.setAttribute("aria-hidden", "true");
+
+    [1, -1].forEach(function (position, side) {
+      var svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("viewBox", "0 0 696 316");
+      svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+      svg.setAttribute("fill", "none");
+      for (var i = 0; i < count; i++) {
+        var d =
+          "M-" + (380 - i * 5 * position) + " -" + (189 + i * 6) +
+          "C-" + (380 - i * 5 * position) + " -" + (189 + i * 6) +
+          " -" + (312 - i * 5 * position) + " " + (216 - i * 6) +
+          " " + (152 - i * 5 * position) + " " + (343 - i * 6) +
+          "C" + (616 - i * 5 * position) + " " + (470 - i * 6) +
+          " " + (684 - i * 5 * position) + " " + (875 - i * 6) +
+          " " + (684 - i * 5 * position) + " " + (875 - i * 6);
+        var p = document.createElementNS(NS, "path");
+        p.setAttribute("d", d);
+        p.setAttribute("pathLength", "1");
+        /* warm hue: orange fading to gold with depth */
+        var hue = side === 0 ? "249,115,22" : "201,162,39";
+        p.setAttribute("stroke", "rgba(" + hue + "," + (0.05 + i * 0.014).toFixed(3) + ")");
+        p.setAttribute("stroke-width", (0.6 + i * 0.05).toFixed(2));
+        p.setAttribute("stroke-dasharray", "0.55 0.45");
+        p.style.strokeDashoffset = (i % 5) * -0.2;
+        p.style.animationDuration = (20 + Math.random() * 12).toFixed(1) + "s";
+        p.style.animationDelay = (-Math.random() * 20).toFixed(1) + "s";
+        svg.appendChild(p);
+      }
+      wrap.appendChild(svg);
+    });
+
+    host.insertBefore(wrap, host.firstChild);
+
+    /* pause the animation while the section is offscreen */
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        wrap.classList.toggle("is-paused", !entries[0].isIntersecting);
+      }).observe(host);
+    }
+  })();
+
   /* ── Coach shader — drifting ember-dust field (WebGL) ────── */
   /* Fragment shader by Matthias Hurrle (@atzedent), ported from a
      React shader-hero component. Follows the cursor with a slow

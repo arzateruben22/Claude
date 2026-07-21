@@ -841,7 +841,39 @@ a { color: inherit; }
 
 /* ── Proof ring — draggable 3D photo carousel ───────────────── */
 
-.section-proof { overflow: hidden; }
+.section-proof { overflow: hidden; position: relative; }
+.section-proof > .section-inner { position: relative; z-index: 1; }
+
+/* Flowing background paths (BackgroundPaths port) — sweeping curves
+   in warm orange/gold behind the proof ring */
+.flow-paths {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+.flow-paths svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.flow-paths path {
+  fill: none;
+  animation-name: flow-travel;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes flow-travel {
+  to { stroke-dashoffset: -2; }
+}
+.flow-paths.is-paused path { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .flow-paths path { animation: none; }
+}
 
 .ring-wrap { margin-top: clamp(1.5rem, 6vw, 4.5rem); }
 
