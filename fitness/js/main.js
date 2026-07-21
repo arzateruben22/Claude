@@ -9,14 +9,11 @@
     var introEl = document.getElementById("intro");
     if (!introEl) return;
     var reduceIntro = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var seen = false;
-    try { seen = sessionStorage.getItem("schflr-intro") === "1"; } catch (e) {}
-    if (reduceIntro || seen) {
+    if (reduceIntro) {
       introEl.classList.add("is-done");
       return;
     }
     introActive = true;
-    try { sessionStorage.setItem("schflr-intro", "1"); } catch (e) {}
     window.setTimeout(function () { introEl.classList.add("leaving"); }, 1200);
     window.setTimeout(function () { introEl.classList.add("is-done"); }, 1720);
   })();
