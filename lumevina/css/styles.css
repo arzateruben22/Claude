@@ -390,23 +390,6 @@ body.intro-lock { overflow: hidden; }
 
 .intro-tag .intro-word { display: inline-block; margin: 0 0.18em; }
 
-.intro-enter {
-  position: absolute;
-  bottom: clamp(1.75rem, 5vh, 3rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  font-size: 0.66rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--ink-35);
-  opacity: 0;
-}
-
-.intro-enter.intro-anim { animation: intro-pulse 2.6s ease-in-out infinite; animation-delay: 0.3s; }
-
-@keyframes intro-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.7; } }
-
 .intro-glow {
   position: fixed;
   width: 22rem; height: 22rem;
