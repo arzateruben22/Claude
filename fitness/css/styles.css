@@ -59,6 +59,12 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
 }
 
+/* Never allow sideways scroll — some animated layers (the 3D ring,
+   the card fan) can briefly poke past the edge on mobile. `clip`
+   hides the overflow without creating a scroll container, so the
+   sticky mobile Book bar keeps working (unlike overflow: hidden). */
+html, body { overflow-x: clip; max-width: 100%; }
+
 body {
   margin: 0;
   background: var(--night);
