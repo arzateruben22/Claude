@@ -103,22 +103,27 @@
       .from(".hero-scroll", { opacity: 0, duration: 0.8 }, 1.4)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.5);
 
-    /* Wordmark drifts as you leave the hero. Only the drift is scrubbed
-       — opacity stays at its resting 0.3 (a scrubbed opacity here made
-       the scrub capture a wrong start value and flicker on first
-       scroll). invalidateOnRefresh recomputes cleanly after the font
-       loads / the intro lifts. */
-    gsap.to(".hero-wordmark", {
-      yPercent: 22,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-        invalidateOnRefresh: true
-      }
-    });
+    /* Wordmark drifts down and fades as you leave the hero. Written as
+       an explicit fromTo with immediateRender:false so the scrub reads
+       the true resting opacity (0.3) as its start — the earlier version
+       captured a stale ~0 during the entrance and flickered on the
+       first scroll. invalidateOnRefresh recomputes cleanly after the
+       font loads / the intro lifts. */
+    gsap.fromTo(".hero-wordmark",
+      { opacity: 0.3 },
+      {
+        yPercent: 22,
+        opacity: 0,
+        ease: "none",
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
 
     /* Service sectors rise in one by one as you scroll to them.
        No scale/overshoot: mid-stagger the row must stay aligned, and
