@@ -652,6 +652,18 @@ a { color: inherit; }
 .story-plate {
   padding: clamp(1.2rem, 3.5vw, 2.2rem);
 }
+
+/* the old grind, pinned to the plate */
+.story-token {
+  position: absolute;
+  top: clamp(0.9rem, 2.5vw, 1.5rem);
+  right: clamp(0.9rem, 2.5vw, 1.5rem);
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: saturate(0.85);
+}
 .frame-sq {
   position: absolute;
   width: 10px;
