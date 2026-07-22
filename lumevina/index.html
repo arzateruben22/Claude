@@ -1092,26 +1092,39 @@
           </div>
         </div>
 
-        <div class="field">
-          <label for="bk-card-name">Name on card</label>
-          <input id="bk-card-name" name="cardname" type="text" autocomplete="cc-name" required>
+        <!-- a card already on file for this client -->
+        <div class="saved-card" hidden>
+          <span class="saved-card-info"></span>
+          <button type="button" class="linklike saved-card-change">Use a different card</button>
         </div>
-        <div class="field">
-          <label for="bk-card">Card number</label>
-          <input id="bk-card" name="card" type="text" inputmode="numeric" autocomplete="cc-number"
-            placeholder="4242 4242 4242 4242" maxlength="19" required>
-        </div>
-        <div class="field-row">
+
+        <div class="booking-card-fields">
           <div class="field">
-            <label for="bk-expiry">Expiry</label>
-            <input id="bk-expiry" name="expiry" type="text" inputmode="numeric" autocomplete="cc-exp"
-              placeholder="MM/YY" maxlength="5" required>
+            <label for="bk-card-name">Name on card</label>
+            <input id="bk-card-name" name="cardname" type="text" autocomplete="cc-name" required>
           </div>
           <div class="field">
-            <label for="bk-cvc">CVC</label>
-            <input id="bk-cvc" name="cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
-              placeholder="123" maxlength="4" required>
+            <label for="bk-card">Card number</label>
+            <input id="bk-card" name="card" type="text" inputmode="numeric" autocomplete="cc-number"
+              placeholder="4242 4242 4242 4242" maxlength="19" required>
           </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="bk-expiry">Expiry</label>
+              <input id="bk-expiry" name="expiry" type="text" inputmode="numeric" autocomplete="cc-exp"
+                placeholder="MM/YY" maxlength="5" required>
+            </div>
+            <div class="field">
+              <label for="bk-cvc">CVC</label>
+              <input id="bk-cvc" name="cvc" type="text" inputmode="numeric" autocomplete="cc-csc"
+                placeholder="123" maxlength="4" required>
+            </div>
+          </div>
+          <label class="save-card">
+            <input type="checkbox" id="bk-save-card">
+            <span>Save this card for faster rebooking — and to hold your spot per our
+            cancellation policy.</span>
+          </label>
         </div>
         <button class="btn-mb booking-pay" type="button">
           <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>

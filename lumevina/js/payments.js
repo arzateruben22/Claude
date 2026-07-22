@@ -73,6 +73,50 @@
     return "$" + Number(n).toFixed(2);
   };
 
+  var cardBrand = function (value) {
+    var d = String(value).replace(/\D/g, "");
+    if (/^4/.test(d)) return "Visa";
+    if (/^(5[1-5]|2[2-7])/.test(d)) return "Mastercard";
+    if (/^3[47]/.test(d)) return "Amex";
+    if (/^6(011|5)/.test(d)) return "Discover";
+    return "Card";
+  };
+
+  /* ═══ SAVED CARD ON FILE ═══
+     DEMO: stores only brand + last-4 + expiry locally, keyed by email —
+     never a full card number. LIVE (Stripe): at deposit time confirm a
+     SetupIntent to vault the card off-session, then store the returned
+     payment_method id + last4 on the Stripe customer. Future deposits and
+     no-show / late-cancel fees charge that saved method (with the client's
+     up-front consent) — no re-entry. */
+  var CARDS_KEY = "lumevina_cards";
+  var loadCards = function () {
+    try { return JSON.parse(localStorage.getItem(CARDS_KEY)) || {}; }
+    catch (e) { return {}; }
+  };
+  var saveCards = function (o) {
+    try { localStorage.setItem(CARDS_KEY, JSON.stringify(o)); } catch (e) { /* private mode */ }
+  };
+  var normEmail = function (e) { return (e || "").trim().toLowerCase(); };
+
+  var saveCard = function (email, cardValue, expiry) {
+    var k = normEmail(email); if (!k) return null;
+    var digits = String(cardValue).replace(/\D/g, "");
+    var rec = { brand: cardBrand(cardValue), last4: digits.slice(-4),
+      expiry: expiry || "", token: "pm_demo_" + Date.now().toString(36),
+      savedAt: new Date().toISOString() };
+    var all = loadCards(); all[k] = rec; saveCards(all);
+    return rec;
+  };
+  var getCard = function (email) {
+    var k = normEmail(email); if (!k) return null;
+    return loadCards()[k] || null;
+  };
+  var forgetCard = function (email) {
+    var k = normEmail(email); var all = loadCards();
+    if (all[k]) { delete all[k]; saveCards(all); }
+  };
+
   /* DEMO processor — see the Stripe notes at the top of this file */
   var process = function (payment, cb) {
     window.setTimeout(function () {
@@ -87,6 +131,10 @@
     cvcValid: cvcValid,
     bindCardFields: bindCardFields,
     money: money,
-    process: process
+    process: process,
+    cardBrand: cardBrand,
+    saveCard: saveCard,
+    getCard: getCard,
+    forgetCard: forgetCard
   };
 })();

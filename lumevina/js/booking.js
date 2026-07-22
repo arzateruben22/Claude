@@ -94,6 +94,14 @@
   var cvcInput = modal.querySelector("#bk-cvc");
   pay.bindCardFields(cardInput, expiryInput, cvcInput);
 
+  /* saved card on file */
+  var cardFields = modal.querySelector(".booking-card-fields");
+  var savedCardWrap = modal.querySelector(".saved-card");
+  var savedCardInfo = modal.querySelector(".saved-card-info");
+  var savedCardChange = modal.querySelector(".saved-card-change");
+  var saveCardCheck = modal.querySelector("#bk-save-card");
+  var usingSavedCard = false;
+
   /* Glow Rewards (js/rewards.js): earning, redemption, petal */
   var rw = window.LumevinaRewards;
   var redeemRow = modal.querySelector(".rw-redeem");
@@ -653,6 +661,10 @@
     modal.classList.remove("rescheduling");
     rescheduleNote.hidden = true;
     resetGift();
+    usingSavedCard = false;
+    savedCardWrap.hidden = true;
+    cardFields.hidden = false;
+    saveCardCheck.checked = false;
     if (serviceId && byId[serviceId]) {
       state.services = [byId[serviceId]];
     } else {
@@ -1000,6 +1012,29 @@
     consentTerms.focus();
   });
 
+  /* saved card: if this client has one on file, offer it instead of re-entry */
+  var setupSavedCard = function () {
+    var card = pay.getCard && pay.getCard(emailInput.value);
+    if (card) {
+      usingSavedCard = true;
+      savedCardInfo.textContent = "💳 " + card.brand + " •••• " + card.last4 + " on file";
+      savedCardWrap.hidden = false;
+      cardFields.hidden = true;
+    } else {
+      usingSavedCard = false;
+      savedCardWrap.hidden = true;
+      cardFields.hidden = false;
+    }
+    saveCardCheck.checked = false;
+  };
+
+  savedCardChange.addEventListener("click", function () {
+    usingSavedCard = false;
+    savedCardWrap.hidden = true;
+    cardFields.hidden = false;
+    cardInput.focus();
+  });
+
   /* consent gate → deposit */
   consentContinue.addEventListener("click", function () {
     var problems = [];
@@ -1018,7 +1053,8 @@
     consentView.hidden = true;
     payView.hidden = false;
     payStatus.textContent = "";
-    cardInput.focus();
+    setupSavedCard();
+    if (!usingSavedCard) cardInput.focus();
   });
 
   consentBack.addEventListener("click", function () {
@@ -1034,10 +1070,12 @@
   /* ── Step 2: pay the deposit (shared engine, Stripe-ready) ── */
   payBtn.addEventListener("click", function () {
     var problems = [];
-    if (!cardNameInput.value.trim()) problems.push("the name on the card");
-    if (!pay.cardValid(cardInput.value)) problems.push("a valid card number");
-    if (!pay.expiryValid(expiryInput.value)) problems.push("a future expiry (MM/YY)");
-    if (!pay.cvcValid(cvcInput.value)) problems.push("a 3–4 digit CVC");
+    if (!usingSavedCard) {
+      if (!cardNameInput.value.trim()) problems.push("the name on the card");
+      if (!pay.cardValid(cardInput.value)) problems.push("a valid card number");
+      if (!pay.expiryValid(expiryInput.value)) problems.push("a future expiry (MM/YY)");
+      if (!pay.cvcValid(cvcInput.value)) problems.push("a 3–4 digit CVC");
+    }
     if (problems.length) {
       payStatus.textContent = "Please check: " + problems.join(", ") + ".";
       return;
@@ -1061,6 +1099,10 @@
         return;
       }
       payStatus.textContent = "";
+      /* vault the card on file when the client opts in (demo: brand + last4) */
+      if (!usingSavedCard && saveCardCheck.checked && pay.saveCard) {
+        pay.saveCard(emailInput.value, cardInput.value, expiryInput.value);
+      }
       saveBooking({
         date: state.dayKey,
         time: state.slot,
