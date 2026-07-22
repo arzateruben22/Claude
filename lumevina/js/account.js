@@ -167,26 +167,6 @@
       var actions = document.createElement("div");
       actions.className = "acct-bk-actions";
 
-      /* Reschedule — allowed only outside the 48-hour window; inside it,
-         a pop-up explains the policy instead of moving the booking. */
-      var resched = document.createElement("button");
-      resched.type = "button";
-      resched.className = "acct-bk-resched";
-      resched.textContent = "Reschedule";
-      resched.addEventListener("click", function () {
-        if (x.start.getTime() - Date.now() <= CANCEL_WINDOW_MS) {
-          notice("Too close to reschedule online",
-            "Appointments can't be moved online within 48 hours of your visit — this is " +
-            "part of our cancellation policy, and the deposit is non-refundable inside " +
-            "this window. Please call or DM us and we'll do our best to help.");
-          return;
-        }
-        if (window.LumevinaBooking && window.LumevinaBooking.reschedule) {
-          closeModal();
-          window.LumevinaBooking.reschedule(x.b, x.i);
-        }
-      });
-
       var cancel = document.createElement("button");
       cancel.type = "button";
       cancel.className = "acct-bk-cancel";
@@ -209,7 +189,6 @@
         cancel.disabled = true;
       }
 
-      actions.appendChild(resched);
       actions.appendChild(cancel);
       li.appendChild(when);
       li.appendChild(what);

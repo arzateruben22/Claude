@@ -113,8 +113,11 @@
   var consentSignature = null;
   var rescheduleNote = modal.querySelector(".booking-reschedule-note");
   var rescheduleConfirm = modal.querySelector(".booking-reschedule-confirm");
+  var repickView = modal.querySelector(".booking-repick");
+  var repickList = modal.querySelector(".repick-list");
   var rescheduleMode = false;
   var rescheduleIndex = -1;
+  var CANCEL_WINDOW_MS = 48 * 60 * 60 * 1000;
 
   /* ── Session state ── */
   var state = {
@@ -654,6 +657,7 @@
     consentView.hidden = true;
     payView.hidden = true;
     successView.hidden = true;
+    repickView.hidden = true;
     renderAll();
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
@@ -682,11 +686,96 @@
     consentView.hidden = true;
     payView.hidden = true;
     successView.hidden = true;
+    repickView.hidden = true;
     renderAll();
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
     modal.focus();
+  };
+
+  /* ── Reschedule entry point (from the "Reschedule it instead" link) ──
+     Finds the client's upcoming appointment(s) on this device and routes:
+     none → a gentle notice · one → straight into the move (48-hour rule
+     enforced) · several → a small picker so they choose which to move. */
+  var bookingStartOf = function (b) {
+    var d = new Date(b.date + "T00:00:00");
+    d.setMinutes(b.time);
+    return d;
+  };
+
+  var tooCloseNotice = function () {
+    if (window.LumevinaNotice) {
+      window.LumevinaNotice.show("Too close to reschedule online",
+        "Appointments can't be moved online within 48 hours of your visit — this is " +
+        "part of our cancellation policy, and the deposit is non-refundable inside " +
+        "this window. Please call or DM us and we'll do our best to help.");
+    }
+  };
+
+  var beginReschedule = function (booking, index) {
+    if (bookingStartOf(booking).getTime() - Date.now() <= CANCEL_WINDOW_MS) {
+      tooCloseNotice();
+      return;
+    }
+    openReschedule(booking, index);
+  };
+
+  var renderRepick = function (upcoming) {
+    repickList.textContent = "";
+    upcoming.forEach(function (x) {
+      var b = x.b;
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "repick-item";
+      var when = bookingStartOf(b).toLocaleDateString("en-US", {
+        weekday: "short", month: "short", day: "numeric"
+      });
+      var svc = (b.services || []).map(function (id) {
+        return byId[id] ? byId[id].name : id;
+      }).join(" + ");
+      btn.innerHTML = '<span class="repick-when">' + when + " · " +
+        fmtTime(b.time) + '</span><span class="repick-what">' + svc + "</span>";
+      btn.addEventListener("click", function () { beginReschedule(b, x.i); });
+      li.appendChild(btn);
+      repickList.appendChild(li);
+    });
+    formView.hidden = true;
+    consentView.hidden = true;
+    payView.hidden = true;
+    successView.hidden = true;
+    repickView.hidden = false;
+  };
+
+  var startReschedule = function () {
+    var now = Date.now();
+    var upcoming = loadBookings()
+      .map(function (b, i) { return { b: b, i: i, start: bookingStartOf(b) }; })
+      .filter(function (x) { return x.start.getTime() + (x.b.dur || 0) * 60000 > now; })
+      .sort(function (a, c) { return a.start - c.start; });
+
+    if (!upcoming.length) {
+      if (window.LumevinaNotice) {
+        window.LumevinaNotice.show("No upcoming appointment found",
+          "We don't see an upcoming appointment saved on this device. If you booked on " +
+          "another phone or computer, open “My Lumevina” there — or just reply to your " +
+          "confirmation email (or DM us on Instagram) and we'll move it for you.");
+      }
+      return;
+    }
+    if (modal.getAttribute("aria-hidden") !== "false") {
+      lastFocus = document.activeElement;
+      modal.setAttribute("aria-hidden", "false");
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+    }
+    if (upcoming.length === 1) {
+      beginReschedule(upcoming[0].b, upcoming[0].i);
+    } else {
+      modal.focus();
+      renderRepick(upcoming);
+    }
   };
 
   var closeModal = function () {
@@ -699,6 +788,12 @@
   modal.querySelector(".booking-close").addEventListener("click", closeModal);
   modal.querySelector(".booking-done").addEventListener("click", closeModal);
   overlay.addEventListener("click", closeModal);
+  modal.querySelector(".booking-resched-start").addEventListener("click", startReschedule);
+  modal.querySelector(".booking-repick-back").addEventListener("click", function () {
+    repickView.hidden = true;
+    formView.hidden = false;
+    modal.focus();
+  });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") {
       if (famEl.classList.contains("open")) { closeFam(); return; }
@@ -1042,5 +1137,9 @@
     openModal();
   });
 
-  window.LumevinaBooking = { open: openModal, reschedule: openReschedule };
+  window.LumevinaBooking = {
+    open: openModal,
+    reschedule: openReschedule,
+    startReschedule: startReschedule
+  };
 })();

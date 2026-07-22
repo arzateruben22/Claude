@@ -950,6 +950,8 @@
         checkout. Demo mode — no card is charged until payments go live.</p>
         <p class="booking-reschedule-note" hidden>Moving your appointment — pick a new day
         and time below. Your deposit carries over; there's nothing more to pay.</p>
+        <p class="booking-resched-link">Already have an appointment?
+          <button type="button" class="linklike booking-resched-start">Reschedule it instead →</button></p>
 
         <div class="field">
           <span class="booking-label" id="bk-services-label">Services</span>
@@ -1084,6 +1086,15 @@
           <span class="btn btn-solid btn-mb-inner">Pay deposit</span>
         </button>
         <p class="form-status booking-pay-status" role="alert"></p>
+      </div>
+
+      <!-- pick which appointment to move (only shown when there's more than one) -->
+      <div class="booking-repick" hidden>
+        <h2 class="booking-title">Which appointment?</h2>
+        <p class="success-sub">Choose the visit you'd like to move — your deposit carries
+        over, and there's nothing more to pay.</p>
+        <ul class="repick-list" role="list"></ul>
+        <button class="btn btn-ghost booking-repick-back" type="button">← Back</button>
       </div>
 
       <div class="booking-success" hidden>

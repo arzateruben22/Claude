@@ -3339,23 +3339,55 @@ body.intro-lock { overflow: hidden; }
 .booking-modal.rescheduling .rw-ref-field,
 .booking-modal.rescheduling .mini-x,
 .booking-modal.rescheduling .booking-demo-note,
+.booking-modal.rescheduling .booking-resched-link,
 .booking-modal.rescheduling .booking-confirm { display: none; }
 
-.acct-bk-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
-
-.acct-bk-resched {
-  font: inherit;
-  font-size: 0.78rem;
-  color: var(--plum);
-  background: rgba(165, 121, 139, 0.12);
-  border: 1px solid transparent;
-  border-radius: 999px;
-  padding: 0.3rem 0.9rem;
-  cursor: pointer;
-  transition: background-color 200ms ease;
+/* seamless "already booked? reschedule" link under the booking intro */
+.booking-resched-link {
+  font-size: 0.86rem;
+  color: var(--mauve);
+  margin: -0.4rem 0 var(--space-4);
 }
 
-.acct-bk-resched:hover { background: rgba(165, 121, 139, 0.22); }
+.linklike {
+  font: inherit;
+  color: var(--plum);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--rose);
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+
+.linklike:hover { color: var(--mauve); }
+
+/* reschedule picker (when a client has more than one upcoming visit) */
+.repick-list { list-style: none; margin: var(--space-4) 0; padding: 0; display: grid; gap: 0.6rem; }
+
+.repick-item {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.repick-item:hover { border-color: var(--mauve); background: rgba(165, 121, 139, 0.08); }
+
+.repick-when { font-weight: 500; color: var(--plum); }
+.repick-what { font-size: 0.85rem; color: var(--mauve); }
+
+.acct-bk-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
 
 .notice-overlay {
   position: fixed;
