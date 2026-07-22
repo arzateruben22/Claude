@@ -2031,8 +2031,8 @@ em { font-style: italic; }
 .court-core { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 40; pointer-events: none; }
 
 .court-core-inner {
-  width: 55%;
-  height: 55%;
+  width: 48%;
+  height: 48%;
   border-radius: 50%;
   background: radial-gradient(closest-side, var(--plum), var(--night));
   border: 1px solid var(--gold-soft);
@@ -2073,6 +2073,31 @@ em { font-style: italic; }
 }
 
 .court-add:hover { background: var(--gold-bright); transform: translateY(-1px); }
+
+/* selected-dish detail card — sits below the ring, so it never crosses the nodes */
+.court-detail {
+  max-width: 30rem;
+  margin: var(--space-4) auto 0;
+  background: var(--plum);
+  border: 1px solid var(--gold-soft);
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem 1.6rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.court-detail[hidden] { display: none; }
+.court-detail.open { opacity: 1; transform: none; }
+.court-detail-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, 3vw, 1.85rem); line-height: 1.06; color: var(--cream); margin: 0; }
+.court-detail-price { font-variant-numeric: tabular-nums; color: var(--gold); font-weight: 700; font-size: 1.15rem; }
+.court-detail-desc { color: var(--cream-60); font-size: 0.94rem; line-height: 1.45; max-width: 24rem; margin: 0; }
+.court-detail-add { margin-top: 0.5rem; }
 
 .court-hint { text-align: center; font-size: 0.85rem; color: var(--cream-35); margin: 0 auto var(--space-4); }
 

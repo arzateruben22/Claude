@@ -211,18 +211,19 @@
                 <div class="court-core-default">
                   <svg class="crown" width="30" height="24" viewBox="0 0 30 24" fill="none" aria-hidden="true"><path d="M3 21h24l-2.4-14-6.6 5.4L15 2l-3 10.4L5.4 7 3 21z" fill="currentColor"/><circle cx="15" cy="3" r="2.2" fill="#C13C2B"/></svg>
                   <span class="court-core-name">Shawarma<br>Queen</span>
-                  <span class="court-core-sub">Tap a dish</span>
-                </div>
-                <div class="court-core-active" hidden>
-                  <span class="court-core-tag"></span>
-                  <span class="court-core-title"></span>
-                  <span class="court-core-price"></span>
-                  <span class="court-core-desc"></span>
-                  <button class="court-add" type="button">Add to order</button>
+                  <span class="court-core-sub court-core-hint">Tap a dish</span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="court-detail" id="court-detail" hidden>
+          <span class="court-core-tag court-detail-tag"></span>
+          <h3 class="court-detail-title"></h3>
+          <span class="court-detail-price"></span>
+          <p class="court-detail-desc"></p>
+          <button class="court-add court-detail-add" type="button">Add to order</button>
         </div>
 
         <p class="court-hint" data-reveal>Tap any dish to see it — then add it, sauce and all.</p>
@@ -287,52 +288,6 @@
       </div>
     </section>
 
-    <!-- ═══════════════ CATERING ═══════════════ -->
-    <section class="section section-catering" id="catering">
-      <div class="section-inner grid-2">
-        <div data-reveal>
-          <p class="eyebrow">Parties &amp; Catering <span class="tl">· For the whole court</span></p>
-          <h2 class="display">Feed the whole kingdom <em>with the spit.</em></h2>
-          <p class="section-sub">Late-night parties, game nights, office lunches, graduations — we roll
-          shawarma platters and combo trays for 15 to 200 guests. Tell us the date and we'll quote it.</p>
-          <ul class="story-marks" role="list">
-            <li><span class="mark-num">01</span>Beef, chicken &amp; mix trays <span class="mark-alt tl">any size</span></li>
-            <li><span class="mark-num">02</span>Garlic, Boom &amp; Queen sauces <span class="mark-alt tl">on the side</span></li>
-            <li><span class="mark-num">03</span>Quote within a day <span class="mark-alt tl">24-hour reply</span></li>
-          </ul>
-        </div>
-        <form class="catering-form" data-reveal novalidate>
-          <div class="field-row">
-            <div class="field">
-              <label for="cat-name">Name</label>
-              <input id="cat-name" name="name" type="text" autocomplete="name" required>
-            </div>
-            <div class="field">
-              <label for="cat-phone">Phone</label>
-              <input id="cat-phone" name="phone" type="tel" autocomplete="tel" required>
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="cat-date">Event date</label>
-              <input id="cat-date" name="date" type="date" required>
-            </div>
-            <div class="field">
-              <label for="cat-guests">Guests</label>
-              <input id="cat-guests" name="guests" type="number" min="10" max="500" placeholder="50">
-            </div>
-          </div>
-          <div class="field">
-            <label for="cat-notes">Tell us about your event</label>
-            <textarea id="cat-notes" name="notes" rows="4"></textarea>
-            <p class="field-help">Where it is, what you're celebrating, anything special.</p>
-          </div>
-          <button class="btn btn-solid" type="submit">Send request</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-    </section>
-
     <!-- ═══════════════ CROWN REWARDS ═══════════════ -->
     <section class="section section-rewards" id="rewards">
       <div class="section-inner">
@@ -389,6 +344,52 @@
 
         <h3 class="reward-bento-title" data-reveal>Claim a reward <span class="tl">· tap one for details</span></h3>
         <div class="reward-bento" data-reveal></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ CATERING ═══════════════ -->
+    <section class="section section-catering" id="catering">
+      <div class="section-inner grid-2">
+        <div data-reveal>
+          <p class="eyebrow">Parties &amp; Catering <span class="tl">· For the whole court</span></p>
+          <h2 class="display">Feed the whole kingdom <em>with the spit.</em></h2>
+          <p class="section-sub">Late-night parties, game nights, office lunches, graduations — we roll
+          shawarma platters and combo trays for 15 to 200 guests. Tell us the date and we'll quote it.</p>
+          <ul class="story-marks" role="list">
+            <li><span class="mark-num">01</span>Beef, chicken &amp; mix trays <span class="mark-alt tl">any size</span></li>
+            <li><span class="mark-num">02</span>Garlic, Boom &amp; Queen sauces <span class="mark-alt tl">on the side</span></li>
+            <li><span class="mark-num">03</span>Quote within a day <span class="mark-alt tl">24-hour reply</span></li>
+          </ul>
+        </div>
+        <form class="catering-form" data-reveal novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat-name">Name</label>
+              <input id="cat-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="cat-phone">Phone</label>
+              <input id="cat-phone" name="phone" type="tel" autocomplete="tel" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat-date">Event date</label>
+              <input id="cat-date" name="date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="cat-guests">Guests</label>
+              <input id="cat-guests" name="guests" type="number" min="10" max="500" placeholder="50">
+            </div>
+          </div>
+          <div class="field">
+            <label for="cat-notes">Tell us about your event</label>
+            <textarea id="cat-notes" name="notes" rows="4"></textarea>
+            <p class="field-help">Where it is, what you're celebrating, anything special.</p>
+          </div>
+          <button class="btn btn-solid" type="submit">Send request</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </section>
 

@@ -1341,13 +1341,14 @@
   var nodes = [].slice.call(orbit.querySelectorAll(".court-node"));
   if (!nodes.length) return;
 
-  var coreDefault = orbit.querySelector(".court-core-default");
-  var coreActive = orbit.querySelector(".court-core-active");
-  var elTag = coreActive.querySelector(".court-core-tag");
-  var elTitle = coreActive.querySelector(".court-core-title");
-  var elPrice = coreActive.querySelector(".court-core-price");
-  var elDesc = coreActive.querySelector(".court-core-desc");
-  var addBtn = coreActive.querySelector(".court-add");
+  var coreHint = orbit.querySelector(".court-core-hint");
+  var detail = document.getElementById("court-detail");
+  var elTag = detail.querySelector(".court-detail-tag");
+  var elTitle = detail.querySelector(".court-detail-title");
+  var elPrice = detail.querySelector(".court-detail-price");
+  var elDesc = detail.querySelector(".court-detail-desc");
+  var addBtn = detail.querySelector(".court-detail-add");
+  var detailTimer = null;
 
   var N = nodes.length;
   var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1383,15 +1384,19 @@
     elTitle.textContent = node.getAttribute("data-name");
     elPrice.textContent = "$" + node.getAttribute("data-price");
     elDesc.textContent = node.getAttribute("data-desc") || "";
-    coreDefault.hidden = true;
-    coreActive.hidden = false;
+    if (coreHint) coreHint.textContent = "Selected";
+    clearTimeout(detailTimer);
+    detail.hidden = false;
+    requestAnimationFrame(function () { detail.classList.add("open"); });
     place();
   };
   var clearItem = function () {
     selected = null;
     nodes.forEach(function (nn) { nn.classList.remove("is-active"); });
-    coreActive.hidden = true;
-    coreDefault.hidden = false;
+    if (coreHint) coreHint.textContent = "Tap a dish";
+    detail.classList.remove("open");
+    clearTimeout(detailTimer);
+    detailTimer = setTimeout(function () { detail.hidden = true; }, 280);
   };
 
   nodes.forEach(function (node) {
