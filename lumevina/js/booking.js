@@ -655,6 +655,10 @@
     resetGift();
     if (serviceId && byId[serviceId]) {
       state.services = [byId[serviceId]];
+    } else {
+      /* generic "Book now" — start empty so the client picks a service first,
+         instead of defaulting to the New Client Consultation */
+      state.services = [];
     }
     closeFam();
     state.slot = null;
