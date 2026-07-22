@@ -89,6 +89,28 @@
 
     .foot { margin-top: 2.5rem; font-size: 0.76rem; color: var(--ink-45); text-align: center; }
 
+    /* bookkeeping */
+    .bk-export { font: inherit; font-size: 0.82rem; color: #fff; background: var(--plum);
+      border: 0; border-radius: 999px; padding: 0.5rem 1.1rem; cursor: pointer;
+      white-space: nowrap; }
+    .bk-export:hover { background: var(--data); }
+    .bk-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.4rem; }
+    .bk-tile { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
+      padding: 0.9rem 1rem; }
+    .bk-tv { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
+      font-variant-numeric: tabular-nums; }
+    .bk-tl { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
+    .bk-table-wrap { overflow-x: auto; }
+    .bk-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .bk-table th { text-align: right; color: var(--ink-45); font-weight: 500; font-size: 0.72rem;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--edge); }
+    .bk-table th:first-child, .bk-table td:first-child { text-align: left; }
+    .bk-table td { text-align: right; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--edge);
+      color: var(--ink-70); font-variant-numeric: tabular-nums; }
+    .cal-note { font-size: 0.88rem; color: var(--ink-60); line-height: 1.6; }
+    .cal-note strong { color: var(--ink); font-weight: 500; }
+    @media (max-width: 720px) { .bk-tiles { grid-template-columns: repeat(2, 1fr); } }
+
     /* ranked bars (most-booked services) */
     .rank { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
     .rank-row { display: grid; grid-template-columns: 9.5rem 1fr 2rem; align-items: center; gap: 0.7rem; }
@@ -235,6 +257,33 @@
         <p class="sub">Retail revenue — lights up when you add products to the shop.</p>
         <div id="product-sales"></div>
       </div>
+    </div>
+
+    <!-- ── Bookkeeping & tax ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Bookkeeping &amp; tax</h2>
+          <p class="sub">Income collected online, processing fees, and what's owed in person.</p>
+        </div>
+        <button class="bk-export" id="bk-csv">Download tax CSV</button>
+      </div>
+      <div class="bk-tiles" id="bk-tiles"></div>
+      <div class="bk-table-wrap"><table class="bk-table" id="bk-table"></table></div>
+      <p class="sub" style="margin-top:0.9rem">Processing fees estimated at 2.9% + 30¢ per online
+      charge (Stripe). The in-person balance is recorded when you mark a visit complete.</p>
+    </div>
+
+    <!-- ── Calendar sync ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Calendar sync</h2>
+          <p class="sub">Keep every appointment in your own Google or Apple calendar.</p>
+        </div>
+        <button class="bk-export" id="cal-ics">Download calendar (.ics)</button>
+      </div>
+      <p class="cal-note" id="cal-note"></p>
     </div>
 
     <!-- ── Client CRM ── -->
@@ -584,6 +633,103 @@
           '<div class="ps-empty">Your <strong>best-selling products</strong> will rank here ' +
           'once retail is live — the same way services rank on the left.</div>';
       }
+    })();
+
+    /* ── Bookkeeping & tax ── */
+    (function () {
+      var STRIPE_PCT = 0.029, STRIPE_FLAT = 0.30;
+      var rows = [];
+      clients.forEach(function (c) {
+        (c.visits || []).forEach(function (v) {
+          var collected = Number(v.paid || v.deposit || 0);
+          /* the deposit is 50%, so total ≈ collected × 2 when not stored */
+          var total = Number(v.total || (v.deposit ? v.deposit * 2 : 0) || collected * 2 || 0);
+          var fee = collected > 0 ? +(collected * STRIPE_PCT + STRIPE_FLAT).toFixed(2) : 0;
+          rows.push({ date: v.date, name: c.name,
+            services: (v.services || []).map(svcName).join(" + "),
+            total: total, collected: collected, fee: fee,
+            net: +(collected - fee).toFixed(2), balance: +(total - collected).toFixed(2) });
+        });
+      });
+      rows.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+
+      var sum = function (k) { return rows.reduce(function (a, r) { return a + r[k]; }, 0); };
+      var tiles = [
+        { l: "Booked revenue", v: money(Math.round(sum("total"))) },
+        { l: "Collected online", v: money(Math.round(sum("collected"))) },
+        { l: "Est. processing fees", v: "−" + money(sum("fee").toFixed(2)) },
+        { l: "Net to your bank", v: money(sum("net").toFixed(2)) }
+      ];
+      document.getElementById("bk-tiles").innerHTML = tiles.map(function (t) {
+        return '<div class="bk-tile"><div class="bk-tv">' + t.v +
+          '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+
+      /* monthly rollup */
+      var months = {};
+      rows.forEach(function (r) {
+        var mk = r.date.slice(0, 7);
+        var m = months[mk] || (months[mk] = { bookings: 0, total: 0, collected: 0, fee: 0, net: 0 });
+        m.bookings++; m.total += r.total; m.collected += r.collected; m.fee += r.fee; m.net += r.net;
+      });
+      var mkeys = Object.keys(months).sort().reverse();
+      var thead = '<thead><tr><th>Month</th><th>Bookings</th><th>Revenue</th>' +
+        '<th>Collected</th><th>Fees</th><th>Net</th></tr></thead>';
+      var tbody = '<tbody>' + mkeys.map(function (mk) {
+        var m = months[mk];
+        var label = new Date(mk + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" });
+        return '<tr><td>' + label + '</td><td>' + m.bookings + '</td><td>' + money(Math.round(m.total)) +
+          '</td><td>' + money(Math.round(m.collected)) + '</td><td>−' + money(m.fee.toFixed(2)) +
+          '</td><td>' + money(m.net.toFixed(2)) + '</td></tr>';
+      }).join("") + '</tbody>';
+      document.getElementById("bk-table").innerHTML = thead + tbody;
+
+      /* CSV export for the accountant */
+      document.getElementById("bk-csv").addEventListener("click", function () {
+        var head = ["Date", "Client", "Services", "Total", "Collected online", "Processing fee", "Net", "Balance in person"];
+        var csv = [head.join(",")].concat(rows.map(function (r) {
+          return [r.date, '"' + (r.name || "") + '"', '"' + r.services + '"',
+            r.total.toFixed(2), r.collected.toFixed(2), r.fee.toFixed(2), r.net.toFixed(2), r.balance.toFixed(2)].join(",");
+        })).join("\r\n");
+        var blob = new Blob([csv], { type: "text/csv" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "lumevina-income-" + new Date().toISOString().slice(0, 10) + ".csv";
+        document.body.appendChild(a); a.click(); a.remove();
+      });
+    })();
+
+    /* ── Calendar sync (owner .ics of all appointments) ── */
+    (function () {
+      var bookings = (lget("lumevina_bookings") || []);
+      var note = document.getElementById("cal-note");
+      note.innerHTML = 'Download imports your appointments once. <strong>To keep it auto-updating</strong>, ' +
+        'the live version publishes a private feed URL you subscribe to in Google or Apple Calendar — ' +
+        'new bookings then appear automatically.';
+      document.getElementById("cal-ics").addEventListener("click", function () {
+        var src = bookings.length ? bookings : [];
+        if (!src.length) {
+          /* sample from CRM clients so the export isn't empty in preview */
+          clients.forEach(function (c) { (c.visits || []).forEach(function (v) {
+            src.push({ date: v.date, time: v.time || 600, dur: v.dur || 60, services: v.services, name: c.name }); }); });
+        }
+        var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+        var stamp = function (dk, mins) { var d = new Date(dk + "T00:00:00"); d.setMinutes(mins || 0);
+          return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00"; };
+        var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Lumevina//Owner//EN", "X-WR-CALNAME:Lumevina Appointments"];
+        src.forEach(function (b, i) {
+          var svc = (b.services || []).map(svcName).join(" + ");
+          lines.push("BEGIN:VEVENT", "UID:lum-own-" + i + "-" + b.date + "@lumevina",
+            "DTSTART:" + stamp(b.date, b.time), "DTEND:" + stamp(b.date, (b.time || 0) + (b.dur || 60)),
+            "SUMMARY:" + (b.name ? b.name + " — " : "") + svc,
+            "LOCATION:Lumevina Aesthetics Spa", "END:VEVENT");
+        });
+        lines.push("END:VCALENDAR");
+        var blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "lumevina-appointments.ics";
+        document.body.appendChild(a); a.click(); a.remove();
+      });
     })();
 
     /* ── Client list + detail ── */

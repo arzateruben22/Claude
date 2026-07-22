@@ -27,13 +27,34 @@ now you'll have great numbers with nothing to compare them to.
 
 ---
 
-## The three accounts you'll use
+## Everything you'll plug in — the full list
 
-| Account | What it's for | Cost |
-|---|---|---|
-| **Netlify** | Hosts your website (you already have this — `lumevina.netlify.app`) | Free |
-| **Stripe** | Processes card payments, sends money to your bank | Free to start · ~2.9% + 30¢ per charge |
-| **Supabase** | The database — remembers bookings, points, availability | Free at your size |
+Stripe and Supabase are the two big ones, but here's the *complete* list so
+nothing's a surprise. The first three are required; the rest are optional or
+only for the app.
+
+| # | Service | What it powers | Required? | Cost |
+|---|---|---|---|---|
+| 1 | **Netlify** | Hosts the website (you have this) | Required | Free |
+| 2 | **Stripe** | Card deposits, Apple Pay, payouts to your bank | Required | ~2.9% + 30¢/charge |
+| 3 | **Supabase** | Database + login + booking/rewards/CRM/bookkeeping data | Required | Free to start |
+| 4 | **Resend** (email) | Confirmations, reminders, receipts | Strongly recommended | Free tier, then cheap |
+| 5 | **Twilio** (SMS) | *Text* reminders (email covers most of it) | Optional | ~1¢/text |
+| 6 | **A domain** (lumevina.com) | A real address vs `.netlify.app` | Optional | ~$15/yr |
+| 7 | **Business bank account** | Where Stripe deposits your money | Required for payouts | Free–low |
+| 8 | **Sales-tax registration** | Makes the bookkeeping/tax reports filing-ready | Required (varies by state) | Free–low |
+| 9 | **Apple Developer** | The iPhone app + push notifications | App only | $99/yr |
+| 10 | **Push provider** (APNs/OneSignal) | Flash-opening push alerts in the app | App only | Free tier |
+| 11 | **Analytics** (Plausible/Google) | Website traffic → booking conversion | Optional | Free–low |
+
+**Calendar sync and bookkeeping need no new accounts** — the calendar feed is
+served by a Supabase function you subscribe to in Google/Apple Calendar, and
+the tax reports read your own Stripe + booking data (you just export the CSV
+for your accountant).
+
+**Shortest path to real bookings:** do **1–3** plus a **business bank account**
+(so Stripe can pay you), add **Resend** so clients get confirmations — and
+you're live. Everything else can follow.
 
 ---
 
