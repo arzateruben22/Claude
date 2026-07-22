@@ -1240,34 +1240,6 @@ body.intro-lock { overflow: hidden; }
 
 /* ─── Take the studio home (shop lines) ─── */
 
-.shelf-band {
-  margin-top: var(--space-7);
-  text-align: center;
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--ink-15);
-}
-
-.shelf-label {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--plum);
-  margin-bottom: var(--space-2);
-}
-
-.shelf-copy {
-  font-size: 0.95rem;
-  color: var(--ink-60);
-  margin-bottom: var(--space-4);
-}
-
-.shelf-links {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
 .shop-note {
   margin: var(--space-6) auto 0;
   max-width: 36rem;
@@ -1732,6 +1704,95 @@ body.intro-lock { overflow: hidden; }
 }
 
 .tools-cover:hover svg { transform: scale(1.04); }
+
+/* centered intro for the merged retail section */
+.tools-head {
+  max-width: 42rem;
+  margin: 0 auto var(--space-7);
+  text-align: center;
+}
+
+/* still-life feature beside the shoppable brand cards */
+.tools-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* keep the still-life in view while the cards scroll past */
+.tools-layout .tools-cover { position: sticky; top: 6rem; }
+
+.shop-home-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.shop-card {
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 16px;
+  padding: var(--space-4) var(--space-5);
+  transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+}
+
+.shop-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--mauve);
+  box-shadow: 0 14px 34px rgba(125, 84, 104, 0.14);
+}
+
+.shop-card-tag {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mauve);
+  background: rgba(165, 121, 139, 0.1);
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  margin-bottom: var(--space-3);
+}
+
+.shop-card-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--plum);
+  margin-bottom: var(--space-2);
+}
+
+.shop-card-desc {
+  font-size: 0.92rem;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-bottom: var(--space-3);
+}
+
+.shop-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.92rem;
+  color: var(--plum);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.shop-card-link span { transition: transform 220ms ease; }
+.shop-card-link:hover { color: var(--mauve); }
+.shop-card-link:hover span { transform: translateX(4px); }
+
+@media (max-width: 860px) {
+  .tools-layout { grid-template-columns: 1fr; gap: var(--space-5); }
+  .tools-layout .tools-cover { position: static; }
+  .tools-head { margin-bottom: var(--space-6); }
+}
 
 /* ─── Journal / newsletter ─── */
 
