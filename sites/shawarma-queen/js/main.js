@@ -1412,7 +1412,8 @@
     if (!selected || !window.SQOrder) return;
     var ing = (selected.getAttribute("data-ingredients") || "")
       .split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-    window.SQOrder.add(selected.getAttribute("data-name"), selected.getAttribute("data-price"), ing, true);
+    var addons = selected.getAttribute("data-addons") !== "no";
+    window.SQOrder.add(selected.getAttribute("data-name"), selected.getAttribute("data-price"), ing, addons);
   });
 
   orbit.addEventListener("click", function (e) {

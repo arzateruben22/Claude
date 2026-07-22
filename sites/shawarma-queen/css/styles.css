@@ -2018,6 +2018,8 @@ em { font-style: italic; }
 .node-beef .court-node-dot    { background: var(--pome);  color: #fff; }
 .node-chicken .court-node-dot { background: var(--gold);  color: var(--night); }
 .node-mix .court-node-dot     { background: var(--cream); color: var(--night); }
+.node-boom .court-node-dot    { background: var(--herb);  color: var(--night); }
+.node-queen .court-node-dot   { background: var(--cream); color: var(--night); }
 
 .court-node:hover .court-node-dot { transform: scale(1.12); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
 .court-node:hover .court-node-label { color: var(--cream); }
