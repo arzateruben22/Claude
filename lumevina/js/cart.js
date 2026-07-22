@@ -252,16 +252,16 @@
     syncGift();
   }
 
-  /* ── Add-to-cart buttons ── */
-  document.querySelectorAll(".add-to-cart").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      addItem(btn.dataset.id, btn.dataset.name, Number(btn.dataset.price));
-      navCart.classList.remove("bump");
-      /* restart the bump animation */
-      void navCart.offsetWidth;
-      navCart.classList.add("bump");
-      openDrawer();
-    });
+  /* ── Add-to-cart (delegated, so JS-rendered retail buttons work too) ── */
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest && e.target.closest(".add-to-cart");
+    if (!btn || btn.disabled) return;
+    addItem(btn.dataset.id, btn.dataset.name, Number(btn.dataset.price));
+    navCart.classList.remove("bump");
+    /* restart the bump animation */
+    void navCart.offsetWidth;
+    navCart.classList.add("bump");
+    openDrawer();
   });
 
   /* ── Checkout modal ── */
@@ -443,6 +443,29 @@
             " Glow Points earned · balance " + rw.points() + " ✦";
           earnedEl.hidden = false;
         }
+
+        /* retail sold online → drop the shelf count + log the sale (live: the
+           Stripe webhook does this server-side; same single source of truth) */
+        if (window.LumevinaInventory) {
+          var salesLog = [];
+          try { salesLog = JSON.parse(localStorage.getItem("lumevina_retail_sales")) || []; }
+          catch (e) { salesLog = []; }
+          Object.keys(cart).forEach(function (id) {
+            if (id.indexOf("retail-") !== 0) return;
+            var item = cart[id];
+            var pid = id.replace("retail-", "");
+            window.LumevinaInventory.decrement(pid, item.qty);
+            salesLog.push({ id: pid, name: item.name, price: item.price, qty: item.qty,
+              at: new Date().toISOString(), channel: "online" });
+          });
+          try { localStorage.setItem("lumevina_retail_sales", JSON.stringify(salesLog)); }
+          catch (e) { /* private mode */ }
+        }
+
+        var subEl = modal.querySelector(".success-sub");
+        if (subEl) subEl.textContent = cartHasGift()
+          ? "Your gift of glow is on its way ✨"
+          : "Your order is on its way ✨";
 
         issueGiftCards();
 

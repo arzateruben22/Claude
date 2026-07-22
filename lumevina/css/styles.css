@@ -1925,6 +1925,35 @@ body.intro-lock { overflow: hidden; }
 .shop-card-link:hover { color: var(--mauve); }
 .shop-card-link:hover span { transform: translateX(4px); }
 
+/* ─── The Shelf (own retail — live inventory) ─── */
+.retail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-4);
+}
+.retail-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 18px;
+  padding: var(--space-4);
+  transition: transform 260ms ease, box-shadow 260ms ease;
+}
+.retail-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(125, 84, 104, 0.12); }
+.retail-card.is-out { opacity: 0.7; }
+.retail-visual { height: 130px; border-radius: 12px; margin-bottom: var(--space-3); }
+.rt-tint-1 { background: linear-gradient(135deg, #f6e8ec, #e2c7d3); }
+.rt-tint-2 { background: linear-gradient(135deg, #ecd9e2, #d9bcc8); }
+.rt-tint-3 { background: linear-gradient(135deg, #f0e0d0, #d9b9a3); }
+.rt-tint-4 { background: linear-gradient(135deg, #e3eedd, #adc2a5); }
+.retail-name { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--plum); margin-bottom: 0.3rem; }
+.retail-desc { font-size: 0.88rem; color: var(--ink-60); line-height: 1.5; margin-bottom: var(--space-3); flex: 1; }
+.retail-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.retail-foot .add-to-cart { padding: 0.55rem 1.1rem; }
+.retail-stock { font-size: 0.78rem; color: var(--ink-35); margin-top: 0.6rem; }
+.retail-stock.is-low { color: var(--plum); font-weight: 500; }
+
 @media (max-width: 860px) {
   .tools-layout { grid-template-columns: 1fr; gap: var(--space-5); }
   .tools-layout .tools-cover { position: static; }

@@ -144,6 +144,9 @@
     .inv-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--edge); background: #fff; color: var(--plum); cursor: pointer; font-size: 1rem; line-height: 1; }
     .inv-btn:hover { border-color: var(--plum); }
     .inv-low { color: var(--data); font-weight: 500; }
+    .inv-sell { font: inherit; font-size: 0.78rem; color: #fff; background: var(--plum); border: none;
+      border-radius: 999px; padding: 0.3rem 0.9rem; cursor: pointer; }
+    .inv-sell:hover { background: var(--data); }
     .bk-tv { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
       font-variant-numeric: tabular-nums; }
     .bk-tl { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
@@ -391,8 +394,9 @@
       </form>
       <div class="bk-tiles" id="inv-tiles"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="inv-table"></table></div>
-      <p class="sub" style="margin-top:0.9rem">When retail sells through the site, each sale will
-      decrement stock automatically. Low-stock is flagged at 3 or fewer.</p>
+      <p class="sub" id="inv-sold" style="margin-top:0.9rem"></p>
+      <p class="sub" style="margin-top:0.4rem">Online sales decrement stock automatically; tap
+      <strong>Sell</strong> to record an in-person sale. Low-stock is flagged at 3 or fewer.</p>
     </div>
 
     <!-- ── Calendar sync ── -->
@@ -742,18 +746,43 @@
       document.getElementById("top-services").innerHTML = html;
     })();
 
-    /* ── Product sales + top products (placeholders until retail exists) ── */
+    /* ── Product sales + top products (from the retail sales log) ── */
     (function () {
-      var orders = lget("lumevina_orders") || [];
-      if (!orders.length) {
+      var sales = lget("lumevina_retail_sales") || [];
+      if (!sales.length) {
         document.getElementById("product-sales").innerHTML =
-          '<div class="ps-empty">No retail products yet. When you add products to the shop, ' +
-          '<strong>units sold, revenue, and top sellers</strong> appear here — and count ' +
-          'toward each client’s lifetime spend.</div>';
+          '<div class="ps-empty">No retail sold yet. As products sell — online or in person — ' +
+          '<strong>units, revenue, and top sellers</strong> appear here.</div>';
         document.getElementById("top-products").innerHTML =
           '<div class="ps-empty">Your <strong>best-selling products</strong> will rank here ' +
-          'once retail is live — the same way services rank on the left.</div>';
+          'once retail starts moving — the same way services rank on the left.</div>';
+        return;
       }
+      var num = function (n) { return Number(n || 0); };
+      var byProduct = {}, units = 0, revenue = 0, online = 0;
+      sales.forEach(function (s) {
+        var q = num(s.qty), rev = num(s.price) * q;
+        units += q; revenue += rev; if (s.channel === "online") online += q;
+        var p = byProduct[s.id] || (byProduct[s.id] = { name: s.name, units: 0, rev: 0 });
+        p.units += q; p.rev += rev;
+      });
+      var pctOnline = units ? Math.round(online / units * 100) : 0;
+      document.getElementById("product-sales").innerHTML =
+        '<div class="mini">' +
+        '<div><div class="m-val">' + money(Math.round(revenue)) + '</div><div class="m-lbl">Retail revenue</div></div>' +
+        '<div><div class="m-val">' + units + '</div><div class="m-lbl">Units sold</div></div>' +
+        '<div><div class="m-val">' + Object.keys(byProduct).length + '</div><div class="m-lbl">Products sold</div></div>' +
+        '<div><div class="m-val">' + pctOnline + '%</div><div class="m-lbl">Sold online</div></div>' +
+        '</div>';
+      var rows = Object.keys(byProduct).map(function (id) { return byProduct[id]; })
+        .sort(function (a, b) { return b.units - a.units; }).slice(0, 6);
+      var max = rows.length ? rows[0].units : 1;
+      document.getElementById("top-products").innerHTML = '<ul class="rank">' + rows.map(function (r) {
+        return '<li class="rank-row"><span class="rank-name">' + r.name + '</span>' +
+          '<span class="rank-bar"><span class="rank-fill" style="width:' +
+          Math.round(r.units / max * 100) + '%"></span></span>' +
+          '<span class="rank-n">' + r.units + '</span></li>';
+      }).join("") + '</ul>';
     })();
 
     /* ── Bookkeeping & tax ── */
@@ -1045,6 +1074,17 @@
       var num = function (n) { return Number(n || 0); };
       var save = function () { try { localStorage.setItem(IKEY, JSON.stringify(inv)); } catch (e) { /* private mode */ } };
 
+      var SALES_KEY = "lumevina_retail_sales";
+      var sales = lget(SALES_KEY) || [];
+      var logSale = function (p, channel) {
+        sales.push({ id: p.id, name: p.name, price: num(p.price), qty: 1,
+          at: new Date().toISOString(), channel: channel });
+        try { localStorage.setItem(SALES_KEY, JSON.stringify(sales)); } catch (e) { /* private mode */ }
+      };
+      var now = new Date();
+      var mm = now.getMonth() + 1;
+      var monthKey = now.getFullYear() + "-" + (mm < 10 ? "0" + mm : mm);
+
       var render = function () {
         var units = inv.reduce(function (a, p) { return a + num(p.stock); }, 0);
         var value = inv.reduce(function (a, p) { return a + num(p.stock) * num(p.price); }, 0);
@@ -1058,24 +1098,46 @@
         document.getElementById("inv-tiles").innerHTML = tiles.map(function (t) {
           return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
             t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
-        var thead = '<thead><tr><th>Product</th><th>Stock</th><th>Cost</th><th>Retail</th><th>Value</th><th>Status</th></tr></thead>';
+        var thead = '<thead><tr><th>Product</th><th>Stock</th><th>Cost</th><th>Retail</th><th>Value</th><th>Status</th><th></th></tr></thead>';
         var tbody = '<tbody>' + inv.map(function (p, i) {
           var st = num(p.stock);
           return '<tr><td>' + p.name + '</td><td><span class="inv-adjust">' +
             '<button class="inv-btn" data-d="-1" data-i="' + i + '" aria-label="decrease">−</button>' + st +
             '<button class="inv-btn" data-d="1" data-i="' + i + '" aria-label="increase">+</button></span></td>' +
             '<td>' + money(num(p.cost)) + '</td><td>' + money(num(p.price)) + '</td>' +
-            '<td>' + money(st * num(p.price)) + '</td><td>' + (st <= LOW ? '<span class="inv-low">Low</span>' : 'OK') + '</td></tr>';
+            '<td>' + money(st * num(p.price)) + '</td><td>' + (st <= LOW ? '<span class="inv-low">Low</span>' : 'OK') + '</td>' +
+            '<td>' + (st > 0 ? '<button class="inv-sell" data-i="' + i + '">Sell</button>' : '—') + '</td></tr>';
         }).join("") + '</tbody>';
         document.getElementById("inv-table").innerHTML = thead + tbody;
+
+        /* retail sold this month (both channels) */
+        var mUnits = 0, mRev = 0;
+        sales.forEach(function (s) {
+          if ((s.at || "").slice(0, 7) !== monthKey) return;
+          mUnits += num(s.qty); mRev += num(s.price) * num(s.qty);
+        });
+        document.getElementById("inv-sold").innerHTML = mUnits
+          ? "<strong>Retail sold this month:</strong> " + money(Math.round(mRev)) + " · " + mUnits + " units"
+          : "No retail sold yet this month.";
       };
       render();
 
       document.getElementById("inv-table").addEventListener("click", function (e) {
-        var btn = e.target.closest(".inv-btn"); if (!btn) return;
-        var i = Number(btn.dataset.i);
-        inv[i].stock = Math.max(0, num(inv[i].stock) + Number(btn.dataset.d));
-        save(); render();
+        var adj = e.target.closest(".inv-btn");
+        if (adj) {
+          var ai = Number(adj.dataset.i);
+          inv[ai].stock = Math.max(0, num(inv[ai].stock) + Number(adj.dataset.d));
+          save(); render();
+          return;
+        }
+        var sell = e.target.closest(".inv-sell");
+        if (sell) {
+          var si = Number(sell.dataset.i);
+          if (num(inv[si].stock) <= 0) return;
+          inv[si].stock = num(inv[si].stock) - 1;
+          logSale(inv[si], "in-person");
+          save(); render();
+        }
       });
       var form = document.getElementById("inv-form");
       document.getElementById("inv-add-toggle").addEventListener("click", function () { form.hidden = !form.hidden; });
