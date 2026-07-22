@@ -3080,6 +3080,144 @@ body.intro-lock { overflow: hidden; }
 .lp-tint-2 { --lp-accent: var(--rose); }
 .lp-tint-3 { --lp-accent: var(--sand); }
 
+/* ─── Booking success actions + pre-visit intake ─── */
+
+.success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin: var(--space-4) 0 0.4rem;
+}
+
+.success-actions .btn { padding: 0.7rem 1.2rem; }
+
+.booking-intake-status {
+  font-size: 0.82rem;
+  color: #6f8a6a;
+  margin-bottom: var(--space-3);
+}
+
+.booking-intake-status[hidden] { display: none; }
+
+.intake-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 96;
+  background: rgba(68, 54, 64, 0.4);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.intake-overlay[hidden] { display: none; }
+
+.intake-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 97;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  pointer-events: none;
+}
+
+.intake-modal[aria-hidden="true"] { display: none; }
+
+.intake-inner {
+  position: relative;
+  pointer-events: auto;
+  width: min(34rem, 100%);
+  max-height: min(48rem, 92vh);
+  overflow-y: auto;
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  padding: clamp(1.5rem, 4vw, 2.4rem);
+}
+
+.intake-close {
+  position: absolute;
+  top: 0.9rem; right: 0.9rem;
+  font: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  background: none;
+  border: 0;
+  color: var(--ink-60);
+  cursor: pointer;
+  padding: 0.35rem;
+}
+
+.intake-intro {
+  font-size: 0.9rem;
+  color: var(--ink-60);
+  margin-bottom: var(--space-4);
+}
+
+.intake-modal textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  resize: vertical;
+}
+
+.intake-checks {
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.intake-checks legend { padding: 0 0.4rem; }
+
+.intake-check,
+.intake-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--ink-60);
+  margin-top: 0.55rem;
+  cursor: pointer;
+}
+
+.intake-check input,
+.intake-consent input {
+  margin-top: 0.15rem;
+  accent-color: var(--mauve);
+  flex: 0 0 auto;
+}
+
+.intake-consent { margin-bottom: var(--space-4); }
+
+.intake-submit { width: 100%; text-align: center; }
+
+.intake-status { color: #b3402f; }
+
+.intake-fine {
+  font-size: 0.76rem;
+  color: var(--ink-35);
+  margin-top: var(--space-2);
+}
+
+.intake-success { text-align: center; }
+.intake-success[hidden] { display: none; }
+
+.acct-intake-line { margin-bottom: 0.5rem; }
+
+.acct-intake-status { font-size: 0.85rem; color: var(--ink-60); }
+
+.acct-intake-status.done { color: #6f8a6a; }
+
+.acct-intake { width: 100%; text-align: center; margin-bottom: var(--space-4); }
+
 /* ─── My Lumevina (account) ─── */
 
 .nav-account { display: inline-flex; align-items: center; }

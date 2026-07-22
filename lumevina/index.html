@@ -1108,7 +1108,104 @@
         <p class="success-sub">Your deposit goes toward your total — the balance is due at
         your visit (cash preferred, card with a fee). A confirmation email is on its way.
         Demo mode: no card was charged.</p>
+
+        <div class="success-actions">
+          <button class="btn btn-ghost booking-cal" type="button">＋ Add to calendar</button>
+          <button class="btn btn-ghost booking-intake-open" type="button">Complete pre-visit form</button>
+        </div>
+        <p class="booking-intake-status" role="status" aria-live="polite" hidden></p>
+
         <button class="btn btn-ghost booking-done" type="button">Back to Lumevina</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PRE-VISIT INTAKE FORM ═══════════════ -->
+  <div class="intake-overlay" hidden></div>
+  <div class="intake-modal" role="dialog" aria-modal="true" aria-labelledby="intake-title" aria-hidden="true" tabindex="-1">
+    <div class="intake-inner">
+      <button class="intake-close" type="button" aria-label="Close intake form">×</button>
+
+      <div class="intake-form-view">
+        <h2 class="booking-title" id="intake-title">Pre-visit form</h2>
+        <p class="intake-intro">A few details help us tailor your treatment and keep you safe.
+        Please complete this before your appointment — it takes about a minute. Your answers
+        are private and stored only for your care.</p>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="in-name">Full name</label>
+            <input id="in-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="in-dob">Date of birth</label>
+            <input id="in-dob" name="dob" type="date" autocomplete="bday">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="in-phone">Phone</label>
+            <input id="in-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="in-email">Email</label>
+            <input id="in-email" name="email" type="email" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="in-concerns">Your main skin or skincare concerns</label>
+          <textarea id="in-concerns" name="concerns" rows="2"
+            placeholder="Acne, texture, fine lines, hyperpigmentation…"></textarea>
+        </div>
+        <div class="field">
+          <label for="in-products">Current products &amp; actives (retinol, acids, etc.)</label>
+          <textarea id="in-products" name="products" rows="2"
+            placeholder="What you're using now, especially retinoids or exfoliating acids"></textarea>
+        </div>
+        <div class="field">
+          <label for="in-allergies">Allergies &amp; sensitivities</label>
+          <input id="in-allergies" name="allergies" type="text"
+            placeholder="Latex, fragrances, ingredients, adhesives…">
+        </div>
+        <div class="field">
+          <label for="in-meds">Medications &amp; recent treatments</label>
+          <input id="in-meds" name="meds" type="text"
+            placeholder="Accutane, antibiotics, recent peels/laser, injectables…">
+        </div>
+
+        <fieldset class="intake-checks">
+          <legend class="booking-label">Please confirm</legend>
+          <label class="intake-check"><input type="checkbox" id="in-pregnant"> I am pregnant or nursing</label>
+          <label class="intake-check"><input type="checkbox" id="in-sun"> I've had significant sun exposure or a tan in the last 2 weeks</label>
+          <label class="intake-check"><input type="checkbox" id="in-accutane"> I've used Accutane/isotretinoin in the last 6 months</label>
+        </fieldset>
+
+        <label class="intake-consent">
+          <input type="checkbox" id="in-consent" required>
+          <span>I confirm the above is accurate, I understand the treatment and its
+          aftercare, and I consent to service. I've read the
+          <a class="inline-link" href="#policies">policies</a>.</span>
+        </label>
+
+        <div class="field">
+          <label for="in-sign">Type your full name to sign</label>
+          <input id="in-sign" name="signature" type="text" autocomplete="off"
+            placeholder="Your signature">
+        </div>
+
+        <button class="btn btn-solid intake-submit" type="button">Submit pre-visit form</button>
+        <p class="form-status intake-status" role="alert"></p>
+        <p class="intake-fine">Demo: your form is saved on this device and shown to your
+        esthetician. Live, it's stored securely with your booking.</p>
+      </div>
+
+      <div class="intake-success" hidden>
+        <p class="success-glyph" aria-hidden="true">🌿</p>
+        <h2 class="booking-title">Form received</h2>
+        <p class="success-sub">Thank you — you're all set for your visit. We'll review this
+        before you arrive.</p>
+        <button class="btn btn-ghost intake-done" type="button">Close</button>
       </div>
     </div>
   </div>
@@ -1222,6 +1319,10 @@
         <ul class="acct-bookings" role="list"></ul>
         <button class="btn btn-solid acct-book" type="button">Book an appointment</button>
 
+        <p class="booking-label">Pre-visit form</p>
+        <p class="acct-intake-line"><span class="acct-intake-status"></span></p>
+        <button class="btn btn-ghost acct-intake" type="button">Complete pre-visit form</button>
+
         <p class="booking-label">Your referral code</p>
         <p class="acct-ref"><code class="acct-ref-code"></code> — a friend's first visit
         earns you 150 ✦ ($15) once it's complete.</p>
@@ -1299,6 +1400,7 @@
   <script src="js/payments.js"></script>
   <script src="js/rewards.js"></script>
   <script src="js/account.js"></script>
+  <script src="js/intake.js"></script>
   <script src="js/liquid-metal.js"></script>
   <script src="js/dither-cards.js"></script>
   <script src="js/morphing-light.js"></script>

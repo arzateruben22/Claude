@@ -10,8 +10,37 @@ the client across devices (site → iPhone app).
 | --- | --- |
 | `schema.sql` | Postgres schema: clients, bookings (with a database-level double-booking guard), rewards ledger, flash slots, push tokens, row-level security |
 | `functions/create-deposit-intent/` | Recomputes the price server-side, inserts the booking, creates the Stripe PaymentIntent for the 50% deposit |
-| `functions/stripe-webhook/` | Confirms payment, holds the booking, writes rewards (multipliers included), documents the referral-credit trigger |
+| `functions/stripe-webhook/` | Confirms payment, holds the booking, writes rewards (multipliers included), fires the confirmation, documents the referral-credit trigger |
+| `functions/send-confirmation/` | Sends confirmation + 24-hour reminder email/SMS (Resend + optional Twilio); also flushes due reminders when run on a schedule |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
+
+## Notifications (confirmations & reminders)
+
+The site collects the client's email at booking and a phone on the intake
+form. To turn on real messages:
+
+1. Create a [Resend](https://resend.com) account, verify your sending domain,
+   and set the secrets:
+
+   ```sh
+   supabase secrets set RESEND_API_KEY=re_...  FROM_EMAIL="Lumevina <hello@yourdomain>"
+   # optional SMS:
+   supabase secrets set TWILIO_SID=AC... TWILIO_TOKEN=... TWILIO_FROM=+1...
+   ```
+
+2. Deploy: `supabase functions deploy send-confirmation`. The webhook already
+   calls it on every paid booking (confirmation now + a queued 24h reminder).
+
+3. Schedule the reminder flush — in the Supabase dashboard add a cron job
+   (Database → Cron) every 15 minutes hitting the function with `{ "due": true }`,
+   which sends any reminder rows whose time has arrived.
+
+## Intake forms
+
+`js/intake.js` collects the pre-visit form. Wire its submit to
+`upsert` into the `intake_forms` table (keyed by email); the owner reads
+them before the visit (a client screen in the dashboard, or straight from
+the table editor). Nothing else changes on the client.
 
 ## One-time setup
 

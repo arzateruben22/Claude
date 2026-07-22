@@ -82,6 +82,45 @@ create table flash_slots (
   claimed_by uuid references bookings (id)
 );
 
+-- ── Pre-visit intake / consent forms ────────────────────────────────
+-- One current form per client (by email); resubmitting overwrites.
+-- Mirrors js/intake.js. The owner reads these before the visit.
+create table intake_forms (
+  email text primary key,
+  client_id uuid references clients (id) on delete set null,
+  name text not null,
+  dob date,
+  phone text,
+  concerns text,
+  products text,
+  allergies text,
+  meds text,
+  pregnant boolean not null default false,
+  recent_sun boolean not null default false,
+  accutane boolean not null default false,
+  signature text not null,
+  signed_at timestamptz not null default now()
+);
+
+alter table intake_forms enable row level security;
+create policy "own intake" on intake_forms
+  for all using (auth.uid() = client_id) with check (auth.uid() = client_id);
+
+-- ── Appointment notifications (confirmations + reminders) ────────────
+-- Rows queued by the webhook; a scheduled function sends what's due and
+-- stamps sent_at. Confirmation fires immediately; reminder is dated to
+-- 24h before the appointment. See send-confirmation + README.
+create table notifications (
+  id bigint generated always as identity primary key,
+  booking_id uuid references bookings (id) on delete cascade,
+  kind text not null check (kind in ('confirmation', 'reminder')),
+  channel text not null check (channel in ('email', 'sms')),
+  send_after timestamptz not null default now(),
+  sent_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index notifications_due on notifications (send_after) where sent_at is null;
+
 -- ── Push tokens (flash-opening notifications) ───────────────────────
 create table push_tokens (
   token text primary key,

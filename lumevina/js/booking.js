@@ -98,7 +98,11 @@
   var refInput = modal.querySelector("#bk-ref");
   var petalBtn = modal.querySelector(".petal-btn");
   var petalResult = modal.querySelector(".petal-result");
+  var calBtn = modal.querySelector(".booking-cal");
+  var intakeBtn = modal.querySelector(".booking-intake-open");
+  var intakeStatusEl = modal.querySelector(".booking-intake-status");
   var pendingBlocks = 0;
+  var lastBooking = null;
 
   /* ── Session state ── */
   var state = {
@@ -825,10 +829,82 @@
       petalResult.hidden = true;
       petalResult.textContent = "";
 
+      /* remember this booking for add-to-calendar + the pre-visit form */
+      lastBooking = {
+        title: "Lumevina — " + sessionName(),
+        start: state.dayKey, startMin: state.slot, durMin: totalDur(),
+        name: nameInput.value.trim(), email: emailInput.value.trim()
+      };
+      intakeStatusEl.hidden = true;
+      if (window.LumevinaIntake &&
+          window.LumevinaIntake.hasFormFor(lastBooking.email)) {
+        intakeStatusEl.textContent = "✓ Pre-visit form on file — tap to update.";
+        intakeStatusEl.hidden = false;
+      }
+
       payView.hidden = true;
       successView.hidden = false;
       modal.querySelector(".booking-done").focus();
     });
+  });
+
+  /* ── Add to calendar (.ics) + pre-visit form, from the success view ── */
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+
+  var icsStamp = function (dayKey, mins) {
+    /* local wall-clock time, no timezone suffix (floating) */
+    var d = new Date(dayKey + "T00:00:00");
+    d.setMinutes(mins);
+    return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" +
+      pad(d.getHours()) + pad(d.getMinutes()) + "00";
+  };
+
+  var downloadICS = function (b) {
+    var uid = "lum-" + Date.now() + "@lumevina";
+    var now = new Date();
+    var dtstamp = now.getUTCFullYear() + pad(now.getUTCMonth() + 1) +
+      pad(now.getUTCDate()) + "T" + pad(now.getUTCHours()) +
+      pad(now.getUTCMinutes()) + pad(now.getUTCSeconds()) + "Z";
+    var lines = [
+      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Lumevina//Booking//EN",
+      "BEGIN:VEVENT",
+      "UID:" + uid,
+      "DTSTAMP:" + dtstamp,
+      "DTSTART:" + icsStamp(b.start, b.startMin),
+      "DTEND:" + icsStamp(b.start, b.startMin + b.durMin),
+      "SUMMARY:" + b.title,
+      "DESCRIPTION:Your appointment at Lumevina Aesthetics Spa. A 50% deposit " +
+        "has been paid; the balance is due at your visit.",
+      "LOCATION:Lumevina Aesthetics Spa\\, Woodland Hills\\, CA",
+      "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY",
+      "DESCRIPTION:Lumevina appointment tomorrow", "END:VALARM",
+      "END:VEVENT", "END:VCALENDAR"
+    ];
+    var blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "lumevina-appointment.ics";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  };
+
+  calBtn.addEventListener("click", function () {
+    if (lastBooking) downloadICS(lastBooking);
+  });
+
+  intakeBtn.addEventListener("click", function () {
+    if (window.LumevinaIntake) {
+      window.LumevinaIntake.open(lastBooking
+        ? { name: lastBooking.name, email: lastBooking.email } : {});
+    }
+  });
+
+  document.addEventListener("lumevina:intake-saved", function () {
+    intakeStatusEl.textContent = "✓ Pre-visit form received — thank you.";
+    intakeStatusEl.hidden = false;
   });
 
   /* ── Book buttons, injected next to every add-to-cart ── */

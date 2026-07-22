@@ -172,6 +172,20 @@
     pointsEl.textContent = rw() ? String(rw().points()) : "0";
     refEl.textContent = rw() ? rw().refCode() : "—";
     renderBookings();
+    renderIntake();
+  };
+
+  var renderIntake = function () {
+    var intake = window.LumevinaIntake;
+    var line = modal.querySelector(".acct-intake-status");
+    var btn = modal.querySelector(".acct-intake");
+    if (!line || !btn) return;
+    var has = intake && session && intake.hasFormFor(session.email);
+    line.textContent = has
+      ? "✓ On file — you're all set. Tap to review or update."
+      : "Not yet completed — please fill this out before your visit.";
+    line.className = "acct-intake-status" + (has ? " done" : "");
+    btn.textContent = has ? "Review pre-visit form" : "Complete pre-visit form";
   };
 
   /* ── Open / close ── */
@@ -252,6 +266,17 @@
   modal.querySelector(".acct-book").addEventListener("click", function () {
     closeModal();
     if (window.LumevinaBooking) window.LumevinaBooking.open();
+  });
+
+  modal.querySelector(".acct-intake").addEventListener("click", function () {
+    if (window.LumevinaIntake) {
+      window.LumevinaIntake.open(session
+        ? { name: session.name, email: session.email } : {});
+    }
+  });
+
+  document.addEventListener("lumevina:intake-saved", function () {
+    if (session) renderIntake();
   });
 
   /* ── Boot ── */

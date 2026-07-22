@@ -93,6 +93,16 @@ Deno.serve(async (req) => {
     paid_cents: intent.amount,
   }).eq("id", bookingId);
 
+  // Fire the confirmation email/SMS and queue the 24h reminder.
+  await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-confirmation`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ booking_id: bookingId, kind: "confirmation" }),
+  }).catch(() => {}); // never block the webhook on notifications
+
   // Claim the flash slot so it can't be reused.
   if (booking.flash) {
     await supabase.from("flash_slots")
