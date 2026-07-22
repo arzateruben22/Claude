@@ -708,13 +708,22 @@
     return d;
   };
 
-  var tooCloseNotice = function () {
-    if (window.LumevinaNotice) {
-      window.LumevinaNotice.show("Too close to reschedule online",
-        "Appointments can't be moved online within 48 hours of your visit — this is " +
-        "part of our cancellation policy, and the deposit is non-refundable inside " +
-        "this window. Please call or DM us and we'll do our best to help.");
+  /* show a pop-up — prefer the shared styled notice, but never depend on it:
+     if account.js hasn't loaded, fall back to a plain dialog so the link
+     always responds instead of silently doing nothing. */
+  var showNotice = function (title, body) {
+    if (window.LumevinaNotice && window.LumevinaNotice.show) {
+      window.LumevinaNotice.show(title, body);
+    } else {
+      window.alert(title + "\n\n" + body);
     }
+  };
+
+  var tooCloseNotice = function () {
+    showNotice("Too close to reschedule online",
+      "Appointments can't be moved online within 48 hours of your visit — this is " +
+      "part of our cancellation policy, and the deposit is non-refundable inside " +
+      "this window. Please call or DM us and we'll do our best to help.");
   };
 
   var beginReschedule = function (booking, index) {
@@ -760,12 +769,10 @@
       .sort(function (a, c) { return a.start - c.start; });
 
     if (!upcoming.length) {
-      if (window.LumevinaNotice) {
-        window.LumevinaNotice.show("No upcoming appointment found",
-          "We don't see an upcoming appointment saved on this device. If you booked on " +
-          "another phone or computer, open “My Lumevina” there — or just reply to your " +
-          "confirmation email (or DM us on Instagram) and we'll move it for you.");
-      }
+      showNotice("No upcoming appointment found",
+        "We don't see an upcoming appointment saved on this device. If you booked on " +
+        "another phone or computer, open “My Lumevina” there — or just reply to your " +
+        "confirmation email (or DM us on Instagram) and we'll move it for you.");
       return;
     }
     if (modal.getAttribute("aria-hidden") !== "false") {
@@ -856,11 +863,9 @@
       document.dispatchEvent(new CustomEvent("lumevina:booking-changed"));
     }
     closeModal();
-    if (window.LumevinaNotice) {
-      window.LumevinaNotice.show("Appointment moved",
-        sessionName() + " is now " + whenText() + " at " + fmtTime(state.slot) +
-        ". Your deposit carried over — nothing more to pay.");
-    }
+    showNotice("Appointment moved",
+      sessionName() + " is now " + whenText() + " at " + fmtTime(state.slot) +
+      ". Your deposit carried over — nothing more to pay.");
   };
 
   confirmBtn.addEventListener("click", function () {
