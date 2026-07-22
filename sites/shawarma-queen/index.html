@@ -365,9 +365,13 @@
             </details>
           </div>
           <div class="visit-card" data-reveal>
-            <h3 class="visit-card-title">Claim with crowns</h3>
-            <ul class="rewards-rows" role="list"></ul>
-            <p class="rewards-fine">One reward per order — it drops into your cart free.</p>
+            <h3 class="visit-card-title">How it works</h3>
+            <ul class="install-perks" role="list">
+              <li><strong>1 crown</strong> for every $1 you spend</li>
+              <li><strong>Double crowns</strong> every Tuesday</li>
+              <li>Tap a reward below to drop it in your order — free</li>
+            </ul>
+            <p class="rewards-fine">One reward per order. Crowns are deducted when you send it.</p>
           </div>
           <div class="visit-card" data-reveal>
             <h3 class="visit-card-title">The app <span class="tl">· install it</span></h3>
@@ -382,6 +386,9 @@
             app today, crowns included.</p>
           </div>
         </div>
+
+        <h3 class="reward-bento-title" data-reveal>Claim a reward <span class="tl">· tap one for details</span></h3>
+        <div class="reward-bento" data-reveal></div>
       </div>
     </section>
 
@@ -610,6 +617,24 @@
     Shawarma Queen. Message and data rates may apply; reply STOP anytime to opt out.
     Memberships save on this phone for now — accounts that follow you across devices
     arrive with the app.</p>
+  </div>
+
+  <div class="addon-overlay reward-overlay" hidden></div>
+  <div class="addon-pop reward-pop" role="dialog" aria-modal="true" aria-labelledby="reward-title" hidden>
+    <div class="reward-pop-grad" aria-hidden="true"></div>
+    <div class="reward-pop-body">
+      <header class="addon-head">
+        <h3 class="addon-title" id="reward-title">Reward</h3>
+        <button class="addon-close reward-close" type="button" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+      <p class="reward-pop-cost"></p>
+      <p class="reward-pop-desc"></p>
+      <div class="reward-pop-bar" aria-hidden="true"><span class="reward-pop-fill"></span></div>
+      <p class="reward-pop-balance" aria-live="polite"></p>
+      <button class="btn btn-solid reward-pop-claim" type="button">Claim reward</button>
+    </div>
   </div>
 
   <p class="add-toast" role="status" aria-live="polite"></p>

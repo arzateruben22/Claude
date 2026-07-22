@@ -666,10 +666,18 @@
   var INSTALL_BONUS = 25;
   var SIGNUP_BONUS = 50;
   var REWARDS = [
-    { id: "sauce", name: "Premium sauce (Boom or Queen)", cost: 20, item: "Reward: Premium Sauce" },
-    { id: "chicken", name: "12″ Chicken Shawarma Wrap", cost: 130, item: "Reward: Chicken Wrap" },
-    { id: "beef", name: "12″ Beef Shawarma Wrap", cost: 140, item: "Reward: Beef Wrap" },
-    { id: "combo", name: "12″ Chicken Combo", cost: 180, item: "Reward: Chicken Combo" }
+    { id: "sauce", name: "Premium Sauce", cost: 20, item: "Reward: Premium Sauce",
+      desc: "Upgrade any wrap to Boom or Queen sauce — the good stuff, on the house.",
+      colors: ["#F5B63D", "#EE4266", "#FFC95A"] },
+    { id: "chicken", name: "Chicken Wrap", cost: 130, item: "Reward: Chicken Wrap",
+      desc: "A full 12″ chicken shawarma wrap — juicy, garlicky, rolled to order. Free.",
+      colors: ["#F5B63D", "#8FCB5E", "#FFC95A"] },
+    { id: "beef", name: "Beef Wrap", cost: 140, item: "Reward: Beef Wrap",
+      desc: "A full 12″ beef shawarma wrap — charred, shaved thin, rolled tight. Free.",
+      colors: ["#EE4266", "#F5B63D", "#A8324B"] },
+    { id: "combo", name: "Chicken Combo", cost: 180, item: "Reward: Chicken Combo",
+      desc: "The whole 12″ chicken combo — wrap, fries, coleslaw & a drink. On us.",
+      colors: ["#8FCB5E", "#F5B63D", "#22B3A0"] }
   ];
 
   var isTuesday = new Date().getDay() === 2;
@@ -844,44 +852,137 @@
     });
   };
 
-  var rewardsRows = document.querySelector(".rewards-rows");
-  var renderRewards = function () {
-    if (!rewardsRows) return;
-    document.querySelectorAll(".puntos-count").forEach(function (el) {
-      el.textContent = getPts();
+  /* Drop a claimed reward into the cart (shared by the tile popup). */
+  var claimReward = function (r) {
+    if (getPts() < r.cost || hasReward()) return false;
+    cart["reward:" + r.id] = {
+      name: r.item, price: 0, qty: 1, sauce: "", removed: [],
+      rewardCost: r.cost, rewardId: r.id
+    };
+    render();
+    showToast("Reward added to your order");
+    openPanel();
+    return true;
+  };
+
+  /* Paint a few drifting blurred blobs — the AnimatedGradient look, native. */
+  var paintGradient = function (host, colors) {
+    host.innerHTML = "";
+    host.style.setProperty("--gs", (11 + Math.random() * 8).toFixed(1) + "s");
+    colors.forEach(function (c, i) {
+      var s = document.createElement("span");
+      s.style.background = c;
+      s.style.top = (Math.random() * 40) + "%";
+      s.style.left = (Math.random() * 40) + "%";
+      ["--tx1", "--ty1", "--tx2", "--ty2", "--tx3", "--ty3"].forEach(function (v) {
+        s.style.setProperty(v, (Math.random() - 0.5).toFixed(3));
+      });
+      s.style.animationDelay = (-i * 2.5) + "s";
+      host.appendChild(s);
     });
+  };
+
+  /* ── Reward detail popup ── */
+
+  var rewardBento = document.querySelector(".reward-bento");
+  var rewardPop = document.querySelector(".reward-pop");
+  var rewardOverlay = document.querySelector(".reward-overlay");
+  var rewardCurrent = null;
+
+  var refreshRewardPop = function () {
+    if (!rewardPop || rewardPop.hidden || !rewardCurrent) return;
+    var r = rewardCurrent, pts = getPts();
+    var claim = rewardPop.querySelector(".reward-pop-claim");
+    var bal = rewardPop.querySelector(".reward-pop-balance");
+    rewardPop.querySelector(".reward-pop-fill").style.width = Math.min(100, (pts / r.cost) * 100) + "%";
+    if (hasReward() && !cart["reward:" + r.id]) {
+      bal.innerHTML = "You already have a reward in this order — one per order.";
+      claim.disabled = true; claim.textContent = "One reward per order";
+    } else if (pts >= r.cost) {
+      bal.innerHTML = "You have <strong>" + pts + " crowns</strong> — enough to claim this.";
+      claim.disabled = false; claim.textContent = "Claim for " + r.cost + " crowns";
+    } else {
+      bal.innerHTML = "You have <strong>" + pts + " crowns</strong> — " + (r.cost - pts) + " more to go.";
+      claim.disabled = true; claim.textContent = "Need " + r.cost + " crowns";
+    }
+  };
+
+  var openReward = function (r) {
+    if (!rewardPop) return;
+    rewardCurrent = r;
+    rewardPop.querySelector(".addon-title").textContent = r.name;
+    rewardPop.querySelector(".reward-pop-cost").textContent = r.cost + " crowns";
+    rewardPop.querySelector(".reward-pop-desc").textContent = r.desc;
+    paintGradient(rewardPop.querySelector(".reward-pop-grad"), r.colors);
+    refreshRewardPop();
+    rewardPop.hidden = false;
+    rewardOverlay.hidden = false;
+    requestAnimationFrame(function () { rewardPop.classList.add("open"); rewardOverlay.classList.add("open"); });
+    rewardPop.querySelector(".reward-pop-claim").focus();
+  };
+  var closeReward = function () {
+    if (!rewardPop) return;
+    rewardPop.classList.remove("open");
+    rewardOverlay.classList.remove("open");
+    setTimeout(function () { rewardPop.hidden = true; rewardOverlay.hidden = true; }, 250);
+    rewardCurrent = null;
+  };
+
+  if (rewardPop) {
+    rewardPop.querySelector(".reward-close").addEventListener("click", closeReward);
+    rewardOverlay.addEventListener("click", closeReward);
+    rewardPop.querySelector(".reward-pop-claim").addEventListener("click", function () {
+      if (rewardCurrent && claimReward(rewardCurrent)) closeReward();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !rewardPop.hidden) closeReward();
+    });
+  }
+
+  var buildRewardTiles = function () {
+    rewardBento.innerHTML = "";
+    REWARDS.forEach(function (r) {
+      var tile = document.createElement("button");
+      tile.type = "button";
+      tile.className = "reward-tile";
+      tile.setAttribute("aria-label", r.name + ", " + r.cost + " crowns — tap for details");
+      var grad = document.createElement("div");
+      grad.className = "reward-grad";
+      paintGradient(grad, r.colors);
+      var cost = document.createElement("span");
+      cost.className = "reward-tile-cost";
+      cost.textContent = r.cost + " crowns";
+      var name = document.createElement("span");
+      name.className = "reward-tile-name";
+      name.textContent = r.name;
+      var cta = document.createElement("span");
+      cta.className = "reward-tile-cta";
+      tile.appendChild(grad);
+      tile.appendChild(cost);
+      tile.appendChild(name);
+      tile.appendChild(cta);
+      tile.addEventListener("click", function () { openReward(r); });
+      rewardBento.appendChild(tile);
+    });
+  };
+
+  /* Rebuilds state cheaply (tiles + their gradients are built once). */
+  var renderRewards = function () {
+    document.querySelectorAll(".puntos-count").forEach(function (el) { el.textContent = getPts(); });
     var tb = document.querySelector(".tuesday-badge");
     if (tb) tb.hidden = !isTuesday;
-    rewardsRows.innerHTML = "";
-    REWARDS.forEach(function (r) {
-      var li = document.createElement("li");
-      li.className = "rewards-row";
-      var name = document.createElement("span");
-      name.className = "rewards-row-name";
-      name.textContent = r.name;
-      var cost = document.createElement("span");
-      cost.className = "rewards-row-cost";
-      cost.textContent = r.cost + " crowns";
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "rewards-claim";
-      btn.textContent = "Claim";
-      btn.disabled = getPts() < r.cost || hasReward();
-      btn.addEventListener("click", function () {
-        if (getPts() < r.cost || hasReward()) return;
-        cart["reward:" + r.id] = {
-          name: r.item, price: 0, qty: 1, sauce: "", removed: [],
-          rewardCost: r.cost, rewardId: r.id
-        };
-        render();
-        showToast("Reward added to your order");
-        openPanel();
+    if (rewardBento) {
+      if (!rewardBento.children.length) buildRewardTiles();
+      var pts = getPts();
+      [].forEach.call(rewardBento.children, function (tile, idx) {
+        var r = REWARDS[idx];
+        var aff = pts >= r.cost;
+        tile.classList.toggle("affordable", aff);
+        tile.classList.toggle("locked", !aff);
+        tile.querySelector(".reward-tile-cta").textContent = aff ? "Ready to claim →" : (r.cost - pts) + " crowns to go";
       });
-      li.appendChild(name);
-      li.appendChild(cost);
-      li.appendChild(btn);
-      rewardsRows.appendChild(li);
-    });
+    }
+    refreshRewardPop();
   };
 
   /* ── Installable app (PWA) ── */

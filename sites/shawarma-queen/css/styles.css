@@ -1167,6 +1167,107 @@ em { font-style: italic; }
   .rewards-grid { grid-template-columns: 1fr; }
 }
 
+/* ── Crown Rewards: animated-gradient reward tiles + detail popup ── */
+
+.reward-bento-title {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 400;
+  text-align: center;
+  margin: var(--space-6) 0 var(--space-4);
+}
+
+.reward-bento-title .tl {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream-35);
+}
+
+.reward-bento {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.reward-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--plum-edge);
+  background: var(--night);
+  min-height: 10rem;
+  padding: var(--space-4);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  transition: transform 220ms ease, border-color 220ms ease;
+}
+
+.reward-tile:hover { transform: translateY(-4px); border-color: var(--gold-soft); }
+.reward-tile:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* animated blurred gradient blobs (the AnimatedGradient look, native) */
+.reward-grad { position: absolute; inset: 0; overflow: hidden; z-index: 0; filter: blur(34px); opacity: 0.55; pointer-events: none; }
+.reward-grad span {
+  position: absolute;
+  width: 70%;
+  padding-bottom: 70%;
+  border-radius: 50%;
+  animation: reward-grad var(--gs, 14s) cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes reward-grad {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(calc(90% * var(--tx1)), calc(90% * var(--ty1))); }
+  50% { transform: translate(calc(90% * var(--tx2)), calc(90% * var(--ty2))); }
+  75% { transform: translate(calc(90% * var(--tx3)), calc(90% * var(--ty3))); }
+}
+
+.reward-tile > *:not(.reward-grad) { position: relative; z-index: 1; }
+
+.reward-tile-cost {
+  align-self: flex-start;
+  margin-bottom: auto;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--night);
+  background: rgba(247, 237, 222, 0.85);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reward-tile.affordable .reward-tile-cost { background: var(--gold); }
+.reward-tile-name { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.1; color: var(--cream); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55); }
+.reward-tile-cta { font-size: 0.72rem; color: var(--cream-60); }
+.reward-tile.locked .reward-tile-cta { color: var(--cream-35); }
+
+@media (max-width: 900px) { .reward-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .reward-bento { grid-template-columns: 1fr; } }
+
+/* reward detail popup (reuses .addon-pop shell) */
+.reward-pop { overflow: hidden; padding: 0; }
+.reward-pop-grad { position: absolute; inset: 0; z-index: 0; filter: blur(42px); opacity: 0.5; pointer-events: none; }
+.reward-pop-grad span { position: absolute; width: 70%; padding-bottom: 70%; border-radius: 50%; animation: reward-grad var(--gs, 16s) cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite; }
+.reward-pop-body { position: relative; z-index: 1; padding: 1.4rem 1.4rem 1.6rem; }
+.reward-pop-cost { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--night); background: var(--gold); padding: 0.3rem 0.7rem; border-radius: 999px; margin: 0 0 0.8rem; font-variant-numeric: tabular-nums; }
+.reward-pop-desc { color: var(--cream); margin: 0 0 var(--space-4); }
+.reward-pop-bar { height: 4px; border-radius: 2px; background: var(--cream-15); overflow: hidden; margin-bottom: 0.5rem; }
+.reward-pop-fill { display: block; height: 100%; width: 0; background: var(--gold); transition: width 400ms ease; }
+.reward-pop-balance { font-size: 0.85rem; color: var(--cream-60); margin: 0 0 var(--space-4); }
+.reward-pop-balance strong { color: var(--gold); }
+.reward-pop-claim { width: 100%; }
+.reward-pop-claim:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* ─── Footer ─── */
 
 .footer {
