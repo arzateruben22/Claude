@@ -362,9 +362,8 @@ body.intro-lock { overflow: hidden; }
 }
 
 .intro-mark {
-  width: clamp(11rem, 26vw, 16rem);
+  width: clamp(12rem, 28vw, 17rem);
   height: auto;
-  color: var(--mauve);
   opacity: 0;
   animation: intro-appear 1.15s ease-out forwards;
   animation-delay: 0.1s;
@@ -646,9 +645,8 @@ body.intro-lock { overflow: hidden; }
 /* ─── Logo mark ─── */
 
 .hero-logo {
-  width: clamp(15rem, 30vw, 21rem);
+  width: clamp(14rem, 28vw, 19rem);
   height: auto;
-  color: var(--mauve);
   margin-bottom: var(--space-4);
 }
 
