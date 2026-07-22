@@ -3210,6 +3210,108 @@ body.intro-lock { overflow: hidden; }
 .intake-success { text-align: center; }
 .intake-success[hidden] { display: none; }
 
+/* required marker + section headings + question groups */
+.in-req { color: var(--mauve); }
+
+.in-section {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--plum);
+  margin: var(--space-4) 0 0.4rem;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--ink-15);
+}
+
+.in-q {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--space-3);
+}
+
+.in-q legend {
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.in-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-right: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+.in-radio input { accent-color: var(--mauve); }
+
+.in-note {
+  font-size: 0.82rem;
+  color: var(--ink-60);
+  background: rgba(165, 121, 139, 0.07);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: var(--space-3);
+}
+
+.in-acne {
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: 0 var(--space-4);
+  margin: var(--space-3) 0;
+  background: rgba(230, 189, 178, 0.07);
+}
+
+.in-acne > summary {
+  cursor: pointer;
+  padding: 0.9rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--plum);
+  list-style: none;
+}
+
+.in-acne > summary::-webkit-details-marker { display: none; }
+.in-acne > summary::before { content: "＋ "; color: var(--mauve); }
+.in-acne[open] > summary::before { content: "− "; }
+.in-acne[open] > summary { border-bottom: 1px solid var(--panel-edge-soft); margin-bottom: var(--space-3); }
+
+.in-terms {
+  max-height: 9rem;
+  overflow-y: auto;
+  font-size: 0.8rem;
+  color: var(--ink-60);
+  line-height: 1.6;
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-bottom: var(--space-3);
+}
+
+/* pre-pay consent gate in the booking flow */
+.booking-consent-view[hidden] { display: none; }
+
+.consent-back {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-bottom: var(--space-3);
+  font: inherit;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mauve);
+  cursor: pointer;
+}
+
+.booking-consent-continue { width: 100%; text-align: center; }
+
+.booking-consent-status { color: #b3402f; }
+
 .acct-intake-line { margin-bottom: 0.5rem; }
 
 .acct-intake-status { font-size: 0.85rem; color: var(--ink-60); }

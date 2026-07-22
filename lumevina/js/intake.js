@@ -1,12 +1,13 @@
 /* Lumevina — pre-visit intake form
-   The digital consultation/consent form clients complete before a
-   visit (GlossGenius parity). Real, validated, and stored — in the
-   demo to localStorage keyed by email; live, it saves to Supabase
-   alongside the booking (see server/README.md). The owner sees each
-   client's latest form in My Lumevina / the dashboard.
+   The full clinical intake (Lumevina Facial Intake + acne consent).
+   The binding pre-payment consent + signature lives in the booking
+   flow (js/booking.js); this longer form gathers the medical/skin
+   detail and is completed before the visit — never blocking the sale.
 
-   window.LumevinaIntake.open(prefill) opens it; booking.js calls this
-   from the success screen, and account.js links to it. */
+   Real, validated, stored per client (localStorage demo, Supabase-
+   ready: one row in intake_forms with a jsonb `answers`). The owner
+   reads it in My Lumevina / the dashboard. Opened via
+   window.LumevinaIntake.open(prefill). */
 
 (function () {
   "use strict";
@@ -21,22 +22,10 @@
   var successView = modal.querySelector(".intake-success");
   var submitBtn = modal.querySelector(".intake-submit");
   var statusEl = modal.querySelector(".intake-status");
-
-  var fields = {
-    name: modal.querySelector("#in-name"),
-    dob: modal.querySelector("#in-dob"),
-    phone: modal.querySelector("#in-phone"),
-    email: modal.querySelector("#in-email"),
-    concerns: modal.querySelector("#in-concerns"),
-    products: modal.querySelector("#in-products"),
-    allergies: modal.querySelector("#in-allergies"),
-    meds: modal.querySelector("#in-meds"),
-    pregnant: modal.querySelector("#in-pregnant"),
-    sun: modal.querySelector("#in-sun"),
-    accutane: modal.querySelector("#in-accutane"),
-    consent: modal.querySelector("#in-consent"),
-    signature: modal.querySelector("#in-sign")
-  };
+  var nameEl = modal.querySelector("#in-name");
+  var emailEl = modal.querySelector("#in-email");
+  var signEl = modal.querySelector("#in-sign");
+  var guardianField = modal.querySelector(".in-guardian-field");
 
   /* ── Storage (keyed by lowercased email) ── */
   var loadAll = function () {
@@ -56,6 +45,55 @@
     return loadAll()[email.toLowerCase()] || null;
   };
 
+  /* ── Serialize every named control into an answers object ──
+     radios → chosen value · checkbox groups → array · lone
+     checkbox → "value"/absent · text/textarea → string */
+  var collect = function () {
+    var out = {};
+    var controls = formView.querySelectorAll("[name]");
+    controls.forEach(function (el) {
+      var n = el.name;
+      if (el.type === "radio") {
+        if (el.checked) out[n] = el.value;
+      } else if (el.type === "checkbox") {
+        var group = formView.querySelectorAll('[name="' + n + '"]');
+        if (group.length > 1) {                 /* a checkbox group */
+          if (!Array.isArray(out[n])) out[n] = [];
+          if (el.checked) out[n].push(el.value);
+        } else if (el.checked) {
+          out[n] = el.value || true;
+        }
+      } else {
+        var v = el.value.trim();
+        if (v) out[n] = v;
+      }
+    });
+    return out;
+  };
+
+  var setValue = function (name, value) {
+    var els = formView.querySelectorAll('[name="' + name + '"]');
+    els.forEach(function (el) {
+      if (el.type === "radio") el.checked = (el.value === value);
+      else if (el.type === "checkbox") {
+        el.checked = Array.isArray(value)
+          ? value.indexOf(el.value) !== -1 : !!value;
+      } else if (value != null) el.value = value;
+    });
+  };
+
+  var clearForm = function () {
+    formView.querySelectorAll("[name]").forEach(function (el) {
+      if (el.type === "radio" || el.type === "checkbox") el.checked = false;
+      else el.value = "";
+    });
+  };
+
+  var syncGuardian = function () {
+    var minor = formView.querySelector('[name="minor"]:checked');
+    guardianField.hidden = !(minor && minor.value === "Yes");
+  };
+
   /* ── Open / close ── */
   var lastFocus = null;
 
@@ -65,25 +103,20 @@
     formView.hidden = false;
     successView.hidden = true;
     prefill = prefill || {};
+    clearForm();
 
-    /* pull known values: passed-in, signed-in account, or a prior form */
     var acct = window.LumevinaAccount && window.LumevinaAccount.current();
     var email = prefill.email || (acct && acct.email) || "";
     var prior = getFor(email);
-    var src = prior || {};
-    fields.name.value = prefill.name || src.name || (acct && acct.name) || "";
-    fields.email.value = email || src.email || "";
-    fields.dob.value = src.dob || "";
-    fields.phone.value = src.phone || "";
-    fields.concerns.value = src.concerns || "";
-    fields.products.value = src.products || "";
-    fields.allergies.value = src.allergies || "";
-    fields.meds.value = src.meds || "";
-    fields.pregnant.checked = !!src.pregnant;
-    fields.sun.checked = !!src.sun;
-    fields.accutane.checked = !!src.accutane;
-    fields.consent.checked = false;
-    fields.signature.value = "";
+    if (prior && prior.answers) {
+      Object.keys(prior.answers).forEach(function (k) {
+        setValue(k, prior.answers[k]);
+      });
+    }
+    nameEl.value = prefill.name || (prior && prior.name) || (acct && acct.name) || "";
+    emailEl.value = email;
+    signEl.value = "";
+    syncGuardian();
 
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
@@ -96,7 +129,6 @@
     overlay.hidden = true;
     var mm = document.getElementById("mobile-menu");
     var bk = document.querySelector(".booking-modal");
-    /* keep scroll locked if the booking modal is still open under us */
     document.body.style.overflow =
       ((mm && !mm.hidden) || (bk && bk.getAttribute("aria-hidden") === "false"))
         ? "hidden" : "";
@@ -109,47 +141,50 @@
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") closeModal();
   });
+  formView.addEventListener("change", function (e) {
+    if (e.target && e.target.name === "minor") syncGuardian();
+  });
 
   /* ── Submit ── */
   submitBtn.addEventListener("click", function () {
+    var name = nameEl.value.trim();
+    var email = emailEl.value.trim();
+    var sig = signEl.value.trim();
+    var answers = collect();
+
     var problems = [];
-    if (!fields.name.value.trim()) problems.push("your name");
-    if (!fields.email.value.trim() || !fields.email.checkValidity()) problems.push("a valid email");
-    if (!fields.consent.checked) problems.push("your consent");
-    var sig = fields.signature.value.trim();
+    if (!name) problems.push("your name");
+    if (!email || !emailEl.checkValidity()) problems.push("a valid email");
+    if (!answers.terms) problems.push("agreement to the terms");
+    if (!answers.covid_symptoms || !answers.covid_consent) problems.push("the health confirmations");
+    if (!answers.photo_consent) problems.push("a photo-permission choice");
+    if (!answers.minor) problems.push("whether you're under 18");
+    if (answers.minor === "Yes" && !answers.guardian) problems.push("your guardian's name & phone");
     if (!sig) problems.push("your signature");
-    else if (sig.toLowerCase() !== fields.name.value.trim().toLowerCase()) {
-      problems.push("a signature matching your name");
-    }
+    else if (sig.toLowerCase() !== name.toLowerCase()) problems.push("a signature matching your name");
+
     if (problems.length) {
       statusEl.textContent = "Please add: " + problems.join(", ") + ".";
+      var first = formView.querySelector(".intake-status");
+      if (first) first.scrollIntoView({ block: "center", behavior: "smooth" });
       return;
     }
 
     var record = {
-      name: fields.name.value.trim(),
-      email: fields.email.value.trim(),
-      dob: fields.dob.value,
-      phone: fields.phone.value.trim(),
-      concerns: fields.concerns.value.trim(),
-      products: fields.products.value.trim(),
-      allergies: fields.allergies.value.trim(),
-      meds: fields.meds.value.trim(),
-      pregnant: fields.pregnant.checked,
-      sun: fields.sun.checked,
-      accutane: fields.accutane.checked,
-      signature: sig,
+      name: name, email: email,
+      answers: answers, signature: sig,
       signedAt: new Date().toISOString()
     };
     save(record);
 
-    /* LIVE: POST record to Supabase (intake_forms table) here. */
+    /* LIVE: upsert { email, name, answers, signature, signed_at } into
+       Supabase intake_forms here (see server/README.md). */
 
     formView.hidden = true;
     successView.hidden = false;
     modal.querySelector(".intake-done").focus();
     document.dispatchEvent(new CustomEvent("lumevina:intake-saved",
-      { detail: { email: record.email } }));
+      { detail: { email: email } }));
   });
 
   window.LumevinaIntake = {

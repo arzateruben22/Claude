@@ -81,6 +81,13 @@
   var payBtn = modal.querySelector(".booking-pay");
   var payStatus = modal.querySelector(".booking-pay-status");
   var backBtn = modal.querySelector(".booking-back");
+  var consentView = modal.querySelector(".booking-consent-view");
+  var consentContinue = modal.querySelector(".booking-consent-continue");
+  var consentBack = modal.querySelector(".consent-back");
+  var consentTerms = modal.querySelector(".consent-terms");
+  var consentCovid = modal.querySelector(".consent-covid");
+  var consentSign = modal.querySelector("#bk-consent-sign");
+  var consentStatus = modal.querySelector(".booking-consent-status");
   var cardNameInput = modal.querySelector("#bk-card-name");
   var cardInput = modal.querySelector("#bk-card");
   var expiryInput = modal.querySelector("#bk-expiry");
@@ -103,6 +110,7 @@
   var intakeStatusEl = modal.querySelector(".booking-intake-status");
   var pendingBlocks = 0;
   var lastBooking = null;
+  var consentSignature = null;
 
   /* ── Session state ── */
   var state = {
@@ -635,6 +643,7 @@
       if (!emailInput.value) emailInput.value = acct.email || "";
     }
     formView.hidden = false;
+    consentView.hidden = true;
     payView.hidden = true;
     successView.hidden = true;
     renderAll();
@@ -742,15 +751,45 @@
     updatePayAmount();
     if (!cardNameInput.value) cardNameInput.value = nameInput.value.trim();
 
+    /* form → quick consent gate (then → deposit) */
+    consentTerms.checked = false;
+    consentCovid.checked = false;
+    consentSign.value = "";
+    consentStatus.textContent = "";
     formView.hidden = true;
+    consentView.hidden = false;
+    consentTerms.focus();
+  });
+
+  /* consent gate → deposit */
+  consentContinue.addEventListener("click", function () {
+    var problems = [];
+    if (!consentTerms.checked) problems.push("agree to the treatment & policies");
+    if (!consentCovid.checked) problems.push("confirm the health screening");
+    var sig = consentSign.value.trim();
+    if (!sig) problems.push("type your name to sign");
+    else if (sig.toLowerCase() !== nameInput.value.trim().toLowerCase()) {
+      problems.push("a signature matching your name");
+    }
+    if (problems.length) {
+      consentStatus.textContent = "Please " + problems.join(", ") + ".";
+      return;
+    }
+    consentSignature = sig;
+    consentView.hidden = true;
     payView.hidden = false;
     payStatus.textContent = "";
     cardInput.focus();
   });
 
+  consentBack.addEventListener("click", function () {
+    consentView.hidden = true;
+    formView.hidden = false;
+  });
+
   backBtn.addEventListener("click", function () {
     payView.hidden = true;
-    formView.hidden = false;
+    consentView.hidden = false;
   });
 
   /* ── Step 2: pay the deposit (shared engine, Stripe-ready) ── */
@@ -794,7 +833,10 @@
         /* stamp where the booking came from — 'app' inside the
            Capacitor shell, 'web' in a browser. Powers the app-vs-web
            split in the owner dashboard, captured from booking #1. */
-        source: window.Capacitor ? "app" : "web"
+        source: window.Capacitor ? "app" : "web",
+        /* the pre-pay consent + signature (the binding sign-off; the
+           full clinical intake is completed before the visit) */
+        consent: { signature: consentSignature, signedAt: new Date().toISOString() }
       });
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());

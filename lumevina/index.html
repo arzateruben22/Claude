@@ -1036,7 +1036,39 @@
         <p class="form-status booking-status" role="alert"></p>
       </div>
 
-      <!-- step 2: the 50% deposit -->
+      <!-- step 2: a quick consent + sign (the full clinical intake comes
+           after booking so it never blocks checkout) -->
+      <div class="booking-consent-view" hidden>
+        <button class="consent-back" type="button">← Back to time selection</button>
+        <h2 class="booking-title">One quick sign-off</h2>
+        <p class="booking-demo-note">Just the essentials to hold your spot — your full
+        pre-visit form comes right after, before your appointment.</p>
+
+        <label class="intake-consent">
+          <input type="checkbox" class="consent-terms">
+          <span>I consent to the treatment and agree to Lumevina's
+          <a class="inline-link" href="#policies">policies</a> (deposits, cancellation,
+          aftercare), and I'll disclose any allergies, medications, or conditions on my
+          pre-visit form.</span>
+        </label>
+        <label class="intake-consent">
+          <input type="checkbox" class="consent-covid">
+          <span>I'm feeling well, have no COVID-19 symptoms, and consent to service during the
+          pandemic — I won't hold Lumevina liable for the possibility of exposure.</span>
+        </label>
+        <div class="field">
+          <label for="bk-consent-sign">Type your full name to sign</label>
+          <input id="bk-consent-sign" type="text" autocomplete="off" placeholder="Your signature">
+        </div>
+
+        <button class="btn-mb booking-consent-continue" type="button">
+          <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
+          <span class="btn btn-solid btn-mb-inner">Agree &amp; continue to deposit</span>
+        </button>
+        <p class="form-status booking-consent-status" role="alert"></p>
+      </div>
+
+      <!-- step 3: the 50% deposit -->
       <div class="booking-pay-view" hidden>
         <button class="booking-back" type="button">← Back to time selection</button>
         <h2 class="booking-title">Secure with a deposit</h2>
@@ -1127,19 +1159,20 @@
       <button class="intake-close" type="button" aria-label="Close intake form">×</button>
 
       <div class="intake-form-view">
-        <h2 class="booking-title" id="intake-title">Pre-visit form</h2>
-        <p class="intake-intro">A few details help us tailor your treatment and keep you safe.
-        Please complete this before your appointment — it takes about a minute. Your answers
-        are private and stored only for your care.</p>
+        <h2 class="booking-title" id="intake-title">Facial intake &amp; consent</h2>
+        <p class="intake-intro">All new and existing clients complete this form. Please be as
+        thorough as you can so we can give you the facial that's best for your skin. Your
+        answers are private and kept only for your care.</p>
 
+        <!-- ── Contact ── -->
         <div class="field-row">
           <div class="field">
-            <label for="in-name">Full name</label>
+            <label for="in-name">First &amp; last name <span class="in-req">*</span></label>
             <input id="in-name" name="name" type="text" autocomplete="name" required>
           </div>
           <div class="field">
-            <label for="in-dob">Date of birth</label>
-            <input id="in-dob" name="dob" type="date" autocomplete="bday">
+            <label for="in-email">Email <span class="in-req">*</span></label>
+            <input id="in-email" name="email" type="email" autocomplete="email" required>
           </div>
         </div>
         <div class="field-row">
@@ -1148,53 +1181,285 @@
             <input id="in-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel">
           </div>
           <div class="field">
-            <label for="in-email">Email</label>
-            <input id="in-email" name="email" type="email" autocomplete="email" required>
+            <label for="in-dob">Date of birth</label>
+            <input id="in-dob" name="dob" type="date" autocomplete="bday">
           </div>
         </div>
 
-        <div class="field">
-          <label for="in-concerns">Your main skin or skincare concerns</label>
-          <textarea id="in-concerns" name="concerns" rows="2"
-            placeholder="Acne, texture, fine lines, hyperpigmentation…"></textarea>
-        </div>
-        <div class="field">
-          <label for="in-products">Current products &amp; actives (retinol, acids, etc.)</label>
-          <textarea id="in-products" name="products" rows="2"
-            placeholder="What you're using now, especially retinoids or exfoliating acids"></textarea>
-        </div>
-        <div class="field">
-          <label for="in-allergies">Allergies &amp; sensitivities</label>
-          <input id="in-allergies" name="allergies" type="text"
-            placeholder="Latex, fragrances, ingredients, adhesives…">
-        </div>
-        <div class="field">
-          <label for="in-meds">Medications &amp; recent treatments</label>
-          <input id="in-meds" name="meds" type="text"
-            placeholder="Accutane, antibiotics, recent peels/laser, injectables…">
-        </div>
+        <!-- ── Medications & history ── -->
+        <p class="in-section">Medications &amp; history</p>
 
-        <fieldset class="intake-checks">
-          <legend class="booking-label">Please confirm</legend>
-          <label class="intake-check"><input type="checkbox" id="in-pregnant"> I am pregnant or nursing</label>
-          <label class="intake-check"><input type="checkbox" id="in-sun"> I've had significant sun exposure or a tan in the last 2 weeks</label>
-          <label class="intake-check"><input type="checkbox" id="in-accutane"> I've used Accutane/isotretinoin in the last 6 months</label>
+        <fieldset class="in-q">
+          <legend>Have you ever taken, or are you currently taking, Retin-A or Accutane?</legend>
+          <label class="in-radio"><input type="radio" name="retin_accutane" value="Yes"> Yes</label>
+          <label class="in-radio"><input type="radio" name="retin_accutane" value="No"> No</label>
         </fieldset>
 
+        <div class="field">
+          <label for="in-physician">Within the last year, have you been under a physician's care,
+            on medication, or had any health problems (including allergies)?</label>
+          <input id="in-physician" name="physician_care" type="text" placeholder="Describe, or “n/a”">
+        </div>
+        <div class="field">
+          <label for="in-allergies">Any known allergies? (nuts, fruits, fragrances, etc.)</label>
+          <input id="in-allergies" name="allergies" type="text" placeholder="List, or “none”">
+        </div>
+        <div class="field">
+          <label for="in-meds">Are you currently taking any medication? Please list all,
+            including over-the-counter drugs and herbal supplements.</label>
+          <textarea id="in-meds" name="medications" rows="2" placeholder="List, or “none”"></textarea>
+        </div>
+
+        <fieldset class="in-q">
+          <legend>Have you experienced any of these health conditions, past or present?</legend>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Hormone imbalance"> Hormone imbalance</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Hyper/Hypo thyroid"> Hyper/Hypo thyroid</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Cancer / systemic disease"> Cancer / systemic disease</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Heart problem"> Heart problem</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Auto-immune disorder"> Auto-immune disorder</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Asthma"> Asthma</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Epilepsy / seizure disorder"> Epilepsy / seizure disorder</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="HIV/AIDS"> HIV/AIDS</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Lupus"> Lupus</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="Other"> Other</label>
+          <label class="intake-check"><input type="checkbox" name="conditions" value="None"> None</label>
+        </fieldset>
+
+        <div class="field">
+          <label for="in-cancer">Have you ever been treated for cancer? If yes, when, and what
+            therapies were used?</label>
+          <input id="in-cancer" name="cancer_history" type="text" placeholder="Describe, or “n/a”">
+        </div>
+        <div class="field">
+          <label for="in-implants">Do you have metal implants, a pacemaker, or body piercings?</label>
+          <input id="in-implants" name="implants" type="text" placeholder="Describe, or “none”">
+        </div>
+
+        <fieldset class="in-q">
+          <legend>Are you pregnant, trying to become pregnant, or lactating?</legend>
+          <label class="in-radio"><input type="radio" name="pregnant" value="Yes"> Yes</label>
+          <label class="in-radio"><input type="radio" name="pregnant" value="No"> No</label>
+        </fieldset>
+        <div class="field">
+          <label for="in-smoker">Are you a frequent smoker?</label>
+          <input id="in-smoker" name="smoker" type="text" placeholder="Yes / No / occasionally">
+        </div>
+
+        <!-- ── Current products & treatments ── -->
+        <p class="in-section">Current products &amp; recent treatments</p>
+
+        <fieldset class="in-q">
+          <legend>Are you currently using any of these products, or have you had any of these
+            treatments recently?</legend>
+          <label class="intake-check"><input type="checkbox" name="using" value="Exfoliating products"> Exfoliating products</label>
+          <label class="intake-check"><input type="checkbox" name="using" value="Vitamin A derivatives (Retinol)"> Vitamin A derivatives (Retinol)</label>
+          <label class="intake-check"><input type="checkbox" name="using" value="Wax (within 24 hrs)"> Wax (within the last 24 hrs)</label>
+          <label class="intake-check"><input type="checkbox" name="using" value="Laser / light therapy (within a month)"> Laser or light therapy (within a month)</label>
+          <label class="intake-check"><input type="checkbox" name="using" value="Chemical peel (within a month)"> Chemical peel (within a month)</label>
+          <label class="intake-check"><input type="checkbox" name="using" value="Microdermabrasion (within a month)"> Microdermabrasion (within a month)</label>
+          <label class="intake-check"><input type="checkbox" name="using" value="N/A"> N/A</label>
+        </fieldset>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="in-exfoliated">Last day you exfoliated?</label>
+            <input id="in-exfoliated" name="last_exfoliated" type="text" placeholder="Please avoid 5–7 days before">
+          </div>
+          <div class="field">
+            <label for="in-retinol">Last day you used retinol?</label>
+            <input id="in-retinol" name="last_retinol" type="text" placeholder="Please stop 7 days before">
+          </div>
+        </div>
+        <div class="field">
+          <label for="in-current-products">What skincare products do you currently use?
+            (brands/types — cleanser, toner, moisturizer, etc.)</label>
+          <textarea id="in-current-products" name="current_products" rows="2"></textarea>
+        </div>
+
+        <!-- ── Your skin ── -->
+        <p class="in-section">Your skin</p>
+
+        <div class="field">
+          <label for="in-goals">What are your skincare goals?</label>
+          <textarea id="in-goals" name="goals" rows="2"></textarea>
+        </div>
+        <fieldset class="in-q">
+          <legend>What are your skincare challenges?</legend>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Wrinkles / fine lines"> Wrinkles / fine lines</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Hyper-pigmentation / sun damage"> Hyper-pigmentation / sun damage</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Breakout activity"> Breakout activity</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Acne scarring"> Acne scarring</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Rosacea"> Rosacea</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Sensitivity / redness"> Sensitivity / redness</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Oiliness"> Oiliness</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Dryness"> Dryness</label>
+          <label class="intake-check"><input type="checkbox" name="challenges" value="Eczema"> Eczema</label>
+        </fieldset>
+        <fieldset class="in-q">
+          <legend>How would you describe your water intake?</legend>
+          <label class="in-radio"><input type="radio" name="water" value="Really good"> Really good</label>
+          <label class="in-radio"><input type="radio" name="water" value="Good"> Good</label>
+          <label class="in-radio"><input type="radio" name="water" value="Needs work"> Needs work</label>
+        </fieldset>
+
+        <!-- ── Preferences ── -->
+        <p class="in-section">Preferences</p>
+
+        <fieldset class="in-q">
+          <legend>Your esthetician may include a face, neck, shoulder, or arm massage if your
+            skin is a good candidate. Do you consent to a massage in these areas?</legend>
+          <label class="in-radio"><input type="radio" name="massage_consent" value="Yes"> Yes</label>
+          <label class="in-radio"><input type="radio" name="massage_consent" value="No"> No</label>
+        </fieldset>
+        <fieldset class="in-q">
+          <legend>Would you like a silent appointment?</legend>
+          <label class="in-radio"><input type="radio" name="silent" value="Yes — I want to relax"> Yes — I want to relax</label>
+          <label class="in-radio"><input type="radio" name="silent" value="No — let's chat!"> No — let's chat!</label>
+        </fieldset>
+        <div class="field">
+          <label for="in-referral">How did you hear about Lumevina / who referred you?
+            (please list their name)</label>
+          <input id="in-referral" name="referral" type="text">
+        </div>
+
+        <!-- ── Acne treatment consent (only if booking an acne treatment) ── -->
+        <details class="in-acne">
+          <summary>Booking an acne treatment? Open the acne consent</summary>
+          <p class="in-note">An acne treatment may include surface cleansing, a mild chemical
+          peel or steam and exfoliation, antibacterial and corrective serums, and extractions
+          (about 45–60 minutes). All implements are disposable or sterilized per State Board of
+          Cosmetology regulations.</p>
+
+          <fieldset class="in-q">
+            <legend>I have not been exposed to excessive sun, and my skin does not feel
+              sensitive or irritated.</legend>
+            <label class="in-radio"><input type="radio" name="acne_sun" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_sun" value="No"> No</label>
+          </fieldset>
+          <fieldset class="in-q">
+            <legend>I have not had a chemical peel of any kind within 14 days of this treatment.</legend>
+            <label class="in-radio"><input type="radio" name="acne_peel" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_peel" value="No"> No</label>
+          </fieldset>
+          <fieldset class="in-q">
+            <legend>I have not had facial waxing within 7 days of this treatment.</legend>
+            <label class="in-radio"><input type="radio" name="acne_wax" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_wax" value="No"> No</label>
+          </fieldset>
+          <fieldset class="in-q">
+            <legend>I have informed the clinic of all health problems I'm aware of, including
+              herpes simplex / cold sores.</legend>
+            <label class="in-radio"><input type="radio" name="acne_health" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_health" value="No"> No</label>
+          </fieldset>
+          <fieldset class="in-q">
+            <legend>I have informed the clinic of any oral or topical medications, including
+              retinoids (Retin-A, Renova, Avita, Differin, Tazorac) or Accutane.</legend>
+            <label class="in-radio"><input type="radio" name="acne_meds" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_meds" value="No"> No</label>
+          </fieldset>
+          <fieldset class="in-q">
+            <legend>I understand clearing acne is best achieved through a series of treatments
+              and consistency with my recommended home-care routine.</legend>
+            <label class="in-radio"><input type="radio" name="acne_series" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_series" value="No"> No</label>
+          </fieldset>
+
+          <label class="intake-consent">
+            <input type="checkbox" name="acne_warnings" value="agreed">
+            <span><strong>Aftercare warnings — I agree:</strong> avoid direct sunlight and tanning
+            booths for at least 3 days; use sunblock after every treatment; do not pick my skin;
+            Face Reality products are clinical-strength actives; mild tingling on application is
+            possible but should not be irritating — if I experience stinging or irritation I will
+            stop the product and contact my acne expert.</span>
+          </label>
+          <fieldset class="in-q">
+            <legend>I consent to photographs of my face to monitor treatment progress.</legend>
+            <label class="in-radio"><input type="radio" name="acne_photos" value="Yes"> Yes</label>
+            <label class="in-radio"><input type="radio" name="acne_photos" value="No"> No</label>
+          </fieldset>
+        </details>
+
+        <!-- ── COVID-19 ── -->
+        <p class="in-section">Health screening</p>
+        <div class="in-note">COVID-19 symptoms: fever, shortness of breath, loss of taste or
+        smell, dry cough, runny nose, chills, muscle pain, a new/unusual headache, or sore
+        throat in the past 72 hours.</div>
         <label class="intake-consent">
-          <input type="checkbox" id="in-consent" required>
-          <span>I confirm the above is accurate, I understand the treatment and its
-          aftercare, and I consent to service. I've read the
-          <a class="inline-link" href="#policies">policies</a>.</span>
+          <input type="checkbox" id="in-covid-symptoms" name="covid_symptoms" value="confirmed" required>
+          <span>I confirm that I — and my household members — do not currently have and have not
+          experienced the symptoms above in the last 14 days, have not been diagnosed with
+          COVID-19 in the last 30 days, and have not knowingly been in contact with a confirmed
+          case in the last 72 hours. <span class="in-req">*</span></span>
+        </label>
+        <label class="intake-consent">
+          <input type="checkbox" id="in-covid-consent" name="covid_consent" value="confirmed" required>
+          <span>I knowingly and willingly consent to service during the pandemic and will not
+          hold Lumevina Aesthetics Spa, or anyone working for the establishment, liable for the
+          possibility of contracting COVID-19. <span class="in-req">*</span></span>
+        </label>
+
+        <!-- ── Terms, photo consent & signature ── -->
+        <p class="in-section">Terms &amp; signature</p>
+        <div class="in-terms">
+          <p>I have read the above and, if I have any concerns, I will address them with my
+          licensed esthetician. I give permission to perform the facial procedure we've
+          discussed. I have given an accurate account of the questions above, including all
+          known allergies, prescription drugs, and products. I understand my esthetician will
+          take every precaution to minimize or eliminate a negative reaction, and I'm willing to
+          follow the home-care recommendations that help do so. I will consult my esthetician
+          immediately with any questions about my treatment or post-treatment care. I agree this
+          constitutes full disclosure and supersedes any previous verbal or written disclosure.
+          I understand the procedure and accept the risk. I do not hold esthetician Evelyn
+          Romero responsible for any condition present but not disclosed at the time of service
+          that may be affected by the treatment performed.</p>
+        </div>
+        <label class="intake-consent">
+          <input type="checkbox" id="in-terms" name="terms" value="agreed" required>
+          <span>I have read and agree to the terms above. <span class="in-req">*</span></span>
         </label>
 
         <div class="field">
-          <label for="in-sign">Type your full name to sign</label>
+          <label for="in-address">Address line 1</label>
+          <input id="in-address" name="address" type="text" autocomplete="address-line1">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="in-suite">Apt / suite</label>
+            <input id="in-suite" name="suite" type="text" autocomplete="address-line2">
+          </div>
+          <div class="field">
+            <label for="in-referred">Referred by</label>
+            <input id="in-referred" name="referred_by" type="text">
+          </div>
+        </div>
+
+        <fieldset class="in-q">
+          <legend>I give permission for photographs to be used by Evelyn Romero for educational
+            and promotional purposes. Full client confidentiality is maintained at all times.
+            <span class="in-req">*</span></legend>
+          <label class="in-radio"><input type="radio" name="photo_consent" value="I accept"> I accept</label>
+          <label class="in-radio"><input type="radio" name="photo_consent" value="I do not accept"> I do not accept</label>
+        </fieldset>
+
+        <fieldset class="in-q">
+          <legend>Are you under the age of 18? <span class="in-req">*</span></legend>
+          <label class="in-radio"><input type="radio" name="minor" value="Yes"> Yes</label>
+          <label class="in-radio"><input type="radio" name="minor" value="No"> No</label>
+        </fieldset>
+        <div class="field in-guardian-field" hidden>
+          <label for="in-guardian">Legal guardian's name &amp; phone number</label>
+          <input id="in-guardian" name="guardian" type="text"
+            placeholder="Required for clients under 18 — guardian must be present">
+        </div>
+
+        <div class="field">
+          <label for="in-sign">Type your full name to sign <span class="in-req">*</span></label>
           <input id="in-sign" name="signature" type="text" autocomplete="off"
             placeholder="Your signature">
         </div>
 
-        <button class="btn btn-solid intake-submit" type="button">Submit pre-visit form</button>
+        <button class="btn btn-solid intake-submit" type="button">Submit form</button>
         <p class="form-status intake-status" role="alert"></p>
         <p class="intake-fine">Demo: your form is saved on this device and shown to your
         esthetician. Live, it's stored securely with your booking.</p>

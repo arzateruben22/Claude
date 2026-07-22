@@ -89,15 +89,7 @@ create table intake_forms (
   email text primary key,
   client_id uuid references clients (id) on delete set null,
   name text not null,
-  dob date,
-  phone text,
-  concerns text,
-  products text,
-  allergies text,
-  meds text,
-  pregnant boolean not null default false,
-  recent_sun boolean not null default false,
-  accutane boolean not null default false,
+  answers jsonb not null,          -- all questions, keyed by field name
   signature text not null,
   signed_at timestamptz not null default now()
 );
