@@ -11,10 +11,32 @@
   var intro = document.getElementById("intro");
   if (!intro) return;
 
+  /* every refresh returns to the top. Tell the browser not to restore
+     the old scroll position, and force the top instantly (the page's
+     scroll-behavior:smooth would otherwise animate it). Some browsers
+     (notably mobile) restore late, after our script — so we snap to
+     top a few times while the veil covers the page, then again at the
+     lift, which reliably beats the restore. */
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+  var resetTop = function () {
+    var html = document.documentElement;
+    var prev = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    html.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+    html.style.scrollBehavior = prev;
+  };
+  resetTop();
+
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   if (reduce.matches) {
-    /* CSS already hides it; make sure nothing is locked */
+    /* CSS already hides it; make sure nothing is locked, and still
+       land at the top on refresh (catch late restores too) */
     intro.classList.add("intro-done");
+    [0, 120, 350].forEach(function (t) { setTimeout(resetTop, t); });
+    window.addEventListener("load", resetTop);
     return;
   }
 
@@ -24,6 +46,11 @@
 
   var done = false;
   var timers = [];
+
+  /* keep snapping to top under the veil until well past any late
+     scroll restoration */
+  [60, 200, 500, 900].forEach(function (t) { timers.push(setTimeout(resetTop, t)); });
+  window.addEventListener("load", resetTop);
 
   /* word-by-word reveal, driven by each element's data-delay */
   intro.querySelectorAll("[data-delay]").forEach(function (el) {
@@ -62,6 +89,8 @@
     window.removeEventListener("touchmove", onWheel, { passive: true });
     intro.classList.add("intro-out");
     document.body.classList.remove("intro-lock");
+    /* land on the hero now that we're unlocked */
+    resetTop();
     /* positions were measured while scroll was locked — recompute now
        that the page is scrollable, so the first scroll is accurate */
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
