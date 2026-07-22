@@ -89,6 +89,62 @@
 
     .foot { margin-top: 2.5rem; font-size: 0.76rem; color: var(--ink-45); text-align: center; }
 
+    /* retention gauge */
+    .retention { display: flex; align-items: center; gap: 1.4rem; }
+    .ret-num { font-family: var(--font-d); font-weight: 600; font-size: 3rem; line-height: 1;
+      color: var(--plum); font-variant-numeric: tabular-nums; }
+    .ret-body { font-size: 0.85rem; color: var(--ink-70); }
+    .ret-body strong { color: var(--ink); font-weight: 500; }
+    .ret-bar { height: 8px; border-radius: 999px; background: rgba(156,63,104,0.14);
+      overflow: hidden; margin: 0.5rem 0 0.3rem; }
+    .ret-fill { display: block; height: 100%; border-radius: inherit;
+      background: linear-gradient(90deg, var(--alt), var(--data)); }
+
+    /* product sales placeholder */
+    #product-sales .ps-empty { font-size: 0.9rem; color: var(--ink-60);
+      background: var(--panel); border: 1px dashed var(--edge); border-radius: 12px;
+      padding: 1.1rem 1.2rem; }
+    #product-sales .ps-empty strong { color: var(--plum); font-weight: 500; }
+
+    /* CRM */
+    .crm-card { margin-bottom: 1.4rem; }
+    .crm-head { display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .crm-search { font: inherit; font-size: 0.9rem; color: var(--ink); background: var(--panel);
+      border: 1px solid var(--edge); border-radius: 999px; padding: 0.5rem 1rem; min-width: 15rem; }
+    .crm-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+    .crm-row { border-top: 1px solid var(--edge); }
+    .crm-summary { display: grid; grid-template-columns: 1.6fr 1fr auto auto; gap: 1rem;
+      align-items: center; padding: 0.9rem 0.2rem; cursor: pointer; }
+    .crm-summary:hover { background: rgba(156,63,104,0.03); }
+    .crm-name { font-weight: 500; color: var(--ink); }
+    .crm-name small { display: block; font-weight: 300; color: var(--ink-45); font-size: 0.8rem; }
+    .crm-meta { font-size: 0.82rem; color: var(--ink-60); font-variant-numeric: tabular-nums; }
+    .crm-chip { justify-self: end; font-size: 0.72rem; letter-spacing: 0.04em; padding: 0.2rem 0.6rem;
+      border-radius: 999px; white-space: nowrap; }
+    .crm-chip.on { color: #4f7d5e; background: rgba(79,125,94,0.12); }
+    .crm-chip.off { color: var(--ink-45); background: rgba(68,54,64,0.06); }
+    .crm-caret { color: var(--ink-45); transition: transform 200ms ease; }
+    .crm-row.open .crm-caret { transform: rotate(90deg); }
+    .crm-detail { display: none; padding: 0.2rem 0.2rem 1.2rem; }
+    .crm-row.open .crm-detail { display: block; }
+    .crm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+    .crm-detail h3 { font-family: var(--font-d); font-weight: 600; font-size: 1.05rem;
+      color: var(--plum); margin: 0.2rem 0 0.5rem; }
+    .crm-visit { font-size: 0.85rem; color: var(--ink-70); padding: 0.35rem 0;
+      border-bottom: 1px solid var(--edge); display: flex; justify-content: space-between; gap: 1rem; }
+    .crm-visit span:last-child { font-variant-numeric: tabular-nums; color: var(--ink); }
+    .crm-ans { list-style: none; margin: 0; padding: 0; font-size: 0.85rem; }
+    .crm-ans li { padding: 0.3rem 0; border-bottom: 1px solid var(--edge); }
+    .crm-ans .k { color: var(--ink-45); }
+    .crm-ans .v { color: var(--ink); }
+    .crm-none { color: var(--ink-45); font-style: italic; font-size: 0.9rem; padding: 1rem 0; }
+    @media (max-width: 720px) {
+      .crm-summary { grid-template-columns: 1fr auto; }
+      .crm-meta, .crm-chip { grid-column: 1 / -1; justify-self: start; }
+      .crm-cols { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 860px) {
       .kpis { grid-template-columns: repeat(2, 1fr); }
       .grid2 { grid-template-columns: 1fr; }
@@ -140,6 +196,32 @@
         <p class="sub" style="margin:1rem 0 0">No-shows fell to <strong style="color:var(--good)">6%</strong>
         (from 18%) — deposits at booking are doing the work.</p>
       </div>
+    </div>
+
+    <!-- ── New-member retention + product sales ── -->
+    <div class="grid2">
+      <div class="card">
+        <h2>New-member retention</h2>
+        <p class="sub">Of clients whose first visit was recent, how many came back.</p>
+        <div class="retention" id="retention"></div>
+      </div>
+      <div class="card">
+        <h2>Product sales</h2>
+        <p class="sub">Retail revenue — lights up when you add products to the shop.</p>
+        <div id="product-sales"></div>
+      </div>
+    </div>
+
+    <!-- ── Client CRM ── -->
+    <div class="card crm-card">
+      <div class="crm-head">
+        <div>
+          <h2>Clients</h2>
+          <p class="sub" id="crm-sub">Every client, their visits, spend, and pre-visit form.</p>
+        </div>
+        <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
+      </div>
+      <ul class="crm-list" id="crm-list"></ul>
     </div>
 
     <div class="proof">
@@ -339,6 +421,197 @@
       var d = document.createElement("div");
       d.innerHTML = '<div class="m-val">' + r.v + '</div><div class="m-lbl">' + r.l + '</div>';
       rbox.appendChild(d);
+    });
+
+    /* ══════════════ Client CRM + retention + product sales ══════════════
+       Reads the same localStorage the site writes (bookings + intake).
+       Live, this reads Supabase (bookings, intake_forms, order_items).
+       When there's no real data yet — a fresh browser or the preview —
+       it falls back to a small sample so the layout reads complete. */
+    var money = function (n) { return "$" + Number(n || 0).toLocaleString("en-US"); };
+    var lget = function (k) {
+      try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; }
+    };
+
+    var CATALOG = {}; /* id → name, from any add-to-cart buttons if present */
+    document.querySelectorAll && document.querySelectorAll(".add-to-cart").forEach(function (b) {
+      if (b.dataset.id) CATALOG[b.dataset.id] = b.dataset.name;
+    });
+    var svcName = function (id) {
+      if (CATALOG[id]) return CATALOG[id];
+      return String(id).replace(/-/g, " ").replace(/\b\w/g, function (c) {
+        return c.toUpperCase(); });
+    };
+
+    var fmtDate = function (key) {
+      var d = new Date(key + "T00:00:00");
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    };
+    var fmtTime = function (mins) {
+      var h = Math.floor(mins / 60), m = mins % 60, ap = h >= 12 ? "PM" : "AM";
+      return (h % 12 === 0 ? 12 : h % 12) + ":" + (m < 10 ? "0" + m : m) + " " + ap;
+    };
+
+    /* build client records from real storage */
+    var buildClients = function () {
+      var bookings = lget("lumevina_bookings") || [];
+      var intake = lget("lumevina_intake") || {};
+      var byEmail = {};
+      var keyOf = function (email, name) {
+        return (email || name || "").toLowerCase() || null;
+      };
+      bookings.forEach(function (b) {
+        var k = keyOf(b.email, b.name); if (!k) return;
+        var c = byEmail[k] || (byEmail[k] = { name: b.name || b.email, email: b.email || "",
+          visits: [], spent: 0 });
+        c.visits.push(b);
+        c.spent += Number(b.paid || b.deposit || 0);
+        if (b.name) c.name = b.name;
+      });
+      Object.keys(intake).forEach(function (email) {
+        var k = email.toLowerCase();
+        var c = byEmail[k] || (byEmail[k] = { name: intake[email].name, email: email,
+          visits: [], spent: 0 });
+        c.intake = intake[email];
+      });
+      return Object.keys(byEmail).map(function (k) { return byEmail[k]; });
+    };
+
+    var SAMPLE = [
+      { name: "Sofia Alvarez", email: "sofia@example.com", spent: 470,
+        visits: [
+          { date: "2026-06-12", time: 600, dur: 60, services: ["ageless-grace-facial"], paid: 115 },
+          { date: "2026-07-18", time: 630, dur: 90, services: ["lumevina-custom-facial", "brow-wax-tweeze"], paid: 100 }
+        ],
+        intake: { answers: { allergies: "None", goals: "Even tone, glow",
+          challenges: ["Hyper-pigmentation / sun damage"], water: "Good",
+          photo_consent: "I accept", minor: "No" }, signedAt: "2026-06-10T18:00:00Z" } },
+      { name: "Maya Chen", email: "maya@example.com", spent: 90,
+        visits: [ { date: "2026-07-20", time: 540, dur: 60, services: ["new-client-consultation"], paid: 90 } ],
+        intake: null },
+      { name: "Priya Nair", email: "priya@example.com", spent: 250,
+        visits: [
+          { date: "2026-05-02", time: 900, dur: 30, services: ["brazilian-wax"], paid: 30 },
+          { date: "2026-06-06", time: 900, dur: 30, services: ["brazilian-wax"], paid: 30 },
+          { date: "2026-07-11", time: 870, dur: 60, services: ["biorepeel-1"], paid: 125 }
+        ],
+        intake: { answers: { allergies: "Fragrance", goals: "Smooth, clear skin",
+          challenges: ["Breakout activity"], photo_consent: "I do not accept", minor: "No" },
+          signedAt: "2026-04-30T17:00:00Z" } }
+    ];
+
+    var clients = buildClients();
+    var usingSample = clients.length === 0;
+    if (usingSample) clients = SAMPLE;
+    clients.sort(function (a, b) { return b.spent - a.spent; });
+
+    /* ── Retention: new members (1 visit) vs those who returned (2+) ── */
+    (function () {
+      var total = clients.length;
+      var returned = clients.filter(function (c) { return (c.visits || []).length >= 2; }).length;
+      var rate = total ? Math.round(returned / total * 100) : 0;
+      document.getElementById("retention").innerHTML =
+        '<div class="ret-num">' + rate + '%</div>' +
+        '<div class="ret-body"><strong>' + returned + ' of ' + total +
+        '</strong> new clients came back for another visit.' +
+        '<div class="ret-bar"><span class="ret-fill" style="width:' + rate + '%"></span></div>' +
+        'The industry average is about 35%.</div>';
+    })();
+
+    /* ── Product sales (placeholder until retail exists) ── */
+    (function () {
+      var orders = lget("lumevina_orders") || [];
+      var box = document.getElementById("product-sales");
+      if (!orders.length) {
+        box.innerHTML = '<div class="ps-empty">No retail products yet. When you add products ' +
+          'to the shop, <strong>units sold, revenue, and top sellers</strong> appear here — ' +
+          'and count toward each client’s lifetime spend.</div>';
+      }
+    })();
+
+    /* ── Client list + detail ── */
+    var listEl = document.getElementById("crm-list");
+    document.getElementById("crm-sub").textContent = usingSample
+      ? "Sample clients — your real records appear here as bookings come in."
+      : clients.length + " client" + (clients.length === 1 ? "" : "s") +
+        " · visits, spend, and pre-visit forms.";
+
+    var ANS_LABELS = {
+      allergies: "Allergies", medications: "Medications", goals: "Goals",
+      challenges: "Challenges", conditions: "Conditions", water: "Water intake",
+      retin_accutane: "Retin-A / Accutane", pregnant: "Pregnant / nursing",
+      photo_consent: "Photo permission", minor: "Under 18", using: "Currently using",
+      current_products: "Current products", massage_consent: "Massage consent",
+      silent: "Silent appointment", physician_care: "Physician care" };
+
+    var renderRow = function (c) {
+      var li = document.createElement("li");
+      li.className = "crm-row";
+      var visits = (c.visits || []).slice().sort(function (a, b) {
+        return (a.date < b.date) ? 1 : -1; });
+      var last = visits[0];
+      var hasForm = !!c.intake;
+
+      var sum = document.createElement("div");
+      sum.className = "crm-summary";
+      sum.innerHTML =
+        '<div class="crm-name">' + (c.name || "—") + '<small>' + (c.email || "") + '</small></div>' +
+        '<div class="crm-meta">' + visits.length + ' visit' + (visits.length === 1 ? "" : "s") +
+          ' · ' + money(c.spent) + (last ? ' · last ' + fmtDate(last.date) : "") + '</div>' +
+        '<span class="crm-chip ' + (hasForm ? "on" : "off") + '">' +
+          (hasForm ? "Form on file" : "No form yet") + '</span>' +
+        '<span class="crm-caret">›</span>';
+      li.appendChild(sum);
+
+      var detail = document.createElement("div");
+      detail.className = "crm-detail";
+      var visitsHtml = visits.map(function (v) {
+        var names = (v.services || []).map(svcName).join(" + ");
+        return '<div class="crm-visit"><span>' + fmtDate(v.date) +
+          (v.time != null ? " · " + fmtTime(v.time) : "") + " · " + names +
+          '</span><span>' + money(v.paid || v.deposit) + '</span></div>';
+      }).join("") || '<div class="crm-none">No visits recorded.</div>';
+
+      var ansHtml = '<div class="crm-none">No pre-visit form on file yet.</div>';
+      if (c.intake && c.intake.answers) {
+        var a = c.intake.answers;
+        ansHtml = '<ul class="crm-ans">' + Object.keys(a).filter(function (k) {
+          return ["terms", "covid_symptoms", "covid_consent"].indexOf(k) === -1;
+        }).map(function (k) {
+          var val = Array.isArray(a[k]) ? a[k].join(", ") : a[k];
+          return '<li><span class="k">' + (ANS_LABELS[k] || k) + ':</span> <span class="v">' +
+            val + '</span></li>';
+        }).join("") + '</ul>';
+      }
+
+      detail.innerHTML =
+        '<div class="crm-cols"><div><h3>Visit history</h3>' + visitsHtml + '</div>' +
+        '<div><h3>Pre-visit form</h3>' + ansHtml + '</div></div>';
+      li.appendChild(detail);
+
+      sum.addEventListener("click", function () { li.classList.toggle("open"); });
+      return li;
+    };
+
+    var draw = function (filter) {
+      listEl.textContent = "";
+      var f = (filter || "").toLowerCase();
+      var shown = clients.filter(function (c) {
+        return !f || (c.name || "").toLowerCase().indexOf(f) !== -1 ||
+          (c.email || "").toLowerCase().indexOf(f) !== -1;
+      });
+      if (!shown.length) {
+        var none = document.createElement("li");
+        none.className = "crm-none";
+        none.textContent = "No clients match “" + filter + ".”";
+        listEl.appendChild(none);
+        return;
+      }
+      shown.forEach(function (c) { listEl.appendChild(renderRow(c)); });
+    };
+    draw("");
+    document.getElementById("crm-search").addEventListener("input", function () {
+      draw(this.value);
     });
   })();
   </script>

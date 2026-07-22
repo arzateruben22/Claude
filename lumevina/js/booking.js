@@ -826,9 +826,13 @@
         time: state.slot,
         dur: totalDur(),
         services: state.services.map(function (s) { return s.id; }),
+        /* who booked — lets the owner CRM group bookings by client */
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
         order: result.id,
         deposit: deposit,
         paid: charge,
+        total: sessionTotal(),
         flash: flashActive(),
         /* stamp where the booking came from — 'app' inside the
            Capacitor shell, 'web' in a browser. Powers the app-vs-web

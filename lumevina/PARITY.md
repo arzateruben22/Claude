@@ -34,10 +34,12 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe) · ⬜ not b
 | One shared calendar / no double-booking | 🟡 | DB exclusion constraint in `schema.sql` |
 | Owner analytics dashboard | ✅ | Revenue, rebooking, no-show, app-vs-web, rewards |
 | Booking source (app vs web) | ✅ | Captured from booking #1 |
-| **Intake forms visible to owner** | 🟡 | Stored per client; read in dashboard/table |
+| **Client CRM (profiles, history, forms)** | ✅ | Searchable clients → visit history + intake answers |
+| **New-member retention cohort** | ✅ | Returned vs first-time, in the dashboard |
+| **Product sales analytics** | 🟡 | Placeholder that lights up when retail is added |
+| **Intake forms visible to owner** | ✅ | Per client in the CRM (Supabase-ready) |
 | Automated confirmations/reminders | 🟡 | `send-confirmation` function |
 | Deposits / no-show protection | 🟡 | 50% deposit rule |
-| Client CRM (profiles, history, notes) | ⬜ | Next big build |
 | Calendar sync (Google/Apple) | ⬜ | Planned |
 | Marketing campaigns (email/SMS blasts) | ⬜ | Newsletter stub only |
 | Waitlist (auto-fill cancellations) | ⬜ | Flash openings are a cousin |
@@ -56,11 +58,11 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe) · ⬜ not b
 
 ## Suggested order for what's left
 
-1. **Client CRM** — per-client profile with history + notes (the biggest owner gap)
-2. **Self-service reschedule** — client moves their own appointment
-3. **Waitlist** — auto-offer a freed slot
-4. **Marketing** — simple email campaign to past clients
-5. **Reviews** — post-visit review request
+1. **Self-service reschedule** — client moves their own appointment
+2. **Waitlist** — auto-offer a freed slot
+3. **Marketing** — simple email campaign to past clients
+4. **Reviews** — post-visit review request
+5. **Retail products** — real inventory + product sales (activates the sales panel)
 6. Memberships, staff, bookkeeping — as the business (or white-label) needs them
 
 Out of scope for a website (hardware/financial products): in-person card-reader
