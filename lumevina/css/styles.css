@@ -3329,9 +3329,8 @@ body.intro-lock { overflow: hidden; }
   margin-bottom: var(--space-4);
 }
 
-.booking-reschedule-confirm { width: 100%; text-align: center; }
-
-/* in reschedule mode, hide the new-booking-only bits */
+/* in reschedule mode, hide the new-booking-only bits (the single confirm
+   button stays — it just relabels to "Confirm new time") */
 .booking-modal.rescheduling .fam,
 .booking-modal.rescheduling #bk-services-label,
 .booking-modal.rescheduling .field-help,
@@ -3339,8 +3338,7 @@ body.intro-lock { overflow: hidden; }
 .booking-modal.rescheduling .rw-ref-field,
 .booking-modal.rescheduling .mini-x,
 .booking-modal.rescheduling .booking-demo-note,
-.booking-modal.rescheduling .booking-resched-link,
-.booking-modal.rescheduling .booking-confirm { display: none; }
+.booking-modal.rescheduling .booking-resched-link { display: none; }
 
 /* seamless "already booked? reschedule" link under the booking intro */
 .booking-resched-link {
@@ -3386,6 +3384,9 @@ body.intro-lock { overflow: hidden; }
 
 .repick-when { font-weight: 500; color: var(--plum); }
 .repick-what { font-size: 0.85rem; color: var(--mauve); }
+
+/* soft "need to reschedule?" line in the Policies section */
+.policy-resched { margin-top: 0.9rem; font-size: 0.9rem; color: var(--mauve); }
 
 .acct-bk-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
 

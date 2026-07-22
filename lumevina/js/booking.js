@@ -112,7 +112,6 @@
   var lastBooking = null;
   var consentSignature = null;
   var rescheduleNote = modal.querySelector(".booking-reschedule-note");
-  var rescheduleConfirm = modal.querySelector(".booking-reschedule-confirm");
   var repickView = modal.querySelector(".booking-repick");
   var repickList = modal.querySelector(".repick-list");
   var rescheduleMode = false;
@@ -337,11 +336,19 @@
     chipsEl.appendChild(endRow);
   };
 
+  var setConfirmLabel = function (withDeposit) {
+    /* one button, two jobs: new booking → deposit · rescheduling → confirm move */
+    confirmBtn.querySelector(".btn-mb-inner").textContent = rescheduleMode
+      ? "Confirm new time"
+      : (withDeposit ? "Continue to deposit · " + pay.money(depositDue())
+                     : "Continue to deposit");
+  };
+
   var renderMeta = function () {
     var n = state.services.length;
     if (!n) {
       metaEl.textContent = "Add at least one service to build your session.";
-      confirmBtn.querySelector(".btn-mb-inner").textContent = "Continue to deposit";
+      setConfirmLabel(false);
       return;
     }
     var dur = totalDur();
@@ -351,8 +358,7 @@
       " · up to " + dayCapacity(dur) + " session" +
       (dayCapacity(dur) === 1 ? "" : "s") +
       " a day · Tue–Sun, 8:00 AM–6:00 PM · lunch 12:00–12:30";
-    confirmBtn.querySelector(".btn-mb-inner").textContent =
-      "Continue to deposit · " + pay.money(depositDue());
+    setConfirmLabel(true);
   };
 
   var renderDays = function () {
@@ -637,7 +643,6 @@
     rescheduleMode = false;
     modal.classList.remove("rescheduling");
     rescheduleNote.hidden = true;
-    rescheduleConfirm.hidden = true;
     if (serviceId && byId[serviceId]) {
       state.services = [byId[serviceId]];
     }
@@ -681,7 +686,6 @@
     statusEl.textContent = "";
     modal.classList.add("rescheduling");
     rescheduleNote.hidden = false;
-    rescheduleConfirm.hidden = false;
     formView.hidden = false;
     consentView.hidden = true;
     payView.hidden = true;
@@ -789,6 +793,8 @@
   modal.querySelector(".booking-done").addEventListener("click", closeModal);
   overlay.addEventListener("click", closeModal);
   modal.querySelector(".booking-resched-start").addEventListener("click", startReschedule);
+  var policyResched = document.querySelector(".policy-resched-start");
+  if (policyResched) policyResched.addEventListener("click", startReschedule);
   modal.querySelector(".booking-repick-back").addEventListener("click", function () {
     repickView.hidden = true;
     formView.hidden = false;
@@ -836,7 +842,8 @@
   });
 
   /* reschedule: just move the existing booking to the new slot */
-  rescheduleConfirm.addEventListener("click", function () {
+  /* move an existing booking to the newly picked slot (reschedule mode) */
+  var doReschedule = function () {
     if (!state.slot) { statusEl.textContent = "Please pick a new time."; return; }
     var all = loadBookings();
     var b = all[rescheduleIndex];
@@ -854,9 +861,12 @@
         sessionName() + " is now " + whenText() + " at " + fmtTime(state.slot) +
         ". Your deposit carried over — nothing more to pay.");
     }
-  });
+  };
 
   confirmBtn.addEventListener("click", function () {
+    /* the same button confirms a move when rescheduling */
+    if (rescheduleMode) { doReschedule(); return; }
+
     var problems = [];
     if (!state.services.length) problems.push("at least one service");
     if (!state.slot) problems.push("a time slot");
