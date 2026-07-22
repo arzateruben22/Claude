@@ -111,6 +111,10 @@
   var pendingBlocks = 0;
   var lastBooking = null;
   var consentSignature = null;
+  var rescheduleNote = modal.querySelector(".booking-reschedule-note");
+  var rescheduleConfirm = modal.querySelector(".booking-reschedule-confirm");
+  var rescheduleMode = false;
+  var rescheduleIndex = -1;
 
   /* ── Session state ── */
   var state = {
@@ -627,6 +631,10 @@
 
   var openModal = function (serviceId) {
     lastFocus = document.activeElement;
+    rescheduleMode = false;
+    modal.classList.remove("rescheduling");
+    rescheduleNote.hidden = true;
+    rescheduleConfirm.hidden = true;
     if (serviceId && byId[serviceId]) {
       state.services = [byId[serviceId]];
     }
@@ -642,6 +650,34 @@
       if (!nameInput.value) nameInput.value = acct.name || "";
       if (!emailInput.value) emailInput.value = acct.email || "";
     }
+    formView.hidden = false;
+    consentView.hidden = true;
+    payView.hidden = true;
+    successView.hidden = true;
+    renderAll();
+    modal.setAttribute("aria-hidden", "false");
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    modal.focus();
+  };
+
+  /* ── Reschedule an existing booking ── deposit already paid & consent
+     already given, so we only re-pick a day/time and move the record. */
+  var openReschedule = function (booking, index) {
+    lastFocus = document.activeElement;
+    rescheduleMode = true;
+    rescheduleIndex = index;
+    var svcs = (booking.services || []).map(function (id) { return byId[id]; })
+      .filter(Boolean);
+    state.services = svcs.length ? svcs
+      : [byId["new-client-consultation"] || services[0]];
+    state.dayKey = null;
+    state.slot = null;
+    closeFam();
+    statusEl.textContent = "";
+    modal.classList.add("rescheduling");
+    rescheduleNote.hidden = false;
+    rescheduleConfirm.hidden = false;
     formView.hidden = false;
     consentView.hidden = true;
     payView.hidden = true;
@@ -702,6 +738,27 @@
     petalResult.textContent = "🌹 " + pick.label + " — balance " +
       rw.points() + " ✦";
     petalResult.hidden = false;
+  });
+
+  /* reschedule: just move the existing booking to the new slot */
+  rescheduleConfirm.addEventListener("click", function () {
+    if (!state.slot) { statusEl.textContent = "Please pick a new time."; return; }
+    var all = loadBookings();
+    var b = all[rescheduleIndex];
+    if (b) {
+      b.date = state.dayKey;
+      b.time = state.slot;
+      b.dur = totalDur();
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(all)); }
+      catch (err) { /* private mode */ }
+      document.dispatchEvent(new CustomEvent("lumevina:booking-changed"));
+    }
+    closeModal();
+    if (window.LumevinaNotice) {
+      window.LumevinaNotice.show("Appointment moved",
+        sessionName() + " is now " + whenText() + " at " + fmtTime(state.slot) +
+        ". Your deposit carried over — nothing more to pay.");
+    }
   });
 
   confirmBtn.addEventListener("click", function () {
@@ -985,5 +1042,5 @@
     openModal();
   });
 
-  window.LumevinaBooking = { open: openModal };
+  window.LumevinaBooking = { open: openModal, reschedule: openReschedule };
 })();

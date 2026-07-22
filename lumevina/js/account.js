@@ -87,6 +87,44 @@
 
   var rw = function () { return window.LumevinaRewards; };
 
+  /* ── Notice pop-up (shared: policy blocks, reschedule confirmations) ── */
+  var noticeOverlay = document.querySelector(".notice-overlay");
+  var noticeModal = document.querySelector(".notice-modal");
+  var noticeReturn = null;
+  var notice = function (title, body) {
+    if (!noticeModal) { window.alert(title + "\n\n" + body); return; }
+    noticeReturn = document.activeElement;
+    noticeModal.querySelector("#notice-title").textContent = title;
+    noticeModal.querySelector(".notice-body").textContent = body;
+    noticeModal.setAttribute("aria-hidden", "false");
+    noticeOverlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    noticeModal.querySelector(".notice-ok").focus();
+  };
+  var closeNotice = function () {
+    if (!noticeModal) return;
+    noticeModal.setAttribute("aria-hidden", "true");
+    noticeOverlay.hidden = true;
+    var mm = document.getElementById("mobile-menu");
+    var anyOpen = document.querySelector(
+      ".account-modal[aria-hidden='false'], .booking-modal[aria-hidden='false']");
+    document.body.style.overflow = ((mm && !mm.hidden) || anyOpen) ? "hidden" : "";
+    if (noticeReturn) noticeReturn.focus();
+  };
+  if (noticeModal) {
+    noticeModal.querySelector(".notice-ok").addEventListener("click", closeNotice);
+    noticeOverlay.addEventListener("click", closeNotice);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && noticeModal.getAttribute("aria-hidden") === "false") closeNotice();
+    });
+  }
+  window.LumevinaNotice = { show: notice };
+
+  /* re-render the account's bookings when one is moved elsewhere */
+  document.addEventListener("lumevina:booking-changed", function () {
+    if (session && modal.getAttribute("aria-hidden") === "false") renderBookings();
+  });
+
   /* ── Rendering ── */
   var renderBookings = function () {
     listEl.textContent = "";
@@ -126,6 +164,29 @@
       meta.textContent = "Order " + (b.order || "—") +
         " · deposit " + "$" + Number(b.deposit || 0).toFixed(2) + " paid";
 
+      var actions = document.createElement("div");
+      actions.className = "acct-bk-actions";
+
+      /* Reschedule — allowed only outside the 48-hour window; inside it,
+         a pop-up explains the policy instead of moving the booking. */
+      var resched = document.createElement("button");
+      resched.type = "button";
+      resched.className = "acct-bk-resched";
+      resched.textContent = "Reschedule";
+      resched.addEventListener("click", function () {
+        if (x.start.getTime() - Date.now() <= CANCEL_WINDOW_MS) {
+          notice("Too close to reschedule online",
+            "Appointments can't be moved online within 48 hours of your visit — this is " +
+            "part of our cancellation policy, and the deposit is non-refundable inside " +
+            "this window. Please call or DM us and we'll do our best to help.");
+          return;
+        }
+        if (window.LumevinaBooking && window.LumevinaBooking.reschedule) {
+          closeModal();
+          window.LumevinaBooking.reschedule(x.b, x.i);
+        }
+      });
+
       var cancel = document.createElement("button");
       cancel.type = "button";
       cancel.className = "acct-bk-cancel";
@@ -144,14 +205,16 @@
           renderBookings();
         });
       } else {
-        cancel.textContent = "Within 48 hours — call or DM to reschedule";
+        cancel.textContent = "Within 48 hours — call or DM to cancel";
         cancel.disabled = true;
       }
 
+      actions.appendChild(resched);
+      actions.appendChild(cancel);
       li.appendChild(when);
       li.appendChild(what);
       li.appendChild(meta);
-      li.appendChild(cancel);
+      li.appendChild(actions);
       listEl.appendChild(li);
     });
   };

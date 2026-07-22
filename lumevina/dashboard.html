@@ -89,6 +89,17 @@
 
     .foot { margin-top: 2.5rem; font-size: 0.76rem; color: var(--ink-45); text-align: center; }
 
+    /* ranked bars (most-booked services) */
+    .rank { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+    .rank-row { display: grid; grid-template-columns: 9.5rem 1fr 2rem; align-items: center; gap: 0.7rem; }
+    .rank-name { font-size: 0.85rem; color: var(--ink-70); white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; }
+    .rank-bar { height: 9px; border-radius: 999px; background: rgba(156,63,104,0.1); overflow: hidden; }
+    .rank-fill { display: block; height: 100%; border-radius: inherit;
+      background: linear-gradient(90deg, var(--data), var(--alt)); }
+    .rank-n { font-size: 0.82rem; color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; }
+    @media (max-width: 720px) { .rank-row { grid-template-columns: 7rem 1fr 1.6rem; } }
+
     /* retention gauge */
     .retention { display: flex; align-items: center; gap: 1.4rem; }
     .ret-num { font-family: var(--font-d); font-weight: 600; font-size: 3rem; line-height: 1;
@@ -195,6 +206,20 @@
         <div class="mini" id="rewards"></div>
         <p class="sub" style="margin:1rem 0 0">No-shows fell to <strong style="color:var(--good)">6%</strong>
         (from 18%) — deposits at booking are doing the work.</p>
+      </div>
+    </div>
+
+    <!-- ── Most-booked services + top products ── -->
+    <div class="grid2">
+      <div class="card">
+        <h2>Most-booked services</h2>
+        <p class="sub">What's carrying the calendar — by number of bookings.</p>
+        <div id="top-services"></div>
+      </div>
+      <div class="card">
+        <h2>Top-selling products</h2>
+        <p class="sub">Best sellers — lights up when you add products to the shop.</p>
+        <div id="top-products"></div>
       </div>
     </div>
 
@@ -518,14 +543,46 @@
         'The industry average is about 35%.</div>';
     })();
 
-    /* ── Product sales (placeholder until retail exists) ── */
+    /* ── Most-booked services (ranked bars) ── */
+    (function () {
+      var counts = {};
+      var anyReal = false;
+      clients.forEach(function (c) {
+        (c.visits || []).forEach(function (v) {
+          (v.services || []).forEach(function (id) {
+            counts[id] = (counts[id] || 0) + 1; anyReal = true;
+          });
+        });
+      });
+      if (!anyReal) {
+        counts = { "lumevina-custom-facial": 34, "brazilian-wax": 27,
+          "ageless-grace-facial": 19, "new-client-consultation": 15,
+          "light-chemical-peel": 11, "brow-wax-tweeze": 9 };
+      }
+      var rows = Object.keys(counts).map(function (id) {
+        return { id: id, n: counts[id] }; })
+        .sort(function (a, b) { return b.n - a.n; }).slice(0, 6);
+      var max = rows.length ? rows[0].n : 1;
+      var html = '<ul class="rank">' + rows.map(function (r) {
+        return '<li class="rank-row"><span class="rank-name">' + svcName(r.id) + '</span>' +
+          '<span class="rank-bar"><span class="rank-fill" style="width:' +
+          Math.round(r.n / max * 100) + '%"></span></span>' +
+          '<span class="rank-n">' + r.n + '</span></li>';
+      }).join("") + '</ul>';
+      document.getElementById("top-services").innerHTML = html;
+    })();
+
+    /* ── Product sales + top products (placeholders until retail exists) ── */
     (function () {
       var orders = lget("lumevina_orders") || [];
-      var box = document.getElementById("product-sales");
       if (!orders.length) {
-        box.innerHTML = '<div class="ps-empty">No retail products yet. When you add products ' +
-          'to the shop, <strong>units sold, revenue, and top sellers</strong> appear here — ' +
-          'and count toward each client’s lifetime spend.</div>';
+        document.getElementById("product-sales").innerHTML =
+          '<div class="ps-empty">No retail products yet. When you add products to the shop, ' +
+          '<strong>units sold, revenue, and top sellers</strong> appear here — and count ' +
+          'toward each client’s lifetime spend.</div>';
+        document.getElementById("top-products").innerHTML =
+          '<div class="ps-empty">Your <strong>best-selling products</strong> will rank here ' +
+          'once retail is live — the same way services rank on the left.</div>';
       }
     })();
 
