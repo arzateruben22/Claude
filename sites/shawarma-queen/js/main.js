@@ -1327,3 +1327,82 @@
     start();
   }
 })();
+
+/* ── Our Story: rotating gold dot-globe (Canvas 2D, no dependencies) ──
+   A Fibonacci-sphere of gold dots that turns slowly behind the story copy.
+   The React reference used Three.js/react-three-fiber; this is the same look
+   without the WebGL/build weight. Pauses off-screen and for reduced motion. */
+
+(function () {
+  "use strict";
+  var section = document.querySelector(".story-globe");
+  var canvas = section && section.querySelector(".globe-canvas");
+  if (!canvas) return;
+  var ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var N = 640, pts = [], ga = Math.PI * (3 - Math.sqrt(5));
+  for (var i = 0; i < N; i++) {
+    var y = 1 - (i / (N - 1)) * 2;
+    var r = Math.sqrt(1 - y * y);
+    var th = ga * i;
+    pts.push([Math.cos(th) * r, y, Math.sin(th) * r]);
+  }
+
+  var dpr = 1, W = 0, H = 0, cx = 0, cy = 0, R = 0;
+  var resize = function () {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var rect = section.getBoundingClientRect();
+    W = Math.max(1, Math.floor(rect.width * dpr));
+    H = Math.max(1, Math.floor(rect.height * dpr));
+    canvas.width = W; canvas.height = H;
+    cx = W / 2; cy = H / 2;
+    R = Math.min(W, H) * 0.42;
+  };
+  resize();
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(section);
+  else window.addEventListener("resize", resize);
+
+  var ay = 0, ax = 0.42, raf = null, last = 0;
+  var draw = function () {
+    ctx.clearRect(0, 0, W, H);
+    var cosY = Math.cos(ay), sinY = Math.sin(ay), cosX = Math.cos(ax), sinX = Math.sin(ax);
+    for (var i = 0; i < N; i++) {
+      var p = pts[i];
+      var x1 = p[0] * cosY - p[2] * sinY;
+      var z1 = p[0] * sinY + p[2] * cosY;
+      var y2 = p[1] * cosX - z1 * sinX;
+      var z2 = p[1] * sinX + z1 * cosX;
+      var depth = (z2 + 1) / 2;                 // 0 back .. 1 front
+      ctx.beginPath();
+      ctx.arc(cx + x1 * R, cy - y2 * R, (0.6 + depth * 1.7) * dpr, 0, 6.2832);
+      ctx.fillStyle = "rgba(245,182,61," + (0.12 + depth * 0.62).toFixed(3) + ")";
+      ctx.fill();
+    }
+  };
+
+  var frame = function (now) {
+    var dt = last ? (now - last) / 1000 : 0;
+    last = now;
+    ay += dt * 0.28;
+    ax += dt * 0.05;
+    draw();
+    raf = requestAnimationFrame(frame);
+  };
+  var start = function () { if (raf === null && !reduced) { last = 0; raf = requestAnimationFrame(frame); } };
+  var stop = function () { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } };
+
+  draw();
+  requestAnimationFrame(function () { canvas.classList.add("on"); });
+  if (reduced) return;
+
+  if (window.IntersectionObserver) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) start(); else stop(); });
+    }, { threshold: 0.02 }).observe(section);
+  } else {
+    start();
+  }
+})();

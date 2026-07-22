@@ -148,24 +148,18 @@
       </a>
     </section>
 
-    <!-- ═══════════════ OUR STORY ═══════════════ -->
-    <section class="section" id="historia">
-      <div class="section-inner grid-2">
-        <div data-reveal>
-          <p class="eyebrow">Our Story <span class="tl">· Grilled to perfection</span></p>
-          <h2 class="display">Two spits, one crown, <em>and the last light on Euclid.</em></h2>
-        </div>
-        <div class="story-copy" data-reveal>
-          <p>Shawarma Queen does one thing and wears the crown for it: beef and chicken turned slowly
-          on the spit, shaved thin off the edges, and rolled to order. Twelve inches or a full
-          twenty-four — you decide how hungry you are.</p>
-          <p>We open when the day winds down and stay lit long after the rest of the block goes dark —
-          <em>every night until 3:30&nbsp;am.</em></p>
-          <ul class="story-marks" role="list">
-            <li><span class="mark-num">01</span>Grilled to perfection, carved to order <span class="mark-alt tl">made fresh</span></li>
-            <li><span class="mark-num">02</span>12″ or 24″ — your call <span class="mark-alt tl">wrap or combo</span></li>
-            <li><span class="mark-num">03</span>Garlic, Boom &amp; Queen sauces <span class="mark-alt tl">pick your sauce</span></li>
-          </ul>
+    <!-- ═══════════════ OUR STORY (rotating dot-globe) ═══════════════ -->
+    <section class="story-globe" id="historia" aria-label="Our story">
+      <canvas class="globe-canvas" aria-hidden="true"></canvas>
+      <div class="story-globe-inner" data-reveal>
+        <p class="eyebrow story-badge">Our Story <span class="tl">· From the old world</span></p>
+        <h2 class="display story-globe-title">A world of flavor, <em>carved to order.</em></h2>
+        <p class="story-globe-lead">Shawarma Queen carries the Levant to Euclid Street — meat marinated
+        overnight, stacked on the spit, grilled and shaved thin, then buried in garlic. An old-world
+        ritual on a new-world corner, with the coals lit every night till <strong>3:30&nbsp;am</strong>.</p>
+        <div class="story-globe-actions">
+          <a class="btn btn-solid js-open-order" href="#carta">Start your order</a>
+          <a class="btn btn-ghost" href="#court">See the signatures</a>
         </div>
       </div>
     </section>
