@@ -3,7 +3,7 @@
    cache-first for static assets. Bump CACHE on deploys that change
    core assets. */
 
-var CACHE = "sq-v9";
+var CACHE = "sq-v10";
 var CORE = [
   "./",
   "index.html",
@@ -12,11 +12,9 @@ var CORE = [
   "js/vendor/gsap.min.js",
   "js/vendor/ScrollTrigger.min.js",
   "manifest.webmanifest",
-  "fonts/bodoni-moda-latin-600-normal.woff2",
-  "fonts/bodoni-moda-latin-700-normal.woff2",
-  "fonts/bodoni-moda-latin-900-normal.woff2",
-  "fonts/bodoni-moda-latin-600-italic.woff2",
-  "fonts/bodoni-moda-latin-700-italic.woff2",
+  "fonts/bricolage-grotesque-latin-600-normal.woff2",
+  "fonts/bricolage-grotesque-latin-700-normal.woff2",
+  "fonts/bricolage-grotesque-latin-800-normal.woff2",
   "fonts/hanken-grotesk-latin-300-normal.woff2",
   "fonts/hanken-grotesk-latin-400-normal.woff2",
   "fonts/hanken-grotesk-latin-500-normal.woff2",
