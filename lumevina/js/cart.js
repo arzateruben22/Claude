@@ -221,6 +221,24 @@
   overlay.addEventListener("click", closeDrawer);
   emptyMsg.querySelector("a").addEventListener("click", closeDrawer);
 
+  /* ── Gift certificate: pick a treatment (or a value) ── */
+  var giftSelect = document.getElementById("gift-service");
+  if (giftSelect) {
+    var giftCard = giftSelect.closest("#gift");
+    var giftPrice = giftCard.querySelector(".product-price");
+    var giftBtn = giftCard.querySelector(".gift-add");
+    var syncGift = function () {
+      var opt = giftSelect.options[giftSelect.selectedIndex];
+      var price = Number(opt.dataset.price);
+      giftPrice.textContent = money(price);
+      giftBtn.dataset.id = opt.value;
+      giftBtn.dataset.price = String(price);
+      giftBtn.dataset.name = "Gift Card · " + opt.dataset.label;
+    };
+    giftSelect.addEventListener("change", syncGift);
+    syncGift();
+  }
+
   /* ── Add-to-cart buttons ── */
   document.querySelectorAll(".add-to-cart").forEach(function (btn) {
     btn.addEventListener("click", function () {

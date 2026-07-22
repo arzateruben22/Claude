@@ -985,6 +985,41 @@ body.intro-lock { overflow: hidden; }
   margin-top: auto;
 }
 
+/* gift certificate: choose which treatment (or a value) to gift */
+.gift-pick-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mauve);
+  margin-bottom: 0.4rem;
+}
+
+.gift-pick { margin-bottom: var(--space-4); }
+
+.gift-select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background-color: var(--porcelain);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: 0.7rem 2.3rem 0.7rem 0.9rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M2 5l5 5 5-5' stroke='%23a5798b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  transition: border-color 200ms ease;
+}
+
+.gift-select:hover,
+.gift-select:focus { border-color: var(--mauve); outline: none; }
+
 .product-price {
   font-variant-numeric: tabular-nums;
   font-weight: 400;

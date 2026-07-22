@@ -1135,7 +1135,7 @@
      card's primary action is Book. Only the gift certificate stays a cart
      purchase, keeping "book" and "buy" from reading as the same thing. */
   document.querySelectorAll(".product-foot .add-to-cart").forEach(function (btn) {
-    if (btn.dataset.id === "gift-certificate-100") return;
+    if (btn.closest("#gift")) return;  // the gift card is a purchase, not a booking
     var b = document.createElement("button");
     b.type = "button";
     b.className = "btn btn-solid book-btn";
