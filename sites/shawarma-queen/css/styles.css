@@ -1,19 +1,19 @@
 /* ═══════════════════════════════════════════════════════════
    Shawarma Queen — the late-night royal court
    Palette: midnight plum / crown gold / pomegranate / pistachio
-   Type: Fraunces (expressive regal serif) + Hanken Grotesk (warm clean UI)
+   Type: Bodoni Moda (dramatic Didone) + Hanken Grotesk (warm clean UI)
    ═══════════════════════════════════════════════════════════ */
 
 /* Self-hosted fonts (Fontsource, latin subset).
-   Fraunces weights are intentionally remapped one step heavier so the
-   display face reads bold & regal wherever the CSS asks for 400/600/700. */
-@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/fraunces-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/fraunces-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/fraunces-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/fraunces-latin-900-normal.woff2") format("woff2"); }
-@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/fraunces-latin-600-italic.woff2") format("woff2"); }
-@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 500; font-display: swap; src: url("../fonts/fraunces-latin-700-italic.woff2") format("woff2"); }
-@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 600; font-display: swap; src: url("../fonts/fraunces-latin-700-italic.woff2") format("woff2"); }
+   Bodoni Moda weights are remapped one step heavier so the display face
+   reads bold & dramatic wherever the CSS asks for 400/600/700. */
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/bodoni-moda-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/bodoni-moda-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/bodoni-moda-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/bodoni-moda-latin-900-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/bodoni-moda-latin-600-italic.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 500; font-display: swap; src: url("../fonts/bodoni-moda-latin-700-italic.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 600; font-display: swap; src: url("../fonts/bodoni-moda-latin-700-italic.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 300; font-display: swap; src: url("../fonts/hanken-grotesk-latin-300-normal.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/hanken-grotesk-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/hanken-grotesk-latin-500-normal.woff2") format("woff2"); }
@@ -34,7 +34,7 @@
   --pome: #c13c2b;             /* brick red — heat / secondary */
   --pome-soft: rgba(193, 60, 43, 0.5);
   --herb: #c4863a;             /* copper — warm tertiary accent */
-  --font-display: "Fraunces", "Georgia", serif;
+  --font-display: "Bodoni Moda", "Didot", "Georgia", serif;
   --font-body: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
   --space-2: 0.5rem;
   --space-3: 1rem;
