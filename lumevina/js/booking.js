@@ -800,8 +800,16 @@
   modal.querySelector(".booking-done").addEventListener("click", closeModal);
   overlay.addEventListener("click", closeModal);
   modal.querySelector(".booking-resched-start").addEventListener("click", startReschedule);
-  var policyResched = document.querySelector(".policy-resched-start");
-  if (policyResched) policyResched.addEventListener("click", startReschedule);
+  /* Delegated so it works even for the cloned copy of this button that the
+     desktop policies "shelf" renders into its detail card (that clone is
+     built with innerHTML, so a directly-bound listener wouldn't survive). */
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t && t.closest && t.closest(".policy-resched-start")) {
+      e.preventDefault();
+      startReschedule();
+    }
+  });
   modal.querySelector(".booking-repick-back").addEventListener("click", function () {
     repickView.hidden = true;
     formView.hidden = false;
