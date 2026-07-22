@@ -98,6 +98,30 @@
     .bk-tile { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
       padding: 0.9rem 1rem; }
     .bk-tile--flag { border-color: var(--mauve); background: rgba(165, 121, 139, 0.08); }
+    .settle-list { list-style: none; margin: 0; padding: 0; }
+    .settle-row { display: grid; grid-template-columns: 1.5fr 1fr auto; gap: 1rem; align-items: center;
+      padding: 0.85rem 0; border-top: 1px solid var(--edge); }
+    .settle-row:first-child { border-top: none; }
+    .settle-row.is-done { opacity: 0.66; }
+    .settle-name { font-weight: 600; color: var(--plum); display: block; }
+    .settle-sub { font-size: 0.78rem; color: var(--ink-45); }
+    .settle-money { text-align: right; font-size: 0.85rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .settle-money span { display: block; }
+    .settle-actions { display: flex; gap: 0.4rem; justify-content: flex-end; }
+    .settle-btn { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.85rem; border-radius: 999px;
+      border: 1px solid var(--edge); background: #fff; color: var(--plum); cursor: pointer;
+      transition: border-color 150ms ease; }
+    .settle-btn:hover { border-color: var(--plum); }
+    .settle-btn--bad { color: var(--data); }
+    .settle-btn--bad:hover { border-color: var(--data); }
+    .settle-state { font-size: 0.82rem; color: var(--plum); text-align: right; }
+    .settle-state--bad { color: var(--data); }
+    .settle-undo { font: inherit; font-size: 0.75rem; background: none; border: none; color: var(--ink-45);
+      text-decoration: underline; cursor: pointer; margin-left: 0.3rem; }
+    @media (max-width: 640px) {
+      .settle-row { grid-template-columns: 1fr; gap: 0.4rem; }
+      .settle-money, .settle-actions, .settle-state { text-align: left; justify-content: flex-start; }
+    }
     .bk-tv { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
       font-variant-numeric: tabular-nums; }
     .bk-tl { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
@@ -260,6 +284,19 @@
       </div>
     </div>
 
+    <!-- ── Settle visits (collect the in-person balance) ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Settle visits</h2>
+          <p class="sub">After each appointment, record the balance paid in person — cash or
+          card — or mark a no-show. This is what closes the invoice.</p>
+        </div>
+      </div>
+      <div class="bk-tiles" id="settle-tiles"></div>
+      <ul class="settle-list" id="settle-list"></ul>
+    </div>
+
     <!-- ── Bookkeeping & tax ── -->
     <div class="card">
       <div class="crm-head">
@@ -287,6 +324,10 @@
       </div>
       <div class="bk-tiles" id="gc-tiles"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="gc-table"></table></div>
+      <p class="sub" style="margin-top:0.9rem"><strong>For your accountant:</strong> gift-card
+      sales are a liability, not income, until redeemed. Some cash-basis businesses instead book
+      them as income when sold — ask your accountant which method fits Lumevina, and hand them this
+      list either way. It's kept separate from your service income above on purpose.</p>
     </div>
 
     <!-- ── Calendar sync ── -->
@@ -768,6 +809,94 @@
         a.download = "lumevina-giftcards-" + new Date().toISOString().slice(0, 10) + ".csv";
         document.body.appendChild(a); a.click(); a.remove();
       });
+    })();
+
+    /* ── Settle visits: record the in-person balance (cash/card) or no-show ── */
+    (function () {
+      var SETTLE_KEY = "lumevina_settlements";
+      var loadS = function () { try { return JSON.parse(localStorage.getItem(SETTLE_KEY)) || {}; } catch (e) { return {}; } };
+      var saveS = function (o) { try { localStorage.setItem(SETTLE_KEY, JSON.stringify(o)); } catch (e) { /* private mode */ } };
+      var settle = loadS();
+      var mc = function (n) { return "$" + Number(n || 0).toLocaleString("en-US"); };
+
+      var keyOf = function (v, c) {
+        return v.order || [v.date, v.time || "", (c.email || v.email || c.name || "")].join("|");
+      };
+
+      var visits = [];
+      clients.forEach(function (c) {
+        (c.visits || []).forEach(function (v) {
+          var online = Number(v.paid || v.deposit || 0);
+          var total = Number(v.total || (v.deposit ? v.deposit * 2 : 0) || online * 2 || 0);
+          visits.push({ key: keyOf(v, c), name: c.name, date: v.date,
+            services: (v.services || []).map(svcName).join(" + "),
+            total: total, online: online, balance: Math.max(0, +(total - online).toFixed(2)) });
+        });
+      });
+      visits.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+
+      var tilesEl = document.getElementById("settle-tiles");
+      var listEl = document.getElementById("settle-list");
+
+      var render = function () {
+        var cash = 0, card = 0, awaiting = 0, noshow = 0;
+        visits.forEach(function (v) {
+          var s = settle[v.key];
+          if (!s || s.status === "open") { awaiting += v.balance; return; }
+          if (s.status === "no-show") { noshow += v.online; return; }
+          if (s.method === "cash") cash += v.balance; else if (s.method === "card") card += v.balance;
+        });
+        var tiles = [
+          { l: "In person · cash", v: mc(Math.round(cash)) },
+          { l: "In person · card", v: mc(Math.round(card)) },
+          { l: "Awaiting balance", v: mc(Math.round(awaiting)), flag: awaiting > 0 },
+          { l: "No-show deposits kept", v: mc(Math.round(noshow)) }
+        ];
+        tilesEl.innerHTML = tiles.map(function (t) {
+          return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
+            t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+
+        listEl.innerHTML = "";
+        visits.forEach(function (v) {
+          var s = settle[v.key] || { status: "open" };
+          var li = document.createElement("li");
+          li.className = "settle-row" + (s.status !== "open" ? " is-done" : "");
+          var meta = '<div class="settle-meta"><span class="settle-name">' + v.name +
+            '</span><span class="settle-sub">' + fmtDate(v.date) + " · " + v.services + '</span></div>';
+          var moneyCol = '<div class="settle-money"><span>' + mc(v.total) + ' total</span>' +
+            '<span class="settle-sub">' + mc(v.online) + ' online · ' + mc(v.balance) + ' balance</span></div>';
+          var action;
+          if (s.status === "paid") {
+            action = '<div class="settle-state">✓ Balance ' + mc(v.balance) + ' paid · ' +
+              (s.method === "cash" ? "cash" : "card") +
+              '<button class="settle-undo" data-k="' + v.key + '">undo</button></div>';
+          } else if (s.status === "no-show") {
+            action = '<div class="settle-state settle-state--bad">✕ No-show · deposit ' + mc(v.online) +
+              ' kept<button class="settle-undo" data-k="' + v.key + '">undo</button></div>';
+          } else if (v.balance <= 0) {
+            action = '<div class="settle-state">Paid in full online</div>';
+          } else {
+            action = '<div class="settle-actions">' +
+              '<button class="settle-btn" data-act="cash" data-k="' + v.key + '">Paid cash</button>' +
+              '<button class="settle-btn" data-act="card" data-k="' + v.key + '">Paid card</button>' +
+              '<button class="settle-btn settle-btn--bad" data-act="noshow" data-k="' + v.key + '">No-show</button></div>';
+          }
+          li.innerHTML = meta + moneyCol + action;
+          listEl.appendChild(li);
+        });
+      };
+
+      listEl.addEventListener("click", function (e) {
+        var btn = e.target.closest("button"); if (!btn) return;
+        var k = btn.dataset.k;
+        if (btn.classList.contains("settle-undo")) { delete settle[k]; }
+        else if (btn.dataset.act === "noshow") { settle[k] = { status: "no-show", at: new Date().toISOString() }; }
+        else { settle[k] = { status: "paid", method: btn.dataset.act, at: new Date().toISOString() }; }
+        saveS(settle);
+        render();
+      });
+
+      render();
     })();
 
     /* ── Calendar sync (owner .ics of all appointments) ── */
