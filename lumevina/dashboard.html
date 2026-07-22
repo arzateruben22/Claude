@@ -97,6 +97,7 @@
     .bk-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.4rem; }
     .bk-tile { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
       padding: 0.9rem 1rem; }
+    .bk-tile--flag { border-color: var(--mauve); background: rgba(165, 121, 139, 0.08); }
     .bk-tv { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
       font-variant-numeric: tabular-nums; }
     .bk-tl { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
@@ -272,6 +273,20 @@
       <div class="bk-table-wrap"><table class="bk-table" id="bk-table"></table></div>
       <p class="sub" style="margin-top:0.9rem">Processing fees estimated at 2.9% + 30¢ per online
       charge (Stripe). The in-person balance is recorded when you mark a visit complete.</p>
+    </div>
+
+    <!-- ── Gift certificates ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Gift certificates</h2>
+          <p class="sub"><strong>Outstanding</strong> is money you've collected but not yet
+          redeemed — a liability (service you still owe) until the code is used.</p>
+        </div>
+        <button class="bk-export" id="gc-csv">Download CSV</button>
+      </div>
+      <div class="bk-tiles" id="gc-tiles"></div>
+      <div class="bk-table-wrap"><table class="bk-table" id="gc-table"></table></div>
     </div>
 
     <!-- ── Calendar sync ── -->
@@ -694,6 +709,63 @@
         var a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
         a.download = "lumevina-income-" + new Date().toISOString().slice(0, 10) + ".csv";
+        document.body.appendChild(a); a.click(); a.remove();
+      });
+    })();
+
+    /* ── Gift certificates (outstanding liability) ── */
+    (function () {
+      var GC_SAMPLE = [
+        { code: "LUM-7Q4K-2F9X", amount: 100, balance: 100, label: "Any treatment ($100 value)", recipientName: "Ava Reyes", status: "active", purchasedAt: "2026-07-05T18:00:00Z" },
+        { code: "LUM-J3MP-8T2C", amount: 230, balance: 130, label: "Ageless Grace Facial", recipientName: "Bianca Ortiz", status: "active", purchasedAt: "2026-06-20T18:00:00Z" },
+        { code: "LUM-R8WD-1K5H", amount: 180, balance: 0, label: "Lumevina Custom Facial", recipientName: "Chloe Kim", status: "redeemed", purchasedAt: "2026-05-14T18:00:00Z" },
+        { code: "LUM-Q2NV-6B3L", amount: 75, balance: 75, label: "Brazilian Wax", recipientName: "Dana Ruiz", status: "active", purchasedAt: "2026-07-15T18:00:00Z" }
+      ];
+      var stored = lget("lumevina_giftcards");
+      var cards = (stored && stored.length) ? stored : GC_SAMPLE;
+      var num = function (n) { return Number(n || 0); };
+
+      var sold = cards.reduce(function (a, c) { return a + num(c.amount); }, 0);
+      var outstanding = cards.reduce(function (a, c) { return a + num(c.balance); }, 0);
+      var redeemed = sold - outstanding;
+      var activeCount = cards.filter(function (c) { return num(c.balance) > 0; }).length;
+
+      var tiles = [
+        { l: "Sold, all time", v: money(Math.round(sold)) },
+        { l: "Redeemed", v: money(Math.round(redeemed)) },
+        { l: "Outstanding (liability)", v: money(Math.round(outstanding)), flag: true },
+        { l: "Active certificates", v: String(activeCount) }
+      ];
+      document.getElementById("gc-tiles").innerHTML = tiles.map(function (t) {
+        return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
+          t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+
+      var statusLabel = function (c) {
+        if (num(c.balance) <= 0) return "Redeemed";
+        if (num(c.balance) < num(c.amount)) return "Partly used";
+        return "Active";
+      };
+      var sorted = cards.slice().sort(function (a, b) { return num(b.balance) - num(a.balance); });
+      var thead = '<thead><tr><th>Code</th><th>Gift</th><th>Recipient</th>' +
+        '<th>Value</th><th>Balance</th><th>Status</th></tr></thead>';
+      var tbody = '<tbody>' + sorted.map(function (c) {
+        return '<tr><td>' + (c.code || "—") + '</td><td>' + (c.label || "—") +
+          '</td><td>' + (c.recipientName || "—") + '</td><td>' + money(num(c.amount)) +
+          '</td><td>' + money(num(c.balance)) + '</td><td>' + statusLabel(c) + '</td></tr>';
+      }).join("") + '</tbody>';
+      document.getElementById("gc-table").innerHTML = thead + tbody;
+
+      document.getElementById("gc-csv").addEventListener("click", function () {
+        var head = ["Code", "Gift", "Recipient", "Value", "Balance", "Status", "Purchased"];
+        var csv = [head.join(",")].concat(sorted.map(function (c) {
+          return [c.code, '"' + (c.label || "") + '"', '"' + (c.recipientName || "") + '"',
+            num(c.amount).toFixed(2), num(c.balance).toFixed(2), statusLabel(c),
+            (c.purchasedAt || "").slice(0, 10)].join(",");
+        })).join("\r\n");
+        var blob = new Blob([csv], { type: "text/csv" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "lumevina-giftcards-" + new Date().toISOString().slice(0, 10) + ".csv";
         document.body.appendChild(a); a.click(); a.remove();
       });
     })();
