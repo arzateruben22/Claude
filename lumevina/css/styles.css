@@ -2624,21 +2624,23 @@ body.intro-lock { overflow: hidden; }
 .product-foot { flex-wrap: wrap; }
 
 .wax-book {
-  width: 26px;
-  height: 26px;
-  padding: 0;
+  padding: 0.34rem 0.72rem;
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
+  gap: 0.36rem;
+  border-radius: 999px;
   border: 1px solid var(--mauve);
   background: none;
   color: var(--plum);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 200ms ease, color 200ms ease;
 }
 
+.wax-book svg { width: 13px; height: 13px; }
 .wax-book:hover { background: var(--mauve); color: #fff; }
 
 /* ─── Checkout modal ─── */

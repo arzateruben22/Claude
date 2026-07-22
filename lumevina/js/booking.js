@@ -1131,24 +1131,29 @@
   /* ── Book buttons, injected next to every add-to-cart ── */
   var CAL_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
 
+  /* Services are booked (pick a time + 50% deposit), not bought — so the
+     card's primary action is Book. Only the gift certificate stays a cart
+     purchase, keeping "book" and "buy" from reading as the same thing. */
   document.querySelectorAll(".product-foot .add-to-cart").forEach(function (btn) {
     if (btn.dataset.id === "gift-certificate-100") return;
     var b = document.createElement("button");
     b.type = "button";
-    b.className = "btn btn-ghost book-btn";
+    b.className = "btn btn-solid book-btn";
     b.textContent = "Book";
     b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn);
+    btn.remove();
   });
 
   document.querySelectorAll(".wax-add").forEach(function (btn) {
     var b = document.createElement("button");
     b.type = "button";
     b.className = "wax-book";
-    b.innerHTML = CAL_ICON;
+    b.innerHTML = CAL_ICON + '<span class="wax-book-label">Book</span>';
     b.setAttribute("aria-label", "Book " + btn.dataset.name);
     b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn.nextSibling);
+    btn.remove();
   });
 
   /* Site-wide Book links open this calendar instead of navigating */
