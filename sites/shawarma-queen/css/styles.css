@@ -1,17 +1,24 @@
 /* ═══════════════════════════════════════════════════════════
    Shawarma Queen — the late-night royal court
    Palette: midnight plum / crown gold / pomegranate / pistachio
-   Type: DM Serif Display (regal drama) + Figtree (clean UI)
+   Type: Fraunces (expressive regal serif) + Hanken Grotesk (warm clean UI)
    ═══════════════════════════════════════════════════════════ */
 
-/* Self-hosted fonts (Fontsource, latin subset) */
-@font-face { font-family: "DM Serif Display"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/dm-serif-display-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "DM Serif Display"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/dm-serif-display-latin-400-italic.woff2") format("woff2"); }
-@font-face { font-family: "Figtree"; font-style: normal; font-weight: 300; font-display: swap; src: url("../fonts/figtree-latin-300-normal.woff2") format("woff2"); }
-@font-face { font-family: "Figtree"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/figtree-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "Figtree"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/figtree-latin-500-normal.woff2") format("woff2"); }
-@font-face { font-family: "Figtree"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/figtree-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Figtree"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/figtree-latin-700-normal.woff2") format("woff2"); }
+/* Self-hosted fonts (Fontsource, latin subset).
+   Fraunces weights are intentionally remapped one step heavier so the
+   display face reads bold & regal wherever the CSS asks for 400/600/700. */
+@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/fraunces-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/fraunces-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/fraunces-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/fraunces-latin-900-normal.woff2") format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 400; font-display: swap; src: url("../fonts/fraunces-latin-600-italic.woff2") format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 500; font-display: swap; src: url("../fonts/fraunces-latin-700-italic.woff2") format("woff2"); }
+@font-face { font-family: "Fraunces"; font-style: italic; font-weight: 600; font-display: swap; src: url("../fonts/fraunces-latin-700-italic.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 300; font-display: swap; src: url("../fonts/hanken-grotesk-latin-300-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/hanken-grotesk-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/hanken-grotesk-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/hanken-grotesk-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/hanken-grotesk-latin-700-normal.woff2") format("woff2"); }
 
 :root {
   --night: #190c09;            /* dark charcoal-brown — page canvas */
@@ -27,8 +34,8 @@
   --pome: #c13c2b;             /* brick red — heat / secondary */
   --pome-soft: rgba(193, 60, 43, 0.5);
   --herb: #c4863a;             /* copper — warm tertiary accent */
-  --font-display: "DM Serif Display", "Georgia", serif;
-  --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
   --space-2: 0.5rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
