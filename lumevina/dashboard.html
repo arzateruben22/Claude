@@ -122,6 +122,28 @@
       .settle-row { grid-template-columns: 1fr; gap: 0.4rem; }
       .settle-money, .settle-actions, .settle-state { text-align: left; justify-content: flex-start; }
     }
+    /* goals */
+    .goal-list { display: grid; gap: 1.15rem; }
+    .goal-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .goal-label { color: var(--ink); font-weight: 500; }
+    .goal-val { color: var(--ink-45); font-variant-numeric: tabular-nums; }
+    .goal-val strong { color: var(--plum); font-weight: 600; }
+    .goal-bar { height: 8px; border-radius: 999px; background: var(--edge); overflow: hidden; }
+    .goal-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--mauve), var(--plum)); transition: width 400ms ease; }
+    .goal-fill.is-met { background: var(--good); }
+    .goal-form { margin-top: 1rem; }
+    .goal-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 0.9rem; }
+    .goal-form label, .inv-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
+    .goal-form input, .inv-form input { font: inherit; padding: 0.5rem 0.65rem; border: 1px solid var(--edge); border-radius: 8px; background: #fff; color: var(--ink); }
+    @media (max-width: 640px) { .goal-form-grid { grid-template-columns: 1fr 1fr; } }
+    /* inventory */
+    .inv-form { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.1rem; align-items: center; }
+    .inv-form input[type=text] { flex: 1; min-width: 160px; }
+    .inv-form input[type=number] { width: 110px; }
+    .inv-adjust { display: inline-flex; gap: 0.4rem; align-items: center; justify-content: flex-end; }
+    .inv-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--edge); background: #fff; color: var(--plum); cursor: pointer; font-size: 1rem; line-height: 1; }
+    .inv-btn:hover { border-color: var(--plum); }
+    .inv-low { color: var(--data); font-weight: 500; }
     .bk-tv { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
       font-variant-numeric: tabular-nums; }
     .bk-tl { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
@@ -328,6 +350,49 @@
       sales are a liability, not income, until redeemed. Some cash-basis businesses instead book
       them as income when sold — ask your accountant which method fits Lumevina, and hand them this
       list either way. It's kept separate from your service income above on purpose.</p>
+    </div>
+
+    <!-- ── Goals ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Goals</h2>
+          <p class="sub">Set monthly targets — progress pulls from your real numbers this month.</p>
+        </div>
+        <button class="bk-export" id="goals-edit">Edit targets</button>
+      </div>
+      <div class="goal-list" id="goal-list"></div>
+      <form class="goal-form" id="goal-form" hidden>
+        <div class="goal-form-grid">
+          <label>Revenue target ($)<input type="number" id="g-revenue" min="0" step="50"></label>
+          <label>Bookings target<input type="number" id="g-bookings" min="0" step="1"></label>
+          <label>New clients target<input type="number" id="g-newclients" min="0" step="1"></label>
+          <label>Rebooking rate target (%)<input type="number" id="g-rebook" min="0" max="100" step="1"></label>
+        </div>
+        <button type="submit" class="bk-export">Save targets</button>
+      </form>
+    </div>
+
+    <!-- ── Inventory ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Inventory</h2>
+          <p class="sub">Retail stock you carry — units, value, and low-stock alerts. Add products as you bring them in.</p>
+        </div>
+        <button class="bk-export" id="inv-add-toggle">+ Add product</button>
+      </div>
+      <form class="inv-form" id="inv-form" hidden>
+        <input type="text" id="inv-name" placeholder="Product name" required>
+        <input type="number" id="inv-stock" placeholder="Stock" min="0" step="1" required>
+        <input type="number" id="inv-cost" placeholder="Cost $" min="0" step="0.01">
+        <input type="number" id="inv-price" placeholder="Retail $" min="0" step="0.01" required>
+        <button type="submit" class="bk-export">Add</button>
+      </form>
+      <div class="bk-tiles" id="inv-tiles"></div>
+      <div class="bk-table-wrap"><table class="bk-table" id="inv-table"></table></div>
+      <p class="sub" style="margin-top:0.9rem">When retail sells through the site, each sale will
+      decrement stock automatically. Low-stock is flagged at 3 or fewer.</p>
     </div>
 
     <!-- ── Calendar sync ── -->
@@ -897,6 +962,133 @@
       });
 
       render();
+    })();
+
+    /* ── Goals: monthly targets vs live actuals ── */
+    (function () {
+      var GKEY = "lumevina_goals";
+      var goals = lget(GKEY) || { revenue: 6000, bookings: 40, newclients: 8, rebook: 55 };
+
+      var now = new Date();
+      var mm = now.getMonth() + 1;
+      var mk = now.getFullYear() + "-" + (mm < 10 ? "0" + mm : mm);
+      var revenue = 0, bookings = 0, firstTimers = 0, returned = 0, totalClients = 0;
+      clients.forEach(function (c) {
+        var vs = c.visits || [];
+        totalClients++;
+        if (vs.length >= 2) returned++;
+        var dates = vs.map(function (v) { return v.date; }).sort();
+        if (dates[0] && dates[0].slice(0, 7) === mk) firstTimers++;
+        vs.forEach(function (v) {
+          if ((v.date || "").slice(0, 7) !== mk) return;
+          bookings++;
+          var online = Number(v.paid || v.deposit || 0);
+          revenue += Number(v.total || (v.deposit ? v.deposit * 2 : 0) || online * 2 || 0);
+        });
+      });
+      var rebook = totalClients ? Math.round(returned / totalClients * 100) : 0;
+
+      var rows = [
+        { label: "Revenue", actual: Math.round(revenue), target: goals.revenue, money: true },
+        { label: "Bookings", actual: bookings, target: goals.bookings },
+        { label: "New clients", actual: firstTimers, target: goals.newclients },
+        { label: "Rebooking rate", actual: rebook, target: goals.rebook, pct: true }
+      ];
+      var fmt = function (r, n) { return r.money ? money(n) : (r.pct ? n + "%" : n); };
+      var renderGoals = function () {
+        document.getElementById("goal-list").innerHTML = rows.map(function (r) {
+          var pct = r.target > 0 ? Math.min(100, Math.round(r.actual / r.target * 100)) : 0;
+          var met = r.target > 0 && r.actual >= r.target;
+          return '<div class="goal-row"><div class="goal-head"><span class="goal-label">' + r.label +
+            '</span><span class="goal-val"><strong>' + fmt(r, r.actual) + '</strong> / ' + fmt(r, r.target) +
+            ' · ' + pct + '%</span></div><div class="goal-bar"><div class="goal-fill' + (met ? ' is-met' : '') +
+            '" style="width:' + pct + '%"></div></div></div>';
+        }).join("");
+      };
+      renderGoals();
+
+      var form = document.getElementById("goal-form");
+      document.getElementById("goals-edit").addEventListener("click", function () {
+        document.getElementById("g-revenue").value = goals.revenue;
+        document.getElementById("g-bookings").value = goals.bookings;
+        document.getElementById("g-newclients").value = goals.newclients;
+        document.getElementById("g-rebook").value = goals.rebook;
+        form.hidden = !form.hidden;
+      });
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        goals = {
+          revenue: Number(document.getElementById("g-revenue").value) || 0,
+          bookings: Number(document.getElementById("g-bookings").value) || 0,
+          newclients: Number(document.getElementById("g-newclients").value) || 0,
+          rebook: Number(document.getElementById("g-rebook").value) || 0
+        };
+        try { localStorage.setItem(GKEY, JSON.stringify(goals)); } catch (e2) { /* private mode */ }
+        rows[0].target = goals.revenue; rows[1].target = goals.bookings;
+        rows[2].target = goals.newclients; rows[3].target = goals.rebook;
+        form.hidden = true;
+        renderGoals();
+      });
+    })();
+
+    /* ── Inventory: retail stock ── */
+    (function () {
+      var IKEY = "lumevina_inventory", LOW = 3;
+      var SAMPLE = [
+        { id: "gm-cleanser", name: "GlyMed Gentle Cleanser", stock: 8, cost: 18, price: 38 },
+        { id: "lm-serum", name: "Le Mieux Peptide Serum", stock: 3, cost: 32, price: 75 },
+        { id: "spf-30", name: "Daily Mineral SPF 30", stock: 12, cost: 14, price: 32 },
+        { id: "gua-sha", name: "Rose Quartz Gua Sha", stock: 2, cost: 9, price: 28 }
+      ];
+      var stored = lget(IKEY);
+      var inv = (stored && stored.length) ? stored : SAMPLE.slice();
+      var num = function (n) { return Number(n || 0); };
+      var save = function () { try { localStorage.setItem(IKEY, JSON.stringify(inv)); } catch (e) { /* private mode */ } };
+
+      var render = function () {
+        var units = inv.reduce(function (a, p) { return a + num(p.stock); }, 0);
+        var value = inv.reduce(function (a, p) { return a + num(p.stock) * num(p.price); }, 0);
+        var low = inv.filter(function (p) { return num(p.stock) <= LOW; }).length;
+        var tiles = [
+          { l: "Products", v: String(inv.length) },
+          { l: "Units in stock", v: String(units) },
+          { l: "Retail value", v: money(Math.round(value)) },
+          { l: "Low stock", v: String(low), flag: low > 0 }
+        ];
+        document.getElementById("inv-tiles").innerHTML = tiles.map(function (t) {
+          return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
+            t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+        var thead = '<thead><tr><th>Product</th><th>Stock</th><th>Cost</th><th>Retail</th><th>Value</th><th>Status</th></tr></thead>';
+        var tbody = '<tbody>' + inv.map(function (p, i) {
+          var st = num(p.stock);
+          return '<tr><td>' + p.name + '</td><td><span class="inv-adjust">' +
+            '<button class="inv-btn" data-d="-1" data-i="' + i + '" aria-label="decrease">−</button>' + st +
+            '<button class="inv-btn" data-d="1" data-i="' + i + '" aria-label="increase">+</button></span></td>' +
+            '<td>' + money(num(p.cost)) + '</td><td>' + money(num(p.price)) + '</td>' +
+            '<td>' + money(st * num(p.price)) + '</td><td>' + (st <= LOW ? '<span class="inv-low">Low</span>' : 'OK') + '</td></tr>';
+        }).join("") + '</tbody>';
+        document.getElementById("inv-table").innerHTML = thead + tbody;
+      };
+      render();
+
+      document.getElementById("inv-table").addEventListener("click", function (e) {
+        var btn = e.target.closest(".inv-btn"); if (!btn) return;
+        var i = Number(btn.dataset.i);
+        inv[i].stock = Math.max(0, num(inv[i].stock) + Number(btn.dataset.d));
+        save(); render();
+      });
+      var form = document.getElementById("inv-form");
+      document.getElementById("inv-add-toggle").addEventListener("click", function () { form.hidden = !form.hidden; });
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var name = document.getElementById("inv-name").value.trim();
+        if (!name) return;
+        inv.push({ id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          name: name, stock: num(document.getElementById("inv-stock").value),
+          cost: num(document.getElementById("inv-cost").value),
+          price: num(document.getElementById("inv-price").value) });
+        save(); render(); form.reset(); form.hidden = true;
+      });
     })();
 
     /* ── Calendar sync (owner .ics of all appointments) ── */
