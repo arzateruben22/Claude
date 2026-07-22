@@ -3,7 +3,7 @@
    cache-first for static assets. Bump CACHE on deploys that change
    core assets. */
 
-var CACHE = "sq-v4";
+var CACHE = "sq-v5";
 var CORE = [
   "./",
   "index.html",
