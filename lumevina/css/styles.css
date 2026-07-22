@@ -810,35 +810,6 @@ body.intro-lock { overflow: hidden; }
 .story-copy { color: var(--ink-60); padding-top: 0.5rem; }
 .story-copy em { color: var(--plum); }
 
-.story-marks {
-  list-style: none;
-  margin: var(--space-5) 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.story-marks li {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-  padding: 0.9rem 0;
-  border-top: 1px solid var(--ink-15);
-  color: var(--ink);
-  font-weight: 400;
-}
-
-.story-marks li:last-child { border-bottom: 1px solid var(--ink-15); }
-
-.mark-num {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--mauve);
-  font-weight: 500;
-}
-
-.mark-alt { margin-left: auto; color: var(--ink-35); font-weight: 300; font-size: 0.9rem; font-style: italic; }
-
 /* ─── Press link (The Spa) ─── */
 
 .press-link {
@@ -1421,6 +1392,9 @@ body.intro-lock { overflow: hidden; }
 }
 
 .ritual-head { text-align: center; }
+
+/* separate the story beat from the three-step ritual within the merged section */
+.spa-ritual-head { margin-top: var(--space-7); }
 
 .ritual-grid {
   display: grid;
