@@ -34,6 +34,19 @@
   var checkoutStatus = modal.querySelector(".checkout-status");
   var orderIdEl = modal.querySelector(".success-order-id");
 
+  /* gift-delivery bits */
+  var giftDetails = modal.querySelector(".gift-details");
+  var giftToMe = modal.querySelector("#co-gift-tome");
+  var giftRecipientFields = modal.querySelector(".gift-recipient-fields");
+  var giftNameInput = modal.querySelector("#co-gift-name");
+  var giftEmailInput = modal.querySelector("#co-gift-email");
+  var giftCodesEl = modal.querySelector(".gift-codes");
+
+  var isGiftId = function (id) { return id.indexOf("gift-") === 0; };
+  var cartHasGift = function () {
+    return Object.keys(cart).some(isGiftId);
+  };
+
   var money = function (n) {
     return "$" + n.toFixed(2);
   };
@@ -270,6 +283,8 @@
     });
     totalEl.textContent = money(subtotal());
 
+    giftDetails.hidden = !cartHasGift();
+
     formView.hidden = false;
     successView.hidden = true;
     checkoutStatus.textContent = "";
@@ -289,6 +304,11 @@
   var checkoutOpen = function () {
     return modal.getAttribute("aria-hidden") === "false";
   };
+
+  /* "send it to me" hides the recipient fields (buyer gives it in person) */
+  giftToMe.addEventListener("change", function () {
+    giftRecipientFields.hidden = giftToMe.checked;
+  });
 
   checkoutBtn.addEventListener("click", openCheckout);
   modal.querySelector(".checkout-close").addEventListener("click", closeCheckout);
@@ -335,7 +355,58 @@
     mark(cvcInput, !cvcOk);
     if (!cvcOk) problems.push("a 3–4 digit CVC");
 
+    /* a gift going to someone else needs a name + email to deliver to */
+    if (cartHasGift() && !giftToMe.checked) {
+      var gName = giftNameInput.value.trim();
+      mark(giftNameInput, !gName);
+      if (!gName) problems.push("the recipient's name");
+      var gEmailOk = giftEmailInput.value.trim() && giftEmailInput.checkValidity();
+      mark(giftEmailInput, !gEmailOk);
+      if (!gEmailOk) problems.push("the recipient's email");
+    }
+
     return problems;
+  };
+
+  /* Issue a certificate per gift unit in the cart and show the codes.
+     (Live: this happens server-side after Stripe confirms, and the code
+     is emailed to the recipient or the buyer — see js/giftcards.js.) */
+  var issueGiftCards = function () {
+    if (!window.LumevinaGiftCards || !cartHasGift()) { giftCodesEl.hidden = true; return; }
+    var toMe = giftToMe.checked;
+    var buyer = checkoutForm.elements.email.value.trim();
+    var codes = [];
+    Object.keys(cart).forEach(function (id) {
+      if (!isGiftId(id)) return;
+      var item = cart[id];
+      for (var i = 0; i < item.qty; i++) {
+        var card = window.LumevinaGiftCards.create({
+          amount: item.price,
+          label: item.name.replace(/^Gift Card · /, ""),
+          serviceId: id.replace(/^gift-/, ""),
+          recipientName: toMe ? "" : giftNameInput.value.trim(),
+          recipientEmail: toMe ? "" : giftEmailInput.value.trim(),
+          message: (modal.querySelector("#co-gift-msg").value || "").trim(),
+          deliverToBuyer: toMe,
+          sendDate: modal.querySelector("#co-gift-date").value || null,
+          boughtBy: buyer
+        });
+        codes.push(card);
+      }
+    });
+    if (!codes.length) { giftCodesEl.hidden = true; return; }
+    var who = toMe ? "You'll receive"
+      : (giftNameInput.value.trim() + " will receive");
+    var html = '<p class="gift-codes-lead">' + who +
+      ' the certificate' + (codes.length > 1 ? "s" : "") + ' by email. ' +
+      'Keep the code' + (codes.length > 1 ? "s" : "") + ' safe — it’s redeemed at booking:</p>';
+    codes.forEach(function (c) {
+      html += '<div class="gift-code-row"><span class="gift-code">' + c.code +
+        '</span><span class="gift-code-for">' + c.label + " · " + money(c.amount) +
+        "</span></div>";
+    });
+    giftCodesEl.innerHTML = html;
+    giftCodesEl.hidden = false;
   };
 
   /* ── Submit → demo success ── */
@@ -373,9 +444,12 @@
           earnedEl.hidden = false;
         }
 
+        issueGiftCards();
+
         formView.hidden = true;
         successView.hidden = false;
         checkoutForm.reset();
+        giftRecipientFields.hidden = false;
         clearCart();
         modal.querySelector(".checkout-done").focus();
       });

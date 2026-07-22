@@ -1086,6 +1086,20 @@
           <span class="rw-redeem-text"></span>
         </label>
 
+        <!-- gift certificate redemption — quiet by default so it never
+             distracts a paying client; anyone with a code can use it -->
+        <div class="gift-redeem">
+          <button type="button" class="linklike gift-redeem-toggle">Have a gift certificate? Enter code →</button>
+          <div class="gift-redeem-body" hidden>
+            <div class="gift-redeem-row">
+              <input type="text" class="gift-redeem-input" placeholder="LUM-XXXX-XXXX"
+                maxlength="14" autocomplete="off" aria-label="Gift certificate code">
+              <button type="button" class="btn btn-ghost gift-redeem-apply">Apply</button>
+            </div>
+            <p class="gift-redeem-status" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+
         <div class="field">
           <label for="bk-card-name">Name on card</label>
           <input id="bk-card-name" name="cardname" type="text" autocomplete="cc-name" required>
@@ -1498,6 +1512,34 @@
         </div>
 
         <form class="checkout-form" novalidate>
+          <!-- gift delivery details — shown when a gift certificate is in the cart -->
+          <div class="gift-details" hidden>
+            <p class="checkout-subhead">Who's the gift for?</p>
+            <label class="gift-tome">
+              <input type="checkbox" id="co-gift-tome">
+              <span>Send it to me — I'll give it in person</span>
+            </label>
+            <div class="gift-recipient-fields">
+              <div class="field">
+                <label for="co-gift-name">Recipient's name</label>
+                <input id="co-gift-name" name="giftname" type="text" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="co-gift-email">Recipient's email</label>
+                <input id="co-gift-email" name="giftemail" type="email" autocomplete="off">
+              </div>
+            </div>
+            <div class="field">
+              <label for="co-gift-msg">Personal message <span class="rw-ref-opt">(optional)</span></label>
+              <textarea id="co-gift-msg" name="giftmsg" rows="2" maxlength="240"
+                placeholder="Happy birthday — enjoy a little glow, on me."></textarea>
+            </div>
+            <div class="field">
+              <label for="co-gift-date">Send on <span class="rw-ref-opt">(optional — defaults to today)</span></label>
+              <input id="co-gift-date" name="giftdate" type="date">
+            </div>
+            <p class="checkout-subhead checkout-subhead--pay">Payment</p>
+          </div>
           <div class="field">
             <label for="co-name">Name on card</label>
             <input id="co-name" name="name" type="text" autocomplete="cc-name" required>
@@ -1536,6 +1578,7 @@
         <h2 class="checkout-title">Payment received</h2>
         <p class="success-sub">Your gift of glow is on its way ✨</p>
         <p class="success-order">Order <span class="success-order-id"></span></p>
+        <div class="gift-codes" hidden></div>
         <p class="rw-earned rw-earned-cart" hidden></p>
         <p class="checkout-demo-note">This was a demo — nothing was charged.</p>
         <button class="btn btn-ghost checkout-done" type="button">Back to Lumevina</button>
@@ -1678,6 +1721,7 @@
   <script src="js/vendor/ScrollTrigger.min.js"></script>
   <script src="js/intro.js"></script>
   <script src="js/payments.js"></script>
+  <script src="js/giftcards.js"></script>
   <script src="js/rewards.js"></script>
   <script src="js/account.js"></script>
   <script src="js/intake.js"></script>

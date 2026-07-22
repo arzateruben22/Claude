@@ -118,6 +118,15 @@
   var rescheduleIndex = -1;
   var CANCEL_WINDOW_MS = 48 * 60 * 60 * 1000;
 
+  /* gift certificate redemption (applied against the deposit) */
+  var giftToggle = modal.querySelector(".gift-redeem-toggle");
+  var giftBody = modal.querySelector(".gift-redeem-body");
+  var giftInput = modal.querySelector(".gift-redeem-input");
+  var giftApplyBtn = modal.querySelector(".gift-redeem-apply");
+  var giftStatus = modal.querySelector(".gift-redeem-status");
+  var giftCode = null;
+  var giftApplied = 0;
+
   /* ── Session state ── */
   var state = {
     services: [byId["new-client-consultation"] || services[0]],
@@ -643,6 +652,7 @@
     rescheduleMode = false;
     modal.classList.remove("rescheduling");
     rescheduleNote.hidden = true;
+    resetGift();
     if (serviceId && byId[serviceId]) {
       state.services = [byId[serviceId]];
     }
@@ -834,9 +844,16 @@
     return state.services.map(function (s) { return s.name; }).join(" + ");
   };
 
+  var rewardsOff = function () {
+    return (rw && redeemCheck.checked) ? pendingBlocks * rw.blockValue : 0;
+  };
+  /* the gift covers whatever's left after points, up to its applied value */
+  var giftOff = function () {
+    return Math.min(giftApplied, Math.max(0, depositDue() - rewardsOff()));
+  };
+
   var chargeNow = function () {
-    var off = (rw && redeemCheck.checked) ? pendingBlocks * rw.blockValue : 0;
-    return Math.max(0, depositDue() - off);
+    return Math.max(0, depositDue() - rewardsOff() - giftOff());
   };
 
   var updatePayAmount = function () {
@@ -846,6 +863,49 @@
   };
 
   redeemCheck.addEventListener("change", updatePayAmount);
+
+  /* ── Gift certificate redemption ── */
+  var resetGift = function () {
+    giftCode = null;
+    giftApplied = 0;
+    if (giftInput) giftInput.value = "";
+    if (giftStatus) giftStatus.textContent = "";
+    if (giftBody) giftBody.hidden = true;
+  };
+
+  if (giftToggle) {
+    giftToggle.addEventListener("click", function () {
+      giftBody.hidden = !giftBody.hidden;
+      if (!giftBody.hidden) giftInput.focus();
+    });
+    giftApplyBtn.addEventListener("click", function () {
+      var gc = window.LumevinaGiftCards;
+      var code = giftInput.value.trim();
+      if (!code) { giftStatus.textContent = "Enter your certificate code."; return; }
+      if (!gc) { giftStatus.textContent = "Gift redemption isn't available right now."; return; }
+      var card = gc.lookup(code);
+      var dueBefore = Math.max(0, depositDue() - rewardsOff());
+      var canCover = gc.quote(code, dueBefore);
+      if (!card) {
+        giftStatus.textContent = "We couldn't find that code — please check and try again.";
+        giftCode = null; giftApplied = 0; updatePayAmount();
+        return;
+      }
+      if (canCover <= 0) {
+        giftStatus.textContent = "That certificate has no balance left.";
+        giftCode = null; giftApplied = 0; updatePayAmount();
+        return;
+      }
+      giftCode = card.code;
+      giftApplied = card.balance; /* giftOff() caps it to what's due */
+      var applied = giftOff();
+      var remaining = Math.max(0, card.balance - applied);
+      giftStatus.textContent = "✓ Applied −" + pay.money(applied) +
+        " toward your deposit" +
+        (remaining > 0 ? " · " + pay.money(remaining) + " stays on your certificate for the visit." : ".");
+      updatePayAmount();
+    });
+  }
 
   petalBtn.addEventListener("click", function () {
     if (petalBtn.disabled || !rw) return;
@@ -982,6 +1042,7 @@
     var deposit = depositDue();
     var redeemedPts = (rw && redeemCheck.checked)
       ? pendingBlocks * rw.blockPoints : 0;
+    var giftUsed = giftOff();
     var charge = chargeNow();
     var firstVisit = !refField.hidden;
     payBtn.disabled = true;
@@ -1022,8 +1083,14 @@
       modal.querySelector(".booking-paid").textContent =
         "Deposit paid: " + pay.money(charge) +
         (redeemedPts ? " (" + redeemedPts + " ✦ applied)" : "") +
+        (giftUsed > 0 ? " (gift −" + pay.money(giftUsed) + ")" : "") +
         " · Balance due: " + pay.money(sessionTotal() - deposit);
       modal.querySelector(".booking-order-id").textContent = result.id;
+
+      /* commit the gift-certificate redemption (decrement its balance) */
+      if (giftCode && giftUsed > 0 && window.LumevinaGiftCards) {
+        window.LumevinaGiftCards.redeem(giftCode, giftUsed);
+      }
 
       /* Glow Rewards: spend the redemption, earn on what was paid */
       if (rw) {
