@@ -1,0 +1,10 @@
+{
+  "name": "booking-commerce-starter-kit",
+  "version": "1.0.0",
+  "description": "Headless booking, loyalty, gift-card, inventory, payments and analytics engines — bring your own UI.",
+  "type": "module",
+  "scripts": {
+    "example": "node example.mjs"
+  },
+  "license": "MIT"
+}
