@@ -37,10 +37,10 @@
     "  lum *= smoothstep(1.05, 0.05, c);",
     /* hue drifts vertically over time (original: pink→cyan; here rose→plum) */
     "  float hueMix = clamp(0.5 + (uv.y - 0.35 * sin(u_time * 0.3)) * 0.9, 0.0, 1.0);",
-    "  vec3 linen = vec3(0.969, 0.945, 0.922);",
-    "  vec3 rose  = vec3(0.788, 0.635, 0.706);",
-    "  vec3 plum  = vec3(0.490, 0.329, 0.408);",
-    "  vec3 sand  = vec3(0.851, 0.725, 0.639);",
+    "  vec3 linen = vec3(0.984, 0.988, 0.992);",
+    "  vec3 rose  = vec3(0.725, 0.761, 0.796);",
+    "  vec3 plum  = vec3(0.247, 0.278, 0.314);",
+    "  vec3 sand  = vec3(0.812, 0.831, 0.827);",
     "  vec3 glow = mix(rose, plum, hueMix);",
     "  glow = mix(glow, sand, clamp(uv.x * 0.6 + 0.2, 0.0, 1.0) * 0.35);",
     /* a warm white core, like the original's vec3(5.) hot center */
