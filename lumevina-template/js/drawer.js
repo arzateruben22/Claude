@@ -46,26 +46,25 @@
       '<div><p class="drawer-eyebrow">The full menu</p><h2 class="drawer-title">Treatments</h2></div>' +
       '<button class="drawer-close" type="button" aria-label="Close menu">&#10005;</button>' +
     '</div>' +
-    '<div class="drawer-tabs" role="tablist"></div>' +
-    '<div class="drawer-body"></div>';
+    '<div class="drawer-main"><nav class="drawer-nav" aria-label="Categories"></nav>' +
+    '<div class="drawer-body"></div></div>';
 
   document.body.appendChild(backdrop);
   document.body.appendChild(panel);
 
-  var tabsEl = panel.querySelector(".drawer-tabs");
+  var navEl = panel.querySelector(".drawer-nav");
   var bodyEl = panel.querySelector(".drawer-body");
   var closeBtn = panel.querySelector(".drawer-close");
 
-  /* tabs */
+  /* category sidebar */
   cat.categories.forEach(function (c, i) {
     var b = document.createElement("button");
-    b.className = "drawer-tab";
+    b.className = "drawer-navitem";
     b.type = "button";
-    b.setAttribute("role", "tab");
     b.dataset.key = c.key;
     b.innerHTML = svgIcon(c.icon) + "<span>" + c.label + "</span>";
     b.addEventListener("click", function () { showCategory(c.key); });
-    tabsEl.appendChild(b);
+    navEl.appendChild(b);
   });
 
   var money = function (n) { return CUR + n; };
@@ -125,7 +124,7 @@
   var showCategory = function (key) {
     var c = cat.categories.filter(function (x) { return x.key === key; })[0] || cat.categories[0];
     activeKey = c.key;
-    Array.prototype.forEach.call(tabsEl.children, function (t) {
+    Array.prototype.forEach.call(navEl.children, function (t) {
       var on = t.dataset.key === c.key;
       t.classList.toggle("is-active", on);
       t.setAttribute("aria-selected", String(on));
