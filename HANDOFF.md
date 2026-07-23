@@ -37,8 +37,21 @@ lumevina-template/
   js/
     catalog.js      # REAL service catalog — single source of truth (see below)
     drawer.js       # slide-over menu drawer + Book/Gift event seam
+    intro.js        # arrival overlay ("Where glow begins") — ported from lumevina/
+  img/              # REAL brand assets (logo-full, logo-mark, favicons)
   fonts/            # self-hosted woff2 (Jost + Cormorant)
 ```
+**Brand + landing effect are in:** the real Lumevina logo (mauve line-art face +
+wordmark) is in the nav (mark + "LUMEVINA"), footer (full logo), and favicon. The
+landing page opens with the ported **intro overlay** (`js/intro.js` + `.intro-*`
+CSS): the logo and "Where glow begins." settle in over a blush-cream veil with a
+cursor glow, then it lifts (auto after ~3.2s, or on any tap/scroll/key) — skipped
+entirely under reduced-motion so it never blocks booking.
+
+**Direction: ONE page, no page-hopping.** Everything to book + as much detail as
+possible should live on the landing page via the drawer/overlays. `treatment.html`
+stays as a shareable deep-link, but don't add more standalone pages — fold new
+content (policies, about) into the page as sections or drawer/modal panels.
 `index.html` links into `treatment.html` from the best-seller "See details" button
 and the Facials category tile; `treatment.html` links back via nav/footer. Same
 design system, so new pages should reuse `css/style.css` classes rather than fork.
