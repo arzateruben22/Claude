@@ -77,10 +77,22 @@ gold-on-gold text spots). To tweak the palette, edit that dark `:root`.
   `.brand-mark`/`.foot-logo`/`.intro-mark`. Responsive + reduced-motion safe.
 
 ### What's still placeholder
-- **Images** are tonal gradients + simple SVG glyphs — swap for real photography
-  (biggest single upgrade). This includes the founder portrait and the "Visit us" map,
-  which are stylized placeholders (swap the map for a real embed/static map).
-- **Buttons are visual only** here — not yet wired to the engine (see below).
+- **Product photo slots are wired** — the best-seller box, the actives bottle box,
+  the hero product card, and the treatment hero use CSS `background-image` with a
+  dark-gradient fallback. Drop two files into `lumevina-template/img/` and they
+  fill automatically: **`product-moisturizer.jpg`** (best-seller / hero card /
+  treatment hero) and **`product-serum.jpg`** (actives "Vitamin C" bottle box).
+  Until the files exist, the boxes show the on-brand dark gradient (no broken icons).
+- Other **images** (founder portrait, category/journal tiles, "Visit us" map) are
+  still tonal gradients + SVG glyphs — swap for real photography when ready.
+- **Sharp / modern / square:** display type is a Helvetica-style grotesque (`--disp`),
+  eyebrows/buttons are uppercase + tracked, and a global `border-radius:0` keeps
+  every box, chip, button, and avatar square. Edit the `SHARP · MODERN · SQUARE`
+  block at the end of `css/style.css` to tune.
+- **Single page, no navigation:** the landing page never links to another page —
+  "See details" and the category tiles open the in-page drawer (drawer supports
+  `data-service-detail="<id>"` to open straight to a service's detail). `treatment.html`
+  remains as an intact standalone deep-link but nothing on the landing page links to it.
 
 ---
 

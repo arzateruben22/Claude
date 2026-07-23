@@ -557,3 +557,25 @@ h3{font-weight:600;letter-spacing:.004em;}
 .visit-map{background:linear-gradient(160deg,#241d13,#16110a);}
 .map-grid{background-image:linear-gradient(rgba(202,160,89,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(202,160,89,.08) 1px,transparent 1px);}
 .map-road{background:rgba(202,160,89,.22);}
+
+/* ═══════════════════  SHARP · MODERN · SQUARE  ═══════════════════ */
+:root{ --disp:'Helvetica Neue','Segoe UI',Arial,system-ui,sans-serif; }
+*,*::before,*::after{border-radius:0!important;}
+h1,h2{font-family:var(--disp);font-weight:700;letter-spacing:-.022em;line-height:1.03;}
+h3{font-family:var(--disp);font-weight:600;letter-spacing:-.012em;}
+.serif-em{font-family:var(--disp);font-style:normal;font-weight:700;color:var(--honey);letter-spacing:-.022em;}
+.hero .serif-em{color:#3a2410;}
+.eyebrow{font-family:var(--disp);letter-spacing:.28em;}
+.btn{text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:500;}
+.brand span{font-family:var(--disp);letter-spacing:.2em;font-weight:600;}
+.drawer-title{font-family:var(--disp);}
+
+/* ── real product photo slots (drop files into img/; the dark gradient shows until then) ── */
+.best-media{background:url('../img/product-moisturizer.jpg') center/cover no-repeat,linear-gradient(150deg,#2a2114,#181209);}
+.best-media svg{display:none;}
+.actives-mid{background:url('../img/product-serum.jpg') center/cover no-repeat,radial-gradient(120% 90% at 50% 20%,#2b2724,#17140f);}
+.actives-mid svg{display:none;}
+.hero-prod .p-img{background:url('../img/product-moisturizer.jpg') center/cover no-repeat,linear-gradient(150deg,#efe1cf,#e4cbb0);}
+.hero-prod .p-img svg{display:none;}
+.t-main{background:url('../img/product-moisturizer.jpg') center/cover no-repeat,radial-gradient(120% 110% at 72% 26%,#d6ac6b,#bd8a44 55%,#9a6529);}
+.t-main svg{display:none;}

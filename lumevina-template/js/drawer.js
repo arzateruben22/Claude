@@ -220,6 +220,14 @@
   };
 
   document.addEventListener("click", function (e) {
+    var sdEl = e.target.closest("[data-service-detail]");
+    if (sdEl) {
+      e.preventDefault();
+      var sid = sdEl.dataset.serviceDetail, sc = categoryOf(sid);
+      open(sc ? sc.key : null);
+      showDetail(sid);
+      return;
+    }
     var openEl = e.target.closest("[data-drawer]");
     if (openEl) { e.preventDefault(); open(openEl.dataset.category, openEl.dataset.service); return; }
     var detEl = e.target.closest("[data-detail]");
