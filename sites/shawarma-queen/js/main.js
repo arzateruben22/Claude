@@ -186,8 +186,9 @@ window.SQForms = (function () {
      premium sauces add $1 each. */
   var SAUCES = [
     { id: "Garlic", price: 0 },
-    { id: "Boom", price: 1 },
-    { id: "Queen", price: 1 }
+    { id: "Boom", price: 0.5 },
+    { id: "Queen", price: 0.5 },
+    { id: "Tzatziki", price: 0.5 }
   ];
   var saucePrice = function (id) {
     for (var i = 0; i < SAUCES.length; i++) if (SAUCES[i].id === id) return SAUCES[i].price;
@@ -232,14 +233,16 @@ window.SQForms = (function () {
     it.removed = Array.isArray(it.removed) ? it.removed : [];
   });
 
-  var keyOf = function (name, sauce, removed) {
+  var keyOf = function (name, sauce, removed, opts) {
     var k = name;
+    if (opts && opts.length) k += "|" + opts.slice().join(",");
     if (sauce) k += "|" + sauce;
     if (removed && removed.length) k += "|no:" + removed.slice().sort().join(",");
     return k;
   };
   var lineNote = function (it) {
     var parts = [];
+    (it.opts || []).forEach(function (o) { parts.push(o); });
     if (it.sauce) parts.push(it.sauce + " sauce");
     (it.removed || []).forEach(function (x) { parts.push("no " + x); });
     return parts.join(", ");
@@ -561,11 +564,12 @@ window.SQForms = (function () {
     toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 1800);
   };
 
-  var addLine = function (name, unitPrice, sauce, removed, qty) {
+  var addLine = function (name, unitPrice, sauce, removed, qty, opts) {
     removed = removed || [];
     qty = qty || 1;
-    var k = keyOf(name, sauce, removed);
-    if (!cart[k]) cart[k] = { name: name, price: unitPrice, qty: 0, sauce: sauce, removed: removed };
+    opts = opts || [];
+    var k = keyOf(name, sauce, removed, opts);
+    if (!cart[k]) cart[k] = { name: name, price: unitPrice, qty: 0, sauce: sauce, removed: removed, opts: opts };
     cart[k].qty += qty;
     render();
     var note = lineNote(cart[k]);
@@ -574,12 +578,82 @@ window.SQForms = (function () {
 
   /* ── Add-on popover: quantity, pick-your-sauce, hold-ingredients ── */
 
-  var addonState = { name: "", base: 0, qty: 1, sauce: "Garlic" };
   var removeList = addonPop.querySelector(".addon-remove-list");
   var removeDetails = addonPop.querySelector(".addon-remove");
   var sauceRadios = addonPop.querySelectorAll('input[name="sq-sauce"]');
+  var sauceBlock = addonPop.querySelector(".addon-sauce-block");
+  var dynamic = addonPop.querySelector(".addon-dynamic");
 
-  var addonUnit = function () { return addonState.base + saucePrice(addonState.sauce); };
+  /* addonState carries a full option set so any item can offer size, a
+     single pick (bread/style/flavor), price-adding extras, a sauce and
+     hold-ingredients — all optional. Chosen options ride along on the
+     cart line as an `opts` list so they show in the order and price. */
+  var addonState = { name: "", base: 0, qty: 1, hasSauce: false, sauce: "Garlic",
+    size: null, pick: "", extras: {} };
+
+  /* ── small DSL parsers for the add buttons ──
+     data-size / data-extras: "Label=price|Label=price"  (price optional)
+     data-pick / data-bread / data-flavor: "A|B|C"  */
+  var splitPipes = function (s) {
+    return (s || "").split("|").map(function (x) { return x.trim(); }).filter(Boolean);
+  };
+  var parsePriced = function (s) {
+    return splitPipes(s).map(function (p) {
+      var i = p.lastIndexOf("=");
+      return i < 0 ? { label: p, price: 0 }
+                   : { label: p.slice(0, i).trim(), price: Number(p.slice(i + 1)) };
+    });
+  };
+  var cfgFromEl = function (el) {
+    var pickVals = splitPipes(el.getAttribute("data-pick") ||
+      el.getAttribute("data-bread") || el.getAttribute("data-flavor"));
+    return {
+      ingredients: (el.getAttribute("data-ingredients") || "")
+        .split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+      sauce: el.getAttribute("data-sauce") === "yes",
+      size: parsePriced(el.getAttribute("data-size")),
+      pickLabel: el.getAttribute("data-pick-label") ||
+        (el.getAttribute("data-bread") ? "Bread" : el.getAttribute("data-flavor") ? "Flavor" : "Choice"),
+      pick: pickVals,
+      extras: parsePriced(el.getAttribute("data-extras"))
+    };
+  };
+
+  var addonUnit = function () {
+    var u = addonState.base;
+    if (addonState.hasSauce) u += saucePrice(addonState.sauce);
+    for (var k in addonState.extras) if (addonState.extras.hasOwnProperty(k)) u += addonState.extras[k];
+    return u;
+  };
+  var buildOpts = function () {
+    var o = [];
+    if (addonState.size) o.push(addonState.size.label);
+    if (addonState.pick) o.push(addonState.pick);
+    for (var k in addonState.extras) if (addonState.extras.hasOwnProperty(k)) o.push(k);
+    return o;
+  };
+
+  /* build a titled option group in the dynamic area */
+  var groupEl = function (title) {
+    var g = document.createElement("div");
+    g.className = "addon-group";
+    var h = document.createElement("p");
+    h.className = "addon-sub";
+    h.textContent = title;
+    g.appendChild(h);
+    return g;
+  };
+  var choiceEl = function (nm, value, checked, tag, type) {
+    var lab = document.createElement("label");
+    lab.className = "sauce-opt opt-choice";
+    var input = document.createElement("input");
+    input.type = type; input.name = nm; input.value = value; input.checked = !!checked;
+    var text = document.createElement("span");
+    text.className = "addon-name"; text.textContent = value;
+    lab.appendChild(input); lab.appendChild(text);
+    if (tag) { var t = document.createElement("span"); t.className = "sauce-up"; t.textContent = tag; lab.appendChild(t); }
+    return lab;
+  };
 
   var renderAddon = function () {
     addonPop.querySelector('[data-count="qty"]').textContent = addonState.qty;
@@ -588,13 +662,63 @@ window.SQForms = (function () {
       "Add" + (addonState.qty > 1 ? " " + addonState.qty : "") + " — " + money(addonUnit() * addonState.qty);
   };
 
-  var openAddon = function (name, base, ingredients) {
-    addonState = { name: name, base: base, qty: 1, sauce: "Garlic" };
+  var openAddon = function (name, base, cfg) {
+    cfg = cfg || {};
+    addonState = { name: name, base: Number(base), qty: 1,
+      hasSauce: !!cfg.sauce, sauce: "Garlic", size: null, pick: "", extras: {} };
     addonPop.querySelector(".addon-title").textContent = name;
+    dynamic.innerHTML = "";
 
-    /* reset sauce to the included Garlic */
-    sauceRadios.forEach(function (r) { r.checked = r.value === "Garlic"; });
+    /* SIZE — radio that sets the base price */
+    if (cfg.size && cfg.size.length) {
+      addonState.size = cfg.size[0];
+      addonState.base = cfg.size[0].price;
+      var gs = groupEl("Size");
+      cfg.size.forEach(function (s, i) {
+        var lab = choiceEl("sq-size", s.label, i === 0, money(s.price), "radio");
+        lab.querySelector("input").addEventListener("change", function () {
+          addonState.size = s; addonState.base = s.price; renderAddon();
+        });
+        gs.appendChild(lab);
+      });
+      dynamic.appendChild(gs);
+    }
 
+    /* PICK — a single no-cost choice (bread / style / flavor) */
+    if (cfg.pick && cfg.pick.length) {
+      addonState.pick = cfg.pick[0];
+      var gp = groupEl(cfg.pickLabel || "Choice");
+      cfg.pick.forEach(function (opt, i) {
+        var lab = choiceEl("sq-pick", opt, i === 0, "", "radio");
+        lab.querySelector("input").addEventListener("change", function () {
+          addonState.pick = opt; renderAddon();
+        });
+        gp.appendChild(lab);
+      });
+      dynamic.appendChild(gp);
+    }
+
+    /* EXTRAS — price-adding checkboxes (double protein, combo, topping) */
+    if (cfg.extras && cfg.extras.length) {
+      var ge = groupEl("Add-ons");
+      cfg.extras.forEach(function (ex) {
+        var lab = choiceEl("sq-extra", ex.label, false, ex.price ? "+" + money(ex.price) : "free", "checkbox");
+        lab.querySelector("input").addEventListener("change", function (e) {
+          if (e.target.checked) addonState.extras[ex.label] = ex.price;
+          else delete addonState.extras[ex.label];
+          renderAddon();
+        });
+        ge.appendChild(lab);
+      });
+      dynamic.appendChild(ge);
+    }
+
+    /* SAUCE — only for items that carry a sauce */
+    sauceBlock.hidden = !cfg.sauce;
+    if (cfg.sauce) sauceRadios.forEach(function (r) { r.checked = r.value === "Garlic"; });
+
+    /* HOLD INGREDIENTS */
+    var ingredients = cfg.ingredients || [];
     removeList.innerHTML = "";
     removeDetails.hidden = !ingredients.length;
     removeDetails.open = false;
@@ -602,12 +726,10 @@ window.SQForms = (function () {
       var label = document.createElement("label");
       label.className = "remove-opt";
       var box = document.createElement("input");
-      box.type = "checkbox";
-      box.value = ing;
+      box.type = "checkbox"; box.value = ing;
       var text = document.createElement("span");
       text.textContent = "No " + ing;
-      label.appendChild(box);
-      label.appendChild(text);
+      label.appendChild(box); label.appendChild(text);
       removeList.appendChild(label);
     });
 
@@ -644,7 +766,8 @@ window.SQForms = (function () {
       var removed = [].map.call(removeList.querySelectorAll("input:checked"), function (b) {
         return b.value;
       });
-      addLine(addonState.name, addonUnit(), addonState.sauce, removed, addonState.qty);
+      addLine(addonState.name, addonUnit(), addonState.hasSauce ? addonState.sauce : "",
+        removed, addonState.qty, buildOpts());
       closeAddon();
       return;
     }
@@ -670,9 +793,7 @@ window.SQForms = (function () {
       if (add.getAttribute("data-addons") === "no") {
         addLine(name, price, "", [], 1);
       } else {
-        var ingredients = (add.getAttribute("data-ingredients") || "")
-          .split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-        openAddon(name, price, ingredients);
+        openAddon(name, price, cfgFromEl(add));
       }
       return;
     }
@@ -1222,7 +1343,15 @@ window.SQForms = (function () {
   window.SQOrder = {
     add: function (name, price, ingredients, addons) {
       if (addons === false) addLine(name, Number(price), "", [], 1);
-      else openAddon(name, Number(price), ingredients || []);
+      else openAddon(name, Number(price), { ingredients: ingredients || [], sauce: true });
+    },
+    /* drop an item into the cart straight from a DOM node's data-* config */
+    addEl: function (el) {
+      if (!el) return;
+      var name = el.getAttribute("data-name");
+      var price = Number(el.getAttribute("data-price"));
+      if (el.getAttribute("data-addons") === "no") addLine(name, price, "", [], 1);
+      else openAddon(name, price, cfgFromEl(el));
     },
     open: openPanel
   };
@@ -1464,10 +1593,7 @@ window.SQForms = (function () {
   addBtn.addEventListener("click", function (e) {
     e.stopPropagation();
     if (!selected || !window.SQOrder) return;
-    var ing = (selected.getAttribute("data-ingredients") || "")
-      .split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-    var addons = selected.getAttribute("data-addons") !== "no";
-    window.SQOrder.add(selected.getAttribute("data-name"), selected.getAttribute("data-price"), ing, addons);
+    window.SQOrder.addEl(selected);
   });
 
   orbit.addEventListener("click", function (e) {
