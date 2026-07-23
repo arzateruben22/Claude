@@ -199,17 +199,57 @@ window.SQForms = (function () {
      and injected as menu-row thumbnails. Items without an entry simply show
      no photo (graceful). */
   var ITEM_IMAGES = {
+    /* Shawarma */
     "Chicken Shawarma": "media/items/chicken-shawarma.jpg",
     "Beef Shawarma": "media/items/beef-shawarma.jpg",
     "Falafel Shawarma": "media/items/falafel-shawarma.jpg",
     "Makali Shawarma": "media/items/makali-shawarma.jpg",
     "Queen Vegan Shawarma": "media/items/queen-vegan-shawarma.jpg",
+    /* Bowls */
     "Beef Bowl": "media/items/beef-bowl.jpg",
     "Chicken Bowl": "media/items/chicken-bowl.jpg",
     "Falafel Bowl": "media/items/falafel-bowl.jpg",
     "Makali Bowl": "media/items/makali-bowl.jpg",
     "Queen Vegan Bowl": "media/items/queen-vegan-bowl.jpg",
-    "Queen Mix Bowl": "media/items/queen-mix-bowl.jpg"
+    "Queen Mix Bowl": "media/items/queen-mix-bowl.jpg",
+    /* Sandwiches & Quesadillas */
+    "Chicken Spicy Sandwich": "media/items/sandwich.jpg",
+    "Chicken Zinger Sandwich": "media/items/sandwich.jpg",
+    "Chicken Shawarma Quesadilla": "media/items/quesadilla.jpg",
+    "Beef Shawarma Quesadilla": "media/items/quesadilla.jpg",
+    /* Sides */
+    "Hummus": "media/items/hummus.jpg",
+    "Hummus with Chicken Shawarma": "media/items/hummus-shawarma.jpg",
+    "Hummus with Beef Shawarma": "media/items/hummus-shawarma.jpg",
+    "Tabbouleh": "media/items/tabbouleh.jpg",
+    "Fattoush": "media/items/fattoush.jpg",
+    "French Fries": "media/items/french-fries.jpg",
+    "Batata Harra": "media/items/batata-harra.jpg",
+    "Motabal": "media/items/motabal.jpg",
+    "Grape Leaves (5 pcs)": "media/items/grape-leaves.jpg",
+    "Falafel (6 pcs)": "media/items/falafel-side.jpg",
+    /* Sauces & Extras */
+    "Garlic Sauce": "media/garlic.jpg",
+    "Queen Sauce": "media/queen.jpg",
+    "Boom Sauce": "media/boom.jpg",
+    "Tzatziki": "media/items/tzatziki.jpg",
+    "Mix Pickles": "media/pickles.jpg",
+    "Grape Leaves (1 pc)": "media/items/grape-leaves.jpg",
+    "Falafel (1 pc)": "media/items/falafel-side.jpg",
+    /* Desserts */
+    "Cheese Knafeh": "media/items/cheese-knafeh.jpg",
+    "Nutella Knafeh": "media/items/nutella-knafeh.jpg",
+    "Pistachio Cup": "media/items/pistachio-cup.jpg",
+    "Pistachio Croissant": "media/items/pistachio-croissant.jpg",
+    "Dubai Pistachio Chocolate Bar": "media/items/dubai-chocolate-bar.jpg",
+    /* Drinks & Slushies */
+    "Boom Boom Cocktail": "media/items/boom-boom-cocktail.jpg",
+    "Boom Boom Avocado": "media/items/boom-boom-avocado.jpg",
+    "Queen Slushie": "media/items/slushie.jpg",
+    /* Pancakes */
+    "Nutella Pancakes with Fruit": "media/items/nutella-pancakes-fruit.jpg",
+    "Nutella Pancakes": "media/items/nutella-pancakes.jpg",
+    "Plain Pancakes": "media/items/plain-pancakes.jpg"
   };
 
   var panel = document.querySelector(".order-panel");
@@ -1773,7 +1813,17 @@ window.SQForms = (function () {
     { name: "Queen Vegan Shawarma", price: 15, tag: "Vegan", desc: "The vegan crown, wrapped.", img: "media/items/queen-vegan-shawarma.jpg",
       attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
     { name: "Makali Bowl", price: 12, tag: "Vegan", desc: "Fried veggie medley.", img: "media/items/makali-bowl.jpg",
-      attrs: { "data-sauce": "yes", "data-size": "Small=12|Large=17", "data-extras": "Double protein=4" } }
+      attrs: { "data-sauce": "yes", "data-size": "Small=12|Large=17", "data-extras": "Double protein=4" } },
+    { name: "Chicken Spicy Sandwich", price: 14, tag: "Sandwich", desc: "Spicy chicken, cheese & slaw.", img: "media/items/sandwich.jpg",
+      attrs: { "data-pick": "Wrap|Box", "data-pick-label": "Style", "data-extras": "Combo — fries + soda=5", "data-ingredients": "bell peppers, mayo, cheese, coleslaw, pickles" } },
+    { name: "Chicken Shawarma Quesadilla", price: 15, tag: "Quesadilla", desc: "Grilled chicken & melted cheese.", img: "media/items/quesadilla.jpg",
+      attrs: { "data-extras": "Combo — fries + soda=5", "data-ingredients": "cheese" } },
+    { name: "Boom Boom Cocktail", price: 14, tag: "Drink", desc: "Fruit smoothie, cream & honey.", img: "media/items/boom-boom-cocktail.jpg",
+      attrs: { "data-addons": "no" } },
+    { name: "Cheese Knafeh", price: 12, tag: "Dessert", desc: "Warm cheese, crisp kataifi, syrup.", img: "media/items/cheese-knafeh.jpg",
+      attrs: { "data-addons": "no" } },
+    { name: "Nutella Pancakes with Fruit", price: 17, tag: "Sweet", desc: "Nutella drizzle & fresh fruit.", img: "media/items/nutella-pancakes-fruit.jpg",
+      attrs: { "data-addons": "no" } }
   ];
 
   SIG.forEach(function (it) {
