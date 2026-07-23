@@ -15,18 +15,20 @@
 @font-face { font-family: "Jost"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/jost-latin-500-normal.woff2") format("woff2"); }
 
 :root {
-  --linen: #f7f1eb;
-  --porcelain: #fdfaf6;
-  --panel-edge: rgba(58, 48, 58, 0.14);
+  /* Direction A — warm-clinical hybrid: cooler greige neutrals, a muted
+     plum accent, one warm accent (sand) kept for character. */
+  --linen: #f1ece5;
+  --porcelain: #faf8f4;
+  --panel-edge: rgba(58, 48, 58, 0.15);
   --panel-edge-soft: rgba(58, 48, 58, 0.08);
-  --ink: #443640;
-  --ink-60: rgba(68, 54, 64, 0.68);
-  --ink-35: rgba(68, 54, 64, 0.42);
-  --ink-15: rgba(68, 54, 64, 0.14);
-  --mauve: #a5798b;
-  --plum: #7d5468;
-  --rose: #c9a2b4;
-  --blush: #e6cfd9;
+  --ink: #322e36;
+  --ink-60: rgba(51, 47, 55, 0.66);
+  --ink-35: rgba(51, 47, 55, 0.42);
+  --ink-15: rgba(51, 47, 55, 0.14);
+  --mauve: #927082;
+  --plum: #7c5a6a;
+  --rose: #c2a0ad;
+  --blush: #e4cdd5;
   --sand: #d9b9a3;
   --sage: #adc2a5;
   --grad-rose: linear-gradient(100deg,
@@ -295,9 +297,9 @@ em { font-style: italic; }
   justify-content: center;
   overflow: hidden;
   background:
-    radial-gradient(60% 55% at 30% 25%, rgba(201, 162, 180, 0.28), transparent 62%),
-    radial-gradient(55% 50% at 82% 78%, rgba(230, 189, 178, 0.24), transparent 60%),
-    linear-gradient(160deg, #fdfaf6 0%, #f6e7ee 45%, #f7f1eb 100%);
+    radial-gradient(60% 55% at 30% 25%, rgba(146, 112, 130, 0.20), transparent 62%),
+    radial-gradient(55% 50% at 82% 78%, rgba(185, 196, 198, 0.22), transparent 60%),
+    linear-gradient(160deg, #faf8f4 0%, #ece4ea 45%, #f1ece5 100%);
   color: var(--plum);
   cursor: pointer;
   transition: opacity 900ms ease, transform 900ms ease;
@@ -2186,7 +2188,7 @@ body.intro-lock { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 60;
-  background: rgba(68, 54, 64, 0.38);
+  background: rgba(51, 47, 55, 0.38);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   opacity: 1;
@@ -2204,7 +2206,7 @@ body.intro-lock { overflow: hidden; }
   flex-direction: column;
   background: var(--porcelain);
   border-left: 1px solid var(--panel-edge);
-  box-shadow: -12px 0 40px rgba(68, 54, 64, 0.16);
+  box-shadow: -12px 0 40px rgba(51, 47, 55, 0.16);
   transform: translateX(100%);
   transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1),
               visibility 0s linear 320ms;
@@ -2357,7 +2359,7 @@ body.intro-lock { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(68, 54, 64, 0.38);
+  background: rgba(51, 47, 55, 0.38);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
@@ -2386,7 +2388,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  box-shadow: 0 24px 70px rgba(51, 47, 55, 0.25);
   padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
@@ -2913,7 +2915,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  box-shadow: 0 24px 70px rgba(51, 47, 55, 0.25);
   padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
@@ -3101,7 +3103,7 @@ body.intro-lock { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(68, 54, 64, 0.38);
+  background: rgba(51, 47, 55, 0.38);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
@@ -3130,7 +3132,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  box-shadow: 0 24px 70px rgba(51, 47, 55, 0.25);
   padding: clamp(1.5rem, 4vw, 2.25rem);
 }
 
@@ -3326,7 +3328,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 14px;
-  box-shadow: 0 18px 44px rgba(68, 54, 64, 0.24);
+  box-shadow: 0 18px 44px rgba(51, 47, 55, 0.24);
   pointer-events: none;
   opacity: 0;
   transform: translate(-50%, calc(-100% - 2px)) scale(0.82);
@@ -3409,7 +3411,7 @@ body.intro-lock { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 96;
-  background: rgba(68, 54, 64, 0.4);
+  background: rgba(51, 47, 55, 0.4);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
@@ -3438,7 +3440,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  box-shadow: 0 24px 70px rgba(51, 47, 55, 0.25);
   padding: clamp(1.5rem, 4vw, 2.4rem);
 }
 
@@ -3701,7 +3703,7 @@ body.intro-lock { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 110;
-  background: rgba(68, 54, 64, 0.42);
+  background: rgba(51, 47, 55, 0.42);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
@@ -3727,7 +3729,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.28);
+  box-shadow: 0 24px 70px rgba(51, 47, 55, 0.28);
   padding: clamp(1.6rem, 5vw, 2.4rem);
   text-align: center;
 }
@@ -3753,7 +3755,7 @@ body.intro-lock { overflow: hidden; }
   position: fixed;
   inset: 0;
   z-index: 80;
-  background: rgba(68, 54, 64, 0.38);
+  background: rgba(51, 47, 55, 0.38);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
@@ -3782,7 +3784,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--porcelain);
   border: 1px solid var(--panel-edge);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(68, 54, 64, 0.25);
+  box-shadow: 0 24px 70px rgba(51, 47, 55, 0.25);
   padding: clamp(1.5rem, 4vw, 2.25rem);
 }
 
@@ -4061,7 +4063,7 @@ body.intro-lock { overflow: hidden; }
   background: var(--ink);
   color: var(--linen);
   border-radius: 12px;
-  box-shadow: 0 10px 26px rgba(68, 54, 64, 0.22);
+  box-shadow: 0 10px 26px rgba(51, 47, 55, 0.22);
 }
 
 a.appstore-badge { text-decoration: none; transition: transform 200ms ease; }
