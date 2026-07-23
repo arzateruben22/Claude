@@ -20,10 +20,7 @@
 
   <header class="nav" id="top">
     <a class="nav-brand" href="#top" aria-label="Shawarma Queen — home">
-      <svg class="crown" width="30" height="24" viewBox="0 0 30 24" fill="none" aria-hidden="true">
-        <path d="M3 21h24l-2.4-14-6.6 5.4L15 2l-3 10.4L5.4 7 3 21z" fill="currentColor"/>
-        <circle cx="15" cy="3" r="2.2" fill="#D5421F"/>
-      </svg>
+      <img class="brand-emblem" src="media/logo.jpg" alt="" aria-hidden="true">
       <span class="nav-brand-text">Shawarma Queen<span class="nav-brand-sub">Anaheim · Open Late</span></span>
     </a>
     <nav class="nav-links nav-dock" aria-label="Main">
@@ -178,19 +175,19 @@
           <div class="court-orbit" id="court-orbit" aria-label="Signature dishes — tap one to add it to your order">
             <div class="court-ring" id="court-ring">
               <button class="court-node node-beef" type="button" data-i="0" data-name="12″ Beef Shawarma Combo" data-price="19" data-tag="Combo" data-desc="Beef wrap + fries, coleslaw, garlic sauce & pickles." data-ingredients="french fries, coleslaw, mixed pickles" style="--ox:1;--oy:0" aria-label="Beef Shawarma Combo, $19 — tap for details">
-                <span class="court-node-dot"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g transform="rotate(-38 12 12)"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5"/></g></svg></span>
+                <span class="court-node-dot"><img src="media/beef.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Beef Combo</span>
               </button>
               <button class="court-node node-chicken" type="button" data-i="1" data-name="12″ Chicken Shawarma Combo" data-price="18" data-tag="Combo" data-desc="Chicken wrap + fries, coleslaw, garlic sauce & pickles." data-ingredients="french fries, coleslaw, mixed pickles" style="--ox:0;--oy:1" aria-label="Chicken Shawarma Combo, $18 — tap for details">
-                <span class="court-node-dot"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g transform="rotate(-38 12 12)"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5"/></g></svg></span>
+                <span class="court-node-dot"><img src="media/chicken.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Chicken Combo</span>
               </button>
               <button class="court-node node-boom" type="button" data-i="2" data-name="Side of Boom Sauce" data-price="1" data-addons="no" data-tag="Spicy · with cheese" data-desc="Spicy mayo with cheese — a cup on the side." style="--ox:-1;--oy:0" aria-label="Boom sauce, $1 — tap for details">
-                <span class="court-node-dot"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3c3.6 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2.4-6 6-11z"/></svg></span>
+                <span class="court-node-dot"><img src="media/boom.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Boom</span>
               </button>
               <button class="court-node node-queen" type="button" data-i="3" data-name="Side of Queen Sauce" data-price="1" data-addons="no" data-tag="Signature · with cheese" data-desc="Mild garlic with cheese — the one we're named for." style="--ox:0;--oy:-1" aria-label="Queen sauce, $1 — tap for details">
-                <span class="court-node-dot"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3c3.6 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2.4-6 6-11z"/></svg></span>
+                <span class="court-node-dot"><img src="media/queen.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Queen</span>
               </button>
             </div>
@@ -236,6 +233,33 @@
           Combos come with French fries, coleslaw, garlic sauce &amp; mixed pickles.</p>
         </div>
 
+        <div class="menu-showcase" data-reveal>
+          <div class="showcase-mains">
+            <figure class="showcase-card">
+              <img src="media/beef.jpg" alt="Beef shawarma wrap" loading="lazy">
+              <figcaption>Beef Shawarma <span class="sc-tag">from $14</span></figcaption>
+            </figure>
+            <figure class="showcase-card">
+              <img src="media/chicken.jpg" alt="Chicken shawarma wrap" loading="lazy">
+              <figcaption>Chicken Shawarma <span class="sc-tag">from $13</span></figcaption>
+            </figure>
+          </div>
+          <div class="showcase-sauces">
+            <figure class="showcase-card sauce">
+              <img src="media/garlic.jpg" alt="Garlic sauce" loading="lazy">
+              <figcaption>Garlic <span class="sc-tag">included</span></figcaption>
+            </figure>
+            <figure class="showcase-card sauce">
+              <img src="media/boom.jpg" alt="Boom sauce" loading="lazy">
+              <figcaption>Boom <span class="sc-tag">+$1</span></figcaption>
+            </figure>
+            <figure class="showcase-card sauce">
+              <img src="media/queen.jpg" alt="Queen sauce" loading="lazy">
+              <figcaption>Queen <span class="sc-tag">+$1</span></figcaption>
+            </figure>
+          </div>
+        </div>
+
         <div class="carta-grid">
           <div class="carta-group" data-reveal>
             <h3 class="carta-group-title">Beef <span class="carta-group-alt">charcoal-dark, shaved thin</span></h3>
@@ -274,6 +298,11 @@
 
         <p class="carta-note" data-reveal>Grilled to perfection, made for kings &amp; queens.
         <!-- TODO: confirm final prices, tax, and any items not shown on the board. --></p>
+
+        <figure class="menu-board" data-reveal>
+          <img src="media/shawrma.jpg" alt="Shawarma Queen menu board — beef and chicken shawarma with prices and sauces" loading="lazy">
+          <figcaption>The board — straight from the shop.</figcaption>
+        </figure>
       </div>
     </section>
 
@@ -631,7 +660,7 @@
 
   <footer class="footer">
     <div class="footer-inner">
-      <p class="footer-brand"><svg class="crown" width="26" height="20" viewBox="0 0 30 24" fill="none" aria-hidden="true"><path d="M3 21h24l-2.4-14-6.6 5.4L15 2l-3 10.4L5.4 7 3 21z" fill="currentColor"/></svg>Shawarma Queen</p>
+      <p class="footer-brand"><img class="brand-emblem" src="media/logo.jpg" alt="" aria-hidden="true">Shawarma Queen</p>
       <p class="footer-line">Made for kings &amp; queens.</p>
       <nav class="footer-nav" aria-label="Footer">
         <a href="#carta">Menu</a>
