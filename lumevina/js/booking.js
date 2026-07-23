@@ -1135,12 +1135,14 @@
         email: emailInput.value.trim(),
         order: result.id,
         deposit: deposit,
-        /* a treatment gift prepays the whole visit, so nothing is owed in
-           person — record it as paid in full; otherwise just the deposit */
-        paid: giftIsService ? sessionTotal() : charge,
+        /* what the card was actually charged (0 when a treatment gift covers
+           the visit). The gift value is tracked separately so the books don't
+           count a redemption as new cash — that cash arrived when it was sold. */
+        paid: charge,
         total: sessionTotal(),
         giftCode: giftCode || null,
         giftPrepaid: giftIsService,
+        giftValue: giftIsService ? sessionTotal() : 0,
         flash: flashActive(),
         /* stamp where the booking came from — 'app' inside the
            Capacitor shell, 'web' in a browser. Powers the app-vs-web

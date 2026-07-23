@@ -95,6 +95,7 @@
       white-space: nowrap; }
     .bk-export:hover { background: var(--data); }
     .bk-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.4rem; }
+    #settle-tiles { grid-template-columns: repeat(5, 1fr); }
     .bk-tile { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
       padding: 0.9rem 1rem; }
     .bk-tile--flag { border-color: var(--mauve); background: rgba(165, 121, 139, 0.08); }
@@ -159,7 +160,7 @@
       color: var(--ink-70); font-variant-numeric: tabular-nums; }
     .cal-note { font-size: 0.88rem; color: var(--ink-60); line-height: 1.6; }
     .cal-note strong { color: var(--ink); font-weight: 500; }
-    @media (max-width: 720px) { .bk-tiles { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px) { .bk-tiles, #settle-tiles { grid-template-columns: repeat(2, 1fr); } }
 
     /* ranked bars (most-booked services) */
     .rank { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
@@ -688,6 +689,12 @@
       { name: "Maya Chen", email: "maya@example.com", spent: 90,
         visits: [ { date: "2026-07-20", time: 540, dur: 60, services: ["new-client-consultation"], paid: 90 } ],
         intake: null },
+      { name: "Chloe Kim", email: "chloe@example.com", spent: 180,
+        /* redeemed her Lumevina Custom Facial gift (LUM-R8WD-1K5H): the whole
+           visit was prepaid by the certificate, so no card was charged */
+        visits: [ { date: "2026-05-16", time: 660, dur: 60, services: ["lumevina-custom-facial"],
+          paid: 0, total: 180, giftPrepaid: true, giftValue: 180, giftCode: "LUM-R8WD-1K5H" } ],
+        intake: null },
       { name: "Priya Nair", email: "priya@example.com", spent: 250,
         visits: [
           { date: "2026-05-02", time: 900, dur: 30, services: ["brazilian-wax"], paid: 30 },
@@ -792,13 +799,16 @@
       clients.forEach(function (c) {
         (c.visits || []).forEach(function (v) {
           var collected = Number(v.paid || v.deposit || 0);
+          var gift = Number(v.giftValue || 0);
           /* the deposit is 50%, so total ≈ collected × 2 when not stored */
           var total = Number(v.total || (v.deposit ? v.deposit * 2 : 0) || collected * 2 || 0);
           var fee = collected > 0 ? +(collected * STRIPE_PCT + STRIPE_FLAT).toFixed(2) : 0;
           rows.push({ date: v.date, name: c.name,
             services: (v.services || []).map(svcName).join(" + "),
             total: total, collected: collected, fee: fee,
-            net: +(collected - fee).toFixed(2), balance: +(total - collected).toFixed(2) });
+            /* a gift redemption already had its cash collected at sale time,
+               so it isn't owed — subtract it from the outstanding balance */
+            net: +(collected - fee).toFixed(2), balance: +(Math.max(0, total - collected - gift)).toFixed(2) });
         });
       });
       rows.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
@@ -924,10 +934,12 @@
       clients.forEach(function (c) {
         (c.visits || []).forEach(function (v) {
           var online = Number(v.paid || v.deposit || 0);
+          var gift = Number(v.giftValue || 0);
           var total = Number(v.total || (v.deposit ? v.deposit * 2 : 0) || online * 2 || 0);
           visits.push({ key: keyOf(v, c), name: c.name, date: v.date,
             services: (v.services || []).map(svcName).join(" + "),
-            total: total, online: online, balance: Math.max(0, +(total - online).toFixed(2)) });
+            total: total, online: online, gift: gift, prepaid: !!v.giftPrepaid || (gift > 0 && gift >= total),
+            balance: Math.max(0, +(total - online - gift).toFixed(2)) });
         });
       });
       visits.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
@@ -936,8 +948,9 @@
       var listEl = document.getElementById("settle-list");
 
       var render = function () {
-        var cash = 0, card = 0, awaiting = 0, noshow = 0;
+        var cash = 0, card = 0, awaiting = 0, noshow = 0, giftPrepaid = 0;
         visits.forEach(function (v) {
+          if (v.prepaid) { giftPrepaid += v.gift; return; }   /* covered by a gift, nothing to settle */
           var s = settle[v.key];
           if (!s || s.status === "open") { awaiting += v.balance; return; }
           if (s.status === "no-show") { noshow += v.online; return; }
@@ -947,6 +960,7 @@
           { l: "In person · cash", v: mc(Math.round(cash)) },
           { l: "In person · card", v: mc(Math.round(card)) },
           { l: "Awaiting balance", v: mc(Math.round(awaiting)), flag: awaiting > 0 },
+          { l: "Prepaid by gift", v: mc(Math.round(giftPrepaid)) },
           { l: "No-show deposits kept", v: mc(Math.round(noshow)) }
         ];
         tilesEl.innerHTML = tiles.map(function (t) {
@@ -957,13 +971,18 @@
         visits.forEach(function (v) {
           var s = settle[v.key] || { status: "open" };
           var li = document.createElement("li");
-          li.className = "settle-row" + (s.status !== "open" ? " is-done" : "");
+          li.className = "settle-row" + (v.prepaid || s.status !== "open" ? " is-done" : "");
           var meta = '<div class="settle-meta"><span class="settle-name">' + v.name +
             '</span><span class="settle-sub">' + fmtDate(v.date) + " · " + v.services + '</span></div>';
           var moneyCol = '<div class="settle-money"><span>' + mc(v.total) + ' total</span>' +
-            '<span class="settle-sub">' + mc(v.online) + ' online · ' + mc(v.balance) + ' balance</span></div>';
+            '<span class="settle-sub">' + (v.prepaid
+              ? mc(v.gift) + ' gift · ' + mc(0) + ' balance'
+              : mc(v.online) + ' online · ' + mc(v.balance) + ' balance') + '</span></div>';
           var action;
-          if (s.status === "paid") {
+          if (v.prepaid) {
+            action = '<div class="settle-state">✦ Prepaid by gift certificate' +
+              (v.gift ? ' · ' + mc(v.gift) : '') + '</div>';
+          } else if (s.status === "paid") {
             action = '<div class="settle-state">✓ Balance ' + mc(v.balance) + ' paid · ' +
               (s.method === "cash" ? "cash" : "card") +
               '<button class="settle-undo" data-k="' + v.key + '">undo</button></div>';
