@@ -1698,7 +1698,15 @@ body.intro-lock { overflow: hidden; }
   transition: height 1000ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-.stack-cards.active { height: 38.5rem; cursor: default; }
+/* expanded: cards leave the pile and flow as a full list, so every line
+   of every card is visible (no fixed height, no clamping) */
+.stack-cards.active {
+  height: auto;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
 
 .stack-card {
   position: absolute;
@@ -1724,11 +1732,27 @@ body.intro-lock { overflow: hidden; }
 .stack-card:nth-child(3) { top: 3rem; z-index: 2; }
 .stack-card:nth-child(4) { top: 3.75rem; z-index: 1; }
 
-/* expanded: fanned out */
-.stack-cards.active .stack-card:nth-child(1) { top: 1.5rem; }
-.stack-cards.active .stack-card:nth-child(2) { top: 9.5rem; }
-.stack-cards.active .stack-card:nth-child(3) { top: 17.5rem; }
-.stack-cards.active .stack-card:nth-child(4) { top: 25.5rem; }
+/* expanded: each card pops into the flow at its natural, full height */
+.stack-cards.active .stack-card {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  width: 100%;
+  height: auto;
+  min-height: 6rem;
+  animation: stackCardIn 440ms cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+.stack-cards.active .stack-card:nth-child(1) { animation-delay: 40ms; }
+.stack-cards.active .stack-card:nth-child(2) { animation-delay: 115ms; }
+.stack-cards.active .stack-card:nth-child(3) { animation-delay: 190ms; }
+.stack-cards.active .stack-card:nth-child(4) { animation-delay: 265ms; }
+
+@keyframes stackCardIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 .stack-card a {
   display: flex;
@@ -1742,7 +1766,13 @@ body.intro-lock { overflow: hidden; }
   pointer-events: none;
 }
 
-.stack-cards.active .stack-card a { pointer-events: auto; }
+/* full padding + auto height once flowing, so long lines never clip */
+.stack-cards.active .stack-card a {
+  pointer-events: auto;
+  height: auto;
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
 
 .stack-thumb {
   display: flex;
@@ -1772,6 +1802,12 @@ body.intro-lock { overflow: hidden; }
   font-size: 0.875rem;
   color: var(--ink-60);
   line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* collapsed: only the top card peeks, so keep its blurb to two lines;
+   once expanded the clamp is lifted and the full text shows */
+.stack-cards:not(.active) .stack-text span {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -1804,10 +1840,21 @@ body.intro-lock { overflow: hidden; }
   transition: opacity 300ms ease, visibility 300ms ease;
 }
 
+/* flows at the end of the list once expanded */
 .stack-cards.active .stack-less {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  align-self: center;
+  margin-top: 0.35rem;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-cards.active .stack-card { animation: none; }
 }
 
 /* ─── Face tools (Beautology Lab) ─── */
