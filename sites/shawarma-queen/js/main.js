@@ -226,9 +226,9 @@ window.SQForms = (function () {
   var DELIVERY_LEAD_MIN = 45;       /* minutes until earliest delivery */
   var LAST_ORDER_BEFORE_CLOSE = 30; /* minutes before closing */
   /* Open hours by weekday, 0 = Sunday, in 24h numbers. Shawarma Queen is
-     open 11:00 am – 3:30 am the next day, every day (end = 27.5 = 3:30 am). */
+     open 10:00 am – 3:30 am the next day, every day (end = 27.5 = 3:30 am). */
   var OPEN_HOURS = [
-    [11, 27.5], [11, 27.5], [11, 27.5], [11, 27.5], [11, 27.5], [11, 27.5], [11, 27.5]
+    [10, 27.5], [10, 27.5], [10, 27.5], [10, 27.5], [10, 27.5], [10, 27.5], [10, 27.5]
   ];
 
   /* Pick-your-sauce, straight off the board. Garlic is included; the
