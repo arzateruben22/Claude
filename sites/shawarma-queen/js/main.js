@@ -195,6 +195,23 @@ window.SQForms = (function () {
     return 0;
   };
 
+  /* Per-item photos, keyed by data-name — shown in the add-to-cart popover
+     and injected as menu-row thumbnails. Items without an entry simply show
+     no photo (graceful). */
+  var ITEM_IMAGES = {
+    "Chicken Shawarma": "media/items/chicken-shawarma.jpg",
+    "Beef Shawarma": "media/items/beef-shawarma.jpg",
+    "Falafel Shawarma": "media/items/falafel-shawarma.jpg",
+    "Makali Shawarma": "media/items/makali-shawarma.jpg",
+    "Queen Vegan Shawarma": "media/items/queen-vegan-shawarma.jpg",
+    "Beef Bowl": "media/items/beef-bowl.jpg",
+    "Chicken Bowl": "media/items/chicken-bowl.jpg",
+    "Falafel Bowl": "media/items/falafel-bowl.jpg",
+    "Makali Bowl": "media/items/makali-bowl.jpg",
+    "Queen Vegan Bowl": "media/items/queen-vegan-bowl.jpg",
+    "Queen Mix Bowl": "media/items/queen-mix-bowl.jpg"
+  };
+
   var panel = document.querySelector(".order-panel");
   if (!panel) return;
 
@@ -583,6 +600,8 @@ window.SQForms = (function () {
   var sauceRadios = addonPop.querySelectorAll('input[name="sq-sauce"]');
   var sauceBlock = addonPop.querySelector(".addon-sauce-block");
   var dynamic = addonPop.querySelector(".addon-dynamic");
+  var imgWrap = addonPop.querySelector(".addon-img-wrap");
+  var imgEl = addonPop.querySelector(".addon-img");
 
   /* addonState carries a full option set so any item can offer size, a
      single pick (bread/style/flavor), price-adding extras, a sauce and
@@ -667,6 +686,12 @@ window.SQForms = (function () {
     addonState = { name: name, base: Number(base), qty: 1,
       hasSauce: !!cfg.sauce, sauce: "Garlic", size: null, pick: "", extras: {} };
     addonPop.querySelector(".addon-title").textContent = name;
+
+    /* item photo */
+    var imgSrc = cfg.img || ITEM_IMAGES[name];
+    if (imgSrc) { imgEl.src = imgSrc; imgEl.alt = name; imgWrap.hidden = false; }
+    else { imgWrap.hidden = true; imgEl.removeAttribute("src"); }
+
     dynamic.innerHTML = "";
 
     /* SIZE — radio that sets the base price */
@@ -1358,6 +1383,20 @@ window.SQForms = (function () {
 
   render();
   renderHistory();
+
+  /* Drop a photo thumbnail into every menu row that has a mapped image. */
+  document.querySelectorAll("#carta .carta-row").forEach(function (row) {
+    var btn = row.querySelector(".add-btn");
+    if (!btn) return;
+    var src = ITEM_IMAGES[btn.getAttribute("data-name")];
+    if (!src || row.querySelector(".carta-thumb")) return;
+    var thumb = document.createElement("span");
+    thumb.className = "carta-thumb";
+    var im = document.createElement("img");
+    im.src = src; im.alt = ""; im.loading = "lazy";
+    thumb.appendChild(im);
+    row.insertBefore(thumb, row.firstChild);
+  });
 })();
 
 /* ── Open-late band: WebGL ember fluid ──

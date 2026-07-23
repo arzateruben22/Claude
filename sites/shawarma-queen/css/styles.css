@@ -872,6 +872,18 @@ em { font-style: italic; }
   padding: 0.95rem 0;
 }
 
+/* Photo thumbnail injected at the start of rows that have an item image */
+.carta-thumb {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 46px; height: 46px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--plum-edge);
+  background: #000;
+}
+.carta-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 .dish strong {
   display: block;
   font-weight: 600;
@@ -1948,6 +1960,11 @@ em { font-style: italic; }
 .addon-meter { font-size: 0.82rem; color: var(--gold); text-align: center; margin: 0.6rem 0 1rem; min-height: 1.2em; }
 .addon-add { width: 100%; }
 .addon-qty-row { border-top: 0; padding-top: 0; }
+
+/* Item photo at the top of the add-to-cart popover */
+.addon-img-wrap { margin: 0 0 var(--space-4); border-radius: 14px; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
+.addon-img-wrap[hidden] { display: none; }
+.addon-img { display: block; width: 100%; height: 168px; object-fit: cover; }
 
 .addon-remove { margin-bottom: 1rem; border-top: 1px solid var(--cream-15); }
 .addon-remove[hidden] { display: none; }
