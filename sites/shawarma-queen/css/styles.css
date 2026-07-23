@@ -1282,7 +1282,10 @@ em { font-style: italic; }
 .brand-emblem { height: 2.4rem; width: auto; border-radius: 6px; flex-shrink: 0; display: block; }
 .footer-brand .brand-emblem { height: 2rem; vertical-align: middle; }
 
-.menu-showcase { margin: 0 0 var(--space-7); }
+/* Capped so the board-cropped photos never render wider than their true
+   pixel size — displaying them at (or below) source keeps them crisp
+   instead of upscaling a small crop into a blurry hero. */
+.menu-showcase { max-width: 660px; margin: 0 auto var(--space-7); }
 .showcase-mains { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
 .showcase-sauces { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
 
@@ -1318,7 +1321,7 @@ em { font-style: italic; }
 .showcase-sauces .showcase-card figcaption { font-size: 0.98rem; padding: 0.85rem 0.8rem 0.7rem; }
 .showcase-card .sc-tag { font-family: var(--font-body); font-size: 0.66rem; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
 
-.menu-board { margin: var(--space-7) 0 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
+.menu-board { max-width: 900px; margin: var(--space-7) auto 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
 .menu-board img { display: block; width: 100%; height: auto; }
 .menu-board figcaption { text-align: center; padding: 0.9rem 1rem; font-size: 0.85rem; color: var(--cream-35); }
 
