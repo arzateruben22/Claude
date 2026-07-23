@@ -1954,6 +1954,37 @@ body.intro-lock { overflow: hidden; }
 .retail-stock { font-size: 0.78rem; color: var(--ink-35); margin-top: 0.6rem; }
 .retail-stock.is-low { color: var(--plum); font-weight: 500; }
 
+/* hero credibility strip — a beat of social proof before the CTA */
+.hero-cred {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-60);
+  margin-top: var(--space-3);
+  line-height: 1.6;
+}
+.hero-cred a { color: var(--plum); font-weight: 500; text-decoration: underline;
+  text-underline-offset: 2px; text-decoration-color: var(--rose); }
+.hero-cred a:hover { color: var(--mauve); }
+.hero-cred span { margin: 0 0.4rem; color: var(--mauve); opacity: 0.55; }
+
+/* labelled sub-headers inside the merged Shop section */
+.shop-subhead {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--plum);
+  margin: var(--space-5) 0 var(--space-4);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--panel-edge-soft);
+}
+.shop-subhead span { color: var(--mauve); font-weight: 400; text-transform: none;
+  letter-spacing: 0.02em; font-size: 0.9em; }
+.shop-subhead--gap { margin-top: var(--space-7); }
+
 @media (max-width: 860px) {
   .tools-layout { grid-template-columns: 1fr; gap: var(--space-5); }
   .tools-layout .tools-cover { position: static; }
