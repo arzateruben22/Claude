@@ -837,10 +837,16 @@ em { font-style: italic; }
 
 .carta-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(3rem, 5vw, 5rem) clamp(3rem, 7vw, 6.5rem);
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
   margin-top: var(--space-7);
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+/* Each category is a collapsible dropdown (native <details>) */
+.carta-group { border-bottom: 1px solid var(--gold-soft); }
 
 .carta-group-title {
   font-family: var(--font-display);
@@ -851,10 +857,33 @@ em { font-style: italic; }
   display: flex;
   align-items: baseline;
   gap: var(--space-3);
-  padding-bottom: var(--space-4);
-  margin-bottom: var(--space-4);
-  border-bottom: 1px solid var(--gold-soft);
+  padding: var(--space-4) 0;
+  margin: 0;
+  cursor: pointer;
+  list-style: none;                 /* remove the default disclosure triangle */
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms ease;
 }
+.carta-group-title::-webkit-details-marker { display: none; }
+.carta-group-title:hover { color: var(--gold); }
+.carta-group-title:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+/* Chevron that flips when the section opens */
+.carta-caret {
+  width: 0.6rem; height: 0.6rem;
+  border-right: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  transform: rotate(45deg);
+  transition: transform 250ms ease;
+  align-self: center;
+  flex: 0 0 auto;
+  margin-left: var(--space-3);
+}
+.carta-group[open] .carta-caret { transform: rotate(-135deg); }
+
+/* Items sit under the header, with a little breathing room before close */
+.carta-group[open] .carta-list { padding-bottom: var(--space-4); }
+@media (prefers-reduced-motion: reduce) { .carta-caret { transition: none; } }
 
 .carta-group-price, .carta-group-alt {
   font-family: var(--font-body);
