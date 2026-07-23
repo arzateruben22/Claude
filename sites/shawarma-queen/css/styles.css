@@ -1321,10 +1321,6 @@ em { font-style: italic; }
 .showcase-sauces .showcase-card figcaption { font-size: 0.98rem; padding: 0.85rem 0.8rem 0.7rem; }
 .showcase-card .sc-tag { font-family: var(--font-body); font-size: 0.66rem; letter-spacing: 0.1em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
 
-.menu-board { max-width: 900px; margin: var(--space-7) auto 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
-.menu-board img { display: block; width: 100%; height: auto; }
-.menu-board figcaption { text-align: center; padding: 0.9rem 1rem; font-size: 0.85rem; color: var(--cream-35); }
-
 @media (max-width: 640px) { .showcase-mains { grid-template-columns: 1fr; } }
 
 /* ─── Spit banner — the fiery rotisserie pair that opens the menu ─── */

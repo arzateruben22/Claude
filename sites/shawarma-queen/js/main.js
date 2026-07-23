@@ -2,6 +2,29 @@
    All entrance states are set from JS so the page is fully
    readable with JavaScript disabled. */
 
+/* ── Shared form delivery ──────────────────────────────────────────
+   Order + catering submissions land in the shop's real email inbox via
+   Web3Forms (no backend, no build step). Paste the free access key below
+   — get one in ~30 seconds at https://web3forms.com by entering the
+   destination email; submissions are then delivered to that address.
+   Until a key is set, SQForms.hasInbox() is false and the forms fall
+   back to a prefilled mailto so nothing breaks. */
+window.SQForms = (function () {
+  var WEB3FORMS_KEY = ""; /* TODO: paste the Web3Forms access key here to go live */
+  return {
+    hasInbox: function () { return !!WEB3FORMS_KEY; },
+    send: function (subject, fields) {
+      var payload = { access_key: WEB3FORMS_KEY, subject: subject };
+      for (var k in fields) if (fields.hasOwnProperty(k)) payload[k] = fields[k];
+      return fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.ok; }).catch(function () { return false; });
+    }
+  };
+})();
+
 (function () {
   "use strict";
 
@@ -41,9 +64,9 @@
     if (e.key === "Escape" && !mobileMenu.hidden) setMenu(false);
   });
 
-  /* ── Catering form → prefilled email ── */
-  /* TODO: swap the address below for Shawarma Queen's real inbox, or wire
-     the form to a service like Formspree for direct submissions. */
+  /* ── Catering form → real inbox (Web3Forms) with mailto fallback ── */
+  /* TODO: this is the address used only for the mailto fallback before a
+     Web3Forms key is set — swap it for Shawarma Queen's real inbox. */
   var CATERING_EMAIL = "hello@shawarmaqueen.example";
   var form = document.querySelector(".catering-form");
   form.addEventListener("submit", function (e) {
@@ -52,18 +75,29 @@
     if (!form.reportValidity()) return;
     var v = function (name) { return (form.elements[name].value || "").trim(); };
     var subject = "Catering request — " + v("name") + (v("date") ? " (" + v("date") + ")" : "");
-    var body = [
-      "Name: " + v("name"),
-      "Phone: " + v("phone"),
-      "Event date: " + v("date"),
-      "Guests: " + v("guests"),
-      "",
-      v("notes")
+    var fields = {
+      name: v("name"), phone: v("phone"), date: v("date"),
+      guests: v("guests"), notes: v("notes")
+    };
+    var mailtoBody = [
+      "Name: " + v("name"), "Phone: " + v("phone"),
+      "Event date: " + v("date"), "Guests: " + v("guests"),
+      "", v("notes")
     ].join("\n");
-    window.location.href = "mailto:" + CATERING_EMAIL +
-      "?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(body);
-    status.textContent = "Opening your email app… If nothing happens, write to " + CATERING_EMAIL + ".";
+    var toMailto = function () {
+      window.location.href = "mailto:" + CATERING_EMAIL +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(mailtoBody);
+      status.textContent = "Opening your email app… If nothing happens, write to " + CATERING_EMAIL + ".";
+    };
+    if (!window.SQForms || !window.SQForms.hasInbox()) { toMailto(); return; }
+    status.textContent = "Sending your request…";
+    window.SQForms.send(subject, fields).then(function (ok) {
+      if (ok) {
+        form.reset();
+        status.textContent = "Request sent! We'll get back to you with a quote within a day.";
+      } else { toMailto(); }
+    });
   });
 
   /* ── Motion (GSAP + ScrollTrigger) ── */
@@ -1145,9 +1179,15 @@
       "+" + earned + " earned" + (isTuesday ? " (double Tuesday)" : ""));
 
     if (link) window.open(link, "_blank", "noopener");
-    window.location.href = "mailto:" + ORDER_EMAIL +
-      "?subject=" + encodeURIComponent((isDelivery ? "Delivery" : "Pickup") + " order — " + name) +
-      "&body=" + encodeURIComponent(lines.join("\n"));
+
+    var orderSubject = (isDelivery ? "Delivery" : "Pickup") + " order — " + name;
+    var orderBody = lines.join("\n");
+    var toMailtoOrder = function () {
+      window.location.href = "mailto:" + ORDER_EMAIL +
+        "?subject=" + encodeURIComponent(orderSubject) +
+        "&body=" + encodeURIComponent(orderBody);
+    };
+
     setPts(getPts() - redeemed + earned);
     addHistory({
       d: Date.now(),
@@ -1158,9 +1198,23 @@
         return cart[k].qty + "× " + cart[k].name;
       }).join(", ")
     });
-    statusEl.textContent = link
-      ? "Payment page opened in a new tab — finish paying there, and send the order email so we can confirm."
-      : "Opening your email app to send the order — we'll text you to confirm.";
+
+    if (window.SQForms && window.SQForms.hasInbox()) {
+      statusEl.textContent = "Sending your order…";
+      window.SQForms.send(orderSubject, { name: name, phone: phone, order: orderBody })
+        .then(function (ok) {
+          if (ok) {
+            statusEl.textContent = link
+              ? "Order sent! Finish paying in the tab we opened — we'll text you to confirm."
+              : "Order sent! We'll text you at " + phone + " to confirm. 👑";
+          } else { toMailtoOrder(); }
+        });
+    } else {
+      toMailtoOrder();
+      statusEl.textContent = link
+        ? "Payment page opened in a new tab — finish paying there, and send the order email so we can confirm."
+        : "Opening your email app to send the order — we'll text you to confirm.";
+    }
   });
 
   /* Tiny public hook so other UI (the radial menu) can drop items into the
