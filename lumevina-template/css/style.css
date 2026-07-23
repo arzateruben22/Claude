@@ -630,3 +630,9 @@ h3{font-family:var(--disp);font-weight:600;letter-spacing:-.012em;}
 .visit-map{background:linear-gradient(160deg,#eae4d6,#d9d0bd);}
 .map-grid{background-image:linear-gradient(rgba(120,100,70,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(120,100,70,.1) 1px,transparent 1px);}
 .map-road{background:rgba(255,255,255,.5);}
+/* product boxes: real photo (when present) over an elegant vector illustration over a light studio backdrop */
+.best-media{background:url('../img/product-moisturizer.jpg') center/cover no-repeat,url('../img/placeholder-jar.svg') center/56% no-repeat,linear-gradient(160deg,#f3ece0,#e5d9c7)!important;}
+.actives-mid{background:url('../img/product-serum.jpg') center/cover no-repeat,url('../img/placeholder-serum.svg') center/52% no-repeat,linear-gradient(160deg,#efe8dc,#ded1be)!important;}
+.hero-prod .p-img{background:url('../img/product-moisturizer.jpg') center/cover no-repeat,url('../img/placeholder-jar.svg') center/66% no-repeat,linear-gradient(150deg,#f4ede1,#e7dcca)!important;}
+.t-main{background:url('../img/product-moisturizer.jpg') center/cover no-repeat,url('../img/placeholder-jar.svg') center/48% no-repeat,linear-gradient(160deg,#efe7da,#e0d3bf)!important;}
+.actives-mid .ring{border-color:rgba(120,90,40,.18);}

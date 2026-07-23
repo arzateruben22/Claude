@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6eede"/><stop offset="1" stop-color="#eaddc6"/>
+    </linearGradient>
+    <linearGradient id="serum" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e7c07a"/><stop offset="1" stop-color="#d69f49"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="120" cy="212" rx="52" ry="8" fill="#000" opacity=".07"/>
+  <rect x="106" y="26" width="28" height="30" rx="8" fill="#e8dcc7"/>
+  <rect x="94" y="54" width="52" height="22" rx="4" fill="#b7a488"/>
+  <rect x="94" y="54" width="52" height="7" rx="3" fill="#ffffff" opacity=".25"/>
+  <rect x="118" y="76" width="4" height="66" fill="#caa059" opacity=".5"/>
+  <rect x="84" y="86" width="72" height="124" rx="12" fill="url(#glass)" stroke="#caa059" stroke-width="1.5"/>
+  <rect x="89" y="120" width="62" height="85" rx="9" fill="url(#serum)" opacity=".6"/>
+  <rect x="92" y="150" width="56" height="38" rx="2" fill="#ffffff" opacity=".9"/>
+  <rect x="101" y="161" width="38" height="3" rx="1.5" fill="#a9803f"/>
+  <rect x="107" y="171" width="26" height="2" rx="1" fill="#caa059"/>
+  <rect x="107" y="179" width="26" height="2" rx="1" fill="#caa059"/>
+  <rect x="90" y="96" width="8" height="104" rx="4" fill="#ffffff" opacity=".45"/>
+</svg>

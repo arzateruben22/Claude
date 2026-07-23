@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <linearGradient id="jarBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf6ec"/><stop offset="1" stop-color="#efe1cd"/>
+    </linearGradient>
+    <linearGradient id="jarLid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cba25c"/><stop offset="1" stop-color="#a9803f"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="120" cy="196" rx="66" ry="10" fill="#000" opacity=".07"/>
+  <rect x="58" y="104" width="124" height="88" rx="16" fill="url(#jarBody)" stroke="#caa059" stroke-width="1.5"/>
+  <rect x="70" y="112" width="100" height="18" rx="9" fill="#ffffff" opacity=".65"/>
+  <rect x="64" y="76" width="112" height="36" rx="13" fill="url(#jarLid)"/>
+  <rect x="64" y="76" width="112" height="11" rx="5.5" fill="#ffffff" opacity=".2"/>
+  <rect x="72" y="122" width="9" height="60" rx="4.5" fill="#ffffff" opacity=".4"/>
+</svg>
