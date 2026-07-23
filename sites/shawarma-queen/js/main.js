@@ -38,11 +38,60 @@ window.SQForms = (function () {
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  /* Brand mark scrolls smoothly back to the top */
-  document.querySelector(".nav-brand").addEventListener("click", function (e) {
-    e.preventDefault();
+  /* ── Eased, header-aware in-page navigation ──
+     Native CSS smooth-scroll stutters here (the canvas globe, ScrollTrigger
+     scrubs and the orbit all run while it animates), so we drive a short
+     fixed-duration ease ourselves and land each section just below the fixed
+     nav. One delegated listener covers every in-page link — brand, nav dock,
+     mobile menu and CTAs — while drawer-opening links (.js-open-order) keep
+     their own behavior. Reduced-motion jumps instantly. */
+  var navEl = document.querySelector(".nav");
+  var scrollRaf = null;
+  var easeInOutCubic = function (t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+  var smoothScrollTo = function (targetY) {
+    targetY = Math.max(0, Math.round(targetY));
+    if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    var startY = window.pageYOffset;
+    var dist = targetY - startY;
+    if (reduced || Math.abs(dist) < 2) { window.scrollTo(0, targetY); return; }
+    var dur = Math.min(700, Math.max(300, Math.abs(dist) * 0.42));
+    var t0 = null;
+    var step = function (ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      window.scrollTo(0, startY + dist * easeInOutCubic(p));
+      scrollRaf = p < 1 ? requestAnimationFrame(step) : null;
+    };
+    scrollRaf = requestAnimationFrame(step);
+  };
+  var scrollToHash = function (hash) {
+    if (hash === "#top" || hash === "#" || hash === "") { smoothScrollTo(0); return; }
+    var el = document.getElementById(hash.slice(1));
+    if (!el) return;
+    var navH = navEl ? navEl.getBoundingClientRect().height : 0;
+    smoothScrollTo(el.getBoundingClientRect().top + window.pageYOffset - navH - 12);
+  };
+  /* Any user gesture on the page cancels an in-flight animated scroll,
+     so wheel/touch never fights the ease. */
+  ["wheel", "touchstart"].forEach(function (evt) {
+    window.addEventListener(evt, function () {
+      if (scrollRaf) { cancelAnimationFrame(scrollRaf); scrollRaf = null; }
+    }, { passive: true });
+  });
+  document.addEventListener("click", function (e) {
+    var link = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!link || e.defaultPrevented || link.classList.contains("js-open-order")) return;
+    var hash = link.getAttribute("href");
+    if (!hash || hash.charAt(0) !== "#") return;
+    if (hash !== "#top" && hash.length > 1 && !document.getElementById(hash.slice(1))) return;
+    e.preventDefault();
+    scrollToHash(hash);
+    if (history.pushState) {
+      history.pushState(null, "", hash === "#top" ? location.pathname + location.search : hash);
+    }
   });
 
   var toggle = document.querySelector(".nav-toggle");
@@ -1784,79 +1833,3 @@ window.SQForms = (function () {
   });
 })();
 
-/* ── Signature dishes: hover-reveal horizontal scroll strip (vanilla port
-   of the 21st.dev ScrollXCarousel + CardHoverReveal). Cards are built from
-   the dish photos; the Add button drops the item into the cart through the
-   shared SQOrder hook (opening the same options popover, with the photo). ── */
-(function () {
-  "use strict";
-  var track = document.querySelector(".sig-track");
-  if (!track) return;
-  var SIG = [
-    { name: "Beef Shawarma", price: 14, tag: "Shawarma", desc: "Charcoal-dark, shaved thin.", img: "media/items/beef-shawarma.jpg",
-      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Chicken Shawarma", price: 13, tag: "Shawarma", desc: "Grilled chicken, garlic & juicy.", img: "media/items/chicken-shawarma.jpg",
-      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Chicken Spicy Sandwich", price: 14, tag: "Sandwich", desc: "Spicy chicken, cheese & slaw.", img: "media/items/sandwich.jpg",
-      attrs: { "data-pick": "Wrap|Box", "data-pick-label": "Style", "data-extras": "Combo — fries + soda=5", "data-ingredients": "bell peppers, mayo, cheese, coleslaw, pickles" } },
-    { name: "Chicken Shawarma Quesadilla", price: 15, tag: "Quesadilla", desc: "Grilled chicken & melted cheese.", img: "media/items/quesadilla.jpg",
-      attrs: { "data-extras": "Combo — fries + soda=5", "data-ingredients": "cheese" } },
-    { name: "Falafel Shawarma", price: 10, tag: "Vegan", desc: "Crispy chickpea, vegan.", img: "media/items/falafel-shawarma.jpg",
-      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Makali Shawarma", price: 11, tag: "Vegan", desc: "Fried veggie medley, vegan.", img: "media/items/makali-shawarma.jpg",
-      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Queen Vegan Shawarma", price: 15, tag: "Vegan", desc: "The vegan crown, wrapped.", img: "media/items/queen-vegan-shawarma.jpg",
-      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } }
-  ];
-
-  SIG.forEach(function (it) {
-    var card = document.createElement("article");
-    card.className = "sig-card";
-
-    var media = document.createElement("div");
-    media.className = "sig-media";
-    var img = document.createElement("img");
-    img.src = it.img; img.alt = it.name; img.loading = "lazy";
-    media.appendChild(img);
-
-    var rev = document.createElement("div");
-    rev.className = "sig-reveal";
-    var tag = document.createElement("span");
-    tag.className = "sig-tag"; tag.textContent = it.tag;
-    var h = document.createElement("h3"); h.textContent = it.name;
-    var p = document.createElement("p"); p.textContent = it.desc;
-    var btn = document.createElement("button");
-    btn.className = "btn btn-solid sig-add"; btn.type = "button";
-    btn.setAttribute("data-name", it.name);
-    btn.setAttribute("data-price", it.price);
-    for (var k in it.attrs) if (it.attrs.hasOwnProperty(k)) btn.setAttribute(k, it.attrs[k]);
-    btn.textContent = "Add — $" + it.price;
-    btn.addEventListener("click", function () { if (window.SQOrder) window.SQOrder.addEl(btn); });
-    var extra = document.createElement("div");
-    extra.className = "sig-extra";
-    extra.appendChild(p); extra.appendChild(btn);
-    rev.appendChild(tag); rev.appendChild(h); rev.appendChild(extra);
-
-    card.appendChild(media);
-    card.appendChild(rev);
-    track.appendChild(card);
-  });
-
-  var scroller = document.querySelector(".sig-scroller");
-  var fill = document.querySelector(".sig-progress-fill");
-  var updProgress = function () {
-    if (!fill) return;
-    var max = scroller.scrollWidth - scroller.clientWidth;
-    fill.style.width = (max > 0 ? (scroller.scrollLeft / max) * 100 : 0) + "%";
-  };
-  scroller.addEventListener("scroll", updProgress, { passive: true });
-  updProgress();
-
-  document.querySelectorAll("[data-sig-dir]").forEach(function (arrow) {
-    arrow.addEventListener("click", function () {
-      var card = scroller.querySelector(".sig-card");
-      var step = card ? card.getBoundingClientRect().width + 20 : 320;
-      scroller.scrollBy({ left: step * Number(arrow.getAttribute("data-sig-dir")), behavior: "smooth" });
-    });
-  });
-})();
