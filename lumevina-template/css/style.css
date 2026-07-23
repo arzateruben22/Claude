@@ -280,6 +280,48 @@ h2{font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.02em;}
 .book-band .btn-ghost{border-color:rgba(243,237,227,.3);color:var(--cream);} .book-band .btn-ghost:hover{border-color:var(--cream);}
 .perk-g svg{display:inline-block;height:1.55rem;width:auto;}
 
+/* ─────────  treatments drawer (slide-over)  ───────── */
+.drawer-backdrop{position:fixed;inset:0;background:rgba(24,18,12,.42);backdrop-filter:blur(3px);z-index:60;opacity:0;transition:opacity .28s ease;}
+.drawer-backdrop.is-open{opacity:1;}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(30rem,94vw);z-index:61;background:var(--cream);
+  box-shadow:-20px 0 60px rgba(34,22,10,.22);display:flex;flex-direction:column;transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.15,1);}
+.drawer.is-open{transform:none;}
+@media(prefers-reduced-motion:reduce){.drawer,.drawer-backdrop{transition:none;}}
+.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1.4rem 1.4rem 1rem;border-bottom:1px solid var(--line-soft);}
+.drawer-eyebrow{font-family:var(--body);font-weight:500;font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:var(--honey);margin:0 0 .35rem;}
+.drawer-title{font-family:var(--disp);font-weight:800;font-size:1.5rem;}
+.drawer-close{background:var(--paper);border:1px solid var(--line);border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:1rem;color:var(--ink);flex:0 0 auto;display:flex;align-items:center;justify-content:center;}
+.drawer-close:hover{background:var(--nude);}
+.drawer-tabs{display:flex;gap:.4rem;padding:.9rem 1.4rem;overflow-x:auto;border-bottom:1px solid var(--line-soft);}
+.drawer-tab{flex:0 0 auto;display:inline-flex;align-items:center;gap:.4rem;background:transparent;border:1px solid var(--line);
+  border-radius:999px;padding:.45rem .85rem;font:inherit;font-size:.8rem;color:var(--muted);cursor:pointer;white-space:nowrap;}
+.drawer-tab svg{width:16px;height:16px;color:var(--honey);}
+.drawer-tab:hover{border-color:var(--ink);color:var(--ink);}
+.drawer-tab.is-active{background:var(--ink);border-color:var(--ink);color:var(--cream);}
+.drawer-tab.is-active svg{color:var(--honey);}
+.drawer-body{flex:1;overflow-y:auto;padding:1.2rem 1.4rem 2rem;}
+.dr-cat-head h3{font-family:var(--disp);font-weight:700;font-size:1.15rem;margin:0 0 .3rem;}
+.dr-cat-head p{font-size:.86rem;color:var(--muted);margin:0 0 1.1rem;}
+.dr-rows{display:grid;gap:.7rem;}
+.dr-row{display:flex;gap:1rem;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line-soft);border-radius:16px;padding:1rem 1.1rem;transition:background .35s ease;}
+.dr-row.is-featured{border-color:var(--honey-soft);box-shadow:0 8px 22px rgba(201,138,60,.1);}
+.dr-row.is-flash{background:var(--honey-soft);}
+.dr-row-top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.dr-row-main strong{font-family:var(--disp);font-weight:700;font-size:.98rem;}
+.dr-badge{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--honey);border:1px solid var(--honey-soft);border-radius:999px;padding:.12rem .5rem;}
+.dr-meta{font-size:.82rem;color:var(--muted);margin:.25rem 0 0;font-variant-numeric:tabular-nums;}
+.dr-dot{color:var(--faint);}
+.dr-desc{font-size:.8rem;color:var(--muted);margin:.4rem 0 0;max-width:22rem;line-height:1.5;}
+.dr-actions{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;flex:0 0 auto;}
+.dr-btn{padding:.5rem 1rem;font-size:.8rem;}
+.dr-gift{background:transparent;border:0;color:var(--muted);font:inherit;font-size:.76rem;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.dr-gift:hover{color:var(--ink);}
+.dr-toast{position:fixed;left:50%;bottom:1.4rem;transform:translate(-50%,1.5rem);z-index:70;background:var(--ink);color:var(--cream);
+  font-size:.84rem;padding:.7rem 1.1rem;border-radius:999px;box-shadow:0 12px 30px rgba(34,22,10,.3);opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;max-width:90vw;text-align:center;}
+.dr-toast.is-on{opacity:1;transform:translate(-50%,0);}
+
 @media(max-width:900px){
   .nav-links{display:none;}
   .founder,.faq,.visit{grid-template-columns:1fr;}

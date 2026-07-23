@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header class="nav"><div class="wrap nav-in"><a class="brand" href="index.html">LUMEVINA</a><nav class="nav-links"><a href="index.html#treatments">Treatments</a><a href="index.html#actives">Actives</a><a href="index.html#about">About</a><a href="index.html#rewards">Rewards</a><a href="index.html#reviews">Reviews</a><a href="index.html#visit">Visit</a></nav><div class="nav-right"><span class="nav-ico">&#9906;</span><span class="nav-ico">&#9825;</span><span class="nav-ico">&#128722;</span><button class="btn btn-dark" type="button">Book Now</button></div></div></header>
+<header class="nav"><div class="wrap nav-in"><a class="brand" href="index.html">LUMEVINA</a><nav class="nav-links"><a href="index.html#treatments" data-drawer>Treatments</a><a href="index.html#actives">Actives</a><a href="index.html#about">About</a><a href="index.html#rewards">Rewards</a><a href="index.html#reviews">Reviews</a><a href="index.html#visit">Visit</a></nav><div class="nav-right"><span class="nav-ico">&#9906;</span><span class="nav-ico">&#9825;</span><span class="nav-ico">&#128722;</span><button class="btn btn-dark" type="button" data-drawer>Book Now</button></div></div></header>
 
 <div class="wrap"><p class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><a href="index.html#treatments">Treatments</a><span class="sep">/</span><span class="here">Custom Facial</span></p></div>
 
@@ -21,7 +21,7 @@
         <p class="sub">One hour, built entirely around your skin that day &mdash; consult, cleanse, treat, and glow. Deep hydration, even tone, and refined texture, with medical-grade actives chosen just for you.</p>
         <p class="t-price">From $180 <small>&middot; 60 min</small></p>
         <div class="concerns"><span class="concern">Dullness</span><span class="concern">Dehydration</span><span class="concern">Uneven texture</span><span class="concern">Congestion</span><span class="concern">Fine lines</span></div>
-        <div class="t-cta"><button class="btn btn-honey" type="button">Book this treatment</button><button class="btn btn-ghost" type="button">Send as a gift</button></div>
+        <div class="t-cta"><button class="btn btn-honey" type="button" data-book="lumevina-custom-facial">Book this treatment</button><button class="btn btn-ghost" type="button" data-gift="lumevina-custom-facial">Send as a gift</button></div>
       </div>
       <div class="t-gallery">
         <div class="t-main"><span class="ghost">GLOW</span><svg viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="30" y="6" width="20" height="14" rx="3" fill="#231a10"/><rect x="24" y="20" width="32" height="10" rx="3" fill="#231a10"/><rect x="20" y="30" width="40" height="84" rx="12" fill="#f2e4cf"/><rect x="28" y="58" width="24" height="30" rx="5" fill="rgba(255,255,255,.85)"/></svg></div>
@@ -110,11 +110,11 @@
 
 <section class="section" style="padding-top:0">
   <div class="wrap">
-    <div class="cat-head"><div><p class="eyebrow">You might also like</p><h2>Related treatments</h2></div><a class="btn btn-ghost" href="index.html#treatments">All treatments &#8599;</a></div>
+    <div class="cat-head"><div><p class="eyebrow">You might also like</p><h2>Related treatments</h2></div><a class="btn btn-ghost" href="index.html#treatments" data-drawer>All treatments &#8599;</a></div>
     <div class="post-grid">
-      <a class="post" href="#"><span class="post-img" style="background:linear-gradient(150deg,#e7cdd6,#d6a9bb)"></span><span class="post-tag">Advanced &middot; From $150</span><h3>BioRePeel &amp; Advanced Peels</h3></a>
-      <a class="post" href="#"><span class="post-img" style="background:linear-gradient(150deg,#dde2d0,#b7c8a2)"></span><span class="post-tag">Program &middot; From $120</span><h3>The Acne Clearing Program</h3></a>
-      <a class="post" href="#"><span class="post-img" style="background:linear-gradient(150deg,#e8d6bf,#d9b78f)"></span><span class="post-tag">Add-on &middot; From $90</span><h3>Dermaplaning &amp; Glow</h3></a>
+      <a class="post" href="#" data-drawer data-category="peels"><span class="post-img" style="background:linear-gradient(150deg,#e7cdd6,#d6a9bb)"></span><span class="post-tag">Advanced &middot; From $210</span><h3>BioRePeel &amp; Advanced Peels</h3></a>
+      <a class="post" href="#" data-drawer data-category="acne"><span class="post-img" style="background:linear-gradient(150deg,#dde2d0,#b7c8a2)"></span><span class="post-tag">Program &middot; From $110</span><h3>The Acne Clearing Program</h3></a>
+      <a class="post" href="#" data-drawer data-category="facials"><span class="post-img" style="background:linear-gradient(150deg,#e8d6bf,#d9b78f)"></span><span class="post-tag">Facial &middot; From $170</span><h3>Custom Facial + Dermaplaning</h3></a>
     </div>
   </div>
 </section>
@@ -125,12 +125,14 @@
       <p class="eyebrow" style="color:#e7b984">Ready when you are</p>
       <h2>Ready to <span class="serif-em">glow</span>?</h2>
       <p class="sub">Book the Custom Facial and we&rsquo;ll tailor every minute to your skin. Deposit holds your time; the rest is on the day.</p>
-      <div class="book-cta"><button class="btn btn-honey" type="button">Book the Custom Facial</button><button class="btn btn-ghost" type="button">Send as a gift</button></div>
+      <div class="book-cta"><button class="btn btn-honey" type="button" data-book="lumevina-custom-facial">Book the Custom Facial</button><button class="btn btn-ghost" type="button" data-gift="lumevina-custom-facial">Send as a gift</button></div>
     </div>
   </div>
 </section>
 
 <footer class="foot"><div class="wrap"><div class="foot-grid"><div><a class="brand" href="index.html">LUMEVINA</a><p class="foot-tag">Bespoke facials &amp; medical-grade skincare in Woodland Hills, California.</p></div><div class="foot-col"><h4>Visit</h4><a href="#">Book an appointment</a><a href="#">Gift certificates</a><a href="#">Policies</a></div><div class="foot-col"><h4>Explore</h4><a href="index.html#treatments">Treatments</a><a href="index.html#about">About Evelyn</a><a href="index.html#journal">Journal</a><a href="index.html#visit">Visit us</a></div><div class="foot-col"><h4>Connect</h4><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">Email</a></div></div><p class="foot-copy">&copy; 2026 Lumevina Aesthetics Spa &middot; New template preview</p></div></footer>
-<p class="demo-note">Demo template &mdash; image areas are tonal placeholders for real photography; buttons are visual.</p>
+<p class="demo-note">Demo template &mdash; image areas are tonal placeholders for real photography. Book &amp; Gift are live; the booking modal (deposit + calendar) connects next.</p>
+<script src="js/catalog.js"></script>
+<script src="js/drawer.js"></script>
 </body>
 </html>

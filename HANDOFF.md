@@ -34,6 +34,9 @@ lumevina-template/
   index.html        # the landing page (edit directly)
   treatment.html    # Custom Facial detail page (shares css/style.css)
   css/style.css     # all styles + @font-face (edit directly)
+  js/
+    catalog.js      # REAL service catalog — single source of truth (see below)
+    drawer.js       # slide-over menu drawer + Book/Gift event seam
   fonts/            # self-hosted woff2 (Jost + Cormorant)
 ```
 `index.html` links into `treatment.html` from the best-seller "See details" button
@@ -57,6 +60,36 @@ Preview: `python3 -m http.server 8792 --directory lumevina-template` → open `/
 - **Buttons are visual only** here — not yet wired to the engine (see below).
 
 ---
+
+## Engine integration — in progress (drawer done, booking next)
+
+The template is being wired to real data + the real engine, in installments on a
+clean event seam.
+
+**Done (installment 1):**
+- **`js/catalog.js`** — the complete real Lumevina catalog (43 services across
+  Facials, Peels & Advanced, Acne, Waxing, Consultations, Gifts) with real prices
+  and 30/60-min durations, mirroring the live site. This is the single source of
+  truth; render everything from it, don't hard-code services in HTML.
+- **`js/drawer.js`** — a slide-over **Treatments drawer**: tap any treatment tile,
+  "View all", nav "Treatments", "Book", or "Explore" and the whole menu slides in
+  over the page (no navigation). Renders from `catalog.js`; accessible (focus trap,
+  Esc, backdrop close, scroll-lock), reduced-motion safe. Both pages load the two
+  scripts before `</body>`.
+- **The seam:** every Book / Gift control fires a `lumevina:book` / `lumevina:gift`
+  CustomEvent on `document` (`detail: { id, service }`). Wire triggers by adding
+  `data-book="<id>"`, `data-gift="<id>"`, or `data-drawer [data-category]` to any
+  element — no per-button JS. A default handler shows a toast until the real engine
+  is mounted; a real handler calls `e.preventDefault()` to silence it.
+
+**Next (installment 2): mount the real booking engine on the seam.**
+Port from `lumevina/js/`: `payments.js` (Stripe-ready) → `rewards.js` (Glow Points)
+→ `booking.js` (calendar + 50% deposit) → `giftcards.js`. `booking.js` derives its
+service list from `.add-to-cart` buttons in the DOM, so either (a) generate a hidden
+product index from `catalog.js`, or (b) refactor `booking.js` to read `catalog.js`
+directly (cleaner for the product). Add an `lumevina:book` listener that opens the
+booking modal for `detail.id` and calls `preventDefault()`. Bring over the booking
+modal markup + its CSS. Then `cart.js`, `account.js`, `intake.js` as needed.
 
 ## The parts bin — everything you can reuse (in `lumevina/`)
 
