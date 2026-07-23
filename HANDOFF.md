@@ -20,6 +20,14 @@ references the user liked:
 It reuses **our real content** (treatments, gift certificates, Glow Rewards, reviews,
 journal) and one ported effect (the moving-border button).
 
+**Sections on the page (top → bottom):** nav · hero (+ trust chips + star micro-rating) ·
+Explore treatments (category grid, each tile a distinct line-icon) · Medical-grade actives ·
+**Meet Evelyn** (founder story + credential badge) · Best-seller signature facial ·
+**Your visit** (3-step ritual: Consult → Treat → Glow) · Gift certificates · Glow Rewards ·
+Reviews · **FAQ** (native `<details>` accordion) · Journal · **Visit us** (address, hours,
+contact + map placeholder) · Newsletter · footer.
+(Bold = added in the customization session; all still use placeholder art/copy.)
+
 ### Where it lives / how to preview
 ```
 lumevina-template/
@@ -39,8 +47,9 @@ Preview: `python3 -m http.server 8792 --directory lumevina-template` → open `/
 - Rounded cards (LUMA), generous whitespace (DERMAI), responsive, reduced-motion safe.
 
 ### What's still placeholder
-- **Images** are tonal gradients + simple SVG "bottles" — swap for real photography
-  (biggest single upgrade).
+- **Images** are tonal gradients + simple SVG glyphs — swap for real photography
+  (biggest single upgrade). This includes the founder portrait and the "Visit us" map,
+  which are stylized placeholders (swap the map for a real embed/static map).
 - **Buttons are visual only** here — not yet wired to the engine (see below).
 
 ---
