@@ -1797,18 +1797,16 @@ window.SQForms = (function () {
       attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
     { name: "Chicken Shawarma", price: 13, tag: "Shawarma", desc: "Grilled chicken, garlic & juicy.", img: "media/items/chicken-shawarma.jpg",
       attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Queen Vegan Shawarma", price: 15, tag: "Vegan", desc: "The vegan crown, wrapped.", img: "media/items/queen-vegan-shawarma.jpg",
-      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
     { name: "Chicken Spicy Sandwich", price: 14, tag: "Sandwich", desc: "Spicy chicken, cheese & slaw.", img: "media/items/sandwich.jpg",
       attrs: { "data-pick": "Wrap|Box", "data-pick-label": "Style", "data-extras": "Combo — fries + soda=5", "data-ingredients": "bell peppers, mayo, cheese, coleslaw, pickles" } },
     { name: "Chicken Shawarma Quesadilla", price: 15, tag: "Quesadilla", desc: "Grilled chicken & melted cheese.", img: "media/items/quesadilla.jpg",
       attrs: { "data-extras": "Combo — fries + soda=5", "data-ingredients": "cheese" } },
-    { name: "Boom Boom Cocktail", price: 14, tag: "Drink", desc: "Fruit smoothie, cream & honey.", img: "media/items/boom-boom-cocktail.jpg",
-      attrs: { "data-addons": "no" } },
-    { name: "Cheese Knafeh", price: 12, tag: "Dessert", desc: "Warm cheese, crisp kataifi, syrup.", img: "media/items/cheese-knafeh.jpg",
-      attrs: { "data-addons": "no" } },
-    { name: "Nutella Pancakes with Fruit", price: 17, tag: "Sweet", desc: "Nutella drizzle & fresh fruit.", img: "media/items/nutella-pancakes-fruit.jpg",
-      attrs: { "data-addons": "no" } }
+    { name: "Falafel Shawarma", price: 10, tag: "Vegan", desc: "Crispy chickpea, vegan.", img: "media/items/falafel-shawarma.jpg",
+      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
+    { name: "Makali Shawarma", price: 11, tag: "Vegan", desc: "Fried veggie medley, vegan.", img: "media/items/makali-shawarma.jpg",
+      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
+    { name: "Queen Vegan Shawarma", price: 15, tag: "Vegan", desc: "The vegan crown, wrapped.", img: "media/items/queen-vegan-shawarma.jpg",
+      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } }
   ];
 
   SIG.forEach(function (it) {
