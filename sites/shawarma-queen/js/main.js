@@ -848,7 +848,13 @@ window.SQForms = (function () {
       addonOverlay.classList.add("open");
     });
     renderAddon();
-    addonPop.querySelector(".addon-add").focus();
+    // Open scrolled to the top (item photo + title), never the bottom.
+    // Focus the close button — a top element — with preventScroll so the
+    // browser doesn't scroll the dialog down to reach the focus target,
+    // then pin the scroll to the top.
+    var firstFocus = addonPop.querySelector(".addon-close");
+    if (firstFocus) firstFocus.focus({ preventScroll: true });
+    addonPop.scrollTop = 0;
   };
 
   var closeAddon = function () {
