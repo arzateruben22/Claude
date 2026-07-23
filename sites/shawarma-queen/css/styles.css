@@ -497,6 +497,79 @@ em { font-style: italic; }
   filter: drop-shadow(0 18px 40px rgba(213, 66, 31, 0.25));
 }
 
+/* Spotlight card — a mouse-lit panel showcasing the Shawarma Queen logo
+   (a static vanilla port of the 21st.dev Spline/Spotlight card). */
+.spotlight-card {
+  position: relative;
+  width: min(23rem, 80vw);
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--plum-edge);
+  background: #060403;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  box-shadow: 0 34px 90px -34px rgba(0, 0, 0, 0.85);
+}
+/* resting glow so the card feels alive without a pointer */
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: 34%;
+  width: 78%; height: 60%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center, rgba(240, 174, 58, 0.18), rgba(213, 66, 31, 0.08) 45%, transparent 72%);
+  filter: blur(26px);
+  pointer-events: none;
+}
+.spotlight-card .spotlight {
+  position: absolute;
+  left: 0; top: 0;
+  width: 300px; height: 300px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center, rgba(255, 194, 87, 0.32), rgba(213, 66, 31, 0.14) 45%, transparent 72%);
+  filter: blur(30px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 240ms ease;
+  will-change: left, top;
+}
+.spotlight-card:hover .spotlight { opacity: 1; }
+.sc-logo {
+  position: relative; z-index: 1;
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  height: auto;
+  border-radius: 14px;
+}
+.sc-badges {
+  position: relative; z-index: 1;
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 0.45rem 1.15rem;
+}
+.sc-badges li {
+  position: relative;
+  padding-left: 0.95rem;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 0.72rem;
+  color: var(--gold);
+}
+.sc-badges li::before {
+  content: "◆";
+  position: absolute; left: 0; top: 0.18em;
+  font-size: 0.58em;
+  color: var(--pome);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-card .spotlight { display: none; }
+}
+
 .spit-meat { transform-box: fill-box; transform-origin: center; animation: spit-turn 24s linear infinite; }
 
 @keyframes spit-turn {
@@ -2008,7 +2081,7 @@ em { font-style: italic; }
 .opt-choice .addon-name { text-transform: none; }
 
 /* Menu trust badges (100% Halal · Fresh · Made to Order · Fast) */
-.menu-badges { display: flex; flex-wrap: wrap; gap: 0.4rem 1.3rem; list-style: none; margin: var(--space-4) 0 0; padding: 0; }
+.menu-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem 1.6rem; list-style: none; margin: var(--space-5) auto var(--space-6); padding: 0; }
 .menu-badges li {
   position: relative; padding-left: 1rem;
   font-family: var(--font-display); text-transform: uppercase;

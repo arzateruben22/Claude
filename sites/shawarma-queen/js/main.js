@@ -1693,3 +1693,19 @@ window.SQForms = (function () {
     start();
   }
 })();
+
+/* ── Spotlight card: a radial glow that follows the pointer over the hero
+   logo panel (vanilla port of the 21st.dev Spline/Spotlight card). ── */
+(function () {
+  "use strict";
+  var card = document.querySelector("[data-spotlight]");
+  if (!card) return;
+  var spot = card.querySelector(".spotlight");
+  if (!spot) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  card.addEventListener("pointermove", function (e) {
+    var r = card.getBoundingClientRect();
+    spot.style.left = (e.clientX - r.left) + "px";
+    spot.style.top = (e.clientY - r.top) + "px";
+  });
+})();
