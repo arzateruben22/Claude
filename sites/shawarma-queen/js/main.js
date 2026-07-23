@@ -208,9 +208,7 @@ window.SQForms = (function () {
     /* (Simple Bowl photos removed — the board crops caught neighbouring bowls) */
     /* Sandwiches & Quesadillas */
     "Chicken Spicy Sandwich": "media/items/sandwich.jpg",
-    "Chicken Zinger Sandwich": "media/items/sandwich.jpg",
     "Chicken Shawarma Quesadilla": "media/items/quesadilla.jpg",
-    "Beef Shawarma Quesadilla": "media/items/quesadilla.jpg",
     /* Sides */
     "Hummus": "media/items/hummus.jpg",
     "Hummus with Chicken Shawarma": "media/items/hummus-shawarma.jpg",
