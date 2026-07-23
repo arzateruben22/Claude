@@ -1975,6 +1975,9 @@ em { font-style: italic; }
   top: 50%;
   transform: translate(-50%, -46%);
   width: min(22rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--plum);
   border: 1px solid var(--plum-edge);
   border-radius: 16px;
@@ -1982,6 +1985,9 @@ em { font-style: italic; }
   opacity: 0;
   transition: opacity 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* Freeze the page behind an open popover so scrolling moves the popover,
+   not the page. */
+body.sq-noscroll { overflow: hidden; }
 
 .addon-pop.open { opacity: 1; transform: translate(-50%, -50%); }
 .addon-pop[hidden] { display: none; }

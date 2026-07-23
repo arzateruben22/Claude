@@ -205,13 +205,7 @@ window.SQForms = (function () {
     "Falafel Shawarma": "media/items/falafel-shawarma.jpg",
     "Makali Shawarma": "media/items/makali-shawarma.jpg",
     "Queen Vegan Shawarma": "media/items/queen-vegan-shawarma.jpg",
-    /* Bowls */
-    "Beef Bowl": "media/items/beef-bowl.jpg",
-    "Chicken Bowl": "media/items/chicken-bowl.jpg",
-    "Falafel Bowl": "media/items/falafel-bowl.jpg",
-    "Makali Bowl": "media/items/makali-bowl.jpg",
-    "Queen Vegan Bowl": "media/items/queen-vegan-bowl.jpg",
-    "Queen Mix Bowl": "media/items/queen-mix-bowl.jpg",
+    /* (Simple Bowl photos removed — the board crops caught neighbouring bowls) */
     /* Sandwiches & Quesadillas */
     "Chicken Spicy Sandwich": "media/items/sandwich.jpg",
     "Chicken Zinger Sandwich": "media/items/sandwich.jpg",
@@ -800,6 +794,8 @@ window.SQForms = (function () {
 
     addonPop.hidden = false;
     addonOverlay.hidden = false;
+    document.body.classList.add("sq-noscroll");
+    addonPop.scrollTop = 0;
     requestAnimationFrame(function () {
       addonPop.classList.add("open");
       addonOverlay.classList.add("open");
@@ -811,6 +807,7 @@ window.SQForms = (function () {
   var closeAddon = function () {
     addonPop.classList.remove("open");
     addonOverlay.classList.remove("open");
+    document.body.classList.remove("sq-noscroll");
     setTimeout(function () { addonPop.hidden = true; addonOverlay.hidden = true; }, 250);
   };
 
@@ -1802,18 +1799,8 @@ window.SQForms = (function () {
       attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
     { name: "Chicken Shawarma", price: 13, tag: "Shawarma", desc: "Grilled chicken, garlic & juicy.", img: "media/items/chicken-shawarma.jpg",
       attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Queen Mix Bowl", price: 22, tag: "Bowl", desc: "Beef & chicken — the royal feast.", img: "media/items/queen-mix-bowl.jpg",
-      attrs: { "data-sauce": "yes", "data-size": "Small=22|Large=28", "data-extras": "Double protein=4" } },
-    { name: "Beef Bowl", price: 16, tag: "Bowl", desc: "Shaved beef over rice & salad.", img: "media/items/beef-bowl.jpg",
-      attrs: { "data-sauce": "yes", "data-size": "Small=16|Large=22", "data-extras": "Double protein=4" } },
-    { name: "Chicken Bowl", price: 15, tag: "Bowl", desc: "Grilled chicken over rice & salad.", img: "media/items/chicken-bowl.jpg",
-      attrs: { "data-sauce": "yes", "data-size": "Small=15|Large=20", "data-extras": "Double protein=4" } },
-    { name: "Falafel Bowl", price: 12, tag: "Vegan", desc: "Crispy falafel & mezze.", img: "media/items/falafel-bowl.jpg",
-      attrs: { "data-sauce": "yes", "data-size": "Small=12|Large=17", "data-extras": "Double protein=4" } },
     { name: "Queen Vegan Shawarma", price: 15, tag: "Vegan", desc: "The vegan crown, wrapped.", img: "media/items/queen-vegan-shawarma.jpg",
       attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
-    { name: "Makali Bowl", price: 12, tag: "Vegan", desc: "Fried veggie medley.", img: "media/items/makali-bowl.jpg",
-      attrs: { "data-sauce": "yes", "data-size": "Small=12|Large=17", "data-extras": "Double protein=4" } },
     { name: "Chicken Spicy Sandwich", price: 14, tag: "Sandwich", desc: "Spicy chicken, cheese & slaw.", img: "media/items/sandwich.jpg",
       attrs: { "data-pick": "Wrap|Box", "data-pick-label": "Style", "data-extras": "Combo — fries + soda=5", "data-ingredients": "bell peppers, mayo, cheese, coleslaw, pickles" } },
     { name: "Chicken Shawarma Quesadilla", price: 15, tag: "Quesadilla", desc: "Grilled chicken & melted cheese.", img: "media/items/quesadilla.jpg",
