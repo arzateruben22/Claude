@@ -3,7 +3,7 @@
    cache-first for static assets. Bump CACHE on deploys that change
    core assets. */
 
-var CACHE = "sq-v15";
+var CACHE = "sq-v16";
 var CORE = [
   "./",
   "index.html",
@@ -28,6 +28,15 @@ var CORE = [
   "media/garlic.jpg",
   "media/boom.jpg",
   "media/queen.jpg",
+  "media/beef-node.jpg",
+  "media/chicken-node.jpg",
+  "media/boom-node.jpg",
+  "media/queen-node.jpg",
+  "media/beef-spit.jpg",
+  "media/chicken-spit.jpg",
+  "media/fries.jpg",
+  "media/coleslaw.jpg",
+  "media/pickles.jpg",
   "media/shawrma.jpg"
 ];
 

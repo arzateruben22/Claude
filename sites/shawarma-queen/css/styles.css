@@ -1327,6 +1327,26 @@ em { font-style: italic; }
 
 @media (max-width: 640px) { .showcase-mains { grid-template-columns: 1fr; } }
 
+/* ─── Spit banner — the fiery rotisserie pair that opens the menu ─── */
+.spit-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; max-width: 760px; margin: 0 auto var(--space-6); border-radius: 16px; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
+.spit-banner .spit { position: relative; margin: 0; }
+.spit-banner .spit img { display: block; width: 100%; height: clamp(170px, 26vw, 250px); object-fit: cover; object-position: center 38%; }
+.spit-banner figcaption {
+  position: absolute; left: 0; bottom: 0; padding: 0.5rem 0.95rem;
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.04em;
+  font-size: 1.05rem; color: var(--cream); text-shadow: 0 2px 10px rgba(0,0,0,0.85);
+}
+
+/* ─── Every combo includes — the sides that come with a combo ─── */
+.combo-includes { max-width: 720px; margin: 0 auto var(--space-7); text-align: center; }
+.ci-lead { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.82rem; color: var(--gold); margin: 0 0 var(--space-4); }
+.ci-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); list-style: none; margin: 0; padding: 0; }
+.ci-item { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+.ci-img { width: 100%; max-width: 132px; aspect-ratio: 1 / 1; border-radius: 50%; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
+.ci-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ci-name { font-size: 0.82rem; letter-spacing: 0.02em; color: var(--cream-60); }
+@media (max-width: 560px) { .ci-list { grid-template-columns: repeat(2, 1fr); gap: var(--space-5) var(--space-4); } }
+
 /* ─── Footer ─── */
 
 .footer {
