@@ -704,3 +704,32 @@ h3{font-family:var(--disp);font-weight:600;letter-spacing:-.012em;}
 .bk-day strong{font-size:1.2rem;}
 .bk-slots{grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:.55rem;}
 .bk-slot{padding:.72rem .45rem;font-size:.88rem;}
+
+/* ─── bigger calendar display ─── */
+.lm-modal.bk-modal{width:min(52rem,97vw);}
+.bk-days{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.6rem;overflow:visible;}
+.bk-day{min-width:0;padding:1rem .5rem;}
+.bk-day span{font-size:.72rem;} .bk-day strong{font-size:1.45rem;}
+.bk-slots{grid-template-columns:repeat(auto-fill,minmax(106px,1fr));gap:.6rem;}
+.bk-slot{padding:.95rem .5rem;font-size:.95rem;}
+.bk-when .bk-label{font-size:.76rem;margin-top:1.6rem;}
+
+/* ─── hero: fix LUMEVINA wordmark overlap + flow into the menu ─── */
+.hero2{padding-bottom:clamp(8rem,15vw,13rem);
+  background:
+    radial-gradient(36% 30% at 22% 26%,rgba(255,255,255,.55),transparent 70%),
+    radial-gradient(30% 26% at 80% 18%,rgba(255,255,255,.45),transparent 70%),
+    radial-gradient(34% 34% at 62% 74%,rgba(255,255,255,.5),transparent 72%),
+    radial-gradient(26% 24% at 14% 80%,rgba(255,255,255,.4),transparent 70%),
+    linear-gradient(180deg,#f0dae3 0%,#e9c8d6 46%,#f0dce4 100%);}
+.hero2-features{margin-bottom:clamp(1.5rem,4vw,3rem);}
+.hero2-wordmark{font-size:clamp(3.4rem,13vw,10.5rem);color:rgba(125,84,104,.075);bottom:.15rem;}
+
+/* the menu section continues the blush, then resolves to the page tone */
+#treatments{position:relative;}
+#treatments::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;
+  background:linear-gradient(180deg,#f0dce4,transparent);pointer-events:none;z-index:0;}
+#treatments>.wrap{position:relative;z-index:1;}
+
+/* ─── merged "Meet Evelyn + signature" section ─── */
+#about .best{margin-top:clamp(2.6rem,6vw,4.6rem);padding-top:clamp(2.6rem,6vw,4.6rem);border-top:1px solid var(--line-soft);}
