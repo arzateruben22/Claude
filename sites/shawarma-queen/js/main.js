@@ -1748,3 +1748,82 @@ window.SQForms = (function () {
     spot.style.top = (e.clientY - r.top) + "px";
   });
 })();
+
+/* ── Signature dishes: hover-reveal horizontal scroll strip (vanilla port
+   of the 21st.dev ScrollXCarousel + CardHoverReveal). Cards are built from
+   the dish photos; the Add button drops the item into the cart through the
+   shared SQOrder hook (opening the same options popover, with the photo). ── */
+(function () {
+  "use strict";
+  var track = document.querySelector(".sig-track");
+  if (!track) return;
+  var SIG = [
+    { name: "Beef Shawarma", price: 14, tag: "Shawarma", desc: "Charcoal-dark, shaved thin.", img: "media/items/beef-shawarma.jpg",
+      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
+    { name: "Chicken Shawarma", price: 13, tag: "Shawarma", desc: "Grilled chicken, garlic & juicy.", img: "media/items/chicken-shawarma.jpg",
+      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
+    { name: "Queen Mix Bowl", price: 22, tag: "Bowl", desc: "Beef & chicken — the royal feast.", img: "media/items/queen-mix-bowl.jpg",
+      attrs: { "data-sauce": "yes", "data-size": "Small=22|Large=28", "data-extras": "Double protein=4" } },
+    { name: "Beef Bowl", price: 16, tag: "Bowl", desc: "Shaved beef over rice & salad.", img: "media/items/beef-bowl.jpg",
+      attrs: { "data-sauce": "yes", "data-size": "Small=16|Large=22", "data-extras": "Double protein=4" } },
+    { name: "Chicken Bowl", price: 15, tag: "Bowl", desc: "Grilled chicken over rice & salad.", img: "media/items/chicken-bowl.jpg",
+      attrs: { "data-sauce": "yes", "data-size": "Small=15|Large=20", "data-extras": "Double protein=4" } },
+    { name: "Falafel Bowl", price: 12, tag: "Vegan", desc: "Crispy falafel & mezze.", img: "media/items/falafel-bowl.jpg",
+      attrs: { "data-sauce": "yes", "data-size": "Small=12|Large=17", "data-extras": "Double protein=4" } },
+    { name: "Queen Vegan Shawarma", price: 15, tag: "Vegan", desc: "The vegan crown, wrapped.", img: "media/items/queen-vegan-shawarma.jpg",
+      attrs: { "data-sauce": "yes", "data-pick": "Sesame Bread|Pita", "data-pick-label": "Bread", "data-extras": "Double protein=4", "data-ingredients": "onions, tomato, pickles" } },
+    { name: "Makali Bowl", price: 12, tag: "Vegan", desc: "Fried veggie medley.", img: "media/items/makali-bowl.jpg",
+      attrs: { "data-sauce": "yes", "data-size": "Small=12|Large=17", "data-extras": "Double protein=4" } }
+  ];
+
+  SIG.forEach(function (it) {
+    var card = document.createElement("article");
+    card.className = "sig-card";
+
+    var media = document.createElement("div");
+    media.className = "sig-media";
+    var img = document.createElement("img");
+    img.src = it.img; img.alt = it.name; img.loading = "lazy";
+    media.appendChild(img);
+
+    var rev = document.createElement("div");
+    rev.className = "sig-reveal";
+    var tag = document.createElement("span");
+    tag.className = "sig-tag"; tag.textContent = it.tag;
+    var h = document.createElement("h3"); h.textContent = it.name;
+    var p = document.createElement("p"); p.textContent = it.desc;
+    var btn = document.createElement("button");
+    btn.className = "btn btn-solid sig-add"; btn.type = "button";
+    btn.setAttribute("data-name", it.name);
+    btn.setAttribute("data-price", it.price);
+    for (var k in it.attrs) if (it.attrs.hasOwnProperty(k)) btn.setAttribute(k, it.attrs[k]);
+    btn.textContent = "Add — $" + it.price;
+    btn.addEventListener("click", function () { if (window.SQOrder) window.SQOrder.addEl(btn); });
+    var extra = document.createElement("div");
+    extra.className = "sig-extra";
+    extra.appendChild(p); extra.appendChild(btn);
+    rev.appendChild(tag); rev.appendChild(h); rev.appendChild(extra);
+
+    card.appendChild(media);
+    card.appendChild(rev);
+    track.appendChild(card);
+  });
+
+  var scroller = document.querySelector(".sig-scroller");
+  var fill = document.querySelector(".sig-progress-fill");
+  var updProgress = function () {
+    if (!fill) return;
+    var max = scroller.scrollWidth - scroller.clientWidth;
+    fill.style.width = (max > 0 ? (scroller.scrollLeft / max) * 100 : 0) + "%";
+  };
+  scroller.addEventListener("scroll", updProgress, { passive: true });
+  updProgress();
+
+  document.querySelectorAll("[data-sig-dir]").forEach(function (arrow) {
+    arrow.addEventListener("click", function () {
+      var card = scroller.querySelector(".sig-card");
+      var step = card ? card.getBoundingClientRect().width + 20 : 320;
+      scroller.scrollBy({ left: step * Number(arrow.getAttribute("data-sig-dir")), behavior: "smooth" });
+    });
+  });
+})();

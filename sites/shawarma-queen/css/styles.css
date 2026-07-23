@@ -1408,6 +1408,69 @@ em { font-style: italic; }
 
 @media (max-width: 640px) { .showcase-mains { grid-template-columns: 1fr; } }
 
+/* ─── Signature dishes: hover-reveal horizontal scroll strip ─── */
+.section-signatures { padding-top: var(--space-7); padding-bottom: var(--space-8); }
+.sig-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-5); }
+.sig-nav { display: flex; gap: 0.6rem; flex: 0 0 auto; }
+.sig-arrow {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--plum-edge); background: var(--plum);
+  color: var(--cream); font-size: 1.5rem; line-height: 1; cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+.sig-arrow:hover { border-color: var(--gold); color: var(--gold); }
+
+.sig-scroller {
+  overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.4rem 0;
+}
+.sig-scroller::-webkit-scrollbar { display: none; }
+.sig-track { display: flex; gap: 20px; padding: 0 var(--space-6); width: max-content; }
+
+.sig-card {
+  position: relative; flex: 0 0 auto;
+  width: clamp(15rem, 30vw, 20rem);
+  aspect-ratio: 4 / 5;
+  border-radius: 18px; overflow: hidden;
+  border: 1px solid var(--plum-edge); background: #000;
+  scroll-snap-align: center;
+}
+.sig-media { position: absolute; inset: 0; }
+.sig-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 500ms ease; }
+.sig-card:hover .sig-media img { transform: scale(1.06); }
+.sig-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, rgba(6, 4, 3, 0.9)); pointer-events: none; }
+
+.sig-reveal {
+  position: absolute; inset: auto 0 0; z-index: 1;
+  padding: 1.1rem 1.3rem 1.3rem;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;
+}
+.sig-tag {
+  font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.08em;
+  font-size: 0.64rem; color: var(--night); background: var(--gold);
+  padding: 0.18rem 0.6rem; border-radius: 999px;
+}
+.sig-reveal h3 { font-family: var(--font-display); text-transform: uppercase; font-size: 1.3rem; color: var(--cream); margin: 0; line-height: 1.05; }
+.sig-extra {
+  max-height: 0; opacity: 0; overflow: hidden;
+  transition: max-height 420ms cubic-bezier(.4, 0, .2, 1), opacity 300ms ease;
+}
+.sig-card:hover .sig-extra, .sig-card:focus-within .sig-extra { max-height: 12rem; opacity: 1; }
+.sig-extra p { font-size: 0.86rem; color: var(--cream-60); margin: 0.5rem 0 0.7rem; }
+.sig-add { align-self: flex-start; }
+
+.sig-progress { height: 3px; border-radius: 999px; background: var(--plum-edge); overflow: hidden; margin-top: var(--space-5); }
+.sig-progress-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--pome), var(--gold)); transition: width 120ms linear; }
+
+@media (prefers-reduced-motion: reduce) { .sig-media img { transition: none; } }
+@media (max-width: 640px) {
+  .sig-track { padding: 0 var(--space-4); }
+  .sig-extra { max-height: 12rem; opacity: 1; }   /* always shown on touch */
+}
+
 /* ─── Spit banner — the fiery rotisserie pair that opens the menu ─── */
 .spit-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; max-width: 760px; margin: 0 auto var(--space-6); border-radius: 16px; overflow: hidden; border: 1px solid var(--plum-edge); background: #000; }
 .spit-banner .spit { position: relative; margin: 0; }
