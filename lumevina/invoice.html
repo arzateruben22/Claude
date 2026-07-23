@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipt · Lumevina Aesthetics Spa</title>
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<style>
+  @font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 500; font-display: swap; src: url("fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Jost"; font-style: normal; font-weight: 300; font-display: swap; src: url("fonts/jost-latin-300-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Jost"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/jost-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Jost"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/jost-latin-500-normal.woff2") format("woff2"); }
+
+  :root{
+    --linen:#f7f1eb; --porcelain:#fdfaf6; --ink:#443640; --ink-60:rgba(68,54,64,.68);
+    --ink-35:rgba(68,54,64,.42); --edge:rgba(90,62,78,.14); --edge-soft:rgba(90,62,78,.08);
+    --mauve:#a5798b; --plum:#7d5468; --rose:#c9a2b4; --sage:#adc2a5;
+    --disp:"Cormorant Garamond",Georgia,serif; --body:"Jost","Avenir Next","Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--linen);color:var(--ink);font-family:var(--body);
+    font-weight:300;line-height:1.5;-webkit-font-smoothing:antialiased;
+    padding:clamp(1rem,4vw,3rem);}
+  .doc{max-width:46rem;margin:0 auto;background:var(--porcelain);border:1px solid var(--edge);
+    border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(68,54,64,.12);}
+  .doc-band{height:6px;background:linear-gradient(100deg,var(--plum),var(--mauve) 55%,var(--rose));}
+  .doc-inner{padding:clamp(1.5rem,4vw,2.75rem);}
+
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;}
+  .brand img{height:64px;width:auto;display:block;}
+  .brand .where{font-size:.76rem;color:var(--ink-60);margin-top:.55rem;line-height:1.6;letter-spacing:.01em;}
+  .meta{text-align:right;min-width:12rem;}
+  .meta .kind{font-family:var(--disp);font-weight:600;font-size:1.9rem;line-height:1;letter-spacing:.01em;}
+  .meta dl{margin:.7rem 0 0;font-size:.78rem;color:var(--ink-60);display:grid;
+    grid-template-columns:auto auto;gap:.18rem .7rem;justify-content:end;}
+  .meta dt{text-align:right;}
+  .meta dd{margin:0;color:var(--ink);font-weight:400;font-variant-numeric:tabular-nums;}
+  .pill{display:inline-block;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:.28rem .6rem;border-radius:999px;font-weight:500;}
+  .pill--part{background:rgba(165,121,139,.16);color:var(--plum);}
+
+  .rule{height:1px;background:var(--edge);margin:1.6rem 0;}
+  .billto{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve);margin:0 0 .35rem;}
+  .billto + .who{font-family:var(--disp);font-size:1.35rem;font-weight:600;color:var(--ink);}
+  .who .em{font-size:.8rem;font-family:var(--body);font-weight:300;color:var(--ink-60);display:block;margin-top:.1rem;}
+
+  table{width:100%;border-collapse:collapse;margin-top:1.5rem;}
+  thead th{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-35);
+    font-weight:500;text-align:left;padding:0 0 .6rem;border-bottom:1px solid var(--edge);}
+  thead th.num{text-align:right;}
+  .grp td{padding:1.05rem 0 .35rem;}
+  .grp .glabel{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--plum);
+    font-weight:500;display:flex;align-items:center;gap:.5rem;}
+  .grp .glabel::before{content:"";width:16px;height:16px;border-radius:5px;display:inline-block;}
+  .grp.appt .glabel::before{background:linear-gradient(135deg,var(--plum),var(--rose));}
+  .grp.retail .glabel::before{background:linear-gradient(135deg,var(--sage),#cfe0c9);}
+  tbody tr.line td{padding:.5rem 0;border-bottom:1px solid var(--edge-soft);vertical-align:top;font-size:.92rem;}
+  tr.line .desc strong{font-weight:500;color:var(--ink);}
+  tr.line .desc span{display:block;font-size:.78rem;color:var(--ink-60);margin-top:.12rem;}
+  tr.line .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+  .totals{margin-top:1.4rem;margin-left:auto;width:min(20rem,100%);font-size:.9rem;}
+  .totals .row{display:flex;justify-content:space-between;padding:.34rem 0;}
+  .totals .row span:last-child{font-variant-numeric:tabular-nums;}
+  .totals .muted{color:var(--ink-60);}
+  .totals .grand{border-top:1px solid var(--edge);margin-top:.4rem;padding-top:.7rem;
+    font-family:var(--disp);font-size:1.5rem;font-weight:600;}
+  .totals .paid{color:var(--sage);filter:saturate(.7) brightness(.75);}
+  .totals .due{background:rgba(165,121,139,.1);border-radius:10px;padding:.55rem .7rem;margin-top:.5rem;
+    font-weight:500;color:var(--plum);}
+
+  .foot{margin-top:1.9rem;padding-top:1.2rem;border-top:1px solid var(--edge);
+    display:flex;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;font-size:.76rem;color:var(--ink-60);line-height:1.6;}
+  .foot .thanks{font-family:var(--disp);font-style:italic;font-size:1.15rem;color:var(--plum);}
+  .paytag{display:inline-flex;align-items:center;gap:.45rem;color:var(--ink);font-weight:400;}
+  .paytag svg{width:1.4rem;height:auto;}
+  .demo{max-width:46rem;margin:1rem auto 0;font-size:.68rem;letter-spacing:.05em;color:var(--ink-35);text-align:center;}
+
+  @media print{body{background:#fff;padding:0;}.doc{box-shadow:none;border:none;border-radius:0;}.demo{display:none;}}
+  @media (max-width:520px){.meta{text-align:left;}.meta dl{justify-content:start;grid-template-columns:auto auto;}.meta dt{text-align:left;}}
+</style>
+</head>
+<body>
+  <div class="doc">
+    <div class="doc-band"></div>
+    <div class="doc-inner">
+      <div class="top">
+        <div class="brand">
+          <img src="img/logo-full.png" alt="Lumevina Aesthetics Spa">
+          <div class="where">Woodland Hills, California<br>Lumevina.aesthetics@gmail.com · @lumevina</div>
+        </div>
+        <div class="meta">
+          <div class="kind">Receipt</div>
+          <dl>
+            <dt>Invoice</dt><dd>LUM-1042</dd>
+            <dt>Issued</dt><dd>Jul 22, 2026</dd>
+            <dt>Appt</dt><dd>Jul 24, 2026</dd>
+            <dt>Status</dt><dd><span class="pill pill--part">Partially paid</span></dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <p class="billto">Billed to</p>
+      <div class="who">Ava Reyes<span class="em">ava.reyes@email.com · (818) 555‑0139</span></div>
+
+      <table>
+        <thead>
+          <tr><th>Description</th><th class="num">Qty</th><th class="num">Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr class="grp appt"><td colspan="3"><span class="glabel">Appointment</span></td></tr>
+          <tr class="line">
+            <td class="desc"><strong>Lumevina Custom Facial</strong>
+              <span>Thu, Jul 24 2026 · 2:00 PM · 60 min · with Evelyn</span></td>
+            <td class="num">1</td>
+            <td class="num">$180.00</td>
+          </tr>
+          <tr class="grp retail"><td colspan="3"><span class="glabel">Retail — took it home</span></td></tr>
+          <tr class="line">
+            <td class="desc"><strong>Vitamin C Brightening Serum</strong>
+              <span>30 ml · restock reminder set for Sep 2026</span></td>
+            <td class="num">1</td>
+            <td class="num">$75.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div class="row muted"><span>Subtotal</span><span>$255.00</span></div>
+        <div class="row muted"><span>Sales tax · retail only (9.5%)</span><span>$7.13</span></div>
+        <div class="row grand"><span>Total</span><span>$262.13</span></div>
+        <div class="row paid"><span>Paid online · deposit + product</span><span>−$172.13</span></div>
+        <div class="row due"><span>Balance due at appointment</span><span>$90.00</span></div>
+      </div>
+
+      <div class="foot">
+        <div>
+          <div class="thanks">Thank you — see you soon.</div>
+          50% service deposit collected online to hold your time. The remaining balance
+          settles in person by card or cash. Products charged in full at purchase.
+        </div>
+        <div class="paytag">
+          <svg viewBox="0 0 48 32" aria-hidden="true"><rect width="48" height="32" rx="4" fill="#1a1f36"/><text x="24" y="21" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">VISA</text></svg>
+          Visa ···· 4242
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="demo">Illustrative sample receipt — generated by the Lumevina platform after a visit that combined a booking and a retail purchase.</p>
+</body>
+</html>
