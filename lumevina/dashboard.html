@@ -850,9 +850,12 @@
 
     /* ── Gift certificates (outstanding liability) ── */
     (function () {
+      /* Service gifts (a named treatment) are all-or-nothing: Active until the
+         treatment is booked, then Redeemed. Only VALUE gifts ("$X toward any
+         treatment") carry a rolling balance, so "Partly used" belongs to them. */
       var GC_SAMPLE = [
-        { code: "LUM-7Q4K-2F9X", amount: 100, balance: 100, label: "Any treatment ($100 value)", recipientName: "Ava Reyes", status: "active", purchasedAt: "2026-07-05T18:00:00Z" },
-        { code: "LUM-J3MP-8T2C", amount: 230, balance: 130, label: "Ageless Grace Facial", recipientName: "Bianca Ortiz", status: "active", purchasedAt: "2026-06-20T18:00:00Z" },
+        { code: "LUM-7Q4K-2F9X", amount: 150, balance: 90, label: "Any treatment ($150 value)", recipientName: "Ava Reyes", status: "active", purchasedAt: "2026-07-05T18:00:00Z" },
+        { code: "LUM-J3MP-8T2C", amount: 230, balance: 230, label: "Ageless Grace Facial", recipientName: "Bianca Ortiz", status: "active", purchasedAt: "2026-06-20T18:00:00Z" },
         { code: "LUM-R8WD-1K5H", amount: 180, balance: 0, label: "Lumevina Custom Facial", recipientName: "Chloe Kim", status: "redeemed", purchasedAt: "2026-05-14T18:00:00Z" },
         { code: "LUM-Q2NV-6B3L", amount: 75, balance: 75, label: "Brazilian Wax", recipientName: "Dana Ruiz", status: "active", purchasedAt: "2026-07-15T18:00:00Z" }
       ];
