@@ -60,11 +60,21 @@ Preview: `python3 -m http.server 8792 --directory lumevina-template` → open `/
 `scratchpad/build-luma.py` in the prior session, but edit the committed files now.)
 
 ### Design tokens (in `css/style.css` `:root`)
-- **Palette:** `--cream #f3ede3` canvas · `--ink #221c16` bold headlines ·
-  `--honey #c98a3c` accent/CTAs · `--nude`/`--clay` warm secondaries · white cards.
-- **Type:** display = bold system sans (DERMAI punch) · body = **Jost** 300/400 ·
-  a **Cormorant** *italic* accent word for spa warmth (`.serif-em`).
-- Rounded cards (LUMA), generous whitespace (DERMAI), responsive, reduced-motion safe.
+The template is now a **dark, gold, serif "ultra-luxury" theme**. The base
+`:root` (light) is overridden by a `DARK · GOLD · SERIF` layer appended at the
+end of `css/style.css` — a second `:root` re-declaration (later source order
+wins) plus targeted overrides for components that hard-code light values (nav,
+news/book-band bands, intro veil, logo filters, placeholder image tiles, and the
+gold-on-gold text spots). To tweak the palette, edit that dark `:root`.
+- **Palette:** `--cream #15110b` deep-espresso canvas · `--paper #1e1710` card
+  surface · `--ink #f0e7d5` warm-ivory text · `--honey #caa059` refined antique
+  gold (accents/CTAs) · `--gold-line` hairline borders · jewel-tone placeholder
+  image tiles (bronze/plum/forest/amber) that swap for real photography.
+- **Type:** display headings (`h1,h2`) = **Cormorant** serif 600 (the luxury
+  lever) with *italic* `.serif-em` accents · card/UI titles = system sans 600 ·
+  body = **Jost** 300 · eyebrows = Jost 500, `.3em` tracking, gold.
+- The real logo is tinted to warm ivory on dark via a CSS `filter` on
+  `.brand-mark`/`.foot-logo`/`.intro-mark`. Responsive + reduced-motion safe.
 
 ### What's still placeholder
 - **Images** are tonal gradients + simple SVG glyphs — swap for real photography
