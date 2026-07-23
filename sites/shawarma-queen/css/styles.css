@@ -1,17 +1,17 @@
 /* ═══════════════════════════════════════════════════════════
    Shawarma Queen — the late-night royal court
    Palette: midnight plum / crown gold / pomegranate / pistachio
-   Type: Bricolage Grotesque (characterful modern display) + Hanken Grotesk
+   Type: Oswald (bold condensed — matches the menu board) + Hanken Grotesk
    ═══════════════════════════════════════════════════════════ */
 
 /* Self-hosted fonts (Fontsource, latin subset).
-   Bricolage weights are remapped heavier so the display face reads bold &
-   confident wherever the CSS asks for 400/500/600/700. (No italic exists;
-   display accent words lean on gold color instead — see below.) */
-@font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-800-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-800-normal.woff2") format("woff2"); }
+   Oswald weights are remapped heavier so the condensed display face reads
+   bold like the printed board wherever the CSS asks for 400/500/600/700.
+   (No italic exists; display accent words lean on gold color instead.) */
+@font-face { font-family: "Oswald"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/oswald-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Oswald"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/oswald-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Oswald"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/oswald-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Oswald"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/oswald-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 300; font-display: swap; src: url("../fonts/hanken-grotesk-latin-300-normal.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/hanken-grotesk-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/hanken-grotesk-latin-500-normal.woff2") format("woff2"); }
@@ -19,20 +19,20 @@
 @font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/hanken-grotesk-latin-700-normal.woff2") format("woff2"); }
 
 :root {
-  --night: #190c09;            /* dark charcoal-brown — page canvas */
-  --plum: #2a1611;             /* raised warm-brown surface */
-  --plum-edge: #45271c;        /* brown borders */
-  --cream: #f5e9d8;            /* laban cream — primary text */
+  --night: #130b08;            /* near-black warm charcoal — page canvas */
+  --plum: #241511;             /* raised warm-black surface */
+  --plum-edge: #3d2519;        /* dark warm borders */
+  --cream: #f5e9d8;            /* warm cream — primary text */
   --cream-60: rgba(245, 233, 216, 0.64);
   --cream-35: rgba(245, 233, 216, 0.36);
   --cream-15: rgba(245, 233, 216, 0.14);
-  --gold: #f0ae3a;             /* deep crown gold — primary accent */
+  --gold: #f0ae3a;             /* rich crown gold — primary accent */
   --gold-bright: #ffc257;
   --gold-soft: rgba(240, 174, 58, 0.5);
-  --pome: #c13c2b;             /* brick red — heat / secondary */
-  --pome-soft: rgba(193, 60, 43, 0.5);
+  --pome: #d5421f;             /* fiery red-orange — heat / secondary */
+  --pome-soft: rgba(213, 66, 31, 0.5);
   --herb: #c4863a;             /* copper — warm tertiary accent */
-  --font-display: "Bricolage Grotesque", "Hanken Grotesk", system-ui, sans-serif;
+  --font-display: "Oswald", "Hanken Grotesk", system-ui, sans-serif;
   --font-body: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
   --space-2: 0.5rem;
   --space-3: 1rem;
@@ -68,7 +68,7 @@ body::before {
   z-index: 0;
   background:
     radial-gradient(120% 90% at 50% 0%, rgba(240, 174, 58, 0.06), transparent 55%),
-    radial-gradient(140% 100% at 50% 110%, rgba(193, 60, 43, 0.06), transparent 60%);
+    radial-gradient(140% 100% at 50% 110%, rgba(213, 66, 31, 0.06), transparent 60%);
 }
 
 main, .footer { position: relative; z-index: 1; }
@@ -91,9 +91,10 @@ em { font-style: italic; }
 .display {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
-  line-height: 1.1;
-  letter-spacing: 0.005em;
+  font-size: clamp(2.4rem, 4.8vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   margin-bottom: var(--space-4);
   text-wrap: balance;
 }
@@ -161,7 +162,7 @@ em { font-style: italic; }
 
 .btn-hot:hover {
   background: #d24e3b;
-  box-shadow: 0 6px 28px rgba(193, 60, 43, 0.4);
+  box-shadow: 0 6px 28px rgba(213, 66, 31, 0.4);
   transform: translateY(-1px);
 }
 
@@ -190,7 +191,7 @@ em { font-style: italic; }
 }
 
 .nav.scrolled {
-  background: rgba(25, 12, 9, 0.9);
+  background: rgba(19, 11, 8, 0.9);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom-color: var(--cream-15);
@@ -323,7 +324,7 @@ em { font-style: italic; }
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(25, 12, 9, 0.98);
+  background: rgba(19, 11, 8, 0.98);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -404,7 +405,7 @@ em { font-style: italic; }
   background: radial-gradient(closest-side,
       rgba(240, 174, 58, 0.4),
       rgba(240, 174, 58, 0.14) 45%,
-      rgba(193, 60, 43, 0.08) 62%,
+      rgba(213, 66, 31, 0.08) 62%,
       transparent 72%);
   animation: glow-breathe 7s ease-in-out infinite alternate;
 }
@@ -427,10 +428,11 @@ em { font-style: italic; }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 8.5vw, 6.4rem);
+  font-size: clamp(3.4rem, 9vw, 7rem);
   font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: 0.005em;
+  line-height: 0.94;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   margin-bottom: var(--space-4);
 }
 
@@ -459,7 +461,7 @@ em { font-style: italic; }
   text-decoration: none;
   padding: 0.55rem 1.1rem;
   border-radius: 999px;
-  background: rgba(25, 12, 9, 0.5);
+  background: rgba(19, 11, 8, 0.5);
   border: 1px solid var(--cream-15);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -492,7 +494,7 @@ em { font-style: italic; }
 .hero-spit {
   width: min(24rem, 70vw);
   height: auto;
-  filter: drop-shadow(0 18px 40px rgba(193, 60, 43, 0.25));
+  filter: drop-shadow(0 18px 40px rgba(213, 66, 31, 0.25));
 }
 
 .spit-meat { transform-box: fill-box; transform-origin: center; animation: spit-turn 24s linear infinite; }
@@ -596,7 +598,7 @@ em { font-style: italic; }
   inset: -3rem -2.5rem;
   z-index: -1;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(25, 12, 9, 0.68), transparent 78%);
+  background: radial-gradient(closest-side, rgba(19, 11, 8, 0.68), transparent 78%);
 }
 
 .story-badge {
@@ -664,7 +666,7 @@ em { font-style: italic; }
 
 .section-court {
   background:
-    radial-gradient(90% 60% at 50% 0%, rgba(193, 60, 43, 0.06), transparent 60%),
+    radial-gradient(90% 60% at 50% 0%, rgba(213, 66, 31, 0.06), transparent 60%),
     var(--plum);
   border-top: 1px solid var(--cream-15);
   border-bottom: 1px solid var(--cream-15);
@@ -710,7 +712,7 @@ em { font-style: italic; }
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, transparent 30%, rgba(25, 12, 9, 0.85) 100%);
+  background: linear-gradient(180deg, transparent 30%, rgba(19, 11, 8, 0.85) 100%);
 }
 
 .court-card-title {
@@ -730,7 +732,7 @@ em { font-style: italic; }
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: rgba(25, 12, 9, 0.55);
+  background: rgba(19, 11, 8, 0.55);
   border: 1px solid var(--gold-soft);
   color: var(--gold);
 }
@@ -766,8 +768,10 @@ em { font-style: italic; }
 
 .carta-group-title {
   font-family: var(--font-display);
-  font-size: 1.85rem;
+  font-size: 1.9rem;
   font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   display: flex;
   align-items: baseline;
   gap: var(--space-3);
@@ -1420,7 +1424,7 @@ em { font-style: italic; }
   position: fixed;
   inset: 0;
   z-index: 60;
-  background: rgba(25, 12, 9, 0.68);
+  background: rgba(19, 11, 8, 0.68);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   opacity: 0;
@@ -1672,7 +1676,7 @@ em { font-style: italic; }
   padding: 1rem;
   border: 1px solid var(--plum-edge);
   border-radius: 12px;
-  background: rgba(25, 12, 9, 0.5);
+  background: rgba(19, 11, 8, 0.5);
 }
 
 .card-fields[hidden] { display: none; }
@@ -1740,7 +1744,7 @@ em { font-style: italic; }
   position: fixed;
   inset: 0;
   z-index: 64;
-  background: rgba(25, 12, 9, 0.62);
+  background: rgba(19, 11, 8, 0.62);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   opacity: 0;
@@ -1970,7 +1974,7 @@ em { font-style: italic; }
   border-radius: 50%;
   background:
     radial-gradient(closest-side, rgba(240, 174, 58, 0.07), transparent 72%),
-    rgba(42, 22, 17, 0.45);
+    rgba(36, 21, 17, 0.45);
   border: 1px solid var(--plum-edge);
   box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.45), 0 24px 60px rgba(0, 0, 0, 0.35);
   touch-action: manipulation;
@@ -2004,7 +2008,7 @@ em { font-style: italic; }
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(25, 12, 9, 0.55);
+  border: 2px solid rgba(19, 11, 8, 0.55);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
   transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease;
 }
@@ -2139,7 +2143,7 @@ em { font-style: italic; }
   border-bottom: 1px solid var(--cream-15);
   /* fallback ground (also what shows under reduced-motion): embers on plum-black */
   background:
-    radial-gradient(60% 55% at 28% 42%, rgba(193, 60, 43, 0.20), transparent 60%),
+    radial-gradient(60% 55% at 28% 42%, rgba(213, 66, 31, 0.20), transparent 60%),
     radial-gradient(55% 55% at 74% 64%, rgba(240, 174, 58, 0.18), transparent 60%),
     #150a07;
 }

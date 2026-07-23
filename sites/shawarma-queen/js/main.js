@@ -668,13 +668,13 @@
   var REWARDS = [
     { id: "sauce", name: "Premium Sauce", cost: 20, item: "Reward: Premium Sauce",
       desc: "Upgrade any wrap to Boom or Queen sauce — the good stuff, on the house.",
-      colors: ["#F0AE3A", "#C13C2B", "#FFC257"] },
+      colors: ["#F0AE3A", "#D5421F", "#FFC257"] },
     { id: "chicken", name: "Chicken Wrap", cost: 130, item: "Reward: Chicken Wrap",
       desc: "A full 12″ chicken shawarma wrap — juicy, garlicky, rolled to order. Free.",
       colors: ["#F0AE3A", "#C4863A", "#FFC257"] },
     { id: "beef", name: "Beef Wrap", cost: 140, item: "Reward: Beef Wrap",
       desc: "A full 12″ beef shawarma wrap — charred, shaved thin, rolled tight. Free.",
-      colors: ["#C13C2B", "#F0AE3A", "#8C2E24"] },
+      colors: ["#D5421F", "#F0AE3A", "#8C2E24"] },
     { id: "combo", name: "Chicken Combo", cost: 180, item: "Reward: Chicken Combo",
       desc: "The whole 12″ chicken combo — wrap, fries, coleslaw & a drink. On us.",
       colors: ["#C4863A", "#F0AE3A", "#B5702A"] }
@@ -1230,11 +1230,11 @@
     "  float specR=pow(max(dot(normalize(vec3(nx+0.005,ny,eps*1.5)),halfVector),0.0),glintIntensity);",
     "  float specG=pow(max(dot(normal,halfVector),0.0),glintIntensity);",
     "  float specB=pow(max(dot(normalize(vec3(nx-0.005,ny,eps*1.5)),halfVector),0.0),glintIntensity);",
-    "  vec3 cPome=vec3(0.76,0.24,0.17); vec3 cGold=vec3(0.94,0.68,0.23); vec3 cCream=vec3(0.96,0.91,0.85);",
+    "  vec3 cPome=vec3(0.84,0.26,0.12); vec3 cGold=vec3(0.94,0.68,0.23); vec3 cCream=vec3(0.96,0.91,0.85);",
     "  vec3 specular=(specR*cPome + specG*cGold + specB*cCream)*1.7;",
     "  color+=specular;",
     "  color=mix(vec3(0.5),color,u_contrast);",
-    "  color+=vec3(0.08,0.045,0.03);",  // plum-black ground instead of pure black
+    "  color+=vec3(0.06,0.035,0.025);",  // plum-black ground instead of pure black
     "  float vig=smoothstep(1.8,0.2,length(uv-0.5)); color*=vig;",
     "  color+=(hash(uv+t)-0.5)*u_grain;",
     "  gl_FragColor=vec4(clamp(color,0.0,1.0),1.0);",
