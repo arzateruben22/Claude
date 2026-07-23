@@ -733,3 +733,24 @@ h3{font-family:var(--disp);font-weight:600;letter-spacing:-.012em;}
 
 /* ─── merged "Meet Evelyn + signature" section ─── */
 #about .best{margin-top:clamp(2.6rem,6vw,4.6rem);padding-top:clamp(2.6rem,6vw,4.6rem);border-top:1px solid var(--line-soft);}
+
+/* ─── month calendar (booking date picker) ─── */
+.lm-modal.bk-modal{width:min(48rem,96vw);}
+.bk-when-cols{display:flex;gap:clamp(1.4rem,3vw,2.4rem);align-items:flex-start;}
+.bk-when-cal{flex:0 0 auto;width:23rem;max-width:100%;}
+.bk-when-times{flex:1;min-width:0;}
+.bk-when-cal .bk-label,.bk-when-times .bk-label{margin-top:0;}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;}
+.cal-month{font-family:var(--disp);font-weight:600;font-size:1.05rem;}
+.cal-nav{width:38px;height:38px;border:1px solid var(--line);background:var(--paper);cursor:pointer;font-size:1.15rem;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+.cal-nav:hover:not([disabled]){border-color:var(--honey);color:var(--honey);}
+.cal-nav[disabled]{opacity:.3;cursor:default;}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;margin-bottom:.4rem;}
+.cal-dow span{text-align:center;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;}
+.cal-day{aspect-ratio:1;border:1px solid var(--line-soft);background:var(--paper);font:inherit;font-size:.95rem;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s ease,border-color .12s ease,color .12s ease;}
+.cal-day:hover:not([disabled]){border-color:var(--honey);color:var(--honey);}
+.cal-day[disabled]{opacity:.25;cursor:default;background:transparent;border-color:transparent;}
+.cal-day.is-active{background:var(--ink);color:var(--cream);border-color:var(--ink);font-weight:600;}
+.cal-blank{aspect-ratio:1;}
+@media(max-width:640px){.bk-when-cols{flex-direction:column;} .bk-when-cal{width:100%;}}

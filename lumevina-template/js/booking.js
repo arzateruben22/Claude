@@ -99,8 +99,10 @@
       '<div class="bk-step bk-when">' +
         '<p class="eyebrow">Book an appointment</p>' +
         '<h3 class="bk-svc-name"></h3><p class="bk-svc-meta"></p>' +
-        '<p class="bk-label">Choose a day</p><div class="bk-days"></div>' +
-        '<p class="bk-label">Choose a time <span class="bk-flash-key">⚡ = 10% off flash opening</span></p><div class="bk-slots"></div>' +
+        '<div class="bk-when-cols">' +
+          '<div class="bk-when-cal"><p class="bk-label">Choose a day</p><div class="bk-cal"></div></div>' +
+          '<div class="bk-when-times"><p class="bk-label">Choose a time <span class="bk-flash-key">⚡ = 10% off flash opening</span></p><div class="bk-slots"></div></div>' +
+        '</div>' +
       '</div>' +
       /* step 2 — pay */
       '<div class="bk-step bk-pay" hidden>' +
@@ -131,7 +133,7 @@
 
     els.when = modal.querySelector(".bk-when"); els.payStep = modal.querySelector(".bk-pay"); els.done = modal.querySelector(".bk-done");
     els.svcName = modal.querySelector(".bk-svc-name"); els.svcMeta = modal.querySelector(".bk-svc-meta");
-    els.days = modal.querySelector(".bk-days"); els.slots = modal.querySelector(".bk-slots");
+    els.cal = modal.querySelector(".bk-cal"); els.slots = modal.querySelector(".bk-slots");
     els.sumSvc = modal.querySelector(".bk-summary-svc"); els.sumWhen = modal.querySelector(".bk-summary-when");
     els.name = modal.querySelector("#bk-name"); els.email = modal.querySelector("#bk-email");
     els.pointsRow = modal.querySelector(".bk-points-row"); els.usePoints = modal.querySelector(".bk-use-points"); els.pointsText = modal.querySelector(".bk-points-text");
@@ -158,25 +160,63 @@
     modal.scrollTop = 0;
   };
 
-  /* ── step 1 render ── */
+  /* ── step 1: a real month calendar ── */
+  var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DOW = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+  var startOfDay = function (d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+  var MIN_DATE, MAX_DATE, calY, calM;
+  var isBookable = function (date) {
+    var t = startOfDay(date).getTime();
+    return t >= MIN_DATE.getTime() && t <= MAX_DATE.getTime() && date.getDay() !== 1; /* Mon closed */
+  };
+
+  var renderCalendar = function () {
+    var first = new Date(calY, calM, 1), offset = first.getDay();
+    var daysInMonth = new Date(calY, calM + 1, 0).getDate();
+    var canPrev = calY > MIN_DATE.getFullYear() || (calY === MIN_DATE.getFullYear() && calM > MIN_DATE.getMonth());
+    var canNext = calY < MAX_DATE.getFullYear() || (calY === MAX_DATE.getFullYear() && calM < MAX_DATE.getMonth());
+    var h = '<div class="cal-head"><button class="cal-nav cal-prev" type="button" aria-label="Previous month"' + (canPrev ? "" : " disabled") + ">&#8249;</button>" +
+      '<span class="cal-month">' + MONTHS[calM] + " " + calY + "</span>" +
+      '<button class="cal-nav cal-next" type="button" aria-label="Next month"' + (canNext ? "" : " disabled") + ">&#8250;</button></div>";
+    h += '<div class="cal-dow">';
+    for (var w = 0; w < 7; w++) h += "<span>" + DOW[w] + "</span>";
+    h += '</div><div class="cal-days">';
+    for (var b = 0; b < offset; b++) h += '<span class="cal-blank"></span>';
+    for (var day = 1; day <= daysInMonth; day++) {
+      var date = new Date(calY, calM, day), key = toKey(date), ok = isBookable(date);
+      h += '<button class="cal-day' + (key === state.dayKey ? " is-active" : "") + '" type="button" data-key="' + key + '"' + (ok ? "" : " disabled") + ">" + day + "</button>";
+    }
+    els.cal.innerHTML = h + "</div>";
+    els.cal.querySelector(".cal-prev").addEventListener("click", function () {
+      if (this.disabled) return; calM--; if (calM < 0) { calM = 11; calY--; } renderCalendar();
+    });
+    els.cal.querySelector(".cal-next").addEventListener("click", function () {
+      if (this.disabled) return; calM++; if (calM > 11) { calM = 0; calY++; } renderCalendar();
+    });
+    Array.prototype.forEach.call(els.cal.querySelectorAll(".cal-day"), function (btn) {
+      if (btn.disabled) return;
+      btn.addEventListener("click", function () {
+        state.dayKey = btn.dataset.key; state.start = null;
+        Array.prototype.forEach.call(els.cal.querySelectorAll(".cal-day"), function (x) { x.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        renderSlots();
+      });
+    });
+  };
+
   var renderWhen = function () {
     els.svcName.textContent = state.svc.name;
     els.svcMeta.textContent = money(state.svc.price) + " · " + state.svc.dur + " min";
-    els.days.textContent = ""; els.slots.textContent = "";
-    var days = bookableDays();
-    days.forEach(function (key, i) {
-      var b = document.createElement("button"); b.type = "button"; b.className = "bk-day";
-      var d = new Date(key + "T00:00:00");
-      b.innerHTML = "<span>" + d.toLocaleDateString(undefined, { weekday: "short" }) + "</span><strong>" + d.getDate() + "</strong>";
-      b.addEventListener("click", function () {
-        state.dayKey = key; state.start = null;
-        modal.querySelectorAll(".bk-day").forEach(function (x) { x.classList.remove("is-active"); });
-        b.classList.add("is-active");
-        renderSlots();
-      });
-      els.days.appendChild(b);
-      if (i === 0) b.click();
-    });
+    els.slots.textContent = "";
+    var today = startOfDay(new Date());
+    MIN_DATE = new Date(today.getTime() + 864e5);        /* from tomorrow */
+    MAX_DATE = new Date(today.getTime() + 60 * 864e5);   /* ~2 months out */
+    var fb = new Date(MIN_DATE);
+    while (!isBookable(fb)) fb = new Date(fb.getTime() + 864e5);
+    calY = fb.getFullYear(); calM = fb.getMonth();
+    state.dayKey = toKey(fb); state.start = null;
+    renderCalendar();
+    renderSlots();
   };
 
   var renderSlots = function () {
