@@ -379,11 +379,16 @@
     Object.keys(cart).forEach(function (id) {
       if (!isGiftId(id)) return;
       var item = cart[id];
+      /* "gift-any-*" is a dollar-value gift (account credit); everything else
+         is a specific treatment. Only real treatments carry a serviceId, which
+         is what makes the certificate a service (all-or-nothing) gift. */
+      var raw = id.replace(/^gift-/, "");
+      var serviceId = /^any(-|$)/.test(raw) ? null : raw;
       for (var i = 0; i < item.qty; i++) {
         var card = window.LumevinaGiftCards.create({
           amount: item.price,
           label: item.name.replace(/^Gift Card · /, ""),
-          serviceId: id.replace(/^gift-/, ""),
+          serviceId: serviceId,
           recipientName: toMe ? "" : giftNameInput.value.trim(),
           recipientEmail: toMe ? "" : giftEmailInput.value.trim(),
           message: (modal.querySelector("#co-gift-msg").value || "").trim(),

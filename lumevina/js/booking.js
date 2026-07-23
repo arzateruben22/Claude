@@ -134,6 +134,7 @@
   var giftStatus = modal.querySelector(".gift-redeem-status");
   var giftCode = null;
   var giftApplied = 0;
+  var giftIsService = false;   /* a treatment gift prepays the whole service */
 
   /* ── Session state ── */
   var state = {
@@ -884,6 +885,7 @@
   var resetGift = function () {
     giftCode = null;
     giftApplied = 0;
+    giftIsService = false;
     if (giftInput) giftInput.value = "";
     if (giftStatus) giftStatus.textContent = "";
     if (giftBody) giftBody.hidden = true;
@@ -900,25 +902,45 @@
       if (!code) { giftStatus.textContent = "Enter your certificate code."; return; }
       if (!gc) { giftStatus.textContent = "Gift redemption isn't available right now."; return; }
       var card = gc.lookup(code);
-      var dueBefore = Math.max(0, depositDue() - rewardsOff());
-      var canCover = gc.quote(code, dueBefore);
       if (!card) {
         giftStatus.textContent = "We couldn't find that code — please check and try again.";
-        giftCode = null; giftApplied = 0; updatePayAmount();
+        giftCode = null; giftApplied = 0; giftIsService = false; updatePayAmount();
         return;
       }
-      if (canCover <= 0) {
+      if (card.balance <= 0 || card.status === "void") {
         giftStatus.textContent = "That certificate has no balance left.";
-        giftCode = null; giftApplied = 0; updatePayAmount();
+        giftCode = null; giftApplied = 0; giftIsService = false; updatePayAmount();
         return;
       }
+
+      /* Treatment gift: all-or-nothing. It only works for its own service,
+         booked on its own, and then it prepays that whole treatment. */
+      if (card.kind === "service") {
+        var ids = state.services.map(function (s) { return s.id; });
+        if (ids.length !== 1 || ids[0] !== card.serviceId) {
+          giftStatus.textContent = "This certificate is for the " + card.label +
+            " — book just that treatment on its own to redeem it.";
+          giftCode = null; giftApplied = 0; giftIsService = false; updatePayAmount();
+          return;
+        }
+        giftCode = card.code;
+        giftIsService = true;
+        giftApplied = card.balance;            /* covers the whole treatment */
+        giftStatus.textContent = "✓ Your " + card.label +
+          " is prepaid in full — nothing due today, nothing at the visit.";
+        updatePayAmount();
+        return;
+      }
+
+      /* Value gift: draws down; remainder stays as account credit. */
       giftCode = card.code;
+      giftIsService = false;
       giftApplied = card.balance; /* giftOff() caps it to what's due */
       var applied = giftOff();
       var remaining = Math.max(0, card.balance - applied);
       giftStatus.textContent = "✓ Applied −" + pay.money(applied) +
         " toward your deposit" +
-        (remaining > 0 ? " · " + pay.money(remaining) + " stays on your certificate for the visit." : ".");
+        (remaining > 0 ? " · " + pay.money(remaining) + " stays on your account as credit." : ".");
       updatePayAmount();
     });
   }
@@ -1113,8 +1135,12 @@
         email: emailInput.value.trim(),
         order: result.id,
         deposit: deposit,
-        paid: charge,
+        /* a treatment gift prepays the whole visit, so nothing is owed in
+           person — record it as paid in full; otherwise just the deposit */
+        paid: giftIsService ? sessionTotal() : charge,
         total: sessionTotal(),
+        giftCode: giftCode || null,
+        giftPrepaid: giftIsService,
         flash: flashActive(),
         /* stamp where the booking came from — 'app' inside the
            Capacitor shell, 'web' in a browser. Powers the app-vs-web
@@ -1126,16 +1152,23 @@
       });
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());
-      modal.querySelector(".booking-paid").textContent =
-        "Deposit paid: " + pay.money(charge) +
-        (redeemedPts ? " (" + redeemedPts + " ✦ applied)" : "") +
-        (giftUsed > 0 ? " (gift −" + pay.money(giftUsed) + ")" : "") +
-        " · Balance due: " + pay.money(sessionTotal() - deposit);
+      modal.querySelector(".booking-paid").textContent = giftIsService
+        ? "Prepaid in full by gift certificate — nothing due today or at the visit."
+        : "Deposit paid: " + pay.money(charge) +
+          (redeemedPts ? " (" + redeemedPts + " ✦ applied)" : "") +
+          (giftUsed > 0 ? " (gift −" + pay.money(giftUsed) + ")" : "") +
+          " · Balance due: " + pay.money(sessionTotal() - deposit);
       modal.querySelector(".booking-order-id").textContent = result.id;
 
-      /* commit the gift-certificate redemption (decrement its balance) */
-      if (giftCode && giftUsed > 0 && window.LumevinaGiftCards) {
-        window.LumevinaGiftCards.redeem(giftCode, giftUsed);
+      /* commit the gift redemption: a treatment gift is spent in full;
+         a value gift draws down and binds to this account by email */
+      if (giftCode && window.LumevinaGiftCards) {
+        if (giftIsService) {
+          window.LumevinaGiftCards.redeem(giftCode);
+        } else if (giftUsed > 0) {
+          window.LumevinaGiftCards.redeem(giftCode, giftUsed, { email: emailInput.value.trim() });
+        }
+        document.dispatchEvent(new CustomEvent("lumevina:giftcards-changed"));
       }
 
       /* Glow Rewards: spend the redemption, earn on what was paid */

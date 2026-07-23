@@ -3857,6 +3857,68 @@ body.intro-lock { overflow: hidden; }
 
 .acct-open-rewards { padding: 0.55rem 1.1rem; }
 
+/* ── Gift credit on the account (value gift cards, tracked here) ── */
+.acct-credit {
+  background: #fff;
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.acct-credit-line { display: flex; align-items: baseline; gap: 0.5rem; }
+
+.acct-credit-amt {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--plum);
+  font-variant-numeric: tabular-nums;
+}
+
+.acct-credit-label { color: var(--mauve); font-size: 0.85rem; }
+
+.acct-credit-list { list-style: none; margin: 0.75rem 0 0; padding: 0; }
+
+.acct-credit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--panel-edge-soft);
+  font-size: 0.85rem;
+}
+
+.acct-credit-item .cc-label { color: var(--ink); }
+.acct-credit-item .cc-code { color: var(--ink-35); font-size: 0.72rem; letter-spacing: 0.04em; }
+.acct-credit-item .cc-bal { color: var(--plum); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.acct-credit-empty { font-size: 0.82rem; color: var(--ink-60); margin: 0.7rem 0 0; }
+
+.acct-credit-add { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+
+.acct-credit-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  background: var(--porcelain);
+  color: var(--ink);
+}
+
+.acct-credit-input::placeholder { text-transform: none; letter-spacing: normal; color: var(--ink-35); }
+
+.acct-credit-btn { flex: 0 0 auto; padding: 0.55rem 1.1rem; }
+
+.acct-credit-status { font-size: 0.82rem; color: var(--mauve); margin: 0.55rem 0 0; min-height: 1.1em; }
+.acct-credit-status.is-error { color: var(--plum); }
+
 .acct-bookings {
   list-style: none;
   margin: 0 0 var(--space-3);

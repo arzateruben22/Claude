@@ -5,9 +5,13 @@
  * demo; when Supabase is connected, swap the load/save bodies for a table
  * (code PK, amount, balance, status, recipient, buyer) and the rest stays.
  *
- * A certificate carries a VALUE. A "service" gift is just a value equal to
- * that service's price, with a friendly label. Redemption decrements the
- * balance, so partial values roll over to the next visit.
+ * Two kinds, and they behave differently — the way people expect:
+ *
+ *   • service — a named treatment (e.g. "Ageless Grace Facial"). ALL-OR-NOTHING:
+ *       it covers that whole treatment once, then it's spent. No partial balance.
+ *   • value   — a dollar amount ("$100 toward any treatment"). It becomes CREDIT
+ *       on the recipient's account and draws down across visits, so each account
+ *       can see how much it has left.
  */
 (function () {
   "use strict";
@@ -35,6 +39,7 @@
   var newCode = function () { return "LUM-" + chunk(4) + "-" + chunk(4); };
 
   var norm = function (code) { return (code || "").trim().toUpperCase(); };
+  var emailKey = function (e) { return String(e || "").trim().toLowerCase(); };
 
   /* Issue a certificate. Returns the stored record (including its code). */
   var create = function (d) {
@@ -42,14 +47,18 @@
     var code = newCode();
     while (list.some(function (g) { return g.code === code; })) code = newCode();
     var amount = Math.max(0, Number(d.amount) || 0);
+    var serviceId = d.serviceId || null;
     var card = {
       code: code,
       amount: amount,
       balance: amount,
+      /* a service gift is a named treatment; anything else is dollar value */
+      kind: serviceId ? "service" : "value",
       label: d.label || "Any treatment",
-      serviceId: d.serviceId || null,
+      serviceId: serviceId,
       recipientName: d.recipientName || "",
       recipientEmail: d.recipientEmail || "",
+      claimedByEmail: null,
       message: d.message || "",
       deliverToBuyer: !!d.deliverToBuyer,
       sendDate: d.sendDate || null,
@@ -75,14 +84,25 @@
     return Math.min(g.balance, Math.max(0, Number(amount) || 0));
   };
 
-  /* Commit a redemption: decrement balance, flip to redeemed when empty. */
-  var redeem = function (code, amount) {
+  /* Commit a redemption.
+     - service gift: all-or-nothing — the whole thing is spent at once.
+     - value gift:  decrement by `amount`, remainder rolls over; the first
+                    time it's used we bind it to the account (opts.email) so
+                    that account can track the balance left. */
+  var redeem = function (code, amount, opts) {
+    opts = opts || {};
     var list = load();
     var g = list.filter(function (x) { return x.code === norm(code); })[0];
     if (!g) return { ok: false, reason: "not_found" };
     if (g.status === "void") return { ok: false, reason: "void" };
     if (g.balance <= 0) return { ok: false, reason: "empty" };
-    var applied = Math.min(g.balance, Math.max(0, Number(amount) || 0));
+    var applied;
+    if (g.kind === "service") {
+      applied = g.balance;                       /* used in full, always */
+    } else {
+      applied = Math.min(g.balance, Math.max(0, Number(amount) || 0));
+      if (opts.email && !g.claimedByEmail) g.claimedByEmail = emailKey(opts.email);
+    }
     g.balance = Math.round((g.balance - applied) * 100) / 100;
     g.status = g.balance <= 0 ? "redeemed" : "active";
     g.lastUsedAt = new Date().toISOString();
@@ -90,11 +110,44 @@
     return { ok: true, applied: applied, balance: g.balance, card: g };
   };
 
+  /* Attach a value gift to an account without spending it — "add a gift card
+     to my account" so its balance shows up as credit there. */
+  var claim = function (code, email) {
+    var list = load();
+    var g = list.filter(function (x) { return x.code === norm(code); })[0];
+    if (!g) return { ok: false, reason: "not_found" };
+    if (g.status === "void") return { ok: false, reason: "void" };
+    if (g.kind === "service") return { ok: false, reason: "service" };
+    if (g.balance <= 0) return { ok: false, reason: "empty" };
+    if (email) { g.claimedByEmail = emailKey(email); save(list); }
+    return { ok: true, card: g };
+  };
+
+  /* The value gift cards that belong to an account (by recipient or claim). */
+  var cardsForEmail = function (email) {
+    var e = emailKey(email);
+    if (!e) return [];
+    return load().filter(function (g) {
+      return g.kind === "value" &&
+        (emailKey(g.recipientEmail) === e || emailKey(g.claimedByEmail) === e);
+    });
+  };
+
+  /* How much gift credit this account has left, all cards summed. */
+  var accountCredit = function (email) {
+    return cardsForEmail(email).reduce(function (a, g) {
+      return a + (Number(g.balance) || 0);
+    }, 0);
+  };
+
   window.LumevinaGiftCards = {
     create: create,
     lookup: lookup,
     quote: quote,
     redeem: redeem,
+    claim: claim,
+    cardsForEmail: cardsForEmail,
+    accountCredit: accountCredit,
     all: load
   };
 })();

@@ -215,7 +215,76 @@
     refEl.textContent = rw() ? rw().refCode() : "—";
     renderBookings();
     renderIntake();
+    renderCredit();
   };
+
+  /* ── Gift credit: value gift cards attached to this account ── */
+  var creditAmtEl = modal.querySelector(".acct-credit-amt");
+  var creditListEl = modal.querySelector(".acct-credit-list");
+  var creditEmptyEl = modal.querySelector(".acct-credit-empty");
+  var creditStatusEl = modal.querySelector(".acct-credit-status");
+  var creditForm = modal.querySelector(".acct-credit-add");
+  var creditInput = modal.querySelector(".acct-credit-input");
+
+  var money = function (n) { return "$" + (Math.round(Number(n || 0) * 100) / 100).toLocaleString("en-US"); };
+
+  var renderCredit = function () {
+    var gc = window.LumevinaGiftCards;
+    if (!creditAmtEl) return;
+    var cards = (gc && session) ? gc.cardsForEmail(session.email) : [];
+    var total = (gc && session) ? gc.accountCredit(session.email) : 0;
+    creditAmtEl.textContent = money(total);
+    creditListEl.textContent = "";
+    cards.forEach(function (c) {
+      var li = document.createElement("li");
+      li.className = "acct-credit-item";
+      var left = document.createElement("span");
+      var lab = document.createElement("span");
+      lab.className = "cc-label";
+      lab.textContent = c.label || "Gift card";
+      var code = document.createElement("span");
+      code.className = "cc-code";
+      code.textContent = "  " + c.code;
+      left.appendChild(lab);
+      left.appendChild(code);
+      var bal = document.createElement("span");
+      bal.className = "cc-bal";
+      bal.textContent = money(c.balance) + " left";
+      li.appendChild(left);
+      li.appendChild(bal);
+      creditListEl.appendChild(li);
+    });
+    creditEmptyEl.hidden = cards.length > 0;
+  };
+
+  if (creditForm) {
+    creditForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var gc = window.LumevinaGiftCards;
+      creditStatusEl.className = "acct-credit-status";
+      if (!gc || !session) { return; }
+      var code = creditInput.value.trim();
+      if (!code) { creditStatusEl.textContent = "Enter the code from your gift card."; return; }
+      var res = gc.claim(code, session.email);
+      if (!res.ok) {
+        creditStatusEl.className = "acct-credit-status is-error";
+        creditStatusEl.textContent =
+          res.reason === "service"
+            ? "That's a treatment gift — redeem it when you book that service, not here."
+          : res.reason === "empty" ? "That card has no balance left."
+          : "We couldn't find that code — please check and try again.";
+        return;
+      }
+      creditInput.value = "";
+      creditStatusEl.textContent = "✓ Added — " + money(res.card.balance) + " credit is on your account.";
+      renderCredit();
+    });
+  }
+
+  /* keep credit fresh when a gift is redeemed elsewhere (e.g. at booking) */
+  document.addEventListener("lumevina:giftcards-changed", function () {
+    if (session && modal.getAttribute("aria-hidden") === "false") renderCredit();
+  });
 
   var renderIntake = function () {
     var intake = window.LumevinaIntake;

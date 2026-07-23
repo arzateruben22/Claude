@@ -1631,6 +1631,23 @@
           <button class="btn btn-ghost acct-open-rewards" type="button">Open Glow Rewards</button>
         </div>
 
+        <p class="booking-label">Gift credit</p>
+        <div class="acct-credit">
+          <div class="acct-credit-line">
+            <span class="acct-credit-amt">$0</span>
+            <span class="acct-credit-label">on your account</span>
+          </div>
+          <ul class="acct-credit-list" role="list"></ul>
+          <p class="acct-credit-empty">A gift card you were given? Add its code to keep the
+          balance on your account.</p>
+          <form class="acct-credit-add" autocomplete="off">
+            <input class="acct-credit-input" type="text" inputmode="latin" placeholder="LUM-XXXX-XXXX"
+                   aria-label="Gift card code" spellcheck="false">
+            <button class="btn btn-ghost acct-credit-btn" type="submit">Add</button>
+          </form>
+          <p class="acct-credit-status" role="status"></p>
+        </div>
+
         <p class="booking-label">Upcoming appointments</p>
         <ul class="acct-bookings" role="list"></ul>
         <button class="btn btn-solid acct-book" type="button">Book an appointment</button>
