@@ -95,14 +95,28 @@ clean event seam.
   element — no per-button JS. A default handler shows a toast until the real engine
   is mounted; a real handler calls `e.preventDefault()` to silence it.
 
-**Next (installment 2): mount the real booking engine on the seam.**
-Port from `lumevina/js/`: `payments.js` (Stripe-ready) → `rewards.js` (Glow Points)
-→ `booking.js` (calendar + 50% deposit) → `giftcards.js`. `booking.js` derives its
-service list from `.add-to-cart` buttons in the DOM, so either (a) generate a hidden
-product index from `catalog.js`, or (b) refactor `booking.js` to read `catalog.js`
-directly (cleaner for the product). Add an `lumevina:book` listener that opens the
-booking modal for `detail.id` and calls `preventDefault()`. Bring over the booking
-modal markup + its CSS. Then `cart.js`, `account.js`, `intake.js` as needed.
+**Done (installment 2): the booking engine is mounted on the seam.**
+- `js/payments.js`, `js/giftcards.js` — reused verbatim from `lumevina/` (both are
+  DOM-free). `js/payments.js` still has the STRIPE INTEGRATION POINT for go-live.
+- `js/rewards.js` — template-native Glow Points ledger (1/$1, double Wax Wednesday,
+  redeem 100=$10 up to half a deposit) + its own modal; nav shows a `.rw-count` pill,
+  "Check your Glow Points" opens it. Same public API as the live site.
+- `js/booking.js` — template-native, **reads `catalog.js` directly** (no hidden DOM).
+  Listens for `lumevina:book`, opens a booking modal: day picker (Tue–Sun, Mondays
+  skipped), 30-min slot grid (respects lunch, seeded availability, one ⚡ flash slot
+  at 10% off), 50% deposit via `payments.js`, Glow-Points redeem + gift-code redeem,
+  success + localStorage (bookings block their cells). Awards points + mystery petal.
+- `js/gift.js` — listens for `lumevina:gift`, gift modal (treatment or value),
+  pays full amount, issues a code via `giftcards.js`.
+- Drawer now has an in-place **detail view** (tap a service → full detail + Book/Gift),
+  so all detail + booking stays on the one page.
+- Script order (both pages): intro · catalog · payments · giftcards · rewards ·
+  booking · gift · drawer.
+
+**Still optional (installment 3):** `cart.js` (retail), `account.js` (My Lumevina +
+gift-credit wallet), `intake.js` (consent/intake), `.ics` calendar add. Booking's
+saved-card + reschedule from the original aren't ported yet. Wire the nav location/
+account affordances if a retail/account flow is wanted.
 
 ## The parts bin — everything you can reuse (in `lumevina/`)
 

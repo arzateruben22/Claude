@@ -73,7 +73,7 @@
   var rowHTML = function (s, catKey) {
     var meta = money(s.price) + ' <span class="dr-dot">&middot;</span> ' + s.dur + " min";
     var feat = s.flag === "featured" ? ' <span class="dr-badge">Signature</span>' : "";
-    var desc = s.desc ? '<p class="dr-desc">' + s.desc + "</p>" : "";
+    var desc = s.desc ? '<span class="dr-desc">' + s.desc + "</span>" : "";
     var actions;
     if (catKey === "gifts" || s.flag === "gift") {
       actions = '<button class="btn btn-honey dr-btn" type="button" data-gift="' + s.id + '">Send gift</button>';
@@ -83,9 +83,42 @@
         '<button class="dr-gift" type="button" data-gift="' + s.id + '">Gift</button>';
     }
     return '<div class="dr-row' + (s.flag === "featured" ? " is-featured" : "") + '">' +
-      '<div class="dr-row-main"><div class="dr-row-top"><strong>' + s.name + "</strong>" + feat + "</div>" +
-      '<p class="dr-meta">' + meta + "</p>" + desc + "</div>" +
+      '<button class="dr-row-main" type="button" data-detail="' + s.id + '">' +
+      '<span class="dr-row-top"><strong>' + s.name + "</strong>" + feat + "</span>" +
+      '<span class="dr-meta">' + meta + "</span>" + desc +
+      '<span class="dr-more">Details &#8594;</span></button>' +
       '<div class="dr-actions">' + actions + "</div></div>";
+  };
+
+  var categoryOf = function (id) {
+    for (var i = 0; i < cat.categories.length; i++) {
+      if (cat.categories[i].services.some(function (s) { return s.id === id; })) return cat.categories[i];
+    }
+    return null;
+  };
+
+  var showDetail = function (id) {
+    var s = findService(id), c = categoryOf(id);
+    if (!s || !c) return;
+    var feat = s.flag === "featured" ? ' <span class="dr-badge">Signature</span>' : "";
+    var isGift = c.key === "gifts" || s.flag === "gift";
+    var cta = isGift
+      ? '<button class="btn btn-honey" type="button" data-gift="' + s.id + '">Send this gift</button>'
+      : '<button class="btn btn-honey" type="button" data-book="' + s.id + '">Book this treatment</button>' +
+        '<button class="btn btn-ghost" type="button" data-gift="' + s.id + '">Send as a gift</button>';
+    var points = isGift
+      ? ["Emailed with a code — never expires", "A specific treatment, or a value toward any service"]
+      : ["Personalized to your skin that day", "Medical-grade actives, gently applied",
+         "50% deposit holds your time — the rest at your visit"];
+    bodyEl.innerHTML =
+      '<button class="dr-back" type="button">&#8592; ' + c.label + "</button>" +
+      '<div class="dr-detail"><h3>' + s.name + feat + "</h3>" +
+      '<p class="dr-detail-meta">' + money(s.price) + " &middot; " + s.dur + " min</p>" +
+      '<p class="dr-detail-desc">' + (s.desc || c.blurb) + "</p>" +
+      '<ul class="dr-detail-points">' +
+      points.map(function (p) { return '<li><span class="dr-tick">&#10003;</span>' + p + "</li>"; }).join("") +
+      "</ul><div class=\"dr-detail-cta\">" + cta + "</div></div>";
+    bodyEl.scrollTop = 0;
   };
 
   var activeKey = null;
@@ -189,6 +222,10 @@
   document.addEventListener("click", function (e) {
     var openEl = e.target.closest("[data-drawer]");
     if (openEl) { e.preventDefault(); open(openEl.dataset.category, openEl.dataset.service); return; }
+    var detEl = e.target.closest("[data-detail]");
+    if (detEl && isOpen) { e.preventDefault(); showDetail(detEl.dataset.detail); return; }
+    var backEl = e.target.closest(".dr-back");
+    if (backEl) { e.preventDefault(); showCategory(activeKey); return; }
     var bookEl = e.target.closest("[data-book]");
     if (bookEl) {
       e.preventDefault();
