@@ -60,7 +60,19 @@ Preview: `python3 -m http.server 8792 --directory lumevina-template` → open `/
 `scratchpad/build-luma.py` in the prior session, but edit the committed files now.)
 
 ### Design tokens (in `css/style.css` `:root`)
-The template is now a **dark, gold, serif "ultra-luxury" theme**. The base
+**Current look = the original Lumevina MAUVE brand vibe** (light + blush). The stylesheet
+is a stack of appended theme layers; the **last** `MAUVE` layer wins, so edit its `:root`
+to tune the palette (`--mauve #a5798b`, `--plum #7d5468`, `--rose #c9a2b4`, `--blush`,
+blush canvas, `--honey` remapped to mauve as the single accent). The home hero is `.hero2`
+— a centered "Radiance, *beautifully restored.*" serif lockup (logo, CanvasRebel credit,
+mauve pill button, features pill, big `LUMEVINA` wordmark, smoky blush background),
+replacing the old `.hero`. The booking modal (`.bk-modal`) was widened to `min(46rem,96vw)`
+with larger day/time chips. Sharp grotesque section headings + square borders remain from
+earlier; the hero + pills are intentionally round/serif to match the original.
+
+<details><summary>Earlier phase — dark gold serif (superseded)</summary>
+
+The template was briefly a **dark, gold, serif "ultra-luxury" theme**. The base
 `:root` (light) is overridden by a `DARK · GOLD · SERIF` layer appended at the
 end of `css/style.css` — a second `:root` re-declaration (later source order
 wins) plus targeted overrides for components that hard-code light values (nav,
@@ -75,6 +87,7 @@ gold-on-gold text spots). To tweak the palette, edit that dark `:root`.
   body = **Jost** 300 · eyebrows = Jost 500, `.3em` tracking, gold.
 - The real logo is tinted to warm ivory on dark via a CSS `filter` on
   `.brand-mark`/`.foot-logo`/`.intro-mark`. Responsive + reduced-motion safe.
+</details>
 
 ### What's still placeholder
 - **Product photo slots are wired** — the best-seller box, the actives bottle box,
