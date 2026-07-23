@@ -3983,6 +3983,106 @@ a.appstore-badge:hover { transform: translateY(-2px); }
   font-size: 1.3rem;
 }
 
+/* ─── Glow Rewards × Connect (merged) ─── */
+
+.rc-grid {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* Rewards column: perks read as a tighter 2×2 grid beside Connect */
+.rc-rewards .app-perks {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rc-cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.rc-cta .appstore-badge { margin-top: 0; }
+
+.rc-points-btn { flex: 0 0 auto; }
+
+/* Connect column: quiet porcelain panel that trails the rewards content */
+.rc-connect {
+  position: sticky;
+  top: 6rem;
+  background: var(--porcelain);
+  border: 1px solid var(--panel-edge);
+  border-radius: 20px;
+  padding: var(--space-5);
+}
+
+.rc-connect-title {
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  margin: 0.35rem 0 0.5rem;
+}
+
+.rc-connect .section-sub { margin-bottom: var(--space-4); }
+
+.rc-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.rc-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid transparent;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.rc-links a:hover {
+  background: var(--linen);
+  border-color: var(--panel-edge-soft);
+  transform: translateX(2px);
+}
+
+.rc-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.rc-ico--ig   { background: linear-gradient(135deg, var(--plum), var(--mauve)); }
+.rc-ico--fb   { background: linear-gradient(135deg, var(--mauve), var(--rose)); }
+.rc-ico--book { background: var(--ink); }
+.rc-ico--mail { background: linear-gradient(135deg, var(--rose), var(--sand)); color: var(--ink); }
+
+.rc-links strong {
+  display: block;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.rc-links .sub {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--ink-60);
+  margin-top: 0.1rem;
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 900px) {
@@ -3997,6 +4097,8 @@ a.appstore-badge:hover { transform: translateY(-2px); }
   .nav-account { margin-left: auto; }
   .nav-rewards, .nav-cart { margin-left: 0; }
   .app-perks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rc-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+  .rc-connect { position: static; top: auto; }
   .nav-toggle { display: flex; }
   .section { padding-top: var(--space-6); padding-bottom: var(--space-6); }
 }
