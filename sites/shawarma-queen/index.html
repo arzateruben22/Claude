@@ -136,7 +136,7 @@
                 <span class="court-node-dot"><img src="media/nodes/chicken.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Chicken</span>
               </button>
-              <button class="court-node node-boom" type="button" data-i="2" data-name="Chicken Spicy Sandwich" data-price="14" data-tag="Wrap or box · combo +$5" data-desc="Spicy fried chicken, cheese, coleslaw &amp; pickles." data-pick="Wrap|Box" data-pick-label="Style" data-extras="Combo — fries + soda=5" data-ingredients="bell peppers, mayo, cheese, coleslaw, pickles" style="--ox:-0.2225;--oy:0.9749" aria-label="Chicken Spicy Sandwich, $14 — tap for details">
+              <button class="court-node node-chicken" type="button" data-i="2" data-name="Chicken Spicy Sandwich" data-price="14" data-tag="Wrap or box · combo +$5" data-desc="Spicy fried chicken, cheese, coleslaw &amp; pickles." data-pick="Wrap|Box" data-pick-label="Style" data-extras="Combo — fries + soda=5" data-ingredients="bell peppers, mayo, cheese, coleslaw, pickles" style="--ox:-0.2225;--oy:0.9749" aria-label="Chicken Spicy Sandwich, $14 — tap for details">
                 <span class="court-node-dot"><img src="media/nodes/spicy.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Spicy</span>
               </button>
@@ -144,15 +144,15 @@
                 <span class="court-node-dot"><img src="media/nodes/quesadilla.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Quesadilla</span>
               </button>
-              <button class="court-node node-mix" type="button" data-i="4" data-name="Falafel Shawarma" data-price="10" data-tag="Vegan · sesame or pita" data-desc="Crispy chickpea falafel — pick your bread &amp; sauce." data-sauce="yes" data-pick="Sesame Bread|Pita" data-pick-label="Bread" data-extras="Double protein=4" data-ingredients="onions, tomato, pickles" style="--ox:-0.9009;--oy:-0.4339" aria-label="Falafel Shawarma, $10 — tap for details">
+              <button class="court-node node-vegan" type="button" data-i="4" data-name="Falafel Shawarma" data-price="10" data-tag="Vegan · sesame or pita" data-desc="Crispy chickpea falafel — pick your bread &amp; sauce." data-sauce="yes" data-pick="Sesame Bread|Pita" data-pick-label="Bread" data-extras="Double protein=4" data-ingredients="onions, tomato, pickles" style="--ox:-0.9009;--oy:-0.4339" aria-label="Falafel Shawarma, $10 — tap for details">
                 <span class="court-node-dot"><img src="media/nodes/falafel.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Falafel</span>
               </button>
-              <button class="court-node node-boom" type="button" data-i="5" data-name="Makali Shawarma" data-price="11" data-tag="Vegan · sesame or pita" data-desc="Fried veggie medley — pick your bread &amp; sauce." data-sauce="yes" data-pick="Sesame Bread|Pita" data-pick-label="Bread" data-extras="Double protein=4" data-ingredients="onions, tomato, pickles" style="--ox:-0.2225;--oy:-0.9749" aria-label="Makali Shawarma, $11 — tap for details">
+              <button class="court-node node-vegan" type="button" data-i="5" data-name="Makali Shawarma" data-price="11" data-tag="Vegan · sesame or pita" data-desc="Fried veggie medley — pick your bread &amp; sauce." data-sauce="yes" data-pick="Sesame Bread|Pita" data-pick-label="Bread" data-extras="Double protein=4" data-ingredients="onions, tomato, pickles" style="--ox:-0.2225;--oy:-0.9749" aria-label="Makali Shawarma, $11 — tap for details">
                 <span class="court-node-dot"><img src="media/nodes/makali.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Makali</span>
               </button>
-              <button class="court-node node-queen" type="button" data-i="6" data-name="Queen Vegan Shawarma" data-price="15" data-tag="The vegan crown" data-desc="The vegan crown, wrapped — pick your bread &amp; sauce." data-sauce="yes" data-pick="Sesame Bread|Pita" data-pick-label="Bread" data-extras="Double protein=4" data-ingredients="onions, tomato, pickles" style="--ox:0.6235;--oy:-0.7818" aria-label="Queen Vegan Shawarma, $15 — tap for details">
+              <button class="court-node node-vegan" type="button" data-i="6" data-name="Queen Vegan Shawarma" data-price="15" data-tag="The vegan crown" data-desc="The vegan crown, wrapped — pick your bread &amp; sauce." data-sauce="yes" data-pick="Sesame Bread|Pita" data-pick-label="Bread" data-extras="Double protein=4" data-ingredients="onions, tomato, pickles" style="--ox:0.6235;--oy:-0.7818" aria-label="Queen Vegan Shawarma, $15 — tap for details">
                 <span class="court-node-dot"><img src="media/nodes/queen-vegan.jpg" alt="" loading="lazy"></span>
                 <span class="court-node-label">Queen Vegan</span>
               </button>
@@ -178,11 +178,10 @@
         </div>
 
         <p class="court-hint" data-reveal>Tap any dish to see it — then add it, sauce and all.</p>
-        <ul class="court-legend" data-reveal>
-          <li><span class="dot" style="background:var(--pome)"></span>Beef Combo</li>
-          <li><span class="dot" style="background:var(--gold)"></span>Chicken Combo</li>
-          <li><span class="dot" style="background:var(--herb)"></span>Boom</li>
-          <li><span class="dot" style="background:var(--cream)"></span>Queen</li>
+        <ul class="court-legend" data-reveal aria-label="Color key">
+          <li><span class="dot" style="background:var(--pome)"></span>Beef</li>
+          <li><span class="dot" style="background:var(--gold)"></span>Chicken</li>
+          <li><span class="dot" style="background:var(--vegan)"></span>Vegan</li>
         </ul>
 
         <p class="court-note" data-reveal>Hungry yet? <a href="#carta">Jump to the full menu →</a></p>

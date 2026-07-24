@@ -32,6 +32,7 @@
   --pome: #d5421f;             /* fiery red-orange — heat / secondary */
   --pome-soft: rgba(213, 66, 31, 0.5);
   --herb: #c4863a;             /* copper — warm tertiary accent */
+  --vegan: #8fae5d;            /* sage green — vegan color code (Court) */
   --font-display: "Oswald", "Hanken Grotesk", system-ui, sans-serif;
   --font-body: "Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
   --space-2: 0.5rem;
@@ -2237,11 +2238,12 @@ body.sq-noscroll { overflow: hidden; }
 }
 
 /* photo nodes — the type colour becomes the ring */
-.node-beef .court-node-dot    { border-color: var(--pome); }
-.node-chicken .court-node-dot { border-color: var(--gold); }
-.node-mix .court-node-dot     { border-color: var(--cream); }
-.node-boom .court-node-dot    { border-color: var(--herb); }
-.node-queen .court-node-dot   { border-color: var(--cream); }
+/* Color-coded by protein: beef (red), chicken (gold), vegan (green).
+   A thicker ring + matching glow makes the category read at a glance. */
+.node-beef .court-node-dot    { border-color: var(--pome); box-shadow: 0 0 0 1px var(--pome), 0 6px 18px rgba(0,0,0,0.4); }
+.node-chicken .court-node-dot { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 6px 18px rgba(0,0,0,0.4); }
+.node-vegan .court-node-dot   { border-color: var(--vegan); box-shadow: 0 0 0 1px var(--vegan), 0 6px 18px rgba(0,0,0,0.4); }
+.court-node-dot { border-width: 3px; }
 
 .court-node:hover .court-node-dot { transform: scale(1.12); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
 .court-node:hover .court-node-label { color: var(--cream); }
