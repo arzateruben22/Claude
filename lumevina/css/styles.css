@@ -72,6 +72,20 @@ body::before {
     radial-gradient(140% 100% at 50% 110%, rgba(165, 121, 139, 0.09), transparent 60%);
 }
 
+/* fine paper grain over the whole page — a tactile, printed-editorial feel
+   that flat template builders don't have. Subtle; sits under nav & modals. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
 main, .footer { position: relative; z-index: 1; }
 
 h1, h2, h3 { margin: 0; font-weight: 500; }
@@ -4189,4 +4203,55 @@ a.appstore-badge:hover { transform: translateY(-2px); }
   .petal-rose { animation: none; }
   .cart-drawer { transition: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+/* ─── Marquee ribbon: a horizontal editorial band that breaks the
+   top-to-bottom template rhythm ─── */
+.ribbon {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: var(--ink);
+  padding: 1.15rem 0;
+}
+.ribbon-track {
+  display: flex;
+  width: max-content;
+  animation: ribbon-scroll 34s linear infinite;
+}
+.ribbon:hover .ribbon-track { animation-play-state: paused; }
+.ribbon-track span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  letter-spacing: 0.01em;
+  color: var(--linen);
+  padding-right: 0;
+}
+.ribbon-track i {
+  font-style: normal;
+  color: var(--rose);
+  margin: 0 clamp(1rem, 2.5vw, 1.8rem);
+  font-size: 0.62em;
+  transform: translateY(-0.05em);
+}
+@keyframes ribbon-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .ribbon { overflow: hidden; }
+  .ribbon-track { animation: none; }
+}
+
+/* ─── Editorial section index — numbers the visitor's journey ─── */
+.eyebrow[data-idx]::before {
+  content: attr(data-idx);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.15em;
+  color: var(--rose);
+  margin-right: 0.7em;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
 }
