@@ -2,6 +2,91 @@
    All entrance states are set from JS so the page is fully
    readable with JavaScript disabled. */
 
+/* ── Intro landing: charred-ember curtain; refresh returns to the top ── */
+(function () {
+  "use strict";
+
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+
+  var intro = document.getElementById("intro");
+  if (!intro) return;
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.documentElement.classList.add("intro-lock");
+
+  /* Glowing embers drifting up over the charcoal */
+  var canvas = intro.querySelector(".intro-embers");
+  var ctx = canvas.getContext("2d");
+  var embers = [];
+  var raf = null, running = true;
+  var resize = function () { canvas.width = intro.clientWidth; canvas.height = intro.clientHeight; };
+  resize();
+  window.addEventListener("resize", resize);
+  for (var i = 0; i < 80; i++) {
+    embers.push({
+      x: Math.random(), y: 0.4 + Math.random() * 0.8,
+      r: 0.5 + Math.random() * 1.6,
+      v: 0.0005 + Math.random() * 0.0016,
+      a: 0.2 + Math.random() * 0.6,
+      tw: Math.random() * Math.PI * 2
+    });
+  }
+  var draw = function () {
+    var w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    for (var g = 0; g < embers.length; g++) {
+      var e = embers[g];
+      e.y -= e.v; e.tw += 0.05;
+      if (e.y < -0.05) { e.y = 1.05; e.x = Math.random(); }
+      var flick = 0.55 + 0.45 * Math.sin(e.tw);
+      var px = e.x * w, py = e.y * h, rad = e.r * 6;
+      var grd = ctx.createRadialGradient(px, py, 0, px, py, rad);
+      grd.addColorStop(0, "rgba(255,184,96," + (e.a * flick).toFixed(3) + ")");
+      grd.addColorStop(1, "rgba(255,120,40,0)");
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2); ctx.fill();
+    }
+    if (running) raf = requestAnimationFrame(draw);
+  };
+  if (!reduce) raf = requestAnimationFrame(draw);
+
+  var finish = function () {
+    running = false;
+    if (raf) cancelAnimationFrame(raf);
+    intro.style.display = "none";
+    intro.classList.add("done");
+    document.documentElement.classList.remove("intro-lock");
+    window.scrollTo(0, 0);
+  };
+
+  var start = function () {
+    if (reduce || typeof gsap === "undefined") {
+      intro.style.transition = "opacity 500ms ease";
+      setTimeout(function () {
+        intro.style.opacity = "0";
+        setTimeout(finish, 520);
+      }, reduce ? 250 : 1200);
+      return;
+    }
+    var tl = gsap.timeline();
+    tl.from(".intro-eyebrow", { opacity: 0, y: 12, duration: 0.7, ease: "power2.out" }, 0.2)
+      .from(".intro-word span", { opacity: 0, y: 44, duration: 1.0, stagger: 0.13, ease: "power3.out" }, 0.35)
+      .from(".intro-tag", { opacity: 0, duration: 0.8, ease: "power2.out" }, 0.95)
+      .to(".intro-inner", { opacity: 0, y: -16, duration: 0.55, ease: "power2.in" }, 2.35)
+      .to(intro, { yPercent: -100, duration: 1.0, ease: "power4.inOut", onComplete: finish }, 2.55);
+    var skip = function () { tl.progress(1); };
+    intro.addEventListener("click", skip);
+    window.addEventListener("keydown", function (e) { if (e.key === "Escape") skip(); }, { once: true });
+  };
+
+  if (document.fonts && document.fonts.ready) {
+    Promise.race([document.fonts.ready, new Promise(function (r) { setTimeout(r, 800); })]).then(start);
+  } else {
+    start();
+  }
+})();
+
 (function () {
   "use strict";
 

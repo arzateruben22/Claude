@@ -78,6 +78,74 @@ em { font-style: italic; }
   border-radius: 2px;
 }
 
+/* ─── Intro landing (charred ember curtain) ─── */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 118%, rgba(232, 163, 86, 0.28), transparent 55%),
+    radial-gradient(90% 60% at 50% 120%, rgba(179, 64, 47, 0.35), transparent 60%),
+    linear-gradient(180deg, #0a0705 0%, #0d0907 55%, #140d08 100%);
+  will-change: transform, opacity;
+}
+
+.intro.done { pointer-events: none; }
+
+.intro-embers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+  mix-blend-mode: screen;
+}
+
+.intro-inner {
+  position: relative;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.intro-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--flame);
+  margin: 0 0 1.4rem;
+}
+
+.intro-word {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3.5rem, 13vw, 9rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  color: var(--cream);
+  margin: 0;
+  text-shadow: 0 0 50px rgba(232, 163, 86, 0.35);
+}
+
+.intro-word span { display: inline-block; }
+
+.intro-tag {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 3vw, 1.7rem);
+  color: var(--flame);
+  margin: 1.2rem 0 0;
+}
+
+/* Site sits underneath until the curtain lifts */
+.intro-lock, .intro-lock body { overflow: hidden; height: 100%; }
+
 /* ─── Type roles ─── */
 
 .display {
