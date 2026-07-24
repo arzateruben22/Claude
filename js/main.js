@@ -15,6 +15,13 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.classList.add("intro-lock");
 
+  /* Pin the page to the top for the whole intro, so the browser can't
+     restore an old scroll position and cause a snap when the curtain
+     lifts. The listener is removed once the intro finishes. */
+  var pinTop = function () { window.scrollTo(0, 0); };
+  window.addEventListener("scroll", pinTop, { passive: true });
+  window.addEventListener("load", pinTop);
+
   /* Glowing embers drifting up over the charcoal */
   var canvas = intro.querySelector(".intro-embers");
   var ctx = canvas.getContext("2d");
@@ -54,6 +61,9 @@
   var finish = function () {
     running = false;
     if (raf) cancelAnimationFrame(raf);
+    window.removeEventListener("scroll", pinTop);
+    window.removeEventListener("load", pinTop);
+    window.scrollTo(0, 0);
     intro.style.display = "none";
     intro.classList.add("done");
     document.documentElement.classList.remove("intro-lock");
