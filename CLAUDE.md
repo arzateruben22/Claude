@@ -17,6 +17,10 @@ This repository is both a live site and the studio template:
   unique design system per client, reuse the proven machinery listed in the
   skill's reuse map, verify in Playwright at 1440/375, deliver an Artifact
   preview, and only then commit/push.
+- **`docs/ARCHITECTURE.md`** = the studio's system-first doctrine (the 17 layers,
+  quality floor, budget-tier assembly model) with deep references for the design
+  system + component library, industry modules, and backend/integration seams.
+  It's the *why* the `new-website` skill executes — read it when planning a build.
 
 House rules that always apply:
 

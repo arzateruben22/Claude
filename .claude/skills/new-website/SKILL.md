@@ -8,6 +8,20 @@ description: Run the studio's full website build process for a new client or pro
 This repo doubles as the studio template: the Los Güeros taqueria site at the
 repo root is the reference implementation. Follow this process start to finish.
 
+**Architecture doctrine.** The system-first thinking behind every build — the 17
+layers, the quality floor, and the budget-tier assembly model — lives in
+[`docs/ARCHITECTURE.md`](../../../docs/ARCHITECTURE.md). This skill is the *how*;
+that doc is the *why*. Deep references it links to:
+
+- [`references/design-system-and-components.md`](references/design-system-and-components.md)
+  — token architecture (color/type/space/radius/shadow, light+dark) and the full
+  component library with real CSS/JS anchors.
+- [`references/industry-modules.md`](references/industry-modules.md) — pluggable
+  per-industry feature sets that snap onto the shared architecture.
+- [`references/backend-integrations.md`](references/backend-integrations.md) — the
+  swap-in seams (payments, storage, CMS, bookings, notifications) that keep
+  static-first the default.
+
 ## Step 0 — Where does the new site live?
 
 Ask the user (or infer from context):
