@@ -457,9 +457,28 @@
             <p class="visit-fine">Pickup &amp; nearby delivery both in the order drawer.</p>
           </div>
         </div>
+        <div class="visit-map" data-reveal>
+          <iframe title="Shawarma Queen location — 430 S Euclid St, Anaheim, CA 92802" src="https://www.google.com/maps?q=430+S+Euclid+St,+Anaheim,+CA+92802&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
       </div>
     </section>
   </main>
+
+  <!-- Sticky mobile action bar: one-tap Call · Directions · Order -->
+  <nav class="action-bar" aria-label="Quick actions">
+    <a href="tel:+17143889460" aria-label="Call Shawarma Queen">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a13 13 0 0 0 6.6 6.6l2-2a1 1 0 0 1 1-.24 11 11 0 0 0 3.4.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.3a1 1 0 0 1 1 1c0 1.2.2 2.3.55 3.4a1 1 0 0 1-.25 1l-2 2.4z" fill="currentColor"/></svg>
+      <span>Call</span>
+    </a>
+    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=430+S+Euclid+St+Anaheim+CA+92802" target="_blank" rel="noopener" aria-label="Get directions to Shawarma Queen">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+      <span>Directions</span>
+    </a>
+    <button type="button" class="js-open-order ab-order" aria-label="Start your order">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 8z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>Order</span>
+    </button>
+  </nav>
 
   <!-- ═══════════════ ORDERING ═══════════════ -->
   <button class="order-fab" type="button" aria-label="Open your order" hidden>

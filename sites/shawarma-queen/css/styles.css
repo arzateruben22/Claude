@@ -2405,3 +2405,60 @@ body.sq-noscroll { overflow: hidden; }
   .hero-glow, .hero-scroll svg, .spit-meat, .spit-ember { animation: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
+
+/* ═══════════════ Enhancements: hero motion · live map · action bar ═══════════════ */
+
+/* Hero cinematic motion — a slow "breathing" zoom on the card art plus a
+   warm ember glow, so the first impression feels alive. Video-ready: drop a
+   <video> in .spotlight-card to replace the still. Reduced-motion safe. */
+@keyframes sqBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.045); } }
+@keyframes sqEmber {
+  0%, 100% { box-shadow: 0 34px 90px -34px rgba(0,0,0,0.85), 0 0 58px -14px rgba(232,163,86,0.20); }
+  50%      { box-shadow: 0 34px 90px -34px rgba(0,0,0,0.85), 0 0 98px -6px rgba(240,174,58,0.42); }
+}
+.sc-logo { animation: sqBreathe 16s ease-in-out infinite; transform-origin: 50% 45%; }
+.spotlight-card { animation: sqEmber 6.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .sc-logo, .spotlight-card { animation: none; } }
+
+/* Visit Us — live Google map */
+.visit-map {
+  margin-top: var(--space-5);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--plum-edge);
+  box-shadow: 0 20px 50px -30px rgba(0,0,0,0.8);
+}
+.visit-map iframe {
+  display: block; width: 100%;
+  height: clamp(260px, 38vw, 420px);
+  border: 0;
+  filter: grayscale(0.22) contrast(1.04) brightness(0.96);
+}
+
+/* Sticky mobile action bar — one-tap Call · Directions · Order */
+.action-bar { display: none; }
+@media (max-width: 800px) {
+  .action-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 44;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem;
+    padding: 0.5rem 0.6rem calc(0.5rem + env(safe-area-inset-bottom));
+    background: rgba(19, 11, 8, 0.94);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--cream-15);
+  }
+  .action-bar a, .action-bar button {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.22rem; padding: 0.45rem 0.2rem;
+    font-family: var(--font-body); font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--cream); background: none; border: 0; border-radius: 12px;
+    text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .action-bar svg { width: 1.35rem; height: 1.35rem; }
+  .action-bar .ab-order { color: var(--night); background: var(--gold); }
+  .action-bar a:active, .action-bar button:active { transform: scale(0.96); }
+  /* lift the floating cart above the bar so they don't overlap */
+  .order-fab { bottom: calc(4.7rem + env(safe-area-inset-bottom)); }
+  /* room so the footer isn't hidden behind the fixed bar */
+  body { padding-bottom: 4.6rem; }
+}
