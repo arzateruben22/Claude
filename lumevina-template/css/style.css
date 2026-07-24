@@ -790,3 +790,28 @@ h3{font-family:var(--disp);font-weight:600;letter-spacing:-.012em;}
 .fab-book.is-on{opacity:1;transform:none;pointer-events:auto;}
 .fab-book:hover{background:var(--plum);}
 @media(prefers-reduced-motion:reduce){.fab-book{transition:opacity .2s ease;transform:none;}}
+
+/* cursor aura (desktop) */
+.cursor-aura{position:fixed;top:0;left:0;z-index:4;pointer-events:none;opacity:0;transition:opacity .35s ease;mix-blend-mode:multiply;will-change:transform;}
+.cursor-aura.visible{opacity:1;}
+.cursor-aura-dot{display:block;width:23rem;height:23rem;border-radius:50%;filter:blur(26px);
+  background:radial-gradient(circle,rgba(165,121,139,.2),rgba(201,162,180,.08) 46%,transparent 70%);
+  transition:width .35s ease,height .35s ease;}
+.cursor-aura.is-active .cursor-aura-dot{width:29rem;height:29rem;}
+
+/* hero headline word reveal */
+.hero2-title .hw{display:inline-block;overflow:hidden;vertical-align:top;line-height:1.03;}
+.hero2-title .hw-in{display:inline-block;transform:translateY(115%);transition:transform .9s cubic-bezier(.16,1,.3,1);}
+.hero2-title.is-in .hw-in{transform:none;}
+@media(prefers-reduced-motion:reduce){.hero2-title .hw-in{transform:none!important;transition:none!important;}}
+
+/* category tiles → real photos */
+.cat-grid .cat:nth-child(1) .cat-img{background:url('../img/founder.jpg') center/cover no-repeat!important;}
+.cat-grid .cat:nth-child(2) .cat-img{background:url('../img/product-serum.jpg') center/cover no-repeat!important;}
+.cat-grid .cat:nth-child(3) .cat-img{background:url('../img/journal-1.jpg') center/cover no-repeat!important;}
+.cat-grid .cat:nth-child(4) .cat-img{background:url('../img/product-moisturizer.jpg') center/cover no-repeat!important;}
+.cat-img .cat-ico{display:none;}
+
+/* testimonial avatars → monogram initials */
+.avatar{background:var(--mauve);color:#fff;display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--disp);font-weight:600;font-size:.92rem;}
