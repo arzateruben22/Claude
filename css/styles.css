@@ -692,6 +692,147 @@ em { font-style: italic; }
   padding: clamp(1.5rem, 3vw, 2.5rem);
 }
 
+/* ── Catering builder ── */
+
+.catering-head { text-align: center; }
+.catering-head .section-sub { margin-left: auto; margin-right: auto; }
+
+.cater-builder {
+  max-width: 46rem;
+  margin: var(--space-6) auto 0;
+  background: var(--soot);
+  border: 1px solid var(--soot-edge);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+}
+
+.cater-step { margin-bottom: var(--space-5); }
+
+.cater-q {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 0 0 var(--space-3);
+}
+
+.cater-num {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: rgba(232, 163, 86, 0.14);
+  color: var(--flame);
+  font-size: 0.85rem;
+  display: grid;
+  place-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.cater-hint {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--cream-35);
+  letter-spacing: 0.04em;
+}
+
+.cater-packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.pkg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+  padding: 1rem;
+  border: 1px solid var(--soot-edge);
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--cream);
+  cursor: pointer;
+  transition: border-color 200ms ease, background-color 200ms ease, transform 150ms ease;
+}
+
+.pkg:hover { border-color: var(--cream-35); transform: translateY(-2px); }
+.pkg.selected { border-color: var(--flame); background: rgba(232, 163, 86, 0.06); }
+.pkg:focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; }
+
+.pkg-tag {
+  position: absolute;
+  top: -0.6rem;
+  left: 1rem;
+  background: var(--flame);
+  color: var(--ink);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.pkg-name { font-weight: 500; font-size: 0.98rem; }
+.pkg-price { font-family: var(--font-display); font-size: 1.5rem; color: var(--flame); font-weight: 600; }
+.pkg-price span { font-family: var(--font-body); font-size: 0.72rem; color: var(--cream-35); font-weight: 400; }
+.pkg-desc { font-size: 0.8rem; color: var(--cream-60); line-height: 1.45; }
+
+.cater-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.chip {
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--soot-edge);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream-60);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+}
+
+.chip:hover { border-color: var(--cream-35); color: var(--cream); }
+.chip.selected { border-color: var(--flame); background: var(--flame); color: var(--ink); font-weight: 500; }
+.chip:focus-visible { outline: 2px solid var(--flame); outline-offset: 2px; }
+
+.cater-builder .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.cater-builder .field input { width: 100%; }
+
+.cater-estimate {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.2rem;
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--flame-soft);
+  border-radius: 12px;
+  background: rgba(232, 163, 86, 0.05);
+}
+
+.cater-est-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream-35);
+}
+
+.cater-est-value { font-size: 1rem; color: var(--cream-60); text-align: right; }
+.cater-est-value strong { font-family: var(--font-display); font-size: 1.5rem; color: var(--flame); }
+
+.cater-submit { width: 100%; }
+.cater-status { margin: var(--space-3) 0 0; }
+
+@media (max-width: 640px) {
+  .cater-packages { grid-template-columns: 1fr; }
+  .cater-builder .field-row { grid-template-columns: 1fr; }
+}
+
 .field { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: var(--space-4); }
 
 .field-row {
