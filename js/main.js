@@ -2,15 +2,31 @@
    All entrance states are set from JS so the page is fully
    readable with JavaScript disabled. */
 
-/* ── Intro landing: charred-ember curtain; refresh returns to the top ── */
+/* ── Intro landing: charred-ember curtain ──
+   Plays only on a first open and on refresh; skipped on back/forward
+   so it never feels repetitive. Refresh also returns to the top. */
 (function () {
   "use strict";
 
-  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-  window.scrollTo(0, 0);
-
   var intro = document.getElementById("intro");
   if (!intro) return;
+
+  var hideIntro = function () {
+    intro.style.display = "none";
+    intro.classList.add("done");
+    document.documentElement.classList.remove("intro-lock");
+  };
+
+  /* A page restored from the back/forward cache should never show it */
+  window.addEventListener("pageshow", function (e) { if (e.persisted) hideIntro(); });
+
+  var navEntry = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+  var navType = navEntry ? navEntry.type
+    : (performance.navigation && performance.navigation.type === 1 ? "reload" : "navigate");
+  if (navType !== "navigate" && navType !== "reload") { hideIntro(); return; }
+
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.classList.add("intro-lock");
@@ -138,8 +154,10 @@
 
   /* ── Catering form → prefilled email ── */
   /* ── Catering: tap-to-build taco-bar quote ──
-     TODO: swap the address for the taqueria's real inbox, or wire the
-     submit to a service like Formspree for direct submissions. */
+     For instant, seamless submissions paste a form endpoint below — a
+     free Formspree form (https://formspree.io/f/xxxxxxx) or Web3Forms.
+     Until it's set, the request falls back to opening the email app. */
+  var CATERING_ENDPOINT = ""; /* TODO: e.g. "https://formspree.io/f/xxxxxxx" */
   var CATERING_EMAIL = "hola@losguerosanaheim.com";
   var MAX_PROTEINS = 3;
   var builder = document.querySelector(".cater-builder");
@@ -216,20 +234,57 @@
         return;
       }
 
-      var body = [
-        "CATERING QUOTE REQUEST",
-        "Service: " + cater.pkg + " ($" + cater.price + "/person)",
-        "Guests: " + cater.guestLabel,
-        "Estimated: from $" + (cater.price * cater.guests).toLocaleString(),
-        "Meats: " + cater.proteins.join(", "),
-        "Event date: " + (date || "flexible / TBD"),
-        "",
-        "Name: " + name,
-        "Phone: " + phone
-      ].join("\n");
+      var subject = "Catering quote — " + cater.pkg + " for " + cater.guestLabel;
+      var estimate = "from $" + (cater.price * cater.guests).toLocaleString();
+      var fields = {
+        _subject: subject,
+        Service: cater.pkg + " ($" + cater.price + "/person)",
+        Guests: cater.guestLabel,
+        Estimate: estimate,
+        Meats: cater.proteins.join(", "),
+        "Event date": date || "flexible / TBD",
+        Name: name,
+        Phone: phone
+      };
 
+      var submitBtn = builder.querySelector(".cater-submit");
+      var firstName = name.split(" ")[0];
+      var done = function () {
+        catStatus.classList.remove("error");
+        catStatus.textContent = "¡Gracias, " + firstName + "! Your request is in — we'll text you a quote within a day.";
+        submitBtn.textContent = "Request sent ✓";
+        submitBtn.disabled = true;
+      };
+
+      /* Seamless direct submission when an endpoint is configured */
+      if (CATERING_ENDPOINT) {
+        submitBtn.disabled = true;
+        var label = submitBtn.innerHTML;
+        submitBtn.textContent = "Sending…";
+        catStatus.classList.remove("error");
+        catStatus.textContent = "";
+        fetch(CATERING_ENDPOINT, {
+          method: "POST",
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify(fields)
+        }).then(function (r) {
+          if (!r.ok) throw new Error("bad response");
+          done();
+        }).catch(function () {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = label;
+          catStatus.classList.add("error");
+          catStatus.textContent = "Couldn't send just now — tap to try again, or call us and we'll quote you.";
+        });
+        return;
+      }
+
+      /* Fallback: open the email app with the request prefilled */
+      var body = ["CATERING QUOTE REQUEST"].concat(Object.keys(fields)
+        .filter(function (k) { return k !== "_subject"; })
+        .map(function (k) { return k + ": " + fields[k]; })).join("\n");
       window.location.href = "mailto:" + CATERING_EMAIL +
-        "?subject=" + encodeURIComponent("Catering quote — " + cater.pkg + " for " + cater.guestLabel) +
+        "?subject=" + encodeURIComponent(subject) +
         "&body=" + encodeURIComponent(body);
       catStatus.textContent = "Opening your email to send it — or call us and we'll quote you on the spot.";
     });
