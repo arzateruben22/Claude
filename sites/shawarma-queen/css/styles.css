@@ -840,7 +840,7 @@ em { font-style: italic; }
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-3);
-  margin-top: var(--space-7);
+  margin-top: var(--space-4);
   max-width: 760px;
   margin-left: auto;
   margin-right: auto;
@@ -2137,7 +2137,7 @@ body.sq-noscroll { overflow: hidden; }
 .opt-choice .addon-name { text-transform: none; }
 
 /* Menu trust badges (100% Halal · Fresh · Made to Order · Fast) */
-.menu-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem 1.6rem; list-style: none; margin: var(--space-5) auto var(--space-6); padding: 0; }
+.menu-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem 1.6rem; list-style: none; margin: var(--space-5) auto var(--space-4); padding: 0; }
 .menu-badges li {
   position: relative; padding-left: 1rem;
   font-family: var(--font-display); text-transform: uppercase;
