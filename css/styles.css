@@ -550,6 +550,92 @@ em { font-style: italic; }
   .hero-scroll { display: none; }
 }
 
+/* ─── Catering promo band ─── */
+
+.promo-band {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--cream);
+  padding: clamp(1.6rem, 4vw, 2.4rem) clamp(1.25rem, 5vw, 3rem);
+  background:
+    linear-gradient(90deg, rgba(179, 64, 47, 0.16), transparent 40%, rgba(232, 163, 86, 0.14)),
+    var(--soot);
+  border-top: 1px solid var(--flame-soft);
+  border-bottom: 1px solid var(--flame-soft);
+}
+
+.promo-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60rem;
+  height: 24rem;
+  max-width: 140vw;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(232, 163, 86, 0.22), transparent 70%);
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.promo-inner {
+  position: relative;
+  max-width: var(--container);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  text-align: center;
+}
+
+.promo-kicker {
+  width: 100%;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+
+.promo-kicker [lang="es"] { color: var(--cream-35); }
+
+.promo-headline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  line-height: 1.05;
+  color: var(--cream);
+}
+
+.promo-headline em { color: var(--flame); font-weight: 400; font-style: italic; }
+
+.promo-cta {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+
+.promo-cta svg { transition: transform 250ms ease; }
+.promo-band:hover .promo-cta { color: var(--flame); }
+.promo-band:hover .promo-cta svg { transform: translateX(5px); }
+.promo-band:hover .promo-glow { opacity: 1.15; }
+.promo-band:focus-visible { outline: 2px solid var(--flame); outline-offset: -4px; }
+
+@media (min-width: 720px) {
+  .promo-headline { width: auto; }
+}
+
 /* ─── Sections ─── */
 
 .section { padding: var(--space-7) clamp(1.25rem, 5vw, 3rem); }
