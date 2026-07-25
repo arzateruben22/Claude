@@ -222,48 +222,88 @@
 
     <!-- ═══════════════ CATERING ═══════════════ -->
     <section class="section section-catering" id="catering">
-      <div class="section-inner grid-2">
-        <div data-reveal>
+      <div class="section-inner">
+        <div class="catering-head" data-reveal>
           <p class="eyebrow">Parties &amp; Catering <span lang="es">· Fiestas y Eventos</span></p>
           <h2 class="display">We bring the taqueria <em>to your party.</em></h2>
-          <p class="section-sub"><em lang="es">Llevamos la taqueria a tu fiesta.</em> Weddings,
-          quinceañeras, office lunches, backyard birthdays — we set up the grill, you
-          enjoy your guests. Taco bars from 20 to 200 people.</p>
-          <ul class="story-marks" role="list">
-            <li><span class="mark-num">01</span>Live taco service <span class="mark-alt" lang="es">taquero en vivo</span></li>
-            <li><span class="mark-num">02</span>Full salsa bar included <span class="mark-alt" lang="es">salsas y complementos</span></li>
-            <li><span class="mark-num">03</span>Quote within a day <span class="mark-alt" lang="es">presupuesto en 24 horas</span></li>
-          </ul>
+          <p class="section-sub"><em lang="es">Llevamos la taqueria a tu fiesta.</em>
+          Build your taco bar in 30 seconds — tap a few choices, see a price, and we'll
+          send your quote within a day.</p>
         </div>
-        <form class="catering-form" data-reveal novalidate>
-          <div class="field-row">
-            <div class="field">
-              <label for="cat-name">Name <span lang="es">· Nombre</span></label>
-              <input id="cat-name" name="name" type="text" autocomplete="name" required>
-            </div>
-            <div class="field">
-              <label for="cat-phone">Phone <span lang="es">· Teléfono</span></label>
-              <input id="cat-phone" name="phone" type="tel" autocomplete="tel" required>
+
+        <!-- TODO: confirm per-person prices and the guest minimum with the owner -->
+        <div class="cater-builder" data-reveal>
+          <div class="cater-step">
+            <p class="cater-q"><span class="cater-num">1</span> Pick your service</p>
+            <div class="cater-packages" role="group" aria-label="Catering package">
+              <button class="pkg" type="button" data-pkg="Drop-off Taco Bar" data-price="14">
+                <span class="pkg-name">Drop-off Taco Bar</span>
+                <span class="pkg-price">$14<span>/person</span></span>
+                <span class="pkg-desc">Trays of meat, tortillas, salsas &amp; toppings delivered hot — you serve.</span>
+              </button>
+              <button class="pkg" type="button" data-pkg="Live Taquero" data-price="19">
+                <span class="pkg-tag">Most popular</span>
+                <span class="pkg-name">Live Taquero</span>
+                <span class="pkg-price">$19<span>/person</span></span>
+                <span class="pkg-desc">Our taquero grills on-site and serves your guests, taco-stand style.</span>
+              </button>
+              <button class="pkg" type="button" data-pkg="Full Fiesta" data-price="25">
+                <span class="pkg-name">Full Fiesta</span>
+                <span class="pkg-price">$25<span>/person</span></span>
+                <span class="pkg-desc">Taquero plus rice, beans, aguas frescas, setup &amp; cleanup.</span>
+              </button>
             </div>
           </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="cat-date">Event date <span lang="es">· Fecha</span></label>
-              <input id="cat-date" name="date" type="date" required>
-            </div>
-            <div class="field">
-              <label for="cat-guests">Guests <span lang="es">· Invitados</span></label>
-              <input id="cat-guests" name="guests" type="number" min="10" max="500" placeholder="50">
+
+          <div class="cater-step">
+            <p class="cater-q"><span class="cater-num">2</span> How many guests?</p>
+            <div class="cater-chips" role="group" aria-label="Guest count">
+              <button class="chip" type="button" data-guests="20" data-label="20–30">20–30</button>
+              <button class="chip" type="button" data-guests="30" data-label="30–50">30–50</button>
+              <button class="chip" type="button" data-guests="50" data-label="50–100">50–100</button>
+              <button class="chip" type="button" data-guests="100" data-label="100+">100+</button>
             </div>
           </div>
-          <div class="field">
-            <label for="cat-notes">Tell us about your event <span lang="es">· Cuéntanos</span></label>
-            <textarea id="cat-notes" name="notes" rows="4"></textarea>
-            <p class="field-help">Where it is, what you're celebrating, anything special.</p>
+
+          <div class="cater-step">
+            <p class="cater-q"><span class="cater-num">3</span> Choose your meats <span class="cater-hint">pick up to 3</span></p>
+            <div class="cater-chips cater-multi" role="group" aria-label="Proteins">
+              <button class="chip" type="button" data-protein="Asada">Asada</button>
+              <button class="chip" type="button" data-protein="Al Pastor">Al Pastor</button>
+              <button class="chip" type="button" data-protein="Carnitas">Carnitas</button>
+              <button class="chip" type="button" data-protein="Pollo Asado">Pollo Asado</button>
+              <button class="chip" type="button" data-protein="Veggie">Veggie</button>
+            </div>
           </div>
-          <button class="btn btn-solid" type="submit">Send request <span lang="es">— Enviar solicitud</span></button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-        </form>
+
+          <div class="cater-step">
+            <p class="cater-q"><span class="cater-num">4</span> Where do we send the quote?</p>
+            <div class="field-row">
+              <div class="field">
+                <label for="cat-name">Name <span lang="es">· nombre</span></label>
+                <input id="cat-name" type="text" autocomplete="name">
+              </div>
+              <div class="field">
+                <label for="cat-phone">Phone <span lang="es">· teléfono</span></label>
+                <input id="cat-phone" type="tel" autocomplete="tel" inputmode="tel">
+              </div>
+            </div>
+            <div class="field">
+              <label for="cat-date">Event date <span lang="es">· fecha</span></label>
+              <input id="cat-date" type="date">
+            </div>
+          </div>
+
+          <div class="cater-estimate" aria-live="polite">
+            <span class="cater-est-label">Your estimate</span>
+            <span class="cater-est-value">Pick a service &amp; guest count</span>
+          </div>
+
+          <button class="btn btn-solid cater-submit" type="button">Request my quote <span lang="es">— Pídelo</span></button>
+          <p class="form-status cater-status" role="status" aria-live="polite"></p>
+          <p class="field-help">Ballpark only — final quote confirms taxes, travel, and any add-ons.
+          20-guest minimum. We reply within a day.</p>
+        </div>
       </div>
     </section>
 

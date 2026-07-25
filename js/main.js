@@ -137,29 +137,103 @@
   });
 
   /* ── Catering form → prefilled email ── */
-  /* TODO: swap the address below for the taqueria's real inbox, or wire
-     the form to a service like Formspree for direct submissions. */
+  /* ── Catering: tap-to-build taco-bar quote ──
+     TODO: swap the address for the taqueria's real inbox, or wire the
+     submit to a service like Formspree for direct submissions. */
   var CATERING_EMAIL = "hola@losguerosanaheim.com";
-  var form = document.querySelector(".catering-form");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var status = form.querySelector(".form-status");
-    if (!form.reportValidity()) return;
-    var v = function (name) { return (form.elements[name].value || "").trim(); };
-    var subject = "Catering request — " + v("name") + (v("date") ? " (" + v("date") + ")" : "");
-    var body = [
-      "Name: " + v("name"),
-      "Phone: " + v("phone"),
-      "Event date: " + v("date"),
-      "Guests: " + v("guests"),
-      "",
-      v("notes")
-    ].join("\n");
-    window.location.href = "mailto:" + CATERING_EMAIL +
-      "?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(body);
-    status.textContent = "Opening your email app… If nothing happens, write to " + CATERING_EMAIL + ".";
-  });
+  var MAX_PROTEINS = 3;
+  var builder = document.querySelector(".cater-builder");
+  if (builder) {
+    var cater = { pkg: null, price: 0, guests: 0, guestLabel: "", proteins: [] };
+    var estVal = builder.querySelector(".cater-est-value");
+    var catStatus = builder.querySelector(".cater-status");
+
+    var renderEstimate = function () {
+      if (cater.pkg && cater.guests) {
+        estVal.innerHTML = "from <strong>$" + (cater.price * cater.guests).toLocaleString() +
+          "</strong> · " + cater.pkg + " for " + cater.guestLabel + " guests";
+      } else {
+        estVal.textContent = "Pick a service & guest count";
+      }
+    };
+
+    /* Single-select groups: packages and guests */
+    builder.querySelectorAll(".pkg").forEach(function (b) {
+      b.addEventListener("click", function () {
+        builder.querySelectorAll(".pkg").forEach(function (x) { x.classList.remove("selected"); });
+        b.classList.add("selected");
+        cater.pkg = b.dataset.pkg;
+        cater.price = Number(b.dataset.price);
+        renderEstimate();
+      });
+    });
+    builder.querySelectorAll("[data-guests]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        builder.querySelectorAll("[data-guests]").forEach(function (x) { x.classList.remove("selected"); });
+        b.classList.add("selected");
+        cater.guests = Number(b.dataset.guests);
+        cater.guestLabel = b.dataset.label;
+        renderEstimate();
+      });
+    });
+
+    /* Multi-select proteins, capped at MAX_PROTEINS */
+    builder.querySelectorAll("[data-protein]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var p = b.dataset.protein;
+        var i = cater.proteins.indexOf(p);
+        if (i >= 0) {
+          cater.proteins.splice(i, 1);
+          b.classList.remove("selected");
+        } else if (cater.proteins.length < MAX_PROTEINS) {
+          cater.proteins.push(p);
+          b.classList.add("selected");
+        } else {
+          catStatus.classList.add("error");
+          catStatus.textContent = "Up to " + MAX_PROTEINS + " meats — deselect one to swap.";
+          return;
+        }
+        catStatus.classList.remove("error");
+        catStatus.textContent = "";
+      });
+    });
+
+    builder.querySelector(".cater-submit").addEventListener("click", function () {
+      var name = document.getElementById("cat-name").value.trim();
+      var phone = document.getElementById("cat-phone").value.trim();
+      var date = document.getElementById("cat-date").value;
+      catStatus.classList.remove("error");
+
+      var missing = [];
+      if (!cater.pkg) missing.push("a service");
+      if (!cater.guests) missing.push("guest count");
+      if (!cater.proteins.length) missing.push("at least one meat");
+      if (!name) missing.push("your name");
+      if (!phone) missing.push("a phone number");
+      if (missing.length) {
+        catStatus.classList.add("error");
+        catStatus.textContent = "Just add " + missing.join(", ") + " and we're set.";
+        return;
+      }
+
+      var body = [
+        "CATERING QUOTE REQUEST",
+        "Service: " + cater.pkg + " ($" + cater.price + "/person)",
+        "Guests: " + cater.guestLabel,
+        "Estimated: from $" + (cater.price * cater.guests).toLocaleString(),
+        "Meats: " + cater.proteins.join(", "),
+        "Event date: " + (date || "flexible / TBD"),
+        "",
+        "Name: " + name,
+        "Phone: " + phone
+      ].join("\n");
+
+      window.location.href = "mailto:" + CATERING_EMAIL +
+        "?subject=" + encodeURIComponent("Catering quote — " + cater.pkg + " for " + cater.guestLabel) +
+        "&body=" + encodeURIComponent(body);
+      catStatus.textContent = "Opening your email to send it — or call us and we'll quote you on the spot.";
+    });
+  }
 
   /* ── Hero video: pause for reduced motion or data saver ── */
   var video = document.querySelector(".hero-video");
