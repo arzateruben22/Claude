@@ -1004,6 +1004,9 @@ window.SQForms = (function () {
   };
 
   var openMember = function (tab) {
+    memberPop.querySelector(".member-auth").hidden = false;
+    memberPop.querySelector(".member-account").hidden = true;
+    memberPop.querySelector(".addon-title").textContent = "Crown Rewards";
     setMemberTab(tab);
     memberPop.hidden = false;
     memberOverlay.hidden = false;
@@ -1019,6 +1022,90 @@ window.SQForms = (function () {
     memberOverlay.classList.remove("open");
     setTimeout(function () { memberPop.hidden = true; memberOverlay.hidden = true; }, 250);
   };
+
+  /* ── App tab bar: Account view + Scan (Crown Card) + tab highlighting ── */
+  var openAccount = function () {
+    var m = getMember();
+    if (!m) { openMember("login"); return; }
+    memberPop.querySelector(".member-auth").hidden = true;
+    var acc = memberPop.querySelector(".member-account");
+    acc.hidden = false;
+    acc.querySelector(".member-account-name").textContent = m.name;
+    acc.querySelector(".member-account-crowns").textContent = getPts();
+    memberPop.querySelector(".addon-title").textContent = "Your account";
+    memberPop.hidden = false;
+    memberOverlay.hidden = false;
+    requestAnimationFrame(function () {
+      memberPop.classList.add("open");
+      memberOverlay.classList.add("open");
+    });
+  };
+
+  var scanPop = document.querySelector(".scan-pop");
+  var scanOverlay = document.querySelector(".scan-overlay");
+  var openScan = function () {
+    var m = getMember();
+    var card = scanPop.querySelector(".scan-card");
+    var join = scanPop.querySelector(".scan-join");
+    if (m) {
+      card.hidden = false; join.hidden = true;
+      card.querySelector(".scan-name").textContent = m.name.split(" ")[0] + "’s card";
+      card.querySelector(".scan-crowns").textContent = getPts();
+    } else {
+      card.hidden = true; join.hidden = false;
+    }
+    scanPop.hidden = false;
+    scanOverlay.hidden = false;
+    requestAnimationFrame(function () {
+      scanPop.classList.add("open");
+      scanOverlay.classList.add("open");
+    });
+  };
+  var closeScan = function () {
+    scanPop.classList.remove("open");
+    scanOverlay.classList.remove("open");
+    setTimeout(function () { scanPop.hidden = true; scanOverlay.hidden = true; }, 250);
+  };
+
+  var tabScan = document.querySelector(".tab-scan");
+  if (tabScan) tabScan.addEventListener("click", openScan);
+  var tabAccount = document.querySelector(".tab-account");
+  if (tabAccount) tabAccount.addEventListener("click", openAccount);
+  scanPop.querySelector(".scan-close").addEventListener("click", closeScan);
+  scanOverlay.addEventListener("click", closeScan);
+  var scanJoinBtn = scanPop.querySelector(".scan-join-btn");
+  if (scanJoinBtn) scanJoinBtn.addEventListener("click", function () {
+    closeScan();
+    setTimeout(function () { openMember("signup"); }, 180);
+  });
+  var viewRewardsBtn = memberPop.querySelector(".member-view-rewards");
+  if (viewRewardsBtn) viewRewardsBtn.addEventListener("click", function () {
+    closeMember();
+    setTimeout(function () {
+      var r = document.getElementById("rewards");
+      if (r) r.scrollIntoView({ behavior: "smooth" });
+    }, 220);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !scanPop.hidden) closeScan();
+  });
+
+  /* highlight Home / Rewards tab based on scroll position */
+  var homeTab = document.querySelector('.action-bar .tab[data-tab="home"]');
+  var rewardsTab = document.querySelector('.action-bar .tab[data-tab="rewards"]');
+  var rewardsSec = document.getElementById("rewards");
+  var syncTabs = function () {
+    if (!homeTab || !rewardsTab) return;
+    var rActive = false;
+    if (rewardsSec) {
+      var r = rewardsSec.getBoundingClientRect();
+      rActive = r.top < window.innerHeight * 0.5 && r.bottom > window.innerHeight * 0.4;
+    }
+    homeTab.classList.toggle("is-active", window.pageYOffset < 220 && !rActive);
+    rewardsTab.classList.toggle("is-active", rActive);
+  };
+  window.addEventListener("scroll", syncTabs, { passive: true });
+  syncTabs();
 
   document.addEventListener("click", function (e) {
     if (e.target.closest(".member-open-login")) { openMember("login"); return; }
