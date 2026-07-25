@@ -1049,16 +1049,16 @@ window.SQForms = (function () {
     }
     scanPop.hidden = false;
     scanOverlay.hidden = false;
-    setActiveTab(document.querySelector(".tab-scan"));
     requestAnimationFrame(function () {
       scanPop.classList.add("open");
       scanOverlay.classList.add("open");
     });
+    if (typeof setActiveTab === "function") setActiveTab(document.querySelector(".tab-scan"));
   };
   var closeScan = function () {
     scanPop.classList.remove("open");
     scanOverlay.classList.remove("open");
-    restoreActiveTab();
+    if (typeof restoreActiveTab === "function") restoreActiveTab();
     setTimeout(function () { scanPop.hidden = true; scanOverlay.hidden = true; }, 250);
   };
   var tabScan = document.querySelector(".tab-scan");
