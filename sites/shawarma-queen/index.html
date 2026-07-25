@@ -474,14 +474,14 @@
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M7 12h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
       <span>Scan</span>
     </button>
-    <button class="tab js-open-order" type="button" aria-label="Your order">
+    <button class="tab tab-order" type="button" aria-label="Start your order">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 8z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
       <span>Order</span>
     </button>
-    <a class="tab" href="#rewards" data-tab="rewards" aria-label="Crown Rewards">
+    <button class="tab tab-rewards" type="button" aria-label="Crown Rewards">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 18h16l-1.6-9.2-4.4 3.4L12 6l-2 6.2L5.6 8.8 4 18z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
       <span>Rewards</span>
-    </a>
+    </button>
     <button class="tab tab-account" type="button" aria-label="Account">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
       <span>Account</span>
@@ -708,12 +708,134 @@
       </div>
       <div class="scan-qr"><img src="media/crown-qr.png" alt="Your Crown Rewards code" loading="lazy"></div>
       <p class="scan-hint">Show this at the register to earn &amp; redeem crowns.</p>
+      <p class="scan-next"></p>
+      <ul class="scan-rules" role="list">
+        <li><strong>1 crown</strong> for every <strong>$1</strong> you spend</li>
+        <li><strong>2× crowns</strong> every Tuesday</li>
+        <li>Redeem crowns for free sauce, wraps &amp; combos</li>
+      </ul>
     </div>
     <div class="scan-join" hidden>
       <p class="scan-join-lead">Join Crown Rewards to get your card — <strong>+50 welcome crowns</strong> the moment you join.</p>
       <button class="btn btn-solid scan-join-btn" type="button">Join now</button>
     </div>
   </div>
+
+  <!-- ═══════════ APP SHEETS (Order flow · Rewards · Account) ═══════════ -->
+  <div class="sheet-overlay" hidden></div>
+
+  <section class="sheet order-sheet" id="order-sheet" role="dialog" aria-modal="true" aria-label="Start your order" hidden>
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <header class="sheet-head">
+      <button class="sheet-back" type="button" hidden aria-label="Back"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h2 class="sheet-title">Start your order</h2>
+      <button class="sheet-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    </header>
+    <div class="sheet-body">
+      <div class="os-step os-fulfill">
+        <p class="sheet-sub">How would you like your order?</p>
+        <div class="os-choices">
+          <button class="os-choice" data-mode="pickup" type="button">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1.2 12.1a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span class="os-choice-t">Pickup</span>
+            <span class="os-choice-d">Ready in ~20 min</span>
+          </button>
+          <button class="os-choice" data-mode="delivery" type="button">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="6.5" cy="17.5" r="2.2" stroke="currentColor" stroke-width="1.6"/><circle cx="17.5" cy="17.5" r="2.2" stroke="currentColor" stroke-width="1.6"/><path d="M8.7 17.5h6.6M4 7h4l2.2 8M14 9h3.3l2.2 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="os-choice-t">Delivery</span>
+            <span class="os-choice-d">~45 min · $25 min</span>
+          </button>
+        </div>
+      </div>
+      <div class="os-step os-location" hidden>
+        <label class="os-search">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.7"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <input type="text" class="os-search-input" placeholder="Search city, state, or ZIP" inputmode="search" aria-label="Search city, state, or ZIP">
+        </label>
+        <div class="os-results" role="list"></div>
+        <p class="os-note" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+    <footer class="sheet-foot">
+      <button class="btn btn-solid os-continue" type="button" disabled>Choose an option</button>
+    </footer>
+  </section>
+
+  <section class="sheet rewards-sheet" id="rewards-sheet" role="dialog" aria-modal="true" aria-label="Crown Rewards" hidden>
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <header class="sheet-head">
+      <h2 class="sheet-title">Crown Rewards</h2>
+      <button class="sheet-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    </header>
+    <div class="sheet-body">
+      <div class="rs-balance">
+        <span class="rs-crowns">0</span>
+        <span class="rs-crowns-label">crowns</span>
+        <div class="rs-progress" aria-hidden="true"><span class="rs-progress-fill"></span></div>
+        <p class="rs-next"></p>
+      </div>
+      <div class="rs-block">
+        <h3 class="rs-h">Offers</h3>
+        <div class="rs-offers"></div>
+      </div>
+      <div class="rs-block">
+        <button class="btn btn-solid rs-redeem-toggle" type="button">Redeem your crowns</button>
+        <div class="rs-catalog" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet account-sheet" id="account-sheet" role="dialog" aria-modal="true" aria-label="Account" hidden>
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <header class="sheet-head">
+      <button class="sheet-back as-back" type="button" hidden aria-label="Back"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <h2 class="sheet-title as-title">Account</h2>
+      <button class="sheet-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    </header>
+    <div class="sheet-body">
+      <div class="as-guest" hidden>
+        <p class="as-guest-lead">Log in or join Crown Rewards to see your profile, orders and offers.</p>
+        <button class="btn btn-solid as-login" type="button">Log in</button>
+        <button class="btn btn-ghost as-join" type="button">Join — +50 crowns</button>
+      </div>
+      <div class="as-member" hidden>
+        <div class="as-head">
+          <span class="as-avatar" aria-hidden="true"></span>
+          <div>
+            <p class="as-name">Member</p>
+            <p class="as-phone tl"></p>
+          </div>
+          <span class="as-crowns-badge"><strong class="as-crowns">0</strong> crowns</span>
+        </div>
+        <div class="as-view as-menu">
+          <ul class="as-list" role="list">
+            <li><button class="as-item" type="button" data-panel="profile"><span>View profile</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></li>
+            <li><button class="as-item" type="button" data-panel="orders"><span>Previous orders</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></li>
+            <li><button class="as-item" type="button" data-panel="marketing"><span>Marketing subscriptions</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></li>
+          </ul>
+          <button class="btn btn-ghost as-logout" type="button">Log out</button>
+        </div>
+        <div class="as-view as-panel-profile" hidden>
+          <dl class="as-detail">
+            <div><dt>Name</dt><dd class="as-d-name"></dd></div>
+            <div><dt>Phone</dt><dd class="as-d-phone"></dd></div>
+            <div><dt>Crowns</dt><dd class="as-d-crowns"></dd></div>
+            <div><dt>Status</dt><dd>Crown member</dd></div>
+          </dl>
+        </div>
+        <div class="as-view as-panel-orders" hidden>
+          <ul class="as-orders-list" role="list"></ul>
+          <p class="as-orders-empty">No orders yet — your history saves on this phone.</p>
+        </div>
+        <div class="as-view as-panel-marketing" hidden>
+          <label class="as-toggle"><span><strong>Text offers</strong><small>Deals &amp; late-night specials by SMS</small></span><input type="checkbox" data-sub="sms"><span class="as-switch" aria-hidden="true"></span></label>
+          <label class="as-toggle"><span><strong>Email offers</strong><small>News, new items &amp; rewards</small></span><input type="checkbox" data-sub="email"><span class="as-switch" aria-hidden="true"></span></label>
+          <label class="as-toggle"><span><strong>Push notifications</strong><small>Order-ready alerts &amp; drops</small></span><input type="checkbox" data-sub="push"><span class="as-switch" aria-hidden="true"></span></label>
+          <p class="as-sub-note">Reply STOP to any text to opt out. Saved on this phone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="addon-overlay reward-overlay" hidden></div>
   <div class="addon-pop reward-pop" role="dialog" aria-modal="true" aria-labelledby="reward-title" hidden>
