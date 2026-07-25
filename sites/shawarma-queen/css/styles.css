@@ -2435,30 +2435,65 @@ body.sq-noscroll { overflow: hidden; }
   filter: grayscale(0.22) contrast(1.04) brightness(0.96);
 }
 
-/* Sticky mobile action bar — one-tap Call · Directions · Order */
+/* App bottom tab bar — Home · Scan · Order · Rewards · Account */
 .action-bar { display: none; }
-@media (max-width: 800px) {
+@media (max-width: 900px) {
   .action-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 44;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem;
-    padding: 0.5rem 0.6rem calc(0.5rem + env(safe-area-inset-bottom));
-    background: rgba(19, 11, 8, 0.94);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+    padding: 0.4rem 0.3rem calc(0.4rem + env(safe-area-inset-bottom));
+    background: rgba(13, 8, 6, 0.96);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-top: 1px solid var(--cream-15);
   }
-  .action-bar a, .action-bar button {
+  .action-bar .tab {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 0.22rem; padding: 0.45rem 0.2rem;
-    font-family: var(--font-body); font-size: 0.64rem; font-weight: 600;
-    letter-spacing: 0.09em; text-transform: uppercase;
-    color: var(--cream); background: none; border: 0; border-radius: 12px;
+    gap: 0.18rem; padding: 0.35rem 0.15rem;
+    font-family: var(--font-body); font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--cream-35); background: none; border: 0; border-radius: 12px;
     text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: color 180ms ease, transform 120ms ease;
   }
-  .action-bar svg { width: 1.35rem; height: 1.35rem; }
-  .action-bar .ab-order { color: var(--night); background: var(--gold); }
-  .action-bar a:active, .action-bar button:active { transform: scale(0.96); }
-  /* lift the floating cart above the bar so they don't overlap */
-  .order-fab { bottom: calc(4.7rem + env(safe-area-inset-bottom)); }
-  /* room so the footer isn't hidden behind the fixed bar */
-  body { padding-bottom: 4.6rem; }
+  .action-bar .tab svg { width: 1.42rem; height: 1.42rem; }
+  .action-bar .tab:hover { color: var(--cream-60); }
+  .action-bar .tab:active { transform: scale(0.9); }
+  .action-bar .tab.is-active { color: var(--gold); }
+  .action-bar .tab:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .order-fab { bottom: calc(5rem + env(safe-area-inset-bottom)); }
+  body { padding-bottom: 5rem; }
 }
+
+/* Scan — Crown Card modal */
+.scan-pop { text-align: center; }
+.scan-card {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  padding: 0.4rem 0 0.2rem;
+}
+.scan-card-head { display: flex; align-items: center; gap: 0.7rem; align-self: stretch;
+  justify-content: center; text-align: left; }
+.scan-crown { width: 2.2rem; height: 2.2rem; color: var(--gold); flex: 0 0 auto; }
+.scan-crown svg { width: 100%; height: 100%; }
+.scan-name { font-family: var(--font-display); text-transform: uppercase; font-size: 1.1rem;
+  letter-spacing: 0.02em; color: var(--cream); margin: 0; line-height: 1.1; }
+.scan-balance { margin: 0.1rem 0 0; color: var(--cream-60); font-size: 0.85rem; }
+.scan-balance strong { color: var(--gold); }
+.scan-qr { background: #f5e9d8; padding: 0.9rem; border-radius: 16px;
+  box-shadow: 0 12px 30px -14px rgba(0,0,0,0.7); }
+.scan-qr img { display: block; width: min(58vw, 210px); height: auto; image-rendering: pixelated; }
+.scan-hint { color: var(--cream-60); font-size: 0.85rem; max-width: 24ch; margin: 0; }
+.scan-join { text-align: center; padding: 0.5rem 0.3rem 0.3rem; }
+.scan-join-lead { color: var(--cream-60); font-size: 0.92rem; margin: 0 0 0.9rem; }
+.scan-join-lead strong { color: var(--gold); }
+
+/* Account view inside the member popup */
+.member-account { text-align: center; padding: 0.6rem 0 0.2rem; }
+.member-account-hi { color: var(--cream-60); margin: 0; }
+.member-account-hi strong { color: var(--cream); }
+.member-account-balance { display: flex; flex-direction: column; align-items: center;
+  gap: 0.1rem; margin: 1rem 0 1.4rem; }
+.member-account-crowns { font-family: var(--font-display); font-size: 3rem; line-height: 1;
+  color: var(--gold); }
+.member-account-balance .tl { text-transform: uppercase; letter-spacing: 0.18em;
+  font-size: 0.7rem; color: var(--cream-35); }
+.member-account-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
