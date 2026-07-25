@@ -2,6 +2,26 @@
    All entrance states are set from JS so the page is fully
    readable with JavaScript disabled. */
 
+/* ── Launch splash: fade the charcoal-logo intro out once it finishes,
+   and let a tap skip it. The whole animation is CSS-driven, so it still
+   clears on its own if this never runs. ── */
+(function () {
+  var splash = document.getElementById("splash");
+  if (!splash) return;
+  document.documentElement.classList.add("splashing");
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hold = reduced ? 450 : 1950;
+  var done = false;
+  var remove = function () {
+    if (done) return; done = true;
+    splash.classList.add("is-done");
+    document.documentElement.classList.remove("splashing");
+  };
+  var fade = function () { splash.classList.add("splash-fade"); setTimeout(remove, 650); };
+  var timer = setTimeout(fade, hold);
+  splash.addEventListener("click", function () { clearTimeout(timer); fade(); });
+})();
+
 /* ── Shared form delivery ──────────────────────────────────────────
    Order + catering submissions land in the shop's real email inbox via
    Web3Forms (no backend, no build step). Paste the free access key below
@@ -1315,16 +1335,6 @@ window.SQForms = (function () {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   }
 
-  var grantInstallBonus = function () {
-    if (localStorage.getItem("sq-install-bonus")) return;
-    try { localStorage.setItem("sq-install-bonus", "1"); } catch (e) {}
-    setPts(getPts() + INSTALL_BONUS);
-    showToast("+" + INSTALL_BONUS + " welcome crowns");
-  };
-  var standalone = window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true;
-  if (standalone) grantInstallBonus();
-  window.addEventListener("appinstalled", grantInstallBonus);
 
   /* ── Clear all (two taps: arm, then confirm) ── */
 
