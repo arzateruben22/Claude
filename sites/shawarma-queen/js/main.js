@@ -1023,39 +1023,33 @@ window.SQForms = (function () {
     setTimeout(function () { memberPop.hidden = true; memberOverlay.hidden = true; }, 250);
   };
 
-  /* ── App tab bar: Account view + Scan (Crown Card) + tab highlighting ── */
-  var openAccount = function () {
-    var m = getMember();
-    if (!m) { openMember("login"); return; }
-    memberPop.querySelector(".member-auth").hidden = true;
-    var acc = memberPop.querySelector(".member-account");
-    acc.hidden = false;
-    acc.querySelector(".member-account-name").textContent = m.name;
-    acc.querySelector(".member-account-crowns").textContent = getPts();
-    memberPop.querySelector(".addon-title").textContent = "Your account";
-    memberPop.hidden = false;
-    memberOverlay.hidden = false;
-    requestAnimationFrame(function () {
-      memberPop.classList.add("open");
-      memberOverlay.classList.add("open");
-    });
-  };
-
+  /* ── Scan: Crown Card (loyalty QR) ── */
   var scanPop = document.querySelector(".scan-pop");
   var scanOverlay = document.querySelector(".scan-overlay");
+  var nextReward = function (pts) {
+    var next = null;
+    REWARDS.forEach(function (r) { if (r.cost > pts && (!next || r.cost < next.cost)) next = r; });
+    return next;
+  };
   var openScan = function () {
     var m = getMember();
     var card = scanPop.querySelector(".scan-card");
     var join = scanPop.querySelector(".scan-join");
+    var pts = getPts();
     if (m) {
       card.hidden = false; join.hidden = true;
       card.querySelector(".scan-name").textContent = m.name.split(" ")[0] + "’s card";
-      card.querySelector(".scan-crowns").textContent = getPts();
+      card.querySelector(".scan-crowns").textContent = pts;
+      var nx = nextReward(pts);
+      card.querySelector(".scan-next").textContent = nx
+        ? (nx.cost - pts) + " crowns to a free " + nx.name
+        : "You’ve got enough to redeem a reward!";
     } else {
       card.hidden = true; join.hidden = false;
     }
     scanPop.hidden = false;
     scanOverlay.hidden = false;
+    setActiveTab(document.querySelector(".tab-scan"));
     requestAnimationFrame(function () {
       scanPop.classList.add("open");
       scanOverlay.classList.add("open");
@@ -1064,13 +1058,11 @@ window.SQForms = (function () {
   var closeScan = function () {
     scanPop.classList.remove("open");
     scanOverlay.classList.remove("open");
+    restoreActiveTab();
     setTimeout(function () { scanPop.hidden = true; scanOverlay.hidden = true; }, 250);
   };
-
   var tabScan = document.querySelector(".tab-scan");
   if (tabScan) tabScan.addEventListener("click", openScan);
-  var tabAccount = document.querySelector(".tab-account");
-  if (tabAccount) tabAccount.addEventListener("click", openAccount);
   scanPop.querySelector(".scan-close").addEventListener("click", closeScan);
   scanOverlay.addEventListener("click", closeScan);
   var scanJoinBtn = scanPop.querySelector(".scan-join-btn");
@@ -1078,34 +1070,9 @@ window.SQForms = (function () {
     closeScan();
     setTimeout(function () { openMember("signup"); }, 180);
   });
-  var viewRewardsBtn = memberPop.querySelector(".member-view-rewards");
-  if (viewRewardsBtn) viewRewardsBtn.addEventListener("click", function () {
-    closeMember();
-    setTimeout(function () {
-      var r = document.getElementById("rewards");
-      if (r) r.scrollIntoView({ behavior: "smooth" });
-    }, 220);
-  });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && !scanPop.hidden) closeScan();
   });
-
-  /* highlight Home / Rewards tab based on scroll position */
-  var homeTab = document.querySelector('.action-bar .tab[data-tab="home"]');
-  var rewardsTab = document.querySelector('.action-bar .tab[data-tab="rewards"]');
-  var rewardsSec = document.getElementById("rewards");
-  var syncTabs = function () {
-    if (!homeTab || !rewardsTab) return;
-    var rActive = false;
-    if (rewardsSec) {
-      var r = rewardsSec.getBoundingClientRect();
-      rActive = r.top < window.innerHeight * 0.5 && r.bottom > window.innerHeight * 0.4;
-    }
-    homeTab.classList.toggle("is-active", window.pageYOffset < 220 && !rActive);
-    rewardsTab.classList.toggle("is-active", rActive);
-  };
-  window.addEventListener("scroll", syncTabs, { passive: true });
-  syncTabs();
 
   document.addEventListener("click", function (e) {
     if (e.target.closest(".member-open-login")) { openMember("login"); return; }
@@ -1574,6 +1541,289 @@ window.SQForms = (function () {
     thumb.appendChild(im);
     row.insertBefore(thumb, row.firstChild);
   });
+
+  /* ════════════════ APP SHEETS: Order flow · Rewards · Account ════════════════ */
+
+  var allTabs = [].slice.call(document.querySelectorAll(".action-bar .tab"));
+  var homeTab = document.querySelector('.action-bar .tab[data-tab="home"]');
+  var setActiveTab = function (el) {
+    allTabs.forEach(function (t) { t.classList.toggle("is-active", t === el); });
+  };
+  var restoreActiveTab = function () {
+    setActiveTab(window.pageYOffset < 320 ? homeTab : null);
+  };
+  window.addEventListener("scroll", function () {
+    if (scanPop.hidden && !activeSheet) restoreActiveTab();
+  }, { passive: true });
+
+  var sheetOverlay = document.querySelector(".sheet-overlay");
+  var activeSheet = null;
+  var openSheet = function (sheet, tab) {
+    if (activeSheet && activeSheet !== sheet) { activeSheet.classList.remove("open"); activeSheet.hidden = true; }
+    activeSheet = sheet;
+    sheet.hidden = false;
+    sheetOverlay.hidden = false;
+    document.body.classList.add("sq-noscroll");
+    setActiveTab(tab);
+    requestAnimationFrame(function () { sheet.classList.add("open"); sheetOverlay.classList.add("open"); });
+  };
+  var closeSheet = function () {
+    if (!activeSheet) return;
+    var s = activeSheet; activeSheet = null;
+    s.classList.remove("open");
+    sheetOverlay.classList.remove("open");
+    document.body.classList.remove("sq-noscroll");
+    restoreActiveTab();
+    setTimeout(function () { s.hidden = true; sheetOverlay.hidden = true; }, 300);
+  };
+  sheetOverlay.addEventListener("click", closeSheet);
+  document.querySelectorAll(".sheet .sheet-close").forEach(function (b) { b.addEventListener("click", closeSheet); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && activeSheet) closeSheet(); });
+  restoreActiveTab();
+
+  var fmtPhone = function (p) {
+    p = (p || "").replace(/\D/g, "");
+    return p.length === 10 ? "(" + p.slice(0, 3) + ") " + p.slice(3, 6) + "-" + p.slice(6) : p;
+  };
+
+  /* ── Order sheet: pickup/delivery → location → menu ── */
+  var orderSheet = document.getElementById("order-sheet");
+  var osFulfill = orderSheet.querySelector(".os-fulfill");
+  var osLocation = orderSheet.querySelector(".os-location");
+  var osBack = orderSheet.querySelector(".sheet-back");
+  var osTitle = orderSheet.querySelector(".sheet-title");
+  var osContinue = orderSheet.querySelector(".os-continue");
+  var osInput = orderSheet.querySelector(".os-search-input");
+  var osResults = orderSheet.querySelector(".os-results");
+  var osNote = orderSheet.querySelector(".os-note");
+  var osMode = null, osLocOk = false;
+  var ANAHEIM_ZIPS = ["92801","92802","92803","92804","92805","92806","92807","92808",
+    "92840","92844","92868","90620","90621","90630","92703","92804"];
+
+  var osSetContinue = function () {
+    osContinue.disabled = !(osMode && osLocOk);
+    osContinue.textContent = !osMode ? "Choose an option"
+      : osLocOk ? (osMode === "delivery" ? "Start delivery order" : "Start pickup order")
+      : "Enter a location";
+  };
+  var osStep = function (loc) {
+    osFulfill.hidden = loc; osLocation.hidden = !loc; osBack.hidden = !loc;
+    osTitle.textContent = !loc ? "Start your order"
+      : (osMode === "delivery" ? "Delivery address" : "Pickup location");
+  };
+  var osStore = function () {
+    osResults.innerHTML =
+      '<button class="os-result" type="button">' +
+      '<span class="os-result-name">Shawarma Queen — Anaheim</span>' +
+      '<span class="os-result-meta">430 S Euclid St, Anaheim, CA 92802 · Open till 3:30 am · ~20 min</span>' +
+      '<span class="os-result-check" aria-hidden="true"></span></button>';
+    osResults.querySelector(".os-result").addEventListener("click", function () {
+      this.classList.add("is-picked"); osLocOk = true; osSetContinue();
+    });
+  };
+  var osPickup = function (q) {
+    osStore();
+    osNote.textContent = (q && !/anaheim|92802|euclid/i.test(q))
+      ? "This is our only location right now — worth the trip." : "";
+  };
+  var osDelivery = function (q) {
+    osResults.innerHTML = "";
+    if (!q) { osNote.textContent = ""; osLocOk = false; return; }
+    var zip = (q.match(/\b\d{5}\b/) || [])[0];
+    if (zip && ANAHEIM_ZIPS.indexOf(zip) !== -1) {
+      osResults.innerHTML = '<div class="os-result is-picked"><span class="os-result-name">We deliver to ' + zip + '</span>' +
+        '<span class="os-result-meta">About 45 min · $25 minimum · card only</span><span class="os-result-check" aria-hidden="true"></span></div>';
+      osNote.textContent = ""; osLocOk = true;
+    } else {
+      osNote.textContent = "Sorry — we only deliver around Anaheim right now. Try pickup instead.";
+      osLocOk = false;
+    }
+  };
+  osFulfill.querySelectorAll(".os-choice").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      osMode = btn.getAttribute("data-mode"); osLocOk = false;
+      osFulfill.querySelectorAll(".os-choice").forEach(function (c) { c.classList.toggle("is-sel", c === btn); });
+      osInput.value = "";
+      osInput.placeholder = osMode === "delivery" ? "Enter your address or ZIP" : "Search city, state, or ZIP";
+      osResults.innerHTML = ""; osNote.textContent = "";
+      if (osMode === "pickup") osPickup("");
+      osStep(true); osSetContinue();
+      setTimeout(function () { osInput.focus(); }, 80);
+    });
+  });
+  osInput.addEventListener("input", function () {
+    var q = osInput.value.trim();
+    if (osMode === "delivery") osDelivery(q); else osPickup(q);
+    osSetContinue();
+  });
+  osBack.addEventListener("click", function () {
+    osMode = null; osLocOk = false;
+    osFulfill.querySelectorAll(".os-choice").forEach(function (c) { c.classList.remove("is-sel"); });
+    osStep(false); osSetContinue();
+  });
+  osContinue.addEventListener("click", function () {
+    var radio = osMode === "delivery" ? deliveryRadio : pickupRadio;
+    if (radio) { radio.checked = true; radio.dispatchEvent(new Event("change", { bubbles: true })); }
+    closeSheet();
+    setTimeout(function () {
+      var menu = document.getElementById("carta");
+      if (menu) menu.scrollIntoView({ behavior: "smooth" });
+      showToast((osMode === "delivery" ? "Delivery" : "Pickup") + " selected — add your items");
+    }, 260);
+  });
+  var openOrderSheet = function () {
+    osMode = null; osLocOk = false;
+    osFulfill.querySelectorAll(".os-choice").forEach(function (c) { c.classList.remove("is-sel"); });
+    osInput.value = ""; osResults.innerHTML = ""; osNote.textContent = "";
+    osStep(false); osSetContinue();
+    openSheet(orderSheet, document.querySelector(".tab-order"));
+  };
+  document.querySelector(".tab-order").addEventListener("click", openOrderSheet);
+
+  /* ── Rewards sheet: balance · offers · redeem catalog ── */
+  var rewardsSheet = document.getElementById("rewards-sheet");
+  var rsCrowns = rewardsSheet.querySelector(".rs-crowns");
+  var rsFill = rewardsSheet.querySelector(".rs-progress-fill");
+  var rsNext = rewardsSheet.querySelector(".rs-next");
+  var rsOffers = rewardsSheet.querySelector(".rs-offers");
+  var rsCatalog = rewardsSheet.querySelector(".rs-catalog");
+  var rsRedeemToggle = rewardsSheet.querySelector(".rs-redeem-toggle");
+
+  var buildOffers = function () {
+    var offers = [
+      { t: "2× Crowns", d: "Double crowns on every order, all day.", tag: isTuesday ? "Active today" : "Tuesdays" }
+    ];
+    if (!getMember()) offers.push({ t: "+50 Welcome Crowns", d: "Join Crown Rewards and we’ll start you off.", tag: "New members" });
+    offers.push({ t: "Free Premium Sauce", d: "Boom or Queen sauce, on the house.", tag: "20 crowns" });
+    rsOffers.innerHTML = "";
+    offers.forEach(function (o) {
+      var el = document.createElement("div");
+      el.className = "rs-offer";
+      el.innerHTML = '<div class="rs-offer-body"><p class="rs-offer-t">' + o.t + '</p>' +
+        '<p class="rs-offer-d">' + o.d + '</p></div><span class="rs-offer-tag">' + o.tag + '</span>';
+      rsOffers.appendChild(el);
+    });
+  };
+  var buildCatalog = function () {
+    var pts = getPts();
+    rsCatalog.innerHTML = "";
+    REWARDS.forEach(function (r) {
+      var can = pts >= r.cost;
+      var pct = Math.min(100, Math.round(pts / r.cost * 100));
+      var row = document.createElement("div");
+      row.className = "rs-cat-row";
+      row.innerHTML = '<div class="rs-cat-info"><p class="rs-cat-name">' + r.name + '</p>' +
+        '<p class="rs-cat-desc">' + r.desc + '</p>' +
+        '<div class="rs-cat-bar"><span style="width:' + pct + '%"></span></div></div>';
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn " + (can ? "btn-solid" : "btn-ghost") + " rs-cat-btn";
+      btn.disabled = !can || hasReward();
+      btn.textContent = can ? ("Redeem · " + r.cost) : ((r.cost - pts) + " to go");
+      btn.addEventListener("click", function () {
+        if (getPts() < r.cost || hasReward()) return;
+        closeSheet();
+        setTimeout(function () { claimReward(r); }, 240);
+      });
+      row.appendChild(btn);
+      rsCatalog.appendChild(row);
+    });
+  };
+  var openRewardsSheet = function () {
+    var pts = getPts();
+    rsCrowns.textContent = pts;
+    var nx = nextReward(pts);
+    rsFill.style.width = (nx ? Math.min(100, pts / nx.cost * 100) : 100) + "%";
+    rsNext.textContent = nx ? ((nx.cost - pts) + " crowns to a free " + nx.name)
+      : "You’ve got enough to redeem a reward!";
+    buildOffers();
+    rsCatalog.hidden = true; rsRedeemToggle.hidden = false;
+    openSheet(rewardsSheet, document.querySelector(".tab-rewards"));
+  };
+  rsRedeemToggle.addEventListener("click", function () {
+    buildCatalog(); rsCatalog.hidden = false; rsRedeemToggle.hidden = true;
+  });
+  document.querySelector(".tab-rewards").addEventListener("click", openRewardsSheet);
+
+  /* ── Account sheet: profile · previous orders · marketing ── */
+  var accountSheet = document.getElementById("account-sheet");
+  var asGuest = accountSheet.querySelector(".as-guest");
+  var asMember = accountSheet.querySelector(".as-member");
+  var asBack = accountSheet.querySelector(".as-back");
+  var asTitle = accountSheet.querySelector(".as-title");
+  var asViews = {
+    menu: accountSheet.querySelector(".as-menu"),
+    profile: accountSheet.querySelector(".as-panel-profile"),
+    orders: accountSheet.querySelector(".as-panel-orders"),
+    marketing: accountSheet.querySelector(".as-panel-marketing")
+  };
+  var asTitles = { menu: "Account", profile: "Profile", orders: "Previous orders", marketing: "Marketing" };
+  var asShow = function (view) {
+    Object.keys(asViews).forEach(function (k) { asViews[k].hidden = k !== view; });
+    asBack.hidden = view === "menu";
+    asTitle.textContent = asTitles[view];
+  };
+  var getSubs = function () { try { return JSON.parse(localStorage.getItem("sq-marketing") || "{}"); } catch (e) { return {}; } };
+  var renderAccountOrders = function () {
+    var list = accountSheet.querySelector(".as-orders-list");
+    var empty = accountSheet.querySelector(".as-orders-empty");
+    var h = getHistory();
+    list.innerHTML = ""; empty.hidden = h.length > 0;
+    h.slice(0, 12).forEach(function (o) {
+      var li = document.createElement("li");
+      li.className = "as-order";
+      var d = new Date(o.d);
+      li.innerHTML = '<span class="as-order-top">' +
+        d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) + ' · ' + o.mode + '</span>' +
+        '<span class="as-order-items">' + o.items + '</span>' +
+        '<span class="as-order-meta">' + money(o.total) + ' · +' + o.earned + ' crowns</span>';
+      list.appendChild(li);
+    });
+  };
+  var renderAccount = function () {
+    var m = getMember();
+    asGuest.hidden = !!m; asMember.hidden = !m;
+    if (!m) return;
+    accountSheet.querySelector(".as-name").textContent = m.name;
+    accountSheet.querySelector(".as-phone").textContent = fmtPhone(m.phone);
+    accountSheet.querySelector(".as-avatar").textContent = (m.name.trim()[0] || "S").toUpperCase();
+    accountSheet.querySelector(".as-crowns").textContent = getPts();
+    accountSheet.querySelector(".as-d-name").textContent = m.name;
+    accountSheet.querySelector(".as-d-phone").textContent = fmtPhone(m.phone);
+    accountSheet.querySelector(".as-d-crowns").textContent = getPts() + " crowns";
+    var subs = getSubs();
+    accountSheet.querySelectorAll(".as-toggle input[data-sub]").forEach(function (t) {
+      t.checked = !!subs[t.getAttribute("data-sub")];
+    });
+    renderAccountOrders();
+  };
+  accountSheet.querySelectorAll(".as-item").forEach(function (b) {
+    b.addEventListener("click", function () { asShow(b.getAttribute("data-panel")); });
+  });
+  asBack.addEventListener("click", function () { asShow("menu"); });
+  accountSheet.querySelector(".as-login").addEventListener("click", function () {
+    closeSheet(); setTimeout(function () { openMember("login"); }, 200);
+  });
+  accountSheet.querySelector(".as-join").addEventListener("click", function () {
+    closeSheet(); setTimeout(function () { openMember("signup"); }, 200);
+  });
+  accountSheet.querySelector(".as-logout").addEventListener("click", function () {
+    try { localStorage.removeItem("sq-member-in"); } catch (e) {}
+    renderMember();
+    showToast("Logged out — your crowns stay safe on this phone");
+    closeSheet();
+  });
+  accountSheet.querySelectorAll(".as-toggle input[data-sub]").forEach(function (t) {
+    t.addEventListener("change", function () {
+      var subs = getSubs(); subs[t.getAttribute("data-sub")] = t.checked;
+      try { localStorage.setItem("sq-marketing", JSON.stringify(subs)); } catch (e) {}
+    });
+  });
+  var openAccountSheet = function () {
+    renderAccount(); asShow("menu");
+    openSheet(accountSheet, document.querySelector(".tab-account"));
+  };
+  document.querySelector(".tab-account").addEventListener("click", openAccountSheet);
 })();
 
 /* ── Open-late band: WebGL ember fluid ──
