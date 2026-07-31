@@ -18,6 +18,12 @@ This repository is both a live site and the studio template:
   skill's reuse map, verify in Playwright at 1440/375, deliver an Artifact
   preview, and only then commit/push.
 
+- **`socal-system/`** = Ruben's day-job toolkit (Atlas SoCal testing dispatch):
+  rulebook, email parser, and workbook audit script for the 2026 SoCal Checklist
+  Budget Tracker. When the user asks about the budget tracker, checklist,
+  cylinders/beams, dispatch emails, or invoices, read `socal-system/RULEBOOK.md`
+  first — it holds all learned formats and rules.
+
 House rules that always apply:
 
 - Ask the intake questions before designing; state the design plan before code.
