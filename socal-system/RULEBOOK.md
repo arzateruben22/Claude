@@ -163,6 +163,13 @@ ID846-DS9 in the subject while all 14 attachments were ID845-DS6.
   PW Regular (majority of hours inside 6 AM-5 PM -> PW ✓), 57 miles
   (30560→30617 ✓), covered ID844 (Mix 557237) + ID845 (Mix 55723740).
 
+## Lunch rules (verification checks)
+
+- 1st lunch must begin no later than 4:59 into the shift.
+- 2nd lunch must begin no later than 9:59 into the shift when working more
+  than 12 hours; waivable when the shift is under 12 hours.
+- Lunch rows are unpaid and excluded from billed hours.
+
 ## Known open items
 
 - Daily log + timesheet examples not yet provided (hours/miles/group leg).
