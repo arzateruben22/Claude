@@ -135,6 +135,34 @@ flag outliers vs. that inspector's history.
 6. Invoice lab lines: tests = checklist specimens that day, hours ≈ 0.5/specimen.
 7. Labor codes per rules above; miles per daily log + repeat/outlier flags.
 
+## Inspector completion email
+
+Subject-only email (no body) from the inspector, subject format:
+`YY-MMDD_LogNumber_Project-105_07-314524_Duty_Mix#_Initials`
+(e.g. `26-0729_072926-ID845-DS6-1_Project-105_07-314524_PI_Cylinders-Mix#55723740_FC`).
+Attachments (typical full set, ~14 files): mix design PDF, MPQP + Weighmaster
+certs, request form xlsx, batch ticket PDF, COC PDF, cylinder location docx,
+aggregate sampling docx, batch check xlsx, concrete testing xlsm, cylinder
+break sheet xlsx, daily PCC record xlsx, TL-0101 xlsm, **inspector daily log
+xlsx**. Verify subject log # against attachments — first specimen received had
+ID846-DS9 in the subject while all 14 attachments were ID845-DS6.
+
+## Inspector daily log (xlsx, "Materials Engineering Staff Daily Report")
+
+- Sheet "Daily Report". Header: E4 contract, E5 EA, E6 date performed,
+  E7 tester name.
+- Time blocks from row 11: col A category (Field/Lab/Lunch), F start, J stop,
+  N task description. Lunch is its own row and is unpaid.
+- Vehicle Use (~rows 32-35): A34 beginning odometer, F34 ending odometer,
+  K34 mileage (must equal end-start), P34 itinerary, vehicle make/model/plate.
+- Hours Worked boxes (~rows 41-44): PW Regular / PW 1.5 OT / PW 2.0 DT /
+  PWSS Regular / PWSS 1.5 / PWSS 2.0; group ("Field"/"Lab") nearby (~AI44).
+- One daily log can cover multiple jobs/pours in the same shift — task rows
+  name each plant visit and mix; match mixes to the dispatched jobs that day.
+- Verified example (FC 7/29): shift 2:00 AM-10:30 AM, 30-min lunch, 8.0 hrs
+  PW Regular (majority of hours inside 6 AM-5 PM -> PW ✓), 57 miles
+  (30560→30617 ✓), covered ID844 (Mix 557237) + ID845 (Mix 55723740).
+
 ## Known open items
 
 - Daily log + timesheet examples not yet provided (hours/miles/group leg).
