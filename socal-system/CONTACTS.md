@@ -19,8 +19,9 @@ send "on behalf of SoCal Dispatch" <socal_dispatch@OneAtlas.com>.
 
 Notes:
 - Initials inferred from log usage (e.g. break-log suffixes _FC, _CV, _APG).
-- Seen in logs but NOT on this roster: KMA (Kristopher Martinez), LC —
-  confirm whether they should be added.
+- KMA (Kristopher Martinez): INACTIVE — appears in historical log entries only;
+  never assign in new dispatch drafts.
+- LC: initials appear in logs but not on the roster — identity/status unconfirmed.
 - Phone typos found in past dispatch emails vs this roster:
   Steven Chang written 714-315-6815 in two 7/29-7/30 emails (roster: ...6816);
   Rigoberto Arroyo written 760-573-3880 in the ID842 email (roster: 760-574-3880).
