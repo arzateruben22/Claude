@@ -174,6 +174,26 @@ ID846-DS9 in the subject while all 14 attachments were ID845-DS6.
   than 12 hours; waivable when the shift is under 12 hours.
 - Lunch rows are unpaid and excluded from billed hours.
 
+## QC compliance & reasonableness checks
+
+Reasonableness (baseline-building — refine as more daily logs arrive):
+- Drive time vs miles: travel-row duration must be plausible for the itinerary
+  distance; flag both too-long and too-short.
+- Time-on-task norms (seed values from FC 7/29 log): batch check ~30 min,
+  aggregate sampling ~30 min, concrete testing ~45-60 min, travel
+  Whittier<->Gardena ~45 min, lab break ~0.5 hr/specimen. Flag large outliers.
+- Identical durations/miles repeated day after day = copy-paste flag.
+
+Caltrans/spec compliance (encode rules QC actually enforces; confirm refs):
+- Breaks performed on the scheduled cure date (cast + cure days), not late.
+- Specimens buried/cured within the required window after cast.
+- Sampling frequency honored: one set per 300 CY (structural/LCB) or
+  1,000 CY (JPCP) vs CY actually poured per batch tickets.
+- Reports submitted within required turnaround.
+- Lunch rules (see Lunch section) — meal-period compliance.
+- Form cites 2018 Standard Specs 40-1.01D(1) for fabrication/curing/handling.
+- OPEN: collect the specific spec references QC holds inspectors to.
+
 ## Known open items
 
 - Daily log + timesheet examples not yet provided (hours/miles/group leg).
