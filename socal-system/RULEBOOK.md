@@ -139,6 +139,18 @@ flag outliers vs. that inspector's history.
 6. Invoice lab lines: tests = checklist specimens that day, hours ≈ 0.5/specimen.
 7. Labor codes per rules above; miles per daily log + repeat/outlier flags.
 
+## Duty determines expected deliverables (completion verification)
+
+The DISPATCH EMAIL's duty line is the source of truth for what a completion
+report must contain — not the request form's fabrication section (the form
+describes the whole job; the duty describes that inspector's portion):
+- "Concrete Plant Inspection" only -> batch check / PCC record / aggregates;
+  NO fabrication docs expected, NO cylinder/beam log entries from this report.
+- "Plant Inspection & Cylinder Fabrication" (combined, one inspector) ->
+  fabrication docs expected; create cylinder/beam log entries + break rows.
+- Split job -> judge each inspector's report only against their own portion;
+  the fabrication portion's report drives the log entries.
+
 ## Inspector completion email
 
 Subject-only email (no body) from the inspector, subject format:
