@@ -66,7 +66,11 @@ flag outliers vs. that inspector's history.
   starts ~1 hr before fabrication). Checklist: one row per inspector.
 - **Compaction batching:** client sends one notice per test; dispatch batches
   them into one email per inspector-shift with per-test times; checklist stacks
-  all tests in a single row's cells.
+  all tests in a single row's cells. **Additional compactions added later for
+  the same inspector + day (same project) are appended into that existing
+  checklist row (new time + log # stacked in the cells) — do NOT create a new
+  row.** Compaction dispatch emails do not use the `REVISED:` subject prefix —
+  that convention is for pour/fabrication re-sends.
 - Inspector named on the form may differ from who actually works it —
   reassignment between form and execution is normal.
 
