@@ -74,6 +74,18 @@ flag outliers vs. that inspector's history.
 - Inspector named on the form may differ from who actually works it —
   reassignment between form and execution is normal.
 
+## District 8 checklist entry format
+
+D8 jobs use a different Job Description style than 105 (no time/ID# prefix).
+Format: `Concrete Plant Inspection -  N Cylinders for every X CY & N Breaks
+@ D days (UW, KB, AC, Temp) - Mix #<mix> - <total> CY / See Dispatch Email /
+Check Request` (e.g. "3 Cylinders for every 1,500 CY & 3 Breaks @ 42 days
+(UW, KB, AC, Temp) - Mix #2102-Opt1 - 2,500 CY"). Columns: Project = D8,
+EA = 1C08U4-style, Task Order = #N, Group = numbered (1 field / 2 plant).
+Cylinder sets are named `S#N_Mix#<mix>`; hours flow to the D8 tabs, not the
+105 invoice. Example verified: EA 8/6/26 Coffman Plant shift, Group 2,
+8 PWSS Reg + 1 PWSS 1.5 OT.
+
 ## Email formats
 
 ### Inbound client notices (FMJV105 Noreply, `[EXTERNAL]`)
