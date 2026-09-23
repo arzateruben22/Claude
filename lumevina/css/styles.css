@@ -4816,3 +4816,6 @@ p.install-steps { padding-left: 0; }
 /* Wide serif wordmarks read larger than stacked marks at the same height */
 .shop-card-logo--wide { padding-top: 0.45rem; }
 .shop-card-logo--wide img { height: 1.55rem; }
+/* Tracked all-caps wordmark: every letter is cap height, so it sits lower */
+.shop-card-logo--caps { padding: 0.75rem 0 0.35rem; }
+.shop-card-logo--caps img { height: 1.05rem; max-width: 100%; }
