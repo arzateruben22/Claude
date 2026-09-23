@@ -28,7 +28,8 @@
   /* product photos, by id (kept out of the saved stock so a photo can be
      added or swapped without resetting anyone's inventory) */
   var PHOTOS = {
-    "gm-cleanser": "img/retail/glymed-cleanser.webp"
+    "gm-cleanser": "img/retail/glymed-cleanser.webp",
+    "spf-30": "img/retail/daily-spf-30.webp"
   };
 
   var num = function (n) { return Number(n || 0); };
@@ -78,7 +79,7 @@
       card.innerHTML =
         (PHOTOS[p.id]
           ? '<div class="retail-visual has-photo" aria-hidden="true"><img src="' + PHOTOS[p.id] +
-            '" alt="" loading="lazy" decoding="async" width="1000" height="400"></div>'
+            '" alt="" loading="lazy" decoding="async"></div>'
           : '<div class="retail-visual rt-tint-' + ((i % 4) + 1) + '" aria-hidden="true"></div>') +
         '<h3 class="retail-name">' + p.name + '</h3>' +
         (p.desc ? '<p class="retail-desc">' + p.desc + '</p>' : '') +
