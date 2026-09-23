@@ -149,3 +149,49 @@ language sql security definer stable as $$
   select b.start_min, b.dur_min from bookings b
   where b.date = p_date and b.status in ('pending', 'held', 'completed');
 $$;
+
+-- ── Glow Membership ────────────────────────────────────────────────
+-- One row per member. Billing is a Stripe Billing subscription; the
+-- stripe-webhook function mirrors its state here. Each paid invoice adds
+-- one facial credit (capped at 2 banked); a booking that uses a credit
+-- links back through membership_ledger. See server/README.md → Memberships.
+create table memberships (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid not null references clients (id) on delete cascade,
+  plan text not null check (plan in ('glow', 'clear', 'ageless')),
+  price_cents int not null,                 -- locked founding price
+  status text not null default 'active'
+    check (status in ('active', 'cancelling', 'cancelled')),
+  credits int not null default 1 check (credits between 0 and 2),
+  started_at timestamptz not null default now(),
+  min_ends_at timestamptz not null,         -- started_at + 3 months
+  next_bill_at timestamptz not null,
+  paused_bill_at timestamptz,               -- the one billing date being skipped
+  last_pause_at timestamptz,                -- one pause per 12 months
+  cancel_at timestamptz,
+  founding boolean not null default true,
+  stripe_customer_id text,
+  stripe_subscription_id text unique,
+  created_at timestamptz not null default now()
+);
+create unique index one_live_membership_per_client
+  on memberships (client_id) where status <> 'cancelled';
+
+create table membership_ledger (
+  id bigint generated always as identity primary key,
+  membership_id uuid not null references memberships (id) on delete cascade,
+  kind text not null check (kind in ('joined', 'billed', 'paused', 'used', 'returned', 'gifted', 'cancel-requested', 'kept', 'cancelled')),
+  amount_cents int,
+  booking_id uuid references bookings (id) on delete set null,
+  gift_code text,
+  created_at timestamptz not null default now()
+);
+
+alter table memberships enable row level security;
+alter table membership_ledger enable row level security;
+create policy "members read their own membership" on memberships
+  for select using (client_id = auth.uid());
+create policy "members read their own ledger" on membership_ledger
+  for select using (membership_id in (select id from memberships where client_id = auth.uid()));
+-- writes happen only in edge functions (service role): join, pause,
+-- cancel, keep, gift, and the webhook's billed / cancelled events.

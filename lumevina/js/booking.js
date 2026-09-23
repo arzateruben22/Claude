@@ -179,13 +179,45 @@
     return state.slot !== null && state.slot === flashStart();
   };
 
+  /* ── Glow Membership: a banked facial covers its plan's treatment, and
+     anything else booked in the same visit is 15% off (js/membership.js) ── */
+  var memberUse = true;          /* the client can untick it to pay instead */
+  var memberRecord = function () {
+    var LM = window.LumevinaMembership;
+    if (!LM || rescheduleMode || giftIsService) return null;
+    var email = emailInput.value.trim() ||
+      ((window.LumevinaAccount && window.LumevinaAccount.current()) || {}).email;
+    var r = email ? LM.get(email) : null;
+    return LM.usable(r) ? r : null;
+  };
+  var memberService = function () {
+    var r = memberRecord();
+    if (!r) return null;
+    var LM = window.LumevinaMembership;
+    for (var i = 0; i < state.services.length; i++) {
+      if (LM.covers(r, state.services[i].id)) return state.services[i];
+    }
+    return null;
+  };
+  var memberActive = function () { return memberUse && !!memberService(); };
+  var memberCovered = function () { return memberActive() ? memberService().price : 0; };
+
+  /* everything the client actually pays for this visit */
+  var payablePrice = function () { return totalPrice() - memberCovered(); };
+
   var flashDiscount = function () {
     return flashActive()
-      ? Math.round(totalPrice() * FLASH_OFF * 100) / 100
+      ? Math.round(payablePrice() * FLASH_OFF * 100) / 100
       : 0;
   };
 
-  var sessionTotal = function () { return totalPrice() - flashDiscount(); };
+  var memberExtrasOff = function () {
+    if (!memberActive()) return 0;
+    var rate = window.LumevinaMembership.extrasRate;
+    return Math.round((payablePrice() - flashDiscount()) * rate * 100) / 100;
+  };
+
+  var sessionTotal = function () { return payablePrice() - flashDiscount() - memberExtrasOff(); };
 
   var depositDue = function () { return sessionTotal() / 2; };
 
@@ -358,6 +390,7 @@
     /* one button, two jobs: new booking → deposit · rescheduling → confirm move */
     confirmBtn.querySelector(".btn-mb-inner").textContent = rescheduleMode
       ? "Confirm new time"
+      : (withDeposit && memberActive() && depositDue() === 0) ? "Continue · nothing due today"
       : (withDeposit ? "Continue to deposit · " + pay.money(depositDue())
                      : "Continue to deposit");
   };
@@ -503,13 +536,19 @@
     state.services.forEach(function (s) {
       addRow(s.name, pay.money(s.price));
     });
+    if (memberActive()) {
+      addRow("Membership facial — included", "−" + pay.money(memberCovered()), "sc-member");
+    }
     if (flashDiscount() > 0) {
       addRow("⚡ Flash opening — 10% off", "−" + pay.money(flashDiscount()), "sc-flash");
+    }
+    if (memberExtrasOff() > 0) {
+      addRow("Member 15% off the rest of this visit", "−" + pay.money(memberExtrasOff()), "sc-member");
     }
     addRow("Total", pay.money(sessionTotal()), "sc-total");
     addRow("Due now — 50% deposit", pay.money(depositDue()), "sc-due");
     addRow("Due in person at your visit", pay.money(sessionTotal() - depositDue()), "sc-rest");
-    if (rw) {
+    if (rw && depositDue() > 0) {
       var q = rw.quote(depositDue(), {
         dayKey: state.dayKey,
         serviceIds: state.services.map(function (s) { return s.id; })
@@ -520,13 +559,49 @@
     }
   };
 
+  var memberRow = document.createElement("label");
+  memberRow.className = "bk-member";
+  memberRow.hidden = true;
+  var memberCheck = document.createElement("input");
+  memberCheck.type = "checkbox";
+  memberCheck.checked = true;
+  var memberText = document.createElement("span");
+  memberRow.appendChild(memberCheck);
+  memberRow.appendChild(memberText);
+  previewEl.parentNode.insertBefore(memberRow, previewEl.nextSibling);
+  memberCheck.addEventListener("change", function () {
+    memberUse = memberCheck.checked;
+    renderMeta();
+    renderPreview();
+  });
+
+  var renderMember = function () {
+    var svc = memberService();
+    var r = memberRecord();
+    memberRow.hidden = !svc;
+    if (!svc) return;
+    var plan = window.LumevinaMembership.plan(r.plan);
+    memberCheck.checked = memberUse;
+    memberText.textContent = "";
+    var b = document.createElement("strong");
+    b.textContent = "Use a " + plan.name + " membership facial";
+    memberText.appendChild(b);
+    memberText.appendChild(document.createTextNode(
+      " on your " + svc.name + " — you have " + r.credits + " banked." +
+      (state.services.length > 1 ? " Everything else this visit is 15% off." : "")));
+  };
+
   var renderAll = function () {
     renderDays();      /* first — projected rail times need the day */
     renderChips();
     renderMeta();
     renderSlots();
     renderPreview();
+    renderMember();
   };
+
+  /* membership is looked up by email, so re-check as it's typed */
+  emailInput.addEventListener("change", function () { renderMeta(); renderPreview(); renderMember(); });
 
   /* ── Session building ── */
   var addService = function (id) {
@@ -662,6 +737,7 @@
     modal.classList.remove("rescheduling");
     rescheduleNote.hidden = true;
     resetGift();
+    memberUse = true;
     usingSavedCard = false;
     savedCardWrap.hidden = true;
     cardFields.hidden = false;
@@ -876,7 +952,9 @@
   var updatePayAmount = function () {
     depositAmtEl.textContent = pay.money(chargeNow());
     payBtn.querySelector(".btn-mb-inner").textContent =
-      "Pay deposit · " + pay.money(chargeNow());
+      (chargeNow() === 0 && memberActive())
+        ? "Confirm booking · nothing due today"
+        : "Pay deposit · " + pay.money(chargeNow());
   };
 
   redeemCheck.addEventListener("change", updatePayAmount);
@@ -924,7 +1002,7 @@
           return;
         }
         giftCode = card.code;
-        giftIsService = true;
+        giftIsService = true;                  /* (membership facial steps aside) */
         giftApplied = card.balance;            /* covers the whole treatment */
         giftStatus.textContent = "✓ Your " + card.label +
           " is prepaid in full — nothing due today, nothing at the visit.";
@@ -995,8 +1073,14 @@
     var rows = state.services.map(function (s) {
       return [s.name + " (" + s.dur + " min)", pay.money(s.price)];
     });
+    if (memberActive()) {
+      rows.push(["Membership facial — included", "−" + pay.money(memberCovered())]);
+    }
     if (flashDiscount() > 0) {
       rows.push(["⚡ Flash opening — 10% off", "−" + pay.money(flashDiscount())]);
+    }
+    if (memberExtrasOff() > 0) {
+      rows.push(["Member 15% off the rest of this visit", "−" + pay.money(memberExtrasOff())]);
     }
     rows.push([whenText() + " · " + fmtTime(state.slot) + " – " +
       fmtTime(state.slot + totalDur()), ""]);
@@ -1108,6 +1192,10 @@
       ? pendingBlocks * rw.blockPoints : 0;
     var giftUsed = giftOff();
     var charge = chargeNow();
+    var memberSvc = memberActive() ? memberService() : null;
+    var memberPlan = memberSvc ? memberRecord().plan : null;
+    var memberValue = memberCovered();
+    var totalAtPay = sessionTotal();   /* fixed before the facial is used up */
     var firstVisit = !refField.hidden;
     payBtn.disabled = true;
     payStatus.textContent = "Processing…";
@@ -1141,6 +1229,10 @@
         paid: charge,
         total: sessionTotal(),
         giftCode: giftCode || null,
+        /* a membership facial: its value was paid by the monthly dues, so
+           the books count it separately (like a prepaid gift) */
+        memberCredit: memberPlan,
+        memberValue: memberValue,
         giftPrepaid: giftIsService,
         giftValue: giftIsService ? sessionTotal() : 0,
         flash: flashActive(),
@@ -1159,12 +1251,20 @@
       document.dispatchEvent(new CustomEvent("lumevina:booked"));
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());
+      if (memberSvc) {
+        window.LumevinaMembership.useCredit(emailInput.value.trim(), memberSvc.id, { order: result.id });
+      }
+      var memberLeft = memberSvc ? window.LumevinaMembership.get(emailInput.value.trim()) : null;
       modal.querySelector(".booking-paid").textContent = giftIsService
         ? "Prepaid in full by gift certificate — nothing due today or at the visit."
-        : "Deposit paid: " + pay.money(charge) +
+        : (memberSvc && totalAtPay === 0)
+        ? "Your " + memberSvc.name + " is included in your membership — nothing due today or at the visit." +
+          " " + memberLeft.credits + " banked " + (memberLeft.credits === 1 ? "facial" : "facials") + " left."
+        : (memberSvc ? memberSvc.name + " included in your membership · " : "") +
+          "Deposit paid: " + pay.money(charge) +
           (redeemedPts ? " (" + redeemedPts + " ✦ applied)" : "") +
           (giftUsed > 0 ? " (gift −" + pay.money(giftUsed) + ")" : "") +
-          " · Balance due: " + pay.money(sessionTotal() - deposit);
+          " · Balance due: " + pay.money(totalAtPay - deposit);
       modal.querySelector(".booking-order-id").textContent = result.id;
 
       /* commit the gift redemption: a treatment gift is spent in full;

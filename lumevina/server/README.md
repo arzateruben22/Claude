@@ -110,6 +110,36 @@ fs.writeFileSync("server/functions/_shared/catalog.ts",out+"};\n");
 console.log("services:",seen.size);'
 ```
 
+## Memberships (Stripe Billing)
+
+`js/membership.js` runs the whole Glow Membership flow in the browser today
+(join, monthly facials, bank up to 2, pause, cancel, gift a banked facial).
+To make it real:
+
+1. In Stripe, create one **Product** per plan (Glow, Clear Skin, Ageless) with a
+   monthly **Price** ($149 / $159 / $199). Founding members keep the price they
+   joined at: never edit a Price, add a new one for new members instead.
+2. Join = a Stripe **Subscription** created server-side for the client's
+   customer, using the card saved at join (`payment_behavior:
+   default_incomplete`, confirmed with Stripe.js), then an insert into
+   `memberships` (schema.sql) with `min_ends_at = now() + 3 months`.
+3. In `stripe-webhook`, handle:
+   - `invoice.paid` → `credits = least(credits + 1, 2)`, ledger row `billed`
+   - `customer.subscription.updated` / `deleted` → mirror `status`, `cancel_at`
+4. Cancel = `cancel_at` on the subscription set to the later of the minimum
+   end or the current period end. It must be available online from My Lumevina
+   (California's automatic-renewal law requires online cancellation when the
+   signup was online), and the terms shown at join must state the price,
+   billing frequency, minimum term and how to cancel: they already do.
+5. Pause = `pause_collection` for the one skipped billing date (once per 12
+   months), mirrored in `paused_bill_at`.
+6. Booking with a credit: `create-deposit-intent` checks the client has a
+   `usable` membership covering the service, prices that service at $0 (and
+   takes 15% off the rest of the visit), and decrements `credits` in the same
+   transaction as the booking insert.
+
+Have the member terms reviewed before launch.
+
 ## Flash openings → push notifications
 
 When a cancellation frees a slot, insert a row into `flash_slots` and send a

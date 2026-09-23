@@ -180,9 +180,14 @@
             return;
           }
           var all = loadBookings();
-          all.splice(x.i, 1);
+          var gone = all.splice(x.i, 1)[0];
           saveBookings(all);
+          /* a membership facial comes back when its visit is cancelled in time */
+          if (gone && gone.memberCredit && window.LumevinaMembership) {
+            window.LumevinaMembership.returnCredit(gone.email || session.email);
+          }
           renderBookings();
+          renderMember();
         });
       } else {
         cancel.textContent = "Within 48 hours — call or DM to cancel";
@@ -216,7 +221,19 @@
     renderBookings();
     renderIntake();
     renderCredit();
+    renderMember();
   };
+
+  /* ── Membership card (drawn by js/membership.js) ── */
+  var memberEl = modal.querySelector(".acct-member");
+  var renderMember = function () {
+    if (memberEl && session && window.LumevinaMembership) {
+      window.LumevinaMembership.renderAccount(memberEl, session.email);
+    }
+  };
+  document.addEventListener("lumevina:membership-changed", function () {
+    if (session && modal.getAttribute("aria-hidden") === "false") renderMember();
+  });
 
   /* ── Gift credit: value gift cards attached to this account ── */
   var creditAmtEl = modal.querySelector(".acct-credit-amt");
@@ -352,6 +369,7 @@
       session = { name: name, email: email, since: Date.now() };
       save();
       render();
+      document.dispatchEvent(new CustomEvent("lumevina:account-changed"));
       /* first sign-in on this device claims the welcome bonus */
       var bonus = rw() ? rw().claimWelcome() : 0;
       if (bonus) {
@@ -367,6 +385,7 @@
     session = null;
     save();
     render();
+    document.dispatchEvent(new CustomEvent("lumevina:account-changed"));
   });
 
   modal.querySelector(".acct-open-rewards").addEventListener("click", function () {
@@ -393,8 +412,18 @@
   /* ── Boot ── */
   load();
 
+  /* sign in without the form, e.g. right after joining a membership */
+  var signIn = function (name, email) {
+    if (session && session.email.toLowerCase() === String(email).toLowerCase()) return;
+    session = { name: name, email: email, since: Date.now() };
+    save();
+    if (rw()) rw().claimWelcome();
+    document.dispatchEvent(new CustomEvent("lumevina:account-changed"));
+  };
+
   window.LumevinaAccount = {
     current: function () { return session; },
-    open: openModal
+    open: openModal,
+    signIn: signIn
   };
 })();

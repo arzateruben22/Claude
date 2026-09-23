@@ -232,6 +232,20 @@
     @media (prefers-reduced-motion: no-preference) {
       .kpi, .card { transition: transform 200ms ease; }
     }
+
+    /* memberships */
+    #mem-tiles { grid-template-columns: repeat(5, 1fr); }
+    .mem-mix { display: grid; gap: 0.6rem; margin: 0.2rem 0 1.3rem; }
+    .mem-mix-row { display: grid; grid-template-columns: 7rem 1fr 6.5rem; gap: 0.8rem; align-items: center; font-size: 0.85rem; }
+    .mem-mix-row .n { color: var(--ink-70); }
+    .mem-mix-row .v { text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .mem-mix-bar { height: 9px; border-radius: 999px; background: rgba(234,185,200,0.1); overflow: hidden; }
+    .mem-mix-bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--data), var(--alt)); }
+    .mem-state { font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.55rem; border-radius: 999px; }
+    .mem-state.on { color: #32d74b; background: rgba(50,215,75,0.12); }
+    .mem-state.ending { color: var(--alt); background: rgba(227,180,143,0.12); }
+    .mem-state.paused { color: var(--ink-70); background: rgba(245,245,247,0.08); }
+    @media (max-width: 720px) { #mem-tiles { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body data-palette="#eab9c8,#e3b48f">
@@ -332,6 +346,21 @@
       <div class="bk-table-wrap"><table class="bk-table" id="bk-table"></table></div>
       <p class="sub" style="margin-top:0.9rem">Processing fees estimated at 2.9% + 30¢ per online
       charge (Stripe). The in-person balance is recorded when you mark a visit complete.</p>
+    </div>
+
+    <!-- ── Glow Membership ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Glow Membership</h2>
+          <p class="sub"><strong>Monthly recurring revenue</strong> is what memberships bring in
+          before the month starts. <strong>Facials owed</strong> are banked visits members have
+          paid for and not yet used.</p>
+        </div>
+      </div>
+      <div class="bk-tiles" id="mem-tiles"></div>
+      <div class="mem-mix" id="mem-mix"></div>
+      <div class="bk-table-wrap"><table class="bk-table" id="mem-table"></table></div>
     </div>
 
     <!-- ── Gift certificates ── -->
@@ -852,6 +881,74 @@
         a.download = "lumevina-income-" + new Date().toISOString().slice(0, 10) + ".csv";
         document.body.appendChild(a); a.click(); a.remove();
       });
+    })();
+
+    /* ── Glow Membership: members, recurring revenue, facials owed ── */
+    (function () {
+      var PLANS = { glow: { name: "Glow", price: 149, value: 180 }, clear: { name: "Clear Skin", price: 159, value: 180 },
+                    ageless: { name: "Ageless", price: 199, value: 230 } };
+      var d = function (daysAgo) { return new Date(Date.now() - daysAgo * 864e5).toISOString(); };
+      var MEM_SAMPLE = [
+        { name: "Maya Chen", plan: "glow", status: "active", credits: 1, startedAt: d(96) },
+        { name: "Sofia Alvarez", plan: "glow", status: "active", credits: 2, startedAt: d(88) },
+        { name: "Priya Nair", plan: "ageless", status: "active", credits: 0, startedAt: d(75) },
+        { name: "Jordan Lee", plan: "clear", status: "active", credits: 1, startedAt: d(64) },
+        { name: "Ava Reyes", plan: "glow", status: "active", credits: 0, startedAt: d(52), pausedMonth: d(-20) },
+        { name: "Hannah Brooks", plan: "clear", status: "active", credits: 1, startedAt: d(41) },
+        { name: "Lena Park", plan: "glow", status: "cancelling", credits: 1, startedAt: d(120), cancelAt: d(-12) },
+        { name: "Isabel Cruz", plan: "ageless", status: "active", credits: 1, startedAt: d(30) },
+        { name: "Nora Patel", plan: "glow", status: "active", credits: 1, startedAt: d(19) },
+        { name: "Chloe Kim", plan: "glow", status: "active", credits: 1, startedAt: d(9) }
+      ];
+      var stored = lget("lumevina_memberships");
+      var real = stored ? Object.keys(stored).map(function (k) { return stored[k]; }) : [];
+      var members = real.length ? real : MEM_SAMPLE;
+      var live = members.filter(function (m) { return m.status === "active" || m.status === "cancelling"; });
+      var billing = live.filter(function (m) { return !m.pausedMonth; });
+      var mrr = billing.reduce(function (a, m) { return a + (m.price || PLANS[m.plan].price); }, 0);
+      var owed = live.reduce(function (a, m) { return a + Number(m.credits || 0); }, 0);
+      var owedValue = live.reduce(function (a, m) { return a + Number(m.credits || 0) * PLANS[m.plan].value; }, 0);
+      var ending = live.filter(function (m) { return m.status === "cancelling"; }).length;
+      var founding = Math.max(0, 25 - members.filter(function (m) { return m.status !== "cancelled"; }).length);
+
+      var tiles = [
+        { l: "Active members", v: String(live.length) },
+        { l: "Monthly recurring revenue", v: money(mrr) },
+        { l: "Facials owed · " + money(owedValue), v: String(owed), flag: true },
+        { l: "Cancelling", v: String(ending) },
+        { l: "Founding spots left", v: founding + " / 25" }
+      ];
+      document.getElementById("mem-tiles").innerHTML = tiles.map(function (t) {
+        return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
+          t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+
+      var max = 1;
+      var mix = Object.keys(PLANS).map(function (id) {
+        var n = live.filter(function (m) { return m.plan === id; }).length;
+        max = Math.max(max, n);
+        return { id: id, n: n };
+      });
+      document.getElementById("mem-mix").innerHTML = mix.map(function (x) {
+        return '<div class="mem-mix-row"><span class="n">' + PLANS[x.id].name + '</span>' +
+          '<span class="mem-mix-bar"><span style="width:' + Math.round(x.n / max * 100) + '%"></span></span>' +
+          '<span class="v">' + x.n + ' · ' + money(x.n * PLANS[x.id].price) + '/mo</span></div>';
+      }).join("");
+
+      var fmt = function (iso) { return iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"; };
+      var state = function (m) {
+        if (m.status === "cancelling") return '<span class="mem-state ending">Ends ' + fmt(m.cancelAt) + '</span>';
+        if (m.status === "cancelled") return '<span class="mem-state paused">Ended</span>';
+        if (m.pausedMonth) return '<span class="mem-state paused">Pausing</span>';
+        return '<span class="mem-state on">Active</span>';
+      };
+      var rows = members.slice().sort(function (a, b) { return new Date(b.startedAt) - new Date(a.startedAt); });
+      document.getElementById("mem-table").innerHTML =
+        '<thead><tr><th>Member</th><th>Plan</th><th>Since</th><th>Banked</th><th>Monthly</th><th>Status</th></tr></thead><tbody>' +
+        rows.map(function (m) {
+          return '<tr><td>' + (m.name || m.email || "—") + '</td><td>' + PLANS[m.plan].name + '</td><td>' +
+            fmt(m.startedAt) + '</td><td>' + (m.credits || 0) + '</td><td>' + money(m.price || PLANS[m.plan].price) +
+            '</td><td>' + state(m) + '</td></tr>';
+        }).join("") + '</tbody>';
     })();
 
     /* ── Gift certificates (outstanding liability) ── */

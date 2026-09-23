@@ -91,6 +91,25 @@
     }, 0);
   };
 
+  /* Glow Membership: 10% off skincare products (retail items only —
+     never gift certificates). Looked up by the signed-in account, or by
+     the receipt email typed at checkout. */
+  var memberEmail = function () {
+    var acct = window.LumevinaAccount && window.LumevinaAccount.current();
+    var typed = document.getElementById("co-email");
+    return (typed && typed.value.trim()) || (acct && acct.email) || "";
+  };
+  var memberOff = function () {
+    var LM = window.LumevinaMembership;
+    var rate = LM ? LM.retailRate(memberEmail()) : 0;
+    if (!rate) return 0;
+    var retail = Object.keys(cart).reduce(function (sum, id) {
+      return id.indexOf("retail-") === 0 ? sum + cart[id].price * cart[id].qty : sum;
+    }, 0);
+    return Math.round(retail * rate * 100) / 100;
+  };
+  var orderTotal = function () { return subtotal() - memberOff(); };
+
   /* ── Rendering ── */
   var render = function () {
     var ids = Object.keys(cart);
@@ -281,7 +300,7 @@
       li.appendChild(amount);
       linesList.appendChild(li);
     });
-    totalEl.textContent = money(subtotal());
+    renderMemberLine();
 
     giftDetails.hidden = !cartHasGift();
 
@@ -293,6 +312,26 @@
     document.body.style.overflow = "hidden";
     modal.focus();
   };
+
+  var renderMemberLine = function () {
+    var old = linesList.querySelector(".co-member");
+    if (old) old.remove();
+    var off = memberOff();
+    if (off > 0) {
+      var li = document.createElement("li");
+      li.className = "co-member";
+      var label = document.createElement("span");
+      label.textContent = "Member 10% off skincare";
+      var amount = document.createElement("span");
+      amount.textContent = "−" + money(off);
+      li.appendChild(label);
+      li.appendChild(amount);
+      linesList.appendChild(li);
+    }
+    totalEl.textContent = money(orderTotal());
+  };
+  var coEmail = document.getElementById("co-email");
+  if (coEmail) coEmail.addEventListener("change", function () { renderMemberLine(); });
 
   var closeCheckout = function () {
     modal.setAttribute("aria-hidden", "true");
@@ -426,7 +465,7 @@
     /* Processing runs through the shared engine — see the Stripe
        integration notes at the top of js/payments.js. */
     var payBtn = checkoutForm.querySelector(".checkout-pay");
-    var total = subtotal();
+    var total = orderTotal();
     payBtn.disabled = true;
     checkoutStatus.textContent = "Processing…";
     pay.process({ amount: total, description: "Lumevina order" },
