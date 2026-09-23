@@ -30,8 +30,10 @@
   var BANK_AFTER_CANCEL_DAYS = 60;
   var FOUNDING_CAP = 25;
 
+  /* A ladder: each tier includes everything in the one below it. */
   var PLANS = [
-    { id: "glow", name: "Glow", price: 149, value: 180, popular: true,
+    { id: "glow", name: "Glow", price: 149, value: 180, popular: true, retail: 0.10,
+      primary: "lumevina-custom-facial",
       covers: ["lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Lumevina Custom Facial",
       line: "Your monthly Lumevina Custom Facial",
@@ -39,22 +41,21 @@
               "10% off skincare products",
               "15% off anything else booked the same visit",
               "First word on flash openings"] },
-    { id: "clear", name: "Clear Skin", price: 159, value: 180,
-      covers: ["monthly-acne-treatment"],
+    { id: "clear", name: "Clear Skin", price: 159, value: 180, retail: 0.10, includes: "glow",
+      primary: "monthly-acne-treatment",
+      covers: ["monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Monthly Acne Treatment",
-      line: "Your acne program, on schedule",
-      perks: ["One Monthly Acne Treatment a month",
-              "A between-visit check-in on your home routine",
-              "10% off skincare products",
-              "15% off anything else booked the same visit"] },
-    { id: "ageless", name: "Ageless", price: 199, value: 230,
-      covers: ["ageless-grace-facial"],
+      line: "Everything in Glow, plus your acne program on schedule",
+      perks: ["Choose the Monthly Acne Treatment any month",
+              "A between-visit check-in on your home routine"] },
+    { id: "ageless", name: "Ageless", price: 199, value: 230, retail: 0.15, includes: "clear",
+      primary: "ageless-grace-facial",
+      covers: ["ageless-grace-facial", "monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Ageless Grace Facial",
-      line: "The signature lifting facial, monthly",
-      perks: ["One Ageless Grace Facial a month",
+      line: "Everything in Clear Skin, plus the signature lifting facial",
+      perks: ["Upgrade to the Ageless Grace Facial any month",
               "A finishing add-on every other visit: LED or dermaplaning",
-              "10% off skincare products",
-              "15% off anything else booked the same visit"] }
+              "15% off skincare products, up from 10%"] }
   ];
   var byId = {};
   PLANS.forEach(function (p) { byId[p.id] = p; });
@@ -249,7 +250,7 @@
     if (!usable(r) || !gc) return { ok: false };
     var plan = byId[r.plan];
     var card = gc.create({
-      amount: plan.value, serviceId: plan.covers[0], label: plan.facial,
+      amount: plan.value, serviceId: plan.primary, label: plan.facial,
       recipientName: (to && to.name) || "", recipientEmail: (to && to.email) || "",
       message: "A facial from " + (r.name || "a Lumevina member") + ", gifted from their membership.",
       boughtBy: r.email
@@ -274,7 +275,10 @@
     put(r);
   };
 
-  var retailRate = function (email) { return isMember(get(email)) ? 0.10 : 0; };
+  var retailRate = function (email) {
+    var r = get(email);
+    return isMember(r) ? byId[r.plan].retail : 0;
+  };
   var extrasRate = 0.15;
 
   var all = function () {
@@ -443,7 +447,7 @@
     });
     $(".mj-book").addEventListener("click", function () {
       closeJoin();
-      if (window.LumevinaBooking) window.LumevinaBooking.open(chosen.covers[0]);
+      if (window.LumevinaBooking) window.LumevinaBooking.open(chosen.primary);
     });
     $(".mj-finish").addEventListener("click", closeJoin);
     document.addEventListener("keydown", function (e) {
@@ -514,7 +518,7 @@
     note.setAttribute("role", "status");
     if (usable(r)) btn("Book my " + (plan.id === "clear" ? "treatment" : "facial"), "btn-solid", function () {
       var c = document.querySelector(".account-close"); if (c) c.click();
-      if (window.LumevinaBooking) window.LumevinaBooking.open(plan.covers[0]);
+      if (window.LumevinaBooking) window.LumevinaBooking.open(plan.primary);
     });
     if (usable(r)) btn("Gift a facial", "btn-ghost", function () { showGift(); });
     if (r.status === "active" && r.pausedMonth) btn("Undo pause", "btn-ghost", function () { unpause(r.email); renderAccount(el, email); });

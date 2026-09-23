@@ -1048,8 +1048,13 @@ body.intro-lock { overflow: hidden; }
 
 .gift-select {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   font-family: var(--font-body);
   font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--ink);
   background-color: var(--porcelain);
   border: 1px solid var(--panel-edge-soft);
@@ -1066,6 +1071,11 @@ body.intro-lock { overflow: hidden; }
 
 .gift-select:hover,
 .gift-select:focus { border-color: var(--mauve); outline: none; }
+
+/* small phones: a touch smaller so every option name fits the closed box */
+@media (max-width: 420px) {
+  .gift-select { font-size: 0.875rem; padding-right: 2rem; background-position: right 0.75rem center; }
+}
 
 /* checkout: gift delivery details */
 .checkout-subhead {
@@ -4537,6 +4547,31 @@ p.install-steps { padding-left: 0; }
 }
 .mem-per { color: var(--ink-60); font-size: 0.95rem; }
 .mem-value { font-size: 0.875rem; color: var(--ink-60); margin-bottom: 1.2rem; }
+/* "Everything in <tier below>, plus" — the ladder, said once */
+.mem-plus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--panel-edge-soft);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.mem-plus span {
+  display: grid;
+  place-items: center;
+  width: 1.25rem; height: 1.25rem;
+  border-radius: 50%;
+  background: var(--grad-rose);
+  color: #000;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.mem-plus + .mem-perks { border-top: 0; padding-top: 0.75rem; }
+
 .mem-perks {
   list-style: none;
   margin: 0 0 1.5rem;
