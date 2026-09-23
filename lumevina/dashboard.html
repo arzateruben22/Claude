@@ -1180,7 +1180,7 @@
       var IKEY = "lumevina_inventory", LOW = 3;
       var SAMPLE = [
         { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", stock: 8, cost: 18, price: 38 },
-        { id: "lm-serum", name: "Le Mieux Peptide Serum", stock: 3, cost: 32, price: 75 },
+        { id: "lm-serum", name: "Le Mieux TGF-β Booster", stock: 3, cost: 32, price: 75 },
         { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", stock: 12, cost: 14, price: 32 }
       ];
       var stored = lget(IKEY);
@@ -1188,7 +1188,7 @@
       /* retired from the shelf (see js/inventory.js) */
       inv = inv.filter(function (p) { return p.id !== "gua-sha"; });
       /* names follow the shelf catalog (js/inventory.js) */
-      var NAMES = { "gm-cleanser": "GlyMed+ Glycolic Facial Cleanser", "spf-30": "Face Reality Daily SPF 30 Plus" };
+      var NAMES = { "gm-cleanser": "GlyMed+ Glycolic Facial Cleanser", "spf-30": "Face Reality Daily SPF 30 Plus", "lm-serum": "Le Mieux TGF-β Booster" };
       inv.forEach(function (p) { if (NAMES[p.id]) p.name = NAMES[p.id]; });
       var num = function (n) { return Number(n || 0); };
       var save = function () { try { localStorage.setItem(IKEY, JSON.stringify(inv)); } catch (e) { /* private mode */ } };

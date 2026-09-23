@@ -19,8 +19,8 @@
   var CATALOG = [
     { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", cost: 18, price: 38, stock: 8,
       desc: "Step one, cleanse: 10% glycolic acid clears dull buildup and keeps skin smooth between facials." },
-    { id: "lm-serum", name: "Le Mieux Peptide Serum", cost: 32, price: 75, stock: 3,
-      desc: "Peptide + marine hydration to keep skin plump and luminous between visits." },
+    { id: "lm-serum", name: "Le Mieux TGF-β Booster", cost: 32, price: 75, stock: 3,
+      desc: "A concentrated dropper serum — a few drops under your moisturizer to boost your routine between facials." },
     { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", cost: 14, price: 32, stock: 12,
       desc: "Broad-spectrum, acne-safe SPF 30 — the one daily step that protects every result." }
   ];
@@ -29,7 +29,8 @@
      added or swapped without resetting anyone's inventory) */
   var PHOTOS = {
     "gm-cleanser": "img/retail/glymed-cleanser.webp",
-    "spf-30": "img/retail/daily-spf-30.webp"
+    "spf-30": "img/retail/daily-spf-30.webp",
+    "lm-serum": "img/retail/le-mieux-tgf-booster.webp"
   };
 
   var num = function (n) { return Number(n || 0); };
