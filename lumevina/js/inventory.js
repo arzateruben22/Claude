@@ -17,12 +17,12 @@
 
   /* the shelf — matches the dashboard's Inventory card */
   var CATALOG = [
-    { id: "gm-cleanser", name: "GlyMed Gentle Cleanser", cost: 18, price: 38, stock: 8,
-      desc: "The daily gel cleanser we start most facials with — soothing, no tightness." },
+    { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", cost: 18, price: 38, stock: 8,
+      desc: "Step one, cleanse: 10% glycolic acid clears dull buildup and keeps skin smooth between facials." },
     { id: "lm-serum", name: "Le Mieux Peptide Serum", cost: 32, price: 75, stock: 3,
       desc: "Peptide + marine hydration to keep skin plump and luminous between visits." },
-    { id: "spf-30", name: "Daily Mineral SPF 30", cost: 14, price: 32, stock: 12,
-      desc: "Weightless mineral sunscreen — the one step that protects every result." }
+    { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", cost: 14, price: 32, stock: 12,
+      desc: "Broad-spectrum, acne-safe SPF 30 — the one daily step that protects every result." }
   ];
 
   /* product photos, by id (kept out of the saved stock so a photo can be
@@ -49,9 +49,20 @@
 
   var inv = load();
   if (!inv) { inv = JSON.parse(JSON.stringify(CATALOG)); persist(); }
-  else if (inv.some(function (p) { return RETIRED.indexOf(p.id) !== -1; })) {
-    inv = inv.filter(function (p) { return RETIRED.indexOf(p.id) === -1; });
-    persist();
+  else {
+    var dirty = false;
+    /* products taken off the shelf leave saved lists too */
+    if (inv.some(function (p) { return RETIRED.indexOf(p.id) !== -1; })) {
+      inv = inv.filter(function (p) { return RETIRED.indexOf(p.id) === -1; });
+      dirty = true;
+    }
+    /* names and descriptions follow the catalog (a product renamed to match
+       its bottle updates everywhere); stock and price stay as saved */
+    inv.forEach(function (p) {
+      var c = CATALOG.filter(function (x) { return x.id === p.id; })[0];
+      if (c && (p.name !== c.name || p.desc !== c.desc)) { p.name = c.name; p.desc = c.desc; dirty = true; }
+    });
+    if (dirty) persist();
   }
 
   var get = function (id) {
