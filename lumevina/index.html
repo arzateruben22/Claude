@@ -497,13 +497,19 @@
             <p class="eyebrow" data-idx="03">The Spa</p>
             <h2 class="display">Skincare that <em>honors your skin.</em></h2>
           </div>
-          <div class="story-copy" data-reveal>
-            <p>Lumevina begins with a conversation, not a menu. Every treatment starts
-            with a close look at your skin — its history, its sensitivities, what it's
-            asking for right now — and becomes a facial built just for you.</p>
-            <p>Medical-grade actives, unhurried hands, and a room that lets your
-            shoulders finally drop. <em>This is skincare as care.</em></p>
-            <a class="press-link" href="https://canvasrebel.com/meet-evelyn-romero/" target="_blank" rel="noopener">
+          <div class="story-copy" data-reveal data-reel data-reel-label="The Spa story">
+            <div class="spa-slide" data-reel-name="Approach">
+              <p class="spa-slide-label">Our approach</p>
+              <p>Lumevina begins with a conversation, not a menu. Every treatment starts
+              with a close look at your skin — its history, its sensitivities, what it's
+              asking for right now — and becomes a facial built just for you.</p>
+            </div>
+            <div class="spa-slide" data-reel-name="The room">
+              <p class="spa-slide-label">The room</p>
+              <p>Medical-grade actives, unhurried hands, and a room that lets your
+              shoulders finally drop. <em>This is skincare as care.</em></p>
+            </div>
+            <a class="press-link" data-reel-name="Press" href="https://canvasrebel.com/meet-evelyn-romero/" target="_blank" rel="noopener">
               <span class="press-eyebrow">Featured Article</span>
               <span class="press-text">Meet Evelyn Romero — the esthetician behind Lumevina, in conversation with CanvasRebel</span>
               <span class="press-arrow" aria-hidden="true">→</span>
@@ -516,20 +522,20 @@
           <p class="eyebrow">The Ritual</p>
           <h3 class="display">Three steps to <em>your best skin.</em></h3>
         </div>
-        <div class="ritual-grid">
-          <div class="ritual-card" data-reveal>
+        <div class="ritual-grid" data-reel data-reel-label="The ritual steps">
+          <div class="ritual-card" data-reveal data-n="01" data-reel-name="01 Consult">
             <p class="ritual-step">01 · Consult</p>
             <h3 class="ritual-card-title">We listen first</h3>
             <p>Every visit opens with a skin consultation — your history, your goals,
             and what your skin is telling us today.</p>
           </div>
-          <div class="ritual-card" data-reveal>
+          <div class="ritual-card" data-reveal data-n="02" data-reel-name="02 Customize">
             <p class="ritual-step">02 · Customize</p>
             <h3 class="ritual-card-title">Composed for you</h3>
             <p>Your esthetician builds the treatment in the room — actives, techniques,
             and finishing care chosen for your skin alone.</p>
           </div>
-          <div class="ritual-card" data-reveal>
+          <div class="ritual-card" data-reveal data-n="03" data-reel-name="03 Glow">
             <p class="ritual-step">03 · Glow</p>
             <h3 class="ritual-card-title">Leave luminous</h3>
             <p>You leave with visible results and a simple home ritual — and your next
@@ -1804,9 +1810,11 @@
   <script src="js/stacked-cards.js"></script>
   <script src="js/cursor-aura.js"></script>
   <script src="js/policy-panels.js"></script>
+  <script src="js/policy-sheet.js"></script>
   <script src="js/sectors.js"></script>
   <script src="js/link-preview.js"></script>
   <script src="js/spotlight.js"></script>
+  <script src="js/reel.js"></script>
   <script src="js/booking.js"></script>
   <script src="js/shuffle-stack.js"></script>
   <script src="js/main.js"></script>
