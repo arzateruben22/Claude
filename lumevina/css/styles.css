@@ -4809,3 +4809,7 @@ p.install-steps { padding-left: 0; }
 @media (prefers-reduced-motion: reduce) {
   .mem-founding-dot { animation: none; }
 }
+
+/* brand wordmark in place of the card title (e.g. GlyMed Plus) */
+.shop-card-logo { line-height: 0; margin-bottom: 0.9rem; }
+.shop-card-logo img { display: block; height: 2.4rem; width: auto; }
