@@ -1181,11 +1181,12 @@
       var SAMPLE = [
         { id: "gm-cleanser", name: "GlyMed Gentle Cleanser", stock: 8, cost: 18, price: 38 },
         { id: "lm-serum", name: "Le Mieux Peptide Serum", stock: 3, cost: 32, price: 75 },
-        { id: "spf-30", name: "Daily Mineral SPF 30", stock: 12, cost: 14, price: 32 },
-        { id: "gua-sha", name: "Rose Quartz Gua Sha", stock: 2, cost: 9, price: 28 }
+        { id: "spf-30", name: "Daily Mineral SPF 30", stock: 12, cost: 14, price: 32 }
       ];
       var stored = lget(IKEY);
       var inv = (stored && stored.length) ? stored : SAMPLE.slice();
+      /* retired from the shelf (see js/inventory.js) */
+      inv = inv.filter(function (p) { return p.id !== "gua-sha"; });
       var num = function (n) { return Number(n || 0); };
       var save = function () { try { localStorage.setItem(IKEY, JSON.stringify(inv)); } catch (e) { /* private mode */ } };
 

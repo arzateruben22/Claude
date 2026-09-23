@@ -22,10 +22,14 @@
     { id: "lm-serum", name: "Le Mieux Peptide Serum", cost: 32, price: 75, stock: 3,
       desc: "Peptide + marine hydration to keep skin plump and luminous between visits." },
     { id: "spf-30", name: "Daily Mineral SPF 30", cost: 14, price: 32, stock: 12,
-      desc: "Weightless mineral sunscreen — the one step that protects every result." },
-    { id: "gua-sha", name: "Rose Quartz Gua Sha", cost: 9, price: 28, stock: 2,
-      desc: "The sculpting stone we use in studio — de-puff and lift at home." }
+      desc: "Weightless mineral sunscreen — the one step that protects every result." }
   ];
+
+  /* product photos, by id (kept out of the saved stock so a photo can be
+     added or swapped without resetting anyone's inventory) */
+  var PHOTOS = {
+    "gm-cleanser": "img/retail/glymed-cleanser.webp"
+  };
 
   var num = function (n) { return Number(n || 0); };
 
@@ -39,8 +43,15 @@
     try { localStorage.setItem(KEY, JSON.stringify(inv)); } catch (e) { /* private mode */ }
   };
 
+  /* products taken off the shelf: dropped from saved lists too */
+  var RETIRED = ["gua-sha"];
+
   var inv = load();
   if (!inv) { inv = JSON.parse(JSON.stringify(CATALOG)); persist(); }
+  else if (inv.some(function (p) { return RETIRED.indexOf(p.id) !== -1; })) {
+    inv = inv.filter(function (p) { return RETIRED.indexOf(p.id) === -1; });
+    persist();
+  }
 
   var get = function (id) {
     return inv.filter(function (p) { return p.id === id; })[0] || null;
@@ -65,7 +76,10 @@
       card.className = "retail-card" + (out ? " is-out" : "");
       card.setAttribute("data-reveal", "");
       card.innerHTML =
-        '<div class="retail-visual rt-tint-' + ((i % 4) + 1) + '" aria-hidden="true"></div>' +
+        (PHOTOS[p.id]
+          ? '<div class="retail-visual has-photo" aria-hidden="true"><img src="' + PHOTOS[p.id] +
+            '" alt="" loading="lazy" decoding="async" width="1000" height="400"></div>'
+          : '<div class="retail-visual rt-tint-' + ((i % 4) + 1) + '" aria-hidden="true"></div>') +
         '<h3 class="retail-name">' + p.name + '</h3>' +
         (p.desc ? '<p class="retail-desc">' + p.desc + '</p>' : '') +
         '<div class="retail-foot"><span class="product-price">$' + num(p.price) + '</span>' +

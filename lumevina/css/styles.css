@@ -2093,7 +2093,7 @@ body.intro-lock { overflow: hidden; }
 /* ─── The Shelf (own retail — live inventory) ─── */
 .retail-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: var(--space-4);
 }
 .retail-card {
@@ -2108,6 +2108,24 @@ body.intro-lock { overflow: hidden; }
 .retail-card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26); }
 .retail-card.is-out { opacity: 0.7; }
 .retail-visual { height: 130px; border-radius: 12px; margin-bottom: var(--space-3); }
+/* a real product shot: shown whole on its own studio backdrop */
+.retail-visual.has-photo {
+  position: relative;
+  overflow: hidden;
+  background: #e9e5e1;
+}
+.retail-visual.has-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s cubic-bezier(.2, .8, .2, 1);
+}
+.retail-card:hover .retail-visual.has-photo img { transform: scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .retail-visual.has-photo img, .retail-card:hover .retail-visual.has-photo img { transition: none; transform: none; }
+}
 /* dark swatches, each lit from one corner in its product's color */
 .rt-tint-1 { background: radial-gradient(120% 120% at 85% 10%, rgba(234, 185, 200, 0.55), transparent 60%), #171214; }
 .rt-tint-2 { background: radial-gradient(120% 120% at 85% 10%, rgba(199, 179, 224, 0.5), transparent 60%), #141217; }
