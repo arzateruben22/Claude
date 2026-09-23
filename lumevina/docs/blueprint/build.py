@@ -26,7 +26,7 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 # Added profit per month by month-from-now, for the three cases.
 S1 = {"low": 1670, "likely": 3670, "high": 6250}        # your chair, once ramped
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net
-COLL = {"low": 1100, "likely": 5100, "high": 10640}     # 6–8 artists, net
+COLL = {"low": 1100, "likely": 4100, "high": 8140}     # 6–8 artists, net
 
 
 def added(m, k):
@@ -58,8 +58,8 @@ def chart_svg():
     lk = "M" + " L".join("%.1f,%.1f" % (x(m), y(added(m, "likely"))) for m in ms)
     stages = [(0, 6, "Your chair"), (6, 15, "Pilot"), (15, 36, "Collective")]
     parts = ['<svg class="chart" viewBox="0 0 800 330" role="img" '
-             'aria-label="Added profit per month over three years. Likely case rises to about $8,800 a month by year three; '
-             'the range runs from about $2,800 to $16,900.">']
+             'aria-label="Added profit per month over three years. Likely case rises to about $7,800 a month by year three; '
+             'the range runs from about $2,800 to $14,400.">']
     for i, (a, b, name) in enumerate(stages):
         parts.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>'
                      % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i))
@@ -75,7 +75,7 @@ def chart_svg():
     parts.append('<path class="likely" pathLength="1" d="%s"/>' % lk)
     ex, ey = x(36), y(added(36, "likely"))
     parts.append('<circle class="endpt" cx="%.1f" cy="%.1f" r="5"/>' % (ex, ey))
-    parts.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">$8.8k a month</text>' % (ex - 12, ey - 14))
+    parts.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">$7.8k a month</text>' % (ex - 12, ey - 14))
     parts.append('</svg>')
     return "".join(parts)
 
@@ -116,9 +116,8 @@ CHAIR_TOTAL = ("Added revenue", "$4,560", "$2,180–$7,940")
 
 COLLECTIVE = [("Platform fees · 7 artists", "$5,600", "$3,600–$8,640"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
-              ("Lumevina Academy", "$1,000", "$0–$2,500"),
               ("Space and running costs", "−$5,500", "−$5,000–$6,500")]
-COLL_TOTAL = ("Net to Lumevina", "$5,100", "$1,100–$10,640")
+COLL_TOTAL = ("Net to Lumevina", "$4,100", "$1,100–$8,140")
 
 GUARD = [
     ("Licensed only.", "Every artist holds a California license and works in a licensed space."),
@@ -182,11 +181,11 @@ DEEP = [
               ("Measure", "How many of their clients also book Evelyn."),
               ("Decide", "15% or more by month 12 means go. Under that, keep the pilot: it still nets about $2.8k a month.")]},
     {"n": 3, "when": "Step 3 · Year 2–3", "h": "The Collective.", "dim": "One house, one app.",
-     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $5,100 a month.",
+     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $4,100 a month.",
      "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes."),
-              ("Fill", "One or two artists a month; the Academy trains the next ones."),
+              ("Fill", "One or two licensed artists a month, found through the pilot artists’ networks."),
               ("App", "Lumevina goes to the App Store with every artist bookable."),
-              ("Target", "Seven artists, about $5.1k net a month: +$105k a year with Step 1.")]},
+              ("Target", "Seven artists, about $4.1k net a month: +$93k a year with Step 1.")]},
 ]
 
 
@@ -411,6 +410,59 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .deep .h2 { font-size: clamp(2.2rem, 4.2vw, 3.3rem); }
 .deep.flip .deep-copy { order: 2; }
 .deep + .deep { border-top: 0; padding-top: 40px; }
+
+
+/* step cards open a panel */
+button.step { display: block; width: 100%; text-align: left; font: inherit; color: inherit; border: 0; cursor: pointer;
+  position: relative; padding-bottom: 76px; transition: background-color .3s ease, transform .4s cubic-bezier(.2,.8,.2,1); }
+button.step:hover { background: var(--card-2); transform: translateY(-3px); }
+button.step:focus-visible { outline: 2px solid var(--rose); outline-offset: 4px; }
+button.step.is-origin { visibility: hidden; }
+.step .plus { position: absolute; right: 20px; bottom: 20px; width: 38px; height: 38px; border-radius: 50%;
+  background: #2c2c2f; color: var(--text); display: grid; place-items: center; transition: transform .45s cubic-bezier(.2,.8,.2,1), background-color .3s; }
+.step .plus svg { width: 16px; height: 16px; }
+button.step:hover .plus { background: var(--text); color: #000; transform: rotate(90deg); }
+
+html.sd-lock { overflow: hidden; }
+.sd-overlay { position: fixed; inset: 0; z-index: 100; }
+.sd-overlay[hidden] { display: none; }
+.sd-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.62);
+  -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%); }
+.sd-panel { position: absolute; inset: 0; margin: auto; width: min(1100px, calc(100% - 48px)); height: min(780px, calc(100dvh - 48px));
+  background: #161618; border-radius: 28px; overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 40px 120px rgba(0,0,0,.6); clip-path: inset(0 round 28px); }
+.sd-close { position: absolute; top: 18px; right: 18px; z-index: 2; width: 38px; height: 38px; border-radius: 50%; border: 0;
+  background: #2c2c2f; color: var(--text); display: grid; place-items: center; cursor: pointer; transition: background-color .2s; }
+.sd-close:hover { background: #3a3a3d; }
+.sd-close svg { width: 16px; height: 16px; }
+.sd-close:focus-visible, .sd-nav button:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.sd-body { flex: 1; overflow: auto; padding: 64px 56px 32px; overscroll-behavior: contain; }
+.sd-grid { display: grid; grid-template-columns: 1fr 1.1fr; grid-template-areas: "head art" "plan art";
+  column-gap: 48px; align-content: center; min-height: 100%; }
+.sd-head { grid-area: head; align-self: end; }
+.sd-grid .deep-art { grid-area: art; align-self: center; }
+.sd-grid .plan { grid-area: plan; align-self: start; }
+.sd-h { font-size: clamp(2rem, 3.8vw, 3.1rem); font-weight: 700; letter-spacing: -0.038em; line-height: 1.05; margin: 14px 0 26px; text-wrap: balance; }
+.sd-panel .deep-art { background: #0b0b0c; }
+.sd-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px;
+  border-top: 1px solid var(--hair); min-height: 66px; }
+.sd-nav button { font: inherit; font-size: .92rem; font-weight: 500; color: var(--text); background: transparent;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 9px 16px; cursor: pointer; transition: background-color .2s, border-color .2s; }
+.sd-nav button:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.4); }
+.sd-nav button[hidden] { display: inline-block; visibility: hidden; }
+.sd-arrow { color: var(--rose); }
+.sd-dots { display: flex; gap: 7px; }
+.sd-dots i { width: 7px; height: 7px; border-radius: 999px; background: #48484a; transition: width .3s, background-color .3s; }
+.sd-dots i.on { width: 20px; background: var(--text); }
+@media (max-width: 860px) {
+  .sd-panel { width: calc(100% - 16px); height: calc(100dvh - 16px); border-radius: 22px; }
+  .sd-body { padding: 60px 18px 20px; }
+  .sd-grid { grid-template-columns: 1fr; grid-template-areas: "head" "art" "plan"; row-gap: 22px; align-content: start; }
+  .sd-h { margin-bottom: 0; }
+  .sd-nav { padding: 10px 12px; }
+  .sd-nav .sd-lbl { display: none; }
+  .sd-nav button { padding: 9px 14px; }
+}
 
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
 .reveal.in { opacity: 1; transform: none; }
@@ -657,7 +709,7 @@ WEB_JS = r"""
   }, { threshold: 0.2 }) : null;
   document.querySelectorAll(".reveal").forEach(function (el) { if (io) io.observe(el); });
 
-  /* count-up numbers: "+$105k" style */
+  /* count-up numbers: "+$93k" style */
   function countUp(el) {
     var target = Number(el.getAttribute("data-count"));
     var pre = el.getAttribute("data-pre") || "", suf = el.getAttribute("data-suf") || "";
@@ -685,6 +737,129 @@ WEB_JS = r"""
     cap.textContent = caps[cur];
   };
   if (imgs.length && !rm) setInterval(function () { if (!document.hidden) show((cur + 1) % imgs.length); }, 3200);
+})();
+"""
+
+
+DIALOG_JS = r"""
+/* Step cards open their game plan in a panel that grows out of the
+   card itself (clip-path from the card's rectangle to the full panel),
+   content rising in behind it. Prev / next slide between steps; Esc,
+   the backdrop or the close button shrink it back into its card. */
+(function () {
+  "use strict";
+  var ov = document.querySelector(".sd-overlay");
+  if (!ov) return;
+  var panel = ov.querySelector(".sd-panel"), backdrop = ov.querySelector(".sd-backdrop");
+  var body = ov.querySelector(".sd-body"), closeBtn = ov.querySelector(".sd-close");
+  var prev = ov.querySelector(".sd-prev"), next = ov.querySelector(".sd-next");
+  var dots = [].slice.call(ov.querySelectorAll(".sd-dots i"));
+  var steps = [].slice.call(ov.querySelectorAll(".sd-step"));
+  var cards = [].slice.call(document.querySelectorAll("button.step[data-open]"));
+  var NAMES = ["Step 1 · Grow your chair", "Step 2 · Pilot two artists", "Step 3 · The Collective"];
+  var EASE = "cubic-bezier(.2,.8,.2,1)";
+  var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canAnimate = !!panel.animate && !rm;
+  var cur = 0, busy = false;
+
+  var show = function (n) {
+    steps.forEach(function (st, i) { st.hidden = i !== n; });
+    dots.forEach(function (d, i) { d.className = i === n ? "on" : ""; });
+    cur = n;
+    prev.hidden = n === 0; next.hidden = n === steps.length - 1;
+    prev.querySelector(".sd-lbl").textContent = n > 0 ? NAMES[n - 1] : "";
+    next.querySelector(".sd-lbl").textContent = n < steps.length - 1 ? NAMES[n + 1] : "";
+    panel.setAttribute("aria-labelledby", "sd-title-" + (n + 1));
+    body.scrollTop = 0;
+  };
+
+  var insetFrom = function (card) {
+    var c = card.getBoundingClientRect(), p = panel.getBoundingClientRect();
+    var px = function (v) { return Math.max(0, Math.round(v)) + "px"; };
+    return "inset(" + px(c.top - p.top) + " " + px(p.right - c.right) + " " +
+      px(p.bottom - c.bottom) + " " + px(c.left - p.left) + " round 22px)";
+  };
+  var FULL = "inset(0px 0px 0px 0px round 28px)";
+
+  var open = function (n) {
+    if (busy) return;
+    var card = cards[n];
+    show(n);
+    ov.hidden = false;
+    document.documentElement.classList.add("sd-lock");
+    card.classList.add("is-origin");
+    if (canAnimate) {
+      busy = true;
+      var a = panel.animate([{ clipPath: insetFrom(card) }, { clipPath: FULL }], { duration: 640, easing: EASE });
+      backdrop.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: "ease" });
+      body.animate([{ opacity: 0, transform: "translateY(22px) scale(.985)" }, { opacity: 1, transform: "none" }],
+        { duration: 560, delay: 200, easing: EASE, fill: "backwards" });
+      closeBtn.animate([{ opacity: 0, transform: "scale(.6)" }, { opacity: 1, transform: "none" }],
+        { duration: 360, delay: 360, easing: EASE, fill: "backwards" });
+      a.onfinish = function () { busy = false; };
+    }
+    closeBtn.focus({ preventScroll: true });
+  };
+
+  var close = function () {
+    if (busy || ov.hidden) return;
+    var card = cards[cur];
+    var done = function () {
+      ov.hidden = true;
+      document.documentElement.classList.remove("sd-lock");
+      cards.forEach(function (c) { c.classList.remove("is-origin"); });
+      busy = false;
+      card.focus({ preventScroll: true });
+    };
+    if (!canAnimate) { done(); return; }
+    busy = true;
+    body.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: "ease", fill: "forwards" });
+    backdrop.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 480, easing: "ease", fill: "forwards" });
+    var a = panel.animate([{ clipPath: FULL }, { clipPath: insetFrom(card) }], { duration: 520, easing: EASE, fill: "forwards" });
+    a.onfinish = function () {
+      done();
+      panel.getAnimations().forEach(function (x) { x.cancel(); });
+      body.getAnimations().forEach(function (x) { x.cancel(); });
+      backdrop.getAnimations().forEach(function (x) { x.cancel(); });
+    };
+  };
+
+  var go = function (n) {
+    if (busy || n < 0 || n >= steps.length || n === cur) return;
+    var dir = n > cur ? 1 : -1;
+    cards.forEach(function (c) { c.classList.remove("is-origin"); });
+    cards[n].classList.add("is-origin");
+    if (!canAnimate) { show(n); return; }
+    busy = true;
+    var out = body.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(" + (-40 * dir) + "px)" }],
+      { duration: 200, easing: "ease-in", fill: "forwards" });
+    out.onfinish = function () {
+      show(n);
+      out.cancel();
+      var inn = body.animate([{ opacity: 0, transform: "translateX(" + (40 * dir) + "px)" }, { opacity: 1, transform: "none" }],
+        { duration: 380, easing: EASE });
+      inn.onfinish = function () { busy = false; };
+    };
+  };
+
+  cards.forEach(function (c, i) { c.addEventListener("click", function () { open(i); }); });
+  closeBtn.addEventListener("click", close);
+  backdrop.addEventListener("click", close);
+  prev.addEventListener("click", function () { go(cur - 1); });
+  next.addEventListener("click", function () { go(cur + 1); });
+  document.addEventListener("keydown", function (e) {
+    if (ov.hidden) return;
+    if (e.key === "Escape") { e.preventDefault(); close(); }
+    else if (e.key === "ArrowRight") go(cur + 1);
+    else if (e.key === "ArrowLeft") go(cur - 1);
+    else if (e.key === "Tab") {
+      /* keep focus inside the panel */
+      var f = [].slice.call(panel.querySelectorAll("button:not([hidden])"));
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+  });
 })();
 """
 
@@ -739,11 +914,9 @@ WEB = """<!DOCTYPE html>
       <h2 class="h2" style="margin-top:14px">Three steps. <span class="dim">Each one earns the next.</span></h2>
     </div>
     <div class="steps">__STEPS__</div>
-    <p class="foot-note reveal">A step starts only when the one before it has worked.</p>
+    <p class="foot-note reveal">Tap a step to open its game plan. Each one starts only when the one before it has worked.</p>
   </div>
 </section>
-
-__DEEP__
 
 <section>
   <div class="wrap">
@@ -781,8 +954,8 @@ __DEEP__
     </div>
     <div class="figs reveal">
       <div class="fig"><div class="k">Low</div><div class="v num" data-count="33" data-pre="+$" data-suf="k">+$33k</div><div class="d">The chair grows a little; the Collective barely covers its lease.</div></div>
-      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="105" data-pre="+$" data-suf="k">+$105k</div><div class="d">Membership sticks, seven artists, clients cross over.</div></div>
-      <div class="fig"><div class="k">High</div><div class="v num" data-count="200" data-pre="+$" data-suf="k">+$200k</div><div class="d">Full membership, eight busy artists, the Academy running.</div></div>
+      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="93" data-pre="+$" data-suf="k">+$93k</div><div class="d">Membership sticks, seven artists, clients cross over.</div></div>
+      <div class="fig"><div class="k">High</div><div class="v num" data-count="173" data-pre="+$" data-suf="k">+$173k</div><div class="d">Full membership and eight busy artists.</div></div>
     </div>
     <div class="chart-card reveal">
       <h3>Added profit per month, over three years</h3>
@@ -824,6 +997,7 @@ __DEEP__
   </div>
 </section>
 
+__DIALOG__
 <script>__NET__</script>
 <script>__WEBJS__</script>
 <script>__STEPSJS__</script>
@@ -832,10 +1006,39 @@ __DEEP__
 """
 
 
+PLUS = ('<span class="plus" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" '
+        'stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>')
+
+
 def steps_html(reveal=True):
-    r = " reveal" if reveal else ""
-    return "".join('<div class="step%s"><div class="n grad">%s</div><h3>%s</h3><p class="when">%s</p><p>%s</p></div>'
-                   % (r, n, t, w, d) for n, t, w, d in STEPS)
+    if not reveal:   # print: static cards
+        return "".join('<div class="step"><div class="n grad">%s</div><h3>%s</h3><p class="when">%s</p><p>%s</p></div>'
+                       % (n, t, w, d) for n, t, w, d in STEPS)
+    return "".join('<button type="button" class="step reveal" data-open="%d" aria-haspopup="dialog" '
+                   'aria-label="Open step %s: %s">'
+                   '<div class="n grad">%s</div><h3>%s</h3><p class="when">%s</p><p>%s</p>%s</button>'
+                   % (i, n, t, n, t, w, d, PLUS) for i, (n, t, w, d) in enumerate(STEPS))
+
+
+def step_dialog():
+    arts = []
+    for d in DEEP:
+        arts.append('<article class="sd-step" data-step-panel="%d" hidden><div class="sd-grid">'
+                    '<div class="sd-head"><p class="kicker">%s</p>'
+                    '<h2 class="sd-h" id="sd-title-%d">%s <span class="dim">%s</span></h2></div>'
+                    '<div class="deep-art"><svg class="scene" data-step="%d" viewBox="%s" role="img" aria-label="%s"></svg></div>'
+                    '<div class="plan">%s</div>'
+                    '</div></article>' % (d["n"] - 1, d["when"], d["n"], d["h"], d["dim"],
+                                          d["n"], d["vb"], d["aria"], plan_html(d["plan"])))
+    return ('<div class="sd-overlay" hidden><div class="sd-backdrop"></div>'
+            '<div class="sd-panel" role="dialog" aria-modal="true" aria-labelledby="sd-title-1">'
+            '<button type="button" class="sd-close" aria-label="Close"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" '
+            'stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'
+            '<div class="sd-body">%s</div>'
+            '<nav class="sd-nav"><button type="button" class="sd-prev"><span class="sd-arrow">&larr;</span> <span class="sd-lbl"></span></button>'
+            '<span class="sd-dots"><i></i><i></i><i></i></span>'
+            '<button type="button" class="sd-next"><span class="sd-lbl"></span> <span class="sd-arrow">&rarr;</span></button></nav>'
+            '</div></div>') % "".join(arts)
 
 
 def flow_html(reveal=True):
@@ -872,7 +1075,7 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL)).replace("__GUARD__", guard_html())
        .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html())
        .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS))
-       .replace("__DEEP__", "".join(deep_web(d) for d in DEEP)).replace("__STEPSJS__", STEPS_JS))
+       .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS)))
 
 # ─────────────────────────── print pages ───────────────────────────
 def foot(n):
@@ -892,7 +1095,7 @@ PRINT = """<!DOCTYPE html>
   <div class="cover-net"><div class="net-wrap"><canvas id="net"></canvas>
     <div class="net-cap"><b id="net-phase">The Collective</b><span id="net-desc">Eight artists, one app, shared Glow Rewards.</span></div></div></div>
   <div class="stats">
-    <div class="stat"><div class="v grad num">+$105k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
+    <div class="stat"><div class="v grad num">+$93k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
     <div class="stat"><div class="v num">3 steps</div><div class="k">Each starts only when the last one worked</div></div>
     <div class="stat"><div class="v num">90 days</div><div class="k">To go live and test the first artist</div></div>
   </div>
@@ -948,8 +1151,8 @@ __DEEPP__
   </div>
   <div class="figs">
     <div class="fig"><div class="k">Low</div><div class="v num">+$33k</div><div class="d">The Collective barely covers its lease.</div></div>
-    <div class="fig hl"><div class="k">Likely</div><div class="v num grad">+$105k</div><div class="d">Membership sticks; seven artists; clients cross over.</div></div>
-    <div class="fig"><div class="k">High</div><div class="v num">+$200k</div><div class="d">Full membership, eight artists, the Academy.</div></div>
+    <div class="fig hl"><div class="k">Likely</div><div class="v num grad">+$93k</div><div class="d">Membership sticks; seven artists; clients cross over.</div></div>
+    <div class="fig"><div class="k">High</div><div class="v num">+$173k</div><div class="d">Full membership and eight busy artists.</div></div>
   </div>
   <div class="chart-card">
     <h3>Added profit per month, over three years</h3>

@@ -195,11 +195,13 @@
   /* ───────────── Step 3 · the Lumevina house ───────────── */
   var step3 = function (svg) {
     el("rect", { x: 16, y: 16, width: 488, height: 262, rx: 20, fill: "#0d0d0f", stroke: "rgba(255,255,255,.14)" }, svg);
-    var labels = ["Lash", "Brow", "Nails", "Lash", "Brow", "Nails", "Lash", "Academy"];
+    var labels = ["Lash", "Brow", "Nails", "Lash", "Brow", "Nails", "Lash", "Spare"];
     var suites = [];
     for (var i = 0; i < 8; i++) {
       var top = i < 4, col = i % 4;
       var s = { x: 28 + col * 118, y: top ? 28 : 196, w: 108, h: 70, label: labels[i], t: 1.6 + i * 0.95 };
+      /* the eighth suite stays open: room to grow in the high case */
+      if (labels[i] === "Spare") s.t = 1e9;
       s.box = el("rect", { x: s.x, y: s.y, width: s.w, height: s.h, rx: 12, fill: "rgba(255,255,255,.02)", stroke: "rgba(255,255,255,.14)", "stroke-dasharray": "4 4" }, svg);
       s.name = text(svg, s.x + 14, s.y + 28, "Open suite", "s-lbl");
       s.sub = text(svg, s.x + 14, s.y + 48, "", "s-sub");
@@ -226,22 +228,22 @@
       suites.forEach(function (s, i) {
         var a = ease(seg(t, s.t, s.t + 0.5));
         var on = a > 0;
-        if (on && s.label !== "Academy") filled += a;
+        if (on && s.label !== "Spare") filled += a;
         s.box.setAttribute("fill", on ? "rgba(234,185,200," + (0.1 * a) + ")" : "rgba(255,255,255,.02)");
         s.box.setAttribute("stroke", on ? "rgba(234,185,200," + (0.25 + 0.5 * a) + ")" : "rgba(255,255,255,.14)");
         s.box.setAttribute("stroke-dasharray", on ? "0" : "4 4");
         s.name.textContent = on ? s.label : "Open suite";
         s.name.setAttribute("class", on ? "s-h" : "s-lbl");
-        s.sub.textContent = on ? (s.label === "Academy" ? "Next artists" : "In the app") : "";
+        s.sub.textContent = on ? (s.label === "Spare" ? "" : "In the app") : "";
         /* a booking ping every ~1.6s once occupied */
         var ph = ((t - s.t - 0.6 + i * 0.37) % 1.6) / 1.6;
-        var live = t > s.t + 0.6 && s.label !== "Academy";
+        var live = t > s.t + 0.6 && s.label !== "Spare";
         s.ping.setAttribute("opacity", live ? 1 : 0);
         s.ring.setAttribute("opacity", live ? 0.7 * (1 - ph) : 0);
         s.ring.setAttribute("r", 4 + 14 * ph);
       });
       /* clients crossing into Evelyn's studio */
-      var occupied = suites.filter(function (s) { return t > s.t + 0.6 && s.label !== "Academy"; });
+      var occupied = suites.filter(function (s) { return t > s.t + 0.6 && s.label !== "Spare"; });
       comets.forEach(function (cm, k) {
         if (!occupied.length) { cm.setAttribute("opacity", 0); return; }
         var s = occupied[k % occupied.length];
@@ -257,11 +259,11 @@
       artistsT.textContent = Math.round(n) + " of 7";
       /* lease starts first (t≈1): −$2.2k, then each artist adds ~$1k */
       var lease = ease(seg(t, 0.6, 1.4));
-      var net = -2200 * lease + (n / 7) * 7300;
+      var net = -2200 * lease + (n / 7) * 6300;
       netT.textContent = (net >= 0 ? "+" : "") + money(net);
       netT.setAttribute("fill", net < 0 ? RED : ROSE_HI);
       studioSub.textContent = occupied.length ? "Their clients book facials" : "The center of the house";
-      note.textContent = t > 9.6 ? "≈ +$105k a year with Step 1" : "";
+      note.textContent = t > 9.6 ? "≈ +$93k a year with Step 1" : "";
       note.setAttribute("opacity", ease(seg(t, 9.6, 10.2)));
     };
   };

@@ -777,36 +777,70 @@ body.intro-lock { overflow: hidden; }
   will-change: transform, opacity;
 }
 
+/* scroll cue: a glass scroll-wheel, centered over the wordmark, with a
+   rose-gold dot gliding down it */
 .hero-scroll {
-  position: absolute;
-  bottom: 2rem;
-  right: clamp(1.25rem, 4vw, 3rem);
+  position: relative;
+  margin: 1.6rem auto 0;
+  width: max-content;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+  gap: 0.7rem;
   text-decoration: none;
-  color: var(--ink-35);
-  transition: color 200ms ease;
-  padding: 0.5rem;
-  z-index: 1;
+  color: var(--ink-60);
+  padding: 0.4rem;
+  z-index: 2;
+  transition: color 250ms ease;
 }
 
-.hero-scroll:hover { color: var(--plum); }
-.hero-scroll svg { animation: nudge 2.4s ease-in-out infinite; }
-
-@keyframes nudge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
+.hero-scroll-mouse {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(245, 245, 247, 0.34);
+  background: rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: border-color 250ms ease, transform 350ms cubic-bezier(.2, .8, .2, 1);
 }
+
+.hero-scroll-mouse i {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 3px;
+  height: 8px;
+  margin-left: -2px;
+  border-radius: 999px;
+  background: var(--grad-rose);
+  box-shadow: 0 0 10px rgba(234, 185, 200, 0.7);
+  animation: wheel 2.2s cubic-bezier(.45, 0, .2, 1) infinite;
+}
+
+@keyframes wheel {
+  0%   { transform: translateY(0); opacity: 0; }
+  15%  { opacity: 1; }
+  70%  { transform: translateY(11px); opacity: 0; }
+  100% { transform: translateY(11px); opacity: 0; }
+}
+
+.hero-scroll-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.hero-scroll:hover { color: var(--ink); }
+.hero-scroll:hover .hero-scroll-mouse { border-color: rgba(245, 245, 247, 0.7); transform: translateY(2px); }
+.hero-scroll:focus-visible { outline: none; }
+.hero-scroll:focus-visible .hero-scroll-mouse { box-shadow: 0 0 0 3px var(--mauve); }
 
 /* short windows: give the content the room instead of the cue */
 @media (max-height: 720px) {
   .hero { padding-bottom: 6rem; }
-  .hero-scroll { display: none; }
+  .hero-scroll { margin-top: 1.4rem; }
   .hero-logo { width: 12rem; }
   .hero-features { display: none; }
 }
@@ -4246,7 +4280,8 @@ a.appstore-badge:hover { transform: translateY(-2px); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-glow, .hero-scroll svg { animation: none; }
+  .hero-glow, .hero-scroll-mouse i { animation: none; }
+  .hero-scroll-mouse i { opacity: 1; }
   .fam-item { animation: none; }
   .policy[open] .policy-body, .policy-detail.show, .sector-panel { animation: none; }
   .nav-cart.bump { animation: none; }
