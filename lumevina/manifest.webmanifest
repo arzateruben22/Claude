@@ -1,0 +1,23 @@
+{
+  "name": "Lumevina Aesthetics Spa",
+  "short_name": "Lumevina",
+  "description": "Book facials and waxing, track your Glow Rewards, and send the gift of glow.",
+  "id": "./",
+  "start_url": "./?source=homescreen",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fdfaf6",
+  "theme_color": "#f7f1eb",
+  "categories": ["beauty", "lifestyle", "health"],
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Book a treatment", "short_name": "Book", "url": "./?source=homescreen#services" },
+    { "name": "Gift cards", "short_name": "Gifts", "url": "./?source=homescreen#gift" },
+    { "name": "Shop skincare", "short_name": "Shop", "url": "./?source=homescreen#shop" }
+  ]
+}

@@ -1145,13 +1145,18 @@
         giftValue: giftIsService ? sessionTotal() : 0,
         flash: flashActive(),
         /* stamp where the booking came from — 'app' inside the
-           Capacitor shell, 'web' in a browser. Powers the app-vs-web
+           Capacitor shell, 'homescreen' when installed from the
+           browser, 'web' otherwise. Powers the app-vs-web
            split in the owner dashboard, captured from booking #1. */
-        source: window.Capacitor ? "app" : "web",
+        source: window.Capacitor ? "app"
+          : (window.navigator.standalone === true ||
+             (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches))
+            ? "homescreen" : "web",
         /* the pre-pay consent + signature (the binding sign-off; the
            full clinical intake is completed before the visit) */
         consent: { signature: consentSignature, signedAt: new Date().toISOString() }
       });
+      document.dispatchEvent(new CustomEvent("lumevina:booked"));
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());
       modal.querySelector(".booking-paid").textContent = giftIsService
