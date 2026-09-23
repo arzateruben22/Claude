@@ -158,6 +158,63 @@ def phone(src, cls=""):
             '<span class="island"></span></div>' % (cls, src))
 
 
+
+# ─────────────────────────── the three steps, in depth ───────────────────────────
+def js_ascii(src):
+    """inline scripts pass through an ASCII-only HTML build, so write any
+    non-ASCII character as a JS escape instead of an HTML entity"""
+    return "".join(c if ord(c) < 128 else "\\u%04x" % ord(c) for c in src)
+
+
+STEPS_JS = js_ascii(open(os.path.join(HERE, "steps.js")).read())
+
+DEEP = [
+    {"n": 1, "when": "Step 1 · Months 0–6", "h": "Grow your chair.", "dim": "Fill every hour.",
+     "vb": "0 0 520 410", "aria": "Animation: a week of appointments fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
+     "plan": [("Launch", "Glow Membership at $159 a month, add-ons at booking, flash openings, and give $25 / get $25."),
+              ("Measure", "Members, average visit, and how many hours are booked."),
+              ("Target", "30 members, a $150+ average visit, 90% of hours booked."),
+              ("Result", "About $4.5k more revenue a month, from the same chair.")]},
+    {"n": 2, "when": "Step 2 · Months 6–12", "h": "Pilot two artists.", "dim": "Prove it small.",
+     "vb": "0 0 520 400", "aria": "Animation: two artists' clients appear; some cross over to book Evelyn; the share climbs past the 15% go line.",
+     "plan": [("Recruit", "Two licensed lash or brow artists who already have a following."),
+              ("Set up", "Their own payouts, a 12% platform fee, shared Glow Rewards, attorney-approved terms."),
+              ("Measure", "How many of their clients also book Evelyn."),
+              ("Decide", "15% or more by month 12 means go. Under that, keep the pilot: it still nets about $2.8k a month.")]},
+    {"n": 3, "when": "Step 3 · Year 2–3", "h": "The Collective.", "dim": "One house, one app.",
+     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $5,100 a month.",
+     "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes."),
+              ("Fill", "One or two artists a month; the Academy trains the next ones."),
+              ("App", "Lumevina goes to the App Store with every artist bookable."),
+              ("Target", "Seven artists, about $5.1k net a month: +$105k a year with Step 1.")]},
+]
+
+
+def plan_html(plan):
+    return "".join('<div class="pl"><span class="pk">%s</span><span class="pv">%s</span></div>' % p for p in plan)
+
+
+def deep_web(d):
+    flip = " flip" if d["n"] == 2 else ""
+    return ('<section class="deep%s"><div class="wrap deep-grid">'
+            '<div class="deep-copy reveal"><p class="kicker">%s</p>'
+            '<h2 class="h2" style="margin:14px 0 26px">%s <span class="dim">%s</span></h2>'
+            '<div class="plan">%s</div></div>'
+            '<div class="deep-art reveal"><svg class="scene" data-step="%d" viewBox="%s" role="img" aria-label="%s"></svg></div>'
+            '</div></section>') % (flip, d["when"], d["h"], d["dim"], plan_html(d["plan"]), d["n"], d["vb"], d["aria"])
+
+
+def deep_print(d, page, total):
+    return ('<section class="page">'
+            '<div><p class="kicker">%s</p><h2 class="h2" style="margin-top:10px">%s <span class="dim">%s</span></h2></div>'
+            '<div class="deep-art"><svg class="scene" data-step="%d" viewBox="%s" role="img" aria-label="%s"></svg></div>'
+            '<div class="plan">%s</div>%s</section>') % (d["when"], d["h"], d["dim"], d["n"], d["vb"], d["aria"],
+                                                        plan_html(d["plan"]), foot_n(page, total))
+
+
+def foot_n(n, total):
+    return '<div class="pfoot"><span>Lumevina · Growth Blueprint</span><span>%d / %d</span></div>' % (n, total)
+
 # ─────────────────────────── styles ───────────────────────────
 BASE_CSS = r"""
 @font-face { font-family: "InterV"; src: url(data:font/woff2;base64,__FONT__) format("woff2");
@@ -286,6 +343,21 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 .days .t { font-size: 1.08rem; letter-spacing: -0.012em; line-height: 1.4; margin-top: 2px; }
 
 .fine { font-size: 0.78rem; color: var(--text-3); line-height: 1.5; }
+
+/* step scenes */
+.deep-art { background: var(--card); border-radius: 22px; padding: 22px; }
+.scene { display: block; width: 100%; height: auto; overflow: visible; }
+.scene text { font-family: "InterV", -apple-system, system-ui, sans-serif; }
+.scene .s-lbl { fill: var(--text-3); font-size: 11.5px; font-weight: 500; }
+.scene .s-sub { fill: var(--text-3); font-size: 11px; }
+.scene .s-h { fill: var(--text); font-size: 13px; font-weight: 600; letter-spacing: -0.01em; }
+.scene .s-big { fill: var(--text); font-size: 26px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.scene .s-go { fill: var(--green); font-size: 12px; font-weight: 600; }
+.plan { display: grid; gap: 0; }
+.pl { display: grid; grid-template-columns: 5.2rem 1fr; gap: 14px; padding: 14px 0; border-top: 1px solid var(--hair); }
+.pl:first-child { border-top: 0; padding-top: 0; }
+.pk { font-size: 0.9rem; font-weight: 600; color: var(--rose); padding-top: 1px; }
+.pv { font-size: 1.02rem; line-height: 1.45; letter-spacing: -0.01em; color: var(--text); }
 """
 
 WEB_CSS = r"""
@@ -335,6 +407,11 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .close { padding: 150px 0 120px; }
 .close .fine { margin-top: 60px; }
 
+.deep-grid { display: grid; grid-template-columns: 1fr 1.08fr; gap: 56px; align-items: center; }
+.deep .h2 { font-size: clamp(2.2rem, 4.2vw, 3.3rem); }
+.deep.flip .deep-copy { order: 2; }
+.deep + .deep { border-top: 0; padding-top: 40px; }
+
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
 .reveal.in { opacity: 1; transform: none; }
 .no-motion .reveal { opacity: 1; transform: none; transition: none; }
@@ -344,7 +421,12 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
   section { padding: 84px 0; }
   .steps, .flow, .figs, .guard { grid-template-columns: 1fr; }
   .flow .fs:not(:last-child)::after { top: auto; bottom: -11px; right: 50%; transform: translateX(50%) rotate(135deg); }
-  .ceiling, .built-grid, .num-grid { grid-template-columns: 1fr; gap: 36px; }
+  .ceiling, .built-grid, .num-grid, .deep-grid { grid-template-columns: 1fr; gap: 36px; }
+  .deep.flip .deep-copy { order: 0; }
+  .deep-art { padding: 14px; }
+  /* the scenes scale down to phone width; lift their type so it stays readable */
+  .scene .s-lbl { font-size: 14px; } .scene .s-sub { font-size: 13.5px; }
+  .scene .s-h { font-size: 15.5px; } .scene .s-big { font-size: 30px; }
   .built-grid .live-phone { width: min(260px, 70%); margin: 0 auto; }
   .costs { grid-template-columns: 1fr 1fr; }
   .hero-grid { grid-template-columns: 1fr; min-height: 0; text-align: center; gap: 8px; padding-top: 48px; }
@@ -401,6 +483,10 @@ body { font-size: 10.5pt; }
 .built { columns: 2; column-gap: 28px; }
 .built li { break-inside: avoid; }
 .closer { margin-top: auto; }
+.page .deep-art { padding: 18px 20px; border-radius: 16px; }
+.page .plan { margin-top: 2px; }
+.page .pl { grid-template-columns: 1.1in 1fr; padding: 11px 0; }
+.page .pk { font-size: 10pt; } .page .pv { font-size: 11pt; }
 .closer .h2 { font-size: 30pt; }
 """
 
@@ -657,6 +743,8 @@ WEB = """<!DOCTYPE html>
   </div>
 </section>
 
+__DEEP__
+
 <section>
   <div class="wrap">
     <div class="sec-head center reveal">
@@ -738,6 +826,7 @@ WEB = """<!DOCTYPE html>
 
 <script>__NET__</script>
 <script>__WEBJS__</script>
+<script>__STEPSJS__</script>
 </body>
 </html>
 """
@@ -782,11 +871,12 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__CHART__", CHART).replace("__CHAIR__", rows(CHAIR, CHAIR_TOTAL))
        .replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL)).replace("__GUARD__", guard_html())
        .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html())
-       .replace("__NET__", NET_JS).replace("__WEBJS__", WEB_JS))
+       .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS))
+       .replace("__DEEP__", "".join(deep_web(d) for d in DEEP)).replace("__STEPSJS__", STEPS_JS))
 
 # ─────────────────────────── print pages ───────────────────────────
 def foot(n):
-    return '<div class="pfoot"><span>Lumevina · Growth Blueprint</span><span>%d / 5</span></div>' % n
+    return foot_n(n, 8)
 
 
 PRINT = """<!DOCTYPE html>
@@ -832,6 +922,8 @@ PRINT = """<!DOCTYPE html>
   </div>
   __F2__
 </section>
+
+__DEEPP__
 
 <section class="page">
   <div>
@@ -890,8 +982,9 @@ PRINT = """<!DOCTYPE html>
   __F5__
 </section>
 
-<script>window.NET_FREEZE = 15.2;</script>
+<script>window.NET_FREEZE = 15.2; window.STEPS_FREEZE = true;</script>
 <script>__NET__</script>
+<script>__STEPSJS__</script>
 </body></html>
 """
 
@@ -900,11 +993,13 @@ pr = (PRINT.replace("__BASE__", base).replace("__PRINT__", PRINT_CSS)
       .replace("__BUILT__", built_list()).replace("__CHART__", CHART)
       .replace("__CHAIR__", rows(CHAIR, CHAIR_TOTAL)).replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL))
       .replace("__GUARD__", guard_html(False)).replace("__COSTS__", costs_html())
-      .replace("__DAYS__", days_html()).replace("__NET__", NET_JS)
+      .replace("__DAYS__", days_html()).replace("__NET__", js_ascii(NET_JS))
       .replace("__P1__", phone(SHOT["home"])).replace("__P2__", phone(SHOT["book"]))
       .replace("__P3__", phone(SHOT["rewards"])).replace("__P4__", phone(SHOT["dash"])))
-for i in range(1, 6):
-    pr = pr.replace("__F%d__" % i, foot(i))
+for i, pg in ((1, 1), (2, 2), (3, 6), (4, 7), (5, 8)):
+    pr = pr.replace("__F%d__" % i, foot(pg))
+pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 8) for k, d in enumerate(DEEP)))
+pr = pr.replace("__STEPSJS__", STEPS_JS)
 
 for name, html in (("web.html", web), ("print.html", pr)):
     html = html.encode("ascii", "xmlcharrefreplace").decode("ascii")
