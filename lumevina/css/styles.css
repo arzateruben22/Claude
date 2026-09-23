@@ -1007,7 +1007,31 @@ body.intro-lock { overflow: hidden; }
 .visual-dermaplane { background: linear-gradient(135deg, #e2b9a2, var(--sand) 60%, #28211a); }
 .visual-peel       { background: linear-gradient(135deg, #e0a4ab, #e69ea4 60%, var(--blush)); }
 .visual-lash       { background: linear-gradient(135deg, #d0aed5, #cfafd5 60%, #2a252c); }
-.visual-gift       { background: linear-gradient(135deg, #b6d6ae, var(--sage) 60%, #1d251a); }
+/* the gift card shows the Lumevina logo on a certificate-like field:
+   a warm glow behind the mark and a hairline inner border */
+.visual-gift {
+  background:
+    radial-gradient(62% 72% at 50% 48%, rgba(234, 185, 200, 0.2), transparent 72%),
+    linear-gradient(160deg, #1d1519 0%, #0d0b0c 100%);
+}
+.visual-gift::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px solid rgba(234, 185, 200, 0.28);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.product-visual.visual-gift img.gift-logo {
+  position: relative;
+  inset: auto;
+  width: 74%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px rgba(234, 185, 200, 0.25));
+  transform: none;
+}
+.product-card:hover .product-visual.visual-gift img.gift-logo { transform: scale(1.04); filter: drop-shadow(0 0 22px rgba(234, 185, 200, 0.4)); }
 
 .product-name {
   font-family: var(--font-display);
