@@ -5,7 +5,9 @@
    you swipe. Tapping a segment jumps to its card. The card in view is
    marked .is-active so the rest can step back. Desktop keeps its grid:
    the bar is hidden there, and nothing here runs until the row can
-   actually scroll. */
+   actually scroll. A reel marked data-reel-tabs gets an iOS-style
+   segmented control above it instead, whose highlight glides with the
+   swipe. */
 
 (function () {
   "use strict";
@@ -21,8 +23,16 @@
     });
     if (cards.length < 2) return;
 
+    var tabs = reel.hasAttribute("data-reel-tabs");
     var bar = document.createElement("div");
-    bar.className = "reel-bar";
+    bar.className = "reel-bar" + (tabs ? " reel-bar--tabs" : "");
+    bar.style.setProperty("--n", cards.length);
+    if (tabs) {
+      var thumb = document.createElement("span");
+      thumb.className = "reel-thumb";
+      thumb.setAttribute("aria-hidden", "true");
+      bar.appendChild(thumb);
+    }
     bar.setAttribute("role", "group");
     bar.setAttribute("aria-label", reel.getAttribute("data-reel-label") || "Cards");
 
@@ -31,7 +41,7 @@
       seg.type = "button";
       seg.className = "reel-seg";
       seg.setAttribute("aria-label", "Show " + card.getAttribute("data-reel-name"));
-      seg.innerHTML = '<span class="reel-track"><span class="reel-fill"></span></span>' +
+      seg.innerHTML = (tabs ? '' : '<span class="reel-track"><span class="reel-fill"></span></span>') +
         '<span class="reel-name"></span>';
       seg.querySelector(".reel-name").textContent = card.getAttribute("data-reel-name");
       seg.addEventListener("click", function () {
@@ -42,7 +52,7 @@
       bar.appendChild(seg);
       return seg;
     });
-    reel.parentNode.insertBefore(bar, reel.nextSibling);
+    reel.parentNode.insertBefore(bar, tabs ? reel : reel.nextSibling);
 
     var raf = null;
     var update = function () {
@@ -69,6 +79,7 @@
         break;
       }
       var active = Math.round(pos);
+      bar.style.setProperty("--pos", pos.toFixed(3));
       fills.forEach(function (seg, i) {
         var f = Math.max(0, Math.min(1, pos - i + 1));
         seg.style.setProperty("--fill", f.toFixed(3));

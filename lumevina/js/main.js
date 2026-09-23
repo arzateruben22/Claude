@@ -91,6 +91,7 @@
 
     /* Hero entrance */
     var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+    intro.timeScale(1.25);  /* the whole entrance plays a touch brisker */
     intro
       .from(".hero-liquid", { opacity: 0, duration: 1.8, ease: "power2.out" }, 0)
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)

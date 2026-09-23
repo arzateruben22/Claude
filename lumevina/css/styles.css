@@ -323,14 +323,14 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
     #000;
   color: var(--plum);
   cursor: pointer;
-  transition: opacity 900ms ease, transform 900ms ease;
+  transition: opacity 720ms ease, transform 720ms ease;
 }
 
 .intro.intro-out {
   opacity: 0;
   transform: translateY(-2%);
   pointer-events: none;
-  transition: opacity 780ms ease, transform 780ms ease;
+  transition: opacity 620ms ease, transform 620ms ease;
 }
 
 /* strip the heavy blur/grid/motes the instant we start lifting, so the
@@ -352,7 +352,7 @@ body.intro-lock { overflow: hidden; }
   opacity: 0;
   stroke-dasharray: 6 6;
   stroke-dashoffset: 1000;
-  animation: intro-grid-draw 2s ease-out forwards;
+  animation: intro-grid-draw 1.6s ease-out forwards;
 }
 
 @keyframes intro-grid-draw {
@@ -367,7 +367,7 @@ body.intro-lock { overflow: hidden; }
   border-radius: 50%;
   background: var(--plum);
   opacity: 0;
-  animation: intro-float 5s ease-in-out infinite;
+  animation: intro-float 4s ease-in-out infinite;
 }
 
 @keyframes intro-float {
@@ -388,13 +388,13 @@ body.intro-lock { overflow: hidden; }
   width: clamp(12rem, 28vw, 17rem);
   height: auto;
   opacity: 0;
-  animation: intro-appear 1.15s ease-out forwards;
-  animation-delay: 0.1s;
+  animation: intro-appear 0.92s ease-out forwards;
+  animation-delay: 0.08s;
 }
 
 .intro-word { opacity: 0; will-change: opacity, transform, filter; }
 
-.intro-word.intro-anim { animation: intro-appear 0.75s ease-out forwards; }
+.intro-word.intro-anim { animation: intro-appear 0.6s ease-out forwards; }
 
 .intro-mark-word {
   font-family: var(--font-display);
@@ -650,7 +650,7 @@ body.intro-lock { overflow: hidden; }
       rgba(234, 185, 200, 0.17) 45%,
       rgba(234, 185, 200, 0.09) 62%,
       transparent 72%);
-  animation: glow-breathe 8s ease-in-out infinite alternate;
+  animation: glow-breathe 6.4s ease-in-out infinite alternate;
 }
 
 .hero-glow-alt {
@@ -4704,7 +4704,6 @@ p.install-steps { padding-left: 0; }
   .mem-how { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 520px) {
-  .mem-how { grid-template-columns: 1fr; }
   .mem-founding { border-radius: 16px; text-align: left; }
 }
 
@@ -5246,4 +5245,78 @@ html.sheet-open { overflow: hidden; }
 }
 @media (max-width: 600px) and (prefers-reduced-motion: reduce) {
   .product-card--hero .product-visual img { animation: none; }
+}
+
+/* ─── Membership on phones: plan switcher + swipe (js/reel.js) ─── */
+@media (max-width: 900px) {
+  .mem-head { margin-bottom: var(--space-4); }
+  .mem-grid[data-reel] {
+    position: relative;
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    margin-inline: calc(-1 * clamp(1.25rem, 5vw, 3rem));
+    padding: 0.25rem clamp(1.25rem, 5vw, 3rem) 0.25rem;
+    scroll-padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+  .mem-grid[data-reel]::-webkit-scrollbar { display: none; }
+  .mem-grid[data-reel] > .mem-plan {
+    flex: 0 0 min(22rem, 86%);
+    scroll-snap-align: start;
+    padding: 1.35rem 1.3rem 1.3rem;
+    transition: filter 350ms ease, scale 350ms ease, border-color 350ms ease;
+  }
+  .mem-grid[data-reel] > .mem-plan:hover { transform: none; }
+  .mem-grid[data-reel] .mem-price { margin-top: 0.6rem; }
+  .mem-grid[data-reel] .mem-amt { font-size: 2.4rem; }
+  .mem-grid[data-reel] .mem-value { margin-bottom: 0.9rem; }
+  .mem-grid[data-reel] .mem-plus { padding-top: 0.8rem; }
+  .mem-grid[data-reel] .mem-perks { gap: 0.5rem; padding-top: 0.8rem; margin-bottom: 1.1rem; }
+  .mem-grid[data-reel] .mem-plus + .mem-perks { padding-top: 0.6rem; }
+  .mem-grid[data-reel] .mem-perks li { font-size: 0.9rem; }
+
+  /* iOS segmented control; the highlight glides with the swipe */
+  .reel-bar--tabs {
+    position: relative;
+    gap: 0;
+    margin: 0 0 0.85rem;
+    padding: 3px;
+    border-radius: 12px;
+    background: rgba(118, 118, 128, 0.24);
+  }
+  .reel-bar--tabs .reel-thumb {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / var(--n, 3));
+    border-radius: 9px;
+    background: #3a3a3e;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35), inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+    transform: translateX(calc(var(--pos, 0) * 100%));
+    pointer-events: none;
+  }
+  .reel-bar--tabs .reel-seg { position: relative; z-index: 1; padding: 0.5rem 0.25rem; text-align: center; border-radius: 9px; }
+  .reel-bar--tabs .reel-name { margin: 0; font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink-60); }
+  .reel-bar--tabs .reel-seg.is-current .reel-name { color: var(--ink); }
+
+  /* the four how-it-works notes as a compact 2 × 2 */
+  .mem-how { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: var(--space-4); }
+  .mem-how li {
+    border: 1px solid var(--panel-edge-soft);
+    border-radius: 14px;
+    background: var(--porcelain);
+    padding: 0.8rem 0.85rem;
+    gap: 0.2rem;
+    align-content: start;
+  }
+  .mem-how strong { font-size: 0.88rem; }
+  .mem-how span { font-size: 0.78rem; line-height: 1.4; }
+  .mem-founding { font-size: 0.8rem; padding: 0.6rem 0.9rem; }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .mem-grid[data-reel] > .mem-plan { transition: none; }
 }

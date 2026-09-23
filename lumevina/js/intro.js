@@ -94,7 +94,7 @@
     /* positions were measured while scroll was locked — recompute now
        that the page is scrollable, so the first scroll is accurate */
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    setTimeout(function () { intro.classList.add("intro-done"); }, 820);
+    setTimeout(function () { intro.classList.add("intro-done"); }, 660);
   };
 
   var onKey = function () { dismiss(); };
@@ -106,5 +106,5 @@
   window.addEventListener("touchmove", onWheel, { passive: true });
 
   /* auto-lift if they just want to watch it breathe */
-  timers.push(setTimeout(function () { dismiss(); }, 3200));
+  timers.push(setTimeout(function () { dismiss(); }, 2600));
 })();

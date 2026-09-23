@@ -42,7 +42,7 @@
     "}",
     "void main(){",
     "  vec2 uv = (gl_FragCoord.xy - 0.5 * u_res) / min(u_res.x, u_res.y);",
-    "  float t = u_time * 0.06;",
+    "  float t = u_time * 0.075;",
     /* LivingNebula-style lens: the field bends around the pointer */
     "  vec2 m = u_mouse * u_res / (2.0 * min(u_res.x, u_res.y));",
     "  float md = length(uv - m);",
@@ -130,8 +130,8 @@
   var inView = true;
 
   var frame = function () {
-    mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.04;
-    mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.04;
+    mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.05;
+    mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.05;
     gl.uniform2f(uRes, canvas.width, canvas.height);
     gl.uniform1f(uTime, (performance.now() - start) / 1000);
     gl.uniform2f(uMouse, mouseCurrent.x, mouseCurrent.y);
