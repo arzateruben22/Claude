@@ -5,14 +5,14 @@
  *   • fonts and images  — cache first (they never change in place)
  * Bump VERSION when an offline-page or caching rule changes. */
 
-var VERSION = "lumevina-v1";
+var VERSION = "lumevina-v2";
 var SHELL = [
   "./",
   "index.html",
   "css/styles.css",
   "img/apple-touch-icon.png",
   "img/icon-192.png",
-  "img/logo-full.png"
+  "img/logo-light.png"
 ];
 
 self.addEventListener("install", function (e) {

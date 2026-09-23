@@ -6,58 +6,54 @@
   <title>Lumevina — Owner Dashboard</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📊%3C/text%3E%3C/svg%3E">
   <style>
-    @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: normal; src: url("fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); font-display: swap; }
-    @font-face { font-family: "Cormorant Garamond"; font-weight: 500; font-style: italic; src: url("fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); font-display: swap; }
-    @font-face { font-family: "Cormorant Garamond"; font-weight: 600; font-style: normal; src: url("fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); font-display: swap; }
-    @font-face { font-family: "Jost"; font-weight: 300; src: url("fonts/jost-latin-300-normal.woff2") format("woff2"); font-display: swap; }
-    @font-face { font-family: "Jost"; font-weight: 400; src: url("fonts/jost-latin-400-normal.woff2") format("woff2"); font-display: swap; }
-    @font-face { font-family: "Jost"; font-weight: 500; src: url("fonts/jost-latin-500-normal.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Inter"; font-weight: 100 900; font-style: normal; src: url("fonts/inter-var.woff2") format("woff2"); font-display: swap; }
 
     :root {
-      --ground: #f4ede6; --panel: #fdfaf6; --card: #ffffff;
-      --ink: #443640; --ink-70: #5f4f59; --ink-45: #8a7a83; --ink-25: #b6a9b0;
-      --plum: #7d5468; --mauve: #a5798b; --edge: rgba(68,54,64,0.1);
-      --data: #9c3f68; --data-soft: rgba(156,63,104,0.14);
-      --alt: #c17a3f; --base: #b6a9b0; --grid: rgba(68,54,64,0.07);
-      --good: #4f7d5e; --font-d: "Cormorant Garamond", Georgia, serif;
-      --font-b: "Jost", system-ui, sans-serif;
+      color-scheme: dark;
+      --ground: #000000; --panel: #1d1d20; --card: #161618;
+      --ink: #f5f5f7; --ink-70: rgba(245,245,247,0.78); --ink-60: rgba(245,245,247,0.64); --ink-45: #86868b; --ink-25: #48484a;
+      --plum: #f5f5f7; --mauve: #eab9c8; --edge: rgba(255,255,255,0.1);
+      --data: #eab9c8; --data-soft: rgba(234,185,200,0.16);
+      --alt: #e3b48f; --base: #48484a; --grid: rgba(255,255,255,0.07);
+      --good: #32d74b; --bad: #ff7a6b;
+      --font-d: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      --font-b: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--ground); color: var(--ink); font-family: var(--font-b);
-      font-weight: 300; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+      font-weight: 400; line-height: 1.5; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
     .wrap { max-width: 76rem; margin: 0 auto; padding: 2.5rem clamp(1rem, 4vw, 2.5rem) 4rem; }
 
     header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
       gap: 1rem; margin-bottom: 0.4rem; }
-    .brand { font-family: var(--font-d); font-weight: 600; font-size: 1.9rem; color: var(--plum);
+    .brand { font-family: var(--font-d); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.03em; color: var(--plum);
       line-height: 1; }
     .brand small { display: block; font-family: var(--font-b); font-weight: 400; font-size: 0.62rem;
       letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-45); margin-top: 0.35rem; }
     .period { font-size: 0.8rem; color: var(--ink-45); text-align: right; }
     .period strong { color: var(--ink-70); font-weight: 500; }
     .demo-tag { display: inline-block; margin: 0.9rem 0 2rem; font-size: 0.72rem; letter-spacing: 0.06em;
-      color: var(--plum); background: var(--data-soft); border: 1px dashed rgba(156,63,104,0.4);
+      color: var(--plum); background: var(--data-soft); border: 1px dashed rgba(234,185,200,0.4);
       border-radius: 999px; padding: 0.35rem 0.9rem; }
 
-    h2 { font-family: var(--font-d); font-weight: 600; font-size: 1.35rem; color: var(--ink);
+    h2 { font-family: var(--font-d); font-weight: 650; font-size: 1.2rem; letter-spacing: -0.02em; color: var(--ink);
       margin-bottom: 0.15rem; }
     .sub { font-size: 0.8rem; color: var(--ink-45); margin-bottom: 1.1rem; }
 
     /* KPI tiles */
     .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2.4rem; }
-    .kpi { background: var(--card); border: 1px solid var(--edge); border-radius: 16px;
-      padding: 1.2rem 1.3rem; box-shadow: 0 3px 14px rgba(90,62,78,0.05); }
-    .kpi-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--ink-45); }
-    .kpi-val { font-family: var(--font-d); font-weight: 600; font-size: 2.25rem; line-height: 1.05;
+    .kpi { background: var(--card); border: 1px solid var(--edge); border-radius: 20px;
+      padding: 1.2rem 1.3rem; box-shadow: 0 3px 14px rgba(0, 0, 0, 0.11); }
+    .kpi-label { font-size: 0.85rem; font-weight: 500; color: var(--ink-45); }
+    .kpi-val { font-family: var(--font-d); font-weight: 700; font-size: 2.1rem; letter-spacing: -0.035em; line-height: 1.05;
       color: var(--plum); font-variant-numeric: tabular-nums; margin: 0.35rem 0 0.15rem; }
     .kpi-note { font-size: 0.78rem; color: var(--ink-45); }
     .kpi-note .up { color: var(--good); font-weight: 500; }
     .kpi-note .down { color: var(--good); font-weight: 500; }
 
     .grid2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.4rem; margin-bottom: 1.4rem; }
-    .card { background: var(--card); border: 1px solid var(--edge); border-radius: 16px;
-      padding: 1.4rem 1.5rem; box-shadow: 0 3px 14px rgba(90,62,78,0.05); position: relative; }
+    .card { background: var(--card); border: 1px solid var(--edge); border-radius: 20px;
+      padding: 1.4rem 1.5rem; box-shadow: 0 3px 14px rgba(0, 0, 0, 0.11); position: relative; }
 
     .legend { display: flex; gap: 1.1rem; font-size: 0.76rem; color: var(--ink-70); margin-bottom: 0.6rem; }
     .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
@@ -70,19 +66,19 @@
     /* tooltip */
     .tip { position: fixed; pointer-events: none; z-index: 20; background: var(--ink); color: #fdfaf6;
       font-size: 0.74rem; padding: 0.4rem 0.6rem; border-radius: 8px; opacity: 0; transition: opacity 120ms;
-      white-space: nowrap; box-shadow: 0 6px 18px rgba(20,12,18,0.3); }
+      white-space: nowrap; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.66); }
     .tip strong { font-weight: 500; }
 
     /* rewards mini-stats */
     .mini { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
-    .mini div { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
+    .mini > div { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
       padding: 0.85rem 1rem; }
-    .mini .m-val { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
+    .mini .m-val { font-family: var(--font-d); font-weight: 700; letter-spacing: -0.03em; font-size: 1.5rem; color: var(--plum);
       font-variant-numeric: tabular-nums; }
     .mini .m-lbl { font-size: 0.72rem; color: var(--ink-45); }
 
-    .proof { background: linear-gradient(135deg, rgba(156,63,104,0.09), rgba(193,122,63,0.08));
-      border: 1px solid var(--edge); border-radius: 16px; padding: 1.5rem 1.7rem; margin-top: 1.4rem; }
+    .proof { background: linear-gradient(135deg, rgba(234,185,200,0.09), rgba(227,180,143,0.08));
+      border: 1px solid var(--edge); border-radius: 20px; padding: 1.5rem 1.7rem; margin-top: 1.4rem; }
     .proof h2 { margin-bottom: 0.5rem; }
     .proof p { font-size: 0.9rem; color: var(--ink-70); max-width: 54rem; }
     .proof strong { color: var(--plum); font-weight: 500; }
@@ -90,7 +86,7 @@
     .foot { margin-top: 2.5rem; font-size: 0.76rem; color: var(--ink-45); text-align: center; }
 
     /* bookkeeping */
-    .bk-export { font: inherit; font-size: 0.82rem; color: #fff; background: var(--plum);
+    .bk-export { font: inherit; font-size: 0.82rem; color: #000; background: var(--plum);
       border: 0; border-radius: 999px; padding: 0.5rem 1.1rem; cursor: pointer;
       white-space: nowrap; }
     .bk-export:hover { background: var(--data); }
@@ -98,7 +94,7 @@
     #settle-tiles { grid-template-columns: repeat(5, 1fr); }
     .bk-tile { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px;
       padding: 0.9rem 1rem; }
-    .bk-tile--flag { border-color: var(--mauve); background: rgba(165, 121, 139, 0.08); }
+    .bk-tile--flag { border-color: var(--mauve); background: rgba(234, 185, 200, 0.07); }
     .settle-list { list-style: none; margin: 0; padding: 0; }
     .settle-row { display: grid; grid-template-columns: 1.5fr 1fr auto; gap: 1rem; align-items: center;
       padding: 0.85rem 0; border-top: 1px solid var(--edge); }
@@ -110,7 +106,7 @@
     .settle-money span { display: block; }
     .settle-actions { display: flex; gap: 0.4rem; justify-content: flex-end; }
     .settle-btn { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.85rem; border-radius: 999px;
-      border: 1px solid var(--edge); background: #fff; color: var(--plum); cursor: pointer;
+      border: 1px solid var(--edge); background: #161616; color: var(--plum); cursor: pointer;
       transition: border-color 150ms ease; }
     .settle-btn:hover { border-color: var(--plum); }
     .settle-btn--bad { color: var(--data); }
@@ -135,22 +131,22 @@
     .goal-form { margin-top: 1rem; }
     .goal-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 0.9rem; }
     .goal-form label, .inv-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
-    .goal-form input, .inv-form input { font: inherit; padding: 0.5rem 0.65rem; border: 1px solid var(--edge); border-radius: 8px; background: #fff; color: var(--ink); }
+    .goal-form input, .inv-form input { font: inherit; padding: 0.5rem 0.65rem; border: 1px solid var(--edge); border-radius: 8px; background: #161616; color: var(--ink); }
     @media (max-width: 640px) { .goal-form-grid { grid-template-columns: 1fr 1fr; } }
     /* inventory */
     .inv-form { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.1rem; align-items: center; }
     .inv-form input[type=text] { flex: 1; min-width: 160px; }
     .inv-form input[type=number] { width: 110px; }
     .inv-adjust { display: inline-flex; gap: 0.4rem; align-items: center; justify-content: flex-end; }
-    .inv-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--edge); background: #fff; color: var(--plum); cursor: pointer; font-size: 1rem; line-height: 1; }
+    .inv-btn { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--edge); background: #161616; color: var(--plum); cursor: pointer; font-size: 1rem; line-height: 1; }
     .inv-btn:hover { border-color: var(--plum); }
     .inv-low { color: var(--data); font-weight: 500; }
-    .inv-sell { font: inherit; font-size: 0.78rem; color: #fff; background: var(--plum); border: none;
+    .inv-sell { font: inherit; font-size: 0.78rem; color: #000; background: var(--plum); border: none;
       border-radius: 999px; padding: 0.3rem 0.9rem; cursor: pointer; }
     .inv-sell:hover { background: var(--data); }
-    .bk-tv { font-family: var(--font-d); font-weight: 600; font-size: 1.5rem; color: var(--plum);
+    .bk-tv { font-family: var(--font-d); font-weight: 700; letter-spacing: -0.03em; font-size: 1.5rem; color: var(--plum);
       font-variant-numeric: tabular-nums; }
-    .bk-tl { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
+    .bk-tl { font-size: 0.8rem; font-weight: 500; color: var(--ink-45); }
     .bk-table-wrap { overflow-x: auto; }
     .bk-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .bk-table th { text-align: right; color: var(--ink-45); font-weight: 500; font-size: 0.72rem;
@@ -167,7 +163,7 @@
     .rank-row { display: grid; grid-template-columns: 9.5rem 1fr 2rem; align-items: center; gap: 0.7rem; }
     .rank-name { font-size: 0.85rem; color: var(--ink-70); white-space: nowrap;
       overflow: hidden; text-overflow: ellipsis; }
-    .rank-bar { height: 9px; border-radius: 999px; background: rgba(156,63,104,0.1); overflow: hidden; }
+    .rank-bar { height: 9px; border-radius: 999px; background: rgba(234,185,200,0.1); overflow: hidden; }
     .rank-fill { display: block; height: 100%; border-radius: inherit;
       background: linear-gradient(90deg, var(--data), var(--alt)); }
     .rank-n { font-size: 0.82rem; color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; }
@@ -175,11 +171,11 @@
 
     /* retention gauge */
     .retention { display: flex; align-items: center; gap: 1.4rem; }
-    .ret-num { font-family: var(--font-d); font-weight: 600; font-size: 3rem; line-height: 1;
+    .ret-num { font-family: var(--font-d); font-weight: 700; letter-spacing: -0.03em; font-size: 3rem; line-height: 1;
       color: var(--plum); font-variant-numeric: tabular-nums; }
     .ret-body { font-size: 0.85rem; color: var(--ink-70); }
     .ret-body strong { color: var(--ink); font-weight: 500; }
-    .ret-bar { height: 8px; border-radius: 999px; background: rgba(156,63,104,0.14);
+    .ret-bar { height: 8px; border-radius: 999px; background: rgba(234,185,200,0.14);
       overflow: hidden; margin: 0.5rem 0 0.3rem; }
     .ret-fill { display: block; height: 100%; border-radius: inherit;
       background: linear-gradient(90deg, var(--alt), var(--data)); }
@@ -200,20 +196,20 @@
     .crm-row { border-top: 1px solid var(--edge); }
     .crm-summary { display: grid; grid-template-columns: 1.6fr 1fr auto auto; gap: 1rem;
       align-items: center; padding: 0.9rem 0.2rem; cursor: pointer; }
-    .crm-summary:hover { background: rgba(156,63,104,0.03); }
+    .crm-summary:hover { background: rgba(234,185,200,0.03); }
     .crm-name { font-weight: 500; color: var(--ink); }
-    .crm-name small { display: block; font-weight: 300; color: var(--ink-45); font-size: 0.8rem; }
+    .crm-name small { display: block; font-weight: 400; color: var(--ink-45); font-size: 0.8rem; }
     .crm-meta { font-size: 0.82rem; color: var(--ink-60); font-variant-numeric: tabular-nums; }
     .crm-chip { justify-self: end; font-size: 0.72rem; letter-spacing: 0.04em; padding: 0.2rem 0.6rem;
       border-radius: 999px; white-space: nowrap; }
-    .crm-chip.on { color: #4f7d5e; background: rgba(79,125,94,0.12); }
-    .crm-chip.off { color: var(--ink-45); background: rgba(68,54,64,0.06); }
+    .crm-chip.on { color: #a8dcb9; background: rgba(50,215,75,0.12); }
+    .crm-chip.off { color: var(--ink-45); background: rgba(0, 0, 0, 0.1); }
     .crm-caret { color: var(--ink-45); transition: transform 200ms ease; }
     .crm-row.open .crm-caret { transform: rotate(90deg); }
     .crm-detail { display: none; padding: 0.2rem 0.2rem 1.2rem; }
     .crm-row.open .crm-detail { display: block; }
     .crm-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
-    .crm-detail h3 { font-family: var(--font-d); font-weight: 600; font-size: 1.05rem;
+    .crm-detail h3 { font-family: var(--font-d); font-weight: 700; letter-spacing: -0.03em; font-size: 1.05rem;
       color: var(--plum); margin: 0.2rem 0 0.5rem; }
     .crm-visit { font-size: 0.85rem; color: var(--ink-70); padding: 0.35rem 0;
       border-bottom: 1px solid var(--edge); display: flex; justify-content: space-between; gap: 1rem; }
@@ -222,7 +218,7 @@
     .crm-ans li { padding: 0.3rem 0; border-bottom: 1px solid var(--edge); }
     .crm-ans .k { color: var(--ink-45); }
     .crm-ans .v { color: var(--ink); }
-    .crm-none { color: var(--ink-45); font-style: italic; font-size: 0.9rem; padding: 1rem 0; }
+    .crm-none { color: var(--ink-45); font-style: normal; font-size: 0.9rem; padding: 1rem 0; }
     @media (max-width: 720px) {
       .crm-summary { grid-template-columns: 1fr auto; }
       .crm-meta, .crm-chip { grid-column: 1 / -1; justify-self: start; }
@@ -238,7 +234,7 @@
     }
   </style>
 </head>
-<body data-palette="#9c3f68,#c17a3f">
+<body data-palette="#eab9c8,#e3b48f">
   <div class="wrap">
     <header>
       <div class="brand">Lumevina<small>Owner Dashboard</small></div>
@@ -268,8 +264,8 @@
         <h2>Where bookings come from</h2>
         <p class="sub">Website vs app, since the app launched.</p>
         <div class="legend">
-          <span><i class="swatch" style="background:#9c3f68"></i> App</span>
-          <span><i class="swatch" style="background:#c17a3f"></i> Website</span>
+          <span><i class="swatch" style="background:#eab9c8"></i> App</span>
+          <span><i class="swatch" style="background:#e3b48f"></i> Website</span>
         </div>
         <div id="chart-source"></div>
       </div>

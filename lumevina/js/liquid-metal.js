@@ -20,8 +20,9 @@
     "void main(){ gl_Position = vec4(a_pos, 0.0, 1.0); }"
   ].join("\n");
 
-  /* domain-warped fbm mapped to the spa palette: ivory highlights,
-     rose / mauve body, a whisper of sand — pearlescent, not chrome */
+  /* domain-warped fbm mapped to the noir palette: near-black body,
+     deep plum and bronze undertones, rose-gold light catching the
+     crests — liquid satin in a dark room */
   var FRAG = [
     "precision highp float;",
     "uniform vec2 u_res;",
@@ -53,14 +54,15 @@
     "  float band = sin((n * 4.5 + r.x * 2.0) * 3.14159 + t * 3.0);",
     "  float spec = smoothstep(0.55, 0.95, band);",
     "  float shade = n * 0.6 + 0.4;",
-    "  vec3 ivory = vec3(0.969, 0.945, 0.922);",
-    "  vec3 rose  = vec3(0.788, 0.635, 0.706);",
-    "  vec3 mauve = vec3(0.647, 0.475, 0.545);",
-    "  vec3 sand  = vec3(0.851, 0.725, 0.639);",
-    "  vec3 col = mix(mauve, rose, shade);",
-    "  col = mix(col, sand, q.y * 0.45);",
-    "  col = mix(col, ivory, spec * 0.9);",
-    "  col = mix(col, ivory, 0.35);",
+    "  vec3 night  = vec3(0.010, 0.008, 0.010);",
+    "  vec3 plum   = vec3(0.150, 0.080, 0.112);",
+    "  vec3 rose   = vec3(0.918, 0.725, 0.784);",
+    "  vec3 gold   = vec3(0.890, 0.706, 0.561);",
+    /* mostly black; soft plum depth; thin rose-gold light on the crests */
+    "  vec3 col = mix(night, plum, smoothstep(0.35, 0.95, shade));",
+    "  float crest = pow(max(band, 0.0), 14.0);",
+    "  vec3 light = mix(rose, gold, clamp(q.y * 1.2, 0.0, 1.0));",
+    "  col += light * crest * 0.42 * smoothstep(0.3, 0.8, n);",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");

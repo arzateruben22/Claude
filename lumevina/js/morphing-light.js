@@ -37,15 +37,15 @@
     "  lum *= smoothstep(1.05, 0.05, c);",
     /* hue drifts vertically over time (original: pink→cyan; here rose→plum) */
     "  float hueMix = clamp(0.5 + (uv.y - 0.35 * sin(u_time * 0.3)) * 0.9, 0.0, 1.0);",
-    "  vec3 linen = vec3(0.969, 0.945, 0.922);",
-    "  vec3 rose  = vec3(0.788, 0.635, 0.706);",
-    "  vec3 plum  = vec3(0.490, 0.329, 0.408);",
-    "  vec3 sand  = vec3(0.851, 0.725, 0.639);",
+    "  vec3 linen = vec3(0.0, 0.0, 0.0);",
+    "  vec3 rose  = vec3(0.918, 0.725, 0.784);",
+    "  vec3 plum  = vec3(0.560, 0.330, 0.450);",
+    "  vec3 sand  = vec3(0.890, 0.706, 0.561);",
     "  vec3 glow = mix(rose, plum, hueMix);",
     "  glow = mix(glow, sand, clamp(uv.x * 0.6 + 0.2, 0.0, 1.0) * 0.35);",
     /* a warm white core, like the original's vec3(5.) hot center */
-    "  glow = mix(glow, vec3(1.0, 0.98, 0.95), smoothstep(0.35, 0.0, c) * 0.7);",
-    "  vec3 col = mix(linen, glow, lum * 0.55);",
+    "  glow = mix(glow, vec3(1.0, 0.93, 0.95), smoothstep(0.35, 0.0, c) * 0.45);",
+    "  vec3 col = mix(linen, glow, lum * 0.32);",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");
