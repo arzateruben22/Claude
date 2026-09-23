@@ -4813,3 +4813,6 @@ p.install-steps { padding-left: 0; }
 /* brand wordmark in place of the card title (e.g. GlyMed Plus) */
 .shop-card-logo { line-height: 0; margin-bottom: 0.9rem; }
 .shop-card-logo img { display: block; height: 2.4rem; width: auto; }
+/* Wide serif wordmarks read larger than stacked marks at the same height */
+.shop-card-logo--wide { padding-top: 0.45rem; }
+.shop-card-logo--wide img { height: 1.55rem; }
