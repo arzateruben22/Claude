@@ -5132,3 +5132,118 @@ html.sheet-open { overflow: hidden; }
 @media (max-width: 760px) {
   .policies-head .section-sub { font-size: 0.95rem; margin-bottom: 0; }
 }
+
+/* ─── Services on phones: signature hero + two-up cards ─── */
+.product-badge { display: none; }
+.shop-grid .product-card { position: relative; }
+
+@media (max-width: 600px) {
+  .shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin-top: var(--space-5);
+  }
+  .shop-grid .product-card {
+    padding: 0.6rem 0.6rem 0.7rem;
+    border-radius: 16px;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 250ms ease, scale 160ms ease;
+  }
+  .shop-grid .product-card:hover { transform: none; }
+  .shop-grid .product-card:active { scale: 0.97; }
+  .shop-grid .product-visual { margin-bottom: 0.6rem; border-radius: 11px; }
+  .shop-grid .product-name { font-size: 0.95rem; line-height: 1.22; margin-bottom: 0.3rem; text-wrap: balance; }
+  .shop-grid .product-desc {
+    font-size: 0.74rem;
+    line-height: 1.42;
+    margin-bottom: 0.6rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .shop-grid .product-foot { flex-direction: row; align-items: center; text-align: left; gap: 0.4rem; }
+  .shop-grid .product-price { font-size: 0.95rem; }
+  .shop-grid .book-btn, .shop-grid .product-foot .add-to-cart { padding: 0.45rem 0.95rem; font-size: 0.8rem; }
+
+  /* Ageless Grace leads full width: the photo becomes the backdrop */
+  .shop-grid .product-card--hero {
+    grid-column: 1 / -1;
+    min-height: 15.5rem;
+    padding: 1.1rem 1.15rem;
+    justify-content: flex-end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .product-card--hero .product-visual {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    aspect-ratio: auto;
+    margin: 0;
+    border-radius: 0;
+  }
+  .product-card--hero .product-visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0.55) 50%, rgba(0, 0, 0, 0.9) 100%);
+  }
+  .product-card--hero .product-visual img { animation: hero-drift 14s ease-in-out infinite alternate; }
+  @keyframes hero-drift { from { transform: scale(1.02); } to { transform: scale(1.12) translate(-2%, -1%); } }
+  .product-card--hero .product-badge {
+    display: inline-block;
+    position: absolute;
+    top: 0.9rem;
+    left: 1rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #000;
+    background: var(--grad-rose);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .shop-grid .product-card--hero .product-name { font-size: 1.35rem; color: #fff; margin-top: auto; }
+  .shop-grid .product-card--hero .product-foot { margin-top: 0.2rem; }
+  .shop-grid .product-card--hero .product-desc { font-size: 0.85rem; color: rgba(255, 255, 255, 0.78); -webkit-line-clamp: 2; }
+  .shop-grid .product-card--hero .product-price { font-size: 1.1rem; color: #fff; }
+  .shop-grid .product-card--hero .book-btn { padding: 0.6rem 1.4rem; font-size: 0.9rem; }
+
+  /* new-client / waxing decks in a half-width tile */
+  .shuffle-head { align-items: flex-start; margin-bottom: 0.9rem; }
+  .shuffle-label { font-size: 0.58rem; letter-spacing: 0.12em; line-height: 1.4; }
+  .shuffle-btn { flex-shrink: 0; padding: 0.4rem; }
+  .shuffle-btn-text { display: none; }
+
+  /* gift certificate spans the row: the certificate sits beside its copy */
+  .shop-grid .product-card--gift {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    column-gap: 0.85rem;
+    align-items: start;
+    padding: 0.7rem 0.8rem 0.8rem;
+  }
+  .product-card--gift .product-visual { grid-row: 1 / span 2; aspect-ratio: 1; margin: 0; }
+  .product-card--gift .product-visual::after { inset: 6px; }
+  .product-card--gift .product-name { margin-top: 0.2rem; }
+  .shop-grid .product-card--gift .product-desc { -webkit-line-clamp: 5; margin-bottom: 0; }
+  .product-card--gift .gift-pick-label, .product-card--gift .gift-pick, .product-card--gift .product-foot { grid-column: 1 / -1; }
+  .product-card--gift .gift-pick-label { margin-top: 0.8rem; }
+  .product-card--gift .gift-pick { margin-bottom: 0.7rem; }
+
+  /* Explore Every Service: sectors two-up */
+  .wax-menu { margin-top: var(--space-5); }
+  .wax-sub { font-size: 0.88rem; }
+  .sector-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: var(--space-4); }
+  .sector-btn { padding: 0.95rem 1rem; border-radius: 14px; -webkit-tap-highlight-color: transparent; transition: transform 250ms ease, scale 160ms ease, border-color 250ms ease; }
+  .sector-btn:active { scale: 0.96; }
+  .sector-name { font-size: 1rem; padding-right: 1.4rem; }
+  .sector-sub { font-size: 0.6rem; letter-spacing: 0.06em; }
+  .sector-chev { top: 1.05rem; right: 0.9rem; }
+}
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .product-card--hero .product-visual img { animation: none; }
+}
