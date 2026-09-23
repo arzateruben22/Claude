@@ -88,21 +88,24 @@
       var card = document.createElement("article");
       card.className = "retail-card" + (out ? " is-out" : "");
       card.setAttribute("data-reveal", "");
+      card.setAttribute("data-spotlight", "");
       card.innerHTML =
         (PHOTOS[p.id]
           ? '<div class="retail-visual has-photo" aria-hidden="true"><img src="' + PHOTOS[p.id] +
             '" alt="" loading="lazy" decoding="async"></div>'
           : '<div class="retail-visual rt-tint-' + ((i % 4) + 1) + '" aria-hidden="true"></div>') +
+        '<div class="retail-body">' +
         '<h3 class="retail-name">' + p.name + '</h3>' +
         (p.desc ? '<p class="retail-desc">' + p.desc + '</p>' : '') +
-        '<div class="retail-foot"><span class="product-price">$' + num(p.price) + '</span>' +
+        '<div class="retail-foot"><p class="retail-price-line"><span class="product-price">$' + num(p.price) + '</span>' +
+        '<span class="retail-stock' + (low ? ' is-low' : '') + '">' +
+        (out ? "Sold out" : (low ? "Only " + num(p.stock) + " left" : "In stock")) + '</span></p>' +
         (out
           ? '<button class="btn btn-ghost" type="button" disabled>Sold out</button>'
           : '<button class="btn btn-solid add-to-cart retail-add" type="button" data-id="retail-' +
-            p.id + '" data-name="' + p.name + '" data-price="' + num(p.price) + '">Add to cart</button>') +
-        '</div>' +
-        '<p class="retail-stock' + (low ? ' is-low' : '') + '">' +
-        (out ? "Sold out" : (low ? "Only " + num(p.stock) + " left" : "In stock")) + '</p>';
+            p.id + '" data-name="' + p.name + '" data-price="' + num(p.price) + '" aria-label="Add ' +
+            p.name + ' to cart">Add</button>') +
+        '</div></div>';
       grid.appendChild(card);
     });
   };
