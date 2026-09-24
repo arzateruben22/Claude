@@ -201,3 +201,32 @@ create policy "members read their own ledger" on membership_ledger
   for select using (membership_id in (select id from memberships where client_id = auth.uid()));
 -- writes happen only in edge functions (service role): join, pause,
 -- cancel, keep, gift, and the webhook's billed / cancelled events.
+
+-- ─────────────────────────────────────────────────────────────
+-- Ask Lumevina: questions handed to Evelyn (functions/ask)
+-- Everyday questions are answered on the spot and never stored here.
+-- Personal ones (reactions, pregnancy, medications, "what should I use")
+-- land here with a drafted reply she checks and sends from the dashboard.
+-- ─────────────────────────────────────────────────────────────
+create table questions (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid references clients (id) on delete set null,
+  name text not null,
+  email text not null,
+  member boolean not null default false,          -- members are promised a reply within 24 hours
+  kind text not null check (kind in ('urgent', 'reaction', 'pregnancy', 'medication', 'condition', 'skin', 'request', 'other')),
+  text text not null,
+  draft text,                                     -- written by the assistant, never sent as is
+  status text not null default 'waiting' check (status in ('waiting', 'answered')),
+  due_at timestamptz not null,
+  reply text,                                     -- what Evelyn actually sent
+  answered_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index questions_waiting on questions (due_at) where status = 'waiting';
+
+alter table questions enable row level security;
+create policy "clients read their own questions" on questions
+  for select using (client_id = auth.uid());
+-- writes happen only in edge functions (service role): ask inserts,
+-- the dashboard's Send reply updates reply / status / answered_at.

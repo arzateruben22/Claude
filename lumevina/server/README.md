@@ -12,6 +12,7 @@ the client across devices (site → iPhone app).
 | `functions/create-deposit-intent/` | Recomputes the price server-side, inserts the booking, creates the Stripe PaymentIntent for the 50% deposit |
 | `functions/stripe-webhook/` | Confirms payment, holds the booking, writes rewards (multipliers included), fires the confirmation, documents the referral-credit trigger |
 | `functions/send-confirmation/` | Sends confirmation + 24-hour reminder email/SMS (Resend + optional Twilio); also flushes due reminders when run on a schedule |
+| `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
 
 ## Notifications (confirmations & reminders)
@@ -169,6 +170,33 @@ packaging) and queuing the month's box. Skip a month = `pause_collection` for
 that billing date. Before supplements go in the box: a California seller's
 permit, sales tax settings from the accountant, insurance that covers
 products, and only the brand's approved wording on the site.
+
+## Ask Lumevina (client questions)
+
+`js/ask.js` runs the chat in the browser today: keyword matching answers the
+everyday questions, and personal ones are saved to localStorage for the
+dashboard's **Client questions** card. To make it real:
+
+1. `supabase secrets set ANTHROPIC_API_KEY=...` and
+   `supabase functions deploy ask`. Run the `questions` table in
+   `schema.sql`.
+2. In `js/ask.js`, send each question to the function instead of
+   `classify()`: `POST /functions/v1/ask` with `{ message, history, name,
+   email }` and the client's session. It returns `{ answer }`, or
+   `{ handoff, due_at }` once the question is saved for Evelyn
+   (`needs_contact: true` means ask for a name and email first).
+3. The dashboard reads `questions where status = 'waiting'` (members, then
+   soonest due), and Send writes `reply`, `status = 'answered'` and
+   `answered_at`, then emails the reply with `send-confirmation`'s
+   `sendEmail`. The client's chat shows it from their own rows.
+
+How it stays safe: the hand-off rules (reactions, pregnancy, medications,
+skin conditions, "what should I use on my skin", emergencies) run as plain
+code before any AI call, so they never depend on the model. Claude only
+answers from the facts in the function, can hand off on its own when a
+question isn't covered, and drafts replies that Evelyn always reviews.
+Cost: at a small spa's volume, a few dollars a month (the fast, inexpensive
+model is set in `MODEL`).
 
 ## Flash openings → push notifications
 

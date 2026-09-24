@@ -302,6 +302,36 @@
     .mem-launch li.tot { font-weight: 600; }
     .mem-launch li.tot span { color: var(--ink) !important; }
     .mem-launch li.info span:last-child { color: var(--ink-45); }
+    /* Client questions (js/ask.js on the website hands these over) */
+    .cq-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+    .cq { background: var(--panel); border: 1px solid var(--edge); border-radius: 14px; padding: 0.95rem 1rem; }
+    .cq.is-member { border-color: rgba(234,185,200,0.35); }
+    .cq.is-urgent { border-color: var(--bad); background: rgba(255,122,107,0.07); }
+    .cq-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.45rem 0.6rem; }
+    .cq-name { font-weight: 600; color: var(--plum); }
+    .cq-pill { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.03em; padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: rgba(255,255,255,0.07); color: var(--ink-70); }
+    .cq-pill--member { background: var(--mauve); color: #000; }
+    .cq-pill--urgent { background: var(--bad); color: #000; }
+    .cq-due { margin-left: auto; font-size: 0.78rem; color: var(--ink-45); font-variant-numeric: tabular-nums; }
+    .cq-due.is-soon { color: var(--alt); font-weight: 600; }
+    .cq-due.is-late { color: var(--bad); font-weight: 600; }
+    .cq-q { margin: 0.55rem 0 0; color: var(--ink); line-height: 1.45; }
+    .cq-q::before { content: "\201C"; } .cq-q::after { content: "\201D"; }
+    .cq-draft-k { display: block; font-size: 0.75rem; color: var(--ink-45); margin: 0.75rem 0 0.35rem; }
+    .cq textarea { width: 100%; min-height: 6.5rem; font: inherit; font-size: 0.88rem; line-height: 1.45; color: var(--ink);
+      background: #0e0e10; border: 1px solid var(--edge); border-radius: 10px; padding: 0.6rem 0.7rem; resize: vertical; }
+    .cq textarea:focus { outline: 2px solid var(--mauve); outline-offset: 1px; border-color: transparent; }
+    .cq-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.6rem; align-items: center; }
+    .cq-send { font: inherit; font-size: 0.82rem; font-weight: 600; padding: 0.45rem 1rem; border-radius: 999px; border: 0;
+      background: var(--mauve); color: #000; cursor: pointer; }
+    .cq-actions .settle-btn:focus-visible, .cq-send:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+    .cq-hint { font-size: 0.75rem; color: var(--ink-45); }
+    .cq-done { margin-top: 1rem; }
+    .cq-done summary { cursor: pointer; font-size: 0.85rem; color: var(--ink-60); }
+    .cq-done .cq { opacity: 0.8; margin-top: 0.6rem; }
+    .cq-reply { margin: 0.55rem 0 0; padding-left: 0.75rem; border-left: 2px solid var(--mauve); color: var(--ink-70); font-size: 0.88rem; line-height: 1.45; }
+    .cq-empty { color: var(--ink-45); font-size: 0.9rem; padding: 0.5rem 0; }
   </style>
 </head>
 <body data-palette="#eab9c8,#e3b48f">
@@ -374,6 +404,21 @@
         <p class="sub">Retail revenue — lights up when you add products to the shop.</p>
         <div id="product-sales"></div>
       </div>
+    </div>
+
+    <!-- ── Client questions (handed over by Ask Lumevina, js/ask.js) ── -->
+    <div class="card" id="client-questions">
+      <div class="crm-head">
+        <div>
+          <h2>Client questions</h2>
+          <p class="sub">Ask Lumevina answers the everyday questions on the website and app, any time. Anything
+          personal lands here with a drafted reply: check it, change anything, and send. Members are promised
+          an answer within 24 hours, everyone else within 2 days.</p>
+        </div>
+      </div>
+      <div class="bk-tiles" id="cq-tiles"></div>
+      <ul class="cq-list" id="cq-list"></ul>
+      <details class="cq-done" id="cq-done" hidden><summary></summary><ul class="cq-list" id="cq-done-list"></ul></details>
     </div>
 
     <!-- ── Settle visits (collect the in-person balance) ── -->
@@ -1769,6 +1814,117 @@
     document.getElementById("crm-search").addEventListener("input", function () {
       draw(this.value);
     });
+  })();
+  </script>
+  <script>
+  /* ── Client questions: what Ask Lumevina (js/ask.js) handed to Evelyn ──
+     Real questions live in localStorage ("lumevina_questions"), shared with
+     the website when both run from the same place. Until there are any, a
+     few sample questions show how it works; sending one of those changes
+     nothing that's saved. LIVE: the questions table (server/schema.sql),
+     and Send emails the reply and shows it in the client's chat. */
+  (function () {
+    "use strict";
+    var KEY = "lumevina_questions";
+    var read = function () { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } };
+    var write = function (a) { try { localStorage.setItem(KEY, JSON.stringify(a)); } catch (e) { /* private mode */ } };
+    var hAgo = function (h) { return new Date(Date.now() - h * 36e5).toISOString(); };
+    var hIn = function (h) { return new Date(Date.now() + h * 36e5).toISOString(); };
+    var SAMPLE = [
+      { id: "s1", at: hAgo(3), name: "Sofia Alvarez", email: "sofia@example.com", member: true, plan: "Glow", kind: "reaction", status: "waiting", dueAt: hIn(21),
+        text: "My cheeks are still a little red and itchy from Saturday’s facial. Is that normal?",
+        draft: "Hi Sofia, thank you for telling me. Some redness for a day or two can be normal, but I want to see it. For now, pause any actives (retinol, acids, exfoliants) and use just a gentle cleanser and moisturizer; a cool compress can help. Could you send me a photo in daylight? If it spreads, gets worse, or you notice swelling around your eyes or lips, please see a doctor right away. — Evelyn" },
+      { id: "s2", at: hAgo(20), name: "Priya Nair", email: "priya@example.com", member: true, plan: "Ageless", kind: "pregnancy", status: "waiting", dueAt: hIn(4),
+        text: "I just found out I’m pregnant! Can I keep my monthly Ageless Grace facial?",
+        draft: "Hi Priya, congratulations! Facials are still on the table. I switch to pregnancy-safe products and skip retinoids and some peels, and it’s always good to check with your doctor too. Let’s plan your next visit together and I’ll adjust everything for you. — Evelyn" },
+      { id: "s3", at: hAgo(9), name: "Jess Moreno", email: "jess@example.com", member: false, plan: "", kind: "medication", status: "waiting", dueAt: hIn(39),
+        text: "I finished Accutane in June. When can I book a peel?",
+        draft: "Hi Jess, thank you for letting me know. Some medications change what I can safely do: after Accutane I usually wait 6 to 12 months or ask for your doctor’s OK, and prescription retinoids pause 5 to 7 days before a facial. Tell me what you’re taking and since when, and I’ll tell you exactly what we can do. — Evelyn" },
+      { id: "s4", at: hAgo(30), name: "Chloe Kim", email: "chloe@example.com", member: true, plan: "Glow", kind: "skin", status: "answered", dueAt: hAgo(6), answeredAt: hAgo(26),
+        text: "What should I use at night for the dark spots on my chin?",
+        reply: "Hi Chloe! For those spots I’d add the vitamin C serum in the morning and keep your SPF every day. I’ll set a bottle aside for your visit next week. — Evelyn" }
+    ];
+    var sample = false;
+    var load = function () {
+      var real = read();
+      sample = !real.length;
+      return sample ? SAMPLE : real;
+    };
+    var KIND = { urgent: "Urgent", reaction: "Reaction", pregnancy: "Pregnancy", medication: "Medication", condition: "Skin condition",
+                 skin: "Skin advice", request: "Asked for you", other: "Other" };
+    var esc = function (t) { var d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; };
+    var dueText = function (q) {
+      var h = (new Date(q.dueAt) - Date.now()) / 36e5;
+      if (h < 0) return { t: "Overdue by " + fmtH(-h), c: "is-late" };
+      return { t: "Due in " + fmtH(h), c: h <= 6 ? "is-soon" : "" };
+    };
+    var fmtH = function (h) { return h < 1 ? Math.max(1, Math.round(h * 60)) + " min" : h < 48 ? Math.round(h) + " h" : Math.round(h / 24) + " days"; };
+    var rank = function (q) { return (q.kind === "urgent" ? 0 : 1) * 1e13 + (q.member ? 0 : 1) * 1e12 + new Date(q.dueAt).getTime() / 1000; };
+
+    var list = document.getElementById("cq-list");
+    var doneBox = document.getElementById("cq-done");
+    var doneList = document.getElementById("cq-done-list");
+    var qs = load();
+
+    var item = function (q) {
+      var due = q.status === "waiting" ? dueText(q) : null;
+      var top = '<div class="cq-top"><span class="cq-name">' + esc(q.name) + '</span>' +
+        (q.member ? '<span class="cq-pill cq-pill--member">' + esc(q.plan || "Member") + ' member</span>' : '<span class="cq-pill">Not a member</span>') +
+        '<span class="cq-pill' + (q.kind === "urgent" ? " cq-pill--urgent" : "") + '">' + esc(KIND[q.kind] || "Other") + '</span>' +
+        (due ? '<span class="cq-due ' + due.c + '">' + due.t + '</span>' :
+               '<span class="cq-due">Answered ' + new Date(q.answeredAt || q.at).toLocaleDateString("en-US", { month: "short", day: "numeric" }) + '</span>') + '</div>' +
+        '<p class="cq-q">' + esc(q.text) + '</p>';
+      if (q.status !== "waiting") return '<li class="cq">' + top + '<p class="cq-reply">' + esc(q.reply || "Handled outside the chat.") + '</p></li>';
+      return '<li class="cq' + (q.member ? " is-member" : "") + (q.kind === "urgent" ? " is-urgent" : "") + '" data-id="' + esc(q.id) + '">' + top +
+        '<label class="cq-draft-k" for="cq-' + esc(q.id) + '">Drafted reply · check it and change anything</label>' +
+        '<textarea id="cq-' + esc(q.id) + '">' + esc(q.draft || "") + '</textarea>' +
+        '<div class="cq-actions"><button type="button" class="cq-send" data-do="send">Send reply</button>' +
+        '<button type="button" class="settle-btn" data-do="handled">Handled another way</button>' +
+        '<span class="cq-hint">' + esc(q.email) + '</span></div></li>';
+    };
+
+    var paint = function () {
+      var waiting = qs.filter(function (q) { return q.status === "waiting"; }).sort(function (a, b) { return rank(a) - rank(b); });
+      var done = qs.filter(function (q) { return q.status !== "waiting"; })
+        .sort(function (a, b) { return new Date(b.answeredAt || b.at) - new Date(a.answeredAt || a.at); });
+      var week = done.filter(function (q) { return Date.now() - new Date(q.answeredAt || q.at) < 7 * 864e5; }).length;
+      var soon = waiting.filter(function (q) { return new Date(q.dueAt) - Date.now() < 6 * 36e5; }).length;
+      var tiles = [
+        { l: "Waiting for you", v: String(waiting.length), flag: waiting.length > 0 },
+        { l: "From members", v: String(waiting.filter(function (q) { return q.member; }).length) },
+        { l: "Due within 6 hours", v: String(soon), flag: soon > 0 },
+        { l: "Answered this week", v: String(week) }
+      ];
+      document.getElementById("cq-tiles").innerHTML = tiles.map(function (t) {
+        return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' + t.v + '</div><div class="bk-tl">' + t.l + '</div></div>';
+      }).join("");
+      list.innerHTML = waiting.length ? waiting.map(item).join("") :
+        '<li class="cq-empty">Nothing waiting. Everyday questions are being answered for you.</li>';
+      doneBox.hidden = !done.length;
+      doneBox.querySelector("summary").textContent = "Answered (" + done.length + ")" + (sample ? " · sample questions until real ones arrive" : "");
+      doneList.innerHTML = done.map(item).join("");
+    };
+
+    list.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-do]");
+      if (!b) return;
+      var li = b.closest("[data-id]");
+      var q = qs.filter(function (x) { return x.id === li.getAttribute("data-id"); })[0];
+      if (!q) return;
+      var text = li.querySelector("textarea").value.trim();
+      if (b.getAttribute("data-do") === "send" && !text) { li.querySelector("textarea").focus(); return; }
+      q.status = "answered";
+      q.answeredAt = new Date().toISOString();
+      q.reply = b.getAttribute("data-do") === "send" ? text : "";
+      if (!sample) {
+        var all = read();
+        all.forEach(function (x) { if (x.id === q.id) { x.status = q.status; x.answeredAt = q.answeredAt; x.reply = q.reply; } });
+        write(all);
+      }
+      paint();
+    });
+    window.addEventListener("storage", function (e) { if (e.key === KEY) { qs = load(); paint(); } });
+    paint();
   })();
   </script>
 </body>

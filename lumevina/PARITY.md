@@ -22,6 +22,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Flash-opening discounts | ✅ | ⬜ | Dynamic pricing to fill slow slots |
 | Gift certificates | ✅ | ✅ | Gift a specific service or a value; full code lifecycle |
 | Memberships (monthly facial) | 🟡 | ✅ | 2 plans (Glow, Ageless), banked facials, pause, online cancel, gift a facial; billing flips on with Stripe Billing |
+| Ask Lumevina (client questions) | 🟡 | not checked | Demo works now: instant answers to everyday questions; anything personal goes to Evelyn with a drafted reply (dashboard: Client questions). Members hear back within 24 hours. Live: `server/functions/ask` with Claude |
 | Self-service cancel (48-hr) | ✅ | ✅ | In My Lumevina |
 | Self-service reschedule | ✅ | ✅ | In-flow link; 48-hr rule enforced |
 | Saved card for rebooking / auto no-show fee | ⬜ | ✅ | Stripe supports it; not wired |

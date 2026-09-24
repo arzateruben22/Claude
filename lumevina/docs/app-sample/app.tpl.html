@@ -159,7 +159,7 @@ h1, h2, h3, p { margin: 0; }
 .press:active { transform: scale(.97); }
 
 /* tab bar */
-.tabbar { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; height: 84px; display: grid; grid-template-columns: repeat(4, 1fr);
+.tabbar { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; height: 84px; display: grid; grid-template-columns: repeat(5, 1fr);
   padding: 7px 10px 0; background: rgba(20, 20, 22, .74); -webkit-backdrop-filter: blur(26px) saturate(180%); backdrop-filter: blur(26px) saturate(180%);
   border-top: .5px solid rgba(255, 255, 255, .1); }
 .tabbar { transition: transform .45s var(--spring); }
@@ -168,6 +168,27 @@ h1, h2, h3, p { margin: 0; }
   font-size: 10.5px; font-weight: 600; letter-spacing: 0; padding: 2px 0; }
 .tab svg { width: 27px; height: 27px; }
 .tab[aria-selected="true"] { color: var(--rose); }
+
+/* ── ask Evelyn ── */
+#v-ask .scroll { padding-bottom: 196px; }
+.ask-intro { color: var(--ink-2); font-size: 14px; line-height: 1.4; margin-top: 6px; }
+.ask-thread { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.am { max-width: 84%; padding: 9px 12px; border-radius: 18px; font-size: 15px; line-height: 1.38; animation: view-in .25s ease both; }
+.am.bot { align-self: flex-start; background: #1f1f22; border-bottom-left-radius: 6px; }
+.am.you { align-self: flex-end; background: var(--grad); color: #000; border-bottom-right-radius: 6px; }
+.am.ev { align-self: flex-start; background: #2a1d23; box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .3); border-bottom-left-radius: 6px; }
+.am .tg { display: block; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--rose); margin-bottom: 2px; }
+.am .pr { display: block; color: var(--ink-2); font-size: 13px; margin-top: 4px; }
+.am.typing { color: var(--ink-3); font-style: italic; }
+.ask-bar { position: absolute; z-index: 6; left: 0; right: 0; bottom: 84px; padding: 8px 12px 10px;
+  background: rgba(10, 10, 11, .82); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); border-top: .5px solid var(--hair); }
+.ask-sugg { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 8px; }
+.ask-sugg::-webkit-scrollbar { display: none; }
+.ask-sugg button { flex: none; border: .5px solid rgba(255, 255, 255, .18); background: none; color: var(--ink); border-radius: 999px; padding: 6px 11px; font-size: 13px; }
+.ask-row { display: flex; gap: 8px; }
+.ask-row input { flex: 1; min-width: 0; border: 0; border-radius: 999px; padding: 9px 14px; font: inherit; font-size: 16px; color: var(--ink); background: #1f1f22; }
+.ask-row input:focus { outline: 2px solid var(--rose); outline-offset: 0; }
+.ask-row button { flex: none; width: 38px; height: 38px; border: 0; border-radius: 50%; background: var(--grad); color: #000; display: grid; place-items: center; }
 
 /* ── home ── */
 .next { position: relative; margin-top: 18px; border-radius: 24px; padding: 18px; overflow: hidden;
@@ -695,6 +716,30 @@ h1, h2, h3, p { margin: 0; }
               </div>
             </section>
 
+            <!-- ASK -->
+            <section class="view" id="v-ask" data-title="Ask" hidden>
+              <div class="navbar">Ask Evelyn</div>
+              <div class="scroll">
+                <p class="kick">Members · any time</p>
+                <h1 class="title">Ask Evelyn</h1>
+                <p class="ask-intro">Everyday questions are answered right away. Anything about your skin goes to Evelyn, and as a Glow member you hear back within 24 hours.</p>
+                <div class="ask-thread" id="ask-thread" aria-live="polite">
+                  <div class="am you">Can I work out after my facial Saturday?</div>
+                  <div class="am bot">Give it 24 hours: skip workouts and heavy sweating, and makeup for the rest of the day.</div>
+                  <div class="am you">My chin keeps breaking out since I switched serums. Should I stop it?</div>
+                  <div class="am bot"><span class="tg">Sent to Evelyn</span>That depends on your skin, so Evelyn will answer this one herself.<span class="pr">Glow member · reply by Wednesday 2:10 PM</span></div>
+                  <div class="am ev"><span class="tg">Evelyn replied</span>Hi Sofia! Pause the new serum for a week and go back to your cleanser and SPF only. Bring it Saturday and I&rsquo;ll look at the ingredients with you. &mdash; Evelyn</div>
+                </div>
+              </div>
+              <form class="ask-bar" id="ask-bar">
+                <div class="ask-sugg" id="ask-sugg">
+                  <button type="button">Before my facial</button><button type="button">Cancel or move</button><button type="button">Parking</button><button type="button">Is this reaction normal?</button>
+                </div>
+                <div class="ask-row"><input id="ask-input" type="text" autocomplete="off" placeholder="Ask anything" aria-label="Your question">
+                  <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+              </form>
+            </section>
+
             <nav class="tabbar" role="tablist" aria-label="App sections">
               <button class="tab" type="button" role="tab" data-tab="home" aria-selected="true">
                 <svg viewBox="0 0 28 28" fill="currentColor"><path d="M14 3.5 3 12.3V24a1.5 1.5 0 0 0 1.5 1.5H11v-7h6v7h6.5A1.5 1.5 0 0 0 25 24V12.3z"/></svg>Home</button>
@@ -702,6 +747,8 @@ h1, h2, h3, p { margin: 0; }
                 <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="5.5" width="20" height="19" rx="4"/><path d="M9 3v5M19 3v5M4 12h20"/><circle cx="10" cy="17.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="14" cy="17.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="17.5" r="1.4" fill="currentColor" stroke="none"/></svg>Book</button>
               <button class="tab" type="button" role="tab" data-tab="rewards" aria-selected="false">
                 <svg viewBox="0 0 28 28" fill="currentColor"><path d="M14 2.5l2.9 8.6L25.5 14l-8.6 2.9L14 25.5l-2.9-8.6L2.5 14l8.6-2.9z"/></svg>Rewards</button>
+              <button class="tab" type="button" role="tab" data-tab="ask" aria-selected="false">
+                <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 14a9.5 9.5 0 0 1-13.8 8.5L4 24l1.5-5.6A9.5 9.5 0 1 1 24 14z"/></svg>Ask</button>
               <button class="tab" type="button" role="tab" data-tab="me" aria-selected="false">
                 <svg viewBox="0 0 28 28" fill="currentColor"><circle cx="14" cy="9.5" r="5.5"/><path d="M3.5 24.5c.8-5.3 5-8.5 10.5-8.5s9.7 3.2 10.5 8.5z"/></svg>Me</button>
             </nav>
@@ -765,6 +812,7 @@ h1, h2, h3, p { margin: 0; }
       <li><button class="try-btn" type="button" data-try="lock"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4"/></svg></span><span><b>Replay the flash alert</b><span class="t">Starts on the lock screen, like a real push.</span></span><span class="go" aria-hidden="true">›</span></button></li>
       <li><button class="try-btn" type="button" data-try="credit"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span><b>Book with a banked facial</b><span class="t">The membership covers it, so nothing is due today.</span></span><span class="go" aria-hidden="true">›</span></button></li>
       <li><button class="try-btn" type="button" data-try="rose"><span class="try-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span><b>Ask the magic mirror</b><span class="t">The small surprise after every visit.</span></span><span class="go" aria-hidden="true">›</span></button></li>
+      <li><button class="try-btn" type="button" data-try="ask"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/></svg></span><span><b>Ask Evelyn a skin question</b><span class="t">Instant answers, and Evelyn herself for anything personal.</span></span><span class="go" aria-hidden="true">›</span></button></li>
       <li><button class="try-btn" type="button" data-try="alert"><span class="try-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><span><b>Send a flash alert in the app</b><span class="t">How a freed-up slot reaches clients first.</span></span><span class="go" aria-hidden="true">›</span></button></li>
     </ul>
     <p class="fine">Sample client and data. Payments are simulated. Services, prices, hours and rewards match the Lumevina website.</p>
@@ -1151,6 +1199,44 @@ h1, h2, h3, p { margin: 0; }
     if (e.key === "Escape" && !wrap.hidden && $("#sh-done").hidden) closeSheet();
   });
 
+  /* ── Ask Evelyn: instant answers, skin questions to Evelyn (the website's js/ask.js, in miniature) ── */
+  var thread = $("#ask-thread");
+  var askScroll = $("#v-ask .scroll");
+  var ANS = [
+    [/before|prep|retinol|botox|filler/i, "Stop retinol 5 to 7 days before, pause exfoliating acids 2 to 3 days before, and don’t wax or shave your face for 2 days."],
+    [/after|work ?out|exercise|makeup/i, "Give it 24 hours: skip workouts and heavy sweating, and makeup for the rest of the day."],
+    [/cancel|move|reschedul/i, "Move it free up to 48 hours before, right from your next visit on Home. Saturdays can’t be moved."],
+    [/park|where|address/i, "Free parking lot. Wait in your car and text when you arrive; the address is in your confirmation."],
+    [/price|cost|how much/i, "Your Glow membership covers your monthly facial. Add-ons are 15% off for you."],
+    [/bank|pause|member/i, "You have 1 facial banked, and you can pause one month a year from Me."]
+  ];
+  var SKIN = /skin|rash|react|\bred\b|redness|itch|burn|swell|break ?out|breaking|acne|pimple|pregnan|accutane|retin|normal\?|should i/i;
+  var bubbleA = function (cls, html) {
+    var d = document.createElement("div"); d.className = "am " + cls; d.innerHTML = html; thread.appendChild(d);
+    askScroll.scrollTo({ top: askScroll.scrollHeight, behavior: calm ? "auto" : "smooth" });
+    return d;
+  };
+  var escA = function (t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; };
+  var askSend = function (text) {
+    text = String(text || "").trim();
+    if (!text) return;
+    bubbleA("you", escA(text));
+    var hit = null;
+    if (!SKIN.test(text)) for (var i = 0; i < ANS.length; i++) if (ANS[i][0].test(text)) { hit = ANS[i][1]; break; }
+    setTimeout(function () {
+      if (hit) { bubbleA("bot", escA(hit)); return; }
+      bubbleA("bot", '<span class="tg">Sent to Evelyn</span>That depends on your skin, so Evelyn will answer this one herself.<span class="pr">Glow member · reply within 24 hours</span>');
+      var typing = null;
+      setTimeout(function () { typing = bubbleA("ev typing", "Evelyn is writing…"); }, calm ? 0 : 1400);
+      setTimeout(function () {
+        if (typing) typing.remove();
+        bubbleA("ev", '<span class="tg">Evelyn replied · sped up for the demo</span>Hi Sofia! Thanks for telling me. Skip your actives for a few days and send me a photo in daylight. If it spreads or swells, see a doctor right away. I’ll take a look Saturday either way. — Evelyn');
+      }, calm ? 0 : 3200);
+    }, calm ? 0 : 380);
+  };
+  $("#ask-bar").addEventListener("submit", function (e) { e.preventDefault(); var i = $("#ask-input"); askSend(i.value); i.value = ""; });
+  $("#ask-sugg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) askSend(b.textContent); });
+
   /* ── the "Try this" buttons beside the phone ── */
   $$("[data-try]").forEach(function (b) {
     b.addEventListener("click", function () {
@@ -1168,6 +1254,9 @@ h1, h2, h3, p { margin: 0; }
         setTimeout(function () { rose.click(); }, calm ? 60 : 800);
       } else if (k === "alert") {
         setTimeout(alertIn, 250);
+      } else if (k === "ask") {
+        pop(); tab("ask");
+        setTimeout(function () { askSend("I got a little rash on my cheek after Saturday. Is that normal?"); }, calm ? 0 : 450);
       }
     });
   });
