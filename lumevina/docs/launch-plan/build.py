@@ -1,0 +1,706 @@
+"""Lumevina · The First 90 Days — a companion to the Growth Blueprint.
+
+How many members Lumevina needs by day 90 for dues to pay every bill, the
+weekly pace to get there, how the talent search runs alongside it, and the
+two engines that keep going after day 90.
+
+Builds two files from one set of content, in the Growth Blueprint's design
+(its CSS is read straight from ../blueprint/build.py, so the two never drift):
+  web.html   — scrolling page with a live calculator
+  print.html — five Letter pages, printed to PDF
+
+Run:  python3 build.py OUTDIR
+"""
+import ast, base64, math, os, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+BP = os.path.join(HERE, "..", "blueprint")
+OUT = sys.argv[1] if len(sys.argv) > 1 else HERE
+
+
+def bp_css():
+    """BASE / WEB / PRINT CSS from the Growth Blueprint, without running it."""
+    tree = ast.parse(open(os.path.join(BP, "build.py")).read())
+    out = {}
+    for node in tree.body:
+        if (isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id in ("BASE_CSS", "WEB_CSS", "PRINT_CSS")):
+            out[node.targets[0].id] = ast.literal_eval(node.value)
+    return out
+
+
+CSS = bp_css()
+FONT = base64.b64encode(open(os.path.join(BP, "inter-var.woff2"), "rb").read()).decode()
+
+# ─────────────────────────── the numbers ───────────────────────────
+# Monthly bills: what it costs to keep the doors open, before anyone books.
+# Assumptions to check against Evelyn's real statements.
+BILLS = [("Room · suite rent and utilities", 1300),
+         ("Insurance and license", 60),
+         ("Lumevina software and texts", 35),
+         ("Marketing · Instagram and chair cards", 150),
+         ("Laundry and small supplies", 55)]
+BILLS_TOTAL = sum(v for _, v in BILLS)
+
+DUES = 159.0                       # plan mix: 6 in 10 Glow $149, 1 in 4 Clear Skin $159, the rest Ageless $199
+FEE = round(DUES * 0.029 + 0.30, 2)
+SUPPLIES = 15.0                    # product used in the member's monthly facial
+PERKS = 5.0                        # 10% off the shelf, 15% off add-ons, averaged per member
+KEPT = DUES - FEE - SUPPLIES - PERKS
+FLOOR = math.ceil(BILLS_TOTAL / KEPT)
+ARTIST_PERK = 6.0                  # members' 10% with artists, paid by Lumevina, once artists join
+FLOOR_WITH_ARTISTS = math.ceil(BILLS_TOTAL / (KEPT - ARTIST_PERK))
+PLAN = 15                          # the plan by day 90: the floor plus room for a cancellation or a slow month
+
+MEMBER = [("Average dues · the plan mix", "$%d" % DUES, "6 in 10 Glow $149 · 1 in 4 Clear Skin $159 · the rest Ageless $199"),
+          ("Card fee", "−$%.2f" % FEE, "2.9% + 30¢"),
+          ("Supplies for the monthly facial", "−$%d" % SUPPLIES, "Backbar product used in the treatment"),
+          ("Member perks", "−$%d" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
+
+LADDER = [5, FLOOR, PLAN, 20, 30, 50]
+
+ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
+            ("Attorney consult", "about $450", "Pilot terms, month 2"),
+            ("Chair cards", "$60", "Printed member card for the treatment room")]
+
+# Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13).
+LIKELY = [0, 0, 0, 0, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15]
+LOW = [0, 0, 0, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 10]
+HIGH = [0, 0, 0, 0, 5, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+FLOOR_WEEK = next(i for i, v in enumerate(LIKELY) if v >= FLOOR)
+
+PACE = [("Week 1", "Count what’s there: facial clients from the last six months, visits a month, who already comes every four to eight weeks. Set up the Saturday scoreboard.", 0),
+        ("Weeks 2–3", "Live payments on, booking moves to Lumevina. In the chair, Evelyn mentions it: membership opens soon, first five get a free kit. Build an early list of 15 names.", 0),
+        ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
+        ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
+        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 11),
+        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend; both get a free add-on.", 15)]
+
+SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
+           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 6),
+           ("Win-back texts", "Clients not seen in 60+ days", 2),
+           ("Member referrals", "Both get a free add-on", 1),
+           ("Website and checkout", "Facial cards, the nudge, the booking upsell", 1)]
+
+SCRIPT = ("The offer, in the chair",
+          "“Your skin renews about every four weeks. As a member it’s $149 a month instead of $180 a visit, and I’ll hold your spot for next month. Want me to book it now?”")
+
+BEHIND = [("Personal invites", "Evelyn texts her 20 most loyal clients herself. Nothing converts like her."),
+          ("A member week", "Anyone who joins that week gets a free LED add-on. It costs time, not product."),
+          ("Show the results", "Before-and-after posts with the member price on them."),
+          ("Don’t", "Cut the dues or reopen the Founding Five. It teaches clients to wait for a deal.")]
+
+TALENT = [("Weeks 1–4", "Build the list", "Ask every client who does their lashes, brows and nails. Save the name, the Instagram, and how many clients mentioned her. Goal: 15 names."),
+          ("Weeks 5–8", "Get to know them", "Follow and book the top five as a client. Coffee with three: their business, not a deal yet. The one-hour attorney consult on pilot terms."),
+          ("Weeks 9–13", "Pick two", "The two whose clients overlap most with Evelyn’s. The one-page pilot offer drafted and ready for day 90.")]
+
+GATE = [{"tag": "Day 90 · %d or more members" % FLOOR, "big": "Sign two artists", "hl": True,
+         "sub": "Offer the pilot to your best two in months 4–5, live by month 6.",
+         "inc": ["Free for 90 days, then 12% on bookings through Lumevina",
+                 "Members save 10% with them, and Lumevina pays it",
+                 "Their clients earn Glow Points to spend with Evelyn"]},
+        {"tag": "Day 90 · under %d members" % FLOOR, "big": "Keep talking", "hl": False,
+         "sub": "Sign nothing yet. The list stays warm while members catch up.",
+         "inc": ["Thirty more days of the member push",
+                 "Use the levers: personal invites, a member week",
+                 "Check again at day 120"]}]
+
+WHY_FIRST = ("Why members first", "An artist signs for clients. Fifteen members who save 10% with her are fifteen reasons to say yes, and they’re the pitch at every coffee.")
+
+ENGINE_M = [("Months 4–6", "About five new members a month", "30 members"),
+            ("Month 6", "Dues about $4,770 a month, clearing the bills by that much", "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
+            ("Year 2", "Steady joins, fewer than 1 in 20 cancel", "50 members"),
+            ("Room check", "50 members is about 12 facials a week", "¼ of open hours")]
+ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 artists"),
+            ("Month 6", "The pilot goes live, free for 90 days, then 12%", "Pilot live"),
+            ("Month 12", "Go or no-go: 15% of their clients book Evelyn", "The gate"),
+            ("Year 2", "The Collective: lease signed, pilot artists pick first", "6–8 artists")]
+
+SCORE = [("Members", "Against the plan: %d by day 90" % PLAN),
+         ("Offers made in the chair", "Every facial client, every visit"),
+         ("Say-yes rate", "One in eight or better"),
+         ("Cancellations", "Fewer than 1 in 20 a month"),
+         ("Names on the talent list", "15 by week 4")]
+
+money = lambda n: "${:,}".format(int(round(n)))
+
+
+# ─────────────────────────── graphics ───────────────────────────
+def pace_svg():
+    X0, X1, Y0, Y1, YMAX = 48, 784, 262, 26, 24
+    x = lambda w: X0 + (X1 - X0) * w / 13.0
+    y = lambda v: Y0 - (Y0 - Y1) * v / YMAX
+    ws = range(14)
+    p = ['<svg class="chart pace" viewBox="0 0 800 300" role="img" aria-label="Members by week, first 90 days. '
+         'The plan reaches %d members by week %d, when dues pay every bill, and %d by day 90. The range runs from %d to %d."'
+         '>' % (FLOOR, FLOOR_WEEK, PLAN, LOW[-1], HIGH[-1])]
+    for i, (a, b, name) in enumerate(((0, 3, "Set up"), (3, 5, "Launch"), (5, 9, "In the chair"), (9, 13, "Win-back and referrals"))):
+        p.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>' % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i % 2))
+        p.append('<text x="%.1f" y="%d" class="stl">%s</text>' % (x(a) + 8, Y1 + 8, name))
+    for v in (5, 10, 15, 20):
+        p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="grid"/>' % (X0, X1, y(v), y(v)))
+        p.append('<text x="%d" y="%.1f" class="yl">%d</text>' % (X0 - 10, y(v) + 4, v))
+    p.append('<line x1="%d" x2="%d" y1="%d" y2="%d" class="base"/>' % (X0, X1, Y0, Y0))
+    for w, lab in ((0, "Now"), (4, "Week 4"), (8, "Week 8"), (13, "Day 90")):
+        anchor = "start" if w == 0 else ("end" if w == 13 else "middle")
+        p.append('<text x="%.1f" y="%d" class="xl" text-anchor="%s">%s</text>' % (x(w), Y0 + 22, anchor, lab))
+    hi = " ".join("%.1f,%.1f" % (x(w), y(HIGH[w])) for w in ws)
+    lo = " ".join("%.1f,%.1f" % (x(w), y(LOW[w])) for w in reversed(ws))
+    p.append('<polygon class="band" points="%s %s"/>' % (hi, lo))
+    # the floor: dues pay every bill
+    p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="floor"/>' % (X0, X1, y(FLOOR), y(FLOOR)))
+    p.append('<text x="%.1f" y="%.1f" class="floorl">The minimum · %d members</text>' % (x(0.2), y(FLOOR) - 8, FLOOR))
+    p.append('<path class="likely" pathLength="1" d="M%s"/>' % " L".join("%.1f,%.1f" % (x(w), y(LIKELY[w])) for w in ws))
+    fx, fy = x(FLOOR_WEEK), y(LIKELY[FLOOR_WEEK])
+    p.append('<circle class="cross" cx="%.1f" cy="%.1f" r="4.5"/>' % (fx, fy))
+    p.append('<text class="crossl" x="%.1f" y="%.1f" text-anchor="middle">Week %d: bills covered</text>' % (fx, fy + 24, FLOOR_WEEK))
+    ex, ey = x(13), y(LIKELY[13])
+    p.append('<circle class="endpt" cx="%.1f" cy="%.1f" r="5"/>' % (ex, ey))
+    p.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">%d by day 90</text>' % (ex - 12, ey - 14, PLAN))
+    p.append('</svg>')
+    return "".join(p)
+
+
+def lanes_svg():
+    X0, X1 = 104, 784
+    x = lambda m: X0 + (X1 - X0) * m / 24.0
+    L1T, L1B = 26, 118                 # members lane, top/bottom
+    ym = lambda v: L1B - (L1B - L1T) * v / 50.0
+    B1, B2 = 150, 180                  # talent bars
+    p = ['<svg class="chart lanes" viewBox="0 0 800 246" role="img" aria-label="After day 90, two engines. Members grow '
+         'from %d at day 90 to 30 by month 6 and 50 by year 2. Talent: build the list to day 90, sign two artists in months 4 to 5, '
+         'the pilot runs to month 12, then the Collective in year 2.">' % PLAN]
+    p.append('<text x="0" y="%d" class="lanel">Members</text>' % ((L1T + L1B) // 2 + 4))
+    p.append('<text x="0" y="%d" class="lanel">Talent</text>' % ((B1 + B2) // 2 + 4))
+    for m in (0, 3, 6, 12, 24):
+        p.append('<line x1="%.1f" x2="%.1f" y1="%d" y2="%d" class="grid"/>' % (x(m), x(m), L1T - 10, B2 + 8))
+    pts = [(0, 0), (0.92, 3), (1.15, 5), (2.3, FLOOR), (3, PLAN), (6, 30), (12, 40), (24, 50)]
+    line = " L".join("%.1f,%.1f" % (x(m), ym(v)) for m, v in pts)
+    p.append('<path class="area" d="M%.1f,%d L%s L%.1f,%d Z"/>' % (x(0), L1B, line, x(24), L1B))
+    p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="floor"/>' % (X0, X1, ym(FLOOR), ym(FLOOR)))
+    p.append('<text x="%.1f" y="%.1f" class="floorl" text-anchor="end">Minimum · %d</text>' % (x(24) - 4, ym(FLOOR) - 6, FLOOR))
+    p.append('<path class="likely" pathLength="1" d="M%s"/>' % line)
+    for m, v, lab, anc in ((3, PLAN, "%d" % PLAN, "middle"), (6, 30, "30", "middle"), (12, 40, "40", "middle"), (24, 50, "50", "end")):
+        p.append('<circle class="dot" cx="%.1f" cy="%.1f" r="4"/>' % (x(m), ym(v)))
+        p.append('<text class="dotl" x="%.1f" y="%.1f" text-anchor="%s">%s</text>' % (x(m) - (4 if anc == "end" else 0), ym(v) - 10, anc, lab))
+    bars = [(0, 3, "Build the list", "b0"), (3, 5, "Sign two", "b1"), (5, 12, "Pilot · 2 artists", "b1"),
+            (12, 15, "Find space", "b0"), (15, 24, "The Collective", "b2")]
+    for a, b, lab, cls in bars:
+        p.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" rx="8" class="bar %s"/>' % (x(a) + 1.5, B1, x(b) - x(a) - 3, B2 - B1, cls))
+        p.append('<text x="%.1f" y="%d" class="barl %s">%s</text>' % ((x(a) + x(b)) / 2, B1 + 19, cls, lab))
+        p[-1] = p[-1].replace('<text ', '<text text-anchor="middle" ', 1)
+    for m, lab, anc in ((3, "Gate: %d+ members" % FLOOR, "start"), (12, "Gate: go or no-go", "start")):
+        p.append('<line x1="%.1f" x2="%.1f" y1="%d" y2="%d" class="gate"/>' % (x(m), x(m), L1T - 14, B2 + 22))
+        p.append('<text x="%.1f" y="%d" class="gatel" text-anchor="%s">%s</text>' % (x(m) + 5, B2 + 20, anc, lab))
+    for m, lab in ((0, "Now"), (3, "Day 90"), (6, "Month 6"), (12, "Year 1"), (24, "Year 2")):
+        anchor = "start" if m == 0 else ("end" if m == 24 else "middle")
+        p.append('<text x="%.1f" y="%d" class="xl" text-anchor="%s">%s</text>' % (x(m), 240, anchor, lab))
+    p.append('</svg>')
+    return "".join(p)
+
+
+# ─────────────────────────── html pieces ───────────────────────────
+def rows(items, total=None, sub=True):
+    h = '<div class="rows">'
+    for it in items:
+        h += '<div class="row"><span class="rn">%s</span><span class="rv">%s</span>%s</div>' % (
+            it[0], it[1], ('<span class="rr">%s</span>' % it[2]) if sub and len(it) > 2 and it[2] else "")
+    if total:
+        h += '<div class="row tot"><span class="rn">%s</span><span class="rv">%s</span></div>' % total
+    return h + '</div>'
+
+
+def bills_rows():
+    return rows([(n, money(v)) for n, v in BILLS], ("Every month", money(BILLS_TOTAL)))
+
+
+def member_rows():
+    return rows(MEMBER, ("Each member leaves", "$%d" % KEPT))
+
+
+def ladder_html():
+    mx = max(LADDER) * KEPT
+    h = '<div class="ladder"><div class="ld-row ld-h"><span>Members</span><span>Dues kept</span><span>After the bills</span><span></span></div>'
+    for n in LADDER:
+        kept, left = n * KEPT, n * KEPT - BILLS_TOTAL
+        cls = " is-floor" if n == FLOOR else (" is-plan" if n == PLAN else "")
+        tag = " <i>the minimum</i>" if n == FLOOR else (" <i>the plan</i>" if n == PLAN else "")
+        left_s = ("+" + money(left)) if left >= 10 else ("even" if left >= 0 else "−" + money(-left))
+        h += ('<div class="ld-row%s"><span class="ld-n">%d%s</span><span>%s</span><span class="ld-left%s">%s</span>'
+              '<span class="ld-bar"><b style="width:%.1f%%"></b><em style="left:%.1f%%"></em></span></div>'
+              % (cls, n, tag, money(kept), " neg" if left < 0 else "", left_s, kept / mx * 100, BILLS_TOTAL / mx * 100))
+    return h + '</div>'
+
+
+def pace_html():
+    return '<div class="pace-t">' + "".join(
+        '<div class="pc-row"><span class="pc-w">%s</span><span class="pc-t">%s</span><span class="pc-n num">%s</span></div>'
+        % (w, t, ("%d" % n) if n else "—") for w, t, n in PACE) + '</div>'
+
+
+def sources_html():
+    return rows([(a, str(n), b) for a, b, n in SOURCES], ("By day 90", str(sum(n for _, _, n in SOURCES))))
+
+
+def cards(items, cls="g"):
+    return "".join('<div class="%s"><b>%s</b><p>%s</p></div>' % (cls, a, b) for a, b in items)
+
+
+def talent_html(reveal=""):
+    return "".join('<div class="g tl%s"><span class="tl-w">%s</span><b>%s</b><p>%s</p></div>' % (reveal, w, a, b) for w, a, b in TALENT)
+
+
+def gate_html(reveal=""):
+    h = ""
+    for o in GATE:
+        h += ('<div class="offer%s%s"><div class="of-tag">%s</div><div class="of-big">%s</div><p class="of-sub">%s</p><ul class="of-list">%s</ul></div>'
+              % (" hl" if o["hl"] else "", reveal, o["tag"], o["big"], o["sub"],
+                 "".join('<li><span class="ck"></span><span>%s</span></li>' % i for i in o["inc"])))
+    return h
+
+
+def engine_rows(items):
+    return '<div class="rows">' + "".join(
+        '<div class="row"><span class="rn"><span class="ek">%s</span>%s</span><span class="rv">%s</span></div>' % it for it in items) + '</div>'
+
+
+FLOW = [("Days 1–90 · Members", "The offer after every facial. %d pays the bills; aim for %d." % (FLOOR, PLAN)),
+        ("Alongside · Talent", "A list of 15 artists, coffee with three, pick two."),
+        ("Day 90 · The gate", "%d+ members: sign two artists. Under: keep pushing." % FLOOR),
+        ("After · Two engines", "30 members by month 6, the pilot live, then the Collective.")]
+
+
+def flow_html(reveal=""):
+    return "".join('<div class="fs%s"><div class="fi">%d</div><b>%s</b><span>%s</span></div>' % (reveal, i + 1, a, b)
+                   for i, (a, b) in enumerate(FLOW))
+
+
+def score_html():
+    return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % s for s in SCORE)
+
+
+def onetime_html():
+    return "".join('<div class="c"><b>%s · %s</b><span>%s</span></div>' % s for s in ONE_TIME)
+
+
+# ─────────────────────────── css ───────────────────────────
+LP_CSS = r"""
+.chart .floor { stroke: #f4c9d6; stroke-width: 1.5; stroke-dasharray: 5 6; opacity: .85; }
+.chart .floorl { fill: var(--rose); font-size: 12px; font-weight: 600; }
+.chart .cross { fill: #000; stroke: #f4c9d6; stroke-width: 2.5; }
+.chart .crossl { fill: var(--text-2); font-size: 11.5px; font-weight: 500; }
+.lanes .lanel { fill: var(--text); font-size: 13px; font-weight: 600; }
+.lanes .area { fill: rgba(244,201,214,.1); }
+.lanes .dot { fill: #f4c9d6; stroke: #000; stroke-width: 2.5; }
+.lanes .dotl { fill: var(--text); font-size: 12px; font-weight: 600; }
+.lanes .bar.b0 { fill: #1f1f22; } .lanes .bar.b1 { fill: rgba(244,201,214,.22); } .lanes .bar.b2 { fill: #f0c2cf; }
+.lanes .barl { fill: var(--text); font-size: 11.5px; font-weight: 600; } .lanes .barl.b2 { fill: #000; }
+.lanes .gate { stroke: rgba(255,255,255,.35); stroke-width: 1; stroke-dasharray: 3 4; }
+.lanes .gatel { fill: var(--text-2); font-size: 11px; font-weight: 500; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.stat { border-top: 1px solid var(--hair); padding-top: 12px; }
+.stat .v { font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.stat .k { color: var(--text-2); margin-top: 6px; line-height: 1.4; }
+.eq { display: flex; align-items: baseline; justify-content: center; gap: .5em; flex-wrap: wrap; background: var(--card); border-radius: 22px;
+  font-weight: 700; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.eq .op { color: var(--text-3); font-weight: 500; }
+.eq small { font-size: .38em; letter-spacing: -0.01em; font-weight: 500; color: var(--text-2); }
+.ladder { background: var(--card); border-radius: 22px; }
+.ld-row { display: grid; grid-template-columns: 1.25fr .9fr 1fr 1.6fr; gap: 12px; align-items: center; border-bottom: 1px solid var(--hair);
+  font-variant-numeric: tabular-nums; }
+.ld-row:last-child { border-bottom: 0; }
+.ld-h { color: var(--text-3); font-weight: 500; }
+.ld-n { font-weight: 600; }
+.ld-n i { font-style: normal; font-weight: 500; color: var(--rose); margin-left: 4px; }
+.ld-left { font-weight: 600; white-space: nowrap; } .ld-left.neg { color: var(--text-3); font-weight: 500; }
+.ld-row.is-floor .ld-left, .ld-row.is-plan .ld-left { color: var(--rose); }
+.ld-bar { position: relative; height: 8px; border-radius: 999px; background: #1f1f22; }
+.ld-bar b { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--grad); }
+.ld-bar em { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #fff; opacity: .7; border-radius: 1px; }
+.ld-row:not(.is-floor):not(.is-plan) .ld-bar b { opacity: .45; }
+.pace-t { background: var(--card); border-radius: 22px; }
+.pc-row { display: grid; grid-template-columns: 6.2rem 1fr 3.2rem; gap: 14px; align-items: baseline; border-bottom: 1px solid var(--hair); }
+.pc-row:last-child { border-bottom: 0; }
+.pc-w { color: var(--rose); font-weight: 600; }
+.pc-t { color: var(--text); line-height: 1.42; letter-spacing: -0.01em; }
+.pc-n { text-align: right; font-weight: 700; letter-spacing: -0.03em; }
+.tl .tl-w { display: block; color: var(--rose); font-weight: 600; margin-bottom: 6px; }
+.ek { display: block; color: var(--rose); font-weight: 600; }
+.four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.costs.five { grid-template-columns: repeat(5, 1fr); }
+.costs.three { grid-template-columns: repeat(3, 1fr); }
+.behind .c:last-child b { color: var(--text-3); }
+"""
+
+LP_WEB = r"""
+.hero90 { padding: 96px 0 40px; }
+.hero90 .h1 { font-size: clamp(3rem, 7.4vw, 6rem); }
+.hero90 .lead { font-size: clamp(1.15rem, 2vw, 1.4rem); max-width: 40rem; margin-top: 22px; }
+.hero90 .stats { margin-top: 44px; }
+.stat .v { font-size: clamp(2.6rem, 6vw, 3.8rem); } .stat .k { font-size: .95rem; }
+.eq { font-size: clamp(2.2rem, 6vw, 4rem); padding: 30px 24px; margin-top: 14px; }
+.ladder { padding: 6px 22px; margin-top: 14px; }
+.ld-row { padding: 13px 0; font-size: .98rem; } .ld-h { font-size: .8rem; }
+.pace-t { padding: 6px 22px; }
+.pc-row { padding: 16px 0; } .pc-w { font-size: .92rem; } .pc-t { font-size: 1.02rem; } .pc-n { font-size: 1.6rem; }
+.calc { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-top: 14px; }
+.calc-in { background: var(--card); border-radius: 22px; padding: 22px 24px; display: grid; gap: 20px; }
+.calc-in label { display: grid; grid-template-columns: 1fr auto; row-gap: 10px; font-size: .95rem; color: var(--text-2); }
+.calc-in output { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.calc-in input { grid-column: 1 / -1; width: 100%; accent-color: #f0c2cf; }
+.calc-out { border-radius: 22px; padding: 24px; display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(160deg, #2a1d23 0%, #16110f 100%); box-shadow: inset 0 0 0 1px rgba(244,201,214,.25); }
+.calc-out .big { font-size: clamp(4rem, 10vw, 6rem); font-weight: 700; letter-spacing: -0.06em; line-height: .9; }
+.calc-out .t { font-size: 1.1rem; font-weight: 600; margin-top: 10px; letter-spacing: -0.015em; }
+.calc-out .s { color: var(--text-2); font-size: .92rem; margin-top: 8px; line-height: 1.45; }
+.calc-note { color: var(--text-3); font-size: .85rem; margin-top: 12px; }
+.tl { display: flex; flex-direction: column; }
+.lanes .likely { stroke-width: 2.5; }
+.mt { margin-top: 14px; } .mt2 { margin-top: 40px; }
+.chart-scroll { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.chart-scroll::-webkit-scrollbar { display: none; }
+.swipe-hint { display: none; color: var(--text-3); font-size: .8rem; margin: 8px 0 4px; }
+@media (max-width: 860px) {
+  /* charts keep a readable size on a phone and swipe sideways inside their card */
+  .chart-scroll { margin: 0 -24px; padding: 0 24px; }
+  .chart-scroll .chart { min-width: 660px; }
+  .chart-scroll .pace { min-width: 560px; }
+  .swipe-hint { display: block; }
+  .chart-scroll .chart .stl { display: block; }
+  .flow { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .flow .fs { padding: 18px 16px; } .flow .fs b { margin-top: 12px; font-size: 1rem; } .flow .fs span { font-size: .88rem; }
+  .flow .fs:not(:last-child)::after { display: none; }
+  .hero90 .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat .v { font-size: 2.4rem; } .stat .k { font-size: .8rem; }
+  .four, .three, .calc { grid-template-columns: 1fr; }
+  .costs.five, .costs.three { grid-template-columns: 1fr 1fr; }
+  .ld-row { grid-template-columns: 1.3fr .9fr .9fr; } .ld-bar { grid-column: 1 / -1; }
+  .pc-row { grid-template-columns: 1fr auto; } .pc-t { grid-column: 1 / -1; grid-row: 2; }
+}
+"""
+
+LP_PRINT = r"""
+.h1 { font-size: 52pt; }
+.stat .v { font-size: 30pt; } .stat .k { font-size: 9pt; }
+.eq { font-size: 30pt; padding: 14px 18px; border-radius: 16px; }
+.ladder { padding: 2px 16px; border-radius: 16px; }
+.ld-row { padding: 6px 0; font-size: 9.5pt; } .ld-h { font-size: 7.8pt; }
+.pace-t { padding: 2px 16px; border-radius: 16px; }
+.pc-row { grid-template-columns: 0.95in 1fr 0.45in; padding: 8px 0; gap: 12px; }
+.pc-w { font-size: 9pt; } .pc-t { font-size: 9.6pt; } .pc-n { font-size: 15pt; }
+.four, .three { gap: 12px; }
+.g.tl { padding: 14px 16px; } .tl .tl-w { font-size: 8.5pt; margin-bottom: 4px; } .g.tl p { font-size: 9.2pt; }
+.ek { font-size: 8.5pt; }
+.sub-h { font-size: 11pt; font-weight: 650; letter-spacing: -0.015em; margin-bottom: 6px; }
+.lanes .likely { stroke-width: 2.5; }
+"""
+
+WEB_JS = r"""
+(function () {
+  "use strict";
+  var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (rm || !("IntersectionObserver" in window)) document.documentElement.classList.add("no-motion");
+  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold: 0.2 }) : null;
+  document.querySelectorAll(".reveal").forEach(function (el) { if (io) io.observe(el); });
+
+  /* the calculator: how many members pay every bill */
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
+  var calc = function () {
+    var bills = +$("c-bills").value, sup = +$("c-sup").value, dues = +$("c-dues").value;
+    var kept = dues - (dues * 0.029 + 0.30) - sup - __PERKS__;
+    var floor = Math.ceil(bills / kept);
+    $("o-bills").textContent = fmt(bills);
+    $("o-sup").textContent = fmt(sup);
+    $("o-dues").textContent = fmt(dues);
+    $("o-floor").textContent = floor;
+    $("o-plan").textContent = "Aim for " + (floor + 3) + " by day 90, with room for a cancellation.";
+    $("o-sub").textContent = "Each member leaves " + fmt(kept) + ". At 30 members, dues clear the bills by " +
+      fmt(30 * kept - bills) + " a month.";
+  };
+  ["c-bills", "c-sup", "c-dues"].forEach(function (id) { $(id).addEventListener("input", calc); });
+  calc();
+})();
+"""
+
+
+# ─────────────────────────── pages ───────────────────────────
+HEAD = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumevina First 90 Days</title>
+<meta name="description" content="The minimum members Lumevina needs by day 90 to run in profit, the weekly pace to get there, and the talent search alongside it.">
+<style>__CSS__</style>
+</head>
+<body>
+"""
+
+WEB_BODY = """
+<section class="hero90">
+  <div class="wrap">
+    <p class="kicker reveal">Lumevina · The first 90 days</p>
+    <h1 class="h1 reveal" style="margin-top:18px">__FLOOR_W__ members.<br><span class="grad">Ninety days.</span></h1>
+    <p class="lead reveal">The fewest members Lumevina needs by day 90 for dues to pay every bill, the weekly pace to get there,
+    and how the talent search runs alongside it. After day 90, both keep growing.</p>
+    <div class="stats reveal">
+      <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every monthly bill.</div></div>
+      <div class="stat"><div class="v num">__PLAN__</div><div class="k">The plan by day 90, with room for a cancellation or a slow month.</div></div>
+      <div class="stat"><div class="v num">30</div><div class="k">By month 6, then 50 by year 2. Artists sign from month 4.</div></div>
+    </div>
+    <div class="chart-card reveal mt2">
+      <h3>Members, week by week</h3>
+      <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every bill.</p>
+      <div class="chart-scroll">__PACE_SVG__</div><p class="swipe-hint">Swipe the chart to see day 90 &rarr;</p>
+    </div>
+    <div class="flow mt">__FLOW__</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">The minimum</p>
+      <h2 class="h2" style="margin-top:14px">Why __FLOOR_W_L__. <span class="dim">Dues that pay every bill.</span></h2>
+      <p class="lead">Membership dues arrive before the month starts. Once they cover the bills, every other booking,
+      add-on and product is profit, and a slow week can&rsquo;t sink the month.</p>
+    </div>
+    <div class="num-grid">
+      <div class="reveal"><div class="cols-h">The monthly bills</div><div class="cols-s">What it costs to open the doors · estimates to check</div>__BILLS__</div>
+      <div class="reveal"><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
+    </div>
+    <div class="eq reveal"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
+    <div class="reveal mt2"><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only, before any regular booking, add-on or product</div>__LADDER__</div>
+    <div class="reveal mt2"><div class="cols-h">Try your real numbers</div><div class="cols-s">Move the sliders to Evelyn&rsquo;s actual rent and costs</div>
+      <div class="calc">
+        <div class="calc-in">
+          <label for="c-bills">Monthly bills <output id="o-bills"></output><input id="c-bills" type="range" min="800" max="3200" step="50" value="__BILLS_N__"></label>
+          <label for="c-sup">Supplies per facial <output id="o-sup"></output><input id="c-sup" type="range" min="5" max="30" step="1" value="__SUP_N__"></label>
+          <label for="c-dues">Average dues <output id="o-dues"></output><input id="c-dues" type="range" min="149" max="199" step="1" value="__DUES_N__"></label>
+        </div>
+        <div class="calc-out" aria-live="polite"><div class="big grad num" id="o-floor"></div><div class="t">members pay every bill</div>
+          <p class="t" id="o-plan" style="font-weight:500;font-size:1rem;color:var(--text-2)"></p><p class="s" id="o-sub"></p></div>
+      </div>
+      <p class="calc-note">Card fee 2.9% + 30¢ and $__PERKS__ of member perks are included.</p>
+    </div>
+    <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the bills by month 5</div>
+      <div class="costs three">__ONETIME__</div></div>
+    <p class="foot-note reveal">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $111 a month.
+    As a Glow member she spends $149, comes every month, and pays first.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">How to get there</p>
+      <h2 class="h2" style="margin-top:14px">Thirteen weeks. <span class="dim">One offer at a time.</span></h2>
+      <p class="lead">Most of the first members are clients who already love Evelyn. The plan is to ask every one of them,
+      at the right moment, with next month&rsquo;s facial booked on the spot.</p>
+    </div>
+    <div class="reveal"><div class="rows-head"><div class="cols-h">Week by week</div><div class="cols-s">Members by the end of each stretch · the plan</div></div>__PACE__</div>
+    <div class="num-grid mt2">
+      <div class="reveal"><div class="cols-h">Where the __PLAN__ come from</div><div class="cols-s">The plan, by day 90</div>__SOURCES__</div>
+      <div class="reveal"><div class="cols-h">__SCRIPT_K__</div><div class="cols-s">Two minutes at the end of every facial</div>
+        <div class="offer hl"><p class="of-big" style="font-size:1.5rem;line-height:1.3;letter-spacing:-0.02em">__SCRIPT_V__</p>
+        <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div></div>
+    </div>
+    <div class="reveal mt2"><div class="cols-h">If week 7 ends under 6 members</div><div class="cols-s">Pull these levers, in this order</div>
+      <div class="costs behind four">__BEHIND__</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Talent, alongside</p>
+      <h2 class="h2" style="margin-top:14px">Scout now. <span class="dim">Sign at day 90.</span></h2>
+      <p class="lead">Both run from day one. The talent search is about two hours a week, mostly Ruben, and never takes
+      Evelyn out of the treatment room. Nothing gets signed until the members are there to offer.</p>
+    </div>
+    <div class="three">__TALENT__</div>
+    <div class="offers mt">__GATE__</div>
+    <div class="perk reveal"><b>__WHY_K__</b><span>__WHY_V__</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">After day 90</p>
+      <h2 class="h2" style="margin-top:14px">Two engines. <span class="dim">Both keep running.</span></h2>
+      <p class="lead">Members keep coming from the chair and from referrals. Artists add a second income on top.
+      Each gate is a number, so every step is earned by the one before it.</p>
+    </div>
+    <div class="chart-card reveal">
+      <h3>The next two years</h3>
+      <p class="sub">Members above; the talent track below. Dashed lines are the gates.</p>
+      <div class="chart-scroll">__LANES_SVG__</div><p class="swipe-hint">Swipe the chart to see year 2 &rarr;</p>
+    </div>
+    <div class="num-grid">
+      <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, referrals, the site</div></div>__ENGINE_M__</div>
+      <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 2 · Talent</div><div class="cols-s">Matches the Growth Blueprint&rsquo;s pipeline</div></div>__ENGINE_T__</div>
+    </div>
+    <p class="foot-note reveal">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__ a member a month, and the minimum moves to __FLOOR2__.</p>
+    <div class="reveal mt2"><div class="cols-h">The Saturday scoreboard</div><div class="cols-s">Five numbers, every week. The dashboard&rsquo;s Glow Membership card and launch ledger count most of them.</div>
+      <div class="costs five">__SCORE__</div></div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap center reveal">
+    <h2 class="h2">__FLOOR_W__ by day ninety. <span class="grad">Then keep building.</span></h2>
+    <p class="fine">All figures are estimates from current menu prices and assumed costs. Replace the bills with Evelyn&rsquo;s real
+    statements before deciding. A companion to the Lumevina Growth Blueprint. Not financial or legal advice.</p>
+  </div>
+</section>
+<script>__JS__</script>
+</body>
+</html>
+"""
+
+PRINT_BODY = """
+<section class="page">
+  <div>
+    <p class="kicker">Lumevina · The first 90 days</p>
+    <h1 class="h1" style="margin-top:12px">__FLOOR_W__ members.<br><span class="grad">Ninety days.</span></h1>
+    <p class="lead" style="margin-top:16px;max-width:6.4in">The fewest members Lumevina needs by day 90 for dues to pay every bill,
+    the weekly pace to get there, and how the talent search runs alongside it.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every monthly bill.</div></div>
+    <div class="stat"><div class="v num">__PLAN__</div><div class="k">The plan by day 90, with room for a cancellation or a slow month.</div></div>
+    <div class="stat"><div class="v num">30</div><div class="k">By month 6, then 50 by year 2. Artists sign from month 4.</div></div>
+  </div>
+  <div class="chart-card">
+    <h3>Members, week by week</h3>
+    <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every bill.</p>
+    __PACE_SVG__
+  </div>
+  <div class="flow">__FLOW__</div>
+  __F1__
+</section>
+
+<section class="page tight">
+  <div>
+    <p class="kicker">The minimum</p>
+    <h2 class="h2" style="margin-top:10px">Why __FLOOR_W_L__. <span class="dim">Dues that pay every bill.</span></h2>
+    <p class="lead" style="margin-top:12px;font-size:11pt">Dues arrive before the month starts. Once they cover the bills, every other
+    booking, add-on and product is profit, and a slow week can&rsquo;t sink the month.</p>
+  </div>
+  <div class="two">
+    <div><div class="cols-h">The monthly bills</div><div class="cols-s">Estimates to check against real statements</div>__BILLS__</div>
+    <div><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
+  </div>
+  <div class="eq"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
+  <div><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only, before any regular booking, add-on or product</div>__LADDER__</div>
+  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the bills by month 5</div>
+    <div class="costs three">__ONETIME__</div></div>
+  <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks
+  spent about $111 a month. As a Glow member she spends $149, comes every month, and pays first.</p>
+  __F2__
+</section>
+
+<section class="page tight">
+  <div>
+    <p class="kicker">How to get there</p>
+    <h2 class="h2" style="margin-top:10px">Thirteen weeks. <span class="dim">One offer at a time.</span></h2>
+  </div>
+  <div><div class="cols-h">Week by week</div><div class="cols-s">Members by the end of each stretch · the plan</div>__PACE__</div>
+  <div class="two">
+    <div><div class="cols-h">Where the __PLAN__ come from</div><div class="cols-s">The plan, by day 90</div>__SOURCES__</div>
+    <div><div class="cols-h">__SCRIPT_K__</div><div class="cols-s">Two minutes at the end of every facial</div>
+      <div class="offer hl"><p class="of-big" style="font-size:13pt;line-height:1.35;letter-spacing:-0.015em">__SCRIPT_V__</p>
+      <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div></div>
+  </div>
+  <div><div class="cols-h">If week 7 ends under 6 members</div><div class="cols-s">Pull these levers, in this order</div>
+    <div class="costs behind" style="grid-template-columns:repeat(4,1fr)">__BEHIND__</div></div>
+  __F3__
+</section>
+
+<section class="page">
+  <div>
+    <p class="kicker">Talent, alongside</p>
+    <h2 class="h2" style="margin-top:10px">Scout now. <span class="dim">Sign at day 90.</span></h2>
+    <p class="lead" style="margin-top:12px;font-size:11pt">Both run from day one. The talent search is about two hours a week, mostly Ruben,
+    and never takes Evelyn out of the treatment room. Nothing gets signed until the members are there to offer.</p>
+  </div>
+  <div class="three">__TALENT__</div>
+  <div><div class="cols-h">The day-90 gate</div><div class="cols-s">One number decides the next step</div>
+    <div class="offers">__GATE__</div></div>
+  <div class="perk"><b>__WHY_K__</b><span>__WHY_V__</span></div>
+  <div><div class="cols-h">The Saturday scoreboard</div><div class="cols-s">Five numbers, every week. The dashboard counts most of them.</div>
+    <div class="costs" style="grid-template-columns:repeat(5,1fr)">__SCORE__</div></div>
+  __F4__
+</section>
+
+<section class="page">
+  <div>
+    <p class="kicker">After day 90</p>
+    <h2 class="h2" style="margin-top:10px">Two engines. <span class="dim">Both keep running.</span></h2>
+    <p class="lead" style="margin-top:12px;font-size:11pt">Members keep coming from the chair and from referrals. Artists add a second
+    income on top. Each gate is a number, so every step is earned by the one before it.</p>
+  </div>
+  <div class="chart-card">
+    <h3>The next two years</h3>
+    <p class="sub">Members above; the talent track below. Dashed lines are the gates.</p>
+    __LANES_SVG__
+  </div>
+  <div class="two">
+    <div><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, referrals, the site</div>__ENGINE_M__</div>
+    <div><div class="cols-h">Engine 2 · Talent</div><div class="cols-s">Matches the Growth Blueprint&rsquo;s pipeline</div>__ENGINE_T__</div>
+  </div>
+  <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__
+  a member a month, and the minimum moves to __FLOOR2__.</p>
+  <div class="closer">
+    <h2 class="h2">__FLOOR_W__ by day ninety. <span class="grad">Then keep building.</span></h2>
+    <p class="fine" style="margin-top:10px">All figures are estimates from current menu prices and assumed costs. Replace the bills with
+    Evelyn&rsquo;s real statements before deciding. A companion to the Lumevina Growth Blueprint. Not financial or legal advice.</p>
+  </div>
+  __F5__
+</section>
+</body>
+</html>
+"""
+
+WORDS = {10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen"}
+
+
+def fill(h, web):
+    rv = " reveal" if web else ""
+    rep = {
+        "__FLOOR_W__": WORDS.get(FLOOR, str(FLOOR)), "__FLOOR_W_L__": WORDS.get(FLOOR, str(FLOOR)).lower(),
+        "__FLOOR__": str(FLOOR), "__PLAN__": str(PLAN), "__FLOOR2__": str(FLOOR_WITH_ARTISTS),
+        "__KEPT__": "%d" % KEPT, "__BILLS_TOTAL__": money(BILLS_TOTAL), "__ARTIST__": "%d" % ARTIST_PERK,
+        "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%d" % PERKS,
+        "__PACE_SVG__": pace_svg(), "__LANES_SVG__": lanes_svg(),
+        "__BILLS__": bills_rows(), "__MEMBER__": member_rows(), "__LADDER__": ladder_html(),
+        "__ONETIME__": onetime_html(), "__PACE__": pace_html(), "__SOURCES__": sources_html(),
+        "__SCRIPT_K__": SCRIPT[0], "__SCRIPT_V__": SCRIPT[1],
+        "__BEHIND__": "".join('<div class="c"><b>%s</b><span>%s</span></div>' % b for b in BEHIND),
+        "__TALENT__": talent_html(rv), "__GATE__": gate_html(rv), "__WHY_K__": WHY_FIRST[0], "__WHY_V__": WHY_FIRST[1],
+        "__FLOW__": flow_html(rv),
+        "__ENGINE_M__": engine_rows(ENGINE_M), "__ENGINE_T__": engine_rows(ENGINE_T), "__SCORE__": score_html(),
+    }
+    for k in sorted(rep, key=len, reverse=True):
+        h = h.replace(k, rep[k])
+    return h
+
+
+base = CSS["BASE_CSS"].replace("__FONT__", FONT) + LP_CSS
+web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, True).replace("__JS__", WEB_JS.replace("__PERKS__", "%d" % PERKS))
+foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 5</span></div>' % n
+pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
+for i in range(1, 6):
+    pr = pr.replace("__F%d__" % i, foot(i))
+
+for name, html in (("web.html", web), ("print.html", pr)):
+    assert "__" not in html.replace("__proto__", ""), [l for l in html.split("\n") if "__" in l][:3]
+    html = html.encode("ascii", "xmlcharrefreplace").decode("ascii")
+    with open(os.path.join(OUT, name), "w") as f:
+        f.write(html)
+    print(name, len(html), "floor", FLOOR, "kept %.2f" % KEPT)
