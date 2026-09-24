@@ -25,8 +25,9 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
 S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Fri, Sun)
-PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net
-COLL = {"low": 1100, "likely": 4100, "high": 8140}     # 6–8 artists, net
+PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
+COLL = {"low": 1100, "likely": 4100, "high": 8100}     # 6–8 artists, net: flat suite rent + crossover − space − perks
+FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
 
 
 def added(m, k):
@@ -36,7 +37,8 @@ def added(m, k):
     if m < 6:
         art = 0
     elif m <= 12:
-        art = p * (m - 6) / 6.0
+        # their clients start crossing over at once; the app fee starts after 90 days free
+        art = p * (1 - FEE_SHARE) * (m - 6) / 6.0 + p * FEE_SHARE * max(0.0, m - 9) / 3.0
     elif m < 15:
         art = p
     elif m <= 16:
@@ -92,7 +94,7 @@ STEPS = [
 FLOW = [
     ("A client books a lash fill", "in the Lumevina app."),
     ("The artist is paid directly.", "They run their own business."),
-    ("Lumevina keeps 12%.", "Automatically, on every booking."),
+    ("Lumevina earns its share.", "A 12% app fee in the pilot. Flat suite rent in the house."),
     ("Glow points bring the client", "to Evelyn for a facial."),
 ]
 
@@ -115,14 +117,15 @@ CHAIR = [("Glow Membership", "$1,500", "$600–$3,000"),
          ("Referrals", "$600", "$300–$900")]
 CHAIR_TOTAL = ("Added revenue", "$4,400", "$2,100–$7,700")
 
-COLLECTIVE = [("Platform fees · 7 artists", "$5,600", "$3,600–$8,640"),
+COLLECTIVE = [("Suite rent · 7 suites", "$6,500", "$4,500–$10,000"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
-              ("Space and running costs", "−$5,500", "−$5,000–$6,500")]
-COLL_TOTAL = ("Net to Lumevina", "$4,100", "$1,100–$8,140")
+              ("Space and running costs", "−$5,500", "−$5,000–$6,500"),
+              ("Artist perks and recruiting", "−$900", "−$900–$1,400")]
+COLL_TOTAL = ("Net to Lumevina", "$4,100", "$1,100–$8,100")
 
 GUARD = [
     ("Licensed only.", "Every artist holds a California license and works in a licensed space."),
-    ("Their own business.", "Artists set their prices and are paid directly, which keeps California’s AB5 employee rules on our side. An attorney signs off first."),
+    ("Their own business.", "Artists set their prices, hours and clients and are paid directly. In the house they pay flat rent, never a cut. That keeps California’s AB5 employee rules on our side. An attorney signs off first."),
     ("Pilot before lease.", "No new space until two artists prove their clients also book Evelyn."),
     ("Clear roles.", "Evelyn owns the brand and the standard of care. Ruben runs operations, the app and the numbers."),
 ]
@@ -134,9 +137,82 @@ COSTS = [("Live payments", "2.9% + 30¢ per payment"),
 
 DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat clients, no-shows, average ticket."),
         ("Weeks 2–3", "Switch on live payments. Move booking from Acuity to Lumevina."),
-        ("Week 4", "Launch Glow Membership and add-ons."),
-        ("Month 2", "One-hour attorney consult on how artists are set up."),
-        ("Month 3", "Bring in one licensed lash or brow artist. Track how many of their clients book you.")]
+        ("Week 4", "Launch Glow Membership and add-ons. Start asking every client who does their lashes, brows and nails."),
+        ("Month 2", "One-hour attorney consult: the pilot terms, the suite agreement, and rent versus fee."),
+        ("Month 3", "Meet the three artists your clients mention most. Offer the pilot to the best two.")]
+
+
+# ─────────────────────────── bringing artists in ───────────────────────────
+WHO = [("Artists your clients already see.", "Ask every client who does their lashes, brows and nails. Those artists come with crossover built in."),
+       ("Licensed, with a following.", "One to three years in, a book of regulars, working from home or a crowded shared salon."),
+       ("Tired of what they have.", "No-shows, high booth rent, or a platform that keeps their clients. Lumevina fixes all three.")]
+
+OFFERS = [
+    {"tag": "The pilot · Step 2", "big": "Free for 90 days", "sub": "Then 12% on bookings made through Lumevina. They keep working where they are.",
+     "inc": ["Their own name, prices, hours and clients", "Deposits that stop no-shows",
+             "Evelyn’s clients see them first", "Their clients earn Glow Points they can spend with Evelyn"],
+     "ask": "In return: honor Glow Points, tag Lumevina twice a month, send facial clients to Evelyn."},
+    {"tag": "The house · Step 3", "big": "$250 a week", "sub": "Flat suite rent, no commission. Founding rate $210 a week, locked for 12 months, for the first three.",
+     "inc": ["A private suite with their name on the door", "The app, Glow Rewards and marketing included",
+             "Pilot artists get first pick of suites", "Leave with 30 days’ notice after the first six months"],
+     "ask": "In return: a six-month first term, house standards for cleanliness, license and insurance."},
+]
+
+CLIENT_PERK = ("For clients", "100 Glow Points ($10 off) on their first booking with any Lumevina artist, spendable anywhere in the house.")
+
+NEGOTIATE = [
+    ("Lead with clients.", "Open with the list of Evelyn’s clients who asked for lashes or brows. Demand sells the room better than a discount."),
+    ("Take the risk off.", "90 days free, leave anytime in the pilot, and every client they bring stays theirs."),
+    ("Give to get.", "Every concession trades for something: a longer term, honoring points, posts that tag Lumevina."),
+    ("Keep founding spots few.", "Only the first three artists get the founding rate. A real limit, said once."),
+    ("Know the walk-away.", "Rent never drops below what covers the suite. If a deal needs less, pass politely."),
+    ("Put it on one page.", "A one-page term sheet in the meeting, then the attorney’s agreement to sign."),
+]
+
+PIPE = [("Months 1–2", "Build the list: the client question, Instagram, referrals, and a waitlist form on the site."),
+        ("Month 3", "Coffee with five or six artists. Bring the one-page offer and the client list."),
+        ("Months 4–5", "Sign two pilot artists. Set up their payouts and services in the app."),
+        ("Month 6", "The pilot goes live, free for 90 days."),
+        ("Month 9", "The 12% app fee starts. Review each artist’s numbers monthly."),
+        ("Month 12", "Go or no-go: 15% of their clients booking Evelyn."),
+        ("Year 2", "Lease signed. Pilot artists pick suites first, then their network fills the rest.")]
+
+TRACK = [("New clients sent to each artist", "Shows what Lumevina delivers"),
+         ("Their clients who book Evelyn", "The 15% go line"),
+         ("Glow Points given and spent", "The real cost of perks"),
+         ("Rent collected, suites filled", "The house’s income"),
+         ("Artists still here at six months", "Whether the offer works")]
+
+
+def who_html(reveal=True):
+    r = " reveal" if reveal else ""
+    return "".join('<div class="g%s"><b>%s</b><p>%s</p></div>' % (r, a, b) for a, b in WHO)
+
+
+def offers_html(reveal=True):
+    r = " reveal" if reveal else ""
+    out = []
+    for i, o in enumerate(OFFERS):
+        inc = "".join('<li><span class="ck" aria-hidden="true"></span>%s</li>' % t for t in o["inc"])
+        out.append('<article class="offer%s%s"><p class="of-tag">%s</p><p class="of-big%s">%s</p><p class="of-sub">%s</p>'
+                   '<ul class="of-list">%s</ul><p class="of-ask">%s</p></article>'
+                   % (" hl" if i == 1 else "", r, o["tag"], " grad" if i == 1 else "", o["big"], o["sub"], inc, o["ask"]))
+    return "".join(out)
+
+
+def negotiate_html(reveal=True):
+    r = " reveal" if reveal else ""
+    return "".join('<div class="g%s"><b>%s</b><p>%s</p></div>' % (r, a, b) for a, b in NEGOTIATE)
+
+
+def pipe_html():
+    return "".join('<li><div class="w">%s</div><div class="t">%s</div></li>' % d for d in PIPE)
+
+
+def track_html():
+    return ('<div class="rows">' + "".join('<div class="row"><span class="rn">%s</span><span class="rv tk">%s</span></div>' % t for t in TRACK)
+            + '<div class="row tot"><span class="rn">Perks and recruiting</span><span class="rv">$900 a month</span>'
+              '<span class="rr">Welcome points, founding rates and ads. Already counted in the numbers.</span></div></div>')
 
 
 def rows(items, total):
@@ -178,12 +254,12 @@ DEEP = [
     {"n": 2, "when": "Step 2 · Months 6–12", "h": "Pilot two artists.", "dim": "Prove it small.",
      "vb": "0 0 520 400", "aria": "Animation: two artists' clients appear; some cross over to book Evelyn; the share climbs past the 15% go line.",
      "plan": [("Recruit", "Two licensed lash or brow artists who already have a following."),
-              ("Set up", "Their own payouts, a 12% platform fee, shared Glow Rewards, attorney-approved terms."),
+              ("Set up", "Their own payouts, 90 days free, then a 12% app fee. Shared Glow Rewards, attorney-approved terms."),
               ("Measure", "How many of their clients also book Evelyn."),
               ("Decide", "15% or more by month 12 means go. Under that, keep the pilot: it still nets about $2.8k a month.")]},
     {"n": 3, "when": "Step 3 · Year 2–3", "h": "The Collective.", "dim": "One house, one app.",
      "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $4,100 a month.",
-     "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes."),
+     "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes. Artists pay flat weekly rent, no commission."),
               ("Fill", "One or two licensed artists a month, found through the pilot artists’ networks."),
               ("App", "Lumevina goes to the App Store with every artist bookable."),
               ("Target", "Seven artists, about $4.1k net a month: +$92k a year with Step 1.")]},
@@ -358,6 +434,28 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 .pl:first-child { border-top: 0; padding-top: 0; }
 .pk { font-size: 0.9rem; font-weight: 600; color: var(--rose); padding-top: 1px; }
 .pv { font-size: 1.02rem; line-height: 1.45; letter-spacing: -0.01em; color: var(--text); }
+
+/* bringing artists in */
+.who3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.offers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.offer { background: var(--card); border-radius: 22px; padding: 24px 24px 22px; display: flex; flex-direction: column; }
+.offer.hl { background: linear-gradient(160deg, #2a1d23 0%, #141213 62%); box-shadow: inset 0 0 0 1px rgba(244,201,214,.25); }
+.of-tag { font-size: 0.8rem; font-weight: 600; color: var(--rose); }
+.of-big { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1.02; margin-top: 10px; }
+.of-sub { color: var(--text-2); font-size: 0.95rem; line-height: 1.45; margin-top: 8px; }
+.of-list { list-style: none; margin: 16px 0 0; padding: 14px 0 0; border-top: 1px solid var(--hair); display: grid; gap: 9px; }
+.of-list li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; font-size: 0.97rem; line-height: 1.4; }
+.of-list .ck { width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: rgba(244,201,214,.16); position: relative; }
+.of-list .ck::after { content: ""; position: absolute; left: 6.5px; top: 3.5px; width: 4px; height: 8px;
+  border: solid var(--rose); border-width: 0 1.8px 1.8px 0; transform: rotate(45deg); }
+.of-ask { margin-top: auto; padding-top: 16px; color: var(--text-3); font-size: 0.88rem; line-height: 1.45; }
+.perk { display: flex; gap: 14px; align-items: baseline; margin-top: 14px; padding: 16px 22px; border-radius: 18px; background: var(--card); }
+.perk b { flex: none; font-weight: 600; color: var(--rose); }
+.perk span { color: var(--text-2); line-height: 1.45; }
+.neg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.split .cols-h { margin-bottom: 14px; }
+.rv.tk { font-weight: 400; color: var(--text-3); font-size: 0.86rem; }
 """
 
 WEB_CSS = r"""
@@ -472,7 +570,9 @@ html.sd-lock { overflow: hidden; }
 
 @media (max-width: 860px) {
   section { padding: 84px 0; }
-  .steps, .flow, .figs, .guard { grid-template-columns: 1fr; }
+  .steps, .flow, .figs, .guard, .who3, .offers, .neg, .split { grid-template-columns: 1fr; }
+  .split { gap: 36px; }
+  .perk { flex-direction: column; gap: 4px; }
   .flow .fs:not(:last-child)::after { top: auto; bottom: -11px; right: 50%; transform: translateX(50%) rotate(135deg); }
   .ceiling, .built-grid, .num-grid, .deep-grid { grid-template-columns: 1fr; gap: 36px; }
   .deep.flip .deep-copy { order: 0; }
@@ -542,6 +642,16 @@ body { font-size: 10.5pt; }
 .page .pk { font-size: 10pt; } .page .pv { font-size: 11pt; }
 .closer .h2 { font-size: 30pt; }
 .phones.five { grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+.who3, .offers, .neg { gap: 12px; }
+.offer { padding: 16px 18px; border-radius: 16px; }
+.of-tag { font-size: 8.5pt; } .of-big { font-size: 24pt; margin-top: 6px; } .of-sub { font-size: 9pt; margin-top: 5px; }
+.of-list { margin-top: 10px; padding-top: 9px; gap: 5px; } .of-list li { font-size: 9.3pt; grid-template-columns: 16px 1fr; gap: 7px; }
+.of-list .ck { width: 14px; height: 14px; } .of-list .ck::after { left: 5px; top: 2.5px; width: 3px; height: 6.5px; border-width: 0 1.5px 1.5px 0; }
+.of-ask { font-size: 8.4pt; padding-top: 10px; }
+.perk { margin-top: 0; padding: 11px 16px; border-radius: 14px; } .perk b, .perk span { font-size: 9.5pt; }
+.split { gap: 24px; }
+.rv.tk { font-size: 8pt; }
 """
 
 # ─────────────────────────── network animation ───────────────────────────
@@ -932,6 +1042,33 @@ WEB = """<!DOCTYPE html>
   </div>
 </section>
 
+<section id="artists">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Bringing artists in</p>
+      <h2 class="h2" style="margin-top:14px">An easy yes. <span class="dim">For artists and their clients.</span></h2>
+      <p class="lead">Recruit the artists Evelyn&rsquo;s clients already see, take the risk out of the first step, and make booking through Lumevina the better deal for everyone.</p>
+    </div>
+    <div class="who3">__WHO__</div>
+    <div class="offers" style="margin-top:14px">__OFFERS__</div>
+    <div class="perk reveal"><b>__PERK_K__</b><span>__PERK_V__</span></div>
+  </div>
+</section>
+
+<section id="negotiate">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">How we negotiate</p>
+      <h2 class="h2" style="margin-top:14px">Six rules. <span class="dim">Every artist, every meeting.</span></h2>
+    </div>
+    <div class="neg">__NEG__</div>
+    <div class="split" style="margin-top:56px">
+      <div class="reveal"><div class="cols-h">The artist pipeline</div><ol class="days">__PIPE__</ol></div>
+      <div class="reveal"><div class="cols-h">How we track it</div>__TRACK__</div>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="wrap built-grid">
     <div class="reveal">
@@ -1077,11 +1214,14 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL)).replace("__GUARD__", guard_html())
        .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html())
        .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS))
-       .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS)))
+       .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS))
+       .replace("__WHO__", who_html()).replace("__OFFERS__", offers_html()).replace("__NEG__", negotiate_html())
+       .replace("__PIPE__", pipe_html()).replace("__TRACK__", track_html())
+       .replace("__PERK_K__", CLIENT_PERK[0]).replace("__PERK_V__", CLIENT_PERK[1]))
 
 # ─────────────────────────── print pages ───────────────────────────
 def foot(n):
-    return foot_n(n, 8)
+    return foot_n(n, 10)
 
 
 PRINT = """<!DOCTYPE html>
@@ -1129,6 +1269,31 @@ PRINT = """<!DOCTYPE html>
 </section>
 
 __DEEPP__
+
+<section class="page">
+  <div>
+    <p class="kicker">Bringing artists in</p>
+    <h2 class="h2" style="margin-top:10px">An easy yes. <span class="dim">For artists and their clients.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">Recruit the artists Evelyn&rsquo;s clients already see, take the risk out of the first step, and make booking through Lumevina the better deal for everyone.</p>
+  </div>
+  <div><p class="kicker" style="margin-bottom:10px">Who we look for</p><div class="who3">__WHO__</div></div>
+  <div><p class="kicker" style="margin-bottom:10px">The offer</p><div class="offers">__OFFERS__</div></div>
+  <div class="perk"><b>__PERK_K__</b><span>__PERK_V__</span></div>
+  __FA__
+</section>
+
+<section class="page">
+  <div>
+    <p class="kicker">How we negotiate</p>
+    <h2 class="h2" style="margin:10px 0 16px">Six rules. <span class="dim">Every artist, every meeting.</span></h2>
+    <div class="neg">__NEG__</div>
+  </div>
+  <div class="split">
+    <div><div class="cols-h">The artist pipeline</div><ol class="days">__PIPE__</ol></div>
+    <div><div class="cols-h">How we track it</div>__TRACK__</div>
+  </div>
+  __FB__
+</section>
 
 <section class="page">
   <div>
@@ -1203,9 +1368,13 @@ pr = (PRINT.replace("__BASE__", base).replace("__PRINT__", PRINT_CSS)
       .replace("__P1__", phone(SHOT["home"])).replace("__P2__", phone(SHOT["book"]))
       .replace("__P3__", phone(SHOT["rewards"])).replace("__P4__", phone(SHOT["dash"]))
       .replace("__P5__", phone(SHOT["member"])))
-for i, pg in ((1, 1), (2, 2), (3, 6), (4, 7), (5, 8)):
+pr = (pr.replace("__WHO__", who_html(False)).replace("__OFFERS__", offers_html(False)).replace("__NEG__", negotiate_html(False))
+      .replace("__PIPE__", pipe_html()).replace("__TRACK__", track_html())
+      .replace("__PERK_K__", CLIENT_PERK[0]).replace("__PERK_V__", CLIENT_PERK[1])
+      .replace("__FA__", foot(6)).replace("__FB__", foot(7)))
+for i, pg in ((1, 1), (2, 2), (3, 8), (4, 9), (5, 10)):
     pr = pr.replace("__F%d__" % i, foot(pg))
-pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 8) for k, d in enumerate(DEEP)))
+pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 10) for k, d in enumerate(DEEP)))
 pr = pr.replace("__STEPSJS__", STEPS_JS)
 
 for name, html in (("web.html", web), ("print.html", pr)):
