@@ -576,7 +576,47 @@
     renderPreview();
   });
 
+  /* not a member yet? offer the membership that covers this facial,
+     right where the price is being weighed */
+  var upsell = document.createElement("div");
+  upsell.className = "bk-upsell";
+  upsell.hidden = true;
+  memberRow.parentNode.insertBefore(upsell, memberRow.nextSibling);
+  var renderUpsell = function () {
+    var LM = window.LumevinaMembership;
+    upsell.hidden = true;
+    if (!LM || rescheduleMode || giftIsService) return;
+    var email = emailInput.value.trim() ||
+      ((window.LumevinaAccount && window.LumevinaAccount.current()) || {}).email;
+    if (email && LM.isMember(LM.get(email))) return;
+    var svc = null, plan = null;
+    for (var i = 0; i < state.services.length && !plan; i++) {
+      for (var j = 0; j < LM.plans.length; j++) {
+        if (LM.plans[j].covers.indexOf(state.services[i].id) !== -1) { svc = state.services[i]; plan = LM.plans[j]; break; }
+      }
+    }
+    if (!plan) return;
+    var left = LM.fiveLeft();
+    upsell.textContent = "";
+    var p = document.createElement("p");
+    var b = document.createElement("strong");
+    b.textContent = "Members pay $" + plan.price + " a month";
+    p.appendChild(b);
+    p.appendChild(document.createTextNode(" for the " + svc.name + " (today $" + svc.price + "), banked if you're busy." +
+      (left > 0 ? " The first five members also get a free skincare kit: " + left + (left === 1 ? " spot" : " spots") + " left." : "")));
+    var go = document.createElement("button");
+    go.type = "button";
+    go.className = "linklike bk-upsell-go";
+    go.setAttribute("data-join", plan.id);   /* the join window opens from membership.js */
+    go.textContent = "See the " + plan.name + " Membership →";
+    go.addEventListener("click", function () { closeModal(); });
+    upsell.appendChild(p);
+    upsell.appendChild(go);
+    upsell.hidden = false;
+  };
+
   var renderMember = function () {
+    renderUpsell();
     var svc = memberService();
     var r = memberRecord();
     memberRow.hidden = !svc;
