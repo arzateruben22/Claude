@@ -5374,10 +5374,14 @@ html.sheet-open { overflow: hidden; }
 }
 
 /* ─── Membership: brighter tier, brighter light ───
-   Each plan is lit a step brighter than the one below it, and the light
-   behind the plans rises with the tier you're on: swiping on phones
-   (--reel-pos from js/reel.js), hovering where they sit side by side
-   (--mem-hover from js/membership.js). Brighter skin, clearer skin. */
+   One pink, climbing in light with the tier: Glow is a dusky rose,
+   Clear Skin a clean petal pink, Ageless a luminous pearl. Every pink
+   detail on a card (the light along its top edge, border, price,
+   checks, the "plus" mark, the Join button) takes its tier's shade, and
+   the light behind the plans rises from rose to pearl with the tier in
+   view: the swipe on phones (--reel-pos, js/reel.js), the hovered plan
+   where they sit side by side (--mem-hover, js/membership.js).
+   Brighter skin, clearer skin. */
 @property --mem-level { syntax: "<number>"; inherits: true; initial-value: 0; }
 .section-membership {
   position: relative;
@@ -5392,39 +5396,107 @@ html.sheet-open { overflow: hidden; }
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(55% 42% at 50% 64%, rgba(247, 211, 222, calc(0.04 + var(--mem-level) * 0.1)), transparent 72%),
-    radial-gradient(30% 24% at 50% 62%, rgba(255, 255, 255, calc(var(--mem-level) * 0.045)), transparent 70%);
+    radial-gradient(58% 44% at 50% 64%, rgba(214, 140, 166, calc(0.07 + var(--mem-level) * 0.035)), transparent 72%),
+    radial-gradient(40% 32% at 50% 62%, rgba(255, 222, 232, calc(var(--mem-level) * 0.07)), transparent 72%),
+    radial-gradient(22% 18% at 50% 60%, rgba(255, 255, 255, calc(var(--mem-level) * 0.04)), transparent 70%);
 }
-.mem-plan[data-tier="1"] { --lum: 0.3; }
-.mem-plan[data-tier="2"] { --lum: 0.62; }
-.mem-plan[data-tier="3"] { --lum: 1; }
+
+/* the ladder: dusk rose → petal → pearl */
+.mem-plan[data-tier="1"] { --lum: 0.3;  --t1: #d596ab; --t2: #e3b0a0; --tier: 213, 150, 171; }
+.mem-plan[data-tier="2"] { --lum: 0.62; --t1: #f0b9ca; --t2: #fbd5df; --tier: 240, 185, 202; }
+.mem-plan[data-tier="3"] { --lum: 1;    --t1: #fde2ea; --t2: #ffffff; --tier: 255, 224, 234; }
+
 .mem-plan[data-tier] {
-  border-color: rgba(234, 185, 200, calc(0.12 + 0.38 * var(--lum)));
+  border-color: rgba(var(--tier), calc(0.14 + 0.34 * var(--lum)));
   background:
-    radial-gradient(120% 70% at 50% 0%, rgba(247, 211, 222, calc(0.03 + 0.12 * var(--lum))), transparent 65%),
+    radial-gradient(120% 70% at 50% 0%, rgba(var(--tier), calc(0.04 + 0.12 * var(--lum))), transparent 65%),
     var(--porcelain);
-  box-shadow: 0 24px 70px -26px rgba(234, 185, 200, calc(0.6 * var(--lum)));
+  box-shadow: 0 24px 70px -26px rgba(var(--tier), calc(0.55 * var(--lum)));
+  transition: transform 350ms cubic-bezier(.2, .8, .2, 1), border-color 300ms ease,
+              box-shadow 400ms ease, filter 350ms ease, scale 350ms ease;
 }
-.mem-plan[data-tier="2"] .mem-amt,
-.mem-plan[data-tier="3"] .mem-amt {
+.mem-plan[data-tier]:hover {
+  border-color: rgba(var(--tier), calc(0.3 + 0.4 * var(--lum)));
+  box-shadow: 0 28px 80px -24px rgba(var(--tier), calc(0.25 + 0.5 * var(--lum)));
+}
+/* a line of light along the top edge, longer and brighter per tier */
+.mem-plan[data-tier]::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: calc(26% + 56% * var(--lum));
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgb(var(--tier)), transparent);
+  box-shadow: 0 0 calc(6px + 18px * var(--lum)) rgba(var(--tier), calc(0.35 + 0.45 * var(--lum)));
+  opacity: calc(0.55 + 0.45 * var(--lum));
+  pointer-events: none;
+}
+
+/* the price carries the tier's shade */
+.mem-plan[data-tier] .mem-amt {
+  background: linear-gradient(95deg, var(--t1), var(--t2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-.mem-plan[data-tier="2"] .mem-amt { background-image: linear-gradient(95deg, #fde4ec, #f4c8d6 50%, #efd0bb); }
-/* Ageless: pearl-white with a slow sheen */
+/* Ageless: pearl with a slow sheen and a soft halo */
 .mem-plan[data-tier="3"] .mem-amt {
-  background-image: linear-gradient(100deg, #f6dcc9 0%, #fff 30%, #fbe7ee 50%, #fff 70%, #f6dcc9 100%);
+  background: linear-gradient(100deg, #f6cfdb 0%, #fff 28%, #fde2ea 50%, #fff 72%, #f6cfdb 100%);
   background-size: 250% 100%;
-  filter: drop-shadow(0 0 16px rgba(255, 236, 242, 0.35));
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 16px rgba(255, 224, 234, 0.4));
   animation: mem-sheen 5s ease-in-out infinite;
 }
 @keyframes mem-sheen { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
-.mem-plan[data-tier="3"] .mem-name { text-shadow: 0 0 18px rgba(255, 236, 242, 0.35); }
+.mem-plan[data-tier="2"] .mem-name { text-shadow: 0 0 14px rgba(var(--tier), 0.2); }
+.mem-plan[data-tier="3"] .mem-name { text-shadow: 0 0 18px rgba(var(--tier), 0.45); }
+
+/* checks, the "plus" mark and the badge, in the tier's pink */
+.mem-plan[data-tier] .mem-perks li::before { background: rgba(var(--tier), calc(0.1 + 0.14 * var(--lum))); }
+.mem-plan[data-tier] .mem-perks li::after { border-color: rgb(var(--tier)); }
+.mem-plan[data-tier] .mem-plus span {
+  background: linear-gradient(135deg, var(--t1), var(--t2));
+  box-shadow: 0 0 calc(4px + 10px * var(--lum)) rgba(var(--tier), calc(0.2 + 0.3 * var(--lum)));
+}
+.mem-plan[data-tier] .mem-tag { background: linear-gradient(95deg, var(--t1), var(--t2)); }
+
+/* every Join is lit in its tier's pink, brightest at the top */
+.mem-plan[data-tier] .mem-join {
+  background: linear-gradient(95deg, var(--t1), var(--t2));
+  color: #000;
+  border-color: transparent;
+  box-shadow: 0 0 calc(24px * var(--lum)) rgba(var(--tier), calc(0.22 * var(--lum)));
+}
+.mem-plan[data-tier] .mem-join:hover {
+  background: linear-gradient(95deg, var(--t1), var(--t2));
+  color: #000;
+  filter: brightness(1.07);
+  box-shadow: 0 8px 30px rgba(var(--tier), calc(0.25 + 0.2 * var(--lum)));
+  transform: translateY(-1px);
+}
+.mem-plan[data-tier] .mem-join.is-mine,
+.mem-plan[data-tier] .mem-join.is-mine:hover {
+  background: transparent;
+  color: rgb(var(--tier));
+  border-color: rgba(var(--tier), 0.7);
+  filter: none;
+}
+
 @media (max-width: 900px) {
   .section-membership { --mem-level: var(--reel-pos, 0); transition: --mem-level 160ms linear; }
   /* room below the cards so their glow fades out instead of being cut */
   .mem-grid[data-reel] { padding-bottom: 2.25rem; margin-bottom: -2rem; }
+  /* the plan switcher's highlight warms from rose to pearl as you swipe */
+  .section-membership .reel-bar--tabs .reel-thumb {
+    background:
+      linear-gradient(rgba(247, 205, 218, calc(0.13 + var(--mem-level) * 0.09)), rgba(247, 205, 218, calc(0.13 + var(--mem-level) * 0.09))),
+      #3a3a3e;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35),
+      0 0 calc(2px + var(--mem-level) * 9px) rgba(255, 224, 234, calc(0.1 + var(--mem-level) * 0.14));
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .mem-plan[data-tier="3"] .mem-amt { animation: none; }
