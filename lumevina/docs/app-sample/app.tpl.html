@@ -1,0 +1,1123 @@
+<title>Lumevina for iPhone</title>
+<meta name="description" content="A working sample of the Lumevina iPhone app: flash alerts, booking with deposits or a banked facial, Glow Rewards and membership.">
+<style>
+@font-face { font-family: "InterV"; src: url(data:font/woff2;base64,{{FONT}}) format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: block; }
+
+/* ── tokens: the Lumevina noir palette ── */
+:root {
+  color-scheme: dark;
+  --bg: #000;
+  --ink: #f5f5f7;
+  --ink-2: #a1a1a6;
+  --ink-3: #6e6e73;
+  --card: #161618;
+  --card-2: #1c1c1e;
+  --card-3: #2c2c2e;
+  --hair: rgba(255, 255, 255, 0.09);
+  --rose: #f4c9d6;
+  --dusk: #d596ab;
+  --grad: linear-gradient(95deg, #f7d3de 0%, #eab9c8 45%, #e2b08c 100%);
+  --green: #32d74b;
+  --tab-off: #8e8e93;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --spring: cubic-bezier(.32, .72, 0, 1);
+}
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: "InterV", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: 16px; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, p { margin: 0; }
+
+/* ── page shell ── */
+.shell { max-width: 1120px; margin: 0 auto; padding-inline: 24px; padding-block: 40px 48px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "copy stage" "try stage";
+  column-gap: 64px; row-gap: 28px; align-items: center; }
+.copy { grid-area: copy; align-self: end; }
+.try { grid-area: try; align-self: start; }
+.stage-col { grid-area: stage; }
+.eyebrow { font-size: 0.9rem; font-weight: 600; color: var(--rose); }
+.h1 { font-size: clamp(2.6rem, 5vw, 4.2rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.02;
+  margin-top: 14px; text-wrap: balance; }
+.grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { color: var(--ink-2); font-size: 1.15rem; line-height: 1.5; letter-spacing: -0.01em; margin-top: 20px; max-width: 30rem; }
+.try-h { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+.try-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-width: 30rem; }
+.try-btn { display: grid; grid-template-columns: 40px 1fr auto; gap: 14px; align-items: center; width: 100%; text-align: left;
+  background: var(--card); border: 1px solid var(--hair); border-radius: 16px; padding: 12px 14px; cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, transform .2s var(--ease); }
+.try-btn:hover { background: var(--card-2); border-color: rgba(244, 201, 214, 0.3); }
+.try-btn:active { transform: scale(.98); }
+.try-btn:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+.try-ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: rgba(244, 201, 214, 0.1); color: var(--rose); }
+.try-ic svg { width: 20px; height: 20px; }
+.try-btn b { display: block; font-weight: 600; font-size: 0.98rem; letter-spacing: -0.01em; }
+.try-btn span.t { display: block; color: var(--ink-2); font-size: 0.86rem; margin-top: 2px; line-height: 1.35; }
+.try-btn .go { color: var(--ink-3); }
+.fine { color: var(--ink-3); font-size: 0.8rem; line-height: 1.5; margin-top: 16px; max-width: 30rem; }
+
+/* ── the phone, drawn at 414 × 868 and scaled to fit ── */
+.stage { --s: .92; position: relative; width: calc(414px * var(--s)); height: calc(868px * var(--s)); margin: 0 auto; }
+.device { position: absolute; left: 0; top: 0; width: 414px; height: 868px; transform: scale(var(--s)); transform-origin: 0 0;
+  border-radius: 66px; padding: 12px; background: #1b1b1d;
+  box-shadow: inset 0 0 0 1.5px #3a3a3c, inset 0 0 0 5px #0d0d0e, 0 0 0 1px #000, 0 40px 120px -20px rgba(234, 185, 200, 0.18), 0 30px 80px rgba(0, 0, 0, 0.7); }
+.screen { position: relative; width: 390px; height: 844px; border-radius: 54px; overflow: hidden; background: #000; isolation: isolate;
+  font-size: 15px; letter-spacing: -0.01em; user-select: none; -webkit-user-select: none; }
+.screen button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.screen button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+
+/* status bar + island + home indicator */
+.status { position: absolute; z-index: 60; top: 0; left: 0; right: 0; height: 54px; display: flex; align-items: center;
+  justify-content: space-between; padding: 6px 30px 0 46px; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; pointer-events: none; }
+.status .icons { display: flex; gap: 6px; align-items: center; }
+.island { position: absolute; z-index: 70; top: 11px; left: 50%; width: 126px; height: 37px; transform: translateX(-50%);
+  background: #000; border-radius: 20px; overflow: hidden; transition: width .5s var(--spring), height .5s var(--spring), border-radius .5s var(--spring); }
+.island.expanded { width: 356px; height: 84px; border-radius: 36px; }
+.island.compact { width: 172px; }
+.la { position: absolute; inset: 0; display: flex; align-items: center; gap: 12px; padding: 0 18px; opacity: 0; transition: opacity .25s ease; }
+.island.expanded .la-full, .island.compact .la-mini { opacity: 1; transition-delay: .2s; }
+.la-full img { width: 44px; height: 44px; border-radius: 11px; }
+.la-full .t { flex: 1; min-width: 0; }
+.la-full .t b { display: block; font-size: 15px; font-weight: 600; }
+.la-full .t span { display: block; font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+.la-full .when { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+.la-mini { justify-content: space-between; padding: 0 14px; }
+.la-mini img { width: 22px; height: 22px; border-radius: 6px; }
+.la-mini span { font-size: 14px; font-weight: 600; color: var(--rose); font-variant-numeric: tabular-nums; }
+.homebar { position: absolute; z-index: 80; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px;
+  background: rgba(255, 255, 255, 0.85); pointer-events: none; }
+
+/* ── lock screen ── */
+.lock { position: absolute; inset: 0; z-index: 40; overflow: hidden;
+  background:
+    radial-gradient(70% 45% at 20% 18%, rgba(234, 185, 200, 0.38), transparent 70%),
+    radial-gradient(70% 50% at 90% 75%, rgba(226, 176, 140, 0.26), transparent 70%),
+    radial-gradient(90% 60% at 50% 110%, rgba(213, 150, 171, 0.3), transparent 70%),
+    #0c0709;
+  transition: transform .55s var(--spring), opacity .45s ease, filter .45s ease; }
+.lock.gone { transform: translateY(-100%); opacity: 0; filter: blur(8px); pointer-events: none; }
+.lock-art { position: absolute; left: 50%; top: 262px; width: 280px; transform: translateX(-50%); opacity: .22; }
+.lock-lock { position: absolute; top: 62px; left: 50%; transform: translateX(-50%); opacity: .9; }
+.lock-date { position: absolute; top: 96px; left: 0; right: 0; text-align: center; font-size: 21px; font-weight: 600; color: rgba(255, 255, 255, .88); }
+.lock-time { position: absolute; top: 118px; left: 0; right: 0; text-align: center; font-size: 104px; font-weight: 650;
+  letter-spacing: -0.045em; line-height: 1; color: rgba(255, 238, 243, .96); font-variant-numeric: tabular-nums; }
+.notif-stack { position: absolute; left: 12px; right: 12px; top: 492px; }
+.notif { display: grid; grid-template-columns: 38px 1fr; gap: 11px; align-items: start; width: 100%; text-align: left; border: 0;
+  border-radius: 22px; padding: 13px 14px; color: var(--ink);
+  background: rgba(58, 48, 52, 0.52); -webkit-backdrop-filter: blur(30px) saturate(160%); backdrop-filter: blur(30px) saturate(160%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25); transition: transform .3s var(--ease); animation: notif-in .7s var(--spring) .5s both; }
+.notif:active { transform: scale(.97); }
+.notif img { width: 38px; height: 38px; border-radius: 9px; }
+.notif .top { display: flex; justify-content: space-between; gap: 8px; font-size: 15px; }
+.notif .top b { font-weight: 600; }
+.notif .top span { color: rgba(255, 255, 255, .55); font-size: 13px; }
+.notif p { font-size: 15px; line-height: 1.32; margin-top: 2px; color: rgba(255, 255, 255, .92); }
+.notif-peek { height: 12px; margin: -2px 14px 0; border-radius: 0 0 18px 18px; background: rgba(58, 48, 52, 0.38);
+  -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px); animation: notif-in .7s var(--spring) .6s both; }
+@keyframes notif-in { from { opacity: 0; transform: translateY(30px) scale(.96); } to { opacity: 1; transform: none; } }
+.lock-foot { position: absolute; left: 0; right: 0; bottom: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 46px; }
+.lock-circ { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(40, 34, 37, .5); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+.lock-open { border: 0; background: none; color: rgba(255, 255, 255, .75); font-size: 13px; font-weight: 500; padding: 8px 12px; border-radius: 999px; }
+.lock-open:hover { color: #fff; }
+
+/* ── app frame ── */
+.app { position: absolute; inset: 0; z-index: 10; background: #000; overflow: hidden;
+  transition: transform .5s var(--spring), border-radius .5s var(--spring), filter .4s ease, opacity .5s ease; }
+.app.launching { transform: scale(.9); opacity: 0; border-radius: 54px; }
+.app.behind { transform: scale(.92) translateY(14px); border-radius: 22px; filter: brightness(.55); }
+.view { position: absolute; inset: 0; }
+.view[hidden] { display: none; }
+.view.show { animation: view-in .28s ease both; }
+@keyframes view-in { from { opacity: 0; } to { opacity: 1; } }
+.scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 58px 16px 110px;
+  scrollbar-width: none; overscroll-behavior: contain; }
+.scroll::-webkit-scrollbar { display: none; }
+.navbar { position: absolute; z-index: 5; top: 0; left: 0; right: 0; height: 98px; padding-top: 54px; display: flex; align-items: center;
+  justify-content: center; font-weight: 600; font-size: 17px; opacity: 0; pointer-events: none;
+  background: rgba(10, 10, 11, .72); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: .5px solid var(--hair); transition: opacity .2s ease; }
+.view.scrolled .navbar, .page.scrolled .navbar { opacity: 1; }
+.kick { font-size: 13px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: .02em; }
+.title { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; margin-top: 2px; }
+.sec { display: flex; align-items: baseline; justify-content: space-between; margin: 26px 2px 10px; }
+.sec h2 { font-size: 21px; font-weight: 700; letter-spacing: -0.025em; }
+.sec .link { border: 0; background: none; color: var(--rose); font-size: 15px; padding: 0; }
+.pill { display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; padding: 8px 14px; font-size: 14px; font-weight: 600;
+  background: rgba(255, 255, 255, .1); color: var(--ink); transition: transform .15s ease, background-color .2s ease; }
+.pill:active { transform: scale(.95); }
+.pill.pink { background: var(--grad); color: #000; }
+.pill svg { width: 15px; height: 15px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px;
+  background: rgba(244, 201, 214, .12); color: var(--rose); }
+.chip svg { width: 12px; height: 12px; }
+.press { transition: transform .15s ease; }
+.press:active { transform: scale(.97); }
+
+/* tab bar */
+.tabbar { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; height: 84px; display: grid; grid-template-columns: repeat(4, 1fr);
+  padding: 7px 10px 0; background: rgba(20, 20, 22, .74); -webkit-backdrop-filter: blur(26px) saturate(180%); backdrop-filter: blur(26px) saturate(180%);
+  border-top: .5px solid rgba(255, 255, 255, .1); }
+.tabbar { transition: transform .45s var(--spring); }
+.app.no-tabs .tabbar { transform: translateY(100%); }
+.tab { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--tab-off);
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0; padding: 2px 0; }
+.tab svg { width: 27px; height: 27px; }
+.tab[aria-selected="true"] { color: var(--rose); }
+
+/* ── home ── */
+.next { position: relative; margin-top: 18px; border-radius: 24px; padding: 18px; overflow: hidden;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(234, 185, 200, .28), transparent 60%), linear-gradient(160deg, #2a1d23, #141213 70%);
+  box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .2); }
+.next .lbl { font-size: 13px; font-weight: 600; color: var(--rose); }
+.next .when { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; margin-top: 6px; }
+.next .what { color: var(--ink-2); margin-top: 3px; }
+.next .row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.next .chip { position: absolute; top: 16px; right: 16px; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.tile { text-align: left; border: 0; background: var(--card); border-radius: 20px; padding: 14px; }
+.tile > span { display: block; }
+.tile .k { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+.tile .v { font-size: 30px; font-weight: 700; letter-spacing: -0.04em; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.tile .d { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+.tile .dots { display: flex; gap: 5px; margin-top: 12px; }
+.tile .dots i { width: 22px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .14); }
+.tile .dots i.on { background: linear-gradient(95deg, #d596ab, #e3b0a0); }
+.hs { display: flex; gap: 10px; overflow-x: auto; margin: 0 -16px; padding: 0 16px 4px; scroll-snap-type: x mandatory;
+  scroll-padding-inline: 16px; scrollbar-width: none; }
+.hs::-webkit-scrollbar { display: none; }
+.flash { flex: 0 0 236px; scroll-snap-align: start; text-align: left; border: 0; background: var(--card); border-radius: 20px; padding: 14px;
+  display: flex; flex-direction: column; align-items: stretch; }
+.flash > span { display: block; }
+.flash .t1 { display: flex !important; justify-content: space-between; align-items: center; }
+.flash .fday { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+.flash .ftime { font-size: 24px; font-weight: 700; letter-spacing: -0.03em; margin-top: 8px; }
+.flash .fsvc { color: var(--ink-2); font-size: 14px; margin-top: 2px; }
+.flash .price { margin-top: 12px; display: flex !important; align-items: baseline; gap: 8px; }
+.flash .price b { font-size: 18px; font-weight: 700; }
+.flash .price s { color: var(--ink-3); font-size: 14px; }
+.prod { flex: 0 0 168px; scroll-snap-align: start; background: var(--card); border-radius: 20px; overflow: hidden; }
+.prod img { display: block; width: 100%; height: 104px; object-fit: cover; background: #e9e5e1; }
+.prod .b { padding: 10px 12px 12px; }
+.prod .n { font-size: 13.5px; font-weight: 600; line-height: 1.25; min-height: 34px; }
+.prod .p { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.prod .p span { font-size: 15px; font-weight: 700; }
+.prod .p s { color: var(--ink-3); font-size: 12px; margin-left: 4px; font-weight: 500; }
+.prod .add { border: 0; border-radius: 999px; font-size: 12.5px; font-weight: 600; padding: 6px 11px; background: rgba(255, 255, 255, .1); }
+.prod .add.on { background: rgba(50, 215, 75, .16); color: var(--green); }
+
+/* ── book ── */
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); padding: 2px; border-radius: 9px; background: rgba(118, 118, 128, .24); margin-top: 16px; position: relative; }
+.seg button { position: relative; z-index: 1; border: 0; background: none; padding: 7px 0; font-size: 13.5px; font-weight: 600; color: var(--ink-2); border-radius: 7px; }
+.seg button[aria-pressed="true"] { color: var(--ink); }
+.seg .thumb { position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc((100% - 4px) / 3); border-radius: 7px; background: #636366;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .3); transition: transform .35s var(--spring); }
+.svc-list { display: grid; gap: 10px; margin-top: 16px; }
+.svc { display: grid; grid-template-columns: 76px 1fr auto; gap: 12px; align-items: center; width: 100%; text-align: left; border: 0;
+  background: var(--card); border-radius: 18px; padding: 10px; }
+.svc img { width: 76px; height: 76px; border-radius: 12px; object-fit: cover; }
+.svc .n { font-weight: 600; font-size: 15.5px; line-height: 1.25; }
+.svc .m { color: var(--ink-2); font-size: 13px; margin-top: 3px; }
+.svc .chip { margin-top: 6px; }
+.svc .pr { font-weight: 700; font-size: 16px; padding-right: 6px; font-variant-numeric: tabular-nums; }
+.page { position: absolute; inset: 0; background: #000; transition: transform .45s var(--spring), filter .45s ease; }
+.book.pushed .page.list { transform: translateX(-28%); filter: brightness(.6); }
+.page.detail { transform: translateX(100%); box-shadow: -20px 0 40px rgba(0, 0, 0, .5); }
+.book.pushed .page.detail { transform: none; }
+.back { position: absolute; z-index: 6; top: 58px; left: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; padding: 0;
+  display: grid; place-items: center; color: #fff; background: rgba(30, 30, 32, .45);
+  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%); }
+.back svg { width: 22px; height: 22px; margin-left: -2px; }
+.hero { position: relative; margin: -58px -16px 0; height: 300px; overflow: hidden; }
+.hero img { width: 100%; height: 100%; object-fit: cover; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .62) 0%, rgba(0, 0, 0, .15) 32%, transparent 50%, #000 100%); }
+.d-name { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-top: -30px; position: relative; }
+.d-meta { color: var(--ink-2); margin-top: 6px; }
+.d-blurb { margin-top: 12px; line-height: 1.45; color: rgba(245, 245, 247, .86); }
+.days { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 6px; scrollbar-width: none; }
+.days::-webkit-scrollbar { display: none; }
+.day { flex: 0 0 56px; border: 0; border-radius: 16px; background: var(--card); padding: 10px 0 11px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.day span { font-size: 12px; color: var(--ink-2); font-weight: 600; }
+.day b { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.day[aria-pressed="true"] { background: var(--grad); color: #000; }
+.day[aria-pressed="true"] span { color: rgba(0, 0, 0, .65); }
+.day:disabled { opacity: .35; cursor: default; }
+.times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.time { border: 0; border-radius: 14px; background: var(--card); padding: 13px 0; font-weight: 600; font-size: 15px;
+  display: flex; align-items: center; justify-content: center; gap: 5px; font-variant-numeric: tabular-nums; }
+.time.flashy { box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .45); color: var(--rose); }
+.time svg { width: 13px; height: 13px; }
+.time[aria-pressed="true"] { background: var(--ink); color: #000; box-shadow: none; }
+.closed { color: var(--ink-3); font-size: 14px; padding: 14px 2px; }
+.flash-note { display: flex; gap: 8px; align-items: center; color: var(--ink-2); font-size: 13px; margin-top: 10px; }
+.flash-note svg { width: 14px; height: 14px; color: var(--rose); flex: none; }
+.cta-bar { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; padding: 12px 16px 34px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .85) 30%, #000); }
+.cta { width: 100%; border: 0; border-radius: 16px; padding: 16px; font-size: 17px; font-weight: 600; background: var(--grad); color: #000;
+  transition: transform .15s ease, opacity .2s ease; }
+.cta:active { transform: scale(.98); }
+.cta:disabled { opacity: .35; cursor: default; transform: none; }
+
+/* ── sheet ── */
+.sheet-wrap { position: absolute; inset: 0; z-index: 30; }
+.sheet-wrap[hidden] { display: none; }
+.sheet-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, .35); opacity: 0; transition: opacity .35s ease; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; min-height: 560px; max-height: 790px; overflow-y: auto; background: #1c1c1e;
+  border-radius: 22px 22px 0 0; padding: 8px 20px 38px; transform: translateY(100%); transition: transform .5s var(--spring); scrollbar-width: none; }
+.sheet-wrap.open .sheet-bg { opacity: 1; }
+.sheet-wrap.open .sheet { transform: none; }
+.grab { width: 38px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .25); margin: 0 auto 10px; }
+.sh-head { display: flex; justify-content: space-between; align-items: center; }
+.sh-head h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.xbtn { width: 30px; height: 30px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .1); display: grid; place-items: center; }
+.xbtn svg { width: 12px; height: 12px; }
+.group { background: #2c2c2e; border-radius: 14px; margin-top: 16px; }
+.grow { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 14px; font-size: 15px; }
+.grow + .grow { border-top: .5px solid rgba(255, 255, 255, .1); }
+.grow .l { color: var(--ink-2); }
+.grow .r { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.grow .r.pink { color: var(--rose); }
+.grow.total .l { color: var(--ink); font-weight: 600; }
+.grow.total .r { font-size: 20px; font-weight: 700; }
+.toggle { position: relative; width: 51px; height: 31px; border-radius: 16px; border: 0; background: rgba(120, 120, 128, .32); padding: 0; flex: none;
+  transition: background-color .25s ease; }
+.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .15), 0 1px 1px rgba(0, 0, 0, .16); transition: transform .3s var(--spring); }
+.toggle[aria-checked="true"] { background: var(--green); }
+.toggle[aria-checked="true"]::after { transform: translateX(20px); }
+.toggle.pinkt[aria-checked="true"] { background: #d98aa3; }
+.credit { display: flex; gap: 12px; align-items: center; padding: 13px 14px; }
+.credit .t { flex: 1; }
+.credit .t b { display: block; font-weight: 600; }
+.credit .t span { display: block; font-size: 13px; color: var(--ink-2); margin-top: 2px; }
+.policy { color: var(--ink-3); font-size: 12.5px; line-height: 1.45; margin-top: 14px; }
+.pay { margin-top: 18px; width: 100%; border: 0; border-radius: 14px; padding: 15px; background: #fff; color: #000; font-size: 17px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .15s ease; }
+.pay:active { transform: scale(.98); }
+.pay svg { width: 20px; height: 20px; }
+.faceid { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(28, 28, 30, .96); border-radius: 22px 22px 0 0; }
+.faceid[hidden] { display: none; }
+.faceid .box { display: grid; justify-items: center; gap: 14px; font-weight: 600; }
+.faceid svg { width: 64px; height: 64px; color: #fff; }
+.faceid .scan path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: draw 1s ease forwards; }
+.faceid .ok { color: var(--green); }
+.faceid .ok path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw .45s ease forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.done { text-align: center; padding-top: 18px; }
+.done .ring { width: 86px; height: 86px; margin: 0 auto; }
+.done .ring circle { stroke-dasharray: 260; stroke-dashoffset: 260; animation: draw .8s var(--ease) forwards; }
+.done .ring path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: draw .45s ease .55s forwards; }
+.done h3 { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; margin-top: 16px; }
+.done .w { color: var(--ink-2); margin-top: 6px; line-height: 1.4; }
+.pts { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 10px 16px; border-radius: 999px;
+  background: rgba(244, 201, 214, .12); color: var(--rose); font-weight: 700; font-size: 17px; font-variant-numeric: tabular-nums;
+  animation: pop .6s var(--spring) .7s both; }
+@keyframes pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+.done .acts { display: grid; gap: 10px; margin-top: 26px; }
+.done .ghost { border: 0; border-radius: 14px; padding: 15px; background: rgba(255, 255, 255, .1); font-weight: 600; font-size: 16px; }
+
+/* ── rewards ── */
+.gcard { position: relative; margin-top: 18px; height: 214px; border-radius: 22px; padding: 18px 20px; overflow: hidden; color: #1a0d12;
+  background: linear-gradient(135deg, #fbe3ea 0%, #f0b9ca 45%, #e6b39d 100%);
+  box-shadow: 0 30px 60px -30px rgba(244, 201, 214, .6), inset 0 0 0 1px rgba(255, 255, 255, .35);
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .5s var(--ease); }
+.gcard.tilting { transition: transform .08s linear; }
+.gcard::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(60% 50% at var(--mx, 30%) var(--my, 20%), rgba(255, 255, 255, .55), transparent 60%); mix-blend-mode: soft-light; }
+.gcard .top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; letter-spacing: .14em; }
+.gcard .num { font-size: 58px; font-weight: 750; letter-spacing: -0.05em; line-height: 1; margin-top: 24px; font-variant-numeric: tabular-nums; }
+.gcard .u { font-size: 14px; font-weight: 600; margin-top: 4px; opacity: .75; }
+.gcard .bot { position: absolute; left: 20px; right: 20px; bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+.gcard .who { font-size: 13px; font-weight: 600; }
+.gcard .who span { display: block; opacity: .65; font-weight: 500; font-size: 12px; }
+.gcard .code { width: 108px; height: 34px; border-radius: 6px; background:
+  repeating-linear-gradient(90deg, #1a0d12 0 2px, transparent 2px 4px, #1a0d12 4px 5px, transparent 5px 8px, #1a0d12 8px 11px, transparent 11px 12px); opacity: .8; }
+.wallet { margin-top: 12px; width: 100%; border: 0; border-radius: 12px; padding: 12px; background: #000; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28);
+  font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.wallet svg { width: 22px; height: 22px; }
+.prog { background: var(--card); border-radius: 18px; padding: 14px 16px; margin-top: 10px; }
+.prog .t { display: flex; justify-content: space-between; font-size: 14px; }
+.prog .t span { color: var(--ink-2); }
+.bar { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, .1); margin-top: 10px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 4px; background: var(--grad); transition: width .9s var(--ease); }
+.petal { position: relative; display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; background: var(--card);
+  border-radius: 22px; padding: 14px 16px; overflow: hidden; }
+.rose-btn { position: relative; width: 110px; height: 110px; border: 0; background: radial-gradient(circle, rgba(244, 201, 214, .18), transparent 65%); border-radius: 50%; padding: 0; }
+.rose-btn svg { width: 110px; height: 110px; overflow: visible; }
+.rose-btn .pet { transform-box: fill-box; transform-origin: 50% 100%; transition: transform .9s var(--spring), opacity .9s ease; }
+.rose-btn.bloom .pet { transform: rotate(var(--r)) translateY(-6px) scale(1.25); }
+.rose-btn.bloom .core { transform: scale(1.3); }
+.rose-btn .core { transform-box: fill-box; transform-origin: center; transition: transform .9s var(--spring); }
+.rose-btn:not(.bloom) { animation: breathe 2.4s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.05); } }
+.spark { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; border-radius: 50%; background: #f7d3de; opacity: 0; pointer-events: none; }
+.rose-btn.bloom .spark { animation: burst .9s var(--ease) forwards; }
+@keyframes burst { 0% { opacity: 1; transform: translate(0, 0) scale(1); } 100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(.4); } }
+.petal .t b { display: block; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
+.petal .t span { display: block; color: var(--ink-2); font-size: 13.5px; line-height: 1.4; margin-top: 4px; }
+.petal .won { color: var(--rose); font-weight: 700; font-size: 22px; letter-spacing: -0.02em; margin-top: 6px; }
+.list { background: var(--card-2); border-radius: 16px; overflow: hidden; }
+.li { display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; font-size: 15px; width: 100%;
+  text-align: left; border: 0; background: none; }
+.li + .li { box-shadow: inset 44px .5px 0 -44px transparent, inset 0 .5px 0 rgba(255, 255, 255, .1); }
+.li .ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: rgba(244, 201, 214, .12); color: var(--rose); }
+.li .ic svg { width: 17px; height: 17px; }
+.li .r { color: var(--ink-2); font-size: 14px; font-variant-numeric: tabular-nums; }
+.li .r.pos { color: var(--rose); font-weight: 600; }
+.li .sub { display: block; color: var(--ink-3); font-size: 12.5px; margin-top: 1px; }
+.li .chev { color: var(--ink-3); width: 14px; height: 14px; }
+
+/* ── me ── */
+.me-head { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+.avatar { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 21px; color: #000; background: var(--grad); }
+.me-head b { display: block; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.me-head span { color: var(--ink-2); font-size: 14px; }
+.mcard { position: relative; margin-top: 18px; border-radius: 22px; padding: 18px; overflow: hidden;
+  background: radial-gradient(120% 70% at 50% 0%, rgba(213, 150, 171, .2), transparent 65%), var(--card);
+  box-shadow: inset 0 0 0 1px rgba(213, 150, 171, .3), 0 24px 70px -30px rgba(213, 150, 171, .5); }
+.mcard::before { content: ""; position: absolute; top: 0; left: 50%; width: 44%; height: 1px; transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, #d596ab, transparent); box-shadow: 0 0 14px rgba(213, 150, 171, .7); }
+.mcard .top { display: flex; justify-content: space-between; align-items: flex-start; }
+.mcard .plan { font-size: 13px; font-weight: 600; color: #d596ab; }
+.mcard .nm { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; margin-top: 2px; }
+.mcard .amt { text-align: right; }
+.mcard .amt b { font-size: 24px; font-weight: 700; letter-spacing: -0.03em;
+  background: linear-gradient(95deg, #d596ab, #e3b0a0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mcard .amt span { display: block; font-size: 12.5px; color: var(--ink-2); }
+.bank { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+.bank .dots { display: flex; gap: 6px; }
+.bank .dots i { width: 34px; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, .12); transition: background-color .4s ease; }
+.bank .dots i.on { background: linear-gradient(95deg, #d596ab, #e3b0a0); box-shadow: 0 0 10px rgba(213, 150, 171, .5); }
+.bank span { color: var(--ink-2); font-size: 14px; }
+.mact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+.mact button { border: 0; border-radius: 14px; padding: 10px 4px; background: rgba(255, 255, 255, .08); font-size: 13px; font-weight: 600;
+  display: grid; justify-items: center; gap: 5px; }
+.mact svg { width: 20px; height: 20px; color: #d596ab; }
+.tiers { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--ink-2); font-size: 13px; }
+.tiers i { width: 10px; height: 10px; border-radius: 50%; }
+
+/* banner + toast */
+.banner { position: absolute; z-index: 50; left: 8px; right: 8px; top: 8px; display: grid; grid-template-columns: 38px 1fr; gap: 11px; text-align: left;
+  border: 0; border-radius: 24px; padding: 12px 14px; color: var(--ink); background: rgba(44, 40, 42, .78);
+  -webkit-backdrop-filter: blur(30px) saturate(170%); backdrop-filter: blur(30px) saturate(170%); box-shadow: 0 16px 40px rgba(0, 0, 0, .45);
+  transform: translateY(-140%); transition: transform .55s var(--spring); }
+.banner.show { transform: translateY(46px); }
+.banner img { width: 38px; height: 38px; border-radius: 9px; }
+.banner .top { display: flex; justify-content: space-between; font-size: 15px; }
+.banner .top b { font-weight: 600; }
+.banner .top span { color: rgba(255, 255, 255, .55); font-size: 13px; }
+.banner p { font-size: 14.5px; line-height: 1.3; margin-top: 2px; color: rgba(255, 255, 255, .9); }
+.toast { position: absolute; z-index: 55; left: 50%; bottom: 104px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: rgba(58, 58, 60, .92); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-radius: 999px;
+  padding: 10px 16px; font-size: 14px; font-weight: 600; white-space: nowrap; transition: opacity .25s ease, transform .35s var(--spring); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; grid-template-areas: "copy" "stage" "try"; row-gap: 28px; padding-block: 28px 40px; padding-inline: 16px; }
+  .copy { text-align: center; }
+  .lead { margin-inline: auto; }
+  .try-list, .fine { margin-inline: auto; }
+  .try-h { text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<main class="shell">
+  <div class="copy">
+    <p class="eyebrow">Sample · Lumevina for iPhone</p>
+    <h1 class="h1">The spa, <span class="grad">one tap away.</span></h1>
+    <p class="lead">A working sample of the Lumevina app. Flash alerts fill empty hours, booking takes a 50% deposit or a banked facial, and Glow Rewards bring clients back. Tap around: no card is charged.</p>
+  </div>
+
+  <div class="stage-col">
+    <div class="stage" id="stage">
+      <div class="device">
+        <div class="screen" id="screen">
+
+          <!-- status bar, Dynamic Island, home indicator -->
+          <div class="status" aria-hidden="true">
+            <span>9:41</span>
+            <span class="icons">
+              <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.2c2.4 0 4.6.9 6.2 2.5l1.3-1.3C13.5 1.4 10.9.3 8 .3S2.5 1.4.5 3.4l1.3 1.3C3.4 3.1 5.6 2.2 8 2.2zm0 3.6c1.4 0 2.7.5 3.6 1.4l1.3-1.3C11.6 4.7 9.9 4 8 4s-3.6.7-4.9 1.9l1.3 1.3c.9-.9 2.2-1.4 3.6-1.4zM8 9.4c-.6 0-1.1.2-1.4.6L8 11.5l1.4-1.5c-.3-.4-.8-.6-1.4-.6z" fill="#fff"/></svg>
+              <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".4"/><rect x="2" y="2" width="17" height="9" rx="2" fill="#fff"/><path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2z" fill="#fff" fill-opacity=".4"/></svg>
+            </span>
+          </div>
+          <div class="island" id="island" aria-live="polite">
+            <div class="la la-full"><img src="{{ICON}}" alt=""><div class="t"><b>You&rsquo;re booked</b><span id="la-svc">Lumevina Custom Facial</span></div><div class="when" id="la-when">3:00</div></div>
+            <div class="la la-mini"><img src="{{ICON}}" alt=""><span id="la-mini">3:00 PM</span></div>
+          </div>
+          <div class="homebar" aria-hidden="true"></div>
+
+          <!-- lock screen with the flash alert -->
+          <div class="lock" id="lock">
+            <img class="lock-art" src="{{LOGO}}" alt="">
+            <svg class="lock-lock" width="18" height="24" viewBox="0 0 18 24" aria-hidden="true"><rect x="1.5" y="10" width="15" height="12" rx="3" fill="#fff" fill-opacity=".9"/><path d="M4.5 10V7a4.5 4.5 0 0 1 9 0v3" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="2"/></svg>
+            <p class="lock-date">Thursday, September 24</p>
+            <p class="lock-time" aria-label="9:41">9:41</p>
+            <div class="notif-stack">
+              <button class="notif" id="notif" type="button" aria-label="Open the flash opening alert from Lumevina">
+                <img src="{{ICON}}" alt="">
+                <span><span class="top"><b>Flash opening today</b><span>now</span></span>
+                <p>Lumevina Custom Facial at 3:00 PM is 10% off. First tap wins.</p></span>
+              </button>
+              <div class="notif-peek" aria-hidden="true"></div>
+            </div>
+            <div class="lock-foot">
+              <span class="lock-circ" aria-hidden="true"><svg width="18" height="22" viewBox="0 0 18 22"><path d="M5 1h8l-1 6H6L5 1zm1 7h6v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V8z" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+              <button class="lock-open" id="lock-open" type="button">Open Lumevina</button>
+              <span class="lock-circ" aria-hidden="true"><svg width="22" height="18" viewBox="0 0 22 18"><path d="M2 5a2 2 0 0 1 2-2h2.5l1.5-2h6l1.5 2H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="11" cy="10" r="3.6" fill="none" stroke="#fff" stroke-width="1.6"/></svg></span>
+            </div>
+          </div>
+
+          <!-- the app -->
+          <div class="app launching" id="app">
+
+            <!-- HOME -->
+            <section class="view" id="v-home" data-title="Home">
+              <div class="navbar">Home</div>
+              <div class="scroll">
+                <p class="kick">Thursday, September 24</p>
+                <h1 class="title">Good morning, Sofia</h1>
+
+                <div class="next">
+                  <p class="lbl">Next visit</p>
+                  <span class="chip" id="next-chip">Membership</span>
+                  <p class="when" id="next-when">Sat, Sep 26 · 10:00 AM</p>
+                  <p class="what" id="next-what">Lumevina Custom Facial with Evelyn</p>
+                  <div class="row">
+                    <button class="pill" type="button" data-toast="Added to your Calendar">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>Calendar</button>
+                    <button class="pill" type="button" data-toast="Free to reschedule until 48 hours before">Reschedule</button>
+                    <button class="pill" type="button" data-toast="Woodland Hills · address in your confirmation">Directions</button>
+                  </div>
+                </div>
+
+                <div class="duo">
+                  <button class="tile press" type="button" data-go="rewards">
+                    <span class="k">Glow Points</span><span class="v" data-points>240</span><span class="d" data-ready>$20 ready to use</span>
+                  </button>
+                  <button class="tile press" type="button" data-go="me">
+                    <span class="k">Glow membership</span><span class="v" data-credits>1</span><span class="d" data-credits-label>facial banked</span>
+                    <div class="dots" data-dots><i class="on"></i><i></i></div>
+                  </button>
+                </div>
+
+                <div class="sec"><h2>Flash openings</h2><span class="chip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>10% off</span></div>
+                <div class="hs" id="flash-list"></div>
+
+                <div class="sec"><h2>Picked for your skin</h2><span class="chip">Members save 10%</span></div>
+                <div class="hs">
+                  <div class="prod"><img src="{{P_CLEANSER}}" alt=""><div class="b"><p class="n">GlyMed+ Glycolic Facial Cleanser</p><div class="p"><span>$34.20<s>$38</s></span><button class="add" type="button">Add</button></div></div></div>
+                  <div class="prod"><img src="{{P_BOOSTER}}" alt=""><div class="b"><p class="n">Le Mieux TGF-β Booster</p><div class="p"><span>$67.50<s>$75</s></span><button class="add" type="button">Add</button></div></div></div>
+                  <div class="prod"><img src="{{P_SPF}}" alt=""><div class="b"><p class="n">Face Reality Daily SPF 30 Plus</p><div class="p"><span>$28.80<s>$32</s></span><button class="add" type="button">Add</button></div></div></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- BOOK -->
+            <section class="view book" id="v-book" data-title="Book" hidden>
+              <div class="page list">
+                <div class="navbar">Book</div>
+                <div class="scroll">
+                  <p class="kick">Tuesday to Sunday · 8 AM to 6 PM</p>
+                  <h1 class="title">Book</h1>
+                  <div class="seg" id="seg" role="group" aria-label="Service type">
+                    <span class="thumb" aria-hidden="true"></span>
+                    <button type="button" data-cat="facials" aria-pressed="true">Facials</button>
+                    <button type="button" data-cat="acne" aria-pressed="false">Acne</button>
+                    <button type="button" data-cat="waxing" aria-pressed="false">Waxing</button>
+                  </div>
+                  <div class="svc-list" id="svc-list"></div>
+                </div>
+              </div>
+              <div class="page detail" id="detail">
+                <button class="back" type="button" id="back" aria-label="Back to Book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+                <div class="scroll" style="padding-bottom:140px">
+                  <div class="hero"><img id="d-img" src="" alt=""></div>
+                  <h2 class="d-name" id="d-name"></h2>
+                  <p class="d-meta" id="d-meta"></p>
+                  <p class="d-blurb" id="d-blurb"></p>
+                  <div class="sec"><h2>Day</h2></div>
+                  <div class="days" id="days"></div>
+                  <div class="sec"><h2>Time</h2></div>
+                  <div id="times"></div>
+                  <p class="flash-note"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>One starred time each day books at 10% off.</p>
+                </div>
+                <div class="cta-bar"><button class="cta" id="cta" type="button" disabled>Choose a time</button></div>
+              </div>
+            </section>
+
+            <!-- REWARDS -->
+            <section class="view" id="v-rewards" data-title="Glow Rewards" hidden>
+              <div class="navbar">Glow Rewards</div>
+              <div class="scroll">
+                <p class="kick">Every visit gives back</p>
+                <h1 class="title">Glow Rewards</h1>
+                <div class="gcard" id="gcard">
+                  <div class="top"><span>LUMEVINA</span><span>GLOW CARD</span></div>
+                  <p class="num" data-points>240</p>
+                  <p class="u">Glow Points · <span data-ready>$20 ready to use</span></p>
+                  <div class="bot"><p class="who">Sofia Ramirez<span>Glow member</span></p><span class="code" aria-hidden="true"></span></div>
+                </div>
+                <button class="wallet" type="button" data-toast="Added to Apple Wallet">
+                  <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" fill="#fff"/><rect x="2.5" y="5" width="19" height="4" rx="2" fill="#f4c9d6"/><rect x="2.5" y="8" width="19" height="3" fill="#e2b08c"/><rect x="2.5" y="10.5" width="19" height="3" fill="#8e8e93"/></svg>
+                  Add to Apple Wallet</button>
+                <div class="prog">
+                  <div class="t"><b id="to-next">60 points to your next $10</b><span>100 pts = $10</span></div>
+                  <div class="bar"><i id="bar" style="width:40%"></i></div>
+                </div>
+
+                <div class="sec"><h2>Mystery petal</h2></div>
+                <div class="petal" id="petal">
+                  <button class="rose-btn" id="rose" type="button" aria-label="Open your mystery petal">
+                    <svg viewBox="0 0 110 110" aria-hidden="true">
+                      <g transform="translate(55 62)">
+                        <path class="pet" style="--r:-40deg" d="M0 0c-18-6-26-24-14-36 6 10 14 20 14 36z" fill="#e8a7ba"/>
+                        <path class="pet" style="--r:40deg" d="M0 0c18-6 26-24 14-36-6 10-14 20-14 36z" fill="#e8a7ba"/>
+                        <path class="pet" style="--r:-15deg" d="M0 0c-12-10-12-30 0-38 12 8 12 28 0 38z" fill="#f4c2d1"/>
+                        <path class="pet" style="--r:15deg" d="M0 2c-16 2-30-8-30-20 12-2 26 6 30 20z" fill="#dc93aa"/>
+                        <path class="pet" style="--r:-70deg" d="M0 2c16 2 30-8 30-20-12-2-26 6-30 20z" fill="#dc93aa"/>
+                        <circle class="core" cx="0" cy="-16" r="7" fill="#f9dbe4"/>
+                        <path d="M0 2v30M0 18c6-2 11-7 12-12" stroke="#6e8f73" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+                      </g>
+                    </svg>
+                    <span class="spark" style="--x:-44px;--y:-30px"></span><span class="spark" style="--x:40px;--y:-40px"></span>
+                    <span class="spark" style="--x:-50px;--y:14px"></span><span class="spark" style="--x:48px;--y:18px"></span>
+                    <span class="spark" style="--x:-10px;--y:-54px"></span><span class="spark" style="--x:16px;--y:50px"></span>
+                    <span class="spark" style="--x:-30px;--y:44px"></span><span class="spark" style="--x:30px;--y:-52px"></span>
+                  </button>
+                  <div class="t" id="petal-t"><b>Your petal is ready</b><span>A surprise after every confirmed visit. Tap the rose.</span></div>
+                </div>
+
+                <div class="sec"><h2>Ways to earn</h2></div>
+                <div class="list">
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Deposits and gifts<span class="sub">1 point per $1</span></span><span class="r pos">1×</span></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4" stroke-linecap="round"/></svg></span><span>Rebook within five weeks</span><span class="r pos">+25</span></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span>Wax Wednesday<span class="sub">Points on waxing</span></span><span class="r pos">2×</span></div>
+                  <button class="li" type="button" data-toast="Share sheet opens here"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span><span>Refer a friend<span class="sub">After their first visit</span></span><span class="r pos">+150</span></button>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16v10H4zM2 7h20v4H2zM12 7v14M12 7c-2-4-7-4-7-1s7 1 7 1 5-3 7 0-5 1-7 1"/></svg></span><span>Birthday month</span><span class="r pos">+50</span></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ME -->
+            <section class="view" id="v-me" data-title="Me" hidden>
+              <div class="navbar">Me</div>
+              <div class="scroll">
+                <h1 class="title" style="margin-top:6px">Me</h1>
+                <div class="me-head"><span class="avatar">SR</span><div><b>Sofia Ramirez</b><span>Client since 2025 · Woodland Hills</span></div></div>
+
+                <div class="mcard">
+                  <div class="top">
+                    <div><p class="plan">Glow membership</p><p class="nm">Glow</p></div>
+                    <div class="amt"><b>$149</b><span>a month · renews Oct 1</span></div>
+                  </div>
+                  <div class="bank"><span class="dots" data-dots><i class="on"></i><i></i></span><span data-bank>1 of 2 facials banked</span></div>
+                  <div class="mact">
+                    <button type="button" data-go="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>Book it</button>
+                    <button type="button" data-toast="Send your banked facial as a gift"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16v10H4zM2 7h20v4H2zM12 7v14"/></svg>Gift it</button>
+                    <button type="button" data-toast="Paused for October · one pause a year"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>Pause</button>
+                  </div>
+                  <p class="tiers"><i style="background:#d596ab"></i>Glow<i style="background:#f0b9ca;margin-left:6px"></i>Clear Skin $159<i style="background:#fde2ea;margin-left:6px"></i>Ageless $199</p>
+                </div>
+
+                <div class="sec"><h2>Notifications</h2></div>
+                <div class="list">
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><span>Flash openings</span><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Flash openings"></button></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg></span><span>Visit reminders</span><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Visit reminders"></button></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Rewards and petals</span><button class="toggle" type="button" role="switch" aria-checked="false" aria-label="Rewards and petals"></button></div>
+                  <button class="li" type="button" id="send-alert"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4"/></svg></span><span>Send a sample flash alert</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
+                </div>
+
+                <div class="sec"><h2>Account</h2></div>
+                <div class="list">
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 14l2 2 4-4"/></svg></span><span>Intake and consent</span><span class="r" style="color:var(--green)">On file</span></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg></span><span>Payment</span><span class="r">Apple Pay</span></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></span><span>Policies<span class="sub">Deposits, 48-hour changes, Saturdays</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></div>
+                </div>
+              </div>
+            </section>
+
+            <nav class="tabbar" role="tablist" aria-label="App sections">
+              <button class="tab" type="button" role="tab" data-tab="home" aria-selected="true">
+                <svg viewBox="0 0 28 28" fill="currentColor"><path d="M14 3.5 3 12.3V24a1.5 1.5 0 0 0 1.5 1.5H11v-7h6v7h6.5A1.5 1.5 0 0 0 25 24V12.3z"/></svg>Home</button>
+              <button class="tab" type="button" role="tab" data-tab="book" aria-selected="false">
+                <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="5.5" width="20" height="19" rx="4"/><path d="M9 3v5M19 3v5M4 12h20"/><circle cx="10" cy="17.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="14" cy="17.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="17.5" r="1.4" fill="currentColor" stroke="none"/></svg>Book</button>
+              <button class="tab" type="button" role="tab" data-tab="rewards" aria-selected="false">
+                <svg viewBox="0 0 28 28" fill="currentColor"><path d="M14 2.5l2.9 8.6L25.5 14l-8.6 2.9L14 25.5l-2.9-8.6L2.5 14l8.6-2.9z"/></svg>Rewards</button>
+              <button class="tab" type="button" role="tab" data-tab="me" aria-selected="false">
+                <svg viewBox="0 0 28 28" fill="currentColor"><circle cx="14" cy="9.5" r="5.5"/><path d="M3.5 24.5c.8-5.3 5-8.5 10.5-8.5s9.7 3.2 10.5 8.5z"/></svg>Me</button>
+            </nav>
+          </div>
+
+          <!-- in-app alert -->
+          <button class="banner" id="banner" type="button" aria-label="Open the flash opening alert">
+            <img src="{{ICON}}" alt="">
+            <span><span class="top"><b>Flash opening Saturday</b><span>now</span></span>
+            <p>Ageless Grace Facial at 4:00 PM is 10% off. First tap wins.</p></span>
+          </button>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+          <!-- confirm sheet -->
+          <div class="sheet-wrap" id="sheet-wrap" hidden>
+            <div class="sheet-bg" id="sheet-bg"></div>
+            <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-title">
+              <div class="grab" aria-hidden="true"></div>
+              <div id="sh-confirm">
+                <div class="sh-head"><h3 id="sh-title">Confirm booking</h3>
+                  <button class="xbtn" type="button" id="sh-close" aria-label="Close"><svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+                <div class="group">
+                  <div class="grow"><span class="l">Service</span><span class="r" id="c-svc"></span></div>
+                  <div class="grow"><span class="l">When</span><span class="r" id="c-when"></span></div>
+                  <div class="grow"><span class="l">Price</span><span class="r" id="c-price"></span></div>
+                  <div class="grow" id="c-flash-row"><span class="l">Flash opening</span><span class="r pink" id="c-flash"></span></div>
+                </div>
+                <div class="group" id="c-credit-group">
+                  <div class="credit"><div class="t"><b>Use a banked facial</b><span id="c-credit-sub">Covered by your Glow membership</span></div>
+                    <button class="toggle pinkt" type="button" role="switch" id="c-credit" aria-checked="false" aria-label="Use a banked facial"></button></div>
+                </div>
+                <div class="group">
+                  <div class="grow total"><span class="l" id="c-due-l">Deposit today · 50%</span><span class="r" id="c-due"></span></div>
+                  <div class="grow"><span class="l">Balance at your visit</span><span class="r" id="c-bal"></span></div>
+                </div>
+                <p class="policy">Free to reschedule until 48 hours before. The deposit goes toward your total. Saturday bookings can&rsquo;t be moved.</p>
+                <button class="pay" type="button" id="pay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 16c1.5 1 3.5 1 5 0"/></svg><span id="pay-l">Pay with Face ID</span></button>
+                <div class="faceid" id="faceid" hidden><div class="box" id="faceid-box"></div></div>
+              </div>
+              <div class="done" id="sh-done" hidden>
+                <svg class="ring" viewBox="0 0 86 86"><circle cx="43" cy="43" r="40" fill="none" stroke="#f4c9d6" stroke-width="4" transform="rotate(-90 43 43)"/><path d="M27 44l11 11 21-23" fill="none" stroke="#f4c9d6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <h3>You&rsquo;re booked.</h3>
+                <p class="w" id="d-when"></p>
+                <span class="pts" id="d-pts"></span>
+                <div class="acts">
+                  <button class="ghost" type="button" data-toast="Added to your Calendar">Add to Calendar</button>
+                  <button class="cta" type="button" id="done-btn">Done</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="try">
+    <p class="try-h">Try this</p>
+    <ul class="try-list">
+      <li><button class="try-btn" type="button" data-try="lock"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4"/></svg></span><span><b>Replay the flash alert</b><span class="t">Starts on the lock screen, like a real push.</span></span><span class="go" aria-hidden="true">›</span></button></li>
+      <li><button class="try-btn" type="button" data-try="credit"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span><b>Book with a banked facial</b><span class="t">The membership covers it, so nothing is due today.</span></span><span class="go" aria-hidden="true">›</span></button></li>
+      <li><button class="try-btn" type="button" data-try="rose"><span class="try-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span><b>Open the mystery petal</b><span class="t">The small surprise after every visit.</span></span><span class="go" aria-hidden="true">›</span></button></li>
+      <li><button class="try-btn" type="button" data-try="alert"><span class="try-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><span><b>Send a flash alert in the app</b><span class="t">How a freed-up slot reaches clients first.</span></span><span class="go" aria-hidden="true">›</span></button></li>
+    </ul>
+    <p class="fine">Sample client and data. Payments are simulated. Services, prices, hours and rewards match the Lumevina website.</p>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var IMG = { custom: "{{S_CUSTOM}}", ageless: "{{S_AGELESS}}", dermaplane: "{{S_DERMA}}", acne: "{{S_ACNE}}",
+              consult: "{{S_CONSULT}}", brazilian: "{{S_BRAZIL}}", underarm: "{{S_UNDERARM}}" };
+
+  /* the menu, from the Lumevina site */
+  var SERVICES = {
+    facials: [
+      { id: "custom", name: "Lumevina Custom Facial", mins: 60, price: 180, img: "custom", covered: true,
+        blurb: "The returning-client facial: customized actives, extractions, LED therapy and cryo globes." },
+      { id: "derma", name: "Custom Facial + Dermaplaning", mins: 60, price: 170, img: "dermaplane", covered: true,
+        blurb: "The Lumevina custom facial finished with dermaplaning. Glass-smooth, extra glow." },
+      { id: "ageless", name: "Ageless Grace Facial", mins: 60, price: 230, img: "ageless", covered: false,
+        blurb: "Our signature lifting facial: peptides, sculpting massage and LED light therapy." },
+      { id: "consult", name: "New Client Consultation + Treatment", mins: 60, price: 200, img: "consult", covered: false,
+        blurb: "Your first visit: a full skin analysis, consultation and a treatment built for your goals." }
+    ],
+    acne: [
+      { id: "acne", name: "Monthly Acne Treatment", mins: 60, price: 180, img: "acne", covered: false,
+        blurb: "Your monthly acne visit on the Face Reality program: extractions, a peel and a routine check." },
+      { id: "acne-new", name: "New Client Acne Consultation", mins: 60, price: 210, img: "consult", covered: false,
+        blurb: "A personalized plan built on Face Reality, the acne line we trust, tailored to your skin." }
+    ],
+    waxing: [
+      { id: "braz", name: "Brazilian Wax", mins: 30, price: 75, img: "brazilian", covered: false,
+        blurb: "Everything gone, completely smooth, or leave a small strip or triangle." },
+      { id: "brazv", name: "Brazilian Wax × Mini Vajacial", mins: 60, price: 95, img: "brazilian", covered: false,
+        blurb: "Brazilian, light steam, extractions, ingrown removal and a hydrojelly mask." },
+      { id: "under", name: "Underarm Wax", mins: 30, price: 20, img: "underarm", covered: false,
+        blurb: "Quick, clean and smooth." }
+    ]
+  };
+  var ALL = [].concat(SERVICES.facials, SERVICES.acne, SERVICES.waxing);
+  var byId = function (id) { return ALL.filter(function (s) { return s.id === id; })[0]; };
+
+  /* this week; Mondays are closed; one starred time a day is 10% off */
+  var DAYS = [
+    { w: "Thu", d: 24, label: "Today", full: "Today", times: ["11:00 AM", "1:30 PM", "3:00 PM", "4:30 PM"], flash: "3:00 PM" },
+    { w: "Fri", d: 25, full: "Fri, Sep 25", times: ["9:00 AM", "10:30 AM", "2:30 PM", "5:00 PM"], flash: "2:30 PM" },
+    { w: "Sat", d: 26, full: "Sat, Sep 26", times: ["8:00 AM", "11:00 AM", "1:30 PM", "4:00 PM"], flash: "4:00 PM" },
+    { w: "Sun", d: 27, full: "Sun, Sep 27", times: ["10:00 AM", "12:30 PM", "3:30 PM"], flash: "3:30 PM" },
+    { w: "Mon", d: 28, full: "Mon, Sep 28", times: [], closed: true },
+    { w: "Tue", d: 29, full: "Tue, Sep 29", times: ["8:00 AM", "9:30 AM", "1:00 PM", "2:30 PM", "5:00 PM"], flash: "1:00 PM" },
+    { w: "Wed", d: 30, full: "Wed, Sep 30", times: ["9:00 AM", "11:00 AM", "3:00 PM"], flash: "11:00 AM" }
+  ];
+
+  var S = { points: 240, credits: 1, petal: false, cat: "facials", svc: null, day: 0, time: null, useCredit: false,
+            next: { when: "Sat, Sep 26 · 10:00 AM", what: "Lumevina Custom Facial with Evelyn", chip: "Membership", order: 2.4 } };
+
+  var money = function (n) { return "$" + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))); };
+
+  /* ── scale the phone to fit ── */
+  var stage = $("#stage");
+  var fit = function () {
+    var col = stage.parentElement.getBoundingClientRect().width;
+    var narrow = window.innerWidth <= 900;
+    var byW = (Math.min(col, window.innerWidth - 32)) / 414;
+    var byH = (window.innerHeight - (narrow ? 40 : 60)) / 868;
+    var s = Math.max(.55, Math.min(1, byW, narrow ? 1 : byH));
+    stage.style.setProperty("--s", s.toFixed(4));
+  };
+  fit();
+  window.addEventListener("resize", fit);
+
+  /* ── toast ── */
+  var toastEl = $("#toast"), toastT = null;
+  var toast = function (msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove("show"); }, 1900);
+  };
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest && e.target.closest("[data-toast]");
+    if (t) toast(t.getAttribute("data-toast"));
+  });
+
+  /* ── lock screen → app ── */
+  var lock = $("#lock"), app = $("#app");
+  var launch = function (then) {
+    lock.classList.add("gone");
+    app.classList.remove("launching");
+    if (then) then();
+  };
+  var relock = function () {
+    closeSheet(true);
+    app.classList.add("launching");
+    lock.classList.remove("gone");
+    var n = $("#notif"), p = $(".notif-peek");
+    [n, p].forEach(function (el) { el.style.animation = "none"; void el.offsetWidth; el.style.animation = ""; });
+  };
+  $("#notif").addEventListener("click", function () { launch(function () { openFlash("custom", 0); }); });
+  $("#lock-open").addEventListener("click", function () { launch(function () { tab("home"); }); });
+
+  /* ── tabs ── */
+  var cur = "home", book = $("#v-book");
+  var syncTabs = function () { app.classList.toggle("no-tabs", cur === "book" && book.classList.contains("pushed")); };
+  var tab = function (name) {
+    cur = name;
+    syncTabs();
+    $$(".tab").forEach(function (t) { t.setAttribute("aria-selected", String(t.getAttribute("data-tab") === name)); });
+    $$(".view").forEach(function (v) {
+      var on = v.id === "v-" + name;
+      if (on && v.hidden) { v.hidden = false; v.classList.remove("show"); void v.offsetWidth; v.classList.add("show"); }
+      else if (!on) v.hidden = true;
+    });
+  };
+  $$(".tab").forEach(function (t) {
+    t.addEventListener("click", function () {
+      var n = t.getAttribute("data-tab");
+      if (n === "book" && cur === "book") pop();
+      tab(n);
+    });
+  });
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest && e.target.closest("[data-go]");
+    if (g) { if (g.getAttribute("data-go") === "book") pop(); tab(g.getAttribute("data-go")); }
+  });
+
+  /* large title → compact navbar on scroll */
+  $$(".scroll").forEach(function (sc) {
+    sc.addEventListener("scroll", function () {
+      var v = sc.closest(".page") || sc.closest(".view");
+      v.classList.toggle("scrolled", sc.scrollTop > 44);
+    }, { passive: true });
+  });
+
+  /* ── shared state on screen ── */
+  var paint = function () {
+    $$("[data-points]").forEach(function (el) { el.textContent = S.points; });
+    var ready = Math.floor(S.points / 100) * 10;
+    $$("[data-ready]").forEach(function (el) { el.textContent = "$" + ready + " ready to use"; });
+    var toNext = 100 - (S.points % 100);
+    $("#to-next").textContent = toNext + " points to your next $10";
+    $("#bar").style.width = (S.points % 100) + "%";
+    $$("[data-credits]").forEach(function (el) { el.textContent = S.credits; });
+    $$("[data-credits-label]").forEach(function (el) { el.textContent = S.credits === 1 ? "facial banked" : "facials banked"; });
+    $$("[data-bank]").forEach(function (el) { el.textContent = S.credits + " of 2 facials banked"; });
+    $$("[data-dots]").forEach(function (el) { $$("i", el).forEach(function (i, k) { i.classList.toggle("on", k < S.credits); }); });
+    $("#next-when").textContent = S.next.when;
+    $("#next-what").textContent = S.next.what;
+    $("#next-chip").textContent = S.next.chip;
+  };
+  var countTo = function (from, to) {
+    if (calm) { S.points = to; paint(); return; }
+    var t0 = performance.now(), dur = 1100;
+    var step = function (now) {
+      var u = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - u, 3);
+      S.points = Math.round(from + (to - from) * e); paint();
+      if (u < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
+  /* ── home: flash openings ── */
+  var FLASHES = [
+    { svc: "custom", day: 0 }, { svc: "ageless", day: 2 }, { svc: "derma", day: 1 }
+  ];
+  $("#flash-list").innerHTML = FLASHES.map(function (f, i) {
+    var s = byId(f.svc), d = DAYS[f.day];
+    return '<button class="flash press" type="button" data-flash="' + i + '">' +
+      '<span class="t1"><span class="fday">' + d.full + '</span><span class="chip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>Flash</span></span>' +
+      '<span class="ftime">' + d.flash + '</span><span class="fsvc">' + s.name + '</span>' +
+      '<span class="price"><b>' + money(s.price * 0.9) + '</b><s>' + money(s.price) + '</s></span></button>';
+  }).join("");
+  $$("[data-flash]").forEach(function (b) {
+    b.addEventListener("click", function () { var f = FLASHES[+b.getAttribute("data-flash")]; openFlash(f.svc, f.day); });
+  });
+  $$(".prod .add").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var on = !b.classList.contains("on");
+      b.classList.toggle("on", on); b.textContent = on ? "Added" : "Add";
+      if (on) toast("Added to your bag · member price");
+    });
+  });
+
+  /* ── book: list ── */
+  var seg = $("#seg"), svcList = $("#svc-list");
+  var renderList = function () {
+    var cats = ["facials", "acne", "waxing"], i = cats.indexOf(S.cat);
+    $(".thumb", seg).style.transform = "translateX(" + (i * 100) + "%)";
+    $$("button", seg).forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-cat") === S.cat)); });
+    svcList.innerHTML = SERVICES[S.cat].map(function (s) {
+      return '<button class="svc press" type="button" data-svc="' + s.id + '"><img src="' + IMG[s.img] + '" alt="">' +
+        '<span><span class="n">' + s.name + '</span><span class="m">' + s.mins + ' min</span>' +
+        (s.covered ? '<span class="chip">Covered by Glow</span>' : "") + '</span><span class="pr">' + money(s.price) + '</span></button>';
+    }).join("");
+    $$("[data-svc]", svcList).forEach(function (b) { b.addEventListener("click", function () { openDetail(b.getAttribute("data-svc"), 0, null); }); });
+  };
+  $$("button", seg).forEach(function (b) { b.addEventListener("click", function () { S.cat = b.getAttribute("data-cat"); renderList(); }); });
+  renderList();
+
+  /* ── book: detail ── */
+  var cta = $("#cta");
+  var pop = function () { book.classList.remove("pushed"); syncTabs(); };
+  var openDetail = function (id, day, time) {
+    var s = byId(id);
+    S.svc = s; S.day = day; S.time = time;
+    S.cat = SERVICES.facials.indexOf(s) > -1 ? "facials" : SERVICES.acne.indexOf(s) > -1 ? "acne" : "waxing";
+    renderList();
+    $("#d-img").src = IMG[s.img];
+    $("#d-name").textContent = s.name;
+    $("#d-meta").textContent = s.mins + " min · " + money(s.price) + " · with Evelyn";
+    $("#d-blurb").textContent = s.blurb;
+    $("#detail .scroll").scrollTop = 0;
+    renderDays(); renderTimes();
+    tab("book");
+    requestAnimationFrame(function () { book.classList.add("pushed"); syncTabs(); });
+  };
+  var openFlash = function (id, day) { openDetail(id, day, DAYS[day].flash); };
+  $("#back").addEventListener("click", pop);
+
+  var renderDays = function () {
+    $("#days").innerHTML = DAYS.map(function (d, i) {
+      return '<button class="day" type="button" data-day="' + i + '" aria-pressed="' + (i === S.day) + '"' + (d.closed ? " disabled" : "") +
+        ' aria-label="' + d.full + (d.closed ? ", closed" : "") + '"><span>' + (d.label || d.w) + '</span><b>' + d.d + '</b></button>';
+    }).join("");
+    $$("[data-day]").forEach(function (b) {
+      b.addEventListener("click", function () { S.day = +b.getAttribute("data-day"); S.time = null; renderDays(); renderTimes(); });
+    });
+  };
+  var BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>';
+  var renderTimes = function () {
+    var d = DAYS[S.day], box = $("#times");
+    if (d.closed) { box.innerHTML = '<p class="closed">Closed on Mondays.</p>'; }
+    else {
+      box.innerHTML = '<div class="times">' + d.times.map(function (t) {
+        var f = t === d.flash;
+        return '<button class="time' + (f ? " flashy" : "") + '" type="button" data-time="' + t + '" aria-pressed="' + (t === S.time) + '"' +
+          (f ? ' aria-label="' + t + ', flash opening, 10% off"' : "") + '>' + (f ? BOLT : "") + t + '</button>';
+      }).join("") + '</div>';
+      $$("[data-time]", box).forEach(function (b) {
+        b.addEventListener("click", function () { S.time = b.getAttribute("data-time"); renderTimes(); });
+      });
+    }
+    var s = S.svc;
+    if (!S.time || !s) { cta.disabled = true; cta.textContent = "Choose a time"; return; }
+    var flash = S.time === DAYS[S.day].flash;
+    cta.disabled = false;
+    cta.textContent = "Continue · " + money(flash ? s.price * 0.9 : s.price);
+  };
+
+  /* ── confirm sheet ── */
+  var wrap = $("#sheet-wrap"), sheet = $("#sheet");
+  var calc = function () {
+    var s = S.svc, flash = S.time === DAYS[S.day].flash;
+    var sub = flash ? s.price * 0.9 : s.price;
+    var canCredit = s.covered && S.credits > 0;
+    if (!canCredit) S.useCredit = false;
+    var due = S.useCredit ? 0 : Math.round(sub / 2);
+    return { flash: flash, sub: sub, canCredit: canCredit, due: due, bal: S.useCredit ? 0 : sub - due };
+  };
+  var paintSheet = function () {
+    var s = S.svc, c = calc(), d = DAYS[S.day];
+    $("#c-svc").textContent = s.name;
+    $("#c-when").textContent = d.full + " · " + S.time;
+    $("#c-price").textContent = money(s.price);
+    $("#c-flash-row").hidden = !c.flash;
+    $("#c-flash").textContent = "−" + money(s.price * 0.1);
+    $("#c-credit-group").hidden = !s.covered;
+    $("#c-credit").setAttribute("aria-checked", String(S.useCredit));
+    $("#c-credit").disabled = !c.canCredit;
+    $("#c-credit-sub").textContent = c.canCredit ? "Covered by your Glow membership · " + S.credits + " banked" : "No facials banked right now";
+    $("#c-due-l").textContent = S.useCredit ? "Due today" : "Deposit today · 50%";
+    $("#c-due").textContent = S.useCredit ? "Nothing" : money(c.due);
+    $("#c-bal").textContent = S.useCredit ? "Covered" : money(c.bal);
+    $("#pay-l").textContent = S.useCredit ? "Confirm with Face ID" : "Pay " + money(c.due) + " with Face ID";
+  };
+  var openSheet = function () {
+    $("#sh-confirm").hidden = false; $("#sh-done").hidden = true; $("#faceid").hidden = true;
+    paintSheet();
+    wrap.hidden = false;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { wrap.classList.add("open"); app.classList.add("behind"); }); });
+    setTimeout(function () { $("#sh-close").focus({ preventScroll: true }); }, 60);
+  };
+  var closeSheet = function (instant) {
+    wrap.classList.remove("open"); app.classList.remove("behind");
+    if (instant || calm) { wrap.hidden = true; return; }
+    setTimeout(function () { if (!wrap.classList.contains("open")) wrap.hidden = true; }, 480);
+  };
+  cta.addEventListener("click", function () { if (!cta.disabled) openSheet(); });
+  $("#sh-close").addEventListener("click", function () { closeSheet(); });
+  $("#sheet-bg").addEventListener("click", function () { if ($("#sh-done").hidden) closeSheet(); });
+  $("#c-credit").addEventListener("click", function () { S.useCredit = !S.useCredit; paintSheet(); });
+
+  var FACE = '<svg class="scan" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">' +
+    '<path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8M24 24v4M40 24v4M32 24v10h-3M25 42c4 3 10 3 14 0"/></svg>';
+  var OK = '<svg class="ok" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="26" stroke-opacity=".3"/><path d="M20 33l8 8 16-17"/></svg>';
+  $("#pay").addEventListener("click", function () {
+    var fx = $("#faceid"), box = $("#faceid-box");
+    fx.hidden = false; box.innerHTML = FACE + "<span>Face ID</span>";
+    setTimeout(function () { box.innerHTML = OK + "<span>Done</span>"; }, calm ? 50 : 1100);
+    setTimeout(finish, calm ? 100 : 1750);
+  });
+
+  /* ── booked ── */
+  var finish = function () {
+    var s = S.svc, c = calc(), d = DAYS[S.day];
+    var earned = c.due + 25;
+    if (S.useCredit) S.credits -= 1;
+    $("#sh-confirm").hidden = true; $("#sh-done").hidden = false;
+    $("#d-when").innerHTML = s.name + "<br>" + d.full + " · " + S.time + " with Evelyn";
+    $("#d-pts").textContent = "+" + earned + " Glow Points";
+    var order = S.day + (S.time.indexOf("PM") > -1 && S.time.indexOf("12") !== 0 ? 0.5 : 0.2);
+    if (order < S.next.order) {
+      S.next = { when: d.full + " · " + S.time, what: s.name + " with Evelyn", chip: S.useCredit ? "Membership" : "Deposit paid", order: order };
+    }
+    var from = S.points;
+    setTimeout(function () { countTo(from, from + earned); }, 700);
+    paint();
+    liveActivity(s, d, S.time);
+    $("#done-btn").focus({ preventScroll: true });
+  };
+  $("#done-btn").addEventListener("click", function () {
+    closeSheet(); S.useCredit = false;
+    setTimeout(function () { pop(); tab("home"); $("#v-home .scroll").scrollTop = 0; }, calm ? 0 : 250);
+  });
+
+  /* Dynamic Island live activity */
+  var island = $("#island"), laT = null;
+  var liveActivity = function (s, d, time) {
+    $("#la-svc").textContent = s.name + " · " + (d.label || d.full);
+    $("#la-when").textContent = time.replace(/ (AM|PM)/, "");
+    $("#la-mini").textContent = time;
+    island.classList.remove("compact"); island.classList.add("expanded");
+    clearTimeout(laT);
+    laT = setTimeout(function () { island.classList.remove("expanded"); island.classList.add("compact"); }, 3200);
+  };
+
+  /* ── rewards: card tilt + mystery petal ── */
+  var card = $("#gcard");
+  if (!calm) {
+    card.addEventListener("pointermove", function (e) {
+      var r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      card.classList.add("tilting");
+      card.style.setProperty("--ry", ((x - .5) * 14).toFixed(2) + "deg");
+      card.style.setProperty("--rx", ((.5 - y) * 12).toFixed(2) + "deg");
+      card.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+      card.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+    });
+    card.addEventListener("pointerleave", function () {
+      card.classList.remove("tilting");
+      card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg");
+    });
+  }
+  var rose = $("#rose");
+  rose.addEventListener("click", function () {
+    if (S.petal) return;
+    S.petal = true;
+    rose.classList.add("bloom");
+    rose.setAttribute("aria-label", "Petal opened");
+    setTimeout(function () {
+      $("#petal-t").innerHTML = '<b>A full bloom</b><span>Added to your Glow Points.</span><p class="won">+30 points</p>';
+      var from = S.points; countTo(from, from + 30);
+    }, calm ? 0 : 650);
+  });
+
+  /* ── me: switches + sample alert ── */
+  $$("#v-me .toggle").forEach(function (t) {
+    t.addEventListener("click", function () { t.setAttribute("aria-checked", String(t.getAttribute("aria-checked") !== "true")); });
+  });
+  var banner = $("#banner"), bT = null;
+  var alertIn = function () {
+    banner.classList.add("show");
+    clearTimeout(bT);
+    bT = setTimeout(function () { banner.classList.remove("show"); }, 4200);
+  };
+  $("#send-alert").addEventListener("click", function () { setTimeout(alertIn, 300); });
+  banner.addEventListener("click", function () { banner.classList.remove("show"); closeSheet(true); openFlash("ageless", 2); });
+
+  /* keyboard: Escape closes the sheet */
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !wrap.hidden && $("#sh-done").hidden) closeSheet();
+  });
+
+  /* ── the "Try this" buttons beside the phone ── */
+  $$("[data-try]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var k = b.getAttribute("data-try");
+      if (k === "lock") { relock(); return; }
+      launch();
+      closeSheet(true);
+      if (k === "credit") {
+        openDetail("custom", 2, "11:00 AM");
+        setTimeout(function () { S.useCredit = S.credits > 0; openSheet(); }, calm ? 0 : 520);
+      } else if (k === "rose") {
+        pop(); tab("rewards");
+        var sc = $("#v-rewards .scroll");
+        setTimeout(function () { sc.scrollTo({ top: $("#petal").offsetTop - 120, behavior: calm ? "auto" : "smooth" }); }, 50);
+        setTimeout(function () { rose.click(); }, calm ? 60 : 800);
+      } else if (k === "alert") {
+        setTimeout(alertIn, 250);
+      }
+    });
+  });
+
+  paint();
+})();
+</script>
