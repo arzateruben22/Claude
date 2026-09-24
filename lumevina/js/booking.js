@@ -117,6 +117,7 @@
   var petalBtn = modal.querySelector(".mirror-btn");
   var petalResult = modal.querySelector(".mirror-result");
   var calBtn = modal.querySelector(".booking-cal");
+  var gcalLink = modal.querySelector(".booking-gcal");
   var intakeBtn = modal.querySelector(".booking-intake-open");
   var intakeStatusEl = modal.querySelector(".booking-intake-status");
   var pendingBlocks = 0;
@@ -1425,6 +1426,17 @@
         start: state.dayKey, startMin: state.slot, durMin: totalDur(),
         name: nameInput.value.trim(), email: emailInput.value.trim()
       };
+      /* Google Calendar works everywhere; the calendar file can't be saved
+         inside a claude.ai preview (js/save-file.js), so it steps aside there */
+      if (gcalLink) {
+        gcalLink.href = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+          "&text=" + encodeURIComponent(lastBooking.title) +
+          "&dates=" + icsStamp(lastBooking.start, lastBooking.startMin) + "/" + icsStamp(lastBooking.start, lastBooking.startMin + lastBooking.durMin) +
+          "&ctz=America/Los_Angeles" +
+          "&details=" + encodeURIComponent("Your appointment at Lumevina Aesthetics Spa. The deposit is paid; the balance is due at your visit.") +
+          "&location=" + encodeURIComponent("Lumevina Aesthetics Spa, Woodland Hills, CA");
+      }
+      calBtn.hidden = !!(window.LumevinaSave && !window.LumevinaSave.canSave("ics"));
       intakeStatusEl.hidden = true;
       if (window.LumevinaIntake &&
           window.LumevinaIntake.hasFormFor(lastBooking.email)) {
@@ -1470,6 +1482,10 @@
       "DESCRIPTION:Lumevina appointment tomorrow", "END:VALARM",
       "END:VEVENT", "END:VCALENDAR"
     ];
+    if (window.LumevinaSave) {
+      window.LumevinaSave.file("lumevina-appointment.ics", lines.join("\r\n"), "text/calendar").catch(function () {});
+      return;
+    }
     var blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
@@ -1509,6 +1525,8 @@
     b.type = "button";
     b.className = "btn btn-solid book-btn";
     b.textContent = "Book";
+    /* keep the menu data on the page (Ask Lumevina reads prices from it) */
+    b.setAttribute("data-id", btn.dataset.id); b.setAttribute("data-name", btn.dataset.name); b.setAttribute("data-price", btn.dataset.price);
     b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn);
     btn.remove();
@@ -1519,6 +1537,8 @@
     b.type = "button";
     b.className = "wax-book";
     b.innerHTML = CAL_ICON + '<span class="wax-book-label">Book</span>';
+    /* keep the menu data on the page (Ask Lumevina reads prices from it) */
+    b.setAttribute("data-id", btn.dataset.id); b.setAttribute("data-name", btn.dataset.name); b.setAttribute("data-price", btn.dataset.price);
     b.setAttribute("aria-label", "Book " + btn.dataset.name);
     b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn.nextSibling);

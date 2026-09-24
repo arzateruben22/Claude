@@ -110,7 +110,7 @@ GATE = [{"tag": "Day 90 · %d or more members" % FLOOR, "big": "Sign two artists
          "sub": "Offer the pilot to your best two in months 4–5, live by month 6.",
          "inc": ["Free for 90 days, then 12% on bookings through Lumevina",
                  "Members save 10% with them, and Lumevina pays it",
-                 "Their clients earn Glow Points to spend with Evelyn"]},
+                 "Their clients earn Glow Points to spend with them or with Evelyn"]},
         {"tag": "Day 90 · under %d members" % FLOOR, "big": "Keep talking", "hl": False,
          "sub": "Sign nothing yet. The list stays warm while members catch up.",
          "inc": ["Thirty more days of the member push",
@@ -200,7 +200,7 @@ for m in MODES:
              fsales=fm * F_AVG, rsales=math.ceil(sb) * R_PRICE)
 
 # ─────────────────────────── build your month ───────────────────────────
-CHAIR_MAX = 25                      # facials a week one person can do well: five a day, five days
+CHAIR_MAX = 30                      # facials a week one person can do: six a day, five days (the Growth Blueprint's ceiling)
 R_COST_ABS = R_PRICE * R_COGS       # what the box costs; a premium price doesn't change it
 
 
@@ -244,7 +244,7 @@ CEIL_NOTES = [("One chair has a ceiling", "About %d facials a week is the most o
 BANK_MEMBERS = PLAN                 # members at day 90
 BANK_RATE = 0.15                    # members who bank their facial in a given month
 BANK_CARRY = 2                      # banked facials are usually used within about two months
-DAY_SLOTS = 5                       # facials in one extra day
+DAY_SLOTS = 6                       # facials in one extra day, the same six as a regular day
 FILL = 0.8                          # how full an extra day gets, beyond the banked facials
 MEMBER_VALUE = 195                  # what a member facial is worth at today's prices
 EXTRA = [(0, "No extra days"), (26 / 12.0, "A Monday every other week"), (52 / 12.0, "A Monday every week")]
@@ -1446,7 +1446,7 @@ PRINT_BODY = """
     <p class="lead" style="margin-top:10px;font-size:11pt">Members can bank a month&rsquo;s facial. The dues are in, but the facial comes back later,
     and in a busy month it can take a day that&rsquo;s normally off.</p>
   </div>
-  <div><div class="cols-h">Facials owed at any time</div><div class="cols-s">Worth, in dues already collected, and the days of work to clear them (5 facials a day)</div>
+  <div><div class="cols-h">Facials owed at any time</div><div class="cols-s">Worth, in dues already collected, and the days of work to clear them (6 facials a day)</div>
     __BANK_GRID__</div>
   <div><div class="cols-h">Working a day that&rsquo;s normally off</div><div class="cols-s">Banked facials take the extra slots first; the rest are new bookings, 80% full</div>
     __EXTRA_GRID__</div>

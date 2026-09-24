@@ -5866,6 +5866,8 @@ html.sheet-open { overflow: hidden; }
 /* ─── Ask Lumevina (js/ask.js) ───
    A pill in the bottom-left corner (the membership card owns the right),
    under every window (z 56) and above the page. The panel opens from it. */
+.success-actions .btn[hidden] { display: none; }
+
 .ask-fab {
   position: fixed;
   left: 1.5rem;
@@ -5939,15 +5941,27 @@ html.sheet-open { overflow: hidden; }
 .ask-act { font: 600 0.8rem/1 var(--font-body); color: var(--ink); background: rgba(255, 255, 255, 0.06); border: 1px solid var(--panel-edge); border-radius: 999px; padding: 0.5rem 0.75rem; cursor: pointer; }
 .ask-act:hover { border-color: rgba(234, 185, 200, 0.5); }
 .ask-act.is-primary { color: var(--on-accent); background: var(--grad-rose); border-color: transparent; }
+.ask-act.is-step { background: transparent; border-color: rgba(234, 185, 200, 0.4); font-weight: 500; }
+.ask-act.is-step:hover { background: rgba(234, 185, 200, 0.1); }
 .ask-handoff { display: grid; gap: 6px; margin-top: 8px; }
 .ask-handoff input { font: inherit; font-size: 16px; color: var(--ink); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--panel-edge); border-radius: 10px; padding: 0.55rem 0.65rem; }
 .ask-handoff input:focus { outline: 2px solid var(--mauve); outline-offset: 0; border-color: transparent; }
 .ask-err { color: #ff9f8f; font-size: 0.78rem; min-height: 0; }
 .ask-err:empty { display: none; }
 
-.ask-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 0.3rem 0.9rem 0.5rem; }
+.ask-chips-wrap { position: relative; }
+.ask-chips-wrap[hidden] { display: none; }
+.ask-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 0.3rem 0.9rem 0.5rem; cursor: grab;
+  overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
 .ask-chips::-webkit-scrollbar { display: none; }
-.ask-chips[hidden] { display: none; }
+.ask-chips.fade-r { -webkit-mask-image: linear-gradient(90deg, #000 80%, transparent); mask-image: linear-gradient(90deg, #000 80%, transparent); }
+.ask-chips.fade-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%); mask-image: linear-gradient(90deg, transparent, #000 20%); }
+.ask-chips.fade-l.fade-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); }
+.ask-nav { position: absolute; top: 0.3rem; z-index: 1; width: 30px; height: 30px; border: 0; border-radius: 50%; display: grid; place-items: center;
+  font: 600 1.15rem/1 var(--font-body); color: var(--on-accent); background: var(--grad-rose); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5); cursor: pointer; }
+.ask-nav.prev { left: 0.35rem; } .ask-nav.next { right: 0.35rem; }
+.ask-nav[hidden] { display: none; }
+.ask-nav:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
 .ask-chip { flex: none; font: 500 0.8rem/1 var(--font-body); color: var(--ink); background: transparent; border: 1px solid var(--panel-edge); border-radius: 999px; padding: 0.5rem 0.75rem; cursor: pointer; }
 .ask-chip:hover { border-color: rgba(234, 185, 200, 0.5); }
 .ask-form { display: flex; gap: 8px; padding: 0.5rem 0.9rem 0.4rem; }

@@ -170,7 +170,7 @@ h1, h2, h3, p { margin: 0; }
 .tab[aria-selected="true"] { color: var(--rose); }
 
 /* ── ask Evelyn ── */
-#v-ask .scroll { padding-bottom: 196px; }
+#v-ask .scroll { padding-bottom: 250px; }
 .ask-intro { color: var(--ink-2); font-size: 14px; line-height: 1.4; margin-top: 6px; }
 .ask-thread { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 .am { max-width: 84%; padding: 9px 12px; border-radius: 18px; font-size: 15px; line-height: 1.38; animation: view-in .25s ease both; }
@@ -184,6 +184,14 @@ h1, h2, h3, p { margin: 0; }
   background: rgba(10, 10, 11, .82); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); border-top: .5px solid var(--hair); }
 .ask-sugg { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 8px; }
 .ask-sugg::-webkit-scrollbar { display: none; }
+.ask-sugg-wrap { position: relative; }
+.sugg-nav { position: absolute; top: 0; z-index: 1; width: 28px; height: 28px; border: 0; border-radius: 50%; background: var(--grad); color: #000;
+  font-size: 18px; font-weight: 700; line-height: 1; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(0, 0, 0, .5); }
+.sugg-nav.prev { left: 0; } .sugg-nav.next { right: 0; }
+.sugg-nav[hidden] { display: none; }
+.am-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.am-opts button { border: .5px solid rgba(244, 201, 214, .45); background: none; color: var(--ink); border-radius: 999px; padding: 6px 10px; font-size: 13px; }
+.am-opts button.go { background: var(--grad); color: #000; border-color: transparent; font-weight: 600; }
 .ask-sugg button { flex: none; border: .5px solid rgba(255, 255, 255, .18); background: none; color: var(--ink); border-radius: 999px; padding: 6px 11px; font-size: 13px; }
 .ask-row { display: flex; gap: 8px; }
 .ask-row input { flex: 1; min-width: 0; border: 0; border-radius: 999px; padding: 9px 14px; font: inherit; font-size: 16px; color: var(--ink); background: #1f1f22; }
@@ -732,8 +740,15 @@ h1, h2, h3, p { margin: 0; }
                 </div>
               </div>
               <form class="ask-bar" id="ask-bar">
-                <div class="ask-sugg" id="ask-sugg">
-                  <button type="button">Before my facial</button><button type="button">Cancel or move</button><button type="button">Parking</button><button type="button">Is this reaction normal?</button>
+                <div class="ask-sugg-wrap">
+                  <button type="button" class="sugg-nav prev" aria-label="Scroll topics left" hidden>&lsaquo;</button>
+                  <div class="ask-sugg" id="ask-sugg">
+                    <button type="button" data-o="n:prices">Prices</button><button type="button" data-o="n:before">Before my facial</button>
+                    <button type="button" data-o="n:after">After my facial</button><button type="button" data-o="n:cancel">Cancel or move</button>
+                    <button type="button" data-o="n:member">My membership</button><button type="button" data-o="t:Where do I park?">Parking</button>
+                    <button type="button" data-o="t:Is this reaction normal?">Is this reaction normal?</button>
+                  </div>
+                  <button type="button" class="sugg-nav next" aria-label="Scroll topics right">&rsaquo;</button>
                 </div>
                 <div class="ask-row"><input id="ask-input" type="text" autocomplete="off" placeholder="Ask anything" aria-label="Your question">
                   <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
@@ -1202,6 +1217,57 @@ h1, h2, h3, p { margin: 0; }
   /* ── Ask Evelyn: instant answers, skin questions to Evelyn (the website's js/ask.js, in miniature) ── */
   var thread = $("#ask-thread");
   var askScroll = $("#v-ask .scroll");
+  /* step by step: prices → facials → one facial → book it */
+  var GROUPS = { facials: "Facials", acne: "Acne program", waxing: "Waxing" };
+  var NODES = {
+    prices: ["Prices for which?", [["Facials", "n:g-facials"], ["Acne program", "n:g-acne"], ["Waxing", "n:g-waxing"], ["Your membership", "n:member"]]],
+    before: ["Getting ready. Which part?", [["Retinol and acids", "n:b-ret"], ["Botox or fillers", "n:b-botox"], ["Waxing or shaving", "n:b-wax"], ["A big event", "n:b-event"]]],
+    "b-ret": ["Stop retinol or prescription retinoids 5 to 7 days before, and pause exfoliating acids 2 to 3 days before.", [["Something else", "n:before"]]],
+    "b-botox": ["Wait 2 weeks after Botox or fillers, or book your facial the same day, before your injections.", [["Something else", "n:before"]]],
+    "b-wax": ["Don’t wax or shave your face for 2 days before your facial, or 2 days after.", [["Something else", "n:before"]]],
+    "b-event": ["Skip the day of a big event: makeup isn’t recommended right after. A few days before is ideal.", [["Something else", "n:before"]]],
+    after: ["After your facial. Which part?", [["Makeup", "n:a-makeup"], ["Working out", "n:a-work"], ["Something feels off", "t:Something feels off with my skin after my facial"]]],
+    "a-makeup": ["Skip makeup for the rest of the day so your skin takes in the treatment.", [["Something else", "n:after"]]],
+    "a-work": ["Give it 24 hours: no workouts or heavy sweating.", [["Something else", "n:after"]]],
+    cancel: ["What do you need?", [["Move my visit", "n:c-move"], ["Running late", "n:c-late"], ["A Saturday visit", "n:c-sat"]]],
+    "c-move": ["Move it free up to 48 hours before, right from your next visit on Home. Your deposit moves with you.", [["Something else", "n:cancel"]]],
+    "c-late": ["There’s a 10-minute grace period. Send a text as soon as you know.", [["Something else", "n:cancel"]]],
+    "c-sat": ["Saturdays are in high demand, so they can’t be moved or cancelled.", [["Something else", "n:cancel"]]],
+    member: ["Your Glow membership. What would you like to know?", [["What it covers", "n:m-covers"], ["Banked facials", "n:m-bank"], ["Pausing", "n:m-pause"]]],
+    "m-covers": ["Glow covers one facial a month: the Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment, plus 15% off add-ons and 10% off the shelf.", [["Something else", "n:member"]]],
+    "m-bank": ["You have 1 facial banked. Up to two can bank, and you can gift one to a friend from Me.", [["Something else", "n:member"]]],
+    "m-pause": ["Pause one month a year at no charge, from Me.", [["Something else", "n:member"]]]
+  };
+  var askNode = function (id) {
+    if (id.indexOf("g-") === 0) {
+      var g = id.slice(2);
+      return ["Which one?", SERVICES[g].map(function (sv) { return [sv.name.replace(/^Lumevina /, "") + " · $" + sv.price, "s:" + sv.id]; })];
+    }
+    if (id.indexOf("s-") === 0) return null;
+    return NODES[id] || null;
+  };
+  var svcNode = function (sid) {
+    var sv = byId(sid);
+    var grp = SERVICES.facials.indexOf(sv) > -1 ? "facials" : SERVICES.acne.indexOf(sv) > -1 ? "acne" : "waxing";
+    return [sv.name + " · $" + sv.price + ". " + sv.blurb + (sv.covered ? " Covered by your Glow membership." : ""),
+      [["Book it", "b:" + sv.id], ["Other " + GROUPS[grp].toLowerCase(), "n:g-" + grp], ["All prices", "n:prices"]]];
+  };
+  var optsHtml = function (opts) {
+    return '<div class="am-opts">' + opts.map(function (o) {
+      return '<button type="button" class="' + (o[1].indexOf("b:") === 0 ? "go" : "") + '" data-o="' + escA(o[1]) + '">' + escA(o[0]) + "</button>";
+    }).join("") + "</div>";
+  };
+  var choose = function (label, target) {
+    if (target.indexOf("t:") === 0) return askSend(target.slice(2));
+    if (target.indexOf("b:") === 0) { pop(); openDetail(target.slice(2), 0, null); return; }
+    var out = target.indexOf("s:") === 0 ? svcNode(target.slice(2)) : askNode(target.slice(2));
+    if (!out) return;
+    $$(".am-opts", thread).forEach(function (o) { o.remove(); });
+    bubbleA("you", escA(label.replace(/ · \$\d+$/, "")));
+    setTimeout(function () { bubbleA("bot", escA(out[0]) + optsHtml(out[1])); }, calm ? 0 : 250);
+  };
+  thread.addEventListener("click", function (e) { var b = e.target.closest("[data-o]"); if (b) choose(b.textContent, b.getAttribute("data-o")); });
+
   var ANS = [
     [/before|prep|retinol|botox|filler/i, "Stop retinol 5 to 7 days before, pause exfoliating acids 2 to 3 days before, and don’t wax or shave your face for 2 days."],
     [/after|work ?out|exercise|makeup/i, "Give it 24 hours: skip workouts and heavy sweating, and makeup for the rest of the day."],
@@ -1213,7 +1279,7 @@ h1, h2, h3, p { margin: 0; }
   var SKIN = /skin|rash|react|\bred\b|redness|itch|burn|swell|break ?out|breaking|acne|pimple|pregnan|accutane|retin|normal\?|should i/i;
   var bubbleA = function (cls, html) {
     var d = document.createElement("div"); d.className = "am " + cls; d.innerHTML = html; thread.appendChild(d);
-    askScroll.scrollTo({ top: askScroll.scrollHeight, behavior: calm ? "auto" : "smooth" });
+    requestAnimationFrame(function () { askScroll.scrollTo({ top: askScroll.scrollHeight, behavior: calm ? "auto" : "smooth" }); });
     return d;
   };
   var escA = function (t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; };
@@ -1235,7 +1301,16 @@ h1, h2, h3, p { margin: 0; }
     }, calm ? 0 : 380);
   };
   $("#ask-bar").addEventListener("submit", function (e) { e.preventDefault(); var i = $("#ask-input"); askSend(i.value); i.value = ""; });
-  $("#ask-sugg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) askSend(b.textContent); });
+  var sugg = $("#ask-sugg"), sPrev = $(".sugg-nav.prev"), sNext = $(".sugg-nav.next");
+  sugg.addEventListener("click", function (e) { var b = e.target.closest("[data-o]"); if (b) choose(b.textContent, b.getAttribute("data-o")); });
+  var paintSugg = function () {
+    sPrev.hidden = sugg.scrollLeft <= 2;
+    sNext.hidden = sugg.scrollLeft >= sugg.scrollWidth - sugg.clientWidth - 2;
+  };
+  sPrev.addEventListener("click", function () { sugg.scrollBy({ left: -180, behavior: calm ? "auto" : "smooth" }); });
+  sNext.addEventListener("click", function () { sugg.scrollBy({ left: 180, behavior: calm ? "auto" : "smooth" }); });
+  sugg.addEventListener("scroll", paintSugg, { passive: true });
+  sugg.addEventListener("wheel", function (e) { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { sugg.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
 
   /* ── the "Try this" buttons beside the phone ── */
   $$("[data-try]").forEach(function (b) {

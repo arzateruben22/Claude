@@ -591,6 +591,7 @@
 
   <div class="tip" id="tip"></div>
 
+  <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
   <script>
   (function () {
@@ -963,6 +964,22 @@
       }).join("") + '</ul>';
     })();
 
+    /* ── Saving files: downloads on the live site; inside a claude.ai preview
+       the viewer is asked first (js/save-file.js). The button says how it went. ── */
+    var saveFile = function (btn, name, data, mime) {
+      var label = btn.getAttribute("data-label") || btn.textContent;
+      btn.setAttribute("data-label", label);
+      var show = function (t) {
+        btn.textContent = t;
+        clearTimeout(btn._saveT);
+        btn._saveT = setTimeout(function () { btn.textContent = label; }, 3200);
+      };
+      window.LumevinaSave.file(name, data, mime).then(function () { show("Saved ✓"); }, function (err) {
+        if (err && err.message) show(err.message.length > 34 ? "Can’t save here" : err.message);
+        if (err && err.message) btn.title = err.message;
+      });
+    };
+
     /* ── Shared: members, dues and the retail/giveaway log ──
        Used by Bookkeeping (income, costs, profit) and the Glow Membership card
        (launch ledger). Real records when there are any, else a small sample. */
@@ -1209,11 +1226,7 @@
           return [e.date, q(LABEL[e.kind]), q(e.who), q(e.what), e.gross.toFixed(2), e.fee.toFixed(2),
             e.cost.toFixed(2), e.net.toFixed(2)].join(",");
         })).join("\r\n");
-        var blob = new Blob([csv], { type: "text/csv" });
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "lumevina-books-" + new Date().toISOString().slice(0, 10) + ".csv";
-        document.body.appendChild(a); a.click(); a.remove();
+        saveFile(this, "lumevina-books-" + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
       });
     })();
 
@@ -1413,11 +1426,7 @@
             num(c.amount).toFixed(2), num(c.balance).toFixed(2), statusLabel(c),
             (c.purchasedAt || "").slice(0, 10)].join(",");
         })).join("\r\n");
-        var blob = new Blob([csv], { type: "text/csv" });
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "lumevina-giftcards-" + new Date().toISOString().slice(0, 10) + ".csv";
-        document.body.appendChild(a); a.click(); a.remove();
+        saveFile(this, "lumevina-giftcards-" + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
       });
     })();
 
@@ -1704,6 +1713,11 @@
         'the live version publishes a private feed URL you subscribe to in Google or Apple Calendar — ' +
         'new bookings then appear automatically.';
       document.getElementById("cal-ics").addEventListener("click", function () {
+        if (!window.LumevinaSave.canSave("ics")) {
+          note.innerHTML = '<strong>Calendar files can&rsquo;t be saved inside this preview.</strong> On the live site this button ' +
+            'downloads your appointments, and the private feed URL keeps Google or Apple Calendar updated on its own.';
+          return;
+        }
         var src = bookings.length ? bookings : [];
         if (!src.length) {
           /* sample from CRM clients so the export isn't empty in preview */
@@ -1722,11 +1736,7 @@
             "LOCATION:Lumevina Aesthetics Spa", "END:VEVENT");
         });
         lines.push("END:VCALENDAR");
-        var blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "lumevina-appointments.ics";
-        document.body.appendChild(a); a.click(); a.remove();
+        saveFile(this, "lumevina-appointments.ics", lines.join("\r\n"), "text/calendar");
       });
     })();
 

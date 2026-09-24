@@ -93,11 +93,11 @@
       return "Hi! I can help with prices, booking, prep, aftercare and memberships, any time. Anything about your own skin goes straight to Evelyn."; } },
     { id: "thanks", k: /thank|appreciate/, a: function () { return "Anytime! Anything else I can help with?"; } },
     { id: "human", k: /real person|\bhuman\b|talk to (someone|a person|evelyn|you)|speak (to|with)|(message|ask|contact|text) evelyn/, handoff: "request" },
-    { id: "new", k: /first time|new client|first visit|never been|haven'?t been/, a: function () {
+    { id: "new", node: "p-facials", k: /first time|new client|first visit|never been|haven'?t been/, a: function () {
       return "Welcome! Start with the New Client Consultation + Treatment, " + price("New Client Consultation + Treatment", 215) +
         ": Evelyn looks at your skin and your routine, then gives you a fully custom facial. On the acne program it’s " +
         price("New Client Consultation + Treatment (Acne Program)", 225) + "."; }, acts: [["Book it", "book"]] },
-    { id: "book", k: /\bbook|appointment|availab|opening|\bslots?\b|schedule (a|an|my)/, a: function () {
+    { id: "book", node: "book", k: /\bbook|appointment|availab|opening|\bslots?\b|schedule (a|an|my)/, a: function () {
       return "You can book any time online: pick your treatment and time, and a deposit holds it. Evelyn works Tuesday to Saturday, 8 AM to 6 PM."; },
       acts: [["Book now", "book"]] },
     { id: "hours", k: /hours|what time|when (are|do) you|open (on|today|tomorrow)|closed|sunday|monday|weekend/, a: function () {
@@ -105,27 +105,27 @@
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
       return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },
-    { id: "gift", k: /gift|certificate|present for/, a: function () {
+    { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
       return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + price("Gift Card · Any treatment ($110 value)", 110) + " card for anything."; },
       acts: [["Send a gift", "#gift"]] },
-    { id: "cancel", k: /cancel|reschedul|move my|change my (appointment|booking|time)|running late|\blate\b|no.?show/, a: function () {
+    { id: "cancel", node: "cancel", k: /cancel|reschedul|move my|change my (appointment|booking|time)|running late|\blate\b|no.?show/, a: function () {
       return "Cancel or reschedule at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you (same month). Same-day changes keep the deposit and add a $43 fee. Saturdays can’t be moved. There’s a 10-minute grace period if you’re running late."; },
       acts: [["Move an appointment", "move"], ["All policies", "#policies"]] },
-    { id: "deposit", k: /deposit|refund/, a: function () {
+    { id: "deposit", node: "cancel", k: /deposit|refund/, a: function () {
       return "Every booking takes a non-refundable deposit that goes toward your total. With 48 hours’ notice it moves to a new date in the same month. Services themselves are non-refundable, but if anything comes up after your visit, reach out within 24 hours."; } },
     { id: "pay", k: /\bpay\b|payment|cash|credit card|\bcard\b|venmo|zelle|apple pay/, a: function () {
       return "Cash is preferred at your visit; cards are accepted with a small fee. The deposit is paid online when you book."; } },
-    { id: "prices", k: /price|cost|how much|menu|rates?\b|\$/, a: function () {
+    { id: "prices", node: "prices", k: /price|cost|how much|menu|rates?\b|\$/, a: function () {
       return "The Lumevina Custom Facial is " + price("Lumevina Custom Facial", 195) + ", with dermaplaning " + price("Lumevina Custom Facial + Dermaplaning", 185) +
         ", the Ageless Grace " + price("Ageless Grace Facial", 245) + " and the Monthly Acne Treatment " + price("Monthly Acne Treatment", 195) +
         ". New clients start at " + price("New Client Consultation + Treatment", 215) + ". Waxing starts at " + price("Upper Lip Wax", 9) + "; a Brazilian is " + price("Brazilian Wax", 80) + "."; },
       acts: [["See the menu", "#services"], ["Book", "book"]] },
-    { id: "before", k: /before (my|the|a) (facial|appointment|visit|treatment)|prep|prepare|stop (using|taking)|botox|filler|shave|shaving|makeup (to|before)/, a: function () {
+    { id: "before", node: "before", k: /before (my|the|a) (facial|appointment|visit|treatment)|prep|prepare|stop (using|taking)|botox|filler|shave|shaving|makeup (to|before)/, a: function () {
       return "Before your facial: stop retinol or prescription retinoids 5 to 7 days ahead, pause exfoliating acids 2 to 3 days ahead, and don’t wax or shave your face for 2 days. After Botox or fillers, wait 2 weeks (or book the facial the same day, before injections). Skip booking on the day of a big event."; },
       acts: [["All prep notes", "#policies"]] },
-    { id: "after", k: /after (my|the|a) (facial|appointment|visit|treatment)|aftercare|work ?out|exercise|gym|sweat|makeup after/, a: function () {
+    { id: "after", node: "after", k: /after (my|the|a) (facial|appointment|visit|treatment)|aftercare|work ?out|exercise|gym|sweat|makeup after/, a: function () {
       return "After your facial: skip makeup for the rest of the day, avoid workouts and heavy sweating for 24 hours (a week after a body peel), and don’t wax or shave your face for 2 days. If anything feels off, message within 24 hours."; } },
-    { id: "member", k: /member|monthly plan|subscri|\bglow plan|join/, a: function () {
+    { id: "member", node: "member", k: /member|monthly plan|subscri|\bglow plan|join/, a: function () {
       return "Two plans. Glow, $159 a month: a Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment every month. Ageless, $209: everything in Glow plus the Ageless Grace Facial and a finishing add-on every other visit. Bank a facial you can’t use, pause once a year, save on the shelf, and ask Evelyn anything with a reply within 24 hours."; },
       acts: [["See memberships", "#membership"]] },
     { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|glow routine/, a: function () {
@@ -162,6 +162,100 @@
     other: "Hi {name}, thanks for your question! — Evelyn"
   };
 
+  /* ── step-by-step menus: prices → facials → one facial → book it ── */
+  var findService = function (name) {
+    var els = document.querySelectorAll('[data-name="' + name + '"][data-price]'), best = null, desc = "";
+    for (var i = 0; i < els.length; i++) {
+      var card = els[i].closest(".product-card, .wax-row, li, article");
+      var d = card && card.querySelector(".product-desc, .wax-desc");
+      if (!best) best = els[i];
+      if (d && d.textContent.trim()) { best = els[i]; desc = d.textContent.trim(); break; }
+    }
+    return best ? { id: best.getAttribute("data-id"), price: best.getAttribute("data-price"), desc: desc } : null;
+  };
+  var SHORT = { "Lumevina Custom Facial": "Custom Facial", "Lumevina Custom Facial + Dermaplaning": "Custom + Dermaplaning",
+    "New Client Consultation + Treatment": "New client facial", "New Client Consultation + Treatment (Acne Program)": "New acne client",
+    "BioRePeel - 1 Facial Treatment": "BioRePeel", "BioRePeel - 3 Facial Treatments": "BioRePeel · 3 treatments",
+    "Back Facial - Half": "Half back", "Back Facial - Full": "Full back", "Wax Wednesday (Brazilian)": "Wax Wednesday Brazilian",
+    "Brazilian Wax x Mini Vajacial Package": "Brazilian + mini vajacial", "Full Face Wax + Cooling Mask": "Full face + cooling mask",
+    "In-Person Consultation": "In person", "Virtual Consultation": "Virtual" };
+  var short = function (n) { return SHORT[n] || n.replace(/ Wax$/, ""); };
+  var GROUPS = {
+    "p-facials": { label: "Facials", ask: "Which facial?", items: ["Lumevina Custom Facial", "Lumevina Custom Facial + Dermaplaning", "Ageless Grace Facial",
+      "New Client Consultation + Treatment", "Couples Facial"] },
+    "p-peels": { label: "Peels", ask: "Which peel?", items: ["Light Chemical Peel", "Medium Chemical Peel", "BioRePeel - 1 Facial Treatment", "BioRePeel - 3 Facial Treatments"] },
+    "p-acne": { label: "Acne program", ask: "Where are you in the acne program?", items: ["New Client Consultation + Treatment (Acne Program)",
+      "Monthly Acne Treatment", "Bi-Weekly Acne Treatment"] },
+    "p-back": { label: "Back facials", ask: "Half or full back?", items: ["Back Facial - Half", "Back Facial - Full"] },
+    "p-wax-face": { label: "Face", ask: "Which area of the face?", items: ["Upper Lip Wax", "Brow Wax + Tweeze", "Nose Wax", "Nostril Wax", "Sideburn Wax",
+      "Hairline Wax", "Full Face Wax", "Full Face Wax + Cooling Mask"] },
+    "p-wax-body": { label: "Body", ask: "Which area?", items: ["Underarm Wax", "Half Arm Wax", "Full Arm Wax", "Half Leg Wax", "Full Leg Wax",
+      "Half Back Wax", "Full Back Wax", "Stomach Strip Wax", "Full Stomach Wax", "Full Butt Wax"] },
+    "p-wax-bikini": { label: "Bikini & Brazilian", ask: "Which one?", items: ["Bikini Line Wax", "Extended Bikini Line", "Brazilian Wax", "First Time Brazilian",
+      "Wax Wednesday (Brazilian)", "Brazilian Wax x Mini Vajacial Package", "Inner Thigh Add-On"] },
+    "p-consult": { label: "Consultations", ask: "In person or by video?", items: ["In-Person Consultation", "Virtual Consultation"] }
+  };
+  var groupOf = function (name) { for (var g in GROUPS) if (GROUPS[g].items.indexOf(name) !== -1) return g; return null; };
+  var serviceAnswer = function (name) {
+    var sv = findService(name);
+    if (!sv) return { text: "I couldn’t find that one on the menu. Want me to ask Evelyn?", acts: [["Ask Evelyn", "skin"]] };
+    var LM = window.LumevinaMembership, glow = LM && LM.plan("glow"), covered = glow && glow.covers.indexOf(sv.id) !== -1;
+    var text = short(name) + " · $" + sv.price + "." + (sv.desc ? " " + sv.desc : "") +
+      (covered ? " Or $" + glow.price + " a month with the Glow membership, a facial every month." : "");
+    var g = groupOf(name);
+    return { text: text, acts: [["Book this", "book:" + sv.id]].concat(g ? [["Other " + GROUPS[g].label.toLowerCase(), "n:" + g]] : [], [["All prices", "n:prices"]]) };
+  };
+  var info = function (text, acts) { return { say: text, opts: acts || [] }; };
+  var NODES = {
+    prices: info("Prices for which?", [["Facials", "n:p-facials"], ["Peels", "n:p-peels"], ["Acne program", "n:p-acne"], ["Back facials", "n:p-back"],
+      ["Waxing", "n:p-wax"], ["Consultations", "n:p-consult"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"]]),
+    "p-wax": info("Which area?", [["Face", "n:p-wax-face"], ["Body", "n:p-wax-body"], ["Bikini & Brazilian", "n:p-wax-bikini"]]),
+    book: info("What would you like to book? Pick one and I’ll open the times.", [["Facials", "n:p-facials"], ["Peels", "n:p-peels"], ["Acne program", "n:p-acne"],
+      ["Back facials", "n:p-back"], ["Waxing", "n:p-wax"], ["Consultations", "n:p-consult"], ["Just show me times", "book"]]),
+    cancel: info("What do you need?", [["Move my appointment", "n:c-move"], ["Cancel", "n:c-cancel"], ["A same-day change", "n:c-same"],
+      ["Running late", "n:c-late"], ["A Saturday booking", "n:c-sat"], ["My deposit", "n:c-dep"]]),
+    "c-move": info("Move it at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you to a new date in the same month.", [["Move an appointment", "move"], ["Something else", "n:cancel"]]),
+    "c-cancel": info("Cancel at least 48 hours ahead with the link in your confirmation email. The deposit can move to a new date in the same month; services themselves are non-refundable.", [["Move instead", "move"], ["Something else", "n:cancel"]]),
+    "c-same": info("A same-day change counts as a late cancel: the deposit is kept, a $43 fee goes to the card on file, and rebooking takes a new deposit.", [["Something else", "n:cancel"]]),
+    "c-late": info("There’s a 10-minute grace period. After that the appointment may be cancelled and the deposit lost, unless there’s still time to fit you in. Send a text as soon as you know.", [["Something else", "n:cancel"]]),
+    "c-sat": info("Saturdays are in high demand, so they can’t be moved or cancelled. Moving one takes a new deposit, and cancelling forfeits the deposit plus a fee. Only book a Saturday if you’re sure.", [["Something else", "n:cancel"]]),
+    "c-dep": info("Every booking takes a non-refundable deposit that goes toward your total. With 48 hours’ notice it moves to a new date in the same month.", [["Something else", "n:cancel"]]),
+    before: info("Getting ready for your facial. Which part?", [["Retinol and acids", "n:b-ret"], ["Botox or fillers", "n:b-botox"], ["Waxing or shaving", "n:b-wax"],
+      ["Permanent makeup", "n:b-pmu"], ["Accutane, laser or surgery", "n:b-med"], ["A big event", "n:b-event"], ["Sunburn or a cold sore", "n:b-sun"]]),
+    "b-ret": info("Stop retinol or prescription retinoids 5 to 7 days before, and pause exfoliants (salicylic, benzoyl peroxide, glycolic and other acids) 2 to 3 days before.", [["Something else", "n:before"]]),
+    "b-botox": info("Wait 2 weeks after Botox or fillers, or book your facial the same day, before your injections.", [["Something else", "n:before"]]),
+    "b-wax": info("Don’t wax or shave your face for 2 days before your facial, or for 2 days after.", [["Something else", "n:before"]]),
+    "b-pmu": info("After permanent makeup, wait 2 weeks before a facial. A facial is fine up to 1 week before your PMU appointment.", [["Something else", "n:before"]]),
+    "b-med": info("After Accutane, recent laser, cosmetic surgery, radiation or chemotherapy, wait 6 to 12 months or bring your doctor’s clearance. Evelyn can look at your situation herself.", [["Ask Evelyn about mine", "skin"], ["Something else", "n:before"]]),
+    "b-event": info("Don’t book your facial the same day as a big event: makeup isn’t recommended right after. A few days before is ideal.", [["Book", "n:book"], ["Something else", "n:before"]]),
+    "b-sun": info("Sunburn, windburn, an open wound or an active cold sore means your skin needs to heal first. Let Evelyn know as soon as possible so you can move your appointment.", [["Move an appointment", "move"], ["Ask Evelyn", "skin"]]),
+    after: info("After your facial. Which part?", [["Makeup", "n:a-makeup"], ["Working out", "n:a-work"], ["Waxing or shaving", "n:a-wax"], ["Something feels off", "skin"]]),
+    "a-makeup": info("Skip makeup for the rest of the day so your skin can take in everything from the treatment.", [["Something else", "n:after"]]),
+    "a-work": info("Give it 24 hours: no workouts or heavy sweating. After a body peel, give it a week.", [["Something else", "n:after"]]),
+    "a-wax": info("No waxing or shaving your face for 2 days after your facial.", [["Something else", "n:after"]]),
+    member: info("Two plans. What would you like to know?", [["Glow · $159", "n:m-glow"], ["Ageless · $209", "n:m-ageless"], ["Banking a facial", "n:m-bank"],
+      ["Pausing or cancelling", "n:m-pause"], ["Ask Evelyn any time", "n:m-ask"], ["Join", "#membership"]]),
+    "m-glow": info("Glow, $159 a month: one facial every month (the Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment), 10% off the shelf, 15% off add-ons, a home routine from Evelyn, and first word on flash openings.", [["Join", "#membership"], ["Compare Ageless", "n:m-ageless"]]),
+    "m-ageless": info("Ageless, $209 a month: everything in Glow, plus the Ageless Grace Facial any month, a finishing add-on every other visit, and 15% off the shelf.", [["Join", "#membership"], ["Compare Glow", "n:m-glow"]]),
+    "m-bank": info("Busy month? Your facial waits. Up to two bank at a time, and you can send a banked facial to a friend as a gift.", [["Something else", "n:member"]]),
+    "m-pause": info("Pause one month a year at no charge. After the 3-month minimum, cancel online any time from My Lumevina.", [["Something else", "n:member"]]),
+    "m-ask": info("Members can ask Evelyn anything, any time. Everyday questions are answered right here, and anything about your skin gets her own reply within 24 hours.", [["Join", "#membership"], ["Something else", "n:member"]]),
+    gift: info("Gift certificates never expire. Which kind?", [["A specific treatment", "n:g-one"], ["Any treatment · $110", "n:g-any"], ["Using one", "n:g-use"]]),
+    "g-one": info("Pick the treatment and send it: the certificate covers that facial or service in full.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
+    "g-any": info("A $110 certificate goes toward any treatment, and never expires.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
+    "g-use": info("Enter the code in My Lumevina or at checkout, and it applies to any treatment.", [["Book", "n:book"], ["Something else", "n:gift"]])
+  };
+  for (var gid in GROUPS) (function (gid) {
+    NODES[gid] = { say: GROUPS[gid].ask, opts: function () {
+      return GROUPS[gid].items.map(function (n) { var sv = findService(n); return [short(n) + (sv ? " · $" + sv.price : ""), "s:" + n]; });
+    } };
+  })(gid);
+  var node = function (id) {
+    var n = NODES[id];
+    if (!n) return null;
+    return { text: typeof n.say === "function" ? n.say() : n.say, acts: typeof n.opts === "function" ? n.opts() : n.opts };
+  };
+
   var classify = function (text) {
     var t = text.toLowerCase();
     if (URGENT.test(t)) return { handoff: "urgent" };
@@ -171,7 +265,7 @@
     for (var n = 0; n < KB.length; n++) {
       if (!KB[n].k.test(t)) continue;
       if (KB[n].handoff) return { handoff: KB[n].handoff };
-      return { answer: KB[n].a(), acts: KB[n].acts || [] };
+      return { answer: KB[n].a(), acts: KB[n].acts || [], node: KB[n].node };
     }
     for (var m = 0; m < TOPICS.length; m++) if (TOPICS[m].k.test(t)) return { answer: TOPICS[m].a(), acts: [["Book", "book"]] };
     return { handoff: "other", unsure: true };
@@ -209,7 +303,9 @@
     '<p class="ask-sub">Instant answers, any time. Anything about your skin goes to Evelyn.</p></div>' +
     '<button type="button" class="ask-x" aria-label="Close">&times;</button></header>' +
     '<div class="ask-log" aria-live="polite"></div>' +
+    '<div class="ask-chips-wrap"><button type="button" class="ask-nav prev" aria-label="Scroll topics left" hidden>&lsaquo;</button>' +
     '<div class="ask-chips" role="group" aria-label="Common questions"></div>' +
+    '<button type="button" class="ask-nav next" aria-label="Scroll topics right" hidden>&rsaquo;</button></div>' +
     '<form class="ask-form"><label class="sr-only" for="ask-in">Your question</label>' +
     '<input id="ask-in" type="text" autocomplete="off" placeholder="Ask about prices, prep, your skin…" maxlength="600">' +
     '<button type="submit" class="ask-send" aria-label="Send">' +
@@ -223,7 +319,9 @@
   var chipsEl = panel.querySelector(".ask-chips");
   var form = panel.querySelector(".ask-form");
   var input = panel.querySelector("#ask-in");
-  var CHIPS = ["Prices", "Before my facial", "After my facial", "Cancel or reschedule", "Parking", "Memberships", "A question about my skin"];
+  var CHIPS = [["Prices", "n:prices"], ["Book", "n:book"], ["Before my facial", "n:before"], ["After my facial", "n:after"],
+    ["Cancel or reschedule", "n:cancel"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"], ["Parking", "t:Where do I park?"],
+    ["A question about my skin", "skin"]];
 
   var state = chat();
   var save = function () { write(CHAT_KEY, state); };
@@ -244,10 +342,15 @@
     logEl.appendChild(d);
     return d;
   };
-  var actsHtml = function (acts) {
-    if (!acts || !acts.length) return "";
+  /* menu steps (n:, s:, t:, skin) only on the newest answer; actions (book, move, #…) stay */
+  var isStep = function (t) { return /^(n:|s:|t:|skin$)/.test(t); };
+  var actsHtml = function (acts, last) {
+    acts = (acts || []).filter(function (a) { return last || !isStep(a[1]); });
+    if (!acts.length) return "";
     return '<div class="ask-acts">' + acts.map(function (a) {
-      return '<button type="button" class="ask-act" data-act="' + esc(a[1]) + '">' + esc(a[0]) + '</button>';
+      var primary = /^book/.test(a[1]) && a[0] !== "Just show me times";
+      return '<button type="button" class="ask-act' + (isStep(a[1]) ? " is-step" : "") + (primary ? " is-primary" : "") +
+        '" data-act="' + esc(a[1]) + '">' + esc(a[0]) + '</button>';
     }).join("") + '</div>';
   };
 
@@ -257,9 +360,12 @@
     bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! Ask me about prices, booking, prep, aftercare or memberships. Anything about your own skin, I’ll pass to Evelyn."));
     var answered = {};
     replies().forEach(function (q) { answered[q.id] = q; });
-    state.log.forEach(function (m) {
+    var lastBot = -1;
+    state.log.forEach(function (m, i) { if (m.who === "bot") lastBot = i; });
+    if (lastBot >= 0 && state.log.slice(lastBot + 1).some(function (m) { return m.who === "you"; })) lastBot = -1;
+    state.log.forEach(function (m, i) {
       if (m.who === "you") bubble("you", esc(m.text));
-      else if (m.who === "bot") bubble("bot", esc(m.text) + actsHtml(m.acts), m.warn ? "warn" : "");
+      else if (m.who === "bot") bubble("bot", esc(m.text) + actsHtml(m.acts, i === lastBot && !state.pending), m.warn ? "warn" : "");
       else if (m.who === "sent") {
         bubble("bot", '<span class="ask-tag">Sent to Evelyn</span>' + esc(m.text));
         var q = answered[m.qid];
@@ -279,8 +385,10 @@
         '<button type="button" class="ask-act" data-act="nevermind">Not now</button></div><p class="ask-err" role="alert"></p>';
       box.appendChild(f);
     }
-    chipsEl.hidden = state.log.length > 0 && !!pending;
-    chipsEl.innerHTML = CHIPS.map(function (c) { return '<button type="button" class="ask-chip">' + esc(c) + "</button>"; }).join("");
+    chipsEl.parentNode.hidden = state.log.length > 0 && !!pending;
+    chipsEl.innerHTML = CHIPS.map(function (c) { return '<button type="button" class="ask-chip" data-go="' + esc(c[1]) + '">' + esc(c[0]) + "</button>"; }).join("");
+    chipsEl.scrollLeft = 0;
+    setTimeout(paintNav, 0);
     replies().forEach(function (q) { state.seen[q.id] = true; });
     save();
     paintFab();
@@ -309,9 +417,14 @@
     if (!text) return;
     push({ who: "you", text: text });
     var r = classify(text);
-    if (r.answer) {
+    if (r.answer && r.node && text.split(/\s+/).length <= 4) {
+      /* a bare topic like "prices" or "cancel": walk them through it */
+      var nd = node(r.node);
       state.pending = null;
-      push({ who: "bot", text: r.answer, acts: r.acts });
+      push({ who: "bot", text: nd.text, acts: nd.acts });
+    } else if (r.answer) {
+      state.pending = null;
+      push({ who: "bot", text: r.answer, acts: (r.acts || []).concat(r.node ? [["More on this", "n:" + r.node]] : []) });
     } else {
       var who = me();
       state.pending = { text: text, kind: r.handoff, lead: LEADS[r.handoff] || LEADS.other, member: !!(who && who.member) };
@@ -368,20 +481,60 @@
   panel.querySelector(".ask-x").addEventListener("click", close);
   panel.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
   form.addEventListener("submit", function (e) { e.preventDefault(); var t = input.value; input.value = ""; ask(t); });
-  chipsEl.addEventListener("click", function (e) {
-    var c = e.target.closest(".ask-chip");
-    if (!c) return;
-    if (c.textContent === "A question about my skin") {
+  /* one step of a menu: show what they picked, then the next step */
+  var go = function (label, target) {
+    if (target === "skin") {
       input.value = "About my skin: ";
       input.focus();
       return;
     }
-    ask(c.textContent);
+    if (target.indexOf("t:") === 0) return ask(target.slice(2));
+    var out = target.indexOf("n:") === 0 ? node(target.slice(2)) : target.indexOf("s:") === 0 ? serviceAnswer(target.slice(2)) : null;
+    if (!out) return;
+    state.pending = null;
+    push({ who: "you", text: label.replace(/ · \$\d+$/, "") });
+    push({ who: "bot", text: out.text, acts: out.acts });
+    render();
+  };
+  chipsEl.addEventListener("click", function (e) {
+    var c = e.target.closest(".ask-chip");
+    if (c) go(c.textContent, c.getAttribute("data-go"));
   });
+
+  /* the topic row slides: arrows on either side, the mouse wheel, or a drag */
+  var prevBtn = panel.querySelector(".ask-nav.prev"), nextBtn = panel.querySelector(".ask-nav.next");
+  var paintNav = function () {
+    var max = chipsEl.scrollWidth - chipsEl.clientWidth;
+    prevBtn.hidden = chipsEl.scrollLeft <= 2;
+    nextBtn.hidden = chipsEl.scrollLeft >= max - 2;
+    chipsEl.classList.toggle("fade-l", !prevBtn.hidden);
+    chipsEl.classList.toggle("fade-r", !nextBtn.hidden);
+  };
+  var slide = function (dir) { chipsEl.scrollBy({ left: dir * chipsEl.clientWidth * 0.7, behavior: calm ? "auto" : "smooth" }); };
+  prevBtn.addEventListener("click", function () { slide(-1); });
+  nextBtn.addEventListener("click", function () { slide(1); });
+  chipsEl.addEventListener("scroll", paintNav, { passive: true });
+  window.addEventListener("resize", paintNav);
+  chipsEl.addEventListener("wheel", function (e) {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && chipsEl.scrollWidth > chipsEl.clientWidth) { chipsEl.scrollLeft += e.deltaY; e.preventDefault(); }
+  }, { passive: false });
+  var drag = null;
+  chipsEl.addEventListener("pointerdown", function (e) { if (e.pointerType === "mouse") drag = { x: e.clientX, left: chipsEl.scrollLeft, moved: false }; });
+  window.addEventListener("pointermove", function (e) {
+    if (!drag) return;
+    var dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 4) drag.moved = true;
+    chipsEl.scrollLeft = drag.left - dx;
+  });
+  window.addEventListener("pointerup", function () { setTimeout(function () { drag = null; }, 0); });
+  chipsEl.addEventListener("click", function (e) { if (drag && drag.moved) { e.stopImmediatePropagation(); e.preventDefault(); } }, true);
+
   logEl.addEventListener("click", function (e) {
     var b = e.target.closest("[data-act]");
     if (!b) return;
     var act = b.getAttribute("data-act");
+    if (isStep(act)) return go(b.textContent, act);
+    if (act.indexOf("book:") === 0) { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(act.slice(5)); return; }
     if (act === "send") return send();
     if (act === "nevermind") { state.pending = null; push({ who: "bot", text: "No problem. Anything else?" }); return render(); }
     if (act === "book") { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(); return; }

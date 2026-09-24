@@ -29,6 +29,9 @@ MEMX = {"low": 340, "likely": 860, "high": 1290}       # membership keeps buildi
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
 COLL = {"low": 900, "likely": 3800, "high": 7700}      # 6–8 artists, net: flat suite rent + crossover − space − perks (incl. members' 10%)
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
+# One person's ceiling: fully booked, six treatments a day, five days a week, every week.
+CEIL_DAY, CEIL_DAYS, CEIL_AVG = 6, 5, 185
+CEIL_YEAR = CEIL_DAY * CEIL_DAYS * 52 * CEIL_AVG                                 # $288,600
 LAUNCH = 160                                             # Founding Five, once, in the launch month: 5 kits (cleanser + SPF) at cost, $350 retail
 
 
@@ -101,7 +104,7 @@ FLOW = [
     ("A client books a lash fill", "in the Lumevina app."),
     ("The artist is paid directly.", "They run their own business."),
     ("Lumevina earns its share.", "A 12% app fee in the pilot. Flat suite rent in the house."),
-    ("Glow points bring the client", "to Evelyn for a facial."),
+    ("Glow Points work across the house:", "a facial with Evelyn, or the artist’s own services."),
 ]
 
 BUILT = [
@@ -230,7 +233,7 @@ OFFERS = [
     {"tag": "The pilot · Step 2", "big": "Free for 90 days", "sub": "Then 12% on bookings made through Lumevina. They keep working where they are.",
      "inc": ["Their own name, prices, hours and clients", "Deposits that stop no-shows",
              "Lumevina members get 10% off with them, and Lumevina pays it",
-             "Their clients earn Glow Points they can spend with Evelyn"],
+             "Their clients earn Glow Points to spend with them or with Evelyn"],
      "ask": "In return: honor Glow Points, give members first look at openings, send facial clients to Evelyn."},
     {"tag": "The house · Step 3", "big": "$250 a week", "sub": "Flat suite rent, no commission. Founding rate $210 a week, locked for 12 months, for the first three.",
      "inc": ["A private suite with their name on the door", "The app, Glow Rewards and marketing included",
@@ -614,6 +617,7 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .center .lead { margin-left: auto; margin-right: auto; }
 .ceiling { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
 .bigstat { font-size: clamp(5rem, 14vw, 10rem); font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
+.ceil-math { margin-top: 12px; color: var(--text-3); font-size: 0.9rem; letter-spacing: -0.005em; }
 .meter { margin-top: 26px; }
 .meter .track { position: relative; height: 14px; border-radius: 999px; background: var(--card-2); overflow: hidden; }
 .meter .fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 999px; background: var(--grad); transition: width 2.2s cubic-bezier(.2,.8,.2,1); }
@@ -769,6 +773,7 @@ body { font-size: 10.5pt; }
 .stat .k { font-size: 8.5pt; color: var(--text-2); margin-top: 2px; }
 .ceil { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; }
 .ceil .bigstat { font-size: 64pt; font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
+.ceil .ceil-math { font-size: 8pt; margin-top: 2px; }
 .phones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .phones figure { margin: 0; }
 .phones figcaption { text-align: center; font-size: 8.5pt; color: var(--text-2); margin-top: 10px; }
@@ -1215,8 +1220,9 @@ WEB = """<!DOCTYPE html>
       <p class="lead" style="font-size:1.2rem;margin-top:20px">Every dollar today needs Evelyn in the treatment room. More hours isn&rsquo;t a plan.</p>
     </div>
     <div class="reveal">
-      <div class="bigstat grad num">$240k</div>
-      <p class="lead" style="margin-top:14px">The most one person can earn in a year: five treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes.</p>
+      <div class="bigstat grad num">__CEIL_K__</div>
+      <p class="lead" style="margin-top:14px">The most one person can earn in a year: six treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes.</p>
+      <p class="ceil-math num">__CEIL_MATH__</p>
       <div class="meter"><div class="track"><div class="fill"></div></div>
         <div class="lab"><span>Chair time used</span><b>100% · the ceiling</b></div></div>
     </div>
@@ -1508,8 +1514,9 @@ PRINT = """<!DOCTYPE html>
     <h2 class="h2" style="margin-top:10px">Your income stops <span class="dim">when your hands stop.</span></h2>
   </div>
   <div class="ceil">
-    <div class="bigstat grad num">$240k</div>
-    <p class="lead">The most one person can earn in a year: five treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes. More hours isn&rsquo;t a plan.</p>
+    <div class="bigstat grad num">__CEIL_K__</div>
+    <p class="lead">The most one person can earn in a year: six treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes.</p>
+    <p class="ceil-math num">__CEIL_MATH__</p>
   </div>
   <div>
     <p class="kicker">The plan</p>
@@ -1655,7 +1662,10 @@ pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 11) for k, d in enumer
 pr = pr.replace("__STEPSJS__", STEPS_JS)
 
 fill = lambda h: (h.replace("__Y_LOW__", str(YEAR["low"])).replace("__Y_LIKELY__", str(YEAR["likely"]))
-                  .replace("__Y_HIGH__", str(YEAR["high"])))
+                  .replace("__Y_HIGH__", str(YEAR["high"]))
+                  .replace("__CEIL_K__", "$%dk" % round(CEIL_YEAR / 1000.0))
+                  .replace("__CEIL_MATH__", "%d a day × %d days × 52 weeks = %s treatments × $%d = %s"
+                           % (CEIL_DAY, CEIL_DAYS, "{:,}".format(CEIL_DAY * CEIL_DAYS * 52), CEIL_AVG, "${:,}".format(CEIL_YEAR))))
 web, pr = fill(web), fill(pr)
 for name, html in (("web.html", web), ("print.html", pr)):
     html = html.encode("ascii", "xmlcharrefreplace").decode("ascii")
