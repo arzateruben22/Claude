@@ -1,13 +1,14 @@
 """Lumevina · The First 90 Days — a companion to the Growth Blueprint.
 
-How many members Lumevina needs by day 90 for dues to pay every business bill, the
-weekly pace to get there, how the talent search runs alongside it, and the
-two engines that keep going after day 90.
+The road to a spa that pays for itself: the milestones, the thirteen weeks to
+get there, where new clients come from, the talent search alongside it, and
+what comes after day 90. The math behind every number sits in an appendix
+(print) and a "Play with it" section of calculators (web).
 
 Builds two files from one set of content, in the Growth Blueprint's design
 (its CSS is read straight from ../blueprint/build.py, so the two never drift):
   web.html   — scrolling page with a live calculator
-  print.html — five Letter pages, printed to PDF
+  print.html — ten Letter pages (five of plan, five of appendix), printed to PDF
 
 Run:  python3 build.py OUTDIR
 """
@@ -85,20 +86,20 @@ PACE = [("Week 1", "Count what’s there: facial clients from the last six month
         ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
         ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
         ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 12),
-        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend; both get a free add-on.", PLAN)]
+        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend for 150 Glow Points.", PLAN)]
 
 SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
-           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 7),
+           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 6),
            ("Win-back texts", "Clients not seen in 60+ days", 3),
-           ("Member referrals", "Both get a free add-on", 2),
-           ("Website and checkout", "Facial cards, the nudge, the booking upsell", 1)]
+           ("New clients", "Google, reviews, gift certificates, neighbors", 2),
+           ("Member referrals", "150 Glow Points when a friend’s first visit is done", 2)]
 
 SCRIPT = ("The offer, in the chair",
           "“Your skin renews about every four weeks. As a member it’s $159 a month instead of $195 a visit, and I’ll hold your spot for next month. Want me to book it now?”")
 
 BEHIND = [("Personal invites", "Evelyn texts her 20 most loyal clients herself. Nothing converts like her."),
           ("A member week", "Anyone who joins that week gets a free LED add-on. It costs time, not product."),
-          ("Show the results", "Before-and-after posts with the member price on them."),
+          ("Double referrals", "Members who bring a friend that week get 300 Glow Points instead of 150."),
           ("Don’t", "Cut the dues or reopen the Founding Five. It teaches clients to wait for a deal.")]
 
 TALENT = [("Weeks 1–4", "Build the list", "Ask every client who does their lashes, brows and nails. Save the name, the Instagram, and how many clients mentioned her. Goal: 15 names."),
@@ -274,10 +275,32 @@ FLIP_HOW = [("The numbers", "Bookkeeping’s Coming in shows the split: services
             ("Evelyn’s week", "Open or close facial slots in the booking calendar.")]
 
 SCORE = [("Members", "Against the plan: %d by day 90" % PLAN),
-         ("Offers made in the chair", "Every facial client, every visit"),
-         ("Say-yes rate", "One in eight or better"),
+         ("New clients", "Two a week by week 6"),
+         ("Say-yes rate", "Offered at every facial; 1 in 8 or better"),
          ("Cancellations", "Fewer than 1 in 20 a month"),
-         ("Names on the talent list", "15 by week 4")]
+         ("Talent list", "15 names by week 4")]
+
+# ─────────────────────────── the story up front ───────────────────────────
+ROADMAP = [("Weeks 1–3", "Launch", "Live payments on, booking moves to Lumevina, an early list of 15 names.", True),
+           ("Days 1–90", "Members", "The offer after every facial, and new clients from Google, reviews and referrals.", True),
+           ("Alongside", "Talent", "A list of 15 lash, brow and nail artists. Coffee with three, pick two.", True),
+           ("Months 4–12", "Artists", "Two artists try Lumevina free for 90 days. Members save 10% with them.", False),
+           ("Year 1", "The network", "Go or no-go: their clients start booking Evelyn, or not.", False),
+           ("Year 2", "The house", "The Lumevina Collective: a shared space and 6 to 8 artists.", False)]
+MONTH6_LEFT = round(30 * KEPT - BILLS_TOTAL, -1)
+MILES = [(5, "Week 5", "The Founding Five", "The first members, each with a free kit and next month already booked.", False),
+         (FLOOR, "Week %d" % FLOOR_WEEK, "Lumevina pays for itself", "Dues cover every business bill before the month starts. Everything else she books is hers.", True),
+         (PLAN, "Day 90", "The day-90 goal", "Room for a cancellation or a slow month, and the signal to offer two artists the pilot.", False),
+         (30, "Month 6", "Dues start paying Evelyn", "About %s a month left from dues after the bills, before the month’s first facial." % money(MONTH6_LEFT), False)]
+
+NEW_GOAL = 2                       # new clients a week by week 6
+NEW_CLIENTS = [("Google, first", "Claim the Google Business Profile: hours, photos, and a Book button straight to Lumevina. Most “facial near me” searches end there."),
+               ("25 reviews by day 90", "A text with the review link the day after every facial. Reviews are what get a stranger to book."),
+               ("Referrals that pay", "Every client has a code: 150 Glow Points, $15, when a friend finishes a first visit. Members hear it at every visit."),
+               ("One result a week", "A before-and-after, with permission, on Instagram and the Google profile, with the New Client price on it."),
+               ("Gift certificates", "Every certificate puts someone new in the chair. Push them before Valentine’s, Mother’s Day and the holidays."),
+               ("Neighbors", "Chair cards with a first-visit offer at a nearby salon, gym, yoga studio or bridal shop, and send clients their way too.")]
+NEW_PATH = ("New client, new member", "A new client hears about the membership at her first visit and gets the offer at her second, once she’s seen her skin change. That’s when she says yes.")
 
 money = lambda n: "${:,}".format(int(round(n)))
 
@@ -289,7 +312,7 @@ def pace_svg():
     y = lambda v: Y0 - (Y0 - Y1) * v / YMAX
     ws = range(14)
     p = ['<svg class="chart pace" viewBox="0 0 800 300" role="img" aria-label="Members by week, first 90 days. '
-         'The plan reaches %d members by week %d, when dues pay every business bill, and %d by day 90. The range runs from %d to %d."'
+         'The plan reaches %d members by week %d, when Lumevina pays for itself, and %d by day 90. The range runs from %d to %d."'
          '>' % (FLOOR, FLOOR_WEEK, PLAN, LOW[-1], HIGH[-1])]
     for i, (a, b, name) in enumerate(((0, 3, "Set up"), (3, 5, "Launch"), (5, 9, "In the chair"), (9, 13, "Win-back and referrals"))):
         p.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>' % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i % 2))
@@ -306,11 +329,11 @@ def pace_svg():
     p.append('<polygon class="band" points="%s %s"/>' % (hi, lo))
     # the floor: dues pay every bill
     p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="floor"/>' % (X0, X1, y(FLOOR), y(FLOOR)))
-    p.append('<text x="%.1f" y="%.1f" class="floorl">The minimum · %d members</text>' % (x(0.2), y(FLOOR) - 8, FLOOR))
+    p.append('<text x="%.1f" y="%.1f" class="floorl">Pays for itself · %d members</text>' % (x(0.2), y(FLOOR) - 8, FLOOR))
     p.append('<path class="likely" pathLength="1" d="M%s"/>' % " L".join("%.1f,%.1f" % (x(w), y(LIKELY[w])) for w in ws))
     fx, fy = x(FLOOR_WEEK), y(LIKELY[FLOOR_WEEK])
     p.append('<circle class="cross" cx="%.1f" cy="%.1f" r="4.5"/>' % (fx, fy))
-    p.append('<text class="crossl" x="%.1f" y="%.1f" text-anchor="middle">Week %d: bills covered</text>' % (fx, fy + 24, FLOOR_WEEK))
+    p.append('<text class="crossl" x="%.1f" y="%.1f" text-anchor="middle">Week %d: pays for itself</text>' % (fx, fy + 24, FLOOR_WEEK))
     ex, ey = x(13), y(LIKELY[13])
     p.append('<circle class="endpt" cx="%.1f" cy="%.1f" r="5"/>' % (ex, ey))
     p.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">%d by day 90</text>' % (ex - 12, ey - 14, PLAN))
@@ -335,7 +358,7 @@ def lanes_svg():
     line = " L".join("%.1f,%.1f" % (x(m), ym(v)) for m, v in pts)
     p.append('<path class="area" d="M%.1f,%d L%s L%.1f,%d Z"/>' % (x(0), L1B, line, x(24), L1B))
     p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="floor"/>' % (X0, X1, ym(FLOOR), ym(FLOOR)))
-    p.append('<text x="%.1f" y="%.1f" class="floorl" text-anchor="end">Minimum · %d</text>' % (x(24) - 4, ym(FLOOR) - 6, FLOOR))
+    p.append('<text x="%.1f" y="%.1f" class="floorl" text-anchor="end">Pays for itself · %d</text>' % (x(24) - 4, ym(FLOOR) - 6, FLOOR))
     p.append('<path class="likely" pathLength="1" d="M%s"/>' % line)
     for m, v, lab, anc in ((3, PLAN, "%d" % PLAN, "middle"), (6, 30, "30", "middle"), (12, 40, "40", "middle"), (24, 50, "50", "end")):
         p.append('<circle class="dot" cx="%.1f" cy="%.1f" r="4"/>' % (x(m), ym(v)))
@@ -381,7 +404,7 @@ def ladder_html():
     for n in LADDER:
         kept, left = n * KEPT, n * KEPT - BILLS_TOTAL
         cls = " is-floor" if n == FLOOR else (" is-plan" if n == PLAN else "")
-        tag = " <i>the minimum</i>" if n == FLOOR else (" <i>the plan</i>" if n == PLAN else "")
+        tag = " <i>pays for itself</i>" if n == FLOOR else (" <i>day-90 goal</i>" if n == PLAN else "")
         left_s = ("+" + money(left)) if left >= 10 else ("even" if left >= 0 else "−" + money(-left))
         h += ('<div class="ld-row%s"><span class="ld-n">%d%s</span><span>%s</span><span class="ld-left%s">%s</span>'
               '<span class="ld-bar"><b style="width:%.1f%%"></b><em style="left:%.1f%%"></em></span></div>'
@@ -421,15 +444,15 @@ def engine_rows(items):
         '<div class="row"><span class="rn"><span class="ek">%s</span>%s</span><span class="rv">%s</span></div>' % it for it in items) + '</div>'
 
 
-FLOW = [("Days 1–90 · Members", "The offer after every facial. %d pays the bills; aim for %d." % (FLOOR, PLAN)),
-        ("Alongside · Talent", "A list of 15 artists, coffee with three, pick two."),
-        ("Day 90 · The gate", "%d+ members: sign two artists. Under: keep pushing." % FLOOR),
-        ("After · Two engines", "30 members by month 6, the pilot live, then the Collective.")]
+def road_html():
+    return "".join('<li class="rs%s"><span class="rp">%s%s</span><b>%s</b><span class="rt">%s</span></li>'
+                   % (" now" if now else "", when, ' <span class="nw">Now</span>' if now else "", name, text)
+                   for when, name, text, now in ROADMAP)
 
 
-def flow_html(reveal=""):
-    return "".join('<div class="fs%s"><div class="fi">%d</div><b>%s</b><span>%s</span></div>' % (reveal, i + 1, a, b)
-                   for i, (a, b) in enumerate(FLOW))
+def miles_html():
+    return "".join('<div class="mile%s"><div class="mn num">%d<small>members</small></div><div class="mw">%s</div><b>%s</b><p>%s</p></div>'
+                   % (" hl" if hl else "", n, when, name, text) for n, when, name, text, hl in MILES)
 
 
 def mode_cols_html():
@@ -602,6 +625,27 @@ LP_CSS = r"""
 .gt-sub { font-style: normal; color: var(--text-3); }
 .bank-t .gt-row { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .extra-t .gt-row { grid-template-columns: 1.6fr .9fr .9fr 1fr .9fr 1.1fr; }
+/* the road: six steps, the ones under way in rose */
+.road { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.rs { position: relative; border-top: 2px solid #2c2a2d; }
+.rs::before { content: ""; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: #2c2a2d; }
+.rs.now { border-top-color: rgba(244,201,214,.7); }
+.rs.now::before { background: #f0c2cf; box-shadow: 0 0 0 4px rgba(244,201,214,.2); }
+.rs .rp { display: flex; align-items: center; gap: 6px; color: var(--text-3); font-weight: 600; font-variant-numeric: tabular-nums; }
+.rs.now .rp { color: var(--rose); }
+.rs .nw { font-size: .72em; letter-spacing: .06em; text-transform: uppercase; color: #000; background: #f0c2cf; border-radius: 999px; padding: 1px 7px; }
+.rs b { display: block; font-weight: 650; letter-spacing: -0.015em; }
+.rs .rt { display: block; color: var(--text-2); line-height: 1.4; }
+/* the milestones */
+.miles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.mile { background: var(--card); border-radius: 22px; display: flex; flex-direction: column; }
+.mile.hl { background: linear-gradient(160deg, #2a1d23 0%, #16110f 100%); box-shadow: inset 0 0 0 1px rgba(244,201,214,.25); }
+.mile .mn { font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+.mile.hl .mn { color: var(--rose); }
+.mile .mn small { font-size: .3em; letter-spacing: 0; font-weight: 500; color: var(--text-3); margin-left: 6px; }
+.mile .mw { color: var(--rose); font-weight: 600; }
+.mile b { display: block; font-weight: 650; letter-spacing: -0.015em; }
+.mile p { color: var(--text-2); line-height: 1.4; }
 """
 
 LP_WEB = r"""
@@ -682,6 +726,24 @@ LP_WEB = r"""
 @media (prefers-reduced-motion: reduce) { .ms-thumb, .mix b { transition: none; } .mp-do li { animation: none; } }
 .tl { display: flex; flex-direction: column; }
 .lanes .likely { stroke-width: 2.5; }
+.road { margin-top: 22px; } .rs { padding-top: 20px; } .rs .rp { font-size: .82rem; } .rs b { font-size: 1.08rem; margin-top: 6px; } .rs .rt { font-size: .9rem; margin-top: 4px; }
+.mile { padding: 22px; } .mile .mn { font-size: 3.2rem; } .mile .mw { font-size: .85rem; margin-top: 16px; }
+.mile b { font-size: 1.08rem; margin-top: 4px; } .mile p { font-size: .92rem; margin-top: 6px; }
+.new6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.play-tabs { display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: #1a1a1d; box-shadow: inset 0 0 0 1px var(--hair);
+  width: max-content; max-width: 100%; margin: 0 auto 32px; }
+.play-tabs button { flex: none; font: inherit; font-size: .95rem; font-weight: 600; color: var(--text-2); background: none; border: 0;
+  border-radius: 999px; padding: 11px 18px; cursor: pointer; white-space: nowrap; transition: background-color .25s, color .25s; }
+.play-tabs button:hover { color: var(--text); }
+.play-tabs button[aria-selected="true"] { background: var(--grad); color: #000; }
+.play-tabs button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+.play-panel[hidden] { display: none; }
+.play-panel .reveal { opacity: 1; transform: none; transition: none; }
+.pp-head { text-align: center; margin-bottom: 26px; }
+.pp-h { font-size: clamp(1.6rem, 3.6vw, 2.3rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; text-wrap: balance; }
+.pp-l { color: var(--text-2); font-size: 1.05rem; max-width: 36rem; margin: 10px auto 0; line-height: 1.5; }
+.link-btn { color: var(--rose); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.link-btn:hover { text-decoration: underline; }
 .mt { margin-top: 14px; } .mt2 { margin-top: 40px; }
 .chart-scroll { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
 .chart-scroll::-webkit-scrollbar { display: none; }
@@ -705,7 +767,13 @@ LP_WEB = r"""
   .costs.five, .costs.three { grid-template-columns: 1fr 1fr; }
   .ld-row { grid-template-columns: 1.3fr .9fr .9fr; } .ld-bar { grid-column: 1 / -1; }
   .pc-row { grid-template-columns: 1fr auto; } .pc-t { grid-column: 1 / -1; grid-row: 2; }
+  .road { grid-template-columns: 1fr 1fr; row-gap: 26px; }
+  .miles, .new6 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mile { padding: 18px 16px; } .mile .mn { font-size: 2.4rem; } .mile p { font-size: .86rem; }
+  .play-tabs { display: grid; grid-template-columns: 1fr 1fr; width: 100%; border-radius: 22px; }
+  .play-tabs button { border-radius: 18px; font-size: .88rem; padding: 10px 8px; }
 }
+@media (max-width: 520px) { .new6 { grid-template-columns: 1fr; } }
 """
 
 LP_PRINT = r"""
@@ -715,7 +783,7 @@ LP_PRINT = r"""
 .ladder { padding: 2px 16px; border-radius: 16px; }
 .ld-row { padding: 4px 0; font-size: 9.5pt; } .ld-h { font-size: 7.8pt; }
 .pace-t { padding: 2px 16px; border-radius: 16px; }
-.pc-row { grid-template-columns: 0.95in 1fr 0.45in; padding: 8px 0; gap: 12px; }
+.pc-row { grid-template-columns: 0.95in 1fr 0.45in; padding: 6px 0; gap: 12px; }
 .pc-w { font-size: 9pt; } .pc-t { font-size: 9.6pt; } .pc-n { font-size: 15pt; }
 .four, .three { gap: 12px; }
 .g.tl { padding: 14px 16px; } .tl .tl-w { font-size: 8.5pt; margin-bottom: 4px; } .g.tl p { font-size: 9.2pt; }
@@ -726,6 +794,12 @@ LP_PRINT = r"""
 .mode-col { padding: 12px 14px; } .mc-name { font-size: 12pt; } .mc-tag { font-size: 8.4pt; } .mix-l { font-size: 8.4pt; }
 .mc-stats b { font-size: 16pt; } .mc-stats span { font-size: 7.6pt; } .mc-do li { font-size: 8.4pt; }
 .gt-row { font-size: 8.8pt; padding: 5px 0; } .gt-h { font-size: 7.8pt; } .gt-over i { font-size: 7.6pt; }
+.road { gap: 12px; row-gap: 20px; grid-template-columns: repeat(3, 1fr); margin-top: 16px; }
+.rs { padding-top: 12px; } .rs .rp { font-size: 8.2pt; } .rs b { font-size: 11pt; margin-top: 3px; } .rs .rt { font-size: 8.8pt; margin-top: 2px; }
+.miles { gap: 12px; }
+.mile { padding: 14px 15px; border-radius: 16px; } .mile .mn { font-size: 30pt; } .mile .mw { font-size: 8.5pt; margin-top: 10px; }
+.mile b { font-size: 10.5pt; margin-top: 2px; } .mile p { font-size: 8.8pt; margin-top: 4px; }
+.new6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 """
 
 WEB_JS = r"""
@@ -889,6 +963,36 @@ WEB_JS = r"""
   });
   ["b-m", "b-r"].forEach(function (id) { $(id).addEventListener("input", bpaint); });
   bpaint();
+
+  /* play with it: one calculator at a time */
+  var tabs = [].slice.call(document.querySelectorAll(".play-tabs [role=tab]"));
+  var pick = function (t, focus) {
+    tabs.forEach(function (b) {
+      var on = b === t;
+      b.setAttribute("aria-selected", String(on));
+      b.tabIndex = on ? 0 : -1;
+      $(b.getAttribute("aria-controls")).hidden = !on;
+    });
+    if (focus) t.focus();
+  };
+  tabs.forEach(function (b, i) {
+    b.addEventListener("click", function () { pick(b); });
+    b.addEventListener("keydown", function (e) {
+      var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!d) return;
+      pick(tabs[(i + d + tabs.length) % tabs.length], true);
+      e.preventDefault();
+    });
+  });
+  document.querySelectorAll("[data-open]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var t = tabs.filter(function (b) { return b.getAttribute("aria-controls") === a.getAttribute("data-open"); })[0];
+      if (!t) return;
+      e.preventDefault();
+      pick(t);
+      $("play").scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "start" });
+    });
+  });
 })();
 """
 
@@ -900,7 +1004,7 @@ HEAD = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lumevina First 90 Days</title>
-<meta name="description" content="The minimum members Lumevina needs by day 90 to run in profit, the weekly pace to get there, and the talent search alongside it.">
+<meta name="description" content="Ninety days to a spa that pays for itself: the road, the milestones, the thirteen weeks, new clients and the talent search, with calculators for every number.">
 <style>__CSS__</style>
 </head>
 <body>
@@ -910,62 +1014,13 @@ WEB_BODY = """
 <section class="hero90">
   <div class="wrap">
     <p class="kicker reveal">Lumevina · The first 90 days</p>
-    <h1 class="h1 reveal" style="margin-top:18px">__FLOOR_W__ members.<br><span class="grad">Ninety days.</span></h1>
-    <p class="lead reveal">The fewest members Lumevina needs by day 90 for dues to pay every business bill, the weekly pace to get there,
-    and how the talent search runs alongside it. After day 90, both keep growing.</p>
-    <div class="stats reveal">
-      <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every business bill.</div></div>
-      <div class="stat"><div class="v num">__PLAN__</div><div class="k">The plan by day 90, with room for a cancellation or a slow month.</div></div>
-      <div class="stat"><div class="v num">30</div><div class="k">By month 6, then 50 by year 2. Artists sign from month 4.</div></div>
-    </div>
-    <div class="chart-card reveal mt2">
-      <h3>Members, week by week</h3>
-      <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every business bill.</p>
-      <div class="chart-scroll">__PACE_SVG__</div><p class="swipe-hint">Swipe the chart to see day 90 &rarr;</p>
-    </div>
-    <div class="flow mt">__FLOW__</div>
-    <p class="foot-note reveal">Three ways to run it: <a href="#switch" style="color:var(--rose)">facials lead, 50/50, or product leads</a>.</p>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="kicker">The minimum</p>
-      <h2 class="h2" style="margin-top:14px">Why __FLOOR_W_L__. <span class="dim">Dues pay the business.</span></h2>
-      <p class="lead">Membership dues arrive before the month starts. Once they cover the business&rsquo;s bills, every other booking,
-      add-on and product is profit, and a slow week can&rsquo;t sink the month.</p>
-    </div>
-    <div class="num-grid">
-      <div class="reveal"><div class="cols-h">The business&rsquo;s monthly bills</div><div class="cols-s">Spa costs only. Home, car and food come from her pay</div>__BILLS__</div>
-      <div class="reveal"><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
-    </div>
-    <div class="eq reveal"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
-    <div class="reveal mt2"><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
-    <div class="reveal mt2"><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too, so this is the members-only view</div>
-      <div class="costs three">__PAY__</div></div>
-    <div class="reveal mt2"><div class="cols-h">Try your real numbers</div><div class="cols-s">Move the sliders to Evelyn&rsquo;s actual rent and costs</div>
-      <div class="calc">
-        <div class="calc-in">
-          <label for="c-bills">Business bills a month <output id="o-bills"></output><input id="c-bills" type="range" min="800" max="3200" step="50" value="__BILLS_N__"></label>
-          <label for="c-sup">Supplies per facial <output id="o-sup"></output><input id="c-sup" type="range" min="5" max="30" step="1" value="__SUP_N__"></label>
-          <label for="c-dues">Average dues <output id="o-dues"></output><input id="c-dues" type="range" min="149" max="199" step="1" value="__DUES_N__"></label>
-          <label for="c-pay">Evelyn&rsquo;s pay, before taxes <output id="o-pay"></output><input id="c-pay" type="range" min="0" max="8000" step="250" value="__PAY_N__"></label>
-        </div>
-        <div class="calc-out" aria-live="polite">
-          <div class="co-pair">
-            <div><div class="big grad num" id="o-floor"></div><div class="t">members pay the business</div></div>
-            <div><div class="big num" id="o-payn"></div><div class="t" id="o-payt"></div></div>
-          </div>
-          <p class="s" id="o-plan"></p><p class="s" id="o-sub"></p></div>
-      </div>
-      <p class="calc-note">Card fee 2.9% + 30¢ and $__PERKS__ of member perks are included. Pay is before taxes, and her regular
-      bookings, waxing, add-ons and retail pay her too, so the second number is the members-only view.</p>
-    </div>
-    <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
-      <div class="costs three">__ONETIME__</div></div>
-    <p class="foot-note reveal">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $121 a month.
-    As a Glow member she spends $159, comes every month, and pays first.</p>
+    <h1 class="h1 reveal" style="margin-top:18px">Ninety days to a spa<br>that <span class="grad">pays you first.</span></h1>
+    <p class="lead reveal">Memberships pay Lumevina&rsquo;s bills before the month even starts. Once they do, every facial, wax and
+    product Evelyn sells is hers. This is the road there, and what comes after.</p>
+    <div class="reveal mt2"><div class="cols-h">The road</div><div class="cols-s">Six steps. The first three start this month</div>
+      <ol class="road">__ROADMAP__</ol></div>
+    <div class="reveal mt2"><div class="cols-h">The milestones</div><div class="cols-s">Members, and what each number unlocks</div>
+      <div class="miles">__MILES__</div></div>
   </div>
 </section>
 
@@ -974,16 +1029,34 @@ WEB_BODY = """
     <div class="sec-head center reveal">
       <p class="kicker">How to get there</p>
       <h2 class="h2" style="margin-top:14px">Thirteen weeks. <span class="dim">One offer at a time.</span></h2>
-      <p class="lead">Most of the first members are clients who already love Evelyn. The plan is to ask every one of them,
-      at the right moment, with next month&rsquo;s facial booked on the spot.</p>
+      <p class="lead">The first members are clients who already love Evelyn, asked at the right moment with next month&rsquo;s
+      facial booked on the spot. New clients fill in behind them.</p>
     </div>
-    <div class="reveal"><div class="rows-head"><div class="cols-h">Week by week</div><div class="cols-s">Members by the end of each stretch · the plan</div></div>__PACE__</div>
+    <div class="chart-card reveal">
+      <h3>Members, week by week</h3>
+      <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: __FLOOR__ members, where Lumevina pays for itself.</p>
+      <div class="chart-scroll">__PACE_SVG__</div><p class="swipe-hint">Swipe the chart to see day 90 &rarr;</p>
+    </div>
+    <div class="reveal mt2"><div class="rows-head"><div class="cols-h">Week by week</div><div class="cols-s">Members by the end of each stretch · the plan</div></div>__PACE__</div>
     <div class="num-grid mt2">
       <div class="reveal"><div class="cols-h">Where the __PLAN__ come from</div><div class="cols-s">The plan, by day 90</div>__SOURCES__</div>
       <div class="reveal"><div class="cols-h">__SCRIPT_K__</div><div class="cols-s">Two minutes at the end of every facial</div>
         <div class="offer hl"><p class="of-big" style="font-size:1.5rem;line-height:1.3;letter-spacing:-0.02em">__SCRIPT_V__</p>
         <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div></div>
     </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">New clients</p>
+      <h2 class="h2" style="margin-top:14px">Two new faces a week. <span class="dim">The next members.</span></h2>
+      <p class="lead">Evelyn&rsquo;s regulars start the membership. New clients keep it growing, and cover the ones who move or
+      cancel. Six ways in, each cheap, each counted on the Saturday scoreboard.</p>
+    </div>
+    <div class="new6">__NEWC__</div>
+    <div class="perk reveal"><b>__NEWP_K__</b><span>__NEWP_V__</span></div>
     <div class="reveal mt2"><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
       <div class="costs behind four">__BEHIND__</div></div>
   </div>
@@ -1000,6 +1073,8 @@ WEB_BODY = """
     <div class="three">__TALENT__</div>
     <div class="offers mt">__GATE__</div>
     <div class="perk reveal"><b>__WHY_K__</b><span>__WHY_V__</span></div>
+    <div class="reveal mt2"><div class="cols-h">The Saturday scoreboard</div><div class="cols-s">Five numbers, every week. The dashboard&rsquo;s Glow Membership card and launch ledger count most of them.</div>
+      <div class="costs five">__SCORE__</div></div>
   </div>
 </section>
 
@@ -1017,140 +1092,164 @@ WEB_BODY = """
       <div class="chart-scroll">__LANES_SVG__</div><p class="swipe-hint">Swipe the chart to see year 2 &rarr;</p>
     </div>
     <div class="num-grid">
-      <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, referrals, the site</div></div>__ENGINE_M__</div>
+      <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, new clients, referrals</div></div>__ENGINE_M__</div>
       <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 2 · Talent</div><div class="cols-s">Matches the Growth Blueprint&rsquo;s pipeline</div></div>__ENGINE_T__</div>
     </div>
+    <div class="perk reveal"><b>Three ways to run it</b><span>Facials can lead, product can lead, or it runs 50/50, at the same pay for Evelyn.
+      <a class="link-btn" href="#play" data-open="p-three">See the three ways &rarr;</a></span></div>
     <p class="foot-note reveal">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__ a member a month, __ARTIST_NOTE__.</p>
-    <div class="reveal mt2"><div class="cols-h">The Saturday scoreboard</div><div class="cols-s">Five numbers, every week. The dashboard&rsquo;s Glow Membership card and launch ledger count most of them.</div>
-      <div class="costs five">__SCORE__</div></div>
   </div>
 </section>
 
-<section id="switch">
+<section id="play">
   <div class="wrap">
     <div class="sec-head center reveal">
-      <p class="kicker">Three ways to run it</p>
-      <h2 class="h2" style="margin-top:14px">Flip the lead. <span class="dim">Keep the pay.</span></h2>
-      <p class="lead">The same pay for Evelyn with the money coming mostly from facials, half and half, or mostly from product.
-      Switch to see what changes, and flip the business the same way when the sales say so.</p>
+      <p class="kicker">Play with it</p>
+      <h2 class="h2" style="margin-top:14px">Your numbers. <span class="dim">Your call.</span></h2>
+      <p class="lead">The math behind every number in this plan, with sliders. Put in Evelyn&rsquo;s real rent and prices and
+      watch the plan move.</p>
     </div>
-    <div class="mode-ui reveal">
-      <div class="mode-switch" role="radiogroup" aria-label="How Lumevina runs">
-        <span class="ms-thumb" aria-hidden="true"></span>
-        <button type="button" role="radio" aria-checked="true" data-mode="facials">Facials lead</button>
-        <button type="button" role="radio" aria-checked="false" data-mode="even">50/50</button>
-        <button type="button" role="radio" aria-checked="false" data-mode="product">Product leads</button>
-      </div>
-      <label class="mode-pay" for="m-pay">Evelyn&rsquo;s pay, before taxes <output id="mo-pay"></output>
-        <input id="m-pay" type="range" min="1000" max="8000" step="250" value="__MODE_PAY_N__"></label>
-      <div class="mode-panel" aria-live="polite">
-        <p class="mp-tag" id="mp-tag"></p>
-        <div class="mix big"><b id="mp-mix"></b></div>
-        <div class="mix-l"><span id="mp-fs"></span><span id="mp-rs"></span></div>
-        <div class="mp-stats">
-          <div><b class="num" id="mp-fpw"></b><span>facials a week</span></div>
-          <div><b class="num" id="mp-subs"></b><span>Glow Routine subscribers</span></div>
-          <div><b class="num" id="mp-hours"></b><span>hours in the chair a week</span></div>
-          <div><b class="num grad" id="mp-pay"></b><span>for Evelyn, after the bills</span></div>
-        </div>
-        <ul class="mp-do" id="mp-do"></ul>
-      </div>
+    <div class="play-tabs reveal" role="tablist" aria-label="Calculators">
+      <button type="button" role="tab" id="t-pays" aria-controls="p-pays" aria-selected="true">Pays for itself</button>
+      <button type="button" role="tab" id="t-three" aria-controls="p-three" aria-selected="false" tabindex="-1">Three ways</button>
+      <button type="button" role="tab" id="t-month" aria-controls="p-month" aria-selected="false" tabindex="-1">Build your month</button>
+      <button type="button" role="tab" id="t-product" aria-controls="p-product" aria-selected="false" tabindex="-1">If product leads</button>
     </div>
-    <div class="perk reveal"><b>The honest read</b><span>__MODE_READ__</span></div>
-    <div class="reveal mt2"><div class="cols-h">When to flip</div><div class="cols-s">The numbers decide, not the mood of one month</div>
-      <div class="costs three">__FLIP_WHEN__</div></div>
-    <div class="reveal mt2"><div class="cols-h">The flip, in a week</div><div class="cols-s">Five things change; nothing is lost</div>
-      <div class="costs five">__FLIP_HOW__</div></div>
-  </div>
-</section>
 
-<section id="mix">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="kicker">Build your month</p>
-      <h2 class="h2" style="margin-top:14px">Pick the pay. <span class="dim">Slide the mix.</span></h2>
-      <p class="lead">How many facials and how many Glow Routine subscribers it takes to make a given amount, anywhere from all
-      facials to all product, and what a premium price adds.</p>
-    </div>
-    <div class="mixer reveal">
-      <div class="calc-in">
-        <label for="x-pay">Evelyn&rsquo;s pay a month <output id="xo-pay"></output>
-          <input id="x-pay" type="range" min="1000" max="20000" step="250" value="__MODE_PAY_N__"></label>
-        <label for="x-mix">Where the money comes from <output id="xo-mix"></output>
-          <input id="x-mix" type="range" min="0" max="100" step="5" value="50">
-          <span class="ends"><span>All facials</span><span>All product</span></span></label>
-        <label for="x-up">Premium price <output id="xo-up"></output>
-          <input id="x-up" type="range" min="0" max="30" step="5" value="0" list="x-up-ticks">
-          <span class="ends"><span>Today&rsquo;s prices</span><span>+30%</span></span></label>
-        <datalist id="x-up-ticks"><option value="0"></option><option value="5"></option><option value="10"></option><option value="15"></option><option value="20"></option><option value="25"></option><option value="30"></option></datalist>
-      </div>
-      <div class="mix-out" aria-live="polite">
-        <div class="mo-tile">
-          <p class="mo-k">Facials a week</p><p class="mo-v num" id="xo-fpw"></p>
-          <div class="chair"><b id="xo-chair"></b><i style="left:100%"></i></div>
-          <p class="mo-note" id="xo-chair-t"></p>
-        </div>
-        <div class="mo-tile">
-          <p class="mo-k">Glow Routine subscribers</p><p class="mo-v num grad" id="xo-subs"></p>
-          <div class="chair open"><b id="xo-subbar"></b></div>
-          <p class="mo-note">No ceiling. They can live anywhere in California, and later anywhere at all.</p>
-        </div>
-        <div class="mo-row"><span>Hours in the chair a week</span><b id="xo-hours"></b></div>
-        <div class="mo-row"><span>Sales a month</span><b id="xo-sales"></b></div>
-        <div class="mo-row"><span>Prices</span><b id="xo-prices"></b></div>
-        <p class="mo-prem" id="xo-prem"></p>
-      </div>
-    </div>
-    <div class="reveal mt2"><div class="cols-h">Banked facials and extra days</div><div class="cols-s">Members can bank a month&rsquo;s facial.
-      The dues are in, but the facial is still owed, and it can take a day that&rsquo;s normally off.</div>
-      <div class="mixer bank">
+    <div class="play-panel" id="p-pays" role="tabpanel" aria-labelledby="t-pays">
+      <div class="pp-head"><h3 class="pp-h">When Lumevina pays for itself</h3>
+        <p class="pp-l">Dues against the business&rsquo;s bills. Move the sliders to Evelyn&rsquo;s actual rent and costs.</p></div>
+      <div class="calc">
         <div class="calc-in">
-          <label for="b-m">Members <output id="bo-m"></output><input id="b-m" type="range" min="0" max="80" step="1" value="__BANK_M__"></label>
-          <label for="b-r">Bank their facial in a given month <output id="bo-r"></output><input id="b-r" type="range" min="0" max="40" step="5" value="__BANK_R__"></label>
-          <div class="bank-days" role="radiogroup" aria-label="Extra days">
-            <span class="bd-k">Work a day that&rsquo;s normally off</span>
-            <div class="bd-sw">
-              <button type="button" role="radio" aria-checked="false" data-days="0">None</button>
-              <button type="button" role="radio" aria-checked="true" data-days="2.1667">Every other week</button>
-              <button type="button" role="radio" aria-checked="false" data-days="4.3333">Every week</button>
-            </div>
+          <label for="c-bills">Business bills a month <output id="o-bills"></output><input id="c-bills" type="range" min="800" max="3200" step="50" value="__BILLS_N__"></label>
+          <label for="c-sup">Supplies per facial <output id="o-sup"></output><input id="c-sup" type="range" min="5" max="30" step="1" value="__SUP_N__"></label>
+          <label for="c-dues">Average dues <output id="o-dues"></output><input id="c-dues" type="range" min="149" max="199" step="1" value="__DUES_N__"></label>
+          <label for="c-pay">Evelyn&rsquo;s pay, before taxes <output id="o-pay"></output><input id="c-pay" type="range" min="0" max="8000" step="250" value="__PAY_N__"></label>
+        </div>
+        <div class="calc-out" aria-live="polite">
+          <div class="co-pair">
+            <div><div class="big grad num" id="o-floor"></div><div class="t">members pay the business</div></div>
+            <div><div class="big num" id="o-payn"></div><div class="t" id="o-payt"></div></div>
           </div>
+          <p class="s" id="o-plan"></p><p class="s" id="o-sub"></p></div>
+      </div>
+      <p class="calc-note">Card fee 2.9% + 30¢ and $__PERKS__ of member perks are included. Pay is before taxes, and her regular
+      bookings, waxing, add-ons and retail pay her too, so the second number is the members-only view.</p>
+      <div class="eq mt2"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
+      <div class="num-grid">
+        <div><div class="cols-h">The business&rsquo;s monthly bills</div><div class="cols-s">Spa costs only. Home, car and food come from her pay</div>__BILLS__</div>
+        <div><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
+      </div>
+      <div class="mt2"><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
+      <div class="mt2"><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes</div>
+        <div class="costs three">__PAY__</div></div>
+      <div class="mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
+        <div class="costs three">__ONETIME__</div></div>
+      <p class="foot-note">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $121 a month.
+      As a Glow member she spends $159, comes every month, and pays first.</p>
+    </div>
+
+    <div class="play-panel" id="p-three" role="tabpanel" aria-labelledby="t-three" hidden>
+      <div class="pp-head"><h3 class="pp-h">Flip the lead. Keep the pay.</h3>
+        <p class="pp-l">The same pay for Evelyn with the money coming mostly from facials, half and half, or mostly from product.
+        Switch to see what changes, and flip the business the same way when the sales say so.</p></div>
+      <div class="mode-ui">
+        <div class="mode-switch" role="radiogroup" aria-label="How Lumevina runs">
+          <span class="ms-thumb" aria-hidden="true"></span>
+          <button type="button" role="radio" aria-checked="true" data-mode="facials">Facials lead</button>
+          <button type="button" role="radio" aria-checked="false" data-mode="even">50/50</button>
+          <button type="button" role="radio" aria-checked="false" data-mode="product">Product leads</button>
+        </div>
+        <label class="mode-pay" for="m-pay">Evelyn&rsquo;s pay, before taxes <output id="mo-pay"></output>
+          <input id="m-pay" type="range" min="1000" max="8000" step="250" value="__MODE_PAY_N__"></label>
+        <div class="mode-panel" aria-live="polite">
+          <p class="mp-tag" id="mp-tag"></p>
+          <div class="mix big"><b id="mp-mix"></b></div>
+          <div class="mix-l"><span id="mp-fs"></span><span id="mp-rs"></span></div>
+          <div class="mp-stats">
+            <div><b class="num" id="mp-fpw"></b><span>facials a week</span></div>
+            <div><b class="num" id="mp-subs"></b><span>Glow Routine subscribers</span></div>
+            <div><b class="num" id="mp-hours"></b><span>hours in the chair a week</span></div>
+            <div><b class="num grad" id="mp-pay"></b><span>for Evelyn, after the bills</span></div>
+          </div>
+          <ul class="mp-do" id="mp-do"></ul>
+        </div>
+      </div>
+      <div class="perk"><b>The honest read</b><span>__MODE_READ__</span></div>
+      <div class="mt2"><div class="cols-h">When to flip</div><div class="cols-s">The numbers decide, not the mood of one month</div>
+        <div class="costs three">__FLIP_WHEN__</div></div>
+      <div class="mt2"><div class="cols-h">The flip, in a week</div><div class="cols-s">Five things change; nothing is lost</div>
+        <div class="costs five">__FLIP_HOW__</div></div>
+    </div>
+
+    <div class="play-panel" id="p-month" role="tabpanel" aria-labelledby="t-month" hidden>
+      <div class="pp-head"><h3 class="pp-h">Pick the pay. Slide the mix.</h3>
+        <p class="pp-l">How many facials and Glow Routine subscribers it takes to make a given amount, anywhere from all
+        facials to all product, and what a premium price adds.</p></div>
+      <div class="mixer">
+        <div class="calc-in">
+          <label for="x-pay">Evelyn&rsquo;s pay a month <output id="xo-pay"></output>
+            <input id="x-pay" type="range" min="1000" max="20000" step="250" value="__MODE_PAY_N__"></label>
+          <label for="x-mix">Where the money comes from <output id="xo-mix"></output>
+            <input id="x-mix" type="range" min="0" max="100" step="5" value="50">
+            <span class="ends"><span>All facials</span><span>All product</span></span></label>
+          <label for="x-up">Premium price <output id="xo-up"></output>
+            <input id="x-up" type="range" min="0" max="30" step="5" value="0" list="x-up-ticks">
+            <span class="ends"><span>Today&rsquo;s prices</span><span>+30%</span></span></label>
+          <datalist id="x-up-ticks"><option value="0"></option><option value="5"></option><option value="10"></option><option value="15"></option><option value="20"></option><option value="25"></option><option value="30"></option></datalist>
         </div>
         <div class="mix-out" aria-live="polite">
-          <div class="mo-tile"><p class="mo-k">Facials owed right now</p><p class="mo-v num" id="bo-owed"></p><p class="mo-note" id="bo-owed-t"></p></div>
-          <div class="mo-tile"><p class="mo-k">Added a month by the extra day</p><p class="mo-v num grad" id="bo-extra"></p><p class="mo-note" id="bo-extra-t"></p></div>
-          <div class="mo-row"><span>If they all come back the same month</span><b id="bo-peak"></b></div>
-          <div class="mo-row"><span>Extra slots a month</span><b id="bo-slots"></b></div>
-          <div class="mo-row"><span>Backlog cleared in</span><b id="bo-clear"></b></div>
+          <div class="mo-tile">
+            <p class="mo-k">Facials a week</p><p class="mo-v num" id="xo-fpw"></p>
+            <div class="chair"><b id="xo-chair"></b><i style="left:100%"></i></div>
+            <p class="mo-note" id="xo-chair-t"></p>
+          </div>
+          <div class="mo-tile">
+            <p class="mo-k">Glow Routine subscribers</p><p class="mo-v num grad" id="xo-subs"></p>
+            <div class="chair open"><b id="xo-subbar"></b></div>
+            <p class="mo-note">No ceiling. They can live anywhere in California, and later anywhere at all.</p>
+          </div>
+          <div class="mo-row"><span>Hours in the chair a week</span><b id="xo-hours"></b></div>
+          <div class="mo-row"><span>Sales a month</span><b id="xo-sales"></b></div>
+          <div class="mo-row"><span>Prices</span><b id="xo-prices"></b></div>
+          <p class="mo-prem" id="xo-prem"></p>
         </div>
       </div>
-      <div class="costs three" style="margin-top:14px">__BANK_NOTES__</div>
+      <div class="mt2"><div class="cols-h">Banked facials and extra days</div><div class="cols-s">Members can bank a month&rsquo;s facial.
+        The dues are in, but the facial is still owed, and it can take a day that&rsquo;s normally off.</div>
+        <div class="mixer bank">
+          <div class="calc-in">
+            <label for="b-m">Members <output id="bo-m"></output><input id="b-m" type="range" min="0" max="80" step="1" value="__BANK_M__"></label>
+            <label for="b-r">Bank their facial in a given month <output id="bo-r"></output><input id="b-r" type="range" min="0" max="40" step="5" value="__BANK_R__"></label>
+            <div class="bank-days" role="radiogroup" aria-label="Extra days">
+              <span class="bd-k">Work a day that&rsquo;s normally off</span>
+              <div class="bd-sw">
+                <button type="button" role="radio" aria-checked="false" data-days="0">None</button>
+                <button type="button" role="radio" aria-checked="true" data-days="2.1667">Every other week</button>
+                <button type="button" role="radio" aria-checked="false" data-days="4.3333">Every week</button>
+              </div>
+            </div>
+          </div>
+          <div class="mix-out" aria-live="polite">
+            <div class="mo-tile"><p class="mo-k">Facials owed right now</p><p class="mo-v num" id="bo-owed"></p><p class="mo-note" id="bo-owed-t"></p></div>
+            <div class="mo-tile"><p class="mo-k">Added a month by the extra day</p><p class="mo-v num grad" id="bo-extra"></p><p class="mo-note" id="bo-extra-t"></p></div>
+            <div class="mo-row"><span>If they all come back the same month</span><b id="bo-peak"></b></div>
+            <div class="mo-row"><span>Extra slots a month</span><b id="bo-slots"></b></div>
+            <div class="mo-row"><span>Backlog cleared in</span><b id="bo-clear"></b></div>
+          </div>
+        </div>
+        <div class="costs three" style="margin-top:14px">__BANK_NOTES__</div>
+      </div>
+      <div class="mt2"><div class="cols-h">One person, or no limit</div><div class="cols-s">Why the mix matters more as the goal grows</div>
+        <div class="costs three">__CEIL_NOTES__</div></div>
+      <div class="mt2"><div class="cols-h">Why a premium price holds</div><div class="cols-s">What clients pay more for, once the app is on the App Store</div>
+        <div class="costs four">__PREM_WHY__</div></div>
     </div>
-    <div class="reveal mt2"><div class="cols-h">One person, or no limit</div><div class="cols-s">Why the mix matters more as the goal grows</div>
-      <div class="costs three">__CEIL_NOTES__</div></div>
-    <div class="reveal mt2"><div class="cols-h">Why a premium price holds</div><div class="cols-s">What clients pay more for, once the app is on the App Store</div>
-      <div class="costs four">__PREM_WHY__</div></div>
-  </div>
-</section>
 
-<section id="product">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="kicker">Another way · if product leads</p>
-      <h2 class="h2" style="margin-top:14px">Five facials a week. <span class="dim">The shelf does the rest.</span></h2>
-      <p class="lead">If Evelyn keeps the chair to about __PL_FPW__ facials a week, a monthly product subscription can carry the rest.
-      It earns less per dollar but takes none of her hours.</p>
-    </div>
-    <div class="num-grid">
-      <div class="reveal"><div class="cols-h">The chair · __PL_FPW__ facials a week</div><div class="cols-s">Facials still pay the bills, with some left over</div>__PL_CHAIR__</div>
-      <div class="reveal"><div class="cols-h">What each Glow Routine subscriber leaves</div><div class="cols-s">Per subscriber, per month</div>__PL_SUB__</div>
-    </div>
-    <div class="perk reveal"><b>The trade</b><span>$100 of facials keeps about $__PL_F100__; $100 of product keeps about $__PL_R100__. A facial member keeps
-    about $__PL_MEMBER__ a month and takes an hour of Evelyn&rsquo;s time; a subscriber keeps about $__PL_RKEPT__ and takes none. About __PL_RATIO__
-    subscribers earn what one member does.</span></div>
-    <div class="reveal mt2"><div class="cols-h">Subscribers needed</div><div class="cols-s">Glow Routine at $__PL_RPRICE__ a month, with five facials a week</div>
-      <div class="costs four">__PL_GOALS__</div></div>
-    <div class="reveal mt2"><div class="cols-h">Try it</div><div class="cols-s">Facials a week, prices and product cost</div>
+    <div class="play-panel" id="p-product" role="tabpanel" aria-labelledby="t-product" hidden>
+      <div class="pp-head"><h3 class="pp-h">Five facials a week. The shelf does the rest.</h3>
+        <p class="pp-l">If Evelyn keeps the chair to about __PL_FPW__ facials a week, a monthly product subscription can carry the rest.
+        It earns less per dollar but takes none of her hours.</p></div>
       <div class="calc">
         <div class="calc-in">
           <label for="p-fpw">Facials a week <output id="po-fpw"></output><input id="p-fpw" type="range" min="1" max="25" step="1" value="__PL_FPW__"></label>
@@ -1168,17 +1267,26 @@ WEB_BODY = """
           <p class="s" id="po-sell"></p><p class="s" id="po-earn"></p></div>
       </div>
       <p class="calc-note">Supplies $__SUP_N__ a facial and card fees are included. Subscribers carry $4 of shipping and packaging, averaged.</p>
+      <div class="num-grid mt2">
+        <div><div class="cols-h">The chair · __PL_FPW__ facials a week</div><div class="cols-s">Facials still pay the bills, with some left over</div>__PL_CHAIR__</div>
+        <div><div class="cols-h">What each Glow Routine subscriber leaves</div><div class="cols-s">Per subscriber, per month</div>__PL_SUB__</div>
+      </div>
+      <div class="perk"><b>The trade</b><span>$100 of facials keeps about $__PL_F100__; $100 of product keeps about $__PL_R100__. A facial member keeps
+      about $__PL_MEMBER__ a month and takes an hour of Evelyn&rsquo;s time; a subscriber keeps about $__PL_RKEPT__ and takes none. About __PL_RATIO__
+      subscribers earn what one member does.</span></div>
+      <div class="mt2"><div class="cols-h">Subscribers needed</div><div class="cols-s">Glow Routine at $__PL_RPRICE__ a month, with five facials a week</div>
+        <div class="costs four">__PL_GOALS__</div></div>
+      <div class="mt2"><div class="cols-h">How to run it</div><div class="cols-s">If this becomes the plan</div>
+        <div class="costs three how">__PL_HOW__</div></div>
+      <p class="foot-note">At five facials a week, a part-time or shared room could cut the biggest bill. Every __PL_STEP__ less a month is one fewer
+      member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
     </div>
-    <div class="reveal mt2"><div class="cols-h">How to run it</div><div class="cols-s">If this becomes the plan</div>
-      <div class="costs three how">__PL_HOW__</div></div>
-    <p class="foot-note reveal">At five facials a week, a part-time or shared room could cut the biggest bill. Every __PL_STEP__ less a month is one fewer
-    member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
   </div>
 </section>
 
 <section class="close">
   <div class="wrap center reveal">
-    <h2 class="h2">__FLOOR_W__ by day ninety. <span class="grad">Then keep building.</span></h2>
+    <h2 class="h2">Paying for itself by day ninety. <span class="grad">Then it grows.</span></h2>
     <p class="fine">All figures are estimates from current menu prices and assumed costs. Replace the bills with Evelyn&rsquo;s real
     statements before deciding. A companion to the Lumevina Growth Blueprint. Not financial or legal advice.</p>
   </div>
@@ -1192,44 +1300,17 @@ PRINT_BODY = """
 <section class="page">
   <div>
     <p class="kicker">Lumevina · The first 90 days</p>
-    <h1 class="h1" style="margin-top:12px">__FLOOR_W__ members.<br><span class="grad">Ninety days.</span></h1>
-    <p class="lead" style="margin-top:16px;max-width:6.4in">The fewest members Lumevina needs by day 90 for dues to pay every business bill,
-    the weekly pace to get there, and how the talent search runs alongside it.</p>
+    <h1 class="h1" style="margin-top:12px">Ninety days to a spa<br>that <span class="grad">pays you first.</span></h1>
+    <p class="lead" style="margin-top:16px;max-width:6.5in">Memberships pay Lumevina&rsquo;s bills before the month even starts.
+    Once they do, every facial, wax and product Evelyn sells is hers. This is the road there, and what comes after.</p>
   </div>
-  <div class="stats">
-    <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every business bill.</div></div>
-    <div class="stat"><div class="v num">__PLAN__</div><div class="k">The plan by day 90, with room for a cancellation or a slow month.</div></div>
-    <div class="stat"><div class="v num">30</div><div class="k">By month 6, then 50 by year 2. Artists sign from month 4.</div></div>
-  </div>
-  <div class="chart-card">
-    <h3>Members, week by week</h3>
-    <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every business bill.</p>
-    __PACE_SVG__
-  </div>
-  <div class="flow">__FLOW__</div>
-  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 6 to 9: three ways to run it, building a month from any mix, banked facials and extra days, and the product-led version.</p>
+  <div><div class="cols-h">The road</div><div class="cols-s">Six steps. The first three start this month</div>
+    <ol class="road">__ROADMAP__</ol></div>
+  <div><div class="cols-h">The milestones</div><div class="cols-s">Members, and what each number unlocks</div>
+    <div class="miles">__MILES__</div></div>
+  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 2 to 5 are the plan: thirteen weeks, new clients, talent, and after day 90.
+  The appendix, pages 6 to 10, has the numbers behind it for Ruben and the accountant.</p>
   __F1__
-</section>
-
-<section class="page tight">
-  <div>
-    <p class="kicker">The minimum</p>
-    <h2 class="h2" style="margin-top:10px">Why __FLOOR_W_L__. <span class="dim">Dues pay the business.</span></h2>
-    <p class="lead" style="margin-top:10px;font-size:11pt">Dues arrive first. Once they cover the business&rsquo;s bills, everything else is profit.</p>
-  </div>
-  <div class="two">
-    <div><div class="cols-h">The business&rsquo;s monthly bills</div><div class="cols-s">Spa costs only. Home, car and food come from her pay</div>__BILLS__</div>
-    <div><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
-  </div>
-  <div class="eq"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
-  <div><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
-  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
-    <div class="costs three">__ONETIME__</div></div>
-  <div><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too</div>
-    <div class="costs three">__PAY__</div></div>
-  <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks
-  spent about $121 a month. As a Glow member she spends $159, comes every month, and pays first.</p>
-  __F2__
 </section>
 
 <section class="page tight">
@@ -1237,15 +1318,32 @@ PRINT_BODY = """
     <p class="kicker">How to get there</p>
     <h2 class="h2" style="margin-top:10px">Thirteen weeks. <span class="dim">One offer at a time.</span></h2>
   </div>
+  <div class="chart-card">
+    <h3>Members, week by week</h3>
+    <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: __FLOOR__ members, where Lumevina pays for itself.</p>
+    __PACE_SVG__
+  </div>
   <div><div class="cols-h">Week by week</div><div class="cols-s">Members by the end of each stretch · the plan</div>__PACE__</div>
+  <div class="offer hl"><p class="kicker">__SCRIPT_K__ · two minutes at the end of every facial</p>
+    <p class="of-big" style="font-size:12.5pt;line-height:1.35;letter-spacing:-0.015em;margin-top:6px">__SCRIPT_V__</p>
+    <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div>
+  __F2__
+</section>
+
+<section class="page">
+  <div>
+    <p class="kicker">New clients</p>
+    <h2 class="h2" style="margin-top:10px">Two new faces a week. <span class="dim">The next members.</span></h2>
+    <p class="lead" style="margin-top:12px;font-size:11pt">Evelyn&rsquo;s regulars start the membership. New clients keep it growing,
+    and cover the ones who move or cancel. Six ways in, each cheap, each counted on the Saturday scoreboard.</p>
+  </div>
+  <div class="new6">__NEWC__</div>
+  <div class="perk"><b>__NEWP_K__</b><span>__NEWP_V__</span></div>
   <div class="two">
     <div><div class="cols-h">Where the __PLAN__ come from</div><div class="cols-s">The plan, by day 90</div>__SOURCES__</div>
-    <div><div class="cols-h">__SCRIPT_K__</div><div class="cols-s">Two minutes at the end of every facial</div>
-      <div class="offer hl"><p class="of-big" style="font-size:13pt;line-height:1.35;letter-spacing:-0.015em">__SCRIPT_V__</p>
-      <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div></div>
+    <div><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
+      <div class="costs behind" style="grid-template-columns:1fr 1fr">__BEHIND__</div></div>
   </div>
-  <div><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
-    <div class="costs behind" style="grid-template-columns:repeat(4,1fr)">__BEHIND__</div></div>
   __F3__
 </section>
 
@@ -1278,13 +1376,13 @@ PRINT_BODY = """
     __LANES_SVG__
   </div>
   <div class="two">
-    <div><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, referrals, the site</div>__ENGINE_M__</div>
+    <div><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, new clients, referrals</div>__ENGINE_M__</div>
     <div><div class="cols-h">Engine 2 · Talent</div><div class="cols-s">Matches the Growth Blueprint&rsquo;s pipeline</div>__ENGINE_T__</div>
   </div>
-  <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__
-  a member a month, __ARTIST_NOTE__.</p>
+  <div class="perk"><b>Three ways to run it</b><span>Facials can lead, product can lead, or it runs 50/50, at the same pay for Evelyn.
+  Appendix pages 7 to 10 show each one, and when to flip.</span></div>
   <div class="closer">
-    <h2 class="h2">__FLOOR_W__ by day ninety. <span class="grad">Then keep building.</span></h2>
+    <h2 class="h2">Paying for itself by day ninety. <span class="grad">Then it grows.</span></h2>
     <p class="fine" style="margin-top:10px">All figures are estimates from current menu prices and assumed costs. Replace the bills with
     Evelyn&rsquo;s real statements before deciding. A companion to the Lumevina Growth Blueprint. Not financial or legal advice.</p>
   </div>
@@ -1293,7 +1391,28 @@ PRINT_BODY = """
 
 <section class="page tight">
   <div>
-    <p class="kicker">Three ways to run it</p>
+    <p class="kicker">Appendix · The numbers behind it</p>
+    <h2 class="h2" style="margin-top:10px">Why __FLOOR_W_L__. <span class="dim">Dues pay the business.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">For Ruben and the accountant. Dues arrive first; past the bills, the rest is profit.</p>
+  </div>
+  <div class="two">
+    <div><div class="cols-h">The business&rsquo;s monthly bills</div><div class="cols-s">Spa costs only. Home, car and food come from her pay</div>__BILLS__</div>
+    <div><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
+  </div>
+  <div class="eq"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
+  <div><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
+  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
+    <div class="costs three">__ONETIME__</div></div>
+  <div><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too</div>
+    <div class="costs three">__PAY__</div></div>
+  <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks
+  spent about $121 a month. As a Glow member she spends $159, comes every month, and pays first.</p>
+  __F6__
+</section>
+
+<section class="page tight">
+  <div>
+    <p class="kicker">Appendix · Three ways to run it</p>
     <h2 class="h2" style="margin-top:10px">Flip the lead. <span class="dim">Keep the pay.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">__MODE_PAY__ a month for Evelyn, after the bills, three ways. The web version has the switch.</p>
   </div>
@@ -1303,12 +1422,12 @@ PRINT_BODY = """
     <div class="costs three">__FLIP_WHEN__</div></div>
   <div><div class="cols-h">The flip, in a week</div><div class="cols-s">Five things change; nothing is lost</div>
     <div class="costs" style="grid-template-columns:repeat(5,1fr)">__FLIP_HOW__</div></div>
-  __F6__
+  __F7__
 </section>
 
 <section class="page tight">
   <div>
-    <p class="kicker">Build your month</p>
+    <p class="kicker">Appendix · Build your month</p>
     <h2 class="h2" style="margin-top:10px">Pick the pay. <span class="dim">Slide the mix.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">Facials a week and Glow Routine subscribers for each goal. The web version has the sliders.</p>
   </div>
@@ -1317,12 +1436,12 @@ PRINT_BODY = """
   <div><div class="cols-h">A premium price</div><div class="cols-s">At 50 / 50 and __MODE_PAY__ a month for Evelyn. What clients pay more for, once the app is on the App Store</div>
     __PREM_T__</div>
   <div class="costs" style="grid-template-columns:repeat(4,1fr)">__PREM_WHY__</div>
-  __F7__
+  __F8__
 </section>
 
 <section class="page tight">
   <div>
-    <p class="kicker">Banked facials and extra days</p>
+    <p class="kicker">Appendix · Banked facials and extra days</p>
     <h2 class="h2" style="margin-top:10px">Paid for. <span class="dim">Still owed.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">Members can bank a month&rsquo;s facial. The dues are in, but the facial comes back later,
     and in a busy month it can take a day that&rsquo;s normally off.</p>
@@ -1333,12 +1452,12 @@ PRINT_BODY = """
     __EXTRA_GRID__</div>
   <div class="perk"><b>To make more</b><span>__EXTRA_STORY__</span></div>
   <div class="costs three">__BANK_NOTES__</div>
-  __F8__
+  __F9__
 </section>
 
 <section class="page tight">
   <div>
-    <p class="kicker">Another way · if product leads</p>
+    <p class="kicker">Appendix · If product leads</p>
     <h2 class="h2" style="margin-top:10px">Five facials. <span class="dim">The shelf does the rest.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">About five facials a week, and a monthly product subscription that takes none of Evelyn&rsquo;s hours.</p>
   </div>
@@ -1354,7 +1473,7 @@ PRINT_BODY = """
     <div class="costs three how">__PL_HOW__</div></div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">At five facials a week, a part-time or shared room could cut the biggest bill.
   Every __PL_STEP__ less a month is one fewer member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
-  __F9__
+  __F10__
 </section>
 </body>
 </html>
@@ -1369,15 +1488,17 @@ def fill(h, web):
         "__FLOOR__": str(FLOOR), "__PLAN__": str(PLAN), "__FLOOR2__": str(FLOOR_WITH_ARTISTS),
         "__KEPT__": "%d" % round(KEPT), "__BILLS_TOTAL__": money(BILLS_TOTAL), "__ARTIST__": "%d" % ARTIST_PERK,
         "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%.2f" % PERKS, "__ONETIME_TOTAL__": money(ONE_TIME_TOTAL), "__BEHIND_N__": str(LIKELY[7] - 2),
-        "__ARTIST_NOTE__": ("and the minimum moves to %d" % FLOOR_WITH_ARTISTS) if FLOOR_WITH_ARTISTS > FLOOR
-                           else ("and the minimum stays at %d" % FLOOR),
+        "__ARTIST_NOTE__": ("and paying for itself then takes %d members" % FLOOR_WITH_ARTISTS) if FLOOR_WITH_ARTISTS > FLOOR
+                           else ("and paying for itself still takes %d" % FLOOR),
         "__PACE_SVG__": pace_svg(), "__LANES_SVG__": lanes_svg(),
         "__BILLS__": bills_rows(), "__MEMBER__": member_rows(), "__LADDER__": ladder_html(),
         "__ONETIME__": onetime_html(), "__PAY__": pay_html(), "__PAY_N__": str(PAY_DEFAULT), "__PACE__": pace_html(), "__SOURCES__": sources_html(),
         "__SCRIPT_K__": SCRIPT[0], "__SCRIPT_V__": SCRIPT[1],
         "__BEHIND__": "".join('<div class="c"><b>%s</b><span>%s</span></div>' % b for b in BEHIND),
         "__TALENT__": talent_html(rv), "__GATE__": gate_html(rv), "__WHY_K__": WHY_FIRST[0], "__WHY_V__": WHY_FIRST[1],
-        "__FLOW__": flow_html(rv),
+        "__ROADMAP__": road_html(), "__MILES__": miles_html(),
+        "__NEWC__": "".join('<div class="g%s"><b>%s</b><p>%s</p></div>' % (rv, a, b) for a, b in NEW_CLIENTS),
+        "__NEWP_K__": NEW_PATH[0], "__NEWP_V__": NEW_PATH[1],
         "__MODE_READ__": ("At the same pay, product leading frees about %d hours a week in the chair but needs about %d more "
                           "subscribers. It pays off once Evelyn&rsquo;s facial hours are full, or when she wants them back, "
                           "not before." % (round(MODES[0]["hours"] - MODES[2]["hours"]), MODES[2]["subs"] - MODES[0]["subs"])),
@@ -1413,9 +1534,9 @@ web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, T
     .replace("__CHAIR_MAX__", str(CHAIR_MAX)).replace("__R_COST__", "%s" % R_COST_ABS).replace("__R_SHIP__", "%s" % R_SHIP)
     .replace("__BANK_CARRY__", str(BANK_CARRY)).replace("__DAY_SLOTS__", str(DAY_SLOTS)).replace("__FILL__", str(FILL))
     .replace("__MEMBER_VALUE__", str(MEMBER_VALUE)))
-foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 9</span></div>' % n
+foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 10</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
-for i in range(1, 10):
+for i in range(10, 0, -1):
     pr = pr.replace("__F%d__" % i, foot(i))
 
 for name, html in (("web.html", web), ("print.html", pr)):
