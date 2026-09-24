@@ -237,6 +237,33 @@ CEIL_NOTES = [("One chair has a ceiling", "About %d facials a week is the most o
               ("Subscribers don’t", "A box ships the same to Woodland Hills or Sacramento. Across California, and later the country, the only limit is packing, and that can be handed off."),
               ("So the mix is the lever", "Facials earn the most per hour and build trust; product scales without her hands. Past the chair’s ceiling, product and artists are the only ways up.")]
 
+# ─────────────────────────── banked facials and extra days ───────────────────────────
+# Members can bank a month's facial (two at most). The dues are already in, but the
+# facial is still owed, so busy months can need a day that's normally off.
+BANK_MEMBERS = PLAN                 # members at day 90
+BANK_RATE = 0.15                    # members who bank their facial in a given month
+BANK_CARRY = 2                      # banked facials are usually used within about two months
+DAY_SLOTS = 5                       # facials in one extra day
+FILL = 0.8                          # how full an extra day gets, beyond the banked facials
+MEMBER_VALUE = 195                  # what a member facial is worth at today's prices
+EXTRA = [(0, "No extra days"), (26 / 12.0, "A Monday every other week"), (52 / 12.0, "A Monday every week")]
+
+
+def bank_math(members, rate, days):
+    owed = min(members * 2, members * rate * BANK_CARRY)
+    back = members * rate                                  # banked facials coming back each month
+    slots = days * DAY_SLOTS
+    used = min(slots, back)
+    open_ = slots - used
+    extra = open_ * FILL * kf(F_AVG)
+    weeks = owed / (slots * 12 / 52.0) if slots else None
+    return owed, back, slots, used, open_, extra, weeks
+
+
+BANK_NOTES = [("Money held, not earned", "Dues come in when they&rsquo;re paid, but a banked facial is still owed. The dashboard&rsquo;s Facials owed tile tracks them, so the books never mistake held money for spare money."),
+              ("They come back in busy months", "Holidays, weddings and summer are when members cash in. Two banked facials per member is the most anyone can hold, so %d members can owe %d at the very most." % (PLAN, PLAN * 2)),
+              ("Open a day off when it builds", "When facials owed pass about 10, two days of work, open a Monday every other week until they&rsquo;re cleared. The open slots after that are new money.")]
+
 FLIP_WHEN = [("Toward product", "Product sales beat facial sales two months running, the facial book has a waitlist, or Evelyn wants fewer chair hours."),
              ("Toward facials", "Routine cancellations run over 1 in 10 a month, product keeps less than $40 of every $100, or facial demand outgrows the open slots."),
              ("One step at a time", "Go through 50/50 first and hold it a month. Members keep their plans and subscribers keep their boxes either way.")]
@@ -448,6 +475,32 @@ def prem_html():
     return h + '</div>'
 
 
+def bank_grid_html():
+    rates = [0.1, 0.2, 0.3]
+    h = ('<div class="grid-t bank-t"><div class="gt-row gt-h"><span>Members</span>' +
+         "".join("<span>%d%% bank a month</span>" % round(r * 100) for r in rates) + '</div>')
+    for m in [10, PLAN, 30, 50]:
+        h += '<div class="gt-row"><span class="gt-pay">%d%s</span>' % (m, " · day 90" if m == PLAN else "")
+        for r in rates:
+            owed = bank_math(m, r, 0)[0]
+            d = math.ceil(round(owed) / DAY_SLOTS)
+            h += '<span>%d owed<br><i class="gt-sub">%s, %d %s</i></span>' % (round(owed), money(round(owed) * MEMBER_VALUE), d, "day" if d == 1 else "days")
+        h += '</div>'
+    return h + '</div>'
+
+
+def extra_grid_html():
+    h = ('<div class="grid-t extra-t"><div class="gt-row gt-h"><span>With %d members, %d%% banking</span><span>Extra slots a month</span>'
+         '<span>For banked facials</span><span>Open for new bookings</span><span>Added a month</span><span>Backlog cleared in</span></div>' % (BANK_MEMBERS, round(BANK_RATE * 100)))
+    for d, name in EXTRA:
+        owed, back, slots, used, open_, extra, weeks = bank_math(BANK_MEMBERS, BANK_RATE, d)
+        h += ('<div class="gt-row"><span class="gt-pay">%s</span><span>%s</span><span>%s</span><span>%s</span><span class="gt-add">%s</span><span>%s</span></div>'
+              % (name, "&mdash;" if not d else "about %d" % round(slots), "&mdash;" if not d else "about %d" % round(used),
+                 "&mdash;" if not d else "about %d" % round(open_), "&mdash;" if not d else "+" + money(round(extra, -1)),
+                 "waits for open slots" if not d else "about %d %s" % (max(1, round(weeks)), "week" if round(weeks) <= 1 else "weeks")))
+    return h + '</div>'
+
+
 def cards2(items):
     return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % i for i in items)
 
@@ -546,6 +599,9 @@ LP_CSS = r"""
 .gt-over i { display: block; font-style: normal; color: #ff9f8f; font-weight: 600; }
 .prem-t .gt-row { grid-template-columns: 1fr 1fr 1fr .9fr .9fr 1.5fr; }
 .gt-add { color: var(--rose); font-weight: 600; }
+.gt-sub { font-style: normal; color: var(--text-3); }
+.bank-t .gt-row { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.extra-t .gt-row { grid-template-columns: 1.6fr .9fr .9fr 1fr .9fr 1.1fr; }
 """
 
 LP_WEB = r"""
@@ -592,6 +648,14 @@ LP_WEB = r"""
   color: var(--text-2); font-size: .92rem; }
 .mo-row b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
 .mo-prem { grid-column: 1 / -1; color: var(--rose); font-size: .95rem; line-height: 1.45; }
+.bank-days { display: grid; gap: 8px; }
+.bd-k { color: var(--text-2); font-size: .95rem; }
+.bd-sw { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 14px; background: #1f1f22; }
+.bd-sw button { font: inherit; font-size: .85rem; font-weight: 600; color: var(--text-2); background: none; border: 0; border-radius: 10px;
+  padding: 9px 6px; cursor: pointer; transition: background-color .25s, color .25s; }
+.bd-sw button[aria-checked="true"] { background: #f0c2cf; color: #000; }
+.bd-sw button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+.mixer.bank { margin-top: 4px; }
 .mode-ui { display: grid; justify-items: center; gap: 18px; }
 .mode-switch { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 5px; border-radius: 999px; background: #1a1a1d;
   width: min(520px, 100%); box-shadow: inset 0 0 0 1px var(--hair); --i: 0; }
@@ -795,6 +859,36 @@ WEB_JS = r"""
   };
   ["x-pay", "x-mix", "x-up"].forEach(function (id) { $(id).addEventListener("input", xpaint); });
   xpaint();
+
+  /* banked facials and extra days */
+  var bdays = 26 / 12;
+  var bpaint = function () {
+    var m = +$("b-m").value, r = +$("b-r").value / 100;
+    var owed = Math.min(m * 2, m * r * __BANK_CARRY__), back = m * r, slots = bdays * __DAY_SLOTS__;
+    var used = Math.min(slots, back), open = slots - used, extra = open * __FILL__ * kfx(__F_AVG__);
+    var perWeek = slots * 12 / 52, weeks = slots ? owed / perWeek : 0, peakDays = Math.ceil(Math.round(owed) / __DAY_SLOTS__);
+    $("bo-m").textContent = m;
+    $("bo-r").textContent = Math.round(r * 100) + "%";
+    $("bo-owed").textContent = Math.round(owed);
+    $("bo-owed-t").textContent = fmt(Math.round(owed) * __MEMBER_VALUE__) + " of dues already collected for them. Two per member is the most anyone can hold, so " +
+      m + " members can owe " + (m * 2) + " at most.";
+    $("bo-extra").textContent = slots ? "+" + fmt(Math.round(extra / 10) * 10) : "$0";
+    $("bo-extra-t").textContent = slots
+      ? "About " + Math.round(used) + " slots go to banked facials, " + Math.round(open) + " open for new bookings, 80% full."
+      : "Banked facials wait for open slots on regular days.";
+    $("bo-peak").textContent = Math.round(owed) + " facials, about " + peakDays + (peakDays === 1 ? " day" : " days") + " of work";
+    $("bo-slots").textContent = slots ? "about " + Math.round(slots) : "none";
+    $("bo-clear").textContent = slots ? "about " + Math.max(1, Math.round(weeks)) + (Math.round(weeks) <= 1 ? " week" : " weeks") : "only as open slots allow";
+    document.querySelectorAll(".bd-sw [data-days]").forEach(function (b) {
+      b.setAttribute("aria-checked", String(Math.abs(+b.getAttribute("data-days") - bdays) < 0.01));
+    });
+  };
+  document.querySelector(".bd-sw").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-days]");
+    if (b) { bdays = +b.getAttribute("data-days"); bpaint(); }
+  });
+  ["b-m", "b-r"].forEach(function (id) { $(id).addEventListener("input", bpaint); });
+  bpaint();
 })();
 """
 
@@ -1007,6 +1101,31 @@ WEB_BODY = """
         <p class="mo-prem" id="xo-prem"></p>
       </div>
     </div>
+    <div class="reveal mt2"><div class="cols-h">Banked facials and extra days</div><div class="cols-s">Members can bank a month&rsquo;s facial.
+      The dues are in, but the facial is still owed, and it can take a day that&rsquo;s normally off.</div>
+      <div class="mixer bank">
+        <div class="calc-in">
+          <label for="b-m">Members <output id="bo-m"></output><input id="b-m" type="range" min="0" max="80" step="1" value="__BANK_M__"></label>
+          <label for="b-r">Bank their facial in a given month <output id="bo-r"></output><input id="b-r" type="range" min="0" max="40" step="5" value="__BANK_R__"></label>
+          <div class="bank-days" role="radiogroup" aria-label="Extra days">
+            <span class="bd-k">Work a day that&rsquo;s normally off</span>
+            <div class="bd-sw">
+              <button type="button" role="radio" aria-checked="false" data-days="0">None</button>
+              <button type="button" role="radio" aria-checked="true" data-days="2.1667">Every other week</button>
+              <button type="button" role="radio" aria-checked="false" data-days="4.3333">Every week</button>
+            </div>
+          </div>
+        </div>
+        <div class="mix-out" aria-live="polite">
+          <div class="mo-tile"><p class="mo-k">Facials owed right now</p><p class="mo-v num" id="bo-owed"></p><p class="mo-note" id="bo-owed-t"></p></div>
+          <div class="mo-tile"><p class="mo-k">Added a month by the extra day</p><p class="mo-v num grad" id="bo-extra"></p><p class="mo-note" id="bo-extra-t"></p></div>
+          <div class="mo-row"><span>If they all come back the same month</span><b id="bo-peak"></b></div>
+          <div class="mo-row"><span>Extra slots a month</span><b id="bo-slots"></b></div>
+          <div class="mo-row"><span>Backlog cleared in</span><b id="bo-clear"></b></div>
+        </div>
+      </div>
+      <div class="costs three" style="margin-top:14px">__BANK_NOTES__</div>
+    </div>
     <div class="reveal mt2"><div class="cols-h">One person, or no limit</div><div class="cols-s">Why the mix matters more as the goal grows</div>
       <div class="costs three">__CEIL_NOTES__</div></div>
     <div class="reveal mt2"><div class="cols-h">Why a premium price holds</div><div class="cols-s">What clients pay more for, once the app is on the App Store</div>
@@ -1088,7 +1207,7 @@ PRINT_BODY = """
     __PACE_SVG__
   </div>
   <div class="flow">__FLOW__</div>
-  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 6 to 8: three ways to run it, building a month from any mix of facials and product, and what the product-led version needs.</p>
+  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 6 to 9: three ways to run it, building a month from any mix, banked facials and extra days, and the product-led version.</p>
   __F1__
 </section>
 
@@ -1203,6 +1322,22 @@ PRINT_BODY = """
 
 <section class="page tight">
   <div>
+    <p class="kicker">Banked facials and extra days</p>
+    <h2 class="h2" style="margin-top:10px">Paid for. <span class="dim">Still owed.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">Members can bank a month&rsquo;s facial. The dues are in, but the facial comes back later,
+    and in a busy month it can take a day that&rsquo;s normally off.</p>
+  </div>
+  <div><div class="cols-h">Facials owed at any time</div><div class="cols-s">Worth, in dues already collected, and the days of work to clear them (5 facials a day)</div>
+    __BANK_GRID__</div>
+  <div><div class="cols-h">Working a day that&rsquo;s normally off</div><div class="cols-s">Banked facials take the extra slots first; the rest are new bookings, 80% full</div>
+    __EXTRA_GRID__</div>
+  <div class="perk"><b>To make more</b><span>__EXTRA_STORY__</span></div>
+  <div class="costs three">__BANK_NOTES__</div>
+  __F8__
+</section>
+
+<section class="page tight">
+  <div>
     <p class="kicker">Another way · if product leads</p>
     <h2 class="h2" style="margin-top:10px">Five facials. <span class="dim">The shelf does the rest.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">About five facials a week, and a monthly product subscription that takes none of Evelyn&rsquo;s hours.</p>
@@ -1219,7 +1354,7 @@ PRINT_BODY = """
     <div class="costs three how">__PL_HOW__</div></div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">At five facials a week, a part-time or shared room could cut the biggest bill.
   Every __PL_STEP__ less a month is one fewer member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
-  __F8__
+  __F9__
 </section>
 </body>
 </html>
@@ -1246,6 +1381,11 @@ def fill(h, web):
         "__MODE_READ__": ("At the same pay, product leading frees about %d hours a week in the chair but needs about %d more "
                           "subscribers. It pays off once Evelyn&rsquo;s facial hours are full, or when she wants them back, "
                           "not before." % (round(MODES[0]["hours"] - MODES[2]["hours"]), MODES[2]["subs"] - MODES[0]["subs"])),
+        "__EXTRA_STORY__": (lambda r: "Open a Monday every other week: about %d more slots a month. After the banked facials, about %d are new bookings, "
+                             "roughly +%s a month, or about %s a year, for about %d extra days of work a month."
+                             % (round(r[2]), round(r[4]), money(round(r[5], -1)), money(round(r[5] * 12, -3)), round(EXTRA[1][0])))(bank_math(BANK_MEMBERS, BANK_RATE, EXTRA[1][0])),
+        "__BANK_GRID__": bank_grid_html(), "__EXTRA_GRID__": extra_grid_html(), "__BANK_NOTES__": cards2(BANK_NOTES),
+        "__BANK_M__": str(BANK_MEMBERS), "__BANK_R__": str(round(BANK_RATE * 100)),
         "__MIX_GRID__": mix_grid_html(), "__PREM_T__": prem_html(), "__PREM_WHY__": cards2(PREM_WHY),
         "__CEIL_NOTES__": cards2(CEIL_NOTES), "__CHAIR_MAX__": str(CHAIR_MAX), "__CHAIR_TOP__": money(round(CHAIR_TOP, -2)),
         "__MODE_COLS__": mode_cols_html(), "__FLIP_WHEN__": cards2(FLIP_WHEN), "__FLIP_HOW__": cards2(FLIP_HOW),
@@ -1270,10 +1410,12 @@ web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, T
     .replace("__MODES_JSON__", json.dumps([{k: m[k] for k in ("id", "name", "share", "tag", "do")} for m in MODES], ensure_ascii=True))
     .replace("__F_AVG__", "%s" % F_AVG).replace("__F_KEPT__", "%.4f" % F_KEPT_EACH).replace("__R_PRICE__", "%s" % R_PRICE)
     .replace("__R_KEPT__", "%.4f" % R_KEPT).replace("__BILLS_N__", str(BILLS_TOTAL))
-    .replace("__CHAIR_MAX__", str(CHAIR_MAX)).replace("__R_COST__", "%s" % R_COST_ABS).replace("__R_SHIP__", "%s" % R_SHIP))
-foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 8</span></div>' % n
+    .replace("__CHAIR_MAX__", str(CHAIR_MAX)).replace("__R_COST__", "%s" % R_COST_ABS).replace("__R_SHIP__", "%s" % R_SHIP)
+    .replace("__BANK_CARRY__", str(BANK_CARRY)).replace("__DAY_SLOTS__", str(DAY_SLOTS)).replace("__FILL__", str(FILL))
+    .replace("__MEMBER_VALUE__", str(MEMBER_VALUE)))
+foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 9</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
-for i in range(1, 9):
+for i in range(1, 10):
     pr = pr.replace("__F%d__" % i, foot(i))
 
 for name, html in (("web.html", web), ("print.html", pr)):

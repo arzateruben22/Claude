@@ -247,6 +247,8 @@
     .mem-state.ending { color: var(--alt); background: rgba(227,180,143,0.12); }
     .mem-state.paused { color: var(--ink-70); background: rgba(245,245,247,0.08); }
     @media (max-width: 720px) { #mem-tiles { grid-template-columns: repeat(2, 1fr); } }
+    .mem-owed-note { margin: -0.4rem 0 1.2rem; font-size: 0.85rem; }
+    .mem-owed-note strong { color: var(--ink); font-weight: 500; }
     .mem-five { margin: 0 0 1.3rem; padding: 0.9rem 1rem; border-radius: 14px; background: rgba(234,185,200,0.06);
       box-shadow: inset 0 0 0 1px rgba(234,185,200,0.2); }
     .mem-five h3 { font-size: 0.9rem; font-weight: 600; margin: 0 0 0.6rem; }
@@ -419,6 +421,7 @@
         </div>
       </div>
       <div class="bk-tiles" id="mem-tiles"></div>
+      <p class="sub mem-owed-note" id="mem-owed-note"></p>
       <div class="mem-mix" id="mem-mix"></div>
       <div class="mem-five" id="mem-five"></div>
       <div class="mem-launch" id="mem-launch"></div>
@@ -1173,6 +1176,15 @@
       document.getElementById("mem-tiles").innerHTML = tiles.map(function (t) {
         return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
           t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+
+      /* banked facials are paid for but still owed: say when they call for an extra day */
+      var owedDays = Math.ceil(owed / 5);
+      document.getElementById("mem-owed-note").innerHTML = owed
+        ? "<strong>" + owed + " facials are paid for and not yet booked</strong>, about " + owedDays + (owedDays === 1 ? " day" : " days") +
+          " of work (" + money(owedValue) + " of dues already in). " + (owed >= 10
+            ? "That's past 10: open a Monday every other week until they're cleared."
+            : "When it passes 10, open a Monday every other week to clear them.")
+        : "No facials owed right now.";
 
       var max = 1;
       var mix = Object.keys(PLANS).map(function (id) {
