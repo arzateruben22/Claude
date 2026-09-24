@@ -860,7 +860,7 @@
       var byProduct = {}, units = 0, revenue = 0, online = 0;
       sales.forEach(function (s) {
         var q = num(s.qty), rev = (s.paid != null ? num(s.paid) : num(s.price)) * q;
-        units += q; revenue += rev; if (s.channel === "online") online += q;
+        units += q; revenue += rev; if (s.channel === "online" || s.channel === "subscription") online += q;
         var p = byProduct[s.id] || (byProduct[s.id] = { name: s.name, units: 0, rev: 0 });
         p.units += q; p.rev += rev;
       });
@@ -875,7 +875,15 @@
         (given.length ? '<p class="sub" style="margin:0.9rem 0 0">Given free in Founding Five kits: <strong>' +
           given.reduce(function (a, s) { return a + (num(s.qty) || 1); }, 0) + ' units</strong>, ' +
           money(given.reduce(function (a, s) { return a + num(s.cost) * (num(s.qty) || 1); }, 0)) +
-          ' at cost. Not counted as sales.</p>' : '');
+          ' at cost. Not counted as sales.</p>' : '') +
+        (function () {
+          /* Glow Routine: the product membership (js/routine.js) */
+          var rts = lget("lumevina_routines") || {};
+          var live = Object.keys(rts).map(function (k) { return rts[k]; }).filter(function (r) { return r.status === "active"; });
+          return live.length ? '<p class="sub" style="margin:0.5rem 0 0">Glow Routine: <strong>' + live.length +
+            (live.length === 1 ? ' subscriber' : ' subscribers') + '</strong>, ' +
+            money(live.reduce(function (a, r) { return a + num(r.price); }, 0)) + ' a month in product sales.</p>' : '';
+        })();
       var rows = Object.keys(byProduct).map(function (id) { return byProduct[id]; })
         .sort(function (a, b) { return b.units - a.units; }).slice(0, 6);
       var max = rows.length ? rows[0].units : 1;
@@ -892,8 +900,8 @@
     /* ── Shared: members, dues and the retail/giveaway log ──
        Used by Bookkeeping (income, costs, profit) and the Glow Membership card
        (launch ledger). Real records when there are any, else a small sample. */
-    var MPLANS = { glow: { name: "Glow", price: 149, value: 180 }, clear: { name: "Clear Skin", price: 159, value: 180 },
-                   ageless: { name: "Ageless", price: 199, value: 230 } };
+    var MPLANS = { glow: { name: "Glow", price: 159, value: 195 }, clear: { name: "Clear Skin", price: 169, value: 195 },
+                   ageless: { name: "Ageless", price: 209, value: 245 } };
     var dAgo = function (daysAgo) { return new Date(Date.now() - daysAgo * 864e5).toISOString(); };
     var MEM_SAMPLE = [
       { name: "Maya Chen", plan: "glow", status: "active", credits: 1, startedAt: dAgo(96) },
@@ -910,7 +918,7 @@
     /* sample: the five earliest members are the Founding Five (kit $32 at cost, $70 retail) */
     MEM_SAMPLE.slice().sort(function (a, b) { return new Date(a.startedAt) - new Date(b.startedAt); }).slice(0, 5)
       .forEach(function (m, i) { m.five = { no: i + 1, kit: i < 3 ? "given" : "ready", addon: i < 2 ? "used" : "ready",
-        kitCost: 32, kitValue: 70, addonValue: i < 2 ? 25 : 0 }; });
+        kitCost: 32, kitValue: 75, addonValue: i < 2 ? 27 : 0 }; });
     var storedMembers = lget("lumevina_memberships");
     var realMembers = storedMembers ? Object.keys(storedMembers).map(function (k) { return storedMembers[k]; }) : [];
     var MEMBERS = realMembers.length ? realMembers : MEM_SAMPLE;
@@ -938,8 +946,8 @@
     if (!realMembers.length) {
       MEMBERS.forEach(function (m) {
         if (!m.five) return;
-        KIT_LOG.push({ name: "GlyMed+ Glycolic Facial Cleanser", qty: 1, cost: 18, price: 38, at: m.startedAt, type: "promo" });
-        KIT_LOG.push({ name: "Face Reality Daily SPF 30 Plus", qty: 1, cost: 14, price: 32, at: m.startedAt, type: "promo" });
+        KIT_LOG.push({ name: "GlyMed+ Glycolic Facial Cleanser", qty: 1, cost: 18, price: 41, at: m.startedAt, type: "promo" });
+        KIT_LOG.push({ name: "Face Reality Daily SPF 30 Plus", qty: 1, cost: 14, price: 34, at: m.startedAt, type: "promo" });
       });
     }
 
@@ -1228,7 +1236,7 @@
         var kitValue = kits.reduce(function (a, k) { return a + num(k.price) * (num(k.qty) || 1); }, 0);
         var kitN = fives.filter(function (m) { return inWin(m.startedAt); }).length;
         var addUsed = fives.filter(function (m) { return m.five.addon === "used"; });
-        var addValue = addUsed.reduce(function (a, m) { return a + (num(m.five.addonValue) || 25); }, 0);
+        var addValue = addUsed.reduce(function (a, m) { return a + (num(m.five.addonValue) || 27); }, 0);
         var addLeft = fives.length - addUsed.length;
         var net = duesIn - fees - kitCost;
         var d2 = function (n) { return "$" + (Math.round(n * 100) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
@@ -1488,9 +1496,9 @@
     (function () {
       var IKEY = "lumevina_inventory", LOW = 3;
       var SAMPLE = [
-        { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", stock: 8, cost: 18, price: 38 },
-        { id: "lm-serum", name: "Le Mieux TGF-β Booster", stock: 3, cost: 32, price: 75 },
-        { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", stock: 12, cost: 14, price: 32 }
+        { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", stock: 8, cost: 18, price: 41 },
+        { id: "lm-serum", name: "Le Mieux TGF-β Booster", stock: 3, cost: 32, price: 80 },
+        { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", stock: 12, cost: 14, price: 34 }
       ];
       var stored = lget(IKEY);
       var inv = (stored && stored.length) ? stored : SAMPLE.slice();
@@ -1499,6 +1507,12 @@
       /* names follow the shelf catalog (js/inventory.js) */
       var NAMES = { "gm-cleanser": "GlyMed+ Glycolic Facial Cleanser", "spf-30": "Face Reality Daily SPF 30 Plus", "lm-serum": "Le Mieux TGF-β Booster" };
       inv.forEach(function (p) { if (NAMES[p.id]) p.name = NAMES[p.id]; });
+      /* the shelf's price list (matches js/inventory.js): catalog prices apply once per list */
+      var PRICE_LIST = "2026-10";
+      inv.forEach(function (p) {
+        var c = SAMPLE.filter(function (x) { return x.id === p.id; })[0];
+        if (c && p.priceList !== PRICE_LIST) { p.price = c.price; p.priceList = PRICE_LIST; }
+      });
       var num = function (n) { return Number(n || 0); };
       var save = function () { try { localStorage.setItem(IKEY, JSON.stringify(inv)); } catch (e) { /* private mode */ } };
 

@@ -2,10 +2,10 @@
  *
  * Two quiet ways a browsing visitor meets the membership:
  *
- *   1. On the facial cards: "Or $149 a month as a member" under the price
+ *   1. On the facial cards: "Or $159 a month as a member" under the price
  *      (members see what their plan already includes instead).
  *   2. A small card that slides up once someone has scrolled past the
- *      services: a facial every month from $149, the savings, and the
+ *      services: a facial every month from $159, the savings, and the
  *      Founding Five spots left. It stays out of the way: hidden while the
  *      membership section is on screen, behind any open window or the
  *      home-screen card, never shown to members, and gone for a week once
@@ -77,7 +77,7 @@
     '<button type="button" class="mem-nudge-x" aria-label="Close">' +
       '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>' +
     '<p class="mem-nudge-chip"><span class="mem-founding-dot" aria-hidden="true"></span><span class="mem-nudge-five"></span></p>' +
-    '<p class="mem-nudge-h">A facial every month, <span>from $149.</span></p>' +
+    '<p class="mem-nudge-h">A facial every month, <span>from $159.</span></p>' +
     '<p class="mem-nudge-b"></p>' +
     '<a class="mem-nudge-go" href="#membership">See the plans <span aria-hidden="true">→</span></a>';
   document.body.appendChild(card);
@@ -88,8 +88,8 @@
     chip.hidden = left === 0;
     card.querySelector(".mem-nudge-five").textContent = "Founding Five · " + left + (left === 1 ? " spot" : " spots") + " left";
     card.querySelector(".mem-nudge-b").textContent = left > 0
-      ? "Save up to $372 a year, bank a month you're busy, and the first five members get a free skincare kit."
-      : "Save up to $372 a year, bank a month you're busy, and save on skincare from our shelf.";
+      ? "Save up to $432 a year, bank a month you're busy, and the first five members get a free skincare kit."
+      : "Save up to $432 a year, bank a month you're busy, and save on skincare from our shelf.";
   };
 
   var passedServices = false, seeingPlans = false, shown = false, gone = false;

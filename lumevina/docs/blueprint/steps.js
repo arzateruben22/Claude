@@ -109,7 +109,7 @@
     });
     var stats = [
       { x: X0, label: "Hours booked", a: 62, b: 94, fmt: function (v) { return Math.round(v) + "%"; }, t0: 2.2, t1: 5.4 },
-      { x: X0 + W7 / 3, label: "Average visit", a: 120, b: 152, fmt: function (v) { return "$" + Math.round(v); }, t0: 5.6, t1: 7.8 },
+      { x: X0 + W7 / 3, label: "Average visit", a: 120, b: 163, fmt: function (v) { return "$" + Math.round(v); }, t0: 5.6, t1: 7.8 },
       { x: X0 + 2 * W7 / 3, label: "Members", a: 0, b: 30, fmt: function (v) { return String(Math.round(v)); }, t0: 7.9, t1: 9.9 }
     ];
     stats.forEach(function (s) {

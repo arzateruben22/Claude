@@ -14,14 +14,15 @@
   "use strict";
 
   var KEY = "lumevina_inventory";
+  var PRICE_LIST = "2026-10";   /* bump when the menu's prices change */
 
   /* the shelf — matches the dashboard's Inventory card */
   var CATALOG = [
-    { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", cost: 18, price: 38, stock: 8,
+    { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", cost: 18, price: 41, stock: 8,
       desc: "Step one, cleanse: 10% glycolic acid clears dull buildup and keeps skin smooth between facials." },
-    { id: "lm-serum", name: "Le Mieux TGF-β Booster", cost: 32, price: 75, stock: 3,
+    { id: "lm-serum", name: "Le Mieux TGF-β Booster", cost: 32, price: 80, stock: 3,
       desc: "A concentrated dropper serum — a few drops under your moisturizer to boost your routine between facials." },
-    { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", cost: 14, price: 32, stock: 12,
+    { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", cost: 14, price: 34, stock: 12,
       desc: "Broad-spectrum, acne-safe SPF 30 — the one daily step that protects every result." }
   ];
 
@@ -49,7 +50,11 @@
   var RETIRED = ["gua-sha"];
 
   var inv = load();
-  if (!inv) { inv = JSON.parse(JSON.stringify(CATALOG)); persist(); }
+  if (!inv) {
+    inv = JSON.parse(JSON.stringify(CATALOG));
+    inv.forEach(function (p) { p.priceList = PRICE_LIST; });
+    persist();
+  }
   else {
     var dirty = false;
     /* products taken off the shelf leave saved lists too */
@@ -58,10 +63,13 @@
       dirty = true;
     }
     /* names and descriptions follow the catalog (a product renamed to match
-       its bottle updates everywhere); stock and price stay as saved */
+       its bottle updates everywhere); stock stays as saved. Prices follow the
+       catalog once per price list, so a menu-wide change reaches saved
+       shelves too, and a price edited after that is left alone. */
     inv.forEach(function (p) {
       var c = CATALOG.filter(function (x) { return x.id === p.id; })[0];
       if (c && (p.name !== c.name || p.desc !== c.desc)) { p.name = c.name; p.desc = c.desc; dirty = true; }
+      if (c && p.priceList !== PRICE_LIST) { p.price = c.price; p.priceList = PRICE_LIST; dirty = true; }
     });
     if (dirty) persist();
   }

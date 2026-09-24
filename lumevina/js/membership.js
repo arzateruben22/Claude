@@ -4,9 +4,9 @@
  * member's account; unused facials bank (up to 2) so a busy month is never
  * wasted, and a banked facial can be gifted to a friend.
  *
- *   Glow      $149/mo  Lumevina Custom Facial (or Custom + Dermaplaning)
- *   Clear     $159/mo  Monthly Acne Treatment, plus a between-visit check-in
- *   Ageless   $199/mo  Ageless Grace Facial, plus a finishing add-on every
+ *   Glow      $159/mo  Lumevina Custom Facial (or Custom + Dermaplaning)
+ *   Clear     $169/mo  Monthly Acne Treatment, plus a between-visit check-in
+ *   Ageless   $209/mo  Ageless Grace Facial, plus a finishing add-on every
  *                      other visit (added in the room)
  *
  * Every plan: 10% off skincare from our shelf, a home routine from Evelyn
@@ -38,13 +38,13 @@
   var FIVE_CAP = 5;
   var KIT = [{ id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser" },
              { id: "spf-30", name: "Face Reality Daily SPF 30 Plus" }];
-  var KIT_VALUE = 70;
-  var ADDON_VALUE = 25;     /* what the free LED or dermaplaning add-on is worth; no product cost */
+  var KIT_VALUE = 75;
+  var ADDON_VALUE = 27;     /* what the free LED or dermaplaning add-on is worth; no product cost */
   var SALES_KEY = "lumevina_retail_sales";
 
   /* A ladder: each tier includes everything in the one below it. */
   var PLANS = [
-    { id: "glow", name: "Glow", price: 149, value: 180, popular: true, retail: 0.10,
+    { id: "glow", name: "Glow", price: 159, value: 195, popular: true, retail: 0.10,
       primary: "lumevina-custom-facial",
       covers: ["lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Lumevina Custom Facial",
@@ -54,14 +54,14 @@
               "A home routine from Evelyn, refreshed each season",
               "15% off add-ons and anything else booked the same visit",
               "First word on flash openings"] },
-    { id: "clear", name: "Clear Skin", price: 159, value: 180, retail: 0.10, includes: "glow",
+    { id: "clear", name: "Clear Skin", price: 169, value: 195, retail: 0.10, includes: "glow",
       primary: "monthly-acne-treatment",
       covers: ["monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Monthly Acne Treatment",
       line: "Everything in Glow, plus your acne program on schedule",
       perks: ["Choose the Monthly Acne Treatment any month",
               "A between-visit check-in on your home routine"] },
-    { id: "ageless", name: "Ageless", price: 199, value: 230, retail: 0.15, includes: "clear",
+    { id: "ageless", name: "Ageless", price: 209, value: 245, retail: 0.15, includes: "clear",
       primary: "ageless-grace-facial",
       covers: ["ageless-grace-facial", "monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Ageless Grace Facial",
@@ -369,8 +369,9 @@
   /* ══════════════════ UI ══════════════════ */
   var pay = window.LumevinaPayments;
   var section = document.getElementById("membership");
-  var overlay = document.querySelector(".member-overlay");
-  var modal = document.querySelector(".member-modal");
+  /* the Glow Routine window borrows these styles, so skip it */
+  var overlay = document.querySelector(".member-overlay:not(.routine-overlay)");
+  var modal = document.querySelector(".member-modal:not(.routine-modal)");
 
   var currentEmail = function () {
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
@@ -562,7 +563,7 @@
     };
     if (!r || (r.status === "cancelled" && !usable(r))) {
       el.appendChild(h("p", "mem-acct-empty",
-        "A facial every month, banked if you're busy, from $149. Members also get 10% off skincare from our shelf." +
+        "A facial every month, banked if you're busy, from $159. Members also get 10% off skincare from our shelf." +
         (fiveLeft() > 0 ? " The first five members get a free welcome skincare kit." : "")));
       var see = h("a", "btn btn-ghost mem-acct-see", "See memberships");
       see.href = "#membership";

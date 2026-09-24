@@ -50,6 +50,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Waitlist (auto-fill cancellations) | ⬜ | ✅ | Flash openings are a cousin |
 | Reviews / reputation management | ⬜ | ✅ | Planned |
 | Memberships / recurring billing | ✅ | ✅ | Glow Membership: 3 tiers, banked facials, Founding Five, launch ledger |
+| Product subscriptions | ✅ | partial | Glow Routine: $75/month refills + skin supplement, ship or pick up, logged at cost |
 | Staff / team management | ⬜ | ✅ | Single-provider today |
 | Retail inventory POS + card reader | 🟡 | ✅ | Stock, cost and in-person "Sell"; kits come out of stock; no card reader |
 | Expense tracking | ✅ | partial | Log supplies, rent, marketing, equipment; kits and retail counted at cost |

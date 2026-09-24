@@ -117,7 +117,7 @@ console.log("services:",seen.size);'
 To make it real:
 
 1. In Stripe, create one **Product** per plan (Glow, Clear Skin, Ageless) with a
-   monthly **Price** ($149 / $159 / $199). Founding members keep the price they
+   monthly **Price** ($159 / $169 / $209). Founding members keep the price they
    joined at: never edit a Price, add a new one for new members instead.
 2. Join = a Stripe **Subscription** created server-side for the client's
    customer, using the card saved at join (`payment_behavior:
@@ -146,6 +146,19 @@ To make it real:
    `five_kit = 'given'` when the kit is handed over.
 
 Have the member terms reviewed before launch.
+
+### Glow Routine (product subscription)
+
+`js/routine.js` runs the $75/month Glow Routine in the browser today: focus
+(Glow, Clear, Ageless), ship or pick up, card on file, and each charge logged
+to the retail sales log at cost so the dashboard's books count it. To make it
+real, reuse the membership pattern: one Stripe **Product** with a monthly
+**Price**, a **Subscription** at signup, and `invoice.paid` in
+`stripe-webhook` writing an `order_items` row (product cost plus shipping or
+packaging) and queuing the month's box. Skip a month = `pause_collection` for
+that billing date. Before supplements go in the box: a California seller's
+permit, sales tax settings from the accountant, insurance that covers
+products, and only the brand's approved wording on the site.
 
 ## Flash openings → push notifications
 

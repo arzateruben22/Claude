@@ -24,8 +24,8 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
-S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Sat)
-MEMX = {"low": 320, "likely": 800, "high": 1200}       # membership keeps building after Step 1: 30 → 50 members by year 2 (profit)
+S1 = {"low": 1730, "likely": 3810, "high": 6510}        # your chair, once ramped (open 5 days: Tue–Sat); prices +7.5% from Oct 2026
+MEMX = {"low": 340, "likely": 860, "high": 1290}       # membership keeps building after Step 1: 30 → 50 members by year 2 (profit)
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
 COLL = {"low": 900, "likely": 3800, "high": 7700}      # 6–8 artists, net: flat suite rent + crossover − space − perks (incl. members' 10%)
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
@@ -116,13 +116,13 @@ BUILT = [
     (False, "Multi-artist booking and payouts · the Stage 2 build"),
 ]
 
-CHAIR = [("Glow Membership", "$1,500", "$600–$3,000"),
-         ("Add-ons at booking", "$800", "$500–$1,100"),
-         ("Flash openings · 5 days a week", "$800", "$400–$1,200"),
-         ("Retail + auto-refill", "$700", "$300–$1,500"),
-         ("Referrals", "$600", "$300–$900"),
-         ("More members · 50 by year 2", "$1,000", "$400–$1,500")]
-CHAIR_TOTAL = ("Added revenue by year 2", "$5,400", "$2,500–$9,200")
+CHAIR = [("Glow Membership", "$1,600", "$650–$3,200"),
+         ("Add-ons at booking", "$850", "$550–$1,200"),
+         ("Flash openings · 5 days a week", "$850", "$450–$1,300"),
+         ("Retail + auto-refill", "$750", "$300–$1,600"),
+         ("Referrals", "$650", "$300–$950"),
+         ("More members · 50 by year 2", "$1,100", "$450–$1,600")]
+CHAIR_TOTAL = ("Added revenue by year 2", "$5,800", "$2,700–$9,900")
 
 COLLECTIVE = [("Suite rent · 7 suites", "$6,500", "$4,500–$10,000"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
@@ -141,7 +141,7 @@ COSTS = [("Live payments", "2.9% + 30¢ per payment"),
          ("Database and texts", "About $35 a month"),
          ("Attorney", "$300–$600 consult; agreements $1.5k–$5k"),
          ("App Store", "$99 a year, at Stage 2"),
-         ("Founding Five", "$160 once: five kits at cost, $350 retail. Add-ons are Evelyn’s time")]
+         ("Founding Five", "$160 once: five kits at cost, $375 retail. Add-ons are Evelyn’s time")]
 
 DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat clients, no-shows, average ticket."),
         ("Weeks 2–3", "Switch on live payments. Move booking from Acuity to Lumevina."),
@@ -151,13 +151,13 @@ DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat c
 
 
 # ─────────────────────────── membership first ───────────────────────────
-WHY = [("$4,800", "Paid before anyone books.", "30 members bill about $4,800 on the 1st of every month. At 50 members, about $8,000."),
+WHY = [("$5,100", "Paid before anyone books.", "30 members bill about $5,100 on the 1st of every month. At 50 members, about $8,500."),
        ("Stays", "Survives artist turnover.", "A client who joins for 10% off her lashes keeps booking facials with Evelyn, even if her lash artist moves on."),
        ("1 a month", "Fills the calendar ahead.", "Every member is a visit a month, booked in advance. Banked facials are already paid for.")]
 
-ANCHOR = [("Custom Facial · Glow", "$180", "$149", "$372"),
-          ("Monthly Acne · Clear Skin", "$180", "$159", "$252"),
-          ("Ageless Grace · Ageless", "$230", "$199", "$372")]
+ANCHOR = [("Custom Facial · Glow", "$195", "$159", "$432"),
+          ("Monthly Acne · Clear Skin", "$195", "$169", "$312"),
+          ("Ageless Grace · Ageless", "$245", "$209", "$432")]
 
 # member perks with the Collective's artists, by tier (the pink ladder)
 TIERS = [("Glow", "#d596ab"), ("Clear Skin", "#f0b9ca"), ("Ageless", "#fde2ea")]
@@ -321,9 +321,9 @@ STEPS_JS = js_ascii(open(os.path.join(HERE, "steps.js")).read())
 DEEP = [
     {"n": 1, "when": "Step 1 · Months 0–6", "h": "Grow your chair.", "dim": "Fill every hour.",
      "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Saturday from 8 AM to 6 PM with Sundays and Mondays closed, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
-     "plan": [("Launch", "Glow Membership from $149 a month, offered at every checkout, plus add-ons at booking, flash openings and give $25 / get $25."),
+     "plan": [("Launch", "Glow Membership from $159 a month, offered at every checkout, plus add-ons at booking, flash openings and give $25 / get $25."),
               ("Measure", "Members, average visit, and how many hours are booked."),
-              ("Target", "30 members by month 6 and 50 by year 2, a $150+ average visit, 90% of hours booked."),
+              ("Target", "30 members by month 6 and 50 by year 2, a $160+ average visit, 90% of hours booked."),
               ("Result", "About $4.4k more revenue a month, from the same five days.")]},
     {"n": 2, "when": "Step 2 · Months 6–12", "h": "Pilot two artists.", "dim": "Prove it small.",
      "vb": "0 0 520 400", "aria": "Animation: two artists' clients appear; some cross over to book Evelyn; the share climbs past the 15% go line.",
@@ -1120,8 +1120,8 @@ WEB = """<!DOCTYPE html>
       <p class="lead" style="font-size:1.2rem;margin-top:20px">Every dollar today needs Evelyn in the treatment room. More hours isn&rsquo;t a plan.</p>
     </div>
     <div class="reveal">
-      <div class="bigstat grad num">$220k</div>
-      <p class="lead" style="margin-top:14px">The most one person can earn in a year: five treatments a day, five days a week, at about $170 each. Fully booked, never sick, before rent, product and taxes.</p>
+      <div class="bigstat grad num">$240k</div>
+      <p class="lead" style="margin-top:14px">The most one person can earn in a year: five treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes.</p>
       <div class="meter"><div class="track"><div class="fill"></div></div>
         <div class="lab"><span>Chair time used</span><b>100% · the ceiling</b></div></div>
     </div>
@@ -1381,8 +1381,8 @@ PRINT = """<!DOCTYPE html>
     <h2 class="h2" style="margin-top:10px">Your income stops <span class="dim">when your hands stop.</span></h2>
   </div>
   <div class="ceil">
-    <div class="bigstat grad num">$220k</div>
-    <p class="lead">The most one person can earn in a year: five treatments a day, five days a week, at about $170 each. Fully booked, never sick, before rent, product and taxes. More hours isn&rsquo;t a plan.</p>
+    <div class="bigstat grad num">$240k</div>
+    <p class="lead">The most one person can earn in a year: five treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes. More hours isn&rsquo;t a plan.</p>
   </div>
   <div>
     <p class="kicker">The plan</p>

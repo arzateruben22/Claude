@@ -49,7 +49,7 @@ BILLS = [("Room · suite rent and utilities", 1400),
          ("Laundry and small supplies", 60)]
 BILLS_TOTAL = sum(v for _, v in BILLS)
 
-DUES = 159.0                       # plan mix: 6 in 10 Glow $149, 1 in 4 Clear Skin $159, the rest Ageless $199
+DUES = round(0.6 * 159 + 0.25 * 169 + 0.15 * 209, 2)   # plan mix: 6 in 10 Glow $159, 1 in 4 Clear Skin $169, the rest Ageless $209
 FEE = round(DUES * 0.029 + 0.30, 2)
 SUPPLIES = 16.0                    # product used in the member's monthly facial
 PERKS = 5.5                        # 10% off the shelf, 15% off add-ons, averaged per member
@@ -62,7 +62,7 @@ PAY = [3000, 4000, 5000]           # Evelyn's monthly pay, before taxes: members
 PAY_DEFAULT = 4000
 pay_members = lambda pay: math.ceil((BILLS_TOTAL + pay) / KEPT)
 
-MEMBER = [("Average dues · the plan mix", "$%d" % DUES, "6 in 10 Glow · 1 in 4 Clear Skin · the rest Ageless"),
+MEMBER = [("Average dues · the plan mix", "$%d" % round(DUES), "6 in 10 Glow · 1 in 4 Clear Skin · the rest Ageless"),
           ("Card fee", "−$%.2f" % FEE, "2.9% + 30¢"),
           ("Supplies for the monthly facial", "−$%d" % SUPPLIES, "Backbar product used in the treatment"),
           ("Member perks", "−$%.2f" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
@@ -75,26 +75,26 @@ ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
 ONE_TIME_TOTAL = 160 + 480 + 65
 
 # Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13).
-LIKELY = [0, 0, 0, 0, 3, 5, 7, 9, 11, 13, 15, 16, 18, 19]
-LOW = [0, 0, 0, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 12]
-HIGH = [0, 0, 0, 0, 5, 7, 9, 12, 14, 17, 19, 22, 24, 26]
+LIKELY = [0, 0, 0, 0, 3, 5, 7, 9, 10, 12, 14, 15, 17, 18]
+LOW = [0, 0, 0, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+HIGH = [0, 0, 0, 0, 5, 7, 9, 11, 13, 16, 18, 20, 22, 24]
 FLOOR_WEEK = next(i for i, v in enumerate(LIKELY) if v >= FLOOR)
 
 PACE = [("Week 1", "Count what’s there: facial clients from the last six months, visits a month, who already comes every four to eight weeks. Set up the Saturday scoreboard.", 0),
         ("Weeks 2–3", "Live payments on, booking moves to Lumevina. In the chair, Evelyn mentions it: membership opens soon, first five get a free kit. Build an early list of 15 names.", 0),
         ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
         ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
-        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in seven says yes.", 13),
+        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 12),
         ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend; both get a free add-on.", PLAN)]
 
 SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
-           ("In the chair, after every facial", "About 1 in 7 of the facial clients offered", 8),
+           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 7),
            ("Win-back texts", "Clients not seen in 60+ days", 3),
            ("Member referrals", "Both get a free add-on", 2),
            ("Website and checkout", "Facial cards, the nudge, the booking upsell", 1)]
 
 SCRIPT = ("The offer, in the chair",
-          "“Your skin renews about every four weeks. As a member it’s $149 a month instead of $180 a visit, and I’ll hold your spot for next month. Want me to book it now?”")
+          "“Your skin renews about every four weeks. As a member it’s $159 a month instead of $195 a visit, and I’ll hold your spot for next month. Want me to book it now?”")
 
 BEHIND = [("Personal invites", "Evelyn texts her 20 most loyal clients herself. Nothing converts like her."),
           ("A member week", "Anyone who joins that week gets a free LED add-on. It costs time, not product."),
@@ -128,9 +128,42 @@ ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 
             ("Month 12", "Go or no-go: 15% of their clients book Evelyn", "The gate"),
             ("Year 2", "The Collective: lease signed, pilot artists pick first", "6–8 artists")]
 
+# ─────────────────────────── if product leads ───────────────────────────
+# Five facials a week, and a monthly product subscription (the Glow Routine) does the rest.
+FPW = 5                                    # facials a week
+F_AVG = 190.0                              # average facial after the price rise, members and non-members
+F_MONTH = FPW * 52 / 12.0
+F_KEPT_EACH = F_AVG - (F_AVG * 0.029 + 0.30) - SUPPLIES
+F_SALES, F_KEPT = F_MONTH * F_AVG, F_MONTH * F_KEPT_EACH
+F_LEFT = F_KEPT - BILLS_TOTAL              # left for Evelyn's pay from facials alone
+R_PRICE = 75.0                             # Glow Routine, a month
+R_COGS = 0.50                              # wholesale is usually about half the price
+R_SHIP = 4.0                               # shipping and packaging, averaged (many pick up at a visit)
+R_FEE = round(R_PRICE * 0.029 + 0.30, 2)
+R_KEPT = R_PRICE * (1 - R_COGS) - R_FEE - R_SHIP
+subs_for_pay = lambda pay: max(0, math.ceil((pay - F_LEFT) / R_KEPT))
+PL_CHAIR = [("Facials a month", "about %d" % round(F_MONTH), "%d a week, Tuesday to Saturday" % FPW),
+            ("Sales", money(round(F_SALES, -1)), "At about %s a visit" % money(F_AVG)),
+            ("Kept after supplies and card fees", money(round(F_KEPT, -1)), "About $%d of every $100" % int(F_KEPT_EACH / F_AVG * 100)),
+            ("Business bills", "−" + money(BILLS_TOTAL), "The same bills as page 2")]
+PL_SUB = [("Glow Routine, a month", money(R_PRICE), "Refills and a daily skin supplement, chosen by Evelyn"),
+          ("Product cost", "−$%.2f" % (R_PRICE * R_COGS), "Wholesale is usually about half the price"),
+          ("Card fee", "−$%.2f" % R_FEE, "2.9% + 30¢"),
+          ("Shipping and packaging", "−$%d" % R_SHIP, "Averaged: many pick up at a visit")]
+PL_GOALS = [("Pay Evelyn $3,000 a month", subs_for_pay(3000), "Facials plus subscribers"),
+            ("Pay Evelyn $4,000 a month", subs_for_pay(4000), "Facials plus subscribers"),
+            ("Outsell the facials", math.ceil(F_SALES / R_PRICE), "More product sales than facial sales"),
+            ("Out-earn the facials", math.ceil(F_KEPT / R_KEPT), "More kept from product than from facials")]
+PL_HOW = [("Cap the facial spots", "12 facial memberships with a waitlist. Her time is the scarce thing, so facials can price up again."),
+          ("Every facial ends with a routine", "The chair is where subscribers start: five facials a week become new routines."),
+          ("The Glow Routine, $%d a month" % R_PRICE, "Evelyn’s pick of refills and a daily skin supplement, a seasonal update, a 15-minute video check-in each quarter, 10% off facials."),
+          ("Start without inventory", "A practitioner dispensary ships supplements for you at a lower margin. Buy the steady sellers wholesale once they prove out."),
+          ("Check before selling supplements", "Seller’s permit and sales tax, insurance that covers products, the brand’s own wording, and a doctor’s OK in pregnancy or on medication."),
+          ("Expect more cancelling", "Plan for about 1 in 10 subscribers a month until real numbers arrive, so the chair and the site keep bringing new ones.")]
+
 SCORE = [("Members", "Against the plan: %d by day 90" % PLAN),
          ("Offers made in the chair", "Every facial client, every visit"),
-         ("Say-yes rate", "One in seven or better"),
+         ("Say-yes rate", "One in eight or better"),
          ("Cancellations", "Fewer than 1 in 20 a month"),
          ("Names on the talent list", "15 by week 4")]
 
@@ -287,6 +320,14 @@ def flow_html(reveal=""):
                    for i, (a, b) in enumerate(FLOW))
 
 
+def pl_goals_html():
+    return "".join('<div class="c"><b>%s · %d subscribers</b><span>%s</span></div>' % (a, n, b) for a, n, b in PL_GOALS)
+
+
+def pl_how_html():
+    return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % h for h in PL_HOW)
+
+
 def score_html():
     return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % s for s in SCORE)
 
@@ -413,6 +454,7 @@ LP_PRINT = r"""
 .ek { font-size: 8.5pt; }
 .sub-h { font-size: 11pt; font-weight: 650; letter-spacing: -0.015em; margin-bottom: 6px; }
 .lanes .likely { stroke-width: 2.5; }
+.costs.how { row-gap: 10px; }
 """
 
 WEB_JS = r"""
@@ -445,6 +487,26 @@ WEB_JS = r"""
   };
   ["c-bills", "c-sup", "c-dues", "c-pay"].forEach(function (id) { $(id).addEventListener("input", calc); });
   calc();
+
+  /* if product leads: facials a week + Glow Routine subscribers */
+  var pcalc = function () {
+    var fpw = +$("p-fpw").value, favg = +$("p-favg").value, r = +$("p-r").value, cogs = +$("p-cogs").value / 100,
+        bills = +$("p-bills").value, pay = +$("p-pay").value;
+    var fm = fpw * 52 / 12, fKeptEach = favg - (favg * 0.029 + 0.30) - __SUP__;
+    var fSales = fm * favg, fKept = fm * fKeptEach, left = fKept - bills;
+    var rKept = r * (1 - cogs) - (r * 0.029 + 0.30) - 4;
+    $("po-fpw").textContent = fpw; $("po-favg").textContent = fmt(favg); $("po-r").textContent = fmt(r);
+    $("po-cogs").textContent = Math.round(cogs * 100) + "%"; $("po-bills").textContent = fmt(bills); $("po-pay").textContent = fmt(pay);
+    $("po-left").textContent = (left < 0 ? "−" : "") + fmt(Math.abs(left));
+    var need = rKept > 0 ? Math.max(0, Math.ceil((pay - left) / rKept)) : Infinity;
+    $("po-subs").textContent = isFinite(need) ? need : "—";
+    $("po-subs-t").textContent = "subscribers pay Evelyn " + fmt(pay) + " a month";
+    $("po-sell").textContent = "Outsell the facials at " + Math.ceil(fSales / r) + " subscribers.";
+    $("po-earn").textContent = rKept > 0 ? "Out-earn them at " + Math.ceil(fKept / rKept) + ". Each subscriber leaves " + fmt(rKept) + "."
+      : "At this cost the routine loses money on every box.";
+  };
+  ["p-fpw", "p-favg", "p-r", "p-cogs", "p-bills", "p-pay"].forEach(function (id) { $(id).addEventListener("input", pcalc); });
+  pcalc();
 })();
 """
 
@@ -480,6 +542,7 @@ WEB_BODY = """
       <div class="chart-scroll">__PACE_SVG__</div><p class="swipe-hint">Swipe the chart to see day 90 &rarr;</p>
     </div>
     <div class="flow mt">__FLOW__</div>
+    <p class="foot-note reveal">Another way: <a href="#product" style="color:var(--rose)">if product leads</a>, with five facials a week and a monthly product subscription.</p>
   </div>
 </section>
 
@@ -519,8 +582,8 @@ WEB_BODY = """
     </div>
     <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
       <div class="costs three">__ONETIME__</div></div>
-    <p class="foot-note reveal">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $111 a month.
-    As a Glow member she spends $149, comes every month, and pays first.</p>
+    <p class="foot-note reveal">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $121 a month.
+    As a Glow member she spends $159, comes every month, and pays first.</p>
   </div>
 </section>
 
@@ -581,6 +644,49 @@ WEB_BODY = """
   </div>
 </section>
 
+<section id="product">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Another way · if product leads</p>
+      <h2 class="h2" style="margin-top:14px">Five facials a week. <span class="dim">The shelf does the rest.</span></h2>
+      <p class="lead">If Evelyn keeps the chair to about __PL_FPW__ facials a week, a monthly product subscription can carry the rest.
+      It earns less per dollar but takes none of her hours.</p>
+    </div>
+    <div class="num-grid">
+      <div class="reveal"><div class="cols-h">The chair · __PL_FPW__ facials a week</div><div class="cols-s">Facials still pay the bills, with some left over</div>__PL_CHAIR__</div>
+      <div class="reveal"><div class="cols-h">What each Glow Routine subscriber leaves</div><div class="cols-s">Per subscriber, per month</div>__PL_SUB__</div>
+    </div>
+    <div class="perk reveal"><b>The trade</b><span>$100 of facials keeps about $__PL_F100__; $100 of product keeps about $__PL_R100__. A facial member keeps
+    about $__PL_MEMBER__ a month and takes an hour of Evelyn&rsquo;s time; a subscriber keeps about $__PL_RKEPT__ and takes none. About __PL_RATIO__
+    subscribers earn what one member does.</span></div>
+    <div class="reveal mt2"><div class="cols-h">Subscribers needed</div><div class="cols-s">Glow Routine at $__PL_RPRICE__ a month, with five facials a week</div>
+      <div class="costs four">__PL_GOALS__</div></div>
+    <div class="reveal mt2"><div class="cols-h">Try it</div><div class="cols-s">Facials a week, prices and product cost</div>
+      <div class="calc">
+        <div class="calc-in">
+          <label for="p-fpw">Facials a week <output id="po-fpw"></output><input id="p-fpw" type="range" min="1" max="25" step="1" value="__PL_FPW__"></label>
+          <label for="p-favg">Average facial <output id="po-favg"></output><input id="p-favg" type="range" min="150" max="260" step="5" value="__PL_FAVG__"></label>
+          <label for="p-r">Glow Routine a month <output id="po-r"></output><input id="p-r" type="range" min="40" max="150" step="5" value="__PL_RPRICE__"></label>
+          <label for="p-cogs">Product cost, share of price <output id="po-cogs"></output><input id="p-cogs" type="range" min="30" max="70" step="5" value="50"></label>
+          <label for="p-bills">Business bills a month <output id="po-bills"></output><input id="p-bills" type="range" min="800" max="3200" step="50" value="__BILLS_N__"></label>
+          <label for="p-pay">Evelyn&rsquo;s pay, before taxes <output id="po-pay"></output><input id="p-pay" type="range" min="0" max="8000" step="250" value="__PAY_N__"></label>
+        </div>
+        <div class="calc-out" aria-live="polite">
+          <div class="co-pair">
+            <div><div class="big grad num" id="po-subs"></div><div class="t" id="po-subs-t"></div></div>
+            <div><div class="big num" id="po-left"></div><div class="t">left from facials after the bills</div></div>
+          </div>
+          <p class="s" id="po-sell"></p><p class="s" id="po-earn"></p></div>
+      </div>
+      <p class="calc-note">Supplies $__SUP_N__ a facial and card fees are included. Subscribers carry $4 of shipping and packaging, averaged.</p>
+    </div>
+    <div class="reveal mt2"><div class="cols-h">How to run it</div><div class="cols-s">If this becomes the plan</div>
+      <div class="costs three how">__PL_HOW__</div></div>
+    <p class="foot-note reveal">At five facials a week, a part-time or shared room could cut the biggest bill. Every __PL_STEP__ less a month is one fewer
+    member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
+  </div>
+</section>
+
 <section class="close">
   <div class="wrap center reveal">
     <h2 class="h2">__FLOOR_W__ by day ninety. <span class="grad">Then keep building.</span></h2>
@@ -612,6 +718,7 @@ PRINT_BODY = """
     __PACE_SVG__
   </div>
   <div class="flow">__FLOW__</div>
+  <p class="fine" style="font-size:9pt;color:var(--text-2)">Page 6: another way, if product leads. Five facials a week, and a monthly product subscription does the rest.</p>
   __F1__
 </section>
 
@@ -632,7 +739,7 @@ PRINT_BODY = """
   <div><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too</div>
     <div class="costs three">__PAY__</div></div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks
-  spent about $111 a month. As a Glow member she spends $149, comes every month, and pays first.</p>
+  spent about $121 a month. As a Glow member she spends $159, comes every month, and pays first.</p>
   __F2__
 </section>
 
@@ -694,6 +801,27 @@ PRINT_BODY = """
   </div>
   __F5__
 </section>
+
+<section class="page tight">
+  <div>
+    <p class="kicker">Another way · if product leads</p>
+    <h2 class="h2" style="margin-top:10px">Five facials. <span class="dim">The shelf does the rest.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">About five facials a week, and a monthly product subscription that takes none of Evelyn&rsquo;s hours.</p>
+  </div>
+  <div class="two">
+    <div><div class="cols-h">The chair · __PL_FPW__ facials a week</div><div class="cols-s">Facials still pay the bills, with some left over</div>__PL_CHAIR__</div>
+    <div><div class="cols-h">What each Glow Routine subscriber leaves</div><div class="cols-s">Per subscriber, per month</div>__PL_SUB__</div>
+  </div>
+  <div class="perk"><b>The trade</b><span>$100 of facials keeps about $__PL_F100__; $100 of product keeps about $__PL_R100__. A member keeps about
+  $__PL_MEMBER__ and takes an hour; a subscriber keeps about $__PL_RKEPT__ and takes none. About __PL_RATIO__ subscribers earn what one member does.</span></div>
+  <div><div class="cols-h">Subscribers needed</div><div class="cols-s">Glow Routine at $__PL_RPRICE__ a month, with five facials a week</div>
+    <div class="costs" style="grid-template-columns:repeat(4,1fr)">__PL_GOALS__</div></div>
+  <div><div class="cols-h">How to run it</div><div class="cols-s">If this becomes the plan</div>
+    <div class="costs three how">__PL_HOW__</div></div>
+  <p class="fine" style="font-size:8.5pt;color:var(--text-2)">At five facials a week, a part-time or shared room could cut the biggest bill.
+  Every __PL_STEP__ less a month is one fewer member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
+  __F6__
+</section>
 </body>
 </html>
 """
@@ -716,6 +844,13 @@ def fill(h, web):
         "__BEHIND__": "".join('<div class="c"><b>%s</b><span>%s</span></div>' % b for b in BEHIND),
         "__TALENT__": talent_html(rv), "__GATE__": gate_html(rv), "__WHY_K__": WHY_FIRST[0], "__WHY_V__": WHY_FIRST[1],
         "__FLOW__": flow_html(rv),
+        "__PL_CHAIR__": rows(PL_CHAIR, ("Left for Evelyn’s pay", money(round(F_LEFT, -1)))),
+        "__PL_SUB__": rows(PL_SUB, ("Each subscriber leaves", "$%d" % round(R_KEPT))),
+        "__PL_GOALS__": pl_goals_html(), "__PL_HOW__": pl_how_html(),
+        "__PL_F100__": "%d" % int(F_KEPT_EACH / F_AVG * 100), "__PL_R100__": "%d" % round(R_KEPT / R_PRICE * 100),
+        "__PL_MEMBER__": "%d" % round(KEPT), "__PL_RKEPT__": "%d" % round(R_KEPT), "__PL_RATIO__": "%.1f" % (KEPT / R_KEPT),
+        "__PL_STEP__": money(round(KEPT, -1)), "__PL_STEP_SUBS__": {4: "four", 5: "five", 6: "six"}.get(round(round(KEPT, -1) / R_KEPT), "several"),
+        "__PL_FPW__": str(FPW), "__PL_FAVG__": "%d" % F_AVG, "__PL_RPRICE__": "%d" % R_PRICE,
         "__ENGINE_M__": engine_rows(ENGINE_M), "__ENGINE_T__": engine_rows(ENGINE_T), "__SCORE__": score_html(),
     }
     for k in sorted(rep, key=len, reverse=True):
@@ -724,10 +859,11 @@ def fill(h, web):
 
 
 base = CSS["BASE_CSS"].replace("__FONT__", FONT) + LP_CSS
-web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, True).replace("__JS__", WEB_JS.replace("__PERKS__", "%s" % PERKS))
-foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 5</span></div>' % n
+web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, True).replace(
+    "__JS__", WEB_JS.replace("__PERKS__", "%s" % PERKS).replace("__SUP__", "%s" % SUPPLIES))
+foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 6</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
-for i in range(1, 6):
+for i in range(1, 7):
     pr = pr.replace("__F%d__" % i, foot(i))
 
 for name, html in (("web.html", web), ("print.html", pr)):
