@@ -3332,10 +3332,10 @@ body.intro-lock { overflow: hidden; }
 
 .rw-ref-note[hidden] { display: none; }
 
-/* mystery petal */
-.petal { margin: var(--space-3) 0 var(--space-4); }
+/* magic mirror */
+.mirror { margin: var(--space-3) 0 var(--space-4); }
 
-.petal-btn {
+.mirror-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -3345,32 +3345,43 @@ body.intro-lock { overflow: hidden; }
   background: rgba(234, 185, 200, 0.15);
   border: 1px dashed var(--rose);
   border-radius: 999px;
-  padding: 0.6rem 1.3rem;
+  padding: 0.55rem 1.3rem 0.55rem 1rem;
   cursor: pointer;
   transition: background-color 200ms ease, transform 200ms ease;
 }
 
-.petal-btn:hover:not(:disabled) { background: rgba(234, 185, 200, 0.27); }
+.mirror-btn:hover:not(:disabled) { background: rgba(234, 185, 200, 0.27); }
 
-.petal-btn:disabled { opacity: 0.45; cursor: default; }
+.mirror-btn:disabled { opacity: 0.55; cursor: default; }
 
-.petal-rose {
-  font-size: 1.15rem;
-  animation: petal-sway 2.6s ease-in-out infinite;
+/* a princess hand mirror: it sways, and the glass catches the light */
+.mirror-wrap { display: inline-grid; color: #e3b48f; animation: mirror-sway 3s ease-in-out infinite; transform-origin: 50% 90%; }
+.mirror-ico { width: 1.45rem; height: 1.45rem; overflow: visible; }
+.mirror-glass { fill: rgba(247, 211, 222, 0.28); animation: mirror-glint 3s ease-in-out infinite; }
+.mirror-shine { stroke: #fff; stroke-width: 1.2; stroke-linecap: round; fill: none; opacity: 0.85; }
+.mirror-btn.is-lit .mirror-glass { animation: none; fill: #f7d3de; filter: drop-shadow(0 0 6px rgba(247, 211, 222, 0.9)); }
+.mirror-btn.is-lit .mirror-wrap { animation: none; }
+@keyframes mirror-sway {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+}
+@keyframes mirror-glint {
+  0%, 70%, 100% { fill: rgba(247, 211, 222, 0.28); }
+  82% { fill: rgba(255, 240, 245, 0.85); }
 }
 
-@keyframes petal-sway {
-  0%, 100% { transform: rotate(-8deg); }
-  50% { transform: rotate(10deg) scale(1.08); }
-}
-
-.petal-result {
+.mirror-result {
   margin: 0.6rem 0 0;
   font-size: 0.9rem;
   color: var(--plum);
 }
 
-.petal-result[hidden] { display: none; }
+.mirror-result[hidden] { display: none; }
+
+.app-perk-mirror { color: #e3b48f; }
+.app-perk-mirror .mirror-ico { width: 1.6rem; height: 1.6rem; }
+.rw-mirror { display: inline-grid; color: #e3b48f; vertical-align: -0.2em; }
+.rw-mirror .mirror-ico { width: 1.1em; height: 1.1em; }
 
 /* rewards modal */
 .rewards-overlay {
@@ -4476,7 +4487,7 @@ a.appstore-badge:hover { transform: translateY(-2px); }
   .fam-item { animation: none; }
   .policy[open] .policy-body, .policy-detail.show, .sector-panel { animation: none; }
   .nav-cart.bump { animation: none; }
-  .petal-rose { animation: none; }
+  .mirror-wrap, .mirror-glass { animation: none; }
   .cart-drawer { transition: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }

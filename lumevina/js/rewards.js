@@ -4,7 +4,7 @@
    session with Wax Wednesday, +25 for rebooking within 5 weeks,
    +50 once a year during your birthday month, a referral code
    worth 150 points when a friend completes their first visit,
-   and a mystery-petal bonus after each confirmed appointment.
+   and a magic-mirror bonus after each confirmed appointment.
    100 points = $10 off, redeemable against up to half a deposit.
    (Flash openings — the daily ⚡ starred time at 10% off — live
    in js/booking.js; in the app they become push notifications.)
@@ -139,20 +139,20 @@
     return WELCOME_BONUS;
   };
 
-  /* ── Mystery petal ── */
-  var PETALS = [
-    { pts: 10, label: "10 bonus petals of glow" },
-    { pts: 10, label: "10 bonus petals of glow" },
-    { pts: 15, label: "15 bonus points — lucky bloom" },
-    { pts: 15, label: "15 bonus points — lucky bloom" },
-    { pts: 25, label: "25 bonus points — the roses like you" },
-    { pts: 25, label: "25 bonus points — the roses like you" },
-    { pts: 50, label: "50 bonus points — full bloom! 🌹" }
+  /* ── Magic mirror: one small surprise per confirmed booking ── */
+  var MIRROR = [
+    { pts: 10, label: "10 bonus points, and a little extra glow" },
+    { pts: 10, label: "10 bonus points, and a little extra glow" },
+    { pts: 15, label: "15 bonus points, a sparkle in the glass" },
+    { pts: 15, label: "15 bonus points, a sparkle in the glass" },
+    { pts: 25, label: "25 bonus points, the fairest skin in town" },
+    { pts: 25, label: "25 bonus points, the fairest skin in town" },
+    { pts: 50, label: "50 bonus points, the fairest of them all ✦" }
   ];
 
-  var petalReveal = function () {
-    var pick = PETALS[Math.floor(Math.random() * PETALS.length)];
-    record(pick.pts, "Mystery petal");
+  var mirrorReveal = function () {
+    var pick = MIRROR[Math.floor(Math.random() * MIRROR.length)];
+    record(pick.pts, "Magic mirror");
     return pick;
   };
 
@@ -285,7 +285,8 @@
     welcomeBonus: WELCOME_BONUS,
     claimWelcome: claimWelcome,
     refCode: function () { return data.refCode; },
-    petalReveal: petalReveal,
+    mirrorReveal: mirrorReveal,
+    petalReveal: mirrorReveal,   /* older name, kept for anything still calling it */
     open: openModal
   };
 })();

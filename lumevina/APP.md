@@ -58,7 +58,7 @@ In Xcode:
       Apple Developer portal (Keys → +, enable APNs), upload it to your push
       provider (Supabase edge function with APNs, or OneSignal), and register
       tokens via `@capacitor/push-notifications` (already a dependency).
-- [ ] **Haptics on the mystery petal** — one line where the petal reveals:
+- [ ] **Haptics on the magic mirror** — one line where the mirror reveals:
       `Haptics.impact({ style: ImpactStyle.Light })` from `@capacitor/haptics`.
 
 ## 4. TestFlight (real phones, before review)
@@ -95,7 +95,7 @@ Draft copy (edit to taste):
 Screenshots (required sizes: 6.9" and 6.5" iPhones — take them in the iOS
 Simulator via Xcode): hero, booking calendar with the ⚡ flash slot, the
 session builder with clock times, Glow Rewards modal, booking success with
-the mystery petal.
+the magic mirror.
 
 ## 6. Submit for review
 

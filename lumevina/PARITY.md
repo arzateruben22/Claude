@@ -58,7 +58,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 ## Where Lumevina is ahead of GlossGenius
 
 - A fully custom, one-of-a-kind brand (theirs is templated)
-- A deeper loyalty program (points, referrals, birthday, flash pricing, petal)
+- A deeper loyalty program (points, referrals, birthday, flash pricing, the magic mirror)
 - Gift certificates: gift a specific treatment *or* a value, with code
   redemption, rollover balances, and an owner liability view
 - Ownership + no monthly fee, and an own-branded iPhone app path

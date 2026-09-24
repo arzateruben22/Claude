@@ -198,6 +198,45 @@ for m in MODES:
     m.update(fpw=fm * 12 / 52, subs=math.ceil(sb), hours=fm * 12 / 52 * 1.25,
              fsales=fm * F_AVG, rsales=math.ceil(sb) * R_PRICE)
 
+# ─────────────────────────── build your month ───────────────────────────
+CHAIR_MAX = 25                      # facials a week one person can do well: five a day, five days
+R_COST_ABS = R_PRICE * R_COGS       # what the box costs; a premium price doesn't change it
+
+
+def kf(price):
+    return price - (price * 0.029 + 0.30) - SUPPLIES
+
+
+def ks(price):
+    return price - R_COST_ABS - (price * 0.029 + 0.30) - R_SHIP
+
+
+def solve_mix(sf, pay, up=0.0):
+    """facials a month and subscribers for a pay goal; sf = facials' share of sales, up = premium price"""
+    pf, pr = F_AVG * (1 + up), R_PRICE * (1 + up)
+    k = BILLS_TOTAL + pay
+    if sf >= 0.999:
+        return k / kf(pf), 0.0
+    if sf <= 0.001:
+        return 0.0, k / ks(pr)
+    r = (pr / pf) * sf / (1 - sf)
+    subs = k / (kf(pf) * r + ks(pr))
+    return r * subs, subs
+
+
+CHAIR_TOP = CHAIR_MAX * 52 / 12.0 * kf(F_AVG) - BILLS_TOTAL      # the most the chair alone can pay Evelyn
+GRID_PAY = [3000, 4000, 6000, 8000, 12000, 16000, 20000]
+GRID_MIX = [(1.0, "All facials"), (0.8, "80 / 20"), (0.5, "50 / 50"), (0.2, "20 / 80"), (0.0, "All product")]
+PREM = [0.0, 0.1, 0.2, 0.3]
+PREM_WHY = [("The app, on the App Store", "Book in one tap, flash openings first, the magic mirror, the routine and the next box, all on her phone."),
+            ("First in line", "Members book first, get the waitlist first, and hear about openings 48 hours early."),
+            ("Evelyn, personally", "She picks every routine, answers questions the same day, and does a video skin check each quarter."),
+            ("Raise it well", "Tie it to the app’s launch, give 30 days’ notice, and keep founding members at their price.")]
+CEIL_NOTES = [("One chair has a ceiling", "About %d facials a week is the most one person can do well. All facials, that tops out near %s a month for Evelyn, and every extra dollar costs more of her hours."
+               % (CHAIR_MAX, money(round(CHAIR_TOP, -2)))),
+              ("Subscribers don’t", "A box ships the same to Woodland Hills or Sacramento. Across California, and later the country, the only limit is packing, and that can be handed off."),
+              ("So the mix is the lever", "Facials earn the most per hour and build trust; product scales without her hands. Past the chair’s ceiling, product and artists are the only ways up.")]
+
 FLIP_WHEN = [("Toward product", "Product sales beat facial sales two months running, the facial book has a waitlist, or Evelyn wants fewer chair hours."),
              ("Toward facials", "Routine cancellations run over 1 in 10 a month, product keeps less than $40 of every $100, or facial demand outgrows the open slots."),
              ("One step at a time", "Go through 50/50 first and hold it a month. Members keep their plans and subscribers keep their boxes either way.")]
@@ -379,6 +418,36 @@ def mode_cols_html():
     return h
 
 
+def mix_grid_html():
+    h = '<div class="grid-t"><div class="gt-row gt-h"><span>Evelyn&rsquo;s pay</span>' + "".join("<span>%s</span>" % n for _, n in GRID_MIX) + '</div>'
+    for pay in GRID_PAY:
+        h += '<div class="gt-row"><span class="gt-pay">%s</span>' % money(pay)
+        for sf, _ in GRID_MIX:
+            f, sb = solve_mix(sf, pay)
+            fw = f * 12 / 52
+            over = fw > CHAIR_MAX
+            parts = []
+            if sf > 0.001:
+                parts.append("%d a week" % round(fw))
+            if sf < 0.999:
+                parts.append("%d subs" % math.ceil(sb))
+            h += '<span class="%s">%s%s</span>' % ("gt-over" if over else "", "<br>".join(parts), "<i>over the chair</i>" if over else "")
+        h += '</div>'
+    return h + '</div>'
+
+
+def prem_html():
+    f0, s0 = solve_mix(0.5, MODE_PAY)
+    h = '<div class="grid-t prem-t"><div class="gt-row gt-h"><span>Premium price</span><span>Facial, average</span><span>Glow Routine</span><span>Facials a week</span><span>Subscribers</span><span>Added at the same volume</span></div>'
+    for up in PREM:
+        f, sb = solve_mix(0.5, MODE_PAY, up)
+        extra = f0 * (kf(F_AVG * (1 + up)) - kf(F_AVG)) + math.ceil(s0) * (ks(R_PRICE * (1 + up)) - ks(R_PRICE))
+        h += ('<div class="gt-row"><span class="gt-pay">%s</span><span>%s</span><span>%s</span><span>%d</span><span>%d</span><span class="gt-add">%s</span></div>'
+              % ("Today" if up == 0 else "+%d%%" % round(up * 100), money(F_AVG * (1 + up)), money(R_PRICE * (1 + up)),
+                 round(f * 12 / 52), math.ceil(sb), "&mdash;" if up == 0 else "+" + money(round(extra, -1)) + " a month"))
+    return h + '</div>'
+
+
 def cards2(items):
     return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % i for i in items)
 
@@ -466,6 +535,17 @@ LP_CSS = r"""
 .mc-do { list-style: none; margin: 0; padding: 8px 0 0; border-top: 1px solid var(--hair); display: grid; gap: 6px; }
 .mc-do li { color: var(--text-2); line-height: 1.35; }
 .mc-do b { display: block; color: var(--rose); font-weight: 600; }
+.grid-t { background: var(--card); border-radius: 16px; padding: 4px 16px; }
+.gt-row { display: grid; grid-template-columns: 1fr repeat(5, 1.15fr); gap: 10px; align-items: center; padding: 7px 0;
+  border-bottom: 1px solid var(--hair); font-variant-numeric: tabular-nums; }
+.gt-row:last-child { border-bottom: 0; }
+.gt-h { color: var(--text-3); font-weight: 500; }
+.gt-pay { font-weight: 700; }
+.gt-row span { line-height: 1.3; }
+.gt-over { color: var(--text-3); }
+.gt-over i { display: block; font-style: normal; color: #ff9f8f; font-weight: 600; }
+.prem-t .gt-row { grid-template-columns: 1fr 1fr 1fr .9fr .9fr 1.5fr; }
+.gt-add { color: var(--rose); font-weight: 600; }
 """
 
 LP_WEB = r"""
@@ -481,7 +561,7 @@ LP_WEB = r"""
 .pc-row { padding: 16px 0; } .pc-w { font-size: .92rem; } .pc-t { font-size: 1.02rem; } .pc-n { font-size: 1.6rem; }
 .calc { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-top: 14px; }
 .calc-in { background: var(--card); border-radius: 22px; padding: 22px 24px; display: grid; gap: 20px; }
-.calc-in label { display: grid; grid-template-columns: 1fr auto; row-gap: 10px; font-size: .95rem; color: var(--text-2); }
+.calc-in label { display: grid; grid-template-columns: 1fr auto; row-gap: 10px; column-gap: 12px; font-size: .95rem; color: var(--text-2); }
 .calc-in output { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
 .calc-in input { grid-column: 1 / -1; width: 100%; accent-color: #f0c2cf; }
 .calc-out { border-radius: 22px; padding: 24px; display: flex; flex-direction: column; justify-content: center;
@@ -492,6 +572,26 @@ LP_WEB = r"""
 .calc-out .t { font-size: 1rem; font-weight: 600; margin-top: 10px; letter-spacing: -0.015em; line-height: 1.3; }
 .calc-out .s { color: var(--text-2); font-size: .92rem; margin-top: 8px; line-height: 1.45; }
 .calc-note { color: var(--text-3); font-size: .85rem; margin-top: 12px; }
+.mixer { display: grid; grid-template-columns: 1fr 1.15fr; gap: 14px; }
+.mixer .calc-in label { row-gap: 8px; }
+.mixer .ends { grid-column: 1 / -1; display: flex; justify-content: space-between; color: var(--text-3); font-size: .78rem; margin-top: -2px; }
+.mix-out { background: linear-gradient(160deg, #2a1d23 0%, #16110f 100%); box-shadow: inset 0 0 0 1px rgba(244,201,214,.25);
+  border-radius: 22px; padding: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; align-content: start; }
+.mo-tile { display: grid; gap: 6px; }
+.mo-k { color: var(--text-2); font-size: .9rem; }
+.mo-v { font-size: clamp(2.6rem, 6vw, 3.6rem); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+.chair { position: relative; height: 8px; border-radius: 999px; background: rgba(255,255,255,.1); margin-top: 6px; }
+.chair b { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: #f5f5f7; transition: width .5s cubic-bezier(.3,.8,.2,1), background-color .3s; }
+.chair b.over { background: #ff9f8f; }
+.chair i { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -2px; background: #ff9f8f; border-radius: 1px; }
+.chair.open { background: linear-gradient(90deg, rgba(244,201,214,.12), rgba(244,201,214,0)); }
+.chair.open b { background: var(--grad); }
+.mo-note { color: var(--text-3); font-size: .82rem; line-height: 1.4; }
+.mo-note.warn { color: #ff9f8f; }
+.mo-row { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.08);
+  color: var(--text-2); font-size: .92rem; }
+.mo-row b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.mo-prem { grid-column: 1 / -1; color: var(--rose); font-size: .95rem; line-height: 1.45; }
 .mode-ui { display: grid; justify-items: center; gap: 18px; }
 .mode-switch { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 5px; border-radius: 999px; background: #1a1a1d;
   width: min(520px, 100%); box-shadow: inset 0 0 0 1px var(--hair); --i: 0; }
@@ -536,6 +636,7 @@ LP_WEB = r"""
   .stat .v { font-size: 2.4rem; } .stat .k { font-size: .8rem; }
   .four, .three, .calc { grid-template-columns: 1fr; }
   .mp-stats { grid-template-columns: repeat(2, 1fr); } .mp-do { grid-template-columns: 1fr; }
+  .mixer, .mix-out { grid-template-columns: 1fr; }
   .mode-switch button { font-size: .85rem; padding: 10px 4px; }
   .costs.five, .costs.three { grid-template-columns: 1fr 1fr; }
   .ld-row { grid-template-columns: 1.3fr .9fr .9fr; } .ld-bar { grid-column: 1 / -1; }
@@ -560,6 +661,7 @@ LP_PRINT = r"""
 .costs.how { row-gap: 10px; }
 .mode-col { padding: 12px 14px; } .mc-name { font-size: 12pt; } .mc-tag { font-size: 8.4pt; } .mix-l { font-size: 8.4pt; }
 .mc-stats b { font-size: 16pt; } .mc-stats span { font-size: 7.6pt; } .mc-do li { font-size: 8.4pt; }
+.gt-row { font-size: 8.8pt; padding: 5px 0; } .gt-h { font-size: 7.8pt; } .gt-over i { font-size: 7.6pt; }
 """
 
 WEB_JS = r"""
@@ -648,6 +750,51 @@ WEB_JS = r"""
   });
   $("m-pay").addEventListener("input", mpaint);
   mpaint();
+
+  /* build your month: pay, the mix, a premium price */
+  var CHAIR = __CHAIR_MAX__, SUPX = __SUP__, RCOST = __R_COST__, RSHIP = __R_SHIP__;
+  var kfx = function (p) { return p - (p * 0.029 + 0.30) - SUPX; };
+  var ksx = function (p) { return p - RCOST - (p * 0.029 + 0.30) - RSHIP; };
+  var solveMix = function (sf, pay, up) {
+    var pf = __F_AVG__ * (1 + up), pr = __R_PRICE__ * (1 + up), k = __BILLS_N__ + pay;
+    if (sf >= 0.999) return [k / kfx(pf), 0];
+    if (sf <= 0.001) return [0, k / ksx(pr)];
+    var r = (pr / pf) * sf / (1 - sf), subs = k / (kfx(pf) * r + ksx(pr));
+    return [r * subs, subs];
+  };
+  var xpaint = function () {
+    var pay = +$("x-pay").value, prod = +$("x-mix").value, up = +$("x-up").value / 100, sf = 1 - prod / 100;
+    var res = solveMix(sf, pay, up), fw = res[0] * 12 / 52, subs = Math.ceil(res[1]);
+    var pf = __F_AVG__ * (1 + up), pr = __R_PRICE__ * (1 + up), fs = res[0] * pf, rs = subs * pr;
+    $("xo-pay").textContent = fmt(pay);
+    $("xo-mix").textContent = prod === 0 ? "All facials" : prod === 100 ? "All product" : "Facials " + (100 - prod) + "% \u00b7 Product " + prod + "%";
+    $("xo-up").textContent = up ? "+" + Math.round(up * 100) + "%" : "None";
+    $("xo-fpw").textContent = sf <= 0.001 ? "0" : fw < 1 ? fw.toFixed(1) : Math.round(fw);
+    var over = fw > CHAIR;
+    var bar = $("xo-chair");
+    bar.style.width = Math.min(100, fw / CHAIR * 100) + "%";
+    bar.classList.toggle("over", over);
+    var note = $("xo-chair-t");
+    note.textContent = over ? "More than one person can do. Shift the mix toward product, or add an artist."
+      : "One chair tops out at " + CHAIR + " a week. This uses " + Math.round(fw / CHAIR * 100) + "% of it.";
+    note.classList.toggle("warn", over);
+    $("xo-subs").textContent = subs;
+    $("xo-subbar").style.width = Math.min(100, subs / 3) + "%";
+    $("xo-hours").textContent = Math.round(fw * 1.25) + " hours";
+    $("xo-sales").textContent = fmt(fs + rs) + " \u00b7 facials " + fmt(fs) + ", product " + fmt(rs);
+    $("xo-prices").textContent = "Facial " + fmt(pf) + " average \u00b7 Glow Routine " + fmt(pr);
+    if (up) {
+      var base = solveMix(sf, pay, 0), bf = base[0], bs = Math.ceil(base[1]);
+      var extra = bf * (kfx(pf) - kfx(__F_AVG__)) + bs * (ksx(pr) - ksx(__R_PRICE__));
+      $("xo-prem").textContent = "The premium price adds about " + fmt(Math.round(extra / 10) * 10) + " a month at today\u2019s volume, or makes the same pay with " +
+        (sf > 0.001 ? Math.round(bf * 12 / 52) + " \u2192 " + Math.round(fw) + " facials a week" : "") +
+        (sf > 0.001 && sf < 0.999 ? " and " : "") + (sf < 0.999 ? bs + " \u2192 " + subs + " subscribers" : "") + ".";
+    } else {
+      $("xo-prem").textContent = "Slide the premium price to see what 5% to 30% more adds, once the app on the App Store gives clients a reason.";
+    }
+  };
+  ["x-pay", "x-mix", "x-up"].forEach(function (id) { $(id).addEventListener("input", xpaint); });
+  xpaint();
 })();
 """
 
@@ -823,6 +970,50 @@ WEB_BODY = """
   </div>
 </section>
 
+<section id="mix">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Build your month</p>
+      <h2 class="h2" style="margin-top:14px">Pick the pay. <span class="dim">Slide the mix.</span></h2>
+      <p class="lead">How many facials and how many Glow Routine subscribers it takes to make a given amount, anywhere from all
+      facials to all product, and what a premium price adds.</p>
+    </div>
+    <div class="mixer reveal">
+      <div class="calc-in">
+        <label for="x-pay">Evelyn&rsquo;s pay a month <output id="xo-pay"></output>
+          <input id="x-pay" type="range" min="1000" max="20000" step="250" value="__MODE_PAY_N__"></label>
+        <label for="x-mix">Where the money comes from <output id="xo-mix"></output>
+          <input id="x-mix" type="range" min="0" max="100" step="5" value="50">
+          <span class="ends"><span>All facials</span><span>All product</span></span></label>
+        <label for="x-up">Premium price <output id="xo-up"></output>
+          <input id="x-up" type="range" min="0" max="30" step="5" value="0" list="x-up-ticks">
+          <span class="ends"><span>Today&rsquo;s prices</span><span>+30%</span></span></label>
+        <datalist id="x-up-ticks"><option value="0"></option><option value="5"></option><option value="10"></option><option value="15"></option><option value="20"></option><option value="25"></option><option value="30"></option></datalist>
+      </div>
+      <div class="mix-out" aria-live="polite">
+        <div class="mo-tile">
+          <p class="mo-k">Facials a week</p><p class="mo-v num" id="xo-fpw"></p>
+          <div class="chair"><b id="xo-chair"></b><i style="left:100%"></i></div>
+          <p class="mo-note" id="xo-chair-t"></p>
+        </div>
+        <div class="mo-tile">
+          <p class="mo-k">Glow Routine subscribers</p><p class="mo-v num grad" id="xo-subs"></p>
+          <div class="chair open"><b id="xo-subbar"></b></div>
+          <p class="mo-note">No ceiling. They can live anywhere in California, and later anywhere at all.</p>
+        </div>
+        <div class="mo-row"><span>Hours in the chair a week</span><b id="xo-hours"></b></div>
+        <div class="mo-row"><span>Sales a month</span><b id="xo-sales"></b></div>
+        <div class="mo-row"><span>Prices</span><b id="xo-prices"></b></div>
+        <p class="mo-prem" id="xo-prem"></p>
+      </div>
+    </div>
+    <div class="reveal mt2"><div class="cols-h">One person, or no limit</div><div class="cols-s">Why the mix matters more as the goal grows</div>
+      <div class="costs three">__CEIL_NOTES__</div></div>
+    <div class="reveal mt2"><div class="cols-h">Why a premium price holds</div><div class="cols-s">What clients pay more for, once the app is on the App Store</div>
+      <div class="costs four">__PREM_WHY__</div></div>
+  </div>
+</section>
+
 <section id="product">
   <div class="wrap">
     <div class="sec-head center reveal">
@@ -897,7 +1088,7 @@ PRINT_BODY = """
     __PACE_SVG__
   </div>
   <div class="flow">__FLOW__</div>
-  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 6 and 7: three ways to run it (facials lead, 50/50, product leads), and what the product-led version needs.</p>
+  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 6 to 8: three ways to run it, building a month from any mix of facials and product, and what the product-led version needs.</p>
   __F1__
 </section>
 
@@ -998,6 +1189,20 @@ PRINT_BODY = """
 
 <section class="page tight">
   <div>
+    <p class="kicker">Build your month</p>
+    <h2 class="h2" style="margin-top:10px">Pick the pay. <span class="dim">Slide the mix.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">Facials a week and Glow Routine subscribers for each goal. The web version has the sliders.</p>
+  </div>
+  <div>__MIX_GRID__</div>
+  <div class="costs three">__CEIL_NOTES__</div>
+  <div><div class="cols-h">A premium price</div><div class="cols-s">At 50 / 50 and __MODE_PAY__ a month for Evelyn. What clients pay more for, once the app is on the App Store</div>
+    __PREM_T__</div>
+  <div class="costs" style="grid-template-columns:repeat(4,1fr)">__PREM_WHY__</div>
+  __F7__
+</section>
+
+<section class="page tight">
+  <div>
     <p class="kicker">Another way · if product leads</p>
     <h2 class="h2" style="margin-top:10px">Five facials. <span class="dim">The shelf does the rest.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">About five facials a week, and a monthly product subscription that takes none of Evelyn&rsquo;s hours.</p>
@@ -1014,7 +1219,7 @@ PRINT_BODY = """
     <div class="costs three how">__PL_HOW__</div></div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">At five facials a week, a part-time or shared room could cut the biggest bill.
   Every __PL_STEP__ less a month is one fewer member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
-  __F7__
+  __F8__
 </section>
 </body>
 </html>
@@ -1041,6 +1246,8 @@ def fill(h, web):
         "__MODE_READ__": ("At the same pay, product leading frees about %d hours a week in the chair but needs about %d more "
                           "subscribers. It pays off once Evelyn&rsquo;s facial hours are full, or when she wants them back, "
                           "not before." % (round(MODES[0]["hours"] - MODES[2]["hours"]), MODES[2]["subs"] - MODES[0]["subs"])),
+        "__MIX_GRID__": mix_grid_html(), "__PREM_T__": prem_html(), "__PREM_WHY__": cards2(PREM_WHY),
+        "__CEIL_NOTES__": cards2(CEIL_NOTES), "__CHAIR_MAX__": str(CHAIR_MAX), "__CHAIR_TOP__": money(round(CHAIR_TOP, -2)),
         "__MODE_COLS__": mode_cols_html(), "__FLIP_WHEN__": cards2(FLIP_WHEN), "__FLIP_HOW__": cards2(FLIP_HOW),
         "__MODE_PAY__": money(MODE_PAY), "__MODE_PAY_N__": str(MODE_PAY),
         "__PL_CHAIR__": rows(PL_CHAIR, ("Left for Evelyn’s pay", money(round(F_LEFT, -1)))),
@@ -1062,10 +1269,11 @@ web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, T
     "__JS__", WEB_JS.replace("__PERKS__", "%s" % PERKS).replace("__SUP__", "%s" % SUPPLIES)
     .replace("__MODES_JSON__", json.dumps([{k: m[k] for k in ("id", "name", "share", "tag", "do")} for m in MODES], ensure_ascii=True))
     .replace("__F_AVG__", "%s" % F_AVG).replace("__F_KEPT__", "%.4f" % F_KEPT_EACH).replace("__R_PRICE__", "%s" % R_PRICE)
-    .replace("__R_KEPT__", "%.4f" % R_KEPT).replace("__BILLS_N__", str(BILLS_TOTAL)))
-foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 7</span></div>' % n
+    .replace("__R_KEPT__", "%.4f" % R_KEPT).replace("__BILLS_N__", str(BILLS_TOTAL))
+    .replace("__CHAIR_MAX__", str(CHAIR_MAX)).replace("__R_COST__", "%s" % R_COST_ABS).replace("__R_SHIP__", "%s" % R_SHIP))
+foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 8</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
-for i in range(1, 8):
+for i in range(1, 9):
     pr = pr.replace("__F%d__" % i, foot(i))
 
 for name, html in (("web.html", web), ("print.html", pr)):

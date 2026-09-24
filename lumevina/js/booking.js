@@ -103,7 +103,7 @@
   var saveCardCheck = modal.querySelector("#bk-save-card");
   var usingSavedCard = false;
 
-  /* Glow Rewards (js/rewards.js): earning, redemption, petal */
+  /* Glow Rewards (js/rewards.js): earning, redemption, the magic mirror */
   var rw = window.LumevinaRewards;
   var redeemRow = modal.querySelector(".rw-redeem");
   var redeemCheck = modal.querySelector("#bk-use-points");
@@ -112,8 +112,8 @@
   var refNoteEl = modal.querySelector(".rw-ref-note");
   var refField = modal.querySelector(".rw-ref-field");
   var refInput = modal.querySelector("#bk-ref");
-  var petalBtn = modal.querySelector(".petal-btn");
-  var petalResult = modal.querySelector(".petal-result");
+  var petalBtn = modal.querySelector(".mirror-btn");
+  var petalResult = modal.querySelector(".mirror-result");
   var calBtn = modal.querySelector(".booking-cal");
   var intakeBtn = modal.querySelector(".booking-intake-open");
   var intakeStatusEl = modal.querySelector(".booking-intake-status");
@@ -1067,9 +1067,10 @@
 
   petalBtn.addEventListener("click", function () {
     if (petalBtn.disabled || !rw) return;
-    var pick = rw.petalReveal();
+    var pick = rw.mirrorReveal();
     petalBtn.disabled = true;
-    petalResult.textContent = "🌹 " + pick.label + " — balance " +
+    petalBtn.classList.add("is-lit");
+    petalResult.textContent = "✦ The mirror says: " + pick.label + " · balance " +
       rw.points() + " ✦";
     petalResult.hidden = false;
   });
@@ -1348,6 +1349,7 @@
         refNoteEl.hidden = true;
       }
       petalBtn.disabled = false;
+      petalBtn.classList.remove("is-lit");
       petalResult.hidden = true;
       petalResult.textContent = "";
 
