@@ -146,7 +146,7 @@ PL_CHAIR = [("Facials a month", "about %d" % round(F_MONTH), "%d a week, Tuesday
             ("Sales", money(round(F_SALES, -1)), "At about %s a visit" % money(F_AVG)),
             ("Kept after supplies and card fees", money(round(F_KEPT, -1)), "About $%d of every $100" % int(F_KEPT_EACH / F_AVG * 100)),
             ("Business bills", "−" + money(BILLS_TOTAL), "The same bills as page 2")]
-PL_SUB = [("Glow Routine, a month", money(R_PRICE), "Refills and a daily skin supplement, chosen by Evelyn"),
+PL_SUB = [("Glow Routine, a month", money(R_PRICE), "The Glow tier. Clear is $85 and Ageless $95, so these figures are the floor"),
           ("Product cost", "−$%.2f" % (R_PRICE * R_COGS), "Wholesale is usually about half the price"),
           ("Card fee", "−$%.2f" % R_FEE, "2.9% + 30¢"),
           ("Shipping and packaging", "−$%d" % R_SHIP, "Averaged: many pick up at a visit")]
@@ -156,7 +156,7 @@ PL_GOALS = [("Pay Evelyn $3,000 a month", subs_for_pay(3000), "Facials plus subs
             ("Out-earn the facials", math.ceil(F_KEPT / R_KEPT), "More kept from product than from facials")]
 PL_HOW = [("Cap the facial spots", "12 facial memberships with a waitlist. Her time is the scarce thing, so facials can price up again."),
           ("Every facial ends with a routine", "The chair is where subscribers start: five facials a week become new routines."),
-          ("The Glow Routine, $%d a month" % R_PRICE, "Evelyn’s pick of refills and a daily skin supplement, a seasonal update, a 15-minute video check-in each quarter, 10% off facials."),
+          ("The Glow Routine, from $%d" % R_PRICE, "Glow, Clear or Ageless at $75, $85 or $95: Evelyn’s pick of refills and a daily skin supplement, a seasonal update, a 15-minute video check-in each quarter, 10% off facials."),
           ("Start without inventory", "A practitioner dispensary ships supplements for you at a lower margin. Buy the steady sellers wholesale once they prove out."),
           ("Check before selling supplements", "Seller’s permit and sales tax, insurance that covers products, the brand’s own wording, and a doctor’s OK in pregnancy or on medication."),
           ("Expect more cancelling", "Plan for about 1 in 10 subscribers a month until real numbers arrive, so the chair and the site keep bringing new ones.")]

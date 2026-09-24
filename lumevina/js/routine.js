@@ -1,6 +1,8 @@
 /* Lumevina — Glow Routine: the product membership
  *
- * $75 a month, no facial included, so it takes none of Evelyn's hours:
+ * From $75 a month, no facial included, so it takes none of Evelyn's hours.
+ * Each focus is its own tier and price, like the memberships:
+ *   Glow $75 · Clear $85 · Ageless $95 (the Le Mieux booster costs more)
  *   each month   refills from our shelf and a daily skin supplement,
  *                chosen by Evelyn for the client's focus
  *   each season  the routine updated as the skin changes
@@ -19,16 +21,16 @@
 
   var KEY = "lumevina_routines";
   var SALES_KEY = "lumevina_retail_sales";
-  var PRICE = 75;
+  var PRICE = 75;                          /* the entry tier; each focus sets its own below */
   var PRODUCT_SHARE = 0.5;                 /* wholesale is usually about half the price */
   var SHIP_COST = 7, PICKUP_COST = 1;      /* shipping and packaging, or just the bag */
 
   var FOCUS = {
-    glow: { name: "Glow", line: "Brightness, tone and a healthy glow",
+    glow: { name: "Glow", price: 75, tier: 1, line: "Brightness, tone and a healthy glow",
       box: "A cleanser or SPF refill as you need it, a brightening step, and a daily skin supplement" },
-    clear: { name: "Clear", line: "Breakouts, congestion and calm skin",
+    clear: { name: "Clear", price: 85, tier: 2, line: "Breakouts, congestion and calm skin",
       box: "Acne-safe refills from Face Reality and GlyMed+, and a daily skin supplement" },
-    ageless: { name: "Ageless", line: "Firmness, fine lines and bounce",
+    ageless: { name: "Ageless", price: 95, tier: 3, line: "Firmness, fine lines and bounce",
       box: "A Le Mieux booster or SPF refill as you need it, and a daily skin supplement" }
   };
 
@@ -54,8 +56,28 @@
 
   /* ── focus chips (the card and the window share one choice) ── */
   var focus = "glow";
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var shownPrice = FOCUS.glow.price;
+  /* the price rolls to the new tier's, on the card and in the window */
+  var rollPrice = function (to) {
+    var els = document.querySelectorAll(".rt-amt, .routine-modal .mj-price");
+    var put = function (v) { els.forEach(function (e) { e.textContent = "$" + Math.round(v); }); };
+    if (calm || to === shownPrice) { put(to); shownPrice = to; return; }
+    var from = shownPrice, t0 = performance.now(), dur = 320;
+    var tick = function (now) {
+      var u = Math.min(1, (now - t0) / dur);
+      put(from + (to - from) * (1 - Math.pow(1 - u, 3)));
+      if (u < 1) requestAnimationFrame(tick); else shownPrice = to;
+    };
+    requestAnimationFrame(tick);
+  };
   var setFocus = function (f) {
     focus = FOCUS[f] ? f : "glow";
+    var price = FOCUS[focus].price;
+    card.setAttribute("data-tier", FOCUS[focus].tier);
+    rollPrice(price);
+    $(".rt-agree-price").textContent = "$" + price;
+    $(".rt-pay .btn-mb-inner").textContent = "Start my routine · $" + price + "/month";
     document.querySelectorAll(".rt-focus [data-focus]").forEach(function (b) {
       b.setAttribute("aria-checked", String(b.getAttribute("data-focus") === focus));
     });
@@ -159,23 +181,24 @@
     var btn = $(".rt-pay");
     btn.disabled = true;
     $(".rt-status").textContent = "Starting your routine…";
-    pay.process({ amount: PRICE, description: "Glow Routine — first month" }, function (err, res) {
+    var price = FOCUS[focus].price;
+    pay.process({ amount: price, description: "Glow Routine (" + FOCUS[focus].name + ") — first month" }, function (err, res) {
       btn.disabled = false;
       if (err) { $(".rt-status").textContent = "Payment failed. Please try again."; return; }
       $(".rt-status").textContent = "";
       var saved = usingSaved ? pay.getCard(email) : pay.saveCard(email, $("#rt-card").value, $("#rt-expiry").value);
       var now = new Date().toISOString();
       var rec = { email: email, name: name, focus: focus, delivery: ship ? "ship" : "pickup",
-        address: ship ? $("#rt-address").value.trim() : "", price: PRICE, status: "active",
+        address: ship ? $("#rt-address").value.trim() : "", price: price, status: "active",
         startedAt: now, nextBoxAt: nextBox(), card: saved ? { brand: saved.brand, last4: saved.last4 } : null,
-        history: [{ at: now, type: "joined", amount: PRICE, order: res.id }] };
+        history: [{ at: now, type: "joined", amount: price, order: res.id }] };
       all[norm(email)] = rec;
       save(all);
       /* the books: income at the price paid, cost = product + shipping or the bag */
       var log;
       try { log = JSON.parse(localStorage.getItem(SALES_KEY)) || []; } catch (e) { log = []; }
-      log.push({ id: "glow-routine", name: "Glow Routine · " + FOCUS[focus].name, qty: 1, price: PRICE, paid: PRICE,
-        cost: PRICE * PRODUCT_SHARE + (ship ? SHIP_COST : PICKUP_COST), at: now, channel: "subscription", type: "sale",
+      log.push({ id: "glow-routine", name: "Glow Routine · " + FOCUS[focus].name, qty: 1, price: price, paid: price,
+        cost: price * PRODUCT_SHARE + (ship ? SHIP_COST : PICKUP_COST), at: now, channel: "subscription", type: "sale",
         note: "First month" });
       try { localStorage.setItem(SALES_KEY, JSON.stringify(log)); } catch (e) { /* private mode */ }
       if (window.LumevinaAccount && window.LumevinaAccount.signIn) window.LumevinaAccount.signIn(name, email);
@@ -204,5 +227,5 @@
   setFocus("glow");
   renderCard();
 
-  window.LumevinaRoutine = { price: PRICE, get: function (email) { return load()[norm(email)] || null; } };
+  window.LumevinaRoutine = { price: PRICE, prices: { glow: 75, clear: 85, ageless: 95 }, get: function (email) { return load()[norm(email)] || null; } };
 })();

@@ -5823,7 +5823,15 @@ html.sheet-open { overflow: hidden; }
   background: transparent; border: 0; border-radius: 999px; padding: 0.42rem 0.7rem; cursor: pointer;
   transition: background-color 200ms ease, color 200ms ease;
 }
-.rt-focus button[aria-checked="true"] { background: var(--mauve); color: #000; }
+.rt-focus button[aria-checked="true"] { background: rgb(var(--rt, 234, 185, 200)); color: #000; }
+/* each focus is a tier, and the light brightens with it: dusk rose → petal → pearl */
+.routine-card { --rt: 213, 150, 171; transition: border-color 400ms ease, background 400ms ease, box-shadow 400ms ease; }
+.routine-card[data-tier="2"] { --rt: 240, 185, 202; }
+.routine-card[data-tier="3"] { --rt: 253, 226, 234; }
+.routine-card { border-color: rgba(var(--rt), 0.32);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(var(--rt), 0.16), transparent 55%), var(--porcelain); }
+.routine-card[data-tier="3"] { box-shadow: 0 0 40px -14px rgba(var(--rt), 0.45); }
+.rt-amt { font-variant-numeric: tabular-nums; }
 .rt-focus button:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
 .rt-start { width: 100%; }
 .rt-start.is-mine { font-size: 0.85rem; }
