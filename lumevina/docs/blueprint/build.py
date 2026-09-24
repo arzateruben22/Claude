@@ -25,13 +25,14 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
 S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Sat)
+MEMX = {"low": 320, "likely": 800, "high": 1200}       # membership keeps building after Step 1: 30 → 50 members by year 2 (profit)
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
-COLL = {"low": 1100, "likely": 4100, "high": 8100}     # 6–8 artists, net: flat suite rent + crossover − space − perks
+COLL = {"low": 900, "likely": 3900, "high": 7900}      # 6–8 artists, net: flat suite rent + crossover − space − perks and points
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
 
 
 def added(m, k):
-    s1 = S1[k] * min(m / 9.0, 1.0)
+    s1 = S1[k] * min(m / 9.0, 1.0) + MEMX[k] * min(max((m - 9) / 15.0, 0.0), 1.0)
     p, q = PILOT[k], COLL[k]
     dip = p - 3000                                       # lease starts before suites fill
     if m < 6:
@@ -48,6 +49,9 @@ def added(m, k):
     else:
         art = q
     return s1 + art
+
+
+YEAR = {k: int(round(added(36, k) * 12 / 1000.0)) for k in ("low", "likely", "high")}
 
 
 def chart_svg():
@@ -114,14 +118,15 @@ CHAIR = [("Glow Membership", "$1,500", "$600–$3,000"),
          ("Add-ons at booking", "$800", "$500–$1,100"),
          ("Flash openings · 5 days a week", "$800", "$400–$1,200"),
          ("Retail + auto-refill", "$700", "$300–$1,500"),
-         ("Referrals", "$600", "$300–$900")]
-CHAIR_TOTAL = ("Added revenue", "$4,400", "$2,100–$7,700")
+         ("Referrals", "$600", "$300–$900"),
+         ("More members · 50 by year 2", "$1,000", "$400–$1,500")]
+CHAIR_TOTAL = ("Added revenue by year 2", "$5,400", "$2,500–$9,200")
 
 COLLECTIVE = [("Suite rent · 7 suites", "$6,500", "$4,500–$10,000"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
               ("Space and running costs", "−$5,500", "−$5,000–$6,500"),
-              ("Artist perks and recruiting", "−$900", "−$900–$1,400")]
-COLL_TOTAL = ("Net to Lumevina", "$4,100", "$1,100–$8,100")
+              ("Perks, points and recruiting", "−$1,100", "−$1,100–$1,600")]
+COLL_TOTAL = ("Net to Lumevina", "$3,900", "$900–$7,900")
 
 GUARD = [
     ("Licensed only.", "Every artist holds a California license and works in a licensed space."),
@@ -142,6 +147,69 @@ DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat c
         ("Month 3", "Meet the three artists your clients mention most. Offer the pilot to the best two.")]
 
 
+# ─────────────────────────── membership first ───────────────────────────
+WHY = [("$4,800", "Paid before anyone books.", "30 members bill about $4,800 on the 1st of every month. At 50 members, about $8,000."),
+       ("Stays", "Survives artist turnover.", "A client who joins for the house perks keeps her facial membership with Evelyn, even if her lash artist moves on."),
+       ("1 a month", "Fills the calendar ahead.", "Every member is a visit a month, booked in advance. Banked facials are already paid for.")]
+
+ANCHOR = [("Custom Facial · Glow", "$180", "$149", "$372"),
+          ("Monthly Acne · Clear Skin", "$180", "$159", "$252"),
+          ("Ageless Grace · Ageless", "$230", "$199", "$372")]
+
+# member perks with the Collective's artists, by tier (the pink ladder)
+TIERS = [("Glow", "#d596ab"), ("Clear Skin", "#f0b9ca"), ("Ageless", "#fde2ea")]
+HOUSE = [("First look at openings, 48 hours early", (1, 1, 1)),
+         ("Double Glow Points with every artist", (1, 1, 1)),
+         ("Waitlist priority for busy artists", (0, 1, 1)),
+         ("A free add-on each season", (0, 0, 1))]
+
+CONVERT = [("At checkout", "Any facial can become month one at the member price, with the single price shown beside it."),
+           ("In the chair", "Evelyn offers it before the client leaves, with next month already booked."),
+           ("First look", "Members see flash openings and new artists a day before anyone else."),
+           ("Founding price", "The first 25 members keep their price for as long as they stay.")]
+
+MTRACK = [("Members", "30 by month 6, 50 by year 2"),
+          ("Share of facial visits from members", "Aim for over half"),
+          ("Cancellations per month", "Under 1 in 20"),
+          ("Members who also book artists", "The house working as one")]
+
+
+def why_html(reveal=True):
+    r = " reveal" if reveal else ""
+    return "".join('<div class="g%s"><div class="gv num%s">%s</div><b>%s</b><p>%s</p></div>'
+                   % (r, " grad" if i == 0 else "", v, a, b) for i, (v, a, b) in enumerate(WHY))
+
+
+def anchor_html():
+    head = '<div class="pt-row pt-h"><span>Facial · plan</span><span>Single</span><span>Member</span><span>Saved a year</span></div>'
+    body = "".join('<div class="pt-row"><span>%s</span><span class="num dimv">%s</span><span class="num">%s</span><span class="num sv">%s</span></div>' % a
+                   for a in ANCHOR)
+    return ('<div class="ptable">' + head + body + '</div>'
+            '<p class="fine" style="margin-top:10px">Members also bank a facial they can&rsquo;t use, pause once a year, gift a banked facial, and save on skincare.</p>')
+
+
+def house_html():
+    head = '<div class="ht-row ht-h"><span></span>' + "".join(
+        '<span><i style="background:%s"></i>%s</span>' % (c, n) for n, c in TIERS) + '</div>'
+    rows = "".join('<div class="ht-row"><span class="ht-p">%s</span>%s</div>' % (
+        perk, "".join('<span class="ht-c">%s</span>' % (
+            '<b class="on" style="--c:%s" aria-label="Included"></b>' % TIERS[i][1] if v else '<b class="off" aria-label="Not included"></b>')
+            for i, v in enumerate(has)))
+        for perk, has in HOUSE)
+    return ('<div class="htable">' + head + rows + '</div>'
+            '<p class="fine" style="margin-top:10px">For lashes, brows and nails. Artists keep their own prices; the seasonal add-on (a lash bath, brow tint or nail art) comes from artists who opt in, in exchange for being featured to members. Lumevina pays for the double points.</p>')
+
+
+def convert_html(compact=False):
+    if compact:
+        return '<div class="cv4">' + "".join('<div class="c"><b>%s</b><span>%s</span></div>' % c for c in CONVERT) + '</div>'
+    return '<div class="plan">' + "".join('<div class="pl"><span class="pk">%s</span><span class="pv">%s</span></div>' % c for c in CONVERT) + '</div>'
+
+
+def mtrack_html():
+    return '<div class="rows">' + "".join('<div class="row"><span class="rn">%s</span><span class="rv tk">%s</span></div>' % t for t in MTRACK) + '</div>'
+
+
 # ─────────────────────────── bringing artists in ───────────────────────────
 WHO = [("Artists your clients already see.", "Ask every client who does their lashes, brows and nails. Those artists come with crossover built in."),
        ("Licensed, with a following.", "One to three years in, a book of regulars, working from home or a crowded shared salon."),
@@ -151,7 +219,7 @@ OFFERS = [
     {"tag": "The pilot · Step 2", "big": "Free for 90 days", "sub": "Then 12% on bookings made through Lumevina. They keep working where they are.",
      "inc": ["Their own name, prices, hours and clients", "Deposits that stop no-shows",
              "Evelyn’s clients see them first", "Their clients earn Glow Points they can spend with Evelyn"],
-     "ask": "In return: honor Glow Points, tag Lumevina twice a month, send facial clients to Evelyn."},
+     "ask": "In return: honor Glow Points, give members first look at openings, send facial clients to Evelyn."},
     {"tag": "The house · Step 3", "big": "$250 a week", "sub": "Flat suite rent, no commission. Founding rate $210 a week, locked for 12 months, for the first three.",
      "inc": ["A private suite with their name on the door", "The app, Glow Rewards and marketing included",
              "Pilot artists get first pick of suites", "Leave with 30 days’ notice after the first six months"],
@@ -211,8 +279,8 @@ def pipe_html():
 
 def track_html():
     return ('<div class="rows">' + "".join('<div class="row"><span class="rn">%s</span><span class="rv tk">%s</span></div>' % t for t in TRACK)
-            + '<div class="row tot"><span class="rn">Perks and recruiting</span><span class="rv">$900 a month</span>'
-              '<span class="rr">Welcome points, founding rates and ads. Already counted in the numbers.</span></div></div>')
+            + '<div class="row tot"><span class="rn">Perks, points and recruiting</span><span class="rv">$1,100 a month</span>'
+              '<span class="rr">Welcome points, members&rsquo; double points, founding rates and ads. Already counted in the numbers.</span></div></div>')
 
 
 def rows(items, total):
@@ -247,9 +315,9 @@ STEPS_JS = js_ascii(open(os.path.join(HERE, "steps.js")).read())
 DEEP = [
     {"n": 1, "when": "Step 1 · Months 0–6", "h": "Grow your chair.", "dim": "Fill every hour.",
      "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Saturday from 8 AM to 6 PM with Sundays and Mondays closed, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
-     "plan": [("Launch", "Glow Membership from $149 a month, add-ons at booking, flash openings, and give $25 / get $25."),
+     "plan": [("Launch", "Glow Membership from $149 a month, offered at every checkout, plus add-ons at booking, flash openings and give $25 / get $25."),
               ("Measure", "Members, average visit, and how many hours are booked."),
-              ("Target", "30 members, a $150+ average visit, 90% of hours booked."),
+              ("Target", "30 members by month 6 and 50 by year 2, a $150+ average visit, 90% of hours booked."),
               ("Result", "About $4.4k more revenue a month, from the same five days.")]},
     {"n": 2, "when": "Step 2 · Months 6–12", "h": "Pilot two artists.", "dim": "Prove it small.",
      "vb": "0 0 520 400", "aria": "Animation: two artists' clients appear; some cross over to book Evelyn; the share climbs past the 15% go line.",
@@ -258,11 +326,11 @@ DEEP = [
               ("Measure", "How many of their clients also book Evelyn."),
               ("Decide", "15% or more by month 12 means go. Under that, keep the pilot: it still nets about $2.8k a month.")]},
     {"n": 3, "when": "Step 3 · Year 2–3", "h": "The Collective.", "dim": "One house, one app.",
-     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $4,100 a month.",
+     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $3,900 a month.",
      "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes. Artists pay flat weekly rent, no commission."),
               ("Fill", "One or two licensed artists a month, found through the pilot artists’ networks."),
               ("App", "Lumevina goes to the App Store with every artist bookable."),
-              ("Target", "Seven artists, about $4.1k net a month: +$92k a year with Step 1.")]},
+              ("Target", "Seven artists, about $3.9k net a month: +$__Y_LIKELY__k a year with Step 1.")]},
 ]
 
 
@@ -435,6 +503,27 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 .pk { font-size: 0.9rem; font-weight: 600; color: var(--rose); padding-top: 1px; }
 .pv { font-size: 1.02rem; line-height: 1.45; letter-spacing: -0.01em; color: var(--text); }
 
+
+/* membership first */
+.gv { font-size: 2.1rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin-bottom: 12px; }
+.ptable, .htable { background: var(--card); border-radius: 22px; padding: 6px 20px; }
+.pt-row { display: grid; grid-template-columns: 1.5fr .8fr 1fr .9fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--hair);
+  font-size: 0.95rem; align-items: baseline; }
+.pt-row:last-child { border-bottom: 0; }
+.pt-h, .ht-h { font-size: 0.78rem; color: var(--text-3); font-weight: 500; }
+.pt-row .dimv { color: var(--text-3); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.25); }
+.pt-row .sv { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+.ht-row { display: grid; grid-template-columns: 1fr repeat(3, 4.6rem); gap: 8px; padding: 11px 0; border-bottom: 1px solid var(--hair); align-items: center; }
+.ht-row:last-child { border-bottom: 0; }
+.ht-h span { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; line-height: 1.2; }
+.ht-h i { width: 10px; height: 10px; border-radius: 50%; }
+.ht-p { font-size: 0.93rem; line-height: 1.35; }
+.ht-c { display: grid; place-items: center; }
+.ht-c b { display: block; width: 18px; height: 18px; border-radius: 50%; position: relative; }
+.ht-c b.on { background: var(--c); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 55%, transparent); }
+.ht-c b.on::after { content: ""; position: absolute; left: 6.5px; top: 3.5px; width: 4px; height: 8px; border: solid #000; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.ht-c b.off { width: 10px; height: 2px; border-radius: 1px; background: var(--text-3); opacity: .6; }
+
 /* bringing artists in */
 .who3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .offers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -571,6 +660,10 @@ html.sd-lock { overflow: hidden; }
 @media (max-width: 860px) {
   section { padding: 84px 0; }
   .steps, .flow, .figs, .guard, .who3, .offers, .neg, .split { grid-template-columns: 1fr; }
+  .ptable, .htable { padding: 4px 14px; }
+  .pt-row { grid-template-columns: 1.3fr .8fr 1fr .8fr; font-size: 0.84rem; gap: 6px; }
+  .ht-row { grid-template-columns: 1fr repeat(3, 3.3rem); gap: 4px; }
+  .ht-h { font-size: 0.7rem; }
   .split { gap: 36px; }
   .perk { flex-direction: column; gap: 4px; }
   .flow .fs:not(:last-child)::after { top: auto; bottom: -11px; right: 50%; transform: translateX(50%) rotate(135deg); }
@@ -652,6 +745,16 @@ body { font-size: 10.5pt; }
 .perk { margin-top: 0; padding: 11px 16px; border-radius: 14px; } .perk b, .perk span { font-size: 9.5pt; }
 .split { gap: 24px; }
 .rv.tk { font-size: 8pt; }
+
+.gv { font-size: 18pt; margin-bottom: 6px; }
+.ptable, .htable { border-radius: 16px; padding: 2px 14px; }
+.pt-row { padding: 6px 0; font-size: 9pt; } .pt-h, .ht-h { font-size: 7.5pt; }
+.ht-row { padding: 6px 0; grid-template-columns: 1fr repeat(3, 0.62in); } .ht-p { font-size: 8.8pt; }
+.ht-c b { width: 14px; height: 14px; } .ht-c b.on::after { left: 5px; top: 2.5px; width: 3px; height: 6.5px; border-width: 0 1.6px 1.6px 0; }
+.cv4 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.page.tight { gap: 0.2in; }
+.cv4 .c b { color: var(--rose); }
+.row { padding: 4px 0; }
 """
 
 # ─────────────────────────── network animation ───────────────────────────
@@ -1042,6 +1145,25 @@ WEB = """<!DOCTYPE html>
   </div>
 </section>
 
+<section id="membership">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Membership first</p>
+      <h2 class="h2" style="margin-top:14px">Every regular, a member. <span class="dim">Billed on the 1st.</span></h2>
+      <p class="lead">A membership pays whether or not the calendar is full, and it keeps clients with Lumevina even if the artist they came in with moves on. So every step pushes toward it.</p>
+    </div>
+    <div class="who3">__WHY__</div>
+    <div class="split" style="margin-top:48px">
+      <div class="reveal"><div class="cols-h">Why clients choose it</div>__ANCHOR__</div>
+      <div class="reveal"><div class="cols-h">Member perks across the house</div>__HOUSE__</div>
+    </div>
+    <div class="split" style="margin-top:48px">
+      <div class="reveal"><div class="cols-h">How we convert</div>__CONVERT__</div>
+      <div class="reveal"><div class="cols-h">What we track</div>__MTRACK__</div>
+    </div>
+  </div>
+</section>
+
 <section id="artists">
   <div class="wrap">
     <div class="sec-head center reveal">
@@ -1092,9 +1214,9 @@ WEB = """<!DOCTYPE html>
       <p class="lead">Added profit per year once all three steps are running, in year two to three.</p>
     </div>
     <div class="figs reveal">
-      <div class="fig"><div class="k">Low</div><div class="v num" data-count="33" data-pre="+$" data-suf="k">+$33k</div><div class="d">The chair grows a little; the Collective barely covers its lease.</div></div>
-      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="92" data-pre="+$" data-suf="k">+$92k</div><div class="d">Membership sticks, seven artists, clients cross over.</div></div>
-      <div class="fig"><div class="k">High</div><div class="v num" data-count="170" data-pre="+$" data-suf="k">+$170k</div><div class="d">Full membership and eight busy artists.</div></div>
+      <div class="fig"><div class="k">Low</div><div class="v num" data-count="__Y_LOW__" data-pre="+$" data-suf="k">+$__Y_LOW__k</div><div class="d">The chair grows a little; the Collective barely covers its lease.</div></div>
+      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="__Y_LIKELY__" data-pre="+$" data-suf="k">+$__Y_LIKELY__k</div><div class="d">50 members, seven artists, clients cross over.</div></div>
+      <div class="fig"><div class="k">High</div><div class="v num" data-count="__Y_HIGH__" data-pre="+$" data-suf="k">+$__Y_HIGH__k</div><div class="d">Full membership and eight busy artists.</div></div>
     </div>
     <div class="chart-card reveal">
       <h3>Added profit per month, over three years</h3>
@@ -1217,11 +1339,13 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS))
        .replace("__WHO__", who_html()).replace("__OFFERS__", offers_html()).replace("__NEG__", negotiate_html())
        .replace("__PIPE__", pipe_html()).replace("__TRACK__", track_html())
-       .replace("__PERK_K__", CLIENT_PERK[0]).replace("__PERK_V__", CLIENT_PERK[1]))
+       .replace("__PERK_K__", CLIENT_PERK[0]).replace("__PERK_V__", CLIENT_PERK[1])
+       .replace("__WHY__", why_html()).replace("__ANCHOR__", anchor_html()).replace("__HOUSE__", house_html())
+       .replace("__CONVERT__", convert_html()).replace("__MTRACK__", mtrack_html()))
 
 # ─────────────────────────── print pages ───────────────────────────
 def foot(n):
-    return foot_n(n, 10)
+    return foot_n(n, 11)
 
 
 PRINT = """<!DOCTYPE html>
@@ -1237,7 +1361,7 @@ PRINT = """<!DOCTYPE html>
   <div class="cover-net"><div class="net-wrap"><canvas id="net"></canvas>
     <div class="net-cap"><b id="net-phase">The Collective</b><span id="net-desc">Eight artists, one app, shared Glow Rewards.</span></div></div></div>
   <div class="stats">
-    <div class="stat"><div class="v grad num">+$92k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
+    <div class="stat"><div class="v grad num">+$__Y_LIKELY__k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
     <div class="stat"><div class="v num">3 steps</div><div class="k">Each starts only when the last one worked</div></div>
     <div class="stat"><div class="v num">90 days</div><div class="k">To go live and test the first artist</div></div>
   </div>
@@ -1269,6 +1393,24 @@ PRINT = """<!DOCTYPE html>
 </section>
 
 __DEEPP__
+
+<section class="page">
+  <div>
+    <p class="kicker">Membership first</p>
+    <h2 class="h2" style="margin-top:10px;font-size:25pt">Every regular, a member. <span class="dim">Billed on the 1st.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">A membership pays whether or not the calendar is full, and it keeps clients with Lumevina even if the artist they came in with moves on.</p>
+  </div>
+  <div class="who3">__WHY__</div>
+  <div class="split">
+    <div><div class="cols-h">Why clients choose it</div>__ANCHOR__</div>
+    <div><div class="cols-h">Member perks across the house</div>__HOUSE__</div>
+  </div>
+  <div class="split">
+    <div><div class="cols-h">How we convert</div>__CONVERT__</div>
+    <div><div class="cols-h">What we track</div>__MTRACK__</div>
+  </div>
+  __FM__
+</section>
 
 <section class="page">
   <div>
@@ -1312,15 +1454,15 @@ __DEEPP__
   __F3__
 </section>
 
-<section class="page">
+<section class="page tight">
   <div>
     <p class="kicker">The numbers</p>
     <h2 class="h2" style="margin-top:10px">What it could add. <span class="dim">Every year.</span></h2>
   </div>
   <div class="figs">
-    <div class="fig"><div class="k">Low</div><div class="v num">+$33k</div><div class="d">The Collective barely covers its lease.</div></div>
-    <div class="fig hl"><div class="k">Likely</div><div class="v num grad">+$92k</div><div class="d">Membership sticks; seven artists; clients cross over.</div></div>
-    <div class="fig"><div class="k">High</div><div class="v num">+$170k</div><div class="d">Full membership and eight busy artists.</div></div>
+    <div class="fig"><div class="k">Low</div><div class="v num">+$__Y_LOW__k</div><div class="d">The Collective barely covers its lease.</div></div>
+    <div class="fig hl"><div class="k">Likely</div><div class="v num grad">+$__Y_LIKELY__k</div><div class="d">50 members; seven artists; clients cross over.</div></div>
+    <div class="fig"><div class="k">High</div><div class="v num">+$__Y_HIGH__k</div><div class="d">Full membership and eight busy artists.</div></div>
   </div>
   <div class="chart-card">
     <h3>Added profit per month, over three years</h3>
@@ -1371,12 +1513,17 @@ pr = (PRINT.replace("__BASE__", base).replace("__PRINT__", PRINT_CSS)
 pr = (pr.replace("__WHO__", who_html(False)).replace("__OFFERS__", offers_html(False)).replace("__NEG__", negotiate_html(False))
       .replace("__PIPE__", pipe_html()).replace("__TRACK__", track_html())
       .replace("__PERK_K__", CLIENT_PERK[0]).replace("__PERK_V__", CLIENT_PERK[1])
-      .replace("__FA__", foot(6)).replace("__FB__", foot(7)))
-for i, pg in ((1, 1), (2, 2), (3, 8), (4, 9), (5, 10)):
+      .replace("__WHY__", why_html(False)).replace("__ANCHOR__", anchor_html()).replace("__HOUSE__", house_html())
+      .replace("__CONVERT__", convert_html(True)).replace("__MTRACK__", mtrack_html())
+      .replace("__FM__", foot(6)).replace("__FA__", foot(7)).replace("__FB__", foot(8)))
+for i, pg in ((1, 1), (2, 2), (3, 9), (4, 10), (5, 11)):
     pr = pr.replace("__F%d__" % i, foot(pg))
-pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 10) for k, d in enumerate(DEEP)))
+pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 11) for k, d in enumerate(DEEP)))
 pr = pr.replace("__STEPSJS__", STEPS_JS)
 
+fill = lambda h: (h.replace("__Y_LOW__", str(YEAR["low"])).replace("__Y_LIKELY__", str(YEAR["likely"]))
+                  .replace("__Y_HIGH__", str(YEAR["high"])))
+web, pr = fill(web), fill(pr)
 for name, html in (("web.html", web), ("print.html", pr)):
     html = html.encode("ascii", "xmlcharrefreplace").decode("ascii")
     with open(os.path.join(OUT, name), "w") as f:
