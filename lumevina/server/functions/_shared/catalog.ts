@@ -10,7 +10,7 @@ export const CATALOG: Record<string, { name: string; price_cents: number; dur_mi
   "new-client-consultation-acne": { name: "New Client Consultation + Treatment (Acne Program)", price_cents: 22500, dur_min: 60 },
   "brazilian-wax-mini-vajacial": { name: "Brazilian Wax x Mini Vajacial Package", price_cents: 10000, dur_min: 60 },
   "underarm-wax": { name: "Underarm Wax", price_cents: 2200, dur_min: 30 },
-  "gift-certificate-100": { name: "E-Gift Certificate ($100)", price_cents: 10000, dur_min: 0 },
+  "gift-certificate-100": { name: "E-Gift Certificate ($110)", price_cents: 11000, dur_min: 0 },
   "couples-facial": { name: "Couples Facial", price_cents: 32500, dur_min: 60 },
   "after-hours-facial": { name: "After Hours Facial Add-On", price_cents: 3200, dur_min: 60 },
   "light-chemical-peel": { name: "Light Chemical Peel", price_cents: 22500, dur_min: 60 },

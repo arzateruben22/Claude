@@ -9,7 +9,7 @@
  *
  *   • service — a named treatment (e.g. "Ageless Grace Facial"). ALL-OR-NOTHING:
  *       it covers that whole treatment once, then it's spent. No partial balance.
- *   • value   — a dollar amount ("$100 toward any treatment"). It becomes CREDIT
+ *   • value   — a dollar amount ("$110 toward any treatment"). It becomes CREDIT
  *       on the recipient's account and draws down across visits, so each account
  *       can see how much it has left.
  */

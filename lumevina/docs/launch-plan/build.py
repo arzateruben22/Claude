@@ -11,7 +11,7 @@ Builds two files from one set of content, in the Growth Blueprint's design
 
 Run:  python3 build.py OUTDIR
 """
-import ast, base64, math, os, sys
+import ast, base64, json, math, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BP = os.path.join(HERE, "..", "blueprint")
@@ -160,6 +160,52 @@ PL_HOW = [("Cap the facial spots", "12 facial memberships with a waitlist. Her t
           ("Start without inventory", "A practitioner dispensary ships supplements for you at a lower margin. Buy the steady sellers wholesale once they prove out."),
           ("Check before selling supplements", "Seller’s permit and sales tax, insurance that covers products, the brand’s own wording, and a doctor’s OK in pregnancy or on medication."),
           ("Expect more cancelling", "Plan for about 1 in 10 subscribers a month until real numbers arrive, so the chair and the site keep bringing new ones.")]
+
+# ─────────────────────────── three ways to run it ───────────────────────────
+# The same pay for Evelyn, with the money coming mostly from facials, half and
+# half, or mostly from product. share = facials' part of all sales.
+MODE_PAY = 4000
+MODES = [
+    {"id": "facials", "name": "Facials lead", "share": 0.8, "tag": "About 80% of sales from facials",
+     "do": [("In the chair", "The Glow Membership at every facial; the routine as a take-home."),
+            ("On the site", "Leads with facials and the membership. The Glow Routine sits in the shop."),
+            ("Evelyn’s week", "Facial slots open Tuesday to Saturday."),
+            ("Stock", "Shelf products for retail and the kits. No supplement stock."),
+            ("Watch", "Members and facial bookings.")]},
+    {"id": "even", "name": "50/50", "share": 0.5, "tag": "Half from facials, half from product",
+     "do": [("In the chair", "Every facial ends with both: the membership or the routine, whichever fits."),
+            ("On the site", "The membership and the Glow Routine side by side."),
+            ("Evelyn’s week", "Four chair days, one day for boxes, check-ins and posts."),
+            ("Stock", "Best sellers bought wholesale; supplements through a dispensary."),
+            ("Watch", "The split: keep each side between 40% and 60%.")]},
+    {"id": "product", "name": "Product leads", "share": 0.3, "tag": "About 70% of sales from product",
+     "do": [("In the chair", "Facials become the premium spot: 12 member spots and a waitlist. Every facial starts a routine."),
+            ("On the site", "Leads with the Glow Routine. Facials shown as limited."),
+            ("Evelyn’s week", "Two or three chair days. The rest for video check-ins, posts and packing."),
+            ("Stock", "Routine products wholesale, with 30 to 45 days on the shelf."),
+            ("Watch", "Subscribers, and cancellations under 1 in 10 a month.")]}]
+
+
+def solve(share, pay=MODE_PAY):
+    """facials a month and subscribers for a pay goal and a sales split"""
+    r = (R_PRICE / F_AVG) * share / (1 - share)           # facials per subscriber
+    subs = (BILLS_TOTAL + pay) / (F_KEPT_EACH * r + R_KEPT)
+    return r * subs, subs
+
+
+for m in MODES:
+    fm, sb = solve(m["share"])
+    m.update(fpw=fm * 12 / 52, subs=math.ceil(sb), hours=fm * 12 / 52 * 1.25,
+             fsales=fm * F_AVG, rsales=math.ceil(sb) * R_PRICE)
+
+FLIP_WHEN = [("Toward product", "Product sales beat facial sales two months running, the facial book has a waitlist, or Evelyn wants fewer chair hours."),
+             ("Toward facials", "Routine cancellations run over 1 in 10 a month, product keeps less than $40 of every $100, or facial demand outgrows the open slots."),
+             ("One step at a time", "Go through 50/50 first and hold it a month. Members keep their plans and subscribers keep their boxes either way.")]
+FLIP_HOW = [("The numbers", "Bookkeeping’s Coming in shows the split: services and dues against retail."),
+            ("The site", "Swap which offer leads: the top of the page, the nudge card, the shop."),
+            ("The chair", "Change the offer at the end of each facial."),
+            ("Stock", "Raise or lower reorder levels on the dashboard."),
+            ("Evelyn’s week", "Open or close facial slots in the booking calendar.")]
 
 SCORE = [("Members", "Against the plan: %d by day 90" % PLAN),
          ("Offers made in the chair", "Every facial client, every visit"),
@@ -320,6 +366,23 @@ def flow_html(reveal=""):
                    for i, (a, b) in enumerate(FLOW))
 
 
+def mode_cols_html():
+    h = ""
+    for m in MODES:
+        fs = m["fsales"] / (m["fsales"] + m["rsales"]) * 100
+        h += ('<div class="mode-col"><p class="mc-name">%s</p><p class="mc-tag">%s</p>'
+              '<div class="mix"><b style="width:%.0f%%"></b></div><div class="mix-l"><span>Facials %d%%</span><span>Product %d%%</span></div>'
+              '<div class="mc-stats"><div><b>%d</b><span>facials a week</span></div><div><b>%d</b><span>subscribers</span></div>'
+              '<div><b>%d</b><span>hours in the chair</span></div></div><ul class="mc-do">%s</ul></div>'
+              % (m["name"], m["tag"], fs, round(fs), 100 - round(fs), round(m["fpw"]), m["subs"], round(m["hours"]),
+                 "".join('<li><b>%s</b> %s</li>' % d for d in m["do"][:3])))
+    return h
+
+
+def cards2(items):
+    return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % i for i in items)
+
+
 def pl_goals_html():
     return "".join('<div class="c"><b>%s · %d subscribers</b><span>%s</span></div>' % (a, n, b) for a, n, b in PL_GOALS)
 
@@ -389,6 +452,20 @@ LP_CSS = r"""
 .costs.five { grid-template-columns: repeat(5, 1fr); }
 .costs.three { grid-template-columns: repeat(3, 1fr); }
 .behind .c:last-child b { color: var(--text-3); }
+.mix { position: relative; height: 10px; border-radius: 999px; background: linear-gradient(90deg, #e2b08c, #f0c2cf); overflow: hidden; }
+.mix b { position: absolute; inset: 0 auto 0 0; background: #f5f5f7; border-radius: 999px 0 0 999px; }
+.mix-l { display: flex; justify-content: space-between; color: var(--text-2); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.mix-l span:last-child { color: var(--rose); }
+.mode-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mode-col { background: var(--card); border-radius: 16px; padding: 14px 16px; }
+.mc-name { font-weight: 700; letter-spacing: -0.02em; }
+.mc-tag { color: var(--text-3); margin: 2px 0 10px; }
+.mc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 12px 0 8px; }
+.mc-stats b { display: block; font-weight: 700; letter-spacing: -0.03em; }
+.mc-stats span { color: var(--text-3); line-height: 1.25; display: block; }
+.mc-do { list-style: none; margin: 0; padding: 8px 0 0; border-top: 1px solid var(--hair); display: grid; gap: 6px; }
+.mc-do li { color: var(--text-2); line-height: 1.35; }
+.mc-do b { display: block; color: var(--rose); font-weight: 600; }
 """
 
 LP_WEB = r"""
@@ -415,6 +492,30 @@ LP_WEB = r"""
 .calc-out .t { font-size: 1rem; font-weight: 600; margin-top: 10px; letter-spacing: -0.015em; line-height: 1.3; }
 .calc-out .s { color: var(--text-2); font-size: .92rem; margin-top: 8px; line-height: 1.45; }
 .calc-note { color: var(--text-3); font-size: .85rem; margin-top: 12px; }
+.mode-ui { display: grid; justify-items: center; gap: 18px; }
+.mode-switch { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); padding: 5px; border-radius: 999px; background: #1a1a1d;
+  width: min(520px, 100%); box-shadow: inset 0 0 0 1px var(--hair); --i: 0; }
+.mode-switch button { position: relative; z-index: 1; font: inherit; font-size: .95rem; font-weight: 600; color: var(--text-2); background: none; border: 0;
+  border-radius: 999px; padding: 11px 8px; cursor: pointer; transition: color .3s; }
+.mode-switch button[aria-checked="true"] { color: #000; }
+.mode-switch button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+.ms-thumb { position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc((100% - 10px) / 3); border-radius: 999px; background: var(--grad);
+  transform: translateX(calc(var(--i) * 100%)); transition: transform .45s cubic-bezier(.3,.8,.2,1); box-shadow: 0 6px 24px -6px rgba(244,201,214,.6); }
+.mode-pay { display: grid; grid-template-columns: 1fr auto; row-gap: 8px; width: min(520px, 100%); color: var(--text-2); font-size: .92rem; }
+.mode-pay output { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.mode-pay input { grid-column: 1 / -1; width: 100%; accent-color: #f0c2cf; }
+.mode-panel { width: 100%; background: var(--card); border-radius: 22px; padding: 24px; }
+.mp-tag { color: var(--text-2); margin-bottom: 12px; }
+.mix.big { height: 14px; }
+.mix b { transition: width .6s cubic-bezier(.3,.8,.2,1); }
+.mp-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 22px 0 18px; }
+.mp-stats b { display: block; font-size: clamp(2rem, 4.4vw, 2.8rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.mp-stats span { display: block; color: var(--text-3); font-size: .85rem; margin-top: 6px; }
+.mp-do { list-style: none; margin: 0; padding: 14px 0 0; border-top: 1px solid var(--hair); display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.mp-do li { color: var(--text-2); font-size: .9rem; line-height: 1.4; animation: mp-in .45s ease both; }
+.mp-do b { display: block; color: var(--rose); font-weight: 600; margin-bottom: 2px; }
+@keyframes mp-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ms-thumb, .mix b { transition: none; } .mp-do li { animation: none; } }
 .tl { display: flex; flex-direction: column; }
 .lanes .likely { stroke-width: 2.5; }
 .mt { margin-top: 14px; } .mt2 { margin-top: 40px; }
@@ -434,6 +535,8 @@ LP_WEB = r"""
   .hero90 .stats { grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .stat .v { font-size: 2.4rem; } .stat .k { font-size: .8rem; }
   .four, .three, .calc { grid-template-columns: 1fr; }
+  .mp-stats { grid-template-columns: repeat(2, 1fr); } .mp-do { grid-template-columns: 1fr; }
+  .mode-switch button { font-size: .85rem; padding: 10px 4px; }
   .costs.five, .costs.three { grid-template-columns: 1fr 1fr; }
   .ld-row { grid-template-columns: 1.3fr .9fr .9fr; } .ld-bar { grid-column: 1 / -1; }
   .pc-row { grid-template-columns: 1fr auto; } .pc-t { grid-column: 1 / -1; grid-row: 2; }
@@ -455,6 +558,8 @@ LP_PRINT = r"""
 .sub-h { font-size: 11pt; font-weight: 650; letter-spacing: -0.015em; margin-bottom: 6px; }
 .lanes .likely { stroke-width: 2.5; }
 .costs.how { row-gap: 10px; }
+.mode-col { padding: 12px 14px; } .mc-name { font-size: 12pt; } .mc-tag { font-size: 8.4pt; } .mix-l { font-size: 8.4pt; }
+.mc-stats b { font-size: 16pt; } .mc-stats span { font-size: 7.6pt; } .mc-do li { font-size: 8.4pt; }
 """
 
 WEB_JS = r"""
@@ -507,6 +612,42 @@ WEB_JS = r"""
   };
   ["p-fpw", "p-favg", "p-r", "p-cogs", "p-bills", "p-pay"].forEach(function (id) { $(id).addEventListener("input", pcalc); });
   pcalc();
+
+  /* three ways to run it: the same pay, a different split */
+  var MODES = __MODES_JSON__;
+  var mode = MODES[0];
+  var mpaint = function () {
+    var pay = +$("m-pay").value;
+    var fav = __F_AVG__, fk = __F_KEPT__, rp = __R_PRICE__, rk = __R_KEPT__, bills = __BILLS_N__;
+    var r = (rp / fav) * mode.share / (1 - mode.share);
+    var subs = Math.ceil((bills + pay) / (fk * r + rk)), fm = r * (bills + pay) / (fk * r + rk);
+    var fs = fm * fav, rs = subs * rp, share = Math.round(fs / (fs + rs) * 100);
+    $("mo-pay").textContent = fmt(pay);
+    $("mp-tag").textContent = mode.tag;
+    $("mp-mix").style.width = share + "%";
+    $("mp-fs").textContent = "Facials " + share + "% \u00b7 " + fmt(fs) + " a month";
+    $("mp-rs").textContent = "Product " + (100 - share) + "% \u00b7 " + fmt(rs) + " a month";
+    $("mp-fpw").textContent = Math.round(fm * 12 / 52);
+    $("mp-subs").textContent = subs;
+    $("mp-hours").textContent = Math.round(fm * 12 / 52 * 1.25);
+    $("mp-pay").textContent = fmt(pay);
+    $("mp-do").innerHTML = mode.do.map(function (d) { return "<li><b>" + d[0] + "</b>" + d[1] + "</li>"; }).join("");
+    var sw = document.querySelector(".mode-switch");
+    sw.style.setProperty("--i", MODES.indexOf(mode));
+    sw.querySelectorAll("[data-mode]").forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-mode") === mode.id)); });
+  };
+  var msw = document.querySelector(".mode-switch");
+  msw.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-mode]");
+    if (b) { mode = MODES.filter(function (m) { return m.id === b.getAttribute("data-mode"); })[0]; mpaint(); }
+  });
+  msw.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    var i = (MODES.indexOf(mode) + (e.key === "ArrowRight" ? 1 : MODES.length - 1)) % MODES.length;
+    mode = MODES[i]; mpaint(); msw.querySelector('[data-mode="' + mode.id + '"]').focus(); e.preventDefault();
+  });
+  $("m-pay").addEventListener("input", mpaint);
+  mpaint();
 })();
 """
 
@@ -542,7 +683,7 @@ WEB_BODY = """
       <div class="chart-scroll">__PACE_SVG__</div><p class="swipe-hint">Swipe the chart to see day 90 &rarr;</p>
     </div>
     <div class="flow mt">__FLOW__</div>
-    <p class="foot-note reveal">Another way: <a href="#product" style="color:var(--rose)">if product leads</a>, with five facials a week and a monthly product subscription.</p>
+    <p class="foot-note reveal">Three ways to run it: <a href="#switch" style="color:var(--rose)">facials lead, 50/50, or product leads</a>.</p>
   </div>
 </section>
 
@@ -644,6 +785,44 @@ WEB_BODY = """
   </div>
 </section>
 
+<section id="switch">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Three ways to run it</p>
+      <h2 class="h2" style="margin-top:14px">Flip the lead. <span class="dim">Keep the pay.</span></h2>
+      <p class="lead">The same pay for Evelyn with the money coming mostly from facials, half and half, or mostly from product.
+      Switch to see what changes, and flip the business the same way when the sales say so.</p>
+    </div>
+    <div class="mode-ui reveal">
+      <div class="mode-switch" role="radiogroup" aria-label="How Lumevina runs">
+        <span class="ms-thumb" aria-hidden="true"></span>
+        <button type="button" role="radio" aria-checked="true" data-mode="facials">Facials lead</button>
+        <button type="button" role="radio" aria-checked="false" data-mode="even">50/50</button>
+        <button type="button" role="radio" aria-checked="false" data-mode="product">Product leads</button>
+      </div>
+      <label class="mode-pay" for="m-pay">Evelyn&rsquo;s pay, before taxes <output id="mo-pay"></output>
+        <input id="m-pay" type="range" min="1000" max="8000" step="250" value="__MODE_PAY_N__"></label>
+      <div class="mode-panel" aria-live="polite">
+        <p class="mp-tag" id="mp-tag"></p>
+        <div class="mix big"><b id="mp-mix"></b></div>
+        <div class="mix-l"><span id="mp-fs"></span><span id="mp-rs"></span></div>
+        <div class="mp-stats">
+          <div><b class="num" id="mp-fpw"></b><span>facials a week</span></div>
+          <div><b class="num" id="mp-subs"></b><span>Glow Routine subscribers</span></div>
+          <div><b class="num" id="mp-hours"></b><span>hours in the chair a week</span></div>
+          <div><b class="num grad" id="mp-pay"></b><span>for Evelyn, after the bills</span></div>
+        </div>
+        <ul class="mp-do" id="mp-do"></ul>
+      </div>
+    </div>
+    <div class="perk reveal"><b>The honest read</b><span>__MODE_READ__</span></div>
+    <div class="reveal mt2"><div class="cols-h">When to flip</div><div class="cols-s">The numbers decide, not the mood of one month</div>
+      <div class="costs three">__FLIP_WHEN__</div></div>
+    <div class="reveal mt2"><div class="cols-h">The flip, in a week</div><div class="cols-s">Five things change; nothing is lost</div>
+      <div class="costs five">__FLIP_HOW__</div></div>
+  </div>
+</section>
+
 <section id="product">
   <div class="wrap">
     <div class="sec-head center reveal">
@@ -718,7 +897,7 @@ PRINT_BODY = """
     __PACE_SVG__
   </div>
   <div class="flow">__FLOW__</div>
-  <p class="fine" style="font-size:9pt;color:var(--text-2)">Page 6: another way, if product leads. Five facials a week, and a monthly product subscription does the rest.</p>
+  <p class="fine" style="font-size:9pt;color:var(--text-2)">Pages 6 and 7: three ways to run it (facials lead, 50/50, product leads), and what the product-led version needs.</p>
   __F1__
 </section>
 
@@ -804,6 +983,21 @@ PRINT_BODY = """
 
 <section class="page tight">
   <div>
+    <p class="kicker">Three ways to run it</p>
+    <h2 class="h2" style="margin-top:10px">Flip the lead. <span class="dim">Keep the pay.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">__MODE_PAY__ a month for Evelyn, after the bills, three ways. The web version has the switch.</p>
+  </div>
+  <div class="mode-cols">__MODE_COLS__</div>
+  <div class="perk"><b>The honest read</b><span>__MODE_READ__</span></div>
+  <div><div class="cols-h">When to flip</div><div class="cols-s">The numbers decide, not the mood of one month</div>
+    <div class="costs three">__FLIP_WHEN__</div></div>
+  <div><div class="cols-h">The flip, in a week</div><div class="cols-s">Five things change; nothing is lost</div>
+    <div class="costs" style="grid-template-columns:repeat(5,1fr)">__FLIP_HOW__</div></div>
+  __F6__
+</section>
+
+<section class="page tight">
+  <div>
     <p class="kicker">Another way · if product leads</p>
     <h2 class="h2" style="margin-top:10px">Five facials. <span class="dim">The shelf does the rest.</span></h2>
     <p class="lead" style="margin-top:10px;font-size:11pt">About five facials a week, and a monthly product subscription that takes none of Evelyn&rsquo;s hours.</p>
@@ -820,7 +1014,7 @@ PRINT_BODY = """
     <div class="costs three how">__PL_HOW__</div></div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">At five facials a week, a part-time or shared room could cut the biggest bill.
   Every __PL_STEP__ less a month is one fewer member, or about __PL_STEP_SUBS__ fewer subscribers.</p>
-  __F6__
+  __F7__
 </section>
 </body>
 </html>
@@ -844,6 +1038,11 @@ def fill(h, web):
         "__BEHIND__": "".join('<div class="c"><b>%s</b><span>%s</span></div>' % b for b in BEHIND),
         "__TALENT__": talent_html(rv), "__GATE__": gate_html(rv), "__WHY_K__": WHY_FIRST[0], "__WHY_V__": WHY_FIRST[1],
         "__FLOW__": flow_html(rv),
+        "__MODE_READ__": ("At the same pay, product leading frees about %d hours a week in the chair but needs about %d more "
+                          "subscribers. It pays off once Evelyn&rsquo;s facial hours are full, or when she wants them back, "
+                          "not before." % (round(MODES[0]["hours"] - MODES[2]["hours"]), MODES[2]["subs"] - MODES[0]["subs"])),
+        "__MODE_COLS__": mode_cols_html(), "__FLIP_WHEN__": cards2(FLIP_WHEN), "__FLIP_HOW__": cards2(FLIP_HOW),
+        "__MODE_PAY__": money(MODE_PAY), "__MODE_PAY_N__": str(MODE_PAY),
         "__PL_CHAIR__": rows(PL_CHAIR, ("Left for Evelyn’s pay", money(round(F_LEFT, -1)))),
         "__PL_SUB__": rows(PL_SUB, ("Each subscriber leaves", "$%d" % round(R_KEPT))),
         "__PL_GOALS__": pl_goals_html(), "__PL_HOW__": pl_how_html(),
@@ -860,10 +1059,13 @@ def fill(h, web):
 
 base = CSS["BASE_CSS"].replace("__FONT__", FONT) + LP_CSS
 web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, True).replace(
-    "__JS__", WEB_JS.replace("__PERKS__", "%s" % PERKS).replace("__SUP__", "%s" % SUPPLIES))
-foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 6</span></div>' % n
+    "__JS__", WEB_JS.replace("__PERKS__", "%s" % PERKS).replace("__SUP__", "%s" % SUPPLIES)
+    .replace("__MODES_JSON__", json.dumps([{k: m[k] for k in ("id", "name", "share", "tag", "do")} for m in MODES], ensure_ascii=True))
+    .replace("__F_AVG__", "%s" % F_AVG).replace("__F_KEPT__", "%.4f" % F_KEPT_EACH).replace("__R_PRICE__", "%s" % R_PRICE)
+    .replace("__R_KEPT__", "%.4f" % R_KEPT).replace("__BILLS_N__", str(BILLS_TOTAL)))
+foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 7</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
-for i in range(1, 7):
+for i in range(1, 8):
     pr = pr.replace("__F%d__" % i, foot(i))
 
 for name, html in (("web.html", web), ("print.html", pr)):

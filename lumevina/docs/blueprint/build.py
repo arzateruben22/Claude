@@ -137,6 +137,15 @@ GUARD = [
     ("Clear roles.", "Evelyn owns the brand and the standard of care. Ruben runs operations, the app and the numbers."),
 ]
 
+# "But guess what": what Evelyn isn't paying for, at what a small studio would realistically charge
+GIFT = [("Website and owner dashboard", 15000, "Booking with deposits, memberships, gift certificates, rewards, the shop, the Glow Routine, intake forms and the books"),
+        ("iPhone app", 6000, "The same system on her home screen, with flash alerts"),
+        ("Growth Blueprint and 90-day plan", 2000, "What a business consultant would charge for the plans")]
+GIFT_CARE = 200                    # care and upkeep a month: updates, fixes, backups, new features
+GIFT_BUILD = sum(v for _, v, _ in GIFT)
+GIFT_PLAN = round(GIFT_BUILD * 1.10)   # a 12-month plan usually costs about 10% more
+GIFT_MONTH = GIFT_PLAN / 12.0
+
 COSTS = [("Live payments", "2.9% + 30¢ per payment"),
          ("Database and texts", "About $35 a month"),
          ("Attorney", "$300–$600 consult; agreements $1.5k–$5k"),
@@ -555,6 +564,39 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 
 WEB_CSS = r"""
 body { font-size: 17px; }
+/* "But guess what" */
+.guess { display: grid; justify-items: center; margin-top: 56px; }
+.guess-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; font: inherit; font-size: 1.05rem; font-weight: 600;
+  color: var(--text); background: #141214; border: 0; border-radius: 999px; padding: 14px 24px; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(244,201,214,.35), 0 0 40px -8px rgba(244,201,214,.35); transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+.guess-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(244,201,214,.6), 0 0 60px -6px rgba(244,201,214,.5); }
+.guess-btn:focus-visible { outline: 2px solid var(--rose); outline-offset: 4px; }
+.guess-btn[aria-expanded="true"] { box-shadow: inset 0 0 0 1px rgba(244,201,214,.6); }
+.guess-heart { width: 20px; height: 20px; fill: #f0c2cf; animation: beat 1.6s ease-in-out infinite; }
+@keyframes beat { 0%, 60%, 100% { transform: scale(1); } 20% { transform: scale(1.18); } 40% { transform: scale(.96); } }
+.petal { position: fixed; z-index: 120; width: 14px; height: 14px; pointer-events: none; fill: #f4c9d6;
+  animation: petal 1.3s cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes petal { from { opacity: 1; transform: translate(0, 0) rotate(0) scale(.6); }
+  to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(1.1); } }
+.guess-card { width: min(720px, 100%); margin-top: 22px; border-radius: 28px; padding: 34px 30px 26px; text-align: center;
+  background: radial-gradient(90% 70% at 50% 0%, rgba(244,201,214,.16), transparent 70%), var(--card);
+  box-shadow: inset 0 0 0 1px rgba(244,201,214,.25), 0 40px 120px -40px rgba(244,201,214,.35);
+  animation: guess-in .7s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes guess-in { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+.guess-card[hidden] { display: none; }
+.guess-h { font-size: clamp(1.5rem, 3.4vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin: 12px auto 0; max-width: 34rem; text-wrap: balance; }
+.guess-switch { display: inline-flex; gap: 4px; padding: 4px; margin-top: 24px; border-radius: 999px; background: #1f1f22; }
+.guess-switch button { font: inherit; font-size: .88rem; font-weight: 600; color: var(--text-2); background: none; border: 0; border-radius: 999px;
+  padding: 8px 16px; cursor: pointer; transition: background-color .25s, color .25s; }
+.guess-switch button[aria-checked="true"] { background: #f0c2cf; color: #000; }
+.guess-switch button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+.guess-big { display: grid; justify-items: center; gap: 4px; margin: 22px 0 18px; }
+.guess-lbl { color: var(--text-2); font-size: 1rem; }
+.guess-v { font-size: clamp(3.4rem, 10vw, 5.6rem); font-weight: 700; letter-spacing: -0.055em; line-height: 1; }
+.guess-sub { color: var(--text-3); font-size: .95rem; }
+.guess-rows { text-align: left; background: #0d0d0e; }
+.guess-fine { color: var(--text-3); font-size: .8rem; margin-top: 14px; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) { .guess-heart, .guess-card, .petal { animation: none; } .petal { display: none; } }
 .wrap { width: min(1040px, calc(100% - 40px)); margin: 0 auto; }
 section { padding: 120px 0; }
 section + section { border-top: 1px solid rgba(255,255,255,.06); }
@@ -958,6 +1000,60 @@ WEB_JS = r"""
     cap.textContent = caps[cur];
   };
   if (imgs.length && !rm) setInterval(function () { if (!document.hidden) show((cur + 1) % imgs.length); }, 3200);
+
+  /* "But guess what": what Evelyn isn't paying for */
+  var gBtn = document.querySelector(".guess-btn"), gCard = document.getElementById("guess-card");
+  if (gBtn && gCard) {
+    var BUILD = __G_BUILD__, PLAN = __G_PLAN__, CARE = __G_CARE__, mode = "monthly", gShown = 0;
+    var fmt = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
+    var gv = document.getElementById("guess-v");
+    var roll = function (to) {
+      if (rm) { gv.textContent = fmt(to); gShown = to; return; }
+      var from = gShown, t0 = performance.now(), dur = 1100;
+      var tick = function (now) {
+        var u = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - u, 3);
+        gv.textContent = fmt(from + (to - from) * e);
+        if (u < 1) requestAnimationFrame(tick); else gShown = to;
+      };
+      requestAnimationFrame(tick);
+    };
+    var paint = function () {
+      var monthly = mode === "monthly";
+      document.getElementById("guess-lbl").textContent = monthly ? "So this month, you\u2019re saving" : "So today, you\u2019re saving";
+      document.getElementById("guess-sub").textContent = monthly
+        ? "and the same every month for a year, then " + fmt(CARE) + " a month"
+        : "then " + fmt(CARE) + " every month after";
+      document.getElementById("guess-year").textContent = fmt((monthly ? PLAN : BUILD) + CARE * 12);
+      gCard.querySelectorAll("[data-pay]").forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-pay") === mode)); });
+      roll(monthly ? PLAN / 12 + CARE : BUILD + CARE);
+    };
+    var burst = function () {
+      if (rm) return;
+      var r = gBtn.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      for (var i = 0; i < 16; i++) {
+        var p = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        p.setAttribute("viewBox", "0 0 24 24"); p.setAttribute("class", "petal"); p.setAttribute("aria-hidden", "true");
+        p.innerHTML = '<path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.7h2C14 6.1 15.6 5 17.6 5 21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/>';
+        var a = Math.random() * Math.PI * 2, d = 70 + Math.random() * 130;
+        p.style.left = (cx - 7) + "px"; p.style.top = (cy - 7) + "px";
+        p.style.setProperty("--dx", Math.cos(a) * d + "px");
+        p.style.setProperty("--dy", (Math.sin(a) * d - 60) + "px");
+        p.style.setProperty("--r", (Math.random() * 120 - 60) + "deg");
+        document.body.appendChild(p);
+        setTimeout(function (el) { return function () { el.remove(); }; }(p), 1400);
+      }
+    };
+    gBtn.addEventListener("click", function () {
+      var open = gCard.hidden;
+      gCard.hidden = !open;
+      gBtn.setAttribute("aria-expanded", String(open));
+      if (open) { burst(); gShown = 0; paint(); gCard.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "nearest" }); }
+    });
+    gCard.querySelector(".guess-switch").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pay]");
+      if (b && b.getAttribute("data-pay") !== mode) { mode = b.getAttribute("data-pay"); paint(); }
+    });
+  }
 })();
 """
 
@@ -1210,6 +1306,28 @@ WEB = """<!DOCTYPE html>
       <ul class="built">__BUILT__</ul>
     </div>
   </div>
+  <div class="wrap guess">
+    <button type="button" class="guess-btn reveal" aria-expanded="false" aria-controls="guess-card">
+      <svg class="guess-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.7h2C14 6.1 15.6 5 17.6 5 21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>
+      <span>But guess what&hellip;</span>
+    </button>
+    <div class="guess-card" id="guess-card" hidden>
+      <p class="kicker">From Ruben, with love</p>
+      <h3 class="guess-h">Your little Prince Charming is doing all of this for you, <span class="grad">because he loves you.</span></h3>
+      <div class="guess-switch" role="radiogroup" aria-label="How it would usually be paid">
+        <button type="button" role="radio" aria-checked="true" data-pay="monthly">12 monthly payments</button>
+        <button type="button" role="radio" aria-checked="false" data-pay="upfront">Paid up front</button>
+      </div>
+      <div class="guess-big">
+        <span class="guess-lbl" id="guess-lbl">So this month, you&rsquo;re saving</span>
+        <span class="guess-v grad num" id="guess-v">$0</span>
+        <span class="guess-sub" id="guess-sub"></span>
+      </div>
+      <div class="rows guess-rows">__GIFT_ROWS__</div>
+      <p class="guess-fine">Values are what a small studio would realistically charge for this work. A 12-month plan usually costs about
+      10% more than paying up front.</p>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -1319,6 +1437,15 @@ def guard_html(reveal=True):
     return "".join('<div class="g%s"><b>%s</b><p>%s</p></div>' % (r, a, b) for a, b in GUARD)
 
 
+def gift_rows():
+    h = "".join('<div class="row"><span class="rn">%s</span><span class="rv">$%s</span><span class="rr">%s</span></div>'
+                % (n, "{:,}".format(v), d) for n, v, d in GIFT)
+    h += ('<div class="row"><span class="rn">Care and upkeep, every month</span><span class="rv">$%d</span>'
+          '<span class="rr">Updates, fixes, backups and new features</span></div>' % GIFT_CARE)
+    h += '<div class="row tot"><span class="rn">The first year, not paid</span><span class="rv" id="guess-year"></span></div>'
+    return h
+
+
 def costs_html():
     return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % c for c in COSTS)
 
@@ -1340,8 +1467,9 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__LIVEPHONE__", live).replace("__BUILT__", built_list())
        .replace("__CHART__", CHART).replace("__CHAIR__", rows(CHAIR, CHAIR_TOTAL))
        .replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL)).replace("__GUARD__", guard_html())
-       .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html())
-       .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS))
+       .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html()).replace("__GIFT_ROWS__", gift_rows())
+       .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS.replace("__G_BUILD__", str(GIFT_BUILD))
+       .replace("__G_PLAN__", str(GIFT_PLAN)).replace("__G_CARE__", str(GIFT_CARE))))
        .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS))
        .replace("__WHO__", who_html()).replace("__OFFERS__", offers_html()).replace("__NEG__", negotiate_html())
        .replace("__PIPE__", pipe_html()).replace("__TRACK__", track_html())
