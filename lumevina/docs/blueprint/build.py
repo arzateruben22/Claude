@@ -27,7 +27,7 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Sat)
 MEMX = {"low": 320, "likely": 800, "high": 1200}       # membership keeps building after Step 1: 30 → 50 members by year 2 (profit)
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
-COLL = {"low": 900, "likely": 3900, "high": 7900}      # 6–8 artists, net: flat suite rent + crossover − space − perks and points
+COLL = {"low": 900, "likely": 3800, "high": 7700}      # 6–8 artists, net: flat suite rent + crossover − space − perks (incl. members' 10%)
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
 
 
@@ -125,8 +125,8 @@ CHAIR_TOTAL = ("Added revenue by year 2", "$5,400", "$2,500–$9,200")
 COLLECTIVE = [("Suite rent · 7 suites", "$6,500", "$4,500–$10,000"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
               ("Space and running costs", "−$5,500", "−$5,000–$6,500"),
-              ("Perks, points and recruiting", "−$1,100", "−$1,100–$1,600")]
-COLL_TOTAL = ("Net to Lumevina", "$3,900", "$900–$7,900")
+              ("Perks, member 10% and recruiting", "−$1,200", "−$1,100–$1,800")]
+COLL_TOTAL = ("Net to Lumevina", "$3,800", "$900–$7,700")
 
 GUARD = [
     ("Licensed only.", "Every artist holds a California license and works in a licensed space."),
@@ -149,7 +149,7 @@ DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat c
 
 # ─────────────────────────── membership first ───────────────────────────
 WHY = [("$4,800", "Paid before anyone books.", "30 members bill about $4,800 on the 1st of every month. At 50 members, about $8,000."),
-       ("Stays", "Survives artist turnover.", "A client who joins for the house perks keeps her facial membership with Evelyn, even if her lash artist moves on."),
+       ("Stays", "Survives artist turnover.", "A client who joins for 10% off her lashes keeps booking facials with Evelyn, even if her lash artist moves on."),
        ("1 a month", "Fills the calendar ahead.", "Every member is a visit a month, booked in advance. Banked facials are already paid for.")]
 
 ANCHOR = [("Custom Facial · Glow", "$180", "$149", "$372"),
@@ -158,14 +158,14 @@ ANCHOR = [("Custom Facial · Glow", "$180", "$149", "$372"),
 
 # member perks with the Collective's artists, by tier (the pink ladder)
 TIERS = [("Glow", "#d596ab"), ("Clear Skin", "#f0b9ca"), ("Ageless", "#fde2ea")]
-HOUSE = [("First look at openings, 48 hours early", (1, 1, 1)),
-         ("Double Glow Points with every artist", (1, 1, 1)),
+HOUSE = [("10% off with every Lumevina artist", (1, 1, 1)),
+         ("First look at openings, 48 hours early", (1, 1, 1)),
          ("Waitlist priority for busy artists", (0, 1, 1)),
          ("A free add-on each season", (0, 0, 1))]
 
 CONVERT = [("At checkout", "Any facial can become month one at the member price, with the single price shown beside it."),
            ("In the chair", "Evelyn offers it before the client leaves, with next month already booked."),
-           ("First look", "Members see flash openings and new artists a day before anyone else."),
+           ("House perks", "10% off with every Lumevina artist, and first look at their openings."),
            ("Founding price", "The first 25 members keep their price for as long as they stay.")]
 
 MTRACK = [("Members", "30 by month 6, 50 by year 2"),
@@ -197,7 +197,7 @@ def house_html():
             for i, v in enumerate(has)))
         for perk, has in HOUSE)
     return ('<div class="htable">' + head + rows + '</div>'
-            '<p class="fine" style="margin-top:10px">For lashes, brows and nails. Artists keep their own prices; the seasonal add-on (a lash bath, brow tint or nail art) comes from artists who opt in, in exchange for being featured to members. Lumevina pays for the double points.</p>')
+            '<p class="fine" style="margin-top:10px">For lashes, brows and nails. Lumevina covers the 10%, so artists keep their own prices and are always paid in full. The seasonal add-on (a lash bath, brow tint or nail art) comes from artists who opt in, in exchange for being featured to members.</p>')
 
 
 def convert_html(compact=False):
@@ -218,18 +218,20 @@ WHO = [("Artists your clients already see.", "Ask every client who does their la
 OFFERS = [
     {"tag": "The pilot · Step 2", "big": "Free for 90 days", "sub": "Then 12% on bookings made through Lumevina. They keep working where they are.",
      "inc": ["Their own name, prices, hours and clients", "Deposits that stop no-shows",
-             "Evelyn’s clients see them first", "Their clients earn Glow Points they can spend with Evelyn"],
+             "Lumevina members get 10% off with them, and Lumevina pays it",
+             "Their clients earn Glow Points they can spend with Evelyn"],
      "ask": "In return: honor Glow Points, give members first look at openings, send facial clients to Evelyn."},
     {"tag": "The house · Step 3", "big": "$250 a week", "sub": "Flat suite rent, no commission. Founding rate $210 a week, locked for 12 months, for the first three.",
      "inc": ["A private suite with their name on the door", "The app, Glow Rewards and marketing included",
+             "Every Lumevina member is a client who saves 10% with them",
              "Pilot artists get first pick of suites", "Leave with 30 days’ notice after the first six months"],
      "ask": "In return: a six-month first term, house standards for cleanliness, license and insurance."},
 ]
 
-CLIENT_PERK = ("For clients", "100 Glow Points ($10 off) on their first booking with any Lumevina artist, spendable anywhere in the house.")
+CLIENT_PERK = ("For clients", "100 Glow Points ($10 off) on their first booking with any Lumevina artist. Members save 10% with every artist, every time.")
 
 NEGOTIATE = [
-    ("Lead with clients.", "Open with the list of Evelyn’s clients who asked for lashes or brows. Demand sells the room better than a discount."),
+    ("Lead with clients.", "Open with the member count: every member saves 10% with them, and Lumevina pays it, so the artist is paid in full. Demand sells the room better than a discount."),
     ("Take the risk off.", "90 days free, leave anytime in the pilot, and every client they bring stays theirs."),
     ("Give to get.", "Every concession trades for something: a longer term, honoring points, posts that tag Lumevina."),
     ("Keep founding spots few.", "Only the first three artists get the founding rate. A real limit, said once."),
@@ -247,7 +249,8 @@ PIPE = [("Months 1–2", "Build the list: the client question, Instagram, referr
 
 TRACK = [("New clients sent to each artist", "Shows what Lumevina delivers"),
          ("Their clients who book Evelyn", "The 15% go line"),
-         ("Glow Points given and spent", "The real cost of perks"),
+         ("Members’ 10% paid by Lumevina", "The cost of the member perk"),
+         ("Glow Points given and spent", "The real cost of points"),
          ("Rent collected, suites filled", "The house’s income"),
          ("Artists still here at six months", "Whether the offer works")]
 
@@ -279,8 +282,8 @@ def pipe_html():
 
 def track_html():
     return ('<div class="rows">' + "".join('<div class="row"><span class="rn">%s</span><span class="rv tk">%s</span></div>' % t for t in TRACK)
-            + '<div class="row tot"><span class="rn">Perks, points and recruiting</span><span class="rv">$1,100 a month</span>'
-              '<span class="rr">Welcome points, members&rsquo; double points, founding rates and ads. Already counted in the numbers.</span></div></div>')
+            + '<div class="row tot"><span class="rn">Perks, member 10% and recruiting</span><span class="rv">$1,200 a month</span>'
+              '<span class="rr">Welcome points, members&rsquo; 10% at the artists, founding rates and ads. Already counted in the numbers.</span></div></div>')
 
 
 def rows(items, total):
@@ -326,11 +329,11 @@ DEEP = [
               ("Measure", "How many of their clients also book Evelyn."),
               ("Decide", "15% or more by month 12 means go. Under that, keep the pilot: it still nets about $2.8k a month.")]},
     {"n": 3, "when": "Step 3 · Year 2–3", "h": "The Collective.", "dim": "One house, one app.",
-     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $3,900 a month.",
-     "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes. Artists pay flat weekly rent, no commission."),
+     "vb": "0 0 520 386", "aria": "Animation: a floor plan fills with artists; bookings ping; net profit climbs from the lease dip to about $3,800 a month.",
+     "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes. Artists pay flat weekly rent, no commission. Members get 10% off every artist."),
               ("Fill", "One or two licensed artists a month, found through the pilot artists’ networks."),
               ("App", "Lumevina goes to the App Store with every artist bookable."),
-              ("Target", "Seven artists, about $3.9k net a month: +$__Y_LIKELY__k a year with Step 1.")]},
+              ("Target", "Seven artists, about $3.8k net a month: +$__Y_LIKELY__k a year with Step 1.")]},
 ]
 
 

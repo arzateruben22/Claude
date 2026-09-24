@@ -285,7 +285,7 @@
       artistsT.textContent = Math.round(n) + " of 7";
       /* lease starts first (t≈1): −$2.2k, then each artist adds ~$1k */
       var lease = ease(seg(t, 0.6, 1.4));
-      var net = -2200 * lease + (n / 7) * 6100;
+      var net = -2200 * lease + (n / 7) * 6000;
       netT.textContent = (net >= 0 ? "+" : "") + money(net);
       netT.setAttribute("fill", net < 0 ? RED : ROSE_HI);
       studioSub.textContent = occupied.length ? "Their clients book facials" : "The center of the house";
