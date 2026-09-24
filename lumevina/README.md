@@ -23,7 +23,8 @@ GitHub Pages, cPanel) — or just open `index.html` in a browser.
   through the site's own cart.
 - **The scheduler** (`js/booking.js`) opens from every service's Book
   button and the site-wide `data-open-booking` links: Tue–Sat,
-  8 AM–6 PM, 12–12:30 lunch, 30/60-minute slots, and a **required 50%
+  8 AM–6 PM, 12–12:30 lunch, plus the extra Mondays set on the dashboard
+  (`js/extra-days.js`: members book them first, everyone from the Friday before), 30/60-minute slots, and a **required 50%
   deposit** collected in step two of the modal. Requests persist in
   `localStorage` (key `lumevina_bookings`).
 - **The cart** (`js/cart.js`) persists in `localStorage` (key

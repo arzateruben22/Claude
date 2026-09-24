@@ -147,6 +147,15 @@ To make it real:
 
 Have the member terms reviewed before launch.
 
+### Extra Mondays
+
+`js/extra-days.js` holds the owner's choice (off, every other Monday, every
+Monday), set from the dashboard's Glow Membership card. The calendar opens
+those Mondays; members book them first and everyone else from the Friday
+before. Live: store it as one row in a `site_settings` table, read it in the
+calendar, and have `create-deposit-intent` reject a Monday that isn't open
+(or a members-only one for a non-member) so the rule holds server-side.
+
 ### Glow Routine (product subscription)
 
 `js/routine.js` runs the $75/month Glow Routine in the browser today: focus

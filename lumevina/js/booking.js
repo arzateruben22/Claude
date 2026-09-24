@@ -3,7 +3,9 @@
    including MULTI-SERVICE sessions: add several services (say, a
    Brazilian wax + custom facial) and they book back-to-back as one
    block. Hours Tuesday–Saturday, 8:00 AM–6:00 PM, lunch 12:00–12:30.
-   Closed Sundays and Mondays.
+   Closed Sundays and Mondays, except the extra Mondays Evelyn opens to
+   clear banked facials (js/extra-days.js): members book those first,
+   everyone else from the Friday before.
 
    The day is a grid of 30-minute cells; each service occupies its
    rough duration (30 or 60 min) and a session needs consecutive
@@ -244,8 +246,25 @@
     for (var i = 0; i < str.length; i++) {
       h = (h * 31 + str.charCodeAt(i)) >>> 0;
     }
-    return (h % 100) < 22;
+    /* an extra Monday was opened on purpose, so it starts emptier */
+    return (h % 100) < (XD && XD.isExtra(keyDate(dayKey)) ? 10 : 22);
   };
+
+  /* ── extra Mondays (js/extra-days.js) ── */
+  var XD = window.LumevinaExtraDays || null;
+  var keyDate = function (key) {
+    var p = String(key).split("-");
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  };
+  /* anyone with a membership (banked facial or not) gets first look */
+  var visitorIsMember = function () {
+    var LM = window.LumevinaMembership;
+    if (!LM) return false;
+    var email = emailInput.value.trim() ||
+      ((window.LumevinaAccount && window.LumevinaAccount.current()) || {}).email;
+    return !!email && LM.isMember(LM.get(email));
+  };
+  var lockedForVisitor = function (d) { return !!XD && XD.membersOnly(d) && !visitorIsMember(); };
 
   var loadBookings = function () {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
@@ -409,7 +428,8 @@
       dur + " min · " + pay.money(totalPrice()) +
       " · up to " + dayCapacity(dur) + " session" +
       (dayCapacity(dur) === 1 ? "" : "s") +
-      " a day · Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30";
+      " a day · Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30" +
+      (XD && XD.label() ? ", plus " + XD.label() : "");
     setConfirmLabel(true);
   };
 
@@ -420,7 +440,9 @@
     var firstKey = null;
     for (var i = 0; shown < 12 && i < 21; i++) {
       var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
-      if (d.getDay() === 0 || d.getDay() === 1) continue; /* closed Sundays and Mondays */
+      var extra = !!XD && XD.isExtra(d);
+      /* closed Sundays and Mondays, unless Evelyn opened an extra Monday */
+      if ((d.getDay() === 0 || d.getDay() === 1) && !extra) continue;
       var key = dateKey(d);
       if (!firstKey) firstKey = key;
       var chip = document.createElement("button");
@@ -435,6 +457,19 @@
       num.textContent = d.getDate();
       chip.appendChild(wd);
       chip.appendChild(num);
+      if (extra) {
+        var locked = lockedForVisitor(d);
+        chip.classList.add("is-extra");
+        chip.classList.toggle("is-members", locked);
+        var tag = document.createElement("span");
+        tag.className = "day-chip-tag";
+        tag.textContent = locked ? "Members" : "Extra";
+        chip.appendChild(tag);
+        chip.title = locked
+          ? "An extra Monday for members' banked facials. Opens to everyone " +
+            XD.openToAllFrom(d).toLocaleDateString("en-US", { weekday: "long" }) + "."
+          : "An extra Monday, opened for banked facials";
+      }
       chip.addEventListener("click", function () {
         state.dayKey = this.dataset.key;
         state.slot = null;
@@ -459,6 +494,32 @@
       empty.className = "booking-open-note";
       empty.textContent = "Pick a service above to see available times.";
       slotsEl.appendChild(empty);
+      return;
+    }
+    /* an extra Monday that's still members-only: say when it opens */
+    var dayD = keyDate(state.dayKey);
+    if (lockedForVisitor(dayD)) {
+      var lock = document.createElement("div");
+      lock.className = "booking-extra-lock";
+      var lp = document.createElement("p");
+      var lb = document.createElement("strong");
+      lb.textContent = "Members book extra Mondays first.";
+      lp.appendChild(lb);
+      lp.appendChild(document.createTextNode(" Evelyn opens these days to catch up on facials members have banked. " +
+        "This one opens to everyone on " + XD.openToAllFrom(dayD).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }) +
+        ". Members: add the email on your membership below to book it now."));
+      lock.appendChild(lp);
+      var LMx = window.LumevinaMembership;
+      if (LMx && LMx.plans && LMx.plans[0]) {
+        var jn = document.createElement("button");
+        jn.type = "button";
+        jn.className = "linklike bk-upsell-go";
+        jn.setAttribute("data-join", LMx.plans[0].id);   /* the join window opens from membership.js */
+        jn.textContent = "See the Glow Membership →";
+        jn.addEventListener("click", function () { closeModal(); });
+        lock.appendChild(jn);
+      }
+      slotsEl.appendChild(lock);
       return;
     }
     var dur = totalDur();
@@ -509,7 +570,8 @@
     note.className = "booking-open-note";
     note.textContent = open + " opening" + (open === 1 ? "" : "s") +
       " for this " + dur + "-minute session" +
-      (fs !== null ? " · ⚡ the starred time books at 10% off" : "");
+      (fs !== null ? " · ⚡ the starred time books at 10% off" : "") +
+      (XD && XD.isExtra(dayD) ? " · an extra Monday, opened for banked facials" : "");
     slotsEl.appendChild(note);
   };
 
@@ -643,7 +705,11 @@
   };
 
   /* membership is looked up by email, so re-check as it's typed */
-  emailInput.addEventListener("change", function () { renderMeta(); renderPreview(); renderMember(); });
+  emailInput.addEventListener("change", function () {
+    renderMeta(); renderPreview(); renderMember();
+    /* a member's email unlocks extra Mondays that are still members-only */
+    if (XD) { renderDays(); renderSlots(); }
+  });
 
   /* ── Session building ── */
   var addService = function (id) {

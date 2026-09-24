@@ -2953,6 +2953,26 @@ body.intro-lock { overflow: hidden; }
 .day-chip.selected .day-chip-wd { color: rgba(0, 0, 0, 0.8); }
 .day-chip.selected .day-chip-num { color: #000; }
 
+/* extra Mondays, opened for banked facials (js/extra-days.js) */
+.day-chip.is-extra { border-color: rgba(234, 185, 200, 0.55); background: rgba(234, 185, 200, 0.08); }
+.day-chip-tag { font-size: 0.56rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mauve); line-height: 1; }
+.day-chip.is-members .day-chip-num { color: var(--ink-60); }
+.day-chip.is-extra.selected { background: var(--mauve); border-color: var(--mauve); }
+.day-chip.is-extra.selected .day-chip-num { color: #000; }
+.day-chip.selected .day-chip-tag { color: rgba(0, 0, 0, 0.75); }
+.booking-extra-lock {
+  grid-column: 1 / -1;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(234, 185, 200, 0.08);
+  border: 1px dashed rgba(234, 185, 200, 0.5);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.booking-extra-lock p { margin: 0 0 0.4rem; }
+.booking-extra-lock strong { color: var(--ink); font-weight: 600; }
+
 .booking-slots {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));

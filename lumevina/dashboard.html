@@ -247,7 +247,15 @@
     .mem-state.ending { color: var(--alt); background: rgba(227,180,143,0.12); }
     .mem-state.paused { color: var(--ink-70); background: rgba(245,245,247,0.08); }
     @media (max-width: 720px) { #mem-tiles { grid-template-columns: repeat(2, 1fr); } }
-    .mem-owed-note { margin: -0.4rem 0 1.2rem; font-size: 0.85rem; }
+    .mem-owed-note { margin: -0.4rem 0 0.8rem; font-size: 0.85rem; }
+    .xm { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; align-items: center; margin: 0 0 1.3rem; }
+    .xm-k { font-size: 0.85rem; font-weight: 600; }
+    .xm-sw { display: inline-flex; justify-self: start; gap: 4px; padding: 4px; border-radius: 999px; background: #161616; border: 1px solid var(--edge); }
+    .xm-sw button { font: inherit; font-size: 0.78rem; font-weight: 600; color: var(--ink-70); background: none; border: 0; border-radius: 999px;
+      padding: 0.35rem 0.8rem; cursor: pointer; }
+    .xm-sw button[aria-checked="true"] { background: #eab9c8; color: #000; }
+    .xm-next { grid-column: 1 / -1; margin: 0; font-size: 0.8rem; color: var(--ink-60); }
+    @media (max-width: 720px) { .xm { grid-template-columns: 1fr; } }
     .mem-owed-note strong { color: var(--ink); font-weight: 500; }
     .mem-five { margin: 0 0 1.3rem; padding: 0.9rem 1rem; border-radius: 14px; background: rgba(234,185,200,0.06);
       box-shadow: inset 0 0 0 1px rgba(234,185,200,0.2); }
@@ -422,6 +430,15 @@
       </div>
       <div class="bk-tiles" id="mem-tiles"></div>
       <p class="sub mem-owed-note" id="mem-owed-note"></p>
+      <div class="xm">
+        <span class="xm-k">Extra Mondays on the website</span>
+        <div class="xm-sw" role="radiogroup" aria-label="Extra Mondays on the website">
+          <button type="button" role="radio" data-every="0">Off</button>
+          <button type="button" role="radio" data-every="2">Every other week</button>
+          <button type="button" role="radio" data-every="1">Every week</button>
+        </div>
+        <p class="xm-next" id="xm-next"></p>
+      </div>
       <div class="mem-mix" id="mem-mix"></div>
       <div class="mem-five" id="mem-five"></div>
       <div class="mem-launch" id="mem-launch"></div>
@@ -529,6 +546,7 @@
 
   <div class="tip" id="tip"></div>
 
+  <script src="js/extra-days.js"></script>
   <script>
   (function () {
     "use strict";
@@ -1177,13 +1195,32 @@
         return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
           t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
 
+      /* extra Mondays: the calendar on the website reads this (js/extra-days.js) */
+      var XD = window.LumevinaExtraDays;
+      var xmPaint = function () {
+        if (!XD) return;
+        var n = XD.every();
+        document.querySelectorAll(".xm-sw [data-every]").forEach(function (b) {
+          b.setAttribute("aria-checked", String(+b.getAttribute("data-every") === n));
+        });
+        var next = XD.upcoming(3).map(function (d) { return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); });
+        document.getElementById("xm-next").textContent = n
+          ? "Bookable on the website: " + next.join(" · ") + ". Members book first; everyone else from the Friday before."
+          : "Off. The website books Tuesday to Saturday only.";
+      };
+      document.querySelector(".xm-sw").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-every]");
+        if (b && XD) { XD.set(+b.getAttribute("data-every")); xmPaint(); }
+      });
+      xmPaint();
+
       /* banked facials are paid for but still owed: say when they call for an extra day */
       var owedDays = Math.ceil(owed / 5);
       document.getElementById("mem-owed-note").innerHTML = owed
         ? "<strong>" + owed + " facials are paid for and not yet booked</strong>, about " + owedDays + (owedDays === 1 ? " day" : " days") +
           " of work (" + money(owedValue) + " of dues already in). " + (owed >= 10
-            ? "That's past 10: open a Monday every other week until they're cleared."
-            : "When it passes 10, open a Monday every other week to clear them.")
+            ? "That's past 10: keep a Monday open every other week (below) until they're cleared."
+            : "When it passes 10, open a Monday every other week (below) to clear them.")
         : "No facials owed right now.";
 
       var max = 1;
