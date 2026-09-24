@@ -44,12 +44,12 @@
   };
 
   /* ───────────── Step 1 · a week of chair time ───────────── */
-  /* the real calendar: open Tuesday to Friday and Sunday, 8 AM to 6 PM with
-     lunch 12:00 to 12:30; Mondays closed, Saturdays off */
+  /* the real calendar: open Tuesday to Saturday, 8 AM to 6 PM with
+     lunch 12:00 to 12:30; closed Sundays and Mondays */
   var step1 = function (svg) {
     var W = 56, H = 26, G = 6, X0 = 62, Y0 = 40, LUNCH = 16;
-    var days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    var off = { Mon: "Closed", Sat: "Off" };
+    var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var off = { Sun: "Closed", Mon: "Closed" };
     var hours = ["8a", "9a", "10a", "11a", "12:30p", "1:30p", "2:30p", "3:30p", "4:30p"];
     var ROWS = hours.length;
     var rowY = function (j) { return Y0 + j * (H + G) + (j >= 4 ? LUNCH : 0); };

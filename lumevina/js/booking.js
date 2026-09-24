@@ -2,7 +2,8 @@
    Client-side booking for every service except gift certificates,
    including MULTI-SERVICE sessions: add several services (say, a
    Brazilian wax + custom facial) and they book back-to-back as one
-   block. Hours Tuesday–Sunday, 8:00 AM–6:00 PM, lunch 12:00–12:30.
+   block. Hours Tuesday–Saturday, 8:00 AM–6:00 PM, lunch 12:00–12:30.
+   Closed Sundays and Mondays.
 
    The day is a grid of 30-minute cells; each service occupies its
    rough duration (30 or 60 min) and a session needs consecutive
@@ -408,7 +409,7 @@
       dur + " min · " + pay.money(totalPrice()) +
       " · up to " + dayCapacity(dur) + " session" +
       (dayCapacity(dur) === 1 ? "" : "s") +
-      " a day · Tue–Sun, 8:00 AM–6:00 PM · lunch 12:00–12:30";
+      " a day · Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30";
     setConfirmLabel(true);
   };
 
@@ -419,7 +420,7 @@
     var firstKey = null;
     for (var i = 0; shown < 12 && i < 21; i++) {
       var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
-      if (d.getDay() === 1) continue; /* closed Mondays */
+      if (d.getDay() === 0 || d.getDay() === 1) continue; /* closed Sundays and Mondays */
       var key = dateKey(d);
       if (!firstKey) firstKey = key;
       var chip = document.createElement("button");

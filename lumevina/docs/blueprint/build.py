@@ -24,7 +24,7 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
-S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Fri, Sun)
+S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Sat)
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
 COLL = {"low": 1100, "likely": 4100, "high": 8100}     # 6–8 artists, net: flat suite rent + crossover − space − perks
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
@@ -246,7 +246,7 @@ STEPS_JS = js_ascii(open(os.path.join(HERE, "steps.js")).read())
 
 DEEP = [
     {"n": 1, "when": "Step 1 · Months 0–6", "h": "Grow your chair.", "dim": "Fill every hour.",
-     "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Friday and Sunday from 8 AM to 6 PM with Mondays and Saturdays off, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
+     "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Saturday from 8 AM to 6 PM with Sundays and Mondays closed, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
      "plan": [("Launch", "Glow Membership from $149 a month, add-ons at booking, flash openings, and give $25 / get $25."),
               ("Measure", "Members, average visit, and how many hours are booked."),
               ("Target", "30 members, a $150+ average visit, 90% of hours booked."),

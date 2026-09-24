@@ -23,7 +23,8 @@ create table clients (
 
 -- ── Bookings ────────────────────────────────────────────────────────
 -- Times mirror the site's grid: minutes from midnight, 30-minute cells,
--- Tue–Sun 08:00–18:00 with lunch 12:00–12:30 enforced in the API layer.
+-- Tue–Sat 08:00–18:00 with lunch 12:00–12:30 enforced in the API layer
+-- (closed Sundays and Mondays).
 create table bookings (
   id uuid primary key default gen_random_uuid(),
   client_id uuid references clients (id) on delete set null,

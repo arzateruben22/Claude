@@ -522,7 +522,7 @@ h1, h2, h3, p { margin: 0; }
               <div class="page list">
                 <div class="navbar">Book</div>
                 <div class="scroll">
-                  <p class="kick">Tuesday to Sunday · 8 AM to 6 PM</p>
+                  <p class="kick">Tuesday to Saturday · 8 AM to 6 PM</p>
                   <h1 class="title">Book</h1>
                   <div class="seg" id="seg" role="group" aria-label="Service type">
                     <span class="thumb" aria-hidden="true"></span>
@@ -757,12 +757,12 @@ h1, h2, h3, p { margin: 0; }
   var ALL = [].concat(SERVICES.facials, SERVICES.acne, SERVICES.waxing);
   var byId = function (id) { return ALL.filter(function (s) { return s.id === id; })[0]; };
 
-  /* this week; Mondays are closed; one starred time a day is 10% off */
+  /* this week; closed Sundays and Mondays; one starred time a day is 10% off */
   var DAYS = [
     { w: "Thu", d: 24, label: "Today", full: "Today", times: ["11:00 AM", "1:30 PM", "3:00 PM", "4:30 PM"], flash: "3:00 PM" },
     { w: "Fri", d: 25, full: "Fri, Sep 25", times: ["9:00 AM", "10:30 AM", "2:30 PM", "5:00 PM"], flash: "2:30 PM" },
     { w: "Sat", d: 26, full: "Sat, Sep 26", times: ["8:00 AM", "11:00 AM", "1:30 PM", "4:00 PM"], flash: "4:00 PM" },
-    { w: "Sun", d: 27, full: "Sun, Sep 27", times: ["10:00 AM", "12:30 PM", "3:30 PM"], flash: "3:30 PM" },
+    { w: "Sun", d: 27, full: "Sun, Sep 27", times: [], closed: true },
     { w: "Mon", d: 28, full: "Mon, Sep 28", times: [], closed: true },
     { w: "Tue", d: 29, full: "Tue, Sep 29", times: ["8:00 AM", "9:30 AM", "1:00 PM", "2:30 PM", "5:00 PM"], flash: "1:00 PM" },
     { w: "Wed", d: 30, full: "Wed, Sep 30", times: ["9:00 AM", "11:00 AM", "3:00 PM"], flash: "11:00 AM" }
@@ -946,7 +946,7 @@ h1, h2, h3, p { margin: 0; }
   var BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>';
   var renderTimes = function () {
     var d = DAYS[S.day], box = $("#times");
-    if (d.closed) { box.innerHTML = '<p class="closed">Closed on Mondays.</p>'; }
+    if (d.closed) { box.innerHTML = '<p class="closed">Closed Sundays and Mondays.</p>'; }
     else {
       box.innerHTML = '<div class="times">' + d.times.map(function (t) {
         var f = t === d.flash;
