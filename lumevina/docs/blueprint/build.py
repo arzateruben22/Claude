@@ -24,7 +24,7 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
-S1 = {"low": 1670, "likely": 3670, "high": 6250}        # your chair, once ramped
+S1 = {"low": 1610, "likely": 3540, "high": 6060}        # your chair, once ramped (open 5 days: Tue–Fri, Sun)
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net
 COLL = {"low": 1100, "likely": 4100, "high": 8140}     # 6–8 artists, net
 
@@ -58,8 +58,8 @@ def chart_svg():
     lk = "M" + " L".join("%.1f,%.1f" % (x(m), y(added(m, "likely"))) for m in ms)
     stages = [(0, 6, "Your chair"), (6, 15, "Pilot"), (15, 36, "Collective")]
     parts = ['<svg class="chart" viewBox="0 0 800 330" role="img" '
-             'aria-label="Added profit per month over three years. Likely case rises to about $7,800 a month by year three; '
-             'the range runs from about $2,800 to $14,400.">']
+             'aria-label="Added profit per month over three years. Likely case rises to about $%s a month by year three; '
+             'the range runs from about $%s to $%s.">' % tuple("{:,}".format(int(round(added(36, k), -2))) for k in ("likely", "low", "high"))]
     for i, (a, b, name) in enumerate(stages):
         parts.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>'
                      % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i))
@@ -75,7 +75,7 @@ def chart_svg():
     parts.append('<path class="likely" pathLength="1" d="%s"/>' % lk)
     ex, ey = x(36), y(added(36, "likely"))
     parts.append('<circle class="endpt" cx="%.1f" cy="%.1f" r="5"/>' % (ex, ey))
-    parts.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">$7.8k a month</text>' % (ex - 12, ey - 14))
+    parts.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">$%.1fk a month</text>' % (ex - 12, ey - 14, added(36, "likely") / 1000.0))
     parts.append('</svg>')
     return "".join(parts)
 
@@ -110,10 +110,10 @@ BUILT = [
 
 CHAIR = [("Glow Membership", "$1,500", "$600–$3,000"),
          ("Add-ons at booking", "$800", "$500–$1,100"),
-         ("Flash openings", "$960", "$480–$1,440"),
+         ("Flash openings · 5 days a week", "$800", "$400–$1,200"),
          ("Retail + auto-refill", "$700", "$300–$1,500"),
          ("Referrals", "$600", "$300–$900")]
-CHAIR_TOTAL = ("Added revenue", "$4,560", "$2,180–$7,940")
+CHAIR_TOTAL = ("Added revenue", "$4,400", "$2,100–$7,700")
 
 COLLECTIVE = [("Platform fees · 7 artists", "$5,600", "$3,600–$8,640"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
@@ -170,11 +170,11 @@ STEPS_JS = js_ascii(open(os.path.join(HERE, "steps.js")).read())
 
 DEEP = [
     {"n": 1, "when": "Step 1 · Months 0–6", "h": "Grow your chair.", "dim": "Fill every hour.",
-     "vb": "0 0 520 410", "aria": "Animation: a week of appointments fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
-     "plan": [("Launch", "Glow Membership at $159 a month, add-ons at booking, flash openings, and give $25 / get $25."),
+     "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Friday and Sunday from 8 AM to 6 PM with Mondays and Saturdays off, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
+     "plan": [("Launch", "Glow Membership from $149 a month, add-ons at booking, flash openings, and give $25 / get $25."),
               ("Measure", "Members, average visit, and how many hours are booked."),
               ("Target", "30 members, a $150+ average visit, 90% of hours booked."),
-              ("Result", "About $4.5k more revenue a month, from the same chair.")]},
+              ("Result", "About $4.4k more revenue a month, from the same five days.")]},
     {"n": 2, "when": "Step 2 · Months 6–12", "h": "Pilot two artists.", "dim": "Prove it small.",
      "vb": "0 0 520 400", "aria": "Animation: two artists' clients appear; some cross over to book Evelyn; the share climbs past the 15% go line.",
      "plan": [("Recruit", "Two licensed lash or brow artists who already have a following."),
@@ -186,7 +186,7 @@ DEEP = [
      "plan": [("Space", "Sign a 6–8 suite lease only after the pilot passes."),
               ("Fill", "One or two licensed artists a month, found through the pilot artists’ networks."),
               ("App", "Lumevina goes to the App Store with every artist bookable."),
-              ("Target", "Seven artists, about $4.1k net a month: +$93k a year with Step 1.")]},
+              ("Target", "Seven artists, about $4.1k net a month: +$92k a year with Step 1.")]},
 ]
 
 
@@ -902,7 +902,7 @@ WEB = """<!DOCTYPE html>
     </div>
     <div class="reveal">
       <div class="bigstat grad num">$220k</div>
-      <p class="lead" style="margin-top:14px">The most one person can earn in a year. Fully booked, never sick, before rent, product and taxes.</p>
+      <p class="lead" style="margin-top:14px">The most one person can earn in a year: five treatments a day, five days a week, at about $170 each. Fully booked, never sick, before rent, product and taxes.</p>
       <div class="meter"><div class="track"><div class="fill"></div></div>
         <div class="lab"><span>Chair time used</span><b>100% · the ceiling</b></div></div>
     </div>
@@ -956,8 +956,8 @@ WEB = """<!DOCTYPE html>
     </div>
     <div class="figs reveal">
       <div class="fig"><div class="k">Low</div><div class="v num" data-count="33" data-pre="+$" data-suf="k">+$33k</div><div class="d">The chair grows a little; the Collective barely covers its lease.</div></div>
-      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="93" data-pre="+$" data-suf="k">+$93k</div><div class="d">Membership sticks, seven artists, clients cross over.</div></div>
-      <div class="fig"><div class="k">High</div><div class="v num" data-count="173" data-pre="+$" data-suf="k">+$173k</div><div class="d">Full membership and eight busy artists.</div></div>
+      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="92" data-pre="+$" data-suf="k">+$92k</div><div class="d">Membership sticks, seven artists, clients cross over.</div></div>
+      <div class="fig"><div class="k">High</div><div class="v num" data-count="170" data-pre="+$" data-suf="k">+$170k</div><div class="d">Full membership and eight busy artists.</div></div>
     </div>
     <div class="chart-card reveal">
       <h3>Added profit per month, over three years</h3>
@@ -1097,7 +1097,7 @@ PRINT = """<!DOCTYPE html>
   <div class="cover-net"><div class="net-wrap"><canvas id="net"></canvas>
     <div class="net-cap"><b id="net-phase">The Collective</b><span id="net-desc">Eight artists, one app, shared Glow Rewards.</span></div></div></div>
   <div class="stats">
-    <div class="stat"><div class="v grad num">+$93k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
+    <div class="stat"><div class="v grad num">+$92k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
     <div class="stat"><div class="v num">3 steps</div><div class="k">Each starts only when the last one worked</div></div>
     <div class="stat"><div class="v num">90 days</div><div class="k">To go live and test the first artist</div></div>
   </div>
@@ -1112,7 +1112,7 @@ PRINT = """<!DOCTYPE html>
   </div>
   <div class="ceil">
     <div class="bigstat grad num">$220k</div>
-    <p class="lead">The most one person can earn in a year. Fully booked, never sick, before rent, product and taxes. More hours isn&rsquo;t a plan.</p>
+    <p class="lead">The most one person can earn in a year: five treatments a day, five days a week, at about $170 each. Fully booked, never sick, before rent, product and taxes. More hours isn&rsquo;t a plan.</p>
   </div>
   <div>
     <p class="kicker">The plan</p>
@@ -1154,8 +1154,8 @@ __DEEPP__
   </div>
   <div class="figs">
     <div class="fig"><div class="k">Low</div><div class="v num">+$33k</div><div class="d">The Collective barely covers its lease.</div></div>
-    <div class="fig hl"><div class="k">Likely</div><div class="v num grad">+$93k</div><div class="d">Membership sticks; seven artists; clients cross over.</div></div>
-    <div class="fig"><div class="k">High</div><div class="v num">+$173k</div><div class="d">Full membership and eight busy artists.</div></div>
+    <div class="fig hl"><div class="k">Likely</div><div class="v num grad">+$92k</div><div class="d">Membership sticks; seven artists; clients cross over.</div></div>
+    <div class="fig"><div class="k">High</div><div class="v num">+$170k</div><div class="d">Full membership and eight busy artists.</div></div>
   </div>
   <div class="chart-card">
     <h3>Added profit per month, over three years</h3>

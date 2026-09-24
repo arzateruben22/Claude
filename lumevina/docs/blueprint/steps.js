@@ -44,16 +44,40 @@
   };
 
   /* ───────────── Step 1 · a week of chair time ───────────── */
+  /* the real calendar: open Tuesday to Friday and Sunday, 8 AM to 6 PM with
+     lunch 12:00 to 12:30; Mondays closed, Saturdays off */
   var step1 = function (svg) {
-    var COLS = 6, ROWS = 8, W = 62, H = 28, G = 6, X0 = 76, Y0 = 40;
-    var days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    var hours = ["10a", "11a", "12p", "1p", "2p", "3p", "4p", "5p"];
-    days.forEach(function (d, i) { text(svg, X0 + i * (W + G) + W / 2, 26, d, "s-lbl", "middle"); });
-    hours.forEach(function (h, j) { text(svg, X0 - 12, Y0 + j * (H + G) + H / 2 + 4, h, "s-lbl", "end"); });
-    var r = rng(11), cells = [], empties = [];
+    var W = 56, H = 26, G = 6, X0 = 62, Y0 = 40, LUNCH = 16;
+    var days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var off = { Mon: "Closed", Sat: "Off" };
+    var hours = ["8a", "9a", "10a", "11a", "12:30p", "1:30p", "2:30p", "3:30p", "4:30p"];
+    var ROWS = hours.length;
+    var rowY = function (j) { return Y0 + j * (H + G) + (j >= 4 ? LUNCH : 0); };
+    var colX = function (i) { return X0 + i * (W + G); };
+    var bottom = rowY(ROWS - 1) + H;
+    days.forEach(function (d, i) {
+      text(svg, colX(i) + W / 2, 26, d, off[d] ? "s-sub" : "s-lbl", "middle");
+    });
+    hours.forEach(function (h, j) { text(svg, X0 - 10, rowY(j) + H / 2 + 4, h, "s-lbl", "end"); });
+    /* the lunch break, drawn as a quiet band across the week */
+    var ly = rowY(3) + H + (G + LUNCH) / 2;
+    el("line", { x1: X0, x2: colX(6) + W, y1: ly, y2: ly, stroke: "rgba(255,255,255,.12)", "stroke-dasharray": "3 4" }, svg);
+    text(svg, X0 - 10, ly + 4, "lunch", "s-sub", "end");
+    /* days off: hatched, never booked */
+    var pat = el("pattern", { id: "s1-hatch", width: 7, height: 7, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" },
+      el("defs", {}, svg));
+    el("rect", { width: 7, height: 7, fill: "#101012" }, pat);
+    el("line", { x1: 0, y1: 0, x2: 0, y2: 7, stroke: "rgba(255,255,255,.07)", "stroke-width": 3 }, pat);
+    days.forEach(function (d, i) {
+      if (!off[d]) return;
+      el("rect", { x: colX(i), y: Y0, width: W, height: bottom - Y0, rx: 8, fill: "url(#s1-hatch)", stroke: "rgba(255,255,255,.06)" }, svg);
+      text(svg, colX(i) + W / 2, (Y0 + bottom) / 2 + 4, off[d], "s-sub", "middle");
+    });
+    var r = rng(11), cells = [], empties = [], n = 0;
     for (var j = 0; j < ROWS; j++) {
-      for (var i = 0; i < COLS; i++) {
-        var x = X0 + i * (W + G), y = Y0 + j * (H + G);
+      for (var i = 0; i < days.length; i++) {
+        if (off[days[i]]) continue;
+        var x = colX(i), y = rowY(j);
         el("rect", { x: x, y: y, width: W, height: H, rx: 7, fill: "none", stroke: "rgba(255,255,255,.07)" }, svg);
         var base = r() < 0.6;
         var c = { x: x, y: y, base: base };
@@ -62,11 +86,13 @@
         c.addon = el("rect", { x: x + W - 13, y: y + 5, width: 8, height: H - 10, rx: 3, fill: GOLD }, c.g);
         c.ring = el("rect", { x: x + 1, y: y + 1, width: W - 2, height: H - 2, rx: 6.5, fill: "none", stroke: ROSE_HI, "stroke-width": 1.6 }, c.g);
         c.dot = el("circle", { cx: x + 11, cy: y + H / 2, r: 3.2, fill: ROSE_HI }, c.g);
-        c.tBase = 0.15 + (i + j * COLS) * 0.02;
+        c.tBase = 0.15 + n * 0.022;
+        n++;
         cells.push(c);
         if (!base) empties.push(c);
       }
     }
+    var W7 = colX(6) + W - X0;
     /* most gaps get filled (flash openings, referrals); a few stay open */
     empties.forEach(function (c, k) { c.fill = r() < 0.88; c.tFill = 2.2 + r() * 3.0; });
     cells.forEach(function (c) {
@@ -74,21 +100,21 @@
       c.hasAddon = booked && r() < 0.36; c.tAddon = 5.6 + r() * 2.0;
       c.member = c.base && r() < 0.34; c.tMember = 7.9 + r() * 1.8;
     });
-    var legend = el("g", { transform: "translate(" + X0 + ",330)" }, svg);
+    var legend = el("g", { transform: "translate(" + X0 + "," + (bottom + 30) + ")" }, svg);
     [[GRAY, "Booked"], [ROSE, "Filled gap"], [GOLD, "Add-on"], ["ring", "Member"]].forEach(function (L, k) {
-      var gx = k * 104;
+      var gx = k * (W7 / 4);
       if (L[0] === "ring") el("rect", { x: gx, y: -9, width: 12, height: 12, rx: 3, fill: "none", stroke: ROSE_HI, "stroke-width": 1.6 }, legend);
       else el("rect", { x: gx, y: -9, width: 12, height: 12, rx: 3, fill: L[0] }, legend);
       text(legend, gx + 18, 1, L[1], "s-lbl");
     });
     var stats = [
       { x: X0, label: "Hours booked", a: 62, b: 94, fmt: function (v) { return Math.round(v) + "%"; }, t0: 2.2, t1: 5.4 },
-      { x: X0 + 140, label: "Average visit", a: 120, b: 152, fmt: function (v) { return "$" + Math.round(v); }, t0: 5.6, t1: 7.8 },
-      { x: X0 + 280, label: "Members", a: 0, b: 30, fmt: function (v) { return String(Math.round(v)); }, t0: 7.9, t1: 9.9 }
+      { x: X0 + W7 / 3, label: "Average visit", a: 120, b: 152, fmt: function (v) { return "$" + Math.round(v); }, t0: 5.6, t1: 7.8 },
+      { x: X0 + 2 * W7 / 3, label: "Members", a: 0, b: 30, fmt: function (v) { return String(Math.round(v)); }, t0: 7.9, t1: 9.9 }
     ];
     stats.forEach(function (s) {
-      s.v = text(svg, s.x, 382, "", "s-big");
-      text(svg, s.x, 400, s.label, "s-lbl");
+      s.v = text(svg, s.x, bottom + 84, "", "s-big");
+      text(svg, s.x, bottom + 102, s.label, "s-lbl");
     });
     return function (t) {
       cells.forEach(function (c) {
