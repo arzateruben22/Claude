@@ -4,10 +4,13 @@
  * member's account; unused facials bank (up to 2) so a busy month is never
  * wasted, and a banked facial can be gifted to a friend.
  *
- *   Glow      $159/mo  Lumevina Custom Facial (or Custom + Dermaplaning)
- *   Clear     $169/mo  Monthly Acne Treatment, plus a between-visit check-in
+ *   Glow      $159/mo  Lumevina Custom Facial, Custom + Dermaplaning, or the
+ *                      Monthly Acne Treatment for clients on the acne program
  *   Ageless   $209/mo  Ageless Grace Facial, plus a finishing add-on every
  *                      other visit (added in the room)
+ *
+ * Two plans, not three: clear-skin clients join Glow and pick the acne
+ * treatment. Records saved under the old "clear" plan read as Glow.
  *
  * Every plan: 10% off skincare from our shelf, a home routine from Evelyn
  * refreshed each season, 15% off add-ons and anything else booked in the
@@ -42,36 +45,30 @@
   var ADDON_VALUE = 27;     /* what the free LED or dermaplaning add-on is worth; no product cost */
   var SALES_KEY = "lumevina_retail_sales";
 
-  /* A ladder: each tier includes everything in the one below it. */
+  /* Ageless includes everything in Glow. */
   var PLANS = [
     { id: "glow", name: "Glow", price: 159, value: 195, popular: true, retail: 0.10,
       primary: "lumevina-custom-facial",
-      covers: ["lumevina-custom-facial", "custom-facial-dermaplaning"],
+      covers: ["lumevina-custom-facial", "custom-facial-dermaplaning", "monthly-acne-treatment"],
       facial: "Lumevina Custom Facial",
-      line: "Your monthly Lumevina Custom Facial",
-      perks: ["One Lumevina Custom Facial a month (or Custom + Dermaplaning)",
+      line: "Your monthly Lumevina Custom Facial, or your acne treatment",
+      perks: ["One facial a month: the Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment",
               "10% off skincare from our shelf",
-              "A home routine from Evelyn, refreshed each season",
+              "A home routine from Evelyn, refreshed each season, with a check-in between visits",
               "15% off add-ons and anything else booked the same visit",
               "First word on flash openings"] },
-    { id: "clear", name: "Clear Skin", price: 169, value: 195, retail: 0.10, includes: "glow",
-      primary: "monthly-acne-treatment",
-      covers: ["monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
-      facial: "Monthly Acne Treatment",
-      line: "Everything in Glow, plus your acne program on schedule",
-      perks: ["Choose the Monthly Acne Treatment any month",
-              "A between-visit check-in on your home routine"] },
-    { id: "ageless", name: "Ageless", price: 209, value: 245, retail: 0.15, includes: "clear",
+    { id: "ageless", name: "Ageless", price: 209, value: 245, retail: 0.15, includes: "glow",
       primary: "ageless-grace-facial",
       covers: ["ageless-grace-facial", "monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
       facial: "Ageless Grace Facial",
-      line: "Everything in Clear Skin, plus the signature lifting facial",
+      line: "Everything in Glow, plus the signature lifting facial",
       perks: ["Upgrade to the Ageless Grace Facial any month",
               "A finishing add-on every other visit: LED or dermaplaning",
               "15% off skincare from our shelf, up from 10%"] }
   ];
   var byId = {};
   PLANS.forEach(function (p) { byId[p.id] = p; });
+  byId.clear = byId.glow;   /* the retired Clear Skin plan: its members are on Glow */
 
   /* ── storage ── */
   var emailKey = function (e) { return String(e || "").trim().toLowerCase(); };
@@ -611,7 +608,7 @@
     };
     var note = h("p", "mem-acct-note");
     note.setAttribute("role", "status");
-    if (usable(r)) btn("Book my " + (plan.id === "clear" ? "treatment" : "facial"), "btn-solid", function () {
+    if (usable(r)) btn("Book my facial", "btn-solid", function () {
       var c = document.querySelector(".account-close"); if (c) c.click();
       if (window.LumevinaBooking) window.LumevinaBooking.open(plan.primary);
     });

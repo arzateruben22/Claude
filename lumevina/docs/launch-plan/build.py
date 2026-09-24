@@ -50,7 +50,7 @@ BILLS = [("Room · suite rent and utilities", 1400),
          ("Laundry and small supplies", 60)]
 BILLS_TOTAL = sum(v for _, v in BILLS)
 
-DUES = round(0.6 * 159 + 0.25 * 169 + 0.15 * 209, 2)   # plan mix: 6 in 10 Glow $159, 1 in 4 Clear Skin $169, the rest Ageless $209
+DUES = round(0.85 * 159 + 0.15 * 209, 2)   # plan mix: most on Glow $159 (custom or acne), about 1 in 7 on Ageless $209
 FEE = round(DUES * 0.029 + 0.30, 2)
 SUPPLIES = 16.0                    # product used in the member's monthly facial
 PERKS = 5.5                        # 10% off the shelf, 15% off add-ons, averaged per member
@@ -63,7 +63,7 @@ PAY = [3000, 4000, 5000]           # Evelyn's monthly pay, before taxes: members
 PAY_DEFAULT = 4000
 pay_members = lambda pay: math.ceil((BILLS_TOTAL + pay) / KEPT)
 
-MEMBER = [("Average dues · the plan mix", "$%d" % round(DUES), "6 in 10 Glow · 1 in 4 Clear Skin · the rest Ageless"),
+MEMBER = [("Average dues · the plan mix", "$%d" % round(DUES), "Most on Glow $159 · about 1 in 7 on Ageless $209"),
           ("Card fee", "−$%.2f" % FEE, "2.9% + 30¢"),
           ("Supplies for the monthly facial", "−$%d" % SUPPLIES, "Backbar product used in the treatment"),
           ("Member perks", "−$%.2f" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
@@ -121,7 +121,7 @@ WHY_FIRST = ("Why members first", "An artist signs for clients. %s members who s
              % (WORDS[PLAN], WORDS[PLAN].lower()))
 
 ENGINE_M = [("Months 4–6", "About %s new members a month" % {3: "three", 4: "four", 5: "five", 6: "six"}.get(round((30 - PLAN) / 3.0), "a few"), "30 members"),
-            ("Month 6", "Dues about $4,770 a month, with this much left for Evelyn’s pay", "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
+            ("Month 6", "Dues about %s a month, with this much left for Evelyn’s pay" % money(round(30 * DUES, -1)), "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
             ("Year 2", "Dues alone cover the business and about %s a month of pay" % money(round(50 * KEPT - BILLS_TOTAL, -2)), "50 members"),
             ("Room check", "50 members is about 12 facials a week", "¼ of open hours")]
 ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 artists"),

@@ -921,16 +921,16 @@
     /* ── Shared: members, dues and the retail/giveaway log ──
        Used by Bookkeeping (income, costs, profit) and the Glow Membership card
        (launch ledger). Real records when there are any, else a small sample. */
-    var MPLANS = { glow: { name: "Glow", price: 159, value: 195 }, clear: { name: "Clear Skin", price: 169, value: 195 },
-                   ageless: { name: "Ageless", price: 209, value: 245 } };
+    var MPLANS = { glow: { name: "Glow", price: 159, value: 195 }, ageless: { name: "Ageless", price: 209, value: 245 } };
+    MPLANS.clear = MPLANS.glow;   /* the retired Clear Skin plan reads as Glow */
     var dAgo = function (daysAgo) { return new Date(Date.now() - daysAgo * 864e5).toISOString(); };
     var MEM_SAMPLE = [
       { name: "Maya Chen", plan: "glow", status: "active", credits: 1, startedAt: dAgo(96) },
       { name: "Sofia Alvarez", plan: "glow", status: "active", credits: 2, startedAt: dAgo(88) },
       { name: "Priya Nair", plan: "ageless", status: "active", credits: 0, startedAt: dAgo(75) },
-      { name: "Jordan Lee", plan: "clear", status: "active", credits: 1, startedAt: dAgo(64) },
+      { name: "Jordan Lee", plan: "glow", status: "active", credits: 1, startedAt: dAgo(64) },
       { name: "Ava Reyes", plan: "glow", status: "active", credits: 0, startedAt: dAgo(52), pausedMonth: dAgo(-20) },
-      { name: "Hannah Brooks", plan: "clear", status: "active", credits: 1, startedAt: dAgo(41) },
+      { name: "Hannah Brooks", plan: "glow", status: "active", credits: 1, startedAt: dAgo(41) },
       { name: "Lena Park", plan: "glow", status: "cancelling", credits: 1, startedAt: dAgo(120), cancelAt: dAgo(-12) },
       { name: "Isabel Cruz", plan: "ageless", status: "active", credits: 1, startedAt: dAgo(30) },
       { name: "Nora Patel", plan: "glow", status: "active", credits: 1, startedAt: dAgo(19) },

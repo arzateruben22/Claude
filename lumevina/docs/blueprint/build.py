@@ -106,7 +106,7 @@ FLOW = [
 
 BUILT = [
     (True, "Online booking with 50% deposits"),
-    (True, "Glow Membership: three plans, banked facials"),
+    (True, "Glow Membership: two plans, banked facials"),
     (True, "Glow Rewards, referrals, birthday perks"),
     (True, "Gift certificates and a shop with live stock"),
     (True, "Client accounts, intake and consent forms"),
@@ -160,20 +160,20 @@ DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat c
 
 
 # ─────────────────────────── membership first ───────────────────────────
-WHY = [("$5,100", "Paid before anyone books.", "30 members bill about $5,100 on the 1st of every month. At 50 members, about $8,500."),
+WHY = [("$5,000", "Paid before anyone books.", "30 members bill about $5,000 on the 1st of every month. At 50 members, about $8,300."),
        ("Stays", "Survives artist turnover.", "A client who joins for 10% off her lashes keeps booking facials with Evelyn, even if her lash artist moves on."),
        ("1 a month", "Fills the calendar ahead.", "Every member is a visit a month, booked in advance. Banked facials are already paid for.")]
 
 ANCHOR = [("Custom Facial · Glow", "$195", "$159", "$432"),
-          ("Monthly Acne · Clear Skin", "$195", "$169", "$312"),
+          ("Monthly Acne · Glow", "$195", "$159", "$432"),
           ("Ageless Grace · Ageless", "$245", "$209", "$432")]
 
-# member perks with the Collective's artists, by tier (the pink ladder)
-TIERS = [("Glow", "#d596ab"), ("Clear Skin", "#f0b9ca"), ("Ageless", "#fde2ea")]
-HOUSE = [("10% off with every Lumevina artist", (1, 1, 1)),
-         ("First look at openings, 48 hours early", (1, 1, 1)),
-         ("Waitlist priority for busy artists", (0, 1, 1)),
-         ("A free add-on each season", (0, 0, 1))]
+# member perks with the Collective's artists, by plan
+TIERS = [("Glow", "#d596ab"), ("Ageless", "#fde2ea")]
+HOUSE = [("10% off with every Lumevina artist", (1, 1)),
+         ("First look at openings, 48 hours early", (1, 1)),
+         ("Waitlist priority for busy artists", (0, 1)),
+         ("A free add-on each season", (0, 1))]
 
 CONVERT = [("At checkout", "Any facial can become month one at the member price, with the single price shown beside it."),
            ("In the chair", "Evelyn offers it before the client leaves, with next month already booked."),
@@ -528,7 +528,7 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 .pt-h, .ht-h { font-size: 0.78rem; color: var(--text-3); font-weight: 500; }
 .pt-row .dimv { color: var(--text-3); text-decoration: line-through; text-decoration-color: rgba(255,255,255,.25); }
 .pt-row .sv { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
-.ht-row { display: grid; grid-template-columns: 1fr repeat(3, 4.6rem); gap: 8px; padding: 11px 0; border-bottom: 1px solid var(--hair); align-items: center; }
+.ht-row { display: grid; grid-template-columns: 1fr repeat(2, 4.6rem); gap: 8px; padding: 11px 0; border-bottom: 1px solid var(--hair); align-items: center; }
 .ht-row:last-child { border-bottom: 0; }
 .ht-h span { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; line-height: 1.2; }
 .ht-h i { width: 10px; height: 10px; border-radius: 50%; }
@@ -710,7 +710,7 @@ html.sd-lock { overflow: hidden; }
   .steps, .flow, .figs, .guard, .who3, .offers, .neg, .split { grid-template-columns: 1fr; }
   .ptable, .htable { padding: 4px 14px; }
   .pt-row { grid-template-columns: 1.3fr .8fr 1fr .8fr; font-size: 0.84rem; gap: 6px; }
-  .ht-row { grid-template-columns: 1fr repeat(3, 3.3rem); gap: 4px; }
+  .ht-row { grid-template-columns: 1fr repeat(2, 3.3rem); gap: 4px; }
   .ht-h { font-size: 0.7rem; }
   .split { gap: 36px; }
   .perk { flex-direction: column; gap: 4px; }
@@ -797,7 +797,7 @@ body { font-size: 10.5pt; }
 .gv { font-size: 18pt; margin-bottom: 6px; }
 .ptable, .htable { border-radius: 16px; padding: 2px 14px; }
 .pt-row { padding: 6px 0; font-size: 9pt; } .pt-h, .ht-h { font-size: 7.5pt; }
-.ht-row { padding: 6px 0; grid-template-columns: 1fr repeat(3, 0.62in); } .ht-p { font-size: 8.8pt; }
+.ht-row { padding: 6px 0; grid-template-columns: 1fr repeat(2, 0.62in); } .ht-p { font-size: 8.8pt; }
 .ht-c b { width: 14px; height: 14px; } .ht-c b.on::after { left: 5px; top: 2.5px; width: 3px; height: 6.5px; border-width: 0 1.6px 1.6px 0; }
 .cv4 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
 .page.tight { gap: 0.2in; }

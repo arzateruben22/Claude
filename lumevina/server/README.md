@@ -116,8 +116,9 @@ console.log("services:",seen.size);'
 (join, monthly facials, bank up to 2, pause, cancel, gift a banked facial).
 To make it real:
 
-1. In Stripe, create one **Product** per plan (Glow, Clear Skin, Ageless) with a
-   monthly **Price** ($159 / $169 / $209). Founding members keep the price they
+1. In Stripe, create one **Product** per plan (Glow, Ageless) with a
+   monthly **Price** ($159 / $209). Clear-skin clients join Glow, which covers
+   the Monthly Acne Treatment. Founding members keep the price they
    joined at: never edit a Price, add a new one for new members instead.
 2. Join = a Stripe **Subscription** created server-side for the client's
    customer, using the card saved at join (`payment_behavior:

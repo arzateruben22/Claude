@@ -21,7 +21,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Referrals · birthday · welcome | ✅ | partial | GG has some; ours is richer |
 | Flash-opening discounts | ✅ | ⬜ | Dynamic pricing to fill slow slots |
 | Gift certificates | ✅ | ✅ | Gift a specific service or a value; full code lifecycle |
-| Memberships (monthly facial) | 🟡 | ✅ | 3 plans, banked facials, pause, online cancel, gift a facial; billing flips on with Stripe Billing |
+| Memberships (monthly facial) | 🟡 | ✅ | 2 plans (Glow, Ageless), banked facials, pause, online cancel, gift a facial; billing flips on with Stripe Billing |
 | Self-service cancel (48-hr) | ✅ | ✅ | In My Lumevina |
 | Self-service reschedule | ✅ | ✅ | In-flow link; 48-hr rule enforced |
 | Saved card for rebooking / auto no-show fee | ⬜ | ✅ | Stripe supports it; not wired |

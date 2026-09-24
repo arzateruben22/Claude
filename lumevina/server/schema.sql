@@ -159,7 +159,7 @@ $$;
 create table memberships (
   id uuid primary key default gen_random_uuid(),
   client_id uuid not null references clients (id) on delete cascade,
-  plan text not null check (plan in ('glow', 'clear', 'ageless')),
+  plan text not null check (plan in ('glow', 'ageless')),
   price_cents int not null,                 -- locked founding price
   status text not null default 'active'
     check (status in ('active', 'cancelling', 'cancelled')),
