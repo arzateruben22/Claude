@@ -1,8 +1,8 @@
-"""Lumevina Growth Blueprint — dark, Apple-style edition.
+"""Lumevina Growth Blueprint & Packages — dark, Apple-style edition.
 
 Builds two files from one set of content:
   web.html   — scrolling page with live motion (network, phone, chart)
-  print.html — five Letter pages, same design frozen, printed to PDF
+  print.html — ten Letter pages, same design frozen, printed to PDF
 
 Run:  python3 build.py            (writes both into OUT)
 The screenshots in shots/ are real captures of the Lumevina site.
@@ -20,7 +20,7 @@ def b64(path):
 
 
 SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.jpg"))
-        for n in ("home", "book", "rewards", "dash")}
+        for n in ("home", "book", "member", "rewards", "dash")}
 
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
@@ -98,12 +98,14 @@ FLOW = [
 
 BUILT = [
     (True, "Online booking with 50% deposits"),
+    (True, "Glow Membership: three plans, banked facials"),
     (True, "Glow Rewards, referrals, birthday perks"),
-    (True, "Gift certificates"),
+    (True, "Gift certificates and a shop with live stock"),
     (True, "Client accounts, intake and consent forms"),
     (True, "Owner dashboard, invoices, tax export"),
     (True, "Installs on any phone’s home screen"),
-    (False, "Live payments and database · a few days"),
+    (False, "Live payments and data · about 2–3 weeks"),
+    (False, "iPhone app in the App Store · with the pilot"),
     (False, "Multi-artist booking and payouts · the Stage 2 build"),
 ]
 
@@ -131,11 +133,161 @@ COSTS = [("Live payments", "2.9% + 30¢ per payment"),
          ("Attorney", "$300–$600 consult; agreements $1.5k–$5k"),
          ("App Store", "$99 a year, at Stage 2")]
 
-DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat clients, no-shows, average ticket."),
+DAYS = [("Week 1", "Choose a package. Write down today’s numbers from Acuity: bookings, repeat clients, no-shows, average ticket."),
         ("Weeks 2–3", "Switch on live payments. Move booking from Acuity to Lumevina."),
         ("Week 4", "Launch Glow Membership and add-ons."),
         ("Month 2", "One-hour attorney consult on how artists are set up."),
         ("Month 3", "Bring in one licensed lash or brow artist. Track how many of their clients book you.")]
+
+
+# ─────────────────────────── value + packages ───────────────────────────
+# What this scope would cost to have built elsewhere (replacement value),
+# and where the packages sit on that scale.
+VALUE = [
+    {"name": "Website", "max": 80, "mine": 12,
+     "bands": [("Freelance developer", 15, 30), ("Design studio", 40, 80)],
+     "note": "Custom design, booking with deposits, memberships, rewards, gift cards, shop, client accounts and the owner dashboard."},
+    {"name": "iPhone app", "max": 40, "mine": 6,
+     "bands": [("Freelance developer", 5, 12), ("Design studio", 20, 40)],
+     "note": "The same system in the App Store, with push alerts for flash openings and rewards."},
+]
+
+WEB_PKG = 12000
+APP_PKG = 6000
+CARE = 250
+CARE_APP = 350
+PLAN = {"web": (3000, 400, 24), "app": (1500, 200, 24)}     # to start, per month, months
+
+PACKAGES = [
+    {"id": "web", "name": "Website", "hl": True, "tag": "Start here",
+     "once": "$12,000", "once_sub": "One time",
+     "mo": "$400", "mo_sub": "a month for 24 months, after $3,000 to start",
+     "chip": "Live in about 2–3 weeks",
+     "inc": ["The full Lumevina site and owner dashboard, yours to keep",
+             "Live deposits, memberships and gift cards through your Stripe",
+             "Bookings, clients and rewards on your own database",
+             "Confirmation and reminder emails",
+             "The move from Acuity, your domain and a walkthrough",
+             "60 days of fixes and changes included"]},
+    {"id": "app", "name": "iPhone app", "hl": False, "tag": "",
+     "once": "$6,000", "once_sub": "One time, with the website",
+     "mo": "$200", "mo_sub": "a month for 24 months, after $1,500 to start",
+     "chip": "Best started with the Step 2 pilot",
+     "inc": ["Lumevina in the App Store, under your name",
+             "Push alerts for flash openings and rewards",
+             "The same booking, membership and rewards as the site",
+             "Listing, screenshots and Apple review handled",
+             "Ready for every artist at Step 2"]},
+    {"id": "care", "name": "Care plan", "hl": False, "tag": "",
+     "once": "$250", "once_sub": "a month · $350 with the app",
+     "mo": "$250", "mo_sub": "a month · $350 with the app",
+     "chip": "Starts after the included 60 days",
+     "inc": ["Hosting, security and software updates",
+             "Small changes anytime: services, prices, photos",
+             "A monthly numbers report from your dashboard",
+             "Fixes within one business day",
+             "Month to month, cancel anytime"]},
+]
+
+
+def value_html(reveal=True):
+    r = " reveal" if reveal else ""
+    out = []
+    for v in VALUE:
+        pct = lambda k: 100.0 * k / v["max"]
+        bands = "".join(
+            '<div class="vb-band vb-b%d" style="--l:%.2f%%;--w:%.2f%%"><span>%s</span><b>$%dk&ndash;$%dk</b></div>'
+            % (i, pct(a), pct(b) - pct(a), name, a, b) for i, (name, a, b) in enumerate(v["bands"]))
+        ticks = "".join('<span style="left:%.2f%%">$%dk</span>' % (pct(t), t)
+                        for t in range(0, v["max"] + 1, 20 if v["max"] > 40 else 10))
+        legend = "".join('<span><i class="vb-b%d"></i>%s <b>$%dk&ndash;$%dk</b></span>' % (i, name, a, b)
+                         for i, (name, a, b) in enumerate(v["bands"]))
+        out.append(
+            '<div class="vb%s"><div class="vb-head"><h3>%s</h3><p>%s</p></div>'
+            '<div class="vb-track">%s<div class="vb-mine" style="--l:%.2f%%"><i></i><b>Your package <span class="num">$%dk</span></b></div></div>'
+            '<div class="vb-ticks">%s</div><div class="vb-legend">%s</div></div>'
+            % (r, v["name"], v["note"], bands, pct(v["mine"]), v["mine"], ticks, legend))
+    return "".join(out)
+
+
+def packages_html(print_mode=False):
+    out = []
+    for pk in PACKAGES:
+        inc = "".join('<li><span class="ck" aria-hidden="true"></span>%s</li>' % t for t in pk["inc"])
+        tag = '<span class="pk-tag">%s</span>' % pk["tag"] if pk["tag"] else ""
+        if print_mode:
+            price = ('<div class="pk-price"><span class="pk-amt num%s">%s</span><span class="pk-sub">%s</span></div>'
+                     % (" grad" if pk["hl"] else "", pk["once"], pk["once_sub"]))
+            if pk["id"] != "care":
+                price += '<p class="pk-alt">Or %s %s</p>' % (pk["mo"], pk["mo_sub"])
+        else:
+            price = ('<div class="pk-price"><span class="p-once"><span class="pk-amt num%s">%s</span><span class="pk-sub">%s</span></span>'
+                     '<span class="p-mo"><span class="pk-amt num%s">%s</span><span class="pk-sub">%s</span></span></div>'
+                     % (" grad" if pk["hl"] else "", pk["once"], pk["once_sub"],
+                        " grad" if pk["hl"] else "", pk["mo"], pk["mo_sub"]))
+        out.append('<article class="pk%s%s">%s<h3>%s</h3>%s<p class="pk-chip">%s</p><ul class="pk-list">%s</ul></article>'
+                   % (" hl" if pk["hl"] else "", "" if print_mode else " reveal", tag, pk["name"], price, pk["chip"], inc))
+    return "".join(out)
+
+
+# payback: the website package + care plan against Step 1's added profit alone
+def cum_profit(m, k):
+    return sum(S1[k] * min(i / 9.0, 1.0) for i in range(1, int(m) + 1))
+
+
+def pkg_cost(m):
+    return WEB_PKG + CARE * max(0, m - 2)
+
+
+def breakeven(k):
+    prev = (0, 0.0, float(WEB_PKG))
+    for m in range(1, 60):
+        c, cost = cum_profit(m, k), pkg_cost(m)
+        if c >= cost:
+            pm, pc, pcost = prev
+            f = (pcost - pc) / ((c - pc) - (cost - pcost))
+            return pm + f
+        prev = (m, c, cost)
+    return None
+
+
+BE = {k: breakeven(k) for k in ("low", "likely", "high")}
+
+
+def payback_svg():
+    X0, X1, Y0, Y1, YMAX, MMAX = 56, 784, 292, 24, 70000, 15
+    x = lambda m: X0 + (X1 - X0) * m / float(MMAX)
+    y = lambda v: Y0 - (Y0 - Y1) * min(max(v, 0), YMAX) / YMAX
+    ms = list(range(0, MMAX + 1))
+    hi = " ".join("%.1f,%.1f" % (x(m), y(cum_profit(m, "high"))) for m in ms)
+    lo = " ".join("%.1f,%.1f" % (x(m), y(cum_profit(m, "low"))) for m in reversed(ms))
+    lk = "M" + " L".join("%.1f,%.1f" % (x(m), y(cum_profit(m, "likely"))) for m in ms)
+    cost = "M" + " L".join("%.1f,%.1f" % (x(m), y(pkg_cost(m))) for m in ms)
+    b = BE["likely"]
+    bx, by = x(b), y(pkg_cost(b))
+    parts = ['<svg class="chart payback" viewBox="0 0 800 330" role="img" '
+             'aria-label="Added profit from Step 1, added up month by month, against the website package and care plan. '
+             'The likely case covers the cost in about %d months; the range runs from about %d to %d months.">'
+             % (round(BE["likely"]), round(BE["high"]), round(BE["low"]))]
+    for v in (20000, 40000, 60000):
+        parts.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="grid"/>' % (X0, X1, y(v), y(v)))
+        parts.append('<text x="%d" y="%.1f" class="yl">$%dk</text>' % (X0 - 10, y(v) + 4, v // 1000))
+    parts.append('<line x1="%d" x2="%d" y1="%d" y2="%d" class="base"/>' % (X0, X1, Y0, Y0))
+    for m, lab in ((0, "Go live"), (3, "3 mo"), (6, "6 mo"), (9, "9 mo"), (12, "Year 1"), (15, "15 mo")):
+        anchor = "start" if m == 0 else ("end" if m == MMAX else "middle")
+        parts.append('<text x="%.1f" y="%d" class="xl" text-anchor="%s">%s</text>' % (x(m), Y0 + 22, anchor, lab))
+    parts.append('<polygon class="band" points="%s %s"/>' % (hi, lo))
+    parts.append('<path class="cost" d="%s"/>' % cost)
+    parts.append('<text class="costl" x="%.1f" y="%.1f" text-anchor="end">Website + care plan</text>' % (x(MMAX), y(pkg_cost(MMAX)) - 10))
+    parts.append('<path class="likely" pathLength="1" d="%s"/>' % lk)
+    parts.append('<line class="bel" x1="%.1f" x2="%.1f" y1="%.1f" y2="%d"/>' % (bx, bx, by, Y0))
+    parts.append('<circle class="endpt" cx="%.1f" cy="%.1f" r="5"/>' % (bx, by))
+    parts.append('<text class="endl" x="%.1f" y="%.1f" text-anchor="end">Paid off · month %d</text>' % (bx - 12, by - 14, round(b)))
+    parts.append('</svg>')
+    return "".join(parts)
+
+
+PAYBACK = payback_svg()
 
 
 def rows(items, total):
@@ -212,7 +364,7 @@ def deep_print(d, page, total):
 
 
 def foot_n(n, total):
-    return '<div class="pfoot"><span>Lumevina · Growth Blueprint</span><span>%d / %d</span></div>' % (n, total)
+    return '<div class="pfoot"><span>Lumevina · Blueprint &amp; Packages</span><span>%d / %d</span></div>' % (n, total)
 
 # ─────────────────────────── styles ───────────────────────────
 BASE_CSS = r"""
@@ -357,6 +509,71 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 .pl:first-child { border-top: 0; padding-top: 0; }
 .pk { font-size: 0.9rem; font-weight: 600; color: var(--rose); padding-top: 1px; }
 .pv { font-size: 1.02rem; line-height: 1.45; letter-spacing: -0.01em; color: var(--text); }
+
+/* value bars: what it would cost elsewhere, and where the package sits */
+.vbs { display: grid; gap: 14px; }
+.vb { background: var(--card); border-radius: 22px; padding: 24px 26px 18px; }
+.vb-head { display: grid; grid-template-columns: 9rem 1fr; gap: 18px; align-items: baseline; }
+.vb-head h3 { font-size: 1.2rem; }
+.vb-head p { color: var(--text-2); font-size: 0.92rem; line-height: 1.45; }
+.vb-track { position: relative; height: 60px; margin-top: 46px; border-radius: 12px; background: var(--card-2); }
+.vb-band { position: absolute; top: 0; bottom: 0; left: var(--l); width: var(--w); border-radius: 12px;
+  display: flex; flex-direction: column; justify-content: center; padding: 0 12px; overflow: hidden; }
+.vb-band span { font-size: 0.76rem; color: var(--text-2); white-space: nowrap; }
+.vb-band b { font-size: 0.95rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.vb-b0 { background: rgba(255,255,255,.08); }
+.vb-b1 { background: rgba(255,255,255,.14); }
+.vb-mine { position: absolute; top: -34px; left: var(--l); width: 0; height: 34px; }
+.vb-mine b { position: absolute; left: 0; top: 0; transform: translateX(-12px); white-space: nowrap;
+  font-size: 0.8rem; font-weight: 600; color: #000; background: var(--grad); border-radius: 999px; padding: 3px 10px;
+  box-shadow: 0 0 18px rgba(244,201,214,.45); }
+.vb-mine b span { font-weight: 700; }
+.vb-mine i { position: absolute; left: -5px; bottom: -5px; width: 10px; height: 10px; border-radius: 50%; background: #f4c9d6;
+  box-shadow: 0 0 0 3px #000, 0 0 14px rgba(244,201,214,.8); }
+.vb-ticks { position: relative; height: 22px; margin-top: 12px; }
+.vb-ticks span { position: absolute; transform: translateX(-50%); font-size: 0.74rem; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.vb-ticks span:first-child { transform: none; }
+.vb-ticks span:last-child { transform: translateX(-100%); }
+/* narrow screens: band names move into a legend under the scale */
+.vb-legend { display: none; }
+.vb-legend span { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; color: var(--text-2); }
+.vb-legend b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; margin-left: auto; }
+.vb-legend i { width: 14px; height: 10px; border-radius: 3px; }
+
+/* packages */
+.pkgs { display: grid; grid-template-columns: 1.08fr 1fr 1fr; gap: 14px; align-items: stretch; }
+.pk { position: relative; display: flex; flex-direction: column; background: var(--card); border-radius: 22px; padding: 26px 24px 24px; }
+.pk.hl { background: linear-gradient(165deg, #2a1d23 0%, #141213 62%); box-shadow: inset 0 0 0 1px rgba(244,201,214,.28), 0 30px 80px -40px rgba(244,201,214,.35); }
+.pk-tag { position: absolute; top: 20px; right: 20px; font-size: 0.74rem; font-weight: 600; color: #000; background: var(--grad);
+  border-radius: 999px; padding: 4px 10px; }
+.pk h3 { font-size: 1.3rem; }
+.pk-price { margin-top: 16px; min-height: 5.2rem; }
+.pk-price > span { display: block; }
+.pk-amt { display: block; font-size: 3rem; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.pk-sub { display: block; font-size: 0.86rem; color: var(--text-2); margin-top: 8px; line-height: 1.4; }
+.pk-alt { font-size: 0.8rem; color: var(--text-3); margin-top: 6px; line-height: 1.4; }
+.pk-chip { align-self: flex-start; margin-top: 16px; font-size: 0.78rem; font-weight: 500; color: var(--rose);
+  background: rgba(244,201,214,.1); border-radius: 999px; padding: 5px 11px; }
+.pk-list { list-style: none; margin: 18px 0 0; padding: 16px 0 0; border-top: 1px solid var(--hair); display: grid; gap: 10px; }
+.pk-list li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; font-size: 0.93rem; font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; }
+.pk-list .ck { width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; background: rgba(244,201,214,.16); position: relative; }
+.pk-list .ck::after { content: ""; position: absolute; left: 6.5px; top: 3.5px; width: 4px; height: 8px;
+  border: solid var(--rose); border-width: 0 1.8px 1.8px 0; transform: rotate(45deg); }
+.pk-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; margin-top: 18px;
+  padding: 18px 22px; border-radius: 18px; background: var(--card); }
+.pk-foot b { font-weight: 600; }
+.pk-foot span { color: var(--text-2); font-size: 0.95rem; }
+
+/* when each piece starts */
+.when3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+.when3 div { border-top: 1px solid var(--hair); padding-top: 12px; }
+.when3 b { display: block; font-size: 0.85rem; font-weight: 600; color: var(--rose); }
+.when3 span { display: block; font-size: 1rem; margin-top: 4px; letter-spacing: -0.01em; }
+
+/* payback chart extras */
+.chart .cost { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 2; stroke-dasharray: 6 6; }
+.chart .costl { fill: var(--text-2); font-size: 12px; font-weight: 500; }
+.chart .bel { stroke: rgba(244,201,214,.5); stroke-width: 1; stroke-dasharray: 3 4; }
 """
 
 WEB_CSS = r"""
@@ -464,6 +681,36 @@ html.sd-lock { overflow: hidden; }
   .sd-nav button { padding: 9px 14px; }
 }
 
+
+/* value bars grow in; the package marker drops onto the scale */
+.vb .vb-band { clip-path: inset(0 100% 0 0 round 12px); transition: clip-path 1.3s cubic-bezier(.2,.8,.2,1); }
+.vb .vb-b1 { transition-delay: .25s; }
+.vb.in .vb-band, .no-motion .vb .vb-band { clip-path: inset(0 0 0 0 round 12px); }
+.vb .vb-mine { opacity: 0; transform: translateY(-14px); transition: opacity .6s ease .9s, transform .8s cubic-bezier(.2,.8,.2,1) .9s; }
+.vb.in .vb-mine, .no-motion .vb .vb-mine { opacity: 1; transform: none; }
+.value-grid { display: grid; gap: 14px; }
+.value-foot { margin-top: 18px; text-align: center; color: var(--text-3); font-size: 0.95rem; }
+
+/* pay once / pay monthly */
+.pk-toggle { display: flex; width: max-content; margin: 0 auto 34px; padding: 3px; border-radius: 12px;
+  background: rgba(118,118,128,.24); position: relative; }
+.pk-toggle button { position: relative; z-index: 1; font: inherit; font-size: .95rem; font-weight: 600; color: var(--text-2);
+  background: none; border: 0; padding: 9px 22px; border-radius: 9px; cursor: pointer; transition: color .25s; }
+.pk-toggle button[aria-pressed="true"] { color: var(--text); }
+.pk-toggle button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+.pk-toggle .thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 9px; background: #3a3a3e;
+  box-shadow: 0 3px 8px rgba(0,0,0,.35); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.pkgs-wrap[data-pay="mo"] .pk-toggle .thumb { transform: translateX(100%); }
+.pk-price { position: relative; }
+.pk-price .p-once, .pk-price .p-mo { transition: opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
+.pk-price .p-mo { position: absolute; inset: 0 0 auto 0; opacity: 0; transform: translateY(10px); pointer-events: none; }
+.pkgs-wrap[data-pay="mo"] .p-once { opacity: 0; transform: translateY(-10px); }
+.pkgs-wrap[data-pay="mo"] .p-mo { opacity: 1; transform: none; }
+.pk { transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease; }
+.pk:hover { transform: translateY(-4px); }
+.pk.hl:hover { box-shadow: inset 0 0 0 1px rgba(244,201,214,.4), 0 36px 90px -36px rgba(244,201,214,.5); }
+.payback-figs { margin-top: 14px; }
+
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
 .reveal.in { opacity: 1; transform: none; }
 .no-motion .reveal { opacity: 1; transform: none; transition: none; }
@@ -471,7 +718,12 @@ html.sd-lock { overflow: hidden; }
 
 @media (max-width: 860px) {
   section { padding: 84px 0; }
-  .steps, .flow, .figs, .guard { grid-template-columns: 1fr; }
+  .steps, .flow, .figs, .guard, .pkgs { grid-template-columns: 1fr; }
+  .vb { padding: 20px 16px 14px; }
+  .vb-head { grid-template-columns: 1fr; gap: 6px; }
+  .vb-band span, .vb-band b { display: none; }
+  .vb-track { height: 40px; }
+  .vb-legend { display: grid; gap: 6px; margin-top: 8px; }
   .flow .fs:not(:last-child)::after { top: auto; bottom: -11px; right: 50%; transform: translateX(50%) rotate(135deg); }
   .ceiling, .built-grid, .num-grid, .deep-grid { grid-template-columns: 1fr; gap: 36px; }
   .deep.flip .deep-copy { order: 0; }
@@ -540,6 +792,30 @@ body { font-size: 10.5pt; }
 .page .pl { grid-template-columns: 1.1in 1fr; padding: 11px 0; }
 .page .pk { font-size: 10pt; } .page .pv { font-size: 11pt; }
 .closer .h2 { font-size: 30pt; }
+
+.vb { padding: 12px 18px 8px; border-radius: 16px; }
+.vbs { gap: 10px; }
+.vb-head { grid-template-columns: 1.3in 1fr; gap: 12px; }
+.vb-head h3 { font-size: 12pt; } .vb-head p { font-size: 8.8pt; }
+.vb-track { height: 40px; margin-top: 34px; border-radius: 9px; }
+.vb-band { border-radius: 9px; padding: 0 9px; }
+.vb-band span { font-size: 7pt; } .vb-band b { font-size: 8.8pt; }
+.vb-mine { top: -26px; height: 26px; } .vb-mine b { font-size: 7.4pt; padding: 2px 8px; transform: translateX(-10px); }
+.vb-mine i { width: 8px; height: 8px; left: -4px; bottom: -4px; }
+.vb-ticks { height: 14px; margin-top: 8px; } .vb-ticks span { font-size: 7pt; }
+.pk { padding: 16px 16px 14px; border-radius: 16px; }
+.pk-tag { top: 13px; right: 13px; font-size: 7pt; padding: 3px 8px; }
+.pk h3 { font-size: 13pt; }
+.pk-price { margin-top: 10px; min-height: 0; }
+.pk-amt { font-size: 26pt; } .pk-sub { font-size: 8.2pt; margin-top: 5px; } .pk-alt { font-size: 7.6pt; }
+.pk-chip { font-size: 7.4pt; margin-top: 10px; padding: 3px 9px; }
+.pk-list { margin-top: 12px; padding-top: 10px; gap: 6px; }
+.pk-list li { font-size: 8.8pt; grid-template-columns: 16px 1fr; gap: 7px; }
+.pk-list .ck { width: 14px; height: 14px; } .pk-list .ck::after { left: 5px; top: 2.5px; width: 3px; height: 6.5px; border-width: 0 1.5px 1.5px 0; }
+.pk-foot { margin-top: 0; padding: 12px 16px; border-radius: 14px; }
+.pk-foot b, .pk-foot span { font-size: 9.5pt; }
+.when3 { margin-top: 0; } .when3 b { font-size: 8.5pt; } .when3 span { font-size: 10pt; }
+.phones.five { grid-template-columns: repeat(5, 1fr); gap: 12px; }
 """
 
 # ─────────────────────────── network animation ───────────────────────────
@@ -728,7 +1004,7 @@ WEB_JS = r"""
   var imgs = document.querySelectorAll(".live-phone img");
   var dots = document.querySelectorAll(".live-dots i");
   var cap = document.querySelector(".live-cap");
-  var caps = ["The Lumevina site, on a phone", "Booking with a 50% deposit", "Glow Rewards", "The owner dashboard"];
+  var caps = ["The Lumevina site, on a phone", "Booking with a 50% deposit", "Glow Membership", "Glow Rewards", "The owner dashboard"];
   var cur = 0;
   var show = function (i) {
     imgs[cur].classList.remove("on"); dots[cur].classList.remove("on");
@@ -737,6 +1013,15 @@ WEB_JS = r"""
     cap.textContent = caps[cur];
   };
   if (imgs.length && !rm) setInterval(function () { if (!document.hidden) show((cur + 1) % imgs.length); }, 3200);
+
+  /* packages: pay once / pay monthly */
+  var pw = document.querySelector(".pkgs-wrap");
+  if (pw) pw.querySelectorAll(".pk-toggle button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      pw.setAttribute("data-pay", b.getAttribute("data-pay"));
+      pw.querySelectorAll(".pk-toggle button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+    });
+  });
 })();
 """
 
@@ -869,8 +1154,8 @@ WEB = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lumevina Growth Blueprint</title>
-<meta name="description" content="A three-step plan to grow Lumevina beyond one chair.">
+<title>Lumevina Blueprint &amp; Packages</title>
+<meta name="description" content="A three-step plan to grow Lumevina beyond one chair, with the website and app packages that power it.">
 <style>__BASE____WEB__</style>
 </head>
 <body>
@@ -878,9 +1163,9 @@ WEB = """<!DOCTYPE html>
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="kicker reveal">Lumevina · Growth Blueprint</p>
+      <p class="kicker reveal">Lumevina · Growth Blueprint &amp; Packages</p>
       <h1 class="h1 reveal">One chair.<br><span class="grad">Then a house.</span></h1>
-      <p class="lead reveal">A simple, three-step plan to grow Lumevina beyond the hours one person can work.</p>
+      <p class="lead reveal">A simple, three-step plan to grow Lumevina beyond the hours one person can work, and the website and app packages that power it.</p>
     </div>
     <div class="net-col">
       <div class="net-wrap">
@@ -935,12 +1220,63 @@ WEB = """<!DOCTYPE html>
     <div class="reveal">
       <div class="live-phone">__LIVEPHONE__</div>
       <p class="live-cap">The Lumevina site, on a phone</p>
-      <div class="live-dots"><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="live-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
     </div>
     <div class="reveal">
       <p class="kicker">Already built</p>
       <h2 class="h2" style="margin:14px 0 26px">The system is ready. <span class="dim">It needs switching on.</span></h2>
       <ul class="built">__BUILT__</ul>
+    </div>
+  </div>
+</section>
+
+<section id="value">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">What it&rsquo;s worth</p>
+      <h2 class="h2" style="margin-top:14px">Custom-built. <span class="dim">Priced for one chair.</span></h2>
+      <p class="lead">What this system would cost to have built elsewhere, and where Lumevina&rsquo;s packages sit.</p>
+    </div>
+    <div class="value-grid">__VALUE__</div>
+    <p class="value-foot reveal">Booking platforms rent you a template for about $25&ndash;$400 a month, forever. This one is yours.</p>
+  </div>
+</section>
+
+<section id="packages">
+  <div class="wrap pkgs-wrap" data-pay="once">
+    <div class="sec-head center reveal">
+      <p class="kicker">Packages</p>
+      <h2 class="h2" style="margin-top:14px">Two packages. <span class="dim">One care plan.</span></h2>
+      <p class="lead">Start with the website. Add the app when the artists arrive. Keep it all running with care.</p>
+    </div>
+    <div class="pk-toggle reveal" role="group" aria-label="How to pay">
+      <span class="thumb" aria-hidden="true"></span>
+      <button type="button" data-pay="once" aria-pressed="true">Pay once</button>
+      <button type="button" data-pay="mo" aria-pressed="false">Pay monthly</button>
+    </div>
+    <div class="pkgs">__PACKAGES__</div>
+    <div class="pk-foot reveal"><span><b>Website and app together: $16,500.</b> Save $1,500.</span>
+      <span>Monthly plans total $12,600 and $6,300. Running costs are paid at cost, never marked up.</span></div>
+    <div class="when3 reveal"><div><b>Now</b><span>Website package</span></div><div><b>Month 2</b><span>Care plan begins</span></div><div><b>Month 6</b><span>iPhone app, with the pilot</span></div></div>
+  </div>
+</section>
+
+<section id="payback">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Payback</p>
+      <h2 class="h2" style="margin-top:14px">It pays for itself. <span class="dim">From your chair alone.</span></h2>
+      <p class="lead">The website package and care plan, against the added profit from Step 1 only: membership, add-ons, flash openings, retail and referrals.</p>
+    </div>
+    <div class="figs reveal">
+      <div class="fig"><div class="k">Low</div><div class="v num" data-count="__BE_LOW__" data-suf=" mo">__BE_LOW__ mo</div><div class="d">Membership grows slowly.</div></div>
+      <div class="fig hl"><div class="k">Likely</div><div class="v num grad" data-count="__BE_LIKELY__" data-suf=" mo">__BE_LIKELY__ mo</div><div class="d">About 30 members and fuller hours.</div></div>
+      <div class="fig"><div class="k">High</div><div class="v num" data-count="__BE_HIGH__" data-suf=" mo">__BE_HIGH__ mo</div><div class="d">Membership fills fast.</div></div>
+    </div>
+    <div class="chart-card reveal">
+      <h3>Added profit, month by month, against what you pay</h3>
+      <p class="sub">Line: likely. Shaded: low to high. Dashed: the website package, then the care plan after the first 60 days. Steps 2 and 3 not counted.</p>
+      __PAYBACK__
     </div>
   </div>
 </section>
@@ -1062,7 +1398,7 @@ def days_html():
 
 live = ('<div class="phone"><div class="screen">'
         + "".join('<img src="%s" alt=""%s>' % (SHOT[n], ' class="on"' if i == 0 else "")
-                  for i, n in enumerate(("home", "book", "rewards", "dash")))
+                  for i, n in enumerate(("home", "book", "member", "rewards", "dash")))
         + '</div><span class="island"></span></div>')
 
 font = b64(FONT)
@@ -1075,29 +1411,33 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL)).replace("__GUARD__", guard_html())
        .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html())
        .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS))
-       .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS)))
+       .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS))
+       .replace("__VALUE__", value_html()).replace("__PACKAGES__", packages_html())
+       .replace("__PAYBACK__", PAYBACK)
+       .replace("__BE_LOW__", str(round(BE["low"]))).replace("__BE_LIKELY__", str(round(BE["likely"])))
+       .replace("__BE_HIGH__", str(round(BE["high"]))))
 
 # ─────────────────────────── print pages ───────────────────────────
 def foot(n):
-    return foot_n(n, 8)
+    return foot_n(n, 10)
 
 
 PRINT = """<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>Lumevina Growth Blueprint</title>
+<html lang="en"><head><meta charset="UTF-8"><title>Lumevina Blueprint &amp; Packages</title>
 <style>__BASE____PRINT__</style></head><body>
 
 <section class="page">
   <div>
-    <p class="kicker">Lumevina · Growth Blueprint</p>
+    <p class="kicker">Lumevina · Growth Blueprint &amp; Packages</p>
     <h1 class="h1" style="margin-top:14px">One chair.<br><span class="grad">Then a house.</span></h1>
-    <p class="lead" style="margin-top:16px;max-width:5.4in">A simple, three-step plan to grow Lumevina beyond the hours one person can work.</p>
+    <p class="lead" style="margin-top:16px;max-width:5.6in">A simple, three-step plan to grow Lumevina beyond the hours one person can work, and the website and app packages that power it.</p>
   </div>
   <div class="cover-net"><div class="net-wrap"><canvas id="net"></canvas>
     <div class="net-cap"><b id="net-phase">The Collective</b><span id="net-desc">Eight artists, one app, shared Glow Rewards.</span></div></div></div>
   <div class="stats">
     <div class="stat"><div class="v grad num">+$93k</div><div class="k">Likely added profit per year, by year 2&ndash;3</div></div>
-    <div class="stat"><div class="v num">3 steps</div><div class="k">Each starts only when the last one worked</div></div>
-    <div class="stat"><div class="v num">90 days</div><div class="k">To go live and test the first artist</div></div>
+    <div class="stat"><div class="v num">$12k</div><div class="k">The website package, live in about 2&ndash;3 weeks</div></div>
+    <div class="stat"><div class="v num">__BE_LIKELY__ months</div><div class="k">For it to pay for itself, from your chair alone</div></div>
   </div>
   <p class="fine">Prepared for Evelyn Romero · Lumevina Aesthetics Spa · Woodland Hills, CA · September 2026</p>
   __F1__
@@ -1133,15 +1473,60 @@ __DEEPP__
     <p class="kicker">Already built</p>
     <h2 class="h2" style="margin-top:10px">The system is ready. <span class="dim">It needs switching on.</span></h2>
   </div>
-  <div class="phones">
+  <div class="phones five">
     <figure>__P1__<figcaption>The site</figcaption></figure>
     <figure>__P2__<figcaption>Booking + deposit</figcaption></figure>
+    <figure>__P5__<figcaption>Glow Membership</figcaption></figure>
     <figure>__P3__<figcaption>Glow Rewards</figcaption></figure>
     <figure>__P4__<figcaption>Owner dashboard</figcaption></figure>
   </div>
   <ul class="built">__BUILT__</ul>
   <p class="fine">Real screens from the Lumevina site as it runs today.</p>
   __F3__
+</section>
+
+<section class="page">
+  <div>
+    <p class="kicker">What it&rsquo;s worth</p>
+    <h2 class="h2" style="margin-top:10px">Custom-built. <span class="dim">Priced for one chair.</span></h2>
+    <p class="lead" style="margin-top:8px;font-size:11pt">What this system would cost to have built elsewhere, and where the packages sit.</p>
+  </div>
+  <div class="vbs">__VALUE__</div>
+  <div>
+    <p class="kicker">Payback</p>
+    <h2 class="h2" style="margin:8px 0 10px;font-size:22pt">It pays for itself. <span class="dim">From your chair alone.</span></h2>
+    <div class="stats">
+      <div class="stat"><div class="v num">__BE_LOW__ mo</div><div class="k">Low &middot; membership grows slowly</div></div>
+      <div class="stat"><div class="v num grad">__BE_LIKELY__ mo</div><div class="k">Likely &middot; about 30 members, fuller hours</div></div>
+      <div class="stat"><div class="v num">__BE_HIGH__ mo</div><div class="k">High &middot; membership fills fast</div></div>
+    </div>
+  </div>
+  <div class="chart-card">
+    <h3>Added profit, month by month, against what you pay</h3>
+    <p class="sub">Line: likely. Shaded: low to high. Dashed: the website package, then the care plan after 60 days. Step 1 only.</p>
+    __PAYBACK__
+  </div>
+  __F6__
+</section>
+
+<section class="page">
+  <div>
+    <p class="kicker">Packages</p>
+    <h2 class="h2" style="margin-top:10px">Two packages. <span class="dim">One care plan.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">Start with the website. Add the app when the artists arrive. Keep it all running with care.</p>
+  </div>
+  <div class="pkgs">__PACKAGES__</div>
+  <div class="pk-foot"><span><b>Website and app together: $16,500.</b> Save $1,500.</span>
+    <span>Monthly plans total $12,600 and $6,300. Running costs are paid at cost, never marked up.</span></div>
+  <div>
+    <p class="kicker" style="margin-bottom:10px">When each piece starts</p>
+    <div class="when3"><div><b>Now</b><span>Website package</span></div><div><b>Month 2</b><span>Care plan begins</span></div><div><b>Month 6</b><span>iPhone app, with the pilot</span></div></div>
+  </div>
+  <div class="closer">
+    <p class="lead" style="font-size:11pt">Booking platforms rent a template for about $25&ndash;$400 a month, forever. <span style="color:var(--text)">This one is yours.</span></p>
+    <p class="fine" style="margin-top:8px">Prices assume everything is switched on and tested. The code, the accounts and the domain are in Lumevina&rsquo;s name.</p>
+  </div>
+  __F7__
 </section>
 
 <section class="page">
@@ -1163,7 +1548,7 @@ __DEEPP__
     <div><div class="cols-h">Your chair</div><div class="cols-s">Added revenue per month · likely, with range</div>__CHAIR__</div>
     <div><div class="cols-h">The Collective</div><div class="cols-s">Per month, once 6&ndash;8 artists are in</div>__COLL__</div>
   </div>
-  __F4__
+  __F8__
 </section>
 
 <section class="page">
@@ -1182,7 +1567,7 @@ __DEEPP__
     <h2 class="h2">Start small. Prove it. <span class="grad">Then grow.</span></h2>
     <p class="fine" style="margin-top:10px">All figures are illustrative estimates based on current menu prices and will be updated with real booking numbers. Not financial or legal advice.</p>
   </div>
-  __F5__
+  __F9__
 </section>
 
 <script>window.NET_FREEZE = 15.2; window.STEPS_FREEZE = true;</script>
@@ -1199,9 +1584,13 @@ pr = (PRINT.replace("__BASE__", base).replace("__PRINT__", PRINT_CSS)
       .replace("__DAYS__", days_html()).replace("__NET__", js_ascii(NET_JS))
       .replace("__P1__", phone(SHOT["home"])).replace("__P2__", phone(SHOT["book"]))
       .replace("__P3__", phone(SHOT["rewards"])).replace("__P4__", phone(SHOT["dash"])))
-for i, pg in ((1, 1), (2, 2), (3, 6), (4, 7), (5, 8)):
+pr = (pr.replace("__P5__", phone(SHOT["member"])).replace("__VALUE__", value_html(False))
+      .replace("__PACKAGES__", packages_html(True)).replace("__PAYBACK__", PAYBACK)
+      .replace("__BE_LOW__", str(round(BE["low"]))).replace("__BE_LIKELY__", str(round(BE["likely"])))
+      .replace("__BE_HIGH__", str(round(BE["high"]))))
+for i, pg in ((1, 1), (2, 2), (3, 6), (6, 7), (7, 8), (8, 9), (9, 10)):
     pr = pr.replace("__F%d__" % i, foot(pg))
-pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 8) for k, d in enumerate(DEEP)))
+pr = pr.replace("__DEEPP__", "".join(deep_print(d, 3 + k, 10) for k, d in enumerate(DEEP)))
 pr = pr.replace("__STEPSJS__", STEPS_JS)
 
 for name, html in (("web.html", web), ("print.html", pr)):
