@@ -42,17 +42,17 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | No-show tracking (deposit kept) | ✅ | ✅ | Deposit kept, balance written off |
 | Auto-charge no-show/late-cancel fee | 🟡 | ✅ | Needs saved card (Stripe off-session) |
 | Gift-certificate liability tracking | ✅ | partial | Outstanding balance tile + per-cert table |
-| Bookkeeping / tax (income) | ✅ | partial | Income, fees, net, CSV; expenses not tracked |
+| Bookkeeping / tax (income, costs, profit) | ✅ | partial | Services, dues, retail, gifts in; card fees, product cost, Founding Five kits, expenses out; monthly profit; CSV |
 | Calendar sync (Google/Apple) | ✅ | ✅ | Owner .ics feed |
 | Intake forms visible to owner | ✅ | ✅ | Per client in the CRM |
 | Automated confirmations/reminders | 🟡 | ✅ | `send-confirmation` function |
 | Marketing campaigns (email/SMS blasts) | ⬜ | ✅ | Newsletter stub only |
 | Waitlist (auto-fill cancellations) | ⬜ | ✅ | Flash openings are a cousin |
 | Reviews / reputation management | ⬜ | ✅ | Planned |
-| Memberships / recurring billing | ⬜ | ✅ | Rewards exist; no subscriptions |
+| Memberships / recurring billing | ✅ | ✅ | Glow Membership: 3 tiers, banked facials, Founding Five, launch ledger |
 | Staff / team management | ⬜ | ✅ | Single-provider today |
-| Retail inventory POS + card reader | ⬜ | ✅ | Retail via affiliate links (Take It Home) |
-| Expense tracking | ⬜ | partial | Income-side only today |
+| Retail inventory POS + card reader | 🟡 | ✅ | Stock, cost and in-person "Sell"; kits come out of stock; no card reader |
+| Expense tracking | ✅ | partial | Log supplies, rent, marketing, equipment; kits and retail counted at cost |
 
 ## Where Lumevina is ahead of GlossGenius
 

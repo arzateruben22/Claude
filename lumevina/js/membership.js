@@ -39,6 +39,8 @@
   var KIT = [{ id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser" },
              { id: "spf-30", name: "Face Reality Daily SPF 30 Plus" }];
   var KIT_VALUE = 70;
+  var ADDON_VALUE = 25;     /* what the free LED or dermaplaning add-on is worth; no product cost */
+  var SALES_KEY = "lumevina_retail_sales";
 
   /* A ladder: each tier includes everything in the one below it. */
   var PLANS = [
@@ -186,9 +188,23 @@
     if (claimed < FIVE_CAP) {
       r.five = { no: claimed + 1, kit: "ready", addon: "ready" };
       r.history.push({ at: now, type: "founding-five", note: "Founding Five #" + (claimed + 1) + ": welcome kit set aside" });
-      /* set the kit aside from shelf stock so the shop never oversells it */
+      /* set the kit aside from shelf stock so the shop never oversells it, and
+         log it as a giveaway at cost so the books carry what it really cost */
       var inv = window.LumevinaInventory;
-      if (inv) KIT.forEach(function (k) { inv.decrement(k.id, 1); });
+      var log = [];
+      try { log = JSON.parse(localStorage.getItem(SALES_KEY)) || []; } catch (e) { log = []; }
+      var kitCost = 0, kitValue = 0;
+      KIT.forEach(function (k) {
+        var p = inv && inv.get(k.id);
+        var cost = p ? Number(p.cost || 0) : 0, price = p ? Number(p.price || 0) : 0;
+        kitCost += cost; kitValue += price;
+        log.push({ id: k.id, name: p ? p.name : k.name, qty: 1, price: price, paid: 0, cost: cost,
+          at: now, channel: "founding-five", type: "promo", note: "Founding Five #" + (claimed + 1) + " welcome kit" });
+        if (inv) inv.decrement(k.id, 1);
+      });
+      try { localStorage.setItem(SALES_KEY, JSON.stringify(log)); } catch (e) { /* private mode */ }
+      r.five.kitCost = kitCost;
+      r.five.kitValue = kitValue || KIT_VALUE;
     }
     put(r);
     return { ok: true, record: r };
@@ -274,7 +290,7 @@
       amount: plan.value, serviceId: plan.primary, label: plan.facial,
       recipientName: (to && to.name) || "", recipientEmail: (to && to.email) || "",
       message: "A facial from " + (r.name || "a Lumevina member") + ", gifted from their membership.",
-      boughtBy: r.email
+      boughtBy: r.email, source: "membership"
     });
     r.credits -= 1;
     r.history.push({ at: new Date().toISOString(), type: "gifted", code: card.code });
@@ -318,7 +334,8 @@
     var r = get(email);
     if (!fiveAddonReady(r)) return { ok: false };
     r.five.addon = "used";
-    r.history.push({ at: new Date().toISOString(), type: "five-addon", order: meta && meta.order });
+    r.five.addonValue = ADDON_VALUE;
+    r.history.push({ at: new Date().toISOString(), type: "five-addon", value: ADDON_VALUE, order: meta && meta.order });
     put(r);
     return { ok: true, record: r };
   };
@@ -344,7 +361,7 @@
     giftCredit: giftCredit, demoAdvance: demoAdvance,
     retailRate: retailRate, extrasRate: extrasRate,
     all: all, foundingLeft: foundingLeft, fmtDate: fmtDate, money: money,
-    FIVE_CAP: FIVE_CAP, KIT: KIT, KIT_VALUE: KIT_VALUE,
+    FIVE_CAP: FIVE_CAP, KIT: KIT, KIT_VALUE: KIT_VALUE, ADDON_VALUE: ADDON_VALUE,
     fiveLeft: fiveLeft, fiveAddonReady: fiveAddonReady, useFiveAddon: useFiveAddon, giveKit: giveKit
   };
   window.LumevinaMembership = api;

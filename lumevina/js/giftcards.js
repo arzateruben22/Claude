@@ -63,6 +63,9 @@
       deliverToBuyer: !!d.deliverToBuyer,
       sendDate: d.sendDate || null,
       boughtBy: d.boughtBy || "",
+      /* "sale" when paid for; "membership" when a member gifts a banked facial
+         (already paid for through dues, so the books don't count it twice) */
+      source: d.source || "sale",
       status: "active",
       purchasedAt: new Date().toISOString()
     };

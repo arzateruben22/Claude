@@ -29,6 +29,7 @@ MEMX = {"low": 320, "likely": 800, "high": 1200}       # membership keeps buildi
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
 COLL = {"low": 900, "likely": 3800, "high": 7700}      # 6–8 artists, net: flat suite rent + crossover − space − perks (incl. members' 10%)
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
+LAUNCH = 160                                             # Founding Five, once, in the launch month: 5 kits (cleanser + SPF) at cost, $350 retail
 
 
 def added(m, k):
@@ -48,7 +49,8 @@ def added(m, k):
         art = dip + (q - dip) * (m - 16) / 14.0
     else:
         art = q
-    return s1 + art
+    launch = LAUNCH if 1 <= m < 2 else 0                 # membership launches in week 4; the five kits go out that month
+    return s1 + art - launch
 
 
 YEAR = {k: int(round(added(36, k) * 12 / 1000.0)) for k in ("low", "likely", "high")}
@@ -138,11 +140,12 @@ GUARD = [
 COSTS = [("Live payments", "2.9% + 30¢ per payment"),
          ("Database and texts", "About $35 a month"),
          ("Attorney", "$300–$600 consult; agreements $1.5k–$5k"),
-         ("App Store", "$99 a year, at Stage 2")]
+         ("App Store", "$99 a year, at Stage 2"),
+         ("Founding Five", "$160 once: five kits at cost, $350 retail. Add-ons are Evelyn’s time")]
 
 DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat clients, no-shows, average ticket."),
         ("Weeks 2–3", "Switch on live payments. Move booking from Acuity to Lumevina."),
-        ("Week 4", "Launch Glow Membership and add-ons. Start asking every client who does their lashes, brows and nails."),
+        ("Week 4", "Launch Glow Membership and add-ons. Set aside five Founding Five kits. Ask every client who does their lashes, brows and nails."),
         ("Month 2", "One-hour attorney consult: the pilot terms, the suite agreement, and rent versus fee."),
         ("Month 3", "Meet the three artists your clients mention most. Offer the pilot to the best two.")]
 
@@ -166,7 +169,7 @@ HOUSE = [("10% off with every Lumevina artist", (1, 1, 1)),
 CONVERT = [("At checkout", "Any facial can become month one at the member price, with the single price shown beside it."),
            ("In the chair", "Evelyn offers it before the client leaves, with next month already booked."),
            ("House perks", "10% off with every Lumevina artist, and first look at their openings."),
-           ("Founding Five", "The first five members, on any plan, get a welcome skincare kit.")]
+           ("Founding Five", "The first five members, any plan: a welcome skincare kit and a free add-on.")]
 
 MTRACK = [("Members", "30 by month 6, 50 by year 2"),
           ("Share of facial visits from members", "Aim for over half"),
@@ -473,7 +476,7 @@ h3 { font-weight: 650; letter-spacing: -0.015em; }
 .g { background: var(--card); border-radius: 22px; padding: 22px 24px; }
 .g b { font-weight: 650; font-size: 1.1rem; letter-spacing: -0.015em; }
 .g p { color: var(--text-2); font-size: 0.95rem; line-height: 1.45; margin-top: 6px; }
-.costs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.costs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
 .c { border-top: 1px solid var(--hair); padding-top: 12px; }
 .c b { display: block; font-weight: 600; font-size: 0.95rem; }
 .c span { display: block; color: var(--text-2); font-size: 0.88rem; margin-top: 4px; line-height: 1.4; }

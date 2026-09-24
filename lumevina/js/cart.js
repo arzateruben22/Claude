@@ -494,13 +494,20 @@
           var salesLog = [];
           try { salesLog = JSON.parse(localStorage.getItem("lumevina_retail_sales")) || []; }
           catch (e) { salesLog = []; }
+          /* log what was actually paid (after any member discount) and the
+             unit cost, so the books show real revenue and product cost */
+          var LMr = window.LumevinaMembership;
+          var rate = LMr ? LMr.retailRate(memberEmail()) : 0;
           Object.keys(cart).forEach(function (id) {
             if (id.indexOf("retail-") !== 0) return;
             var item = cart[id];
             var pid = id.replace("retail-", "");
+            var stock = window.LumevinaInventory.get(pid);
             window.LumevinaInventory.decrement(pid, item.qty);
             salesLog.push({ id: pid, name: item.name, price: item.price, qty: item.qty,
-              at: new Date().toISOString(), channel: "online" });
+              paid: Math.round(item.price * (1 - rate) * 100) / 100,
+              cost: stock ? Number(stock.cost || 0) : 0,
+              at: new Date().toISOString(), channel: "online", type: "sale" });
           });
           try { localStorage.setItem("lumevina_retail_sales", JSON.stringify(salesLog)); }
           catch (e) { /* private mode */ }

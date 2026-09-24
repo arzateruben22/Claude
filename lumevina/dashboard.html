@@ -135,6 +135,7 @@
     @media (max-width: 640px) { .goal-form-grid { grid-template-columns: 1fr 1fr; } }
     /* inventory */
     .inv-form { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.1rem; align-items: center; }
+    .inv-form[hidden] { display: none; }
     .inv-form input[type=text] { flex: 1; min-width: 160px; }
     .inv-form input[type=number] { width: 110px; }
     .inv-adjust { display: inline-flex; gap: 0.4rem; align-items: center; justify-content: flex-end; }
@@ -151,7 +152,7 @@
     .bk-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .bk-table th { text-align: right; color: var(--ink-45); font-weight: 500; font-size: 0.72rem;
       letter-spacing: 0.06em; text-transform: uppercase; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--edge); }
-    .bk-table th:first-child, .bk-table td:first-child { text-align: left; }
+    .bk-table th:first-child, .bk-table td:first-child { text-align: left; white-space: nowrap; }
     .bk-table td { text-align: right; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--edge);
       color: var(--ink-70); font-variant-numeric: tabular-nums; }
     .cal-note { font-size: 0.88rem; color: var(--ink-60); line-height: 1.6; }
@@ -257,6 +258,40 @@
     .mem-five-row button { font: inherit; font-size: 0.78rem; font-weight: 600; color: #000; background: #eab9c8; border: 0;
       border-radius: 999px; padding: 0.3rem 0.7rem; cursor: pointer; }
     @media (max-width: 720px) { .mem-five-row { grid-template-columns: 2rem 1fr; } .mem-five-row .st, .mem-five-row button { grid-column: 2; justify-self: start; } }
+    .bk-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
+    .bk-export--ghost { background: transparent; color: var(--plum); box-shadow: inset 0 0 0 1px var(--edge); }
+    .bk-export--ghost:hover { background: rgba(234,185,200,0.1); }
+    .bk-exp-form select { font: inherit; font-size: 0.85rem; color: var(--ink); background: #161616; border: 1px solid var(--edge);
+      border-radius: 10px; padding: 0.5rem 0.7rem; }
+    .bk-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0 0 1.4rem; }
+    .bk-col { background: var(--panel); border: 1px solid var(--edge); border-radius: 12px; padding: 0.9rem 1rem 0.7rem; }
+    .bk-col h3 { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-45); margin: 0 0 0.3rem; }
+    .bk-col ul { list-style: none; margin: 0; padding: 0; }
+    .bk-col li { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; padding: 0.5rem 0;
+      border-bottom: 1px solid var(--edge); font-size: 0.86rem; }
+    .bk-ln { color: var(--ink); }
+    .bk-ln small { display: block; color: var(--ink-45); font-size: 0.74rem; margin-top: 0.1rem; }
+    .bk-lv { color: var(--ink-70); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .bk-col--out .bk-lv { color: var(--alt); }
+    .bk-empty .bk-ln { color: var(--ink-70); }
+    .bk-total { display: flex; justify-content: space-between; margin: 0.6rem 0 0; font-size: 0.88rem; font-weight: 600;
+      font-variant-numeric: tabular-nums; }
+    .bk-net { color: var(--ink) !important; font-weight: 600; }
+    .bk-net.is-neg { color: var(--bad) !important; }
+    @media (max-width: 720px) { .bk-split { grid-template-columns: 1fr; } }
+    .mem-launch { margin: 0 0 1.3rem; padding: 0.9rem 1rem; border-radius: 14px; background: var(--panel); border: 1px solid var(--edge); }
+    .mem-launch h3 { font-size: 0.9rem; font-weight: 600; margin: 0 0 0.15rem; }
+    .mem-launch > p { font-size: 0.78rem; color: var(--ink-45); margin: 0 0 0.5rem; }
+    .mem-launch ul { list-style: none; margin: 0; padding: 0; }
+    .mem-launch li { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; padding: 0.42rem 0;
+      border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; }
+    .mem-launch li span:first-child { color: var(--ink-70); }
+    .mem-launch li small { color: var(--ink-45); font-size: 0.74rem; }
+    .mem-launch li span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .mem-launch li.out span:last-child { color: var(--alt); }
+    .mem-launch li.tot { font-weight: 600; }
+    .mem-launch li.tot span { color: var(--ink) !important; }
+    .mem-launch li.info span:last-child { color: var(--ink-45); }
   </style>
 </head>
 <body data-palette="#eab9c8,#e3b48f">
@@ -344,19 +379,33 @@
       <ul class="settle-list" id="settle-list"></ul>
     </div>
 
-    <!-- ── Bookkeeping & tax ── -->
+    <!-- ── Bookkeeping & profit ── -->
     <div class="card">
       <div class="crm-head">
         <div>
-          <h2>Bookkeeping &amp; tax</h2>
-          <p class="sub">Income collected online, processing fees, and what's owed in person.</p>
+          <h2>Bookkeeping &amp; profit</h2>
+          <p class="sub">Everything that came in, what it cost you, and what you keep: services, membership
+          dues, retail, gift certificates, card fees, product cost and the Founding Five kits.</p>
         </div>
-        <button class="bk-export" id="bk-csv">Download tax CSV</button>
+        <div class="bk-actions">
+          <button class="bk-export bk-export--ghost" id="bk-exp-toggle">+ Log expense</button>
+          <button class="bk-export" id="bk-csv">Download tax CSV</button>
+        </div>
       </div>
+      <form class="inv-form bk-exp-form" id="bk-exp-form" hidden>
+        <input type="date" id="bk-exp-date" aria-label="Date">
+        <input type="text" id="bk-exp-what" placeholder="What (e.g. Le Mieux backbar order)" required>
+        <select id="bk-exp-cat" aria-label="Category"></select>
+        <input type="number" id="bk-exp-amt" placeholder="Amount $" min="0" step="0.01" required>
+        <button type="submit" class="bk-export">Add</button>
+      </form>
       <div class="bk-tiles" id="bk-tiles"></div>
+      <div class="bk-split" id="bk-split"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="bk-table"></table></div>
-      <p class="sub" style="margin-top:0.9rem">Processing fees estimated at 2.9% + 30¢ per online
-      charge (Stripe). The in-person balance is recorded when you mark a visit complete.</p>
+      <p class="sub" style="margin-top:0.9rem">Card fees are estimated at 2.9% + 30¢ a charge (Stripe).
+      A balance counts once you mark the visit paid under Settle visits. Buying retail stock isn't an
+      expense here: its cost counts when a product sells or goes out in a Founding Five kit, so nothing
+      is counted twice. Log the product you use in treatments as <strong>Treatment supplies</strong>.</p>
     </div>
 
     <!-- ── Glow Membership ── -->
@@ -372,6 +421,7 @@
       <div class="bk-tiles" id="mem-tiles"></div>
       <div class="mem-mix" id="mem-mix"></div>
       <div class="mem-five" id="mem-five"></div>
+      <div class="mem-launch" id="mem-launch"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="mem-table"></table></div>
     </div>
 
@@ -388,9 +438,10 @@
       <div class="bk-tiles" id="gc-tiles"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="gc-table"></table></div>
       <p class="sub" style="margin-top:0.9rem"><strong>For your accountant:</strong> gift-card
-      sales are a liability, not income, until redeemed. Some cash-basis businesses instead book
-      them as income when sold — ask your accountant which method fits Lumevina, and hand them this
-      list either way. It's kept separate from your service income above on purpose.</p>
+      sales are a liability, not income, until redeemed. Bookkeeping above shows them as money in
+      when sold (cash basis) on their own line, so your accountant can move them if Lumevina books
+      them as a liability instead. Gifts members send from their plan aren't counted: those were
+      paid for through dues.</p>
     </div>
 
     <!-- ── Goals ── -->
@@ -792,8 +843,11 @@
 
     /* ── Product sales + top products (from the retail sales log) ── */
     (function () {
-      var sales = lget("lumevina_retail_sales") || [];
-      if (!sales.length) {
+      var all = lget("lumevina_retail_sales") || [];
+      /* Founding Five kits went out free: not revenue, shown on their own line */
+      var sales = all.filter(function (s) { return s.type !== "promo"; });
+      var given = all.filter(function (s) { return s.type === "promo"; });
+      if (!sales.length && !given.length) {
         document.getElementById("product-sales").innerHTML =
           '<div class="ps-empty">No retail sold yet. As products sell — online or in person — ' +
           '<strong>units, revenue, and top sellers</strong> appear here.</div>';
@@ -805,7 +859,7 @@
       var num = function (n) { return Number(n || 0); };
       var byProduct = {}, units = 0, revenue = 0, online = 0;
       sales.forEach(function (s) {
-        var q = num(s.qty), rev = num(s.price) * q;
+        var q = num(s.qty), rev = (s.paid != null ? num(s.paid) : num(s.price)) * q;
         units += q; revenue += rev; if (s.channel === "online") online += q;
         var p = byProduct[s.id] || (byProduct[s.id] = { name: s.name, units: 0, rev: 0 });
         p.units += q; p.rev += rev;
@@ -817,11 +871,17 @@
         '<div><div class="m-val">' + units + '</div><div class="m-lbl">Units sold</div></div>' +
         '<div><div class="m-val">' + Object.keys(byProduct).length + '</div><div class="m-lbl">Products sold</div></div>' +
         '<div><div class="m-val">' + pctOnline + '%</div><div class="m-lbl">Sold online</div></div>' +
-        '</div>';
+        '</div>' +
+        (given.length ? '<p class="sub" style="margin:0.9rem 0 0">Given free in Founding Five kits: <strong>' +
+          given.reduce(function (a, s) { return a + (num(s.qty) || 1); }, 0) + ' units</strong>, ' +
+          money(given.reduce(function (a, s) { return a + num(s.cost) * (num(s.qty) || 1); }, 0)) +
+          ' at cost. Not counted as sales.</p>' : '');
       var rows = Object.keys(byProduct).map(function (id) { return byProduct[id]; })
         .sort(function (a, b) { return b.units - a.units; }).slice(0, 6);
       var max = rows.length ? rows[0].units : 1;
-      document.getElementById("top-products").innerHTML = '<ul class="rank">' + rows.map(function (r) {
+      document.getElementById("top-products").innerHTML = !rows.length
+        ? '<div class="ps-empty">Your <strong>best-selling products</strong> will rank here once retail starts moving.</div>'
+        : '<ul class="rank">' + rows.map(function (r) {
         return '<li class="rank-row"><span class="rank-name">' + r.name + '</span>' +
           '<span class="rank-bar"><span class="rank-fill" style="width:' +
           Math.round(r.units / max * 100) + '%"></span></span>' +
@@ -829,95 +889,264 @@
       }).join("") + '</ul>';
     })();
 
-    /* ── Bookkeeping & tax ── */
-    (function () {
-      var STRIPE_PCT = 0.029, STRIPE_FLAT = 0.30;
-      var rows = [];
-      clients.forEach(function (c) {
-        (c.visits || []).forEach(function (v) {
-          var collected = Number(v.paid || v.deposit || 0);
-          var gift = Number(v.giftValue || 0);
-          /* the deposit is 50%, so total ≈ collected × 2 when not stored */
-          var total = Number(v.total || (v.deposit ? v.deposit * 2 : 0) || collected * 2 || 0);
-          var fee = collected > 0 ? +(collected * STRIPE_PCT + STRIPE_FLAT).toFixed(2) : 0;
-          rows.push({ date: v.date, name: c.name,
-            services: (v.services || []).map(svcName).join(" + "),
-            total: total, collected: collected, fee: fee,
-            /* a gift redemption already had its cash collected at sale time,
-               so it isn't owed — subtract it from the outstanding balance */
-            net: +(collected - fee).toFixed(2), balance: +(Math.max(0, total - collected - gift)).toFixed(2) });
+    /* ── Shared: members, dues and the retail/giveaway log ──
+       Used by Bookkeeping (income, costs, profit) and the Glow Membership card
+       (launch ledger). Real records when there are any, else a small sample. */
+    var MPLANS = { glow: { name: "Glow", price: 149, value: 180 }, clear: { name: "Clear Skin", price: 159, value: 180 },
+                   ageless: { name: "Ageless", price: 199, value: 230 } };
+    var dAgo = function (daysAgo) { return new Date(Date.now() - daysAgo * 864e5).toISOString(); };
+    var MEM_SAMPLE = [
+      { name: "Maya Chen", plan: "glow", status: "active", credits: 1, startedAt: dAgo(96) },
+      { name: "Sofia Alvarez", plan: "glow", status: "active", credits: 2, startedAt: dAgo(88) },
+      { name: "Priya Nair", plan: "ageless", status: "active", credits: 0, startedAt: dAgo(75) },
+      { name: "Jordan Lee", plan: "clear", status: "active", credits: 1, startedAt: dAgo(64) },
+      { name: "Ava Reyes", plan: "glow", status: "active", credits: 0, startedAt: dAgo(52), pausedMonth: dAgo(-20) },
+      { name: "Hannah Brooks", plan: "clear", status: "active", credits: 1, startedAt: dAgo(41) },
+      { name: "Lena Park", plan: "glow", status: "cancelling", credits: 1, startedAt: dAgo(120), cancelAt: dAgo(-12) },
+      { name: "Isabel Cruz", plan: "ageless", status: "active", credits: 1, startedAt: dAgo(30) },
+      { name: "Nora Patel", plan: "glow", status: "active", credits: 1, startedAt: dAgo(19) },
+      { name: "Chloe Kim", plan: "glow", status: "active", credits: 1, startedAt: dAgo(9) }
+    ];
+    /* sample: the five earliest members are the Founding Five (kit $32 at cost, $70 retail) */
+    MEM_SAMPLE.slice().sort(function (a, b) { return new Date(a.startedAt) - new Date(b.startedAt); }).slice(0, 5)
+      .forEach(function (m, i) { m.five = { no: i + 1, kit: i < 3 ? "given" : "ready", addon: i < 2 ? "used" : "ready",
+        kitCost: 32, kitValue: 70, addonValue: i < 2 ? 25 : 0 }; });
+    var storedMembers = lget("lumevina_memberships");
+    var realMembers = storedMembers ? Object.keys(storedMembers).map(function (k) { return storedMembers[k]; }) : [];
+    var MEMBERS = realMembers.length ? realMembers : MEM_SAMPLE;
+    var FEE = function (amt) { return amt > 0 ? +(amt * 0.029 + 0.30).toFixed(2) : 0; };
+    /* every dues payment: the member's billing history, or for the sample one a month since joining */
+    var DUES = [];
+    MEMBERS.forEach(function (m) {
+      var plan = MPLANS[m.plan] || MPLANS.glow;
+      if (m.history && m.history.length) {
+        m.history.forEach(function (h) {
+          if ((h.type === "joined" || h.type === "billed") && h.amount) {
+            DUES.push({ at: h.at, amount: Number(h.amount), name: m.name || m.email, plan: m.plan });
+          }
         });
+      } else {
+        var stop = m.status === "cancelling" && m.cancelAt ? Math.min(Date.now(), new Date(m.cancelAt).getTime()) : Date.now();
+        for (var t = new Date(m.startedAt).getTime(); t <= stop; t += 30 * 864e5) {
+          DUES.push({ at: new Date(t).toISOString(), amount: m.price || plan.price, name: m.name, plan: m.plan });
+        }
+      }
+    });
+    var RETAIL_LOG = lget("lumevina_retail_sales") || [];
+    /* Founding Five kits given away: the real log, or the sample's kits */
+    var KIT_LOG = RETAIL_LOG.filter(function (x) { return x.type === "promo"; });
+    if (!realMembers.length) {
+      MEMBERS.forEach(function (m) {
+        if (!m.five) return;
+        KIT_LOG.push({ name: "GlyMed+ Glycolic Facial Cleanser", qty: 1, cost: 18, price: 38, at: m.startedAt, type: "promo" });
+        KIT_LOG.push({ name: "Face Reality Daily SPF 30 Plus", qty: 1, cost: 14, price: 32, at: m.startedAt, type: "promo" });
       });
-      rows.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    }
 
-      var sum = function (k) { return rows.reduce(function (a, r) { return a + r[k]; }, 0); };
-      var tiles = [
-        { l: "Booked revenue", v: money(Math.round(sum("total"))) },
-        { l: "Collected online", v: money(Math.round(sum("collected"))) },
-        { l: "Est. processing fees", v: "−" + money(sum("fee").toFixed(2)) },
-        { l: "Net to your bank", v: money(sum("net").toFixed(2)) }
-      ];
-      document.getElementById("bk-tiles").innerHTML = tiles.map(function (t) {
-        return '<div class="bk-tile"><div class="bk-tv">' + t.v +
-          '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+    /* gift certificates: the real list, or a sample */
+    var GC_SAMPLE = [
+      { code: "LUM-7Q4K-2F9X", amount: 150, balance: 90, label: "Any treatment ($150 value)", recipientName: "Ava Reyes", status: "active", purchasedAt: "2026-07-05T18:00:00Z" },
+      { code: "LUM-J3MP-8T2C", amount: 230, balance: 230, label: "Ageless Grace Facial", recipientName: "Bianca Ortiz", status: "active", purchasedAt: "2026-06-20T18:00:00Z" },
+      { code: "LUM-R8WD-1K5H", amount: 180, balance: 0, label: "Lumevina Custom Facial", recipientName: "Chloe Kim", status: "redeemed", purchasedAt: "2026-05-14T18:00:00Z" },
+      { code: "LUM-Q2NV-6B3L", amount: 75, balance: 75, label: "Brazilian Wax", recipientName: "Dana Ruiz", status: "active", purchasedAt: "2026-07-15T18:00:00Z" }
+    ];
+    var storedGifts = lget("lumevina_giftcards");
+    var GIFTS = (storedGifts && storedGifts.length) ? storedGifts : GC_SAMPLE;
+    /* what each product costs you, for older log entries that didn't record it */
+    var UNIT_COST = { "gm-cleanser": 18, "lm-serum": 32, "spf-30": 14 };
+    (lget("lumevina_inventory") || []).forEach(function (p) { if (p.cost != null) UNIT_COST[p.id] = Number(p.cost); });
+    var costOf = function (x) { return x.cost != null ? Number(x.cost) : (UNIT_COST[x.id] || 0); };
+    var num = function (n) { return Number(n || 0); };
 
-      /* monthly rollup */
-      var months = {};
-      rows.forEach(function (r) {
-        var mk = r.date.slice(0, 7);
-        var m = months[mk] || (months[mk] = { bookings: 0, total: 0, collected: 0, fee: 0, net: 0 });
-        m.bookings++; m.total += r.total; m.collected += r.collected; m.fee += r.fee; m.net += r.net;
+    /* ── Bookkeeping: what came in, what it cost, what you keep ──
+       Cash basis, one line per money event:
+         in   services (online deposits + balances marked paid in person),
+              membership dues, retail at the price actually paid, gift
+              certificates sold (not the ones members gift from their plan)
+         out  card fees, the cost of products sold, Founding Five kits
+              (given free, counted at what the products cost you), and the
+              expenses logged here (supplies, rent, marketing…)
+       Buying retail stock isn't logged as an expense: its cost is counted
+       when a product sells or goes out in a kit, so it's never counted twice. */
+    (function () {
+      var EXP_KEY = "lumevina_expenses";
+      var CATS = ["Treatment supplies", "Rent & utilities", "Marketing", "Equipment", "Other"];
+      var loadExp = function () { return lget(EXP_KEY) || []; };
+      var r2 = function (n) { return Math.round(n * 100) / 100; };
+      var m2 = function (n) { return "$" + r2(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+      var day = function (iso) { return String(iso || "").slice(0, 10); };
+
+      var collect = function () {
+        var settle = lget("lumevina_settlements") || {};
+        var E = [];
+        var add = function (e) { e.fee = e.fee || 0; e.cost = e.cost || 0; e.gross = e.gross || 0; E.push(e); };
+
+        clients.forEach(function (c) {
+          (c.visits || []).forEach(function (v) {
+            var online = num(v.paid || v.deposit);
+            var gift = num(v.giftValue);
+            var total = num(v.total || (v.deposit ? v.deposit * 2 : 0) || online * 2);
+            var what = (v.services || []).map(svcName).join(" + ");
+            if (online > 0) add({ date: v.date, kind: "service", who: c.name, what: what + " · deposit", gross: online, fee: FEE(online) });
+            var key = v.order || [v.date, v.time || "", (c.email || v.email || c.name || "")].join("|");
+            var s = settle[key], balance = Math.max(0, r2(total - online - gift));
+            if (s && s.status === "paid" && balance > 0) {
+              add({ date: v.date, kind: "service", who: c.name, what: what + " · balance, " + s.method,
+                gross: balance, fee: s.method === "card" ? FEE(balance) : 0 });
+            }
+          });
+        });
+        DUES.forEach(function (d) {
+          add({ date: day(d.at), kind: "dues", who: d.name, what: (MPLANS[d.plan] || MPLANS.glow).name + " membership",
+            gross: d.amount, fee: FEE(d.amount) });
+        });
+        RETAIL_LOG.forEach(function (x) {
+          if (x.type === "promo") return;
+          var q = num(x.qty) || 1;
+          var gross = r2((x.paid != null ? num(x.paid) : num(x.price)) * q);
+          add({ date: day(x.at), kind: "retail", who: x.channel === "online" ? "Online shop" : "In person",
+            what: x.name + (q > 1 ? " × " + q : ""), qty: q, gross: gross, fee: FEE(gross), cost: costOf(x) * q });
+        });
+        GIFTS.forEach(function (g) {
+          if (g.source === "membership" || /gifted from their membership/i.test(g.message || "")) return;
+          add({ date: day(g.purchasedAt), kind: "gift", who: g.boughtBy || "—", what: "Gift certificate " + (g.code || ""),
+            gross: num(g.amount), fee: FEE(num(g.amount)) });
+        });
+        KIT_LOG.forEach(function (k) {
+          var q = num(k.qty) || 1;
+          add({ date: day(k.at), kind: "kit", who: k.note || "Founding Five welcome kit",
+            what: k.name + " (free)", cost: costOf(k) * q, value: num(k.price) * q });
+        });
+        loadExp().forEach(function (x) {
+          add({ date: x.date, kind: "expense", who: x.category, what: x.what, cost: num(x.amount) });
+        });
+        E.forEach(function (e) { e.net = r2(e.gross - e.fee - e.cost); });
+        return E.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+      };
+
+      var LABEL = { service: "Services", dues: "Membership dues", retail: "Retail", gift: "Gift certificates",
+        kit: "Founding Five kit", expense: "Expense" };
+
+      var render = function () {
+        var E = collect();
+        var tot = function (f) { return E.filter(f); };
+        var sum = function (list, k) { return list.reduce(function (a, e) { return a + e[k]; }, 0); };
+        var kind = function (k) { return tot(function (e) { return e.kind === k; }); };
+
+        var inRows = ["service", "dues", "retail", "gift"].map(function (k) {
+          var l = kind(k); return { k: k, n: l.length, v: sum(l, "gross") };
+        });
+        var moneyIn = sum(E, "gross");
+        var fees = sum(E, "fee");
+        var retail = kind("retail"), kits = kind("kit"), exps = kind("expense");
+        var cogs = sum(retail, "cost"), kitCost = sum(kits, "cost"), kitValue = sum(kits, "value");
+        var kitCount = MEMBERS.filter(function (m) { return m.five; }).length;
+        var expTotal = sum(exps, "cost");
+        var out = fees + cogs + kitCost + expTotal;
+        var profit = moneyIn - out;
+        var margin = moneyIn ? Math.round(profit / moneyIn * 100) : 0;
+
+        var tiles = [
+          { l: "Money in", v: money(Math.round(moneyIn)) },
+          { l: "Costs", v: "−" + money(Math.round(out)) },
+          { l: exps.length ? "Profit" : "Profit before rent & supplies", v: money(Math.round(profit)), flag: true },
+          { l: exps.length ? "Kept of every $1" : "Kept of every $1, before expenses", v: margin + "¢" }
+        ];
+        document.getElementById("bk-tiles").innerHTML = tiles.map(function (t) {
+          return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' + t.v +
+            '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+
+        /* in / out, side by side */
+        var byCat = {};
+        exps.forEach(function (e) { byCat[e.who] = (byCat[e.who] || 0) + e.cost; });
+        var line = function (name, sub, v, sign) {
+          return '<li><span class="bk-ln">' + name + (sub ? '<small>' + sub + '</small>' : '') + '</span>' +
+            '<span class="bk-lv">' + (sign || "") + m2(v) + '</span></li>';
+        };
+        var subIn = { service: "deposits online + balances marked paid",
+          dues: "every monthly charge", retail: "at the price paid, after member discounts",
+          gift: "sold, not the ones members gift from their plan" };
+        var inHtml = inRows.map(function (r) { return line(LABEL[r.k], subIn[r.k], r.v); }).join("");
+        var outHtml =
+          line("Card fees", "estimated, 2.9% + 30¢ a charge", fees, "−") +
+          line("Products sold", retail.length ? "what the " + sum(retail, "qty") + " sold cost you" : "nothing sold yet", cogs, "−") +
+          line("Founding Five kits", kitCount + (kitCount === 1 ? " kit" : " kits") + " given free · " + money(Math.round(kitValue)) +
+            " retail, counted at cost", kitCost, "−") +
+          (Object.keys(byCat).length
+            ? Object.keys(byCat).map(function (c) { return line(c, "logged expenses", byCat[c], "−"); }).join("")
+            : '<li class="bk-empty"><span class="bk-ln">Business expenses<small>none logged yet · add supplies, rent and ads so profit is real</small></span><span class="bk-lv">—</span></li>');
+        document.getElementById("bk-split").innerHTML =
+          '<div class="bk-col"><h3>Coming in</h3><ul>' + inHtml + '</ul><p class="bk-total"><span>Total in</span><span>' + m2(moneyIn) + '</span></p></div>' +
+          '<div class="bk-col bk-col--out"><h3>Going out</h3><ul>' + outHtml + '</ul><p class="bk-total"><span>Total out</span><span>−' + m2(out) + '</span></p></div>';
+
+        /* monthly rollup */
+        var months = {};
+        E.forEach(function (e) {
+          var mk = String(e.date).slice(0, 7);
+          var m = months[mk] || (months[mk] = { service: 0, dues: 0, retail: 0, gift: 0, fee: 0, goods: 0, exp: 0, net: 0 });
+          if (m[e.kind] != null) m[e.kind] += e.gross;
+          m.fee += e.fee;
+          if (e.kind === "expense") m.exp += e.cost; else m.goods += e.cost;
+          m.net += e.net;
+        });
+        var mkeys = Object.keys(months).sort().reverse();
+        var c = function (n) { return n ? money(Math.round(n)) : "—"; };
+        var neg = function (n) { return n ? "−" + money(Math.round(n)) : "—"; };
+        document.getElementById("bk-table").innerHTML =
+          '<thead><tr><th>Month</th><th>Services</th><th>Dues</th><th>Retail</th><th>Gifts</th>' +
+          '<th>Card fees</th><th>Products &amp; kits</th><th>Expenses</th><th>Profit</th></tr></thead><tbody>' +
+          mkeys.map(function (mk) {
+            var m = months[mk];
+            var label = new Date(mk + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" });
+            return '<tr><td>' + label + '</td><td>' + c(m.service) + '</td><td>' + c(m.dues) + '</td><td>' + c(m.retail) +
+              '</td><td>' + c(m.gift) + '</td><td>' + neg(m.fee) + '</td><td>' + neg(m.goods) + '</td><td>' + neg(m.exp) +
+              '</td><td class="bk-net' + (m.net < 0 ? ' is-neg' : '') + '">' + (m.net < 0 ? "−" : "") + money(Math.abs(Math.round(m.net))) + '</td></tr>';
+          }).join("") + '</tbody>';
+        return E;
+      };
+      render();
+      document.addEventListener("lumevina:books", render);
+
+      /* log an expense */
+      var form = document.getElementById("bk-exp-form");
+      var sel = document.getElementById("bk-exp-cat");
+      sel.innerHTML = CATS.map(function (c) { return '<option>' + c + '</option>'; }).join("");
+      document.getElementById("bk-exp-date").value = new Date().toISOString().slice(0, 10);
+      document.getElementById("bk-exp-toggle").addEventListener("click", function () { form.hidden = !form.hidden; });
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var amt = num(document.getElementById("bk-exp-amt").value);
+        var what = document.getElementById("bk-exp-what").value.trim();
+        if (!amt || !what) return;
+        var list = loadExp();
+        list.push({ date: document.getElementById("bk-exp-date").value || new Date().toISOString().slice(0, 10),
+          what: what, category: sel.value, amount: amt, at: new Date().toISOString() });
+        try { localStorage.setItem(EXP_KEY, JSON.stringify(list)); } catch (err) { /* private mode */ }
+        form.reset(); form.hidden = true;
+        document.getElementById("bk-exp-date").value = new Date().toISOString().slice(0, 10);
+        render();
       });
-      var mkeys = Object.keys(months).sort().reverse();
-      var thead = '<thead><tr><th>Month</th><th>Bookings</th><th>Revenue</th>' +
-        '<th>Collected</th><th>Fees</th><th>Net</th></tr></thead>';
-      var tbody = '<tbody>' + mkeys.map(function (mk) {
-        var m = months[mk];
-        var label = new Date(mk + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" });
-        return '<tr><td>' + label + '</td><td>' + m.bookings + '</td><td>' + money(Math.round(m.total)) +
-          '</td><td>' + money(Math.round(m.collected)) + '</td><td>−' + money(m.fee.toFixed(2)) +
-          '</td><td>' + money(m.net.toFixed(2)) + '</td></tr>';
-      }).join("") + '</tbody>';
-      document.getElementById("bk-table").innerHTML = thead + tbody;
 
-      /* CSV export for the accountant */
+      /* CSV export for the accountant: every line, in and out */
       document.getElementById("bk-csv").addEventListener("click", function () {
-        var head = ["Date", "Client", "Services", "Total", "Collected online", "Processing fee", "Net", "Balance in person"];
-        var csv = [head.join(",")].concat(rows.map(function (r) {
-          return [r.date, '"' + (r.name || "") + '"', '"' + r.services + '"',
-            r.total.toFixed(2), r.collected.toFixed(2), r.fee.toFixed(2), r.net.toFixed(2), r.balance.toFixed(2)].join(",");
+        var q = function (t) { return '"' + String(t == null ? "" : t).replace(/"/g, '""') + '"'; };
+        var head = ["Date", "Type", "Who", "What", "Money in", "Card fee", "Product cost / expense", "Net"];
+        var csv = [head.join(",")].concat(collect().map(function (e) {
+          return [e.date, q(LABEL[e.kind]), q(e.who), q(e.what), e.gross.toFixed(2), e.fee.toFixed(2),
+            e.cost.toFixed(2), e.net.toFixed(2)].join(",");
         })).join("\r\n");
         var blob = new Blob([csv], { type: "text/csv" });
         var a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "lumevina-income-" + new Date().toISOString().slice(0, 10) + ".csv";
+        a.download = "lumevina-books-" + new Date().toISOString().slice(0, 10) + ".csv";
         document.body.appendChild(a); a.click(); a.remove();
       });
     })();
 
     /* ── Glow Membership: members, recurring revenue, facials owed ── */
     (function () {
-      var PLANS = { glow: { name: "Glow", price: 149, value: 180 }, clear: { name: "Clear Skin", price: 159, value: 180 },
-                    ageless: { name: "Ageless", price: 199, value: 230 } };
-      var d = function (daysAgo) { return new Date(Date.now() - daysAgo * 864e5).toISOString(); };
-      var MEM_SAMPLE = [
-        { name: "Maya Chen", plan: "glow", status: "active", credits: 1, startedAt: d(96) },
-        { name: "Sofia Alvarez", plan: "glow", status: "active", credits: 2, startedAt: d(88) },
-        { name: "Priya Nair", plan: "ageless", status: "active", credits: 0, startedAt: d(75) },
-        { name: "Jordan Lee", plan: "clear", status: "active", credits: 1, startedAt: d(64) },
-        { name: "Ava Reyes", plan: "glow", status: "active", credits: 0, startedAt: d(52), pausedMonth: d(-20) },
-        { name: "Hannah Brooks", plan: "clear", status: "active", credits: 1, startedAt: d(41) },
-        { name: "Lena Park", plan: "glow", status: "cancelling", credits: 1, startedAt: d(120), cancelAt: d(-12) },
-        { name: "Isabel Cruz", plan: "ageless", status: "active", credits: 1, startedAt: d(30) },
-        { name: "Nora Patel", plan: "glow", status: "active", credits: 1, startedAt: d(19) },
-        { name: "Chloe Kim", plan: "glow", status: "active", credits: 1, startedAt: d(9) }
-      ];
-      /* sample: the five earliest members are the Founding Five */
-      MEM_SAMPLE.slice().sort(function (a, b) { return new Date(a.startedAt) - new Date(b.startedAt); }).slice(0, 5)
-        .forEach(function (m, i) { m.five = { no: i + 1, kit: i < 3 ? "given" : "ready", addon: i < 2 ? "used" : "ready" }; });
-      var stored = lget("lumevina_memberships");
-      var real = stored ? Object.keys(stored).map(function (k) { return stored[k]; }) : [];
-      var members = real.length ? real : MEM_SAMPLE;
+      var PLANS = MPLANS;
+      var members = MEMBERS;
       var live = members.filter(function (m) { return m.status === "active" || m.status === "cancelling"; });
       var billing = live.filter(function (m) { return !m.pausedMonth; });
       var mrr = billing.reduce(function (a, m) { return a + (m.price || PLANS[m.plan].price); }, 0);
@@ -975,6 +1204,51 @@
         });
       });
 
+      /* Launch ledger: the first weeks of sign-ups, with the Founding Five
+         giveaways netted out. Runs from the first member's join for 30 days,
+         or until the fifth spot fills if that takes longer. */
+      (function () {
+        var el = document.getElementById("mem-launch");
+        var t = function (iso) { return new Date(iso).getTime(); };
+        var joins = members.map(function (m) { return t(m.startedAt); }).filter(isFinite).sort(function (a, b) { return a - b; });
+        if (!joins.length) {
+          el.innerHTML = '<h3>Launch ledger</h3><p>Starts with your first member: dues in, card fees, and the Founding Five kits at cost.</p>';
+          return;
+        }
+        var start = joins[0], now = Date.now();
+        var fifth = fives.length === 5 ? Math.max.apply(null, fives.map(function (m) { return t(m.startedAt); })) : now;
+        var end = Math.min(now, Math.max(start + 30 * 864e5, fifth));
+        var inWin = function (iso) { var x = t(iso); return x >= start && x <= end; };
+        var joined = members.filter(function (m) { return inWin(m.startedAt); }).length;
+        var dues = DUES.filter(function (d) { return inWin(d.at); });
+        var duesIn = dues.reduce(function (a, d) { return a + d.amount; }, 0);
+        var fees = dues.reduce(function (a, d) { return a + FEE(d.amount); }, 0);
+        var kits = KIT_LOG.filter(function (k) { return inWin(k.at); });
+        var kitCost = kits.reduce(function (a, k) { return a + costOf(k) * (num(k.qty) || 1); }, 0);
+        var kitValue = kits.reduce(function (a, k) { return a + num(k.price) * (num(k.qty) || 1); }, 0);
+        var kitN = fives.filter(function (m) { return inWin(m.startedAt); }).length;
+        var addUsed = fives.filter(function (m) { return m.five.addon === "used"; });
+        var addValue = addUsed.reduce(function (a, m) { return a + (num(m.five.addonValue) || 25); }, 0);
+        var addLeft = fives.length - addUsed.length;
+        var net = duesIn - fees - kitCost;
+        var d2 = function (n) { return "$" + (Math.round(n * 100) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+        var fd = function (x) { return new Date(x).toLocaleDateString("en-US", { month: "short", day: "numeric" }); };
+        var spotsLeft = 5 - fives.length;
+        el.innerHTML = '<h3>Launch ledger <span style="color:var(--ink-70);font-weight:400">· ' + fd(start) + ' – ' +
+          (end >= now - 864e5 ? "today" : fd(end)) + '</span></h3>' +
+          '<p>Your first weeks of sign-ups: the first 30 days, or until all five Founding Five spots fill if that takes longer.</p><ul>' +
+          '<li><span>Members joined</span><span>' + joined + '</span></li>' +
+          '<li><span>Dues collected <small>· ' + dues.length + (dues.length === 1 ? ' charge' : ' charges') + '</small></span><span>' + d2(duesIn) + '</span></li>' +
+          '<li class="out"><span>Card fees on dues</span><span>−' + d2(fees) + '</span></li>' +
+          '<li class="out"><span>Founding Five kits <small>· ' + kitN + ' × cleanser + SPF, ' + money(Math.round(kitValue)) + ' retail</small></span><span>−' + d2(kitCost) + '</span></li>' +
+          '<li class="info"><span>Free add-ons <small>· ' + addUsed.length + ' given, ' + addLeft + ' still to give · your time, no product</small></span><span>' +
+            money(addValue) + ' of time</span></li>' +
+          '<li class="tot"><span>Kept from the launch</span><span>' + d2(net) + '</span></li>' +
+          (spotsLeft > 0 ? '<li class="info"><span>Hold back on the shelf <small>· for the ' + spotsLeft + (spotsLeft === 1 ? ' spot' : ' spots') +
+            ' left</small></span><span>' + spotsLeft + ' cleanser + ' + spotsLeft + ' SPF</span></li>' : '') +
+          '</ul>';
+      })();
+
       var fmt = function (iso) { return iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"; };
       var state = function (m) {
         if (m.status === "cancelling") return '<span class="mem-state ending">Ends ' + fmt(m.cancelAt) + '</span>';
@@ -997,14 +1271,7 @@
       /* Service gifts (a named treatment) are all-or-nothing: Active until the
          treatment is booked, then Redeemed. Only VALUE gifts ("$X toward any
          treatment") carry a rolling balance, so "Partly used" belongs to them. */
-      var GC_SAMPLE = [
-        { code: "LUM-7Q4K-2F9X", amount: 150, balance: 90, label: "Any treatment ($150 value)", recipientName: "Ava Reyes", status: "active", purchasedAt: "2026-07-05T18:00:00Z" },
-        { code: "LUM-J3MP-8T2C", amount: 230, balance: 230, label: "Ageless Grace Facial", recipientName: "Bianca Ortiz", status: "active", purchasedAt: "2026-06-20T18:00:00Z" },
-        { code: "LUM-R8WD-1K5H", amount: 180, balance: 0, label: "Lumevina Custom Facial", recipientName: "Chloe Kim", status: "redeemed", purchasedAt: "2026-05-14T18:00:00Z" },
-        { code: "LUM-Q2NV-6B3L", amount: 75, balance: 75, label: "Brazilian Wax", recipientName: "Dana Ruiz", status: "active", purchasedAt: "2026-07-15T18:00:00Z" }
-      ];
-      var stored = lget("lumevina_giftcards");
-      var cards = (stored && stored.length) ? stored : GC_SAMPLE;
+      var cards = GIFTS;
       var num = function (n) { return Number(n || 0); };
 
       var sold = cards.reduce(function (a, c) { return a + num(c.amount); }, 0);
@@ -1144,6 +1411,7 @@
         else { settle[k] = { status: "paid", method: btn.dataset.act, at: new Date().toISOString() }; }
         saveS(settle);
         render();
+        document.dispatchEvent(new Event("lumevina:books"));
       });
 
       render();
@@ -1237,8 +1505,8 @@
       var SALES_KEY = "lumevina_retail_sales";
       var sales = lget(SALES_KEY) || [];
       var logSale = function (p, channel) {
-        sales.push({ id: p.id, name: p.name, price: num(p.price), qty: 1,
-          at: new Date().toISOString(), channel: channel });
+        sales.push({ id: p.id, name: p.name, price: num(p.price), qty: 1, paid: num(p.price), cost: num(p.cost),
+          at: new Date().toISOString(), channel: channel, type: "sale" });
         try { localStorage.setItem(SALES_KEY, JSON.stringify(sales)); } catch (e) { /* private mode */ }
       };
       var now = new Date();
@@ -1271,14 +1539,21 @@
         document.getElementById("inv-table").innerHTML = thead + tbody;
 
         /* retail sold this month (both channels) */
-        var mUnits = 0, mRev = 0;
+        var mUnits = 0, mRev = 0, mCost = 0, kitUnits = 0, kitCost = 0;
         sales.forEach(function (s) {
+          var q = num(s.qty) || 1;
+          if (s.type === "promo") { kitUnits += q; kitCost += num(s.cost) * q; return; }
           if ((s.at || "").slice(0, 7) !== monthKey) return;
-          mUnits += num(s.qty); mRev += num(s.price) * num(s.qty);
+          mUnits += q; mRev += (s.paid != null ? num(s.paid) : num(s.price)) * q; mCost += costOf(s) * q;
         });
-        document.getElementById("inv-sold").innerHTML = mUnits
-          ? "<strong>Retail sold this month:</strong> " + money(Math.round(mRev)) + " · " + mUnits + " units"
-          : "No retail sold yet this month.";
+        var held = Math.max(0, 5 - MEMBERS.filter(function (m) { return m.five; }).length);
+        document.getElementById("inv-sold").innerHTML = (mUnits
+          ? "<strong>Retail sold this month:</strong> " + money(Math.round(mRev)) + " · " + mUnits + (mUnits === 1 ? " unit · " : " units · ") +
+            money(Math.round(mCost)) + " at cost"
+          : "No retail sold yet this month.") +
+          (kitUnits ? "<br><strong>Founding Five kits:</strong> " + kitUnits + " units given free · " + money(kitCost) + " at cost" : "") +
+          (held ? "<br><strong>Hold back for the Founding Five:</strong> " + held + " cleanser" + (held === 1 ? "" : "s") +
+            " and " + held + " SPF for the " + held + (held === 1 ? " spot" : " spots") + " left" : "");
       };
       render();
 
