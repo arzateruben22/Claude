@@ -1,4 +1,5 @@
 <title>Lumevina for iPhone</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="A working sample of the Lumevina iPhone app: flash alerts, booking with deposits or a banked facial, Glow Rewards and membership.">
 <style>
 @font-face { font-family: "InterV"; src: url(data:font/woff2;base64,{{FONT}}) format("woff2");
@@ -24,6 +25,9 @@
   --spring: cubic-bezier(.32, .72, 0, 1);
 }
 html, body { background: var(--bg); color: var(--ink); }
+/* the page itself never pans sideways: only the rails inside the phone scroll */
+html, body { overflow-x: hidden; overflow-x: clip; max-width: 100%; overscroll-behavior-x: none; }
+body { margin: 0; }
 body { font-family: "InterV", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 16px; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
 button { font: inherit; color: inherit; }
@@ -58,7 +62,7 @@ h1, h2, h3, p { margin: 0; }
 
 /* ── the phone, drawn at 414 × 868 and scaled to fit ── */
 .stage { --s: .92; position: relative; width: calc(414px * var(--s)); height: calc(868px * var(--s)); margin: 0 auto; }
-.device { position: absolute; left: 0; top: 0; width: 414px; height: 868px; transform: scale(var(--s)); transform-origin: 0 0;
+.device { position: absolute; left: 0; top: 0; box-sizing: border-box; width: 414px; height: 868px; transform: scale(var(--s)); transform-origin: 0 0;
   border-radius: 66px; padding: 12px; background: #1b1b1d;
   box-shadow: inset 0 0 0 1.5px #3a3a3c, inset 0 0 0 5px #0d0d0e, 0 0 0 1px #000, 0 40px 120px -20px rgba(234, 185, 200, 0.18), 0 30px 80px rgba(0, 0, 0, 0.7); }
 .screen { position: relative; width: 390px; height: 844px; border-radius: 54px; overflow: hidden; background: #000; isolation: isolate;
@@ -183,7 +187,7 @@ h1, h2, h3, p { margin: 0; }
 .tile .dots { display: flex; gap: 5px; margin-top: 12px; }
 .tile .dots i { width: 22px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .14); }
 .tile .dots i.on { background: linear-gradient(95deg, #d596ab, #e3b0a0); }
-.hs { display: flex; gap: 10px; overflow-x: auto; margin: 0 -16px; padding: 0 16px 4px; scroll-snap-type: x mandatory;
+.hs { display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; margin: 0 -16px; padding: 0 16px 4px; scroll-snap-type: x mandatory;
   scroll-padding-inline: 16px; scrollbar-width: none; }
 .hs::-webkit-scrollbar { display: none; }
 .flash { flex: 0 0 236px; scroll-snap-align: start; text-align: left; border: 0; background: var(--card); border-radius: 20px; padding: 14px;
@@ -234,7 +238,7 @@ h1, h2, h3, p { margin: 0; }
 .d-name { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-top: -30px; position: relative; }
 .d-meta { color: var(--ink-2); margin-top: 6px; }
 .d-blurb { margin-top: 12px; line-height: 1.45; color: rgba(245, 245, 247, .86); }
-.days { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 2px 16px 6px; scrollbar-width: none; }
+.days { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; margin: 0 -16px; padding: 2px 16px 6px; scrollbar-width: none; }
 .days::-webkit-scrollbar { display: none; }
 .day { flex: 0 0 56px; border: 0; border-radius: 16px; background: var(--card); padding: 10px 0 11px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .day span { font-size: 12px; color: var(--ink-2); font-weight: 600; }

@@ -4743,6 +4743,7 @@ p.install-steps { padding-left: 0; }
   border-top: 1px solid var(--panel-edge-soft);
   display: grid;
   gap: 0.65rem;
+  align-content: start;   /* a shorter list stays together; the card's extra height sits below it */
   flex: 1;
 }
 .mem-perks li {
