@@ -33,24 +33,31 @@ CSS = bp_css()
 FONT = base64.b64encode(open(os.path.join(BP, "inter-var.woff2"), "rb").read()).decode()
 
 # ─────────────────────────── the numbers ───────────────────────────
+WORDS = {10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen", 16: "Sixteen",
+         17: "Seventeen", 18: "Eighteen", 19: "Nineteen", 20: "Twenty", 21: "Twenty-one", 22: "Twenty-two"}
+money = lambda n: "${:,}".format(int(round(n)))
 # Monthly bills: what it costs to keep the doors open, before anyone books.
-# Assumptions to check against Evelyn's real statements.
-BILLS = [("Room · suite rent and utilities", 1300),
-         ("Insurance and license", 60),
-         ("Lumevina software and texts", 35),
-         ("Marketing · Instagram and chair cards", 150),
-         ("Laundry and small supplies", 55)]
+# Estimates to check against Evelyn's real statements, set 5–10% above the
+# first guesses for headroom, plus what a business normally pays to keep a
+# site, app and books running.
+BILLS = [("Room · suite rent and utilities", 1400),
+         ("Insurance and license", 65),
+         ("Website and app care", 200),     # a normal care plan runs $150–$500 a month
+         ("Hosting, database, texts, domain and email", 65),
+         ("Marketing · Instagram and chair cards", 160),
+         ("Bookkeeping and tax prep, spread monthly", 50),
+         ("Laundry and small supplies", 60)]
 BILLS_TOTAL = sum(v for _, v in BILLS)
 
 DUES = 159.0                       # plan mix: 6 in 10 Glow $149, 1 in 4 Clear Skin $159, the rest Ageless $199
 FEE = round(DUES * 0.029 + 0.30, 2)
-SUPPLIES = 15.0                    # product used in the member's monthly facial
-PERKS = 5.0                        # 10% off the shelf, 15% off add-ons, averaged per member
+SUPPLIES = 16.0                    # product used in the member's monthly facial
+PERKS = 5.5                        # 10% off the shelf, 15% off add-ons, averaged per member
 KEPT = DUES - FEE - SUPPLIES - PERKS
 FLOOR = math.ceil(BILLS_TOTAL / KEPT)
 ARTIST_PERK = 6.0                  # members' 10% with artists, paid by Lumevina, once artists join
 FLOOR_WITH_ARTISTS = math.ceil(BILLS_TOTAL / (KEPT - ARTIST_PERK))
-PLAN = 15                          # the plan by day 90: the floor plus room for a cancellation or a slow month
+PLAN = FLOOR + 3                   # the plan by day 90: the floor plus room for a cancellation or a slow month
 PAY = [3000, 4000, 5000]           # Evelyn's monthly pay, before taxes: members for dues to cover the business and her pay
 PAY_DEFAULT = 4000
 pay_members = lambda pay: math.ceil((BILLS_TOTAL + pay) / KEPT)
@@ -58,31 +65,32 @@ pay_members = lambda pay: math.ceil((BILLS_TOTAL + pay) / KEPT)
 MEMBER = [("Average dues · the plan mix", "$%d" % DUES, "6 in 10 Glow · 1 in 4 Clear Skin · the rest Ageless"),
           ("Card fee", "−$%.2f" % FEE, "2.9% + 30¢"),
           ("Supplies for the monthly facial", "−$%d" % SUPPLIES, "Backbar product used in the treatment"),
-          ("Member perks", "−$%d" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
+          ("Member perks", "−$%.2f" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
 
-LADDER = [5, FLOOR, PLAN, 20, 30, 50]
+LADDER = [5, FLOOR, PLAN, 25, 30, 50]
 
 ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
-            ("Attorney consult", "about $450", "Pilot terms, month 2"),
-            ("Chair cards", "$60", "A member card for the treatment room")]
+            ("Attorney consult", "about $480", "Pilot terms, month 2"),
+            ("Chair cards", "$65", "A member card for the treatment room")]
+ONE_TIME_TOTAL = 160 + 480 + 65
 
 # Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13).
-LIKELY = [0, 0, 0, 0, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15]
-LOW = [0, 0, 0, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 10]
-HIGH = [0, 0, 0, 0, 5, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+LIKELY = [0, 0, 0, 0, 3, 5, 7, 9, 11, 13, 15, 16, 18, 19]
+LOW = [0, 0, 0, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 12]
+HIGH = [0, 0, 0, 0, 5, 7, 9, 12, 14, 17, 19, 22, 24, 26]
 FLOOR_WEEK = next(i for i, v in enumerate(LIKELY) if v >= FLOOR)
 
 PACE = [("Week 1", "Count what’s there: facial clients from the last six months, visits a month, who already comes every four to eight weeks. Set up the Saturday scoreboard.", 0),
         ("Weeks 2–3", "Live payments on, booking moves to Lumevina. In the chair, Evelyn mentions it: membership opens soon, first five get a free kit. Build an early list of 15 names.", 0),
         ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
         ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
-        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 11),
-        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend; both get a free add-on.", 15)]
+        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in seven says yes.", 13),
+        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend; both get a free add-on.", PLAN)]
 
 SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
-           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 6),
-           ("Win-back texts", "Clients not seen in 60+ days", 2),
-           ("Member referrals", "Both get a free add-on", 1),
+           ("In the chair, after every facial", "About 1 in 7 of the facial clients offered", 8),
+           ("Win-back texts", "Clients not seen in 60+ days", 3),
+           ("Member referrals", "Both get a free add-on", 2),
            ("Website and checkout", "Facial cards, the nudge, the booking upsell", 1)]
 
 SCRIPT = ("The offer, in the chair",
@@ -108,11 +116,12 @@ GATE = [{"tag": "Day 90 · %d or more members" % FLOOR, "big": "Sign two artists
                  "Use the levers: personal invites, a member week",
                  "Check again at day 120"]}]
 
-WHY_FIRST = ("Why members first", "An artist signs for clients. Fifteen members who save 10% with her are fifteen reasons to say yes, and they’re the pitch at every coffee.")
+WHY_FIRST = ("Why members first", "An artist signs for clients. %s members who save 10%% with her are %s reasons to say yes, and they’re the pitch at every coffee."
+             % (WORDS[PLAN], WORDS[PLAN].lower()))
 
-ENGINE_M = [("Months 4–6", "About five new members a month", "30 members"),
+ENGINE_M = [("Months 4–6", "About %s new members a month" % {3: "three", 4: "four", 5: "five", 6: "six"}.get(round((30 - PLAN) / 3.0), "a few"), "30 members"),
             ("Month 6", "Dues about $4,770 a month, with this much left for Evelyn’s pay", "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
-            ("Year 2", "Dues alone cover the business and about $5,000 a month of pay", "50 members"),
+            ("Year 2", "Dues alone cover the business and about %s a month of pay" % money(round(50 * KEPT - BILLS_TOTAL, -2)), "50 members"),
             ("Room check", "50 members is about 12 facials a week", "¼ of open hours")]
 ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 artists"),
             ("Month 6", "The pilot goes live, free for 90 days, then 12%", "Pilot live"),
@@ -121,7 +130,7 @@ ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 
 
 SCORE = [("Members", "Against the plan: %d by day 90" % PLAN),
          ("Offers made in the chair", "Every facial client, every visit"),
-         ("Say-yes rate", "One in eight or better"),
+         ("Say-yes rate", "One in seven or better"),
          ("Cancellations", "Fewer than 1 in 20 a month"),
          ("Names on the talent list", "15 by week 4")]
 
@@ -130,7 +139,7 @@ money = lambda n: "${:,}".format(int(round(n)))
 
 # ─────────────────────────── graphics ───────────────────────────
 def pace_svg():
-    X0, X1, Y0, Y1, YMAX = 48, 784, 262, 26, 24
+    X0, X1, Y0, Y1, YMAX = 48, 784, 262, 26, 30
     x = lambda w: X0 + (X1 - X0) * w / 13.0
     y = lambda v: Y0 - (Y0 - Y1) * v / YMAX
     ws = range(14)
@@ -140,7 +149,7 @@ def pace_svg():
     for i, (a, b, name) in enumerate(((0, 3, "Set up"), (3, 5, "Launch"), (5, 9, "In the chair"), (9, 13, "Win-back and referrals"))):
         p.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>' % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i % 2))
         p.append('<text x="%.1f" y="%d" class="stl">%s</text>' % (x(a) + 8, Y1 + 8, name))
-    for v in (5, 10, 15, 20):
+    for v in (5, 10, 15, 20, 25):
         p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="grid"/>' % (X0, X1, y(v), y(v)))
         p.append('<text x="%d" y="%.1f" class="yl">%d</text>' % (X0 - 10, y(v) + 4, v))
     p.append('<line x1="%d" x2="%d" y1="%d" y2="%d" class="base"/>' % (X0, X1, Y0, Y0))
@@ -177,7 +186,7 @@ def lanes_svg():
     p.append('<text x="0" y="%d" class="lanel">Talent</text>' % ((B1 + B2) // 2 + 4))
     for m in (0, 3, 6, 12, 24):
         p.append('<line x1="%.1f" x2="%.1f" y1="%d" y2="%d" class="grid"/>' % (x(m), x(m), L1T - 10, B2 + 8))
-    pts = [(0, 0), (0.92, 3), (1.15, 5), (2.3, FLOOR), (3, PLAN), (6, 30), (12, 40), (24, 50)]
+    pts = [(0, 0), (0.92, 3), (1.15, 5), (FLOOR_WEEK / 4.33, FLOOR), (3, PLAN), (6, 30), (12, 40), (24, 50)]
     line = " L".join("%.1f,%.1f" % (x(m), ym(v)) for m, v in pts)
     p.append('<path class="area" d="M%.1f,%d L%s L%.1f,%d Z"/>' % (x(0), L1B, line, x(24), L1B))
     p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="floor"/>' % (X0, X1, ym(FLOOR), ym(FLOOR)))
@@ -218,7 +227,7 @@ def bills_rows():
 
 
 def member_rows():
-    return rows(MEMBER, ("Each member leaves", "$%d" % KEPT))
+    return rows(MEMBER, ("Each member leaves", "$%d" % round(KEPT)))
 
 
 def ladder_html():
@@ -508,7 +517,7 @@ WEB_BODY = """
       <p class="calc-note">Card fee 2.9% + 30¢ and $__PERKS__ of member perks are included. Pay is before taxes, and her regular
       bookings, waxing, add-ons and retail pay her too, so the second number is the members-only view.</p>
     </div>
-    <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the business&rsquo;s bills by month 5</div>
+    <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
       <div class="costs three">__ONETIME__</div></div>
     <p class="foot-note reveal">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $111 a month.
     As a Glow member she spends $149, comes every month, and pays first.</p>
@@ -530,7 +539,7 @@ WEB_BODY = """
         <div class="offer hl"><p class="of-big" style="font-size:1.5rem;line-height:1.3;letter-spacing:-0.02em">__SCRIPT_V__</p>
         <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div></div>
     </div>
-    <div class="reveal mt2"><div class="cols-h">If week 7 ends under 6 members</div><div class="cols-s">Pull these levers, in this order</div>
+    <div class="reveal mt2"><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
       <div class="costs behind four">__BEHIND__</div></div>
   </div>
 </section>
@@ -566,7 +575,7 @@ WEB_BODY = """
       <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 1 · Members</div><div class="cols-s">The chair, referrals, the site</div></div>__ENGINE_M__</div>
       <div class="reveal"><div class="rows-head" style="padding-top:22px"><div class="cols-h">Engine 2 · Talent</div><div class="cols-s">Matches the Growth Blueprint&rsquo;s pipeline</div></div>__ENGINE_T__</div>
     </div>
-    <p class="foot-note reveal">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__ a member a month, and the minimum moves to __FLOOR2__.</p>
+    <p class="foot-note reveal">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__ a member a month, __ARTIST_NOTE__.</p>
     <div class="reveal mt2"><div class="cols-h">The Saturday scoreboard</div><div class="cols-s">Five numbers, every week. The dashboard&rsquo;s Glow Membership card and launch ledger count most of them.</div>
       <div class="costs five">__SCORE__</div></div>
   </div>
@@ -618,7 +627,7 @@ PRINT_BODY = """
   </div>
   <div class="eq"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
   <div><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
-  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the business&rsquo;s bills by month 5</div>
+  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About __ONETIME_TOTAL__, paid back from dues above the business&rsquo;s bills by month 5</div>
     <div class="costs three">__ONETIME__</div></div>
   <div><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too</div>
     <div class="costs three">__PAY__</div></div>
@@ -639,7 +648,7 @@ PRINT_BODY = """
       <div class="offer hl"><p class="of-big" style="font-size:13pt;line-height:1.35;letter-spacing:-0.015em">__SCRIPT_V__</p>
       <p class="of-ask">Book it before she leaves. A facial on the calendar is a member who stays.</p></div></div>
   </div>
-  <div><div class="cols-h">If week 7 ends under 6 members</div><div class="cols-s">Pull these levers, in this order</div>
+  <div><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
     <div class="costs behind" style="grid-template-columns:repeat(4,1fr)">__BEHIND__</div></div>
   __F3__
 </section>
@@ -677,7 +686,7 @@ PRINT_BODY = """
     <div><div class="cols-h">Engine 2 · Talent</div><div class="cols-s">Matches the Growth Blueprint&rsquo;s pipeline</div>__ENGINE_T__</div>
   </div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Once artists join, members&rsquo; 10% with them costs Lumevina about $__ARTIST__
-  a member a month, and the minimum moves to __FLOOR2__.</p>
+  a member a month, __ARTIST_NOTE__.</p>
   <div class="closer">
     <h2 class="h2">__FLOOR_W__ by day ninety. <span class="grad">Then keep building.</span></h2>
     <p class="fine" style="margin-top:10px">All figures are estimates from current menu prices and assumed costs. Replace the bills with
@@ -689,7 +698,6 @@ PRINT_BODY = """
 </html>
 """
 
-WORDS = {10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen"}
 
 
 def fill(h, web):
@@ -697,8 +705,10 @@ def fill(h, web):
     rep = {
         "__FLOOR_W__": WORDS.get(FLOOR, str(FLOOR)), "__FLOOR_W_L__": WORDS.get(FLOOR, str(FLOOR)).lower(),
         "__FLOOR__": str(FLOOR), "__PLAN__": str(PLAN), "__FLOOR2__": str(FLOOR_WITH_ARTISTS),
-        "__KEPT__": "%d" % KEPT, "__BILLS_TOTAL__": money(BILLS_TOTAL), "__ARTIST__": "%d" % ARTIST_PERK,
-        "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%d" % PERKS,
+        "__KEPT__": "%d" % round(KEPT), "__BILLS_TOTAL__": money(BILLS_TOTAL), "__ARTIST__": "%d" % ARTIST_PERK,
+        "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%.2f" % PERKS, "__ONETIME_TOTAL__": money(ONE_TIME_TOTAL), "__BEHIND_N__": str(LIKELY[7] - 2),
+        "__ARTIST_NOTE__": ("and the minimum moves to %d" % FLOOR_WITH_ARTISTS) if FLOOR_WITH_ARTISTS > FLOOR
+                           else ("and the minimum stays at %d" % FLOOR),
         "__PACE_SVG__": pace_svg(), "__LANES_SVG__": lanes_svg(),
         "__BILLS__": bills_rows(), "__MEMBER__": member_rows(), "__LADDER__": ladder_html(),
         "__ONETIME__": onetime_html(), "__PAY__": pay_html(), "__PAY_N__": str(PAY_DEFAULT), "__PACE__": pace_html(), "__SOURCES__": sources_html(),
@@ -714,7 +724,7 @@ def fill(h, web):
 
 
 base = CSS["BASE_CSS"].replace("__FONT__", FONT) + LP_CSS
-web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, True).replace("__JS__", WEB_JS.replace("__PERKS__", "%d" % PERKS))
+web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, True).replace("__JS__", WEB_JS.replace("__PERKS__", "%s" % PERKS))
 foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 5</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
 for i in range(1, 6):
