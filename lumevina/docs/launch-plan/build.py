@@ -1,6 +1,6 @@
 """Lumevina · The First 90 Days — a companion to the Growth Blueprint.
 
-How many members Lumevina needs by day 90 for dues to pay every bill, the
+How many members Lumevina needs by day 90 for dues to pay every business bill, the
 weekly pace to get there, how the talent search runs alongside it, and the
 two engines that keep going after day 90.
 
@@ -51,8 +51,11 @@ FLOOR = math.ceil(BILLS_TOTAL / KEPT)
 ARTIST_PERK = 6.0                  # members' 10% with artists, paid by Lumevina, once artists join
 FLOOR_WITH_ARTISTS = math.ceil(BILLS_TOTAL / (KEPT - ARTIST_PERK))
 PLAN = 15                          # the plan by day 90: the floor plus room for a cancellation or a slow month
+PAY = [3000, 4000, 5000]           # Evelyn's monthly pay, before taxes: members for dues to cover the business and her pay
+PAY_DEFAULT = 4000
+pay_members = lambda pay: math.ceil((BILLS_TOTAL + pay) / KEPT)
 
-MEMBER = [("Average dues · the plan mix", "$%d" % DUES, "6 in 10 Glow $149 · 1 in 4 Clear Skin $159 · the rest Ageless $199"),
+MEMBER = [("Average dues · the plan mix", "$%d" % DUES, "6 in 10 Glow · 1 in 4 Clear Skin · the rest Ageless"),
           ("Card fee", "−$%.2f" % FEE, "2.9% + 30¢"),
           ("Supplies for the monthly facial", "−$%d" % SUPPLIES, "Backbar product used in the treatment"),
           ("Member perks", "−$%d" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
@@ -61,7 +64,7 @@ LADDER = [5, FLOOR, PLAN, 20, 30, 50]
 
 ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
             ("Attorney consult", "about $450", "Pilot terms, month 2"),
-            ("Chair cards", "$60", "Printed member card for the treatment room")]
+            ("Chair cards", "$60", "A member card for the treatment room")]
 
 # Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13).
 LIKELY = [0, 0, 0, 0, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15]
@@ -108,8 +111,8 @@ GATE = [{"tag": "Day 90 · %d or more members" % FLOOR, "big": "Sign two artists
 WHY_FIRST = ("Why members first", "An artist signs for clients. Fifteen members who save 10% with her are fifteen reasons to say yes, and they’re the pitch at every coffee.")
 
 ENGINE_M = [("Months 4–6", "About five new members a month", "30 members"),
-            ("Month 6", "Dues about $4,770 a month, clearing the bills by that much", "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
-            ("Year 2", "Steady joins, fewer than 1 in 20 cancel", "50 members"),
+            ("Month 6", "Dues about $4,770 a month, with this much left for Evelyn’s pay", "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
+            ("Year 2", "Dues alone cover the business and about $5,000 a month of pay", "50 members"),
             ("Room check", "50 members is about 12 facials a week", "¼ of open hours")]
 ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 artists"),
             ("Month 6", "The pilot goes live, free for 90 days, then 12%", "Pilot live"),
@@ -132,7 +135,7 @@ def pace_svg():
     y = lambda v: Y0 - (Y0 - Y1) * v / YMAX
     ws = range(14)
     p = ['<svg class="chart pace" viewBox="0 0 800 300" role="img" aria-label="Members by week, first 90 days. '
-         'The plan reaches %d members by week %d, when dues pay every bill, and %d by day 90. The range runs from %d to %d."'
+         'The plan reaches %d members by week %d, when dues pay every business bill, and %d by day 90. The range runs from %d to %d."'
          '>' % (FLOOR, FLOOR_WEEK, PLAN, LOW[-1], HIGH[-1])]
     for i, (a, b, name) in enumerate(((0, 3, "Set up"), (3, 5, "Launch"), (5, 9, "In the chair"), (9, 13, "Win-back and referrals"))):
         p.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>' % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i % 2))
@@ -220,7 +223,7 @@ def member_rows():
 
 def ladder_html():
     mx = max(LADDER) * KEPT
-    h = '<div class="ladder"><div class="ld-row ld-h"><span>Members</span><span>Dues kept</span><span>After the bills</span><span></span></div>'
+    h = '<div class="ladder"><div class="ld-row ld-h"><span>Members</span><span>Dues kept</span><span>Left for her pay</span><span></span></div>'
     for n in LADDER:
         kept, left = n * KEPT, n * KEPT - BILLS_TOTAL
         cls = " is-floor" if n == FLOOR else (" is-plan" if n == PLAN else "")
@@ -277,6 +280,11 @@ def flow_html(reveal=""):
 
 def score_html():
     return "".join('<div class="c"><b>%s</b><span>%s</span></div>' % s for s in SCORE)
+
+
+def pay_html():
+    return "".join('<div class="c"><b>%s a month · %d members</b><span>Business bills and pay: %s</span></div>'
+                   % (money(p), pay_members(p), money(BILLS_TOTAL + p)) for p in PAY)
 
 
 def onetime_html():
@@ -351,8 +359,10 @@ LP_WEB = r"""
 .calc-in input { grid-column: 1 / -1; width: 100%; accent-color: #f0c2cf; }
 .calc-out { border-radius: 22px; padding: 24px; display: flex; flex-direction: column; justify-content: center;
   background: linear-gradient(160deg, #2a1d23 0%, #16110f 100%); box-shadow: inset 0 0 0 1px rgba(244,201,214,.25); }
-.calc-out .big { font-size: clamp(4rem, 10vw, 6rem); font-weight: 700; letter-spacing: -0.06em; line-height: .9; }
-.calc-out .t { font-size: 1.1rem; font-weight: 600; margin-top: 10px; letter-spacing: -0.015em; }
+.calc-out .big { font-size: clamp(3.4rem, 8vw, 5rem); font-weight: 700; letter-spacing: -0.06em; line-height: .9; }
+.co-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+.co-pair > div + div { border-left: 1px solid rgba(244,201,214,.2); padding-left: 16px; }
+.calc-out .t { font-size: 1rem; font-weight: 600; margin-top: 10px; letter-spacing: -0.015em; line-height: 1.3; }
 .calc-out .s { color: var(--text-2); font-size: .92rem; margin-top: 8px; line-height: 1.45; }
 .calc-note { color: var(--text-3); font-size: .85rem; margin-top: 12px; }
 .tl { display: flex; flex-direction: column; }
@@ -383,9 +393,9 @@ LP_WEB = r"""
 LP_PRINT = r"""
 .h1 { font-size: 52pt; }
 .stat .v { font-size: 30pt; } .stat .k { font-size: 9pt; }
-.eq { font-size: 30pt; padding: 14px 18px; border-radius: 16px; }
+.eq { font-size: 25pt; padding: 10px 18px; border-radius: 16px; }
 .ladder { padding: 2px 16px; border-radius: 16px; }
-.ld-row { padding: 6px 0; font-size: 9.5pt; } .ld-h { font-size: 7.8pt; }
+.ld-row { padding: 4px 0; font-size: 9.5pt; } .ld-h { font-size: 7.8pt; }
 .pace-t { padding: 2px 16px; border-radius: 16px; }
 .pc-row { grid-template-columns: 0.95in 1fr 0.45in; padding: 8px 0; gap: 12px; }
 .pc-w { font-size: 9pt; } .pc-t { font-size: 9.6pt; } .pc-n { font-size: 15pt; }
@@ -410,18 +420,21 @@ WEB_JS = r"""
   var $ = function (id) { return document.getElementById(id); };
   var fmt = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
   var calc = function () {
-    var bills = +$("c-bills").value, sup = +$("c-sup").value, dues = +$("c-dues").value;
+    var bills = +$("c-bills").value, sup = +$("c-sup").value, dues = +$("c-dues").value, pay = +$("c-pay").value;
     var kept = dues - (dues * 0.029 + 0.30) - sup - __PERKS__;
     var floor = Math.ceil(bills / kept);
     $("o-bills").textContent = fmt(bills);
     $("o-sup").textContent = fmt(sup);
     $("o-dues").textContent = fmt(dues);
     $("o-floor").textContent = floor;
+    $("o-pay").textContent = fmt(pay);
+    $("o-payn").textContent = Math.ceil((bills + pay) / kept);
+    $("o-payt").textContent = pay ? "members also pay Evelyn " + fmt(pay) + " a month" : "set her pay to see this";
     $("o-plan").textContent = "Aim for " + (floor + 3) + " by day 90, with room for a cancellation.";
-    $("o-sub").textContent = "Each member leaves " + fmt(kept) + ". At 30 members, dues clear the bills by " +
-      fmt(30 * kept - bills) + " a month.";
+    $("o-sub").textContent = "Each member leaves " + fmt(kept) + ". At 30 members, dues leave " +
+      fmt(30 * kept - bills) + " a month for her pay.";
   };
-  ["c-bills", "c-sup", "c-dues"].forEach(function (id) { $(id).addEventListener("input", calc); });
+  ["c-bills", "c-sup", "c-dues", "c-pay"].forEach(function (id) { $(id).addEventListener("input", calc); });
   calc();
 })();
 """
@@ -445,16 +458,16 @@ WEB_BODY = """
   <div class="wrap">
     <p class="kicker reveal">Lumevina · The first 90 days</p>
     <h1 class="h1 reveal" style="margin-top:18px">__FLOOR_W__ members.<br><span class="grad">Ninety days.</span></h1>
-    <p class="lead reveal">The fewest members Lumevina needs by day 90 for dues to pay every bill, the weekly pace to get there,
+    <p class="lead reveal">The fewest members Lumevina needs by day 90 for dues to pay every business bill, the weekly pace to get there,
     and how the talent search runs alongside it. After day 90, both keep growing.</p>
     <div class="stats reveal">
-      <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every monthly bill.</div></div>
+      <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every business bill.</div></div>
       <div class="stat"><div class="v num">__PLAN__</div><div class="k">The plan by day 90, with room for a cancellation or a slow month.</div></div>
       <div class="stat"><div class="v num">30</div><div class="k">By month 6, then 50 by year 2. Artists sign from month 4.</div></div>
     </div>
     <div class="chart-card reveal mt2">
       <h3>Members, week by week</h3>
-      <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every bill.</p>
+      <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every business bill.</p>
       <div class="chart-scroll">__PACE_SVG__</div><p class="swipe-hint">Swipe the chart to see day 90 &rarr;</p>
     </div>
     <div class="flow mt">__FLOW__</div>
@@ -465,29 +478,37 @@ WEB_BODY = """
   <div class="wrap">
     <div class="sec-head center reveal">
       <p class="kicker">The minimum</p>
-      <h2 class="h2" style="margin-top:14px">Why __FLOOR_W_L__. <span class="dim">Dues that pay every bill.</span></h2>
-      <p class="lead">Membership dues arrive before the month starts. Once they cover the bills, every other booking,
+      <h2 class="h2" style="margin-top:14px">Why __FLOOR_W_L__. <span class="dim">Dues pay the business.</span></h2>
+      <p class="lead">Membership dues arrive before the month starts. Once they cover the business&rsquo;s bills, every other booking,
       add-on and product is profit, and a slow week can&rsquo;t sink the month.</p>
     </div>
     <div class="num-grid">
-      <div class="reveal"><div class="cols-h">The monthly bills</div><div class="cols-s">What it costs to open the doors · estimates to check</div>__BILLS__</div>
+      <div class="reveal"><div class="cols-h">The business&rsquo;s monthly bills</div><div class="cols-s">Spa costs only. Home, car and food come from her pay</div>__BILLS__</div>
       <div class="reveal"><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
     </div>
     <div class="eq reveal"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
-    <div class="reveal mt2"><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only, before any regular booking, add-on or product</div>__LADDER__</div>
+    <div class="reveal mt2"><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
+    <div class="reveal mt2"><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too, so this is the members-only view</div>
+      <div class="costs three">__PAY__</div></div>
     <div class="reveal mt2"><div class="cols-h">Try your real numbers</div><div class="cols-s">Move the sliders to Evelyn&rsquo;s actual rent and costs</div>
       <div class="calc">
         <div class="calc-in">
-          <label for="c-bills">Monthly bills <output id="o-bills"></output><input id="c-bills" type="range" min="800" max="3200" step="50" value="__BILLS_N__"></label>
+          <label for="c-bills">Business bills a month <output id="o-bills"></output><input id="c-bills" type="range" min="800" max="3200" step="50" value="__BILLS_N__"></label>
           <label for="c-sup">Supplies per facial <output id="o-sup"></output><input id="c-sup" type="range" min="5" max="30" step="1" value="__SUP_N__"></label>
           <label for="c-dues">Average dues <output id="o-dues"></output><input id="c-dues" type="range" min="149" max="199" step="1" value="__DUES_N__"></label>
+          <label for="c-pay">Evelyn&rsquo;s pay, before taxes <output id="o-pay"></output><input id="c-pay" type="range" min="0" max="8000" step="250" value="__PAY_N__"></label>
         </div>
-        <div class="calc-out" aria-live="polite"><div class="big grad num" id="o-floor"></div><div class="t">members pay every bill</div>
-          <p class="t" id="o-plan" style="font-weight:500;font-size:1rem;color:var(--text-2)"></p><p class="s" id="o-sub"></p></div>
+        <div class="calc-out" aria-live="polite">
+          <div class="co-pair">
+            <div><div class="big grad num" id="o-floor"></div><div class="t">members pay the business</div></div>
+            <div><div class="big num" id="o-payn"></div><div class="t" id="o-payt"></div></div>
+          </div>
+          <p class="s" id="o-plan"></p><p class="s" id="o-sub"></p></div>
       </div>
-      <p class="calc-note">Card fee 2.9% + 30¢ and $__PERKS__ of member perks are included.</p>
+      <p class="calc-note">Card fee 2.9% + 30¢ and $__PERKS__ of member perks are included. Pay is before taxes, and her regular
+      bookings, waxing, add-ons and retail pay her too, so the second number is the members-only view.</p>
     </div>
-    <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the bills by month 5</div>
+    <div class="reveal mt2"><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the business&rsquo;s bills by month 5</div>
       <div class="costs three">__ONETIME__</div></div>
     <p class="foot-note reveal">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks spent about $111 a month.
     As a Glow member she spends $149, comes every month, and pays first.</p>
@@ -568,17 +589,17 @@ PRINT_BODY = """
   <div>
     <p class="kicker">Lumevina · The first 90 days</p>
     <h1 class="h1" style="margin-top:12px">__FLOOR_W__ members.<br><span class="grad">Ninety days.</span></h1>
-    <p class="lead" style="margin-top:16px;max-width:6.4in">The fewest members Lumevina needs by day 90 for dues to pay every bill,
+    <p class="lead" style="margin-top:16px;max-width:6.4in">The fewest members Lumevina needs by day 90 for dues to pay every business bill,
     the weekly pace to get there, and how the talent search runs alongside it.</p>
   </div>
   <div class="stats">
-    <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every monthly bill.</div></div>
+    <div class="stat"><div class="v grad num">__FLOOR__</div><div class="k">The minimum by day 90. Dues pay every business bill.</div></div>
     <div class="stat"><div class="v num">__PLAN__</div><div class="k">The plan by day 90, with room for a cancellation or a slow month.</div></div>
     <div class="stat"><div class="v num">30</div><div class="k">By month 6, then 50 by year 2. Artists sign from month 4.</div></div>
   </div>
   <div class="chart-card">
     <h3>Members, week by week</h3>
-    <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every bill.</p>
+    <p class="sub">Line: the plan. Shaded: slow to strong. Dashed: the minimum, where dues pay every business bill.</p>
     __PACE_SVG__
   </div>
   <div class="flow">__FLOW__</div>
@@ -588,18 +609,19 @@ PRINT_BODY = """
 <section class="page tight">
   <div>
     <p class="kicker">The minimum</p>
-    <h2 class="h2" style="margin-top:10px">Why __FLOOR_W_L__. <span class="dim">Dues that pay every bill.</span></h2>
-    <p class="lead" style="margin-top:12px;font-size:11pt">Dues arrive before the month starts. Once they cover the bills, every other
-    booking, add-on and product is profit, and a slow week can&rsquo;t sink the month.</p>
+    <h2 class="h2" style="margin-top:10px">Why __FLOOR_W_L__. <span class="dim">Dues pay the business.</span></h2>
+    <p class="lead" style="margin-top:10px;font-size:11pt">Dues arrive first. Once they cover the business&rsquo;s bills, everything else is profit.</p>
   </div>
   <div class="two">
-    <div><div class="cols-h">The monthly bills</div><div class="cols-s">Estimates to check against real statements</div>__BILLS__</div>
+    <div><div class="cols-h">The business&rsquo;s monthly bills</div><div class="cols-s">Spa costs only. Home, car and food come from her pay</div>__BILLS__</div>
     <div><div class="cols-h">What each member leaves</div><div class="cols-s">Per member, per month</div>__MEMBER__</div>
   </div>
   <div class="eq"><span>__BILLS_TOTAL__</span><span class="op">÷</span><span>$__KEPT__</span><span class="op">=</span><span class="grad">__FLOOR__ members</span></div>
-  <div><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only, before any regular booking, add-on or product</div>__LADDER__</div>
-  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the bills by month 5</div>
+  <div><div class="cols-h">What each step up the ladder leaves</div><div class="cols-s">Dues only. What&rsquo;s left after the business&rsquo;s bills is what Evelyn pays herself from</div>__LADDER__</div>
+  <div><div class="cols-h">One-time launch costs</div><div class="cols-s">About $670, paid back from dues above the business&rsquo;s bills by month 5</div>
     <div class="costs three">__ONETIME__</div></div>
+  <div><div class="cols-h">Paying Evelyn too</div><div class="cols-s">Members for dues alone to cover the business and her monthly pay, before taxes. Her regular bookings pay her too</div>
+    <div class="costs three">__PAY__</div></div>
   <p class="fine" style="font-size:8.5pt;color:var(--text-2)">Why it&rsquo;s growth, not moved money: a regular who came every seven weeks
   spent about $111 a month. As a Glow member she spends $149, comes every month, and pays first.</p>
   __F2__
@@ -679,7 +701,7 @@ def fill(h, web):
         "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%d" % PERKS,
         "__PACE_SVG__": pace_svg(), "__LANES_SVG__": lanes_svg(),
         "__BILLS__": bills_rows(), "__MEMBER__": member_rows(), "__LADDER__": ladder_html(),
-        "__ONETIME__": onetime_html(), "__PACE__": pace_html(), "__SOURCES__": sources_html(),
+        "__ONETIME__": onetime_html(), "__PAY__": pay_html(), "__PAY_N__": str(PAY_DEFAULT), "__PACE__": pace_html(), "__SOURCES__": sources_html(),
         "__SCRIPT_K__": SCRIPT[0], "__SCRIPT_V__": SCRIPT[1],
         "__BEHIND__": "".join('<div class="c"><b>%s</b><span>%s</span></div>' % b for b in BEHIND),
         "__TALENT__": talent_html(rv), "__GATE__": gate_html(rv), "__WHY_K__": WHY_FIRST[0], "__WHY_V__": WHY_FIRST[1],
