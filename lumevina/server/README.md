@@ -137,6 +137,13 @@ To make it real:
    `usable` membership covering the service, prices that service at $0 (and
    takes 15% off the rest of the visit), and decrements `credits` in the same
    transaction as the booking insert.
+7. Founding Five: in the join transaction, if fewer than five memberships have
+   a `five_no`, set the next number with `five_kit = 'ready'` and
+   `five_addon = 'ready'`, and decrement the two kit products (GlyMed+
+   Glycolic Facial Cleanser, Face Reality Daily SPF 30 Plus) in `products` so
+   the shop never oversells them. The first booking that uses a membership
+   credit sets `five_addon = 'used'`; the owner dashboard sets
+   `five_kit = 'given'` when the kit is handed over.
 
 Have the member terms reviewed before launch.
 

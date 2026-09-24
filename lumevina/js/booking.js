@@ -589,7 +589,8 @@
     memberText.appendChild(b);
     memberText.appendChild(document.createTextNode(
       " on your " + svc.name + " — you have " + r.credits + " banked." +
-      (state.services.length > 1 ? " Everything else this visit is 15% off." : "")));
+      (state.services.length > 1 ? " Everything else this visit is 15% off." : "") +
+      (window.LumevinaMembership.fiveAddonReady(r) ? " Founding Five: a free LED or dermaplaning add-on is included." : "")));
   };
 
   var renderAll = function () {
@@ -1252,16 +1253,22 @@
       document.dispatchEvent(new CustomEvent("lumevina:booked"));
       summaryEl.textContent = sessionName() + " · " + whenText() + " · " +
         fmtTime(state.slot) + " – " + fmtTime(state.slot + totalDur());
+      var fiveAddon = false;
       if (memberSvc) {
-        window.LumevinaMembership.useCredit(emailInput.value.trim(), memberSvc.id, { order: result.id });
+        var LM = window.LumevinaMembership;
+        LM.useCredit(emailInput.value.trim(), memberSvc.id, { order: result.id });
+        /* Founding Five: the free add-on rides on this membership facial */
+        fiveAddon = LM.useFiveAddon(emailInput.value.trim(), { order: result.id }).ok;
       }
       var memberLeft = memberSvc ? window.LumevinaMembership.get(emailInput.value.trim()) : null;
       modal.querySelector(".booking-paid").textContent = giftIsService
         ? "Prepaid in full by gift certificate — nothing due today or at the visit."
         : (memberSvc && totalAtPay === 0)
         ? "Your " + memberSvc.name + " is included in your membership — nothing due today or at the visit." +
-          " " + memberLeft.credits + " banked " + (memberLeft.credits === 1 ? "facial" : "facials") + " left."
-        : (memberSvc ? memberSvc.name + " included in your membership · " : "") +
+          " " + memberLeft.credits + " banked " + (memberLeft.credits === 1 ? "facial" : "facials") + " left." +
+          (fiveAddon ? " Your free Founding Five add-on (LED or dermaplaning) is included." : "")
+        : (memberSvc ? memberSvc.name + " included in your membership" +
+          (fiveAddon ? " with your free Founding Five add-on" : "") + " · " : "") +
           "Deposit paid: " + pay.money(charge) +
           (redeemedPts ? " (" + redeemedPts + " ✦ applied)" : "") +
           (giftUsed > 0 ? " (gift −" + pay.money(giftUsed) + ")" : "") +

@@ -246,6 +246,17 @@
     .mem-state.ending { color: var(--alt); background: rgba(227,180,143,0.12); }
     .mem-state.paused { color: var(--ink-70); background: rgba(245,245,247,0.08); }
     @media (max-width: 720px) { #mem-tiles { grid-template-columns: repeat(2, 1fr); } }
+    .mem-five { margin: 0 0 1.3rem; padding: 0.9rem 1rem; border-radius: 14px; background: rgba(234,185,200,0.06);
+      box-shadow: inset 0 0 0 1px rgba(234,185,200,0.2); }
+    .mem-five h3 { font-size: 0.9rem; font-weight: 600; margin: 0 0 0.6rem; }
+    .mem-five h3 span { color: var(--ink-70); font-weight: 400; }
+    .mem-five-row { display: grid; grid-template-columns: 2rem 1fr auto auto; gap: 0.8rem; align-items: center; padding: 0.45rem 0;
+      font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    .mem-five-row .no { color: var(--ink-70); font-variant-numeric: tabular-nums; }
+    .mem-five-row .st { color: var(--ink-70); font-size: 0.8rem; }
+    .mem-five-row button { font: inherit; font-size: 0.78rem; font-weight: 600; color: #000; background: #eab9c8; border: 0;
+      border-radius: 999px; padding: 0.3rem 0.7rem; cursor: pointer; }
+    @media (max-width: 720px) { .mem-five-row { grid-template-columns: 2rem 1fr; } .mem-five-row .st, .mem-five-row button { grid-column: 2; justify-self: start; } }
   </style>
 </head>
 <body data-palette="#eab9c8,#e3b48f">
@@ -360,6 +371,7 @@
       </div>
       <div class="bk-tiles" id="mem-tiles"></div>
       <div class="mem-mix" id="mem-mix"></div>
+      <div class="mem-five" id="mem-five"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="mem-table"></table></div>
     </div>
 
@@ -900,6 +912,9 @@
         { name: "Nora Patel", plan: "glow", status: "active", credits: 1, startedAt: d(19) },
         { name: "Chloe Kim", plan: "glow", status: "active", credits: 1, startedAt: d(9) }
       ];
+      /* sample: the five earliest members are the Founding Five */
+      MEM_SAMPLE.slice().sort(function (a, b) { return new Date(a.startedAt) - new Date(b.startedAt); }).slice(0, 5)
+        .forEach(function (m, i) { m.five = { no: i + 1, kit: i < 3 ? "given" : "ready", addon: i < 2 ? "used" : "ready" }; });
       var stored = lget("lumevina_memberships");
       var real = stored ? Object.keys(stored).map(function (k) { return stored[k]; }) : [];
       var members = real.length ? real : MEM_SAMPLE;
@@ -909,14 +924,14 @@
       var owed = live.reduce(function (a, m) { return a + Number(m.credits || 0); }, 0);
       var owedValue = live.reduce(function (a, m) { return a + Number(m.credits || 0) * PLANS[m.plan].value; }, 0);
       var ending = live.filter(function (m) { return m.status === "cancelling"; }).length;
-      var founding = Math.max(0, 25 - members.filter(function (m) { return m.status !== "cancelled"; }).length);
+      var fives = members.filter(function (m) { return m.five; }).sort(function (a, b) { return a.five.no - b.five.no; });
 
       var tiles = [
         { l: "Active members", v: String(live.length) },
         { l: "Monthly recurring revenue", v: money(mrr) },
         { l: "Facials owed · " + money(owedValue), v: String(owed), flag: true },
         { l: "Cancelling", v: String(ending) },
-        { l: "Founding spots left", v: founding + " / 25" }
+        { l: "Founding Five claimed", v: fives.length + " / 5" }
       ];
       document.getElementById("mem-tiles").innerHTML = tiles.map(function (t) {
         return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
@@ -933,6 +948,32 @@
           '<span class="mem-mix-bar"><span style="width:' + Math.round(x.n / max * 100) + '%"></span></span>' +
           '<span class="v">' + x.n + ' · ' + money(x.n * PLANS[x.id].price) + '/mo</span></div>';
       }).join("");
+
+      /* Founding Five: welcome kits to hand over, add-ons to give */
+      var fiveEl = document.getElementById("mem-five");
+      var kitsOut = fives.filter(function (m) { return m.five.kit !== "given"; }).length;
+      fiveEl.innerHTML = '<h3>Founding Five <span>· ' + fives.length + ' of 5 claimed · ' + kitsOut +
+        (kitsOut === 1 ? ' kit' : ' kits') + ' to hand over</span></h3>' +
+        (fives.length ? fives.map(function (m) {
+          return '<div class="mem-five-row"><span class="no">#' + m.five.no + '</span><span>' + (m.name || m.email) + ' · ' +
+            PLANS[m.plan].name + '</span><span class="st">Kit: ' + (m.five.kit === "given" ? "handed over" : "set aside") +
+            ' · Add-on: ' + (m.five.addon === "used" ? "used" : "not yet") + '</span>' +
+            (m.five.kit !== "given" && m.email ? '<button type="button" data-kit="' + m.email + '">Mark kit handed over</button>' : '<span></span>') +
+            '</div>';
+        }).join("") : '<p class="st" style="margin:0;font-size:0.82rem;color:var(--ink-70)">No one yet. The first five members, any plan, get a welcome skincare kit and a free add-on.</p>');
+      fiveEl.querySelectorAll("[data-kit]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var all = lget("lumevina_memberships") || {};
+          var k = b.getAttribute("data-kit").trim().toLowerCase();
+          if (all[k] && all[k].five) {
+            all[k].five.kit = "given";
+            (all[k].history = all[k].history || []).push({ at: new Date().toISOString(), type: "five-kit" });
+            try { localStorage.setItem("lumevina_memberships", JSON.stringify(all)); } catch (e) {}
+          }
+          b.outerHTML = '<span></span>';
+          location.reload();
+        });
+      });
 
       var fmt = function (iso) { return iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"; };
       var state = function (m) {

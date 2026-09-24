@@ -166,7 +166,7 @@ HOUSE = [("10% off with every Lumevina artist", (1, 1, 1)),
 CONVERT = [("At checkout", "Any facial can become month one at the member price, with the single price shown beside it."),
            ("In the chair", "Evelyn offers it before the client leaves, with next month already booked."),
            ("House perks", "10% off with every Lumevina artist, and first look at their openings."),
-           ("Founding price", "The first 25 members keep their price for as long as they stay.")]
+           ("Founding Five", "The first five members, on any plan, get a welcome skincare kit.")]
 
 MTRACK = [("Members", "30 by month 6, 50 by year 2"),
           ("Share of facial visits from members", "Aim for over half"),

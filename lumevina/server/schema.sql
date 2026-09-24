@@ -171,6 +171,11 @@ create table memberships (
   last_pause_at timestamptz,                -- one pause per 12 months
   cancel_at timestamptz,
   founding boolean not null default true,
+  -- Founding Five: the first five members (any plan) get a welcome skincare
+  -- kit and a free add-on. Assign five_no 1–5 in the join transaction.
+  five_no smallint unique check (five_no between 1 and 5),
+  five_kit text check (five_kit in ('ready', 'given')),
+  five_addon text check (five_addon in ('ready', 'used')),
   stripe_customer_id text,
   stripe_subscription_id text unique,
   created_at timestamptz not null default now()

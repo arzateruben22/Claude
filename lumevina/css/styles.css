@@ -5591,3 +5591,28 @@ html.sheet-open { overflow: hidden; }
   .mem-plan[data-tier="3"] .mem-amt { animation: none; }
   .section-membership { transition: none; }
 }
+
+/* ─── Founding Five: the first five members get a welcome kit + add-on ─── */
+.mem-five.is-full .mem-founding-dot { animation: none; background: var(--ink-35); box-shadow: none; }
+.mem-five-left { color: var(--mauve); font-weight: 600; font-variant-numeric: tabular-nums; }
+.mem-five.is-full .mem-five-left { color: var(--ink-60); font-weight: 500; }
+.mj-five {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: radial-gradient(120% 100% at 0% 0%, rgba(234, 185, 200, 0.16), transparent 60%), rgba(234, 185, 200, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(234, 185, 200, 0.28);
+}
+.mj-five-h { display: flex; align-items: center; gap: 0.55rem; font-weight: 600; font-size: 0.92rem; color: var(--plum); margin: 0; }
+.mj-five-no { color: var(--mauve); font-variant-numeric: tabular-nums; }
+.mj-five-b { font-size: 0.85rem; line-height: 1.5; color: var(--ink-60); margin: 0.4rem 0 0; }
+.mem-acct-five {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #000;
+  background: var(--grad-rose);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  margin-right: auto;
+}
+.mem-acct-head { flex-wrap: wrap; }

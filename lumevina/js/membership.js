@@ -9,8 +9,14 @@
  *   Ageless   $199/mo  Ageless Grace Facial, plus a finishing add-on every
  *                      other visit (added in the room)
  *
- * Every plan: 10% off skincare products, 15% off anything else booked in
- * the same visit as a membership facial, first word on flash openings.
+ * Every plan: 10% off skincare from our shelf, a home routine from Evelyn
+ * refreshed each season, 15% off add-ons and anything else booked in the
+ * same visit as a membership facial, first word on flash openings.
+ *
+ * Founding Five: the first five members, on any plan, get a welcome
+ * skincare kit (GlyMed+ Glycolic Facial Cleanser + Face Reality Daily SPF
+ * 30 Plus, set aside from shelf stock when they join) and a free LED or
+ * dermaplaning add-on at their first member facial.
  *
  * Terms (California auto-renewal friendly): the price, billing date and
  * minimum are shown before joining and agreed to with a checkbox; after the
@@ -29,6 +35,10 @@
   var MIN_MONTHS = 3;
   var BANK_AFTER_CANCEL_DAYS = 60;
   var FOUNDING_CAP = 25;
+  var FIVE_CAP = 5;
+  var KIT = [{ id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser" },
+             { id: "spf-30", name: "Face Reality Daily SPF 30 Plus" }];
+  var KIT_VALUE = 70;
 
   /* A ladder: each tier includes everything in the one below it. */
   var PLANS = [
@@ -38,8 +48,9 @@
       facial: "Lumevina Custom Facial",
       line: "Your monthly Lumevina Custom Facial",
       perks: ["One Lumevina Custom Facial a month (or Custom + Dermaplaning)",
-              "10% off skincare products",
-              "15% off anything else booked the same visit",
+              "10% off skincare from our shelf",
+              "A home routine from Evelyn, refreshed each season",
+              "15% off add-ons and anything else booked the same visit",
               "First word on flash openings"] },
     { id: "clear", name: "Clear Skin", price: 159, value: 180, retail: 0.10, includes: "glow",
       primary: "monthly-acne-treatment",
@@ -55,7 +66,7 @@
       line: "Everything in Clear Skin, plus the signature lifting facial",
       perks: ["Upgrade to the Ageless Grace Facial any month",
               "A finishing add-on every other visit: LED or dermaplaning",
-              "15% off skincare products, up from 10%"] }
+              "15% off skincare from our shelf, up from 10%"] }
   ];
   var byId = {};
   PLANS.forEach(function (p) { byId[p.id] = p; });
@@ -169,6 +180,16 @@
       card: who.card || null, founding: true,
       history: [{ at: now, type: "joined", amount: plan.price, note: "First month billed" }]
     };
+    /* the first five members, any plan: a welcome kit and a free add-on.
+       A spot stays claimed once given, even if that member later leaves. */
+    var claimed = fiveClaimed();
+    if (claimed < FIVE_CAP) {
+      r.five = { no: claimed + 1, kit: "ready", addon: "ready" };
+      r.history.push({ at: now, type: "founding-five", note: "Founding Five #" + (claimed + 1) + ": welcome kit set aside" });
+      /* set the kit aside from shelf stock so the shop never oversells it */
+      var inv = window.LumevinaInventory;
+      if (inv) KIT.forEach(function (k) { inv.decrement(k.id, 1); });
+    }
     put(r);
     return { ok: true, record: r };
   };
@@ -286,6 +307,30 @@
     Object.keys(a).forEach(function (k) { var r = get(k); if (r) out.push(r); });
     return out;
   };
+  var fiveClaimed = function () {
+    var a = loadAll();
+    return Object.keys(a).filter(function (k) { return a[k].five; }).length;
+  };
+  var fiveLeft = function () { return Math.max(0, FIVE_CAP - fiveClaimed()); };
+  /* the free add-on rides on the member's next membership facial */
+  var fiveAddonReady = function (r) { return !!(r && r.five && r.five.addon === "ready"); };
+  var useFiveAddon = function (email, meta) {
+    var r = get(email);
+    if (!fiveAddonReady(r)) return { ok: false };
+    r.five.addon = "used";
+    r.history.push({ at: new Date().toISOString(), type: "five-addon", order: meta && meta.order });
+    put(r);
+    return { ok: true, record: r };
+  };
+  /* the owner marks the kit handed over (dashboard) */
+  var giveKit = function (email) {
+    var r = get(email);
+    if (!r || !r.five || r.five.kit === "given") return { ok: false };
+    r.five.kit = "given";
+    r.history.push({ at: new Date().toISOString(), type: "five-kit" });
+    put(r);
+    return { ok: true, record: r };
+  };
   var foundingLeft = function () {
     return Math.max(0, FOUNDING_CAP - all().filter(function (r) { return r.founding && r.status !== "cancelled"; }).length);
   };
@@ -298,7 +343,9 @@
     canPause: canPause, pause: pause, unpause: unpause, cancel: cancel, keep: keep,
     giftCredit: giftCredit, demoAdvance: demoAdvance,
     retailRate: retailRate, extrasRate: extrasRate,
-    all: all, foundingLeft: foundingLeft, fmtDate: fmtDate, money: money
+    all: all, foundingLeft: foundingLeft, fmtDate: fmtDate, money: money,
+    FIVE_CAP: FIVE_CAP, KIT: KIT, KIT_VALUE: KIT_VALUE,
+    fiveLeft: fiveLeft, fiveAddonReady: fiveAddonReady, useFiveAddon: useFiveAddon, giveKit: giveKit
   };
   window.LumevinaMembership = api;
 
@@ -337,10 +384,12 @@
       btn.textContent = mine ? "Your plan · manage" : "Join " + byId[btn.getAttribute("data-join")].name;
       btn.classList.toggle("is-mine", mine);
     });
-    var left = section.querySelector(".mem-founding-left");
-    if (left) {
-      var n = foundingLeft();
-      left.textContent = n < FOUNDING_CAP ? n + " of " + FOUNDING_CAP + " founding spots left" : "Limited to " + FOUNDING_CAP + " founding members";
+    var five = section.querySelector(".mem-five");
+    if (five) {
+      var n = fiveLeft();
+      five.classList.toggle("is-full", n === 0);
+      five.querySelector(".mem-five-left").textContent = n === 0 ? "All five spots are taken"
+        : n === 1 ? "1 spot left" : n + " of " + FIVE_CAP + " spots left";
     }
   };
 
@@ -373,6 +422,11 @@
       var b = document.createElement("span"); b.textContent = row[1];
       li.appendChild(a); li.appendChild(b); terms.appendChild(li);
     });
+    var fl = fiveLeft(), fiveEl = $(".mj-five");
+    if (fiveEl) {
+      fiveEl.hidden = fl === 0;
+      if (fl > 0) fiveEl.querySelector(".mj-five-no").textContent = "#" + (FIVE_CAP - fl + 1) + " of " + FIVE_CAP;
+    }
     $(".mj-agree-text").textContent = "I agree to be billed " + money(chosen.price) +
       " today and every month until I cancel. I can cancel online any time; a " + MIN_MONTHS +
       "-month minimum applies. Unused facials bank up to " + BANK_CAP + ".";
@@ -445,6 +499,8 @@
       $(".mj-done").hidden = false;
       $(".mj-done-title").textContent = "Welcome to " + chosen.name + ", " + name.split(" ")[0] + ".";
       $(".mj-done-body").textContent = "Your first " + chosen.facial + " is on your account, ready to book. " +
+        (out.record.five ? "You're Founding Five member #" + out.record.five.no + ": your welcome skincare kit is set aside " +
+          "for pickup at your first visit, and your first facial includes a free LED or dermaplaning add-on. " : "") +
         "Next billing: " + fmtDate(out.record.nextBillAt) + ". Order " + res.id + ".";
       $(".mj-book").focus();
       renderSection();
@@ -489,7 +545,8 @@
     };
     if (!r || (r.status === "cancelled" && !usable(r))) {
       el.appendChild(h("p", "mem-acct-empty",
-        "A facial every month, banked if you're busy, from $149. Members also get 10% off skincare."));
+        "A facial every month, banked if you're busy, from $149. Members also get 10% off skincare from our shelf." +
+        (fiveLeft() > 0 ? " The first five members get a free welcome skincare kit." : "")));
       var see = h("a", "btn btn-ghost mem-acct-see", "See memberships");
       see.href = "#membership";
       see.addEventListener("click", function () {
@@ -501,6 +558,7 @@
     var plan = byId[r.plan];
     var head = h("div", "mem-acct-head");
     head.appendChild(h("span", "mem-acct-plan", plan.name + " Membership"));
+    if (r.five) head.appendChild(h("span", "mem-acct-five", "Founding Five · #" + r.five.no));
     var pill = r.status === "cancelling" ? "Ends " + fmtDate(r.cancelAt)
       : r.status === "cancelled" ? "Ended" : r.pausedMonth ? "Pausing next month" : "Active";
     head.appendChild(h("span", "mem-acct-pill" + (r.status === "active" && !r.pausedMonth ? " on" : ""), pill));
@@ -523,6 +581,10 @@
     if (Date.now() < new Date(r.minEndsAt).getTime()) fact("Minimum ends", fmtDate(r.minEndsAt));
     if (r.status === "cancelled") fact("Use banked facials by", fmtDate(addDays(r.cancelAt, BANK_AFTER_CANCEL_DAYS)));
     if (r.card) fact("Billing card", r.card.brand + " •••• " + r.card.last4);
+    if (r.five) {
+      fact("Welcome kit", r.five.kit === "given" ? "Picked up" : "Set aside · pick up at your next visit");
+      fact("Free add-on", r.five.addon === "used" ? "Used" : "LED or dermaplaning at your next member facial");
+    }
     el.appendChild(facts);
 
     var actions = h("div", "mem-acct-actions");
