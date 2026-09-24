@@ -75,15 +75,35 @@
   </header>
 
   <div class="mobile-menu" id="mobile-menu" hidden>
-    <a href="#services">Services</a>
-    <a href="#membership">Membership</a>
-    <a href="#spa">The Spa</a>
-    <a href="#policies">Policies</a>
-    <a href="#journal">Journal</a>
-    <a class="btn btn-solid" data-open-booking href="#services">Book now</a>
-    <button class="btn btn-ghost mobile-cart" type="button">Cart · <span class="nav-cart-count">0</span></button>
-    <button class="btn btn-ghost" type="button" data-open-rewards>Glow Rewards · ✦ <span class="rw-count">0</span></button>
-    <button class="btn btn-ghost" type="button" data-open-account>My Lumevina</button>
+    <!-- every section, in page order (numbers match each section's eyebrow) -->
+    <nav class="mm-links" aria-label="Menu">
+      <a href="#services" style="--i:0"><span class="mm-num" aria-hidden="true">01</span>Services</a>
+      <a href="#membership" style="--i:1"><span class="mm-num" aria-hidden="true">02</span>Membership</a>
+      <a href="#spa" style="--i:2"><span class="mm-num" aria-hidden="true">03</span>The Spa</a>
+      <a href="#shop" style="--i:3"><span class="mm-num" aria-hidden="true">04</span>Shop</a>
+      <a href="#policies" style="--i:4"><span class="mm-num" aria-hidden="true">05</span>Policies</a>
+      <a href="#rewards" style="--i:5"><span class="mm-num" aria-hidden="true">06</span>Glow Rewards</a>
+      <a href="#journal" style="--i:6"><span class="mm-num" aria-hidden="true">07</span>Journal</a>
+    </nav>
+    <div class="mm-actions">
+      <a class="btn btn-solid mm-book" data-open-booking href="#services">Book now</a>
+      <div class="mm-quick">
+        <button class="mm-tile mobile-cart" type="button">
+          <svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="mm-label">Cart</span>
+          <span class="mm-count nav-cart-count">0</span>
+        </button>
+        <button class="mm-tile" type="button" data-open-rewards>
+          <span class="mm-icon mm-icon-glyph" aria-hidden="true">✦</span>
+          <span class="mm-label">Glow Rewards</span>
+          <span class="mm-count rw-count">0</span>
+        </button>
+        <button class="mm-tile" type="button" data-open-account>
+          <svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="mm-label">My Lumevina</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <main>
