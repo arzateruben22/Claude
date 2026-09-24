@@ -5320,3 +5320,113 @@ html.sheet-open { overflow: hidden; }
 @media (max-width: 900px) and (prefers-reduced-motion: reduce) {
   .mem-grid[data-reel] > .mem-plan { transition: none; }
 }
+
+/* ─── Glow Rewards on phones: auto-advancing perk carousel (js/reel.js) ─── */
+@media (max-width: 900px) {
+  .rc-grid { gap: var(--space-4); }
+  .rc-grid > * { min-width: 0; }   /* let the carousel scroll instead of widening the column */
+  .rc-rewards .app-perks[data-reel] {
+    position: relative;
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    margin: var(--space-4) calc(-1 * clamp(1.25rem, 5vw, 3rem)) 0;
+    padding: 0.25rem clamp(1.25rem, 5vw, 3rem) 0.25rem;
+    scroll-padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+  .app-perks[data-reel]::-webkit-scrollbar { display: none; }
+  .app-perks[data-reel] > .app-perk {
+    flex: 0 0 min(20rem, 80%);
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.7rem;
+    align-items: center;
+    padding: 1.1rem 1.2rem 1.2rem;
+    background:
+      radial-gradient(90% 80% at 100% 0%, rgba(234, 185, 200, 0.1), transparent 60%),
+      var(--porcelain);
+    transition: filter 350ms ease, scale 350ms ease, border-color 350ms ease;
+  }
+  .app-perks[data-reel] .app-perk-glyph {
+    display: grid;
+    place-items: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    margin: 0;
+    border-radius: 11px;
+    background: rgba(234, 185, 200, 0.1);
+    font-size: 1.1rem;
+  }
+  .app-perks[data-reel] .app-perk h3 { margin: 0; font-size: 1.05rem; }
+  .app-perks[data-reel] .app-perk p { grid-column: 1 / -1; margin-top: 0.7rem; font-size: 0.9rem; line-height: 1.5; }
+  .app-perks[data-reel] + .reel-bar { margin-top: 0.85rem; }
+
+  .rc-cta { gap: var(--space-3); margin-top: var(--space-4); }
+  .rc-connect { padding: 1.35rem 1.25rem; }
+  .rc-connect .section-sub { font-size: 0.95rem; }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .app-perks[data-reel] > .app-perk { transition: none; }
+}
+
+/* ─── Membership: brighter tier, brighter light ───
+   Each plan is lit a step brighter than the one below it, and the light
+   behind the plans rises with the tier you're on: swiping on phones
+   (--reel-pos from js/reel.js), hovering where they sit side by side
+   (--mem-hover from js/membership.js). Brighter skin, clearer skin. */
+@property --mem-level { syntax: "<number>"; inherits: true; initial-value: 0; }
+.section-membership {
+  position: relative;
+  isolation: isolate;
+  --mem-level: var(--mem-hover, 0);
+  transition: --mem-level 700ms cubic-bezier(.2, .8, .2, 1);
+}
+.section-membership::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 42% at 50% 64%, rgba(247, 211, 222, calc(0.04 + var(--mem-level) * 0.1)), transparent 72%),
+    radial-gradient(30% 24% at 50% 62%, rgba(255, 255, 255, calc(var(--mem-level) * 0.045)), transparent 70%);
+}
+.mem-plan[data-tier="1"] { --lum: 0.3; }
+.mem-plan[data-tier="2"] { --lum: 0.62; }
+.mem-plan[data-tier="3"] { --lum: 1; }
+.mem-plan[data-tier] {
+  border-color: rgba(234, 185, 200, calc(0.12 + 0.38 * var(--lum)));
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(247, 211, 222, calc(0.03 + 0.12 * var(--lum))), transparent 65%),
+    var(--porcelain);
+  box-shadow: 0 24px 70px -26px rgba(234, 185, 200, calc(0.6 * var(--lum)));
+}
+.mem-plan[data-tier="2"] .mem-amt,
+.mem-plan[data-tier="3"] .mem-amt {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.mem-plan[data-tier="2"] .mem-amt { background-image: linear-gradient(95deg, #fde4ec, #f4c8d6 50%, #efd0bb); }
+/* Ageless: pearl-white with a slow sheen */
+.mem-plan[data-tier="3"] .mem-amt {
+  background-image: linear-gradient(100deg, #f6dcc9 0%, #fff 30%, #fbe7ee 50%, #fff 70%, #f6dcc9 100%);
+  background-size: 250% 100%;
+  filter: drop-shadow(0 0 16px rgba(255, 236, 242, 0.35));
+  animation: mem-sheen 5s ease-in-out infinite;
+}
+@keyframes mem-sheen { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+.mem-plan[data-tier="3"] .mem-name { text-shadow: 0 0 18px rgba(255, 236, 242, 0.35); }
+@media (max-width: 900px) {
+  .section-membership { --mem-level: var(--reel-pos, 0); transition: --mem-level 160ms linear; }
+  /* room below the cards so their glow fades out instead of being cut */
+  .mem-grid[data-reel] { padding-bottom: 2.25rem; margin-bottom: -2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mem-plan[data-tier="3"] .mem-amt { animation: none; }
+  .section-membership { transition: none; }
+}

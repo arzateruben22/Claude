@@ -313,6 +313,21 @@
     return s ? s.email : "";
   };
 
+  /* ── the better the tier, the brighter the light (clearer skin) ──
+     On phones the swipe position drives it (js/reel.js sets --reel-pos);
+     where the plans sit side by side, hovering or focusing one does. */
+  if (section) {
+    var planGrid = section.querySelector(".mem-grid");
+    var sideBySide = function () { return planGrid && planGrid.scrollWidth <= planGrid.clientWidth + 1; };
+    var setHover = function (v) { section.style.setProperty("--mem-hover", v); };
+    section.querySelectorAll(".mem-plan[data-tier]").forEach(function (plan) {
+      var lvl = Number(plan.getAttribute("data-tier")) - 1;
+      plan.addEventListener("pointerenter", function () { if (sideBySide()) setHover(lvl); });
+      plan.addEventListener("focusin", function () { if (sideBySide()) setHover(lvl); });
+    });
+    if (planGrid) planGrid.addEventListener("pointerleave", function () { setHover(0); });
+  }
+
   /* ── plan cards reflect the visitor's own membership ── */
   var renderSection = function () {
     if (!section) return;

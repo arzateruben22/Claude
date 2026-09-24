@@ -7,7 +7,9 @@
    the bar is hidden there, and nothing here runs until the row can
    actually scroll. A reel marked data-reel-tabs gets an iOS-style
    segmented control above it instead, whose highlight glides with the
-   swipe. */
+   swipe. A reel with data-reel-auto="ms" also advances itself, a
+   carousel that loops while it's on screen, and stops for good the
+   moment someone touches it (never under reduced motion). */
 
 (function () {
   "use strict";
@@ -54,6 +56,8 @@
     });
     reel.parentNode.insertBefore(bar, tabs ? reel : reel.nextSibling);
 
+    /* the section hears the swipe position too (e.g. Membership brightens) */
+    var host = reel.closest("section");
     var raf = null;
     var update = function () {
       raf = null;
@@ -80,6 +84,7 @@
       }
       var active = Math.round(pos);
       bar.style.setProperty("--pos", pos.toFixed(3));
+      if (host) host.style.setProperty("--reel-pos", pos.toFixed(3));
       fills.forEach(function (seg, i) {
         var f = Math.max(0, Math.min(1, pos - i + 1));
         seg.style.setProperty("--fill", f.toFixed(3));
@@ -96,5 +101,31 @@
     reel.addEventListener("scroll", queue, { passive: true });
     window.addEventListener("resize", queue);
     update();
+
+    /* ── optional autoplay ── */
+    var every = parseInt(reel.getAttribute("data-reel-auto"), 10);
+    if (every && !calm && "IntersectionObserver" in window) {
+      var timer = null, stopped = false;
+      var goTo = function (i) {
+        var pad = parseFloat(getComputedStyle(reel).scrollPaddingLeft) || 0;
+        reel.scrollTo({ left: cards[i].offsetLeft - pad, behavior: "smooth" });
+      };
+      var tick = function () {
+        if (reel.scrollWidth - reel.clientWidth <= 1) return;   /* desktop grid */
+        var cur = cards.findIndex(function (c) { return c.classList.contains("is-active"); });
+        var atEnd = reel.scrollLeft >= reel.scrollWidth - reel.clientWidth - 2;
+        goTo(atEnd ? 0 : Math.min(cards.length - 1, cur + 1));
+      };
+      var play = function () { if (!stopped && !timer) timer = setInterval(tick, every); };
+      var pause = function () { clearInterval(timer); timer = null; };
+      var stop = function () { stopped = true; pause(); };
+      ["pointerdown", "touchstart", "wheel", "keydown"].forEach(function (ev) {
+        reel.addEventListener(ev, stop, { passive: true });
+      });
+      bar.addEventListener("click", stop);
+      new IntersectionObserver(function (entries) {
+        entries[0].isIntersecting ? play() : pause();
+      }, { threshold: 0.6 }).observe(reel);
+    }
   });
 })();
