@@ -164,9 +164,8 @@ WHY = [("$5,000", "Paid before anyone books.", "30 members bill about $5,000 on 
        ("Stays", "Survives artist turnover.", "A client who joins for 10% off her lashes keeps booking facials with Evelyn, even if her lash artist moves on."),
        ("1 a month", "Fills the calendar ahead.", "Every member is a visit a month, booked in advance. Banked facials are already paid for.")]
 
-ANCHOR = [("Custom Facial · Glow", "$195", "$159", "$432"),
-          ("Monthly Acne · Glow", "$195", "$159", "$432"),
-          ("Ageless Grace · Ageless", "$245", "$209", "$432")]
+ANCHOR = [("Glow · Custom Facial or Monthly Acne", "$195", "$159", "$432"),
+          ("Ageless · Ageless Grace Facial", "$245", "$209", "$432")]
 
 # member perks with the Collective's artists, by plan
 TIERS = [("Glow", "#d596ab"), ("Ageless", "#fde2ea")]
@@ -193,7 +192,7 @@ def why_html(reveal=True):
 
 
 def anchor_html():
-    head = '<div class="pt-row pt-h"><span>Facial · plan</span><span>Single</span><span>Member</span><span>Saved a year</span></div>'
+    head = '<div class="pt-row pt-h"><span>Plan · facial</span><span>Single</span><span>Member</span><span>Saved a year</span></div>'
     body = "".join('<div class="pt-row"><span>%s</span><span class="num dimv">%s</span><span class="num">%s</span><span class="num sv">%s</span></div>' % a
                    for a in ANCHOR)
     return ('<div class="ptable">' + head + body + '</div>'
