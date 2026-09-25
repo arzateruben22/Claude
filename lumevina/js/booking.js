@@ -614,7 +614,7 @@
     addRow("Due in person at your visit", pay.money(sessionTotal() - depositDue()), "sc-rest");
     if (rw && depositDue() > 0) {
       var q = rw.quote(depositDue(), {
-        dayKey: state.dayKey,
+        dayKey: state.dayKey, member: visitorIsMember(),
         serviceIds: state.services.map(function (s) { return s.id; })
       });
       addRow("✦ Glow Points on this deposit" +
@@ -1323,7 +1323,16 @@
       if (!usingSavedCard && saveCardCheck.checked && pay.saveCard) {
         pay.saveCard(emailInput.value, cardInput.value, expiryInput.value);
       }
+      /* what this booking earns, worked out before it's saved, so a cancellation
+         in time can hand back exactly these points (js/account.js) */
+      var earnOpts = { dayKey: state.dayKey, member: visitorIsMember(), serviceIds: state.services.map(function (s) { return s.id; }) };
+      var earnQ = rw ? rw.quote(charge, earnOpts) : null;
+      var prevLastVisit = rw ? rw.lastVisit() : null;
       saveBooking({
+        points: earnQ ? earnQ.points : 0,
+        rebookBonus: earnQ && earnQ.streak ? rw.rebookBonus : 0,
+        birthdayBonus: !!(earnQ && earnQ.birthday),
+        prevLastVisit: prevLastVisit,
         date: state.dayKey,
         time: state.slot,
         dur: totalDur(),
@@ -1397,10 +1406,7 @@
       /* Glow Rewards: spend the redemption, earn on what was paid */
       if (rw) {
         if (redeemedPts) rw.spend(redeemedPts, "Redeemed on deposit");
-        var q = rw.award(charge, {
-          dayKey: state.dayKey,
-          serviceIds: state.services.map(function (s) { return s.id; })
-        }, "Deposit — " + sessionName());
+        var q = rw.award(charge, earnOpts, "Deposit — " + sessionName());
         earnedEl.textContent = "✦ +" + q.points + " Glow Points earned" +
           (q.notes.length ? " (" + q.notes.join(", ") + ")" : "") +
           " · balance " + rw.points() + " ✦";

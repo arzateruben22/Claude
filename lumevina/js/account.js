@@ -176,7 +176,8 @@
         cancel.addEventListener("click", function () {
           if (cancel.dataset.arm !== "1") {
             cancel.dataset.arm = "1";
-            cancel.textContent = "Tap again to confirm — deposit is non-refundable";
+            cancel.textContent = "Tap again to confirm: the deposit is non-refundable" +
+              (b.points ? " and its " + b.points + " Glow Points go back" : "");
             return;
           }
           var all = loadBookings();
@@ -186,7 +187,16 @@
           if (gone && gone.memberCredit && window.LumevinaMembership) {
             window.LumevinaMembership.returnCredit(gone.email || session.email);
           }
+          /* the Glow Points this booking earned (rebooking bonus included) go back */
+          var back = gone && window.LumevinaRewards ? window.LumevinaRewards.reverse(gone) : 0;
           renderBookings();
+          if (back) {
+            var note = document.createElement("li");
+            note.className = "acct-none";
+            note.setAttribute("role", "status");
+            note.textContent = "Cancelled. The " + back + " Glow Points from that booking were returned.";
+            listEl.insertBefore(note, listEl.firstChild);
+          }
           renderMember();
         });
       } else {

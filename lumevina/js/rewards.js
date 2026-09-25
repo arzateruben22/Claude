@@ -1,7 +1,9 @@
 /* Lumevina — Glow Rewards
    The loyalty layer: 1 Glow Point per $1 paid in-site (booking
    deposits and shop orders), double points on Wednesdays or any
-   session with Wax Wednesday, +25 for rebooking within 5 weeks,
+   session with Wax Wednesday, +25 for non-members whose next visit
+   is within 5 weeks of their last (members already have a facial
+   every month), handed back if that booking is cancelled,
    +50 once a year during your birthday month, a referral code
    worth 150 points when a friend completes their first visit,
    and a magic-mirror bonus after each confirmed appointment.
@@ -78,10 +80,12 @@
     return dayKey && new Date(dayKey + "T00:00:00").getDay() === 3;
   };
 
-  var streakActive = function () {
-    if (!data.lastVisit) return false;
-    var last = new Date(data.lastVisit + "T00:00:00").getTime();
-    return (Date.now() - last) <= STREAK_DAYS * 24 * 60 * 60 * 1000;
+  /* the rebooking bonus: a non-member's new appointment falls within 5
+     weeks after their last one */
+  var rebookEligible = function (dayKey, member) {
+    if (member || !data.lastVisit || !dayKey) return false;
+    var days = (new Date(dayKey + "T00:00:00") - new Date(data.lastVisit + "T00:00:00")) / 864e5;
+    return days > 0 && days <= STREAK_DAYS;
   };
 
   var birthdayEligible = function (dayKey) {
@@ -97,14 +101,14 @@
     var base = Math.round(amount);
     var doubled = isWednesday(opts.dayKey) ||
       (opts.serviceIds || []).indexOf("wax-wednesday") !== -1;
-    var streak = opts.dayKey && streakActive();
+    var streak = rebookEligible(opts.dayKey, opts.member);
     var birthday = birthdayEligible(opts.dayKey);
     var pts = base * (doubled ? 2 : 1) +
       (streak ? STREAK_BONUS : 0) +
       (birthday ? BIRTHDAY_BONUS : 0);
     var notes = [];
     if (doubled) notes.push("double points — Wax Wednesday");
-    if (streak) notes.push("+" + STREAK_BONUS + " rebooking streak");
+    if (streak) notes.push("+" + STREAK_BONUS + " for rebooking within 5 weeks");
     if (birthday) notes.push("+" + BIRTHDAY_BONUS + " birthday month 🎂");
     return { points: pts, doubled: doubled, streak: streak,
       birthday: birthday, notes: notes };
@@ -114,13 +118,25 @@
     var q = quote(amount, opts);
     record(q.points, label || "Payment");
     if (opts && opts.dayKey) {
-      data.lastVisit = opts.dayKey;
+      /* the latest appointment is the one the next rebooking is measured from */
+      if (!data.lastVisit || opts.dayKey > data.lastVisit) data.lastVisit = opts.dayKey;
       if (q.birthday) {
         data.birthdayClaimed = new Date(opts.dayKey + "T00:00:00").getFullYear();
       }
     }
     save();
     return q;
+  };
+
+  /* a booking cancelled in time hands back the points it earned, rebooking
+     bonus included, and the visit it counted as is forgotten */
+  var reverse = function (b) {
+    if (!b || !b.points) return 0;
+    record(-b.points, "Cancelled booking — points returned");
+    if (b.date && data.lastVisit === b.date) data.lastVisit = b.prevLastVisit || null;
+    if (b.birthdayBonus) data.birthdayClaimed = null;
+    save();
+    return b.points;
   };
 
   /* redeemable blocks against a given deposit — points may cover
@@ -277,6 +293,9 @@
     points: function () { return data.points; },
     quote: quote,
     award: award,
+    reverse: reverse,
+    lastVisit: function () { return data.lastVisit; },
+    rebookBonus: STREAK_BONUS,
     spend: function (pts, label) { record(-pts, label || "Reward redeemed"); },
     redeemableBlocks: redeemableBlocks,
     blockPoints: BLOCK_POINTS,

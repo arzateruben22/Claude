@@ -270,8 +270,11 @@ h1, h2, h3, p { margin: 0; }
 .svc { display: grid; grid-template-columns: 76px 1fr auto; gap: 12px; align-items: center; width: 100%; text-align: left; border: 0;
   background: var(--card); border-radius: 18px; padding: 10px; }
 .svc img { width: 76px; height: 76px; border-radius: 12px; object-fit: cover; }
+/* name, then its length on a line of its own, then the Glow chip */
+.svc .n, .svc .m { display: block; }
 .svc .n { font-weight: 600; font-size: 15.5px; line-height: 1.25; }
 .svc .m { color: var(--ink-2); font-size: 13px; margin-top: 3px; }
+.svc .chip { margin-top: 6px; }
 .svc .chip { margin-top: 6px; }
 .svc .pr { font-weight: 700; font-size: 16px; padding-right: 6px; font-variant-numeric: tabular-nums; }
 .page { position: absolute; inset: 0; background: #000; transition: transform .45s var(--spring), filter .45s ease; }
@@ -334,6 +337,29 @@ h1, h2, h3, p { margin: 0; }
   border-radius: 22px 22px 0 0; padding: 8px 20px 38px; transform: translateY(100%); transition: transform .5s var(--spring); scrollbar-width: none; }
 .sheet-wrap.open .sheet-bg { opacity: 1; }
 .sheet-wrap.open .sheet { transform: none; }
+/* the Glow Card as an Apple Wallet pass: a preview of what "Add to Apple Wallet" adds */
+.pass-sheet { min-height: 0; }
+.pass { margin-top: 14px; border-radius: 16px; padding: 14px 16px 16px; color: #1a0f13;
+  background: linear-gradient(160deg, #f7d3de 0%, #eab9c8 55%, #e2b08c 100%); box-shadow: 0 18px 40px -18px rgba(234, 185, 200, .6); }
+.pass-top { display: flex; align-items: center; gap: 8px; }
+.pass-top img { width: 26px; height: 26px; border-radius: 6px; }
+.pass-top .brand { font-weight: 700; letter-spacing: .12em; font-size: 12px; }
+.pass-top .hdr { margin-left: auto; text-align: right; }
+.pass small { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .62; }
+.pass-top .hdr b { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pass-main { margin-top: 16px; }
+.pass-main b { display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+.pass-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.pass-row b { display: block; font-size: 14px; font-weight: 600; }
+.pass-qr { display: grid; justify-items: center; gap: 6px; margin-top: 16px; background: #fff; border-radius: 10px; padding: 10px; }
+.pass-qr svg { width: 104px; height: 104px; display: block; }
+.pass-qr span { font-size: 11px; font-weight: 600; color: #3a2a30; }
+.pass-uses { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+.pass-uses li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.35; color: var(--ink-2); }
+.pass-uses li b { color: var(--ink); font-weight: 600; }
+.pass-uses .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: rgba(244, 201, 214, .12); color: var(--rose); }
+.pass-uses .ic svg { width: 15px; height: 15px; }
+.pass-add { margin-top: 18px; }
 .grab { width: 38px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .25); margin: 0 auto 10px; }
 .sh-head { display: flex; justify-content: space-between; align-items: center; }
 .sh-head h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
@@ -694,7 +720,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <p class="u">Glow Points · <span data-ready>$20 ready to use</span></p>
                   <div class="bot"><p class="who">Sofia Ramirez<span>Glow member</span></p><span class="code" aria-hidden="true"></span></div>
                 </div>
-                <button class="wallet" type="button" data-toast="Added to Apple Wallet">
+                <button class="wallet" type="button" id="wallet-open">
                   <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" fill="#fff"/><rect x="2.5" y="5" width="19" height="4" rx="2" fill="#f4c9d6"/><rect x="2.5" y="8" width="19" height="3" fill="#e2b08c"/><rect x="2.5" y="10.5" width="19" height="3" fill="#8e8e93"/></svg>
                   Add to Apple Wallet</button>
                 <div class="prog">
@@ -735,7 +761,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                 <div class="sec"><h2>Ways to earn</h2></div>
                 <div class="list">
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Deposits and gifts<span class="sub">1 point per $1</span></span><span class="r pos">1×</span></div>
-                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4" stroke-linecap="round"/></svg></span><span>Rebook within five weeks</span><span class="r pos">+25</span></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4" stroke-linecap="round"/></svg></span><span>Rebook within five weeks<span class="sub">Non-members · handed back if you cancel</span></span><span class="r pos">+25</span></div>
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span>Wax Wednesday<span class="sub">Points on waxing</span></span><span class="r pos">2×</span></div>
                   <button class="li" type="button" data-toast="Share sheet opens here"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span><span>Refer a friend<span class="sub">After their first visit</span></span><span class="r pos">+150</span></button>
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16v10H4zM2 7h20v4H2zM12 7v14M12 7c-2-4-7-4-7-1s7 1 7 1 5-3 7 0-5 1-7 1"/></svg></span><span>Birthday month</span><span class="r pos">+50</span></div>
@@ -852,6 +878,36 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
             <span><span class="top"><b>Flash opening Saturday</b><span>now</span></span>
             <p>Ageless Grace Facial at 4:00 PM is 10% off. First tap wins.</p></span>
           </button>
+          <div class="sheet-wrap" id="pass-wrap" hidden>
+            <div class="sheet-bg" data-pass-close></div>
+            <div class="sheet pass-sheet" role="dialog" aria-modal="true" aria-labelledby="pass-title">
+              <div class="grab" aria-hidden="true"></div>
+              <div class="sh-head"><h3 id="pass-title">Your Glow Card in Wallet</h3>
+                <button class="xbtn" type="button" data-pass-close aria-label="Close"><svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+              <div class="pass" aria-label="Glow Card pass preview">
+                <div class="pass-top"><img src="data:image/png;base64,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" alt=""><span class="brand">LUMEVINA</span>
+                  <span class="hdr"><small>Glow Points</small><b id="pass-pts">240</b></span></div>
+                <div class="pass-main"><small>Ready to use</small><b id="pass-ready">$20 off</b></div>
+                <div class="pass-row">
+                  <div><small>Next visit</small><b id="pass-next">Sat, Sep 26 · 10:00 AM</b></div>
+                  <div style="text-align:right"><small>Member</small><b>Glow</b></div>
+                </div>
+                <div class="pass-qr"><svg id="pass-code" viewBox="0 0 29 29" shape-rendering="crispEdges" aria-hidden="true"></svg>
+                  <span>Friends scan for $15 off · GLOW-SOFI</span></div>
+              </div>
+              <ul class="pass-uses">
+                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+                  <span><b>You&rsquo;re here.</b> Near the spa it can surface on your lock screen, with &ldquo;I&rsquo;m here&rdquo; to text Evelyn from the parking lot.</span></li>
+                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span>
+                  <span><b>Your next visit.</b> Updates when you book or move it, and shows up the morning of.</span></li>
+                <li><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span>
+                  <span><b>Points, live.</b> A quiet note when they change: &ldquo;+25 Glow Points.&rdquo;</span></li>
+                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-4M14 18v3"/></svg></span>
+                  <span><b>Your referral code.</b> A friend scans it with their camera for $15 off a first visit; you earn 150 points.</span></li>
+              </ul>
+              <button class="pay pass-add" type="button" id="pass-add">Add to Apple Wallet</button>
+            </div>
+          </div>
           <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
           <!-- confirm sheet -->
@@ -1195,8 +1251,10 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   $("#app-exit").addEventListener("click", exitApp);
   /* Esc leaves the app, unless the booking sheet is open (that closes first) */
   document.addEventListener("keydown", function (e) {
-    var sw = document.getElementById("sheet-wrap");
-    if (e.key === "Escape" && !(sw && !sw.hidden)) exitApp();
+    if (e.key !== "Escape") return;
+    var sw = document.getElementById("sheet-wrap"), pw = document.getElementById("pass-wrap");
+    if (pw && !pw.hidden) { pw.querySelector("[data-pass-close]").click(); return; }
+    if (!(sw && !sw.hidden)) exitApp();
   });
 
   /* ── toast ── */
@@ -1481,6 +1539,37 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     requestAnimationFrame(function () { requestAnimationFrame(function () { wrap.classList.add("open"); app.classList.add("behind"); }); });
     setTimeout(function () { $("#sh-close").focus({ preventScroll: true }); }, 60);
   };
+  /* ── the Glow Card pass preview ── */
+  var passWrap = $("#pass-wrap");
+  /* a QR-style code, drawn once: three finder squares and a fixed scatter (a sample, not scannable) */
+  (function () {
+    var svg = $("#pass-code"), cells = [], seed = 7;
+    var rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    var finder = function (x, y) {
+      cells.push('<rect x="' + x + '" y="' + y + '" width="7" height="7"/><rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>');
+    };
+    for (var y = 0; y < 29; y++) for (var x = 0; x < 29; x++) {
+      var inFinder = (x < 8 && y < 8) || (x > 20 && y < 8) || (x < 8 && y > 20);
+      if (!inFinder && rnd() < 0.46) cells.push('<rect x="' + x + '" y="' + y + '" width="1" height="1"/>');
+    }
+    finder(0, 0); finder(22, 0); finder(0, 22);
+    svg.innerHTML = '<g fill="#1a0f13">' + cells.join("") + '</g>';
+  })();
+  var openPass = function () {
+    $("#pass-pts").textContent = S.points;
+    $("#pass-ready").textContent = "$" + Math.floor(S.points / 100) * 10 + " off";
+    $("#pass-next").textContent = S.next.when;
+    passWrap.hidden = false;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { passWrap.classList.add("open"); app.classList.add("behind"); }); });
+  };
+  var closePass = function () {
+    passWrap.classList.remove("open"); app.classList.remove("behind");
+    setTimeout(function () { if (!passWrap.classList.contains("open")) passWrap.hidden = true; }, calm ? 0 : 480);
+  };
+  $("#wallet-open").addEventListener("click", openPass);
+  $$("[data-pass-close]").forEach(function (b) { b.addEventListener("click", closePass); });
+  $("#pass-add").addEventListener("click", function () { closePass(); toast("Added to Apple Wallet · sample"); });
+
   var closeSheet = function (instant) {
     wrap.classList.remove("open"); app.classList.remove("behind");
     if (instant || calm) { wrap.hidden = true; return; }
@@ -1504,11 +1593,13 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   /* ── booked ── */
   var finish = function () {
     var s = S.svc, c = calc(), d = DAYS[S.day];
-    var earned = c.due + 25;
+    /* Sofia is a Glow member: points on what she pays, and no rebooking bonus
+       (that's for non-members; members already have their monthly facial) */
+    var earned = Math.round(c.due);
     if (S.useCredit) S.credits -= 1;
     $("#sh-confirm").hidden = true; $("#sh-done").hidden = false;
     $("#d-when").innerHTML = s.name + "<br>" + d.full + " · " + S.time + " with Evelyn";
-    $("#d-pts").textContent = "+" + earned + " Glow Points";
+    $("#d-pts").textContent = earned ? "+" + earned + " Glow Points" : "Covered by your Glow membership";
     var order = S.day + (S.time.indexOf("PM") > -1 && S.time.indexOf("12") !== 0 ? 0.5 : 0.2);
     if (order < S.next.order) {
       S.next = { when: d.full + " · " + S.time, what: s.name + " with Evelyn", chip: S.useCredit ? "Membership" : "Deposit paid", order: order };

@@ -132,9 +132,13 @@ Deno.serve(async (req) => {
   const day = new Date(`${booking.date}T00:00:00`);
   const doubled = day.getDay() === 3 ||
     (booking.services as string[]).includes("wax-wednesday");
-  const streak = !!client.last_visit &&
-    (day.getTime() - new Date(client.last_visit).getTime()) <=
-      STREAK_DAYS * 24 * 60 * 60 * 1000;
+  // Rebooking bonus: non-members only (members already have a facial every
+  // month), when this visit falls within 5 weeks after their last one.
+  const { data: membership } = await supabase.from("memberships")
+    .select("id").eq("client_id", client.id).neq("status", "cancelled").maybeSingle();
+  const sinceLast = client.last_visit
+    ? (day.getTime() - new Date(`${client.last_visit}T00:00:00`).getTime()) / 864e5 : -1;
+  const streak = !membership && sinceLast > 0 && sinceLast <= STREAK_DAYS;
   const birthday = client.birth_month === day.getMonth() &&
     client.birthday_claimed_year !== day.getFullYear();
 
@@ -148,10 +152,23 @@ Deno.serve(async (req) => {
     booking_id: bookingId,
   });
 
+  // What this booking earned, so a cancellation in time hands exactly this
+  // back (the return_booking_points trigger in schema.sql).
+  await supabase.from("bookings").update({
+    points_earned: points, prev_last_visit: client.last_visit ?? null,
+  }).eq("id", bookingId);
+
   await supabase.from("clients").update({
-    last_visit: booking.date,
+    last_visit: !client.last_visit || booking.date > client.last_visit ? booking.date : client.last_visit,
     ...(birthday ? { birthday_claimed_year: day.getFullYear() } : {}),
   }).eq("id", client.id);
+
+  // The Glow Card in Apple Wallet shows points and the next visit: tell it.
+  fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/wallet-pass/notify`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ client_id: client.id }),
+  }).catch(() => {});
 
   return new Response("ok", { status: 200 });
 });
