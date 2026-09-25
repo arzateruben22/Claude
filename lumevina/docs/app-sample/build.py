@@ -37,6 +37,7 @@ def raw(rel, mime):
 
 FIELDS = {
     "FONT": base64.b64encode(open(os.path.join(SITE, "fonts", "inter-var.woff2"), "rb").read()).decode(),
+    "TYPOS_JS": open(os.path.join(SITE, "js", "ask-typos.js")).read(),   # shared with the website chat
     "ICON": raw("img/apple-touch-icon.png", "image/png"),
     "LOGO": raw("img/logo-light.png", "image/png"),
     "S_CUSTOM": img("img/services/custom.webp", 480),

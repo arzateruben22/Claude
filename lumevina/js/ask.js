@@ -92,6 +92,8 @@
     { id: "hi", k: /^(hi|hey|hello|good (morning|afternoon|evening))[\s!.,]*(there)?[\s!.]*$/, a: function () {
       return "Hi! I can help with prices, booking, prep, aftercare and memberships, any time. Anything about your own skin goes straight to Evelyn."; } },
     { id: "thanks", k: /thank|appreciate/, a: function () { return "Anytime! Anything else I can help with?"; } },
+    { id: "ack", k: /^(ok|okay|k|kk|cool|great|got it|sounds good|perfect|nice|alright|all right|yes|yeah|yep|no|nope|nah)[\s!.]*$/, a: function () {
+      return "Anything else I can help with?"; } },
     { id: "human", k: /real person|\bhuman\b|talk to (someone|a person|evelyn|you)|speak (to|with)|(message|ask|contact|text) evelyn/, handoff: "request" },
     { id: "new", node: "p-facials", k: /first time|new client|first visit|never been|haven'?t been/, a: function () {
       return "Welcome! Start with the New Client Consultation + Treatment, " + price("New Client Consultation + Treatment", 215) +
@@ -268,10 +270,14 @@
     return { text: typeof n.say === "function" ? n.say() : n.say, acts: typeof n.opts === "function" ? n.opts() : n.opts };
   };
 
+  var TY = window.LumevinaTypos;
   var classify = function (text) {
-    var t = text.toLowerCase();
-    if (URGENT.test(t)) return { handoff: "urgent" };
-    for (var i = 0; i < KINDS.length; i++) if (KINDS[i].k.test(t)) return { handoff: KINDS[i].kind };
+    var raw = text.toLowerCase();
+    /* typos and texting shorthand read as the word they meant ("facail", "cancle", "appt") */
+    var t = TY ? TY.fix(text) : raw;
+    /* safety first, on what they typed and on what they meant */
+    if (URGENT.test(raw) || URGENT.test(t)) return { handoff: "urgent" };
+    for (var i = 0; i < KINDS.length; i++) if (KINDS[i].k.test(raw) || KINDS[i].k.test(t)) return { handoff: KINDS[i].kind };
     var topical = ASKS_ABOUT.test(t) || t.split(/\s+/).length <= 3;
     if (topical) for (var j = 0; j < TOPICS.length; j++) if (TOPICS[j].k.test(t)) return { answer: TOPICS[j].a(), acts: [["Book", "book"]] };
     for (var n = 0; n < KB.length; n++) {
@@ -280,6 +286,8 @@
       return { answer: KB[n].a(), acts: KB[n].acts || [], node: KB[n].node };
     }
     for (var m = 0; m < TOPICS.length; m++) if (TOPICS[m].k.test(t)) return { answer: TOPICS[m].a(), acts: [["Book", "book"]] };
+    /* keyboard mashing or a lone unknown word: ask again instead of bothering Evelyn */
+    if (TY && TY.gibberish(text)) return { unclear: true };
     return { handoff: "other", unsure: true };
   };
 
@@ -413,6 +421,7 @@
     fab.querySelector(".ask-fab-t").textContent = n ? "Evelyn replied" : "Ask Lumevina";
   };
 
+  var UNCLEAR_ACTS = [["Prices", "n:prices"], ["Book", "n:book"], ["Cancel or move", "n:cancel"], ["Memberships", "n:member"]];
   var LEADS = {
     urgent: "That could be serious. If you’re having trouble breathing, or your lips, tongue or throat are swelling, call 911 now. I’m also sending this to Evelyn.",
     reaction: "I’m sorry you’re dealing with that. Evelyn should answer this one herself, not me.",
@@ -421,7 +430,8 @@
     condition: "Evelyn will want to answer this one herself, since it depends on your skin.",
     skin: "That depends on your skin, so Evelyn will answer this one herself.",
     request: "Of course. I’ll send your message to Evelyn.",
-    other: "I’m not sure I’ve got that one right. Want me to send it to Evelyn?"
+    other: "I’m not sure I’ve got that one right. Want me to send it to Evelyn?",
+    again: "Still not catching it, sorry. Want me to send your message to Evelyn as it is?"
   };
 
   var ask = function (text) {
@@ -429,6 +439,16 @@
     if (!text) return;
     push({ who: "you", text: text });
     var r = classify(text);
+    if (r.unclear) {
+      state.unclear = (state.unclear || 0) + 1;
+      if (state.unclear === 1) {
+        state.pending = null;
+        push({ who: "bot", text: "I didn’t quite catch that. Could you say it another way, or pick a topic?", acts: UNCLEAR_ACTS });
+        return render();
+      }
+      /* twice in a row: maybe it's real and just unusual, so offer Evelyn */
+      r = { handoff: "other" };
+    } else state.unclear = 0;
     if (r.answer && r.node && text.split(/\s+/).length <= 4) {
       /* a bare topic like "prices" or "cancel": walk them through it */
       var nd = node(r.node);
@@ -439,7 +459,8 @@
       push({ who: "bot", text: r.answer, acts: (r.acts || []).concat(r.node ? [["More on this", "n:" + r.node]] : []) });
     } else {
       var who = me();
-      state.pending = { text: text, kind: r.handoff, lead: LEADS[r.handoff] || LEADS.other, member: !!(who && who.member) };
+      state.pending = { text: text, kind: r.handoff, lead: (state.unclear >= 2 ? LEADS.again : LEADS[r.handoff]) || LEADS.other, member: !!(who && who.member) };
+      if (state.unclear >= 2) state.unclear = 0;
       if (r.handoff === "urgent") push({ who: "bot", text: LEADS.urgent, warn: true });
       if (r.handoff === "urgent") state.pending.lead = "Send your message to Evelyn too?";
       save();

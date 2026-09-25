@@ -38,6 +38,8 @@ body { transition: opacity .35s ease; }
 body { font-family: "InterV", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 16px; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
 button { font: inherit; color: inherit; }
+/* hidden means hidden, whatever display a component sets */
+[hidden] { display: none !important; }
 h1, h2, h3, p { margin: 0; }
 
 /* ── page shell ── */
@@ -285,9 +287,24 @@ h1, h2, h3, p { margin: 0; }
 .d-name { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-top: -30px; position: relative; }
 .d-meta { color: var(--ink-2); margin-top: 6px; }
 .d-blurb { margin-top: 12px; line-height: 1.45; color: rgba(245, 245, 247, .86); }
-.days { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; margin: 0 -16px; padding: 2px 16px 6px; scrollbar-width: none; }
+/* four weeks out, one swipeable page per week, seven days in a row on each */
+.days { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin: 0 -16px; scrollbar-width: none; }
 .days::-webkit-scrollbar { display: none; }
-.day { flex: 0 0 56px; border: 0; border-radius: 16px; background: var(--card); padding: 10px 0 11px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.wk { flex: 0 0 100%; box-sizing: border-box; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px;
+  padding: 2px 16px 6px; scroll-snap-align: start; scroll-snap-stop: always; }
+.day { position: relative; min-width: 0; border: 0; border-radius: 14px; background: var(--card); padding: 9px 0 11px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.day .fd { position: absolute; bottom: 5px; left: 50%; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--rose); }
+.day[aria-pressed="true"] .fd { background: #000; }
+.wk-ctl { display: flex; align-items: center; gap: 4px; }
+.wk-label { display: grid; justify-items: end; line-height: 1.15; min-width: 118px; text-align: right; }
+.wk-label b { font-size: 13px; font-weight: 600; color: var(--ink); }
+.wk-label span { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.wk-nav { width: 30px; height: 30px; border: 0; border-radius: 50%; background: var(--card); color: var(--ink); display: grid; place-items: center; padding: 0; }
+.wk-nav svg { width: 16px; height: 16px; }
+.wk-nav:disabled { opacity: .3; }
+.wk-dots { display: flex; justify-content: center; gap: 5px; margin-top: 4px; }
+.wk-dots i { width: 5px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .2); transition: width .25s var(--ease), background-color .25s; }
+.wk-dots i.on { width: 14px; background: var(--rose); }
 .day span { font-size: 12px; color: var(--ink-2); font-weight: 600; }
 .day b { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .day[aria-pressed="true"] { background: var(--grad); color: #000; }
@@ -413,6 +430,9 @@ h1, h2, h3, p { margin: 0; }
 .list { background: var(--card-2); border-radius: 16px; overflow: hidden; }
 .li { display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; font-size: 15px; width: 100%;
   text-align: left; border: 0; background: none; }
+/* full-width rows and buttons count their padding inside the width, so nothing on their
+   right edge (points, prices, arrows) is pushed past the card and clipped */
+.try-btn, .notif, .svc, .cta, .pay, .wallet, .li { box-sizing: border-box; }
 .li + .li { box-shadow: inset 44px .5px 0 -44px transparent, inset 0 .5px 0 rgba(255, 255, 255, .1); }
 .li .ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: rgba(244, 201, 214, .12); color: var(--rose); }
 .li .ic svg { width: 17px; height: 17px; }
@@ -645,11 +665,18 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <h2 class="d-name" id="d-name"></h2>
                   <p class="d-meta" id="d-meta"></p>
                   <p class="d-blurb" id="d-blurb"></p>
-                  <div class="sec"><h2>Day</h2></div>
+                  <div class="sec"><h2>Day</h2>
+                    <div class="wk-ctl">
+                      <button class="wk-nav" type="button" id="wk-prev" aria-label="Earlier week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+                      <p class="wk-label" aria-live="polite"><b id="wk-t">This week</b><span id="wk-s"></span></p>
+                      <button class="wk-nav" type="button" id="wk-next" aria-label="Later week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+                    </div>
+                  </div>
                   <div class="days" id="days"></div>
+                  <div class="wk-dots" id="wk-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
                   <div class="sec"><h2>Time</h2></div>
                   <div id="times"></div>
-                  <p class="flash-note"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>One starred time each day books at 10% off.</p>
+                  <p class="flash-note"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>Starred times are flash openings, 10% off. Book up to 4 weeks ahead.</p>
                 </div>
                 <div class="cta-bar"><button class="cta" id="cta" type="button" disabled>Choose a time</button></div>
               </div>
@@ -884,6 +911,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   </div>
 </main>
 
+<script>{{TYPOS_JS}}</script>
 <script>
 (function () {
   "use strict";
@@ -934,6 +962,24 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     { w: "Tue", d: 29, full: "Tue, Sep 29", times: ["8:00 AM", "9:30 AM", "1:00 PM", "2:30 PM", "5:00 PM"], flash: "1:00 PM" },
     { w: "Wed", d: 30, full: "Wed, Sep 30", times: ["9:00 AM", "11:00 AM", "3:00 PM"], flash: "11:00 AM" }
   ];
+  /* booking opens four weeks out: the rest of the 28 days after this week. Closed Sundays and
+     Mondays; flash openings are last-minute, so only this week has them. Nearer weeks are fuller. */
+  var WEEKS = 4;
+  (function () {
+    var SETS = [["8:00 AM", "9:30 AM", "11:00 AM", "1:30 PM", "3:00 PM", "4:30 PM"],
+                ["9:00 AM", "10:30 AM", "12:00 PM", "2:30 PM", "5:00 PM"],
+                ["8:00 AM", "11:00 AM", "1:00 PM", "2:30 PM", "4:00 PM", "5:30 PM"]];
+    var SAT = ["8:00 AM", "10:30 AM", "1:00 PM", "3:30 PM"];
+    var base = new Date(2026, 8, 24);                       /* the demo's "today": Thursday, September 24 */
+    for (var i = DAYS.length; i < WEEKS * 7; i++) {
+      var dt = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i), wd = dt.getDay();
+      var w = dt.toLocaleDateString("en-US", { weekday: "short" }), m = dt.toLocaleDateString("en-US", { month: "short" });
+      var times = wd === 0 || wd === 1 ? [] : (wd === 6 ? SAT : SETS[i % 3]).slice();
+      if (i < 14 && times.length > 3) times.splice(1 + (i % 2), 2);   /* next week is busier */
+      DAYS.push({ w: w, d: dt.getDate(), m: m, full: w + ", " + m + " " + dt.getDate(), times: times, closed: !times.length });
+    }
+    DAYS.forEach(function (d) { if (!d.m) d.m = "Sep"; });
+  })();
 
   var S = { points: 240, credits: 1, petal: false, cat: "facials", svc: null, day: 0, time: null, useCredit: false,
             next: { when: "Sat, Sep 26 · 10:00 AM", what: "Lumevina Custom Facial with Evelyn", chip: "Membership", order: 2.4 } };
@@ -1072,7 +1118,8 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   /* swipe up anywhere on the lock screen, or tap its empty space, to open; the alert opens its own screen */
   (function () {
     var y0 = null, x0 = 0, moved = false;
-    var start = function (x, y, t) { moved = false; y0 = t.closest(".notif, .lock-open") ? null : y; x0 = x; };
+    /* a swipe can start anywhere but the alert, including "Swipe up to open" at the bottom edge */
+    var start = function (x, y, t) { moved = false; y0 = t.closest(".notif") ? null : y; x0 = x; };
     var move = function (x, y) {
       if (y0 === null) return;
       if (Math.abs(y - y0) > 8 || Math.abs(x - x0) > 8) moved = true;
@@ -1207,21 +1254,59 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     $("#detail .scroll").scrollTop = 0;
     renderDays(); renderTimes();
     tab("book");
+    requestAnimationFrame(function () { showWeek(Math.floor(S.day / 7), false); });
     if (quiet) { book.classList.add("pushed"); syncTabs(); }
     else requestAnimationFrame(function () { book.classList.add("pushed"); syncTabs(); });
   };
   var openFlash = function (id, day) { openDetail(id, day, DAYS[day].flash); };
   $("#back").addEventListener("click", pop);
 
-  var renderDays = function () {
-    $("#days").innerHTML = DAYS.map(function (d, i) {
-      return '<button class="day" type="button" data-day="' + i + '" aria-pressed="' + (i === S.day) + '"' + (d.closed ? " disabled" : "") +
-        ' aria-label="' + d.full + (d.closed ? ", closed" : "") + '"><span>' + (d.label || d.w) + '</span><b>' + d.d + '</b></button>';
-    }).join("");
-    $$("[data-day]").forEach(function (b) {
-      b.addEventListener("click", function () { S.day = +b.getAttribute("data-day"); S.time = null; renderDays(); renderTimes(); });
-    });
+  var daysBox = $("#days"), wkPrev = $("#wk-prev"), wkNext = $("#wk-next"), curWk = 0;
+  var WK_NAME = ["This week", "Next week", "In 2 weeks", "In 3 weeks"];
+  var span = function (k) {
+    var a = DAYS[k * 7], b = DAYS[k * 7 + 6];
+    return a.m + " " + a.d + " – " + (b.m !== a.m ? b.m + " " : "") + b.d;
   };
+  var paintWk = function (k) {
+    curWk = k;
+    $("#wk-t").textContent = WK_NAME[k];
+    $("#wk-s").textContent = span(k);
+    wkPrev.disabled = k === 0; wkNext.disabled = k === WEEKS - 1;
+    $$("#wk-dots i").forEach(function (d, i) { d.classList.toggle("on", i === k); });
+  };
+  var showWeek = function (k, smooth) {
+    k = Math.max(0, Math.min(WEEKS - 1, k));
+    daysBox.scrollTo({ left: k * daysBox.clientWidth, behavior: smooth && !calm ? "smooth" : "auto" });
+    paintWk(k);
+  };
+  var renderDays = function () {
+    var h = "";
+    for (var k = 0; k < WEEKS; k++) {
+      h += '<div class="wk" role="group" aria-label="' + WK_NAME[k] + ', ' + span(k) + '">';
+      for (var i = k * 7; i < k * 7 + 7; i++) {
+        var d = DAYS[i];
+        h += '<button class="day" type="button" data-day="' + i + '" aria-pressed="' + (i === S.day) + '"' + (d.closed ? " disabled" : "") +
+          ' aria-label="' + d.full + (d.closed ? ", closed" : d.flash ? ", has a flash opening" : "") + '"><span>' + (d.label || d.w) + '</span><b>' + d.d + '</b>' +
+          (d.flash ? '<i class="fd" aria-hidden="true"></i>' : "") + '</button>';
+      }
+      h += '</div>';
+    }
+    daysBox.innerHTML = h;
+    showWeek(Math.floor(S.day / 7), false);
+  };
+  daysBox.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-day]");
+    if (!b || b.disabled) return;
+    S.day = +b.getAttribute("data-day"); S.time = null;
+    $$("[data-day]", daysBox).forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+    renderTimes();
+  });
+  daysBox.addEventListener("scroll", function () {
+    var k = Math.round(daysBox.scrollLeft / Math.max(1, daysBox.clientWidth));
+    if (k !== curWk) paintWk(k);
+  }, { passive: true });
+  wkPrev.addEventListener("click", function () { showWeek(curWk - 1, true); });
+  wkNext.addEventListener("click", function () { showWeek(curWk + 1, true); });
   var BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>';
   var renderTimes = function () {
     var d = DAYS[S.day], box = $("#times");
@@ -1431,6 +1516,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   thread.addEventListener("click", function (e) { var b = e.target.closest("[data-o]"); if (b) choose(b.textContent, b.getAttribute("data-o")); });
 
   var ANS = [
+    [/^(ok|okay|k|cool|great|got it|sounds good|perfect|nice|alright|yes|yeah|yep|thanks|thank you|ty)[\s!.]*$/i, "Anything else I can help with?"],
     [/before|prep|retinol|botox|filler/i, "Stop retinol 5 to 7 days before, pause exfoliating acids 2 to 3 days before, and don’t wax or shave your face for 2 days."],
     [/after|work ?out|exercise|makeup/i, "Give it 24 hours: skip workouts and heavy sweating, and makeup for the rest of the day."],
     [/cancel|move|reschedul/i, "Move it free up to 48 hours before, right from your next visit on Home. Saturdays can’t be moved."],
@@ -1445,14 +1531,25 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     return d;
   };
   var escA = function (t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; };
+  var TY = window.LumevinaTypos, unclearN = 0;
   var askSend = function (text) {
     text = String(text || "").trim();
     if (!text) return;
     bubbleA("you", escA(text));
+    /* typos and shorthand read as what they meant (js/ask-typos.js); skin questions still go to Evelyn */
+    var fixed = TY ? TY.fix(text) : text;
+    var skin = SKIN.test(text) || SKIN.test(fixed);
     var hit = null;
-    if (!SKIN.test(text)) for (var i = 0; i < ANS.length; i++) if (ANS[i][0].test(text)) { hit = ANS[i][1]; break; }
+    if (!skin) for (var i = 0; i < ANS.length; i++) if (ANS[i][0].test(fixed) || ANS[i][0].test(text)) { hit = ANS[i][1]; break; }
+    var unclear = !skin && !hit && TY && TY.gibberish(text);
+    unclearN = unclear ? unclearN + 1 : 0;
     setTimeout(function () {
       if (hit) { bubbleA("bot", escA(hit)); return; }
+      if (unclear) {
+        bubbleA("bot", unclearN > 1 ? "Still not catching it, sorry. Try a topic below, or say it another way."
+          : "I didn’t quite catch that. Could you say it another way, or pick a topic below?");
+        return;
+      }
       bubbleA("bot", '<span class="tg">Sent to Evelyn</span>That depends on your skin, so Evelyn will answer this one herself.<span class="pr">Glow member · reply within 24 hours</span>');
       var typing = null;
       setTimeout(function () { typing = bubbleA("ev typing", "Evelyn is writing…"); }, calm ? 0 : 1400);
