@@ -122,6 +122,18 @@
     } catch (e) { return null; }
   })();
   var refInput = modal.querySelector("#bk-ref");
+  /* the code field says whether the code counts, and the price updates as it's typed */
+  var refHint = modal.querySelector(".rw-ref-hint");
+  var paintRefHint = function () {
+    if (!refHint) return;
+    var c = refInput.value.trim().toUpperCase();
+    refHint.textContent = !c ? "A friend’s code takes $15 off your first visit."
+      : referralCode() ? "✓ $15 off your first visit"
+      : (rw && c === rw.refCode()) ? "That’s your own code: share it with a friend instead."
+      : "Codes look like GLOW-AB12.";
+    refHint.classList.toggle("is-ok", !!referralCode());
+  };
+  refInput.addEventListener("input", function () { paintRefHint(); renderPreview(); });
   var petalBtn = modal.querySelector(".mirror-btn");
   var petalResult = modal.querySelector(".mirror-result");
   var calBtn = modal.querySelector(".booking-cal");
@@ -229,7 +241,18 @@
     return Math.round((payablePrice() - flashDiscount()) * rate * 100) / 100;
   };
 
-  var sessionTotal = function () { return payablePrice() - flashDiscount() - memberExtrasOff(); };
+  /* a friend's referral code: $15 off a first visit (the friend who shared it earns
+     150 points, $15, once this visit is done) */
+  var REF_OFF = 15;
+  var referralCode = function () {
+    var c = refInput.value.trim().toUpperCase();
+    return !refField.hidden && /^GLOW-[A-Z0-9]{4}$/.test(c) && !(rw && c === rw.refCode()) ? c : null;
+  };
+  var referralOff = function () {
+    return referralCode() ? Math.min(REF_OFF, Math.max(0, payablePrice() - flashDiscount() - memberExtrasOff())) : 0;
+  };
+
+  var sessionTotal = function () { return payablePrice() - flashDiscount() - memberExtrasOff() - referralOff(); };
 
   var depositDue = function () { return sessionTotal() / 2; };
 
@@ -617,6 +640,9 @@
     if (memberExtrasOff() > 0) {
       addRow("Member 15% off the rest of this visit", "−" + pay.money(memberExtrasOff()), "sc-member");
     }
+    if (referralOff() > 0) {
+      addRow("Friend’s referral — $" + REF_OFF + " off your first visit", "−" + pay.money(referralOff()), "sc-flash");
+    }
     addRow("Total", pay.money(sessionTotal()), "sc-total");
     addRow("Due now — 50% deposit", pay.money(depositDue()), "sc-due");
     addRow("Due in person at your visit", pay.money(sessionTotal() - depositDue()), "sc-rest");
@@ -873,6 +899,7 @@
     /* referral code: first visit only, filled in when they came from a shared link */
     refField.hidden = loadBookings().length > 0;
     if (!refField.hidden && !refInput.value && incomingRef && !(rw && incomingRef === rw.refCode())) refInput.value = incomingRef;
+    paintRefHint();
     /* signed-in clients skip retyping name & email */
     var acct = window.LumevinaAccount && window.LumevinaAccount.current();
     if (acct) {
@@ -1338,6 +1365,8 @@
       var earnQ = rw ? rw.quote(charge, earnOpts) : null;
       var prevLastVisit = rw ? rw.lastVisit() : null;
       saveBooking({
+        referral: referralCode(),
+        referralOff: referralOff(),
         points: earnQ ? earnQ.points : 0,
         rebookBonus: earnQ && earnQ.streak ? rw.rebookBonus : 0,
         birthdayBonus: !!(earnQ && earnQ.birthday),
@@ -1424,8 +1453,8 @@
       var code = refInput.value.trim().toUpperCase();
       if (firstVisit && code && rw && code !== rw.refCode()) {
         refNoteEl.textContent = "✉ Referral code " + code +
-          " received — your friend earns " + rw.referralBonus +
-          " ✦ ($15) once your visit is complete.";
+          " applied: $" + REF_OFF + " off this first visit, and your friend earns " + rw.referralBonus +
+          " ✦ ($15) once it's complete.";
         refNoteEl.hidden = false;
       } else {
         refNoteEl.hidden = true;

@@ -1343,6 +1343,13 @@ body.intro-lock { overflow: hidden; }
   margin-bottom: var(--space-3);
 }
 
+/* a label in the Switch button's shape (the Brazilian package card's header), not a control */
+.shuffle-tag { cursor: default; pointer-events: none; }
+.shuffle-tag .shuffle-btn-text { line-height: 13px; }
+/* the Switch button and the tag share one height, so both header rows match exactly */
+.shuffle-btn { box-sizing: border-box; height: 2rem; }
+.shuffle-head { min-height: 2.25rem; }   /* room for a label that wraps to two lines */
+
 .shuffle-label {
   font-size: 0.7rem;
   font-weight: 500;
@@ -3582,6 +3589,8 @@ body.intro-lock { overflow: hidden; }
 }
 
 .rw-copy { padding: 0.45rem 0.9rem; }
+.rw-ref-hint { margin: 0.35rem 0 0; font-size: 0.8rem; color: var(--ink-60); }
+.rw-ref-hint.is-ok { color: var(--plum); font-weight: 600; }
 .rw-share { margin: 0.5rem 0 0.2rem; }
 .rw-share-status { overflow-wrap: anywhere; }
 .acct-share { margin: 0.2rem 0 0.4rem; }
@@ -5342,10 +5351,12 @@ html.sheet-open { overflow: hidden; }
   .shop-grid .product-card--hero .book-btn { padding: 0.6rem 1.4rem; font-size: 0.9rem; }
 
   /* new-client / waxing decks in a half-width tile */
-  .shuffle-head { align-items: flex-start; margin-bottom: 0.9rem; }
+  .shuffle-head { align-items: flex-start; margin-bottom: 0.9rem; min-height: 0; }
   .shuffle-label { font-size: 0.58rem; letter-spacing: 0.12em; line-height: 1.4; }
-  .shuffle-btn { flex-shrink: 0; padding: 0.4rem; }
+  .shuffle-btn { flex-shrink: 0; padding: 0.4rem; height: 1.75rem; }
   .shuffle-btn-text { display: none; }
+  .shuffle-tag { padding: 0.4rem 0.55rem; }
+  .shuffle-tag .shuffle-btn-text { display: inline; font-size: 0.58rem; line-height: 13px; }
 
   /* gift certificate spans the row: the certificate sits beside its copy */
   .shop-grid .product-card--gift {

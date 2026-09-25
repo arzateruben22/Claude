@@ -231,6 +231,11 @@
           </div>
 
           <article class="product-card" data-reveal data-spotlight>
+            <!-- the same header row as the New Clients card beside it, so the two photos line up -->
+            <div class="shuffle-head">
+              <span class="shuffle-label">Waxing · Package</span>
+              <span class="shuffle-btn shuffle-tag" aria-hidden="true"><span class="shuffle-btn-text">2 in 1</span></span>
+            </div>
             <div class="product-visual visual-peel" aria-hidden="true"><img src="img/services/brazilian.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
             <h3 class="product-name">Brazilian Wax × Mini Vajacial</h3>
             <p class="product-desc">The package: Brazilian wax paired with a mini vajacial — smooth, calm, ingrown-free.</p>
@@ -799,8 +804,8 @@
               <div class="app-perk" data-reel-name="Refer">
                 <span class="app-perk-glyph" aria-hidden="true">🎂</span>
                 <h3>Refer &amp; celebrate</h3>
-                <p>150 points ($15) when a referred friend finishes their first visit — plus a
-                +50 bonus in your birthday month, every year.</p>
+                <p>Refer a friend: they get $15 off their first visit, you get 150 points ($15)
+                when it’s done — plus a +50 bonus in your birthday month, every year.</p>
               </div>
               <div class="app-perk" data-reel-name="Mirror">
                 <span class="app-perk-glyph app-perk-mirror" aria-hidden="true"><svg class="mirror-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8l1.3 1.5h-2.6z" fill="currentColor"/><ellipse cx="12" cy="9.4" rx="6.3" ry="7.3" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse class="mirror-glass" cx="12" cy="9.4" rx="4.3" ry="5.3"/><path class="mirror-shine" d="M9.6 6.8l2.7-1.8M9.7 9.2l1.5-1"/><path d="M12 16.8v5.4M10.1 18.6h3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span>
@@ -1017,7 +1022,8 @@
         <div class="field rw-ref-field" hidden>
           <label for="bk-ref">Referral code <span class="rw-ref-opt">(optional — first visit)</span></label>
           <input id="bk-ref" name="ref" type="text" autocomplete="off"
-            placeholder="GLOW-XXXX" maxlength="12">
+            placeholder="GLOW-XXXX" maxlength="12" aria-describedby="bk-ref-hint">
+          <p class="rw-ref-hint" id="bk-ref-hint" aria-live="polite">A friend’s code takes $15 off your first visit.</p>
         </div>
         <button class="btn-mb booking-confirm" type="button">
           <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
@@ -1665,8 +1671,8 @@
         <button class="btn btn-ghost acct-intake" type="button">Complete pre-visit form</button>
 
         <p class="booking-label">Your referral code</p>
-        <p class="acct-ref"><code class="acct-ref-code"></code> — a friend's first visit
-        earns you 150 ✦ ($15) once it's complete.</p>
+        <p class="acct-ref"><code class="acct-ref-code"></code> — a friend gets $15 off their
+        first visit, and you earn 150 ✦ ($15) once it's complete.</p>
         <button class="btn btn-ghost acct-share" type="button">Share my code</button>
         <p class="acct-ref acct-share-status" role="status" hidden></p>
 
@@ -1876,7 +1882,7 @@
         <li><span aria-hidden="true">↻</span> +25 points when your next visit is within 5 weeks of your last (non-members; handed back if you cancel it)</li>
         <li><span aria-hidden="true">⚡</span> The starred flash opening each day is 10% off</li>
         <li><span aria-hidden="true">🎂</span> +50 points once a year in your birthday month</li>
-        <li><span aria-hidden="true">✉</span> 150 points when a referred friend completes their first visit</li>
+        <li><span aria-hidden="true">✉</span> Refer a friend: they get $15 off their first visit, you get 150 points ($15) when it’s done</li>
         <li><span aria-hidden="true" class="rw-mirror"><svg class="mirror-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8l1.3 1.5h-2.6z" fill="currentColor"/><ellipse cx="12" cy="9.4" rx="6.3" ry="7.3" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse class="mirror-glass" cx="12" cy="9.4" rx="4.3" ry="5.3"/><path class="mirror-shine" d="M9.6 6.8l2.7-1.8M9.7 9.2l1.5-1"/><path d="M12 16.8v5.4M10.1 18.6h3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span> Magic mirror after every confirmed booking</li>
       </ul>
       <p class="rw-fine">100 points = $10 off · points cover up to half of any deposit.</p>
@@ -1890,8 +1896,8 @@
         </div>
         <button class="btn btn-solid rw-share" type="button">Share my code</button>
         <p class="rw-fine rw-share-status" role="status" hidden></p>
-        <p class="rw-fine">Send it to a friend: you earn 150 ✦ ($15) when they complete
-        their first appointment.</p>
+        <p class="rw-fine">Send it to a friend: they get $15 off their first visit, and you
+        earn 150 ✦ ($15) when it's done.</p>
         <div class="rw-bday-row">
           <label for="rw-bmonth">Birthday month</label>
           <select id="rw-bmonth">

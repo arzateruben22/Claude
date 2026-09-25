@@ -360,7 +360,7 @@ STEPS_JS = js_ascii(open(os.path.join(HERE, "steps.js")).read())
 DEEP = [
     {"n": 1, "when": "Step 1 · Months 0–6", "h": "Grow your chair.", "dim": "Fill every hour.",
      "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Saturday from 8 AM to 6 PM with Sundays and Mondays closed, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
-     "plan": [("Launch", "Glow Membership from $159 a month, offered at every checkout, plus add-ons at booking, flash openings and give $25 / get $25."),
+     "plan": [("Launch", "Glow Membership from $159 a month, offered at every checkout, plus add-ons at booking, flash openings and give $15 / get $15 referrals."),
               ("Measure", "Members, average visit, and how many hours are booked."),
               ("Target", "20 members by month 3 and 50 by month 6, a $160+ average visit, 90% of hours booked."),
               ("Result", "About $5.8k more revenue a month by month 9, from the same five days.")]},
@@ -1007,10 +1007,11 @@ NET_JS = r"""
   }
   var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (rm) { for (var g2 = 0; g2 < 14 * 60; g2++) step(1 / 60); return; }
+  var SPEED = 1.3;   /* the whole story plays a little faster: one loop is about 14 seconds */
   var last = performance.now(), raf = null, vis = true;
   var loop = function (now) {
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    step(dt);
+    step(dt * SPEED);
     raf = requestAnimationFrame(loop);
   };
   var play = function () { if (raf === null && vis && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); } };

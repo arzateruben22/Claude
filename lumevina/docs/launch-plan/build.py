@@ -88,13 +88,13 @@ PACE = [("Week 1", "Count what’s there: facial clients from the last six month
         ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
         ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
         ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 13),
-        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend for 150 Glow Points.", PLAN)]
+        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend: $15 off for them, 150 Glow Points for the member.", PLAN)]
 
 SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
            ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 7),
            ("Win-back texts", "Clients not seen in 60+ days", 4),
            ("New clients", "Google, reviews, gift certificates, neighbors", 2),
-           ("Member referrals", "150 Glow Points when a friend’s first visit is done", 2)]
+           ("Member referrals", "$15 off for the friend; 150 Glow Points when their first visit is done", 2)]
 
 SCRIPT = ("The offer, in the chair",
           "“Your skin renews about every four weeks. As a member it’s $159 a month instead of $195 a visit, and I’ll hold your spot for next month. Want me to book it now?”")
@@ -298,7 +298,7 @@ MILES = [(5, "Week 5", "The Founding Five", "The first members, each with a free
 NEW_GOAL = 2                       # new clients a week by week 6
 NEW_CLIENTS = [("Google, first", "Claim the Google Business Profile: hours, photos, and a Book button straight to Lumevina. Most “facial near me” searches end there."),
                ("25 reviews by day 90", "A text with the review link the day after every facial. Reviews are what get a stranger to book."),
-               ("Referrals that pay", "Every client has a code: 150 Glow Points, $15, when a friend finishes a first visit. Members hear it at every visit."),
+               ("Referrals that pay", "Every client has a code: the friend gets $15 off a first visit, and the client gets 150 Glow Points ($15) when it’s done. Members hear it at every visit."),
                ("One result a week", "A before-and-after, with permission, on Instagram and the Google profile, with the New Client price on it."),
                ("Gift certificates", "Every certificate puts someone new in the chair. Push them before Valentine’s, Mother’s Day and the holidays."),
                ("Neighbors", "Chair cards with a first-visit offer at a nearby salon, gym, yoga studio or bridal shop, and send clients their way too.")]

@@ -223,7 +223,11 @@ client's last one. `stripe-webhook` records what each booking earned in
 counting toward the next rebooking bonus. The website does the same today
 (`js/rewards.js` `reverse`, called from My Lumevina's cancel).
 
-Referrals: **Share my code** (Glow Rewards and My Lumevina) opens the phone's
+Referrals give both sides $15: the friend gets **$15 off their first visit**
+(`create-deposit-intent` checks the code belongs to another client and that
+it's the booker's first booking, and records it in `bookings.referral_code`),
+and the client who shared it gets **150 points ($15)** once that visit is
+completed. **Share my code** (Glow Rewards and My Lumevina) opens the phone's
 share menu with a link like `https://lumevina.com/?ref=GLOW-AB12`, or copies
 it where there's no share menu. A visitor arriving with `?ref=` has the code
 remembered and filled in on their first booking; the referral-credit trigger

@@ -4,8 +4,9 @@
    session with Wax Wednesday, +25 for non-members whose next visit
    is within 5 weeks of their last (members already have a facial
    every month), handed back if that booking is cancelled,
-   +50 once a year during your birthday month, a referral code
-   worth 150 points when a friend completes their first visit,
+   +50 once a year during your birthday month, a referral code that
+   gives a friend $15 off their first visit and is worth 150 points
+   ($15) to you when that visit is complete,
    and a magic-mirror bonus after each confirmed appointment.
    100 points = $10 off, redeemable against up to half a deposit.
    (Flash openings — the daily ⚡ starred time at 10% off — live
@@ -156,7 +157,7 @@
     return (live ? location.origin + location.pathname : SITE + "/") + "?ref=" + encodeURIComponent(data.refCode);
   };
   var shareText = function () {
-    return "I love my facials at Lumevina Aesthetics Spa in Woodland Hills. Book your first visit with my code " + data.refCode + ":";
+    return "I love my facials at Lumevina Aesthetics Spa in Woodland Hills. Use my code " + data.refCode + " for $15 off your first visit:";
   };
   var share = function (statusEl) {
     var url = shareLink(), text = shareText(), all = text + " " + url;
@@ -169,7 +170,7 @@
     };
     if (navigator.share) {
       navigator.share({ title: "Lumevina", text: text, url: url }).then(function () {
-        say("Sent. You earn " + REFERRAL_BONUS + " ✦ when their first visit is done.");
+        say("Sent. They get $15 off, and you earn " + REFERRAL_BONUS + " ✦ when their first visit is done.");
       }, function (e) { if (!(e && e.name === "AbortError")) copy(); });
     } else copy();
   };

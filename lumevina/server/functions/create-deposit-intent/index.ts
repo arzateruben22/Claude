@@ -15,7 +15,7 @@
 // {
 //   date: "2026-08-04", start_min: 600, services: ["brazilian-wax"],
 //   client_id?: uuid, guest_name?: string, guest_email?: string,
-//   points_redeemed?: number, flash?: boolean
+//   points_redeemed?: number, flash?: boolean, ref_code?: string
 // }
 
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -25,6 +25,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { CATALOG } from "../_shared/catalog.ts";
 
 const FLASH_OFF = 0.10;
+const REFERRAL_OFF_CENTS = 1500; // a friend's code: $15 off a first visit
 const POINT_VALUE_CENTS = 10; // 100 points = $10.00
 
 Deno.serve(async (req) => {
@@ -64,6 +65,32 @@ Deno.serve(async (req) => {
     if (flash) totalCents = Math.round(totalCents * (1 - FLASH_OFF));
   }
 
+  // A friend's referral code: $15 off, on a first visit only, never your own
+  // code. The booker is linked to the friend (clients.referred_by), so the
+  // grant_referral_credit trigger pays the friend 150 points once this visit
+  // is completed.
+  let referral: string | null = null;
+  const code = String(body.ref_code ?? "").trim().toUpperCase();
+  if (/^GLOW-[A-Z0-9]{4}$/.test(code)) {
+    const { data: owner } = await supabase.from("clients").select("id").eq("ref_code", code).maybeSingle();
+    let prior = 0;
+    if (body.client_id) {
+      ({ count: prior = 0 } = await supabase.from("bookings").select("id", { count: "exact", head: true })
+        .eq("client_id", body.client_id).neq("status", "cancelled"));
+    } else if (body.guest_email) {
+      ({ count: prior = 0 } = await supabase.from("bookings").select("id", { count: "exact", head: true })
+        .eq("guest_email", body.guest_email).neq("status", "cancelled"));
+    }
+    if (owner && owner.id !== body.client_id && !prior) {
+      referral = code;
+      totalCents = Math.max(0, totalCents - REFERRAL_OFF_CENTS);
+      if (body.client_id) {
+        await supabase.from("clients").update({ referred_by: code })
+          .eq("id", body.client_id).is("referred_by", null);
+      }
+    }
+  }
+
   const depositCents = Math.round(totalCents / 2);
 
   // Points may cover up to half the deposit — verified against the ledger.
@@ -92,6 +119,7 @@ Deno.serve(async (req) => {
     deposit_cents: depositCents,
     points_redeemed: redeemed,
     flash,
+    referral_code: referral,
     source: body.source === "app" || body.source === "admin" ? body.source : "web",
   }).select().single();
 

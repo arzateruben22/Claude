@@ -40,6 +40,7 @@ create table bookings (
   points_redeemed int not null default 0,
   points_earned int not null default 0,  -- set by stripe-webhook; handed back on cancel
   prev_last_visit date,            -- the client's last_visit before this booking
+  referral_code text,              -- a friend's code: $15 off this first visit
   flash boolean not null default false,
   source text not null default 'web'  -- 'web' | 'app' | 'admin' — powers the
     check (source in ('web', 'app', 'admin')),  -- app-vs-web split in the

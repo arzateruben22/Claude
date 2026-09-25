@@ -122,6 +122,9 @@
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
       return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },
+    { id: "refer", k: /\brefer|referral|invite a friend|friend'?s code|code from (a|my) friend|share my code/, a: function () {
+      return "Share your code from Glow Rewards: your friend gets $15 off their first visit, and you get 150 points ($15) once it’s done. Got a friend’s code? Enter it when you book your first visit."; },
+      acts: [["Book", "book"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
       return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + price("Gift Card · Any treatment ($110 value)", 110) + " card for anything."; },
       acts: [["Send a gift", "#gift"]] },
