@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Lumevina for iPhone</title>
 <meta name="color-scheme" content="dark">
 <style>html, body { background: #000; color-scheme: dark; }</style>
@@ -175,6 +176,8 @@ h1, h2, h3, p { margin: 0; }
 .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 999px;
   background: rgba(244, 201, 214, .12); color: var(--rose); }
 .chip svg { width: 12px; height: 12px; }
+/* the Ageless plan's own chip: an outline in its lighter pink, since Sofia's Glow facials don't cover it */
+.chip.ag { background: none; box-shadow: inset 0 0 0 1px rgba(253, 226, 234, .35); color: #fde2ea; }
 .press { transition: transform .15s ease; }
 .press:active { transform: scale(.97); }
 
@@ -275,7 +278,6 @@ h1, h2, h3, p { margin: 0; }
 .svc .n { font-weight: 600; font-size: 15.5px; line-height: 1.25; }
 .svc .m { color: var(--ink-2); font-size: 13px; margin-top: 3px; }
 .svc .chip { margin-top: 6px; }
-.svc .chip { margin-top: 6px; }
 .svc .pr { font-weight: 700; font-size: 16px; padding-right: 6px; font-variant-numeric: tabular-nums; }
 .page { position: absolute; inset: 0; background: #000; transition: transform .45s var(--spring), filter .45s ease; }
 .book.pushed .page.list { transform: translateX(-28%); filter: brightness(.6); }
@@ -289,6 +291,8 @@ h1, h2, h3, p { margin: 0; }
 .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .62) 0%, rgba(0, 0, 0, .15) 32%, transparent 50%, #000 100%); }
 .d-name { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-top: -30px; position: relative; }
 .d-meta { color: var(--ink-2); margin-top: 6px; }
+.d-cover:empty { display: none; }
+.d-cover { margin-top: 10px; }
 .d-blurb { margin-top: 12px; line-height: 1.45; color: rgba(245, 245, 247, .86); }
 /* four weeks out, one swipeable page per week, seven days in a row on each */
 .days { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin: 0 -16px; scrollbar-width: none; }
@@ -308,6 +312,30 @@ h1, h2, h3, p { margin: 0; }
 .wk-dots { display: flex; justify-content: center; gap: 5px; margin-top: 4px; }
 .wk-dots i { width: 5px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .2); transition: width .25s var(--ease), background-color .25s; }
 .wk-dots i.on { width: 14px; background: var(--rose); }
+/* the month view: tap the calendar button to see the whole month, with the four open weeks lit */
+.cal-tog { width: auto; padding: 0 10px 0 8px; margin-right: 4px; gap: 5px; display: inline-flex; align-items: center; font-size: 13px; font-weight: 600; border-radius: 15px; }
+.cal-tog svg { width: 14px; height: 14px; }
+.cal-tog[aria-pressed="true"] { background: var(--grad); color: #000; }
+.wk-ctl.month .wk-label b { white-space: nowrap; }
+.cal { animation: calIn .28s var(--ease); }
+@keyframes calIn { from { opacity: 0; transform: translateY(-6px); } }
+.cal-h, .cal-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.cal-h span { text-align: center; font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--ink-3); padding-bottom: 6px; }
+.cal-g { row-gap: 4px; }
+.cd { position: relative; height: 44px; border: 0; background: none; padding: 0; color: var(--ink); display: grid; place-items: center; }
+.cd b { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--card);
+  font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color .2s ease, color .2s ease; }
+.cd.today b { box-shadow: inset 0 0 0 1.5px var(--rose); }
+.cd[aria-pressed="true"] b { background: var(--grad); color: #000; box-shadow: none; }
+.cd:disabled b, .cd.out b { background: none; color: var(--ink-3); font-weight: 500; }
+.cd.out b { opacity: .45; }
+.cd .fd { position: absolute; bottom: 0; left: 50%; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--rose); }
+.cal-key { display: flex; gap: 14px; justify-content: center; margin-top: 8px; font-size: 12px; color: var(--ink-2); }
+.cal-key span { display: inline-flex; align-items: center; gap: 5px; }
+.cal-key i { width: 10px; height: 10px; border-radius: 50%; background: var(--card); }
+.cal-key i.fl { width: 4px; height: 4px; background: var(--rose); }
+.cal-key i.td { background: none; box-shadow: inset 0 0 0 1.5px var(--rose); }
+.picked { font-size: 14px; font-weight: 600; color: var(--rose); font-variant-numeric: tabular-nums; }
 .day span { font-size: 12px; color: var(--ink-2); font-weight: 600; }
 .day b { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .day[aria-pressed="true"] { background: var(--grad); color: #000; }
@@ -667,9 +695,11 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <div class="hero"><img id="d-img" src="" alt=""></div>
                   <h2 class="d-name" id="d-name"></h2>
                   <p class="d-meta" id="d-meta"></p>
+                  <p class="d-cover" id="d-cover"></p>
                   <p class="d-blurb" id="d-blurb"></p>
                   <div class="sec"><h2>Day</h2>
                     <div class="wk-ctl">
+                      <button class="wk-nav cal-tog" type="button" id="cal-tog" aria-pressed="false" aria-label="Show the month calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg><span id="cal-tog-l">Month</span></button>
                       <button class="wk-nav" type="button" id="wk-prev" aria-label="Earlier week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
                       <p class="wk-label" aria-live="polite"><b id="wk-t">This week</b><span id="wk-s"></span></p>
                       <button class="wk-nav" type="button" id="wk-next" aria-label="Later week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -677,7 +707,8 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   </div>
                   <div class="days" id="days"></div>
                   <div class="wk-dots" id="wk-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
-                  <div class="sec"><h2>Time</h2></div>
+                  <div class="cal" id="cal" hidden></div>
+                  <div class="sec"><h2>Time</h2><span class="picked" id="picked"></span></div>
                   <div id="times"></div>
                   <p class="flash-note"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>Starred times are flash openings, 10% off. Book up to 4 weeks ahead.</p>
                 </div>
@@ -875,6 +906,9 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <div class="credit"><div class="t"><b>Use a banked facial</b><span id="c-credit-sub">Covered by your Glow membership</span></div>
                     <button class="toggle pinkt" type="button" role="switch" id="c-credit" aria-checked="false" aria-label="Use a banked facial"></button></div>
                 </div>
+                <div class="group" id="c-ag-group" hidden>
+                  <div class="credit"><div class="t"><b>Included with Ageless</b><span>Your Glow facials don&rsquo;t cover this one. On Ageless ($209 a month) it&rsquo;s your monthly facial.</span></div></div>
+                </div>
                 <div class="group">
                   <div class="grow total"><span class="l" id="c-due-l">Deposit today · 50%</span><span class="r" id="c-due"></span></div>
                   <div class="grow"><span class="l">Balance at your visit</span><span class="r" id="c-bal"></span></div>
@@ -925,20 +959,21 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   var IMG = { custom: "{{S_CUSTOM}}", ageless: "{{S_AGELESS}}", dermaplane: "{{S_DERMA}}", acne: "{{S_ACNE}}",
               consult: "{{S_CONSULT}}", brazilian: "{{S_BRAZIL}}", underarm: "{{S_UNDERARM}}" };
 
-  /* the menu, from the Lumevina site */
+  /* the menu, from the Lumevina site. covered: the membership that includes it. Sofia is on Glow
+     (the Custom Facial, Custom + Dermaplaning, the Monthly Acne Treatment); Ageless adds the Ageless Grace. */
   var SERVICES = {
     facials: [
-      { id: "custom", name: "Lumevina Custom Facial", mins: 60, price: 195, img: "custom", covered: true,
+      { id: "custom", name: "Lumevina Custom Facial", mins: 60, price: 195, img: "custom", covered: "glow",
         blurb: "The returning-client facial: customized actives, extractions, LED therapy and cryo globes." },
-      { id: "derma", name: "Custom Facial + Dermaplaning", mins: 60, price: 185, img: "dermaplane", covered: true,
+      { id: "derma", name: "Custom Facial + Dermaplaning", mins: 60, price: 185, img: "dermaplane", covered: "glow",
         blurb: "The Lumevina custom facial finished with dermaplaning. Glass-smooth, extra glow." },
-      { id: "ageless", name: "Ageless Grace Facial", mins: 60, price: 245, img: "ageless", covered: false,
+      { id: "ageless", name: "Ageless Grace Facial", mins: 60, price: 245, img: "ageless", covered: "ageless",
         blurb: "Our signature lifting facial: peptides, sculpting massage and LED light therapy." },
       { id: "consult", name: "New Client Consultation + Treatment", mins: 60, price: 215, img: "consult", covered: false,
         blurb: "Your first visit: a full skin analysis, consultation and a treatment built for your goals." }
     ],
     acne: [
-      { id: "acne", name: "Monthly Acne Treatment", mins: 60, price: 195, img: "acne", covered: false,
+      { id: "acne", name: "Monthly Acne Treatment", mins: 60, price: 195, img: "acne", covered: "glow",
         blurb: "Your monthly acne visit on the Face Reality program: extractions, a peel and a routine check." },
       { id: "acne-new", name: "New Client Acne Consultation", mins: 60, price: 225, img: "consult", covered: false,
         blurb: "A personalized plan built on Face Reality, the acne line we trust, tailored to your skin." }
@@ -981,7 +1016,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
       if (i < 14 && times.length > 3) times.splice(1 + (i % 2), 2);   /* next week is busier */
       DAYS.push({ w: w, d: dt.getDate(), m: m, full: w + ", " + m + " " + dt.getDate(), times: times, closed: !times.length });
     }
-    DAYS.forEach(function (d) { if (!d.m) d.m = "Sep"; });
+    DAYS.forEach(function (d, k) { if (!d.m) d.m = "Sep"; d.date = new Date(base.getFullYear(), base.getMonth(), base.getDate() + k); });
   })();
 
   var S = { points: 240, credits: 1, petal: false, cat: "facials", svc: null, day: 0, time: null, useCredit: false,
@@ -1229,6 +1264,10 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
 
   /* ── book: list ── */
   var seg = $("#seg"), svcList = $("#svc-list");
+  var coverChip = function (s) {
+    return s.covered === "glow" ? '<span class="chip">Covered by Glow</span>'
+      : s.covered === "ageless" ? '<span class="chip ag">Included with Ageless</span>' : "";
+  };
   var renderList = function () {
     var cats = ["facials", "acne", "waxing"], i = cats.indexOf(S.cat);
     $(".thumb", seg).style.transform = "translateX(" + (i * 100) + "%)";
@@ -1236,7 +1275,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     svcList.innerHTML = SERVICES[S.cat].map(function (s) {
       return '<button class="svc press" type="button" data-svc="' + s.id + '"><img src="' + IMG[s.img] + '" alt="">' +
         '<span><span class="n">' + s.name + '</span><span class="m">' + s.mins + ' min</span>' +
-        (s.covered ? '<span class="chip">Covered by Glow</span>' : "") + '</span><span class="pr">' + money(s.price) + '</span></button>';
+        coverChip(s) + '</span><span class="pr">' + money(s.price) + '</span></button>';
     }).join("");
     $$("[data-svc]", svcList).forEach(function (b) { b.addEventListener("click", function () { openDetail(b.getAttribute("data-svc"), 0, null); }); });
   };
@@ -1255,6 +1294,8 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     $("#d-name").textContent = s.name;
     $("#d-meta").textContent = s.mins + " min · " + money(s.price) + " · with Evelyn";
     $("#d-blurb").textContent = s.blurb;
+    $("#d-cover").innerHTML = s.covered === "glow" ? '<span class="chip">Covered by your Glow membership</span>'
+      : s.covered === "ageless" ? '<span class="chip ag">Included with the Ageless membership</span>' : "";
     $("#detail .scroll").scrollTop = 0;
     renderDays(); renderTimes();
     tab("book");
@@ -1266,6 +1307,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   $("#back").addEventListener("click", pop);
 
   var daysBox = $("#days"), wkPrev = $("#wk-prev"), wkNext = $("#wk-next"), curWk = 0;
+  var calBox = $("#cal"), calTog = $("#cal-tog"), wkCtl = calTog.parentNode, month = false, curMo = 0;
   var WK_NAME = ["This week", "Next week", "In 2 weeks", "In 3 weeks"];
   var span = function (k) {
     var a = DAYS[k * 7], b = DAYS[k * 7 + 6];
@@ -1273,6 +1315,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   };
   var paintWk = function (k) {
     curWk = k;
+    if (month) return;
     $("#wk-t").textContent = WK_NAME[k];
     $("#wk-s").textContent = span(k);
     wkPrev.disabled = k === 0; wkNext.disabled = k === WEEKS - 1;
@@ -1296,24 +1339,71 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
       h += '</div>';
     }
     daysBox.innerHTML = h;
-    showWeek(Math.floor(S.day / 7), false);
+    if (month) setMonth(true); else showWeek(Math.floor(S.day / 7), false);
   };
-  daysBox.addEventListener("click", function (e) {
-    var b = e.target.closest("[data-day]");
-    if (!b || b.disabled) return;
-    S.day = +b.getAttribute("data-day"); S.time = null;
-    $$("[data-day]", daysBox).forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+
+  /* the month view: every month the four weeks touch, whole, with the bookable days lit */
+  var FIRST = DAYS[0].date, LAST = DAYS[DAYS.length - 1].date;
+  var MONTHS = [];
+  for (var mo = new Date(FIRST.getFullYear(), FIRST.getMonth(), 1); mo <= LAST; mo = new Date(mo.getFullYear(), mo.getMonth() + 1, 1)) MONTHS.push(mo);
+  var dayIndex = function (dt) { return Math.round((dt - FIRST) / 864e5); };
+  var longName = function (d) {
+    return (d.label ? d.label + " · " : "") + d.date.toLocaleDateString("en-US", { weekday: "long" }) + ", " + d.m + " " + d.d;
+  };
+  var renderCal = function () {
+    var mo = MONTHS[curMo], y = mo.getFullYear(), m = mo.getMonth(), n = new Date(y, m + 1, 0).getDate();
+    var h = '<div class="cal-h" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>' +
+      '<div class="cal-g" role="group" aria-label="' + mo.toLocaleDateString("en-US", { month: "long", year: "numeric" }) + '">';
+    for (var b = 0; b < mo.getDay(); b++) h += '<span></span>';
+    for (var dd = 1; dd <= n; dd++) {
+      var i = dayIndex(new Date(y, m, dd)), d = DAYS[i];
+      if (!d) { h += '<span class="cd out" aria-hidden="true"><b>' + dd + '</b></span>'; continue; }
+      h += '<button class="cd' + (i === 0 ? " today" : "") + '" type="button" data-day="' + i + '" aria-pressed="' + (i === S.day) + '"' +
+        (d.closed ? " disabled" : "") + ' aria-label="' + longName(d) + (d.closed ? ", closed" : d.flash ? ", has a flash opening" : "") + '"><b>' + dd + '</b>' +
+        (d.flash ? '<i class="fd" aria-hidden="true"></i>' : "") + '</button>';
+    }
+    h += '</div><p class="cal-key"><span><i class="td"></i>Today</span><span><i></i>Open</span><span><i class="fl"></i>Flash opening</span></p>';
+    calBox.innerHTML = h;
+    $("#wk-t").textContent = mo.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    $("#wk-s").textContent = "Open through " + DAYS[DAYS.length - 1].m + " " + DAYS[DAYS.length - 1].d;
+    wkPrev.disabled = curMo === 0; wkNext.disabled = curMo === MONTHS.length - 1;
+  };
+  var setMonth = function (on) {
+    month = on;
+    calTog.setAttribute("aria-pressed", String(on));
+    calTog.setAttribute("aria-label", on ? "Show one week at a time" : "Show the month calendar");
+    $("#cal-tog-l").textContent = on ? "Week" : "Month";
+    wkCtl.classList.toggle("month", on);
+    daysBox.hidden = on; $("#wk-dots").hidden = on; calBox.hidden = !on;
+    if (on) {
+      var dt = DAYS[S.day].date;
+      curMo = Math.max(0, MONTHS.findIndex(function (x) { return x.getMonth() === dt.getMonth(); }));
+      renderCal();
+    } else showWeek(Math.floor(S.day / 7), false);
+  };
+  calTog.addEventListener("click", function () { setMonth(!month); });
+
+  var pickDay = function (i) {
+    S.day = i; S.time = null;
+    $$("[data-day]", daysBox).concat($$("[data-day]", calBox)).forEach(function (x) { x.setAttribute("aria-pressed", String(+x.getAttribute("data-day") === i)); });
     renderTimes();
+  };
+  [daysBox, calBox].forEach(function (box) {
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-day]");
+      if (b && !b.disabled) pickDay(+b.getAttribute("data-day"));
+    });
   });
   daysBox.addEventListener("scroll", function () {
     var k = Math.round(daysBox.scrollLeft / Math.max(1, daysBox.clientWidth));
     if (k !== curWk) paintWk(k);
   }, { passive: true });
-  wkPrev.addEventListener("click", function () { showWeek(curWk - 1, true); });
-  wkNext.addEventListener("click", function () { showWeek(curWk + 1, true); });
+  wkPrev.addEventListener("click", function () { if (month) { curMo = Math.max(0, curMo - 1); renderCal(); } else showWeek(curWk - 1, true); });
+  wkNext.addEventListener("click", function () { if (month) { curMo = Math.min(MONTHS.length - 1, curMo + 1); renderCal(); } else showWeek(curWk + 1, true); });
   var BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>';
   var renderTimes = function () {
     var d = DAYS[S.day], box = $("#times");
+    $("#picked").textContent = longName(d);
     if (d.closed) { box.innerHTML = '<p class="closed">Closed Sundays and Mondays.</p>'; }
     else {
       box.innerHTML = '<div class="times">' + d.times.map(function (t) {
@@ -1337,7 +1427,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   var calc = function () {
     var s = S.svc, flash = S.time === DAYS[S.day].flash;
     var sub = flash ? s.price * 0.9 : s.price;
-    var canCredit = s.covered && S.credits > 0;
+    var canCredit = s.covered === "glow" && S.credits > 0;
     if (!canCredit) S.useCredit = false;
     var due = S.useCredit ? 0 : Math.round(sub / 2);
     return { flash: flash, sub: sub, canCredit: canCredit, due: due, bal: S.useCredit ? 0 : sub - due };
@@ -1349,7 +1439,8 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     $("#c-price").textContent = money(s.price);
     $("#c-flash-row").hidden = !c.flash;
     $("#c-flash").textContent = "−" + money(s.price * 0.1);
-    $("#c-credit-group").hidden = !s.covered;
+    $("#c-credit-group").hidden = s.covered !== "glow";
+    $("#c-ag-group").hidden = s.covered !== "ageless";
     $("#c-credit").setAttribute("aria-checked", String(S.useCredit));
     $("#c-credit").disabled = !c.canCredit;
     $("#c-credit-sub").textContent = c.canCredit ? "Covered by your Glow membership · " + S.credits + " banked" : "No facials banked right now";
@@ -1503,7 +1594,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     "c-late": ["There’s a 10-minute grace period. Send a text as soon as you know.", [["Something else", "n:cancel"]]],
     "c-sat": ["Saturdays are in high demand, so they can’t be moved or cancelled.", [["Something else", "n:cancel"]]],
     member: ["Your Glow membership. What would you like to know?", [["What it covers", "n:m-covers"], ["Banked facials", "n:m-bank"], ["Pausing", "n:m-pause"]]],
-    "m-covers": ["Glow covers one facial a month: the Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment, plus 15% off add-ons and 10% off the shelf.", [["Something else", "n:member"]]],
+    "m-covers": ["Glow covers one facial a month: the Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment, plus 15% off add-ons and 10% off the shelf. The Ageless Grace Facial is included with Ageless ($209 a month).", [["Something else", "n:member"]]],
     "m-bank": ["You have 1 facial banked. Up to two can bank, and with two waiting we don’t bill you until you book one. You can gift one to a friend from Me.", [["Something else", "n:member"]]],
     "m-pause": ["Pause one month a year at no charge, from Me.", [["Something else", "n:member"]]]
   };
@@ -1518,7 +1609,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   var svcNode = function (sid) {
     var sv = byId(sid);
     var grp = SERVICES.facials.indexOf(sv) > -1 ? "facials" : SERVICES.acne.indexOf(sv) > -1 ? "acne" : "waxing";
-    return [sv.name + " · $" + sv.price + ". " + sv.blurb + (sv.covered ? " Covered by your Glow membership." : ""),
+    return [sv.name + " · $" + sv.price + ". " + sv.blurb + (sv.covered === "glow" ? " Covered by your Glow membership." : sv.covered === "ageless" ? " Included with the Ageless membership ($209 a month)." : ""),
       [["Book it", "b:" + sv.id], ["Other " + GROUPS[grp].toLowerCase(), "n:g-" + grp], ["All prices", "n:prices"]]];
   };
   var optsHtml = function (opts) {
