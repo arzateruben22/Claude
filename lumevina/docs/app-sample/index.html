@@ -492,6 +492,35 @@ h1, h2, h3, p { margin: 0; }
   .try-list, .fine { margin-inline: auto; }
   .try-h { text-align: center; }
 }
+/* ── phones: the page scrolls past the demo; "Try the app version" opens it full screen ── */
+.try-app, .stage-cover, .app-bar { display: none; }
+.try-app { align-items: center; gap: 8px; margin: 22px auto 0; border: 0; border-radius: 999px; padding: 14px 24px;
+  background: var(--grad); color: #1a0f13; font-size: 1rem; font-weight: 650; letter-spacing: -0.01em; cursor: pointer;
+  box-shadow: 0 10px 30px -8px rgba(234, 185, 200, .45); transition: transform .2s var(--ease); }
+.try-app:active { transform: scale(.97); }
+.try-app:focus-visible, .stage-cover:focus-visible, .app-exit:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.stage-cover { position: absolute; inset: 0; z-index: 5; border: 0; padding: 0; background: none; cursor: pointer;
+  border-radius: calc(66px * var(--s)); align-items: flex-end; justify-content: center; }
+.stage-cover span { margin-bottom: 18%; padding: 10px 18px; border-radius: 999px; font-size: 15px; font-weight: 600; color: #fff;
+  background: rgba(20, 16, 18, .82); box-shadow: 0 0 0 1px rgba(244, 201, 214, .35), 0 10px 30px rgba(0, 0, 0, .5); }
+@media (max-width: 900px) {
+  html:not(.app-mode) .try-app { display: inline-flex; }
+  html:not(.app-mode) .stage-cover { display: flex; }
+  /* asleep on the page: swipes over the phone scroll the page, a tap opens the app */
+  html:not(.app-mode) .device { pointer-events: none; }
+}
+/* the app, full screen: only the phone and a way back */
+html.app-mode, html.app-mode body { overflow: hidden; overscroll-behavior: none; }
+html.app-mode .copy, html.app-mode .try, html.app-mode .lv-hub-tab { display: none !important; }
+html.app-mode .shell { display: block; padding: 0; max-width: none; }
+html.app-mode .stage-col { height: var(--app-h, 100vh); display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  padding: max(8px, env(safe-area-inset-top)) 8px 8px; box-sizing: border-box; animation: app-in .3s ease both; }
+html.app-mode .app-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; max-width: 430px; height: 44px; margin-bottom: 8px; }
+.app-exit { display: inline-flex; align-items: center; gap: 6px; border: 0; border-radius: 999px; padding: 9px 16px 9px 12px;
+  background: var(--card-2); color: var(--ink); font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: inset 0 0 0 1px var(--hair); }
+.app-exit svg { width: 16px; height: 16px; }
+.app-bar-note { color: var(--ink-3); font-size: 13px; }
+@keyframes app-in { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
@@ -502,10 +531,16 @@ h1, h2, h3, p { margin: 0; }
     <p class="eyebrow">Sample · Lumevina for iPhone</p>
     <h1 class="h1">The spa, <span class="grad">one tap away.</span></h1>
     <p class="lead">A working sample of the Lumevina app. Flash alerts fill empty hours, booking takes a 50% deposit or a banked facial, and Glow Rewards bring clients back. Tap around: no card is charged.</p>
+    <button class="try-app" type="button" data-app-enter>Try the app version <span aria-hidden="true">→</span></button>
   </div>
 
   <div class="stage-col">
+    <div class="app-bar">
+      <button class="app-exit" type="button" id="app-exit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Exit app</button>
+      <span class="app-bar-note">Sample · nothing is charged</span>
+    </div>
     <div class="stage" id="stage">
+      <button class="stage-cover" type="button" data-app-enter aria-label="Try the app version"><span>Tap to open the app</span></button>
       <div class="device">
         <div class="screen" id="screen">
 
@@ -910,7 +945,19 @@ h1, h2, h3, p { margin: 0; }
 
   /* ── scale the phone to fit ── */
   var stage = $("#stage");
+  var root = document.documentElement;
+  var inApp = function () { return root.classList.contains("app-mode"); };
+  /* the visible height: a viewer that sizes this page to its content reports a huge
+     innerHeight, so never trust more than the device's own screen */
+  var screenH = function () { return Math.min(window.innerHeight, (window.screen && screen.height) || window.innerHeight); };
   var fit = function () {
+    if (inApp()) {
+      var h = screenH();
+      root.style.setProperty("--app-h", h + "px");
+      var sa = Math.min((window.innerWidth - 16) / 414, (h - 68) / 868, 1);
+      stage.style.setProperty("--s", Math.max(.4, sa).toFixed(4));
+      return;
+    }
     var col = stage.parentElement.getBoundingClientRect().width;
     var narrow = window.innerWidth <= 900;
     var byW = (Math.min(col, window.innerWidth - 32)) / 414;
@@ -920,6 +967,36 @@ h1, h2, h3, p { margin: 0; }
   };
   fit();
   window.addEventListener("resize", fit);
+
+  /* ── phones: open the demo full screen, and come back to the page ── */
+  var narrow = function () { return window.innerWidth <= 900; };
+  var toTop = function () {
+    try { window.scrollTo(0, 0); } catch (e) {}
+    try { root.scrollIntoView({ block: "start" }); } catch (e) {}
+  };
+  var enterApp = function () {
+    if (inApp()) return;
+    root.classList.add("app-mode");
+    fit();
+    toTop();
+    setTimeout(function () { $("#app-exit").focus({ preventScroll: true }); }, 60);
+  };
+  var exitApp = function () {
+    if (!inApp()) return;
+    root.classList.remove("app-mode");
+    root.style.removeProperty("--app-h");
+    fit();
+    var col = stage.parentElement;
+    col.scrollIntoView({ block: "center" });
+    var cover = $(".stage-cover"); if (cover) cover.focus({ preventScroll: true });
+  };
+  $$("[data-app-enter]").forEach(function (b) { b.addEventListener("click", enterApp); });
+  $("#app-exit").addEventListener("click", exitApp);
+  /* Esc leaves the app, unless the booking sheet is open (that closes first) */
+  document.addEventListener("keydown", function (e) {
+    var sw = document.getElementById("sheet-wrap");
+    if (e.key === "Escape" && !(sw && !sw.hidden)) exitApp();
+  });
 
   /* ── toast ── */
   var toastEl = $("#toast"), toastT = null;
@@ -1342,6 +1419,7 @@ h1, h2, h3, p { margin: 0; }
   $$("[data-try]").forEach(function (b) {
     b.addEventListener("click", function () {
       var k = b.getAttribute("data-try");
+      if (narrow()) enterApp();
       if (k === "lock") { relock(); return; }
       launch();
       closeSheet(true);
