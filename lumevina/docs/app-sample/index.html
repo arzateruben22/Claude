@@ -159,7 +159,7 @@ h1, h2, h3, p { margin: 0; }
 .scroll::-webkit-scrollbar { display: none; }
 .navbar { position: absolute; z-index: 5; top: 0; left: 0; right: 0; height: 98px; padding-top: 54px; display: flex; align-items: center;
   justify-content: center; font-weight: 600; font-size: 17px; opacity: 0; pointer-events: none;
-  background: rgba(10, 10, 11, .72); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  background: #0a0a0b;
   border-bottom: .5px solid var(--hair); transition: opacity .2s ease; }
 .view.scrolled .navbar, .page.scrolled .navbar { opacity: 1; }
 .kick { font-size: 13px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: .02em; }
@@ -180,7 +180,7 @@ h1, h2, h3, p { margin: 0; }
 
 /* tab bar */
 .tabbar { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; height: 84px; display: grid; grid-template-columns: repeat(5, 1fr);
-  padding: 7px 10px 0; background: rgba(20, 20, 22, .74); -webkit-backdrop-filter: blur(26px) saturate(180%); backdrop-filter: blur(26px) saturate(180%);
+  padding: 7px 10px 0; background: rgba(18, 18, 20, .97);
   border-top: .5px solid rgba(255, 255, 255, .1); }
 .tabbar { transition: transform .45s var(--spring); }
 .app.no-tabs .tabbar { transform: translateY(100%); }
@@ -201,13 +201,14 @@ h1, h2, h3, p { margin: 0; }
 .am .pr { display: block; color: var(--ink-2); font-size: 13px; margin-top: 4px; }
 .am.typing { color: var(--ink-3); font-style: italic; }
 .ask-bar { position: absolute; z-index: 6; left: 0; right: 0; bottom: 84px; padding: 8px 12px 10px;
-  background: rgba(10, 10, 11, .82); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); border-top: .5px solid var(--hair); }
+  background: rgba(10, 10, 11, .97); border-top: .5px solid var(--hair); }
 .ask-sugg { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 8px; }
 .ask-sugg::-webkit-scrollbar { display: none; }
 .ask-sugg-wrap { position: relative; }
 .sugg-nav { position: absolute; top: 0; z-index: 1; width: 28px; height: 28px; border: 0; border-radius: 50%; background: var(--grad); color: #000;
   font-size: 18px; font-weight: 700; line-height: 1; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(0, 0, 0, .5); }
-.sugg-nav.prev { left: 0; } .sugg-nav.next { right: 0; }
+/* "sn-" names: the Home screen's "Next visit" card is already called .next */
+.sugg-nav.sn-prev { left: 0; } .sugg-nav.sn-next { right: 0; }
 .sugg-nav[hidden] { display: none; }
 .am-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .am-opts button { border: .5px solid rgba(244, 201, 214, .45); background: none; color: var(--ink); border-radius: 999px; padding: 6px 10px; font-size: 13px; }
@@ -278,8 +279,7 @@ h1, h2, h3, p { margin: 0; }
 .page.detail { transform: translateX(100%); box-shadow: -20px 0 40px rgba(0, 0, 0, .5); }
 .book.pushed .page.detail { transform: none; }
 .back { position: absolute; z-index: 6; top: 58px; left: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; padding: 0;
-  display: grid; place-items: center; color: #fff; background: rgba(30, 30, 32, .45);
-  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%); }
+  display: grid; place-items: center; color: #fff; background: rgba(24, 24, 26, .72); }
 .back svg { width: 22px; height: 22px; margin-left: -2px; }
 .hero { position: relative; margin: -58px -16px 0; height: 300px; overflow: hidden; }
 .hero img { width: 100%; height: 100%; object-fit: cover; }
@@ -473,8 +473,8 @@ h1, h2, h3, p { margin: 0; }
 
 /* banner + toast */
 .banner { position: absolute; z-index: 50; left: 8px; right: 8px; top: 8px; display: grid; grid-template-columns: 38px 1fr; gap: 11px; text-align: left;
-  border: 0; border-radius: 24px; padding: 12px 14px; color: var(--ink); background: rgba(44, 40, 42, .78);
-  -webkit-backdrop-filter: blur(30px) saturate(170%); backdrop-filter: blur(30px) saturate(170%); box-shadow: 0 16px 40px rgba(0, 0, 0, .45);
+  border: 0; border-radius: 24px; padding: 12px 14px; color: var(--ink); background: rgba(44, 40, 42, .97);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .45);
   transform: translateY(-140%); transition: transform .55s var(--spring); }
 .banner.show { transform: translateY(46px); }
 .banner img { width: 38px; height: 38px; border-radius: 9px; }
@@ -483,7 +483,7 @@ h1, h2, h3, p { margin: 0; }
 .banner .top span { color: rgba(255, 255, 255, .55); font-size: 13px; }
 .banner p { font-size: 14.5px; line-height: 1.3; margin-top: 2px; color: rgba(255, 255, 255, .9); }
 .toast { position: absolute; z-index: 55; left: 50%; bottom: 104px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
-  background: rgba(58, 58, 60, .92); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-radius: 999px;
+  background: rgba(58, 58, 60, .97); border-radius: 999px;
   padding: 10px 16px; font-size: 14px; font-weight: 600; white-space: nowrap; transition: opacity .25s ease, transform .35s var(--spring); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
@@ -794,14 +794,14 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
               </div>
               <form class="ask-bar" id="ask-bar">
                 <div class="ask-sugg-wrap">
-                  <button type="button" class="sugg-nav prev" aria-label="Scroll topics left" hidden>&lsaquo;</button>
+                  <button type="button" class="sugg-nav sn-prev" aria-label="Scroll topics left" hidden>&lsaquo;</button>
                   <div class="ask-sugg" id="ask-sugg">
                     <button type="button" data-o="n:prices">Prices</button><button type="button" data-o="n:before">Before my facial</button>
                     <button type="button" data-o="n:after">After my facial</button><button type="button" data-o="n:cancel">Cancel or move</button>
                     <button type="button" data-o="n:member">My membership</button><button type="button" data-o="t:Where do I park?">Parking</button>
                     <button type="button" data-o="t:Is this reaction normal?">Is this reaction normal?</button>
                   </div>
-                  <button type="button" class="sugg-nav next" aria-label="Scroll topics right">&rsaquo;</button>
+                  <button type="button" class="sugg-nav sn-next" aria-label="Scroll topics right">&rsaquo;</button>
                 </div>
                 <div class="ask-row"><input id="ask-input" type="text" autocomplete="off" placeholder="Ask anything" aria-label="Your question">
                   <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
@@ -949,7 +949,14 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   var inApp = function () { return root.classList.contains("app-mode"); };
   /* the visible height: a viewer that sizes this page to its content reports a huge
      innerHeight, so never trust more than the device's own screen */
-  var screenH = function () { return Math.min(window.innerHeight, (window.screen && screen.height) || window.innerHeight); };
+  var screenH = function () {
+    var h = Math.min(window.innerHeight, (window.screen && screen.height) || window.innerHeight);
+    if (window.visualViewport) h = Math.min(h, window.visualViewport.height);
+    return seenH ? Math.min(h, seenH) : h;
+  };
+  /* A viewer that sizes this page to its content hides the real screen height from it, so
+     measure it: the part of the full-screen app that is actually visible on the device. */
+  var seenH = 0;
   var fit = function () {
     if (inApp()) {
       var h = screenH();
@@ -974,8 +981,21 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     try { window.scrollTo(0, 0); } catch (e) {}
     try { root.scrollIntoView({ block: "start" }); } catch (e) {}
   };
+  var col = stage.parentElement;
+  if ("IntersectionObserver" in window) {
+    var steps = []; for (var i = 0; i <= 100; i++) steps.push(i / 100);
+    new IntersectionObserver(function (es) {
+      if (!inApp()) return;
+      var e = es[0], r = e.intersectionRect, b = e.boundingClientRect;
+      if (!e.isIntersecting || b.top < -2) return;          /* only when the top of the app is on screen */
+      var vis = Math.round(r.bottom - b.top);
+      if (vis >= 360 && vis < Math.round(b.height) - 4) { seenH = vis; fit(); }
+    }, { threshold: steps }).observe(col);
+  }
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", function () { if (inApp()) fit(); });
   var enterApp = function (unlock) {
     if (inApp()) return;
+    seenH = 0;
     root.classList.add("app-mode");
     fit();
     toTop();
@@ -1427,7 +1447,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     }, calm ? 0 : 380);
   };
   $("#ask-bar").addEventListener("submit", function (e) { e.preventDefault(); var i = $("#ask-input"); askSend(i.value); i.value = ""; });
-  var sugg = $("#ask-sugg"), sPrev = $(".sugg-nav.prev"), sNext = $(".sugg-nav.next");
+  var sugg = $("#ask-sugg"), sPrev = $(".sugg-nav.sn-prev"), sNext = $(".sugg-nav.sn-next");
   sugg.addEventListener("click", function (e) { var b = e.target.closest("[data-o]"); if (b) choose(b.textContent, b.getAttribute("data-o")); });
   var paintSugg = function () {
     sPrev.hidden = sugg.scrollLeft <= 2;
