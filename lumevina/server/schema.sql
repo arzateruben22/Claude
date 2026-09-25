@@ -4,7 +4,6 @@
 -- Apply with:  supabase db push   (see server/README.md)
 
 create extension if not exists btree_gist;
-create extension if not exists pgcrypto;   -- gen_random_bytes, for Wallet pass tokens
 
 -- ── Clients ─────────────────────────────────────────────────────────
 -- One row per person. Auth is Supabase magic-link email auth; this
@@ -254,36 +253,3 @@ create policy "clients read their own questions" on questions
   for select using (client_id = auth.uid());
 -- writes happen only in edge functions (service role): ask inserts,
 -- the dashboard's Send reply updates reply / status / answered_at.
-
-
--- ── The Glow Card in Apple Wallet ───────────────────────────────────
--- One pass per client (functions/wallet-pass). Devices that add it register
--- here so Wallet can be told to fetch a fresh copy when points or the next
--- visit change. Server-only: no client policies.
-create table wallet_passes (
-  serial text primary key default gen_random_uuid()::text,
-  client_id uuid unique not null references clients (id) on delete cascade,
-  auth_token text not null default encode(gen_random_bytes(24), 'hex'),
-  updated_at timestamptz not null default now()
-);
-create table wallet_registrations (
-  device_id text not null,
-  push_token text not null,
-  serial text not null references wallet_passes (serial) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (device_id, serial)
-);
-alter table wallet_passes enable row level security;
-alter table wallet_registrations enable row level security;
-
--- any change to points or bookings marks the client's pass as updated
-create or replace function touch_wallet_pass() returns trigger
-language plpgsql security definer as $$
-begin
-  update wallet_passes set updated_at = now() where client_id = new.client_id;
-  return new;
-end $$;
-create trigger wallet_after_points after insert on rewards_ledger
-  for each row execute function touch_wallet_pass();
-create trigger wallet_after_booking after insert or update on bookings
-  for each row when (new.client_id is not null) execute function touch_wallet_pass();

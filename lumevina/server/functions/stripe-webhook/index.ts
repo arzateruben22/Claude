@@ -163,13 +163,6 @@ Deno.serve(async (req) => {
     ...(birthday ? { birthday_claimed_year: day.getFullYear() } : {}),
   }).eq("id", client.id);
 
-  // The Glow Card in Apple Wallet shows points and the next visit: tell it.
-  fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/wallet-pass/notify`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ client_id: client.id }),
-  }).catch(() => {});
-
   return new Response("ok", { status: 200 });
 });
 

@@ -3582,6 +3582,10 @@ body.intro-lock { overflow: hidden; }
 }
 
 .rw-copy { padding: 0.45rem 0.9rem; }
+.rw-share { margin: 0.5rem 0 0.2rem; }
+.rw-share-status { overflow-wrap: anywhere; }
+.acct-share { margin: 0.2rem 0 0.4rem; }
+.acct-share-status[hidden], .rw-share-status[hidden] { display: none; }
 
 .rw-bday-row {
   display: flex;

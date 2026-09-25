@@ -83,6 +83,9 @@
   var welcomeEl = modal.querySelector(".acct-welcome");
   var pointsEl = modal.querySelector(".acct-points");
   var refEl = modal.querySelector(".acct-ref-code");
+  modal.querySelector(".acct-share").addEventListener("click", function () {
+    if (window.LumevinaRewards) window.LumevinaRewards.share(modal.querySelector(".acct-share-status"));
+  });
   var listEl = modal.querySelector(".acct-bookings");
 
   var rw = function () { return window.LumevinaRewards; };

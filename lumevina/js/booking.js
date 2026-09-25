@@ -113,6 +113,14 @@
   var earnedEl = modal.querySelector(".rw-earned");
   var refNoteEl = modal.querySelector(".rw-ref-note");
   var refField = modal.querySelector(".rw-ref-field");
+  /* a friend's shared link (…/?ref=GLOW-XXXX): remember the code for their first booking */
+  var incomingRef = (function () {
+    try {
+      var r = new URLSearchParams(location.search).get("ref");
+      if (r && /^GLOW-[A-Z0-9]{4}$/i.test(r)) localStorage.setItem("lumevina_ref_in", r.toUpperCase());
+      return localStorage.getItem("lumevina_ref_in");
+    } catch (e) { return null; }
+  })();
   var refInput = modal.querySelector("#bk-ref");
   var petalBtn = modal.querySelector(".mirror-btn");
   var petalResult = modal.querySelector(".mirror-result");
@@ -862,8 +870,9 @@
     state.slot = null;
     statusEl.textContent = "";
     payStatus.textContent = "";
-    /* referral code: first visit only */
+    /* referral code: first visit only, filled in when they came from a shared link */
     refField.hidden = loadBookings().length > 0;
+    if (!refField.hidden && !refInput.value && incomingRef && !(rw && incomingRef === rw.refCode())) refInput.value = incomingRef;
     /* signed-in clients skip retyping name & email */
     var acct = window.LumevinaAccount && window.LumevinaAccount.current();
     if (acct) {

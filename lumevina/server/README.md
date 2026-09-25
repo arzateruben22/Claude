@@ -13,7 +13,6 @@ the client across devices (site → iPhone app).
 | `functions/stripe-webhook/` | Confirms payment, holds the booking, writes rewards (multipliers included), fires the confirmation, documents the referral-credit trigger |
 | `functions/send-confirmation/` | Sends confirmation + 24-hour reminder email/SMS (Resend + optional Twilio); also flushes due reminders when run on a schedule |
 | `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
-| `functions/wallet-pass/` | The Glow Card in Apple Wallet: builds each client's signed pass and runs Apple's update service so points and the next visit stay current |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
 
 ## Notifications (confirmations & reminders)
@@ -214,50 +213,7 @@ question isn't covered, and drafts replies that Evelyn always reviews.
 Cost: at a small spa's volume, a few dollars a month (the fast, inexpensive
 model is set in `MODEL`).
 
-## Apple Wallet (the Glow Card)
-
-The app's **Add to Apple Wallet** button (Rewards) is a preview today. The
-real pass is `functions/wallet-pass/`, not yet run: it needs Apple's
-certificates first. What the card does:
-
-- **Front:** Glow Points, dollars ready to use, the next visit, the plan.
-- **QR code = the referral link.** A friend scans it with their camera, books
-  with $15 off, and the client earns 150 points once that visit is done. No
-  scanner needed at the spa.
-- **Shows up when it's useful.** The next visit is the pass's relevant date
-  and the spa is its location, so iOS can surface the card that morning and
-  on arrival. Its back has "I'm here", which texts Evelyn (the arrival policy).
-- **Stays current.** When points or the next visit change, Wallet is told to
-  fetch a fresh copy and shows a note ("Glow Points: 265").
-
-To switch it on (about an afternoon, once the Apple Developer account exists):
-
-1. Apple Developer account ($99/yr, the same one the App Store needs).
-   Certificates, IDs & Profiles → Identifiers → **Pass Type IDs** → add
-   `pass.com.lumevina.glowcard`. Create its certificate, download it, and
-   export the certificate and its private key as PEM. Download Apple's
-   **WWDR G4** intermediate certificate as PEM too.
-2. Run the Wallet tables at the end of `schema.sql` (`wallet_passes`,
-   `wallet_registrations` and the two triggers that mark a pass updated).
-3. `supabase secrets set PASS_TYPE_ID=pass.com.lumevina.glowcard
-   APPLE_TEAM_ID=... PASS_SIGNER_CERT="$(cat pass.pem)"
-   PASS_SIGNER_KEY="$(cat pass.key)" PASS_SIGNER_KEY_PASSPHRASE=...
-   APPLE_WWDR_CERT="$(cat wwdr.pem)" SITE_URL=https://lumevina.com
-   SPA_SMS=+1... SPA_LAT=34.17 SPA_LNG=-118.60` (the spa's exact coordinates).
-4. `supabase functions deploy wallet-pass --no-verify-jwt` (Wallet calls its
-   `/v1/...` routes with the pass's own token, not a Supabase session).
-5. The button: in the app and on the website (iPhone Safari), link
-   **Add to Apple Wallet** to `GET /functions/v1/wallet-pass` with the
-   client's session; iOS opens the pass and offers **Add**. Use Apple's
-   official "Add to Apple Wallet" badge artwork for the button.
-6. `stripe-webhook` already calls `wallet-pass/notify` after a booking earns
-   points; call it the same way after any other points change (redemptions,
-   referral credit, the magic mirror, cancellations).
-
-Apple reviews nothing here, but its Wallet guidelines ask that pass updates
-stay about the pass: points and visits, not promotions.
-
-### Glow Points and rebooking
+## Glow Points, rebooking and referrals
 
 The +25 rebooking bonus is for **non-members** (members already have a
 facial every month): it's earned when a visit falls within 5 weeks after the
@@ -266,6 +222,14 @@ client's last one. `stripe-webhook` records what each booking earned in
 `return_booking_points` trigger hands those points back and the visit stops
 counting toward the next rebooking bonus. The website does the same today
 (`js/rewards.js` `reverse`, called from My Lumevina's cancel).
+
+Referrals: **Share my code** (Glow Rewards and My Lumevina) opens the phone's
+share menu with a link like `https://lumevina.com/?ref=GLOW-AB12`, or copies
+it where there's no share menu. A visitor arriving with `?ref=` has the code
+remembered and filled in on their first booking; the referral-credit trigger
+at the end of `functions/stripe-webhook/index.ts` pays the 150 points once
+that first visit is completed. Set the live address in `js/rewards.js`
+(`SITE`) when the domain is final.
 
 ## Flash openings → push notifications
 

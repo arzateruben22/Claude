@@ -337,29 +337,6 @@ h1, h2, h3, p { margin: 0; }
   border-radius: 22px 22px 0 0; padding: 8px 20px 38px; transform: translateY(100%); transition: transform .5s var(--spring); scrollbar-width: none; }
 .sheet-wrap.open .sheet-bg { opacity: 1; }
 .sheet-wrap.open .sheet { transform: none; }
-/* the Glow Card as an Apple Wallet pass: a preview of what "Add to Apple Wallet" adds */
-.pass-sheet { min-height: 0; }
-.pass { margin-top: 14px; border-radius: 16px; padding: 14px 16px 16px; color: #1a0f13;
-  background: linear-gradient(160deg, #f7d3de 0%, #eab9c8 55%, #e2b08c 100%); box-shadow: 0 18px 40px -18px rgba(234, 185, 200, .6); }
-.pass-top { display: flex; align-items: center; gap: 8px; }
-.pass-top img { width: 26px; height: 26px; border-radius: 6px; }
-.pass-top .brand { font-weight: 700; letter-spacing: .12em; font-size: 12px; }
-.pass-top .hdr { margin-left: auto; text-align: right; }
-.pass small { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .62; }
-.pass-top .hdr b { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.pass-main { margin-top: 16px; }
-.pass-main b { display: block; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
-.pass-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 14px; }
-.pass-row b { display: block; font-size: 14px; font-weight: 600; }
-.pass-qr { display: grid; justify-items: center; gap: 6px; margin-top: 16px; background: #fff; border-radius: 10px; padding: 10px; }
-.pass-qr svg { width: 104px; height: 104px; display: block; }
-.pass-qr span { font-size: 11px; font-weight: 600; color: #3a2a30; }
-.pass-uses { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
-.pass-uses li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; font-size: 14px; line-height: 1.35; color: var(--ink-2); }
-.pass-uses li b { color: var(--ink); font-weight: 600; }
-.pass-uses .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: rgba(244, 201, 214, .12); color: var(--rose); }
-.pass-uses .ic svg { width: 15px; height: 15px; }
-.pass-add { margin-top: 18px; }
 .grab { width: 38px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .25); margin: 0 auto 10px; }
 .sh-head { display: flex; justify-content: space-between; align-items: center; }
 .sh-head h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
@@ -426,9 +403,9 @@ h1, h2, h3, p { margin: 0; }
 .gcard .who span { display: block; opacity: .65; font-weight: 500; font-size: 12px; }
 .gcard .code { width: 108px; height: 34px; border-radius: 6px; background:
   repeating-linear-gradient(90deg, #1a0d12 0 2px, transparent 2px 4px, #1a0d12 4px 5px, transparent 5px 8px, #1a0d12 8px 11px, transparent 11px 12px); opacity: .8; }
-.wallet { margin-top: 12px; width: 100%; border: 0; border-radius: 12px; padding: 12px; background: #000; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28);
+.share-code { margin-top: 12px; width: 100%; border: 0; border-radius: 12px; padding: 12px; background: #000; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28);
   font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.wallet svg { width: 22px; height: 22px; }
+.share-code svg { width: 22px; height: 22px; }
 .prog { background: var(--card); border-radius: 18px; padding: 14px 16px; margin-top: 10px; }
 .prog .t { display: flex; justify-content: space-between; font-size: 14px; }
 .prog .t span { color: var(--ink-2); }
@@ -458,7 +435,7 @@ h1, h2, h3, p { margin: 0; }
   text-align: left; border: 0; background: none; }
 /* full-width rows and buttons count their padding inside the width, so nothing on their
    right edge (points, prices, arrows) is pushed past the card and clipped */
-.try-btn, .notif, .svc, .cta, .pay, .wallet, .li { box-sizing: border-box; }
+.try-btn, .notif, .svc, .cta, .pay, .share-code, .li { box-sizing: border-box; }
 .li + .li { box-shadow: inset 44px .5px 0 -44px transparent, inset 0 .5px 0 rgba(255, 255, 255, .1); }
 .li .ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: rgba(244, 201, 214, .12); color: var(--rose); }
 .li .ic svg { width: 17px; height: 17px; }
@@ -720,9 +697,9 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <p class="u">Glow Points · <span data-ready>$20 ready to use</span></p>
                   <div class="bot"><p class="who">Sofia Ramirez<span>Glow member</span></p><span class="code" aria-hidden="true"></span></div>
                 </div>
-                <button class="wallet" type="button" id="wallet-open">
-                  <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="3" fill="#fff"/><rect x="2.5" y="5" width="19" height="4" rx="2" fill="#f4c9d6"/><rect x="2.5" y="8" width="19" height="3" fill="#e2b08c"/><rect x="2.5" y="10.5" width="19" height="3" fill="#8e8e93"/></svg>
-                  Add to Apple Wallet</button>
+                <button class="share-code" type="button" data-share>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
+                  Share my code · GLOW-SOFI</button>
                 <div class="prog">
                   <div class="t"><b id="to-next">60 points to your next $10</b><span>100 pts = $10</span></div>
                   <div class="bar"><i id="bar" style="width:40%"></i></div>
@@ -763,7 +740,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Deposits and gifts<span class="sub">1 point per $1</span></span><span class="r pos">1×</span></div>
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4" stroke-linecap="round"/></svg></span><span>Rebook within five weeks<span class="sub">Non-members · handed back if you cancel</span></span><span class="r pos">+25</span></div>
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span>Wax Wednesday<span class="sub">Points on waxing</span></span><span class="r pos">2×</span></div>
-                  <button class="li" type="button" data-toast="Share sheet opens here"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span><span>Refer a friend<span class="sub">After their first visit</span></span><span class="r pos">+150</span></button>
+                  <button class="li" type="button" data-share><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span><span>Refer a friend<span class="sub">After their first visit</span></span><span class="r pos">+150</span></button>
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 11h16v10H4zM2 7h20v4H2zM12 7v14M12 7c-2-4-7-4-7-1s7 1 7 1 5-3 7 0-5 1-7 1"/></svg></span><span>Birthday month</span><span class="r pos">+50</span></div>
                 </div>
               </div>
@@ -878,36 +855,6 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
             <span><span class="top"><b>Flash opening Saturday</b><span>now</span></span>
             <p>Ageless Grace Facial at 4:00 PM is 10% off. First tap wins.</p></span>
           </button>
-          <div class="sheet-wrap" id="pass-wrap" hidden>
-            <div class="sheet-bg" data-pass-close></div>
-            <div class="sheet pass-sheet" role="dialog" aria-modal="true" aria-labelledby="pass-title">
-              <div class="grab" aria-hidden="true"></div>
-              <div class="sh-head"><h3 id="pass-title">Your Glow Card in Wallet</h3>
-                <button class="xbtn" type="button" data-pass-close aria-label="Close"><svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
-              <div class="pass" aria-label="Glow Card pass preview">
-                <div class="pass-top"><img src="{{ICON}}" alt=""><span class="brand">LUMEVINA</span>
-                  <span class="hdr"><small>Glow Points</small><b id="pass-pts">240</b></span></div>
-                <div class="pass-main"><small>Ready to use</small><b id="pass-ready">$20 off</b></div>
-                <div class="pass-row">
-                  <div><small>Next visit</small><b id="pass-next">Sat, Sep 26 · 10:00 AM</b></div>
-                  <div style="text-align:right"><small>Member</small><b>Glow</b></div>
-                </div>
-                <div class="pass-qr"><svg id="pass-code" viewBox="0 0 29 29" shape-rendering="crispEdges" aria-hidden="true"></svg>
-                  <span>Friends scan for $15 off · GLOW-SOFI</span></div>
-              </div>
-              <ul class="pass-uses">
-                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
-                  <span><b>You&rsquo;re here.</b> Near the spa it can surface on your lock screen, with &ldquo;I&rsquo;m here&rdquo; to text Evelyn from the parking lot.</span></li>
-                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span>
-                  <span><b>Your next visit.</b> Updates when you book or move it, and shows up the morning of.</span></li>
-                <li><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span>
-                  <span><b>Points, live.</b> A quiet note when they change: &ldquo;+25 Glow Points.&rdquo;</span></li>
-                <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-4M14 18v3"/></svg></span>
-                  <span><b>Your referral code.</b> A friend scans it with their camera for $15 off a first visit; you earn 150 points.</span></li>
-              </ul>
-              <button class="pay pass-add" type="button" id="pass-add">Add to Apple Wallet</button>
-            </div>
-          </div>
           <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
           <!-- confirm sheet -->
@@ -1132,8 +1079,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
   /* Esc leaves the app, unless the booking sheet is open (that closes first) */
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
-    var sw = document.getElementById("sheet-wrap"), pw = document.getElementById("pass-wrap");
-    if (pw && !pw.hidden) { pw.querySelector("[data-pass-close]").click(); return; }
+    var sw = document.getElementById("sheet-wrap");
     if (!(sw && !sw.hidden)) exitApp();
   });
 
@@ -1419,36 +1365,21 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     requestAnimationFrame(function () { requestAnimationFrame(function () { wrap.classList.add("open"); app.classList.add("behind"); }); });
     setTimeout(function () { $("#sh-close").focus({ preventScroll: true }); }, 60);
   };
-  /* ── the Glow Card pass preview ── */
-  var passWrap = $("#pass-wrap");
-  /* a QR-style code, drawn once: three finder squares and a fixed scatter (a sample, not scannable) */
-  (function () {
-    var svg = $("#pass-code"), cells = [], seed = 7;
-    var rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    var finder = function (x, y) {
-      cells.push('<rect x="' + x + '" y="' + y + '" width="7" height="7"/><rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>');
+  /* ── Share my code: the phone's share menu, or a copy to paste ── */
+  var shareCode = function () {
+    var url = "https://lumevina.com/?ref=GLOW-SOFI";
+    var text = "I love my facials at Lumevina Aesthetics Spa in Woodland Hills. Book your first visit with my code GLOW-SOFI:";
+    var copy = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text + " " + url).then(function () { toast("Copied · paste it into a text"); },
+          function () { toast("Your code: GLOW-SOFI"); });
+      } else toast("Your code: GLOW-SOFI");
     };
-    for (var y = 0; y < 29; y++) for (var x = 0; x < 29; x++) {
-      var inFinder = (x < 8 && y < 8) || (x > 20 && y < 8) || (x < 8 && y > 20);
-      if (!inFinder && rnd() < 0.46) cells.push('<rect x="' + x + '" y="' + y + '" width="1" height="1"/>');
-    }
-    finder(0, 0); finder(22, 0); finder(0, 22);
-    svg.innerHTML = '<g fill="#1a0f13">' + cells.join("") + '</g>';
-  })();
-  var openPass = function () {
-    $("#pass-pts").textContent = S.points;
-    $("#pass-ready").textContent = "$" + Math.floor(S.points / 100) * 10 + " off";
-    $("#pass-next").textContent = S.next.when;
-    passWrap.hidden = false;
-    requestAnimationFrame(function () { requestAnimationFrame(function () { passWrap.classList.add("open"); app.classList.add("behind"); }); });
+    if (navigator.share) navigator.share({ title: "Lumevina", text: text, url: url }).then(function () { toast("Sent · +150 when they visit"); },
+      function (e) { if (!(e && e.name === "AbortError")) copy(); });
+    else copy();
   };
-  var closePass = function () {
-    passWrap.classList.remove("open"); app.classList.remove("behind");
-    setTimeout(function () { if (!passWrap.classList.contains("open")) passWrap.hidden = true; }, calm ? 0 : 480);
-  };
-  $("#wallet-open").addEventListener("click", openPass);
-  $$("[data-pass-close]").forEach(function (b) { b.addEventListener("click", closePass); });
-  $("#pass-add").addEventListener("click", function () { closePass(); toast("Added to Apple Wallet · sample"); });
+  $$("[data-share]").forEach(function (b) { b.addEventListener("click", shareCode); });
 
   var closeSheet = function (instant) {
     wrap.classList.remove("open"); app.classList.remove("behind");

@@ -147,6 +147,33 @@
     return Math.max(0, Math.min(byPoints, byDeposit));
   };
 
+  /* ── Share my code: the phone's own share menu (Messages, Instagram,
+     WhatsApp…), or a copy to paste where there isn't one ── */
+  var SITE = "https://lumevina.com";   /* the live address: set it when the domain is final */
+  var shareLink = function () {
+    var live = /^https?:$/.test(location.protocol) &&
+      !/claude|usercontent|localhost|127\.0\.0\.1/.test(location.hostname);
+    return (live ? location.origin + location.pathname : SITE + "/") + "?ref=" + encodeURIComponent(data.refCode);
+  };
+  var shareText = function () {
+    return "I love my facials at Lumevina Aesthetics Spa in Woodland Hills. Book your first visit with my code " + data.refCode + ":";
+  };
+  var share = function (statusEl) {
+    var url = shareLink(), text = shareText(), all = text + " " + url;
+    var say = function (m) { if (statusEl) { statusEl.textContent = m; statusEl.hidden = false; } };
+    var copy = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(all).then(function () { say("Copied. Paste it into a text or a DM."); },
+          function () { say("Copy this: " + all); });
+      } else say("Copy this: " + all);
+    };
+    if (navigator.share) {
+      navigator.share({ title: "Lumevina", text: text, url: url }).then(function () {
+        say("Sent. You earn " + REFERRAL_BONUS + " ✦ when their first visit is done.");
+      }, function (e) { if (!(e && e.name === "AbortError")) copy(); });
+    } else copy();
+  };
+
   /* ── Welcome bonus: claimed by the first sign-in ── */
   var claimWelcome = function () {
     if (data.welcomeClaimed) return 0;
@@ -255,6 +282,9 @@
       data.birthdayClaimed = null;
       save();
     });
+    modal.querySelector(".rw-share").addEventListener("click", function () {
+      share(modal.querySelector(".rw-share-status"));
+    });
     modal.querySelector(".rw-copy").addEventListener("click", function () {
       var btn = this;
       var done = function (ok) {
@@ -304,6 +334,8 @@
     welcomeBonus: WELCOME_BONUS,
     claimWelcome: claimWelcome,
     refCode: function () { return data.refCode; },
+    share: share,
+    shareLink: shareLink,
     mirrorReveal: mirrorReveal,
     petalReveal: mirrorReveal,   /* older name, kept for anything still calling it */
     open: openModal
