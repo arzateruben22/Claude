@@ -235,6 +235,32 @@ at the end of `functions/stripe-webhook/index.ts` pays the 150 points once
 that first visit is completed. Set the live address in `js/rewards.js`
 (`SITE`) when the domain is final.
 
+## Skin School (the online course)
+
+`school.html` is built from `docs/school/` (`python3 docs/school/build.py`). In the
+preview, purchases and progress live in the browser (`lumevina_school`) and every
+sale is written to `lumevina_course_sales`, which the dashboard's books read.
+
+To go live:
+
+1. **Checkout.** One Stripe Checkout price per tier (Skin Basics $49, The Course
+   $149, Course + Kit $229, Course + Evelyn $449). Members: a 25% coupon, and
+   Skin Basics as a $0 grant, both checked against `memberships` by email.
+   Skin Basics buyers who upgrade get $49 off with a one-time coupon.
+2. **Access.** A `course_access` row per buyer (email, tier, order) written by the
+   Stripe webhook; lessons past the two free ones load only for a signed-in
+   buyer. Progress (`course_progress`: email, lesson id, done at) replaces
+   localStorage so it follows them to any device.
+3. **Video.** Host the lesson videos on a private video host (Vimeo, Bunny
+   Stream or Mux) with signed URLs, so links can't be shared.
+4. **Kits.** Kit tiers add an order to the shelf's stock (the cleanser and
+   SPF 30) and to the shipping list; cost is product plus postage.
+5. **Calls.** Course + Evelyn opens six slots a month on Evelyn's calendar; the
+   buyer's pick creates a video-call booking and a check-in 30 days later.
+
+The lessons in `docs/school/curriculum.js` are drafts: Evelyn reviews each one
+before recording, and anything medical points to a dermatologist or doctor.
+
 ## Flash openings → push notifications
 
 When a cancellation frees a slot, insert a row into `flash_slots` and send a

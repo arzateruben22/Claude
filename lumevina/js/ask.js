@@ -125,6 +125,9 @@
     { id: "refer", k: /\brefer|referral|invite a friend|friend'?s code|code from (a|my) friend|share my code/, a: function () {
       return "Share your code from Glow Rewards: your friend gets $15 off their first visit, and you get 150 points ($15) once it’s done. Got a friend’s code? Enter it when you book your first visit."; },
       acts: [["Book", "book"]] },
+    { id: "school", k: /\bcourses?\b|\bclass(es)?\b|skin school|teach me|\blessons?\b|tutorial|masterclass/, a: function () {
+      return "Evelyn’s Skin School is her online course: 33 short lessons in three levels, from your first routine to acne, dark spots and aging. The first two lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off."; },
+      acts: [["Take the free lesson", "go:school.html#learn"], ["See the courses", "go:school.html#tiers"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
       return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + price("Gift Card · Any treatment ($110 value)", 110) + " card for anything."; },
       acts: [["Send a gift", "#gift"]] },
@@ -576,6 +579,11 @@
     if (act === "book") { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(); return; }
     if (act === "move") { close(); if (window.LumevinaBooking) window.LumevinaBooking.startReschedule(); return; }
     if (act === "account") { close(); if (window.LumevinaAccount) window.LumevinaAccount.open(); return; }
+    if (act.indexOf("go:") === 0) {                 /* another page: the course, or its link in a preview */
+      var to = act.slice(3);
+      if (/^https?:/.test(to)) window.open(to, "_blank", "noopener"); else location.href = to;
+      return;
+    }
     if (act.charAt(0) === "#") {
       close();
       var t = document.querySelector(act);

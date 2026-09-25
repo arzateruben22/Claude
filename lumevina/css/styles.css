@@ -5805,7 +5805,7 @@ html.sheet-open { overflow: hidden; }
 .bk-upsell-go { color: var(--mauve); font-weight: 600; }
 
 /* ─── Glow Routine: the product membership (js/routine.js) ─── */
-.routine-card {
+.routine-card, .school-card {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto;
   gap: var(--space-4);
@@ -5866,14 +5866,23 @@ html.sheet-open { overflow: hidden; }
 .rt-delivery b { display: block; color: var(--ink); font-weight: 600; }
 .rt-delivery input { margin-top: 0.2rem; accent-color: #eab9c8; }
 .rt-address-field[hidden] { display: none; }
+/* Skin School: the online course, shaped like the routine card, in its lightest rose */
+.school-card { border-color: rgba(247, 211, 222, 0.34); box-shadow: 0 0 40px -16px rgba(247, 211, 222, 0.4);
+  background: radial-gradient(120% 140% at 100% 0%, rgba(227, 180, 143, 0.14), transparent 55%),
+              radial-gradient(120% 140% at 0% 0%, rgba(247, 211, 222, 0.14), transparent 55%), var(--porcelain); }
+.sc-go { width: 100%; text-align: center; }
+.sc-more { justify-self: center; color: var(--mauve); font-size: 0.88rem; font-weight: 600; text-decoration: none; }
+.sc-more:hover { text-decoration: underline; }
 .rt-form[hidden], .rt-done[hidden], .rt-saved[hidden], .rt-card-fields[hidden] { display: none; }
 
 @media (max-width: 1080px) {
-  .routine-card { grid-template-columns: minmax(0, 1fr) auto; }
+  .routine-card, .school-card { grid-template-columns: minmax(0, 1fr) auto; }
   .rt-perks { display: none; }
 }
 @media (max-width: 640px) {
-  .routine-card { grid-template-columns: 1fr; gap: 0.9rem; padding: 1.05rem; }
+  .routine-card, .school-card { grid-template-columns: 1fr; gap: 0.9rem; padding: 1.05rem; }
+  .school-card .sc-go { grid-column: 2; grid-row: 1; }
+  .school-card .sc-more { grid-column: 1 / -1; }
   .rt-desc { font-size: 0.88rem; }
   .rt-buy { grid-template-columns: auto 1fr; align-items: center; min-width: 0; }
   .rt-focus { grid-column: 1 / -1; grid-row: 2; }

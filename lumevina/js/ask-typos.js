@@ -25,7 +25,7 @@
     "referral refer birthday pause banked payment cash venmo zelle makeup workout exercise sweat shave shaving " +
     "retinol retinoid botox filler fillers aftercare prepare pregnant pregnancy breastfeeding accutane rash " +
     "redness reaction breakout breakouts pimple pimples pores sensitive oily skin lashes nails evelyn lumevina " +
-    "extractions hydrating ingredients allergic allergy swelling burning itchy").split(" ");
+    "extractions hydrating ingredients allergic allergy swelling burning itchy course courses class classes lesson lessons school").split(" ");
 
   /* everyday words: known, so never treated as typos or gibberish */
   var COMMON = ("a i the and or but is are was were be been being am do does did done have has had can could would " +

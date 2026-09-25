@@ -60,7 +60,7 @@
   var shownPrice = FOCUS.glow.price;
   /* the price rolls to the new tier's, on the card and in the window */
   var rollPrice = function (to) {
-    var els = document.querySelectorAll(".rt-amt, .routine-modal .mj-price");
+    var els = document.querySelectorAll(".routine-card .rt-amt, .routine-modal .mj-price");
     var put = function (v) { els.forEach(function (e) { e.textContent = "$" + Math.round(v); }); };
     if (calm || to === shownPrice) { put(to); shownPrice = to; return; }
     var from = shownPrice, t0 = performance.now(), dur = 320;

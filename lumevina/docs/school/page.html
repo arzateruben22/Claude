@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lumevina Skin School</title>
+<meta name="description" content="Evelyn's skincare course: three levels from your first cleanser to treating acne, dark spots and aging.">
+<meta name="theme-color" content="#000000">
+<style>__CSS__</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap tb">
+    <a class="brand" href="index.html" aria-label="Lumevina: back to the website">Lumevina<span>Skin School</span></a>
+    <div class="tb-right">
+      <a class="tb-link" href="#tiers">Courses</a>
+      <button type="button" class="tb-me" id="tb-me" aria-label="Open my course">
+        <svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true"><circle class="bg" cx="12" cy="12" r="9"/><circle class="fg" cx="12" cy="12" r="9" stroke-dasharray="56.55" stroke-dashoffset="56.55"/></svg>
+        <span id="tb-me-l">Free lesson</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="kicker reveal">Lumevina · Skin School</p>
+      <h1 class="h1 reveal">Know your skin.<br><span class="grad">Then glow for life.</span></h1>
+      <p class="lead reveal">Evelyn&rsquo;s course, from your first cleanser to treating acne, dark spots and aging. Three levels, one short lesson at a time.</p>
+      <div class="cta-row reveal">
+        <button type="button" class="btn btn-grad" data-open-lesson="1-1">Take the free lesson</button>
+        <a class="btn btn-ghost" href="#tiers">See the courses</a>
+      </div>
+    </div>
+    <div class="skin-col">
+      <div class="skin-wrap">
+        <canvas id="skin" role="img" aria-label="Animation: a cross-section of skin. New cells rise to the surface and shed, drops of vitamin C, a retinoid, niacinamide and BHA sink in, then dark spots fade and collagen builds."></canvas>
+      </div>
+      <div class="skin-cap"><b id="skin-phase">Level 1 · Know your skin</b><span id="skin-desc">New cells rise to the surface about every four weeks.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap ceiling">
+    <div class="reveal">
+      <p class="kicker">Between visits</p>
+      <h2 class="h2" style="margin-top:14px">A facial takes an hour. <span class="dim">Your skin lives the other 29 days.</span></h2>
+      <p class="lead" style="font-size:1.2rem;margin-top:20px">A treatment resets your skin. What you do at home decides whether it lasts. This course teaches the home half, so every visit builds on the last one.</p>
+    </div>
+    <div class="reveal">
+      <div class="bigstat grad num">29<small>days</small></div>
+      <p class="lead" style="margin-top:14px">between monthly facials, and every one of them is up to you.</p>
+      <div class="month" aria-hidden="true">__MONTH__</div>
+      <div class="month-lab"><span><i style="background:var(--rose)"></i>1 day with Evelyn</span><span><i style="background:#3a2a31"></i>29 days at home</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="levels">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">The course</p>
+      <h2 class="h2">Three levels. <span class="dim">Each one builds on the last.</span></h2>
+    </div>
+    <div class="levels" id="levels-grid"></div>
+    <p class="foot-note reveal">Tap a level to see what&rsquo;s inside.</p>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Two-minute quiz</p>
+      <h2 class="h2">What&rsquo;s your skin, <span class="dim">really?</span></h2>
+      <p class="lead">Five questions. Your skin type, your first step, and where to start in the course.</p>
+    </div>
+    <div class="quiz reveal" id="quiz-card" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="inside">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Inside a lesson</p>
+      <h2 class="h2">Short. Clear. <span class="dim">Made for real life.</span></h2>
+      <p class="lead">Every lesson has four parts, and none of them take long. Try this one.</p>
+    </div>
+    <div class="inside">
+      <ul class="parts reveal" id="parts">
+        <li><button type="button" class="part on auto" data-part="watch"><span class="pi"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span><span><b>Watch</b><span class="d">Evelyn explains it on camera, in about ten minutes.</span></span><span class="bar"><i></i></span></button></li>
+        <li><button type="button" class="part" data-part="learn"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Learn</b><span class="d">The key points, written out to come back to.</span></span><span class="bar"><i></i></span></button></li>
+        <li><button type="button" class="part" data-part="try"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span><span><b>Try</b><span class="d">One small thing to do at home tonight.</span></span><span class="bar"><i></i></span></button></li>
+        <li><button type="button" class="part" data-part="check"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5v.4M12 17h.01"/></svg></span><span><b>Check</b><span class="d">One quick question to make it stick.</span></span><span class="bar"><i></i></span></button></li>
+      </ul>
+      <div class="demo-card reveal" id="demo-card"></div>
+    </div>
+  </div>
+</section>
+
+<section id="tiers">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Choose how you learn</p>
+      <h2 class="h2">On your own, <span class="dim">or with Evelyn.</span></h2>
+      <p class="lead">Pay once, keep it for life. Every option includes all three levels.</p>
+    </div>
+    <div class="tiers" id="tier-grid"></div>
+    <div class="starter reveal" id="starter"></div>
+    <p class="member-note reveal"><b>Glow and Ageless members:</b> Skin Basics is included with your membership, and any course is 25% off.</p>
+  </div>
+</section>
+
+<section id="all">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Everything you&rsquo;ll learn</p>
+      <h2 class="h2">The whole course. <span class="dim">Nothing held back.</span></h2>
+    </div>
+    <div class="totals reveal" id="totals"></div>
+    <div class="cur reveal" id="cur"></div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Questions</p>
+      <h2 class="h2">Good to know.</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>Who is this for?</summary><p>Anyone who wants to understand their skin, from a first real routine to a plan for acne, dark spots or aging. You don&rsquo;t need to be a Lumevina client, and it&rsquo;s even better if you are.</p></details>
+      <details><summary>How long do I have access?</summary><p>For life, including new lessons as Evelyn adds them. Each lesson is 7 to 12 minutes, so most people finish a level in a week or two.</p></details>
+      <details><summary>Do I need to buy products?</summary><p>No. The course works with what you already own and shows you what to keep. The kit is there if you&rsquo;d like to start with products Evelyn trusts.</p></details>
+      <details><summary>How does the 1-on-1 with Evelyn work?</summary><p>After you join, you pick a time for a 45-minute video call. Evelyn looks at your skin, goes through your products and writes your routine. Thirty days later, a 15-minute check-in to fine-tune it. There are six spots a month.</p></details>
+      <details><summary>Is this medical advice?</summary><p>No. It&rsquo;s skincare education from a licensed esthetician. Anything medical, like cystic acne, rashes, changing moles or prescriptions, belongs with a dermatologist or doctor, and the lessons tell you when.</p></details>
+      <details><summary>Can I get a refund?</summary><p>Yes, within 14 days if you&rsquo;ve finished fewer than a quarter of the lessons. Kits can be returned unopened.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap center">
+    <p class="kicker reveal">Lumevina · Skin School</p>
+    <h2 class="h2 reveal" style="margin-top:14px">Your skin, <span class="grad">for life.</span></h2>
+    <p class="lead reveal" style="font-size:1.2rem;max-width:34rem;margin-top:20px">Start with the free lesson. If it helps, the rest is waiting.</p>
+    <div class="cta-row reveal" style="justify-content:center">
+      <button type="button" class="btn btn-grad" data-open-lesson="1-1">Take the free lesson</button>
+      <a class="btn btn-ghost" href="#tiers">See the courses</a>
+    </div>
+    <p class="fine">A preview for Evelyn. Lessons are drafted for her to review and record, and prices are proposals. Nothing is charged: use the test card 4242 4242 4242 4242. Skincare education, not medical advice.</p>
+    <div class="demo-links"><button type="button" id="demo-all">Demo: unlock everything</button><button type="button" id="demo-reset">Demo: start over</button></div>
+  </div>
+</section>
+</main>
+
+<!-- a level, opened from its card -->
+<div class="ov lv-ov" hidden>
+  <div class="ov-backdrop"></div>
+  <div class="ov-panel" role="dialog" aria-modal="true" aria-labelledby="lv-title-1">
+    <button type="button" class="x lv-x" aria-label="Close"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="lv-body" id="lv-body"></div>
+    <nav class="ov-nav"><button type="button" class="lv-prev"><span class="arrow">&larr;</span> <span class="lbl"></span></button>
+      <span class="dots"><i></i><i></i><i></i></span>
+      <button type="button" class="lv-next"><span class="lbl"></span> <span class="arrow">&rarr;</span></button></nav>
+  </div>
+</div>
+
+<!-- checkout -->
+<div class="ov co-ov" hidden>
+  <div class="ov-backdrop"></div>
+  <div class="co-panel" role="dialog" aria-modal="true" aria-labelledby="co-h">
+    <button type="button" class="x co-x" aria-label="Close"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div id="co-form">
+      <p class="kicker">Lumevina · Skin School</p>
+      <h2 class="co-h" id="co-h">The Course</h2>
+      <div class="co-sum"><span id="co-line"></span><b id="co-total"></b></div>
+      <div class="fld"><label for="co-name">Your name</label><input id="co-name" autocomplete="name"></div>
+      <div class="fld"><label for="co-email">Email</label><input id="co-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+      <div id="co-kit">
+        <div class="fld"><label for="co-skin">Your skin, for the kit</label>
+          <select id="co-skin"><option value="">Choose one</option><option>Dry</option><option>Normal</option><option>Combination</option><option>Oily</option><option>Sensitive</option><option>Acne-prone</option></select></div>
+        <div class="fld"><span class="fl">The kit</span>
+          <div class="seg" role="radiogroup" aria-label="How you get the kit"><button type="button" role="radio" aria-checked="true" data-ship="ship">Ship it free</button><button type="button" role="radio" aria-checked="false" data-ship="pickup">Pick up at my visit</button></div></div>
+        <div class="fld" id="co-addr-f"><label for="co-addr">Shipping address</label><input id="co-addr" autocomplete="street-address" placeholder="Street, city, ZIP"></div>
+      </div>
+      <div class="fld-row">
+        <div class="fld"><label for="co-card">Card</label><input id="co-card" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242"></div>
+        <div class="fld"><label for="co-exp">Expiry</label><input id="co-exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY"></div>
+        <div class="fld"><label for="co-cvc">CVC</label><input id="co-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123"></div>
+      </div>
+      <p class="co-test">Preview: use <code>4242 4242 4242 4242</code>, any future date and any three digits. Nothing is charged.</p>
+      <p class="co-status" id="co-status" role="alert"></p>
+      <button type="button" class="btn btn-grad co-pay" id="co-pay">Pay</button>
+      <p class="co-fine">One payment, lifetime access. Refund within 14 days if you&rsquo;ve finished fewer than a quarter of the lessons.</p>
+    </div>
+    <div class="co-done" id="co-done" hidden></div>
+  </div>
+</div>
+
+<!-- the course player -->
+<div class="ov pl-ov" hidden>
+  <div class="ov-backdrop"></div>
+  <div class="pl-panel" role="dialog" aria-modal="true" aria-label="Skin School lessons">
+    <div class="pl-top">
+      <button type="button" class="pl-menu" id="pl-menu" aria-expanded="false">Lessons</button>
+      <span class="pl-title">Skin School<span id="pl-who"></span></span>
+      <span class="pl-prog"><svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true"><circle class="bg" cx="12" cy="12" r="9"/><circle class="fg" id="pl-ring" cx="12" cy="12" r="9" stroke-dasharray="56.55" stroke-dashoffset="56.55"/></svg><span id="pl-count">0 of 33</span></span>
+      <button type="button" class="x pl-x" aria-label="Close the course"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="pl-grid">
+      <nav class="pl-rail" id="pl-rail" aria-label="All lessons"></nav>
+      <div class="pl-main" id="pl-main"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>__CURRICULUM__</script>
+<script>__PAYMENTS__</script>
+<script>__HERO__</script>
+<script>__SCENES__</script>
+<script>__APP__</script>
+</body>
+</html>
