@@ -21,7 +21,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Referrals · birthday · welcome | ✅ | partial | GG has some; ours is richer |
 | Flash-opening discounts | ✅ | ⬜ | Dynamic pricing to fill slow slots |
 | Gift certificates | ✅ | ✅ | Gift a specific service or a value; full code lifecycle |
-| Memberships (monthly facial) | 🟡 | ✅ | 2 plans (Glow, Ageless), banked facials, pause, online cancel, gift a facial; billing flips on with Stripe Billing |
+| Memberships (monthly facial) | 🟡 | ✅ | 2 plans (Glow, Ageless), banked facials (billing holds at 2), pause, online cancel, gift a facial; billing flips on with Stripe Billing |
 | Ask Lumevina (client questions) | 🟡 | not checked | Demo works now: instant answers to everyday questions; anything personal goes to Evelyn with a drafted reply (dashboard: Client questions). Members hear back within 24 hours. Live: `server/functions/ask` with Claude |
 | Self-service cancel (48-hr) | ✅ | ✅ | In My Lumevina |
 | Self-service reschedule | ✅ | ✅ | In-flow link; 48-hr rule enforced |
@@ -50,7 +50,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Marketing campaigns (email/SMS blasts) | ⬜ | ✅ | Newsletter stub only |
 | Waitlist (auto-fill cancellations) | ⬜ | ✅ | Flash openings are a cousin |
 | Reviews / reputation management | ⬜ | ✅ | Planned |
-| Memberships / recurring billing | ✅ | ✅ | Glow Membership: 3 tiers, banked facials, Founding Five, launch ledger |
+| Memberships / recurring billing | ✅ | ✅ | Glow Membership: 2 plans, banked facials (billing holds at 2), Founding Five, launch ledger |
 | Product subscriptions | ✅ | partial | Glow Routine: $75/month refills + skin supplement, ship or pick up, logged at cost |
 | Staff / team management | ⬜ | ✅ | Single-provider today |
 | Retail inventory POS + card reader | 🟡 | ✅ | Stock, cost and in-person "Sell"; kits come out of stock; no card reader |

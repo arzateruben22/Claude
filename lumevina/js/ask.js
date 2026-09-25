@@ -97,6 +97,21 @@
       return "Welcome! Start with the New Client Consultation + Treatment, " + price("New Client Consultation + Treatment", 215) +
         ": Evelyn looks at your skin and your routine, then gives you a fully custom facial. On the acne program it’s " +
         price("New Client Consultation + Treatment (Acne Program)", 225) + "."; }, acts: [["Book it", "book"]] },
+    /* membership questions a member asks about their own plan, before "book" and "cancel" catch them */
+    { id: "bank", node: "member", k: /\bbank|roll ?over|unused facial|busy month|miss(ed)? (a|my) month|facials? (left|waiting|saved)|how many facials/, a: function () {
+      var LM = window.LumevinaMembership, s = window.LumevinaAccount && window.LumevinaAccount.current();
+      var r = LM && s ? LM.get(s.email) : null;
+      var rule = "Up to two facials bank at a time, and with two waiting we don\u2019t bill you until you book one, so you never pay for a facial you can\u2019t use. You can also gift a banked facial to a friend.";
+      if (!LM || !LM.isMember(r)) return "Busy month? Your facial waits. " + rule;
+      if (LM.onHold(r)) return "You have " + r.credits + " facials banked, so billing is on hold until you book one: you never pay for a facial you can\u2019t use. You can also gift a banked facial to a friend.";
+      return "You have " + r.credits + (r.credits === 1 ? " facial" : " facials") + " banked. " + rule; },
+      acts: [["Book my facial", "book"]] },
+    { id: "mpause", node: "member", k: /\bpause|freeze my|cancel (my )?(membership|plan)|(stop|end) my (membership|plan)/, a: function () {
+      return "Pause one month a year at no charge, from My Lumevina. After the 3-month minimum, you can cancel online any time there too, and any banked facials stay yours for 60 days."; },
+      acts: [["Open My Lumevina", "account"]] },
+    { id: "cancel", node: "cancel", k: /cancel|reschedul|move my|change my (appointment|booking|time)|running late|\blate\b|no.?show/, a: function () {
+      return "Cancel or reschedule at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you (same month). Same-day changes keep the deposit and add a $43 fee. Saturdays can’t be moved. There’s a 10-minute grace period if you’re running late."; },
+      acts: [["Move an appointment", "move"], ["All policies", "#policies"]] },
     { id: "book", node: "book", k: /\bbook|appointment|availab|opening|\bslots?\b|schedule (a|an|my)/, a: function () {
       return "You can book any time online: pick your treatment and time, and a deposit holds it. Evelyn works Tuesday to Saturday, 8 AM to 6 PM."; },
       acts: [["Book now", "book"]] },
@@ -108,9 +123,6 @@
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
       return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + price("Gift Card · Any treatment ($110 value)", 110) + " card for anything."; },
       acts: [["Send a gift", "#gift"]] },
-    { id: "cancel", node: "cancel", k: /cancel|reschedul|move my|change my (appointment|booking|time)|running late|\blate\b|no.?show/, a: function () {
-      return "Cancel or reschedule at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you (same month). Same-day changes keep the deposit and add a $43 fee. Saturdays can’t be moved. There’s a 10-minute grace period if you’re running late."; },
-      acts: [["Move an appointment", "move"], ["All policies", "#policies"]] },
     { id: "deposit", node: "cancel", k: /deposit|refund/, a: function () {
       return "Every booking takes a non-refundable deposit that goes toward your total. With 48 hours’ notice it moves to a new date in the same month. Services themselves are non-refundable, but if anything comes up after your visit, reach out within 24 hours."; } },
     { id: "pay", k: /\bpay\b|payment|cash|credit card|\bcard\b|venmo|zelle|apple pay/, a: function () {
@@ -237,7 +249,7 @@
       ["Pausing or cancelling", "n:m-pause"], ["Ask Evelyn any time", "n:m-ask"], ["Join", "#membership"]]),
     "m-glow": info("Glow, $159 a month: one facial every month (the Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment), 10% off the shelf, 15% off add-ons, a home routine from Evelyn, and first word on flash openings.", [["Join", "#membership"], ["Compare Ageless", "n:m-ageless"]]),
     "m-ageless": info("Ageless, $209 a month: everything in Glow, plus the Ageless Grace Facial any month, a finishing add-on every other visit, and 15% off the shelf.", [["Join", "#membership"], ["Compare Glow", "n:m-glow"]]),
-    "m-bank": info("Busy month? Your facial waits. Up to two bank at a time, and you can send a banked facial to a friend as a gift.", [["Something else", "n:member"]]),
+    "m-bank": info("Busy month? Your facial waits. Up to two bank at a time, and with two waiting we don’t bill you until you book one, so you never pay for a facial you can’t use. You can also send a banked facial to a friend as a gift.", [["Something else", "n:member"]]),
     "m-pause": info("Pause one month a year at no charge. After the 3-month minimum, cancel online any time from My Lumevina.", [["Something else", "n:member"]]),
     "m-ask": info("Members can ask Evelyn anything, any time. Everyday questions are answered right here, and anything about your skin gets her own reply within 24 hours.", [["Join", "#membership"], ["Something else", "n:member"]]),
     gift: info("Gift certificates never expire. Which kind?", [["A specific treatment", "n:g-one"], ["Any treatment · $110", "n:g-any"], ["Using one", "n:g-use"]]),
@@ -539,6 +551,7 @@
     if (act === "nevermind") { state.pending = null; push({ who: "bot", text: "No problem. Anything else?" }); return render(); }
     if (act === "book") { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(); return; }
     if (act === "move") { close(); if (window.LumevinaBooking) window.LumevinaBooking.startReschedule(); return; }
+    if (act === "account") { close(); if (window.LumevinaAccount) window.LumevinaAccount.open(); return; }
     if (act.charAt(0) === "#") {
       close();
       var t = document.querySelector(act);

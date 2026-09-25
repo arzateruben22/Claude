@@ -114,7 +114,8 @@ console.log("services:",seen.size);'
 ## Memberships (Stripe Billing)
 
 `js/membership.js` runs the whole Glow Membership flow in the browser today
-(join, monthly facials, bank up to 2, pause, cancel, gift a banked facial).
+(join, monthly facials, bank up to 2 with billing held at 2, pause, cancel,
+gift a banked facial).
 To make it real:
 
 1. In Stripe, create one **Product** per plan (Glow, Ageless) with a
@@ -126,20 +127,34 @@ To make it real:
    default_incomplete`, confirmed with Stripe.js), then an insert into
    `memberships` (schema.sql) with `min_ends_at = now() + 3 months`.
 3. In `stripe-webhook`, handle:
-   - `invoice.paid` → `credits = least(credits + 1, 2)`, ledger row `billed`
+   - `invoice.paid` → `credits = credits + 1`, ledger row `billed`
+   - `invoice.voided` on a held subscription → ledger row `held`
    - `customer.subscription.updated` / `deleted` → mirror `status`, `cancel_at`
-4. Cancel = `cancel_at` on the subscription set to the later of the minimum
+4. Billing hold at 2 banked facials (so no one pays for a facial they can't
+   use). After every change to `credits` (a paid invoice, a booking, a
+   returned or gifted facial), run one `sync_hold` step:
+   - `credits >= 2` and not already held → set the subscription's
+     `pause_collection = { behavior: 'void' }` (no `resumes_at`), set
+     `on_hold = true`, and send the member one email and text: "You have 2
+     facials waiting, so we won't bill you on {date}. Book one and your
+     monthly facial picks up again."
+   - `credits < 2` and held → clear `pause_collection`, `on_hold = false`.
+   - Three days before a held billing date, send one booking reminder.
+   The member's own pause (step 6) takes priority: while `paused_bill_at` is
+   set, leave `pause_collection` as the pause set it, and re-run `sync_hold`
+   when it resumes.
+5. Cancel = `cancel_at` on the subscription set to the later of the minimum
    end or the current period end. It must be available online from My Lumevina
    (California's automatic-renewal law requires online cancellation when the
    signup was online), and the terms shown at join must state the price,
    billing frequency, minimum term and how to cancel: they already do.
-5. Pause = `pause_collection` for the one skipped billing date (once per 12
+6. Pause = `pause_collection` for the one skipped billing date (once per 12
    months), mirrored in `paused_bill_at`.
-6. Booking with a credit: `create-deposit-intent` checks the client has a
+7. Booking with a credit: `create-deposit-intent` checks the client has a
    `usable` membership covering the service, prices that service at $0 (and
    takes 15% off the rest of the visit), and decrements `credits` in the same
    transaction as the booking insert.
-7. Founding Five: in the join transaction, if fewer than five memberships have
+8. Founding Five: in the join transaction, if fewer than five memberships have
    a `five_no`, set the next number with `five_kit = 'ready'` and
    `five_addon = 'ready'`, and decrement the two kit products (GlyMed+
    Glycolic Facial Cleanser, Face Reality Daily SPF 30 Plus) in `products` so

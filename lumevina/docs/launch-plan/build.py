@@ -262,7 +262,7 @@ def bank_math(members, rate, days):
 
 
 BANK_NOTES = [("Money held, not earned", "Dues come in when they&rsquo;re paid, but a banked facial is still owed. The dashboard&rsquo;s Facials owed tile tracks them, so the books never mistake held money for spare money."),
-              ("They come back in busy months", "Holidays, weddings and summer are when members cash in. Two banked facials per member is the most anyone can hold, so %d members can owe %d at the very most." % (PLAN, PLAN * 2)),
+              ("They come back in busy months", "Holidays, weddings and summer are when members cash in. Two banked facials per member is the most that builds up: at two, billing holds until one is booked. So %d members can owe about %d at the very most." % (PLAN, PLAN * 2)),
               ("Open a day off when it builds", "When facials owed pass about 10, two days of work, open a Monday every other week until they&rsquo;re cleared. The open slots after that are new money.")]
 
 FLIP_WHEN = [("Toward product", "Product sales beat facial sales two months running, the facial book has a waitlist, or Evelyn wants fewer chair hours."),

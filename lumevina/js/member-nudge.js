@@ -10,6 +10,9 @@
  *      membership section is on screen, behind any open window or the
  *      home-screen card, never shown to members, and gone for a week once
  *      closed (remembered in this browser only).
+ *   3. The same card reminds a member whose billing is on hold because two
+ *      facials are already waiting: book one and billing picks up again.
+ *      Closing it snoozes the reminder for three days.
  */
 (function () {
   "use strict";
@@ -19,6 +22,7 @@
 
   var KEY = "lumevina_member_nudge";
   var SNOOZE_DAYS = 7;
+  var HOLD_SNOOZE_DAYS = 3;
   var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var read = function () {
@@ -31,7 +35,13 @@
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
     return s ? LM.get(s.email) : null;
   };
-  var isMember = function () { return LM.isMember(me()); };
+  /* what the card is for right now: "join" for visitors, "hold" for a member
+     with two facials waiting, nothing for everyone else */
+  var mode = function () {
+    var r = me();
+    if (LM.onHold && LM.onHold(r)) return "hold";
+    return LM.isMember(r) ? null : "join";
+  };
 
   /* the plan that covers a service, cheapest first */
   var planFor = function (serviceId) {
@@ -82,7 +92,24 @@
     '<a class="mem-nudge-go" href="#membership">See the plans <span aria-hidden="true">→</span></a>';
   document.body.appendChild(card);
 
+  var cur = null;
   var paint = function () {
+    var h = card.querySelector(".mem-nudge-h"), go = card.querySelector(".mem-nudge-go");
+    card.classList.toggle("is-hold", cur === "hold");
+    if (cur === "hold") {
+      var r = me();
+      card.setAttribute("aria-label", "Your membership");
+      card.querySelector(".mem-nudge-chip").hidden = false;
+      card.querySelector(".mem-nudge-five").textContent = "Billing on hold";
+      h.innerHTML = r.credits + " facials are <span>waiting for you.</span>";
+      card.querySelector(".mem-nudge-b").textContent = "We won't bill you on " + LM.fmtDate(r.nextBillAt) +
+        ". Book one and your monthly facial picks up again. Nothing is lost.";
+      go.innerHTML = 'Book my facial <span aria-hidden="true">→</span>';
+      return;
+    }
+    card.setAttribute("aria-label", "Glow Membership");
+    h.innerHTML = "A facial every month, <span>from $159.</span>";
+    go.innerHTML = 'See the plans <span aria-hidden="true">→</span>';
     var left = LM.fiveLeft();
     var chip = card.querySelector(".mem-nudge-chip");
     chip.hidden = left === 0;
@@ -92,10 +119,10 @@
       : "Save up to $432 a year, bank a month you're busy, and save on skincare from our shelf.";
   };
 
-  var passedServices = false, seeingPlans = false, shown = false, gone = false;
-  var snoozed = function () {
-    var s = read();
-    return s.snoozeUntil && Date.now() < s.snoozeUntil;
+  var passedServices = false, seeingPlans = false, shown = false, gone = {};
+  var snoozed = function (m) {
+    var s = read(), until = m === "hold" ? s.holdSnoozeUntil : s.snoozeUntil;
+    return until && Date.now() < until;
   };
   /* something else has the screen: a window, the menu, or the home-screen card */
   var busy = function () {
@@ -105,22 +132,25 @@
   };
 
   var update = function () {
-    if (gone) return;
-    if (isMember() || snoozed()) { hide(true); return; }
-    var want = passedServices && !seeingPlans && !busy();
-    if (want && !shown) show();
-    else if (!want && shown) hide(false);
+    var m = mode();
+    if (!m || gone[m] || snoozed(m)) { hide(); return; }
+    /* the hold reminder doesn't wait for scrolling: it's about her own account */
+    var want = (m === "hold" || (passedServices && !seeingPlans)) && !busy();
+    if (want && (!shown || m !== cur)) show(m);
+    else if (!want && shown) hide();
   };
-  var show = function () {
+  var show = function (m) {
+    var swap = shown && m !== cur;
     shown = true;
+    cur = m;
     paint();
+    if (swap) return;
     card.hidden = false;
     if (calm) { card.classList.add("show"); return; }
     requestAnimationFrame(function () { requestAnimationFrame(function () { card.classList.add("show"); }); });
   };
-  var hide = function (forGood) {
-    if (forGood) gone = true;
-    if (!shown && !forGood) return;
+  var hide = function () {
+    if (!shown) return;
     shown = false;
     card.classList.remove("show");
     setTimeout(function () { if (!shown) card.hidden = true; }, calm ? 0 : 420);
@@ -148,13 +178,21 @@
 
   card.querySelector(".mem-nudge-x").addEventListener("click", function () {
     var s = read();
-    s.snoozeUntil = Date.now() + SNOOZE_DAYS * 864e5;
+    if (cur === "hold") s.holdSnoozeUntil = Date.now() + HOLD_SNOOZE_DAYS * 864e5;
+    else s.snoozeUntil = Date.now() + SNOOZE_DAYS * 864e5;
     write(s);
-    hide(true);
+    gone[cur] = true;
+    hide();
   });
   card.querySelector(".mem-nudge-go").addEventListener("click", function (e) {
     e.preventDefault();
-    hide(false);
+    var was = cur;
+    hide();
+    if (was === "hold") {
+      var r = me();
+      if (r && window.LumevinaBooking) window.LumevinaBooking.open(LM.plan(r.plan).primary);
+      return;
+    }
     membership.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
   });
 

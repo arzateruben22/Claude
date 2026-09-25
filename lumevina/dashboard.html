@@ -470,7 +470,7 @@
           <h2>Glow Membership</h2>
           <p class="sub"><strong>Monthly recurring revenue</strong> is what memberships bring in
           before the month starts. <strong>Facials owed</strong> are banked visits members have
-          paid for and not yet used.</p>
+          paid for and not yet used. With two waiting, a member isn't billed until they book one.</p>
         </div>
       </div>
       <div class="bk-tiles" id="mem-tiles"></div>
@@ -1235,7 +1235,9 @@
       var PLANS = MPLANS;
       var members = MEMBERS;
       var live = members.filter(function (m) { return m.status === "active" || m.status === "cancelling"; });
-      var billing = live.filter(function (m) { return !m.pausedMonth; });
+      /* two facials waiting holds billing until one is booked (js/membership.js) */
+      var held = live.filter(function (m) { return !m.pausedMonth && Number(m.credits || 0) >= 2; });
+      var billing = live.filter(function (m) { return !m.pausedMonth && held.indexOf(m) === -1; });
       var mrr = billing.reduce(function (a, m) { return a + (m.price || PLANS[m.plan].price); }, 0);
       var owed = live.reduce(function (a, m) { return a + Number(m.credits || 0); }, 0);
       var owedValue = live.reduce(function (a, m) { return a + Number(m.credits || 0) * PLANS[m.plan].value; }, 0);
@@ -1280,6 +1282,11 @@
             ? "That's past 10: keep a Monday open every other week (below) until they're cleared."
             : "When it passes 10, open a Monday every other week (below) to clear them.")
         : "No facials owed right now.";
+      if (held.length) {
+        var names = held.map(function (m) { return (m.name || m.email || "A member").split(" ")[0]; });
+        document.getElementById("mem-owed-note").innerHTML += " <strong>" + (held.length === 1 ? "1 member is" : held.length + " members are") +
+          " on hold</strong>, with 2 or more facials waiting and no billing until they book: " + names.join(", ") + ". A quick text inviting them in brings the dues back.";
+      }
 
       var max = 1;
       var mix = Object.keys(PLANS).map(function (id) {
@@ -1369,6 +1376,7 @@
         if (m.status === "cancelling") return '<span class="mem-state ending">Ends ' + fmt(m.cancelAt) + '</span>';
         if (m.status === "cancelled") return '<span class="mem-state paused">Ended</span>';
         if (m.pausedMonth) return '<span class="mem-state paused">Pausing</span>';
+        if (Number(m.credits || 0) >= 2) return '<span class="mem-state paused">On hold · book 1</span>';
         return '<span class="mem-state on">Active</span>';
       };
       var rows = members.slice().sort(function (a, b) { return new Date(b.startedAt) - new Date(a.startedAt); });

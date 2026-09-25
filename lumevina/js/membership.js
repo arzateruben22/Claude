@@ -2,7 +2,9 @@
  *
  * A monthly skincare membership. Each billing month adds one facial to the
  * member's account; unused facials bank (up to 2) so a busy month is never
- * wasted, and a banked facial can be gifted to a friend.
+ * wasted, and a banked facial can be gifted to a friend. With two facials
+ * waiting, billing holds: that month isn't charged, and billing picks up
+ * again once one is booked or gifted. Nobody pays for a facial they can't use.
  *
  *   Glow      $159/mo  Lumevina Custom Facial, Custom + Dermaplaning, or the
  *                      Monthly Acne Treatment for clients on the acne program
@@ -101,9 +103,10 @@
   var money = function (n) { return "$" + Number(n).toFixed(2).replace(/\.00$/, ""); };
 
   /* ── billing: bring a record up to today ──
-     Each billing date that has passed either bills the month (adding one
-     facial, capped at BANK_CAP) or skips it when paused. A cancellation
-     takes effect on its date; banked facials stay usable for 60 days. */
+     Each billing date that has passed bills the month (adding one facial),
+     skips it when paused, or holds it when BANK_CAP facials are already
+     waiting: no charge and no new facial. A cancellation takes effect on
+     its date; banked facials stay usable for 60 days. */
   var accrue = function (r) {
     var now = Date.now(), dirty = false;
     while ((r.status === "active" || r.status === "cancelling") &&
@@ -118,9 +121,11 @@
       if (r.pausedMonth === r.nextBillAt) {
         r.history.push({ at: r.nextBillAt, type: "paused", note: "Month paused, not billed" });
         r.pausedMonth = null;
+      } else if (r.credits >= BANK_CAP) {
+        r.history.push({ at: r.nextBillAt, type: "held", note: r.credits + " facials waiting: month not billed" });
       } else {
         r.history.push({ at: r.nextBillAt, type: "billed", amount: r.price || plan.price });
-        r.credits = Math.min(BANK_CAP, r.credits + 1);
+        r.credits += 1;
       }
       r.nextBillAt = addMonths(r.nextBillAt, 1);
       dirty = true;
@@ -162,6 +167,11 @@
 
   var isMember = function (r) {
     return !!r && (r.status === "active" || r.status === "cancelling");
+  };
+
+  /* billing holds while BANK_CAP facials are waiting (a paused month skips anyway) */
+  var onHold = function (r) {
+    return isMember(r) && !r.pausedMonth && r.credits >= BANK_CAP;
   };
 
   /* ── actions ── */
@@ -224,18 +234,20 @@
     return { ok: true, record: r };
   };
 
-  /* a cancelled appointment gives its facial back (cap still applies) */
+  /* a cancelled appointment always gives its facial back, even past the cap:
+     it was paid for. Billing simply holds until the count drops below it. */
   var returnCredit = function (email) {
     var r = get(email);
     if (!r) return;
-    r.credits = Math.min(BANK_CAP, r.credits + 1);
+    r.credits += 1;
     r.used = Math.max(0, r.used - 1);
     r.history.push({ at: new Date().toISOString(), type: "returned" });
     put(r);
   };
 
   var canPause = function (r) {
-    if (!r || r.status !== "active" || r.pausedMonth) return false;
+    /* on hold, the month isn't billed anyway: don't spend the year's pause on it */
+    if (!r || r.status !== "active" || r.pausedMonth || onHold(r)) return false;
     return !r.lastPauseAt || Date.now() - new Date(r.lastPauseAt).getTime() > 365 * 864e5;
   };
   var pause = function (email) {
@@ -354,7 +366,7 @@
   var api = {
     plans: PLANS, plan: function (id) { return byId[id] || null; },
     BANK_CAP: BANK_CAP, MIN_MONTHS: MIN_MONTHS, FOUNDING_CAP: FOUNDING_CAP,
-    get: get, isMember: isMember, usable: usable, covers: covers,
+    get: get, isMember: isMember, onHold: onHold, usable: usable, covers: covers,
     join: join, useCredit: useCredit, returnCredit: returnCredit,
     canPause: canPause, pause: pause, unpause: unpause, cancel: cancel, keep: keep,
     giftCredit: giftCredit, demoAdvance: demoAdvance,
@@ -446,7 +458,8 @@
     }
     $(".mj-agree-text").textContent = "I agree to be billed " + money(chosen.price) +
       " today and every month until I cancel. I can cancel online any time; a " + MIN_MONTHS +
-      "-month minimum applies. Unused facials bank up to " + BANK_CAP + ".";
+      "-month minimum applies. Unused facials bank up to " + BANK_CAP + "; with " + BANK_CAP +
+      " waiting, I'm not billed until I book one.";
     $("#mj-name").value = s ? s.name : "";
     $("#mj-email").value = s ? s.email : "";
     $("#mj-agree").checked = false;
@@ -576,24 +589,29 @@
     var head = h("div", "mem-acct-head");
     head.appendChild(h("span", "mem-acct-plan", plan.name + " Membership"));
     if (r.five) head.appendChild(h("span", "mem-acct-five", "Founding Five · #" + r.five.no));
+    var hold = onHold(r);
     var pill = r.status === "cancelling" ? "Ends " + fmtDate(r.cancelAt)
-      : r.status === "cancelled" ? "Ended" : r.pausedMonth ? "Pausing next month" : "Active";
-    head.appendChild(h("span", "mem-acct-pill" + (r.status === "active" && !r.pausedMonth ? " on" : ""), pill));
+      : r.status === "cancelled" ? "Ended" : r.pausedMonth ? "Pausing next month" : hold ? "Billing on hold" : "Active";
+    head.appendChild(h("span", "mem-acct-pill" + (r.status === "active" && !r.pausedMonth && !hold ? " on" : ""), pill));
     el.appendChild(head);
 
     var big = h("div", "mem-acct-credits");
     var dots = h("span", "mem-acct-dots");
-    for (var i = 0; i < BANK_CAP; i++) dots.appendChild(h("i", i < r.credits ? "on" : ""));
+    for (var i = 0; i < Math.max(BANK_CAP, r.credits); i++) dots.appendChild(h("i", i < r.credits ? "on" : ""));
     big.appendChild(h("span", "mem-acct-num", String(r.credits)));
     big.appendChild(h("span", "mem-acct-lbl", (r.credits === 1 ? "facial" : "facials") + " ready to book"));
     big.appendChild(dots);
     el.appendChild(big);
+    if (hold) {
+      el.appendChild(h("p", "mem-acct-hold", "You have " + r.credits + " facials waiting, so we won't bill you on " +
+        fmtDate(r.nextBillAt) + ". Book one and your monthly facial picks up again. Nothing is lost."));
+    }
 
     var facts = h("ul", "mem-acct-facts");
     var fact = function (a, b) { var li = h("li"); li.appendChild(h("span", "", a)); li.appendChild(h("span", "", b)); facts.appendChild(li); };
     if (r.status === "cancelling") fact("Last day", fmtDate(r.cancelAt) + " · no more billing");
     else if (r.status !== "cancelled") fact(r.pausedMonth ? "Skipping" : "Next billing",
-      fmtDate(r.nextBillAt) + (r.pausedMonth ? " (paused)" : " · " + money(r.price)));
+      hold ? "On hold until you book" : fmtDate(r.nextBillAt) + (r.pausedMonth ? " (paused)" : " · " + money(r.price)));
     fact("Member since", fmtDate(r.startedAt));
     if (Date.now() < new Date(r.minEndsAt).getTime()) fact("Minimum ends", fmtDate(r.minEndsAt));
     if (r.status === "cancelled") fact("Use banked facials by", fmtDate(addDays(r.cancelAt, BANK_AFTER_CANCEL_DAYS)));

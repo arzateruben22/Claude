@@ -154,8 +154,11 @@ $$;
 -- ── Glow Membership ────────────────────────────────────────────────
 -- One row per member. Billing is a Stripe Billing subscription; the
 -- stripe-webhook function mirrors its state here. Each paid invoice adds
--- one facial credit (capped at 2 banked); a booking that uses a credit
--- links back through membership_ledger. See server/README.md → Memberships.
+-- one facial credit. With 2 banked, billing holds (the subscription's
+-- pause_collection voids that month's invoice) until one is used, so no one
+-- pays for a facial they can't book; a cancelled booking may return a credit
+-- past 2. A booking that uses a credit links back through membership_ledger.
+-- See server/README.md → Memberships.
 create table memberships (
   id uuid primary key default gen_random_uuid(),
   client_id uuid not null references clients (id) on delete cascade,
@@ -163,11 +166,12 @@ create table memberships (
   price_cents int not null,                 -- locked founding price
   status text not null default 'active'
     check (status in ('active', 'cancelling', 'cancelled')),
-  credits int not null default 1 check (credits between 0 and 2),
+  credits int not null default 1 check (credits >= 0),
   started_at timestamptz not null default now(),
   min_ends_at timestamptz not null,         -- started_at + 3 months
   next_bill_at timestamptz not null,
   paused_bill_at timestamptz,               -- the one billing date being skipped
+  on_hold boolean not null default false,   -- 2 facials waiting: billing held until one is used
   last_pause_at timestamptz,                -- one pause per 12 months
   cancel_at timestamptz,
   founding boolean not null default true,
@@ -186,7 +190,7 @@ create unique index one_live_membership_per_client
 create table membership_ledger (
   id bigint generated always as identity primary key,
   membership_id uuid not null references memberships (id) on delete cascade,
-  kind text not null check (kind in ('joined', 'billed', 'paused', 'used', 'returned', 'gifted', 'cancel-requested', 'kept', 'cancelled')),
+  kind text not null check (kind in ('joined', 'billed', 'paused', 'held', 'used', 'returned', 'gifted', 'cancel-requested', 'kept', 'cancelled')),
   amount_cents int,
   booking_id uuid references bookings (id) on delete set null,
   gift_code text,
