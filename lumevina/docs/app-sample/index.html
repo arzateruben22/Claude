@@ -1,4 +1,5 @@
 <title>Lumevina for iPhone</title>
+<script>document.documentElement.className += " booting";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="A working sample of the Lumevina iPhone app: flash alerts, booking with deposits or a banked facial, Glow Rewards and membership.">
 <style>
@@ -28,6 +29,10 @@ html, body { background: var(--bg); color: var(--ink); }
 /* the page itself never pans sideways: only the rails inside the phone scroll */
 html, body { overflow-x: hidden; overflow-x: clip; max-width: 100%; overscroll-behavior-x: none; }
 body { margin: 0; }
+/* first paint waits for the embedded font, then the page fades in once (see "boot" in the script) */
+body { transition: opacity .35s ease; }
+.booting body { opacity: 0; }
+.booting .notif, .booting .notif-peek { animation-play-state: paused; }
 body { font-family: "InterV", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   font-size: 16px; -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
 button { font: inherit; color: inherit; }
@@ -98,8 +103,12 @@ h1, h2, h3, p { margin: 0; }
     radial-gradient(70% 50% at 90% 75%, rgba(226, 176, 140, 0.26), transparent 70%),
     radial-gradient(90% 60% at 50% 110%, rgba(213, 150, 171, 0.3), transparent 70%),
     #0c0709;
-  transition: transform .55s var(--spring), opacity .45s ease, filter .45s ease; }
-.lock.gone { transform: translateY(-100%); opacity: 0; filter: blur(8px); pointer-events: none; }
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .55);
+  transition: transform .6s var(--spring); will-change: transform; }
+/* past the top edge, shadow and all, so nothing peeks in once it's gone */
+.lock.gone { transform: translate3d(0, calc(-100% - 100px), 0); pointer-events: none; }
+.lock > * { transition: opacity .35s ease .05s; }
+.lock.gone > * { opacity: 0; transition-delay: 0s; }
 .lock-art { position: absolute; left: 50%; top: 262px; width: 280px; transform: translateX(-50%); opacity: .22; }
 .lock-lock { position: absolute; top: 62px; left: 50%; transform: translateX(-50%); opacity: .9; }
 .lock-date { position: absolute; top: 96px; left: 0; right: 0; text-align: center; font-size: 21px; font-weight: 600; color: rgba(255, 255, 255, .88); }
@@ -108,7 +117,7 @@ h1, h2, h3, p { margin: 0; }
 .notif-stack { position: absolute; left: 12px; right: 12px; top: 492px; }
 .notif { display: grid; grid-template-columns: 38px 1fr; gap: 11px; align-items: start; width: 100%; text-align: left; border: 0;
   border-radius: 22px; padding: 13px 14px; color: var(--ink);
-  background: rgba(58, 48, 52, 0.52); -webkit-backdrop-filter: blur(30px) saturate(160%); backdrop-filter: blur(30px) saturate(160%);
+  background: rgba(62, 50, 55, 0.78);
   box-shadow: 0 10px 30px rgba(0, 0, 0, .25); transition: transform .3s var(--ease); animation: notif-in .7s var(--spring) .5s both; }
 .notif:active { transform: scale(.97); }
 .notif img { width: 38px; height: 38px; border-radius: 9px; }
@@ -116,19 +125,26 @@ h1, h2, h3, p { margin: 0; }
 .notif .top b { font-weight: 600; }
 .notif .top span { color: rgba(255, 255, 255, .55); font-size: 13px; }
 .notif p { font-size: 15px; line-height: 1.32; margin-top: 2px; color: rgba(255, 255, 255, .92); }
-.notif-peek { height: 12px; margin: -2px 14px 0; border-radius: 0 0 18px 18px; background: rgba(58, 48, 52, 0.38);
-  -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px); animation: notif-in .7s var(--spring) .6s both; }
+.notif-peek { height: 12px; margin: -2px 14px 0; border-radius: 0 0 18px 18px; background: rgba(62, 50, 55, 0.5);
+  animation: notif-in .7s var(--spring) .6s both; }
 @keyframes notif-in { from { opacity: 0; transform: translateY(30px) scale(.96); } to { opacity: 1; transform: none; } }
 .lock-foot { position: absolute; left: 0; right: 0; bottom: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 46px; }
 .lock-circ { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center;
-  background: rgba(40, 34, 37, .5); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+  background: rgba(40, 34, 37, .62); }
 .lock-open { border: 0; background: none; color: rgba(255, 255, 255, .75); font-size: 13px; font-weight: 500; padding: 8px 12px; border-radius: 999px; }
 .lock-open:hover { color: #fff; }
 
 /* ── app frame ── */
-.app { position: absolute; inset: 0; z-index: 10; background: #000; overflow: hidden;
-  transition: transform .5s var(--spring), border-radius .5s var(--spring), filter .4s ease, opacity .5s ease; }
-.app.launching { transform: scale(.9); opacity: 0; border-radius: 54px; }
+.app { position: absolute; inset: 0; z-index: 10; background: #000; overflow: hidden; will-change: transform;
+  transition: transform .6s var(--spring), border-radius .5s var(--spring), filter .4s ease; }
+/* waiting under the lock: a touch large and dim. Only transform and an overlay's opacity move,
+   so nothing inside is repainted and the tab bar's blur never pops */
+.app.launching { transform: scale(1.06); }
+.app::after { content: ""; position: absolute; inset: 0; z-index: 90; background: #000; opacity: 0; pointer-events: none;
+  transition: opacity .6s var(--spring); }
+.app.launching::after { opacity: .5; }
+/* for jumping straight to a screen while the lock still covers it */
+.app.instant, .app.instant * { transition: none !important; }
 .app.behind { transform: scale(.92) translateY(14px); border-radius: 22px; filter: brightness(.55); }
 .view { position: absolute; inset: 0; }
 .view[hidden] { display: none; }
@@ -918,10 +934,17 @@ h1, h2, h3, p { margin: 0; }
 
   /* ── lock screen → app ── */
   var lock = $("#lock"), app = $("#app");
+  /* set up the screen the app opens on before the lock moves, with no animation of its own,
+     so the unlock is one motion: the lock slides up, the app settles */
+  var quiet = false;
+  var instantly = function (fn) {
+    app.classList.add("instant"); quiet = true;
+    try { fn(); } finally { quiet = false; void app.offsetWidth; app.classList.remove("instant"); }
+  };
   var launch = function (then) {
+    if (then) instantly(then);
     lock.classList.add("gone");
     app.classList.remove("launching");
-    if (then) then();
   };
   var relock = function () {
     closeSheet(true);
@@ -942,7 +965,7 @@ h1, h2, h3, p { margin: 0; }
     $$(".tab").forEach(function (t) { t.setAttribute("aria-selected", String(t.getAttribute("data-tab") === name)); });
     $$(".view").forEach(function (v) {
       var on = v.id === "v-" + name;
-      if (on && v.hidden) { v.hidden = false; v.classList.remove("show"); void v.offsetWidth; v.classList.add("show"); }
+      if (on && v.hidden) { v.hidden = false; v.classList.remove("show"); if (!quiet) { void v.offsetWidth; v.classList.add("show"); } }
       else if (!on) v.hidden = true;
     });
   };
@@ -1046,7 +1069,8 @@ h1, h2, h3, p { margin: 0; }
     $("#detail .scroll").scrollTop = 0;
     renderDays(); renderTimes();
     tab("book");
-    requestAnimationFrame(function () { book.classList.add("pushed"); syncTabs(); });
+    if (quiet) { book.classList.add("pushed"); syncTabs(); }
+    else requestAnimationFrame(function () { book.classList.add("pushed"); syncTabs(); });
   };
   var openFlash = function (id, day) { openDetail(id, day, DAYS[day].flash); };
   $("#back").addEventListener("click", pop);
@@ -1337,5 +1361,21 @@ h1, h2, h3, p { margin: 0; }
   });
 
   paint();
+
+  /* boot: reveal once the font is in (or after a second, whichever is first), then decode the
+     app's pictures while nothing is moving, so the first unlock never waits on them */
+  var booted = false;
+  var boot = function () {
+    if (booted) return;
+    booted = true;
+    document.documentElement.classList.remove("booting");
+    var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 200); };
+    idle(function () {
+      $$("img", app).forEach(function (im) { if (im.decode) im.decode().catch(function () {}); });
+      Object.keys(IMG).forEach(function (k) { var im = new Image(); im.src = IMG[k]; if (im.decode) im.decode().catch(function () {}); });
+    });
+  };
+  if (document.fonts && document.fonts.load) document.fonts.load('600 16px "InterV"').then(boot, boot);
+  setTimeout(boot, 1000);
 })();
 </script>
