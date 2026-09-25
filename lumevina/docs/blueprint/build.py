@@ -886,10 +886,10 @@ NET_JS = r"""
   var descEl = document.getElementById("net-desc");
   var PH = [
     { t: 0, name: "Today", desc: "One chair. About 80 visits a month." },
-    { t: 3, name: "Pilot", desc: "Two artists bring their own clients into the app." },
-    { t: 7.5, name: "The Collective", desc: "Eight artists, one app, shared Glow Rewards." }
+    { t: 4.5, name: "Pilot", desc: "Two artists bring their own clients into the app." },
+    { t: 9, name: "The Collective", desc: "Eight artists, one app, shared Glow Rewards." }
   ];
-  var CYCLE = 16.5;   /* the opening "Today" hold is 3s (was 4.5); everything after keeps its pace */
+  var CYCLE = 18;
   var LABELS = ["Lash", "Brow", "Nails", "Lash", "Brow", "Nails", "Lash", "Brow"];
   var ORDER = [0, 4, 2, 6, 1, 5, 3, 7];
   var W, H, cx, cy, R, dpr;
@@ -1006,11 +1006,12 @@ NET_JS = r"""
     return;
   }
   var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (rm) { for (var g2 = 0; g2 < 12.5 * 60; g2++) step(1 / 60); return; }
+  if (rm) { for (var g2 = 0; g2 < 14 * 60; g2++) step(1 / 60); return; }
+  var SPEED = 1.3;   /* the whole story plays a little faster: one loop is about 14 seconds */
   var last = performance.now(), raf = null, vis = true;
   var loop = function (now) {
     var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    step(dt);
+    step(dt * SPEED);
     raf = requestAnimationFrame(loop);
   };
   var play = function () { if (raf === null && vis && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); } };
@@ -1743,7 +1744,7 @@ __DEEPP__
   __F5__
 </section>
 
-<script>window.NET_FREEZE = 13.7; window.STEPS_FREEZE = true;</script>
+<script>window.NET_FREEZE = 15.2; window.STEPS_FREEZE = true;</script>
 <script>__NET__</script>
 <script>__STEPSJS__</script>
 </body></html>
