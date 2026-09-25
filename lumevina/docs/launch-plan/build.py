@@ -58,7 +58,9 @@ KEPT = DUES - FEE - SUPPLIES - PERKS
 FLOOR = math.ceil(BILLS_TOTAL / KEPT)
 ARTIST_PERK = 6.0                  # members' 10% with artists, paid by Lumevina, once artists join
 FLOOR_WITH_ARTISTS = math.ceil(BILLS_TOTAL / (KEPT - ARTIST_PERK))
-PLAN = FLOOR + 3                   # the plan by day 90: the floor plus room for a cancellation or a slow month
+PLAN_ROOM = 5                      # room above the floor for a cancellation or a slow month
+PLAN = FLOOR + PLAN_ROOM            # the plan by day 90 (month 3): 20, the Growth Blueprint's target
+MONTH6 = 50                        # the plan by month 6, the Growth Blueprint's target
 PAY = [3000, 4000, 5000]           # Evelyn's monthly pay, before taxes: members for dues to cover the business and her pay
 PAY_DEFAULT = 4000
 pay_members = lambda pay: math.ceil((BILLS_TOTAL + pay) / KEPT)
@@ -68,7 +70,7 @@ MEMBER = [("Average dues · the plan mix", "$%d" % round(DUES), "Most on Glow $1
           ("Supplies for the monthly facial", "−$%d" % SUPPLIES, "Backbar product used in the treatment"),
           ("Member perks", "−$%.2f" % PERKS, "10% off the shelf and 15% off add-ons, averaged")]
 
-LADDER = [5, FLOOR, PLAN, 25, 30, 50]
+LADDER = [5, FLOOR, PLAN, 30, 40, MONTH6]
 
 ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
             ("Attorney consult", "about $480", "Pilot terms, month 2"),
@@ -76,21 +78,21 @@ ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
 ONE_TIME_TOTAL = 160 + 480 + 65
 
 # Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13).
-LIKELY = [0, 0, 0, 0, 3, 5, 7, 9, 10, 12, 14, 15, 17, 18]
-LOW = [0, 0, 0, 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-HIGH = [0, 0, 0, 0, 5, 7, 9, 11, 13, 16, 18, 20, 22, 24]
+LIKELY = [0, 0, 0, 0, 3, 5, 7, 9, 11, 13, 15, 17, 18, 20]
+LOW = [0, 0, 0, 0, 1, 3, 4, 5, 6, 7, 8, 10, 11, 12]
+HIGH = [0, 0, 0, 0, 5, 7, 9, 11, 14, 17, 19, 22, 24, 26]
 FLOOR_WEEK = next(i for i, v in enumerate(LIKELY) if v >= FLOOR)
 
 PACE = [("Week 1", "Count what’s there: facial clients from the last six months, visits a month, who already comes every four to eight weeks. Set up the Saturday scoreboard.", 0),
         ("Weeks 2–3", "Live payments on, booking moves to Lumevina. In the chair, Evelyn mentions it: membership opens soon, first five get a free kit. Build an early list of 15 names.", 0),
         ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
         ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
-        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 12),
+        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 13),
         ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend for 150 Glow Points.", PLAN)]
 
 SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
-           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 6),
-           ("Win-back texts", "Clients not seen in 60+ days", 3),
+           ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 7),
+           ("Win-back texts", "Clients not seen in 60+ days", 4),
            ("New clients", "Google, reviews, gift certificates, neighbors", 2),
            ("Member referrals", "150 Glow Points when a friend’s first visit is done", 2)]
 
@@ -120,9 +122,9 @@ GATE = [{"tag": "Day 90 · %d or more members" % FLOOR, "big": "Sign two artists
 WHY_FIRST = ("Why members first", "An artist signs for clients. %s members who save 10%% with her are %s reasons to say yes, and they’re the pitch at every coffee."
              % (WORDS[PLAN], WORDS[PLAN].lower()))
 
-ENGINE_M = [("Months 4–6", "About %s new members a month" % {3: "three", 4: "four", 5: "five", 6: "six"}.get(round((30 - PLAN) / 3.0), "a few"), "30 members"),
-            ("Month 6", "Dues about %s a month, with this much left for Evelyn’s pay" % money(round(30 * DUES, -1)), "+$%s" % "{:,}".format(int(round(30 * KEPT - BILLS_TOTAL, -1)))),
-            ("Year 2", "Dues alone cover the business and about %s a month of pay" % money(round(50 * KEPT - BILLS_TOTAL, -2)), "50 members"),
+ENGINE_M = [("Months 4–6", "About %s new members a month" % {8: "eight", 9: "nine", 10: "ten", 11: "eleven", 12: "twelve"}.get(round((MONTH6 - PLAN) / 3.0), "ten"), "%d members" % MONTH6),
+            ("Month 6", "Dues about %s a month, with this much left for Evelyn’s pay" % money(round(MONTH6 * DUES, -1)), "+$%s" % "{:,}".format(int(round(MONTH6 * KEPT - BILLS_TOTAL, -1)))),
+            ("Year 1", "Hold at %d: new members replace any who leave" % MONTH6, "%d members" % MONTH6),
             ("Room check", "50 members is about 12 facials a week", "¼ of open hours")]
 ENGINE_T = [("Months 4–5", "Sign the two pilot artists, if day 90 passed", "2 artists"),
             ("Month 6", "The pilot goes live, free for 90 days, then 12%", "Pilot live"),
@@ -287,11 +289,11 @@ ROADMAP = [("Weeks 1–3", "Launch", "Live payments on, booking moves to Lumevin
            ("Months 4–12", "Artists", "Two artists try Lumevina free for 90 days. Members save 10% with them.", False),
            ("Year 1", "The network", "Go or no-go: their clients start booking Evelyn, or not.", False),
            ("Year 2", "The house", "The Lumevina Collective: a shared space and 6 to 8 artists.", False)]
-MONTH6_LEFT = round(30 * KEPT - BILLS_TOTAL, -1)
+MONTH6_LEFT = round(MONTH6 * KEPT - BILLS_TOTAL, -1)
 MILES = [(5, "Week 5", "The Founding Five", "The first members, each with a free kit and next month already booked.", False),
          (FLOOR, "Week %d" % FLOOR_WEEK, "Lumevina pays for itself", "Dues cover every business bill before the month starts. Everything else she books is hers.", True),
          (PLAN, "Day 90", "The day-90 goal", "Room for a cancellation or a slow month, and the signal to offer two artists the pilot.", False),
-         (30, "Month 6", "Dues start paying Evelyn", "About %s a month left from dues after the bills, before the month’s first facial." % money(MONTH6_LEFT), False)]
+         (MONTH6, "Month 6", "Dues pay Evelyn too", "About %s a month left from dues after the bills, before the month’s first facial." % money(MONTH6_LEFT), False)]
 
 NEW_GOAL = 2                       # new clients a week by week 6
 NEW_CLIENTS = [("Google, first", "Claim the Google Business Profile: hours, photos, and a Book button straight to Lumevina. Most “facial near me” searches end there."),
@@ -348,19 +350,19 @@ def lanes_svg():
     ym = lambda v: L1B - (L1B - L1T) * v / 50.0
     B1, B2 = 150, 180                  # talent bars
     p = ['<svg class="chart lanes" viewBox="0 0 800 246" role="img" aria-label="After day 90, two engines. Members grow '
-         'from %d at day 90 to 30 by month 6 and 50 by year 2. Talent: build the list to day 90, sign two artists in months 4 to 5, '
-         'the pilot runs to month 12, then the Collective in year 2.">' % PLAN]
+         'from %d at day 90 to %d by month 6, then hold there. Talent: build the list to day 90, sign two artists in months 4 to 5, '
+         'the pilot runs to month 12, then the Collective in year 2.">' % (PLAN, MONTH6)]
     p.append('<text x="0" y="%d" class="lanel">Members</text>' % ((L1T + L1B) // 2 + 4))
     p.append('<text x="0" y="%d" class="lanel">Talent</text>' % ((B1 + B2) // 2 + 4))
     for m in (0, 3, 6, 12, 24):
         p.append('<line x1="%.1f" x2="%.1f" y1="%d" y2="%d" class="grid"/>' % (x(m), x(m), L1T - 10, B2 + 8))
-    pts = [(0, 0), (0.92, 3), (1.15, 5), (FLOOR_WEEK / 4.33, FLOOR), (3, PLAN), (6, 30), (12, 40), (24, 50)]
+    pts = [(0, 0), (0.92, 3), (1.15, 5), (FLOOR_WEEK / 4.33, FLOOR), (3, PLAN), (6, MONTH6), (12, MONTH6), (24, MONTH6)]
     line = " L".join("%.1f,%.1f" % (x(m), ym(v)) for m, v in pts)
     p.append('<path class="area" d="M%.1f,%d L%s L%.1f,%d Z"/>' % (x(0), L1B, line, x(24), L1B))
     p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="floor"/>' % (X0, X1, ym(FLOOR), ym(FLOOR)))
     p.append('<text x="%.1f" y="%.1f" class="floorl" text-anchor="end">Pays for itself · %d</text>' % (x(24) - 4, ym(FLOOR) - 6, FLOOR))
     p.append('<path class="likely" pathLength="1" d="M%s"/>' % line)
-    for m, v, lab, anc in ((3, PLAN, "%d" % PLAN, "middle"), (6, 30, "30", "middle"), (12, 40, "40", "middle"), (24, 50, "50", "end")):
+    for m, v, lab, anc in ((3, PLAN, "%d" % PLAN, "middle"), (6, MONTH6, "%d" % MONTH6, "middle"), (24, MONTH6, "Hold at %d" % MONTH6, "end")):
         p.append('<circle class="dot" cx="%.1f" cy="%.1f" r="4"/>' % (x(m), ym(v)))
         p.append('<text class="dotl" x="%.1f" y="%.1f" text-anchor="%s">%s</text>' % (x(m) - (4 if anc == "end" else 0), ym(v) - 10, anc, lab))
     bars = [(0, 3, "Build the list", "b0"), (3, 5, "Sign two", "b1"), (5, 12, "Pilot · 2 artists", "b1"),
@@ -502,7 +504,7 @@ def bank_grid_html():
     rates = [0.1, 0.2, 0.3]
     h = ('<div class="grid-t bank-t"><div class="gt-row gt-h"><span>Members</span>' +
          "".join("<span>%d%% bank a month</span>" % round(r * 100) for r in rates) + '</div>')
-    for m in [10, PLAN, 30, 50]:
+    for m in [10, PLAN, 30, MONTH6]:
         h += '<div class="gt-row"><span class="gt-pay">%d%s</span>' % (m, " · day 90" if m == PLAN else "")
         for r in rates:
             owed = bank_math(m, r, 0)[0]
@@ -826,9 +828,9 @@ WEB_JS = r"""
     $("o-pay").textContent = fmt(pay);
     $("o-payn").textContent = Math.ceil((bills + pay) / kept);
     $("o-payt").textContent = pay ? "members also pay Evelyn " + fmt(pay) + " a month" : "set her pay to see this";
-    $("o-plan").textContent = "Aim for " + (floor + 3) + " by day 90, with room for a cancellation.";
-    $("o-sub").textContent = "Each member leaves " + fmt(kept) + ". At 30 members, dues leave " +
-      fmt(30 * kept - bills) + " a month for her pay.";
+    $("o-plan").textContent = "Aim for " + (floor + __PLAN_ROOM__) + " by day 90, with room for a cancellation.";
+    $("o-sub").textContent = "Each member leaves " + fmt(kept) + ". At __MONTH6__ members, the month-6 goal, dues leave " +
+      fmt(__MONTH6__ * kept - bills) + " a month for her pay.";
   };
   ["c-bills", "c-sup", "c-dues", "c-pay"].forEach(function (id) { $(id).addEventListener("input", calc); });
   calc();
@@ -1533,7 +1535,7 @@ web = HEAD.replace("__CSS__", base + CSS["WEB_CSS"] + LP_WEB) + fill(WEB_BODY, T
     .replace("__R_KEPT__", "%.4f" % R_KEPT).replace("__BILLS_N__", str(BILLS_TOTAL))
     .replace("__CHAIR_MAX__", str(CHAIR_MAX)).replace("__R_COST__", "%s" % R_COST_ABS).replace("__R_SHIP__", "%s" % R_SHIP)
     .replace("__BANK_CARRY__", str(BANK_CARRY)).replace("__DAY_SLOTS__", str(DAY_SLOTS)).replace("__FILL__", str(FILL))
-    .replace("__MEMBER_VALUE__", str(MEMBER_VALUE)))
+    .replace("__MEMBER_VALUE__", str(MEMBER_VALUE)).replace("__PLAN_ROOM__", str(PLAN_ROOM)).replace("__MONTH6__", str(MONTH6)))
 foot = lambda n: '<div class="pfoot"><span>Lumevina · The first 90 days</span><span>%d / 10</span></div>' % n
 pr = HEAD.replace("__CSS__", base + CSS["PRINT_CSS"] + LP_PRINT) + fill(PRINT_BODY, False)
 for i in range(10, 0, -1):

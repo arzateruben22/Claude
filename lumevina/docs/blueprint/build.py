@@ -25,7 +25,11 @@ SHOT = {n: "data:image/jpeg;base64," + b64(os.path.join(HERE, "shots", n + "-s.j
 # ─────────────────────────── the numbers ───────────────────────────
 # Added profit per month by month-from-now, for the three cases.
 S1 = {"low": 1730, "likely": 3810, "high": 6510}        # your chair, once ramped (open 5 days: Tue–Sat); prices +7.5% from Oct 2026
-MEMX = {"low": 340, "likely": 860, "high": 1290}       # membership keeps building after Step 1: 30 → 50 members by year 2 (profit)
+MEMX = {"low": 340, "likely": 860, "high": 1290}       # members 31 to 50 (profit)
+# Membership's share of S1 (the Glow Membership row of CHAIR against the chair's other rows),
+# pulled out so members can follow their own pace: 20 by month 3, 50 by month 6.
+MEM_SHARE = {"low": 650 / 2250.0, "likely": 1600 / 4700.0, "high": 3200 / 8250.0}
+MEM_TARGETS = [(1, 0), (3, 20), (6, 50)]               # (month, members): launch in week 4, 20 by month 3, 50 by month 6
 PILOT = {"low": 1420, "likely": 2840, "high": 4760}     # 2 artists, net: 12% app fee + their clients booking Evelyn
 COLL = {"low": 900, "likely": 3800, "high": 7700}      # 6–8 artists, net: flat suite rent + crossover − space − perks (incl. members' 10%)
 FEE_SHARE = 0.67                                         # share of the pilot that is the app fee (free for its first 90 days)
@@ -35,8 +39,19 @@ CEIL_YEAR = CEIL_DAY * CEIL_DAYS * 52 * CEIL_AVG                                
 LAUNCH = 160                                             # Founding Five, once, in the launch month: 5 kits (cleanser + SPF) at cost, $350 retail
 
 
+def members_at(m):
+    if m <= MEM_TARGETS[0][0]:
+        return 0.0
+    for (a, va), (b, vb) in zip(MEM_TARGETS, MEM_TARGETS[1:]):
+        if m <= b:
+            return va + (vb - va) * (m - a) / float(b - a)
+    return float(MEM_TARGETS[-1][1])
+
+
 def added(m, k):
-    s1 = S1[k] * min(m / 9.0, 1.0) + MEMX[k] * min(max((m - 9) / 15.0, 0.0), 1.0)
+    # add-ons, flash openings, retail and referrals ramp in over nine months; members follow MEM_TARGETS
+    members = (S1[k] * MEM_SHARE[k] + MEMX[k]) * members_at(m) / 50.0
+    s1 = S1[k] * (1 - MEM_SHARE[k]) * min(m / 9.0, 1.0) + members
     p, q = PILOT[k], COLL[k]
     dip = p - 3000                                       # lease starts before suites fill
     if m < 6:
@@ -124,8 +139,8 @@ CHAIR = [("Glow Membership", "$1,600", "$650–$3,200"),
          ("Flash openings · 5 days a week", "$850", "$450–$1,300"),
          ("Retail + auto-refill", "$750", "$300–$1,600"),
          ("Referrals", "$650", "$300–$950"),
-         ("More members · 50 by year 2", "$1,100", "$450–$1,600")]
-CHAIR_TOTAL = ("Added revenue by year 2", "$5,800", "$2,700–$9,900")
+         ("More members · 50 by month 6", "$1,100", "$450–$1,600")]
+CHAIR_TOTAL = ("Added revenue by month 9", "$5,800", "$2,700–$9,900")
 
 COLLECTIVE = [("Suite rent · 7 suites", "$6,500", "$4,500–$10,000"),
               ("Their clients booking you", "$4,000", "$2,500–$6,000"),
@@ -176,7 +191,7 @@ DAYS = [("Week 1", "Write down today’s numbers from Acuity: bookings, repeat c
 
 
 # ─────────────────────────── membership first ───────────────────────────
-WHY = [("$5,000", "Paid before anyone books.", "30 members bill about $5,000 on the 1st of every month. At 50 members, about $8,300."),
+WHY = [("$8,300", "Paid before anyone books.", "50 members by month 6 bill about $8,300 on the 1st of every month. At 20 members, by month 3, about $3,300."),
        ("Stays", "Survives artist turnover.", "A client who joins for 10% off her lashes keeps booking facials with Evelyn, even if her lash artist moves on."),
        ("1 a month", "Fills the calendar ahead.", "Every member is a visit a month, booked in advance. Banked facials are already paid for.")]
 
@@ -195,7 +210,7 @@ CONVERT = [("At checkout", "Any facial can become month one at the member price,
            ("House perks", "10% off with every Lumevina artist, and first look at their openings."),
            ("Founding Five", "The first five members, any plan: a welcome skincare kit and a free add-on.")]
 
-MTRACK = [("Members", "30 by month 6, 50 by year 2"),
+MTRACK = [("Members", "20 by month 3, 50 by month 6"),
           ("Share of facial visits from members", "Aim for over half"),
           ("Cancellations per month", "Under 1 in 20"),
           ("Members who also book artists", "The house working as one")]
@@ -347,8 +362,8 @@ DEEP = [
      "vb": "0 0 520 452", "aria": "Animation: a week of appointments, Tuesday to Saturday from 8 AM to 6 PM with Sundays and Mondays closed, fills up; add-ons and members appear; hours booked rise from 62% to 94%.",
      "plan": [("Launch", "Glow Membership from $159 a month, offered at every checkout, plus add-ons at booking, flash openings and give $25 / get $25."),
               ("Measure", "Members, average visit, and how many hours are booked."),
-              ("Target", "30 members by month 6 and 50 by year 2, a $160+ average visit, 90% of hours booked."),
-              ("Result", "About $4.4k more revenue a month, from the same five days.")]},
+              ("Target", "20 members by month 3 and 50 by month 6, a $160+ average visit, 90% of hours booked."),
+              ("Result", "About $5.8k more revenue a month by month 9, from the same five days.")]},
     {"n": 2, "when": "Step 2 · Months 6–12", "h": "Pilot two artists.", "dim": "Prove it small.",
      "vb": "0 0 520 400", "aria": "Animation: two artists' clients appear; some cross over to book Evelyn; the share climbs past the 15% go line.",
      "plan": [("Recruit", "Two licensed lash or brow artists who already have a following."),
@@ -665,6 +680,8 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .ceiling { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
 .bigstat { font-size: clamp(5rem, 14vw, 10rem); font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
 .ceil-math { margin-top: 12px; color: var(--text-3); font-size: 0.9rem; letter-spacing: -0.005em; }
+.est-mark { font-size: 0.32em; vertical-align: super; margin-left: 0.04em; letter-spacing: 0; -webkit-text-fill-color: var(--text-3); }
+.est-note { margin-top: 10px; color: var(--text-3); font-size: 0.8rem; font-style: italic; line-height: 1.45; max-width: 36rem; }
 .meter { margin-top: 26px; }
 .meter .track { position: relative; height: 14px; border-radius: 999px; background: var(--card-2); overflow: hidden; }
 .meter .fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 999px; background: var(--grad); transition: width 2.2s cubic-bezier(.2,.8,.2,1); }
@@ -821,6 +838,7 @@ body { font-size: 10.5pt; }
 .ceil { display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center; }
 .ceil .bigstat { font-size: 64pt; font-weight: 700; letter-spacing: -0.06em; line-height: 0.9; }
 .ceil .ceil-math { font-size: 8pt; margin-top: 2px; }
+.ceil .est-note { font-size: 7.4pt; margin-top: 2px; }
 .phones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .phones figure { margin: 0; }
 .phones figcaption { text-align: center; font-size: 8.5pt; color: var(--text-2); margin-top: 10px; }
@@ -1292,9 +1310,10 @@ WEB = """<!DOCTYPE html>
       <p class="lead" style="font-size:1.2rem;margin-top:20px">Every dollar today needs Evelyn in the treatment room. More hours isn&rsquo;t a plan.</p>
     </div>
     <div class="reveal">
-      <div class="bigstat grad num">__CEIL_K__</div>
+      <div class="bigstat grad num">__CEIL_K__<sup class="est-mark">*</sup></div>
       <p class="lead" style="margin-top:14px">The most one person can earn in a year: six treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes.</p>
       <p class="ceil-math num">__CEIL_MATH__</p>
+      <p class="est-note">*Estimates. Real numbers depend on bookings, prices, time off and costs. The same goes for every number in this blueprint.</p>
       <div class="meter"><div class="track"><div class="fill"></div></div>
         <div class="lab"><span>Chair time used</span><b>100% · the ceiling</b></div></div>
     </div>
@@ -1602,9 +1621,10 @@ PRINT = """<!DOCTYPE html>
     <h2 class="h2" style="margin-top:10px">Your income stops <span class="dim">when your hands stop.</span></h2>
   </div>
   <div class="ceil">
-    <div class="bigstat grad num">__CEIL_K__</div>
+    <div class="bigstat grad num">__CEIL_K__<sup class="est-mark">*</sup></div>
     <p class="lead">The most one person can earn in a year: six treatments a day, five days a week, at about $185 each. Fully booked, never sick, before rent, product and taxes.</p>
     <p class="ceil-math num">__CEIL_MATH__</p>
+    <p class="est-note">*Estimates, like every number in this blueprint. Real results depend on bookings, prices, time off and costs.</p>
   </div>
   <div>
     <p class="kicker">The plan</p>
