@@ -157,10 +157,9 @@ h1, h2, h3, p { margin: 0; }
 .scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 58px 16px 110px;
   scrollbar-width: none; overscroll-behavior: contain; }
 .scroll::-webkit-scrollbar { display: none; }
-/* no pinned title bar (on iPhones it read as a grey block that stuck): just a strip of the
-   app's own black behind the clock, so content scrolls away under the status bar */
-.navbar { position: absolute; z-index: 5; top: 0; left: 0; right: 0; height: 50px; background: #000;
-  font-size: 0; color: transparent; pointer-events: none; }
+/* like a real iPhone: screens run to the top edge and scroll under the clock; only the
+   Dynamic Island (the camera) stays black. No pinned title bar */
+.navbar { display: none; }
 .kick { font-size: 13px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: .02em; }
 .title { font-size: 34px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.08; margin-top: 2px; }
 .sec { display: flex; align-items: baseline; justify-content: space-between; margin: 26px 2px 10px; }
@@ -962,7 +961,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
       root.style.setProperty("--app-h", h + "px");
       /* 8 above + 46 for the exit bar, and below the phone room for anything the viewer draws
          over the page's bottom edge (the page can't see that), more on touch screens */
-      var below = touchy ? 44 : 12;
+      var below = touchy ? 100 : 12;
       var sa = Math.min((window.innerWidth - 16) / 414, (h - 54 - below) / 868, 1);
       stage.style.setProperty("--s", Math.max(.4, sa).toFixed(4));
       return;
