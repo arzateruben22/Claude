@@ -7,7 +7,7 @@ Builds two files from one set of content:
 Run:  python3 build.py            (writes both into OUT)
 The screenshots in shots/ are real captures of the Lumevina site.
 """
-import base64, os, sys
+import base64, json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1] if len(sys.argv) > 1 else HERE
@@ -140,14 +140,27 @@ GUARD = [
     ("Clear roles.", "Evelyn owns the brand and the standard of care. Ruben runs operations, the app and the numbers."),
 ]
 
-# "But guess what": what Evelyn isn't paying for, at what a small studio would realistically charge
-GIFT = [("Website and owner dashboard", 15000, "Booking with deposits, memberships, gift certificates, rewards, the shop, the Glow Routine, intake forms and the books"),
-        ("iPhone app", 6000, "The same system on her home screen, with flash alerts"),
-        ("Growth Blueprint and 90-day plan", 2000, "What a business consultant would charge for the plans")]
-GIFT_CARE = 200                    # care and upkeep a month: updates, fixes, backups, new features
-GIFT_BUILD = sum(v for _, v, _ in GIFT)
-GIFT_PLAN = round(GIFT_BUILD * 1.10)   # a 12-month plan usually costs about 10% more
-GIFT_MONTH = GIFT_PLAN / 12.0
+# "But guess what": what Evelyn isn't paying for, itemized. Rough US prices:
+# a small design studio, and an experienced freelancer doing the same work.
+GIFT = [("Website with online booking", 6000, 3000, "Every service and price, 50% deposits, reminders and a Google Calendar link"),
+        ("Owner dashboard and the books", 4000, 2000, "Today’s bookings, clients, invoices, reports and the tax export"),
+        ("Glow Membership billing", 3000, 1500, "Two plans billed on the 1st, banked facials, pause and cancel"),
+        ("Shop with order and inventory control", 3500, 1800, "Live stock, low-stock alerts, product cost and every order in one list"),
+        ("Gift certificates and Glow Rewards", 2000, 1000, "Gift cards by email, points, referrals and birthday perks"),
+        ("Ask Lumevina AI chat", 4000, 2000, "Answers clients 24/7 and hands the personal questions to Evelyn"),
+        ("Intake forms and the Glow Routine", 1500, 800, "Consent and skin forms before the visit, the routine after it"),
+        ("iPhone app", 6000, 3000, "The same system on her home screen, with flash alerts"),
+        ("Growth Blueprint and 90-day plan", 2000, 1000, "What a business consultant would charge for the plans")]
+GIFT_CARE = (200, 100)             # care and upkeep a month: updates, fixes, backups, new features
+
+
+def _gift(i):
+    build = sum(g[1 + i] for g in GIFT)
+    # a 12-month plan usually costs about 10% more than paying up front
+    return {"build": build, "plan": round(build * 1.10), "care": GIFT_CARE[i]}
+
+
+GIFT_BY = {"studio": _gift(0), "free": _gift(1)}
 
 COSTS = [("Live payments", "2.9% + 30¢ per payment"),
          ("Database and texts", "About $35 a month"),
@@ -587,7 +600,14 @@ body { font-size: 17px; }
 @keyframes guess-in { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
 .guess-card[hidden] { display: none; }
 .guess-h { font-size: clamp(1.5rem, 3.4vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin: 12px auto 0; max-width: 34rem; text-wrap: balance; }
-.guess-switch { display: inline-flex; gap: 4px; padding: 4px; margin-top: 24px; border-radius: 999px; background: #1f1f22; }
+.guess-hint { margin: 0 0 12px; color: #f0c2cf; font-size: .95rem; font-weight: 600; letter-spacing: .02em; }
+.guess-hint[hidden] { display: none; }
+.gh-arrow { display: inline-block; animation: nudge-down 1.4s ease-in-out infinite; }
+@keyframes nudge-down { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+.guess-switches { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; margin-top: 24px; }
+.gs-grp { display: grid; justify-items: center; gap: 6px; }
+.gs-lbl { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--text-3); }
+.guess-switch { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: #1f1f22; }
 .guess-switch button { font: inherit; font-size: .88rem; font-weight: 600; color: var(--text-2); background: none; border: 0; border-radius: 999px;
   padding: 8px 16px; cursor: pointer; transition: background-color .25s, color .25s; }
 .guess-switch button[aria-checked="true"] { background: #f0c2cf; color: #000; }
@@ -597,8 +617,35 @@ body { font-size: 17px; }
 .guess-v { font-size: clamp(3.4rem, 10vw, 5.6rem); font-weight: 700; letter-spacing: -0.055em; line-height: 1; }
 .guess-sub { color: var(--text-3); font-size: .95rem; }
 .guess-rows { text-align: left; background: #0d0d0e; }
+.guess-rows .row { grid-template-columns: 1fr auto auto; column-gap: 18px; }
+.guess-rows .rv { min-width: 4.6em; transition: color .25s, opacity .25s; }
+.guess-rows .gr-h .rn, .guess-rows .gr-h .rv { font-size: .74rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); }
+.guess-card[data-who="studio"] .row:not(.gr-h) .gf, .guess-card[data-who="free"] .row:not(.gr-h) .gs { opacity: .4; font-weight: 400; }
+.guess-card[data-who="studio"] .gr-h .gs, .guess-card[data-who="free"] .gr-h .gf { color: #f0c2cf; }
+.guess-rows .row.tot .rv { font-size: 1rem; }
+.guess-nudge { position: fixed; z-index: 90; left: 0; right: 0; margin: 0 auto; width: max-content; bottom: 20px; display: flex; align-items: center; gap: 2px; padding: 4px;
+  border-radius: 999px; background: #141214; box-shadow: inset 0 0 0 1px rgba(244,201,214,.45), 0 16px 40px -10px rgba(0,0,0,.8), 0 0 40px -10px rgba(244,201,214,.45);
+  transform: translateY(140%); opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .3s, visibility 0s .45s; max-width: calc(100% - 32px); }
+.guess-nudge.on { transform: none; opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s; }
+.guess-nudge button { font: inherit; color: var(--text); background: none; border: 0; cursor: pointer; border-radius: 999px; }
+.gn-go { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; font-size: .92rem; white-space: nowrap; }
+.gn-go b { color: #f0c2cf; }
+.gn-short { display: none; }
+.gn-go svg { width: 16px; height: 16px; fill: #f0c2cf; flex: none; animation: beat 1.6s ease-in-out infinite; }
+.gn-x { width: 34px; height: 34px; font-size: 1.2rem; color: var(--text-3) !important; }
+.guess-nudge button:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+@media (max-width: 520px) {
+  .guess-card { padding: 28px 16px 22px; }
+  .guess-rows { padding: 6px 14px; }
+  .guess-rows .row { column-gap: 10px; }
+  .guess-rows .rv { min-width: 0; font-size: .9rem; }
+  .gn-go { font-size: .85rem; padding: 8px 4px 8px 12px; gap: 6px; white-space: normal; text-align: left; min-width: 0; line-height: 1.3; }
+  .gn-x { flex: none; }
+  .gn-long { display: none; } .gn-short { display: inline; }
+}
 .guess-fine { color: var(--text-3); font-size: .8rem; margin-top: 14px; line-height: 1.5; }
-@media (prefers-reduced-motion: reduce) { .guess-heart, .guess-card, .petal { animation: none; } .petal { display: none; } }
+@media (prefers-reduced-motion: reduce) { .guess-heart, .guess-card, .petal, .gh-arrow, .gn-go svg { animation: none; } .petal { display: none; } }
 .wrap { width: min(1040px, calc(100% - 40px)); margin: 0 auto; }
 section { padding: 120px 0; }
 section + section { border-top: 1px solid rgba(255,255,255,.06); }
@@ -1005,10 +1052,10 @@ WEB_JS = r"""
   };
   if (imgs.length && !rm) setInterval(function () { if (!document.hidden) show((cur + 1) % imgs.length); }, 3200);
 
-  /* "But guess what": what Evelyn isn't paying for */
+  /* "But guess what": what Evelyn isn't paying for, by who builds it and how it's paid */
   var gBtn = document.querySelector(".guess-btn"), gCard = document.getElementById("guess-card");
   if (gBtn && gCard) {
-    var BUILD = __G_BUILD__, PLAN = __G_PLAN__, CARE = __G_CARE__, mode = "monthly", gShown = 0;
+    var BY = __G_BY__, mode = "monthly", who = "studio", gShown = 0, opened = false;
     var fmt = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
     var gv = document.getElementById("guess-v");
     var roll = function (to) {
@@ -1022,14 +1069,17 @@ WEB_JS = r"""
       requestAnimationFrame(tick);
     };
     var paint = function () {
-      var monthly = mode === "monthly";
-      document.getElementById("guess-lbl").textContent = monthly ? "So this month, you\u2019re saving" : "So today, you\u2019re saving";
-      document.getElementById("guess-sub").textContent = monthly
-        ? "and the same every month for a year, then " + fmt(CARE) + " a month"
-        : "then " + fmt(CARE) + " every month after";
-      document.getElementById("guess-year").textContent = fmt((monthly ? PLAN : BUILD) + CARE * 12);
+      var monthly = mode === "monthly", g = BY[who];
+      document.getElementById("guess-lbl").textContent = (monthly ? "So this month, you’re saving" : "So today, you’re saving");
+      document.getElementById("guess-sub").textContent = (who === "studio" ? "if a studio built it, " : "if a freelancer built it, ")
+        + (monthly ? "and the same every month for a year, then " + fmt(g.care) + " a month" : "then " + fmt(g.care) + " every month after");
+      ["studio", "free"].forEach(function (k) {
+        document.getElementById("guess-year-" + k).textContent = fmt((monthly ? BY[k].plan : BY[k].build) + BY[k].care * 12);
+      });
+      gCard.setAttribute("data-who", who);
       gCard.querySelectorAll("[data-pay]").forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-pay") === mode)); });
-      roll(monthly ? PLAN / 12 + CARE : BUILD + CARE);
+      gCard.querySelectorAll("[data-who-pick]").forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-who-pick") === who)); });
+      roll(monthly ? g.plan / 12 + g.care : g.build + g.care);
     };
     var burst = function () {
       if (rm) return;
@@ -1047,16 +1097,38 @@ WEB_JS = r"""
         setTimeout(function (el) { return function () { el.remove(); }; }(p), 1400);
       }
     };
-    gBtn.addEventListener("click", function () {
+    var nudge = document.querySelector(".guess-nudge");
+    var hideNudge = function () { if (nudge) nudge.classList.remove("on"); };
+    var toggle = function () {
       var open = gCard.hidden;
       gCard.hidden = !open;
       gBtn.setAttribute("aria-expanded", String(open));
-      if (open) { burst(); gShown = 0; paint(); gCard.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "nearest" }); }
-    });
-    gCard.querySelector(".guess-switch").addEventListener("click", function (e) {
-      var b = e.target.closest("[data-pay]");
+      if (open) {
+        opened = true; hideNudge();
+        document.querySelector(".guess-hint").hidden = true;
+        burst(); gShown = 0; paint(); gCard.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "nearest" });
+      }
+    };
+    gBtn.addEventListener("click", toggle);
+    gCard.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pay]"), w = e.target.closest("[data-who-pick]");
       if (b && b.getAttribute("data-pay") !== mode) { mode = b.getAttribute("data-pay"); paint(); }
+      if (w && w.getAttribute("data-who-pick") !== who) { who = w.getAttribute("data-who-pick"); paint(); }
     });
+    /* scrolled past without opening it: a little pill brings her back */
+    if (nudge && "IntersectionObserver" in window) {
+      var dismissed = false;
+      new IntersectionObserver(function (es) {
+        var e = es[0], above = !e.isIntersecting && e.boundingClientRect.top < 0;
+        nudge.classList.toggle("on", above && !opened && !dismissed);
+      }).observe(gBtn);
+      nudge.querySelector(".gn-go").addEventListener("click", function () {
+        hideNudge();
+        gBtn.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "center" });
+        setTimeout(function () { if (gCard.hidden) toggle(); }, rm ? 0 : 650);
+      });
+      nudge.querySelector(".gn-x").addEventListener("click", function () { dismissed = true; hideNudge(); });
+    }
   }
 })();
 """
@@ -1312,16 +1384,25 @@ WEB = """<!DOCTYPE html>
     </div>
   </div>
   <div class="wrap guess">
+    <p class="guess-hint reveal" aria-hidden="true">Click here <span class="gh-arrow">&darr;</span></p>
     <button type="button" class="guess-btn reveal" aria-expanded="false" aria-controls="guess-card">
       <svg class="guess-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.7h2C14 6.1 15.6 5 17.6 5 21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>
       <span>But guess what&hellip;</span>
     </button>
-    <div class="guess-card" id="guess-card" hidden>
+    <div class="guess-card" id="guess-card" data-who="studio" hidden>
       <p class="kicker">From Ruben, with love</p>
       <h3 class="guess-h">Your little Prince Charming is doing all of this for you, <span class="grad">because he loves you.</span></h3>
-      <div class="guess-switch" role="radiogroup" aria-label="How it would usually be paid">
-        <button type="button" role="radio" aria-checked="true" data-pay="monthly">12 monthly payments</button>
-        <button type="button" role="radio" aria-checked="false" data-pay="upfront">Paid up front</button>
+      <div class="guess-switches">
+        <div class="gs-grp"><span class="gs-lbl" aria-hidden="true">Built by</span>
+        <div class="guess-switch" role="radiogroup" aria-label="Who would usually build it">
+          <button type="button" role="radio" aria-checked="true" data-who-pick="studio">A studio</button>
+          <button type="button" role="radio" aria-checked="false" data-who-pick="free">A freelancer</button>
+        </div></div>
+        <div class="gs-grp"><span class="gs-lbl" aria-hidden="true">Paid</span>
+        <div class="guess-switch" role="radiogroup" aria-label="How it would usually be paid">
+          <button type="button" role="radio" aria-checked="true" data-pay="monthly">Over 12 months</button>
+          <button type="button" role="radio" aria-checked="false" data-pay="upfront">Up front</button>
+        </div></div>
       </div>
       <div class="guess-big">
         <span class="guess-lbl" id="guess-lbl">So this month, you&rsquo;re saving</span>
@@ -1329,8 +1410,13 @@ WEB = """<!DOCTYPE html>
         <span class="guess-sub" id="guess-sub"></span>
       </div>
       <div class="rows guess-rows">__GIFT_ROWS__</div>
-      <p class="guess-fine">Values are what a small studio would realistically charge for this work. A 12-month plan usually costs about
-      10% more than paying up front.</p>
+      <p class="guess-fine">Rough US prices for this same work: a small design studio, or one experienced freelancer. A freelancer usually
+      costs about half, takes longer, and it all rests on one person. Real quotes vary. A 12-month plan usually costs about 10% more than paying up front.</p>
+    </div>
+    <div class="guess-nudge" role="status">
+      <button type="button" class="gn-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.7h2C14 6.1 15.6 5 17.6 5 21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>
+      <span><span class="gn-long">Wait, you </span><span class="gn-short">You </span>missed something. <b>Click here</b></span></button>
+      <button type="button" class="gn-x" aria-label="Dismiss">&times;</button>
     </div>
   </div>
 </section>
@@ -1443,11 +1529,14 @@ def guard_html(reveal=True):
 
 
 def gift_rows():
-    h = "".join('<div class="row"><span class="rn">%s</span><span class="rv">$%s</span><span class="rr">%s</span></div>'
-                % (n, "{:,}".format(v), d) for n, v, d in GIFT)
-    h += ('<div class="row"><span class="rn">Care and upkeep, every month</span><span class="rv">$%d</span>'
-          '<span class="rr">Updates, fixes, backups and new features</span></div>' % GIFT_CARE)
-    h += '<div class="row tot"><span class="rn">The first year, not paid</span><span class="rv" id="guess-year"></span></div>'
+    h = ('<div class="row gr-h"><span class="rn">What it would cost</span><span class="rv gs">A studio</span>'
+         '<span class="rv gf">A freelancer</span></div>')
+    h += "".join('<div class="row"><span class="rn">%s</span><span class="rv gs">$%s</span><span class="rv gf">$%s</span>'
+                 '<span class="rr">%s</span></div>' % (n, "{:,}".format(a), "{:,}".format(b), d) for n, a, b, d in GIFT)
+    h += ('<div class="row"><span class="rn">Care and upkeep, every month</span><span class="rv gs">$%d</span>'
+          '<span class="rv gf">$%d</span><span class="rr">Updates, fixes, backups and new features</span></div>' % GIFT_CARE)
+    h += ('<div class="row tot"><span class="rn">The first year, not paid</span><span class="rv gs" id="guess-year-studio"></span>'
+          '<span class="rv gf" id="guess-year-free"></span></div>')
     return h
 
 
@@ -1473,8 +1562,7 @@ web = (WEB.replace("__BASE__", base).replace("__WEB__", WEB_CSS)
        .replace("__CHART__", CHART).replace("__CHAIR__", rows(CHAIR, CHAIR_TOTAL))
        .replace("__COLL__", rows(COLLECTIVE, COLL_TOTAL)).replace("__GUARD__", guard_html())
        .replace("__COSTS__", costs_html()).replace("__DAYS__", days_html()).replace("__GIFT_ROWS__", gift_rows())
-       .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS.replace("__G_BUILD__", str(GIFT_BUILD))
-       .replace("__G_PLAN__", str(GIFT_PLAN)).replace("__G_CARE__", str(GIFT_CARE))))
+       .replace("__NET__", js_ascii(NET_JS)).replace("__WEBJS__", js_ascii(WEB_JS.replace("__G_BY__", json.dumps(GIFT_BY))))
        .replace("__DIALOG__", step_dialog()).replace("__STEPSJS__", STEPS_JS + js_ascii(DIALOG_JS))
        .replace("__WHO__", who_html()).replace("__OFFERS__", offers_html()).replace("__NEG__", negotiate_html())
        .replace("__PIPE__", pipe_html()).replace("__TRACK__", track_html())
