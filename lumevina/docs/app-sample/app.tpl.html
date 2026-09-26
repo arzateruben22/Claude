@@ -286,14 +286,19 @@ h1, h2, h3, p { margin: 0; }
 .back { position: absolute; z-index: 6; top: 58px; left: 14px; width: 40px; height: 40px; border: 0; border-radius: 50%; padding: 0;
   display: grid; place-items: center; color: #fff; background: rgba(24, 24, 26, .72); }
 .back svg { width: 22px; height: 22px; margin-left: -2px; }
-.hero { position: relative; margin: -58px -16px 0; height: 300px; overflow: hidden; }
+.hero { position: relative; margin: -58px -16px 0; height: 300px; overflow: hidden; transition: height .5s var(--spring); }
 .hero img { width: 100%; height: 100%; object-fit: cover; }
 .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .62) 0%, rgba(0, 0, 0, .15) 32%, transparent 50%, #000 100%); }
 .d-name { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-top: -30px; position: relative; }
 .d-meta { color: var(--ink-2); margin-top: 6px; }
 .d-cover:empty { display: none; }
 .d-cover { margin-top: 10px; }
-.d-blurb { margin-top: 12px; line-height: 1.45; color: rgba(245, 245, 247, .86); }
+.d-blurb { margin-top: 12px; line-height: 1.45; color: rgba(245, 245, 247, .86); max-height: 120px; overflow: hidden;
+  transition: max-height .45s var(--spring), margin-top .45s var(--spring), opacity .25s ease; }
+/* the month calendar opens: the photo slims to a band and the description folds away, so the whole
+   month, the times and the button fit on one screen */
+.detail.cal-open .hero { height: 150px; }
+.detail.cal-open .d-blurb { max-height: 0; margin-top: 0; opacity: 0; }
 /* four weeks out, one swipeable page per week, seven days in a row on each */
 .days { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; margin: 0 -16px; scrollbar-width: none; }
 .days::-webkit-scrollbar { display: none; }
@@ -320,11 +325,11 @@ h1, h2, h3, p { margin: 0; }
 .cal { animation: calIn .28s var(--ease); }
 @keyframes calIn { from { opacity: 0; transform: translateY(-6px); } }
 .cal-h, .cal-g { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
-.cal-h span { text-align: center; font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--ink-3); padding-bottom: 6px; }
-.cal-g { row-gap: 4px; }
-.cd { position: relative; height: 44px; border: 0; background: none; padding: 0; color: var(--ink); display: grid; place-items: center; }
-.cd b { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--card);
-  font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color .2s ease, color .2s ease; }
+.cal-h span { text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .06em; color: var(--ink-3); padding-bottom: 8px; }
+.cal-g { row-gap: 6px; }
+.cd { position: relative; height: 50px; border: 0; background: none; padding: 0; color: var(--ink); display: grid; place-items: center; }
+.cd b { width: 43px; height: 43px; border-radius: 50%; display: grid; place-items: center; background: var(--card);
+  font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color .2s ease, color .2s ease; }
 .cd.today b { box-shadow: inset 0 0 0 1.5px var(--rose); }
 .cd[aria-pressed="true"] b { background: var(--grad); color: #000; box-shadow: none; }
 .cd:disabled b, .cd.out b { background: none; color: var(--ink-3); font-weight: 500; }
@@ -1374,6 +1379,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     calTog.setAttribute("aria-label", on ? "Show one week at a time" : "Show the month calendar");
     $("#cal-tog-l").textContent = on ? "Week" : "Month";
     wkCtl.classList.toggle("month", on);
+    $("#detail").classList.toggle("cal-open", on);
     daysBox.hidden = on; $("#wk-dots").hidden = on; calBox.hidden = !on;
     if (on) {
       var dt = DAYS[S.day].date;
@@ -1381,7 +1387,11 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
       renderCal();
     } else showWeek(Math.floor(S.day / 7), false);
   };
-  calTog.addEventListener("click", function () { setMonth(!month); });
+  calTog.addEventListener("click", function () {
+    setMonth(!month);
+    /* opening the month: bring the page back to the top so the slimmer photo, the calendar and the times all show */
+    if (month) { var sc = $("#detail .scroll"); if (sc.scrollTop > 0) sc.scrollTo({ top: 0, behavior: calm ? "auto" : "smooth" }); }
+  });
 
   var pickDay = function (i) {
     S.day = i; S.time = null;
