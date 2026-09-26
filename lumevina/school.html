@@ -80,7 +80,18 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .hero .lead { font-size: clamp(1.15rem, 2vw, 1.4rem); max-width: 27rem; margin-top: 24px; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 .skin-wrap { position: relative; height: 520px; }
-.skin-wrap canvas { display: block; width: 100%; height: 100%; }
+.skin-wrap canvas { position: relative; display: block; width: 100%; height: 100%; }
+/* the top of the skin slice: footage laid back in perspective so it reads as the top of a block,
+   meeting the animated cross-section at the surface line */
+.skin-top { position: absolute; left: 0; right: 0; top: 0; height: var(--top-h, 0px); perspective: 620px; perspective-origin: 50% 100%;
+  pointer-events: none; opacity: 0; transition: opacity 1s ease; }
+.skin-wrap.has-top .skin-top { opacity: 1; }
+.skin-top-plane { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--top-h, 0px) * 2.1); transform-origin: 50% 100%;
+  transform: rotateX(62deg); overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to top, #000 45%, transparent 100%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to top, #000 45%, transparent 100%);
+  mask-composite: intersect; }
+.skin-top-plane video, .skin-top-plane img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .skin-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.95rem; color: var(--text-2);
   transition: opacity .5s ease; margin-top: 4px; text-align: center; min-height: 3em; }
 .skin-cap b { color: var(--text); font-weight: 600; }
@@ -534,6 +545,9 @@ html.lock { overflow: hidden; }
     </div>
     <div class="skin-col">
       <div class="skin-wrap">
+        <!-- the top of the slice: real skin footage (media/skin-top.mp4, or a still at media/skin-top.jpg),
+             tilted back in 3D; the canvas draws the cut face below it. No file, no change. -->
+        <div class="skin-top" aria-hidden="true"><div class="skin-top-plane"></div></div>
         <canvas id="skin" role="img" aria-label="Animation: a cross-section of skin. New cells rise to the surface and shed, drops of vitamin C, a retinoid, niacinamide and BHA sink in, then dark spots fade and collagen builds."></canvas>
       </div>
       <div class="skin-cap"><b id="skin-phase">Level 1 · Know your skin</b><span id="skin-desc">New cells rise to the surface about every four weeks.</span></div>
@@ -1535,6 +1549,7 @@ window.SCHOOL = {
     });
   };
   var maxDpr = Math.min(window.devicePixelRatio || 1, 3), useDpr = maxDpr;
+  var wrap = cv.parentNode, hasTop = false;
   var size = function () {
     dpr = useDpr;
     var rc = cv.getBoundingClientRect();
@@ -1542,7 +1557,9 @@ window.SCHOOL = {
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.imageSmoothingQuality = "high";
-    SURF = H * 0.2; BASE = H * 0.58;
+    /* with real footage on top, the cut face sits lower so the top of the slice has room */
+    SURF = H * (hasTop ? 0.3 : 0.2); BASE = H * (hasTop ? 0.63 : 0.58);
+    wrap.style.setProperty("--top-h", Math.round(SURF + H * 0.014) + "px");
     makeOverlay();
     if (W !== builtW) { builtW = W; build(); }     /* a phone's toolbar resizing the window keeps the tissue as is */
   };
@@ -1791,6 +1808,43 @@ window.SCHOOL = {
 
   frozen = window.SKIN_FREEZE === true;
   var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* the top of the slice: real skin footage if it's there (a video, else a still), otherwise
+     the page looks as it always has. window.SKIN_TOP can point somewhere else (e.g. a preview). */
+  var topMedia = null;
+  (function () {
+    var plane = wrap.querySelector(".skin-top-plane");
+    if (!plane) return;
+    var SRC = window.SKIN_TOP || { video: ["media/skin-top.webm", "media/skin-top.mp4"], image: "media/skin-top.jpg" };
+    var show = function (el) {
+      plane.appendChild(el); topMedia = el;
+      hasTop = true; wrap.classList.add("has-top"); builtW = 0; size();
+      if (frozen) draw(T);                              /* reduced motion: redraw the still frame */
+    };
+    var tryImage = function () {
+      if (!SRC.image) return;
+      var im = new Image();
+      im.alt = ""; im.decoding = "async";
+      im.onload = function () { show(im); };
+      im.src = SRC.image;
+    };
+    if (!SRC.video) { tryImage(); return; }
+    var v = document.createElement("video");
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = "auto";
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+    v.addEventListener("loadeddata", function () { show(v); if (!rm && !frozen) v.play().catch(function () {}); }, { once: true });
+    /* each file type the browser can play gets a turn (webm first, then mp4 for Safari), then the still */
+    var list = [].concat(SRC.video).filter(function (u) {
+      var type = /\.webm$/.test(u) ? "video/webm" : "video/mp4";
+      return !!v.canPlayType(type);
+    });
+    var next = function () {
+      if (!list.length) { tryImage(); return; }
+      v.src = list.shift();
+    };
+    v.addEventListener("error", next);
+    next();
+  })();
   var T = 0;
   size();
   if (frozen || rm) {
@@ -1817,8 +1871,14 @@ window.SCHOOL = {
     }
     raf = requestAnimationFrame(loop);
   };
-  var play = function () { if (raf === null && vis && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); } };
-  var pause = function () { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } };
+  var play = function () {
+    if (raf === null && vis && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); }
+    if (topMedia && topMedia.play && vis && !document.hidden) topMedia.play().catch(function () {});
+  };
+  var pause = function () {
+    if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+    if (topMedia && topMedia.pause) topMedia.pause();
+  };
   window.addEventListener("resize", size, { passive: true });
   document.addEventListener("visibilitychange", function () { if (document.hidden) pause(); else play(); });
   if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { vis = e[0].isIntersecting; if (vis) play(); else pause(); }).observe(cv);

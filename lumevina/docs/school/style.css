@@ -72,7 +72,18 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .hero .lead { font-size: clamp(1.15rem, 2vw, 1.4rem); max-width: 27rem; margin-top: 24px; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 .skin-wrap { position: relative; height: 520px; }
-.skin-wrap canvas { display: block; width: 100%; height: 100%; }
+.skin-wrap canvas { position: relative; display: block; width: 100%; height: 100%; }
+/* the top of the skin slice: footage laid back in perspective so it reads as the top of a block,
+   meeting the animated cross-section at the surface line */
+.skin-top { position: absolute; left: 0; right: 0; top: 0; height: var(--top-h, 0px); perspective: 620px; perspective-origin: 50% 100%;
+  pointer-events: none; opacity: 0; transition: opacity 1s ease; }
+.skin-wrap.has-top .skin-top { opacity: 1; }
+.skin-top-plane { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--top-h, 0px) * 2.1); transform-origin: 50% 100%;
+  transform: rotateX(62deg); overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to top, #000 45%, transparent 100%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to top, #000 45%, transparent 100%);
+  mask-composite: intersect; }
+.skin-top-plane video, .skin-top-plane img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .skin-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.95rem; color: var(--text-2);
   transition: opacity .5s ease; margin-top: 4px; text-align: center; min-height: 3em; }
 .skin-cap b { color: var(--text); font-weight: 600; }

@@ -199,6 +199,7 @@
     });
   };
   var maxDpr = Math.min(window.devicePixelRatio || 1, 3), useDpr = maxDpr;
+  var wrap = cv.parentNode, hasTop = false;
   var size = function () {
     dpr = useDpr;
     var rc = cv.getBoundingClientRect();
@@ -206,7 +207,9 @@
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.imageSmoothingQuality = "high";
-    SURF = H * 0.2; BASE = H * 0.58;
+    /* with real footage on top, the cut face sits lower so the top of the slice has room */
+    SURF = H * (hasTop ? 0.3 : 0.2); BASE = H * (hasTop ? 0.63 : 0.58);
+    wrap.style.setProperty("--top-h", Math.round(SURF + H * 0.014) + "px");
     makeOverlay();
     if (W !== builtW) { builtW = W; build(); }     /* a phone's toolbar resizing the window keeps the tissue as is */
   };
@@ -455,6 +458,43 @@
 
   frozen = window.SKIN_FREEZE === true;
   var rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* the top of the slice: real skin footage if it's there (a video, else a still), otherwise
+     the page looks as it always has. window.SKIN_TOP can point somewhere else (e.g. a preview). */
+  var topMedia = null;
+  (function () {
+    var plane = wrap.querySelector(".skin-top-plane");
+    if (!plane) return;
+    var SRC = window.SKIN_TOP || { video: ["media/skin-top.webm", "media/skin-top.mp4"], image: "media/skin-top.jpg" };
+    var show = function (el) {
+      plane.appendChild(el); topMedia = el;
+      hasTop = true; wrap.classList.add("has-top"); builtW = 0; size();
+      if (frozen) draw(T);                              /* reduced motion: redraw the still frame */
+    };
+    var tryImage = function () {
+      if (!SRC.image) return;
+      var im = new Image();
+      im.alt = ""; im.decoding = "async";
+      im.onload = function () { show(im); };
+      im.src = SRC.image;
+    };
+    if (!SRC.video) { tryImage(); return; }
+    var v = document.createElement("video");
+    v.muted = true; v.loop = true; v.playsInline = true; v.preload = "auto";
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+    v.addEventListener("loadeddata", function () { show(v); if (!rm && !frozen) v.play().catch(function () {}); }, { once: true });
+    /* each file type the browser can play gets a turn (webm first, then mp4 for Safari), then the still */
+    var list = [].concat(SRC.video).filter(function (u) {
+      var type = /\.webm$/.test(u) ? "video/webm" : "video/mp4";
+      return !!v.canPlayType(type);
+    });
+    var next = function () {
+      if (!list.length) { tryImage(); return; }
+      v.src = list.shift();
+    };
+    v.addEventListener("error", next);
+    next();
+  })();
   var T = 0;
   size();
   if (frozen || rm) {
@@ -481,8 +521,14 @@
     }
     raf = requestAnimationFrame(loop);
   };
-  var play = function () { if (raf === null && vis && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); } };
-  var pause = function () { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } };
+  var play = function () {
+    if (raf === null && vis && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(loop); }
+    if (topMedia && topMedia.play && vis && !document.hidden) topMedia.play().catch(function () {});
+  };
+  var pause = function () {
+    if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+    if (topMedia && topMedia.pause) topMedia.pause();
+  };
   window.addEventListener("resize", size, { passive: true });
   document.addEventListener("visibilitychange", function () { if (document.hidden) pause(); else play(); });
   if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { vis = e[0].isIntersecting; if (vis) play(); else pause(); }).observe(cv);
