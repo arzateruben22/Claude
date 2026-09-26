@@ -75,7 +75,7 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .skin-wrap canvas { position: relative; display: block; width: 100%; height: 100%; }
 /* the top of the skin slice: footage laid back in perspective so it reads as the top of a block,
    meeting the animated cross-section at the surface line */
-.skin-top { position: absolute; left: 0; right: 0; top: 0; height: var(--top-h, 0px); perspective: 620px; perspective-origin: 50% 100%;
+.skin-top { position: absolute; left: 0; right: 0; top: 0; height: var(--top-h, 0px); perspective: 560px; perspective-origin: 50% 100%;
   pointer-events: none; opacity: 0; transition: opacity 1s ease; }
 .skin-wrap.has-top .skin-top { opacity: 1; }
 .skin-top-plane { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--top-h, 0px) * 2.1); transform-origin: 50% 100%;
@@ -83,7 +83,14 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to top, #000 45%, transparent 100%);
   -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to top, #000 45%, transparent 100%);
   mask-composite: intersect; }
-.skin-top-plane video, .skin-top-plane img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.skin-top-tex, .skin-top-media { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+/* a slow sheen of light across the skin's surface, brighter when Level 3 makes it glow */
+.skin-top-plane::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 236, 228, .16) 46%, rgba(255, 244, 238, .24) 50%, rgba(255, 236, 228, .16) 54%, transparent 70%);
+  background-size: 260% 100%; background-position: 120% 0; animation: skinSheen 9s linear infinite; mix-blend-mode: screen; transition: opacity .8s ease; }
+.skin-wrap[data-phase="2"] .skin-top-plane::after { animation-duration: 5s; }
+@keyframes skinSheen { to { background-position: -20% 0; } }
+@media (prefers-reduced-motion: reduce) { .skin-top-plane::after { animation: none; background-position: 50% 0; } }
 .skin-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.95rem; color: var(--text-2);
   transition: opacity .5s ease; margin-top: 4px; text-align: center; min-height: 3em; }
 .skin-cap b { color: var(--text); font-weight: 600; }
