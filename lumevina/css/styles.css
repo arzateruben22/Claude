@@ -5866,6 +5866,10 @@ html.sheet-open { overflow: hidden; }
 .rt-delivery b { display: block; color: var(--ink); font-weight: 600; }
 .rt-delivery input { margin-top: 0.2rem; accent-color: #eab9c8; }
 .rt-address-field[hidden] { display: none; }
+/* checkout: shipping for shelf products */
+.ship-details[hidden], .ship-address[hidden] { display: none; }
+.co-ship .ship-note { display: block; color: var(--ink-60); }
+.co-ship .ship-note.is-free { color: var(--mauve); font-weight: 600; }
 /* Skin School: the online course, shaped like the routine card, in its lightest rose */
 .school-card { border-color: rgba(247, 211, 222, 0.34); box-shadow: 0 0 40px -16px rgba(247, 211, 222, 0.4);
   background: radial-gradient(120% 140% at 100% 0%, rgba(227, 180, 143, 0.14), transparent 55%),

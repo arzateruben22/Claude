@@ -912,7 +912,7 @@
     (function () {
       var all = lget("lumevina_retail_sales") || [];
       /* Founding Five kits went out free: not revenue, shown on their own line */
-      var sales = all.filter(function (s) { return s.type !== "promo"; });
+      var sales = all.filter(function (s) { return s.type !== "promo" && s.type !== "shipping"; });
       var given = all.filter(function (s) { return s.type === "promo"; });
       if (!sales.length && !given.length) {
         document.getElementById("product-sales").innerHTML =
@@ -1095,6 +1095,10 @@
         });
         RETAIL_LOG.forEach(function (x) {
           if (x.type === "promo") return;
+          if (x.type === "shipping") {      /* free for members: often $0 in, postage out */
+            add({ date: day(x.at), kind: "shipping", who: "Online shop", what: x.name, gross: num(x.paid), fee: 0, cost: num(x.cost) });
+            return;
+          }
           var q = num(x.qty) || 1;
           var gross = r2((x.paid != null ? num(x.paid) : num(x.price)) * q);
           add({ date: day(x.at), kind: "retail", who: x.channel === "online" ? "Online shop" : "In person",
@@ -1124,7 +1128,7 @@
       };
 
       var LABEL = { service: "Services", dues: "Membership dues", retail: "Retail", gift: "Gift certificates",
-        kit: "Founding Five kit", expense: "Expense", course: "Skin School" };
+        kit: "Founding Five kit", expense: "Expense", course: "Skin School", shipping: "Shipping" };
 
       var render = function () {
         var E = collect();
@@ -1140,9 +1144,10 @@
         var retail = kind("retail"), kits = kind("kit"), exps = kind("expense");
         var cogs = sum(retail, "cost"), kitCost = sum(kits, "cost"), kitValue = sum(kits, "value");
         var courses = kind("course"), courseKits = sum(courses, "cost");
+        var ships = kind("shipping"), postage = sum(ships, "cost"), shipIn = sum(ships, "gross");
         var kitCount = MEMBERS.filter(function (m) { return m.five; }).length;
         var expTotal = sum(exps, "cost");
-        var out = fees + cogs + kitCost + courseKits + expTotal;
+        var out = fees + cogs + kitCost + courseKits + postage + expTotal;
         var profit = moneyIn - out;
         var margin = moneyIn ? Math.round(profit / moneyIn * 100) : 0;
 
@@ -1167,13 +1172,15 @@
           dues: "every monthly charge", retail: "at the price paid, after member discounts",
           gift: "sold, not the ones members gift from their plan",
           course: courses.length ? courses.length + (courses.length === 1 ? " course" : " courses") + " sold" : "no courses sold yet" };
-        var inHtml = inRows.map(function (r) { return line(LABEL[r.k], subIn[r.k], r.v); }).join("");
+        var inHtml = inRows.map(function (r) { return line(LABEL[r.k], subIn[r.k], r.v); }).join("") +
+          (ships.length ? line("Shipping charged", ships.length + (ships.length === 1 ? " order" : " orders") + " shipped · members ship free", shipIn) : "");
         var outHtml =
           line("Card fees", "estimated, 2.9% + 30¢ a charge", fees, "−") +
           line("Products sold", retail.length ? "what the " + sum(retail, "qty") + " sold cost you" : "nothing sold yet", cogs, "−") +
           line("Founding Five kits", kitCount + (kitCount === 1 ? " kit" : " kits") + " given free · " + money(Math.round(kitValue)) +
             " retail, counted at cost", kitCost, "−") +
           (courseKits ? line("Skin School kits", "product and shipping for the kits sent", courseKits, "−") : "") +
+          (postage ? line("Postage", "boxes and postage for " + ships.length + (ships.length === 1 ? " shelf order" : " shelf orders"), postage, "−") : "") +
           (Object.keys(byCat).length
             ? Object.keys(byCat).map(function (c) { return line(c, "logged expenses", byCat[c], "−"); }).join("")
             : '<li class="bk-empty"><span class="bk-ln">Business expenses<small>none logged yet · add supplies, rent and ads so profit is real</small></span><span class="bk-lv">—</span></li>');
@@ -1187,6 +1194,7 @@
           var mk = String(e.date).slice(0, 7);
           var m = months[mk] || (months[mk] = { service: 0, dues: 0, retail: 0, gift: 0, course: 0, fee: 0, goods: 0, exp: 0, net: 0 });
           if (m[e.kind] != null) m[e.kind] += e.gross;
+          else if (e.kind === "shipping") m.retail += e.gross;
           m.fee += e.fee;
           if (e.kind === "expense") m.exp += e.cost; else m.goods += e.cost;
           m.net += e.net;

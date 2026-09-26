@@ -56,6 +56,7 @@ After a facial: no makeup the rest of the day; no workouts or heavy sweating for
 Memberships: Glow $159/month (one Custom Facial, Custom + Dermaplaning, or Monthly Acne Treatment a month) and Ageless $209/month (everything in Glow plus the Ageless Grace Facial, a finishing add-on every other visit, 15% off the shelf). Bank up to 2 facials (with 2 waiting, billing holds until one is booked, so nobody pays for a facial they can't use), pause one month a year, cancel online after 3 months, 10% off the shelf, 15% off add-ons, and members can ask Evelyn anything with a reply within 24 hours.
 Gift certificates never expire and work for any treatment.
 Glow Routine: Evelyn's product picks sent monthly, from $75.
+Shipping for shelf products: free for members; otherwise $8, free over $75. Pickup at a visit is always free.
 Skin School: Evelyn's online course at /school.html. 33 short lessons in three levels (Skin Basics, Actives & Routines, Treat Your Concern); the first two lessons are free. Skin Basics alone $49; The Course $149; Course + Kit $229; Course + Evelyn $449 with a 45-minute 1-on-1 video consult (6 a month). Members get Skin Basics free and 25% off.
 Menu:
 ${menu}`;

@@ -458,7 +458,7 @@
             <h3 class="mem-name">Glow</h3>
             <p class="mem-price"><span class="mem-amt">$159</span><span class="mem-per">/month</span></p>
             <p class="mem-value">A facial every month, custom or acne · a $195 value</p>
-            <ul class="mem-perks" role="list"><li>One facial a month: the Lumevina Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment</li><li>10% off skincare from our shelf</li><li>A home routine from Evelyn, refreshed each season, with a check-in between visits</li><li>15% off add-ons and anything else booked the same visit</li><li>Ask Evelyn any time: instant answers, and her own reply within 24 hours</li><li>First word on flash openings</li></ul>
+            <ul class="mem-perks" role="list"><li>One facial a month: the Lumevina Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment</li><li>10% off skincare from our shelf, and free shipping</li><li>A home routine from Evelyn, refreshed each season, with a check-in between visits</li><li>15% off add-ons and anything else booked the same visit</li><li>Ask Evelyn any time: instant answers, and her own reply within 24 hours</li><li>First word on flash openings</li></ul>
             <button class="btn btn-solid mem-join" type="button" data-join="glow">Join Glow</button>
           </article>
           <article class="mem-plan" data-reveal data-reel-name="Ageless" data-tier="3">
@@ -608,7 +608,7 @@
         </div>
 
         <div class="shop-row">
-          <p class="shop-subhead" data-reveal>From our shelf <span>ships, or pick up at your visit</span></p>
+          <p class="shop-subhead" data-reveal>From our shelf <span>free shipping for members, or pick up at your visit</span></p>
           <div class="retail-grid" id="retail-grid"></div>
         </div>
 
@@ -1577,6 +1577,19 @@
             <div class="field">
               <label for="co-gift-date">Send on <span class="rw-ref-opt">(optional — defaults to today)</span></label>
               <input id="co-gift-date" name="giftdate" type="date">
+            </div>
+            <p class="checkout-subhead checkout-subhead--pay">Payment</p>
+          </div>
+          <!-- skincare delivery — shown when the cart has shelf products (js/cart.js) -->
+          <div class="ship-details" hidden>
+            <p class="checkout-subhead">How should we get it to you?</p>
+            <div class="rt-delivery co-ship" role="radiogroup" aria-label="Delivery">
+              <label><input type="radio" name="delivery" value="ship" checked> <span><b>Ship it to me</b><span class="ship-note">Free for members · otherwise $8, free over $75</span></span></label>
+              <label><input type="radio" name="delivery" value="pickup"> <span><b>Pick up at my visit</b>Free, waiting at the front</span></label>
+            </div>
+            <div class="field ship-address">
+              <label for="co-address">Shipping address</label>
+              <input id="co-address" name="address" type="text" autocomplete="street-address" placeholder="Street, city, ZIP">
             </div>
             <p class="checkout-subhead checkout-subhead--pay">Payment</p>
           </div>

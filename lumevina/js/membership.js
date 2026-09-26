@@ -14,7 +14,7 @@
  * Two plans, not three: clear-skin clients join Glow and pick the acne
  * treatment. Records saved under the old "clear" plan read as Glow.
  *
- * Every plan: 10% off skincare from our shelf, a home routine from Evelyn
+ * Every plan: 10% off skincare from our shelf (free shipping on it), a home routine from Evelyn
  * refreshed each season, 15% off add-ons and anything else booked in the
  * same visit as a membership facial, Ask Evelyn any time (js/ask.js: her own
  * reply within 24 hours), first word on flash openings.
@@ -56,7 +56,7 @@
       facial: "Lumevina Custom Facial",
       line: "Your monthly Lumevina Custom Facial, or your acne treatment",
       perks: ["One facial a month: the Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment",
-              "10% off skincare from our shelf",
+              "10% off skincare from our shelf, and free shipping",
               "A home routine from Evelyn, refreshed each season, with a check-in between visits",
               "15% off add-ons and anything else booked the same visit",
               "Ask Evelyn any time: instant answers, and her own reply within 24 hours",

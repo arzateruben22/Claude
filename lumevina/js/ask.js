@@ -146,10 +146,10 @@
     { id: "after", node: "after", k: /after (my|the|a) (facial|appointment|visit|treatment)|aftercare|work ?out|exercise|gym|sweat|makeup after/, a: function () {
       return "After your facial: skip makeup for the rest of the day, avoid workouts and heavy sweating for 24 hours (a week after a body peel), and don’t wax or shave your face for 2 days. If anything feels off, message within 24 hours."; } },
     { id: "member", node: "member", k: /member|monthly plan|subscri|\bglow plan|join/, a: function () {
-      return "Two plans. Glow, $159 a month: a Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment every month. Ageless, $209: everything in Glow plus the Ageless Grace Facial and a finishing add-on every other visit. Bank a facial you can’t use, pause once a year, save on the shelf, and ask Evelyn anything with a reply within 24 hours."; },
+      return "Two plans. Glow, $159 a month: a Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment every month. Ageless, $209: everything in Glow plus the Ageless Grace Facial and a finishing add-on every other visit. Bank a facial you can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours."; },
       acts: [["See memberships", "#membership"]] },
     { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|glow routine/, a: function () {
-      return "Evelyn’s shelf has the cleansers, serums and SPF she uses in the room, and the Glow Routine sends her picks every month from $75. For what’s right for your skin, she’ll want to choose it herself; ask her and she’ll reply."; },
+      return "Evelyn’s shelf has the cleansers, serums and SPF she uses in the room, and the Glow Routine sends her picks every month from $75. Shipping is free for members, otherwise $8 and free over $75, or pick up free at your visit. For what’s right for your skin, she’ll want to choose it herself; ask her and she’ll reply."; },
       acts: [["Shop the shelf", "#shop"]] },
     { id: "lashes", k: /lash|nails?\b|manicure|pedicure|tint|lamination/, a: function () {
       return "Lumevina’s menu is facials, peels and waxing. For lashes, brows and nails, Evelyn is happy to point you to artists she trusts."; } }

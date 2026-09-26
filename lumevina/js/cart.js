@@ -108,7 +108,33 @@
     }, 0);
     return Math.round(retail * rate * 100) / 100;
   };
-  var orderTotal = function () { return subtotal() - memberOff(); };
+  /* Shipping for shelf products: free for members, otherwise $8 and free
+     over $75 (after any member discount). Pickup at a visit is always free.
+     SHIP_COST is what a small box really costs (postage + packaging), for the books. */
+  var SHIP_FEE = 8, FREE_OVER = 75, SHIP_COST = 9;
+  var retailSubtotal = function () {
+    return Object.keys(cart).reduce(function (sum, id) {
+      return id.indexOf("retail-") === 0 ? sum + cart[id].price * cart[id].qty : sum;
+    }, 0);
+  };
+  var cartHasRetail = function () { return Object.keys(cart).some(function (id) { return id.indexOf("retail-") === 0; }); };
+  var shipDetails = modal.querySelector(".ship-details");
+  var shipAddress = modal.querySelector(".ship-address");
+  var delivery = function () {
+    var c = modal.querySelector('input[name="delivery"]:checked');
+    return c ? c.value : "ship";
+  };
+  var isMember = function () {
+    var LM = window.LumevinaMembership;
+    return !!(LM && LM.retailRate(memberEmail()));
+  };
+  var shipping = function () {
+    if (!cartHasRetail() || delivery() !== "ship") return { fee: 0, why: delivery() === "pickup" ? "pickup" : "" };
+    if (isMember()) return { fee: 0, why: "member" };
+    if (retailSubtotal() - memberOff() >= FREE_OVER) return { fee: 0, why: "over" };
+    return { fee: SHIP_FEE, why: "" };
+  };
+  var orderTotal = function () { return subtotal() - memberOff() + shipping().fee; };
 
   /* ── Rendering ── */
   var render = function () {
@@ -303,6 +329,11 @@
     renderMemberLine();
 
     giftDetails.hidden = !cartHasGift();
+    shipDetails.hidden = !cartHasRetail();
+    if (shipDetails.hidden === false) syncShip();
+    /* one "Payment" heading: the last section shown carries it */
+    var gp = giftDetails.querySelector(".checkout-subhead--pay");
+    if (gp) gp.hidden = cartHasRetail();
 
     formView.hidden = false;
     successView.hidden = true;
@@ -313,25 +344,49 @@
     modal.focus();
   };
 
+  var addLine = function (cls, text, value) {
+    var li = document.createElement("li");
+    li.className = cls;
+    var label = document.createElement("span");
+    label.textContent = text;
+    var amount = document.createElement("span");
+    amount.textContent = value;
+    li.appendChild(label);
+    li.appendChild(amount);
+    linesList.appendChild(li);
+  };
   var renderMemberLine = function () {
-    var old = linesList.querySelector(".co-member");
-    if (old) old.remove();
+    linesList.querySelectorAll(".co-member, .co-ship-line").forEach(function (el) { el.remove(); });
     var off = memberOff();
     if (off > 0) {
-      var li = document.createElement("li");
-      li.className = "co-member";
-      var label = document.createElement("span");
-      label.textContent = "Member 10% off skincare";
-      var amount = document.createElement("span");
-      amount.textContent = "−" + money(off);
-      li.appendChild(label);
-      li.appendChild(amount);
-      linesList.appendChild(li);
+      var LM = window.LumevinaMembership;
+      var rate = LM ? LM.retailRate(memberEmail()) : 0;
+      addLine("co-member", "Member " + Math.round(rate * 100) + "% off skincare", "−" + money(off));
+    }
+    if (cartHasRetail()) {
+      var sh = shipping();
+      addLine("co-ship-line", delivery() === "pickup" ? "Pickup at your visit" :
+        sh.why === "member" ? "Shipping · free for members" : sh.why === "over" ? "Shipping · free over $75" : "Shipping",
+        sh.fee ? money(sh.fee) : "Free");
+      /* the note under "Ship it to me" says what this cart gets */
+      var note = modal.querySelector(".ship-note");
+      var member = isMember(), over = retailSubtotal() - off >= FREE_OVER;
+      note.textContent = member ? "Free: a member perk" : over ? "Free on orders over $75" :
+        "$8 · free over $75, or free for members";
+      note.classList.toggle("is-free", member || over);
     }
     totalEl.textContent = money(orderTotal());
   };
+  var syncShip = function () {
+    shipAddress.hidden = delivery() !== "ship";
+    renderMemberLine();
+  };
+  modal.querySelectorAll('input[name="delivery"]').forEach(function (r) { r.addEventListener("change", syncShip); });
   var coEmail = document.getElementById("co-email");
-  if (coEmail) coEmail.addEventListener("change", function () { renderMemberLine(); });
+  if (coEmail) {
+    coEmail.addEventListener("change", function () { renderMemberLine(); });
+    coEmail.addEventListener("input", function () { renderMemberLine(); });
+  }
 
   var closeCheckout = function () {
     modal.setAttribute("aria-hidden", "true");
@@ -393,6 +448,14 @@
     var cvcOk = pay.cvcValid(cvcInput.value);
     mark(cvcInput, !cvcOk);
     if (!cvcOk) problems.push("a 3–4 digit CVC");
+
+    /* shelf products being shipped need somewhere to go */
+    if (cartHasRetail() && delivery() === "ship") {
+      var addrInput = modal.querySelector("#co-address");
+      var addrOk = addrInput.value.trim().length >= 6;
+      mark(addrInput, !addrOk);
+      if (!addrOk) problems.push("a shipping address");
+    }
 
     /* a gift going to someone else needs a name + email to deliver to */
     if (cartHasGift() && !giftToMe.checked) {
@@ -509,6 +572,13 @@
               cost: stock ? Number(stock.cost || 0) : 0,
               at: new Date().toISOString(), channel: "online", type: "sale" });
           });
+          /* shipping: what the client paid (often nothing) and what postage cost us */
+          var shipNow = shipping();
+          if (cartHasRetail() && delivery() === "ship") {
+            salesLog.push({ id: "shipping", name: shipNow.why === "member" ? "Shipping · member, free" :
+              shipNow.why === "over" ? "Shipping · free over $75" : "Shipping", price: shipNow.fee, qty: 1, paid: shipNow.fee,
+              cost: SHIP_COST, at: new Date().toISOString(), channel: "online", type: "shipping" });
+          }
           try { localStorage.setItem("lumevina_retail_sales", JSON.stringify(salesLog)); }
           catch (e) { /* private mode */ }
         }
@@ -516,6 +586,7 @@
         var subEl = modal.querySelector(".success-sub");
         if (subEl) subEl.textContent = cartHasGift()
           ? "Your gift of glow is on its way ✨"
+          : cartHasRetail() && delivery() === "pickup" ? "Your order will be waiting at the front ✨"
           : "Your order is on its way ✨";
 
         issueGiftCards();
@@ -524,6 +595,7 @@
         successView.hidden = false;
         checkoutForm.reset();
         giftRecipientFields.hidden = false;
+        shipAddress.hidden = false;
         clearCart();
         modal.querySelector(".checkout-done").focus();
       });
