@@ -592,6 +592,7 @@
     var next = ALL.filter(function (r) { return owns(r) && !st.done[r.ls.id]; })[0];
     return (next || ALL[0]).ls.id;
   };
+  var BACK = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var player = (function () {
     var ov = $(".pl-ov"), panel = $(".pl-panel", ov), rail = $("#pl-rail"), main = $("#pl-main"), cur = null;
     var paintRail = function () {
@@ -623,11 +624,13 @@
           (ls.builder ? '<div><p class="ls-sec">Your routine builder</p>' + builderHtml() + '</div>' : "") + checkHtml(ls) +
           '<div class="ls-nav">' + (prev ? '<button type="button" class="btn btn-ghost" data-go="' + prev.ls.id + '">&larr; Back</button>' : "<span></span>") +
           '<button type="button" class="btn btn-dark ls-done' + (done ? " is-done" : "") + '" id="ls-done">' + (done ? "&#10003; Completed" : "Mark complete") + '</button>' +
-          (next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>'
+          (next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>' +
+          '<button type="button" class="ls-exit" data-exit>' + BACK + 'Back to the Skin School page</button>'
         : '<div class="locked-card"><h3>This lesson is part of ' + (lv.n === 1 ? "Skin Basics" : "The Course") + '.</h3>' +
           '<p>' + (lv.n === 1 ? "Level 1 is $49 on its own, or included in every course." : "Unlock all three levels, the routine builder and lifetime access.") + '</p>' +
           '<button type="button" class="btn btn-grad" data-see-tiers>See the courses</button></div>' +
-          '<div class="ls-ghost" aria-hidden="true">' + learnHtml(ls) + '</div>') +
+          '<div class="ls-ghost" aria-hidden="true">' + learnHtml(ls) + '</div>' +
+          '<button type="button" class="ls-exit" data-exit>' + BACK + 'Back to the Skin School page</button>') +
         '</article>';
       main.scrollTop = 0;
       panel.classList.remove("pl-open"); $("#pl-menu").setAttribute("aria-expanded", "false");
@@ -676,8 +679,10 @@
       });
       var btn = $(".cele-card .btn", p); if (btn) btn.focus({ preventScroll: true });
     };
+    var inHistory = function () { return !!(history.state && history.state.skinSchool); };
     var open = function (id) {
       var go = function () {
+        if (ov.hidden && !inHistory()) { try { history.pushState({ skinSchool: 1 }, "", "#learn"); } catch (e) { /* sandboxed */ } }
         ov.hidden = false;
         document.documentElement.classList.add("lock");
         show(id || st.last || firstOpen(), true);
@@ -685,18 +690,25 @@
           panel.animate([{ opacity: 0, transform: "translateY(30px) scale(.97)" }, { opacity: 1, transform: "none" }], { duration: 520, easing: EASE });
           $(".ov-backdrop", ov).animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360 });
         }
-        $(".pl-x", ov).focus({ preventScroll: true });
+        $("#pl-exit").focus({ preventScroll: true });
       };
       if (window.SchoolLevels.isOpen()) window.SchoolLevels.close(go); else go();
     };
-    var close = function () {
+    var close = function (fromHistory) {
       if (ov.hidden) return;
+      if (fromHistory !== true && inHistory()) {                  /* popstate below does the closing */
+        history.back();
+        setTimeout(function () { if (!ov.hidden) close(true); }, 450);  /* in case the viewer swallows it */
+        return;
+      }
+      if (fromHistory !== true && /^#learn/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* sandboxed */ } }
       var end = function () { ov.hidden = true; document.documentElement.classList.remove("lock"); paintAll(); };
       if (rm || !panel.animate) { end(); return; }
       var a = panel.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(24px) scale(.98)" }], { duration: 260, easing: "ease-in", fill: "forwards" });
       a.onfinish = function () { end(); a.cancel(); };
     };
-    $(".pl-x", ov).addEventListener("click", close);
+    $("#pl-exit").addEventListener("click", close);
+    window.addEventListener("popstate", function () { if (!ov.hidden && !inHistory()) close(true); });
     $("#pl-menu").addEventListener("click", function () {
       var o = panel.classList.toggle("pl-open");
       $("#pl-menu").setAttribute("aria-expanded", String(o));
@@ -704,6 +716,7 @@
     ov.addEventListener("click", function (e) {
       var g = e.target.closest("[data-go]");
       if (g) { show(g.getAttribute("data-go")); return; }
+      if (e.target.closest("[data-exit]")) { close(); return; }
       if (e.target.closest("#ls-done")) { var row = BY[cur]; if (!st.done[row.ls.id]) complete(row); return; }
       if (e.target.closest("#ls-cert")) { if (doneCount() === ALL.length) certificate(); else toast((ALL.length - doneCount()) + " lessons to go before your certificate."); return; }
       if (e.target.closest("[data-see-tiers]")) { close(); setTimeout(function () { $("#tiers").scrollIntoView({ behavior: rm ? "auto" : "smooth" }); }, 280); }

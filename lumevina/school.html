@@ -57,7 +57,7 @@ section + section { border-top: 1px solid rgba(255,255,255,.06); }
 .btn:disabled { opacity: .45; cursor: default; transform: none; }
 
 /* top bar */
-.topbar { position: fixed; z-index: 60; top: 0; left: 0; right: 0; background: rgba(0,0,0,.72);
+.topbar { position: fixed; z-index: 60; top: 0; left: 0; right: 0; padding-top: env(safe-area-inset-top); background: rgba(0,0,0,.72);
   -webkit-backdrop-filter: saturate(160%) blur(18px); backdrop-filter: saturate(160%) blur(18px); border-bottom: 1px solid rgba(255,255,255,.06); }
 .tb { display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .brand { color: var(--text); text-decoration: none; font-weight: 700; letter-spacing: -0.02em; font-size: 1.02rem; }
@@ -354,8 +354,17 @@ html.lock { overflow: hidden; }
 .pl-panel { position: absolute; inset: 0; margin: auto; width: min(1200px, calc(100% - 32px)); height: calc(100dvh - 32px);
   background: #121214; border-radius: 26px; overflow: hidden; display: grid; grid-template-rows: auto 1fr;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 40px 120px rgba(0,0,0,.6); clip-path: inset(0 round 26px); }
-.pl-top { display: flex; align-items: center; gap: 14px; padding: 12px 64px 12px 18px; border-bottom: 1px solid var(--hair); min-height: 62px; }
-.pl-top .x { top: 12px; right: 12px; }
+.pl-top { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--hair); min-height: 62px; }
+/* the way out: always labeled, always top left */
+.pl-exit { display: inline-flex; align-items: center; gap: 4px; border: 0; border-radius: 999px; padding: 8px 14px 8px 9px; cursor: pointer;
+  background: var(--text); color: #000; font-size: .9rem; font-weight: 650; transition: transform .25s var(--ease), background-color .2s; }
+.pl-exit:hover { background: #fff; }
+.pl-exit:active { transform: scale(.95); }
+.pl-exit svg { width: 18px; height: 18px; }
+.ls-exit { justify-self: center; display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; cursor: pointer;
+  color: var(--text-2); font-size: .92rem; padding: 8px 10px; border-radius: 999px; }
+.ls-exit:hover { color: var(--text); background: #1a1a1d; }
+.ls-exit svg { width: 16px; height: 16px; }
 .pl-menu { display: none; border: 0; background: #1c1c1f; border-radius: 999px; padding: 8px 14px; font-size: .9rem; font-weight: 600; cursor: pointer; }
 .pl-title { font-weight: 700; letter-spacing: -0.02em; }
 .pl-title span { color: var(--text-3); font-weight: 500; margin-left: 6px; }
@@ -466,12 +475,18 @@ html.lock { overflow: hidden; }
   .part .bar { grid-column: 1; width: 100%; margin-top: 0; }
   .demo-card { padding: 20px 16px; min-height: 0; }
   .pl-panel { width: 100%; height: 100dvh; border-radius: 0; clip-path: none; }
+  .pl-top { padding: calc(10px + env(safe-area-inset-top)) 12px 10px; gap: 8px; min-height: 0; }
+  .pl-title { display: none; }
+  .ov-panel { top: env(safe-area-inset-top); bottom: env(safe-area-inset-bottom); height: calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
   .pl-grid { grid-template-columns: 1fr; position: relative; }
   .pl-menu { display: inline-block; }
   .pl-title span { display: none; }
   .pl-rail { position: absolute; inset: 0; z-index: 4; background: #121214; transform: translateX(-100%); transition: transform .4s var(--ease); border-right: 0; }
   .pl-open .pl-rail { transform: none; }
   .lesson { padding: 26px 16px 50px; gap: 22px; }
+  .ls-nav { display: grid; grid-template-columns: auto 1fr; }
+  .ls-nav > :last-child { grid-column: 1 / -1; order: -1; }      /* Next lesson first, full width */
+  .ls-nav .btn { padding: 13px 18px; }
   .bd-out { grid-template-columns: 1fr; }
   .fld-row { grid-template-columns: 1fr 1fr; }
   .fld-row .fld:first-child { grid-column: 1 / -1; }
@@ -688,10 +703,10 @@ html.lock { overflow: hidden; }
   <div class="ov-backdrop"></div>
   <div class="pl-panel" role="dialog" aria-modal="true" aria-label="Skin School lessons">
     <div class="pl-top">
+      <button type="button" class="pl-exit" id="pl-exit" aria-label="Exit the lessons, back to the Skin School page"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Exit</button>
       <button type="button" class="pl-menu" id="pl-menu" aria-expanded="false">Lessons</button>
       <span class="pl-title">Skin School<span id="pl-who"></span></span>
       <span class="pl-prog"><svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true"><circle class="bg" cx="12" cy="12" r="9"/><circle class="fg" id="pl-ring" cx="12" cy="12" r="9" stroke-dasharray="56.55" stroke-dashoffset="56.55"/></svg><span id="pl-count">0 of 33</span></span>
-      <button type="button" class="x pl-x" aria-label="Close the course"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
     <div class="pl-grid">
       <nav class="pl-rail" id="pl-rail" aria-label="All lessons"></nav>
@@ -2489,6 +2504,7 @@ window.SCHOOL = {
     var next = ALL.filter(function (r) { return owns(r) && !st.done[r.ls.id]; })[0];
     return (next || ALL[0]).ls.id;
   };
+  var BACK = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var player = (function () {
     var ov = $(".pl-ov"), panel = $(".pl-panel", ov), rail = $("#pl-rail"), main = $("#pl-main"), cur = null;
     var paintRail = function () {
@@ -2520,11 +2536,13 @@ window.SCHOOL = {
           (ls.builder ? '<div><p class="ls-sec">Your routine builder</p>' + builderHtml() + '</div>' : "") + checkHtml(ls) +
           '<div class="ls-nav">' + (prev ? '<button type="button" class="btn btn-ghost" data-go="' + prev.ls.id + '">&larr; Back</button>' : "<span></span>") +
           '<button type="button" class="btn btn-dark ls-done' + (done ? " is-done" : "") + '" id="ls-done">' + (done ? "&#10003; Completed" : "Mark complete") + '</button>' +
-          (next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>'
+          (next ? '<button type="button" class="btn btn-grad" data-go="' + next.ls.id + '">Next lesson &rarr;</button>' : '<button type="button" class="btn btn-grad" id="ls-cert">See my certificate</button>') + '</div>' +
+          '<button type="button" class="ls-exit" data-exit>' + BACK + 'Back to the Skin School page</button>'
         : '<div class="locked-card"><h3>This lesson is part of ' + (lv.n === 1 ? "Skin Basics" : "The Course") + '.</h3>' +
           '<p>' + (lv.n === 1 ? "Level 1 is $49 on its own, or included in every course." : "Unlock all three levels, the routine builder and lifetime access.") + '</p>' +
           '<button type="button" class="btn btn-grad" data-see-tiers>See the courses</button></div>' +
-          '<div class="ls-ghost" aria-hidden="true">' + learnHtml(ls) + '</div>') +
+          '<div class="ls-ghost" aria-hidden="true">' + learnHtml(ls) + '</div>' +
+          '<button type="button" class="ls-exit" data-exit>' + BACK + 'Back to the Skin School page</button>') +
         '</article>';
       main.scrollTop = 0;
       panel.classList.remove("pl-open"); $("#pl-menu").setAttribute("aria-expanded", "false");
@@ -2573,8 +2591,10 @@ window.SCHOOL = {
       });
       var btn = $(".cele-card .btn", p); if (btn) btn.focus({ preventScroll: true });
     };
+    var inHistory = function () { return !!(history.state && history.state.skinSchool); };
     var open = function (id) {
       var go = function () {
+        if (ov.hidden && !inHistory()) { try { history.pushState({ skinSchool: 1 }, "", "#learn"); } catch (e) { /* sandboxed */ } }
         ov.hidden = false;
         document.documentElement.classList.add("lock");
         show(id || st.last || firstOpen(), true);
@@ -2582,18 +2602,25 @@ window.SCHOOL = {
           panel.animate([{ opacity: 0, transform: "translateY(30px) scale(.97)" }, { opacity: 1, transform: "none" }], { duration: 520, easing: EASE });
           $(".ov-backdrop", ov).animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360 });
         }
-        $(".pl-x", ov).focus({ preventScroll: true });
+        $("#pl-exit").focus({ preventScroll: true });
       };
       if (window.SchoolLevels.isOpen()) window.SchoolLevels.close(go); else go();
     };
-    var close = function () {
+    var close = function (fromHistory) {
       if (ov.hidden) return;
+      if (fromHistory !== true && inHistory()) {                  /* popstate below does the closing */
+        history.back();
+        setTimeout(function () { if (!ov.hidden) close(true); }, 450);  /* in case the viewer swallows it */
+        return;
+      }
+      if (fromHistory !== true && /^#learn/.test(location.hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* sandboxed */ } }
       var end = function () { ov.hidden = true; document.documentElement.classList.remove("lock"); paintAll(); };
       if (rm || !panel.animate) { end(); return; }
       var a = panel.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(24px) scale(.98)" }], { duration: 260, easing: "ease-in", fill: "forwards" });
       a.onfinish = function () { end(); a.cancel(); };
     };
-    $(".pl-x", ov).addEventListener("click", close);
+    $("#pl-exit").addEventListener("click", close);
+    window.addEventListener("popstate", function () { if (!ov.hidden && !inHistory()) close(true); });
     $("#pl-menu").addEventListener("click", function () {
       var o = panel.classList.toggle("pl-open");
       $("#pl-menu").setAttribute("aria-expanded", String(o));
@@ -2601,6 +2628,7 @@ window.SCHOOL = {
     ov.addEventListener("click", function (e) {
       var g = e.target.closest("[data-go]");
       if (g) { show(g.getAttribute("data-go")); return; }
+      if (e.target.closest("[data-exit]")) { close(); return; }
       if (e.target.closest("#ls-done")) { var row = BY[cur]; if (!st.done[row.ls.id]) complete(row); return; }
       if (e.target.closest("#ls-cert")) { if (doneCount() === ALL.length) certificate(); else toast((ALL.length - doneCount()) + " lessons to go before your certificate."); return; }
       if (e.target.closest("[data-see-tiers]")) { close(); setTimeout(function () { $("#tiers").scrollIntoView({ behavior: rm ? "auto" : "smooth" }); }, 280); }
