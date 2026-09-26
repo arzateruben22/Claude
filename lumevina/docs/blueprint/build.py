@@ -130,6 +130,7 @@ BUILT = [
     (True, "Client accounts, intake and consent forms"),
     (True, "Owner dashboard, invoices, tax export"),
     (True, "Installs on any phone’s home screen"),
+    (True, "Skin School: an online course, 33 lessons"),
     (False, "Live payments and data · about 2–3 weeks"),
     (False, "Multi-artist booking and payouts · the Stage 2 build"),
 ]
@@ -165,6 +166,8 @@ GIFT = [("Website with online booking", 6000, 3000, "Every service and price, 50
         ("Ask Lumevina AI chat", 4000, 2000, "Answers clients 24/7 and hands the personal questions to Evelyn"),
         ("Intake forms and the Glow Routine", 1500, 800, "Consent and skin forms before the visit, the routine after it"),
         ("iPhone app", 6000, 3000, "The same system on her home screen, with flash alerts"),
+        ("Skin School course page and player", 7000, 3500, "Animations, a skin quiz, checkout, lesson progress and a certificate"),
+        ("Skin School curriculum", 5000, 2500, "33 lessons written out, from beginner to advanced, each with a quick check"),
         ("Growth Blueprint and 90-day plan", 2000, 1000, "What a business consultant would charge for the plans")]
 GIFT_CARE = (200, 100)             # care and upkeep a month: updates, fixes, backups, new features
 
