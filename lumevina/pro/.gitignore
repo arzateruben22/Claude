@@ -1,0 +1,4 @@
+.build/
+etsy/.token.json
+etsy/state.json
+__pycache__/

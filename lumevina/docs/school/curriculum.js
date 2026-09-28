@@ -471,5 +471,34 @@ window.SCHOOL = {
       line: "The course, the kit, and Evelyn herself.",
       has: ["Everything in Course + Kit", "A 45-minute 1-on-1 video skin consult with Evelyn", "Your written routine, built for your skin", "A 15-minute check-in 30 days later"] }
   ],
-  starter: { id: "basics", name: "Skin Basics", price: 49, line: "Just Level 1. Its $49 counts toward the full course if you upgrade." }
+  starter: { id: "basics", name: "Skin Basics", price: 49, line: "Just Level 1. Its $49 counts toward the full course if you upgrade." },
+
+  /* Skin School Live: in-person group classes. They run on Sundays and Monday evenings, when the
+     studio is closed, so they never take a facial slot. cost = what one seat or guest costs Evelyn in
+     supplies (take-home kit, printed journal, drinks; card fees are counted separately in the books).
+     See CLASSES.md for the margin math. */
+  live: {
+    classes: {
+      live: { id: "live", name: "Skin School Live", tag: "Group class · 6 seats", seats: 6, price: 129, member: 109, cost: 22,
+        line: "Two hours at the studio with Evelyn and a small group.",
+        has: ["Your skin under the lamp: a one-on-one skin check", "Your routine, built with you on the spot",
+              "A take-home kit: travel cleanser, SPF 30 and a printed skin journal",
+              "Skin Basics online (Level 1), yours to keep", "Bubbly or tea, and 15% off a facial booked that night"],
+        agenda: [["Welcome and skin check", 30], ["The routine, step by step", 45], ["Build yours", 30], ["Questions and your kit", 15]] },
+      party: { id: "party", name: "Glow Party", tag: "Private group · 4 to 8", price: 690, base: 6, extra: 95, max: 8, min: 4,
+        home: 75, deposit: 0.5, cost: 22, homeCost: 15,
+        line: "Your own class for you and your friends, at the studio or at your place.",
+        has: ["Everything in Skin School Live, just for your group", "Up to 6 guests, host included, then $95 a guest",
+              "At the studio, or at your home nearby for $75", "Half now to hold the date, the rest on the day"] },
+      pro: { id: "pro", name: "Pro Night", tag: "For estheticians · 8 seats", seats: 8, price: 249, cost: 28,
+        line: "The business side of a studio, from someone running one.",
+        has: ["Three hours on pricing, memberships, rebooking and your books",
+              "The Esthetician Business Kit: forms, aftercare cards, menu, scripts and both spreadsheets",
+              "A printed 90-day planner", "Dinner and a glass of wine"] }
+    },
+    /* upcoming sessions, counted from today: [class, days from now (rounded to the weekday), weekday, start, minutes] */
+    plan: [["live", 14, 0, "14:00", 120], ["live", 29, 1, "18:30", 120], ["pro", 36, 1, "18:30", 180],
+           ["live", 42, 0, "14:00", 120], ["live", 57, 1, "18:30", 120], ["live", 70, 0, "14:00", 120]],
+    where: "Lumevina Aesthetics, Woodland Hills. The address comes with your confirmation."
+  }
 };

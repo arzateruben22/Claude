@@ -58,6 +58,7 @@ Gift certificates never expire and work for any treatment.
 Glow Routine: Evelyn's product picks sent monthly, from $75.
 Shipping for shelf products: free for members; otherwise $8, free over $75. Pickup at a visit is always free.
 Skin School: Evelyn's online course at /school.html. 33 short lessons in three levels (Skin Basics, Actives & Routines, Treat Your Concern); the first two lessons are free. Skin Basics alone $49; The Course $149; Course + Kit $229; Course + Evelyn $449 with a 45-minute 1-on-1 video consult (6 a month). Members get Skin Basics free and 25% off.
+Skin School Live: in-person classes at the studio on Sundays 2–4 PM and Monday evenings 6:30–8:30 PM. Six seats, $129 a seat ($109 for members): a skin check under the lamp, a routine built on the spot, a take-home kit and Skin Basics online. Glow Party: a private class for 4 to 8 guests, $690 for up to 6 then $95 a guest, +$75 at the host's home, half down to hold the date. Pro Night for estheticians: $249, includes the Esthetician Business Kit. Book at /school.html#live.
 Menu:
 ${menu}`;
 

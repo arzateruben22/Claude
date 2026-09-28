@@ -15,6 +15,7 @@
     <a class="brand" href="index.html" aria-label="Lumevina: back to the website">Lumevina<span>Skin School</span></a>
     <div class="tb-right">
       <a class="tb-link" href="#tiers">Courses</a>
+      <a class="tb-link" href="#live">Classes</a>
       <button type="button" class="tb-me" id="tb-me" aria-label="Open my course">
         <svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true"><circle class="bg" cx="12" cy="12" r="9"/><circle class="fg" cx="12" cy="12" r="9" stroke-dasharray="56.55" stroke-dashoffset="56.55"/></svg>
         <span id="tb-me-l">Free lesson</span>
@@ -117,6 +118,23 @@
   </div>
 </section>
 
+<section id="live">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <p class="kicker">Skin School Live</p>
+      <h2 class="h2">Learn it in person. <span class="dim">Together.</span></h2>
+      <p class="lead">Two hours at the studio with Evelyn and a small group: your skin under the lamp, your routine built on the spot, and a kit to take home.</p>
+    </div>
+    <div class="live-grid">
+      <div class="live-main reveal" id="live-main"></div>
+      <div class="live-side">
+        <div class="live-card reveal" id="live-party"></div>
+        <div class="live-card reveal" id="live-pro"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="all">
   <div class="wrap">
     <div class="sec-head center reveal">
@@ -139,6 +157,9 @@
       <details><summary>How long do I have access?</summary><p>For life, including new lessons as Evelyn adds them. Each lesson is 7 to 12 minutes, so most people finish a level in a week or two.</p></details>
       <details><summary>Do I need to buy products?</summary><p>No. The course works with what you already own and shows you what to keep. The kit is there if you&rsquo;d like to start with products Evelyn trusts.</p></details>
       <details><summary>How does the 1-on-1 with Evelyn work?</summary><p>After you join, you pick a time for a 45-minute video call. Evelyn looks at your skin, goes through your products and writes your routine. Thirty days later, a 15-minute check-in to fine-tune it. There are six spots a month.</p></details>
+      <details><summary>What happens at Skin School Live?</summary><p>Six people, two hours, one lamp. Evelyn checks everyone&rsquo;s skin up close, walks through a routine step by step with real products, then helps each of you build yours. You leave with a small kit, a printed skin journal and Skin Basics online to keep learning.</p></details>
+      <details><summary>Can I bring a friend?</summary><p>Yes. Book two seats together, or plan a Glow Party for your own group of four to eight.</p></details>
+      <details><summary>What if a class doesn&rsquo;t fill?</summary><p>A class runs with three or more people. If it doesn&rsquo;t reach three, you choose: move to the next date, or get a full refund.</p></details>
       <details><summary>Is this medical advice?</summary><p>No. It&rsquo;s skincare education from a licensed esthetician. Anything medical, like cystic acne, rashes, changing moles or prescriptions, belongs with a dermatologist or doctor, and the lessons tell you when.</p></details>
       <details><summary>Can I get a refund?</summary><p>Yes, within 14 days if you&rsquo;ve finished fewer than a quarter of the lessons. Kits can be returned unopened.</p></details>
     </div>
@@ -154,7 +175,7 @@
       <button type="button" class="btn btn-grad" data-open-lesson="1-1">Take the free lesson</button>
       <a class="btn btn-ghost" href="#tiers">See the courses</a>
     </div>
-    <p class="fine">A preview for Evelyn. Lessons are drafted for her to review and record, and prices are proposals. Nothing is charged: use the test card 4242 4242 4242 4242. Skincare education, not medical advice.</p>
+    <p class="fine">A preview for Evelyn. Lessons are drafted for her to review and record, and prices and class dates are proposals. Nothing is charged: use the test card 4242 4242 4242 4242. Skincare education, not medical advice.</p>
     <div class="demo-links"><button type="button" id="demo-all">Demo: unlock everything</button><button type="button" id="demo-reset">Demo: start over</button></div>
   </div>
 </section>
@@ -183,10 +204,21 @@
       <div class="co-sum"><span id="co-line"></span><b id="co-total"></b></div>
       <div class="fld"><label for="co-name">Your name</label><input id="co-name" autocomplete="name"></div>
       <div class="fld"><label for="co-email">Email</label><input id="co-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+      <div id="co-class" hidden>
+        <p class="co-when" id="co-when"></p>
+        <div class="fld" id="co-date-f"><label for="co-date">Date</label><select id="co-date"></select></div>
+        <div class="fld-row co-two">
+          <div class="fld" id="co-seats-f"><label for="co-seats">Seats</label><select id="co-seats"></select></div>
+          <div class="fld" id="co-guests-f"><label for="co-guests">Guests, you included</label><select id="co-guests"></select></div>
+        </div>
+        <div class="fld" id="co-place-f"><span class="fl">Where</span>
+          <div class="seg" role="radiogroup" aria-label="Where the party is"><button type="button" role="radio" aria-checked="true" data-place="studio">At the studio</button><button type="button" role="radio" aria-checked="false" data-place="home">At my place, +$75</button></div></div>
+        <div class="fld" id="co-where-f"><label for="co-where">Your address</label><input id="co-where" autocomplete="street-address" placeholder="Street, city, ZIP"></div>
+      </div>
       <div id="co-kit">
         <div class="fld"><label for="co-skin">Your skin, for the kit</label>
           <select id="co-skin"><option value="">Choose one</option><option>Dry</option><option>Normal</option><option>Combination</option><option>Oily</option><option>Sensitive</option><option>Acne-prone</option></select></div>
-        <div class="fld"><span class="fl">The kit</span>
+        <div class="fld" id="co-ship-f"><span class="fl">The kit</span>
           <div class="seg" role="radiogroup" aria-label="How you get the kit"><button type="button" role="radio" aria-checked="true" data-ship="ship">Ship it free</button><button type="button" role="radio" aria-checked="false" data-ship="pickup">Pick up at my visit</button></div></div>
         <div class="fld" id="co-addr-f"><label for="co-addr">Shipping address</label><input id="co-addr" autocomplete="street-address" placeholder="Street, city, ZIP"></div>
       </div>

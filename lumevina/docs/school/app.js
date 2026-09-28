@@ -395,6 +395,67 @@
   }).join("");
   $("#starter").innerHTML = '<p><b>Just starting?</b> ' + esc(S.starter.name) + ' (Level 1) on its own is ' + money(S.starter.price) + '. ' +
     esc(S.starter.line.replace(/^Just Level 1\. /, "")) + '</p><button type="button" class="btn btn-ghost" data-buy="basics">Start with ' + esc(S.starter.name) + '</button>';
+
+  /* ── Skin School Live: in-person classes ── */
+  var L = S.live, LC = L.classes;
+  var DAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var pad2 = function (n) { return (n < 10 ? "0" : "") + n; };
+  var clock = function (mins, ampm) { var h = Math.floor(mins / 60) % 24, m = mins % 60; return (h % 12 || 12) + ":" + pad2(m) + (ampm ? (h >= 12 ? " PM" : " AM") : ""); };
+  var span = function (start, len) {
+    var p = start.split(":"), a = +p[0] * 60 + +p[1], b = a + len;
+    return clock(a, (a >= 720) !== (b >= 720)) + "\u2013" + clock(b, true);
+  };
+  var dayKey = function (d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); };
+  var sessions = function () {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    return L.plan.map(function (p) {
+      var d = new Date(today); d.setDate(d.getDate() + p[1]);
+      d.setDate(d.getDate() + ((p[2] - d.getDay() + 7) % 7));
+      return { cls: p[0], date: d, key: p[0] + "-" + dayKey(d), start: p[3], mins: p[4] };
+    });
+  };
+  var classLog = function () { try { return (JSON.parse(localStorage.getItem(SALES)) || []).filter(function (x) { return x.kind === "class"; }); } catch (e) { return []; } };
+  var taken = function (key) { return classLog().reduce(function (a, x) { return a + (x.session === key ? (x.seats || 0) : 0); }, 0); };
+  var seatsLeft = function (s) { return Math.max(0, LC[s.cls].seats - taken(s.key)); };
+  var whenOf = function (s) { return DAY[s.date.getDay()] + ", " + MON[s.date.getMonth()] + " " + s.date.getDate() + " \u00b7 " + span(s.start, s.mins); };
+  var startOf = function (s) { var d = new Date(s.date), p = s.start.split(":"); d.setHours(+p[0], +p[1], 0, 0); return d; };
+  var seatDots = function (cap, left) {
+    var h = ""; for (var i = 0; i < cap; i++) h += '<i class="' + (i < cap - left ? "on" : "") + '"></i>';
+    return '<span class="ses-dots" role="img" aria-label="' + left + " of " + cap + ' seats left">' + h + "</span>";
+  };
+  var checks = function (list) { return '<ul class="t-list">' + list.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("") + "</ul>"; };
+  var paintLive = function () {
+    var all = sessions(), lv = LC.live, pro = LC.pro;
+    var total = lv.agenda.reduce(function (a, x) { return a + x[1]; }, 0);
+    var rows = all.filter(function (x) { return x.cls === "live"; }).map(function (x) {
+      var left = seatsLeft(x);
+      return '<div class="ses"><div class="ses-d"><b>' + x.date.getDate() + '</b><span>' + MON[x.date.getMonth()] + '</span></div>' +
+        '<div class="ses-t"><b>' + DAY[x.date.getDay()] + '</b><span>' + span(x.start, x.mins) + '</span></div>' +
+        seatDots(lv.seats, left) + '<span class="ses-left">' + (left ? left + " left" : "Full") + '</span>' +
+        '<button type="button" class="btn ' + (left ? "btn-grad" : "btn-dark") + ' ses-go" data-class="live" data-session="' + x.key + '"' + (left ? "" : " disabled") + '>' + (left ? "Book" : "Full") + '</button></div>';
+    }).join("");
+    $("#live-main").innerHTML = '<span class="t-tag">' + esc(lv.tag) + '</span><h3 class="t-name">' + esc(lv.name) + '</h3>' +
+      '<div class="t-price">' + money(lv.price) + '<small>a seat</small></div>' +
+      '<p class="t-line">' + esc(lv.line) + ' Glow and Ageless members pay ' + money(lv.member) + '.</p>' +
+      '<div class="agenda" role="list" aria-label="The two hours">' + lv.agenda.map(function (a, i) {
+        return '<div role="listitem" style="flex:' + a[1] + ';--i:' + i + '"><i></i><b>' + esc(a[0]) + '</b><span>' + a[1] + ' min</span></div>';
+      }).join("") + '</div>' + checks(lv.has) +
+      '<h4 class="up-h">Upcoming classes <span>' + total / 60 + ' hours \u00b7 ' + lv.seats + ' seats each</span></h4><div class="sess">' + rows + '</div>' +
+      '<p class="live-note">A class runs with three or more. If yours doesn\u2019t fill, move to the next date or get a full refund. None of these work? <button type="button" class="linkish" data-class="party">Plan a Glow Party</button> for your own group.</p>';
+    var pt = LC.party;
+    $("#live-party").innerHTML = '<span class="t-tag">' + esc(pt.tag) + '</span><h3 class="t-name">' + esc(pt.name) + '</h3>' +
+      '<div class="t-price">' + money(pt.price) + '<small>up to ' + pt.base + ' guests</small></div><p class="t-line">' + esc(pt.line) + '</p>' +
+      checks(pt.has) + '<button type="button" class="btn btn-dark" data-class="party">Plan a Glow Party</button>';
+    var next = all.filter(function (x) { return x.cls === "pro"; })[0], pl = next ? seatsLeft(next) : 0;
+    $("#live-pro").innerHTML = '<span class="t-tag">' + esc(pro.tag) + '</span><h3 class="t-name">' + esc(pro.name) + '</h3>' +
+      '<div class="t-price">' + money(pro.price) + '<small>a seat</small></div><p class="t-line">' + esc(pro.line) + '</p>' +
+      (next ? '<div class="ses ses-one"><div class="ses-d"><b>' + next.date.getDate() + '</b><span>' + MON[next.date.getMonth()] + '</span></div>' +
+        '<div class="ses-t"><b>' + DAY[next.date.getDay()] + '</b><span>' + span(next.start, next.mins) + '</span></div>' + seatDots(pro.seats, pl) +
+        '<span class="ses-left">' + (pl ? pl + " left" : "Full") + '</span></div>' : "") +
+      checks(pro.has) + '<button type="button" class="btn btn-dark" data-class="pro"' + (next ? ' data-session="' + next.key + '"' : "") + (pl ? "" : " disabled") + '>Save a seat</button>';
+  };
+  paintLive();
   watch();
 
   /* ── checkout ── */
@@ -426,7 +487,7 @@
       $("#co-kit").hidden = !kit;
       $("#co-addr-f").hidden = !kit || ship !== "ship";
       var free = p.due === 0;
-      $$(".fld-row, .co-test", form).forEach(function (el) { el.hidden = free; });
+      $$(".fld-row:not(.co-two), .co-test", form).forEach(function (el) { el.hidden = free; });
       $("#co-pay").textContent = free ? "Start " + tier.name : "Pay " + money(p.due);
     };
     var open = function (id) {
@@ -455,7 +516,7 @@
       document.documentElement.classList.remove("lock");
     };
     pay.bindCardFields($("#co-card"), $("#co-exp"), $("#co-cvc"));
-    $("#co-email").addEventListener("input", paintSum);
+    $("#co-email").addEventListener("input", function () { if (!cls) paintSum(); });
     $$("[data-ship]", ov).forEach(function (b) {
       b.addEventListener("click", function () {
         ship = b.getAttribute("data-ship");
@@ -466,9 +527,150 @@
     $(".co-x", ov).addEventListener("click", close);
     $(".ov-backdrop", ov).addEventListener("click", close);
     ov.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
-    document.addEventListener("click", function (e) { var b = e.target.closest("[data-buy]"); if (b) open(b.getAttribute("data-buy")); });
+    document.addEventListener("click", function (e) { var b = e.target.closest("[data-buy]"); if (b) { cls = null; $("#co-class").hidden = true; $("#co-ship-f").hidden = false; open(b.getAttribute("data-buy")); } });
+
+    /* Skin School Live: the same checkout, with a date, seats or guests, and no shipping */
+    var cls = null, sess = null, place = "studio";
+    var partyDates = function () {
+      var out = [], d = new Date(), busy = {};
+      sessions().forEach(function (x) { busy[dayKey(x.date)] = 1; });
+      d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + 10);
+      for (var i = 0; i < 56 && out.length < 12; i++, d.setDate(d.getDate() + 1)) {
+        var w = d.getDay();
+        if ((w === 0 || w === 1) && !busy[dayKey(d)]) out.push({ cls: "party", date: new Date(d), key: "party-" + dayKey(d), start: w === 0 ? "14:00" : "18:30", mins: 120 });
+      }
+      return out;
+    };
+    var classPrice = function () {
+      var member = isMember($("#co-email").value), n = +$("#co-seats").value || 1, g = +$("#co-guests").value || cls.base || 1;
+      if (cls.id === "party") {
+        var total = cls.price + Math.max(0, g - cls.base) * cls.extra + (place === "home" ? cls.home : 0);
+        return { member: false, total: total, due: Math.round(total * cls.deposit), n: g };
+      }
+      var per = member && cls.member ? cls.member : cls.price;
+      return { member: member && !!cls.member, total: per * n, due: per * n, n: n, per: per };
+    };
+    var paintClass = function () {
+      var list = cls.id === "party" ? partyDates() : sessions().filter(function (x) { return x.cls === cls.id && seatsLeft(x) > 0; });
+      var s0 = list.filter(function (x) { return x.key === sess; })[0] || list[0];
+      sess = s0 ? s0.key : null;
+      $("#co-date").innerHTML = list.map(function (x) { return '<option value="' + x.key + '"' + (x.key === sess ? " selected" : "") + ">" + esc(whenOf(x)) + "</option>"; }).join("");
+      var party = cls.id === "party";
+      if (!party && s0) {
+        var left = seatsLeft(s0), keep = +$("#co-seats").value || 1, opts = "";
+        for (var i = 1; i <= Math.min(3, left); i++) opts += '<option value="' + i + '"' + (i === Math.min(keep, left) ? " selected" : "") + ">" + i + (i > 1 ? " seats" : " seat") + "</option>";
+        $("#co-seats").innerHTML = opts;
+      }
+      $("#co-seats-f").hidden = party;
+      $("#co-guests-f").hidden = !party;
+      $("#co-place-f").hidden = !party;
+      $("#co-where-f").hidden = !party || place !== "home";
+      $("#co-kit").hidden = cls.id === "pro";
+      $("#co-ship-f").hidden = true;
+      $("#co-addr-f").hidden = true;
+      var p = classPrice();
+      $("#co-h").textContent = cls.name;
+      $("#co-when").textContent = s0 ? (party ? "Your date: " : "") + whenOf(s0) + (party && place === "home" ? " \u00b7 at your place" : " \u00b7 " + L.where) : "No dates open right now.";
+      $("#co-line").textContent = party ? "Half today to hold the date, " + money(p.total - p.due) + " on the day" :
+        p.n + (p.n > 1 ? " seats" : " seat") + " \u00b7 " + (p.member ? "member price, " + money(p.per) + " each" : money(p.per) + " each");
+      $("#co-total").textContent = money(p.due);
+      $$(".fld-row:not(.co-two), .co-test", form).forEach(function (el) { el.hidden = false; });
+      $("#co-pay").textContent = party ? "Hold the date \u00b7 " + money(p.due) : "Reserve " + (p.n > 1 ? p.n + " seats" : "my seat") + " \u00b7 " + money(p.due);
+      $("#co-pay").disabled = !s0;
+    };
+    var openClass = function (id, key) {
+      cls = LC[id]; sess = key || null; place = "studio";
+      if (!cls) return;
+      form.hidden = false; done.hidden = true; status.textContent = "";
+      $("#co-class").hidden = false;
+      $("#co-seats").innerHTML = '<option value="1">1 seat</option>';
+      var g = ""; for (var i = cls.min || 1; i <= (cls.max || 1); i++) g += '<option value="' + i + '"' + (i === cls.base ? " selected" : "") + ">" + i + " guests</option>";
+      $("#co-guests").innerHTML = g;
+      $$("[data-place]", ov).forEach(function (x) { x.setAttribute("aria-checked", String(x.getAttribute("data-place") === "studio")); });
+      var acct = null; try { acct = JSON.parse(localStorage.getItem("lumevina_account")); } catch (e) { /* none */ }
+      if (!$("#co-name").value) $("#co-name").value = st.name || (acct && acct.name) || "";
+      if (!$("#co-email").value) $("#co-email").value = st.email || (acct && acct.email) || "";
+      if (st.quiz && !$("#co-skin").value) $("#co-skin").value = st.quiz.acne ? "Acne-prone" : st.quiz.sens ? "Sensitive" : { dry: "Dry", normal: "Normal", combo: "Combination", oily: "Oily" }[st.quiz.type];
+      paintClass();
+      ov.hidden = false;
+      document.documentElement.classList.add("lock");
+      if (!rm && ov.animate) {
+        $(".co-panel", ov).animate([{ opacity: 0, transform: "translateY(24px) scale(.97)" }, { opacity: 1, transform: "none" }], { duration: 420, easing: EASE });
+        $(".ov-backdrop", ov).animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+      }
+      setTimeout(function () { ($("#co-name").value ? $("#co-email").value ? $("#co-date") : $("#co-email") : $("#co-name")).focus({ preventScroll: true }); }, 50);
+    };
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-class]"); if (b && !b.disabled) openClass(b.getAttribute("data-class"), b.getAttribute("data-session"));
+    });
+    $("#co-date").addEventListener("change", function () { sess = this.value; paintClass(); });
+    $("#co-seats").addEventListener("change", function () { paintClass(); });
+    $("#co-guests").addEventListener("change", function () { paintClass(); });
+    $$("[data-place]", ov).forEach(function (b) {
+      b.addEventListener("click", function () {
+        place = b.getAttribute("data-place");
+        $$("[data-place]", ov).forEach(function (x) { x.setAttribute("aria-checked", String(x === b)); });
+        paintClass();
+      });
+    });
+    $("#co-email").addEventListener("input", function () { if (cls) paintClass(); });
+    var calLink = function (title, s) {
+      var f = function (d) { return d.getUTCFullYear() + pad2(d.getUTCMonth() + 1) + pad2(d.getUTCDate()) + "T" + pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + "00Z"; };
+      var a = startOf(s), b = new Date(a.getTime() + s.mins * 60000);
+      var ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Lumevina//Skin School//EN", "BEGIN:VEVENT", "UID:" + s.key + "-" + Date.now() + "@lumevina",
+        "DTSTAMP:" + f(new Date()), "DTSTART:" + f(a), "DTEND:" + f(b), "SUMMARY:" + title, "LOCATION:Lumevina Aesthetics, Woodland Hills", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+      return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    };
+    var payClass = function () {
+      var name = $("#co-name").value.trim(), email = $("#co-email").value.trim(), p = classPrice();
+      var list = cls.id === "party" ? partyDates() : sessions();
+      var s0 = list.filter(function (x) { return x.key === sess; })[0];
+      var problems = [];
+      if (!name) problems.push("your name");
+      if (!email || !$("#co-email").checkValidity()) problems.push("a valid email");
+      if (!s0) problems.push("a date");
+      if (cls.id === "party" && place === "home" && $("#co-where").value.trim().length < 6) problems.push("your address");
+      if (s0 && cls.id !== "party" && seatsLeft(s0) < p.n) problems.push("fewer seats (only " + seatsLeft(s0) + " left)");
+      if (!pay.cardValid($("#co-card").value)) problems.push("a valid card number");
+      if (!pay.expiryValid($("#co-exp").value)) problems.push("a future expiry (MM/YY)");
+      if (!pay.cvcValid($("#co-cvc").value)) problems.push("a 3\u20134 digit CVC");
+      if (problems.length) { status.textContent = "Please add " + problems.join(", ") + "."; return; }
+      var btn = $("#co-pay"); btn.disabled = true; status.textContent = "";
+      pay.process({ amount: p.due, description: "Skin School \u2014 " + cls.name + ", " + whenOf(s0) }, function (err, res) {
+        btn.disabled = false;
+        if (err) { status.textContent = "The payment didn't go through. Please try again."; return; }
+        var now = new Date().toISOString(), party = cls.id === "party";
+        var log; try { log = JSON.parse(localStorage.getItem(SALES)) || []; } catch (e) { log = []; }
+        log.push({ id: "skin-school-" + cls.id, kind: "class", cls: cls.id, name: cls.name + " \u00b7 " + whenOf(s0),
+          session: s0.key, date: dayKey(s0.date), when: whenOf(s0), seats: party ? 0 : p.n, guests: party ? p.n : 0,
+          place: party ? place : "studio", price: p.total, paid: p.due, deposit: party ? p.due : 0,
+          cost: party ? p.n * cls.cost + (place === "home" ? cls.homeCost : 0) : p.n * cls.cost,
+          member: p.member, who: name, email: email, skin: $("#co-skin").value || null, at: now, order: res.id });
+        try { localStorage.setItem(SALES, JSON.stringify(log)); } catch (e) { /* private mode */ }
+        st.name = name; st.email = email;
+        (st.live = st.live || []).push({ key: s0.key, cls: cls.id, when: whenOf(s0) });
+        var gift = cls.id !== "pro" && !st.tier;
+        if (gift) { st.tier = "basics"; st.at = now; }
+        save();
+        form.hidden = true; done.hidden = false;
+        var first = name.split(" ")[0];
+        done.innerHTML = '<p class="kicker">' + (party ? "Your date is held" : "You\u2019re booked") + '</p><p class="big">See you soon, <span class="grad">' + esc(first) + '.</span></p>' +
+          '<p><b>' + esc(cls.name) + '</b><br>' + esc(whenOf(s0)) + (party ? "" : " \u00b7 " + p.n + (p.n > 1 ? " seats" : " seat")) + '<br>' +
+          (party && place === "home" ? "At your place. Evelyn brings everything." : esc(L.where)) + '</p>' +
+          (party ? "<p>Evelyn will text you this week to plan the details. The rest, " + money(p.total - p.due) + ", is due on the day.</p>" : "") +
+          (cls.id === "pro" ? "<p>Your Esthetician Business Kit arrives by email today, so you can look through it before the night.</p>" : "") +
+          (gift ? "<p>Skin Basics (Level 1) is open for you now, so you can start before class.</p>" : "") +
+          '<div class="qz-acts"><a class="btn btn-ghost" download="lumevina-' + cls.id + '.ics" href="' + calLink(cls.name, s0) + '">Add to calendar</a>' +
+          (gift ? '<button type="button" class="btn btn-grad" id="co-start">Start Skin Basics</button>' : '<button type="button" class="btn btn-grad" id="co-close2">Done</button>') + '</div>';
+        petals($(".big", done), 22);
+        var go = $("#co-start"); if (go) go.addEventListener("click", function () { close(); player.open(firstOpen()); });
+        var c2 = $("#co-close2"); if (c2) c2.addEventListener("click", close);
+        paintLive(); paintAll();
+      });
+    };
 
     $("#co-pay").addEventListener("click", function () {
+      if (cls) { payClass(); return; }
       var name = $("#co-name").value.trim(), email = $("#co-email").value.trim(), p = priceNow(), kit = tier.id === "kit" || tier.id === "evelyn";
       var problems = [];
       if (!name) problems.push("your name");

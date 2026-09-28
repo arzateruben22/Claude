@@ -509,6 +509,20 @@
       paid for through dues.</p>
     </div>
 
+    <!-- ── Skin School Live ── -->
+    <div class="card">
+      <div class="crm-head">
+        <div>
+          <h2>Skin School Live</h2>
+          <p class="sub">Classes booked on the Skin School page. They run on Sundays and Monday
+          evenings, when the studio is closed, so they never take a facial slot. <strong>Kept</strong>
+          is what's left after card fees and each guest's kit, journal and drinks.</p>
+        </div>
+      </div>
+      <div class="bk-tiles" id="cls-tiles"></div>
+      <div class="bk-table-wrap"><table class="bk-table" id="cls-table"></table></div>
+    </div>
+
     <!-- ── Goals ── -->
     <div class="card">
       <div class="crm-head">
@@ -1111,6 +1125,13 @@
         });
         COURSE_LOG.forEach(function (x) {
           var paid = num(x.paid);
+          if (x.kind === "class") {
+            add({ date: day(x.at), kind: "course", cls: true, who: x.who || "—",
+              what: x.name + (x.seats ? " · " + x.seats + (x.seats > 1 ? " seats" : " seat") : "") +
+                (x.guests ? " · " + x.guests + " guests, deposit" : "") + (x.member ? " · member price" : ""),
+              gross: paid, fee: paid ? FEE(paid) : 0, cost: num(x.cost) });
+            return;
+          }
           add({ date: day(x.at), kind: "course", who: x.who || "—",
             what: x.name + (x.member ? " · member price" : "") + (x.consult ? " · call " + x.consult : ""),
             gross: paid, fee: paid ? FEE(paid) : 0, cost: num(x.cost) });
@@ -1144,6 +1165,7 @@
         var retail = kind("retail"), kits = kind("kit"), exps = kind("expense");
         var cogs = sum(retail, "cost"), kitCost = sum(kits, "cost"), kitValue = sum(kits, "value");
         var courses = kind("course"), courseKits = sum(courses, "cost");
+        var nCls = courses.filter(function (e) { return e.cls; }).length;
         var ships = kind("shipping"), postage = sum(ships, "cost"), shipIn = sum(ships, "gross");
         var kitCount = MEMBERS.filter(function (m) { return m.five; }).length;
         var expTotal = sum(exps, "cost");
@@ -1171,7 +1193,8 @@
         var subIn = { service: "deposits online + balances marked paid",
           dues: "every monthly charge", retail: "at the price paid, after member discounts",
           gift: "sold, not the ones members gift from their plan",
-          course: courses.length ? courses.length + (courses.length === 1 ? " course" : " courses") + " sold" : "no courses sold yet" };
+          course: (courses.length - nCls ? (courses.length - nCls) + (courses.length - nCls === 1 ? " course" : " courses") + " sold" : "no courses sold yet") +
+            (nCls ? " · " + nCls + (nCls === 1 ? " class booking" : " class bookings") : "") };
         var inHtml = inRows.map(function (r) { return line(LABEL[r.k], subIn[r.k], r.v); }).join("") +
           (ships.length ? line("Shipping charged", ships.length + (ships.length === 1 ? " order" : " orders") + " shipped · members ship free", shipIn) : "");
         var outHtml =
@@ -1179,7 +1202,8 @@
           line("Products sold", retail.length ? "what the " + sum(retail, "qty") + " sold cost you" : "nothing sold yet", cogs, "−") +
           line("Founding Five kits", kitCount + (kitCount === 1 ? " kit" : " kits") + " given free · " + money(Math.round(kitValue)) +
             " retail, counted at cost", kitCost, "−") +
-          (courseKits ? line("Skin School kits", "product and shipping for the kits sent", courseKits, "−") : "") +
+          (courseKits ? line(nCls ? "Skin School kits and class supplies" : "Skin School kits",
+            nCls ? "course kits, plus take-home kits, journals and drinks for classes" : "product and shipping for the kits sent", courseKits, "−") : "") +
           (postage ? line("Postage", "boxes and postage for " + ships.length + (ships.length === 1 ? " shelf order" : " shelf orders"), postage, "−") : "") +
           (Object.keys(byCat).length
             ? Object.keys(byCat).map(function (c) { return line(c, "logged expenses", byCat[c], "−"); }).join("")
@@ -1455,6 +1479,45 @@
         })).join("\r\n");
         saveFile(this, "lumevina-giftcards-" + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
       });
+    })();
+
+    /* ── Skin School Live: who's coming to each class, and what it keeps ── */
+    (function () {
+      var num = function (n) { return Number(n || 0); };
+      var all = (lget("lumevina_course_sales") || []).filter(function (x) { return x.kind === "class"; });
+      var today = new Date().toISOString().slice(0, 10);
+      var CAP = { live: 6, pro: 8 };
+      var groups = {};
+      all.forEach(function (x) {
+        var g = groups[x.session] || (groups[x.session] = { date: x.date, when: x.when || x.date, cls: x.cls, name: String(x.name || "").split(" · ")[0],
+          seats: 0, guests: 0, who: [], paid: 0, price: 0, fee: 0, cost: 0 });
+        g.seats += num(x.seats); g.guests += num(x.guests); g.paid += num(x.paid); g.price += num(x.price);
+        g.fee += num(x.price) ? FEE(num(x.price)) : 0; g.cost += num(x.cost);      /* a party's balance is charged on the day too */
+        g.who.push((x.who || "—") + (num(x.seats) > 1 ? " +" + (num(x.seats) - 1) : ""));
+      });
+      var list = Object.keys(groups).map(function (k) { return groups[k]; }).sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+      var up = list.filter(function (g) { return g.date >= today; });
+      var seats = up.reduce(function (a, g) { return a + g.seats + g.guests; }, 0);
+      var paid = list.reduce(function (a, g) { return a + g.paid; }, 0);
+      var kept = list.reduce(function (a, g) { return a + g.price - g.fee - g.cost; }, 0);
+      var heads = list.reduce(function (a, g) { return a + g.seats + g.guests; }, 0);
+      var tiles = [
+        { l: "Upcoming classes", v: String(up.length) },
+        { l: "People coming", v: String(seats) },
+        { l: "Paid so far", v: money(Math.round(paid)) },
+        { l: "Kept per guest", v: heads ? money(Math.round(kept / heads)) : "—", flag: true }
+      ];
+      document.getElementById("cls-tiles").innerHTML = tiles.map(function (t) {
+        return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' + t.v +
+          '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+      var thead = '<thead><tr><th>When</th><th>Class</th><th>Booked</th><th>Guests</th><th>Paid</th><th>Supplies</th><th>Kept</th></tr></thead>';
+      var tbody = list.length ? '<tbody>' + list.map(function (g) {
+        var booked = g.cls === "party" ? g.guests + " guests" : g.seats + " of " + (CAP[g.cls] || g.seats);
+        return '<tr><td>' + g.when + '</td><td>' + g.name + '</td><td>' + booked + '</td><td>' + g.who.join(", ") +
+          '</td><td>' + money(Math.round(g.paid)) + (g.cls === "party" ? " deposit" : "") + '</td><td>−' + money(Math.round(g.cost)) +
+          '</td><td>' + money(Math.round(g.price - g.fee - g.cost)) + '</td></tr>';
+      }).join("") + '</tbody>' : '<tbody><tr><td colspan="7">No classes booked yet. Seats booked on the Skin School page show up here, grouped by class.</td></tr></tbody>';
+      document.getElementById("cls-table").innerHTML = thead + tbody;
     })();
 
     /* ── Settle visits: record the in-person balance (cash/card) or no-show ── */

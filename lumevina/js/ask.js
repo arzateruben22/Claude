@@ -95,6 +95,9 @@
     { id: "ack", k: /^(ok|okay|k|kk|cool|great|got it|sounds good|perfect|nice|alright|all right|yes|yeah|yep|no|nope|nah)[\s!.]*$/, a: function () {
       return "Anything else I can help with?"; } },
     { id: "human", k: /real person|\bhuman\b|talk to (someone|a person|evelyn|you)|speak (to|with)|(message|ask|contact|text) evelyn/, handoff: "request" },
+    { id: "live", k: /in[- ]person|group class|workshop|glow party|\bpart(y|ies)\b|girls'? night|bachelorette|pro night|skin school live|live class/, a: function () {
+      return "Skin School Live is Evelyn’s in-person class: two hours at the studio with six people, a skin check under the lamp, your routine built on the spot and a kit to take home, for $129 ($109 for members). Want it just for your friends? A Glow Party is $690 for up to six, at the studio or at your place. Estheticians can join Pro Night for $249."; },
+      acts: [["See class dates", "go:school.html#live"], ["Plan a Glow Party", "go:school.html#live"]] },
     { id: "new", node: "p-facials", k: /first time|new client|first visit|never been|haven'?t been/, a: function () {
       return "Welcome! Start with the New Client Consultation + Treatment, " + price("New Client Consultation + Treatment", 215) +
         ": Evelyn looks at your skin and your routine, then gives you a fully custom facial. On the acne program it’s " +
@@ -126,8 +129,8 @@
       return "Share your code from Glow Rewards: your friend gets $15 off their first visit, and you get 150 points ($15) once it’s done. Got a friend’s code? Enter it when you book your first visit."; },
       acts: [["Book", "book"]] },
     { id: "school", k: /\bcourses?\b|\bclass(es)?\b|skin school|teach me|\blessons?\b|tutorial|masterclass/, a: function () {
-      return "Evelyn’s Skin School is her online course: 33 short lessons in three levels, from your first routine to acne, dark spots and aging. The first two lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off."; },
-      acts: [["Take the free lesson", "go:school.html#learn"], ["See the courses", "go:school.html#tiers"]] },
+      return "Evelyn’s Skin School is her online course: 33 short lessons in three levels, from your first routine to acne, dark spots and aging. The first two lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off. Prefer in person? Skin School Live is a two-hour class at the studio for $129."; },
+      acts: [["Take the free lesson", "go:school.html#learn"], ["See the courses", "go:school.html#tiers"], ["Class dates", "go:school.html#live"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
       return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + price("Gift Card · Any treatment ($110 value)", 110) + " card for anything."; },
       acts: [["Send a gift", "#gift"]] },
