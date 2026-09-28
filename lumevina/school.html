@@ -3107,6 +3107,12 @@ window.SCHOOL = {
       });
     });
     $("#co-email").addEventListener("input", function () { if (cls) paintClass(); });
+    var gcalLink = function (title, s) {
+      var f = function (d) { return d.getUTCFullYear() + pad2(d.getUTCMonth() + 1) + pad2(d.getUTCDate()) + "T" + pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + "00Z"; };
+      var a = startOf(s), b = new Date(a.getTime() + s.mins * 60000);
+      return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(title) + "&dates=" + f(a) + "/" + f(b) +
+        "&location=" + encodeURIComponent("Lumevina Aesthetics, Woodland Hills") + "&details=" + encodeURIComponent("Skin School with Evelyn. The address is in your confirmation email.");
+    };
     var calLink = function (title, s) {
       var f = function (d) { return d.getUTCFullYear() + pad2(d.getUTCMonth() + 1) + pad2(d.getUTCDate()) + "T" + pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + "00Z"; };
       var a = startOf(s), b = new Date(a.getTime() + s.mins * 60000);
@@ -3153,7 +3159,9 @@ window.SCHOOL = {
           (party ? "<p>Evelyn will text you this week to plan the details. The rest, " + money(p.total - p.due) + ", is due on the day.</p>" : "") +
           (cls.id === "pro" ? "<p>Your Esthetician Business Kit arrives by email today, so you can look through it before the night.</p>" : "") +
           (gift ? "<p>Skin Basics (Level 1) is open for you now, so you can start before class.</p>" : "") +
-          '<div class="qz-acts"><a class="btn btn-ghost" download="lumevina-' + cls.id + '.ics" href="' + calLink(cls.name, s0) + '">Add to calendar</a>' +
+          '<div class="qz-acts"><a class="btn btn-ghost" target="_blank" rel="noopener" href="' + gcalLink(cls.name, s0) + '">Google Calendar</a>' +
+          /* the .ics file suits Apple and Outlook; previews that can't save files get the Google link only */
+          (window.claude && window.claude.use ? "" : '<a class="btn btn-ghost" download="lumevina-' + cls.id + '.ics" href="' + calLink(cls.name, s0) + '">Apple or Outlook</a>') +
           (gift ? '<button type="button" class="btn btn-grad" id="co-start">Start Skin Basics</button>' : '<button type="button" class="btn btn-grad" id="co-close2">Done</button>') + '</div>';
         petals($(".big", done), 22);
         var go = $("#co-start"); if (go) go.addEventListener("click", function () { close(); player.open(firstOpen()); });
