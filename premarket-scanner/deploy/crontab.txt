@@ -1,0 +1,16 @@
+# Mac / Linux: run `crontab -e`, paste these lines, and change
+# /Users/you/premarket-scanner to wherever the folder lives.
+# Times are the computer's local time; these assume Pacific.
+# Weekdays only. The scanner detects market holidays and skips them.
+#
+# m  h  dom mon dow  command
+
+# Night before: the after-hours session is over (5:00pm PT = 8pm ET)
+2  17 * * 1-5  cd /Users/you/premarket-scanner && .venv/bin/python -m scanner scan --notify >> cron.log 2>&1
+
+# Morning of: two passes before the 6:30am PT open
+35 5  * * 1-5  cd /Users/you/premarket-scanner && .venv/bin/python -m scanner scan --notify >> cron.log 2>&1
+2  6  * * 1-5  cd /Users/you/premarket-scanner && .venv/bin/python -m scanner scan --notify >> cron.log 2>&1
+
+# Afternoon: grade today's paper trades once the close is in
+45 13 * * 1-5  cd /Users/you/premarket-scanner && .venv/bin/python -m scanner grade >> cron.log 2>&1

@@ -1,0 +1,4 @@
+requests>=2.28
+yfinance>=0.2.40          # free float data (optional: delete if you use a Massive key)
+tzdata; platform_system == "Windows"
+tomli; python_version < "3.11"

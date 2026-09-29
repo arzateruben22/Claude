@@ -1,0 +1,60 @@
+# Free cloud runs, so your computer can stay off.
+#
+# Setup (in the scanner's OWN private repo, not a public one):
+#   1. Copy this file to .github/workflows/scanner.yml
+#   2. Settings > Secrets and variables > Actions > add:
+#        ALPACA_API_KEY, ALPACA_SECRET_KEY   (and/or MASSIVE_API_KEY)
+#        NTFY_TOPIC or DISCORD_WEBHOOK_URL   (so results reach your phone)
+#   3. Actions tab > "scanner" > Run workflow, to test it once.
+#
+# GitHub cron is UTC and ignores daylight saving, so each job is scheduled
+# twice (PDT and PST). The --window flag makes the wrong-season copy exit
+# immediately. GitHub can start scheduled runs 5-20+ minutes late; the
+# windows below allow for that.
+
+name: scanner
+
+on:
+  schedule:
+    - cron: "35 12 * * 1-5"   # 5:35am PDT
+    - cron: "35 13 * * 1-5"   # 5:35am PST
+    - cron: "2 0 * * 2-6"     # 5:02pm PDT (next day in UTC)
+    - cron: "2 1 * * 2-6"     # 5:02pm PST
+    - cron: "45 20 * * 1-5"   # 1:45pm PDT, grading
+    - cron: "45 21 * * 1-5"   # 1:45pm PST, grading
+  workflow_dispatch:
+
+permissions:
+  contents: write   # to commit the journal + watchlists back
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
+      NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Morning scan
+        run: python -m scanner scan --window 05:25-06:25 --notify
+      - name: Evening scan
+        run: python -m scanner scan --window 16:55-18:00 --notify
+      - name: Grade paper trades
+        run: python -m scanner grade
+
+      - name: Save journal + watchlists
+        run: |
+          git config user.name "scanner-bot"
+          git config user.email "scanner-bot@users.noreply.github.com"
+          git add -f output 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Scanner results $(date -u +%F\ %H:%M)"
+          git push

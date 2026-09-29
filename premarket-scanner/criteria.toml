@@ -1,0 +1,42 @@
+# Scanner rules. Edit these, not the code.
+#
+# "Gap" is always measured from the last regular-session close — the same
+# number tomorrow's pre-market gap is measured against:
+#   * morning scan  -> pre-market price vs yesterday's 4pm ET close
+#   * evening scan  -> after-hours price vs today's 4pm ET close
+
+[filters]
+min_price = 2.0
+max_price = 20.0
+min_gap_pct = 10.0            # % above the last regular close
+min_rvol = 3.0                # session volume vs normal volume by this time of day
+max_float_shares = 20_000_000
+require_catalyst = true       # needs a news headline inside news_lookback_hours
+min_session_volume = 50_000   # shares traded this session; keeps out untradeable names
+allow_unknown_float = true    # float data missing -> keep it, but flag "float ?"
+
+[scan]
+news_lookback_hours = 24
+lookback_days = 10            # trading days used for "normal" volume
+max_candidates = 60           # top gappers that get the detailed (slower) check
+sort_by = "gap"               # gap | rvol | volume
+exclude_warrants_units = true # drops 5-letter W/U/R symbols and names with Warrant/Unit/Right
+show_near_misses = true       # also list stocks that fail exactly one rule
+
+# Paper-trade simulator used by `python -m scanner grade`.
+# Pretend entry at the 9:30 ET open, then whichever hits first wins.
+[paper]
+target_pct = 10.0
+stop_pct = 5.0
+
+# Headline keywords -> catalyst tag. Case-insensitive, whole words.
+# Tags listed in `warn_tags` are shown with a warning instead of as a plus.
+[catalysts]
+warn_tags = ["dilution"]
+earnings = ["earnings", "revenue", "quarterly results", "guidance", "eps", "profit"]
+fda = ["fda", "approval", "phase 1", "phase 2", "phase 3", "clinical", "trial", "pdufa", "clearance"]
+deal = ["merger", "acquire", "acquires", "acquisition", "buyout", "takeover", "to be acquired", "definitive agreement"]
+contract = ["contract", "award", "awarded", "partnership", "collaboration", "purchase order", "supply agreement"]
+product = ["launch", "launches", "unveils", "patent", "breakthrough"]
+crypto_ai = ["bitcoin", "crypto", "blockchain", "artificial intelligence", "ai"]
+dilution = ["offering", "priced", "registered direct", "private placement", "at-the-market", "warrants", "reverse split", "reverse stock split"]
