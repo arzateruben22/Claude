@@ -92,9 +92,19 @@ you tune the rules. Change any number in `criteria.toml`; no code changes needed
 | **1:45 pm** | `grade` | Scores today's picks against what actually happened |
 | Weekly | `stats` | Is it working? |
 
-Each scan saves `output/watchlists/<date>_<time>_<session>.md` + `.csv`,
-overwrites `output/latest.md`, and adds new picks to `output/journal.csv`.
-Add `--notify` to push the list to your phone.
+### See the list
+
+Every scan writes a web page: **`output/latest.html`**. Open it in any
+browser, or run `python -m scanner scan --open` to open it for you. It
+shows each pick as a card (gap, price, relative volume, float, spread,
+pre-market high, the headline as a link, and any warnings), then the near
+misses and which rule each one missed. It follows your phone or computer's
+light/dark setting. Left open in a browser tab, it reloads itself every
+5 minutes to pick up the next scan.
+
+Each scan also keeps a copy in `output/watchlists/` (`.html`, `.md` and
+`.csv` for spreadsheets) and adds new picks to `output/journal.csv`.
+Add `--notify` to send it to your phone.
 
 ### Run it automatically
 
@@ -113,7 +123,10 @@ Pick one:
 ### Phone alerts
 
 Easiest: install the free **ntfy** app, subscribe to a topic name nobody would
-guess, and put `NTFY_TOPIC=that-name` in `.env`. Or use
+guess, and put `NTFY_TOPIC=that-name` in `.env`. The alert reads like
+"4 picks: ABCD +62%, WXYZ +35%…" and carries the watchlist page as an
+attachment: tap it to open the full list. ntfy keeps attachments for about
+3 hours; if the attachment fails, a plain-text list is sent instead. Or use
 `DISCORD_WEBHOOK_URL=` for a Discord channel.
 
 ## 5. Backtest first: does this even work?
@@ -176,7 +189,7 @@ fill you worse than the sim. Wait for 15–20+ trade days before trusting any nu
 
 ```
 python -m scanner scan [--session auto|premarket|regular|afterhours]
-                       [--notify] [--no-save] [--window 05:25-06:20]
+                       [--open] [--notify] [--no-save] [--window 05:25-06:20]
                        [--provider alpaca|massive|demo] [--demo] [--at "2026-09-29 05:45"]
 python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premarket|afterhours]
                            [--time 05:45] [--demo]

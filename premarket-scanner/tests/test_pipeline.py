@@ -38,9 +38,12 @@ def test_demo_evening_scan_measures_from_todays_close():
 def test_reports_and_journal_round_trip(tmp_path):
     res = _scan()
     paths = report.write_outputs(res, CRIT, tmp_path)
-    md = paths[0].read_text()
+    html_file, md_file, csv_file, latest = paths
+    assert html_file.suffix == ".html" and latest.name == "latest.html"
+    assert "DMBIO" in latest.read_text()
+    md = md_file.read_text()
     assert "| 1 | DMBIO |" in md and "DEMO DATA" in md and "Near misses" in md
-    assert paths[1].read_text().count("\n") == 1 + len(res.passed)
+    assert csv_file.read_text().count("\n") == 1 + len(res.passed)
 
     jpath = tmp_path / "journal.csv"
     assert journal.record(res, jpath) == 4

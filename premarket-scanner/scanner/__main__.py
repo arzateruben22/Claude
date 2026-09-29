@@ -60,13 +60,19 @@ def cmd_scan(args) -> int:
     if not args.no_save:
         paths = report.write_outputs(res, crit, out_dir)
         added = journal.record(res, out_dir / "journal.csv")
-        print(f"\nSaved {paths[0].relative_to(ROOT)} (+ .csv, latest.md); "
-              f"{added} new pick(s) in the journal.")
+        print(f"\nSaved {paths[0].relative_to(ROOT)} (+ .md, .csv); open "
+              f"{paths[-1].relative_to(ROOT)} in a browser. {added} new pick(s) in the journal.")
+        if args.open:
+            import webbrowser
+
+            webbrowser.open(paths[-1].resolve().as_uri())
     if args.notify:
+        from . import html_report
         from .notify import send
 
         label = report.SESSION_LABEL[res.session]
-        sent = send(f"{label} scan: {len(res.passed)} pick(s)", report.push_text(res))
+        sent = send(f"{label} scan: {len(res.passed)} pick(s)", report.push_text(res),
+                    page=html_report.page(res, crit), summary=report.one_line(res))
         print(f"Notified: {', '.join(sent) or 'nothing (set NTFY_TOPIC or DISCORD_WEBHOOK_URL)'}")
     return 0
 
@@ -162,6 +168,7 @@ def main(argv=None) -> int:
     p.add_argument("--session", choices=("auto",) + SESSIONS, default="auto")
     p.add_argument("--window", metavar="HH:MM-HH:MM", help="only run inside this Pacific-time window (for schedulers)")
     p.add_argument("--notify", action="store_true", help="push results via ntfy/Discord")
+    p.add_argument("--open", action="store_true", help="open the watchlist page in your browser")
     p.add_argument("--no-save", action="store_true", help="print only; don't write files or journal")
     p.set_defaults(func=cmd_scan)
 

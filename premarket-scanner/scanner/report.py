@@ -5,7 +5,7 @@ import csv
 from pathlib import Path
 from typing import List
 
-from . import fmt
+from . import fmt, html_report
 from .config import OUTPUT, Criteria
 from .market import PT, fmt_pt
 from .models import Candidate, ScanResult
@@ -109,6 +109,9 @@ def write_outputs(res: ScanResult, crit: Criteria, out_dir: Path = OUTPUT) -> Li
     md = markdown(res, crit)
     base.with_suffix(".md").write_text(md, encoding="utf-8")
     (out_dir / "latest.md").write_text(md, encoding="utf-8")
+    page = html_report.page(res, crit)
+    base.with_suffix(".html").write_text(page, encoding="utf-8")
+    (out_dir / "latest.html").write_text(page, encoding="utf-8")
     with open(base.with_suffix(".csv"), "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, CSV_FIELDS)
         w.writeheader()
@@ -124,7 +127,16 @@ def write_outputs(res: ScanResult, crit: Criteria, out_dir: Path = OUTPUT) -> Li
                 "tags": ";".join(c.tags), "warnings": ";".join(c.warnings), "headline": c.headline,
                 "url": c.news[0].url if c.news else "",
             })
-    return [base.with_suffix(".md"), base.with_suffix(".csv"), out_dir / "latest.md"]
+    return [base.with_suffix(".html"), base.with_suffix(".md"), base.with_suffix(".csv"), out_dir / "latest.html"]
+
+
+def one_line(res: ScanResult) -> str:
+    """'3 picks: DMBIO +62%, DMAI +35%, DMEV +18%' (fits a notification line)."""
+    if not res.passed:
+        return "No picks this scan. Tap to see the near misses."
+    names = ", ".join(f"{c.symbol} {c.metrics.gap_pct:+.0f}%" for c in res.passed[:6])
+    more = f" +{len(res.passed) - 6} more" if len(res.passed) > 6 else ""
+    return f"{len(res.passed)} pick{'s' if len(res.passed) != 1 else ''}: {names}{more}. Tap to open the list."
 
 
 def push_text(res: ScanResult) -> str:
