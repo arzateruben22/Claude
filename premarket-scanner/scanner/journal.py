@@ -130,8 +130,38 @@ def grade(provider: Provider, crit: Criteria, now: datetime, path: Path = JOURNA
     return graded, pending
 
 
+# Buckets used to see which kinds of picks actually work: (column, [(low, high, label)])
+BUCKETS = {
+    "gap": ("gap_pct", [(0, 20, "+10-20%"), (20, 40, "+20-40%"), (40, 100, "+40-100%"), (100, 1e9, "+100%+")]),
+    "RVOL": ("rvol", [(0, 5, "3-5x"), (5, 10, "5-10x"), (10, 25, "10-25x"), (25, 1e9, "25x+")]),
+    "float": ("float_shares", [(0, 5e6, "under 5M"), (5e6, 10e6, "5-10M"), (10e6, 20e6, "10-20M"),
+                               (20e6, 1e18, "over 20M")]),
+    "price": ("scan_price", [(0, 5, "under $5"), (5, 10, "$5-10"), (10, 1e9, "$10+")]),
+}
+SMALL_SAMPLE = 20
+
+
+def _risk_lines(pnl: List[float]) -> List[str]:
+    wins = sum(p for p in pnl if p > 0)
+    losses = -sum(p for p in pnl if p < 0)
+    pf = f"{wins / losses:.2f}" if losses else "no losses"
+    run = peak = worst = 0.0
+    streak = longest = 0
+    for p in pnl:
+        run += p
+        peak = max(peak, run)
+        worst = min(worst, run - peak)
+        streak = streak + 1 if p < 0 else 0
+        longest = max(longest, streak)
+    return [
+        f"Profit factor {pf} (total won ÷ total lost; above ~1.5 is good, under 1.0 loses money)",
+        f"Worst drawdown {worst:+.1f}% · longest losing streak {longest} trades "
+        "(equal size per pick, returns added)",
+    ]
+
+
 def stats(crit: Criteria, path: Path = JOURNAL) -> str:
-    rows = [r for r in _read(path) if r.get("graded_at")]
+    rows = sorted((r for r in _read(path) if r.get("graded_at")), key=lambda r: (r["trade_date"], r["scan_time_pt"]))
     if not rows:
         return "No graded picks yet. Run scans for a few days, then `python -m scanner grade`."
 
@@ -139,26 +169,45 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
         pnl = [float(r["sim_pnl_pct"]) for r in rs]
         wins = sum(p > 0 for p in pnl)
         held = sum(float(r["open_vs_scan_pct"]) >= 0 for r in rs)
-        return (f"{label:<14} {len(rs):>4} picks · win {wins / len(rs):>4.0%} · avg {mean(pnl):+.2f}% "
-                f"· median {median(pnl):+.2f}% · max-up avg {mean(float(r['max_up_pct']) for r in rs):+.1f}% "
+        star = "*" if len(rs) < SMALL_SAMPLE else " "
+        return (f"  {label:<13} {len(rs):>4}{star} picks · win {wins / len(rs):>4.0%} · avg {mean(pnl):+6.2f}% "
+                f"· median {median(pnl):+6.2f}% · max-up avg {mean(float(r['max_up_pct']) for r in rs):+5.1f}% "
                 f"· gap held to open {held / len(rs):.0%}")
 
+    def grouped(title: str, key) -> List[str]:
+        groups = defaultdict(list)
+        for r in rows:
+            for k in key(r):
+                groups[k].append(r)
+        return ["", title] + [block(k, rs) for k, rs in groups.items()]
+
+    def bucket(col: str, edges) -> callable:
+        def key(r):
+            raw = r.get(col)
+            if raw in (None, ""):
+                return ["unknown"]
+            v = float(raw)
+            return [lbl for lo, hi, lbl in edges if lo <= v < hi][:1] or ["other"]
+        return key
+
     days = sorted({r["trade_date"] for r in rows})
+    pnl = [float(r["sim_pnl_pct"]) for r in rows]
     out = [f"Paper results: {len(rows)} graded picks over {len(days)} trade days ({days[0]} → {days[-1]})",
            f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at close;"
            f" {crit.cost_pct:g}% cost per trade",
            "", block("All", rows)]
-    for session in ("premarket", "afterhours", "regular"):
-        rs = [r for r in rows if r["session"] == session]
-        if rs:
-            out.append(block(session, rs))
-    tags = defaultdict(list)
-    for r in rows:
-        for t in (r["tags"] or "untagged").split(";"):
-            tags[t].append(r)
-    out += ["", "By catalyst:"] + [block(t, rs) for t, rs in sorted(tags.items(), key=lambda kv: -len(kv[1]))]
-    total = sum(float(r["sim_pnl_pct"]) for r in rows)
-    out += ["", f"Sum of sim returns: {total:+.1f}% (equal size per pick, after {crit.cost_pct:g}% cost each)."]
+    out += [block(sess, rs) for sess in ("premarket", "afterhours", "regular")
+            if (rs := [r for r in rows if r["session"] == sess]) and len(rs) != len(rows)]
+    out += [""] + _risk_lines(pnl)
+    out += grouped("By catalyst:", lambda r: (r["tags"] or "untagged").split(";"))
+    for name, (col, edges) in BUCKETS.items():
+        g = grouped(f"By {name}:", bucket(col, edges))
+        order = [lbl for *_, lbl in edges] + ["unknown", "other"]
+        out += g[:2] + sorted(g[2:], key=lambda line: next(
+            (i for i, lbl in enumerate(order) if line.startswith(f"  {lbl} ")), 99))
+    out += grouped("By month:", lambda r: [r["trade_date"][:7]])
+    out += ["", f"Sum of sim returns: {sum(pnl):+.1f}% (equal size per pick, after {crit.cost_pct:g}% cost each).",
+            f"* fewer than {SMALL_SAMPLE} picks: noise, not a pattern."]
     if len(days) < 15:
         out.append(f"Only {len(days)} trade days so far: too few to trust. Aim for 15-20+.")
     return "\n".join(out)

@@ -51,25 +51,36 @@ class AlpacaProvider(Provider):
         self.feed = feed
         self.delay_minutes = 15 if feed == "delayed_sip" else 0
         self.trading = "https://paper-api.alpaca.markets" if paper else "https://api.alpaca.markets"
-        self.http = http or Http({"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret})
+        # Free plan allows 200 requests/minute; stay just under it.
+        self.http = http or Http({"APCA-API-KEY-ID": key, "APCA-API-SECRET-KEY": secret}, per_minute=190)
 
     # -- universe -----------------------------------------------------------
-    def universe(self) -> List[Tuple[str, str]]:
-        """(symbol, name) for active, tradable US-listed stocks; cached per day."""
-        cache = CACHE / f"alpaca_assets_{date.today().isoformat()}.json"
+    def universe(self, include_inactive: bool = False) -> List[Tuple[str, str]]:
+        """(symbol, name) for US-listed stocks; cached per day.
+
+        include_inactive adds delisted names, so backtests aren't limited to the
+        survivors (a scanner that only sees survivors looks better than it is).
+        """
+        tag = "all" if include_inactive else "active"
+        cache = CACHE / f"alpaca_assets_{tag}_{date.today().isoformat()}.json"
         if cache.exists():
             return [tuple(x) for x in json.loads(cache.read_text())]
         rows = self.http.get(f"{self.trading}/v2/assets", {"status": "active", "asset_class": "us_equity"})
-        assets = sorted(
-            (a["symbol"], a.get("name") or "")
-            for a in rows
-            if a.get("tradable") and a.get("exchange") in EXCHANGES
-        )
+        # Letters-only symbols: the rules skip the rest anyway, and one odd symbol
+        # (BRK.B, ABC/WS) can make a whole multi-symbol request fail.
+        assets = {a["symbol"]: a.get("name") or "" for a in rows
+                  if a.get("tradable") and a.get("exchange") in EXCHANGES and a["symbol"].isalpha()}
+        if include_inactive:
+            rows = self.http.get(f"{self.trading}/v2/assets", {"status": "inactive", "asset_class": "us_equity"})
+            for a in rows:
+                if a.get("exchange") in EXCHANGES and a["symbol"].isalpha():
+                    assets.setdefault(a["symbol"], a.get("name") or "")
         CACHE.mkdir(parents=True, exist_ok=True)
-        for old in CACHE.glob("alpaca_assets_*.json"):
+        for old in CACHE.glob(f"alpaca_assets_{tag}_*.json"):
             old.unlink()
-        cache.write_text(json.dumps(assets))
-        return assets
+        result = sorted(assets.items())
+        cache.write_text(json.dumps(result))
+        return result
 
     # -- provider API ---------------------------------------------------------
     def screen(self, now: datetime, session: str) -> List[Quote]:
@@ -86,19 +97,20 @@ class AlpacaProvider(Provider):
                     quotes.append(q)
         return quotes
 
-    def intraday_bars(self, symbols: Sequence[str], start: datetime, end: datetime) -> Dict[str, List[Bar]]:
+    def bars(self, symbols: Sequence[str], start: datetime, end: datetime, timeframe: str) -> Dict[str, List[Bar]]:
+        """Multi-symbol bars at 5Min, 15Min or 1Day (extended hours included)."""
         feed = self.feed
         if feed == "delayed_sip":
             # Basic plan may query SIP history up to 15 minutes ago.
             feed = "sip"
             end = min(end, datetime.now(timezone.utc) - timedelta(minutes=16))
         out: Dict[str, List[Bar]] = defaultdict(list)
-        for chunk in chunks(symbols, 100):
+        for chunk in chunks(symbols, 100 if timeframe == "5Min" else 400):
             token = None
             while True:
                 params = {
                     "symbols": ",".join(chunk),
-                    "timeframe": "5Min",
+                    "timeframe": timeframe,
                     "start": iso(start),
                     "end": iso(end),
                     "feed": feed,
@@ -115,13 +127,18 @@ class AlpacaProvider(Provider):
                     break
         return dict(out)
 
-    def news(self, symbols: Sequence[str], since: datetime) -> Dict[str, List[NewsItem]]:
+    def intraday_bars(self, symbols: Sequence[str], start: datetime, end: datetime) -> Dict[str, List[Bar]]:
+        return self.bars(symbols, start, end, "5Min")
+
+    def news(self, symbols: Sequence[str], since: datetime, until: Optional[datetime] = None) -> Dict[str, List[NewsItem]]:
         out: Dict[str, List[NewsItem]] = defaultdict(list)
         for chunk in chunks(symbols, 50):
             wanted = set(chunk)
             token = None
             for _ in range(5):  # at most 250 articles per chunk
                 params = {"symbols": ",".join(chunk), "start": iso(since), "limit": 50, "sort": "desc"}
+                if until:
+                    params["end"] = iso(until)
                 if token:
                     params["page_token"] = token
                 data = self.http.get(f"{DATA}/v1beta1/news", params)

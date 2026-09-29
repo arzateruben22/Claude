@@ -4,6 +4,7 @@
   python -m scanner scan --demo       offline demo with fake tickers
   python -m scanner grade             score past picks (paper trading)
   python -m scanner stats             paper-trading scoreboard
+  python -m scanner backtest --from 2026-06-01   replay past days through the rules
   python -m scanner journal           last few journal rows
   python -m scanner doctor            check keys and connectivity
 """
@@ -12,12 +13,12 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 from . import journal, report
 from .config import OUTPUT, ROOT, load_criteria, load_env
 from .engine import run_scan
-from .market import SESSIONS, detect_session, fmt_pt, in_pt_window, parse_pt
+from .market import ET, SESSIONS, detect_session, fmt_pt, in_pt_window, parse_pt, previous_trading_day, trade_date_for
 from .providers import NAMES, ProviderError, make_provider
 
 
@@ -81,6 +82,33 @@ def cmd_grade(args) -> int:
     return 0
 
 
+def cmd_backtest(args) -> int:
+    from .backtest import run_backtest, trading_days
+
+    crit = load_criteria()
+    provider = make_provider("demo" if args.demo else args.provider)
+    today = datetime.now(ET).date()
+    last = args.last or previous_trading_day(today)
+    while provider.name != "demo" and trade_date_for(args.session, last) >= today:
+        last = previous_trading_day(last)  # its trade day hasn't finished yet, so it can't be graded
+    first = args.first
+    if first > last:
+        raise ProviderError(f"--from {first} is after --to {last}.")
+    at = datetime.strptime(args.time or ("17:00" if args.session == "afterhours" else "05:45"), "%H:%M").time()
+    if at.minute % 5:
+        raise ProviderError("--time must be on a 5-minute mark (e.g. 05:45) so no bar peeks past it.")
+    n = len(trading_days(first, last))
+    print(f"Backtest {first} → {last}: {n} trading days, {args.session} scan at {at:%H:%M} PT, "
+          f"provider {provider.name}. Rules: {crit.summary()}")
+    if provider.name != "demo":
+        print(f"First run downloads history (roughly {max(1, n // 4)}-{max(2, n // 2)} min on the free plan); "
+              "re-runs with new rules use the cache in .cache/backtest.\n")
+    out_dir, stats = run_backtest(provider, crit, first, last, args.session, at)
+    print("\n" + stats)
+    print(f"\nSaved {(out_dir / 'summary.md').relative_to(ROOT)} and journal.csv")
+    return 0
+
+
 def cmd_stats(args) -> int:
     out_dir = OUTPUT / "demo" if args.demo else OUTPUT
     print(journal.stats(load_criteria(), out_dir / "journal.csv"))
@@ -136,6 +164,16 @@ def main(argv=None) -> int:
     p.add_argument("--notify", action="store_true", help="push results via ntfy/Discord")
     p.add_argument("--no-save", action="store_true", help="print only; don't write files or journal")
     p.set_defaults(func=cmd_scan)
+
+    p = sub.add_parser("backtest", help="replay past days through the rules (Alpaca or demo)")
+    p.add_argument("--provider", choices=NAMES, help="data source (default: from .env)")
+    p.add_argument("--demo", action="store_true", help="offline demo data, fake tickers")
+    p.add_argument("--from", dest="first", required=True, type=date.fromisoformat, metavar="YYYY-MM-DD")
+    p.add_argument("--to", dest="last", type=date.fromisoformat, metavar="YYYY-MM-DD",
+                   help="last scan day (default: the last finished trading day)")
+    p.add_argument("--session", choices=("premarket", "afterhours"), default="premarket")
+    p.add_argument("--time", metavar="HH:MM", help="Pacific scan time (default 05:45, or 17:00 for afterhours)")
+    p.set_defaults(func=cmd_backtest)
 
     p = sub.add_parser("grade", help="grade finished picks in the journal")
     _provider_args(p)

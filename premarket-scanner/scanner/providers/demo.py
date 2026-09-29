@@ -165,8 +165,7 @@ class DemoProvider(Provider):
 
     # -- provider API ---------------------------------------------------------
     def screen(self, now: datetime, session: str) -> List[Quote]:
-        local = now.astimezone(ET)
-        self.anchor, self.event_session, self.now = local.date(), session, now
+        self.prepare(now, session)
         s_start, _ = session_window(session, self.anchor)
         quotes = []
         for sym, spec in self.specs.items():
@@ -183,7 +182,11 @@ class DemoProvider(Provider):
             self.anchor = start.astimezone(ET).date()
         return {s: self._bars(s, start, end) for s in symbols if s in self.specs}
 
-    def news(self, symbols: Sequence[str], since: datetime) -> Dict[str, List[NewsItem]]:
+    def prepare(self, now: datetime, session: str) -> None:
+        """Script the event onto this day (backtests call this for each day)."""
+        self.anchor, self.event_session, self.now = now.astimezone(ET).date(), session, now
+
+    def news(self, symbols: Sequence[str], since: datetime, until: Optional[datetime] = None) -> Dict[str, List[NewsItem]]:
         out = {}
         for s in symbols:
             spec = self.specs.get(s)

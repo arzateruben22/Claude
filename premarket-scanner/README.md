@@ -116,7 +116,44 @@ Easiest: install the free **ntfy** app, subscribe to a topic name nobody would
 guess, and put `NTFY_TOPIC=that-name` in `.env`. Or use
 `DISCORD_WEBHOOK_URL=` for a Discord channel.
 
-## 5. Paper trading
+## 5. Backtest first: does this even work?
+
+Replays past days through the exact same rules and paper-trade grading,
+using Alpaca's free history. You get months of results tonight instead of
+waiting weeks.
+
+```bash
+python -m scanner backtest --from 2026-01-02                  # through the last finished day
+python -m scanner backtest --from 2026-01-02 --session afterhours
+python -m scanner backtest --demo --from 2026-09-14           # offline, fake tickers
+```
+
+Results land in `output/backtests/<dates>/`: `summary.md` plus `journal.csv`,
+one row per pick. Every past day is scanned at 5:45am PT by default
+(`--time` to change). On free data it sees the market as of 5:30, exactly
+what your live scan would have shown.
+
+The first run downloads history: roughly 15 seconds per trading day, so a
+year takes about an hour. After that it's cached in `.cache/backtest`, so you
+can change `criteria.toml` and re-run in minutes. That loop is the point:
+check the **By gap / RVOL / float / price / catalyst** tables, tighten the
+rules toward what worked, and re-run.
+
+**It never peeks at the future.** The screen only sees bars that had
+finished by scan time, news is cut off at scan time, and halts after scan time
+are ignored. Tests enforce each of these.
+
+What it can't fix, so results read a bit better than reality:
+- **Float is today's float.** Many small caps have diluted since.
+- **Past spreads aren't known.** The spread rule can't filter, and every
+  trade is charged `cost_pct` instead.
+- **Some delisted stocks are missing,** and those are often the ones that went badly.
+
+How to read it: look for a **profit factor above ~1.3 over 200+ picks** that
+holds up in most months, not one hot streak. Anything with fewer than 20 picks
+is marked `*`: that's noise, not a pattern.
+
+## 6. Paper trading
 
 ```bash
 python -m scanner grade      # after 1:30pm PT: fills in how each pick did
@@ -141,6 +178,8 @@ fill you worse than the sim. Wait for 15–20+ trade days before trusting any nu
 python -m scanner scan [--session auto|premarket|regular|afterhours]
                        [--notify] [--no-save] [--window 05:25-06:20]
                        [--provider alpaca|massive|demo] [--demo] [--at "2026-09-29 05:45"]
+python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premarket|afterhours]
+                           [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
 ```
 
@@ -160,7 +199,7 @@ judge       criteria.toml → picks, near misses → terminal / files / phone / 
 ```
 
 Code map: `scanner/providers/` (alpaca, massive, demo), `engine.py`,
-`metrics.py`, `criteria.py`, `report.py`, `journal.py`. Tests:
+`metrics.py`, `criteria.py`, `report.py`, `journal.py`, `backtest.py`. Tests:
 `pip install -r requirements-dev.txt && python -m pytest`.
 
 ## Known limits (v1)

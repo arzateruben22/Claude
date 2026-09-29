@@ -11,13 +11,13 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Optional
 
 from . import metrics as metrics_mod
 from .config import Criteria
 from .criteria import evaluate, rank, symbol_allowed, tag_news
 from .market import ET, previous_trading_day
-from .models import Candidate, ScanResult
+from .models import Candidate, Quote, ScanResult
 from .providers.base import Provider
 
 # The pre-filter is deliberately looser than the rules so near misses survive
@@ -42,9 +42,12 @@ def quick_failures(c: Candidate, crit: Criteria) -> int:
     )
 
 
-def run_scan(provider: Provider, crit: Criteria, now: datetime, session: str) -> ScanResult:
+def run_scan(provider: Provider, crit: Criteria, now: datetime, session: str,
+             quotes: Optional[List[Quote]] = None) -> ScanResult:
+    """`quotes` replaces the live screen (backtests pass a historical one)."""
     asof = now - timedelta(minutes=provider.delay_minutes)
-    quotes = provider.screen(now, session)
+    if quotes is None:
+        quotes = provider.screen(now, session)
 
     pool = []
     for q in quotes:
@@ -83,12 +86,12 @@ def run_scan(provider: Provider, crit: Criteria, now: datetime, session: str) ->
             hs = halts.get(c.symbol, [])
             active = [h for h in hs if h.active(now)]
             c.halted_now = active[-1].code if active else ""
-            c.halts = [h for h in hs if not h.active(now)]
+            c.halts = [h for h in hs if h.halted_at <= now and not h.active(now)]  # never the future
 
     enrich = [c for c in cands if quick_failures(c, crit) <= 1]
     if enrich:
         syms = [c.symbol for c in enrich]
-        news = provider.news(syms, now - timedelta(hours=crit.news_lookback_hours))
+        news = provider.news(syms, now - timedelta(hours=crit.news_lookback_hours), until=now)
         floats = provider.floats(syms)
         for c in enrich:
             c.news = sorted(news.get(c.symbol, []), key=lambda n: n.published, reverse=True)

@@ -74,11 +74,11 @@ class MassiveProvider(Provider):
             results = pool.map(lambda s: (s, self._bars_one(s, start, end)), symbols)
             return dict(results)
 
-    def _news_one(self, symbol: str, since: datetime) -> List[NewsItem]:
-        data = self.http.get(
-            f"{BASE}/v2/reference/news",
-            {"ticker": symbol, "published_utc.gte": iso(since), "order": "desc", "sort": "published_utc", "limit": 20},
-        )
+    def _news_one(self, symbol: str, since: datetime, until: Optional[datetime]) -> List[NewsItem]:
+        params = {"ticker": symbol, "published_utc.gte": iso(since), "order": "desc", "sort": "published_utc", "limit": 20}
+        if until:
+            params["published_utc.lte"] = iso(until)
+        data = self.http.get(f"{BASE}/v2/reference/news", params)
         out = []
         for item in data.get("results") or []:
             if len(item.get("tickers") or []) > MAX_SYMBOLS_PER_ARTICLE:
@@ -93,6 +93,6 @@ class MassiveProvider(Provider):
             )
         return out
 
-    def news(self, symbols: Sequence[str], since: datetime) -> Dict[str, List[NewsItem]]:
+    def news(self, symbols: Sequence[str], since: datetime, until: Optional[datetime] = None) -> Dict[str, List[NewsItem]]:
         with ThreadPoolExecutor(self.workers) as pool:
-            return {s: n for s, n in pool.map(lambda s: (s, self._news_one(s, since)), symbols) if n}
+            return {s: n for s, n in pool.map(lambda s: (s, self._news_one(s, since, until)), symbols) if n}
