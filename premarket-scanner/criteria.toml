@@ -14,6 +14,10 @@ max_float_shares = 20_000_000
 require_catalyst = true       # needs a news headline inside news_lookback_hours
 min_session_volume = 50_000   # shares traded this session; keeps out untradeable names
 allow_unknown_float = true    # float data missing -> keep it, but flag "float ?"
+max_spread_pct = 1.5          # bid/ask spread at scan time, % of price. Pre-market spreads run
+                              # wider than after the open; tighten to 1.0 for regular-hours scans
+allow_unknown_spread = true   # no quote -> keep it, but flag "spread ?"
+exclude_halted = true         # drop stocks halted right now (news pending, SEC, etc.)
 
 [scan]
 news_lookback_hours = 24
@@ -28,6 +32,7 @@ show_near_misses = true       # also list stocks that fail exactly one rule
 [paper]
 target_pct = 10.0
 stop_pct = 5.0
+cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
 
 # Headline keywords -> catalyst tag. Case-insensitive, whole words.
 # Tags listed in `warn_tags` are shown with a warning instead of as a plus.

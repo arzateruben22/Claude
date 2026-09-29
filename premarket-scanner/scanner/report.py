@@ -29,12 +29,13 @@ def _row(i: int, c: Candidate) -> List[str]:
         f"{m.rvol:.1f}x",
         fmt.shares(m.session_volume),
         fmt.shares(c.float_shares),
+        "?" if c.spread_pct is None else f"{c.spread_pct:.1f}%",
         fmt.money(m.session_high),
         _catalyst(c),
     ]
 
 
-HEAD = ["#", "Symbol", "Price", "Gap", "RVOL", "Volume", "Float", "Session high", "Catalyst"]
+HEAD = ["#", "Symbol", "Price", "Gap", "RVOL", "Volume", "Float", "Spread", "Session high", "Catalyst"]
 
 
 def _table(rows: List[List[str]]) -> str:
@@ -96,7 +97,8 @@ def markdown(res: ScanResult, crit: Criteria) -> str:
 
 
 CSV_FIELDS = ["rank", "symbol", "name", "price", "ref_close", "gap_pct", "rvol", "session_volume",
-              "avg_daily_volume", "float_shares", "session_high", "tags", "warnings", "headline", "url"]
+              "avg_daily_volume", "float_shares", "spread_pct", "session_high", "tags", "warnings",
+              "headline", "url"]
 
 
 def write_outputs(res: ScanResult, crit: Criteria, out_dir: Path = OUTPUT) -> List[Path]:
@@ -116,7 +118,9 @@ def write_outputs(res: ScanResult, crit: Criteria, out_dir: Path = OUTPUT) -> Li
                 "rank": i, "symbol": c.symbol, "name": c.name, "price": round(m.price, 4),
                 "ref_close": round(m.ref_close, 4), "gap_pct": round(m.gap_pct, 2), "rvol": round(m.rvol, 2),
                 "session_volume": int(m.session_volume), "avg_daily_volume": int(m.avg_daily_volume),
-                "float_shares": int(c.float_shares) if c.float_shares else "", "session_high": round(m.session_high, 4),
+                "float_shares": int(c.float_shares) if c.float_shares else "",
+                "spread_pct": "" if c.spread_pct is None else round(c.spread_pct, 2),
+                "session_high": round(m.session_high, 4),
                 "tags": ";".join(c.tags), "warnings": ";".join(c.warnings), "headline": c.headline,
                 "url": c.news[0].url if c.news else "",
             })
@@ -130,7 +134,7 @@ def push_text(res: ScanResult) -> str:
     lines = []
     for c in res.passed[:8]:
         m = c.metrics
-        warn = " ⚠" if c.warnings and any(w.endswith("headline") for w in c.warnings) else ""
+        warn = " ⚠" if any(not w.endswith("unknown") for w in c.warnings) else ""
         lines.append(f"{c.symbol} {fmt.money(m.price)} {fmt.pct(m.gap_pct)} RVOL {m.rvol:.0f}x "
                      f"float {fmt.shares(c.float_shares)}{warn}\n  {c.headline[:90]}")
     if len(res.passed) > 8:

@@ -29,9 +29,11 @@ def quote_from_snapshot(t: dict, today: date, session: str) -> Optional[Quote]:
         return None
     day = t.get("day") or {}
     prev = t.get("prevDay") or {}
+    quote = t.get("lastQuote") or {}
+    bid, ask = quote.get("p"), quote.get("P")  # lower-case p = bid, upper-case P = ask
     if session == "afterhours":
-        return Quote(t["ticker"], float(price), day.get("c") or None, prev.get("c"))
-    return Quote(t["ticker"], float(price), prev.get("c"))
+        return Quote(t["ticker"], float(price), day.get("c") or None, prev.get("c"), bid=bid, ask=ask)
+    return Quote(t["ticker"], float(price), prev.get("c"), bid=bid, ask=ask)
 
 
 class MassiveProvider(Provider):

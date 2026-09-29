@@ -3,11 +3,11 @@ from __future__ import annotations
 
 import re
 import time
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Dict, Iterable, Iterator, List, Optional, Sequence
 from urllib.parse import urlparse
 
-from ..models import Bar, NewsItem, Quote
+from ..models import Bar, Halt, NewsItem, Quote
 
 # Roundup articles ("12 stocks moving in pre-market") tag many tickers at once
 # and aren't a real catalyst for any of them. Skip articles tagging more.
@@ -29,7 +29,7 @@ class Http:
         self.timeout = timeout
         self.retries = retries
 
-    def get(self, url: str, params: Optional[dict] = None) -> dict:
+    def _request(self, url: str, params: Optional[dict] = None):
         where = urlparse(url).netloc + urlparse(url).path
         for attempt in range(self.retries):
             try:
@@ -47,8 +47,14 @@ class Http:
                 continue
             if r.status_code >= 400:
                 raise ProviderError(f"HTTP {r.status_code} from {where}: {r.text[:300]}")
-            return r.json()
+            return r
         raise ProviderError(f"gave up on {where} after {self.retries} tries (rate limit or server error)")
+
+    def get(self, url: str, params: Optional[dict] = None) -> dict:
+        return self._request(url, params).json()
+
+    def get_text(self, url: str, params: Optional[dict] = None) -> str:
+        return self._request(url, params).text
 
 
 class Provider:
@@ -72,6 +78,12 @@ class Provider:
         from .floats import lookup
 
         return lookup(symbols)
+
+    def halts(self, days: Sequence[date]) -> Dict[str, List[Halt]]:
+        """Trading halts on these days, all US exchanges (Nasdaq's public feed)."""
+        from .halts import fetch
+
+        return fetch(days)
 
 
 # --- helpers shared by providers -------------------------------------------

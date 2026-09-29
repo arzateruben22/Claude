@@ -26,6 +26,9 @@ class Criteria:
     require_catalyst: bool = True
     min_session_volume: float = 50_000
     allow_unknown_float: bool = True
+    max_spread_pct: float = 1.5
+    allow_unknown_spread: bool = True
+    exclude_halted: bool = True
 
     news_lookback_hours: float = 24
     lookback_days: int = 10
@@ -36,6 +39,7 @@ class Criteria:
 
     target_pct: float = 10.0
     stop_pct: float = 5.0
+    cost_pct: float = 0.5
 
     catalysts: Dict[str, List[str]] = field(default_factory=dict)
     warn_tags: List[str] = field(default_factory=list)
@@ -47,7 +51,10 @@ class Criteria:
             f"RVOL >= {self.min_rvol:g}x",
             f"float <= {self.max_float_shares / 1e6:g}M",
             f"vol >= {self.min_session_volume / 1e3:g}k",
+            f"spread <= {self.max_spread_pct:g}%",
         ]
+        if self.exclude_halted:
+            parts.append("not halted")
         if self.require_catalyst:
             parts.append("news catalyst")
         return " · ".join(parts)

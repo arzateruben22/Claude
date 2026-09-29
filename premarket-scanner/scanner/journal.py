@@ -3,7 +3,8 @@
 Grading pretends you bought at the 9:30 ET open of the trade day (evening picks
 trade the next morning) and exits at whichever comes first: the +target, the
 -stop, or the 4pm close. If one 5-minute bar touches both, it counts as the
-stop — pessimistic on purpose.
+stop — pessimistic on purpose. Every trade is then charged `cost_pct` for the
+spread and slippage you'd really pay.
 """
 from __future__ import annotations
 
@@ -24,7 +25,7 @@ from .providers.base import Provider
 JOURNAL = OUTPUT / "journal.csv"
 FIELDS = [
     "scan_date", "session", "scan_time_pt", "trade_date", "symbol", "scan_price", "gap_pct", "rvol",
-    "float_shares", "tags", "warnings", "headline",
+    "float_shares", "spread_pct", "tags", "warnings", "headline",
     "open", "high", "low", "close", "open_vs_scan_pct", "max_up_pct", "max_down_pct", "close_vs_open_pct",
     "sim_exit", "sim_pnl_pct", "graded_at",
 ]
@@ -63,6 +64,7 @@ def record(res: ScanResult, path: Path = JOURNAL) -> int:
             "trade_date": trade_date_for(res.session, scan_date).isoformat(),
             "symbol": c.symbol, "scan_price": round(m.price, 4), "gap_pct": round(m.gap_pct, 2),
             "rvol": round(m.rvol, 2), "float_shares": int(c.float_shares) if c.float_shares else "",
+            "spread_pct": "" if c.spread_pct is None else round(c.spread_pct, 2),
             "tags": ";".join(c.tags), "warnings": ";".join(c.warnings), "headline": c.headline,
         })
         added += 1
@@ -93,7 +95,7 @@ def outcome(bars: List[Bar], day: date, scan_price: float, crit: Criteria) -> Op
         "open": round(o, 4), "high": round(hi, 4), "low": round(lo, 4), "close": round(cl, 4),
         "open_vs_scan_pct": r((o / scan_price - 1) * 100), "max_up_pct": r((hi / o - 1) * 100),
         "max_down_pct": r((lo / o - 1) * 100), "close_vs_open_pct": r((cl / o - 1) * 100),
-        "sim_exit": exit_, "sim_pnl_pct": r(pnl),
+        "sim_exit": exit_, "sim_pnl_pct": r(pnl - crit.cost_pct),
     }
 
 
@@ -143,7 +145,8 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
 
     days = sorted({r["trade_date"] for r in rows})
     out = [f"Paper results: {len(rows)} graded picks over {len(days)} trade days ({days[0]} → {days[-1]})",
-           f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at close",
+           f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at close;"
+           f" {crit.cost_pct:g}% cost per trade",
            "", block("All", rows)]
     for session in ("premarket", "afterhours", "regular"):
         rs = [r for r in rows if r["session"] == session]
@@ -155,7 +158,7 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
             tags[t].append(r)
     out += ["", "By catalyst:"] + [block(t, rs) for t, rs in sorted(tags.items(), key=lambda kv: -len(kv[1]))]
     total = sum(float(r["sim_pnl_pct"]) for r in rows)
-    out += ["", f"Sum of sim returns: {total:+.1f}% (equal size per pick, no fees/slippage — real fills are worse)."]
+    out += ["", f"Sum of sim returns: {total:+.1f}% (equal size per pick, after {crit.cost_pct:g}% cost each)."]
     if len(days) < 15:
         out.append(f"Only {len(days)} trade days so far: too few to trust. Aim for 15-20+.")
     return "\n".join(out)

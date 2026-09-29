@@ -21,10 +21,12 @@ def test_demo_premarket_scan():
     res = _scan()
     assert [c.symbol for c in res.passed] == ["DMBIO", "DMAI", "DMEV", "DMFRT"]
     misses = {c.symbol: c.failures[0].split()[0] for c in res.near_misses}
-    assert misses == {"DMRX": "price", "DMSHP": "no", "DMGLD": "float", "DMCHP": "RVOL", "DMSOL": "gap"}
+    assert misses == {"DMRX": "price", "DMSHP": "no", "DMGLD": "float", "DMCHP": "RVOL", "DMSOL": "gap",
+                      "DMHLT": "halted", "DMWID": "spread"}
     frt = res.passed[-1]
     assert "dilution headline" in frt.warnings
-    assert res.universe > 30 and res.checked == 9
+    assert "volatility pause (LUDP) x2 since last session" in res.passed[1].warnings  # DMAI
+    assert res.universe > 30 and res.checked == 11
 
 
 def test_demo_evening_scan_measures_from_todays_close():
@@ -49,6 +51,10 @@ def test_reports_and_journal_round_trip(tmp_path):
     graded, pending = journal.grade(DemoProvider(), CRIT, parse_pt("2026-09-28 14:00"), jpath)
     assert (graded, pending) == (4, 0)
     assert "4 graded picks" in journal.stats(CRIT, jpath)
+    rows = {r["symbol"]: r for r in journal._read(jpath)}
+    assert rows["DMBIO"]["sim_exit"] == "target"
+    assert float(rows["DMBIO"]["sim_pnl_pct"]) == CRIT.target_pct - CRIT.cost_pct   # cost charged
+    assert rows["DMBIO"]["spread_pct"] == "0.4"
 
 
 def test_simulator_is_pessimistic_when_one_bar_hits_both():

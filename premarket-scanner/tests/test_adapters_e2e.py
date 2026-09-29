@@ -15,6 +15,12 @@ from helpers import FakeHttp
 
 NOW = parse_pt("2026-09-28 05:45")
 EXPECTED = ["DMBIO", "DMAI", "DMEV", "DMFRT"]
+MISSES = {"DMRX", "DMSHP", "DMGLD", "DMCHP", "DMSOL", "DMHLT", "DMWID"}
+
+
+def _bid_ask(demo, sym, price):
+    half = price * demo.specs[sym].spread / 2
+    return round(price - half, 4), round(price + half, 4)
 
 
 @pytest.fixture
@@ -49,7 +55,9 @@ def test_alpaca_adapter(market, monkeypatch, tmp_path):
         for s in p["symbols"].split(","):
             bars = market._bars(s, s_start, NOW)
             last = bars[-1]
+            bid, ask = _bid_ask(market, s, last.close)
             out[s] = {"latestTrade": {"p": last.close, "t": iso(last.start)},
+                      "latestQuote": {"bp": bid, "ap": ask},
                       "dailyBar": {"t": f"{d}T04:00:00Z", "c": last.close},
                       "prevDailyBar": {"c": market.specs[s].close}}
         return out
@@ -64,10 +72,10 @@ def test_alpaca_adapter(market, monkeypatch, tmp_path):
     http = FakeHttp({"/v2/assets": assets, "/v2/stocks/snapshots": snapshots,
                      "/v2/stocks/bars": bars, "/v1beta1/news": news})
     prov = alpaca.AlpacaProvider("k", "s", feed="sip", http=http)
-    prov.floats = market.floats
+    prov.floats, prov.halts = market.floats, market.halts
     res = run_scan(prov, load_criteria(), NOW, "premarket")
     assert [c.symbol for c in res.passed] == EXPECTED
-    assert {c.symbol for c in res.near_misses} == {"DMRX", "DMSHP", "DMGLD", "DMCHP", "DMSOL"}
+    assert {c.symbol for c in res.near_misses} == MISSES
 
 
 def test_massive_adapter(market):
@@ -78,7 +86,9 @@ def test_massive_adapter(market):
         tickers = []
         for s, spec in market.specs.items():
             last = market._bars(s, s_start, NOW)[-1]
+            bid, ask = _bid_ask(market, s, last.close)
             tickers.append({"ticker": s, "lastTrade": {"p": last.close, "t": int(last.start.timestamp() * 1e9)},
+                            "lastQuote": {"p": bid, "P": ask},
                             "day": {"c": 0}, "prevDay": {"c": spec.close}, "min": {}})
         return {"status": "OK", "tickers": tickers}
 
@@ -91,6 +101,7 @@ def test_massive_adapter(market):
     http = FakeHttp({"/v2/snapshot/": snapshot, "/v2/aggs/ticker/": aggs,
                      "/v2/reference/news": lambda url, p: {"results": _news(market, p["ticker"])}})
     prov = massive.MassiveProvider("k", http=http, workers=4)
-    prov.floats = market.floats
+    prov.floats, prov.halts = market.floats, market.halts
     res = run_scan(prov, load_criteria(), NOW, "premarket")
     assert [c.symbol for c in res.passed] == EXPECTED
+    assert {c.symbol for c in res.near_misses} == MISSES

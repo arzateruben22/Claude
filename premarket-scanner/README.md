@@ -7,17 +7,20 @@ grades every pick after the close.
 
 ```
 Pre-market scan · Mon Sep 28, 5:45 AM PT · demo  [DEMO DATA — fake tickers]
-Rules: $2-$20 · gap >= +10% · RVOL >= 3x · float <= 20M · vol >= 50k · news catalyst
+Rules: $2-$20 · gap >= +10% · RVOL >= 3x · float <= 20M · vol >= 50k · spread <= 1.5% · not halted · news catalyst
 
-#  Symbol  Price  Gap     RVOL   Volume  Float  Session high  Catalyst
-1  DMBIO   $5.02  +61.9%  26.2x  649.9k  8.5M   $5.09         fda
-2  DMAI    $7.27  +34.6%  11.3x  438.9k  14.0M  $7.36         contract, crypto_ai
-3  DMEV    $9.23  +18.4%  6.2x   352.9k  11.0M  $9.37         earnings
-4  DMFRT   $6.95  +15.9%  7.2x   157.1k  18.0M  $7.08         ⚠ dilution
+#  Symbol  Price  Gap     RVOL   Volume  Float  Spread  Session high  Catalyst
+1  DMBIO   $5.02  +61.9%  26.2x  649.9k  8.5M   0.4%    $5.09         fda
+2  DMAI    $7.27  +34.6%  11.3x  438.9k  14.0M  0.4%    $7.36         contract, crypto_ai
+3  DMEV    $9.23  +18.4%  6.2x   352.9k  11.0M  0.4%    $9.37         earnings
+4  DMFRT   $6.95  +15.9%  7.2x   157.1k  18.0M  0.4%    $7.08         ⚠ dilution
+
+  DMAI: ⚠ volatility pause (LUDP) x2 since last session
 
 Near misses (fail one rule):
+  DMHLT     $5.79   +44.7%  ✗ halted now: news pending (T1)
+  DMWID     $4.54   +29.7%  ✗ spread 4.5% > 1.5%
   DMSHP     $5.78   +28.5%  ✗ no news
-  DMGLD    $14.57   +21.4%  ✗ float 85.0M > 20.0M
   ...
 ```
 
@@ -72,6 +75,8 @@ python -m scanner scan             # picks the session from the clock
 | Float | ≤ 20M shares | Massive free float, else yfinance. If unknown, the stock is kept and flagged |
 | Catalyst | required | A headline in the last 24h. Roundup articles tagging 5+ tickers don't count |
 | Session volume | ≥ 50k shares | Keeps out names you couldn't get in and out of |
+| Spread | ≤ 1.5% | (ask − bid) ÷ midpoint at scan time. A 3% spread means you're down 3% the moment you buy. Pre-market runs wider than after the open; use 1.0 for regular-hours scans |
+| Not halted | on | Nasdaq's free halt feed, all US exchanges. Halted right now (news pending, SEC, etc.) = out. Halts or volatility pauses since the last session = ⚠ warning |
 
 Headlines are tagged (fda, earnings, deal, contract…). **Offering / reverse
 split / warrants** headlines get a ⚠ because those gaps often get sold into.
@@ -122,12 +127,13 @@ python -m scanner journal    # last 15 picks
 The simulator assumes you **bought the 9:30 ET open** of the trade day (evening
 picks trade the next morning) and sold at **+10% or −5%**, whichever came first,
 else at the close. If one 5-minute bar touched both, it counts as the loss.
+Every trade is charged **0.5%** for spread and slippage (`cost_pct`).
 `stats` breaks results down by session and catalyst type, e.g. do FDA gappers
-actually beat earnings gappers for you? Change `target_pct` / `stop_pct` in
-`criteria.toml`.
+actually beat earnings gappers for you? Change `target_pct` / `stop_pct` /
+`cost_pct` in `criteria.toml`.
 
-Treat it as a filter check, not a P&L forecast: real fills, slippage and halts
-are worse than the sim. Wait for 15–20+ trade days before trusting any number.
+Treat it as a filter check, not a P&L forecast: fast opens and halts can still
+fill you worse than the sim. Wait for 15–20+ trade days before trusting any number.
 
 ## Commands
 
@@ -148,6 +154,7 @@ screen      one pass over ~10k symbols (snapshot): price + rough gap
 pre-filter  loose price/gap cut → top 60 gappers
 bars        5-min bars incl. extended hours, last ~10 trading days
 metrics     exact gap, time-of-day RVOL, session volume/high      (metrics.py)
+halts       Nasdaq halt feed (2 requests); spread from the snapshot quote
 enrich      news + float, only for names within one rule of passing
 judge       criteria.toml → picks, near misses → terminal / files / phone / journal
 ```
@@ -161,4 +168,6 @@ Code map: `scanner/providers/` (alpaca, massive, demo), `engine.py`,
 - Early 1pm closes (day after Thanksgiving, Christmas Eve) aren't modelled.
   Update the holiday list in `scanner/market.py` each December.
 - yfinance float data is unofficial and sometimes missing (shows as `?`).
-- Halts, short-sale restrictions, and borrow availability aren't checked.
+- The spread is one quote at scan time (15 min old on free data), not an average.
+- If Nasdaq's halt feed is down, the scan still runs and says the halt check was skipped.
+- Short-sale restrictions and borrow availability aren't checked.

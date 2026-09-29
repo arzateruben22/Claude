@@ -36,10 +36,12 @@ def quote_from_snapshot(symbol: str, snap: dict, today: date, session: str) -> O
         if not daily_is_today:
             return None
         # dailyBar.c should be today's close; prev close is the loose backup.
-        return Quote(symbol, float(price), daily.get("c"), prev.get("c"))
-    # Before today's first print, dailyBar is still yesterday's bar.
-    ref = prev.get("c") if daily_is_today else daily.get("c")
-    return Quote(symbol, float(price), ref)
+        ref, alt = daily.get("c"), prev.get("c")
+    else:
+        # Before today's first print, dailyBar is still yesterday's bar.
+        ref, alt = (prev.get("c") if daily_is_today else daily.get("c")), None
+    quote = snap.get("latestQuote") or {}
+    return Quote(symbol, float(price), ref, alt, bid=quote.get("bp"), ask=quote.get("ap"))
 
 
 class AlpacaProvider(Provider):

@@ -16,7 +16,7 @@ NOW = datetime(2026, 9, 29, 12, 45, tzinfo=timezone.utc)  # 8:45 ET
 
 def _cand(price=5.0, gap=25.0, rvol=6.0, vol=200_000, float_=8e6, news=True):
     m = Metrics(price, price / (1 + gap / 100), gap, vol, vol / rvol, rvol, 1e6, price, 10)
-    c = Candidate("ABCD", "Abcd Inc", m, float_)
+    c = Candidate("ABCD", "Abcd Inc", m, float_, spread_pct=0.5)
     if news:
         c.news = [NewsItem("Abcd wins contract", NOW)]
     return c

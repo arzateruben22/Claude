@@ -13,7 +13,7 @@ from datetime import date, datetime, time, timedelta
 from typing import Dict, List, Optional, Sequence, Tuple
 
 from ..market import ET, is_trading_day, next_trading_day, session_window
-from ..models import Bar, NewsItem, Quote
+from ..models import Bar, Halt, NewsItem, Quote
 from .base import Provider
 
 STEP = timedelta(minutes=5)
@@ -33,13 +33,15 @@ class Spec:
     rvol: float         # event-session volume vs normal
     headline: str = ""  # "" = no news
     day_move: float = 0.0  # open->close drift on the trade day (for grading)
+    spread: float = 0.004  # bid/ask spread as a fraction of price
+    halt: str = ""         # "" | "now" (halted at scan time) | "earlier" (paused, resumed)
 
 
 SPECS = [
     Spec("DMBIO", "Demo Biotherapeutics", 3.10, 900_000, 8.5e6, 0.62, 25,
          "Demo Biotherapeutics Announces Positive Phase 2 Topline Results", 0.14),
     Spec("DMAI", "Demo AI Systems", 5.40, 1_400_000, 14e6, 0.34, 12,
-         "Demo AI Systems Awarded $12M Contract With Federal Agency", -0.06),
+         "Demo AI Systems Awarded $12M Contract With Federal Agency", -0.06, halt="earlier"),
     Spec("DMEV", "Demo Electric Vehicles", 7.80, 2_100_000, 11e6, 0.18, 6,
          "Demo EV Reports Record Quarterly Results, Raises Guidance", 0.05),
     Spec("DMFRT", "Demo Ocean Freight", 6.00, 800_000, 18e6, 0.16, 7,
@@ -56,6 +58,10 @@ SPECS = [
     Spec("DMBIG", "Demo Big Industries", 48.00, 9_000_000, 900e6, 0.12, 3,
          "Demo Big Industries Beats Earnings Estimates", 0.01),
     Spec("DMTOY", "Demo Toys", 3.00, 700_000, 15e6, 0.02, 1, "", 0.0),
+    Spec("DMHLT", "Demo Holdings", 4.00, 700_000, 7e6, 0.45, 15,
+         "Demo Holdings Enters Definitive Agreement To Be Acquired", 0.0, halt="now"),
+    Spec("DMWID", "Demo Widgets", 3.50, 500_000, 5e6, 0.30, 8,
+         "Demo Widgets Awarded Patent For Battery Design", 0.04, spread=0.045),
 ]
 FILLER = [f"DMX{chr(65 + i // 26)}{chr(65 + i % 26)}" for i in range(30)]
 
@@ -168,7 +174,8 @@ class DemoProvider(Provider):
             if not today:
                 continue
             ref = spec.close if session != "afterhours" else self._close_before(spec, self.anchor)
-            quotes.append(Quote(sym, today[-1].close, ref, name=spec.name))
+            px, half = today[-1].close, today[-1].close * spec.spread / 2
+            quotes.append(Quote(sym, px, ref, name=spec.name, bid=round(px - half, 4), ask=round(px + half, 4)))
         return quotes
 
     def intraday_bars(self, symbols: Sequence[str], start: datetime, end: datetime) -> Dict[str, List[Bar]]:
@@ -186,6 +193,19 @@ class DemoProvider(Provider):
 
     def floats(self, symbols: Sequence[str]) -> Dict[str, Optional[float]]:
         return {s: self.specs[s].float_shares for s in symbols if s in self.specs}
+
+    def halts(self, days: Sequence[date]) -> Dict[str, List[Halt]]:
+        now = self.now or datetime.now(ET)
+        out: Dict[str, List[Halt]] = {}
+        for sym, spec in self.specs.items():
+            if spec.halt == "now":
+                out[sym] = [Halt(sym, "T1", now - timedelta(minutes=12))]
+            elif spec.halt == "earlier":
+                prior = self._prev(now.astimezone(ET).date())
+                t = datetime.combine(prior, time(10, 4), tzinfo=ET)
+                out[sym] = [Halt(sym, "LUDP", t, t + timedelta(minutes=5)),
+                            Halt(sym, "LUDP", t + timedelta(minutes=31), t + timedelta(minutes=36))]
+        return out
 
 
 def anchor_for(session: str, now: datetime) -> Tuple[str, datetime]:

@@ -31,6 +31,15 @@ class Quote:
     ref_close: Optional[float]
     alt_ref_close: Optional[float] = None
     name: str = ""
+    bid: Optional[float] = None
+    ask: Optional[float] = None
+
+    @property
+    def spread_pct(self) -> Optional[float]:
+        """Bid/ask spread as % of the midpoint; None if missing, locked or crossed."""
+        if not self.bid or not self.ask or self.bid <= 0 or self.ask <= self.bid:
+            return None
+        return (self.ask - self.bid) / ((self.ask + self.bid) / 2) * 100
 
 
 @dataclass
@@ -39,6 +48,17 @@ class NewsItem:
     published: datetime
     source: str = ""
     url: str = ""
+
+
+@dataclass
+class Halt:
+    symbol: str
+    code: str                     # e.g. T1 (news pending), LUDP (volatility pause)
+    halted_at: datetime
+    resumed_at: Optional[datetime] = None   # None = no resumption time published yet
+
+    def active(self, at: datetime) -> bool:
+        return self.halted_at <= at and (self.resumed_at is None or self.resumed_at > at)
 
 
 @dataclass
@@ -62,6 +82,9 @@ class Candidate:
     name: str
     metrics: Metrics
     float_shares: Optional[float] = None
+    spread_pct: Optional[float] = None
+    halts: List[Halt] = field(default_factory=list)
+    halted_now: str = ""     # halt reason code if halted at scan time
     news: List[NewsItem] = field(default_factory=list)
     tags: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)

@@ -7,6 +7,7 @@ from typing import Dict, List
 from . import fmt
 from .config import Criteria
 from .models import Candidate, NewsItem
+from .providers.halts import VOLATILITY, describe
 
 _WARRANT_NAME = re.compile(r"\b(warrants?|units?|rights?)\b", re.IGNORECASE)
 
@@ -53,12 +54,33 @@ def evaluate(c: Candidate, crit: Criteria) -> None:
             fails.append("float unknown")
     elif c.float_shares > crit.max_float_shares:
         fails.append(f"float {fmt.shares(c.float_shares)} > {fmt.shares(crit.max_float_shares)}")
+    if c.spread_pct is None:
+        if crit.allow_unknown_spread:
+            c.warnings.append("spread unknown")
+        else:
+            fails.append("spread unknown")
+    elif c.spread_pct > crit.max_spread_pct:
+        fails.append(f"spread {c.spread_pct:.1f}% > {crit.max_spread_pct:g}%")
+    if c.halted_now and crit.exclude_halted:
+        fails.append(f"halted now: {describe(c.halted_now)}")
     if crit.require_catalyst and not c.news:
         fails.append("no news")
+    c.warnings += halt_warnings(c)
     for tag in c.tags:
         if tag in crit.warn_tags:
             c.warnings.append(f"{tag} headline")
     c.failures = fails
+
+
+def halt_warnings(c: Candidate) -> List[str]:
+    """One line per halt reason seen today / last session (already resumed)."""
+    counts: Dict[str, int] = {}
+    for h in c.halts:
+        counts[h.code] = counts.get(h.code, 0) + 1
+    return [
+        f"{'' if code in VOLATILITY else 'halted: '}{describe(code)}{f' x{n}' if n > 1 else ''} since last session"
+        for code, n in counts.items()
+    ]
 
 
 _SORT_KEYS = {
