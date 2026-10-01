@@ -4,8 +4,8 @@
  *
  *   1. On the facial cards: "Or $159 a month as a member" under the price
  *      (members see what their plan already includes instead).
- *   2. A small card that slides up once someone has scrolled past the
- *      services: a facial every month from $159, the savings, and the
+ *   2. A small card that slides up once someone who has booked before
+ *      scrolls past the services: a facial every month from $159, the savings, and the
  *      Founding Five spots left. It stays out of the way: hidden while the
  *      membership section is on screen, behind any open window or the
  *      home-screen card, never shown to members, and gone for a week once
@@ -40,7 +40,12 @@
   var mode = function () {
     var r = me();
     if (LM.onHold && LM.onHold(r)) return "hold";
-    return LM.isMember(r) ? null : "join";
+    if (LM.isMember(r)) return null;
+    /* someone who hasn't had a first visit is here to book it: the pop-up
+       waits until they have (the membership section is still on the page) */
+    var B = window.LumevinaBooking;
+    if (B && B.hasBooked && !B.hasBooked()) return null;
+    return "join";
   };
 
   /* the plan that covers a service, cheapest first */

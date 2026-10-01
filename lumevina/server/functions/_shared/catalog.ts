@@ -6,7 +6,7 @@ export const CATALOG: Record<string, { name: string; price_cents: number; dur_mi
   "ageless-grace-facial": { name: "Ageless Grace Facial", price_cents: 24500, dur_min: 60 },
   "lumevina-custom-facial": { name: "Lumevina Custom Facial", price_cents: 19500, dur_min: 60 },
   "custom-facial-dermaplaning": { name: "Lumevina Custom Facial + Dermaplaning", price_cents: 18500, dur_min: 60 },
-  "new-client-consultation": { name: "New Client Consultation + Treatment", price_cents: 21500, dur_min: 60 },
+  "new-client-consultation": { name: "New Clients Start Here", price_cents: 22000, dur_min: 60 },
   "new-client-consultation-acne": { name: "New Client Consultation + Treatment (Acne Program)", price_cents: 22500, dur_min: 60 },
   "brazilian-wax-mini-vajacial": { name: "Brazilian Wax x Mini Vajacial Package", price_cents: 10000, dur_min: 60 },
   "underarm-wax": { name: "Underarm Wax", price_cents: 2200, dur_min: 30 },

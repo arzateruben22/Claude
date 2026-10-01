@@ -28,7 +28,18 @@
     if (document.body) document.body.scrollTop = 0;
     html.style.scrollBehavior = prev;
   };
-  resetTop();
+  if (!location.hash) resetTop();   /* a link to #services and the like keeps its place */
+
+  /* once per visit: a second page load in the same session, or a link
+     that points somewhere specific (#services, #book-new…), skips the
+     greeting so nobody waits twice (the head script already hid it) */
+  var seen = document.documentElement.classList.contains("no-intro");
+  try { sessionStorage.setItem("lumevina_intro_seen", "1"); } catch (e) { /* storage blocked */ }
+  if (seen) {
+    intro.classList.add("intro-done");
+    if (!location.hash) { [0, 120, 350].forEach(function (t) { setTimeout(resetTop, t); }); }
+    return;
+  }
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   if (reduce.matches) {
@@ -105,6 +116,6 @@
   window.addEventListener("wheel", onWheel, { passive: true });
   window.addEventListener("touchmove", onWheel, { passive: true });
 
-  /* auto-lift if they just want to watch it breathe */
-  timers.push(setTimeout(function () { dismiss(); }, 2600));
+  /* auto-lift soon: it's a greeting, not a wait (the words land by ~1.1s) */
+  timers.push(setTimeout(function () { dismiss(); }, 1500));
 })();

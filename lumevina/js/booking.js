@@ -180,23 +180,27 @@
      slots go out as push notifications (see Glow Rewards). */
   var FLASH_OFF = 0.10;
 
-  var flashStart = function () {
-    if (!state.dayKey || !state.services.length) return null;
-    var dur = totalDur();
+  /* the day's one starred time for a session of this length, or null */
+  var flashFor = function (dayKey, dur) {
     var todayKey = dateKey(new Date());
     var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
-    var userSet = userBusyCells(state.dayKey);
+    var userSet = userBusyCells(dayKey);
     var opts = candidateStarts(dur).filter(function (t) {
-      if (state.dayKey === todayKey && t <= nowMins) return false;
-      return blockFree(state.dayKey, t, dur, userSet);
+      if (dayKey === todayKey && t <= nowMins) return false;
+      return blockFree(dayKey, t, dur, userSet);
     });
     if (!opts.length) return null;
-    var str = state.dayKey + ":flash";
+    var str = dayKey + ":flash";
     var h = 0;
     for (var i = 0; i < str.length; i++) {
       h = (h * 31 + str.charCodeAt(i)) >>> 0;
     }
     return opts[h % opts.length];
+  };
+
+  var flashStart = function () {
+    if (!state.dayKey || !state.services.length) return null;
+    return flashFor(state.dayKey, totalDur());
   };
 
   var flashActive = function () {
@@ -628,6 +632,10 @@
       li.appendChild(v);
       costsEl.appendChild(li);
     };
+    /* the chosen time leads, so it reads right even when the sheet opens
+       scrolled to this summary (from the homepage's Start here card) */
+    addRow(keyDate(state.dayKey).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }),
+      fmtTime(state.slot), "sc-when");
     state.services.forEach(function (s) {
       addRow(s.name, pay.money(s.price));
     });
@@ -871,10 +879,45 @@
     if (famEl.classList.contains("open")) closeFam(); else openFam();
   });
 
+  /* ── The next few openings for one service ── the homepage's "Start
+     here" card shows these so a new client can tap a real time. One per
+     day (the earliest), skipping closed days, members-only Mondays and
+     anything starting within the hour. */
+  var openings = function (serviceId, n) {
+    var s = byId[serviceId];
+    if (!s) return [];
+    var out = [];
+    /* a morning, an afternoon, a late morning: three real openings that
+       give a choice of time of day, not three 8:00 AMs */
+    var PREFER = [0, LUNCH_END, 10 * 60];
+    var now = new Date();
+    var todayKey = dateKey(now);
+    var soon = now.getHours() * 60 + now.getMinutes() + 60;
+    for (var i = 0; i < 21 && out.length < (n || 3); i++) {
+      var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      var extra = !!XD && XD.isExtra(d);
+      if ((d.getDay() === 0 || d.getDay() === 1) && !extra) continue;
+      if (lockedForVisitor(d)) continue;
+      var key = dateKey(d);
+      var userSet = userBusyCells(key);
+      var free = candidateStarts(s.dur).filter(function (t) {
+        return !(key === todayKey && t <= soon) && blockFree(key, t, s.dur, userSet);
+      });
+      if (!free.length) continue;
+      var want = PREFER[out.length % PREFER.length];
+      var t = free.filter(function (x) { return x >= want; })[0];
+      if (t === undefined) t = free[0];
+      out.push({ dayKey: key, slot: t, date: d, time: fmtTime(t), flash: flashFor(key, s.dur) === t });
+    }
+    return out;
+  };
+
   /* ── Open / close ── */
   var lastFocus = null;
 
-  var openModal = function (serviceId) {
+  /* openModal(serviceId, pick) — pick = { dayKey, slot } opens the sheet
+     on that exact time (from the homepage's "Start here" card) */
+  var openModal = function (serviceId, pick) {
     lastFocus = document.activeElement;
     rescheduleMode = false;
     modal.classList.remove("rescheduling");
@@ -894,6 +937,11 @@
     }
     closeFam();
     state.slot = null;
+    if (pick && pick.dayKey && state.services.length) {
+      state.dayKey = pick.dayKey;
+      if (typeof pick.slot === "number" &&
+          blockFree(pick.dayKey, pick.slot, totalDur(), userBusyCells(pick.dayKey))) state.slot = pick.slot;
+    }
     statusEl.textContent = "";
     payStatus.textContent = "";
     /* referral code: first visit only, filled in when they came from a shared link */
@@ -916,6 +964,12 @@
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
     modal.focus();
+    /* opened on a chosen time: skip past the picker to the total and the name field */
+    if (pick && state.slot !== null) {
+      setTimeout(function () {
+        (previewEl.hidden ? nameInput : previewEl).scrollIntoView({ block: "start", behavior: "auto" });
+      }, 40);
+    }
   };
 
   /* ── Reschedule an existing booking ── deposit already paid & consent
@@ -1601,6 +1655,9 @@
   window.LumevinaBooking = {
     open: openModal,
     reschedule: openReschedule,
-    startReschedule: startReschedule
+    startReschedule: startReschedule,
+    openings: openings,
+    service: function (id) { return byId[id] || null; },
+    hasBooked: function () { return loadBookings().length > 0; }
   };
 })();

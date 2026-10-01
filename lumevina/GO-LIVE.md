@@ -111,6 +111,9 @@ the login safe; I'll tell you exactly which buttons to press when we wire it.
    **activate** the account — this is what lets real money reach your bank.
 3. That's it. Don't touch the settings — when we wire it, I'll point you to the
    exact keys to copy.
+4. One switch to flip: **Settings → Payment methods**, turn on **Klarna**,
+   **Affirm** and **Afterpay**. The homepage says clients can pay over time
+   (like your GlossGenius page does), and this is what makes that true.
 
 ### Supabase (the database / "notebook")
 
@@ -157,6 +160,13 @@ money flows and the booking shows up — before you announce anything.
 
 Clients only ever see the public site and their own account — never your
 numbers.
+
+### Your Instagram link
+
+Put the site in your Instagram bio as is, or use **`lumevina.netlify.app/#book-new`**
+for stories and posts: it skips the greeting and opens the booking sheet right on
+your first-visit facial ("New Clients Start Here"), so a new client is one tap from
+picking a time.
 
 ---
 

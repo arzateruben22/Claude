@@ -17,6 +17,8 @@
   <link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
+  <!-- the arrival greeting plays once per visit, and never on a link to a specific spot -->
+  <script>try{if(sessionStorage.getItem("lumevina_intro_seen")||location.hash)document.documentElement.classList.add("no-intro")}catch(e){}</script>
 </head>
 <body>
 
@@ -88,6 +90,7 @@
       <a href="#journal" style="--i:7"><span class="mm-num" aria-hidden="true">08</span>Journal</a>
     </nav>
     <div class="mm-actions">
+      <a class="mm-new" href="#start">New here? <strong>Start here</strong> <span aria-hidden="true">&rarr;</span></a>
       <a class="btn btn-solid mm-book" data-open-booking href="#services">Book now</a>
       <div class="mm-quick">
         <button class="mm-tile mobile-cart" type="button">
@@ -118,34 +121,45 @@
       <div class="hero-glow hero-glow-alt" aria-hidden="true"></div>
       <div class="hero-inner">
 
-        <!-- Lumevina brand lockup -->
-        <img class="hero-logo" src="img/logo-light.png" alt="Lumevina Aesthetics Spa" width="320" height="200">
-
         <h1 class="hero-title" aria-label="Radiance, beautifully restored.">
           <span class="line" aria-hidden="true"><span class="line-inner">Radiance,</span></span>
           <span class="line" aria-hidden="true"><span class="line-inner"><em>beautifully restored.</em></span></span>
         </h1>
-        <p class="hero-sub">Bespoke facials and results-driven skincare.
-        Book your visit — or send the gift of glow.</p>
+        <p class="hero-sub">Personalized facials by Evelyn Romero, licensed esthetician, in Woodland Hills.</p>
+
+        <!-- New clients start here: the first visit from Evelyn's booking page, as one
+             question and a tap on a real time (js/start-here.js fills in the openings) -->
+        <div class="nc" id="start">
+          <p class="nc-eyebrow" id="nc-q">New here? What brings you in?</p>
+          <div class="nc-pick" role="radiogroup" aria-labelledby="nc-q">
+            <button type="button" role="radio" aria-checked="true" data-nc="glow">Glowing skin</button>
+            <button type="button" role="radio" aria-checked="false" data-nc="acne">Acne &amp; breakouts</button>
+          </div>
+          <div class="nc-svc">
+            <p class="nc-tag" hidden></p>
+            <div class="nc-row">
+              <h2 class="nc-name">New Clients Start Here</h2>
+              <p class="nc-meta"><span class="nc-price">from $220</span><span class="nc-mins">60+ min</span></p>
+            </div>
+            <p class="nc-desc">A consultation, a look at your current routine, and a facial built around what your skin needs.</p>
+            <details class="nc-inc">
+              <summary>What every facial includes</summary>
+              <ul role="list">
+                <li>Double cleanse</li><li>Enzyme exfoliation</li><li>Extractions</li><li>Targeted mask</li>
+                <li>Relaxing massage</li><li>LED</li><li>Cryo globes</li>
+              </ul>
+            </details>
+          </div>
+          <p class="nc-label" hidden>Next openings · tap one to book it</p>
+          <div class="nc-times"></div>
+          <a class="btn btn-solid nc-book" href="#services">Book my first facial</a>
+          <p class="nc-fine">A 50% deposit holds your time · Pay over time with Klarna, Affirm or Afterpay</p>
+        </div>
+        <p class="nc-back"><span class="nc-back-text">Been here before?</span>
+          <a class="nc-back-link" data-open-booking href="#services">Book your next visit <span aria-hidden="true">&rarr;</span></a></p>
         <p class="hero-cred">As featured in
           <a href="https://canvasrebel.com/meet-evelyn-romero/" target="_blank" rel="noopener">CanvasRebel</a>
-          <span aria-hidden="true">·</span> Medical-grade skincare
-          <span aria-hidden="true">·</span> Woodland Hills, CA</p>
-        <div class="hero-actions">
-          <a class="btn-mb" data-open-booking href="#services">
-            <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
-            <span class="btn btn-solid btn-mb-inner">Book an appointment</span>
-          </a>
-        </div>
-        <ul class="hero-features" role="list">
-          <li>Personalized facials</li>
-          <li>Medical-grade actives</li>
-          <li>Gifts that never expire</li>
-        </ul>
-        <a class="hero-scroll" href="#services" aria-label="Scroll to services">
-          <span class="hero-scroll-mouse" aria-hidden="true"><i></i></span>
-          <span class="hero-scroll-label">Scroll</span>
-        </a>
+          <span aria-hidden="true">·</span> Medical-grade skincare</p>
       </div>
       <p class="hero-wordmark" aria-hidden="true">LUMEVINA</p>
     </section>
@@ -199,45 +213,8 @@
             </div>
           </article>
 
-          <!-- New-client options shuffle as a card stack (js/shuffle-stack.js) -->
-          <div class="product-card shuffle-tile" data-reveal>
-            <div class="shuffle-head">
-              <span class="shuffle-label">New Clients · 2 options</span>
-              <button class="shuffle-btn" type="button" aria-label="Switch between new client options">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
-                <span class="shuffle-btn-text">Switch</span>
-              </button>
-            </div>
-            <div class="shuffle-stack">
-              <article class="shuffle-card is-front">
-                <div class="product-visual visual-consult" aria-hidden="true"><img src="img/services/consult.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
-                <h3 class="product-name">New Client Consultation + Treatment</h3>
-                <p class="product-desc">Your first visit — full skin analysis, consultation, and a treatment built for your goals.</p>
-                <div class="product-foot">
-                  <span class="product-price">$215</span>
-                  <button class="btn btn-solid add-to-cart" type="button"
-                    data-id="new-client-consultation" data-name="New Client Consultation + Treatment" data-price="215">Add to cart</button>
-                </div>
-              </article>
-              <article class="shuffle-card is-back" aria-hidden="true">
-                <div class="product-visual visual-acne" aria-hidden="true"><img src="img/services/acne.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
-                <h3 class="product-name">New Client Consultation + Treatment (Acne Program)</h3>
-                <p class="product-desc">Struggling with acne? A personalized plan built on Face Reality — the #1 acne line — tailored to your skin. Clear, healthy skin starts here.</p>
-                <div class="product-foot">
-                  <span class="product-price">$225</span>
-                  <button class="btn btn-solid add-to-cart" type="button"
-                    data-id="new-client-consultation-acne" data-name="New Client Consultation + Treatment (Acne Program)" data-price="225">Add to cart</button>
-                </div>
-              </article>
-            </div>
-          </div>
-
           <article class="product-card" data-reveal data-spotlight>
-            <!-- the same header row as the New Clients card beside it, so the two photos line up -->
-            <div class="shuffle-head">
-              <span class="shuffle-label">Waxing · Package</span>
-              <span class="shuffle-btn shuffle-tag" aria-hidden="true"><span class="shuffle-btn-text">2 in 1</span></span>
-            </div>
+            <span class="product-badge">Waxing · 2 in 1</span>
             <div class="product-visual visual-peel" aria-hidden="true"><img src="img/services/brazilian.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
             <h3 class="product-name">Brazilian Wax × Mini Vajacial</h3>
             <p class="product-desc">The package: Brazilian wax paired with a mini vajacial — smooth, calm, ingrown-free.</p>
@@ -260,7 +237,7 @@
                 <option value="gift-ageless-grace-facial" data-price="245" data-label="Ageless Grace Facial">Ageless Grace Facial · $245</option>
                 <option value="gift-lumevina-custom-facial" data-price="195" data-label="Lumevina Custom Facial">Lumevina Custom Facial · $195</option>
                 <option value="gift-custom-facial-dermaplaning" data-price="185" data-label="Custom Facial + Dermaplaning">Custom + Dermaplaning · $185</option>
-                <option value="gift-new-client-consultation" data-price="215" data-label="New Client Consultation + Treatment">New Client Consult · $215</option>
+                <option value="gift-new-client-consultation" data-price="220" data-label="New Clients Start Here">New Clients Start Here · $220</option>
                 <option value="gift-new-client-consultation-acne" data-price="225" data-label="New Client Consultation + Treatment (Acne Program)">New Client Acne Consult · $225</option>
                 <option value="gift-monthly-acne-treatment" data-price="195" data-label="Monthly Acne Treatment">Monthly Acne Treatment · $195</option>
                 <option value="gift-brazilian-wax-mini-vajacial" data-price="100" data-label="Brazilian Wax x Mini Vajacial Package">Brazilian + Mini Vajacial · $100</option>
@@ -324,7 +301,7 @@
             <div class="wax-group">
               <h4 class="wax-group-title">Facials</h4>
               <ul class="wax-list" role="list">
-                <li class="wax-row"><span class="wax-item"><strong>New Clients Start Here</strong><span class="wax-desc">Consultation, routine review, and a fully customized facial.</span></span><span class="dots"></span><span class="wax-price">$215</span><button class="wax-add add-to-cart" type="button" data-id="new-client-consultation" data-name="New Client Consultation + Treatment" data-price="215" aria-label="Add New Client Consultation and Treatment to cart">+</button></li>
+                <li class="wax-row"><span class="wax-item"><strong>New Clients Start Here</strong><span class="wax-desc">Consultation, a review of your current routine, and a fully customized facial. For non-acne skin; for acne, start with the Acne Program.</span></span><span class="dots"></span><span class="wax-price">from $220</span><button class="wax-add add-to-cart" type="button" data-id="new-client-consultation" data-name="New Clients Start Here" data-price="220" aria-label="Add New Clients Start Here to cart">+</button></li>
                 <li class="wax-row"><span class="wax-item"><strong>Lumevina Custom Facial</strong><span class="wax-desc">Returning clients — customized actives, extractions, LED + cryo globes.</span></span><span class="dots"></span><span class="wax-price">$195</span><button class="wax-add add-to-cart" type="button" data-id="lumevina-custom-facial" data-name="Lumevina Custom Facial" data-price="195" aria-label="Add Lumevina Custom Facial to cart">+</button></li>
                 <li class="wax-row"><span class="wax-item"><strong>Ageless Grace Facial</strong><span class="wax-desc">Our signature lifting facial — peptides, sculpting massage, and LED light therapy.</span></span><span class="dots"></span><span class="wax-price">$245</span><button class="wax-add add-to-cart" type="button" data-id="ageless-grace-facial" data-name="Ageless Grace Facial" data-price="245" aria-label="Add Ageless Grace Facial to cart">+</button></li>
                 <li class="wax-row"><span class="wax-item"><strong>Custom Facial + Dermaplaning</strong><span class="wax-desc">The custom facial finished with dermaplaning — glass-smooth, extra glow.</span></span><span class="dots"></span><span class="wax-price">$185</span><button class="wax-add add-to-cart" type="button" data-id="custom-facial-dermaplaning" data-name="Lumevina Custom Facial + Dermaplaning" data-price="185" aria-label="Add Custom Facial with Dermaplaning to cart">+</button></li>
@@ -480,15 +457,7 @@
       </div>
     </section>
 
-    <!-- ═══════════════ MARQUEE RIBBON (breaks the vertical rhythm) ═══════════════ -->
-    <div class="ribbon" aria-hidden="true">
-      <div class="ribbon-track">
-        <span>Bespoke facials<i>✦</i>Medical-grade skincare<i>✦</i>Woodland Hills<i>✦</i>Real, visible results<i>✦</i>Where glow begins<i>✦</i></span>
-        <span>Bespoke facials<i>✦</i>Medical-grade skincare<i>✦</i>Woodland Hills<i>✦</i>Real, visible results<i>✦</i>Where glow begins<i>✦</i></span>
-      </div>
-    </div>
-
-    <!-- ═══════════════ THE SPA · THE RITUAL ═══════════════ -->
+    <!-- ═══════════════ THE SPA ═══════════════ -->
     <section class="section section-ritual section-spa-ritual" id="spa">
       <canvas class="ritual-light" aria-hidden="true"></canvas>
       <div class="ritual-scrim" aria-hidden="true"></div>
@@ -518,31 +487,6 @@
           </div>
         </div>
 
-        <!-- the three-step ritual (nav "Ritual" jumps here) -->
-        <div class="ritual-head spa-ritual-head" id="ritual" data-reveal>
-          <p class="eyebrow">The Ritual</p>
-          <h3 class="display">Three steps to <em>your best skin.</em></h3>
-        </div>
-        <div class="ritual-grid" data-reel data-reel-label="The ritual steps">
-          <div class="ritual-card" data-reveal data-n="01" data-reel-name="01 Consult">
-            <p class="ritual-step">01 · Consult</p>
-            <h3 class="ritual-card-title">We listen first</h3>
-            <p>Every visit opens with a skin consultation — your history, your goals,
-            and what your skin is telling us today.</p>
-          </div>
-          <div class="ritual-card" data-reveal data-n="02" data-reel-name="02 Customize">
-            <p class="ritual-step">02 · Customize</p>
-            <h3 class="ritual-card-title">Composed for you</h3>
-            <p>Your esthetician builds the treatment in the room — actives, techniques,
-            and finishing care chosen for your skin alone.</p>
-          </div>
-          <div class="ritual-card" data-reveal data-n="03" data-reel-name="03 Glow">
-            <p class="ritual-step">03 · Glow</p>
-            <h3 class="ritual-card-title">Leave luminous</h3>
-            <p>You leave with visible results and a simple home ritual — and your next
-            visit builds on the last.</p>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -801,7 +745,7 @@
       </div>
     </section>
 
-    <!-- ═══════════════ GLOW REWARDS · CONNECT ═══════════════ -->
+    <!-- ═══════════════ GLOW REWARDS ═══════════════ -->
     <section class="section section-app section-rewards-connect" id="rewards">
       <div class="section-inner">
         <div class="rc-grid">
@@ -858,63 +802,6 @@
             </div>
           </div>
 
-          <!-- Connect -->
-          <aside class="rc-connect" id="connect" data-reveal>
-            <p class="eyebrow">Connect</p>
-            <h3 class="display rc-connect-title">Follow <em>the glow.</em></h3>
-            <p class="section-sub">Behind-the-scenes, skin tips between visits, and first word
-            on openings — tap the stack to find us everywhere.</p>
-            <!-- TODO: swap the Instagram/Facebook hrefs for the spa's real profiles -->
-            <div class="stack-cards" data-reveal role="button" tabindex="0"
-                 aria-expanded="false" aria-label="Expand Lumevina's links">
-              <div class="stack-card">
-                <a href="https://www.instagram.com/lumevina" target="_blank" rel="noopener">
-                  <span class="stack-thumb thumb-instagram" aria-hidden="true">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>
-                  </span>
-                  <span class="stack-text">
-                    <strong>Instagram</strong>
-                    <span>Daily glow — results, rituals, behind the scenes</span>
-                  </span>
-                </a>
-              </div>
-              <div class="stack-card">
-                <a href="https://www.facebook.com" target="_blank" rel="noopener">
-                  <span class="stack-thumb thumb-facebook" aria-hidden="true">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                  </span>
-                  <span class="stack-text">
-                    <strong>Facebook</strong>
-                    <span>Reviews, updates, and our community</span>
-                  </span>
-                </a>
-              </div>
-              <div class="stack-card">
-                <a data-open-booking href="#services">
-                  <span class="stack-thumb thumb-book" aria-hidden="true">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                  </span>
-                  <span class="stack-text">
-                    <strong>Book Online</strong>
-                    <span>Reserve your next visit in a minute</span>
-                  </span>
-                </a>
-              </div>
-              <div class="stack-card">
-                <a href="mailto:Lumevina.aesthetics@gmail.com">
-                  <span class="stack-thumb thumb-mail" aria-hidden="true">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
-                  </span>
-                  <span class="stack-text">
-                    <strong>Email</strong>
-                    <span>Lumevina.aesthetics@gmail.com</span>
-                  </span>
-                </a>
-              </div>
-              <p class="stack-hint" aria-hidden="true">Tap to expand</p>
-              <button class="btn btn-ghost stack-less" type="button">Show less</button>
-            </div>
-          </aside>
         </div>
       </div>
     </section>
@@ -961,7 +848,6 @@
         <a href="#services">Services</a>
         <a href="#membership">Membership</a>
         <a href="#spa">The Spa</a>
-        <a href="#ritual">Ritual</a>
         <a href="#gift">E-Gift Cards</a>
         <a data-open-booking href="#services">Book Online</a>
       </nav>
@@ -1972,7 +1858,6 @@
   <script src="js/liquid-metal.js"></script>
   <script src="js/morphing-light.js"></script>
   <script src="js/moving-border.js"></script>
-  <script src="js/stacked-cards.js"></script>
   <script src="js/cursor-aura.js"></script>
   <script src="js/policy-panels.js"></script>
   <script src="js/policy-sheet.js"></script>
@@ -1982,7 +1867,7 @@
   <script src="js/reel.js"></script>
   <script src="js/extra-days.js"></script>
   <script src="js/booking.js"></script>
-  <script src="js/shuffle-stack.js"></script>
+  <script src="js/start-here.js"></script>
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/install.js"></script>

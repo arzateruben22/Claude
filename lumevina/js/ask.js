@@ -77,7 +77,7 @@
         ". The Glow membership covers the Monthly Acne Treatment."; } },
     { k: /consult/, a: function () {
       return "A consultation is " + price("In-Person Consultation", 55) + " in person or " + price("Virtual Consultation", 55) +
-        " by video. New clients can also start with a consultation and treatment for " + price("New Client Consultation + Treatment", 215) + "."; } },
+        " by video. New clients can also start with a consultation and a custom facial, from " + price("New Clients Start Here", 220) + "."; } },
     { k: /underarm|armpit/, a: function () { return "An underarm wax is " + price("Underarm Wax", 22) + "."; } },
     { k: /\bbrows?\b|eyebrow/, a: function () { return "Brow wax and tweeze is " + price("Brow Wax + Tweeze", 27) + "."; } },
     { k: /\blip\b/, a: function () { return "An upper lip wax is " + price("Upper Lip Wax", 9) + "."; } },
@@ -99,9 +99,11 @@
       return "Skin School Live is Evelyn’s in-person class: two hours at the studio with six people, a skin check under the lamp, your routine built on the spot and a kit to take home, for $129 ($109 for members). Want it just for your friends? A Glow Party is $690 for up to six, at the studio or at your place. Estheticians can join Pro Night for $249."; },
       acts: [["See class dates", "go:school.html#live"], ["Plan a Glow Party", "go:school.html#live"]] },
     { id: "new", node: "p-facials", k: /first time|new client|first visit|never been|haven'?t been/, a: function () {
-      return "Welcome! Start with the New Client Consultation + Treatment, " + price("New Client Consultation + Treatment", 215) +
-        ": Evelyn looks at your skin and your routine, then gives you a fully custom facial. On the acne program it’s " +
-        price("New Client Consultation + Treatment (Acne Program)", 225) + "."; }, acts: [["Book it", "book"]] },
+      return "Welcome! New clients start here: a consultation, a look at your current routine, and a fully custom facial, from " +
+        price("New Clients Start Here", 220) + ". Every facial includes a double cleanse, enzyme exfoliation, extractions, a targeted mask, massage, LED and cryo globes. " +
+        "If acne is your main concern, start with the Acne Program’s consultation and treatment instead, " +
+        price("New Client Consultation + Treatment (Acne Program)", 225) + "."; },
+      acts: [["Book my first facial", "book:new-client-consultation"], ["Acne first visit", "book:new-client-consultation-acne"]] },
     /* membership questions a member asks about their own plan, before "book" and "cancel" catch them */
     { id: "bank", node: "member", k: /\bbank|roll ?over|unused facial|busy month|miss(ed)? (a|my) month|facials? (left|waiting|saved)|how many facials/, a: function () {
       var LM = window.LumevinaMembership, s = window.LumevinaAccount && window.LumevinaAccount.current();
@@ -141,7 +143,7 @@
     { id: "prices", node: "prices", k: /price|cost|how much|menu|rates?\b|\$/, a: function () {
       return "The Lumevina Custom Facial is " + price("Lumevina Custom Facial", 195) + ", with dermaplaning " + price("Lumevina Custom Facial + Dermaplaning", 185) +
         ", the Ageless Grace " + price("Ageless Grace Facial", 245) + " and the Monthly Acne Treatment " + price("Monthly Acne Treatment", 195) +
-        ". New clients start at " + price("New Client Consultation + Treatment", 215) + ". Waxing starts at " + price("Upper Lip Wax", 9) + "; a Brazilian is " + price("Brazilian Wax", 80) + "."; },
+        ". New clients start at " + price("New Clients Start Here", 220) + ". Waxing starts at " + price("Upper Lip Wax", 9) + "; a Brazilian is " + price("Brazilian Wax", 80) + "."; },
       acts: [["See the menu", "#services"], ["Book", "book"]] },
     { id: "before", node: "before", k: /before (my|the|a) (facial|appointment|visit|treatment)|prep|prepare|stop (using|taking)|botox|filler|shave|shaving|makeup (to|before)/, a: function () {
       return "Before your facial: stop retinol or prescription retinoids 5 to 7 days ahead, pause exfoliating acids 2 to 3 days ahead, and don’t wax or shave your face for 2 days. After Botox or fillers, wait 2 weeks (or book the facial the same day, before injections). Skip booking on the day of a big event."; },
@@ -197,7 +199,7 @@
     return best ? { id: best.getAttribute("data-id"), price: best.getAttribute("data-price"), desc: desc } : null;
   };
   var SHORT = { "Lumevina Custom Facial": "Custom Facial", "Lumevina Custom Facial + Dermaplaning": "Custom + Dermaplaning",
-    "New Client Consultation + Treatment": "New client facial", "New Client Consultation + Treatment (Acne Program)": "New acne client",
+    "New Clients Start Here": "New client facial", "New Client Consultation + Treatment (Acne Program)": "New acne client",
     "BioRePeel - 1 Facial Treatment": "BioRePeel", "BioRePeel - 3 Facial Treatments": "BioRePeel · 3 treatments",
     "Back Facial - Half": "Half back", "Back Facial - Full": "Full back", "Wax Wednesday (Brazilian)": "Wax Wednesday Brazilian",
     "Brazilian Wax x Mini Vajacial Package": "Brazilian + mini vajacial", "Full Face Wax + Cooling Mask": "Full face + cooling mask",
@@ -205,7 +207,7 @@
   var short = function (n) { return SHORT[n] || n.replace(/ Wax$/, ""); };
   var GROUPS = {
     "p-facials": { label: "Facials", ask: "Which facial?", items: ["Lumevina Custom Facial", "Lumevina Custom Facial + Dermaplaning", "Ageless Grace Facial",
-      "New Client Consultation + Treatment", "Couples Facial"] },
+      "New Clients Start Here", "Couples Facial"] },
     "p-peels": { label: "Peels", ask: "Which peel?", items: ["Light Chemical Peel", "Medium Chemical Peel", "BioRePeel - 1 Facial Treatment", "BioRePeel - 3 Facial Treatments"] },
     "p-acne": { label: "Acne program", ask: "Where are you in the acne program?", items: ["New Client Consultation + Treatment (Acne Program)",
       "Monthly Acne Treatment", "Bi-Weekly Acne Treatment"] },
