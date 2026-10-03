@@ -607,6 +607,7 @@
 
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
+  <script src="js/react-bits.js"></script>
   <script>
   (function () {
     "use strict";
@@ -2025,6 +2026,25 @@
     });
     window.addEventListener("storage", function (e) { if (e.key === KEY) { qs = load(); paint(); } });
     paint();
+  })();
+  </script>
+  <script>
+  /* Numbers count into place as they come on screen (React Bits CountUp,
+     js/react-bits.js): the headline figures once, and every tile again
+     when it changes, from its old value to the new one, so logging an
+     expense visibly takes it off the profit. */
+  (function () {
+    "use strict";
+    var FX = window.LumevinaFX;
+    if (!FX) return;
+    document.querySelectorAll(".kpi-val").forEach(function (el) { FX.countUp(el, { duration: 1.4 }); });
+    document.querySelectorAll(".bk-tiles").forEach(function (box) {
+      var run = function () {
+        box.querySelectorAll(".bk-tv").forEach(function (el, i) { FX.countUp(el, { key: box.id + ":" + i }); });
+      };
+      run();
+      new MutationObserver(run).observe(box, { childList: true });
+    });
   })();
   </script>
 </body>

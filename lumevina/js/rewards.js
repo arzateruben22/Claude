@@ -214,7 +214,9 @@
 
   var renderModal = function () {
     if (!modal) return;
-    modal.querySelector(".rw-balance-num").textContent = String(data.points);
+    var bal = modal.querySelector(".rw-balance-num");
+    bal.textContent = String(data.points);
+    if (window.LumevinaFX) window.LumevinaFX.countUp(bal);   /* counts in from what it showed last */
 
     var toNext = BLOCK_POINTS - (data.points % BLOCK_POINTS);
     var blocks = Math.floor(data.points / BLOCK_POINTS);

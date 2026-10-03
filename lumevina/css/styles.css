@@ -6031,3 +6031,46 @@ html.sheet-open { overflow: hidden; }
     padding-bottom: env(safe-area-inset-bottom, 0px); }
 }
 @media (prefers-reduced-motion: reduce) { .ask-fab, .ask-panel { transition: none; } }
+
+/* ─── React Bits effects (js/react-bits.js) ─── */
+
+/* BlurText: the words of a headline, waiting to come into focus */
+.rb-w { display: inline-block; }
+.rb-blur-wait .rb-w { opacity: 0; filter: blur(10px); }
+
+/* ShinyText: a slow light across a line, 2.4s across then a pause.
+   It takes the text's own color, so it works on any line. */
+.rb-shiny {
+  background-image: linear-gradient(120deg, currentColor 0%, currentColor 35%, #fff 50%, currentColor 65%, currentColor 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rb-shiny 4s linear infinite;
+}
+@keyframes rb-shiny {
+  0% { background-position: 150% center; }
+  60%, 100% { background-position: -50% center; }
+}
+
+/* GlareHover: the streak of light, parked off the card until it plays */
+.rb-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(-45deg, transparent 60%, rgba(255, 236, 242, 0.28) 70%, transparent 85%, transparent 100%) no-repeat;
+  background-size: 250% 250%;
+  background-position: -100% -100%;
+}
+.rb-glare.is-on { background-position: 100% 100%; transition: background-position 700ms ease; }
+.rb-glare.is-reset { transition: none; }
+
+.mem-five.is-full .rb-shiny { animation: none; background: none; -webkit-text-fill-color: currentColor; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rb-shiny { animation: none; background: none; -webkit-text-fill-color: currentColor; }
+  .rb-blur-wait .rb-w { opacity: 1; filter: none; }
+  .rb-glare { display: none; }
+}

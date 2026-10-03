@@ -130,7 +130,7 @@
         <!-- New clients start here: the first visit from Evelyn's booking page, as one
              question and a tap on a real time (js/start-here.js fills in the openings) -->
         <div class="nc" id="start">
-          <p class="nc-eyebrow" id="nc-q">New here? What brings you in?</p>
+          <p class="nc-eyebrow" id="nc-q"><span class="rb-shiny">New here? What brings you in?</span></p>
           <div class="nc-pick" role="radiogroup" aria-labelledby="nc-q">
             <button type="button" role="radio" aria-checked="true" data-nc="glow">Glowing skin</button>
             <button type="button" role="radio" aria-checked="false" data-nc="acne">Acne &amp; breakouts</button>
@@ -169,7 +169,7 @@
       <div class="section-inner">
         <div class="shop-head" data-reveal>
           <p class="eyebrow" data-idx="01">Services &amp; Gift Cards</p>
-          <h2 class="display">Your glow, <em>on your schedule.</em></h2>
+          <h2 class="display" data-blur-text>Your glow, <em>on your schedule.</em></h2>
           <p class="section-sub">Choose a treatment to <strong>book instantly</strong> — pick your
           time and hold it with a 50% deposit. Prefer to give the gift of glow? The
           <a class="inline-link" href="#gift">gift certificate</a> is a quick add to your cart.</p>
@@ -226,7 +226,7 @@
           </article>
 
           <article class="product-card product-card--gift" id="gift" data-reveal data-spotlight>
-            <div class="product-visual visual-gift" aria-hidden="true"><img class="gift-logo" src="img/logo-gift.webp" alt="" loading="lazy" decoding="async" width="663" height="474"></div>
+            <div class="product-visual visual-gift" aria-hidden="true" data-glare><img class="gift-logo" src="img/logo-gift.webp" alt="" loading="lazy" decoding="async" width="663" height="474"></div>
             <h3 class="product-name">E-Gift Certificate</h3>
             <p class="product-desc">The gift of glow — pick a treatment to gift, or a $110 value
             toward any service. Delivered by email with a unique code; certificates never expire.</p>
@@ -420,17 +420,17 @@
       <div class="section-inner">
         <div class="mem-head" data-reveal>
           <p class="eyebrow" data-idx="02">Glow Membership</p>
-          <h2 class="display">Your skin, <em>on a schedule.</em></h2>
+          <h2 class="display" data-blur-text>Your skin, <em>on a schedule.</em></h2>
           <p class="section-sub">Skin renews about every four weeks. A monthly facial keeps it
           there, and a membership makes it automatic: one treatment a month, banked if you're
           busy, with member pricing on everything else.</p>
           <p class="mem-founding mem-five"><span class="mem-founding-dot" aria-hidden="true"></span>
           <span><strong>Founding Five:</strong> the first five members on any plan get a free skincare kit
-          and add-on · <span class="mem-five-left">5 of 5 spots left</span></span></p>
+          and add-on · <span class="mem-five-left rb-shiny">5 of 5 spots left</span></span></p>
         </div>
 
         <div class="mem-grid" data-reel data-reel-tabs data-reel-label="Membership plans">
-          <article class="mem-plan is-popular" data-reveal data-reel-name="Glow" data-tier="1">
+          <article class="mem-plan is-popular" data-reveal data-glare data-reel-name="Glow" data-tier="1">
             <span class="mem-tag">Most popular</span>
             <h3 class="mem-name">Glow</h3>
             <p class="mem-price"><span class="mem-amt">$159</span><span class="mem-per">/month</span></p>
@@ -438,7 +438,7 @@
             <ul class="mem-perks" role="list"><li>One facial a month: the Lumevina Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment</li><li>10% off skincare from our shelf, and free shipping</li><li>A home routine from Evelyn, refreshed each season, with a check-in between visits</li><li>15% off add-ons and anything else booked the same visit</li><li>Ask Evelyn any time: instant answers, and her own reply within 24 hours</li><li>First word on flash openings</li></ul>
             <button class="btn btn-solid mem-join" type="button" data-join="glow">Join Glow</button>
           </article>
-          <article class="mem-plan" data-reveal data-reel-name="Ageless" data-tier="3">
+          <article class="mem-plan" data-reveal data-glare data-reel-name="Ageless" data-tier="3">
             <h3 class="mem-name">Ageless</h3>
             <p class="mem-price"><span class="mem-amt">$209</span><span class="mem-per">/month</span></p>
             <p class="mem-value">Any of the facials, up to the Ageless Grace · a $245 value</p>
@@ -465,7 +465,7 @@
         <div class="grid-2 spa-story">
           <div data-reveal>
             <p class="eyebrow" data-idx="03">The Spa</p>
-            <h2 class="display">Skincare that <em>honors your skin.</em></h2>
+            <h2 class="display" data-blur-text>Skincare that <em>honors your skin.</em></h2>
           </div>
           <div class="story-copy" data-reveal data-reel data-reel-label="The Spa story">
             <div class="spa-slide" data-reel-name="Approach">
@@ -495,7 +495,7 @@
       <div class="section-inner">
         <div class="shop-head" data-reveal>
           <p class="eyebrow" data-idx="04">Shop</p>
-          <h2 class="display">Take a little glow <em>home.</em></h2>
+          <h2 class="display" data-blur-text>Take a little glow <em>home.</em></h2>
           <p class="section-sub">Buy what we stock straight from our shelf, or shop the
           professional lines behind every treatment.</p>
         </div>
@@ -593,7 +593,7 @@
       <div class="section-inner">
         <div class="policies-head" data-reveal>
           <p class="eyebrow" data-idx="05">Before You Book</p>
-          <h2 class="display">Good to know, <em>before you glow.</em></h2>
+          <h2 class="display" data-blur-text>Good to know, <em>before you glow.</em></h2>
           <p class="section-sub">Please review our policies before booking any service —
           and fill out all required intake forms. Questions? DM
           <a class="inline-link" href="https://www.instagram.com/lumevina" target="_blank" rel="noopener">@lumevina</a>
@@ -753,7 +753,7 @@
           <div class="rc-rewards">
             <div class="app-head" data-reveal>
               <p class="eyebrow" data-idx="06">Glow Rewards</p>
-              <h2 class="display">Every visit <em>gives back.</em></h2>
+              <h2 class="display" data-blur-text>Every visit <em>gives back.</em></h2>
               <p class="section-sub">Earn Glow Points on every deposit and gift — live on this
               site today, and soon in the Lumevina app for iPhone, where your points carry over.</p>
             </div>
@@ -811,7 +811,7 @@
       <div class="section-inner journal-inner">
         <div data-reveal>
           <p class="eyebrow" data-idx="07">The Journal</p>
-          <h2 class="display">Spa notes, <em>monthly.</em></h2>
+          <h2 class="display" data-blur-text>Spa notes, <em>monthly.</em></h2>
           <p class="section-sub">Skin science without the jargon — seasonal skincare,
           treatment spotlights, and first access to new offerings.</p>
         </div>
@@ -1864,6 +1864,7 @@
   <script src="js/sectors.js"></script>
   <script src="js/link-preview.js"></script>
   <script src="js/spotlight.js"></script>
+  <script src="js/react-bits.js"></script>
   <script src="js/reel.js"></script>
   <script src="js/extra-days.js"></script>
   <script src="js/booking.js"></script>

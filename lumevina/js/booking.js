@@ -1544,6 +1544,12 @@
 
       payView.hidden = true;
       successView.hidden = false;
+      /* React Bits effects (js/react-bits.js): a burst of sparks from the rose,
+         and the points count in */
+      if (window.LumevinaFX) {
+        window.LumevinaFX.burst(successView.querySelector(".success-glyph"));
+        if (rw) window.LumevinaFX.countUp(earnedEl);
+      }
       modal.querySelector(".booking-done").focus();
     });
   });

@@ -593,6 +593,11 @@
 
         formView.hidden = true;
         successView.hidden = false;
+        /* React Bits effects (js/react-bits.js): a burst of sparks, and the points count in */
+        if (window.LumevinaFX) {
+          window.LumevinaFX.burst(successView.querySelector(".success-glyph"));
+          if (rw && earnedEl) window.LumevinaFX.countUp(earnedEl);
+        }
         checkoutForm.reset();
         giftRecipientFields.hidden = false;
         shipAddress.hidden = false;
