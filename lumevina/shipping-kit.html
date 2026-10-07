@@ -1,0 +1,482 @@
+<meta charset="utf-8">
+<title>Lumevina Shipping Kit</title>
+<meta name="color-scheme" content="dark">
+<style>
+@font-face { font-family: "Inter"; font-weight: 100 900; font-style: normal; src: url("fonts/inter-var.woff2") format("woff2"); font-display: swap; }
+/* One reading column; the shopping list, packages and cost estimator widen into panels.
+   Lumevina noir, the same black, porcelain panels and rose-to-sand light as the site. */
+:root {
+  color-scheme: dark;
+  --ground: #000;
+  --panel: #111113;
+  --panel-hi: #19171a;
+  --hair: rgba(255, 255, 255, 0.09);
+  --ink: #f5f5f7;
+  --ink-2: #aaa5a8;
+  --ink-3: #75707a;
+  --rose: #f4c9d6;
+  --good: #7fd48f;
+  --warn: #f2b48a;
+  --grad: linear-gradient(95deg, #f7d3de 0%, #eab9c8 45%, #e2b08c 100%);
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--ground); color: var(--ink); }
+body { margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: var(--rose); }
+.wrap { width: min(980px, 100%); margin: 0 auto; padding-inline: 20px; padding-block: 40px 64px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.brand { font-weight: 700; letter-spacing: -0.02em; font-size: 1.05rem; }
+.brand span { display: block; font-size: .62rem; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin-top: 2px; }
+.for { font-size: .82rem; font-weight: 600; color: var(--rose); margin: 0; }
+
+h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); font-weight: 700; letter-spacing: -0.045em; line-height: 1.02; margin: 48px 0 0; max-width: 15ch; text-wrap: balance; }
+.grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { color: var(--ink-2); font-size: clamp(1.05rem, 2vw, 1.2rem); max-width: 40rem; margin: 18px 0 0; }
+
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 36px 0 0; padding: 0; list-style: none; }
+.facts li { background: var(--panel); border-radius: 18px; padding: 16px 16px 14px; box-shadow: inset 0 0 0 1px var(--hair); }
+.facts b { display: block; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.facts span { display: block; color: var(--ink-2); font-size: .86rem; margin-top: 4px; }
+
+section { margin-top: 64px; }
+h2 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; margin: 0; text-wrap: balance; }
+.kicker { font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin: 0 0 10px; }
+.intro { color: var(--ink-2); max-width: 40rem; margin: 12px 0 0; }
+
+/* shopping list */
+.buy-list { list-style: none; margin: 22px 0 0; padding: 0; background: var(--panel); border-radius: 22px; box-shadow: inset 0 0 0 1px var(--hair); }
+.buy { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 6px 14px; align-items: center; padding: 14px 18px; border-top: 1px solid var(--hair); }
+.buy:first-child { border-top: 0; }
+.buy input { appearance: none; -webkit-appearance: none; margin: 0; width: 24px; height: 24px; border-radius: 8px; border: 1.5px solid var(--ink-3);
+  display: grid; place-items: center; cursor: pointer; background: transparent; }
+.buy input::after { content: ""; width: 10px; height: 6px; border: solid #000; border-width: 0 0 2px 2px; transform: rotate(-45deg) translate(1px, -1px); opacity: 0; }
+.buy input:checked { background: var(--grad); border-color: transparent; }
+.buy input:checked::after { opacity: 1; }
+.buy input:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.buy-name { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+.buy-spec { margin: 2px 0 0; color: var(--ink-2); font-size: .9rem; }
+.buy-price { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.buy-find { font-size: .85rem; font-weight: 600; text-decoration: none; white-space: nowrap; padding: 7px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .35); }
+.buy-find:hover { background: rgba(244, 201, 214, .1); }
+.buy.is-got .buy-name, .buy.is-got .buy-price { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--ink-3); }
+.sub-h { margin: 28px 0 0; font-size: 1rem; font-weight: 600; color: var(--ink-2); }
+.tally { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin: 14px 4px 0; color: var(--ink-2); font-size: .92rem; }
+.tally b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* packages, drawn to scale (1 inch = 12px) */
+.packs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 22px 0 0; }
+.pack { background: var(--panel); border-radius: 22px; padding: 18px; box-shadow: inset 0 0 0 1px var(--hair); display: flex; flex-direction: column; gap: 10px; }
+.pack-draw { height: 128px; display: grid; place-items: center; border-radius: 14px; background: #0a0a0b; position: relative; }
+.foot { border: 1.5px dashed rgba(244, 201, 214, .55); border-radius: 4px; position: relative; background: rgba(244, 201, 214, .06); }
+.foot.is-mailer { border-radius: 10px; }
+.foot .w, .foot .l { position: absolute; font-size: .7rem; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.foot .w { left: 50%; bottom: -19px; transform: translateX(-50%); }
+.foot .l { top: 50%; right: -8px; transform: translate(100%, -50%); }
+.pack h3 { margin: 6px 0 0; font-size: 1.15rem; letter-spacing: -0.02em; }
+.pack .size { margin: 0; color: var(--rose); font-weight: 600; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.pack p { margin: 0; color: var(--ink-2); font-size: .92rem; }
+.pack .cost { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--hair); color: var(--ink); font-size: .9rem; }
+
+/* steps: real sequences, so they're numbered */
+.steps { list-style: none; margin: 22px 0 0; padding: 0; counter-reset: s; display: grid; gap: 2px; max-width: 46rem; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; padding: 14px 0; border-top: 1px solid var(--hair); color: var(--ink-2); }
+.steps li:first-child { border-top: 0; }
+.steps li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: #000; font-weight: 700; font-size: .85rem; }
+.steps b { color: var(--ink); font-weight: 600; }
+.tip { margin: 18px 0 0; max-width: 46rem; padding: 14px 16px; border-radius: 16px; background: var(--panel); box-shadow: inset 0 0 0 1px rgba(244, 201, 214, .25); color: var(--ink-2); font-size: .95rem; }
+.tip b { color: var(--ink); }
+code, .mono { font-family: var(--mono); font-size: .88em; color: var(--ink); }
+
+/* estimator */
+.est { margin: 22px 0 0; background: var(--panel); border-radius: 22px; padding: 20px; box-shadow: inset 0 0 0 1px var(--hair); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; }
+.est fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.est legend { font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 8px; padding: 0; }
+.est fieldset + fieldset { margin-top: 16px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: block; padding: 8px 13px; border-radius: 999px; font-size: .88rem; font-weight: 500; color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--hair); transition: background-color .2s, color .2s; }
+.seg input:checked + span { background: var(--grad); color: #000; box-shadow: none; font-weight: 600; }
+.seg input:focus-visible + span { outline: 2px solid var(--rose); outline-offset: 2px; }
+.est-out { background: #0a0a0b; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+.est-num { font-size: 3rem; font-weight: 700; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; margin: 0; }
+.est-break { margin: 0; color: var(--ink-2); font-size: .92rem; }
+.est-chip { align-self: flex-start; margin: 4px 0 0; font-size: .82rem; font-weight: 600; padding: 5px 11px; border-radius: 999px; }
+.est-chip.is-good { color: #06210c; background: var(--good); }
+.est-chip.is-over { color: #2a1406; background: var(--warn); }
+.est-note { margin: 0; color: var(--ink-3); font-size: .82rem; }
+
+.rates { margin: 18px 0 0; overflow-x: auto; }
+.rates table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.rates caption { text-align: left; color: var(--ink-2); font-size: .88rem; padding-bottom: 8px; }
+.rates th, .rates td { text-align: left; padding: 9px 10px; border-top: 1px solid var(--hair); vertical-align: top; }
+.rates td:nth-child(2), .rates th:nth-child(2) { white-space: nowrap; }
+.rates thead th { border-top: 0; color: var(--ink-3); font-weight: 600; font-size: .78rem; letter-spacing: .04em; }
+.rates td.n { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+.rates th.n { text-align: right; }
+
+.know { list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.know li { background: var(--panel); border-radius: 18px; padding: 16px 18px; box-shadow: inset 0 0 0 1px var(--hair); color: var(--ink-2); font-size: .95rem; }
+.know b { display: block; color: var(--ink); margin-bottom: 4px; }
+
+.fine { margin-top: 64px; padding-top: 18px; border-top: 1px solid var(--hair); color: var(--ink-3); font-size: .82rem; }
+.fine p { margin: 0 0 8px; max-width: 52rem; }
+.fine a { color: var(--ink-2); }
+
+@media (max-width: 760px) {
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .packs { grid-template-columns: 1fr; }
+  .est { grid-template-columns: 1fr; }
+  .know { grid-template-columns: 1fr; }
+  .buy { grid-template-columns: auto minmax(0, 1fr) auto; padding: 14px 14px; }
+  .buy-find { grid-column: 2 / -1; justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) { .seg span { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Lumevina<span>Aesthetics Spa</span></div>
+    <p class="for">Shipping kit</p>
+  </header>
+
+  <h1>Shipping from home, <span class="grad">set up once.</span></h1>
+  <p class="lead">Shelf orders, Glow Routine boxes and Skin School kits: what to buy, one evening of setup, and a
+  ten-minute routine for each order. The website and the dashboard already handle the addresses and paperwork.</p>
+
+  <ul class="facts">
+    <li><b>Free</b><span>Pirate Ship: labels at USPS's discounted price, no monthly fee</span></li>
+    <li><b>About $190</b><span>Everything to start, bought once</span></li>
+    <li><b>$7.33</b><span>One bottle in a mailer, LA area, label and supplies included</span></li>
+    <li><b>10 min</b><span>Per order, from packing slip to pickup</span></li>
+  </ul>
+
+  <!-- ── What to buy ── -->
+  <section aria-labelledby="buy-h">
+    <p class="kicker">Shopping list</p>
+    <h2 id="buy-h">What to buy</h2>
+    <p class="intro">Tick things off as they arrive. Prices are what these usually cost online in 2026; the links search
+    Amazon, but Walmart and Staples carry the same things.</p>
+
+    <ul class="buy-list" id="buy-start">
+      <li class="buy">
+        <input type="checkbox" id="b-printer" data-price="80" aria-labelledby="b-printer-n">
+        <div><p class="buy-name" id="b-printer-n">Label printer</p>
+        <p class="buy-spec">MUNBYN RW403B. Prints 4 × 6 labels with heat, so there's never ink to buy. Bluetooth, and works with Mac, Windows, iPhone and Android.</p></div>
+        <p class="buy-price">$80</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=MUNBYN+RW403B" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-labels" data-price="13" aria-labelledby="b-labels-n">
+        <div><p class="buy-name" id="b-labels-n">Thermal labels</p>
+        <p class="buy-spec">4 × 6 in, fanfold stack of 500. About 3¢ a label.</p></div>
+        <p class="buy-price">$13</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=4x6+fanfold+thermal+shipping+labels+500" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-scale" data-price="25" aria-labelledby="b-scale-n">
+        <div><p class="buy-name" id="b-scale-n">Shipping scale</p>
+        <p class="buy-spec">Digital, up to 50 lb, reads in ounces. Accuteck is a good brand. Postage goes by weight, so this keeps every label right.</p></div>
+        <p class="buy-price">$25</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=Accuteck+digital+shipping+postal+scale" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-mailers" data-price="27" aria-labelledby="b-mailers-n">
+        <div><p class="buy-name" id="b-mailers-n">Bubble mailers</p>
+        <p class="buy-spec">6 × 10 in (size #0), pack of 100, self-sealing. For a single plastic bottle or tube.</p></div>
+        <p class="buy-price">$27</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=6x10+poly+bubble+mailers+100" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-boxes" data-price="22" aria-labelledby="b-boxes-n">
+        <div><p class="buy-name" id="b-boxes-n">Small boxes</p>
+        <p class="buy-spec">6 × 6 × 4 in, pack of 25. For two or three items, and anything glass or with a pump or dropper.</p></div>
+        <p class="buy-price">$22</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=6x6x4+shipping+boxes+25+pack" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-tape" data-price="12" aria-labelledby="b-tape-n">
+        <div><p class="buy-name" id="b-tape-n">Packing tape</p>
+        <p class="buy-spec">2 in clear tape with a dispenser gun. Also for taping bottle caps shut.</p></div>
+        <p class="buy-price">$12</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=packing+tape+dispenser+gun" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-wrap" data-price="10" aria-labelledby="b-wrap-n">
+        <div><p class="buy-name" id="b-wrap-n">Bubble wrap</p>
+        <p class="buy-spec">A small roll, 12 in wide. One layer around glass and pumps.</p></div>
+        <p class="buy-price">$10</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=bubble+wrap+roll+12+inch" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-bags" data-price="5" aria-labelledby="b-bags-n">
+        <div><p class="buy-name" id="b-bags-n">Zip bags and paper towels</p>
+        <p class="buy-spec">Sandwich-size zip bags, one per bottle, with a folded paper towel inside. This is what stops a leak.</p></div>
+        <p class="buy-price">$5</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=sandwich+zip+bags" target="_blank" rel="noopener">Find it</a>
+      </li>
+    </ul>
+    <p class="tally" aria-live="polite"><span>Still to buy: <b id="t-left">$194</b></span><span>Bought: <b id="t-got">$0</b> of <b id="t-all">$194</b></span></p>
+
+    <p class="sub-h">Nice to have</p>
+    <ul class="buy-list" id="buy-later">
+      <li class="buy">
+        <input type="checkbox" id="b-medium" data-price="28" aria-labelledby="b-medium-n">
+        <div><p class="buy-name" id="b-medium-n">Medium boxes</p>
+        <p class="buy-spec">10 × 8 × 4 in, pack of 25. For sets and kits, once those start shipping.</p></div>
+        <p class="buy-price">$28</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=10x8x4+shipping+boxes+25+pack" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-stickers" data-price="25" aria-labelledby="b-stickers-n">
+        <div><p class="buy-name" id="b-stickers-n">Lumevina stickers</p>
+        <p class="buy-spec">2 in round, about 50, from Sticker Mule or Vistaprint. One seals the tissue, and the package feels like the studio.</p></div>
+        <p class="buy-price">$25</p>
+        <a class="buy-find" href="https://www.stickermule.com/custom-stickers" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-tissue" data-price="8" aria-labelledby="b-tissue-n">
+        <div><p class="buy-name" id="b-tissue-n">Tissue paper</p>
+        <p class="buy-spec">Blush or white, for wrapping the products inside the box.</p></div>
+        <p class="buy-price">$8</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=blush+tissue+paper" target="_blank" rel="noopener">Find it</a>
+      </li>
+      <li class="buy">
+        <input type="checkbox" id="b-rollo" data-price="285" aria-labelledby="b-rollo-n">
+        <div><p class="buy-name" id="b-rollo-n">Rollo Wireless printer, instead</p>
+        <p class="buy-spec">Only if the MUNBYN turns out to be a hassle. It prints over Wi-Fi with AirPrint, so a Mac or iPhone needs nothing installed.</p></div>
+        <p class="buy-price">$285</p>
+        <a class="buy-find" href="https://www.amazon.com/s?k=Rollo+Wireless+Printer" target="_blank" rel="noopener">Find it</a>
+      </li>
+    </ul>
+    <p class="tip"><b>Want to start for $0?</b> If there's already a regular printer at home, Pirate Ship prints labels on plain
+    paper: cut it out and tape it on with clear packing tape. Get the label printer once there are more than a few orders a week.</p>
+  </section>
+
+  <!-- ── Which package ── -->
+  <section aria-labelledby="pack-h">
+    <p class="kicker">Three sizes cover everything</p>
+    <h2 id="pack-h">Which package</h2>
+    <p class="intro">The dashboard picks one for each order from what's in it, and it can be changed there. Footprints below are drawn to scale.</p>
+    <div class="packs">
+      <article class="pack">
+        <div class="pack-draw" aria-hidden="true"><div class="foot is-mailer" style="width:120px;height:72px"><span class="w">10 in</span><span class="l">6 in</span></div></div>
+        <h3>Bubble mailer</h3>
+        <p class="size">6 × 10 in</p>
+        <p>One plastic bottle or tube. Light, cheap, and fits in a mailbox.</p>
+        <p class="cost">About $6.93 to $8.40 postage, by USPS Ground Advantage</p>
+      </article>
+      <article class="pack">
+        <div class="pack-draw" aria-hidden="true"><div class="foot" style="width:72px;height:72px"><span class="w">6 in</span><span class="l">6 in · 4 deep</span></div></div>
+        <h3>Small box</h3>
+        <p class="size">6 × 6 × 4 in</p>
+        <p>Two or three items, or anything glass, with a pump or a dropper.</p>
+        <p class="cost">About $6.93 to $8.39 nearby, up to $14.36 across the country</p>
+      </article>
+      <article class="pack">
+        <div class="pack-draw" aria-hidden="true"><div class="foot" style="width:120px;height:96px"><span class="w">10 in</span><span class="l">8 in · 4 deep</span></div></div>
+        <h3>Medium box</h3>
+        <p class="size">10 × 8 × 4 in</p>
+        <p>Sets, kits, and four items or more.</p>
+        <p class="cost">About $10 to $17 for a full box, depending on distance</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── Setup ── -->
+  <section aria-labelledby="setup-h">
+    <p class="kicker">One evening</p>
+    <h2 id="setup-h">Set it up</h2>
+    <ol class="steps">
+      <li><span><b>Make a free Pirate Ship account</b> at <a href="https://www.pirateship.com" target="_blank" rel="noopener">pirateship.com</a>
+      with the Lumevina email, and add a card. It's charged only when you buy a label.</span></li>
+      <li><span><b>Use the studio as the "Ship from" address,</b> not home. It prints on every label, and anything returned goes back there.</span></li>
+      <li><span><b>Turn on email notifications</b> in Pirate Ship's settings, with the Lumevina name and logo. Each client then gets
+      their tracking number by email, automatically.</span></li>
+      <li><span><b>Set up the printer:</b> plug it in, load the labels, and install MUNBYN's free driver from munbyn.com (there's one for
+      Mac and one for Windows). On the new laptop, install it again; it takes about five minutes.</span></li>
+      <li><span><b>Print a test label.</b> In Pirate Ship, set the label size to 4 × 6 (thermal printer), then print one.</span></li>
+      <li><span><b>Make a packing spot:</b> the scale, a bin with mailers and boxes, the bags, tape and paper towels, and the printer within reach.</span></li>
+      <li><span><b>Practice once.</b> On the dashboard, under Shipping, press <b>Download for Pirate Ship</b> (it has sample orders until
+      real ones come in). In Pirate Ship choose <b>Import</b>, then <b>Upload a spreadsheet</b>, and pick that file. Look, but don't buy.</span></li>
+    </ol>
+  </section>
+
+  <!-- ── Packing ── -->
+  <section aria-labelledby="packing-h">
+    <p class="kicker">Skincare is liquid</p>
+    <h2 id="packing-h">Pack it so nothing leaks</h2>
+    <ol class="steps">
+      <li><span><b>Tighten every cap</b> and run a strip of tape around it.</span></li>
+      <li><span><b>Bag each bottle</b> in its own zip bag, with a folded paper towel inside.</span></li>
+      <li><span><b>Wrap glass, pumps and droppers</b> in one layer of bubble wrap, and send them in a box, never a mailer.</span></li>
+      <li><span><b>Fill the gaps</b> with tissue or bubble wrap until nothing rattles when you shake it.</span></li>
+      <li><span><b>Put the packing slip on top,</b> close it, and tape along every seam.</span></li>
+    </ol>
+  </section>
+
+  <!-- ── Each order ── -->
+  <section aria-labelledby="order-h">
+    <p class="kicker">The routine</p>
+    <h2 id="order-h">Every order, about ten minutes</h2>
+    <ol class="steps">
+      <li><span><b>Open the dashboard, then Shipping.</b> Everything to pack is listed with its package, weight and ship-by date.</span></li>
+      <li><span><b>Press Packing slips</b> and print them on the label printer: one 4 × 6 slip per order, with a thank-you note.</span></li>
+      <li><span><b>Pack each order,</b> weigh it, and fix the ounces on the dashboard if they're off.</span></li>
+      <li><span><b>Press Download for Pirate Ship.</b> In Pirate Ship: <b>Import</b>, <b>Upload a spreadsheet</b>, pick the file, check
+      the prices, and buy. Pirate Ship shows what each USPS option costs for every package; take the cheapest.</span></li>
+      <li><span><b>Print the labels</b> and stick one on each package.</span></li>
+      <li><span><b>Mark each one shipped</b> on the dashboard, with the tracking number and what the label cost. The books then use the real postage.</span></li>
+      <li><span><b>Hand them off:</b> schedule a free pickup at <a href="https://tools.usps.com/schedule-pickup-steps.htm" target="_blank" rel="noopener">usps.com</a>
+      the night before, and the carrier takes them from the door. Or drop them at the post office, or in a blue mailbox if they fit.</span></li>
+    </ol>
+    <p class="tip"><b>The promise on the website is "ships in 1–2 business days".</b> A look at the dashboard each workday morning keeps it:
+    anything under To pack goes out that day or the next. Glow Routine boxes wait under Coming up until three days before their date.</p>
+  </section>
+
+  <!-- ── Costs ── -->
+  <section aria-labelledby="cost-h">
+    <p class="kicker">The numbers</p>
+    <h2 id="cost-h">What a package costs</h2>
+    <p class="intro">Postage plus the mailer or box, bag and label. The website charges $8, free over $75 and for members, so the
+    question is how that compares.</p>
+
+    <form class="est" id="est" aria-label="Shipping cost estimator">
+      <div>
+        <fieldset>
+          <legend>Package</legend>
+          <div class="seg">
+            <label><input type="radio" name="pack" id="e-mailer" value="mailer" checked><span>Bubble mailer</span></label>
+            <label><input type="radio" name="pack" id="e-small" value="small"><span>Small box</span></label>
+            <label><input type="radio" name="pack" id="e-medium" value="medium"><span>Medium box</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Going to</legend>
+          <div class="seg">
+            <label><input type="radio" name="to" id="e-la" value="91367" checked><span>LA area</span></label>
+            <label><input type="radio" name="to" id="e-socal" value="92101"><span>Rest of SoCal</span></label>
+            <label><input type="radio" name="to" id="e-norcal" value="94103"><span>NorCal, Arizona, Nevada</span></label>
+            <label><input type="radio" name="to" id="e-mid" value="75201"><span>Texas and the middle</span></label>
+            <label><input type="radio" name="to" id="e-east" value="10001"><span>East Coast</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Weight, packed</legend>
+          <div class="seg">
+            <label><input type="radio" name="oz" id="e-light" value="12" checked><span>Under 1 lb</span></label>
+            <label><input type="radio" name="oz" id="e-heavy" value="24"><span>1 to 2 lb</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="est-out" aria-live="polite">
+        <p class="est-num" id="e-total">$7.33</p>
+        <p class="est-break" id="e-break">$6.93 postage by USPS Ground Advantage, plus $0.40 for the mailer, bag and label.</p>
+        <p class="est-chip is-good" id="e-chip">The $8 shipping fee covers it</p>
+        <p class="est-note">An estimate from USPS's 2026 prices. Pirate Ship shows the exact price before you buy.</p>
+      </div>
+    </form>
+
+    <div class="rates">
+      <table>
+        <caption>USPS Ground Advantage through Pirate Ship, any package under 1 lb, from July 12, 2026</caption>
+        <thead><tr><th scope="col">Going to</th><th scope="col">USPS zone</th><th scope="col" class="n">Postage</th></tr></thead>
+        <tbody>
+          <tr><td>LA and Ventura</td><td>1</td><td class="n">$6.93</td></tr>
+          <tr><td>San Diego, Orange County, the Inland Empire</td><td>2</td><td class="n">$6.94</td></tr>
+          <tr><td>Fresno, Las Vegas</td><td>3</td><td class="n">$7.30</td></tr>
+          <tr><td>The Bay Area, Sacramento, Phoenix, Salt Lake City</td><td>4</td><td class="n">$7.46</td></tr>
+          <tr><td>Seattle, Portland, Denver</td><td>5</td><td class="n">$7.69</td></tr>
+          <tr><td>New York, Miami, Atlanta</td><td>8</td><td class="n">$8.40</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tip"><b>Is $8 right?</b> Most orders go to the LA area, where a mailer runs about $7.33 all in and a small box about
+    $8 to $9.50, so $8 about breaks even. Members and orders over $75 ship free, which is part of what makes them worth it.
+    The dashboard's Shipping card shows the real average each month. If it stays above $9, raise the fee to $9 or the free-shipping line to $85.</p>
+  </section>
+
+  <!-- ── Good to know ── -->
+  <section aria-labelledby="know-h">
+    <p class="kicker">Good to know</p>
+    <h2 id="know-h">Before the first package</h2>
+    <ul class="know">
+      <li><b>Pickup is the cheapest shipping</b>A client with an appointment in the next 45 days gets "Pick up at my visit" picked for them at
+      checkout. It's free for them and costs no postage.</li>
+      <li><b>Coverage is built in</b>Ground Advantage and Priority Mail include up to $100 of insurance, enough for any order on the shelf.
+      If something arrives broken, ask for a photo and send a replacement.</li>
+      <li><b>Flammable or aerosol?</b>If a label says flammable, or it's an aerosol spray, it can only go by ground and needs special
+      marking. Check before mailing it. Cleansers, serums, creams and SPF ship normally.</li>
+      <li><b>Ask each brand first</b>Before shipping a brand's products, check with the rep that a professional account allows selling online
+      and shipping to clients. Some professional-only lines don't.</li>
+      <li><b>Sales tax on products</b>Products sold to California addresses need sales tax collected. Ask the accountant before the first
+      shipped sale, so it's set up from the start.</li>
+      <li><b>New laptop</b>Pirate Ship works in any browser, Mac or Windows, so there's nothing to move. Only the printer driver needs
+      installing again.</li>
+    </ul>
+  </section>
+
+  <footer class="fine">
+    <p>Prices: USPS Ground Advantage commercial prices effective July 12, 2026 (every package under 1 lb now costs the same);
+    Priority Mail Cubic 2026 prices of $8.39 nearby and $14.36 cross-country for the small box. Zones 6 and 7 and the medium box
+    are estimated between those. Supply prices are typical 2026 online prices.</p>
+    <p>Sources: <a href="https://www.ship.com/post/usps-rate-changes-july-2026" target="_blank" rel="noopener">ship.com, USPS rate changes July 2026</a> ·
+    <a href="https://www.ship.com/post/usps-cubic-pricing-explained" target="_blank" rel="noopener">ship.com, cubic pricing explained</a> ·
+    <a href="https://www.capterra.com/p/172133/Pirate-Ship/pricing/" target="_blank" rel="noopener">Capterra, Pirate Ship pricing</a> ·
+    <a href="https://techradar.com/pro/quicker-more-reliable-and-more-fun-the-munbyn-rw403b-is-the-best-shipping-label-printer-weve-tested-and-it-just-got-a-big-price-cut" target="_blank" rel="noopener">TechRadar, MUNBYN RW403B</a></p>
+  </footer>
+</div>
+
+<script src="js/shipping.js"></script>
+<script>
+(function () {
+  "use strict";
+  var KEY = "lumevina_shipping_kit_bought";
+  var money = function (n) { return "$" + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))); };
+
+  /* ── shopping list: ticks are remembered on this device only ── */
+  var got = {};
+  try { got = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { got = {}; }
+  var boxes = document.querySelectorAll(".buy input[type=checkbox]");
+  var start = document.querySelectorAll("#buy-start input");
+  var tally = function () {
+    var all = 0, have = 0;
+    start.forEach(function (b) { var p = Number(b.getAttribute("data-price")); all += p; if (b.checked) have += p; });
+    document.getElementById("t-all").textContent = money(all);
+    document.getElementById("t-got").textContent = money(have);
+    document.getElementById("t-left").textContent = money(all - have);
+  };
+  boxes.forEach(function (b) {
+    b.checked = !!got[b.id];
+    b.closest(".buy").classList.toggle("is-got", b.checked);
+    b.addEventListener("change", function () {
+      got[b.id] = b.checked;
+      b.closest(".buy").classList.toggle("is-got", b.checked);
+      try { localStorage.setItem(KEY, JSON.stringify(got)); } catch (e) { /* private window: ticks last until the page closes */ }
+      tally();
+    });
+  });
+  tally();
+
+  /* ── estimator: the same tables the dashboard uses (js/shipping.js) ── */
+  var SH = window.LumevinaShip, form = document.getElementById("est");
+  if (!SH || !form) return;
+  var FEE = 8;
+  var paint = function () {
+    var pack = form.elements.pack.value, zip = form.elements.to.value, oz = Number(form.elements.oz.value);
+    var e = SH.estimate({ pack: pack, oz: oz, address: { zip: zip } });
+    var p = SH.PACKS[pack];
+    document.getElementById("e-total").textContent = money(e.total);
+    document.getElementById("e-break").textContent = money(e.postage) + " postage by " + e.service + ", plus " +
+      money(e.supplies) + " for the " + p.name.toLowerCase() + ", bag and label.";
+    var chip = document.getElementById("e-chip"), over = e.total - FEE;
+    chip.className = "est-chip " + (over <= 0 ? "is-good" : "is-over");
+    chip.textContent = over <= 0 ? "The $8 shipping fee covers it" : money(over) + " more than the $8 shipping fee";
+  };
+  form.addEventListener("change", paint);
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
+  paint();
+})();
+</script>

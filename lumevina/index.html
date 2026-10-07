@@ -1470,12 +1470,23 @@
           <div class="ship-details" hidden>
             <p class="checkout-subhead">How should we get it to you?</p>
             <div class="rt-delivery co-ship" role="radiogroup" aria-label="Delivery">
-              <label><input type="radio" name="delivery" value="ship" checked> <span><b>Ship it to me</b><span class="ship-note">Free for members · otherwise $8, free over $75</span></span></label>
-              <label><input type="radio" name="delivery" value="pickup"> <span><b>Pick up at my visit</b>Free, waiting at the front</span></label>
+              <label><input type="radio" name="delivery" value="ship" checked> <span><b>Ship it to me</b><span class="ship-note">Free for members · otherwise $8, free over $75</span><span class="ship-when">Ships in 1–2 business days, with tracking by email</span></span></label>
+              <label><input type="radio" name="delivery" value="pickup"> <span><b>Pick up at my visit</b>Free, waiting at the front<span class="pickup-when"></span></span></label>
             </div>
-            <div class="field ship-address">
-              <label for="co-address">Shipping address</label>
-              <input id="co-address" name="address" type="text" autocomplete="street-address" placeholder="Street, city, ZIP">
+            <div class="ship-address" role="group" aria-label="Shipping address">
+              <div class="field">
+                <label for="co-street">Street address</label>
+                <input id="co-street" type="text" autocomplete="shipping address-line1">
+              </div>
+              <div class="field">
+                <label for="co-apt">Apt, suite or unit <span class="rw-ref-opt">(optional)</span></label>
+                <input id="co-apt" type="text" autocomplete="shipping address-line2">
+              </div>
+              <div class="field-row field-row--addr">
+                <div class="field"><label for="co-city">City</label><input id="co-city" type="text" autocomplete="shipping address-level2"></div>
+                <div class="field"><label for="co-state">State</label><input id="co-state" type="text" autocomplete="shipping address-level1" value="CA" autocapitalize="characters"></div>
+                <div class="field"><label for="co-zip">ZIP</label><input id="co-zip" type="text" inputmode="numeric" autocomplete="shipping postal-code"></div>
+              </div>
             </div>
             <p class="checkout-subhead checkout-subhead--pay">Payment</p>
           </div>
@@ -1641,9 +1652,20 @@
             <input id="rt-email" type="email" autocomplete="email" required>
           </div>
         </div>
-        <div class="field rt-address-field">
-          <label for="rt-address">Shipping address</label>
-          <input id="rt-address" type="text" autocomplete="street-address" placeholder="Street, city, ZIP">
+        <div class="rt-address-field" role="group" aria-label="Shipping address">
+          <div class="field">
+            <label for="rt-street">Street address</label>
+            <input id="rt-street" type="text" autocomplete="shipping address-line1">
+          </div>
+          <div class="field">
+            <label for="rt-apt">Apt, suite or unit <span class="rw-ref-opt">(optional)</span></label>
+            <input id="rt-apt" type="text" autocomplete="shipping address-line2">
+          </div>
+          <div class="field-row field-row--addr">
+            <div class="field"><label for="rt-city">City</label><input id="rt-city" type="text" autocomplete="shipping address-level2"></div>
+            <div class="field"><label for="rt-state">State</label><input id="rt-state" type="text" autocomplete="shipping address-level1" value="CA" autocapitalize="characters"></div>
+            <div class="field"><label for="rt-zip">ZIP</label><input id="rt-zip" type="text" inputmode="numeric" autocomplete="shipping postal-code"></div>
+          </div>
         </div>
 
         <div class="mj-saved rt-saved" hidden>
@@ -1849,6 +1871,7 @@
   <script src="js/payments.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/inventory.js"></script>
+  <script src="js/shipping.js"></script>
   <script src="js/rewards.js"></script>
   <script src="js/account.js"></script>
   <script src="js/membership.js"></script>

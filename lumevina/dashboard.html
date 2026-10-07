@@ -332,6 +332,54 @@
     .cq-done .cq { opacity: 0.8; margin-top: 0.6rem; }
     .cq-reply { margin: 0.55rem 0 0; padding-left: 0.75rem; border-left: 2px solid var(--mauve); color: var(--ink-70); font-size: 0.88rem; line-height: 1.45; }
     .cq-empty { color: var(--ink-45); font-size: 0.9rem; padding: 0.5rem 0; }
+    /* shipping (js/shipping.js) */
+    .sh-status { min-height: 1.2em; font-size: 0.82rem; color: var(--mauve); margin: -0.5rem 0 0.8rem; }
+    .sh-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+    .sh { background: var(--panel); border: 1px solid var(--edge); border-radius: 14px; padding: 0.9rem 1rem; }
+    .sh.is-late { border-color: rgba(255, 122, 107, 0.6); }
+    .sh.is-done { opacity: 0.82; }
+    .sh-items { margin: 0.4rem 0 0; color: var(--ink); font-size: 0.9rem; }
+    .sh-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 1rem; margin-top: 0.75rem; align-items: start; }
+    .sh-addr { font-style: normal; font-size: 0.85rem; color: var(--ink-70); line-height: 1.45; }
+    .sh-pack { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; align-items: center; font-size: 0.78rem; color: var(--ink-45); }
+    .sh-pack label { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .sh-pack select, .sh-pack input { font: inherit; font-size: 0.85rem; color: var(--ink); background: #161616;
+      border: 1px solid var(--edge); border-radius: 8px; padding: 0.35rem 0.5rem; }
+    .sh-pack input { width: 4.4rem; font-variant-numeric: tabular-nums; }
+    .sh-est { flex-basis: 100%; margin: 0; font-size: 0.78rem; color: var(--ink-45); }
+    .sh-est strong { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sh-ship { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: flex-end; margin-top: 0.75rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--edge); }
+    .sh-ship[hidden] { display: none; }
+    .sh-ship label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.72rem; color: var(--ink-45); }
+    .sh-ship input { font: inherit; font-size: 0.88rem; padding: 0.45rem 0.6rem; border: 1px solid var(--edge); border-radius: 8px;
+      background: #161616; color: var(--ink); }
+    .sh-ship input[name=tracking] { width: 17rem; max-width: 100%; font-variant-numeric: tabular-nums; }
+    .sh-ship input[name=postage] { width: 6.5rem; }
+    .sh-track { margin: 0.45rem 0 0; font-size: 0.82rem; color: var(--ink-60); }
+    .sh-track a { color: var(--mauve); word-break: break-all; }
+    .sh-key { margin: 1rem 0 0; }
+    .sh-key strong { color: var(--ink-70); font-weight: 600; }
+    @media (max-width: 640px) { .sh-body { grid-template-columns: 1fr; } }
+    /* packing slips: shown at their real size, 4 × 6 in */
+    .slip-ov { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.72); display: grid;
+      place-items: start center; overflow: auto; padding: 2rem 1rem; }
+    .slip-ov[hidden] { display: none; }
+    .slip-panel { background: var(--card); border: 1px solid var(--edge); border-radius: 20px; padding: 1rem; max-width: 100%; }
+    .slip-bar { display: flex; flex-wrap: wrap; gap: 0.7rem; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
+    .slip-count { font-size: 0.85rem; color: var(--ink-60); }
+    .slip-sheet { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+    .slip-sheet .slip { border-radius: 4px; }
+    @media (max-width: 480px) { .slip-sheet .slip { zoom: 0.82; } }
+    .printing-slips body { background: #fff; }
+    @media print {
+      .printing-slips body > :not(.slip-ov) { display: none !important; }
+      .printing-slips .slip-ov { position: static; display: block; background: none; padding: 0; overflow: visible; }
+      .printing-slips .slip-panel { background: none; border: 0; padding: 0; border-radius: 0; }
+      .printing-slips .slip-bar { display: none; }
+      .printing-slips .slip-sheet { display: block; }
+      .printing-slips .slip-sheet .slip { zoom: 1; border-radius: 0; }
+    }
   </style>
 </head>
 <body data-palette="#eab9c8,#e3b48f">
@@ -432,6 +480,31 @@
       </div>
       <div class="bk-tiles" id="settle-tiles"></div>
       <ul class="settle-list" id="settle-list"></ul>
+    </div>
+
+    <!-- ── Shipping: what's going out by mail (js/shipping.js) ── -->
+    <div class="card" id="shipping">
+      <div class="crm-head">
+        <div>
+          <h2>Shipping</h2>
+          <p class="sub">Shelf orders, Glow Routine boxes and Skin School kits going out by mail. Pack each one
+          in the package shown, make the labels in Pirate Ship from the download, then mark it shipped with
+          the tracking number and what the label cost. The books then use the real postage.</p>
+        </div>
+        <div class="bk-actions">
+          <button class="bk-export bk-export--ghost" id="sh-slips" type="button">Packing slips</button>
+          <button class="bk-export" id="sh-csv" type="button">Download for Pirate Ship</button>
+        </div>
+      </div>
+      <p class="sh-status" id="sh-status" role="status" aria-live="polite"></p>
+      <div class="bk-tiles" id="sh-tiles"></div>
+      <ul class="sh-list" id="sh-list"></ul>
+      <details class="cq-done" id="sh-soon" hidden><summary></summary><ul class="sh-list" id="sh-soon-list"></ul></details>
+      <details class="cq-done" id="sh-done" hidden><summary></summary><ul class="sh-list" id="sh-done-list"></ul></details>
+      <p class="sub sh-key"><strong>Bubble mailer</strong>, 6 × 10 in: one plastic bottle or tube.
+      <strong>Small box</strong>, 6 × 6 × 4 in: two or three items, or anything glass, with a pump or a dropper.
+      <strong>Medium box</strong>, 10 × 8 × 4 in: sets and kits. Every bottle goes in a zip bag with a folded paper towel.
+      Postage shown is an estimate from USPS's 2026 prices; Pirate Ship shows the exact price before you buy.</p>
     </div>
 
     <!-- ── Bookkeeping & profit ── -->
@@ -608,6 +681,7 @@
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
   <script src="js/react-bits.js"></script>
+  <script src="js/shipping.js"></script>
   <script>
   (function () {
     "use strict";
@@ -1108,10 +1182,11 @@
           add({ date: day(d.at), kind: "dues", who: d.name, what: (MPLANS[d.plan] || MPLANS.glow).name + " membership",
             gross: d.amount, fee: FEE(d.amount) });
         });
-        RETAIL_LOG.forEach(function (x) {
+        /* read fresh: marking a package shipped puts its real postage in the log */
+        (lget("lumevina_retail_sales") || RETAIL_LOG).forEach(function (x) {
           if (x.type === "promo") return;
           if (x.type === "shipping") {      /* free for members: often $0 in, postage out */
-            add({ date: day(x.at), kind: "shipping", who: "Online shop", what: x.name, gross: num(x.paid), fee: 0, cost: num(x.cost) });
+            add({ date: day(x.at), kind: "shipping", who: x.who || "Online shop", what: x.name, gross: num(x.paid), fee: 0, cost: num(x.cost) });
             return;
           }
           var q = num(x.qty) || 1;
@@ -1205,7 +1280,8 @@
             " retail, counted at cost", kitCost, "−") +
           (courseKits ? line(nCls ? "Skin School kits and class supplies" : "Skin School kits",
             nCls ? "course kits, plus take-home kits, journals and drinks for classes" : "product and shipping for the kits sent", courseKits, "−") : "") +
-          (postage ? line("Postage", "boxes and postage for " + ships.length + (ships.length === 1 ? " shelf order" : " shelf orders"), postage, "−") : "") +
+          (postage ? line("Postage", "labels and packing supplies for " + ships.length + (ships.length === 1 ? " package" : " packages") +
+            " · real label prices once marked shipped", postage, "−") : "") +
           (Object.keys(byCat).length
             ? Object.keys(byCat).map(function (c) { return line(c, "logged expenses", byCat[c], "−"); }).join("")
             : '<li class="bk-empty"><span class="bk-ln">Business expenses<small>none logged yet · add supplies, rent and ads so profit is real</small></span><span class="bk-lv">—</span></li>');
@@ -2026,6 +2102,301 @@
     });
     window.addEventListener("storage", function (e) { if (e.key === KEY) { qs = load(); paint(); } });
     paint();
+  })();
+  </script>
+  <script>
+  /* Shipping: what's waiting to go out, and what it really cost (js/shipping.js).
+     Until the first real order ships, sample orders show how it works; they
+     can be packed, printed, downloaded and marked shipped, and none of it is
+     saved or counted in the books. */
+  (function () {
+    "use strict";
+    var SH = window.LumevinaShip;
+    var card = document.getElementById("shipping");
+    if (!SH || !card) return;
+
+    var $ = function (id) { return document.getElementById(id); };
+    var esc = function (v) {
+      return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    };
+    var money = function (n) { return "$" + Number(n).toFixed(2); };
+    var day = function (iso) { return new Date(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); };
+    var SRC = { shop: "Shop order", routine: "Glow Routine", school: "Skin School kit" };
+    var SOON = 3 * 864e5;            /* due within three days: pack it now */
+    var CHARGE = 8;                  /* what the shop charges (js/cart.js) */
+
+    var style = document.createElement("style");
+    style.textContent = SH.SLIP_CSS;
+    document.head.appendChild(style);
+
+    var samples = function () {
+      var now = Date.now(), d = function (n) { return new Date(now + n * 864e5).toISOString(); };
+      var mk = function (o) { var r = Object.assign({ status: "to-ship", sample: true, charged: 0 }, o); r.est = SH.estimate(r).total; return r; };
+      var shipped = mk({ id: "S-4", order: "LUM-SAMPLE4", source: "school", at: d(-5), due: d(-3), name: "Ana Ruiz",
+        email: "ana@example.com", address: { street: "77 Sample Way", apt: "", city: "Pasadena", state: "CA", zip: "91101" },
+        items: [{ id: "school-kit", name: "Skin School starter kit · Combination", qty: 1 }], pack: "small", oz: 13 });
+      SH.apply.ship(shipped, { tracking: "9400 1000 0000 0000 0000 00", postage: "6.94" });
+      shipped.shippedAt = d(-3);
+      return [
+        mk({ id: "S-1", order: "LUM-SAMPLE1", source: "shop", at: d(-1), due: d(1), name: "Maya Chen", email: "maya@example.com",
+          address: { street: "21800 Sample St", apt: "Apt 4", city: "Woodland Hills", state: "CA", zip: "91367" },
+          items: [{ id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", qty: 1 },
+            { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", qty: 1 }], pack: "small", oz: 16, charged: 8 }),
+        mk({ id: "S-2", order: "LUM-SAMPLE2", source: "shop", at: d(-2), due: d(0), name: "Jordan Ellis", email: "jordan@example.com",
+          address: { street: "410 Sample Ave", apt: "", city: "Austin", state: "TX", zip: "78704" },
+          items: [{ id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", qty: 1 }], pack: "mailer", oz: 10 }),
+        mk({ id: "S-3", order: "LUM-SAMPLE3", source: "routine", at: d(-20), due: d(9), name: "Priya Shah", email: "priya@example.com",
+          address: { street: "5 Sample Ct", apt: "", city: "Sherman Oaks", state: "CA", zip: "91403" },
+          items: [{ id: "glow-routine", name: "Glow Routine box · Clear", qty: 1 }], pack: "small", oz: 18 }),
+        shipped
+      ];
+    };
+
+    var list = [], sample = false;
+    var load = function () {
+      var real = SH.list();
+      sample = !real.length;
+      list = sample ? (list.length && list[0].sample ? list : samples()) : real;
+    };
+    var byId = function (id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; };
+    var due = function (r) { return new Date(r.due).getTime(); };
+    var open = function (r) { return r.status !== "shipped"; };
+    var waiting = function () { return list.filter(function (r) { return open(r) && due(r) - Date.now() < SOON; }).sort(function (a, b) { return due(a) - due(b); }); };
+    var later = function () { return list.filter(function (r) { return open(r) && due(r) - Date.now() >= SOON; }).sort(function (a, b) { return due(a) - due(b); }); };
+    var gone = function () {
+      return list.filter(function (r) { return r.status === "shipped"; })
+        .sort(function (a, b) { return new Date(b.shippedAt) - new Date(a.shippedAt); });
+    };
+
+    var say = function (msg) { $("sh-status").textContent = msg; };
+
+    /* ── tiles ── */
+    var paintTiles = function () {
+      var wait = waiting(), late = wait.filter(function (r) { return due(r) < Date.now(); }).length;
+      var m = new Date();
+      var thisMonth = function (iso) { var d = new Date(iso); return d.getMonth() === m.getMonth() && d.getFullYear() === m.getFullYear(); };
+      var out = gone().filter(function (r) { return thisMonth(r.shippedAt); });
+      var priced = out.filter(function (r) { return r.postage != null; });
+      var spent = priced.reduce(function (a, r) { return a + r.postage; }, 0);
+      var avg = priced.length ? priced.reduce(function (a, r) { return a + r.postage + r.supplies; }, 0) / priced.length : null;
+      var tiles = [
+        { l: (late ? late + " past the ship-by date" : "To pack now") + (sample ? " · sample orders" : ""), v: String(wait.length), flag: wait.length > 0 },
+        { l: "Shipped this month", v: String(out.length) },
+        { l: "Spent on labels this month", v: money(spent) },
+        { l: "Average package, label and supplies · you charge $" + CHARGE, v: avg == null ? "—" : money(avg) }
+      ];
+      $("sh-tiles").innerHTML = tiles.map(function (t) {
+        return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' + t.v + '</div><div class="bk-tl">' + esc(t.l) + '</div></div>';
+      }).join("");
+    };
+
+    /* ── rows ── */
+    var items = function (r) { return r.items.map(function (it) { return esc(it.qty) + " × " + esc(it.name); }).join(" · "); };
+    var addr = function (r) {
+      var a = r.address;
+      return esc(r.name) + "<br>" + esc(a.street) + (a.apt ? ", " + esc(a.apt) : "") + "<br>" + esc(a.city) + ", " + esc(a.state) + " " + esc(a.zip);
+    };
+    var est = function (r) {
+      var e = SH.estimate(r);
+      return 'About <strong>' + money(e.postage) + '</strong> postage by ' + e.service + ', ' + e.where + ' · ' +
+        (r.charged ? money(r.charged) + ' shipping paid' : 'shipped free');
+    };
+    var pills = function (r) {
+      return '<span class="cq-pill">' + SRC[r.source] + '</span>' + (r.sample ? '<span class="cq-pill">Sample</span>' : '');
+    };
+    var row = function (r) {
+      var late = due(r) < Date.now(), today = !late && due(r) - Date.now() < 864e5;
+      var opts = SH.ORDER.map(function (k) {
+        var p = SH.PACKS[k];
+        return '<option value="' + k + '"' + (k === r.pack ? " selected" : "") + '>' + p.name + ', ' + p.size + '</option>';
+      }).join("");
+      return '<li class="sh' + (late ? ' is-late' : '') + '" data-id="' + esc(r.id) + '">' +
+        '<div class="cq-top"><span class="cq-name">' + esc(r.name) + '</span>' + pills(r) +
+          '<span class="cq-due' + (late ? ' is-late' : today ? ' is-soon' : '') + '">' + (late ? "Was due " : "Ship by ") + day(r.due) + '</span></div>' +
+        '<p class="sh-items">' + items(r) + '</p>' +
+        '<div class="sh-body"><address class="sh-addr">' + addr(r) + '</address>' +
+          '<div class="sh-pack"><label>Package <select data-f="pack">' + opts + '</select></label>' +
+            '<label>Weight <input data-f="oz" type="number" min="1" step="1" value="' + esc(r.oz) + '"> oz</label>' +
+            '<p class="sh-est">' + est(r) + '</p></div></div>' +
+        '<div class="cq-actions"><button class="settle-btn" type="button" data-do="copy">Copy address</button>' +
+          '<button class="settle-btn" type="button" data-do="slip">Packing slip</button>' +
+          '<button class="cq-send" type="button" data-do="ship">Mark shipped</button></div>' +
+        '<form class="sh-ship" hidden>' +
+          '<label>Tracking number<input name="tracking" autocomplete="off" spellcheck="false" placeholder="From Pirate Ship"></label>' +
+          '<label>Label cost<input name="postage" inputmode="decimal" autocomplete="off" placeholder="' + SH.estimate(r).postage.toFixed(2) + '"></label>' +
+          '<button class="cq-send" type="submit">Save</button>' +
+          '<button class="settle-undo" type="button" data-do="cancel">Cancel</button></form>' +
+        '</li>';
+    };
+    var doneRow = function (r) {
+      var link = r.tracking
+        ? '<a href="' + esc(SH.trackUrl(r.tracking)) + '" target="_blank" rel="noopener">' + esc(r.carrier + " " + r.tracking) + '</a>'
+        : 'No tracking number';
+      return '<li class="sh is-done" data-id="' + esc(r.id) + '">' +
+        '<div class="cq-top"><span class="cq-name">' + esc(r.name) + '</span>' + pills(r) +
+          '<span class="cq-due">Shipped ' + day(r.shippedAt) + '</span></div>' +
+        '<p class="sh-items">' + items(r) + '</p>' +
+        '<p class="sh-track">' + link + (r.postage != null ? ' · label ' + money(r.postage) : '') +
+          ' <button class="settle-undo" type="button" data-do="unship">Undo</button></p>' +
+        (r.postage == null ? '<form class="sh-ship sh-cost"><label>Label cost, from Pirate Ship<input name="postage" inputmode="decimal" ' +
+          'autocomplete="off" placeholder="' + SH.estimate(r).postage.toFixed(2) + '"></label><button class="cq-send" type="submit">Save</button></form>' : '') +
+        '</li>';
+    };
+
+    var paint = function () {
+      load();
+      paintTiles();
+      var wait = waiting(), soon = later(), done = gone();
+      $("sh-list").innerHTML = wait.length ? wait.map(row).join("")
+        : '<li class="cq-empty">Nothing to pack right now. Orders that ship show up here as they come in.</li>';
+      $("sh-soon").hidden = !soon.length;
+      $("sh-soon").querySelector("summary").textContent = "Coming up (" + soon.length + ") · Glow Routine boxes and orders due later";
+      $("sh-soon-list").innerHTML = soon.map(row).join("");
+      $("sh-done").hidden = !done.length;
+      $("sh-done").querySelector("summary").textContent = "Shipped (" + done.length + ")" + (sample ? " · sample orders until real ones arrive" : "");
+      $("sh-done-list").innerHTML = done.slice(0, 40).map(doneRow).join("");
+    };
+
+    /* one change, on a sample (in memory) or a real order (saved, and the
+       books re-read so the real postage shows up in profit straight away) */
+    var change = function (how, r, arg) {
+      if (r.sample) { SH.apply[how](r, arg); return r; }
+      var fresh = { ship: SH.markShipped, unship: SH.unship, update: SH.update, cost: SH.setLabelCost }[how](r.id, arg);
+      if (fresh) Object.assign(r, fresh);
+      document.dispatchEvent(new Event("lumevina:books"));
+      return r;
+    };
+
+    /* ── copy an address (for Pirate Ship's single label, or anywhere) ── */
+    var copy = function (text, li) {
+      var ok = function () { say("Address copied."); };
+      var fallback = function () {
+        var t = document.createElement("textarea");
+        t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+        document.body.appendChild(t); t.select();
+        var done = false;
+        try { done = document.execCommand("copy"); } catch (e) { done = false; }
+        t.remove();
+        if (done) { ok(); return; }
+        var a = li.querySelector(".sh-addr"), range = document.createRange();
+        range.selectNodeContents(a);
+        var sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        say("The address is highlighted: press Ctrl+C, or ⌘C on a Mac, to copy it.");
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fallback);
+      else fallback();
+    };
+
+    /* ── packing slips ── */
+    var ov = null, showing = [];
+    var preview = function () { return !!(window.LumevinaSave && window.LumevinaSave.inPreview()); };
+    var closeSlips = function () { if (ov) ov.hidden = true; };
+    var printSlips = function () {
+      if (preview()) {
+        window.LumevinaSave.file("Lumevina packing slips.html", SH.slipDocument(showing), "text/html").then(function () {
+          say("Slips saved. Open the file and it goes straight to print.");
+        }, function (err) { if (err && err.message) say(err.message); });
+        return;
+      }
+      var root = document.documentElement;
+      root.classList.add("printing-slips");
+      var undo = function () { root.classList.remove("printing-slips"); window.removeEventListener("afterprint", undo); };
+      window.addEventListener("afterprint", undo);
+      window.print();
+      setTimeout(undo, 1000);
+    };
+    var openSlips = function (recs) {
+      if (!recs.length) { say("Nothing waiting to pack."); return; }
+      if (!ov) {
+        ov = document.createElement("div");
+        ov.className = "slip-ov";
+        ov.hidden = true;
+        ov.setAttribute("role", "dialog");
+        ov.setAttribute("aria-modal", "true");
+        ov.setAttribute("aria-label", "Packing slips");
+        ov.innerHTML = '<div class="slip-panel"><div class="slip-bar"><p class="slip-count"></p><div class="bk-actions">' +
+          '<button class="bk-export bk-export--ghost" type="button" data-slip="close">Close</button>' +
+          '<button class="bk-export" type="button" data-slip="print"></button></div></div><div class="slip-sheet"></div></div>';
+        document.body.appendChild(ov);
+        ov.addEventListener("click", function (e) {
+          if (e.target === ov) { closeSlips(); return; }
+          var b = e.target.closest("[data-slip]");
+          if (!b) return;
+          if (b.getAttribute("data-slip") === "close") closeSlips(); else printSlips();
+        });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape" && ov && !ov.hidden) closeSlips(); });
+      }
+      showing = recs;
+      ov.querySelector(".slip-sheet").innerHTML = recs.map(SH.slip).join("");
+      ov.querySelector(".slip-count").textContent = recs.length + (recs.length === 1 ? " packing slip" : " packing slips") +
+        " · 4 × 6 in, prints on the label printer";
+      var pb = ov.querySelector('[data-slip="print"]');
+      pb.textContent = preview() ? "Save to print" : "Print";
+      ov.hidden = false;
+      pb.focus();
+    };
+
+    /* ── actions ── */
+    card.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-do]");
+      if (!b) return;
+      var li = b.closest("[data-id]"), r = li && byId(li.getAttribute("data-id"));
+      if (!r) return;
+      var what = b.getAttribute("data-do"), form = li.querySelector(".sh-ship");
+      if (what === "copy") copy(SH.block(r), li);
+      else if (what === "slip") openSlips([r]);
+      else if (what === "ship") { form.hidden = !form.hidden; if (!form.hidden) form.elements.tracking.focus(); }
+      else if (what === "cancel") form.hidden = true;
+      else if (what === "unship") { change("unship", r); paint(); say(r.name.split(" ")[0] + "'s package is back in To pack."); }
+    });
+    card.addEventListener("submit", function (e) {
+      var form = e.target.closest(".sh-ship");
+      if (!form) return;
+      e.preventDefault();
+      var r = byId(form.closest("[data-id]").getAttribute("data-id")), first = r.name.split(" ")[0];
+      if (form.classList.contains("sh-cost")) {
+        change("cost", r, { postage: form.elements.postage.value });
+        paint();
+        say(r.postage != null ? first + "'s label: " + money(r.postage) + ", now in the books." : "Type the label's price, like 6.93.");
+        return;
+      }
+      change("ship", r, { tracking: form.elements.tracking.value, postage: form.elements.postage.value });
+      paint();
+      say(first + "'s package is marked shipped" + (r.postage != null ? ", " + money(r.postage) + " label." :
+        ". Add the label cost under Shipped when you have it."));
+    });
+    card.addEventListener("change", function (e) {
+      var el = e.target.closest("[data-f]");
+      if (!el) return;
+      var li = el.closest("[data-id]"), r = byId(li.getAttribute("data-id"));
+      if (el.getAttribute("data-f") === "pack") {
+        /* a different package weighs differently: carry the difference */
+        var from = SH.PACKS[r.pack], to = SH.PACKS[el.value];
+        change("update", r, { pack: el.value, oz: Math.max(1, r.oz - from.tare + to.tare) });
+        li.querySelector('[data-f="oz"]').value = r.oz;
+      } else {
+        change("update", r, { oz: el.value });
+        el.value = r.oz;
+      }
+      li.querySelector(".sh-est").innerHTML = est(r);
+    });
+
+    $("sh-csv").addEventListener("click", function () {
+      var wait = waiting();
+      if (!wait.length) { say("Nothing waiting to ship."); return; }
+      if (!window.LumevinaSave) return;
+      window.LumevinaSave.file("Lumevina Pirate Ship " + new Date().toISOString().slice(0, 10) + ".csv", SH.csv(wait), "text/csv")
+        .then(function () {
+          say("Saved " + wait.length + (wait.length === 1 ? " order" : " orders") +
+            ". In Pirate Ship: Import, then Upload a spreadsheet, then pick this file.");
+        }, function (err) { if (err && err.message) say(err.message); });
+    });
+    $("sh-slips").addEventListener("click", function () { openSlips(waiting()); });
+
+    paint();
+    window.addEventListener("storage", function (e) { if (e.key === SH.KEY) paint(); });
   })();
   </script>
   <script>

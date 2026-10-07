@@ -330,7 +330,7 @@
 
     giftDetails.hidden = !cartHasGift();
     shipDetails.hidden = !cartHasRetail();
-    if (shipDetails.hidden === false) syncShip();
+    if (shipDetails.hidden === false) { setupDelivery(); syncShip(); }
     /* one "Payment" heading: the last section shown carries it */
     var gp = giftDetails.querySelector(".checkout-subhead--pay");
     if (gp) gp.hidden = cartHasRetail();
@@ -381,7 +381,27 @@
     shipAddress.hidden = delivery() !== "ship";
     renderMemberLine();
   };
-  modal.querySelectorAll('input[name="delivery"]').forEach(function (r) { r.addEventListener("change", syncShip); });
+  var deliveryPicked = false;
+  modal.querySelectorAll('input[name="delivery"]').forEach(function (r) {
+    r.addEventListener("change", function () { deliveryPicked = true; syncShip(); });
+  });
+
+  /* Already booked? Then picking it up at that visit is free for them and
+     costs no postage, so it's the default (they can still choose shipping).
+     A returning client's last address is filled in for them. */
+  var setupDelivery = function () {
+    var B = window.LumevinaBooking, next = B && B.next ? B.next() : null;
+    var soon = next && next.getTime() - Date.now() < 45 * 864e5;
+    var when = modal.querySelector(".pickup-when");
+    if (when) when.textContent = soon ? " · your visit is " +
+      next.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) : "";
+    if (soon && !deliveryPicked) {
+      var pick = modal.querySelector('input[name="delivery"][value="pickup"]');
+      if (pick) pick.checked = true;
+    }
+    var SH = window.LumevinaShip, acct = window.LumevinaAccount && window.LumevinaAccount.current();
+    if (SH) SH.fillAddress(modal, "co", SH.lastAddress(memberEmail() || (acct && acct.email)));
+  };
   var coEmail = document.getElementById("co-email");
   if (coEmail) {
     coEmail.addEventListener("change", function () { renderMemberLine(); });
@@ -449,12 +469,11 @@
     mark(cvcInput, !cvcOk);
     if (!cvcOk) problems.push("a 3–4 digit CVC");
 
-    /* shelf products being shipped need somewhere to go */
-    if (cartHasRetail() && delivery() === "ship") {
-      var addrInput = modal.querySelector("#co-address");
-      var addrOk = addrInput.value.trim().length >= 6;
-      mark(addrInput, !addrOk);
-      if (!addrOk) problems.push("a shipping address");
+    /* shelf products being shipped need somewhere to go: street, city,
+       state and ZIP each in their own field, the way a label needs them */
+    if (cartHasRetail() && delivery() === "ship" && window.LumevinaShip) {
+      var addr = window.LumevinaShip.readAddress(modal, "co");
+      problems = problems.concat(addr.problems);
     }
 
     /* a gift going to someone else needs a name + email to deliver to */
@@ -572,12 +591,26 @@
               cost: stock ? Number(stock.cost || 0) : 0,
               at: new Date().toISOString(), channel: "online", type: "sale" });
           });
-          /* shipping: what the client paid (often nothing) and what postage cost us */
+          /* shipping: what the client paid (often nothing) and what postage
+             costs us. The order goes on the dashboard's Shipping list
+             (js/shipping.js), and its estimate is replaced by the real label
+             price once it's marked shipped. */
           var shipNow = shipping();
           if (cartHasRetail() && delivery() === "ship") {
-            salesLog.push({ id: "shipping", name: shipNow.why === "member" ? "Shipping · member, free" :
-              shipNow.why === "over" ? "Shipping · free over $75" : "Shipping", price: shipNow.fee, qty: 1, paid: shipNow.fee,
-              cost: SHIP_COST, at: new Date().toISOString(), channel: "online", type: "shipping" });
+            var shipLabel = shipNow.why === "member" ? "Shipping · member, free" :
+              shipNow.why === "over" ? "Shipping · free over $75" : "Shipping";
+            var SH = window.LumevinaShip;
+            if (SH) {
+              var shipRec = SH.add({ source: "shop", order: result.id, name: checkoutForm.elements.name.value.trim(),
+                email: checkoutForm.elements.email.value.trim(), address: SH.readAddress(modal, "co").address,
+                charged: shipNow.fee,
+                items: Object.keys(cart).filter(function (id) { return id.indexOf("retail-") === 0; })
+                  .map(function (id) { return { id: id, name: cart[id].name, qty: cart[id].qty }; }) });
+              salesLog.push(SH.bookEntry(shipRec, shipNow.fee, shipLabel));
+            } else {
+              salesLog.push({ id: "shipping", name: shipLabel, price: shipNow.fee, qty: 1, paid: shipNow.fee,
+                cost: SHIP_COST, at: new Date().toISOString(), channel: "online", type: "shipping", order: result.id });
+            }
           }
           try { localStorage.setItem("lumevina_retail_sales", JSON.stringify(salesLog)); }
           catch (e) { /* private mode */ }
@@ -587,6 +620,7 @@
         if (subEl) subEl.textContent = cartHasGift()
           ? "Your gift of glow is on its way ✨"
           : cartHasRetail() && delivery() === "pickup" ? "Your order will be waiting at the front ✨"
+          : cartHasRetail() ? "Your order ships in 1–2 business days. The tracking number comes by email ✨"
           : "Your order is on its way ✨";
 
         issueGiftCards();
@@ -599,6 +633,7 @@
           if (rw && earnedEl) window.LumevinaFX.countUp(earnedEl);
         }
         checkoutForm.reset();
+        deliveryPicked = false;
         giftRecipientFields.hidden = false;
         shipAddress.hidden = false;
         clearCart();

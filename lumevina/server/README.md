@@ -186,6 +186,32 @@ that billing date. Before supplements go in the box: a California seller's
 permit, sales tax settings from the accountant, insurance that covers
 products, and only the brand's approved wording on the site.
 
+### Shipping
+
+`js/shipping.js` keeps one list of everything that goes out by mail (shelf
+orders, Glow Routine boxes, Skin School kits) in the browser today, and the
+dashboard's **Shipping** card works from it. To make it real:
+
+1. Run the `shipments` table in `schema.sql`.
+2. Checkout sends the address as separate fields (street, apt, city, state,
+   ZIP). Validate them in the function that creates the PaymentIntent, and
+   in `stripe-webhook`, on `payment_intent.succeeded` for an order with
+   shipped items, insert a `shipments` row: package and weight from the same
+   table as `js/shipping.js` (`PACKS` and `ITEMS`), `ship_by` two business
+   days out. For the Glow Routine, insert one on each `invoice.paid` with
+   `ship_by` set to that month's box date.
+3. The dashboard reads `to_ship` rows instead of localStorage. Mark shipped
+   writes `tracking`, `carrier`, `postage_cents`, `supplies_cents`,
+   `shipped_at`, and the books use `postage_cents + supplies_cents` instead
+   of `est_cents`.
+4. Labels stay in Pirate Ship (it has no API): the dashboard's download is
+   its import file. If the shop grows past about ten orders a day, a label
+   API (Shippo or EasyPost, a few cents a label) can buy the label from the
+   dashboard in one tap; the row already has everything it needs.
+5. Optional: Pirate Ship emails the client their tracking when the import
+   includes an email. To send it from Lumevina instead, have
+   `send-confirmation` email the tracking link when a row turns `shipped`.
+
 ## Ask Lumevina (client questions)
 
 `js/ask.js` runs the chat in the browser today: keyword matching answers the

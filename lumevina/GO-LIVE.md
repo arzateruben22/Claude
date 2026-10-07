@@ -46,6 +46,7 @@ only for the app.
 | 9 | **Apple Developer** | The iPhone app + push notifications | App only | $99/yr |
 | 10 | **Push provider** (APNs/OneSignal) | Flash-opening push alerts in the app | App only | Free tier |
 | 11 | **Analytics** (Plausible/Google) | Website traffic → booking conversion | Optional | Free–low |
+| 12 | **Pirate Ship** | Shipping labels at USPS's discounted prices, from the dashboard's download (see SHIPPING.md) | Before the first shipped order | Free; you pay only for labels |
 
 **Calendar sync and bookkeeping need no new accounts** — the calendar feed is
 served by a Supabase function you subscribe to in Google/Apple Calendar, and

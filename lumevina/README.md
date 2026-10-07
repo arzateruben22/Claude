@@ -13,6 +13,8 @@ GitHub Pages, cPanel) — or just open `index.html` in a browser.
 | `css/styles.css` | Design system (ivory/mauve palette, cards, type, layout) |
 | `js/main.js` | Nav, mobile menu, newsletter form, GSAP animations |
 | `js/cart.js` | Cart drawer, localStorage persistence, demo checkout |
+| `js/shipping.js` | The shipping list: packages, postage estimates, Pirate Ship file, packing slips (see `SHIPPING.md`) |
+| `shipping-kit.html` | The shipping guide for Evelyn: what to buy, setup, packing, the routine, costs |
 | `js/vendor/` | GSAP 3.12.5 + ScrollTrigger (self-hosted) |
 | `fonts/` | Cormorant Garamond + Jost (self-hosted woff2) |
 

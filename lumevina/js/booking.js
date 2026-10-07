@@ -1664,6 +1664,13 @@
     startReschedule: startReschedule,
     openings: openings,
     service: function (id) { return byId[id] || null; },
-    hasBooked: function () { return loadBookings().length > 0; }
+    hasBooked: function () { return loadBookings().length > 0; },
+    /* when the next appointment on this device starts, or null */
+    next: function () {
+      var now = Date.now();
+      var starts = loadBookings().map(bookingStartOf).filter(function (d) { return d.getTime() > now; })
+        .sort(function (a, b) { return a - b; });
+      return starts[0] || null;
+    }
   };
 })();

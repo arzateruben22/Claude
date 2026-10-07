@@ -23,7 +23,8 @@
   var SALES_KEY = "lumevina_retail_sales";
   var PRICE = 75;                          /* the entry tier; each focus sets its own below */
   var PRODUCT_SHARE = 0.5;                 /* wholesale is usually about half the price */
-  var SHIP_COST = 7, PICKUP_COST = 1;      /* shipping and packaging, or just the bag */
+  var SHIP_COST = 7, PICKUP_COST = 1;      /* shipping and packaging, or just the bag (shipping's
+                                              own line comes from js/shipping.js when it's loaded) */
 
   var FOCUS = {
     glow: { name: "Glow", price: 75, tier: 1, line: "Brightness, tone and a healthy glow",
@@ -140,6 +141,7 @@
       $("#rt-email").value = s ? s.email : "";
       $("#rt-agree").checked = false;
       $(".rt-status").textContent = "";
+      if (window.LumevinaShip && s) window.LumevinaShip.fillAddress(modal, "rt", window.LumevinaShip.lastAddress(s.email));
       setupCard(); syncDelivery();
     }
     lastFocus = document.activeElement;
@@ -165,7 +167,8 @@
     var problems = [];
     if (!name) problems.push("your name");
     if (!email || !$("#rt-email").checkValidity()) problems.push("a valid email");
-    if (ship && $("#rt-address").value.trim().length < 6) problems.push("a shipping address");
+    var SH = window.LumevinaShip, addr = ship && SH ? SH.readAddress(modal, "rt") : null;
+    if (addr) problems = problems.concat(addr.problems);
     if (!usingSaved) {
       if (!pay.cardValid($("#rt-card").value)) problems.push("a valid card number");
       if (!pay.expiryValid($("#rt-expiry").value)) problems.push("a future expiry (MM/YY)");
@@ -189,7 +192,7 @@
       var saved = usingSaved ? pay.getCard(email) : pay.saveCard(email, $("#rt-card").value, $("#rt-expiry").value);
       var now = new Date().toISOString();
       var rec = { email: email, name: name, focus: focus, delivery: ship ? "ship" : "pickup",
-        address: ship ? $("#rt-address").value.trim() : "", price: price, status: "active",
+        address: addr ? addr.address : null, price: price, status: "active",
         startedAt: now, nextBoxAt: nextBox(), card: saved ? { brand: saved.brand, last4: saved.last4 } : null,
         history: [{ at: now, type: "joined", amount: price, order: res.id }] };
       all[norm(email)] = rec;
@@ -197,9 +200,14 @@
       /* the books: income at the price paid, cost = product + shipping or the bag */
       var log;
       try { log = JSON.parse(localStorage.getItem(SALES_KEY)) || []; } catch (e) { log = []; }
+      /* a shipped box goes on the dashboard's Shipping list for its ship date,
+         with its postage as its own line in the books */
+      var box = ship && SH ? SH.add({ source: "routine", order: res.id, name: name, email: email, address: addr.address,
+        due: rec.nextBoxAt, items: [{ id: "glow-routine", name: "Glow Routine box · " + FOCUS[focus].name, qty: 1 }] }) : null;
       log.push({ id: "glow-routine", name: "Glow Routine · " + FOCUS[focus].name, qty: 1, price: price, paid: price,
-        cost: price * PRODUCT_SHARE + (ship ? SHIP_COST : PICKUP_COST), at: now, channel: "subscription", type: "sale",
-        note: "First month" });
+        cost: price * PRODUCT_SHARE + (box ? 0 : ship ? SHIP_COST : PICKUP_COST), at: now, channel: "subscription", type: "sale",
+        note: "First month", order: res.id });
+      if (box) log.push(SH.bookEntry(box, 0, "Shipping · Glow Routine box, included"));
       try { localStorage.setItem(SALES_KEY, JSON.stringify(log)); } catch (e) { /* private mode */ }
       if (window.LumevinaAccount && window.LumevinaAccount.signIn) window.LumevinaAccount.signIn(name, email);
       showDone("Your " + FOCUS[focus].name + " routine is on, " + name.split(" ")[0] + ".",

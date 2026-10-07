@@ -487,7 +487,7 @@
       $("#co-kit").hidden = !kit;
       $("#co-addr-f").hidden = !kit || ship !== "ship";
       var free = p.due === 0;
-      $$(".fld-row:not(.co-two), .co-test", form).forEach(function (el) { el.hidden = free; });
+      $$(".fld-row:not(.co-two):not(.co-addr-row), .co-test", form).forEach(function (el) { el.hidden = free; });
       $("#co-pay").textContent = free ? "Start " + tier.name : "Pay " + money(p.due);
     };
     var open = function (id) {
@@ -498,6 +498,7 @@
       var acct = null; try { acct = JSON.parse(localStorage.getItem("lumevina_account")); } catch (e) { /* none */ }
       if (!$("#co-name").value) $("#co-name").value = st.name || (acct && acct.name) || "";
       if (!$("#co-email").value) $("#co-email").value = st.email || (acct && acct.email) || "";
+      if (window.LumevinaShip) window.LumevinaShip.fillAddress(document, "co", window.LumevinaShip.lastAddress($("#co-email").value));
       if (st.quiz && !$("#co-skin").value) {
         $("#co-skin").value = st.quiz.acne ? "Acne-prone" : st.quiz.sens ? "Sensitive" : { dry: "Dry", normal: "Normal", combo: "Combination", oily: "Oily" }[st.quiz.type];
       }
@@ -684,7 +685,8 @@
       if (!name) problems.push("your name");
       if (!email || !$("#co-email").checkValidity()) problems.push("a valid email");
       if (kit && !$("#co-skin").value) problems.push("your skin type for the kit");
-      if (kit && ship === "ship" && $("#co-addr").value.trim().length < 6) problems.push("a shipping address");
+      var SH = window.LumevinaShip, addr = kit && ship === "ship" && SH ? SH.readAddress(document, "co") : null;
+      if (addr) problems = problems.concat(addr.problems);
       if (p.due > 0) {
         if (!pay.cardValid($("#co-card").value)) problems.push("a valid card number");
         if (!pay.expiryValid($("#co-exp").value)) problems.push("a future expiry (MM/YY)");
@@ -698,17 +700,28 @@
         st.tier = tier.id; st.name = name; st.email = email; st.at = now; st.order = order;
         if (kit) st.kit = { skin: $("#co-skin").value, ship: ship };
         save();
+        /* a shipped kit goes on the dashboard's Shipping list (js/shipping.js),
+           with its postage as its own line in the books */
+        var box = addr ? SH.add({ source: "school", order: order || "", name: name, email: email, address: addr.address,
+          items: [{ id: "school-kit", name: "Skin School starter kit · " + $("#co-skin").value, qty: 1 }] }) : null;
+        if (box) {
+          try {
+            var rl = JSON.parse(localStorage.getItem("lumevina_retail_sales")) || [];
+            rl.push(SH.bookEntry(box, 0, "Shipping · Skin School kit, free"));
+            localStorage.setItem("lumevina_retail_sales", JSON.stringify(rl));
+          } catch (err) { /* private mode */ }
+        }
         /* the books: what was paid, and what the kit cost (product + shipping, or the bag) */
         var log; try { log = JSON.parse(localStorage.getItem(SALES)) || []; } catch (e) { log = []; }
         log.push({ id: "skin-school-" + tier.id, name: "Skin School · " + tier.name, tier: tier.id, price: tier.price, paid: p.due,
-          cost: kit ? 32 + (ship === "ship" ? 10 : 1) : 0, member: p.member, who: name, email: email, at: now, order: order,
+          cost: kit ? 32 + (ship === "ship" ? (box ? 0 : 10) : 1) : 0, member: p.member, who: name, email: email, at: now, order: order,
           consult: tier.id === "evelyn" ? "to book" : null });
         try { localStorage.setItem(SALES, JSON.stringify(log)); } catch (e) { /* private mode */ }
         form.hidden = true; done.hidden = false;
         var first = name.split(" ")[0];
         done.innerHTML = '<p class="kicker">You&rsquo;re in</p><p class="big">Welcome to Skin School, <span class="grad">' + esc(first) + '.</span></p>' +
           '<p>' + (tier.id === "basics" ? "Level 1 is open: nine lessons, about an hour and a half." : "All three levels are open: 33 lessons.") +
-          (kit ? " Your kit " + (ship === "ship" ? "ships this week, free." : "will be waiting at the front at your next visit.") : "") +
+          (kit ? " Your kit " + (ship === "ship" ? "ships free in 1–2 business days, with tracking by email." : "will be waiting at the front at your next visit.") : "") +
           (order ? " Order " + esc(order) + "." : "") + '</p>' +
           (tier.id === "evelyn" ? '<p><b>Pick a time for your call with Evelyn:</b></p><div class="slots" id="slots">' +
             ["Tue 6:30 PM", "Wed 7:00 PM", "Thu 6:30 PM", "Sat 9:00 AM"].map(function (s) { return '<button type="button" aria-pressed="false">' + s + '</button>'; }).join("") + '</div>' : "") +

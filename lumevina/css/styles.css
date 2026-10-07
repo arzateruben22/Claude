@@ -5889,6 +5889,14 @@ html.sheet-open { overflow: hidden; }
 /* checkout: shipping for shelf products */
 .ship-details[hidden], .ship-address[hidden] { display: none; }
 .co-ship .ship-note { display: block; color: var(--ink-60); }
+.co-ship .ship-when { display: block; color: var(--ink-35); font-size: 0.8rem; }
+.co-ship .pickup-when { color: var(--mauve); }
+/* street / apt / city · state · ZIP: the way a shipping label needs it */
+.field-row--addr { grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.7fr) minmax(0, 1fr); }
+@media (max-width: 480px) {
+  .field-row.field-row--addr { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 var(--space-3); }
+  .field-row--addr .field:first-child { grid-column: 1 / -1; }
+}
 .co-ship .ship-note.is-free { color: var(--mauve); font-weight: 600; }
 /* Skin School: the online course, shaped like the routine card, in its lightest rose */
 .school-card { border-color: rgba(247, 211, 222, 0.34); box-shadow: 0 0 40px -16px rgba(247, 211, 222, 0.4);

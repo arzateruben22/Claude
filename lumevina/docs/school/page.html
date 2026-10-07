@@ -220,7 +220,15 @@
           <select id="co-skin"><option value="">Choose one</option><option>Dry</option><option>Normal</option><option>Combination</option><option>Oily</option><option>Sensitive</option><option>Acne-prone</option></select></div>
         <div class="fld" id="co-ship-f"><span class="fl">The kit</span>
           <div class="seg" role="radiogroup" aria-label="How you get the kit"><button type="button" role="radio" aria-checked="true" data-ship="ship">Ship it free</button><button type="button" role="radio" aria-checked="false" data-ship="pickup">Pick up at my visit</button></div></div>
-        <div class="fld" id="co-addr-f"><label for="co-addr">Shipping address</label><input id="co-addr" autocomplete="street-address" placeholder="Street, city, ZIP"></div>
+        <div id="co-addr-f" role="group" aria-label="Shipping address">
+          <div class="fld"><label for="co-street">Street address</label><input id="co-street" autocomplete="shipping address-line1"></div>
+          <div class="fld"><label for="co-apt">Apt, suite or unit (optional)</label><input id="co-apt" autocomplete="shipping address-line2"></div>
+          <div class="fld-row co-addr-row">
+            <div class="fld"><label for="co-city">City</label><input id="co-city" autocomplete="shipping address-level2"></div>
+            <div class="fld"><label for="co-state">State</label><input id="co-state" autocomplete="shipping address-level1" value="CA" autocapitalize="characters"></div>
+            <div class="fld"><label for="co-zip">ZIP</label><input id="co-zip" inputmode="numeric" autocomplete="shipping postal-code"></div>
+          </div>
+        </div>
       </div>
       <div class="fld-row">
         <div class="fld"><label for="co-card">Card</label><input id="co-card" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242"></div>
@@ -257,6 +265,7 @@
 
 <script>__CURRICULUM__</script>
 <script>__PAYMENTS__</script>
+<script>__SHIPPING__</script>
 <script>__HERO__</script>
 <script>__SCENES__</script>
 <script>__APP__</script>

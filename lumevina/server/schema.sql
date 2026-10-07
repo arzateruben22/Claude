@@ -254,3 +254,47 @@ create policy "clients read their own questions" on questions
   for select using (client_id = auth.uid());
 -- writes happen only in edge functions (service role): ask inserts,
 -- the dashboard's Send reply updates reply / status / answered_at.
+
+-- ─────────────────────────────────────────────────────────────
+-- Shipping: everything that goes out by mail (js/shipping.js)
+-- Shelf orders, Glow Routine boxes and Skin School kits. stripe-webhook
+-- inserts a row for each paid order that ships (payment_intent.succeeded
+-- for the shop and Skin School, invoice.paid for each month's Glow Routine
+-- box). The dashboard's Shipping card works from it: the Pirate Ship
+-- spreadsheet, packing slips, then the tracking number and what the
+-- label really cost, which replaces the estimate in the books.
+-- See SHIPPING.md.
+-- ─────────────────────────────────────────────────────────────
+create table shipments (
+  id uuid primary key default gen_random_uuid(),
+  order_ref text not null,                        -- the Stripe PaymentIntent or invoice
+  source text not null check (source in ('shop', 'routine', 'school')),
+  client_id uuid references clients (id) on delete set null,
+  name text not null,
+  email text,                                     -- Pirate Ship emails the tracking here
+  street text not null,
+  apt text,
+  city text not null,
+  state char(2) not null,
+  zip text not null check (zip ~ '^\d{5}(-\d{4})?$'),
+  items jsonb not null,                           -- [{ "id": "gm-cleanser", "name": "...", "qty": 1 }]
+  package text not null default 'mailer' check (package in ('mailer', 'small', 'medium')),
+  weight_oz int not null check (weight_oz > 0),
+  charged_cents int not null default 0,           -- what the client paid for shipping
+  est_cents int not null,                         -- estimated postage + supplies, until the label is bought
+  postage_cents int,                              -- the label's real price
+  supplies_cents int,
+  tracking text,
+  carrier text check (carrier in ('USPS', 'UPS')),
+  status text not null default 'to_ship' check (status in ('to_ship', 'shipped', 'delivered', 'returned')),
+  ship_by timestamptz not null,                   -- two business days after the order; a Routine box's date
+  shipped_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index shipments_to_ship on shipments (ship_by) where status = 'to_ship';
+
+alter table shipments enable row level security;
+create policy "clients read their own shipments" on shipments
+  for select using (client_id = auth.uid());
+-- writes happen only in edge functions (service role): the webhook inserts,
+-- the dashboard's Mark shipped updates tracking / postage / status.

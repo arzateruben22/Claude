@@ -381,6 +381,7 @@ html.lock { overflow: hidden; }
 .fld label, .fld .fl { font-size: .82rem; font-weight: 600; color: var(--text-2); }
 .fld input, .fld select { width: 100%; font: inherit; font-size: 1rem; color: var(--text); background: #0d0d0e; border: 1px solid #2c2c2f; border-radius: 12px; padding: 12px 14px; }
 .fld input:focus, .fld select:focus { outline: none; border-color: var(--rose); }
+.fld input[aria-invalid="true"] { border-color: #ff7a6b; }
 .fld-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; }
 .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 14px; background: #0d0d0e; }
 .seg button { border: 0; background: none; border-radius: 10px; padding: 10px; font-size: .92rem; font-weight: 600; color: var(--text-2); cursor: pointer; }

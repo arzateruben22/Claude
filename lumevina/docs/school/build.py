@@ -38,6 +38,7 @@ for key, val in [
     ("__MONTH__", month),
     ("__CURRICULUM__", script(read(HERE, "curriculum.js"))),
     ("__PAYMENTS__", script(read(SITE, "js", "payments.js"))),
+    ("__SHIPPING__", script(read(SITE, "js", "shipping.js"))),
     ("__HERO__", script(read(HERE, "hero.js"))),
     ("__SCENES__", script(read(HERE, "scenes.js"))),
     ("__APP__", script(read(HERE, "app.js"))),
