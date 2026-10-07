@@ -198,16 +198,17 @@
       n.status === "watching" || n.status === "new" ? colors.cyan : colors["ink-dim"];
   }
 
-  function syncWeb(web) {
+  function syncWeb(s) {
     var seen = {};
-    web.forEach(function (w) {
+    s.web.forEach(function (w) {
       seen[w.id] = true;
       var n = nodes[w.id];
       if (!n) {
         n = nodes[w.id] = { id: w.id, a: hash(w.id) * Math.PI * 2, r: RING[w.status] || 0.8, grow: reduceMotion ? 1 : 0, gone: 0 };
       } else if (n.status !== w.status) {
         var kind = w.status === "killed" ? "down" : w.status === "bought" ? "up" : w.status === "sold" ? "gold" : null;
-        if (kind) bursts.push({ id: w.id, kind: kind, t: 0 });
+        var queued = kind && queueEvent(w, s);
+        if (kind && !(queued && kind === "down")) bursts.push({ id: w.id, kind: kind, t: 0 });   // the spider stomps its own
       }
       n.status = w.status; n.symbol = w.symbol; n.pnl = w.pnl; n.mcap = w.mcap;
       n.tr = RING[w.status] || 0.8; n.gone = 0;
@@ -221,22 +222,229 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  function drawSpider(cx, cy, t) {
-    var wig = reduceMotion ? 0 : Math.sin(t / 260) * 0.12;
-    ctx.save();
-    ctx.shadowColor = colors.pink; ctx.shadowBlur = 14;
-    ctx.strokeStyle = colors.pink; ctx.lineWidth = 2; ctx.lineCap = "round";
+  /* ---------- the crawler: a spider that walks the web ----------
+     Eight two-joint legs. Planted feet stay put until the body gets too far
+     ahead, then step (alternating groups, like a real gait). A foot that lands
+     near a coin grabs it. Short trips are a crawl, long ones a jump. It stops
+     on whatever the desk just did (buy, sell, stomp) and tags it; between
+     events it patrols the coins it's holding. */
+  var spider = null, events = [], lastT = 0;
+  var LEG_ANGLES = [0.5, 1.1, 1.9, 2.55];      // from the heading, each side
+
+  function shortMoney(x) {
+    return x >= 1e6 ? (x / 1e6).toFixed(2) + "M" : x >= 1e3 ? Math.round(x / 1e3) + "K" : Math.round(x) + "";
+  }
+
+  function queueEvent(w, s) {
+    if (reduceMotion) return false;
+    var ev = { id: w.id, kind: w.status };
+    if (w.status === "bought") {
+      ev.text = "BUY $" + w.symbol + " · cap " + shortMoney(w.mcap || 0); ev.color = "pink"; ev.ms = 3200; ev.rank = 0;
+    } else if (w.status === "sold") {
+      var t = (s.trades || []).filter(function (x) { return x.symbol === w.symbol; })[0];
+      var p = t ? t.pnl_pct : null;
+      ev.text = "SELL $" + w.symbol + (p == null ? "" : " " + pct(p)); ev.color = p != null && p < 0 ? "down" : "gold"; ev.ms = 3000; ev.rank = 0;
+    } else if (w.status === "killed") {
+      var k = (s.kills || []).filter(function (x) { return x.mint === w.id; })[0];
+      ev.text = "STOMPED $" + w.symbol + (k ? " · " + k.reason.split(" (")[0] : ""); ev.color = "down"; ev.ms = 1800; ev.rank = 1;
+      if (events.length >= 2) return false;   // stomps are common; don't let them crowd out trades
+    } else return false;
+    events.push(ev);
+    events.sort(function (a, b) { return a.rank - b.rank; });
+    if (events.length > 5) events.length = 5;
+    return true;
+  }
+
+  function makeSpider(x, y, L) {
+    var legs = [];
     for (var i = 0; i < 8; i++) {
-      var side = i < 4 ? -1 : 1, k = i % 4;
-      var base = (side < 0 ? Math.PI : 0) + (k - 1.5) * 0.45 * side + (k % 2 ? wig : -wig);
-      var kx = cx + Math.cos(base) * 13, ky = cy + Math.sin(base) * 13 - 4;
-      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(kx, ky);
-      ctx.lineTo(kx + Math.cos(base) * 9, ky + 9); ctx.stroke();
+      var side = i < 4 ? 1 : -1, k = i % 4;
+      legs.push({ ang: side * LEG_ANGLES[k], group: (k + (side > 0 ? 0 : 1)) % 2, foot: { x: x, y: y },
+                  from: null, to: null, t: 1, node: null });
     }
-    ctx.fillStyle = colors.pink;
-    ctx.beginPath(); ctx.arc(cx, cy, 6.5, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(cx, cy - 8, 4, 0, Math.PI * 2); ctx.fill();
+    return { x: x, y: y, vx: 0, vy: 0, heading: -Math.PI / 2, L: L, z: 0, mode: "rest", legs: legs,
+             target: null, until: 0, jump: null, label: null, tint: "pink", squash: 0, patrol: 0, gait: 0, gaitClock: 0 };
+  }
+
+  function homeOf(sp, leg) {
+    var a = sp.heading + leg.ang;
+    return { x: sp.x + Math.cos(a) * sp.L * 1.7, y: sp.y + Math.sin(a) * sp.L * 1.7 };
+  }
+
+  function nearestNode(p, within, geo) {
+    var best = null, bestD = within;
+    Object.keys(nodes).forEach(function (id) {
+      var n = nodes[id]; if (n.gone || n.grow < 0.98) return;
+      var q = geo(n), d = Math.hypot(q.x - p.x, q.y - p.y);
+      if (d < bestD) { best = n; bestD = d; }
+    });
+    return best;
+  }
+
+  function nextTarget(sp, now) {
+    var ev = events.shift();
+    if (ev && nodes[ev.id]) return ev;
+    var held = Object.keys(nodes).map(function (k) { return nodes[k]; }).filter(function (n) { return n.status === "bought" && !n.gone; });
+    if (held.length) {
+      var n = held[sp.patrol++ % held.length];
+      return { id: n.id, kind: "hold", ms: 2600 };
+    }
+    var watch = Object.keys(nodes).map(function (k) { return nodes[k]; }).filter(function (n) { return n.status === "watching" && !n.gone && n.grow >= 0.98; });
+    if (watch.length && Math.random() < 0.75) {
+      var w = watch[Math.floor(Math.random() * watch.length)];
+      return { id: w.id, kind: "inspect", text: "reading $" + w.symbol + "…", color: "cyan", ms: 1600 };
+    }
+    return { id: null, kind: "home", ms: 1400 };
+  }
+
+  function updateSpider(sp, dt, now, geo, hub) {
+    // pick the next stop
+    if (!sp.target || (sp.mode === "rest" && now > sp.until)) {
+      sp.target = nextTarget(sp, now); sp.mode = "travel";
+    }
+    var tn = sp.target.id ? nodes[sp.target.id] : null;
+    if (sp.target.id && (!tn || tn.gone)) { sp.target = null; return; }
+    var tp = tn ? geo(tn) : hub;
+    var dx = tp.x - sp.x, dy = tp.y - sp.y, d = Math.hypot(dx, dy);
+
+    if (sp.mode === "travel" && !sp.jump && d > sp.L * 6) {
+      sp.jump = { fx: sp.x, fy: sp.y, t: 0, dur: 0.5 + d / 1600 };
+    }
+    if (sp.jump) {
+      var j = sp.jump;
+      j.t = Math.min(1, j.t + dt / j.dur);
+      var e = j.t < 0.5 ? 2 * j.t * j.t : 1 - Math.pow(-2 * j.t + 2, 2) / 2;
+      sp.x = j.fx + (tp.x - j.fx) * e; sp.y = j.fy + (tp.y - j.fy) * e;
+      sp.z = Math.sin(Math.PI * j.t) * Math.min(60, 18 + d * 0.12);
+      var face = Math.atan2(dy, dx);
+      sp.heading += Math.atan2(Math.sin(face - sp.heading), Math.cos(face - sp.heading)) * Math.min(1, dt * 8);
+      if (j.t >= 1) {                                  // land: legs splay, feet grab what's near
+        sp.jump = null; sp.z = 0; sp.squash = 1;
+        sp.legs.forEach(function (leg) {
+          var h = homeOf(sp, leg), n = nearestNode(h, sp.L * 0.9, geo);
+          leg.node = n ? n.id : null; leg.foot = n ? geo(n) : h; leg.t = 1;
+        });
+        bursts.push({ x: sp.x, y: sp.y, kind: "cyan", t: 0 });
+        d = 0;
+      }
+    } else if (sp.mode === "travel") {
+      var speed = Math.min(sp.L * 5, d * 4);
+      if (d > 0.5) {
+        sp.vx = dx / d * speed; sp.vy = dy / d * speed;
+        sp.x += sp.vx * dt; sp.y += sp.vy * dt;
+        var want = Math.atan2(dy, dx), diff = Math.atan2(Math.sin(want - sp.heading), Math.cos(want - sp.heading));
+        sp.heading += diff * Math.min(1, dt * 6);
+      }
+    }
+    if (sp.mode === "travel" && !sp.jump && d < 3) {   // arrived
+      sp.mode = "rest"; sp.vx = sp.vy = 0;
+      var tg = sp.target, text = tg.text, color = tg.color;
+      if (tg.kind === "hold" && tn) {
+        text = "$" + tn.symbol + " " + pct(tn.pnl == null ? 0 : tn.pnl);
+        color = tn.pnl != null && tn.pnl < 0 ? "down" : "up";
+      }
+      sp.until = now + tg.ms;
+      if (text) sp.label = { text: text, color: color, born: now, until: sp.until };
+      if (color) sp.tint = color === "cyan" || color === "up" ? "pink" : color;
+      if (tg.kind === "killed") { sp.squash = 1.4; bursts.push({ id: tg.id, kind: "down", t: 0 }); }
+    }
+    sp.squash = Math.max(0, sp.squash - dt * 3);
+    if (sp.mode === "rest" && now > sp.until - 300 && sp.tint !== "pink") sp.tint = "pink";
+
+    // legs: step when the body has moved on, alternating groups
+    sp.gaitClock += dt;
+    if (sp.gaitClock > 0.12) { sp.gaitClock = 0; sp.gait ^= 1; }
+    var moving = sp.mode === "travel";
+    sp.legs.forEach(function (leg) {
+      if (sp.jump) return;
+      if (leg.node && nodes[leg.node] && leg.t >= 1) leg.foot = geo(nodes[leg.node]);   // stuck to a moving coin
+      var h = homeOf(sp, leg);
+      if (leg.t < 1) {
+        leg.t = Math.min(1, leg.t + dt / (moving ? 0.11 : 0.2));
+        var f = leg.t * leg.t * (3 - 2 * leg.t);
+        leg.foot = { x: leg.from.x + (leg.to.x - leg.from.x) * f, y: leg.from.y + (leg.to.y - leg.from.y) * f };
+        leg.lift = Math.sin(Math.PI * leg.t);
+        return;
+      }
+      leg.lift = 0;
+      var off = Math.hypot(leg.foot.x - h.x, leg.foot.y - h.y);
+      var need = moving ? (leg.group === sp.gait && off > sp.L * 0.55) : off > sp.L * 0.9 || (Math.random() < dt * 0.08);   // now and then a resting leg re-grips
+      if (need) {
+        var aim = { x: h.x + sp.vx * 0.12, y: h.y + sp.vy * 0.12 };
+        var n = moving ? null : nearestNode(aim, sp.L * 0.9, geo);
+        leg.node = n ? n.id : null;
+        leg.from = leg.foot; leg.to = n ? geo(n) : aim; leg.t = 0;
+      }
+    });
+
+    if (sp.label && now > sp.label.until + 450) sp.label = null;
+  }
+
+  function drawSpider(sp, now, hub) {
+    var L = sp.L, bx = sp.x, by = sp.y - sp.z, grow = 1 + sp.z / 160;
+    var col = colors[sp.tint] || colors.pink;
+    // silk back to the hub
+    ctx.save();
+    ctx.globalAlpha = 0.22; ctx.strokeStyle = colors.cyan; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(hub.x, hub.y); ctx.lineTo(bx, by); ctx.stroke();
+    if (sp.z > 1) {                                   // shadow while airborne
+      ctx.globalAlpha = 0.25; ctx.fillStyle = "#000";
+      ctx.beginPath(); ctx.ellipse(sp.x, sp.y + 4, L * 0.9, L * 0.35, 0, 0, Math.PI * 2); ctx.fill();
+    }
     ctx.restore();
+
+    ctx.save();
+    ctx.shadowColor = col; ctx.shadowBlur = 12;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.8; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    sp.legs.forEach(function (leg) {
+      var a = sp.heading + leg.ang;
+      var hip = { x: bx + Math.cos(a) * L * 0.28 * grow, y: by + Math.sin(a) * L * 0.28 * grow };
+      var foot = sp.jump ? { x: bx + Math.cos(a) * L * 1.1, y: by + Math.sin(a) * L * 1.1 + L * 0.3 }
+                         : { x: leg.foot.x, y: leg.foot.y - (leg.lift || 0) * L * 0.35 };
+      var dx = foot.x - hip.x, dy = foot.y - hip.y, d = Math.hypot(dx, dy) || 1, maxD = L * 1.95;
+      if (d > maxD) { foot = { x: hip.x + dx / d * maxD, y: hip.y + dy / d * maxD }; d = maxD; }
+      var h = Math.sqrt(Math.max(0, L * L - (d / 2) * (d / 2)));
+      var mx = (hip.x + foot.x) / 2, my = (hip.y + foot.y) / 2, px = -dy / d, py = dx / d;
+      if (px * (mx - bx) + py * (my - by) < 0) { px = -px; py = -py; }   // knees bend away from the body
+      var knee = { x: mx + px * h, y: my + py * h - L * 0.25 };
+      ctx.beginPath(); ctx.moveTo(hip.x, hip.y); ctx.lineTo(knee.x, knee.y); ctx.lineTo(foot.x, foot.y); ctx.stroke();
+      ctx.beginPath(); ctx.arc(knee.x, knee.y, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(foot.x, foot.y, leg.node ? 3.2 : 2.4, 0, Math.PI * 2); ctx.fill();
+    });
+    // body: abdomen box behind, head in front
+    ctx.translate(bx, by); ctx.rotate(sp.heading);
+    var sq = 1 + sp.squash * 0.25;
+    ctx.scale(grow * sq, grow / sq);
+    ctx.globalAlpha = 0.9;
+    ctx.beginPath(); ctx.rect(-L * 0.95, -L * 0.3, L * 0.85, L * 0.6); ctx.fill();
+    ctx.globalAlpha = 1; ctx.lineWidth = 1.4; ctx.strokeStyle = colors.ink;
+    ctx.beginPath(); ctx.rect(-L * 0.95, -L * 0.3, L * 0.85, L * 0.6); ctx.stroke();
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(L * 0.12, 0, L * 0.22, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = colors.ink;
+    ctx.beginPath(); ctx.arc(L * 0.22, -L * 0.08, 1.6, 0, Math.PI * 2); ctx.arc(L * 0.22, L * 0.08, 1.6, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    // tags: "jump" in the air, the action when it lands
+    ctx.save();
+    ctx.font = "600 11px " + getComputedStyle(document.body).fontFamily; ctx.textBaseline = "middle";
+    if (sp.jump) tag("jump", colors.cyan, bx + L * 1.3, by - L * 1.1, 1);
+    if (sp.label) {
+      var age = now - sp.label.born, a2 = Math.min(1, age / 180) * Math.min(1, Math.max(0, (sp.label.until + 450 - now) / 450));
+      tag(sp.label.text, colors[sp.label.color] || colors.pink, bx + L * 1.4, by - L * 1.5, a2);
+    }
+    ctx.restore();
+  }
+
+  function tag(text, col, x, y, alpha) {
+    var w = ctx.measureText(text).width + 14, h = 20;
+    x = Math.min(x, canvas.clientWidth - w - 6);
+    ctx.globalAlpha = alpha * 0.92; ctx.fillStyle = colors.panel;
+    ctx.fillRect(x, y - h / 2, w, h);
+    ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.lineWidth = 1.2;
+    ctx.strokeRect(x + 0.5, y - h / 2 + 0.5, w - 1, h - 1);
+    ctx.fillStyle = col; ctx.textAlign = "left";
+    ctx.fillText(text, x + 7, y + 0.5);
   }
 
   /* Vice City sunset behind the web: striped sun on the horizon, a grid floor
@@ -275,6 +483,9 @@
     ctx.clearRect(0, 0, w, h);
     drawBackdrop(w, h, t);
     var cx = w / 2, cy = h / 2 + 6, R = Math.min(w, h) / 2 - 34;
+    var geo = function (n) { return { x: cx + Math.cos(n.a) * R * n.r, y: cy + Math.sin(n.a) * R * n.r }; };
+    var hub = { x: cx, y: cy };
+    var dt = Math.min(0.05, Math.max(0, (t - lastT) / 1000)); lastT = t;
     // radar rings
     ctx.strokeStyle = colors.cyan; ctx.globalAlpha = 0.18; ctx.lineWidth = 1;
     [0.36, 0.56, 0.8, 0.95].forEach(function (k) { ctx.beginPath(); ctx.arc(cx, cy, R * k, 0, Math.PI * 2); ctx.stroke(); });
@@ -344,10 +555,10 @@
 
     // bursts: stomp (red), buy (green), sell (gold)
     bursts = bursts.filter(function (b) {
-      var n = nodes[b.id]; if (!n) return false;
+      var n = b.id ? nodes[b.id] : null; if (b.id && !n) return false;
       b.t += reduceMotion ? 1 : 0.025;
       if (b.t >= 1) return false;
-      var x = cx + Math.cos(n.a) * R * n.r, y = cy + Math.sin(n.a) * R * n.r;
+      var x = n ? geo(n).x : b.x, y = n ? geo(n).y : b.y;
       ctx.globalAlpha = 1 - b.t; ctx.strokeStyle = colors[b.kind]; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(x, y, 6 + b.t * 30, 0, Math.PI * 2); ctx.stroke();
       if (b.kind === "down") {
@@ -358,7 +569,18 @@
       return true;
     });
     ctx.globalAlpha = 1;
-    drawSpider(cx, cy, t);
+    // the hub the threads hang from
+    ctx.fillStyle = colors.cyan; ctx.globalAlpha = 0.8;
+    ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+    var L = Math.max(18, Math.min(46, R * 0.2));     // leg segment: a big, leggy crawler like the original
+    if (!spider) spider = makeSpider(cx, cy, L);
+    spider.L = L;
+    if (!reduceMotion) updateSpider(spider, dt, t, geo, hub);
+    else if (!spider.posed) {                         // reduced motion: a still spider on the hub
+      spider.legs.forEach(function (leg) { leg.foot = homeOf(spider, leg); });
+      spider.posed = true;
+    }
+    drawSpider(spider, t, hub);
     requestAnimationFrame(draw);
   }
 
@@ -368,7 +590,7 @@
   if (replay && jump) frame = Math.min(replay.frames.length - 1, parseInt(jump[1], 10));
   function render(s) {
     if (replay) s.replay = true;
-    renderHeader(s); renderCrew(s.agents); renderStats(s); renderChart(s); renderSheet(s); renderBooks(s); syncWeb(s.web);
+    renderHeader(s); renderCrew(s.agents); renderStats(s); renderChart(s); renderSheet(s); renderBooks(s); syncWeb(s);
   }
   function tick() {
     if (replay) {
@@ -383,7 +605,7 @@
   }
 
   buildCrew(); readColors(); resize();
-  window.addEventListener("resize", function () { resize(); });
+  window.addEventListener("resize", function () { resize(); if (spider) { spider.posed = false; spider.x = canvas.clientWidth / 2; spider.y = canvas.clientHeight / 2 + 6; } });
   tick();
   setInterval(tick, replay ? replay.interval || 1500 : 1500);
   requestAnimationFrame(draw);

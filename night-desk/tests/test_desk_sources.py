@@ -207,3 +207,18 @@ def test_impact_is_the_average_fill_of_a_constant_product_pool():
     tokens_out = x - (x * y) / (y + d)          # what $d actually buys
     avg_price = d / tokens_out
     assert impact(d, L) == pytest.approx(avg_price / P - 1)
+
+
+def test_held_coins_always_stay_on_the_web(night):
+    desk, _, _, now = night
+    for _ in range(3):        # open positions even if the night ended flat
+        r = next((r for r in desk.reviews.values() if r.status == "watching" and r.coin.mint not in desk.broker.positions), None)
+        if r and desk.broker.can_buy(r.coin.mint, now)[0]:
+            desk.broker.buy(r.coin, now)
+            r.status = "bought"
+    held = set(desk.broker.positions)
+    for r in desk.reviews.values():            # make every other coin look more recent
+        if r.coin.mint not in held:
+            r.updated = now + timedelta(minutes=5)
+    web = {n["id"] for n in desk.state(now)["web"]}
+    assert held and held <= web and len(web) <= 40

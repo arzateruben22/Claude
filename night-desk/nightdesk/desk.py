@@ -303,7 +303,11 @@ class Desk:
     # -- the dashboard's view ------------------------------------------------------
     def state(self, now: datetime) -> dict:
         b = self.broker
-        recent = sorted(self.reviews.values(), key=lambda r: r.updated or r.first_seen, reverse=True)[:40]
+        # Coins being held always stay on the web; the rest is the 40 most recently touched.
+        held = [self.reviews[m] for m in b.positions if m in self.reviews]
+        others = sorted((r for r in self.reviews.values() if r.coin.mint not in b.positions),
+                        key=lambda r: r.updated or r.first_seen, reverse=True)
+        recent = held + others[: max(0, 40 - len(held))]
         focus = self.reviews.get(self.focus) if self.focus else None
         eq = b.equity()
         step = max(1, len(self.equity) // 300)
