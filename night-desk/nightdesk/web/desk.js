@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var AGENTS = ["chief", "crawler", "vet", "scan", "social", "judge", "size", "fills", "risk"];
+  var AGENTS = ["crawler", "vet", "scan", "social", "judge", "size", "fills", "risk"];   // CHIEF runs the header
   var GLYPHS = {
     chief: '<path d="M2 12h12M3 12 2 5l3.5 3L8 3l2.5 5L14 5l-1 7"/>',
     crawler: '<circle cx="8" cy="8" r="2.4"/><path d="M6 6.5 2.5 3M10 6.5 13.5 3M6 9.5 2.5 13M10 9.5l3.5 3.5M5.6 8H1.5M10.4 8h4.1"/>',
@@ -78,8 +78,12 @@
   /* ---------- header + books ---------- */
   function renderHeader(s) {
     $("mode").textContent = s.replay ? "Replay · demo night" : s.mode === "demo" ? "Demo market" : "Live data";
-    $("clock").textContent = pt(s.now, true);
-    $("clock-sub").textContent = "Pacific · desk running since " + pt(s.started);
+    var now = new Date(s.now);
+    $("clock").textContent = now.toISOString().slice(11, 16) + " UTC";
+    $("clock-sub").textContent = pt(s.now) + " Pacific";
+    $("night").textContent = "Night " + (Math.floor((now - new Date(s.started)) / 864e5) + 1);
+    $("date").textContent = now.toLocaleString("en-US", { timeZone: "America/Los_Angeles", weekday: "short", month: "short", day: "numeric" });
+    $("scene-count").textContent = s.counts.seen.toLocaleString("en-US") + " found · " + s.counts.killed.toLocaleString("en-US") + " stomped";
     $("equity").textContent = money(s.bank.equity);
     $("pnl").textContent = pct(s.bank.pnl / s.bank.start * 100);
     $("pnl").className = cls(s.bank.pnl);
@@ -135,7 +139,7 @@
     var f = s.focus;
     if (!f) return;
     var rows = f.checks.map(function (c) {
-      return "<tr><td class='k'>" + c.kind + "</td><td>" + esc(c.rule) + "</td><td class='v'>" + esc(c.value) +
+      return "<tr><td class='n'></td><td class='k'>" + c.kind + "</td><td class='r'>" + esc(c.rule.replace(/[ ,]+/g, "_")).replace(/_/g, "_<wbr>") + "</td><td class='v'>" + esc(c.value) +
         "</td><td class='l'>" + esc(c.limit) + "</td><td class='" + (c.ok ? "ok'>✓" : "no'>✗") + "</td></tr>";
     }).join("");
     var v = f.verdict;
@@ -184,14 +188,14 @@
 
   function readColors() {
     var cs = getComputedStyle(document.documentElement);
-    ["thread", "up", "down", "gold", "ink", "ink-soft", "ink-dim", "line", "panel", "warn"].forEach(function (k) {
+    ["cyan", "pink", "up", "down", "gold", "ink", "ink-soft", "ink-dim", "line", "panel", "warn"].forEach(function (k) {
       colors[k] = cs.getPropertyValue("--" + k).trim() || "#888";
     });
   }
   function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; }
   function statusColor(n) {
     return n.status === "killed" ? colors.down : n.status === "bought" ? colors.up : n.status === "sold" ? colors.gold :
-      n.status === "watching" || n.status === "new" ? colors.thread : colors["ink-dim"];
+      n.status === "watching" || n.status === "new" ? colors.cyan : colors["ink-dim"];
   }
 
   function syncWeb(web) {
@@ -219,7 +223,9 @@
 
   function drawSpider(cx, cy, t) {
     var wig = reduceMotion ? 0 : Math.sin(t / 260) * 0.12;
-    ctx.strokeStyle = colors.thread; ctx.lineWidth = 2; ctx.lineCap = "round";
+    ctx.save();
+    ctx.shadowColor = colors.pink; ctx.shadowBlur = 14;
+    ctx.strokeStyle = colors.pink; ctx.lineWidth = 2; ctx.lineCap = "round";
     for (var i = 0; i < 8; i++) {
       var side = i < 4 ? -1 : 1, k = i % 4;
       var base = (side < 0 ? Math.PI : 0) + (k - 1.5) * 0.45 * side + (k % 2 ? wig : -wig);
@@ -227,19 +233,52 @@
       ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(kx, ky);
       ctx.lineTo(kx + Math.cos(base) * 9, ky + 9); ctx.stroke();
     }
-    ctx.fillStyle = colors.thread;
+    ctx.fillStyle = colors.pink;
     ctx.beginPath(); ctx.arc(cx, cy, 6.5, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(cx, cy - 8, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  /* Vice City sunset behind the web: striped sun on the horizon, a grid floor
+     rolling toward you. Kept faint so the web stays readable. */
+  function drawBackdrop(w, h, t) {
+    var horizon = h * 0.64, sunR = Math.min(w * 0.16, h * 0.34), sx = w / 2;
+    var g = ctx.createLinearGradient(0, horizon - sunR, 0, horizon);
+    g.addColorStop(0, colors.pink); g.addColorStop(1, "#ff9a3d");
+    ctx.save();
+    ctx.globalAlpha = 0.28;
+    ctx.beginPath(); ctx.arc(sx, horizon, sunR, Math.PI, 0); ctx.closePath();
+    ctx.fillStyle = g; ctx.fill();
+    ctx.globalCompositeOperation = "destination-out";
+    for (var i = 0; i < 6; i++) {        // the stripes cut through the lower half of the sun
+      var y = horizon - sunR * 0.5 + i * sunR * 0.09;
+      ctx.fillRect(sx - sunR, y, sunR * 2, 2 + i * 1.2);
+    }
+    ctx.restore();
+    ctx.save();
+    ctx.strokeStyle = colors.cyan; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(0, horizon); ctx.lineTo(w, horizon); ctx.stroke();
+    ctx.globalAlpha = 0.16; ctx.strokeStyle = colors.pink; ctx.lineWidth = 1;
+    for (var v = -12; v <= 12; v++) {    // lines running to the vanishing point
+      ctx.beginPath(); ctx.moveTo(sx + v * 18, horizon); ctx.lineTo(sx + v * w * 0.16, h); ctx.stroke();
+    }
+    var roll = reduceMotion ? 0 : (t / 2400) % 1;
+    for (var k = 0; k < 8; k++) {        // horizontal lines, bunching toward the horizon
+      var f = (k + roll) / 8, y2 = horizon + (h - horizon) * f * f;
+      ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke();
+    }
+    ctx.restore();
   }
 
   function draw(t) {
     var w = canvas.clientWidth, h = canvas.clientHeight;
     ctx.clearRect(0, 0, w, h);
+    drawBackdrop(w, h, t);
     var cx = w / 2, cy = h / 2 + 6, R = Math.min(w, h) / 2 - 34;
     // radar rings
-    ctx.strokeStyle = colors.line; ctx.lineWidth = 1;
+    ctx.strokeStyle = colors.cyan; ctx.globalAlpha = 0.18; ctx.lineWidth = 1;
     [0.36, 0.56, 0.8, 0.95].forEach(function (k) { ctx.beginPath(); ctx.arc(cx, cy, R * k, 0, Math.PI * 2); ctx.stroke(); });
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.1;
     for (var s = 0; s < 6; s++) { var a = s * Math.PI / 3; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); ctx.stroke(); }
     ctx.globalAlpha = 1;
 

@@ -5,77 +5,83 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Night Desk</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=IBM+Plex+Mono:wght@400;600&family=Mr+Dafoe&display=swap">
 <link rel="stylesheet" href="desk.css">
 </head>
 <body>
 <!--BODY-->
 <div class="page">
-  <header class="bar">
-    <div class="brand">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="16" cy="16" r="4.5"/><path d="M12 13 6 7M20 13l6-6M12 19l-6 6M20 19l6 6M11.5 16H4M20.5 16H28"/></g></svg>
-      <h1>Night Desk</h1>
-      <span class="badge paper">Paper money</span>
-      <span class="badge mode" id="mode">Connecting…</span>
-    </div>
-    <div class="clock"><b id="clock">--:--</b><span id="clock-sub">waiting for the desk</span></div>
-    <dl class="bank">
-      <div><dt>Bank</dt><dd id="equity">—</dd></div>
-      <div><dt>Since start</dt><dd id="pnl">—</dd></div>
-      <div><dt>Today</dt><dd id="day">—</dd></div>
-      <div><dt>Open</dt><dd id="open">—</dd></div>
-    </dl>
-  </header>
+  <div class="frame">
+    <header class="bar">
+      <div class="brand">
+        <h1>Night Desk</h1>
+        <p class="tagline">crawler finds · vet stomps · judge picks · paper trades</p>
+      </div>
+      <div class="badges">
+        <span class="badge paper">Paper money</span>
+        <span class="badge mode" id="mode">Connecting…</span>
+      </div>
+      <div class="when">
+        <div class="night"><span><b id="night">Night 1</b> · <span id="date">—</span></span><span id="clock-sub">waiting for the desk</span></div>
+        <div class="utc" id="clock">--:-- UTC</div>
+      </div>
+      <dl class="bank">
+        <div><dt>Bank</dt><dd id="equity">—</dd></div>
+        <div><dt>Since start</dt><dd id="pnl">—</dd></div>
+        <div><dt>Today</dt><dd id="day">—</dd></div>
+        <div><dt>Open</dt><dd id="open">—</dd></div>
+      </dl>
+    </header>
 
-  <main class="floor">
     <section class="crew" id="crew" aria-label="Desk agents"></section>
 
     <section class="web box" aria-label="The crawler's web: every coin it has found">
       <canvas id="web" role="img" aria-label="Coins the crawler found, colored by what the desk decided"></canvas>
       <ul class="legend">
-        <li style="--c: var(--thread)">watching</li>
+        <li style="--c: var(--cyan)">watching</li>
         <li style="--c: var(--down)">stomped</li>
         <li style="--c: var(--up)">holding</li>
         <li style="--c: var(--gold)">sold</li>
         <li style="--c: var(--ink-dim)">passed on</li>
       </ul>
+      <p class="scene-title">the crawler's web<br><span id="scene-count"></span></p>
       <ol class="ticker" id="ticker" aria-live="polite"></ol>
     </section>
 
     <section class="balance box">
       <div class="balance-head"><h2>Balance</h2><ul class="chips" id="stats"></ul></div>
-      <svg id="chart" viewBox="0 0 1000 180" preserveAspectRatio="none" role="img" aria-label="Paper balance over time">
+      <svg id="chart" viewBox="0 0 1000 180" role="img" aria-label="Paper balance over time">
         <defs><linearGradient id="eq-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" style="stop-color: var(--thread); stop-opacity: .28"/><stop offset="1" style="stop-color: var(--thread); stop-opacity: 0"/>
+          <stop offset="0" style="stop-color: var(--pink); stop-opacity: .32"/><stop offset="1" style="stop-color: var(--cyan); stop-opacity: 0"/>
         </linearGradient></defs>
         <g id="chart-body"></g>
       </svg>
     </section>
 
-    <section class="sheet box" aria-labelledby="sheet-h">
-      <h2 id="sheet-h">On the desk <small>every rule, for the coin under review</small></h2>
-      <div id="sheet"><p class="empty">The crawler hasn't found anything yet.</p></div>
-    </section>
+    <div class="lower">
+      <section class="sheet box" aria-labelledby="sheet-h">
+        <div class="code-tab"><b id="sheet-h">desk.toml</b><span>every rule, for the coin on the desk</span></div>
+        <div id="sheet"><p class="empty">The crawler hasn't found anything yet.</p></div>
+      </section>
 
-    <div class="side">
-    <section class="book box">
-      <h2>Holding <small id="hold-count"></small></h2>
-      <ol class="rows" id="positions"></ol>
-      <h2>Closed trades <small>newest first</small></h2>
-      <ol class="rows" id="trades"></ol>
-    </section>
-
-    <section class="kills box">
-      <h2>Kill list <small>stomped before they could hurt</small></h2>
-      <ol class="rows" id="kills"></ol>
-    </section>
-
-    <section class="verdicts box">
-      <h2>Judge <small id="judge-by"></small></h2>
-      <ol class="rows" id="verdicts"></ol>
-    </section>
+      <div class="side">
+        <section class="book box">
+          <h2>Holding <small id="hold-count"></small></h2>
+          <ol class="rows" id="positions"></ol>
+          <h2>Closed trades <small>newest first</small></h2>
+          <ol class="rows" id="trades"></ol>
+        </section>
+        <section class="kills box">
+          <h2>Kill list <small>stomped before they could hurt</small></h2>
+          <ol class="rows" id="kills"></ol>
+        </section>
+        <section class="verdicts box">
+          <h2>Judge <small id="judge-by"></small></h2>
+          <ol class="rows" id="verdicts"></ol>
+        </section>
+      </div>
     </div>
-  </main>
+  </div>
 
   <footer class="foot">
     <p class="notes" id="notes"></p>

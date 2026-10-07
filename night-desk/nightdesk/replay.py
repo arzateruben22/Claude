@@ -15,8 +15,6 @@ from .judge import RulesJudge
 from .server import WEB
 from .sources.sim import SimMarket
 
-FONTS = ("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700"
-         "&family=IBM+Plex+Mono:wght@400;600&display=swap")
 
 
 def record(cfg: Config, start: datetime, hours: float, seed: int = 7, frame_every_s: int = 90,
@@ -51,8 +49,9 @@ def _parts(data: dict) -> tuple:
     css = (WEB / "desk.css").read_text(encoding="utf-8")
     js = (WEB / "desk.js").read_text(encoding="utf-8")
     payload = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
+    fonts = next(line for line in index.splitlines() if "fonts.googleapis.com/css2" in line)
     head = (f"<title>Night Desk</title>\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n"
-            f"<link rel=\"stylesheet\" href=\"{FONTS}\">\n<style>{css}</style>\n")
+            f"{fonts.strip()}\n<style>{css}</style>\n")
     boot = (
         "<script>window.NIGHT_DESK_REPLAY=" + payload + ";"
         "window.NIGHT_DESK_REPLAY.frames.forEach(function(f){"
