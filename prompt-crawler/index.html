@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prompt Crawler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="crawler.css">
+</head>
+<body>
+<!--BODY-->
+<div class="app" id="app">
+  <header class="status" aria-label="Crawler status">
+    <dl class="stats">
+      <div><dt>swarm</dt><dd class="hi">prompt-crawler</dd></div>
+      <div><dt>legs</dt><dd>16</dd></div>
+      <div><dt>tentacles</dt><dd class="teal">22</dd></div>
+      <div><dt>words read</dt><dd><span id="st-read">0</span>/<span id="st-total">0</span></dd></div>
+      <div><dt>links</dt><dd class="gold" id="st-links">0</dd></div>
+      <div><dt>flags</dt><dd class="pink" id="st-flags">0</dd></div>
+      <div><dt>t</dt><dd id="st-t">0.00</dd></div>
+      <div class="wide"><dt>frame</dt><dd id="st-frame">0000</dd></div>
+    </dl>
+    <div class="controls">
+      <button type="button" class="ctl" id="pause" aria-pressed="false">pause</button>
+      <button type="button" class="ctl" id="speed" aria-label="Crawl speed 1x">1x</button>
+      <button type="button" class="ctl file" id="open-load" aria-haspopup="dialog" title="Crawl a different prompt">studio.prompt</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Prompt sections"></nav>
+
+  <section class="stage" id="stage" aria-label="The crawler's web of words">
+    <canvas id="web" role="img" aria-label="A spider crawls a web of the prompt's words, one section at a time"></canvas>
+    <div class="heading" id="heading">
+      <h1><span id="h-num">01</span> <span id="h-name">role</span></h1>
+      <p id="h-sub">who the studio works for</p>
+    </div>
+    <p class="sr-only" id="announce" aria-live="polite"></p>
+    <aside class="ship" id="ship" aria-labelledby="ship-h" hidden>
+      <header>
+        <h2 id="ship-h">Flags to ask</h2>
+        <button type="button" class="ctl" id="ship-close">hide</button>
+      </header>
+      <p class="ship-sum" id="ship-sum"></p>
+      <ol class="asks" id="asks"></ol>
+      <div class="ship-actions">
+        <button type="button" class="btn pink" id="copy-asks">Copy questions</button>
+        <button type="button" class="btn" id="again">Crawl again</button>
+        <button type="button" class="btn" id="load-2">Crawl your prompt</button>
+      </div>
+    </aside>
+  </section>
+
+  <section class="panels" aria-label="Crawl readouts">
+    <article class="panel">
+      <header><h2>Crawl log</h2><span class="teal"><span id="p-wps">0</span> w/s</span></header>
+      <ol class="log" id="log"></ol>
+    </article>
+    <article class="panel">
+      <header><h2>Sections</h2><span class="teal">7</span></header>
+      <ol class="secs" id="secs"></ol>
+      <p class="foot">words → kinds → links</p>
+    </article>
+    <article class="panel">
+      <header><h2>Coverage radar</h2><span class="teal">live</span></header>
+      <canvas class="radar" id="radar" role="img" aria-label="How much of each section is covered"></canvas>
+      <dl class="kinds">
+        <div><dt>claims</dt><dd><i id="k-claim"></i><span id="n-claim">0</span></dd></div>
+        <div><dt>owners</dt><dd><i id="k-owner"></i><span id="n-owner">0</span></dd></div>
+        <div><dt>approvals</dt><dd><i id="k-approval"></i><span id="n-approval">0</span></dd></div>
+      </dl>
+    </article>
+    <article class="panel">
+      <header><h2>Word heat</h2><span class="teal" id="p-total">0</span></header>
+      <div class="heat" id="heat"></div>
+      <p class="lbl">words per minute</p>
+      <p class="big" id="p-wpm">0/m</p>
+      <dl class="counts">
+        <div><dt>read</dt><dd id="c-read">0</dd></div>
+        <div><dt>linked</dt><dd class="gold" id="c-linked">0</dd></div>
+        <div><dt>flagged</dt><dd class="pink" id="c-flagged">0</dd></div>
+        <div><dt>guessed</dt><dd class="teal" id="c-guessed">0</dd></div>
+      </dl>
+    </article>
+    <article class="panel">
+      <header><h2>Spec score</h2><span class="teal">live</span></header>
+      <canvas class="wave" id="wave" role="img" aria-label="Reading rhythm"></canvas>
+      <div class="gauge">
+        <canvas id="gauge" aria-hidden="true"></canvas>
+        <p class="score"><b id="p-score">0</b><span>spec score</span></p>
+      </div>
+      <p class="pink" id="p-ask">flags to ask · 0</p>
+      <p class="dim">ask, don't guess</p>
+    </article>
+    <article class="panel">
+      <header><h2>crawler.py</h2><span class="pink"><span id="p-lps">0</span> l/s</span></header>
+      <pre class="code" id="code"></pre>
+    </article>
+  </section>
+</div>
+
+<dialog class="load" id="load" aria-labelledby="load-h">
+  <form id="load-form">
+    <h2 id="load-h">Crawl a prompt</h2>
+    <p>Paste a prompt or open a text file. Start each part with a heading: <code># role</code>,
+      <code># objective</code>, <code># context</code>, <code># roles</code>, <code># rules</code>,
+      <code># review</code>, <code># start</code>. Without headings the crawler sorts each sentence
+      itself and counts it as guessed.</p>
+    <label for="prompt-input">Prompt</label>
+    <textarea id="prompt-input" rows="14" spellcheck="false" autocomplete="off"></textarea>
+    <div class="row">
+      <label class="btn" for="prompt-file">Open a file</label>
+      <input type="file" id="prompt-file" accept=".txt,.md,.markdown,.prompt,text/plain,text/markdown">
+      <span class="dim" id="file-name"></span>
+    </div>
+    <p class="err" id="load-err" role="alert"></p>
+    <div class="row">
+      <button type="submit" class="btn pink" id="load-go">Crawl it</button>
+      <button type="button" class="btn" id="load-demo">Use studio.prompt</button>
+      <button type="button" class="btn" id="load-cancel">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<noscript><style>.app { display: none; }</style><p class="nojs">The crawler needs JavaScript to read the prompt and draw the web.</p></noscript>
+
+<script type="text/plain" id="studio-prompt"># role · who the studio works for
+You are the chief of staff for a two-person web studio. You turn rough client drafts into one release packet: every claim traceable to a source, every page with an owner, and a full build the team can approve.
+
+# objective · one site · one manual run
+Ship one complete client website per run at the $5k tier: menu, online ordering, booking and a clean, modern hero. Start from the intake answers, add nothing the client did not ask for, and stop when the preview is approved.
+
+# context · what is already true
+The Los Güeros taco shop site is the reference build. Reuse its ordering drawer, payment form and PWA kit, never its colors or fonts. Clients send logos, photos, hours and some menu text, etc. Most visitors arrive on phones.
+
+# roles · who owns what
+Ruben owns the client and signs off on design. Claude drafts the design plan, builds the pages and writes the handoff. The client confirms prices, hours and phone numbers. Nobody publishes without the owner's approval.
+
+# rules · what never bends
+Contrast at least 4.5:1. Visible focus states, 44px touch targets and reduced motion respected. No build step, relative paths only. Card forms stay in 4242 test mode until a real processor is connected. Mark every placeholder and list it in the handoff.
+
+# review · how it gets checked
+Check every page in Playwright at 1440 and 375 wide. The site should load fast and feel premium. Ruben reviews the Artifact preview and approves it before anything is pushed.
+
+# start · the first move
+Ask the four intake questions first: brand, art direction, scope and deploy. Then state the design plan in five lines and wait for approval.
+</script>
+<!--/BODY-->
+<script src="analyze.js"></script>
+<script src="crawler.js"></script>
+</body>
+</html>
