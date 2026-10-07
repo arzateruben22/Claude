@@ -1,0 +1,62 @@
+# Night Desk rulebook. Every number the desk believes lives here.
+#
+# Three kinds of rule:
+#   [kill]   rug signs. Break one and the coin is stomped for good.
+#   [ready]  not-yet rules. The coin waits on the watchlist and is re-checked.
+#   [scan]   0-1 scores for "is this worth a trade right now". Also re-checked.
+# A coin that clears all three goes to the judge. A "yes" becomes a paper buy.
+
+[desk]
+start_bank = 1000.0          # paper dollars
+discover_seconds = 60        # how often the crawler sweeps for new coins
+poll_seconds = 15            # how often watched coins and positions are re-priced
+watch_minutes = 90           # drop a coin that hasn't qualified by then
+
+[kill]
+max_top_wallet_pct = 5.0     # biggest single holder, pools excluded
+max_top10_pct = 35.0         # top 10 holders together, pools excluded
+max_dev_pct = 5.0            # creator still holding more than this
+require_mint_revoked = true  # creator can't print more coins
+require_freeze_revoked = true  # creator can't freeze your coins
+min_lp_locked_pct = 90.0     # pool money locked or burned (when reported)
+kill_on_danger_flags = true  # any RugCheck "danger" flag
+
+[ready]
+min_age_minutes = 15         # let it survive the first sniper wave
+max_age_hours = 24
+min_liquidity_usd = 12000
+min_volume_h1_usd = 15000
+min_mcap_usd = 60000
+max_mcap_usd = 5000000
+min_trades_h1 = 150
+
+[scan]
+min_buy_pressure = 0.55      # buys ÷ all trades, last hour
+min_buy_pressure_now = 0.55  # same, last 5 minutes (is the buying still happening)
+max_momentum_spent = 0.60    # 1.0 = already up 300% this hour
+min_heat = 0.30              # is it still trading now (last 5 min vs last hour)
+min_liquidity_fit = 0.60     # can the pool take a full-size ticket
+min_social = 0.34            # website / X / Telegram: at least one of three
+
+[judge]
+use_ai = true                # needs ANTHROPIC_API_KEY; otherwise the rules decide
+model = "claude-opus-5-5"    # "claude-haiku-4-5" is the tiny, cheaper option
+effort = "low"
+min_confidence = 0.6
+
+[size]
+ticket_pct = 10.0            # % of the paper bank per trade
+max_pct_of_liquidity = 1.0   # never more than this % of the pool
+max_open = 3
+fee_pct = 1.0                # per side: DEX fee plus priority tip
+slippage_pct = 1.0           # per side, on top of price impact
+
+[risk]
+take_profit_pct = 40.0
+stop_loss_pct = 20.0
+trail_arm_pct = 20.0         # once up this much...
+trail_pct = 15.0             # ...sell if it falls this far from the peak
+max_hold_minutes = 120
+rug_liquidity_drop_pct = 50.0  # pool lost this much since entry: get out
+daily_loss_limit_pct = 15.0  # stop buying for the day after losing this much
+cooldown_minutes = 60        # don't re-buy a coin you just sold

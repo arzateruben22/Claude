@@ -1,0 +1,4 @@
+requests>=2.28
+anthropic>=1.0          # only for the AI judge; the desk runs without a key
+tomli; python_version < "3.11"
+tzdata; platform_system == "Windows"
