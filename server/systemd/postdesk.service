@@ -1,0 +1,16 @@
+[Unit]
+Description=Post Desk: drafts, your approvals, and scheduled posts on X
+After=network-online.target
+Wants=network-online.target
+# Waits until you've connected X once (see server/README.md, step 5).
+ConditionPathExists=@DIR@/post-desk/.secrets/x_tokens.json
+
+[Service]
+User=@USER@
+WorkingDirectory=@DIR@/post-desk
+ExecStart=@DIR@/.venv/bin/python -m postdesk run --no-browser
+Restart=on-failure
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

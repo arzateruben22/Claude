@@ -492,10 +492,14 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python paperbook.py", description="Every paper trade from both desks, in one ledger.")
     ap.add_argument("--demo", action="store_true", help="read the desks' demo results instead of live ones")
     ap.add_argument("--watch", type=float, metavar="MINUTES", help="keep updating every few minutes")
+    ap.add_argument("--print", action="store_true", dest="print_only", help="just print the totals; write nothing")
     ap.add_argument("--config", default=str(HERE / "book.toml"))
     args = ap.parse_args(argv)
     with open(args.config, "rb") as fh:
         cfg = tomllib.load(fh)
+    if args.print_only:
+        print(render_text(load(cfg, args.demo)))
+        return 0
     out = HERE / "output" / ("demo" if args.demo else "")
     while True:
         book = build(cfg, args.demo, out)

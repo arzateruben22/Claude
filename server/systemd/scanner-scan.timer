@@ -1,0 +1,10 @@
+[Unit]
+Description=Scanner runs: after hours the evening before, then twice before the open
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 17:02:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 05:35:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 06:02:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

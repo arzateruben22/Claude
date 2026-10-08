@@ -1,0 +1,8 @@
+[Unit]
+Description=Night Desk: nightly lessons, risk officer and scorecard (paper only, changes nothing)
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@DIR@/night-desk
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly

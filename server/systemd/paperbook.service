@@ -1,0 +1,13 @@
+[Unit]
+Description=Paper Book: every paper trade from both desks, refreshed every 15 minutes
+After=network-online.target
+
+[Service]
+User=@USER@
+WorkingDirectory=@DIR@/paper-book
+ExecStart=@DIR@/.venv/bin/python paperbook.py --watch 15
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

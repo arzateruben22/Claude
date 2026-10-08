@@ -1,0 +1,8 @@
+[Unit]
+Description=Night Desk's review, every morning
+
+[Timer]
+OnCalendar=*-*-* 07:00:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

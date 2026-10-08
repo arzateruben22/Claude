@@ -61,7 +61,8 @@ settings (the cloud environment menu in the session's title bar, then Edit) and 
 Allowed domains:
 
 - coins: `api.dexscreener.com`, `api.geckoterminal.com`, `api.rugcheck.xyz`
-- stocks: `data.alpaca.markets`, `paper-api.alpaca.markets`, `api.alpaca.markets`, `www.nasdaqtrader.com`
+- stocks: `data.alpaca.markets`, `paper-api.alpaca.markets`, `api.alpaca.markets`, `www.nasdaqtrader.com`,
+  and for float data `query1.finance.yahoo.com`, `query2.finance.yahoo.com`, `fc.yahoo.com`
 
 Put `ALPACA_API_KEY` and `ALPACA_SECRET_KEY` in the environment's secrets as well (never in a chat).
 

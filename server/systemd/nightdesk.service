@@ -1,0 +1,14 @@
+[Unit]
+Description=Night Desk: the paper-money coin desk on live prices
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=@USER@
+WorkingDirectory=@DIR@/night-desk
+ExecStart=@DIR@/.venv/bin/python -m nightdesk run --no-browser
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
