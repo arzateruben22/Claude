@@ -26,8 +26,11 @@ for f in "$DIR"/server/systemd/*.service "$DIR"/server/systemd/*.timer; do
   sed -e "s#@DIR@#$DIR#g" -e "s#@USER@#$OWNER#g" "$f" > "/etc/systemd/system/$(basename "$f")"
 done
 systemctl daemon-reload
-systemctl enable --now nightdesk.service majors.service paperbook.service postdesk.service \
-  scanner-scan.timer scanner-grade.timer nightdesk-review.timer
+systemctl enable --now scanner-scan.timer scanner-grade.timer nightdesk-review.timer
+systemctl enable nightdesk.service majors.service paperbook.service postdesk.service
+# (Re)start so a `git pull` takes effect. The desks save open paper positions on the way out and resume them.
+# Post Desk only starts once X is connected.
+systemctl restart nightdesk.service majors.service paperbook.service postdesk.service
 
 echo
 bash "$DIR/server/status.sh"

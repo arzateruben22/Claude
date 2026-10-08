@@ -2,6 +2,7 @@
 Description=Night Desk: nightly lessons, risk officer and scorecard (paper only, changes nothing)
 
 [Service]
+Environment=PYTHONUNBUFFERED=1
 Type=oneshot
 User=@USER@
 WorkingDirectory=@DIR@/night-desk

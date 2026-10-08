@@ -6,6 +6,7 @@ Wants=network-online.target
 ConditionPathExists=@DIR@/post-desk/.secrets/x_tokens.json
 
 [Service]
+Environment=PYTHONUNBUFFERED=1
 User=@USER@
 WorkingDirectory=@DIR@/post-desk
 ExecStart=@DIR@/.venv/bin/python -m postdesk run --no-browser

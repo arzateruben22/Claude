@@ -6,6 +6,7 @@ Wants=network-online.target
 ConditionPathExists=@DIR@/premarket-scanner/.env
 
 [Service]
+Environment=PYTHONUNBUFFERED=1
 Type=oneshot
 User=@USER@
 WorkingDirectory=@DIR@/premarket-scanner

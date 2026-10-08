@@ -3,6 +3,7 @@ Description=Paper Book, Trade Crawler and Paper Galaxy: every paper trade, refre
 After=network-online.target
 
 [Service]
+Environment=PYTHONUNBUFFERED=1
 User=@USER@
 WorkingDirectory=@DIR@/paper-book
 ExecStart=@DIR@/.venv/bin/python paperbook.py --watch 15 --serve 8790
