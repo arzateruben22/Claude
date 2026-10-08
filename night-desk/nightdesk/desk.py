@@ -67,6 +67,8 @@ class Desk:
                        for k, v in AGENTS.items()}
         self.counts = {"seen": 0, "killed": 0, "judged": 0, "yes": 0, "bought": 0, "sold": 0}
         self.kill_rules: Counter = Counter()       # which kill rule stomped each coin
+        self.wait_rules: Counter = Counter()       # rules still failing when a coin's watch ran out
+        self.near_miss: Counter = Counter()        # ...when that was the only rule it failed
         self.focus: Optional[str] = None
         self.focus_rank = 0
         self.focus_until: Optional[datetime] = None
@@ -210,6 +212,13 @@ class Desk:
                 self.say("vet", f"stomped ${r.coin.symbol}: {r.note}", now, count=1, meter=rate)
                 self._set_focus(mint, now, rank=2, hold_s=60)
             elif outcome == "expired" or (outcome == "waiting" and now - r.first_seen > watch_for):
+                if outcome == "waiting":            # why it never qualified: a tally only, the rules don't change
+                    failing = [c.rule for c in r.checks if not c.ok] or ["no price data"]
+                    self.wait_rules.update(failing)
+                    if len(failing) == 1:
+                        self.near_miss[failing[0]] += 1
+                else:
+                    self.wait_rules["too old"] += 1
                 self._done(r, "skipped" if outcome == "waiting" else "expired", now)
                 r.note = f"never qualified ({r.note})" if outcome == "waiting" else r.note
             elif outcome == "candidate":
@@ -422,6 +431,7 @@ class Desk:
                        for t in b.trades[-500:]],
             "cooldown": {m: t.isoformat() for m, t in b.cooldown.items()},
             "equity": self.equity[-4320:], "counts": self.counts, "kill_rules": dict(self.kill_rules),
+            "wait_rules": dict(self.wait_rules), "near_miss": dict(self.near_miss),
             "gone": sorted(self.gone, key=self.gone.get)[-3000:],
         }
         tmp = self.out_dir / "state.json.tmp"
@@ -444,6 +454,8 @@ class Desk:
         b.cooldown = {m: datetime.fromisoformat(t) for m, t in data["cooldown"].items()}
         self.equity, self.counts = data["equity"], {**self.counts, **data["counts"]}
         self.kill_rules = Counter(data.get("kill_rules", {}))
+        self.wait_rules = Counter(data.get("wait_rules", {}))
+        self.near_miss = Counter(data.get("near_miss", {}))
         now = datetime.fromisoformat(self.equity[-1][0]) if self.equity else self.started
         self.gone = {m: now for m in data["gone"]}
         # Held coins come back on the watchlist so they keep being priced.

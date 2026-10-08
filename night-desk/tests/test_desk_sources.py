@@ -89,6 +89,13 @@ def test_files_and_resume(tmp_path):
     assert again.broker.cash == pytest.approx(desk.broker.cash)
     assert set(again.broker.positions) == set(desk.broker.positions)
     assert len(again.broker.trades) == len(desk.broker.trades)
+    assert again.wait_rules == desk.wait_rules and again.near_miss == desk.near_miss
+
+
+def test_coins_that_never_qualify_say_why(night):
+    desk, _, _, _ = night
+    assert desk.wait_rules and sum(desk.wait_rules.values()) >= sum(desk.near_miss.values())
+    assert set(desk.near_miss) <= set(desk.wait_rules)            # a near miss is one of the failing rules
 
 
 def test_sim_rugs_drain_the_pool():

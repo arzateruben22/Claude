@@ -24,6 +24,16 @@ print(f"  {judged} passed every check and were judged · {yes} judged worth buyi
 signs = sorted(s.get("kill_rules", {}).items(), key=lambda kv: -kv[1])[:3]
 if signs:
     print("  most common rug signs: " + ", ".join(f"{rule} ({n})" for rule, n in signs))
+waits = sorted(s.get("wait_rules", {}).items(), key=lambda kv: -kv[1])[:5]
+if waits:
+    print("  rules the others were still failing when their 90 minutes ran out:")
+    for rule, n in waits:
+        print(f"    {rule}: {n}")
+near = sorted(s.get("near_miss", {}).items(), key=lambda kv: -kv[1])[:3]
+if near:
+    print("  close calls (failed just one rule): " + ", ".join(f"{rule} ({n})" for rule, n in near))
+elif seen and not waits:
+    print("  (why the others never qualified shows up here about 90 minutes after the latest update)")
 held = s.get("positions", [])
 if held:
     print("  holding now: " + ", ".join("$" + p["symbol"] for p in held))
