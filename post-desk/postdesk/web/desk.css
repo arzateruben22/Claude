@@ -19,8 +19,6 @@
   --lilac: #c9a7ff;
   --citron: #e8e36a;
   --grey: #8b8f99;
-  --f-take: var(--amber); --f-list: var(--mint); --f-how_to: var(--sky); --f-question: var(--coral);
-  --f-story: var(--lilac); --f-data: var(--citron); --f-quote: var(--paper); --f-repost: var(--grey);
   --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;

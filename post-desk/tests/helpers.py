@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 from types import SimpleNamespace
 
 from postdesk import config
@@ -11,7 +12,7 @@ from postdesk.budget import Budget
 from postdesk.store import Store
 
 T0 = datetime(2026, 10, 5, 7, 0, tzinfo=timezone.utc)      # midnight in Los Angeles
-_BASE = config.load()
+_BASE = config.load(Path(__file__).with_name("desk.test.toml"))   # not your desk.toml: tests stay put when you edit it
 
 
 def cfg(**changes):

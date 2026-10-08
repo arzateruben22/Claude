@@ -14,7 +14,8 @@ from .review import make_reviewer
 from .store import Store
 from .writer import ManualWriter, make_writer
 
-DEMO_CURATED = ("opsgarden", "builderbecca")   # make-believe accounts in the demo's timeline
+DEMO_CURATED = {"informative": ("opsgarden", "builderbecca"),   # make-believe accounts in the demo's timeline
+                "comedy": ("liftlaughs", "ravecore")}
 
 
 def demo_desk(cfg: Config, start: datetime, folder: Optional[Path], seed: int = 7, allow_ai: bool = False,
@@ -28,12 +29,12 @@ def demo_desk(cfg: Config, start: datetime, folder: Optional[Path], seed: int = 
         store = Store(folder / "desk.db")
     cfg = copy.deepcopy(cfg)
     if not cfg.topics.curated_reposts:                         # so the demo shows reposts too
-        cfg.topics.curated_reposts = list(DEMO_CURATED)
+        cfg.topics.curated_reposts = list(DEMO_CURATED[cfg.writer.style])
     budget = Budget(cfg.budget, store, cfg.tz, cfg.writer.ai_daily_usd)
-    x = DemoX(start, budget, cfg.tz, seed=seed, handle=cfg.account.handle)
+    x = DemoX(start, budget, cfg.tz, seed=seed, handle=cfg.account.handle, style=cfg.writer.style)
     writer = make_writer(cfg, budget, demo=True, allow_ai=allow_ai)
     reviewer = make_reviewer(cfg, budget, allow_ai=allow_ai)
-    return Desk(cfg, x, writer, DemoFeeds(seed), store, budget, start, mode="demo", folder=folder,
+    return Desk(cfg, x, writer, DemoFeeds(seed, cfg.writer.style), store, budget, start, mode="demo", folder=folder,
                 reviewer=reviewer, demo_reviewer=demo_reviewer, seed=seed)
 
 

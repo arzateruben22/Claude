@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from typing import List
 
-from .demo_content import HEADLINES
+from .demo_content import demo_pool
 from .models import Signal
 
 MAX_BYTES = 2_000_000
@@ -76,12 +76,13 @@ class Feeds:
 
 
 class DemoFeeds:
-    def __init__(self, seed: int = 7):
+    def __init__(self, seed: int = 7, style: str = "informative"):
         self.rng = random.Random(seed)
+        self.headlines = demo_pool(style)[3]
 
     def fetch(self, now: datetime) -> List[Signal]:
         day = now.date().toordinal()
-        picks = random.Random(day).sample(HEADLINES, 3)
+        picks = random.Random(day).sample(self.headlines, 3)
         return [Signal(id="rss-demo-" + hashlib.sha1(h.encode()).hexdigest()[:12], source="rss", text=h,
                        url=f"https://example.com/news/{day}-{i}",
                        created=now - timedelta(hours=2 + i), score=round(10 / (2 + i), 3)) for i, h in enumerate(picks)]

@@ -15,14 +15,16 @@ from typing import Dict, List
 from zoneinfo import ZoneInfo
 
 from .budget import Budget
-from .demo_content import TRENDING
+from .demo_content import demo_pool
 from .guard import weighted_length
 from .models import Metric, Signal
 from .xapi import velocity
 
 FORMAT_REACH = {"take": 1.15, "list": 1.5, "how_to": 1.35, "question": 0.8, "story": 1.0, "data": 1.2,
-                "quote": 0.75, "repost": 0.3}
-FORMAT_TALK = {"question": 1.8, "take": 1.3, "story": 1.1}   # posts that get replies
+                "quote": 0.75, "repost": 0.3,
+                "hot_take": 1.45, "pov": 1.3, "observation": 1.0, "fake_headline": 1.1,
+                "this_or_that": 0.85}
+FORMAT_TALK = {"question": 1.8, "take": 1.3, "story": 1.1, "hot_take": 2.0, "this_or_that": 1.9}   # posts that get replies
 
 
 def hour_reach(h: float) -> float:
@@ -33,8 +35,10 @@ def hour_reach(h: float) -> float:
 class DemoX:
     name = "demo"
 
-    def __init__(self, start: datetime, budget: Budget, tz: ZoneInfo, seed: int = 7, handle: str = "yourhandle"):
+    def __init__(self, start: datetime, budget: Budget, tz: ZoneInfo, seed: int = 7, handle: str = "yourhandle",
+                 style: str = "informative"):
         self.rng = random.Random(seed)
+        self.trending = demo_pool(style)[2]
         self.budget, self.tz, self.handle = budget, tz, handle
         self.followers = 240.0
         self.posts: Dict[str, dict] = {}
@@ -55,7 +59,7 @@ class DemoX:
         self.followers = max(0.0, self.followers + gained - self.followers * 0.002 * days)   # a little churn
         self.last = now
         while self.next_trend <= now:                      # other people post too
-            author, text = TRENDING[self.rng.randrange(len(TRENDING))]
+            author, text = self.trending[self.rng.randrange(len(self.trending))]
             self.timeline.append({"id": f"t{len(self.timeline) + 1:05d}", "author": author, "text": text,
                                   "created": self.next_trend, "heat": self.rng.lognormvariate(0, 0.9)})
             self.next_trend += timedelta(minutes=self.rng.uniform(20, 70))

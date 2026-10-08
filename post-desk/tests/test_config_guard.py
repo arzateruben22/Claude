@@ -1,6 +1,7 @@
 import pytest
 
 from postdesk import config, guard
+from postdesk.writer import FORMAT_HELP
 from postdesk.models import Draft
 
 from .helpers import T0, cfg
@@ -10,17 +11,30 @@ def draft(text, kind="original", **kw):
     return Draft(id="d1", created=T0, kind=kind, text=text, **kw)
 
 
-def failed(d, c=None, recent=()):
-    return {x.rule: x.level for x in guard.check(d, c or cfg(), recent) if not x.ok}
+def failed(d, c=None, recent=(), borrowed=()):
+    return {x.rule: x.level for x in guard.check(d, c or cfg(), recent, borrowed) if not x.ok}
 
 
 # -- settings --------------------------------------------------------------------------------
 
-def test_the_shipped_settings_load():
+def test_your_settings_load():
     c = config.load()
-    assert c.approval.mode == "review"           # nothing posts without you, out of the box
+    assert c.approval.mode == "review"           # nothing posts without you until you say so
     assert c.writer.links == "never"
-    assert c.scout.every_minutes == 240
+    assert c.writer.style == "comedy" and set(c.writer.formats) <= set(FORMAT_HELP)
+
+
+def test_comedy_never_touches_politics_or_drugs():
+    c = config.load()
+    for text in ("my cardio plan is the same as the election: avoid it", "rave tip: drugs are not a personality"):
+        assert failed(draft(text), c).get("avoided topics") == "block"
+
+
+def test_someone_elses_joke_is_blocked():
+    joke = "Treadmill: 45 minutes. Distance: emotional."
+    assert failed(draft("Treadmill: 45 minutes. Distance: emotional!"), borrowed=[joke]).get("not someone else's post") == "block"
+    assert "not someone else's post" not in failed(draft("Leg day is a scam invented by people who own stairs."),
+                                                    borrowed=[joke])
 
 
 def test_unknown_settings_are_rejected(tmp_path):

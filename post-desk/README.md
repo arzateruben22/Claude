@@ -5,11 +5,13 @@ approve them, and the desk sends them out on a schedule. Then it measures what w
 
 It's the "Claude does 95% of the work, you approve" setup:
 
-- **Writes** original posts (takes, lists, how-tos, questions, short stories, data points) and
-  quote-post takes on things catching on in your niche, using free news feeds and a small,
-  budgeted X search for ideas.
+- **Writes** original posts in the formats you choose, and quote posts on things catching on in
+  your niche, using free feeds and a small, budgeted X search for ideas. Two styles:
+  `comedy` (hot takes, observations, POVs, lists, satirical headlines, this-or-that) and
+  `informative` (takes, lists, how-tos, questions, short stories, data points).
 - **Checks** every draft against X's automation rules and your own: no @mentions, no engagement
-  bait, no repeats, no avoided topics, links off by default, a source for any number.
+  bait, no repeats, no avoided topics, links off by default, a source for any number, and nothing
+  too close to a post or headline the scout found (no borrowed jokes).
 - **Waits for you.** Nothing posts until you approve it, unless you later choose to let clean
   original posts go out on their own. Quote posts always wait for you.
 - **Posts** in slots spread across your active hours, and over time moves most slots to the hours
@@ -99,7 +101,7 @@ that matter most:
 | `[topics]` | `include` / `avoid` topics, `keywords` the scout searches, `watch_accounts`, `curated_reposts` (the only accounts it may repost), free `rss` feeds for ideas |
 | `[schedule]` | `posts_per_day` (default 8), `active_hours`, `min_gap_minutes`, daily caps for quotes and reposts |
 | `[approval]` | `mode = "review"` (you approve everything) or `"auto_originals"` (clean original posts go out on their own; anything flagged, and every quote, still waits for you) |
-| `[writer]` | Claude model and effort, formats, `max_chars`, `links = "never"`, `ai_daily_usd` |
+| `[writer]` | `style` (`comedy` or `informative`), Claude model and effort, formats, `max_chars`, `links = "never"`, `ai_daily_usd` |
 | `[budget]` | hard X spending caps per day and month, and the share the scout may use for reading |
 | `[money]` | payout thresholds (copy them from Creator Studio), `verified_followers` (**TODO**: copy it now and then, since the API can't count it), affiliate domains and the disclosure tag |
 
@@ -149,18 +151,19 @@ unapproved drafts and approved quotes expire after `expire_hours`.
 
 X's API charges per call (rates in `[budget]`; check the developer console, since they change):
 about $0.015 a post, $0.20 a post with a link, $0.005 per post read, and $0.001 for reading your own
-posts' numbers. The demo's two weeks, with the default settings, used:
+posts' numbers. Two demo weeks with the settings in `desk.toml` used:
 
 | | per day |
 |---|---|
-| 8 posts | ~$0.12 |
-| scout (X search every 4 hours + curated accounts) | ~$0.35–0.50 |
-| your posts' numbers and follower count | ~$0.15 |
-| **X total** | **~$0.60–0.80** (about $20–24 a month; capped at $1.00/day, $25/month) |
-| Claude (writer + nightly review, Opus 5.5) | ~$0.20–0.35, capped at `ai_daily_usd` ($0.50) |
+| 8 posts (+ up to 1 repost) | ~$0.12 |
+| scout (an X search of 10 posts twice a day, plus author lookups for quotes) | ~$0.13 |
+| your posts' numbers and follower count | ~$0.17 |
+| **X total** | **~$0.42** (about $13 a month; capped at $0.60/day, $18/month) |
+| Claude (writer + nightly review, Opus 5.5) | ~$0.20–0.35, capped at `ai_daily_usd` ($0.40) |
 
-To spend less: scout less often (`every_minutes = 480`), read fewer posts (`max_results = 10`),
-use `claude-sonnet-5-5` for the writer, or turn keywords off and rely on the free RSS feeds.
+To spend less: scout less often, read fewer posts, use `claude-sonnet-5-5` for the writer, or turn
+keywords off and rely on the free RSS feeds. To find ideas faster, scout more often (`every_minutes
+= 240` roughly doubles the scout's cost).
 When a cap is reached the desk stops that kind of spending until the next day (or month), says
 so in the log, and always keeps posting money aside from reading money.
 
@@ -190,6 +193,13 @@ those were reported as Premium, around 500 verified followers and 500K+ views in
 check). For most new accounts that takes months, and the payouts are modest at first. Sponsors,
 affiliate links and your own products usually earn more. The **media kit** line in `stats` and on
 the dashboard is what sponsors ask for.
+
+**Starting from zero followers**, the order that usually works: post consistently (the desk), and
+spend 15 minutes a day *yourself* replying to bigger accounts in your niche. Replies are how new
+accounts get seen, and they're exactly what a bot must not automate. Get Premium once the posting
+habit sticks: it's required for payouts and gives your replies more reach. Keep affiliate links in
+your bio or a pinned post rather than in automated posts (link posts cost more through the API, and
+reach tends to be lower).
 
 The desk can make posting consistent, cheap and measured. It can't promise followers or income.
 The demo's growth numbers are invented and say nothing about your account.
@@ -230,7 +240,9 @@ tests/               python -m pytest
 ## Placeholders to fill in (TODO)
 
 - `[account] handle`: your X handle
-- `[account] notes`: true facts about you the writer may use
-- `[money] verified_followers` and the payout thresholds: from Creator Studio
-- `[topics]` keywords, watch accounts, curated reposts and feeds: the defaults are examples for an AI-tools niche
+- `[account] voice`: replace the starting voice once you've picked 5–10 posts that sound like you
+- `[account] premium`: set to true once you have X Premium (needed for payouts)
+- `[topics] watch_accounts`, `curated_reposts` and `rss`: accounts to learn from, accounts you'd
+  repost, and idea feeds (the current feeds are a starting point)
+- `[money]` thresholds and `verified_followers`: from Creator Studio
 - `.env`: X_CLIENT_ID, X_CLIENT_SECRET, ANTHROPIC_API_KEY

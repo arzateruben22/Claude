@@ -210,7 +210,7 @@ def render(store: Store, cfg: Config, now: datetime, followers: int, verified_fo
         lines.append("By format (reach = views per follower, adjusted for the hour posted; 1.0x = typical):")
         for k, v in sorted(fmts.items(), key=lambda kv: kv[1]["factor"], reverse=True):
             flag = "" if v["n"] >= MIN_N else "  (too few to judge)"
-            lines.append(f"  {k:<10} {v['factor']:>4.1f}x   {v['n']:>3} posts   ~{v['median']:>7,} views{flag}")
+            lines.append(f"  {k.replace('_', ' '):<14} {v['factor']:>4.1f}x   {v['n']:>3} posts   ~{v['median']:>7,} views{flag}")
         lines.append("")
     hours = by_hour(rs)
     if hours:

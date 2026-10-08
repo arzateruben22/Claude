@@ -63,6 +63,7 @@ class ApprovalCfg:
 @dataclass
 class WriterCfg:
     use_ai: bool = True
+    style: str = "informative"     # informative | comedy
     model: str = "claude-opus-5-5"
     effort: str = "medium"
     drafts_per_batch: int = 6
@@ -162,6 +163,8 @@ def load(path: Path | None = None) -> Config:
 def validate(cfg: Config) -> None:
     if cfg.approval.mode not in ("review", "auto_originals"):
         raise ValueError("[approval] mode must be review or auto_originals")
+    if cfg.writer.style not in ("informative", "comedy"):
+        raise ValueError("[writer] style must be informative or comedy")
     if cfg.writer.links not in ("never", "allowed"):
         raise ValueError("[writer] links must be never or allowed")
     for name in ("writer", "review"):

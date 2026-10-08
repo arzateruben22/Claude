@@ -117,3 +117,115 @@ HEADLINES = [
     "How teams are budgeting for AI in 2026",
     "The case for boring AI products",
 ]
+
+
+# -- comedy style ([writer] style = "comedy"): gym life, raves, everyday life ----------------------
+
+COMEDY_ORIGINALS = {
+    "hot_take": [
+        "Unpopular opinion: cardio is optional. Running is a reaction to danger and I am not in danger.",
+        "Gym mirrors should be closed before 7am. Nobody is ready for that.",
+        "If you rerack your weights you're a better person than most people with a podcast.",
+        "Leg day is a scam invented by people who own stairs.",
+        "The best part of any rave is the 4am gas station snack run. I will not be taking questions.",
+        "Pineapple on pizza is fine. Pineapple in a protein shake is a crime.",
+        "Grunting at the gym is the adult version of 'look at me' and I fully support it.",
+        "Texting 'k' should count as a declaration of war.",
+        "Morning people aren't better than us. They just went to bed while we were at the rave.",
+        "Clapping when the DJ finishes is correct. Clapping when the plane lands is also correct. Fight me on neither.",
+    ],
+    "observation": [
+        "Every gym has one guy who has been about to start his set since 2019.",
+        "Nothing humbles you faster than a staircase the day after leg day.",
+        "The festival lineup drops and suddenly everyone in the group chat is a music critic.",
+        "Pre-workout kicks in and suddenly you're drafting a text to your ex about your new PR.",
+        "Gym playlists are just songs that make you think you're in a movie training montage.",
+        "Every festival group has one friend who always knows where everyone is and one friend who is the emergency.",
+        "Saying 'last set' at the gym is the most common lie told indoors.",
+        "Walking to my car after the gym like I just came home from a war.",
+    ],
+    "pov": [
+        "pov: you made eye contact in the gym mirror and now you both have to pretend it never happened",
+        "pov: the drop is coming and your friend picks this exact moment to tell you a story",
+        "pov: you said 'one more song' three hours ago",
+        "pov: your gym crush starts using the machine you've been waiting for",
+        "pov: it's 7am, you're still wearing kandi, and your mom is calling",
+        "pov: you skipped leg day and now the stairs know",
+        "pov: the DJ finally plays your song and you're in the bathroom line",
+        "pov: you're the only one who wipes down the bench and you're quietly furious about it",
+    ],
+    "list": [
+        "Types of people at the gym:\n\n1. The mirror philosopher\n2. The 45-minute phone call\n3. The guy who grunts on warm-ups\n4. You, pretending not to notice all three",
+        "Rave survival kit:\n\n- comfy shoes\n- earplugs\n- a phone charger\n- one friend who never loses the group",
+        "Signs it was a good rave:\n\n- your feet hurt\n- your voice is gone\n- you have 400 blurry videos of the same light show",
+        "Gym excuses, ranked:\n\n3. 'my pre-workout hasn't kicked in'\n2. 'I'm deloading'\n1. 'it's a rest day' (it's the fourth one)",
+        "Things that should be illegal at the gym:\n\n- sitting on a machine to scroll\n- curling in the squat rack\n- unsolicited form advice",
+        "Festival group chat, in stages:\n\n1. 'we should all go!!'\n2. tickets bought\n3. nobody books the hotel\n4. 'who has a charger'",
+        "Things you hear at 3am at a rave:\n\n- 'this is the best night of my life'\n- 'where are my friends'\n- 'one more song'",
+        "Relationship red flags:\n\n- doesn't rerack weights\n- leaves before the headliner\n- replies 'k'",
+    ],
+    "fake_headline": [
+        "BREAKING: Local man who said 'last set' 40 minutes ago still on last set",
+        "Scientists confirm the gym is mostly people waiting for the same bench",
+        "Report: man who skipped leg day for three years now legally classified as a lollipop",
+        "Festival introduces new 'exit' feature after attendees spend six hours looking for one",
+        "BREAKING: rave friend who 'knows a shortcut' leads group into a parking lot again",
+        "Local woman's 'quick gym session' enters its third hour, family remains hopeful",
+        "BREAKING: man returns weights to the rack, gym staff in tears",
+        "Area raver insists sunrise set was 'life changing', cannot name a single song from it",
+    ],
+    "this_or_that": [
+        "Leg day or a rave the same night. You only get one working body.",
+        "Gym at 5am or gym at 10pm. There is no middle.",
+        "Front row at the rave or in the back where you can breathe?",
+        "Never skip leg day again or never wait for a bench again. Pick one.",
+        "Sunrise set or headliner set. You only get one forever.",
+        "Protein shake with water or with milk. This decides who I trust.",
+        "Gym crush: say hi, or admire from a respectful distance for two years?",
+        "Headphones at the gym: music or a podcast?",
+    ],
+}
+
+COMEDY_QUOTE_TAKES = [
+    "This is the most accurate thing posted today and I'm saying that from the squat rack.",
+    "Saving this to show my legs what they could have been.",
+    "Every rave group has this person, and if you don't know who it is, it's you.",
+    "Read this between sets and now I need a longer rest.",
+    "I felt this in my calves, which is wild because I've never trained them.",
+    "The accuracy is upsetting. I need to sit down on the leg press I'm not using.",
+    "This belongs in a museum, right next to my unused gym membership card.",
+    "Somebody finally said it and now I can go home.",
+    "My group chat is going to be arguing about this for the rest of the week.",
+    "This is peak gym culture and I'm proud to be part of the problem.",
+]
+
+COMEDY_TRENDING = [   # (author, text) for the demo scout: invented accounts
+    ("liftlaughs", "Nobody tells you the hardest part of the gym is finding parking."),
+    ("bassdropdiaries", "The best rave moments are the ones you won't remember filming."),
+    ("gymthoughts", "Pre-workout and bad decisions kick in at the same time for me."),
+    ("festivalfeed", "Festival season means my step count finally matches my personality."),
+    ("cardiohater", "Treadmill: 45 minutes. Distance: emotional."),
+    ("ravecore", "Lost my friends at the rave, found three new ones and a hat."),
+    ("benchwaiter", "Been waiting for this bench so long I've started paying rent."),
+    ("dailydeadpan", "My alarm and I have agreed to see other people."),
+    ("legdaylegend", "Did legs yesterday. I live on the couch now."),
+    ("sunriseset", "A sunrise set hits different when you've been awake since yesterday."),
+]
+
+COMEDY_HEADLINES = [   # demo only: invented
+    "Gyms brace for the January rush, again",
+    "Festival season tickets go on sale this week",
+    "Why everyone at the gym suddenly owns the same water bottle",
+    "The rise of the 5am gym crowd",
+    "Rave fashion trends for the new season",
+    "Is pre-workout the new coffee?",
+    "The etiquette of sharing gym equipment",
+    "How festival crowds plan their sets",
+]
+
+
+def demo_pool(style: str):
+    """(originals by format, quote takes, trending posts, headlines) for a writer style."""
+    if style == "comedy":
+        return COMEDY_ORIGINALS, COMEDY_QUOTE_TAKES, COMEDY_TRENDING, COMEDY_HEADLINES
+    return ORIGINALS, QUOTE_TAKES, TRENDING, HEADLINES

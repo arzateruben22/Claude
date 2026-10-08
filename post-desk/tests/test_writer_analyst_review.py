@@ -179,3 +179,21 @@ def test_a_failed_claude_review_falls_back_to_rules():
     b, store = budget(c)
     result = review.nightly(store, c, T0, review.ClaudeReviewer(c, b, FakeClaude(stop="max_tokens")))
     assert result["by"] == "rules" and "failed" in result["note"]
+
+
+def test_comedy_style_prompt_and_samples():
+    c = cfg(writer__style="comedy", writer__formats=["hot_take", "pov", "fake_headline"])
+    p = system_prompt(c)
+    assert "comedy account" in p and "No slurs" in p and "never punch down" in p.lower()
+    assert "Never copy or lightly reword" in p
+    out = TemplateWriter(c).originals(T0, 6, [], [], [])
+    assert len(out) == 6 and {d.format for d in out} <= {"hot_take", "pov", "fake_headline"}
+    b, _ = budget(c)
+    fake = FakeClaude({"takes": []})
+    ClaudeWriter(c, b, fake).quotes(T0, [Signal("1", "x", "gym post", author="a")], [])
+    assert "joke" in fake.calls[0]["messages"][0]["content"]
+
+
+def test_informative_style_keeps_its_rules():
+    p = system_prompt(cfg())
+    assert "comedy account" not in p and "source_url must be the link" in p

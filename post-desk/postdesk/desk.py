@@ -127,6 +127,10 @@ class Desk:
         waiting = [d.text for d in self.store.drafts(("queued", "approved")) if d.text and d.id != exclude]
         return posted + waiting
 
+    def _borrowed(self, now: datetime) -> List[str]:
+        """What the scout found lately: a draft must not copy it."""
+        return [s.text for s in self.store.signals(now - timedelta(days=3), limit=300)]
+
     def _save_slots(self) -> None:
         self.store.put(f"slots:{self.day}", self.slot_state)
 
@@ -319,7 +323,7 @@ class Desk:
 
     def _admit(self, now: datetime, d: Draft) -> str:
         """Check a new draft and file it: blocked, cleared to post on its own, or waiting for you."""
-        d.checks = guard.check(d, self.cfg, self._recent(now, exclude=d.id))
+        d.checks = guard.check(d, self.cfg, self._recent(now, exclude=d.id), self._borrowed(now))
         if d.blocked:
             d.status = "blocked"
             why = "; ".join(f"{c.rule}: {c.note}" if c.note else c.rule for c in d.checks if not c.ok and c.level == "block")
@@ -371,7 +375,7 @@ class Desk:
         return originals[0] if originals else None
 
     def _publish(self, now: datetime, d: Draft) -> bool:
-        d.checks = guard.check(d, self.cfg, self._recent(now, exclude=d.id))
+        d.checks = guard.check(d, self.cfg, self._recent(now, exclude=d.id), self._borrowed(now))
         if d.blocked:                     # something changed since it was approved (say, a similar post went out)
             d.status = "blocked"
             self.store.save_draft(d)
@@ -532,7 +536,7 @@ class Desk:
                 d.text = text
                 if d.by != "you":
                     d.by += "+you"
-            d.checks = guard.check(d, self.cfg, self._recent(now, exclude=d.id))
+            d.checks = guard.check(d, self.cfg, self._recent(now, exclude=d.id), self._borrowed(now))
             if d.blocked:
                 d.status = "blocked"
                 self.store.save_draft(d)

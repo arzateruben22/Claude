@@ -23,6 +23,7 @@ BAIT = [r"\blike if\b", r"\brt if\b", r"\bretweet if\b", r"\brepost if\b", r"\bf
 NUMBERS = re.compile(r"\b\d+(\.\d+)?\s?(%|x\b|percent\b|million\b|billion\b|k\b|times\b)", re.I)
 SHORT_URL = 23          # X counts every link as 23 characters
 MIN_COMMENTARY = 40     # a quote post earns only when it adds real commentary
+BORROWED = 0.5          # this close to someone else's post (a scouted post or headline) is copying
 
 
 def weighted_length(text: str) -> int:
@@ -50,7 +51,7 @@ def similarity(a: str, b: str) -> float:
     return len(sa & sb) / len(sa | sb)
 
 
-def check(d: Draft, cfg: Config, recent: Iterable[str] = ()) -> List[Check]:
+def check(d: Draft, cfg: Config, recent: Iterable[str] = (), borrowed: Iterable[str] = ()) -> List[Check]:
     out: List[Check] = []
 
     def add(rule: str, ok: bool, note: str = "", level: str = "block") -> None:
@@ -90,6 +91,9 @@ def check(d: Draft, cfg: Config, recent: Iterable[str] = ()) -> List[Check]:
     add("avoided topics", not hit, ("touches: " + ", ".join(hit)) if hit else "")
     best = max((similarity(text, r) for r in recent if r), default=0.0)
     add("not a repeat", best < 0.6, f"{best:.0%} like a recent post" if best >= 0.6 else "")
+    copied = max((similarity(text, b) for b in borrowed if b), default=0.0)
+    add("not someone else's post", copied < BORROWED,
+        f"{copied:.0%} like a post or headline the scout found: write your own" if copied >= BORROWED else "")
     letters = [c for c in text if c.isalpha()]
     if len(letters) >= 20:
         caps = sum(c.isupper() for c in letters) / len(letters)

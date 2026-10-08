@@ -7,12 +7,18 @@
   const TOKEN = meta ? meta.content : "";
   const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const root = getComputedStyle(document.documentElement);
-  const FORMATS = ["take", "list", "how_to", "question", "story", "data", "quote", "repost"];
-  const COLOR = {};
-  FORMATS.forEach((f) => { COLOR[f] = root.getPropertyValue("--f-" + f).trim() || "#8b8f99"; });
-  const RED = root.getPropertyValue("--red").trim() || "#ff3b30";
-  const NAME = { how_to: "how-to" };
-  const fname = (f) => NAME[f] || f;
+  const css = (v, d) => root.getPropertyValue(v).trim() || d;
+  const PALETTE = ["--amber", "--mint", "--sky", "--coral", "--lilac", "--citron"].map((v) => css(v, "#8b8f99"));
+  const COLOR = { quote: css("--paper", "#f2efe6"), repost: css("--grey", "#8b8f99") };
+  let FORMATS = [];
+  function setFormats(list) {            // your formats from desk.toml, each with its own color
+    if (FORMATS.length) return;
+    FORMATS = list.slice();
+    FORMATS.forEach((f, i) => { COLOR[f] = PALETTE[i % PALETTE.length]; });
+    legend();
+  }
+  const RED = css("--red", "#ff3b30");
+  const fname = (f) => (f === "how_to" ? "how-to" : String(f || "").replace(/_/g, " "));
   const fcolor = (f) => COLOR[f] || COLOR.repost;
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
@@ -267,7 +273,7 @@
   }
 
   function legend() {
-    $("legend").innerHTML = FORMATS.filter((f) => f !== "repost")
+    $("legend").innerHTML = FORMATS.concat(["quote"])
       .map((f) => `<li style="--c:${fcolor(f)}">${esc(fname(f))}</li>`).join("");
   }
 
@@ -541,6 +547,7 @@
   // -- everything -----------------------------------------------------------------------------------------
   function render(s) {
     S = s;
+    setFormats(s.formats_allowed);
     status(s);
     rundown(s);
     nextUp(s);
@@ -557,7 +564,6 @@
     if (REDUCE) drawWheel(0);
   }
 
-  legend();
   counter();
   if (REDUCE) window.addEventListener("resize", () => drawWheel(0));
   else requestAnimationFrame(loop);

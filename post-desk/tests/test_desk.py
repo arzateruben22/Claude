@@ -199,3 +199,15 @@ def test_no_internet_keeps_the_draft_and_backs_off():
     assert not ok and desk.store.draft(d.id).status == "approved"
     run(desk, T0 + timedelta(hours=8), 0.05, every=0.5)        # three quick steps: no retry storm
     assert len(calls) == 1 and desk.halt_until == T0 + timedelta(hours=8, minutes=5)
+
+
+def test_your_comedy_settings_run_in_the_demo(tmp_path):
+    from postdesk import config
+
+    c = config.load()                                         # your desk.toml
+    desk = demo_desk(c, T0, tmp_path, seed=5)
+    run(desk, T0, 24 * 3)
+    out = posted(desk)
+    assert out and {d.format for d in out if d.kind == "original"} <= set(c.writer.formats)
+    assert all(d.decided_by == "demo reviewer" for d in out)  # review mode: nothing posted on its own
+    assert {d.target_author for d in out if d.kind == "repost"} <= {"liftlaughs", "ravecore"}
