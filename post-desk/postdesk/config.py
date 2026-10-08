@@ -5,7 +5,7 @@ import os
 import re
 from dataclasses import dataclass, field, fields
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 from zoneinfo import ZoneInfo
 
 try:
@@ -72,6 +72,9 @@ class WriterCfg:
     hashtags_max: int = 1
     links: str = "never"
     ai_daily_usd: float = 0.50
+    edge: str = "edgy"                                         # comedy only: clean | edgy | spicy
+    hold_words: List[str] = field(default_factory=list)       # posts with these always wait for you
+    slang: Dict[str, str] = field(default_factory=dict)       # term -> what it means, for the writer
 
 
 @dataclass
@@ -165,6 +168,10 @@ def validate(cfg: Config) -> None:
         raise ValueError("[approval] mode must be review or auto_originals")
     if cfg.writer.style not in ("informative", "comedy"):
         raise ValueError("[writer] style must be informative or comedy")
+    if cfg.writer.edge not in ("clean", "edgy", "spicy"):
+        raise ValueError("[writer] edge must be clean, edgy or spicy")
+    if not all(isinstance(k, str) and isinstance(v, str) for k, v in cfg.writer.slang.items()):
+        raise ValueError("[writer.slang] entries look like: unc = \"someone getting old\"")
     if cfg.writer.links not in ("never", "allowed"):
         raise ValueError("[writer] links must be never or allowed")
     for name in ("writer", "review"):

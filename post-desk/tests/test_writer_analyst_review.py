@@ -197,3 +197,16 @@ def test_comedy_style_prompt_and_samples():
 def test_informative_style_keeps_its_rules():
     p = system_prompt(cfg())
     assert "comedy account" not in p and "source_url must be the link" in p
+
+
+def test_comedy_edge_and_slang():
+    c = cfg(writer__style="comedy", writer__edge="edgy",
+            writer__slang={"unc": "someone getting old", "cooked": "defeated"})
+    p = system_prompt(c)
+    assert "Slightly edgy" in p and "never a description" in p and "Nothing explicit" in p
+    assert "unc: someone getting old" in p and "at most two terms" in p
+    assert "No slurs" in p                                # the hard limits still hold
+    assert "Keep it clean" in system_prompt(cfg(writer__style="comedy", writer__edge="clean"))
+    assert "Tone:" not in system_prompt(cfg())             # informative accounts are unchanged
+    with pytest.raises(ValueError, match="edge"):
+        cfg(writer__edge="unhinged")

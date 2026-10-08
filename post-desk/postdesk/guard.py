@@ -87,6 +87,9 @@ def check(d: Draft, cfg: Config, recent: Iterable[str] = (), borrowed: Iterable[
     low = text.lower()
     bait = [p for p in BAIT if re.search(p, low)]
     add("no engagement bait", not bait, "asks for likes, reposts or follows" if bait else "")
+    held = [w for w in cfg.writer.hold_words if re.search(r"\b" + re.escape(w.lower()) + r"\b", low)]
+    if held:
+        add("spicy word", False, f"uses '{held[0]}': check it reads as a wink, not a description", "warn")
     hit = [t for t in cfg.topics.avoid if re.search(r"\b" + re.escape(t.lower()) + r"\b", low + " " + d.topic.lower())]
     add("avoided topics", not hit, ("touches: " + ", ".join(hit)) if hit else "")
     best = max((similarity(text, r) for r in recent if r), default=0.0)

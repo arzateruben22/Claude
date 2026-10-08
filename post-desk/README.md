@@ -101,7 +101,8 @@ that matter most:
 | `[topics]` | `include` / `avoid` topics, `keywords` the scout searches, `watch_accounts`, `curated_reposts` (the only accounts it may repost), free `rss` feeds for ideas |
 | `[schedule]` | `posts_per_day` (default 8), `active_hours`, `min_gap_minutes`, daily caps for quotes and reposts |
 | `[approval]` | `mode = "review"` (you approve everything) or `"auto_originals"` (clean original posts go out on their own; anything flagged, and every quote, still waits for you) |
-| `[writer]` | `style` (`comedy` or `informative`), Claude model and effort, formats, `max_chars`, `links = "never"`, `ai_daily_usd` |
+| `[writer]` | `style` (`comedy` or `informative`), Claude model and effort, formats, `max_chars`, `links = "never"`, `ai_daily_usd`; for comedy, `edge` (`clean`, `edgy` or `spicy`; never explicit, never slurs) and `hold_words` (posts using them always wait for you, even on auto) |
+| `[writer.slang]` | slang the writer may use, each with its meaning so it's used right (`unc = "someone getting old"`). At most two terms a post. |
 | `[budget]` | hard X spending caps per day and month, and the share the scout may use for reading |
 | `[money]` | payout thresholds (copy them from Creator Studio), `verified_followers` (**TODO**: copy it now and then, since the API can't count it), affiliate domains and the disclosure tag |
 
