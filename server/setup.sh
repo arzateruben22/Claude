@@ -6,10 +6,13 @@ set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/setup.sh"; exit 1; }
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 OWNER="${SUDO_USER:-root}"
+# A new server is often still installing its own updates: wait for them, and never stop to ask questions.
+export DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a
+APT="apt-get -o DPkg::Lock::Timeout=600"
 
 echo "Installing Python..."
-apt-get update -qq
-apt-get install -y -qq python3 python3-venv python3-pip git > /dev/null
+$APT update -qq
+$APT install -y -qq python3 python3-venv python3-pip git > /dev/null
 
 echo "Installing the desks' packages into $DIR/.venv ..."
 sudo -u "$OWNER" python3 -m venv "$DIR/.venv"
