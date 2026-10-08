@@ -68,6 +68,67 @@ python -m nightdesk check <mint address>   # put one coin through every rule, ri
 python -m nightdesk report                 # paper results: win rate, profit factor, exits, kills
 python -m nightdesk report --demo
 python -m nightdesk replay                 # record a demo night into one HTML file (phone-friendly)
+python -m nightdesk sim --days 30          # a month of the demo market, no dashboard
+```
+
+## Before real money: scorecard, risk officer, nightly review
+
+Three checks, all on paper. None of them can trade, and none of them can
+change `desk.toml`.
+
+```bash
+python -m nightdesk nightly        # all three in one go: put this on a schedule
+python -m nightdesk scorecard      # every gate, pass or fail
+python -m nightdesk risk           # the risk officer tries to kill the strategy
+python -m nightdesk lessons        # last week's losers, the patterns, at most one proposal
+```
+
+**The scorecard.** Every line must pass. The numbers live in `[gates]`.
+
+| Gate | Keep if |
+|---|---|
+| real market | live data; the demo never passes |
+| enough trades | 100+ closed paper trades |
+| enough time | 30+ days of paper trading |
+| profit factor | above 1.3 (money won ÷ money lost) |
+| steady returns | Sharpe above 1 (daily returns, annualized) |
+| pain you'd sit through | worst drop under 25% |
+| not a few lucky trades | still profitable without the best 5% of trades |
+| survives real costs | still profitable with fees and slippage doubled |
+| still works lately | the newest third of trades makes money too |
+| risk officer | said KEEP, for this rulebook, in the last 7 days |
+
+Only trades made under the **current rulebook** count. Change any number in
+`desk.toml`, or switch between the rules judge and Claude, and the scorecard
+starts from zero. A changed desk has to earn its way back.
+
+**The risk officer** reads the rulebook, the scorecard and every trade, and
+its job is to say KILL: too few trades, profit from a few lucky coins, costs
+that would erase the edge, results getting worse. It says KEEP only when it
+can't find a serious reason. With an API key it's Claude (`[review]` in
+`desk.toml`); without one, any failed gate is a KILL.
+
+**The nightly review** looks at the last 7 days: every losing trade with the
+coin's numbers at entry, and the patterns behind the losses. It finds them by
+splitting each entry number at its middle value, for example "pool size
+under $22,500: 31 trades lost $210, the other 31 made $180". It appends one
+lesson per real pattern to `output/live/lessons.md` and proposes **at most
+one** change. It never makes the change; if you do, the scorecard restarts.
+
+Run it once a night, for example at 6am (Mac/Linux, `crontab -e`):
+
+```
+0 6 * * * cd /path/to/night-desk && .venv/bin/python -m nightdesk nightly
+```
+
+With Claude, a nightly run is two calls at high effort: my estimate is 10–40
+cents a night (check your usage page). Set `effort = "medium"` to spend less.
+
+Try all of it on the demo first:
+
+```bash
+python -m nightdesk sim --days 30     # a month of the demo market, about 10 minutes
+python -m nightdesk nightly --demo    # always NOT READY: the demo fails "real market" on purpose
 ```
 
 ## The rulebook: `desk.toml`
@@ -79,7 +140,8 @@ Every number the desk believes is in one file, in three kinds of rule:
 - **`[scan]`** 0–1 scores for "worth a trade right now": buying over the last hour *and* last 5 minutes, how much of the move is already spent, whether it's still trading, whether the pool can take your ticket, socials.
 
 Then `[judge]`, `[size]` and `[risk]` decide the trade. Change a number,
-restart, compare `report` results.
+restart, compare `report` results. `[gates]` and `[review]` only judge the
+desk; changing them doesn't restart the scorecard.
 
 ## How the paper fills work
 

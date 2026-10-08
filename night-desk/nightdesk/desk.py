@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Deque, Dict, List, Optional
 
-from . import rules
+from . import gates, rules
 from .config import Config
 from .judge import describe as describe_judge
 from .models import Coin, Position, Review, Trade
@@ -74,8 +74,11 @@ class Desk:
         self.last_save: Optional[datetime] = None
         self.notes: Deque[str] = deque(maxlen=5)
         self.out_dir = out_dir
+        # Which version of the rules is trading: the scorecard only counts this version's trades.
+        self.rulebook = gates.rulebook_id(cfg, getattr(judge, "name", "rules"))
         if out_dir:
             out_dir.mkdir(parents=True, exist_ok=True)
+            gates.record_rulebook(out_dir, self.rulebook, getattr(judge, "name", "rules"), now)
 
     # -- helpers ----------------------------------------------------------------
     def say(self, agent: str, text: str, now: datetime, count: int = 0, meter: Optional[float] = None) -> None:
@@ -93,10 +96,23 @@ class Desk:
         if not self.out_dir:
             return
         path = self.out_dir / name
-        new = not path.exists()
+        if path.exists():
+            with open(path, newline="", encoding="utf-8") as fh:
+                header = next(csv.reader(fh), [])
+            if header != list(row):          # columns were added since this file began: rewrite it once
+                with open(path, newline="", encoding="utf-8") as fh:
+                    old = list(csv.DictReader(fh))
+                cols = list(row) + [c for c in header if c not in row]
+                with open(path, "w", newline="", encoding="utf-8") as fh:
+                    w = csv.DictWriter(fh, cols, restval="")
+                    w.writeheader()
+                    w.writerows(old)
+                header = cols
+        else:
+            header = []
         with open(path, "a", newline="", encoding="utf-8") as fh:
-            w = csv.DictWriter(fh, list(row))
-            if new:
+            w = csv.DictWriter(fh, header or list(row), restval="")
+            if not header:
                 w.writeheader()
             w.writerow(row)
 
@@ -240,6 +256,12 @@ class Desk:
             if pos is None:
                 r.note = "judge said yes, but the ticket is too small"
                 continue
+            c = r.coin
+            pos.rulebook = self.rulebook
+            pos.entry = {"age_min": round(c.age_minutes(now), 1), "liquidity": round(c.liquidity),
+                         "mcap": round(c.mcap), "volume_h1": round(c.volume_h1), "trades_h1": c.trades_h1,
+                         **{k: round(x, 3) for k, x in r.scores.items()},
+                         "judge_conf": v.confidence, "judge_by": v.by}
             r.status, r.updated, r.note = "bought", now, f"bought: {v.reason}"
             self.counts["bought"] += 1
             pool_pct = ticket / r.coin.liquidity * 100 if r.coin.liquidity else 0
@@ -263,6 +285,8 @@ class Desk:
                 "mint": t.mint, "cost": round(t.cost, 2), "proceeds": round(t.proceeds, 2),
                 "pnl": round(t.pnl, 2), "pnl_pct": round(t.pnl_pct, 2), "exit": t.exit_reason,
                 "held_min": round((t.closed_at - t.opened_at).total_seconds() / 60, 1),
+                "rulebook": t.rulebook, "judge_by": t.entry.get("judge_by", ""),
+                **{k: t.entry.get(k, "") for k in gates.ENTRY_KEYS},
             })
             self.say("risk", f"sold ${t.symbol} {t.pnl_pct:+.1f}% ({why})", now,
                      count=1, meter=0.5 + self.broker.day_pnl_pct() / (2 * self.cfg.risk.daily_loss_limit_pct))

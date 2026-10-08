@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -103,6 +103,8 @@ class Position:
     last_price: float
     last_liquidity: float
     reason: str = ""
+    entry: Dict[str, Any] = field(default_factory=dict)   # the coin's numbers when it was bought
+    rulebook: str = ""                                     # which version of desk.toml bought it
 
 
 @dataclass
@@ -116,6 +118,8 @@ class Trade:
     entry_price: float
     exit_price: float
     exit_reason: str
+    entry: Dict[str, Any] = field(default_factory=dict)
+    rulebook: str = ""
 
     @property
     def pnl(self) -> float:

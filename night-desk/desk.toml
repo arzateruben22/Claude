@@ -60,3 +60,24 @@ max_hold_minutes = 120
 rug_liquidity_drop_pct = 50.0  # pool lost this much since entry: get out
 daily_loss_limit_pct = 15.0  # stop buying for the day after losing this much
 cooldown_minutes = 60        # don't re-buy a coin you just sold
+
+# Before real money: the scorecard (python -m nightdesk scorecard).
+# Only trades made under the current rulebook count. Change any number above
+# and the scorecard starts over: a changed desk has to earn its way back.
+[gates]
+min_trades = 100             # closed paper trades
+min_days = 30                # days of paper trading
+min_profit_factor = 1.3      # money won ÷ money lost
+min_sharpe = 1.0             # daily returns, annualized over 365 days
+max_drawdown_pct = 25.0      # worst fall from a high point
+best_trades_share = 0.05     # still profitable without the best 5% of trades (at least 3)
+cost_multiplier = 2.0        # still profitable with fees and slippage doubled
+recent_share = 0.33          # the newest third of trades must make money too
+
+# The risk officer and the nightly review (python -m nightdesk nightly).
+# They only write reports and proposals. Nothing they say changes the desk.
+[review]
+use_ai = true                # needs ANTHROPIC_API_KEY; otherwise rule-based
+model = "claude-opus-5-5"
+effort = "high"              # runs once a night, so let it think
+lookback_days = 7            # the nightly review compares this window with everything before it

@@ -103,7 +103,8 @@ class PaperBroker:
         self.cash += proceeds
         self.cooldown[mint] = now + timedelta(minutes=self.cfg.risk.cooldown_minutes)
         exit_price = proceeds / p.qty if p.qty else 0.0
-        trade = Trade(p.mint, p.symbol, p.opened_at, now, p.cost, proceeds, p.entry_price, exit_price, reason)
+        trade = Trade(p.mint, p.symbol, p.opened_at, now, p.cost, proceeds, p.entry_price, exit_price, reason,
+                      dict(p.entry), p.rulebook)
         self.trades.append(trade)
         return trade
 

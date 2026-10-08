@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import math
 import random
+from bisect import bisect_right
 from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
@@ -24,6 +25,7 @@ from ..models import Coin, Safety
 from .base import Source
 
 STEP = timedelta(seconds=15)
+KEEP_FOR = timedelta(hours=30)
 SUPPLY = 1e9
 FATES = (("scam", 0.30), ("rug", 0.20), ("pump", 0.18), ("bleed", 0.17), ("dud", 0.15))
 SYLLABLES = ["ZA", "MO", "KI", "RU", "BO", "PE", "LU", "XI", "GO", "NU", "FI", "TA", "SNO", "GLO",
@@ -55,7 +57,10 @@ class _SimCoin:
     mcap: float = 0.0
     liquidity: float = 0.0
     vol_total: float = 0.0
-    tape: Deque[Tuple[datetime, float, float, int, int]] = field(default_factory=lambda: deque(maxlen=250))
+    buys_total: int = 0
+    sells_total: int = 0
+    # (time, price, volume, buys, sells, and the running totals of those three since launch)
+    tape: Deque[Tuple] = field(default_factory=lambda: deque(maxlen=250))
 
     # -- the hidden path --------------------------------------------------------
     def curve(self, minutes: float) -> float:
@@ -98,7 +103,10 @@ class _SimCoin:
             lean = min(0.95, max(0.05, lean))
             buys = int(round(trades * lean))
             self.vol_total += volume
-            self.tape.append((self.t, self.mcap / SUPPLY, volume, buys, trades - buys))
+            self.buys_total += buys
+            self.sells_total += trades - buys
+            self.tape.append((self.t, self.mcap / SUPPLY, volume, buys, trades - buys,
+                              self.vol_total, self.buys_total, self.sells_total))
 
     def _minutes(self, t: datetime) -> float:
         return (t - self.born).total_seconds() / 60
@@ -107,15 +115,23 @@ class _SimCoin:
         self.advance(now)
         price = self.mcap / SUPPLY
 
+        tape = list(self.tape)   # oldest first
+
+        def start(minutes: int) -> int:
+            """Index of the first tape row inside the last `minutes`."""
+            return bisect_right(tape, now - timedelta(minutes=minutes), key=lambda r: r[0])
+
         def window(minutes: int):
-            since = now - timedelta(minutes=minutes)
-            rows = [r for r in self.tape if r[0] > since]
-            return (sum(r[2] for r in rows), sum(r[3] for r in rows), sum(r[4] for r in rows))
+            """Volume, buys and sells inside the window, from the running totals."""
+            i = start(minutes)
+            if i >= len(tape):
+                return 0.0, 0, 0
+            last, before = tape[-1], tape[i]
+            return tuple(last[k] - before[k] + before[k - 3] for k in (5, 6, 7))
 
         def change(minutes: int) -> float:
-            since = now - timedelta(minutes=minutes)
-            older = [r for r in self.tape if r[0] <= since]
-            ref = older[-1][1] if older else (self.tape[0][1] if self.tape else price)
+            i = start(minutes)
+            ref = tape[i - 1][1] if i > 0 else (tape[0][1] if tape else price)
             return (price / ref - 1) * 100 if ref else 0.0
 
         v5, b5, s5 = window(5)
@@ -145,6 +161,9 @@ class SimMarket(Source):
         while self.next_birth <= now:
             self._launch(self.next_birth)
             self.next_birth += timedelta(seconds=self.rng.expovariate(1 / self.launch_every_s))
+        # Coins older than any rule allows are forgotten, so a month-long run stays small.
+        while self.order and now - self.coins[self.order[0]].born > KEEP_FOR:
+            del self.coins[self.order.pop(0)]
 
     def _launch(self, born: datetime) -> None:
         r = random.Random(self.rng.getrandbits(64))

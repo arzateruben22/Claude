@@ -5,11 +5,20 @@
   python -m nightdesk check <mint>      run the whole desk on one coin, once
   python -m nightdesk report            paper results so far
   python -m nightdesk replay            record a demo night into one HTML file
+
+Before real money (paper only, they change nothing):
+  python -m nightdesk scorecard         every gate, pass or fail
+  python -m nightdesk risk              the risk officer tries to kill the strategy
+  python -m nightdesk lessons           nightly review: losers, patterns, one proposal
+  python -m nightdesk nightly           lessons + risk + scorecard, for a schedule
+  python -m nightdesk sim --days 30     a month of demo market (about 10 minutes)
 """
 from __future__ import annotations
 
 import argparse
 import csv
+import json
+import math
 import signal
 import sys
 import webbrowser
@@ -17,7 +26,7 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import config, rules
+from . import config, gates, review, rules
 from .config import OUTPUT
 from .desk import Desk
 from .judge import describe, make_judge
@@ -35,9 +44,8 @@ def cmd_run(args) -> int:
         start = now - timedelta(hours=args.warmup)
         source = SimMarket(start, seed=args.seed)
         judge = make_judge(cfg.judge, allow_ai=args.ai)
+        _reset_demo()
         desk = Desk(cfg, source, judge, start, OUTPUT / "demo", mode="demo")
-        for f in ("trades.csv", "kills.csv", "state.json"):
-            (OUTPUT / "demo" / f).unlink(missing_ok=True)
         print(f"Warming up the demo desk ({args.warmup:g} simulated hours)...")
         t = start
         while t < now:
@@ -137,6 +145,141 @@ def cmd_report(args) -> int:
     return 0
 
 
+DEMO_FILES = ("trades.csv", "kills.csv", "state.json", "rulebook.json", "risk_review.json", "risk_review.md",
+              "scorecard.json", "scorecard.md", "lessons.md")
+
+
+def _reset_demo() -> None:
+    for f in DEMO_FILES:
+        (OUTPUT / "demo" / f).unlink(missing_ok=True)
+
+
+def _where(args):
+    mode = "demo" if args.demo else "live"
+    return OUTPUT / mode, mode
+
+
+def _analyst(cfg, args):
+    """Claude for the reviews on live data; on the demo only when asked (--ai), since it costs money."""
+    if args.demo and not args.ai:
+        return None
+    return review.make_analyst(cfg.review)
+
+
+def _score(cfg, folder, mode, now, every=False):
+    rb = gates.current_rulebook(cfg, folder)
+    trades = gates.load_trades(folder)
+    mine = trades if every else [t for t in trades if t["rulebook"] == rb["id"]]
+    s = gates.summarize(mine, cfg, None if every else rb["since"])
+    officer, why = review.load_officer(folder, rb["id"], now)
+    return rb, trades, mine, s, gates.gates(s, cfg, mode, officer, why or "not run")
+
+
+def _scorecard_text(cfg, folder, mode, now, every=False):
+    rb, trades, mine, s, gs = _score(cfg, folder, mode, now, every)
+    text = gates.render(gs, s, rb, mode, cfg)
+    others = len(trades) - len(mine)
+    if others:
+        text += f"\n{others} older trades were made under a different rulebook and don't count here."
+    (folder / "scorecard.md").write_text(text + "\n")
+    (folder / "scorecard.json").write_text(json.dumps(gates.to_json(gs, s, rb, mode), indent=1, default=str))
+    return text, gs
+
+
+def cmd_scorecard(args) -> int:
+    cfg = config.load()
+    folder, mode = _where(args)
+    if not (folder / "trades.csv").exists() and not (folder / "rulebook.json").exists():
+        print(f"No paper results yet in {folder}. Run the desk first"
+              + (" (or: python -m nightdesk sim --days 30)." if args.demo else "."))
+        return 0
+    text, _ = _scorecard_text(cfg, folder, mode, datetime.now(timezone.utc), args.all)
+    print(text)
+    return 0
+
+
+def cmd_risk(args) -> int:
+    cfg = config.load()
+    folder, mode = _where(args)
+    folder.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc)
+    rb, _, mine, s, gs = _score(cfg, folder, mode, now)
+    analyst = _analyst(cfg, args)
+    result = review.run_officer(mine, s, gs, cfg, mode, rb, now, analyst)
+    review.save_officer(folder, result)
+    print(review.render_officer(result))
+    if analyst and analyst.cost:
+        print(f"(about ${analyst.cost:.2f} of Claude usage)")
+    return 0
+
+
+def cmd_lessons(args) -> int:
+    cfg = config.load()
+    folder, mode = _where(args)
+    folder.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc)
+    rb = gates.current_rulebook(cfg, folder)
+    mine = [t for t in gates.load_trades(folder) if t["rulebook"] == rb["id"]]
+    analyst = _analyst(cfg, args)
+    md = review.render_lessons(review.nightly(mine, cfg, mode, rb, now, analyst))
+    path = review.append_lessons(folder, md)
+    print(md + f"Added to {path}")
+    return 0
+
+
+def cmd_nightly(args) -> int:
+    """The whole review in one go, for a schedule: lessons, then the officer, then the scorecard."""
+    cfg = config.load()
+    folder, mode = _where(args)
+    folder.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc)
+    analyst = _analyst(cfg, args)
+    rb = gates.current_rulebook(cfg, folder)
+    mine = [t for t in gates.load_trades(folder) if t["rulebook"] == rb["id"]]
+    night = review.nightly(mine, cfg, mode, rb, now, analyst)
+    review.append_lessons(folder, review.render_lessons(night))
+    rb, _, mine, s, gs = _score(cfg, folder, mode, now)
+    officer = review.run_officer(mine, s, gs, cfg, mode, rb, now, analyst)
+    review.save_officer(folder, officer)
+    text, gs = _scorecard_text(cfg, folder, mode, now)
+    p = night["proposal"]
+    print(text)
+    print(f"\nRisk officer ({officer['by']}): {officer['verdict']}. {officer['biggest_reason']}")
+    print("Proposal: " + (f"[{p['section']}] {p['setting']} {p['from']} → {p['to']}" if p else "none tonight")
+          + f"  (details in {folder / 'lessons.md'})")
+    if analyst and analyst.cost:
+        print(f"About ${analyst.cost:.2f} of Claude usage tonight.")
+    print("Nothing was changed. Paper only.")
+    return 0
+
+
+def cmd_sim(args) -> int:
+    """Run the demo market headless for days at a time, so the reviews have something to read."""
+    from .judge import RulesJudge
+    from .sources.sim import SimMarket
+
+    cfg = config.load()
+    end = datetime.now(timezone.utc).replace(microsecond=0)
+    start = end - timedelta(days=args.days)
+    _reset_demo()
+    desk = Desk(cfg, SimMarket(start, seed=args.seed), RulesJudge(cfg.judge), start, OUTPUT / "demo", mode="demo")
+    desk.last_save = end          # write state once at the end, not every simulated minute
+    print(f"Simulating {args.days:g} days of the demo market (seed {args.seed}, rules judge)...")
+    t, day = start, -1
+    while t <= end:
+        desk.step(t)
+        d = min(int((t - start).total_seconds() // 86400), math.ceil(args.days) - 1)
+        if d != day:
+            day = d
+            print(f"\r  day {d + 1}/{math.ceil(args.days)} · {len(desk.broker.trades)} trades · "
+                  f"bank ${desk.broker.equity():,.0f}", end="", flush=True)
+        t += timedelta(seconds=15)
+    desk.save()
+    print(f"\nDone: {len(desk.broker.trades)} paper trades in {OUTPUT / 'demo'}.\n"
+          "Next: python -m nightdesk nightly --demo")
+    return 0
+
+
 def cmd_replay(args) -> int:
     from . import replay
 
@@ -181,6 +324,24 @@ def main(argv=None) -> int:
     p = sub.add_parser("report", help="paper results so far")
     p.add_argument("--demo", action="store_true")
     p.set_defaults(func=cmd_report)
+
+    p = sub.add_parser("scorecard", help="every gate before real money, pass or fail")
+    p.add_argument("--demo", action="store_true")
+    p.add_argument("--all", action="store_true", help="count trades from older rulebooks too")
+    p.set_defaults(func=cmd_scorecard)
+
+    for name, fn, text in (("risk", cmd_risk, "the risk officer tries to kill the strategy"),
+                           ("lessons", cmd_lessons, "nightly review: losers, patterns, at most one proposal"),
+                           ("nightly", cmd_nightly, "lessons + risk officer + scorecard, for a schedule")):
+        p = sub.add_parser(name, help=text)
+        p.add_argument("--demo", action="store_true")
+        p.add_argument("--ai", action="store_true", help="demo only: use Claude on the demo data too")
+        p.set_defaults(func=fn)
+
+    p = sub.add_parser("sim", help="run the demo market headless for days (for trying the reviews)")
+    p.add_argument("--days", type=float, default=30)
+    p.add_argument("--seed", type=int, default=7)
+    p.set_defaults(func=cmd_sim)
 
     p = sub.add_parser("replay", help="record a demo night into one HTML file")
     p.add_argument("--hours", type=float, default=6)

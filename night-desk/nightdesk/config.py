@@ -84,6 +84,26 @@ class RiskCfg:
 
 
 @dataclass
+class GatesCfg:
+    min_trades: int = 100
+    min_days: float = 30
+    min_profit_factor: float = 1.3
+    min_sharpe: float = 1.0
+    max_drawdown_pct: float = 25.0
+    best_trades_share: float = 0.05
+    cost_multiplier: float = 2.0
+    recent_share: float = 0.33
+
+
+@dataclass
+class ReviewCfg:
+    use_ai: bool = True
+    model: str = "claude-opus-5-5"
+    effort: str = "high"
+    lookback_days: float = 7
+
+
+@dataclass
 class Config:
     desk: DeskCfg = field(default_factory=DeskCfg)
     kill: KillCfg = field(default_factory=KillCfg)
@@ -92,6 +112,8 @@ class Config:
     judge: JudgeCfg = field(default_factory=JudgeCfg)
     size: SizeCfg = field(default_factory=SizeCfg)
     risk: RiskCfg = field(default_factory=RiskCfg)
+    gates: GatesCfg = field(default_factory=GatesCfg)
+    review: ReviewCfg = field(default_factory=ReviewCfg)
 
 
 def load(path: Path | None = None) -> Config:
@@ -110,8 +132,9 @@ def load(path: Path | None = None) -> Config:
             setattr(target, key, value)
     if raw:
         raise ValueError(f"Unknown section(s) in {path.name}: {', '.join(sorted(raw))}")
-    if cfg.judge.effort not in ("low", "medium", "high", "xhigh", "max"):
-        raise ValueError("[judge] effort must be low, medium, high, xhigh or max")
+    for name in ("judge", "review"):
+        if getattr(cfg, name).effort not in ("low", "medium", "high", "xhigh", "max"):
+            raise ValueError(f"[{name}] effort must be low, medium, high, xhigh or max")
     return cfg
 
 
