@@ -44,6 +44,14 @@ everything so far into an archive folder (nothing is deleted) and restarts every
 
 Stocks start at the next weekday morning scan (5:35am Pacific).
 
+**Alerts on your phone (2 minutes, free):** run `bash server/alerts.sh`, install the **ntfy** app and
+subscribe to the topic it prints. You get a push if a desk stops, keeps crashing, goes quiet or loses
+10% of its bank in a day, plus a summary every evening at 8pm with BTC bought-and-held for comparison.
+
+**Backups:** the server saves a copy of every desk's paper records each night (kept 30 days). For a copy
+that survives losing the server itself, turn on **Backups** for your Droplet in DigitalOcean (about
+$1.20 a month on the $6 plan).
+
 **To see your results at any time:**
 
 ```bash

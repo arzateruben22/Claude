@@ -1,0 +1,10 @@
+[Unit]
+Description=Watchdog: phone alerts when a desk stops or has a bad day, plus an evening summary
+ConditionPathExists=@DIR@/server/.alerts
+
+[Service]
+Type=oneshot
+Environment=PYTHONUNBUFFERED=1
+User=@USER@
+WorkingDirectory=@DIR@/paper-book
+ExecStart=@DIR@/.venv/bin/python watchdog.py

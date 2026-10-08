@@ -1084,6 +1084,7 @@
     const sc = score().total, nf = countFlags(true);
     $('ship-sum').innerHTML = `Paper score <b>${sc}</b> of 100 · <b>${D.meta.trades.toLocaleString('en-US')}</b> trades · ` +
       `<b>${esc(usd(S.pnl))}</b> paper P&amp;L · <b>${nf}</b> flag${nf === 1 ? '' : 's'}` +
+      (D.meta.btc != null ? ` · BTC bought and held <b>${esc(pct(D.meta.btc))}</b>` : '') +
       (D.meta.demo ? ' · <b>demo prices</b>' : '') + ` · updated ${esc(D.meta.updated_local)}`;
     $('asks').innerHTML = asks.length ? asks.map((q) => {
       const chip = q.level === 'up' ? 'chip up' : q.level === 'note' ? 'chip note' : 'chip';

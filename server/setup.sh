@@ -26,7 +26,7 @@ for f in "$DIR"/server/systemd/*.service "$DIR"/server/systemd/*.timer; do
   sed -e "s#@DIR@#$DIR#g" -e "s#@USER@#$OWNER#g" "$f" > "/etc/systemd/system/$(basename "$f")"
 done
 systemctl daemon-reload
-systemctl enable --now scanner-scan.timer scanner-grade.timer nightdesk-review.timer
+systemctl enable --now scanner-scan.timer scanner-grade.timer nightdesk-review.timer watchdog.timer backup.timer
 systemctl enable nightdesk.service majors.service paperbook.service postdesk.service
 # (Re)start so a `git pull` takes effect. The desks save open paper positions on the way out and resume them.
 # Post Desk only starts once X is connected.
@@ -40,4 +40,6 @@ Running now (paper money): memecoins, big coins (BTC, ETH, XRP, ADA...) and the 
 Next:
   bash server/keys.sh        your keys (Alpaca for stocks; X and Claude for posting)
   bash server/connect-x.sh   connect your X account, then posting starts
+  bash server/alerts.sh      phone alerts if a desk stops or has a bad day, plus an evening summary
+Backups of the paper records run every night (sudo bash server/backup.sh to make one now).
 MSG

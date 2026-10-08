@@ -1,0 +1,6 @@
+[Unit]
+Description=Nightly backup of the desks' paper records (never keys)
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash @DIR@/server/backup.sh

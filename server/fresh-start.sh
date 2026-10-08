@@ -25,6 +25,10 @@ if [ -f "$DIR/premarket-scanner/output/journal.csv" ]; then
   mv "$DIR/premarket-scanner/output/journal.csv" "$DIR/premarket-scanner/output/archive/journal-$STAMP.csv"
   echo "archived premarket-scanner/output/journal.csv -> premarket-scanner/output/archive/journal-$STAMP.csv"
 fi
+if [ -f "$DIR/paper-book/output/benchmark.json" ]; then     # BTC buy-and-hold starts again from today too
+  mkdir -p "$DIR/paper-book/output/archive"
+  mv "$DIR/paper-book/output/benchmark.json" "$DIR/paper-book/output/archive/benchmark-$STAMP.json"
+fi
 systemctl start nightdesk.service majors.service paperbook.service
 sleep 5
 

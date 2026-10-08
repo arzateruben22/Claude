@@ -166,6 +166,7 @@ class Book:
     tz: ZoneInfo
     ticket: float = 100.0
     share_bank: bool = False                                        # each day's stock picks split the stock bank
+    benchmark: Optional[dict] = None                                # BTC bought at the start and held (benchmark.py)
     stock_rules: Tuple[float, float, float] = (10.0, 5.0, 0.5)    # target %, stop %, cost % from the scanner
 
     @property
@@ -250,6 +251,10 @@ def render_text(book: Book) -> str:
         today = book.now.astimezone(book.tz).date()
         week = sum(v for k, v in days.items() if (today - k).days < 7)
         lines.append(f"  today {_usd(days.get(today, 0.0))} · last 7 days {_usd(week)}")
+    import benchmark
+
+    if book.benchmark:
+        lines.append("  " + benchmark.line(book))
     if not all_s["trades"]:
         lines.append("  No closed paper trades yet. Each one shows up here as soon as a desk closes it.")
     elif all_s["trades"] < 50:
@@ -405,6 +410,16 @@ def render_html(book: Book) -> str:
     stamp = f"updated {book.now.astimezone(book.tz):%a %d %b %Y, %H:%M %Z}"
     demo = '<b>DEMO MARKETS · invented prices</b> · ' if book.demo else ""
 
+    bench = book.benchmark
+    if bench:
+        import benchmark
+
+        since = datetime.fromisoformat(bench["since"]).astimezone(book.tz)
+        bench_tile = (f'<div class="tile"><span>BTC bought and held</span><b class="{_cls(bench["pct"])}">'
+                      f'{bench["pct"]:+.1f}%</b><small>since {since:%d %b %H:%M} · big coins desk '
+                      f'{benchmark.desk_return(book, "majors"):+.1f}%</small></div>')
+    else:
+        bench_tile = ""
     tiles = (
         f'<div class="tile"><span>Net, all paper trades</span><b class="{_cls(all_s["net"])}">{e(_usd(all_s["net"]))}</b>'
         f'<small>{all_s["return_pct"]:+.1f}% of ${total:,.0f}</small></div>'
@@ -412,7 +427,7 @@ def render_html(book: Book) -> str:
                   f'<small>{per[d]["trades"]} trades · won {per[d]["win_rate"]:.0f}%</small></div>' for d in DESKS)
         + f'<div class="tile"><span>Open right now</span><b class="{_cls(book.unrealized)}">{e(_usd(book.unrealized))}</b>'
           f'<small>{len(book.held["memecoins"]) + len(book.held["majors"])} coins held · '
-          f'{len(book.held["stocks"])} stock picks waiting</small></div>')
+          f'{len(book.held["stocks"])} stock picks waiting</small></div>' + bench_tile)
 
     rows = "".join(
         f"<tr><th scope=\"row\">{LABEL[d]}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
@@ -500,8 +515,11 @@ def page(fragment: str) -> str:
 # -- command line ---------------------------------------------------------------------------------------
 
 def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> Book:
+    import benchmark                               # BTC bought at the start and held: the bar to clear
+
     book = load(cfg, demo, now)
     out.mkdir(parents=True, exist_ok=True)
+    book.benchmark = benchmark.load(out, book)
     write_ledger(book, out / "ledger.csv")
     frag = render_html(book)
     (out / "paper-book.fragment.html").write_text(frag, encoding="utf-8")
@@ -564,7 +582,11 @@ def main(argv=None) -> int:
     with open(args.config, "rb") as fh:
         cfg = tomllib.load(fh)
     if args.print_only:
-        print(render_text(load(cfg, args.demo)))
+        import benchmark
+
+        book = load(cfg, args.demo)
+        book.benchmark = benchmark.load(HERE / "output" / ("demo" if args.demo else ""), book)
+        print(render_text(book))
         return 0
     out = HERE / "output" / ("demo" if args.demo else "")
     server = None

@@ -1,0 +1,9 @@
+[Unit]
+Description=Run the watchdog every 5 minutes (it stays idle until server/alerts.sh has made a topic)
+
+[Timer]
+OnCalendar=*-*-* *:00/5:00
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target

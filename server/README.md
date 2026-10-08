@@ -114,7 +114,19 @@ journalctl -u postdesk -f                # live log of one service (nightdesk, p
 sudo systemctl restart postdesk          # after editing desk.toml
 git pull && sudo bash server/setup.sh    # update to the newest code
 sudo bash server/fresh-start.sh          # start counting from zero today (archives, never deletes)
+bash server/alerts.sh                    # phone alerts through the ntfy app (once)
+sudo bash server/backup.sh               # a backup right now (the timer makes one every night)
 ```
+
+**Alerts** (`paper-book/watchdog.py`, every 5 minutes once `server/alerts.sh` has made a topic): a push
+when a desk stops or keeps crashing, goes quiet (running but saving nothing, usually no prices), loses
+`day_loss_pct` of its bank in a day, or the nightly backup goes missing; plus a summary at `summary_at`.
+Both settings live in `[alerts]` in `paper-book/book.toml`. `python watchdog.py --dry-run` (from
+`paper-book/`) shows what it would send.
+
+**Backups** (`server/backup.sh`, 3:30am Pacific): every desk's records, never keys or tokens, in
+`/var/backups/desks`, newest 30 kept. The restore steps are at the top of the script. They live on the
+same machine, so also turn on your provider's backups (DigitalOcean: the Droplet's **Backups** tab).
 
 Each desk starts with $100 of paper money (`start_bank` in `night-desk/desk.toml`,
 `majors-desk/majors.toml` and `paper-book/book.toml`). After changing it, run `fresh-start.sh` so the

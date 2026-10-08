@@ -19,6 +19,13 @@ It writes `paper-book/output/ledger.csv` (one row per closed paper trade, both d
 the start, each day's result, win rate, profit factor, worst drop, open positions, and the
 latest trades.
 
+## The bar to clear: BTC bought and held
+
+Every refresh also prices $100 of BTC bought the moment the desks started and simply held (Coinbase's
+public prices, no key). The paper book, `server/status.sh`, the crawler's results and the evening summary
+all show it beside the big-coin desk. If a desk can't beat just holding, it isn't earning its keep. The
+start is saved in `output/benchmark.json`; `server/fresh-start.sh` resets it with everything else.
+
 ## The Trade Crawler
 
 Every refresh also writes `output/crawler.html`, a sixteen-legged crawler that reads the paper book

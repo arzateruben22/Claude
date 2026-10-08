@@ -12,10 +12,12 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
 from statistics import mean
 from typing import Dict, List
 
+import benchmark
 import galaxy
 import paperbook as pb
 
@@ -120,6 +122,15 @@ def flags(book: pb.Book) -> List[dict]:
             pf_txt = "no losses" if pf == float("inf") else f"profit factor {pf:.2f}"
             add(ups, d, "holding up", f"{label}: {_rate(s['win_rate'])} wins, {pf_txt}, "
                                       f"{_usd(s['net'])} over {n} trades.")
+    b = book.benchmark
+    if b and (book.trades["majors"] or book.held["majors"]):
+        mine, n = benchmark.desk_return(book, "majors"), len(book.trades["majors"])
+        since = datetime.fromisoformat(b["since"]).astimezone(book.tz)
+        text = f"Big coins {_pct(mine)} against BTC bought and held {_pct(b['pct'])} since {since:%a %d %b}."
+        if mine < b["pct"]:
+            add(found if n >= 20 else notes, "majors", "vs BTC", text + " So far, just holding BTC did better.")
+        else:
+            add(ups if n >= 20 else notes, "majors", "vs BTC", text + " Ahead of just holding, so far.")
     for d in pb.DESKS:
         for h in book.held[d]:
             if h.value is not None and h.cost > 0 and h.value < 0.8 * h.cost:
@@ -191,7 +202,7 @@ def data(book: pb.Book) -> dict:
         "meta": {"demo": book.demo, "updated": book.now.isoformat(), "tz": str(book.tz),
                  "updated_local": book.now.astimezone(book.tz).strftime("%a %d %b %Y, %H:%M"),
                  "bank": sum(book.banks.values()), "trades": sum(len(book.trades[d]) for d in pb.DESKS),
-                 "big_loss": BIG_LOSS},
+                 "big_loss": BIG_LOSS, "btc": book.benchmark["pct"] if book.benchmark else None},
         "desks": desks, "sections": sections, "flags": flags(book),
     }
 
