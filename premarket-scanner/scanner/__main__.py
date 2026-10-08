@@ -260,7 +260,16 @@ def cmd_doctor(args) -> int:
         return 1
     print(f"\nProvider: {provider.name}" + (f" (delayed ~{provider.delay_minutes} min)" if provider.delay_minutes else ""))
     if provider.name == "alpaca":
-        clock = provider.http.get(f"{provider.trading}/v2/clock")
+        try:
+            clock = provider.http.get(f"{provider.trading}/v2/clock")
+        except ProviderError as exc:
+            if "HTTP 401" in str(exc) or "HTTP 403" in str(exc):
+                print("✗ Alpaca turned these keys down. They must come from your Paper account (the key ID starts "
+                      "with PK), and the secret must belong to that same key ID. Easiest fix: regenerate the keys "
+                      "in Alpaca and save both again (on the always-on server: bash server/keys.sh).")
+            else:
+                print(f"✗ {exc}")
+            return 1
         print(f"✓ Alpaca keys work · market open now: {clock.get('is_open')} · next open {clock.get('next_open')}")
     elif provider.name == "massive":
         status = provider.http.get("https://api.massive.com/v1/marketstatus/now")

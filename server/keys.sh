@@ -27,8 +27,21 @@ set_key() {  # .env file, KEY, value
 }
 
 echo "STOCKS: your free Alpaca *paper* account (alpaca.markets > Paper > API keys)"
-set_key "$DIR/premarket-scanner/.env" ALPACA_API_KEY "$(ask '  Alpaca API key ID')"
-set_key "$DIR/premarket-scanner/.env" ALPACA_SECRET_KEY "$(ask '  Alpaca secret key (hidden)' hidden)"
+akey="$(ask '  Alpaca API key ID')"
+asecret="$(ask '  Alpaca secret key (hidden)' hidden)"
+akey="${akey//[[:space:]]/}"
+asecret="${asecret//[[:space:]]/}"
+if [ -n "$asecret" ] && { [ "$asecret" = "$akey" ] || [ "${#asecret}" -lt 30 ]; }; then
+  echo "  That secret doesn't look right: it's about 40 characters and different from the key ID."
+  echo "  (Often the key ID was still copied.) Not saved. Copy the secret again and rerun: bash server/keys.sh"
+  asecret=""
+fi
+set_key "$DIR/premarket-scanner/.env" ALPACA_API_KEY "$akey"
+set_key "$DIR/premarket-scanner/.env" ALPACA_SECRET_KEY "$asecret"
+if [ -n "$akey$asecret" ] && [ -x "$DIR/.venv/bin/python" ]; then
+  echo "  checking them with Alpaca..."
+  (cd "$DIR/premarket-scanner" && "$DIR/.venv/bin/python" -m scanner doctor 2>&1 | tail -n 1 | sed 's/^/  /') || true
+fi
 
 echo
 echo "POSTING ON X: your X developer app (developer.x.com > your app > Keys and tokens > OAuth 2.0)"
