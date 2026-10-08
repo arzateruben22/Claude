@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paper Galaxy</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="galaxy.css">
+</head>
+<body>
+<!--BODY-->
+<div class="app">
+  <div class="universe">
+    <header class="hud hud-top">
+      <div class="brand">
+        <h1>Paper Galaxy</h1>
+        <p id="sub">paper money only</p>
+      </div>
+      <dl class="counts">
+        <div><dt>Galaxies</dt><dd id="c-gal">0</dd></div>
+        <div><dt>Stars</dt><dd id="c-stars">0</dd></div>
+        <div><dt>Planets</dt><dd id="c-planets">0</dd></div>
+        <div><dt>Net</dt><dd id="c-net">$0</dd></div>
+      </dl>
+    </header>
+    <canvas id="sky" role="img" aria-label="A map of every paper trade: one galaxy per desk, one star per coin or stock, one orbiting planet per trade. The panel beside it lists the same numbers."></canvas>
+    <div class="tip" id="tip" role="status" hidden></div>
+    <div class="hud hud-bottom">
+      <button type="button" class="play" id="play" aria-label="Play the history from the first trade">Play</button>
+      <div class="track">
+        <input type="range" id="time" min="0" max="1000" value="1000" aria-label="Time, from the first trade to now">
+        <div class="ticks" id="ticks" aria-hidden="true"></div>
+      </div>
+      <output class="when" id="when" for="time">now</output>
+      <button type="button" class="fit" id="fit" aria-label="Fit everything in view">Fit</button>
+    </div>
+  </div>
+  <aside class="panel" aria-label="What the galaxy shows">
+    <section>
+      <h2>Galaxies</h2>
+      <ul class="gals" id="galaxies"></ul>
+    </section>
+    <section>
+      <h2>Constellations <small id="c-const"></small></h2>
+      <p class="hint">Patterns in the trades. Each one lights up once there are enough trades to say anything.</p>
+      <ol class="pats" id="patterns"></ol>
+    </section>
+    <section>
+      <h2>Milestones</h2>
+      <ol class="miles" id="milestones"></ol>
+    </section>
+    <section class="key">
+      <h2>How to read it</h2>
+      <ul>
+        <li><i class="dot win"></i>Star size: how often it's been traded. Bright core: it made money. Red: it lost.</li>
+        <li><i class="dot planet"></i>Planets: each closed trade, the newest ten per star. Mint won, coral lost.</li>
+        <li><i class="ring"></i>A pulsing ring: a position that's open right now.</li>
+        <li>New coins and stocks join on the outer arms, so each galaxy grows outward over time.</li>
+      </ul>
+      <p class="note">Paper money only. Constellations describe what happened, not what will happen.</p>
+    </section>
+  </aside>
+</div>
+<noscript><p class="noscript">The galaxy needs JavaScript. The same numbers are in the paper book (paper-book.html).</p></noscript>
+<!--/BODY-->
+<script src="galaxy.js"></script>
+</body>
+</html>

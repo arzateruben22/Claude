@@ -8,3 +8,5 @@ systemctl list-timers --no-pager 'scanner-*' 'nightdesk-*' 2>/dev/null | head -n
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 echo
 "$DIR/.venv/bin/python" "$DIR/paper-book/paperbook.py" --print
+echo
+echo "Paper Galaxy: http://127.0.0.1:8790 through ssh -L 8790:127.0.0.1:8790 (or your Tailscale address after phone.sh)"

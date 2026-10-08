@@ -46,6 +46,11 @@ Stocks start at the next weekday morning scan (5:35am Pacific).
 bash server/status.sh
 ```
 
+**To watch it grow:** the **Paper Galaxy** draws every paper trade as a universe. Each desk is a
+galaxy, each coin or stock is a star, and each trade is a planet orbiting it. Patterns
+("constellations") light up as trades pile up. Open it on your phone after step 6 of Part 3
+(`sudo bash server/phone.sh`), at the address it prints, port 8790.
+
 ## Part 3: Start posting on X (about 30 minutes, once)
 
 1. **Make the X app.** Go to **developer.x.com**, sign in with the account that will post, and
@@ -64,7 +69,8 @@ bash server/status.sh
    - Your browser lands on a page that won't load. That's normal.
    - Copy the whole address from the address bar, paste it back into the server, and press Enter.
 6. **Approve from your phone (optional):** run `sudo bash server/phone.sh` and follow what it
-   prints. Install the Tailscale app, sign in, and open the address it gives you.
+   prints. Install the Tailscale app, sign in, and open the addresses it gives you: Post Desk
+   on port 8788, and the Paper Galaxy on port 8790.
 7. **On X:** turn on the **Automated** label (Settings → Your account → Account information →
    Automation).
 

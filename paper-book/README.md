@@ -19,6 +19,25 @@ It writes `paper-book/output/ledger.csv` (one row per closed paper trade, both d
 the start, each day's result, win rate, profit factor, worst drop, open positions, and the
 latest trades.
 
+## The Paper Galaxy
+
+Every refresh also writes `output/galaxy.html`: the same trades drawn as a universe.
+
+- **Galaxies:** one per desk. Add a desk to the ledger and it becomes a new galaxy.
+- **Stars:** each coin or stock a desk has traded. Size shows how often it's been traded. A bright
+  core means it made money; red means it lost.
+- **Planets:** each closed trade orbits its star. A pulsing ring marks a position that's open now.
+- **Growth:** new symbols join on the outer arms, so a galaxy grows outward as the desk trades more.
+- **Timeline:** replays everything from the first trade to now. The biggest moves flash as they happen.
+- **Constellations:** patterns in the trades, such as how exits went, holding time, time of day,
+  which symbols carried the profit, streaks, and whether two desks win and lose on the same days.
+  Each one stays locked, showing a progress bar, until there are enough trades to say anything.
+  They describe what happened, not what will happen.
+
+`python paperbook.py --serve 8790` keeps it at http://127.0.0.1:8790. The page picks up new trades
+on its own every two minutes, and `/book` shows the paper book. On the always-on machine,
+`server/phone.sh` puts both on your phone.
+
 ## Start paper trading on your computer (Mac or Linux)
 
 One-time setup, from the repo folder:

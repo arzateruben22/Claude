@@ -10,7 +10,7 @@ Everything on one small Linux machine that never sleeps:
 | `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7 | right away |
 | `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices, hourly | right away |
 | `scanner-scan` / `scanner-grade` | stocks, paper picks before the open, graded after the close | once your Alpaca paper keys are in (step 6) |
-| `paperbook` | one ledger of every paper trade, refreshed every 15 minutes | right away |
+| `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Paper Galaxy on port 8790 | right away |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
@@ -89,11 +89,13 @@ are graded at 1:45 pm.
 From your computer, open a tunnel to the dashboards:
 
 ```bash
-ssh -L 8788:127.0.0.1:8788 -L 8787:127.0.0.1:8787 you@your-server
+ssh -L 8788:127.0.0.1:8788 -L 8787:127.0.0.1:8787 -L 8790:127.0.0.1:8790 you@your-server
 ```
 
 - http://127.0.0.1:8788: **Post Desk**. Approve drafts here, ideally once in the morning.
-- http://127.0.0.1:8787: **Night Desk**, the coin desk.
+- http://127.0.0.1:8790: **Paper Galaxy**, every paper trade drawn as a universe that grows
+  (the paper book is at `/book`).
+- http://127.0.0.1:8787: **Night Desk**, the memecoin desk.
 - Paper book: `bash server/status.sh` prints the totals. The full report is
   `paper-book/output/paper-book.html`; copy it to your computer with
   `scp you@your-server:desks/paper-book/output/paper-book.html .`

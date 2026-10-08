@@ -494,7 +494,47 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     frag = render_html(book)
     (out / "paper-book.fragment.html").write_text(frag, encoding="utf-8")
     (out / "paper-book.html").write_text(page(frag), encoding="utf-8")
+    import galaxy                                  # the same numbers, drawn as a universe
+
+    galaxy.write(book, out)
     return book
+
+
+SERVED = {"/": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
+          "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv"}
+TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8"}
+
+
+def serve(out: Path, host: str = "127.0.0.1", port: int = 8790):
+    """Read-only: the galaxy, the paper book and the ledger, nothing else. Answers only to its own address."""
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):  # noqa: N802
+            name = (self.headers.get("Host") or "").rsplit(":", 1)[0].strip("[]")
+            path = SERVED.get(self.path.split("?", 1)[0])
+            file = out / path if path else None
+            if name not in ("127.0.0.1", "localhost", "::1", host):
+                code, body, ctype = 403, b"wrong host", "text/plain"
+            elif not file or not file.is_file():
+                code, body, ctype = 404, b"not found (nothing written yet?)", "text/plain"
+            else:
+                code, body, ctype = 200, file.read_bytes(), TYPES[file.suffix]
+            self.send_response(code)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.end_headers()
+            self.wfile.write(body)
+
+        def log_message(self, *a):
+            pass
+
+    server = ThreadingHTTPServer((host, port), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server
 
 
 def main(argv=None) -> int:
@@ -502,6 +542,8 @@ def main(argv=None) -> int:
     ap.add_argument("--demo", action="store_true", help="read the desks' demo results instead of live ones")
     ap.add_argument("--watch", type=float, metavar="MINUTES", help="keep updating every few minutes")
     ap.add_argument("--print", action="store_true", dest="print_only", help="just print the totals; write nothing")
+    ap.add_argument("--serve", type=int, metavar="PORT", help="also show the galaxy and the book at http://HOST:PORT")
+    ap.add_argument("--host", default="127.0.0.1", help="with --serve: the address to answer on (default this machine only)")
     ap.add_argument("--config", default=str(HERE / "book.toml"))
     args = ap.parse_args(argv)
     with open(args.config, "rb") as fh:
@@ -510,10 +552,16 @@ def main(argv=None) -> int:
         print(render_text(load(cfg, args.demo)))
         return 0
     out = HERE / "output" / ("demo" if args.demo else "")
+    server = None
     while True:
         book = build(cfg, args.demo, out)
         print(render_text(book))
-        print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}")
+        print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}\nGalaxy: {out / 'galaxy.html'}")
+        if args.serve and server is None:
+            server = serve(out, args.host, args.serve)
+            print(f"Showing the galaxy at http://{args.host}:{args.serve}/  (the book: /book)")
+            if not args.watch:
+                args.watch = 15                     # serving means staying up, so keep the numbers fresh
         if not args.watch:
             return 0
         try:

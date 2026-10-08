@@ -1,11 +1,11 @@
 [Unit]
-Description=Paper Book: every paper trade from both desks, refreshed every 15 minutes
+Description=Paper Book and Paper Galaxy: every paper trade, refreshed every 15 minutes, shown on port 8790
 After=network-online.target
 
 [Service]
 User=@USER@
 WorkingDirectory=@DIR@/paper-book
-ExecStart=@DIR@/.venv/bin/python paperbook.py --watch 15
+ExecStart=@DIR@/.venv/bin/python paperbook.py --watch 15 --serve 8790
 Restart=always
 RestartSec=60
 
