@@ -65,5 +65,5 @@ if [ -n "$handle" ]; then
 fi
 
 echo
-echo "Done. Stocks start at the next weekday scan (5:35am Pacific)."
+echo "Done. Stocks start with the next weekday scan: 5:02pm Pacific (for the next morning), then 5:35 and 6:02am."
 echo "To start posting: bash server/connect-x.sh"
