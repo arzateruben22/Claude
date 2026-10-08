@@ -10,79 +10,87 @@
 </head>
 <body>
 <!--BODY-->
-<div class="page">
-  <div class="frame">
-    <header class="bar">
-      <div class="brand">
-        <h1>Night Desk</h1>
-        <p class="tagline">crawler finds · vet stomps · judge picks · paper trades</p>
-      </div>
-      <div class="badges">
-        <span class="badge paper">Paper money</span>
-        <span class="badge mode" id="mode">Connecting…</span>
-      </div>
-      <div class="when">
-        <div class="night"><span><b id="night">Night 1</b> · <span id="date">—</span></span><span id="clock-sub">waiting for the desk</span></div>
-        <div class="utc" id="clock">--:-- UTC</div>
-      </div>
-      <dl class="bank">
-        <div><dt>Bank</dt><dd id="equity">—</dd></div>
-        <div><dt>Since start</dt><dd id="pnl">—</dd></div>
-        <div><dt>Today</dt><dd id="day">—</dd></div>
-        <div><dt>Open</dt><dd id="open">—</dd></div>
-      </dl>
-    </header>
-
-    <section class="crew" id="crew" aria-label="Desk agents"></section>
-
-    <section class="web box" aria-label="The crawler's web: every coin it has found">
-      <canvas id="web" role="img" aria-label="Coins the crawler found, colored by what the desk decided"></canvas>
-      <ul class="legend">
-        <li style="--c: var(--cyan)">watching</li>
-        <li style="--c: var(--down)">stomped</li>
-        <li style="--c: var(--up)">holding</li>
-        <li style="--c: var(--gold)">sold</li>
-        <li style="--c: var(--violet)">judge said no</li>
-        <li style="--c: var(--ink-dim)">let go</li>
-      </ul>
-      <p class="scene-title">the crawler's web<br><span id="scene-count"></span></p>
-      <ol class="ticker" id="ticker" aria-live="polite"></ol>
-    </section>
-
-    <section class="balance box">
-      <div class="balance-head"><h2>Balance</h2><ul class="chips" id="stats"></ul></div>
-      <svg id="chart" viewBox="0 0 1000 180" role="img" aria-label="Paper balance over time">
-        <defs><linearGradient id="eq-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" style="stop-color: var(--pink); stop-opacity: .34"/><stop offset=".55" style="stop-color: var(--violet); stop-opacity: .16"/><stop offset="1" style="stop-color: var(--violet); stop-opacity: 0"/>
-        </linearGradient></defs>
-        <g id="chart-body"></g>
-      </svg>
-    </section>
-
-    <div class="lower">
-      <section class="sheet box" aria-labelledby="sheet-h">
-        <div class="code-tab"><b id="sheet-h">desk.toml</b><span>every rule, for the coin on the desk</span></div>
-        <div id="sheet"><p class="empty">The crawler hasn't found anything yet.</p></div>
-      </section>
-
-      <div class="side">
-        <section class="book box">
-          <h2>Holding <small id="hold-count"></small></h2>
-          <ol class="rows" id="positions"></ol>
-          <h2>Closed trades <small>newest first</small></h2>
-          <ol class="rows" id="trades"></ol>
-        </section>
-        <section class="kills box">
-          <h2>Kill list <small>stomped before they could hurt</small></h2>
-          <ol class="rows" id="kills"></ol>
-        </section>
-        <section class="verdicts box">
-          <h2>Judge <small id="judge-by"></small></h2>
-          <ol class="rows" id="verdicts"></ol>
-        </section>
-      </div>
+<div class="app">
+  <header class="status" aria-label="Desk status">
+    <h1 class="brand">Night Desk</h1>
+    <dl class="stats">
+      <div><dt>mode</dt><dd id="st-mode">connecting</dd></div>
+      <div><dt>coins</dt><dd id="st-seen">0</dd></div>
+      <div><dt>stomped</dt><dd class="down" id="st-killed">0</dd></div>
+      <div><dt>judged</dt><dd class="violet" id="st-judged">0</dd></div>
+      <div><dt>holding</dt><dd class="up" id="st-open">0</dd></div>
+      <div><dt>bank</dt><dd id="st-bank">—</dd></div>
+      <div><dt>today</dt><dd id="st-day">—</dd></div>
+      <div class="wide"><dt>night</dt><dd id="st-night">1</dd></div>
+    </dl>
+    <div class="right">
+      <span class="badge">paper money</span>
+      <span class="utc" id="clock">--:-- UTC</span>
     </div>
-  </div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="The crew: tap one to keep it on screen"></nav>
+
+  <section class="stage" aria-label="The crawler's web">
+    <canvas id="web" role="img" aria-label="Coins the crawler found, grouped by what the desk decided, with the spider walking between them"></canvas>
+    <div class="heading" id="heading">
+      <h2><span id="h-num">01</span> <span id="h-name">crawler</span></h2>
+      <p class="h-role" id="h-role">reads every new pool</p>
+      <p class="h-status" id="h-status">standing by</p>
+    </div>
+    <ul class="legend">
+      <li style="--c: var(--cyan)">watching</li>
+      <li style="--c: var(--down)">stomped</li>
+      <li style="--c: var(--up)">holding</li>
+      <li style="--c: var(--gold)">sold</li>
+      <li style="--c: var(--violet)">judge said no</li>
+      <li style="--c: var(--ink-dim)">let go</li>
+    </ul>
+  </section>
+
+  <section class="panels" aria-label="Desk readouts">
+    <article class="panel">
+      <header><h3>Desk log</h3><span class="cyan"><span id="p-epm">0</span>/min</span></header>
+      <ol class="log" id="log"></ol>
+    </article>
+    <article class="panel">
+      <header><h3>Book</h3><span class="up" id="p-open">0 open</span></header>
+      <ol class="book" id="positions"></ol>
+      <p class="sub-h">closed <span id="p-closed"></span></p>
+      <ol class="book" id="trades"></ol>
+    </article>
+    <article class="panel">
+      <header><h3>Rule radar</h3><span class="cyan" id="p-focus">—</span></header>
+      <canvas class="radar" id="radar" role="img" aria-label="The coin on the desk: each scan score against its line"></canvas>
+      <dl class="kinds" id="kinds"></dl>
+    </article>
+    <article class="panel">
+      <header><h3>Kill heat</h3><span class="down" id="p-killed">0</span></header>
+      <div class="heat" id="heat"></div>
+      <p class="lbl">stomped per hour</p>
+      <p class="big" id="p-kph">0/h</p>
+      <dl class="counts">
+        <div><dt>seen</dt><dd id="c-seen">0</dd></div>
+        <div><dt>judged</dt><dd class="violet" id="c-judged">0</dd></div>
+        <div><dt>bought</dt><dd class="up" id="c-bought">0</dd></div>
+        <div><dt>sold</dt><dd class="gold" id="c-sold">0</dd></div>
+      </dl>
+    </article>
+    <article class="panel">
+      <header><h3>Balance</h3><span class="cyan" id="p-since">+0.0%</span></header>
+      <canvas class="wave" id="wave" role="img" aria-label="Paper balance over time"></canvas>
+      <div class="gauge">
+        <canvas id="gauge" aria-hidden="true"></canvas>
+        <p class="score"><b id="p-bank">—</b><span id="p-day">today —</span></p>
+      </div>
+      <p class="pink" id="p-limit">daily loss limit —</p>
+      <p class="dim" id="p-pf">profit factor —</p>
+    </article>
+    <article class="panel">
+      <header><h3>desk.toml</h3><span id="p-verdict">—</span></header>
+      <pre class="code" id="code">The crawler hasn't found anything yet.</pre>
+    </article>
+  </section>
 
   <footer class="foot">
     <p class="notes" id="notes"></p>

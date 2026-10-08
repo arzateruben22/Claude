@@ -29,7 +29,7 @@ def record(cfg: Config, start: datetime, hours: float, seed: int = 7, frame_ever
             s = desk.state(now)
             s["eq_n"] = len(desk.equity)
             s.pop("equity")
-            s["feed"], s["trades"] = s["feed"][:3], s["trades"][:12]
+            s["feed"], s["trades"] = s["feed"][:16], s["trades"][:12]
             s["kills"], s["verdicts"] = s["kills"][:10], s["verdicts"][:8]
             s.pop("rules")
             for node in s["web"]:               # the page draws these from id/status/symbol/mcap/pnl

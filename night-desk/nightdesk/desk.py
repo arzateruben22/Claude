@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import csv
 import json
-from collections import deque
+from collections import Counter, deque
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Deque, Dict, List, Optional
@@ -66,6 +66,7 @@ class Desk:
         self.agents = {k: {"role": v, "status": "standing by", "count": 0, "meter": 0.0, "at": None}
                        for k, v in AGENTS.items()}
         self.counts = {"seen": 0, "killed": 0, "judged": 0, "yes": 0, "bought": 0, "sold": 0}
+        self.kill_rules: Counter = Counter()       # which kill rule stomped each coin
         self.focus: Optional[str] = None
         self.focus_rank = 0
         self.focus_until: Optional[datetime] = None
@@ -201,6 +202,7 @@ class Desk:
             if outcome == "killed":
                 self._done(r, "killed", now)
                 self.counts["killed"] += 1
+                self.kill_rules[next((c.rule for c in r.checks if c.kind == "kill" and not c.ok), "other")] += 1
                 self.kills.append({"t": now.isoformat(), "symbol": r.coin.symbol, "mint": mint, "reason": r.note})
                 self._append_csv("kills.csv", {"time": now.isoformat(), "symbol": r.coin.symbol, "mint": mint,
                                                "reason": r.note})
@@ -346,6 +348,7 @@ class Desk:
             "agents": {k: dict(v) for k, v in self.agents.items()},   # a copy: snapshots must not share state
             "web": [self._node(r, now) for r in recent],
             "focus": self._sheet(focus) if focus else None,
+            "kill_rules": self.kill_rules.most_common(8),
             "positions": [self._pos(p, now) for p in b.positions.values()],
             "trades": [self._trade(t) for t in reversed(trades)],
             "stats": self._stats(),
@@ -373,11 +376,16 @@ class Desk:
                 "born": r.first_seen.isoformat(), "updated": (r.updated or r.first_seen).isoformat(),
                 "mcap": round(r.coin.mcap), "pnl": pnl}
 
-    @staticmethod
-    def _sheet(r: Review) -> dict:
+    def _sheet(self, r: Review) -> dict:
+        sc = self.cfg.scan
         return {"symbol": r.coin.symbol, "name": r.coin.name, "mint": r.coin.mint, "status": r.status,
                 "note": r.note, "mcap": round(r.coin.mcap), "liquidity": round(r.coin.liquidity),
                 "checks": [c.__dict__ for c in r.checks],
+                "scores": {k: round(v, 3) for k, v in r.scores.items()},
+                # the line each score must clear (move_already_spent must stay under its line)
+                "limits": {"buy_pressure": sc.min_buy_pressure, "buy_pressure_now": sc.min_buy_pressure_now,
+                           "momentum_spent": sc.max_momentum_spent, "heat": sc.min_heat,
+                           "liquidity_fit": sc.min_liquidity_fit, "social": sc.min_social},
                 "verdict": r.verdict.__dict__ if r.verdict else None}
 
     @staticmethod
@@ -413,7 +421,7 @@ class Desk:
             "trades": [{**t.__dict__, "opened_at": t.opened_at.isoformat(), "closed_at": t.closed_at.isoformat()}
                        for t in b.trades[-500:]],
             "cooldown": {m: t.isoformat() for m, t in b.cooldown.items()},
-            "equity": self.equity[-4320:], "counts": self.counts,
+            "equity": self.equity[-4320:], "counts": self.counts, "kill_rules": dict(self.kill_rules),
             "gone": sorted(self.gone, key=self.gone.get)[-3000:],
         }
         tmp = self.out_dir / "state.json.tmp"
@@ -435,6 +443,7 @@ class Desk:
             b.trades.append(Trade(**t))
         b.cooldown = {m: datetime.fromisoformat(t) for m, t in data["cooldown"].items()}
         self.equity, self.counts = data["equity"], {**self.counts, **data["counts"]}
+        self.kill_rules = Counter(data.get("kill_rules", {}))
         now = datetime.fromisoformat(self.equity[-1][0]) if self.equity else self.started
         self.gone = {m: now for m in data["gone"]}
         # Held coins come back on the watchlist so they keep being priced.
