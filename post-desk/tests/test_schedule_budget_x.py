@@ -191,3 +191,14 @@ def test_no_internet_is_its_own_error(tokens):
     with pytest.raises(xapi.Offline):
         x.post(T0, "hello")
     assert store.spent(T0) == 0
+
+
+def test_sign_in_by_pasting_the_address():
+    good = "http://127.0.0.1:8789/callback?state=abc&code=XYZ123"
+    assert xapi.code_from_address(good + "  ", "abc") == "XYZ123"
+    with pytest.raises(xapi.AuthError, match="different sign-in"):
+        xapi.code_from_address(good, "other")
+    with pytest.raises(xapi.AuthError, match="access_denied"):
+        xapi.code_from_address("http://127.0.0.1:8789/callback?state=abc&error=access_denied", "abc")
+    with pytest.raises(xapi.AuthError, match="No code"):
+        xapi.code_from_address("http://127.0.0.1:8789/callback?state=abc", "abc")
