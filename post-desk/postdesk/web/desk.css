@@ -180,7 +180,7 @@ button, select, textarea, input { font: inherit; color: inherit; }
 .scout .src b { color: var(--sky); font-weight: 500; }
 .scout .heat { margin-left: auto; color: var(--amber); }
 .bars { display: grid; gap: 7px; }
-.bars .row { display: grid; grid-template-columns: 74px 1fr 64px; gap: 8px; align-items: center; font: 400 12px var(--mono); }
+.bars .row { display: grid; grid-template-columns: 104px 1fr 64px; gap: 8px; align-items: center; font: 400 12px var(--mono); }
 .bars .track { position: relative; height: 16px; background: var(--ink-2); border-radius: 3px; overflow: hidden; }
 .bars .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--fc, var(--sky)); border-radius: 3px; }
 .bars .one { position: absolute; top: -2px; bottom: -2px; width: 0; border-left: 1px dashed var(--paper); opacity: .55; }
