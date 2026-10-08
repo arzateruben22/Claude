@@ -1,0 +1,14 @@
+[Unit]
+Description=Majors Desk: paper trading on BTC, ETH, SOL, XRP, ADA, DOGE (Coinbase prices)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=@USER@
+WorkingDirectory=@DIR@/majors-desk
+ExecStart=@DIR@/.venv/bin/python -m majors run
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

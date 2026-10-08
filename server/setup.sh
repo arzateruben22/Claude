@@ -15,22 +15,23 @@ echo "Installing the desks' packages into $DIR/.venv ..."
 sudo -u "$OWNER" python3 -m venv "$DIR/.venv"
 sudo -u "$OWNER" "$DIR/.venv/bin/pip" install -q --upgrade pip
 sudo -u "$OWNER" "$DIR/.venv/bin/pip" install -q -r "$DIR/night-desk/requirements.txt" \
-  -r "$DIR/premarket-scanner/requirements.txt" -r "$DIR/post-desk/requirements.txt"
+  -r "$DIR/premarket-scanner/requirements.txt" -r "$DIR/post-desk/requirements.txt" \
+  -r "$DIR/majors-desk/requirements.txt"
 
 echo "Installing the services (they run as $OWNER)..."
 for f in "$DIR"/server/systemd/*.service "$DIR"/server/systemd/*.timer; do
   sed -e "s#@DIR@#$DIR#g" -e "s#@USER@#$OWNER#g" "$f" > "/etc/systemd/system/$(basename "$f")"
 done
 systemctl daemon-reload
-systemctl enable --now nightdesk.service paperbook.service postdesk.service \
+systemctl enable --now nightdesk.service majors.service paperbook.service postdesk.service \
   scanner-scan.timer scanner-grade.timer nightdesk-review.timer
 
 echo
 bash "$DIR/server/status.sh"
 cat <<MSG
 
-Running now: the coin desk (paper money) and the paper book.
-Waiting for you:
-  - Post Desk starts once you've connected X:  server/README.md, step 5
-  - stocks start once premarket-scanner/.env has your Alpaca paper keys:  step 6
+Running now (paper money): memecoins, big coins (BTC, ETH, XRP, ADA...) and the paper book.
+Next:
+  bash server/keys.sh        your keys (Alpaca for stocks; X and Claude for posting)
+  bash server/connect-x.sh   connect your X account, then posting starts
 MSG

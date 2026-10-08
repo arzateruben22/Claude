@@ -1,11 +1,14 @@
 # Always-on machine
 
+The short version is in [`START-HERE.md`](../START-HERE.md). This page has the details.
+
 Everything on one small Linux machine that never sleeps:
 
 | Service | What it does | Starts |
 |---|---|---|
 | `postdesk` | your X account: drafts, your approvals, scheduled posts | once you've connected X (step 5) |
-| `nightdesk` | coins, paper money, live prices, 24/7 | right away |
+| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7 | right away |
+| `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices, hourly | right away |
 | `scanner-scan` / `scanner-grade` | stocks, paper picks before the open, graded after the close | once your Alpaca paper keys are in (step 6) |
 | `paperbook` | one ledger of every paper trade, refreshed every 15 minutes | right away |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard | right away |
@@ -39,59 +42,47 @@ add the server's key as a read-only deploy key in the repository settings.
 sudo bash server/setup.sh
 ```
 
-It installs Python and the packages, then starts the coin desk and the paper book. It also sets
-up the stock timers, which wait for your keys. Check on everything any time with
-`bash server/status.sh`.
+It installs Python and the packages, then starts the memecoin desk, the big-coin desk and the
+paper book. It also sets up the stock timers, which wait for your keys. Check on everything any
+time with `bash server/status.sh`.
 
-## 4. Fill in your settings
+## 4. Your keys
 
 ```bash
-nano post-desk/desk.toml      # at least: [account] handle
+bash server/keys.sh
 ```
+
+It asks for each key in turn: Alpaca (stocks), the X app's Client ID and Secret, Claude, and your X
+handle. Press Enter to skip any you don't have yet, and run it again later for the rest. Keys are
+saved in `.env` files only your user can read. Never paste them into a chat.
+
+The X app comes first: create it and add credits (`post-desk/README.md`, section 2). Its callback
+URL must be `http://127.0.0.1:8789/callback`.
 
 ## 5. Connect your X account (Post Desk)
 
-First create the X developer app and add credits (see `post-desk/README.md`, section 2). The app's
-callback URL must be `http://127.0.0.1:8789/callback`. Then put your keys in `post-desk/.env`:
-
 ```bash
-cp post-desk/.env.example post-desk/.env
-nano post-desk/.env           # X_CLIENT_ID, X_CLIENT_SECRET, ANTHROPIC_API_KEY
+bash server/connect-x.sh
 ```
 
-X needs a browser to approve the app, and the server has none, so borrow your computer's.
-On **your computer**:
+1. Open the link it prints on your phone or computer, signed in to the account that will post,
+   and approve.
+2. Your browser lands on a `127.0.0.1` page that won't load. That's expected.
+3. Copy the whole address from the address bar and paste it back right away.
 
-```bash
-ssh -L 8789:127.0.0.1:8789 you@your-server
-```
+It checks the connection and starts Post Desk.
 
-and in that same SSH window, on the server:
+If you'd rather not copy the address, use a tunnel: on your computer run
+`ssh -L 8789:127.0.0.1:8789 you@your-server`, then on the server run
+`cd desks/post-desk && ../.venv/bin/python -m postdesk auth --no-browser`, and open the link
+on your computer.
 
-```bash
-cd desks/post-desk && ../.venv/bin/python -m postdesk auth --no-browser
-```
+## 6. Stocks
 
-Open the link it prints in your computer's browser and approve. X sends you back to
-`127.0.0.1:8789`, and the tunnel carries that to the server. Then:
-
-```bash
-../.venv/bin/python -m postdesk doctor --online
-sudo systemctl start postdesk
-```
-
-## 6. Turn on stocks
-
-Sign up at alpaca.markets (free), open the **Paper** account and create API keys. Then:
-
-```bash
-cp premarket-scanner/.env.example premarket-scanner/.env
-nano premarket-scanner/.env   # ALPACA_API_KEY, ALPACA_SECRET_KEY
-cd premarket-scanner && ../.venv/bin/python -m scanner doctor
-```
-
-Nothing else to start: the next weekday scan picks the keys up (5:35 and 6:02 am Pacific, plus
-5:02 pm for the evening before). Picks are graded at 1:45 pm.
+Once `keys.sh` has your Alpaca paper keys, check them with
+`cd premarket-scanner && ../.venv/bin/python -m scanner doctor`. Nothing else to start: the next
+weekday scan picks them up (5:35 and 6:02 am Pacific, plus 5:02 pm for the evening before). Picks
+are graded at 1:45 pm.
 
 ## 7. Look at it
 
@@ -107,11 +98,11 @@ ssh -L 8788:127.0.0.1:8788 -L 8787:127.0.0.1:8787 you@your-server
   `paper-book/output/paper-book.html`; copy it to your computer with
   `scp you@your-server:desks/paper-book/output/paper-book.html .`
 
-**From your phone:** the simplest way is [Tailscale](https://tailscale.com) (free for personal
-use). Install it on the server and your phone, then point Post Desk at the server's Tailscale
-address. Change its service line to `ExecStart=... -m postdesk run --no-browser --host 100.x.y.z`
-with `sudo systemctl edit --full postdesk`. The dashboard then only answers on your private
-Tailscale network, and its buttons still need the key that's written into the page.
+**From your phone:** `sudo bash server/phone.sh`. It puts the server on your private
+[Tailscale](https://tailscale.com) network (free for personal use) and moves Post Desk's dashboard
+there. Install the Tailscale app on your phone, sign in with the same account, and open the address
+it prints. Only your own devices can reach it, and its buttons still need the key written into
+the page. After this, the SSH tunnel to port 8788 no longer applies.
 
 ## Day to day
 
@@ -130,4 +121,4 @@ git pull && sudo bash server/setup.sh    # update to the newest code
 | X API (8 posts a day, the scout, your numbers) | about $13, capped at $18 |
 | Claude (writer and nightly review) | about $6–10, capped at $0.40 a day |
 | X Premium (needed for payouts; get it once the posting habit sticks) | X's current price |
-| coins and stocks | free data, paper money |
+| memecoins, big coins and stocks | free data, paper money |

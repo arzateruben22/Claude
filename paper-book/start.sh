@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Start paper trading on this computer (Mac or Linux). Paper money only.
-#   coins   Night Desk runs nonstop on live prices (its dashboard: http://127.0.0.1:8787)
+#   memecoins  Night Desk runs nonstop on live prices (its dashboard: http://127.0.0.1:8787)
+#   big coins  Majors Desk decides every hour on Coinbase prices
 #   book    the paper book refreshes every 15 minutes
 #   stocks  run on a schedule instead: see "Stocks" in paper-book/README.md
 set -euo pipefail
@@ -21,6 +22,7 @@ start() {   # name, folder, arguments...
 }
 
 start coins "$ROOT/night-desk" -m nightdesk run --no-browser
+start majors "$ROOT/majors-desk" -m majors run
 start book "$ROOT/paper-book" paperbook.py --watch 15
 echo
 echo "Coin desk dashboard: http://127.0.0.1:8787"

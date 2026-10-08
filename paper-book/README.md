@@ -5,7 +5,8 @@ nothing in this repo can place a real order.
 
 | Desk | What it trades | Paper money | When it trades |
 |---|---|---|---|
-| **Coins**: Night Desk (`night-desk/`) | brand-new Solana coins that pass its rug checks | $1,000 bank | nonstop, 24/7, while it's running |
+| **Memecoins**: Night Desk (`night-desk/`) | brand-new Solana coins that pass its rug checks | $1,000 bank | nonstop, 24/7, while it's running |
+| **Big coins**: Majors Desk (`majors-desk/`) | BTC, ETH, SOL, XRP, ADA, DOGE, hourly trend following | $1,000 bank | every hour, 24/7, while it's running |
 | **Stocks**: premarket scanner (`premarket-scanner/`) | US stocks gapping up before the open | $100 a pick, out of $1,000 | picks before the open; graded after the close, weekdays |
 
 ```bash
@@ -24,14 +25,15 @@ One-time setup, from the repo folder:
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r night-desk/requirements.txt -r premarket-scanner/requirements.txt
+.venv/bin/pip install -r night-desk/requirements.txt -r majors-desk/requirements.txt \
+  -r premarket-scanner/requirements.txt
 ```
 
-**Coins: no keys needed.**
+**Memecoins and big coins: no keys needed.**
 
 ```bash
-paper-book/start.sh      # starts the coin desk and the paper book in the background
-paper-book/stop.sh       # stops them; open coin positions are saved and resume on the next start
+paper-book/start.sh      # starts both coin desks and the paper book in the background
+paper-book/stop.sh       # stops them; open positions are saved and resume on the next start
 ```
 
 The coin desk's own dashboard is at http://127.0.0.1:8787. It only trades while the computer is
@@ -60,7 +62,8 @@ The cloud environment blocks market-data sites by default. To allow them, open t
 settings (the cloud environment menu in the session's title bar, then Edit) and add these under
 Allowed domains:
 
-- coins: `api.dexscreener.com`, `api.geckoterminal.com`, `api.rugcheck.xyz`
+- memecoins: `api.dexscreener.com`, `api.geckoterminal.com`, `api.rugcheck.xyz`
+- big coins: `api.exchange.coinbase.com`
 - stocks: `data.alpaca.markets`, `paper-api.alpaca.markets`, `api.alpaca.markets`, `www.nasdaqtrader.com`,
   and for float data `query1.finance.yahoo.com`, `query2.finance.yahoo.com`, `fc.yahoo.com`
 
@@ -72,7 +75,9 @@ a computer that stays on.
 
 ## What the numbers mean
 
-- **Coins** are priced from the pool's live price, with swap fees and price impact included, so
+- **Big coins** fill at the hour's closing price on Coinbase, with the exchange fee and slippage
+  charged on each buy and sell.
+- **Memecoins** are priced from the pool's live price, with swap fees and price impact included, so
   they're close to what a real swap would get. No order ever reaches the market.
 - **Stocks** buy at the 9:30 ET open and sell at the scanner's target, its stop or the close,
   whichever comes first, minus the scanner's cost for spread and slippage. When one five-minute
@@ -84,4 +89,7 @@ a computer that stays on.
   `python -m scanner scorecard`), and both need weeks of results first.
 
 `python paper-book/paperbook.py --demo` builds the same report from the desks' demo markets
-(after `python -m nightdesk sim` and `python -m scanner backtest --demo`), labelled as demo.
+(after `python -m nightdesk sim`, `python -m majors sim` and `python -m scanner backtest --demo`),
+labelled as demo.
+
+On an always-on machine, `server/setup.sh` runs all of this for you: see `START-HERE.md`.

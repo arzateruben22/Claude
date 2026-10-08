@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # What's running, what's waiting, and when the stock scanner runs next.
-for u in nightdesk postdesk paperbook; do
+for u in nightdesk majors postdesk paperbook; do
   printf "%-12s %s\n" "$u" "$(systemctl is-active "$u.service" 2>/dev/null)"
 done
 echo
