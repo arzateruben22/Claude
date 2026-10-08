@@ -27,7 +27,7 @@ FIELDS = [
     "scan_date", "session", "scan_time_pt", "trade_date", "symbol", "scan_price", "gap_pct", "rvol",
     "float_shares", "spread_pct", "tags", "warnings", "headline",
     "open", "high", "low", "close", "open_vs_scan_pct", "max_up_pct", "max_down_pct", "close_vs_open_pct",
-    "sim_exit", "sim_pnl_pct", "graded_at",
+    "sim_exit", "sim_pnl_pct", "graded_at", "rules",
 ]
 GRADE_AFTER = time(16, 30)  # ET, gives delayed feeds time to catch up
 
@@ -47,8 +47,11 @@ def _write(path: Path, rows: List[dict]) -> None:
         w.writerows(rows)
 
 
-def record(res: ScanResult, path: Path = JOURNAL) -> int:
-    """Log today's picks once each (first sighting keeps its scan price)."""
+def record(res: ScanResult, path: Path = JOURNAL, rules: str = "") -> int:
+    """Log today's picks once each (first sighting keeps its scan price).
+
+    `rules` is the fingerprint of criteria.toml that picked them, so the scorecard
+    can count only picks made with the current rules."""
     rows = _read(path)
     scan_date = res.now.astimezone(ET).date()
     seen = {(r["scan_date"], r["session"], r["symbol"]) for r in rows}
@@ -66,6 +69,7 @@ def record(res: ScanResult, path: Path = JOURNAL) -> int:
             "rvol": round(m.rvol, 2), "float_shares": int(c.float_shares) if c.float_shares else "",
             "spread_pct": "" if c.spread_pct is None else round(c.spread_pct, 2),
             "tags": ";".join(c.tags), "warnings": ";".join(c.warnings), "headline": c.headline,
+            "rules": rules,
         })
         added += 1
     if added:

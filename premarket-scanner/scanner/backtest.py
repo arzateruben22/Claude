@@ -24,7 +24,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
-from . import journal
+from . import gates, journal
 from .config import CACHE, OUTPUT, Criteria
 from .engine import run_scan
 from .market import ET, PT, is_trading_day, previous_trading_day, session_window, trade_date_for
@@ -225,6 +225,11 @@ def run_backtest(provider: Provider, crit: Criteria, first: date, last: date, se
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / "journal.csv"
     path.unlink(missing_ok=True)
+    rid = gates.rules_id(crit)
+    (out_dir / "rules.json").write_text(json.dumps({
+        "id": rid, "created": datetime.now(timezone.utc).isoformat(), "first": first.isoformat(),
+        "last": last.isoformat(), "session": session, "at": at.strftime("%H:%M"),
+        "provider": getattr(provider, "name", "?"), "rules": crit.summary()}, indent=1))
 
     # On delayed (free) data, the live scan at 5:45 sees the market as of 5:30;
     # the backtest's screen does too.
@@ -255,7 +260,7 @@ def run_backtest(provider: Provider, crit: Criteria, first: date, last: date, se
                 _write_gz(cache_file, [[q.symbol, q.price, q.ref_close, q.alt_ref_close] for q in quotes])
 
         res = run_scan(source, crit, now, session, quotes=quotes)
-        journal.record(res, path)
+        journal.record(res, path, rules=rid)
         trade_day = trade_date_for(session, d)
         journal.grade(source, crit, datetime.combine(trade_day, time(20, 1), tzinfo=ET), path)
         graded = {r["symbol"]: r for r in journal._read(path) if r["scan_date"] == d.isoformat()}

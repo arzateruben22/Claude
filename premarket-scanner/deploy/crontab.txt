@@ -14,3 +14,6 @@
 
 # Afternoon: grade today's paper trades once the close is in
 45 13 * * 1-5  cd /Users/you/premarket-scanner && .venv/bin/python -m scanner grade >> cron.log 2>&1
+
+# Then the nightly review: lessons, risk officer, scorecard (paper only, changes nothing)
+55 13 * * 1-5  cd /Users/you/premarket-scanner && .venv/bin/python -m scanner nightly >> cron.log 2>&1

@@ -5,6 +5,7 @@
 #   2. Settings > Secrets and variables > Actions > add:
 #        ALPACA_API_KEY, ALPACA_SECRET_KEY   (and/or MASSIVE_API_KEY)
 #        NTFY_TOPIC or DISCORD_WEBHOOK_URL   (so results reach your phone)
+#        ANTHROPIC_API_KEY                   (optional: Claude for the nightly review)
 #   3. Actions tab > "scanner" > Run workflow, to test it once.
 #
 # GitHub cron is UTC and ignores daylight saving, so each job is scheduled
@@ -36,6 +37,7 @@ jobs:
       MASSIVE_API_KEY: ${{ secrets.MASSIVE_API_KEY }}
       NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -50,6 +52,8 @@ jobs:
         run: python -m scanner scan --window 16:55-18:00 --notify
       - name: Grade paper trades
         run: python -m scanner grade
+      - name: Nightly review (lessons, risk officer, scorecard; changes nothing)
+        run: python -m scanner nightly --window 13:40-14:30
 
       - name: Save journal + watchlists
         run: |

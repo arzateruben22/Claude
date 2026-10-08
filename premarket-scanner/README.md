@@ -90,6 +90,7 @@ you tune the rules. Change any number in `criteria.toml`; no code changes needed
 | **5:00 pm**, night before | `scan` | After-hours has ended: earnings, news and AH movers |
 | **5:35 am** and **6:00 am** | `scan` | Pre-market picture before the 6:30 open (free data: add 15 min) |
 | **1:45 pm** | `grade` | Scores today's picks against what actually happened |
+| **1:55 pm** | `nightly` | Lessons, risk officer and scorecard (section 7) |
 | Weekly | `stats` | Is it working? |
 
 ### See the list
@@ -185,6 +186,71 @@ actually beat earnings gappers for you? Change `target_pct` / `stop_pct` /
 Treat it as a filter check, not a P&L forecast: fast opens and halts can still
 fill you worse than the sim. Wait for 15–20+ trade days before trusting any number.
 
+## 7. Before real money: scorecard, risk officer, nightly review
+
+Three checks, all on paper. None of them can place an order, and none of
+them can change `criteria.toml`.
+
+```bash
+python -m scanner nightly        # all three, after grade (the schedules in deploy/ do this)
+python -m scanner scorecard      # every gate, pass or fail
+python -m scanner risk           # the risk officer tries to kill the rules
+python -m scanner lessons        # the week's losing picks, the patterns, at most one proposal
+```
+
+**The scorecard** needs two kinds of evidence, both made with the *current*
+rules: a backtest (history) and graded paper picks (forward). Every line
+must pass; the numbers live in `[gates]`.
+
+| Gate | Keep if |
+|---|---|
+| real market data | a backtest on real history; the demo never passes |
+| backtest with these rules | one exists (re-run it after any rule change) |
+| enough picks | 100+ graded backtest picks |
+| profit factor | above 1.3 (money won ÷ money lost) |
+| steady returns | Sharpe above 1 (daily returns, annualized) |
+| pain you'd sit through | worst drop under 25%, with each day's picks sharing the account |
+| not a few lucky picks | still profitable without the best 5% of picks |
+| survives real costs | still profitable with `cost_pct` doubled |
+| still works lately | the newest third of picks makes money |
+| most months | 60%+ of months profitable |
+| paper trading | 20+ graded trade days with these rules |
+| paper matches the backtest | profitable, and at least half the backtest's average pick |
+| risk officer | said KEEP, for these rules, in the last 7 days |
+
+Every pick and every backtest is stamped with a fingerprint of
+`criteria.toml`. Change a rule and the scorecard starts from zero: new rules
+earn their way back. It also counts how many rule sets you've backtested,
+because the more you try, the more likely one passes by luck.
+
+**The risk officer** reads the rules, the scorecard, the backtest breakdown
+and the paper picks, and its job is to say KILL: too few picks, profit from
+one stock or one hot month, costs that would erase the edge, paper doing
+worse than history. It says KEEP only when it can't find a serious reason.
+With `ANTHROPIC_API_KEY` in `.env` it's Claude (settings in `[review]`);
+without it, any failed gate is a KILL.
+
+**The nightly review** looks at the last 7 days of paper picks: each loser
+with its gap, RVOL, float and catalyst, and the patterns behind the losses.
+It finds them by splitting each scan-time number at its middle value (and by
+catalyst tag), for example "float at or above 11M shares: 117 picks lost
+253% in total; the other 78 made +507%". Until paper has 20 graded picks it
+learns from the backtest instead, and says so. It appends one lesson per
+real pattern to `output/lessons.md` and proposes **at most one** change. It
+can't touch `cost_pct`: making costs cheaper on paper is how backtests lie.
+To test a proposal, edit `criteria.toml`, re-run the backtest over the same
+dates, and keep paper trading.
+
+With Claude, a nightly run is two calls at high effort: my estimate is 10–40
+cents a day (check your usage page). Set `effort = "medium"` to spend less.
+
+Try it on the demo (always NOT READY: the demo fails "real market data" on purpose):
+
+```bash
+python -m scanner backtest --demo --from 2026-08-03 --to 2026-09-25
+python -m scanner nightly --demo
+```
+
 ## Commands
 
 ```
@@ -194,6 +260,7 @@ python -m scanner scan [--session auto|premarket|regular|afterhours]
 python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premarket|afterhours]
                            [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
+python -m scanner scorecard | risk | lessons | nightly [--demo] [--ai]    # nightly also takes --window
 ```
 
 `--window` makes a scheduled run exit quietly outside a Pacific-time window.

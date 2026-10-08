@@ -34,6 +34,29 @@ target_pct = 10.0
 stop_pct = 5.0
 cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
 
+# Before real money: the scorecard (python -m scanner scorecard).
+# It needs a backtest AND paper picks made with the current rules above.
+# Change any rule and both start over: new rules have to earn their way back.
+[gates]
+min_picks = 100               # graded backtest picks
+min_profit_factor = 1.3       # money won ÷ money lost
+min_sharpe = 1.0              # daily returns, annualized over 252 trading days
+max_drawdown_pct = 25.0       # worst fall from a high point (each day's picks share the account)
+best_picks_share = 0.05       # still profitable without the best 5% of picks (at least 3)
+cost_multiplier = 2.0         # still profitable with cost_pct doubled
+recent_share = 0.33           # the newest third of picks must make money too
+min_good_months = 0.6         # share of months (with 5+ picks) that made money
+min_paper_days = 20           # graded paper trade days with these rules
+paper_vs_backtest = 0.5       # paper's average pick must reach half the backtest's
+
+# The risk officer and the nightly review (python -m scanner nightly).
+# They only write reports and proposals. Nothing they say changes the rules.
+[review]
+use_ai = true                 # needs ANTHROPIC_API_KEY in .env; otherwise rule-based
+model = "claude-opus-5-5"
+effort = "high"               # runs once a day, so let it think
+lookback_days = 7             # the review compares this window with everything before it
+
 # Headline keywords -> catalyst tag. Case-insensitive, whole words.
 # Tags listed in `warn_tags` are shown with a warning instead of as a plus.
 [catalysts]
