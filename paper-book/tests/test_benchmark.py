@@ -27,12 +27,15 @@ def prices(start=60000.0, now=63000.0, calls=None):
 
 
 def book(tmp_path, majors=(), held=()):
-    folder = tmp_path / "majors-live"
-    folder.mkdir(exist_ok=True)
-    (folder / "state.json").write_text(json.dumps({"equity": [[START.isoformat(), 100.0], [NOW.isoformat(), 103.0]]}))
+    big, memes = tmp_path / "majors-live", tmp_path / "memes-live"
+    big.mkdir(exist_ok=True)
+    memes.mkdir(exist_ok=True)
+    # big coins stamp equity with the hourly candle (an hour early here); memecoins with the clock
+    (big / "state.json").write_text(json.dumps({"equity": [[(START - timedelta(hours=1)).isoformat(), 100.0]]}))
+    (memes / "state.json").write_text(json.dumps({"equity": [[START.isoformat(), 100.0], [NOW.isoformat(), 103.0]]}))
     trades = {"memecoins": [], "majors": list(majors), "stocks": []}
     hold = {"memecoins": [], "majors": list(held), "stocks": []}
-    return pb.Book(trades, hold, {d: 100.0 for d in pb.DESKS}, {"majors": str(folder)}, False, NOW, LA)
+    return pb.Book(trades, hold, {d: 100.0 for d in pb.DESKS}, {"majors": str(big), "memecoins": str(memes)}, False, NOW, LA)
 
 
 def trade(pnl, i=0):
@@ -73,3 +76,19 @@ def test_big_coins_compared_with_holding_btc(tmp_path):
     vs = [f for f in crawler.flags(b) if f["chip"] == "vs BTC"]
     assert vs[0]["level"] == "flag" and "holding BTC did better" in vs[0]["text"]          # 25 trades behind BTC
     assert crawler.data(b)["meta"]["btc"] == 5.0
+
+
+def test_the_start_is_the_clock_time_not_an_hourly_candle(tmp_path):
+    b = book(tmp_path)                                  # big coins' candle stamp (START - 1h) is ignored
+    real = START + timedelta(minutes=51)
+    (tmp_path / "memes-live" / "state.json").write_text(json.dumps({"equity": [[real.isoformat(), 100.0]]}))
+    assert benchmark.started(b) == real
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / benchmark.FILE).write_text(json.dumps({"since": START.isoformat(), "btc_start": 1.0}))   # the first version's file
+    got = benchmark.load(out, b, prices())
+    assert got["since"] == real.isoformat() and got["btc_start"] == 60000.0 and got["v"] == benchmark.VERSION
+    far = {"since": (real - timedelta(days=2)).isoformat(), "btc_start": 1.0}                        # not close: kept
+    (out / benchmark.FILE).write_text(json.dumps(far))
+    kept = benchmark.load(out, b, prices())
+    assert kept["since"] == far["since"] and kept["btc_start"] == 1.0

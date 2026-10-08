@@ -18,6 +18,7 @@ import paperbook as pb
 
 COINBASE = "https://api.exchange.coinbase.com"
 FILE = "benchmark.json"
+VERSION = 2
 Fetch = Callable[[str], object]
 
 
@@ -45,17 +46,17 @@ def btc_now(fetch: Fetch) -> Optional[float]:
 
 
 def started(book: pb.Book) -> datetime:
-    """When the desks started: the earliest equity point, trade or open position we can find."""
+    """When the desks started: the memecoin desk's first equity point (stamped by the clock, every minute),
+    or the first trade or open position. Not the big-coin desk's: it stamps the start of each hourly candle."""
     times = [t.opened for d in pb.DESKS for t in book.trades[d]] + [h.opened for d in pb.DESKS for h in book.held[d]]
-    for d in ("memecoins", "majors"):
-        state = Path(book.sources.get(d, "")) / "state.json"
-        try:
-            points = json.loads(state.read_text()).get("equity") or []
-            if points:
-                t = datetime.fromisoformat(points[0][0])
-                times.append(t if t.tzinfo else t.replace(tzinfo=timezone.utc))
-        except (OSError, ValueError, KeyError, IndexError, TypeError):
-            pass
+    state = Path(book.sources.get("memecoins", "")) / "state.json"
+    try:
+        points = json.loads(state.read_text()).get("equity") or []
+        if points:
+            t = datetime.fromisoformat(points[0][0])
+            times.append(t if t.tzinfo else t.replace(tzinfo=timezone.utc))
+    except (OSError, ValueError, KeyError, IndexError, TypeError):
+        pass
     return min(times) if times else book.now
 
 
@@ -69,13 +70,22 @@ def load(out: Path, book: pb.Book, fetch: Optional[Fetch] = None) -> Optional[di
         saved = json.loads(path.read_text())
     except (OSError, ValueError):
         saved = None
+    if saved and saved.get("v") != VERSION:
+        # Saved by the first version, which could start up to two hours early (an hourly candle's stamp).
+        # Move it to the real start when that is close by; otherwise keep it as it is.
+        old, better = datetime.fromisoformat(saved["since"]), started(book)
+        if old < better <= old + timedelta(hours=6):
+            saved = None
+        else:
+            saved["v"] = VERSION
+            path.write_text(json.dumps(saved))
     try:
         if not saved:
             since = started(book)
             p0 = btc_at(since, fetch)
             if not p0:
                 return None
-            saved = {"since": since.isoformat(), "btc_start": p0}
+            saved = {"since": since.isoformat(), "btc_start": p0, "v": VERSION}
             out.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(saved))
         p1 = btc_now(fetch)
