@@ -6,7 +6,7 @@ import pytest
 
 from postdesk import analyst, review
 from postdesk.models import Draft, Metric, Signal
-from postdesk.writer import ClaudeWriter, ManualWriter, TemplateWriter, make_writer, system_prompt
+from postdesk.writer import FORMAT_HELP, ClaudeWriter, ManualWriter, TemplateWriter, make_writer, system_prompt
 
 from .helpers import T0, FakeClaude, budget, cfg
 
@@ -210,3 +210,20 @@ def test_comedy_edge_and_slang():
     assert "Tone:" not in system_prompt(cfg())             # informative accounts are unchanged
     with pytest.raises(ValueError, match="edge"):
         cfg(writer__edge="unhinged")
+
+
+def test_storytime_fake_quotes_and_examples():
+    c = cfg(writer__style="comedy", writer__formats=["storytime", "fake_quote"],
+            writer__examples=["Pre-workout got me texting my ex\n\nPre-workout got me texting my ex\n\n- Sun Tzu"])
+    p = system_prompt(c)
+    assert "Posts in the voice you're writing for" in p and "- Sun Tzu" in p and "never copy" in p
+    assert "Never invent a quote from a real living person" in p
+    assert 'Never "women are..." or "men are..."' in p and "must read as a bit" in p
+    assert "verdict" in FORMAT_HELP["storytime"] and "attribution" in FORMAT_HELP["fake_quote"]
+    out = TemplateWriter(c).originals(T0, 4, [], [], [])
+    assert {d.format for d in out} <= {"storytime", "fake_quote"} and out
+    b, _ = budget(c)
+    fake = FakeClaude({"takes": []})
+    ClaudeWriter(c, b, fake).quotes(T0, [Signal("1", "x", "a viral story", author="a")], [])
+    assert "written twice" in fake.calls[0]["messages"][0]["content"]
+    assert "Posts in the voice" not in system_prompt(cfg())        # no examples, no block

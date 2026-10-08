@@ -7,7 +7,8 @@ It's the "Claude does 95% of the work, you approve" setup:
 
 - **Writes** original posts in the formats you choose, and quote posts on things catching on in
   your niche, using free feeds and a small, budgeted X search for ideas. Two styles:
-  `comedy` (hot takes, observations, POVs, lists, satirical headlines, this-or-that) and
+  `comedy` (stories, hot takes, fake quotes, POVs, observations, lists, satirical headlines,
+  this-or-that) and
   `informative` (takes, lists, how-tos, questions, short stories, data points).
 - **Checks** every draft against X's automation rules and your own: no @mentions, no engagement
   bait, no repeats, no avoided topics, links off by default, a source for any number, and nothing
@@ -103,6 +104,7 @@ that matter most:
 | `[approval]` | `mode = "review"` (you approve everything) or `"auto_originals"` (clean original posts go out on their own; anything flagged, and every quote, still waits for you) |
 | `[writer]` | `style` (`comedy` or `informative`), Claude model and effort, formats, `max_chars`, `links = "never"`, `ai_daily_usd`; for comedy, `edge` (`clean`, `edgy` or `spicy`; never explicit, never slurs) and `hold_words` (posts using them always wait for you, even on auto) |
 | `[writer.slang]` | slang the writer may use, each with its meaning so it's used right (`unc = "someone getting old"`). At most two terms a post. |
+| `[writer] examples` | 5–10 posts in your voice. The writer learns their rhythm, length and shapes, and any draft too close to one is blocked so they never get reposted. |
 | `[budget]` | hard X spending caps per day and month, and the share the scout may use for reading |
 | `[money]` | payout thresholds (copy them from Creator Studio), `verified_followers` (**TODO**: copy it now and then, since the API can't count it), affiliate domains and the disclosure tag |
 

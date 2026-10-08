@@ -23,7 +23,7 @@ from .xapi import velocity
 FORMAT_REACH = {"take": 1.15, "list": 1.5, "how_to": 1.35, "question": 0.8, "story": 1.0, "data": 1.2,
                 "quote": 0.75, "repost": 0.3,
                 "hot_take": 1.45, "pov": 1.3, "observation": 1.0, "fake_headline": 1.1,
-                "this_or_that": 0.85}
+                "this_or_that": 0.85, "storytime": 1.5, "fake_quote": 1.25}
 FORMAT_TALK = {"question": 1.8, "take": 1.3, "story": 1.1, "hot_take": 2.0, "this_or_that": 1.9}   # posts that get replies
 
 

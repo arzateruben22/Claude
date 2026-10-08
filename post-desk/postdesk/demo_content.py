@@ -196,6 +196,23 @@ COMEDY_ORIGINALS = {
     ],
 }
 
+COMEDY_ORIGINALS["storytime"] = [
+    "Asked my buddy why he lifts at 5am. He said 'no lines.' Bro there's no lines because everyone else has a will to live.",
+    "Saw a man bring a full charcuterie board to the rave. Brie. Grapes. Little knife. Most popular person there by 1am. Respect.",
+    "Lady at my gym has been on the stairmaster since 2022. Hasn't spoken. Hasn't stopped. I think she's going somewhere.",
+    "My cousin bought a $90 pre-workout, a $60 shaker and a $200 gym bag. Went twice. The bag goes to brunch now. It's in better shape than him.",
+    "Guy at my gym has done the same 3 exercises since 2019. Same shirt. Same playlist. Same PR. Man is a historic landmark at this point.",
+    "Friend said she'd leave the rave 'right after this song.' That was 2 hours, 4 waters and a brand new best friend named Tyler ago.",
+]
+COMEDY_ORIGINALS["fake_quote"] = [
+    "Hydrate or die\n\nHydrate or die\n\n- the guy selling $8 water at the festival",
+    "We're leaving after this set\n\nWe're leaving after this set\n\n- famous last words",
+    "Leg day is a myth\n\nLeg day is a myth\n\n- every guy in a tank top",
+    "One more song\n\nOne more song\n\n- my last three brain cells at 4am",
+    "Cardio is for the weak\n\nCardio is for the weak\n\n- my knees",
+    "Just one more set\n\nJust one more set\n\n- Napoleon, probably",
+]
+
 COMEDY_QUOTE_TAKES = [
     "This is the most accurate thing posted today and I'm saying that from the squat rack.",
     "Saving this to show my legs what they could have been.",

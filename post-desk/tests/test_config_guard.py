@@ -177,3 +177,9 @@ def test_spicy_words_always_wait_for_you():
 def test_your_slang_loads():
     c = config.load()
     assert c.writer.edge in ("clean", "edgy", "spicy") and "unc" in c.writer.slang and "crack" in c.writer.hold_words
+
+
+def test_gendered_insults_wait_for_you():
+    c = config.load()
+    assert failed(draft("Instagram got your bihh again"), c).get("spicy word") == "warn"
+    assert "storytime" in c.writer.formats and len(c.writer.examples) >= 5

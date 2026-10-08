@@ -129,7 +129,7 @@ class Desk:
 
     def _borrowed(self, now: datetime) -> List[str]:
         """What the scout found lately: a draft must not copy it."""
-        return [s.text for s in self.store.signals(now - timedelta(days=3), limit=300)]
+        return [s.text for s in self.store.signals(now - timedelta(days=3), limit=300)] + list(self.cfg.writer.examples)
 
     def _save_slots(self) -> None:
         self.store.put(f"slots:{self.day}", self.slot_state)
