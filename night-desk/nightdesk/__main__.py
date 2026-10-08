@@ -11,7 +11,7 @@ Before real money (paper only, they change nothing):
   python -m nightdesk risk              the risk officer tries to kill the strategy
   python -m nightdesk lessons           nightly review: losers, patterns, one proposal
   python -m nightdesk nightly           lessons + risk + scorecard, for a schedule
-  python -m nightdesk sim --days 30     a month of demo market (about 10 minutes)
+  python -m nightdesk sim --days 30     a month of demo market (about 15 minutes)
 """
 from __future__ import annotations
 

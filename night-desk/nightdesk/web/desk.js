@@ -188,14 +188,14 @@
 
   function readColors() {
     var cs = getComputedStyle(document.documentElement);
-    ["cyan", "pink", "up", "down", "gold", "ink", "ink-soft", "ink-dim", "line", "panel", "warn"].forEach(function (k) {
+    ["cyan", "pink", "violet", "up", "down", "gold", "ink", "ink-soft", "ink-dim", "line", "panel", "warn"].forEach(function (k) {
       colors[k] = cs.getPropertyValue("--" + k).trim() || "#888";
     });
   }
   function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; }
   function statusColor(n) {
     return n.status === "killed" ? colors.down : n.status === "bought" ? colors.up : n.status === "sold" ? colors.gold :
-      n.status === "watching" || n.status === "new" ? colors.cyan : colors["ink-dim"];
+      n.status === "watching" || n.status === "new" ? colors.cyan : n.status === "declined" ? colors.violet : colors["ink-dim"];
   }
 
   function syncWeb(s) {
@@ -451,6 +451,9 @@
      rolling toward you. Kept faint so the web stays readable. */
   function drawBackdrop(w, h, t) {
     var horizon = h * 0.64, sunR = Math.min(w * 0.16, h * 0.34), sx = w / 2;
+    var sky = ctx.createRadialGradient(sx, horizon, sunR * 0.4, sx, horizon, sunR * 2.8);   // violet dusk around the sun
+    sky.addColorStop(0, colors.violet); sky.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.save(); ctx.globalAlpha = 0.22; ctx.fillStyle = sky; ctx.fillRect(0, 0, w, horizon); ctx.restore();
     var g = ctx.createLinearGradient(0, horizon - sunR, 0, horizon);
     g.addColorStop(0, colors.pink); g.addColorStop(1, "#ff9a3d");
     ctx.save();
@@ -471,6 +474,7 @@
       ctx.beginPath(); ctx.moveTo(sx + v * 18, horizon); ctx.lineTo(sx + v * w * 0.16, h); ctx.stroke();
     }
     var roll = reduceMotion ? 0 : (t / 2400) % 1;
+    ctx.strokeStyle = colors.violet; ctx.globalAlpha = 0.24;
     for (var k = 0; k < 8; k++) {        // horizontal lines, bunching toward the horizon
       var f = (k + roll) / 8, y2 = horizon + (h - horizon) * f * f;
       ctx.beginPath(); ctx.moveTo(0, y2); ctx.lineTo(w, y2); ctx.stroke();

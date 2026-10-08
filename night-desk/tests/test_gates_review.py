@@ -36,7 +36,7 @@ def card(ts, mode="live", officer=None):
 
 
 KEEP = {"verdict": "KEEP", "by": "rules", "biggest_reason": "nothing stands out"}
-STEADY = [12.0 if i % 3 else -4.0 for i in range(120)]   # 40 days, wins 2 of 3
+STEADY = [12.0 if i % 4 else -4.0 for i in range(120)]   # 40 days, wins 3 of 4
 
 
 # -- rulebook ----------------------------------------------------------------------
@@ -63,6 +63,15 @@ def test_rulebook_history_keeps_the_first_start(tmp_path):
 
 
 # -- the numbers and the gates ---------------------------------------------------------
+
+def test_a_losing_run_never_shows_steady_returns():
+    # Big wins while the bank is small, big losses once it has grown: the old per-day percentages
+    # averaged out positive here even though the money went down.
+    first = T0.astimezone(gates.PT).date()
+    rets = gates.daily_returns(trades([500.0, -900.0, 500.0, -900.0, 500.0, -400.0], every_hours=24),
+                               1000, first, first + timedelta(days=5))
+    assert sum(rets) < 0 and gates.sharpe(rets) < 0
+
 
 def test_basic_numbers():
     assert gates.profit_factor([10, -5, 5]) == 3.0

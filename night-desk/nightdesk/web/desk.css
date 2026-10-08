@@ -16,6 +16,7 @@
   --up: #4dffb4;       /* gains, holding */
   --down: #ff6a3d;     /* losses, stomped: sunset orange-red, never brand pink */
   --gold: #ffd36e;     /* sold */
+  --violet: #b56cff;   /* the judge and the night sky: the third neon beside pink and blue */
   --warn: #ffc24d;
   --frame: linear-gradient(180deg, #ff3ea5 0%, #d23bc4 38%, #8a47e6 70%, #3a7bf2 100%);
   --f-neon: "Mr Dafoe", "Brush Script MT", "Segoe Script", cursive;
@@ -78,7 +79,10 @@ a { color: var(--cyan); }
 .agent[data-agent="vet"].live { border-top-color: var(--down); box-shadow: 0 0 16px rgba(255, 106, 61, .22); }
 .agent[data-agent="vet"] .meter span { background: var(--down); }
 .agent[data-agent="risk"] .meter span { background: var(--up); }
-.agent[data-agent="judge"] .meter span { background: var(--pink); }
+.agent[data-agent="judge"] svg, .agent[data-agent="judge"] .count { color: var(--violet); }
+.agent[data-agent="judge"] .meter span { background: var(--violet); }
+.agent[data-agent="judge"].live { border-top-color: var(--violet); box-shadow: 0 0 16px rgba(181, 108, 255, .3); }
+.verdicts h2 { color: var(--violet); }
 
 /* -- the web: a wide synthwave scene ------------------------------------- */
 .web { position: relative; padding: 0; overflow: hidden; min-height: 460px; display: grid;
@@ -132,7 +136,7 @@ h2 small { font: 400 11px var(--f-data); letter-spacing: 0; text-transform: none
 .rules td { padding: 3px 8px 3px 0; vertical-align: top; }
 .rules td.n::before { content: counter(line); color: var(--line); font-size: 11px; }
 .rules td.n { width: 1%; text-align: right; padding-right: 12px; user-select: none; }
-.rules td.k { color: var(--pink); font-size: 10px; letter-spacing: .08em; width: 1%; white-space: nowrap; }
+.rules td.k { color: var(--violet); font-size: 10px; letter-spacing: .08em; width: 1%; white-space: nowrap; }
 .rules td.r { color: var(--cyan); }
 .rules td.v, .rules td.l { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .rules td.l { color: var(--ink-soft); }

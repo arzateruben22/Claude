@@ -42,7 +42,7 @@ same as live.
 | **CHIEF** | Runs the tick, keeps the books |
 
 On the web: **blue** = watching, **red ✗** = stomped, **green** = holding,
-**gold** = sold, **grey** = passed on.
+**gold** = sold, **violet** = the judge said no, **grey** = let go (never qualified).
 
 ## Live mode (real coins, fake money)
 
@@ -68,7 +68,7 @@ python -m nightdesk check <mint address>   # put one coin through every rule, ri
 python -m nightdesk report                 # paper results: win rate, profit factor, exits, kills
 python -m nightdesk report --demo
 python -m nightdesk replay                 # record a demo night into one HTML file (phone-friendly)
-python -m nightdesk sim --days 30          # a month of the demo market, no dashboard
+python -m nightdesk sim --days 30          # a month of the demo market, no dashboard (~15 min)
 ```
 
 ## Before real money: scorecard, risk officer, nightly review
@@ -127,7 +127,7 @@ cents a night (check your usage page). Set `effort = "medium"` to spend less.
 Try all of it on the demo first:
 
 ```bash
-python -m nightdesk sim --days 30     # a month of the demo market, about 10 minutes
+python -m nightdesk sim --days 30     # a month of the demo market, about 15 minutes
 python -m nightdesk nightly --demo    # always NOT READY: the demo fails "real market" on purpose
 ```
 

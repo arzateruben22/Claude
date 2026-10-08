@@ -104,15 +104,14 @@ def max_drawdown_pct(pnls: List[float], start: float) -> float:
 
 
 def daily_returns(trades: List[dict], start_bank: float, first: date, last: date) -> List[float]:
-    """Realized return for every calendar day (Pacific), quiet days included as 0."""
+    """Each calendar day's realized P&L (Pacific) as a share of the starting bank, quiet days as 0.
+    Measured against the start, not the running balance, so a losing run can't average out positive."""
     by_day: Dict[date, float] = defaultdict(float)
     for t in trades:
         by_day[t["closed"].astimezone(PT).date()] += t["pnl"]
-    eq, out, d = start_bank, [], first
+    out, d = [], first
     while d <= last:
-        p = by_day.get(d, 0.0)
-        out.append(p / eq if eq > 0 else 0.0)
-        eq += p
+        out.append(by_day.get(d, 0.0) / start_bank if start_bank > 0 else 0.0)
         d += timedelta(days=1)
     return out
 
