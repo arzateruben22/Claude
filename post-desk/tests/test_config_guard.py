@@ -161,3 +161,19 @@ def test_what_may_post_without_you():
     assert not guard.may_auto_post(rp, c)
     c.approval.auto_curated_reposts = True
     assert guard.may_auto_post(rp, c)
+
+
+def test_spicy_words_always_wait_for_you():
+    c = cfg(approval__mode="auto_originals", writer__hold_words=["crack"])
+    d = draft("Gym crush asked if I crack. After leg day I can barely crack a smile.")
+    d.checks = guard.check(d, c)
+    assert failed(d, c) == {"spicy word": "warn"} and not d.blocked
+    assert not guard.may_auto_post(d, c)                   # automatic mode still holds it
+    clean = draft("Leg day is a scam invented by people who own stairs.")
+    clean.checks = guard.check(clean, c)
+    assert guard.may_auto_post(clean, c)
+
+
+def test_your_slang_loads():
+    c = config.load()
+    assert c.writer.edge in ("clean", "edgy", "spicy") and "unc" in c.writer.slang and "crack" in c.writer.hold_words

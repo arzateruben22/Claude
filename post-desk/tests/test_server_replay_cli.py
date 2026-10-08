@@ -78,6 +78,8 @@ def test_command_line(tmp_path, monkeypatch, capsys):
     capsys.readouterr()
     assert cli.main(["stats", "--demo"]) == 0
     assert "posts so far" in capsys.readouterr().out
+    assert cli.main(["draft", "--n", "2", "--demo"]) == 0      # fresh drafts, whatever time of day the sim ended
+    assert "drafts written" in capsys.readouterr().out
     assert cli.main(["queue", "--demo"]) == 0
     waiting = [line.split()[0] for line in capsys.readouterr().out.splitlines() if " queued " in line]
     assert waiting
@@ -88,5 +90,3 @@ def test_command_line(tmp_path, monkeypatch, capsys):
     assert "$12.50" in capsys.readouterr().out
     assert cli.main(["review", "--demo"]) == 0
     assert (tmp_path / "demo" / "lessons.md").exists()
-    assert cli.main(["draft", "--n", "2", "--demo"]) == 0
-    assert "drafts written" in capsys.readouterr().out

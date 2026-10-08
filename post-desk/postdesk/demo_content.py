@@ -123,6 +123,8 @@ HEADLINES = [
 
 COMEDY_ORIGINALS = {
     "hot_take": [
+        "If you still need 15 minutes on the bike to warm up, you're officially unc. Respectfully.",
+        'Calling the headliner mid is free. Your aura after saying it is not.',
         "Unpopular opinion: cardio is optional. Running is a reaction to danger and I am not in danger.",
         "Gym mirrors should be closed before 7am. Nobody is ready for that.",
         "If you rerack your weights you're a better person than most people with a podcast.",
@@ -135,6 +137,8 @@ COMEDY_ORIGINALS = {
         "Clapping when the DJ finishes is correct. Clapping when the plane lands is also correct. Fight me on neither.",
     ],
     "observation": [
+        "Pre-workout hit, playlist hit, gym crush walked in. I'm locked in and cooked at the same time.",
+        'Nothing says unc like checking the set times so you can leave before the traffic.',
         "Every gym has one guy who has been about to start his set since 2019.",
         "Nothing humbles you faster than a staircase the day after leg day.",
         "The festival lineup drops and suddenly everyone in the group chat is a music critic.",
@@ -145,6 +149,8 @@ COMEDY_ORIGINALS = {
         "Walking to my car after the gym like I just came home from a war.",
     ],
     "pov": [
+        "pov: you said 'one more song' and now your back is making unc noises",
+        "pov: your gym crush asks if you crack and you're too cooked from leg day to answer",
         "pov: you made eye contact in the gym mirror and now you both have to pretend it never happened",
         "pov: the drop is coming and your friend picks this exact moment to tell you a story",
         "pov: you said 'one more song' three hours ago",
@@ -165,6 +171,8 @@ COMEDY_ORIGINALS = {
         "Relationship red flags:\n\n- doesn't rerack weights\n- leaves before the headliner\n- replies 'k'",
     ],
     "fake_headline": [
+        "BREAKING: man who called the DJ 'mid' loses 1,000 aura on the spot",
+        "Report: local raver completely cooked after promising 'I'm just going for the opener'",
         "BREAKING: Local man who said 'last set' 40 minutes ago still on last set",
         "Scientists confirm the gym is mostly people waiting for the same bench",
         "Report: man who skipped leg day for three years now legally classified as a lollipop",
@@ -175,6 +183,8 @@ COMEDY_ORIGINALS = {
         "Area raver insists sunrise set was 'life changing', cannot name a single song from it",
     ],
     "this_or_that": [
+        'Lose all your gym progress or lose all your aura. Choose carefully.',
+        'Delulu about your gym crush or delulu about your bench PR. Pick your poison.',
         "Leg day or a rave the same night. You only get one working body.",
         "Gym at 5am or gym at 10pm. There is no middle.",
         "Front row at the rave or in the back where you can breathe?",

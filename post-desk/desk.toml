@@ -53,6 +53,24 @@ max_chars = 200                # jokes land shorter
 hashtags_max = 0               # hashtags read as try-hard on a comedy account
 links = "never"                # never | allowed  (a post with a link costs about 13x more through the API)
 ai_daily_usd = 0.40            # Claude spend cap per day
+edge = "edgy"                  # clean | edgy | spicy. Never explicit, never slurs, never about real people
+hold_words = ["crack", "smash"]   # posts with these always wait for you, even once posting is automatic
+
+[writer.slang]                 # slang the writer may use (two at most per post), with what it means
+unc = "someone getting old ('26 and already unc')"
+cooked = "defeated, done for ('leg day has me cooked')"
+crack = "to have sex. Innuendo only: a wink, never a description"
+aura = "cool points you gain or lose ('-1000 aura')"
+"locked in" = "fully focused"
+"crash out" = "lose your cool and do something reckless"
+mid = "mediocre"
+ate = "did something really well ('the DJ ate')"
+glazing = "over-praising someone"
+delulu = "delusional, usually about a crush"
+rizz = "charm, flirting skill"
+"the ick" = "a small thing that suddenly turns you off someone"
+lowkey = "a little, or secretly"
+"no cap" = "no lie, for real"
 
 [scout]
 every_minutes = 480            # twice a day is plenty for ideas; each search reads max_results posts
