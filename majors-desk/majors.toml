@@ -1,0 +1,25 @@
+# Majors Desk: the big coins, paper money, public exchange prices (no account, no keys).
+# Every number the desk believes lives here.
+
+[desk]
+start_bank = 1000.0                                  # paper dollars
+coins = ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"]  # traded against US dollars on Coinbase
+quote = "USD"
+
+# Trend following on hourly candles: buy a breakout while the trend is up, then ride it with a
+# trailing stop. Most trades lose a little; the few long trends pay for them. Decisions are made
+# on each hour's closing price.
+[rules]
+trend_hours = 100          # only buy when the price is above its 100-hour average
+breakout_hours = 48        # ...and the hour closes above the highest price of the previous 48 hours
+exit_hours = 24            # sell when an hour closes below the lowest price of the previous 24 hours
+atr_hours = 14             # how far a coin normally moves in an hour, averaged over 14 hours
+stop_atr = 3.0             # ...or sell when it falls 3 of those moves below its best close since buying
+risk_pct = 1.0             # each trade risks 1% of the bank between the buy and the stop
+max_position_pct = 25.0    # never more than 25% of the bank in one coin
+max_positions = 4
+cooldown_hours = 6         # after selling a coin, wait this long before buying it again
+
+[costs]                    # charged on every paper buy and sell
+fee_pct = 0.40             # per side: a typical exchange fee for a small account (check yours)
+slippage_pct = 0.05        # per side: the price moves a little against you when you fill

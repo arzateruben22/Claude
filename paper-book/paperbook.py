@@ -1,7 +1,8 @@
 """Paper Book: every paper trade from both desks in one ledger, with one running total.
 
-  coins   Night Desk (../night-desk): new Solana coins, live prices, paper money
-  stocks  Premarket scanner (../premarket-scanner): gap-up picks, graded after the close
+  memecoins  Night Desk (../night-desk): brand-new Solana coins, live prices, paper money
+  majors     Majors Desk (../majors-desk): BTC, ETH, XRP, ADA..., hourly trend following, paper money
+  stocks     Premarket scanner (../premarket-scanner): gap-up picks, graded after the close
 
   python paperbook.py               update the ledger and the report once
   python paperbook.py --watch 15    ...every 15 minutes, while the desks run
@@ -32,7 +33,8 @@ except ModuleNotFoundError:  # Python 3.10
 
 HERE = Path(__file__).resolve().parent
 ET = ZoneInfo("America/New_York")
-DESKS = ("coins", "stocks")
+DESKS = ("memecoins", "majors", "stocks")
+LABEL = {"memecoins": "Memecoins", "majors": "Big coins", "stocks": "Stocks"}
 
 
 @dataclass
@@ -70,15 +72,16 @@ def _dt(s: str) -> datetime:
     return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
 
 
-def load_coins(folder: Path) -> Tuple[List[Trade], List[Holding]]:
-    trades = [Trade("coins", "$" + r["symbol"], _dt(r["opened"]), _dt(r["closed"]), float(r["pnl"]),
+def load_coins(folder: Path, desk: str = "memecoins", prefix: str = "$") -> Tuple[List[Trade], List[Holding]]:
+    """Night Desk and Majors Desk write the same files: trades.csv and state.json."""
+    trades = [Trade(desk, prefix + r["symbol"], _dt(r["opened"]), _dt(r["closed"]), float(r["pnl"]),
                     float(r["pnl_pct"]), r["exit"].split(":")[0])
               for r in _read_csv(folder / "trades.csv")]
     held: List[Holding] = []
     state = folder / "state.json"
     if state.exists():
         for p in json.loads(state.read_text()).get("positions", []):
-            held.append(Holding("coins", "$" + p["symbol"], _dt(p["opened_at"]), float(p["cost"]),
+            held.append(Holding(desk, prefix + p["symbol"], _dt(p["opened_at"]), float(p["cost"]),
                                 float(p["qty"]) * float(p["last_price"]), "marked at the last price, before exit costs"))
     return trades, held
 
@@ -166,18 +169,20 @@ class Book:
 
 
 def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
-    c, s = cfg["coins"], cfg["stocks"]
+    c, m, s = cfg["memecoins"], cfg["majors"], cfg["stocks"]
     coins_folder = (HERE / (c["demo_folder"] if demo else c["folder"])).resolve()
+    majors_folder = (HERE / (m["demo_folder"] if demo else m["folder"])).resolve()
     if demo:
         journal = HERE / s["demo_journal"] if s.get("demo_journal") else newest_demo_journal(HERE.parent / "premarket-scanner")
     else:
         journal = HERE / s["journal"]
     journal = journal.resolve()
-    ct, ch = load_coins(coins_folder)
+    ct, ch = load_coins(coins_folder, "memecoins", "$")
+    mt, mh = load_coins(majors_folder, "majors", "")
     st, sh = load_stocks(journal, float(s["ticket_usd"]))
-    return Book({"coins": ct, "stocks": st}, {"coins": ch, "stocks": sh},
-                {"coins": float(c["start_bank"]), "stocks": float(s["start_bank"])},
-                {"coins": str(coins_folder), "stocks": str(journal)}, demo,
+    return Book({"memecoins": ct, "majors": mt, "stocks": st}, {"memecoins": ch, "majors": mh, "stocks": sh},
+                {"memecoins": float(c["start_bank"]), "majors": float(m["start_bank"]), "stocks": float(s["start_bank"])},
+                {"memecoins": str(coins_folder), "majors": str(majors_folder), "stocks": str(journal)}, demo,
                 now or datetime.now(timezone.utc), ZoneInfo(cfg["report"]["timezone"]),
                 float(s["ticket_usd"]), stock_rules(HERE.parent / "premarket-scanner" / "criteria.toml"))
 
@@ -219,12 +224,12 @@ def render_text(book: Book) -> str:
              f"{book.now.astimezone(book.tz):%a %d %b %H:%M %Z}", ""]
     for d in DESKS:
         s = stats(book.trades[d], book.banks[d])
-        lines.append(f"  {d:<7} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
+        lines.append(f"  {d:<9} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
                      f"${book.banks[d]:,.0f})  won {s['win_rate']:.0f}%  profit factor {_pf(s['profit_factor'])}  "
                      f"worst drawdown {s['max_drawdown_pct']:.1f}%")
-    lines.append(f"  {'total':<7} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
+    lines.append(f"  {'total':<9} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
                  f"({all_s['return_pct']:+.1f}% of ${total_start:,.0f})")
-    open_coins = [h for h in book.held["coins"]]
+    open_coins = book.held["memecoins"] + book.held["majors"]
     waiting = [h for h in book.held["stocks"]]
     if open_coins:
         lines.append(f"  open coins: {len(open_coins)}, unrealized {_usd(book.unrealized)} (before exit costs)")
@@ -248,17 +253,17 @@ CSS = """
 /* Paper Book: an old green-bar printout, the kind ledgers came on. Rows band like fanfold paper. */
 :root {
   --paper: #f8fbf7; --band: #e5f1e6; --ink: #1c2620; --muted: #4f5f55; --rule: #c4d5c8;
-  --ribbon: #2a54b8; --up: #12773a; --down: #b4261d; --hole: #dfe9e1;
+  --ribbon: #2a54b8; --gold: #8a5a00; --plum: #7a3a9a; --up: #12773a; --down: #b4261d; --hole: #dfe9e1;
   --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --paper: #0e1411; --band: #15211a; --ink: #dde9e0; --muted: #a2b5a8; --rule: #2b3b31;
-  --ribbon: #92b2ff; --up: #4fd17f; --down: #ff7d70; --hole: #1a251f; color-scheme: dark; } }
+  --ribbon: #92b2ff; --gold: #f0c35a; --plum: #d4a6f2; --up: #4fd17f; --down: #ff7d70; --hole: #1a251f; color-scheme: dark; } }
 :root[data-theme="dark"] {
   --paper: #0e1411; --band: #15211a; --ink: #dde9e0; --muted: #a2b5a8; --rule: #2b3b31;
-  --ribbon: #92b2ff; --up: #4fd17f; --down: #ff7d70; --hole: #1a251f; color-scheme: dark; }
+  --ribbon: #92b2ff; --gold: #f0c35a; --plum: #d4a6f2; --up: #4fd17f; --down: #ff7d70; --hole: #1a251f; color-scheme: dark; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--display); }
 .sheet { max-width: 1080px; margin: 0 auto; padding-inline: 44px; padding-block: 28px 40px; position: relative;
@@ -270,9 +275,9 @@ h2 { font: 700 13px/1.2 var(--display); letter-spacing: .14em; text-transform: u
 .top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
 .stamp { font: 500 12.5px/1.4 var(--mono); color: var(--muted); }
 .stamp b { color: var(--down); font-weight: 500; }
-.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 18px 0 26px; border: 1px solid var(--rule); }
-.tile { padding: 12px 14px; border-right: 1px solid var(--rule); min-width: 0; }
-.tile:last-child { border-right: 0; }
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin: 18px 0 26px;
+  background: var(--rule); border: 1px solid var(--rule); }
+.tile { padding: 12px 14px; min-width: 0; background: var(--paper); }
 .tile span { display: block; font: 600 11.5px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .tile b { display: block; font: 500 clamp(19px, 3.2vw, 27px)/1.2 var(--mono); font-variant-numeric: tabular-nums; margin-top: 4px; }
 .tile small { font: 400 12px var(--mono); color: var(--muted); }
@@ -284,10 +289,12 @@ section { margin-bottom: 28px; min-width: 0; }
 .chart .grid { stroke: var(--rule); fill: none; }
 .chart .grid.dash { stroke-dasharray: 3 4; }
 .chart .l-total { stroke: var(--ink); stroke-width: 2.6; fill: none; }
-.chart .l-coins { stroke: var(--ribbon); stroke-width: 1.6; fill: none; }
-.chart .l-stocks { stroke: var(--up); stroke-width: 1.6; fill: none; }
+.chart .l-memecoins { stroke: var(--ribbon); stroke-width: 1.6; fill: none; }
+.chart .l-majors { stroke: var(--gold); stroke-width: 1.6; fill: none; }
+.chart .l-stocks { stroke: var(--plum); stroke-width: 1.6; fill: none; }
 .chart .b-up { fill: var(--up); } .chart .b-down { fill: var(--down); }
-.key .k-total { color: var(--ink); } .key .k-coins { color: var(--ribbon); } .key .k-stocks { color: var(--up); }
+.key .k-total { color: var(--ink); } .key .k-memecoins { color: var(--ribbon); } .key .k-majors { color: var(--gold); }
+.key .k-stocks { color: var(--plum); }
 .key { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 400 12.5px var(--mono); color: var(--muted); margin: 0 0 6px; }
 .key i { display: inline-block; width: 18px; height: 0; border-top: 3px solid currentColor; vertical-align: middle; margin-right: 6px; }
 .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
@@ -303,8 +310,7 @@ td.n, th.n { text-align: right; }
 @media (max-width: 760px) {
   .sheet { padding-inline: 16px; background-image: none; }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tile:nth-child(2) { border-right: 0; }
-  .tile:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .tile:first-child { grid-column: 1 / -1; }
   .two { grid-template-columns: minmax(0, 1fr); }
 }
 """
@@ -341,7 +347,7 @@ def _equity_svg(book: Book) -> str:
     for v in (hi - pad, 0.0, lo + pad):
         out.append(f'<line class="grid{"" if v == 0 else " dash"}" x1="{L}" x2="{W - R}" y1="{y(v):.1f}" y2="{y(v):.1f}"/>')
         out.append(f'<text x="{L - 6}" y="{y(v) + 4:.1f}" text-anchor="end">{html.escape(_usd(v))}</text>')
-    for k in ("coins", "stocks", "total"):
+    for k in DESKS + ("total",):
         s = rel[k]
         if not s:
             continue
@@ -392,13 +398,14 @@ def render_html(book: Book) -> str:
     tiles = (
         f'<div class="tile"><span>Net, all paper trades</span><b class="{_cls(all_s["net"])}">{e(_usd(all_s["net"]))}</b>'
         f'<small>{all_s["return_pct"]:+.1f}% of ${total:,.0f}</small></div>'
-        + "".join(f'<div class="tile"><span>{d}</span><b class="{_cls(per[d]["net"])}">{e(_usd(per[d]["net"]))}</b>'
+        + "".join(f'<div class="tile"><span>{LABEL[d]}</span><b class="{_cls(per[d]["net"])}">{e(_usd(per[d]["net"]))}</b>'
                   f'<small>{per[d]["trades"]} trades · won {per[d]["win_rate"]:.0f}%</small></div>' for d in DESKS)
         + f'<div class="tile"><span>Open right now</span><b class="{_cls(book.unrealized)}">{e(_usd(book.unrealized))}</b>'
-          f'<small>{len(book.held["coins"])} coins · {len(book.held["stocks"])} stock picks waiting</small></div>')
+          f'<small>{len(book.held["memecoins"]) + len(book.held["majors"])} coins held · '
+          f'{len(book.held["stocks"])} stock picks waiting</small></div>')
 
     rows = "".join(
-        f"<tr><th scope=\"row\">{d}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
+        f"<tr><th scope=\"row\">{LABEL[d]}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
         f"<td class=n>{e(_usd(per[d]['avg_win']))}</td><td class=n>{e(_usd(per[d]['avg_loss']))}</td>"
         f"<td class=n>{_pf(per[d]['profit_factor'])}</td><td class=n>{per[d]['max_drawdown_pct']:.1f}%</td>"
         f"<td class=\"n {_cls(per[d]['net'])}\">{e(_usd(per[d]['net']))}</td></tr>" for d in DESKS)
@@ -406,10 +413,10 @@ def render_html(book: Book) -> str:
                   f'<th class=n>Avg win</th><th class=n>Avg loss</th><th class=n>Profit factor</th>'
                   f'<th class=n>Worst drop</th><th class=n>Net</th></tr></thead><tbody>{rows}</tbody></table></div>')
 
-    held = book.held["coins"] + book.held["stocks"]
+    held = book.held["memecoins"] + book.held["majors"] + book.held["stocks"]
     if held:
         hrows = "".join(
-            f"<tr><td>{h.desk}</td><td>{e(h.symbol)}</td><td>{h.opened.astimezone(book.tz):%d %b %H:%M}</td>"
+            f"<tr><td>{LABEL[h.desk]}</td><td>{e(h.symbol)}</td><td>{h.opened.astimezone(book.tz):%d %b %H:%M}</td>"
             f"<td class=n>{e(_usd(h.cost, False))}</td>"
             f"<td class=\"n {_cls((h.value or h.cost) - h.cost)}\">{'—' if h.value is None else e(_usd(h.value - h.cost))}</td>"
             f"<td>{e(h.note)}</td></tr>" for h in held)
@@ -421,7 +428,7 @@ def render_html(book: Book) -> str:
     recent = book.all_trades[-40:][::-1]
     if recent:
         trows = "".join(
-            f"<tr><td>{t.closed.astimezone(book.tz):%d %b %H:%M}</td><td>{t.desk}</td><td>{e(t.symbol[:14])}</td>"
+            f"<tr><td>{t.closed.astimezone(book.tz):%d %b %H:%M}</td><td>{LABEL[t.desk]}</td><td>{e(t.symbol[:14])}</td>"
             f"<td>{e(t.exit)}</td><td class=\"n {_cls(t.pnl_pct)}\">{t.pnl_pct:+.1f}%</td>"
             f"<td class=\"n {_cls(t.pnl)}\">{e(_usd(t.pnl))}</td></tr>" for t in recent)
         trades_html = (f'<div class="scroll"><table><thead><tr><th>Closed</th><th>Desk</th><th>Symbol</th><th>Exit</th>'
@@ -443,8 +450,8 @@ def render_html(book: Book) -> str:
   <div class="tiles">{tiles}</div>
   <section aria-labelledby="h-eq">
     <h2 id="h-eq">Profit and loss since the start</h2>
-    <p class="key"><span class="k-total"><i></i>both desks</span><span class="k-coins"><i></i>coins</span>
-      <span class="k-stocks"><i></i>stocks</span></p>
+    <p class="key"><span class="k-total"><i></i>all desks</span><span class="k-memecoins"><i></i>memecoins</span>
+      <span class="k-majors"><i></i>big coins</span><span class="k-stocks"><i></i>stocks</span></p>
     <div class="chart">{_equity_svg(book)}</div>
   </section>
   <section aria-labelledby="h-day">
@@ -457,7 +464,9 @@ def render_html(book: Book) -> str:
   <section class="notes" aria-labelledby="h-n">
     <h2 id="h-n">How these numbers are made</h2>
     {few}
-    <p><b>Coins</b> (Night Desk): ${book.banks['coins']:,.0f} of paper money. Buys and sells are priced from the pool's
+    <p><b>Big coins</b> (Majors Desk): ${book.banks['majors']:,.0f} of paper money, trading BTC, ETH, XRP, ADA and others on
+      Coinbase's hourly prices. Each buy and sell pays the exchange fee and a little slippage.</p>
+    <p><b>Memecoins</b> (Night Desk): ${book.banks['memecoins']:,.0f} of paper money. Buys and sells are priced from the pool's
       live price with fees and price impact included, so they're close to what a real swap would get, but no order
       ever reaches the market.</p>
     <p><b>Stocks</b> (premarket scanner): ${book.ticket:,.0f} of paper money per pick, out of ${book.banks['stocks']:,.0f}.

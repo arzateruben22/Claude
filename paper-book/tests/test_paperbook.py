@@ -39,7 +39,14 @@ def desks(tmp_path):
         {"scan_date": "2026-10-07", "trade_date": "2026-10-07", "symbol": "EFGH", "sim_pnl_pct": "-5.5", "sim_exit": "stop"},
         {"scan_date": "2026-10-08", "trade_date": "2026-10-09", "symbol": "IJKL", "sim_pnl_pct": "", "sim_exit": ""},
     ])
-    cfg = {"coins": {"folder": str(coins), "demo_folder": str(coins), "start_bank": 1000.0},
+    majors = tmp_path / "majors-desk" / "output" / "live"
+    write_csv(majors / "trades.csv", [
+        {"opened": "2026-10-06T10:00:00+00:00", "closed": "2026-10-07T15:00:00+00:00", "symbol": "BTC",
+         "pnl": "12.50", "pnl_pct": "5.0", "exit": "trailing stop"}])
+    (majors / "state.json").write_text(json.dumps({"positions": [
+        {"symbol": "XRP", "opened_at": "2026-10-08T12:00:00+00:00", "qty": 100.0, "cost": 60.0, "last_price": 0.55}]}))
+    cfg = {"memecoins": {"folder": str(coins), "demo_folder": str(coins), "start_bank": 1000.0},
+           "majors": {"folder": str(majors), "demo_folder": str(majors), "start_bank": 1000.0},
            "stocks": {"journal": str(journal), "demo_journal": str(journal), "start_bank": 1000.0, "ticket_usd": 100.0},
            "report": {"timezone": "America/Los_Angeles"}}
     return cfg
@@ -47,17 +54,20 @@ def desks(tmp_path):
 
 def test_reads_both_desks(desks):
     book = pb.load(desks, demo=False, now=NOW)
-    assert [t.pnl for t in book.trades["coins"]] == [30.0, -20.0]
+    assert [t.pnl for t in book.trades["memecoins"]] == [30.0, -20.0]
+    assert [t.symbol for t in book.trades["majors"]] == ["BTC"] and book.trades["majors"][0].exit == "trailing stop"
     assert [t.pnl for t in book.trades["stocks"]] == [9.5, -5.5]          # $100 a pick
-    assert book.trades["coins"][0].exit == "target"
-    [coin] = book.held["coins"]
-    assert coin.value == pytest.approx(60.0) and book.unrealized == pytest.approx(10.0)
+    assert book.trades["memecoins"][0].exit == "target"
+    [coin] = book.held["memecoins"]
+    assert coin.value == pytest.approx(60.0)
+    [xrp] = book.held["majors"]
+    assert xrp.value == pytest.approx(55.0) and book.unrealized == pytest.approx(10.0 - 5.0)
     [pick] = book.held["stocks"]
     assert pick.symbol == "IJKL" and pick.value is None
 
 
 def test_the_numbers():
-    t = lambda pnl, h: pb.Trade("coins", "X", NOW, NOW + timedelta(hours=h), pnl, 0.0, "x")
+    t = lambda pnl, h: pb.Trade("memecoins", "X", NOW, NOW + timedelta(hours=h), pnl, 0.0, "x")
     s = pb.stats([t(100, 1), t(-50, 2), t(-100, 3), t(30, 4)], 1000.0)
     assert s["net"] == -20 and s["trades"] == 4 and s["win_rate"] == 50.0
     assert s["profit_factor"] == pytest.approx(130 / 150, abs=0.01)
@@ -67,7 +77,7 @@ def test_the_numbers():
 
 def test_days_follow_the_report_time_zone():
     late = datetime(2026, 10, 8, 5, 0, tzinfo=timezone.utc)                      # 10pm on the 7th in LA
-    days = pb.daily([pb.Trade("coins", "X", late, late, 5.0, 0, "x")], ZoneInfo("America/Los_Angeles"))
+    days = pb.daily([pb.Trade("memecoins", "X", late, late, 5.0, 0, "x")], ZoneInfo("America/Los_Angeles"))
     assert list(days) == [datetime(2026, 10, 7).date()]
 
 
@@ -75,7 +85,7 @@ def test_build_writes_the_ledger_and_a_safe_page(desks, tmp_path):
     out = tmp_path / "out"
     book = pb.build(desks, False, out, now=NOW)
     rows = list(csv.DictReader(open(out / "ledger.csv")))
-    assert len(rows) == 4 and {r["desk"] for r in rows} == {"coins", "stocks"}
+    assert len(rows) == 5 and {r["desk"] for r in rows} == {"memecoins", "majors", "stocks"}
     page = (out / "paper-book.html").read_text()
     assert page.startswith("<!doctype html>") and "<title>Paper Book</title>" in page
     assert "<b>RUG</b>" not in page and "&lt;b&gt;RUG" in page                  # coin names are escaped
@@ -85,7 +95,8 @@ def test_build_writes_the_ledger_and_a_safe_page(desks, tmp_path):
 
 
 def test_nothing_yet(tmp_path):
-    cfg = {"coins": {"folder": str(tmp_path / "none"), "demo_folder": "", "start_bank": 1000.0},
+    cfg = {"memecoins": {"folder": str(tmp_path / "none"), "demo_folder": "", "start_bank": 1000.0},
+           "majors": {"folder": str(tmp_path / "none2"), "demo_folder": "", "start_bank": 1000.0},
            "stocks": {"journal": str(tmp_path / "none.csv"), "demo_journal": "", "start_bank": 1000.0, "ticket_usd": 100.0},
            "report": {"timezone": "America/Los_Angeles"}}
     book = pb.build(cfg, False, tmp_path / "out", now=NOW)
