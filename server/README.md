@@ -113,7 +113,12 @@ bash server/status.sh                    # what's running, next stock scans, pap
 journalctl -u postdesk -f                # live log of one service (nightdesk, paperbook...)
 sudo systemctl restart postdesk          # after editing desk.toml
 git pull && sudo bash server/setup.sh    # update to the newest code
+sudo bash server/fresh-start.sh          # start counting from zero today (archives, never deletes)
 ```
+
+Each desk starts with $100 of paper money (`start_bank` in `night-desk/desk.toml`,
+`majors-desk/majors.toml` and `paper-book/book.toml`). After changing it, run `fresh-start.sh` so the
+desks don't carry on from their old bank.
 
 ## What it costs per month (roughly)
 

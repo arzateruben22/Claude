@@ -5,9 +5,9 @@ nothing in this repo can place a real order.
 
 | Desk | What it trades | Paper money | When it trades |
 |---|---|---|---|
-| **Memecoins**: Night Desk (`night-desk/`) | brand-new Solana coins that pass its rug checks | $1,000 bank | nonstop, 24/7, while it's running |
-| **Big coins**: Majors Desk (`majors-desk/`) | BTC, ETH, SOL, XRP, ADA, DOGE, hourly trend following | $1,000 bank | every hour, 24/7, while it's running |
-| **Stocks**: premarket scanner (`premarket-scanner/`) | US stocks gapping up before the open | $100 a pick, out of $1,000 | picks before the open; graded after the close, weekdays |
+| **Memecoins**: Night Desk (`night-desk/`) | brand-new Solana coins that pass its rug checks | $100 bank | nonstop, 24/7, while it's running |
+| **Big coins**: Majors Desk (`majors-desk/`) | BTC, ETH, SOL, XRP, ADA, DOGE, hourly trend following | $100 bank | every hour, 24/7, while it's running |
+| **Stocks**: premarket scanner (`premarket-scanner/`) | US stocks gapping up before the open | $100 bank, split equally between each weekday's picks | picks before the open; graded after the close, weekdays |
 
 ```bash
 python paper-book/paperbook.py             # the ledger and the report, now

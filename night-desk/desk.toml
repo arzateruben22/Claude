@@ -7,7 +7,7 @@
 # A coin that clears all three goes to the judge. A "yes" becomes a paper buy.
 
 [desk]
-start_bank = 1000.0          # paper dollars
+start_bank = 100.0           # paper dollars
 discover_seconds = 60        # how often the crawler sweeps for new coins
 poll_seconds = 15            # how often watched coins and positions are re-priced
 watch_minutes = 90           # drop a coin that hasn't qualified by then

@@ -12,6 +12,7 @@ from majors.market import HOUR, Candle, Coinbase, DemoMarket, MarketError
 
 T0 = datetime(2026, 9, 1, tzinfo=timezone.utc)
 BASE = config.load()
+BASE.desk.start_bank = 1000.0          # the tests' numbers are worked out on a $1,000 paper bank
 
 
 def cfg(**changes):
@@ -83,6 +84,7 @@ def test_sizing_and_costs():
     p = Desk(c, None)._buy("ETH", 100.0, T0, stop_distance=0.5)
     assert p.cost == pytest.approx(250.0)               # the 25% cap
     assert Desk(cfg(desk__start_bank=20.0), None)._buy("ETH", 100.0, T0, 0.5) is None   # under the $10 minimum
+    assert Desk(cfg(desk__start_bank=100.0), None)._buy("ETH", 100.0, T0, 0.5).cost == pytest.approx(25.0)  # $100 bank trades
 
 
 def test_one_decision_per_hour_cooldown_and_limits():

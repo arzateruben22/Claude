@@ -30,7 +30,11 @@ cd desks
 sudo bash server/setup.sh
 ```
 
-**Memecoins and big coins are now paper trading.** They need no account and no keys.
+**Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
+starts with $100 of paper money.
+
+**To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
+everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.
 
 **For stocks** (free, 5 more minutes):
 1. Sign up at **alpaca.markets** and switch to the **Paper** account.

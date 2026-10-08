@@ -2,7 +2,7 @@
 # Every number the desk believes lives here.
 
 [desk]
-start_bank = 1000.0                                  # paper dollars
+start_bank = 100.0                                   # paper dollars
 coins = ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"]  # traded against US dollars on Coinbase
 quote = "USD"
 

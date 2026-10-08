@@ -87,10 +87,17 @@ def load_coins(folder: Path, desk: str = "memecoins", prefix: str = "$") -> Tupl
     return trades, held
 
 
-def load_stocks(journal: Path, ticket: float) -> Tuple[List[Trade], List[Holding]]:
+def load_stocks(journal: Path, ticket: float, share: Optional[float] = None) -> Tuple[List[Trade], List[Holding]]:
+    """Each pick gets `ticket` paper dollars, or with `share` set, each day's picks split that much equally."""
     trades: List[Trade] = []
     held: List[Holding] = []
-    for r in _read_csv(journal):
+    rows = _read_csv(journal)
+    per_day: Dict[str, int] = defaultdict(int)
+    for r in rows:
+        per_day[r["trade_date"]] += 1
+    for r in rows:
+        if share is not None:
+            ticket = share / per_day[r["trade_date"]]
         day = date.fromisoformat(r["trade_date"])
         opened = datetime.combine(day, time(9, 30), tzinfo=ET)
         if r.get("sim_pnl_pct", "") != "":
@@ -98,7 +105,7 @@ def load_stocks(journal: Path, ticket: float) -> Tuple[List[Trade], List[Holding
             trades.append(Trade("stocks", r["symbol"], opened, datetime.combine(day, time(16, 0), tzinfo=ET),
                                 round(ticket * pct / 100, 2), pct, r.get("sim_exit", "") or "close"))
         else:
-            held.append(Holding("stocks", r["symbol"], opened, ticket, None,
+            held.append(Holding("stocks", r["symbol"], opened, round(ticket, 2), None,
                                 f"picked {r['scan_date']}; buys at the {day:%a %d %b} open, graded after the close"))
     return trades, held
 
@@ -158,6 +165,7 @@ class Book:
     now: datetime
     tz: ZoneInfo
     ticket: float = 100.0
+    share_bank: bool = False                                        # each day's stock picks split the stock bank
     stock_rules: Tuple[float, float, float] = (10.0, 5.0, 0.5)    # target %, stop %, cost % from the scanner
 
     @property
@@ -180,12 +188,13 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
     journal = journal.resolve()
     ct, ch = load_coins(coins_folder, "memecoins", "$")
     mt, mh = load_coins(majors_folder, "majors", "")
-    st, sh = load_stocks(journal, float(s["ticket_usd"]))
+    share = bool(s.get("share_bank", False))
+    st, sh = load_stocks(journal, float(s["ticket_usd"]), float(s["start_bank"]) if share else None)
     return Book({"memecoins": ct, "majors": mt, "stocks": st}, {"memecoins": ch, "majors": mh, "stocks": sh},
                 {"memecoins": float(c["start_bank"]), "majors": float(m["start_bank"]), "stocks": float(s["start_bank"])},
                 {"memecoins": str(coins_folder), "majors": str(majors_folder), "stocks": str(journal)}, demo,
                 now or datetime.now(timezone.utc), ZoneInfo(cfg["report"]["timezone"]),
-                float(s["ticket_usd"]), stock_rules(HERE.parent / "premarket-scanner" / "criteria.toml"))
+                float(s["ticket_usd"]), share, stock_rules(HERE.parent / "premarket-scanner" / "criteria.toml"))
 
 
 def stock_rules(path: Path) -> Tuple[float, float, float]:
@@ -437,6 +446,8 @@ def render_html(book: Book) -> str:
     else:
         trades_html = '<p class="empty">No closed paper trades yet. Each one appears here as soon as a desk closes it.</p>'
 
+    stake = (f"each weekday's picks split ${book.banks['stocks']:,.0f} of paper money equally" if book.share_bank else
+             f"${book.ticket:,.0f} of paper money per pick, out of ${book.banks['stocks']:,.0f}")
     few = ("" if all_s["trades"] >= 50 else
            f"<p><b>{all_s['trades']} trades is far too few to judge.</b> Let both desks run for weeks before reading "
            "anything into these numbers.</p>")
@@ -470,7 +481,7 @@ def render_html(book: Book) -> str:
     <p><b>Memecoins</b> (Night Desk): ${book.banks['memecoins']:,.0f} of paper money. Buys and sells are priced from the pool's
       live price with fees and price impact included, so they're close to what a real swap would get, but no order
       ever reaches the market.</p>
-    <p><b>Stocks</b> (premarket scanner): ${book.ticket:,.0f} of paper money per pick, out of ${book.banks['stocks']:,.0f}.
+    <p><b>Stocks</b> (premarket scanner): {stake}.
       Each pick is bought at the 9:30 ET open and sold at +{book.stock_rules[0]:g}%, −{book.stock_rules[1]:g}% or the
       close, whichever comes first, minus {book.stock_rules[2]:g}% for spread and slippage. When one five-minute bar
       touches both, it counts as the stop.</p>

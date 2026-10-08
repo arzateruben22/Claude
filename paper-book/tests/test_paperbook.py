@@ -107,3 +107,35 @@ def test_nothing_yet(tmp_path):
 def test_demo_is_labelled(desks, tmp_path):
     pb.build(desks, True, tmp_path / "out", now=NOW)
     assert "DEMO MARKETS" in (tmp_path / "out" / "paper-book.html").read_text()
+
+
+def test_each_days_stock_picks_can_share_the_bank(tmp_path):
+    journal = tmp_path / "journal.csv"
+    write_csv(journal, [
+        {"scan_date": "2026-10-06", "trade_date": "2026-10-06", "symbol": "AAA", "sim_pnl_pct": "10.0", "sim_exit": "target"},
+        {"scan_date": "2026-10-06", "trade_date": "2026-10-06", "symbol": "BBB", "sim_pnl_pct": "-5.0", "sim_exit": "stop"},
+        {"scan_date": "2026-10-07", "trade_date": "2026-10-07", "symbol": "CCC", "sim_pnl_pct": "4.0", "sim_exit": "close"},
+        {"scan_date": "2026-10-08", "trade_date": "2026-10-09", "symbol": "DDD", "sim_pnl_pct": "", "sim_exit": ""},
+        {"scan_date": "2026-10-08", "trade_date": "2026-10-09", "symbol": "EEE", "sim_pnl_pct": "", "sim_exit": ""},
+        {"scan_date": "2026-10-08", "trade_date": "2026-10-09", "symbol": "FFF", "sim_pnl_pct": "", "sim_exit": ""},
+    ])
+    trades, held = pb.load_stocks(journal, 100.0, share=100.0)
+    assert [t.pnl for t in trades] == [5.0, -2.5, 4.0]          # two picks split $100; one pick gets all of it
+    assert [h.cost for h in held] == [33.33] * 3
+    fixed, _ = pb.load_stocks(journal, 100.0)
+    assert [t.pnl for t in fixed] == [10.0, -5.0, 4.0]
+
+
+def test_your_settings_start_every_desk_at_100():
+    import tomllib
+
+    with open(Path(__file__).resolve().parent.parent / "book.toml", "rb") as fh:
+        cfg = tomllib.load(fh)
+    root = Path(__file__).resolve().parents[2]
+    with open(root / "night-desk" / "desk.toml", "rb") as fh:
+        night = tomllib.load(fh)["desk"]["start_bank"]
+    with open(root / "majors-desk" / "majors.toml", "rb") as fh:
+        majors = tomllib.load(fh)["desk"]["start_bank"]
+    assert cfg["memecoins"]["start_bank"] == night == 100.0           # the book and the desks agree
+    assert cfg["majors"]["start_bank"] == majors == 100.0
+    assert cfg["stocks"]["start_bank"] == 100.0 and cfg["stocks"]["share_bank"] is True

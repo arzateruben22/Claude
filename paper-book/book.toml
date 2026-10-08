@@ -3,18 +3,19 @@
 [memecoins]                               # Night Desk: brand-new Solana coins, live data, paper money
 folder = "../night-desk/output/live"      # where `python -m nightdesk run` keeps its results
 demo_folder = "../night-desk/output/demo"
-start_bank = 1000.0                       # same as [desk] start_bank in night-desk/desk.toml
+start_bank = 100.0                        # same as [desk] start_bank in night-desk/desk.toml
 
 [majors]                                  # Majors Desk: BTC, ETH, SOL, XRP, ADA, DOGE on Coinbase prices
 folder = "../majors-desk/output/live"     # where `python -m majors run` keeps its results
 demo_folder = "../majors-desk/output/demo"
-start_bank = 1000.0                       # same as [desk] start_bank in majors-desk/majors.toml
+start_bank = 100.0                        # same as [desk] start_bank in majors-desk/majors.toml
 
 [stocks]                                  # Premarket scanner: gap-up stocks, graded paper picks
 journal = "../premarket-scanner/output/journal.csv"
 demo_journal = ""                         # empty: the newest demo backtest
-start_bank = 1000.0
-ticket_usd = 100.0                        # paper dollars per pick (the scanner grades each pick in percent)
+start_bank = 100.0
+share_bank = true                         # each weekday's picks split the stock bank equally
+ticket_usd = 100.0                        # paper dollars per pick, used only when share_bank = false
 
 [report]
 timezone = "America/Los_Angeles"
