@@ -28,9 +28,15 @@ Every refresh also writes `output/galaxy.html`: the same trades drawn as a unive
   core means it made money; red means it lost.
 - **Planets:** each closed trade orbits its star. A pulsing ring marks a position that's open now.
 - **Growth:** new symbols join on the outer arms, so a galaxy grows outward as the desk trades more.
+- **Silk:** every star is tied to its nearest neighbours, and threads brighten as their stars trade,
+  so the web grows outward with the galaxy.
+- **The spider:** Night Desk's crawler, loose in the galaxy. During the replay it walks to the biggest
+  trades as they close, and it jumps between galaxies on a dragline. At "now" it checks on open
+  positions. Every walk spins a fresh thread. **Follow spider** rides along with it.
 - **Timeline:** replays everything from the first trade to now. The biggest moves flash as they happen.
 - **Constellations:** patterns in the trades, such as how exits went, holding time, time of day,
   which symbols carried the profit, streaks, and whether two desks win and lose on the same days.
+  Each is spun as an orb web between its stars (a silk bridge, for two desks).
   Each one stays locked, showing a progress bar, until there are enough trades to say anything.
   They describe what happened, not what will happen.
 

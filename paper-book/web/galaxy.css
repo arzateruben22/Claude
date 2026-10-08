@@ -92,6 +92,10 @@ button, input { font: inherit; color: inherit; }
 .dot.win { background: radial-gradient(circle, #fff7d6 0 30%, var(--major) 70%); }
 .dot.planet { width: 6px; height: 6px; background: var(--win); box-shadow: 8px 0 0 var(--loss); margin-right: 8px; }
 .ring { border: 2px solid var(--meme); }
+.silk { flex: none; width: 14px; height: 0; border-top: 1px solid #dfe6ff; transform: translateY(-3px); opacity: 0.8; }
+.spider { flex: none; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #dfe6ff; background: #0b0f22;
+  box-shadow: 0 0 6px #dfe6ff; transform: translateY(1px); }
+.fit[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--void); }
 .noscript { padding: 16px; }
 
 @media (max-width: 900px) {
@@ -102,6 +106,9 @@ button, input { font: inherit; color: inherit; }
   .counts { gap: 4px 16px; }
   .counts dd { font-size: 16px; }
   .when { min-width: 0; font-size: 11px; }
+  .hud-bottom { flex-wrap: wrap; gap: 8px 10px; }
+  .track { order: -1; flex-basis: 100%; }
+  .play, .fit { padding: 6px 11px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

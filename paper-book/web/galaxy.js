@@ -9,7 +9,7 @@
   const tok = (n, d) => css.getPropertyValue(n).trim() || d;
   const HUES = [tok("--meme", "#6f9bff"), tok("--major", "#f2c45c"), tok("--stock", "#c895f5"), "#7fe3e0", "#ff9de2", "#9ef07a"];
   const WIN = tok("--win", "#5fe0a0"), LOSS = tok("--loss", "#ff6f61"), INK = tok("--ink", "#e9ecff"), DIM = tok("--dim", "#a7add0");
-  const WARM = "#fff3cf";
+  const WARM = "#fff3cf", SILK = "#dfe6ff";
   const CORE = 26, ARM = 34, TILT = 0.72;
   const deskColor = (i) => HUES[i % HUES.length];
 
@@ -91,7 +91,21 @@
     });
     const big = G.trades.map((t) => Math.abs(t[3])).sort((a, b) => a - b);
     const nova = big.length >= 20 ? big[Math.floor(big.length * 0.97)] : Infinity;
-    W = { gals, pos, bySym, heldBySym, t0, t1, nova };
+    // silk: each new star is tied to its two nearest older stars (the first ones to the galaxy's core),
+    // so the web grows outward along the arms exactly as the galaxy does
+    const links = [];
+    gals.forEach((g) => {
+      const done = [];
+      g.list.forEach((si) => {
+        const p = pos[si];
+        const near = done.map((sj) => [sj, (pos[sj].x - p.x) ** 2 + (pos[sj].y - p.y) ** 2])
+          .sort((a, b) => a[1] - b[1]).slice(0, 2);
+        if (near.length < 2) links.push([si, -1 - g.i, G.symbols[si].born]);
+        near.forEach(([sj]) => links.push([si, sj, G.symbols[si].born]));
+        done.push(si);
+      });
+    });
+    W = { gals, pos, bySym, heldBySym, t0, t1, nova, links };
   }
 
   // -- the universe at one moment -----------------------------------------------------------------
@@ -138,6 +152,10 @@
     z = Math.min((VW - 2 * side) / (x1 - x0 + (2 * label) / z), (VH - top - bottom) / (y1 - y0));
     cam.tx = (x0 + x1) / 2; cam.ty = (y0 + y1) / 2 - (top - bottom) / 2 / Math.max(z, 1e-3);
     cam.tz = Math.max(0.04, Math.min(2.4, z));
+    if (follow && spider) {                 // ride along with the spider, a few times closer
+      cam.tz = Math.max(0.06, Math.min(3, z * 3.2));
+      cam.tx = spider.x; cam.ty = spider.y - (top - bottom) / 2 / cam.tz;
+    }
     if (!cam.ready || REDUCE) { cam.x = cam.tx; cam.y = cam.ty; cam.z = cam.tz; cam.ready = true; }
   }
   const Z = () => cam.z * cam.uz;
@@ -201,18 +219,30 @@
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
 
-    // constellations: patterns found in the trades
+    // silk: threads between neighbouring stars, brighter the more those stars have traded
+    ctx.lineWidth = 1;
+    for (const [a, b, born] of W.links) {
+      if (born > S.T) continue;
+      const pa = starAt(a), pb = starAt(b);
+      const x1 = sx(pa.x), y1 = sy(pa.y), x2 = sx(pb.x), y2 = sy(pb.y);
+      if (Math.max(x1, x2) < -20 || Math.min(x1, x2) > VW + 20 || Math.max(y1, y2) < -20 || Math.min(y1, y2) > VH + 20) continue;
+      const s = (a >= 0 ? S.cnt[a] : 0) + (b >= 0 ? S.cnt[b] : 0);
+      ctx.strokeStyle = rgba(SILK, 0.06 + Math.min(0.3, Math.sqrt(s) * 0.045));
+      thread(x1, y1, x2, y2);
+      if (s >= 4) dew(x1, y1, x2, y2, clock, a);
+    }
+
+    // constellations: patterns found in the trades, spun as orb webs between their stars
     for (const p of G.patterns) {
       if (!p.unlocked || p.at > S.T) continue;
       const on = highlight === p.id;
       if (p.desk === "*") {
         const [a, b] = p.desks.map((k) => W.gals.find((g) => g.key === k));
         if (!a || !b || !S.deskBorn[a.i] || !S.deskBorn[b.i]) continue;
-        ctx.setLineDash([4, 7]);
-        ctx.strokeStyle = rgba(INK, on ? 0.75 : 0.12);
+        ctx.strokeStyle = rgba(SILK, on ? 0.8 : 0.14);
         ctx.lineWidth = on ? 1.6 : 1;
-        ctx.beginPath(); ctx.moveTo(sx(a.x), sy(a.y)); ctx.lineTo(sx(b.x), sy(b.y)); ctx.stroke();
-        ctx.setLineDash([]);
+        thread(sx(a.x), sy(a.y), sx(b.x), sy(b.y));
+        dew(sx(a.x), sy(a.y), sx(b.x), sy(b.y), clock, 7);
         if (on) label(p.title, (sx(a.x) + sx(b.x)) / 2, (sy(a.y) + sy(b.y)) / 2 - 8, INK, true);
         continue;
       }
@@ -222,17 +252,25 @@
       const mx = pts.reduce((a, q) => a + q[0], 0) / pts.length, my = pts.reduce((a, q) => a + q[1], 0) / pts.length;
       pts.sort((a, b) => Math.atan2(a[1] - my, a[0] - mx) - Math.atan2(b[1] - my, b[0] - mx));
       const col = deskColor(p.di);
-      ctx.strokeStyle = rgba(col, on ? 0.95 : 0.13);
-      ctx.lineWidth = on ? 1.8 : 1;
+      ctx.strokeStyle = rgba(col, on ? 0.9 : 0.15);
+      ctx.lineWidth = on ? 1.4 : 0.9;
       ctx.beginPath();
-      pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1])));
-      if (pts.length > 2) ctx.closePath();
+      for (const q of pts) { ctx.moveTo(mx, my); ctx.lineTo(q[0], q[1]); }      // radial threads from the hub
+      if (pts.length >= 3) {
+        for (const f of [0.2, 0.34, 0.48, 0.62, 0.76, 0.9]) {                    // the spiral, ring by ring
+          pts.forEach((q, i) => {
+            const x = mx + (q[0] - mx) * f, y = my + (q[1] - my) * f;
+            if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+          });
+          ctx.closePath();
+        }
+      }
       ctx.stroke();
       if (on) label(p.title, mx, my - 10, col, true);
     }
 
     // stars, their planets, open positions
-    const top = new Set();
+    const top = new Set(), names = [];
     W.gals.forEach((g) => {
       g.list.filter((i) => S.born[i]).sort((a, b) => Math.abs(S.net[b]) - Math.abs(S.net[a])).slice(0, 3).forEach((i) => top.add(i));
     });
@@ -271,8 +309,29 @@
         ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.arc(x, y, r + (7 + pulse * 5) * Math.max(z, 0.5), 0, 6.2832); ctx.stroke();
       }
-      if (z > 0.7 || top.has(i) || i === hover) label(G.symbols[i].s, x + r + 5, y - r - 2, DIM, false);
+      if (z > 0.7 || top.has(i) || i === hover) {
+        names.push([i === hover ? 1e12 : (top.has(i) ? 1e9 : 0) + Math.abs(net) + n, G.symbols[i].s, x + r + 5, y - r - 2]);
+      }
     }
+    // names: most important first, and never on top of each other
+    ctx.font = `500 11px "IBM Plex Mono", monospace`;
+    const placed = [];
+    names.sort((a, b) => b[0] - a[0]).forEach(([, text, x, y]) => {
+      const w = ctx.measureText(text).width, box = [x - 2, y - 11, w + 4, 14];
+      if (placed.some((p) => box[0] < p[0] + p[2] && p[0] < box[0] + box[2] && box[1] < p[1] + p[3] && p[1] < box[1] + box[3])) return;
+      placed.push(box);
+      label(text, x, y, DIM, false);
+    });
+
+    // fresh silk: what the spider spun on its walks, bright at first, settling into the web
+    for (const s of spun) {
+      if ((s.a >= 0 && !S.born[s.a]) || (s.b >= 0 && !S.born[s.b])) continue;
+      const a = starAt(s.a), b = starAt(s.b), age = (now - s.born) / 1000;
+      ctx.strokeStyle = rgba(SILK, Math.max(0.12, 0.7 - age * 0.035));
+      ctx.lineWidth = 1.2;
+      thread(sx(a.x), sy(a.y), sx(b.x), sy(b.y));
+    }
+    if (spider) drawSpider(spider);
 
     // galaxy names
     for (const g of W.gals) {
@@ -297,6 +356,190 @@
       ctx.beginPath(); ctx.arc(sx(p.x), sy(p.y), (6 + k * 60) * Math.max(z, 0.4), 0, 6.2832); ctx.stroke();
     }
   }
+  function thread(x1, y1, x2, y2) {         // silk sags a little between its anchors
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.quadraticCurveTo((x1 + x2) / 2, (y1 + y2) / 2 + len * 0.06, x2, y2);
+    ctx.stroke();
+  }
+  function dew(x1, y1, x2, y2, clock, seed) {   // a dewdrop catching the light, halfway along
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    if (len < 14) return;
+    const x = (x1 + x2) / 2, y = (y1 + y2) / 2 + len * 0.03;
+    ctx.fillStyle = rgba(SILK, REDUCE ? 0.6 : 0.4 + 0.4 * Math.sin(clock * 2 + seed * 1.7));
+    ctx.fillRect(x - 0.9, y - 0.9, 1.8, 1.8);
+  }
+  function starAt(id) { return id >= 0 ? W.pos[id] : W.gals[-1 - id]; }
+
+  // -- the weaver: Night Desk's spider, loose in the galaxy ------------------------------------------------------
+  // Eight two-joint legs; planted feet grab the nearest star, and they step in alternating groups. It goes
+  // where the trades are: in the replay, to the biggest moves as they happen; at "now", to what's open.
+  // Long trips are a jump on a dragline. Wherever it walks it spins a thread from the last star it held.
+  const LEG_ANGLES = [0.5, 1.1, 1.9, 2.55];
+  let spider = null, follow = false, spun = [], queue = [];
+  const legLen = () => Math.max(4, 17 / Math.max(0.02, Z()));    // world units: the same size on screen at any zoom
+  function nearestStar(p, within) {
+    let best = null, bd = within * within;
+    for (let i = 0; i < G.symbols.length; i++) {
+      if (!S.born[i]) continue;
+      const q = W.pos[i], d = (q.x - p.x) ** 2 + (q.y - p.y) ** 2;
+      if (d < bd) { bd = d; best = i; }
+    }
+    return best;
+  }
+  function makeSpider() {
+    const busiest = W.gals.slice().sort((a, b) => S.deskN[b.i] - S.deskN[a.i])[0];   // or where the first trade happens
+    const g = S.planets || !G.trades.length ? busiest : W.gals[G.symbols[G.trades[0][0]].d];
+    const legs = [];
+    for (let i = 0; i < 8; i++) {
+      const side = i < 4 ? 1 : -1, k = i % 4;
+      legs.push({ ang: side * LEG_ANGLES[k], group: (k + (side > 0 ? 0 : 1)) % 2, foot: { x: g.x, y: g.y }, from: null, to: null, t: 1, lift: 0 });
+    }
+    const sp = { x: g.x, y: g.y, vx: 0, vy: 0, heading: -Math.PI / 2, L: legLen(), z: 0, mode: "rest", legs, target: null,
+      until: 0, jump: null, tag: null, anchor: -1 - g.i, gait: 0, gaitClock: 0, patrol: 0 };
+    sp.legs.forEach((leg) => { const h = homeOf(sp, leg), n = nearestStar(h, sp.L); leg.foot = n != null ? { x: W.pos[n].x, y: W.pos[n].y } : h; });
+    return sp;
+  }
+  function homeOf(sp, leg) { const a = sp.heading + leg.ang; return { x: sp.x + Math.cos(a) * sp.L * 1.7, y: sp.y + Math.sin(a) * sp.L * 1.7 }; }
+  function heard(t) {                     // a trade just closed in the replay: the spider keeps the three biggest
+    const ev = { id: t[0], size: Math.abs(t[3]), win: t[2] > 0, ms: 900,
+      text: `${G.symbols[t[0]].s} ${t[3] >= 0 ? "+" : "−"}${Math.abs(t[3]).toFixed(1)}%` };
+    if (queue.length < 3) { queue.push(ev); return; }
+    let k = 0;
+    queue.forEach((q, i) => { if (q.size < queue[k].size) k = i; });
+    if (ev.size > queue[k].size) queue[k] = ev;
+  }
+  function nextTarget(sp) {
+    if (queue.length) { queue.sort((a, b) => b.size - a.size); return queue.shift(); }
+    const open = Number(slider.value) >= 1000 ? [...W.heldBySym.keys()].filter((i) => S.born[i]) : [];
+    if (open.length && Math.random() < 0.65) {
+      const i = open[sp.patrol++ % open.length], h = W.heldBySym.get(i), pnl = h[3] == null ? null : h[3] - h[2];
+      return { id: i, win: pnl == null || pnl >= 0, ms: 2600,
+        text: pnl == null ? `${G.symbols[i].s} · buys at the open` : `holding ${G.symbols[i].s} ${usd(pnl)}` };
+    }
+    const busy = [];
+    for (let i = 0; i < G.symbols.length; i++) if (S.born[i] && S.cnt[i]) busy.push(i);
+    if (!busy.length) return { id: null, ms: 1500 };
+    busy.sort((a, b) => S.cnt[b] - S.cnt[a]);
+    const i = busy[Math.floor(Math.pow(Math.random(), 2) * Math.min(busy.length, 30))];
+    return { id: i, win: S.net[i] >= 0, ms: 2000, text: `${G.symbols[i].s} · ${S.cnt[i]} trade${S.cnt[i] === 1 ? "" : "s"} · ${usd(S.net[i])}` };
+  }
+  function updateSpider(sp, dt, now) {
+    sp.L = legLen();
+    if (sp.anchor >= 0 && !S.born[sp.anchor]) sp.anchor = -1 - G.symbols[sp.anchor].d;   // the timeline went back
+    if (sp.target && sp.target.id != null && !S.born[sp.target.id]) sp.target = null;
+    if (!sp.target || (sp.mode === "rest" && now > sp.until)) { sp.target = nextTarget(sp); sp.mode = "travel"; }
+    const tg = sp.target, tp = starAt(tg.id == null ? sp.anchor : tg.id);
+    const dx = tp.x - sp.x, dy = tp.y - sp.y;
+    let d = Math.hypot(dx, dy);
+    if (sp.mode === "travel" && !sp.jump && d > sp.L * 9) sp.jump = { fx: sp.x, fy: sp.y, t: 0, dur: 0.45 + Math.min(0.9, d / (sp.L * 140)) };
+    if (sp.jump) {
+      const j = sp.jump;
+      j.t = Math.min(1, j.t + dt / j.dur);
+      const e = j.t < 0.5 ? 2 * j.t * j.t : 1 - Math.pow(-2 * j.t + 2, 2) / 2;
+      sp.x = j.fx + (tp.x - j.fx) * e; sp.y = j.fy + (tp.y - j.fy) * e;
+      sp.z = Math.sin(Math.PI * j.t) * Math.min(sp.L * 6, 10 + d * 0.15);
+      const face = Math.atan2(dy, dx);
+      sp.heading += Math.atan2(Math.sin(face - sp.heading), Math.cos(face - sp.heading)) * Math.min(1, dt * 8);
+      if (j.t >= 1) {
+        sp.jump = null; sp.z = 0; d = 0;
+        sp.legs.forEach((leg) => { const h = homeOf(sp, leg), n = nearestStar(h, sp.L); leg.foot = n != null ? { x: W.pos[n].x, y: W.pos[n].y } : h; leg.t = 1; });
+      }
+    } else if (sp.mode === "travel" && d > 0.3) {
+      const speed = Math.min(sp.L * 7, d * 5);
+      sp.vx = (dx / d) * speed; sp.vy = (dy / d) * speed;
+      sp.x += sp.vx * dt; sp.y += sp.vy * dt;
+      const want = Math.atan2(dy, dx);
+      sp.heading += Math.atan2(Math.sin(want - sp.heading), Math.cos(want - sp.heading)) * Math.min(1, dt * 6);
+    }
+    if (sp.mode === "travel" && !sp.jump && d < sp.L * 0.15 + 0.5) {
+      sp.mode = "rest"; sp.vx = sp.vy = 0; sp.until = now + tg.ms;
+      if (tg.text) sp.tag = { text: tg.text, win: tg.win, born: now, until: sp.until };
+      if (tg.id != null && tg.id !== sp.anchor) {
+        spun.push({ a: sp.anchor, b: tg.id, born: now });
+        if (spun.length > 80) spun.shift();
+        sp.anchor = tg.id;
+      }
+    }
+    sp.gaitClock += dt;
+    if (sp.gaitClock > 0.12) { sp.gaitClock = 0; sp.gait ^= 1; }
+    const moving = sp.mode === "travel";
+    sp.legs.forEach((leg) => {
+      if (sp.jump) return;
+      const h = homeOf(sp, leg);
+      if (leg.t < 1) {
+        leg.t = Math.min(1, leg.t + dt / (moving ? 0.11 : 0.2));
+        const f = leg.t * leg.t * (3 - 2 * leg.t);
+        leg.foot = { x: leg.from.x + (leg.to.x - leg.from.x) * f, y: leg.from.y + (leg.to.y - leg.from.y) * f };
+        leg.lift = Math.sin(Math.PI * leg.t);
+        return;
+      }
+      leg.lift = 0;
+      const off = Math.hypot(leg.foot.x - h.x, leg.foot.y - h.y);
+      const need = moving ? leg.group === sp.gait && off > sp.L * 0.55 : off > sp.L * 0.9 || Math.random() < dt * 0.08;
+      if (need) {
+        const aim = { x: h.x + sp.vx * 0.12, y: h.y + sp.vy * 0.12 }, n = moving ? null : nearestStar(aim, sp.L * 0.9);
+        leg.from = leg.foot; leg.to = n != null ? { x: W.pos[n].x, y: W.pos[n].y } : aim; leg.t = 0;
+      }
+    });
+    if (sp.tag && now > sp.tag.until + 450) sp.tag = null;
+  }
+  function drawSpider(sp) {
+    const z = Z(), L = sp.L * z, bx = sx(sp.x), by = sy(sp.y) - sp.z * z, grow = 1 + sp.z / (sp.L * 14);
+    const col = sp.tag ? (sp.tag.win ? WIN : LOSS) : SILK;
+    const an = starAt(sp.anchor);
+    const tail = { x: bx - Math.cos(sp.heading) * L * 0.95, y: by - Math.sin(sp.heading) * L * 0.95 };
+    ctx.strokeStyle = rgba(SILK, 0.6); ctx.lineWidth = 1;                    // the dragline back to the last star
+    ctx.beginPath(); ctx.moveTo(sx(an.x), sy(an.y)); ctx.lineTo(tail.x, tail.y); ctx.stroke();
+    if (sp.z > 1) {
+      ctx.fillStyle = "rgba(0,0,0,0.35)";
+      ctx.beginPath(); ctx.ellipse(sx(sp.x), sy(sp.y) + 3, L * 0.9, L * 0.32, 0, 0, 6.2832); ctx.fill();
+    }
+    ctx.save();
+    ctx.shadowColor = col; ctx.shadowBlur = 10;
+    ctx.strokeStyle = rgba(SILK, 0.95); ctx.fillStyle = SILK; ctx.lineWidth = 1.5; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    sp.legs.forEach((leg) => {
+      const a = sp.heading + leg.ang;
+      const hip = { x: bx + Math.cos(a) * L * 0.26 * grow, y: by + Math.sin(a) * L * 0.26 * grow };
+      let foot = sp.jump ? { x: bx + Math.cos(a) * L * 1.1, y: by + Math.sin(a) * L * 1.1 + L * 0.3 }
+        : { x: sx(leg.foot.x), y: sy(leg.foot.y) - (leg.lift || 0) * L * 0.35 };
+      const dx = foot.x - hip.x, dy = foot.y - hip.y, maxD = L * 1.95;
+      let d = Math.hypot(dx, dy) || 1;
+      if (d > maxD) { foot = { x: hip.x + (dx / d) * maxD, y: hip.y + (dy / d) * maxD }; d = maxD; }
+      const h = Math.sqrt(Math.max(0, L * L - (d / 2) * (d / 2)));
+      const mx = (hip.x + foot.x) / 2, my = (hip.y + foot.y) / 2;
+      let px = -dy / d, py = dx / d;
+      if (px * (mx - bx) + py * (my - by) < 0) { px = -px; py = -py; }
+      const knee = { x: mx + px * h, y: my + py * h - L * 0.25 };
+      ctx.beginPath(); ctx.moveTo(hip.x, hip.y); ctx.lineTo(knee.x, knee.y); ctx.lineTo(foot.x, foot.y); ctx.stroke();
+      ctx.beginPath(); ctx.arc(foot.x, foot.y, 1.8, 0, 6.2832); ctx.fill();
+    });
+    ctx.translate(bx, by); ctx.rotate(sp.heading); ctx.scale(grow, grow);
+    ctx.fillStyle = "#0b0f22"; ctx.lineWidth = 1.4; ctx.strokeStyle = SILK;
+    ctx.beginPath(); ctx.ellipse(-L * 0.55, 0, L * 0.52, L * 0.37, 0, 0, 6.2832); ctx.fill(); ctx.stroke();
+    ctx.shadowBlur = 6; ctx.fillStyle = col;                                   // a few stars on its back
+    [[-0.75, -0.12], [-0.5, 0.14], [-0.36, -0.1], [-0.82, 0.12]].forEach(([u, v]) => {
+      ctx.beginPath(); ctx.arc(L * u, L * v, Math.max(0.8, L * 0.05), 0, 6.2832); ctx.fill();
+    });
+    ctx.fillStyle = SILK;
+    ctx.beginPath(); ctx.arc(L * 0.14, 0, L * 0.21, 0, 6.2832); ctx.fill();
+    ctx.fillStyle = "#05060d"; ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(L * 0.24, -L * 0.07, Math.max(0.9, L * 0.045), 0, 6.2832); ctx.arc(L * 0.24, L * 0.07, Math.max(0.9, L * 0.045), 0, 6.2832); ctx.fill();
+    ctx.restore();
+    if (sp.tag) {
+      const now = performance.now(), age = now - sp.tag.born;
+      const a = Math.min(1, age / 180) * Math.min(1, Math.max(0, (sp.tag.until + 450 - now) / 450));
+      ctx.font = `500 12px "IBM Plex Mono", monospace`;
+      const w = ctx.measureText(sp.tag.text).width + 14, x = Math.min(Math.max(4, bx + L * 1.4), VW - w - 4);
+      const y = Math.min(Math.max(14, by - L * 1.5), VH - 14);
+      ctx.globalAlpha = a * 0.92; ctx.fillStyle = "#0b0f22"; ctx.fillRect(x, y - 10, w, 20);
+      ctx.globalAlpha = a; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y - 9.5, w - 1, 19);
+      ctx.fillStyle = col; ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.fillText(sp.tag.text, x + 7, y + 0.5);
+      ctx.textBaseline = "alphabetic"; ctx.globalAlpha = 1;
+    }
+  }
+
   function label(text, x, y, color, bold) {
     ctx.font = bold ? `600 12.5px "IBM Plex Sans", sans-serif` : `500 11px "IBM Plex Mono", monospace`;
     ctx.fillStyle = "rgba(5,6,13,0.7)";
@@ -322,6 +565,7 @@
         if (t[1] <= before) continue;
         if (t[1] > S.T) break;
         if (Math.abs(t[3]) >= W.nova) novas.push({ si: t[0], start: t0, win: t[2] > 0 });
+        heard(t);
       }
       if (novas.length > 30) novas = novas.slice(-30);
     }
@@ -339,7 +583,14 @@
   }
   $("play").addEventListener("click", () => (playing ? pause() : play()));
   slider.addEventListener("input", () => { pause(); setTime(Number(slider.value)); });
-  $("fit").addEventListener("click", () => { cam.ux = cam.uy = 0; cam.uz = 1; cam.focus = -1; dirty = true; });
+  $("fit").addEventListener("click", () => { cam.ux = cam.uy = 0; cam.uz = 1; cam.focus = -1; setFollow(false); dirty = true; });
+  function setFollow(on) {
+    follow = on && !!spider;
+    $("follow").setAttribute("aria-pressed", String(follow));
+    $("follow").textContent = follow ? "Following" : "Follow spider";
+    cam.ux = cam.uy = 0; cam.uz = 1; cam.focus = -1; dirty = true;
+  }
+  $("follow").addEventListener("click", () => setFollow(!follow));
 
   function loop(now) {
     if (playing) {
@@ -348,7 +599,9 @@
       setTime(v, true);
       if (v >= 1000) pause();
     }
+    const step = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0.016;
     lastFrame = now;
+    if (spider && !REDUCE) updateSpider(spider, step, now);
     fit();
     const k = 0.08;
     const moving = Math.abs(cam.x - cam.tx) + Math.abs(cam.y - cam.ty) > 0.5 || Math.abs(cam.z - cam.tz) > 0.0005;
@@ -490,6 +743,8 @@
       const atEnd = Number(slider.value) >= 1000;
       G = next;
       build();
+      S = stateAt(T());
+      spider = makeSpider(); spun = []; queue = [];
       panel();
       setTime(atEnd ? 1000 : Number(slider.value), atEnd);
     } catch (e) { /* not served next to galaxy.json: nothing to refresh */ }
@@ -504,6 +759,7 @@
   panel();
   hud();
   fit();
+  spider = makeSpider();
   if (autoplay) play(); else pause();
   if (!G.trades.length) $("play").disabled = true;
   requestAnimationFrame(loop);

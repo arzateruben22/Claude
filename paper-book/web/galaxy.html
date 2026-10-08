@@ -24,7 +24,7 @@
         <div><dt>Net</dt><dd id="c-net">$0</dd></div>
       </dl>
     </header>
-    <canvas id="sky" role="img" aria-label="A map of every paper trade: one galaxy per desk, one star per coin or stock, one orbiting planet per trade. The panel beside it lists the same numbers."></canvas>
+    <canvas id="sky" role="img" aria-label="A map of every paper trade: one galaxy per desk, one star per coin or stock, one orbiting planet per trade, silk threads between neighbouring stars, and a spider that walks to the biggest trades. The panel beside it lists the same numbers."></canvas>
     <div class="tip" id="tip" role="status" hidden></div>
     <div class="hud hud-bottom">
       <button type="button" class="play" id="play" aria-label="Play the history from the first trade">Play</button>
@@ -33,6 +33,7 @@
         <div class="ticks" id="ticks" aria-hidden="true"></div>
       </div>
       <output class="when" id="when" for="time">now</output>
+      <button type="button" class="fit" id="follow" aria-pressed="false">Follow spider</button>
       <button type="button" class="fit" id="fit" aria-label="Fit everything in view">Fit</button>
     </div>
   </div>
@@ -43,7 +44,7 @@
     </section>
     <section>
       <h2>Constellations <small id="c-const"></small></h2>
-      <p class="hint">Patterns in the trades. Each one lights up once there are enough trades to say anything.</p>
+      <p class="hint">Patterns in the trades, spun as orb webs between their stars. Each one lights up once there are enough trades to say anything.</p>
       <ol class="pats" id="patterns"></ol>
     </section>
     <section>
@@ -56,7 +57,8 @@
         <li><i class="dot win"></i>Star size: how often it's been traded. Bright core: it made money. Red: it lost.</li>
         <li><i class="dot planet"></i>Planets: each closed trade, the newest ten per star. Mint won, coral lost.</li>
         <li><i class="ring"></i>A pulsing ring: a position that's open right now.</li>
-        <li>New coins and stocks join on the outer arms, so each galaxy grows outward over time.</li>
+        <li><i class="silk"></i>Silk: every star is tied to its nearest neighbours, and threads brighten as their stars trade. New coins and stocks join on the outer arms, so the galaxy and its web grow outward together.</li>
+        <li><i class="spider"></i>The spider walks to the biggest trades as they happen, jumps between galaxies on a dragline, and checks on open positions. Every walk spins a fresh thread.</li>
       </ul>
       <p class="note">Paper money only. Constellations describe what happened, not what will happen.</p>
     </section>
