@@ -101,8 +101,8 @@ Then schedule it: `crontab -e` and paste the lines from `premarket-scanner/deplo
 (change the folder path). It scans at 5:35 and 6:02 am Pacific, grades the day's picks at 1:45 pm,
 and runs its nightly review at 1:55 pm. The paper book picks the grades up on its next refresh.
 
-**Windows**: run each in its own window: `cd night-desk` then `python -m nightdesk run`, and
-`cd paper-book` then `python paperbook.py --watch 15`. Schedule the scanner with Task Scheduler
+**Windows**: run each in its own window: `cd night-desk` then `python -m nightdesk run`,
+`cd majors-desk` then `python -m majors run`, and `cd paper-book` then `python paperbook.py --watch 15`. Schedule the scanner with Task Scheduler
 at the same times as the crontab.
 
 ## Running it in Claude's cloud instead
