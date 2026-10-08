@@ -1,0 +1,85 @@
+# Post Desk settings. Everything the desk believes lives here.
+# Placeholders are marked TODO: change them before going live.
+
+[account]
+handle = "yourhandle"          # TODO: your X handle, without the @
+niche = "comedy: satire and low-stakes hot takes about gym life, raves and everyday life"
+audience = "gym-goers, ravers, and anyone who likes a hot take with their coffee"
+voice = "deadpan and confident, a little unhinged. Short punchy lines; lowercase is fine. Hot takes delivered like facts. Never mean to people, merciless to leg day."
+                               # TODO: replace with your own voice once you've picked 5-10 example posts
+language = "en"
+premium = false                # TODO: X Premium is needed for creator payouts (and helps reach); set true once you have it
+timezone = "America/Los_Angeles"
+notes = ["goes to the gym", "goes to raves", "loves comedy"]   # true things the writer may joke about
+
+[topics]
+include = ["gym life", "raves and festivals", "everyday life", "dating and texting", "food opinions", "work life",
+           "internet culture"]
+avoid = ["politics", "political", "election", "democrat", "republican", "liberal", "conservative", "maga", "trump",
+         "biden", "immigration", "abortion", "gun control", "israel", "gaza", "palestine", "ukraine", "russia",
+         "racist", "racism", "racial", "ethnicity", "religion", "religious", "tragedy", "shooting", "suicide",
+         "overdose", "drugs", "molly", "ecstasy", "cocaine", "steroids", "medical", "diagnosis",
+         "investment advice", "crypto pump"]
+keywords = ["leg day", "gym bro", "pre workout", "rave", "festival season", "cardio"]   # what the scout searches on X
+watch_accounts = []            # TODO (later): comedy accounts whose posts the scout checks
+curated_reposts = []           # TODO (later): the ONLY accounts the desk may repost on its own
+rss = ["https://www.reddit.com/r/gymmemes/top/.rss?t=day",   # free idea sources (TODO: review later)
+       "https://www.reddit.com/r/aves/top/.rss?t=day",
+       "https://news.google.com/rss/search?q=gym+OR+%22music+festival%22&hl=en-US&gl=US&ceid=US:en"]
+
+[schedule]
+posts_per_day = 8              # original posts plus quotes; the review suggests fewer if slots go unused
+active_hours = "08:00-24:00"   # local time: a gym, rave and comedy crowd is up late
+min_gap_minutes = 60
+jitter_minutes = 10            # posts don't land on the exact same minute every day
+max_quotes_per_day = 2
+max_reposts_per_day = 1
+explore_share = 0.25           # share of slots spent testing hours that haven't proven themselves
+
+[approval]
+mode = "review"                # review: you approve every post. auto_originals: clean originals post on their own
+auto_curated_reposts = false   # with auto_originals: also repost curated accounts without asking
+expire_hours = 24              # drafts nobody approved are dropped
+min_queue = 8                  # the writer keeps this many drafts waiting
+
+[writer]
+use_ai = true                  # needs ANTHROPIC_API_KEY; without it, demo samples only
+style = "comedy"               # comedy | informative
+model = "claude-opus-5-5"      # the strongest writer: jokes need it
+effort = "medium"
+drafts_per_batch = 8
+formats = ["hot_take", "observation", "pov", "list", "fake_headline", "this_or_that"]
+max_chars = 200                # jokes land shorter
+hashtags_max = 0               # hashtags read as try-hard on a comedy account
+links = "never"                # never | allowed  (a post with a link costs about 13x more through the API)
+ai_daily_usd = 0.40            # Claude spend cap per day
+
+[scout]
+every_minutes = 480            # twice a day is plenty for ideas; each search reads max_results posts
+max_results = 10               # 10 x $0.005 = $0.05 a search
+min_likes = 200                # only posts that are clearly landing
+lookback_hours = 12
+quote_ideas = 2                # quote-post drafts written from the hottest posts each run
+
+[budget]                       # X API pay-per-use rates; check developer.x.com, they change
+daily_usd = 0.60
+monthly_usd = 18.00
+reads_share = 0.4              # the scout may use at most this share of the daily budget
+post = 0.015
+post_with_link = 0.20
+read_post = 0.005
+read_user = 0.010
+owned_read = 0.001
+
+[money]                        # Original Content Rewards: check Creator Studio for the real numbers
+min_verified_followers = 500
+min_impressions_90d = 500000     # TODO: confirm both thresholds in Creator Studio
+verified_followers = 0         # TODO: copy from Creator Studio now and then (the API can't count it cheaply)
+affiliate_domains = []         # posts linking these must carry the disclosure below
+disclosure = "#ad"
+
+[review]
+use_ai = true
+model = "claude-opus-5-5"
+effort = "high"
+lookback_days = 7

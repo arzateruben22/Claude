@@ -1,0 +1,78 @@
+# A frozen copy of the original settings, so the tests don't change when you edit desk.toml.
+# Placeholders are marked TODO: change them before going live.
+
+[account]
+handle = "yourhandle"          # TODO: your X handle, without the @
+niche = "AI tools and the people building with them"
+audience = "builders, founders and curious people who don't code (yet)"
+voice = "plain, confident, a little funny. Short sentences. No hype words, no emojis in every line."
+language = "en"
+premium = true                 # X Premium: needed for creator payouts; also allows long posts
+timezone = "America/Los_Angeles"
+notes = []                     # TODO: true things about you the writer may use, e.g. "I built a paper-trading bot"
+                               # (without notes it never invents your experiences or results)
+
+[topics]
+include = ["AI agents", "Claude", "coding with AI", "startup tools", "automation"]
+avoid = ["politics", "election", "religion", "medical", "diagnosis", "investment advice", "crypto pump",
+         "tragedy", "shooting"]
+keywords = ["AI agent", "Claude Code", "vibe coding", "LLM"]   # what the scout searches on X
+watch_accounts = []            # handles whose new posts the scout checks (every read costs money)
+curated_reposts = []           # the ONLY accounts the desk may repost on its own
+rss = ["https://hnrss.org/frontpage?points=150", "https://www.anthropic.com/news/rss.xml"]   # free idea sources
+
+[schedule]
+posts_per_day = 8              # original posts plus quotes
+active_hours = "07:00-23:00"   # local time, from [account] timezone
+min_gap_minutes = 60
+jitter_minutes = 10            # posts don't land on the exact same minute every day
+max_quotes_per_day = 2
+max_reposts_per_day = 2
+explore_share = 0.2            # share of slots spent trying hours that haven't been tested
+
+[approval]
+mode = "review"                # review: you approve every post. auto_originals: clean originals post on their own
+auto_curated_reposts = false   # with auto_originals: also repost curated accounts without asking
+expire_hours = 24              # drafts nobody approved are dropped
+min_queue = 6                  # the writer keeps this many drafts waiting
+
+[writer]
+use_ai = true                  # needs ANTHROPIC_API_KEY; without it, demo templates only
+model = "claude-opus-5-5"
+effort = "medium"
+drafts_per_batch = 6
+formats = ["take", "list", "how_to", "question", "story", "data"]
+max_chars = 280                # keep posts short even with Premium
+hashtags_max = 1
+links = "never"                # never | allowed  (a post with a link costs about 13x more through the API)
+ai_daily_usd = 0.50            # Claude spend cap per day
+
+[scout]
+every_minutes = 240             # each X search reads max_results posts: 20 x $0.005 = $0.10
+max_results = 20               # posts read per search; each read costs money
+min_likes = 50                 # ignore smaller posts
+lookback_hours = 12
+quote_ideas = 2                # quote-post drafts written from the hottest posts each run
+
+[budget]                       # X API pay-per-use rates; check developer.x.com, they change
+daily_usd = 1.00
+monthly_usd = 25.00
+reads_share = 0.6              # the scout may use at most this share of the daily budget
+post = 0.015
+post_with_link = 0.20
+read_post = 0.005
+read_user = 0.010
+owned_read = 0.001
+
+[money]                        # Original Content Rewards: check Creator Studio for the real numbers
+min_verified_followers = 500
+min_impressions_90d = 500000
+verified_followers = 0         # TODO: copy from Creator Studio now and then (the API can't count it cheaply)
+affiliate_domains = []         # posts linking these must carry the disclosure below
+disclosure = "#ad"
+
+[review]
+use_ai = true
+model = "claude-opus-5-5"
+effort = "high"
+lookback_days = 7
