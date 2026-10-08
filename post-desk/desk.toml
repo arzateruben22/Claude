@@ -5,8 +5,7 @@
 handle = "yourhandle"          # TODO: your X handle, without the @
 niche = "comedy: satire and low-stakes hot takes about gym life, raves and everyday life"
 audience = "gym-goers, ravers, and anyone who likes a hot take with their coffee"
-voice = "deadpan and confident, a little unhinged. Short punchy lines; lowercase is fine. Hot takes delivered like facts. Never mean to people, merciless to leg day."
-                               # TODO: replace with your own voice once you've picked 5-10 example posts
+voice = "deadpan and confident, a little unhinged. Short, choppy sentences. Hyper-specific details (numbers, times, prices) that make a bit feel real, then a one-line verdict. Lowercase is fine. Hot takes delivered like facts. Merciless to habits, never to people for who they are."
 language = "en"
 premium = false                # TODO: X Premium is needed for creator payouts (and helps reach); set true once you have it
 timezone = "America/Los_Angeles"
@@ -20,7 +19,7 @@ avoid = ["politics", "political", "election", "democrat", "republican", "liberal
          "racist", "racism", "racial", "ethnicity", "religion", "religious", "tragedy", "shooting", "suicide",
          "overdose", "drugs", "molly", "ecstasy", "cocaine", "steroids", "medical", "diagnosis",
          "investment advice", "crypto pump"]
-keywords = ["leg day", "gym bro", "pre workout", "rave", "festival season", "cardio"]   # what the scout searches on X
+keywords = ["leg day", "gym bro", "pre workout", "rave", "festival season", "thirst trap", "situationship", "gym crush"]   # what the scout searches on X
 watch_accounts = []            # TODO (later): comedy accounts whose posts the scout checks
 curated_reposts = []           # TODO (later): the ONLY accounts the desk may repost on its own
 rss = ["https://www.reddit.com/r/gymmemes/top/.rss?t=day",   # free idea sources (TODO: review later)
@@ -48,13 +47,22 @@ style = "comedy"               # comedy | informative
 model = "claude-opus-5-5"      # the strongest writer: jokes need it
 effort = "medium"
 drafts_per_batch = 8
-formats = ["hot_take", "observation", "pov", "list", "fake_headline", "this_or_that"]
+formats = ["storytime", "hot_take", "fake_quote", "pov", "observation", "list", "fake_headline", "this_or_that"]
 max_chars = 200                # jokes land shorter
 hashtags_max = 0               # hashtags read as try-hard on a comedy account
 links = "never"                # never | allowed  (a post with a link costs about 13x more through the API)
 ai_daily_usd = 0.40            # Claude spend cap per day
 edge = "edgy"                  # clean | edgy | spicy. Never explicit, never slurs, never about real people
-hold_words = ["crack", "smash"]   # posts with these always wait for you, even once posting is automatic
+hold_words = ["crack", "smash", "bitch", "bihh", "hoe", "thot"]   # posts with these always wait for you, even on auto
+examples = [                   # posts in your voice (the writer learns the rhythm; drafts too close to these are blocked)
+  "My buddy went to one rave 'just to see the hype.' Came back with kandi up to his elbows, a festival fiancée and a new personality. He's an accountant. He says PLUR in meetings now.",
+  "Homie has 2 jobs, a 5am alarm and 14 sets of curls a day. Says he 'doesn't have time' to text back. Bro rested 4 minutes between sets. He had time.",
+  "Saw a guy film a 40-minute set for his Instagram. Didn't break a sweat. Got 3 likes. One was his mom. Cooked.",
+  "Pre-workout got me texting my ex\n\nPre-workout got me texting my ex\n\n- Sun Tzu",
+  "The gym got your girl\n\nThe gym got your girl\n\n- the 6am spin class",
+  "He skipped leg day for 3 years. Let him wobble. He was destined to be a flamingo.",
+  "If your situationship has a gym membership and still can't commit to a workout split, it was never going to commit to you.",
+]
 
 [writer.slang]                 # slang the writer may use (two at most per post), with what it means
 unc = "someone getting old ('26 and already unc')"

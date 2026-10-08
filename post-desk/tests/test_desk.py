@@ -211,3 +211,12 @@ def test_your_comedy_settings_run_in_the_demo(tmp_path):
     assert out and {d.format for d in out if d.kind == "original"} <= set(c.writer.formats)
     assert all(d.decided_by == "demo reviewer" for d in out)  # review mode: nothing posted on its own
     assert {d.target_author for d in out if d.kind == "repost"} <= {"liftlaughs", "ravecore"}
+
+
+def test_your_examples_are_never_posted_as_drafts():
+    example = "He skipped leg day for 3 years. Let him wobble. He was destined to be a flamingo."
+    desk = make(cfg(writer__examples=[example]))
+    d = __import__("postdesk.models", fromlist=["Draft"]).Draft(id="x1", created=T0, kind="original",
+                                                                  text=example + "!", format="take", by="claude")
+    assert desk._admit(T0, d) == "blocked"
+    assert any(c.rule == "not someone else's post" and not c.ok for c in d.checks)

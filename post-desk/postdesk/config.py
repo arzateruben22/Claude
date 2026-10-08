@@ -75,6 +75,7 @@ class WriterCfg:
     edge: str = "edgy"                                         # comedy only: clean | edgy | spicy
     hold_words: List[str] = field(default_factory=list)       # posts with these always wait for you
     slang: Dict[str, str] = field(default_factory=dict)       # term -> what it means, for the writer
+    examples: List[str] = field(default_factory=list)         # posts in your voice: rhythm to learn, never to copy
 
 
 @dataclass

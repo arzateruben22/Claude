@@ -96,7 +96,7 @@ def check(d: Draft, cfg: Config, recent: Iterable[str] = (), borrowed: Iterable[
     add("not a repeat", best < 0.6, f"{best:.0%} like a recent post" if best >= 0.6 else "")
     copied = max((similarity(text, b) for b in borrowed if b), default=0.0)
     add("not someone else's post", copied < BORROWED,
-        f"{copied:.0%} like a post or headline the scout found: write your own" if copied >= BORROWED else "")
+        f"{copied:.0%} like a post the scout found or one of your examples: write something new" if copied >= BORROWED else "")
     letters = [c for c in text if c.isalpha()]
     if len(letters) >= 20:
         caps = sum(c.isupper() for c in letters) / len(letters)
