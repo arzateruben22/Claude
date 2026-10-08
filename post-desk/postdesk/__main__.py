@@ -99,7 +99,7 @@ def cmd_run(args) -> int:
 def cmd_auth(args) -> int:
     import requests
 
-    from .xapi import authorize_url, exchange_code, pkce_pair, save_tokens, wait_for_code
+    from .xapi import authorize_url, code_from_address, exchange_code, pkce_pair, save_tokens, wait_for_code
 
     client_id, secret = os.getenv("X_CLIENT_ID", ""), os.getenv("X_CLIENT_SECRET", "")
     if not client_id:
@@ -109,11 +109,18 @@ def cmd_auth(args) -> int:
     verifier, challenge = pkce_pair()
     state = secrets.token_urlsafe(16)
     url = authorize_url(client_id, redirect, state, challenge)
-    print("Opening X so you can approve Post Desk for your account.\n"
-          f"(The app's callback URL in the X developer console must be exactly {redirect})\n\n{url}\n")
-    if not args.no_browser:
-        webbrowser.open(url)
-    code = wait_for_code(args.port, state)
+    print(f"(The app's callback URL in the X developer console must be exactly {redirect})\n")
+    if args.paste:
+        print("1. Open this link on your phone or computer, signed in to the X account that will post:\n\n"
+              f"{url}\n\n2. Approve. Your browser then lands on a page that won't load. That's expected.\n"
+              "3. Copy the whole address from the address bar and paste it here right away "
+              "(X's sign-in codes expire quickly).\n")
+        code = code_from_address(input("Address: "), state)
+    else:
+        print(f"Opening X so you can approve Post Desk for your account.\n\n{url}\n")
+        if not args.no_browser:
+            webbrowser.open(url)
+        code = wait_for_code(args.port, state)
     tok = exchange_code(requests.Session(), client_id, secret, code, verifier, redirect)
     save_tokens(tok)
     print(f"Connected. The keys are in {SECRETS / 'x_tokens.json'} (readable only by you). Never share that file.")
@@ -354,6 +361,8 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("auth", help="connect your X account (OAuth 2.0, once)")
     p.add_argument("--port", type=int, default=8789)
+    p.add_argument("--paste", action="store_true",
+                   help="no browser here (a server): approve on another device and paste the address back")
     p.add_argument("--no-browser", action="store_true")
     p.set_defaults(func=cmd_auth)
 

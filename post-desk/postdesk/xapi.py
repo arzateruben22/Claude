@@ -242,6 +242,20 @@ class XClient:
         pass
 
 
+def code_from_address(address: str, state: str) -> str:
+    """The sign-in code from the address X sent your browser to (for machines without a browser)."""
+    from urllib.parse import parse_qs, urlparse
+
+    q = parse_qs(urlparse(address.strip()).query)
+    if "error" in q:
+        raise AuthError("X said: " + q["error"][0])
+    if q.get("state", [""])[0] != state:
+        raise AuthError("That address is from a different sign-in. Run auth again and paste the new one.")
+    if "code" not in q:
+        raise AuthError("No code in that address. Copy the whole address from the browser's address bar.")
+    return q["code"][0]
+
+
 def wait_for_code(port: int, state: str, timeout: float = 300) -> str:
     """A one-shot local web server that catches X's redirect after you approve the app."""
     from http.server import BaseHTTPRequestHandler, HTTPServer
