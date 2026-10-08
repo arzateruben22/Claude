@@ -25,7 +25,8 @@ On your phone:
 
        $TOPIC
 
-  3. Tap Subscribe. The "Alerts are on" test push should already be there.
+  3. Tap Subscribe. If the "Alerts are on" test push isn't there, send another with:
+       bash server/alerts.sh
 
 The watchdog checks every 5 minutes and sends the evening summary at 8pm Pacific. Keep the topic private:
 anyone who knows it can read your pushes.
