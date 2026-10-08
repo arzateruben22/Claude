@@ -1,0 +1,15 @@
+# Paper Book settings. Paper money only: nothing here can place a real order.
+
+[coins]                                   # Night Desk: new Solana coins, live data, paper money
+folder = "../night-desk/output/live"      # where `python -m nightdesk run` keeps its results
+demo_folder = "../night-desk/output/demo"
+start_bank = 1000.0                       # same as [desk] start_bank in night-desk/desk.toml
+
+[stocks]                                  # Premarket scanner: gap-up stocks, graded paper picks
+journal = "../premarket-scanner/output/journal.csv"
+demo_journal = ""                         # empty: the newest demo backtest
+start_bank = 1000.0
+ticket_usd = 100.0                        # paper dollars per pick (the scanner grades each pick in percent)
+
+[report]
+timezone = "America/Los_Angeles"
