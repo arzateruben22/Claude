@@ -242,7 +242,7 @@ def render_text(book: Book) -> str:
         week = sum(v for k, v in days.items() if (today - k).days < 7)
         lines.append(f"  today {_usd(days.get(today, 0.0))} · last 7 days {_usd(week)}")
     if not all_s["trades"]:
-        lines.append("  No closed paper trades yet. Start the desks (see README) and they'll show up here.")
+        lines.append("  No closed paper trades yet. Each one shows up here as soon as a desk closes it.")
     elif all_s["trades"] < 50:
         lines.append(f"  Only {all_s['trades']} trades: far too few to judge anything yet.")
     return "\n".join(lines)
@@ -435,7 +435,7 @@ def render_html(book: Book) -> str:
         trades_html = (f'<div class="scroll"><table><thead><tr><th>Closed</th><th>Desk</th><th>Symbol</th><th>Exit</th>'
                        f'<th class=n>Move</th><th class=n>P&amp;L</th></tr></thead><tbody>{trows}</tbody></table></div>')
     else:
-        trades_html = '<p class="empty">No closed paper trades yet. Start the desks and they appear here.</p>'
+        trades_html = '<p class="empty">No closed paper trades yet. Each one appears here as soon as a desk closes it.</p>'
 
     few = ("" if all_s["trades"] >= 50 else
            f"<p><b>{all_s['trades']} trades is far too few to judge.</b> Let both desks run for weeks before reading "
