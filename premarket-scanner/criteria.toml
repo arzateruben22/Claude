@@ -1,0 +1,70 @@
+# Scanner rules. Edit these, not the code.
+#
+# "Gap" is always measured from the last regular-session close — the same
+# number tomorrow's pre-market gap is measured against:
+#   * morning scan  -> pre-market price vs yesterday's 4pm ET close
+#   * evening scan  -> after-hours price vs today's 4pm ET close
+
+[filters]
+min_price = 2.0
+max_price = 20.0
+min_gap_pct = 10.0            # % above the last regular close
+min_rvol = 3.0                # session volume vs normal volume by this time of day
+max_float_shares = 20_000_000
+require_catalyst = true       # needs a news headline inside news_lookback_hours
+min_session_volume = 50_000   # shares traded this session; keeps out untradeable names
+allow_unknown_float = true    # float data missing -> keep it, but flag "float ?"
+max_spread_pct = 1.5          # bid/ask spread at scan time, % of price. Pre-market spreads run
+                              # wider than after the open; tighten to 1.0 for regular-hours scans
+allow_unknown_spread = true   # no quote -> keep it, but flag "spread ?"
+exclude_halted = true         # drop stocks halted right now (news pending, SEC, etc.)
+
+[scan]
+news_lookback_hours = 24
+lookback_days = 10            # trading days used for "normal" volume
+max_candidates = 60           # top gappers that get the detailed (slower) check
+sort_by = "gap"               # gap | rvol | volume
+exclude_warrants_units = true # drops 5-letter W/U/R symbols and names with Warrant/Unit/Right
+show_near_misses = true       # also list stocks that fail exactly one rule
+
+# Paper-trade simulator used by `python -m scanner grade`.
+# Pretend entry at the 9:30 ET open, then whichever hits first wins.
+[paper]
+target_pct = 10.0
+stop_pct = 5.0
+cost_pct = 0.5                # round-trip spread + slippage charged to every simulated trade
+
+# Before real money: the scorecard (python -m scanner scorecard).
+# It needs a backtest AND paper picks made with the current rules above.
+# Change any rule and both start over: new rules have to earn their way back.
+[gates]
+min_picks = 100               # graded backtest picks
+min_profit_factor = 1.3       # money won ÷ money lost
+min_sharpe = 1.0              # daily returns, annualized over 252 trading days
+max_drawdown_pct = 25.0       # worst fall from a high point (each day's picks share the account)
+best_picks_share = 0.05       # still profitable without the best 5% of picks (at least 3)
+cost_multiplier = 2.0         # still profitable with cost_pct doubled
+recent_share = 0.33           # the newest third of picks must make money too
+min_good_months = 0.6         # share of months (with 5+ picks) that made money
+min_paper_days = 20           # graded paper trade days with these rules
+paper_vs_backtest = 0.5       # paper's average pick must reach half the backtest's
+
+# The risk officer and the nightly review (python -m scanner nightly).
+# They only write reports and proposals. Nothing they say changes the rules.
+[review]
+use_ai = true                 # needs ANTHROPIC_API_KEY in .env; otherwise rule-based
+model = "claude-opus-5-5"
+effort = "high"               # runs once a day, so let it think
+lookback_days = 7             # the review compares this window with everything before it
+
+# Headline keywords -> catalyst tag. Case-insensitive, whole words.
+# Tags listed in `warn_tags` are shown with a warning instead of as a plus.
+[catalysts]
+warn_tags = ["dilution"]
+earnings = ["earnings", "revenue", "quarterly results", "guidance", "eps", "profit"]
+fda = ["fda", "approval", "phase 1", "phase 2", "phase 3", "clinical", "trial", "pdufa", "clearance"]
+deal = ["merger", "acquire", "acquires", "acquisition", "buyout", "takeover", "to be acquired", "definitive agreement"]
+contract = ["contract", "award", "awarded", "partnership", "collaboration", "purchase order", "supply agreement"]
+product = ["launch", "launches", "unveils", "patent", "breakthrough"]
+crypto_ai = ["bitcoin", "crypto", "blockchain", "artificial intelligence", "ai"]
+dilution = ["offering", "priced", "registered direct", "private placement", "at-the-market", "warrants", "reverse split", "reverse stock split"]
