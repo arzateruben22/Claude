@@ -195,3 +195,11 @@ def test_command_line(tmp_path, monkeypatch, capsys):
     out = capsys.readouterr().out
     assert "INVENTED" in out and "just holding" in out
     assert cli.main(["status"]) == 0 and "Nothing yet" in capsys.readouterr().out
+
+
+def test_why_explains_each_coin(capsys):
+    from majors.__main__ import main
+
+    assert main(["why", "--demo"]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("A buy needs") and all(coin in out for coin in ("BTC", "ETH", "DOGE"))

@@ -5,6 +5,7 @@
   python -m majors backtest --days 180  the same rules over real past prices, vs just holding
   python -m majors sim --days 30        a month of an invented market (for trying it out)
   python -m majors doctor               can it reach Coinbase's prices?
+  python -m majors why                  why each coin is or isn't a buy right now
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from pathlib import Path
 
 from . import config
 from .config import OUTPUT
+from . import rules
 from .desk import Desk, replay, summary
 from .market import HOUR, Coinbase, DemoMarket, MarketError, floor_hour
 
@@ -148,6 +150,44 @@ def cmd_doctor(args) -> int:
     return 1 if bad else 0
 
 
+def cmd_why(args) -> int:
+    """Each coin against the buy rule, in plain words: how far it is from a buy, and whether it's held."""
+    cfg = config.load()
+    r = cfg.rules
+    market = DemoMarket(args.seed) if args.demo else Coinbase(cache_dir=OUTPUT / "cache")
+    now = _now()
+    held = set()
+    state = OUTPUT / ("demo" if args.demo else "live") / "state.json"
+    if state.exists():
+        import json
+
+        held = {p["symbol"] for p in json.loads(state.read_text()).get("positions", [])}
+    print(f"A buy needs the last hour to close above its {r.trend_hours}h average (an uptrend) AND above the "
+          f"highest price of the {r.breakout_hours} hours before it (a breakout).")
+    for coin in cfg.desk.coins:
+        try:
+            cs = market.recent(coin, cfg.desk.quote, now, r.candles_needed() + 2)
+        except MarketError as exc:
+            print(f"  {coin:<5} can't get prices: {exc}")
+            continue
+        if coin in held:
+            print(f"  {coin:<5} held now: it sells on its stop or when the trend ends")
+            continue
+        ok, why = rules.entry(cs, r)
+        if len(cs) < r.candles_needed():
+            print(f"  {coin:<5} {why}")
+            continue
+        last = cs[-1].c
+        trend = rules.ema([c.c for c in cs], r.trend_hours)
+        high = max(c.h for c in cs[-1 - r.breakout_hours:-1])
+        trend_txt = f"{'above' if last > trend else 'below'} its {r.trend_hours}h average ({(last / trend - 1) * 100:+.1f}%)"
+        need = (f"{(high / last - 1) * 100:+.1f}% short of its {r.breakout_hours}h high (${high:,.6g})" if last <= high
+                else f"broke above its {r.breakout_hours}h high (${high:,.6g})")
+        print(f"  {coin:<5} ${last:,.6g} · {trend_txt} · {need}"
+              + (" · BUY SIGNAL (taken on the desk's next hourly check)" if ok else ""))
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m majors", description="Paper trading on the big coins.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -168,6 +208,10 @@ def main(argv=None) -> int:
     p.set_defaults(func=cmd_sim)
     p = sub.add_parser("doctor", help="check that Coinbase's prices are reachable")
     p.set_defaults(func=cmd_doctor)
+    p = sub.add_parser("why", help="why each coin is or isn't a buy right now")
+    p.add_argument("--demo", action="store_true", help="invented prices instead of Coinbase's")
+    p.add_argument("--seed", type=int, default=7)
+    p.set_defaults(func=cmd_why)
     args = ap.parse_args(argv)
     try:
         return args.func(args)
