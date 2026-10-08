@@ -27,4 +27,5 @@ start book "$ROOT/paper-book" paperbook.py --watch 15
 echo
 echo "Coin desk dashboard: http://127.0.0.1:8787"
 echo "Paper book:          $ROOT/paper-book/output/paper-book.html"
+echo "Trade Crawler:       $ROOT/paper-book/output/crawler.html"
 echo "Stop everything:     paper-book/stop.sh   (open coin positions are saved and resume next start)"

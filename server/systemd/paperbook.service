@@ -1,5 +1,5 @@
 [Unit]
-Description=Paper Book and Paper Galaxy: every paper trade, refreshed every 15 minutes, shown on port 8790
+Description=Paper Book, Trade Crawler and Paper Galaxy: every paper trade, refreshed every 15 minutes, shown on port 8790
 After=network-online.target
 
 [Service]

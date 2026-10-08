@@ -88,6 +88,7 @@ def test_page_data_and_safety(tmp_path):
 
 
 def test_served_read_only(tmp_path):
+    (tmp_path / "crawler.html").write_text("<p>crawler</p>")
     (tmp_path / "galaxy.html").write_text("<p>galaxy</p>")
     (tmp_path / "secret.txt").write_text("no")
     server = pb.serve(tmp_path, "127.0.0.1", 0)
@@ -100,7 +101,7 @@ def test_served_read_only(tmp_path):
         return r.status, r.read()
 
     try:
-        assert get("/") == (200, b"<p>galaxy</p>")
+        assert get("/") == (200, b"<p>crawler</p>") and get("/galaxy") == (200, b"<p>galaxy</p>")
         assert get("/secret.txt")[0] == 404 and get("/../book.toml")[0] == 404
         assert get("/book")[0] == 404                      # not written yet
         assert get("/", host="evil.example")[0] == 403

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trade Crawler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="crawler.css">
+</head>
+<body>
+<!--BODY-->
+<div class="app" id="app">
+  <header class="status" aria-label="Crawler status">
+    <dl class="stats">
+      <div><dt>swarm</dt><dd class="hi">trade-crawler</dd></div>
+      <div><dt>legs</dt><dd>16</dd></div>
+      <div><dt>tentacles</dt><dd class="teal">22</dd></div>
+      <div><dt>trades read</dt><dd><span id="st-read">0</span>/<span id="st-total">0</span></dd></div>
+      <div><dt>won</dt><dd class="gold" id="st-links">0</dd></div>
+      <div><dt>flags</dt><dd class="pink" id="st-flags">0</dd></div>
+      <div><dt>p&amp;l</dt><dd id="st-pnl">$0</dd></div>
+      <div class="wide"><dt>frame</dt><dd id="st-frame">0000</dd></div>
+    </dl>
+    <div class="controls">
+      <button type="button" class="ctl" id="pause" aria-pressed="false">pause</button>
+      <button type="button" class="ctl" id="speed" aria-label="Crawl speed 1x">1x</button>
+      <span class="badge" id="book-name">paper.book</span>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Desks"></nav>
+  <section class="stage" id="stage" aria-label="The crawler's web of trades">
+    <canvas id="web" role="img" aria-label="A spider crawls a web of paper trades, one desk at a time: wins are linked, big losses are flagged"></canvas>
+    <div class="heading" id="heading">
+      <h1><span id="h-num">01</span> <span id="h-name">memecoins</span></h1>
+      <p id="h-sub">brand-new Solana coins</p>
+    </div>
+    <p class="sr-only" id="announce" aria-live="polite"></p>
+    <aside class="ship" id="ship" aria-labelledby="ship-h" hidden>
+      <header>
+        <h2 id="ship-h">Flags to check</h2>
+        <button type="button" class="ctl" id="ship-close">hide</button>
+      </header>
+      <p class="ship-sum" id="ship-sum"></p>
+      <ol class="asks" id="asks"></ol>
+      <div class="ship-actions">
+        <button type="button" class="btn pink" id="copy-asks">Copy flags</button>
+        <button type="button" class="btn" id="again">Crawl again</button>
+      </div>
+    </aside>
+  </section>
+  <section class="panels" aria-label="Crawl readouts">
+    <article class="panel">
+      <header><h2>Trade log</h2><span class="teal"><span id="p-wps">0</span> t/s</span></header>
+      <ol class="log" id="log"></ol>
+    </article>
+    <article class="panel">
+      <header><h2>Desks</h2><span class="teal" id="p-desks">0</span></header>
+      <ol class="secs" id="secs"></ol>
+      <p class="foot">trades → wins → flags</p>
+    </article>
+    <article class="panel">
+      <header><h2>Edge radar</h2><span class="teal">live</span></header>
+      <canvas class="radar" id="radar" role="img" aria-label="Win rate, profit factor, win-to-loss size, drawdown control, green days and sample size so far"></canvas>
+      <dl class="kinds">
+        <div><dt>wins</dt><dd><i id="k-claim"></i><span id="n-claim">0</span></dd></div>
+        <div><dt>losses</dt><dd><i id="k-owner"></i><span id="n-owner">0</span></dd></div>
+        <div><dt>open</dt><dd><i id="k-approval"></i><span id="n-approval">0</span></dd></div>
+      </dl>
+    </article>
+    <article class="panel">
+      <header><h2>Trade heat</h2><span class="teal" id="p-total">0</span></header>
+      <div class="heat" id="heat"></div>
+      <p class="lbl">paper p&amp;l so far</p>
+      <p class="big" id="p-wpm">$0</p>
+      <dl class="counts">
+        <div><dt>read</dt><dd id="c-read">0</dd></div>
+        <div><dt>won</dt><dd class="gold" id="c-linked">0</dd></div>
+        <div><dt>flagged</dt><dd class="pink" id="c-flagged">0</dd></div>
+        <div><dt>open</dt><dd class="teal" id="c-guessed">0</dd></div>
+      </dl>
+    </article>
+    <article class="panel">
+      <header><h2>Paper score</h2><span class="teal">live</span></header>
+      <canvas class="wave" id="wave" role="img" aria-label="Paper profit and loss of the trades read so far"></canvas>
+      <div class="gauge">
+        <canvas id="gauge" aria-hidden="true"></canvas>
+        <p class="score"><b id="p-score">0</b><span>paper score</span></p>
+      </div>
+      <p class="pink" id="p-ask">flags to check · 0</p>
+      <p class="dim">paper money only</p>
+    </article>
+    <article class="panel">
+      <header><h2>crawler.py</h2><span class="pink"><span id="p-lps">0</span> l/s</span></header>
+      <pre class="code" id="code"></pre>
+    </article>
+  </section>
+</div>
+<noscript><p style="padding:16px">The crawler needs JavaScript. The same numbers are in the paper book (/book).</p></noscript>
+<!--/BODY-->
+<script src="crawler.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Approve posts and watch the galaxy from your phone. Puts this machine and your phone on one private
-# network (Tailscale, free for personal use) and opens Post Desk and the Paper Galaxy there. From the repo folder:
+# Approve posts and watch the crawler from your phone. Puts this machine and your phone on one private
+# network (Tailscale, free for personal use) and opens Post Desk and the Trade Crawler there. From the repo folder:
 #   sudo bash server/phone.sh
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/phone.sh"; exit 1; }
@@ -27,6 +27,6 @@ cat <<MSG
 
 On your phone: install the Tailscale app, sign in with the same account, then open
   http://$IP:8788        Post Desk: approve posts
-  http://$IP:8790        Paper Galaxy (and /book for the paper book)
+  http://$IP:8790        Trade Crawler (/galaxy for the galaxy, /book for the paper book)
 and add them to your home screen. Only devices signed in to your Tailscale can reach them.
 MSG

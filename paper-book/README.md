@@ -19,6 +19,28 @@ It writes `paper-book/output/ledger.csv` (one row per closed paper trade, both d
 the start, each day's result, win rate, profit factor, worst drop, open positions, and the
 latest trades.
 
+## The Trade Crawler
+
+Every refresh also writes `output/crawler.html`, a sixteen-legged crawler that reads the paper book
+one trade at a time.
+
+- **Clusters:** one per desk (memecoins, big coins, stocks), then the open positions, then the
+  patterns. The camera walks from cluster to cluster along a glowing trail.
+- **Nodes:** each closed trade, in the order it closed. As the crawler reaches each trade, its
+  tentacles touch it. Wins glow in the desk's colour, losses stay grey, and **flags** turn pink: a
+  rug exit, or a loss of half the stake or more. The core flares on every flag.
+- **Panels:** the trade log, progress per desk, an edge radar (win rate, profit factor, win size
+  against loss size, drawdown control, green days, sample size), a heat grid, the paper P&L curve
+  with a paper score out of 100, and `crawler.py` typing itself as it goes.
+- **Ship:** at the end, a list of flags to check before trusting any desk with real money. Examples:
+  a profit factor under 1, rug exits, losses that blew through the stop, one symbol carrying a
+  desk, long losing streaks, deep drawdowns, positions down a fifth, and desks with too few
+  trades to judge. **Copy flags** puts the list on your clipboard.
+- Tabs jump to any cluster. Space pauses, and **1x** cycles the speed. Each desk walks its last 240
+  trades; the older ones are counted in one step.
+
+Flags and the score describe what happened. They are not forecasts, and nothing here changes a desk.
+
 ## The Paper Galaxy
 
 Every refresh also writes `output/galaxy.html`: the same trades drawn as a universe.
@@ -40,9 +62,11 @@ Every refresh also writes `output/galaxy.html`: the same trades drawn as a unive
   Each one stays locked, showing a progress bar, until there are enough trades to say anything.
   They describe what happened, not what will happen.
 
-`python paperbook.py --serve 8790` keeps it at http://127.0.0.1:8790. The page picks up new trades
-on its own every two minutes, and `/book` shows the paper book. On the always-on machine,
-`server/phone.sh` puts both on your phone.
+`python paperbook.py --serve 8790` serves the crawler at http://127.0.0.1:8790, the galaxy at `/galaxy`
+and the paper book at `/book`. Both pages check for new trades every two minutes. The crawler
+finishes its pass and shows the flags, then crawls again with the new trades a minute later (or
+right away with **Crawl new trades**). On the always-on machine, `server/phone.sh` puts all three on
+your phone.
 
 ## Start paper trading on your computer (Mac or Linux)
 
