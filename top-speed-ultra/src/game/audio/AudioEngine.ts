@@ -20,6 +20,8 @@ export class AudioEngine {
   private screech!: GainNode; private wind!: GainNode; private windF!: BiquadFilterNode;
   private scrapeG!: GainNode;
   private noise!: AudioBuffer;
+  private rainG: GainNode | null = null;
+  setRain(w: number) { if (this.ctx && this.rainG) this.rainG.gain.setTargetAtTime(w * 0.16, this.ctx.currentTime, 0.4); }
   private lastThrottle = 0; private popT = 0; private limT = 0;
   vol = { master: 0.8, engine: 0.9, ambient: 0.7 };
   get ready() { return !!this.ctx; }
@@ -68,6 +70,7 @@ export class AudioEngine {
     this.windF = ctx.createBiquadFilter(); this.windF.type = 'bandpass'; this.windF.frequency.value = 600; this.windF.Q.value = 0.5; this.wind = loop(this.windF, this.ambientBus);
     const scf = ctx.createBiquadFilter(); scf.type = 'bandpass'; scf.frequency.value = 2600; scf.Q.value = 1.5; this.scrapeG = loop(scf, this.ambientBus);
     const hf = ctx.createBiquadFilter(); hf.type = 'lowpass'; hf.frequency.value = 220; loop(hf, this.ambientBus, 0.05);   // the freeway's low hum
+    const rf = ctx.createBiquadFilter(); rf.type = 'highpass'; rf.frequency.value = 2500; this.rainG = loop(rf, this.ambientBus, 0);   // rain on the roof
     this.applyVolumes();
   }
 

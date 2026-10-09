@@ -4,6 +4,8 @@ export type Quality = 'low' | 'medium' | 'high' | 'ultra';
 export type Mode = 'free' | 'survival' | 'time';
 export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';
 export type Corner = 'map' | 'sky' | 'off';
+export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
+export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
 
 export interface Settings {
@@ -21,6 +23,8 @@ export interface Settings {
   cornerSize: number;       // 0 small, 1 medium, 2 large
   start: string;            // where Free Drive starts: a carriageway label like 'I-405 North'
   showTouch: boolean;       // on-screen pedals on a device without a coarse pointer
+  time: TimeOfDay;          // 'live' follows this device's clock (the sun's real position over OC)
+  weather: Weather;
 }
 
 export interface QualityPreset {
@@ -87,7 +91,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false, time: 'day', weather: 'clear',
   };
 }
 
@@ -103,6 +107,8 @@ export function loadSettings(): Settings {
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
+      time: (['live', 'sunrise', 'day', 'sunset', 'night'] as const).includes(v.time as TimeOfDay) ? v.time! : d.time,
+      weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
     };
   } catch { return d; }

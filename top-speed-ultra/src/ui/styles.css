@@ -181,3 +181,26 @@ input[type="range"] { width: 100%; accent-color: var(--rosso-2); }
 @media (max-width: 700px) and (pointer: fine) { .hud-road { top: max(236px, calc(env(safe-area-inset-top) + 226px)); max-width: 92vw; } }
 @media (max-width: 560px) { .overlay.menu { background: rgba(6, 7, 9, 0.7); } .hud-mph { font-size: 38px; } .hud-gear { font-size: 24px; margin-left: 6px; } }
 @media (prefers-reduced-motion: reduce) { .loadbar i, .toast { animation: none; } }
+
+/* profile */
+.panel.profile { max-height: 92vh; overflow-y: auto; }
+.who { display: flex; gap: 14px; align-items: center; }
+.avatar { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font: 800 30px/1 var(--font); flex: none; box-shadow: 0 0 0 2px rgba(243, 241, 236, 0.4); }
+.who-main { display: grid; gap: 2px; min-width: 0; }
+.who-main .name { background: transparent; border: 0; border-bottom: 1px solid var(--line); font: 700 26px/1.1 var(--font); padding: 2px 0; width: 100%; min-width: 0; }
+.who-main .name:focus { border-bottom-color: var(--badge); outline: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.xp { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.xp i { display: block; height: 100%; background: linear-gradient(90deg, var(--rosso-2), var(--badge)); }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatches button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.swatches button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--rosso-2); }
+.routes { display: flex; gap: 8px; flex-wrap: wrap; }
+.routes span { opacity: 0.32; filter: grayscale(1); }
+.routes span.on { opacity: 1; filter: none; }
+.ach { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ach li { display: grid; gap: 1px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line); opacity: 0.55; }
+.ach li.got { opacity: 1; border-color: rgba(245, 197, 24, 0.6); }
+.ach li.got b::before { content: "★ "; color: var(--badge); }
+.ach b { font-size: 15px; }
+.ach span { font-size: 13px; color: var(--dim); }

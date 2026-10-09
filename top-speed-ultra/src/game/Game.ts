@@ -19,8 +19,10 @@ import { PlayerCar } from './vehicle/PlayerCar';
 import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
+import * as P from './road/props';
 import { clamp, damp, lerp, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
+import { ProfileBook, Earned } from './profile';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -101,6 +103,8 @@ export class Game {
   private ctxLost = false;
   private steps = 0;
   private cands: Hit[] = [];
+  readonly profile = new ProfileBook();
+  private prof = { t: 0, dist: 0, flush: 0 };
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
   visited = new Set<string>();       // freeways driven this session (for tests and the profile)
@@ -120,6 +124,7 @@ export class Game {
     this.camera = new THREE.PerspectiveCamera(60, 1, 0.05, 2000);
     this.scene.add(this.camera);
     this.env = new Environment(this.scene, this.renderer);
+    this.env.set(settings.time, settings.weather, true);
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
     this.input = new Input(canvas);
@@ -214,6 +219,7 @@ export class Game {
     const st = mode === 'time' ? STARTS[0] : STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
     const m = this.findMain(st.label);
     this.placeCar(m, m.len * st.at, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
+    this.earned(this.profile.add({ freeway: m.label }));
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
     this.traffic.fill(this.view());
@@ -228,20 +234,21 @@ export class Game {
     this.ev.toast(`${m.label} · ${mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive'}`, 'info');
   }
 
-  quitToMenu() { this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.profile.save(); this.setPaused(false); this.startAttract(); }
   restart() { void this.start(this.mode); }
 
   setPaused(on: boolean) {
     if (this.attract && on) return;
     if (this.paused === on) return;
     this.paused = on;
-    if (on) { this.audio.suspend(); this.input.clear(); } else { this.audio.resume(); this.last = performance.now(); }
+    if (on) { this.audio.suspend(); this.input.clear(); this.profile.save(); } else { this.audio.resume(); this.last = performance.now(); }
     this.ev.pause(on);
   }
   get isPaused() { return this.paused; }
 
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
+    if (s.time !== this.settings.time || s.weather !== this.settings.weather) this.env.set(s.time, s.weather);
     this.settings = s;
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
@@ -389,7 +396,11 @@ export class Game {
     if (this.routeTarget === path) { this.route = []; this.routeTarget = null; if (!this.attract) this.ev.toast(`You made it: ${path.label}`, 'good'); }
     if (path.main) {
       this.visited.add(path.label);
-      if (path !== this.lastMain && !this.attract) this.ev.toast(path.label + (path.name ? ' · ' + path.name : ''), 'info');
+      if (path !== this.lastMain && !this.attract) {
+        this.ev.toast(path.label + (path.name ? ' · ' + path.name : ''), 'info');
+        const crossed = this.lastMain && this.lastMain.route !== path.route ? 1 : 0;
+        this.earned(this.profile.add({ freeway: path.label, interchange: crossed }));
+      }
       this.lastMain = path;
     }
   }
@@ -507,15 +518,15 @@ export class Game {
   }
   // which side of the freeway a ramp comes in on (seen from the freeway)
   private sideOfMerge(ramp: Path, j: Junction): 'L' | 'R' {
-    const m = j.to, h = m.heading(clamp(j.toS, 0, m.len)), a = m.at(clamp(j.toS, 0, m.len), 0);
-    const b = ramp.at(Math.max(0, ramp.len - 120), 0);
-    return (b.x - a.x) * -Math.cos(h) + (b.z - a.z) * Math.sin(h) >= 0 ? 'R' : 'L';
+    const m = j.to, b = ramp.at(Math.max(0, ramp.len - 120), 0);
+    return m.project(b.x, b.z, Math.max(0, j.toS - 120)).d >= 0 ? 'R' : 'L';
   }
+  // which side a ramp leaves on, judged against the curving road (not the tangent at the split)
   private sideOf(path: Path, j: Junction): 'L' | 'R' {
-    const a = path.at(clamp(j.s, 0, path.len), 0), h = path.heading(clamp(j.s, 0, path.len));
-    const b = j.to.at(Math.min(j.to.len, j.toS + 200), 0);
-    return (b.x - a.x) * -Math.cos(h) + (b.z - a.z) * Math.sin(h) >= 0 ? 'R' : 'L';
+    const b = j.to.at(Math.min(j.to.len, j.toS + 150), 0);
+    return path.project(b.x, b.z, j.s + 150).d >= 0 ? 'R' : 'L';
   }
+
 
   // ----------------------------------------------------------------------------------------- the loop
   private frame = (now: number) => {
@@ -548,7 +559,8 @@ export class Game {
     }, this.time);
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
-    this.env.follow(this.car.root.position, this.camera, this.time);
+    this.weatherTick(dt);
+    this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.cockpit.setDriverVisible(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
     this.renderCorner(dt);
@@ -559,6 +571,21 @@ export class Game {
     this.hudT -= dt;
     if (this.hudT <= 0) { this.hudT = 0.1; this.sendHud(); }
   };
+
+  // the weather reaches everything: grip, traffic pace, the road's sheen, headlights, lamps, the sound of rain
+  private carVel = new THREE.Vector3();
+  private weatherTick(dt: number) {
+    const e = this.env;
+    e.update(dt);
+    this.phys.grip = e.grip;
+    this.traffic.pace = 1 - 0.14 * e.wet - 0.1 * (1 - Math.min(1, e.visibility * 3));
+    this.roads.setWet(e.wet);
+    const dark = 1 - e.daylight, gloom = Math.max(dark, e.visibility < 0.3 ? 0.6 : 0, e.wet > 0.5 ? 0.5 : 0);
+    this.car.setHeadlights(gloom > 0.25 ? Math.min(1, gloom) : 0);
+    const lamp = P.mats.lampHead() as THREE.MeshStandardMaterial;
+    lamp.emissive.setRGB(1, 0.86, 0.62); lamp.emissiveIntensity = dark > 0.4 ? 3.2 * dark : 0.05;
+    if (!this.attract) this.audio.setRain(e.wet > 0.5 && e.visibility > 0.3 ? e.wet : 0);
+  }
 
   private stream(budget: number) {
     const p = this.phys, h = p.psi;
@@ -608,7 +635,7 @@ export class Game {
       this.traffic.bump(contact.car, dvc * along, this.time);       // pushed along -n: that much faster (or slower) along its lane
       this.shake = Math.max(this.shake, Math.min(1, contact.speed / 12));
       this.combo = 1; this.comboT = 0; this.streak = 0;
-      if (contact.speed > 2 && playing) this.collisions++;
+      if (contact.speed > 2 && playing) { this.collisions++; this.profile.add({ collision: 1 }); }
       if (contact.speed > 3) this.audio.crash(contact.speed); else this.audio.thump(contact.speed * 3);
       if (this.mode === 'survival' && playing && contact.speed > 7) this.endRun(`Crashed into ${cl.id === 'suv' ? 'an SUV' : cl.id === 'semi' ? 'a big rig' : 'a ' + (cl.id === 'truck' ? 'box truck' : cl.id === 'sports' ? 'sports car' : cl.id)}`);
     }
@@ -623,6 +650,7 @@ export class Game {
       this.overtakes++;
       this.comboT = 4;
       if (ps.close) this.nearMisses++;
+      this.earned(this.profile.add(ps.close ? { nearMiss: 1, runNearMisses: this.nearMisses } : { cleanPass: 1 }));
       const pts = Math.round((ps.close ? 250 : 100) * this.combo);
       this.score += pts;
       this.ev.toast(ps.close ? `Near miss +${pts}` : `Clean pass +${pts}`, 'good');
@@ -632,6 +660,15 @@ export class Game {
     // distance, the streak and the clocks
     const fwd = Math.max(0, view.v) * dt;
     if (!this.attract && !this.wrongWay) this.distance += fwd;
+    if (playing) {
+      this.prof.t += dt; if (!this.wrongWay) this.prof.dist += fwd;
+      this.prof.flush -= dt;
+      if (this.prof.flush <= 0) {
+        this.prof.flush = 0.5;
+        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses }));
+        this.prof.t = 0; this.prof.dist = 0;
+      }
+    }
     this.top = Math.max(this.top, Math.abs(p.vx));
     if (playing) {
       if (this.mode === 'survival') {
@@ -648,8 +685,16 @@ export class Game {
     }
   }
 
+  // level-ups and achievements, as they happen
+  private earned(e: Earned) {
+    if (this.attract) return;
+    if (e.levelUp) this.ev.toast(`Level ${e.levelUp}`, 'good');
+    for (const a of e.unlocked) this.ev.toast(`Achievement: ${a}`, 'good');
+  }
+
   private endRun(reason: string) {
     this.over = true;
+    this.profile.endRun();
     const score = this.mode === 'time' ? Math.round(this.distance) : Math.round(this.score);
     const best = loadBest(this.mode), newBest = score > best;
     if (newBest) saveBest(this.mode, score);

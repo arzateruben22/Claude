@@ -37,6 +37,7 @@ export class Traffic {
   private nextId = 1;
   level: TrafficLevel = { perKmLane: 5, bold: 0 };
   scale = 1;                                           // a temporary thinning (the Clear Path ability)
+  pace = 1;                                            // how fast everyone drives (slower in rain and fog)
   viewAhead = 1600;
 
   constructor(private net: Network, capacity = 320) {
@@ -171,7 +172,7 @@ export class Traffic {
           if (pd > 0 && inLane) { const g = pd - (player.len + cl.len) / 2; if (g < gap) { gap = g; vl = player.v; } }
         }
         if (c.stopT > 0) c.stopT -= dt;
-        const v0 = c.stopT > 0 ? 0 : c.v0;
+        const v0 = c.stopT > 0 ? 0 : c.v0 * this.pace;
         const s0 = c.bold ? 2 : 3, th = c.bold ? 0.85 : 1.25;
         const sStar = s0 + c.v * th + (c.v * (c.v - vl)) / (2 * Math.sqrt(A * B));
         let acc = A * (1 - Math.pow(c.v / Math.max(1, v0), 4)) - (gap < 1e8 ? A * Math.pow(Math.max(sStar, 0) / Math.max(gap, 0.5), 2) : 0);

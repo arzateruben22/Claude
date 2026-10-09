@@ -67,6 +67,13 @@ export class Roads {
 
   get count() { return this.built.size; }
 
+  // rain darkens the asphalt and makes it glossy (it picks up the sky and the lights)
+  setWet(w: number) {
+    const a = this.m.asphalt as THREE.MeshStandardMaterial, sh = this.m.shoulder as THREE.MeshStandardMaterial;
+    a.roughness = 1 - 0.62 * w; a.color.setHex(0xb9b7b2).multiplyScalar(1 - 0.32 * w); a.envMapIntensity = 1 + 1.2 * w;
+    sh.roughness = 0.95 - 0.5 * w; sh.color.setHex(0xa8a49c).multiplyScalar(1 - 0.3 * w);
+  }
+
   // build what's within the draw distance (nearest and in front first), drop what's well beyond it
   update(x: number, z: number, hx: number, hz: number, budget = 1) {
     const R = this.q.drawDistance;

@@ -3,13 +3,14 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
-import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
 import { board } from '../game/records';
+import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
@@ -149,6 +150,7 @@ export function App() {
               <button className="btn primary" onClick={() => drive()}>Drive</button>
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
               <button className="btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}>Bests</button>
+              <button className="btn" onClick={() => setPanel('profile')}>Profile</button>
             </div>
             <p className="fine">Freeway geometry: OpenStreetMap contributors via Overture Maps (ODbL). Elevation: USGS via AWS Terrain Tiles. The car, its badge and everything you see are our own, made in code.</p>
           </div>
@@ -231,6 +233,8 @@ export function App() {
         </div>
       )}
 
+      {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
+
       {panel === 'board' && (
         <div className="overlay center">
           <div className="panel">
@@ -246,6 +250,9 @@ export function App() {
         <div className="overlay center">
           <div className="panel">
             <h2>Settings</h2>
+            <div className="field"><label>Time of day</label><Seg value={settings.time} options={['live', 'sunrise', 'day', 'sunset', 'night'] as TimeOfDay[]} labels={(t) => ({ live: 'Live', sunrise: 'Sunrise', day: 'Day', sunset: 'Sunset', night: 'Night' })[t]} onChange={(t) => update({ time: t })} /></div>
+            <div className="field"><label>Weather</label><Seg value={settings.weather} options={['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as Weather[]} labels={(w) => ({ clear: 'Clear', cloudy: 'Cloudy', rain: 'Rain', fog: 'Fog', mist: 'Mist', changing: 'Changing' })[w]} onChange={(w) => update({ weather: w })} /></div>
+            <p className="fine">Live puts the sun where it is over Orange County right now, from this device's clock. Weather is simulated here (no live weather feed). Rain cuts grip by about a fifth.</p>
             <div className="field"><label>Graphics</label><Seg value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
             <p className="fine">{qualityNote(settings.quality)}</p>
             <div className="field"><label>Gearbox</label><Seg value={settings.transmission} options={['auto', 'manual']} labels={(t) => (t === 'auto' ? 'Automatic' : 'Manual')} onChange={(t) => update({ transmission: t })} /></div>
@@ -299,6 +306,55 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
           </li>
         ))}</ol>
       )}
+    </div>
+  );
+}
+
+// your profile: who you are, how far you've come, what you've driven
+function ProfilePanel({ game, onClose }: { game: Game; onClose: () => void }) {
+  const book = game.profile;
+  const [, bump] = useState(0);
+  const p = book.p, level = levelOf(p.xp), lo = xpFor(level), hi = xpFor(level + 1);
+  const routes = new Set(p.freeways.map((f) => f.replace(/\s+(North|South|East|West)$/, '')));
+  const av = AVATARS[p.avatar];
+  const hours = p.timeDriven / 3600;
+  return (
+    <div className="overlay center">
+      <div className="panel profile">
+        <div className="who">
+          <span className="avatar" style={{ background: av.bg, color: av.fg }} aria-hidden="true">{(p.username || 'D').slice(0, 1).toUpperCase()}</span>
+          <div className="who-main">
+            <label className="sr" htmlFor="pname">Name</label>
+            <input id="pname" className="name" maxLength={20} defaultValue={p.username} onBlur={(e) => { book.rename(e.target.value); bump((n) => n + 1); }} />
+            <p>Level {level} · {Math.floor(p.credits).toLocaleString()} credits</p>
+          </div>
+        </div>
+        <div className="xp" role="progressbar" aria-valuemin={lo} aria-valuemax={hi} aria-valuenow={Math.floor(p.xp)} aria-label={`Level ${level} progress`}>
+          <i style={{ width: `${Math.min(100, ((p.xp - lo) / Math.max(1, hi - lo)) * 100).toFixed(1)}%` }} />
+        </div>
+        <p className="fine">{Math.floor(p.xp).toLocaleString()} XP · {Math.max(0, Math.ceil(hi - p.xp)).toLocaleString()} to level {level + 1}. Credits are earned by driving and only spent in the game.</p>
+        <div className="swatches" role="group" aria-label="Avatar colour">
+          {AVATARS.map((a, i) => <button key={i} aria-pressed={i === p.avatar} style={{ background: a.bg }} onClick={() => { book.setAvatar(i); bump((n) => n + 1); }} aria-label={`Colour ${i + 1}`} />)}
+        </div>
+        <dl className="stats">
+          <div><dt>Time driven</dt><dd>{hours >= 1 ? hours.toFixed(1) + ' h' : Math.round(p.timeDriven / 60) + ' min'}</dd></div>
+          <div><dt>Distance</dt><dd>{(p.distance / 1609.344).toFixed(1)} mi</dd></div>
+          <div><dt>Top speed</dt><dd>{Math.round(p.topSpeed * 2.236936)} mph</dd></div>
+          <div><dt>Best streak</dt><dd>{p.bestStreak.toFixed(1)} s</dd></div>
+          <div><dt>Near misses</dt><dd>{p.nearMisses}</dd></div>
+          <div><dt>Clean passes</dt><dd>{p.cleanPasses}</dd></div>
+          <div><dt>Interchanges</dt><dd>{p.interchanges}</dd></div>
+          <div><dt>Runs</dt><dd>{p.runs}</dd></div>
+          <div><dt>Races won</dt><dd>{p.racesWon}</dd></div>
+          <div><dt>Cars</dt><dd>{p.vehicles.length}</dd></div>
+        </dl>
+        <p className="eyebrow">Freeways driven · {routes.size} of 10</p>
+        <div className="routes">{ROUTES_ALL.map((r) => <span key={r} className={routes.has(r) ? 'on' : ''}><Shield label={r} /></span>)}</div>
+        <p className="eyebrow">Achievements · {p.achievements.length} of {ACHIEVEMENTS.length}</p>
+        <ul className="ach">{ACHIEVEMENTS.map((a) => <li key={a.id} className={p.achievements.includes(a.id) ? 'got' : ''}><b>{a.name}</b><span>{a.how}</span></li>)}</ul>
+        <p className="fine">Saved on this device only (profile v{PROFILE_VERSION}).</p>
+        <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
+      </div>
     </div>
   );
 }

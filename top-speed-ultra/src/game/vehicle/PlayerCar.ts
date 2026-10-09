@@ -53,8 +53,18 @@ export class PlayerCar {
   private prev = { x: 0, y: 0, z: 0, psi: 0 };
   private cur = { x: 0, y: 0, z: 0, psi: 0 };
 
+  // two headlamp beams, off by day
+  readonly beams: THREE.SpotLight[] = [];
+  setHeadlights(on: number) { for (const b of this.beams) { b.visible = on > 0.02; b.intensity = on * 260; } }
+
   constructor() {
     this.root.rotation.order = 'YXZ';
+    for (const s of [-1, 1]) {
+      const b = new THREE.SpotLight(0xfff4e6, 0, 170, 0.42, 0.55, 1.6);
+      b.position.set(s * 0.62, 0.55, -2.2); b.target.position.set(s * 0.9, -0.2, -40);
+      b.castShadow = false; b.visible = false;
+      this.root.add(b, b.target); this.beams.push(b);
+    }
     this.root.add(this.body);
     this.body.add(this.cockpit.group);
     this.eye.position.copy(EYE); this.body.add(this.eye);
