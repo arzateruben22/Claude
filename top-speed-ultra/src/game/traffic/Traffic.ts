@@ -278,6 +278,20 @@ export class Traffic {
     if (Math.abs(dv) > 4) c.stopT = 8;
   }
 
+  // Clear Path: cars ahead of you in your lane move over, where the gap allows (nobody teleports)
+  makeWay(player: PlayerView, range = 320) {
+    const p = player.path, lane = p.laneOf(player.d);
+    const list = this.cars.filter((c) => c.path === p).sort((a, b) => a.s - b.s);
+    for (const c of list) {
+      if (c.s < player.s || c.s > player.s + range || c.t >= 0 || c.lane !== lane) continue;
+      const cl = this.classes[c.cls];
+      for (const to of [lane + 1, lane - 1]) {
+        if (to < 0 || to >= p.lanes || (this.heavy(cl) && !p.truckLane(to))) continue;
+        if (this.safe(c, to, list, player, false)) { c.from = c.lane; c.to = to; c.t = 0; c.sig = to > c.lane ? 1 : -1; c.sigT = 0.4; break; }
+      }
+    }
+  }
+
   // clear the space you're about to be put back into
   clearAround(x: number, z: number, r = 70) { this.cars = this.cars.filter((c) => Math.hypot(c.x - x, c.z - z) > r); }
   // thin the traffic out of sight (Clear Path): drop a share of the cars you can't see right now

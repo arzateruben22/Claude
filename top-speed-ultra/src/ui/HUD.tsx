@@ -7,11 +7,12 @@ export interface HudHandle { set: (h: HudData) => void }
 
 const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean }>(function HUD({ showFps, visible }, ref) {
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; onAbility: () => void }>(function HUD({ showFps, visible, onAbility }, ref) {
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
   const big = useRef<HTMLDivElement>(null), road = useRef<HTMLDivElement>(null), next = useRef<HTMLDivElement>(null), wrong = useRef<HTMLDivElement>(null);
+  const abil = useRef<HTMLButtonElement>(null), abilName = useRef<HTMLSpanElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -38,6 +39,13 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean }>
       if (next.current) next.current.hidden = !h.next;
       if (wrong.current) wrong.current.hidden = !h.wrongWay;
       put(fps.current, 'fps', h.fps + ' fps');
+      if (abil.current) {
+        put(abilName.current, 'abil', h.ability);
+        const b = abil.current, on = h.abilityOn > 0, cool = h.abilityCool;
+        b.classList.toggle('on', on); b.classList.toggle('cool', !on && cool > 0);
+        b.style.setProperty('--p', String(on ? h.abilityOn : 1 - cool));
+        b.setAttribute('aria-label', on ? `${h.ability} active` : cool > 0 ? `${h.ability} recharging` : `Use ${h.ability}`);
+      }
       put(cam.current, 'cam', h.cam);
     },
   }));
@@ -51,6 +59,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean }>
         <div><b ref={k3 as React.RefObject<HTMLElement>} /><span ref={v3 as React.RefObject<HTMLSpanElement>} /></div>
       </div>
       {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
+      <button type="button" className="hud-ability" ref={abil} onClick={onAbility}><span ref={abilName}>Ability</span></button>
       <div className="hud-speed">
         <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
         <div className="hud-rpm"><div ref={bar} /></div>

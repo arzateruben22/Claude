@@ -129,7 +129,7 @@ export class Cockpit {
   private leds: THREE.MeshStandardMaterial[] = [];
   private paddles: THREE.Mesh[] = [];
   private paddleT = [0, 0];
-  private hands: { anchor: THREE.Object3D; wrist: THREE.Object3D; shoulder: THREE.Vector3; pole: THREE.Vector3; fore: THREE.Mesh; upper: THREE.Mesh; elbow: THREE.Mesh }[] = [];
+  private hands: { anchor: THREE.Object3D; wrist: THREE.Object3D; shoulder: THREE.Vector3; pole: THREE.Vector3; fore: THREE.Mesh; upper: THREE.Mesh; elbow: THREE.Mesh; mesh: THREE.Mesh; restP: THREE.Vector3; restQ: THREE.Quaternion }[] = [];
   private rightFoot = new THREE.Group();
   private manettino!: THREE.Mesh;
   private faceMats: THREE.MeshBasicMaterial[] = [];
@@ -484,7 +484,7 @@ export class Cockpit {
       const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.047, 0.052, 1, 14), m.shirt);
       const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.044, 14, 10), m.skin);
       g.add(fore, upper, elbow);
-      this.hands.push({ anchor, wrist, shoulder, pole, fore, upper, elbow });
+      this.hands.push({ anchor, wrist, shoulder, pole, fore, upper, elbow, mesh: hand, restP: anchor.position.clone(), restQ: anchor.quaternion.clone() });
     };
     arm(148, false, v3(-0.6, 0.88, 0.24), v3(-0.45, -1, -0.15));
     arm(32, true, v3(-0.14, 0.88, 0.24), v3(0.45, -1, -0.15));
@@ -499,6 +499,83 @@ export class Cockpit {
   }
 
   setDriverVisible(v: boolean) { this.driverBody.visible = v; }
+
+  // ------------------------------------------------------------------------------------- who's driving (cosmetic)
+  private sleeve = new THREE.MeshStandardMaterial({ color: 0xf2f2f0, roughness: 0.85 });
+  private extras: THREE.Object3D[] = [];
+  private pose = 0; private poseWant = 0; private poseKind: 'watch' | 'wave' | 'knee' = 'watch';
+  setLook(l: { skin: number; sleeve: number | null; gloves: number | null; watch: 'gold' | 'steel' | 'smart' | null; ring: boolean; bracelet: boolean; scale: number; pose: 'watch' | 'wave' | 'knee' }) {
+    const m = this.m;
+    m.skin.color.setHex(l.skin);
+    m.handSkin.color.setHex(l.gloves ?? l.skin);
+    m.handSkin.sheen = l.gloves ? 0 : 0.15; m.handSkin.roughness = l.gloves ? 0.45 : 0.6;
+    if (l.sleeve !== null) this.sleeve.color.setHex(l.sleeve);
+    for (const h of this.hands) {
+      h.fore.material = l.sleeve !== null ? this.sleeve : m.skin;
+      h.elbow.material = l.sleeve !== null ? this.sleeve : m.skin;
+      h.upper.material = l.sleeve !== null ? this.sleeve : m.shirt;
+      h.mesh.scale.setScalar(l.scale);
+    }
+    for (const e of this.extras) e.parent?.remove(e);
+    this.extras = [];
+    const metal = (c: number, r = 0.22) => new THREE.MeshStandardMaterial({ color: c, metalness: 1, roughness: r });
+    const L = this.hands[0], R = this.hands[1];
+    // a watch round the left wrist, face up where you can see it
+    if (l.watch) {
+      const w = new THREE.Group();
+      const bandM = l.watch === 'smart' ? new THREE.MeshStandardMaterial({ color: 0x15171a, roughness: 0.7 }) : metal(l.watch === 'gold' ? 0xd4a83a : 0xc9ccd0);
+      const band = new THREE.Mesh(new THREE.TorusGeometry(0.031 * l.scale, 0.0062, 8, 28), bandM);
+      const face = l.watch === 'smart'
+        ? new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.009, 0.036), new THREE.MeshStandardMaterial({ color: 0x0a0c10, emissive: 0x2a6cff, emissiveIntensity: 0.6, roughness: 0.2 }))
+        : new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.009, 28), metal(l.watch === 'gold' ? 0xd9b04a : 0xd6d9dd, 0.15));
+      face.position.set(0, 0.033 * l.scale, 0);
+      if (l.watch !== 'smart') { const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.0012, 24), new THREE.MeshStandardMaterial({ color: l.watch === 'gold' ? 0x10301e : 0x0e1a2c, roughness: 0.3, metalness: 0.4 })); dial.position.y = 0.038 * l.scale; w.add(dial); }
+      w.add(band, face);
+      w.position.copy(L.wrist.position).add(new THREE.Vector3(0, -0.012, -0.016));
+      w.rotation.x = 0.55;
+      L.anchor.add(w); this.extras.push(w);
+    }
+    if (l.bracelet) {
+      const b = new THREE.Mesh(new THREE.TorusGeometry(0.03 * l.scale, 0.0035, 8, 28), metal(0xd4a83a));
+      b.position.copy(R.wrist.position).add(new THREE.Vector3(0, -0.012, -0.016)); b.rotation.x = 0.55;
+      R.anchor.add(b); this.extras.push(b);
+    }
+    // a ring on the right hand's first finger, where it shows over the rim
+    if (l.ring) {
+      const r = new THREE.Mesh(new THREE.TorusGeometry(0.0112 * l.scale, 0.0026, 8, 20), metal(0xd4a83a, 0.18));
+      r.position.set(-0.028 * l.scale, 0.03 * l.scale, 0.016 * l.scale); r.rotation.y = Math.PI / 2; r.rotation.z = 0.5;
+      R.anchor.add(r); this.extras.push(r);
+    }
+    this.poseKind = l.pose;
+  }
+  // lift the left hand off the wheel (1) or put it back (0); it eases there
+  setPose(on: boolean) { this.poseWant = on ? 1 : 0; }
+
+  private posePoint = new THREE.Vector3(); private poseQ = new THREE.Quaternion(); private poseM = new THREE.Matrix4();
+  private animatePose(dt: number) {
+    this.pose = damp(this.pose, this.poseWant, 7, dt);
+    const h = this.hands[0];
+    if (!h) return;
+    if (this.pose < 0.002) { h.anchor.position.copy(h.restP); h.anchor.quaternion.copy(h.restQ); return; }
+    // the pose, in the cockpit's frame: in front of your chest (watch), up by the mirror (wave) or on your thigh (knee)
+    const P = this.poseKind === 'watch' ? v3(-0.45, 0.97, -0.27) : this.poseKind === 'wave' ? v3(-0.5, 1.1, -0.38) : v3(-0.52, 0.71, -0.27);
+    const look = this.poseKind === 'knee' ? v3(0, 1, 0.15) : v3(EYE.x - P.x, EYE.y - P.y, EYE.z - P.z);
+    // local y (the back of the hand) faces the look direction; local x runs across the body
+    const yAx = look.normalize(), xAx = v3(1, 0, 0).sub(yAx.clone().multiplyScalar(yAx.x)).normalize(), zAx = new THREE.Vector3().crossVectors(xAx, yAx);
+    this.poseM.makeBasis(xAx, yAx, zAx);
+    this.poseQ.setFromRotationMatrix(this.poseM);
+    // into the turning wheel's frame
+    this.group.updateMatrixWorld(true);
+    const world = this.posePoint.copy(P).applyMatrix4(this.group.matrixWorld);
+    const parent = h.anchor.parent!;
+    const local = parent.worldToLocal(world.clone());
+    const pq = new THREE.Quaternion(); parent.getWorldQuaternion(pq);
+    const gq = new THREE.Quaternion(); this.group.getWorldQuaternion(gq);
+    const qLocal = pq.invert().multiply(gq).multiply(this.poseQ);
+    const t = this.pose * this.pose * (3 - 2 * this.pose);
+    h.anchor.position.lerpVectors(h.restP, local, t);
+    h.anchor.quaternion.slerpQuaternions(h.restQ, qLocal, t);
+  }
 
   // --------------------------------------------------------------------------------------- per frame
   update(dt: number, s: { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; distance: number; mode: string; time: string }, now: number) {
@@ -521,6 +598,7 @@ export class Cockpit {
     this.rightFoot.position.y = 0.215 + this.footBrake * 0.02;
     this.rightFoot.rotation.x = -0.32 - (this.footBrake > 0.5 ? s.brake : s.throttle) * 0.22;
     this.instruments.update(dt, { speed: s.speed, rpm: s.rpm, gear: s.gear, auto: s.auto, limiter: s.limiter, distance: s.distance, throttle: s.throttle, mode: s.mode, time: s.time } as Readout);
+    this.animatePose(dt);
     this.solveArms();
   }
 

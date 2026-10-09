@@ -204,3 +204,18 @@ input[type="range"] { width: 100%; accent-color: var(--rosso-2); }
 .ach li.got b::before { content: "★ "; color: var(--badge); }
 .ach b { font-size: 15px; }
 .ach span { font-size: 13px; color: var(--dim); }
+
+/* the ability button: a ring that drains while it's on and refills while it recharges */
+.hud-ability { --p: 1; position: absolute; right: 196px; bottom: max(18px, env(safe-area-inset-bottom)); width: 74px; height: 74px; border-radius: 50%; pointer-events: auto; cursor: pointer;
+  border: 0; padding: 0; display: grid; place-items: center; color: var(--ink); font: 700 11px/1.1 var(--font); letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
+  background: radial-gradient(circle at center, rgba(12, 13, 16, 0.82) 58%, transparent 59%), conic-gradient(var(--badge) calc(var(--p) * 1turn), rgba(243, 241, 236, 0.18) 0); }
+.hud-ability span { max-width: 52px; }
+.hud-ability.cool { color: var(--dim); background: radial-gradient(circle at center, rgba(12, 13, 16, 0.82) 58%, transparent 59%), conic-gradient(rgba(243, 241, 236, 0.55) calc(var(--p) * 1turn), rgba(243, 241, 236, 0.12) 0); }
+.hud-ability.on { box-shadow: 0 0 22px rgba(245, 197, 24, 0.6); color: var(--badge); }
+@media (pointer: coarse) { .hud-ability { right: 14px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 150px); width: 66px; height: 66px; } }
+.drivers { display: grid; gap: 8px; }
+.gcell.driver { gap: 2px; }
+.gcell.driver b { font-size: 19px; }
+.gcell.driver small { color: var(--badge); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 11px; }
+.gcell.driver em { font-style: normal; font-size: 13px; color: var(--ink); }
+.pick b { font-size: 17px; }

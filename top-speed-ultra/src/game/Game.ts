@@ -23,6 +23,7 @@ import * as P from './road/props';
 import { clamp, damp, lerp, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
+import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -35,6 +36,7 @@ export interface Hud {
   speed: number; gear: string; rpm: number; rpmFrac: number; distance: number; score: number; combo: number;
   timeLeft: number; fps: number; mode: Mode; auto: boolean; cam: string; checkpoint: number; countdown: number; best: number; overtakes: number;
   road: string; next: string; nextDist: number; wrongWay: boolean; streak: number; bestStreak: number; nearMisses: number; top: number;
+  ability: string; abilityOn: number; abilityCool: number;
 }
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; best: number; newBest: boolean; time: number;
@@ -104,6 +106,9 @@ export class Game {
   private steps = 0;
   private cands: Hit[] = [];
   readonly profile = new ProfileBook();
+  ability = new Ability(ABILITIES.clear);
+  private worldScale = 1;            // Focus Time slows the world (not you)
+  private gripBoost = 1;
   private prof = { t: 0, dist: 0, flush: 0 };
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
@@ -127,6 +132,7 @@ export class Game {
     this.env.set(settings.time, settings.weather, true);
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
+    this.applyDriver();
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
     canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
@@ -225,6 +231,7 @@ export class Game {
     this.traffic.fill(this.view());
     this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
+    this.endAbility(); this.ability.reset();
     this.timeLeft = 60; this.nextCheckpoint = 2000; this.countdown = mode === 'time' ? 3 : 0;
     this.input.recenter();
     await this.prebuild('Merging onto ' + m.label);
@@ -249,13 +256,48 @@ export class Game {
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
     if (s.time !== this.settings.time || s.weather !== this.settings.weather) this.env.set(s.time, s.weather);
+    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     this.settings = s;
+    if (who) this.applyDriver();
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     if (d && this.traffic) this.applyDensity();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
     this.onResize();
+  }
+
+  // who's driving: their look in the cockpit, and their ability
+  private applyDriver() {
+    const s = this.settings, d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
+    this.car.cockpit.setLook(lookFor(d.id, s.presentation, s.skin));
+    this.endAbility();
+    this.ability = new Ability(ABILITIES[d.ability]);
+  }
+  useAbility() {
+    if (this.attract || this.over || this.paused || this.countdown > 0 || !this.ability.trigger()) return false;
+    const v = this.view(), id = this.ability.def.id;
+    if (id === 'clear') {
+      this.traffic.scale = 0.65;
+      const cf = new THREE.Vector3(); this.camera.getWorldDirection(cf);
+      this.traffic.thin(0.35, v, cf.x, cf.z);
+      this.traffic.makeWay(v);
+      this.car.cockpit.setPose(true); this.poseT = 1.6;
+    } else if (id === 'focus') {
+      this.worldScale = 0.7;
+      this.car.cockpit.setPose(true); this.poseT = 0.9;
+    } else {
+      this.gripBoost = 1.3;
+      this.car.cockpit.setPose(true); this.poseT = this.ability.def.duration;   // one hand on the wheel
+    }
+    this.ev.toast(this.ability.def.name, 'good');
+    return true;
+  }
+  private poseT = 0;
+  private endAbility() {
+    this.traffic && (this.traffic.scale = 1);
+    this.worldScale = 1; this.gripBoost = 1;
+    this.car.cockpit.setPose(false); this.poseT = 0;
   }
 
   // navigation: head for a freeway (by label), or clear it
@@ -321,6 +363,7 @@ export class Game {
       if (a === 'reset') this.resetCar();
       if (a === 'hud') { this.hudOn = !this.hudOn; this.ev.hudToggle(this.hudOn); }
       if (a === 'corner') this.cycleCorner();
+      if (a === 'ability') this.useAbility();
       if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
         if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
@@ -577,7 +620,6 @@ export class Game {
   private weatherTick(dt: number) {
     const e = this.env;
     e.update(dt);
-    this.phys.grip = e.grip;
     this.traffic.pace = 1 - 0.14 * e.wet - 0.1 * (1 - Math.min(1, e.visibility * 3));
     this.roads.setWet(e.wet);
     const dark = 1 - e.daylight, gloom = Math.max(dark, e.visibility < 0.3 ? 0.6 : 0, e.wet > 0.5 ? 0.5 : 0);
@@ -606,6 +648,7 @@ export class Game {
       return;
     }
     const c = this.input.c;
+    p.grip = this.env.grip * this.gripBoost;
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
     this.trackPath();
     if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) this.rejoin();
@@ -621,7 +664,9 @@ export class Game {
     p.impacts.length = 0;
     // traffic
     const view = this.view();
-    const passes = this.traffic.step(dt, view, this.time);
+    if (this.ability.update(dt) === 'end') this.endAbility();
+    if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.cockpit.setPose(false); }
+    const passes = this.traffic.step(dt * this.worldScale, view, this.time);
     for (const contact of this.traffic.collide(view)) {
       p.x += contact.nx * contact.depth; p.z += contact.nz * contact.depth;
       if (contact.speed <= 0) continue;
@@ -889,6 +934,7 @@ export class Game {
       best: loadBest(this.mode), overtakes: this.overtakes,
       road: this.path.main ? this.path.label : (this.path.label ? 'To ' + this.path.label : 'Ramp'),
       next, nextDist, wrongWay: this.wrongWay, streak: this.streak, bestStreak: this.bestStreak, nearMisses: this.nearMisses, top: Math.round(this.top * MPH),
+      ability: this.ability.def.name, abilityOn: this.ability.active / this.ability.def.duration, abilityCool: this.ability.coolFrac,
     });
   }
 

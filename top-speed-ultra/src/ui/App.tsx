@@ -6,11 +6,12 @@ import { Game, Result, CORNER_PX } from '../game/Game';
 import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
+import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
@@ -100,7 +101,7 @@ export function App() {
   return (
     <div className="app">
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} onAbility={() => game.current?.useAbility()} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -140,6 +141,9 @@ export function App() {
                 </button>
               ))}
             </div>
+            <button className="pick" onClick={() => setPanel('driver')}>
+              <small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
+            </button>
             {mode !== 'time' && (
               <button className="pick" onClick={() => setPanel('start')}>
                 <small>Start on</small><Shield label={start.label} /><span>{start.blurb}</span><i aria-hidden="true">›</i>
@@ -234,6 +238,31 @@ export function App() {
       )}
 
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
+
+      {panel === 'driver' && (
+        <div className="overlay center">
+          <div className="panel">
+            <h2>Driver</h2>
+            <div className="drivers">
+              {DRIVERS.map((d) => {
+                const a = ABILITIES[d.ability];
+                return (
+                  <button key={d.id} className={'gcell driver' + (settings.driver === d.id ? ' on' : '')} onClick={() => update({ driver: d.id })}>
+                    <b>{d.name}</b><small>{d.title}</small><span>{d.blurb}</span>
+                    <em>{a.name}: {a.blurb} Recharges in {a.cooldown} s.</em>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="field"><label>Presentation</label><Seg value={settings.presentation} options={['m', 'f']} labels={(v) => (v === 'm' ? 'Male' : 'Female')} onChange={(v) => update({ presentation: v })} /></div>
+            <div className="field"><label>Skin tone</label>
+              <div className="swatches" role="group" aria-label="Skin tone">{SKINS.map((c, i) => <button key={i} aria-pressed={settings.skin === i} style={{ background: '#' + c.toString(16).padStart(6, '0') }} onClick={() => update({ skin: i })} aria-label={`Tone ${i + 1}`} />)}</div>
+            </div>
+            <p className="fine">Looks are cosmetic. Use the ability with the round button (or F). Abilities change the traffic or the grip, never the scoring rules.</p>
+            <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
+          </div>
+        </div>
+      )}
 
       {panel === 'board' && (
         <div className="overlay center">

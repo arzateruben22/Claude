@@ -25,6 +25,9 @@ export interface Settings {
   showTouch: boolean;       // on-screen pedals on a device without a coarse pointer
   time: TimeOfDay;          // 'live' follows this device's clock (the sun's real position over OC)
   weather: Weather;
+  driver: 'closer' | 'ace' | 'wrench';
+  presentation: 'm' | 'f';
+  skin: number;             // index into drivers.SKINS
 }
 
 export interface QualityPreset {
@@ -91,7 +94,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false, time: 'day', weather: 'clear',
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1,
   };
 }
 
@@ -109,6 +112,9 @@ export function loadSettings(): Settings {
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
       time: (['live', 'sunrise', 'day', 'sunset', 'night'] as const).includes(v.time as TimeOfDay) ? v.time! : d.time,
       weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
+      driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',
+      presentation: v.presentation === 'f' ? 'f' : 'm',
+      skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
     };
   } catch { return d; }

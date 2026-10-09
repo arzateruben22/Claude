@@ -52,7 +52,21 @@ point through to the browser. That bug was fixed for later runs, and the chain i
 
 Freeways driven so far: I-405, CA-55, CA-91, CA-241, I-5, CA-57 and CA-73.
 
-- **Not yet driven:** CA-22, CA-133 and CA-261 (routes exist in the graph).
+Later the same day, after the steering change and the ramp-side fix:
+
+| Chain | Result |
+| --- | --- |
+| I-405 N → 55 N → 91 E → 241 S | All reached again with the new steering |
+| 91 W → 55 S → I-5 S | Reached. The 55 South starts from the 91 at a Y |
+| I-5 S → 55 S → 405 N, then 55 N → 91 W → 57 S → **22 E** | All reached |
+| 241 N → **133 S** → I-5 N → 55 N → 91 E → 241 S, then **133 N** | Both 133 directions reached. The 261 leg ran out of its 1,600 s budget; reaching 241 South from 241 North means a long loop |
+| 241 S → **261 S** at the Y (`dbg3.js`) | Hand-off at s = 9,197 m, then 500 m on the 261 |
+
+**All ten freeways have now been driven through real junctions:** I-5, I-405, 22, 55, 57, 73, 91, 133, 241, 261.
+
+**Bug found and fixed.** The autopilot drove past the I-5 South → 133 connector. `sideOf()` judged the ramp's
+side against the straight tangent at the split, and the 5 curves there. It now projects onto the curved road.
+
 - **No page errors.** None of the game runs logged a page error. The only error in the logs came from that same test
   script.
 
