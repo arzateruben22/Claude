@@ -127,7 +127,8 @@ export class Terrain {
         const dy = Math.abs(H[v] - target[v]);
         const w = 1 - smoothstep(0.8, 2 + Math.min(40, dy * 1.8 + 6), best[v]);
         H[v] = lerp(H[v], target[v], w);
-        if (best[v] < 1.2) H[v] = Math.min(H[v], target[v]);
+        // coarse tiles can't follow a cut's edge, so near any road they stay below it outright
+        if (best[v] < (lod ? sp * 0.8 : 1.2)) H[v] = Math.min(H[v], target[v]);
       }
       if (cap[v] < 1e8) H[v] = Math.min(H[v], cap[v]);
     }

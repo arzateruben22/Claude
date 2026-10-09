@@ -16,6 +16,7 @@ export interface TrafficCar {
   sig: number; sigT: number; acc: number; ps: number; pd: number; spin: number;
   decide: number; hitT: number; stopT: number; color: THREE.Color; side: number; touched: number; id: number;
   bold: boolean;                                       // an aggressive driver (Expert traffic)
+  racer?: { name: string; top: number; accel: number; done: number; base: number; hold: boolean };   // an AI racer: progress, finish time
   x: number; z: number; y: number; h: number;          // world pose, refreshed every step
 }
 export interface PlayerView {
@@ -148,7 +149,7 @@ export class Traffic {
         c.d = c.pd = nx.laneCenter(c.lane);
       } else c.v = -1;
     }
-    this.cars = this.cars.filter((c) => c.v >= 0 && Math.hypot(c.x - player.x, c.z - player.z) < R);
+    this.cars = this.cars.filter((c) => c.racer || (c.v >= 0 && Math.hypot(c.x - player.x, c.z - player.z) < R));
     // each carriageway is its own queue
     const byPath = new Map<Path, TrafficCar[]>();
     for (const c of this.cars) { let a = byPath.get(c.path); if (!a) byPath.set(c.path, (a = [])); a.push(c); }
@@ -172,14 +173,23 @@ export class Traffic {
           if (pd > 0 && inLane) { const g = pd - (player.len + cl.len) / 2; if (g < gap) { gap = g; vl = player.v; } }
         }
         if (c.stopT > 0) c.stopT -= dt;
-        const v0 = c.stopT > 0 ? 0 : c.v0 * this.pace;
-        const s0 = c.bold ? 2 : 3, th = c.bold ? 0.85 : 1.25;
-        const sStar = s0 + c.v * th + (c.v * (c.v - vl)) / (2 * Math.sqrt(A * B));
-        let acc = A * (1 - Math.pow(c.v / Math.max(1, v0), 4)) - (gap < 1e8 ? A * Math.pow(Math.max(sStar, 0) / Math.max(gap, 0.5), 2) : 0);
-        acc = clamp(acc, -9, A * (c.bold ? 1.4 : 1));
+        let v0 = c.stopT > 0 ? 0 : c.v0 * this.pace;
+        const rc = c.racer;
+        let aMax = A * (c.bold ? 1.4 : 1);
+        if (rc) {
+          // racers: flat out, but no faster than the curves ahead allow
+          let k = 0;
+          for (let a = 20; a < 40 + c.v * 2.5; a += 15) k = Math.max(k, Math.abs(path.sample(Math.min(path.len, c.s + a), SP).k));
+          v0 = rc.hold ? 0 : Math.min(rc.top, Math.sqrt(11 / Math.max(k, 1e-5)));
+          aMax = rc.accel;
+        }
+        const s0 = c.bold || rc ? 2 : 3, th = rc ? 0.6 : c.bold ? 0.85 : 1.25;
+        const sStar = s0 + c.v * th + (c.v * (c.v - vl)) / (2 * Math.sqrt(aMax * B));
+        let acc = aMax * (1 - Math.pow(c.v / Math.max(1, v0), 4)) - (gap < 1e8 ? aMax * Math.pow(Math.max(sStar, 0) / Math.max(gap, 0.5), 2) : 0);
+        acc = clamp(acc, -10, aMax);
         if (c.stopT > 0) acc = Math.min(acc, -4);
         c.acc = acc;
-        c.v = Math.max(0, c.v + acc * dt);
+        c.v = rc && rc.hold ? 0 : Math.max(0, c.v + acc * dt);       // on the grid: held until GO
         c.s += c.v * dt;
         c.spin += (c.v / cl.wheelR) * dt;
         // lane changes: signal first, then a 3 s move (bold drivers: shorter signal, quicker move)
@@ -192,10 +202,10 @@ export class Traffic {
           }
         } else if (c.stopT <= 0) {
           c.decide -= dt;
-          const behind = playerHere && pLane === c.lane && player.s < c.s && c.s - player.s < 140 && player.v > c.v + 8;
+          const behind = !c.racer && playerHere && pLane === c.lane && player.s < c.s && c.s - player.s < 140 && player.v > c.v + 8;
           if (c.decide <= 0 || (behind && c.decide < 1.5 && c.lane < path.lanes - 1)) {
-            c.decide = (c.bold ? 1.5 : 3) + this.r() * (c.bold ? 3 : 6);
-            const slow = gap < 70 && vl < c.v0 - 2;
+            c.decide = c.racer ? 0.6 + this.r() * 0.8 : (c.bold ? 1.5 : 3) + this.r() * (c.bold ? 3 : 6);
+            const slow = gap < (c.racer ? 140 : 70) && vl < (c.racer ? c.racer.top : c.v0) - 2;
             const options: number[] = [];
             if (behind && !c.bold && this.r() < 0.7) options.push(c.lane + 1);
             if (slow) options.push(c.lane - 1, c.lane + 1);
@@ -278,6 +288,20 @@ export class Traffic {
     if (Math.abs(dv) > 4) c.stopT = 8;
   }
 
+  // an AI racer on the grid
+  addRacer(p: Path, s: number, lane: number, name: string, paint: number, top: number, accel: number, base: number) {
+    const sports = this.classes.findIndex((c) => c.id === 'sports');
+    const at = p.at(s, p.laneCenter(lane));
+    const car: TrafficCar = { cls: sports >= 0 ? sports : 0, path: p, s, d: p.laneCenter(lane), v: 0, v0: top, lane, from: lane, to: lane, t: -1, sig: 0, sigT: 0, acc: 0, ps: s, pd: p.laneCenter(lane),
+      spin: 0, decide: 1, hitT: 0, stopT: 0, color: new THREE.Color(paint), side: 1, touched: -99, id: this.nextId++, bold: true,
+      x: at.x, z: at.z, y: at.y, h: at.h, racer: { name, top, accel, done: 0, base, hold: true } };
+    this.cars.push(car);
+    return car;
+  }
+  removeRacers() { this.cars = this.cars.filter((c) => !c.racer); }
+  // clear cars off a stretch of road (the starting grid)
+  clearStretch(p: Path, s0: number, s1: number) { this.cars = this.cars.filter((c) => c.racer || c.path !== p || c.s < s0 || c.s > s1); }
+
   // Clear Path: cars ahead of you in your lane move over, where the gap allows (nobody teleports)
   makeWay(player: PlayerView, range = 320) {
     const p = player.path, lane = p.laneOf(player.d);
@@ -293,13 +317,13 @@ export class Traffic {
   }
 
   // clear the space you're about to be put back into
-  clearAround(x: number, z: number, r = 70) { this.cars = this.cars.filter((c) => Math.hypot(c.x - x, c.z - z) > r); }
+  clearAround(x: number, z: number, r = 70) { this.cars = this.cars.filter((c) => c.racer || Math.hypot(c.x - x, c.z - z) > r); }
   // thin the traffic out of sight (Clear Path): drop a share of the cars you can't see right now
   thin(fraction: number, player: PlayerView, camFwdX: number, camFwdZ: number) {
     this.cars = this.cars.filter((c) => {
       const dx = c.x - player.x, dz = c.z - player.z, dist = Math.hypot(dx, dz);
       const inView = dist < 40 || (dist < this.viewAhead * 0.8 && (dx * camFwdX + dz * camFwdZ) / Math.max(1, dist) > 0.35);
-      return inView || this.r() > fraction;
+      return inView || !!c.racer || this.r() > fraction;
     });
   }
 

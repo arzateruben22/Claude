@@ -4,7 +4,7 @@
 import { clamp } from './util';
 
 export type Action =
-  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability';
+  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio';
 
 export interface Controls {
   throttle: number;   // 0..1, smoothed
@@ -22,7 +22,7 @@ const KEYS: Record<string, string> = {
   Space: 'handbrake', KeyV: 'back',
 };
 const ACTIONS: Record<string, Action> = {
-  KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability',
+  KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability', KeyB: 'radio',
 };
 
 export class Input {

@@ -4,6 +4,75 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-09 (later): P2–P4 systems
+
+All of these were built, then checked in Playwright. Results are as printed by the test scripts.
+
+### Profile (`profile.ts`)
+
+Versioned v1 on the device: XP and levels, fictional credits, lifetime stats, freeways driven, nine achievements, and
+a Profile screen.
+
+Verified:
+- XP and levels accrue from driving.
+- "Ton Up" unlocks.
+- The Profile screen renders at phone size.
+
+### Weather and time (`env/Environment.ts`)
+
+Verified:
+- Six combinations rendered (day, sunset, night, rain, fog, mist) with no errors.
+- Rain: grip 0.8, wet 1.
+- Fog: visibility 0.14.
+- Live mode at 02:13 Pacific gave daylight 0 (correct).
+
+### Drivers and abilities (`drivers.ts`)
+
+| Ability | Verified result |
+| --- | --- |
+| Clear Path | Removed 0 of 67 cars in view and 26 out of sight; scale 0.65 during, 1 after; the 45 s cooldown blocks a refire |
+| Focus Time | Traffic moved at 0.70× |
+| Locked In | Grip 1.00 → 1.30 → 1.00 |
+
+Hand poses were checked in screenshots (the watch flex shows the gold watch).
+
+### Races, cars, garage (`race.ts`, `cars.ts`)
+
+Verified:
+- The countdown holds you and all rivals at 0 m/s.
+- Racing slowly ends "Too far behind" at P4.
+- Flat out, the autopilot won the Irvine Sprint, and 1,500 credits and racesWon were added.
+- Buying the Brio for 9,000 of 20,000 credits leaves 11,000, and the physics mass becomes 1,250 kg.
+- The showroom refuses without enough credits ("29,900 more credits needed") and below the car's level ("Opens at
+  level 8").
+
+**Bug found and fixed.** Rivals crept forward at 1 m/s during the countdown.
+
+### Ultra Realism and radio
+
+Verified:
+- Locked below level 5.
+- At level 6 and 155 mph, tunnel vision reached 0.37, and it switches off on its own.
+- The radio cycles Coast → Freeway FM → Canyon Radio → off, with the audio context running.
+
+**Bugs found and fixed:**
+- On phones the top bar covered the gear readout. Buttons now have their own row.
+- Route shields on the profile were greyed out by a CSS selector.
+- Coarse terrain tiles could cover a road in a cut at speed. They now stay below nearby roads.
+
+### Full regression (`final.js`)
+
+Verified:
+- Loads in 16.9 s in software rendering.
+- 405 N → 55 N in 274 s on the autopilot.
+- Night and rain render.
+- The High and Ultra presets rebuild mid-drive.
+- Recovers from a lost WebGL context.
+- Pause and resume work. Reset was checked separately with real frames: 39.9 → 0.5 m/s.
+- Speed Survival scored 2,723 points, with a best streak of 27.6 s.
+- The race finished P1.
+- No page errors.
+
 ## 2026-10-09: the real freeway network
 
 ### Data
@@ -113,8 +182,6 @@ side against the straight tangent at the split, and the 5 curves there. It now p
 
 - **Performance on a real phone is unmeasured.** In SwiftShader the Low preset drew about 400 to 800 calls and
   500k triangles. Tree canopies were the biggest share and now have a 4× lighter phone version, not yet re-measured.
-- **The P2–P4 systems aren't built.** That's the versioned profile, weather and day/night, drivers and abilities,
-  races, economy and garage, the Ultra Realism unlock, and radio. See the roadmap.
 - **Exits.** There are no exit numbers, and street ramps rejoin by moving you to an on-ramp, not by driving streets.
 
 ## Before this log

@@ -20,10 +20,14 @@ import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
 import * as P from './road/props';
-import { clamp, damp, lerp, MPH } from './util';
+import { Radio } from './audio/Radio';
+import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
+import { carById, applyCar } from './cars';
+import { COURSES, Course, RIVALS, gate, saveBestTime, bestTime, fmtTime } from './race';
+import type { TrafficCar } from './traffic/Traffic';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -31,16 +35,24 @@ const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Ho
 const DT = 1 / 120;
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
+const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export interface Hud {
   speed: number; gear: string; rpm: number; rpmFrac: number; distance: number; score: number; combo: number;
   timeLeft: number; fps: number; mode: Mode; auto: boolean; cam: string; checkpoint: number; countdown: number; best: number; overtakes: number;
   road: string; next: string; nextDist: number; wrongWay: boolean; streak: number; bestStreak: number; nearMisses: number; top: number;
   ability: string; abilityOn: number; abilityCool: number;
+  racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string;
+  tunnel: number; radio: string;
 }
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
+  race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
+}
+interface RaceState {
+  course: Course; path: Path; s0: number; L: number; cps: number[]; next: number; t: number; go: boolean;
+  racers: TrafficCar[]; gates: THREE.Group; progress: number; order: string[]; position: number;
 }
 export interface GameEvents {
   hud: (h: Hud) => void;
@@ -109,6 +121,10 @@ export class Game {
   ability = new Ability(ABILITIES.clear);
   private worldScale = 1;            // Focus Time slows the world (not you)
   private gripBoost = 1;
+  private carGrip = 1;
+  race: RaceState | null = null;
+  readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
+  private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
@@ -133,6 +149,7 @@ export class Game {
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
     this.applyDriver();
+    this.applyCarChoice();
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
     canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
@@ -198,6 +215,7 @@ export class Game {
     if (Math.abs(dx) < 1 && Math.abs(dz) < 1) return;
     ORIGIN.x += dx; ORIGIN.z += dz;
     this.roads?.rebase(); this.terrain?.rebase(this.phys.x, this.phys.z);
+    if (this.race) for (const g of this.race.gates.children) g.position.set(g.userData.ax - ORIGIN.x, g.position.y, g.userData.az - ORIGIN.z);
     this.camera.position.x -= dx; this.camera.position.z -= dz;
     this.chasePos.x -= dx; this.chasePos.z -= dz;
     this.camFrom.p.x -= dx; this.camFrom.p.z -= dz;
@@ -216,7 +234,10 @@ export class Game {
     this.audio.silence();
   }
 
-  async start(mode: Mode, startLabel = this.settings.start) {
+  async start(mode: Mode, startLabel = this.settings.start, courseId = this.settings.course) {
+    this.endRace();
+    this.applyCarChoice();
+    if (mode === 'race') return this.startRace(COURSES.find((c) => c.id === courseId) ?? COURSES[0]);
     this.audio.start();
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
@@ -241,7 +262,115 @@ export class Game {
     this.ev.toast(`${m.label} · ${mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive'}`, 'info');
   }
 
-  quitToMenu() { this.profile.save(); this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
+  // Ultra Realism opens at level 5; then each of its parts can be switched on its own
+  get ultraOpen() { return this.profile.level >= 5; }
+  private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }
+
+  // ----------------------------------------------------------------------------------------- races
+  private async startRace(course: Course) {
+    this.audio.start();
+    this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
+    this.audio.applyVolumes();
+    this.mode = 'race'; this.attract = false; this.over = false;
+    const m = this.findMain(course.road), s0 = m.len * course.at, L = course.length;
+    this.placeCar(m, s0, Math.min(1, m.lanes - 1), 0);
+    this.setRoute(null);
+    this.traffic.reseed(7000 + COURSES.indexOf(course));
+    this.traffic.fill(this.view());
+    this.traffic.clearStretch(m, s0 - 80, s0 + 320);
+    // the grid: rivals in the other lanes, staggered; they're quick, but a little slower than your car flat out
+    const top = this.carTop();
+    const slots: [number, number][] = m.lanes >= 3 ? [[0, 7], [2, 7], [Math.min(3, m.lanes - 1), -7]] : [[0, 9], [1, 18], [0, -9]];
+    const racers = RIVALS.map((r, i) => this.traffic.addRacer(m, s0 + slots[i][1], slots[i][0], r.name, r.paint, top * r.pace, 4.6 - i * 0.25, s0));
+    const gates = new THREE.Group();
+    gates.add(gate(m, s0 + 14, 'start', 'START'), gate(m, s0 + L, 'finish', 'FINISH'));
+    const cps: number[] = [];
+    for (let k = 1; k <= course.cps; k++) { const s = (L * k) / (course.cps + 1); cps.push(s); gates.add(gate(m, s0 + s, 'cp', `CP ${k}`)); }
+    this.scene.add(gates);
+    this.race = { course, path: m, s0, L, cps, next: 0, t: 0, go: false, racers, gates, progress: 0, order: [], position: 4 };
+    this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0;
+    this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
+    this.endAbility(); this.ability.reset();
+    this.countdown = 3;
+    this.input.recenter();
+    await this.prebuild(course.name);
+    this.setPaused(false);
+    this.ev.loading(false);
+    this.last = performance.now();
+    this.ev.toast(`${course.name} · ${(L / 1609.344).toFixed(1)} mi`, 'info');
+  }
+  // what this car does flat out (from its gearing and drag), so the rivals can be set against it
+  private carTop() {
+    const wheelTop = ((SPEC.redline * Math.PI) / 30) * SPEC.wheelR / (SPEC.gears[SPEC.gears.length - 1] * SPEC.final);
+    const dragTop = Math.cbrt((SPEC.power * 0.9) / (0.5 * 1.225 * SPEC.CdA));
+    return Math.min(wheelTop, dragTop);
+  }
+  private endRace() {
+    if (!this.race) return;
+    this.scene.remove(this.race.gates);
+    this.race.gates.traverse((o) => { const mm = o as THREE.Mesh; if (mm.geometry) mm.geometry.dispose(); });
+    this.traffic.removeRacers();
+    this.race = null;
+  }
+  // how far along the course something at (x, z) is
+  private courseProgress(x: number, z: number, guess: number) {
+    const r = this.race!, pr = r.path.project(x, z, r.s0 + guess);
+    return Math.abs(pr.d) < 60 ? pr.s - r.s0 : -1;
+  }
+  private raceTick(dt: number) {
+    const r = this.race!;
+    for (const c of r.racers) c.racer!.hold = this.countdown > 0;
+    if (this.countdown > 0 || this.over) return;
+    if (!r.go) { r.go = true; }
+    r.t += dt;
+    const p = this.phys;
+    const prog = this.path === r.path ? p.s - r.s0 : this.courseProgress(p.x, p.z, r.progress);
+    if (prog >= 0) r.progress = Math.max(r.progress, Math.min(prog, r.L));
+    for (const c of r.racers) {
+      const rc = c.racer!;
+      if (rc.done) continue;
+      const cp = c.path === r.path ? c.s - r.s0 : this.courseProgress(c.x, c.z, c.s - r.s0);
+      if (cp >= r.L) { rc.done = r.t; r.order.push(rc.name); }
+    }
+    while (r.next < r.cps.length && r.progress >= r.cps[r.next]) {
+      r.next++;
+      this.ev.toast(`Checkpoint ${r.next}/${r.cps.length} · P${this.racePosition()}`, 'good');
+    }
+    r.position = this.racePosition();
+    if (r.progress >= r.L) { r.order.push('You'); this.finishRace(r.order.length); return; }
+    // everyone else is home and you're over a minute behind the winner: that's the race
+    if (r.order.length === r.racers.length && r.t - Math.max(...r.racers.map((c) => c.racer!.done)) > 60) this.finishRace(r.racers.length + 1, 'Too far behind');
+  }
+  racePosition() {
+    const r = this.race; if (!r) return 0;
+    let ahead = 0;
+    for (const c of r.racers) {
+      if (c.racer!.done) { ahead++; continue; }
+      const cp = c.path === r.path ? c.s - r.s0 : this.courseProgress(c.x, c.z, c.s - r.s0);
+      if (cp > r.progress) ahead++;
+    }
+    return ahead + 1;
+  }
+  private finishRace(position: number, why?: string) {
+    const r = this.race!;
+    this.over = true;
+    const credits = r.course.reward[Math.min(position, 4) - 1], xp = Math.round(credits / 2) + (position === 1 ? 300 : 0);
+    const lvl = this.profile.reward(xp, credits);
+    if (position === 1) { this.profile.p.racesWon++; this.profile.save(); }
+    const newBest = !why && saveBestTime(r.course.id, r.t);
+    this.profile.endRun();
+    const best = bestTime(r.course.id);
+    const ordinal = ['1st', '2nd', '3rd', '4th'][Math.min(position, 4) - 1];
+    if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    setTimeout(() => this.ev.over({
+      mode: 'race', score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
+      best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
+      board: { mode: 'race', runs: [], rank: 0 },
+      race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
+    }), 1400);
+  }
   restart() { void this.start(this.mode); }
 
   setPaused(on: boolean) {
@@ -262,9 +391,18 @@ export class Game {
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
+    this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
     this.onResize();
+  }
+
+  // the car from your garage: its numbers into the physics, its paint onto the body
+  applyCarChoice() {
+    const c = carById(this.profile.p.car);
+    this.carGrip = applyCar(c);
+    this.car.cockpit.m.paint.color.setHex(c.paint);
+    return c;
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -364,6 +502,7 @@ export class Game {
       if (a === 'hud') { this.hudOn = !this.hudOn; this.ev.hudToggle(this.hudOn); }
       if (a === 'corner') this.cycleCorner();
       if (a === 'ability') this.useAbility();
+      if (a === 'radio') this.cycleRadio();
       if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
         if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
@@ -603,6 +742,7 @@ export class Game {
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
     this.weatherTick(dt);
+    this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.cockpit.setDriverVisible(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
@@ -614,6 +754,13 @@ export class Game {
     this.hudT -= dt;
     if (this.hudT <= 0) { this.hudT = 0.1; this.sendHud(); }
   };
+
+  // Ultra Realism: the edges close in and the world goes quiet as the speed builds, and the car buzzes at speed
+  private realism(dt: number) {
+    const on = this.ultraOn(), v = Math.abs(this.phys.vx), k = smoothstep(45, 95, v);
+    this.tunnel = damp(this.tunnel, on && this.settings.ultraTunnel ? k * 0.9 : 0, 3, dt);
+    this.audio.setMuffle(on && this.settings.ultraMuffle ? lerp(20000, 1900, k) : 20000);
+  }
 
   // the weather reaches everything: grip, traffic pace, the road's sheen, headlights, lamps, the sound of rain
   private carVel = new THREE.Vector3();
@@ -644,11 +791,12 @@ export class Game {
       this.countdown -= dt;
       p.step(dt, { ...this.input.c, brake: 1, handbrake: true }, this.path, this.net);
       if (Math.ceil(this.countdown) !== before) this.ev.toast(this.countdown > 0 ? String(Math.ceil(this.countdown)) : 'GO', 'info');
+      if (this.race) { this.raceTick(dt); this.traffic.step(dt, this.view(), this.time); }
       this.car.snapshot(p);
       return;
     }
     const c = this.input.c;
-    p.grip = this.env.grip * this.gripBoost;
+    p.grip = this.env.grip * this.gripBoost * this.carGrip;
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
     this.trackPath();
     if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) this.rejoin();
@@ -702,6 +850,7 @@ export class Game {
       this.combo = Math.min(8, this.combo + (ps.close ? 1 : 0.5));
     }
     if (this.comboT > 0) { this.comboT -= dt; if (this.comboT <= 0) this.combo = 1; }
+    if (this.race) this.raceTick(dt);
     // distance, the streak and the clocks
     const fwd = Math.max(0, view.v) * dt;
     if (!this.attract && !this.wrongWay) this.distance += fwd;
@@ -792,6 +941,10 @@ export class Game {
       this.wantQ.setFromRotationMatrix(m);
       this.tmpQ.setFromEuler(this.tmpE.set(c.lookPitch * 0.5, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);
       fov = (portrait ? 80 : 60) + this.settings.fov * 0.5 + speedK * 6;
+    }
+    if (this.ultraOn() && this.settings.ultraShake && !lookBack && !REDUCED_MOTION) {
+      const b = smoothstep(30, 90, Math.abs(p.vx)) * 0.0032;
+      this.wantP.x += (Math.random() - 0.5) * b; this.wantP.y += (Math.random() - 0.5) * b * 1.4 + Math.sin(this.time * 23) * b * 0.4;
     }
     if (this.shake > 0) {
       this.wantP.x += (Math.random() - 0.5) * this.shake * 0.06; this.wantP.y += (Math.random() - 0.5) * this.shake * 0.05;
@@ -935,6 +1088,9 @@ export class Game {
       road: this.path.main ? this.path.label : (this.path.label ? 'To ' + this.path.label : 'Ramp'),
       next, nextDist, wrongWay: this.wrongWay, streak: this.streak, bestStreak: this.bestStreak, nearMisses: this.nearMisses, top: Math.round(this.top * MPH),
       ability: this.ability.def.name, abilityOn: this.ability.active / this.ability.def.duration, abilityCool: this.ability.coolFrac,
+      racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
+      raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '',
+      tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
     });
   }
 

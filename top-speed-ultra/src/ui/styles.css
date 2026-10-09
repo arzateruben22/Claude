@@ -165,17 +165,17 @@ input[type="range"] { width: 100%; accent-color: var(--rosso-2); }
 .touch-shift { display: grid; gap: 8px; }
 @media (pointer: coarse) {
   /* phones: speed top left, the numbers under it, the buttons top right, pedals and steering at the bottom */
-  .hud-speed { bottom: auto; top: max(10px, env(safe-area-inset-top)); right: auto; left: 10px; text-align: left; min-width: 0; padding: 4px 10px 6px; }
+  .hud-speed { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 46px); right: auto; left: 10px; text-align: left; min-width: 0; padding: 4px 10px 6px; }
   .hud-row { justify-content: flex-start; }
   .hud-rpm { width: 128px; }
   .hud-cam { display: none; }
-  .hud-stats { top: max(84px, calc(env(safe-area-inset-top) + 74px)); left: 10px; }
-  .tbar { gap: 6px; right: 8px; }
+  .hud-stats { top: calc(max(10px, env(safe-area-inset-top)) + 126px); left: 10px; }
+  .tbar { gap: 6px; right: 8px; left: 8px; justify-content: flex-end; }
   .tbar .tbtn { padding: 7px 9px; font-size: 11px; letter-spacing: 0.06em; }
   .hud-stats span { font-size: 16px; }
   .hud-stats b { min-width: 70px; }
-  .hud-fps { bottom: auto; top: max(150px, calc(env(safe-area-inset-top) + 142px)); left: 16px; }
-  .hud-road { top: max(236px, calc(env(safe-area-inset-top) + 226px)); max-width: 92vw; }
+  .hud-fps { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 196px); left: 16px; }
+  .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 238px); max-width: 92vw; }
   .toasts { top: 40%; }
 }
 @media (max-width: 700px) and (pointer: fine) { .hud-road { top: max(236px, calc(env(safe-area-inset-top) + 226px)); max-width: 92vw; } }
@@ -196,8 +196,8 @@ input[type="range"] { width: 100%; accent-color: var(--rosso-2); }
 .swatches button { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
 .swatches button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--rosso-2); }
 .routes { display: flex; gap: 8px; flex-wrap: wrap; }
-.routes span { opacity: 0.32; filter: grayscale(1); }
-.routes span.on { opacity: 1; filter: none; }
+.routes > span { opacity: 0.32; filter: grayscale(1); }
+.routes > span.on { opacity: 1; filter: none; }
 .ach { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .ach li { display: grid; gap: 1px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line); opacity: 0.55; }
 .ach li.got { opacity: 1; border-color: rgba(245, 197, 24, 0.6); }
@@ -219,3 +219,19 @@ input[type="range"] { width: 100%; accent-color: var(--rosso-2); }
 .gcell.driver small { color: var(--badge); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 11px; }
 .gcell.driver em { font-style: normal; font-size: 13px; color: var(--ink); }
 .pick b { font-size: 17px; }
+
+.gcell.car { cursor: default; }
+.carhead { display: flex; gap: 10px; align-items: center; }
+.carhead .paint { width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(243, 241, 236, 0.5); }
+.gcell.car .row { margin-top: 6px; }
+.order { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.order li { display: flex; gap: 10px; padding: 4px 0; border-top: 1px solid var(--line); }
+.order li b { width: 1.4em; color: var(--dim); }
+.order li.me { color: var(--badge); font-weight: 700; }
+.gcell.driver small .shield-row { vertical-align: middle; }
+.gcell.driver small .shield { min-width: 30px; height: 22px; font-size: 12px; }
+
+/* Ultra Realism: tunnel vision closes in from the edges as the speed builds */
+.tunnel { --t: 0; position: absolute; inset: 0; pointer-events: none; opacity: min(1, calc(var(--t) * 1.7));
+  background: radial-gradient(ellipse 70% 62% at 50% 40%, transparent calc(55% - var(--t) * 30%), rgba(0, 0, 0, 0.7) calc(85% - var(--t) * 25%), rgba(0, 0, 0, 0.96) 100%); }
+@media (prefers-reduced-motion: reduce) { .tunnel { display: none; } }

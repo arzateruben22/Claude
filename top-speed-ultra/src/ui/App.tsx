@@ -7,11 +7,13 @@ import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, 
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
+import { COURSES, bestTime, fmtTime } from '../game/race';
+import { CARS, carById, figures, slotsFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
@@ -79,7 +81,7 @@ export function App() {
   const drive = (m: Mode = mode) => {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
     setScreen('playing');
-    void game.current?.start(m, settings.start);
+    void game.current?.start(m, settings.start, settings.course);
   };
   const resume = () => { setPanel(null); game.current?.setPaused(false); setScreen('playing'); };
   const toMenu = () => { setPanel(null); setResult(null); game.current?.quitToMenu(); setScreen('menu'); };
@@ -114,6 +116,7 @@ export function App() {
           <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}>View</button>
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
           <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}>Pause</button>
         </div>
       )}
@@ -137,14 +140,23 @@ export function App() {
               {(Object.keys(MODES) as Mode[]).map((m) => (
                 <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} onClick={() => setMode(m)}>
                   <b>{MODES[m].label}</b><span>{MODES[m].blurb}</span>
-                  {m !== 'free' && <em>Best {m === 'time' ? (loadBest(m) / 1609.344).toFixed(2) + ' mi' : loadBest(m).toLocaleString()}</em>}
+                  {(m === 'survival' || m === 'time') && <em>Best {m === 'time' ? (loadBest(m) / 1609.344).toFixed(2) + ' mi' : loadBest(m).toLocaleString()}</em>}
+                  {m === 'race' && <em>{game.current?.profile.p.racesWon ?? 0} won</em>}
                 </button>
               ))}
             </div>
             <button className="pick" onClick={() => setPanel('driver')}>
               <small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
             </button>
-            {mode !== 'time' && (
+            <button className="pick" onClick={() => setPanel('garage')}>
+              <small>Car</small><b>{carById(game.current?.profile.p.car ?? 'rossini-gt').name}</b><span>{figures(carById(game.current?.profile.p.car ?? 'rossini-gt')).hp} hp</span><i aria-hidden="true">›</i>
+            </button>
+            {mode === 'race' && (
+              <button className="pick" onClick={() => setPanel('course')}>
+                <small>Race</small><b>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).name}</b><span>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).road}</span><i aria-hidden="true">›</i>
+              </button>
+            )}
+            {mode !== 'time' && mode !== 'race' && (
               <button className="pick" onClick={() => setPanel('start')}>
                 <small>Start on</small><Shield label={start.label} /><span>{start.blurb}</span><i aria-hidden="true">›</i>
               </button>
@@ -182,8 +194,15 @@ export function App() {
           <div className="panel narrow result">
             <p className="eyebrow">{MODES[result.mode].label}</p>
             <h2>{result.reason}</h2>
-            <div className="big">{result.mode === 'time' ? (result.distance / 1609.344).toFixed(2) : result.score.toLocaleString()}<small>{result.mode === 'time' ? 'miles' : 'points'}</small></div>
-            {result.newBest ? <p className="good">New personal best</p> : <p className="muted">Best {result.mode === 'time' ? (result.best / 1609.344).toFixed(2) + ' mi' : result.best.toLocaleString()}</p>}
+            {result.race ? <>
+              <div className="big">P{result.race.position}<small>of {result.race.of} · {result.race.time}</small></div>
+              {result.newBest ? <p className="good">New best time on {result.race.course}</p> : result.race.best ? <p className="muted">Best {result.race.best}</p> : null}
+              <p className="good">+{result.race.credits.toLocaleString()} credits · +{result.race.xp.toLocaleString()} XP</p>
+              <ol className="order">{result.race.order.map((n, i) => <li key={n} className={n === 'You' ? 'me' : ''}><b>{i + 1}</b>{n}</li>)}</ol>
+            </> : <>
+              <div className="big">{result.mode === 'time' ? (result.distance / 1609.344).toFixed(2) : result.score.toLocaleString()}<small>{result.mode === 'time' ? 'miles' : 'points'}</small></div>
+              {result.newBest ? <p className="good">New personal best</p> : <p className="muted">Best {result.mode === 'time' ? (result.best / 1609.344).toFixed(2) + ' mi' : result.best.toLocaleString()}</p>}
+            </>}
             <dl className="stats">
               <div><dt>Distance</dt><dd>{(result.distance / 1609.344).toFixed(2)} mi</dd></div>
               <div><dt>Top speed</dt><dd>{Math.round(result.top * 2.236936)} mph</dd></div>
@@ -194,7 +213,7 @@ export function App() {
                 <div><dt>Collisions</dt><dd>{result.collisions}</dd></div>
               </>}
             </dl>
-            <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />
+            {!result.race && <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />}
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
               <button className="btn" onClick={toMenu}>Main menu</button>
@@ -238,6 +257,28 @@ export function App() {
       )}
 
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
+
+      {panel === 'course' && (
+        <div className="overlay center">
+          <div className="panel">
+            <h2>Races</h2>
+            <div className="drivers">
+              {COURSES.map((c) => {
+                const b = bestTime(c.id);
+                return (
+                  <button key={c.id} className={'gcell driver' + (settings.course === c.id ? ' on' : '')} onClick={() => { update({ course: c.id }); setPanel(null); }}>
+                    <b>{c.name}</b><small>{c.kind} · {(c.length / 1609.344).toFixed(1)} mi · <Shield label={c.road} /></small><span>{c.blurb}</span>
+                    <em>Win {c.reward[0].toLocaleString()} credits{b ? ` · best ${fmtTime(b)}` : ''}</em>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="row"><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
+          </div>
+        </div>
+      )}
+
+      {panel === 'garage' && game.current && <GaragePanel game={game.current} onClose={() => setPanel(null)} />}
 
       {panel === 'driver' && (
         <div className="overlay center">
@@ -293,11 +334,22 @@ export function App() {
             <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
             <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
             {!coarse && <Toggle label="On-screen pedals (for touch screens)" value={settings.showTouch} onChange={(v) => update({ showTouch: v })} />}
+            <div className="field"><label>Ultra Realism</label>
+              {game.current?.ultraOpen ? <>
+                <Toggle label="On: the world closes in at speed" value={settings.ultra} onChange={(v) => update({ ultra: v })} />
+                {settings.ultra && <div className="stack">
+                  <Toggle label="Tunnel vision above about 100 mph" value={settings.ultraTunnel} onChange={(v) => update({ ultraTunnel: v })} />
+                  <Toggle label="Camera shake at speed" value={settings.ultraShake} onChange={(v) => update({ ultraShake: v })} />
+                  <Toggle label="Muffled sound at speed" value={settings.ultraMuffle} onChange={(v) => update({ ultraMuffle: v })} />
+                </div>}
+              </> : <p className="fine">Opens at level 5 (you're level {game.current ? levelOf(game.current.profile.p.xp) : 1}).</p>}
+            </div>
+            <Range label="Radio" min={0} max={1} step={0.05} value={settings.music} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ music: v })} />
             <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
             <Range label="Master volume" min={0} max={1} step={0.05} value={settings.master} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ master: v })} />
             <Range label="Engine" min={0} max={1} step={0.05} value={settings.engine} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ engine: v })} />
             <Range label="Road and wind" min={0} max={1} step={0.05} value={settings.ambient} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ ambient: v })} />
-            {!coarse && <p className="fine">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, V look back, R reset, P pause.</p>}
+            {!coarse && <p className="fine">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause.</p>}
             <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
           </div>
         </div>
@@ -335,6 +387,44 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
           </li>
         ))}</ol>
       )}
+    </div>
+  );
+}
+
+// the garage (what you own, pick one) and the showroom (what credits can buy, by level)
+function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
+  const book = game.profile;
+  const [, bump] = useState(0);
+  const [msg, setMsg] = useState('');
+  const p = book.p, level = levelOf(p.xp), slots = slotsFor(level);
+  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); };
+  return (
+    <div className="overlay center">
+      <div className="panel profile">
+        <h2>Garage</h2>
+        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
+        {msg && <p className="good" role="status">{msg}</p>}
+        <div className="drivers">
+          {CARS.map((c) => {
+            const f = figures(c), owned = p.vehicles.includes(c.id), driving = p.car === c.id, locked = level < c.level;
+            return (
+              <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '')}>
+                <div className="carhead"><span className="paint" style={{ background: '#' + c.paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
+                <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
+                <span>{c.blurb}</span>
+                <div className="row">
+                  {owned ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
+                    : locked ? <em>Opens at level {c.level}</em>
+                    : <button className="btn primary" onClick={() => act(() => book.buy(c.id, c.price, c.level, slots), `${c.name} is yours`)}>Buy · {c.price.toLocaleString()}</button>}
+                  {owned && c.id !== 'rossini-gt' && <button className="btn" onClick={() => act(() => book.sell(c.id, c.price), `Sold for ${Math.round(c.price * 0.6).toLocaleString()} credits`)}>Sell</button>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="fine">The makes are our own. For now every car shares one body; the paint and what's underneath change.</p>
+        <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
+      </div>
     </div>
   );
 }

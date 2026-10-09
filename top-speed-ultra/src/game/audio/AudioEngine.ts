@@ -21,6 +21,13 @@ export class AudioEngine {
   private scrapeG!: GainNode;
   private noise!: AudioBuffer;
   private rainG: GainNode | null = null;
+  private muffleF: BiquadFilterNode | null = null;
+  musicBus: GainNode | null = null;
+  get context() { return this.ctx; }
+  get noiseBuffer() { return this.noise; }
+  // 20 kHz is open; lower is muffled (Ultra Realism at speed)
+  setMuffle(hz: number) { if (this.ctx && this.muffleF) this.muffleF.frequency.setTargetAtTime(hz, this.ctx.currentTime, 0.25); }
+  setMusicVolume(v: number) { if (this.ctx && this.musicBus) this.musicBus.gain.setTargetAtTime(v * 0.55, this.ctx.currentTime, 0.1); }
   setRain(w: number) { if (this.ctx && this.rainG) this.rainG.gain.setTargetAtTime(w * 0.16, this.ctx.currentTime, 0.4); }
   private lastThrottle = 0; private popT = 0; private limT = 0;
   vol = { master: 0.8, engine: 0.9, ambient: 0.7 };
@@ -34,7 +41,10 @@ export class AudioEngine {
     const ctx = new AC();
     this.ctx = ctx;
     const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.connect(ctx.destination);
-    this.master = ctx.createGain(); this.master.connect(comp);
+    // Ultra Realism's muffling: everything outside the radio goes through this
+    this.muffleF = ctx.createBiquadFilter(); this.muffleF.type = 'lowpass'; this.muffleF.frequency.value = 20000; this.muffleF.Q.value = 0.5; this.muffleF.connect(comp);
+    this.master = ctx.createGain(); this.master.connect(this.muffleF);
+    this.musicBus = ctx.createGain(); this.musicBus.gain.value = 0.5; this.musicBus.connect(comp);
     this.engineBus = ctx.createGain(); this.engineBus.connect(this.master);
     this.ambientBus = ctx.createGain(); this.ambientBus.connect(this.master);
     const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);

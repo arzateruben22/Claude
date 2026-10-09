@@ -134,6 +134,34 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - Playwright runs headless Chromium with `--use-angle=swiftshader --enable-unsafe-swiftshader`. Software rendering
   runs at about 10 fps, so tests use `fastForward` for distance and real frames for screenshots.
 
+## Game systems added after the network
+
+- **`profile.ts`.** `ProfileBook.add()` takes small increments (time, distance, passes, freeways, interchanges) and
+  returns level-ups and unlocks. It saves when there's something worth saving. `buy`, `sell` and `choose` handle the
+  garage; `reward` handles race payouts. Migration lives in `migrate()`.
+- **`drivers.ts`.** `DRIVERS`, `ABILITIES`, `lookFor()`, which gives the cockpit's cosmetic look, and `Ability`,
+  which does duration and cooldown.
+  - Clear Path sets `Traffic.scale = 0.65` (fewer spawns), `Traffic.thin()` (out of view only) and
+    `Traffic.makeWay()` (gap-checked lane changes).
+  - Focus Time steps traffic with `dt × 0.7`.
+  - Locked In multiplies grip by 1.3.
+  - `Cockpit.setLook()` and `setPose()` handle the hands.
+- **`cars.ts`.** `applyCar()` writes a car's numbers into the physics `SPEC`. `figures()` gives the showroom's
+  estimates, calibrated to the GT's measured 3.3 s and 211 mph.
+- **`race.ts`.**
+  - Courses are stretches of one carriageway.
+  - Rivals are `Traffic` cars with a `racer` record. They're never despawned or thinned, are held during the
+    countdown, run flat out up to √(11/k) in curves, and are set against your car's computed top speed.
+  - Progress means projecting onto the course path.
+- **`env/Environment.ts`.**
+  - `sunPosition()` is an astronomical sun position for 33.72° N, 117.83° W.
+  - Weather presets come from the `WX` table. The state eases toward its target over about 2.5 s.
+  - The PMREM environment map is rebuilt at most every 4 s when things change.
+  - Rain streaks are a 1,800-segment `LineSegments` round the camera.
+- **`audio/Radio.ts`.** A sixteenth-note scheduler on the audio clock, looking 250 ms ahead. Each station has a key,
+  chords, tempo, swing and style (pads, synthwave or lo-fi). It plays into `AudioEngine.musicBus`, which bypasses the
+  Ultra Realism muffle.
+
 ## Known issues
 
 - **Unresolved crossings.** 4 of 506 crossings don't fully clear (the builder prints them): a ramp clips another road

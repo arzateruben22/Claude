@@ -12,7 +12,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
   const big = useRef<HTMLDivElement>(null), road = useRef<HTMLDivElement>(null), next = useRef<HTMLDivElement>(null), wrong = useRef<HTMLDivElement>(null);
-  const abil = useRef<HTMLButtonElement>(null), abilName = useRef<HTMLSpanElement>(null);
+  const abil = useRef<HTMLButtonElement>(null), abilName = useRef<HTMLSpanElement>(null), tun = useRef<HTMLDivElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -20,7 +20,11 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
       put(speed.current, 'speed', String(h.speed));
       put(gear.current, 'gear', h.gear + (h.auto ? '' : ' M'));
       if (bar.current) { bar.current.style.transform = `scaleX(${h.rpmFrac.toFixed(3)})`; bar.current.classList.toggle('red', h.rpmFrac > 0.92); }
-      if (h.mode === 'survival') {
+      if (h.mode === 'race') {
+        put(k1.current, 'k1', 'Position'); put(v1.current, 'v1', h.racePos ? `P${h.racePos} / ${h.raceOf}` : '');
+        put(k2.current, 'k2', h.raceCp ? `Gates ${h.raceCp}` : 'To finish'); put(v2.current, 'v2', miles(Math.max(0, h.raceLeft)));
+        put(k3.current, 'k3', 'Time'); put(v3.current, 'v3', h.raceTime);
+      } else if (h.mode === 'survival') {
         put(k1.current, 'k1', 'Score'); put(v1.current, 'v1', h.score.toLocaleString() + (h.combo > 1 ? `  x${h.combo.toFixed(1)}` : ''));
         put(k2.current, 'k2', 'Over 100'); put(v2.current, 'v2', h.streak.toFixed(1) + ' s');
         put(k3.current, 'k3', 'Near misses'); put(v3.current, 'v3', String(h.nearMisses));
@@ -39,6 +43,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
       if (next.current) next.current.hidden = !h.next;
       if (wrong.current) wrong.current.hidden = !h.wrongWay;
       put(fps.current, 'fps', h.fps + ' fps');
+      if (tun.current) tun.current.style.setProperty('--t', h.tunnel.toFixed(3));
       if (abil.current) {
         put(abilName.current, 'abil', h.ability);
         const b = abil.current, on = h.abilityOn > 0, cool = h.abilityCool;
@@ -51,6 +56,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   }));
   return (
     <div className="hud" hidden={!visible} aria-hidden="true">
+      <div className="tunnel" ref={tun} />
       <div className="hud-road"><div className="hud-roadname" ref={road} /><div className="hud-next" ref={next} hidden /></div>
       <div className="hud-wrong" ref={wrong} hidden>WRONG WAY</div>
       <div className="hud-stats" ref={big}>

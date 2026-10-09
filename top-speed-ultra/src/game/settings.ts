@@ -1,7 +1,7 @@
 // Player settings and the graphics quality presets. Saved to localStorage when it's available.
 
 export type Quality = 'low' | 'medium' | 'high' | 'ultra';
-export type Mode = 'free' | 'survival' | 'time';
+export type Mode = 'free' | 'survival' | 'race' | 'time';
 export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';
 export type Corner = 'map' | 'sky' | 'off';
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
@@ -28,6 +28,12 @@ export interface Settings {
   driver: 'closer' | 'ace' | 'wrench';
   presentation: 'm' | 'f';
   skin: number;             // index into drivers.SKINS
+  course: string;           // the race you last picked
+  music: number;            // radio volume
+  ultra: boolean;           // Ultra Realism (opens at level 5), and its three parts
+  ultraTunnel: boolean;
+  ultraShake: boolean;
+  ultraMuffle: boolean;
 }
 
 export interface QualityPreset {
@@ -63,6 +69,7 @@ export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: 
 export const MODES: Record<Mode, { label: string; blurb: string }> = {
   free:     { label: 'Free Drive',     blurb: 'All of Orange County\'s freeways, no clock. Take any interchange.' },
   survival: { label: 'Speed Survival', blurb: 'Stay over 100 mph. Near misses and clean passes build the streak. One real crash ends it.' },
+  race:     { label: 'Races',          blurb: 'Three rivals on real stretches of freeway: sprints, checkpoints, endurance.' },
   time:     { label: 'Time Trial',     blurb: '60 seconds on the clock. Every 2 km buys 25 more.' },
 };
 
@@ -94,7 +101,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
   };
 }
 
@@ -115,6 +122,7 @@ export function loadSettings(): Settings {
       driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
+      course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
     };
   } catch { return d; }

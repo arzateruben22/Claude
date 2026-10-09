@@ -23,6 +23,7 @@ export interface Profile {
   runs: number;
   freeways: string[];                // carriageways driven, e.g. 'CA-55 North'
   vehicles: string[];
+  car: string;                       // the one you drive
   achievements: string[];
   created: number;
 }
@@ -52,7 +53,7 @@ export function levelOf(xp: number) { let l = 1; while (xpFor(l + 1) <= xp) l++;
 
 function fresh(): Profile {
   return { v: PROFILE_VERSION, username: 'Driver', avatar: 0, xp: 0, credits: 0, timeDriven: 0, distance: 0, topSpeed: 0, bestStreak: 0,
-    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], achievements: [], created: Date.now() };
+    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', achievements: [], created: Date.now() };
 }
 
 // older saves come in through here, one version at a time
@@ -66,6 +67,7 @@ function migrate(raw: Record<string, unknown>): Profile {
   }
   if (!Array.isArray(p.freeways)) p.freeways = [];
   if (!Array.isArray(p.vehicles) || !p.vehicles.length) p.vehicles = ['rossini-gt'];
+  if (typeof p.car !== 'string' || !p.vehicles.includes(p.car)) p.car = p.vehicles[0];
   if (!Array.isArray(p.achievements)) p.achievements = [];
   p.username = String(p.username || 'Driver').slice(0, 20);
   p.avatar = Math.max(0, Math.min(AVATARS.length - 1, Number(p.avatar) || 0));
@@ -124,6 +126,27 @@ export class ProfileBook {
     for (const a of ACHIEVEMENTS) if (test[a.id] && !p.achievements.includes(a.id)) { p.achievements.push(a.id); got.push(a.name); }
     return got;
   }
+
+  // the showroom: credits only, a free garage slot, and the level it asks for. Returns why not, or null.
+  buy(id: string, price: number, level: number, slots: number): string | null {
+    const p = this.p;
+    if (p.vehicles.includes(id)) return 'Already in your garage';
+    if (this.level < level) return `Opens at level ${level}`;
+    if (p.vehicles.length >= slots) return `Garage full (${slots} slots at your level)`;
+    if (p.credits < price) return `${Math.ceil(price - p.credits).toLocaleString()} more credits needed`;
+    p.credits -= price; p.vehicles.push(id); p.car = id; this.save();
+    return null;
+  }
+  sell(id: string, price: number): string | null {
+    const p = this.p;
+    if (id === 'rossini-gt') return 'Your first car stays';
+    if (!p.vehicles.includes(id)) return 'Not yours';
+    p.vehicles = p.vehicles.filter((v) => v !== id); p.credits += Math.round(price * 0.6);
+    if (p.car === id) p.car = 'rossini-gt';
+    this.save(); return null;
+  }
+  choose(id: string) { if (this.p.vehicles.includes(id)) { this.p.car = id; this.save(); } }
+  reward(xp: number, credits: number) { const before = this.level; this.p.xp += xp; this.p.credits += credits; this.save(); return this.level > before ? this.level : null; }
 
   rename(name: string) { this.p.username = name.trim().slice(0, 20) || 'Driver'; this.save(); }
   setAvatar(i: number) { this.p.avatar = Math.max(0, Math.min(AVATARS.length - 1, i)); this.save(); }

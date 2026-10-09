@@ -32,14 +32,14 @@ The road data is rebuilt by `tools/oc-network/` (Python), which has its own READ
 
 - **Phone controls.** Drag the pad at the bottom left to steer. Hold GAS and BRAKE on the right.
 - **Top bar.** **View** changes the camera: driver's seat, hood, chase, free look. **Go to** picks a freeway to
-  navigate to. **Pause**.
+  navigate to. **Radio** changes station. **Pause**.
 - **Corner window.** Tap it to switch between a road map with your route in yellow, a live sky camera, or off.
 - **On the road.** A prompt at the top tells you the next move, such as "Keep right: CA-55 North · 0.4 mi". Green
   signs over the road name the exits.
 - **Keyboard:**
   - W/S or the arrows: drive. A/D: steer. Space: handbrake.
   - Q/E: shift. M: automatic or manual.
-  - C: view. N: map. V: look back. R: reset. P: pause.
+  - C: view. N: map. F: ability. B: radio. V: look back. R: reset. P: pause.
 - **Gamepad** (standard mapping): triggers for gas and brake, left stick to steer.
 - **End of the road.** If a freeway ends (as the 261 does at Walnut Ave), you're turned around. If you take an exit
   to a street, you're moved to a nearby on-ramp.
@@ -47,6 +47,13 @@ The road data is rebuilt by `tools/oc-network/` (Python), which has its own READ
 ## Modes
 
 - **Free Drive.** No clock. Start on any of 12 freeway points and go anywhere.
+- **Races.** Three rivals on real stretches of freeway:
+  - Irvine Sprint on the 405 North
+  - Santa Ana Checkpoints on the 5 North
+  - Foothill Sprint on the 241 South
+  - Riverside Endurance on the 91 East
+
+  There's a countdown, live position, gates, credits and XP for a finish, and best times.
 - **Speed Survival.**
   - Score builds with distance, faster above 100 mph, and more the longer your streak over 100 mph runs.
   - Clean passes and near misses build a combo.
@@ -56,6 +63,27 @@ The road data is rebuilt by `tools/oc-network/` (Python), which has its own READ
 
 Traffic has five levels: None, Light, Moderate, Heavy and Expert. Expert adds aggressive drivers. Runs are kept per
 mode on this device only, and the leaderboard says so.
+
+## Drivers, cars and your profile
+
+- **Drivers.** There are three, each in a male or female presentation, with five skin tones. Each has one ability,
+  fired by the round button or F:
+  - The Closer has Clear Path: traffic eases off 35% for 8 s. Cars move over and nothing vanishes in view.
+  - The Ace has Focus Time: the world runs at 70% for 5 s.
+  - The Wrench has Locked In: 30% more grip for 7 s.
+
+  The hands are cosmetic: a gold watch flex, racing gloves, or one hand on the knee.
+- **Garage.** Four fictional cars (Rossini GT, Brio, Corsa and the electric Vela E) bought with credits you earn by
+  driving. **No real money anywhere.** Garage slots open up as you level.
+- **Profile.** Level and XP, credits, lifetime stats, the freeways you've driven, and nine achievements. Saved on this
+  device only.
+- **Sky.**
+  - Live puts the sun where it really is over Orange County, from your clock. Or pick sunrise, day, sunset or night.
+  - Weather is clear, cloudy, rain, fog, mist or changing. It's simulated, with no live feed. Rain cuts grip.
+- **Ultra Realism** (from level 5): tunnel vision, camera shake and muffled hearing at speed, each switched on its
+  own.
+- **Radio** (top bar, or B). Three fictional stations whose music is composed live in code. Nothing is recorded,
+  licensed or streamed.
 
 ## The car
 

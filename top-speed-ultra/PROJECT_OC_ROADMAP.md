@@ -42,26 +42,26 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Speed Survival scoring | Done | The streak counts time over 100 mph. Clean passes and near misses build a combo. A real crash ends the run. |
 | Exploit resistance | Done | Each car scores once. Stopped cars don't count. No score while wrong-way. Walls and contact reset the streak. The clock pauses with the game. |
 | Local leaderboard | Done | Top ten per mode, labelled "Local leaderboard · this device only". |
-| Versioned profile | Planned | Username, avatar, level and XP, time, distance, best streak, wins, vehicles, currency, achievements. Saved locally with a version number. |
-| Physics: arcade to sim | Partial | A slider controls assists and tyre falloff. Sim mode had an oscillation at about 175 mph. The tyre falloff is now smooth and needs a re-test. |
+| Versioned profile | Done | Name, avatar colour, level and XP, fictional credits, time, distance, top speed, best streak, near misses, passes, interchanges, races won, cars, nine achievements. Saved on the device as v1, with a migration path. |
+| Physics: arcade to sim | Done | A slider controls assists and tyre falloff. Steering lock is speed-sensitive. Sim has a light race-mode stability control. No spins at 134, 168 or about 200 mph on the autopilot. |
 | Auto and manual gearbox | Done | |
 
 ## P3: world and progression
 
 | Item | Status | Notes |
 | --- | --- | --- |
-| Weather and day/night | Planned | Clear, cloudy, rain, fog, mist, sunrise, sunset and night, set by hand. Live weather only with an authorised API, with a simulated fallback. The sky and lights already exist. |
-| Driver archetypes | Planned | Three of them, each with male and female versions. Cosmetic hand animations. |
-| Abilities | Partial | `Traffic.thin()` is the hook for Clear Path: it removes 35% of the cars you can't see. Focus Time would slow the world 30% on a defined timescale. The framework (cooldown, duration, UI) isn't built. |
-| AI races | Planned | Checkpoint, sprint, time trial and endurance. Countdown, standings, rewards. |
-| Economy, garage, showroom | Planned | Fictional currency only, never real money. One car to start, more garage slots by level. |
+| Weather and day/night | Done | Live puts the sun at its real position over OC from the device clock. Presets: sunrise, day, sunset, night. Weather: clear, cloudy, rain, fog, mist, or changing. Rain gets streaks, a wet road, about 20% less grip and slower traffic. Night gets stars, moonlight, headlight beams and lit lamps. **No live weather feed**: none is authorised here, so weather is simulated. A future paid weather pass would be designed only; no payments exist. |
+| Driver archetypes | Done | The Closer, The Ace and The Wrench, each male or female, with five skin tones. Cosmetic: sleeves, gloves, gold, steel or smart watch, ring, bracelet. Hand animations: a watch check, a wave, one hand on the knee. |
+| Abilities | Done | Clear Path (8 s, 45 s cooldown): 35% fewer cars by flow and spawning. Cars ahead move over; nothing in view vanishes (verified). Focus Time (5 s, 40 s): the world at 0.70× (verified). Locked In (7 s, 35 s): grip ×1.3 (verified). There's a round HUD button with a cooldown ring, and the F key. |
+| AI races | Done | Irvine Sprint (405 N), Santa Ana Checkpoints (I-5 N), Foothill Sprint (241 S) and Riverside Endurance (91 E), plus Time Trial. Three rivals, a countdown that holds everyone, live position, gates, the finish, credits and XP, best times. |
+| Economy, garage, showroom | Done | Credits are earned only. Four fictional cars with their own power, weight, gearing, drag, downforce and grip. One body for now; the paint changes. Garage slots: 1 + level/4. Buy, choose and sell for 60%. |
 
 ## P4: depth
 
 | Item | Status | Notes |
 | --- | --- | --- |
-| Ultra Realism Mode | Planned | Unlocks by level. Tunnel vision, camera shake and muffling, each toggled on its own. |
-| Radio | Roadmap | Fictional stations with original or licensed audio only. No scraped streams. |
+| Ultra Realism Mode | Done | Opens at level 5. Tunnel vision, camera shake and muffling, each switched on its own. Shake follows reduced-motion. |
+| Radio | Done (framework) | Three fictional stations (KCST 101.5 Coast, KFWY 96.9 Freeway FM, KNYN 88.3 Canyon Radio) play music composed live in code. Nothing is recorded, licensed or streamed. More stations or licensed audio can plug into the same `Radio` class. |
 | City expansion | Roadmap | The pipeline already pulls arterial streets. Driving them needs intersections and signals. |
 | Golden Road vertical slice on foot | Roadmap | Simulated crowds. It must never claim live occupancy. |
 
