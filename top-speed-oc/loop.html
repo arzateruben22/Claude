@@ -1,0 +1,357 @@
+<title>Loop Lab</title>
+<meta name="description" content="Coming soon to Top Speed OC: a stunt track with a loop, banked turns, boost pads and speed dashes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,600;0,800;0,900;1,900&family=Overpass+Mono:wght@700&display=swap">
+<style>
+/* Loop Lab: a preview of the stunt track, shown the way a toy track looks in a dark garage at night.
+   One look on purpose: orange plastic, cyan boost pads, pink speed dashes on a deep violet floor. */
+:root {
+  --bg: #0d0820;
+  --ink: #f6f1ff;
+  --dim: #c3b8e2;
+  --track: #ff6a13;
+  --boost: #22e5ff;
+  --dash: #ff2bd6;
+  --panel: rgba(13, 8, 32, 0.76);
+  --line: rgba(246, 241, 255, 0.2);
+  --display: "Overpass", "Arial Narrow", system-ui, sans-serif;
+  --digits: "Overpass Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 600 15px/1.4 var(--display); overflow: hidden; }
+:focus-visible { outline: 3px solid var(--boost); outline-offset: 2px; }
+#gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.top { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 16px; right: 16px; pointer-events: none; }
+.brand { min-width: 0; }
+.badge { display: inline-block; background: var(--track); color: #1d0c00; font: 900 11.5px var(--display); letter-spacing: .22em;
+  text-transform: uppercase; padding: 5px 9px 3px; border-radius: 6px; }
+.brand h1 { margin: 8px 0 0; font: italic 900 clamp(34px, 8vw, 64px)/0.92 var(--display); text-transform: uppercase;
+  text-shadow: 0 4px 28px rgba(255,106,19,.5); text-wrap: balance; }
+.brand p { margin: 8px 0 0; max-width: 44ch; color: var(--dim); font-size: 15px; text-shadow: 0 1px 8px #000; }
+.back { position: absolute; top: 0; right: 0; pointer-events: auto; color: var(--ink); text-decoration: none; border: 1.5px solid var(--line); background: var(--panel);
+  border-radius: 9px; padding: 8px 12px 6px; font: 800 13px var(--display); letter-spacing: .08em; text-transform: uppercase; }
+.speed { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); text-align: right; pointer-events: none; }
+.speed b { display: block; font: 700 clamp(38px, 8vw, 64px)/1 var(--digits); font-variant-numeric: tabular-nums; text-shadow: 0 2px 16px #000; }
+.speed span { font: 800 12px var(--display); letter-spacing: .2em; color: var(--dim); text-transform: uppercase; }
+.speed .kick { display: block; margin-top: 6px; font: 900 15px var(--display); letter-spacing: .16em; color: var(--boost); opacity: 0; transition: opacity .2s; }
+.speed .kick.on { opacity: 1; }
+.speed .kick.dash { color: var(--dash); }
+.bottom { position: absolute; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: flex;
+  justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; pointer-events: none; }
+.legend { display: grid; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px 8px;
+  font-size: 13px; pointer-events: auto; }
+.legend i { display: inline-block; width: 22px; height: 7px; border-radius: 4px; margin-right: 9px; vertical-align: 2px; }
+.views { display: flex; gap: 8px; pointer-events: auto; }
+.views button { background: var(--panel); color: var(--ink); border: 2px solid var(--line); border-radius: 10px; padding: 10px 16px 8px;
+  font: 900 14px var(--display); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.views button[aria-pressed="true"] { background: var(--track); border-color: var(--track); color: #1d0c00; }
+.note { margin: 0; color: var(--dim); font-size: 12.5px; }
+.fail { position: absolute; inset: 0; display: grid; place-items: center; padding-inline: 16px; text-align: center; background: var(--bg); }
+.fail p { max-width: 40ch; font-size: 17px; }
+@media (max-width: 560px) {
+  .brand p { font-size: 13.5px; }
+  .speed { top: auto; bottom: 170px; transform: none; }
+  .legend { font-size: 12px; }
+  .views button { padding: 9px 12px 7px; font-size: 13px; }
+}
+</style>
+
+<canvas id="gl" role="img" aria-label="An orange toy-style stunt track at night: a full loop, banked turns, glowing cyan boost pads and pink speed dashes, with a red car riding it"></canvas>
+<header class="top">
+  <div class="brand">
+    <span class="badge">Coming soon</span>
+    <h1>Loop Lab</h1>
+    <p>The stunt track for Top Speed OC: a full loop, banked turns, boost pads and speed dashes. This is a look, not a drive yet. Ride along or look around.</p>
+  </div>
+  <a class="back" href="https://claude.ai/artifact/77nkyfhNFoWgq6G8SLUAkL" target="_blank" rel="noopener">Back to the 405 ↗</a>
+</header>
+<div class="speed" id="speed" aria-hidden="true"><b id="mph">0</b><span>mph</span><span class="kick" id="kick">Boost</span></div>
+<div class="bottom">
+  <div class="legend" aria-label="Track key">
+    <div><i style="background:var(--boost)"></i>Boost pad: a big kick of speed</div>
+    <div><i style="background:var(--dash)"></i>Speed dash: a little one</div>
+    <div><i style="background:var(--track)"></i>Loop and banked turns</div>
+  </div>
+  <div class="views" role="group" aria-label="Camera">
+    <button type="button" id="v-ride" aria-pressed="true">Ride along</button>
+    <button type="button" id="v-look" aria-pressed="false">Look around</button>
+  </div>
+</div>
+<div class="fail" id="fail" hidden><p id="fail-text"></p></div>
+<noscript><div class="fail"><p>Loop Lab is a 3D preview and needs JavaScript. The track: a full loop, two banked turns, boost pads and speed dashes, coming soon to Top Speed OC.</p></div></noscript>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const fail = (msg) => { $('fail-text').textContent = msg; $('fail').hidden = false; };
+  if (!window.THREE) { fail('The 3D preview could not load its graphics library. Check your connection and reload.'); return; }
+  const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const V3 = THREE.Vector3;
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas: $('gl'), antialias: true }); }
+  catch (e) { fail('This preview needs WebGL, and this browser has it turned off.'); return; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0d0820);
+  scene.fog = new THREE.Fog(0x0d0820, 140, 520);
+  const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 1500);
+  scene.add(new THREE.HemisphereLight(0xc9b8ff, 0x1a0f2e, 0.8));
+  const key = new THREE.DirectionalLight(0xffe4c8, 0.95); key.position.set(80, 140, 60); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x7f6bff, 0.45); rim.position.set(-90, 40, -80); scene.add(rim);
+
+  const tex = (w, h, draw) => {
+    const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+    const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 4; return t;
+  };
+
+  // ---------------------------------------------------------------- the room: a violet sky dome, stars, a grid floor
+  const dome = new THREE.SphereGeometry(900, 32, 16), dc = [], cTop = new THREE.Color(0x07040f), cMid = new THREE.Color(0x4a1d6e), cLow = new THREE.Color(0x0d0820);
+  const dp = dome.attributes.position;
+  for (let i = 0; i < dp.count; i++) {
+    const y = dp.getY(i) / 900, c = y > 0.04 ? cMid.clone().lerp(cTop, Math.min(1, (y - 0.04) / 0.5)) : cLow.clone().lerp(cMid, Math.max(0, (y + 0.15) / 0.19));
+    dc.push(c.r, c.g, c.b);
+  }
+  dome.setAttribute('color', new THREE.Float32BufferAttribute(dc, 3));
+  scene.add(new THREE.Mesh(dome, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false })));
+  const sp = [];
+  for (let i = 0; i < 700; i++) {
+    const a = Math.random() * Math.PI * 2, e = 0.12 + Math.random() * 1.3, r = 850;
+    sp.push(Math.cos(a) * Math.cos(e) * r, Math.sin(e) * r, Math.sin(a) * Math.cos(e) * r);
+  }
+  const stars = new THREE.BufferGeometry(); stars.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+  scene.add(new THREE.Points(stars, new THREE.PointsMaterial({ color: 0xffffff, size: 1.6, sizeAttenuation: false, fog: false })));
+  const grid = tex(256, 256, (g, w, h) => {
+    g.fillStyle = '#120a2a'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#3c1f72'; g.lineWidth = 3; g.strokeRect(0, 0, w, h);
+    g.strokeStyle = '#24134a'; g.lineWidth = 1; g.beginPath(); g.moveTo(w / 2, 0); g.lineTo(w / 2, h); g.moveTo(0, h / 2); g.lineTo(w, h / 2); g.stroke();
+  });
+  grid.wrapS = grid.wrapT = THREE.RepeatWrapping; grid.repeat.set(90, 90);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(1800, 1800), new THREE.MeshStandardMaterial({ map: grid, roughness: 0.92 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -6; scene.add(floor);
+
+  // ---------------------------------------------------------------- the track: one closed lap
+  // start straight → the loop (it drifts sideways so it clears itself) → a banked left → a hill → a banked left home
+  const pts = [[0, 0, -10], [0, 0, 20], [0, 0, 55], [0, 0, 82]];
+  for (let k = 0; k <= 8; k++) {
+    const th = (-90 + k * 45) * Math.PI / 180;
+    pts.push([k * 1.1, 18 + 18 * Math.sin(th), 100 + 18 * Math.cos(th)]);
+  }
+  pts.push([9.5, 0, 122], [9.5, 0, 148]);
+  for (const ph of [150, 120, 90, 60, 30]) { const a = ph * Math.PI / 180; pts.push([44.5 + 35 * Math.cos(a), 1 + 3 * Math.sin(a), 150 + 35 * Math.sin(a)]); }
+  pts.push([79.5, 1, 140], [79.5, 0, 112], [72, 0, 88], [86, 0, 62], [79.5, 0, 38], [79.5, 7, 16], [79.5, 0, -4], [79.5, 0, -22]);
+  for (const ph of [-30, -60, -90, -120, -150]) { const a = ph * Math.PI / 180; pts.push([39.75 + 39.75 * Math.cos(a), 2 + 3 * Math.sin(-a), -22 + 39.75 * Math.sin(a)]); }
+  pts.push([0, 1, -36]);
+  const curve = new THREE.CatmullRomCurve3(pts.map((p) => new V3(...p)), true, 'centripetal');
+  const N = 1600, P = curve.getSpacedPoints(N); P.pop();
+  const LAP = curve.getLength(), STEP = LAP / N;
+  const T = P.map((p, i) => P[(i + 1) % N].clone().sub(P[(i - 1 + N) % N]).normalize());
+  // carry "up" along the track (parallel transport): this is what turns you upside down at the top of the loop
+  const U = new Array(N);
+  U[0] = new V3(0, 1, 0).sub(T[0].clone().multiplyScalar(T[0].y)).normalize();
+  for (let i = 1; i < N; i++) {
+    U[i] = U[i - 1].clone().applyQuaternion(new THREE.Quaternion().setFromUnitVectors(T[i - 1], T[i]));
+    U[i].sub(T[i].clone().multiplyScalar(U[i].dot(T[i]))).normalize();
+  }
+  const last = U[N - 1].clone().applyQuaternion(new THREE.Quaternion().setFromUnitVectors(T[N - 1], T[0]));
+  const twist = Math.atan2(new V3().crossVectors(last, U[0]).dot(T[0]), last.dot(U[0]));
+  for (let i = 0; i < N; i++) U[i].applyAxisAngle(T[i], twist * i / N);
+  // bank into the flat turns
+  const raw = new Float32Array(N), toward = [];
+  for (let i = 0; i < N; i++) {
+    const k = T[(i + 8) % N].clone().sub(T[(i - 8 + N) % N]); k.y = 0;
+    const m = k.length();
+    toward[i] = m > 1e-4 ? k.multiplyScalar(1 / m) : null;
+    raw[i] = U[i].y > 0.6 && Math.abs(T[i].y) < 0.4 ? Math.min(0.6, m * 2.2) : 0;
+  }
+  for (let i = 0; i < N; i++) {
+    let b = 0; for (let j = -24; j <= 24; j++) b += raw[(i + j + N) % N]; b /= 49;
+    if (b > 0.01 && toward[i]) {
+      U[i] = U[i].clone().multiplyScalar(Math.cos(b)).add(toward[i].clone().multiplyScalar(Math.sin(b)));
+      U[i].sub(T[i].clone().multiplyScalar(U[i].dot(T[i]))).normalize();
+    }
+  }
+  const B = T.map((t, i) => new V3().crossVectors(t, U[i]).normalize());
+  const HW = 3.1, WALL = 0.8;
+
+  const surfTex = tex(256, 512, (g, w, h) => {
+    g.fillStyle = '#ff6a13'; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#e9560a'; g.fillRect(w * 0.05, 0, w * 0.04, h); g.fillRect(w * 0.91, 0, w * 0.04, h);
+    g.fillStyle = 'rgba(255,255,255,.12)'; for (let y = 0; y < h; y += 64) g.fillRect(w * 0.47, y, w * 0.06, 28);
+    g.fillStyle = 'rgba(0,0,0,.06)'; for (let y = 0; y < h; y += 16) g.fillRect(0, y, w, 2);
+  });
+  surfTex.wrapS = surfTex.wrapT = THREE.RepeatWrapping;
+  const strip = (left, right, uv) => {
+    const pos = [], uvs = [], idx = [];
+    for (let i = 0; i < N; i++) {
+      const a = left(i), b = right(i);
+      pos.push(a.x, a.y, a.z, b.x, b.y, b.z);
+      uvs.push(0, uv ? (i * STEP) / 8 : 0, 1, uv ? (i * STEP) / 8 : 0);
+      const j = (i + 1) % N;
+      idx.push(2 * i, 2 * j, 2 * i + 1, 2 * i + 1, 2 * j, 2 * j + 1);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    g.setIndex(idx); g.computeVertexNormals();
+    return g;
+  };
+  const at = (i, side, up) => P[i].clone().addScaledVector(B[i], side * HW).addScaledVector(U[i], up);
+  scene.add(new THREE.Mesh(strip((i) => at(i, -1, 0), (i) => at(i, 1, 0), true),
+    new THREE.MeshStandardMaterial({ map: surfTex, roughness: 0.32, metalness: 0.05, side: THREE.DoubleSide })));
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xff8c42, roughness: 0.4, side: THREE.DoubleSide });
+  for (const side of [-1, 1]) {
+    scene.add(new THREE.Mesh(strip((i) => at(i, side, 0), (i) => at(i, side, WALL)), wallMat));
+    const edge = new THREE.BufferGeometry().setFromPoints([...Array(N + 1)].map((_, i) => at(i % N, side, WALL)));
+    scene.add(new THREE.Line(edge, new THREE.LineBasicMaterial({ color: 0xffc08a })));
+  }
+  // stands under the raised parts
+  const legMat = new THREE.MeshStandardMaterial({ color: 0x3b2a6b, roughness: 0.5, metalness: 0.4 });
+  for (let i = 0; i < N; i += 22) {
+    const p = P[i];
+    if (U[i].y < 0.75) continue;
+    const h = p.y + 6 - 0.3, leg = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.45, h, 10), legMat);
+    leg.position.set(p.x, -6 + h / 2, p.z); scene.add(leg);
+  }
+  for (const k of [0.3, 0.7]) {                  // the loop's own feet
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(14, 0.8, 1.2), legMat); leg.position.set(4.4, -5.6, 100 + (k - 0.5) * 20); scene.add(leg);
+  }
+
+  // ---------------------------------------------------------------- boost pads and speed dashes
+  const decal = (i, len, mat, lift = 0.05, wide = 0.82) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(HW * 2 * wide, len), mat);
+    const basis = new THREE.Matrix4().makeBasis(B[i], T[i], U[i]);
+    m.quaternion.setFromRotationMatrix(basis);
+    m.position.copy(P[i]).addScaledVector(U[i], lift);
+    scene.add(m); return m;
+  };
+  const chevrons = tex(128, 256, (g, w, h) => {
+    g.clearRect(0, 0, w, h);
+    g.strokeStyle = '#ffffff'; g.lineWidth = 14; g.lineCap = 'round'; g.lineJoin = 'round';
+    for (const y of [60, 130, 200]) { g.beginPath(); g.moveTo(18, y + 22); g.lineTo(w / 2, y - 22); g.lineTo(w - 18, y + 22); g.stroke(); }
+  });
+  const boostMat = new THREE.MeshBasicMaterial({ map: chevrons, color: 0x22e5ff, transparent: true, side: THREE.DoubleSide, fog: false });
+  const padBase = new THREE.MeshBasicMaterial({ color: 0x0b5a6e, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
+  const dashMat = new THREE.MeshBasicMaterial({ color: 0xff2bd6, side: THREE.DoubleSide, fog: false });
+  const near = (z0) => { let best = 0, d = 1e9; P.forEach((p, i) => { const e = p.distanceTo(z0); if (e < d) { d = e; best = i; } }); return best; };
+  const BOOSTS = [near(new V3(0, 0, 40)), near(new V3(0, 0, 66)), near(new V3(79.5, 0, 125)), near(new V3(79.5, 2, 30))];
+  const DASHES = [];
+  for (const i of BOOSTS) { decal(i, 7, padBase, 0.03); decal(i, 7, boostMat, 0.06); }
+  for (const start of [near(new V3(76, 0, 75)), near(new V3(20, 3, -55))]) {
+    for (let k = 0; k < 6; k++) { const i = (start + k * 9) % N; decal(i, 0.7, dashMat, 0.05, 0.9); DASHES.push(i); }
+  }
+  // the start gate
+  const gateTex = tex(512, 96, (g, w, h) => {
+    for (let x = 0; x < w; x += 24) for (let y = 0; y < 24; y += 12) { g.fillStyle = ((x / 24 + y / 12) % 2) ? '#111' : '#fff'; g.fillRect(x, y, 24, 12); g.fillRect(x, h - 24 + y, 24, 12); }
+    g.fillStyle = '#ff6a13'; g.fillRect(0, 24, w, h - 48);
+    g.fillStyle = '#1d0c00'; g.font = 'italic 900 40px Overpass, Arial, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('LOOP LAB', w / 2, h / 2 + 2);
+  });
+  const g0 = near(new V3(0, 0, 4)), gate = new THREE.Group();
+  const post = new THREE.BoxGeometry(0.6, 7, 0.6), postMat = new THREE.MeshStandardMaterial({ color: 0xdedbe8, roughness: 0.4 });
+  for (const s of [-1, 1]) { const m = new THREE.Mesh(post, postMat); m.position.set(s * (HW + 0.8), 3.5, 0); gate.add(m); }
+  const banner = new THREE.Mesh(new THREE.PlaneGeometry(HW * 2 + 2.2, 2.1), new THREE.MeshBasicMaterial({ map: gateTex, side: THREE.DoubleSide }));
+  banner.position.set(0, 6.4, 0); gate.add(banner);
+  gate.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(B[g0], U[g0], T[g0].clone().negate()));
+  gate.position.copy(P[g0]); scene.add(gate);
+
+  // ---------------------------------------------------------------- the car: a toy Rossini Veloce
+  const car = new THREE.Group();
+  const paint = new THREE.MeshStandardMaterial({ color: 0xc4161c, roughness: 0.28, metalness: 0.3 });
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.5, 3.4), paint); body.position.y = 0.45; car.add(body);
+  const nose = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.3, 0.8), paint); nose.position.set(0, 0.36, 1.9); car.add(nose);
+  const cab = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.42, 1.5), new THREE.MeshStandardMaterial({ color: 0x141824, roughness: 0.15, metalness: 0.6 }));
+  cab.position.set(0, 0.88, -0.2); car.add(cab);
+  const wing = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 0.4), paint); wing.position.set(0, 1.0, -1.55); car.add(wing);
+  const wheel = new THREE.CylinderGeometry(0.36, 0.36, 0.3, 16), tire = new THREE.MeshStandardMaterial({ color: 0x111114, roughness: 0.8 });
+  for (const [x, z] of [[-0.9, 1.15], [0.9, 1.15], [-0.9, -1.15], [0.9, -1.15]]) { const w = new THREE.Mesh(wheel, tire); w.rotation.z = Math.PI / 2; w.position.set(x, 0.36, z); car.add(w); }
+  const glow = (c) => new THREE.MeshBasicMaterial({ color: c });
+  for (const s of [-0.55, 0.55]) {
+    const t = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.12, 0.05), glow(0xff2b44)); t.position.set(s, 0.55, -1.72); car.add(t);
+    const h = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.05), glow(0xfff2d6)); h.position.set(s, 0.42, 2.31); car.add(h);
+  }
+  scene.add(car);
+
+  // ---------------------------------------------------------------- motion and cameras
+  const BASE = 34, MAX = 95;
+  let s = 0, v = BASE, kickT = 0, mode = RM ? 'look' : 'ride';
+  const camUp = new V3(0, 1, 0), center = new V3(40, 0, 60);
+  let yaw = 0.9, pitch = 0.62, dist = 210, drag = null;
+  const sample = (x) => {
+    const i = Math.floor(x) % N, j = (i + 1) % N, f = x - Math.floor(x);
+    return { p: P[i].clone().lerp(P[j], f), t: T[i].clone().lerp(T[j], f).normalize(), u: U[i].clone().lerp(U[j], f).normalize(), i };
+  };
+  function setMode(m) {
+    mode = m;
+    $('v-ride').setAttribute('aria-pressed', String(m === 'ride'));
+    $('v-look').setAttribute('aria-pressed', String(m === 'look'));
+    $('speed').style.visibility = m === 'ride' ? 'visible' : 'hidden';
+  }
+  $('v-ride').addEventListener('click', () => setMode('ride'));
+  $('v-look').addEventListener('click', () => setMode('look'));
+  const cv = $('gl');
+  cv.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY }; try { cv.setPointerCapture(e.pointerId); } catch (err) { /* fine */ } });
+  cv.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    if (mode === 'ride') setMode('look');
+    yaw -= (e.clientX - drag.x) * 0.006; pitch = Math.min(1.35, Math.max(0.12, pitch + (e.clientY - drag.y) * 0.004));
+    drag = { x: e.clientX, y: e.clientY };
+  });
+  const up = () => { drag = null; };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  cv.addEventListener('wheel', (e) => { e.preventDefault(); dist = Math.min(420, Math.max(60, dist * (1 + Math.sign(e.deltaY) * 0.08))); }, { passive: false });
+  addEventListener('keydown', (e) => { if (e.key === 'r' || e.key === 'R') setMode('ride'); if (e.key === 'l' || e.key === 'L') setMode('look'); });
+
+  function resize() {
+    const w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    dist = w < h ? 300 : 210;
+  }
+  addEventListener('resize', resize); resize();
+  setMode(mode);
+
+  let lastT = 0, lastI = 0, shown = 0;
+  function frame(now) {
+    const dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0.016; lastT = now;
+    // the car: boost pads kick it up to speed, speed dashes nudge it, then it settles back
+    s = (s + v * dt / STEP) % N;
+    const here = sample(s);
+    for (let k = lastI; k !== here.i; k = (k + 1) % N) {
+      if (BOOSTS.some((b) => Math.abs(b - k) < 6)) { v = Math.min(MAX, v + 3.2); kickT = 0.8; $('kick').textContent = 'Boost'; $('kick').className = 'kick on'; }
+      if (DASHES.includes(k)) { v = Math.min(MAX, v + 2.2); if (kickT <= 0.3) { kickT = 0.5; $('kick').textContent = 'Speed dash'; $('kick').className = 'kick on dash'; } }
+    }
+    lastI = here.i;
+    v += (BASE - v) * dt * 0.35;
+    if (kickT > 0) { kickT -= dt; if (kickT <= 0) $('kick').className = 'kick'; }
+    car.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new V3().crossVectors(here.u, here.t).normalize(), here.u, here.t));
+    car.position.copy(here.p).addScaledVector(here.u, 0.05);
+    if (mode === 'ride') {
+      camUp.lerp(here.u, 1 - Math.exp(-dt * 7)).normalize();
+      const want = here.p.clone().addScaledVector(here.t, -8.5).addScaledVector(camUp, 3.2);
+      camera.position.lerp(want, 1 - Math.exp(-dt * 9));
+      camera.up.copy(camUp);
+      camera.lookAt(here.p.clone().addScaledVector(here.t, 9).addScaledVector(camUp, 0.6));
+      const fov = 68 + 22 * (v - BASE) / (MAX - BASE);
+      if (Math.abs(camera.fov - fov) > 0.1) { camera.fov = fov; camera.updateProjectionMatrix(); }
+      const mph = Math.round(v * 2.6);
+      if (mph !== shown) { shown = mph; $('mph').textContent = mph; }
+    } else {
+      if (!drag && !RM) yaw += dt * 0.08;
+      camera.up.set(0, 1, 0);
+      camera.position.set(center.x + Math.cos(yaw) * Math.cos(pitch) * dist, center.y + Math.sin(pitch) * dist, center.z + Math.sin(yaw) * Math.cos(pitch) * dist);
+      camera.lookAt(center);
+      if (camera.fov !== 55) { camera.fov = 55; camera.updateProjectionMatrix(); }
+    }
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.__loop = { P, U, T, N, LAP, setMode, scene, camera };
+})();
+</script>
