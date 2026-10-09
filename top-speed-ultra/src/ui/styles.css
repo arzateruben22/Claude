@@ -235,3 +235,9 @@ input[type="range"] { width: 100%; accent-color: var(--rosso-2); }
 .tunnel { --t: 0; position: absolute; inset: 0; pointer-events: none; opacity: min(1, calc(var(--t) * 1.7));
   background: radial-gradient(ellipse 70% 62% at 50% 40%, transparent calc(55% - var(--t) * 30%), rgba(0, 0, 0, 0.7) calc(85% - var(--t) * 25%), rgba(0, 0, 0, 0.96) 100%); }
 @media (prefers-reduced-motion: reduce) { .tunnel { display: none; } }
+
+.soon { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; text-decoration: none; color: var(--ink); border: 1px dashed rgba(245, 197, 24, 0.55); border-radius: 14px; padding: 10px 14px; background: rgba(12, 13, 16, 0.5); }
+.soon small { grid-column: 1 / -1; color: var(--badge); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; font-size: 11px; }
+.soon b { font-size: 17px; }
+.soon span { grid-column: 1; color: var(--dim); font-size: 14px; }
+.soon i { grid-column: 2; grid-row: 2 / 4; align-self: center; font-style: normal; font-size: 20px; color: var(--badge); }

@@ -70,7 +70,8 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Item | Status | Notes |
 | --- | --- | --- |
 | Multiplayer | Roadmap only | It doesn't exist and isn't claimed. It needs a server, accounts and anti-cheat. |
-| Housing, arcade track, commercial features | Roadmap | The arcade loop track stays as "Coming soon" (Loop Lab). |
+| Arcade track | Coming soon (shown) | A "Coming soon" card in the menu links to the Loop Lab preview: loop-the-loop, banking, boost pads. |
+| Housing, commercial features | Roadmap | Not started. Payments stay out entirely. |
 | LA County and beyond | Roadmap | Same pipeline with a bigger bounding box. The data budget is the constraint: about 1.2 MB per county. |
 
 ## How realistic can it get?
