@@ -1,0 +1,7 @@
+pyarrow==25.0.1
+requests==2.33.1
+shapely==2.2.0
+numpy
+scipy
+networkx
+pillow
