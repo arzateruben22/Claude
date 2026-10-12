@@ -41,6 +41,7 @@ export class CarPhysics {
   s = 0; d = 0; slope = 0;
   handling = 0.35;            // 0 arcade .. 1 sim
   grip = 1;                   // the road: 1 dry, about 0.8 in the rain
+  hold = false;               // on the start line: the brakes are on, and holding them doesn't select reverse
   impacts: Impact[] = [];
   private stillT = 0;
   private proj = { s: 0, d: 0 };
@@ -83,7 +84,7 @@ export class CarPhysics {
 
     // reverse the arcade way: hold brake at a standstill to back up
     const spd = this.vx;
-    if (this.auto) {
+    if (this.auto && !this.hold) {
       if (Math.abs(spd) < 0.6 && brake > 0.5 && throttle < 0.1) { this.stillT += dt; if (this.stillT > 0.45 && this.gear > 0) { this.gear = -1; this.shiftT = 0.25; } }
       else this.stillT = 0;
       if (this.gear === -1 && throttle > 0.1 && spd > -0.6) { this.gear = 1; this.shiftT = 0.2; }

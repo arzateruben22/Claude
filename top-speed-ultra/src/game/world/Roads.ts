@@ -237,7 +237,7 @@ export class Roads {
     }
 
     // -------------------------------------------------------------- a crash cushion where a road just stops
-    if (!p.next && s1 >= p.len - 0.1) {
+    if (s1 >= p.len - 0.1 && net.hasEndWall(p)) {
       const e = p.at(p.len - 1.5, 0);
       const g = new THREE.BoxGeometry(p.paveR - p.paveL + 0.8, 1.1, 3); g.rotateY(e.h); g.translate(e.x - ox, e.y + 0.55, e.z - oz);
       own(new THREE.Mesh(g, this.m.cushion)).castShadow = true;

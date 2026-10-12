@@ -47,13 +47,26 @@ traffic code.
 - **Barriers.** A path has a barrier along each paved edge wherever that edge point isn't on another road (within
   2.5 m of height).
   - This one rule produces gaps where ramps split off, gore noses, merges, and Y junctions where one freeway ends in
-    another. It's computed lazily per sample and cached.
+    another. It's computed lazily per sample and cached, a window of ±32 samples at a time.
+  - A ramp that starts at another road has no barrier for its first three samples. They're set outright, because the
+    first look at a ramp can come from further along it, before those samples are worked out.
   - The physics collides with the actual barrier segments (`wallsNear`). Run ends (`capA`/`capB`) act as posts, so
     you can hit a gore nose.
-  - A path with no `next` gets a wall across its end, and the game turns you around or rejoins you before you reach
-    it.
+  - The physics only takes barrier segments within 2 m of the car's height. A ramp climbing past your road gets
+    barriers once it's 2.5 m clear of it, and those are over your roof.
+  - A path with no `next` gets a wall across its end (and a crash cushion), unless it ends on another road
+    (`hasEndWall`). The game turns you around or rejoins you before you reach it.
+  - `wallsNear` copies each segment's end before checking its neighbours, because `hasWall` can reuse the shared
+    `AT` buffer while it works out more of the road.
+  - `npm test` scans every travel lane of the 20 carriageways for a barrier within 1 m of the lane's centre line, and
+    checks that the barriers come out the same on a first look as on a second.
 - **Routing.** `route(from, s, to)` is a small Dijkstra over (path, entry s) states. Its cost is distance plus 30 m
-  for each ramp piece. It returns the list of junctions to take.
+  for each ramp piece. It returns the list of junctions to take, or null if there's no way.
+  - Turnarounds and street exits aren't edges, so from the far south of the 405 and the 5 (past about 42.6 km and
+    53 km) there's no planned way back north.
+  - `Game.followRoute()` keeps the navigator on track whenever the road under you changes: it ticks off a hand-off,
+    plans again if you've left the route, or arrives. If there's no way from the road you're on, it keeps the
+    destination and tries again at the next road, and after a turnaround or rejoin.
 
 **OSM quirk to know about.** Ramp lines leave from the middle of the carriageway; that's where OSM puts the node.
 For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavement. Two things depend on this:
@@ -131,8 +144,24 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   - `navigateTo(label)` sets a route.
   - `stats` returns the path, position, speed, roads and tiles built, path switches, freeways visited and the route.
   - `frames` counts rendered frames.
-- Playwright runs headless Chromium with `--use-angle=swiftshader --enable-unsafe-swiftshader`. Software rendering
-  runs at about 10 fps, so tests use `fastForward` for distance and real frames for screenshots.
+- Playwright runs headless Chromium with `--use-angle=swiftshader --enable-unsafe-swiftshader`. Tests use
+  `fastForward` for distance (about 25× real time) and real frames only where rendering is the point.
+- In this sandbox SwiftShader draws Low at about 1.6–2.3 fps (at 320×180 as at 640×360, so it's limited by geometry,
+  not pixels), Medium at 0.3–0.7 fps, and High and Ultra at about 0.3 fps once warm. The first frames after a switch
+  to High or Ultra take minutes. None of this says anything about a phone.
+
+## The regression suite (`npm test`)
+
+- `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
+  with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
+- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`. Run some with
+  `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
+- `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
+- Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
+  (git-ignored).
+- Free Drive and Speed Survival seed their traffic at random. The suite puts the car back on its mark and seeds the
+  traffic (`traffic.reseed(n)` and `fill()`), so every run is the same drive. The autopilot isn't a perfect driver:
+  in Heavy traffic it crashed in 2 of 12 seeded two-minute Survival runs.
 
 ## Game systems added after the network
 
@@ -172,3 +201,8 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Street ramps.** They end at a barrier. The game moves you to a nearby on-ramp instead of driving surface
   streets.
 - **Hands.** They're stylised fists.
+- **Switching graphics presets leaks a little.** Each round trip to Ultra leaves about 17–20 more textures alive
+  (36 → 56 → 73), probably the bloom and GTAO passes' render targets, which `EffectComposer.dispose()` doesn't free.
+  The frame rate on Low afterwards is unchanged.
+- **Traffic can cut in close.** A traffic car (not an aggressive one) changed lanes into the autopilot about 5 m ahead
+  while closing at 20 m/s, in Heavy traffic.

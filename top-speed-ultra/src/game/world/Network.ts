@@ -41,6 +41,7 @@ export class Network {
   heights!: Float32Array;
   // barrier state per path and side: -1 unknown, 0 open, 1 barrier
   private walls = new Map<number, { L: Int8Array; R: Int8Array }>();
+  private ends = new Map<number, boolean>();
 
   private constructor(private data: RawNet) {
     this.attribution = data.attribution;
@@ -200,10 +201,23 @@ export class Network {
         const at = p.at(k * STEP, d, AT);
         w[k] = this.covered(at.x, at.z, at.y, p, 0.6) ? 0 : 1;
       }
-      // no barrier across the first/last few metres where a ramp starts or ends at another road
-      if (p.prev || p.inc.some((j) => j.s < 1)) for (let k = 0; k < Math.min(p.n, 3); k++) w[k] = w[k] && 1;
+      // no barrier across the first few metres where a ramp starts at another road (set outright: these samples
+      // may not have been worked out yet when the first look at this road was further along it)
+      if (p.prev || p.inc.some((j) => j.s < 1)) for (let k = 0; k < Math.min(p.n, 3); k++) w[k] = 0;
     }
     return w[i] === 1;
+  }
+
+  // a wall across the end of a road that stops, unless it stops on another road (a ramp cut off at the edge of the map
+  // inside a freeway, say)
+  hasEndWall(p: Path) {
+    let e = this.ends.get(p.id);
+    if (e === undefined) {
+      const at = p.at(p.len - 0.5, 0, AT);
+      e = !p.next && !this.covered(at.x, at.z, at.y, p, 0.6);
+      this.ends.set(p.id, e);
+    }
+    return e;
   }
 
   // barrier segments within r of (x, z), near height y, for the physics
@@ -219,21 +233,25 @@ export class Network {
         for (let i = i0; i <= i1; i++) {
           if (!this.hasWall(p, i, side) || !this.hasWall(p, i + 1, side)) continue;
           const a = p.at(i * STEP, d, AT), ax = a.x, az = a.z, ay = a.y;
-          const b = p.at((i + 1) * STEP, d, AT);
+          // a barrier more than 2 m above or below the car is over its roof or under its wheels (a ramp climbing
+          // past the road you're on gets barriers once it's 2.5 m clear of it)
+          if (Math.abs(ay - y) > 2) continue;
+          // copied now: hasWall() below can reuse AT while it works out more of the road
+          const b = p.at((i + 1) * STEP, d, AT), bx = b.x, bz = b.z;
           // normal pointing back onto this road: the right barrier faces left, the left one faces right
           // (with t = (sin h, cos h), right is (-t.z, t.x))
-          const tx = b.x - ax, tz = b.z - az, L = Math.hypot(tx, tz) || 1;
+          const tx = bx - ax, tz = bz - az, L = Math.hypot(tx, tz) || 1;
           const nx = side === 'R' ? tz / L : -tz / L, nz = side === 'R' ? -tx / L : tx / L;
           const capA = i === 0 || !this.hasWall(p, i - 1, side), capB = i + 2 >= p.n || !this.hasWall(p, i + 2, side);
-          out.push({ ax, az, bx: b.x, bz: b.z, nx, nz, y: ay, capA, capB });
+          out.push({ ax, az, bx, bz, nx, nz, y: ay, capA, capB });
         }
       }
       // a dead end: a wall across the end of the road
-      if (!p.next && p.len - h.s < r + 5) {
+      if (!p.next && p.len - h.s < r + 5 && this.hasEndWall(p)) {
         const e = p.len - 0.5;
         const a = p.at(e, p.wallL, AT), ax = a.x, az = a.z; const b = p.at(e, p.wallR, AT);
         const hd = p.heading(e);
-        out.push({ ax, az, bx: b.x, bz: b.z, nx: -Math.sin(hd), nz: -Math.cos(hd), y: a.y, capA: false, capB: false });
+        if (Math.abs(a.y - y) <= 2) out.push({ ax, az, bx: b.x, bz: b.z, nx: -Math.sin(hd), nz: -Math.cos(hd), y: a.y, capA: false, capB: false });
       }
     }
     return out;

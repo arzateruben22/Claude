@@ -35,6 +35,8 @@ here, then read:
 - **Map data.** Never copy Google Maps data.
 - **Other projects.** Don't modify Trade Crawler or other projects in this repo.
 - **Verify before you claim.**
+  - Run the regression suite before and after a change: `npm run build && npm test` (about 10 minutes here; `--only=`
+    for some groups). Add a check for anything new you build. The technical notes explain the suite.
   - Test in Playwright (headless Chromium with `--use-angle=swiftshader`), using the `window.__game` hooks
     (`fastForward`, `navigateTo`, `stats`).
   - Log results in `PROJECT_OC_PROGRESS.md`. Never invent results.

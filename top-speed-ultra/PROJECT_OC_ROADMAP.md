@@ -17,7 +17,8 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Stable game loop | Done | Fixed 120 Hz physics with interpolation. Floating origin. Recovers from a lost WebGL context. |
 | Controls | Done | Phone first: steering pad, GAS and BRAKE. Keyboard and gamepad still work. The Controls screen was removed, as asked. |
 | Continuous road | Done | Real freeways stream in 160 m chunks, including every ramp. |
-| Collisions | Done | Barriers are real segments, including the gore noses where ramps split off. Traffic collides as world-space boxes. |
+| Collisions | Done | Barriers are real segments, including the gore noses where ramps split off. Traffic collides as world-space boxes. Fixed on 2026-10-12: barrier stubs left in travel lanes at ramp starts, barriers on ramps 2.5–3.5 m overhead (one in the fast lane of the 55 North at the I-5 spun cars round at full speed), and two crash cushions inside the 91. Also fixed: barrier segments that came out tens of metres long on a first look and could cut across the road for a step. A scan of every lane now finds none. |
+| Regression suite | Done | `npm test` drives the built game through 50 checks across the systems below, in about 10 minutes. It found the six bugs fixed on 2026-10-12. |
 
 ## P1: connected OC freeway prototype
 
@@ -26,7 +27,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Real network: I-5, I-405, CA-91, 55, 57, 22, 73, 133, 241, 261 | Done | From OpenStreetMap via Overture Maps. 20 carriageways, 1,247 ramp pieces, 1,256 junctions. Every freeway can reach every other. |
 | Traversable interchanges | Done | Verified by driving: I-405 N to 55 N to 91 E to 241 S. More chains are in the progress log. |
 | Chunk streaming | Done | Road chunks plus 480 m terrain tiles with two LODs, nearest and ahead first. |
-| Navigation | Done | Pick a freeway and direction. A route is planned through the interchanges. A prompt says "Keep right: CA-55 North · 0.4 mi", and the map shows a yellow line. It reroutes if you miss a turn. |
+| Navigation | Done | Pick a freeway and direction. A route is planned through the interchanges. A prompt says "Keep right: CA-55 North · 0.4 mi", and the map shows a yellow line. It reroutes if you miss a turn. Fixed on 2026-10-12: one failed reroute (a ramp you've spun onto backwards) used to switch navigation off for the rest of the drive, and a turnaround never re-planned. The far south of the 405 and the 5 still has no planned way back north until you're turned around. |
 | Labels and destinations | Partial | Green guide signs show real OSM destination text. There are no exit numbers, because OSM `junction:ref` isn't in the source data. |
 | Ferrari-inspired cockpit | Done | Original model of our own "R" make: carbon and leather wheel, shift lights, round tachometer, screens. |
 | Dashboard | Done | The real tachometer and gear display in the cluster. The HUD is minimal. |
@@ -53,7 +54,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Weather and day/night | Done | Live puts the sun at its real position over OC from the device clock. Presets: sunrise, day, sunset, night. Weather: clear, cloudy, rain, fog, mist, or changing. Rain gets streaks, a wet road, about 20% less grip and slower traffic. Night gets stars, moonlight, headlight beams and lit lamps. **No live weather feed**: none is authorised here, so weather is simulated. A future paid weather pass would be designed only; no payments exist. |
 | Driver archetypes | Done | The Closer, The Ace and The Wrench, each male or female, with five skin tones. Cosmetic: sleeves, gloves, gold, steel or smart watch, ring, bracelet. Hand animations: a watch check, a wave, one hand on the knee. |
 | Abilities | Done | Clear Path (8 s, 45 s cooldown): 35% fewer cars by flow and spawning. Cars ahead move over; nothing in view vanishes (verified). Focus Time (5 s, 40 s): the world at 0.70× (verified). Locked In (7 s, 35 s): grip ×1.3 (verified). There's a round HUD button with a cooldown ring, and the F key. |
-| AI races | Done | Irvine Sprint (405 N), Santa Ana Checkpoints (I-5 N), Foothill Sprint (241 S) and Riverside Endurance (91 E), plus Time Trial. Three rivals, a countdown that holds everyone, live position, gates, the finish, credits and XP, best times. |
+| AI races | Done | Irvine Sprint (405 N), Santa Ana Checkpoints (I-5 N), Foothill Sprint (241 S) and Riverside Endurance (91 E), plus Time Trial. Three rivals, a countdown that holds everyone, live position, gates, the finish, credits and XP, best times. Fixed on 2026-10-12: off the gas, the countdown's brakes selected reverse and backed you 2 m off the grid. |
 | Economy, garage, showroom | Done | Credits are earned only. Four fictional cars with their own power, weight, gearing, drag, downforce and grip. One body for now; the paint changes. Garage slots: 1 + level/4. Buy, choose and sell for 60%. |
 
 ## P4: depth

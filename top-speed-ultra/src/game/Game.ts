@@ -568,14 +568,7 @@ export class Game {
   private enterPath(path: Path, s: number, d: number) {
     this.path = path; this.phys.s = s; this.phys.d = d;
     this.switches++;
-    if (this.route.length && this.route[0].to === path) this.route.shift();
-    else if (this.route.length && !this.route.some((j) => j.to === path) && this.routeTarget && path !== this.routeTarget) {
-      // off the planned route: plan again from here
-      const r = this.net.route(path, Math.max(0, s), this.routeTarget);
-      this.route = r ?? [];
-      if (!this.attract) this.ev.toast('Rerouting', 'info');
-    }
-    if (this.routeTarget === path) { this.route = []; this.routeTarget = null; if (!this.attract) this.ev.toast(`You made it: ${path.label}`, 'good'); }
+    this.followRoute(path, s);
     if (path.main) {
       this.visited.add(path.label);
       if (path !== this.lastMain && !this.attract) {
@@ -585,6 +578,18 @@ export class Game {
       }
       this.lastMain = path;
     }
+  }
+  // keep the navigator on track on the road you're now on: tick off the hand-off you just made, plan again if you've
+  // left the route (if there's no way from this road, a ramp you've spun onto backwards say, keep the destination and
+  // try again at the next road), or arrive
+  private followRoute(path: Path, s: number) {
+    if (this.route.length && this.route[0].to === path) this.route.shift();
+    else if (this.routeTarget && path !== this.routeTarget && !this.route.some((j) => j.to === path)) {
+      const r = this.net.route(path, Math.max(0, s), this.routeTarget);
+      this.route = r ?? [];
+      if (r && !this.attract) this.ev.toast('Rerouting', 'info');
+    }
+    if (this.routeTarget === path) { this.route = []; this.routeTarget = null; if (!this.attract) this.ev.toast(`You made it: ${path.label}`, 'good'); }
   }
 
   // the end of the road: turn around (a freeway that just stops) or rejoin from the street (an off-ramp)
@@ -789,7 +794,9 @@ export class Game {
     if (this.countdown > 0) {
       const before = Math.ceil(this.countdown);
       this.countdown -= dt;
+      p.hold = true;
       p.step(dt, { ...this.input.c, brake: 1, handbrake: true }, this.path, this.net);
+      p.hold = false;
       if (Math.ceil(this.countdown) !== before) this.ev.toast(this.countdown > 0 ? String(Math.ceil(this.countdown)) : 'GO', 'info');
       if (this.race) { this.raceTick(dt); this.traffic.step(dt, this.view(), this.time); }
       this.car.snapshot(p);
@@ -799,7 +806,8 @@ export class Game {
     p.grip = this.env.grip * this.gripBoost * this.carGrip;
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
     this.trackPath();
-    if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) this.rejoin();
+    // the end of the road: turned around or put back on, and the route planned again from there
+    if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
     this.car.snapshot(p);
     const playing = !this.attract && !this.over;
     // walls
