@@ -2,6 +2,7 @@
 
 A phone-first, first-person driving game on Orange County's real freeways. This folder is the whole game. Start
 here, then read:
+- `PROJECT_OC_MASTER_PROMPT.md`: the owner's full vision and every feature they've asked for.
 - `PROJECT_OC_PROGRESS.md`: what's done and how it was checked.
 - `PROJECT_OC_ROADMAP.md`: what's left, in priority order.
 - `PROJECT_OC_TECHNICAL_NOTES.md`: how it works.
