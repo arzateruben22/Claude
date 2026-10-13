@@ -20,7 +20,7 @@ const plain = args.includes('--plain');
 const dir = path.join(ROOT, 'tests', 'out', 'preview', 'build', 'hands-eye');
 mkdirSync(dir, { recursive: true });
 await build({
-  stdin: { contents: `export * from './src/preview/hands-sdf.ts'; export * from './src/preview/hands-mesh.ts';`, resolveDir: ROOT, loader: 'ts' },
+  stdin: { contents: `export * from './src/preview/hands-sdf.ts'; export * from './src/preview/hands-mesh.ts'; export { rimA, rimB, rimAt } from './src/preview/spec.ts';`, resolveDir: ROOT, loader: 'ts' },
   bundle: true, format: 'esm', platform: 'node', outfile: path.join(dir, 'eye.mjs'), logLevel: 'warning',
 });
 const M = await import(pathToFileURL(path.join(dir, 'eye.mjs')).href + '?t=' + Date.now());
