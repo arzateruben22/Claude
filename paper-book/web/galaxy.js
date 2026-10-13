@@ -7,11 +7,14 @@
   const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = getComputedStyle(document.documentElement);
   const tok = (n, d) => css.getPropertyValue(n).trim() || d;
-  const HUES = [tok("--meme", "#6f9bff"), tok("--major", "#f2c45c"), tok("--stock", "#c895f5"), "#7fe3e0", "#ff9de2", "#9ef07a"];
+  // Each desk keeps its own hue, whichever desks are in the book; a desk without one takes the next spare.
+  const HUE_OF = { memecoins: tok("--meme", "#6f9bff"), majors: tok("--major", "#f2c45c"), stocks: tok("--stock", "#c895f5"),
+    memecoins_wild: "#ff9a4d", stocks_wild: "#d7f25f" };
+  const SPARE = ["#7fe3e0", "#ff9de2", "#9ef07a"];
   const WIN = tok("--win", "#5fe0a0"), LOSS = tok("--loss", "#ff6f61"), INK = tok("--ink", "#e9ecff"), DIM = tok("--dim", "#a7add0");
   const WARM = "#fff3cf", SILK = "#dfe6ff";
   const CORE = 26, ARM = 34, TILT = 0.72;
-  const deskColor = (i) => HUES[i % HUES.length];
+  const deskColor = (i) => HUE_OF[(G.desks[i] || {}).key] || SPARE[i % SPARE.length];
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -50,9 +53,17 @@
     const galR = lists.map((l, i) => radiusFor(Math.max(1, l.length)) * spread[i]);
     const maxR = Math.max(110, ...galR);
     const ring = D <= 1 ? 0 : (2 * maxR + 170) / (2 * Math.sin(Math.PI / D));
-    const gals = G.desks.map((d, i) => {
+    // On a phone held upright, a ring of many galaxies puts their names side by side, on top of each other.
+    // There, zigzag down the screen instead: one galaxy per row, alternating sides.
+    const column = window.innerHeight > window.innerWidth * 1.2 && D > 3;
+    const place = (i) => {
+      if (column) return [(i % 2 ? 1 : -1) * (maxR + 40), (i - (D - 1) / 2) * (2 * maxR + 120) * 0.75];
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(1, D);
-      const g = { i, key: d.key, label: d.label, color: deskColor(i), x: Math.cos(a) * ring, y: Math.sin(a) * ring * 0.86,
+      return [Math.cos(a) * ring, Math.sin(a) * ring * 0.86];
+    };
+    const gals = G.desks.map((d, i) => {
+      const [gx, gy] = place(i);
+      const g = { i, key: d.key, label: d.label, color: deskColor(i), x: gx, y: gy,
         R: galR[i], spread: spread[i], spin: hash(d.key) * Math.PI * 2, list: lists[i], dust: [] };
       const rand = rng(Math.floor(hash(d.key + "dust") * 1e9));
       for (let j = 0; j < 1100; j++) {
@@ -147,7 +158,8 @@
       x0 = Math.min(x0, g.x - R); x1 = Math.max(x1, g.x + R);
       y0 = Math.min(y0, g.y - R * TILT); y1 = Math.max(y1, g.y + R * TILT + 70);
     });
-    const top = VW < 700 ? 118 : 86, bottom = 70, side = 24, label = 95;   // label: half a galaxy name's width, in pixels
+    // label: half a galaxy name's width, in pixels; on a phone the timeline and buttons take more of the bottom
+    const top = VW < 700 ? 118 : 86, bottom = VW < 700 ? 175 : 70, side = 24, label = 95;
     let z = Math.min((VW - 2 * side) / (x1 - x0), (VH - top - bottom) / (y1 - y0));
     z = Math.min((VW - 2 * side) / (x1 - x0 + (2 * label) / z), (VH - top - bottom) / (y1 - y0));
     cam.tx = (x0 + x1) / 2; cam.ty = (y0 + y1) / 2 - (top - bottom) / 2 / Math.max(z, 1e-3);
@@ -343,7 +355,8 @@
       ctx.fillText(g.label.toUpperCase(), x, y);
       ctx.font = `500 12px "IBM Plex Mono", monospace`;
       ctx.fillStyle = has ? (S.deskNet[g.i] >= 0 ? WIN : LOSS) : DIM;
-      ctx.fillText(has ? `${usd(S.deskNet[g.i])} · ${S.deskN[g.i]} trades` : "waiting for its first trade", x, y + 17);
+      ctx.fillText(has ? `${usd(S.deskNet[g.i])} · ${S.deskN[g.i]} trades` : VW < 520 ? "no trades yet" : "waiting for its first trade",
+        x, y + 17);
       ctx.textAlign = "left";
     }
 

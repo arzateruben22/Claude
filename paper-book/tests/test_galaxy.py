@@ -11,6 +11,7 @@ import paperbook as pb  # noqa: E402
 
 LA = ZoneInfo("America/Los_Angeles")
 NOW = datetime(2026, 10, 8, 20, 0, tzinfo=timezone.utc)
+THREE = ("memecoins", "majors", "stocks")     # the original desks; the wild ones have their own tests
 
 
 def trades(desk, n, start=datetime(2026, 9, 1, 17, tzinfo=timezone.utc), every=timedelta(hours=7), pnl=lambda i: 10 if i % 3 else -5,
@@ -25,7 +26,7 @@ def trades(desk, n, start=datetime(2026, 9, 1, 17, tzinfo=timezone.utc), every=t
 def book(memes=0, majors=0, stocks=0, **kw):
     t = {"memecoins": trades("memecoins", memes, **kw), "majors": trades("majors", majors, **kw),
          "stocks": trades("stocks", stocks, **kw)}
-    return pb.Book(t, {d: [] for d in pb.DESKS}, {d: 1000.0 for d in pb.DESKS}, {}, False, NOW, LA)
+    return pb.Book(t, {d: [] for d in THREE}, {d: 1000.0 for d in THREE}, {}, False, NOW, LA)
 
 
 def by_id(pats):
@@ -77,7 +78,7 @@ def test_page_data_and_safety(tmp_path):
     b = book(memes=25, majors=8, symbol=lambda i: "<script>" if i == 0 else f"S{i % 4}")
     b.held["majors"] = [pb.Holding("majors", "XRP", NOW - timedelta(hours=3), 60.0, 55.0, "")]
     payload = galaxy.write(b, tmp_path)
-    assert [d["key"] for d in payload["desks"]] == list(pb.DESKS)
+    assert [d["key"] for d in payload["desks"]] == list(THREE)
     assert len(payload["trades"]) == 33 and payload["trades"] == sorted(payload["trades"], key=lambda r: r[1])
     assert any(s["s"] == "XRP" for s in payload["symbols"]) and payload["held"][0][3] == 55.0
     page = (tmp_path / "galaxy.html").read_text()

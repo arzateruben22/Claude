@@ -1,6 +1,6 @@
 # Paper Book
 
-Every paper trade from both desks in one ledger, with one running total. Paper money only:
+Every paper trade from every desk in one ledger, with one running total. Paper money only:
 nothing in this repo can place a real order.
 
 | Desk | What it trades | Paper money | When it trades |
@@ -8,13 +8,18 @@ nothing in this repo can place a real order.
 | **Memecoins**: Night Desk (`night-desk/`) | brand-new Solana coins that pass its rug checks | $100 bank | nonstop, 24/7, while it's running |
 | **Big coins**: Majors Desk (`majors-desk/`) | BTC, ETH, SOL, XRP, ADA, DOGE, hourly trend following | $100 bank | every hour, 24/7, while it's running |
 | **Stocks**: premarket scanner (`premarket-scanner/`) | US stocks gapping up before the open | $100 bank, split equally between each weekday's picks | picks before the open; graded after the close, weekdays |
+| **Wild memecoins**: Night Desk's wild rulebook (`night-desk/desk-wild.toml`) | the same coins and rug checks, with looser entry rules and bigger, longer bets | its own $100 bank | alongside the memecoin desk |
+| **Wild stocks**: the scanner's wild rules (`premarket-scanner/criteria-wild.toml`) | smaller gaps, no news needed, +20% / −8% exits | its own $100 bank | a minute after each stock scan |
+
+The wild desks are riskier copies run side by side, so the book shows whether taking more risk pays. They don't
+change the original desks or their four-week test. A desk is in the book when `book.toml` has a section for it.
 
 ```bash
 python paper-book/paperbook.py             # the ledger and the report, now
 python paper-book/paperbook.py --watch 15  # ...every 15 minutes
 ```
 
-It writes `paper-book/output/ledger.csv` (one row per closed paper trade, both desks) and
+It writes `paper-book/output/ledger.csv` (one row per closed paper trade, every desk) and
 `paper-book/output/paper-book.html`: net profit and loss overall and per desk, the curve since
 the start, each day's result, win rate, profit factor, worst drop, open positions, and the
 latest trades.

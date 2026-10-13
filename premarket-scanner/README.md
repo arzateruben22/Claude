@@ -83,6 +83,22 @@ split / warrants** headlines get a ⚠ because those gaps often get sold into.
 Stocks that miss exactly one rule are listed as **near misses**, which helps
 you tune the rules. Change any number in `criteria.toml`; no code changes needed.
 
+### The wild rules (`criteria-wild.toml`)
+
+A riskier second set of rules, graded on its own $100 of paper money next to the main ones, so you can see
+whether more risk pays: a 5% gap is enough, no news needed, $1 stocks and floats up to 50M allowed, and each
+pick aims for **+20% with a −8% stop**. Because looser picks are harder to trade, it's charged **0.75%** per
+trade instead of 0.5%. The scorecard (`[gates]`) is the same. Every command takes `--book wild`:
+
+```bash
+python -m scanner scan --book wild        # picks go to output/wild/journal.csv
+python -m scanner grade --book wild
+python -m scanner stats --book wild       # ends with the fade check: how often picks closed below their open
+```
+
+The **fade check** at the end of `stats` (both books) counts how often a pick closed below its 9:30 open.
+Professionals often bet against gap-ups; this only measures how often that side would have been right.
+
 ## 4. Daily routine (Pacific time)
 
 | When | Command | Why |
@@ -261,6 +277,7 @@ python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premar
                            [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
 python -m scanner scorecard | risk | lessons | nightly [--demo] [--ai]    # nightly also takes --window
+# every command also takes --book wild (criteria-wild.toml, results in output/wild/)
 ```
 
 `--window` makes a scheduled run exit quietly outside a Pacific-time window.

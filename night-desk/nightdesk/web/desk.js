@@ -92,7 +92,9 @@
   /* ---------- status line ---------- */
   function renderStatus(s) {
     var c = s.counts, b = s.bank, now = new Date(s.now);
-    $("st-mode").textContent = s.replay ? "replay" : s.mode;
+    var book = s.book && s.book !== "main" ? s.book : "";
+    $("st-mode").textContent = (s.replay ? "replay" : s.mode) + (book ? " · " + book + " rules" : "");
+    if (book && document.title.indexOf(book) < 0) document.title = "Night Desk · " + book + " rules";
     $("st-seen").textContent = c.seen.toLocaleString("en-US");
     $("st-killed").textContent = c.killed.toLocaleString("en-US");
     $("st-judged").textContent = c.judged.toLocaleString("en-US");

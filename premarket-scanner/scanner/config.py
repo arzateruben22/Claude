@@ -60,6 +60,20 @@ class Criteria:
         return " · ".join(parts)
 
 
+def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Path]:
+    """Each rulebook has its own rules file and results folder:
+    main = criteria.toml and output/; any other name = criteria-<name>.toml and output/<name>/."""
+    output = output or OUTPUT
+    if book == "main":
+        return ROOT / "criteria.toml", output
+    if not book.replace("-", "").isalnum() or not book.islower():
+        raise ValueError(f"A rulebook name is lowercase letters, digits and dashes, not {book!r}")
+    path = ROOT / f"criteria-{book}.toml"
+    if not path.exists():
+        raise ValueError(f"No rulebook called {book!r}: {path.name} doesn't exist")
+    return path, output / book
+
+
 def load_criteria(path: Path | None = None) -> Criteria:
     path = path or ROOT / "criteria.toml"
     with open(path, "rb") as fh:

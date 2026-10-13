@@ -17,6 +17,21 @@ start_bank = 100.0
 share_bank = true                         # each weekday's picks split the stock bank equally
 ticket_usd = 100.0                        # paper dollars per pick, used only when share_bank = false
 
+# The wild desks: riskier copies of the memecoin and stock desks, each on its own paper bank, so the book
+# shows side by side whether taking more risk pays. Delete a section to leave that desk out.
+[memecoins_wild]                          # Night Desk's wild rulebook (night-desk/desk-wild.toml), same coins
+folder = "../night-desk/output/wild/live" # where `python -m nightdesk run --with wild` keeps its results
+demo_folder = "../night-desk/output/wild/demo"
+start_bank = 100.0                        # same as [desk] start_bank in night-desk/desk-wild.toml
+
+[stocks_wild]                             # the scanner's wild rules (premarket-scanner/criteria-wild.toml)
+journal = "../premarket-scanner/output/wild/journal.csv"
+demo_journal = ""                         # empty: the newest wild demo backtest
+rules = "../premarket-scanner/criteria-wild.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
 [report]
 timezone = "America/Los_Angeles"
 

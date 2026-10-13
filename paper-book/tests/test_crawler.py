@@ -10,6 +10,7 @@ import paperbook as pb  # noqa: E402
 
 LA = ZoneInfo("America/Los_Angeles")
 NOW = datetime(2026, 10, 8, 20, 0, tzinfo=timezone.utc)
+THREE = ("memecoins", "majors", "stocks")     # the original desks; the wild ones have their own tests
 T0 = datetime(2026, 9, 1, 17, tzinfo=timezone.utc)
 
 
@@ -21,8 +22,8 @@ def trades(desk, n, pnl=lambda i: 10 if i % 3 else -5, pct=None, exit_=lambda i:
 
 
 def book(**per_desk):
-    t = {d: per_desk.get(d, []) for d in pb.DESKS}
-    return pb.Book(t, {d: [] for d in pb.DESKS}, {d: 1000.0 for d in pb.DESKS}, {}, False, NOW, LA)
+    t = {d: per_desk.get(d, []) for d in THREE}
+    return pb.Book(t, {d: [] for d in THREE}, {d: 1000.0 for d in THREE}, {}, False, NOW, LA)
 
 
 def chips(b, desk=None, level=None):

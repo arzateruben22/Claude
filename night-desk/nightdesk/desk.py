@@ -53,8 +53,8 @@ def _money(x: float) -> str:
 
 class Desk:
     def __init__(self, cfg: Config, source: Source, judge, now: datetime, out_dir: Optional[Path] = None,
-                 mode: str = "demo"):
-        self.cfg, self.source, self.judge, self.mode = cfg, source, judge, mode
+                 mode: str = "demo", book: str = "main"):
+        self.cfg, self.source, self.judge, self.mode, self.book = cfg, source, judge, mode, book
         self.started = now
         self.broker = PaperBroker(cfg, cfg.desk.start_bank)
         self.reviews: Dict[str, Review] = {}
@@ -348,7 +348,7 @@ class Desk:
         step = max(1, len(self.equity) // 300)
         trades = b.trades[-30:]
         return {
-            "now": now.isoformat(), "mode": self.mode, "started": self.started.isoformat(),
+            "now": now.isoformat(), "mode": self.mode, "book": self.book, "started": self.started.isoformat(),
             "judge": describe_judge(self.judge),
             "bank": {"equity": round(eq, 2), "cash": round(b.cash, 2), "start": self.cfg.desk.start_bank,
                      "day_pnl_pct": round(b.day_pnl_pct(), 2), "halted": b.halted(), "open": len(b.positions),

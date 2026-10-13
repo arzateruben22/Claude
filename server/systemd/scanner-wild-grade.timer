@@ -1,0 +1,8 @@
+[Unit]
+Description=Grade the wild-rules stock picks once the close is in
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 13:47:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

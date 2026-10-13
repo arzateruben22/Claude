@@ -48,7 +48,7 @@ def btc_now(fetch: Fetch) -> Optional[float]:
 def started(book: pb.Book) -> datetime:
     """When the desks started: the memecoin desk's first equity point (stamped by the clock, every minute),
     or the first trade or open position. Not the big-coin desk's: it stamps the start of each hourly candle."""
-    times = [t.opened for d in pb.DESKS for t in book.trades[d]] + [h.opened for d in pb.DESKS for h in book.held[d]]
+    times = [t.opened for d in book.desks for t in book.trades[d]] + [h.opened for d in book.desks for h in book.held[d]]
     state = Path(book.sources.get("memecoins", "")) / "state.json"
     try:
         points = json.loads(state.read_text()).get("equity") or []

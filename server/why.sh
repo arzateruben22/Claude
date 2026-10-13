@@ -7,8 +7,8 @@ DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PY="$DIR/.venv/bin/python"
 pacific() { [ -n "$1" ] && [ "$1" != "n/a" ] && TZ=America/Los_Angeles date -d "$1" '+%a %d %b, %-I:%M %p Pacific' 2>/dev/null; }
 
-echo "MEMECOINS"
-"$PY" - "$DIR/night-desk/output/live/state.json" <<'PYEOF'
+memecoins() {   # $1: the desk's state.json
+"$PY" - "$1" <<'PYEOF'
 import json, os, sys, time
 path = sys.argv[1]
 if not os.path.exists(path):
@@ -43,14 +43,10 @@ if age > 5:
 if not seen:
     print("  ! it hasn't found a single new coin, so it may not be reaching DexScreener: journalctl -u nightdesk -n 30 --no-pager")
 PYEOF
+}
 
-echo
-echo "BIG COINS"
-(cd "$DIR/majors-desk" && "$PY" -m majors why | sed 's/^/  /')
-
-echo
-echo "STOCKS"
-"$PY" - "$DIR/premarket-scanner/output/journal.csv" <<'PYEOF'
+stocks() {   # $1: the journal
+"$PY" - "$1" <<'PYEOF'
 import csv, os, sys
 path = sys.argv[1]
 rows = list(csv.DictReader(open(path, newline=""))) if os.path.exists(path) else []
@@ -62,7 +58,31 @@ else:
     print(f"  {len(graded)} picks graded so far")
     if waiting:
         print("  bought at the open on their trade day: " + ", ".join(f"{r['symbol']} ({r['trade_date']})" for r in waiting[:8]))
+    moves = [float(r["close_vs_open_pct"]) for r in graded if r.get("close_vs_open_pct")]
+    if moves:
+        down = sum(m < 0 for m in moves)
+        print(f"  fade check: {down} of {len(moves)} closed below their 9:30 open (measured only, never bet on)")
 PYEOF
+}
+
+echo "MEMECOINS"
+memecoins "$DIR/night-desk/output/live/state.json"
+
+echo
+echo "WILD MEMECOINS (same coins, riskier rules, own \$100)"
+memecoins "$DIR/night-desk/output/wild/live/state.json"
+
+echo
+echo "BIG COINS"
+(cd "$DIR/majors-desk" && "$PY" -m majors why | sed 's/^/  /')
+
+echo
+echo "STOCKS"
+stocks "$DIR/premarket-scanner/output/journal.csv"
+
+echo
+echo "WILD STOCKS (smaller gaps, no news needed, own \$100)"
+stocks "$DIR/premarket-scanner/output/wild/journal.csv"
 last="$(pacific "$(systemctl show scanner-scan.service -p ExecMainExitTimestamp --value 2>/dev/null)")"
 next="$(pacific "$(systemctl show scanner-scan.timer -p NextElapseUSecRealtime --value 2>/dev/null)")"
 [ -n "$last" ] && echo "  last scan: $last"

@@ -2,6 +2,7 @@
 
   python -m nightdesk run --demo        simulated market, opens the dashboard
   python -m nightdesk run               live market data, paper money
+  python -m nightdesk run --with wild   ...plus the wild rulebook (desk-wild.toml) on its own paper bank
   python -m nightdesk check <mint>      run the whole desk on one coin, once
   python -m nightdesk report            paper results so far
   python -m nightdesk replay            record a demo night into one HTML file
@@ -12,6 +13,9 @@ Before real money (paper only, they change nothing):
   python -m nightdesk lessons           nightly review: losers, patterns, one proposal
   python -m nightdesk nightly           lessons + risk + scorecard, for a schedule
   python -m nightdesk sim --days 30     a month of demo market (about 15 minutes)
+
+Every command takes --book NAME to work on another rulebook: --book wild reads desk-wild.toml and
+keeps its results in output/wild/ instead of desk.toml and output/.
 """
 from __future__ import annotations
 
@@ -35,39 +39,59 @@ from .models import Review
 
 def cmd_run(args) -> int:
     from .server import Runner, SimClock, make_server, wall_clock
+    from .sources.shared import SharedSource
 
-    cfg = config.load()
+    books = list(dict.fromkeys([args.book] + (args.also or [])))
     now = datetime.now(timezone.utc)
     if args.demo:
         from .sources.sim import SimMarket
 
         start = now - timedelta(hours=args.warmup)
         source = SimMarket(start, seed=args.seed)
-        judge = make_judge(cfg.judge, allow_ai=args.ai)
-        _reset_demo()
-        desk = Desk(cfg, source, judge, start, OUTPUT / "demo", mode="demo")
-        print(f"Warming up the demo desk ({args.warmup:g} simulated hours)...")
-        t = start
-        while t < now:
-            desk.step(t)
-            t += timedelta(seconds=5)
-        clock = SimClock(now, args.speed)
     else:
         from .sources.live import LiveSource
 
+        start = now
         source = LiveSource()
-        judge = make_judge(cfg.judge, allow_ai=True)
-        desk = Desk(cfg, source, judge, now, OUTPUT / "live", mode="live")
-        if desk.resume():
-            print(f"Resumed the paper book: bank ${desk.broker.equity():,.2f}, {len(desk.broker.positions)} open.")
+    if len(books) > 1:
+        source = SharedSource(source)      # one feed for every rulebook: no extra API traffic
+    desks = []
+    for book in books:
+        path, base = config.book_paths(book, OUTPUT)
+        cfg = config.load(path)
+        if args.demo:
+            judge = make_judge(cfg.judge, allow_ai=args.ai)
+            _reset_demo(base)
+            desk = Desk(cfg, source, judge, start, base / "demo", mode="demo", book=book)
+        else:
+            judge = make_judge(cfg.judge, allow_ai=True)
+            desk = Desk(cfg, source, judge, now, base / "live", mode="live", book=book)
+            if desk.resume():
+                which = "" if book == "main" else f" ({book} rules)"
+                print(f"Resumed the paper book{which}: bank ${desk.broker.equity():,.2f}, "
+                      f"{len(desk.broker.positions)} open.")
+        desks.append(desk)
+    if args.demo:
+        print(f"Warming up the demo desk{'s' if len(desks) > 1 else ''} ({args.warmup:g} simulated hours)...")
+        t = start
+        while t < now:
+            for desk in desks:
+                desk.step(t)
+            t += timedelta(seconds=5)
+        clock = SimClock(now, args.speed)
+    else:
         clock = wall_clock
 
-    runner = Runner(desk, clock)
+    runner = Runner(desks, clock)
     runner.start()
     server = make_server(runner, args.host, args.port)
     url = f"http://{args.host}:{server.server_address[1]}/"
     mode = f"DEMO market at {args.speed:g}x speed" if args.demo else "LIVE market data"
-    print(f"\nNight Desk is open: {url}\n  {mode} · paper money only · judge: {describe(judge)}\n  Ctrl+C to stop.")
+    print(f"\nNight Desk is open: {url}\n  {mode} · paper money only · judge: {describe(desks[0].judge)}")
+    for desk in desks[1:]:
+        print(f"  {desk.book} rules, own ${desk.cfg.desk.start_bank:,.0f} paper bank: {url}{desk.book}/ "
+              f"· judge: {describe(desk.judge)}")
+    print("  Ctrl+C to stop.")
     if not args.no_browser:
         webbrowser.open(url)
 
@@ -88,7 +112,7 @@ def cmd_run(args) -> int:
 def cmd_check(args) -> int:
     from .sources.live import LiveSource
 
-    cfg = config.load()
+    cfg, _ = _book(args)
     now = datetime.now(timezone.utc)
     src = LiveSource()
     coin = src.snapshot([args.mint], now).get(args.mint)
@@ -119,7 +143,7 @@ def _read(path: Path) -> list:
 
 
 def cmd_report(args) -> int:
-    folder = OUTPUT / ("demo" if args.demo else "live")
+    folder, _ = _where(args)
     trades, kills = _read(folder / "trades.csv"), _read(folder / "kills.csv")
     if not trades and not kills:
         print(f"No results yet in {folder}. Run the desk first.")
@@ -149,14 +173,20 @@ DEMO_FILES = ("trades.csv", "kills.csv", "state.json", "rulebook.json", "risk_re
               "scorecard.json", "scorecard.md", "lessons.md")
 
 
-def _reset_demo() -> None:
+def _reset_demo(base: Path = OUTPUT) -> None:
     for f in DEMO_FILES:
-        (OUTPUT / "demo" / f).unlink(missing_ok=True)
+        (base / "demo" / f).unlink(missing_ok=True)
+
+
+def _book(args):
+    """The rulebook a command works on (--book, main by default) and its results folder."""
+    path, base = config.book_paths(getattr(args, "book", "main"), OUTPUT)
+    return config.load(path), base
 
 
 def _where(args):
     mode = "demo" if args.demo else "live"
-    return OUTPUT / mode, mode
+    return _book(args)[1] / mode, mode
 
 
 def _analyst(cfg, args):
@@ -187,7 +217,7 @@ def _scorecard_text(cfg, folder, mode, now, every=False):
 
 
 def cmd_scorecard(args) -> int:
-    cfg = config.load()
+    cfg, _ = _book(args)
     folder, mode = _where(args)
     if not (folder / "trades.csv").exists() and not (folder / "rulebook.json").exists():
         print(f"No paper results yet in {folder}. Run the desk first"
@@ -199,7 +229,7 @@ def cmd_scorecard(args) -> int:
 
 
 def cmd_risk(args) -> int:
-    cfg = config.load()
+    cfg, _ = _book(args)
     folder, mode = _where(args)
     folder.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc)
@@ -214,7 +244,7 @@ def cmd_risk(args) -> int:
 
 
 def cmd_lessons(args) -> int:
-    cfg = config.load()
+    cfg, _ = _book(args)
     folder, mode = _where(args)
     folder.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc)
@@ -229,7 +259,7 @@ def cmd_lessons(args) -> int:
 
 def cmd_nightly(args) -> int:
     """The whole review in one go, for a schedule: lessons, then the officer, then the scorecard."""
-    cfg = config.load()
+    cfg, _ = _book(args)
     folder, mode = _where(args)
     folder.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc)
@@ -258,11 +288,12 @@ def cmd_sim(args) -> int:
     from .judge import RulesJudge
     from .sources.sim import SimMarket
 
-    cfg = config.load()
+    cfg, base = _book(args)
     end = datetime.now(timezone.utc).replace(microsecond=0)
     start = end - timedelta(days=args.days)
-    _reset_demo()
-    desk = Desk(cfg, SimMarket(start, seed=args.seed), RulesJudge(cfg.judge), start, OUTPUT / "demo", mode="demo")
+    _reset_demo(base)
+    desk = Desk(cfg, SimMarket(start, seed=args.seed), RulesJudge(cfg.judge), start, base / "demo", mode="demo",
+                book=args.book)
     desk.last_save = end          # write state once at the end, not every simulated minute
     print(f"Simulating {args.days:g} days of the demo market (seed {args.seed}, rules judge)...")
     t, day = start, -1
@@ -275,8 +306,9 @@ def cmd_sim(args) -> int:
                   f"bank ${desk.broker.equity():,.0f}", end="", flush=True)
         t += timedelta(seconds=15)
     desk.save()
-    print(f"\nDone: {len(desk.broker.trades)} paper trades in {OUTPUT / 'demo'}.\n"
-          "Next: python -m nightdesk nightly --demo")
+    which = "" if args.book == "main" else f" --book {args.book}"
+    print(f"\nDone: {len(desk.broker.trades)} paper trades in {base / 'demo'}.\n"
+          f"Next: python -m nightdesk nightly --demo{which}")
     return 0
 
 
@@ -315,6 +347,8 @@ def main(argv=None) -> int:
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8787)
     p.add_argument("--no-browser", action="store_true")
+    p.add_argument("--with", dest="also", action="append", metavar="BOOK",
+                   help="also run another rulebook alongside, on its own paper bank (e.g. --with wild)")
     p.set_defaults(func=cmd_run)
 
     p = sub.add_parser("check", help="put one coin through every rule (live data)")
@@ -350,7 +384,18 @@ def main(argv=None) -> int:
     p.add_argument("--fragment", action="store_true", help=argparse.SUPPRESS)
     p.set_defaults(func=cmd_replay)
 
+    for name, p in sub.choices.items():
+        if name != "replay":
+            p.add_argument("--book", default="main", metavar="NAME",
+                           help="which rulebook: main (desk.toml, the default) or another, e.g. wild (desk-wild.toml)")
+
     args = ap.parse_args(argv)
+    try:                               # a bad rulebook name, said plainly before anything runs
+        for book in [getattr(args, "book", "main")] + (getattr(args, "also", None) or []):
+            config.book_paths(book)
+    except ValueError as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 2
     try:
         return args.func(args)
     except KeyboardInterrupt:

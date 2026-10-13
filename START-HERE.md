@@ -33,6 +33,11 @@ sudo bash server/setup.sh
 **Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
 starts with $100 of paper money.
 
+**The wild desks** run next to the memecoin and stock desks: the same markets with riskier rules (younger coins,
+bigger bets, smaller stock gaps, wider exits), each on its own $100 of paper money. They show side by side whether
+taking more risk pays, without changing the original desks. Already set up? One update adds them:
+`cd ~/desks && git pull && sudo bash server/setup.sh` (it keeps every paper trade so far).
+
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
 everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.
 

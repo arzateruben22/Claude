@@ -39,9 +39,10 @@ BACKUPS = Path("/var/backups/desks")
 NTFY = "https://ntfy.sh"
 UNITS = {"nightdesk": "Memecoin desk", "majors": "Big-coin desk", "paperbook": "Paper book and crawler",
          "postdesk": "Post Desk"}
-QUIET = {"nightdesk": ("night-desk/output/live/state.json", 20),     # saves every minute
-         "majors": ("majors-desk/output/live/state.json", 150)}       # saves every hour
-DESK_OF = {"memecoins": "Memecoins", "majors": "Big coins", "stocks": "Stocks"}
+# What should keep saving while its service runs: name -> (service, file, minutes, label)
+QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Memecoin desk"),     # every minute
+         "nightdesk-wild": ("nightdesk", "night-desk/output/wild/live/state.json", 20, "Wild memecoin desk"),
+         "majors": ("majors", "majors-desk/output/live/state.json", 150, "Big-coin desk")}         # every hour
 
 
 @dataclass
@@ -136,17 +137,17 @@ def check_units(now: datetime, state: dict, units: Callable[[str], Tuple[str, in
 def check_quiet(now: datetime, state: dict, mtime_of: Callable[[Path], Optional[datetime]], root: Path = ROOT) -> List[Push]:
     out: List[Push] = []
     sent = state.setdefault("sent", {})
-    for name, (rel, minutes) in QUIET.items():
-        if state.get("units", {}).get(name, {}).get("active") != "active":
+    for name, (unit, rel, minutes, label) in QUIET.items():
+        if state.get("units", {}).get(unit, {}).get("active") != "active":
             continue                                        # a stopped desk is already reported as stopped
         m = mtime_of(root / rel)
         if m is None:
             continue
         age = (now - m).total_seconds() / 60
         if age > minutes and _ago(now, sent.get(f"quiet:{name}"), 6):
-            out.append(Push(f"{UNITS[name]} has gone quiet",
+            out.append(Push(f"{label} has gone quiet",
                             f"It's running but hasn't saved anything for {age:.0f} minutes, usually because it can't get "
-                            f"prices. To see why: journalctl -u {name} -n 30 --no-pager", 4, ("zzz",)))
+                            f"prices. To see why: journalctl -u {unit} -n 30 --no-pager", 4, ("zzz",)))
             sent[f"quiet:{name}"] = now.isoformat()
     return out
 
@@ -155,7 +156,7 @@ def check_losses(now: datetime, state: dict, book: pb.Book, limit_pct: float, ni
     out: List[Push] = []
     sent = state.setdefault("sent", {})
     today = now.astimezone(book.tz).date()
-    for d in pb.DESKS:
+    for d in book.desks:
         bank = book.banks[d]
         day = pb.daily(book.trades[d], book.tz).get(today, 0.0)
         if not bank or day > -limit_pct / 100 * bank or sent.get(f"loss:{d}") == today.isoformat():
@@ -163,7 +164,7 @@ def check_losses(now: datetime, state: dict, book: pb.Book, limit_pct: float, ni
         body = f"{day / bank * 100:+.1f}% of its ${bank:,.0f} paper bank in trades closed today."
         if d == "memecoins" and day <= -night_limit_pct / 100 * bank:
             body += f" It hit its own {night_limit_pct:g}% daily limit, so it has stopped buying until tomorrow."
-        out.append(Push(f"{DESK_OF[d]} down {_usd(day)} today", body + " Paper money only.", 4, ("chart_with_downwards_trend",)))
+        out.append(Push(f"{pb.LABEL[d]} down {_usd(day)} today", body + " Paper money only.", 4, ("chart_with_downwards_trend",)))
         sent[f"loss:{d}"] = today.isoformat()
     return out
 
@@ -179,15 +180,15 @@ def check_backup(now: datetime, state: dict, newest: Optional[datetime], folder_
 
 def summary(book: pb.Book, day: date) -> Push:
     lines, today_total, since_total = [], 0.0, 0.0
-    for d in pb.DESKS:
+    for d in book.desks:
         trades = book.trades[d]
         closed = [t for t in trades if t.closed.astimezone(book.tz).date() == day]
         today_pnl, net = sum(t.pnl for t in closed), sum(t.pnl for t in trades)
         today_total += today_pnl
         since_total += net
-        lines.append(f"{DESK_OF[d]}: {_usd(today_pnl)} today ({len(closed)} closed) · {_usd(net)} since the start")
-    held = [h for d in pb.DESKS for h in book.held[d]]
-    bank = sum(book.banks.values())
+        lines.append(f"{pb.LABEL[d]}: {_usd(today_pnl)} today ({len(closed)} closed) · {_usd(net)} since the start")
+    held = [h for d in book.desks for h in book.held[d]]
+    bank = book.bank_total
     lines.append(f"All desks: {_usd(since_total)} ({since_total / bank * 100:+.1f}% of ${bank:,.0f})"
                  + (f" · {len(held)} open, {_usd(book.unrealized)} not banked" if held else ""))
     if book.benchmark:

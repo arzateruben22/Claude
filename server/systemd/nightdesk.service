@@ -1,5 +1,5 @@
 [Unit]
-Description=Night Desk: the paper-money coin desk on live prices
+Description=Night Desk: the paper-money coin desk on live prices (main and wild rulebooks, one shared feed)
 After=network-online.target
 Wants=network-online.target
 
@@ -7,7 +7,7 @@ Wants=network-online.target
 Environment=PYTHONUNBUFFERED=1
 User=@USER@
 WorkingDirectory=@DIR@/night-desk
-ExecStart=@DIR@/.venv/bin/python -m nightdesk run --no-browser
+ExecStart=@DIR@/.venv/bin/python -m nightdesk run --no-browser --with wild
 Restart=always
 RestartSec=30
 

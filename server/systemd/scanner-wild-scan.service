@@ -1,0 +1,13 @@
+[Unit]
+Description=Premarket scanner, wild rules: pick gap-up stocks (paper, its own bank)
+After=network-online.target
+Wants=network-online.target
+# Waits for your Alpaca paper keys in premarket-scanner/.env
+ConditionPathExists=@DIR@/premarket-scanner/.env
+
+[Service]
+Environment=PYTHONUNBUFFERED=1
+Type=oneshot
+User=@USER@
+WorkingDirectory=@DIR@/premarket-scanner
+ExecStart=@DIR@/.venv/bin/python -m scanner scan --book wild

@@ -141,7 +141,7 @@ def desk_patterns(desk: str, trades: List[pb.Trade], tz) -> List[dict]:
     add("exits", f"How {label.lower()} trades end", NEED["exits"], exits)
     add("sources", "Where the winnings came from", NEED["sources"], sources)
     add("streaks", "Streaks", NEED["streaks"], streaks)
-    if desk == "stocks":
+    if pb.KIND[desk] == "stocks":
         add("weekday", "Day of the week", NEED["weekday"], weekday)
     else:
         add("hold", "Holding time", NEED["hold"], hold)
@@ -149,31 +149,37 @@ def desk_patterns(desk: str, trades: List[pb.Trade], tz) -> List[dict]:
     return out
 
 
+def pairs(desks) -> List[tuple]:
+    """Which desks to compare: each pair of markets, and each wild desk with the desk it's a riskier copy of."""
+    base = [d for d in desks if not d.endswith("_wild")]
+    out = [(a, b) for i, a in enumerate(base) for b in base[i + 1:]]
+    return out + [(d[:-5], d) for d in desks if d.endswith("_wild") and d[:-5] in desks]
+
+
 def shared_patterns(book: pb.Book) -> List[dict]:
     """Do two desks win and lose on the same days? That decides whether they spread the risk."""
-    days = {d: pb.daily(book.trades[d], book.tz) for d in pb.DESKS}
+    days = {d: pb.daily(book.trades[d], book.tz) for d in book.desks}
     out = []
-    for i, a in enumerate(pb.DESKS):
-        for b in pb.DESKS[i + 1:]:
-            common = sorted(set(days[a]) & set(days[b]))
-            item = {"id": f"{a}+{b}", "desk": "*", "desks": [a, b], "symbols": [],
-                    "title": f"{pb.LABEL[a]} and {pb.LABEL[b].lower()} together", "n": len(common),
-                    "need": SHARED_DAYS, "unlocked": len(common) >= SHARED_DAYS}
-            if not item["unlocked"]:
-                item["detail"] = (f"Unlocks after {SHARED_DAYS} days with trades on both "
-                                  f"({SHARED_DAYS - len(common)} to go).")
-            else:
-                x = [days[a][d] for d in common]
-                y = [days[b][d] for d in common]
-                mx, my = mean(x), mean(y)
-                sx = math.sqrt(sum((v - mx) ** 2 for v in x))
-                sy = math.sqrt(sum((v - my) ** 2 for v in y))
-                r = sum((u - mx) * (v - my) for u, v in zip(x, y)) / (sx * sy) if sx and sy else 0.0
-                how = ("tend to win and lose on the same days" if r > 0.3 else
-                       "tend to move opposite ways" if r < -0.3 else "move mostly independently")
-                item["detail"] = (f"They {how}: correlation {r:+.2f} over {len(common)} shared days "
-                                  "(+1 = always together, 0 = unrelated).")
-            out.append(item)
+    for a, b in pairs(book.desks):
+        common = sorted(set(days[a]) & set(days[b]))
+        item = {"id": f"{a}+{b}", "desk": "*", "desks": [a, b], "symbols": [],
+                "title": f"{pb.LABEL[a]} and {pb.LABEL[b].lower()} together", "n": len(common),
+                "need": SHARED_DAYS, "unlocked": len(common) >= SHARED_DAYS}
+        if not item["unlocked"]:
+            item["detail"] = (f"Unlocks after {SHARED_DAYS} days with trades on both "
+                              f"({SHARED_DAYS - len(common)} to go).")
+        else:
+            x = [days[a][d] for d in common]
+            y = [days[b][d] for d in common]
+            mx, my = mean(x), mean(y)
+            sx = math.sqrt(sum((v - mx) ** 2 for v in x))
+            sy = math.sqrt(sum((v - my) ** 2 for v in y))
+            r = sum((u - mx) * (v - my) for u, v in zip(x, y)) / (sx * sy) if sx and sy else 0.0
+            how = ("tend to win and lose on the same days" if r > 0.3 else
+                   "tend to move opposite ways" if r < -0.3 else "move mostly independently")
+            item["detail"] = (f"They {how}: correlation {r:+.2f} over {len(common)} shared days "
+                              "(+1 = always together, 0 = unrelated).")
+        out.append(item)
     return out
 
 
@@ -187,7 +193,7 @@ def milestones(book: pb.Book) -> List[dict]:
     add("First light", trades[0].closed if trades else None, "the first paper trade closes")
     for n in (10, 100, 1000):
         add(f"{n:,} trades", trades[n - 1].closed if len(trades) >= n else None)
-    firsts = [min((t.closed for t in book.trades[d]), default=None) for d in pb.DESKS]
+    firsts = [min((t.closed for t in book.trades[d]), default=None) for d in book.desks]
     add("Every desk trading", max(firsts) if all(firsts) else None, "a galaxy for each desk")
     total, hit = 0.0, None
     for t in trades:
@@ -217,7 +223,7 @@ def data(book: pb.Book) -> dict:
         key = (desk, name)
         if key not in sym_index:
             sym_index[key] = len(symbols)
-            symbols.append({"d": pb.DESKS.index(desk), "s": name, "born": int(born.timestamp())})
+            symbols.append({"d": book.desks.index(desk), "s": name, "born": int(born.timestamp())})
         return sym_index[key]
 
     exits: List[str] = []
@@ -229,16 +235,16 @@ def data(book: pb.Book) -> dict:
         rows.append([i, int(t.closed.timestamp()), round(t.pnl, 2), round(t.pnl_pct, 2), exits.index(t.exit),
                      int((t.closed - t.opened).total_seconds() // 60)])
     held = []
-    for d in pb.DESKS:
+    for d in book.desks:
         for h in book.held[d]:
             i = sym(d, h.symbol, h.opened)
             held.append([i, int(h.opened.timestamp()), round(h.cost, 2), None if h.value is None else round(h.value, 2)])
     desks = []
-    for d in pb.DESKS:
+    for d in book.desks:
         s = pb.stats(book.trades[d], book.banks[d])
         desks.append({"key": d, "label": pb.LABEL[d], "bank": book.banks[d], "trades": s["trades"],
                       "net": s["net"], "win_rate": s["win_rate"], "open": len(book.held[d])})
-    pats = [p for d in pb.DESKS for p in desk_patterns(d, book.trades[d], book.tz)] + shared_patterns(book)
+    pats = [p for d in book.desks for p in desk_patterns(d, book.trades[d], book.tz)] + shared_patterns(book)
     return {
         "meta": {"demo": book.demo, "updated": book.now.isoformat(), "now": int(book.now.timestamp()),
                  "tz": str(book.tz), "updated_local": book.now.astimezone(book.tz).strftime("%a %d %b %Y, %H:%M")},

@@ -164,6 +164,24 @@ def _risk_lines(pnl: List[float]) -> List[str]:
     ]
 
 
+def fade(rows: List[dict]) -> Optional[Tuple[int, int, float]]:
+    """How often graded picks closed below their 9:30 open: (faded, graded, average close vs open %).
+    The pros often bet against gap-ups; this only measures how often that side would have been right."""
+    moves = [float(r["close_vs_open_pct"]) for r in rows if r.get("graded_at") and r.get("close_vs_open_pct") not in (None, "")]
+    if not moves:
+        return None
+    return sum(m < 0 for m in moves), len(moves), mean(moves)
+
+
+def fade_lines(rows: List[dict]) -> List[str]:
+    f = fade(rows)
+    if not f:
+        return []
+    down, n, avg = f
+    return [f"Fade check: {down}/{n} picks ({down / n:.0%}) closed below their 9:30 open; average close vs open "
+            f"{avg:+.1f}%. A measurement only: nothing here bets against them."]
+
+
 def stats(crit: Criteria, path: Path = JOURNAL) -> str:
     rows = sorted((r for r in _read(path) if r.get("graded_at")), key=lambda r: (r["trade_date"], r["scan_time_pt"]))
     if not rows:
@@ -203,6 +221,7 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
     out += [block(sess, rs) for sess in ("premarket", "afterhours", "regular")
             if (rs := [r for r in rows if r["session"] == sess]) and len(rs) != len(rows)]
     out += [""] + _risk_lines(pnl)
+    out += fade_lines(rows)
     out += grouped("By catalyst:", lambda r: (r["tags"] or "untagged").split(";"))
     for name, (col, edges) in BUCKETS.items():
         g = grouped(f"By {name}:", bucket(col, edges))

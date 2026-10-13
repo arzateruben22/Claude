@@ -17,8 +17,10 @@
   const FONT = token('--mono', 'ui-monospace, monospace');
 
   const LEGS = 16, TENTACLES = 22, HOLD = 14;
-  // Where each cluster sits in the web, in crawl order: three desks, the open positions, the patterns.
+  // Where each cluster sits in the web, in crawl order: the desks, the open positions, the patterns.
   const CENTERS = [[0, 0], [-430, -560], [-1150, -190], [-990, 640], [-140, 880], [780, 650], [930, -250]];
+  // More clusters than that: keep going round the outside.
+  const centerOf = (i) => CENTERS[i] || [Math.round(1500 * Math.cos(i * 1.1)), Math.round(1300 * Math.sin(i * 1.1))];
   const SHIP = { key: 'ship', name: 'ship', color: C.pink, sub: 'flags to check before any real money' };
   const AXES = ['WIN', 'PF', 'R:R', 'DD', 'GREEN', 'N'];
   const GREY = [205, 212, 220], WHITE = [240, 244, 248], CREAM = [246, 231, 166];
@@ -83,7 +85,7 @@
   function buildWorld() {
     const small = window.innerWidth < 700;
     return secs.map((s, i) => {
-      const [cx, cy] = CENTERS[i];
+      const [cx, cy] = centerOf(i);
       const r = rng(4049 + i * 7919);
       const blobs = [];
       const nb = 6 + Math.floor(r() * 4);
@@ -1075,7 +1077,8 @@
 
   // ---------------------------------------------------------------- results
 
-  const NAME = { memecoins: 'memecoins', majors: 'big coins', stocks: 'stocks' };
+  const NAME = { memecoins: 'memecoins', majors: 'big coins', stocks: 'stocks',
+    memecoins_wild: 'wild memecoins', stocks_wild: 'wild stocks' };
   function colorOf(key) { const s = secs.find((x) => x.key === key); return s ? s.color : C.pink; }
 
   function showShip() {

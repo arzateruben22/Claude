@@ -143,6 +143,32 @@ Then `[judge]`, `[size]` and `[risk]` decide the trade. Change a number,
 restart, compare `report` results. `[gates]` and `[review]` only judge the
 desk; changing them doesn't restart the scorecard.
 
+## The wild rulebook: `desk-wild.toml`
+
+A second, riskier rulebook that trades the same coins next to the main desk, on its own $100 of paper money.
+The point is to find out faster whether taking more risk pays, without touching the main desk's test.
+
+| | `desk.toml` (main) | `desk-wild.toml` (wild) |
+|---|---|---|
+| Rug checks (`[kill]`) | strict | **identical**: a rug loses the whole stake |
+| Youngest coin it buys | 15 min | 5 min |
+| Pool, volume, trades, market cap minimums | $12K, $15K/h, 150/h, $60K | half of each |
+| Website or socials | at least one | not needed |
+| Ticket, coins at once | 10% of the bank, 3 | 20%, 5 |
+| Target, stop, longest hold | +40%, −20%, 2 h | +100%, −25%, 4 h |
+| Judge | Claude if there's a key, else rules | rules only, so it never costs anything |
+| Fees, slippage, scorecard (`[gates]`) | | **identical** |
+
+```bash
+python -m nightdesk run --with wild        # both desks, one shared price feed; wild at http://127.0.0.1:8787/wild/
+python -m nightdesk report --book wild     # every command takes --book wild
+python -m nightdesk sim --days 30 --book wild
+```
+
+Both desks share one feed (`sources/shared.py`): a sweep, a price or a safety report fetched for one is reused
+by the other, so the free APIs see about the same traffic as one desk. The wild desk's results live in
+`output/wild/`, and the paper book shows it as **Wild memecoins**.
+
 ## How the paper fills work
 
 Buys and sells are priced like a real constant-product pool (pump.fun,

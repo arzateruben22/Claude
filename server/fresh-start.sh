@@ -7,24 +7,26 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STAMP="$(date +%Y-%m-%d-%H%M)"
 
-echo "This starts every desk over from today: memecoins, big coins and stocks go back to the"
+echo "This starts every desk over from today: memecoins, big coins and stocks (and the wild desks) go back to the"
 echo "paper bank in their settings, and the results so far move to an archive folder."
 read -r -p "Start over now? (y/n) " ok
 case "$ok" in y|Y|yes|Yes|YES) ;; *) echo "Nothing changed."; exit 0 ;; esac
 
 systemctl stop nightdesk.service majors.service paperbook.service
-for d in night-desk majors-desk; do
-  if [ -d "$DIR/$d/output/live" ]; then
-    mkdir -p "$DIR/$d/output/archive"
-    mv "$DIR/$d/output/live" "$DIR/$d/output/archive/live-$STAMP"
-    echo "archived $d/output/live -> $d/output/archive/live-$STAMP"
+for base in night-desk/output night-desk/output/wild majors-desk/output; do
+  if [ -d "$DIR/$base/live" ]; then
+    mkdir -p "$DIR/$base/archive"
+    mv "$DIR/$base/live" "$DIR/$base/archive/live-$STAMP"
+    echo "archived $base/live -> $base/archive/live-$STAMP"
   fi
 done
-if [ -f "$DIR/premarket-scanner/output/journal.csv" ]; then
-  mkdir -p "$DIR/premarket-scanner/output/archive"
-  mv "$DIR/premarket-scanner/output/journal.csv" "$DIR/premarket-scanner/output/archive/journal-$STAMP.csv"
-  echo "archived premarket-scanner/output/journal.csv -> premarket-scanner/output/archive/journal-$STAMP.csv"
-fi
+for base in premarket-scanner/output premarket-scanner/output/wild; do
+  if [ -f "$DIR/$base/journal.csv" ]; then
+    mkdir -p "$DIR/$base/archive"
+    mv "$DIR/$base/journal.csv" "$DIR/$base/archive/journal-$STAMP.csv"
+    echo "archived $base/journal.csv -> $base/archive/journal-$STAMP.csv"
+  fi
+done
 if [ -f "$DIR/paper-book/output/benchmark.json" ]; then     # BTC buy-and-hold starts again from today too
   mkdir -p "$DIR/paper-book/output/archive"
   mv "$DIR/paper-book/output/benchmark.json" "$DIR/paper-book/output/archive/benchmark-$STAMP.json"

@@ -1,0 +1,66 @@
+# Scanner rules, WILD book: the same scanner with more risk, graded on its own $100 of paper money.
+#
+# Compared with criteria.toml it takes more picks and lets them run further:
+#   * a 5% gap is enough (main: 10%), with less unusual volume (2x, main: 3x)
+#   * no news headline needed, and cheaper or bigger-float stocks allowed
+#   * each pick aims for +20% with a -8% stop (main: +10% / -5%)
+# Looser picks are harder to trade, so the cost charged per trade is HIGHER, not lower.
+# The bar before real money ([gates]) is the same as the main book's.
+#
+# Run any command with --book wild: python -m scanner scan --book wild
+# Its picks and grades live in output/wild/. The paper book shows them as "Wild stocks".
+# Paper money only. Nothing here can place a real order.
+
+[filters]
+min_price = 1.0               # main: 2.0
+max_price = 20.0
+min_gap_pct = 5.0             # main: 10.0
+min_rvol = 2.0                # main: 3.0
+max_float_shares = 50_000_000 # main: 20M
+require_catalyst = false      # main: true (news still gets tagged when there is some)
+min_session_volume = 50_000
+allow_unknown_float = true
+max_spread_pct = 2.0          # main: 1.5
+allow_unknown_spread = true
+exclude_halted = true
+
+[scan]
+news_lookback_hours = 24
+lookback_days = 10
+max_candidates = 60
+sort_by = "gap"
+exclude_warrants_units = true
+show_near_misses = true
+
+[paper]
+target_pct = 20.0             # main: 10.0
+stop_pct = 8.0                # main: 5.0
+cost_pct = 0.75               # main: 0.5. Cheaper, thinner stocks cost more to get in and out of
+
+[gates]                       # identical to criteria.toml: a riskier book has to clear the same bar
+min_picks = 100
+min_profit_factor = 1.3
+min_sharpe = 1.0
+max_drawdown_pct = 25.0
+best_picks_share = 0.05
+cost_multiplier = 2.0
+recent_share = 0.33
+min_good_months = 0.6
+min_paper_days = 20
+paper_vs_backtest = 0.5
+
+[review]
+use_ai = true                 # needs ANTHROPIC_API_KEY in .env; otherwise rule-based
+model = "claude-opus-5-5"
+effort = "high"
+lookback_days = 7
+
+[catalysts]                   # same tags as criteria.toml
+warn_tags = ["dilution"]
+earnings = ["earnings", "revenue", "quarterly results", "guidance", "eps", "profit"]
+fda = ["fda", "approval", "phase 1", "phase 2", "phase 3", "clinical", "trial", "pdufa", "clearance"]
+deal = ["merger", "acquire", "acquires", "acquisition", "buyout", "takeover", "to be acquired", "definitive agreement"]
+contract = ["contract", "award", "awarded", "partnership", "collaboration", "purchase order", "supply agreement"]
+product = ["launch", "launches", "unveils", "patent", "breakthrough"]
+crypto_ai = ["bitcoin", "crypto", "blockchain", "artificial intelligence", "ai"]
+dilution = ["offering", "priced", "registered direct", "private placement", "at-the-market", "warrants", "reverse split", "reverse stock split"]

@@ -1,0 +1,10 @@
+[Unit]
+Description=Wild-rules scanner runs, a minute after the main scans so they don't hit Alpaca at once
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 17:03:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 05:36:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 06:03:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

@@ -26,7 +26,8 @@ for f in "$DIR"/server/systemd/*.service "$DIR"/server/systemd/*.timer; do
   sed -e "s#@DIR@#$DIR#g" -e "s#@USER@#$OWNER#g" "$f" > "/etc/systemd/system/$(basename "$f")"
 done
 systemctl daemon-reload
-systemctl enable --now scanner-scan.timer scanner-grade.timer nightdesk-review.timer watchdog.timer backup.timer
+systemctl enable --now scanner-scan.timer scanner-grade.timer scanner-wild-scan.timer scanner-wild-grade.timer \
+  nightdesk-review.timer watchdog.timer backup.timer
 systemctl enable nightdesk.service majors.service paperbook.service postdesk.service
 # (Re)start so a `git pull` takes effect. The desks save open paper positions on the way out and resume them.
 # Post Desk only starts once X is connected.
@@ -36,7 +37,8 @@ echo
 bash "$DIR/server/status.sh"
 cat <<MSG
 
-Running now (paper money): memecoins, big coins (BTC, ETH, XRP, ADA...) and the paper book.
+Running now (paper money): memecoins, big coins (BTC, ETH, XRP, ADA...) and the paper book,
+plus the wild desks: riskier copies of the memecoin and stock desks, each on its own \$100 of paper money.
 Next:
   bash server/keys.sh        your keys (Alpaca for stocks; X and Claude for posting)
   bash server/connect-x.sh   connect your X account, then posting starts

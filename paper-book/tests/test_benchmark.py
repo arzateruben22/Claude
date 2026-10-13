@@ -12,6 +12,7 @@ import paperbook as pb  # noqa: E402
 LA = ZoneInfo("America/Los_Angeles")
 START = datetime(2026, 10, 8, 17, 51, tzinfo=timezone.utc)
 NOW = START + timedelta(days=3)
+THREE = ("memecoins", "majors", "stocks")     # the original desks; the wild ones have their own tests
 
 
 def prices(start=60000.0, now=63000.0, calls=None):
@@ -35,7 +36,7 @@ def book(tmp_path, majors=(), held=()):
     (memes / "state.json").write_text(json.dumps({"equity": [[START.isoformat(), 100.0], [NOW.isoformat(), 103.0]]}))
     trades = {"memecoins": [], "majors": list(majors), "stocks": []}
     hold = {"memecoins": [], "majors": list(held), "stocks": []}
-    return pb.Book(trades, hold, {d: 100.0 for d in pb.DESKS}, {"majors": str(big), "memecoins": str(memes)}, False, NOW, LA)
+    return pb.Book(trades, hold, {d: 100.0 for d in THREE}, {"majors": str(big), "memecoins": str(memes)}, False, NOW, LA)
 
 
 def trade(pnl, i=0):

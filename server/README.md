@@ -7,11 +7,12 @@ Everything on one small Linux machine that never sleeps:
 | Service | What it does | Starts |
 |---|---|---|
 | `postdesk` | your X account: drafts, your approvals, scheduled posts | once you've connected X (step 5) |
-| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7 | right away |
+| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7; also runs the **wild** rulebook on its own $100 (dashboard at `/wild/`) | right away |
 | `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices, hourly | right away |
 | `scanner-scan` / `scanner-grade` | stocks, paper picks before the open, graded after the close | once your Alpaca paper keys are in (step 6) |
+| `scanner-wild-scan` / `scanner-wild-grade` | the same with the wild stock rules, a minute later, on their own $100 | with the stock scans |
 | `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Trade Crawler and Paper Galaxy on port 8790 | right away |
-| `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard | right away |
+| `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for both rulebooks | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
 

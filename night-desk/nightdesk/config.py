@@ -116,6 +116,20 @@ class Config:
     review: ReviewCfg = field(default_factory=ReviewCfg)
 
 
+def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Path]:
+    """Each rulebook has its own settings file and results folder:
+    main = desk.toml and output/; any other name = desk-<name>.toml and output/<name>/."""
+    output = output or OUTPUT
+    if book == "main":
+        return ROOT / "desk.toml", output
+    if not book.replace("-", "").isalnum() or not book.islower():
+        raise ValueError(f"A rulebook name is lowercase letters, digits and dashes, not {book!r}")
+    path = ROOT / f"desk-{book}.toml"
+    if not path.exists():
+        raise ValueError(f"No rulebook called {book!r}: {path.name} doesn't exist")
+    return path, output / book
+
+
 def load(path: Path | None = None) -> Config:
     path = path or ROOT / "desk.toml"
     with open(path, "rb") as fh:

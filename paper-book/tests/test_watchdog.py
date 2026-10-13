@@ -10,11 +10,12 @@ import watchdog as wd  # noqa: E402
 
 LA = ZoneInfo("America/Los_Angeles")
 NOW = datetime(2026, 10, 9, 19, 0, tzinfo=timezone.utc)          # Fri 09 Oct, noon in Los Angeles
+THREE = ("memecoins", "majors", "stocks")     # the original desks; the wild ones have their own tests
 
 
 def book(memes=(), majors=()):
-    return pb.Book({"memecoins": list(memes), "majors": list(majors), "stocks": []}, {d: [] for d in pb.DESKS},
-                   {d: 100.0 for d in pb.DESKS}, {}, False, NOW, LA)
+    return pb.Book({"memecoins": list(memes), "majors": list(majors), "stocks": []}, {d: [] for d in THREE},
+                   {d: 100.0 for d in THREE}, {}, False, NOW, LA)
 
 
 def trade(desk, pnl, at=NOW - timedelta(hours=1)):

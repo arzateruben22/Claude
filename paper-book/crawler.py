@@ -1,6 +1,6 @@
 """Trade Crawler: the paper book, read trade by trade by a sixteen-legged crawler.
 
-  cluster   one per desk (memecoins, big coins, stocks), then the open positions, then the patterns
+  cluster   one per desk (memecoins, big coins, stocks, and any wild desks), then the open positions, then the patterns
   node      each closed paper trade, in the order it closed
   link      a winning trade
   flag      a trade worth a second look: a rug exit, or a loss of half the stake or more
@@ -27,9 +27,12 @@ BIG_LOSS = -50.0       # % of the stake: a trade that lost half or more gets fla
 TRUST = 30             # trades before a desk's win rate means much
 STREAK = 6             # losses in a row worth a flag
 DRAWDOWN = 20.0        # % below the desk's high worth a flag
-COLORS = {"memecoins": "#3cc3f2", "majors": "#f2bd4f", "stocks": "#a08cff", "open": "#5fe3a1", "patterns": "#e98bff"}
-NAMES = {"memecoins": "memecoins", "majors": "big coins", "stocks": "stocks"}
-ABBR = {"memecoins": "MEM", "majors": "BIG", "stocks": "STK", "open": "OPN", "patterns": "PAT"}
+COLORS = {"memecoins": "#3cc3f2", "majors": "#f2bd4f", "stocks": "#a08cff", "memecoins_wild": "#ff9a4d",
+          "stocks_wild": "#d7f25f", "open": "#5fe3a1", "patterns": "#e98bff"}
+NAMES = {"memecoins": "memecoins", "majors": "big coins", "stocks": "stocks", "memecoins_wild": "wild memecoins",
+         "stocks_wild": "wild stocks"}
+ABBR = {"memecoins": "MEM", "majors": "BIG", "stocks": "STK", "memecoins_wild": "WMEM", "stocks_wild": "WSTK",
+        "open": "OPN", "patterns": "PAT"}
 
 
 def is_flag(t: pb.Trade) -> bool:
@@ -71,7 +74,7 @@ def flags(book: pb.Book) -> List[dict]:
     def add(into, desk, chip, text):
         into.append({"desk": desk, "chip": chip, "text": text})
 
-    for d in pb.DESKS:
+    for d in book.desks:
         ts = sorted(book.trades[d], key=lambda t: t.closed)
         label, n = pb.LABEL[d], len(ts)
         if not n:
@@ -131,7 +134,7 @@ def flags(book: pb.Book) -> List[dict]:
             add(found if n >= 20 else notes, "majors", "vs BTC", text + " So far, just holding BTC did better.")
         else:
             add(ups if n >= 20 else notes, "majors", "vs BTC", text + " Ahead of just holding, so far.")
-    for d in pb.DESKS:
+    for d in book.desks:
         for h in book.held[d]:
             if h.value is not None and h.cost > 0 and h.value < 0.8 * h.cost:
                 add(found, d, "open", f"{h.symbol} is open at {_pct((h.value / h.cost - 1) * 100)} "
@@ -170,8 +173,8 @@ def _trade_section(book: pb.Book, d: str) -> dict:
 
 
 def data(book: pb.Book) -> dict:
-    sections = [_trade_section(book, d) for d in pb.DESKS]
-    held = [h for d in pb.DESKS for h in book.held[d]]
+    sections = [_trade_section(book, d) for d in book.desks]
+    held = [h for d in book.desks for h in book.held[d]]
     marked = [h for h in held if h.value is not None]
     open_sub = f"{len(held)} open position{'s' if len(held) != 1 else ''}"
     if marked:
@@ -182,7 +185,7 @@ def data(book: pb.Book) -> dict:
         "words": [[h.symbol, h.desk, round(h.cost, 2), None if h.value is None else round(h.value, 2),
                    int(h.opened.timestamp())] for h in sorted(held, key=lambda h: h.opened)],
     })
-    pats = [p for d in pb.DESKS for p in galaxy.desk_patterns(d, book.trades[d], book.tz)] + galaxy.shared_patterns(book)
+    pats = [p for d in book.desks for p in galaxy.desk_patterns(d, book.trades[d], book.tz)] + galaxy.shared_patterns(book)
     sections.append({
         "key": "patterns", "name": "patterns", "abbr": ABBR["patterns"], "color": COLORS["patterns"], "kind": "patterns",
         "sub": f"{sum(p['unlocked'] for p in pats)} of {len(pats)} patterns unlocked by enough trades",
@@ -191,7 +194,7 @@ def data(book: pb.Book) -> dict:
                    int(p["unlocked"]), p["detail"]] for p in pats],
     })
     desks = []
-    for d in pb.DESKS:
+    for d in book.desks:
         s = pb.stats(book.trades[d], book.banks[d])
         pf = s["profit_factor"]
         desks.append({"key": d, "label": pb.LABEL[d], "bank": book.banks[d], "trades": s["trades"], "net": s["net"],
@@ -201,7 +204,7 @@ def data(book: pb.Book) -> dict:
     return {
         "meta": {"demo": book.demo, "updated": book.now.isoformat(), "tz": str(book.tz),
                  "updated_local": book.now.astimezone(book.tz).strftime("%a %d %b %Y, %H:%M"),
-                 "bank": sum(book.banks.values()), "trades": sum(len(book.trades[d]) for d in pb.DESKS),
+                 "bank": book.bank_total, "trades": sum(len(book.trades[d]) for d in book.desks),
                  "big_loss": BIG_LOSS, "btc": book.benchmark["pct"] if book.benchmark else None},
         "desks": desks, "sections": sections, "flags": flags(book),
     }

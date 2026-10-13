@@ -1,8 +1,12 @@
-"""Paper Book: every paper trade from both desks in one ledger, with one running total.
+"""Paper Book: every paper trade from every desk in one ledger, with one running total.
 
-  memecoins  Night Desk (../night-desk): brand-new Solana coins, live prices, paper money
-  majors     Majors Desk (../majors-desk): BTC, ETH, XRP, ADA..., hourly trend following, paper money
-  stocks     Premarket scanner (../premarket-scanner): gap-up picks, graded after the close
+  memecoins       Night Desk (../night-desk): brand-new Solana coins, live prices, paper money
+  majors          Majors Desk (../majors-desk): BTC, ETH, XRP, ADA..., hourly trend following, paper money
+  stocks          Premarket scanner (../premarket-scanner): gap-up picks, graded after the close
+  memecoins_wild  Night Desk's wild rulebook (desk-wild.toml): the same coins, more risk, its own bank
+  stocks_wild     the scanner's wild rules (criteria-wild.toml): more picks, wider exits, its own bank
+
+A desk is in the book when book.toml has a section for it.
 
   python paperbook.py               update the ledger and the report once
   python paperbook.py --watch 15    ...every 15 minutes, while the desks run
@@ -21,7 +25,7 @@ import json
 import sys
 import time as _time
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -34,8 +38,11 @@ except ModuleNotFoundError:  # Python 3.10
 
 HERE = Path(__file__).resolve().parent
 ET = ZoneInfo("America/New_York")
-DESKS = ("memecoins", "majors", "stocks")
-LABEL = {"memecoins": "Memecoins", "majors": "Big coins", "stocks": "Stocks"}
+DESKS = ("memecoins", "majors", "stocks", "memecoins_wild", "stocks_wild")     # every desk the book knows, in order
+LABEL = {"memecoins": "Memecoins", "majors": "Big coins", "stocks": "Stocks",
+         "memecoins_wild": "Wild memecoins", "stocks_wild": "Wild stocks"}
+KIND = {"memecoins": "coins", "majors": "coins", "stocks": "stocks", "memecoins_wild": "coins", "stocks_wild": "stocks"}
+STOCK_RULES = {"stocks": "../premarket-scanner/criteria.toml", "stocks_wild": "../premarket-scanner/criteria-wild.toml"}
 
 
 @dataclass
@@ -87,7 +94,8 @@ def load_coins(folder: Path, desk: str = "memecoins", prefix: str = "$") -> Tupl
     return trades, held
 
 
-def load_stocks(journal: Path, ticket: float, share: Optional[float] = None) -> Tuple[List[Trade], List[Holding]]:
+def load_stocks(journal: Path, ticket: float, share: Optional[float] = None,
+                desk: str = "stocks") -> Tuple[List[Trade], List[Holding]]:
     """Each pick gets `ticket` paper dollars, or with `share` set, each day's picks split that much equally."""
     trades: List[Trade] = []
     held: List[Holding] = []
@@ -102,17 +110,18 @@ def load_stocks(journal: Path, ticket: float, share: Optional[float] = None) -> 
         opened = datetime.combine(day, time(9, 30), tzinfo=ET)
         if r.get("sim_pnl_pct", "") != "":
             pct = float(r["sim_pnl_pct"])
-            trades.append(Trade("stocks", r["symbol"], opened, datetime.combine(day, time(16, 0), tzinfo=ET),
+            trades.append(Trade(desk, r["symbol"], opened, datetime.combine(day, time(16, 0), tzinfo=ET),
                                 round(ticket * pct / 100, 2), pct, r.get("sim_exit", "") or "close"))
         else:
-            held.append(Holding("stocks", r["symbol"], opened, round(ticket, 2), None,
+            held.append(Holding(desk, r["symbol"], opened, round(ticket, 2), None,
                                 f"picked {r['scan_date']}; buys at the {day:%a %d %b} open, graded after the close"))
     return trades, held
 
 
-def newest_demo_journal(scanner: Path) -> Path:
-    found = sorted((scanner / "output" / "demo" / "backtests").glob("*/journal.csv"), key=lambda p: p.stat().st_mtime)
-    return found[-1] if found else scanner / "output" / "demo" / "journal.csv"
+def newest_demo_journal(output: Path) -> Path:
+    """The newest demo backtest in a scanner results folder (output/, or output/wild/ for the wild rules)."""
+    found = sorted((output / "demo" / "backtests").glob("*/journal.csv"), key=lambda p: p.stat().st_mtime)
+    return found[-1] if found else output / "demo" / "journal.csv"
 
 
 # -- the numbers ------------------------------------------------------------------------------
@@ -167,35 +176,57 @@ class Book:
     ticket: float = 100.0
     share_bank: bool = False                                        # each day's stock picks split the stock bank
     benchmark: Optional[dict] = None                                # BTC bought at the start and held (benchmark.py)
-    stock_rules: Tuple[float, float, float] = (10.0, 5.0, 0.5)    # target %, stop %, cost % from the scanner
+    # target %, stop %, cost % from each stock desk's own rules
+    stock_rules: Dict[str, Tuple[float, float, float]] = field(default_factory=lambda: {"stocks": (10.0, 5.0, 0.5)})
+
+    @property
+    def desks(self) -> Tuple[str, ...]:
+        """The desks in this book, in DESKS order."""
+        return tuple(d for d in DESKS if d in self.trades)
+
+    @property
+    def bank_total(self) -> float:
+        return sum(self.banks[d] for d in self.desks)
 
     @property
     def all_trades(self) -> List[Trade]:
-        return sorted((t for d in DESKS for t in self.trades[d]), key=lambda t: t.closed)
+        return sorted((t for d in self.desks for t in self.trades[d]), key=lambda t: t.closed)
 
     @property
     def unrealized(self) -> float:
-        return sum(h.value - h.cost for d in DESKS for h in self.held[d] if h.value is not None)
+        return sum(h.value - h.cost for d in self.desks for h in self.held[d] if h.value is not None)
+
+    def kind(self, kind: str) -> List[str]:
+        return [d for d in self.desks if KIND[d] == kind]
 
 
 def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
-    c, m, s = cfg["memecoins"], cfg["majors"], cfg["stocks"]
-    coins_folder = (HERE / (c["demo_folder"] if demo else c["folder"])).resolve()
-    majors_folder = (HERE / (m["demo_folder"] if demo else m["folder"])).resolve()
-    if demo:
-        journal = HERE / s["demo_journal"] if s.get("demo_journal") else newest_demo_journal(HERE.parent / "premarket-scanner")
-    else:
-        journal = HERE / s["journal"]
-    journal = journal.resolve()
-    ct, ch = load_coins(coins_folder, "memecoins", "$")
-    mt, mh = load_coins(majors_folder, "majors", "")
-    share = bool(s.get("share_bank", False))
-    st, sh = load_stocks(journal, float(s["ticket_usd"]), float(s["start_bank"]) if share else None)
-    return Book({"memecoins": ct, "majors": mt, "stocks": st}, {"memecoins": ch, "majors": mh, "stocks": sh},
-                {"memecoins": float(c["start_bank"]), "majors": float(m["start_bank"]), "stocks": float(s["start_bank"])},
-                {"memecoins": str(coins_folder), "majors": str(majors_folder), "stocks": str(journal)}, demo,
-                now or datetime.now(timezone.utc), ZoneInfo(cfg["report"]["timezone"]),
-                float(s["ticket_usd"]), share, stock_rules(HERE.parent / "premarket-scanner" / "criteria.toml"))
+    trades: Dict[str, List[Trade]] = {}
+    held: Dict[str, List[Holding]] = {}
+    banks: Dict[str, float] = {}
+    sources: Dict[str, str] = {}
+    rules: Dict[str, Tuple[float, float, float]] = {}
+    first_stocks = next((cfg[d] for d in DESKS if KIND[d] == "stocks" and d in cfg), {})
+    for d in DESKS:
+        c = cfg.get(d)
+        if c is None:
+            continue
+        banks[d] = float(c["start_bank"])
+        if KIND[d] == "coins":
+            folder = (HERE / (c["demo_folder"] if demo else c["folder"])).resolve()
+            trades[d], held[d] = load_coins(folder, d, "" if d == "majors" else "$")
+            sources[d] = str(folder)
+            continue
+        live = (HERE / c["journal"]).resolve()
+        journal = ((HERE / c["demo_journal"]) if c.get("demo_journal") else newest_demo_journal(live.parent)) if demo else live
+        journal = journal.resolve()
+        share = bool(c.get("share_bank", False))
+        trades[d], held[d] = load_stocks(journal, float(c["ticket_usd"]), banks[d] if share else None, desk=d)
+        sources[d] = str(journal)
+        rules[d] = stock_rules(HERE / c.get("rules", STOCK_RULES[d]))
+    return Book(trades, held, banks, sources, demo, now or datetime.now(timezone.utc),
+                ZoneInfo(cfg["report"]["timezone"]), float(first_stocks.get("ticket_usd", 100.0)),
+                bool(first_stocks.get("share_bank", False)), stock_rules=rules)
 
 
 def stock_rules(path: Path) -> Tuple[float, float, float]:
@@ -229,19 +260,19 @@ def _pf(v) -> str:
 
 
 def render_text(book: Book) -> str:
-    total_start = sum(book.banks.values())
+    total_start = book.bank_total
     all_s = stats(book.all_trades, total_start)
     lines = [f"PAPER BOOK{' (DEMO markets)' if book.demo else ''} · paper money only · "
              f"{book.now.astimezone(book.tz):%a %d %b %H:%M %Z}", ""]
-    for d in DESKS:
+    for d in book.desks:
         s = stats(book.trades[d], book.banks[d])
-        lines.append(f"  {d:<9} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
+        lines.append(f"  {LABEL[d].lower():<14} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
                      f"${book.banks[d]:,.0f})  won {s['win_rate']:.0f}%  profit factor {_pf(s['profit_factor'])}  "
                      f"worst drawdown {s['max_drawdown_pct']:.1f}%")
-    lines.append(f"  {'total':<9} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
+    lines.append(f"  {'total':<14} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
                  f"({all_s['return_pct']:+.1f}% of ${total_start:,.0f})")
-    open_coins = book.held["memecoins"] + book.held["majors"]
-    waiting = [h for h in book.held["stocks"]]
+    open_coins = [h for d in book.kind("coins") for h in book.held[d]]
+    waiting = [h for d in book.kind("stocks") for h in book.held[d]]
     if open_coins:
         lines.append(f"  open coins: {len(open_coins)}, unrealized {_usd(book.unrealized)} (before exit costs)")
     if waiting:
@@ -290,8 +321,9 @@ h2 { font: 700 13px/1.2 var(--display); letter-spacing: .14em; text-transform: u
 .top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
 .stamp { font: 500 12.5px/1.4 var(--mono); color: var(--muted); }
 .stamp b { color: var(--down); font-weight: 500; }
-.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; margin: 18px 0 26px;
+.tiles { display: grid; grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr)); gap: 1px; margin: 18px 0 26px;
   background: var(--rule); border: 1px solid var(--rule); }
+.tiles.wide-first .tile:first-child { grid-column: span 2; }
 .tile { padding: 12px 14px; min-width: 0; background: var(--paper); }
 .tile span { display: block; font: 600 11.5px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .tile b { display: block; font: 500 clamp(19px, 3.2vw, 27px)/1.2 var(--mono); font-variant-numeric: tabular-nums; margin-top: 4px; }
@@ -307,9 +339,13 @@ section { margin-bottom: 28px; min-width: 0; }
 .chart .l-memecoins { stroke: var(--ribbon); stroke-width: 1.6; fill: none; }
 .chart .l-majors { stroke: var(--gold); stroke-width: 1.6; fill: none; }
 .chart .l-stocks { stroke: var(--plum); stroke-width: 1.6; fill: none; }
+.chart .l-memecoins_wild { stroke: var(--ribbon); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
+.chart .l-stocks_wild { stroke: var(--plum); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
 .chart .b-up { fill: var(--up); } .chart .b-down { fill: var(--down); }
 .key .k-total { color: var(--ink); } .key .k-memecoins { color: var(--ribbon); } .key .k-majors { color: var(--gold); }
 .key .k-stocks { color: var(--plum); }
+.key .k-memecoins_wild { color: var(--ribbon); } .key .k-stocks_wild { color: var(--plum); }
+.key .k-memecoins_wild i, .key .k-stocks_wild i { border-top-style: dashed; }
 .key { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 400 12.5px var(--mono); color: var(--muted); margin: 0 0 6px; }
 .key i { display: inline-block; width: 18px; height: 0; border-top: 3px solid currentColor; vertical-align: middle; margin-right: 6px; }
 .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
@@ -325,7 +361,8 @@ td.n, th.n { text-align: right; }
 @media (max-width: 760px) {
   .sheet { padding-inline: 16px; background-image: none; }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tile:first-child { grid-column: 1 / -1; }
+  .tile:first-child, .tiles.wide-first .tile:first-child { grid-column: 1 / -1; }
+  .tiles.lone-last .tile:last-child { grid-column: 1 / -1; }
   .two { grid-template-columns: minmax(0, 1fr); }
 }
 """
@@ -340,14 +377,14 @@ def _cls(v: float) -> str:
 
 
 def _equity_svg(book: Book) -> str:
-    total = sum(book.banks.values())
+    total = book.bank_total
     lines = {"total": equity_series(book.all_trades, total)}
-    for d in DESKS:
+    for d in book.desks:
         lines[d] = equity_series(book.trades[d], book.banks[d])
     pts = [p for s in lines.values() for p in s]
     if not pts:
         return '<p class="empty">The curve starts with the first closed paper trade.</p>'
-    W, H, L, R, T, B = 720, 260, 64, 12, 14, 28
+    W, H, R, T, B = 720, 260, 12, 14, 28
     t0 = min(p[0] for p in pts)
     t1 = max(max(p[0] for p in pts), t0 + timedelta(hours=1))
     # each desk is drawn as change from its own start, so all three share one dollar scale
@@ -356,13 +393,18 @@ def _equity_svg(book: Book) -> str:
     lo, hi = min(vals), max(vals)
     pad = max((hi - lo) * 0.08, 1.0)
     lo, hi = lo - pad, hi + pad
+    ticks = (hi - pad, 0.0, lo + pad)
+    L = _label_room(_usd(v) for v in ticks)
     x = lambda t: L + (t - t0).total_seconds() / (t1 - t0).total_seconds() * (W - L - R)
     y = lambda v: T + (hi - v) / (hi - lo) * (H - T - B)
     out = [f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Paper profit and loss over time">']
-    for v in (hi - pad, 0.0, lo + pad):
+    shown: List[float] = []
+    for v in ticks:
         out.append(f'<line class="grid{"" if v == 0 else " dash"}" x1="{L}" x2="{W - R}" y1="{y(v):.1f}" y2="{y(v):.1f}"/>')
-        out.append(f'<text x="{L - 6}" y="{y(v) + 4:.1f}" text-anchor="end">{html.escape(_usd(v))}</text>')
-    for k in DESKS + ("total",):
+        if all(abs(y(v) - u) >= 13 for u in shown):           # never print two amounts on top of each other
+            shown.append(y(v))
+            out.append(f'<text x="{L - 6}" y="{y(v) + 4:.1f}" text-anchor="end">{html.escape(_usd(v))}</text>')
+    for k in book.desks + ("total",):
         s = rel[k]
         if not s:
             continue
@@ -375,6 +417,11 @@ def _equity_svg(book: Book) -> str:
     return "".join(out)
 
 
+def _label_room(labels) -> int:
+    """Left margin for a chart's amounts: wide enough for the longest one (11px mono is about 6.7px a character)."""
+    return max(64, 12 + round(6.7 * max(len(s) for s in labels)))
+
+
 def _daily_svg(book: Book) -> str:
     days = daily(book.all_trades, book.tz)
     if not days:
@@ -382,8 +429,9 @@ def _daily_svg(book: Book) -> str:
     today = book.now.astimezone(book.tz).date()
     first = max(min(days), today - timedelta(days=29))
     span = [first + timedelta(days=i) for i in range((today - first).days + 1)]
-    W, H, L, T, B = 720, 170, 64, 10, 24
+    W, H, T, B = 720, 170, 10, 24
     top = max(1.0, max(abs(days.get(d, 0.0)) for d in span))
+    L = _label_room([_usd(top), _usd(-top)])
     mid = T + (H - T - B) / 2
     bw = (W - L - 8) / max(1, len(span))
     out = [f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Paper profit or loss per day">',
@@ -404,9 +452,9 @@ def _daily_svg(book: Book) -> str:
 
 def render_html(book: Book) -> str:
     e = html.escape
-    total = sum(book.banks.values())
+    total = book.bank_total
     all_s = stats(book.all_trades, total)
-    per = {d: stats(book.trades[d], book.banks[d]) for d in DESKS}
+    per = {d: stats(book.trades[d], book.banks[d]) for d in book.desks}
     stamp = f"updated {book.now.astimezone(book.tz):%a %d %b %Y, %H:%M %Z}"
     demo = '<b>DEMO MARKETS · invented prices</b> · ' if book.demo else ""
 
@@ -420,25 +468,32 @@ def render_html(book: Book) -> str:
                       f'{benchmark.desk_return(book, "majors"):+.1f}%</small></div>')
     else:
         bench_tile = ""
-    tiles = (
-        f'<div class="tile"><span>Net, all paper trades</span><b class="{_cls(all_s["net"])}">{e(_usd(all_s["net"]))}</b>'
-        f'<small>{all_s["return_pct"]:+.1f}% of ${total:,.0f}</small></div>'
-        + "".join(f'<div class="tile"><span>{LABEL[d]}</span><b class="{_cls(per[d]["net"])}">{e(_usd(per[d]["net"]))}</b>'
-                  f'<small>{per[d]["trades"]} trades · won {per[d]["win_rate"]:.0f}%</small></div>' for d in DESKS)
-        + f'<div class="tile"><span>Open right now</span><b class="{_cls(book.unrealized)}">{e(_usd(book.unrealized))}</b>'
-          f'<small>{len(book.held["memecoins"]) + len(book.held["majors"])} coins held · '
-          f'{len(book.held["stocks"])} stock picks waiting</small></div>' + bench_tile)
+    coins_held = sum(len(book.held[d]) for d in book.kind("coins"))
+    picks_waiting = sum(len(book.held[d]) for d in book.kind("stocks"))
+    tile_list = (
+        [f'<div class="tile"><span>Net, all paper trades</span><b class="{_cls(all_s["net"])}">{e(_usd(all_s["net"]))}</b>'
+         f'<small>{all_s["return_pct"]:+.1f}% of ${total:,.0f}</small></div>']
+        + [f'<div class="tile"><span>{LABEL[d]}</span><b class="{_cls(per[d]["net"])}">{e(_usd(per[d]["net"]))}</b>'
+           f'<small>{per[d]["trades"]} trades · won {per[d]["win_rate"]:.0f}%</small></div>' for d in book.desks]
+        + [f'<div class="tile"><span>Open right now</span><b class="{_cls(book.unrealized)}">{e(_usd(book.unrealized))}</b>'
+           f'<small>{coins_held} coins held · {picks_waiting} stock picks waiting</small></div>']
+        + ([bench_tile] if bench_tile else []))
+    n = len(tile_list)
+    # One or two full rows on a wide screen: the first tile takes two cells when the count is odd.
+    cols = n if n <= 5 else (n + 1) // 2
+    tile_cls = "tiles" + (" wide-first" if n > 5 and n % 2 else "") + (" lone-last" if n % 2 == 0 else "")
+    tiles = f'<div class="{tile_cls}" style="--cols:{cols}">' + "".join(tile_list) + "</div>"
 
     rows = "".join(
         f"<tr><th scope=\"row\">{LABEL[d]}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
         f"<td class=n>{e(_usd(per[d]['avg_win']))}</td><td class=n>{e(_usd(per[d]['avg_loss']))}</td>"
         f"<td class=n>{_pf(per[d]['profit_factor'])}</td><td class=n>{per[d]['max_drawdown_pct']:.1f}%</td>"
-        f"<td class=\"n {_cls(per[d]['net'])}\">{e(_usd(per[d]['net']))}</td></tr>" for d in DESKS)
+        f"<td class=\"n {_cls(per[d]['net'])}\">{e(_usd(per[d]['net']))}</td></tr>" for d in book.desks)
     desk_table = (f'<div class="scroll"><table><thead><tr><th>Desk</th><th class=n>Trades</th><th class=n>Won</th>'
                   f'<th class=n>Avg win</th><th class=n>Avg loss</th><th class=n>Profit factor</th>'
                   f'<th class=n>Worst drop</th><th class=n>Net</th></tr></thead><tbody>{rows}</tbody></table></div>')
 
-    held = book.held["memecoins"] + book.held["majors"] + book.held["stocks"]
+    held = [h for d in book.desks for h in book.held[d]]
     if held:
         hrows = "".join(
             f"<tr><td>{LABEL[h.desk]}</td><td>{e(h.symbol)}</td><td>{h.opened.astimezone(book.tz):%d %b %H:%M}</td>"
@@ -461,11 +516,11 @@ def render_html(book: Book) -> str:
     else:
         trades_html = '<p class="empty">No closed paper trades yet. Each one appears here as soon as a desk closes it.</p>'
 
-    stake = (f"each weekday's picks split ${book.banks['stocks']:,.0f} of paper money equally" if book.share_bank else
-             f"${book.ticket:,.0f} of paper money per pick, out of ${book.banks['stocks']:,.0f}")
     few = ("" if all_s["trades"] >= 50 else
-           f"<p><b>{all_s['trades']} trades is far too few to judge.</b> Let both desks run for weeks before reading "
+           f"<p><b>{all_s['trades']} trades is far too few to judge.</b> Let the desks run for weeks before reading "
            "anything into these numbers.</p>")
+    notes = "\n    ".join(_note(book, d) for d in NOTE_ORDER if d in book.desks)
+    key = "".join(f'<span class="k-{d}"><i></i>{LABEL[d].lower()}</span>' for d in book.desks)
     return f"""<title>Paper Book</title>
 {FONTS}
 <style>{CSS}</style>
@@ -474,11 +529,10 @@ def render_html(book: Book) -> str:
     <h1>Paper Book</h1>
     <p class="stamp">{demo}paper money only · {e(stamp)}</p>
   </header>
-  <div class="tiles">{tiles}</div>
+  {tiles}
   <section aria-labelledby="h-eq">
     <h2 id="h-eq">Profit and loss since the start</h2>
-    <p class="key"><span class="k-total"><i></i>all desks</span><span class="k-memecoins"><i></i>memecoins</span>
-      <span class="k-majors"><i></i>big coins</span><span class="k-stocks"><i></i>stocks</span></p>
+    <p class="key"><span class="k-total"><i></i>all desks</span>{key}</p>
     <div class="chart">{_equity_svg(book)}</div>
   </section>
   <section aria-labelledby="h-day">
@@ -491,19 +545,38 @@ def render_html(book: Book) -> str:
   <section class="notes" aria-labelledby="h-n">
     <h2 id="h-n">How these numbers are made</h2>
     {few}
-    <p><b>Big coins</b> (Majors Desk): ${book.banks['majors']:,.0f} of paper money, trading BTC, ETH, XRP, ADA and others on
-      Coinbase's hourly prices. Each buy and sell pays the exchange fee and a little slippage.</p>
-    <p><b>Memecoins</b> (Night Desk): ${book.banks['memecoins']:,.0f} of paper money. Buys and sells are priced from the pool's
-      live price with fees and price impact included, so they're close to what a real swap would get, but no order
-      ever reaches the market.</p>
-    <p><b>Stocks</b> (premarket scanner): {stake}.
-      Each pick is bought at the 9:30 ET open and sold at +{book.stock_rules[0]:g}%, −{book.stock_rules[1]:g}% or the
-      close, whichever comes first, minus {book.stock_rules[2]:g}% for spread and slippage. When one five-minute bar
-      touches both, it counts as the stop.</p>
+    {notes}
     <p>Paper results flatter real trading: real fills, gaps and nerves are worse. Nothing here is a forecast or advice.</p>
   </section>
 </main>
 """
+
+
+NOTE_ORDER = ("majors", "memecoins", "stocks", "memecoins_wild", "stocks_wild")
+
+
+def _note(book: Book, d: str) -> str:
+    """How one desk's numbers are made, for the notes at the foot of the page."""
+    bank = f"${book.banks[d]:,.0f}"
+    if d == "majors":
+        return (f"<p><b>Big coins</b> (Majors Desk): {bank} of paper money, trading BTC, ETH, XRP, ADA and others on\n"
+                "      Coinbase's hourly prices. Each buy and sell pays the exchange fee and a little slippage.</p>")
+    if d == "memecoins":
+        return (f"<p><b>Memecoins</b> (Night Desk): {bank} of paper money. Buys and sells are priced from the pool's\n"
+                "      live price with fees and price impact included, so they're close to what a real swap would get, "
+                "but no order\n      ever reaches the market.</p>")
+    if d == "memecoins_wild":
+        return (f"<p><b>Wild memecoins</b> (Night Desk, wild rules): its own {bank} of paper money on the same coins, "
+                "prices, fees and\n      rug checks as Memecoins, with looser entry rules and bigger, longer bets "
+                "(night-desk/desk-wild.toml).\n      It's there to find out faster whether taking more risk pays.</p>")
+    stake = (f"each weekday's picks split {bank} of paper money equally" if book.share_bank else
+             f"${book.ticket:,.0f} of paper money per pick, out of {bank}")
+    target, stop, cost = book.stock_rules.get(d, (10.0, 5.0, 0.5))
+    name = ("<b>Stocks</b> (premarket scanner)" if d == "stocks" else
+            "<b>Wild stocks</b> (premarket scanner, wild rules: smaller gaps, no news needed)")
+    return (f"<p>{name}: {stake}.\n      Each pick is bought at the 9:30 ET open and sold at +{target:g}%, −{stop:g}% "
+            f"or the\n      close, whichever comes first, minus {cost:g}% for spread and slippage. When one five-minute bar\n"
+            "      touches both, it counts as the stop.</p>")
 
 
 def page(fragment: str) -> str:

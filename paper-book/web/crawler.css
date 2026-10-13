@@ -68,7 +68,7 @@ button { font: inherit; }
 .ctl:hover { color: var(--ink); border-color: var(--line-2); }
 
 /* section tabs */
-.tabs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+.tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 4px; }
 .tabs button {
   background: #111418; color: var(--dim); border: 0; border-radius: 1px;
   height: 22px; font-size: 11px; cursor: pointer; white-space: nowrap;

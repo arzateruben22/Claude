@@ -1,7 +1,9 @@
-"""Runs the desk in a background thread and serves the dashboard.
+"""Runs the desks in a background thread and serves the dashboard.
 
-  GET /            the dashboard
-  GET /api/state   the desk's latest state as JSON (the page polls this)
+  GET /                 the dashboard
+  GET /api/state        the main desk's latest state as JSON (the page polls this)
+  GET /<book>/          the same dashboard for another rulebook running alongside (e.g. /wild/)
+  GET /<book>/api/state ...and its state
 """
 from __future__ import annotations
 
@@ -11,7 +13,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Dict, List, Union
 
 from .desk import Desk
 
@@ -35,48 +37,72 @@ def wall_clock() -> datetime:
 
 
 class Runner(threading.Thread):
-    """Steps the desk forever and keeps a ready-to-serve JSON snapshot."""
+    """Steps the desks forever and keeps a ready-to-serve JSON snapshot of each.
 
-    def __init__(self, desk: Desk, clock: Callable[[], datetime], tick: float = 0.5):
+    The first desk is the main one. Desks share one thread, so they read the market one after
+    another at the same moment, and a desk that breaks never stops the others."""
+
+    def __init__(self, desks: Union[Desk, List[Desk]], clock: Callable[[], datetime], tick: float = 0.5):
         super().__init__(daemon=True)
-        self.desk, self.clock, self.tick = desk, clock, tick
+        self.desks = desks if isinstance(desks, list) else [desks]
+        self.desk = self.desks[0]
+        self.clock, self.tick = clock, tick
         self.lock = threading.Lock()
-        self.latest = json.dumps(desk.state(clock()))
+        now = clock()
+        self.states: Dict[str, str] = {d.book: json.dumps(d.state(now)) for d in self.desks}
         self.stopped = threading.Event()
         self.error = ""
+
+    @property
+    def latest(self) -> str:
+        return self.states[self.desk.book]
 
     def run(self) -> None:
         while not self.stopped.is_set():
             now = self.clock()
-            try:
-                self.desk.step(now)
-                snapshot = json.dumps(self.desk.state(now))
-            except Exception as exc:  # keep the page alive and say what broke
-                self.error = f"{type(exc).__name__}: {exc}"
-                self.desk.notes.append(f"desk error: {self.error}")
-                snapshot = json.dumps(self.desk.state(now))
-            with self.lock:
-                self.latest = snapshot
+            for desk in self.desks:
+                try:
+                    desk.step(now)
+                    snapshot = json.dumps(desk.state(now))
+                except Exception as exc:  # keep the page alive and say what broke
+                    self.error = f"{type(exc).__name__}: {exc}"
+                    desk.notes.append(f"desk error: {self.error}")
+                    snapshot = json.dumps(desk.state(now))
+                with self.lock:
+                    self.states[desk.book] = snapshot
             self.stopped.wait(self.tick)
 
     def stop(self) -> None:
         self.stopped.set()
-        self.desk.save()
+        for desk in self.desks:
+            desk.save()
 
 
 def make_server(runner: Runner, host: str = "127.0.0.1", port: int = 8787) -> ThreadingHTTPServer:
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):  # noqa: N802 (http.server naming)
             path = self.path.split("?", 1)[0]
+            book = runner.desk.book
+            first, _, rest = path.lstrip("/").partition("/")
+            if first in runner.states and first != runner.desk.book:   # /wild/... is the wild desk's page
+                if not rest and not path.endswith("/"):
+                    return self._redirect(path + "/")
+                book, path = first, "/" + rest
             if path == "/api/state":
                 with runner.lock:
-                    body = runner.latest.encode()
+                    body = runner.states[book].encode()
                 return self._send(200, "application/json", body)
             name = "index.html" if path in ("/", "/index.html") else path.lstrip("/")
             file = (WEB / name).resolve()
             if file.parent != WEB or not file.is_file():   # only files in web/, nothing else
                 return self._send(404, "text/plain; charset=utf-8", b"not found")
             return self._send(200, TYPES.get(file.suffix, "application/octet-stream"), file.read_bytes())
+
+        def _redirect(self, to: str) -> None:
+            self.send_response(301)
+            self.send_header("Location", to)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
 
         def _send(self, code: int, ctype: str, body: bytes) -> None:
             self.send_response(code)

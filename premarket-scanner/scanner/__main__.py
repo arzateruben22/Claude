@@ -7,12 +7,16 @@
   python -m scanner backtest --from 2026-06-01   replay past days through the rules
   python -m scanner journal           last few journal rows
   python -m scanner doctor            check keys and connectivity
+  python -m scanner scan --book wild  the same, with the wild rules (criteria-wild.toml) on their own paper bank
 
 Before real money (paper only, they change nothing):
   python -m scanner scorecard         every gate, pass or fail
   python -m scanner risk              the risk officer tries to kill the rules
   python -m scanner lessons           nightly review: losing picks, patterns, one proposal
   python -m scanner nightly           lessons + risk + scorecard, after `grade`
+
+Every command takes --book NAME: --book wild reads criteria-wild.toml and keeps its picks, grades and
+reviews in output/wild/ instead of criteria.toml and output/.
 """
 from __future__ import annotations
 
@@ -23,7 +27,7 @@ import sys
 from datetime import date, datetime, timezone
 
 from . import gates, journal, report, review
-from .config import OUTPUT, ROOT, load_criteria, load_env
+from .config import OUTPUT, ROOT, book_paths, load_criteria, load_env
 from .engine import run_scan
 from .market import ET, SESSIONS, detect_session, fmt_pt, in_pt_window, parse_pt, previous_trading_day, trade_date_for
 from .providers import NAMES, ProviderError, make_provider
@@ -35,18 +39,36 @@ def _provider_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--at", metavar='"YYYY-MM-DD HH:MM"', help="pretend it's this Pacific time (demo only)")
 
 
+def _book(args):
+    """(rules file, results folder) for --book; main = criteria.toml and output/."""
+    return book_paths(getattr(args, "book", "main"), OUTPUT)
+
+
+def _rel(path):
+    """A path as the user would type it from the scanner folder (absolute when it's elsewhere)."""
+    try:
+        return path.relative_to(ROOT)
+    except ValueError:
+        return path
+
+
+def _crit(args):
+    return load_criteria(_book(args)[0])
+
+
 def _setup(args):
     name = "demo" if args.demo else args.provider
     provider = make_provider(name)
     if args.at and provider.name != "demo":
         raise ProviderError("--at only works with --demo: live snapshots can't be rewound.")
     now = parse_pt(args.at) if args.at else datetime.now(timezone.utc)
-    out_dir = OUTPUT / "demo" if provider.name == "demo" else OUTPUT
+    base = _book(args)[1]
+    out_dir = base / "demo" if provider.name == "demo" else base
     return provider, now, out_dir
 
 
 def cmd_scan(args) -> int:
-    crit = load_criteria()
+    crit = _crit(args)
     provider, now, out_dir = _setup(args)
     if args.window and not args.at and not in_pt_window(now, args.window):
         print(f"Outside the {args.window} PT window ({fmt_pt(now)}); skipping.")
@@ -67,8 +89,8 @@ def cmd_scan(args) -> int:
     if not args.no_save:
         paths = report.write_outputs(res, crit, out_dir)
         added = journal.record(res, out_dir / "journal.csv", rules=gates.rules_id(crit))
-        print(f"\nSaved {paths[0].relative_to(ROOT)} (+ .md, .csv); open "
-              f"{paths[-1].relative_to(ROOT)} in a browser. {added} new pick(s) in the journal.")
+        print(f"\nSaved {_rel(paths[0])} (+ .md, .csv); open "
+              f"{_rel(paths[-1])} in a browser. {added} new pick(s) in the journal.")
         if args.open:
             import webbrowser
 
@@ -77,7 +99,7 @@ def cmd_scan(args) -> int:
         from . import html_report
         from .notify import send
 
-        label = report.SESSION_LABEL[res.session]
+        label = report.SESSION_LABEL[res.session] + ("" if args.book == "main" else f" ({args.book} rules)")
         sent = send(f"{label} scan: {len(res.passed)} pick(s)", report.push_text(res),
                     page=html_report.page(res, crit), summary=report.one_line(res))
         print(f"Notified: {', '.join(sent) or 'nothing (set NTFY_TOPIC or DISCORD_WEBHOOK_URL)'}")
@@ -85,7 +107,7 @@ def cmd_scan(args) -> int:
 
 
 def cmd_grade(args) -> int:
-    crit = load_criteria()
+    crit = _crit(args)
     provider, now, out_dir = _setup(args)
     graded, pending = journal.grade(provider, crit, now, out_dir / "journal.csv")
     print(f"Graded {graded} pick(s); {pending} waiting for their trade day to finish.")
@@ -98,7 +120,7 @@ def cmd_grade(args) -> int:
 def cmd_backtest(args) -> int:
     from .backtest import run_backtest, trading_days
 
-    crit = load_criteria()
+    crit = _crit(args)
     provider = make_provider("demo" if args.demo else args.provider)
     today = datetime.now(ET).date()
     last = args.last or previous_trading_day(today)
@@ -116,20 +138,22 @@ def cmd_backtest(args) -> int:
     if provider.name != "demo":
         print(f"First run downloads history (roughly {max(1, n // 4)}-{max(2, n // 2)} min on the free plan); "
               "re-runs with new rules use the cache in .cache/backtest.\n")
-    out_dir, stats = run_backtest(provider, crit, first, last, args.session, at)
+    out_dir, stats = run_backtest(provider, crit, first, last, args.session, at, base=_book(args)[1])
     print("\n" + stats)
-    print(f"\nSaved {(out_dir / 'summary.md').relative_to(ROOT)} and journal.csv")
+    print(f"\nSaved {_rel(out_dir / 'summary.md')} and journal.csv")
     return 0
 
 
 def cmd_stats(args) -> int:
-    out_dir = OUTPUT / "demo" if args.demo else OUTPUT
-    print(journal.stats(load_criteria(), out_dir / "journal.csv"))
+    base = _book(args)[1]
+    out_dir = base / "demo" if args.demo else base
+    print(journal.stats(_crit(args), out_dir / "journal.csv"))
     return 0
 
 
 def cmd_journal(args) -> int:
-    out_dir = OUTPUT / "demo" if args.demo else OUTPUT
+    base = _book(args)[1]
+    out_dir = base / "demo" if args.demo else base
     print(journal.recent(out_dir / "journal.csv", args.limit))
     return 0
 
@@ -160,8 +184,9 @@ def _evidence(crit, settings, folder, demo, now) -> dict:
 def _review_setup(args):
     from .gates import load_settings
 
-    crit, settings = load_criteria(), load_settings()
-    folder = OUTPUT / "demo" if args.demo else OUTPUT
+    path, base = _book(args)
+    crit, settings = load_criteria(path), load_settings(path)
+    folder = base / "demo" if args.demo else base
     analyst = None if (args.demo and not getattr(args, "ai", False)) else review.make_analyst(settings.review)
     return crit, settings, folder, analyst
 
@@ -240,8 +265,9 @@ def cmd_nightly(args) -> int:
 def cmd_doctor(args) -> int:
     now = datetime.now(timezone.utc)
     print(f"Python {sys.version.split()[0]} · {fmt_pt(now)} · session: {detect_session(now)}")
-    crit = load_criteria()
-    print(f"criteria.toml OK — {crit.summary()}")
+    path = _book(args)[0]
+    crit = load_criteria(path)
+    print(f"{path.name} OK — {crit.summary()}")
     for var in ("SCANNER_PROVIDER", "ALPACA_API_KEY", "ALPACA_SECRET_KEY", "ALPACA_FEED", "MASSIVE_API_KEY",
                 "NTFY_TOPIC", "DISCORD_WEBHOOK_URL"):
         val = os.getenv(var)
@@ -329,7 +355,16 @@ def main(argv=None) -> int:
     p.add_argument("--provider", choices=NAMES)
     p.set_defaults(func=cmd_doctor)
 
+    for p in sub.choices.values():
+        p.add_argument("--book", default="main", metavar="NAME",
+                       help="which rules: main (criteria.toml, the default) or another, e.g. wild (criteria-wild.toml)")
+
     args = ap.parse_args(argv)
+    try:                               # a bad rulebook name, said plainly before anything runs
+        book_paths(args.book)
+    except ValueError as exc:
+        print(f"✗ {exc}", file=sys.stderr)
+        return 2
     try:
         return args.func(args)
     except ProviderError as exc:

@@ -212,7 +212,7 @@ def trading_days(first: date, last: date) -> List[date]:
 
 def run_backtest(provider: Provider, crit: Criteria, first: date, last: date, session: str = "premarket",
                  at: time = time(5, 45), out_dir: Optional[Path] = None,
-                 log: Callable[[str], None] = print) -> Tuple[Path, str]:
+                 log: Callable[[str], None] = print, base: Optional[Path] = None) -> Tuple[Path, str]:
     """Returns (folder with journal.csv + summary.md, stats text)."""
     days = trading_days(first, last)
     if not days:
@@ -221,7 +221,7 @@ def run_backtest(provider: Provider, crit: Criteria, first: date, last: date, se
     source = provider if demo else CachedProvider(provider)
     names = universe_of(source)
     label = f"{first}_{last}_{session}_{at.strftime('%H%M')}"
-    out_dir = out_dir or (OUTPUT / ("demo" if demo else "") / "backtests" / label)
+    out_dir = out_dir or ((base or OUTPUT) / ("demo" if demo else "") / "backtests" / label)
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / "journal.csv"
     path.unlink(missing_ok=True)
