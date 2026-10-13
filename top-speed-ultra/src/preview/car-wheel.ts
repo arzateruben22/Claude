@@ -1,9 +1,14 @@
-// The Rossini GT's wheels: 20-inch forged twin-five-spoke rims (machined faces, gunmetal sides, a deep concave),
-// 245/35 front and 305/30 rear tyres modelled in section (rim protector, sidewall bulge, rounded shoulders, three
-// circumferential grooves; no lettering), drilled carbon-ceramic discs on anodised bells, and six-piston monobloc
-// calipers in Rossini yellow. Built in the wheel's own frame (axle along x, +x outboard) and filed into a Kit.
+// The garage cars' wheels, one generator in four styles:
+//   twin5 (Rossini GT)    20-inch forged twin-five-spoke rims, machined faces, gunmetal sides, a deep concave
+//   five  (Rossini Brio)  19-inch five-spoke, painted silver with a machined lip
+//   cl10  (Rossini Corsa) ten straight spokes in satin black, a centre-lock hub with a red hex nut
+//   aero  (Vela E)        a dished aero cover with five curved turbine slots over a gunmetal rim
+// Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
+// lettering); drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour.
+// Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
+// caller's matrix scales the radius for smaller wheels.
 import * as THREE from 'three';
-import { Kit, V3, v3, gridGeo, latheGeo } from './car-kit';
+import { Kit, V3, v3, gridGeo, latheGeo, capGeo } from './car-kit';
 
 export const WHEEL = { R: 0.345, rim: 0.254, wF: 0.245, wR: 0.305 };
 export const TREAD_V: [number, number] = [0.3, 0.7];
@@ -46,11 +51,12 @@ function tyre(w: number, segs: number) {
   return lathe(prof, vs, segs, true);
 }
 
-export interface WheelOptions { q: 'phone' | 'high'; front: boolean }
+export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero';
+export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number }
 // add one wheel (built for the right side) to a kit; m places it, out = -1 mirrors it for the left
 export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -1, spin?: Kit) {
-  const high = o.q === 'high', segs = high ? 120 : 56;
-  const w = o.front ? WHEEL.wF : WHEEL.wR, hw = w / 2;
+  const high = o.q === 'high', segs = high ? 120 : 56, style = o.style ?? 'twin5';
+  const w = o.w ?? (o.front ? WHEEL.wF : WHEEL.wR), hw = w / 2;
   const S = spin ?? kit;                 // spinning parts can go to their own kit
   const put = (k: Kit, key: string, g: THREE.BufferGeometry) => {
     if (out < 0) {
@@ -68,15 +74,22 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   const barrel: [number, number][] = [[0.2385, hw + 0.003], [0.236, hw - 0.016], [0.236, -hw + 0.01], [0.246, -hw - 0.004], [0.256, -hw - 0.006]];
   put(S, 'rimPaint', lathe(barrel, barrel.map((p) => p[1] * 4), high ? 72 : 40, false));
 
-  // ten spokes in five pairs, splaying from the hub to the rim through a deep concave
+  // spokes: (centre angle, splay sign) for each spoke, and how each style shapes them
   const xh = hw - 0.062, xr = hw + 0.009, rh = 0.088, rr = 0.239, nR = high ? 14 : 8;
-  for (let pr = 0; pr < 5; pr++) for (const s of [-1, 1]) {
-    const pc = (pr / 5) * Math.PI * 2 + Math.PI / 2;
+  const spokes: [number, number][] = [];
+  if (style === 'twin5') for (let pr = 0; pr < 5; pr++) for (const s of [-1, 1]) spokes.push([(pr / 5) * Math.PI * 2 + Math.PI / 2, s]);
+  if (style === 'five') for (let k = 0; k < 5; k++) spokes.push([(k / 5) * Math.PI * 2 + Math.PI / 2, 0]);
+  if (style === 'cl10') for (let k = 0; k < 10; k++) spokes.push([(k / 10) * Math.PI * 2 + Math.PI / 2, 0]);
+  const faceKey = style === 'twin5' ? 'machined' : 'rimPaint';
+  for (const [pc, s] of spokes) {
     const faceRows: V3[][] = [], sideL: V3[][] = [], sideR: V3[][] = [];
     for (let i = 0; i <= nR; i++) {
       const f = i / nR, r = rh + (rr - rh) * f;
       const th = pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
-      const wdt = 0.026 - 0.009 * f, dep = 0.036 - 0.012 * f, xf = xh + (xr - xh) * Math.pow(f, 0.62);
+      // five: broad spokes that taper and thin toward the rim; cl10: slim straight ones, a shallow concave
+      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : 0.026 - 0.009 * f;
+      const dep = style === 'five' ? 0.032 - 0.01 * f : 0.036 - 0.012 * f;
+      const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : 0.62);
       const Rd = v3(0, Math.cos(th), Math.sin(th)), T = v3(0, -Math.sin(th), Math.cos(th));
       const at = (x: number, t: number) => Rd.clone().multiplyScalar(r).add(T.clone().multiplyScalar(t)).setX(x);
       const fl = at(xf, -wdt * 0.36), fr = at(xf, wdt * 0.36), cl = at(xf - 0.005, -wdt / 2), cr = at(xf - 0.005, wdt / 2);
@@ -86,26 +99,72 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const face = gridGeo(faceRows, { flip: false });
     const fuv = face.attributes.uv as THREE.BufferAttribute, fp = face.attributes.position;
     for (let k = 0; k < fuv.count; k++) { const y = fp.getY(k), z = fp.getZ(k); fuv.setXY(k, Math.atan2(z, y) / (Math.PI * 2), Math.hypot(y, z) * 6); }
-    put(S, 'machined', face);
+    put(S, faceKey, face);
     put(S, 'rimPaint', gridGeo(sideL, { flip: false }));
     put(S, 'rimPaint', gridGeo(sideR, { flip: false }));
     const backRows: V3[][] = [];
     for (let i = 0; i <= nR; i++) backRows.push([sideR[i][2], sideL[i][0]]);
     put(S, 'rimPaint', gridGeo(backRows, { flip: false }));
   }
-  // hub: machined face with a centre-cap ring, five bolts in recesses, the R badge
-  const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.07, xh + 0.004], [0.088, xh + 0.001], [0.096, xh - 0.008], [0.098, xh - 0.034]];
-  put(S, 'machined', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
-  for (let k = 0; k < 5; k++) {
-    const a = (k / 5) * Math.PI * 2 + Math.PI / 2 + Math.PI / 5, y = Math.cos(a) * 0.056, z = Math.sin(a) * 0.056;
-    const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0055, y, z);
-    put(S, 'dark', rec);
-    const bolt = new THREE.CylinderGeometry(0.0105, 0.0105, 0.016, 6); bolt.rotateZ(-Math.PI / 2); bolt.translate(xh + 0.006, y, z);
-    put(S, 'chrome', bolt.toNonIndexed());
+  if (style === 'aero') {
+    // a dished cover from the hub to the rim with five curved turbine slots; behind it, the spokes' shadows
+    const outline: THREE.Vector2[] = [];
+    for (let k = 0; k < 72; k++) { const a = (k / 72) * Math.PI * 2; outline.push(new THREE.Vector2(Math.cos(a) * 0.238, Math.sin(a) * 0.238)); }
+    const holes: THREE.Vector2[][] = [];
+    for (let k = 0; k < 5; k++) {
+      const a0 = (k / 5) * Math.PI * 2 + 0.3, slot: THREE.Vector2[] = [], inner: THREE.Vector2[] = [];
+      for (let j = 0; j <= 10; j++) {
+        const t = j / 10, r = 0.115 + 0.105 * t, a = a0 + 0.55 * t * t, wd = 0.012 + 0.018 * Math.sin(Math.PI * Math.min(1, t * 1.1));
+        slot.push(new THREE.Vector2(Math.cos(a) * r, Math.sin(a) * r));
+        inner.push(new THREE.Vector2(Math.cos(a + wd / r * 1.0) * r, Math.sin(a + wd / r * 1.0) * r));
+      }
+      holes.push([...slot, ...inner.reverse()]);
+    }
+    const ring: THREE.Vector2[] = []; for (let k = 0; k < 40; k++) { const a = -(k / 40) * Math.PI * 2; ring.push(new THREE.Vector2(Math.cos(a) * 0.05, Math.sin(a) * 0.05)); }
+    const disc = capGeo(outline, [...holes, ring], high ? 0.022 : 0.04);
+    // dish it: the face sits proud at the rim and steps in toward the hub, then turn it to face +x
+    const dp = disc.attributes.position;
+    for (let k = 0; k < dp.count; k++) { const y = dp.getX(k), z = dp.getY(k), r = Math.hypot(y, z); dp.setXYZ(k, xr - 0.004 - 0.028 * Math.pow(1 - r / 0.238, 1.6), y, z); }
+    disc.computeVertexNormals();
+    const du = disc.attributes.uv as THREE.BufferAttribute; for (let k = 0; k < du.count; k++) { const y = dp.getY(k), z = dp.getZ(k); du.setXY(k, Math.atan2(z, y) / (Math.PI * 2), Math.hypot(y, z) * 6); }
+    // (the cap faced +z in its own plane; the cyclic swap of axes above keeps its winding, so it now faces +x)
+    put(S, 'aero', disc);
+    // the slot walls, down to a dark backing plate
+    for (const h of holes) {
+      const top = h.map((p) => { const r = Math.hypot(p.x, p.y); return v3(xr - 0.004 - 0.028 * Math.pow(1 - r / 0.238, 1.6), p.x, p.y); });
+      const bot = top.map((p) => p.clone().setX(p.x - 0.03));
+      put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: true }));
+      put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: false }));
+    }
+    const back = new THREE.CircleGeometry(0.236, 48); back.rotateY(Math.PI / 2); back.translate(xh - 0.03, 0, 0); put(S, 'rimPaint', back);
+    // a silver ring at the cover's edge
+    put(S, 'machined', lathe([[0.2385, xr - 0.003], [0.234, xr - 0.0035], [0.226, xr - 0.0045]], [0, 0.3, 0.6], segs, true));
   }
-  // the badge reads upright: CircleGeometry's u runs to -z (forward), which is right as seen from outboard
-  const cap = new THREE.CircleGeometry(0.0295, 32); cap.rotateY(Math.PI / 2); cap.translate(xh + 0.0078, 0, 0);
-  put(S, 'badge', cap);
+  // hub: machined face with a centre-cap ring, five bolts in recesses, the badge; the Corsa's is a centre lock
+  if (style === 'cl10') {
+    const hub: [number, number][] = [[0.0, xh + 0.004], [0.06, xh + 0.004], [0.084, xh - 0.002], [0.098, xh - 0.034]];
+    put(S, 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 48 : 24, true));
+    const nut = new THREE.CylinderGeometry(0.044, 0.046, 0.028, 6); nut.rotateZ(-Math.PI / 2); nut.translate(xh + 0.016, 0, 0);
+    put(S, 'nut', nut.toNonIndexed());
+    const cone = latheGeo([[0.0, xh + 0.046], [0.018, xh + 0.044], [0.03, xh + 0.03]], 24, 'x', { flip: true }); put(S, 'chrome', cone);
+    const peg = new THREE.CylinderGeometry(0.005, 0.005, 0.012, 8); peg.rotateZ(-Math.PI / 2); peg.translate(xh + 0.006, 0.07, 0); put(S, 'chrome', peg);
+  } else if (style !== 'aero') {
+    const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.07, xh + 0.004], [0.088, xh + 0.001], [0.096, xh - 0.008], [0.098, xh - 0.034]];
+    put(S, style === 'twin5' ? 'machined' : 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
+    for (let k = 0; k < 5; k++) {
+      const a = (k / 5) * Math.PI * 2 + Math.PI / 2 + Math.PI / 5, y = Math.cos(a) * 0.056, z = Math.sin(a) * 0.056;
+      const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0055, y, z);
+      put(S, 'dark', rec);
+      const bolt = new THREE.CylinderGeometry(0.0105, 0.0105, 0.016, 6); bolt.rotateZ(-Math.PI / 2); bolt.translate(xh + 0.006, y, z);
+      put(S, 'chrome', bolt.toNonIndexed());
+    }
+  }
+  if (style !== 'cl10') {
+    // the badge reads upright: CircleGeometry's u runs to -z (forward), which is right as seen from outboard
+    const cap = new THREE.CircleGeometry(0.0295, 32); cap.rotateY(Math.PI / 2); cap.translate(style === 'aero' ? xr - 0.031 : xh + 0.0078, 0, 0);
+    put(S, 'badge', cap);
+    if (style === 'aero') { const cr = latheGeo([[0.05, xr - 0.032], [0.05, xr - 0.06]], 32, 'x', { flip: false }); put(S, 'dark', cr); }
+  }
 
   // brake: drilled carbon-ceramic friction ring on an anodised bell
   const Rd = o.front ? 0.2 : 0.19, td = o.front ? 0.036 : 0.032, xd = xh - 0.052, xo = xd + td / 2, xi = xd - td / 2, ri = 0.128;

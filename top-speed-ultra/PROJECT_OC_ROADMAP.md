@@ -65,6 +65,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Radio | Done (framework) | Three fictional stations (KCST 101.5 Coast, KFWY 96.9 Freeway FM, KNYN 88.3 Canyon Radio) play music composed live in code. Nothing is recorded, licensed or streamed. More stations or licensed audio can plug into the same `Radio` class. |
 | City expansion | Roadmap | The pipeline already pulls arterial streets. Driving them needs intersections and signals. |
 | Golden Road vertical slice on foot | Roadmap | Simulated crowds. It must never claim live occupancy. |
+| On foot: Lot 57, our own hangout on Orangewood Ave, Anaheim | Planned (prototype in progress) | Plan in `PROJECT_OC_ON_FOOT.md`. A fictional taproom and yard (no real business's name or look) at the real spot, on the real streets from OpenStreetMap via Overture. Get out of the car, walk, sit, order, talk to NPCs. Crowds are simulated by time and day and labelled so. No live occupancy, events or multiplayer. |
 
 ## P5: later
 

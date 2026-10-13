@@ -1,7 +1,12 @@
-// The Rossini GT's cockpit: everything the driver sees from the seat, in the car's frame (spec.ts).
+// The garage cars' cockpits: everything the driver sees from the seat, in the car's frame (spec.ts).
 //
-//   buildCockpit({ paint, quality?, mirrors?, body?, stitch? }): Cockpit
-//     paint: sRGB hex for the body seen through the glass (bonnet, wings, mirror housings).
+//   buildCockpit({ car?, paint?, quality?, mirrors?, body?, stitch? }): Cockpit
+//     car: 'rossini-gt' (default) | 'rossini-brio' | 'rossini-corsa' | 'vela-e'. Each has its own trim (THEMES below):
+//       GT black Alcantara and Nappa with cognac seats; Brio navy leather, aluminium trim, an all-leather wheel;
+//       Corsa carbon buckets in Alcantara with red four-point harnesses, a roll hoop, carbon door cards, an
+//       Alcantara wheel with a yellow centre stripe; Vela E ivory leather, a round two-spoke wheel with the V badge
+//       and a wide display in place of the tachometer.
+//     paint: sRGB hex for the body seen through the glass (bonnet, wings, mirror housings; default the car's).
 //     quality: 'phone' | 'high' (default 'high': finer meshes, anisotropic carbon and aluminium, 512 maps).
 //     mirrors: 'env' (default: the sky's environment map in the rear-view and door mirrors, no extra renders) or
 //       'live' (render-target reflections of the scene in the rear-view and the driver's door mirror, cut to each
@@ -24,14 +29,23 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, mat, clamp, sstep, lerp, between } from './car-kit';
 import * as M from './car-mats';
-import { body, buildBody, mirrorParts, mirrorGlassPlacement, MIRROR, wsPoint, wsXZ, WS, sgPoint, SG } from './car-body';
-import { carMaterials, carAO } from './car';
+import { bodyFor } from './car-body';
+import { carMaterials, aoFor } from './car';
+import { CarId, shapeFor } from './car-shape';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as G from './car-gauges';
 import { windscreenDust, badgeTex, once } from './car-tex';
 import { CarMirror } from './car-mirror';
 
-export interface CockpitOptions { paint: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number }
+export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number }
+// each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
+interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon' }
+const THEMES: Record<string, Theme> = {
+  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', binnacle: 'tach', door: 'nappa' },
+  brio: { seat: 0x1c2740, seatKind: 'leather', stitch: 0x8fb0e0, dash: 'nappa', band: 'alu', wheel: 'brio', binnacle: 'tach', door: 'nappa' },
+  corsa: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0xe8b81c, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'tach', door: 'carbon' },
+  vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', binnacle: 'screen', door: 'nappa' },
+};
 export interface Cockpit {
   group: THREE.Group;
   wheel: THREE.Object3D;
@@ -96,29 +110,38 @@ function rimFrames(a0: number, a1: number, n: number) {
 }
 
 // ------------------------------------------------------------------------------------------------ the cockpit
-export function buildCockpit(o: CockpitOptions): Cockpit {
+export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const q = o.quality ?? 'high', high = q === 'high';
+  const id = o.car ?? 'rossini-gt', P = shapeFor(id), B = bodyFor(id), T = THEMES[P.interior];
+  const { body, wsPoint, wsXZ, WS, sgPoint, SG, MIRROR, mirrorParts, mirrorGlassPlacement } = B;
+  const D = P.cabinW;                                // the door cards' inner face (half-width)
+  const paint = o.paint ?? P.paint;
   const live = (o.mirrors ?? 'env') === 'live';
   const group = new THREE.Group(); group.name = 'cockpit';
   const kit = new Kit(), wk = new Kit(), bk = new Kit();       // the interior, the steering wheel, the body outside
   const ghost: THREE.BufferGeometry[] = [];         // dash surfaces that the windscreen reflects
-  const stitchC = o.stitch ?? 0xc58a52;
+  const stitchC = o.stitch ?? T.stitch;
 
   // ---------------------------------------------------------------- materials
-  const ext = carMaterials(o.paint, q);
+  const ext = carMaterials(paint, q, P.caliper, id);
   const tachT = G.tachTextures(high ? 1024 : 512);
   const mats: Record<string, THREE.Material> = {
     paint: ext.paint, trim: ext.trim, dark: ext.dark, lamp: ext.lamp, tail: ext.tail, grille: ext.grille, liner: ext.liner, rubber: ext.rubber, badge: ext.badge,
-    mirror: ext.mirror, exhaust: ext.exhaust, mirrorDim: M.chrome(0.03, 0x4a4d52),
+    mirror: M.chrome(0.02, 0x6a6e74), exhaust: ext.exhaust, mirrorDim: M.chrome(0.03, 0x4a4d52), carbonX: ext.carbon, frit: M.gloss(0x040404),
     // black Nappa reflects about 3-4 % (sRGB ~0x33 before the grain map's ~0.86); black Alcantara a little less
     alc: M.alcantara(q, 0x2c2c2f), nappa: M.leather(q, 0x333336, { tile: 0.12 }),
     nappaPerf: M.leather(q, 0x2f2f32, { perforated: true, tile: 0.09, worn: true }), wheelNappa: M.leather(q, 0x2f2f32, { tile: 0.08, worn: true }),
-    tan: M.leather(q, 0x7a3f1c, { tile: 0.12, sheen: 0.45 }), tanPerf: M.leather(q, 0x7a3f1c, { perforated: true, tile: 0.1, sheen: 0.45 }),
+    tan: T.seatKind === 'buckets' ? M.alcantara(q, T.seat, 0.07) : M.leather(q, T.seat, { tile: 0.12, sheen: 0.45 }),
+    tanPerf: T.seatKind === 'buckets' ? M.alcantara(q, 0x232326, 0.06) : M.leather(q, T.seat, { perforated: true, tile: 0.1, sheen: 0.45 }),
     carbon: M.carbon(q), alu: M.brushed(q, 0xc6cace), anod: M.brushed(q, 0x3c3f45, { rough: 1.25, aniso: 0.6, key: 'anod' }),
     chrome: M.chrome(0.08), plastic: M.softPlastic(q), gloss: M.gloss(), carpet: M.carpet(q),
     stitch: M.stitch(stitchC), stitchDark: M.stitch(0x2b1a10),
     glass: M.glass('cabin', 0.04, { env: 0.3 }), sideGlass: M.glass('cabinSide', 0.1, { env: 0.45 }), gaugeGlass: M.glass('gauge', 0.0, { env: 0.9 }),
-    frit: M.gloss(0x040404),
+    roofGlass: M.glass('roofIn', 0.72, { env: 0.35, color: 0x05080c }),
+    belt: once('m.belt', () => new THREE.MeshStandardMaterial({ color: 0x8a1216, roughness: 0.82 })),
+    hoop: once('m.hoop', () => new THREE.MeshPhysicalMaterial({ color: 0x1c1c1e, roughness: 0.55, metalness: 0.2, clearcoat: 0.3 })),
+    stripe: once('m.stripe', () => new THREE.MeshStandardMaterial({ color: 0xe8b81c, roughness: 0.6 })),
+    screenV: once('m.scrV', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.velaScreenTex(), emissiveIntensity: 0.95, roughness: 0.12 })),
     tach: once('m.tach' + q, () => new THREE.MeshStandardMaterial({ map: tachT.map, emissiveMap: tachT.emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.85, roughness: 0.55 })),
     screenL: once('m.scrL', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.leftScreenTex(), emissiveIntensity: 0.9, roughness: 0.18 })),
     screenR: once('m.scrR', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.rightScreenTex(), emissiveIntensity: 0.9, roughness: 0.18 })),
@@ -127,10 +150,15 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     red: once('m.red', () => new THREE.MeshPhysicalMaterial({ color: 0xb3151b, roughness: 0.35, clearcoat: 0.5 })),
     dial: once('m.dial', () => new THREE.MeshStandardMaterial({ map: G.modeDialTex(), transparent: true, alphaTest: 0.4, roughness: 0.5 })),
     led: once('m.led', () => new THREE.MeshPhysicalMaterial({ color: 0x0b0c0d, roughness: 0.15, clearcoat: 1 })),
-    dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x8a8076, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
+    dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x6e665e, transparent: true, opacity: 0.26, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
   };
   for (const k of ['alc', 'nappa', 'tan', 'tanPerf', 'carpet', 'plastic']) (mats[k] as THREE.Material).side = THREE.DoubleSide;
-  mats.badgeHub = once('m.badgehub', () => new THREE.MeshPhysicalMaterial({ map: badgeTex(), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1 }));
+  mats.badgeHub = once('m.badgehub' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1 }));
+  // the dash top and the fascia band, per car
+  mats.dashTop = T.dash === 'alc' ? mats.alc : mats.nappa;
+  mats.band = T.band === 'carbon' ? mats.carbon : mats.alu;
+  mats.doorLow = T.door === 'carbon' ? mats.carbon : mats.nappa;
+  mats.alcW = M.alcantara(q, 0x2a2a2d, 0.05);
 
   // ambient occlusion inside: dark low down and under the dash, the headliner lit only by bounce
   kit.ao = (p, n) => {
@@ -143,7 +171,7 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     return clamp(a, 0.15, 1);
   };
   wk.ao = (p) => clamp(0.85 + p.z * 4, 0.6, 1);
-  bk.ao = carAO;
+  bk.ao = aoFor(B);
 
   // ---------------------------------------------------------------- windscreen: glass, frit, dust
   const NS = high ? 30 : 18, NT = high ? 18 : 10;
@@ -164,7 +192,7 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   }
 
   // ---------------------------------------------------------------- the dashboard
-  const xs = range(-0.865, 0.865, high ? 48 : 26);
+  const xs = range(-(D - 0.001), D - 0.001, high ? 48 : 26);
   const glassBase = (x: number): [number, number] => {
     const s = clamp(x / WS.xb, -1, 1), zb = wsXZ(s, 0)[1] + 0.012;
     return [zb, body.top(zb, Math.min(Math.abs(x), WS.xb - 0.005)) - 0.016];
@@ -177,13 +205,13 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   const FASCIA: [number, number][] = [[-0.665, 0.795], [-0.659, 0.75], [-0.646, 0.69], [-0.628, 0.62]];
   const LOWER: [number, number][] = [[-0.628, 0.62], [-0.632, 0.555], [-0.67, 0.495], [-0.78, 0.445], [-0.96, 0.41]];
   const top = loftX(xs, dashTop, true);
-  kit.add('alc', top); ghost.push(top);
+  kit.add('dashTop', top); ghost.push(top);
   kit.add('nappa', loftX(xs, () => LIP, true));
   kit.add('nappa', loftX(xs, () => FASCIA, true));
   kit.add('plastic', loftX(xs, () => LOWER, true));
   // dash ends against the doors
   for (const sd of [-1, 1]) {
-    const x = sd * 0.865, pts = [...dashTop(x), ...LIP.slice(1), ...FASCIA.slice(1), ...LOWER.slice(1)];
+    const x = sd * (D - 0.001), pts = [...dashTop(x), ...LIP.slice(1), ...FASCIA.slice(1), ...LOWER.slice(1)];
     const sh = new THREE.Shape(pts.map(([z, y]) => new THREE.Vector2(z, y)));
     const cap = new THREE.ShapeGeometry(sh, 1); cap.rotateY(-Math.PI / 2); cap.translate(x, 0, 0);
     kit.add('nappa', cap, null, 0.1);
@@ -200,13 +228,13 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     // a carbon band across the fascia, with a fine aluminium line under it
     const band = (x0: number, x1: number) => {
       const b = new RoundedBoxGeometry(x1 - x0, 0.026, 0.012, 2, 0.004); b.rotateX(-0.12); b.translate((x0 + x1) / 2, 0.75, -0.655);
-      kit.add('carbon', b, null, 'keep' as const);
+      kit.add('band', b, null, T.band === 'alu' ? 0.12 : 'keep');
       const l = new THREE.BoxGeometry(x1 - x0, 0.0025, 0.004); l.rotateX(-0.12); l.translate((x0 + x1) / 2, 0.735, -0.655); kit.add('alu', l, null, 0.05);
     };
-    band(-0.86, -0.64); band(-0.1, 0.86);
+    band(-(D - 0.006), -0.64); band(T.binnacle === 'screen' ? 0.06 : -0.1, D - 0.006);
   }
   // round vents: brushed bezel, dark throat, five vanes, a knob
-  for (const [x, y, s] of [[-0.78, 0.705, 0.95], [0.03, 0.7, 1.0], [0.79, 0.705, 0.95]] as [number, number, number][]) {
+  for (const [x, y, s] of [[-(D - 0.086), 0.705, 0.95], [0.03, 0.7, 1.0], [D - 0.076, 0.705, 0.95]] as [number, number, number][]) {
     const m = mat(x, y, -0.652, -0.12, 0, 0, s);
     kit.add('alu', latheGeo([[0.04, -0.004], [0.046, 0.006], [0.053, 0.011], [0.0565, 0.008], [0.057, -0.004]], high ? 48 : 28, 'z', { flip: true, uRepeat: 1, vScale: 0.05 }), m);
     kit.add('gloss', latheGeo([[0.0405, -0.004], [0.04, -0.05]], 32, 'z', { flip: true }), m, 0.05);
@@ -217,13 +245,27 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   // centre stack: a carbon panel under the centre vent with three knobs and a hazard switch
   {
     const p = new RoundedBoxGeometry(0.22, 0.2, 0.014, 2, 0.006); p.rotateX(-0.45); p.translate(0, 0.565, -0.6);
-    kit.add('carbon', p);
-    for (const x of [-0.06, 0, 0.06]) { const k = latheGeo([[0.0, 0.016], [0.012, 0.016], [0.014, 0.012], [0.014, 0.0]], 24, 'z', { flip: true, vScale: 0.02 }); kit.add('alu', k, mat(x, 0.585, -0.585, -0.45)); }
+    kit.add(T.band === 'alu' ? 'gloss' : 'carbon', p);
+    if (T.binnacle === 'screen') {
+      // the Vela's centre touchscreen (the lower part of its display atlas)
+      const sc = new THREE.PlaneGeometry(0.19, 0.17); const su = sc.attributes.uv as THREE.BufferAttribute;
+      for (let i = 0; i < su.count; i++) su.setXY(i, 0.7 + 0.3 * su.getX(i), su.getY(i) * 0.5);
+      sc.rotateX(-0.45); sc.translate(0, 0.567, -0.592); kit.add('screenV', sc);
+    } else for (const x of [-0.06, 0, 0.06]) { const k = latheGeo([[0.0, 0.016], [0.012, 0.016], [0.014, 0.012], [0.014, 0.0]], 24, 'z', { flip: true, vScale: 0.02 }); kit.add('alu', k, mat(x, 0.585, -0.585, -0.45)); }
   }
 
   // ---------------------------------------------------------------- the binnacle: tach, two displays, the cowl
   const clM = mat(-0.37, 0.835, -0.62, -0.41);
-  {
+  if (T.binnacle === 'screen') {
+    // the Vela's wide display, free-standing over the dash on a leather-wrapped plinth
+    const vM = mat(-0.17, 0.862, -0.635, -0.36);
+    const bez = extrude(roundRect(0.64, 0.168, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
+    const scr = new THREE.PlaneGeometry(0.62, 0.15); const su = scr.attributes.uv as THREE.BufferAttribute;
+    for (let i = 0; i < su.count; i++) su.setY(i, 0.5 + 0.5 * su.getY(i));
+    scr.translate(0, 0, -0.0018); kit.add('screenV', scr, vM);
+    const plinth = new RoundedBoxGeometry(0.34, 0.07, 0.1, 3, 0.02); plinth.translate(-0.17, 0.81, -0.68); kit.add('nappa', plinth);
+    ghost.push(bez.clone().applyMatrix4(vM));
+  } else {
     const plate = extrude(roundRect(0.47, 0.18, 0.02), 0.012, 0.002); plate.translate(0, 0, -0.03);
     kit.add('gloss', plate, clM, 0.05);
     kit.add('gloss', latheGeo([[0.077, -0.022], [0.077, 0.011]], 64, 'z', { flip: true }), clM, 0.05);
@@ -251,12 +293,12 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
       kit.add('stitch', stitchRow(path, path.map(() => v3(0, -0.45, -0.89)), path.map(() => v3(0, 0.89, -0.45))), clM);
     }
   }
-  // the needle (it moves): a tapered blade, lit, on its own mesh in the binnacle's frame
+  // the needle (it moves): a tapered blade, lit, on its own mesh in the binnacle's frame (not on the Vela)
   const needleMat = new THREE.MeshStandardMaterial({ color: 0x220800, emissive: 0xff4a12, emissiveIntensity: 2.2, roughness: 0.4 });
   const needleShape = new THREE.Shape([new THREE.Vector2(-0.0023, -0.016), new THREE.Vector2(0.0023, -0.016), new THREE.Vector2(0.0009, 0.064), new THREE.Vector2(-0.0009, 0.064)]);
   const needle = new THREE.Mesh(new THREE.ShapeGeometry(needleShape), needleMat);
   const needlePivot = new THREE.Group(); needlePivot.applyMatrix4(clM); needlePivot.add(needle); needle.position.z = 0.0025;
-  group.add(needlePivot);
+  if (T.binnacle === 'tach') group.add(needlePivot);
   let rpm = 3150, rpmShown = rpm, flutter = 0;
   const setNeedle = (r: number) => { needle.rotation.z = G.tachAngle(r) - Math.PI / 2; };
   setNeedle(rpm);

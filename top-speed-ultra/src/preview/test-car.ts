@@ -1,23 +1,37 @@
-// Test page for the car part: the Rossini GT inside and out, and the traffic.
-//   ?view=seat | dash | beauty | rear | wheel | traffic | side | top | front | mirror | dmirror | door | wheelck
-//   &q=high|phone   &world=0 to skip the game's roads and terrain   &paint=hex   &s=metres from the stretch start
-//   &mirrors=live|env   &hands=1 (the hands part on the rim, to check the fit)
+// Test page for the car part: the four garage cars inside and out, from every camera the game has.
+//   ?view= seat | free-left | free-right | free-up | hood | chase | sky | sky-zoom | dash | beauty | rear | wheel |
+//          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck
+//   &car=rossini-gt | rossini-brio | rossini-corsa | vela-e      &q=high|phone   &world=0 to skip the game's roads
+//   &paint=hex   &s=metres from the stretch start   &mirrors=live|env   &hands=1 (the hands part on the rim)
+//   &portrait=1 (the game's portrait-phone camera numbers)
+// The game's cameras (src/game/Game.ts updateCamera), in the car's frame:
+//   seat: EYE, pitched -0.085 rad (portrait -0.27), FOV 58 (portrait 96); free: the same eye, FOV 66
+//   hood: (0, 1.0, -1.45), pitched -0.04 rad, FOV 62 (portrait 92)
+//   chase: 6.6 m behind, 2.25 m up (portrait 8.2, 2.9), looking 3.5 m ahead and 0.9 m up, FOV 60 (portrait 80)
+//   sky: 150 m up and 40 m ahead, looking straight down, FOV 50, square
 // Logs (console.warn, so preview-shoot prints it) the build time and the part's own cost: draw calls and triangles
 // with the part shown minus with it hidden, shadow passes included.
 import * as THREE from 'three';
 import { makeStage, Stage } from './stage';
-import { buildCar, buildTrafficCar, TrafficKind } from './car';
-import { buildCockpit } from './cockpit';
+import { buildCar } from './car';
+import { CAR_IDS, CarId } from './car-shape';
 import { EYE } from './spec';
 
 const q = new URLSearchParams(location.search);
 const view = q.get('view') ?? 'beauty';
 const quality = (q.get('q') ?? 'high') as 'high' | 'phone';
-const paint = parseInt(q.get('paint') ?? '9b1219', 16);
-const debug = ['side', 'top', 'front'].includes(view);
+const car = (q.get('car') ?? 'rossini-gt') as CarId;
+const paint = q.get('paint') ? parseInt(q.get('paint')!, 16) : undefined;
+const portrait = q.get('portrait') === '1';
+const debug = ['side', 'top', 'front', 'lineup', 'lineup-top'].includes(view);
 const wantWorld = !debug && q.get('world') !== '0';
+const interior = ['seat', 'free-left', 'free-right', 'free-up', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view);
 
-const stage = await makeStage({ stretch: !debug, fov: view === 'seat' || view === 'door' ? 60 : view === 'dash' || view === 'wheelck' ? 50 : view === 'wheel' ? 34 : view === 'dmirror' ? 16 : view === 'grip' ? 28 : 30, near: 0.02 });
+const FOV: Record<string, number> = {
+  seat: portrait ? 96 : 58, 'free-left': 66, 'free-right': 66, 'free-up': 66, hood: portrait ? 92 : 62, chase: portrait ? 80 : 60, sky: 50, 'sky-zoom': 7,
+  dash: 50, wheelck: 50, door: 60, wheel: 34, dmirror: 16, grip: 28, garage: 34,
+};
+const stage = await makeStage({ stretch: !debug, fov: FOV[view] ?? 30, near: view === 'chase' ? 0.15 : 0.02 });
 const { scene, camera, renderer } = stage;
 const env = stage.useGameSky((q.get('time') as 'sunset') ?? 'sunset');
 // Test light only: the game's 'sunset' preset has the sun at 3 degrees, where the sound walls shade the whole
@@ -30,13 +44,13 @@ const env = stage.useGameSky((q.get('time') as 'sunset') ?? 'sunset');
   E.targetFor = (d: Date) => { const s = orig(d); s.alt = alt; return s; };
   env.set('sunset', 'clear', true);
 }
-const log: Record<string, unknown> = { view, quality };
+const log: Record<string, unknown> = { view, car, quality };
 
 // where: on I-405 North (lane 1), or at the origin on a plain ground for the debug views
 let frame: THREE.Object3D;
 if (debug) {
   frame = new THREE.Group(); scene.add(frame);
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x55534f, roughness: 0.9 }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: 0x55534f, roughness: 0.9 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 } else {
   const st = stage.stretch!;
@@ -44,12 +58,20 @@ if (debug) {
 }
 const L = (x: number, y: number, z: number) => frame.localToWorld(new THREE.Vector3(x, y, z));
 function look(from: THREE.Vector3, at: THREE.Vector3) { camera.position.copy(from); camera.up.set(0, 1, 0); camera.lookAt(at); }
+// a camera fixed in the car's frame: position, then yaw (left +) and pitch (up +) from straight ahead
+function carCam(p: THREE.Vector3, yaw: number, pitch: number) {
+  frame.updateMatrixWorld(true);
+  camera.position.copy(p).applyMatrix4(frame.matrixWorld);
+  const qf = frame.getWorldQuaternion(new THREE.Quaternion());
+  camera.quaternion.copy(qf).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch, yaw, 0, 'YXZ')));
+}
 
 // what to build
 let part: THREE.Object3D;
 const t0 = performance.now();
-if (['seat', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view)) {
-  const ck = buildCockpit({ paint, quality, mirrors: (q.get('mirrors') as 'live' | 'env' | null) ?? undefined });
+if (interior) {
+  const { buildCockpit } = await import('./cockpit');
+  const ck = buildCockpit({ car, paint, quality, mirrors: (q.get('mirrors') as 'live' | 'env' | null) ?? undefined });
   part = ck.group;
   frame.add(ck.group);
   log.buildMs = Math.round(performance.now() - t0);
@@ -59,28 +81,39 @@ if (['seat', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(vi
     try {
       const [{ buildDriverArms }, { lookFor }] = await Promise.all([import('./hands'), import('../game/drivers')]);
       const arms = buildDriverArms({ look: lookFor('closer', 'm', 1), presentation: 'm', quality });
-      ck.group.add(arms.group);
+      ck.wheel.add(arms.group);
       log.hands = 'ok';
     } catch (e) { log.hands = String(e); }
   }
-  if (view === 'seat') stage.driverView(stage.stretch!.s0 + Number(q.get('s') ?? 1500), undefined, EYE);
+  if (view === 'seat') carCam(EYE, 0, portrait ? -0.27 : -0.085);
+  if (view === 'free-left') carCam(EYE, 1.2, -0.22);
+  if (view === 'free-right') carCam(EYE, -1.05, -0.3);
+  if (view === 'free-up') carCam(EYE, -0.25, 0.75);
   if (view === 'dash') look(L(-0.3, 1.02, -0.02), L(-0.4, 0.83, -0.6));
   if (view === 'mirror') look(L(-0.37, 1.16, 0.1), L(0.05, 1.18, -0.3));
   if (view === 'dmirror') look(L(-0.37, 1.16, 0.1), L(-1.02, 0.975, -0.66));
   if (view === 'door') look(L(-0.3, 1.12, 0.12), L(-0.86, 0.72, -0.35));
   if (view === 'wheelck') look(L(-0.37, 1.16, 0.1), L(-0.37, 0.84, -0.42));
   if (view === 'grip') look(L(-0.1, 1.08, -0.05), L(-0.22, 0.9, -0.45));
-} else if (view === 'traffic') {
-  const kinds: TrafficKind[] = ['sedan', 'suv', 'pickup', 'van', 'boxTruck'];
-  const cols = [0xd8d8d6, 0x1d2836, 0x6b6e72, 0xf1f1ee, 0xe9e9e6];
-  const grp = new THREE.Group();
-  kinds.forEach((k, i) => { const c = buildTrafficCar(k, cols[i], quality); c.position.set(-6 + i * 3.4 * (i > 2 ? 1.1 : 1), 0, 2 + (i % 2) * 1.5 - i * 1.2); c.rotation.y = 0.5; grp.add(c); });
-  frame.add(grp); part = grp;
-  log.buildMs = Math.round(performance.now() - t0);
-  look(L(2, 2.2, -13), L(-1, 0.9, 0));
+} else if (view === 'garage' || view === 'lineup' || view === 'lineup-top') {
+  // all four: side by side across the lanes (garage), or nose to tail on a plain floor (lineup, for proportions)
+  const grp = new THREE.Group(); frame.add(grp); part = grp;
+  const ms: number[] = [];
+  CAR_IDS.forEach((id, i) => {
+    const t1 = performance.now();
+    const c = buildCar({ car: id, quality });
+    ms.push(Math.round(performance.now() - t1));
+    if (view === 'garage') { c.position.set(-1.0 + i * 2.75, 0, 1.2 - i * 0.9); c.rotation.y = 0; }
+    else c.position.set(0, 0, -8.1 + i * 5.4);
+    grp.add(c);
+  });
+  log.buildMs = ms;
+  if (view === 'garage') look(L(-5.2, 1.35, -9.5), L(2.6, 0.55, 0.4));
+  if (view === 'lineup') { camera.fov = 15; look(L(-90, 1.0, 0), L(0, 0.65, 0)); }
+  if (view === 'lineup-top') { camera.fov = 15; look(L(0, 95, 0.01), L(0, 0, 0)); }
 } else {
-  const car = buildCar({ paint, quality });
-  frame.add(car); part = car;
+  const c = buildCar({ car, paint, quality });
+  frame.add(c); part = c;
   log.buildMs = Math.round(performance.now() - t0);
   if (view === 'side') look(L(-14, 0.62, 0), L(0, 0.62, 0));
   if (view === 'top') look(L(0, 16, 0.01), L(0, 0, 0));
@@ -88,8 +121,17 @@ if (['seat', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(vi
   if (view === 'beauty') look(L(-3.9, 1.0, -4.6), L(0.1, 0.5, 0.2));
   if (view === 'rear') look(L(-3.4, 1.05, 5.0), L(0.15, 0.55, 0.1));
   if (view === 'wheel') look(L(-2.0, 0.55, -2.25), L(-0.85, 0.36, -1.33));
+  if (view === 'hood') carCam(new THREE.Vector3(0, 1.0, -1.45), 0, -0.04);
+  if (view === 'chase') look(L(0, portrait ? 2.9 : 2.25, portrait ? 8.2 : 6.6), L(0, 0.9, -3.5));
+  if (view === 'sky' || view === 'sky-zoom') {
+    // heading-up: the car's forward is the top of the frame
+    const p = L(0, 150, -40), at = L(0, 0, -40.001), fwd = L(0, 0, -1).sub(L(0, 0, 0)).normalize();
+    camera.position.copy(p); camera.up.copy(fwd); camera.lookAt(at);
+    if (view === 'sky-zoom') { camera.position.copy(L(0, 150, 0)); camera.lookAt(L(0, 0, 0.001)); }
+  }
 }
-if (debug) { camera.fov = 16; camera.updateProjectionMatrix(); }
+if (debug && !view.startsWith('lineup')) camera.fov = 16;
+camera.updateProjectionMatrix();
 // the sun's shadow box follows what we're looking at
 env.follow(frame.getWorldPosition(new THREE.Vector3()), camera, 0, 0);
 if (wantWorld) stage.addGameWorld('high');

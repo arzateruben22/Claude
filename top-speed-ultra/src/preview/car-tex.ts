@@ -409,7 +409,19 @@ export function contactShadow(len: number, wid: number, wheels: [number, number]
 
 // ------------------------------------------------------------------------------------------------ the R badge
 // our make's mark: a yellow enamel disc with a black italic R, in a thin bright ring
-export function badgeTex(n = 256): THREE.Texture {
+export function badgeTex(n = 256, brand: 'rossini' | 'vela' = 'rossini'): THREE.Texture {
+  if (brand === 'vela') return once('badgeV' + n, () => {
+    // Vela: a deep blue-black enamel disc, a satin silver ring and a V drawn as two sails
+    const [c, g] = canvas(n, n), h = n / 2;
+    const gr = g.createRadialGradient(h * 0.75, h * 0.7, 0, h, h, h);
+    gr.addColorStop(0, '#22324a'); gr.addColorStop(1, '#0a0f18');
+    g.fillStyle = gr; g.beginPath(); g.arc(h, h, h, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = '#c9ced6'; g.lineWidth = n * 0.05; g.beginPath(); g.arc(h, h, h * 0.88, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = '#e6e9ee';
+    g.beginPath(); g.moveTo(h - n * 0.27, h - n * 0.2); g.lineTo(h - n * 0.04, h + n * 0.27); g.lineTo(h - n * 0.01, h + n * 0.08); g.lineTo(h - n * 0.15, h - n * 0.2); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(h + n * 0.27, h - n * 0.2); g.lineTo(h + n * 0.04, h + n * 0.27); g.lineTo(h + n * 0.01, h + n * 0.08); g.lineTo(h + n * 0.15, h - n * 0.2); g.closePath(); g.fill();
+    return canvasTex(c, true);
+  });
   return once('badge' + n, () => {
     const [c, g] = canvas(n, n), h = n / 2;
     const gr = g.createRadialGradient(h * 0.8, h * 0.7, 0, h, h, h);

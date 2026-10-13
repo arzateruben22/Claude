@@ -262,16 +262,18 @@ function dims(pres: Pres): Dims {
 // four fingers wrap round the far side (toward the dash) and come back round the inner edge, and the short thumb
 // crosses the front face and hooks over the inner front edge with its nail toward the driver.
 export const POSE = {
-  alpha: 40 * DEG,       // where the palm meets the rim: the section's normal there, from straight out toward the driver
-  palmT: 14,             // the metacarpal heads' axis above the palm's skin there (mm)
-  mcpDist: 24,           // from that contact on round to the middle knuckle (mm)
-  ulnar: 12 * DEG,       // the rim crosses the palm on a slant (the heel of the hand toward three o'clock)
+  alpha: 31 * DEG,       // where the palm meets the rim: the section's normal there, from straight out toward the driver
+  palmT: 13,             // the metacarpal heads' axis above the palm's skin there (mm)
+  mcpDist: 22,           // from that contact on round to the middle knuckle (mm)
+  ulnar: 30 * DEG,       // the rim crosses the palm on a slant (the heel of the hand toward three o'clock), so the
+                         // wrist and forearm stay outside the rim and clear of the fingertips as the driver sees them
   roll: 4 * DEG,         // the palm rolls about its own axis (index side up)
   cup: [-2, 0, 7, 15],   // each knuckle turned on round the rim (deg): the hand cups as it closes (4th/5th CMC flex)
-  squeeze: 3.4,          // how far the finger pads press in (mm)
-  // the thumb: where its MCP joint, IP joint and tip sit round the rim [mm along the rim past the index knuckle,
-  // section angle (deg)]
-  thumb: { cmc: [9, -15, -2], mcp: [2, 110, 8], ip: [0, 148], tip: [0, 188] },
+  squeeze: 4.2,          // how far the finger pads press in (mm)
+  // the thumb, short and bent across the rim's front face: its base in the heel of the hand [along R, N, P from the
+  // index metacarpal's base (mm)]; where its tip may hook over the inner front edge (mm along the rim past the index
+  // knuckle; past the second value costs); the bone axes' lift off the leather at the MCP, IP and tip (mm)
+  thumb: { cmc: [6, -15, 4], tipX: [6, 20, 42], tipPhi: [128, 170], ipPhi: [96, 138], lift: [10.5, 9.5, 6.4] },
   conv: [6, 1, -6, -13],   // the fingers converge toward the thenar as they close (deg, about the back of the hand)
   limits: [[0, 95], [0, 110], [0, 90]],
 };
@@ -409,34 +411,53 @@ export function buildAnatomy(pres: Pres): Anatomy {
 
   // ---- the thumb: from its base at the heel of the hand across the rim's front face; short and bent, its pad on
   // the rim, its tip hooked over the inner front edge past the index finger, its nail toward the driver
-  const tc = POSE.thumb.cmc, cmc = madd(madd(madd(base[0], R, tc[0] * fem), N, tc[1] * fem), P, tc[2]);
-  const tl = d.thumb.len, tpal = d.thumb.palm, T = POSE.thumb, sq = POSE.squeeze * 0.6, x0 = mcp[0][0];
-  // the metacarpal from the CMC toward the MCP's place on the front face (its length fixed)
-  const T1 = rimPoint(x0 + T.mcp[0], T.mcp[1] * DEG, tpal[0] * 0.8 + (T.mcp[2] ?? 0));
-  const md = norm(sub(T1.p, cmc));
-  const tMcp = madd(cmc, md, tl[0]);
-  // each phalanx lands on the rim at its section angle, its pad pressed into the leather; slide along the rim until
-  // the bone has its length. Big steps round the section and short ones along the rim: a bent thumb, not a long one
-  const land = (from: V3, phi: number, lift: number, L: number) => {
-    let gx = from[0], best = gx, be = 1e9;
-    for (let it = 0; it < 80; it++) {
-      const q = rimPoint(gx, phi * DEG, lift).p, e = len(sub(q, from)) - L;
-      if (Math.abs(e) < be) { be = Math.abs(e); best = gx; }
-      if (Math.abs(e) < 0.03) break;
-      gx += e < 0 ? Math.max(0.3, -e * 0.8) : -Math.min(Math.abs(e) * 0.8, 4);
-    }
-    return rimPoint(best, phi * DEG, lift);
+  const tc = POSE.thumb.cmc, cmc0 = madd(madd(madd(base[0], R, tc[0] * fem), N, tc[1] * fem), P, tc[2]);
+  const tl = d.thumb.len, T = POSE.thumb, lift = T.lift.map((x) => x * (female ? 0.9 : 1));
+  // Solved backwards from the tip: the tip hooks over the inner front edge near the index finger, the IP joint sits
+  // on the front face, and the two joints flex by natural amounts; of those, keep the thumb whose base (CMC) lands
+  // nearest its place in the heel of the hand, with no bone in the leather.
+  const ipFrom = (tip: V3, tx: number, phi: number, lf: number) => {
+    let a = tx - 45, b = tx;
+    const dist = (x: number) => len(sub(rimPoint(x, phi * DEG, lf).p, tip));
+    if (dist(a) < tl[2] || dist(b) > tl[2]) return null;
+    for (let i = 0; i < 30; i++) { const m = (a + b) / 2; if (dist(m) > tl[2]) a = m; else b = m; }
+    return rimPoint((a + b) / 2, phi * DEG, lf);
   };
-  const tn0 = perp(T1.n, md);
-  const q1 = land(tMcp, T.ip[1], tpal[1] * 0.8 - sq * 0.5, tl[1]);
-  const q2 = land(q1.p, T.tip[1], tpal[2] * 0.55 - sq * 0.3, tl[2]);
+  let best: { j: V3[]; n: V3[]; s: number } | null = null;
+  const xi = mcp[0][0];
+  for (let dx = T.tipX[0]; dx <= T.tipX[2]; dx += 3) for (let tph = T.tipPhi[0]; tph <= T.tipPhi[1]; tph += 6) {
+    const qt = rimPoint(xi + dx, tph * DEG, lift[2]), tip = qt.p;
+    for (let iph = T.ipPhi[0]; iph <= T.ipPhi[1]; iph += 6) for (const il of [lift[1], lift[1] + 4, lift[1] + 8]) {
+      const qi = ipFrom(tip, xi + dx, iph, il);
+      if (!qi) continue;
+      const ip = qi.p, d2 = norm(sub(tip, ip));
+      const pal = perp(mul(lerp3(qi.n, qt.n, 0.5), -1), d2), ax = norm(cross(d2, pal));
+      for (let fI = 20; fI <= 75; fI += 5) {
+        const d1 = rot(d2, ax, -fI * DEG), mc = madd(ip, d1, -tl[1]);
+        if (rimSdfG(mc[0], mc[1], mc[2]) < d.thumb.palm[0] * 0.8) continue;
+        const mid1 = madd(ip, d1, -tl[1] / 2);
+        if (rimSdfG(mid1[0], mid1[1], mid1[2]) < d.thumb.palm[1] - 3) continue;
+        // the metacarpal reaches back from the MCP toward the thumb's base; how far it misses, and how it bends
+        const toB = sub(cmc0, mc), e = Math.abs(len(toB) - tl[0]), d0 = mul(norm(toB), -1);
+        const c = madd(mc, d0, -tl[0]);
+        const p1 = perp(pal, d1), fl = Math.atan2(dot(d1, p1) - dot(d0, p1), 1) / DEG;
+        const fM = Math.acos(Math.max(-1, Math.min(1, dot(d0, d1)))) / DEG;
+        const midM = madd(mc, d0, -tl[0] * 0.4);
+        const sunk = Math.max(0, d.thumb.palm[0] - rimSdfG(midM[0], midM[1], midM[2]));
+        const sc = 2 * e + 0.35 * Math.max(0, dx - T.tipX[1]) + 0.05 * Math.abs(fI - 45) + 0.06 * Math.max(0, fM - 50) + 0.04 * Math.max(0, 10 - fM) + 0.05 * Math.max(0, il - lift[1]) + sunk + 0.01 * Math.abs(fl);
+        if (!best || sc < best.s) best = { j: [c, mc, ip, tip], n: [perp(qi.n, d0), perp(lerp3(qi.n, qt.n, 0.3), d1), perp(qt.n, d2)], s: sc };
+      }
+    }
+  }
+  if (!best) throw new Error('hands: no thumb pose');
+  const cmc = best.j[0], tMcp = best.j[1], md = norm(sub(tMcp, cmc));
+  const q1 = { p: best.j[2] }, q2 = { p: best.j[3] };
   const tIp = q1.p, tTip = q2.p;
   const td1 = norm(sub(tIp, tMcp)), td2 = norm(sub(tTip, tIp));
-  const tn1 = perp(lerp3(T1.n, q1.n, 0.5), td1), tn2 = perp(lerp3(q1.n, q2.n, 0.6), td2);
+  const tn0 = best.n[0], tn1 = best.n[1], tn2 = best.n[2];
   const tAxis = norm(cross(td1, mul(tn1, -1)));
   const bend = (u: V3, v: V3) => Math.acos(Math.max(-1, Math.min(1, dot(u, v)))) / DEG;
-  const p1 = { bend: bend(md, td1) }, p2 = { bend: bend(td1, td2) };
-  const tflex = [0, p1.bend, p2.bend];
+  const tflex = [0, bend(md, td1), bend(td1, td2)];
   const tj: V3[] = [cmc, tMcp, tIp, tTip];
   const td: V3[] = [md, td1, td2];
   const tdn: V3[] = [tn0, tn1, tn2];

@@ -108,6 +108,46 @@ export function rightScreenTex() {
   }));
 }
 
+// the Vela E's displays, one atlas: the top half is the wide driver display (power meter, speed, gear, battery,
+// range, the next exit); the bottom right is the centre touchscreen (a map with the route and the climate strip)
+export function velaScreenTex() {
+  return once('scrV', () => screen(1024, 512, (g) => {
+    g.fillStyle = '#04060a'; g.fillRect(0, 0, 1024, 512);
+    // ---- driver display (0..1024 x 0..256)
+    const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(50,80,120,0.22)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 1024, 256);
+    // power / regen arc
+    g.lineCap = 'round';
+    g.strokeStyle = '#1d2733'; g.lineWidth = 14; g.beginPath(); g.arc(150, 150, 96, Math.PI * 0.8, Math.PI * 2.2); g.stroke();
+    g.strokeStyle = '#4fb3ff'; g.beginPath(); g.arc(150, 150, 96, Math.PI * 1.25, Math.PI * 1.62); g.stroke();
+    g.strokeStyle = '#2bd17e'; g.beginPath(); g.arc(150, 150, 96, Math.PI * 1.1, Math.PI * 1.25); g.stroke();
+    g.fillStyle = '#8f98a3'; g.font = `500 22px ${FONT}`; g.textAlign = 'center'; g.fillText('kW', 150, 150); g.fillStyle = '#e8ecef'; g.font = `600 34px ${FONT}`; g.fillText('186', 150, 190);
+    // speed and gear
+    g.fillStyle = '#f2f5f8'; g.font = `300 132px ${FONT}`; g.fillText('68', 470, 168);
+    g.fillStyle = '#8f98a3'; g.font = `500 24px ${FONT}`; g.fillText('MPH', 470, 206);
+    g.fillStyle = '#4fb3ff'; g.font = `700 30px ${FONT}`; g.fillText('D', 600, 92);
+    g.fillStyle = '#5d6672'; g.font = `600 30px ${FONT}`; g.fillText('P  R  N', 600 - 104, 92);
+    // battery and range
+    g.textAlign = 'left'; g.strokeStyle = '#8f98a3'; g.lineWidth = 3; g.strokeRect(700, 78, 120, 44); g.fillStyle = '#8f98a3'; g.fillRect(822, 92, 7, 16);
+    g.fillStyle = '#2bd17e'; g.fillRect(705, 83, 86, 34);
+    g.fillStyle = '#e8ecef'; g.font = `600 30px ${FONT}`; g.fillText('78%', 846, 112);
+    g.fillStyle = '#8f98a3'; g.font = `500 24px ${FONT}`; g.fillText('241 mi range', 700, 160);
+    g.fillStyle = '#e8ecef'; g.font = `600 24px ${FONT}`; g.fillText('Exit Jamboree Rd  0.8 mi', 700, 210);
+    g.fillStyle = '#4b5561'; g.fillRect(40, 236, 944, 2);
+    // ---- centre touchscreen (716..1024 x 256..512): the map
+    const x0 = 716, y0 = 256;
+    g.save(); g.beginPath(); g.rect(x0, y0, 308, 256); g.clip();
+    g.fillStyle = '#0a0e13'; g.fillRect(x0, y0, 308, 256);
+    g.strokeStyle = '#18202a'; g.lineWidth = 8; for (let i = -2; i < 7; i++) { g.beginPath(); g.moveTo(x0 + i * 60, y0 + 256); g.lineTo(x0 + i * 60 + 160, y0); g.stroke(); }
+    g.strokeStyle = '#3a4350'; g.lineWidth = 20; g.beginPath(); g.moveTo(x0 + 90, y0 + 270); g.bezierCurveTo(x0 + 140, y0 + 170, x0 + 190, y0 + 90, x0 + 320, y0 - 10); g.stroke();
+    g.strokeStyle = '#4fb3ff'; g.lineWidth = 7; g.beginPath(); g.moveTo(x0 + 90, y0 + 270); g.bezierCurveTo(x0 + 140, y0 + 170, x0 + 190, y0 + 90, x0 + 320, y0 - 10); g.stroke();
+    g.fillStyle = '#fff'; g.beginPath(); g.moveTo(x0 + 128, y0 + 188); g.lineTo(x0 + 116, y0 + 212); g.lineTo(x0 + 128, y0 + 206); g.lineTo(x0 + 140, y0 + 212); g.closePath(); g.fill();
+    g.fillStyle = 'rgba(8,11,15,0.9)'; g.fillRect(x0, y0 + 206, 308, 50);
+    g.fillStyle = '#e8ecef'; g.font = `600 22px ${FONT}`; g.textAlign = 'left'; g.fillText('71°F   AUTO', x0 + 16, y0 + 240);
+    g.fillStyle = '#8f98a3'; g.textAlign = 'right'; g.fillText('6:12 PM', x0 + 296, y0 + 240);
+    g.restore();
+  }));
+}
+
 // small labels for buttons: an atlas of 8 icons, 64 px each, white on black
 export function iconAtlas() {
   return once('icons', () => {
