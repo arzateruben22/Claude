@@ -540,7 +540,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   if (o.body ?? true) {
     // the whole shell (no glass: the cockpit has its own): the bonnet and wings through the windscreen, the door
     // tops and the haunches through the side glass and in the door mirrors, the engine cover in the rear-view
-    buildBody(bk, { q, glass: false, mirrors: false });
+    B.buildBody(bk, { q, glass: false, mirrors: false });
     for (const sd of [-1, 1] as const) mirrorParts(bk, sd, !live || sd > 0, 'paint');
   }
 

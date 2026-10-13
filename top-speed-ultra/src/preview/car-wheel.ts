@@ -124,14 +124,14 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const disc = capGeo(outline, [...holes, ring], high ? 0.022 : 0.04);
     // dish it: the face sits proud at the rim and steps in toward the hub, then turn it to face +x
     const dp = disc.attributes.position;
-    for (let k = 0; k < dp.count; k++) { const y = dp.getX(k), z = dp.getY(k), r = Math.hypot(y, z); dp.setXYZ(k, xr - 0.004 - 0.028 * Math.pow(1 - r / 0.238, 1.6), y, z); }
+    for (let k = 0; k < dp.count; k++) { const y = dp.getX(k), z = dp.getY(k), r = Math.hypot(y, z); dp.setXYZ(k, xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), y, z); }
     disc.computeVertexNormals();
     const du = disc.attributes.uv as THREE.BufferAttribute; for (let k = 0; k < du.count; k++) { const y = dp.getY(k), z = dp.getZ(k); du.setXY(k, Math.atan2(z, y) / (Math.PI * 2), Math.hypot(y, z) * 6); }
     // (the cap faced +z in its own plane; the cyclic swap of axes above keeps its winding, so it now faces +x)
     put(S, 'aero', disc);
     // the slot walls, down to a dark backing plate
     for (const h of holes) {
-      const top = h.map((p) => { const r = Math.hypot(p.x, p.y); return v3(xr - 0.004 - 0.028 * Math.pow(1 - r / 0.238, 1.6), p.x, p.y); });
+      const top = h.map((p) => { const r = Math.hypot(p.x, p.y); return v3(xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), p.x, p.y); });
       const bot = top.map((p) => p.clone().setX(p.x - 0.03));
       put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: true }));
       put(S, 'dark', gridGeo([top, bot], { closeU: true, flip: false }));

@@ -68,7 +68,7 @@ const GT: ShapeParams = {
   RH: [[-1.12, 0.818], [-0.85, 0.975], [-0.6, 1.11], [-0.4, 1.205], [-0.2, 1.274], [0.0, 1.305], [0.2, 1.316], [0.5, 1.284], [0.9, 1.185], [1.4, 1.07], [1.85, 0.985], [2.1, 0.94]],
   GB: [[-1.12, 0.82], [-0.5, 0.86], [0.1, 0.86], [0.6, 0.79], [1.2, 0.63], [1.8, 0.5], [2.1, 0.45]],
   ZC0: -1.12, ZC1: 2.1, DROP: 0.075, ROLL: 0.13, P: 4, K: 0.035,
-  nose: { R: 0.38, p: 2.5, Ry: 0.11, tuck: 0.07, tuckY: 0.42 },
+  nose: { R: 0.38, p: 2.5, Ry: 0.14, tuck: 0.09, tuckY: 0.48 },
   tail: { R: 0.24, p: 2.4, Ry: 0.03, tuck: 0.085, tuckY: 0.6 },
   scallop: { depth: 0.095, z0: -0.55, z1: 0.5, e0: 0.84, e1: 0.95, yc: 0.53, h: 0.16 },
   WS: { zb: -1.095, zt: -0.2, xb: 0.765, xt: 0.61 },
@@ -102,7 +102,7 @@ const BRIO: ShapeParams = {
   RH: [[-1.1, 0.802], [-0.85, 0.972], [-0.6, 1.106], [-0.4, 1.2], [-0.2, 1.268], [0.0, 1.298], [0.2, 1.305], [0.5, 1.268], [0.9, 1.16], [1.35, 1.05], [1.72, 0.975], [1.95, 0.935]],
   GB: [[-1.1, 0.79], [-0.5, 0.83], [0.1, 0.83], [0.6, 0.765], [1.2, 0.61], [1.7, 0.5], [1.95, 0.46]],
   ZC0: -1.1, ZC1: 1.95, DROP: 0.07, ROLL: 0.15,
-  nose: { R: 0.46, p: 2.15, Ry: 0.16, tuck: 0.06, tuckY: 0.45 },
+  nose: { R: 0.46, p: 2.15, Ry: 0.19, tuck: 0.075, tuckY: 0.5 },
   tail: { R: 0.32, p: 2.2, Ry: 0.05, tuck: 0.07, tuckY: 0.55 },
   scallop: { depth: 0.06, z0: -0.5, z1: 0.45, e0: 0.76, e1: 0.86, yc: 0.55, h: 0.13 },
   WS: { zb: -1.075, zt: -0.21, xb: 0.74, xt: 0.59 },
@@ -132,7 +132,7 @@ const CORSA: ShapeParams = {
   FH: [[-2.42, 0.46], [-2.15, 0.595], [-1.85, 0.718], [-1.55, 0.798], [-1.33, 0.828], [-1.0, 0.846], [-0.5, 0.862], [0.0, 0.876], [0.5, 0.905], [1.0, 0.945], [1.32, 0.958], [1.8, 0.952], [2.1, 0.948], [2.36, 0.968]],
   CC: [[-2.42, 0.41], [-2.15, 0.495], [-1.8, 0.595], [-1.5, 0.68], [-1.33, 0.735], [-1.12, 0.806], [-0.6, 0.848], [0.6, 0.872], [1.2, 0.89], [2.0, 0.925], [2.36, 0.955]],
   RH: [[-1.12, 0.81], [-0.85, 0.968], [-0.6, 1.103], [-0.4, 1.198], [-0.2, 1.266], [0.0, 1.296], [0.2, 1.306], [0.5, 1.274], [0.9, 1.175], [1.4, 1.06], [1.85, 0.975], [2.1, 0.935]],
-  nose: { R: 0.34, p: 2.7, Ry: 0.08, tuck: 0.05, tuckY: 0.38 },
+  nose: { R: 0.34, p: 2.7, Ry: 0.1, tuck: 0.07, tuckY: 0.42 },
   tail: { R: 0.2, p: 2.6, Ry: 0.025, tuck: 0.09, tuckY: 0.6 },
   scallop: { depth: 0.11, z0: -0.6, z1: 0.48, e0: 0.86, e1: 0.97, yc: 0.51, h: 0.19 },
   carbonRoof: true,
@@ -163,7 +163,7 @@ const VELA: ShapeParams = {
   RH: [[-1.12, 0.822], [-0.85, 0.978], [-0.6, 1.113], [-0.4, 1.208], [-0.2, 1.277], [0.0, 1.306], [0.2, 1.313], [0.5, 1.292], [0.9, 1.238], [1.4, 1.14], [1.9, 1.03], [2.28, 0.955]],
   GB: [[-1.12, 0.82], [-0.5, 0.86], [0.1, 0.86], [0.6, 0.835], [1.2, 0.77], [1.8, 0.67], [2.28, 0.58]],
   ZC0: -1.12, ZC1: 2.28,
-  nose: { R: 0.42, p: 2.3, Ry: 0.13, tuck: 0.05, tuckY: 0.4 },
+  nose: { R: 0.42, p: 2.3, Ry: 0.17, tuck: 0.075, tuckY: 0.5 },
   tail: { R: 0.26, p: 2.3, Ry: 0.035, tuck: 0.06, tuckY: 0.58 },
   scallop: { depth: 0.035, z0: -0.5, z1: 0.6, e0: 0.95, e1: 1.1, yc: 0.5, h: 0.14 },
   SG: { fb: [-0.92, 0.885], rb: [0.78, 0.952], rt: [0.62, 1.2], ftZ: -0.165 },
@@ -184,5 +184,17 @@ const VELA: ShapeParams = {
   wheel: 'aero', rimColor: 0x1e2024, caliper: 0x2d6fd8, interior: 'vela',
 };
 
-export const SHAPES: Record<CarId, ShapeParams> = { 'rossini-gt': GT, 'rossini-brio': BRIO, 'rossini-corsa': CORSA, 'vela-e': VELA };
+// The front lids sit fuller and higher than the first cut: a real mid-engine car's lid meets its nose at 0.55 to
+// 0.62 m (pedestrian-impact rules), not 0.45. The game's hood camera (0, 1.0, -1.45) then sees the lid's leading
+// edge along the bottom of the frame, and the driver sees the wings and the lid's crown over the dash.
+function liftNose(P: ShapeParams, dy: number): ShapeParams {
+  const zEnd = P.axle.zF + 0.3;
+  const f = (z: number) => { const t = Math.min(1, Math.max(0, (z - P.ZF) / (zEnd - P.ZF))); return 1 - t * t * (3 - 2 * t); };
+  const up = (K: K, k: number): K => K.map(([z, y]) => [z, +(y + dy * k * f(z)).toFixed(4)]);
+  return { ...P, CC: up(P.CC, 1), FH: up(P.FH, 0.7) };
+}
+
+export const SHAPES: Record<CarId, ShapeParams> = {
+  'rossini-gt': liftNose(GT, 0.075), 'rossini-brio': liftNose(BRIO, 0.07), 'rossini-corsa': liftNose(CORSA, 0.065), 'vela-e': liftNose(VELA, 0.085),
+};
 export const shapeFor = (id: CarId = 'rossini-gt') => SHAPES[id] ?? GT;

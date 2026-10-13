@@ -56,7 +56,16 @@ for (let v = 0; v < nv; v++) {
   for (let j = 0; j < n; j++) { const i = a ? a[j] : j; const d = f.prim(i, x, y, z), g = f.group[i]; if (d < gd[g]) gd[g] = d; }
   let g = 0; for (let k = 1; k < 6; k++) if (gd[k] < gd[g] - 0.6) g = k;
   const c = plain ? COLS[0] : COLS[g];
-  col.set(c, v * 3);
+  // ambient occlusion from the field and the rim, so creases and gaps read
+  const nx = mesh.nrm[v * 3], ny = mesh.nrm[v * 3 + 1], nz = mesh.nrm[v * 3 + 2];
+  let occ = 0, w = 1;
+  for (const s of [1.5, 4, 8, 14]) {
+    const qx = x + nx * s, qy = y + ny * s, qz = z + nz * s;
+    const d = Math.min(f.eval(qx, qy, qz, a, a ? a.length : 0), M.rimSdfG(qx, qy, qz));
+    occ += w * Math.max(0, (s - d) / s); w *= 0.65;
+  }
+  const ao = Math.max(0.15, Math.min(1, 1 - occ * 0.8));
+  col.set([c[0] * ao, c[1] * ao, c[2] * ao], v * 3);
 }
 
 // the rim near the grip (G frame directly, via the wheel plane)
@@ -105,8 +114,10 @@ views.forEach((name, vi) => {
   const r = M.mul(M.norm(M.cross(fw, up)), -1), u = M.mul(M.cross(r, fw), -1);
   const k = 1 / Math.tan((v.fov * Math.PI) / 360);
   const proj = (p) => { const d = M.sub(p, v.eye), zz = M.dot(d, fw); return [W / 2 + (M.dot(d, r) / zz) * k * H / 2, H / 2 - (M.dot(d, u) / zz) * k * H / 2, zz]; };
-  const L1 = M.norm(M.add(M.mul(upG, 1), M.mul(M.norm(M.sub(eyeG, C)), 0.6))), L2 = M.norm([0.5, 0.3, 0.6]);
-  const shade = (n, c) => { const a = Math.max(0, M.dot(n, L1)) * 0.7 + Math.max(0, M.dot(n, L2)) * 0.2 + 0.2; return [c[0] * a, c[1] * a, c[2] * a]; };
+  // a low sun from the front left (car frame), sky from above, a little bounce
+  const sunG = M.norm(M.sub(M.wToG(M.carToW([-0.37 - 0.5, 0.8 + 0.6, -0.42 - 0.6])), M.wToG(M.carToW([-0.37, 0.8, -0.42]))));
+  const L1 = sunG, L2 = upG;
+  const shade = (n, c) => { const a = Math.max(0, M.dot(n, L1)) * 0.75 + (0.5 + 0.5 * M.dot(n, L2)) * 0.3 + 0.06; return [c[0] * a, c[1] * a, c[2] * a]; };
   const tri = (P, N, c) => {
     const p = P.map(proj);
     if (p.some((q) => q[2] < 1)) return;

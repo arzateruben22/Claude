@@ -16,6 +16,7 @@ import { makeStage, Stage } from './stage';
 import { buildCar } from './car';
 import { CAR_IDS, CarId } from './car-shape';
 import { EYE } from './spec';
+import { carProbe } from './car-probe';
 
 const q = new URLSearchParams(location.search);
 const view = q.get('view') ?? 'beauty';
@@ -50,7 +51,7 @@ const log: Record<string, unknown> = { view, car, quality };
 let frame: THREE.Object3D;
 if (debug) {
   frame = new THREE.Group(); scene.add(frame);
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: 0x55534f, roughness: 0.9 }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000), new THREE.MeshStandardMaterial({ color: 0x55534f, roughness: 0.9 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 } else {
   const st = stage.stretch!;
@@ -109,8 +110,8 @@ if (interior) {
   });
   log.buildMs = ms;
   if (view === 'garage') look(L(-5.2, 1.35, -9.5), L(2.6, 0.55, 0.4));
-  if (view === 'lineup') { camera.fov = 15; look(L(-90, 1.0, 0), L(0, 0.65, 0)); }
-  if (view === 'lineup-top') { camera.fov = 15; look(L(0, 95, 0.01), L(0, 0, 0)); }
+  if (view === 'lineup') { camera.fov = 1.7; look(L(-180, 0.7, 0), L(0, 0.7, 0)); }
+  if (view === 'lineup-top') { camera.fov = 7.5; look(L(0, 180, 0.01), L(0, 0, 0)); }
 } else {
   const c = buildCar({ car, paint, quality });
   frame.add(c); part = c;
@@ -144,6 +145,28 @@ function measure(s: Stage, obj: THREE.Object3D) {
   obj.visible = true; const b = run();
   info.autoReset = true;
   return { calls: b.calls - a.calls, tris: b.tris - a.tris, sceneCalls: b.calls, sceneTris: b.tris };
+}
+// geometry sanity: name any mesh with NaN positions
+{
+  const bad: string[] = [];
+  part.traverse((o) => {
+    const m = o as THREE.Mesh; const p = m.isMesh ? m.geometry.attributes.position : null;
+    if (p) for (let i = 0; i < p.array.length; i++) if (!Number.isFinite(p.array[i])) { bad.push(`${m.parent?.name}/${m.name}@${Math.floor(i / 3)}/${p.count}`); break; }
+  });
+  if (bad.length) log.nan = bad;
+}
+// the car's reflection probe (&probe=0 to see the sky preset's environment instead): the real road, walls and sky
+// round the car in the paint, the glass, the chrome and the mirrors. Captured once the sky has run a frame or two.
+if (q.get('probe') !== '0') {
+  await new Promise<void>((res) => { let k = 0; stage.onFrame(() => { if (++k === 2) res(); }); });
+  const t1 = performance.now();
+  const probe = carProbe(renderer, scene, frame, { res: quality === 'high' ? 128 : 64 });
+  probe.capture([part]);
+  // inside: only what's outside the cabin and the mirrors see the probe; the cabin keeps the darker cabin light
+  if (interior) { const b = part.getObjectByName('body'); if (b) probe.apply(b); probe.apply(part, { skip: (m) => !['mirror', 'mirrorDim', 'chrome'].includes(m.name) }); }
+  else probe.apply(part);
+  log.probeMs = Math.round(performance.now() - t1);
+  stage.onFrame(() => probe.tick([part]));
 }
 await stage.ready(2);
 if (q.get('measure') !== '0') Object.assign(log, measure(stage, part));

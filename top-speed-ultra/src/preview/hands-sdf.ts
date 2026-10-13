@@ -69,7 +69,7 @@ export function rimSdfG(gx: number, gy: number, gz: number) {
 // ------------------------------------------------------------------------------------------------ the field
 // Primitives: 0 = round cone with an elliptical section, 1 = ellipsoid. Each belongs to a group (0 palm and arm,
 // 1 thumb, 2..5 the four fingers) and blends into it with its own radius k.
-const S = 20;
+const S = 21;
 export const G_PALM = 0, G_THUMB = 1, G_FINGER = 2;
 export class Field {
   n = 0;
@@ -83,18 +83,19 @@ export class Field {
   private T: Uint8Array = new Uint8Array(0); private Gp: Uint8Array = new Uint8Array(0); private K: Float64Array = new Float64Array(0);
 
   // a round cone from a (radius r1) to b (radius r2); its section is scaled by su along `up` and sl across
-  cone(a: V3, b: V3, r1: number, r2: number, up: V3, su: number, sl: number, group: number, k: number, tag = 0) {
+  // (sl2: the lateral scale at b, if it changes along the cone)
+  cone(a: V3, b: V3, r1: number, r2: number, up: V3, su: number, sl: number, group: number, k: number, tag = 0, sl2 = sl) {
     const ax = norm(sub(b, a)), L = len(sub(b, a));
     const u = perp(up, ax), l = cross(ax, u);
     const bb = Math.max(-0.95, Math.min(0.95, (r1 - r2) / Math.max(L, 1e-6))), aa = Math.sqrt(1 - bb * bb);
-    this.F.push(a[0], a[1], a[2], ax[0], ax[1], ax[2], u[0], u[1], u[2], l[0], l[1], l[2], L, r1, r2, su, sl, Math.min(1, su, sl), bb, aa);
+    this.F.push(a[0], a[1], a[2], ax[0], ax[1], ax[2], u[0], u[1], u[2], l[0], l[1], l[2], L, r1, r2, su, sl, Math.min(1, su, sl, sl2), bb, aa, sl2);
     this.type.push(0); this.group.push(group); this.k.push(k); this.tag.push(tag); this.n++;
     return this.n - 1;
   }
   // an ellipsoid at c with semi-axes rx along ax, ry along up (made perpendicular), rz across
   ell(c: V3, ax: V3, up: V3, rx: number, ry: number, rz: number, group: number, k: number, tag = 0) {
     const x = norm(ax), u = perp(up, x), l = cross(x, u);
-    this.F.push(c[0], c[1], c[2], x[0], x[1], x[2], u[0], u[1], u[2], l[0], l[1], l[2], rx, ry, rz, 0, 0, 0, 0, 0);
+    this.F.push(c[0], c[1], c[2], x[0], x[1], x[2], u[0], u[1], u[2], l[0], l[1], l[2], rx, ry, rz, 0, 0, 0, 0, 0, 0);
     this.type.push(1); this.group.push(group); this.k.push(k); this.tag.push(tag); this.n++;
     return this.n - 1;
   }
@@ -109,7 +110,8 @@ export class Field {
     const ly = dx * F[b + 6] + dy * F[b + 7] + dz * F[b + 8];
     const lz = dx * F[b + 9] + dy * F[b + 10] + dz * F[b + 11];
     if (this.T[i] === 0) {
-      const L = F[b + 12], r1 = F[b + 13], r2 = F[b + 14], su = ly / F[b + 15], sl = lz / F[b + 16], qx = Math.sqrt(su * su + sl * sl), qy = lx;
+      const L = F[b + 12], r1 = F[b + 13], r2 = F[b + 14], tl = lx <= 0 ? 0 : lx >= L ? 1 : lx / L;
+      const su = ly / F[b + 15], sl = lz / (F[b + 16] + (F[b + 20] - F[b + 16]) * tl), qx = Math.sqrt(su * su + sl * sl), qy = lx;
       const bb = F[b + 18], aa = F[b + 19], kk = -bb * qx + aa * qy;
       let d: number;
       if (kk < 0) d = Math.sqrt(qx * qx + qy * qy) - r1;
@@ -160,7 +162,7 @@ export class Field {
     for (let i = 0; i < this.n; i++) {
       const b = i * S, F = this.F, c: V3 = [F[b], F[b + 1], F[b + 2]];
       if (this.type[i] === 0) {
-        const L = F[b + 12], s = Math.max(F[b + 15], F[b + 16], 1), r = Math.max(F[b + 13], F[b + 14]) * s;
+        const L = F[b + 12], s = Math.max(F[b + 15], F[b + 16], F[b + 20], 1), r = Math.max(F[b + 13], F[b + 14]) * s;
         out.push({ c: madd(c, [F[b + 3], F[b + 4], F[b + 5]], L / 2), r: L / 2 + r });
       } else out.push({ c, r: Math.max(F[b + 12], F[b + 13], F[b + 14]) });
     }
@@ -229,15 +231,15 @@ function dims(pres: Pres): Dims {
   const m: Dims = {
     len: [[41, 25.4, 21.5], [46, 28.5, 23.7], [43, 26.7, 22.4], [34, 21.1, 18.3]],
     halfW: [[10.9, 9.5, 8.1], [11.2, 9.8, 8.3], [9.9, 8.7, 7.4], [8.4, 7.4, 6.2]],
-    dors: [[5.6, 5.0, 4.1], [5.8, 5.2, 4.3], [5.5, 4.9, 4.0], [4.9, 4.4, 3.6]],
-    palm: [[8.4, 7.1, 6.0], [8.8, 7.4, 6.2], [8.4, 7.1, 6.0], [7.4, 6.3, 5.3]],
+    dors: [[6.4, 5.4, 4.3], [6.6, 5.6, 4.5], [6.3, 5.3, 4.3], [5.6, 4.8, 3.9]],
+    palm: [[10.0, 8.2, 7.0], [10.4, 8.5, 7.2], [9.9, 8.1, 6.9], [8.8, 7.2, 6.1]],
     mc: [66, 63, 57.5, 52.5],
     spread: [30, 9.8, -10, -28],        // along the knuckle line, + toward the thumb
     prox: [1.5, 0, 4, 10],              // MCP heads step back toward the little finger
     arch: [-3.5, 0, -3.5, -9.5],        // the transverse arch (deeper in a grip)
     knuckle: [9.0, 9.4, 8.6, 7.4],
     fan: [5, 1.5, -2.5, -6.5],          // metacarpals converge toward the wrist (deg)
-    thumb: { len: [44, 34, 29], halfW: [12.5, 11.0, 10.4], dors: [7.2, 6.4, 5.4], palm: [11.5, 9.2, 8.2] },
+    thumb: { len: [44, 34, 29], halfW: [12.5, 11.0, 10.4], dors: [7.4, 6.6, 5.4], palm: [11.5, 9.6, 8.4] },
     wrist: [29, 19.5], carpus: 24, foreLen: 262, upperLen: 300, tendon: 1.7,
     nail: [0.42, 0.42, 0.42, 0.42, 0.44], nailFree: 1.4,
     forearm: [[28.5, 19.5], [32, 22.5], [37, 28], [41.5, 32.5], [43, 36]],
@@ -505,11 +507,10 @@ export function buildAnatomy(pres: Pres): Anatomy {
   f.ell(madd(lerp3(lerp3(mcp[0], base[0], 0.3), lerp3(tj[1], tj[2], 0.2), 0.5), N, -8 * fem), sub(tj[1], mcp[0]), N, len(sub(tj[1], mcp[0])) * 0.5, 7 * fem, 9 * fem, G_PALM, 9, 37);
   // the wrist and the forearm, a flattened section that rounds out toward the elbow, with its muscle bellies
   const segs = d.forearm, Lf = d.foreLen;
-  for (let s = 0; s < 4; s++) {
-    const a = madd(wrist, fd, (Lf * s) / 4 - (s === 0 ? 6 : 0)), b = madd(wrist, fd, (Lf * (s + 1)) / 4);
-    const [w0, h0] = segs[s], [w1, h1] = segs[s + 1];
-    f.cone(a, b, h0, h1, fu, 1, (w0 / h0 + w1 / h1) / 2, G_PALM, 14, 40 + s);
-  }
+  // one tube from the wrist to the elbow whose section rounds out as it goes (a chain of tubes made rings where they
+  // met); the muscle bellies below give it its shape
+  f.cone(madd(wrist, fd, -6), madd(wrist, fd, Lf), segs[0][1], segs[4][1], fu, 1, segs[0][0] / segs[0][1], G_PALM, 8, 40, segs[4][0] / segs[4][1]);
+  f.cone(madd(wrist, fd, Lf * 0.2), madd(wrist, fd, Lf * 0.75), segs[1][1], segs[3][1], fu, 1, segs[1][0] / segs[1][1], G_PALM, 16, 41, segs[3][0] / segs[3][1]);
   f.ell(madd(wrist, fd, Lf + 4), fd, fu, 30 * fem, 34 * fem, 40 * fem, G_PALM, 14, 44);
   f.cone(madd(wrist, fd, Lf), madd(wrist, fd, Lf + 70), 36 * fem, 40 * fem, fu, 1, 1.15, G_PALM, 12, 45);
   // brachioradialis (the thumb side, toward the elbow) and the flexor mass (inner forearm)
@@ -566,39 +567,37 @@ export function buildAnatomy(pres: Pres): Anatomy {
 
 function carDirToW(c: V3): V3 { return [c[0], c[1] * CT + c[2] * ST, -c[1] * ST + c[2] * CT]; }
 
-// One finger (or the thumb). Each phalanx is waisted (narrower mid-shaft, wider at the joints' condyles) and tapers
-// toward the tip; its palmar pad is fullest between the creases; the back is rounder over the joints (the bony
-// heads of the phalanges) and flatter where the nail sits.
+// One finger (or the thumb), as a smooth tapering tube: one round cone per phalanx with an elliptical section (wider
+// than deep, the bone nearer the back), meeting the next at each joint so a bent joint makes a bony corner on the back
+// and a crease on the palm side. The joints are a little wider than the shafts (the condyles), the bony head of the
+// bone before a bent joint stands out a little on the back, and the fingertip has a fuller pad under a flatter
+// nail bed. No pads in between: they made the fingers look beaded.
 function addDigit(f: Field, g: Digit, group: number, k: number, slim: number) {
   const J = g.joints, thumb = g.name === 'thumb';
-  for (let b = 0; b < 3; b++) {
-    if (thumb && b === 0) continue;
+  for (let b = thumb ? 1 : 0; b < 3; b++) {
     const a = J[b], e = J[b + 1], dir = g.dirs[b], up = g.dorsal[b];
-    const hw = g.halfW[b] * slim, dor = g.dors[b], pal = g.palm[b];
-    const r = (dor + pal) / 2, shift = (pal - dor) / 2;
-    const nb = b + 1 < 3 ? b + 1 : b;
     const last = b === 2;
-    const r2 = ((g.dors[nb] + g.palm[nb]) / 2) * (last ? 0.9 : 1), shift2 = (g.palm[nb] - g.dors[nb]) / 2;
-    const hw2 = (last ? g.halfW[2] * 0.94 : g.halfW[nb]) * slim;
-    const tipBack = last ? r2 : 0;
-    const L = len(sub(e, a));
-    // the shaft in two halves, waisted in the middle
-    const a2 = madd(a, up, -shift), e2 = madd(madd(e, up, -shift2), dir, -tipBack);
-    const mid = lerp3(a2, e2, 0.5), waist = last ? 0.97 : 0.9;
-    const rm = ((r + r2) / 2) * waist, hwm = ((hw + hw2) / 2) * (last ? 1 : 0.93);
-    f.cone(a2, mid, r * (last ? 1 : 0.96), rm, up, 1, hwm / rm, group, k, 100 + b);
-    f.cone(mid, e2, rm, r2 * (last ? 1 : 0.96), up, 1, (last ? hw2 : hwm) / rm, group, k, 103 + b);
-    // the pulp of each phalanx (fullest on the fingertip), between the creases
-    const pc = madd(lerp3(a, e, last ? 0.6 : 0.52), up, -(pal * (last ? 0.42 : 0.38)));
-    f.ell(pc, dir, up, L * (last ? 0.36 : 0.36), pal * 0.62, hw * 0.86, group, k * 1.2, 110 + b);
-    // the joint at the bone's base: condyles a little wider than the shafts, the bony head proud on the back
-    if (b > 0) {
-      const ax = lerp3(g.dirs[b - 1], dir, 0.5);
-      const ww = thumb ? 1.0 : 1.05;
-      f.ell(madd(a, up, 0.5 - shift * 0.5), ax, up, 5.4, r * 1.0, g.halfW[b - 1] * slim * ww * 0.97, group, k * 1.3, 120 + b);
-      // the dorsal head of the proximal bone: what makes a bent knuckle look bony
-      const hd = lerp3(g.dorsal[b - 1], up, 0.5);
-      f.ell(madd(madd(a, hd, (g.dors[b - 1] + g.dors[b]) * 0.5 - 2.2), ax, -1.2), ax, hd, 4.4, 3.2, g.halfW[b] * slim * 0.72, group, 2.2, 125 + b);
+    const r1 = (g.dors[b] + g.palm[b]) / 2, sh1 = (g.palm[b] - g.dors[b]) / 2;
+    const r2 = last ? r1 * 0.86 : (g.dors[b + 1] + g.palm[b + 1]) / 2;
+    const sh2 = last ? sh1 * 0.8 : (g.palm[b + 1] - g.dors[b + 1]) / 2;
+    const hw1 = g.halfW[b] * slim, hw2 = (last ? g.halfW[2] * 0.9 : Math.max(g.halfW[b + 1], g.halfW[b] * 0.93)) * slim;
+    const sl = (hw1 / r1 + hw2 / r2) / 2;
+    const a2 = madd(a, up, -sh1), e2 = last ? madd(madd(e, up, -sh2), dir, -r2 * 0.98) : madd(e, up, -sh2);
+    f.cone(a2, e2, r1, r2, up, 1, sl, group, k, 100 + b);
+    if (last) {
+      // the fingertip's pad, fuller than the nail bed, and the tip's roundness
+      const L = len(sub(e, a));
+      f.ell(madd(madd(a, dir, L * 0.6), up, -g.palm[2] * 0.42), dir, up, L * 0.36, g.palm[2] * 0.62, hw1 * 0.86, group, k * 1.4, 110);
+    }
+    if (b > (thumb ? 1 : 0)) {
+      // the joint at this bone's base: condyles a little wider than the shafts, no deeper
+      const ax = norm(add(g.dirs[b - 1], dir)), hd = norm(add(g.dorsal[b - 1], up));
+      const rp = (g.dors[b - 1] + g.palm[b - 1]) / 2, flex = Math.acos(Math.max(-1, Math.min(1, dot(g.dirs[b - 1], dir))));
+      f.ell(madd(a, hd, -sh1 * 0.6), ax, hd, 4.2, r1 * 0.78, Math.max(g.halfW[b], g.halfW[b - 1] * 0.93) * slim * (thumb ? 1.0 : 1.03), group, 2.6, 120 + b);
+      // the bony head of the bone before the joint, under the skin of a bent knuckle
+      const s = Math.min(1, flex / (70 * DEG));
+      if (s > 0.15) f.ell(madd(madd(a, hd, g.dors[b - 1] * 0.5 + (g.dors[b - 1] + g.dors[b]) * 0.08), g.dirs[b - 1], -1.0), ax, hd, 3.8, 2.0 + 0.5 * s, g.halfW[b] * slim * 0.7, group, 2.4, 125 + b);
+      void rp;
     }
   }
 }
