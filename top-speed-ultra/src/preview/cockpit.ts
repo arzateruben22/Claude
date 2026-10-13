@@ -2,11 +2,13 @@
 //
 //   buildCockpit({ paint, quality?, mirrors?, body?, stitch? }): Cockpit
 //     paint: sRGB hex for the body seen through the glass (bonnet, wings, mirror housings).
-//     quality: 'phone' | 'high' (default 'high': finer meshes, anisotropic carbon and aluminium, 512 maps, live
-//       mirrors). mirrors: 'live' (render-target reflections of the scene in the rear-view and driver's door
-//       mirror; each costs one extra low-resolution scene render a frame) or 'env' (the sky's environment map,
-//       no extra renders). Default 'live' on high, 'env' on phone. body: include the front of the car's body seen
-//       through the windscreen and the door mirrors (default true). stitch: thread colour (default cognac).
+//     quality: 'phone' | 'high' (default 'high': finer meshes, anisotropic carbon and aluminium, 512 maps).
+//     mirrors: 'env' (default: the sky's environment map in the rear-view and door mirrors, no extra renders) or
+//       'live' (render-target reflections of the scene in the rear-view and the driver's door mirror, cut to each
+//       glass's outline; they alternate, so one extra low-resolution scene render a frame. That render re-draws
+//       whatever of the world the mirror sees, which is over the cockpit's draw-call budget in a full scene: opt in).
+//     body: include the front of the car's body seen through the windscreen and the door mirrors (default true).
+//     stitch: thread colour (default cognac).
 //   returns { group, wheel, update(dt), setInstruments({ rpm }) }
 //     group: the interior in the car's frame. wheel: the steering-wheel mount at spec WHEEL_AT, rotation.x =
 //     WHEEL_TILT; its rotation.z steers, and hands added to it turn with it (the rim follows spec rimAt/rimA/rimB).
@@ -23,7 +25,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, mat, clamp, sstep, lerp, between } from './car-kit';
 import * as M from './car-mats';
 import { body, buildBody, mirrorParts, mirrorGlassPlacement, MIRROR, wsPoint, wsXZ, WS, sgPoint, SG } from './car-body';
-import { carMaterials } from './car';
+import { carMaterials, carAO } from './car';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as G from './car-gauges';
 import { windscreenDust, badgeTex, once } from './car-tex';
@@ -96,9 +98,9 @@ function rimFrames(a0: number, a1: number, n: number) {
 // ------------------------------------------------------------------------------------------------ the cockpit
 export function buildCockpit(o: CockpitOptions): Cockpit {
   const q = o.quality ?? 'high', high = q === 'high';
-  const live = (o.mirrors ?? (high ? 'live' : 'env')) === 'live';
+  const live = (o.mirrors ?? 'env') === 'live';
   const group = new THREE.Group(); group.name = 'cockpit';
-  const kit = new Kit(), wk = new Kit();
+  const kit = new Kit(), wk = new Kit(), bk = new Kit();       // the interior, the steering wheel, the body outside
   const ghost: THREE.BufferGeometry[] = [];         // dash surfaces that the windscreen reflects
   const stitchC = o.stitch ?? 0xc58a52;
 
@@ -106,10 +108,11 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   const ext = carMaterials(o.paint, q);
   const tachT = G.tachTextures(high ? 1024 : 512);
   const mats: Record<string, THREE.Material> = {
-    paint: ext.paint, trim: ext.trim, dark: ext.dark, lamp: ext.lamp, grille: ext.grille, liner: ext.liner, rubber: ext.rubber, badge: ext.badge,
-    mirror: ext.mirror,
-    alc: M.alcantara(q, 0x2a2a2d), nappa: M.leather(q, 0x111113, { tile: 0.12 }),
-    nappaPerf: M.leather(q, 0x121214, { perforated: true, tile: 0.09, worn: true }), wheelNappa: M.leather(q, 0x121214, { tile: 0.08, worn: true }),
+    paint: ext.paint, trim: ext.trim, dark: ext.dark, lamp: ext.lamp, tail: ext.tail, grille: ext.grille, liner: ext.liner, rubber: ext.rubber, badge: ext.badge,
+    mirror: ext.mirror, exhaust: ext.exhaust, mirrorDim: M.chrome(0.03, 0x4a4d52),
+    // black Nappa reflects about 3-4 % (sRGB ~0x33 before the grain map's ~0.86); black Alcantara a little less
+    alc: M.alcantara(q, 0x2c2c2f), nappa: M.leather(q, 0x333336, { tile: 0.12 }),
+    nappaPerf: M.leather(q, 0x2f2f32, { perforated: true, tile: 0.09, worn: true }), wheelNappa: M.leather(q, 0x2f2f32, { tile: 0.08, worn: true }),
     tan: M.leather(q, 0x7a3f1c, { tile: 0.12, sheen: 0.45 }), tanPerf: M.leather(q, 0x7a3f1c, { perforated: true, tile: 0.1, sheen: 0.45 }),
     carbon: M.carbon(q), alu: M.brushed(q, 0xc6cace), anod: M.brushed(q, 0x3c3f45, { rough: 1.25, aniso: 0.6, key: 'anod' }),
     chrome: M.chrome(0.08), plastic: M.softPlastic(q), gloss: M.gloss(), carpet: M.carpet(q),
@@ -127,7 +130,7 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x8a8076, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
   };
   for (const k of ['alc', 'nappa', 'tan', 'tanPerf', 'carpet', 'plastic']) (mats[k] as THREE.Material).side = THREE.DoubleSide;
-  mats.badgeHub = once('m.badgehub', () => new THREE.MeshPhysicalMaterial({ map: badgeTex(), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0xffffff, emissiveMap: badgeTex(), emissiveIntensity: 0.05 }));
+  mats.badgeHub = once('m.badgehub', () => new THREE.MeshPhysicalMaterial({ map: badgeTex(), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1 }));
 
   // ambient occlusion inside: dark low down and under the dash, the headliner lit only by bounce
   kit.ao = (p, n) => {
@@ -140,6 +143,7 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     return clamp(a, 0.15, 1);
   };
   wk.ao = (p) => clamp(0.85 + p.z * 4, 0.6, 1);
+  bk.ao = carAO;
 
   // ---------------------------------------------------------------- windscreen: glass, frit, dust
   const NS = high ? 30 : 18, NT = high ? 18 : 10;
@@ -269,11 +273,15 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
       wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]), (i) => rimB(f.as[i]), segs, { around: 0.13, flip: true }));
       return f;
     };
-    zone(0.62, 2.52, 'carbon', high ? 70 : 36);
-    zone(3.98, 5.44, 'carbon', high ? 52 : 28);
-    const grips = [zone(-0.84, 0.62, 'nappaPerf', high ? 56 : 30), zone(2.52, 3.98, 'nappaPerf', high ? 56 : 30)];
+    // The grips are perforated Nappa from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and
+    // 148 degrees, about +-16 degrees of rim under the palm and fingers) sits wholly on leather: no seam, ring or
+    // step under the fingers. Carbon only across the top (the shift lights) and the bottom.
+    const G0 = 0.91, G1 = Math.PI - G0, B0 = Math.PI + 0.8, B1 = Math.PI * 2 - 0.8;
+    zone(G0, G1, 'carbon', high ? 56 : 30);
+    zone(B0, B1, 'carbon', high ? 52 : 28);
+    const grips = [zone(B1 - Math.PI * 2, G0, 'nappaPerf', high ? 64 : 34), zone(G1, B0, 'nappaPerf', high ? 64 : 34)];
     // the perforation stops short of the edges: a plain Nappa band where each grip meets the carbon
-    for (const [a0, a1] of [[0.5, 0.62], [-0.84, -0.72], [2.52, 2.64], [3.86, 3.98]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8);
+    for (const [a0, a1] of [[G0 - 0.09, G0], [B1 - Math.PI * 2, B1 - Math.PI * 2 + 0.09], [G1, G1 + 0.09], [B0 - 0.09, B0]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8);
     // double stitching on the inside of each grip, toward the driver
     for (const f of grips) for (const th of [Math.PI * 0.69, Math.PI * 0.81]) {
       const path: V3[] = [], across: V3[] = [], lift: V3[] = [];
@@ -287,9 +295,10 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
       wk.add('stitch', stitchRow(path, across, lift, 0.0016));
     }
     // brushed rings where leather meets carbon
-    for (const a of [0.62, 2.52, 3.98, -0.84]) {
+    for (const a of [G0, G1, B0, B1]) {
       const p = rimAt(a), t = rimAt(a + 0.002).sub(rimAt(a - 0.002)).normalize();
-      const ring = new THREE.TorusGeometry(1, 0.075, 8, 32); ring.scale(rimA(a) * 1.0, rimB(a) * 1.0, 1);
+      // a 3 mm band, 0.8 mm proud of the rim (the torus's tube is scaled along the rim to 2.6 mm)
+      const ring = new THREE.TorusGeometry(1, 0.075, 8, 40); ring.scale(rimA(a) * 0.97, rimB(a) * 0.97, 0.035);
       // the torus's ring plane: x along the outward normal, y toward the driver, axis along the rim
       const N = p.clone().sub(t.clone().multiplyScalar(p.dot(t))).normalize();
       ring.applyMatrix4(new THREE.Matrix4().makeBasis(N, v3(0, 0, 1), t).setPosition(p));
@@ -432,8 +441,10 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     }
     // a carbon strip under the sill, the pull strap, the release, a speaker
     const strip = new RoundedBoxGeometry(0.012, 0.022, 1.36, 2, 0.004); strip.translate(X(0.853), 0.8, -0.22); kit.add('carbon', strip);
-    const strap = tubeGeo([v3(X(0.852), 0.71, -0.66), v3(X(0.818), 0.705, -0.62), v3(X(0.812), 0.7, -0.5), v3(X(0.85), 0.695, -0.45)], () => 0.009, 8, { rb: () => 0.005 });
-    kit.add('alu', strap);
+    // the pull strap: a loop of cognac leather, flat in section, its ends in small aluminium clamps
+    const sp = [v3(X(0.852), 0.71, -0.66), v3(X(0.83), 0.707, -0.635), v3(X(0.818), 0.703, -0.58), v3(X(0.82), 0.699, -0.5), v3(X(0.85), 0.695, -0.45)];
+    kit.add('tan', tubeGeo(sp, () => 0.012, 8, { rb: () => 0.0028, up: v3(0, 1, 0) }));
+    for (const e of [sp[0], sp[sp.length - 1]]) { const c = new RoundedBoxGeometry(0.014, 0.03, 0.022, 2, 0.004); c.translate(e.x - sd * 0.004, e.y, e.z); kit.add('alu', c); }
     const rel = new RoundedBoxGeometry(0.012, 0.016, 0.06, 2, 0.004); rel.translate(X(0.85), 0.77, -0.72); kit.add('alu', rel);
     const spk = latheGeo([[0.0, 0.0], [0.06, 0.0], [0.068, -0.004]], 32, 'z', { flip: true, vScale: 0.05 });
     spk.applyMatrix4(mat(X(0.858), 0.43, -0.7, 0, -sd * Math.PI / 2)); kit.add('alu', spk);
@@ -446,12 +457,12 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     for (const a of range(body.canopyX(z, sill(z)) - 0.01, 0, 14)) pts.push([a, body.top(z, a) - 0.035]);
     const all = [...pts, ...pts.slice(0, -1).reverse().map(([x, y]) => [-x, y] as [number, number])];
     sh.moveTo(all[0][0], all[0][1]); for (const p of all.slice(1)) sh.lineTo(p[0], p[1]); sh.closePath();
-    const win = roundRect(0.8, 0.2, 0.05, 0, 1.06);
+    const win = roundRect(0.86, 0.22, 0.05, 0, 1.065);
     sh.holes.push(win);
     const g = new THREE.ShapeGeometry(sh, 4); g.rotateY(Math.PI); g.translate(0, 0, z);
     kit.add('alc', g, null, 0.08);
     const glassW = new THREE.ShapeGeometry(win, 4); glassW.rotateY(Math.PI); glassW.translate(0, 0, z + 0.006); kit.add('sideGlass', glassW);
-    const ring = new THREE.Shape(roundRect(0.84, 0.24, 0.07, 0, 1.06).getPoints(6)); ring.holes.push(new THREE.Path(win.getPoints(6)));
+    const ring = new THREE.Shape(roundRect(0.9, 0.26, 0.07, 0, 1.065).getPoints(6)); ring.holes.push(new THREE.Path(win.getPoints(6)));
     const rg = new THREE.ShapeGeometry(ring, 4); rg.rotateY(Math.PI); rg.translate(0, 0, z - 0.002); kit.add('frit', rg, null, 0.05);
   }
 
@@ -485,8 +496,10 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
 
   // ---------------------------------------------------------------- the car's body seen through the glass
   if (o.body ?? true) {
-    buildBody(kit, { q, glass: false, clip: (c) => c.z < -1.0, mirrors: false });
-    for (const sd of [-1, 1] as const) mirrorParts(kit, sd, !live || sd > 0, 'paint');
+    // the whole shell (no glass: the cockpit has its own): the bonnet and wings through the windscreen, the door
+    // tops and the haunches through the side glass and in the door mirrors, the engine cover in the rear-view
+    buildBody(bk, { q, glass: false, mirrors: false });
+    for (const sd of [-1, 1] as const) mirrorParts(bk, sd, !live || sd > 0, 'paint');
   }
 
   // ---------------------------------------------------------------- the dashboard's ghost in the windscreen
@@ -519,6 +532,8 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   // ---------------------------------------------------------------- build
   kit.build(mats, group, { shadow: (k) => ['alc', 'nappa', 'tan', 'paint', 'carbon', 'plastic'].includes(k) });
   wk.build(mats, wheelMount, { shadow: (k) => ['nappaPerf', 'wheelNappa', 'carbon'].includes(k) });
+  const outside = new THREE.Group(); outside.name = 'body'; group.add(outside);
+  bk.build(mats, outside, { shadow: (k) => k === 'paint' || k === 'dark' });
   for (const k of ['glass', 'sideGlass', 'gaugeGlass', 'dust']) { const m = group.getObjectByName(k); if (m) { m.renderOrder = k === 'dust' ? 4 : 2; m.castShadow = false; } }
 
   // ---------------------------------------------------------------- mirrors with reflections
@@ -527,22 +542,24 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     // looks straight back through the bulkhead window
     const mount = wsPoint(-0.05, 0.935, -0.008), inward = body.topNormal(mount.x, mount.z).negate();
     const mb = mount.clone().addScaledVector(inward, 0.03).add(v3(0, -0.034, 0.012));
-    const nrm = EYE.clone().sub(mb).normalize().add(v3(0, 1.08, 2.2).sub(mb).normalize()).normalize();
+    // aimed through the middle of the bulkhead window, over the engine cover, at the road ~6 m behind the tail
+    const nrm = EYE.clone().sub(mb).normalize().add(v3(0, 0.75, 2.3).sub(mb).normalize()).normalize();
     const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrm)); look.updateMatrix();
     const housing = extrude(roundRect(0.262, 0.07, 0.03), 0.026, 0.006, 8); housing.translate(0, 0, -0.03); housing.applyMatrix4(look.matrix);
     const stem = new THREE.CylinderGeometry(0.0065, 0.0075, 1, 12); stem.applyMatrix4(between(mount, mb.clone().addScaledVector(nrm, -0.03)));
     const extra = new Kit(); extra.add('gloss', housing); extra.add('plastic', stem, null, 0.02);
     const base = new RoundedBoxGeometry(0.05, 0.012, 0.035, 2, 0.004); base.applyMatrix4(new THREE.Matrix4().makeBasis(v3(1, 0, 0), inward.clone().negate(), v3(1, 0, 0).cross(inward.clone().negate()).normalize()).setPosition(mount.clone().addScaledVector(inward, 0.005)));
     extra.add('plastic', base);
-    if (!live) { const g = new THREE.PlaneGeometry(0.248, 0.058); g.applyMatrix4(look.matrix); extra.add('mirror', g, null, 0.2); }
+    // without a live reflection the rear-view shows the environment map dimmed, as a mirror facing a dark cabin does
+    if (!live) { const g = new THREE.PlaneGeometry(0.248, 0.058); g.applyMatrix4(look.matrix); extra.add('mirrorDim', g, null, 0.2); }
     extra.build(mats, group, { shadow: () => false });
     if (live) {
-      const rv = new CarMirror(0.248, 0.058, { res: high ? [320, 80] : [192, 48], tint: 0xc4c4c4, far: 400, every: high ? 1 : 2, phase: 0 });
+      const rv = new CarMirror(0.248, 0.058, { res: high ? [320, 80] : [192, 48], tint: 0xc4c4c4, every: 2, phase: 0 });
       rv.position.copy(mb).addScaledVector(nrm, 0.0008); rv.lookAt(rv.position.clone().add(nrm)); rv.name = 'rear-view-mirror';
       group.add(rv);
       if (o.body ?? true) {
         const { p, q: qq } = mirrorGlassPlacement(-1);
-        const dm = new CarMirror(MIRROR.glass[0], MIRROR.glass[1], { res: high ? [192, 84] : [128, 56], tint: 0xc9ccd2, far: 300, every: high ? 1 : 2, phase: 1, dim: 0.35 });
+        const dm = new CarMirror(MIRROR.glass[0], MIRROR.glass[1], { res: high ? [192, 84] : [128, 56], tint: 0xc9ccd2, every: 2, phase: 1, dim: 0.35 });
         dm.position.copy(p); dm.quaternion.copy(qq); dm.name = 'door-mirror-left';
         group.add(dm);
       }

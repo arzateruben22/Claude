@@ -7,7 +7,8 @@
 //   new CarMirror(w, h, { res: [w, h], tint?, far?, every?, phase?, dim? })
 //     w, h: the glass in metres (local x, y); the reflective face looks along local +z.
 //     res: render-target size. tint: multiplies the reflection (silvering is ~85-90 % reflective, an auto-dimming
-//     rear-view a little less). far: how far the mirror sees (default 300 m). every / phase: render on one frame in
+//     rear-view a little less). far: how far the mirror sees (default: the main camera's far plane, so the sky dome
+//     and the distant hills, sized to sit inside it, show in the mirror). every / phase: render on one frame in
 //     `every` (default 1), offset by phase, so two mirrors can alternate. dim: darken toward the edges (0..1).
 //   CarMirror.busy: true while any mirror is rendering (others skip, so mirrors never recurse).
 import * as THREE from 'three';
@@ -62,7 +63,7 @@ export class CarMirror extends THREE.Mesh {
       vertexShader: VERT, fragmentShader: FRAG,
     });
     this.corners = [[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]].map(([x, y]) => new THREE.Vector3(x, y, 0));
-    const every = Math.max(1, o.every ?? 1), phase = o.phase ?? 0, far = o.far ?? 300;
+    const every = Math.max(1, o.every ?? 1), phase = o.phase ?? 0;
     const P = new THREE.Vector3(), N = new THREE.Vector3(), C = new THREE.Vector3(), E = new THREE.Vector3(), Y = new THREE.Vector3();
     const R = new THREE.Matrix4(), c = new THREE.Vector3();
     const bias = new THREE.Matrix4().set(0.5, 0, 0, 0.5, 0, 0.5, 0, 0.5, 0, 0, 0.5, 0.5, 0, 0, 0, 1);
@@ -88,7 +89,7 @@ export class CarMirror extends THREE.Mesh {
         const s = 1 / Math.max(1e-4, -c.z);
         l = Math.min(l, c.x * s); r = Math.max(r, c.x * s); b = Math.min(b, c.y * s); t = Math.max(t, c.y * s);
       }
-      const near = d + 0.004;
+      const near = d + 0.004, far = o.far ?? ((camera as THREE.PerspectiveCamera).far || 4000);
       vc.projectionMatrix.makePerspective(l * near, r * near, t * near, b * near, near, far);
       vc.projectionMatrixInverse.copy(vc.projectionMatrix).invert();
       vc.far = far; vc.near = near;

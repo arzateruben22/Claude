@@ -1,6 +1,7 @@
 // Test page for the car part: the Rossini GT inside and out, and the traffic.
-//   ?view=seat | dash | beauty | rear | wheel | traffic | side | top | front | mirror
+//   ?view=seat | dash | beauty | rear | wheel | traffic | side | top | front | mirror | dmirror | door | wheelck
 //   &q=high|phone   &world=0 to skip the game's roads and terrain   &paint=hex   &s=metres from the stretch start
+//   &mirrors=live|env   &hands=1 (the hands part on the rim, to check the fit)
 // Logs (console.warn, so preview-shoot prints it) the build time and the part's own cost: draw calls and triangles
 // with the part shown minus with it hidden, shadow passes included.
 import * as THREE from 'three';
@@ -16,7 +17,7 @@ const paint = parseInt(q.get('paint') ?? '9b1219', 16);
 const debug = ['side', 'top', 'front'].includes(view);
 const wantWorld = !debug && q.get('world') !== '0';
 
-const stage = await makeStage({ stretch: !debug, fov: view === 'seat' ? 60 : view === 'dash' ? 50 : view === 'wheel' ? 34 : 30, near: 0.02 });
+const stage = await makeStage({ stretch: !debug, fov: view === 'seat' || view === 'door' ? 60 : view === 'dash' || view === 'wheelck' ? 50 : view === 'wheel' ? 34 : view === 'dmirror' ? 16 : view === 'grip' ? 28 : 30, near: 0.02 });
 const { scene, camera, renderer } = stage;
 const env = stage.useGameSky((q.get('time') as 'sunset') ?? 'sunset');
 // Test light only: the game's 'sunset' preset has the sun at 3 degrees, where the sound walls shade the whole
@@ -47,15 +48,28 @@ function look(from: THREE.Vector3, at: THREE.Vector3) { camera.position.copy(fro
 // what to build
 let part: THREE.Object3D;
 const t0 = performance.now();
-if (view === 'seat' || view === 'dash' || view === 'mirror') {
+if (['seat', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view)) {
   const ck = buildCockpit({ paint, quality, mirrors: (q.get('mirrors') as 'live' | 'env' | null) ?? undefined });
   part = ck.group;
   frame.add(ck.group);
   log.buildMs = Math.round(performance.now() - t0);
   stage.onFrame((dt) => ck.update?.(dt));
+  // &hands=1: the hands part's driver on the rim (a fit check: the grips must be clean leather under the fingers)
+  if (q.get('hands') === '1') {
+    try {
+      const [{ buildDriverArms }, { lookFor }] = await Promise.all([import('./hands'), import('../game/drivers')]);
+      const arms = buildDriverArms({ look: lookFor('closer', 'm', 1), presentation: 'm', quality });
+      ck.group.add(arms.group);
+      log.hands = 'ok';
+    } catch (e) { log.hands = String(e); }
+  }
   if (view === 'seat') stage.driverView(stage.stretch!.s0 + Number(q.get('s') ?? 1500), undefined, EYE);
   if (view === 'dash') look(L(-0.3, 1.02, -0.02), L(-0.4, 0.83, -0.6));
   if (view === 'mirror') look(L(-0.37, 1.16, 0.1), L(0.05, 1.18, -0.3));
+  if (view === 'dmirror') look(L(-0.37, 1.16, 0.1), L(-1.02, 0.975, -0.66));
+  if (view === 'door') look(L(-0.3, 1.12, 0.12), L(-0.86, 0.72, -0.35));
+  if (view === 'wheelck') look(L(-0.37, 1.16, 0.1), L(-0.37, 0.84, -0.42));
+  if (view === 'grip') look(L(-0.1, 1.08, -0.05), L(-0.22, 0.9, -0.45));
 } else if (view === 'traffic') {
   const kinds: TrafficKind[] = ['sedan', 'suv', 'pickup', 'van', 'boxTruck'];
   const cols = [0xd8d8d6, 0x1d2836, 0x6b6e72, 0xf1f1ee, 0xe9e9e6];

@@ -35,7 +35,8 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800): Rec
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge', () => new THREE.MeshPhysicalMaterial({ map: badgeTex(), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
     word: once('m.word', () => new THREE.MeshStandardMaterial({ color: 0xe4e6e8, alphaMap: wordmarkTex('ROSSINI'), alphaTest: 0.5, metalness: 1, roughness: 0.18 })),
-    interior: once('m.cabin', () => M.patchedStd(0x0d0d0e, 0.6)),
+    interior: once('m.cabin', () => M.patchedStd(0x161618, 0.6)),
+    seatSil: once('m.seatsil', () => M.patchedStd(0x5c2c12, 0.55)),
     exhaust: once('m.exhaust', () => new THREE.MeshPhysicalMaterial({ color: 0x8e9097, metalness: 1, roughness: 0.3, iridescence: 0.55, iridescenceIOR: 1.9, iridescenceThicknessRange: [180, 420], side: THREE.DoubleSide })),
     tyre: M.tyre(q, TREAD_V), machined: M.machined(q), rimPaint: M.rimPaint(), disc: M.disc(q),
     caliper: once('m.cal' + caliper, () => { const m = M.caliper(caliper).clone(); m.side = THREE.DoubleSide; return m; }),
@@ -44,7 +45,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800): Rec
 }
 
 // a heuristic for ambient occlusion outside: the underside and the wheel wells are dark, the lower body a little
-function carAO(p: V3, n: V3) {
+export function carAO(p: V3, n: V3) {
   let a = 0.62 + 0.38 * sstep(0.08, 0.7, p.y);
   if (n.y < -0.4) a *= 0.55;
   // inside the wheel wells, above the axle: the liner and the top of the tyre sit in the dark

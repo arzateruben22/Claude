@@ -211,11 +211,11 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
       color: hex, metalness: o.metal ?? 0.62, roughness: o.rough ?? 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1,
-      clearcoatNormalMap: X.peelNormal(S(q, 256, 128)), clearcoatNormalScale: new THREE.Vector2(0.12, 0.12),
+      clearcoatNormalMap: X.peelNormal(S(q, 256, 128)), clearcoatNormalScale: new THREE.Vector2(0.05, 0.05),
     });
     const peel = m.clearcoatNormalMap!.clone(); peel.repeat.set(4, 4); peel.needsUpdate = true; m.clearcoatNormalMap = peel;
     m.name = 'paint';
-    const uniforms = { uShut: { value: packShut(lines) }, uShutN: { value: Math.min(MAX_SHUT, lines.length) }, uFlake: { value: q === 'high' ? (o.flake ?? 0.25) : 0 } };
+    const uniforms = { uShut: { value: packShut(lines) }, uShutN: { value: Math.min(MAX_SHUT, lines.length) }, uFlake: { value: q === 'high' ? (o.flake ?? 0.15) : 0 } };
     (m.userData as { uniforms: typeof uniforms }).uniforms = uniforms;
     patch(m, 'paint' + q, (sh) => {
       Object.assign(sh.uniforms, uniforms);
@@ -236,7 +236,7 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
             vec3 h0 = flakeHash(floor(fp / exp2(l0))) * 2.0 - 1.0;
             vec3 h1 = flakeHash(floor(fp / exp2(l0 + 1.0)) + 17.0) * 2.0 - 1.0;
             vec3 fh = mix(h0, h1, lt);
-            float fk = uFlake * pow(exp2(l0), -0.85);
+            float fk = uFlake * pow(exp2(l0), -1.2);
             normal = normalize(normal + normalize(normalMatrix * fh) * fk * length(fh) * (1.0 - shutLine));
           }`)
         .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>

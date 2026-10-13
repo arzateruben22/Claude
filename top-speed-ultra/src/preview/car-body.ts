@@ -9,31 +9,35 @@
 //
 // Car frame: metres, x right, y up, the car faces -z, origin on the ground under the middle of the car.
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { Kit, V3, v3, curve, clamp, sstep, gridGeo, roundPoly, roundRect, mat, tubeGeo, latheGeo } from './car-kit';
 import type { ShutLine } from './car-mats';
+import { EYE } from './spec';
 
 export const ZF = -2.3, ZR = 2.3, YSILL = 0.13;
-export const AXLE = { zF: -1.33, zR: 1.32, r: 0.345, trackF: 0.835, trackR: 0.83 };
+export const AXLE = { zF: -1.33, zR: 1.32, r: 0.345, trackF: 0.848, trackR: 0.83 };   // tyres flush with the arches
 export interface Arch { z: number; yc: number; R: number; cut: number }
 const mkArch = (z: number, R: number): Arch => ({ z, yc: 0.3, R, cut: Math.sqrt(R * R - (0.3 - YSILL) ** 2) });
 export const ARCHES = [mkArch(AXLE.zF, 0.425), mkArch(AXLE.zR, 0.435)];
 
 // ------------------------------------------------------------------------------------------------ the shape
 const WP = curve([[-2.3, 0.86], [-2.1, 0.915], [-1.8, 0.95], [-1.33, 0.966], [-1.0, 0.952], [-0.6, 0.938], [-0.1, 0.932], [0.4, 0.948], [0.9, 0.975], [1.32, 0.985], [1.8, 0.978], [2.1, 0.96], [2.3, 0.935]]);
-const FH = curve([[-2.3, 0.56], [-2.0, 0.69], [-1.65, 0.8], [-1.33, 0.835], [-1.0, 0.855], [-0.5, 0.874], [0.0, 0.888], [0.5, 0.915], [1.0, 0.955], [1.32, 0.968], [1.8, 0.962], [2.1, 0.955], [2.3, 0.95]]);
-const CC = curve([[-2.3, 0.5], [-2.0, 0.585], [-1.6, 0.69], [-1.33, 0.745], [-1.12, 0.815], [-0.6, 0.855], [0.6, 0.88], [1.2, 0.9], [2.0, 0.935], [2.3, 0.945]]);
+const FH = curve([[-2.3, 0.505], [-2.05, 0.625], [-1.8, 0.735], [-1.55, 0.808], [-1.33, 0.835], [-1.0, 0.855], [-0.5, 0.874], [0.0, 0.888], [0.5, 0.915], [1.0, 0.955], [1.32, 0.968], [1.8, 0.962], [2.1, 0.958], [2.3, 0.988]]);
+const CC = curve([[-2.3, 0.455], [-2.05, 0.522], [-1.75, 0.612], [-1.5, 0.692], [-1.33, 0.745], [-1.12, 0.815], [-0.6, 0.855], [0.6, 0.88], [1.2, 0.9], [2.0, 0.935], [2.3, 0.978]]);
 const RH = curve([[-1.12, 0.818], [-0.85, 0.975], [-0.6, 1.11], [-0.4, 1.205], [-0.2, 1.274], [0.0, 1.305], [0.2, 1.316], [0.5, 1.284], [0.9, 1.185], [1.4, 1.07], [1.85, 0.985], [2.1, 0.94]]);
 const GB = curve([[-1.12, 0.82], [-0.5, 0.86], [0.1, 0.86], [0.6, 0.79], [1.2, 0.63], [1.8, 0.5], [2.1, 0.45]]);
 const ZC0 = -1.12, ZC1 = 2.1, DROP = 0.075, ROLL = 0.13, P = 4, K = 0.035;
 
-// the nose and tail are rounded in plan (Rc) and in elevation (Rv)
+// the nose and tail are rounded in plan and in elevation: a superellipse quadrant of radius R and exponent p (p > 2
+// starts with zero curvature, so the rounding blends into the flanks without a crease in the reflections)
 function ends(z: number): [number, number] {
   let dw = 0, dy = 0;
-  const q = (R: number, t: number) => (t > 0 ? R - Math.sqrt(Math.max(0, R * R - Math.min(R, t) ** 2)) : 0);
-  dw += q(0.3, ZF + 0.3 - z) + q(0.12, z - (ZR - 0.12));
-  dy += q(0.09, ZF + 0.09 - z) + q(0.05, z - (ZR - 0.05));
+  const q = (R: number, t: number, p = 2) => (t > 0 ? R * (1 - Math.pow(Math.max(0, 1 - Math.pow(Math.min(R, t) / R, p)), 1 / p)) : 0);
+  dw += q(0.36, ZF + 0.36 - z, 2.6) + q(0.16, z - (ZR - 0.16), 2.4);
+  dy += q(0.1, ZF + 0.1 - z, 2.4) + q(0.022, z - (ZR - 0.022));
   return [dw, dy];
 }
+const DIFF = 0.64;                     // half-width of the diffuser's mouth
 // the side intake's scallop: the door's lower half sweeps inward to feed it
 function scallop(z: number, y: number) {
   const ramp = sstep(-0.55, 0.5, z) * (1 - sstep(0.84, 0.95, z)), v = (y - 0.53) / 0.16;
@@ -148,10 +152,9 @@ export function shutLines(): ShutLine[] {
   return [
     { plane: 'side', pts: [[-0.9, 0.22], [0.4, 0.22], [0.47, 0.905], [-0.86, 0.885]], r: 0.04 },                 // doors
     { plane: 'top', pts: [[-0.5, -2.13], [0.5, -2.13], [0.57, -1.2], [-0.57, -1.2]], r: 0.07 },                  // front lid
-    { plane: 'side', pts: [[-1.735, 0.47], [-1.87, 0.735]], seg: true },                                          // front bumper seams
+    { plane: 'side', pts: [[-1.72, 0.45], [-1.84, 0.655]], seg: true },                                           // front bumper seams
     { plane: 'side', pts: [[1.72, 0.47], [1.98, 0.84]], seg: true },                                              // rear bumper seams
     { plane: 'side', pts: [[1.0, 0.775], [1.12, 0.775], [1.12, 0.86], [1.0, 0.86]], r: 0.015, side: 1 },         // fuel filler, right
-    { plane: 'front', pts: [[-0.62, 0.2], [0.62, 0.2], [0.62, 0.4], [-0.62, 0.4]], r: 0.05, side: -1 },           // front fascia split
   ];
 }
 
@@ -243,12 +246,12 @@ export function buildBody(kit: Kit, o: BodyOptions) {
     const r = sec(z), s = new THREE.Shape();
     s.moveTo(r[0].x, r[0].y);
     for (let j = 1; j < r.length; j++) s.lineTo(r[j].x, r[j].y);
-    if (notch) { const w = 0.7; s.lineTo(-w, YSILL); s.lineTo(-w, 0.38); s.lineTo(w, 0.38); s.lineTo(w, YSILL); }
+    if (notch) { const w = DIFF; s.lineTo(-w, YSILL); s.lineTo(-w, 0.38); s.lineTo(w, 0.38); s.lineTo(w, YSILL); }
     s.closePath();
     return s;
   };
-  const intakeF = roundPoly([[-0.47, 0.17], [0.47, 0.17], [0.4, 0.335], [-0.4, 0.335]], 0.045);
-  const meshR = roundRect(1.46, 0.29, 0.035, 0, 0.605);
+  const intakeF = roundPoly([[-0.43, 0.158], [0.43, 0.158], [0.37, 0.305], [-0.37, 0.305]], 0.04);
+  const meshR = roundRect(1.4, 0.32, 0.04, 0, 0.6);
   if (keep(v3(0, 0.3, ZF))) {
     const s = capShape(ZF, false); s.holes.push(intakeF);
     const g = new THREE.ShapeGeometry(s, 6); g.rotateY(Math.PI); g.translate(0, 0, ZF);
@@ -304,7 +307,7 @@ export function buildBody(kit: Kit, o: BodyOptions) {
   }
 
   if (glass) buildGlass(kit, keep);
-  if (o.extras ?? true) buildExtras(kit, o, keep, intakeF, meshR);
+  if (o.extras ?? true) buildExtras(kit, o, keep, intakeF, meshR, sec(ZR));
   if (o.mirrors ?? true) for (const sd of [1, -1] as const) mirrorParts(kit, sd, true);
 }
 
@@ -350,8 +353,17 @@ function buildGlass(kit: Kit, keep: (p: V3) => boolean) {
 
 // ------------------------------------------------------------------------------------------------ door mirrors
 // a wedge-nosed pod on a carbon blade from the door's top front corner; the glass faces back, flush in its rim
-export const MIRROR = { at: v3(1.025, 0.975, -0.7), w: 0.205, h: 0.094, d: 0.12, glass: [0.172, 0.074] as [number, number], yaw: 0.14 };
-function mirrorQ(side: 1 | -1) { return new THREE.Quaternion().setFromEuler(new THREE.Euler(0.03, -side * MIRROR.yaw, 0)); }
+export const MIRROR = { at: v3(1.025, 0.975, -0.7), w: 0.205, h: 0.094, d: 0.12, glass: [0.172, 0.074] as [number, number] };
+// Each mirror is aimed for the driver, as a driver would set it: the glass's normal halves the angle between the
+// eye and the view it should show (straight back, so the inboard edge just shows the flank and the horizon sits a little above the middle).
+// The housing turns with it, so the glass sits flush in its rim.
+function mirrorQ(side: 1 | -1) {
+  const c = v3(side * MIRROR.at.x, MIRROR.at.y, MIRROR.at.z + MIRROR.d / 2);
+  const view = v3(side * 0.05, -0.02, 1).normalize();
+  const n = EYE.clone().sub(c).normalize().add(view).normalize();
+  const x = v3(0, 1, 0).cross(n).normalize(), y = n.clone().cross(x);
+  return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, n));
+}
 export function mirrorGlassPlacement(side: 1 | -1, inset = 0.006) {
   const q = mirrorQ(side);
   const p = v3(0, 0, MIRROR.d / 2 - inset).applyQuaternion(q).add(v3(side * MIRROR.at.x, MIRROR.at.y, MIRROR.at.z));
@@ -382,11 +394,15 @@ export function mirrorParts(kit: Kit, side: 1 | -1, withGlass: boolean, housingK
   cup.translate(0, 0, MIRROR.d / 2 - 0.012);
   kit.add('dark', cup, m, 0.1);
   if (withGlass) { const g = new THREE.PlaneGeometry(MIRROR.glass[0], MIRROR.glass[1]); const gp = mirrorGlassPlacement(side); g.applyQuaternion(gp.q); g.translate(gp.p.x, gp.p.y, gp.p.z); kit.add('mirror', g, null, 0.2); }
-  // the blade to the door
-  const a = v3(side * 0.925, 0.9, -0.675), b = v3(side * 0.985, 0.958, -0.695);
-  const blade = new THREE.BoxGeometry(0.02, 1, 0.075, 1, 3, 1); blade.applyMatrix4(new THREE.Matrix4().makeScale(1, a.distanceTo(b) + 0.02, 1));
-  blade.applyMatrix4(new THREE.Matrix4().compose(a.clone().add(b).multiplyScalar(0.5), new THREE.Quaternion().setFromUnitVectors(v3(0, 1, 0), b.clone().sub(a).normalize()), v3(1, 1, 1)));
-  kit.add('carbon', blade, null, 0.1);
+  // the stalk to the door: a thin body-coloured aerofoil (about 70 mm chord, 14 mm thick) that rises out of the door's
+  // shoulder, below the side glass, and flares at both ends
+  const path: V3[] = [];
+  for (let k = 0; k <= 8; k++) {
+    const t = k / 8, e = t * t * (3 - 2 * t);
+    path.push(v3(side * (0.882 + 0.118 * t), 0.828 + 0.132 * e, -0.668 - 0.022 * t));
+  }
+  const flare = (i: number) => 1 + 0.35 * Math.max(0, 1 - i / 2) + 0.25 * Math.max(0, (i - 6) / 2);
+  kit.add(housingKey, tubeGeo(path, (i) => 0.0068 * flare(i), 10, { rb: (i) => 0.034 * flare(i), up: v3(0, 1, 0) }), null, 0.1);
 }
 
 // ------------------------------------------------------------------------------------------------ lamps, grilles, aero
@@ -438,7 +454,7 @@ export function lampMaterials() {
   };
 }
 const HEAD = [[0.36, -2.17], [0.79, -2.095], [0.86, -1.93], [0.5, -2.0]] as [number, number][];
-function buildExtras(kit: Kit, o: BodyOptions, keep: (p: V3) => boolean, intakeF: THREE.Shape, meshR: THREE.Shape) {
+function buildExtras(kit: Kit, o: BodyOptions, keep: (p: V3) => boolean, intakeF: THREE.Shape, meshR: THREE.Shape, tailSec: V3[]) {
   // headlamps: a param patch on the fender tops, a hair proud of the paint
   if (keep(v3(0.6, 0.6, -2.0))) for (const sd of [1, -1]) {
     const rows: V3[][] = [];
@@ -462,7 +478,7 @@ function buildExtras(kit: Kit, o: BodyOptions, keep: (p: V3) => boolean, intakeF
   // front intake: frame, tunnel, honeycomb, dark back
   if (keep(v3(0, 0.25, ZF))) {
     const pts = intakeF.getPoints(6);
-    const frame = new THREE.Shape(pts.map((p) => new THREE.Vector2(p.x * 1.03, 0.252 + (p.y - 0.252) * 1.09)));
+    const frame = new THREE.Shape(pts.map((p) => new THREE.Vector2(p.x * 1.03, 0.2315 + (p.y - 0.2315) * 1.1)));
     frame.holes.push(new THREE.Path(pts));
     const fg = new THREE.ShapeGeometry(frame, 4); fg.rotateY(Math.PI); fg.translate(0, 0, ZF - 0.003);
     kit.add('trim', fg, null, 0.2);
@@ -472,15 +488,33 @@ function buildExtras(kit: Kit, o: BodyOptions, keep: (p: V3) => boolean, intakeF
     kit.add('dark', back, null, 0.2);
     const hc = new THREE.ShapeGeometry(intakeF, 6); hc.rotateY(Math.PI); hc.translate(0, 0, ZF + 0.025);
     kit.add('grille', hc, null, 1);
-    // splitter: a carbon blade under the nose
-    const sp = roundRect(1.5, 0.42, 0.22, 0, 0); const sg = new THREE.ExtrudeGeometry(sp, { depth: 0.018, bevelEnabled: false, curveSegments: 10 });
-    sg.rotateX(Math.PI / 2); sg.translate(0, 0.128, ZF + 0.16);
-    kit.add('carbon', sg, null, 1);
+    // two body-coloured strakes split the opening into a centre duct and two radiator ducts
+    for (const x of [-0.205, 0.205]) {
+      const st = new THREE.BoxGeometry(0.026, 0.16, 0.1, 1, 1, 1); st.translate(x, 0.232, ZF + 0.045);
+      kit.add('paint', st, null, 0.2);
+    }
+    // splitter: a carbon blade under the nose, 6 cm proud of it, with a turned-up lip at each end
+    const sp = roundRect(1.62, 0.5, 0.2, 0, 0); const sg = new THREE.ExtrudeGeometry(sp, { depth: 0.016, bevelEnabled: true, bevelThickness: 0.003, bevelSize: 0.003, bevelSegments: 1, curveSegments: 10 });
+    sg.rotateX(Math.PI / 2); sg.translate(0, 0.122, ZF + 0.19);
+    kit.add('carbon', sg, null, 0.15);
+    for (const sd of [-1, 1]) {
+      const fin = new THREE.BoxGeometry(0.01, 0.06, 0.2); fin.translate(sd * 0.74, 0.15, ZF + 0.06);
+      kit.add('carbon', fin, null, 0.15);
+    }
   }
   // rear: light bar, mesh panel, exhausts, diffuser, wordmark
   if (keep(v3(0, 0.5, ZR))) {
-    const bar = new THREE.PlaneGeometry(1.56, 0.034); bar.translate(0, 0.815, ZR + 0.003);
+    // the lamps: a gloss-black band across the tail with a thin LED line in it, turning down at each end
+    const band = new THREE.ShapeGeometry(roundRect(1.48, 0.075, 0.02, 0, 0.82), 4); band.translate(0, 0, ZR + 0.002);
+    kit.add('trim', band, null, 0.2);
+    const bar = new THREE.PlaneGeometry(1.36, 0.016); bar.translate(0, 0.826, ZR + 0.004);
     kit.add('tail', bar);
+    for (const sd of [-1, 1]) {
+      const end = new THREE.PlaneGeometry(0.016, 0.05); end.translate(sd * 0.688, 0.81, ZR + 0.004);
+      kit.add('tail', end);
+      const lens = new THREE.ShapeGeometry(roundRect(0.11, 0.05, 0.012, sd * 0.61, 0.806), 2); lens.translate(0, 0, ZR + 0.003);
+      kit.add('tail', lens);
+    }
     const pts = meshR.getPoints(6);
     kit.add('dark', gridGeo([pts.map((p) => v3(p.x, p.y, ZR)), pts.map((p) => v3(p.x, p.y, ZR - 0.1))], { flip: true }), null, 0.2);
     const back = new THREE.ShapeGeometry(meshR, 6); back.translate(0, 0, ZR - 0.1); kit.add('dark', back, null, 0.2);
@@ -488,22 +522,49 @@ function buildExtras(kit: Kit, o: BodyOptions, keep: (p: V3) => boolean, intakeF
     const frame = new THREE.Shape(pts.map((p) => new THREE.Vector2(p.x * 1.012, 0.605 + (p.y - 0.605) * 1.07)));
     frame.holes.push(new THREE.Path(pts));
     const fg = new THREE.ShapeGeometry(frame, 4); fg.translate(0, 0, ZR + 0.002); kit.add('trim', fg, null, 0.2);
+    // twin centre exhausts: thick-walled titanium tips with a rolled lip, sooty inside
     for (const sd of [1, -1]) {
-      const tip = latheGeo([[0.047, ZR - 0.09], [0.056, ZR - 0.02], [0.058, ZR + 0.02], [0.054, ZR + 0.025], [0.047, ZR + 0.018], [0.047, ZR - 0.09]], 32, 'z', { vScale: 0.1 });
-      tip.translate(sd * 0.115, 0.5, 0);
+      const tip = latheGeo([[0.058, ZR - 0.12], [0.064, ZR - 0.02], [0.067, ZR + 0.022], [0.0635, ZR + 0.034], [0.0575, ZR + 0.026], [0.0565, ZR - 0.16]], 40, 'z', { vScale: 0.1 });
+      tip.translate(sd * 0.135, 0.54, 0);
       kit.add('exhaust', tip);
-      const inner = new THREE.CircleGeometry(0.047, 24); inner.translate(sd * 0.115, 0.5, ZR - 0.05); kit.add('dark', inner, null, 0.1);
+      const inner = new THREE.CircleGeometry(0.057, 24); inner.translate(sd * 0.135, 0.54, ZR - 0.15); kit.add('dark', inner, null, 0.1);
+    }
+    // the lower tail: a carbon valance below the lamps' line, cut round the diffuser's mouth
+    {
+      const r = tailSec, yv = 0.43, rightPts: [number, number][] = [];
+      for (const p of r) { if (p.x > 0 && p.y <= yv) rightPts.push([p.x, p.y]); }
+      rightPts.sort((a, b) => a[1] - b[1]);
+      const xAt = (y: number) => { let best = rightPts[0]; for (const p of rightPts) if (p[1] <= y) best = p; return best[0]; };
+      const sh = new THREE.Shape();
+      sh.moveTo(DIFF, YSILL); sh.lineTo(rightPts[0][0], rightPts[0][1]);
+      for (const p of rightPts) sh.lineTo(p[0], p[1]);
+      sh.lineTo(xAt(yv), yv); sh.lineTo(-xAt(yv), yv);
+      for (const p of [...rightPts].reverse()) sh.lineTo(-p[0], p[1]);
+      sh.lineTo(-DIFF, YSILL); sh.lineTo(-DIFF, 0.38); sh.lineTo(DIFF, 0.38); sh.closePath();
+      const g = new THREE.ShapeGeometry(sh, 4); g.translate(0, 0, ZR + 0.004);
+      kit.add('carbon', g, null, 0.2);
     }
     // diffuser: a ramp up from the floor with five strakes
     const ramp: V3[][] = [];
-    for (let k = 0; k <= 8; k++) { const t = k / 8, z = 1.7 + (ZR - 1.7) * t, y = 0.135 + (0.38 - 0.135) * (t * t * (3 - 2 * t)); ramp.push([v3(-0.7, y, z), v3(0.7, y, z)]); }
-    kit.add('carbon', gridGeo(ramp, { flip: true }), null, 1);
-    for (const x of [-0.7, -0.42, -0.14, 0.14, 0.42, 0.7]) {
+    for (let k = 0; k <= 8; k++) { const t = k / 8, z = 1.7 + (ZR - 1.7) * t, y = 0.135 + (0.38 - 0.135) * (t * t * (3 - 2 * t)); ramp.push([v3(-DIFF, y, z), v3(DIFF, y, z)]); }
+    kit.add('dark', gridGeo(ramp, { flip: true }), null, 1);
+    for (const x of [-DIFF, -0.38, -0.13, 0.13, 0.38, DIFF]) {
       const s = new THREE.Shape(); s.moveTo(1.7, 0.135); s.lineTo(ZR + 0.02, 0.135);
       for (let k = 8; k >= 0; k--) { const t = k / 8; s.lineTo(1.7 + (ZR - 1.7) * t, 0.135 + (0.38 - 0.135) * (t * t * (3 - 2 * t))); }
       const fin = new THREE.ExtrudeGeometry(s, { depth: 0.008, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + 0.004, 0, 0);
-      kit.add('carbon', fin, null, 1);
+      kit.add('dark', fin, null, 1);
     }
+  }
+  // side skirts: a carbon blade along each sill between the arches, flaring out 3 cm at its foot (it puts a dark
+  // band under the paint, so the body reads lower and thinner from the side)
+  if (keep(v3(0.9, 0.15, 0))) for (const sd of [1, -1]) {
+    const z0 = ARCHES[0].z + ARCHES[0].cut + 0.012, z1 = ARCHES[1].z - ARCHES[1].cut - 0.012, rows: V3[][] = [];
+    for (let k = 0; k <= 40; k++) {
+      const z = z0 + (z1 - z0) * (k / 40), e = Math.min(1, Math.min(z - z0, z1 - z) / 0.05), f = Math.sqrt(e);
+      const x = (y: number) => body.side(z, y);
+      rows.push([v3(sd * (x(0.255) + 0.0015), 0.255, z), v3(sd * (x(0.19) + 0.013 * f), 0.19, z), v3(sd * (x(YSILL) + 0.03 * f), YSILL + 0.006, z), v3(sd * (x(YSILL) + 0.026 * f), YSILL - 0.006, z), v3(sd * (x(YSILL) - 0.01), YSILL - 0.008, z)]);
+    }
+    kit.add('carbon', gridGeo(rows, { flip: sd > 0 }), null, 0.15);
   }
   // side intakes: an opening at the end of the scallop, with a gloss frame, honeycomb and a dark plenum
   if (keep(v3(0.9, 0.5, 0.7))) for (const sd of [1, -1]) {
@@ -558,17 +619,32 @@ function buildExtras(kit: Kit, o: BodyOptions, keep: (p: V3) => boolean, intakeF
 }
 
 // ------------------------------------------------------------------------------------------------ a cabin seen through the glass
-// for outside views only: dark seats, dash and a wheel so the windows don't look onto nothing
+// for outside views only: the shapes of the cockpit (dash and binnacle, the wheel, two cognac bucket seats with their
+// bolsters and head sections, the console, the bulkhead) in two flat materials, so the windows look into a cabin
 export function cabinSilhouette(kit: Kit) {
-  const add = (g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add('interior', g.applyMatrix4(m), null, 0.3);
-  add(new THREE.BoxGeometry(1.7, 0.2, 0.42), mat(0, 0.76, -0.86, -0.1));
-  for (const sx of [-0.37, 0.37]) {
-    add(new THREE.BoxGeometry(0.5, 0.12, 0.5), mat(sx, 0.32, 0.1));
-    add(new THREE.BoxGeometry(0.5, 0.72, 0.14), mat(sx, 0.72, 0.42, -0.22));
-    add(new THREE.BoxGeometry(0.3, 0.2, 0.1), mat(sx, 1.12, 0.52, -0.22));
+  const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, g.applyMatrix4(m), null, 0.3);
+  const rb = (w: number, h: number, d: number, r: number) => new RoundedBoxGeometry(w, h, d, 2, r);
+  // dash, binnacle, console, floor, bulkhead
+  put('interior', rb(1.72, 0.2, 0.46, 0.06), mat(0, 0.755, -0.88, -0.08));
+  put('interior', rb(0.5, 0.11, 0.2, 0.04), mat(-0.37, 0.86, -0.66, -0.3));
+  put('interior', rb(0.24, 0.34, 1.0, 0.04), mat(0, 0.28, -0.15));
+  // the bulkhead follows the canopy, so nothing pokes out through the roof
+  {
+    const z = 0.56, pts: THREE.Vector2[] = [new THREE.Vector2(0.84, 0.45)];
+    for (let k = 0; k <= 14; k++) { const y = 0.82 + (body.top(z, 0) - 0.06 - 0.82) * (k / 14); pts.push(new THREE.Vector2(Math.max(0.02, body.canopyX(z, y) - 0.04), y)); }
+    const all = [...pts, ...pts.slice().reverse().map((p) => new THREE.Vector2(-p.x, p.y))];
+    const g = new THREE.ShapeGeometry(new THREE.Shape(all), 2); g.rotateY(Math.PI); g.translate(0, 0, z);
+    kit.add('interior', g, null, 0.3);
   }
-  add(new THREE.TorusGeometry(0.178, 0.02, 8, 32), mat(-0.37, 0.8, -0.42, -0.38));
-  add(new THREE.BoxGeometry(0.24, 0.3, 0.9), mat(0, 0.28, -0.2));
-  const back = new THREE.PlaneGeometry(1.7, 0.6); back.applyMatrix4(mat(0, 0.85, 0.55, 0, Math.PI));
-  kit.add('interior', back, null, 0.3);
+  // the wheel
+  put('interior', new THREE.TorusGeometry(0.178, 0.022, 8, 32), mat(-0.37, 0.8, -0.42, -0.38));
+  put('interior', rb(0.2, 0.13, 0.06, 0.03), mat(-0.37, 0.8, -0.43, -0.38));
+  // seats: cushion, backrest reclined 22 degrees with raised side bolsters, a narrower head section
+  for (const sx of [-0.37, 0.37]) {
+    put('seatSil', rb(0.5, 0.11, 0.5, 0.045), mat(sx, 0.29, 0.03));
+    const tilt = -0.38;
+    put('seatSil', rb(0.34, 0.6, 0.1, 0.04), mat(sx, 0.62, 0.38, tilt));
+    for (const s of [-1, 1]) put('seatSil', rb(0.08, 0.56, 0.16, 0.035), mat(sx + s * 0.2, 0.6, 0.39, tilt, 0, s * 0.08));
+    put('seatSil', rb(0.27, 0.2, 0.11, 0.05), mat(sx, 1.02, 0.52, tilt));
+  }
 }
