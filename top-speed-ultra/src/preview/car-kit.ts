@@ -148,6 +148,51 @@ export function roundPoly(pts: [number, number][], r: number) {
   return s;
 }
 
+// a flat face (z = 0, facing +z) from an outline with holes, triangulated with a grid of interior points so it
+// bends smoothly when warped. UVs are x, y in metres.
+export function capGeo(outline: THREE.Vector2[], holes: THREE.Vector2[][], spacing = 0.1) {
+  const inside = (p: THREE.Vector2, poly: THREE.Vector2[]) => {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const a = poly[i], b = poly[j];
+      if ((a.y > p.y) !== (b.y > p.y) && p.x < (b.x - a.x) * (p.y - a.y) / (b.y - a.y) + a.x) c = !c;
+    }
+    return c;
+  };
+  const near = (p: THREE.Vector2, poly: THREE.Vector2[], d: number) => {
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i], b = poly[(i + 1) % poly.length], ab = b.clone().sub(a), t = clamp(p.clone().sub(a).dot(ab) / Math.max(1e-9, ab.lengthSq()), 0, 1);
+      if (a.clone().addScaledVector(ab, t).distanceTo(p) < d) return true;
+    }
+    return false;
+  };
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const p of outline) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }
+  const steiner: THREE.Vector2[][] = [];
+  for (let y = y0 + spacing / 2; y < y1; y += spacing) for (let x = x0 + spacing / 2; x < x1; x += spacing) {
+    const p = new THREE.Vector2(x + (Math.round(y / spacing) % 2) * spacing * 0.5, y);
+    if (!inside(p, outline) || holes.some((h) => inside(p, h))) continue;
+    if (near(p, outline, spacing * 0.35) || holes.some((h) => near(p, h, spacing * 0.35))) continue;
+    steiner.push([p]);
+  }
+  const all = [...outline, ...holes.flat(), ...steiner.flat()];
+  const faces = THREE.ShapeUtils.triangulateShape(outline.slice(), [...holes.map((h) => h.slice()), ...steiner]);
+  const pos = new Float32Array(all.length * 3), uv = new Float32Array(all.length * 2), idx: number[] = [];
+  all.forEach((p, i) => { pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; uv[i * 2] = p.x; uv[i * 2 + 1] = p.y; });
+  for (const [a, b, c] of faces) {
+    const A = all[a], B = all[b], C = all[c], cr = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
+    if (Math.abs(cr) < 1e-12) continue;
+    if (cr > 0) idx.push(a, b, c); else idx.push(a, c, b);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  const nrm = new Float32Array(all.length * 3); for (let i = 0; i < all.length; i++) nrm[i * 3 + 2] = 1;
+  g.setAttribute('normal', new THREE.BufferAttribute(nrm, 3));
+  g.setIndex(idx);
+  return g;
+}
+
 // planar UVs in metres by the dominant axis of each vertex normal
 export function boxUV(g: THREE.BufferGeometry, scale = 1) {
   const p = g.attributes.position, n = g.attributes.normal, uv = new Float32Array(p.count * 2);
@@ -164,10 +209,40 @@ export function boxUV(g: THREE.BufferGeometry, scale = 1) {
 
 // ------------------------------------------------------------------------------------------------ the kit
 export type AOFn = (p: V3, n: V3) => number;
+// a smooth deformation of space: moves p in place, returns false where it is the identity (and its Jacobian too)
+export type WarpFn = (p: V3) => boolean;
 interface Part { g: THREE.BufferGeometry }
+// apply a warp to a geometry: positions move, normals turn with the warp's local Jacobian (cofactor transform)
+export function warpGeo(g: THREE.BufferGeometry, warp: WarpFn) {
+  const p = g.attributes.position as THREE.BufferAttribute, n = g.attributes.normal as THREE.BufferAttribute | undefined;
+  const P = new THREE.Vector3(), Q = new THREE.Vector3(), a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  const N = new THREE.Vector3(), t = new THREE.Vector3(), e = 1e-3;
+  const col = (out: V3, k: 0 | 1 | 2) => {
+    Q.copy(P).setComponent(k, P.getComponent(k) + e); warp(Q); out.copy(Q);
+    Q.copy(P).setComponent(k, P.getComponent(k) - e); warp(Q); return out.sub(Q).multiplyScalar(1 / (2 * e));
+  };
+  for (let i = 0; i < p.count; i++) {
+    P.set(p.getX(i), p.getY(i), p.getZ(i));
+    Q.copy(P);
+    if (!warp(Q)) continue;
+    p.setXYZ(i, Q.x, Q.y, Q.z);
+    if (!n) continue;
+    col(a, 0); col(b, 1); col(c, 2);
+    N.set(n.getX(i), n.getY(i), n.getZ(i));
+    // A^-T is proportional to [b x c, c x a, a x b] (as columns)
+    const out = t.crossVectors(b, c).multiplyScalar(N.x);
+    out.add(Q.crossVectors(c, a).multiplyScalar(N.y)).add(Q.crossVectors(a, b).multiplyScalar(N.z)).normalize();
+    n.setXYZ(i, out.x, out.y, out.z);
+  }
+  p.needsUpdate = true; if (n) n.needsUpdate = true;
+  return g;
+}
 export class Kit {
   private parts = new Map<string, Part[]>();
   ao: AOFn | null = null;
+  warp: WarpFn | null = null;
+  // run fn with the warp off (rigid parts placed by hand at warped positions)
+  rigid(fn: () => void) { const w = this.warp; this.warp = null; try { fn(); } finally { this.warp = w; } }
 
   // file a geometry under a material key; m places it; uv: 'keep' keeps its UVs, a number box-maps at that scale
   add(key: string, g: THREE.BufferGeometry, m?: THREE.Matrix4 | null, uv: 'keep' | number = 'keep') {
@@ -175,6 +250,7 @@ export class Kit {
     if (m) geo = geo.applyMatrix4(m);
     if (!geo.attributes.normal) geo.computeVertexNormals();
     if (uv !== 'keep' || !geo.attributes.uv) boxUV(geo, typeof uv === 'number' ? uv : 0.1);
+    if (this.warp) warpGeo(geo, this.warp);
     for (const k of Object.keys(geo.attributes)) if (k !== 'position' && k !== 'normal' && k !== 'uv') geo.deleteAttribute(k);
     if (!this.parts.has(key)) this.parts.set(key, []);
     this.parts.get(key)!.push({ g: geo });
