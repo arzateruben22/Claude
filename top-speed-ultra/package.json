@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && node scripts/single-file.mjs",
+    "build": "tsc --noEmit -p tsconfig.game.json && vite build && node scripts/single-file.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "node tests/regression.mjs"

@@ -54,3 +54,8 @@ you can read). The current game, for comparison: `src/preview/test-stage.ts` →
 | The scene | `main.ts` | puts it all together; `?view=` presets; the page that gets published |
 
 Each part documents its options at the top of its file.
+
+## Builds
+
+The game's `npm run build` type-checks with `tsconfig.game.json`, which leaves out `src/preview/`, so work here can
+never break the game's build. Plain `npx tsc --noEmit` still checks everything, the preview included.
