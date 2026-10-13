@@ -39,12 +39,12 @@ import { CarMirror } from './car-mirror';
 
 export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
-interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon' }
+interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon'; head: number }
 const THEMES: Record<string, Theme> = {
-  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', binnacle: 'tach', door: 'nappa' },
-  brio: { seat: 0x1c2740, seatKind: 'leather', stitch: 0x8fb0e0, dash: 'nappa', band: 'alu', wheel: 'brio', binnacle: 'tach', door: 'nappa' },
-  corsa: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0xe8b81c, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'tach', door: 'carbon' },
-  vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', binnacle: 'screen', door: 'nappa' },
+  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', binnacle: 'tach', door: 'nappa', head: 0x3a3a3e },
+  brio: { seat: 0x1c2740, seatKind: 'leather', stitch: 0x8fb0e0, dash: 'nappa', band: 'alu', wheel: 'brio', binnacle: 'tach', door: 'nappa', head: 0x55565b },
+  corsa: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0xe8b81c, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'tach', door: 'carbon', head: 0x29292b },
+  vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', binnacle: 'screen', door: 'nappa', head: 0xa39e93 },
 };
 export interface Cockpit {
   group: THREE.Group;
@@ -159,6 +159,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   mats.band = T.band === 'carbon' ? mats.carbon : mats.alu;
   mats.doorLow = T.door === 'carbon' ? mats.carbon : mats.nappa;
   mats.alcW = M.alcantara(q, 0x2a2a2d, 0.05);
+  // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
+  mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
 
   // ambient occlusion inside: dark low down and under the dash, the headliner lit only by bounce
   kit.ao = (p, n) => {
@@ -310,20 +312,29 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const wheelM = mat(WHEEL_AT.x, WHEEL_AT.y, WHEEL_AT.z, WHEEL_TILT);
   {
     const segs = high ? 22 : 12;
-    const zone = (a0: number, a1: number, key: string, n: number) => {
+    const zone = (a0: number, a1: number, key: string, n: number, grow = 1) => {
       const f = rimFrames(a0, a1, n);
-      wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]), (i) => rimB(f.as[i]), segs, { around: 0.13, flip: true }));
+      wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]) * grow, (i) => rimB(f.as[i]) * grow, segs, { around: 0.13, flip: true }));
       return f;
     };
+    // each car's wheel: GT carbon top and bottom, perforated Nappa grips, carbon spokes, shift lights; Brio all
+    // Nappa with aluminium spokes; Corsa all Alcantara with a yellow stripe at 12 o'clock, carbon spokes, shift
+    // lights; Vela smooth Nappa on a round hub with two slim brushed spokes and the V badge
+    const ws = T.wheel;
+    const rimTop = ws === 'gt' ? 'carbon' : ws === 'corsa' ? 'alcW' : 'wheelNappa';
+    const gripK = ws === 'corsa' ? 'alcW' : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
+    const spokeK = ws === 'brio' || ws === 'vela' ? 'alu' : 'carbon';
     // The grips are perforated Nappa from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and
     // 148 degrees, about +-16 degrees of rim under the palm and fingers) sits wholly on leather: no seam, ring or
     // step under the fingers. Carbon only across the top (the shift lights) and the bottom.
     const G0 = 0.91, G1 = Math.PI - G0, B0 = Math.PI + 0.8, B1 = Math.PI * 2 - 0.8;
-    zone(G0, G1, 'carbon', high ? 56 : 30);
-    zone(B0, B1, 'carbon', high ? 52 : 28);
-    const grips = [zone(B1 - Math.PI * 2, G0, 'nappaPerf', high ? 64 : 34), zone(G1, B0, 'nappaPerf', high ? 64 : 34)];
+    zone(G0, G1, rimTop, high ? 56 : 30);
+    zone(B0, B1, rimTop, high ? 52 : 28);
+    const grips = [zone(B1 - Math.PI * 2, G0, gripK, high ? 64 : 34), zone(G1, B0, gripK, high ? 64 : 34)];
     // the perforation stops short of the edges: a plain Nappa band where each grip meets the carbon
-    for (const [a0, a1] of [[G0 - 0.09, G0], [B1 - Math.PI * 2, B1 - Math.PI * 2 + 0.09], [G1, G1 + 0.09], [B0 - 0.09, B0]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8);
+    if (gripK === 'nappaPerf') for (const [a0, a1] of [[G0 - 0.09, G0], [B1 - Math.PI * 2, B1 - Math.PI * 2 + 0.09], [G1, G1 + 0.09], [B0 - 0.09, B0]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8);
+    // the Corsa's centre marker: a 25 mm yellow band at the top, a hair proud
+    if (ws === 'corsa') zone(Math.PI / 2 - 0.07, Math.PI / 2 + 0.07, 'stripe', 8, 1.03);
     // double stitching on the inside of each grip, toward the driver
     for (const f of grips) for (const th of [Math.PI * 0.69, Math.PI * 0.81]) {
       const path: V3[] = [], across: V3[] = [], lift: V3[] = [];
@@ -337,7 +348,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       wk.add('stitch', stitchRow(path, across, lift, 0.0016));
     }
     // brushed rings where leather meets carbon
-    for (const a of [G0, G1, B0, B1]) {
+    if (ws === 'gt') for (const a of [G0, G1, B0, B1]) {
       const p = rimAt(a), t = rimAt(a + 0.002).sub(rimAt(a - 0.002)).normalize();
       // a 3 mm band, 0.8 mm proud of the rim (the torus's tube is scaled along the rim to 2.6 mm)
       const ring = new THREE.TorusGeometry(1, 0.075, 8, 40); ring.scale(rimA(a) * 0.97, rimB(a) * 0.97, 0.035);
@@ -347,22 +358,24 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       wk.add('alu', ring, null, 0.02);
     }
     // shift lights across the top, on the driver's face of the rim
-    for (let i = 0; i < 10; i++) {
+    if (ws === 'gt' || ws === 'corsa') for (let i = 0; i < 10; i++) {
       const a = 2.0 - (i / 9) * 0.88, p = rimAt(a);
       const led = new RoundedBoxGeometry(0.0085, 0.0042, 0.003, 1, 0.001);
       led.rotateZ(a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
       wk.add('led', led, null, 0.02);
     }
     // hub: a Nappa airbag cover with the badge, three carbon spokes with aluminium inlays and button pods
-    const hub = extrude(roundRect(0.19, 0.122, 0.04, 0, -0.004), 0.034, 0.012); hub.translate(0, 0, -0.036);
+    const hub = ws === 'vela' ? extrude(roundRect(0.13, 0.13, 0.065, 0, -0.004), 0.034, 0.012) : extrude(roundRect(0.19, 0.122, 0.04, 0, -0.004), 0.034, 0.012);
+    hub.translate(0, 0, -0.036);
     wk.add('wheelNappa', hub);
-    const seam = new THREE.TorusGeometry(1, 0.012, 4, 64); seam.scale(0.071, 0.046, 1); seam.translate(0, -0.004, -0.001);
+    const seam = new THREE.TorusGeometry(1, 0.012, 4, 64); if (ws === 'vela') seam.scale(0.05, 0.05, 1); else seam.scale(0.071, 0.046, 1); seam.translate(0, -0.004, -0.001);
     wk.add('gloss', seam, null, 0.05);
     const badge = new THREE.CircleGeometry(0.022, 40); badge.translate(0, 0.004, -0.0005);
     wk.add('badgeHub', badge);
     const bring = new THREE.TorusGeometry(0.0228, 0.0016, 8, 48); bring.translate(0, 0.004, -0.0005); wk.add('chrome', bring, null, 0.02);
     for (const sd of [-1, 1]) {
-      const sp = new RoundedBoxGeometry(0.082, 0.052, 0.02, 3, 0.008); sp.translate(sd * 0.13, -0.006, -0.012); wk.add('carbon', sp);
+      const sp = ws === 'vela' ? new RoundedBoxGeometry(0.11, 0.03, 0.016, 3, 0.007) : new RoundedBoxGeometry(0.082, 0.052, 0.02, 3, 0.008);
+      sp.translate(sd * (ws === 'vela' ? 0.12 : 0.13), -0.006, -0.012); wk.add(spokeK, sp);
       const inlay = new THREE.BoxGeometry(0.07, 0.003, 0.002); inlay.translate(sd * 0.13, -0.03, -0.0015); wk.add('alu', inlay, null, 0.02);
       const pod = new RoundedBoxGeometry(0.058, 0.04, 0.008, 2, 0.004); pod.translate(sd * 0.128, -0.004, 0.0); wk.add('gloss', pod, null, 0.05);
       // three buttons a side, each a cell of the icon atlas
@@ -375,7 +388,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
         face.translate(sd * 0.128 + bx, -0.004 + by, 0.0071); wk.add('icons', face);
       });
     }
-    const bot = new RoundedBoxGeometry(0.058, 0.07, 0.02, 3, 0.008); bot.translate(0, -0.102, -0.012); wk.add('carbon', bot);
+    if (ws !== 'vela') {
+    const bot = new RoundedBoxGeometry(0.058, 0.07, 0.02, 3, 0.008); bot.translate(0, -0.102, -0.012); wk.add(spokeK, bot);
     const binl = new THREE.BoxGeometry(0.003, 0.05, 0.002); binl.translate(0, -0.104, -0.0015); wk.add('alu', binl, null, 0.02);
     // engine start (lower left) and the drive-mode dial (lower right)
     const st = new THREE.CylinderGeometry(0.0135, 0.0142, 0.008, 32); st.rotateX(Math.PI / 2); st.translate(-0.06, -0.05, 0.002); wk.add('red', st);
@@ -388,6 +402,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const suv = scale.attributes.uv as THREE.BufferAttribute, sp2 = scale.attributes.position;
     for (let i = 0; i < suv.count; i++) suv.setXY(i, (sp2.getX(i) - 0.06) / 0.07 + 0.5, (sp2.getY(i) + 0.05) / 0.07 + 0.5);
     wk.add('dial', scale);
+    }
   }
   // the column, its shroud and the paddles: fixed to the car, not the wheel
   {
@@ -418,7 +433,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       }
       rows.push(r);
     }
-    kit.add('alc', gridGeo(rows, { flip: sd > 0 }));
+    kit.add('head', gridGeo(rows, { flip: sd > 0 }));
   }
   // header beam along the top of the glass, and the headliner back to the bulkhead
   {
@@ -432,7 +447,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
         const out = (s - sc) * 0.6;
         rows.push([p0, p1, p2, ph].map((p) => p.clone().add(v3(Math.sign(s) * Math.abs(out) * 0.4, -Math.abs(out) * 0.1, Math.abs(out) * 0.4))));
       }
-      kit.add('alc', gridGeo(rows, { flip: true }));
+      kit.add('head', gridGeo(rows, { flip: true }));
     }
     const zBack = 0.565, NZ = high ? 16 : 8, NX = high ? 24 : 12;
     const edgeX = (z: number) => {
@@ -449,11 +464,36 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       }
       rows.push(r);
     }
-    kit.add('alc', gridGeo(rows, { flip: true }));
+    // the Vela's glass roof: the headliner stops round it, the glass (tinted, seen from below) fills the gap
+    const RF = P.roofGlass;
+    const inRoof = (p: V3) => !!RF && Math.abs(p.x) < RF.x * 0.93 && p.z > RF.z0 + 0.035 && p.z < RF.z1 - 0.035;
+    const hl = gridGeo(rows, { flip: true });
+    if (RF) {
+      const [lining, hole] = splitGrid(hl, NZ + 1, NX + 1, (i, j) => inRoof(rows[i][j].clone().add(rows[i + 1][j + 1]).multiplyScalar(0.5)));
+      kit.add('head', lining);
+      const gl = hole.clone(); const gp = gl.attributes.position;
+      for (let k = 0; k < gp.count; k++) gp.setY(k, gp.getY(k) + 0.012);
+      kit.add('roofGlass', gl);
+    } else kit.add('head', hl);
+    // sun visors folded up against the headliner, hinged outboard, clipped inboard
+    for (const sd of [-1, 1] as const) {
+      const xc = sd * 0.4, z0 = wsXZ(sd * 0.5, 1)[1] + 0.04, z1 = z0 + 0.175;
+      const y0 = body.top(z0, Math.abs(xc)) - 0.024 - 0.013, y1 = body.top(z1, Math.abs(xc)) - 0.024 - 0.013;
+      const Z = v3(0, y1 - y0, z1 - z0).normalize(), X = v3(1, 0, 0), Y = Z.clone().cross(X).normalize();
+      const m = new THREE.Matrix4().makeBasis(X, Y, Z).setPosition(v3(xc, (y0 + y1) / 2, (z0 + z1) / 2));
+      kit.add('head', new RoundedBoxGeometry(0.4, 0.02, 0.172, 3, 0.0095), m);
+      // a stitched welt round the edge, and the hinge rod and clip (satin black)
+      const edge: V3[] = [];
+      for (let k = 0; k <= 40; k++) { const a = (k / 40) * Math.PI * 2, c = Math.cos(a), s2 = Math.sin(a); edge.push(v3(Math.sign(c) * Math.pow(Math.abs(c), 0.25) * 0.192, -0.0102, Math.sign(s2) * Math.pow(Math.abs(s2), 0.25) * 0.078).applyMatrix4(m)); }
+      const nY = Y.clone().negate(), acr = edge.map((_, k) => edge[Math.min(40, k + 1)].clone().sub(edge[Math.max(0, k - 1)]).normalize().cross(nY).normalize());
+      kit.add('stitchDark', stitchRow(edge, acr, edge.map(() => nY), 0.0014));
+      const rod = new THREE.CylinderGeometry(0.0055, 0.0055, 0.06, 10); rod.rotateZ(Math.PI / 2); rod.translate(sd * 0.215, 0.006, -0.06); kit.add('plastic', rod, m, 0.05);
+      const clip = new RoundedBoxGeometry(0.03, 0.014, 0.02, 2, 0.005); clip.translate(-sd * 0.215, 0.006, -0.05); kit.add('plastic', clip, m, 0.05);
+    }
     for (const sd of [-1, 1] as const) {
       const rail = range(0, 1, 18).map((u) => { const p = sgInner(u, 1, sd, 0.016); p.y -= 0.012; return p; });
       rail.push(v3(sd * (edgeX(zBack) - 0.018), body.top(zBack, edgeX(zBack)) - 0.05, zBack));
-      kit.add('alc', tubeGeo(rail, () => 0.017, high ? 10 : 6));
+      kit.add('head', tubeGeo(rail, () => 0.017, high ? 10 : 6));
     }
   }
   // ---------------------------------------------------------------- side glass (inside) with frit
@@ -472,7 +512,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const X = (x: number) => sd * x;
     const flip = sd > 0;
     // lower panel up to the armrest, the armrest (cognac), the Alcantara insert, the sill cap to the glass
-    kit.add('nappa', loftZ(zs, (z) => { const a = arm(z); return [[X(0.866), 0.2], [X(0.862), 0.36], [X(0.858), 0.5], [X(0.85 - 0.02 * a), 0.545], [X(0.85 - 0.055 * a), 0.585]]; }, flip));
+    kit.add('doorLow', loftZ(zs, (z) => { const a = arm(z); return [[X(0.866), 0.2], [X(0.862), 0.36], [X(0.858), 0.5], [X(0.85 - 0.02 * a), 0.545], [X(0.85 - 0.055 * a), 0.585]]; }, flip));
     kit.add('tan', loftZ(zs, (z) => { const a = arm(z); return [[X(0.85 - 0.055 * a), 0.585], [X(0.85 - 0.068 * a), 0.618], [X(0.85 - 0.06 * a), 0.646], [X(0.856 - 0.03 * a), 0.664], [X(0.858), 0.676]]; }, flip));
     kit.add('alc', loftZ(zs, () => [[X(0.858), 0.676], [X(0.86), 0.74], [X(0.858), 0.81]], flip));
     kit.add('nappa', loftZ(zs, (z) => { const ys = sill(z), gx = body.canopyX(z, ys + 0.012) - 0.008; return [[X(0.858), 0.81], [X(0.856), ys - 0.05], [X(0.845), ys - 0.012], [X(Math.min(0.84, gx + 0.006)), ys + 0.002], [X(gx - 0.002), ys + 0.006]]; }, flip));
@@ -527,6 +567,33 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     back('tan', U.slice(0, 5)); back('tanPerf', U.slice(4, 9)); back('tan', U.slice(8));
     back('carbon', [U[0], -0.2, -0.1, 0, 0.1, 0.2, U[12]].map((u) => u * 1.02), 0.075);
   }
+  // ---------------------------------------------------------------- the Corsa: a roll hoop behind the seats, a four-point harness on the passenger seat
+  if (P.interior === 'corsa') {
+    const z = 0.535, yTop = body.top(z, 0) - 0.085, Xm = D - 0.11, hoop: V3[] = [];
+    for (let k = 0; k <= 40; k++) {
+      const sx = -1 + 2 * (k / 40), y = 0.16 + (yTop - 0.16) * Math.pow(Math.max(0, 1 - Math.abs(sx) ** 5), 1 / 5);
+      let x = sx * Xm; if (y > 0.8) x = Math.sign(sx) * Math.min(Math.abs(x), body.canopyX(z, y) - 0.06);
+      hoop.push(v3(x, y, z));
+    }
+    kit.add('hoop', tubeGeo(hoop, () => 0.021, high ? 12 : 8), null, 0.1);
+    // the harness: two shoulder straps out of the backrest's slots, down the seat to a turn-buckle, two lap belts
+    const cx = 0.37, upV = v3(0, Math.cos(0.38), Math.sin(0.38)), fwdV = v3(0, Math.sin(0.38), -Math.cos(0.38)), base = v3(cx, 0.3, 0.28);
+    const onBack = (h: number, u: number) => base.clone().addScaledVector(upV, h).add(v3(u, 0, 0)).addScaledVector(fwdV, 0.02 * Math.sin(Math.PI * h / 0.8) + 0.006);
+    const buckle = v3(cx, 0.322, 0.03);
+    for (const sd of [-1, 1]) {
+      const path: V3[] = [];
+      for (let k = 0; k <= 8; k++) { const h = 0.6 - 0.46 * (k / 8); path.push(onBack(h, sd * (0.075 - 0.03 * (k / 8)))); }
+      path.push(v3(cx + sd * 0.04, 0.33, 0.17), v3(cx + sd * 0.02, 0.326, 0.08), buckle.clone().add(v3(sd * 0.01, 0, -0.01)));
+      kit.add('belt', tubeGeo(path, () => 0.019, 6, { rb: () => 0.0022, up: v3(1, 0, 0) }), null, 0.1);
+      const lap = [v3(cx + sd * 0.235, 0.36, 0.2), v3(cx + sd * 0.17, 0.335, 0.12), v3(cx + sd * 0.08, 0.327, 0.05), buckle.clone().add(v3(sd * 0.02, 0, 0))];
+      kit.add('belt', tubeGeo(lap, () => 0.019, 6, { rb: () => 0.0022, up: v3(0, 0, 1) }), null, 0.1);
+      // adjusters on the shoulder straps
+      const adj = new RoundedBoxGeometry(0.05, 0.008, 0.03, 2, 0.003); adj.applyMatrix4(new THREE.Matrix4().makeBasis(v3(1, 0, 0), fwdV, upV.clone().negate()).setPosition(onBack(0.36, sd * 0.06).addScaledVector(fwdV, 0.004)));
+      kit.add('alu', adj, null, 0.05);
+    }
+    const bk2 = new THREE.CylinderGeometry(0.034, 0.034, 0.014, 32); bk2.translate(buckle.x, buckle.y + 0.004, buckle.z); kit.add('alu', bk2, null, 0.05);
+  }
+
   // ---------------------------------------------------------------- console, floor
   {
     const con = new RoundedBoxGeometry(0.24, 0.36, 1.0, 3, 0.03); con.translate(0, 0.27, -0.13); kit.add('nappa', con);
@@ -541,7 +608,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the whole shell (no glass: the cockpit has its own): the bonnet and wings through the windscreen, the door
     // tops and the haunches through the side glass and in the door mirrors, the engine cover in the rear-view
     B.buildBody(bk, { q, glass: false, mirrors: false });
-    for (const sd of [-1, 1] as const) mirrorParts(bk, sd, !live || sd > 0, 'paint');
+    for (const sd of [-1, 1] as const) mirrorParts(bk, sd, !live || sd > 0);
   }
 
   // ---------------------------------------------------------------- the dashboard's ghost in the windscreen

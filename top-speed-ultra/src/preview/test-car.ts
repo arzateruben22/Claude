@@ -1,5 +1,5 @@
 // Test page for the car part: the four garage cars inside and out, from every camera the game has.
-//   ?view= seat | free-left | free-right | free-up | hood | chase | sky | sky-zoom | dash | beauty | rear | wheel |
+//   ?view= seat | free-left | free-right | free-up | hood | chase | back | sky | sky-zoom | dash | beauty | rear | wheel |
 //          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck
 //   &car=rossini-gt | rossini-brio | rossini-corsa | vela-e      &q=high|phone   &world=0 to skip the game's roads
 //   &paint=hex   &s=metres from the stretch start   &mirrors=live|env   &hands=1 (the hands part on the rim)
@@ -29,7 +29,7 @@ const wantWorld = !debug && q.get('world') !== '0';
 const interior = ['seat', 'free-left', 'free-right', 'free-up', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view);
 
 const FOV: Record<string, number> = {
-  seat: portrait ? 96 : 58, 'free-left': 66, 'free-right': 66, 'free-up': 66, hood: portrait ? 92 : 62, chase: portrait ? 80 : 60, sky: 50, 'sky-zoom': 7,
+  seat: portrait ? 96 : 58, 'free-left': 66, 'free-right': 66, 'free-up': 66, hood: portrait ? 92 : 62, chase: portrait ? 80 : 60, sky: 50, 'sky-zoom': 7, back: 62,
   dash: 50, wheelck: 50, door: 60, wheel: 34, dmirror: 16, grip: 28, garage: 34,
 };
 const stage = await makeStage({ stretch: !debug, fov: FOV[view] ?? 30, near: view === 'chase' ? 0.15 : 0.02 });
@@ -123,6 +123,7 @@ if (interior) {
   if (view === 'rear') look(L(-3.4, 1.05, 5.0), L(0.15, 0.55, 0.1));
   if (view === 'wheel') look(L(-2.0, 0.55, -2.25), L(-0.85, 0.36, -1.33));
   if (view === 'hood') carCam(new THREE.Vector3(0, 1.0, -1.45), 0, -0.04);
+  if (view === 'back') carCam(new THREE.Vector3(0, 1.15, 2.6), Math.PI, 0);
   if (view === 'chase') look(L(0, portrait ? 2.9 : 2.25, portrait ? 8.2 : 6.6), L(0, 0.9, -3.5));
   if (view === 'sky' || view === 'sky-zoom') {
     // heading-up: the car's forward is the top of the frame

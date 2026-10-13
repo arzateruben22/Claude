@@ -12,7 +12,7 @@
 // Car frame: metres, x right, y up, the car faces -z, origin on the ground under the middle of the car.
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { Kit, V3, v3, curve, clamp, sstep, gridGeo, roundPoly, roundRect, mat, tubeGeo, latheGeo } from './car-kit';
+import { Kit, V3, v3, curve, clamp, sstep, gridGeo, roundPoly, roundRect, mat, tubeGeo, latheGeo, extrude } from './car-kit';
 import type { ShutLine } from './car-mats';
 import { EYE } from './spec';
 import { CarId, ShapeParams, shapeFor } from './car-shape';
@@ -137,6 +137,19 @@ function makeBody(P: ShapeParams) {
     },
     halfWidth: (z: number) => WP(z),
   };
+
+  // a point on the nose's corner skin at half-width ax and height y (the front-facing flank ahead of the front
+  // wheel), by bisection along z, and the skin's outward normal there (right side)
+  const cornerZ = (ax: number, y: number) => {
+    let lo = ZF, hi = ZF + P.nose.R + 0.2;
+    for (let i = 0; i < 36; i++) { const m = (lo + hi) / 2; if (body.side(m, y) < ax) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  };
+  const cornerN = (y: number, z: number) => {
+    const e = 0.002, dz = (body.side(z + e, y) - body.side(z - e, y)) / (2 * e), dy = (body.side(z, y + e) - body.side(z, y - e)) / (2 * e);
+    return v3(1, -dy, -dz).normalize();
+  };
+  const CORNER_Q = P.cornerIntake ? ccw(P.cornerIntake) : null;
 
   // the ends' lean: the nose's chin and the tail's lower half are set back (a smooth warp of everything filed in the
   // body's kit; the wheels are added rigid)
@@ -280,6 +293,7 @@ function makeBody(P: ShapeParams) {
       if (RF_Q && n.y > 0.25 && inQuad([c.x, c.z], RF_Q, 0.035)) continue;
       if (Math.abs(n.x) > 0.2 && ax > 0.3 && inQuad([c.z, c.y], SG_Q, 0.022)) continue;
       if (INTAKE && Math.abs(n.x) > 0.3 && c.z > INTAKE.z0 + 0.012 && c.z < INTAKE.z1 - 0.012 && c.y > INTAKE.y0 + 0.012 && c.y < INTAKE.y1 - 0.012) continue;
+      if (CORNER_Q && n.z < -0.15 && c.z < ZF + 0.7 && inQuad([ax, c.y], CORNER_Q, 0.008)) continue;
       if (LOUVRE && n.y > 0.3 && ax < LOUVRE.x - 0.012 && c.z > LOUVRE.z0 + 0.012 && c.z < LOUVRE.z1 - 0.012) continue;
       const ia = i * nj + j, ib = ia + 1, ic = ia + nj, id = ic + 1;
       // a carbon roof panel (Corsa): the canopy's top between the windscreen header and the rear screen
@@ -535,7 +549,7 @@ function makeBody(P: ShapeParams) {
       const hc = new THREE.ShapeGeometry(intakeF, 6); hc.rotateY(Math.PI); hc.translate(0, 0, ZF + 0.025);
       kit.add('grille', hc, null, 1);
       // strakes split the opening into a centre duct and two radiator ducts
-      const strakes = P.noseStyle === 'corsa' ? [-0.36, -0.13, 0.13, 0.36] : P.noseStyle === 'gt' ? [-0.205, 0.205] : [];
+      const strakes = P.noseStyle === 'corsa' ? [-0.3, -0.11, 0.11, 0.3] : P.noseStyle === 'gt' ? [-0.205, 0.205] : [];
       for (const x of strakes) {
         const st = new THREE.BoxGeometry(0.026, 0.2, 0.1, 1, 1, 1); st.translate(x, cy, ZF + 0.045);
         kit.add(Math.abs(x) < 0.2 && P.noseStyle === 'corsa' ? 'carbon' : 'paint', st, null, 0.2);
@@ -561,6 +575,35 @@ function makeBody(P: ShapeParams) {
         kit.add('carbon', g, null, 0.06);
       }
     }
+    // corner intakes: an opening in each front corner under the lamp, with a frame that wraps the skin's cut edge,
+    // a mesh set 20 mm back and a dark plenum behind it
+    if (P.cornerIntake && keep(v3(0.6, 0.3, ZF + 0.1))) for (const sd of [1, -1] as const) {
+      const Q = P.cornerIntake, nu = 12, nv = 6;
+      const gu = 1 / Math.hypot(Q[1][0] - Q[0][0], Q[1][1] - Q[0][1]), gv = 1 / Math.hypot(Q[3][0] - Q[0][0], Q[3][1] - Q[0][1]);
+      const at = (u: number, v: number, d: number) => {
+        const ax0 = Q[0][0] + (Q[1][0] - Q[0][0]) * u, y0 = Q[0][1] + (Q[1][1] - Q[0][1]) * u;
+        const ax1 = Q[3][0] + (Q[2][0] - Q[3][0]) * u, y1 = Q[3][1] + (Q[2][1] - Q[3][1]) * u;
+        const ax = ax0 + (ax1 - ax0) * v, y = y0 + (y1 - y0) * v, z = cornerZ(ax, y), nn = cornerN(y, z);
+        return v3(sd * (ax + nn.x * d), y + nn.y * d, z + nn.z * d);
+      };
+      const grid = (d: number) => { const rr: V3[][] = []; for (let i = 0; i <= nv; i++) { const r: V3[] = []; for (let j = 0; j <= nu; j++) r.push(at(j / nu, i / nv, d)); rr.push(r); } return rr; };
+      // the outline (counter-clockwise in u, v), grown outward by g metres
+      const ring = (d: number, g: number) => {
+        const r: V3[] = [], k = 8, a0 = -g * gu, a1 = 1 + g * gu, b0 = -g * gv, b1 = 1 + g * gv;
+        for (let j = 0; j < k; j++) r.push(at(a0 + (a1 - a0) * (j / k), b0, d));
+        for (let j = 0; j < k; j++) r.push(at(a1, b0 + (b1 - b0) * (j / k), d));
+        for (let j = 0; j < k; j++) r.push(at(a1 - (a1 - a0) * (j / k), b1, d));
+        for (let j = 0; j < k; j++) r.push(at(a0, b1 - (b1 - b0) * (j / k), d));
+        return r;
+      };
+      const fl = sd < 0;
+      kit.add(P.noseStyle === 'corsa' ? 'carbon' : 'trim', gridGeo([ring(0.003, 0.012), ring(0.003, -0.009)], { closeU: true, flip: fl }), null, 0.06);
+      kit.add('dark', gridGeo([ring(0.001, -0.009), ring(-0.07, -0.009)], { closeU: true, flip: fl }), null, 0.2);
+      const hc = gridGeo(grid(-0.02), { flip: fl }), hu = hc.attributes.uv as THREE.BufferAttribute, hp = hc.attributes.position;
+      for (let k = 0; k < hu.count; k++) hu.setXY(k, hp.getX(k) - hp.getZ(k) * sd, hp.getY(k));
+      kit.add('grille', hc);
+      kit.add('dark', gridGeo(grid(-0.07), { flip: fl }), null, 0.2);
+    }
     // the bonnet's centre vent and the front fenders' louvres (Corsa)
     if (P.bonnetVent && keep(v3(0, 0.7, -1.8))) topVent(kit, -0.34, 0.34, ZF + 0.5, ZF + 0.84, 6);
     if (P.fenderVents && keep(v3(0.7, 0.8, -1.2))) for (const sd of [-1, 1]) {
@@ -582,15 +625,34 @@ function makeBody(P: ShapeParams) {
       if (P.tailStyle === 'gt' || P.tailStyle === 'corsa') {
         // a gloss-black band across the tail; in it a thin LED line, and at each end a lamp that turns down
         const hw = tailX(yl) - 0.02;
-        const band = new THREE.ShapeGeometry(roundRect(hw * 2, 0.085, 0.02, 0, yl), 4); band.translate(0, 0, ZR + 0.002);
+        const band = new THREE.ShapeGeometry(roundRect(hw * 2, 0.1, 0.022, 0, yl - 0.004), 4); band.translate(0, 0, ZR + 0.002);
         kit.add('trim', band, null, 0.2);
-        kit.add('tail', bar(hw * 2 - 0.16, 0.014, yl + 0.008));
+        kit.add('tail', bar(hw * 2 - 0.5, 0.012, yl + 0.016));
+        // a lamp cluster at each end: a swept lens standing 14 mm proud of the band (its sides catch the light),
+        // the outer end turned down, a reflector strip under it
         for (const sd of [-1, 1]) {
-          const lens = new THREE.ShapeGeometry(roundRect(0.2, 0.05, 0.014, sd * (hw - 0.115), yl - 0.005), 2); lens.translate(0, 0, ZR + 0.003);
-          const lu = lens.attributes.uv as THREE.BufferAttribute, lp = lens.attributes.position, x0 = sd * (hw - 0.115) - 0.1;
-          for (let k = 0; k < lu.count; k++) lu.setXY(k, clamp((lp.getX(k) - x0) / 0.2, 0, 1) * 0.5, clamp((lp.getY(k) - (yl - 0.03)) / 0.05, 0, 1));
+          const L = 0.3, H = 0.06, xo = sd * (hw - 0.012), xi = xo - sd * L, y0 = yl - 0.034, y1 = y0 + H;
+          const sh = new THREE.Shape();
+          const pts: [number, number][] = [[xi + sd * 0.035, y0], [xo, y0 - 0.012], [xo, y1], [xi, y1]];
+          sh.moveTo(pts[0][0], pts[0][1]); for (const pp of pts.slice(1)) sh.lineTo(pp[0], pp[1]); sh.closePath();
+          const lens = extrude(sh, 0.014, 0.004, 4); lens.translate(0, 0, ZR + 0.001);
+          const lu = lens.attributes.uv as THREE.BufferAttribute, lp = lens.attributes.position, xmin = Math.min(xi, xo);
+          for (let k = 0; k < lu.count; k++) lu.setXY(k, clamp((lp.getX(k) - xmin) / L, 0, 1) * 0.5, clamp((lp.getY(k) - (y0 - 0.012)) / (H + 0.012), 0, 1));
+          lens.computeVertexNormals();
           kit.add('tail', lens);
-          const end = bar(0.016, 0.07, yl - 0.02, ZR + 0.0045); end.translate(sd * (hw - 0.008), 0, 0); kit.add('tail', end);
+          const refl = new THREE.ShapeGeometry(roundRect(0.16, 0.008, 0.003, xo - sd * 0.1, y0 - 0.026), 1); refl.translate(0, 0, ZR + 0.0035);
+          const ru = refl.attributes.uv as THREE.BufferAttribute; for (let k = 0; k < ru.count; k++) ru.setXY(k, 0.02, 0.1);
+          kit.add('tail', refl);
+        }
+        // the GT's ducktail: a carbon lip along the deck's trailing edge, kicked up 30 mm
+        if (P.tailStyle === 'gt') {
+          const half = body.shoulder(ZR).Ws - 0.14, rowsD: V3[][] = [];
+          for (let k = 0; k <= 32; k++) {
+            const x = -half + 2 * half * (k / 32), a = Math.abs(x), e = Math.min(1, (half - a) / 0.05);
+            const zb = ZR - 0.09, yb = body.top(zb, a) - ends(zb)[1] * 0 - 0.002, ye = body.top(ZR - 0.012, a);
+            rowsD.push([v3(x, yb, zb), v3(x, Math.max(ye, yb - 0.02) + 0.03 * e, ZR + 0.012), v3(x, Math.max(ye, yb - 0.02) + 0.03 * e - 0.009 - 0.003 * e, ZR + 0.014), v3(x, ye - 0.006, ZR - 0.008)]);
+          }
+          kit.add('carbon', gridGeo(rowsD, { closeU: true, flip: true }), null, 0.1);
         }
       } else if (P.tailStyle === 'brio') {
         // two round lamps a side in a body-coloured tail, each in a chrome ring
@@ -606,13 +668,13 @@ function makeBody(P: ShapeParams) {
       } else {
         // Vela: one lit line across the whole tail, wrapping round the corners, over a gloss-black band
         const hw = tailX(yl) - 0.006;
-        const band = new THREE.ShapeGeometry(roundRect(hw * 2, 0.05, 0.012, 0, yl), 4); band.translate(0, 0, ZR + 0.002);
+        const band = new THREE.ShapeGeometry(roundRect(hw * 2, 0.064, 0.014, 0, yl), 4); band.translate(0, 0, ZR + 0.002);
         kit.add('trim', band, null, 0.2);
-        kit.add('tail', bar(hw * 2 - 0.02, 0.016, yl));
+        kit.add('tail', bar(hw * 2 - 0.02, 0.022, yl));
         for (const sd of [-1, 1]) {
           // round the corner: a strip on the side skin just ahead of the tail
           const rowsW: V3[][] = [];
-          for (let k = 0; k <= 6; k++) { const z = ZR - 0.16 * (k / 6), x = sd * (body.side(z, yl) + 0.003); rowsW.push([v3(x, yl - 0.008, z), v3(x, yl + 0.008, z)]); }
+          for (let k = 0; k <= 6; k++) { const z = ZR - 0.16 * (k / 6), x = sd * (body.side(z, yl) + 0.003); rowsW.push([v3(x, yl - 0.011, z), v3(x, yl + 0.011, z)]); }
           const wg = gridGeo(rowsW, { flip: sd > 0 }), wu = wg.attributes.uv as THREE.BufferAttribute;
           for (let k = 0; k < wu.count; k++) wu.setXY(k, 0.25, k % 2 ? 0.55 : 0.4);
           kit.add('tail', wg);

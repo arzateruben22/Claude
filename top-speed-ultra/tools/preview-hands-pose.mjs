@@ -12,7 +12,7 @@ for (const [k, v] of Object.entries(po)) { if (v && typeof v === 'object' && !Ar
 const pres = process.argv[3] ?? 'm';
 const t0 = performance.now();
 const A = M.buildAnatomy(pres);
-console.log('anatomy ms', (performance.now() - t0).toFixed(1));
+console.log('anatomy ms', (performance.now() - t0).toFixed(1), 'thumbScore', M.thumbScore?.toFixed?.(2), 'q', JSON.stringify(M.thumbQ), JSON.stringify(M.thumbTerms, (k, v) => typeof v === 'number' ? +v.toFixed(1) : v), 'iMCP', A.mcp[0].map(Math.round).join(','));
 const eyeW = M.carToW([-0.37, 1.16, 0.1]);
 const eyeG = M.wToG(eyeW);
 const ph = (p) => M.sectionAngle(p).toFixed(0);

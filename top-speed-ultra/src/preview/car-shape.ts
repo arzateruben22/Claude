@@ -40,7 +40,8 @@ export interface ShapeParams {
   headStyle: 'twin' | 'round' | 'slim';
   noseStyle: 'gt' | 'brio' | 'corsa' | 'vela';
   tailStyle: 'gt' | 'brio' | 'corsa' | 'vela';
-  noseIntake: [number, number][];        // the main front opening (x, y), convex
+  noseIntake: [number, number][];        // the main front opening (x, y), convex; inside the nose face's outline
+  cornerIntake: [number, number][] | null; // an opening in each front corner (|x|, y): inner-bottom, outer-bottom, outer-top, inner-top
   rearMesh: { w: number; h: number; cy: number } | null;
   exhaust: 'twin' | 'single' | 'high' | 'none';
   diffuser: { half: number; h: number; z0: number; fins: number[] };
@@ -81,7 +82,8 @@ const GT: ShapeParams = {
   frontLid: [[-0.5, -2.13], [0.5, -2.13], [0.57, -1.2], [-0.57, -1.2]],
   head: [[0.36, -2.17], [0.79, -2.095], [0.86, -1.93], [0.5, -2.0]], headStyle: 'twin',
   noseStyle: 'gt', tailStyle: 'gt',
-  noseIntake: [[-0.43, 0.158], [0.43, 0.158], [0.37, 0.305], [-0.37, 0.305]],
+  noseIntake: [[-0.41, 0.158], [0.41, 0.158], [0.36, 0.305], [-0.36, 0.305]],
+  cornerIntake: [[0.5, 0.19], [0.79, 0.2], [0.73, 0.35], [0.52, 0.33]],
   rearMesh: { w: 1.36, h: 0.26, cy: 0.6 },
   exhaust: 'twin',
   diffuser: { half: 0.64, h: 0.38, z0: 1.7, fins: [-0.64, -0.38, -0.13, 0.13, 0.38, 0.64] },
@@ -114,7 +116,8 @@ const BRIO: ShapeParams = {
   frontLid: [[-0.48, -1.96], [0.48, -1.96], [0.54, -1.15], [-0.54, -1.15]],
   head: [[0.47, -2.0], [0.77, -1.9], [0.8, -1.74], [0.53, -1.8]], headStyle: 'round',
   noseStyle: 'brio', tailStyle: 'brio',
-  noseIntake: [[-0.34, 0.17], [0.34, 0.17], [0.3, 0.29], [-0.3, 0.29]],
+  noseIntake: [[-0.27, 0.17], [0.27, 0.17], [0.24, 0.29], [-0.24, 0.29]],
+  cornerIntake: [[0.37, 0.2], [0.63, 0.21], [0.59, 0.31], [0.39, 0.3]],
   rearMesh: { w: 1.1, h: 0.17, cy: 0.56 },
   exhaust: 'single',
   diffuser: { half: 0.5, h: 0.33, z0: 1.6, fins: [-0.5, -0.17, 0.17, 0.5] },
@@ -141,7 +144,8 @@ const CORSA: ShapeParams = {
   frontLid: [[-0.52, -2.2], [0.52, -2.2], [0.57, -1.2], [-0.57, -1.2]],
   head: [[0.4, -2.26], [0.8, -2.17], [0.88, -2.0], [0.52, -2.08]],
   noseStyle: 'corsa', tailStyle: 'corsa',
-  noseIntake: [[-0.56, 0.135], [0.56, 0.135], [0.47, 0.32], [-0.47, 0.32]],
+  noseIntake: [[-0.45, 0.135], [0.45, 0.135], [0.4, 0.32], [-0.4, 0.32]],
+  cornerIntake: [[0.54, 0.15], [0.87, 0.17], [0.81, 0.39], [0.56, 0.35]],
   rearMesh: { w: 1.42, h: 0.3, cy: 0.58 },
   exhaust: 'high',
   diffuser: { half: 0.72, h: 0.42, z0: 1.6, fins: [-0.72, -0.48, -0.24, 0, 0.24, 0.48, 0.72] },
@@ -174,7 +178,8 @@ const VELA: ShapeParams = {
   frontLid: [[-0.52, -2.18], [0.52, -2.18], [0.58, -1.25], [-0.58, -1.25]],
   head: [[0.52, -2.235], [0.84, -2.13], [0.87, -2.06], [0.56, -2.18]], headStyle: 'slim',
   noseStyle: 'vela', tailStyle: 'vela',
-  noseIntake: [[-0.46, 0.17], [0.46, 0.17], [0.42, 0.235], [-0.42, 0.235]],
+  noseIntake: [[-0.34, 0.17], [0.34, 0.17], [0.31, 0.235], [-0.31, 0.235]],
+  cornerIntake: [[0.47, 0.2], [0.55, 0.2], [0.58, 0.41], [0.51, 0.41]],
   rearMesh: null,
   exhaust: 'none',
   diffuser: { half: 0.66, h: 0.34, z0: 1.75, fins: [-0.66, -0.33, 0, 0.33, 0.66] },
