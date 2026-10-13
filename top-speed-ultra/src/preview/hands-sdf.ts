@@ -241,7 +241,7 @@ function dims(pres: Pres): Dims {
 
 // the pose: the palm lies over the rim's front face with the back of the hand toward the driver; the knuckles sit
 // at the rim's outer front edge and the fingers wrap round behind it; the thumb lies along the inner face
-const POSE = {
+export const POSE = {
   alpha: 60 * DEG,       // the back of the hand's normal, from straight out (away from the hub) toward the driver
   palmT: 15,             // the metacarpals' axis above the palm's skin where the palm meets the rim (mm)
   mcpDist: 21,           // from that contact to the middle knuckle, toward the fingers (mm)

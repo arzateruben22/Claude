@@ -18,7 +18,6 @@
 // and a windscreen with a faint ghost of the dashboard reflected in it and a film of dust with the wiper sweeps.
 // No hands: another part builds them on the rim.
 import * as THREE from 'three';
-import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, mat, clamp, sstep, lerp, between } from './car-kit';
@@ -28,6 +27,7 @@ import { carMaterials } from './car';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as G from './car-gauges';
 import { windscreenDust, badgeTex, once } from './car-tex';
+import { CarMirror } from './car-mirror';
 
 export interface CockpitOptions { paint: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number }
 export interface Cockpit {
@@ -91,44 +91,6 @@ function rimFrames(a0: number, a1: number, n: number) {
     N.push(p.clone().sub(t.clone().multiplyScalar(p.dot(t))).normalize()); path.push(p); B.push(v3(0, 0, 1)); as.push(a);
   }
   return { path, N, B, as };
-}
-
-// mirrors that show the scene: a Reflector with a dimmed, unblended shader, never rendered from inside another
-let mirrorBusy = false;
-const MirrorShader = {
-  name: 'CarMirror',
-  uniforms: { color: { value: null }, tDiffuse: { value: null }, textureMatrix: { value: null } },
-  vertexShader: /* glsl */`
-    uniform mat4 textureMatrix;
-    varying vec4 vUv;
-    #include <common>
-    #include <logdepthbuf_pars_vertex>
-    void main() {
-      vUv = textureMatrix * vec4(position, 1.0);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      #include <logdepthbuf_vertex>
-    }`,
-  fragmentShader: /* glsl */`
-    uniform vec3 color; uniform sampler2D tDiffuse; varying vec4 vUv;
-    #include <logdepthbuf_pars_fragment>
-    void main() {
-      #include <logdepthbuf_fragment>
-      vec4 base = texture2DProj(tDiffuse, vUv);
-      gl_FragColor = vec4(base.rgb * color, 1.0);
-      #include <tonemapping_fragment>
-      #include <colorspace_fragment>
-    }`,
-};
-function liveMirror(geo: THREE.BufferGeometry, w: number, h: number, tint: number) {
-  const r = new Reflector(geo, { textureWidth: w, textureHeight: h, color: tint, multisample: 0, clipBias: 0.002, shader: MirrorShader });
-  const orig = r.onBeforeRender;
-  r.onBeforeRender = function (renderer, scene, camera, geometry, material, group) {
-    if (mirrorBusy) return;
-    mirrorBusy = true;
-    try { orig.call(r, renderer, scene, camera, geometry, material, group); } finally { mirrorBusy = false; }
-  };
-  r.castShadow = false; r.receiveShadow = false;
-  return r;
 }
 
 // ------------------------------------------------------------------------------------------------ the cockpit
@@ -409,8 +371,18 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   }
   // header beam along the top of the glass, and the headliner back to the bulkhead
   {
-    const path = range(-1.12, 1.12, 30).map((s) => { const p = wsPoint(clamp(s, -1.1, 1.1), 0.975, -0.024); return p; });
-    kit.add('alc', tubeGeo(path, () => 0.024, high ? 14 : 8, { rb: () => 0.017 }));
+    // the header: a slim padded lip that wraps the glass's top edge into the headliner (kept tight to the roof so
+    // the driver's view up the road stays open: its lower edge sits ~18 degrees above the eye line)
+    {
+      const hs = range(-1.04, 1.04, high ? 40 : 20), rows: V3[][] = [];
+      for (const s of hs) {
+        const sc = clamp(s, -1, 1), p0 = wsPoint(sc, 0.955, -0.007), p1 = wsPoint(sc, 0.985, -0.016), p2 = wsPoint(sc, 1, -0.02);
+        const [hx, hz0] = wsXZ(sc, 1), hz = hz0 + 0.03, ph = v3(hx * 0.99, body.top(hz, Math.abs(hx)) - 0.024, hz);
+        const out = (s - sc) * 0.6;
+        rows.push([p0, p1, p2, ph].map((p) => p.clone().add(v3(Math.sign(s) * Math.abs(out) * 0.4, -Math.abs(out) * 0.1, Math.abs(out) * 0.4))));
+      }
+      kit.add('alc', gridGeo(rows, { flip: true }));
+    }
     const zBack = 0.565, NZ = high ? 16 : 8, NX = high ? 24 : 12;
     const edgeX = (z: number) => {
       if (z <= SG.ft[0]) return Math.abs(sgPoint(0, 1, 1).x);
@@ -421,8 +393,8 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
     for (let i = 0; i <= NZ; i++) {
       const w = i / NZ, r: V3[] = [];
       for (let j = 0; j <= NX; j++) {
-        const s = -1 + 2 * (j / NX), z0 = wsXZ(clamp(s, -1, 1), 1)[1] + 0.012, z = lerp(z0, zBack, w), x = s * (edgeX(z) - 0.012);
-        r.push(v3(x, body.top(z, Math.abs(x)) - 0.03, z));
+        const s = -1 + 2 * (j / NX), z0 = wsXZ(clamp(s, -1, 1), 1)[1] + 0.025, z = lerp(z0, zBack, w), x = s * (edgeX(z) - 0.012);
+        r.push(v3(x, body.top(z, Math.abs(x)) - 0.024 - 0.004 * Math.sin(Math.PI * w), z));
       }
       rows.push(r);
     }
@@ -550,27 +522,30 @@ export function buildCockpit(o: CockpitOptions): Cockpit {
   for (const k of ['glass', 'sideGlass', 'gaugeGlass', 'dust']) { const m = group.getObjectByName(k); if (m) { m.renderOrder = k === 'dust' ? 4 : 2; m.castShadow = false; } }
 
   // ---------------------------------------------------------------- mirrors with reflections
-  if (live) {
-    // rear-view: frameless, hung from the top of the windscreen, angled between the driver's eye and the rear window
-    const mount = wsPoint(0.05, 0.88, -0.008), inward = body.topNormal(mount.x, mount.z).negate();
-    const mb = mount.clone().addScaledVector(inward, 0.045).add(v3(0, -0.028, 0.0));
-    const nrm = EYE.clone().sub(mb).normalize().add(v3(0, 1.06, 2.2).sub(mb).normalize()).normalize();
-    const housing = new RoundedBoxGeometry(0.255, 0.072, 0.03, 4, 0.012);
+  {
+    // rear-view: frameless, hung from the top of the windscreen just left of centre, its face turned so the driver
+    // looks straight back through the bulkhead window
+    const mount = wsPoint(-0.05, 0.935, -0.008), inward = body.topNormal(mount.x, mount.z).negate();
+    const mb = mount.clone().addScaledVector(inward, 0.03).add(v3(0, -0.034, 0.012));
+    const nrm = EYE.clone().sub(mb).normalize().add(v3(0, 1.08, 2.2).sub(mb).normalize()).normalize();
     const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrm)); look.updateMatrix();
-    housing.translate(0, 0, -0.016); housing.applyMatrix4(look.matrix);
+    const housing = extrude(roundRect(0.262, 0.07, 0.03), 0.026, 0.006, 8); housing.translate(0, 0, -0.03); housing.applyMatrix4(look.matrix);
     const stem = new THREE.CylinderGeometry(0.0065, 0.0075, 1, 12); stem.applyMatrix4(between(mount, mb.clone().addScaledVector(nrm, -0.03)));
     const extra = new Kit(); extra.add('gloss', housing); extra.add('plastic', stem, null, 0.02);
     const base = new RoundedBoxGeometry(0.05, 0.012, 0.035, 2, 0.004); base.applyMatrix4(new THREE.Matrix4().makeBasis(v3(1, 0, 0), inward.clone().negate(), v3(1, 0, 0).cross(inward.clone().negate()).normalize()).setPosition(mount.clone().addScaledVector(inward, 0.005)));
     extra.add('plastic', base);
+    if (!live) { const g = new THREE.PlaneGeometry(0.248, 0.058); g.applyMatrix4(look.matrix); extra.add('mirror', g, null, 0.2); }
     extra.build(mats, group, { shadow: () => false });
-    const rv = liveMirror(new THREE.PlaneGeometry(0.24, 0.058), high ? 384 : 256, high ? 96 : 64, 0xaaaaaa);
-    rv.position.copy(mb).addScaledVector(nrm, 0.0005); rv.lookAt(rv.position.clone().add(nrm)); rv.name = 'rear-view-mirror';
-    group.add(rv);
-    if (o.body ?? true) {
-      const { p, q: qq } = mirrorGlassPlacement(-1);
-      const dm = liveMirror(new THREE.PlaneGeometry(MIRROR.glass[0], MIRROR.glass[1]), high ? 192 : 128, high ? 96 : 64, 0xa4a8b0);
-      dm.position.copy(p); dm.quaternion.copy(qq); dm.name = 'door-mirror-left';
-      group.add(dm);
+    if (live) {
+      const rv = new CarMirror(0.248, 0.058, { res: high ? [320, 80] : [192, 48], tint: 0xc4c4c4, far: 400, every: high ? 1 : 2, phase: 0 });
+      rv.position.copy(mb).addScaledVector(nrm, 0.0008); rv.lookAt(rv.position.clone().add(nrm)); rv.name = 'rear-view-mirror';
+      group.add(rv);
+      if (o.body ?? true) {
+        const { p, q: qq } = mirrorGlassPlacement(-1);
+        const dm = new CarMirror(MIRROR.glass[0], MIRROR.glass[1], { res: high ? [192, 84] : [128, 56], tint: 0xc9ccd2, far: 300, every: high ? 1 : 2, phase: 1, dim: 0.35 });
+        dm.position.copy(p); dm.quaternion.copy(qq); dm.name = 'door-mirror-left';
+        group.add(dm);
+      }
     }
   }
 

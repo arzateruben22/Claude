@@ -20,6 +20,8 @@ await build({
   bundle: true, format: 'esm', platform: 'node', outfile: path.join(dir, 'debug.mjs'), logLevel: 'warning',
 });
 const M = await import(pathToFileURL(path.join(dir, 'debug.mjs')).href + '?t=' + Date.now());
+// --pose='{"alpha":1.1,"thumb":{"phi":[100,130,160]}}' overrides the grip pose for a quick look
+{ const po = JSON.parse(opt('pose', '{}')); for (const [k, v] of Object.entries(po)) { if (v && typeof v === 'object' && !Array.isArray(v)) Object.assign(M.POSE[k], v); else M.POSE[k] = v; } }
 
 const t0 = performance.now();
 const arm = M.buildArmGeometry(pres, h);
@@ -33,9 +35,9 @@ console.log('wrist', A.wrist.map((x) => x.toFixed(1)).join(','), 'elbow', A.elbo
 // ---- the rim near the grip, in G
 const rimTris = [], rimN = [];
 {
-  const a0 = M.GRIP_A, nA = 120, nB = 32, ring = [];
+  const a0 = M.GRIP_A, full = views.includes('both'), nA = full ? 360 : 120, nB = 32, ring = [];
   for (let i = 0; i <= nA; i++) {
-    const a = a0 + ((i / nA) * 2 - 1) * 0.9, R = 178;
+    const a = full ? (i / nA) * Math.PI * 2 : a0 + ((i / nA) * 2 - 1) * 0.9, R = 178;
     const row = [];
     const { rimA, rimB } = M;
     for (let j = 0; j < nB; j++) {
@@ -67,6 +69,8 @@ const V = {
   back: { eye: M.madd(C, dw([0.1, 0.3, -1]), 320), at: C, fov: 40 },
   top: { eye: M.madd(C, dw([-0.6, 0.8, 0.4]), 320), at: C, fov: 40 },
   close: { eye: M.madd(C, M.norm(M.sub(eyeG, C)), 250), at: C, fov: 40 },
+  both: { eye: eyeG, at: [0, 60, 0], fov: 38 },
+  eyeR: { eye: eyeG, at: C, fov: 16 },
   arm: { eye: M.madd(M.lerp3(Wr, El, 0.4), [0.3, 1, 0.3], 700), at: M.lerp3(Wr, El, 0.4), fov: 50 },
 };
 const list = views.split(',');
@@ -111,6 +115,7 @@ list.forEach((name, vi) => {
     const P = [a, b, c].map((q) => gw([pos[q * 3], pos[q * 3 + 1], pos[q * 3 + 2]])), N = [a, b, c].map((q) => dw([nrm[q * 3], nrm[q * 3 + 1], nrm[q * 3 + 2]]));
     const cc = col ? [a, b, c].map((q) => [col[q * 3], col[q * 3 + 1], col[q * 3 + 2]]) : [0.85, 0.62, 0.5];
     tri(P, N, cc);
+    if (name === 'both') tri(P.map((q) => [-q[0], q[1], q[2]]), N.map((q) => [-q[0], q[1], q[2]]), cc);
   }
   const ox = (vi % cols) * W, oy = Math.floor(vi / cols) * H;
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) for (let c = 0; c < 3; c++) {

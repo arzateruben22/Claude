@@ -22,7 +22,7 @@ export const ARCHES = [mkArch(AXLE.zF, 0.425), mkArch(AXLE.zR, 0.435)];
 const WP = curve([[-2.3, 0.86], [-2.1, 0.915], [-1.8, 0.95], [-1.33, 0.966], [-1.0, 0.952], [-0.6, 0.938], [-0.1, 0.932], [0.4, 0.948], [0.9, 0.975], [1.32, 0.985], [1.8, 0.978], [2.1, 0.96], [2.3, 0.935]]);
 const FH = curve([[-2.3, 0.56], [-2.0, 0.69], [-1.65, 0.8], [-1.33, 0.835], [-1.0, 0.855], [-0.5, 0.874], [0.0, 0.888], [0.5, 0.915], [1.0, 0.955], [1.32, 0.968], [1.8, 0.962], [2.1, 0.955], [2.3, 0.95]]);
 const CC = curve([[-2.3, 0.5], [-2.0, 0.585], [-1.6, 0.69], [-1.33, 0.745], [-1.12, 0.815], [-0.6, 0.855], [0.6, 0.88], [1.2, 0.9], [2.0, 0.935], [2.3, 0.945]]);
-const RH = curve([[-1.12, 0.818], [-0.85, 0.955], [-0.6, 1.075], [-0.3, 1.19], [-0.1, 1.245], [0.15, 1.268], [0.5, 1.24], [0.9, 1.16], [1.4, 1.06], [1.85, 0.985], [2.1, 0.94]]);
+const RH = curve([[-1.12, 0.818], [-0.85, 0.975], [-0.6, 1.11], [-0.4, 1.205], [-0.2, 1.274], [0.0, 1.305], [0.2, 1.316], [0.5, 1.284], [0.9, 1.185], [1.4, 1.07], [1.85, 0.985], [2.1, 0.94]]);
 const GB = curve([[-1.12, 0.82], [-0.5, 0.86], [0.1, 0.86], [0.6, 0.79], [1.2, 0.63], [1.8, 0.5], [2.1, 0.45]]);
 const ZC0 = -1.12, ZC1 = 2.1, DROP = 0.075, ROLL = 0.13, P = 4, K = 0.035;
 
@@ -93,7 +93,7 @@ export const body = {
 
 // ------------------------------------------------------------------------------------------------ glass outlines
 // windscreen, in top view: s across (-1..1), t from the base (0) to the header (1)
-export const WS = { zb: -1.095, zt: -0.115, xb: 0.765, xt: 0.6 };
+export const WS = { zb: -1.095, zt: -0.2, xb: 0.765, xt: 0.61 };
 export function wsXZ(s: number, t: number): [number, number] {
   const zb = WS.zb + 0.03 * s * s, zt = WS.zt + 0.025 * s * s;
   return [s * (WS.xb + (WS.xt - WS.xb) * t), zb + (zt - zb) * t];
@@ -105,8 +105,8 @@ export function wsPoint(s: number, t: number, off = 0, out = new THREE.Vector3()
   return out;
 }
 // side glass, in side view (z, y): corners front-bottom, rear-bottom, rear-top, front-top
-const FTz = -0.08;
-export const SG = { fb: [-0.92, 0.885], rb: [0.56, 0.94], rt: [0.4, 1.165], ft: [FTz, 0] as number[] };
+const FTz = -0.165;
+export const SG = { fb: [-0.92, 0.885], rb: [0.56, 0.94], rt: [0.42, 1.19], ft: [FTz, 0] as number[] };
 SG.ft[1] = body.top(FTz, 0.66) - 0.004;
 export function sgZY(u: number, v: number): [number, number] {
   const bz = SG.fb[0] + (SG.rb[0] - SG.fb[0]) * u, by = SG.fb[1] + (SG.rb[1] - SG.fb[1]) * u;

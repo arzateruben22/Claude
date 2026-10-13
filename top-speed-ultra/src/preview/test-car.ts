@@ -48,7 +48,7 @@ function look(from: THREE.Vector3, at: THREE.Vector3) { camera.position.copy(fro
 let part: THREE.Object3D;
 const t0 = performance.now();
 if (view === 'seat' || view === 'dash' || view === 'mirror') {
-  const ck = buildCockpit({ paint, quality });
+  const ck = buildCockpit({ paint, quality, mirrors: (q.get('mirrors') as 'live' | 'env' | null) ?? undefined });
   part = ck.group;
   frame.add(ck.group);
   log.buildMs = Math.round(performance.now() - t0);
