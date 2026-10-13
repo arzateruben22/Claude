@@ -1,5 +1,10 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src"],
-  "exclude": ["src/preview"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/preview",
+    "src/onfoot"
+  ]
 }
