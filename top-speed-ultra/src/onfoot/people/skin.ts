@@ -78,6 +78,7 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
     uLiner: { value: o.liner }, uHair: { value: new THREE.Color(o.hairColor) }, uFreckles: { value: o.freckles },
     uAge: { value: THREE.MathUtils.clamp((o.age - 25) / 50, 0, 1) }, uMale: { value: o.male ? 1 : 0 },
     uInk: { value: new THREE.Color(o.tattooInk ?? 0x1a2230) },
+    uHeadO: { value: new THREE.Vector3(0, 0, 0) }, uHeadS: { value: new THREE.Vector3(1, 1, 1) }, uLipP: { value: new THREE.Vector4(-1, 0.026, 1, 1) },
   };
   m.uniformsRef = u;
   m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
@@ -92,6 +93,7 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
 varying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc;
 uniform vec3 uTone; uniform float uDark; uniform vec3 uLip; uniform float uLipAmt; uniform float uBlush; uniform float uBeard; uniform vec3 uBeardCol;
 uniform float uLiner; uniform vec3 uHair; uniform float uFreckles; uniform float uAge; uniform float uMale; uniform vec3 uInk;
+uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP;
 ${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', sssLights())
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
@@ -112,6 +114,21 @@ c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.75);
 vec3 lipN = c * mix(vec3(0.92, 0.62, 0.62), vec3(0.78, 0.6, 0.62), uDark);
 vec3 lipC = mix(lipN, pow(uLip, vec3(1.1)) * 0.85, uLipAmt * 0.92);
 float lipM = smoothstep(0.15, 0.75, lip);
+#ifdef SKIN_FACE
+{
+  // the vermilion border, per pixel: a crisp line with the Cupid's bow, whatever the mesh's resolution
+  vec3 hl = (vRest - uHeadO) / uHeadS;
+  float mY = uLipP.x, mw = uLipP.y, ax = abs(hl.x);
+  float xr = clamp(1.0 - (hl.x / mw) * (hl.x / mw), 0.0, 1.0);
+  float hU = 0.0068 * uLipP.z * pow(xr, 0.5) * (1.0 + 0.16 * exp(-pow((ax - 0.0046) / 0.0032, 2.0)) - 0.1 * exp(-pow(hl.x / 0.0022, 2.0)));
+  float hL = 0.0086 * uLipP.w * pow(xr, 0.62);
+  float dy = hl.y - mY, aa = max(0.00025, fwidth(dy) * 0.8);
+  float inU = dy >= 0.0 ? smoothstep(hU + aa, hU - aa, dy) : 0.0;
+  float inL = dy < 0.0 ? smoothstep(hL + aa, hL - aa, -dy) : 0.0;
+  float lipA = clamp((inU + inL) * smoothstep(0.004, 0.011, hl.z) * smoothstep(mw + 0.0008, mw - 0.0015, ax), 0.0, 1.0);
+  if (uLipP.x > -0.5) lipM = lipA;
+}
+#endif
 c = mix(c, lipC, lipM);
 // blush
 c = mix(c, c * vec3(1.08, 0.86, 0.84), blush * uBlush * (1.0 - uDark * 0.5));

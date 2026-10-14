@@ -19,7 +19,9 @@ export function scalpCover(style: HairStyle, l: V3, age: number, male: boolean) 
   yH += rec * (0.022 * smooth(1.2, 0.0, phi) + 0.012 * Math.exp(-(((phi - 0.75) / 0.3) ** 2)));
   let c = smooth(yH - 0.003, yH + 0.004, y);
   // the ears are not hair
-  if (ax > 0.06 && y < 0.02 && y > -0.05 && z < -0.05 && z > -0.105) c *= smooth(0.066, 0.06, ax);
+  // the ears are not hair: their own outline, out from the side of the skull
+  const earE = Math.exp(-(((y + 0.014) / 0.034) ** 2) - (((z + 0.083) / 0.026) ** 2));
+  c *= 1 - smooth(0.3, 0.55, earE) * smooth(0.062, 0.07, ax);
   // a thinning crown on a receding style
   if (style === 'receding') c *= 1 - 0.85 * smooth(0.07, 0.1, y) * smooth(-0.11, -0.04, z);
   return c;
@@ -42,7 +44,8 @@ export function faceMasks(l: V3, hf: HeadFrame, look: Look): FaceMask {
   // warmth: cheeks, nose, ears, chin, lids
   const cheeks = g3(ax, y, z, [0.04, -0.03, 0.012], 0.018);
   const nose = g3(x, y, z, hf.nose.tip, 0.009) + 0.5 * g3(ax, y, z, [0.012, hf.nose.tip[1] - 0.006, 0.022], 0.007);
-  const ear = ax > 0.062 && y > -0.055 && y < 0.025 && z < -0.055 && z > -0.11 ? 1 : 0;
+  // the ear itself: outside the side of the skull, within the ear's outline (no hard box)
+  const ear = smooth(0.066, 0.076, ax) * Math.exp(-(((y + 0.016) / 0.03) ** 2) - (((z + 0.081) / 0.024) ** 2));
   const lids = g3(ax, y, z, [ex, 0.004, 0.011], 0.009);
   const red = clamp(0.55 * cheeks + 0.75 * nose + 0.7 * ear + 0.35 * lip + 0.25 * g3(x, y, z, [0, -0.098, 0.02], 0.012) + 0.3 * lids);
   const thin = clamp(ear + 0.3 * nose);

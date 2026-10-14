@@ -129,11 +129,11 @@ function margins(u: number, hf: HeadFrame, st: LidState) {
   const x = lerp(-0.0137, 0.015, u);
   const yc = lerp(-0.0009, 0.0004 + tilt, u);
   const bu = bump(u, 0.43, 0.75), bl = bump(u, 0.56, 0.85);
-  const yU0 = yc + (0.0054 - 0.0008 * F.hooded) * bu;
-  const yL = yc - 0.0041 * bl + bl * (0.0008 * st.blink + 0.0022 * st.squint);
+  const yU0 = yc + (0.0059 - 0.0008 * F.hooded) * bu;
+  const yL = yc - 0.0045 * bl + bl * (0.0008 * st.blink + 0.0022 * st.squint);
   const yUopen = yU0 - 0.0016 * st.squint * bu;
   const yU = lerp(yUopen, yL + 0.0003 * bl, st.blink);
-  return { x, yU, yL, yU0, yL0: yc - 0.0041 * bl };
+  return { x, yU, yL, yU0, yL0: yc - 0.0045 * bl };
 }
 const zOn = (x: number, y: number, r: number) => {
   const zs = Math.sqrt(Math.max(r * r - 0.6 * x * x - y * y, 1e-9));
@@ -327,7 +327,7 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
   f.ea([0, mY - 0.0078, zF - 0.02], 0.0155, 0.0048, 0.017, 0, 0.003, 1);
   f.finalize();
   // mesh in head-local, then place
-  const h = quality === 'high' ? 0.0012 : 0.0016;
+  const h = quality === 'high' ? 0.0015 : 0.002;
   const box = { o: [-0.03, mY - 0.02, zF - 0.048] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.06 / h), ny: Math.ceil(0.04 / h), nz: Math.ceil(0.056 / h) };
   const mesh = meshField(f, box, h);
   const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3), lowerW = new Float32Array(nv);

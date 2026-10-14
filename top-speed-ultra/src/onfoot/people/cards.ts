@@ -25,23 +25,25 @@ function canvasTex(key: string, w: number, h: number, draw: (g: CanvasRenderingC
 
 /** hair: strands running along v (root at v=0), tapering and thinning toward the tips. kind 'curl' waves them */
 export function hairTexture(kind: 'straight' | 'wavy' | 'curl' = 'straight') {
-  return canvasTex('hair-' + kind, 256, 512, (g, w, h) => {
+  return canvasTex('hair2-' + kind, 256, 512, (g, w, h) => {
     g.clearRect(0, 0, w, h);
     const r = rng(kind.length * 977);
-    const n = kind === 'curl' ? 150 : 220;
+    // a clump: strands bunched toward the middle, with gaps between them and ragged, thinning tips
+    const n = kind === 'curl' ? 70 : 95;
     for (let i = 0; i < n; i++) {
-      const x0 = r.next() * w, shade = 0.55 + 0.45 * r.next(), wd = 0.7 + r.next() * 1.6;
-      const end = h * (0.55 + 0.45 * r.next());
-      const amp = kind === 'curl' ? 6 + r.next() * 8 : kind === 'wavy' ? 2 + r.next() * 4 : r.next() * 1.5;
-      const fr = kind === 'curl' ? 0.05 + r.next() * 0.03 : 0.012 + r.next() * 0.01, ph = r.next() * 6.28;
+      const x0 = w * (0.5 + (r.next() - 0.5) * (0.35 + 0.6 * r.next())), shade = 0.45 + 0.55 * r.next(), wd = 0.6 + r.next() * 1.1;
+      const end = h * (0.45 + 0.55 * r.next());
+      const amp = kind === 'curl' ? 7 + r.next() * 9 : kind === 'wavy' ? 2 + r.next() * 4 : r.next() * 1.2;
+      const fr = kind === 'curl' ? 0.045 + r.next() * 0.03 : 0.012 + r.next() * 0.01, ph = r.next() * 6.28;
+      const drift = (r.next() - 0.5) * 18;
       g.beginPath();
       for (let y = 0; y <= end; y += 4) {
-        const x = x0 + Math.sin(y * fr + ph) * amp + (y / h) * (r.next() - 0.5) * 2;
+        const x = x0 + Math.sin(y * fr + ph) * amp + (y / h) * drift;
         if (y === 0) g.moveTo(x, y); else g.lineTo(x, y);
       }
-      const v = Math.round(shade * 255);
+      const v = Math.round(shade * 255), a0 = 0.75 + 0.25 * r.next();
       const grad = g.createLinearGradient(0, 0, 0, end);
-      grad.addColorStop(0, `rgba(${v},${v},${v},1)`); grad.addColorStop(0.75, `rgba(${v},${v},${v},0.9)`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
+      grad.addColorStop(0, `rgba(${v},${v},${v},${a0})`); grad.addColorStop(0.7, `rgba(${v},${v},${v},${a0 * 0.85})`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
       g.strokeStyle = grad; g.lineWidth = wd; g.stroke();
     }
   });
@@ -78,7 +80,7 @@ export function browTexture() {
   });
 }
 
-export function hairLights() {
+export function hairLights(strength = 1) {
   return THREE.ShaderChunk.lights_physical_pars_fragment
     .replace('void RE_Direct_Physical(', 'vec3 gHairT = vec3(0.0, 1.0, 0.0); vec3 gHairSpec = vec3(1.0); float gHairShift = 0.0;\nvoid RE_Direct_Physical(')
     .replace('reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );', /* glsl */ `
@@ -91,7 +93,7 @@ export function hairLights() {
 	  float s1 = pow( sqrt( max( 0.0, 1.0 - th1 * th1 ) ), 90.0 );
 	  float s2 = pow( sqrt( max( 0.0, 1.0 - th2 * th2 ) ), 22.0 );
 	  float wrap = saturate( dot( geometryNormal, directLight.direction ) * 0.5 + 0.5 );
-	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * 0.35 * gHairSpec + s2 * 0.25 * material.diffuseColor * 2.0 );
+	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.09 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.12 * strength).toFixed(3)} * material.diffuseColor );
 	}`);
 }
 

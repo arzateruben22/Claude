@@ -104,3 +104,81 @@ export function buildGeometry(pos: Float32Array, nrm: Float32Array, idx: Uint32A
 
 /** the side of a plane a point is on (positive = the side n points to) */
 export const side = (p: V3, o: V3, n: V3) => dot([p[0] - o[0], p[1] - o[1], p[2] - o[2]], n);
+
+/** skin weights against any field whose primitives carry bone tags (a garment's body subset, a collar band), with the
+ *  rig's per-bone falloff scaled; `act` gives each vertex's active primitive list in the field being weighted */
+export function skinWeightsF(rig: Rig, fields: Field[], pos: Float32Array, act: ((v: number, fi: number) => Int32Array | null) | null, sigmaScale: number, skip?: Set<number>) {
+  const nv = pos.length / 3, nb = BONES.length;
+  const si = new Uint16Array(nv * 4), sw = new Float32Array(nv * 4);
+  const d = new Float64Array(nb), d2 = new Float64Array(nb), w = new Float64Array(nb);
+  for (let v = 0; v < nv; v++) {
+    d.fill(1e9);
+    fields.forEach((f, fi) => {
+      const a = act ? act(v, fi) : null;
+      if (act && a && a.length === 0) return;
+      f.boneDist(pos[v * 3], pos[v * 3 + 1], pos[v * 3 + 2], a, a ? a.length : 0, d2);
+      for (let b = 0; b < nb; b++) if (d2[b] < d[b]) d[b] = d2[b];
+    });
+    if (skip) for (const b of skip) d[b] = 1e9;
+    let dmin = 1e9;
+    for (let b = 0; b < nb; b++) dmin = Math.min(dmin, d[b]);
+    for (let b = 0; b < nb; b++) { const q = (d[b] - dmin) / (rig.sigma[b] * sigmaScale); w[b] = q < 3 ? Math.exp(-q * q) : 0; }
+    let tot = 0;
+    for (let k = 0; k < 4; k++) {
+      let best = -1, bw = 0;
+      for (let b = 0; b < nb; b++) if (w[b] > bw) { bw = w[b]; best = b; }
+      if (best < 0) { si[v * 4 + k] = 0; sw[v * 4 + k] = 0; continue; }
+      si[v * 4 + k] = best; sw[v * 4 + k] = bw; tot += bw; w[best] = 0;
+    }
+    if (tot <= 0) { si[v * 4] = 3; sw[v * 4] = 1; tot = 1; }
+    for (let k = 0; k < 4; k++) sw[v * 4 + k] /= tot;
+  }
+  return { si, sw };
+}
+
+/** drop triangles whose three vertices all pass `gone` */
+export function dropTris(idx: Uint32Array, gone: Uint8Array) {
+  const out: number[] = [];
+  for (let t = 0; t < idx.length; t += 3) if (!(gone[idx[t]] && gone[idx[t + 1]] && gone[idx[t + 2]])) out.push(idx[t], idx[t + 1], idx[t + 2]);
+  return Uint32Array.from(out);
+}
+
+/** clip a mesh to where `region` < 0, splitting the triangles that cross its zero set (a clean edge line, however
+ *  coarse the mesh); returns the new arrays, each vertex's source vertex, and the boundary edges in winding order */
+export function clipByRegion(pos: Float32Array, nrm: Float32Array, idx: Uint32Array, region: (x: number, y: number, z: number) => number) {
+  const nv = pos.length / 3;
+  const P: number[] = Array.from(pos), N: number[] = Array.from(nrm), R: number[] = [], S: number[] = [];
+  for (let v = 0; v < nv; v++) { R.push(region(pos[v * 3], pos[v * 3 + 1], pos[v * 3 + 2])); S.push(v); }
+  const em = new Map<number, number>();
+  const cut = (a: number, b: number) => {
+    const key = a < b ? a * 4194304 + b : b * 4194304 + a;
+    const hit = em.get(key);
+    if (hit !== undefined) return hit;
+    const t = R[a] / (R[a] - R[b]);
+    const id = P.length / 3;
+    const n = [0, 1, 2].map((k) => N[a * 3 + k] + (N[b * 3 + k] - N[a * 3 + k]) * t);
+    const l = Math.hypot(n[0], n[1], n[2]) || 1;
+    for (let k = 0; k < 3; k++) { P.push(P[a * 3 + k] + (P[b * 3 + k] - P[a * 3 + k]) * t); N.push(n[k] / l); }
+    R.push(0); S.push(t < 0.5 ? S[a] : S[b]);
+    em.set(key, id);
+    return id;
+  };
+  const out: number[] = [], edges: number[] = [];
+  for (let i = 0; i < idx.length; i += 3) {
+    const v = [idx[i], idx[i + 1], idx[i + 2]], ins = v.map((x) => R[x] < 0);
+    const n = (ins[0] ? 1 : 0) + (ins[1] ? 1 : 0) + (ins[2] ? 1 : 0);
+    if (n === 3) { out.push(v[0], v[1], v[2]); continue; }
+    if (n === 0) continue;
+    if (n === 1) {
+      const r = ins[0] ? 0 : ins[1] ? 1 : 2, a = v[r], b = v[(r + 1) % 3], c = v[(r + 2) % 3];
+      const p = cut(a, b), q = cut(a, c);
+      out.push(a, p, q); edges.push(p, q);
+    } else {
+      const r = !ins[0] ? 0 : !ins[1] ? 1 : 2, c = v[r], a = v[(r + 1) % 3], b = v[(r + 2) % 3];
+      const p = cut(b, c), q = cut(a, c);
+      // (a, b, c) with c outside: keep a, b, p and a, p, q
+      out.push(a, b, p, a, p, q); edges.push(p, q);
+    }
+  }
+  return { pos: Float32Array.from(P), nrm: Float32Array.from(N), idx: Uint32Array.from(out), src: Int32Array.from(S), edges };
+}

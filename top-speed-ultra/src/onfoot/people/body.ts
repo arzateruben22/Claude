@@ -43,6 +43,11 @@ export interface Rig {
     upperArm: number; foreArm: number; thigh: number; shin: number; foot: number; handLen: number;
   };
   fat: { T: number; belly: number; hip: number; thigh: number; arm: number; chest: number; neck: number };
+  /** limb geometry of the LEFT side in the rest pose (mirror x for the right) */
+  limb: { dU: V3; dFore: V3; sh: V3; el: V3; wr: V3; dL: V3; hip: V3; knee: V3; ankle: V3; toe: V3; neckR: number; neckBase: V3; neckTop: V3; footLen: number };
+  /** body point -> the left foot's own frame (origin at the ankle, unpitched); mirror x first for the right foot */
+  footLocal(p: V3): V3;
+  male: boolean;
 }
 
 /** subcutaneous fat thickness (m) from the 0..1 fat parameter */
@@ -137,11 +142,14 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   // abdomen, waist, belly
   f.ea([0, 0.585 * H, 0.012 * s], 0.122 * ws + 0.6 * fat.belly, 0.075 * s, 0.085 * s + 0.35 * fat.belly, C, 0.05 * s, B.hips);
   f.ea([0, waistY, -0.006 * s], waistHalf, 0.07 * s, 0.092 * s + 0.4 * fat.waist, C, 0.05 * s, B.spine);
-  const sag = soft * 0.025 * s + fat.belly * 0.2;
+  const sag = soft * 0.025 * s + fat.belly * 0.15;
   if (fat.belly > 0.004 || b.belly > 0) {
-    // a broad bulge that grows out of the abdomen (wide, blended over a long radius), never a ball stuck on
-    const fb = fat.belly;
-    f.ea([0, 0.598 * H - sag + 0.012 * b.belly * s, 0.012 * s + 0.55 * fb], 0.112 * ws + 0.78 * fb, 0.095 * s + 0.62 * fb, 0.08 * s + 0.5 * fb, C, 0.05 * s + 0.45 * fb, B.spine);
+    // a belly is wide (it spans the waist) and grows out of the abdomen from under the ribs to over the hips: three
+    // overlapping masses, blended over long radii; a firm beer belly sits higher and rounder, a soft one lower
+    const P = fat.belly, firm = clamp(b.belly);
+    f.ea([0, navelY - 0.01 * s - sag * (1 - 0.5 * firm), 0.004 * s + 0.32 * P], waistHalf * 0.92 + 0.45 * P, 0.12 * s + 0.42 * P, 0.07 * s + 0.62 * P, C, 0.06 * s + 0.32 * P, B.spine);
+    f.ea([0, navelY + 0.075 * s, 0.22 * P], waistHalf * 0.85 + 0.25 * P, 0.07 * s + 0.2 * P, 0.065 * s + 0.45 * P * (0.6 + 0.4 * firm), C, 0.05 * s + 0.25 * P, B.spine);
+    f.ea([0, navelY - 0.075 * s - sag, 0.005 * s + 0.2 * P], waistHalf * 0.8 + 0.35 * P, 0.06 * s + 0.25 * P, 0.06 * s + 0.45 * P * (1 - 0.4 * firm), C, 0.05 * s + 0.25 * P, B.hips);
   }
   if (fat.waist > 0.008) for (const sg of [1, -1]) {
     f.ea([sg * (waistHalf * 0.8 + 0.2 * fat.waist), 0.595 * H - sag * 0.5, -0.025 * s], 0.035 * s + 0.6 * fat.waist, 0.055 * s + 0.4 * fat.waist, 0.06 * s + 0.4 * fat.waist, C, 0.05 * s, B.spine);
@@ -163,9 +171,11 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
       f.ea([sg * 0.062 * ws, 0.738 * H, 0.068 * s + 0.2 * fat.chest], 0.068 * ws + 0.012 * mu, 0.052 * s + 0.01 * mu + 0.25 * fat.chest, 0.026 * s + 0.024 * mu + 0.5 * fat.chest, C, 0.035 * s, B.chest);
     } else {
       // the bust (always clothed)
-      const br = (0.048 + 0.028 * b.bust) * ws + 0.45 * fat.chest;
-      const drop = (0.012 * soft + 0.012 * clamp((b.age - 35) / 35)) * s + 0.2 * fat.chest;
-      f.ea([sg * 0.083 * ws, 0.716 * H - drop, 0.072 * s + 0.15 * fat.chest], br * 1.02, br * 0.92, br * 0.82, C, 0.04 * s, B.chest);
+      // a natural shape: set a little apart and turned slightly out, the upper slope blending into the chest, the
+      // fullness low
+      const br = (0.044 + 0.026 * b.bust) * ws + 0.45 * fat.chest;
+      const drop = (0.012 * soft + 0.014 * clamp((b.age - 35) / 35)) * s + 0.2 * fat.chest;
+      f.ell([sg * 0.088 * ws, 0.71 * H - drop, 0.062 * s + 0.15 * fat.chest], [Math.cos(12 * DEG), 0, sg * Math.sin(12 * DEG)], [0, 1, 0.25], br * 1.05, br * 0.9, br * 0.74, C, 0.055 * s, B.chest);
     }
   }
   // neck
@@ -273,6 +283,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   for (const n of ['fingL', 'fingR']) sigma[B[n as BoneName]] = 0.007 * s;
   for (const n of ['footL', 'footR', 'toeL', 'toeR']) sigma[B[n as BoneName]] = 0.014 * s;
   sigma[B.head] = 0.02 * s; sigma[B.neck] = 0.02 * s;
+  for (const n of ['armL', 'armR', 'clavL', 'clavR']) sigma[B[n as BoneName]] = 0.034 * s;
   for (const n of ['thighL', 'thighR', 'hips', 'spine']) sigma[B[n as BoneName]] = 0.03 * s + T * 0.6;
 
   const wristN = norm(dFore);
@@ -288,6 +299,9 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
       upperArm, foreArm, thigh, shin, foot: footLen, handLen,
     },
     fat: { T, belly: fat.belly, hip: fat.hip, thigh: fat.thigh, arm: fat.arm, chest: fat.chest, neck: fat.neck },
+    limb: { dU, dFore, sh: shL, el: elL, wr: wrL, dL, hip: hpL, knee: knL, ankle: anL, toe: J[B.toeL], neckR, neckBase: [0, neckBaseY - 0.02 * s, -0.02 * s], neckTop: [0, neckTopY + 0.005 * s, -0.048 * s], footLen },
+    footLocal: (p: V3): V3 => rot(sub(p, anL), [1, 0, 0], -pitch),
+    male: m,
   };
 }
 

@@ -33,7 +33,9 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
     const c = [dot(s.c, ax), dot(s.c, ay), dot(s.c, az)];
     for (let i = 0; i < 3; i++) { lo[i] = Math.min(lo[i], c[i] - s.r); hi[i] = Math.max(hi[i], c[i] + s.r); }
   }
-  hi[0] = Math.min(hi[0], capS);
+  // past ~22 cm from the wrist every look's sleeve covers the arm (the rolled work shirt ends ~20 cm up): no need to
+  // mesh skin there
+  hi[0] = Math.min(hi[0], capS, dot(A.wrist, ax) + 222);
   const pad = 2 * h + 2;
   for (let i = 0; i < 3; i++) { lo[i] -= pad; hi[i] += pad; }
   const box: Box = {
@@ -114,6 +116,24 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
     arm[v * 2] = along; arm[v * 2 + 1] = tipness;
     const base = [0.86, 0.62, 0.5];
     dbg.set([base[0] * ao * (1 + red * 0.15), base[1] * ao * (1 - red * 0.2), base[2] * ao * (1 - red * 0.25)], v * 3);
+  }
+  // the baked occlusion and redness, relaxed over the mesh: a vertex whose samples fell into a crease of its own makes
+  // a dark speck a pixel wide from the seat; two passes of neighbour averaging (the minimum is kept in real creases)
+  {
+    const idx = mesh.idx, sum = new Float32Array(nv * 2), cnt = new Uint16Array(nv);
+    for (let pass = 0; pass < 2; pass++) {
+      sum.fill(0); cnt.fill(0);
+      for (let t = 0; t < idx.length; t += 3) for (let e = 0; e < 3; e++) {
+        const a = idx[t + e], b = idx[t + ((e + 1) % 3)];
+        sum[a * 2] += skin[b * 4 + 2]; sum[a * 2 + 1] += skin[b * 4]; cnt[a]++;
+        sum[b * 2] += skin[a * 4 + 2]; sum[b * 2 + 1] += skin[a * 4]; cnt[b]++;
+      }
+      for (let v = 0; v < nv; v++) if (cnt[v]) {
+        const ao = sum[v * 2] / cnt[v], rd = sum[v * 2 + 1] / cnt[v];
+        skin[v * 4 + 2] = Math.max(skin[v * 4 + 2], ao * 0.98) * 0.5 + ao * 0.5;
+        skin[v * 4] = skin[v * 4] * 0.5 + rd * 0.5;
+      }
+    }
   }
   const res: ArmGeometry = { anatomy: A, mesh, skin, joint, arm, debugColor: dbg, ms: performance.now() - t0 };
   cache.set(key, res);

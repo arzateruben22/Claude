@@ -38,29 +38,42 @@ export function meshField(field: Sdf, box: Box, h: number): MeshOut {
   const tmp = [0, 0, 0], pv = new Float64Array(field.n);
   let evals = 0, nNear = 0;
 
-  // ---- 1. which blocks can hold the surface, and what reaches each of them (super-blocks of 4^3 blocks first)
-  const SB = 4, sbr = (SB * B * h * Math.sqrt(3)) / 2;
-  const skip = new Uint8Array(nb);
+  // ---- 1. which blocks can hold the surface, and what reaches each of them. Super-blocks of 4^3 blocks first, each
+  //         with the primitives that can reach it, so a block only ever looks at its super-block's short list
+  const SB = 4, sbr = (SB * B * h * Math.sqrt(3)) / 2, sbReach = sbr * 1.6 + reachR;
+  const skip = new Uint8Array(nb), sbAct = new Map<number, Int32Array>(), sbOf = new Int32Array(nb).fill(-1);
+  const all = new Int32Array(field.n);
+  for (let i = 0; i < field.n; i++) all[i] = i;
   for (let sz = 0; sz < nbz; sz += SB) for (let sy = 0; sy < nby; sy += SB) for (let sx = 0; sx < nbx; sx += SB) {
     P((sx + SB / 2) * B, (sy + SB / 2) * B, (sz + SB / 2) * B, tmp);
     const D = field.eval(tmp[0], tmp[1], tmp[2], null, 0); evals++;
-    if (Math.abs(D) <= sbr * 1.6 + reachR) continue;
+    const far = Math.abs(D) > sbr * 1.6 + reachR;
+    const key = sx + nbx * (sy + nby * sz);
+    if (!far) {
+      let m = 1e9;
+      for (let i = 0; i < field.n; i++) { pv[i] = field.prim(i, tmp[0], tmp[1], tmp[2]); m = Math.min(m, pv[i] + sbReach); }
+      const list: number[] = [];
+      for (let i = 0; i < field.n; i++) if (pv[i] - sbReach <= m + margin) list.push(i);
+      sbAct.set(key, Int32Array.from(list));
+    }
     for (let bz = sz; bz < Math.min(nbz, sz + SB); bz++) for (let by = sy; by < Math.min(nby, sy + SB); by++) for (let bx = sx; bx < Math.min(nbx, sx + SB); bx++) {
-      const bi = bx + nbx * (by + nby * bz); skip[bi] = 1; bsign[bi] = D < 0 ? -1 : 1;
+      const bi = bx + nbx * (by + nby * bz);
+      if (far) { skip[bi] = 1; bsign[bi] = D < 0 ? -1 : 1; } else sbOf[bi] = key;
     }
   }
   for (let bz = 0; bz < nbz; bz++) for (let by = 0; by < nby; by++) for (let bx = 0; bx < nbx; bx++) {
     const bi = bx + nbx * (by + nby * bz);
     if (skip[bi]) continue;
+    const sl = sbAct.get(sbOf[bi]) ?? all;
     P((bx + 0.5) * B, (by + 0.5) * B, (bz + 0.5) * B, tmp);
-    const D = field.eval(tmp[0], tmp[1], tmp[2], null, 0); evals++;
+    const D = field.eval(tmp[0], tmp[1], tmp[2], sl, sl.length); evals++;
     bsign[bi] = D < 0 ? -1 : 1;
     if (Math.abs(D) > reachR) continue;
     near[bi] = 1; nNear++;
     let m = 1e9;
-    for (let i = 0; i < field.n; i++) { pv[i] = field.prim(i, tmp[0], tmp[1], tmp[2]); m = Math.min(m, pv[i] + reachR); }
+    for (let j = 0; j < sl.length; j++) { const i = sl[j]; pv[i] = field.prim(i, tmp[0], tmp[1], tmp[2]); m = Math.min(m, pv[i] + reachR); }
     const list: number[] = [];
-    for (let i = 0; i < field.n; i++) if (pv[i] - reachR <= m + margin) list.push(i);
+    for (let j = 0; j < sl.length; j++) { const i = sl[j]; if (pv[i] - reachR <= m + margin) list.push(i); }
     act[bi] = Int32Array.from(list);
   }
   const blockOf = (i: number, j: number, k: number) => Math.min(nbx - 1, (i / B) | 0) + nbx * (Math.min(nby - 1, (j / B) | 0) + nby * Math.min(nbz - 1, (k / B) | 0));

@@ -45,52 +45,58 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
   E([0, 0.033, -0.07], 0.074, 0.083, 0.095, 0.02);
   E([0, 0.042, -0.02 - 0.006 * (fh - 1)], 0.058, 0.058, 0.043, 0.025);
   E([0, 0.002, -0.118], 0.058, 0.06, 0.052, 0.03);
-  for (const sg of [1, -1]) E([sg * 0.051, 0.016, -0.046], 0.02, 0.04, 0.045, 0.022);
+  // the temples: behind the orbital rim, flat to slightly hollow (the head is widest above the ears, not at the eyes)
+  for (const sg of [1, -1]) E([sg * 0.046, 0.022, -0.064], 0.018, 0.034, 0.036, 0.022);
   // ---- brow ridge and orbital rims
-  const brz = 0.0195 + 0.003 * (br - 1);
+  const brz = 0.0185 + 0.003 * (br - 1), bry = m ? 0.0215 : 0.0245;
   for (const sg of [1, -1]) {
-    K([0, 0.0185, brz], [sg * 0.042, 0.0175 + 0.002 * (m ? 0 : 1), brz - 0.01], 0.0085 + 0.0015 * (br - 1), 0.0075, 0.012, [0, 1, 0], 0.75, 1);
-    K([sg * 0.042, 0.0175, brz - 0.01], [sg * 0.053, -0.004, -0.006], 0.0075, 0.0068, 0.01);
+    // the superior orbital rim under the brow, sitting well above the lid
+    K([0, bry - 0.002, brz], [sg * 0.04, bry + (m ? 0 : 0.0015), brz - 0.009], 0.0078 + 0.0015 * (br - 1), 0.0066, 0.014, [0, 1, 0], 0.7, 1);
+    K([sg * 0.04, bry, brz - 0.009], [sg * 0.053, 0.0, -0.007], 0.0066, 0.0062, 0.012);
+    // the soft tissue that slopes from the brow down to the lid crease (the fold over the upper lid)
+    E([sg * (ex + 0.001), 0.0142 + 0.001 * F.hooded, 0.0098], 0.0165 * F.eyeSize, 0.0052 + 0.0012 * F.hooded, 0.0062, 0.006);
   }
   // ---- cheekbones, arches, under-eye
   for (const sg of [1, -1]) {
-    E([sg * 0.044, -0.022 - 0.003 * old, -0.008 + 0.003 * (cb - 1)], 0.02 * cb, 0.016, 0.016 * cb, 0.022);
+    E([sg * 0.043, -0.02 - 0.003 * old, -0.004 + 0.004 * (cb - 1)], 0.018 * cb, 0.013, 0.016 * cb, 0.02);
     K([sg * 0.05, -0.02, -0.012], [sg * 0.062, -0.017, -0.05], 0.009 * cb, 0.008, 0.018);
     E([sg * 0.029, -0.019, 0.0], 0.018, 0.011, 0.012, 0.012);
   }
   // ---- midface, cheeks, jaw, chin
   E([0, -0.054, -0.009], 0.03, 0.029, 0.028, 0.02);
   for (const sg of [1, -1]) {
-    E([sg * 0.034, -0.044 - 0.004 * old, -0.008], 0.022 * ch, 0.024, 0.021 * ch, 0.025);
+    E([sg * 0.031, -0.046 - 0.004 * old, -0.006], 0.019 * ch, 0.022, 0.02 * ch, 0.025);
     // the mandible: body from the chin to the angle, then the ramus up to the ear
-    K([sg * 0.012 * cw, -0.101 * cl, 0.004], [sg * 0.044 * jw, -0.083, -0.058], 0.0105, 0.011 + 0.002 * (jw - 1), 0.016);
-    K([sg * 0.044 * jw, -0.083, -0.058], [sg * 0.051, -0.036, -0.072], 0.011, 0.009, 0.016);
+    K([sg * 0.012 * cw, -0.101 * cl, 0.004], [sg * 0.041 * jw, -0.083, -0.058], 0.0105, 0.0105 + 0.002 * (jw - 1), 0.024);
+    K([sg * 0.041 * jw, -0.083, -0.058], [sg * 0.049, -0.036, -0.072], 0.0105, 0.009, 0.022);
     // jowls with age and weight
     if (old + fat > 0.7) E([sg * 0.032, -0.088 - 0.004 * old, 0.0], 0.016, 0.014 + 0.008 * fat, 0.016 + 0.006 * fat, 0.02);
   }
-  E([0, -0.07, -0.036], 0.036 * jw, 0.028, 0.04, 0.022);
+  E([0, -0.07, -0.036], 0.032 * jw, 0.028, 0.04, 0.022);
   E([0, -0.097 * cl, 0.011], 0.0168 * cw, 0.0152 * cl, 0.0138, 0.011);
   E([0, -0.083, 0.011], 0.019, 0.0095, 0.0105, 0.01);
   E([0, -0.101 * cl - 0.006 * fat, -0.036], 0.026, 0.009 + 0.016 * fat * fat, 0.028, 0.02);
   // ---- nose
   const nl = F.noseLen, nw = F.noseW, nb = F.noseBridge, nt = F.noseTip;
   const tip: V3 = [0, -0.0375 * nl, 0.0345 + 0.004 * (nl - 1)];
-  K([0, 0.002, 0.0152], [0, tip[1] + 0.009, tip[2] - 0.003], 0.0048 * (0.8 + 0.2 * nb), 0.0064 * nw, 0.008, [0, 0, 1], 0.7 + 0.12 * nb, 1.62);
-  for (const sg of [1, -1]) K([sg * 0.007, 0.0, 0.011], [sg * 0.0115 * nw, tip[1] + 0.003, 0.02], 0.006, 0.0068, 0.008);
-  E(tip, 0.0095 * nt * nw, 0.0075 * nt, 0.008 * nt, 0.006);
-  for (const sg of [1, -1]) E([sg * 0.0128 * nw, tip[1] - 0.0055, 0.0225 + 0.002 * (nl - 1)], 0.0068 * nw, 0.0062, 0.0085, 0.004);
-  K([0, tip[1] - 0.003, tip[2] - 0.003], [0, -0.0485 * nl, 0.0255], 0.0034, 0.003, 0.004);
-  E([0, -0.0445 * nl, 0.0195], 0.012 * nw, 0.006, 0.008, 0.006);
-  for (const sg of [1, -1]) XR([sg * 0.0063 * nw, tip[1] - 0.0097, 0.0278], [0, 0.3, 1], [0, 1, -0.3], 0.005, 0.0021, 0.0032 * nw, 0.0015);
+  K([0, 0.004, 0.0158], [0, tip[1] + 0.009, tip[2] - 0.003], 0.0043 * (0.8 + 0.2 * nb), 0.0062 * nw, 0.008, [0, 0, 1], 0.72 + 0.12 * nb, 1.3);
+  for (const sg of [1, -1]) K([sg * 0.0048, -0.012, 0.0165], [sg * 0.0105 * nw, tip[1] + 0.003, 0.0205], 0.0038, 0.0062, 0.008);
+  // the lobule (tip), the alae either side with their round wings, the columella, and nostrils that open downward
+  E(tip, 0.0072 * nt * nw, 0.0068 * nt, 0.0076 * nt, 0.005);
+  for (const sg of [1, -1]) E([sg * 0.0112 * nw, tip[1] - 0.0062, 0.0212 + 0.002 * (nl - 1)], 0.0062 * nw, 0.0058, 0.0078, 0.0042);
+  K([0, tip[1] - 0.004, tip[2] - 0.004], [0, -0.049 * nl, 0.0262], 0.0036, 0.0031, 0.005);
+  E([0, -0.0458 * nl, 0.0192], 0.0098 * nw, 0.005, 0.0072, 0.006);
+  // nostrils: shallow, tucked under the lobule behind the columella's front, opening downward
+  for (const sg of [1, -1]) XR([sg * 0.0056 * nw, tip[1] - 0.0088, 0.0222], [0, 0.18, 1], [0, 1, -0.18], 0.0044, 0.0015, 0.0025 * nw, 0.0016);
   // ---- lips: upper (with the Cupid's bow), lower; philtral columns; the slit and the cavity behind
   const mw = F.mouthW, lu = F.lipUpper, ll = F.lipLower;
   const mY = -0.0675 - 0.002 * (nl - 1);
   E([0, mY + 0.0065 + 0.0005 * lu, 0.0252 + 0.0012 * lu], 0.0125 * mw, 0.0052 * lu, 0.0062 * (0.9 + 0.1 * lu), 0.004);
   for (const sg of [1, -1]) {
-    ER([sg * 0.013 * mw, mY + 0.0046, 0.0195], [1, 0, -0.62 * sg], [0, 1, 0], 0.0102 * mw, 0.0042 * lu, 0.0052, 0.004);
+    ER([sg * 0.013 * mw, mY + 0.0041, 0.0195], [1, 0.08 * sg, -0.62 * sg], [0, 1, 0], 0.0102 * mw, 0.0042 * lu, 0.0052, 0.004);
     E([sg * 0.0042, mY + 0.0105 * lu, 0.0262], 0.0042, 0.0028, 0.003, 0.003);   // Cupid's bow peaks
     K([sg * 0.0042, -0.0495 * nl, 0.0258], [sg * 0.005, mY + 0.0105, 0.0268], 0.0021, 0.0023, 0.003);
-    ER([sg * 0.012 * mw, mY - 0.0045, 0.0178], [1, 0, -0.65 * sg], [0, 1, 0], 0.0092 * mw, 0.0045 * ll, 0.0052, 0.004);
+    ER([sg * 0.012 * mw, mY - 0.0038, 0.0178], [1, 0.1 * sg, -0.65 * sg], [0, 1, 0], 0.0092 * mw, 0.0045 * ll, 0.0052, 0.004);
     X([sg * 0.0265 * mw, mY, 0.0165], 0.002, 0.0026, 0.0022, 0.0025);   // the corners tuck in
   }
   E([0, mY - 0.0064 - 0.0006 * ll, 0.0222 + 0.0012 * ll], 0.0132 * mw, 0.0057 * ll, 0.0062, 0.004);
@@ -101,7 +107,7 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
   // the globe under the lids, and the opening (a little larger than the lid margins, which are their own meshes)
   const es = F.eyeSize;
   for (const sg of [1, -1]) E([sg * ex, 0, 0], 0.0177 * es, 0.0137 * es, 0.0137 * es, 0.005);
-  for (const sg of [1, -1]) X([sg * (ex + 0.0006 * es), 0.0012 * es, 0.0125 * es], 0.0172 * es, 0.0064 * es, 0.009 * es, 0.0028);
+  for (const sg of [1, -1]) X([sg * (ex + 0.0006 * es), 0.001 * es, 0.0125 * es], 0.0174 * es, 0.0068 * es, 0.009 * es, 0.0028);
   // ---- ears: a flattened disc with the helix rim, the concha and scapha hollows, and the lobe
   const esz = F.earSize, eo = F.earOut;
   for (const sg of [1, -1]) {

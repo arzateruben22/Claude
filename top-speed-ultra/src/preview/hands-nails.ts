@@ -98,6 +98,7 @@ function addNail(A: Anatomy, g: Digit, female: boolean, nr: number, nc: number, 
   const cen = centre[nr >> 1];
   for (let k = 0; k < ring.length; k++) {
     const [i0, j0] = ring[k], [i1, j1] = ring[(k + 1) % ring.length];
+    if (i0 === 0 && i1 === 0) continue;      // the base is tucked under the cuticle: no visible edge there
     const a = rows[i0][j0], b = rows[i1][j1];
     const ta = top[i0][j0], tb = top[i1][j1];
     const outward = norm(sub(lerpV(a.p, b.p), cen));

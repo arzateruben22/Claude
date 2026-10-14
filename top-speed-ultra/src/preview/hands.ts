@@ -7,17 +7,22 @@
 //                     ring, bracelet, scale (0.9 = the female presentation)
 //     o.presentation  'm' | 'f' (default: from look.scale; < 0.95 is 'f')
 //     o.nails         polish colour (hex), or null for natural nails. Default: natural for 'm', a deep red for 'f'
-//     o.quality       'phone' (3 mm skin mesh, lighter shader) | 'high' (2 mm, full skin detail). Default 'high'
+//     o.quality       'phone' (3 mm skin mesh, lighter shader) | 'high' (2.25 mm, full skin detail). Default 'high'
 //     o.watchTime     [h, m, s] shown on the watch (default 10:09:36)
-//   returns { group, setWheelAngle(rad), setTone(hex), dispose(), stats }
+//   returns { group, setWheelAngle(rad), setTone(hex), dispose(), stats, grip }
 //     group           a THREE.Group in the car's frame (x right, y up, -z forward, metres); add it to the car
 //     setWheelAngle   the wheel's rotation (the cockpit's wheelSpin.rotation.z); the hands turn with the rim and the
 //                     arms follow (two-bone reach, shoulders, elbows down and out). Reads right to about ±1 rad.
 //     setTone         change the skin tone (hex) without rebuilding
-//     stats           { buildMs, tris, calls } (calls: draw calls in the colour pass, without shadows)
+//     stats           { buildMs, tris, calls, meshMs, accMs } (calls: draw calls in the colour pass, without shadows;
+//                     meshMs: the cached-per-presentation skin mesh, accMs: sleeves, watch, ring, bangle)
+//     grip            { right, left }: the middle of each grip (knuckles to fingertips), car frame, wheel straight
 //
-// Each hand is one smooth surface meshed once from an anatomical distance field (hands-sdf.ts, hands-mesh.ts); the
-// mesh is cached per presentation and quality, so a second call costs only the per-look work.
+// Each hand is one smooth surface meshed once from an anatomical distance field (hands-sdf.ts, hands-mesh.ts): four
+// fingers curled round the rim's far side with their tips and nails coming back round its inner edge, a short bent
+// thumb over the inner front edge with its nail to the driver, a knuckle ridge and an arched back of the hand. The
+// mesh is cached per presentation and quality, the sleeves/watch/ring/bangle geometry per look (hands-acc.ts), so a
+// second call costs only the materials and the per-arm buffers.
 import * as THREE from 'three';
 import type { DriverLook, Presentation } from '../game/drivers';
 import { GRIP, WHEEL_AT, WHEEL_TILT } from './spec';
@@ -39,7 +44,9 @@ export interface DriverArms {
   setWheelAngle(rad: number): void;
   setTone(hex: number): void;
   dispose(): void;
-  stats: { buildMs: number; tris: number; calls: number };
+  stats: { buildMs: number; tris: number; calls: number; meshMs: number; accMs: number };
+  /** the middle of each grip (between the knuckles and the fingertips), car frame, wheel straight */
+  grip: { right: THREE.Vector3; left: THREE.Vector3 };
 }
 
 const CT = Math.cos(WHEEL_TILT), ST = Math.sin(WHEEL_TILT);
@@ -52,7 +59,7 @@ function both(pres: Presentation, q: Quality): Built {
   const key = `${pres}:${q}`;
   const hit = built.get(key);
   if (hit) return hit;
-  const arm = buildArmGeometry(pres, q === 'high' ? 2 : 3);
+  const arm = buildArmGeometry(pres, q === 'high' ? 2.25 : 3);
   const nails = buildNails(arm.anatomy, pres === 'f', q);
   const m = arm.mesh, nv = m.stats.verts;
   const pos = new Float32Array(nv * 6), nrm = new Float32Array(nv * 6);
@@ -88,6 +95,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   const female = pres === 'f';
   const paint = o.nails === undefined ? (female ? 0x7c1426 : null) : o.nails;
   const B = both(pres, q), A = B.arm.anatomy, nv = B.nv;
+  const tMesh = performance.now() - t0;
   const group = new THREE.Group();
   group.name = 'driver-arms';
 
@@ -161,7 +169,9 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   g.setAttribute('skinIndex', new THREE.BufferAttribute(si, 4));
   g.setAttribute('skinWeight', new THREE.BufferAttribute(sw, 4));
   // under a sleeve the forearm isn't seen: leave those triangles out
+  const tA0 = performance.now();
   const acc = buildAccessories({ anatomy: A, look, female, quality: q, watchTime: o.watchTime ?? [10, 9, 36], toCar, dirToCar });
+  const tAcc = performance.now() - tA0;
   const covered = acc.sleeveFrom;   // skin farther up the arm than this (mm from the wrist) is under the sleeve
   const keep: number[] = [];
   const along = B.arm.arm;
@@ -217,6 +227,8 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   }
   let tris = 0;
   for (const m of meshes) tris += (m.geometry.index ? m.geometry.index.count : m.geometry.attributes.position.count) / 3;
+  const gripG: V3 = [0, 0, 0];
+  for (let i = 0; i < 3; i++) gripG[i] = (A.mcp[1][i] + A.digits[1].joints[3][i]) / 2;
   const buildMs = performance.now() - t0;
   return {
     group,
@@ -231,6 +243,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
       skeleton.dispose();
       group.removeFromParent();
     },
-    stats: { buildMs, tris, calls: meshes.length },
+    stats: { buildMs, tris, calls: meshes.length, meshMs: tMesh, accMs: tAcc },
+    grip: { right: new THREE.Vector3(...toCar(gripG, 0)), left: new THREE.Vector3(...toCar(gripG, 1)) },
   };
 }

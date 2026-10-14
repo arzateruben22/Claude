@@ -3,9 +3,10 @@
 //   ?view=seat     from the driver's eye (spec EYE), as the game frames it, sky 'day'
 //   ?view=fingers  the right hand's grip in three panels: from the driver's eye (zoomed), from above, from the dash
 //   ?view=close    the right hand from about 25 cm: knuckles, skin, the thumbnail
-//   ?view=female   the female presentation: painted nails, ring, bracelet, the gold watch
+//   ?view=female   the female presentation in two panels: the left hand from outside the rim (the ring, the
+//                  fingers round the rim), the right from the driver's side (painted nails, the bangle)
 //   ?view=tones    the five skin tones (drivers.ts SKINS) side by side, the right hand in each
-//   ?view=gloves   the Ace's leather driving gloves
+//   ?view=gloves   the Ace's leather driving gloves (knuckle holes, stitching), the right hand from the driver's side
 //   ?view=wrench   rolled sleeves and the smart watch
 //   ?view=watch    the left wrist close up
 //   ?driver=closer|ace|wrench &pres=m|f &skin=0..4 &quality=phone|high &wheel=rad &time=day|sunset &hud=1
@@ -21,10 +22,10 @@ const view = q.get('view') ?? 'seat';
 const preset: Record<string, { driver: DriverId; pres: Presentation; skin: number; fov: number }> = {
   seat: { driver: 'closer', pres: 'm', skin: 1, fov: 60 },
   fingers: { driver: 'wrench', pres: 'm', skin: 1, fov: 30 },
-  close: { driver: 'wrench', pres: 'm', skin: 1, fov: 40 },
+  close: { driver: 'wrench', pres: 'm', skin: 1, fov: 24 },
   female: { driver: 'closer', pres: 'f', skin: 1, fov: 36 },
-  tones: { driver: 'wrench', pres: 'm', skin: 0, fov: 34 },
-  gloves: { driver: 'ace', pres: 'm', skin: 2, fov: 38 },
+  tones: { driver: 'wrench', pres: 'm', skin: 0, fov: 30 },
+  gloves: { driver: 'ace', pres: 'm', skin: 2, fov: 28 },
   wrench: { driver: 'wrench', pres: 'm', skin: 3, fov: 38 },
   watch: { driver: 'closer', pres: 'm', skin: 2, fov: 34 },
 };
@@ -109,13 +110,14 @@ arms.setWheelAngle(wheelA); spin.rotation.z = wheelA;
 
 // ---- camera
 const cam = stage.camera;
-const handR = new THREE.Vector3(-0.222, 0.905, -0.452);   // the right hand's grip, between knuckles and fingertips
+const handR = arms.grip.right.clone();   // the right hand's grip, between knuckles and fingertips
 const look = (from: THREE.Vector3, at: THREE.Vector3) => { cam.position.copy(from); cam.up.set(0, 1, 0); cam.lookAt(at); };
 if (view === 'seat') look(EYE, new THREE.Vector3(EYE.x, EYE.y - 0.06, EYE.z - 10));
-else if (view === 'close') { const at = handR.clone().add(new THREE.Vector3(0.006, 0.004, 0.012)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.25)).add(new THREE.Vector3(0.05, 0.0, 0.0)), at); }
-else if (view === 'tones') { const at = handR.clone().add(new THREE.Vector3(-0.012, 0.012, 0.02)); look(at.clone().add(new THREE.Vector3(-0.12, 0.16, 0.2).normalize().multiplyScalar(0.36)), at); }
-else if (view === 'female') look(new THREE.Vector3(-0.3, 1.12, -0.06), new THREE.Vector3(-0.3, 0.88, -0.42));
-else if (view === 'gloves' || view === 'wrench') look(new THREE.Vector3(-0.37, 1.13, -0.03), new THREE.Vector3(-0.37, 0.86, -0.42));
+else if (view === 'close') { const at = handR.clone().add(new THREE.Vector3(0.004, 0.006, 0.01)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.25)).add(new THREE.Vector3(0.04, 0.03, 0.0)), at); }
+else if (view === 'tones') { const at = handR.clone().add(new THREE.Vector3(-0.012, -0.006, 0.014)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.36)).add(new THREE.Vector3(0.04, 0.02, 0.0)), at); }
+else if (view === 'female') look(new THREE.Vector3(-0.3, 1.12, -0.06), new THREE.Vector3(-0.3, 0.88, -0.42));   // (two panels below)
+else if (view === 'gloves') { const at = handR.clone().add(new THREE.Vector3(0.0, 0.004, 0.012)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.3)).add(new THREE.Vector3(0.07, 0.03, 0.0)), at); }
+else if (view === 'wrench') look(new THREE.Vector3(-0.37, 1.13, -0.03), new THREE.Vector3(-0.37, 0.86, -0.42));
 else if (view === 'watch') look(new THREE.Vector3(-0.66, 1.02, -0.25), new THREE.Vector3(-0.555, 0.865, -0.375));   // the left wrist's back, from above and outside
 
 // ---- the grip in three panels: the driver's eye, above, the dash side
@@ -128,6 +130,27 @@ if (view === 'fingers') {
   ];
   stage.setRender(() => {
     const w = r.domElement.width / r.getPixelRatio(), h = r.domElement.height / r.getPixelRatio(), cw = w / 3;
+    r.setScissorTest(true);
+    cam.aspect = cw / h;
+    shots.forEach(([from, at, fov], i) => {
+      cam.fov = fov; cam.updateProjectionMatrix(); look(from, at);
+      r.setViewport(i * cw, 0, cw, h); r.setScissor(i * cw, 0, cw, h);
+      r.render(scene, cam);
+    });
+    r.setScissorTest(false);
+  });
+}
+
+// ---- the female look in two panels: the left hand from outside the rim and in front of it (the fingers round the
+// rim, the ring on the ring finger), the right hand from the driver's side (the thumbnail, the fingertips, the bangle)
+if (view === 'female') {
+  const r = stage.renderer, gl = arms.grip.left.clone(), gr = arms.grip.right.clone();
+  const shots: [THREE.Vector3, THREE.Vector3, number][] = [
+    [gl.clone().add(new THREE.Vector3(-0.16, 0.1, -0.15)), gl.clone().add(new THREE.Vector3(-0.012, 0.0, -0.01)), 30],
+    [gr.clone().add(EYE.clone().sub(gr).normalize().multiplyScalar(0.3)).add(new THREE.Vector3(0.06, 0.0, 0.0)), gr.clone().add(new THREE.Vector3(0.0, -0.025, 0.04)), 30],
+  ];
+  stage.setRender(() => {
+    const w = r.domElement.width / r.getPixelRatio(), h = r.domElement.height / r.getPixelRatio(), cw = w / 2;
     r.setScissorTest(true);
     cam.aspect = cw / h;
     shots.forEach(([from, at, fov], i) => {
@@ -168,7 +191,7 @@ await stage.ready(1);
 window.__previewReady = false;
 const without = stage.info();
 arms.group.visible = true;
-const line = `[hands] view=${view} driver=${driver}/${pres} skin=${skinIdx} quality=${quality} build=${first.ms.toFixed(0)}ms cached=${second.ms.toFixed(1)}ms meshes=${arms.stats.calls} tris=${arms.stats.tris} | frame calls ${all.calls} (without hands ${without.calls}) tris ${all.tris} (without ${without.tris})`;
+const line = `[hands] view=${view} driver=${driver}/${pres} skin=${skinIdx} quality=${quality} build=${first.ms.toFixed(0)}ms (mesh ${arms.stats.meshMs.toFixed(0)} acc ${arms.stats.accMs.toFixed(0)}) cached=${second.ms.toFixed(1)}ms meshes=${arms.stats.calls} tris=${arms.stats.tris} | frame calls ${all.calls} (without hands ${without.calls}) tris ${all.tris} (without ${without.tris})`;
 console.warn(line);
 div.textContent = line.replace(' | ', '\n');
 await stage.ready(2);

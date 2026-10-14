@@ -6,7 +6,7 @@
 // (mm) as the right arm, and mirrored to the left where it's worn there. All of it is skinned to the arm's bones.
 import * as THREE from 'three';
 import type { DriverLook } from '../game/drivers';
-import { Anatomy, V3, add, cross, dot, len, madd, mul, norm, perp, sub, lerp3 } from './hands-sdf';
+import { Anatomy, V3, add, cross, dot, len, madd, mul, norm, perp, sub, lerp3, G_FINGER } from './hands-sdf';
 import type { Quality } from './hands-skin';
 
 export interface AccOptions {
@@ -248,11 +248,12 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
   const N = up0, X = mul(fd, -1), Y = norm(cross(N, X));
   void fl;
   const k = female ? 0.84 : 1;
-  const base = madd(madd(A.wrist, fd, along), N, rTop + 0.6);
+  // the case back presses a little into the flesh of the wrist
+  const base = madd(madd(A.wrist, fd, along), N, rTop - 0.8);
   const metal = kind === 'gold' ? GOLD : kind === 'steel' ? STEEL : ALU;
   mbMetal.bone = 1; mbMetal.w2 = 0;
   if (kind !== 'smart') {
-    const R = 20 * k, H = 10.5 * k;
+    const R = 19 * k, H = 10 * k;
     // case back, middle, polished bezel (rounded), the crystal's seat
     mbMetal.color = lin(metal); mbMetal.metal = 1; mbMetal.rough = 0.28;
     mbMetal.lathe(base, N, X, [[R * 0.82, 0], [R * 0.96, 0.6], [R, 2], [R * 1.005, H * 0.62], [R * 0.99, H * 0.7]], seg);
@@ -265,9 +266,11 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     mbMetal.rough = 0.2;
     mbMetal.lathe(madd(madd(base, N, H * 0.42), X, R * 0.98), X, N, [[2.6 * k, 0], [2.8 * k, 0.6], [2.8 * k, 3.4 * k], [2.2 * k, 4 * k], [0.01, 4.1 * k]], 16);
     // lugs: four short bars from the case to the bracelet
+    // lugs: four short horns from the case down toward the wrist, the bracelet's end links between them
     for (const sy of [-1, 1]) for (const sx of [-1, 1]) {
-      const c = madd(madd(madd(base, Y, sy * R * 0.95), X, sx * R * 0.5), N, H * 0.36);
-      mbMetal.box(c, mul(Y, 3.2 * k), mul(X, 1.6 * k), mul(N, 2.3 * k));
+      const c = madd(madd(madd(base, Y, sy * R * 1.0), X, sx * R * 0.48), N, H * 0.3);
+      const dY = norm(madd(mul(Y, sy), N, -0.35));
+      mbMetal.box(c, mul(dY, 3.6 * k), mul(X, 1.5 * k), mul(N, 2.0 * k));
     }
     // the dial
     const dz = H * 0.78, dr = R * 0.84;
@@ -295,7 +298,8 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     mbGlass.bone = 1; mbGlass.color = [1, 1, 1];
     mbGlass.lathe(base, N, X, prof, seg);
     // the bracelet: three-piece links round the wrist, polished centres and brushed outer pieces
-    bracelet3(mbMetal, A, along, N, metal, R * 1.0, k, q);
+    const att: [V3, V3] = [madd(madd(base, Y, R * 1.1), N, H * 0.02), madd(madd(base, Y, -R * 1.1), N, H * 0.02)];
+    bracelet3(mbMetal, A, along, N, metal, R * 1.0, k, q, att);
   } else {
     const W = 34 * (female ? 0.88 : 1), Hh = 40 * (female ? 0.88 : 1), T = 10.5, rc = 8.5;
     // the rounded-rectangle case (aluminium, bead-blasted), its screen and the glass over it
@@ -324,29 +328,40 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     mbGlass.bone = 1; mbGlass.color = [1, 1, 1];
     mbGlass.grid([outline(1.6, T), outline(5, T + 0.6), outline(rc, T + 0.9)], true, undefined, true);
     // the sport band
-    sportBand(mbMetal, A, along, N, Hh, female, q);
+    sportBand(mbMetal, A, along, N, Hh, female, q, [madd(madd(base, Y, Hh / 2 - 1), N, T * 0.35), madd(madd(base, Y, -Hh / 2 + 1), N, T * 0.35)]);
   }
 }
 
 // a band that follows the wrist round, from one side of the case to the other: centre line, width, thickness
-function bandPath(A: Anatomy, along: number, N: V3, n: number, gap: number) {
+// attach: where the band leaves the case at each end (+Y side first): the band's first and last few links rise from
+// the skin to meet the lugs, so the head is held on the wrist rather than floating over it
+function bandPath(A: Anatomy, along: number, N: V3, n: number, gap: number, attach?: [V3, V3]) {
   const { fd } = armFrame(A);
   const up = perp(N, fd), lat = cross(fd, up), out: { p: V3; n: V3; t: V3 }[] = [];
   for (let i = 0; i <= n; i++) {
     const th = gap + (i / n) * (Math.PI * 2 - 2 * gap), dir = norm(add(mul(up, Math.cos(th)), mul(lat, Math.sin(th))));
     let r = skinR(A, along, dir); if (r < 0) r = 30;
-    out.push({ p: madd(madd(A.wrist, fd, along), dir, r), n: dir, t: norm(cross(fd, dir)) });
+    let p = madd(madd(A.wrist, fd, along), dir, r);
+    if (attach) {
+      const m = Math.max(4, Math.round(n * 0.2));
+      const e0 = i / m, e1 = (n - i) / m;
+      if (e0 < 1) p = lerp3(attach[0], p, e0 * e0 * (3 - 2 * e0));
+      if (e1 < 1) p = lerp3(attach[1], p, e1 * e1 * (3 - 2 * e1));
+    }
+    out.push({ p, n: dir, t: norm(cross(fd, dir)) });
   }
   return out;
 }
 
-function bracelet3(mb: MB, A: Anatomy, along: number, N: V3, metal: number, R: number, k: number, q: Quality) {
+function bracelet3(mb: MB, A: Anatomy, along: number, N: V3, metal: number, R: number, k: number, q: Quality, attach?: [V3, V3]) {
   const { fd } = armFrame(A);
   const gap = Math.asin(Math.min(0.9, (R * 0.95) / 30));
-  const path = bandPath(A, along, N, q === 'high' ? 34 : 22, gap);
+  const path = bandPath(A, along, N, q === 'high' ? 40 : 26, gap, attach);
   const W = 19 * k;
   for (let i = 0; i < path.length - 1; i++) {
-    const a = path[i], b = path[i + 1], c = lerp3(a.p, b.p, 0.5), n = norm(add(a.n, b.n)), t = norm(sub(b.p, a.p)), L = len(sub(b.p, a.p));
+    const a = path[i], b = path[i + 1], c = lerp3(a.p, b.p, 0.5), t = norm(sub(b.p, a.p)), L = len(sub(b.p, a.p));
+    // each link lies along the band (where it rises to the lugs too), its face out from the wrist
+    let n = norm(cross(fd, t)); if (dot(n, add(a.n, b.n)) < 0) n = mul(n, -1);
     for (const [off, w, polished] of [[-W * 0.36, W * 0.27, 0], [0, W * 0.2, 1], [W * 0.36, W * 0.27, 0]] as [number, number, number][]) {
       mb.color = lin(metal); mb.metal = 1; mb.rough = polished ? 0.1 : 0.34;
       const ctr = madd(madd(c, fd, off), n, 1.9 + (polished ? 0.25 : 0));
@@ -355,10 +370,10 @@ function bracelet3(mb: MB, A: Anatomy, along: number, N: V3, metal: number, R: n
   }
 }
 
-function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female: boolean, q: Quality) {
+function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female: boolean, q: Quality, attach?: [V3, V3]) {
   const { fd } = armFrame(A);
   const gap = Math.asin(Math.min(0.9, (Hh0 / 2) / 30));
-  const path = bandPath(A, along, N, q === 'high' ? 40 : 24, gap);
+  const path = bandPath(A, along, N, q === 'high' ? 40 : 24, gap, attach);
   const bw = (female ? 18 : 21), T = 2.6;
   mb.color = lin(0x2a2c30); mb.metal = 0; mb.rough = 0.72;
   const rows: V3[][] = path.map((s) => {
@@ -372,7 +387,7 @@ function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female
 function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality) {
   const g = A.digits[2];                               // the ring finger
   const a = g.joints[0], b = g.joints[1], d = g.dirs[0], up = g.dorsal[0], lat = cross(d, up);
-  const c = lerp3(a, b, 0.3), seg = q === 'high' ? 48 : 28;
+  const c = lerp3(a, b, 0.46), seg = q === "high" ? 48 : 28;
   const W = female ? 2.4 : 4.6, T = female ? 1.5 : 1.8;
   const f = A.field, pts: V3[][] = [];
   const prof: [number, number][] = [[0, -W / 2], [T * 0.7, -W / 2], [T, -W * 0.3], [T, W * 0.3], [T * 0.7, W / 2], [0, W / 2]];
@@ -380,7 +395,8 @@ function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality)
   for (let j = 0; j < seg; j++) {
     const th = (j / seg) * Math.PI * 2, dir = norm(add(mul(up, Math.cos(th)), mul(lat, Math.sin(th))));
     let lo = 0, hi = 16;
-    for (let i = 0; i < 20; i++) { const m = (lo + hi) / 2, p = madd(c, dir, m); if (f.free(p[0], p[1], p[2], null, 0) < 0) lo = m; else hi = m; }
+    // the ring finger's own surface (the neighbours pressed against it would pull the band out of round)
+    for (let i = 0; i < 20; i++) { const m = (lo + hi) / 2, p = madd(c, dir, m); if (f.groupDist(G_FINGER + 2, p[0], p[1], p[2]) < 0) lo = m; else hi = m; }
     rs.push(lo + 0.15);
   }
   for (const [rOff, z] of prof) {
@@ -392,15 +408,11 @@ function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality)
   mbMetal.bone = 2; mbMetal.w2 = 0; mbMetal.color = lin(GOLD); mbMetal.metal = 1; mbMetal.rough = 0.1;
   mbMetal.grid(pts, true, undefined, true);
   if (female) {
-    // a small solitaire in four claws, on top
-    const top = madd(c, up, rs[0] + T), sz = 2.4;
-    for (let i = 0; i < 4; i++) {
-      const a2 = (i / 4) * Math.PI * 2 + Math.PI / 4, o = norm(add(mul(lat, Math.cos(a2)), mul(d, Math.sin(a2))));
-      mbMetal.box(madd(madd(top, o, sz * 0.95), up, 1.3), mul(o, 0.35), mul(cross(up, o), 0.35), mul(up, 1.4));
-    }
-    mbMetal.lathe(top, up, lat, [[sz * 0.8, 0], [sz * 0.95, 0.9]], 16);
+    // a small stone in a rub-over (bezel) setting on top: low, so nothing catches
+    const top = madd(c, up, rs[0] + T * 0.8), sz = 2.0;
+    mbMetal.lathe(top, up, lat, [[sz * 0.7, -0.3], [sz * 1.12, 0.2], [sz * 1.1, 1.0], [sz * 0.95, 1.15]], 20);
     mbGlass.bone = 2; mbGlass.color = [1, 1, 1];
-    mbGlass.lathe(madd(top, up, 0.6), up, lat, [[0.01, -0.2], [sz * 0.6, 0.6], [sz, 1.5], [sz * 0.62, 2.4], [0.01, 2.5]], 8);
+    mbGlass.lathe(madd(top, up, 0.5), up, lat, [[0.01, 0.0], [sz * 0.95, 0.6], [sz * 0.7, 1.3], [0.01, 1.45]], 10);
   }
 }
 
@@ -511,11 +523,17 @@ function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, nu
 }
 
 // ------------------------------------------------------------------------------------------------ assemble
-export function buildAccessories(o: AccOptions): Accessories {
+// The accessories' geometry (sampled from the arm's field, the slow part) is kept per presentation, quality and look;
+// each build clones it, so a second driver with the same look costs only the materials.
+interface AccGeo { cloth: THREE.BufferGeometry | null; metal: THREE.BufferGeometry | null; dial: THREE.BufferGeometry | null; glass: THREE.BufferGeometry | null; sleeveFrom: number; weaveKind: 'poplin' | 'knit' | 'twill'; sleeveColor: number }
+const accCache = new Map<string, AccGeo>();
+function accGeometry(o: AccOptions): AccGeo {
   const A = o.anatomy, look = o.look, q = o.quality;
+  const key = [A.pres, q, look.sleeve, look.gloves, look.watch, look.ring, look.bracelet, o.female, o.watchTime.join(':')].join('|');
+  const hit = accCache.get(key);
+  if (hit) return hit;
   const metal = new MB(0, o), dial = new MB(0, o), glass = new MB(0, o), cloth = new MB(0, o);
   const sides = [new MB(0, o), new MB(1, o)];
-  const meshes: THREE.SkinnedMesh[] = [];
   let sleeveFrom = 1e9;
   let weaveKind: 'poplin' | 'knit' | 'twill' = 'poplin';
   // ---- sleeves
@@ -549,24 +567,35 @@ export function buildAccessories(o: AccOptions): Accessories {
   if (look.bracelet) bangle(metalR, A, q);
   metal.append(metalL); metal.append(metalR); dial.append(dialL); glass.append(glassL); glass.append(glassR);
 
-  const mk = (mb: MB, mat: THREE.Material, name: string) => {
-    if (!mb.idx.length) return;
-    const m = new THREE.SkinnedMesh(mb.geometry(), mat); m.name = name; meshes.push(m);
+  const g = (mb: MB) => (mb.idx.length ? mb.geometry() : null);
+  const res: AccGeo = { cloth: g(cloth), metal: g(metal), dial: g(dial), glass: g(glass), sleeveFrom, weaveKind, sleeveColor: kinds.color };
+  accCache.set(key, res);
+  return res;
+}
+
+export function buildAccessories(o: AccOptions): Accessories {
+  const look = o.look, q = o.quality;
+  const G = accGeometry(o);
+  const meshes: THREE.SkinnedMesh[] = [];
+  const weaveKind = G.weaveKind, sleeveFrom = G.sleeveFrom, kinds = { color: G.sleeveColor };
+  const mk = (geo: THREE.BufferGeometry | null, mat: THREE.Material, name: string) => {
+    if (!geo) { mat.dispose(); return; }
+    const m = new THREE.SkinnedMesh(geo.clone(), mat); m.name = name; meshes.push(m);
   };
   const sheenC = new THREE.Color(kinds.color).lerp(new THREE.Color(1, 1, 1), 0.35);
   const clothMat = new THREE.MeshPhysicalMaterial({
     vertexColors: true, roughness: weaveKind === 'knit' ? 0.78 : 0.86, metalness: 0, sheen: q === 'high' ? 0.7 : 0.3, sheenColor: sheenC, sheenRoughness: 0.55,
     normalMap: weave(weaveKind), normalScale: new THREE.Vector2(0.55, 0.55), envMapIntensity: 0.7,
   });
-  mk(cloth, clothMat, 'sleeves');
-  mk(metal, accMaterial(), 'metal');
+  mk(G.cloth, clothMat, 'sleeves');
+  mk(G.metal, accMaterial(), 'metal');
   if (look.watch) {
     const dt = dialTexture(look.watch, o.watchTime);
     const dm = look.watch === 'smart'
       ? new THREE.MeshStandardMaterial({ map: dt, emissiveMap: dt, emissive: 0xffffff, emissiveIntensity: 0.55, color: 0x050505, roughness: 0.3 })
       : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.32, metalness: look.watch === 'gold' ? 0.35 : 0.15, clearcoat: 0.4, clearcoatRoughness: 0.2 });
-    mk(dial, dm, 'dial');
+    mk(G.dial, dm, 'dial');
   }
-  mk(glass, new THREE.MeshPhysicalMaterial({ color: 0xf4f8ff, roughness: 0.02, metalness: 0, transparent: true, opacity: 0.16, envMapIntensity: 2.4, clearcoat: 1, clearcoatRoughness: 0.02, depthWrite: false, ior: 1.77 }), 'crystal');
+  mk(G.glass, new THREE.MeshPhysicalMaterial({ color: 0xf4f8ff, roughness: 0.02, metalness: 0, transparent: true, opacity: 0.16, envMapIntensity: 2.4, clearcoat: 1, clearcoatRoughness: 0.02, depthWrite: false, ior: 1.77 }), 'crystal');
   return { meshes, sleeveFrom };
 }

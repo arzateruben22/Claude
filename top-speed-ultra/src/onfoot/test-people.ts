@@ -9,6 +9,7 @@ addEventListener('error', (e) => { window.__previewError = String(e.message || e
 addEventListener('unhandledrejection', (e) => { window.__previewError = String((e as PromiseRejectionEvent).reason); });
 
 const q = new URLSearchParams(location.search);
+if (q.get('cdbg')) (globalThis as { __clothDbg?: number }).__clothDbg = Number(q.get('cdbg'));
 const view = q.get('view') ?? 'bodies';
 const quality = (q.get('quality') ?? 'high') as 'high' | 'phone';
 
@@ -46,24 +47,27 @@ function studio() {
 }
 
 async function main() {
+  // let the page finish loading first: building people is heavy, synchronous work
+  await new Promise((r) => setTimeout(r, 50));
   const people: Person[] = [];
   let render = () => renderer.render(scene, camera);
-  if (view === 'bodies') {
+  if (view === 'bodies' || view === 'clothes') {
     studio();
+    if (view === 'clothes') { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new RoomEnvironment(renderer), 0.04).texture; }
     const all: PresetName[] = ['thin', 'petite', 'casual', 'tall', 'stocky', 'curvy', 'muscular', 'pear', 'beerBelly', 'hourglass', 'obese', 'broad', 'heavy', 'olderWoman', 'elder'];
-    const names = q.get('only') ? (q.get('only')!.split(',') as PresetName[]) : all;
+    const names = q.get('only') ? (q.get('only')!.split(',') as PresetName[]) : view === 'clothes' ? (['reference', 'casual', 'beerBelly', 'broad', 'elder'] as PresetName[]) : all;
     const t0 = performance.now();
     names.forEach((n, i) => {
-      const o = preset(n); o.quality = quality; o.lod = 1;
+      const o = preset(n); o.quality = quality; o.lod = view === 'clothes' ? 0 : 1;
       const p = buildPerson(o);
-      p.group.position.set((i - (names.length - 1) / 2) * 0.78, 0, 0);
+      p.group.position.set((i - (names.length - 1) / 2) * (view === 'clothes' ? 0.9 : 0.78), 0, 0);
       scene.add(p.group); people.push(p);
     });
     extra.buildMs = Math.round(performance.now() - t0);
     for (const p of people) p.update(0.016);
     camera.fov = 22; camera.aspect = innerWidth / (innerHeight / 2); camera.updateProjectionMatrix();
-    const dz = Math.max(3.2, names.length * 0.55);
-    camera.position.set(0, 1.0, dz); camera.lookAt(0, 0.92, 0);
+    const dz = Number(q.get('dz') ?? (view === 'clothes' ? 5.6 : Math.max(3.2, names.length * 0.55))), cy = Number(q.get('cy') ?? 0.92);
+    camera.position.set(0, cy + 0.08, dz); camera.lookAt(0, cy, 0);
     render = () => {
       const W = innerWidth, H = innerHeight;
       renderer.info.reset();
@@ -91,6 +95,7 @@ async function main() {
     const t0 = performance.now();
     names.forEach((n, i) => {
       const o = preset(n); o.quality = quality; o.lod = 0;
+      if (q.get('bald')) { o.look.hair = 'bald'; o.look.glasses = false; o.acc.hoops = null; }
       const p = buildPerson(o);
       p.group.position.set(i * 3, 0, 0);
       scene.add(p.group); people.push(p);
@@ -127,6 +132,7 @@ async function main() {
       renderer.setScissorTest(false);
     };
   }
+  if (q.get('dbg') === 'normal' || q.get('dbg') === 'flat') for (const p of people) p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh && m.name.startsWith('cloth')) (m as THREE.Mesh).material = q.get('dbg') === 'normal' ? new THREE.MeshNormalMaterial() : new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.6 }); });
   extra.people = people.map((p) => p.stats());
   if (people[0]) { const ms: THREE.Mesh[] = []; people[0].group.traverse((m) => { if ((m as THREE.Mesh).isMesh) ms.push(m as THREE.Mesh); }); const e = ms[0]; e.updateWorldMatrix(true, false); const z = new THREE.Vector3(0, 0, 1).transformDirection(e.matrixWorld); extra.eyeZ = z.toArray().map((v) => +v.toFixed(3)); const pp = new THREE.Vector3(); e.getWorldPosition(pp); extra.eyeP = pp.toArray().map((v) => +v.toFixed(3)); extra.eyeParent = e.parent?.parent?.name; }
   extra.parts = people.slice(0, 1).map((p) => { const out: string[] = []; p.group.traverse((m) => { const g = (m as THREE.Mesh).geometry; if (g && m.visible) out.push(`${m.type}:${(g.index ? g.index.count : g.attributes.position.count) / 3}:${Object.keys(g.morphAttributes).length ? g.morphAttributes.position?.length : 0}`); }); return out.join(' '); });

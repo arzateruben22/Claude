@@ -38,7 +38,11 @@ vec3 bumpNormal(vec3 pos, vec3 n, float H, float faceDir) {
   vec3 r1 = cross(sy, n), r2 = cross(n, sx);
   float det = dot(sx, r1) * faceDir;
   vec3 g = sign(det) * (dFdx(H) * r1 + dFdy(H) * r2);
-  return normalize(abs(det) * n - g);
+  vec3 v = abs(det) * n - g;
+  float l2 = dot(v, v);
+  // degenerate derivatives (silhouettes, tiny triangles) would give a NaN normal: a black speck
+  vec3 b = l2 > 1e-30 ? v * inversesqrt(l2) : n;
+  return dot(b, n) > 0.2 ? b : n;
 }
 `;
 
@@ -101,6 +105,8 @@ export function skinMaterial(o: SkinOptions): SkinMaterial {
     m.sheenColor.setRGB(0.75 - 0.42 * k, 0.62 - 0.38 * k, 0.56 - 0.36 * k);
     m.specularIntensity = 0.62 - 0.2 * k;
     m.clearcoat = high ? (gloved ? 0.35 : 0.06 * (1 - k)) : 0;
+    // black leather: a faint neutral sheen, not the skin's peach film (which turned it grey)
+    if (gloved) { m.sheen = high ? 0.12 : 0; m.sheenColor.setRGB(0.3, 0.29, 0.28); m.specularIntensity = 0.5; }
   };
   fit(o.tone);
   m.setTone = (hex: number) => { uniforms.uTone.value.set(hex); uniforms.uDark.value = darkness(hex); fit(hex); };
@@ -235,7 +241,8 @@ gAoD = mix(1.0, ao, 0.45);
 normal = bumpNormal(-vViewPosition, normal, H * 0.001, faceDirection);`)
       .replace('#include <lights_fragment_end>', /* glsl */ `#include <lights_fragment_end>
 {
-  reflectedLight.indirectDiffuse *= ao;
+  // occluded skin goes warm-dark (light scattered through the flesh), not grey
+  reflectedLight.indirectDiffuse *= ao * mix(vec3(1.0), vec3(1.12, 0.92, 0.88), (1.0 - ao) * 0.7);
   float dotNVo = saturate(dot(geometryNormal, geometryViewDir));
   reflectedLight.indirectSpecular *= computeSpecularOcclusion(dotNVo, ao, material.roughness);
   #ifdef USE_SHEEN
@@ -272,9 +279,9 @@ export interface NailMaterial extends THREE.MeshPhysicalMaterial { setTone(hex: 
 export function nailMaterial(o: { tone: number; paint: number | null; quality: Quality }): NailMaterial {
   const painted = o.paint !== null;
   const m = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, roughness: painted ? 0.16 : 0.3, metalness: 0, ior: 1.5,
-    clearcoat: painted ? 1 : 0.35, clearcoatRoughness: painted ? 0.04 : 0.18,
-    envMapIntensity: 1, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+    color: 0xffffff, roughness: painted ? 0.16 : 0.36, metalness: 0, ior: 1.5,
+    clearcoat: painted ? 1 : 0.12, clearcoatRoughness: painted ? 0.04 : 0.25,
+    envMapIntensity: painted ? 1 : 0.7, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
   }) as NailMaterial;
   const u = {
     uTone: { value: new THREE.Color(o.tone) }, uDark: { value: darkness(o.tone) },
@@ -294,18 +301,19 @@ float s = vNail.x, w = vNail.y, freeAt = vNail.z, L = vNail.w;     // mm from th
 float side = vNail.y;
 // the nail bed: pink over the skin tone; paler toward the free edge's line; the lunula at the base
 vec3 bed = mix(uTone * vec3(1.05, 0.78, 0.76), vec3(0.62, 0.36, 0.34), 0.35 + 0.25 * uDark);
-bed = mix(bed, bed * vec3(1.08, 1.02, 1.0) + 0.04, smoothstep(freeAt - 2.5, freeAt, s) * 0.5);
+bed = mix(bed, bed * vec3(1.06, 1.02, 1.0) + 0.03, smoothstep(freeAt - 2.0, freeAt, s) * 0.35);
 float lun = smoothstep(0.08, -0.08, length(vec2((s - 0.3) / (L * 0.2 + 0.6), w * 0.85)) - 1.0);
-bed = mix(bed, vec3(0.78, 0.68, 0.64), lun * 0.6);
+bed = mix(bed, bed * vec3(1.12, 1.08, 1.06) + 0.05, lun * 0.55);
 // the free edge: off-white, the smile line where it leaves the fingertip
-vec3 fe = vec3(0.82, 0.79, 0.72) * (0.94 + 0.06 * vnoise(vec3(s * 3.0, w * 4.0, 0.0)));
+// (translucent: the bed's colour shows through it, whiter only where it is thick and clear of the finger)
+vec3 fe = mix(bed * vec3(1.1, 1.05, 1.02) + 0.035, vec3(0.80, 0.76, 0.70), 0.25 + 0.45 * smoothstep(0.5, 3.0, s - freeAt)) * (0.94 + 0.06 * vnoise(vec3(s * 3.0, w * 4.0, 0.0)));
 float isFree = smoothstep(freeAt - 0.15, freeAt + 0.35, s + 0.25 * w * w);
 vec3 nc = mix(bed, fe, isFree);
-nc = mix(nc, vec3(0.86, 0.8, 0.76), smoothstep(0.7, 0.0, s) * 0.5);            // cuticle
+nc = mix(nc, uTone * vec3(1.0, 0.86, 0.82), smoothstep(0.9, 0.0, s) * 0.6);      // the cuticle: skin over the plate's base
 float ridges = vnoise(vec3(w * 9.0, s * 0.25, 1.0));
 nc *= 0.96 + 0.06 * ridges;
 // polish: a hair short of the cuticle and the side walls
-float coat = uPainted * smoothstep(0.35, 0.65, s) * smoothstep(0.98, 0.9, abs(w));
+float coat = uPainted * smoothstep(0.35, 0.65, s);   // the polish wraps the free edge and the plate's sides
 vec3 pc = uPaint * (0.95 + 0.05 * vnoise(vec3(s * 0.8, w * 2.0, 3.0)));
 diffuseColor.rgb = mix(nc, pc, coat);
 float nailRough = mix(mix(0.32, 0.4, isFree), 0.12, coat);

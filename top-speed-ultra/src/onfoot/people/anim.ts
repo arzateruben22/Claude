@@ -97,7 +97,10 @@ export class Animator {
     // ---- the base stance: arms down (heavier arms rest a little out), legs in, posture
     const armOut = (7 + 7 * heavy + 3 * clamp(bd.muscle - 0.6) * 2) * DEG;
     const legIn = Math.max(0, rig.legAngle - (2.5 + 4 * heavy) * DEG);
-    R(B.armL, [0, 0, 1], -(rig.armAngle - armOut)); R(B.armR, [0, 0, 1], rig.armAngle - armOut);
+    // the shoulder girdle takes a share of lowering the arms from the rest pose, so the shoulder line follows
+    const lower = rig.armAngle - armOut;
+    R(B.clavL, [0, 0, 1], -lower * 0.2); R(B.clavR, [0, 0, 1], lower * 0.2);
+    R(B.armL, [0, 0, 1], -lower * 0.8); R(B.armR, [0, 0, 1], lower * 0.8);
     R(B.armL, [1, 0, 0], -4 * DEG); R(B.armR, [1, 0, 0], -4 * DEG);
     R(B.foreL, this.armFlexL, -(12 + 6 * soft) * DEG); R(B.foreR, this.armFlexR, -(12 + 6 * soft) * DEG);
     R(B.handL, [0, 1, 0], 8 * DEG); R(B.handR, [0, 1, 0], -8 * DEG);
