@@ -36,6 +36,7 @@ export interface Rig {
   neckSeam: number;             // y of the head mesh / body mesh seam
   wrist: { p: V3; n: V3 }[];    // the hand-mesh seams (n points toward the hand), L then R
   heel: number;                 // heel height the feet are posed for (m)
+  pitch: number;                // the feet's pitch for that heel (rad, about x at the ankle)
   dims: {
     hipY: number; kneeY: number; ankleY: number; crotchY: number; waistY: number; chestY: number; shoulderY: number; navelY: number;
     hipHalf: number; waistHalf: number; chestHalf: number; shoulderX: number; thighR: number; seatZ: number; bellyZ: number; chestZ: number;
@@ -138,8 +139,9 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   f.ea([0, waistY, -0.006 * s], waistHalf, 0.07 * s, 0.092 * s + 0.4 * fat.waist, C, 0.05 * s, B.spine);
   const sag = soft * 0.025 * s + fat.belly * 0.2;
   if (fat.belly > 0.004 || b.belly > 0) {
-    const bz = 0.035 * s + 1.0 * fat.belly;
-    f.ea([0, 0.6 * H - sag + 0.01 * b.belly * s, bz], 0.1 * ws + 0.7 * fat.belly, 0.085 * s + 0.8 * fat.belly, 0.05 * s + 0.75 * fat.belly, C, 0.06 * s, B.spine);
+    // a broad bulge that grows out of the abdomen (wide, blended over a long radius), never a ball stuck on
+    const fb = fat.belly;
+    f.ea([0, 0.598 * H - sag + 0.012 * b.belly * s, 0.012 * s + 0.55 * fb], 0.112 * ws + 0.78 * fb, 0.095 * s + 0.62 * fb, 0.08 * s + 0.5 * fb, C, 0.05 * s + 0.45 * fb, B.spine);
   }
   if (fat.waist > 0.008) for (const sg of [1, -1]) {
     f.ea([sg * (waistHalf * 0.8 + 0.2 * fat.waist), 0.595 * H - sag * 0.5, -0.025 * s], 0.035 * s + 0.6 * fat.waist, 0.055 * s + 0.4 * fat.waist, 0.06 * s + 0.4 * fat.waist, C, 0.05 * s, B.spine);
@@ -277,7 +279,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const wristP = madd(wrL, dFore, -0.012 * s);
   f.finalize();
   return {
-    H, s, ws, joints: J, field: f, head, sigma, armAngle: armA, legAngle: legA, heel,
+    H, s, ws, joints: J, field: f, head, sigma, armAngle: armA, legAngle: legA, heel, pitch,
     neckSeam: head.toBody([0, -0.16, 0])[1],
     wrist: [{ p: wristP, n: wristN }, { p: mirror(wristP), n: mirror(wristN) }],
     dims: {

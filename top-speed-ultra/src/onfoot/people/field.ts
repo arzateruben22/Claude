@@ -49,11 +49,18 @@ export class Field implements Sdf {
     this.push(1, group, k, bone, carve);
     return this.n - 1;
   }
+  /** rounded box at c: half sizes hx along ax, hy along up (made perpendicular), hz across, edge radius r */
+  box(c: V3, ax: V3, up: V3, hx: number, hy: number, hz: number, r: number, group: number, k: number, bone: number, carve = 0) {
+    const x = norm(ax), u = perp(up, x), l = cross(x, u);
+    this.F.push(c[0], c[1], c[2], x[0], x[1], x[2], u[0], u[1], u[2], l[0], l[1], l[2], hx - r, hy - r, hz - r, r, 0, 0, 0, 0, 0);
+    this.push(2, group, k, bone, carve);
+    return this.n - 1;
+  }
   /** axis-aligned ellipsoid */
   ea(c: V3, rx: number, ry: number, rz: number, group: number, k: number, bone: number, carve = 0) {
     return this.ell(c, [1, 0, 0], [0, 1, 0], rx, ry, rz, group, k, bone, carve);
   }
-  private push(t: number, g: number, k: number, bone: number, carve: number) {
+  push(t: number, g: number, k: number, bone: number, carve: number) {
     this.type.push(t); this.group.push(g); this.k.push(Math.max(k, 1e-5)); this.bone.push(bone); this.carve.push(carve); this.n++;
     this.maxK = Math.max(this.maxK, k);
   }
@@ -79,6 +86,11 @@ export class Field implements Sdf {
       else if (kk > aa * L) d = Math.sqrt(qx * qx + (qy - L) * (qy - L)) - r2;
       else d = qx * aa + qy * bb - r1;
       return d * F[b + 17];
+    }
+    if (this.T[i] === 2) {
+      const qx = Math.abs(lx) - F[b + 12], qy = Math.abs(ly) - F[b + 13], qz = Math.abs(lz) - F[b + 14];
+      const ox = qx > 0 ? qx : 0, oy = qy > 0 ? qy : 0, oz = qz > 0 ? qz : 0;
+      return Math.sqrt(ox * ox + oy * oy + oz * oz) + Math.min(Math.max(qx, qy, qz), 0) - F[b + 15];
     }
     const rx = F[b + 12], ry = F[b + 13], rz = F[b + 14];
     const ax = lx / rx, ay = ly / ry, az = lz / rz;
@@ -118,6 +130,17 @@ export class Field implements Sdf {
     }
     return s;
   }
+  /** a new field with the same blend tree and only the primitives `keep` accepts (carves too) */
+  subset(keep: (i: number) => boolean): Field {
+    const o = new Field();
+    o.gParent = this.gParent.slice(); o.gK = this.gK.slice(); o.maxK = this.maxK;
+    for (let i = 0; i < this.n; i++) {
+      if (!keep(i)) continue;
+      for (let j = 0; j < S; j++) o.F.push(this.F[i * S + j]);
+      o.push(this.type[i], this.group[i], this.k[i], this.bone[i], this.carve[i]);
+    }
+    return o.finalize();
+  }
   /** each primitive's bounding sphere */
   bounds(): { c: V3; r: number; i: number }[] {
     const out: { c: V3; r: number; i: number }[] = [];
@@ -127,7 +150,8 @@ export class Field implements Sdf {
       if (this.type[i] === 0) {
         const L = F[b + 12], s = Math.max(F[b + 15], F[b + 16], F[b + 20], 1), r = Math.max(F[b + 13], F[b + 14]) * s;
         out.push({ c: madd(c, [F[b + 3], F[b + 4], F[b + 5]], L / 2), r: L / 2 + r, i });
-      } else out.push({ c, r: Math.max(F[b + 12], F[b + 13], F[b + 14]), i });
+      } else if (this.type[i] === 2) out.push({ c, r: Math.hypot(F[b + 12], F[b + 13], F[b + 14]) + F[b + 15], i });
+      else out.push({ c, r: Math.max(F[b + 12], F[b + 13], F[b + 14]), i });
     }
     return out;
   }
@@ -145,3 +169,32 @@ export class Field implements Sdf {
 }
 
 export const centre = (a: V3, b: V3): V3 => add(a, b).map((v) => v / 2) as V3;
+
+/** a field offset outward by t, smooth-unioned (radius k) with an optional second field (a drape hull, a sole) */
+export class OffsetSdf implements Sdf {
+  n: number; maxK: number;
+  private bufA: Int32Array; private bufB: Int32Array;
+  constructor(public A: Field, public t: number, public Bf: Field | null = null, public k = 0.02) {
+    this.n = A.n + (Bf ? Bf.n : 0);
+    this.maxK = Math.max(A.maxK, Bf ? Bf.maxK : 0, k);
+    this.bufA = new Int32Array(A.n); this.bufB = new Int32Array(Bf ? Bf.n : 0);
+  }
+  prim(i: number, x: number, y: number, z: number) { return i < this.A.n ? this.A.prim(i, x, y, z) - this.t : this.Bf!.prim(i - this.A.n, x, y, z); }
+  eval(x: number, y: number, z: number, act: Int32Array | null, nAct: number) {
+    const nA = this.A.n;
+    if (!act) {
+      const a = this.A.eval(x, y, z, null, 0) - this.t;
+      if (!this.Bf) return a;
+      return smin(a, this.Bf.eval(x, y, z, null, 0), this.k);
+    }
+    let na = 0, nb = 0;
+    for (let j = 0; j < nAct; j++) { const i = act[j]; if (i < nA) this.bufA[na++] = i; else this.bufB[nb++] = i - nA; }
+    const a = na ? this.A.eval(x, y, z, this.bufA, na) - this.t : 1e9;
+    if (!this.Bf || !nb) return a;
+    return smin(a, this.Bf.eval(x, y, z, this.bufB, nb), this.k);
+  }
+}
+export function smin(a: number, b: number, k: number) {
+  const h = Math.max(k - Math.abs(a - b), 0) / k;
+  return Math.min(a, b) - h * h * k * 0.25;
+}
