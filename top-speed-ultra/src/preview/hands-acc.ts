@@ -498,7 +498,7 @@ function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, nu
     ringsC.forEach((col, i) => { g.strokeStyle = col; g.lineWidth = 13; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cx + 172, 50 - i * 16, -Math.PI / 2, -Math.PI / 2 + (0.55 + i * 0.15) * Math.PI * 2); g.stroke(); });
   } else {
     // a sunburst dial: radial brushing as fine light and dark spokes over the base colour
-    const base = kind === 'gold' ? [236, 226, 204] : [18, 22, 30];
+    const base = kind === 'gold' ? [226, 224, 216] : [18, 22, 30];   // gold watch: a silvered white dial
     g.fillStyle = `rgb(${base.join(',')})`; g.fillRect(0, 0, n, n);
     for (let i = 0; i < 720; i++) {
       const a = (i / 720) * Math.PI * 2, l = (Math.sin(i * 12.9898) * 43758.5453) % 1;
@@ -593,7 +593,7 @@ export function buildAccessories(o: AccOptions): Accessories {
     const dt = dialTexture(look.watch, o.watchTime);
     const dm = look.watch === 'smart'
       ? new THREE.MeshStandardMaterial({ map: dt, emissiveMap: dt, emissive: 0xffffff, emissiveIntensity: 0.55, color: 0x050505, roughness: 0.3 })
-      : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.32, metalness: look.watch === 'gold' ? 0.35 : 0.15, clearcoat: 0.4, clearcoatRoughness: 0.2 });
+      : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.42, metalness: 0, clearcoat: 0.4, clearcoatRoughness: 0.2 })   // lacquered, not metal: a metal dial took the warm sky's colour and read as skin;
     mk(G.dial, dm, 'dial');
   }
   mk(G.glass, new THREE.MeshPhysicalMaterial({ color: 0xf4f8ff, roughness: 0.02, metalness: 0, transparent: true, opacity: 0.16, envMapIntensity: 2.4, clearcoat: 1, clearcoatRoughness: 0.02, depthWrite: false, ior: 1.77 }), 'crystal');

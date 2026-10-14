@@ -54,7 +54,7 @@ function rigidSkinned(pos: ArrayLike<number>, idx: ArrayLike<number>, bone: numb
 }
 
 /** attach morph targets (body-frame deltas), keeping only the non-zero ones */
-function setMorphs(g: THREE.BufferGeometry, deltas: Float32Array[]): number[] {
+function setMorphs(g: THREE.BufferGeometry, deltas: Float32Array[], normals = false): number[] {
   const map: number[] = [], attrs: THREE.BufferAttribute[] = [];
   deltas.forEach((d, e) => {
     let nz = false;
@@ -63,6 +63,21 @@ function setMorphs(g: THREE.BufferGeometry, deltas: Float32Array[]): number[] {
     map.push(e); attrs.push(new THREE.BufferAttribute(d, 3));
   });
   if (attrs.length) { g.morphAttributes.position = attrs; g.morphTargetsRelative = true; }
+  // morph normals (relative): a closed lid or a smiling cheek is shaded as its new shape, not its rest shape
+  if (normals && attrs.length && g.index) {
+    const base = g.attributes.position.array as Float32Array, tmp = new THREE.BufferGeometry();
+    tmp.setIndex(g.index);
+    const triN = (p: Float32Array) => { tmp.setAttribute('position', new THREE.BufferAttribute(p, 3)); tmp.deleteAttribute('normal'); tmp.computeVertexNormals(); return tmp.attributes.normal.array as Float32Array; };
+    const n0 = Float32Array.from(triN(Float32Array.from(base)));
+    g.morphAttributes.normal = attrs.map((a) => {
+      const p = new Float32Array(base.length), d = a.array as Float32Array;
+      for (let i = 0; i < p.length; i++) p[i] = base[i] + d[i];
+      const n1 = triN(p), o2 = new Float32Array(p.length);
+      for (let i = 0; i < p.length; i++) o2[i] = n1[i] - n0[i];
+      return new THREE.BufferAttribute(o2, 3);
+    });
+    tmp.dispose();
+  }
   return map;
 }
 
@@ -232,22 +247,24 @@ export function buildPerson(o: PersonOptions): Person {
     const cl = clipByRegion(mesh.pos, mesh.nrm, mesh.idx, (x, y, z) => hb.sdf.keep(x, y, z));
     const act = (v: number) => mesh.act[mesh.vblock[cl.src[v]]];
     const ao = bakeAO(hb.sdf, cl.pos, cl.nrm, act, 0.006, 0.02);
-    const nv = cl.pos.length / 3, flow = new Float32Array(nv * 3);
-    const roots: V3[] = [];
+    const nv = cl.pos.length / 3, flow = new Float32Array(nv * 3), edge = new Float32Array(nv);
+    const roots: V3[] = [], edgeRoots: V3[] = [];
     for (let v = 0; v < nv; v++) {
       const p: V3 = [cl.pos[v * 3], cl.pos[v * 3 + 1], cl.pos[v * 3 + 2]];
       flow.set(hb.flow(p), v * 3);
+      edge[v] = clamp(-hb.sdf.keep(p[0], p[1], p[2]) / 0.013);   // 0 at the hairline (and a curtain's edges and ends), 1 well inside
       if (hb.sdf.keep(p[0], p[1], p[2]) < -0.005) roots.push(p);
+      if (edge[v] > 0.12 && edge[v] < 0.5) edgeRoots.push(p);
     }
     const { si, sw } = hairWeights(hb, cl.pos);
-    const geo = buildGeometry(cl.pos, cl.nrm, cl.idx, si, sw, { aFlow: { a: flow, n: 3 }, aAo: { a: ao, n: 1 } });
+    const geo = buildGeometry(cl.pos, cl.nrm, cl.idx, si, sw, { aFlow: { a: flow, n: 3 }, aAo: { a: ao, n: 1 }, aEdge: { a: edge, n: 1 } });
     const capMat = hairCapMaterial(o.look, quality);
     mats.push(capMat);
     const cap = new THREE.SkinnedMesh(geo.geo, capMat);
     cap.name = 'hair-cap';
     buildMs.hairCap = Math.round(performance.now() - th);
     const tc = performance.now();
-    const cards = growCards(hb, roots, quality, o.seed);
+    const cards = growCards(hb, roots, quality, o.seed, edgeRoots);
     const cg = new THREE.BufferGeometry();
     cg.setAttribute('position', new THREE.BufferAttribute(cards.pos, 3));
     cg.setAttribute('uv', new THREE.BufferAttribute(cards.uv, 2));
@@ -256,7 +273,7 @@ export function buildPerson(o: PersonOptions): Person {
     const cw = hairWeights(hb, cards.pos);
     cg.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(cw.si, 4));
     cg.setAttribute('skinWeight', new THREE.BufferAttribute(cw.sw, 4));
-    const cmat = cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4 });
+    const cmat = cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : 1 });
     mats.push(cmat);
     const cm = new THREE.SkinnedMesh(cg, cmat);
     cm.name = 'hair-cards';
@@ -371,7 +388,7 @@ export function buildPerson(o: PersonOptions): Person {
     // morphs follow the same vertex compaction
     const used = hgeo.map, kept = hgeo.count;
     const compact = (d: Float32Array) => { const out = new Float32Array(kept * 3); for (let v = 0; v < N; v++) { const u = used[v]; if (u >= 0) { out[u * 3] = d[v * 3]; out[u * 3 + 1] = d[v * 3 + 1]; out[u * 3 + 2] = d[v * 3 + 2]; } } return out; };
-    const hmap = setMorphs(hgeo.geo, deltas.map(compact));
+    const hmap = setMorphs(hgeo.geo, deltas.map(compact), true);
     const headMesh = new THREE.SkinnedMesh(hgeo.geo, getFaceMat());
     G.add(headMesh);
     faceMeshes[0].push({ mesh: headMesh, map: hmap });

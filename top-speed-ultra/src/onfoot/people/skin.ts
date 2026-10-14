@@ -38,7 +38,7 @@ vec3 bumpNormal(vec3 pos, vec3 n, float H, float faceDir) {
 
 export function sssLights() {
   return THREE.ShaderChunk.lights_physical_pars_fragment
-    .replace('void RE_Direct_Physical(', 'float gThin = 0.0; float gAoD = 1.0; vec3 gSss = vec3(1.0, 0.35, 0.22); float gWrap = 1.0;\nvoid RE_Direct_Physical(')
+    .replace('void RE_Direct_Physical(', 'float gThin = 0.0; float gAoD = 1.0; vec3 gSss = vec3(1.0, 0.42, 0.3); float gWrap = 1.0;\nvoid RE_Direct_Physical(')
     .replace('reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );', /* glsl */ `
 	reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor ) * gAoD;
 	#ifdef SKIN_SSS
@@ -67,7 +67,7 @@ export function darkness(hex: number) {
 export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'body' = 'face'): SkinMaterial {
   const high = quality === 'high';
   const m = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, roughness: 0.5, metalness: 0, ior: 1.4, specularIntensity: 0.55,
+    color: 0xffffff, roughness: 0.5, metalness: 0, ior: 1.4, specularIntensity: 0.65,
     sheen: high ? 0.3 : 0, sheenColor: new THREE.Color(0.75, 0.62, 0.56), sheenRoughness: 0.45,
     clearcoat: high ? 0.08 : 0, clearcoatRoughness: 0.35, envMapIntensity: 0.8,
   }) as SkinMaterial;
@@ -147,7 +147,9 @@ float stub = 0.0;
 // scalp under the hair: the hair's colour, with strands
 {
   float strand = 0.65 + 0.35 * vnoise(hp * vec3(1.6, 0.25, 1.6));
-  c = mix(c, uHair * 0.55 * strand, smoothstep(0.1, 0.8, scalp));
+  // a broken, soft hairline: noise along the edge, fine hairs thinning out onto the skin
+  float scE = scalp + 0.32 * (vnoise(hp * vec3(0.9, 0.35, 0.9)) - 0.5) + 0.18 * (vnoise(hp * vec3(3.0, 0.6, 3.0)) - 0.5);
+  c = mix(c, uHair * 0.55 * strand, smoothstep(0.3, 0.95, scE));
 }
 // freckles
 #ifdef SKIN_FACE
@@ -184,7 +186,7 @@ H -= 0.06 * lipM * pow(0.5 + 0.5 * sin(hp.x * 2.6 + vnoise(hp * 0.6) * 3.0), 3.0
 H -= wrink * uAge * 0.14 * pow(0.5 + 0.5 * sin(hp.y * 0.62 + 2.0 * vnoise(hp * 0.08)), 4.0) * mid;
 H -= uAge * 0.05 * smoothstep(0.42, 0.5, vnoise(hp * vec3(0.4, 1.2, 0.4))) * mid;
 H += stub * 0.03 * fine;
-float rough = 0.52 - 0.1 * red * (1.0 - uDark * 0.3) + 0.05 * (1.0 - fine) + 0.03 * m3;
+float rough = 0.47 - 0.12 * red * (1.0 - uDark * 0.3) + 0.05 * (1.0 - fine) + 0.03 * m3;
 rough = mix(rough, mix(0.42, 0.3, uLipAmt), lipM);
 rough = mix(rough, 0.22, smoothstep(0.2, 0.8, mouth));
 rough = mix(rough, 0.62, clamp(stub, 0.0, 1.0) * 0.6);

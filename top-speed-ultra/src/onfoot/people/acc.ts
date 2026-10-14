@@ -188,7 +188,8 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     const quilted = acc.bag === 'quilted';
     const side = quilted ? 1 : -1;                       // the bag hangs on this side; a crossbody's strap crosses from the other shoulder
     const hw = (quilted ? 0.115 : 0.095) * s, hh = (quilted ? 0.072 : 0.065) * s, hd = (quilted ? 0.03 : 0.028) * s;
-    const yB = D.hipY + (quilted ? 0.05 : 0.07) * s, xB = side * (D.hipHalf + hd + 0.012), zB = quilted ? -0.015 : 0.035;
+    // tucked against the side of the hip, a little behind the hanging arm (not out where the hand swings)
+    const yB = D.hipY + (quilted ? 0.06 : 0.07) * s, xB = side * (D.hipHalf + hd * 0.75 + 0.004), zB = quilted ? -0.028 : 0.035;
     const c: V3 = [xB, yB, zB];
     const ex: V3 = [0, 0, 1], ey: V3 = [0, 1, 0], ez: V3 = [side, 0, 0];
     mb.bones = [B.hips, B.spine]; mb.w2 = 0.3;
@@ -216,7 +217,7 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     }
     const st = mb.pos.length / 3;
     mb.bones = [B.chest, B.hips];
-    if (quilted) { mb.setColor(0xd8b25a); mb.metal = 1; mb.rough = 0.22; mb.tube(path, (t) => 0.0024 * (1 + 0.45 * Math.abs(Math.sin(t * 210))), 6, false); }
+    if (quilted) { mb.setColor(0xd8b25a); mb.metal = 1; mb.rough = 0.22; mb.tube(path, (t) => 0.0034 * (1 + 0.4 * Math.abs(Math.sin(t * 210))), 6, false); }
     else { mb.setColor(acc.bagColor); mb.metal = 0; mb.rough = 0.55; for (const o2 of [-0.004, 0.004]) mb.tube(path.map((p) => [p[0] + o2 * 0.3, p[1], p[2] + o2] as V3), () => 0.0026, 5, false); }
     for (let v = st; v < mb.pos.length / 3; v++) { const y = mb.pos[v * 3 + 1]; const w = clamp((D.chestY - y) / (D.chestY - yB), 0, 1); mb.sw[v * 4] = 1 - w; mb.sw[v * 4 + 1] = w; }
   }

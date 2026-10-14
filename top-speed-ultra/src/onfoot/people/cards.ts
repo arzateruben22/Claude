@@ -69,7 +69,14 @@ export function browTexture() {
   return canvasTex('brow', 512, 64, (g, w, h) => {
     g.clearRect(0, 0, w, h);
     const r = rng(777);
-    for (let i = 0; i < 1100; i++) {
+    // a soft underlying density (brows read as a tone at conversation distance before single hairs do)
+    for (let i = 0; i < 40; i++) {
+      const u = i / 39, cx = u * w, rr = h * (0.34 - 0.16 * Math.max(0, u - 0.2));
+      const gr = g.createRadialGradient(cx, h * 0.52, 0, cx, h * 0.52, rr);
+      gr.addColorStop(0, `rgba(255,255,255,${0.1 * (u < 0.1 ? u / 0.1 : 1)})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = gr; g.fillRect(cx - rr, 0, rr * 2, h);
+    }
+    for (let i = 0; i < 2600; i++) {
       const u = r.next(), x = u * w, y = h * (0.1 + 0.8 * r.next());
       const edge = Math.min(1, Math.min(y, h - y) / (h * 0.25));
       const ang = u < 0.18 ? -Math.PI / 2 + (r.next() - 0.5) * 0.4 : -0.35 - (1 - u) * 0.35 + (r.next() - 0.5) * 0.3 + (y / h - 0.5) * 0.4;
@@ -90,18 +97,18 @@ export function hairLights(strength = 1) {
 	  vec3 T1 = normalize( gHairT + geometryNormal * ( 0.12 + gHairShift ) );
 	  vec3 T2 = normalize( gHairT - geometryNormal * 0.08 );
 	  float th1 = dot( T1, Hh ), th2 = dot( T2, Hh );
-	  float s1 = pow( sqrt( max( 0.0, 1.0 - th1 * th1 ) ), 90.0 );
-	  float s2 = pow( sqrt( max( 0.0, 1.0 - th2 * th2 ) ), 22.0 );
+	  float s1 = pow( sqrt( max( 0.0, 1.0 - th1 * th1 ) ), 48.0 );
+	  float s2 = pow( sqrt( max( 0.0, 1.0 - th2 * th2 ) ), 14.0 );
 	  float wrap = saturate( dot( geometryNormal, directLight.direction ) * 0.5 + 0.5 );
-	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.09 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.12 * strength).toFixed(3)} * material.diffuseColor );
+	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.12 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.12 * strength).toFixed(3)} * material.diffuseColor );
 	}`);
 }
 
 export interface CardMaterial extends THREE.MeshStandardMaterial { uniformsRef: Record<string, THREE.IUniform> }
 
 /** strand-card material; `grey` mixes grey strands in by a per-strand hash */
-export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number } = {}): CardMaterial {
-  const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, side: THREE.DoubleSide, alphaTest: o.alphaTest ?? 0.42, transparent: false }) as CardMaterial;
+export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number } = {}): CardMaterial {
+  const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, envMapIntensity: 0.35, side: THREE.DoubleSide, alphaTest: o.alphaTest ?? 0.42, transparent: false }) as CardMaterial;
   m.map = tex;
   const u: Record<string, THREE.IUniform> = {
     uCol: { value: new THREE.Color(color) }, uGrey: { value: o.grey ?? 0 }, uGreyCol: { value: new THREE.Color(o.greyColor ?? 0xbdb9b2) }, uShift: { value: o.shift ?? 0 },
@@ -109,7 +116,7 @@ export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality
   m.uniformsRef = u;
   m.alphaToCoverage = quality === 'high';
   const kk = o.kk ?? true;
-  m.customProgramCacheKey = () => `card-${quality}-${kk ? 1 : 0}`;
+  m.customProgramCacheKey = () => `card-${quality}-${kk ? 1 : 0}-${o.sheen ?? 1}`;
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.fragmentShader = sh.fragmentShader
@@ -130,7 +137,7 @@ diffuseColor.a = st.a;`)
   vec2 dux = dFdx( vMapUv ), duy = dFdy( vMapUv );
   vec3 t = dpx * duy.y - dpy * dux.y;
   gHairT = normalize( t - normal * dot( t, normal ) + 1e-6 );
-  gHairSpec = mix( vec3(1.0, 0.95, 0.9), diffuseColor.rgb * 3.0, 0.25 );
+  gHairSpec = mix( vec3(1.0, 0.95, 0.9), diffuseColor.rgb * 3.0, 0.25 ) * ${(o.sheen ?? 1).toFixed(3)};
   gHairShift = uShift;
 }
 #include <lights_fragment_begin>`);

@@ -83,7 +83,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const crotchY = hipY - 0.055 * s;
   const chestY = 0.72 * H, shoulderY = 0.815 * H, navelY = 0.6 * H;
   const waistY = m ? 0.615 * H : 0.625 * H;
-  const shoulderX = (m ? 0.172 : 0.156) * ws * (1 + 0.09 * b.shoulders + 0.04 * mu) + fat.chest * 0.25;
+  const shoulderX = (m ? 0.168 : 0.149) * ws * (1 + 0.09 * b.shoulders + 0.04 * mu) + fat.chest * 0.25;
   const hipJX = (m ? 0.083 : 0.088) * ws * (1 + 0.07 * b.hips);
   const hipHalf = (m ? 0.148 : 0.163) * ws * (1 + 0.08 * b.hips) + 0.55 * fat.hip;
   const waistHalf = (m ? 0.127 : 0.11) * ws * (1 + 0.1 * b.waist) * (m ? 1 : 1 - 0.04 * Math.max(0, -b.waist)) + 0.75 * fat.waist + 0.012 * mu * (m ? 1 : 0.5);
@@ -195,9 +195,11 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
     const bFi = sg > 0 ? B.fingL : B.fingR, bTh = sg > 0 ? B.thumbL : B.thumbR;
     const fwd: V3 = [0, 0, 1];
     // deltoid
-    f.ell(X(madd(madd(shL, dU, 0.03 * s), [1, 0, 0], 0.012 * ws)), X(dU), fwd, 0.072 * s, 0.05 * ws + 0.022 * mu + 0.35 * fat.arm, 0.047 * ws + 0.02 * mu + 0.3 * fat.arm, gA, 0.03 * s, bA);
+    // (set low on the arm and short along it: its top meets the trapezius slope instead of rising over it as a ball)
+    const dOut: V3 = [-dU[1], dU[0], 0];
+    f.ell(X(madd(madd(shL, dU, 0.05 * s), dOut, 0.004 * ws)), X(dU), fwd, 0.06 * s, 0.041 * ws + 0.02 * mu + 0.3 * fat.arm, 0.044 * ws + 0.02 * mu + 0.3 * fat.arm, gA, 0.026 * s, bA);
     // upper arm, biceps, triceps, the soft underside on heavier arms
-    f.cone(X(madd(shL, dU, 0.03 * s)), X(elL), 0.044 * ws + 0.012 * mu + 0.7 * fat.arm, 0.034 * ws + 0.006 * mu + 0.35 * fat.arm, fwd, 1, 0.92, gA, 0.025 * s, bA);
+    f.cone(X(madd(shL, dU, 0.045 * s)), X(elL), 0.044 * ws + 0.012 * mu + 0.7 * fat.arm, 0.034 * ws + 0.006 * mu + 0.35 * fat.arm, fwd, 1, 0.92, gA, 0.025 * s, bA);
     f.ell(X(add(lerp3(shL, elL, 0.58), [0, 0, 0.016 * s])), X(dU), fwd, 0.085 * s, 0.022 * ws + 0.016 * mu + 0.25 * fat.arm, 0.026 * ws + 0.01 * mu, gA, 0.02 * s, bA);
     f.ell(X(add(lerp3(shL, elL, 0.42), [0, 0, -0.018 * s])), X(dU), fwd, 0.09 * s, 0.024 * ws + 0.01 * mu + 0.6 * fat.arm * (0.6 + 0.4 * soft), 0.027 * ws + 0.006 * mu + 0.3 * fat.arm, gA, 0.02 * s, bA);
     // elbow, forearm (wide at the muscles, flat at the wrist)

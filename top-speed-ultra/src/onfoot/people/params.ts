@@ -98,7 +98,7 @@ export interface PersonOptions {
 // ------------------------------------------------------------------------------------------------ palettes
 /** a wide range of real skin tones (sRGB), light to deep */
 export const SKIN_TONES = [0xf3d6c4, 0xeac0a4, 0xdcab8a, 0xc99472, 0xb57a58, 0x9c6545, 0x80513a, 0x65402f, 0x4e3226, 0x3d281f];
-export const HAIR_COLORS = { black: 0x141110, darkBrown: 0x2a1c14, brown: 0x4a3122, auburn: 0x6b3220, blonde: 0xb08d5a, ash: 0x8a7a66, red: 0x7c341c, grey: 0x9a9690, white: 0xd6d3cc };
+export const HAIR_COLORS = { black: 0x141110, darkBrown: 0x33231a, brown: 0x4a3122, auburn: 0x6b3220, blonde: 0xb08d5a, ash: 0x8a7a66, red: 0x7c341c, grey: 0x9a9690, white: 0xd6d3cc };
 export const IRIS_COLORS = [0x3d2614, 0x4b2e17, 0x5a3a1e, 0x6b5a2e, 0x4f6a52, 0x5a7891, 0x3e5a78, 0x71604a];
 
 const NIGHT_TOPS = [0x161616, 0xf2efe8, 0x1d2a44, 0x7a1d24, 0x2f4a3a, 0x5b4636, 0x8a8f96, 0x3a2f4f, 0xc9a77a, 0x0f3550];
@@ -162,7 +162,7 @@ export function preset(name: PresetName): PersonOptions {
       { watch: 0x222222 });
     case 'thin': return P(107, { sex: 'm', age: 24, height: 1.88, heads: 7.8, fat: 0.04, muscle: 0.15, shoulders: -0.3, legs: 0.4 },
       { width: 0.94, cheeks: 0.8, jaw: 0.98 }, { skin: SKIN_TONES[0], hair: 'long', hairColor: HAIR_COLORS.brown, freckles: 0.4 },
-      [{ kind: 'shirt', color: 0x1a1a1a, fabric: 'cotton', sleeve: 1, neck: 'collar', open: true }, { kind: 'jeans', color: DENIM[3], fabric: 'denim' }, { kind: 'boots', color: 0x111111, fabric: 'leather' }],
+      [{ kind: 'shirt', color: 0x1a1a1a, fabric: 'cotton', sleeve: 1, neck: 'collar', open: false }, { kind: 'jeans', color: DENIM[3], fabric: 'denim' }, { kind: 'boots', color: 0x111111, fabric: 'leather' }],
       { ring: 0xc0c4c8 });
     case 'heavy': return P(108, { sex: 'f', age: 45, height: 1.64, fat: 0.82, muscle: 0.3, apple: 0.5, bust: 0.8, soft: 0.6 },
       { cheeks: 1.25 }, { skin: SKIN_TONES[2], hair: 'bob', hairColor: HAIR_COLORS.auburn, lipstick: 0x9a3b44, blush: 0.3, glasses: true },

@@ -126,14 +126,14 @@ const bump = (u: number, peak: number, pw: number) => { const w = u < peak ? 0.5
 /** the lids' margins (eye-local, metres, unscaled): x, upper y, lower y */
 function margins(u: number, hf: HeadFrame, st: LidState) {
   const F = hf.face, tilt = 0.0012 * F.eyeTilt;
-  const x = lerp(-0.0137, 0.015, u);
+  const x = lerp(-0.0152, 0.0135, u);   // the inner corner further from the pupil than the outer (real eyes)
   const yc = lerp(-0.0009, 0.0004 + tilt, u);
-  const bu = bump(u, 0.43, 0.75), bl = bump(u, 0.56, 0.85);
-  const yU0 = yc + (0.0059 - 0.0008 * F.hooded) * bu;
-  const yL = yc - 0.0045 * bl + bl * (0.0008 * st.blink + 0.0022 * st.squint);
+  const bu = bump(u, 0.47, 0.75), bl = bump(u, 0.6, 0.85);
+  const yU0 = yc + (0.005 - 0.0008 * F.hooded) * bu;   // the upper lid rests over the top of the iris
+  const yL = yc - 0.0043 * bl + bl * (0.0008 * st.blink + 0.0022 * st.squint);
   const yUopen = yU0 - 0.0016 * st.squint * bu;
   const yU = lerp(yUopen, yL + 0.0003 * bl, st.blink);
-  return { x, yU, yL, yU0, yL0: yc - 0.0045 * bl };
+  return { x, yU, yL, yU0, yL0: yc - 0.0043 * bl };
 }
 const zOn = (x: number, y: number, r: number) => {
   const zs = Math.sqrt(Math.max(r * r - 0.6 * x * x - y * y, 1e-9));
@@ -173,7 +173,9 @@ export function buildLids(hf: HeadFrame): LidData {
     const rows = upper ? UP_ROWS : LO_ROWS, off = pos.length;
     const P = lidPoints(hf, side, upper, base);
     pos.push(...P);
-    rows.forEach(([dy], ri) => { for (let c = 0; c < LID_COLS; c++) { ao.push(ri < 2 ? 0.35 : ri < 4 ? 0.7 : 0.95); liner.push(ri >= 2 && ri <= 4 ? 1 : ri === 5 ? 0.5 : 0); void dy; } });
+    // the upper lid a shade darker than the brow skin, with a crease line under the fold (a closed lid reads as a lid)
+    const UPAO = [0.35, 0.35, 0.55, 0.65, 0.72, 0.78, 0.8, 0.72, 0.6, 0.82];
+    rows.forEach(([dy], ri) => { for (let c = 0; c < LID_COLS; c++) { ao.push(upper ? UPAO[ri] : ri < 2 ? 0.35 : ri < 4 ? 0.7 : 0.95); liner.push(ri >= 2 && ri <= 4 ? 1 : ri === 5 ? 0.5 : 0); void dy; } });
     // morphs: blink and squint of this eye are parametric
     const bName = side > 0 ? 'blinkL' : 'blinkR', sName = side > 0 ? 'squintL' : 'squintR';
     for (const [name, st] of [[bName, { blink: 1, squint: 0 }], [sName, { blink: 0, squint: 1 }]] as const) {
@@ -258,7 +260,7 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
 /** brows on the skin: points projected onto the head's surface */
 export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Quality) {
   const m = hf.male, F = hf.face;
-  const thick = m ? 1 : 0.68, arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
+  const thick = m ? 1.12 : 0.86, arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
   const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
   const n = 16;
   const project = (pl: V3, off: number): V3 => {
@@ -279,7 +281,7 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
       const yMid = 0.0175 + low + arch * Math.sin(Math.PI * Math.min(1, u / 0.72) * 0.5) * (u < 0.72 ? 1 : 1) - (u > 0.72 ? (u - 0.72) * 0.012 : 0);
       const hw = (u < 0.15 ? 0.0042 + 0.004 * (u / 0.15) : 0.0082 * (1 - 0.62 * (u - 0.15) / 0.85)) * thick;
       for (let j = 0; j < 3; j++) {
-        const y = yMid + (j - 1) * hw * 0.55;
+        const y = yMid + (j - 1) * hw * 0.62;
         rows[j].push(project([side * x, y, 0.03], 0.0005 + (j === 1 ? 0.0002 : 0)));
       }
     }
@@ -287,7 +289,7 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
     const off = pos.length / 3;
     pos.push(...s.pos); uvs.push(...s.uvs); idx.push(...s.idx.map((v) => v + off));
   }
-  const brow = look.grey > 0.7 ? 0x8a847c : new THREE.Color(look.hairColor).multiplyScalar(0.7).getHex();
+  const brow = look.grey > 0.7 ? 0x8a847c : new THREE.Color(look.hairColor).multiplyScalar(0.55).getHex();
   const mat = cardMaterial(brow, browTexture(), quality, { kk: false, alphaTest: 0.02, grey: Math.min(0.7, look.grey * 0.6) });
   mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
   return { pos, uvs, idx, mat };
@@ -308,13 +310,14 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
       T.forEach(([hw, hh, ht], i) => {
         const w = (lower ? [0.0028, 0.0031, 0.0034, 0.0035, 0.0035][i] : hw) * s;
         const cx = x + w;
-        x = cx + w * 1.02;
+        x = cx + w * 0.9;
         const zc = arch(cx) - (lower ? 0.0024 : 0) - ht;
         const yEdge = lower ? mY + 0.0007 : mY - 0.0007;
         const cy = lower ? yEdge - hh * 0.5 : yEdge + hh * 0.5;
         const dx = 27 * 2 * cx;
         const ax = norm([1, 0, -dx]);
-        f.ell([side * cx, cy, zc], [side * ax[0], 0, ax[2]], [0, 1, 0], w * 0.98, hh * 0.5 * s, ht * s, 0, 0.0006, lower ? 1 : 0);
+        // rounded boxes: flat incisal edges and a continuous row with shallow grooves between the crowns
+        f.box([side * cx, cy, zc], [side * ax[0], 0, ax[2]], [0, 1, 0], w * 0.97, hh * 0.5 * s, ht * s * 0.8, 0.0011, 0, 0.0012, lower ? 1 : 0);
       });
     }
     // the gum line
@@ -327,7 +330,8 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
   f.ea([0, mY - 0.0078, zF - 0.02], 0.0155, 0.0048, 0.017, 0, 0.003, 1);
   f.finalize();
   // mesh in head-local, then place
-  const h = quality === 'high' ? 0.0015 : 0.002;
+  // fine enough to keep the crowns' flat edges and the grooves between them (a coarse grid made them into pegs)
+  const h = quality === 'high' ? 0.0008 : 0.0012;
   const box = { o: [-0.03, mY - 0.02, zF - 0.048] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.06 / h), ny: Math.ceil(0.04 / h), nz: Math.ceil(0.056 / h) };
   const mesh = meshField(f, box, h);
   const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3), lowerW = new Float32Array(nv);
@@ -342,10 +346,10 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
     const gum = lowerW[v] ? clamp((mY - 0.0063 - y) / 0.0016) : clamp((y - mY - 0.0063) / 0.0016);
     const tongue = Math.abs(z - (zF - 0.022)) < 0.024 && y < mY - 0.002 && z < zF - 0.004 && x * x / 0.019 ** 2 + ((y - mY + 0.0075) / 0.0062) ** 2 + ((z - zF + 0.022) / 0.022) ** 2 < 1.25 ? 1 : 0;
     const depth = smooth(zF - 0.03, zF - 0.002, z);
-    let c: V3 = [0.86, 0.83, 0.76];
+    let c: V3 = [0.76, 0.72, 0.63];   // teeth are ivory, never paper white
     c = [lerp(c[0], 0.72, gum), lerp(c[1], 0.36, gum), lerp(c[2], 0.38, gum)];
     if (tongue) c = [0.62, 0.3, 0.3];
-    const sh = 0.25 + 0.75 * depth;
+    const sh = 0.18 + 0.7 * depth;
     col[v * 3] = c[0] * sh; col[v * 3 + 1] = c[1] * sh; col[v * 3 + 2] = c[2] * sh;
   }
   // body frame
@@ -416,8 +420,10 @@ if (o.z > 9.3 && rho < irisR + 0.25) {
   float vein = smoothstep(0.92, 1.0, 1.0 - abs(vnoise(o * vec3(0.6, 1.4, 0.6)) - 0.5) * 2.0) * side;
   c = mix(c, vec3(0.75, 0.32, 0.3), vein * 0.5 + side * 0.12);
   c *= mix(1.0, 0.5, smoothstep(9.0, 2.0, o.z));
-  c *= mix(1.0, 0.5, smoothstep(1.5, 9.0, o.y)) * mix(1.0, 0.8, smoothstep(-3.0, -9.0, o.y));
+  c *= mix(1.0, 0.8, smoothstep(5.0, 9.0, o.y)) * mix(1.0, 0.85, smoothstep(-3.0, -9.0, o.y));
 }
+// the upper lid and lashes shade the top of the eye (iris too), so the eye sits in the head instead of on it
+c *= mix(1.0, 0.42, smoothstep(0.0, 5.5, o.y)) * mix(1.0, 0.85, smoothstep(-2.5, -5.5, o.y));
 diffuseColor.rgb = c;
 `)
       .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = rough;');
@@ -459,12 +465,12 @@ const EXPR: Record<Expression, Partial<Record<MorphName, number>>> = {
 };
 type Vis = 'AA' | 'EE' | 'OO' | 'MM' | 'FF' | 'CC' | '__';
 const VIS: Record<Vis, Partial<Record<MorphName, number>>> = {
-  AA: { jawOpen: 0.42, mouthClose: 0 },
-  EE: { jawOpen: 0.12, wide: 0.9, mouthClose: 0.35 },
-  OO: { jawOpen: 0.18, pucker: 1, mouthClose: 0.25 },
+  AA: { jawOpen: 0.3, mouthClose: 0.1 },
+  EE: { jawOpen: 0.12, wide: 0.3, mouthClose: 0.5 },
+  OO: { jawOpen: 0.14, pucker: 0.8, mouthClose: 0.35 },
   MM: { mouthClose: 1, press: 0.8 },
   FF: { jawOpen: 0.05, tuck: 1, mouthClose: 0.4 },
-  CC: { jawOpen: 0.16, mouthClose: 0.45, wide: 0.25 },
+  CC: { jawOpen: 0.13, mouthClose: 0.55, wide: 0.12 },
   __: { mouthClose: 1 },
 };
 const MOUTH = [MI.jawOpen, MI.mouthClose, MI.wide, MI.pucker, MI.press, MI.tuck];

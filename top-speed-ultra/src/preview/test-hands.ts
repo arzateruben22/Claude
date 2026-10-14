@@ -107,6 +107,9 @@ const second = build(skinIdx);                      // the cached path
 second.arms.dispose();
 const wheelA = Number(q.get('wheel') ?? 0);
 arms.setWheelAngle(wheelA); spin.rotation.z = wheelA;
+// debugging: ?hide=nails (or any part's name) hides that part
+const hide = q.get('hide');
+if (hide) arms.group.traverse((o) => { if (o.name === hide) o.visible = false; });
 
 // ---- camera
 const cam = stage.camera;
@@ -128,11 +131,15 @@ if (view === 'fingers') {
     [handR.clone().add(new THREE.Vector3(0.02, 0.24, 0.06)), handR.clone(), 30],
     [handR.clone().add(new THREE.Vector3(0.06, 0.07, -0.23)), handR.clone(), 30],
   ];
+  // ?panel=N: that panel alone, full frame (for a closer look)
+  const only = q.has('panel') ? Number(q.get('panel')) : -1;
   stage.setRender(() => {
-    const w = r.domElement.width / r.getPixelRatio(), h = r.domElement.height / r.getPixelRatio(), cw = w / 3;
+    const w = r.domElement.width / r.getPixelRatio(), h = r.domElement.height / r.getPixelRatio(), cw = only >= 0 ? w : w / 3;
     r.setScissorTest(true);
     cam.aspect = cw / h;
     shots.forEach(([from, at, fov], i) => {
+      if (only >= 0 && i !== only) return;
+      if (only >= 0) i = 0;
       cam.fov = fov; cam.updateProjectionMatrix(); look(from, at);
       r.setViewport(i * cw, 0, cw, h); r.setScissor(i * cw, 0, cw, h);
       r.render(scene, cam);

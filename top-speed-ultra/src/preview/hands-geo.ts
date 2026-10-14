@@ -95,9 +95,9 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
     // redness: knuckles, finger joints' backs, fingertips; the palm side of the fingers is pinker too
     let red = 0;
     for (let i = 0; i < 4; i++) {
-      red = Math.max(red, g3(len(sub(p, knuckles[i])), 9) * 0.9, g3(len(sub(p, pips[i])), 8.5) * 0.85 * Math.max(0, dot(n, A.digits[i].dorsal[0]) + 0.3), g3(len(sub(p, dips[i])), 7) * 0.6);
+      red = Math.max(red, g3(len(sub(p, knuckles[i])), 9) * 0.75, g3(len(sub(p, pips[i])), 7.5) * 0.65 * Math.max(0, dot(n, A.digits[i].dorsal[0]) + 0.3), g3(len(sub(p, dips[i])), 6) * 0.5);
     }
-    for (const t of tips) red = Math.max(red, g3(len(sub(p, t)), 11) * 0.95);
+    for (const t of tips) red = Math.max(red, g3(len(sub(p, t)), 9) * 0.8);
     red = Math.max(red, palmar * onFinger * 0.5);
     const thin = onFinger * (bi >= 0 ? bones[bi].thin : 0);
     skin.set([red, palmar, ao, thin], v * 4);

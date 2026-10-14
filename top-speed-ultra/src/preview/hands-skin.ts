@@ -49,16 +49,16 @@ vec3 bumpNormal(vec3 pos, vec3 n, float H, float faceDir) {
 // direct light with a subsurface look: wrapped, red-tinted diffuse and light coming through thin parts
 function sssLights() {
   return THREE.ShaderChunk.lights_physical_pars_fragment
-    .replace('void RE_Direct_Physical(', 'float gThin = 0.0; float gAoD = 1.0; vec3 gSss = vec3(1.0, 0.35, 0.22);\nvoid RE_Direct_Physical(')
+    .replace('void RE_Direct_Physical(', 'float gThin = 0.0; float gAoD = 1.0; vec3 gSss = vec3(1.0, 0.42, 0.30);\nvoid RE_Direct_Physical(')
     .replace('reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );', /* glsl */ `
 	reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor ) * gAoD;
 	#ifdef SKIN_SSS
 	float nl = dot( geometryNormal, directLight.direction );
 	float wrapNL = saturate( ( nl + 0.45 ) / 1.45 );
-	reflectedLight.directDiffuse += max( wrapNL - dotNL, 0.0 ) * directLight.color * BRDF_Lambert( material.diffuseColor ) * gSss * 0.6 * gAoD;
+	reflectedLight.directDiffuse += max( wrapNL - dotNL, 0.0 ) * directLight.color * BRDF_Lambert( material.diffuseColor ) * gSss * 0.5 * gAoD;
 	float back = pow( saturate( dot( geometryViewDir, - directLight.direction ) ), 3.0 );
 	float thru = saturate( 0.35 - nl );
-	reflectedLight.directDiffuse += directLight.color * gThin * ( back * 0.7 + 0.12 ) * thru * gSss * material.diffuseColor;
+	reflectedLight.directDiffuse += directLight.color * gThin * ( back * 0.6 + 0.035 ) * thru * gSss * material.diffuseColor;
 	#endif`);
 }
 
@@ -166,13 +166,13 @@ float m1 = vnoise(hp * 0.07) - 0.5, m2 = vnoise(hp * 0.21 + 7.1) - 0.5, m3 = vno
 c *= 1.0 + 0.07 * m1 + 0.05 * m2 + 0.025 * m3;
 c = mix(c, c * vec3(1.06, 0.93, 0.9), clamp(m1 * 1.6 + 0.4, 0.0, 1.0) * 0.35);
 vec3 redT = mix(vec3(1.12, 0.80, 0.76), vec3(0.80, 0.70, 0.68), uDark);
-c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.85);
+c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.6);   // subtle: strong red read as swollen knuckles
 vec3 palmTone = mix(c * vec3(1.05, 0.97, 0.95), vec3(0.5, 0.33, 0.27), 0.12 + 0.42 * uDark);
 c = mix(c, palmTone, clamp(palmar * 0.9, 0.0, 1.0) * (0.35 + 0.5 * uDark));
 c *= mix(vec3(1.0), mix(vec3(0.86, 0.93, 1.03), vec3(0.86, 0.84, 0.86), uDark), vein * 0.55);   // blue-grey under light skin, darker under dark
 // tiny pigment spots on light skin (sparse, faint)
 #ifdef SKIN_HIGH
-{ vec2 sp = cells(hp * 0.45); c *= 1.0 - (1.0 - uDark) * 0.18 * smoothstep(0.16, 0.05, sp.x) * step(0.82, hh13(floor(hp * 0.45) + 5.0)) * fine; }
+{ vec2 sp = cells(hp * 0.45); c *= 1.0 - (1.0 - uDark) * 0.09 * smoothstep(0.16, 0.05, sp.x) * step(0.9, hh13(floor(hp * 0.45) + 5.0)) * fine; }
 #endif
 // ---- relief (mm), turned into metres for the bump
 float H = 0.0;
@@ -281,7 +281,7 @@ export function nailMaterial(o: { tone: number; paint: number | null; quality: Q
   const m = new THREE.MeshPhysicalMaterial({
     color: 0xffffff, roughness: painted ? 0.16 : 0.36, metalness: 0, ior: 1.5,
     clearcoat: painted ? 1 : 0.12, clearcoatRoughness: painted ? 0.04 : 0.25,
-    envMapIntensity: painted ? 1 : 0.7, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
+    envMapIntensity: painted ? 1 : 0.7, polygonOffset: false,
   }) as NailMaterial;
   const u = {
     uTone: { value: new THREE.Color(o.tone) }, uDark: { value: darkness(o.tone) },
@@ -306,7 +306,7 @@ float lun = smoothstep(0.08, -0.08, length(vec2((s - 0.3) / (L * 0.2 + 0.6), w *
 bed = mix(bed, bed * vec3(1.12, 1.08, 1.06) + 0.05, lun * 0.55);
 // the free edge: off-white, the smile line where it leaves the fingertip
 // (translucent: the bed's colour shows through it, whiter only where it is thick and clear of the finger)
-vec3 fe = mix(bed * vec3(1.1, 1.05, 1.02) + 0.035, vec3(0.80, 0.76, 0.70), 0.25 + 0.45 * smoothstep(0.5, 3.0, s - freeAt)) * (0.94 + 0.06 * vnoise(vec3(s * 3.0, w * 4.0, 0.0)));
+vec3 fe = mix(bed * vec3(1.04, 1.0, 0.98) + 0.015, vec3(0.70, 0.66, 0.60), 0.06 + 0.4 * smoothstep(1.0, 3.5, s - freeAt)) * (0.94 + 0.06 * vnoise(vec3(s * 3.0, w * 4.0, 0.0)));
 float isFree = smoothstep(freeAt - 0.15, freeAt + 0.35, s + 0.25 * w * w);
 vec3 nc = mix(bed, fe, isFree);
 nc = mix(nc, uTone * vec3(1.0, 0.86, 0.82), smoothstep(0.9, 0.0, s) * 0.6);      // the cuticle: skin over the plate's base
