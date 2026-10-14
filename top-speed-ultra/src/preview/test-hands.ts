@@ -1,6 +1,7 @@
 // Test page for the driver's hands (hands.ts). A stand-in steering wheel (rim swept with spec.ts rimAt/rimA/rimB in
 // dark leather, three spokes and a hub) and a dark dash, the game's sky, and the hands gripping the rim.
 //   ?view=seat     from the driver's eye (spec EYE), as the game frames it, sky 'day'
+//   ?view=fingers  the right hand's grip in three panels: from the driver's eye (zoomed), from above, from the dash
 //   ?view=close    the right hand from about 25 cm: knuckles, skin, the thumbnail
 //   ?view=female   the female presentation: painted nails, ring, bracelet, the gold watch
 //   ?view=tones    the five skin tones (drivers.ts SKINS) side by side, the right hand in each
@@ -19,6 +20,7 @@ const q = new URLSearchParams(location.search);
 const view = q.get('view') ?? 'seat';
 const preset: Record<string, { driver: DriverId; pres: Presentation; skin: number; fov: number }> = {
   seat: { driver: 'closer', pres: 'm', skin: 1, fov: 60 },
+  fingers: { driver: 'wrench', pres: 'm', skin: 1, fov: 30 },
   close: { driver: 'wrench', pres: 'm', skin: 1, fov: 40 },
   female: { driver: 'closer', pres: 'f', skin: 1, fov: 36 },
   tones: { driver: 'wrench', pres: 'm', skin: 0, fov: 34 },
@@ -107,14 +109,35 @@ arms.setWheelAngle(wheelA); spin.rotation.z = wheelA;
 
 // ---- camera
 const cam = stage.camera;
-const handR = new THREE.Vector3(-0.205, 0.905, -0.43);
+const handR = new THREE.Vector3(-0.222, 0.905, -0.452);   // the right hand's grip, between knuckles and fingertips
 const look = (from: THREE.Vector3, at: THREE.Vector3) => { cam.position.copy(from); cam.up.set(0, 1, 0); cam.lookAt(at); };
 if (view === 'seat') look(EYE, new THREE.Vector3(EYE.x, EYE.y - 0.06, EYE.z - 10));
-else if (view === 'close') { const at = handR.clone().add(new THREE.Vector3(0.005, 0.0, 0.03)); look(at.clone().add(new THREE.Vector3(-0.07, 0.15, 0.2).normalize().multiplyScalar(0.25)), at); }
+else if (view === 'close') { const at = handR.clone().add(new THREE.Vector3(0.006, 0.004, 0.012)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.25)).add(new THREE.Vector3(0.05, 0.0, 0.0)), at); }
 else if (view === 'tones') { const at = handR.clone().add(new THREE.Vector3(-0.012, 0.012, 0.02)); look(at.clone().add(new THREE.Vector3(-0.12, 0.16, 0.2).normalize().multiplyScalar(0.36)), at); }
 else if (view === 'female') look(new THREE.Vector3(-0.3, 1.12, -0.06), new THREE.Vector3(-0.3, 0.88, -0.42));
 else if (view === 'gloves' || view === 'wrench') look(new THREE.Vector3(-0.37, 1.13, -0.03), new THREE.Vector3(-0.37, 0.86, -0.42));
-else if (view === 'watch') look(new THREE.Vector3(-0.47, 1.0, -0.12), new THREE.Vector3(-0.57, 0.86, -0.33));
+else if (view === 'watch') look(new THREE.Vector3(-0.66, 1.02, -0.25), new THREE.Vector3(-0.555, 0.865, -0.375));   // the left wrist's back, from above and outside
+
+// ---- the grip in three panels: the driver's eye, above, the dash side
+if (view === 'fingers') {
+  const r = stage.renderer;
+  const shots: [THREE.Vector3, THREE.Vector3, number][] = [
+    [EYE.clone(), handR.clone(), 12],
+    [handR.clone().add(new THREE.Vector3(0.02, 0.24, 0.06)), handR.clone(), 30],
+    [handR.clone().add(new THREE.Vector3(0.06, 0.07, -0.23)), handR.clone(), 30],
+  ];
+  stage.setRender(() => {
+    const w = r.domElement.width / r.getPixelRatio(), h = r.domElement.height / r.getPixelRatio(), cw = w / 3;
+    r.setScissorTest(true);
+    cam.aspect = cw / h;
+    shots.forEach(([from, at, fov], i) => {
+      cam.fov = fov; cam.updateProjectionMatrix(); look(from, at);
+      r.setViewport(i * cw, 0, cw, h); r.setScissor(i * cw, 0, cw, h);
+      r.render(scene, cam);
+    });
+    r.setScissorTest(false);
+  });
+}
 
 // ---- the five tones side by side: one viewport each
 if (view === 'tones') {

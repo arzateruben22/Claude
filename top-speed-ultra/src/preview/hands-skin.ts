@@ -94,7 +94,16 @@ export function skinMaterial(o: SkinOptions): SkinMaterial {
     uLeather: { value: new THREE.Color(o.glove ?? 0x111111) },
     uFem: { value: o.female ? 1 : 0 },
   };
-  m.setTone = (hex: number) => { uniforms.uTone.value.set(hex); uniforms.uDark.value = darkness(hex); };
+  // the sheen (the fine vellus hair and the skin's oily film) and the specular lobe follow the tone: on dark skin a
+  // light sheen reads as a wet, chalky film
+  const fit = (hex: number) => {
+    const k = darkness(hex);
+    m.sheenColor.setRGB(0.75 - 0.42 * k, 0.62 - 0.38 * k, 0.56 - 0.36 * k);
+    m.specularIntensity = 0.62 - 0.2 * k;
+    m.clearcoat = high ? (gloved ? 0.35 : 0.06 * (1 - k)) : 0;
+  };
+  fit(o.tone);
+  m.setTone = (hex: number) => { uniforms.uTone.value.set(hex); uniforms.uDark.value = darkness(hex); fit(hex); };
   m.customProgramCacheKey = () => `skin-${o.quality}-${gloved ? 'g' : 's'}`;
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, uniforms);
@@ -152,9 +161,9 @@ c *= 1.0 + 0.07 * m1 + 0.05 * m2 + 0.025 * m3;
 c = mix(c, c * vec3(1.06, 0.93, 0.9), clamp(m1 * 1.6 + 0.4, 0.0, 1.0) * 0.35);
 vec3 redT = mix(vec3(1.12, 0.80, 0.76), vec3(0.80, 0.70, 0.68), uDark);
 c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.85);
-vec3 palmTone = mix(c * vec3(1.05, 0.97, 0.95), vec3(0.5, 0.33, 0.27), 0.12 + 0.6 * uDark);
+vec3 palmTone = mix(c * vec3(1.05, 0.97, 0.95), vec3(0.5, 0.33, 0.27), 0.12 + 0.42 * uDark);
 c = mix(c, palmTone, clamp(palmar * 0.9, 0.0, 1.0) * (0.35 + 0.5 * uDark));
-c *= mix(vec3(1.0), vec3(0.86, 0.93, 1.03), vein * 0.55);
+c *= mix(vec3(1.0), mix(vec3(0.86, 0.93, 1.03), vec3(0.86, 0.84, 0.86), uDark), vein * 0.55);   // blue-grey under light skin, darker under dark
 // tiny pigment spots on light skin (sparse, faint)
 #ifdef SKIN_HIGH
 { vec2 sp = cells(hp * 0.45); c *= 1.0 - (1.0 - uDark) * 0.18 * smoothstep(0.16, 0.05, sp.x) * step(0.82, hh13(floor(hp * 0.45) + 5.0)) * fine; }
@@ -163,8 +172,8 @@ c *= mix(vec3(1.0), vec3(0.86, 0.93, 1.03), vein * 0.55);
 float H = 0.0;
 #ifdef SKIN_HIGH
 vec2 cl = cells(hp * 1.05 + vec3(0.0, wob, 0.0));
-H -= 0.045 * smoothstep(0.16, 0.0, cl.y) * fine * (1.0 - palmar * 0.4);          // the furrow network
-H -= 0.03 * smoothstep(0.22, 0.0, cl.x) * fine;                                // pores at its nodes
+H -= 0.03 * smoothstep(0.16, 0.0, cl.y) * fine * (1.0 - palmar * 0.4);           // the furrow network
+H -= 0.018 * smoothstep(0.22, 0.0, cl.x) * fine;                               // pores at its nodes
 H += 0.02 * (vnoise(hp * 3.1) - 0.5) * fine;
 #else
 H += 0.04 * (vnoise(hp * 1.6) - 0.5) * mid;
@@ -178,12 +187,12 @@ float lines = pow(0.5 + 0.5 * cos(arc * 6.2832 / sp), 6.0);
 float crease = win * lines * mix(1.0, 0.65, uFem);
 H -= 0.11 * crease * mid;
 // knuckle folds: the slack skin round the big knuckles
-H += 0.05 * (vnoise(hp * vec3(0.5, 1.6, 0.5)) - 0.5) * smoothstep(0.2, 0.8, red) * dorsal * mid;
+H += 0.035 * (vnoise(hp * vec3(0.5, 1.6, 0.5)) - 0.5) * smoothstep(0.2, 0.8, red) * dorsal * mid;
 // veins raised a little
 H += 0.32 * vein * mid;
 c *= 1.0 - 0.18 * crease * mid;
 diffuseColor.rgb = c;
-float rough = mix(0.54, 0.40, clamp(red * dorsal, 0.0, 1.0)) + 0.08 * palmar + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.08 * crease;
+float rough = mix(0.54, 0.43, clamp(red * dorsal, 0.0, 1.0)) + 0.08 * palmar + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.08 * crease + 0.06 * uDark;
 float leather = 0.0;
 #ifdef GLOVE
 leather = smoothstep(0.35, 0.65, vLeather);

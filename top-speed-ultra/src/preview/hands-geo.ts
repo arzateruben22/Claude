@@ -80,14 +80,16 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
       const d = Math.min(f.eval(q[0], q[1], q[2], a, na), rimSdfG(q[0], q[1], q[2]));
       occ += w * Math.max(0, (s - d) / s); w *= 0.6;
     }
-    const ao = Math.max(0, Math.min(1, 1 - occ * 0.7));
+    const ao = Math.max(0.3, Math.min(1, 1 - occ * 0.55));   // per vertex at 2-3 mm: kept soft, or the creases smear
     // nearest finger bone
     let bd = 1e9, bi = -1;
     for (let i = 0; i < bones.length; i++) { const d = segDist(p, bones[i].a, bones[i].b); if (d < bd) { bd = d; bi = i; } }
     const along = dot(sub(p, A.wrist), A.foreDir);
     const onFinger = bi >= 0 && bd < 13 ? 1 - Math.max(0, Math.min(1, (bd - 9) / 4)) : 0;
-    const upDir = onFinger > 0.5 ? bones[bi].up : along > 8 ? A.foreUp : dN;
-    const palmar = Math.max(0, Math.min(1, -dot(n, upDir) * 1.3));
+    // the back of the hand turns smoothly into the back of the forearm, and into each finger's back
+    const handUp = norm(lerp3(dN, A.foreUp, Math.max(0, Math.min(1, (along + 5) / 40))));
+    const upDir = bi >= 0 ? norm(lerp3(handUp, bones[bi].up, onFinger)) : handUp;
+    const pd = -dot(n, upDir), palmar = pd <= 0.05 ? 0 : pd >= 0.75 ? 1 : ((pd - 0.05) / 0.7) ** 2 * (3 - 2 * (pd - 0.05) / 0.7);
     // redness: knuckles, finger joints' backs, fingertips; the palm side of the fingers is pinker too
     let red = 0;
     for (let i = 0; i < 4; i++) {

@@ -1,0 +1,15 @@
+// Times the hands build in node: the anatomy (hands-sdf) and the meshed arm with its per-vertex data (hands-geo).
+//   node tools/preview-hands-prof.mjs
+import { build } from 'esbuild';
+import { pathToFileURL } from 'node:url';
+const out = '/home/user/Claude/top-speed-ultra/tests/out/preview/build/hands-prof/geo.mjs';
+await build({ stdin: { contents: `export * from './src/preview/hands-geo.ts'; export * from './src/preview/hands-sdf.ts';`, resolveDir: '/home/user/Claude/top-speed-ultra', loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', outfile: out, logLevel: 'warning' });
+const M = await import(pathToFileURL(out).href);
+for (const [pres, h] of [['m', 2], ['m', 3], ['f', 2]]) {
+  const t0 = performance.now();
+  const A = M.buildAnatomy(pres);
+  const t1 = performance.now();
+  const g = M.buildArmGeometry(pres, h);
+  const t2 = performance.now();
+  console.log(pres, h, 'anatomy', (t1 - t0).toFixed(0), 'geo total', (t2 - t1).toFixed(0), 'mesh', g.mesh.stats.ms.toFixed(0), 'verts', g.mesh.stats.verts, 'tris', g.mesh.stats.tris);
+}

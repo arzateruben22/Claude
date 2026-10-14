@@ -96,6 +96,7 @@ const C = M.lerp3(A.mcp[1], A.digits[1].joints[3], 0.5);
 const V = {
   eye: { eye: eyeG, at: M.wToG([100, 60, 0]), fov: 30, mirror: true },
   eyeR: { eye: eyeG, at: C, fov: 13 },
+  eyeT: { eye: eyeG, at: M.lerp3(A.digits[1].joints[3], A.digits[2].joints[3], 0.5), fov: 7 },
   dash: { eye: M.madd(C, M.norm([0.25, -0.25, -1]), 260), at: C, fov: 40 },
   top: { eye: M.madd(C, M.norm([0, 1, 0.25]), 260), at: C, fov: 40 },
   inner: { eye: M.madd(C, M.norm([0.2, -1, 0.5]), 260), at: C, fov: 40 },

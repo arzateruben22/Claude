@@ -372,7 +372,7 @@ function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female
 function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality) {
   const g = A.digits[2];                               // the ring finger
   const a = g.joints[0], b = g.joints[1], d = g.dirs[0], up = g.dorsal[0], lat = cross(d, up);
-  const c = lerp3(a, b, 0.42), seg = q === 'high' ? 48 : 28;
+  const c = lerp3(a, b, 0.3), seg = q === 'high' ? 48 : 28;
   const W = female ? 2.4 : 4.6, T = female ? 1.5 : 1.8;
   const f = A.field, pts: V3[][] = [];
   const prof: [number, number][] = [[0, -W / 2], [T * 0.7, -W / 2], [T, -W * 0.3], [T, W * 0.3], [T * 0.7, W / 2], [0, W / 2]];
