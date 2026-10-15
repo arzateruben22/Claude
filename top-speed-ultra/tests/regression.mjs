@@ -3,7 +3,7 @@
 //
 //   npm run build && npm test             every group
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
-//                                         progression, render, phone)
+//                                         progression, render, phone, launch)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
@@ -11,7 +11,7 @@
 // Every group opens a fresh browser context, so each starts with an empty profile.
 
 import { chromium } from 'playwright';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
@@ -609,6 +609,44 @@ await group('phone', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'phone-goto.png') });
     expect(n === 20, `${n} listed`);
     return `${n} listed`;
+  });
+});
+
+// the local-launch features: start at your own exit, and the run card you can share
+await group('launch', async (use) => {
+  const { page } = await use({ settings: { start: 'I-405 North' } });
+  const road = 'CA-57 North';
+  let want = null;
+  await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
+    const exits = await game(page, (l) => window.__game.exitsFor(l), road);
+    expect(exits.length >= 10, `${exits.length} exits on ${road}`);
+    want = exits.find((e) => /Orangewood/.test(e.text)) ?? exits[0];
+    await page.locator('.pick', { hasText: 'Start on' }).first().click();
+    await page.locator('.grid.roads .gcell').filter({ has: page.locator('.shield', { hasText: /^57$/ }) }).filter({ hasText: 'North' }).click();
+    const listed = await page.locator('.grid.exits .gcell').count();
+    await page.screenshot({ path: path.join(OUT, 'launch-exits.png') });
+    expect(listed === exits.length, `${listed} listed, ${exits.length} in the data`);
+    await page.locator('.grid.exits .gcell', { hasText: want.text }).first().click();
+    const pick = await page.locator('.pick', { hasText: 'Start on' }).first().innerText();
+    expect(pick.includes(want.text), `the Start pick says "${pick.replace(/\s+/g, ' ')}"`);
+    await drive(page, 'Free Drive');
+    const r = await game(page, () => { const g = window.__game; return { road: g.path.label, main: g.path.main, s: g.phys.s }; });
+    expect(r.main && r.road === road, `started on ${r.road}`);
+    const ahead = want.s - r.s;
+    expect(ahead > 430 && ahead < 470, `${fmt(ahead)} m before the sign`);
+    return `${exits.length} exits on ${road}; started ${fmt(ahead)} m before "${want.text}"`;
+  });
+  await check('the run card downloads as a 1080 × 1350 PNG', async () => {
+    await game(page, () => { const g = window.__game; g.fastForward(20, {}, 40); g.endFreeDrive(); });
+    await page.waitForSelector('.result', { timeout: 10000 });
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }), page.getByRole('button', { name: 'Share run' }).click()]);
+    const file = path.join(OUT, 'launch-run-card.png');
+    await dl.saveAs(file);
+    const buf = readFileSync(file);
+    expect(buf.length > 20000 && buf.subarray(1, 4).toString() === 'PNG', `${buf.length} bytes`);
+    const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
+    expect(w === 1080 && h === 1350, `${w} × ${h}`);
+    return `${dl.suggestedFilename()}, ${w} × ${h}, ${Math.round(buf.length / 1024)} KB`;
   });
 });
 

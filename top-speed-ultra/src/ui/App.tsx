@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
+import { shareRunCard } from './runCard';
 import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
@@ -36,6 +37,7 @@ export function App() {
   const [error, setError] = useState('');
   const [boardMode, setBoardMode] = useState<Mode>('survival');
   const [navTarget, setNavTarget] = useState<string | null>(null);
+  const [exitRoad, setExitRoad] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -100,6 +102,9 @@ export function App() {
   const playing = screen === 'playing';
   const cornerPx = CORNER_PX[settings.cornerSize] ?? CORNER_PX[1];
   const start = STARTS.find((s) => s.label === settings.start) ?? STARTS[0];
+  // "start at your exit": the key names the carriageway; the exit list gives its sign text
+  const exitRoadOf = settings.exit.split(' @ ')[0];
+  const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
   return (
     <div className="app">
       <div className="stage" ref={host} />
@@ -157,8 +162,8 @@ export function App() {
               </button>
             )}
             {mode !== 'time' && mode !== 'race' && (
-              <button className="pick" onClick={() => setPanel('start')}>
-                <small>Start on</small><Shield label={start.label} /><span>{start.blurb}</span><i aria-hidden="true">›</i>
+              <button className="pick" onClick={() => { setExitRoad(null); setPanel('start'); }}>
+                <small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
               </button>
             )}
             <div className="field"><label>Traffic</label><Seg value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
@@ -219,6 +224,7 @@ export function App() {
             {!result.race && <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />}
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
+              <button className="btn" onClick={() => void shareRunCard(result, game.current?.profile.p.username ?? 'Driver').then((r) => toast(r === 'shared' ? 'Shared' : r === 'saved' ? 'Run card saved' : 'Could not make the card', r === 'failed' ? 'bad' : 'good'))}>Share run</button>
               <button className="btn" onClick={toMenu}>Main menu</button>
             </div>
           </div>
@@ -228,15 +234,34 @@ export function App() {
       {panel === 'start' && (
         <div className="overlay center">
           <div className="panel">
-            <h2>Start on</h2>
-            <div className="grid">
-              {STARTS.map((s) => (
-                <button key={s.label} className={'gcell' + (s.label === settings.start ? ' on' : '')} onClick={() => { update({ start: s.label }); setPanel(null); }}>
-                  <Shield label={s.label} /><span>{s.blurb}</span>
-                </button>
-              ))}
-            </div>
-            <div className="row"><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
+            {exitRoad ? <>
+              <h2><Shield label={exitRoad} /></h2>
+              <p className="fine">Pick your exit. You start 450 m before its sign, in the second lane, from the signs in the map data.</p>
+              <div className="grid exits">
+                {(game.current?.exitsFor(exitRoad) ?? []).map((e) => (
+                  <button key={e.key} className={'gcell' + (settings.exit === e.key ? ' on' : '')} onClick={() => { update({ exit: e.key }); setExitRoad(null); setPanel(null); }}>
+                    <b>{e.text}</b><span>{e.mi.toFixed(1)} mi along · exit {e.side === 'R' ? 'right' : 'left'}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="row"><button className="btn" onClick={() => setExitRoad(null)}>Back</button></div>
+            </> : <>
+              <h2>Start on</h2>
+              <div className="grid">
+                {STARTS.map((s) => (
+                  <button key={s.label} className={'gcell' + (!settings.exit && s.label === settings.start ? ' on' : '')} onClick={() => { update({ start: s.label, exit: '' }); setPanel(null); }}>
+                    <Shield label={s.label} /><span>{s.blurb}</span>
+                  </button>
+                ))}
+              </div>
+              <h3>Or at your exit</h3>
+              <div className="grid roads">
+                {ROUTES.flatMap((r) => (game.current?.mainsLabels ?? []).filter((l) => l.startsWith(r + ' ')).map((l) => (
+                  <button key={l} className={'gcell' + (settings.exit.startsWith(l + ' @') ? ' on' : '')} onClick={() => setExitRoad(l)}><Shield label={l} /></button>
+                )))}
+              </div>
+              <div className="row"><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
+            </>}
           </div>
         </div>
       )}

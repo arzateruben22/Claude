@@ -22,6 +22,7 @@ export interface Settings {
   corner: Corner;           // the top-right window: road map, live sky camera, or nothing
   cornerSize: number;       // 0 small, 1 medium, 2 large
   start: string;            // where Free Drive starts: a carriageway label like 'I-405 North'
+  exit: string;             // or start at your own exit: a key from Game.exitsFor ('<carriageway> @ <metres>'), '' for the start above
   showTouch: boolean;       // on-screen pedals on a device without a coarse pointer
   time: TimeOfDay;          // 'live' follows this device's clock (the sun's real position over OC)
   weather: Weather;
@@ -101,7 +102,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
   };
 }
 
@@ -117,6 +118,7 @@ export function loadSettings(): Settings {
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
+      exit: typeof v.exit === 'string' ? v.exit : '',
       time: (['live', 'sunrise', 'day', 'sunset', 'night'] as const).includes(v.time as TimeOfDay) ? v.time! : d.time,
       weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
       driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',

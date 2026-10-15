@@ -10,7 +10,7 @@ import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
-import { Network, Hit } from './world/Network';
+import { Network, Hit, Sign } from './world/Network';
 import { Path, Junction, ORIGIN } from './world/Path';
 import { Roads } from './world/Roads';
 import { Terrain } from './world/Terrain';
@@ -45,8 +45,10 @@ export interface Hud {
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string;
   tunnel: number; radio: string;
 }
+// a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
+export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
 export interface Result {
-  mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; best: number; newBest: boolean; time: number;
+  mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
 }
@@ -200,6 +202,27 @@ export class Game {
   }
 
   findMain(label: string) { return this.net.mains.find((m) => m.label === label) ?? this.net.mains[0]; }
+  // every real exit on a carriageway, from the guide signs in the map data, in order along the road
+  exitsFor(label: string): Exit[] {
+    const out: Exit[] = [], seen = new Set<string>();
+    for (const g of this.net.signs) {
+      if (!g.path.main || g.path.label !== label) continue;
+      const key = `${label} @ ${Math.round(g.s)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ key, text: g.text.join(' / '), s: g.s, mi: g.s / 1609.344, side: g.side });
+    }
+    return out.sort((a, b) => a.s - b.s);
+  }
+  // the sign a Settings.exit key names, if the data still has it
+  private resolveExit(key: string): Sign | null {
+    const m = /^(.+) @ (\d+)$/.exec(key);
+    if (!m) return null;
+    const s = Number(m[2]);
+    let best: Sign | null = null;
+    for (const g of this.net.signs) if (g.path.main && g.path.label === m[1] && Math.abs(g.s - s) < 20 && (!best || Math.abs(g.s - s) < Math.abs(best.s - s))) best = g;
+    return best;
+  }
 
   private placeCar(path: Path, s: number, lane: number, speed: number) {
     this.path = path;
@@ -244,8 +267,11 @@ export class Game {
     this.mode = mode; this.attract = false; this.over = false;
     // the time trial always starts in the same place with the same traffic, so times compare
     const st = mode === 'time' ? STARTS[0] : STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
-    const m = this.findMain(st.label);
-    this.placeCar(m, m.len * st.at, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
+    // "start at your exit": on that exit's carriageway, 450 m before its sign, so the first thing you see is your exit
+    const exit = mode === 'time' ? null : this.resolveExit(this.settings.exit);
+    const m = exit ? exit.path : this.findMain(st.label);
+    const s0 = exit ? clamp(exit.s - 450, 40, Math.max(40, m.len - 200)) : m.len * st.at;
+    this.placeCar(m, s0, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
     this.earned(this.profile.add({ freeway: m.label }));
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
@@ -259,7 +285,8 @@ export class Game {
     this.setPaused(false);
     this.ev.loading(false);
     this.last = performance.now();
-    this.ev.toast(`${m.label} · ${mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive'}`, 'info');
+    const what = mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive';
+    this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
   quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
@@ -366,7 +393,7 @@ export class Game {
     if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
     setTimeout(() => this.ev.over({
       mode: 'race', score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
-      best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
+      road: r.course.road, best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
       board: { mode: 'race', runs: [], rank: 0 },
       race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
     }), 1400);
@@ -902,7 +929,7 @@ export class Game {
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const board = recordRun(run);
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board }), 1200);
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board }), 1200);
   }
 
   // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary
