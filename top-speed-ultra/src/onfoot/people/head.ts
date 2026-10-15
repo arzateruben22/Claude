@@ -62,37 +62,43 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
     K([sg * 0.05, -0.02, -0.012], [sg * 0.062, -0.017, -0.05], 0.0078 * cb, 0.0072, 0.022);
     // the masseter and the parotid soft tissue in front of the ear: fills the side of the face between the arch,
     // the ramus and the cheek, so the face doesn't read as a mask on a sphere
-    E([sg * 0.043, -0.045, -0.044], 0.0145 * (0.9 + 0.3 * fat), 0.03, 0.03, 0.024);   // (narrow: the face tapers from the cheekbones to the jaw)
+    E([sg * 0.043, -0.045, -0.044], 0.0145 * (0.9 + 0.3 * fat), 0.022, 0.03, 0.016);   // (narrow and short: the face tapers from the cheekbones to the jaw, and the angle stays a corner)
     E([sg * 0.029, -0.019, 0.0], 0.018, 0.011, 0.012, 0.012);
     // beside the nose: the maxilla's frontal process and the cheek's inner mass, so the nasal sidewall slopes into the
     // cheek instead of rising out of a valley
-    E([sg * 0.0165, -0.029, 0.0055], 0.011, 0.016, 0.0105, 0.012);
+    E([sg * 0.0165, -0.029, 0.0055], 0.014, 0.016, 0.0105, 0.016);
   }
   // ---- midface, cheeks, jaw, chin
   E([0, -0.054, -0.009], 0.03, 0.029, 0.028, 0.02);
   for (const sg of [1, -1]) {
     E([sg * 0.031, -0.046 - 0.004 * old, -0.006], 0.019 * ch, 0.022, 0.02 * ch, 0.025);
     // the mandible: body from the chin to the angle, then the ramus up to the ear
-    K([sg * 0.015 * cw, -0.1 * cl, 0.006], [sg * 0.041 * jw, -0.083, -0.058], 0.0105, 0.0105 + 0.002 * (jw - 1), 0.024);
-    K([sg * 0.041 * jw, -0.083, -0.058], [sg * 0.049, -0.036, -0.072], 0.0105, 0.009, 0.022);
+    // (blended tight so the lower border stays an edge over the neck instead of filleting into it)
+    K([sg * 0.015 * cw, -0.1 * cl, 0.006], [sg * 0.041 * jw, -0.083, -0.058], 0.0105, 0.0105 + 0.002 * (jw - 1), 0.017);
+    K([sg * 0.041 * jw, -0.083, -0.058], [sg * 0.049, -0.036, -0.072], 0.0105, 0.009, 0.016);
     // jowls with age and weight
     if (old + fat > 0.7) E([sg * 0.032, -0.088 - 0.004 * old, 0.0], 0.016, 0.014 + 0.008 * fat, 0.016 + 0.006 * fat, 0.02);
   }
   E([0, -0.07, -0.036], 0.032 * jw, 0.028, 0.04, 0.022);
   E([0, -0.069, 0.002], 0.029, 0.024, 0.019, 0.016);
   E([0, -0.0535, 0.0186], 0.0112, 0.0072, 0.0066, 0.006);
-  for (const sg of [1, -1]) E([sg * 0.033, -0.058, -0.012], 0.018 * (0.85 + 0.4 * fat), 0.024, 0.022 * (0.85 + 0.3 * fat), 0.022);
+  const lc = 0.8 + 0.5 * fat;   // the lower cheek: lean faces taper from the cheekbones to the chin, heavy ones fill out to the jaw
+  for (const sg of [1, -1]) E([sg * 0.033, -0.058, -0.012], 0.018 * (0.85 + 0.4 * fat) * lc, 0.024 * lc, 0.022 * (0.85 + 0.3 * fat) * lc, 0.016);
   E([0, -0.098 * cl, 0.0125 - (m ? 0.0015 : 0)], 0.0185 * cw * (m ? 1.12 : 1), 0.0158 * cl * (m ? 0.9 : 1), 0.0136 * (m ? 0.88 : 1), 0.015);   // men: broader, flatter, squarer
   E([0, -0.083, 0.011], 0.019, 0.0095, 0.0105, 0.01);
-  E([0, -0.101 * cl - 0.006 * fat, -0.036], 0.026, 0.009 + 0.016 * fat * fat, 0.028, 0.02);
+  // under the mandible: a short plate set back from the chin, so the throat meets the chin at an angle; it hangs lower
+  // and reaches further only with weight and age (the double chin, the wattle)
+  E([0, -0.097 * cl - 0.012 * fat * fat - 0.004 * old, -0.042], 0.026, 0.008 + 0.016 * fat * fat + 0.004 * old, 0.02 + 0.008 * fat * fat + 0.004 * old, 0.016);
   // ---- nose
   const nl = F.noseLen, nw = F.noseW, nb = F.noseBridge, nt = F.noseTip;
-  const tip: V3 = [0, -0.0375 * nl, 0.0345 + 0.004 * (nl - 1)];
-  K([0, 0.004, 0.0162], [0, tip[1] + 0.009, tip[2] - 0.0028], 0.0037 * (0.85 + 0.15 * nb), 0.0058 * nw, 0.007, [0, 0, 1], 1.0 + 0.1 * (nb - 1), 0.82, C, 1.05);
-  for (const sg of [1, -1]) K([sg * 0.0036, -0.017, 0.0172], [sg * 0.0098 * nw, tip[1] + 0.003, 0.0205], 0.0028, 0.0056, 0.007);
+  // the dorsum starts at the eye line about 10 mm wide and blends softly, and the sidewalls start further out, so the
+  // nose slopes into the maxilla instead of standing on it as a blade with a crease; the lobule continues the dorsum
+  const tip: V3 = [0, -0.0375 * nl, 0.032 + 0.004 * (nl - 1)];
+  K([0, 0.008, 0.0162], [0, tip[1] + 0.008, tip[2] - 0.0018], 0.0052 * (0.85 + 0.15 * nb), 0.0058 * nw, 0.012, [0, 0, 1], 1.0 + 0.1 * (nb - 1), 0.82, C, 0.95);
+  for (const sg of [1, -1]) K([sg * 0.006, -0.017, 0.0172], [sg * 0.0098 * nw, tip[1] + 0.003, 0.0205], 0.0028, 0.0056, 0.013);
   // the lobule (tip), the alae either side with their round wings, the columella, and nostrils that open downward
-  E(tip, 0.0072 * nt * nw, 0.0068 * nt, 0.0076 * nt, 0.005);
-  for (const sg of [1, -1]) E([sg * 0.0108 * nw, tip[1] - 0.0062, 0.0212 + 0.002 * (nl - 1)], 0.0058 * nw, 0.0056, 0.0076, 0.0058);
+  E(tip, 0.0064 * nt * nw, 0.0068 * nt, 0.007 * nt, 0.0075);
+  for (const sg of [1, -1]) E([sg * 0.0108 * nw, tip[1] - 0.0062, 0.0212 + 0.002 * (nl - 1)], 0.0058 * nw, 0.0056, 0.0076, 0.0064);
   K([0, tip[1] - 0.004, tip[2] - 0.004], [0, -0.049 * nl, 0.0262], 0.0036, 0.0031, 0.005);
   E([0, -0.0458 * nl, 0.0192], 0.0098 * nw, 0.005, 0.0072, 0.006);
   // nostrils: shallow, tucked under the lobule behind the columella's front, opening downward
@@ -131,7 +137,8 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
     XR([c[0] + sg * 0.0055, c[1] + 0.014 * esz, c[2] - 0.003], n, up, 0.0035, 0.0085 * esz, 0.0055 * esz, 0.0012);   // scapha
   }
   // the neck under the skull, the muscles from behind the ear to the collarbone notch
-  for (const sg of [1, -1]) K([sg * 0.05, -0.05, -0.084], [sg * 0.013, -0.215, -0.025], 0.011 + 0.003 * fat, 0.009, 0.02);
+  // (thin and blended tight, from behind the jaw angle, so they do not fill the hollow under the jaw)
+  for (const sg of [1, -1]) K([sg * 0.05, -0.05, -0.092], [sg * 0.013, -0.215, -0.025], 0.008 + 0.003 * fat, 0.009, 0.012);
 
   return {
     o: org, sx, sy, sz, toBody: T,

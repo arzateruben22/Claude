@@ -167,9 +167,10 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
     f.ea([sg * (chestHalf * 0.78), 0.695 * H, -0.045 * s], 0.035 * ws + 0.03 * mu + 0.25 * fat.chest, 0.1 * s, 0.06 * s, C, 0.04 * s, B.chest);
     f.ea([sg * 0.075 * ws, 0.75 * H, -0.085 * s - 0.25 * fat.chest], 0.055 * ws, 0.075 * s, 0.03 * s, C, 0.035 * s, B.chest);
     // trapezius slope from the neck to the shoulder
-    f.rc([sg * 0.032 * ws, 0.832 * H, -0.045 * s], [sg * (shoulderX - 0.03 * ws), 0.81 * H, -0.035 * s], 0.032 * s + 0.014 * mu + 0.3 * fat.chest, 0.026 * s + 0.01 * mu, C, 0.03 * s, B.chest);
+    // (it starts outside the neck column and lower, so the slope begins at the neck's base rather than under the ears)
+    f.rc([sg * 0.052 * ws, 0.82 * H, -0.045 * s], [sg * (shoulderX - 0.03 * ws), 0.81 * H, -0.035 * s], 0.027 * s + 0.014 * mu + 0.3 * fat.chest, 0.026 * s + 0.01 * mu, C, 0.03 * s, B.chest);
     // collarbones: visible on lean bodies, buried as fat rises
-    f.rc([sg * 0.018 * ws, 0.808 * H, 0.025 * s], [sg * (shoulderX - 0.012), 0.818 * H, -0.004 * s], 0.0075 * s + 0.6 * fat.chest, 0.0085 * s + 0.4 * fat.chest, C, 0.012 * s, sg > 0 ? B.clavL : B.clavR);
+    f.rc([sg * 0.018 * ws, 0.808 * H, 0.025 * s], [sg * (shoulderX - 0.012), 0.818 * H, -0.004 * s], 0.0075 * s + 0.6 * fat.chest, 0.0085 * s + 0.4 * fat.chest, C, 0.009 * s, sg > 0 ? B.clavL : B.clavR);
     if (m || b.bust < 0.15) {
       // pectorals
       f.ea([sg * 0.062 * ws, 0.738 * H, 0.068 * s + 0.2 * fat.chest], 0.068 * ws + 0.012 * mu, 0.052 * s + 0.01 * mu + 0.25 * fat.chest, 0.026 * s + 0.024 * mu + 0.5 * fat.chest, C, 0.035 * s, B.chest);
@@ -184,11 +185,15 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   }
   // neck
   const neckR = (m ? 0.058 : 0.05) * ws + 0.5 * fat.neck + 0.008 * mu;
-  f.cone([0, neckBaseY - 0.02 * s, -0.02 * s], [0, neckTopY + 0.005 * s, -0.048 * s], neckR * 1.04, neckR * 0.94, [0, 0, 1], 0.9, 1, C, 0.035 * s, B.neck);
+  // the column sits back under the ears and is shallower than it is wide, so the throat drops from a vertex behind the
+  // chin instead of flowing out of it and the collarbones stand proud of its base; blended tight so the trapezius
+  // slope starts at its base rather than fairing up into the jaw
+  const neckBase: V3 = [0, neckBaseY - 0.02 * s, -0.028 * s], neckTop: V3 = [0, neckTopY + 0.005 * s, -0.062 * s];
+  f.cone(neckBase, neckTop, neckR * 1.04, neckR * 0.88, [0, 0, 1], 0.82, 1, C, 0.024 * s, B.neck);
   if (m) {
-    // the larynx, just proud of the throat
-    const yL = H - 0.262 * hs, t = (yL - (neckBaseY - 0.02 * s)) / (neckTopY + 0.025 * s - neckBaseY), zc = -0.02 * s + (-0.028 * s) * t;
-    f.ea([0, yL, zc + neckR * 0.86], 0.0085 * s, 0.011 * s, 0.006 * s, C, 0.01 * s, B.neck);
+    // the larynx: a vertical ridge just proud of the throat (not a ball)
+    const yL = H - 0.262 * hs, t = (yL - neckBase[1]) / (neckTopY + 0.025 * s - neckBaseY), zc = neckBase[2] + (neckTop[2] - neckBase[2]) * t;
+    f.ea([0, yL, zc + neckR * 0.78], 0.0075 * s, 0.015 * s, 0.006 * s, C, 0.01 * s, B.neck);
   }
 
   // ---------------------------------------------------------------- arms (left; right mirrored at the end)
@@ -305,7 +310,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
       upperArm, foreArm, thigh, shin, foot: footLen, handLen,
     },
     fat: { T, belly: fat.belly, hip: fat.hip, thigh: fat.thigh, arm: fat.arm, chest: fat.chest, neck: fat.neck },
-    limb: { dU, dFore, sh: shL, el: elL, wr: wrL, dL, hip: hpL, knee: knL, ankle: anL, toe: J[B.toeL], neckR, neckBase: [0, neckBaseY - 0.02 * s, -0.02 * s], neckTop: [0, neckTopY + 0.005 * s, -0.048 * s], footLen },
+    limb: { dU, dFore, sh: shL, el: elL, wr: wrL, dL, hip: hpL, knee: knL, ankle: anL, toe: J[B.toeL], neckR, neckBase, neckTop, footLen },
     footLocal: (p: V3): V3 => rot(sub(p, anL), [1, 0, 0], -pitch),
     male: m,
   };

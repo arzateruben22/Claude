@@ -1,7 +1,7 @@
 // Every surface texture is painted in code at load time: no image files to download.
 
 import * as THREE from 'three';
-import { tfbm, tnoise, rng, clamp } from './util';
+import { tfbm, tnoise, rng, clamp, smoothstep } from './util';
 
 let SIZE = 1024;
 let ANISO = 8;
@@ -343,6 +343,43 @@ export function clouds(): THREE.Texture {
     }
     g.putImageData(img, 0, 0);
     const t = tex(c, true); t.wrapT = THREE.ClampToEdgeWrapping; return t;
+  });
+}
+
+// The low beams' pool on the road, seen from above and laid on a strip BEAM_POOL.w metres wide that runs from
+// BEAM_POOL.near to BEAM_POOL.far metres ahead of the car's centre (near end at the bottom of the canvas). Two
+// lamps' pools merge a few metres out into one wedge that widens with distance, full by 7 m, easing off toward a
+// low beam's soft horizontal cut-off that sits farther out on the right (the kick-up that lights the shoulder and
+// the signs), with a warm core inside a cooler rim and a faint scatter past the lit wedge. Painted in linear light;
+// the alpha carries the shape. The SpotLights in PlayerCar still light the traffic and the walls; this is the patch
+// the beams leave on the road, which a 1/d² spot cone can only paint as a blob at the bumper.
+export const BEAM_POOL = { w: 12, near: 2, far: 40 };
+export function beamPool(): THREE.Texture {
+  return once('beamPool', () => {
+    const w = 128, h = 512, [c, g] = mk(w, h), img = g.createImageData(w, h), d = img.data;
+    const { w: W, near, far } = BEAM_POOL, row = new Float32Array(w);
+    for (let j = 0; j < h; j++) {
+      const k = far - (far - near) * ((j + 0.5) / h);          // metres ahead, far at the top of the canvas
+      const sig = 0.33 + 0.1 * k;                               // each lamp's pool widens with distance
+      let peak = 0;
+      for (let i = 0; i < w; i++) {
+        const x = ((i + 0.5) / w - 0.5) * W;
+        const a = Math.exp(-((x - 0.62) ** 2) / (2 * sig * sig)) + Math.exp(-((x + 0.62) ** 2) / (2 * sig * sig));
+        row[i] = a; if (a > peak) peak = a;
+      }
+      for (let i = 0; i < w; i++) {
+        const x = ((i + 0.5) / w - 0.5) * W, core = row[i] / peak;
+        const cut = 30 + 6 * smoothstep(-0.4, 1.4, x);          // the cut-off line, lifted on the right
+        const along = smoothstep(near, 6.5, k) * (1 - 0.78 * smoothstep(10, cut, k)) * (1 - smoothstep(cut - 2, cut + 3, k));
+        const spill = 0.13 * Math.exp(-(x * x) / (2 * (2.4 * sig) ** 2));
+        const edge = 1 - smoothstep(W / 2 - 1.5, W / 2, Math.abs(x));
+        const a = clamp((core + spill) * along * edge, 0, 1), m = Math.pow(core, 0.6);
+        const o = (j * w + i) * 4;
+        d[o] = (0.78 + 0.22 * m) * 255; d[o + 1] = (0.86 + 0.08 * m) * 255; d[o + 2] = (1 - 0.18 * m) * 255; d[o + 3] = a * 255;
+      }
+    }
+    g.putImageData(img, 0, 0);
+    const t = tex(c, false); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; t.anisotropy = ANISO; return t;
   });
 }
 

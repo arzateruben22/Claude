@@ -17,6 +17,8 @@ import { CarId, shapeFor } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
 import { CarPhysics, SPEC } from './Physics';
 import { ORIGIN } from '../world/Path';
+import type { Path } from '../world/Path';
+import { beamPool, BEAM_POOL } from '../textures';
 import type { DriverLook, Presentation } from '../drivers';
 import { clamp, damp, lerp } from '../util';
 
@@ -26,6 +28,9 @@ export interface CockpitState { delta: number; rpm: number; gear: number; auto: 
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
 const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
+// the beam pool strip: rows along its length (the road's profile is sampled at each), its height above the road,
+// and the light it adds at full (linear, before the tone map: the night road sits near 0.003, a lit lane near 0.2)
+const POOL_ROWS = 14, POOL_LIFT = 0.025, POOL_LEVEL = 0.18;
 
 function disposeGeometry(o: THREE.Object3D) {
   o.traverse((c) => { const m = c as THREE.Mesh; if (m.isMesh) m.geometry.dispose(); });   // materials are shared caches
@@ -38,7 +43,8 @@ export class PlayerCar {
   readonly eye = new THREE.Object3D();
   readonly hood = new THREE.Object3D();
   readonly rear = new THREE.Object3D();
-  readonly beams: THREE.SpotLight[] = [];     // two headlamp beams, off by day
+  readonly beams: THREE.SpotLight[] = [];     // two headlamp beams, off by day: they light the traffic and the walls
+  readonly pool: THREE.Mesh;                  // the painted low-beam pool on the road ahead, laid on the road's profile
   stats = { buildMs: 0, carMs: 0, cockpitMs: 0, handsMs: 0 };
 
   private cfg: CarConfig | null = null;
@@ -57,11 +63,28 @@ export class PlayerCar {
 
   constructor() {
     this.root.rotation.order = 'YXZ';
+    // A narrow, soft cone aimed a touch above level: the road under the bumper sits outside it, so the beams reach
+    // the traffic and the walls ahead without flooding the first metres of road (a spot's 1/d² × grazing incidence
+    // would paint a blown-out blob there). The pool the beams leave on the road is the painted strip below.
     for (const s of [-1, 1]) {
-      const b = new THREE.SpotLight(0xfff4e6, 0, 170, 0.42, 0.55, 1.6);
-      b.position.set(s * 0.62, 0.55, -2.2); b.target.position.set(s * 0.9, -0.2, -40);
+      const b = new THREE.SpotLight(0xfff4e6, 0, 170, 0.2, 0.88, 1.2);
+      b.position.set(s * 0.62, 0.55, -2.2); b.target.position.set(s * 0.62, 0.9, -70);
       b.castShadow = false; b.visible = false;
       this.root.add(b, b.target); this.beams.push(b);
+    }
+    {
+      const { w, near, far } = BEAM_POOL, n = POOL_ROWS, pos = new Float32Array(n * 6), uv = new Float32Array(n * 4), idx: number[] = [];
+      for (let i = 0; i < n; i++) {
+        const k = near + ((far - near) * i) / (n - 1), v = i / (n - 1);
+        pos.set([-w / 2, 0, -k, w / 2, 0, -k], i * 6); uv.set([0, v, 1, v], i * 4);
+        if (i) idx.push(i * 2 - 2, i * 2 - 1, i * 2, i * 2 - 1, i * 2 + 1, i * 2);
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+      g.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); g.setIndex(idx);
+      const m = new THREE.MeshBasicMaterial({ map: beamPool(), color: new THREE.Color(POOL_LEVEL, POOL_LEVEL, POOL_LEVEL), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+      this.pool = new THREE.Mesh(g, m); this.pool.frustumCulled = false; this.pool.visible = false; this.pool.renderOrder = -1;
+      this.root.add(this.pool);
     }
     this.root.add(this.body);
     this.eye.position.copy(EYE); this.body.add(this.eye);
@@ -142,8 +165,11 @@ export class PlayerCar {
   // from outside the car the tinted glass and the cabin silhouette show; from the seat they would be in the way
   setOutsideView(v: boolean) { for (const o of this.outsideParts) o.visible = v; }
 
-  setHeadlights(on: number) {
-    for (const b of this.beams) { b.visible = on > 0.02; b.intensity = on * 260; }
+  // on: the beams' level (0 by day, 1 at night); dark: how dark it is, so the painted pool keeps a lower level when
+  // the lamps come on for rain or fog by day
+  setHeadlights(on: number, dark = 1) {
+    for (const b of this.beams) { b.visible = on > 0.02; b.intensity = on * 70; }
+    this.pool.visible = on > 0.02; (this.pool.material as THREE.MeshBasicMaterial).opacity = on * lerp(0.35, 1, clamp(dark, 0, 1));
     const lamp = this.mats.lamp as THREE.MeshPhysicalMaterial | undefined;
     if (lamp) lamp.emissiveIntensity = 2.4 + on * 3;
   }
@@ -163,14 +189,16 @@ export class PlayerCar {
     this.arms?.setWheelAngle(this.wheelAngle);
   }
 
-  // place everything for this frame; alpha blends the last two physics steps
-  update(dt: number, alpha: number, p: CarPhysics, braking: boolean, now: number) {
+  // place everything for this frame; alpha blends the last two physics steps. With the road's path the beam pool is
+  // laid on the road's profile ahead (crests and sags), without it the pool lies flat on the car's grade.
+  update(dt: number, alpha: number, p: CarPhysics, braking: boolean, now: number, path?: Path) {
     const x = lerp(this.prev.x, this.cur.x, alpha), z = lerp(this.prev.z, this.cur.z, alpha), y = lerp(this.prev.y, this.cur.y, alpha);
     let dpsi = this.cur.psi - this.prev.psi; dpsi = Math.atan2(Math.sin(dpsi), Math.cos(dpsi));
     const psi = this.prev.psi + dpsi * alpha;
     this.root.position.set(x - ORIGIN.x, y, z - ORIGIN.z);
     this.root.rotation.y = psi + Math.PI;
     this.root.rotation.x = Math.atan(p.slope) * Math.cos(psi - p.psi);
+    if (this.pool.visible) this.layPool(p.s, y, path);
     // suspension: springs toward the load transfer, plus expansion joints every 15 m and a little engine buzz
     const s = this.sus, v = Math.abs(p.vx);
     // springs, stepped at 120 Hz whatever the frame rate (a big frame step would make them blow up)
@@ -194,5 +222,19 @@ export class PlayerCar {
     const tail = this.mats.tail as THREE.MeshPhysicalMaterial | undefined;
     if (tail) tail.emissiveIntensity = braking ? 5 : 1.6;
     void now;
+  }
+
+  // the pool's rows follow the road's height ahead of the car, expressed in the root's frame (which carries the
+  // car's pitch on the grade), a few centimetres above the surface so it never fights the road for depth
+  private layPool(s: number, y: number, path?: Path) {
+    const attr = this.pool.geometry.attributes.position as THREE.BufferAttribute, a = attr.array as Float32Array;
+    const th = this.root.rotation.x, c = Math.cos(th), sn = Math.sin(th), { near, far } = BEAM_POOL;
+    for (let i = 0; i < POOL_ROWS; i++) {
+      const k = near + ((far - near) * i) / (POOL_ROWS - 1);
+      let ly = POOL_LIFT, lz = -k;
+      if (path) { const dy = path.height(s + k) - y; ly = dy * c - k * sn + POOL_LIFT; lz = -(dy * sn + k * c); }
+      a[i * 6 + 1] = ly; a[i * 6 + 2] = lz; a[i * 6 + 4] = ly; a[i * 6 + 5] = lz;
+    }
+    attr.needsUpdate = true;
   }
 }

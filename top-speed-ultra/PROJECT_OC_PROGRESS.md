@@ -4,6 +4,48 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: first realism pass by agents: headlight beams, the NPC nose, the jaw and neck
+
+The first orchestrated render pass (two art-director audits, then one fix agent per shortfall and a sceptical judge
+per fix) kept three fixes before the account's session limit stopped it. Each was judged on before/after renders.
+
+**Headlight beams (game, finding g1).** The two spotlights painted blown-out, heart-shaped blobs on the road right
+under the bumper, and came on at sunset. Now the spots are a narrow soft cone aimed just above level, so they reach
+traffic and walls but not the road under the nose, and the low beam on the road is a painted pool: a 12 × 38 m
+additive strip of fourteen rows re-laid on the road's height each frame (it follows crests and sags), with two
+pools merging into one widening wedge and a soft cut-off at 30–36 m lifted on the right like a US low beam
+(`textures.ts` `beamPool()`, `PlayerCar.ts`, `Game.ts` `weatherTick`: the lamps now fade in with gloom instead of
+switching at a threshold). Before/after: `tests/out/audit-night-hood.png` vs `tests/out/fix-g1-night-hood.png`,
+and the cockpit, chase and sunset frames beside them. The judge kept it and listed what remains: a faint two-lobe
+seam at 4–6 m in the hood view, the narrower cone no longer lights adjacent-lane cars inside 15 m or a nearby wall
+(not yet looked at in a night shot with a wall), the pool ignores camber on banked ramps, it is not fogged, and a lit
+traffic car at 28 m reads as a blown-white rear: pre-existing, worth its own finding.
+
+**The NPC nose (people, p1).** The bridge was a pinched blade with hard sidewall creases and a separate bulbous tip.
+`src/onfoot/people/head.ts`: a wider radix starting at the eye line, softer dorsum and sidewall blends, the tip a
+lobule that continues the dorsum, fuller maxilla beside the nose. Judged at 0.62 m and 0.33 m on the reference,
+casual and elder presets at three yaws (`tests/out/preview/fix-p1-*.png`): the crease and the ridge highlight are
+gone, the bridge reads about twice as wide, nothing else moved. Cost flat (build-time SDF).
+
+**Jaw to neck (people, p2).** One convex curve from chin to throat, masseter lumps, a ball under the chin, the
+trapezius rising to the ears. `head.ts` and `body.ts`: a concave cervicomental angle, the mandible's lower border as
+an edge over the neck, a visible sternocleidomastoid band, the neck a column, the elder's wattle a distinct pouch.
+Judged on profile, front, talk, lineup and collar renders (`tests/out/preview/fix-p2-*.png`). Noted, not blocking:
+a soft dark patch under the lean female's ear in profile, and her collarbones now at the gaunt limit.
+
+**Not reached:** the lens flare's black square at High (g2), stars by day (g3), waxy skin (p3) and the rest of both
+audits' lists (night lighting, Monopoly houses, blank mirrors, paper mountains, flat daylight; teeth, hair, mouth
+corners, brows, expressions). They run in the next pass. The audit also judged my lens flare (added earlier today):
+it never draws at High and leaves a solid black square at the sun; the sunset preset's 3° sun also sits below the
+procedural ridge line, so the flare would rarely show even when fixed.
+
+**Verified:** the judges' renders above, `npx tsc --noEmit` clean, and the full suite on this build: `npm test`
+**53 of 56** (`tests/out/full-1015c.log`) with the three misses all 30 s Playwright timeouts on a screenshot or a
+click in the launch group while another pass was rendering on the same four cores; the launch group alone then
+**5 of 5** (`tests/out/launch-1015e.log`), so every check passed on this build. The suite's actions now get two
+minutes instead of Playwright's 30 s (`tests/regression.mjs` `open()`), since software rendering shares the CPU
+with other renders here; what a check asserts is unchanged.
+
 ## 2026-10-15: the ability hand poses are on the anatomical hands
 
 The one thing the realism hands had lost against the old cockpit: the abilities' gestures. `DriverArms.setPose`

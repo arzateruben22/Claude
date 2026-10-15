@@ -787,7 +787,7 @@ export class Game {
     }
     const alpha = this.paused ? 1 : this.acc / DT;
     this.stream(1);
-    this.car.update(dt, alpha, this.phys, this.input.c.brake > 0.05 && this.phys.gear > 0, this.time);
+    this.car.update(dt, alpha, this.phys, this.input.c.brake > 0.05 && this.phys.gear > 0, this.time, this.path);
     this.car.updateCockpit(dt, {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
@@ -823,7 +823,8 @@ export class Game {
     this.traffic.pace = 1 - 0.14 * e.wet - 0.1 * (1 - Math.min(1, e.visibility * 3));
     this.roads.setWet(e.wet);
     const dark = 1 - e.daylight, gloom = Math.max(dark, e.visibility < 0.3 ? 0.6 : 0, e.wet > 0.5 ? 0.5 : 0);
-    this.car.setHeadlights(gloom > 0.25 ? Math.min(1, gloom) : 0);
+    // a ramp, not a switch: the beams stay off through sunset, come up faintly through dusk and reach full at night
+    this.car.setHeadlights(smoothstep(0.35, 0.8, gloom), dark);
     const lamp = P.mats.lampHead() as THREE.MeshStandardMaterial;
     lamp.emissive.setRGB(1, 0.86, 0.62); lamp.emissiveIntensity = dark > 0.4 ? 3.2 * dark : 0.05;
     if (!this.attract) this.audio.setRain(e.wet > 0.5 && e.visibility > 0.3 ? e.wet : 0);

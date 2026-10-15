@@ -118,6 +118,10 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   visor, a roof fairing in paint, stacks, tanks, frame rails, fifth wheel, west-coast mirrors) placed at the front of
   a 20 m frame, and the 45 ft trailer (box, floor frame, skirts, conspicuity tape, landing gear, door rods, mud flaps,
   underride guard) is trim in that frame; `rig.axles` lists all five axles, so the game instances ten wheels.
+- **Headlights.** Two narrow soft spotlights (angle 0.20, penumbra 0.88) aimed just above level light traffic and
+  walls; the pool on the road is painted: `textures.ts` `beamPool()` on a 12 × 38 m additive strip of 14 rows that
+  `PlayerCar` re-lays each frame on the road's height ahead (`path.height`), opacity = beam level × lerp(0.35, 1,
+  dark). `Game.weatherTick` fades the beams in with gloom (smoothstep 0.35–0.8).
 - **Environment.** The sky shader, PMREM lighting, sun shadows following the car, haze and the far mountain ring
   are unchanged from Ultra. Since 2026-10-15 the sun has a lens flare (`three/examples/jsm/objects/Lensflare`): a
   warm glow at the sun and four ghost rings down the lens axis, from two canvas textures (`T.flareGlow`,
