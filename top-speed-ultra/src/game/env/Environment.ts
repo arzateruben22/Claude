@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
+import { Lensflare, LensflareElement } from 'three/examples/jsm/objects/Lensflare.js';
 import * as T from '../textures';
 import { fbm2, clamp, lerp, smoothstep } from '../util';
 
@@ -51,6 +52,8 @@ export class Environment {
   readonly mountains: THREE.Mesh;
   readonly stars: THREE.Points;
   readonly sunDir = new THREE.Vector3(0, 1, 0);
+  private flare: Lensflare;
+  private flareEls: { el: LensflareElement; base: THREE.Color }[] = [];
   private rain: THREE.LineSegments | null = null;
   private drops = new Float32Array(0);
   private shadowSize = 0;
@@ -90,6 +93,16 @@ export class Environment {
     this.clouds = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({ map: ct, transparent: true, depthWrite: false, fog: false, side: THREE.BackSide, opacity: 0.9, color: 0xffffff }));
     this.clouds.renderOrder = -2;
     scene.add(this.clouds);
+
+    // the sun's lens flare: a warm glow at the sun and a few ghosts down the lens axis. It hides behind the roof,
+    // the pillars and the mirror by its own depth test (the glass doesn't write depth, so it reads through the
+    // windscreen), fades with cloud and haze, and is gone at night
+    this.flare = new Lensflare();
+    const glow = T.flareGlow(), ghost = T.flareGhost();
+    const els: [THREE.Texture, number, number, number][] = [[glow, 380, 0, 0xfff0d8], [ghost, 44, 0.42, 0xffd6a0], [ghost, 86, 0.6, 0xc4dcff], [ghost, 28, 0.78, 0xffe4bc], [ghost, 124, 1.02, 0xcad4ff]];
+    for (const [t, size, d, col] of els) { const el = new LensflareElement(t, size, d, new THREE.Color(col)); this.flareEls.push({ el, base: new THREE.Color(col) }); this.flare.addElement(el); }
+    this.flare.visible = false;
+    scene.add(this.flare);
 
     // distant mountains: a ring of hazy ridges that travels with you (the real ones nearby come from the terrain)
     const n = 256, pos: number[] = [], idx: number[] = [];
@@ -254,6 +267,11 @@ export class Environment {
     this.clouds.rotation.y = time * 0.002;
     this.mountains.position.set(cp.x, cp.y - this.farPlane * 0.01, cp.z);
     this.stars.position.copy(cp);
+    // the flare sits far out along the sun from the camera; its strength follows daylight, the sun's height and
+    // how much of it the weather lets through
+    const k = this.daylight * smoothstep(0.01, 0.1, this.cur.alt) * clamp((this.cur.sun - 0.25) / 0.75, 0, 1) * 0.85;
+    this.flare.visible = k > 0.02;
+    if (this.flare.visible) { this.flare.position.copy(cp).addScaledVector(this.sunDir, this.farPlane * 0.45); for (const f of this.flareEls) f.el.color.copy(f.base).multiplyScalar(k); }
     this.updateRain(dt, cp, carVel);
   }
 

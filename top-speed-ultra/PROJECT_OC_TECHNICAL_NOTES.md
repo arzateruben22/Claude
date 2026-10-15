@@ -119,7 +119,12 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   a 20 m frame, and the 45 ft trailer (box, floor frame, skirts, conspicuity tape, landing gear, door rods, mud flaps,
   underride guard) is trim in that frame; `rig.axles` lists all five axles, so the game instances ten wheels.
 - **Environment.** The sky shader, PMREM lighting, sun shadows following the car, haze and the far mountain ring
-  are unchanged from Ultra.
+  are unchanged from Ultra. Since 2026-10-15 the sun has a lens flare (`three/examples/jsm/objects/Lensflare`): a
+  warm glow at the sun and four ghost rings down the lens axis, from two canvas textures (`T.flareGlow`,
+  `T.flareGhost`). `Environment.follow()` parks it 900 m out along `sunDir` from the camera every frame and scales
+  the elements' colours by daylight × the sun's height × the weather's sun factor, so it fades under cloud, goes in
+  rain and fog, and is off at night. Its own depth test hides it behind the roof, pillars and mirror; the glass
+  doesn't write depth, so it reads through the windscreen.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
   a camera 150 m above the car.
 
