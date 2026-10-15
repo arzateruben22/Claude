@@ -502,7 +502,7 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
             );
           })}
         </div>
-        <p className="fine">The makes are our own. For now every car shares one body; the paint and what's underneath change.</p>
+        <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
         <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
       </div>
     </div>
