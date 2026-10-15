@@ -1,6 +1,6 @@
 // Traffic vehicles: the realism preview's lofted bodies (src/preview/traffic.ts: sedan, coupe, SUV, pickup, van, box
-// truck, with the glass band and vertex-coloured trim) plus the game's own instanced wheels and lamps, and a semi
-// built from blocks. Model frame: -z forward, +x right, y up, origin on the ground at the middle.
+// truck, and the tractor-trailer semi, with the glass band and vertex-coloured trim) plus the game's own instanced
+// wheels and lamps. Model frame: -z forward, +x right, y up, origin on the ground at the middle.
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -31,12 +31,12 @@ function lights(spots: [number, number, number, number, number][], color: [numbe
 // a class from the preview's traffic bodies, with the game's own wheels (they turn) and lamps (they brake and blink)
 function fromPreview(id: string, kind: TrafficKind, opts: { mass: number; weight: number; speed: [number, number]; lanes?: number[]; fixedColor?: number[] }): CarClass {
   const p = trafficParts(kind, 'phone', { wheels: false }), S = p.spec, L = S.len / 2, W2 = S.wid / 2;
-  const tailY = S.box ? 1.0 : S.deck - 0.14, headY = S.hood - 0.12;
+  const tailY = S.box ? 1.0 : S.rig ? S.rig.trailerY[0] - 0.08 : S.deck - 0.14, headY = S.hood - 0.12;
   const tail = lights([[0.36, 0.11, -W2 * 0.78, tailY, L + 0.005], [0.36, 0.11, W2 * 0.78, tailY, L + 0.005]], [0.55, 0.04, 0.05]);
   const head = lights([[0.32, 0.09, -W2 * 0.7, headY, -L - 0.005], [0.32, 0.09, W2 * 0.7, headY, -L - 0.005]], [0.9, 0.9, 0.85]);
   return {
     id, len: S.len, wid: S.wid, lanes: opts.lanes ?? [0, 1, 2, 3], body: p.paint, glass: p.glass, trim: p.trim, tail, head, wheelR: S.r,
-    wheels: [[-S.track, S.r, S.zA[0]], [S.track, S.r, S.zA[0]], [-S.track, S.r, S.zA[1]], [S.track, S.r, S.zA[1]]],
+    wheels: S.axles.flatMap((z) => [[-S.track, S.r, z], [S.track, S.r, z]] as [number, number, number][]),
     blink: [[-W2 + 0.08, tailY + 0.1, L + 0.01], [W2 - 0.08, tailY + 0.1, L + 0.01]],
     mass: opts.mass, weight: opts.weight, speed: opts.speed, fixedColor: opts.fixedColor,
   };
@@ -49,17 +49,7 @@ export function buildClasses(): CarClass[] {
   const pickup = fromPreview('pickup', 'pickup', { mass: 2400, weight: 12, speed: [26, 33] });
   const van = fromPreview('van', 'van', { mass: 2300, weight: 8, speed: [25, 32], lanes: [1, 2, 3], fixedColor: [0xf2f2f0, 0xe8e8e2, 0xf4f4f2, 0x2c4f8a, 0x8d9196] });
   const bt = fromPreview('truck', 'boxTruck', { mass: 7500, weight: 7, speed: [24, 28], lanes: [2, 3], fixedColor: [0xf2f2ef, 0xe8e8e2, 0xf4f4f2, 0x2c4f8a, 0xc9302c] });
-  const semi = (() => {
-    const wid = 2.55, len = 19.5, L = len / 2;
-    const body = clean([box(wid, 1.5, 2.6, 0, 1.45, -L + 1.3, 0.12), box(wid - 0.1, 0.9, 1.8, 0, 2.6, -L + 1.6, 0.15), box(wid * 0.5, 0.25, 3.6, 0, 1.05, -L + 3.9, 0.05),
-      box(wid + 0.05, 2.9, 14.6, 0, 2.6, L - 7.3, 0.04), box(wid * 0.8, 0.2, 14.4, 0, 1.0, L - 7.3, 0.03)]);
-    const glass = clean([box(wid - 0.2, 0.75, 0.06, 0, 2.35, -L + 0.0 + 0.02, 0.02)]);
-    const tail = lights([[0.3, 0.14, -1.05, 1.0, L + 0.01], [0.3, 0.14, 1.05, 1.0, L + 0.01]], [0.55, 0.04, 0.05]);
-    const head = lights([[0.3, 0.14, -0.95, 1.05, -L - 0.01], [0.3, 0.14, 0.95, 1.05, -L - 0.01]], [0.9, 0.9, 0.85]);
-    return { id: 'semi', len, wid, mass: 16000, weight: 8, lanes: [2, 3], body, glass, tail, head, wheelR: 0.52, speed: [24, 28],
-      wheels: [[-1.05, 0.52, -L + 1.0], [1.05, 0.52, -L + 1.0], [-1.05, 0.52, -L + 4.6], [1.05, 0.52, -L + 4.6], [-1.05, 0.52, L - 2.6], [1.05, 0.52, L - 2.6], [-1.05, 0.52, L - 1.3], [1.05, 0.52, L - 1.3]],
-      blink: [[-1.2, 1.2, L + 0.02], [1.2, 1.2, L + 0.02]], fixedColor: [0xf4f4f2, 0xf0f0ec, 0xdedcd6, 0xb8bcc2] } as CarClass;
-  })();
+  const semi = fromPreview('semi', 'semi', { mass: 16000, weight: 8, speed: [24, 28], lanes: [2, 3], fixedColor: [0xf4f4f2, 0xf0f0ec, 0xdedcd6, 0xb8bcc2, 0x8a1c1c, 0x1e3a8a] });
   return [sedan, suv, sports, pickup, van, bt, semi];
 }
 

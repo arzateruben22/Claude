@@ -150,7 +150,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     red: once('m.red', () => new THREE.MeshPhysicalMaterial({ color: 0xb3151b, roughness: 0.35, clearcoat: 0.5 })),
     dial: once('m.dial', () => new THREE.MeshStandardMaterial({ map: G.modeDialTex(), transparent: true, alphaTest: 0.4, roughness: 0.5 })),
     led: once('m.led', () => new THREE.MeshPhysicalMaterial({ color: 0x0b0c0d, roughness: 0.15, clearcoat: 1 })),
-    dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x6e665e, transparent: true, opacity: 0.26, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
+    dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x6e665e, transparent: true, opacity: 0.13, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
   };
   for (const k of ['alc', 'nappa', 'tan', 'tanPerf', 'carpet', 'plastic']) (mats[k] as THREE.Material).side = THREE.DoubleSide;
   mats.badgeHub = once('m.badgehub' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1 }));

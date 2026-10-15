@@ -4,6 +4,30 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: the tractor-trailer semi, a cleaner windscreen, and a safer autopilot
+
+**The semi.** The last block-built traffic vehicle is now built like the others, from `src/preview/traffic.ts`: a
+conventional tractor (boxy loft, a 2.2 m hood narrower than the cab, glass only over the doors, chrome grille
+surround and bumper, sun visor, roof fairing in the paint colour, twin stacks, fuel tanks between the axles, frame
+rails and a fifth wheel over the tandem, west-coast mirrors) and a 45 ft box trailer with floor frame, side skirts,
+red conspicuity tape, landing gear, door seam and lock rods, mud flaps and an underride guard, 20 m in all on five
+axles. The game instances ten turning wheels from the spec's axle list, and keeps the semi in the two right lanes.
+`tests/out/preview/traffic-semi.png` is the preview render; `tests/out/semi-chase.png` is the game, placed 22 m behind
+one on the 405.
+
+**Windscreen dust** at the driver's seat was reading as snow at the desktop tier: its opacity is halved (0.26 →
+0.13). It is still there against the light.
+
+**The autopilot** (attract mode and the suite's driver) used to judge a lane by where cars were, not where they were
+going, and the longer semi changed the seeded Survival run enough that at 39 s it moved into lane 3 as a pickup 5 m
+ahead was also moving into lane 3. It now counts a car that is signalling and moving into a lane as already in it,
+for both the gap ahead and the clear check. Seeded Survival runs through again.
+
+**Verified:** `npm test -- --only=survival` **7 of 7** (a new check: seven traffic classes from the preview, the semi
+20 m × 2.5 m with ten wheels, 5 of 154 seeded cars are semis and every one spawned in the two right lanes; the seeded
+run now scores 8,591 with a 16.82 s best streak, 21 clean passes, top 116 mph). `--only=survival,abilities` **10 of
+10** on the first semi build before the tractor was reshaped. No page errors in any run.
+
 ## 2026-10-15: the Chrome noir menus are in the game
 
 The owner asked for "something more modern with a futuristic HD cyberpunk feel" and chose direction B, "Chrome

@@ -301,6 +301,22 @@ await group('survival', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'survival-result.png') });
     return `closing at ${fmt(r.v0)} m/s: "${reason}", board labelled local`;
   });
+  await check('traffic is the preview\'s bodies, with a 20 m tractor-trailer semi that spawns in the right lanes', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, cls = g.traffic.classes.map((c) => ({ id: c.id, len: +c.len.toFixed(1), wid: +c.wid.toFixed(2), wheels: c.wheels.length, trim: !!c.trim, tris: (c.body.index ? c.body.index.count : c.body.attributes.position.count) / 3 }));
+      g.setPaused(true); g.traffic.reseed(7); g.traffic.fill(g.view());
+      const semis = g.traffic.cars.filter((c) => g.traffic.classes[c.cls].id === 'semi');
+      const lanes = semis.map((c) => [c.lane, c.path.lanes]), right = lanes.filter(([l, n]) => l >= n - 2).length;
+      return { cls, cars: g.traffic.cars.length, semis: semis.length, right, lanes };
+    });
+    const semi = r.cls.find((c) => c.id === 'semi');
+    expect(r.cls.length === 7, `${r.cls.length} classes, not 7`);
+    expect(semi && semi.len === 20 && semi.wheels === 10 && semi.trim, `semi class: ${JSON.stringify(semi)}`);
+    expect(r.cls.every((c) => c.tris > 400), 'a class has fewer than 400 triangles: ' + r.cls.map((c) => c.id + ':' + c.tris).join(' '));
+    expect(r.semis >= 2, `only ${r.semis} semis in ${r.cars} cars`);
+    expect(r.right === r.semis, `${r.semis - r.right} of ${r.semis} semis spawned outside the two right lanes: ${JSON.stringify(r.lanes)}`);
+    return `${r.cls.length} classes, semi ${semi.len} m × ${semi.wid} m with ${semi.wheels} wheels; ${r.semis} of ${r.cars} cars are semis, all in the two right lanes`;
+  });
   await check('time trial traffic is the same every time', async () => {
     const snap = () => game(page, async () => {
       const g = window.__game, cars = () => JSON.stringify(g.traffic.cars.map((c) => [c.id, c.path.id, Math.round(c.s * 10), Math.round(c.d * 10)]));

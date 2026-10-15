@@ -678,15 +678,17 @@ export class Game {
   private autopilot(c: Controls, cruise = 31) {
     const p = this.phys, path = this.path, v = Math.max(3, p.vx);
     const lanes = path.lanes;
+    // a car counts as in lane l when it is there, or is signalling and moving into it (t.to while its change runs)
+    const inLane = (t: TrafficCar, l: number, tol: number) => Math.abs(t.d - path.laneCenter(l)) <= tol || (t.t >= 0 && t.to === l);
     const ahead = (l: number) => {
       let g = 1e9, sp = 0;
       for (const t of this.traffic.cars) {
-        if (t.path !== path || Math.abs(t.d - path.laneCenter(l)) > 2.3 || t.s < p.s - 2) continue;
+        if (t.path !== path || !inLane(t, l, 2.3) || t.s < p.s - 2) continue;
         const d = t.s - p.s - this.traffic.classes[t.cls].len / 2 - SPEC.halfL; if (d < g) { g = d; sp = t.v; }
       }
       return { g, v: sp };
     };
-    const clear = (l: number) => this.traffic.cars.every((t) => t.path !== path || Math.abs(t.d - path.laneCenter(l)) > 2.6 || t.s < p.s - 25 || t.s > p.s + 30);
+    const clear = (l: number) => this.traffic.cars.every((t) => t.path !== path || !inLane(t, l, 2.6) || t.s < p.s - 25 || t.s > p.s + 30);
     // where the route wants you
     const next = this.route[0];
     let want = -1;
