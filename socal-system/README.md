@@ -16,6 +16,13 @@ cylinder/beam logs → invoice.
   lab-line reconciliation. Usage: `python tools/audit_workbook.py <workbook.xlsx>`
 - `findings/SoCal_CrossCheck_Findings.xlsx` — the 49-item punch list from the
   full audit of the 7/30/2026 workbook (still open as of the 7/31 file).
+- `timesheet/` — **SoCal Timesheet**, the inspector timesheet program:
+  `SPEC.md` (functional spec), `rules.js` (pure rules engine), `index.html` +
+  `app.js` (the app), `tests/rules.test.mjs` (`node tests/rules.test.mjs`),
+  `make_artifact.py` (derives the claude.ai artifact variant). Static, no
+  build step. Computes PW/PWSS, the OT ladder, weekend minimums, midnight
+  splits, lunch compliance, odometer miles and the cross-shift day ledger
+  live as time is entered; manager review + CSV import-sheet export.
 
 ## Workflow with Claude
 

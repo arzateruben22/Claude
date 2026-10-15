@@ -22,7 +22,9 @@ This repository is both a live site and the studio template:
   rulebook, email parser, and workbook audit script for the 2026 SoCal Checklist
   Budget Tracker. When the user asks about the budget tracker, checklist,
   cylinders/beams, dispatch emails, or invoices, read `socal-system/RULEBOOK.md`
-  first — it holds all learned formats and rules.
+  first — it holds all learned formats and rules. `socal-system/timesheet/` is
+  the inspector timesheet app (spec in its `SPEC.md`; run tests with
+  `node socal-system/timesheet/tests/rules.test.mjs`).
 
 House rules that always apply:
 
