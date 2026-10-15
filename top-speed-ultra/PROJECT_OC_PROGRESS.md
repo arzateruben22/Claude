@@ -52,6 +52,16 @@ density at None and no cars about, the ability says "No traffic to clear" and ke
   5 s; with density None and 0 cars, Clear Path did not fire and stayed ready. Phone group re-run after the Feedback
   button was added to the pause and settings screens: 5 of 5.
 
+**Full suite after the day's changes: 55 of 55** (`npm test`, all nine groups, about 11 minutes here). The
+interchange chains, races, progression and render checks match the 2026-10-12 numbers (405 N → 55 N in 215 s, the
+Irvine Sprint won in 2:21.7, 178 XP for 60 s, the six skies rendered, context loss recovered).
+
+**Test link.** This build is published separately at https://claude.ai/artifact/AsFiTsf6TFF4Hij25U3MR9 so it can be
+tried on a real phone (the main link https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV still holds the 2026-10-13
+build: updating it needs the 3 MB live page read first, which this session could not do safely). Inside the
+artifact viewer a plain download does nothing, so the run card there goes through the viewer's own save hook (see
+the technical notes); on a phone the share sheet comes first either way.
+
 ## 2026-10-12: a committed regression suite, and the bugs it found
 
 The test scripts behind the entries below (`final.js`, `modes.js`, `sim.js`, `dbg3.js`) were never committed. They're

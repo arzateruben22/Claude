@@ -179,9 +179,12 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   s, miles, side), de-duplicated by key `'<carriageway> @ <metres>'`. `Settings.exit` holds a key; `Game.start()`
   resolves it to the sign (within 20 m, so a rebuilt data file still matches) and places the car at `sign.s - 450`
   (clamped to the road) in the second lane. An empty key, or one the data no longer has, falls back to `Settings.start`.
-- **Run cards (`src/ui/runCard.ts`).** `drawRunCard(result, name)` draws a 1080 × 1350 canvas; `shareRunCard()` uses
-  `navigator.share` with the PNG as a file where `canShare` allows it, otherwise an `<a download>` of a blob URL.
-  `Result.road` carries the carriageway for the shield.
+- **Run cards (`src/ui/runCard.ts`).** `drawRunCard(result, name)` draws a 1080 × 1350 canvas; `shareRunCard()` tries,
+  in order: `navigator.share` with the PNG as a file where `canShare` allows it (phones); the hosted page's viewer
+  save prompt (`window.claude.use('downloads')` → `save({filename, data})`, which the claude.ai artifact viewer
+  provides when the artifact is published with `capabilities: {downloads: true}`; a plain download does nothing in
+  that viewer); else an `<a download>` of a blob URL (the file:// build and ordinary hosting). `Result.road` carries
+  the carriageway for the shield.
 - **Feedback report.** `Game.report()` gathers the device and drive numbers (`Report`); `src/ui/feedback.ts` formats
   them and copies to the clipboard (falling back to select-and-`execCommand('copy')`). `VERSION` in `settings.ts`
   must be bumped with `package.json`.

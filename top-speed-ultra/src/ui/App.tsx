@@ -229,7 +229,7 @@ export function App() {
             {!result.race && <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />}
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
-              <button className="btn" onClick={() => void shareRunCard(result, game.current?.profile.p.username ?? 'Driver').then((r) => toast(r === 'shared' ? 'Shared' : r === 'saved' ? 'Run card saved' : 'Could not make the card', r === 'failed' ? 'bad' : 'good'))}>Share run</button>
+              <button className="btn" onClick={() => void shareRunCard(result, game.current?.profile.p.username ?? 'Driver').then((r) => toast({ shared: 'Shared', saved: 'Run card saved', declined: 'Not saved', failed: 'Could not save the card' }[r], r === 'failed' ? 'bad' : r === 'declined' ? 'info' : 'good'))}>Share run</button>
               <button className="btn" onClick={toMenu}>Main menu</button>
             </div>
           </div>

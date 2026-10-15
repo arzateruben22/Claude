@@ -96,8 +96,12 @@ export function drawRunCard(r: Result, name: string): HTMLCanvasElement {
   return c;
 }
 
-// share the card through the device's share sheet, or download it; says which happened
-export async function shareRunCard(r: Result, name: string): Promise<'shared' | 'saved' | 'failed'> {
+// the hosted page's viewer (claude.ai) blocks plain downloads and offers its own save prompt instead
+interface HostDownloads { save(r: { filename: string; data: Blob }): Promise<{ status: string }> }
+interface HostRuntime { use?: (name: 'downloads') => Promise<HostDownloads | null> }
+
+// share the card through the device's share sheet, the host's save prompt, or a download; says which happened
+export async function shareRunCard(r: Result, name: string): Promise<'shared' | 'saved' | 'declined' | 'failed'> {
   const c = drawRunCard(r, name);
   const blob = await new Promise<Blob | null>((res) => c.toBlob(res, 'image/png'));
   if (!blob) return 'failed';
@@ -105,6 +109,18 @@ export async function shareRunCard(r: Result, name: string): Promise<'shared' | 
   const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean; share?: (d: ShareData) => Promise<void> };
   if (nav.canShare && nav.share && nav.canShare({ files: [file] })) {
     try { await nav.share({ files: [file], title: 'Top Speed OC', text: '#TopSpeedOC' }); return 'shared'; } catch { /* cancelled or refused: save it instead */ }
+  }
+  const host = (window as unknown as { claude?: HostRuntime }).claude;
+  if (host?.use) {
+    const dl = await host.use('downloads').catch(() => null);
+    if (dl) {
+      try { await dl.save({ filename: file.name, data: blob }); return 'saved'; } catch (e) {
+        const code = (e as { code?: string })?.code;
+        if (code === 'declined') return 'declined';
+        if (code !== 'unavailable' && code !== 'not_granted') return 'failed';
+        /* no save prompt in this view: try a plain download below */
+      }
+    }
   }
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
