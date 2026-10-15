@@ -119,6 +119,20 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
   a camera 150 m above the car.
 
+## UI
+
+- `src/ui/styles.css` is the "Chrome noir" stylesheet: every colour, font and gradient is a token at the top
+  (`--void`, `--night`, `--volt`, `--mag`, `--chrome`, `--f-display`, `--f-ui`, `--f-mono`, …). The fonts load from
+  Google Fonts through the link in `index.html` and in `scripts/single-file.mjs`; keep the two in step.
+- The menu is `.overlay.menu > .menu-col` with a `.row.dock` that is `position: sticky; bottom: 0` (the Drive
+  button stays reachable while the column scrolls), and `.menu-aside` fixed to the viewport on wide screens. Panels
+  (`.panel`) have a sticky last `.row` as their footer. Every `.overlay` sets `scroll-padding-bottom`, so anything
+  scrolled into view (by a tap, a tab, or Playwright) lands above those footers.
+- The column's slide-in animates its children, not the column: a transform on the column would make the fixed
+  aside position itself relative to the column.
+- `tools/ui-shots.mjs` captures the 13 screens and waits for entrance animations to finish before each shot; in
+  SwiftShader the first frames after load take seconds (shader compilation), which delays the animations' start.
+
 ## Simulation
 
 - Fixed 120 Hz physics with an accumulator and interpolation.

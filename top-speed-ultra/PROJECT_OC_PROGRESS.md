@@ -4,6 +4,31 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: the Chrome noir menus are in the game
+
+The owner asked for "something more modern with a futuristic HD cyberpunk feel" and chose direction B, "Chrome
+noir", from the two the designers built in worktrees. The agent that was to apply it is stopped by the weekly limit, so
+its patch (`scratchpad/ui-design-2.patch`: `index.html`, `scripts/single-file.mjs`, `src/ui/App.tsx`,
+`src/ui/styles.css`) was applied three-way and the three conflicts resolved by hand: the day's "start at your exit"
+picker and Feedback panel now live inside the new layout (the Start panel is a `panel wide`; the roads and exits grids
+scroll with their panel). The look: a chromed ULTRA wordmark with a slow sheen, Big Shoulders Display for headings,
+Chakra Petch for text, JetBrains Mono for numbers and labels, violet-black glass with a hairline edge, magenta
+selection corners, a yellow Drive dock pinned to the bottom of the menu, hexagonal ability button, angled chips
+for the touch pedals and the top bar. Every accessible name, role and class the suite relies on is kept.
+
+Three layout faults from the unfinished direction were fixed: controls scrolled into view landed under the sticky
+Drive dock and panel footers (now `scroll-padding-bottom` on the overlays, so Playwright's and the browser's
+scroll-into-view keep them clear); the exit picker's inner scroll fought the panel's sticky footer (its
+`max-height`s removed, the panel grows and the overlay scrolls); and the desktop side card (Loop Lab, the data credit)
+was pinned to the animating menu column instead of the viewport (the slide-in now animates the column's parts).
+
+**Verified:** `npm test -- --only=launch,phone,boot` **16 of 16** on this build (the phone layout checks, the exit
+picker click-through, the Feedback and Share run buttons). All 13 screens captured at phone and desktop size in
+`tests/out/ui-after/` (the capture tool now waits for entrance animations to finish: in software rendering the first
+frames after load take seconds, so the animations started late and the first desktop captures were mid-fade).
+Not reviewed yet: an art-director pass over every screen for polish; the agents' review and polish steps run when the
+limit lifts.
+
 ## 2026-10-15: the realism preview's cars, cockpits and hands are in the game
 
 The owner, after trying the test build: "This game looks like garbage, keep rendering for MAXIMUM RESULTS." The
