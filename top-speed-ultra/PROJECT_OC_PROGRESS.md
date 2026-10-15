@@ -51,7 +51,8 @@ are four raised Botts' dots per 3.66 m where there was a painted dash, with the 
 Sound walls are split-face masonry block in running bond, tan, 0.2 m courses (`blockWall()`), instead of tinted
 concrete. Verified in daylight from the seat, chase and hood cameras (`tests/out/car-low-{cockpit,chase,hood}.png`,
 Low, 960 × 540): the slabs, joints, dots and block courses read at every distance; no page errors; 371 draw calls
-and 606k triangles from the seat in Moderate traffic.
+and 606k triangles from the seat in Moderate traffic. Suite: `--only=boot,render,survival` **24 of 24** on this
+build (the rain and fog renders cover the wet concrete).
 
 **Not done, candidly.** The ability hand animations (the Closer's watch check, the Ace's wave, the Wrench's hand on
 the knee) do not yet exist on the new hands: `setPose` is a no-op until the hands get a rig. The cockpit's two side
