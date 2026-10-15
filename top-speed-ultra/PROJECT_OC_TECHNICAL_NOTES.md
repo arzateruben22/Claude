@@ -103,6 +103,12 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   (`delta × steerRatio`, clamped to ±2.2 rad), the hands follow it, and the tach needle takes the rpm. Build cost in
   SwiftShader: about 0.4 s car, 0.6 s cockpit, 1 s hands (the hands' SDF is meshed at load and cached per
   presentation and quality). `Cockpit.ts` and `Instruments.ts` are the previous look and are no longer used.
+- **Traffic bodies (`traffic/carModels.ts`).** Six of the seven classes come from `src/preview/traffic.ts`
+  `trafficParts(kind, 'phone', { wheels: false })`: `paint` (the body loft and end caps, no colour attribute so the
+  instance colour paints it), `glass` (the band), `trim` (vertex-coloured, one shared material and one more
+  `InstancedMesh` per class), and `spec` (length, width, wheel radius, track, axle z) for the class's dimensions and
+  wheel positions. The game keeps its own wheels and lamps. The body material is the preview's `M.paint` with a
+  white base, which honours `instanceColor`. The semi is still built from blocks here.
 - **Environment.** The sky shader, PMREM lighting, sun shadows following the car, haze and the far mountain ring
   are unchanged from Ultra.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from

@@ -31,7 +31,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Labels and destinations | Partial | Green guide signs show real OSM destination text. There are no exit numbers, because OSM `junction:ref` isn't in the source data. |
 | Ferrari-inspired cockpit | Done | Since 2026-10-15 the realism preview's cockpits are in the game: one per car (Alcantara, Nappa with stitching, carbon, aluminium, a live tachometer, the dashboard's ghost in the windscreen, mirrors) with the driver's anatomical hands on the rim in the chosen look. Not yet on the new hands: the ability poses (watch check, wave, hand on the knee). |
 | Dashboard | Done | The real tachometer and gear display in the cluster. The HUD is minimal. |
-| Traffic AI | Done | Intelligent Driver Model. Signalled lane changes with gap checks. Trucks keep right. Cars follow freeways into the next one at Y junctions. |
+| Traffic AI | Done | Intelligent Driver Model. Signalled lane changes with gap checks. Trucks keep right. Cars follow freeways into the next one at Y junctions. Since 2026-10-15 the vehicles are the realism preview's lofted bodies (sedan, coupe, SUV, pickup, van, box truck) in clearcoat paint; the semi is still block-built. |
 
 ## P2: modes, scoring and saves
 

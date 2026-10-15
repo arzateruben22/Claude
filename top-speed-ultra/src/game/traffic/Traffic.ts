@@ -8,6 +8,7 @@ import * as THREE from 'three';
 import { Path, ORIGIN } from '../world/Path';
 import type { Network } from '../world/Network';
 import { buildClasses, wheelGeometry, CarClass, PAINTS } from './carModels';
+import * as M from '../../preview/car-mats';
 import { clamp, rng, smoothstep } from '../util';
 
 export interface TrafficCar {
@@ -33,7 +34,7 @@ export class Traffic {
   readonly group = new THREE.Group();
   readonly classes: CarClass[] = buildClasses();
   cars: TrafficCar[] = [];
-  private meshes: { body: THREE.InstancedMesh; glass: THREE.InstancedMesh; tail: THREE.InstancedMesh; head: THREE.InstancedMesh; wheels: THREE.InstancedMesh; blink: THREE.InstancedMesh }[] = [];
+  private meshes: { body: THREE.InstancedMesh; glass: THREE.InstancedMesh; tail: THREE.InstancedMesh; head: THREE.InstancedMesh; wheels: THREE.InstancedMesh; blink: THREE.InstancedMesh; trim: THREE.InstancedMesh | null }[] = [];
   private r = rng(91);
   private nextId = 1;
   level: TrafficLevel = { perKmLane: 5, bold: 0 };
@@ -44,7 +45,9 @@ export class Traffic {
   constructor(private net: Network, capacity = 320) {
     const wheel = wheelGeometry();
     const blinkGeo = new THREE.BoxGeometry(0.12, 0.08, 0.04);
-    const bodyM = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.45, roughness: 0.32, envMapIntensity: 1.1 });
+    // the preview's clearcoat paint with flake; the instance colour gives each car its own paint
+    const bodyM = M.paint(0xffffff, 'phone', [], { key: 'traffic', flake: 0.2 });
+    const trimM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, metalness: 0.25 });
     const glassM = new THREE.MeshStandardMaterial({ color: 0x0c1016, metalness: 0.85, roughness: 0.06, envMapIntensity: 1.4 });
     const lightM = new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
     const wheelM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.6, metalness: 0.3 });
@@ -57,7 +60,7 @@ export class Traffic {
       };
       const body = mk(c.body, bodyM, cap); body.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(cap * 3), 3);
       const tail = mk(c.tail, lightM, cap, false); tail.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(cap * 3), 3);
-      this.meshes.push({ body, glass: mk(c.glass, glassM, cap), tail, head: mk(c.head, lightM, cap, false), wheels: mk(wheel, wheelM, cap * c.wheels.length), blink: mk(blinkGeo, blinkM, cap * 2, false) });
+      this.meshes.push({ body, glass: mk(c.glass, glassM, cap), tail, head: mk(c.head, lightM, cap, false), wheels: mk(wheel, wheelM, cap * c.wheels.length), blink: mk(blinkGeo, blinkM, cap * 2, false), trim: c.trim ? mk(c.trim, trimM, cap) : null });
     }
     this.group.name = 'traffic';
   }
@@ -345,7 +348,7 @@ export class Traffic {
       this.q.setFromEuler(this.e);
       this.p3.set(at.x - ORIGIN.x, at.y, at.z - ORIGIN.z);
       this.m4.compose(this.p3, this.q, this.sc);
-      m.body.setMatrixAt(i, this.m4); m.glass.setMatrixAt(i, this.m4); m.tail.setMatrixAt(i, this.m4); m.head.setMatrixAt(i, this.m4);
+      m.body.setMatrixAt(i, this.m4); m.glass.setMatrixAt(i, this.m4); m.tail.setMatrixAt(i, this.m4); m.head.setMatrixAt(i, this.m4); m.trim?.setMatrixAt(i, this.m4);
       m.body.setColorAt(i, c.color);
       const brake = c.acc < -0.9 || c.stopT > 0 ? 3.2 : 1;
       m.tail.instanceColor!.setXYZ(i, brake, brake, brake);
@@ -365,8 +368,9 @@ export class Traffic {
     this.meshes.forEach((m, k) => {
       const n = counts[k], cl = this.classes[k];
       m.body.count = m.glass.count = m.tail.count = m.head.count = n;
+      if (m.trim) m.trim.count = n;
       m.wheels.count = n * cl.wheels.length; m.blink.count = n * 2;
-      for (const im of [m.body, m.glass, m.tail, m.head, m.wheels, m.blink]) im.instanceMatrix.needsUpdate = true;
+      for (const im of [m.body, m.glass, m.tail, m.head, m.wheels, m.blink, m.trim]) if (im) im.instanceMatrix.needsUpdate = true;
       if (m.body.instanceColor) m.body.instanceColor.needsUpdate = true;
       if (m.tail.instanceColor) m.tail.instanceColor.needsUpdate = true;
     });

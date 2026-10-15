@@ -1,24 +1,19 @@
-// Traffic vehicles, built from side profiles: a painted lower body, a dark glass greenhouse with a painted roof,
-// tail and head lights, and wheels. Model frame: -z forward, +x right, y up, origin on the ground at the middle.
+// Traffic vehicles: the realism preview's lofted bodies (src/preview/traffic.ts: sedan, coupe, SUV, pickup, van, box
+// truck, with the glass band and vertex-coloured trim) plus the game's own instanced wheels and lamps, and a semi
+// built from blocks. Model frame: -z forward, +x right, y up, origin on the ground at the middle.
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { trafficParts, TrafficKind } from '../../preview/traffic';
 
 export interface CarClass {
   id: string; len: number; wid: number; mass: number; weight: number; lanes: number[];
   body: THREE.BufferGeometry; glass: THREE.BufferGeometry; tail: THREE.BufferGeometry; head: THREE.BufferGeometry;
+  trim?: THREE.BufferGeometry;       // grille, bumpers, mirrors, box, bed: vertex-coloured, one shared material
   wheels: [number, number, number][]; wheelR: number; blink: [number, number, number][];
   speed: [number, number];           // m/s range they like
   fixedColor?: number[];             // trucks: white, a few fleet colours
-}
-
-function profile(points: [number, number][], width: number, bevel = 0.05) {
-  const shape = new THREE.Shape(points.map(([z, y]) => new THREE.Vector2(z, y)));
-  const g = new THREE.ExtrudeGeometry(shape, { depth: width - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 2, curveSegments: 6 });
-  g.rotateY(-Math.PI / 2);                      // (z, y) profile, extruded across x
-  g.translate(width / 2 - bevel, 0, 0);
-  return g.index ? g.toNonIndexed() : g;
 }
 function box(w: number, h: number, l: number, x: number, y: number, z: number, r = 0.04) {
   const g = new RoundedBoxGeometry(w, h, l, 2, r); g.translate(x, y, z); return g.index ? g.toNonIndexed() : g;
@@ -33,50 +28,27 @@ function lights(spots: [number, number, number, number, number][], color: [numbe
   return g;
 }
 
-function car(id: string, len: number, wid: number, lower: [number, number][], green: [number, number][], roofY: number, roofZ: [number, number],
-  tailY: number, headY: number, opts: Partial<CarClass> & { mass: number; weight: number; speed: [number, number] }): CarClass {
-  const L = len / 2;
-  const body = clean([profile(lower, wid), box(wid * 0.82, 0.05, roofZ[1] - roofZ[0], 0, roofY, (roofZ[0] + roofZ[1]) / 2, 0.02)]);
-  const glass = clean([profile(green, wid * 0.86, 0.04)]);
-  const tail = lights([[0.36, 0.11, -wid / 2 + 0.24, tailY, L + 0.005], [0.36, 0.11, wid / 2 - 0.24, tailY, L + 0.005]], [0.55, 0.04, 0.05]);
-  const head = lights([[0.32, 0.09, -wid / 2 + 0.24, headY, -L - 0.005], [0.32, 0.09, wid / 2 - 0.24, headY, -L - 0.005]], [0.9, 0.9, 0.85]);
-  const r = opts.wheelR ?? 0.33, ax = len * 0.31;
+// a class from the preview's traffic bodies, with the game's own wheels (they turn) and lamps (they brake and blink)
+function fromPreview(id: string, kind: TrafficKind, opts: { mass: number; weight: number; speed: [number, number]; lanes?: number[]; fixedColor?: number[] }): CarClass {
+  const p = trafficParts(kind, 'phone', { wheels: false }), S = p.spec, L = S.len / 2, W2 = S.wid / 2;
+  const tailY = S.box ? 1.0 : S.deck - 0.14, headY = S.hood - 0.12;
+  const tail = lights([[0.36, 0.11, -W2 * 0.78, tailY, L + 0.005], [0.36, 0.11, W2 * 0.78, tailY, L + 0.005]], [0.55, 0.04, 0.05]);
+  const head = lights([[0.32, 0.09, -W2 * 0.7, headY, -L - 0.005], [0.32, 0.09, W2 * 0.7, headY, -L - 0.005]], [0.9, 0.9, 0.85]);
   return {
-    id, len, wid, lanes: [0, 1, 2, 3], body, glass, tail, head, wheelR: r,
-    wheels: opts.wheels ?? [[-wid / 2 + 0.12, r, -ax], [wid / 2 - 0.12, r, -ax], [-wid / 2 + 0.12, r, ax], [wid / 2 - 0.12, r, ax]],
-    blink: [[-wid / 2 + 0.08, tailY + 0.1, L + 0.01], [wid / 2 - 0.08, tailY + 0.1, L + 0.01]],
-    ...opts,
-  } as CarClass;
+    id, len: S.len, wid: S.wid, lanes: opts.lanes ?? [0, 1, 2, 3], body: p.paint, glass: p.glass, trim: p.trim, tail, head, wheelR: S.r,
+    wheels: [[-S.track, S.r, S.zA[0]], [S.track, S.r, S.zA[0]], [-S.track, S.r, S.zA[1]], [S.track, S.r, S.zA[1]]],
+    blink: [[-W2 + 0.08, tailY + 0.1, L + 0.01], [W2 - 0.08, tailY + 0.1, L + 0.01]],
+    mass: opts.mass, weight: opts.weight, speed: opts.speed, fixedColor: opts.fixedColor,
+  };
 }
 
 export function buildClasses(): CarClass[] {
-  const sedan = car('sedan', 4.8, 1.84,
-    [[-2.4, 0.33], [-2.38, 0.62], [-2.12, 0.78], [-0.9, 0.87], [1.25, 0.9], [2.32, 0.86], [2.4, 0.55], [2.3, 0.3], [-2.3, 0.3]],
-    [[-0.92, 0.86], [-0.08, 1.4], [0.95, 1.41], [1.62, 0.89]], 1.41, [-0.1, 0.95], 0.78, 0.66,
-    { mass: 1550, weight: 36, speed: [27, 36] });
-  const suv = car('suv', 4.9, 1.95,
-    [[-2.45, 0.42], [-2.42, 0.86], [-2.2, 0.99], [-1.1, 1.06], [2.32, 1.08], [2.45, 1.02], [2.45, 0.48], [2.35, 0.38], [-2.35, 0.38]],
-    [[-1.05, 1.05], [-0.3, 1.71], [2.2, 1.72], [2.38, 1.07]], 1.72, [-0.3, 2.2], 1.0, 0.86,
-    { mass: 2150, weight: 28, speed: [26, 34], wheelR: 0.37 });
-  const sports = car('sports', 4.5, 1.94,
-    [[-2.25, 0.28], [-2.25, 0.46], [-1.8, 0.6], [-0.62, 0.77], [1.5, 0.84], [2.25, 0.8], [2.25, 0.4], [2.1, 0.28], [-2.1, 0.28]],
-    [[-0.78, 0.76], [-0.05, 1.18], [0.75, 1.18], [1.55, 0.82]], 1.18, [-0.05, 0.75], 0.72, 0.52,
-    { mass: 1500, weight: 8, speed: [31, 40], wheelR: 0.33 });
-  const pickup = car('pickup', 5.8, 2.0,
-    [[-2.9, 0.48], [-2.86, 0.98], [-2.6, 1.1], [-1.5, 1.14], [2.9, 1.14], [2.9, 0.52], [2.8, 0.42], [-2.8, 0.42]],
-    [[-1.48, 1.13], [-0.98, 1.84], [0.38, 1.85], [0.5, 1.13]], 1.85, [-0.98, 0.38], 0.98, 0.9,
-    { mass: 2400, weight: 12, speed: [26, 33], wheelR: 0.39 });
-  // box truck: cab and a tall box, built from blocks
-  const bt = (() => {
-    const wid = 2.45, len = 8.2, L = len / 2;
-    const body = clean([box(wid, 1.15, 2.0, 0, 1.0, -L + 1.0, 0.08), box(wid - 0.1, 0.5, 1.4, 0, 1.75, -L + 1.25, 0.08), box(wid + 0.04, 2.6, 5.9, 0, 2.15, 1.05, 0.05), box(wid * 0.9, 0.3, len - 0.4, 0, 0.55, 0, 0.03)]);
-    const glass = clean([box(wid - 0.16, 0.6, 0.06, 0, 1.75, -L + 0.52, 0.02), box(wid - 0.02, 0.5, 0.9, 0, 1.75, -L + 1.2, 0.02)]);
-    const tail = lights([[0.3, 0.14, -0.95, 0.75, L + 0.01], [0.3, 0.14, 0.95, 0.75, L + 0.01]], [0.55, 0.04, 0.05]);
-    const head = lights([[0.3, 0.12, -0.9, 0.85, -L - 0.01], [0.3, 0.12, 0.9, 0.85, -L - 0.01]], [0.9, 0.9, 0.85]);
-    return { id: 'truck', len, wid, mass: 7500, weight: 7, lanes: [2, 3], body, glass, tail, head, wheelR: 0.48, speed: [24, 28],
-      wheels: [[-1.05, 0.48, -L + 1.3], [1.05, 0.48, -L + 1.3], [-1.05, 0.48, L - 1.4], [1.05, 0.48, L - 1.4]],
-      blink: [[-1.15, 1.0, L + 0.02], [1.15, 1.0, L + 0.02]], fixedColor: [0xf2f2ef, 0xe8e8e2, 0xf4f4f2, 0x2c4f8a, 0xc9302c] } as CarClass;
-  })();
+  const sedan = fromPreview('sedan', 'sedan', { mass: 1550, weight: 34, speed: [27, 36] });
+  const suv = fromPreview('suv', 'suv', { mass: 2150, weight: 28, speed: [26, 34] });
+  const sports = fromPreview('sports', 'coupe', { mass: 1500, weight: 8, speed: [31, 40] });
+  const pickup = fromPreview('pickup', 'pickup', { mass: 2400, weight: 12, speed: [26, 33] });
+  const van = fromPreview('van', 'van', { mass: 2300, weight: 8, speed: [25, 32], lanes: [1, 2, 3], fixedColor: [0xf2f2f0, 0xe8e8e2, 0xf4f4f2, 0x2c4f8a, 0x8d9196] });
+  const bt = fromPreview('truck', 'boxTruck', { mass: 7500, weight: 7, speed: [24, 28], lanes: [2, 3], fixedColor: [0xf2f2ef, 0xe8e8e2, 0xf4f4f2, 0x2c4f8a, 0xc9302c] });
   const semi = (() => {
     const wid = 2.55, len = 19.5, L = len / 2;
     const body = clean([box(wid, 1.5, 2.6, 0, 1.45, -L + 1.3, 0.12), box(wid - 0.1, 0.9, 1.8, 0, 2.6, -L + 1.6, 0.15), box(wid * 0.5, 0.25, 3.6, 0, 1.05, -L + 3.9, 0.05),
@@ -88,7 +60,7 @@ export function buildClasses(): CarClass[] {
       wheels: [[-1.05, 0.52, -L + 1.0], [1.05, 0.52, -L + 1.0], [-1.05, 0.52, -L + 4.6], [1.05, 0.52, -L + 4.6], [-1.05, 0.52, L - 2.6], [1.05, 0.52, L - 2.6], [-1.05, 0.52, L - 1.3], [1.05, 0.52, L - 1.3]],
       blink: [[-1.2, 1.2, L + 0.02], [1.2, 1.2, L + 0.02]], fixedColor: [0xf4f4f2, 0xf0f0ec, 0xdedcd6, 0xb8bcc2] } as CarClass;
   })();
-  return [sedan, suv, sports, pickup, bt, semi];
+  return [sedan, suv, sports, pickup, van, bt, semi];
 }
 
 // one wheel: dark tyre, a silver face with darker spoke gaps so you can see it turn

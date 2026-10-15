@@ -30,6 +30,15 @@ blend has finished (a shot taken mid-blend sits inside the windscreen). Frame co
 490k triangles (the old car: 444 calls, 491k), 10–12 fps in this software renderer, the same as before the change.
 The regression result is logged below this entry's "Suite" line.
 
+**Traffic bodies** (same session). The preview's unbranded traffic vehicles (`src/preview/traffic.ts`, moved out of
+`car.ts` and given a coupe) now feed the game's instanced traffic: sedan, coupe (the "sports" class), SUV, pickup, a
+new van class, and the box truck are lofted bodies with a glass band and vertex-coloured trim (grille, bumpers,
+mirrors, box, bed), on the game's own turning wheels and braking lamps, in the preview's clearcoat paint with the
+per-car instance colour. Collision boxes and wheel positions come from the same specs, so what you see is what you
+hit. The semi is still the block-built one. Verified (`tests/out/traffic-{cockpit,chase}.png`, Heavy, seeded, 154
+cars): bodies, colours and lamps render through the instancing; 373 draw calls and 838k triangles from the seat in
+Heavy traffic (the bodies are denser than the old profiles); no page errors.
+
 **Not done, candidly.** The ability hand animations (the Closer's watch check, the Ace's wave, the Wrench's hand on
 the knee) do not yet exist on the new hands: `setPose` is a no-op until the hands get a rig. The cockpit's two side
 screens are static pictures (the HUD carries speed and gear); the shift paddles do not flick. Phone performance is
