@@ -51,7 +51,7 @@ export interface Rig {
 }
 
 /** subcutaneous fat thickness (m) from the 0..1 fat parameter */
-const fatT = (f: number) => 0.002 + 0.055 * Math.pow(clamp(f), 1.8);
+const fatT = (f: number) => 0.002 + 0.068 * Math.pow(clamp(f), 1.8);   // 0.055 left fat=1 reading only "heavy"
 
 export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const m = b.sex === 'm';
@@ -59,14 +59,16 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const T = fatT(b.fat), mu = clamp(b.muscle), soft = clamp(b.soft), ap = clamp(b.apple, -1, 1);
   const fat = {
     T,
-    belly: T * (m ? 1.5 : 1.0) * (1 + 0.7 * ap) + 0.05 * b.belly * s,
+    // the belly saturates (a soft limit) while the rest keeps filling out: a very heavy body is heavy all over,
+    // not a ball on thin legs
+    belly: 0.1 * (1 - Math.exp(-T * (m ? 1.3 : 1.0) * (1 + 0.7 * ap) / 0.1)) + 0.05 * b.belly * s,
     waist: T * (m ? 1.1 : 0.85) * (1 + 0.4 * ap),
-    hip: T * (m ? 0.7 : 1.35) * (1 - 0.55 * ap),
-    thigh: T * (m ? 0.62 : 1.1) * (1 - 0.5 * ap),
-    arm: T * (m ? 0.55 : 0.85),
-    chest: T * 0.75,
-    calf: T * 0.38,
-    neck: T * 0.5,
+    hip: T * (m ? 0.9 : 1.35) * (1 - 0.5 * ap),
+    thigh: T * ((m ? 0.8 : 1.25) + 5 * T) * (1 - 0.4 * ap),
+    arm: T * ((m ? 0.75 : 0.95) + 3 * T),
+    chest: T * 0.9,
+    calf: T * 0.5,
+    neck: T * (0.5 + 4 * T),
   };
   const f = new Field();
   // the blend tree
@@ -114,7 +116,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   J[B.thumbL] = madd(madd(madd(wrL, hA, 0.022 * hs2), hT, 0.02 * hs2), hN, 0.008 * hs2);
   for (const [l, r] of [[B.clavL, B.clavR], [B.armL, B.armR], [B.foreL, B.foreR], [B.handL, B.handR], [B.fingL, B.fingR], [B.thumbL, B.thumbR]]) J[r] = mirror(J[l]);
   // legs: spread so the thighs never touch in the rest pose
-  const thighR0 = (m ? 0.083 : 0.087) * ws + 0.6 * fat.thigh + 0.012 * mu;
+  const thighR0 = (m ? 0.083 : 0.087) * ws + 0.85 * fat.thigh + 0.012 * mu;
   const gapAt = crotchY - 0.04 * s;
   // at height gapAt the thigh centre is at hipJX + (hipY - gapAt) tan(a); need that - radius >= 1.4 cm
   const need = thighR0 * 0.92 + 0.014 - hipJX;
@@ -147,9 +149,11 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
     // a belly is wide (it spans the waist) and grows out of the abdomen from under the ribs to over the hips: three
     // overlapping masses, blended over long radii; a firm beer belly sits higher and rounder, a soft one lower
     const P = fat.belly, firm = clamp(b.belly);
-    f.ea([0, navelY - 0.01 * s - sag * (1 - 0.5 * firm), 0.004 * s + 0.32 * P], waistHalf * 0.92 + 0.45 * P, 0.12 * s + 0.42 * P, 0.07 * s + 0.62 * P, C, 0.06 * s + 0.32 * P, B.spine);
-    f.ea([0, navelY + 0.075 * s, 0.22 * P], waistHalf * 0.85 + 0.25 * P, 0.07 * s + 0.2 * P, 0.065 * s + 0.45 * P * (0.6 + 0.4 * firm), C, 0.05 * s + 0.25 * P, B.spine);
-    f.ea([0, navelY - 0.075 * s - sag, 0.005 * s + 0.2 * P], waistHalf * 0.8 + 0.35 * P, 0.06 * s + 0.25 * P, 0.06 * s + 0.45 * P * (1 - 0.4 * firm), C, 0.05 * s + 0.25 * P, B.hips);
+    // (not a ball: wide across the waist, its front flatter, sloping gently out from under the chest, fullest at and
+    // below the navel and hanging a little over the belt line)
+    f.ea([0, navelY - 0.02 * s - sag * (1 - 0.4 * firm), 0.004 * s + 0.28 * P], waistHalf * 0.95 + 0.58 * P * (1 - 0.45 * firm), 0.12 * s + 0.4 * P, 0.065 * s + 0.5 * P, C, 0.06 * s + 0.32 * P, B.spine);
+    f.ea([0, navelY + 0.085 * s, 0.12 * P], waistHalf * 0.85 + 0.3 * P * (1 - 0.45 * firm), 0.07 * s + 0.18 * P, 0.06 * s + 0.3 * P * (0.6 + 0.4 * firm), C, 0.06 * s + 0.3 * P, B.spine);
+    f.ea([0, navelY - 0.085 * s - sag * 1.2, 0.005 * s + 0.27 * P], waistHalf * 0.85 + 0.4 * P, 0.055 * s + 0.22 * P, 0.06 * s + 0.42 * P * (1 - 0.25 * firm), C, 0.045 * s + 0.2 * P, B.hips);
   }
   if (fat.waist > 0.008) for (const sg of [1, -1]) {
     f.ea([sg * (waistHalf * 0.8 + 0.2 * fat.waist), 0.595 * H - sag * 0.5, -0.025 * s], 0.035 * s + 0.6 * fat.waist, 0.055 * s + 0.4 * fat.waist, 0.06 * s + 0.4 * fat.waist, C, 0.05 * s, B.spine);

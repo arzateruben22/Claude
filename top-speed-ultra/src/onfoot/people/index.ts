@@ -4,3 +4,4 @@ export type { Person } from './person';
 export { randomPerson, preset, PRESETS } from './params';
 export type { PersonOptions, PresetName, BodyShape, FaceShape, Look, Garment, Accessories, Quality } from './params';
 export type { AnimName } from './anim';
+export { lodFor, LOD_RANGES } from './budget';

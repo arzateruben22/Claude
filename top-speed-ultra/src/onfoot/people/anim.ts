@@ -95,7 +95,7 @@ export class Animator {
     const bd = this.body, rig = this.rig, t = this.t, ph = this.ph;
     const heavy = clamp((bd.fat - 0.55) / 0.45), post = bd.posture, soft = bd.soft;
     // ---- the base stance: arms down (heavier arms rest a little out), legs in, posture
-    const armOut = (7 + 7 * heavy + 3 * clamp(bd.muscle - 0.6) * 2) * DEG;
+    const armOut = (7 + 11 * heavy + 3 * clamp(bd.muscle - 0.6) * 2) * DEG;   // a heavy body holds its arms clear of the belly
     const legIn = Math.max(0, rig.legAngle - (2.5 + 4 * heavy) * DEG);
     // the shoulder girdle takes a share of lowering the arms from the rest pose, so the shoulder line follows
     const lower = rig.armAngle - armOut;

@@ -67,7 +67,7 @@ export interface SkinOptions {
   glove: number | null;         // leather colour, or none
   quality: Quality;
   female: boolean;
-  veins: number[];              // segments in the hand frame (mm): x0 y0 z0 x1 y1 z1 r
+  veins: number[];              // segments in the hand frame (mm): x0 y0 z0 x1 y1 z1 r, then the skin's up there
   holes: number[];              // glove openings (mm): x y z r (4 knuckles, then the back)
   holeNormals: number[];        // their outward normals
 }
@@ -92,11 +92,12 @@ export function skinMaterial(o: SkinOptions): SkinMaterial {
     uTone: { value: tone.clone() },
     uDark: { value: darkness(o.tone) },
     uVeins: { value: veinUniform(o.veins) },
-    uVeinAmt: { value: (o.female ? 0.55 : 1) },
+    uVeinAmt: { value: (o.female ? 0.3 : 0.8) },
     uHoles: { value: Array.from({ length: 5 }, (_, i) => new THREE.Vector4(o.holes[i * 4] ?? 0, o.holes[i * 4 + 1] ?? 0, o.holes[i * 4 + 2] ?? 0, o.holes[i * 4 + 3] ?? 0)) },
     uHoleN: { value: Array.from({ length: 5 }, (_, i) => new THREE.Vector3(o.holeNormals[i * 3] ?? 0, o.holeNormals[i * 3 + 1] ?? 0, o.holeNormals[i * 3 + 2] ?? 1)) },
     uLeather: { value: new THREE.Color(o.glove ?? 0x111111) },
     uFem: { value: o.female ? 1 : 0 },
+    uDbg: { value: 0 },             // debugging (test page ?skindbg=): 1 no relief, 2 no occlusion, 3 flat colour
   };
   // the sheen (the fine vellus hair and the skin's oily film) and the specular lobe follow the tone: on dark skin a
   // light sheen reads as a wet, chalky film
@@ -138,7 +139,7 @@ transformed += normal * 0.0009 * vLeather;
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', /* glsl */ `#include <common>
 varying vec3 vHand; varying vec4 vSkin; varying vec4 vJoint; varying vec2 vArm;
-uniform vec3 uTone; uniform float uDark; uniform vec4 uVeins[${NV * 2}]; uniform float uVeinAmt; uniform float uFem;
+uniform vec3 uTone; uniform float uDark; uniform vec4 uVeins[${NV * 3}]; uniform float uVeinAmt; uniform float uFem; uniform float uDbg;
 #ifdef GLOVE
 uniform vec4 uHoles[5]; uniform vec3 uHoleN[5]; uniform vec3 uLeather; varying float vLeather;
 #endif
@@ -154,9 +155,15 @@ float dorsal = 1.0 - palmar;
 // ---- veins on the back of the hand and up the forearm
 float vein = 0.0;
 for (int i = 0; i < ${NV}; i++) {
-  vec4 a = uVeins[i * 2], b = uVeins[i * 2 + 1];
-  float d = segd(hp, a.xyz, b.xyz) / a.w;
-  vein = max(vein, exp(-d * d * 1.6));
+  vec4 a = uVeins[i * 3], b = uVeins[i * 3 + 1]; vec3 up = uVeins[i * 3 + 2].xyz;
+  // distance across the skin (the 'up' component removed): a band that follows the surface, not a buried tube that
+  // the skin only touches in spots (those spots read as dark specks from the seat)
+  vec3 pa = hp - a.xyz, ba = b.xyz - a.xyz;
+  float t = clamp(dot(pa - up * dot(pa, up), ba - up * dot(ba, up)) / max(dot(ba - up * dot(ba, up), ba - up * dot(ba, up)), 1e-3), 0.0, 1.0);
+  vec3 q = pa - ba * t;
+  float hz = dot(q, up);
+  float d = length(q - up * hz) / a.w;
+  vein = max(vein, exp(-d * d * 1.6) * smoothstep(14.0, 7.0, abs(hz)));
 }
 float wob = vnoise(hp * 0.35);
 vein *= uVeinAmt * dorsal * smoothstep(0.15, 0.6, wob + 0.3) * (1.0 - uDark * 0.55);
@@ -170,17 +177,16 @@ c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.6);   // subtle: strong red r
 vec3 palmTone = mix(c * vec3(1.05, 0.97, 0.95), vec3(0.5, 0.33, 0.27), 0.12 + 0.42 * uDark);
 c = mix(c, palmTone, clamp(palmar * 0.9, 0.0, 1.0) * (0.35 + 0.5 * uDark));
 c *= mix(vec3(1.0), mix(vec3(0.86, 0.93, 1.03), vec3(0.86, 0.84, 0.86), uDark), vein * 0.55);   // blue-grey under light skin, darker under dark
-// tiny pigment spots on light skin (sparse, faint)
-#ifdef SKIN_HIGH
-{ vec2 sp = cells(hp * 0.45); c *= 1.0 - (1.0 - uDark) * 0.09 * smoothstep(0.16, 0.05, sp.x) * step(0.9, hh13(floor(hp * 0.45) + 5.0)) * fine; }
-#endif
+// (no pigment-spot term: from the seat its dots read as dirt or stubble)
 // ---- relief (mm), turned into metres for the bump
 float H = 0.0;
 #ifdef SKIN_HIGH
 vec2 cl = cells(hp * 1.05 + vec3(0.0, wob, 0.0));
-H -= 0.03 * smoothstep(0.16, 0.0, cl.y) * fine * (1.0 - palmar * 0.4);           // the furrow network
-H -= 0.018 * smoothstep(0.22, 0.0, cl.x) * fine;                               // pores at its nodes
-H += 0.02 * (vnoise(hp * 3.1) - 0.5) * fine;
+// (subtle, and fading out well before a pore reaches a pixel: stronger read as orange peel / plucked skin)
+float fine2 = fine * fine;
+H -= 0.013 * smoothstep(0.16, 0.0, cl.y) * fine2 * (1.0 - palmar * 0.4);        // the furrow network
+H -= 0.007 * smoothstep(0.22, 0.0, cl.x) * fine2;                               // pores at its nodes
+H += 0.008 * (vnoise(hp * 3.1) - 0.5) * fine2;
 #else
 H += 0.04 * (vnoise(hp * 1.6) - 0.5) * mid;
 #endif
@@ -190,12 +196,16 @@ float win = exp(-(ax * ax) / (kind > 1.5 ? 70.0 : kind > 0.5 ? 30.0 : 22.0)) * s
 float arc = ax + la * la * (kind > 0.5 ? 0.02 : 0.035) + (vnoise(hp * 0.7) - 0.5) * 1.2;
 float sp = kind > 1.5 ? 2.2 : kind > 0.5 ? 1.15 : 1.35;
 float lines = pow(0.5 + 0.5 * cos(arc * 6.2832 / sp), 6.0);
+// a crease line is ~0.2 of its spacing wide: once a pixel is wider than that it aliases into dots, so it turns into
+// its own average (a soft shading across the joint) instead
+float sharpC = smoothstep(sp * 0.42, sp * 0.16, pix);
+lines = mix(0.226, lines, sharpC);
 float crease = win * lines * mix(1.0, 0.65, uFem);
-H -= 0.11 * crease * mid;
+H -= 0.11 * crease * mid * sharpC;
 // knuckle folds: the slack skin round the big knuckles
-H += 0.035 * (vnoise(hp * vec3(0.5, 1.6, 0.5)) - 0.5) * smoothstep(0.2, 0.8, red) * dorsal * mid;
-// veins raised a little
-H += 0.32 * vein * mid;
+H += 0.035 * (vnoise(hp * vec3(0.5, 1.6, 0.5)) - 0.5) * smoothstep(0.2, 0.8, red) * dorsal * fine;
+// veins raised a little (only while a vein is a few pixels wide)
+H += 0.24 * vein * smoothstep(1.2, 0.45, pix);
 c *= 1.0 - 0.18 * crease * mid;
 diffuseColor.rgb = c;
 float rough = mix(0.54, 0.43, clamp(red * dorsal, 0.0, 1.0)) + 0.08 * palmar + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.08 * crease + 0.06 * uDark;
@@ -217,6 +227,14 @@ leather = smoothstep(0.35, 0.65, vLeather);
   float along = vArm.x;
   float strap = smoothstep(4.0, 5.0, along) * smoothstep(17.0, 16.0, along) * smoothstep(0.55, 0.3, palmar);
   float sline = (smoothstep(0.35, 0.1, abs(along - 6.2)) + smoothstep(0.35, 0.1, abs(along - 14.8))) * step(0.5, fract(dot(hp, vec3(0.31, 0.6, 0.73)) / 2.3)) * strap;
+  // each finger is sewn from a back and a palm piece: a raised seam with its stitching runs down both sides of the
+  // finger (where the back turns into the palm side) and round the tip
+  float onF = smoothstep(0.15, 0.4, thin);
+  float sd = abs(palmar - 0.42);
+  float fseam = smoothstep(0.1, 0.03, sd) * onF;
+  float fst = smoothstep(0.05, 0.0, sd) * step(0.45, fract(dot(hp, vec3(0.57, 0.41, 0.71)) / 1.9)) * onF;
+  stitch = max(stitch, fst);
+  edge = max(edge, fseam * 0.6);
   vec2 grain = cells(hp * 1.4);
   float gH = 0.06 * smoothstep(0.2, 0.0, grain.y) * mid;
   float fold = win * pow(0.5 + 0.5 * cos(arc * 6.2832 / (sp * 2.6)), 3.0);
@@ -227,11 +245,14 @@ leather = smoothstep(0.35, 0.65, vLeather);
   lc = mix(lc, vec3(0.16, 0.15, 0.14), stitch * 0.85);
   lc = mix(lc, lc * 0.6, sline * 0.8);
   diffuseColor.rgb = mix(diffuseColor.rgb, lc, leather);
-  H = mix(H, -gH - 0.22 * fold * mid + 0.12 * stitch * mid + 0.25 * strap * mid - 0.1 * sline, leather);
+  H = mix(H, -gH - 0.22 * fold * mid + 0.12 * stitch * mid + 0.25 * strap * mid - 0.1 * sline + 0.18 * fseam * mid, leather);
   rough = mix(rough, 0.48 - 0.12 * smoothstep(0.3, 0.9, red) * dorsal + 0.1 * fold + 0.1 * edge, leather);
   thin *= 1.0 - leather; ao = mix(ao, ao * 0.95, leather);
 }
 #endif
+if (uDbg > 0.5 && uDbg < 1.5) H = 0.0;
+if (uDbg > 1.5 && uDbg < 2.5) ao = 1.0;
+if (uDbg > 2.5) diffuseColor.rgb = vec3(0.6, 0.45, 0.35);
 gThin = thin * (1.0 - uDark * 0.5);
 gSss = mix(vec3(1.0, 0.34, 0.22), vec3(0.75, 0.32, 0.22), uDark);
 gAoD = mix(1.0, ao, 0.45);
@@ -245,8 +266,12 @@ normal = bumpNormal(-vViewPosition, normal, H * 0.001, faceDirection);`)
   reflectedLight.indirectDiffuse *= ao * mix(vec3(1.0), vec3(1.12, 0.92, 0.88), (1.0 - ao) * 0.7);
   float dotNVo = saturate(dot(geometryNormal, geometryViewDir));
   reflectedLight.indirectSpecular *= computeSpecularOcclusion(dotNVo, ao, material.roughness);
+  // specular and sheen die in the creases where the fingers press together (bright specks there read as cracks)
+  float ao2 = ao * ao;
+  reflectedLight.directSpecular *= mix(1.0, ao2, 0.85);
   #ifdef USE_SHEEN
-  sheenSpecularIndirect *= ao;
+  sheenSpecularIndirect *= ao2;
+  sheenSpecularDirect *= ao2;
   #endif
   #ifdef USE_CLEARCOAT
   clearcoatSpecularIndirect *= ao;
@@ -265,9 +290,9 @@ function darkness(hex: number) {
 function veinUniform(v: number[]) {
   const out: THREE.Vector4[] = [];
   for (let i = 0; i < NV; i++) {
-    const b = i * 7;
-    if (b + 6 < v.length) { out.push(new THREE.Vector4(v[b], v[b + 1], v[b + 2], v[b + 6]), new THREE.Vector4(v[b + 3], v[b + 4], v[b + 5], 0)); }
-    else out.push(new THREE.Vector4(1e4, 1e4, 1e4, 1), new THREE.Vector4(1e4, 1e4, 1e4, 0));
+    const b = i * 10;
+    if (b + 9 < v.length) out.push(new THREE.Vector4(v[b], v[b + 1], v[b + 2], v[b + 6]), new THREE.Vector4(v[b + 3], v[b + 4], v[b + 5], 0), new THREE.Vector4(v[b + 7], v[b + 8], v[b + 9], 0));
+    else out.push(new THREE.Vector4(1e4, 1e4, 1e4, 1), new THREE.Vector4(1e4, 1e4, 1e4, 0), new THREE.Vector4(0, 1, 0, 0));
   }
   return out;
 }
@@ -297,10 +322,12 @@ export function nailMaterial(o: { tone: number; paint: number | null; quality: Q
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>\nvarying vec4 vNail; uniform vec3 uTone; uniform float uDark; uniform vec3 uPaint; uniform float uPainted;\n${NOISE}`)
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
-float s = vNail.x, w = vNail.y, freeAt = vNail.z, L = vNail.w;     // mm from the cuticle; -1..1 across
+float s = vNail.x, w = vNail.y, freeAt = vNail.z, L = abs(vNail.w);     // mm from the cuticle; -1..1 across
+float nRim = step(vNail.w, 0.0);                                      // the plate's cut edge
 float side = vNail.y;
 // the nail bed: pink over the skin tone; paler toward the free edge's line; the lunula at the base
-vec3 bed = mix(uTone * vec3(1.05, 0.78, 0.76), vec3(0.62, 0.36, 0.34), 0.35 + 0.25 * uDark);
+// (a little lighter and pinker than the skin round it, so the plate still registers a few pixels wide from the seat)
+vec3 bed = mix(uTone * vec3(1.08, 0.86, 0.84) + 0.035, vec3(0.74, 0.47, 0.45), 0.3 + 0.25 * uDark);
 bed = mix(bed, bed * vec3(1.06, 1.02, 1.0) + 0.03, smoothstep(freeAt - 2.0, freeAt, s) * 0.35);
 float lun = smoothstep(0.08, -0.08, length(vec2((s - 0.3) / (L * 0.2 + 0.6), w * 0.85)) - 1.0);
 bed = mix(bed, bed * vec3(1.12, 1.08, 1.06) + 0.05, lun * 0.55);
@@ -316,10 +343,13 @@ nc *= 0.96 + 0.06 * ridges;
 float coat = uPainted * smoothstep(0.35, 0.65, s);   // the polish wraps the free edge and the plate's sides
 vec3 pc = uPaint * (0.95 + 0.05 * vnoise(vec3(s * 0.8, w * 2.0, 3.0)));
 diffuseColor.rgb = mix(nc, pc, coat);
-float nailRough = mix(mix(0.32, 0.4, isFree), 0.12, coat);
+// the cut edge: the bed's colour at ~70%, matte (not a white crescent catching the sky)
+diffuseColor.rgb = mix(diffuseColor.rgb, mix(bed, pc, coat) * 0.7, nRim);
+float nailRough = mix(mix(mix(0.32, 0.4, isFree), 0.12, coat), 0.7, nRim);
 float nailH = mix(0.004 * ridges, 0.0, coat);
 `)
       .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = nailRough;')
+      .replace('#include <lights_physical_fragment>', '#include <lights_physical_fragment>\n#ifdef USE_CLEARCOAT\nmaterial.clearcoat *= 1.0 - 0.6 * nRim;\n#endif')
       .replace('#include <normal_fragment_maps>', '#include <normal_fragment_maps>\nnormal = bumpNormal(-vViewPosition, normal, nailH * 0.001, faceDirection);');
   };
   return m;

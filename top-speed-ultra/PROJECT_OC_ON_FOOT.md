@@ -251,6 +251,61 @@ bands), spatialised for the four nearest groups. Laughter, glass clinks and the 
 - **Level of detail.** Full animation within 15 m at 30 Hz, simpler within 40 m at 10 Hz, flat impostors beyond
   45 m. The impostors are rendered at load from our own puppet, in code.
 
+### The people builder (`src/onfoot/people/`, built; supersedes the puppet plan above up close)
+
+Every person is generated in code from one continuous body generator: no downloaded models, textures or scans, and no
+real person's likeness. Adults only (21 to 75).
+
+- **API** (`src/onfoot/people/index.ts`): `buildPerson(o: PersonOptions): Person` with `group`, `setExpression(name,
+  weight?)` (neutral, smile, laugh, playful, talking, listen, surprised), `say(line, seconds)` (drives the AA, EE, OO,
+  MM, FF visemes), `lookAt(target)` (eyes and head), `play('idle' | 'talk' | 'walk' | 'sit' | 'laugh' | 'turn')`,
+  `update(dt)`, `setLod(0 | 1 | 2)`, `eyes()`, `stats()`. Also `randomPerson(seed)`, `preset(name)` (16 presets,
+  `reference` is the red satin slip dress, gold hoops, fine chain, black quilted bag and loose updo), and
+  `lodFor(distance, quality)`.
+- **Bodies**: signed-distance primitives meshed into one smooth skin, skinned to a 26-bone skeleton. Continuous
+  parameters: height, heads-tall, fat, fat distribution (apple to pear, belly, softness), muscle, shoulder and hip
+  width, bust, posture, age. The lineup (`people-bodies.png`) runs from very thin to heavy, petite to 1.88 m, 24 to
+  75.
+- **Faces**: skull, brow ridge, cheekbones, nose, philtrum, lips and ears in the same field. Separate eyeballs (iris
+  with fibres, pupil, wet cornea), lofted lids that blink, lash and brow cards, teeth and tongue. Expressions are
+  morph targets on every head mesh.
+- **Clothes**: offset shells generated from each body (so they fit every size), clipped to necklines, hems and
+  sleeves, with satin, cotton, denim, leather and wool shading. Shoes, heels and boots, plus hoops, studs, chains,
+  watches, rings, glasses and bags.
+- **Hair**: a volume per style (updo, long, bob, short, curly, ponytail, receding, buzz, bald) with a strand shader,
+  plus strand cards with Kajiya-Kay highlights. Updos get face-framing locks.
+
+Measured on 14 October 2026 (SwiftShader, 960x540; triangles and draw calls from `renderer.info`; build times are
+desktop CPU, so a phone will be slower, by an amount not yet measured):
+
+| Level | Used for | High (desktop) | Phone |
+| --- | --- | --- | --- |
+| LOD 0 | the person you talk to, and the closest few on desktop | about 150k to 210k tris, 17 to 20 calls, 7 to 9.5 s build | 71k tris, 17 calls, 4.6 s build |
+| LOD 1 | patio distance | 11.6k tris, 1 call, 1.0 s build | 7.5k tris, 1 call, 0.71 s build |
+| LOD 2 | far crowd | not used inside 14 m | 1.5k tris, 1 call, 0.29 s build |
+
+A crowd of 30 (`view=crowd`): on phone quality it's 17 at LOD 1 and 13 at LOD 2. The whole scene, patio included,
+draws in 53 calls and 152k triangles, inside the phone budget below. Animating all 30 costs 0.7 ms a frame. On high
+quality it's 2 at LOD 0 and 28 at LOD 1: 89 calls and 748k triangles, just over the High triangle budget.
+(Measured 2026-10-14 in headless Chromium with SwiftShader at 960x540; build times are desktop CPU.)
+
+Where it falls short (candidly):
+- It looks like a game conversation scene, not a photograph. The faces read as people with expressions (neutral,
+  smile, a wink with a dark lash line on the closed lid, talking) but still look like CG: skin is smooth, faces are
+  long and a little mannequin-like, and in the front conversation shot the updo reads as a sleek cap (the bun shows
+  from three-quarter and behind, not from the front). The teeth now sit with an overbite and the lower row hidden,
+  but a talking mouth still shows a narrow pale band rather than individual teeth.
+- Clothes are offset shells: a big belly in a tee hangs as a smooth bell, with no wrinkles finer than the waist and
+  elbow folds.
+- The bodies lineup shows thin to obese, but at fat 1 the build is a hand-tuned soft limit on the belly; heavier
+  presets were checked walking (people-walk-obese.png: arms clear of the belly, the tee follows) but not sitting since
+  that change; the tee's back shows a dark yoke line across the shoulder blades.
+- Phone LOD 0 is 71k triangles, about 18% over the 60k target.
+- NPCs aren't instanced: each one is its own skinned mesh, so it's one draw call per person (30 for 30), not the 16
+  for every NPC planned below.
+- Building people is slow. 30 people took about 15 s on a desktop CPU, so the game must build them over several frames or
+  in a worker, cache them, and start from far LODs. None of that is built yet.
+
 ### Groups that look like they're talking
 
 A conversation is a small state machine per group of two to six:

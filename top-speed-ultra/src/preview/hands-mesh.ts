@@ -174,6 +174,57 @@ export function meshField(field: Field, box: Box, h: number): MeshOut {
     const gl = Math.hypot(gx, gy, gz) || 1;
     N32[v * 3] = gx / gl; N32[v * 3 + 1] = gy / gl; N32[v * 3 + 2] = gz / gl;
   }
+  // ---- 5. each quad's diagonal again, now that its corners lie on the surface: the split chosen on the cell
+  // centres can fold once the corners are projected, and a folded triangle faces away and is culled - a pinhole that
+  // shows the background as a dark speck a pixel wide. Keep the split whose two triangles both face along the normals.
+  {
+    const P = P32, N = N32;
+    const facing = (a: number, b: number, c: number) => {
+      const ux = P[b * 3] - P[a * 3], uy = P[b * 3 + 1] - P[a * 3 + 1], uz = P[b * 3 + 2] - P[a * 3 + 2];
+      const vx = P[c * 3] - P[a * 3], vy = P[c * 3 + 1] - P[a * 3 + 1], vz = P[c * 3 + 2] - P[a * 3 + 2];
+      const fx = uy * vz - uz * vy, fy = uz * vx - ux * vz, fz = ux * vy - uy * vx, fl = Math.hypot(fx, fy, fz);
+      if (fl < 1e-12) return 0;
+      const nx = N[a * 3] + N[b * 3] + N[c * 3], ny = N[a * 3 + 1] + N[b * 3 + 1] + N[c * 3 + 1], nz = N[a * 3 + 2] + N[b * 3 + 2] + N[c * 3 + 2];
+      return (fx * nx + fy * ny + fz * nz) / (fl * (Math.hypot(nx, ny, nz) || 1));
+    };
+    for (let t = 0; t + 5 < tris.length; t += 6) {
+      const q0 = tris[t], q1 = tris[t + 1], q2 = tris[t + 2], q3 = tris[t + 5];
+      const sA = Math.min(facing(q0, q1, q2), facing(q0, q2, q3)), sB = Math.min(facing(q1, q2, q3), facing(q1, q3, q0));
+      if (sB > sA + 1e-3) { tris[t] = q1; tris[t + 1] = q2; tris[t + 2] = q3; tris[t + 3] = q1; tris[t + 4] = q3; tris[t + 5] = q0; }
+      else { tris[t] = q0; tris[t + 1] = q1; tris[t + 2] = q2; tris[t + 3] = q0; tris[t + 4] = q2; tris[t + 5] = q3; }
+    }
+  }
+  // ---- 6. relax the outliers: a vertex standing off its ring (a spike or a pit where two blends meet in a sharp
+  // crease) or whose normal disagrees with its neighbours' shades as a dark speck a pixel wide from the seat. Move it
+  // toward its ring's centre and blend its normal with theirs; the rest of the surface is left exactly as meshed.
+  {
+    const P = P32, N = N32, deg = new Uint16Array(nv);
+    for (let t = 0; t < tris.length; t++) deg[tris[t]] += 2;
+    const off = new Uint32Array(nv + 1);
+    for (let v = 0; v < nv; v++) off[v + 1] = off[v] + deg[v];
+    const nbr = new Uint32Array(off[nv]), fill = off.slice(0, nv);
+    for (let t = 0; t < tris.length; t += 3) for (let e = 0; e < 3; e++) {
+      const a = tris[t + e], b = tris[t + (e + 1) % 3];
+      nbr[fill[a]++] = b; nbr[fill[b]++] = a;
+    }
+    for (let pass = 0; pass < 2; pass++) {
+      for (let v = 0; v < nv; v++) {
+        const n0 = off[v], n1 = off[v + 1], k = n1 - n0;
+        if (!k) continue;
+        let cx = 0, cy = 0, cz = 0, sx = 0, sy = 0, sz = 0;
+        for (let j = n0; j < n1; j++) { const u = nbr[j]; cx += P[u * 3]; cy += P[u * 3 + 1]; cz += P[u * 3 + 2]; sx += N[u * 3]; sy += N[u * 3 + 1]; sz += N[u * 3 + 2]; }
+        cx /= k; cy /= k; cz /= k;
+        const sl = Math.hypot(sx, sy, sz) || 1, nx = N[v * 3], ny = N[v * 3 + 1], nz = N[v * 3 + 2];
+        const c = (sx * nx + sy * ny + sz * nz) / sl;
+        const hgt = (P[v * 3] - cx) * nx + (P[v * 3 + 1] - cy) * ny + (P[v * 3 + 2] - cz) * nz;
+        if (c > 0.92 && Math.abs(hgt) < 0.35 * h) continue;
+        const w = c < 0.8 || Math.abs(hgt) > 0.5 * h ? 0.6 : 0.35;
+        P[v * 3] += (cx - P[v * 3]) * w; P[v * 3 + 1] += (cy - P[v * 3 + 1]) * w; P[v * 3 + 2] += (cz - P[v * 3 + 2]) * w;
+        const mx = nx * (1 - w) + (sx / sl) * w, my = ny * (1 - w) + (sy / sl) * w, mz = nz * (1 - w) + (sz / sl) * w, ml = Math.hypot(mx, my, mz) || 1;
+        N[v * 3] = mx / ml; N[v * 3 + 1] = my / ml; N[v * 3 + 2] = mz / ml;
+      }
+    }
+  }
   const ms = performance.now() - t0;
   return { pos: P32, nrm: N32, idx: Uint32Array.from(tris), vblock: Int32Array.from(vb), act, stats: { blocks: nb, near: nNear, evals, verts: nv, tris: tris.length / 3, ms, phases: [tB - t0, tR - tB, tC - tR, performance.now() - tC].map(Math.round), avgAct: Math.round(act.reduce((s, a) => s + (a ? a.length : 0), 0) / Math.max(1, nNear)) } };
 }

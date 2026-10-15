@@ -109,6 +109,11 @@ const wheelA = Number(q.get('wheel') ?? 0);
 arms.setWheelAngle(wheelA); spin.rotation.z = wheelA;
 // debugging: ?hide=nails (or any part's name) hides that part
 const hide = q.get('hide');
+if (q.has('noshadow')) env.sun.castShadow = false;           // debugging: are specks the shadow map's?
+if (q.has('skindbg')) arms.group.traverse((o) => {          // debugging: switch skin shader terms off
+  const m = (o as THREE.Mesh).material as THREE.Material & { userData: { uniforms?: Record<string, { value: number }> } };
+  if (o.name === 'skin' && m) { const ob = m.onBeforeCompile; m.onBeforeCompile = (sh, r) => { ob.call(m, sh, r); sh.uniforms.uDbg.value = Number(q.get('skindbg')); }; m.needsUpdate = true; }
+});
 if (hide) arms.group.traverse((o) => { if (o.name === hide) o.visible = false; });
 
 // ---- camera

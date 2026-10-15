@@ -138,7 +138,7 @@ export function buildPerson(o: PersonOptions): Person {
     return gone;
   };
   const clothMesh = (gb: GarmentBuild) => {
-    const h = gb.h * (quality === 'high' ? 1 : 1.35);
+    const h = gb.h * (quality === 'high' ? 1 : 1.6);
     const sdf = gb.sdf, A = sdf.A, X = sdf.X;
     const { mesh } = meshPart(sdf, aabbBox(gb.box[0], gb.box[1], h), h);
     // clip the shell to the garment's region: exact edges along the hems, sleeves, necklines and straps
@@ -242,7 +242,7 @@ export function buildPerson(o: PersonOptions): Person {
     const hb = getHair();
     if (!hb) return [];
     const th = performance.now();
-    const h = quality === 'high' ? 0.0042 : 0.0058;
+    const h = quality === 'high' ? 0.0042 : 0.0068;
     const { mesh } = meshPart(hb.sdf, aabbBox(hb.box[0], hb.box[1], h), h);
     const cl = clipByRegion(mesh.pos, mesh.nrm, mesh.idx, (x, y, z) => hb.sdf.keep(x, y, z));
     const act = (v: number) => mesh.act[mesh.vblock[cl.src[v]]];
@@ -308,7 +308,7 @@ export function buildPerson(o: PersonOptions): Person {
   const buildLod0 = () => {
     const G = new THREE.Group();
     const tb = performance.now();
-    const hBody = quality === 'high' ? 0.012 : 0.016, hHead = quality === 'high' ? 0.0027 : 0.0038, hHand = quality === 'high' ? 0.0052 : 0.0068;
+    const hBody = quality === 'high' ? 0.012 : 0.018, hHead = quality === 'high' ? 0.0027 : 0.0041, hHand = quality === 'high' ? 0.0052 : 0.0068;
     const wr = rig.wrist;
     // ---- the body, minus the head and hands
     // the wrist seams are planes across the forearm: they only apply within a cylinder round the forearm's axis
@@ -378,8 +378,10 @@ export function buildPerson(o: PersonOptions): Person {
       pos[v * 3] = b[0]; pos[v * 3 + 1] = b[1]; pos[v * 3 + 2] = b[2];
       nrm[v * 3] = lg.attributes.normal.getX(i); nrm[v * 3 + 1] = lg.attributes.normal.getY(i); nrm[v * 3 + 2] = lg.attributes.normal.getZ(i);
       si[v * 4] = B.head; sw[v * 4] = 1;
-      aSkin[v * 4] = 0.35; aSkin[v * 4 + 2] = lids.ao[i]; aSkin[v * 4 + 3] = 0.2;
-      aFace[v * 4 + 2] = 0.6 + 0.4 * lids.liner[i];
+      // the lid takes the skin masks of where it sits (a fixed redness and thinness made a closed lid a pale pink disc)
+      const lm = faceMasks(lids.pos[i], hf, o.look);
+      aSkin[v * 4] = lm.red; aSkin[v * 4 + 2] = lids.ao[i]; aSkin[v * 4 + 3] = Math.min(lm.thin, 0.08);
+      aFace[v * 4] = lm.blush; aFace[v * 4 + 2] = lids.liner[i] > 1 ? lids.liner[i] : 0.6 + 0.4 * lids.liner[i];   // >1 = the dark lash line aMisc[v * 4 + 2] = lm.wrink;
     }
     const idx = new Uint32Array(head.idx.length + lids.idx.length);
     idx.set(head.idx); idx.set(lids.idx.map((v) => v + nh), head.idx.length);

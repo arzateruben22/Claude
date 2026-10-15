@@ -102,9 +102,10 @@ float pix = length(fwidth(hp));
 float fine = smoothstep(0.9, 0.25, pix);
 float mid = smoothstep(3.5, 0.9, pix);
 float red = vSkin.x, lip = vSkin.y, ao = vSkin.z, thin = vSkin.w;
-float blush = vFace.x, beard = vFace.y, eyeA = vFace.z, mouth = vFace.w;
+float blush = vFace.x, beard = vFace.y, eyeA = min(vFace.z, 1.0), mouth = vFace.w, lashL = clamp(vFace.z - 1.0, 0.0, 1.0);
 float tat = vMisc.x, scalp = vMisc.y, wrink = vMisc.z, fz = vMisc.w;
 vec3 c = pow(uTone, vec3(1.12)) * 0.8;
+c = mix(vec3(dot(c, vec3(0.3, 0.59, 0.11))), c, 0.86);   // real skin is less saturated than a paint chip
 float m1 = vnoise(hp * 0.05) - 0.5, m2 = vnoise(hp * 0.17 + 7.1) - 0.5, m3 = vnoise(hp * 0.8 + 3.3) - 0.5;
 c *= 1.0 + 0.06 * m1 + 0.045 * m2 + 0.02 * m3;
 c = mix(c, c * vec3(1.05, 0.93, 0.9), clamp(m1 * 1.6 + 0.4, 0.0, 1.0) * 0.3);
@@ -133,7 +134,9 @@ c = mix(c, lipC, lipM);
 // blush
 c = mix(c, c * vec3(1.08, 0.86, 0.84), blush * uBlush * (1.0 - uDark * 0.5));
 // eyes: a touch of shadow and liner close to the lids; under-eye shadow with age
-c *= 1.0 - eyeA * (0.08 + 0.12 * uAge + 0.25 * uLiner * (1.0 - uMale));
+c *= 1.0 - eyeA * (0.17 + 0.12 * uAge + 0.22 * uLiner * (1.0 - uMale));   // lids are more pigmented than the cheek
+c = mix(c, c * vec3(0.97, 0.92, 0.93), eyeA * 0.6);
+c = mix(c, vec3(0.035, 0.026, 0.024), lashL);   // the lash line along each lid margin: what makes an eye read at a distance
 // stubble and beard shadow
 float stub = 0.0;
 #ifdef SKIN_FACE
@@ -189,8 +192,9 @@ H += stub * 0.03 * fine;
 float rough = 0.47 - 0.12 * red * (1.0 - uDark * 0.3) + 0.05 * (1.0 - fine) + 0.03 * m3;
 rough = mix(rough, mix(0.42, 0.3, uLipAmt), lipM);
 rough = mix(rough, 0.22, smoothstep(0.2, 0.8, mouth));
+rough += 0.12 * eyeA;   // a matte lid: no env sheen turning a closed lid into a pale disc
 rough = mix(rough, 0.62, clamp(stub, 0.0, 1.0) * 0.6);
-rough = mix(rough, 0.7, smoothstep(0.1, 0.8, scalp));
+rough = mix(rough, 0.85, smoothstep(0.1, 0.8, scalp));   // a buzz cut is matte, never a polished dome
 gThin = thin * (1.0 - uDark * 0.5);
 gSss = mix(vec3(1.0, 0.36, 0.24), vec3(0.78, 0.34, 0.24), uDark);
 gAoD = mix(1.0, ao, 0.5);

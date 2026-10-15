@@ -82,12 +82,15 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
       const d = Math.min(f.eval(q[0], q[1], q[2], a, na), rimSdfG(q[0], q[1], q[2]));
       occ += w * Math.max(0, (s - d) / s); w *= 0.6;
     }
-    const ao = Math.max(0.3, Math.min(1, 1 - occ * 0.55));   // per vertex at 2-3 mm: kept soft, or the creases smear
+    const aoRaw = Math.min(1, 1 - occ * 0.55);
     // nearest finger bone
     let bd = 1e9, bi = -1;
     for (let i = 0; i < bones.length; i++) { const d = segDist(p, bones[i].a, bones[i].b); if (d < bd) { bd = d; bi = i; } }
     const along = dot(sub(p, A.wrist), A.foreDir);
     const onFinger = bi >= 0 && bd < 13 ? 1 - Math.max(0, Math.min(1, (bd - 9) / 4)) : 0;
+    // per vertex at 2-3 mm the occlusion is kept soft (or the creases smear), and the back of the hand never goes
+    // darker than ~0.6 (single dark vertices read as dirt or stubble from the seat); the creases between fingers may
+    const ao = Math.max(0.62 - 0.2 * onFinger, aoRaw);
     // the back of the hand turns smoothly into the back of the forearm, and into each finger's back
     const handUp = norm(lerp3(dN, A.foreUp, Math.max(0, Math.min(1, (along + 5) / 40))));
     const upDir = bi >= 0 ? norm(lerp3(handUp, bones[bi].up, onFinger)) : handUp;
@@ -95,10 +98,10 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
     // redness: knuckles, finger joints' backs, fingertips; the palm side of the fingers is pinker too
     let red = 0;
     for (let i = 0; i < 4; i++) {
-      red = Math.max(red, g3(len(sub(p, knuckles[i])), 9) * 0.75, g3(len(sub(p, pips[i])), 7.5) * 0.65 * Math.max(0, dot(n, A.digits[i].dorsal[0]) + 0.3), g3(len(sub(p, dips[i])), 6) * 0.5);
+      red = Math.max(red, g3(len(sub(p, knuckles[i])), 9) * 0.45, g3(len(sub(p, pips[i])), 7.5) * 0.35 * Math.max(0, dot(n, A.digits[i].dorsal[0]) + 0.3), g3(len(sub(p, dips[i])), 6) * 0.35);
     }
-    for (const t of tips) red = Math.max(red, g3(len(sub(p, t)), 9) * 0.8);
-    red = Math.max(red, palmar * onFinger * 0.5);
+    for (const t of tips) red = Math.max(red, g3(len(sub(p, t)), 9) * 0.6);
+    red = Math.max(red, palmar * onFinger * 0.3);
     const thin = onFinger * (bi >= 0 ? bones[bi].thin : 0);
     skin.set([red, palmar, ao, thin], v * 4);
     // the nearest joint's crease coordinates

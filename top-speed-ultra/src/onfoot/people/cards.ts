@@ -88,7 +88,11 @@ export function browTexture() {
 }
 
 export function hairLights(strength = 1) {
+  // hair is not a GGX surface: the standard lobe and the environment's grazing reflection (a silver rim on dark hair)
+  // are cut down; the Kajiya-Kay lobes below carry the highlights, the secondary one coloured by the hair
   return THREE.ShaderChunk.lights_physical_pars_fragment
+    .replace('reflectedLight.directSpecular += irradiance * BRDF_GGX( directLight.direction, geometryViewDir, geometryNormal, material );', 'reflectedLight.directSpecular += irradiance * BRDF_GGX( directLight.direction, geometryViewDir, geometryNormal, material ) * 0.15;')
+    .replace('reflectedLight.indirectSpecular += radiance * singleScattering;', 'reflectedLight.indirectSpecular += radiance * singleScattering * 0.3;')
     .replace('void RE_Direct_Physical(', 'vec3 gHairT = vec3(0.0, 1.0, 0.0); vec3 gHairSpec = vec3(1.0); float gHairShift = 0.0;\nvoid RE_Direct_Physical(')
     .replace('reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );', /* glsl */ `
 	reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );
@@ -99,8 +103,10 @@ export function hairLights(strength = 1) {
 	  float th1 = dot( T1, Hh ), th2 = dot( T2, Hh );
 	  float s1 = pow( sqrt( max( 0.0, 1.0 - th1 * th1 ) ), 48.0 );
 	  float s2 = pow( sqrt( max( 0.0, 1.0 - th2 * th2 ) ), 14.0 );
-	  float wrap = saturate( dot( geometryNormal, directLight.direction ) * 0.5 + 0.5 );
-	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.12 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.12 * strength).toFixed(3)} * material.diffuseColor );
+	  // lights on the far side of the head must not light the hair (a half-wrap let the string lights in front turn dark hair
+	  // silver-beige from behind)
+	  float wrap = smoothstep( -0.1, 0.55, dot( geometryNormal, directLight.direction ) );
+	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.12 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.45 * strength).toFixed(3)} * sqrt( material.diffuseColor ) );
 	}`);
 }
 
@@ -121,7 +127,7 @@ export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality
     Object.assign(sh.uniforms, u);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', '#include <common>\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uShift;')
-      .replace('#include <lights_physical_pars_fragment>', kk ? hairLights() : THREE.ShaderChunk.lights_physical_pars_fragment)
+      .replace('#include <lights_physical_pars_fragment>', kk ? hairLights(0.8) : THREE.ShaderChunk.lights_physical_pars_fragment)
       .replace('#include <map_fragment>', /* glsl */ `
 vec4 st = texture2D( map, vMapUv );
 float hsh = fract(sin(floor(vMapUv.x * 220.0) * 12.9898) * 43758.5453);
@@ -137,7 +143,7 @@ diffuseColor.a = st.a;`)
   vec2 dux = dFdx( vMapUv ), duy = dFdy( vMapUv );
   vec3 t = dpx * duy.y - dpy * dux.y;
   gHairT = normalize( t - normal * dot( t, normal ) + 1e-6 );
-  gHairSpec = mix( vec3(1.0, 0.95, 0.9), diffuseColor.rgb * 3.0, 0.25 ) * ${(o.sheen ?? 1).toFixed(3)};
+  gHairSpec = mix( vec3(1.0, 0.95, 0.9), diffuseColor.rgb * 3.0, 0.55 ) * ${(o.sheen ?? 1).toFixed(3)};
   gHairShift = uShift;
 }
 #include <lights_fragment_begin>`);

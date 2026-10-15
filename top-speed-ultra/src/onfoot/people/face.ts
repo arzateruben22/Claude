@@ -118,8 +118,8 @@ export function morphDeltas(pos: Float32Array, hf: HeadFrame, o: { jawW?: (v: nu
 
 // ------------------------------------------------------------------------------------------------ eyelids
 export interface LidState { blink: number; squint: number }
-const UP_ROWS: [number, number][] = [[0.003, 0.01212], [0.0004, 0.01222], [0, 0.0128], [0.00025, 0.01335], [0.0012, 0.0134], [0.0025, 0.0134], [0.004, 0.01338], [0.0058, 0.01332], [0.0078, 0.0131], [0.0095, 0.0127]];
-const LO_ROWS: [number, number][] = [[0.0025, 0.01212], [0.0003, 0.01222], [0, 0.0128], [0.0002, 0.0133], [0.0012, 0.01335], [0.0028, 0.0133], [0.0048, 0.0131], [0.0065, 0.0127]];
+const UP_ROWS: [number, number][] = [[0.003, 0.01212], [0.0004, 0.01222], [0, 0.0128], [0.00025, 0.01335], [0.0012, 0.0134], [0.0025, 0.0134], [0.004, 0.01338], [0.0058, 0.01336], [0.0078, 0.01332], [0.0095, 0.01318]];   // the outer rows lie on the socket skin (a tucked edge left a dark ring)
+const LO_ROWS: [number, number][] = [[0.0025, 0.01212], [0.0003, 0.01222], [0, 0.0128], [0.0002, 0.0133], [0.0012, 0.01335], [0.0028, 0.01333], [0.0048, 0.01325], [0.0065, 0.01308]];
 const LID_COLS = 26;
 const bump = (u: number, peak: number, pw: number) => { const w = u < peak ? 0.5 * u / peak : 0.5 + 0.5 * (u - peak) / (1 - peak); return Math.pow(Math.max(0, Math.sin(Math.PI * clamp(w))), pw); };
 
@@ -174,8 +174,8 @@ export function buildLids(hf: HeadFrame): LidData {
     const P = lidPoints(hf, side, upper, base);
     pos.push(...P);
     // the upper lid a shade darker than the brow skin, with a crease line under the fold (a closed lid reads as a lid)
-    const UPAO = [0.35, 0.35, 0.55, 0.65, 0.72, 0.78, 0.8, 0.72, 0.6, 0.82];
-    rows.forEach(([dy], ri) => { for (let c = 0; c < LID_COLS; c++) { ao.push(upper ? UPAO[ri] : ri < 2 ? 0.35 : ri < 4 ? 0.7 : 0.95); liner.push(ri >= 2 && ri <= 4 ? 1 : ri === 5 ? 0.5 : 0); void dy; } });
+    const UPAO = [0.28, 0.32, 0.47, 0.54, 0.6, 0.64, 0.68, 0.66, 0.6, 0.82];   // a closed lid must not read as a pale patch
+    rows.forEach(([dy], ri) => { for (let c = 0; c < LID_COLS; c++) { ao.push(upper ? UPAO[ri] : ri < 2 ? 0.35 : ri < 4 ? 0.7 : 0.95); liner.push((ri === 2 || ri === 3) ? (upper ? 1.85 : 1.35) : ri === 4 ? 1 : ri === 5 ? 0.5 : 0); void dy; } });   // liner > 1 = the dark lash line
     // morphs: blink and squint of this eye are parametric
     const bName = side > 0 ? 'blinkL' : 'blinkR', sName = side > 0 ? 'squintL' : 'squintR';
     for (const [name, st] of [[bName, { blink: 1, squint: 0 }], [sName, { blink: 0, squint: 1 }]] as const) {
@@ -221,7 +221,9 @@ function lashRows(hf: HeadFrame, side: number, upper: boolean, st: LidState, lay
     const z = zOn(m.x, y, r);
     const root: V3 = [m.x, y, z];
     const radial = norm([m.x * 0.6, y, z]);
-    const upv: V3 = upper ? [0, 1, 0] : [0, -1, 0];
+    // a closing upper lid rolls its margin down, so its lashes end up pointing down along the closed lid (not dots on it)
+    const bl = upper ? Math.max(st.blink, 0) : 0;
+    const upv: V3 = upper ? norm([0, 1 - 1.9 * bl, 0.35 * bl]) : [0, -1, 0];
     const lat: V3 = [1, 0, 0];
     const L = lenMax * (0.45 + 0.55 * bump(u, upper ? 0.62 : 0.6, 0.7));
     const d0 = norm(add(add(mul(radial, 0.8), mul(upv, 0.2)), mul(lat, upper ? 0.15 * (u - 0.4) : 0.1 * (u - 0.5))));
@@ -310,14 +312,14 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
       T.forEach(([hw, hh, ht], i) => {
         const w = (lower ? [0.0028, 0.0031, 0.0034, 0.0035, 0.0035][i] : hw) * s;
         const cx = x + w;
-        x = cx + w * 0.9;
-        const zc = arch(cx) - (lower ? 0.0024 : 0) - ht;
-        const yEdge = lower ? mY + 0.0007 : mY - 0.0007;
+        x = cx + w * 0.85;
+        const zc = arch(cx) - (lower ? 0.0036 : 0) - ht;   // overjet: the lower row sits behind the upper
+        const yEdge = lower ? mY - 0.0011 : mY - 0.0007;   // overbite: the lower lip covers the lower edges
         const cy = lower ? yEdge - hh * 0.5 : yEdge + hh * 0.5;
         const dx = 27 * 2 * cx;
         const ax = norm([1, 0, -dx]);
         // rounded boxes: flat incisal edges and a continuous row with shallow grooves between the crowns
-        f.box([side * cx, cy, zc], [side * ax[0], 0, ax[2]], [0, 1, 0], w * 0.97, hh * 0.5 * s, ht * s * 0.8, 0.0011, 0, 0.0012, lower ? 1 : 0);
+        f.box([side * cx, cy, zc], [side * ax[0], 0, ax[2]], [0, 1, 0], w * 0.99, hh * 0.5 * s, ht * s * 0.8, 0.0006, 0, 0.0042, lower ? 1 : 0);
       });
     }
     // the gum line
@@ -331,8 +333,10 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
   f.finalize();
   // mesh in head-local, then place
   // fine enough to keep the crowns' flat edges and the grooves between them (a coarse grid made them into pegs)
-  const h = quality === 'high' ? 0.0008 : 0.0012;
-  const box = { o: [-0.03, mY - 0.02, zF - 0.048] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.06 / h), ny: Math.ceil(0.04 / h), nz: Math.ceil(0.056 / h) };
+  const h = quality === 'high' ? 0.0008 : 0.0015;
+  // phone: only the front of the mouth (what a talking mouth shows); the back of the tongue and the molars are cut off
+  const zBack = quality === 'high' ? 0.048 : 0.026;
+  const box = { o: [-0.03, mY - 0.02, zF - zBack] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.06 / h), ny: Math.ceil(0.04 / h), nz: Math.ceil((zBack + 0.008) / h) };
   const mesh = meshField(f, box, h);
   const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3), lowerW = new Float32Array(nv);
   const bd = new Float64Array(2);
@@ -346,10 +350,10 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
     const gum = lowerW[v] ? clamp((mY - 0.0063 - y) / 0.0016) : clamp((y - mY - 0.0063) / 0.0016);
     const tongue = Math.abs(z - (zF - 0.022)) < 0.024 && y < mY - 0.002 && z < zF - 0.004 && x * x / 0.019 ** 2 + ((y - mY + 0.0075) / 0.0062) ** 2 + ((z - zF + 0.022) / 0.022) ** 2 < 1.25 ? 1 : 0;
     const depth = smooth(zF - 0.03, zF - 0.002, z);
-    let c: V3 = [0.76, 0.72, 0.63];   // teeth are ivory, never paper white
+    let c: V3 = [0.86, 0.77, 0.6];   // teeth are ivory, never paper white
     c = [lerp(c[0], 0.72, gum), lerp(c[1], 0.36, gum), lerp(c[2], 0.38, gum)];
     if (tongue) c = [0.62, 0.3, 0.3];
-    const sh = 0.18 + 0.7 * depth;
+    const sh = (0.3 + 0.72 * depth) * (lowerW[v] ? 0.7 : 1);   // the lower row sits in the lip's shadow
     col[v * 3] = c[0] * sh; col[v * 3 + 1] = c[1] * sh; col[v * 3 + 2] = c[2] * sh;
   }
   // body frame
@@ -361,7 +365,7 @@ export function buildTeeth(hf: HeadFrame, quality: Quality) {
     N[v * 3] = n[0]; N[v * 3 + 1] = n[1]; N[v * 3 + 2] = n[2];
   }
   const deltas = morphDeltas(P, hf, { jawW: (v) => lowerW[v], only: [MI.jawOpen] });
-  const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.28, clearcoat: 0.4, clearcoatRoughness: 0.2, envMapIntensity: 0.6 });
+  const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.55, specularIntensity: 0.4, envMapIntensity: 0.1 });   // no grey-metal band
   return { pos: P, nrm: N, idx: mesh.idx, col, deltas, mat };
 }
 
@@ -416,7 +420,7 @@ if (o.z > 9.3 && rho < irisR + 0.25) {
 } else {
   // sclera: off-white, warmer and veined toward the corners, shaded where the lids hang over it
   float side = smoothstep(4.0, 11.0, abs(o.x));
-  c = vec3(0.66, 0.64, 0.63) * (0.94 + 0.06 * vnoise(o * 0.8));
+  c = vec3(0.6, 0.575, 0.555) * (0.94 + 0.06 * vnoise(o * 0.8));
   float vein = smoothstep(0.92, 1.0, 1.0 - abs(vnoise(o * vec3(0.6, 1.4, 0.6)) - 0.5) * 2.0) * side;
   c = mix(c, vec3(0.75, 0.32, 0.3), vein * 0.5 + side * 0.12);
   c *= mix(1.0, 0.5, smoothstep(9.0, 2.0, o.z));

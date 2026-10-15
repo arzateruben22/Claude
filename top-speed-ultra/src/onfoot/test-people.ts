@@ -6,9 +6,9 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { buildPerson, Person, preset, PresetName, randomPerson, PersonOptions } from './people';
+import { buildPerson, Person, preset, PresetName, randomPerson, PersonOptions, PRESETS, lodFor } from './people';
 
-declare global { interface Window { __stage?: { info(): unknown }; __previewReady?: boolean; __previewError?: string; __people?: unknown } }
+declare global { interface Window { __previewReady?: boolean; __previewError?: string; __people?: unknown } }
 addEventListener('error', (e) => { window.__previewError = String(e.message || e); });
 addEventListener('unhandledrejection', (e) => { window.__previewError = String((e as PromiseRejectionEvent).reason); });
 
@@ -35,7 +35,7 @@ const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.05, 2
 let frameMs = 0;
 const info = () => ({ calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, programs: renderer.info.programs?.length ?? 0, frameMs, ...extra });
 const extra: Record<string, unknown> = {};
-window.__stage = { info };
+(window as unknown as { __stage: { info(): unknown } }).__stage = { info };   // (typed locally: src/preview declares its own)
 renderer.info.autoReset = false;
 
 function studio() {
@@ -141,7 +141,8 @@ async function main() {
   // let the page finish loading first: building people is heavy, synchronous work
   await new Promise((r) => setTimeout(r, 50));
   const people: Person[] = [];
-  let render = () => renderer.render(scene, camera);
+  // one frame's numbers (the page renders three frames; info.autoReset is off for the composer views)
+  let render = () => { renderer.info.reset(); renderer.render(scene, camera); };
   if (view === 'bodies' || view === 'clothes') {
     studio();
     if (view === 'clothes') { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new RoomEnvironment(renderer), 0.04).texture; }
@@ -248,6 +249,52 @@ async function main() {
     camera.fov = 34; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
     camera.position.copy(cam); camera.lookAt(0.1, 1.05, -0.4);
   }
+  if (view === 'crowd') {
+    // a busy night: n people in small groups across the patio, LOD by distance (people/budget.ts), the camera at a
+    // third-person height. Reports draw calls, triangles and build time by LOD.
+    const P = patio();
+    P.table(2.4, -2.2); P.chair(2.4, -2.75, 0); P.chair(2.4, -1.65, Math.PI);
+    const n = Number(q.get('n') ?? 30);
+    const cam = new THREE.Vector3(0.4, 1.75, 6.5);
+    let sd = 12345; const rnd = () => ((sd = (sd * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+    const opts = (i: number): PersonOptions => (i < PRESETS.length ? preset(PRESETS[i]) : randomPerson(100 + i));
+    const spots: { o: PersonOptions; x: number; z: number; ry: number; anim: 'idle' | 'talk' | 'sit' | 'laugh'; look?: number }[] = [];
+    spots.push({ o: opts(0), x: 2.4, z: -2.75, ry: 0, anim: 'sit', look: 1 }, { o: opts(1), x: 2.4, z: -1.65, ry: Math.PI, anim: 'sit', look: 0 });
+    let gi = 0;
+    while (spots.length < n) {
+      const k = Math.min(n - spots.length, 2 + Math.floor(rnd() * 3));
+      const col = gi % 4, row = Math.floor(gi / 4);
+      const cx = -4.6 + col * 3.0 + (rnd() - 0.5) * 1.0 - (row % 2) * 1.2, cz = 2.6 - row * 3.2 + (rnd() - 0.5) * 0.8;
+      const rad = 0.5 + 0.12 * k, a0 = rnd() * 6.28, first = spots.length;
+      for (let j = 0; j < k; j++) {
+        const a = a0 + (j / k) * 6.28, x = cx + Math.sin(a) * rad, z = cz + Math.cos(a) * rad;
+        spots.push({ o: opts(spots.length), x, z, ry: faceTo(x, z, cx, cz), anim: j === 0 ? 'talk' : rnd() < 0.2 ? 'laugh' : rnd() < 0.5 ? 'talk' : 'idle', look: j === 0 ? first + 1 : first });
+      }
+      gi++;
+    }
+    const byLod: Record<number, { n: number; ms: number; tris: number; calls: number }> = { 0: { n: 0, ms: 0, tris: 0, calls: 0 }, 1: { n: 0, ms: 0, tris: 0, calls: 0 }, 2: { n: 0, ms: 0, tris: 0, calls: 0 } };
+    const t0 = performance.now();
+    for (const s2 of spots) {
+      const d = Math.hypot(s2.x - cam.x, s2.z - cam.z);
+      s2.o.quality = quality; s2.o.lod = lodFor(d, quality);
+      const tb = performance.now();
+      const p = buildPerson(s2.o);
+      const st = p.stats(), b = byLod[st.lod];
+      b.n++; b.ms += performance.now() - tb; b.tris += st.tris; b.calls += st.calls;
+      p.group.position.set(s2.x, 0, s2.z); p.group.rotation.y = s2.ry;
+      p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) m.castShadow = true; });
+      scene.add(p.group); p.play(s2.anim); people.push(p);
+    }
+    spots.forEach((s2, i) => { if (s2.look !== undefined && people[s2.look]) people[i].lookAt(people[s2.look].eyes()); });
+    extra.buildMs = Math.round(performance.now() - t0);
+    for (const k of [0, 1, 2]) { const b = byLod[k]; b.ms = Math.round(b.n ? b.ms / b.n : 0); }
+    extra.crowd = { n: spots.length, quality, perLod: byLod, note: 'perLod.ms = mean build ms per person; tris/calls summed' };
+    const tu = performance.now();
+    for (let k = 0; k < 45; k++) for (const p of people) p.update(1 / 30);
+    extra.updateMsPerFrame = +((performance.now() - tu) / 45).toFixed(2);
+    camera.fov = 50; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    camera.position.copy(cam); camera.lookAt(0, 1.0, -2.5);
+  }
   if (view === 'talk') {
     // the first-person conversation shot: about 1 m, face and shoulders, warm string-light key, shallow focus
     patio({ lights: false });
@@ -297,10 +344,11 @@ async function main() {
     let z = 1.2;
     for (let k = 0; k < Number(q.get('steps') ?? 26); k++) { z -= 1.25 / 30; me.group.position.z = z; for (const p of people) p.update(1 / 30); }
     camera.fov = 50; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-    camera.position.set(0.55, 1.95, z + 2.7); camera.lookAt(0, 1.25, z - 2.5);
+    const fd = Number(q.get('fd') ?? 1);   // follow distance scale (1 = the default GTA-style follow)
+    camera.position.set(0.55 * fd, 1.25 + 0.7 * fd, z + 2.7 * fd); camera.lookAt(0, 1.25, z - 2.5);
   }
   if (q.get('dbg') === 'normal' || q.get('dbg') === 'flat') for (const p of people) p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh && m.name.startsWith('cloth')) (m as THREE.Mesh).material = q.get('dbg') === 'normal' ? new THREE.MeshNormalMaterial() : new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.6 }); });
-  extra.people = people.map((p) => p.stats());
+  if (view !== 'crowd') extra.people = people.map((p) => p.stats());
   if (people[0]) { const ms: THREE.Mesh[] = []; people[0].group.traverse((m) => { if ((m as THREE.Mesh).isMesh) ms.push(m as THREE.Mesh); }); const e = ms[0]; e.updateWorldMatrix(true, false); const z = new THREE.Vector3(0, 0, 1).transformDirection(e.matrixWorld); extra.eyeZ = z.toArray().map((v) => +v.toFixed(3)); const pp = new THREE.Vector3(); e.getWorldPosition(pp); extra.eyeP = pp.toArray().map((v) => +v.toFixed(3)); extra.eyeParent = e.parent?.parent?.name; }
   extra.parts = people.slice(0, 1).map((p) => { const out: string[] = []; p.group.traverse((m) => { const g = (m as THREE.Mesh).geometry; if (g && m.visible) out.push(`${m.type}:${(g.index ? g.index.count : g.attributes.position.count) / 3}:${Object.keys(g.morphAttributes).length ? g.morphAttributes.position?.length : 0}`); }); return out.join(' '); });
   (window as unknown as { __people: Person[] }).__people = people;

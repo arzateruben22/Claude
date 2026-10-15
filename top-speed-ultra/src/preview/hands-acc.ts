@@ -70,10 +70,16 @@ class MB {
     for (let j = 0; j < seg; j++) this.t(ctr, ids[(j + 1) % seg], ids[j]);
   }
   // a box from its centre and three half-extent vectors, flat-shaded
+  // soft > 0: the corner normals lean out (a polished, rounded-edged piece: no flat face that mirrors the sky white
+  // at a grazing angle)
+  soft = 0;
   box(c: V3, ax: V3, ay: V3, az: V3) {
+    const nv = (n: V3, o: V3) => this.soft > 0 ? norm(madd(norm(n), norm(o), this.soft)) : n;
     const f = (n: V3, u: V3, w: V3) => {
-      const a = this.v(add(add(add(c, n), mul(u, -1)), mul(w, -1)), n), b = this.v(add(add(add(c, n), u), mul(w, -1)), n);
-      const d = this.v(add(add(add(c, n), u), w), n), e = this.v(add(add(add(c, n), mul(u, -1)), w), n);
+      const p1 = add(add(add(c, n), mul(u, -1)), mul(w, -1)), p2 = add(add(add(c, n), u), mul(w, -1));
+      const p3 = add(add(add(c, n), u), w), p4 = add(add(add(c, n), mul(u, -1)), w);
+      const a = this.v(p1, nv(n, sub(p1, c))), b = this.v(p2, nv(n, sub(p2, c)));
+      const d = this.v(p3, nv(n, sub(p3, c))), e = this.v(p4, nv(n, sub(p4, c)));
       this.q(a, b, d, e);
     };
     f(ax, ay, az); f(mul(ax, -1), az, ay); f(ay, az, ax); f(mul(ay, -1), ax, az); f(az, ax, ay); f(mul(az, -1), ay, ax);
@@ -257,6 +263,8 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     // case back, middle, polished bezel (rounded), the crystal's seat
     mbMetal.color = lin(metal); mbMetal.metal = 1; mbMetal.rough = 0.28;
     mbMetal.lathe(base, N, X, [[R * 0.82, 0], [R * 0.96, 0.6], [R, 2], [R * 1.005, H * 0.62], [R * 0.99, H * 0.7]], seg);
+    // the case back (closed: where the wrist falls away beside the case, the dial's underside showed through)
+    mbMetal.disc(base, N, X, R * 0.83, seg);
     mbMetal.rough = 0.12;
     mbMetal.lathe(base, N, X, [[R * 0.99, H * 0.7], [R * 0.985, H * 0.78], [R * 0.95, H * 0.86], [R * 0.9, H * 0.9], [R * 0.86, H * 0.9]], seg);
     // the inner wall (rehaut) down to the dial
@@ -270,7 +278,7 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     for (const sy of [-1, 1]) for (const sx of [-1, 1]) {
       const c = madd(madd(madd(base, Y, sy * R * 1.0), X, sx * R * 0.48), N, H * 0.3);
       const dY = norm(madd(mul(Y, sy), N, -0.35));
-      mbMetal.box(c, mul(dY, 3.6 * k), mul(X, 1.5 * k), mul(N, 2.0 * k));
+      mbMetal.soft = 0.7; mbMetal.box(c, mul(dY, 3.6 * k), mul(X, 1.5 * k), mul(N, 2.0 * k)); mbMetal.soft = 0;
     }
     // the dial
     const dz = H * 0.78, dr = R * 0.84;
@@ -358,16 +366,29 @@ function bracelet3(mb: MB, A: Anatomy, along: number, N: V3, metal: number, R: n
   const gap = Math.asin(Math.min(0.9, (R * 0.95) / 30));
   const path = bandPath(A, along, N, q === 'high' ? 40 : 26, gap, attach);
   const W = 19 * k;
-  for (let i = 0; i < path.length - 1; i++) {
-    const a = path[i], b = path[i + 1], c = lerp3(a.p, b.p, 0.5), t = norm(sub(b.p, a.p)), L = len(sub(b.p, a.p));
-    // each link lies along the band (where it rises to the lugs too), its face out from the wrist
+  const frame = (a: { p: V3; n: V3 }, b: { p: V3; n: V3 }) => {
+    const t = norm(sub(b.p, a.p));
     let n = norm(cross(fd, t)); if (dot(n, add(a.n, b.n)) < 0) n = mul(n, -1);
-    for (const [off, w, polished] of [[-W * 0.36, W * 0.27, 0], [0, W * 0.2, 1], [W * 0.36, W * 0.27, 0]] as [number, number, number][]) {
-      mb.color = lin(metal); mb.metal = 1; mb.rough = polished ? 0.1 : 0.34;
-      const ctr = madd(madd(c, fd, off), n, 1.9 + (polished ? 0.25 : 0));
-      mb.box(ctr, mul(t, L * 0.47), mul(fd, w / 2), mul(n, 1.5));
+    return { t, n, L: len(sub(b.p, a.p)) };
+  };
+  // one articulated band: the outer pieces of each link, the polished centre pieces staggered over the joints
+  // (they hold neighbouring links together, as the pins do), and the pins' bar under it all, so no light shows
+  // through between the rows
+  mb.soft = 0.7;
+  for (let i = 0; i < path.length - 1; i++) {
+    const a = path[i], b = path[i + 1], c = lerp3(a.p, b.p, 0.5), { t, n, L } = frame(a, b);
+    mb.color = lin(metal); mb.metal = 1; mb.rough = 0.34;
+    for (const sx of [-1, 1]) mb.box(madd(madd(c, fd, sx * W * 0.345), n, 1.9), mul(t, L * 0.48), mul(fd, W * 0.15), mul(n, 1.5));
+    // the bar under the link, across the whole width (darker: it is mostly in shadow between the pieces)
+    mb.color = lin(metal).map((x) => x * 0.55) as [number, number, number]; mb.rough = 0.45;
+    mb.box(madd(c, n, 1.2), mul(t, L * 0.5), mul(fd, W * 0.47), mul(n, 0.75));
+    if (i + 2 < path.length) {
+      const nx = path[i + 2], f2 = frame(b, nx), tc = norm(add(t, f2.t)), nc = norm(add(n, f2.n));
+      mb.color = lin(metal); mb.rough = 0.1;
+      mb.box(madd(b.p, nc, 2.15), mul(tc, (L + f2.L) * 0.24), mul(fd, W * 0.2), mul(nc, 1.55));
     }
   }
+  mb.soft = 0;
 }
 
 function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female: boolean, q: Quality, attach?: [V3, V3]) {
@@ -387,7 +408,7 @@ function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female
 function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality) {
   const g = A.digits[2];                               // the ring finger
   const a = g.joints[0], b = g.joints[1], d = g.dirs[0], up = g.dorsal[0], lat = cross(d, up);
-  const c = lerp3(a, b, 0.46), seg = q === "high" ? 48 : 28;
+  const c = lerp3(a, b, 0.3), seg = q === "high" ? 48 : 28;      // near the web, where rings sit
   const W = female ? 2.4 : 4.6, T = female ? 1.5 : 1.8;
   const f = A.field, pts: V3[][] = [];
   const prof: [number, number][] = [[0, -W / 2], [T * 0.7, -W / 2], [T, -W * 0.3], [T, W * 0.3], [T * 0.7, W / 2], [0, W / 2]];
@@ -395,9 +416,20 @@ function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality)
   for (let j = 0; j < seg; j++) {
     const th = (j / seg) * Math.PI * 2, dir = norm(add(mul(up, Math.cos(th)), mul(lat, Math.sin(th))));
     let lo = 0, hi = 16;
-    // the ring finger's own surface (the neighbours pressed against it would pull the band out of round)
+    // the ring finger's own surface
     for (let i = 0; i < 20; i++) { const m = (lo + hi) / 2, p = madd(c, dir, m); if (f.groupDist(G_FINGER + 2, p[0], p[1], p[2]) < 0) lo = m; else hi = m; }
-    rs.push(lo + 0.15);
+    // and the skin as it is meshed (the flesh blended in from the web and the neighbours, the bulge on the rim):
+    // the first exit going out from the finger's axis, over the band's whole width
+    let full = 0;
+    for (let m = lo * 0.5; m < 18; m += 0.2) {
+      let inside = false;
+      for (const z of [-W / 2, 0, W / 2]) { const p = madd(madd(c, dir, m), d, z); if (f.eval(p[0], p[1], p[2], null, 0) < 0) { inside = true; break; } }
+      if (!inside) { full = m; break; }
+      full = m;
+    }
+    // where a neighbour presses on the finger the skin runs on into it: the band goes under that flesh (hidden)
+    // rather than standing off it like a fin
+    rs.push(full > lo + 3 ? lo - 0.4 : Math.max(lo, full) + 0.3);
   }
   for (const [rOff, z] of prof) {
     const row: V3[] = [];
@@ -592,8 +624,9 @@ export function buildAccessories(o: AccOptions): Accessories {
   if (look.watch) {
     const dt = dialTexture(look.watch, o.watchTime);
     const dm = look.watch === 'smart'
-      ? new THREE.MeshStandardMaterial({ map: dt, emissiveMap: dt, emissive: 0xffffff, emissiveIntensity: 0.55, color: 0x050505, roughness: 0.3 })
-      : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.42, metalness: 0, clearcoat: 0.4, clearcoatRoughness: 0.2 })   // lacquered, not metal: a metal dial took the warm sky's colour and read as skin;
+      ? new THREE.MeshStandardMaterial({ map: dt, emissiveMap: dt, emissive: 0xffffff, emissiveIntensity: 0.55, color: 0x050505, roughness: 0.3, side: THREE.DoubleSide })
+      : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.42, metalness: 0, clearcoat: 0.4, clearcoatRoughness: 0.2, side: THREE.DoubleSide })   // lacquered, not metal: a metal dial took the warm sky's colour and read as skin;
+    // (double sided: the dial disc's winding faced into the case, so it was culled and the wrist showed through)
     mk(G.dial, dm, 'dial');
   }
   mk(G.glass, new THREE.MeshPhysicalMaterial({ color: 0xf4f8ff, roughness: 0.02, metalness: 0, transparent: true, opacity: 0.16, envMapIntensity: 2.4, clearcoat: 1, clearcoatRoughness: 0.02, depthWrite: false, ior: 1.77 }), 'crystal');

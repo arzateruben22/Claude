@@ -47,7 +47,7 @@ function addNail(A: Anatomy, g: Digit, female: boolean, nr: number, nc: number, 
   const total = Ln + Fe;
   // top surface rows: attached part sampled on the skin, the free edge carried on past the fingertip
   const rows: { p: V3; n: V3; s: number; w: number }[][] = [];
-  const T = 0.42;                                         // plate thickness (mm)
+  const T = female ? 0.42 : 0.3;                          // plate thickness (mm)
   const centre: V3[] = [];
   let prevR: number[] = [];
   for (let i = 0; i <= nr; i++) {
@@ -58,7 +58,8 @@ function addNail(A: Anatomy, g: Digit, female: boolean, nr: number, nc: number, 
     let hw = (Wn / 2) * base;
     if (s > sh) {
       const e = (s - sh) / (Fe + (female ? 0.4 : 0.9));
-      hw *= female ? Math.sqrt(Math.max(0.02, 1 - e * e * e)) * (1 - 0.18 * e) : Math.pow(Math.max(0.02, 1 - Math.pow(e, 4)), 0.5);
+      // the female free edge an oval (no square corners), the male one a short rounded rim
+      hw *= female ? Math.sqrt(Math.max(0.02, 1 - e * e)) : Math.pow(Math.max(0.02, 1 - Math.pow(e, 4)), 0.5);
     }
     if (i === nr) hw *= female ? 0.35 : 0.6;
     // the skin under each column first: a ray that finds no skin (it ran on into a neighbouring finger, pressed
@@ -85,7 +86,8 @@ function addNail(A: Anatomy, g: Digit, female: boolean, nr: number, nc: number, 
       if (s > sh) {
         // past the fingertip: continue along the plate's line, drooping a little
         const e = s - sh;
-        p = madd(madd(p, d, e), u, -0.022 * e * e - (female ? 0.03 : 0.05) * e);
+        // (the female free edge bends 10-15 deg down to follow the fingertip, and curves across like a real plate)
+        p = madd(madd(p, d, e), u, female ? -0.04 * e * e - 0.14 * e - 0.15 * Wn * w * w * Math.min(1, e / 1.5) * 0.5 : -0.022 * e * e - 0.05 * e);
       }
       // never into the leather: the long free edges of the fingertips curled round the inner edge ran into the rim,
       // and the plates' cut edges showed as white serrations (the clear coat reflecting the sky) along the fingers
@@ -103,7 +105,8 @@ function addNail(A: Anatomy, g: Digit, female: boolean, nr: number, nc: number, 
     if (dot(n, v.n) < 0) n = mul(n, -1);
     return n;
   }));
-  const push = (p: V3, n: V3, s: number, w: number) => { out.pos.push(...p); out.nrm.push(...n); out.nail.push(s, w, Ln, total); return out.pos.length / 3 - 1; };
+  // (rim vertices carry a negative length: the shader shades the plate's cut edge with the bed's colour, matte)
+  const push = (p: V3, n: V3, s: number, w: number, rim = false) => { out.pos.push(...p); out.nrm.push(...n); out.nail.push(s, w, Ln, rim ? -total : total); return out.pos.length / 3 - 1; };
   const vt: number[][] = [], vb: number[][] = [];
   rows.forEach((row, i) => { vt.push(row.map((v, j) => push(v.p, top[i][j], v.s, v.w))); });
   rows.forEach((row, i) => { vb.push(row.map((v, j) => push(madd(v.p, top[i][j], -T), mul(top[i][j], -1), v.s, v.w))); });
@@ -119,14 +122,16 @@ function addNail(A: Anatomy, g: Digit, female: boolean, nr: number, nc: number, 
   for (let j = nc - 1; j >= 0; j--) ring.push([nr, j]);
   for (let i = nr - 1; i >= 1; i--) ring.push([i, 0]);
   const cen = centre[nr >> 1];
-  for (let k = 0; k < ring.length; k++) {
+  // a short (male) free edge has no visible thickness: no rim at all (its outward normals caught the sky as a white
+  // crescent round every fingertip)
+  for (let k = 0; k < ring.length && Fe >= 0.5; k++) {
     const [i0, j0] = ring[k], [i1, j1] = ring[(k + 1) % ring.length];
     if (i0 === 0 && i1 === 0) continue;      // the base is tucked under the cuticle: no visible edge there
     const a = rows[i0][j0], b = rows[i1][j1];
     const ta = top[i0][j0], tb = top[i1][j1];
     const outward = norm(sub(lerpV(a.p, b.p), cen));
-    const a0 = push(a.p, outward, a.s, a.w), b0 = push(b.p, outward, b.s, b.w);
-    const a1 = push(madd(a.p, ta, -T), outward, a.s, a.w), b1 = push(madd(b.p, tb, -T), outward, b.s, b.w);
+    const a0 = push(a.p, outward, a.s, a.w, true), b0 = push(b.p, outward, b.s, b.w, true);
+    const a1 = push(madd(a.p, ta, -T), outward, a.s, a.w, true), b1 = push(madd(b.p, tb, -T), outward, b.s, b.w, true);
     quad(a0, a1, b1, b0);
   }
   // make every triangle face outward (the shell's winding depends on the finger's side)

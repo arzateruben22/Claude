@@ -208,7 +208,8 @@ export function buildGarments(rig: Rig, body: BodyShape, outfit: Garment[]): Gar
 
   // ---- arm geometry (left; mirrored)
   const Larm = D.upperArm + D.foreArm;
-  const armpitL: V3 = [D.chestHalf + 0.004, D.shoulderY - 0.1 * s, -0.025 * s];
+  // the armpit plane moves out with the fat: a heavy flank bulges past it and a short sleeve's cut opened a hole there
+const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * s, -0.025 * s];
   const nPit: V3 = [Math.cos(21 * DEG), Math.sin(21 * DEG), 0];
   /** keep everything but the arm past `dist` (m along the arm from the shoulder joint; may be negative) */
   const sleeveKeep = (dist: number): Region => {
@@ -230,7 +231,10 @@ export function buildGarments(rig: Rig, body: BodyShape, outfit: Garment[]): Gar
     return (x, y, z) => {
       const cyl = (Math.hypot(x / rx, (z - zc) / rz) - 1) * Math.min(rx, rz);
       const yc = lerp(backY, frontY, clamp((z - zB) / (zF - zB)));
-      return Math.max(cyl, yc - y);
+      // and nothing up the back of the neck: the neck leans forward and its back is wider than the cylinder, so a
+      // shell offset from it would rise behind the neck like a brace
+      const back = Math.max(Math.abs(x) - rx * 1.3, backY + 0.012 * s - y, z - zc);
+      return Math.min(Math.max(cyl, yc - y), back);
     };
   };
   const neckRemoval = (neck: Garment['neck'], deep = 1): Region => {
@@ -321,7 +325,7 @@ export function buildGarments(rig: Rig, body: BodyShape, outfit: Garment[]): Gar
     const bones = bonesOf([...TORSO, ...armBones, 'thighL', 'thighR', ...(dress ? LEGS : [])]);
     const A = sub_(bonesOf([...TORSO, ...armBones, 'thighL', 'thighR', ...(dress ? LEGS : [])]));
     let keep: Region = inter(above(hem), sleeveKeep(armDist));
-    if (strap) keep = inter(keep, strapKeep(D.chestY + (body.sex === 'f' ? 0.035 : 0.05) * s, 0.0075 * s));
+    if (strap) keep = inter(keep, strapKeep(D.chestY + (body.sex === 'f' ? 0.06 : 0.065) * s, 0.0075 * s));
     else keep = inter(keep, not(neckRemoval(neck, outer ? 1.6 : k === 'blouse' ? 1.15 : 1)));
     if (g.open) keep = inter(keep, openFront(outer ? 0.07 * ws : 0.03 * ws, outer ? 0.2 * ws : 0.12 * ws, hem, jug));
     const dTop = D.chestY + 0.06 * s;

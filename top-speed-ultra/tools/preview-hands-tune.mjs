@@ -24,5 +24,7 @@ for (const po of combos) {
   const mcps = A.digits.slice(0, 4).map((d) => M.sectionAngle(d.joints[0]).toFixed(0)).join('/');
   const nails = A.digits.map((d) => M.dot(d.dorsal[2], M.norm(M.sub(eyeG, d.joints[3]))).toFixed(2)).join('/');
   const flex = A.digits.slice(0, 4).map((d) => d.flex.map((x) => x.toFixed(0)).join(',')).join(' ');
+  const rimd = A.digits.slice(0, 4).map((d) => d.joints.slice(1).map((j) => M.rimSdfG(j[0], j[1], j[2]).toFixed(0)).join(",")).join(" ");
+  if (process.env.SHORT) { console.log(JSON.stringify(po).padEnd(70), "N.eye", M.dot(A.palm.N, eC).toFixed(2), "mcp", mcps, "tips", tips, "nail", nails, "flex", flex, "rimd", rimd); continue; }
   console.log(JSON.stringify(po).padEnd(60), 'N.eye', M.dot(A.palm.N, eC).toFixed(2), 'mcp', mcps, 'tips', tips, 'nail', nails, 'flex', flex, 'thumb', M.thumbScore.toFixed(1), JSON.stringify(M.thumbTerms, (k, v) => typeof v === 'number' ? +v.toFixed(0) : v));
 }
