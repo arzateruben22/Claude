@@ -94,7 +94,7 @@ button { -webkit-tap-highlight-color: var(--clear); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* ------------------------------------------------------------------ overlays and panels */
-.overlay { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain;
+.overlay { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scroll-padding-bottom: 130px;   /* keep scrolled-to controls above the sticky dock and panel footers */
   padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
 .overlay.center { display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 45%, var(--scrim) 0%, var(--scrim-2) 100%); }
 
@@ -200,7 +200,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .overlay.menu { padding-bottom: 0;
   background: radial-gradient(70% 55% at 0% 100%, var(--haze-mag), var(--clear) 70%), radial-gradient(60% 50% at 0% 0%, var(--haze-violet), var(--clear) 70%),
     linear-gradient(90deg, var(--scrim-3) 0%, var(--scrim-2) 34%, var(--scrim) 50%, var(--scrim-0) 68%); }
-.menu-col { width: min(500px, 100%); display: grid; gap: 20px; padding-top: 6px; animation: col-in 0.45s var(--ease) both; }
+.menu-col { width: min(500px, 100%); display: grid; gap: 20px; padding-top: 6px; }
+/* the slide-in animates the column's parts, not the column: a transform on the column would pin the fixed aside to it */
+.menu-col > :not(.menu-aside) { animation: col-in 0.45s var(--ease) both; }
 @keyframes col-in { from { opacity: 0; transform: translateX(-14px); } }
 .lede { margin: 0; max-width: 44ch; font-size: 15px; line-height: 1.5; color: var(--dim); }
 .menu-sec { display: grid; gap: 12px; }
@@ -421,8 +423,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* ------------------------------------------------------------------ touch: a steering rail and two pedals */
 
 /* start at your exit, the feedback report */
-.grid.roads { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); max-height: 34vh; }
-.grid.exits { max-height: 62vh; }
+.grid.roads { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
 .grid.exits b { font-size: 15px; line-height: 1.25; }
 .panel h3 { margin: 4px 0 0; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
 .report { width: 100%; font: 500 12.5px/1.45 var(--f-mono, ui-monospace, Menlo, Consolas, monospace); background: var(--glass); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; resize: none; user-select: text; -webkit-user-select: text; }
