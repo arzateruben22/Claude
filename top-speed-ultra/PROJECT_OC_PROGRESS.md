@@ -19,7 +19,8 @@ finger rig, so a wave reads as a raised loose fist.
 itself: each ability fired through `useAbility()` with the matching driver and captured from the driver's seat
 (`tests/out/pose-{wave,watch,knee}.png`: the Closer's wave with the gold watch, the Ace's gloved watch check, the
 Wrench's hand down on the console while the left hand holds the wheel). `npm test -- --only=abilities` **4 of 4**
-with the poses in; no page errors.
+with the poses in; no page errors. Then the full suite on this build (semi, autopilot fix, poses): `npm test`
+**56 of 56**, 20 minutes in this container (`tests/out/full-1015b.log`).
 
 ## 2026-10-15: the tractor-trailer semi, a cleaner windscreen, and a safer autopilot
 
