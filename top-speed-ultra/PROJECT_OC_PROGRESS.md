@@ -43,6 +43,15 @@ report real-phone performance, which has never been measured.
   textures" and the drive on CA-57 North; Copy and Back worked with no page errors (`tests/out/launch-feedback.png`).
   Those numbers describe this sandbox's software renderer, not any phone.
 
+**Abilities tuned toward the owner's "about 5 seconds"** (same day): Clear Path 8 → 6 s (traffic needs a moment to
+move over), Locked In 7 → 5 s, Focus Time stays 5 s; cooldowns unchanged. **Clear Path with No Traffic**: with the
+density at None and no cars about, the ability says "No traffic to clear" and keeps its charge instead of burning a
+45 s cooldown on nothing.
+- Verified (`npm test -- --only=abilities,launch`, 9 of 9): Clear Path 153 → 106 cars with all 46 in view kept, scale
+  0.65 then 1 after its 6 s, cooldown blocks a refire; Focus Time 0.7× then 1×; Locked In grip ×1.3 then ×1 after
+  5 s; with density None and 0 cars, Clear Path did not fire and stayed ready. Phone group re-run after the Feedback
+  button was added to the pause and settings screens: 5 of 5.
+
 ## 2026-10-12: a committed regression suite, and the bugs it found
 
 The test scripts behind the entries below (`final.js`, `modes.js`, `sim.js`, `dbg3.js`) were never committed. They're

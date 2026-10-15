@@ -59,7 +59,7 @@ Built items are marked ✅. Everything else is still to do.
     yet.
   - Focus Time: time slows about 30–35%.
   - Locked In: grip, with one-handed driving as the cosmetic.
-  - The owner wanted abilities of about 5 seconds. They're 5–8 s now and can be tuned. Clear Path needs a sensible
+  - The owner wanted abilities of about 5 seconds. Tuned to 5–6 s on 2026-10-15 (Clear Path 6 s, the others 5 s). Clear Path needs a sensible
     rule in No Traffic mode.
 - ✅ A profile and stats screen, like the Trade Crawler's: name, avatar, level, XP, time, distance, best streak,
   races won, cars, credits, achievements. Saved locally and versioned.

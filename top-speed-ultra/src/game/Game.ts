@@ -447,7 +447,10 @@ export class Game {
     this.ability = new Ability(ABILITIES[d.ability]);
   }
   useAbility() {
-    if (this.attract || this.over || this.paused || this.countdown > 0 || !this.ability.trigger()) return false;
+    if (this.attract || this.over || this.paused || this.countdown > 0 || !this.ability.ready) return false;
+    // with no traffic there is nothing to clear: say so and keep the charge
+    if (this.ability.def.id === 'clear' && this.traffic.level.perKmLane === 0 && this.traffic.cars.length === 0) { this.ev.toast('No traffic to clear', 'info'); return false; }
+    if (!this.ability.trigger()) return false;
     const v = this.view(), id = this.ability.def.id;
     if (id === 'clear') {
       this.traffic.scale = 0.65;

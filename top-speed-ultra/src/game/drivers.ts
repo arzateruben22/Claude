@@ -10,11 +10,11 @@ export interface AbilityDef { id: AbilityId; name: string; blurb: string; durati
 export const ABILITIES: Record<AbilityId, AbilityDef> = {
   // 35% fewer cars, by flow and spawning: cars ahead move out of your lane and fewer join beyond the haze.
   // Nothing in view disappears.
-  clear: { id: 'clear', name: 'Clear Path', blurb: 'Traffic eases off 35% for 8 s: cars ahead move over, fewer join. Nothing vanishes in view.', duration: 8, cooldown: 45 },
+  clear: { id: 'clear', name: 'Clear Path', blurb: 'Traffic eases off 35% for 6 s: cars ahead move over, fewer join. Nothing vanishes in view.', duration: 6, cooldown: 45 },
   // the world (traffic, its lights and sounds) runs at 70% speed; you and your car don't
   focus: { id: 'focus', name: 'Focus Time', blurb: 'The world slows to 70% for 5 s. Your car doesn\'t.', duration: 5, cooldown: 40 },
   // tyres bite: grip x1.3 (it beats the rain)
-  grip: { id: 'grip', name: 'Locked In', blurb: '30% more grip for 7 s, rain or shine.', duration: 7, cooldown: 35 },
+  grip: { id: 'grip', name: 'Locked In', blurb: '30% more grip for 5 s, rain or shine.', duration: 5, cooldown: 35 },
 };
 
 export interface DriverLook {

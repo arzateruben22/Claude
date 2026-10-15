@@ -636,6 +636,19 @@ await group('launch', async (use) => {
     expect(ahead > 430 && ahead < 470, `${fmt(ahead)} m before the sign`);
     return `${exits.length} exits on ${road}; started ${fmt(ahead)} m before "${want.text}"`;
   });
+  await check('Clear Path with no traffic says so and keeps its charge', async () => {
+    const r = await game(page, () => {
+      const g = window.__game;
+      g.updateSettings({ ...g.settings, density: 'none' });
+      g.traffic.cars.length = 0; g.fastForward(1, {}, 40);
+      const fired = g.useAbility(), ready = g.ability.ready, cars = g.traffic.cars.length, name = g.ability.def.name;
+      g.updateSettings({ ...g.settings, density: 'moderate' });
+      return { fired, ready, cars, name };
+    });
+    expect(r.name === 'Clear Path', `driver has ${r.name}`);
+    expect(r.cars === 0 && !r.fired && r.ready, JSON.stringify(r));
+    return `${r.cars} cars: not fired, still ready`;
+  });
   await check('Feedback report names the browser, the GPU, the preset, the frame rate and the drive', async () => {
     await game(page, () => window.__game.setPaused(true));
     await page.getByRole('button', { name: 'Feedback', exact: true }).click();
