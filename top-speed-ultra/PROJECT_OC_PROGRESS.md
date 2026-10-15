@@ -28,7 +28,10 @@ driver's seat shows the dash, tach, mirror, A-pillar and both hands with the Clo
 from behind with tail lamps, diffuser and wheels; hood shows the bonnet lip and the road once the half-second view
 blend has finished (a shot taken mid-blend sits inside the windscreen). Frame cost at the seat: 355 draw calls,
 490k triangles (the old car: 444 calls, 491k), 10–12 fps in this software renderer, the same as before the change.
-The regression result is logged below this entry's "Suite" line.
+**Suite:** `npm test -- --only=boot,survival,render,phone,launch` with the new car and traffic: **34 of 34** (the
+render group's six skies, the lost-context recovery and the High/Ultra rebuild all pass with the preview car built
+at both tiers; Survival's seeded numbers are unchanged: 16,244, 28.75 s, 25 passes). The test link
+https://claude.ai/artifact/AsFiTsf6TFF4Hij25U3MR9 carries this build.
 
 **Traffic bodies** (same session). The preview's unbranded traffic vehicles (`src/preview/traffic.ts`, moved out of
 `car.ts` and given a coupe) now feed the game's instanced traffic: sedan, coupe (the "sports" class), SUV, pickup, a
