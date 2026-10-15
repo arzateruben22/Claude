@@ -636,6 +636,18 @@ await group('launch', async (use) => {
     expect(ahead > 430 && ahead < 470, `${fmt(ahead)} m before the sign`);
     return `${exits.length} exits on ${road}; started ${fmt(ahead)} m before "${want.text}"`;
   });
+  await check('Feedback report names the browser, the GPU, the preset, the frame rate and the drive', async () => {
+    await game(page, () => window.__game.setPaused(true));
+    await page.getByRole('button', { name: 'Feedback', exact: true }).click();
+    const text = await page.locator('textarea.report').inputValue();
+    await page.screenshot({ path: path.join(OUT, 'launch-feedback.png') });
+    for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road]) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
+    await page.getByRole('button', { name: 'Copy', exact: true }).click();
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    await game(page, () => window.__game.setPaused(false));
+    const line = (p) => text.split('\n').find((l) => l.startsWith(p)) ?? '';
+    return `${line('GPU')}; ${line('Frame rate')}`;
+  });
   await check('the run card downloads as a 1080 × 1350 PNG', async () => {
     await game(page, () => { const g = window.__game; g.fastForward(20, {}, 40); g.endFreeDrive(); });
     await page.waitForSelector('.result', { timeout: 10000 });

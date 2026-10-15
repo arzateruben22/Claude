@@ -7,7 +7,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -47,6 +47,13 @@ export interface Hud {
 }
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
+// what a feedback report says about the device and this drive: nothing personal, nothing sent by the game
+export interface Report {
+  version: string; host: string; ua: string; screen: string; pointer: 'touch' | 'mouse'; cores: number; memoryGB: number | null; gpu: string;
+  quality: string; adaptive: boolean; pixelRatio: number; buffer: string; fps: number; calls: number; tris: number; textures: number;
+  mode: Mode; attract: boolean; road: string; mph: number; density: string; cars: number; runSeconds: number;
+  time: string; weather: string; ultra: boolean;
+}
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
@@ -1130,6 +1137,24 @@ export class Game {
   }
 
   get inAttract() { return this.attract; }
+  // for the Feedback panel: the device and this drive, as numbers a player can paste to us. Nothing personal.
+  report(): Report {
+    const gl = this.renderer.getContext(), dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    const nav = navigator as Navigator & { deviceMemory?: number };
+    const info = this.renderer.info, el = this.renderer.domElement;
+    return {
+      version: VERSION, host: location.protocol === 'file:' ? 'file' : location.host, ua: navigator.userAgent,
+      screen: `${innerWidth}×${innerHeight} @${Math.round(devicePixelRatio * 100) / 100}`,
+      pointer: typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'touch' : 'mouse',
+      cores: navigator.hardwareConcurrency || 0, memoryGB: nav.deviceMemory ?? null,
+      gpu: dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'not reported',
+      quality: QUALITY[this.settings.quality].label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
+      buffer: `${el.width}×${el.height}`, fps: this.fps, calls: info.render.calls, tris: info.render.triangles, textures: info.memory.textures,
+      mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
+      cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
+      time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
+    };
+  }
   // testing aids: run the simulation ahead with fixed controls (or the autopilot), without waiting for frames
   fastForward(seconds: number, c: Partial<Controls> = {}, cruise = 0) {
     Object.assign(this.input.c, c);

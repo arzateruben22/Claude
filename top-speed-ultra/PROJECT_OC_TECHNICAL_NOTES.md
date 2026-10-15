@@ -182,6 +182,9 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Run cards (`src/ui/runCard.ts`).** `drawRunCard(result, name)` draws a 1080 × 1350 canvas; `shareRunCard()` uses
   `navigator.share` with the PNG as a file where `canShare` allows it, otherwise an `<a download>` of a blob URL.
   `Result.road` carries the carriageway for the shield.
+- **Feedback report.** `Game.report()` gathers the device and drive numbers (`Report`); `src/ui/feedback.ts` formats
+  them and copies to the clipboard (falling back to select-and-`execCommand('copy')`). `VERSION` in `settings.ts`
+  must be bumped with `package.json`.
 - **`cars.ts`.** `applyCar()` writes a car's numbers into the physics `SPEC`. `figures()` gives the showroom's
   estimates, calibrated to the GT's measured 3.3 s and 211 mph.
 - **`race.ts`.**

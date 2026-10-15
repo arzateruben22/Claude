@@ -1,5 +1,7 @@
 // Player settings and the graphics quality presets. Saved to localStorage when it's available.
 
+export const VERSION = '0.1.0';   // keep in step with package.json; shown in feedback reports
+
 export type Quality = 'low' | 'medium' | 'high' | 'ultra';
 export type Mode = 'free' | 'survival' | 'race' | 'time';
 export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';

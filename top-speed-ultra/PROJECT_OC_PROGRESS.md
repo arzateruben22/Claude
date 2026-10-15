@@ -32,6 +32,17 @@ again after a test fix): 22 of 22 checks pass.
 Not measured: a real phone's share sheet (headless Chromium has no `navigator.share`, so the download path is what
 the suite exercises).
 
+**Feedback report** (same day). Pause → Feedback, or Settings → Feedback, shows a report about the device and the
+drive: the browser, screen and pointer, cores and memory, the GPU (`WEBGL_debug_renderer_info`), the graphics preset,
+pixel ratio and drawing-buffer size, frame rate, draw calls, triangles and textures, the mode, road, speed, traffic
+density and car count, the sky settings. Copy (clipboard, or select-and-copy where that is refused) and Share (where
+`navigator.share` exists). The game sends nothing; the player pastes it to us. This is how the launch's ambassadors
+report real-phone performance, which has never been measured.
+- Verified (`npm test -- --only=launch`, 4 of 4): the report named the browser (HeadlessChrome), "GPU: ANGLE (Google,
+  Vulkan 1.3.0 (SwiftShader Device (Subzero)...))", the Low preset, "11 fps · 444 draw calls · 491k triangles · 45
+  textures" and the drive on CA-57 North; Copy and Back worked with no page errors (`tests/out/launch-feedback.png`).
+  Those numbers describe this sandbox's software renderer, not any phone.
+
 ## 2026-10-12: a committed regression suite, and the bugs it found
 
 The test scripts behind the entries below (`final.js`, `modes.js`, `sim.js`, `dbg3.js`) were never committed. They're

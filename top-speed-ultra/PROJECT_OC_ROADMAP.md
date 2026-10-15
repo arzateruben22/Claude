@@ -48,6 +48,8 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Auto and manual gearbox | Done | |
 | Start at your exit | Done | Every real exit on all 20 carriageways, from the sign data, in the Start panel. You start 450 m before its sign. Built 2026-10-15 for the local launch. |
 | Run cards | Done | "Share run" on the results screen: a 1080 × 1350 PNG drawn on the device, through the share sheet or as a download. Nothing is uploaded. |
+| Feedback report | Done | Pause or Settings → Feedback: device, GPU, preset, frame rate and the drive as text to copy or share. Nothing is sent by the game. The way real-phone performance gets measured. |
+| Real-phone performance | Not measured | Still no number from a real phone. The Feedback report is built for the launch ambassadors to supply them. |
 
 ## P3: world and progression
 

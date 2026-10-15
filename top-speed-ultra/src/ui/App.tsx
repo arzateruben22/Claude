@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
+import { formatReport, copyText } from './feedback';
 import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
@@ -14,7 +15,7 @@ import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
@@ -38,6 +39,8 @@ export function App() {
   const [boardMode, setBoardMode] = useState<Mode>('survival');
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoad] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
+  const [report, setReport] = useState('');                           // the Feedback panel's text
+  const reportRef = useRef<HTMLTextAreaElement>(null);
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -86,6 +89,7 @@ export function App() {
     void game.current?.start(m, settings.start, settings.course);
   };
   const resume = () => { setPanel(null); game.current?.setPaused(false); setScreen('playing'); };
+  const openFeedback = () => { if (game.current) setReport(formatReport(game.current.report())); setPanel('feedback'); };
   const toMenu = () => { setPanel(null); setResult(null); game.current?.quitToMenu(); setScreen('menu'); };
   const navigate = (label: string | null) => {
     if (game.current?.navigateTo(label)) setNavTarget(label);
@@ -191,6 +195,7 @@ export function App() {
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
               {mode === 'free' && <button className="btn" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>}
+              <button className="btn" onClick={openFeedback}>Feedback</button>
               <button className="btn" onClick={toMenu}>Main menu</button>
             </div>
           </div>
@@ -284,6 +289,21 @@ export function App() {
         </div>
       )}
 
+      {panel === 'feedback' && (
+        <div className="overlay center">
+          <div className="panel narrow">
+            <h2>Feedback</h2>
+            <p className="fine">This report is about your device and this drive, nothing personal, and the game never sends it anywhere. Copy it, add what you saw, and send it to us wherever you got the game.</p>
+            <textarea ref={reportRef} className="report" readOnly value={report} rows={10} aria-label="Feedback report" />
+            <div className="row">
+              <button className="btn primary" onClick={() => void copyText(report, reportRef.current).then((ok) => toast(ok ? 'Copied' : 'Select the text and copy it', ok ? 'good' : 'info'))}>Copy</button>
+              {typeof navigator.share === 'function' && <button className="btn" onClick={() => navigator.share({ title: 'Top Speed OC feedback', text: report }).catch(() => { /* cancelled */ })}>Share</button>}
+              <button className="btn" onClick={() => setPanel(null)}>Back</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
 
       {panel === 'course' && (
@@ -328,7 +348,7 @@ export function App() {
               <div className="swatches" role="group" aria-label="Skin tone">{SKINS.map((c, i) => <button key={i} aria-pressed={settings.skin === i} style={{ background: '#' + c.toString(16).padStart(6, '0') }} onClick={() => update({ skin: i })} aria-label={`Tone ${i + 1}`} />)}</div>
             </div>
             <p className="fine">Looks are cosmetic. Use the ability with the round button (or F). Abilities change the traffic or the grip, never the scoring rules.</p>
-            <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
+            <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button><button className="btn" onClick={openFeedback}>Feedback</button></div>
           </div>
         </div>
       )}
