@@ -279,3 +279,52 @@ Form controls all have stable ids. No horizontal page scroll at 375px.
 Strike tracking/discipline, payroll export formats, per-inspector
 rate amounts, PDF generation, invoice-tab writing (lives in the
 import-sheet flow), auth beyond claude.ai sharing.
+
+## v1.1 additions (build these too)
+
+### Inspector day ledger (cumulative OT across shifts — "the Randy case")
+Overtime is a property of the PERSON's workday, not of a job. A second
+shift or second job the same day must not restart the 8-hour regular
+clock. Implementation:
+- Workday = calendar date (midnight to midnight), consistent with the
+  checklist's "Shift Change" midnight split.
+- When an entry is being edited for inspector I on date D, the app
+  computes `ledgerMinutes(I, D)` = sum of PAID minutes that fall on date D
+  from every OTHER stored entry of inspector I: an entry dated D contributes
+  its dayOne paid minutes (or all paid minutes when it has no split); an
+  entry dated D−1 that crosses midnight contributes its dayTwo paid minutes
+  (use rules.evaluateShift on the stored blocks to get the split; never
+  trust stored totals).
+- The "Hours already worked today" field is PREFILLED with ledgerMinutes
+  and shows the ledger lines ("8:00 PM–2:00 AM, 360 min, job X") under it;
+  the inspector may override with a note (e.g. hours at another employer
+  not in this system). Manual override is recorded as
+  `priorMinutesManual: true`.
+- Example that must work end to end: Randy (free-text inspector),
+  2026-08-05: entry A work 20:00–02:00 (jobRef "JOB-A", crosses into
+  8/6); entry B dated 2026-08-06 work 06:00–12:00 (jobRef "JOB-B").
+  Entry B's prefilled prior minutes = 120 (the 00:00–02:00 spill of A
+  that landed on 8/6). Entry B tiers: 360 paid minutes starting at
+  accrual 121 → 360 Regular? NO: accrual 121..480 = 360 Regular exactly
+  → PW Regular 6.00. Change A to 18:00–02:00 (prior = 120 still, since
+  only post-midnight minutes land on 8/6) — ledger logic is by DATE of
+  the minute, not by shift. Then make B 06:00–14:00 with lunch 10:00–10:30:
+  paid 450, accrual 121→570 → Regular 360 min (121..480) + 1.5 OT 90 min
+  (481..570) → PW Regular 6.00 + PW 1.5 OT 1.50.
+
+### Billing rates & invoice preview
+- Rates are BILLING rates (what Atlas invoices the client per hour by
+  labor code), per project, per inspector. They are NOT pay rates; label
+  them "Invoice rate" everywhere.
+- Store in collection `rates` (artifact mode) / localStorage key
+  `socal-timesheet-rates-v1`; doc id `<project>`, fields
+  {project, period, byInspector: {<name>: {"PW Regular":n, "PW 1.5 OT":n,
+  "PW 2.0 DT":n, "PWSS Regular":n, "PWSS 1.5 OT":n, "PWSS 2.0 DT":n,
+  "Non-PW":n}}}. No rate values in page source; seeded after publish.
+  Editable in a Settings panel on the Rules screen (table), writes only on
+  Save.
+- Results card gains an "Invoice preview" line: Σ tier.hours × rate for the
+  entry's project + inspector; "—" with the note "no rate on file" when
+  missing. Review detail shows the same; CSV export gains Rate and Amount
+  columns.
+- Non-PW hours: v1 has no Non-PW entry type; show nothing for it.
