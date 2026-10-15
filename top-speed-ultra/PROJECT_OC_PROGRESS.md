@@ -4,6 +4,34 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: launch features: start at your exit, and the run card
+
+Built for the local launch plan (`PROJECT_OC_BUSINESS.md`): every OC resident has an exit, and a run should be
+shareable without a server.
+
+- **Start at your exit.** The Start panel now lists all 20 carriageways under the 12 quick starts; tapping one lists
+  every real exit on it (from the guide signs in the map data: 416 across the network, 4 to 58 per carriageway) with
+  its distance along the road and which side it leaves. Picking one starts you 450 m before its sign, in the second
+  lane, and the toast names the exit. `Settings.exit` holds the key (`'<carriageway> @ <metres>'`); the quick starts
+  clear it. Time Trial keeps its fixed start.
+- **Run cards.** The results screen has "Share run": a 1080 × 1350 PNG drawn on the device (the road's shield, the big
+  number, the reason, the stats, "#TopSpeedOC", "A game. Drive the real ones at the limit.", and the device-only and
+  map-credit lines). It goes through the phone's share sheet where there is one, otherwise it downloads. Nothing is
+  uploaded by the game.
+
+**Verified** (headless Chromium, SwiftShader, `npm test -- --only=launch,boot,phone,survival`, then `--only=launch`
+again after a test fix): 22 of 22 checks pass.
+- Launch: CA-57 North lists 14 exits, the same number the data has; picking "Orangewood Avenue" (the Lot 57 exit) and
+  tapping Drive started on CA-57 North 450 m before the sign. The run card downloaded as `top-speed-oc-free-703.png`,
+  1080 × 1350, 955 KB (screenshots `tests/out/launch-exits.png`, `tests/out/launch-run-card.png`).
+- Boot, Survival and Phone groups unchanged: 781,426 lane points clear, 11,333,756 barrier segments the same twice,
+  Survival score 16,244 with a 28.75 s streak, the phone menu and HUD fit, Go to lists 20.
+- One test fix: the first run of the card check timed out at 15 s because the results screen keeps rendering the
+  scene behind it at 1–2 fps here, so the click and the drawing took about 19 s; the check now allows 90 s.
+
+Not measured: a real phone's share sheet (headless Chromium has no `navigator.share`, so the download path is what
+the suite exercises).
+
 ## 2026-10-12: a committed regression suite, and the bugs it found
 
 The test scripts behind the entries below (`final.js`, `modes.js`, `sim.js`, `dbg3.js`) were never committed. They're

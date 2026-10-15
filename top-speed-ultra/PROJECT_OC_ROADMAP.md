@@ -46,6 +46,8 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Versioned profile | Done | Name, avatar colour, level and XP, fictional credits, time, distance, top speed, best streak, near misses, passes, interchanges, races won, cars, nine achievements. Saved on the device as v1, with a migration path. |
 | Physics: arcade to sim | Done | A slider controls assists and tyre falloff. Steering lock is speed-sensitive. Sim has a light race-mode stability control. No spins at 134, 168 or about 200 mph on the autopilot. |
 | Auto and manual gearbox | Done | |
+| Start at your exit | Done | Every real exit on all 20 carriageways, from the sign data, in the Start panel. You start 450 m before its sign. Built 2026-10-15 for the local launch. |
+| Run cards | Done | "Share run" on the results screen: a 1080 × 1350 PNG drawn on the device, through the share sheet or as a download. Nothing is uploaded. |
 
 ## P3: world and progression
 

@@ -154,7 +154,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 - `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
-- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`. Run some with
+- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`. Run some with
   `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
@@ -175,6 +175,13 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   - Focus Time steps traffic with `dt × 0.7`.
   - Locked In multiplies grip by 1.3.
   - `Cockpit.setLook()` and `setPose()` handle the hands.
+- **Start at your exit.** `Game.exitsFor(label)` lists a carriageway's real exits from `net.signs` (key, sign text,
+  s, miles, side), de-duplicated by key `'<carriageway> @ <metres>'`. `Settings.exit` holds a key; `Game.start()`
+  resolves it to the sign (within 20 m, so a rebuilt data file still matches) and places the car at `sign.s - 450`
+  (clamped to the road) in the second lane. An empty key, or one the data no longer has, falls back to `Settings.start`.
+- **Run cards (`src/ui/runCard.ts`).** `drawRunCard(result, name)` draws a 1080 × 1350 canvas; `shareRunCard()` uses
+  `navigator.share` with the PNG as a file where `canShare` allows it, otherwise an `<a download>` of a blob URL.
+  `Result.road` carries the carriageway for the shield.
 - **`cars.ts`.** `applyCar()` writes a car's numbers into the physics `SPEC`. `figures()` gives the showroom's
   estimates, calibrated to the GT's measured 3.3 s and 211 mph.
 - **`race.ts`.**

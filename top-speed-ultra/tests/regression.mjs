@@ -639,7 +639,8 @@ await group('launch', async (use) => {
   await check('the run card downloads as a 1080 × 1350 PNG', async () => {
     await game(page, () => { const g = window.__game; g.fastForward(20, {}, 40); g.endFreeDrive(); });
     await page.waitForSelector('.result', { timeout: 10000 });
-    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }), page.getByRole('button', { name: 'Share run' }).click()]);
+    // the results screen still renders the scene behind it at 1-2 fps here, so the click and the card take a while
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 90000 }), page.getByRole('button', { name: 'Share run' }).click()]);
     const file = path.join(OUT, 'launch-run-card.png');
     await dl.saveAs(file);
     const buf = readFileSync(file);
