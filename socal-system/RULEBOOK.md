@@ -41,6 +41,18 @@ July 2026 emails. Last updated: 2026-07-31.
 - **OPEN QUESTION:** are Whittier Lab break lines exempt from shift rules?
   (Observed: lab lines are always PW-Regular, even 10:15 PM on Saturday 7/4.)
 - **OPEN QUESTION:** holiday coding/pay.
+- **Cumulative day (verified):** OT accrues on the PERSON's calendar day across
+  separate shifts. Evidence: FC 7/29/26 worked 02:00–10:30 (8.00 PW Regular)
+  and then a 20:30 plant shift that the July invoice bills entirely as
+  PWSS 1.5 OT (4.0 hrs). The timesheet app prefills "hours already worked
+  today" from the inspector's other entries for that reason.
+- **OPEN QUESTION:** does one continuous night shift restart its 8-hour
+  clock at midnight (workday = calendar day, matching the Shift Change row)
+  or run continuously? App default: restarts at 00:00 and flags
+  OVERNIGHT_RULING with the alternative hours whenever they differ.
+- **OPEN QUESTION (EA form):** D8 Daily Report form uses 08-1C08U3 with the
+  note "All EA #'s end in 3"; the checklist uses 1C08U4. Both exist; which
+  belongs on the timesheet? (105: 07-314524, "All EA #'s end in 4".)
 
 ## Overnight splits
 

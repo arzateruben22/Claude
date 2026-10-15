@@ -52,8 +52,8 @@ export function evaluateShift(input) { /* ... */ }
 //   tiers: [{code, minutes, hours}],// chronological-merged totals, see codes
 //   byJob: [{jobRef, tiers:[{code, minutes, hours}]}], // allocation per jobRef
 //   split: null | {                 // present when shift crosses midnight
-//     dayOne: {date, tiers},
-//     dayTwo: {date, tiers, shiftChange: true},
+//     dayOne: {date, tiers, byJob},  // byJob = that day's share, same shape
+//     dayTwo: {date, tiers, byJob, shiftChange: true}, // as top-level byJob
 //   },
 //   flags: [{severity, code, message}], // severity: "error"|"warn"|"ruling"|"info"
 //   timelineOk: boolean,
@@ -64,8 +64,11 @@ export function validateOdometer({begin, end, claimedMiles})
 //                         // warn MILES_MISMATCH when claimedMiles≠end-begin
 
 export function validateEA(project, ea)
-// → flags: 105-Express EA must end in "4"; D8 EA must end in "3";
-//   else warn EA_FORMAT with the rule named. CTC: no suffix rule.
+// → flags: 105-Express EA must end in "4" (07-314524), else warn EA_FORMAT
+//   naming the rule. D8: NO suffix rule — RULEBOOK §District 8 documents the
+//   EA as "1C08U4-style" and states no trailing-digit rule (its canonical
+//   example ends in 4); warn EA_FORMAT only when the D8 EA is blank.
+//   CTC: no rule.
 
 export const FLAG_CODES = { /* every code below, as constants */ };
 ```
@@ -96,6 +99,12 @@ All arithmetic in integer minutes. Hours reported as minutes/60 rounded to
   increments it. Ladder by accrued total: minutes 1–480 → Regular;
   481–720 → 1.5 OT; 721+ → 2.0 DT. (8 hrs regular; after 4 OT hours
   everything further is 2.0 — rulebook.)
+- The clock is the CALENDAR DAY's clock, not the shift's: RULEBOOK §Labor
+  codes puts the thresholds on "hours past 8 in a day" / "past hour 12"
+  and uses "day" everywhere as the calendar date (all day Saturday/Sunday,
+  the midnight Shift Change row). At midnight the ladder restarts at 0 for
+  the day-two portion — see §Overnight split. priorMinutes seeds day one
+  only (it is "already worked today", i.e. on input.date).
 - Day-of-week minimums, applied PER MINUTE by the calendar day that minute
   falls on (matters for overnight): Saturday → minimum 1.5 OT;
   Sunday → minimum 2.0 DT. Effective tier = max(ladder tier, day minimum).
@@ -115,10 +124,26 @@ All arithmetic in integer minutes. Hours reported as minutes/60 rounded to
 - If any paid/lunch minute falls on the day after input.date, split is
   non-null. dayOne = minutes before 24:00; dayTwo = minutes from 00:00,
   date = next calendar date, shiftChange: true (checklist "Shift Change"
-  row). Tier accrual is continuous across midnight (one shift, one ladder);
-  day minimums apply per actual calendar day (Fri→Sat spill: Sat portion
+  row).
+- The ladder RESTARTS at midnight: dayTwo paid minutes accrue from 0 (not
+  from priorMinutes, not from dayOne's total). Authority: RULEBOOK §Labor
+  codes ("any hours past 8 in a day", "2.0 past hour 12", "all day
+  Saturday/Sunday" — the unit is the day, never the shift) and §Overnight
+  splits (the post-midnight hours are carried on a second row dated the
+  next day and coded by that day). This is the same workday definition as
+  §Inspector day ledger (v1.1): the spill is "already worked today" on
+  dayTwo.date, so an overnight entry's own dayTwo coding and the next
+  entry's prefilled priorMinutes form one continuous ladder for that date.
+  Example: Thu 18:00→Fri 09:00 with two lunches (Thu 330 paid, Fri 510
+  paid) → Thu `PWSS Regular` 5.50; Fri `PWSS Regular` 8.00 + `PWSS 1.5 OT`
+  0.50 — NOT Fri 2.5 Regular + 4 OT + 2 DT (the retired v1 "one shift, one
+  ladder" reading treated the Friday minutes as hours 6–14 of a Thursday
+  shift, which contradicted the ledger's count of the same minutes).
+  Family and lunch compliance stay per shift (RULEBOOK words those rules
+  on "the shift").
+- Day minimums apply per actual calendar day (Fri→Sat spill: Sat portion
   min 1.5; Sat→Sun spill: Sun portion min 2.0; Sun→Mon spill: Mon portion
-  reverts to pure ladder).
+  is the plain Monday ladder from 0).
 - tiers (top level) = dayOne + dayTwo merged.
 
 ### Lunch compliance (flag codes)
@@ -295,6 +320,10 @@ clock. Implementation:
   entry dated D−1 that crosses midnight contributes its dayTwo paid minutes
   (use rules.evaluateShift on the stored blocks to get the split; never
   trust stored totals).
+- Because the engine's ladder restarts at midnight (§Overnight split), the
+  D−1 entry codes its own dayTwo minutes from 0 on date D and the ledger
+  hands that same count to the next entry on D — one workday, one ladder,
+  nothing double-counted or skipped.
 - The "Hours already worked today" field is PREFILLED with ledgerMinutes
   and shows the ledger lines ("8:00 PM–2:00 AM, 360 min, job X") under it;
   the inspector may override with a note (e.g. hours at another employer
@@ -328,3 +357,17 @@ clock. Implementation:
   missing. Review detail shows the same; CSV export gains Rate and Amount
   columns.
 - Non-PW hours: v1 has no Non-PW entry type; show nothing for it.
+
+## v1.2 corrections (adversarial verification against RULEBOOK)
+
+Authority order is RULEBOOK > spec; both items below were spec text that
+contradicted the rulebook, so the spec was corrected and the engine with it.
+- Overnight ladder: v1 §Overnight split said "tier accrual is continuous
+  across midnight (one shift, one ladder)". RULEBOOK puts the 8/12-hour
+  thresholds on the day, and v1.1's ledger already counted the spill as
+  the next date's hours, so the same minutes were laddered twice under two
+  clocks. Now: ladder restarts at 0 at midnight (§Tiers, §Overnight split).
+- D8 EA: v1 said "D8 EA must end in '3'". RULEBOOK §District 8 documents
+  the D8 EA as `1C08U4`-style with no suffix rule, so the spec flagged the
+  rulebook's own canonical value. Now: no D8 suffix rule; only a blank D8
+  EA warns (§validateEA).

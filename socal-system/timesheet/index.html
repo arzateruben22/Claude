@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SoCal Timesheet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&amp;display=swap">
+<style>
+:root {
+  --bg: #F4F6F3;
+  --surface: #FFFFFF;
+  --ink: #1B232C;
+  --muted: #5B6671;
+  --line: #D7DDD6;
+  --accent: #C8641E;
+  --ok: #2E7D43;
+  --warn: #A96F0A;
+  --err: #BB3A34;
+  --ruling: #6B5CA8;
+  --font-head: "Barlow Semi Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --font-body: -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius: 3px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #13181E;
+    --surface: #1C232B;
+    --ink: #E9EDF0;
+    --muted: #97A2AC;
+    --line: #2C353E;
+    --accent: #E98B4B;
+    --ok: #58B072;
+    --warn: #D1A33C;
+    --err: #E0726C;
+    --ruling: #A79AD6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #13181E;
+  --surface: #1C232B;
+  --ink: #E9EDF0;
+  --muted: #97A2AC;
+  --line: #2C353E;
+  --accent: #E98B4B;
+  --ok: #58B072;
+  --warn: #D1A33C;
+  --err: #E0726C;
+  --ruling: #A79AD6;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  min-height: 100vh;
+  overflow-wrap: anywhere;
+}
+[hidden] { display: none !important; }
+html.js .screen:not(.is-active) { display: none; }
+html.artifact .btn-print { display: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) 56px max(16px, env(safe-area-inset-left, 0px));
+}
+.num, .tier-hours, input[type="time"], input[type="number"], input[type="date"], td.num, .kv dd.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Masthead */
+.masthead::before {
+  content: "";
+  display: block;
+  height: 10px;
+  margin: 0 0 14px;
+  background: repeating-linear-gradient(135deg, var(--accent) 0 16px, var(--ink) 16px 32px);
+}
+h1, h2, h3, h4, legend, label, .lbl, th, .btn, .chip, .tabs a, .tier-code, .tier-hours, .family-badge, .block-legend, .entry-row strong, .kv dt {
+  font-family: var(--font-head);
+}
+h1 { font-size: 1.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; margin: 0; line-height: 1.05; }
+.tagline { margin: 6px 0 0; color: var(--muted); max-width: 62ch; }
+.mode-note { margin: 10px 0 0; font-size: .9rem; color: var(--muted); border-left: 3px solid var(--accent); padding-left: 8px; }
+noscript p { margin: 10px 0 0; padding: 8px 10px; border: 1px solid var(--line); background: var(--surface); }
+
+/* Tabs */
+.tabs { display: flex; gap: 2px; border-bottom: 2px solid var(--line); margin: 18px 0 6px; }
+.tabs a {
+  font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 1rem;
+  padding: 10px 14px; margin-bottom: -2px; min-height: 44px; display: inline-flex; align-items: center;
+  color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent;
+}
+.tabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tabs a:hover { color: var(--ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .tabs a { transition: color .15s ease, border-color .15s ease; }
+  .btn { transition: background-color .15s ease, color .15s ease; }
+}
+
+h2 { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; margin: 14px 0 2px; }
+h3 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 8px; }
+h4 { font-size: 1rem; font-weight: 700; margin: 14px 0 4px; text-transform: uppercase; letter-spacing: .04em; }
+.screen:focus { outline: none; }
+.screen-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 6px; }
+.screen-head h2 { margin: 0; }
+.hint { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+p { margin: 0 0 10px; }
+ul, ol { margin: 0 0 10px; padding-left: 22px; }
+li { margin-bottom: 4px; }
+a { color: var(--ink); }
+
+/* Cards and fieldsets */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin: 14px 0; }
+fieldset { min-width: 0; margin: 14px 0; padding: 10px 14px 14px; border: 1px solid var(--line); background: var(--surface); border-radius: var(--radius); }
+legend { font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: .95rem; padding: 0 6px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field.span-2 { grid-column: 1 / -1; }
+label, .lbl { font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: .78rem; color: var(--muted); }
+.label-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+input:not([type="checkbox"]):not([type="hidden"]), select, textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--muted); border-radius: var(--radius); padding: 8px 10px; min-height: 44px;
+}
+input, select, textarea { max-width: 100%; min-width: 0; }
+textarea { min-height: 88px; resize: vertical; }
+input[readonly] { background: var(--bg); }
+.check { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.check input { width: 22px; height: 22px; margin: 0; flex: 0 0 auto; accent-color: var(--accent); }
+.check label { text-transform: none; letter-spacing: 0; font-size: .95rem; color: var(--ink); font-family: var(--font-body); }
+
+/* Buttons */
+.btn {
+  font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: .95rem;
+  min-height: 44px; padding: 8px 16px; border: 1px solid var(--ink); background: var(--surface); color: var(--ink);
+  border-radius: var(--radius); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { background: var(--muted); color: var(--bg); }
+.btn-submit { background: var(--ink); color: var(--bg); border: 3px solid var(--accent); font-size: 1.15rem; padding: 8px 22px; }
+.btn-submit:hover { background: var(--muted); }
+.btn-sm { min-height: 36px; padding: 4px 10px; font-size: .82rem; }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.btn[disabled]:hover { background: var(--ink); }
+.btn.btn-sm[disabled]:hover, .btn:not(.btn-primary):not(.btn-submit)[disabled]:hover { background: var(--surface); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0; }
+.actions .hint { flex-basis: 100%; margin: 0; }
+.status { margin: 6px 0; font-size: .95rem; }
+.status-ok { color: var(--ok); }
+.status-err { color: var(--err); }
+
+/* Chips */
+.chip {
+  display: inline-block; font-weight: 700; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+  padding: 2px 7px; border: 1px solid var(--muted); border-radius: 2px; line-height: 1.35; color: var(--ink); background: var(--surface);
+  white-space: nowrap; vertical-align: middle;
+}
+.chip-ok { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 16%, transparent); }
+.chip-warn { border-color: var(--warn); background: color-mix(in srgb, var(--warn) 20%, transparent); }
+.chip-err { border-color: var(--err); background: color-mix(in srgb, var(--err) 16%, transparent); }
+.chip-info { border-color: var(--muted); background: color-mix(in srgb, var(--muted) 14%, transparent); }
+.chip-ruling { border-color: var(--ruling); background: var(--ruling); color: var(--bg); }
+.chip-accent { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.chip-example { border-style: dashed; }
+.chip-status-draft { border-color: var(--muted); }
+.chip-status-submitted { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.chip-status-approved { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 16%, transparent); }
+.chip-status-kicked_back { border-color: var(--err); background: color-mix(in srgb, var(--err) 16%, transparent); }
+
+/* Day ledger */
+.ledger-lines { list-style: none; padding: 0; margin: 6px 0 0; font-size: .92rem; }
+.ledger-lines li { padding: 6px 0; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.ledger-lines li:first-child { border-top: 0; }
+.ledger-total { font-weight: 600; }
+
+/* Time blocks */
+.block-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; padding: 8px 12px 12px;
+  border: 1px solid var(--line); background: var(--bg);
+}
+.block-row .f-cat { grid-column: 1 / -1; }
+.block-row .f-job { grid-column: 1 / -1; }
+.block-row .f-note { grid-column: 1 / -1; }
+.block-row .block-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
+.block-legend { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 4px; }
+@media (min-width: 680px) {
+  .block-row {
+    grid-template-columns: 1.3fr 1fr 1fr auto;
+    grid-template-areas: "cat start stop act" "job note note act";
+    align-items: end;
+  }
+  .block-row .f-cat { grid-area: cat; }
+  .block-row .f-start { grid-area: start; }
+  .block-row .f-stop { grid-area: stop; }
+  .block-row .f-job { grid-area: job; }
+  .block-row .f-note { grid-area: note; }
+  .block-row .block-actions { grid-area: act; flex-direction: column; justify-content: center; }
+}
+.block-row.is-incomplete { border-color: var(--warn); }
+.blocks-empty { color: var(--muted); font-size: .92rem; margin: 6px 0; }
+
+/* Results card */
+.results { border-left: 5px solid var(--accent); }
+.results-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.results-head h3 { margin: 0; }
+.family-badge {
+  font-weight: 700; font-size: 1.25rem; letter-spacing: .06em; padding: 2px 12px; border-radius: 2px;
+  background: var(--accent); color: var(--bg);
+}
+.family-reason { color: var(--muted); font-size: .92rem; margin: 6px 0 10px; }
+.empty-state { padding: 10px 0 4px; }
+.empty-state h4 { margin: 0 0 4px; }
+.empty-state p, .empty-state li { color: var(--muted); font-size: .95rem; }
+.tiers { margin: 6px 0 10px; }
+.tier { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); }
+.tier:first-child { border-top: 0; }
+.tier-code { font-weight: 700; font-size: 1.05rem; letter-spacing: .03em; text-transform: uppercase; }
+.tier-hours { font-weight: 700; font-size: 2rem; line-height: 1; }
+.tier-hours small { font-size: .85rem; font-weight: 600; color: var(--muted); margin-left: 4px; letter-spacing: .04em; }
+.tier-total { border-top: 2px solid var(--ink); font-weight: 600; }
+.tier-total .tier-hours { font-size: 1.3rem; }
+.split { border: 1px dashed var(--muted); padding: 8px 10px; margin: 8px 0; font-size: .95rem; }
+.split-row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 4px 0; }
+.split-row + .split-row { border-top: 1px solid var(--line); }
+.split-date { font-weight: 700; font-family: var(--font-head); min-width: 9ch; }
+.line-row { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; margin: 6px 0; }
+.line-row .lbl { flex: 0 0 auto; }
+.invoice-amt { font-family: var(--font-head); font-weight: 700; font-size: 1.3rem; }
+.flags { list-style: none; padding: 0; margin: 8px 0 0; }
+.flag { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; padding: 8px 10px; margin: 6px 0; border-left: 4px solid var(--muted); background: var(--bg); }
+.flag-error { border-left-color: var(--err); }
+.flag-warn { border-left-color: var(--warn); }
+.flag-info { border-left-color: var(--muted); }
+.flag-ruling { border-left-color: var(--ruling); }
+.flag-code { font-family: var(--font-head); font-weight: 600; font-size: .85rem; letter-spacing: .04em; color: var(--muted); }
+.flag-msg { flex-basis: 100%; }
+.summary-row { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .92rem; color: var(--muted); margin: 0 0 6px; }
+.summary-row b { color: var(--ink); font-weight: 600; }
+
+/* Review */
+.toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; margin: 10px 0; }
+.toolbar .field { flex: 1 1 180px; }
+.entry-row {
+  display: grid; gap: 4px; width: 100%; text-align: left; font: inherit; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: var(--radius);
+  padding: 10px 12px; margin: 8px 0; cursor: pointer;
+}
+.entry-row:hover { border-left-color: var(--accent); }
+.entry-row.is-selected { border-left-color: var(--accent); }
+.entry-row strong { font-size: 1.05rem; letter-spacing: .02em; }
+.er-main { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.er-tiers { font-size: .92rem; color: var(--muted); }
+.er-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.detail-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px; }
+.detail-head h3 { margin: 0; flex: 1 1 auto; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0 0 10px; font-size: .95rem; }
+.kv dt { font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: .78rem; color: var(--muted); padding-top: 3px; }
+.kv dd { margin: 0; min-width: 0; }
+@media (max-width: 420px) { .kv { grid-template-columns: 1fr; gap: 0 } .kv dd { margin-bottom: 6px; } }
+.table-scroll { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: .75rem; color: var(--muted); white-space: nowrap; }
+td.num, th.num { text-align: right; }
+td.num { white-space: nowrap; }
+.table-scroll table { min-width: 440px; }
+#csv-out { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; min-height: 160px; white-space: pre; overflow: auto; }
+
+/* Rules screen */
+.rules-digest h3 { margin-top: 18px; }
+.rules-digest p, .rules-digest li { max-width: 70ch; }
+.open-rulings li { margin-bottom: 10px; }
+.open-rulings .chip { margin-right: 6px; }
+.rates-table input { min-height: 38px; padding: 4px 6px; min-width: 88px; text-align: right; }
+.rates-table { min-width: 860px; }
+.rates-table th:first-child { position: sticky; left: 0; background: var(--surface); min-width: 170px; text-align: left; font-size: .9rem; text-transform: none; letter-spacing: 0; color: var(--ink); z-index: 1; box-shadow: 1px 0 0 var(--line); }
+.rates-table th.num { white-space: normal; min-width: 96px; }
+
+footer { margin-top: 30px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+
+/* Print */
+.print-only { display: none; }
+@media print {
+  html.js .screen:not(.is-active) { display: none; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  .wrap { display: none !important; }
+  .print-only { display: block !important; }
+  #print-sheet { max-width: none; padding: 0; color: #000; }
+  #print-sheet h1 { font-size: 16pt; text-transform: none; letter-spacing: 0; }
+  #print-sheet h2 { font-size: 12pt; margin: 12pt 0 4pt; }
+  #print-sheet table { border-collapse: collapse; width: 100%; font-size: 10pt; }
+  #print-sheet th, #print-sheet td { border: 1px solid #000; padding: 3pt 5pt; color: #000; }
+  #print-sheet th { background: #eee; }
+  #print-sheet .ps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4pt 10pt; margin: 6pt 0; }
+  #print-sheet .ps-grid div { border-bottom: 1px solid #000; padding: 2pt 0; }
+  #print-sheet .ps-hours { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4pt; margin-top: 6pt; }
+  #print-sheet .ps-hours div { border: 1px solid #000; padding: 4pt; text-align: center; }
+  #print-sheet .ps-hours b { display: block; font-size: 14pt; font-variant-numeric: tabular-nums; }
+  #print-sheet .ps-sign { display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; margin-top: 24pt; }
+  #print-sheet .ps-sign div { border-top: 1px solid #000; padding-top: 3pt; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <h1>SoCal Timesheet</h1>
+    <p class="tagline">Labor codes, overtime, lunch checks and the midnight split, computed from the dispatch rulebook as you type. Pilot tool: runs alongside official payroll, never replaces it.</p>
+    <p id="mode-note" class="mode-note" role="status">Storage: connecting&hellip;</p>
+    <noscript><p>JavaScript is off in this browser. The calculator, saving and review need it. The Rules screen below reads fine as-is.</p></noscript>
+  </header>
+
+  <nav class="tabs" aria-label="Screens">
+    <a href="#entry" id="tab-entry" aria-current="page">Entry</a>
+    <a href="#review" id="tab-review">Review</a>
+    <a href="#rules" id="tab-rules">Rules</a>
+  </nav>
+
+  <main id="main">
+
+    <!-- ENTRY -->
+    <section id="entry" class="screen is-active" tabindex="-1" aria-labelledby="entry-h">
+      <div class="screen-head">
+        <h2 id="entry-h">Entry</h2>
+        <p id="entry-context" class="hint">New entry. Fill in the shift; the results card updates as you go.</p>
+        <button type="button" id="btn-new" class="btn btn-sm" hidden>Start a new entry</button>
+      </div>
+
+      <form id="entry-form" novalidate autocomplete="off">
+        <input type="hidden" id="f-entry-id" value="">
+
+        <fieldset>
+          <legend>Who, when, where</legend>
+          <div class="grid-2">
+            <div class="field">
+              <label for="f-inspector">Inspector</label>
+              <select id="f-inspector" name="inspector">
+                <option value="">Choose an inspector</option>
+                <option value="Aleksey Souglobov">Aleksey Souglobov</option>
+                <option value="Fernando Carranza">Fernando Carranza</option>
+                <option value="Alberto Pineda-Gonzalez">Alberto Pineda-Gonzalez</option>
+                <option value="Eriberto Aragon">Eriberto Aragon</option>
+                <option value="Rigoberto Arroyo">Rigoberto Arroyo</option>
+                <option value="Carlos Viramontes">Carlos Viramontes</option>
+                <option value="Steven Chang">Steven Chang</option>
+                <option value="Eduardo Gomez">Eduardo Gomez</option>
+                <option value="__other__">Other (type a name)</option>
+              </select>
+            </div>
+            <div class="field" id="f-inspector-other-wrap" hidden>
+              <label for="f-inspector-other">Inspector name</label>
+              <input type="text" id="f-inspector-other" name="inspectorOther" placeholder="First Last">
+            </div>
+            <div class="field">
+              <label for="f-entered-by">Entered by</label>
+              <input type="text" id="f-entered-by" name="enteredBy" placeholder="Your name">
+            </div>
+            <div class="field">
+              <div class="label-row"><label for="f-date">Date shift started</label> <span id="f-weekday" class="chip" aria-live="polite">&mdash;</span></div>
+              <input type="date" id="f-date" name="date" required>
+            </div>
+            <div class="field">
+              <label for="f-project">Project</label>
+              <select id="f-project" name="project">
+                <option value="105-Express">105 Express (EA 07-314524)</option>
+                <option value="D8">District 8</option>
+                <option value="CTC">CTC</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-ea">EA</label>
+              <input type="text" id="f-ea" name="ea" placeholder="07-314524" class="num">
+            </div>
+            <div class="field" id="f-task-order-wrap" hidden>
+              <label for="f-task-order">Task order</label>
+              <input type="text" id="f-task-order" name="taskOrder" placeholder="#3">
+            </div>
+            <div class="field">
+              <label for="f-group">Group</label>
+              <select id="f-group" name="group"></select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Day ledger</legend>
+          <div class="grid-2">
+            <div class="field">
+              <label for="f-prior">Hours already worked today (other job)</label>
+              <input type="text" id="f-prior" name="priorMinutes" inputmode="numeric" placeholder="0:00" class="num" aria-describedby="prior-help">
+              <p id="prior-help" class="hint">h:mm. Prefilled from this inspector's other entries on this date, including last night's spill past midnight. The 8-hour clock keeps counting from here.</p>
+            </div>
+            <div class="field">
+              <label for="f-prior-note">Override note</label>
+              <input type="text" id="f-prior-note" name="priorNote" placeholder="e.g. 4 hrs at another employer, not in this system">
+            </div>
+          </div>
+          <div id="ledger" class="hint">Pick an inspector and a date to see the day ledger.</div>
+          <div class="actions" style="margin:8px 0 0">
+            <button type="button" id="btn-prior-reset" class="btn btn-sm" hidden>Use ledger value</button>
+          </div>
+          <div class="grid-2" style="margin-top:8px">
+            <div class="check">
+              <input type="checkbox" id="f-holiday" name="holiday">
+              <label for="f-holiday">Holiday (no rule on file yet; flags a QC ruling)</label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="f-lunch2-waived" name="secondLunchWaived">
+              <label for="f-lunch2-waived">Second lunch waived (only valid under 12 hrs)</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Time blocks</legend>
+          <p class="hint">Work, travel and paid breaks count toward hours. Lunch is unpaid. A stop time earlier than its start means the block crosses midnight.</p>
+          <div id="blocks"></div>
+          <p id="blocks-empty" class="blocks-empty">No blocks yet.</p>
+          <div class="actions" style="margin:8px 0 0">
+            <button type="button" id="btn-add-block" class="btn">+ Add block</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Vehicle</legend>
+          <div class="grid-3">
+            <div class="field">
+              <label for="f-odo-begin">Beginning odometer</label>
+              <input type="number" id="f-odo-begin" name="odoBegin" inputmode="numeric" min="0" step="1" class="num">
+            </div>
+            <div class="field">
+              <label for="f-odo-end">Ending odometer</label>
+              <input type="number" id="f-odo-end" name="odoEnd" inputmode="numeric" min="0" step="1" class="num">
+            </div>
+            <div class="field">
+              <label for="f-miles">Miles</label>
+              <input type="number" id="f-miles" name="miles" inputmode="numeric" min="0" step="1" class="num" aria-describedby="miles-help">
+              <p id="miles-help" class="hint">Auto: end minus begin. Type over it if the paper log says otherwise.</p>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label for="f-itinerary">Itinerary (one stop per line)</label>
+            <textarea id="f-itinerary" name="itinerary" rows="3" placeholder="Whittier Lab&#10;Gardena plant&#10;Whittier Lab"></textarea>
+          </div>
+          <div class="grid-3" style="margin-top:12px">
+            <div class="field">
+              <label for="f-make">Make</label>
+              <input type="text" id="f-make" name="make">
+            </div>
+            <div class="field">
+              <label for="f-model">Model</label>
+              <input type="text" id="f-model" name="model">
+            </div>
+            <div class="field">
+              <label for="f-plate">Plate</label>
+              <input type="text" id="f-plate" name="plate">
+            </div>
+          </div>
+        </fieldset>
+
+        <section id="results" class="card results" aria-labelledby="results-h">
+          <div class="results-head"><h3 id="results-h">Results</h3></div>
+          <div class="empty-state">
+            <h4>Nothing to code yet</h4>
+            <p>Add the first time block above. As soon as a block has a start and stop, this card shows:</p>
+            <ul>
+              <li>hours by labor code (PW or PWSS; Regular, 1.5 OT, 2.0 DT)</li>
+              <li>why it picked PW or PWSS, and both rows when the shift crosses midnight</li>
+              <li>lunch timing against the 4:59 and 9:59 limits</li>
+              <li>anything that blocks Submit, and anything waiting on a QC ruling</li>
+            </ul>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button type="submit" id="btn-submit" class="btn btn-submit" disabled aria-describedby="submit-reason">Submit</button>
+          <button type="button" id="btn-draft" class="btn">Save draft</button>
+          <button type="button" id="btn-print" class="btn btn-print">Print daily report</button>
+          <p id="submit-reason" class="hint" aria-live="polite">Add at least one complete time block to submit.</p>
+        </div>
+        <p id="entry-msg" class="status" role="status"></p>
+      </form>
+    </section>
+
+    <!-- REVIEW -->
+    <section id="review" class="screen" tabindex="-1" aria-labelledby="review-h">
+      <div class="screen-head">
+        <h2 id="review-h">Review</h2>
+        <p class="hint">Manager view. Open an entry to recheck it against the rules, approve it, or kick it back with a note.</p>
+      </div>
+      <div class="toolbar">
+        <div class="field">
+          <label for="f-review-filter">Show</label>
+          <select id="f-review-filter">
+            <option value="all">All entries</option>
+            <option value="submitted">Needs review</option>
+            <option value="approved">Approved</option>
+            <option value="kicked_back">Kicked back</option>
+            <option value="draft">Drafts</option>
+          </select>
+        </div>
+        <button type="button" id="btn-csv" class="btn">Export CSV</button>
+      </div>
+      <div id="csv-panel" class="card" hidden>
+        <div class="screen-head">
+          <h3 style="margin:0">CSV export</h3>
+          <button type="button" id="btn-csv-copy" class="btn btn-sm">Copy to clipboard</button>
+          <button type="button" id="btn-csv-close" class="btn btn-sm">Close</button>
+        </div>
+        <p class="hint">Submitted and approved entries, one row per date portion, labor code and job. Copy and paste into the budget tracker.</p>
+        <label for="csv-out">CSV text</label>
+        <textarea id="csv-out" readonly rows="10" spellcheck="false"></textarea>
+        <p id="csv-msg" class="status" role="status"></p>
+      </div>
+      <div id="review-list">
+        <div class="card empty-state">
+          <h4>No entries yet</h4>
+          <p>Entries land here newest first, with hours by labor code, flag counts and a status chip (Draft, Submitted, Approved, Kicked back). Submit one from the Entry tab and it shows up immediately.</p>
+        </div>
+      </div>
+      <div id="review-detail" class="card" hidden></div>
+    </section>
+
+    <!-- RULES -->
+    <section id="rules" class="screen" tabindex="-1" aria-labelledby="rules-h">
+      <div class="screen-head">
+        <h2 id="rules-h">Rules</h2>
+        <p class="hint">What the engine applies, in plain words. Authority: the SoCal dispatch rulebook (last updated 2026-07-31).</p>
+      </div>
+
+      <div class="card rules-digest">
+        <p>This tool computes company rulebook rules. It is not legal advice and it is not payroll. Where the rulebook has no answer, the result carries a <span class="chip chip-ruling">Pending QC ruling</span> flag instead of a guess, and the hours are coded the conservative way described below.</p>
+
+        <h3>The window: PW vs PWSS</h3>
+        <ul>
+          <li>The window is 6:00 AM to 5:00 PM by the clock.</li>
+          <li>Every paid minute (work, travel, paid break) is counted by its actual clock time. Majority inside the window: <b>PW</b>. Majority outside: <b>PWSS</b> (special shift).</li>
+          <li>Exact 50/50: the shift codes to the side where it <em>started</em>.</li>
+          <li>One family per shift. It prefixes every labor code: PW Regular, PW 1.5 OT, PW 2.0 DT, PWSS Regular, PWSS 1.5 OT, PWSS 2.0 DT.</li>
+          <li>Minutes after midnight count by their real clock time on day two. Lunch is unpaid and never counts.</li>
+        </ul>
+
+        <h3>The ladder: Regular, 1.5 OT, 2.0 DT</h3>
+        <ul>
+          <li>Minutes 1 to 480 (the first 8 hours) are Regular. Minutes 481 to 720 (hours 8 to 12) are 1.5 OT. Minute 721 onward (past 12 hours, i.e. after 4 hours of OT) is 2.0 DT.</li>
+          <li>The count belongs to the calendar day, not the shift: at midnight it restarts at zero for the Shift Change row, because the post-midnight hours are the next day's hours (rulebook: "any hours past 8 in a day").</li>
+          <li>The ladder starts where the day ledger says, not at zero. See below.</li>
+        </ul>
+
+        <h3>Saturday and Sunday</h3>
+        <ul>
+          <li>Saturday: every minute is at least 1.5 OT. Sunday: every minute is 2.0 DT.</li>
+          <li>Applied per calendar day of each minute. A Friday shift that spills past midnight has its Saturday minutes at 1.5; Saturday into Sunday goes to 2.0 after midnight; Sunday into Monday drops back to the plain ladder.</li>
+          <li>Holidays have no rule on file. A holiday shift is coded like a weekday and flagged for QC.</li>
+        </ul>
+
+        <h3>Lunch</h3>
+        <ul>
+          <li>The first lunch must <em>begin</em> no later than 4:59 after the shift starts (elapsed clock time). A shift under 5 hours with no lunch is fine.</li>
+          <li>Over 12 hours worked: a second lunch must begin no later than 9:59. Between 10 and 12 hours the second lunch is waivable; the tool notes it either way.</li>
+          <li>A missing or late lunch is an error and blocks Submit.</li>
+          <li>Rest breaks are advisory only: a paid stretch over 4 hours with no break or lunch gets a warning (California 10-minute paid rest per 4 hours), pending a company policy ruling.</li>
+        </ul>
+
+        <h3>Midnight: the Shift Change row</h3>
+        <ul>
+          <li>A shift that crosses midnight gets a second checklist row dated the next day at 12:00 AM with Status <b>Shift Change</b>. The results card shows both rows.</li>
+          <li>Hours after midnight are coded by their own calendar day (so a Friday night shift's Saturday minutes are OT) and the 8-hour clock restarts at midnight, the same way the day ledger below counts them.</li>
+        </ul>
+
+        <h3>Day ledger: hours already worked today</h3>
+        <ul>
+          <li>Overtime belongs to the person's workday (midnight to midnight), not to a job. A second shift or a second job on the same date does not restart the 8-hour clock.</li>
+          <li>The Entry screen prefills "Hours already worked today" from every other entry on file for that inspector on that date, including the post-midnight spill of a shift that started the day before.</li>
+          <li>Override it, with a note, when hours exist outside this system (another employer, or a day that was never entered). The override is recorded with the entry.</li>
+        </ul>
+
+        <h3>Timeline checks</h3>
+        <ul>
+          <li>Blocks sort by start time. A block that starts earlier than the previous block's stop is placed on day two.</li>
+          <li>Overlapping blocks and zero-length blocks are errors. A gap between blocks is a warning (off the clock, not paid). More than 20 hours elapsed is an error (almost certainly a typo).</li>
+        </ul>
+
+        <h3>Miles and EA</h3>
+        <ul>
+          <li>Miles come from the daily log odometer: ending minus beginning. An ending reading below the beginning is an error. Typed miles that do not match the odometer are a warning.</li>
+          <li>EA format is a warning only: 105 Express EAs end in 4 (07-314524). D8 EAs appear two ways: the Daily Report form uses 08-1C08U3 (form note: all EA #'s end in 3) and the checklist uses 1C08U4; both are accepted, the 4-form gets an info note. CTC has no EA rule.</li>
+          <li>Non-PW hours (interviews, PTO) are not an entry type in this version.</li>
+        </ul>
+
+        <h3 id="open-rulings-h">Open rulings: pending QC</h3>
+        <p>Six questions the rulebook leaves open. The engine never guesses on them; it flags the entry and codes it as described.</p>
+        <ol class="open-rulings" aria-labelledby="open-rulings-h">
+          <li><span class="chip chip-ruling">Pending QC ruling</span><b>Saturday after 4 hours of OT.</b> Saturday is 1.5 all day. Does the "after 4 hours of 1.5, the rest is 2.0" rule roll Saturday hours 5+ to 2.0? Current behavior: hours stay at 1.5 unless the ladder itself passes 12 hours of work; any Saturday shift over 4 paid hours is flagged with both readings.</li>
+          <li><span class="chip chip-ruling">Pending QC ruling</span><b>Holiday coding and pay.</b> No holiday rule exists. The Holiday toggle codes the day like a normal weekday and flags it. Premium pay is never assumed.</li>
+          <li><span class="chip chip-ruling">Pending QC ruling</span><b>Whittier Lab break lines.</b> Observed: lab break lines are always PW Regular, even at 10:15 PM on Saturday 7/4. Are lab lines exempt from the shift rules? This tool applies the shift rules to every block; QC decides whether lab lines get an exemption.</li>
+          <li><span class="chip chip-ruling">Pending QC ruling</span><b>Night shifts across midnight.</b> The rulebook puts overtime on "hours past 8 in a day" and carries post-midnight hours on a next-day Shift Change row. Real invoices confirm the day is the unit across separate shifts (a second shift after an 8-hour morning was billed entirely as OT). Whether one continuous night shift restarts its 8-hour clock at midnight is undecided. Current behavior: the clock restarts at 00:00; any overnight shift where the continuous reading would differ is flagged with both sets of hours.</li>
+          <li><span class="chip chip-ruling">Pending QC ruling</span><b>Which D8 EA goes on the timesheet.</b> Daily Report form: 08-1C08U3. Checklist: 1C08U4. The app accepts both and notes the difference.</li>
+          <li><span class="chip chip-ruling">Pending QC ruling</span><b>Rest-break policy.</b> California provides a paid 10-minute rest per 4 hours. Company policy on tracking and enforcing it is not written down, so the engine only warns.</li>
+        </ol>
+      </div>
+
+      <section class="card" id="settings" aria-labelledby="settings-h">
+        <h3 id="settings-h">Settings: invoice rates</h3>
+        <p class="hint">Invoice rates are what Atlas bills the client per hour by labor code. They are not pay rates. Nothing here is saved until you press Save. Rates feed the Invoice preview line on the results card and the Rate and Amount columns in the CSV export.</p>
+        <div class="grid-2">
+          <div class="field">
+            <label for="r-project">Project</label>
+            <select id="r-project">
+              <option value="105-Express">105 Express</option>
+              <option value="D8">District 8</option>
+              <option value="CTC">CTC</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-period">Rate period</label>
+            <input type="text" id="r-period" placeholder="e.g. 2026 or FY26-27">
+          </div>
+        </div>
+        <div id="rates-table" class="table-scroll" style="margin-top:12px">
+          <p class="hint">Rates load here once storage answers.</p>
+        </div>
+        <div class="toolbar">
+          <div class="field">
+            <label for="r-add-name">Add an inspector row</label>
+            <input type="text" id="r-add-name" placeholder="First Last">
+          </div>
+          <button type="button" id="btn-rate-add" class="btn btn-sm">Add row</button>
+        </div>
+        <div class="actions">
+          <button type="button" id="btn-rates-save" class="btn btn-primary">Save rates</button>
+          <button type="button" id="btn-rates-reload" class="btn">Discard changes</button>
+        </div>
+        <p id="rates-msg" class="status" role="status"></p>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>SoCal Timesheet computes Atlas SoCal rulebook rules for the 105 Express, District 8 and CTC testing dispatch. Pilot tool: it runs alongside the official payroll system and is not legal advice. Undecided rules are flagged, never guessed.</p>
+  </footer>
+</div>
+
+<div id="print-sheet" class="print-only" aria-hidden="true"></div>
+
+<template id="tpl-block">
+  <fieldset class="block-row">
+    <legend class="block-legend">Block <span class="block-n">1</span></legend>
+    <div class="field f-cat">
+      <label>Category</label>
+      <select data-k="category">
+        <option value="work">Work</option>
+        <option value="travel">Travel</option>
+        <option value="lunch">Lunch (unpaid)</option>
+        <option value="break">Break (paid)</option>
+      </select>
+    </div>
+    <div class="field f-start">
+      <label>Start</label>
+      <input type="time" step="60" data-k="start">
+    </div>
+    <div class="field f-stop">
+      <label>Stop</label>
+      <input type="time" step="60" data-k="stop">
+    </div>
+    <div class="field f-job">
+      <label>Job / log #</label>
+      <input type="text" data-k="jobRef" placeholder="080526-ID852-...">
+    </div>
+    <div class="field f-note">
+      <label>Description</label>
+      <input type="text" data-k="note" placeholder="Plant inspection, Mix #2102">
+    </div>
+    <div class="block-actions">
+      <button type="button" class="btn btn-sm" data-act="dup">Duplicate</button>
+      <button type="button" class="btn btn-sm" data-act="rm">Remove</button>
+    </div>
+  </fieldset>
+</template>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
