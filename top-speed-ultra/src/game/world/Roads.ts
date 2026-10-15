@@ -14,6 +14,7 @@ import type { QualityPreset } from '../settings';
 
 export const CHUNK = 160;
 const DASH = 3.66, GAP = 10.97, PERIOD = DASH + GAP;
+const TOLL = new Set(['SR-73', 'SR-133', 'SR-241', 'SR-261']);
 
 interface Desc { key: number; path: Path | null; k: number; over: Overpass | null; x: number; z: number; r: number }
 interface Built { desc: Desc; group: THREE.Group; ox: number; oz: number }
@@ -31,13 +32,14 @@ export class Roads {
   private signsBy = new Map<number, Sign[]>();
 
   constructor(private net: Network, private q: QualityPreset) {
-    const a = T.asphalt(), sh = T.shoulder(), c = T.concrete();
+    const a = T.asphalt(), sh = T.shoulder(), c = T.concrete(), pc = T.pcc(), bw = T.blockWall();
     const off = (m: THREE.MeshStandardMaterial, f: number) => { m.polygonOffset = true; m.polygonOffsetFactor = f; m.polygonOffsetUnits = f; return m; };
     this.m = {
       asphalt: off(new THREE.MeshStandardMaterial({ map: a.map, normalMap: a.normalMap, roughnessMap: a.roughnessMap, normalScale: new THREE.Vector2(0.6, 0.6), color: 0xb9b7b2 }), -1),
       shoulder: off(new THREE.MeshStandardMaterial({ map: sh.map, normalMap: sh.normalMap, roughness: 0.95, color: 0xa8a49c }), -1),
+      pcc: off(new THREE.MeshStandardMaterial({ map: pc.map, normalMap: pc.normalMap, roughnessMap: pc.roughnessMap, normalScale: new THREE.Vector2(0.5, 0.5), color: 0xd8d4cc }), -1),
       concrete: new THREE.MeshStandardMaterial({ map: c.map, normalMap: c.normalMap, roughness: 0.9, color: 0xe0dcd3, side: THREE.DoubleSide }),
-      wall: new THREE.MeshStandardMaterial({ map: c.map, normalMap: c.normalMap, roughness: 0.95, color: 0xc9b9a0, side: THREE.DoubleSide }),
+      wall: new THREE.MeshStandardMaterial({ map: bw.map, normalMap: bw.normalMap, roughness: 0.95, color: 0xf0e8da, side: THREE.DoubleSide }),
       under: new THREE.MeshStandardMaterial({ map: c.map, roughness: 0.95, color: 0x9d988f, side: THREE.DoubleSide }),
       paint: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
       cushion: new THREE.MeshStandardMaterial({ color: 0xf2c21b, roughness: 0.6 }),
@@ -69,9 +71,10 @@ export class Roads {
 
   // rain darkens the asphalt and makes it glossy (it picks up the sky and the lights)
   setWet(w: number) {
-    const a = this.m.asphalt as THREE.MeshStandardMaterial, sh = this.m.shoulder as THREE.MeshStandardMaterial;
+    const a = this.m.asphalt as THREE.MeshStandardMaterial, sh = this.m.shoulder as THREE.MeshStandardMaterial, pc = this.m.pcc as THREE.MeshStandardMaterial;
     a.roughness = 1 - 0.62 * w; a.color.setHex(0xb9b7b2).multiplyScalar(1 - 0.32 * w); a.envMapIntensity = 1 + 1.2 * w;
     sh.roughness = 0.95 - 0.5 * w; sh.color.setHex(0xa8a49c).multiplyScalar(1 - 0.3 * w);
+    pc.roughness = 1 - 0.55 * w; pc.color.setHex(0xd8d4cc).multiplyScalar(1 - 0.3 * w); pc.envMapIntensity = 1 + 1.0 * w;
   }
 
   // build what's within the draw distance (nearest and in front first), drop what's well beyond it
@@ -151,8 +154,10 @@ export class Roads {
     const lanesProf: number[] = []; for (let i = 0; i <= p.lanes; i++) lanesProf.push(p.edgeL + LANE_W * i);
     const vOff = (s0 / LANE_W) % 1000;
     const vRow = (row: Row, scale: number) => vOff * (LANE_W / scale) + (row.s - s0) / scale;
-    const lanes = this.strip(rows, lanesProf.map((d) => [d, 0]), (row, j) => [j, vRow(row, LANE_W)], (i, j) => !covered((rows[i].s + rows[i + 1].s) / 2, (lanesProf[j] + lanesProf[j + 1]) / 2, rows[i].y));
-    if (lanes) own(new THREE.Mesh(lanes, this.m.asphalt));
+    // the interstates and state routes are concrete slabs; the toll roads and every ramp are asphalt
+    const pcc = p.main && !TOLL.has(p.route ?? '');
+    const lanes = this.strip(rows, lanesProf.map((d) => [d, 0]), (row, j) => [j, vRow(row, pcc ? T.SLAB : LANE_W)], (i, j) => !covered((rows[i].s + rows[i + 1].s) / 2, (lanesProf[j] + lanesProf[j + 1]) / 2, rows[i].y));
+    if (lanes) own(new THREE.Mesh(lanes, pcc ? this.m.pcc : this.m.asphalt));
     const shL = this.strip(rows, [[p.paveL - 0.4, -0.05], [p.paveL, 0], [p.edgeL, 0]], (row, j) => [j * 0.9, vRow(row, 3)], (i) => !covered((rows[i].s + rows[i + 1].s) / 2, (p.paveL + p.edgeL) / 2, rows[i].y));
     const shR = this.strip(rows, [[p.edgeR, 0], [p.paveR, 0], [p.paveR + 0.4, -0.05]], (row, j) => [j * 1.1, vRow(row, 3)], (i) => !covered((rows[i].s + rows[i + 1].s) / 2, (p.paveR + p.edgeR) / 2, rows[i].y));
     const sh = [shL, shR].filter(Boolean) as THREE.BufferGeometry[];
@@ -298,8 +303,11 @@ export class Roads {
     for (let L = 1; L < p.lanes; L++) {
       const d = p.edgeL + LANE_W * L;
       for (let st = Math.floor(s0 / PERIOD) * PERIOD; st < s1; st += PERIOD) {
-        const a = Math.max(st, s0), b = Math.min(st + DASH, s1);
-        if (b > a) quad(a, b, d, 0.12, white);
+        // California lane lines: four raised Botts' dots where other states paint a dash
+        for (let k = 0; k < 4; k++) {
+          const cx = st + 0.45 + k * 0.92;
+          if (cx >= s0 && cx < s1) quad(cx - 0.06, cx + 0.06, d, 0.11, white, 0.02);
+        }
         const m = st + DASH + GAP / 2;
         if (m >= s0 && m < s1) quad(m - 0.05, m + 0.05, d, 0.1, [1.2, 1.2, 1.1], 0.03);
       }

@@ -113,6 +113,69 @@ export function concrete(): PBR {
   });
 }
 
+// Portland cement concrete lanes (the 405, the 5, the 55, the 57, the 91, the 22): one lane wide by one slab long.
+// Light grey-beige slabs with a sealed, slightly skewed transverse joint, the longitudinal joint at the lane edge,
+// diamond-ground tining, darker polished wheel paths, an oil line, hairline cracks and a patch.
+export const SLAB = 4.57;
+export function pcc(): PBR {
+  return once('pcc', () => {
+    const n = Math.min(SIZE, 1024), r = rng(41);
+    const [c, g] = mk(n, n), [rc, rg] = mk(n, n);
+    const img = g.createImageData(n, n), d = img.data, rimg = rg.createImageData(n, n), rd = rimg.data;
+    const height = new Float32Array(n * n);
+    const skew = 0.06 * n;                                 // the joints run a little off square, as Caltrans saws them
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const u = x / n, v = y / n;
+      const grain = tnoise(x * 1.1, y * 1.1, n * 1.1, 42);
+      const coarse = tfbm(u * 5, v * 5, 5, 4, 43);
+      const mottle = tfbm(u * 2, v * 2, 2, 3, 44);
+      const tine = 0.5 + 0.5 * Math.sin((y / 4.5) * Math.PI * 2);        // grooves about 2 cm apart
+      const path = Math.exp(-(((u - 0.28) / 0.08) ** 2)) + Math.exp(-(((u - 0.72) / 0.08) ** 2));
+      const oil = Math.exp(-(((u - 0.5) / 0.04) ** 2)) * (0.4 + 0.6 * tfbm(u * 4, v * 8, 4, 3, 45));
+      const jy = (((y - u * skew) % n) + n) % n, tj = Math.min(jy, n - jy), lj = Math.min(x, n - x);
+      const joint = Math.max(tj < 3 ? 1 : tj < 7 ? 0.35 : 0, lj < 2 ? 1 : lj < 5 ? 0.3 : 0);
+      let lum = 0.58 + (mottle - 0.5) * 0.08 + (coarse - 0.5) * 0.07 + (grain - 0.5) * 0.09 - path * 0.05 - oil * 0.05 - tine * 0.015;
+      lum -= joint * 0.26;
+      const i = (y * n + x) * 4;
+      d[i] = clamp(lum * 255 * 1.02, 0, 255); d[i + 1] = clamp(lum * 255, 0, 255); d[i + 2] = clamp(lum * 255 * 0.94, 0, 255); d[i + 3] = 255;
+      const rough = clamp(0.86 - path * 0.14 - oil * 0.12 + (grain - 0.5) * 0.08 + joint * 0.1, 0.4, 1);
+      rd[i] = rd[i + 1] = rd[i + 2] = rough * 255; rd[i + 3] = 255;
+      height[y * n + x] = grain * 0.35 + coarse * 0.25 + tine * 0.25 - joint * 0.8;
+    }
+    g.putImageData(img, 0, 0); rg.putImageData(rimg, 0, 0);
+    g.strokeStyle = 'rgba(40,38,36,0.45)'; g.lineWidth = 1.5;
+    for (let k = 0; k < 2; k++) {
+      let x = r() * n, y = r() * n, a = r() * Math.PI * 2;
+      g.beginPath(); g.moveTo(x, y);
+      for (let s = 0; s < 30; s++) { a += (r() - 0.5) * 0.8; x += Math.cos(a) * 6; y += Math.sin(a) * 6; g.lineTo(x, y); }
+      g.stroke();
+    }
+    return { map: tex(c, true), normalMap: normalMap(height, n, n, 1.6), roughnessMap: tex(rc, false) };
+  });
+}
+
+// a masonry sound wall: split-face block in running bond, tan, 0.2 m courses of 0.4 m blocks; one tile is 4 m by
+// 4 m with the height along u (the wall strip's u runs up the face) and the road along v
+export function blockWall(): PBR {
+  return once('blockWall', () => {
+    const n = 512, [c, g] = mk(n, n), img = g.createImageData(n, n), d = img.data, height = new Float32Array(n * n);
+    const bh = n / 20, bw = n / 10;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const course = Math.floor(x / bh), xx = x - course * bh;
+      const yo = (y + (course % 2) * (bw / 2)) % n, by = Math.floor(yo / bw), yy = yo - by * bw;
+      const mortar = xx < 2 || yy < 2;
+      const face = tnoise(x * 1.3, y * 1.3, n * 1.3, 51), split = tfbm((x / n) * 10, (y / n) * 10, 10, 4, 52);
+      const tint = tfbm((by * 0.37 + course * 0.11) % 1, (course * 0.23) % 1, 1, 1, 53);
+      const lum = mortar ? 0.72 : 0.62 + (tint - 0.5) * 0.14 + (split - 0.5) * 0.14 + (face - 0.5) * 0.1;
+      const i = (y * n + x) * 4;
+      d[i] = clamp(lum * 255, 0, 255); d[i + 1] = clamp(lum * 255 * 0.9, 0, 255); d[i + 2] = clamp(lum * 255 * 0.74, 0, 255); d[i + 3] = 255;
+      height[y * n + x] = mortar ? 0 : 0.5 + (split - 0.5) * 0.8 + (face - 0.5) * 0.3;
+    }
+    g.putImageData(img, 0, 0);
+    return { map: tex(c, true), normalMap: normalMap(height, n, n, 2.4) };
+  });
+}
+
 // roadside ground: dry Southern California grass and dirt, tinted further by vertex colour
 export function ground(): PBR {
   return once('ground', () => {

@@ -83,6 +83,11 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     wall in town), light standards, and guide-sign gantries 800 m and 260 m before each exit.
   - Elevated sections (more than 2 m above ground) get a deck underside and columns. Columns are never placed on
     another road.
+- **Road surfaces.** `Roads` picks the lane material per path: `pcc` (concrete slabs, `textures.ts` `pcc()`, tiled one
+  lane wide by `SLAB` = 4.57 m along, so `vRow` uses `SLAB` for those paths) for mains that are not toll roads
+  (`TOLL` set), `asphalt` otherwise. `setWet` darkens and glosses both. Lane lines are Botts' dots: four 0.11 m
+  quads per dash period at 0.45 + k × 0.92 m, lifted 0.02 m, plus the reflector in the gap. Sound walls use
+  `blockWall()` (courses along the strip's u, which runs up the face; blocks along v, the road).
 - **Terrain (`world/Terrain.ts`).** Tiles are 480 m. LOD 0 has a 12 m grid within about 520 m; LOD 1 has a 40 m
   grid.
   - Heights are the 60 m elevation grid plus noise. Every road sample then pulls nearby vertices toward the road's
