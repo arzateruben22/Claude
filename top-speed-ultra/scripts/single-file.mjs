@@ -14,7 +14,7 @@ const head = `<title>Top Speed OC: Ultra</title>
 <meta name="description" content="First-person sports-car freeway driving in the browser: a live Southern California freeway at speed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Saira+Semi+Condensed:wght@400;700;800&display=swap">
 <style>${css}</style>`;
 const body = `<div id="root"></div>
 <noscript>Top Speed OC: Ultra is a 3D driving game and needs JavaScript and WebGL.</noscript>
