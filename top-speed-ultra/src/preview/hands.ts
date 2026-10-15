@@ -9,7 +9,7 @@
 //     o.nails         polish colour (hex), or null for natural nails. Default: natural for 'm', a deep red for 'f'
 //     o.quality       'phone' (3 mm skin mesh, lighter shader) | 'high' (2.25 mm, full skin detail). Default 'high'
 //     o.watchTime     [h, m, s] shown on the watch (default 10:09:36)
-//   returns { group, setWheelAngle(rad), setTone(hex), dispose(), stats, grip }
+//   returns { group, setWheelAngle(rad), setPose(pose), setTone(hex), dispose(), stats, grip }
 //     group           a THREE.Group in the car's frame (x right, y up, -z forward, metres); add it to the car
 //     setWheelAngle   the wheel's rotation (the cockpit's wheelSpin.rotation.z); the hands turn with the rim and the
 //                     arms follow (two-bone reach, shoulders, elbows down and out). Reads right to about ±1 rad.
@@ -39,9 +39,14 @@ export interface HandsOptions {
   quality?: Quality;
   watchTime?: [number, number, number];
 }
+/** off-wheel poses for the abilities: the right hand resting on the knee, the left wrist raised to check the watch,
+ *  the left hand up at the window waving. 'wheel' puts both hands back. */
+export type HandPose = 'wheel' | 'knee' | 'watch' | 'wave';
 export interface DriverArms {
   group: THREE.Group;
   setWheelAngle(rad: number): void;
+  /** blend a hand off the wheel (0.3 s) and back; immediate skips the blend (test pages) */
+  setPose(pose: HandPose, immediate?: boolean): void;
   setTone(hex: number): void;
   dispose(): void;
   stats: { buildMs: number; tris: number; calls: number; meshMs: number; accMs: number };
@@ -114,18 +119,44 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
     return { side, shoulder0, pole, wristW_m, upper, fore, hand, foreUp, bindFore: new THREE.Quaternion(), bindForeDir: new THREE.Vector3(), bindUpper: new THREE.Quaternion(), bindUpperDir: new THREE.Vector3() };
   });
   const qTilt = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), WHEEL_TILT);
-  const wheelAxis = new THREE.Vector3(0, 0, 1).applyQuaternion(qTilt);
   const basis = (dir: THREE.Vector3, up: THREE.Vector3) => {
     const y = dir.clone().normalize(), x = up.clone().sub(y.clone().multiplyScalar(up.dot(y))).normalize(), z = new THREE.Vector3().crossVectors(x, y);
     return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, z));
   };
   const tmpQ = new THREE.Quaternion(), wq = new THREE.Quaternion(), vA = new THREE.Vector3(), vB = new THREE.Vector3();
+  // ---- off-wheel poses: a target for the hand bone (car frame) per side, blended in and out over 0.3 s. The bone
+  // maps the bind-pose hand (on the rim, wheel straight) by pos + quat * qTilt⁻¹ * (v - WHEEL_AT). A pose says where
+  // the wrist goes and which way the hand points (wrist to middle knuckle) and its back faces; the bone's quat is the
+  // rotation taking the bind hand's measured axes onto those, times qTilt, and its position puts the wrist there
+  const qTiltInv = qTilt.clone().invert(), waveQ = new THREE.Quaternion();
+  const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z).normalize();
+  const basisOf = (a: THREE.Vector3, b: THREE.Vector3) => { const x = a.clone().normalize(), z = new THREE.Vector3().crossVectors(x, b).normalize(), y = new THREE.Vector3().crossVectors(z, x); return new THREE.Matrix4().makeBasis(x, y, z); };
+  const wristC = [0, 1].map((side) => new THREE.Vector3(...toCar(A.wrist, side)));
+  const lenC = [0, 1].map((side) => new THREE.Vector3(...toCar(A.mcp[2], side)).sub(wristC[side]).normalize());
+  const backC = [0, 1].map((side) => new THREE.Vector3(...dirToCar([-A.palm.N[0], -A.palm.N[1], -A.palm.N[2]], side)).normalize());
+  const poseFor = (side: number, wrist: THREE.Vector3, len: THREE.Vector3, back: THREE.Vector3, wave: boolean) => {
+    const quat = new THREE.Quaternion().setFromRotationMatrix(basisOf(len, back).multiply(basisOf(lenC[side], backC[side]).invert()));
+    const pos = wrist.clone().sub(wristC[side].clone().sub(WHEEL_AT).applyQuaternion(quat));
+    return { side, pos, quat: quat.multiply(qTilt), wave, axis: len.clone() };
+  };
+  const POSES: Record<Exclude<HandPose, 'wheel'>, ReturnType<typeof poseFor>> = {
+    knee: poseFor(0, new THREE.Vector3(-0.12, 0.9, -0.42), V(0.1, -0.5, -0.86), V(0.05, 0.86, -0.5), false),       // right hand down on the console, palm down
+    watch: poseFor(1, new THREE.Vector3(-0.49, 1.0, -0.33), V(0.8, 0.35, -0.49), V(0.25, 0.34, 0.9), false),       // left wrist up, its back to the eyes
+    wave: poseFor(1, new THREE.Vector3(-0.58, 1.02, -0.4), V(-0.1, 0.95, -0.3), V(0.85, 0.2, 0.5), true),          // left hand up at the window, palm out
+  };
+  const off = sides.map(() => ({ t: 0, goal: 0, pos: new THREE.Vector3(), quat: new THREE.Quaternion(), wave: false, axis: new THREE.Vector3(0, 1, 0) }));
+  let lastT = performance.now();
   const pose = (angle: number, bind: boolean) => {
+    const now = performance.now(), dt = bind ? 0 : Math.min(0.1, (now - lastT) / 1000); lastT = now;
     wq.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angle).premultiply(qTilt);
-    const dq = new THREE.Quaternion().setFromAxisAngle(wheelAxis, angle);
     for (const s of sides) {
-      s.hand.position.copy(WHEEL_AT); s.hand.quaternion.copy(wq);
-      const wrist = s.wristW_m.clone().applyQuaternion(wq).add(WHEEL_AT);
+      const o = off[s.side];
+      o.t += Math.max(-dt / 0.3, Math.min(dt / 0.3, o.goal - o.t));
+      const k = o.t * o.t * (3 - 2 * o.t);
+      s.hand.position.copy(WHEEL_AT).lerp(o.pos, k); s.hand.quaternion.copy(wq).slerp(o.quat, k);
+      if (o.wave && k > 0) s.hand.quaternion.premultiply(waveQ.setFromAxisAngle(o.axis, Math.sin(now * 0.0138) * 0.35 * k));
+      const dq = s.hand.quaternion.clone().multiply(qTiltInv);     // the hand's rotation from its bind orientation
+      const wrist = s.wristW_m.clone().applyQuaternion(s.hand.quaternion).add(s.hand.position);
       const r = reach(s.shoulder0, [wrist.x, wrist.y, wrist.z], L1, L2, s.pole);
       const S = new THREE.Vector3(...r.shoulder), E = new THREE.Vector3(...r.elbow);
       const fdir = vA.copy(wrist).sub(E).normalize(), udir = vB.copy(E).sub(S).normalize();
@@ -233,6 +264,11 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   return {
     group,
     setWheelAngle(rad: number) { pose(rad, false); },
+    setPose(p: HandPose, immediate = false) {
+      for (const o of off) o.goal = 0;
+      if (p !== 'wheel') { const P = POSES[p], o = off[P.side]; o.pos.copy(P.pos); o.quat.copy(P.quat); o.wave = P.wave; o.axis.copy(P.axis); o.goal = 1; }
+      if (immediate) for (const o of off) o.t = o.goal;
+    },
     setTone(hex: number) { skinMat.setTone(hex); nailMat?.setTone(hex); },
     dispose() {
       for (const m of meshes) {

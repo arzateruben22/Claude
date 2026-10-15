@@ -4,6 +4,23 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: the ability hand poses are on the anatomical hands
+
+The one thing the realism hands had lost against the old cockpit: the abilities' gestures. `DriverArms.setPose`
+now takes a hand off the rim and back. A pose names where the wrist goes and which way the hand points and its back
+faces; the hand bone's rotation is solved from the bind hand's measured axes (wrist to middle knuckle, the palm
+normal), the arm's two-bone IK follows the wrist, and it blends over 0.3 s each way. Clear Path: the left hand comes
+up at the window and waves (a slow roll about the forearm) for 1.6 s. Focus Time: the left wrist comes up in front
+of the eyes, back of the hand to the driver, for 0.9 s. Locked In: the right hand rests on the console, palm down,
+for the five seconds, the left hand steering alone. The fingers keep their grip curl in every pose; there's no
+finger rig, so a wave reads as a raised loose fist.
+
+**Verified:** the preview's hands page with `?pose=knee|watch|wave` (`tests/out/preview/pose-*.png`), then the game
+itself: each ability fired through `useAbility()` with the matching driver and captured from the driver's seat
+(`tests/out/pose-{wave,watch,knee}.png`: the Closer's wave with the gold watch, the Ace's gloved watch check, the
+Wrench's hand down on the console while the left hand holds the wheel). `npm test -- --only=abilities` **4 of 4**
+with the poses in; no page errors.
+
 ## 2026-10-15: the tractor-trailer semi, a cleaner windscreen, and a safer autopilot
 
 **The semi.** The last block-built traffic vehicle is now built like the others, from `src/preview/traffic.ts`: a

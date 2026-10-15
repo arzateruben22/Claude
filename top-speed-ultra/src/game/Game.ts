@@ -466,13 +466,13 @@ export class Game {
       const cf = new THREE.Vector3(); this.camera.getWorldDirection(cf);
       this.traffic.thin(0.35, v, cf.x, cf.z);
       this.traffic.makeWay(v);
-      this.car.setPose(true); this.poseT = 1.6;
+      this.car.setPose('wave'); this.poseT = 1.6;
     } else if (id === 'focus') {
       this.worldScale = 0.7;
-      this.car.setPose(true); this.poseT = 0.9;
+      this.car.setPose('watch'); this.poseT = 0.9;
     } else {
       this.gripBoost = 1.3;
-      this.car.setPose(true); this.poseT = this.ability.def.duration;   // one hand on the wheel
+      this.car.setPose('knee'); this.poseT = this.ability.def.duration;   // one hand on the wheel
     }
     this.ev.toast(this.ability.def.name, 'good');
     return true;
@@ -481,7 +481,7 @@ export class Game {
   private endAbility() {
     this.traffic && (this.traffic.scale = 1);
     this.worldScale = 1; this.gripBoost = 1;
-    this.car.setPose(false); this.poseT = 0;
+    this.car.setPose(null); this.poseT = 0;
   }
 
   // navigation: head for a freeway (by label), or clear it
@@ -869,7 +869,7 @@ export class Game {
     // traffic
     const view = this.view();
     if (this.ability.update(dt) === 'end') this.endAbility();
-    if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.setPose(false); }
+    if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.setPose(null); }
     const passes = this.traffic.step(dt * this.worldScale, view, this.time);
     for (const contact of this.traffic.collide(view)) {
       p.x += contact.nx * contact.depth; p.z += contact.nz * contact.depth;

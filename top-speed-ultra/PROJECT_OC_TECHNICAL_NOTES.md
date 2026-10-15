@@ -214,7 +214,9 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     `Traffic.makeWay()` (gap-checked lane changes).
   - Focus Time steps traffic with `dt × 0.7`.
   - Locked In multiplies grip by 1.3.
-  - `Cockpit.setLook()` and `setPose()` handle the hands.
+  - `PlayerCar.setLook()` and `setPose('wave' | 'watch' | 'knee' | null)` handle the hands: Clear Path waves the left
+    hand at the window for 1.6 s, Focus Time brings the left wrist up for a 0.9 s watch check, Locked In rests the
+    right hand on the console for its duration.
 - **Start at your exit.** `Game.exitsFor(label)` lists a carriageway's real exits from `net.signs` (key, sign text,
   s, miles, side), de-duplicated by key `'<carriageway> @ <metres>'`. `Settings.exit` holds a key; `Game.start()`
   resolves it to the sign (within 20 m, so a rebuilt data file still matches) and places the car at `sign.s - 450`
@@ -253,8 +255,11 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Exits.** There are no exit numbers, since the source data has no `junction:ref`.
 - **Street ramps.** They end at a barrier. The game moves you to a nearby on-ramp instead of driving surface
   streets.
-- **Hands.** Anatomical since 2026-10-15 (the preview's), but without the ability poses: `PlayerCar.setPose` is a
-  no-op until the hands get a rig. The cockpit's side screens are static; the paddles don't flick.
+- **Hands.** Anatomical since 2026-10-15 (the preview's). The ability poses are on them since the same day
+  (`DriverArms.setPose`: a pose names the wrist's place and which way the hand points and its back faces; the bone's
+  rotation is solved from the bind hand's measured axes, the arm's IK follows, and it blends in and out over 0.3 s).
+  The fingers keep their grip curl in every pose: there is no finger rig. The cockpit's side screens are static; the
+  paddles don't flick.
 - **Switching graphics presets leaks a little.** Each round trip to Ultra leaves about 17–20 more textures alive
   (36 → 56 → 73), probably the bloom and GTAO passes' render targets, which `EffectComposer.dispose()` doesn't free.
   The frame rate on Low afterwards is unchanged.

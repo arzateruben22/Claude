@@ -9,7 +9,7 @@
 import * as THREE from 'three';
 import { buildCar } from '../../preview/car';
 import { buildCockpit, Cockpit } from '../../preview/cockpit';
-import { buildDriverArms, DriverArms } from '../../preview/hands';
+import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
 import { addWheel } from '../../preview/car-wheel';
 import { Kit } from '../../preview/car-kit';
 import { bodyFor } from '../../preview/car-body';
@@ -135,8 +135,9 @@ export class PlayerCar {
 
   // the driver's look (sleeves, gloves, watch, ring, bracelet, skin) without rebuilding the car
   setLook(look: DriverLook) { if (this.cfg) this.configure({ ...this.cfg, look }); }
-  // the ability's hand animation (watch check, wave, hand on the knee): not yet on the anatomical hands
-  setPose(_on: boolean) { /* TODO: poses for the new hands */ }
+  // the ability's hand animation: the left hand waves (Clear Path), the left wrist comes up for a watch check (Focus
+  // Time), the right hand rests on the console (Locked In); null puts both hands back on the rim. Blended in 0.3 s.
+  setPose(pose: HandPose | null) { this.arms?.setPose(pose ?? 'wheel'); }
   flickPaddle(_dir: 1 | -1) { /* the preview's paddles are fixed */ }
   // from outside the car the tinted glass and the cabin silhouette show; from the seat they would be in the way
   setOutsideView(v: boolean) { for (const o of this.outsideParts) o.visible = v; }

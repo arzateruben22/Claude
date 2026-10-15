@@ -12,7 +12,7 @@
 //   ?driver=closer|ace|wrench &pres=m|f &skin=0..4 &quality=phone|high &wheel=rad &time=day|sunset &hud=1
 import * as THREE from 'three';
 import { makeStage } from './stage';
-import { buildDriverArms } from './hands';
+import { buildDriverArms, HandPose } from './hands';
 import { lookFor, SKINS, DriverId, Presentation } from '../game/drivers';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as T from '../game/textures';
@@ -107,6 +107,8 @@ const second = build(skinIdx);                      // the cached path
 second.arms.dispose();
 const wheelA = Number(q.get('wheel') ?? 0);
 arms.setWheelAngle(wheelA); spin.rotation.z = wheelA;
+// ?pose=knee|watch|wave: an ability's hand pose, without the blend
+if (q.has('pose')) { arms.setPose(q.get('pose') as HandPose, true); arms.setWheelAngle(wheelA); }
 // debugging: ?hide=nails (or any part's name) hides that part
 const hide = q.get('hide');
 if (q.has('noshadow')) env.sun.castShadow = false;           // debugging: are specks the shadow map's?
