@@ -92,6 +92,17 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   - Scenery sits on a jittered grid and is always clear of roads. On the flats it's stucco houses with tile roofs
     and office blocks; elsewhere, palms, trees and shrubs.
   - A sea plane sits at y = -0.4.
+- **The player's car (`vehicle/PlayerCar.ts`).** Built from the realism preview's modules, which the game now
+  depends on (read-only: `src/preview/car.ts` `buildCar`, `cockpit.ts` `buildCockpit`, `hands.ts`
+  `buildDriverArms`, `car-wheel.ts` `addWheel`, `spec.ts` `EYE`). `configure({ car, paint, quality, look,
+  presentation, nails })` rebuilds only what changed: car id or quality → the exterior (`cabin: 'full'`, no wheels),
+  the cockpit (`body: false`, `mirrors: 'env'`) and four wheel groups (hub kit on a steering group, spinning kit
+  inside it, placed from `bodyFor(id).AXLE`); paint → the shared paint material's colour; look, presentation or
+  nails → the hands. Quality tiers: Low and Medium → 'phone', High and Ultra → 'high'. From the seat the exterior's
+  glass, frit and cabin silhouette are hidden (`setOutsideView`). `updateCockpit()` steers the wheel mount
+  (`delta × steerRatio`, clamped to ±2.2 rad), the hands follow it, and the tach needle takes the rpm. Build cost in
+  SwiftShader: about 0.4 s car, 0.6 s cockpit, 1 s hands (the hands' SDF is meshed at load and cached per
+  presentation and quality). `Cockpit.ts` and `Instruments.ts` are the previous look and are no longer used.
 - **Environment.** The sky shader, PMREM lighting, sun shadows following the car, haze and the far mountain ring
   are unchanged from Ultra.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
@@ -213,7 +224,8 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Exits.** There are no exit numbers, since the source data has no `junction:ref`.
 - **Street ramps.** They end at a barrier. The game moves you to a nearby on-ramp instead of driving surface
   streets.
-- **Hands.** They're stylised fists.
+- **Hands.** Anatomical since 2026-10-15 (the preview's), but without the ability poses: `PlayerCar.setPose` is a
+  no-op until the hands get a rig. The cockpit's side screens are static; the paddles don't flick.
 - **Switching graphics presets leaks a little.** Each round trip to Ultra leaves about 17–20 more textures alive
   (36 → 56 → 73), probably the bloom and GTAO passes' render targets, which `EffectComposer.dispose()` doesn't free.
   The frame rate on Low afterwards is unchanged.

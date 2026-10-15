@@ -29,7 +29,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Chunk streaming | Done | Road chunks plus 480 m terrain tiles with two LODs, nearest and ahead first. |
 | Navigation | Done | Pick a freeway and direction. A route is planned through the interchanges. A prompt says "Keep right: CA-55 North · 0.4 mi", and the map shows a yellow line. It reroutes if you miss a turn. Fixed on 2026-10-12: one failed reroute (a ramp you've spun onto backwards) used to switch navigation off for the rest of the drive, and a turnaround never re-planned. The far south of the 405 and the 5 still has no planned way back north until you're turned around. |
 | Labels and destinations | Partial | Green guide signs show real OSM destination text. There are no exit numbers, because OSM `junction:ref` isn't in the source data. |
-| Ferrari-inspired cockpit | Done | Original model of our own "R" make: carbon and leather wheel, shift lights, round tachometer, screens. |
+| Ferrari-inspired cockpit | Done | Since 2026-10-15 the realism preview's cockpits are in the game: one per car (Alcantara, Nappa with stitching, carbon, aluminium, a live tachometer, the dashboard's ghost in the windscreen, mirrors) with the driver's anatomical hands on the rim in the chosen look. Not yet on the new hands: the ability poses (watch check, wave, hand on the knee). |
 | Dashboard | Done | The real tachometer and gear display in the cluster. The HUD is minimal. |
 | Traffic AI | Done | Intelligent Driver Model. Signalled lane changes with gap checks. Trucks keep right. Cars follow freeways into the next one at Y junctions. |
 
@@ -59,7 +59,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Driver archetypes | Done | The Closer, The Ace and The Wrench, each male or female, with five skin tones. Cosmetic: sleeves, gloves, gold, steel or smart watch, ring, bracelet. Hand animations: a watch check, a wave, one hand on the knee. |
 | Abilities | Done | Clear Path (6 s, 45 s cooldown; with no traffic it says "No traffic to clear" and keeps its charge): 35% fewer cars by flow and spawning. Cars ahead move over; nothing in view vanishes (verified). Focus Time (5 s, 40 s): the world at 0.70× (verified). Locked In (5 s, 35 s): grip ×1.3 (verified). There's a round HUD button with a cooldown ring, and the F key. |
 | AI races | Done | Irvine Sprint (405 N), Santa Ana Checkpoints (I-5 N), Foothill Sprint (241 S) and Riverside Endurance (91 E), plus Time Trial. Three rivals, a countdown that holds everyone, live position, gates, the finish, credits and XP, best times. Fixed on 2026-10-12: off the gas, the countdown's brakes selected reverse and backed you 2 m off the grid. |
-| Economy, garage, showroom | Done | Credits are earned only. Four fictional cars with their own power, weight, gearing, drag, downforce and grip. One body for now; the paint changes. Garage slots: 1 + level/4. Buy, choose and sell for 60%. |
+| Economy, garage, showroom | Done | Credits are earned only. Four fictional cars with their own power, weight, gearing, drag, downforce and grip, and since 2026-10-15 four distinct bodies and interiors from the realism preview (GT, Brio, Corsa, Vela E). Garage slots: 1 + level/4. Buy, choose and sell for 60%. |
 
 ## P4: depth
 

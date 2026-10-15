@@ -4,6 +4,37 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: the realism preview's cars, cockpits and hands are in the game
+
+The owner, after trying the test build: "This game looks like garbage, keep rendering for MAXIMUM RESULTS." The
+background agents that were going to integrate the realism preview are stopped by the account's weekly limit until
+Oct 18, so the integration was done by hand, ahead of the preview's remaining parts.
+
+**What changed.** `src/game/vehicle/PlayerCar.ts` now builds the player's car from the preview modules
+(`src/preview/car.ts`, `cockpit.ts`, `hands.ts`): the four garage cars as four distinct bodies (clearcoat metallic
+paint with flake, shut lines, LED lamps, tail-lamp clusters, diffuser, exhausts, forged wheels with tyres and
+drilled discs, a contact shadow), each with its own cockpit (GT black Alcantara and cognac Nappa, Brio navy leather
+with aluminium, Corsa carbon buckets with harnesses and a roll hoop, Vela E ivory leather with a screen dash), a real
+tachometer with a live needle, a windscreen with the dashboard's ghost reflection and dust, door and rear-view
+mirrors, and the driver's anatomical hands gripping the rim at ten and two with the chosen look (skin tone, sleeves or
+rolled, gloves, gold/steel/smart watch, ring, bangle, painted nails on the female presentation). The wheels spin and
+the fronts steer (the preview built them rigid; the game puts each in its own groups, calipers on the hub). Graphics
+Low and Medium use the preview's 'phone' quality tier, High and Ultra the 'high' tier. The paint, the car and the
+driver's look rebuild only what changed. The previous cockpit (`Cockpit.ts`, `Instruments.ts`) is no longer used.
+
+**Verified** (headless Chromium, SwiftShader, 960 × 540, Low, sunset, `tests/out/car-low-{cockpit,chase,hood}.png`
+and `tests/out/dbg2-*.png`): build in software 428 ms car + 597 ms cockpit + 966 ms hands; no page errors; the
+driver's seat shows the dash, tach, mirror, A-pillar and both hands with the Closer's gold watch; chase shows the GT
+from behind with tail lamps, diffuser and wheels; hood shows the bonnet lip and the road once the half-second view
+blend has finished (a shot taken mid-blend sits inside the windscreen). Frame cost at the seat: 355 draw calls,
+490k triangles (the old car: 444 calls, 491k), 10–12 fps in this software renderer, the same as before the change.
+The regression result is logged below this entry's "Suite" line.
+
+**Not done, candidly.** The ability hand animations (the Closer's watch check, the Ace's wave, the Wrench's hand on
+the knee) do not yet exist on the new hands: `setPose` is a no-op until the hands get a rig. The cockpit's two side
+screens are static pictures (the HUD carries speed and gear); the shift paddles do not flick. Phone performance is
+still unmeasured; the Feedback report will say.
+
 ## 2026-10-15: launch features: start at your exit, and the run card
 
 Built for the local launch plan (`PROJECT_OC_BUSINESS.md`): every OC resident has an exit, and a run should be

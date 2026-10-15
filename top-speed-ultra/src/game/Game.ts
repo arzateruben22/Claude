@@ -16,6 +16,7 @@ import { Roads } from './world/Roads';
 import { Terrain } from './world/Terrain';
 import { CarPhysics, SPEC } from './vehicle/Physics';
 import { PlayerCar } from './vehicle/PlayerCar';
+import type { CarId } from '../preview/car-shape';
 import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
@@ -431,18 +432,26 @@ export class Game {
     this.onResize();
   }
 
-  // the car from your garage: its numbers into the physics, its paint onto the body
+  // the car from your garage: its numbers into the physics, its body and cockpit into the scene
   applyCarChoice() {
     const c = carById(this.profile.p.car);
     this.carGrip = applyCar(c);
-    this.car.cockpit.m.paint.color.setHex(c.paint);
+    this.configureCar();
     return c;
+  }
+  // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed
+  private configureCar() {
+    const s = this.settings, c = carById(this.profile.p.car), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
+    this.car.configure({
+      car: c.id as CarId, paint: c.paint, quality: s.quality === 'high' || s.quality === 'ultra' ? 'high' : 'phone',
+      look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
+    });
   }
 
   // who's driving: their look in the cockpit, and their ability
   private applyDriver() {
-    const s = this.settings, d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
-    this.car.cockpit.setLook(lookFor(d.id, s.presentation, s.skin));
+    const d = DRIVERS.find((x) => x.id === this.settings.driver) ?? DRIVERS[0];
+    this.configureCar();
     this.endAbility();
     this.ability = new Ability(ABILITIES[d.ability]);
   }
@@ -457,13 +466,13 @@ export class Game {
       const cf = new THREE.Vector3(); this.camera.getWorldDirection(cf);
       this.traffic.thin(0.35, v, cf.x, cf.z);
       this.traffic.makeWay(v);
-      this.car.cockpit.setPose(true); this.poseT = 1.6;
+      this.car.setPose(true); this.poseT = 1.6;
     } else if (id === 'focus') {
       this.worldScale = 0.7;
-      this.car.cockpit.setPose(true); this.poseT = 0.9;
+      this.car.setPose(true); this.poseT = 0.9;
     } else {
       this.gripBoost = 1.3;
-      this.car.cockpit.setPose(true); this.poseT = this.ability.def.duration;   // one hand on the wheel
+      this.car.setPose(true); this.poseT = this.ability.def.duration;   // one hand on the wheel
     }
     this.ev.toast(this.ability.def.name, 'good');
     return true;
@@ -472,7 +481,7 @@ export class Game {
   private endAbility() {
     this.traffic && (this.traffic.scale = 1);
     this.worldScale = 1; this.gripBoost = 1;
-    this.car.cockpit.setPose(false); this.poseT = 0;
+    this.car.setPose(false); this.poseT = 0;
   }
 
   // navigation: head for a freeway (by label), or clear it
@@ -499,6 +508,7 @@ export class Game {
     this.env.setQuality(q.shadows, far);
     if (this.traffic) this.traffic.viewAhead = q.drawDistance * 0.95;
     if (rebuild && this.net) {
+      this.configureCar();                 // the car's own quality tier may have changed
       this.buildWorld();
       const p = this.phys;
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
@@ -544,7 +554,7 @@ export class Game {
       if (a === 'shiftUp' || a === 'shiftDown') {
         if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
         const dir = a === 'shiftUp' ? 1 : -1;
-        if (this.phys.shift(dir)) { this.car.cockpit.flickPaddle(dir); this.audio.shift(); }
+        if (this.phys.shift(dir)) { this.car.flickPaddle(dir); this.audio.shift(); }
       }
     }
   }
@@ -776,17 +786,16 @@ export class Game {
     const alpha = this.paused ? 1 : this.acc / DT;
     this.stream(1);
     this.car.update(dt, alpha, this.phys, this.input.c.brake > 0.05 && this.phys.gear > 0, this.time);
-    this.car.cockpit.update(dt, {
+    this.car.updateCockpit(dt, {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
-      speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake, distance: this.distance,
-      mode: this.settings.handling < 0.5 ? 'Sport' : 'Race', time: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-    }, this.time);
+      speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
+    });
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
-    this.car.cockpit.setDriverVisible(this.cam !== 'cockpit' && this.cam !== 'free');
+    this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
     this.renderCorner(dt);
     if (!this.attract) {
@@ -858,7 +867,7 @@ export class Game {
     // traffic
     const view = this.view();
     if (this.ability.update(dt) === 'end') this.endAbility();
-    if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.cockpit.setPose(false); }
+    if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.setPose(false); }
     const passes = this.traffic.step(dt * this.worldScale, view, this.time);
     for (const contact of this.traffic.collide(view)) {
       p.x += contact.nx * contact.depth; p.z += contact.nz * contact.depth;
@@ -1032,7 +1041,7 @@ export class Game {
       this.renderer.setScissorTest(true);
       this.renderer.setScissor(x, y, s, s); this.renderer.setViewport(x, y, s, s);
       const fog = this.scene.fog; this.scene.fog = null;
-      this.car.cockpit.setDriverVisible(true);
+      this.car.setOutsideView(true);
       this.renderer.render(this.scene, this.skyCam);
       this.scene.fog = fog;
       this.renderer.setScissorTest(false);

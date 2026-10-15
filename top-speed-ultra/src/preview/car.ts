@@ -23,7 +23,7 @@ import { CarId, shapeFor } from './car-shape';
 
 export type Quality = 'phone' | 'high';
 export type { CarId } from './car-shape';
-export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; cabin?: 'full' | 'shell'; caliper?: number; contactShadow?: boolean }
+export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; cabin?: 'full' | 'shell'; caliper?: number; contactShadow?: boolean; wheels?: boolean }
 
 // the colours each interior shows through the glass from outside
 const SIL: Record<string, [number, number]> = { gt: [0x161618, 0x5c2c12], brio: [0x161618, 0x1b2233], corsa: [0x141416, 0x1a1a1c], vela: [0x1a1a1c, 0x8e8981] };
@@ -93,7 +93,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   const full = (o.cabin ?? 'full') === 'full';
   B.buildBody(kit, { q, glass: full });
   if (full) B.cabinSilhouette(kit);
-  addWheels(kit, B, q);
+  if (o.wheels ?? true) addWheels(kit, B, q);          // false: the game adds its own wheels, which spin and steer
   const mats = carMaterials(o.paint ?? P.paint, q, o.caliper ?? P.caliper, id);
   kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
   if (o.contactShadow ?? true) g.add(contactPatch(B.ZR - B.ZF, P.WP.reduce((m, [, w]) => Math.max(m, w), 0) * 2,
