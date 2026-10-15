@@ -30,7 +30,9 @@ for (const [size, ctxOpt] of Object.entries(SIZES)) {
   await page.goto(pathToFileURL(GAME).href);
   await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
   const shots = [];
-  const shot = async (name) => { await page.waitForTimeout(350); await page.screenshot({ path: path.join(outDir, `${size}-${name}.png`) }); shots.push(name); };
+  // let the entrance animations finish (in software rendering a frame can take a while, so they start late)
+  const settled = () => page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity), null, { timeout: 8000 }).catch(() => {});
+  const shot = async (name) => { await page.waitForTimeout(350); await settled(); await page.screenshot({ path: path.join(outDir, `${size}-${name}.png`) }); shots.push(name); };
   const close = async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(200); };
   const tryShot = async (name, fn) => { try { await fn(); await shot(name); } catch (e) { errors.push(`${name}: ${String(e.message || e).split('\n')[0]}`); } };
 
