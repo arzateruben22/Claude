@@ -15,6 +15,8 @@ export const SPEC = {
   CdA: 0.62, ClA: 0.5, crr: 0.012, Cf: 125000, Cr: 185000, steerRatio: 13,
 };
 const L = SPEC.a + SPEC.b, G = 9.81, RHO = 1.225;
+const TRACK = 1.62;          // mean track width, for the lateral load transfer
+const LOAD_SENS = 0.12;      // tyre load sensitivity: the peak friction coefficient falls 12% for every +100% of load
 
 export function engineTorque(rpm: number) {
   const ramp = rpm < 3300 ? lerp(430, SPEC.peakTorque, clamp((rpm - 1000) / 2300, 0, 1)) : SPEC.peakTorque;
@@ -42,7 +44,13 @@ export class CarPhysics {
   handling = 0.35;            // 0 arcade .. 1 sim
   grip = 1;                   // the road: 1 dry, about 0.8 in the rain
   hold = false;               // on the start line: the brakes are on, and holding them doesn't select reverse
+  // the drift readout, for the marks, the smoke and the HUD: the body slip angle in degrees (+ when the nose points
+  // left of the direction of travel), whether it counts as a drift (past 8° over 8 m/s) and for how long it has (a
+  // transition to the other side within half a second keeps the count going)
+  drift = { angle: 0, active: false, time: 0 };
   impacts: Impact[] = [];
+  private driftLapse = 0;
+  private hbWas = false; private hbKick = 0;
   private stillT = 0;
   private proj = { s: 0, d: 0 };
 
@@ -51,12 +59,23 @@ export class CarPhysics {
   // the most the front wheels will turn at this speed: full lock when parking, a few degrees at 200 mph
   // (what the tyres can use: past ~100 mph a fraction of a degree already asks for more than the grip there is)
   maxDelta(v = Math.abs(this.vx)) { return clamp((L * 13.5) / (v * v + 1) + 0.03 * (1 - smoothstep(18, 55, v)) + 0.0065, 0.0065, 0.52) * (1 + this.handling * 0.35); }
+  // the lock available to a steer request on this side (+1 left, -1 right): maxDelta()'s speed limit, opened up on the
+  // counter-steer side (the front wheels turned toward the direction of travel) to the body slip angle plus an 8°
+  // margin, up to a road car's 38° of lock, so a slide can be caught and straightened; steering into the slide stays
+  // speed-limited
+  steerLock(side: number, v = Math.abs(this.vx)) {
+    const base = this.maxDelta(v);
+    if (this.vx < 3 || side * this.vy <= 0) return base;
+    const beta = Math.abs(Math.atan2(this.vy, this.vx));
+    return base + clamp(beta + 0.14 - base, 0, 0.66 - base) * smoothstep(0.04, 0.12, beta);
+  }
 
   placeAt(road: Path, s: number, d: number, speed: number) {
     const p = road.at(s, d);
     this.x = p.x; this.z = p.z; this.y = p.y; this.psi = p.h;
     this.vx = speed; this.vy = 0; this.r = 0; this.delta = 0;
     this.s = s; this.d = d; this.gear = speed > 20 ? 4 : 1; this.shiftT = 0;
+    this.drift.angle = 0; this.drift.active = false; this.drift.time = 0; this.driftLapse = 0; this.hbKick = 0; this.hbWas = false;
     this.rpm = Math.max(SPEC.idle, this.wheelRpm() * this.ratio * SPEC.final);
   }
 
@@ -102,17 +121,27 @@ export class CarPhysics {
       }
     }
 
-    // steering: full lock when parking, a few degrees at 200 mph
+    // steering: full lock when parking, a few degrees at 200 mph, and more on the counter-steer side when sliding
     const v = Math.abs(this.vx);
-    const maxDelta = this.maxDelta(v);
-    const want = -c.steer * maxDelta;
+    const base = this.maxDelta(v);
+    const want = -c.steer * this.steerLock(c.steer < 0 ? 1 : -1, v);
     this.delta += clamp(want - this.delta, -2.4 * dt, 2.4 * dt);
     const delta = this.delta;
 
-    // loads: static split, longitudinal transfer, downforce
+    // loads: static split, longitudinal transfer through the centre-of-mass height, downforce; the lateral transfer
+    // loads each axle's outside tyre, split by roll stiffness (a touch more at the front in arcade, which keeps the nose
+    // pushing rather than the tail stepping out)
     const down = 0.5 * RHO * SPEC.ClA * v * v;
-    const Fzf = Math.max(500, (SPEC.mass * G * SPEC.b) / L - (SPEC.mass * this.ax * SPEC.h) / L + down * 0.42);
-    const Fzr = Math.max(500, (SPEC.mass * G * SPEC.a) / L + (SPEC.mass * this.ax * SPEC.h) / L + down * 0.58);
+    const Wf = (SPEC.mass * G * SPEC.b) / L, Wr = (SPEC.mass * G * SPEC.a) / L, dLong = (SPEC.mass * this.ax * SPEC.h) / L;
+    const Fzf = Math.max(500, Wf - dLong + down * 0.42);
+    const Fzr = Math.max(500, Wr + dLong + down * 0.58);
+    const dLat = (SPEC.mass * this.ay * SPEC.h) / TRACK, rollF = 0.5 + 0.06 * assist;
+    const dF = clamp(dLat * rollF, -Fzf / 2, Fzf / 2), dR = clamp(dLat * (1 - rollF), -Fzr / 2, Fzr / 2);
+    // tyre load sensitivity: an axle's peak friction coefficient falls a little with the load it carries above its
+    // static share, and with the transfer onto its outside tyre (the inside gives up more than the outside gains).
+    // Braking into a corner moves load forward and rotates the car; throttle on the way out squats the rear and grips.
+    const loadMu = (Fz: number, Fz0: number, d: number) => mu * clamp(1 - LOAD_SENS * ((Fz / Fz0 - 1) + (4 * d * d) / (Fz0 * Fz)), 0.7, 1.1);
+    const muF = loadMu(Fzf, Wf, dF), muR = loadMu(Fzr, Wr, dR);
 
     // drivetrain
     if (this.shiftT > 0) this.shiftT -= dt;
@@ -132,41 +161,53 @@ export class CarPhysics {
     if (throttle < 0.05 && !slipping) torque = -(28 + this.rpm * 0.0085);   // engine braking
     if (shifting) torque *= 0.15;
     let Fx_r = (torque * ratio * SPEC.eff) / SPEC.wheelR;
-    // traction: the rear can only push so hard (traction control trims it in arcade)
-    const rearLimit = mu * Fzr;
-    this.spin = 0;
-    if (Math.abs(Fx_r) > rearLimit) {
-      this.spin = (Math.abs(Fx_r) - rearLimit) / rearLimit;
-      Fx_r = Math.sign(Fx_r) * rearLimit * (assist > 0.3 ? 0.98 : 0.9);
-    }
     this.throttleOut = torque > 0 ? throttle * (shifting ? 0.15 : 1) : 0;
-    // brakes with ABS: never more than the tyres can hold
+    // brakes with ABS: never more than the tyres can hold. The rear's share comes off the drive torque at the wheel
+    // before the traction limit below: on the throttle and the brake together (left-foot braking in a drift) the wheel
+    // keeps spinning as long as the net torque still beats the grip
     let brakeF = brake * 1.35 * SPEC.mass * G;
     let Fx_f = 0;
     if (brakeF > 0 && Math.abs(this.vx) > 0.05) {
       const dir = -Math.sign(this.vx);
       // ABS on both axles; brake distribution keeps the rear from locking up as weight moves forward
-      const bf = Math.min(brakeF * 0.62, mu * Fzf * 0.97), br = Math.min(brakeF * 0.38, mu * Fzr * (assist > 0.3 ? 0.55 : 0.68));
+      const bf = Math.min(brakeF * 0.62, muF * Fzf * 0.97), br = Math.min(brakeF * 0.38, muR * Fzr * (assist > 0.3 ? 0.55 : 0.68));
       Fx_f += dir * bf; Fx_r += dir * br;
     } else if (brakeF > 0) { this.vx *= 0.9; brakeF = 0; }
+    // traction: the rear can only push so hard (traction control trims it in arcade); what it spends pushing it can't
+    // spend on cornering (the friction circle below), which is how power-over starts a slide
+    const rearLimit = muR * Fzr;
+    this.spin = 0;
+    let kinetic = 1;      // a spinning tyre is sliding, and keeps less grip than one held at the edge (sim; arcade's traction control holds it there)
+    if (Math.abs(Fx_r) > rearLimit) {
+      this.spin = (Math.abs(Fx_r) - rearLimit) / rearLimit;
+      kinetic = 1 - 0.15 * (1 - assist) * smoothstep(0, 0.5, this.spin);
+      Fx_r = Math.sign(Fx_r) * rearLimit * kinetic * (assist > 0.3 ? 0.98 : 0.95);
+    }
     let rearGrip = 1;
-    if (c.handbrake) { Fx_r += -Math.sign(this.vx) * mu * Fzr * 0.85; rearGrip = 0.32 + 0.25 * assist; }
+    if (c.handbrake) { Fx_r += -Math.sign(this.vx) * muR * Fzr * 0.85; rearGrip = 0.32 + 0.25 * assist; }
+    // the handbrake's yaw kick: pulled with the wheel turned, the tail steps out at once (a pulse spread over ~0.2 s)
+    if (c.handbrake && !this.hbWas && this.vx > 4) this.hbKick = -Math.sign(c.steer) * Math.min(1, Math.abs(c.steer)) * 0.45 * smoothstep(4, 12, v) * (0.7 + 0.3 * this.handling);
+    this.hbWas = c.handbrake;
 
     // tyres: slip angles, saturating lateral force, friction circle at the rear
     const vxs = Math.max(Math.abs(this.vx), 0.5) * Math.sign(this.vx || 1);
     const aF = Math.atan2(this.vy + SPEC.a * this.r, Math.abs(vxs)) - delta * Math.sign(vxs);
     const aR = Math.atan2(this.vy - SPEC.b * this.r, Math.abs(vxs));
-    const tire = (alpha: number, Fz: number, C: number, grip: number) => {
-      const max = mu * Fz * grip;
+    const tire = (alpha: number, Fz: number, C: number, grip: number, muA: number) => {
+      const max = muA * Fz * grip;
       let f = max * Math.tanh((C * alpha) / max);
       if (this.handling > 0.5) f *= 1 - 0.1 * (this.handling - 0.5) * 2 * smoothstep(0.08, 0.22, Math.abs(alpha));   // sim: tyres let go past the peak
       return -f;
     };
     // the front shares its grip between braking and turning: brake hard in a corner and it pushes wide
-    const frontCircle = Math.sqrt(Math.max(0, 1 - (Fx_f / (mu * Fzf)) ** 2));
-    let Fyf = tire(aF, Fzf, SPEC.Cf, 1) * Math.max(0.3, frontCircle);
-    const rearCircle = Math.sqrt(Math.max(0, (mu * Fzr * rearGrip) ** 2 - Fx_r * Fx_r)) / Math.max(1, mu * Fzr * rearGrip);
-    let Fyr = tire(aR, Fzr, SPEC.Cr, rearGrip) * Math.max(0.25, rearCircle);
+    const frontCircle = Math.sqrt(Math.max(0, 1 - (Fx_f / (muF * Fzf)) ** 2));
+    let Fyf = tire(aF, Fzf, SPEC.Cf, 1, muF) * Math.max(0.3, frontCircle);
+    const rearMax = muR * Fzr * rearGrip * kinetic;
+    const rearCircle = Math.sqrt(Math.max(0, rearMax * rearMax - Fx_r * Fx_r)) / Math.max(1, rearMax);
+    // a spun-up rear keeps little sideways grip: its contact patch slides mostly along the wheel, so what grip is left
+    // goes forward (sim most of all; arcade keeps more of its guidance)
+    const spinLat = 1 - 0.6 * smoothstep(0.05, 0.6, this.spin) * (0.4 + 0.6 * this.handling);
+    let Fyr = tire(aR, Fzr, SPEC.Cr, rearGrip * kinetic, muR) * Math.max(0.25, rearCircle) * spinLat;
     this.slipF = Math.abs(aF); this.slipR = Math.abs(aR);
     const lowSpeed = smoothstep(1.5, 6, v);
     Fyf *= lowSpeed; Fyr *= lowSpeed;
@@ -181,23 +222,39 @@ export class CarPhysics {
     this.vx += (ax + this.vy * this.r) * dt;
     this.vy += (ay - this.vx * this.r) * dt;
     this.r += ((SPEC.a * (Fyf * cd + Fx_f * sd) - SPEC.b * Fyr) / SPEC.Iz) * dt;
+    if (this.hbKick !== 0) { const k = this.hbKick * Math.min(1, dt / 0.2); this.r += k; this.hbKick -= k; if (Math.abs(this.hbKick) < 1e-3) this.hbKick = 0; }
     // low speed: the car simply follows its front wheels
     const rKin = (this.vx * Math.tan(delta)) / L;
     this.r = lerp(rKin, this.r, lowSpeed);
     this.vy *= lerp(Math.exp(-dt * 8), 1, lowSpeed);
     // stability control. Arcade: always on, pulling yaw toward what the wheels ask for and bleeding off sideways
-    // slide. Sim keeps a light race-mode version that only steps in once the car is really sliding (past ~5°),
-    // so you can drift it but a lift or a brake in a fast curve doesn't throw it round.
-    const beta = Math.abs(Math.atan2(this.vy, Math.max(1, Math.abs(this.vx))));
+    // slide. Sim keeps a light race-mode version that only steps in once the car is really sliding (past ~5°).
+    // Both back off while the driver holds the slide: counter-steering (the front wheels turned toward the direction
+    // of travel) with a real slip angle on, or the handbrake pulled with the wheel turned. Hands straight or turned
+    // into the slide, as in a lift or a brake in a fast sweeper, it catches the car as before. The back-off fades
+    // above 90 mph: nobody drifts there, and the straight-line runs must never spin.
+    const betaS = Math.atan2(this.vy, Math.max(1, Math.abs(this.vx))), beta = Math.abs(betaS);
     const race = (1 - assist) * smoothstep(0.06, 0.16, beta) * smoothstep(8, 20, v);
+    const counter = clamp((delta * Math.sign(betaS)) / Math.max(0.03, base), 0, 1) * smoothstep(0.05, 0.14, beta);
+    const flick = c.handbrake ? Math.min(1, Math.abs(c.steer) * 1.5) * 0.8 : 0;
+    const holding = Math.max(counter, flick) * (0.9 + 0.1 * this.handling) * (1 - 0.6 * smoothstep(40, 65, v));
     if (assist > 0 || race > 0) {
-      const rWant = rKin / (1 + 0.0009 * v * v);
-      this.r += (rWant - this.r) * (1 - Math.exp(-dt * (5 * assist + 3.5 * race)));
-      this.vy *= Math.exp(-dt * (2.2 * assist * assist + 1.6 * race));
+      // what the wheels ask for, and no more yaw than the tyres could ever give at this speed. The yaw pull keeps a
+      // little of its say in arcade (the car still wants to go where the wheels point); the sideslip bleed, which is
+      // what would eat the drift angle itself, lets go in full once the driver holds the slide
+      const rCap = (mu * G) / Math.max(5, v);
+      const rWant = clamp(rKin / (1 + 0.0009 * v * v), -rCap, rCap);
+      this.r += (rWant - this.r) * (1 - Math.exp(-dt * (5 * assist + 3.5 * race) * (1 - holding)));
+      this.vy *= Math.exp(-dt * (2.2 * assist * assist + 1.6 * race) * (1 - holding) * (1 - holding));
     }
     if (Math.abs(this.vx) < 0.05 && throttle < 0.05 && brake > 0.05) this.vx = 0;
     this.ax = this.ax + (ax - this.ax) * Math.min(1, dt * 10);
     this.ay = this.ay + ((ay - 0) - this.ay) * Math.min(1, dt * 10);
+    // the drift readout
+    const d = this.drift;
+    d.angle = this.vx > 1 ? (-Math.atan2(this.vy, this.vx) * 180) / Math.PI : 0;
+    d.active = Math.abs(d.angle) > 8 && v > 8;
+    if (d.active) { d.time += dt; this.driftLapse = 0; } else if ((this.driftLapse += dt) > 0.5) d.time = 0;   // half a second of grace links a transition
 
     // move through the world
     const sf = Math.sin(this.psi), cf = Math.cos(this.psi);
