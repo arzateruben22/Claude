@@ -50,3 +50,25 @@ here, then read:
   the people builder's geometry), design decisions, and adversarial review of the day's agent output. Keep its
   session capacity for that; don't spend it on screenshots and suite runs.
 - Workflow scripts take a `model` per agent; daytime passes set `'opus'`, overnight passes leave the default.
+
+## Triage rule for new ideas (owner, 2026-10-16)
+
+When the owner brings a new idea or feature, the session triages it before building, on any model:
+
+- **Opus-class (build now, in this session):** UI screens and HUD, menus, content (stations, paints, cars'
+  trim, signs, props), textures and materials tuning, docs, tests, integration, renders and screenshots, small
+  physics or audio tuning with an existing model, anything reversible in an afternoon.
+- **Fable-class (hand to a Fable 5.1 session):** a new simulation or vehicle-dynamics model, rendering
+  architecture (new passes, LOD or streaming budgets, the single-file build), geometry and skinning systems
+  (rigs, expressions, hair, the people builder's fields), data pipelines where correctness is hard to check
+  (map import, provenance), security, privacy or business-rule design, and anything where a wrong design is
+  expensive to undo. Also the adversarial review of a day's agent output.
+- **Mixed:** build the routine part now on Opus agents and dispatch the hard core to a `fable` agent from this
+  session (agents take a `model`); only recommend switching the whole session when the owner's own back-and-forth
+  with the model is the hard part (a design conversation, a decision).
+
+When an idea is Fable-class, the session must (1) say so in one line, (2) give the owner a ready-to-paste prompt
+block headed "Fable prompt" that names the files, the rules that apply, the proof required (which renders, which
+suite groups) and where to log it, and (3) append the same block under "Fable queue" in `PROJECT_OC_HANDOFF.md`
+so the next overnight session finds it even if the owner doesn't switch right away. The reverse holds for a
+Fable session handed routine work: queue it under "Opus queue".

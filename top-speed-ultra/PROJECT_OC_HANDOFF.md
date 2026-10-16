@@ -55,3 +55,18 @@ the hard-reasoning session: do not spend it on renders or suite runs. Run at mos
 Agents: reviewers and designers on model 'fable', anything that renders or runs the suite on 'opus'. Update
 PROJECT_OC_HANDOFF.md at the end.
 ```
+
+## Fable queue (hard items waiting for an overnight session)
+
+- Review and finish the drift physics (`tsu-drift` worktree, `src/game/vehicle/Physics.ts`); see the overnight
+  prompt above.
+- Specs: finger rig for the anatomical hands; expression system coupling cheeks, eyes and the nasolabial fold to
+  the mouth; hair silhouette (updo reads as a cap from the front).
+- Fix the severity 4–5 findings of `PROJECT_OC_REVIEW_NOTES.md` once it exists.
+
+## Opus queue (routine items waiting for a daytime session)
+
+- Everything in the daytime prompt above, in order.
+- From the audits, not yet taken: night lighting (cabin lit as daylight, freeway lamps light nothing), the
+  Monopoly houses, the paper mountains, flat clear-day light, traffic bodies' door seams and mirrors, the chase
+  camera's hovering rear wheels; teeth, mouth corners, brows and beards on the people.
