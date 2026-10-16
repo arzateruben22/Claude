@@ -8,9 +8,18 @@
 //     w, h: the glass in metres (local x, y); the reflective face looks along local +z.
 //     res: render-target size. tint: multiplies the reflection (silvering is ~85-90 % reflective, an auto-dimming
 //     rear-view a little less). far: how far the mirror sees (default: the main camera's far plane, so the sky dome
-//     and the distant hills, sized to sit inside it, show in the mirror). every / phase: render on one frame in
-//     `every` (default 1), offset by phase, so two mirrors can alternate. dim: darken toward the edges (0..1).
+//     and the distant hills, sized to sit inside it, show in the mirror; a shorter far culls the distant road chunks,
+//     which are most of a mirror's draw calls, and leaves the sky dome, which is drawn at the far plane whatever it
+//     is, but not the hills and clouds). every / phase: render on one frame in `every` (default 1), offset by phase,
+//     so two mirrors can alternate. dim: darken toward the edges (0..1).
 //   CarMirror.busy: true while any mirror is rendering (others skip, so mirrors never recurse).
+//   mirror.active: false keeps the last image on the glass instead of rendering a new one (the game switches the
+//     mirrors off outside the driver's seat, where they are a few pixels behind the car's glass). A pass that
+//     renders the scene with an override material (the GTAO normal and depth passes) is skipped too.
+//   mirror.hide: objects left out of this mirror's render (hidden for the nested render only, then restored). The
+//     game's rear-view leaves out the player's own car: a mid-engine car's rear-view otherwise shows its engine
+//     cover, wing and tail lamps through the bulkhead window, so the road and the traffic behind show instead, as
+//     a rear camera would; it also saves drawing the car's quarter-million triangles into an 80-pixel-high target.
 import * as THREE from 'three';
 
 const VERT = /* glsl */`
@@ -47,6 +56,8 @@ export interface MirrorOptions { res: [number, number]; tint?: number; far?: num
 
 export class CarMirror extends THREE.Mesh {
   static busy = false;
+  active = true;
+  hide: THREE.Object3D[] = [];
   readonly target: THREE.WebGLRenderTarget;
   readonly cam = new THREE.PerspectiveCamera();
   private frame = 0;
@@ -69,7 +80,7 @@ export class CarMirror extends THREE.Mesh {
     const bias = new THREE.Matrix4().set(0.5, 0, 0, 0.5, 0, 0.5, 0, 0.5, 0, 0, 0.5, 0.5, 0, 0, 0, 1);
     this.castShadow = false; this.receiveShadow = false;
     this.onBeforeRender = (renderer, scene, camera) => {
-      if (CarMirror.busy) return;
+      if (CarMirror.busy || !this.active || scene.overrideMaterial) return;
       if ((this.frame++ % every) !== phase % every) return;
       P.setFromMatrixPosition(this.matrixWorld);
       R.extractRotation(this.matrixWorld);
@@ -97,6 +108,8 @@ export class CarMirror extends THREE.Mesh {
       // render
       CarMirror.busy = true;
       this.visible = false;
+      const hidden = this.hide.filter((h) => h.visible);
+      for (const h of hidden) h.visible = false;
       const prevTarget = renderer.getRenderTarget(), prevXr = renderer.xr.enabled, prevShadow = renderer.shadowMap.autoUpdate;
       renderer.xr.enabled = false; renderer.shadowMap.autoUpdate = false;
       try {
@@ -109,6 +122,7 @@ export class CarMirror extends THREE.Mesh {
         renderer.setRenderTarget(prevTarget);
         const vp = (camera as THREE.PerspectiveCamera & { viewport?: THREE.Vector4 }).viewport;
         if (vp !== undefined) renderer.state.viewport(vp);
+        for (const h of hidden) h.visible = true;
         this.visible = true;
         CarMirror.busy = false;
       }

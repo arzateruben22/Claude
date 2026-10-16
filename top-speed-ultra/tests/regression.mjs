@@ -359,6 +359,36 @@ await group('race', async (use) => {
       return `${fmt(r.left)} s: you at most ${fmt(r.worst)} m/s, moved ${fmt(r.moved)} m, in gear ${r.gear}; rivals ${r.rivals.join(', ')} m/s`;
     });
   }
+  // the standings: the gap column has to read in the same order as the positions (every gap is estimated at your
+  // speed), and the race timer lives in the race box, not on the road plate over the horizon
+  await check('race standings: gaps fall in position order, the timer sits in the race box', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game;
+      await g.start('race'); g.setPaused(true);
+      while (g.countdown > 0) g.fastForward(0.5, { throttle: 0, brake: 0, steer: 0 }, 0);
+      // slow for 20 s so the rivals lead, then fast for 30 s to pass them: rows ahead and behind, at mixed speeds
+      let bad = null, ahead = 0, behind = 0;
+      for (let t = 0; t < 50; t++) {
+        g.fastForward(1, {}, t < 20 ? 28 : 80);
+        const st = g.race.standings;
+        for (let k = 1; k < st.length; k++) if (st[k].gap > st[k - 1].gap + 1e-9) bad ??= { t, rows: st.map((s) => `P${s.pos} ${s.name} ${s.gap.toFixed(1)}`).join(', ') };
+        ahead += st.filter((s) => s.gap > 0).length; behind += st.filter((s) => s.gap < 0).length;
+      }
+      return { bad, ahead, behind, last: g.race.standings.map((s) => `P${s.pos} ${s.name} ${s.you ? '' : s.gap.toFixed(1)}`.trim()).join(', ') };
+    });
+    expect(!r.bad, `gaps out of order at ${r.bad?.t} s: ${r.bad?.rows}`);
+    expect(r.ahead > 0 && r.behind > 0, `only rows ${r.ahead ? 'ahead' : 'behind'} were sampled`);
+    await frames(page, 2);
+    const dom = await game(page, () => ({
+      inBox: document.querySelector('.hud-race .hud-timer em')?.textContent ?? null,
+      onPlate: !!document.querySelector('.hud-road .hud-timer'),
+      gaps: [...document.querySelectorAll('.hud-standings li:not([hidden]) b')].map((b) => b.textContent),
+    }));
+    expect(/^\d+:\d\d\.\d$/.test(dom.inBox ?? '') && !dom.onPlate, `timer in the race box "${dom.inBox}", on the road plate ${dom.onPlate}`);
+    const shown = dom.gaps.map((s) => (s === '' ? 0 : s === 'FIN' ? Infinity : Number(s.replace('−', '-'))));
+    expect(shown.every((v, k) => k === 0 || v <= shown[k - 1]), `the HUD gap column reads ${dom.gaps.join(' / ')}`);
+    return `${r.ahead} rows ahead and ${r.behind} behind over 50 s, all in order; now ${r.last}; HUD timer ${dom.inBox}, gaps ${dom.gaps.map((s) => s || 'you').join(' / ')}`;
+  });
   await check('flat out, the autopilot wins the Irvine Sprint', async () => {
     const credits0 = await game(page, () => window.__game.profile.p.credits);
     const r = await game(page, async () => {
@@ -537,6 +567,29 @@ await group('render', async (use) => {
       return `grip ${fmt(e.grip)}, wet ${fmt(e.wet)}, visibility ${fmt(e.vis)}, daylight ${fmt(e.day)}`;
     });
   }
+  // the palms (R4): instanced crowns of alpha-tested frond cards, inside the old crown's 448 triangles, casting
+  // shadows; the frond texture has gaps between its leaflets and keeps its colour under the transparent texels
+  await check('palms: alpha-tested frond crowns within the old triangle budget', async () => {
+    const r = await game(page, () => {
+      let crowns = 0, inst = 0, tris = 0, cast = true, mat = null;
+      window.__game.terrain.group.traverse((o) => {
+        if (!o.isInstancedMesh || !(o.material.alphaTest > 0)) return;
+        crowns++; inst += o.count; cast &&= o.castShadow; mat = o.material;
+        tris = (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
+      });
+      if (!mat) return { crowns };
+      const img = mat.map.image, at = mat.alphaTest * 255, a = (x, y) => img.data[(y * img.width + x) * 4 + 3];
+      let gap = 0, leaf = 0;
+      for (let y = 150; y < 350; y++) for (let x = 68; x < 188; x++) if (a(x, y) < at) gap++; else leaf++;
+      const i0 = (300 * img.width + 4) * 4, under = [...img.data.slice(i0, i0 + 4)];
+      return { crowns, inst, tris, cast, double: mat.side === 2, w: img.width, gap: gap / (gap + leaf), under };
+    });
+    expect(r.crowns > 0, 'no palm crowns built on I-405 North');
+    expect(r.tris <= 448 && r.cast && r.double, `${r.tris} triangles a crown (the old one was 448), casts shadows ${r.cast}, double-sided ${r.double}`);
+    expect(r.gap > 0.15 && r.gap < 0.85, `the frond blade is ${fmt(r.gap * 100)}% gaps`);
+    expect(r.under[3] === 0 && r.under[0] + r.under[1] + r.under[2] > 60, `a transparent texel holds rgba ${r.under.join(',')}`);
+    return `${r.inst} palms in ${r.crowns} crown meshes, ${r.tris} triangles a crown at Low, castShadow set; blade ${fmt(r.gap * 100)}% gaps; transparent texel rgba ${r.under.join(',')}`;
+  });
   await check('Live time follows the real sun over OC', async () => {
     await page.clock.setFixedTime(new Date('2026-10-12T09:13:00Z'));        // 02:13 Pacific
     const night = await sky('live', 'clear');
@@ -580,14 +633,25 @@ await group('render', async (use) => {
   // last, because the first frames after a switch compile new shaders and take minutes here
   await check(`High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
     const out = [];
+    let crownHigh = 0;
     for (const q of ['high', 'ultra', 'low']) {
       const t0 = Date.now();
-      const s = await game(page, (qq) => { const g = window.__game; g.updateSettings({ ...g.settings, quality: qq }); return { ...g.stats, post: !!g.composer }; }, q);
+      const s = await game(page, (qq) => {
+        const g = window.__game; g.updateSettings({ ...g.settings, quality: qq });
+        // the live rear-view (a render target on the glass) comes with High and Ultra on a desktop; Low keeps the environment map
+        let live = false; g.scene.traverse((o) => { if (o.name === 'rear-view-mirror' && o.target) live = true; });
+        // the palm crowns' triangles at this tier (alpha-tested frond cards; fewer fronds below High)
+        let crown = 0; g.terrain.group.traverse((o) => { if (o.isInstancedMesh && o.material.alphaTest > 0) crown = (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
+        return { ...g.stats, post: !!g.composer, live, crown };
+      }, q);
+      crownHigh ||= s.crown;
+      expect(s.crown > 0 && s.crown <= 448 && (q === 'low') === (s.crown < crownHigh), `${q}: palm crowns of ${s.crown} triangles (High ${crownHigh})`);
       expect(s.roads > 0 && s.tiles > 0, `${q}: ${s.roads} road chunks, ${s.tiles} tiles`);
       expect(s.post === (q !== 'low'), `${q}: post-processing ${s.post ? 'on' : 'off'}`);
+      expect(s.live === (q !== 'low'), `${q}: live mirrors ${s.live ? 'on' : 'off'}`);
       if (slow || q === 'low') await frames(page, 3, 400000);
       if (slow && q !== 'low') await shot(`quality-${q}`);
-      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
+      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
     }
     return out.join('; ');
   });

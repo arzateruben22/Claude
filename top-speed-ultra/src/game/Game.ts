@@ -27,7 +27,7 @@ import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { carById, applyCar } from './cars';
-import { COURSES, Course, RIVALS, gate, saveBestTime, bestTime, fmtTime } from './race';
+import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
@@ -37,13 +37,14 @@ const DT = 1 / 120;
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NO_STANDINGS: Standing[] = [];
 
 export interface Hud {
   speed: number; gear: string; rpm: number; rpmFrac: number; distance: number; score: number; combo: number;
   timeLeft: number; fps: number; mode: Mode; auto: boolean; cam: string; checkpoint: number; countdown: number; best: number; overtakes: number;
   road: string; next: string; nextDist: number; wrongWay: boolean; streak: number; bestStreak: number; nearMisses: number; top: number;
   ability: string; abilityOn: number; abilityCool: number;
-  racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string;
+  racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
 }
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
@@ -62,7 +63,7 @@ export interface Result {
 }
 interface RaceState {
   course: Course; path: Path; s0: number; L: number; cps: number[]; next: number; t: number; go: boolean;
-  racers: TrafficCar[]; gates: THREE.Group; progress: number; order: string[]; position: number;
+  racers: TrafficCar[]; gates: THREE.Group; progress: number; order: string[]; position: number; standings: Standing[];
 }
 export interface GameEvents {
   hud: (h: Hud) => void;
@@ -96,6 +97,7 @@ export class Game {
   private composer: EffectComposer | null = null;
   private bloom: UnrealBloomPass | null = null;
   private gtao: GTAOPass | null = null;
+  private outputSat: THREE.IUniform<number> | null = null;   // the output pass's saturation, under cloud
   private settings: Settings;
   private raf = 0;
   private last = 0;
@@ -325,7 +327,7 @@ export class Game {
     const cps: number[] = [];
     for (let k = 1; k <= course.cps; k++) { const s = (L * k) / (course.cps + 1); cps.push(s); gates.add(gate(m, s0 + s, 'cp', `CP ${k}`)); }
     this.scene.add(gates);
-    this.race = { course, path: m, s0, L, cps, next: 0, t: 0, go: false, racers, gates, progress: 0, order: [], position: 4 };
+    this.race = { course, path: m, s0, L, cps, next: 0, t: 0, go: false, racers, gates, progress: 0, order: [], position: 4, standings: [] };
     this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
     this.endAbility(); this.ability.reset();
@@ -358,37 +360,33 @@ export class Game {
   private raceTick(dt: number) {
     const r = this.race!;
     for (const c of r.racers) c.racer!.hold = this.countdown > 0;
-    if (this.countdown > 0 || this.over) return;
-    if (!r.go) { r.go = true; }
-    r.t += dt;
-    const p = this.phys;
-    const prog = this.path === r.path ? p.s - r.s0 : this.courseProgress(p.x, p.z, r.progress);
-    if (prog >= 0) r.progress = Math.max(r.progress, Math.min(prog, r.L));
-    for (const c of r.racers) {
-      const rc = c.racer!;
-      if (rc.done) continue;
-      const cp = c.path === r.path ? c.s - r.s0 : this.courseProgress(c.x, c.z, c.s - r.s0);
-      if (cp >= r.L) { rc.done = r.t; r.order.push(rc.name); }
+    if (this.over) return;
+    const p = this.phys, going = this.countdown <= 0;
+    if (going) {
+      if (!r.go) { r.go = true; }
+      r.t += dt;
+      const prog = this.path === r.path ? p.s - r.s0 : this.courseProgress(p.x, p.z, r.progress);
+      if (prog >= 0) r.progress = Math.max(r.progress, Math.min(prog, r.L));
     }
+    // where every rival is along the course (finishers hold the line), then the standings with the gaps to you
+    const runners = r.racers.map((c, i) => {
+      const rc = c.racer!;
+      const cp = rc.done ? r.L : c.path === r.path ? c.s - r.s0 : this.courseProgress(c.x, c.z, c.s - r.s0);
+      if (!rc.done && going && cp >= r.L) { rc.done = r.t; r.order.push(rc.name); }
+      return { name: rc.name, tag: RIVALS[i]?.tag ?? '', prog: Math.min(cp, r.L), v: c.v, done: rc.done };
+    });
+    r.standings = standings({ prog: r.progress, v: Math.abs(p.vx) }, runners, r.t, r.L);
+    r.position = r.standings.find((s) => s.you)?.pos ?? r.racers.length + 1;
+    if (!going) return;
     while (r.next < r.cps.length && r.progress >= r.cps[r.next]) {
       r.next++;
-      this.ev.toast(`Checkpoint ${r.next}/${r.cps.length} · P${this.racePosition()}`, 'good');
+      this.ev.toast(`Checkpoint ${r.next}/${r.cps.length} · P${r.position}`, 'good');
     }
-    r.position = this.racePosition();
     if (r.progress >= r.L) { r.order.push('You'); this.finishRace(r.order.length); return; }
     // everyone else is home and you're over a minute behind the winner: that's the race
     if (r.order.length === r.racers.length && r.t - Math.max(...r.racers.map((c) => c.racer!.done)) > 60) this.finishRace(r.racers.length + 1, 'Too far behind');
   }
-  racePosition() {
-    const r = this.race; if (!r) return 0;
-    let ahead = 0;
-    for (const c of r.racers) {
-      if (c.racer!.done) { ahead++; continue; }
-      const cp = c.path === r.path ? c.s - r.s0 : this.courseProgress(c.x, c.z, c.s - r.s0);
-      if (cp > r.progress) ahead++;
-    }
-    return ahead + 1;
-  }
+  racePosition() { return this.race?.position ?? 0; }
   private finishRace(position: number, why?: string) {
     const r = this.race!;
     this.over = true;
@@ -440,11 +438,15 @@ export class Game {
     this.configureCar();
     return c;
   }
-  // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed
+  // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed. Live
+  // mirrors (the road and the traffic behind, one extra low-resolution render a frame) come with High and Ultra on
+  // a device with a fine pointer; phones keep the environment map whatever the preset.
   private configureCar() {
     const s = this.settings, c = carById(this.profile.p.car), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
+    const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
+    const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
-      car: c.id as CarId, paint: c.paint, quality: s.quality === 'high' || s.quality === 'ultra' ? 'high' : 'phone',
+      car: c.id as CarId, paint: c.paint, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
   }
@@ -514,7 +516,7 @@ export class Game {
       const p = this.phys;
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
     }
-    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null;
+    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null;
     if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
       const rt = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, samples: q.msaa });
@@ -522,7 +524,13 @@ export class Game {
       c.addPass(new RenderPass(this.scene, this.camera));
       if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
       if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.22, 0.45, 0.92); c.addPass(this.bloom); }
-      c.addPass(new OutputPass());
+      // the output pass with a saturation control folded into its shader (no extra pass): the grade under cloud
+      const out = new OutputPass(), sat: THREE.IUniform<number> = { value: 1 };
+      (out.uniforms as Record<string, THREE.IUniform>).saturation = sat;
+      out.material.fragmentShader = out.material.fragmentShader
+        .replace('uniform sampler2D tDiffuse;', 'uniform sampler2D tDiffuse;\n\t\tuniform float saturation;')
+        .replace('// tone mapping', 'gl_FragColor.rgb = mix(vec3(dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722))), gl_FragColor.rgb, saturation);\n\t\t\t// tone mapping');
+      c.addPass(out); this.outputSat = sat;
       this.composer = c;
     }
     this.onResize();
@@ -799,6 +807,7 @@ export class Game {
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
+    if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderCorner(dt);
@@ -1148,7 +1157,7 @@ export class Game {
       next, nextDist, wrongWay: this.wrongWay, streak: this.streak, bestStreak: this.bestStreak, nearMisses: this.nearMisses, top: Math.round(this.top * MPH),
       ability: this.ability.def.name, abilityOn: this.ability.active / this.ability.def.duration, abilityCool: this.ability.coolFrac,
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
-      raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '',
+      raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
     });
   }

@@ -16,11 +16,34 @@ export const COURSES: Course[] = [
   { id: 'foothill', name: 'Foothill Sprint', kind: 'sprint', road: 'CA-241 South', at: 0.15, length: 10000, cps: 0, reward: [1800, 1000, 500, 200], blurb: '10 km down the 241 toll road: two lanes, hills, sweepers.' },
   { id: 'riverside', name: 'Riverside Endurance', kind: 'endurance', road: 'CA-91 East', at: 0.12, length: 30000, cps: 3, reward: [5000, 2500, 1200, 400], blurb: '30 km out the 91 toward Riverside. Pace yourself through the traffic.' },
 ];
+// our fictional rivals; the tag is the OC city they race out of (the HUD shows it where a sim would show a flag)
 export const RIVALS = [
-  { name: 'Marco V.', paint: 0x1d1f24, pace: 0.95 },
-  { name: 'Dani K.', paint: 0x0f6b4a, pace: 0.92 },
-  { name: 'Sol R.', paint: 0xe8701a, pace: 0.89 },
+  { name: 'Marco V.', tag: 'ANA', paint: 0x1d1f24, pace: 0.95 },
+  { name: 'Dani K.', tag: 'IRV', paint: 0x0f6b4a, pace: 0.92 },
+  { name: 'Sol R.', tag: 'HB', paint: 0xe8701a, pace: 0.89 },
 ];
+export const YOUR_TAG = 'OC';
+
+// a row of the live standings. gap: seconds between that car and you, positive when it is ahead of you, negative
+// behind, 0 on your own row. It is an estimate from the distance along the course at your speed (there is no
+// timing line between the cars), and the HUD says so. One speed for every row keeps the gaps in the same order as
+// the positions; a rival's own speed would let a slow car further back show a smaller gap than a fast one ahead.
+export interface Standing { pos: number; name: string; tag: string; you: boolean; gap: number; done: number }
+export interface Runner { name: string; tag: string; prog: number; v: number; done: number }
+export function standings(you: { prog: number; v: number }, rivals: Runner[], t: number, L: number): Standing[] {
+  const me: Runner = { name: 'You', tag: YOUR_TAG, prog: you.prog, v: you.v, done: 0 };
+  // finishers first in the order they crossed the line, then everyone else by distance covered
+  const all = [...rivals, me].sort((a, b) => (a.done && b.done ? a.done - b.done : a.done ? -1 : b.done ? 1 : b.prog - a.prog));
+  const vMe = Math.max(you.v, 8);
+  return all.map((r, i) => {
+    let gap = 0;
+    if (r !== me) {
+      if (r.done) gap = t - r.done + (L - you.prog) / vMe;                    // home already: how far behind you would cross at this speed
+      else gap = (r.prog - you.prog) / vMe;                                   // ahead (+) or behind (−): the distance between you at your speed
+    }
+    return { pos: i + 1, name: r.name, tag: r.tag, you: r === me, gap, done: r.done };
+  });
+}
 
 export function bestTime(id: string): number { try { return Number(localStorage.getItem('tsu.race.' + id)) || 0; } catch { return 0; } }
 export function saveBestTime(id: string, t: number) {

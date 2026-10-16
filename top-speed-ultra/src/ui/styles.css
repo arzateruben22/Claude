@@ -371,6 +371,40 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-rpm div { height: 100%; background: linear-gradient(90deg, var(--chrome-lo), var(--ink)); transform-origin: left; transform: scaleX(0); }
 .hud-rpm div.red { background: var(--mag); }
 .hud-cam { display: block; margin-top: 6px; font: 500 10px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.hud [hidden] { display: none !important; }
+
+/* rev lights over the gear: chrome, then volt, then magenta; all of them flash on the limiter */
+.hud-revs { display: flex; justify-content: flex-end; gap: 3px; margin: 0 2px 8px 0; }
+.hud-revs i { width: 16px; height: 6px; background: var(--line-2); transform: skewX(var(--skew)); }
+.hud-revs i.on { background: var(--chrome); }
+.hud-revs i:nth-child(n+4).on { background: var(--volt); box-shadow: 0 0 6px var(--volt-glow); }
+.hud-revs i:nth-child(n+7).on { background: var(--mag); box-shadow: 0 0 6px var(--mag-glow); }
+.hud-revs.flash i.on { animation: rev-flash 0.18s steps(1) infinite alternate; }
+@keyframes rev-flash { to { opacity: 0.2; } }
+
+/* the race HUD: a position box with the race timer beside the position, the standings with the gap to you in
+   seconds (your row in volt). Nothing of it sits over the road; the corner window stays the track map. */
+.hud-race { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 12px; display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--volt); }
+.hud-pos { display: grid; grid-template-columns: auto 1fr auto; column-gap: 10px; align-items: end; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
+.hud-pos > b { grid-row: 1 / 3; min-width: 1ch; font: 800 46px/0.82 var(--f-display); letter-spacing: 0.02em; color: var(--volt); }
+.hud-pos > span { display: flex; flex-direction: column; gap: 3px; }
+.hud-pos > span i { font: 500 9.5px/1 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.hud-pos > span em { font: 600 15px/1 var(--f-mono); font-style: normal; font-variant-numeric: tabular-nums; }
+.hud-pos > .hud-timer { grid-column: 3; grid-row: 1; align-items: flex-end; }
+.hud-pos > .hud-timer em { font-size: 16px; letter-spacing: 0.01em; }
+.hud-pos > small { grid-column: 2 / -1; margin-top: 5px; font: 500 10px/1.2 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hud-standings { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.hud-standings li { display: grid; grid-template-columns: 14px 34px minmax(0, 1fr) auto; align-items: center; gap: 7px; min-height: 21px; padding: 0 6px 0 4px; font: 600 12.5px/1 var(--f-ui); }
+.hud-standings i { font: 600 11px/1 var(--f-mono); font-style: normal; text-align: right; color: var(--dim); font-variant-numeric: tabular-nums; }
+.hud-standings em { padding: 3px 0 2px; font: 600 9px/1 var(--f-mono); font-style: normal; letter-spacing: 0.12em; text-align: center; color: var(--chrome); box-shadow: inset 0 0 0 1px var(--line-2); }
+.hud-standings span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hud-standings b { min-width: 5ch; font: 600 12px/1 var(--f-mono); letter-spacing: -0.02em; text-align: right; font-variant-numeric: tabular-nums; }
+.hud-standings li.me { color: var(--volt-ink); background: var(--volt); }
+.hud-standings li.me i, .hud-standings li.me em { color: var(--volt-ink); }
+.hud-standings li.me em { box-shadow: inset 0 0 0 1px var(--volt-deep); }
+.hud-standings li.done { color: var(--dim); }
+.hud-standings li.done b { color: var(--good); }
+.hud-race-note { font: 500 9px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
 
 .toasts { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; pointer-events: none; width: max-content; max-width: min(92vw, 560px); }
 .toast { position: relative; isolation: isolate; padding: 8px 20px; font: 600 13px/1.3 var(--f-mono); letter-spacing: 0.06em; text-align: center; color: var(--ink); animation: pop 0.28s var(--ease); }
@@ -502,11 +536,25 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .hud-row { justify-content: flex-start; }
   .hud-rpm { width: 136px; }
   .hud-cam { display: none; }
-  .hud-stats { top: calc(max(10px, env(safe-area-inset-top)) + 134px); left: 10px; }
+  .hud-revs { justify-content: flex-start; margin: 0 0 6px 1px; }
+  .hud-revs i { width: 12px; height: 4px; }
+  .hud-stats { top: calc(max(10px, env(safe-area-inset-top)) + 146px); left: 10px; }
   .hud-stats span { font-size: 15px; }
   .hud-stats b { min-width: 78px; }
-  .hud-fps { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 206px); left: 12px; }
+  .hud-race { top: calc(max(10px, env(safe-area-inset-top)) + 146px); left: 10px; width: 208px; gap: 4px; padding: 6px 8px 5px 10px; }
+  .hud-pos { column-gap: 8px; padding-bottom: 5px; }
+  .hud-pos > b { font-size: 32px; }
+  .hud-pos > span em { font-size: 13px; }
+  .hud-pos > .hud-timer em { font-size: 14px; }
+  .hud-pos > small { margin-top: 3px; font-size: 9px; }
+  .hud-standings li { grid-template-columns: 14px 30px minmax(0, 1fr) auto; gap: 5px; min-height: 18px; font-size: 12px; }
+  .hud-standings li:not(.near) { display: none; }
+  .hud-race-note { font-size: 8px; }
+  .hud-fps { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 218px); left: 12px; }
   .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 244px); max-width: 92vw; }
+  /* in a race the position box is taller than the numbers it replaces: the plate (and the frame rate) go under it */
+  .hud:has(.hud-race:not([hidden])) .hud-fps { top: calc(max(10px, env(safe-area-inset-top)) + 282px); }
+  .hud:has(.hud-race:not([hidden])) .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 292px); }
   .toasts { top: 40%; }
   .seg button { min-height: 44px; }
   .hud-ability { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
@@ -515,7 +563,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* motion is a garnish: off when asked */
 @media (prefers-reduced-motion: reduce) {
-  .panel, .menu-col, .toast, .loadbar i, .mode.on::after, .gcell.on::after,
+  .panel, .menu-col, .toast, .loadbar i, .mode.on::after, .gcell.on::after, .hud-revs i,
   .brand.hero .word::before, .brand.hero .word::after, .brand.hero .word span::after { animation: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }

@@ -251,36 +251,100 @@ export function paintPeel(): THREE.Texture {
   });
 }
 
-// palm trunk: ring scars
+// palm trunk: the leaf-base scars, a spiral lattice of diamonds under horizontal ring grooves (8 a repeat)
 export function bark(): THREE.Texture {
   return once('bark', () => {
-    const [c, g] = mk(128, 256), img = g.createImageData(128, 256), d = img.data;
-    for (let y = 0; y < 256; y++) for (let x = 0; x < 128; x++) {
-      const ring = 0.5 + 0.5 * Math.sin(y * 0.55 + tnoise(x * 0.1, y * 0.1, 12.8, 81) * 2);
-      const l = 0.55 + ring * 0.25 + (tnoise(x * 0.5, y * 0.5, 64, 82) - 0.5) * 0.2;
-      const i = (y * 128 + x) * 4;
-      d[i] = 128 * l; d[i + 1] = 108 * l; d[i + 2] = 86 * l; d[i + 3] = 255;
+    const w = 128, h = 256, [c, g] = mk(w, h), img = g.createImageData(w, h), d = img.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const a = Math.sin((x / w) * Math.PI * 6 + (y / h) * Math.PI * 4), b = Math.sin((x / w) * Math.PI * 6 - (y / h) * Math.PI * 4);
+      const lattice = 0.5 + 0.5 * a * b;
+      const ry = y % 32, groove = ry < 5 ? 0.6 : ry < 9 ? 1.1 : 1;              // a dark groove with a lighter lip above it
+      const fibre = (tnoise(x * 0.5, y * 0.25, 64, 81) - 0.5) * 0.22 + (tnoise(x * 0.125, y * 0.0625, 16, 82) - 0.5) * 0.16;
+      const l = (0.76 + lattice * 0.24 + fibre) * groove;
+      const i = (y * w + x) * 4;
+      d[i] = 134 * l; d[i + 1] = 116 * l; d[i + 2] = 96 * l; d[i + 3] = 255;
     }
     g.putImageData(img, 0, 0);
     return tex(c, true);
   });
 }
 
-// a palm frond: a rib with leaflets, on a transparent background
+// Palm fronds on a transparent background, both in one texture: a live pinnate frond in the left half (a bare
+// petiole, a pale midrib that tapers to the tip, and lance-shaped leaflets angled toward the tip, drooping at their
+// ends, with gaps between them) and a dead, straw-brown one in the right half whose leaflets hang along it. A strip
+// across the top, above both cards' UVs, is the fibrous brown of the crown shaft the fronds grow from. The RGB is
+// painted everywhere so the transparent gaps don't darken the mip-maps' edges, and the blade's envelope keeps a low
+// alpha floor so a far mip-map still clears the alpha test as a solid frond instead of dissolving.
+// A live card is 1.5 m wide and 2.9-3.8 m long, so a leaflet drawn at (dx, dy) pixels in this 256-pixel-wide half
+// lies at about (dx, 1.2 dy) on the card: the leaflets leave the midrib at about 45 degrees.
 export function frond(): THREE.Texture {
   return once('frond', () => {
-    const [c, g] = mk(256, 512), r = rng(91);
-    g.clearRect(0, 0, 256, 512);
-    g.strokeStyle = '#6d7a3a'; g.lineWidth = 6; g.beginPath(); g.moveTo(128, 512); g.lineTo(128, 10); g.stroke();
-    for (let y = 30; y < 500; y += 7) {
-      const len = 118 * Math.sin((y / 512) * Math.PI) + 10;
-      for (const s of [-1, 1]) {
-        const shade = 70 + r() * 50;
-        g.strokeStyle = `rgb(${shade * 0.55},${shade + 30},${shade * 0.45})`; g.lineWidth = 3 + r() * 2;
-        g.beginPath(); g.moveTo(128, y); g.quadraticCurveTo(128 + s * len * 0.5, y - 12, 128 + s * len, y + 26 + r() * 10); g.stroke();
+    const n = 512, [c, g] = mk(n, n), [mc, mg] = mk(n, n), r = rng(91);
+    g.fillStyle = '#5b7a39'; g.fillRect(0, 0, n / 2, n); g.fillStyle = '#8a7049'; g.fillRect(n / 2, 0, n / 2, n);
+    mg.fillStyle = '#000'; mg.fillRect(0, 0, n, n);
+    // a quadratic stroke whose width follows w(t), drawn as a polygon on both canvases (its colour, and white on
+    // the alpha mask); `vein` adds a lighter centre line
+    const stroke = (x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, w: (t: number) => number, col: string, vein?: string) => {
+      const L: [number, number][] = [], R: [number, number][] = [], C: [number, number][] = [];
+      for (let k = 0; k <= 10; k++) {
+        const t = k / 10, mt = 1 - t, x = mt * mt * x0 + 2 * mt * t * x1 + t * t * x2, y = mt * mt * y0 + 2 * mt * t * y1 + t * t * y2;
+        const dx = 2 * mt * (x1 - x0) + 2 * t * (x2 - x1), dy = 2 * mt * (y1 - y0) + 2 * t * (y2 - y1), len = Math.hypot(dx, dy) || 1;
+        const hw = w(t) / 2, nx = -dy / len * hw, ny = dx / len * hw;
+        L.push([x + nx, y + ny]); R.push([x - nx, y - ny]); C.push([x, y]);
       }
-    }
-    const t = tex(c, true); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;
+      for (const [ctx, fill] of [[g, col], [mg, '#fff']] as const) {
+        ctx.fillStyle = fill; ctx.beginPath(); ctx.moveTo(L[0][0], L[0][1]);
+        for (const [x, y] of L.slice(1)) ctx.lineTo(x, y);
+        for (let k = R.length - 1; k >= 0; k--) ctx.lineTo(R[k][0], R[k][1]);
+        ctx.closePath(); ctx.fill();
+      }
+      if (vein) { g.strokeStyle = vein; g.lineWidth = 1; g.beginPath(); g.moveTo(C[0][0], C[0][1]); for (const [x, y] of C.slice(1, 8)) g.lineTo(x, y); g.stroke(); }
+    };
+    const leaf = (cx: number, dead: boolean) => {
+      const base = 506, blade0 = 404, tip = 52;
+      // the leaflets' length along the blade (t = 0 at its base, 1 at the tip): longest 40% of the way up
+      const lenAt = (t: number) => (dead ? 0.8 : 1) * (28 + 96 * Math.sin(Math.PI * Math.pow(0.04 + t * 0.96, 0.76)));
+      // where a leaflet of length l ends, relative to where it leaves the rachis
+      const reach = (l: number): [number, number] => (dead ? [l * 0.6, -l * 0.6] : [l * 0.95, -l * 0.3]);
+      // the blade's envelope on the mask, at a low alpha: solid at a distance, cut away between the leaflets up close
+      mg.fillStyle = 'rgb(46,46,46)'; mg.beginPath(); mg.moveTo(cx, blade0 + 4);
+      for (let k = 0; k <= 24; k++) { const t = k / 24, y = blade0 - (blade0 - tip) * t, [ex, ey] = reach(lenAt(t) * 0.92); mg.lineTo(cx + ex, y + ey); }
+      mg.lineTo(cx, tip - 10);
+      for (let k = 24; k >= 0; k--) { const t = k / 24, y = blade0 - (blade0 - tip) * t, [ex, ey] = reach(lenAt(t) * 0.92); mg.lineTo(cx - ex, y + ey); }
+      mg.closePath(); mg.fill();
+      const step = dead ? 9 : 12;
+      for (let y0 = blade0 - 2; y0 > tip + 2; y0 -= step) {
+        for (const s of [-1, 1]) {
+          const y = y0 - (s > 0 ? step / 2 : 0), t = (blade0 - y) / (blade0 - tip);         // the two rows alternate
+          if (t > 1 || (dead && r() < 0.18)) continue;                                      // dead ones lose leaflets
+          const l = lenAt(t) * (0.88 + r() * 0.24), [ex, ey] = reach(l), j = (r() - 0.5) * 10;
+          if (dead) {
+            const col = r() < 0.2 ? `rgb(${116 + r() * 16 | 0},${108 + r() * 12 | 0},${94 + r() * 10 | 0})` : `rgb(${124 + r() * 36 | 0},${100 + r() * 26 | 0},${64 + r() * 20 | 0})`;
+            stroke(cx + s, y, cx + s * ex * 0.6, y + ey * 0.4, cx + s * ex, y + ey + j, (u) => 1 + 3.2 * Math.sin(Math.PI * Math.pow(u, 0.7)), col);
+          } else {
+            const yellow = r() < 0.05, sh = r();
+            const col = yellow ? `rgb(${104 + sh * 20 | 0},${124 + sh * 16 | 0},${50 + sh * 12 | 0})` : `rgb(${50 + sh * 36 | 0},${96 + sh * 40 | 0},${32 + sh * 22 | 0})`;
+            stroke(cx + s * 2, y, cx + s * ex * 0.5, y + ey * 1.45, cx + s * ex, y + ey + j, (u) => 1 + 5.6 * Math.sin(Math.PI * Math.pow(u, 0.62)), col,
+              yellow ? undefined : `rgba(190,205,120,${0.25 + sh * 0.2})`);
+          }
+        }
+      }
+      // the petiole and the midrib over the leaflets' roots
+      stroke(cx, base, cx, (base + blade0) / 2, cx, blade0, (u) => 10 - u * 3, dead ? '#7c6345' : '#87864f');
+      stroke(cx, blade0, cx, (blade0 + tip) / 2, cx, tip - 6, (u) => 7 - u * 5.5, dead ? '#9b8257' : '#b4b86a');
+    };
+    leaf(128, false); leaf(384, true);
+    // the crown shaft's strip: fibrous brown, solid
+    g.fillStyle = '#5c4b34'; g.fillRect(0, 0, n, 24); mg.fillStyle = '#fff'; mg.fillRect(0, 0, n, 24);
+    for (let x = 0; x < n; x += 2) { g.fillStyle = `rgba(${r() < 0.5 ? '40,30,20' : '130,110,80'},${0.15 + r() * 0.3})`; g.fillRect(x, 0, 1 + (r() * 2 | 0), 24); }
+    const img = g.getImageData(0, 0, n, n), mask = mg.getImageData(0, 0, n, n).data, d = img.data;
+    for (let i = 0; i < d.length; i += 4) d[i + 3] = mask[i];
+    // the texture is the ImageData itself, not the canvas: a canvas keeps premultiplied colour, so putting this back
+    // on it would turn every transparent texel black, and the mip-maps would darken the fronds' edges
+    c.width = mc.width = 1;                                                                                  // free both canvases
+    const t = new THREE.Texture(img);
+    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANISO; t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; t.needsUpdate = true;
+    return t;
   });
 }
 

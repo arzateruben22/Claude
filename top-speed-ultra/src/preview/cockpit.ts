@@ -11,13 +11,17 @@
 //     mirrors: 'env' (default: the sky's environment map in the rear-view and door mirrors, no extra renders) or
 //       'live' (render-target reflections of the scene in the rear-view and the driver's door mirror, cut to each
 //       glass's outline; they alternate, so one extra low-resolution scene render a frame. That render re-draws
-//       whatever of the world the mirror sees, which is over the cockpit's draw-call budget in a full scene: opt in).
+//       whatever of the world the mirror sees, which is over the cockpit's draw-call budget in a full scene: opt in;
+//       the game does on High and Ultra, and leaves its own car out of the rear-view's render, see CarMirror.hide).
+//       With body false the door mirror's glass sits a hair proud of the exterior's own glass (the game's PlayerCar
+//       builds the body separately), so it draws over it.
 //     body: include the front of the car's body seen through the windscreen and the door mirrors (default true).
 //     stitch: thread colour (default cognac).
-//   returns { group, wheel, update(dt), setInstruments({ rpm }) }
+//   returns { group, wheel, update(dt), setInstruments({ rpm }), mirrors }
 //     group: the interior in the car's frame. wheel: the steering-wheel mount at spec WHEEL_AT, rotation.x =
 //     WHEEL_TILT; its rotation.z steers, and hands added to it turn with it (the rim follows spec rimAt/rimA/rimB).
-//     update(dt): the needle's idle flutter. setInstruments: move the tach needle.
+//     update(dt): the needle's idle flutter. setInstruments: move the tach needle. mirrors: the live CarMirrors
+//     (empty with 'env'), to switch off (active = false) or dispose.
 //
 // What it is made of: Alcantara (dash top, pillars, headliner, door inserts), black Nappa with cognac double
 // stitching (fascia, binnacle, door cards, wheel grips perforated), cognac Nappa seats, 2x2 twill carbon under a
@@ -52,6 +56,7 @@ export interface Cockpit {
   update?(dt: number): void;
   setInstruments?(o: { rpm?: number }): void;
   rearView?: { at: THREE.Vector3; normal: THREE.Vector3; w: number; h: number };   // the rear-view mirror's face: centre, normal, size
+  mirrors: CarMirror[];
 }
 
 const CENTRE = v3(-0.1, 0.85, -0.2);            // a point in the middle of the cabin: "inward" is toward it
@@ -648,13 +653,20 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
 
   // ---------------------------------------------------------------- mirrors with reflections
   let rearView: Cockpit['rearView'];
+  const mirrors: CarMirror[] = [];
   {
-    // rear-view: frameless, hung from the top of the windscreen just left of centre, its face turned so the driver
-    // looks straight back through the bulkhead window
-    const mount = wsPoint(-0.05, 0.935, -0.008), inward = body.topNormal(mount.x, mount.z).negate();
+    // rear-view: frameless, hung from the top of the windscreen over the driver's side (x ~ -0.22, about 24 degrees
+    // right of the eye: at the centre of the glass it sits 45 degrees out and more than half of it is off screen at
+    // the game's 58-degree cockpit view), its face turned so the driver looks straight back along the car
+    // With the environment map ('env': phones, Low and Medium) the glass keeps its old place just left of centre
+    // and its old aim through the bulkhead window: moved over the driver's side it covered the road in portrait.
+    const mount = wsPoint(live ? -0.36 : -0.05, 0.935, -0.008), inward = body.topNormal(mount.x, mount.z).negate();
     const mb = mount.clone().addScaledVector(inward, 0.03).add(v3(0, -0.034, 0.012));
-    // aimed through the middle of the bulkhead window, over the engine cover, at the road ~6 m behind the tail
-    const nrm = EYE.clone().sub(mb).normalize().add(v3(0, 0.75, 2.3).sub(mb).normalize()).normalize();
+    // aimed straight back, the centre of the glass 2.5 degrees below level: the horizon sits in the upper half and a
+    // car twenty metres behind fills the middle (the glass sees 7.5 degrees top to bottom from the driver's eye).
+    // The game's rear-view renders the world without the player's car (PlayerCar), so the aim ignores the bulkhead
+    // window and the engine cover behind it.
+    const nrm = EYE.clone().sub(mb).normalize().add((live ? v3(0, mb.y - 30 * Math.tan(2.5 * Math.PI / 180), 30) : v3(0, 0.75, 2.3)).sub(mb).normalize()).normalize();
     rearView = { at: mb.clone(), normal: nrm.clone(), w: 0.262, h: 0.07 };
     const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrm)); look.updateMatrix();
     const housing = extrude(roundRect(0.262, 0.07, 0.03), 0.026, 0.006, 8); housing.translate(0, 0, -0.03); housing.applyMatrix4(look.matrix);
@@ -666,15 +678,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     if (!live) { const g = new THREE.PlaneGeometry(0.248, 0.058); g.applyMatrix4(look.matrix); extra.add('mirrorDim', g, null, 0.2); }
     extra.build(mats, group, { shadow: () => false });
     if (live) {
-      const rv = new CarMirror(0.248, 0.058, { res: high ? [320, 80] : [192, 48], tint: 0xc4c4c4, every: 2, phase: 0 });
+      // both mirrors see 400 m: the road, the walls and the traffic behind draw, the far road chunks (most of the
+      // draw calls) do not, and the backdrop beyond it is the sky. The targets cost draw calls, not pixels, so the
+      // desktop build gets sharp ones (the rear-view spans a third of a 1440-wide frame).
+      const rv = new CarMirror(0.248, 0.058, { res: high ? [512, 128] : [192, 48], tint: 0xc4c4c4, every: 2, phase: 0, far: 400 });
       rv.position.copy(mb).addScaledVector(nrm, 0.0008); rv.lookAt(rv.position.clone().add(nrm)); rv.name = 'rear-view-mirror';
-      group.add(rv);
-      if (o.body ?? true) {
-        const { p, q: qq } = mirrorGlassPlacement(-1);
-        const dm = new CarMirror(MIRROR.glass[0], MIRROR.glass[1], { res: high ? [192, 84] : [128, 56], tint: 0xc9ccd2, every: 2, phase: 1, dim: 0.35 });
-        dm.position.copy(p); dm.quaternion.copy(qq); dm.name = 'door-mirror-left';
-        group.add(dm);
-      }
+      group.add(rv); mirrors.push(rv);
+      // the driver's door mirror: flush in the cockpit's own housing, or 0.8 mm proud of the exterior's glass
+      const { p, q: qq } = mirrorGlassPlacement(-1, (o.body ?? true) ? 0.006 : 0.0052);
+      const dm = new CarMirror(MIRROR.glass[0], MIRROR.glass[1], { res: high ? [256, 112] : [128, 56], tint: 0xc9ccd2, every: 2, phase: 1, dim: 0.35, far: 400 });
+      dm.position.copy(p); dm.quaternion.copy(qq); dm.name = 'door-mirror-left';
+      group.add(dm); mirrors.push(dm);
     }
   }
 
@@ -685,5 +699,5 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     setNeedle(rpmShown + Math.sin(flutter * 23) * 12 + Math.sin(flutter * 7.3) * 18);
   };
   group.userData.materials = mats;
-  return { group, wheel: wheelMount, update, setInstruments, rearView };
+  return { group, wheel: wheelMount, update, setInstruments, rearView, mirrors };
 }

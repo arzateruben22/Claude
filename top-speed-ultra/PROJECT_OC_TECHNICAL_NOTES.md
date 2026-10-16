@@ -96,6 +96,13 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     slopes, irrigated green in town, and sand at sea level.
   - Scenery sits on a jittered grid and is always clear of roads. On the flats it's stucco houses with tile roofs
     and office blocks; elsewhere, palms, trees and shrubs.
+  - Palms (`road/props.ts` `palmTrunk()`, `palmCrown(detail)`; `textures.ts` `bark()`, `frond()`) are one
+    InstancedMesh per part per tile. The crown is frond cards folded along the midrib and cut out by the frond
+    texture's alpha (alphaTest 0.4, double-sided): 12 live and 5 dead fronds (382 triangles) on High and Ultra, 10 and
+    4 (222) when `props < 1`. The frond texture is uploaded as ImageData, not a canvas, so its transparent texels keep
+    their colour for the mip-maps. three.js's shadow pass reuses a material's `map` and `alphaTest`, so the shadows
+    are frond-shaped with no custom depth material. Trunks lean up to 3.4 degrees; the lean, the crown's yaw and its
+    size come from a second random stream, so the rest of the scenery stays where it was.
   - A sea plane sits at y = -0.4.
 - **The player's car (`vehicle/PlayerCar.ts`).** Built from the realism preview's modules, which the game now
   depends on (read-only: `src/preview/car.ts` `buildCar`, `cockpit.ts` `buildCockpit`, `hands.ts`
