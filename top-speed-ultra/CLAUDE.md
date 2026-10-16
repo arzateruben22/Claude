@@ -41,3 +41,12 @@ here, then read:
     (`fastForward`, `navigateTo`, `stats`).
   - Log results in `PROJECT_OC_PROGRESS.md`. Never invent results.
 - **Commits** go on branch `claude/always-on`.
+
+## Model policy (owner, 2026-10-16)
+
+- **Daytime (Pacific):** sessions and their agents run on Opus 5.5 for routine implementation, renders, suite runs
+  and integration.
+- **Overnight:** Fable 5.1, on what it is best at: the hardest reasoning (vehicle physics, rendering architecture,
+  the people builder's geometry), design decisions, and adversarial review of the day's agent output. Keep its
+  session capacity for that; don't spend it on screenshots and suite runs.
+- Workflow scripts take a `model` per agent; daytime passes set `'opus'`, overnight passes leave the default.

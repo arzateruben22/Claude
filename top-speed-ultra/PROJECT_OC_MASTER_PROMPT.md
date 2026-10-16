@@ -126,3 +126,5 @@ P0–P4 core systems are built (see the progress log). Good next steps:
   handling setting; black skid marks laid on the road by slipping tyres; tyre smoke; a drift angle readout.
 - **The main menu** should be more seamless, with a finer luxury, Apple-like aesthetic feel (see
   `PROJECT_OC_UI_TARGET.md`).
+- **Model policy.** Daytime (Pacific) work on Opus 5.5; Fable 5.1 overnight for the hardest problems and for
+  reviewing the day's work (details in `CLAUDE.md`).
