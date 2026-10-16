@@ -5,7 +5,8 @@
    1 px hairlines and soft 16-22 px radii, spacing on an 8 pt rhythm, pill buttons, segmented controls and switches
    drawn in CSS, and the system's own text face (San Francisco on an iPhone or a Mac, Segoe on Windows, Roboto on
    Android; nothing to download). Big Shoulders Display is the chromed ULTRA of the wordmark only; JetBrains Mono sets
-   the numbers. The HUD keeps its sharper plates and Chakra Petch until its own pass (U1).
+   the numbers. The HUD keeps its sharper plates and Chakra Petch; its U1 pass adds a status row (a compass and a clock
+   chip) and the Minimal style, which tucks the controls away and leaves a round pause chip and a nav bubble.
    Every colour lives in these tokens. One dark look on purpose: it sits over a moving 3D scene. */
 @property --mk { syntax: "<length>"; inherits: true; initial-value: 132px; }   /* the lockup's size, so it can ease */
 :root {
@@ -100,6 +101,7 @@
   --skew: -14deg;                           /* the HUD's plates */
   --ease: cubic-bezier(0.2, 0.85, 0.25, 1);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.55, 0, 0.8, 0.25);  /* things leaving: the Minimal HUD's controls sliding away */
   --t-fade: 220ms;
   color-scheme: dark;
 }
@@ -109,7 +111,7 @@ body { background: var(--void); color: var(--ink); font: 400 15px/1.45 var(--f-t
 button, input, textarea { font: inherit; color: inherit; }
 button { -webkit-tap-highlight-color: var(--clear); }
 :focus-visible { outline: 2px solid var(--sunset); outline-offset: 2px; }
-.app { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+.app { --st: 40px; position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }   /* --st: the HUD's status row (compass, clock); the controls start under it */
 .stage { position: absolute; inset: 0; }
 .game-canvas { display: block; width: 100%; height: 100%; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -162,7 +164,7 @@ button { -webkit-tap-highlight-color: var(--clear); }
 .row { display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: center; }
 .stack { display: grid; gap: 8px; }
 
-/* the HUD's top-bar buttons keep their skewed plates (HUD pass U1) */
+/* the HUD's top-bar buttons keep their skewed plates (the Minimal HUD's pause chip is round: see below) */
 .tbtn { position: relative; isolation: isolate; border: 0; background: none; cursor: pointer; }
 .tbtn::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--glass); box-shadow: inset 0 0 0 1px var(--line-2); }
 .tbtn:focus-visible { outline: none; }
@@ -489,7 +491,7 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 @keyframes pop { from { transform: translateY(8px); opacity: 0; } }
 
 /* where you are and what's next */
-.hud-road { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; max-width: min(46vw, 520px); }
+.hud-road { position: absolute; top: calc(max(14px, env(safe-area-inset-top)) + 34px); left: 50%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; max-width: min(46vw, 520px); }
 /* the route chip: the OC mark where the region would read, then the road */
 .hud-roadname { position: relative; isolation: isolate; display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 5px 18px 5px 10px; font: 600 14px/1.2 var(--f-ui); letter-spacing: 0.08em; text-transform: uppercase;
   background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 -2px 0 var(--sunset); }
@@ -500,14 +502,14 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .hud-wrong { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) skewX(var(--skew)); padding: 12px 26px; font: 900 34px/1 var(--f-display); letter-spacing: 0.16em; color: var(--ink); background: var(--alarm); box-shadow: 0 0 0 1px var(--ember), 0 12px 34px var(--ember-glow); }
 
 /* the top bar: one chrome-edged strip of controls */
-.tbar { position: absolute; top: max(12px, env(safe-area-inset-top)); right: 14px; display: flex; gap: 6px; }
+.tbar { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + var(--st)); right: 14px; display: flex; gap: 6px; }
 .tbtn { pointer-events: auto; min-height: 38px; min-width: 44px; padding: 0 14px; font: 600 12px/1 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); }
 .tbtn::before { background: var(--hud); }
 .tbtn.on { color: var(--sunset-text); }
 .tbtn.on::before { box-shadow: inset 0 0 0 1px var(--sunset-line), inset 0 -2px 0 var(--sunset); }
 
 /* the corner window: a square frame with locked-on corners (the sky camera draws inside its box) */
-.corner { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px); right: 12px; padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: 0 10px 28px var(--shadow); }
+.corner { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px + var(--st)); right: 12px; padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: 0 10px 28px var(--shadow); }
 .corner::after { content: ""; position: absolute; inset: -4px; pointer-events: none;
   background:
     linear-gradient(var(--chrome) 0 0) left top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left top / 2px 12px no-repeat,
@@ -517,6 +519,54 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .corner canvas { display: block; width: 100%; height: 100%; }
 .corner.sky { border-color: var(--line-3); }
 .corner-tag { position: absolute; left: 0; bottom: 0; padding: 3px 7px; font: 500 9.5px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); background: var(--hud); pointer-events: none; }
+
+/* ------------------------------------------------------------------ the status row (U1): a compass and a clock chip */
+/* the compass, top centre: a tape of ticks and letters slides under a fixed sunset index as the car turns (HUD.tsx sets
+   --h, the heading in degrees; --ppd is the tape's scale, px per degree). The band fades out at both ends. */
+.hud-compass { --ppd: 2.2px; position: absolute; top: max(14px, env(safe-area-inset-top)); left: 50%; width: clamp(140px, 30vw, 340px); height: 26px; overflow: hidden; transform: translateX(-50%);
+  background: var(--hud); box-shadow: inset 0 -1px 0 var(--line-2);
+  -webkit-mask: linear-gradient(90deg, var(--clear), var(--opaque) 22%, var(--opaque) 78%, var(--clear)); mask: linear-gradient(90deg, var(--clear), var(--opaque) 22%, var(--opaque) 78%, var(--clear)); }
+.hud-tape { --h: 0; position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(calc((var(--h) + 180) * var(--ppd) * -1)); }
+.hud-tape i { position: absolute; bottom: 0; left: calc((var(--a) + 180) * var(--ppd)); width: 1px; height: 4px; background: var(--line-3); font-style: normal; }
+.hud-tape i.ic { height: 6px; }
+.hud-tape i.c { height: 7px; background: var(--ink); }
+.hud-tape b { position: absolute; bottom: 10px; left: 0; transform: translateX(-50%); font: 600 12.5px/1 var(--f-ui); letter-spacing: 0.04em; color: var(--ink); }
+.hud-tape i.ic b { font-size: 10px; font-weight: 500; color: var(--dim); }
+.hud-tape i.n b { color: var(--sunset-text); }
+.hud-compass::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 2px; height: 9px; margin-left: -1px; background: var(--sunset); box-shadow: 0 0 6px var(--sunset-glow); }
+/* the clock chip, top right: this device's clock, and the temperature the game is simulating (it says so) */
+.hud-clock { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; display: flex; align-items: center; gap: 10px; height: 28px; padding: 0 12px; white-space: nowrap;
+  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line); }
+.hud-clock b, .hud-clock em { font: 600 14px/1 var(--f-mono); font-style: normal; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hud-clock span { padding-left: 10px; border-left: 1px solid var(--line-2); font: 500 11.5px/14px var(--f-text); letter-spacing: 0.01em; color: var(--dim); }
+
+/* ------------------------------------------------------------------ the Minimal HUD, tucked away (U1; App.tsx: useIdle) */
+/* after 4 s of just driving the top bar slides up and away and the corner window off the right edge (the game stops
+   drawing it there); the pause button stays as a round chip, and with a route the nav bubble takes the window's place.
+   Hidden controls are `visibility: hidden` once gone, so they leave the tab order and the accessibility tree. */
+.tbar .tbtn, .corner { transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.app.hud-idle .tbar .tbtn:not(.menu), .app.hud-idle .corner { opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform 420ms var(--ease-in), opacity 360ms var(--ease-in), visibility 0s linear 420ms; }
+.app.hud-idle .tbar .tbtn:not(.menu) { transform: translateY(calc(-100% - 64px)); }
+.app.hud-idle .corner { transform: translateX(calc(100% + 32px)); }
+.tbtn .tico { display: none; }
+.tbtn .tico path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.app.hud-idle .tbtn.menu { display: grid; place-items: center; width: 44px; min-width: 44px; min-height: 44px; padding: 0; }
+.app.hud-idle .tbtn.menu > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.app.hud-idle .tbtn.menu .tico { display: block; animation: fade-in var(--t-fade) var(--ease-out); }
+.app.hud-idle .tbtn.menu::before { transform: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line-2), 0 6px 18px var(--shadow); }
+.app.hud-idle .tbtn.menu:active::before { transform: scale(0.94); }
+/* the nav bubble: where the corner window was, the next manoeuvre's arrow and how far it is (HUD.tsx) */
+.hud-bubble { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px + var(--st)); right: 14px; width: 84px; height: 84px; display: grid; place-content: center; justify-items: center; gap: 5px;
+  border-radius: 50%; background: var(--hud); box-shadow: inset 0 0 0 1.5px var(--sunset-line), 0 10px 28px var(--shadow);
+  opacity: 0; visibility: hidden; transform: scale(0.82); transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out), visibility 0s linear 240ms; }
+.hud-bubble.on { opacity: 1; visibility: visible; transform: none; transition: opacity 300ms var(--ease-out) 180ms, transform 360ms var(--ease-out) 180ms, visibility 0s linear 0s; }
+.hud-bubble svg { display: block; overflow: visible; }
+.hud-bubble path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.hud-bubble path.thru { stroke: var(--line-2); stroke-width: 2.5; }
+.hud-bubble:not([data-turn="ahead"]) .ahead, .hud-bubble[data-turn="ahead"] .thru, .hud-bubble[data-turn="ahead"] .fork { display: none; }
+.hud-bubble[data-turn="left"] svg { transform: scaleX(-1); }
+.hud-bubble b { font: 600 13px/1 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 
 /* the ability button: a hexagon whose edge drains while it's on and refills while it recharges */
 .hud-ability { --p: 1; position: absolute; right: 222px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
@@ -604,20 +654,25 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .hud-gear { font-size: 21px; margin-left: 4px; }
 }
 @media (pointer: coarse) {
-  /* phones: speed top left, the numbers under it, the buttons top right, pedals and steering at the bottom */
+  /* phones: the status row on top (compass, clock), the buttons under it on the right, speed top left with the numbers
+     under it, pedals and steering at the bottom */
+  .app { --st: 44px; }
+  .hud-compass { --ppd: 1.6px; top: calc(max(10px, env(safe-area-inset-top)) + 8px); width: 156px; }   /* centred on the two-line clock chip */
+  .hud-clock { top: max(10px, env(safe-area-inset-top)); right: 8px; }
+  .hud-bubble { right: 8px; width: 76px; height: 76px; gap: 4px; }
   .tbar { gap: 6px; right: 8px; left: 8px; justify-content: flex-end; }
   .tbar .tbtn { min-height: 44px; padding: 0 11px; font-size: 11.5px; letter-spacing: 0.08em; }
-  .hud-speed { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 58px); right: auto; left: 10px; min-width: 0; padding: 8px 12px 8px; text-align: left; }
+  .hud-speed { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 58px + var(--st)); right: auto; left: 10px; min-width: 0; padding: 8px 12px 8px; text-align: left; }
   .hud-speed::before { right: auto; left: -1px; background: linear-gradient(var(--sunset) 0 0) left top / 18px 2px no-repeat, linear-gradient(var(--sunset) 0 0) left top / 2px 18px no-repeat; }
   .hud-row { justify-content: flex-start; }
   .hud-rpm { width: 136px; }
   .hud-cam { display: none; }
   .hud-revs { justify-content: flex-start; margin: 0 0 6px 1px; }
   .hud-revs i { width: 12px; height: 4px; }
-  .hud-stats { top: calc(max(10px, env(safe-area-inset-top)) + 146px); left: 10px; }
+  .hud-stats { top: calc(max(10px, env(safe-area-inset-top)) + 146px + var(--st)); left: 10px; }
   .hud-stats span { font-size: 15px; }
   .hud-stats b { min-width: 78px; }
-  .hud-race { top: calc(max(10px, env(safe-area-inset-top)) + 146px); left: 10px; width: 208px; gap: 4px; padding: 6px 8px 5px 10px; }
+  .hud-race { top: calc(max(10px, env(safe-area-inset-top)) + 146px + var(--st)); left: 10px; width: 208px; gap: 4px; padding: 6px 8px 5px 10px; }
   .hud-pos { column-gap: 8px; padding-bottom: 5px; }
   .hud-pos > b { font-size: 32px; }
   .hud-pos > span em { font-size: 13px; }
@@ -626,23 +681,35 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .hud-standings li { grid-template-columns: 14px 30px minmax(0, 1fr) auto; gap: 5px; min-height: 18px; font-size: 12px; }
   .hud-standings li:not(.near) { display: none; }
   .hud-race-note { font-size: 8px; }
-  .hud-fps { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 218px); left: 12px; }
-  .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 244px); max-width: 92vw; }
+  .hud-fps { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 218px + var(--st)); left: 12px; }
+  .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 244px + var(--st)); max-width: 92vw; }
   /* in a race the position box is taller than the numbers it replaces: the plate (and the frame rate) go under it */
-  .hud:has(.hud-race:not([hidden])) .hud-fps { top: calc(max(10px, env(safe-area-inset-top)) + 282px); }
-  .hud:has(.hud-race:not([hidden])) .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 292px); }
+  .hud:has(.hud-race:not([hidden])) .hud-fps { top: calc(max(10px, env(safe-area-inset-top)) + 282px + var(--st)); }
+  .hud:has(.hud-race:not([hidden])) .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 292px + var(--st)); }
   .toasts { top: 40%; }
   .seg button { min-height: 44px; }
   .back { min-height: 44px; }
   .hud-ability { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
 }
-@media (max-width: 700px) and (pointer: fine) { .hud-road { top: max(236px, calc(env(safe-area-inset-top) + 226px)); max-width: 92vw; } }
+/* a narrow window with a mouse: the desktop HUD, with the compass and the route chip under the corner window and the
+   clock chip on two lines (as on a phone) so the stats plate keeps the left of the status row */
+@media (max-width: 700px) and (pointer: fine) {
+  .hud-compass { top: max(calc(222px + var(--st)), calc(env(safe-area-inset-top) + 212px + var(--st))); }
+  .hud-road { top: max(calc(256px + var(--st)), calc(env(safe-area-inset-top) + 246px + var(--st))); max-width: 92vw; }
+}
+@media (max-width: 700px), (pointer: coarse) {
+  .hud-clock { flex-direction: column; align-items: flex-end; gap: 4px; height: auto; padding: 6px 10px; }
+  .hud-clock b { font-size: 13px; }
+  .hud-clock em { font-size: 11.5px; }
+  .hud-clock span { padding-left: 0; border-left: 0; font-size: 10.5px; line-height: 12px; }
+}
 
 /* motion is a garnish: off when asked (the sheet then cuts between screens, App.tsx skips the cross-fade) */
 @media (prefers-reduced-motion: reduce) {
   .panel, .sheet-body, .sheet-ghost > *, .toast, .loadbar i, .hud-revs i, .brand.hero .word span::after { animation: none !important; }
   .overlay.loading-screen.leaving { animation: none !important; visibility: hidden; }
   .btn, .seg button, .mode, .pick, .gcell, .soon, .back, .toggle input, .sheet .brand .lockup { transition: none !important; }
+  .tbar .tbtn, .corner, .hud-bubble, .tbtn .tico { transition: none !important; animation: none !important; }   /* the Minimal HUD just shows and hides */
   .btn:hover, .btn:active, .soon:hover { transform: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }

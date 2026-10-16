@@ -9,6 +9,7 @@ export type Corner = 'map' | 'sky' | 'off';
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
+export type HudStyle = 'modern' | 'minimal';
 
 export interface Settings {
   quality: Quality;
@@ -37,6 +38,7 @@ export interface Settings {
   ultraTunnel: boolean;
   ultraShake: boolean;
   ultraMuffle: boolean;
+  hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
 }
 
 export interface QualityPreset {
@@ -105,6 +107,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    hudStyle: 'modern',
   };
 }
 
@@ -128,6 +131,7 @@ export function loadSettings(): Settings {
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
+      hudStyle: v.hudStyle === 'minimal' ? 'minimal' : 'modern',
     };
   } catch { return d; }
 }

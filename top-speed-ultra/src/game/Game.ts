@@ -46,7 +46,11 @@ export interface Hud {
   ability: string; abilityOn: number; abilityCool: number;
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
+  // the adaptive HUD (U1): the compass bearing the car points along (degrees from north, clockwise), the simulated air
+  // temperature (°F) for the clock chip, and which way the next manoeuvre goes for the nav bubble ('' with no route)
+  heading: number; tempF: number; turn: Turn;
 }
+export type Turn = 'left' | 'right' | 'ahead' | '';
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
 // what a feedback report says about the device and this drive: nothing personal, nothing sent by the game
@@ -1045,6 +1049,7 @@ export class Game {
     if (mode === 'sky') {
       // a live camera 150 m up, heading-up, looking down just ahead of the car
       const r = this.cornerRect(), pr = this.renderer.getPixelRatio(), H = this.host.clientHeight || innerHeight;
+      if (this.cornerAway(r)) return;
       const p = this.car.root.position;
       const fx = Math.sin(this.phys.psi), fz = Math.cos(this.phys.psi);
       this.skyCam.position.set(p.x + fx * 40, p.y + 150, p.z + fz * 40);
@@ -1066,8 +1071,11 @@ export class Game {
     this.mapT -= dt;
     if (this.mapT > 0 || !this.mapCanvas) return;
     this.mapT = 0.1;
+    if (this.cornerAway(this.cornerRect())) return;
     this.drawMap(this.mapCanvas);
   }
+  // the Minimal HUD (U1) slides the window off the right edge when it tucks it away: nothing to draw while it's there
+  private cornerAway(r: { x: number; size: number }) { return r.size <= 0 || r.x >= (this.host.clientWidth || innerWidth) - 1; }
 
   // a heading-up road map: every freeway within a few kilometres, the route, you
   private drawMap(cv: HTMLCanvasElement) {
@@ -1136,18 +1144,22 @@ export class Game {
     if (Math.abs(next - this.renderScale) > 0.001) { this.renderScale = next; this.onResize(); }
   }
 
-  // what's next on the route, and how far
-  private nextManoeuvre(): [string, number] {
+  // what's next on the route, how far, and which way it goes
+  private nextManoeuvre(): [string, number, Turn] {
     const j = this.route[0];
-    if (!j) return ['', 0];
-    const side = j.kind === 'diverge' ? (this.sideOf(this.path, j) === 'R' ? 'Keep right' : 'Keep left') : 'Continue';
+    if (!j) return ['', 0, ''];
+    const turn: Turn = j.kind === 'diverge' ? (this.sideOf(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
+    const side = turn === 'right' ? 'Keep right' : turn === 'left' ? 'Keep left' : 'Continue';
     const to = j.to.main ? j.to.label : this.net.leadsTo(j.to) || 'the ramp';
-    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s)];
+    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s), turn];
   }
 
   private sendHud() {
     const p = this.phys;
-    const [next, nextDist] = this.nextManoeuvre();
+    const [next, nextDist, turn] = this.nextManoeuvre();
+    // world x runs east and z south (tools/oc-network/common.py), and the car points along (sin psi, cos psi): its
+    // bearing from north is pi - psi
+    const heading = ((((Math.PI - p.psi) * 180) / Math.PI) % 360 + 360) % 360;
     this.ev.hud({
       speed: Math.round(Math.abs(p.vx) * MPH), gear: p.gear < 0 ? 'R' : String(p.gear), rpm: Math.round(p.rpm), rpmFrac: clamp(p.rpm / SPEC.redline, 0, 1),
       distance: this.distance, score: Math.round(this.score), combo: this.combo, timeLeft: this.timeLeft, fps: this.fps, mode: this.mode,
@@ -1159,6 +1171,7 @@ export class Game {
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
+      heading, tempF: this.env.tempF(), turn,
     });
   }
 

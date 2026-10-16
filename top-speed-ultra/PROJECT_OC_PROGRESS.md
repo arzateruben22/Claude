@@ -4,6 +4,34 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-16: the adaptive HUD: a HUD style setting, a compass, a clock chip, auto-hide (UI pass, U1)
+
+Panels 1 and 9 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U1).
+
+- **Status row, both styles**: a thin compass strip at the top centre (a tape of ticks with N E S W and the four
+  between, under a sunset index; the bearing is the car's own, from its yaw) and a chip at the top right with this
+  device's clock and the temperature the game simulates, labelled "simulated" (`Environment.tempF`: OC's coast by the
+  hour, less a few degrees for the weather in force; a clear day reads 72°). The top bar and the corner window now sit
+  one row lower, under it.
+- **HUD style** (Settings, Display): Modern (the default: every control stays) or Minimal. In Minimal, after 4 s of
+  just driving the top bar slides up and away and the corner window off the right edge (the game stops drawing it
+  there); speed, gear, the stats, the route prompt and the ability ring stay. Pause stays too, as a round chip in the
+  corner, so pausing is always one tap. With a route set, a round nav bubble takes the corner's place: the next
+  manoeuvre's arrow (keep left, keep right, ahead) and the distance. A tap, a mouse move, a key or a pad button brings
+  everything back; driving input (the pedals, the steering rail, W A S D and the arrows, Space, Q, E, V, the pad's
+  triggers and handbrake and shift buttons) doesn't, or the road would never clear. Keyboard focus on a control of the
+  bar keeps it up. Reduced motion: it just shows and hides, no slide.
+- **Checked**: `npx tsc --noEmit` exits 0. `npm test -- --only=phone,launch,boot`: "18/18 passed", including the new
+  phone check "HUD: compass and clock chip; Minimal tucks the bar away after 4 s, Pause stays, a tap brings it back"
+  (it switches to Minimal through Pause, Settings, HUD style; reads 304° on I-405 North through Irvine, which runs
+  northwest; then pauses from the round chip). `tests/out/u1-hud-shots.mjs` at 390x844 and 1440x900: Modern still up
+  after 5.5 s; Minimal tucked away 3.5-4.2 s after the last input; a real tap (phone) or mouse move (desktop) brought it
+  back; holding W did not; Tab did, and focus on "View" held the bar up past 6 s; with reduced motion the transitions
+  are 0 s; no page errors.
+- **Screenshots** (tests/out/ui-after/): hud-modern-phone.png, hud-modern-desktop.png, hud-minimal-shown-phone.png,
+  hud-minimal-shown-desktop.png, hud-minimal-hidden-phone.png, hud-minimal-hidden-desktop.png, hud-settings-phone.png,
+  hud-settings-desktop.png.
+
 ## 2026-10-16: the main menu is one glass sheet with a Drive dock (UI pass, U0)
 
 The owner asked for a main menu that feels "more seamless" with "a finer luxury Apple-like aesthetic feel". Built from

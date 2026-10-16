@@ -1,4 +1,7 @@
 // The heads-up display. It never re-renders: the game writes straight into these elements ten times a second.
+// The adaptive HUD (U1) adds a status row on both styles: a compass strip at the top centre and a chip at the top right
+// with this device's clock and a simulated temperature; and, in Minimal, the round nav bubble that stands in for the
+// corner window while it's tucked away (App.tsx decides when: the `bubble` prop).
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import type { CSSProperties } from 'react';
@@ -8,8 +11,17 @@ import { OcMark, OC_LOGO_240 } from './Mark';
 export interface HudHandle { set: (h: HudData) => void }
 
 const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
+// how far to the next manoeuvre, the same on the prompt and in the nav bubble
+const toGo = (m: number) => (m > 1609 ? miles(m) : Math.round(m * 3.281 / 10) * 10 + ' ft');
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; onAbility: () => void }>(function HUD({ showFps, visible, onAbility }, ref) {
+// the compass tape: a tick every 15°, the four cardinal letters and the four between them, from -180° to 540° so any
+// heading has half a turn of tape either side of it. The tape slides by --h (the heading); styles.css sets the scale.
+const TAPE = Array.from({ length: 49 }, (_, k) => {
+  const a = -180 + k * 15, n = ((a % 360) + 360) % 360;
+  return { a, label: n % 90 === 0 ? 'NESW'[n / 90] : n % 45 === 0 ? ['NE', 'SE', 'SW', 'NW'][(n - 45) / 90] : '' };
+});
+
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; bubble: boolean; onAbility: () => void }>(function HUD({ showFps, visible, bubble, onAbility }, ref) {
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
@@ -18,6 +30,9 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   // the race HUD: the position box with the race timer beside the position, the standings, and the rev lights over the gear
   const race = useRef<HTMLDivElement>(null), pos = useRef<HTMLElement>(null), posOf = useRef<HTMLElement>(null), prog = useRef<HTMLElement>(null);
   const timer = useRef<HTMLElement>(null), rows = useRef<HTMLOListElement>(null), revs = useRef<HTMLDivElement>(null);
+  // U1: the compass tape, the clock chip, the nav bubble
+  const tape = useRef<HTMLDivElement>(null), clock = useRef<HTMLElement>(null), temp = useRef<HTMLElement>(null);
+  const bub = useRef<HTMLDivElement>(null), bubDist = useRef<HTMLElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -67,8 +82,16 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
       }
       if (big.current) big.current.classList.toggle('warn', h.mode === 'time' && h.timeLeft < 10);
       put(road.current, 'road', h.road);
-      put(next.current, 'next', h.next ? `${h.next} · ${h.nextDist > 1609 ? miles(h.nextDist) : Math.round(h.nextDist * 3.281 / 10) * 10 + ' ft'}` : '');
+      put(next.current, 'next', h.next ? `${h.next} · ${toGo(h.nextDist)}` : '');
       if (next.current) next.current.hidden = !h.next;
+      if (bub.current) { bub.current.hidden = !h.next; if (bub.current.dataset.turn !== h.turn) bub.current.dataset.turn = h.turn; }
+      put(bubDist.current, 'bub', h.next ? toGo(h.nextDist) : '');
+      const hd = h.heading.toFixed(1);
+      if (tape.current && last.hd !== hd) { last.hd = hd; tape.current.style.setProperty('--h', hd); }
+      // the device clock, re-read when the minute turns; the temperature is the game's own (simulated)
+      const now = new Date(), minute = String(now.getHours() * 60 + now.getMinutes());
+      if (last.minute !== minute) { last.minute = minute; put(clock.current, 'clock', now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })); }
+      put(temp.current, 'temp', `${h.tempF}°`);
       if (wrong.current) wrong.current.hidden = !h.wrongWay;
       put(fps.current, 'fps', h.fps + ' fps');
       if (tun.current) tun.current.style.setProperty('--t', h.tunnel.toFixed(3));
@@ -85,6 +108,20 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   return (
     <div className="hud" hidden={!visible} aria-hidden="true">
       <div className="tunnel" ref={tun} />
+      <div className="hud-compass">
+        <div className="hud-tape" ref={tape}>
+          {TAPE.map((t) => <i key={t.a} className={t.label === 'N' ? 'c n' : t.label.length === 1 ? 'c' : t.label ? 'ic' : undefined} style={{ '--a': t.a } as CSSProperties}>{t.label && <b>{t.label}</b>}</i>)}
+        </div>
+      </div>
+      <div className="hud-clock"><b ref={clock as React.RefObject<HTMLElement>} /><span><em ref={temp as React.RefObject<HTMLElement>} /> · simulated</span></div>
+      <div className={'hud-bubble' + (bubble ? ' on' : '')} ref={bub} hidden>
+        <svg viewBox="0 0 32 32" width="30" height="30">
+          <path className="ahead" d="M16 28V6M9 13l7-7 7 7" />
+          <path className="thru" d="M12 28V6" />
+          <path className="fork" d="M12 28v-8c0-5 8-5 8-10V6M16 10l4-4 4 4" />
+        </svg>
+        <b ref={bubDist as React.RefObject<HTMLElement>} />
+      </div>
       <div className="hud-road"><div className="hud-roadname"><OcMark size="sm" /><span ref={road} /></div><div className="hud-next" ref={next} hidden /></div>
       <div className="hud-race" ref={race} hidden>
         <div className="hud-pos"><b ref={pos as React.RefObject<HTMLElement>}>–</b><span><i>Position</i><em ref={posOf as React.RefObject<HTMLElement>}>of 4</em></span><span className="hud-timer"><i>Time</i><em ref={timer as React.RefObject<HTMLElement>}>0:00.0</em></span><small ref={prog as React.RefObject<HTMLElement>} /></div>

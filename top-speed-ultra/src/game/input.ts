@@ -21,6 +21,8 @@ const KEYS: Record<string, string> = {
   KeyW: 'up', ArrowUp: 'up', KeyS: 'down', ArrowDown: 'down', KeyA: 'left', ArrowLeft: 'left', KeyD: 'right', ArrowRight: 'right',
   Space: 'handbrake', KeyV: 'back',
 };
+// the pad's driving buttons (standard mapping): handbrake (A, X), shifts (bumpers), brake and throttle (triggers)
+const DRIVING_PAD = new Set([0, 2, 4, 5, 6, 7]);
 const ACTIONS: Record<string, Action> = {
   KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability', KeyB: 'radio',
 };
@@ -36,6 +38,10 @@ export class Input {
   // touch inputs written by the on-screen controls
   readonly touch = { steer: 0, gas: false, brake: false, active: false };
   private padPrev: boolean[] = [];
+  private padWake = false;
+  // when the pad last asked for something other than driving (a menu, camera or d-pad button, or a look with the right
+  // stick): the adaptive HUD (U1) comes back on it. The triggers, the stick's steering, handbrake and shifts don't count.
+  padAt = 0;
   private keyBound = false;
 
   constructor(private el: HTMLElement) {}
@@ -117,6 +123,9 @@ export class Input {
       if (Math.abs(rx) > 0.2 || Math.abs(ry) > 0.2) { this.lookTarget.yaw = -rx * 1.6; this.lookTarget.pitch = -ry * 0.6; this.idleLook = 0; }
       else if (!this.drag && Math.abs(this.lookTarget.yaw) > 0 && !this.freeLook && c.analog) { this.lookTarget.yaw = 0; this.lookTarget.pitch = 0; }
       if (btn(10) || btn(11)) this.recenter();
+      const wake = p.buttons.some((b, i) => b.pressed && !DRIVING_PAD.has(i)) || Math.abs(rx) > 0.2 || Math.abs(ry) > 0.2;
+      if (wake && !this.padWake) this.padAt = performance.now();
+      this.padWake = wake;
       break;
     }
     // touch

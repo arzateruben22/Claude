@@ -10,7 +10,7 @@ import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } fr
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -29,6 +29,9 @@ const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA
 const MODE_LIST = Object.keys(MODES) as Mode[];
 const LEAVE_MS = 380;      // the loading screen's fade into the menu (styles.css: .loading-screen.leaving)
 const GHOST_MS = 260;      // how long the outgoing content of the sheet lingers while it fades (styles.css: sheet-out)
+const IDLE_MS = 4000;      // the Minimal HUD tucks the top bar and the corner window away after this long without input
+// keys that only drive (throttle, brake, steering, handbrake, look back, shifts): pressing them isn't asking for the HUD
+const DRIVING_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'KeyV', 'KeyQ', 'KeyE']);
 
 export function App() {
   const host = useRef<HTMLDivElement>(null);
@@ -170,6 +173,8 @@ export function App() {
     : m === 'race' ? `${game.current?.profile.p.racesWon ?? 0} won` : 'No clock';
 
   const playing = screen === 'playing';
+  // the adaptive HUD (U1): in Minimal, true once a drive has gone IDLE_MS without a tap, mouse move, key or pad button
+  const idle = useIdle(playing && settings.hudStyle === 'minimal', () => game.current?.input.padAt ?? 0);
   const cornerPx = CORNER_PX[settings.cornerSize] ?? CORNER_PX[1];
   const start = STARTS.find((s) => s.label === settings.start) ?? STARTS[0];
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
@@ -324,6 +329,10 @@ export function App() {
                 <p className="fine">{qualityNote(settings.quality)}</p>
                 <div className="field"><label>Corner window</label><Seg label="Corner window" value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>
                 <div className="field"><label>Corner size</label><Seg label="Corner size" value={String(settings.cornerSize)} options={['0', '1', '2']} labels={(v) => ['Small', 'Medium', 'Large'][Number(v)]} onChange={(v) => update({ cornerSize: Number(v) })} /></div>
+                <div className="field"><label>HUD style</label><Seg label="HUD style" value={settings.hudStyle} options={['modern', 'minimal'] as HudStyle[]} labels={(v) => (v === 'modern' ? 'Modern' : 'Minimal')} onChange={(v) => update({ hudStyle: v })} /></div>
+                <p className="fine">{settings.hudStyle === 'minimal'
+                  ? 'Minimal tucks the top bar and the corner window away after 4 s of just driving; a tap, a mouse move, a key or a pad button brings them back. Speed, the route prompt and Pause stay.'
+                  : 'Modern keeps every control on screen.'}</p>
                 <div className="toggles">
                   <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
                   <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
@@ -398,9 +407,9 @@ export function App() {
   </>;
 
   return (
-    <div className="app">
+    <div className={'app' + (idle ? ' hud-idle' : '')}>
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} bubble={idle && settings.corner !== 'off'} onAbility={() => game.current?.useAbility()} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -414,7 +423,11 @@ export function App() {
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
           <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}>Pause</button>
+          {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
+              pause button in the corner (styles.css). Its name stays "Pause" either way. */}
+          <button type="button" className="tbtn menu" onClick={() => game.current?.setPaused(true)}>
+            <svg className="tico" viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M4.5 3v8M9.5 3v8" /></svg><span>Pause</span>
+          </button>
         </div>
       )}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
@@ -533,6 +546,43 @@ function crossFade(main: HTMLElement | null, body: HTMLElement | null, layer: HT
   clearTimeout(timer.current);
   timer.current = window.setTimeout(() => layer.replaceChildren(), GHOST_MS);
   return true;
+}
+
+// The Minimal HUD's clock (U1): while `active`, returns true once IDLE_MS pass without a tap, a mouse or pen move, a key
+// or a pad button, and false again on the next one. Driving doesn't count (the pedals, the steering rail, the driving
+// keys, the pad's triggers), or a driver would never see the road clear. A keyboard user on a control of the bar keeps
+// it up, and any wake re-arms the clock.
+function useIdle(active: boolean, padAt: () => number) {
+  const [idle, setIdle] = useState(false);
+  const padRef = useRef(padAt);
+  padRef.current = padAt;
+  useEffect(() => {
+    setIdle(false);
+    if (!active) return;
+    let timer = 0, pad = padRef.current();
+    const sleep = () => {
+      const a = document.activeElement;
+      if (a instanceof HTMLElement && a.closest('.tbar, .corner') && a.matches(':focus-visible')) { arm(); return; }
+      setIdle(true);
+    };
+    const arm = () => { clearTimeout(timer); timer = window.setTimeout(sleep, IDLE_MS); };
+    const wake = () => { setIdle(false); arm(); };
+    const onMove = (e: PointerEvent) => { if (e.pointerType !== 'touch') wake(); };
+    const onDown = (e: PointerEvent) => { if (!(e.target instanceof Element && e.target.closest('.touch'))) wake(); };
+    const onKey = (e: KeyboardEvent) => { if (!DRIVING_KEYS.has(e.code)) wake(); };
+    const poll = window.setInterval(() => { const t = padRef.current(); if (t !== pad) { pad = t; wake(); } }, 250);
+    addEventListener('pointermove', onMove, true);
+    addEventListener('pointerdown', onDown, true);
+    addEventListener('keydown', onKey, true);
+    arm();
+    return () => {
+      clearTimeout(timer); clearInterval(poll);
+      removeEventListener('pointermove', onMove, true);
+      removeEventListener('pointerdown', onDown, true);
+      removeEventListener('keydown', onKey, true);
+    };
+  }, [active]);
+  return active && idle;
 }
 
 function qualityNote(q: Quality) {

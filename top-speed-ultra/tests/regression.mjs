@@ -709,6 +709,37 @@ await group('phone', async (use) => {
     expect(n === 20, `${n} listed`);
     return `${n} listed`;
   });
+  // the adaptive HUD (U1): every style has a status row, a compass and a clock chip whose temperature says it's
+  // simulated. Minimal tucks the top bar and the corner window away after 4 s of just driving, keeps Pause in reach as
+  // a round chip, and a tap on the road brings the rest back.
+  await check('HUD: compass and clock chip; Minimal tucks the bar away after 4 s, Pause stays, a tap brings it back', async () => {
+    await page.keyboard.press('Escape');                                         // close Go to
+    const row = await game(page, () => ({ h: Number(document.querySelector('.hud-tape')?.style.getPropertyValue('--h')), clock: document.querySelector('.hud-clock')?.textContent ?? '' }));
+    // the drive starts on I-405 North through Irvine, which runs northwest
+    expect(row.h > 270 && row.h < 340, `the compass reads ${row.h}° on I-405 North in Irvine`);
+    expect(/\d+° · simulated/.test(row.clock), `the clock chip says "${row.clock}"`);
+    await game(page, () => window.__game.setPaused(true));
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.getByRole('group', { name: 'HUD style' }).getByRole('button', { name: 'Minimal' }).click();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    const view = page.getByRole('button', { name: 'View', exact: true }), pause = page.getByRole('button', { name: 'Pause', exact: true });
+    const tucked = () => page.waitForFunction(() => document.querySelector('.app.hud-idle') && [...document.querySelectorAll('.tbar .tbtn')].find((b) => b.textContent === 'View')
+      && getComputedStyle([...document.querySelectorAll('.tbar .tbtn')].find((b) => b.textContent === 'View')).visibility === 'hidden', null, { timeout: 60000, polling: 250 });
+    expect(await view.isVisible(), 'the top bar is not up after Resume');
+    const t0 = Date.now();
+    await tucked();
+    const s = (Date.now() - t0) / 1000;
+    expect(s >= 3, `tucked away after ${fmt(s)} s`);
+    expect(await pause.isVisible(), 'Pause went with the bar');
+    expect(!(await page.locator('.corner').isVisible()), 'the corner window stayed');
+    await page.touchscreen.tap(195, 470);
+    await view.waitFor({ state: 'visible', timeout: 30000 });
+    await tucked();
+    await pause.tap();                                                             // the round chip pauses
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    return `compass ${row.h}°, "${row.clock}"; tucked away ${fmt(s)} s after Resume; a tap brought it back; the chip paused`;
+  });
 });
 
 // the local-launch features: start at your own exit, and the run card you can share

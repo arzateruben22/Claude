@@ -36,7 +36,10 @@ const dirFrom = (alt: number, az: number, out = new THREE.Vector3()) => out.set(
 const PRESETS: Record<Exclude<TimeOfDay, 'live'>, { alt: number; az: number }> = {
   sunrise: { alt: 4, az: 100 }, day: { alt: 55, az: 195 }, sunset: { alt: 5.5, az: 292 }, night: { alt: -28, az: 330 },
 };
-const WX: Record<Sky5, { turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: number; wet: number; grip: number }> = {
+// the simulated temperature (tempF): the hour each preset stands for, and what each weather takes off
+const TEMP_HOUR: Record<Exclude<TimeOfDay, 'live'>, number> = { sunrise: 6.5, day: 12.5, sunset: 19.5, night: 23 };
+const TEMP_WX: Record<Sky5, number> = { clear: 0, cloudy: -3, rain: -8, fog: -6, mist: -4 };
+const WX: Record<Sky5,{ turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: number; wet: number; grip: number }> = {
   clear:  { turb: 1.3, sun: 1,    sky: 1,    cloud: 0.55, cloudDark: 0,    fogNear: 220, fogFar: 1,    haze: 0xa9bfd6, wet: 0, grip: 1 },
   cloudy: { turb: 5,   sun: 0.42, sky: 0.72, cloud: 1,    cloudDark: 0.5,  fogNear: 180, fogFar: 0.9,  haze: 0x9ea6b0, wet: 0, grip: 1 },
   rain:   { turb: 9,   sun: 0.2,  sky: 0.5,  cloud: 1,    cloudDark: 0.65, fogNear: 50,  fogFar: 0.55, haze: 0x7f8891, wet: 1, grip: 0.8 },
@@ -209,6 +212,14 @@ export class Environment {
     if (this.weather !== 'changing') return this.weather;
     const cycle: Sky5[] = ['clear', 'cloudy', 'rain', 'cloudy', 'clear', 'mist', 'clear', 'fog', 'mist'];
     return cycle[Math.floor(now.getTime() / 240000) % cycle.length];
+  }
+
+  // the air temperature on the HUD's clock chip, °F (U1). Simulated, and the chip says so: Orange County's mild coast
+  // by the hour (58° at 3 am up to 74° at 3 pm; "Live" uses this device's clock, the presets their own hour) less a few
+  // degrees for the weather in force. A clear day reads 72°. Nothing live is fed in.
+  tempF(now = new Date()): number {
+    const hour = this.time === 'live' ? now.getHours() + now.getMinutes() / 60 : TEMP_HOUR[this.time];
+    return Math.round(66 + 8 * Math.cos(((hour - 15) / 24) * Math.PI * 2) + TEMP_WX[this.currentWeather(now)]);
   }
 
   private targetFor(now: Date): State {
