@@ -79,7 +79,7 @@ PROJECT_OC_HANDOFF.md at the end.
   ```
 
 - Vehicle dynamics: finish the drift physics and add real weight transfer, ABS and traction control, for every car
-  including the OC Hypercar (owner's hypercar directive, 2026-10-16). The drift draft is committed as work in
+  including the OC Hypercar (owner's hypercar directive, 2026-10-16), plus the hypercar's AWD, thrust and hop review. The drift draft is committed as work in
   progress on `claude/drift` (0a6a24e, unverified). Fable prompt:
 
   ```
@@ -100,6 +100,11 @@ PROJECT_OC_HANDOFF.md at the end.
      no paid car may out-perform the best earnable one.
   6. Safety: the autopilot's 134–200 mph runs stay spin-free, a lift or brake in a fast sweeper never throws the car
      round in Arcade, and a slide is catchable in Sport.
+  7. The OC Hypercar Founder Edition (claude/hypercar, milestones M3 and M5; the owner wants it the fastest car with
+     the best handling and traction): an all-wheel-drive split with torque vectoring for it, how its Cold Thrust and
+     Ground Lock forces combine with the tyres, and a review of the scripted Thrust Hop's airborne state (landing
+     loads, never switching road levels at an interchange, the traffic-collision skip, overpass clearance). Decide
+     whether a free-flight hop is worth its cost; keep the Hyper class separation intact.
   Proof: the drift test script (slip angle and yaw traces for a handbrake entry, a power-over and a lift-off at 40,
   70 and 120 mph per profile), a braking test (60–0 distance per profile, with and without ABS), and
   'npm test -- --only=survival,race,progression,phone' green. Log it in PROJECT_OC_PROGRESS.md with the numbers;
