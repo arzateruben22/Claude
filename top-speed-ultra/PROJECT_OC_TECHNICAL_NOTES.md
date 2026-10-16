@@ -123,12 +123,23 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   `PlayerCar` re-lays each frame on the road's height ahead (`path.height`), opacity = beam level × lerp(0.35, 1,
   dark). `Game.weatherTick` fades the beams in with gloom (smoothstep 0.35–0.8).
 - **Environment.** The sky shader, PMREM lighting, sun shadows following the car, haze and the far mountain ring
-  are unchanged from Ultra. Since 2026-10-15 the sun has a lens flare (`three/examples/jsm/objects/Lensflare`): a
-  warm glow at the sun and four ghost rings down the lens axis, from two canvas textures (`T.flareGlow`,
-  `T.flareGhost`). `Environment.follow()` parks it 900 m out along `sunDir` from the camera every frame and scales
-  the elements' colours by daylight × the sun's height × the weather's sun factor, so it fades under cloud, goes in
-  rain and fog, and is off at night. Its own depth test hides it behind the roof, pillars and mirror; the glass
-  doesn't write depth, so it reads through the windscreen.
+  are unchanged from Ultra. Since 2026-10-15 the sun has a lens flare: a warm glow at the sun and four ghost rings
+  down the lens axis, from two canvas textures (`T.flareGlow`, `T.flareGhost`). It is drawn by `Environment` itself,
+  not three's `Lensflare` (that one reads the framebuffer back for its occlusion test, which fails on the
+  multisampled target High and Ultra render into and left a black square at the sun): `updateFlare()` projects
+  `sunDir` through the camera each frame and places five additive planes in a screen-space scene (sizes in shares
+  of the screen's height, so they stay round in portrait), and `renderFlare()` draws that scene over the finished
+  frame after the composer (so bloom and AO never see it). Strength = daylight × the sun's height × the weather's
+  sun factor, so it fades under cloud, goes in rain and fog, and is off at night; it fades as the sun leaves the
+  frame. Occlusion: the mountain ring's crest height at the sun's azimuth (`ridgeAltitude`, soft over the sun's
+  half-degree disc), a raycast toward the sun every third frame through the roads, the traffic and the terrain's
+  instanced props (not its ground; `maxDistance` 400 m, see-through and hidden meshes ignored), and for the
+  player's car `PlayerCar.sunBlocked`: the cabin as a box with the glass as openings and the rear-view mirror in
+  it, since the real body (180k triangles) is too heavy to raycast. The result blends over 0.3 s. The ring writes
+  depth now, so the stars and clouds no longer show through its ridges. The sunset preset's sun now sits at 5.5°
+  at azimuth 292° (was 3° at 258°, behind a 6.9° crest, so it never showed): 292° is where the ring's crest is
+  lowest in the west (5.1°), and 5.5° keeps daylight at 0.91 (`smoothstep(-0.1, 0.14, alt)`), so the preset stays
+  dimmer and warmer than day, which the regression suite's sunset check requires.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
   a camera 150 m above the car.
 

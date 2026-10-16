@@ -51,6 +51,7 @@ export interface Cockpit {
   wheel: THREE.Object3D;
   update?(dt: number): void;
   setInstruments?(o: { rpm?: number }): void;
+  rearView?: { at: THREE.Vector3; normal: THREE.Vector3; w: number; h: number };   // the rear-view mirror's face: centre, normal, size
 }
 
 const CENTRE = v3(-0.1, 0.85, -0.2);            // a point in the middle of the cabin: "inward" is toward it
@@ -646,6 +647,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   for (const k of ['glass', 'sideGlass', 'gaugeGlass', 'dust']) { const m = group.getObjectByName(k); if (m) { m.renderOrder = k === 'dust' ? 4 : 2; m.castShadow = false; } }
 
   // ---------------------------------------------------------------- mirrors with reflections
+  let rearView: Cockpit['rearView'];
   {
     // rear-view: frameless, hung from the top of the windscreen just left of centre, its face turned so the driver
     // looks straight back through the bulkhead window
@@ -653,6 +655,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const mb = mount.clone().addScaledVector(inward, 0.03).add(v3(0, -0.034, 0.012));
     // aimed through the middle of the bulkhead window, over the engine cover, at the road ~6 m behind the tail
     const nrm = EYE.clone().sub(mb).normalize().add(v3(0, 0.75, 2.3).sub(mb).normalize()).normalize();
+    rearView = { at: mb.clone(), normal: nrm.clone(), w: 0.262, h: 0.07 };
     const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrm)); look.updateMatrix();
     const housing = extrude(roundRect(0.262, 0.07, 0.03), 0.026, 0.006, 8); housing.translate(0, 0, -0.03); housing.applyMatrix4(look.matrix);
     const stem = new THREE.CylinderGeometry(0.0065, 0.0075, 1, 12); stem.applyMatrix4(between(mount, mb.clone().addScaledVector(nrm, -0.03)));
@@ -682,5 +685,5 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     setNeedle(rpmShown + Math.sin(flutter * 23) * 12 + Math.sin(flutter * 7.3) * 18);
   };
   group.userData.materials = mats;
-  return { group, wheel: wheelMount, update, setInstruments };
+  return { group, wheel: wheelMount, update, setInstruments, rearView };
 }

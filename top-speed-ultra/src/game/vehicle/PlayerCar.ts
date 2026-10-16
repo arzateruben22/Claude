@@ -13,6 +13,7 @@ import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
 import { addWheel } from '../../preview/car-wheel';
 import { Kit } from '../../preview/car-kit';
 import { bodyFor } from '../../preview/car-body';
+import type { CarBody } from '../../preview/car-body';
 import { CarId, shapeFor } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
 import { CarPhysics, SPEC } from './Physics';
@@ -127,6 +128,7 @@ export class PlayerCar {
     // wheels: the preview builds them rigid into the body; here each gets its own groups so it spins, and the
     // fronts steer. The calipers stay on the hub (the non-spinning kit); the tyre, rim and disc turn.
     const B = bodyFor(c.car), P = shapeFor(c.car), A = B.AXLE, k = A.r / 0.345;
+    this.buildSunOccluder(B, ck);
     const scale = new THREE.Matrix4().makeScale(1, k, k);
     for (const [z, track, front] of [[A.zF, A.trackF, true], [A.zR, A.trackR, false]] as [number, number, boolean][]) {
       for (const out of [1, -1] as const) {
@@ -164,6 +166,40 @@ export class PlayerCar {
   flickPaddle(_dir: 1 | -1) { /* the preview's paddles are fixed */ }
   // from outside the car the tinted glass and the cabin silhouette show; from the seat they would be in the way
   setOutsideView(v: boolean) { for (const o of this.outsideParts) o.visible = v; }
+
+  // The cabin as the sun's lens flare sees it: a box with the glass as openings (the windscreen under its header
+  // lip, the side windows, the rear screen, the Vela's glass roof) and the rear-view mirror hanging in it. The real
+  // body is 180k triangles, far too many to raycast every few frames, and this is what matters from the seat.
+  private occ = { ray: new THREE.Ray(), inv: new THREE.Matrix4(), box: new THREE.Box3(), openings: [] as THREE.Vector3[][], mirror: [] as THREE.Vector3[], p: new THREE.Vector3() };
+  private buildSunOccluder(B: CarBody, ck: Cockpit) {
+    const o = this.occ, v = () => new THREE.Vector3();
+    const quad = (f: (s: number, t: number) => THREE.Vector3) => [f(-1, 0), f(1, 0), f(1, 1), f(-1, 1)];
+    o.openings = [
+      quad((s, t) => B.wsPoint(s, t * 0.95, 0, v())),
+      quad((s, t) => B.sgPoint((s + 1) / 2, t, 1, v())), quad((s, t) => B.sgPoint((s + 1) / 2, t, -1, v())),
+      quad((s, t) => B.rgPoint(s, t, v())),
+    ];
+    if (B.RF) o.openings.push(quad((s, t) => B.rfPoint(s, t, v())));
+    const rv = ck.rearView;
+    if (rv) {
+      const x = v().set(0, 1, 0).cross(rv.normal).normalize(), y = rv.normal.clone().cross(x);
+      o.mirror = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => rv.at.clone().addScaledVector(x, (a * rv.w) / 2).addScaledVector(y, (b * rv.h) / 2));
+    } else o.mirror = [];
+    o.box.min.set(-1.05, 0.65, B.wsPoint(0, 0, 0, v()).z - 0.05); o.box.max.set(1.05, 1.75, B.rgPoint(0, 1, v()).z + 0.1);
+  }
+  // whether the car hides what lies far along dir (world space) from origin: from inside the cabin the ray must
+  // leave through an opening and miss the mirror; from outside, the cabin is solid
+  sunBlocked(origin: THREE.Vector3, dir: THREE.Vector3): boolean {
+    const o = this.occ, r = o.ray;
+    if (!o.openings.length) return false;
+    o.inv.copy(this.body.matrixWorld).invert();
+    r.origin.copy(origin).applyMatrix4(o.inv); r.direction.copy(dir).transformDirection(o.inv);
+    const hits = (q: THREE.Vector3[]) => !!(r.intersectTriangle(q[0], q[1], q[2], false, o.p) || r.intersectTriangle(q[0], q[2], q[3], false, o.p));
+    if (!o.box.containsPoint(r.origin)) return r.intersectsBox(o.box);
+    if (o.mirror.length && hits(o.mirror)) return true;
+    for (const q of o.openings) if (hits(q)) return false;
+    return true;
+  }
 
   // on: the beams' level (0 by day, 1 at night); dark: how dark it is, so the painted pool keeps a lower level when
   // the lamps come on for rain or fog by day

@@ -314,7 +314,8 @@ export function flareGlow(): THREE.Texture {
   return once('flareGlow', () => {
     const n = 256, [c, g] = mk(n, n);
     const gr = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
-    gr.addColorStop(0, 'rgba(255,250,240,1)'); gr.addColorStop(0.1, 'rgba(255,242,220,0.9)'); gr.addColorStop(0.3, 'rgba(255,218,165,0.28)'); gr.addColorStop(0.6, 'rgba(255,205,150,0.07)'); gr.addColorStop(1, 'rgba(255,200,140,0)');
+    // a small hot core and a long soft halo, so the sun reads as a point with glare rather than a flat disc
+    gr.addColorStop(0, 'rgba(255,250,240,1)'); gr.addColorStop(0.06, 'rgba(255,245,228,0.85)'); gr.addColorStop(0.18, 'rgba(255,225,180,0.3)'); gr.addColorStop(0.4, 'rgba(255,210,155,0.09)'); gr.addColorStop(0.7, 'rgba(255,205,150,0.025)'); gr.addColorStop(1, 'rgba(255,200,140,0)');
     g.fillStyle = gr; g.fillRect(0, 0, n, n);
     const t = tex(c, true); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;
   });
@@ -323,7 +324,8 @@ export function flareGhost(): THREE.Texture {
   return once('flareGhost', () => {
     const n = 128, [c, g] = mk(n, n);
     const gr = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
-    gr.addColorStop(0, 'rgba(255,255,255,0.06)'); gr.addColorStop(0.72, 'rgba(255,255,255,0.09)'); gr.addColorStop(0.86, 'rgba(255,255,255,0.5)'); gr.addColorStop(0.95, 'rgba(255,255,255,0.12)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    // a faint disc with a soft bright rim (0.7 to 0.97), as a lens's internal reflections look
+    gr.addColorStop(0, 'rgba(255,255,255,0.05)'); gr.addColorStop(0.5, 'rgba(255,255,255,0.07)'); gr.addColorStop(0.7, 'rgba(255,255,255,0.12)'); gr.addColorStop(0.86, 'rgba(255,255,255,0.36)'); gr.addColorStop(0.97, 'rgba(255,255,255,0.08)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = gr; g.fillRect(0, 0, n, n);
     const t = tex(c, true); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;
   });

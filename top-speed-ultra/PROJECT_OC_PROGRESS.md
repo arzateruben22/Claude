@@ -4,6 +4,58 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-16: the sun's lens flare draws at High, and the sunset preset is a sunset again (finding g2)
+
+**The flare.** three's `Lensflare` reads the framebuffer back for its occlusion test, which fails on the multisampled
+target High and Ultra render into: it never drew there and left a solid 16-px black square at the sun's screen
+position (`tests/out/audit-sunset-ahead-{hood,cockpit,chase}.png`, `audit-crops/ahead-hood-sun.png`). It is gone.
+`Environment` now draws the flare itself: `updateFlare()` projects `sunDir` through the camera's own orientation
+each frame and places five additive planes (the glow at 26 % of the screen's height, four ghost rings at
+sun·(1−2d)) in a small screen-space scene with an orthographic camera, sized in shares of the screen's height so
+they stay round in portrait, and `renderFlare()` draws that scene over the finished frame after the composer, so
+bloom and AO never see it and Low (no composer) gets the same picture. Occlusion is a raycast toward the sun every
+third frame (400 m, through the roads, the traffic and the terrain's instanced props; see-through, hidden and
+skinned meshes ignored; 0.2–2 ms per cast here), the mountain ring's crest height at the sun's azimuth
+(`ridgeAltitude`, soft over the sun's half-degree disc), and for the player's car `PlayerCar.sunBlocked`: the
+cabin as a box with the kit's windscreen, side windows, rear screen and the Vela's glass roof as openings and the
+rear-view mirror (now `Cockpit.rearView`) as a blocker, since raycasting the real body cost 15–19 ms. The result
+blends over 0.3 s. The ring writes depth now, so stars and clouds no longer show through its ridges. Glow texture
+given a hot core and long halo, ghost rims softened (`textures.ts`).
+
+**The sunset preset.** The first version of this fix lifted the sunset sun from 3° to 8° because the ring's crest
+is 6.9° at its azimuth (258°), so a 3° sun had never shown; the judge rejected that: at 8° `daylight`
+(`smoothstep(−0.1, 0.14, alt)`) is exactly 1, the suite's `renders sunset, clear` check (`e.day < 1`) fails by
+construction, and the preset read as full afternoon (sunlight 3.1, hemisphere light and sky gain the same as day).
+Retuned without touching the ring or the formula: the crest profile, computed from the ring's own `fbm2` (3.0° at
+az 164° to 12.3° at az 110°), is lowest in the western half at az 292–293° (5.0–5.1°, a late-June sunset
+direction over OC), so the preset is now **5.5° at az 292°**: the whole disc clears the crest by 0.14° (the
+flare's ridge factor is exactly 1), daylight 0.91 (0.92 after the suite's 15 s ease from day), sunlight 2.86,
+golden 0.79, so the preset is dimmer and warmer than day again. I-405 North, the suite's own start, faces it 11°
+left of the nose at the start and 12° right after 30 s. Not touched, worth its own finding: the sunrise preset
+(4° at az 100°) sits behind a 9.6° crest, so it never shows its sun either.
+
+**Verified** (headless Chromium, SwiftShader, 960 × 540, I-405 North after 30 s of autopilot; all with zero page
+errors):
+- `npm test -- --only=render` **12 of 12** (`tests/out/fix-g2-r2-render.log`): sunset daylight 0.92, day 1,
+  night 0; the suite's own `tests/out/sky-sunset-clear.png` (Low, 640 × 360, cockpit) shows the sun just over the
+  ridge through the windscreen with the glow and ghost train.
+- High, cockpit/chase/hood (`tests/out/fix-g2-r2-sunset-high-{cockpit,chase,hood}.png`,
+  `fix-g2-r2-sunset-high.log`): flare visible in all three (strength 0.77, ridge 1, nothing hit, raycast
+  0.3–1.9 ms), the sun in a dip of the ridge line, long lamp-post and palm shadows down the road, no square;
+  563–638 draw calls and 1.45–1.56 M triangles a frame.
+- Low, hood/chase (`fix-g2-r2-sunset-low-{hood,chase}.png`, `fix-g2-r2-sunset-low.log`): the same placement
+  (sun at pixel 580,206 in the hood view on both presets), 342–418 calls, 0.40–0.46 M triangles.
+- High, portrait 390 × 844, hood/cockpit (`fix-g2-r2-sunset-portrait-high-{hood,cockpit}.png`,
+  `fix-g2-r2-portrait-high.log`): the glow and ghosts stay round, the sun over the ridge right of the nose. With
+  the sun turned to the car's heading (az 279°, crest 8.3°) the ridge hides it, honestly: no flare and no square
+  (`fix-g2-r2-sunset-ahead-portrait-high-hood.png`, ridge factor 0). Pre-existing and not part of this finding:
+  the cloud layer stretches into vertical streaks in portrait.
+- Ultra, hood, 640 × 360 (`fix-g2-r2-sunset-ultra-hood.png`, `fix-g2-r2-sunset-ultra.log`): the flare draws over
+  the bloomed frame, no square; 1,278 calls, 3.74 M triangles a frame.
+- `npx tsc --noEmit` clean for both `tsconfig.json` and `tsconfig.game.json`.
+- Before/after: `tests/out/audit-sunset-ahead-hood.png` (black square, stars by day) vs
+  `tests/out/fix-g2-r2-sunset-high-hood.png`; the first fix's bright-afternoon frames are `fix-g2-sunset-high-*.png`.
+
 ## 2026-10-15: first realism pass by agents: headlight beams, the NPC nose, the jaw and neck
 
 The first orchestrated render pass (two art-director audits, then one fix agent per shortfall and a sceptical judge

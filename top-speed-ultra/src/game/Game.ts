@@ -191,6 +191,7 @@ export class Game {
     this.terrain = new Terrain(this.net, q); this.scene.add(this.terrain.group);
     if (!this.traffic) { this.traffic = new Traffic(this.net); this.scene.add(this.traffic.group); }
     this.traffic.viewAhead = q.drawDistance * 0.95;
+    this.env.setFlareOccluders([this.roads.group, this.traffic.group], [this.terrain.group], (o, d) => this.car.sunBlocked(o, d));
     this.applyDensity();
   }
   private applyDensity() {
@@ -799,6 +800,7 @@ export class Game {
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
+    this.env.renderFlare();
     this.renderCorner(dt);
     if (!this.attract) {
       this.audio.update(dt, { rpm: this.phys.rpm, throttle: this.phys.throttleOut, speed: Math.abs(this.phys.vx), slip: Math.max(this.phys.slipR, this.phys.slipF) + (this.input.c.handbrake ? 0.2 : 0), limiter: this.phys.limiter, scrape: this.scrape, cockpit: this.cam === 'cockpit' || this.cam === 'free' });
