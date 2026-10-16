@@ -78,6 +78,34 @@ PROJECT_OC_HANDOFF.md at the end.
   test, log it in PROJECT_OC_PROGRESS.md, and list anything the owner must decide.
   ```
 
+- Vehicle dynamics: finish the drift physics and add real weight transfer, ABS and traction control, for every car
+  including the OC Hypercar (owner's hypercar directive, 2026-10-16). The drift draft is committed as work in
+  progress on `claude/drift` (0a6a24e, unverified). Fable prompt:
+
+  ```
+  OC Ultra (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md, the top of PROJECT_OC_PROGRESS.md and
+  PROJECT_OC_HYPERCAR.md (on claude/hypercar). Work in the tsu-drift worktree, branch claude/drift, file
+  src/game/vehicle/Physics.ts (the bicycle model at 120 Hz). Commit 0a6a24e is an unverified draft: lateral and
+  longitudinal load transfer with tyre load sensitivity, counter-steer lock, a handbrake yaw kick, kinetic grip for a
+  spun-up rear, stability control that backs off while the driver holds a slide, and a drift readout. Review it and
+  finish it as one vehicle-dynamics model:
+  1. Weight transfer: longitudinal and lateral, with roll stiffness split per car, so braking into a corner rotates
+     the car and throttle on exit squats the rear. Are the signs, magnitudes and load sensitivity right?
+  2. ABS: a slip-ratio controller per axle (not just a force cap), strong in Arcade, lighter in Simulation, off-able.
+  3. Traction control: a rear slip-ratio target that trims torque, strong in Arcade, permissive in Sport, minimal in
+     Simulation; it must still let a held drift keep the rear spinning.
+  4. The three profiles (Arcade 0.15, Sport 0.5, Simulation 0.9 on the existing handling setting; M4 on
+     claude/hypercar adds the Settings UI) must feel distinct: write down what each assist does at each value.
+  5. Per-car parameters from src/game/cars.ts (mass, CdA, ClA, grip; the hypercar's downforce) must flow through;
+     no paid car may out-perform the best earnable one.
+  6. Safety: the autopilot's 134–200 mph runs stay spin-free, a lift or brake in a fast sweeper never throws the car
+     round in Arcade, and a slide is catchable in Sport.
+  Proof: the drift test script (slip angle and yaw traces for a handbrake entry, a power-over and a lift-off at 40,
+  70 and 120 mph per profile), a braking test (60–0 distance per profile, with and without ABS), and
+  'npm test -- --only=survival,race,progression,phone' green. Log it in PROJECT_OC_PROGRESS.md with the numbers;
+  commit on claude/drift. Agents: reviewers and the dynamics design on 'fable', test runs on 'opus'.
+  ```
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
