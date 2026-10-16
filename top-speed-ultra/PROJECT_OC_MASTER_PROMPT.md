@@ -130,3 +130,48 @@ P0–P4 core systems are built (see the progress log). Good next steps:
   reviewing the day's work (details in `CLAUDE.md`).
 - **The name.** The game is **OC Ultra**, with "Top Speed" beneath; the OC sunset wordmark is its logo, replacing
   the R badge everywhere the R stood for the game (the R stays as the Rossini car brand).
+
+## Added 2026-10-16 (evening): the OC Hypercar
+
+The owner's directive (its title quoted, its brief summarised) and the owner's own words, quoted:
+
+- **"OC Hypercar — Prototype 01."** Recreate the hypercar on the owner's reference sheet (a 3/4 hero shot at night,
+  then front, rear, side and top views, and headlight, rear, wheel and wing details) as faithfully as the game's
+  technology allows:
+  - the silhouette and proportions; an extremely low, wide, aggressive front with a deep carbon splitter;
+  - metallic light-silver paint; ice-blue LED headlight blades and accent strips;
+  - carbon skirts and diffuser; deep side intakes; a large rear wing on swan-neck mounts;
+  - black multi-spoke wheels with blue calipers; a full-width red rear light bar;
+  - the OC wordmark on the nose badge, the rear plate and the wheel centres.
+
+  Not a generic supercar.
+- "make the speed go insanely fast and handling and traction best of the best and also have its own unique ability
+  to do what the new [a real carmaker's new roadster; the name is left out here under the own-brands rule] does"
+- "whatever makes this car exclusive"
+- "I kind of want to price this at $4.99"
+- "Okay let’s make the the hypercar when ur in free roam mode like not racing anybody it has max out goated stats"
+
+What that becomes (the plan, the dimension sheet, the numbers and the milestones are in `PROJECT_OC_HYPERCAR.md`):
+
+- ⬜ **The OC Hypercar**, the fourth car in the garage.
+  - The garage shows Rossini GT, Brio, Corsa and the OC Hypercar. The Vela E stays in the code, shown only in owner
+    mode or to a profile that owns it.
+  - It's a procedural model built in code like the other cars, never claimed as a finished 3D asset.
+- ⬜ **Two tunes, chosen by the mode at the start of a run**, never mid-run.
+  - **Unleashed in Free Drive:** the fastest, best-handling, best-traction car in the game, with its ability.
+  - **The race tune in Speed Survival, Races and Time Trial:** at or under the best earnable car (the Rossini Corsa)
+    on every measured number, with the ability off, so a paid car never wins a scored run by paying.
+  - The garage card and the HUD say which tune is on (an "Unleashed" chip in Free Drive).
+- ⬜ **Its own ability, with our own names.** The inspiration was reported on 2026-10-15; its figures are
+  manufacturer claims, not verified, and no real company or product is named in the game, code, UI or commits.
+  - **Cold Thrust** (hold): rear cold-gas thrust from a compressed-air tank.
+  - **Ground Lock:** fans that pull the car down for about 2 g of cornering.
+  - **Thrust Hop:** a short hop over a car or a semi in the same lane, landing on the road it left; never under an
+    overpass or sign gantry.
+  - Free Drive only.
+- ⬜ **The OC Hypercar Founder Edition**, $4.99 one time, sold in a founder window to December 31, 2026 (one constant).
+  - Its exclusives: a numbered plaque ("No. 0000 · TEST" in owner mode until the store assigns real numbers), a paint
+    and LED colour of its own, an LED wake-up sweep, a garage reveal, a run-card badge.
+  - "Never sold again" is a promise only the owner can keep.
+  - Real money stays in test mode. The store (SKU, entitlement, server-assigned serial) belongs to the
+    `claude/store` branch; the hypercar branch builds no purchase flow.
