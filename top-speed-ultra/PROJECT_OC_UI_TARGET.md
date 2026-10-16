@@ -18,7 +18,7 @@ the yellow accent is already ours.
   "Messages" as a story system (roadmap; until then the phone shows what exists).
 - **The mock's icons, fonts and artwork.** Re-drawn in our style with our own icons.
 
-## Owner's direction, 2026-10-16: seamless, with a finer luxury feel
+## Owner's direction, 2026-10-16: seamless, with a finer luxury feel: Done (U0)
 
 "Make the main menu more seamless and have a finer luxury Apple-like aesthetic feel to it." This is the first item
 of the UI pass (U0) and the lens for the rest: Chrome noir's base and yellow accent stay, the angled chips and

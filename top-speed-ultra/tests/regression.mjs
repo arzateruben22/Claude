@@ -664,6 +664,22 @@ await group('phone', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'phone-menu.png') });
     expect(await noSideScroll(), 'the page scrolls sideways');
   });
+  // the main menu is one persistent glass sheet (owner, 2026-10-16: "more seamless"): opening a screen changes what the
+  // sheet shows, the sheet and the Drive dock stay, and the dock marks where you are
+  await check('menu: one sheet; the Drive dock stays while its screens change', async () => {
+    await game(page, () => { document.querySelector('.sheet').dataset.k = 'first'; });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.waitForTimeout(400);
+    const r = await game(page, () => ({ same: document.querySelector('.sheet')?.dataset.k === 'first', title: document.querySelector('.sheet-body .panel h2')?.textContent,
+      go: !!document.querySelector('.dock .btn.go'), here: document.querySelector('.dock [aria-current="page"]')?.textContent }));
+    const drives = await page.getByRole('button', { name: 'Drive', exact: true }).count();
+    expect(r.same && r.title === 'Settings' && r.go && r.here === 'Settings', JSON.stringify(r));
+    expect(drives === 1, `${drives} Drive buttons`);
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();   // the dock's button toggles back
+    await page.waitForTimeout(400);
+    expect(await page.locator('.sheet.home .modes').count() === 1, 'not back on the menu');
+    return `same sheet, dock marks ${r.here}, one Drive button`;
+  });
   await check('profile screen renders', async () => {
     await page.getByRole('button', { name: 'Profile', exact: true }).click();
     await page.waitForTimeout(400);

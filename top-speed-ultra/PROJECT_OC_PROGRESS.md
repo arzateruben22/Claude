@@ -4,6 +4,27 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-16: the main menu is one glass sheet with a Drive dock (UI pass, U0)
+
+The owner asked for a main menu that feels "more seamless" with "a finer luxury Apple-like aesthetic feel". Built from
+`PROJECT_OC_UI_TARGET.md`, section "Owner's direction, 2026-10-16" (U0).
+
+- **One sheet**: the menu is a single frosted-glass sheet over the live attract drive. Opening Settings, Bests,
+  Profile, Driver, Garage, Start or Course changes what the sheet shows with a cross-fade; the sheet itself stays put
+  instead of a new panel mounting.
+- **The dock**: a Drive dock stays at the bottom while screens change, marks the screen you are on, and there is only
+  one Drive button. Tapping the current screen's dock button returns to the menu.
+- **The finish**: hairline borders, large soft radii, spacing on an 8 pt rhythm, the system font stack for text,
+  CSS-drawn switches and segmented controls, visible focus rings, reduced motion respected. Chrome noir's base and
+  yellow accent stay; the angled chips and magenta corners are gone.
+- **Checked**: `npx tsc --noEmit` exits 0. `npm test -- --only=phone,launch,boot`: "17/17 passed, exit 0", including
+  the new phone check "menu: one sheet; the Drive dock stays while its screens change" (result "same sheet, dock marks
+  Settings, one Drive button"). A separate review script at 390x844 passed 14/14.
+- **Screenshots** (tests/out/ui-after/): menu-before-phone.png, menu-before-desktop.png, menu-after-phone.png,
+  menu-after-desktop.png, u0-crossfade-mid-phone.png, u0-crossfade-mid-desktop.png, u0-focus-phone.png,
+  u0-focus-desktop.png, and the full set phone-*.png / desktop-*.png (menu, settings, bests, profile, driver, garage,
+  start, course, loading, driving, goto, paused, results).
+
 ## 2026-10-16: the game is "OC Ultra", and the OC sunset wordmark replaces the R badge (UI pass, identity)
 
 The owner, looking at the loading screen on their phone: "get rid of that R as the logo and replace it with the new
