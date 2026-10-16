@@ -4,6 +4,44 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-15: live rear-view and door mirrors on High and Ultra (reference pass, R1)
+
+The first delta against the owner's reference image (`PROJECT_OC_VISUAL_TARGET.md`): the rear-view mirror used to
+show the sky's environment map (a dark band from the seat). `Game.configureCar` now passes `mirrors: 'live'` to
+`PlayerCar` on High and Ultra when the device has a fine pointer (phones and Low/Medium keep `'env'`), and
+`buildCockpit` returns its `CarMirror`s so the car can switch them off outside the seat and dispose them on a
+rebuild. Three things were needed to make the glass show the road and the traffic behind:
+
+- **Our cars are mid-engined.** From the mirror's eye the bulkhead window frames the car's own wing, tail lamps and
+  engine-cover louvres, with the car behind squeezed into a slot (`tests/out/dbg-mirror2-eye-aim.png`). The
+  rear-view therefore renders the world without the player's car (`CarMirror.hide`: body, cabin, hands, wheels,
+  hidden for that nested render only), as a rear camera would, and is aimed straight back 2.5 degrees below level.
+  The door mirror keeps the flank.
+- **The glass was off screen.** Hung just left of centre it sat 45 degrees right of the eye and only its left 38 %
+  was in a 16:9 frame at the cockpit's 58-degree view. It now hangs over the driver's side (x about -0.22), fully in
+  frame at 16:9 and 16:10.
+- **Cost.** Each mirror renders every other frame (the two alternate) into a 512x128 / 256x112 target with a 400 m
+  far plane: the far road chunks were most of the draw calls (471 -> 172 for the rear-view), the sky dome still
+  draws (it sits at the far plane whatever it is), the backdrop hills and clouds beyond 400 m do not. Measured in
+  SwiftShader at 960x540, High, I-405 North, day, moderate traffic, over 4 frames with `info.autoReset` off: 645
+  calls / 2.13 M triangles a frame with `'env'`, 823 / 3.05 M with the live mirrors (the rear-view's own render 172
+  calls / 0.92 M, the door mirror's 181 / 0.93 M; the player's car is 240 k triangles).
+
+The judge rejected the first cut for one reason: the mount had moved for every tier, so on a phone (portrait, 96°
+view) the environment-map mirror became a dark slab over 43 % of the screen width in front of the road
+(`tests/out/review-R1-phone-cockpit.png`). Fixed by hand: with `'env'` the glass keeps its old place just left of
+centre and its old aim through the bulkhead window; only the live mirror moves over the driver's side.
+`tests/out/fix-R1-phone-cockpit.png` (390 × 844, Low) shows the road clear again, with no mirror targets built
+(`car.interior.mirrors.length === 0`). Suite: `npm test -- --only=render` **12 of 12** on the agent's cut (the
+High/Ultra/Low preset check now also asserts live/live/env mirrors); the hand fix typechecks and only changes the
+`'env'` branch.
+
+**Verified:** `tests/out/fix-R1-cockpit.png` (the driver's seat with a sedan placed 20.9 m behind in the same lane:
+it fills the middle of the rear-view, with the median, the lane line, a second car in the right lane and the sound
+wall; 2x crops `fix-R1-cockpit-{rearview,door}.png`; `fix-R1-before-cockpit*.png` is the `'env'` state). `npm test
+-- --only=render` **12 of 12** (the High/Ultra/Low preset switch now also checks the mirror mode: live, live, env),
+`npx tsc --noEmit` clean. Not measured on a real GPU.
+
 ## 2026-10-15: the ability hand poses are on the anatomical hands
 
 The one thing the realism hands had lost against the old cockpit: the abilities' gestures. `DriverArms.setPose`

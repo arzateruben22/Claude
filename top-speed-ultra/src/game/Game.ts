@@ -439,11 +439,15 @@ export class Game {
     this.configureCar();
     return c;
   }
-  // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed
+  // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed. Live
+  // mirrors (the road and the traffic behind, one extra low-resolution render a frame) come with High and Ultra on
+  // a device with a fine pointer; phones keep the environment map whatever the preset.
   private configureCar() {
     const s = this.settings, c = carById(this.profile.p.car), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
+    const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
+    const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
-      car: c.id as CarId, paint: c.paint, quality: s.quality === 'high' || s.quality === 'ultra' ? 'high' : 'phone',
+      car: c.id as CarId, paint: c.paint, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
   }

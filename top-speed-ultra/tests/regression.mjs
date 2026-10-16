@@ -579,12 +579,18 @@ await group('render', async (use) => {
     const out = [];
     for (const q of ['high', 'ultra', 'low']) {
       const t0 = Date.now();
-      const s = await game(page, (qq) => { const g = window.__game; g.updateSettings({ ...g.settings, quality: qq }); return { ...g.stats, post: !!g.composer }; }, q);
+      const s = await game(page, (qq) => {
+        const g = window.__game; g.updateSettings({ ...g.settings, quality: qq });
+        // the live rear-view (a render target on the glass) comes with High and Ultra on a desktop; Low keeps the environment map
+        let live = false; g.scene.traverse((o) => { if (o.name === 'rear-view-mirror' && o.target) live = true; });
+        return { ...g.stats, post: !!g.composer, live };
+      }, q);
       expect(s.roads > 0 && s.tiles > 0, `${q}: ${s.roads} road chunks, ${s.tiles} tiles`);
       expect(s.post === (q !== 'low'), `${q}: post-processing ${s.post ? 'on' : 'off'}`);
+      expect(s.live === (q !== 'low'), `${q}: live mirrors ${s.live ? 'on' : 'off'}`);
       if (slow || q === 'low') await frames(page, 3, 400000);
       if (slow && q !== 'low') await shot(`quality-${q}`);
-      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
+      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
     }
     return out.join('; ');
   });

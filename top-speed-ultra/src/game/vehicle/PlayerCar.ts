@@ -3,8 +3,13 @@
 // that pitches under acceleration and braking, rolls in corners and buzzes with the engine, with wheels that spin
 // and steer, headlight beams, tail lights that brighten on the brakes, and the game's camera anchors.
 //
-// configure() builds or rebuilds only what changed: the car and its cockpit (car id or quality), the paint, the hands
-// (driver look, presentation, nails). Quality 'phone' is the lighter build, 'high' the full desktop look.
+// configure() builds or rebuilds only what changed: the car and its cockpit (car id, quality or mirrors), the paint,
+// the hands (driver look, presentation, nails). Quality 'phone' is the lighter build, 'high' the full desktop look.
+// Mirrors 'live' renders the scene into the rear-view and the driver's door mirror (one extra low-resolution render a
+// frame, the two alternating; only from the driver's seat), 'env' shows the sky's environment map in them. The
+// rear-view renders the world without this car (body, cabin, hands, wheels): through the bulkhead window a
+// mid-engine car's rear-view shows its own engine cover and wing, so it is drawn as a rear camera, the road and the
+// traffic behind filling the glass. The door mirror keeps the car's flank in view.
 
 import * as THREE from 'three';
 import { buildCar } from '../../preview/car';
@@ -21,7 +26,8 @@ import type { DriverLook, Presentation } from '../drivers';
 import { clamp, damp, lerp } from '../util';
 
 export type CarQuality = 'phone' | 'high';
-export interface CarConfig { car: CarId; paint: number; quality: CarQuality; look: DriverLook; presentation: Presentation; nails: number | null }
+export type MirrorMode = 'live' | 'env';
+export interface CarConfig { car: CarId; paint: number; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null }
 export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number }
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
@@ -74,7 +80,7 @@ export class PlayerCar {
   // build what changed
   configure(c: CarConfig) {
     const o = this.cfg;
-    const carChanged = !o || o.car !== c.car || o.quality !== c.quality;
+    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
     const paintChanged = !carChanged && o!.paint !== c.paint;
     const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
     this.cfg = c;
@@ -82,12 +88,21 @@ export class PlayerCar {
     if (carChanged) this.buildCarAndCockpit(c);
     else if (paintChanged) this.setPaint(c.paint);
     if (handsChanged) this.buildHands(c);
+    this.setMirrorExclusions();
     this.stats.buildMs = Math.round(performance.now() - t0);
+  }
+
+  // the rear-view renders the world without this car; the door mirror sees the flank, so it hides nothing
+  private setMirrorExclusions() {
+    const rv = this.interior?.mirrors.find((m) => m.name === 'rear-view-mirror');
+    if (!rv) return;
+    const own: (THREE.Object3D | null | undefined)[] = [this.exterior, this.interior!.group, this.arms?.group, ...this.wheels.map((w) => w.steer)];
+    rv.hide = own.filter((o): o is THREE.Object3D => !!o);
   }
 
   private buildCarAndCockpit(c: CarConfig) {
     if (this.exterior) disposeGeometry(this.exterior);
-    if (this.interior) disposeGeometry(this.interior.group);
+    if (this.interior) { for (const m of this.interior.mirrors) m.dispose(); disposeGeometry(this.interior.group); }
     for (const w of this.wheels) disposeGeometry(w.steer);
     this.wheels = [];
     let t = performance.now();
@@ -97,7 +112,7 @@ export class PlayerCar {
     this.mats = ext.userData.materials as Record<string, THREE.Material>;
     this.outsideParts = OUTSIDE_ONLY.map((k) => ext.getObjectByName(k)).filter((x): x is THREE.Object3D => !!x);
     t = performance.now();
-    const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: 'env', body: false });
+    const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: c.mirrors, body: false });
     this.stats.cockpitMs = Math.round(performance.now() - t);
     this.interior = ck; this.body.add(ck.group);
     ck.wheel.rotation.z = this.wheelAngle;
@@ -139,8 +154,12 @@ export class PlayerCar {
   // Time), the right hand rests on the console (Locked In); null puts both hands back on the rim. Blended in 0.3 s.
   setPose(pose: HandPose | null) { this.arms?.setPose(pose ?? 'wheel'); }
   flickPaddle(_dir: 1 | -1) { /* the preview's paddles are fixed */ }
-  // from outside the car the tinted glass and the cabin silhouette show; from the seat they would be in the way
-  setOutsideView(v: boolean) { for (const o of this.outsideParts) o.visible = v; }
+  // from outside the car the tinted glass and the cabin silhouette show; from the seat they would be in the way.
+  // The live mirrors only render from the seat: from outside they are a few pixels behind the glass.
+  setOutsideView(v: boolean) {
+    for (const o of this.outsideParts) o.visible = v;
+    if (this.interior) for (const m of this.interior.mirrors) m.active = !v;
+  }
 
   setHeadlights(on: number) {
     for (const b of this.beams) { b.visible = on > 0.02; b.intensity = on * 260; }
