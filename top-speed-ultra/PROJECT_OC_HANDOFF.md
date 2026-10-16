@@ -1,0 +1,57 @@
+# Project OC: session handoff
+
+The owner runs daytime sessions on Opus 5.5 and overnight sessions on Fable 5.1 (`CLAUDE.md`, Model policy). Every
+session starts cold, so this file holds the current state and a ready-to-paste prompt for each kind of session.
+The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
+model: routine work to `opus`, hard reasoning to `fable`.
+
+## State at the last update (2026-10-16, 07:10 UTC)
+
+- Branch `claude/always-on` at `39bd521`: the semi, hand poses, headlight beams, NPC nose, two jaw rounds, four skin
+  rounds, the visual-target, UI-target and model-policy briefs. Test link https://claude.ai/artifact/AsFiTsf6TFF4Hij25U3MR9
+  (version 6, before the flare and overcast work).
+- Worktree `claude/ref-pass` at `368cd01` (`/home/user/Claude/tsu-ref/top-speed-ultra`): live mirrors committed;
+  overcast light kept by its judge but uncommitted; race HUD half-built; palms not started. Its integrator merges
+  onto `claude/always-on` when done.
+- Worktree `claude/drift` (`/home/user/Claude/tsu-drift/top-speed-ultra`): drift physics half-built in
+  `Physics.ts`; skid marks, smoke and readout not started.
+- Main checkout, uncommitted: the flare rewrite with its repaired sunset preset (judged "keep once the preset is
+  retuned"; retuned; re-judge pending), the daytime-stars fix (in progress).
+- Workflow scripts in the session scratchpad are copies of the ones under this repo's `.claude/` if present; if
+  not, the briefs below are enough to re-author them.
+- Pending from the owner: a real-phone Feedback report (first frame rate on real hardware), the UE5 go/no-go.
+
+## Prompt for an Opus 5.5 daytime session
+
+```
+Project OC (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md, PROJECT_OC_PROGRESS.md (top entries),
+PROJECT_OC_VISUAL_TARGET.md and PROJECT_OC_UI_TARGET.md. Then, with ultracode on, in this order, one lane at a
+time or at most two (the machine has 4 cores; a third lane makes the suite time out):
+1. Integrate what is judged and uncommitted: the overcast light in the tsu-ref worktree (commit on claude/ref-pass),
+   the flare rewrite in the main checkout if its re-judge passed (check the progress log), then merge
+   claude/ref-pass onto claude/always-on, run the full suite, log, push, republish dist/artifact.html to the test link.
+2. Finish the reference pass: race HUD (standings, gaps, lap timer, rev lights, OC city tags) and palm fronds, each
+   judged on renders; then the drift pass items D2 (skid marks) and D3 (smoke and readout) on top of the drift
+   physics once a Fable session has reviewed it.
+3. Run the UI pass from PROJECT_OC_UI_TARGET.md starting with U0, the seamless luxury menu.
+Agents: routine builders, judges and integrators on model 'opus'. Commit only judged work; no model names in
+commits or code; verify before you claim; log in PROJECT_OC_PROGRESS.md. Update PROJECT_OC_HANDOFF.md at the end.
+```
+
+## Prompt for a Fable 5.1 overnight session
+
+```
+Project OC (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md and the top of PROJECT_OC_PROGRESS.md. This is
+the hard-reasoning session: do not spend it on renders or suite runs. Run at most two lanes. In this order:
+1. Review the drift physics in the tsu-drift worktree (src/game/vehicle/Physics.ts, the bicycle model at 120 Hz):
+   is the slide catchable, is weight transfer and load sensitivity right, does the stability control back off only
+   under counter-steer, will the autopilot's 134–200 mph runs stay spin-free? Fix what is wrong, prove it with the
+   drift test script and the suite's survival and race groups, commit on claude/drift.
+2. Read PROJECT_OC_REVIEW_NOTES.md (the adversarial review of the day's agent work) and fix the confirmed findings
+   of severity 4 and 5 yourself; queue the rest for the daytime session in this file.
+3. Design, don't build: the finger rig for the anatomical hands (so a wave opens the hand), the expression system
+   that moves cheeks and eyes with the mouth, and the hair silhouette fix, as short specs the daytime agents can
+   implement. Put them in PROJECT_OC_TECHNICAL_NOTES.md under "Specs for the next pass".
+Agents: reviewers and designers on model 'fable', anything that renders or runs the suite on 'opus'. Update
+PROJECT_OC_HANDOFF.md at the end.
+```
