@@ -1,7 +1,9 @@
 // The heads-up display. It never re-renders: the game writes straight into these elements ten times a second.
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
+import type { CSSProperties } from 'react';
 import type { Hud as HudData } from '../game/Game';
+import { OcMark, OC_LOGO_240 } from './Mark';
 
 export interface HudHandle { set: (h: HudData) => void }
 
@@ -11,7 +13,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
-  const big = useRef<HTMLDivElement>(null), road = useRef<HTMLDivElement>(null), next = useRef<HTMLDivElement>(null), wrong = useRef<HTMLDivElement>(null);
+  const big = useRef<HTMLDivElement>(null), road = useRef<HTMLSpanElement>(null), next = useRef<HTMLDivElement>(null), wrong = useRef<HTMLDivElement>(null);
   const abil = useRef<HTMLButtonElement>(null), abilName = useRef<HTMLSpanElement>(null), tun = useRef<HTMLDivElement>(null);
   // the race HUD: the position box with the race timer beside the position, the standings, and the rev lights over the gear
   const race = useRef<HTMLDivElement>(null), pos = useRef<HTMLElement>(null), posOf = useRef<HTMLElement>(null), prog = useRef<HTMLElement>(null);
@@ -46,6 +48,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
           const [p, t, nm, gp] = li.children as unknown as HTMLElement[];
           put(p, `r${k}p`, String(st.pos)); put(t, `r${k}t`, st.tag); put(nm, `r${k}n`, st.name);
           put(gp, `r${k}g`, st.you ? '' : st.done ? 'FIN' : (st.gap >= 0 ? '+' : '−') + Math.min(999, Math.abs(st.gap)).toFixed(1));
+          t.classList.toggle('oc', st.you);       // your tag reads "OC": the mark goes there (styles.css)
           li.classList.toggle('me', st.you); li.classList.toggle('done', st.done > 0); li.classList.toggle('near', k >= lo && k < lo + 3);
         }
         put(k1.current, 'k1', ''); put(v1.current, 'v1', ''); put(k2.current, 'k2', ''); put(v2.current, 'v2', ''); put(k3.current, 'k3', ''); put(v3.current, 'v3', '');
@@ -82,10 +85,10 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   return (
     <div className="hud" hidden={!visible} aria-hidden="true">
       <div className="tunnel" ref={tun} />
-      <div className="hud-road"><div className="hud-roadname" ref={road} /><div className="hud-next" ref={next} hidden /></div>
+      <div className="hud-road"><div className="hud-roadname"><OcMark size="sm" /><span ref={road} /></div><div className="hud-next" ref={next} hidden /></div>
       <div className="hud-race" ref={race} hidden>
         <div className="hud-pos"><b ref={pos as React.RefObject<HTMLElement>}>–</b><span><i>Position</i><em ref={posOf as React.RefObject<HTMLElement>}>of 4</em></span><span className="hud-timer"><i>Time</i><em ref={timer as React.RefObject<HTMLElement>}>0:00.0</em></span><small ref={prog as React.RefObject<HTMLElement>} /></div>
-        <ol className="hud-standings" ref={rows}>{[0, 1, 2, 3].map((k) => <li key={k} hidden><i /><em /><span /><b /></li>)}</ol>
+        <ol className="hud-standings" ref={rows} style={{ '--oc-mark-sm': `url("${OC_LOGO_240}")` } as CSSProperties}>{[0, 1, 2, 3].map((k) => <li key={k} hidden><i /><em /><span /><b /></li>)}</ol>
         <small className="hud-race-note">Gaps in s · estimated</small>
       </div>
       <div className="hud-wrong" ref={wrong} hidden>WRONG WAY</div>

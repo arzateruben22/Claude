@@ -14,6 +14,7 @@ import { COURSES, bestTime, fmtTime } from '../game/race';
 import { CARS, carById, figures, slotsFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
+import { OcLockup, OcWatermark } from './Mark';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
@@ -136,7 +137,7 @@ export function App() {
       )}
 
       {(screen === 'loading' || busy) && !error && (
-        <div className="overlay center loading-screen"><div className="loading"><Brand /><p>{loadingText}…</p><div className="loadbar"><i /></div></div></div>
+        <div className="overlay center loading-screen"><OcWatermark /><div className="loading"><Brand /><p>{loadingText}…</p><div className="loadbar"><i /></div></div></div>
       )}
       {error && <div className="overlay center"><div className="panel narrow"><Brand /><p>{error}</p></div></div>}
       {lost && <div className="overlay center"><div className="panel narrow"><h2>Graphics reset</h2><p>The browser dropped the 3D context for a moment. It's coming back on its own; press Resume when it does.</p><button className="btn primary" onClick={resume}>Resume</button></div></div>}
@@ -200,8 +201,9 @@ export function App() {
 
       {screen === 'paused' && !panel && (
         <div className="overlay center">
-          <div className="panel narrow">
-            <p className="eyebrow">{MODES[mode].label}</p>
+          <div className="panel narrow paused">
+            <OcWatermark />
+            <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
             <h2>Paused</h2>
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
@@ -219,7 +221,7 @@ export function App() {
       {screen === 'over' && result && (
         <div className="overlay center">
           <div className="panel narrow result">
-            <p className="eyebrow">{MODES[result.mode].label}</p>
+            <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[result.mode].label}</p></div>
             <h2>{result.reason}</h2>
             {result.race ? <>
               <div className="big">P{result.race.position}<small>of {result.race.of} · {result.race.time}</small></div>
@@ -311,7 +313,7 @@ export function App() {
             <textarea ref={reportRef} className="report" readOnly value={report} rows={10} aria-label="Feedback report" />
             <div className="row">
               <button className="btn primary" onClick={() => void copyText(report, reportRef.current).then((ok) => toast(ok ? 'Copied' : 'Select the text and copy it', ok ? 'good' : 'info'))}>Copy</button>
-              {typeof navigator.share === 'function' && <button className="btn" onClick={() => navigator.share({ title: 'Top Speed OC feedback', text: report }).catch(() => { /* cancelled */ })}>Share</button>}
+              {typeof navigator.share === 'function' && <button className="btn" onClick={() => navigator.share({ title: 'OC Ultra feedback', text: report }).catch(() => { /* cancelled */ })}>Share</button>}
               <button className="btn" onClick={() => setPanel(null)}>Back</button>
             </div>
           </div>
@@ -558,14 +560,10 @@ function ProfilePanel({ game, onClose }: { game: Game; onClose: () => void }) {
   );
 }
 
-// the R badge and the ULTRA wordmark; on the menu (hero) the wordmark gets its chrome shimmer
+// the game's name as the page heading: the OC sunset wordmark, ULTRA beside it, TOP SPEED under (Mark.tsx); on the
+// menu (hero) the chrome gets its sunset sheen. A screen reader hears "OC Ultra Top Speed".
 function Brand({ hero = false }: { hero?: boolean }) {
-  return (
-    <div className={'brand' + (hero ? ' hero' : '')}>
-      <span className="badge" aria-hidden="true"><b>R</b></span>
-      <div className="brand-word"><h1 className="word" data-text="Ultra"><span data-text="Ultra">Ultra</span></h1><p>Top Speed OC</p></div>
-    </div>
-  );
+  return <div className={'brand' + (hero ? ' hero' : '')}><OcLockup heading /></div>;
 }
 // how far along a range input is, for the filled part of its track
 function fill(v: number, min: number, max: number): CSSProperties {

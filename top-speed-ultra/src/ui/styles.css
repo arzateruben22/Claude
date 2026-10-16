@@ -1,11 +1,12 @@
-/* Top Speed OC: Ultra. "Chrome noir": Orange County after midnight. Near-black violet glass over the moving freeway,
-   brushed-chrome and holographic hairlines, hot magenta for what's selected, electric yellow for the R badge and the
-   one thing to press. Display: Big Shoulders Display. Interface: Chakra Petch. Data: JetBrains Mono.
+/* OC Ultra: Top Speed. "Chrome noir": Orange County after midnight. Near-black violet glass over the moving freeway,
+   brushed-chrome hairlines, and the OC sunset wordmark's colours (owner, 2026-10-16) as the one accent: sunset orange
+   for the thing to press and for focus, amber for what's selected, tail-light ember for danger, a sunset-edge hairline
+   along the top of every panel. Display: Big Shoulders Display. Interface: Chakra Petch. Data: JetBrains Mono.
    Every colour lives in these tokens. One dark look on purpose: it sits over a moving 3D scene. */
 :root {
   /* night: violet-black surfaces */
   --void: #05030a;
-  --night: #0b0713;
+  --night-1: #0b0713;
   --night-2: #120c1e;
   --night-3: #1b1329;
   --glass: rgba(14, 9, 25, 0.8);            /* cards over the scene or a panel */
@@ -18,7 +19,7 @@
   --scrim-2: rgba(5, 3, 10, 0.84);
   --scrim-3: rgba(5, 3, 10, 0.93);
   --scrim-0: rgba(5, 3, 10, 0);
-  --haze-mag: rgba(255, 46, 139, 0.14);     /* the city glow at the edge of the menu */
+  --haze-sun: rgba(249, 109, 9, 0.14);      /* the sunset glow at the edge of the menu */
   --haze-violet: rgba(120, 72, 255, 0.12);
   --shadow: rgba(0, 0, 0, 0.55);
   /* ink */
@@ -28,24 +29,28 @@
   --line: rgba(214, 204, 236, 0.16);
   --line-2: rgba(214, 204, 236, 0.32);
   --line-3: rgba(244, 240, 252, 0.62);
-  /* signals */
-  --volt: #ffe500;                          /* electric yellow: the R badge, Drive, focus */
-  --volt-hi: #fff7a8;
-  --volt-deep: #e0b800;
-  --volt-ink: #140f00;
-  --volt-line: rgba(255, 229, 0, 0.55);
-  --volt-wash: rgba(255, 229, 0, 0.1);
-  --volt-glow: rgba(255, 229, 0, 0.3);
-  --mag: #ff2e8b;                           /* hot magenta: the selection */
-  --mag-ink: #ff6aac;                       /* magenta for small text */
-  --mag-line: rgba(255, 46, 139, 0.6);
-  --mag-wash: rgba(255, 46, 139, 0.16);
-  --mag-glow: rgba(255, 46, 139, 0.4);
-  --alarm: #d6004e;                         /* wrong way: white text on it is 5:1 */
-  --cyan: #46f0ff;
-  --violet: #8d5cff;
+  /* signals: the OC sunset family, sampled from the owner's wordmark (src/ui/assets/oc-theme.css). Contrast is WCAG 2.x
+     on the violet-black base #0b0812: sunset 8.75:1, amber 11.77:1, ember 4.56:1 (so ember is for fills, hairlines and
+     large type only). Over a HUD plate on a white sky --sunset falls to 4.43:1, so small text uses --sunset-text. */
+  --sunset: #fd9123;                        /* the sky orange: Drive, focus, the accent */
+  --sunset-text: #ffa040;                   /* small sunset text: 9.79:1 on the base, 4.96:1 on a HUD plate over white */
+  --sunset-hi: #ffc98c;
+  --sunset-deep: #e5620b;
+  --sunset-line: rgba(253, 145, 35, 0.55);
+  --sunset-wash: rgba(253, 145, 35, 0.1);
+  --sunset-glow: rgba(253, 145, 35, 0.3);
+  --amber: #febc31;                         /* the sun's highlight: what's selected */
+  --amber-line: rgba(254, 188, 49, 0.6);
+  --amber-wash: rgba(254, 188, 49, 0.13);
+  --amber-glow: rgba(254, 188, 49, 0.35);
+  --ember: #ee1e0a;                         /* the red edge and the tail lights: danger */
+  --ember-line: rgba(238, 30, 10, 0.6);
+  --ember-glow: rgba(238, 30, 10, 0.4);
+  --night: #000000;                         /* the black the mark is cut from: ink on sunset 9.25:1, on amber 12.45:1 */
+  --sunset-edge: linear-gradient(90deg, #f96d09 0%, #fc6231 50%, #ee1e0a 100%);   /* hairlines; never under text */
+  --alarm: #c81a0a;                         /* wrong way: a deeper tail-light red, --ink on it 5.23:1 */
   --good: #5effb4;
-  --bad: #ff5a78;
+  --bad: #ff6a4f;                           /* danger text, tail-light red: 7.02:1 on the base */
   /* brushed chrome */
   --chrome-hi: #ffffff;
   --chrome: #d4cfe2;
@@ -64,12 +69,13 @@
 
   --g-chrome: linear-gradient(180deg, var(--chrome-hi) 0%, var(--chrome) 34%, var(--chrome-lo) 49%, var(--chrome-deep) 52%, var(--chrome) 60%, var(--chrome-hi) 78%, var(--chrome) 100%);
   --g-brush: repeating-linear-gradient(90deg, var(--sheen) 0 1px, var(--clear) 1px 3px);
-  --g-holo: linear-gradient(100deg, var(--clear) 18%, var(--mag) 34%, var(--violet) 44%, var(--cyan) 54%, var(--volt) 64%, var(--clear) 80%);
-  --g-edge: conic-gradient(from 0deg, var(--line-2) 0deg, var(--violet) 22deg, var(--mag) 48deg, var(--volt) 74deg, var(--line-2) 104deg,
-    var(--line-2) 168deg, var(--violet) 196deg, var(--cyan) 226deg, var(--chrome) 252deg, var(--line-2) 282deg, var(--chrome) 318deg, var(--line-2) 344deg);
+  --g-holo: linear-gradient(100deg, var(--clear) 18%, var(--ember) 34%, var(--sunset) 46%, var(--amber) 58%, var(--chrome-hi) 66%, var(--clear) 80%);
+  --g-edge: conic-gradient(from 0deg, var(--line-2) 0deg, var(--amber-line) 40deg, var(--line-2) 100deg,
+    var(--line-2) 168deg, var(--ember-line) 206deg, var(--chrome-lo) 240deg, var(--line-2) 282deg, var(--chrome) 318deg, var(--line-2) 344deg);
   --g-ring: conic-gradient(var(--chrome-hi), var(--chrome-lo), var(--chrome), var(--chrome-deep), var(--chrome-hi), var(--chrome-lo), var(--chrome-hi));
   --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .7 0 0 0 -.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --frame-mask: linear-gradient(var(--opaque) 0 0) content-box, linear-gradient(var(--opaque) 0 0);
+  --oc-mask: url(./assets/oc-mask.png);    /* the wordmark's letterform alpha: referenced once, so the build inlines it once */
 
   /* type */
   --f-display: "Big Shoulders Display", "Oswald", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
@@ -87,7 +93,7 @@ html, body, #root { height: 100%; margin: 0; }
 body { background: var(--void); color: var(--ink); font: 500 15px/1.45 var(--f-ui); overflow: hidden; -webkit-font-smoothing: antialiased; }
 button, input { font: inherit; color: inherit; }
 button { -webkit-tap-highlight-color: var(--clear); }
-:focus-visible { outline: 2px solid var(--volt); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--sunset); outline-offset: 3px; }
 .app { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
 .stage { position: absolute; inset: 0; }
 .game-canvas { display: block; width: 100%; height: 100%; }
@@ -98,7 +104,8 @@ button { -webkit-tap-highlight-color: var(--clear); }
   padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
 .overlay.center { display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 45%, var(--scrim) 0%, var(--scrim-2) 100%); }
 
-/* a panel: smoked violet glass, a holographic hairline, two corners cut. The last row (Done, Back) stays in reach. */
+/* a panel: smoked violet glass, a chrome hairline frame with a sunset edge along the top, two corners cut. The last
+   row (Done, Back) stays in reach. */
 .panel { --px: 28px; --pb: 24px; position: relative; width: min(600px, 100%); display: grid; gap: 16px; padding: 28px var(--px) var(--pb);
   background: linear-gradient(180deg, var(--glass-hi), var(--glass-2) 160px);
   -webkit-backdrop-filter: blur(16px) saturate(1.25); backdrop-filter: blur(16px) saturate(1.25);
@@ -106,23 +113,24 @@ button { -webkit-tap-highlight-color: var(--clear); }
   animation: panel-in 0.3s var(--ease) both; }
 .panel::before { content: ""; position: absolute; inset: 0; padding: 1px; pointer-events: none; background: var(--g-edge);
   -webkit-mask: var(--frame-mask); -webkit-mask-composite: xor; mask: var(--frame-mask); mask-composite: exclude; }
-/* the cut corners get their own hairlines */
+/* the sunset edge along the top, and the cut corners get their own hairlines (the top one carries the edge on) */
 .panel::after { content: ""; position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(45deg, var(--clear) calc(50% - 1.3px), var(--mag) calc(50% - 1.3px) calc(50% + 1.3px), var(--clear) calc(50% + 1.3px)) right top / var(--cut) var(--cut) no-repeat,
-    linear-gradient(45deg, var(--clear) calc(50% - 1.3px), var(--cyan) calc(50% - 1.3px) calc(50% + 1.3px), var(--clear) calc(50% + 1.3px)) left bottom / var(--cut) var(--cut) no-repeat; }
+    var(--sunset-edge) left top / calc(100% - var(--cut)) 2px no-repeat,
+    linear-gradient(45deg, var(--clear) calc(50% - 1.3px), var(--ember) calc(50% - 1.3px) calc(50% + 1.3px), var(--clear) calc(50% + 1.3px)) right top / var(--cut) var(--cut) no-repeat,
+    linear-gradient(45deg, var(--clear) calc(50% - 1.3px), var(--line-3) calc(50% - 1.3px) calc(50% + 1.3px), var(--clear) calc(50% + 1.3px)) left bottom / var(--cut) var(--cut) no-repeat; }
 .panel.narrow { width: min(420px, 100%); }
 .panel.wide { width: min(720px, 100%); }
 .panel.settings { width: min(940px, 100%); }
 .panel h2 { position: relative; margin: 0; padding-bottom: 14px; font: 800 44px/0.9 var(--f-display); letter-spacing: 0.02em; text-transform: uppercase; text-wrap: balance; }
-.panel h2::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, var(--volt) 0 32px, var(--line-2) 32px 55%, var(--clear)); }
+.panel h2::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: linear-gradient(90deg, var(--sunset) 0 32px, var(--line-2) 32px 55%, var(--clear)); }
 .panel p { margin: 0; color: var(--dim); }
 .panel > .row:last-child { position: sticky; bottom: 0; z-index: 3; margin: 4px calc(-1 * var(--px)) calc(-1 * var(--pb)); padding: 18px var(--px) var(--pb);
   background: linear-gradient(180deg, var(--scrim-0), var(--foot) 26px); }
 @keyframes panel-in { from { opacity: 0; transform: translateY(18px); } }
 
 .fine { margin: 0; color: var(--faint); font-size: 13px; line-height: 1.5; }
-.eyebrow { margin: 0; color: var(--volt) !important; font: 500 11.5px/1.3 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; }
+.eyebrow { margin: 0; color: var(--sunset-text) !important; font: 500 11.5px/1.3 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; }
 .muted { color: var(--dim); }
 .good { color: var(--good) !important; font-weight: 600; }
 .sect { display: flex; align-items: center; gap: 12px; margin: 0; color: var(--faint); font: 500 11px/1 var(--f-mono); letter-spacing: 0.24em; text-transform: uppercase; }
@@ -133,25 +141,25 @@ button { -webkit-tap-highlight-color: var(--clear); }
 .btn::before, .seg button::before, .tbtn::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew));
   background: var(--glass); box-shadow: inset 0 0 0 1px var(--line-2); }
 .btn { min-height: 46px; padding: 0 24px; font: 600 14px/1 var(--f-ui); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
-.btn.primary { color: var(--volt-ink); font-weight: 700; }
-.btn.primary::before { background: linear-gradient(180deg, var(--volt-hi) -40%, var(--volt) 45%, var(--volt-deep) 140%); box-shadow: 0 0 0 1px var(--volt), 0 8px 26px var(--volt-glow); }
+.btn.primary { color: var(--night); font-weight: 700; }
+.btn.primary::before { background: linear-gradient(180deg, var(--sunset-hi) -40%, var(--sunset) 45%, var(--sunset-deep) 140%); box-shadow: 0 0 0 1px var(--sunset), 0 8px 26px var(--sunset-glow); }
 .btn:focus-visible, .seg button:focus-visible, .tbtn:focus-visible { outline: none; }
-.btn:focus-visible::before, .seg button:focus-visible::before, .tbtn:focus-visible::before { outline: 2px solid var(--volt); outline-offset: 3px; }
+.btn:focus-visible::before, .seg button:focus-visible::before, .tbtn:focus-visible::before { outline: 2px solid var(--sunset); outline-offset: 3px; }
 .btn.primary:focus-visible::before { outline-color: var(--ink); }
 @media (hover: hover) {
   .btn:hover::before, .seg button:hover::before, .tbtn:hover::before { box-shadow: inset 0 0 0 1px var(--line-3); }
-  .btn.primary:hover::before { box-shadow: 0 0 0 1px var(--volt-hi), 0 8px 30px var(--volt-glow); }
+  .btn.primary:hover::before { box-shadow: 0 0 0 1px var(--sunset-hi), 0 8px 30px var(--sunset-glow); }
 }
 .btn:active::before, .tbtn:active::before { transform: skewX(var(--skew)) scale(0.97); }
 .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; padding-inline: 6px; }
 .stack { display: grid; gap: 10px; padding-inline: 6px; }
 
-/* segmented choices: skewed tabs, the chosen one lit magenta */
+/* segmented choices: skewed tabs, the chosen one lit amber */
 .seg { display: flex; flex-wrap: wrap; gap: 6px 8px; padding-inline: 5px; }
 .seg button { min-height: 40px; padding: 0 15px; font: 500 14px/1 var(--f-ui); color: var(--dim); }
 .seg button::before { background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
 .seg button[aria-pressed="true"] { color: var(--ink); font-weight: 600; }
-.seg button[aria-pressed="true"]::before { background: linear-gradient(180deg, var(--mag-wash), var(--mag-wash)), var(--night-2); box-shadow: inset 0 0 0 1px var(--mag), inset 0 -2px 0 var(--mag); }
+.seg button[aria-pressed="true"]::before { background: linear-gradient(180deg, var(--amber-wash), var(--amber-wash)), var(--night-2); box-shadow: inset 0 0 0 1px var(--amber), inset 0 -2px 0 var(--amber); }
 
 /* fields, sliders, toggles */
 .field { display: grid; gap: 8px; }
@@ -159,46 +167,69 @@ button { -webkit-tap-highlight-color: var(--clear); }
 .field output { color: var(--ink); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
 .slider { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; font: 500 12px/1 var(--f-mono); color: var(--dim); letter-spacing: 0.06em; }
 input[type="range"] { --v: 50%; -webkit-appearance: none; appearance: none; width: 100%; height: 30px; margin: 0; background: none; cursor: pointer; }
-input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(90deg, var(--mag) 0 var(--v), var(--line-2) var(--v)); }
-input[type="range"]::-moz-range-track { height: 4px; background: linear-gradient(90deg, var(--mag) 0 var(--v), var(--line-2) var(--v)); }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(90deg, var(--sunset) 0 var(--v), var(--line-2) var(--v)); }
+input[type="range"]::-moz-range-track { height: 4px; background: linear-gradient(90deg, var(--sunset) 0 var(--v), var(--line-2) var(--v)); }
 input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 26px; margin-top: -11px; border: 0; border-radius: 1px; transform: skewX(var(--skew));
-  background: var(--g-chrome); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--volt); }
-input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; border-radius: 1px; background: var(--g-chrome); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--volt); }
+  background: var(--g-chrome); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--sunset); }
+input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; border-radius: 1px; background: var(--g-chrome); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--sunset); }
 .toggle { display: flex; gap: 14px; align-items: center; min-height: 44px; cursor: pointer; color: var(--ink); font-size: 14.5px; }
 .toggle input { -webkit-appearance: none; appearance: none; flex: none; width: 46px; height: 24px; margin: 0; cursor: pointer; transform: skewX(var(--skew));
   background: linear-gradient(var(--dim), var(--dim)) 4px 50% / 14px 14px no-repeat, var(--cell); box-shadow: inset 0 0 0 1px var(--line-2); }
-.toggle input:checked { background: linear-gradient(var(--volt-ink), var(--volt-ink)) calc(100% - 4px) 50% / 14px 14px no-repeat, var(--volt); box-shadow: inset 0 0 0 1px var(--volt); }
+.toggle input:checked { background: linear-gradient(var(--night), var(--night)) calc(100% - 4px) 50% / 14px 14px no-repeat, var(--sunset); box-shadow: inset 0 0 0 1px var(--sunset); }
 
-/* ------------------------------------------------------------------ the R badge and the ULTRA wordmark */
-.brand { display: flex; gap: 18px; align-items: center; }
-.badge { position: relative; isolation: isolate; flex: none; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
-  background: radial-gradient(circle at 34% 28%, var(--volt-hi) 0%, var(--volt) 46%, var(--volt-deep) 100%); box-shadow: 0 0 30px var(--volt-glow); }
-.badge::before { content: ""; position: absolute; inset: -5px; z-index: -1; border-radius: 50%; background: var(--g-ring);
-  -webkit-mask: radial-gradient(circle, var(--clear) calc(50% - 2.5px), var(--opaque) calc(50% - 2px)); mask: radial-gradient(circle, var(--clear) calc(50% - 2.5px), var(--opaque) calc(50% - 2px)); }
-.badge b { font: 900 40px/1 var(--f-display); color: var(--volt-ink); transform: skewX(-10deg) translateY(1px); }
-.brand-word { display: grid; gap: 8px; min-width: 0; }
-.word { position: relative; isolation: isolate; margin: 0; font: 900 clamp(68px, 19vw, 104px)/0.8 var(--f-display); letter-spacing: 0.015em; text-transform: uppercase;
+/* ------------------------------------------------------------------ the game's name: OC Ultra, Top Speed beneath */
+/* the cut-outs keep their 1200 x 429 aspect (width set, height auto): never stretched */
+.oc-mark { display: block; max-width: 100%; height: auto; -webkit-user-drag: none; user-select: none; pointer-events: none; }
+/* the lockup (Mark.tsx, owner 2026-10-16): the OC mark, the chromed ULTRA beside it on the letters' baseline, and a
+   quiet TOP SPEED under both. No R badge: the R is the car's brand. Everything scales from --mk, the mark's width.
+   Inside the cut-out the letters start 2 % in and stop at 85 % of its height (the speed streaks run below), so ULTRA
+   stands 5.4 % of the width up from the image's foot and TOP SPEED lines up with the O. */
+.brand { display: grid; justify-items: start; }
+.lockup { --mk: 132px; display: grid; justify-items: start; gap: calc(var(--mk) * 0.02); margin: 0; font: inherit; }
+.lockup-name { display: flex; align-items: flex-end; gap: calc(var(--mk) * 0.035); }
+.lockup .oc-mark { flex: none; width: var(--mk); margin-left: calc(var(--mk) * -0.02); }
+.lockup .word { font-size: calc(var(--mk) * 0.2); line-height: 0.8; margin-bottom: calc(var(--mk) * 0.054); }
+.lockup-sub { display: flex; align-items: center; gap: 0.9em; font: 500 12px/1 var(--f-mono); font-size: max(10px, calc(var(--mk) * 0.04));
+  letter-spacing: 0.42em; text-transform: uppercase; color: var(--dim); }
+.lockup-sub::before { content: ""; width: 2.2em; height: 2px; background: var(--sunset-edge); }
+.brand .lockup { --mk: clamp(208px, 58vw, 300px); }
+.brand .oc-mark { filter: drop-shadow(0 10px 26px var(--ember-glow)); }
+.word { position: relative; isolation: isolate; display: inline-block; margin: 0; font: 900 30px/0.9 var(--f-display); letter-spacing: 0.06em; text-transform: uppercase;
   transform: skewX(-8deg); transform-origin: left bottom; }
 .word span { position: relative; display: inline-block; padding-right: 0.04em; background: var(--noise), var(--g-brush), var(--g-chrome);
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--clear); color: var(--clear); }
-/* chromatic split: a magenta and a cyan copy just behind the chrome, a hair out of register */
-.word::before, .word::after { content: attr(data-text) / ""; position: absolute; left: 0; top: 0; z-index: -1; -webkit-text-fill-color: currentColor; opacity: 0.9; pointer-events: none; }
-.word::before { color: var(--mag); transform: translate(-2px, 0); }
-.word::after { color: var(--cyan); transform: translate(2px, 0); opacity: 0.7; }
-/* the holographic sheen that drifts over the hero wordmark */
+/* a sunset split: an ember and an amber copy just behind the chrome, a hair out of register */
+.word::before, .word::after { content: attr(data-text) / ""; position: absolute; left: 0; top: 0; z-index: -1; -webkit-text-fill-color: currentColor; opacity: 0.85; pointer-events: none; }
+.word::before { color: var(--ember); transform: translate(-1px, 0); }
+.word::after { color: var(--amber); transform: translate(1px, 0); opacity: 0.6; }
+/* the sunset sheen that drifts over the chrome on the menu */
 .brand.hero .word span::after { content: attr(data-text) / ""; position: absolute; inset: 0; padding-right: 0.04em; background: var(--g-holo) 0 0 / 100% 100%;
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: var(--clear); opacity: 0; animation: sheen 7s ease-in-out 0.6s infinite; will-change: opacity; }
-.brand.hero .word::before { animation: split-a 9s steps(1, end) 2s infinite; }
-.brand.hero .word::after { animation: split-b 9s steps(1, end) 2s infinite; }
 @keyframes sheen { 0%, 100% { opacity: 0; } 35%, 55% { opacity: 0.55; } }
-@keyframes split-a { 0%, 91%, 100% { transform: translate(-2px, 0); } 92% { transform: translate(-6px, 1px); } 93% { transform: translate(-1px, 0); } 94% { transform: translate(-4px, 0); } }
-@keyframes split-b { 0%, 91%, 100% { transform: translate(2px, 0); } 92% { transform: translate(5px, -1px); } 93% { transform: translate(1px, 0); } 94% { transform: translate(3px, 0); } }
-.brand-word p { display: flex; align-items: center; gap: 10px; margin: 0; font: 500 12px/1 var(--f-mono); letter-spacing: 0.42em; text-transform: uppercase; color: var(--dim); }
-.brand-word p::before { content: ""; width: 22px; height: 2px; background: var(--volt); }
+
+/* panel headers (pause, results): the lockup on the left, the mode on the right */
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: -6px 0 2px; }
+.panel-head .eyebrow { text-align: right; }
+
+/* the watermark (Mark.tsx): palms and a skyline over a sunset, cut to the letterform by its alpha, at 7 %. It sits
+   behind everything in its screen or panel and is drawn in code, so it costs no second image */
+.oc-watermark { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; opacity: 0.07; }
+/* on the loading screen it stays under the content: at most a viewport-height wide (so its top sits in the lower third
+   on a short window), up to 1000 px on a wide one, never under 640 px so a phone still shows palms and skyline */
+.oc-watermark i { position: absolute; left: 50%; bottom: -2%; width: min(clamp(640px, 68vw, 1000px), 100vh); aspect-ratio: 960 / 343; transform: translateX(-50%);
+  background: linear-gradient(180deg, var(--ember) 2%, var(--sunset) 38%, var(--amber) 70%);
+  -webkit-mask: var(--oc-mask) 0 0 / 100% 100% no-repeat; mask: var(--oc-mask) 0 0 / 100% 100% no-repeat; }
+.oc-watermark svg { display: block; width: 100%; height: 100%; }
+.oc-watermark .wm-ink { fill: var(--night); }
+.oc-watermark .wm-sun { fill: var(--sunset-hi); }
+.oc-watermark .wm-trunk, .oc-watermark .wm-frond { fill: none; stroke: var(--night); stroke-linecap: round; }
+.oc-watermark .wm-lights { fill: none; stroke: var(--amber); stroke-width: 3; stroke-dasharray: 14 30; }
+.overlay.loading-screen { isolation: isolate; }
+.panel.paused .oc-watermark i { width: 112%; bottom: -3%; }
 
 /* ------------------------------------------------------------------ the main menu */
 .overlay.menu { padding-bottom: 0;
-  background: radial-gradient(70% 55% at 0% 100%, var(--haze-mag), var(--clear) 70%), radial-gradient(60% 50% at 0% 0%, var(--haze-violet), var(--clear) 70%),
+  background: radial-gradient(70% 55% at 0% 100%, var(--haze-sun), var(--clear) 70%), radial-gradient(60% 50% at 0% 0%, var(--haze-violet), var(--clear) 70%),
     linear-gradient(90deg, var(--scrim-3) 0%, var(--scrim-2) 34%, var(--scrim) 50%, var(--scrim-0) 68%); }
 .menu-col { width: min(500px, 100%); display: grid; gap: 20px; padding-top: 6px; }
 /* the slide-in animates the column's parts, not the column: a transform on the column would pin the fixed aside to it */
@@ -212,14 +243,14 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   background: var(--glass); box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); }
 .mode i { font: 500 11px/1 var(--f-mono); font-style: normal; letter-spacing: 0.14em; color: var(--faint); }
 .mode b { align-self: end; font: 800 25px/0.95 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
-.mode em { font: 500 11.5px/1.2 var(--f-mono); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; color: var(--volt); }
-.mode.on { background: linear-gradient(150deg, var(--mag-wash), var(--clear) 75%), var(--glass); box-shadow: inset 0 0 0 1px var(--mag-line); }
-.mode.on i { color: var(--mag-ink); }
+.mode em { font: 500 11.5px/1.2 var(--f-mono); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sunset-text); }
+.mode.on { background: linear-gradient(150deg, var(--amber-wash), var(--clear) 75%), var(--glass); box-shadow: inset 0 0 0 1px var(--amber-line); }
+.mode.on i { color: var(--amber); }
 @media (hover: hover) { .mode:not(.on):hover, .pick:hover, .gcell:not(.car):not(.on):hover { box-shadow: inset 0 0 0 1px var(--line-3); } }
-.mode-brief { margin: 0; padding: 2px 0 2px 14px; border-left: 2px solid var(--mag); font-size: 14px; line-height: 1.45; color: var(--ink); min-height: 2.9em; }
+.mode-brief { margin: 0; padding: 2px 0 2px 14px; border-left: 2px solid var(--amber); font-size: 14px; line-height: 1.45; color: var(--ink); min-height: 2.9em; }
 
 /* targeting reticle: the corners lock onto whatever is selected */
-.mode.on::after, .gcell.on::after { --r: var(--mag); content: ""; position: absolute; inset: -5px; pointer-events: none;
+.mode.on::after, .gcell.on::after { --r: var(--amber); content: ""; position: absolute; inset: -5px; pointer-events: none;
   background:
     linear-gradient(var(--r) 0 0) left top / 14px 2px no-repeat, linear-gradient(var(--r) 0 0) left top / 2px 14px no-repeat,
     linear-gradient(var(--r) 0 0) right top / 14px 2px no-repeat, linear-gradient(var(--r) 0 0) right top / 2px 14px no-repeat,
@@ -236,34 +267,35 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .pick > b, .pick > .shield-row { grid-area: v; justify-self: start; }
 .pick > b { font: 600 17px/1.15 var(--f-ui); }
 .pick > span:not(.shield-row) { grid-area: s; min-width: 0; color: var(--dim); font-size: 13px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pick > i { grid-area: i; position: relative; isolation: isolate; display: grid; place-items: center; width: 30px; height: 30px; font: 600 20px/1 var(--f-ui); font-style: normal; color: var(--volt); }
+.pick > i { grid-area: i; position: relative; isolation: isolate; display: grid; place-items: center; width: 30px; height: 30px; font: 600 20px/1 var(--f-ui); font-style: normal; color: var(--sunset-text); }
 .pick > i::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); box-shadow: inset 0 0 0 1px var(--line-2); }
 
-/* the dock: Drive is always under the thumb */
+/* the dock: Drive is always under the thumb, lit with the wordmark's sunset edge (orange into red). The label sits
+   mid-button, where the ink is 6.9:1 on the edge (7.2:1 at its orange end, 4.8:1 at the red end the label never reaches) */
 .dock { position: sticky; bottom: 0; z-index: 4; display: grid; grid-template-columns: 1.5fr 1fr 0.8fr 0.9fr; gap: 12px; margin-inline: -16px; padding: 16px 22px max(16px, env(safe-area-inset-bottom));
   background: linear-gradient(180deg, var(--scrim-0), var(--scrim-3) 22px); }
 .dock .btn { padding-inline: 10px; }
 .btn.go { min-height: 52px; font: 800 24px/1 var(--f-display); letter-spacing: 0.16em; }
-.btn.go::after { content: ""; display: inline-block; margin-left: 12px; width: 0; height: 0; border-block: 7px solid var(--clear); border-left: 11px solid var(--volt-ink); vertical-align: 1px; }
+.btn.go::before { background: linear-gradient(180deg, var(--sunset-hi) -50%, var(--clear) 45%), var(--sunset-edge); }
+.btn.go::after { content: ""; display: inline-block; margin-left: 12px; width: 0; height: 0; border-block: 7px solid var(--clear); border-left: 11px solid var(--night); vertical-align: 1px; }
 
 .menu-aside { display: grid; gap: 14px; padding-bottom: 20px; }
 .soon { position: relative; display: grid; grid-template-columns: 1fr auto; column-gap: 14px; row-gap: 4px; padding: 14px 16px; text-decoration: none; color: var(--ink); background: var(--glass); }
-.soon::before { content: ""; position: absolute; inset: 0; padding: 1px; pointer-events: none; background: linear-gradient(110deg, var(--mag), var(--violet), var(--cyan), var(--volt), var(--line-2) 80%);
+.soon::before { content: ""; position: absolute; inset: 0; padding: 1px; pointer-events: none; background: linear-gradient(110deg, var(--ember), var(--sunset), var(--amber), var(--line-2) 80%);
   -webkit-mask: var(--frame-mask); -webkit-mask-composite: xor; mask: var(--frame-mask); mask-composite: exclude; }
-.soon small { grid-column: 1 / -1; justify-self: start; position: relative; isolation: isolate; padding: 3px 9px; font: 500 10.5px/1.2 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--volt-ink); }
-.soon small::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--volt); }
+.soon small { grid-column: 1 / -1; justify-self: start; position: relative; isolation: isolate; padding: 3px 9px; font: 500 10.5px/1.2 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--night); }
+.soon small::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--sunset); }
 .soon b { font: 800 24px/1 var(--f-display); letter-spacing: 0.04em; text-transform: uppercase; }
 .soon span { grid-column: 1; color: var(--dim); font-size: 13.5px; line-height: 1.4; }
-.soon i { grid-column: 2; grid-row: 2 / 4; align-self: center; font-style: normal; font-size: 22px; color: var(--volt); }
+.soon i { grid-column: 2; grid-row: 2 / 4; align-self: center; font-style: normal; font-size: 22px; color: var(--sunset-text); }
 .soon:focus-visible { outline-offset: 4px; }
 
 /* ------------------------------------------------------------------ loading */
 .overlay.loading-screen { background: radial-gradient(80% 60% at 30% 40%, var(--night-2) 0%, var(--void) 75%); }
 .loading { display: grid; gap: 22px; justify-items: start; width: min(400px, 100%); }
 .loading p { margin: 0; font: 500 13px/1.3 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
-.loading .word { font-size: clamp(60px, 16vw, 84px); }
 .loadbar { position: relative; width: 100%; height: 2px; background: var(--line); overflow: hidden; }
-.loadbar i { position: absolute; inset: 0; width: 38%; background: linear-gradient(90deg, var(--clear), var(--mag) 50%, var(--volt)); animation: load 1.2s var(--ease) infinite; }
+.loadbar i { position: absolute; inset: 0; width: 38%; background: linear-gradient(90deg, var(--clear), var(--ember) 40%, var(--sunset) 75%, var(--amber)); animation: load 1.2s var(--ease) infinite; }
 @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(270%); } }
 
 /* ------------------------------------------------------------------ lists inside panels: start, go to, drivers, races, cars */
@@ -272,12 +304,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .gcell { position: relative; display: grid; gap: 4px; justify-items: start; align-content: center; min-height: 52px; padding: 10px 12px; text-align: left; cursor: pointer; border: 0;
   color: var(--ink); background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
 .gcell span:not(.shield):not(.shield-row) { color: var(--dim); font-size: 13px; line-height: 1.35; }
-.gcell.on { background: linear-gradient(150deg, var(--mag-wash), var(--clear) 70%), var(--cell); box-shadow: inset 0 0 0 1px var(--mag-line); }
+.gcell.on { background: linear-gradient(150deg, var(--amber-wash), var(--clear) 70%), var(--cell); box-shadow: inset 0 0 0 1px var(--amber-line); }
 .drivers { display: grid; gap: 12px; }
 .gcell.driver { gap: 4px; padding: 14px 16px; align-content: start; }
 .gcell.driver b { font: 800 26px/0.95 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
-.gcell.driver small { font: 500 11px/1.4 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--volt); }
-.gcell.driver em { font-style: normal; font-size: 13.5px; line-height: 1.4; color: var(--ink); padding-left: 10px; border-left: 2px solid var(--volt-line); margin-top: 4px; }
+.gcell.driver small { font: 500 11px/1.4 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sunset-text); }
+.gcell.driver em { font-style: normal; font-size: 13.5px; line-height: 1.4; color: var(--ink); padding-left: 10px; border-left: 2px solid var(--sunset-line); margin-top: 4px; }
 .gcell.driver small .shield-row { vertical-align: middle; gap: 6px; }
 .gcell.driver small .shield { min-width: 30px; height: 22px; font-size: 12px; }
 .gcell.driver small .shield-row b { font: 600 12px/1 var(--f-mono); letter-spacing: 0.1em; }
@@ -285,7 +317,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .carhead { display: flex; gap: 12px; align-items: center; }
 .carhead .paint { width: 22px; height: 22px; flex: none; transform: skewX(var(--skew)); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--line-3); }
 .gcell.car .row { margin-top: 8px; }
-.gcell.car .row em { font: 500 11.5px/1.2 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--volt); border: 0; padding: 0; margin: 0; }
+.gcell.car .row em { font: 500 11.5px/1.2 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--sunset-text); border: 0; padding: 0; margin: 0; }
 
 /* route shields: the real sign shapes, sharpened */
 .shield-row { display: inline-flex; gap: 8px; align-items: center; }
@@ -299,7 +331,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .result .big { display: flex; align-items: baseline; gap: 12px; font: 700 76px/0.9 var(--f-mono); letter-spacing: -0.05em; font-variant-numeric: tabular-nums; color: var(--ink); }
 .result .big small { font: 500 13px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 1px; margin: 0; background: var(--line); box-shadow: 0 0 0 1px var(--line); }
-.stats div { padding: 10px 12px 11px; background: var(--night); }
+.stats div { padding: 10px 12px 11px; background: var(--night-1); }
 .stats dt { font: 500 10px/1.3 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
 .stats dd { margin: 4px 0 0; font: 600 20px/1.1 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .board { display: grid; gap: 8px; }
@@ -311,17 +343,17 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .board li b { font-size: 18px; font-weight: 600; }
 .board li span { color: var(--dim); font-size: 12px; min-width: 0; }
 .board li time { color: var(--faint); font-size: 11px; }
-.board li.me { background: linear-gradient(90deg, var(--volt-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--volt); }
-.board li.me b { color: var(--volt); }
+.board li.me { background: linear-gradient(90deg, var(--sunset-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--sunset); }
+.board li.me b { color: var(--sunset-text); }
 .order { list-style: none; margin: 0; padding: 0; display: grid; font-family: var(--f-mono); }
 .order li { display: flex; gap: 12px; padding: 8px 8px; border-top: 1px solid var(--line); }
 .order li b { width: 1.6em; color: var(--faint); }
-.order li.me { color: var(--volt); font-weight: 600; background: linear-gradient(90deg, var(--volt-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--volt); }
+.order li.me { color: var(--sunset-text); font-weight: 600; background: linear-gradient(90deg, var(--sunset-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--sunset); }
 
 /* ------------------------------------------------------------------ settings */
 .sgrid, .scol { display: grid; gap: 26px; align-content: start; }
 .sgroup { display: grid; gap: 14px; align-content: start; }
-.sgroup .sect { font-size: 11px; color: var(--mag-ink); }
+.sgroup .sect { font-size: 11px; color: var(--sunset-text); }
 .fine.keys { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.02em; }
 
 /* ------------------------------------------------------------------ profile */
@@ -332,27 +364,27 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .who-main { display: grid; gap: 4px; min-width: 0; flex: 1; }
 .who-main .name { width: 100%; min-width: 0; padding: 2px 0 4px; border: 0; border-bottom: 1px solid var(--line-2); background: var(--clear); border-radius: 0;
   font: 800 34px/1 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
-.who-main .name:focus { outline: none; border-bottom: 2px solid var(--volt); margin-bottom: -1px; }
+.who-main .name:focus { outline: none; border-bottom: 2px solid var(--sunset); margin-bottom: -1px; }
 .who-main p { font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
 .xp { height: 10px; background: var(--line); -webkit-mask: repeating-linear-gradient(90deg, var(--opaque) 0 8px, var(--clear) 8px 10px); mask: repeating-linear-gradient(90deg, var(--opaque) 0 8px, var(--clear) 8px 10px); }
-.xp i { display: block; height: 100%; background: linear-gradient(90deg, var(--mag), var(--volt)); }
+.xp i { display: block; height: 100%; background: linear-gradient(90deg, var(--ember), var(--sunset) 55%, var(--amber)); }
 .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
 .swatches button { width: 44px; height: 44px; padding: 6px; border: 0; border-radius: 50%; cursor: pointer; background-clip: content-box !important; box-shadow: inset 0 0 0 1px var(--clear); }
-.swatches button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--mag), inset 0 0 0 4px var(--void); }
+.swatches button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--amber), inset 0 0 0 4px var(--void); }
 .routes { display: flex; gap: 10px 12px; flex-wrap: wrap; padding: 2px; }
 .routes > span { opacity: 0.32; filter: grayscale(1); }
 .routes > span.on { opacity: 1; filter: none; }
 .ach { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 .ach li { display: grid; gap: 2px; align-content: start; padding: 9px 12px; background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
 .ach li:not(.got) b, .ach li:not(.got) span { color: var(--faint); }
-.ach li.got { box-shadow: inset 0 0 0 1px var(--volt-line), inset 2px 0 0 var(--volt); }
-.ach li.got b::before { content: "★ "; color: var(--volt); }
+.ach li.got { box-shadow: inset 0 0 0 1px var(--sunset-line), inset 2px 0 0 var(--sunset); }
+.ach li.got b::before { content: "★ "; color: var(--amber); }
 .ach b { font: 600 15px/1.25 var(--f-ui); }
 .ach span { font-size: 12.5px; color: var(--dim); }
 
 /* ------------------------------------------------------------------ the HUD: small, sharp and out of the way */
 .hud { position: absolute; inset: 0; pointer-events: none; }
-.hud-stats { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 12px; display: grid; gap: 3px; padding: 8px 14px 8px 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--volt); }
+.hud-stats { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 12px; display: grid; gap: 3px; padding: 8px 14px 8px 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--sunset); }
 .hud-stats div:has(b:empty) { display: none; }
 .hud-stats div { display: flex; gap: 12px; align-items: baseline; }
 .hud-stats b { min-width: 92px; font: 500 10px/1.2 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
@@ -360,33 +392,33 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-stats.warn div:first-child span { color: var(--bad); }
 .hud-fps { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); left: 16px; padding: 2px 6px; background: var(--hud); font: 500 11px/1.3 var(--f-mono); color: var(--dim); font-variant-numeric: tabular-nums; }
 .hud-speed { position: absolute; right: 18px; bottom: max(16px, env(safe-area-inset-bottom)); min-width: 190px; padding: 10px 14px 9px; text-align: right; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line); }
-.hud-speed::before { content: ""; position: absolute; right: -1px; top: -1px; width: 18px; height: 18px; background: linear-gradient(var(--volt) 0 0) right top / 18px 2px no-repeat, linear-gradient(var(--volt) 0 0) right top / 2px 18px no-repeat; }
+.hud-speed::before { content: ""; position: absolute; right: -1px; top: -1px; width: 18px; height: 18px; background: linear-gradient(var(--sunset) 0 0) right top / 18px 2px no-repeat, linear-gradient(var(--sunset) 0 0) right top / 2px 18px no-repeat; }
 .hud-row { display: flex; align-items: baseline; justify-content: flex-end; gap: 8px; }
 .hud-mph { min-width: 3ch; font: 700 50px/0.9 var(--f-mono); letter-spacing: -0.05em; text-align: right; font-variant-numeric: tabular-nums; }
 .hud-unit { font: 500 11px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
-.hud-gear { position: relative; isolation: isolate; min-width: 1.7em; margin-left: 6px; padding: 3px 4px; font: 700 26px/1 var(--f-mono); text-align: center; color: var(--volt); align-self: center; white-space: nowrap; }
-.hud-gear::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--volt-wash); box-shadow: inset 0 0 0 1px var(--volt-line); }
+.hud-gear { position: relative; isolation: isolate; min-width: 1.7em; margin-left: 6px; padding: 3px 4px; font: 700 26px/1 var(--f-mono); text-align: center; color: var(--sunset-text); align-self: center; white-space: nowrap; }
+.hud-gear::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--sunset-wash); box-shadow: inset 0 0 0 1px var(--sunset-line); }
 .hud-rpm { height: 5px; margin-top: 8px; background: var(--line-2); overflow: hidden;
   -webkit-mask: repeating-linear-gradient(90deg, var(--opaque) 0 6px, var(--clear) 6px 8px); mask: repeating-linear-gradient(90deg, var(--opaque) 0 6px, var(--clear) 6px 8px); }
 .hud-rpm div { height: 100%; background: linear-gradient(90deg, var(--chrome-lo), var(--ink)); transform-origin: left; transform: scaleX(0); }
-.hud-rpm div.red { background: var(--mag); }
+.hud-rpm div.red { background: var(--ember); }
 .hud-cam { display: block; margin-top: 6px; font: 500 10px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud [hidden] { display: none !important; }
 
-/* rev lights over the gear: chrome, then volt, then magenta; all of them flash on the limiter */
+/* rev lights over the gear: chrome, then amber, then tail-light ember; all of them flash on the limiter */
 .hud-revs { display: flex; justify-content: flex-end; gap: 3px; margin: 0 2px 8px 0; }
 .hud-revs i { width: 16px; height: 6px; background: var(--line-2); transform: skewX(var(--skew)); }
 .hud-revs i.on { background: var(--chrome); }
-.hud-revs i:nth-child(n+4).on { background: var(--volt); box-shadow: 0 0 6px var(--volt-glow); }
-.hud-revs i:nth-child(n+7).on { background: var(--mag); box-shadow: 0 0 6px var(--mag-glow); }
+.hud-revs i:nth-child(n+4).on { background: var(--amber); box-shadow: 0 0 6px var(--amber-glow); }
+.hud-revs i:nth-child(n+7).on { background: var(--ember); box-shadow: 0 0 6px var(--ember-glow); }
 .hud-revs.flash i.on { animation: rev-flash 0.18s steps(1) infinite alternate; }
 @keyframes rev-flash { to { opacity: 0.2; } }
 
 /* the race HUD: a position box with the race timer beside the position, the standings with the gap to you in
-   seconds (your row in volt). Nothing of it sits over the road; the corner window stays the track map. */
-.hud-race { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 12px; display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--volt); }
+   seconds (your row in sunset). Nothing of it sits over the road; the corner window stays the track map. */
+.hud-race { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 12px; display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--sunset); }
 .hud-pos { display: grid; grid-template-columns: auto 1fr auto; column-gap: 10px; align-items: end; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
-.hud-pos > b { grid-row: 1 / 3; min-width: 1ch; font: 800 46px/0.82 var(--f-display); letter-spacing: 0.02em; color: var(--volt); }
+.hud-pos > b { grid-row: 1 / 3; min-width: 1ch; font: 800 46px/0.82 var(--f-display); letter-spacing: 0.02em; color: var(--sunset-text); }
 .hud-pos > span { display: flex; flex-direction: column; gap: 3px; }
 .hud-pos > span i { font: 500 9.5px/1 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud-pos > span em { font: 600 15px/1 var(--f-mono); font-style: normal; font-variant-numeric: tabular-nums; }
@@ -399,11 +431,13 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-standings em { padding: 3px 0 2px; font: 600 9px/1 var(--f-mono); font-style: normal; letter-spacing: 0.12em; text-align: center; color: var(--chrome); box-shadow: inset 0 0 0 1px var(--line-2); }
 .hud-standings span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .hud-standings b { min-width: 5ch; font: 600 12px/1 var(--f-mono); letter-spacing: -0.02em; text-align: right; font-variant-numeric: tabular-nums; }
-.hud-standings li.me { color: var(--volt-ink); background: var(--volt); }
-.hud-standings li.me i, .hud-standings li.me em { color: var(--volt-ink); }
-.hud-standings li.me em { box-shadow: inset 0 0 0 1px var(--volt-deep); }
+.hud-standings li.me { color: var(--night); background: var(--sunset); }
+.hud-standings li.me i, .hud-standings li.me em { color: var(--night); }
+.hud-standings li.me em { box-shadow: inset 0 0 0 1px var(--sunset-deep); }
 .hud-standings li.done { color: var(--dim); }
 .hud-standings li.done b { color: var(--good); }
+/* your row's tag reads "OC": the 240 px mark sits there instead, a decal on black (HUD.tsx sets --oc-mark-sm) */
+.hud-standings li.me em.oc { color: var(--clear); box-shadow: none; background: var(--oc-mark-sm) center / contain no-repeat, var(--night); }
 .hud-race-note { font: 500 9px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
 
 .toasts { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; pointer-events: none; width: max-content; max-width: min(92vw, 560px); }
@@ -417,18 +451,21 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* where you are and what's next */
 .hud-road { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; max-width: min(46vw, 520px); }
-.hud-roadname { position: relative; isolation: isolate; max-width: 100%; padding: 6px 18px; font: 600 14px/1.2 var(--f-ui); letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 -2px 0 var(--volt); }
-.hud-roadname:empty { display: none; }
+/* the route chip: the OC mark where the region would read, then the road */
+.hud-roadname { position: relative; isolation: isolate; display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 5px 18px 5px 10px; font: 600 14px/1.2 var(--f-ui); letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 -2px 0 var(--sunset); }
+.hud-roadname:has(> span:empty) { display: none; }
+.hud-roadname > span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hud-roadname .oc-mark { flex: none; width: 46px; }
 .hud-next { padding: 5px 12px; font: 600 15px/1.25 var(--f-ui); text-align: center; color: var(--sign-white); background: var(--sign-green); border: 2px solid var(--sign-white); border-radius: 6px; box-shadow: 0 6px 18px var(--shadow); }
-.hud-wrong { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) skewX(var(--skew)); padding: 12px 26px; font: 900 34px/1 var(--f-display); letter-spacing: 0.16em; color: var(--ink); background: var(--alarm); box-shadow: 0 0 0 1px var(--mag), 0 12px 34px var(--mag-glow); }
+.hud-wrong { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) skewX(var(--skew)); padding: 12px 26px; font: 900 34px/1 var(--f-display); letter-spacing: 0.16em; color: var(--ink); background: var(--alarm); box-shadow: 0 0 0 1px var(--ember), 0 12px 34px var(--ember-glow); }
 
 /* the top bar: one chrome-edged strip of controls */
 .tbar { position: absolute; top: max(12px, env(safe-area-inset-top)); right: 14px; display: flex; gap: 6px; }
 .tbtn { pointer-events: auto; min-height: 38px; min-width: 44px; padding: 0 14px; font: 600 12px/1 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); }
 .tbtn::before { background: var(--hud); }
-.tbtn.on { color: var(--volt); }
-.tbtn.on::before { box-shadow: inset 0 0 0 1px var(--volt-line), inset 0 -2px 0 var(--volt); }
+.tbtn.on { color: var(--sunset-text); }
+.tbtn.on::before { box-shadow: inset 0 0 0 1px var(--sunset-line), inset 0 -2px 0 var(--sunset); }
 
 /* the corner window: a square frame with locked-on corners (the sky camera draws inside its box) */
 .corner { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px); right: 12px; padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: 0 10px 28px var(--shadow); }
@@ -437,7 +474,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
     linear-gradient(var(--chrome) 0 0) left top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left top / 2px 12px no-repeat,
     linear-gradient(var(--chrome) 0 0) right top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) right top / 2px 12px no-repeat,
     linear-gradient(var(--chrome) 0 0) left bottom / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left bottom / 2px 12px no-repeat,
-    linear-gradient(var(--volt) 0 0) right bottom / 12px 2px no-repeat, linear-gradient(var(--volt) 0 0) right bottom / 2px 12px no-repeat; }
+    linear-gradient(var(--sunset) 0 0) right bottom / 12px 2px no-repeat, linear-gradient(var(--sunset) 0 0) right bottom / 2px 12px no-repeat; }
 .corner canvas { display: block; width: 100%; height: 100%; }
 .corner.sky { border-color: var(--line-3); }
 .corner-tag { position: absolute; left: 0; bottom: 0; padding: 3px 7px; font: 500 9.5px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); background: var(--hud); pointer-events: none; }
@@ -445,12 +482,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* the ability button: a hexagon whose edge drains while it's on and refills while it recharges */
 .hud-ability { --p: 1; position: absolute; right: 222px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
   display: grid; place-items: center; color: var(--ink); font: 600 10.5px/1.1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
-  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--volt) calc(var(--p) * 1turn), var(--line-2) 0); }
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--sunset) calc(var(--p) * 1turn), var(--line-2) 0); }
 .hud-ability::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
 .hud-ability span { max-width: 54px; }
 .hud-ability.cool { color: var(--dim); background: conic-gradient(var(--chrome) calc(var(--p) * 1turn), var(--line) 0); }
-.hud-ability.on { color: var(--volt); }
-.hud-ability.on::before { background: radial-gradient(circle, var(--volt-wash), var(--clear) 70%), var(--glass-2); }
+.hud-ability.on { color: var(--sunset-text); }
+.hud-ability.on::before { background: radial-gradient(circle, var(--sunset-wash), var(--clear) 70%), var(--glass-2); }
 .hud-ability:focus-visible { outline: none; }
 .hud-ability:focus-visible::before { background: var(--night-3); }
 
@@ -473,18 +510,18 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
     var(--hud); }
 .touch-hint { position: absolute; top: 9px; font: 500 10px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 .touch-knob { width: 38px; height: 58px; margin-top: 12px; clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
-  background: linear-gradient(90deg, var(--clear) 45%, var(--volt) 45% 55%, var(--clear) 55%), var(--g-chrome); }
+  background: linear-gradient(90deg, var(--clear) 45%, var(--sunset) 45% 55%, var(--clear) 55%), var(--g-chrome); }
 .touch-pedals { position: absolute; right: 20px; bottom: max(14px, env(safe-area-inset-bottom)); display: flex; gap: 16px; align-items: flex-end; pointer-events: auto; }
 .pedal { position: relative; isolation: isolate; width: 74px; display: grid; place-items: center; font: 800 17px/1 var(--f-display); letter-spacing: 0.16em; touch-action: none; }
 .pedal::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(-8deg); background: var(--hud); box-shadow: inset 0 0 0 1px var(--line-2); }
-.pedal.gas { height: 132px; color: var(--volt); }
-.pedal.gas::before { box-shadow: inset 0 0 0 1px var(--volt-line), inset 0 3px 0 var(--volt); }
-.pedal.brake { height: 96px; color: var(--mag-ink); }
-.pedal.brake::before { box-shadow: inset 0 0 0 1px var(--mag-line), inset 0 3px 0 var(--mag); }
-.pedal.gas.down { color: var(--volt-ink); }
-.pedal.gas.down::before { background: var(--volt); }
-.pedal.brake.down { color: var(--void); }
-.pedal.brake.down::before { background: var(--mag); }
+.pedal.gas { height: 132px; color: var(--sunset-text); }
+.pedal.gas::before { box-shadow: inset 0 0 0 1px var(--sunset-line), inset 0 3px 0 var(--sunset); }
+.pedal.brake { height: 96px; color: var(--bad); }
+.pedal.brake::before { box-shadow: inset 0 0 0 1px var(--ember-line), inset 0 3px 0 var(--ember); }
+.pedal.gas.down { color: var(--night); }
+.pedal.gas.down::before { background: var(--sunset); }
+.pedal.brake.down { color: var(--night); }
+.pedal.brake.down::before { background: var(--ember); }
 .touch-shift { display: grid; gap: 10px; }
 .touch-shift .tbtn { min-height: 46px; min-width: 50px; padding: 0; font: 600 22px/1 var(--f-mono); }
 
@@ -504,7 +541,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* ------------------------------------------------------------------ phones */
 @media (max-width: 560px) {
-  .overlay.menu { background: radial-gradient(90% 40% at 100% 0%, var(--haze-mag), var(--clear) 70%), linear-gradient(180deg, var(--scrim-2) 0%, var(--scrim-3) 40%, var(--scrim-3) 100%); }
+  .overlay.menu { background: radial-gradient(90% 40% at 100% 0%, var(--haze-sun), var(--clear) 70%), linear-gradient(180deg, var(--scrim-2) 0%, var(--scrim-3) 40%, var(--scrim-3) 100%); }
   .menu-col { gap: 18px; }
   .lede { font-size: 14.5px; }
   .dock { grid-template-columns: repeat(3, 1fr); gap: 10px 12px; padding-inline: 20px; }
@@ -517,7 +554,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .overlay.center { align-items: end; padding: max(28px, env(safe-area-inset-top)) 0 0; }
   .panel { --px: 20px; --pb: max(18px, env(safe-area-inset-bottom)); width: 100%; padding-top: 26px;
     clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%); }
-  .panel::after { background: linear-gradient(45deg, var(--clear) calc(50% - 1.3px), var(--mag) calc(50% - 1.3px) calc(50% + 1.3px), var(--clear) calc(50% + 1.3px)) right top / 26px 26px no-repeat; }
+  .panel::after { background: var(--sunset-edge) left top / calc(100% - 26px) 2px no-repeat,
+    linear-gradient(45deg, var(--clear) calc(50% - 1.3px), var(--ember) calc(50% - 1.3px) calc(50% + 1.3px), var(--clear) calc(50% + 1.3px)) right top / 26px 26px no-repeat; }
   .panel.narrow, .panel.wide, .panel.settings, .panel.profile { width: 100%; }
   .panel h2 { font-size: 40px; }
   .loading-screen { align-items: center !important; padding-inline: 20px !important; }
@@ -532,7 +570,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .tbar { gap: 6px; right: 8px; left: 8px; justify-content: flex-end; }
   .tbar .tbtn { min-height: 44px; padding: 0 11px; font-size: 11.5px; letter-spacing: 0.08em; }
   .hud-speed { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 58px); right: auto; left: 10px; min-width: 0; padding: 8px 12px 8px; text-align: left; }
-  .hud-speed::before { right: auto; left: -1px; background: linear-gradient(var(--volt) 0 0) left top / 18px 2px no-repeat, linear-gradient(var(--volt) 0 0) left top / 2px 18px no-repeat; }
+  .hud-speed::before { right: auto; left: -1px; background: linear-gradient(var(--sunset) 0 0) left top / 18px 2px no-repeat, linear-gradient(var(--sunset) 0 0) left top / 2px 18px no-repeat; }
   .hud-row { justify-content: flex-start; }
   .hud-rpm { width: 136px; }
   .hud-cam { display: none; }
@@ -564,7 +602,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* motion is a garnish: off when asked */
 @media (prefers-reduced-motion: reduce) {
   .panel, .menu-col, .toast, .loadbar i, .mode.on::after, .gcell.on::after, .hud-revs i,
-  .brand.hero .word::before, .brand.hero .word::after, .brand.hero .word span::after { animation: none !important; }
+  .brand.hero .word span::after { animation: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }
 }

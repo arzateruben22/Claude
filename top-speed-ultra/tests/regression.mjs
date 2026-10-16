@@ -738,6 +738,8 @@ await group('launch', async (use) => {
     const text = await page.locator('textarea.report').inputValue();
     await page.screenshot({ path: path.join(OUT, 'launch-feedback.png') });
     for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road]) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
+    // the game is "OC Ultra" (owner, 2026-10-16): the report's first line names it
+    expect(/^OC Ultra \S+ · feedback report/.test(text), `the report starts "${text.split('\n')[0]}"`);
     await page.getByRole('button', { name: 'Copy', exact: true }).click();
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await game(page, () => window.__game.setPaused(false));
@@ -755,6 +757,8 @@ await group('launch', async (use) => {
     expect(buf.length > 20000 && buf.subarray(1, 4).toString() === 'PNG', `${buf.length} bytes`);
     const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
     expect(w === 1080 && h === 1350, `${w} × ${h}`);
+    // named for the game, OC Ultra (owner, 2026-10-16): oc-ultra-<mode>-<score>.png
+    expect(/^oc-ultra-free-\d+\.png$/.test(dl.suggestedFilename()), `the card is called ${dl.suggestedFilename()}`);
     return `${dl.suggestedFilename()}, ${w} × ${h}, ${Math.round(buf.length / 1024)} KB`;
   });
 });

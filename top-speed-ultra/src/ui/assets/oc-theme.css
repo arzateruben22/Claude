@@ -1,0 +1,14 @@
+/* OC sunset wordmark theme (sampled from the owner's wordmark source by final.py; Pillow + numpy).
+   Contrast is WCAG 2.x, against the UI's violet-black base #0b0812.
+   NOTE: src/ui/styles.css already defines --night (#0b0713, used once: .stats div). Loading this file after it
+   at :root replaces that value; rename one of them in the UI pass if that is not wanted. */
+:root {
+  --sunset: #fd9123;       /* sky orange: median of 52555 saturated sky px (hue 18-40 deg) inside the letters. 8.75:1 on #0b0812 */
+  --ember: #ee1e0a;        /* red edge: median of 8489 outer-stroke px on the C's right side. 4.56:1 on #0b0812 (borderline: fills, hairlines, large text) */
+  --amber: #febc31;        /* sun highlight: median of 4537 gold px (hue 35-55 deg) around the sun at (770,424). 11.77:1 on #0b0812 */
+  --night: #000000;        /* the black the mark is cut from (exterior black: 835346 px >12 px from any lit px, max channel 0-2, median 0; decal band median #010000, silhouettes #030100). 1.06:1 on #0b0812: a surface/ink colour, never text on the base; as ink on --sunset 9.25:1, on --amber 12.45:1 */
+  --sunset-text: #fd9123;  /* text-safe sunset: 8.75:1 on #0b0812 (target 4.5:1; no lift needed: --sunset already clears 4.5:1, so the solver returns it unchanged) */
+  --sunset-edge: linear-gradient(90deg, #f96d09 0%, #fc6231 50%, #ee1e0a 100%);
+  /* --sunset-edge stops: O's left outer stroke, the top stroke's middle third, the C's red right side.
+     Its lowest contrast anywhere along the gradient is 4.56:1 on #0b0812. */
+}

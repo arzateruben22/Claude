@@ -9,7 +9,7 @@ export function formatReport(r: Report): string {
   const mem = r.memoryGB ? ` · ${r.memoryGB} GB` : '';
   const drive = r.attract ? 'On the menu' : `${MODES[r.mode].label} on ${r.road} at ${r.mph} mph · ${r.density} traffic · ${r.cars} cars · ${pad2(Math.floor(r.runSeconds / 60))}:${pad2(r.runSeconds % 60)} in`;
   return [
-    `Top Speed OC ${r.version} · feedback report (${r.host})`,
+    `OC Ultra ${r.version} · feedback report (${r.host})`,
     `Device: ${r.ua}`,
     `Screen: ${r.screen}, ${r.pointer} · ${r.cores || '?'} cores${mem}`,
     `GPU: ${r.gpu}`,

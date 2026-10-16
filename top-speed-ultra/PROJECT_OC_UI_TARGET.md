@@ -28,7 +28,7 @@ and regular weights, one persistent glass sheet whose content cross-fades betwee
 re-mounting, a Drive dock that persists, a loading screen that fades into the menu, iOS-style switches and segmented
 controls drawn in CSS, reduced motion respected. Phone first.
 
-## Identity: the OC sunset wordmark (owner, 2026-10-16)
+## Identity: the OC sunset wordmark (owner, 2026-10-16): Done
 
 **The name (owner, later the same day):** the game is now **OC Ultra**, with **Top Speed** beneath. The R badge is
 no longer the game's logo: the lockup is the OC wordmark with ULTRA and a small "TOP SPEED" line. The R stays

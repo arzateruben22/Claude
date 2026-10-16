@@ -2,7 +2,7 @@
   "name": "top-speed-ultra",
   "private": true,
   "version": "0.1.0",
-  "description": "Top Speed OC: Ultra. A first-person sports-car freeway simulator for the browser.",
+  "description": "OC Ultra: Top Speed. A first-person sports-car freeway simulator for the browser.",
   "type": "module",
   "scripts": {
     "dev": "vite",
