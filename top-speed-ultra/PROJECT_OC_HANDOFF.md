@@ -33,7 +33,8 @@ time or at most two (the machine has 4 cores; a third lane makes the suite time 
 2. Finish the reference pass: race HUD (standings, gaps, lap timer, rev lights, OC city tags) and palm fronds, each
    judged on renders; then the drift pass items D2 (skid marks) and D3 (smoke and readout) on top of the drift
    physics once a Fable session has reviewed it.
-3. Run the UI pass from PROJECT_OC_UI_TARGET.md starting with U0, the seamless luxury menu.
+3. Run the UI pass from PROJECT_OC_UI_TARGET.md starting with UID (the owner's OC sunset wordmark everywhere "OC"
+   reads, and its theme tokens; assets in src/ui/assets/), then U0, the seamless luxury menu.
 Agents: routine builders, judges and integrators on model 'opus'. Commit only judged work; no model names in
 commits or code; verify before you claim; log in PROJECT_OC_PROGRESS.md. Update PROJECT_OC_HANDOFF.md at the end.
 ```
