@@ -1,5 +1,6 @@
 // Where things are on a face and body, as soft masks in the head's frame: lips, the mouth's interior, warm areas,
-// blush, beard and stubble, the eye area, wrinkles, freckles, and the scalp under each hairstyle.
+// blush, beard and stubble, the eye area, wrinkles (forehead, crow's feet, neck rings), freckles, and the scalp under
+// each hairstyle.
 import { V3, clamp, smooth } from './math';
 import { HeadFrame } from './head';
 import { HairStyle, Look } from './params';
@@ -47,7 +48,9 @@ export function faceMasks(l: V3, hf: HeadFrame, look: Look): FaceMask {
   // the ear itself: outside the side of the skull, within the ear's outline (no hard box)
   const ear = smooth(0.066, 0.076, ax) * Math.exp(-(((y + 0.016) / 0.03) ** 2) - (((z + 0.081) / 0.024) ** 2));
   const lids = g3(ax, y, z, [ex, 0.004, 0.011], 0.009);
-  const red = clamp(0.55 * cheeks + 0.75 * nose + 0.7 * ear + 0.35 * lip + 0.25 * g3(x, y, z, [0, -0.098, 0.02], 0.012) + 0.3 * lids);
+  const neck = smooth(-0.105, -0.13, y);   // the throat and the sides of the neck below the jaw
+  // (the neck carries a little warmth, continuous with the body's floor in skin.ts, so the jaw is not a mask edge)
+  const red = clamp(0.55 * cheeks + 0.75 * nose + 0.7 * ear + 0.35 * lip + 0.25 * g3(x, y, z, [0, -0.098, 0.02], 0.012) + 0.3 * lids + 0.12 * neck);
   const thin = clamp(ear + 0.3 * nose);
   const blush = g3(ax, y, z, [0.042, -0.028, 0.014], 0.016);
   // beard and stubble
@@ -65,7 +68,10 @@ export function faceMasks(l: V3, hf: HeadFrame, look: Look): FaceMask {
       : full;
   }
   const eyeA = Math.exp(-2 * (((ax - ex) / 0.02) ** 2 + ((y - 0.003) / 0.014) ** 2)) * smooth(-0.002, 0.008, z);
-  const wrink = clamp(smooth(0.028, 0.04, y) * smooth(0.078, 0.058, y) * smooth(0.0, 0.012, z) + 0.7 * g3(ax, y, z, [ex + 0.02, 0, 0.0], 0.007));
+  // where the horizontal furrows go with age: the forehead, the crow's feet, and rings round the front of the throat
+  // (the nasolabial folds, marionette and glabellar lines and under-eye bags are per pixel in skin.ts)
+  const wrink = clamp(smooth(0.028, 0.04, y) * smooth(0.078, 0.058, y) * smooth(0.0, 0.012, z) + 0.7 * g3(ax, y, z, [ex + 0.02, 0, 0.0], 0.007)
+    + 0.6 * neck * smooth(-0.2, -0.175, y) * smooth(-0.075, -0.035, z));
   const freck = clamp(1.2 * g3(ax, y, z, [0.03, -0.022, 0.014], 0.02) + g3(x, y, z, [0, -0.02, 0.026], 0.012));
   return { red, lip, thin, blush, beard, eyeA, mouth, scalp: scalpCover(look.hair, l, 35 + 40 * hf.old, hf.male), wrink, freck };
 }

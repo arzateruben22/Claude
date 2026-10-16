@@ -113,6 +113,7 @@ export function buildPerson(o: PersonOptions): Person {
       (u.uHeadO.value as THREE.Vector3).set(hf.o[0], hf.o[1], hf.o[2]);
       (u.uHeadS.value as THREE.Vector3).set(hf.sx, hf.sy, hf.sz);
       (u.uLipP.value as THREE.Vector4).set(hf.mouth.y, 0.026 * o.face.mouthW, o.face.lipUpper, o.face.lipLower);
+      (u.uFaceP.value as THREE.Vector4).set(hf.eye.x, hf.nose.tip[1], hf.old, 0);   // for the per-pixel folds and under-eye bags
     }
     return faceMat;
   };

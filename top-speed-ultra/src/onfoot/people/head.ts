@@ -73,9 +73,10 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
   for (const sg of [1, -1]) {
     E([sg * 0.031, -0.046 - 0.004 * old, -0.006], 0.019 * ch, 0.022, 0.02 * ch, 0.025);
     // the mandible: body from the chin to the angle, then the ramus up to the ear
-    // (blended tight so the lower border stays an edge over the neck instead of filleting into it)
-    K([sg * 0.015 * cw, -0.1 * cl, 0.006], [sg * 0.041 * jw, -0.083, -0.058], 0.0105, 0.0105 + 0.002 * (jw - 1), 0.017);
-    K([sg * 0.041 * jw, -0.083, -0.058], [sg * 0.049, -0.036, -0.072], 0.0105, 0.009, 0.016);
+    // (blended fairly tight so the lower border stays an edge over the neck instead of filleting into it, but not so
+    // tight that it reads as a bevelled slab; the angle is a rounded knob where the masseter inserts, not a box corner)
+    K([sg * 0.015 * cw, -0.1 * cl, 0.006], [sg * 0.041 * jw, -0.083, -0.058], 0.0105, 0.0115 + 0.002 * (jw - 1), 0.02);
+    K([sg * 0.041 * jw, -0.083, -0.058], [sg * 0.049, -0.036, -0.072], 0.0115, 0.009, 0.019);
     // jowls with age and weight
     if (old + fat > 0.7) E([sg * 0.032, -0.088 - 0.004 * old, 0.0], 0.016, 0.014 + 0.008 * fat, 0.016 + 0.006 * fat, 0.02);
   }
@@ -84,7 +85,7 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
   E([0, -0.0535, 0.0186], 0.0112, 0.0072, 0.0066, 0.006);
   const lc = 0.8 + 0.5 * fat;   // the lower cheek: lean faces taper from the cheekbones to the chin, heavy ones fill out to the jaw
   for (const sg of [1, -1]) E([sg * 0.033, -0.058, -0.012], 0.018 * (0.85 + 0.4 * fat) * lc, 0.024 * lc, 0.022 * (0.85 + 0.3 * fat) * lc, 0.016);
-  E([0, -0.098 * cl, 0.0125 - (m ? 0.0015 : 0)], 0.0185 * cw * (m ? 1.12 : 1), 0.0158 * cl * (m ? 0.9 : 1), 0.0136 * (m ? 0.88 : 1), 0.015);   // men: broader, flatter, squarer
+  E([0, -0.098 * cl, 0.0125 - (m ? 0.0015 : 0)], 0.0185 * cw * (m ? 1.12 : 1), 0.0158 * cl * (m ? 0.9 : 1), 0.0136 * (m ? 0.88 : 1), 0.017);   // men: broader, flatter, squarer (joined to the jaw body, not a separate lobe)
   E([0, -0.083, 0.011], 0.019, 0.0095, 0.0105, 0.01);
   // under the mandible: a short plate set back from the chin, so the throat meets the chin at an angle; it hangs lower
   // and reaches further only with weight and age (the double chin, the wattle)
@@ -137,8 +138,9 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
     XR([c[0] + sg * 0.0055, c[1] + 0.014 * esz, c[2] - 0.003], n, up, 0.0035, 0.0085 * esz, 0.0055 * esz, 0.0012);   // scapha
   }
   // the neck under the skull, the muscles from behind the ear to the collarbone notch
-  // (thin and blended tight, from behind the jaw angle, so they do not fill the hollow under the jaw)
-  for (const sg of [1, -1]) K([sg * 0.05, -0.05, -0.092], [sg * 0.013, -0.215, -0.025], 0.008 + 0.003 * fat, 0.009, 0.012);
+  // (thin and blended tight, from the mastoid under the ear lobe, so they emerge from the skull instead of as a knob
+  // below the ear, and do not fill the hollow under the jaw)
+  for (const sg of [1, -1]) K([sg * 0.047, -0.032, -0.09], [sg * 0.013, -0.215, -0.025], 0.0075 + 0.003 * fat, 0.009, 0.012);
 
   return {
     o: org, sx, sy, sz, toBody: T,
