@@ -4,8 +4,12 @@
 //    stubble and beard shadow; eyeshadow; the mouth's dark interior; the scalp under the hair; freckles; tattoos
 //  - procedural relief in the rest pose's frame (it sticks to the skin as it moves): a 3 mm unevenness that survives at
 //    conversation distance, a fine furrow network and pores (larger on the nose and cheeks) when they are resolved;
-//    with age, forehead lines, crow's feet and neck rings (vertex-masked), and per-pixel nasolabial folds, marionette
-//    and glabellar lines, under-eye bags and age spots; everything faded out below a pixel
+//    with age, forehead lines and neck rings (vertex-masked bands; the furrows themselves drift, arch, break into
+//    segments and vary in depth, so they read as a few wrinkles and not as corduroy), crow's feet fanning out from
+//    the outer corner of each eye, a crepe network on the cheeks and neck, and per-pixel nasolabial folds, marionette
+//    and glabellar lines, under-eye bags and age spots; everything faded out below a pixel. With age the colour goes
+//    too: blotchier, sallower, a diffuse capillary redness on the nose and cheekbones; and the skin dries out: matte
+//    on the forehead and cheeks (roughness up, specular down), the nose keeping its shine
 //  - roughness varied (an oilier T-zone, wet lips and mouth, sebum in the folds), a soft sheen, a faint clearcoat on 'high'
 //  - a cheap subsurface look: wrapped, red-tinted diffuse and light through thin parts (ears, nose), baked AO
 import * as THREE from 'three';
@@ -125,6 +129,24 @@ c = mix(c, c * vec3(1.06, 0.9, 0.88), clamp(m4 * 2.5 + 0.25, 0.0, 1.0) * 0.4 * m
 c = mix(c, c * vec3(1.0, 0.98, 0.9), clamp(-m2 * 2.0, 0.0, 1.0) * 0.25);
 vec3 redT = mix(vec3(1.09, 0.84, 0.83), vec3(0.86, 0.74, 0.72), uDark);   // pink-red, not orange (orange cheeks read as a tan mask over a pale neck)
 c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.75);
+// ---- age in the colour: old skin is blotchier (10 mm patches, and the 3 mm mottle stronger), sallower and a touch
+// greyer (the young rosy tone goes), with a diffuse redness from broken capillaries over the nose's wings and across
+// the cheekbones, which lighter skin shows most. On every mesh, so the neck and hands match the face. uAge is 0 at 25.
+float specK = 1.0;
+if (uAge > 0.02) {
+  float blot = vnoise(hp * 0.09 + 13.0) - 0.5, blot2 = vnoise(hp * 0.21 + 23.0) - 0.5;
+  c *= (1.0 + uAge * (0.09 * blot + 0.07 * blot2 * mid3)) * (1.0 - 0.05 * uAge);   // blotchy, and a little less luminous
+  c = mix(c, c * vec3(1.0, 0.96, 0.88), uAge * 0.35);
+  c = mix(c, vec3(dot(c, vec3(0.3, 0.59, 0.11))), uAge * 0.1);
+  #ifdef SKIN_FACE
+  // broken capillaries: a speckled 2-5 mm redness over the cheekbones (where it happens to show), and the nose's wings
+  // and tip and the ears reddening for good
+  float cn = vnoise(hp * 0.2 + 17.0) + 0.5 * (vnoise(hp * 0.55 + 29.0) - 0.5) * mid3 + 0.3 * blot2;
+  float coup = clamp(red * 1.4, 0.0, 1.0) * smoothstep(0.35, 0.8, cn) + 0.3 * smoothstep(0.5, 0.9, red) * (0.4 + 0.6 * cn);
+  c = mix(c, c * vec3(1.1, 0.78, 0.76), uAge * (1.0 - uDark * 0.7) * clamp(coup, 0.0, 1.0) * 0.55);
+  #endif
+  specK = 1.0 - 0.35 * uAge * (1.0 - red * 0.7);   // drier with age: less sebum gloss off the T-zone (used in lights_physical_fragment)
+}
 // lips: a darker, redder, slightly cooler tone, or lipstick
 vec3 lipN = c * mix(vec3(0.92, 0.62, 0.62), vec3(0.78, 0.6, 0.62), uDark);
 vec3 lipC = mix(lipN, pow(uLip, vec3(1.1)) * 0.85, uLipAmt * 0.92);
@@ -217,9 +239,34 @@ float fold = 0.0, bag = 0.0, trough = 0.0, bulge = 0.0;
   trough = exp(-(tx * tx + ty * ty)) * uAge * front;
 }
 #endif
-// forehead lines, crow's feet and neck rings: furrows about 8 mm apart that wander and break up, deeper and darker with age
-float crease = wrink * uAge * pow(0.5 + 0.5 * sin(hp.y * 0.78 + 2.0 * vnoise(hp * 0.08)), 4.0) * (0.55 + 0.45 * vnoise(hp * vec3(0.12, 0.4, 0.12) + 2.0)) * mid * (1.0 - lipM) * (1.0 - eyeA);
-c *= 1.0 - 0.18 * crease - 0.13 * fold - 0.1 * trough - 0.05 * bag;
+// ---- forehead lines and neck rings (in the vertex-masked bands): furrows 6-11 mm apart whose spacing drifts, that
+// break into segments of varying depth with fainter lines between, and on the forehead arch up with the brows. The
+// crow's feet fan out and back from the outer corner of each eye. All deeper and darker with age; never on the lips
+// or the lids. The phase runs on the body's y on every mesh so the neck's rings meet across the head/body seam.
+float cy = hp.y, crow = 0.0;
+#ifdef SKIN_FACE
+{
+  float hx = hl.x / 0.045;
+  cy += 3.5 * hx * hx * smoothstep(-0.12, -0.02, hl.y);   // mm: the forehead's lines are higher in the middle than at the temples
+  vec2 cq = vec2(abs(hl.x) - uFaceP.x - 0.0135, hl.y + 0.001);   // from the outer canthus, outward
+  float cr = length(cq), ca = atan(cq.y, max(cq.x, 0.0005));
+  float fan = pow(0.5 + 0.5 * sin(ca * 11.0 + 1.5 * vnoise(hp * 0.09)), 3.0);
+  crow = fan * smoothstep(0.002, 0.005, cr) * smoothstep(0.017, 0.009, cr) * smoothstep(0.85, 0.45, abs(ca)) * step(0.0, cq.x)
+       * smoothstep(0.066, 0.058, abs(hl.x)) * smoothstep(-0.03, -0.01, hl.z) * (0.6 + 0.4 * vnoise(hp * 0.2));
+}
+#endif
+float drift = cy * 0.8 + 2.5 * vnoise(hp * vec3(0.045, 0.03, 0.045) + 3.0);
+float li = floor((drift - 1.5708) / 6.2832 + 0.5);    // which furrow: each gets its own gaps and depth
+float seg = smoothstep(0.3, 0.58, vnoise(vec3(hp.x * 0.07, li * 1.7, hp.z * 0.07) + 2.0)) * (0.6 + 0.6 * vnoise(vec3(hp.x * 0.03, li * 2.3, hp.z * 0.03) + 5.0));
+float lines = pow(0.5 + 0.5 * sin(drift), 4.0) * seg
+            + 0.3 * pow(0.5 + 0.5 * sin(drift * 2.0 + 1.0), 4.0) * smoothstep(0.4, 0.62, vnoise(hp * vec3(0.12, 0.3, 0.12) + 7.0));
+float crease = clamp(wrink * lines + crow, 0.0, 1.0) * uAge * mid * (1.0 - lipM) * (1.0 - eyeA);
+float crepe = 0.0;   // the fine polygonal network of older skin (cheeks, neck, the backs of the hands), 2 mm cells; skipped where it would not resolve
+if (uAge > 0.03 && mid3 > 0.001) {
+  vec2 cp = cells(hp * 0.5 + 9.0);
+  crepe = uAge * smoothstep(0.26, 0.06, cp.y) * mid3 * (1.0 - lipM) * (1.0 - eyeA * 0.5);
+}
+c *= 1.0 - 0.22 * crease - 0.2 * fold - 0.1 * trough - 0.05 * bag - 0.06 * crepe;
 c = mix(c, c * vec3(0.92, 0.86, 0.9), (trough + 0.4 * bag) * 0.5);   // the shadowed, bluer skin under the eye
 // mouth interior
 c = mix(c, vec3(0.2, 0.045, 0.05) * (0.4 + 0.6 * ao), smoothstep(0.2, 0.8, mouth));
@@ -242,10 +289,10 @@ H += 0.035 * (vnoise(hp * 1.5) - 0.5) * fine;   // gated fine: at 2 px/mm this w
 // vertical lip lines
 H -= 0.06 * lipM * pow(0.5 + 0.5 * sin(hp.x * 2.6 + vnoise(hp * 0.6) * 3.0), 3.0) * mid;
 // age: the furrows, folds, troughs and bags, plus a finer creasing across the cheeks
-H -= 0.5 * crease + 0.55 * fold + 0.35 * trough - 0.55 * bag - 0.35 * bulge;
-H -= uAge * 0.06 * smoothstep(0.42, 0.5, vnoise(hp * vec3(0.3, 0.8, 0.3))) * mid3;
+H -= 0.7 * crease + 0.65 * fold + 0.35 * trough - 0.55 * bag - 0.35 * bulge + 0.05 * crepe;
 H += stub * 0.03 * fine;
 float rough = 0.52 - 0.12 * red * (1.0 - uDark * 0.3) + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.03 * m4 * mid3;
+rough += 0.1 * uAge * (1.0 - red * 0.6);   // old skin is drier: matte on the forehead and cheeks, the nose keeps its shine
 rough -= 0.07 * (crease + fold);   // sebum sits in the folds
 rough = mix(rough, mix(0.42, 0.3, uLipAmt), lipM);
 rough = mix(rough, 0.22, smoothstep(0.2, 0.8, mouth));
@@ -257,6 +304,7 @@ gSss = mix(vec3(1.0, 0.36, 0.24), vec3(0.78, 0.34, 0.24), uDark);
 gAoD = mix(1.0, ao, 0.5);
 `)
       .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = clamp(rough, 0.2, 0.85);')
+      .replace('float specularIntensityFactor = specularIntensity;', 'float specularIntensityFactor = specularIntensity * specK;')
       .replace('#include <normal_fragment_maps>', /* glsl */ `#include <normal_fragment_maps>
 normal = bumpNormal(-vViewPosition, normal, H * 0.001, faceDirection);`)
       .replace('#include <lights_fragment_end>', /* glsl */ `#include <lights_fragment_end>

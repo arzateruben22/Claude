@@ -68,10 +68,11 @@ export function faceMasks(l: V3, hf: HeadFrame, look: Look): FaceMask {
       : full;
   }
   const eyeA = Math.exp(-2 * (((ax - ex) / 0.02) ** 2 + ((y - 0.003) / 0.014) ** 2)) * smooth(-0.002, 0.008, z);
-  // where the horizontal furrows go with age: the forehead, the crow's feet, and rings round the front of the throat
-  // (the nasolabial folds, marionette and glabellar lines and under-eye bags are per pixel in skin.ts)
-  const wrink = clamp(smooth(0.028, 0.04, y) * smooth(0.078, 0.058, y) * smooth(0.0, 0.012, z) + 0.7 * g3(ax, y, z, [ex + 0.02, 0, 0.0], 0.007)
-    + 0.6 * neck * smooth(-0.2, -0.175, y) * smooth(-0.075, -0.035, z));
+  // where the horizontal furrows go with age: the forehead, fading out before the temples (real lines stop at the end of
+  // the brow), and a few rings round the front of the throat. The crow's feet, nasolabial folds, marionette and
+  // glabellar lines and under-eye bags are per pixel in skin.ts.
+  const wrink = clamp(smooth(0.028, 0.04, y) * smooth(0.078, 0.058, y) * smooth(0.0, 0.012, z) * smooth(0.064, 0.046, ax)
+    + 0.35 * neck * smooth(-0.2, -0.175, y) * smooth(-0.075, -0.035, z));
   const freck = clamp(1.2 * g3(ax, y, z, [0.03, -0.022, 0.014], 0.02) + g3(x, y, z, [0, -0.02, 0.026], 0.012));
   return { red, lip, thin, blush, beard, eyeA, mouth, scalp: scalpCover(look.hair, l, 35 + 40 * hf.old, hf.male), wrink, freck };
 }
