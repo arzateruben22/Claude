@@ -169,7 +169,7 @@ export class Terrain {
   // houses, offices, palms, trees, shrubs: clear of every road
   private scenery(group: THREE.Group, tx: number, tz: number, heightAt: (x: number, z: number) => number) {
     const net = this.net, x0 = tx * TILE, z0 = tz * TILE, dens = this.q.props;
-    const r = rng(tx * 7919 + tz * 104729 + 17);
+    const r = rng(tx * 7919 + tz * 104729 + 17), r2 = rng(tx * 31 + tz * 17 + 5);   // r2: the palms' lean, crown size and yaw
     const clear = (x: number, z: number, m: number) => {
       for (const h of net.near(x, z, m + 2)) if (h.d > h.path.paveL - m && h.d < h.path.paveR + m && h.s > -m && h.s < h.path.len + m) return false;
       return true;
@@ -200,9 +200,10 @@ export class Terrain {
       } else if (pick < 0.62 * u + 0.16) {
         if (!clear(x, z, 4)) continue;
         if (u > 0.3 && r() < 0.45) {
-          const h = 12 + r() * 13, m = mat(x, z, r() * 6, 1);
+          // a slight lean (up to 3.5 degrees, in a random direction), the crown on the leaning trunk's top
+          const h = 12 + r() * 13, cs = 1 + r2() * 0.25, m = mat(x, z, r() * 6, 1).multiply(new THREE.Matrix4().makeRotationZ((r2() - 0.5) * 0.12));
           palmT.push(m.clone().multiply(new THREE.Matrix4().makeScale(1, h, 1)));
-          palmC.push(m.clone().multiply(new THREE.Matrix4().makeTranslation(0, h, 0)).multiply(new THREE.Matrix4().makeScale(1.1, 1.1, 1.1)));
+          palmC.push(m.clone().multiply(new THREE.Matrix4().makeTranslation(0, h, 0)).multiply(new THREE.Matrix4().makeRotationY(r2() * 6)).multiply(new THREE.Matrix4().makeScale(cs, cs, cs)));
         } else { const s = 0.7 + r() * 0.9; trees.push(mat(x, z, r() * 6, s, s * (0.9 + r() * 0.3))); }
       } else if (pick < 0.62 * u + 0.4 && clear(x, z, 2)) {
         const s = 0.8 + r() * 1.4; shrubs.push(mat(x, z, r() * 6, s));
@@ -218,7 +219,7 @@ export class Terrain {
     inst(house(), houseMat(), houses, true, houseCol);
     const types = P.buildings(), bm = [P.mats.facade(0), P.mats.facade(1), P.mats.facade(2)], roof = P.mats.roof();
     offices.forEach((ms, t) => inst(types[t], [bm[t], bm[t], roof, roof, bm[t], bm[t]], ms));
-    inst(P.palmTrunk(), P.mats.bark(), palmT); inst(P.palmCrown(), P.mats.frond(), palmC);
+    inst(P.palmTrunk(), P.mats.bark(), palmT); inst(P.palmCrown(this.q.props < 1 ? 0 : 1), P.mats.frond(), palmC);
     inst(P.treeCanopy(this.q.props < 1 ? 1 : 3), P.mats.foliage(), trees); inst(P.treeTrunk(), P.mats.trunk(), trees);
     inst(P.shrub(), P.mats.foliage(), shrubs, false);
   }

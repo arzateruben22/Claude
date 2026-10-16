@@ -36,11 +36,15 @@ const PRESETS: Record<Exclude<TimeOfDay, 'live'>, { alt: number; az: number }> =
 };
 const WX: Record<Sky5, { turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: number; wet: number; grip: number }> = {
   clear:  { turb: 1.3, sun: 1,    sky: 1,    cloud: 0.55, cloudDark: 0,    fogNear: 220, fogFar: 1,    haze: 0xa9bfd6, wet: 0, grip: 1 },
-  cloudy: { turb: 5,   sun: 0.42, sky: 0.72, cloud: 1,    cloudDark: 0.35, fogNear: 180, fogFar: 0.9,  haze: 0x9ea6b0, wet: 0, grip: 1 },
+  cloudy: { turb: 5,   sun: 0.42, sky: 0.72, cloud: 1,    cloudDark: 0.5,  fogNear: 180, fogFar: 0.9,  haze: 0x9ea6b0, wet: 0, grip: 1 },
   rain:   { turb: 9,   sun: 0.2,  sky: 0.5,  cloud: 1,    cloudDark: 0.65, fogNear: 50,  fogFar: 0.55, haze: 0x7f8891, wet: 1, grip: 0.8 },
   fog:    { turb: 10,  sun: 0.3,  sky: 0.62, cloud: 0.7,  cloudDark: 0.3,  fogNear: 12,  fogFar: 0.14, haze: 0xb2b7bc, wet: 0.35, grip: 0.95 },
   mist:   { turb: 4,   sun: 0.65, sky: 0.85, cloud: 0.8,  cloudDark: 0.15, fogNear: 50,  fogFar: 0.42, haze: 0xbfc8d2, wet: 0.1, grip: 0.98 },
 };
+
+// the light under an overcast sky: a near-neutral, slightly cool sky light, a grey ground bounce, a cool sun. Red sits
+// a touch above green in each: the asphalt and concrete maps lean green and went cyan under a plain cool light.
+const OVERCAST_SKY = new THREE.Color(0.88, 0.86, 0.93), OVERCAST_GROUND = new THREE.Color(0.44, 0.42, 0.45), OVERCAST_SUN = new THREE.Color(0.93, 0.93, 1);
 
 interface State { alt: number; az: number; turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: THREE.Color; wet: number; grip: number }
 
@@ -68,6 +72,7 @@ export class Environment {
   weather: Weather = 'clear';
   private cur: State; private tgt: State;
   private liveT = 0;
+  private overcastK = 0;
 
   constructor(private scene: THREE.Scene, renderer: THREE.WebGLRenderer) {
     this.renderer = renderer;
@@ -139,6 +144,8 @@ export class Environment {
   get grip() { return this.cur.grip; }
   get daylight() { return smoothstep(-0.1, 0.14, this.cur.alt); }
   get visibility() { return this.cur.fogFar; }
+  // the grade under cloud, for the output pass on High and Ultra: a little less saturation (1 = untouched)
+  get saturation() { return 1 - 0.15 * this.overcastK; }
 
   set(time: TimeOfDay, weather: Weather, instant = false) {
     this.time = time; this.weather = weather;
@@ -192,31 +199,48 @@ export class Environment {
       uu.mieCoefficient.value = lerp(0.0025, 0.009, 1 - smoothstep(0.02, 0.4, c.alt)); uu.mieDirectionalG.value = 0.8;
       uu.sunPosition.value.copy(this.sunDir).multiplyScalar(1000);
     }
+    // overcast: how much of the sun the weather hides (clear 0, mist 0.44, cloudy 0.73, fog 0.88, rain 1). Under
+    // cloud the sky does the lighting: the direct sun falls away much faster than the weather's sun factor (cloudy
+    // keeps 7% of it: a faint grounding shadow under the cars rather than hard shadows; PCFSoft shadows ignore
+    // shadow.radius, so this blend is what softens them), it turns neutral-cool, and the hemisphere light rises,
+    // brighter, cooler and nearer neutral. By day only; night keeps its moonlight and the old small lift under cloud.
+    const overcast = clamp((1 - c.sun) / 0.8, 0, 1) * day, direct = c.sun ** 3;
+    this.overcastK = overcast;
     const gain = 0.36 * (0.03 + 0.97 * day) * c.sky;
-    (this.sky.material as THREE.ShaderMaterial).uniforms.skyGain.value = gain;
-    (this.envSky.material as THREE.ShaderMaterial).uniforms.skyGain.value = gain;
+    // the visible sky goes grey rather than white under cloud (the reference's overcast is a mid grey with a bright
+    // horizon), so the deck's undersides can stay a light grey and still read against it
+    (this.sky.material as THREE.ShaderMaterial).uniforms.skyGain.value = gain * (1 - 0.18 * overcast);
+    // the sky that lights the scene (the environment map) is bright and even under cloud, so it isn't dimmed with
+    // the visible sky: the cabin's dark plastics and the paint are lit mostly by its reflection and would go black
+    (this.envSky.material as THREE.ShaderMaterial).uniforms.skyGain.value = gain * (1 + 0.6 * overcast);
     // sunlight by day (warm when it's low), moonlight by night
     const low = 1 - smoothstep(0.05, 0.6, c.alt);
     if (day > 0.02) {
-      this.sun.color.setRGB(1, lerp(0.95, 0.66, low), lerp(0.86, 0.42, low));
-      this.sun.intensity = 3.1 * c.sun * smoothstep(-0.02, 0.12, c.alt);
+      this.sun.color.setRGB(1, lerp(0.95, 0.66, low), lerp(0.86, 0.42, low)).lerp(OVERCAST_SUN, overcast);
+      this.sun.intensity = 3.1 * lerp(c.sun, direct, day) * smoothstep(-0.02, 0.12, c.alt);
     }
     const moon = 1 - day;
     if (moon > 0.5) { this.sun.color.setRGB(0.55, 0.66, 1); this.sun.intensity = 0.32 * c.sun + 0.08; dirFrom(0.7, 2.8, this.sunDir); }
-    this.hemi.color.setRGB(lerp(0.12, 0.74, day), lerp(0.16, 0.82, day), lerp(0.28, 0.93, day));
-    this.hemi.groundColor.setRGB(lerp(0.03, 0.48, day), lerp(0.03, 0.42, day), lerp(0.04, 0.33, day));
-    this.hemi.intensity = lerp(0.25, 0.55, day) * lerp(1.15, 1, c.sun);
+    this.hemi.color.setRGB(lerp(0.12, 0.74, day), lerp(0.16, 0.82, day), lerp(0.28, 0.93, day)).lerp(OVERCAST_SKY, overcast);
+    this.hemi.groundColor.setRGB(lerp(0.03, 0.48, day), lerp(0.03, 0.42, day), lerp(0.04, 0.33, day)).lerp(OVERCAST_GROUND, overcast);
+    this.hemi.intensity = lerp(0.25, 0.55, day) * (1 + (1 - c.sun) * lerp(0.15, 1.6 * c.sky, day));
     const fog = this.scene.fog as THREE.Fog;
     fog.color.copy(c.haze); (this.scene.background as THREE.Color).copy(c.haze);
     fog.near = Math.min(c.fogNear, this.farPlane * 0.12);
     fog.far = Math.max(fog.near + 60, this.farPlane * 0.92 * c.fogFar);
+    // the cloud deck: under cloud its undersides go a mid grey against the bright haze and the dome flattens, so the
+    // deck comes down toward the horizon as a real one does (clear keeps its high, fading fair-weather cloud). The
+    // rim fades out through the texture's own edge and the world draws over the dome, so nothing shows at the join.
     const cm = this.clouds.material as THREE.MeshBasicMaterial;
     cm.opacity = c.cloud * lerp(0.25, 1, day);
-    cm.color.setRGB(1, 1, 1).multiplyScalar(lerp(0.15, 1 - c.cloudDark * 0.6, day));
+    cm.color.setRGB(1, 1, 1).multiplyScalar(lerp(0.15, 1 - c.cloudDark * lerp(0.6, 0.9, overcast), day));
+    this.clouds.scale.y = this.clouds.scale.x * lerp(1, 0.4, overcast);
     (this.mountains.material as THREE.MeshBasicMaterial).color.copy(c.haze).lerp(new THREE.Color(0x5d6470), 0.25 * day);
     this.mountains.visible = c.fogFar > 0.3;
     (this.stars.material as THREE.PointsMaterial).opacity = clamp((1 - day) * 1.3 - 0.2, 0, 1) * (c.sun > 0.5 ? 1 : 0.25);
-    this.renderer.toneMappingExposure = lerp(1.25, 0.92, day);
+    // exposure set for the outside: under cloud the camera opens up a little, as a real one would, so the sky
+    // reads bright and the road mid-grey while the cockpit stays the darker thing in frame
+    this.renderer.toneMappingExposure = lerp(1.25, 0.92, day) * (1 + 0.2 * overcast * c.sky);
   }
 
   private rebuildEnv() {

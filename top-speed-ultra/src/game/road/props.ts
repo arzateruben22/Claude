@@ -36,7 +36,7 @@ export const mats = {
   foliage: () => once('m.foliage', () => new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, envMapIntensity: 0.35 })),
   bark: () => once('m.bark', () => new THREE.MeshStandardMaterial({ map: T.bark(), roughness: 0.95 })),
   trunk: () => once('m.trunk', () => new THREE.MeshStandardMaterial({ color: 0x5a4636, roughness: 0.95 })),
-  frond: () => once('m.frond', () => new THREE.MeshStandardMaterial({ map: T.frond(), alphaTest: 0.45, side: THREE.DoubleSide, roughness: 0.85, vertexColors: true })),
+  frond: () => once('m.frond', () => new THREE.MeshStandardMaterial({ map: T.frond(), alphaTest: 0.4, side: THREE.DoubleSide, roughness: 0.85, vertexColors: true })),
   lampHead: () => once('m.lamphead', () => new THREE.MeshStandardMaterial({ color: 0x3c3f44, metalness: 0.6, roughness: 0.4, emissive: 0x111111 })),
   wire: () => once('m.wire', () => new THREE.LineBasicMaterial({ color: 0x2a2b2e, transparent: true, opacity: 0.85 })),
   facade: (k: 0 | 1 | 2) => once('m.facade' + k, () => new THREE.MeshStandardMaterial({ map: T.facade(k), roughness: k === 2 ? 0.25 : 0.85, metalness: k === 2 ? 0.4 : 0 })),
@@ -45,37 +45,64 @@ export const mats = {
 };
 
 // ---------------------------------------------------------------- trees and plants
-// Washingtonia fan palm: tall bare trunk and a tight crown, with a skirt of dead fronds
+// A palm: a tall bare trunk ringed with leaf scars, and a crown of pinnate fronds. Each frond is one card folded
+// along its midrib (its halves hang in a V) that arches up from the crown shaft and droops toward the tip: the young
+// ones high and upright, the old ones lower and hanging. A few dead fronds hang under the crown, and a short collar
+// of old leaf bases joins the crown to the trunk. Both parts are instanced by the terrain; the fronds are cut out of
+// the card by the texture's alpha (alphaTest), and three.js's shadow pass applies the same map and alphaTest, so
+// they cast frond-shaped shadows.
 export const palmTrunk = () => once('g.palmtrunk', () => {
   const g = new THREE.CylinderGeometry(0.2, 0.33, 1, 9, 6, true);
   g.translate(0, 0.5, 0);
-  const uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * 12);
+  const uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * 10);
   return g;
 });
-export const palmCrown = () => once('g.palmcrown', () => {
+// detail 1 for High/Ultra (12 live + 5 dead fronds, 382 triangles), 0 for Low/Medium (10 + 4, 222 triangles);
+// the old crown was 448 triangles at every tier
+export const palmCrown = (detail = 1) => once('g.palmcrown' + detail, () => {
   const parts: THREE.BufferGeometry[] = [], r = rng(7);
-  const frondGeo = (len: number, droop: number, dead: boolean) => {
-    const g = new THREE.PlaneGeometry(1.5, len, 1, 8);
+  const live = detail ? 12 : 10, dead = detail ? 5 : 4, segs = detail ? 6 : 4, V0 = 1 - 36 / 512;
+  // a frond card: lifted `lift` radians at the base, bending down by `bend` along its length (most at the tip), its
+  // halves folded down by `fold`. The texture's left half is the live frond, the right one the dead frond, and the
+  // cards stop short of the crown-shaft strip across its top. Its vertex colour darkens toward the crown's heart.
+  const frond = (w: number, len: number, lift: number, bend: number, fold: number, isDead: boolean, n: number, tint: number[]) => {
+    const g = new THREE.PlaneGeometry(w, len, 2, n);
     g.translate(0, len / 2, 0);
-    const p = g.attributes.position;
-    for (let i = 0; i < p.count; i++) {                      // arc it over
-      const y = p.getY(i), t = y / len;
-      p.setXYZ(i, p.getX(i), y * Math.cos(t * droop), -y * Math.sin(t * droop) * 0.9);
+    const mid: THREE.Vector3[] = [new THREE.Vector3()], ang: number[] = [lift];
+    for (let k = 1; k <= n; k++) {                                         // walk the rachis
+      const a = lift - bend * Math.pow(k / n, 1.6);
+      mid.push(mid[k - 1].clone().add(new THREE.Vector3(0, Math.sin(a) * len / n, -Math.cos(a) * len / n))); ang.push(a);
+    }
+    const p = g.attributes.position, uv = g.attributes.uv;
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i), k = Math.round((p.getY(i) / len) * n), a = ang[k], m = mid[k];
+      p.setXYZ(i, x * Math.cos(fold), m.y - Math.abs(x) * Math.sin(fold) * Math.cos(a), m.z - Math.abs(x) * Math.sin(fold) * Math.sin(a));
+      uv.setXY(i, (isDead ? 0.5 : 0) + uv.getX(i) * 0.5, uv.getY(i) * V0);
     }
     g.computeVertexNormals();
-    return paint(g, () => (dead ? [0.55, 0.42, 0.28] : [0.9 + r() * 0.15, 1, 0.85]));
+    const shade = (x: number, y: number, z: number) => 0.55 + 0.45 * Math.min(1, Math.hypot(x, y, z) / 1.8);
+    return paint(g.toNonIndexed(), (x, y, z) => { const k = shade(x, y, z); return [tint[0] * k, tint[1] * k, tint[2] * k]; });
   };
-  for (let i = 0; i < 18; i++) {
-    const g = frondGeo(2.6 + r() * 0.8, 1.2 + r() * 0.9, false);
-    g.rotateX(-0.5 + r() * 0.6); g.rotateY((i / 18) * Math.PI * 2 + r() * 0.3);
+  for (let i = 0; i < live; i++) {
+    // 0 is an old frond, low and hanging, 1 a young one, high and upright; spread round the crown so they mix
+    const age = ((i * 7) % live + r()) / live;
+    const g = frond(1.5, 2.9 + r() * 0.9, 0.2 + age * 1.0, 1.2 + (1 - age) * 0.45 + r() * 0.2, 0.55, false, segs,
+      [0.78 + r() * 0.14, 0.92 + r() * 0.08, 0.7 + r() * 0.14]);
+    g.translate(0, -0.25 + age * 0.45, 0);
+    g.rotateY((i / live) * Math.PI * 2 + (r() - 0.5) * 0.35);
     parts.push(g);
   }
-  for (let i = 0; i < 10; i++) {                             // the brown skirt hanging under the crown
-    const g = frondGeo(2.2, 2.6, true);
-    g.rotateX(0.2); g.rotateY((i / 10) * Math.PI * 2);
-    g.translate(0, -0.6, 0);
+  for (let i = 0; i < dead; i++) {                                          // the brown skirt under the crown
+    const k = 0.85 + r() * 0.2;
+    const g = frond(0.85, 2.4 + r() * 0.5, -0.8 - r() * 0.3, 0.5, 0.4, true, Math.max(3, segs - 2), [k, k * 0.97, k * 0.92]);
+    g.translate(0, -0.35, -0.16); g.rotateY((i / dead) * Math.PI * 2 + r() * 0.5);
     parts.push(g);
   }
+  // the collar of old leaf bases, a little wider than the trunk's top, from the crown-shaft strip
+  const collar = new THREE.CylinderGeometry(0.15, 0.25, 0.85, 7, 1, true).toNonIndexed();
+  collar.translate(0, -0.2, 0);
+  const cuv = collar.attributes.uv; for (let i = 0; i < cuv.count; i++) cuv.setY(i, 1 - (cuv.getY(i) > 0.5 ? 3 : 21) / 512);
+  parts.push(paint(collar, (_x, y) => { const k = 0.75 + 0.3 * (y + 0.62); return [k, k, k]; }));
   return mergeGeometries(parts)!;
 });
 // detail 3 for High/Ultra (about 1,600 triangles), 1 for phones (about 400)

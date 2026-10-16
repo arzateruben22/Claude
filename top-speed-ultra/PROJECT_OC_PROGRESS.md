@@ -4,6 +4,145 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-16: the reference pass, R2 to R4, checked together and integrated
+
+Three more deltas from `PROJECT_OC_VISUAL_TARGET.md` were reviewed and kept, and are committed together on
+`claude/ref-pass`: R2 (overcast light, below), R3 (the race HUD) and R4 (palms with real fronds), whose own entries
+follow this one. The rows of the visual target are now marked: R1 to R4 Done (R3 has no lap counter, because no course
+has laps, and the map corner shows no rival dots), R5 to R7 Not yet.
+
+**R2, overcast light** (`src/game/env/Environment.ts`, and the output pass in `src/game/Game.ts`). Under cloud the sky
+now does the lighting, by day only (night keeps its moonlight). How overcast it is follows how much of the sun the
+weather hides: none in clear weather, which renders exactly as before, about three quarters under cloudy, all of it in
+rain.
+
+- The direct sun falls away much faster than before and turns a neutral, slightly cool white. Under cloudy it keeps
+  about 7% of its clear strength, enough for a faint shadow under the cars instead of hard shadows.
+- The sky light (the hemisphere light) rises and turns nearly neutral and a little cool, with a grey ground bounce.
+- The environment map that lights the paint and the cabin brightens under cloud, so the dark plastics don't go black.
+  The visible sky goes a little greyer.
+- The cloud deck's undersides darken (cloudy's `cloudDark` 0.35 to 0.5) and the dome flattens, so the deck comes down
+  toward the horizon.
+- Exposure opens up by as much as 20% (1.016 under cloudy by day, up from 0.92), so the sky reads bright and the road
+  mid-grey while the cockpit stays the darker part of the frame.
+- On High and Ultra, the output pass desaturates the frame by up to 15% under cloud (0.89 saturation under cloudy).
+  This is folded into the existing output shader, so it adds no extra pass. Low and Medium have no output pass, so
+  they get the light without this grade.
+
+**Verified** (960 × 540, High, Free Drive, 30 s at 30 m/s, overlay hidden; `tests/out/fix-r2-shot.mjs`). I-405 North,
+day, cloudy: `tests/out/fix-R2-cloudy-{cockpit,chase,hood}.png` against
+`tests/out/fix-R2-before-cloudy-{cockpit,chase,hood}.png`. The light state read back
+(`tests/out/fix-R2-before-day-cloudy.log` against `fix-R2-after-day-cloudy-v2.log`): sun intensity 1.302 to 0.23,
+hemisphere 0.598 to 0.917 (sky colour #dfeaf7 to #ecedf7), exposure 0.92 to 1.016. In the chase frame the car's shadow
+on the road is much fainter and the grade is greyer. Sunset, cloudy, at the old 3 degree sunset preset:
+`tests/out/fix-R2-sunset-cloudy-{cockpit,chase,hood}.png` against `fix-R2-before-sunset-cloudy-*.png`. The road and
+the walls read clearly lighter than the near-black of before (sun 0.291, hemisphere 0.685, exposure 1.094;
+`fix-R2-after-sunset-cloudy.log`). Clear weather renders as before, since with no cloud every new term drops out:
+`tests/out/fix-R2-clear-cockpit.png` (sun 3.1, hemisphere 0.55, exposure 0.92; `fix-R2-after-day-clear.log`). The cost
+is the same draw calls (cockpit 761, chase 615, hood 539 before and after). No suite check was added for R2. The
+render group still renders rain, fog and mist by day (the weathers R2 changes most) with no page errors.
+
+**R3, the race HUD.** The position box with the race timer, the standings with estimated gaps that fall in position
+order, the rev lights, and Free Drive's road-name plate back where it was on the phone. See the R3 entry below:
+`tests/out/fix-R3-r2-phone.png`, `fix-R3-r2-desktop.png`, `fix-R3-r2-phone-free.png`, `fix-R3-r2-suite.log`.
+
+**R4, the palms.** Frond-card crowns cut out by alpha: 382 triangles on High and Ultra and 222 on Low and Medium,
+against 448 before. Frond-shaped shadows and ringed, leaning trunks. See the R4 entry below:
+`tests/out/fix-R4-compare-2x.png`, `tests/out/preview/fix-R4-palm-crown-high.png`, `fix-R4-suite-render.log`.
+
+**The whole suite on the three together** (`npx tsc --noEmit` clean, `npm run build`, then `npm test` in the `tsu-ref`
+worktree; `tests/out/integrate-ref-suite.log`): **58/58 passed**, exit 0, in about 13 minutes of group time. The lines
+that touch this pass: "race standings: gaps fall in position order, the timer sits in the race box: 78 rows ahead and
+72 behind over 50 s, all in order"; "palms: alpha-tested frond crowns within the old triangle budget: 109 palms in 11
+crown meshes, 222 triangles a crown at Low"; "high: … palm crowns 382 triangles; ultra: … 382; low: … 222"; renders
+day rain, fog and mist; no page errors in any group.
+
+Not checked: a real phone or GPU, the Medium tier's frames, and R2's look at night or in rain, fog or mist (the suite
+renders those weathers, but no one has compared their frames before and after).
+
+## 2026-10-16: palms with real fronds (reference pass, R4)
+
+The palms were a dense green ball of 18 plain arcs and a skirt of 10 more (448 triangles at every tier). Now:
+
+- **Crown** (`palmCrown(detail)` in `road/props.ts`). Each frond is one 1.5 m card folded along its midrib into a
+  V, bent along a rachis that lifts at the base and droops toward the tip: young fronds higher and upright, old ones
+  lower and hanging, the vertex colour darker toward the crown's heart. A few straw-brown dead fronds hang under the
+  crown, and a 7-sided collar of leaf bases joins it to the trunk. High and Ultra: 12 live + 5 dead fronds, 6
+  segments a frond, **382 triangles**. Low and Medium (`props < 1`): 10 + 4, 4 segments, **222 triangles**. Still one
+  InstancedMesh per part per tile.
+- **Frond texture** (`frond()` in `textures.ts`). One 512 × 512 texture with a live pinnate frond (bare petiole, pale
+  midrib, lance-shaped leaflets leaving it at about 45 degrees and drooping at their ends, gaps between them) and a
+  dead one, alpha-tested at 0.4, double-sided. It is now uploaded as ImageData instead of a canvas: a canvas keeps
+  premultiplied colour, so every transparent texel had turned black (read back rgba 0,0,0,0 outside the frond; now
+  91,122,57,0) and the mip-maps darkened the fronds' edges. A low alpha floor across the blade keeps far fronds solid:
+  box-filtered like the GPU's mip-maps, the share of texels passing the alpha test is 1.09 of mip 0's at mip 1, 1.24
+  at mip 2 and 1.6 at mips 3 to 5, so far fronds fill in rather than dissolve.
+- **Trunk.** The bark has a ring groove every 32 pixels (80 rings a trunk) over a lattice of leaf-base scars. Trunks
+  lean up to 3.4 degrees in a random direction; the crown sits on the leaning top with a random yaw and a 1 to 1.25
+  scale. These come from a second random stream, so every house, tree and palm is where it was.
+- **Shadows.** three.js's shadow pass copies `map` and `alphaTest` into its depth material when a material has both,
+  so the crowns cast frond-shaped shadows with no custom depth material (Medium, High and Ultra; Low has no shadows).
+
+**Verified** (960 × 540, I-405 North, day, clear, Free Drive, 30 s at 30 m/s, overlay hidden;
+`tests/out/fix-R4-shot.mjs`): `tests/out/fix-R4-high-chase.png`, `fix-R4-high-hood.png`, `fix-R4-low-chase.png`,
+`fix-R4-low-hood.png`. The before frames, `tests/out/fix-R4-before-{high,low}-{chase,hood}.png`, were rendered by
+the first R4 attempt from this worktree's own build before any palm edit (its log lists the old crown: alphaTest
+0.45, 448 triangles); the main checkout's build was not used because it is a different branch. The same palm before
+and after, 2×: `tests/out/fix-R4-compare-2x.png` (a dense blob before; separate arching fronds, the dead ones and the
+lean after). Close-ups from the realism preview (`src/preview/test-palm.ts`, the game's own palms at 13 m):
+`tests/out/preview/fix-R4-palm-crown-high.png` (and `-2x`), `fix-R4-palm-crown-low.png`, `fix-R4-palm-whole-high.png`,
+and `fix-R4-palm-shadow-high.png` (the crown's shadow on the ground, leaflets visible in it).
+
+| Frame (calls / triangles a frame) | Before | After |
+| --- | --- | --- |
+| High, chase | 615 / 1,508,910 | 615 / 1,503,364 |
+| High, hood | 539 / 1,404,037 | 539 / 1,398,491 |
+| Low, chase | 408 / 457,335 | 408 / 449,653 |
+| Low, hood | 332 / 392,832 | 332 / 385,150 |
+
+The crowns' own share, the same frame with them shown and hidden (`tests/out/fix-R4-calls.mjs`, hood): Low 4 calls and
+8,658 triangles (4 crown meshes in view), High 7 calls and 58,446 triangles (main and shadow passes). Two consecutive
+measurements of the paused frame, crowns unchanged, read 374 then 332 calls on Low and 584 then 539 on High (an extra pass on
+some frames), so single-run call counts can differ by about that much.
+
+New checks in the render group: "palms: alpha-tested frond crowns within the old triangle budget" (the crown meshes
+alpha-tested, double-sided and casting shadows, at most 448 triangles, the frond blade between 15% and 85% gaps, a
+transparent texel keeping its colour), and the High/Ultra rebuild check now reads the crown's triangles at each tier
+(at most 448, Low fewer than High). `npm test -- --only=render` **13 of 13** (`tests/out/fix-R4-suite-render.log`):
+"109 palms in 11 crown meshes, 222 triangles a crown at Low, castShadow set; blade 41.62% gaps; transparent texel rgba
+91,122,57,0" (castShadow is set on every tier; Low's renderer draws no shadows) and "high: … palm crowns 382
+triangles; ultra: … 382; low: … 222", no page errors.
+
+Not checked: a real phone or GPU, the Medium tier's frames, palms at sunset or night.
+
+## 2026-10-16: the race HUD (reference pass, R3), second round after the judge
+
+The race HUD replaces the three race numbers in the stats box with a position box (the big position, "of 4", the
+distance to go, and now the race timer beside the position, labelled Time), the live standings (position, the
+rival's OC city tag, name, the gap to you in seconds, your row in volt; a phone shows the three rows around you)
+with the note "Gaps in s · estimated", and eight rev lights over the gear. The judge sent the first cut back for
+three things, all fixed:
+
+- **Free Drive had moved on the phone.** The road-name plate had been pushed to +292 px for every mode. In the
+  `(pointer: coarse)` block it is back at +244 px; only while the race box is shown
+  (`.hud:has(.hud-race:not([hidden]))`) does it go under the box, to +292 px. The opt-in frame-rate chip moves under
+  the race box in a race too (+282 px; at +218 px it sat on the standings).
+- **The timer sat stacked under the road name, over the horizon.** It now lives in the race box, top right
+  (`.hud-pos > .hud-timer`); nothing of the race HUD is on the road plate.
+- **The gap column could disagree with the order.** `standings()` estimated a car behind you with its own speed,
+  so a slow car further back could show a smaller gap than a fast one just behind (the first cut's desktop frame
+  read P2 −9.0, P3 −13.7, P4 −11.3). Every gap is now the distance along the course at your speed (`vMe`), so the
+  gaps fall with the positions; finishers are still ranked first, ahead of every unfinished car.
+
+**Verified:** `tests/out/fix-R3-r2-phone.png` (390 × 844, Irvine Sprint, 40 s in: race box 156–287 px, timer
+0:40.6 in it, gaps −6.1 / −8.4, plate at 302 px) and `tests/out/fix-R3-r2-desktop.png` (1440 × 900: timer 0:40.9 in
+the box, gaps −6.5 / −6.9 / −12.6, plate alone at the top); `tests/out/fix-R3-r2-phone-free.png` (Free Drive on the
+phone: plate at 254 px = 10 + 244, under the Distance/Top box at 156–210 px); `tests/out/fix-R3-r2-phone-race-fps.png`
+(frame-rate chip at 292 px, under the box, left of the plate). New check in the race group: 50 s of the Irvine
+Sprint (20 s slow, 30 s fast) sampled every second, 78 rows ahead and 72 behind, gaps never out of order; the HUD
+timer in `.hud-race`, none on the plate, the HUD gap column in order. `npm test -- --only=race,phone` **11 of 11**,
+no page errors. Not checked on a real phone.
+
 ## 2026-10-15: live rear-view and door mirrors on High and Ultra (reference pass, R1)
 
 The first delta against the owner's reference image (`PROJECT_OC_VISUAL_TARGET.md`): the rear-view mirror used to
