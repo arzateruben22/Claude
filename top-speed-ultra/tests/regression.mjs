@@ -590,6 +590,39 @@ await group('render', async (use) => {
     expect(r.under[3] === 0 && r.under[0] + r.under[1] + r.under[2] > 60, `a transparent texel holds rgba ${r.under.join(',')}`);
     return `${r.inst} palms in ${r.crowns} crown meshes, ${r.tris} triangles a crown at Low, castShadow set; blade ${fmt(r.gap * 100)}% gaps; transparent texel rgba ${r.under.join(',')}`;
   });
+  // the buildings (W1): house plans (two at Low, four above) and three office types, each one instanced mesh with one material over an
+  // atlas whose alpha is the tint mask; every instance's colour packs its tint and its strip (roof row or facade style)
+  await check('buildings: house plans and office types, one draw call each, a look per instance', async () => {
+    const r = await game(page, () => {
+      const kinds = {}, roofs = new Set(), styles = new Set(), tints = new Set();
+      let single = true, mask = null;
+      window.__game.terrain.group.traverse((o) => {
+        const n = o.isInstancedMesh ? o.geometry.name : '';
+        if (!/^(house|office)-/.test(n)) return;
+        const tris = o.geometry.attributes.position.count / 3;
+        const k = (kinds[n] ??= { meshes: 0, inst: 0, tris });
+        k.meshes++; k.inst += o.count;
+        single &&= !Array.isArray(o.material) && !!o.instanceColor;
+        if (!mask && n.startsWith('house')) { const d = o.material.map.image.data; let a0 = 0, a1 = 0; for (let i = 3; i < d.length; i += 4) d[i] === 0 ? a0++ : d[i] === 255 && a1++; mask = { a0, a1, all: d.length / 4 }; }
+        const c = o.instanceColor?.array ?? [];
+        for (let i = 0; i < o.count; i++) {
+          const kk = Math.floor(c[i * 3] / 2);
+          (n.startsWith('house') ? roofs : styles).add(kk);
+          if (n.startsWith('house')) tints.add([c[i * 3] - 2 * kk, c[i * 3 + 1] % 2, c[i * 3 + 2]].map((v) => v.toFixed(2)).join());
+        }
+      });
+      return { kinds, single, mask, roofs: [...roofs].sort(), styles: [...styles].sort(), tints: tints.size };
+    });
+    const plans = Object.keys(r.kinds).filter((n) => n.startsWith('house')).sort(), offices = Object.keys(r.kinds).filter((n) => n.startsWith('office'));
+    expect(plans.join() === 'house-0,house-1', `house plans built at Low: ${plans.join(', ') || 'none'} (Low builds plans 0 and 1)`);
+    expect(offices.length > 0, 'no office types built on I-405 North');
+    expect(r.single, 'a building mesh has several materials or no instance colours');
+    const worst = Math.max(...plans.map((n) => r.kinds[n].tris));
+    expect(worst <= 48, `a house plan has ${worst} triangles at Low (budget 48)`);
+    expect(r.mask && r.mask.a0 > 0.01 * r.mask.all && r.mask.a1 > 0.5 * r.mask.all, `the stucco atlas's tint mask: ${JSON.stringify(r.mask)}`);
+    expect(r.roofs.length === 3 && r.tints >= 6, `roof rows used ${r.roofs.join(',')}, ${r.tints} stucco tints`);
+    return `${plans.map((n) => `${n} ${r.kinds[n].inst} in ${r.kinds[n].meshes} meshes, ${r.kinds[n].tris} tris`).join('; ')}; ${offices.map((n) => `${n} ${r.kinds[n].inst}`).join(', ')}; roofs ${r.roofs.join(',')}, office styles ${r.styles.join(',')}, ${r.tints} stucco tints; mask ${(100 * r.mask.a0 / r.mask.all).toFixed(1)}% untinted`;
+  });
   await check('Live time follows the real sun over OC', async () => {
     await page.clock.setFixedTime(new Date('2026-10-12T09:13:00Z'));        // 02:13 Pacific
     const night = await sky('live', 'clear');
@@ -642,16 +675,19 @@ await group('render', async (use) => {
         let live = false; g.scene.traverse((o) => { if (o.name === 'rear-view-mirror' && o.target) live = true; });
         // the palm crowns' triangles at this tier (alpha-tested frond cards; fewer fronds below High)
         let crown = 0; g.terrain.group.traverse((o) => { if (o.isInstancedMesh && o.material.alphaTest > 0) crown = (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
-        return { ...g.stats, post: !!g.composer, live, crown };
+        // the house plans built (W1): four on High and Ultra, two on Low
+        const plans = new Set(); g.terrain.group.traverse((o) => { if (o.isInstancedMesh && /^house-/.test(o.geometry.name)) plans.add(o.geometry.name); });
+        return { ...g.stats, post: !!g.composer, live, crown, plans: plans.size };
       }, q);
       crownHigh ||= s.crown;
       expect(s.crown > 0 && s.crown <= 448 && (q === 'low') === (s.crown < crownHigh), `${q}: palm crowns of ${s.crown} triangles (High ${crownHigh})`);
       expect(s.roads > 0 && s.tiles > 0, `${q}: ${s.roads} road chunks, ${s.tiles} tiles`);
+      expect(s.plans === (q === 'low' ? 2 : 4), `${q}: ${s.plans} house plans built`);
       expect(s.post === (q !== 'low'), `${q}: post-processing ${s.post ? 'on' : 'off'}`);
       expect(s.live === (q !== 'low'), `${q}: live mirrors ${s.live ? 'on' : 'off'}`);
       if (slow || q === 'low') await frames(page, 3, 400000);
       if (slow && q !== 'low') await shot(`quality-${q}`);
-      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
+      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles, ${s.plans} house plans${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
     }
     return out.join('; ');
   });

@@ -96,6 +96,21 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     slopes, irrigated green in town, and sand at sea level.
   - Scenery sits on a jittered grid and is always clear of roads. On the flats it's stucco houses with tile roofs
     and office blocks; elsewhere, palms, trees and shrubs.
+  - Buildings (W1). Houses are four plans in `Terrain.ts` `house(plan, detail)`: an L-shaped ranch and a two-storey
+    with a garage wing (hipped), a ranch with a gabled garage and a two-storey gabled house. On Low (`props < 0.6`)
+    plans 2 and 3 fold into 0 and 1, so a tile costs two house draw calls. Offices are three types in `props.ts`
+    `buildings()` (2, 3 and 8 storeys, with rooftop units and a penthouse on the tower). Every building is one
+    InstancedMesh per plan or type per tile, built face by face with `props.ts` `Shell`, over one of two atlases:
+    `textures.ts` `stucco(detail)` (window, upper, front and plain wall strips; Spanish tile, composite and shake
+    roof rows) and `facade(detail)` (curtain wall, tower glass and precast styles, then roof, rooftop units and
+    penthouse panel). Each atlas's alpha is a tint mask, not transparency. `props.ts` `buildingMat` patches
+    MeshStandardMaterial so that the instance colour packs tint.r + 2 × strip in r and tint.g + 2 × shade (one of four) in g. The
+    vertex colour marks what each face is: r tinted, g a baked shade, b whether the strip shift applies. One draw
+    call carries each house's stucco colour, roof row and shade, and each office's glass colour and style. The old
+    house's five random draws are kept in order and the look comes from a third stream, so the rest of the
+    scenery stays where it was. `detail` (props ≥ 1) adds soffits, both atlases' normal maps and the stucco's roughness map (the facade
+    always has one, for its glass).
+    Preview: `src/preview/test-buildings.ts`.
   - Palms (`road/props.ts` `palmTrunk()`, `palmCrown(detail)`; `textures.ts` `bark()`, `frond()`) are one
     InstancedMesh per part per tile. The crown is frond cards folded along the midrib and cut out by the frond
     texture's alpha (alphaTest 0.4, double-sided): 12 live and 5 dead fronds (382 triangles) on High and Ultra, 10 and

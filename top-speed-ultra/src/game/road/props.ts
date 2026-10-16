@@ -39,8 +39,6 @@ export const mats = {
   frond: () => once('m.frond', () => new THREE.MeshStandardMaterial({ map: T.frond(), alphaTest: 0.4, side: THREE.DoubleSide, roughness: 0.85, vertexColors: true })),
   lampHead: () => once('m.lamphead', () => new THREE.MeshStandardMaterial({ color: 0x3c3f44, metalness: 0.6, roughness: 0.4, emissive: 0x111111 })),
   wire: () => once('m.wire', () => new THREE.LineBasicMaterial({ color: 0x2a2b2e, transparent: true, opacity: 0.85 })),
-  facade: (k: 0 | 1 | 2) => once('m.facade' + k, () => new THREE.MeshStandardMaterial({ map: T.facade(k), roughness: k === 2 ? 0.25 : 0.85, metalness: k === 2 ? 0.4 : 0 })),
-  roof: () => once('m.roof', () => new THREE.MeshStandardMaterial({ color: 0x8b8680, roughness: 0.95 })),
   signFace: () => once('m.signback', () => new THREE.MeshStandardMaterial({ color: 0x8c9096, metalness: 0.6, roughness: 0.5 })),
 };
 
@@ -160,16 +158,116 @@ export const powerPole = () => once('g.powerpole', () => {
   return mergeGeometries([pole, arm, brace])!;
 });
 
-// buildings: box with per-face UVs so one window cell is ~3.6 m whatever the size
-export function building(w: number, h: number, d: number) {
-  const g = new THREE.BoxGeometry(w, h, d);
-  g.translate(0, h / 2, 0);
-  const uv = g.attributes.uv, cell = 3.6;
-  const dims = [[d, h], [d, h], [w, d], [w, d], [w, h], [w, h]];          // +x -x +y -y +z -z faces, 4 vertices each
-  for (let f = 0; f < 6; f++) for (let k = 0; k < 4; k++) {
-    const i = f * 4 + k;
-    uv.setXY(i, uv.getX(i) * dims[f][0] / (cell * 2), uv.getY(i) * dims[f][1] / (cell * 2));
-  }
-  return g;
+// ---------------------------------------------------------------- buildings
+// The buildings' material: an atlas (T.stucco for the houses, T.facade for the offices) on a MeshStandardMaterial,
+// patched so one instanced draw call carries each building's own look. Every vertex's colour says what it is:
+// r = 1 on the tinted part (a house's walls, an office's facades), g a baked shade, b = 1 where the instance's choice
+// of strip applies (a house's roof row, an office's facade style). Every instance's colour packs (tint.r + 2k,
+// tint.g + 2j, tint.b): the tint for the tinted part, k the strip (the UVs move k strips down the atlas), and j one
+// of four shades for the rest. The tint shows where the atlas's alpha says (stucco and roofing, curtain glass).
+export type Part = [number, number, number];
+export const WALL: Part = [1, 1, 0], ROOFING: Part = [0, 1, 1], FACADE_PART: Part = [1, 1, 1], PLAIN: Part = [0, 1, 0], SOFFIT: Part = [1, 0.8, 0];
+export function packLook(tint: THREE.Color, k: number, j: number) {
+  return new THREE.Color(Math.min(tint.r, 0.999) + 2 * k, Math.min(tint.g, 0.999) + 2 * j, tint.b);
 }
-export const buildings = () => once('g.buildings', () => [building(26, 9, 18), building(34, 15, 20), building(22, 36, 22)]);
+export function buildingMat(kind: 'house' | 'office', detail: boolean) {
+  return once(`m.${kind}${detail ? 1 : 0}`, () => {
+    const a = kind === 'house' ? T.stucco(detail) : T.facade(detail);
+    const m = new THREE.MeshStandardMaterial({ map: a.map, normalMap: a.normalMap ?? null, roughnessMap: a.roughnessMap ?? null, roughness: a.roughnessMap ? 1 : 0.9, vertexColors: true, envMapIntensity: kind === 'office' ? 1 : 0.6 });
+    if (a.normalMap) m.normalScale.set(0.9, 0.9);
+    const shift = (kind === 'house' ? T.STUCCO.roofPitch : T.FACADE.pitch) / T.ATLAS_H;
+    m.customProgramCacheKey = () => `bld-${kind}-${detail ? 1 : 0}`;
+    m.onBeforeCompile = (sh) => {
+      sh.uniforms.bShift = { value: shift };
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nuniform float bShift;\nvarying float vBShade;')
+        .replace('#include <color_vertex>', `#include <color_vertex>
+#ifdef USE_INSTANCING_COLOR
+  {
+    float bK = floor(instanceColor.r * 0.5), bJ = floor(instanceColor.g * 0.5);
+    vec3 bTint = vec3(instanceColor.r - 2.0 * bK, instanceColor.g - 2.0 * bJ, instanceColor.b);
+    vec3 bShade = bJ < 0.5 ? vec3(1.0) : bJ < 1.5 ? vec3(0.9, 0.86, 0.82) : bJ < 2.5 ? vec3(1.07, 1.04, 1.0) : vec3(0.8, 0.8, 0.83);
+    vColor = mix(bShade, bTint, color.r);
+    float bS = color.b * bK * bShift;
+    #ifdef USE_MAP
+      vMapUv.y -= bS;
+    #endif
+    #ifdef USE_NORMALMAP
+      vNormalMapUv.y -= bS;
+    #endif
+    #ifdef USE_ROUGHNESSMAP
+      vRoughnessMapUv.y -= bS;
+    #endif
+  }
+#endif
+  vBShade = color.g;`);
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying float vBShade;')
+        .replace('#include <map_fragment>', `float bMask = 1.0;
+#ifdef USE_MAP
+  vec4 bTex = texture2D(map, vMapUv);
+  diffuseColor.rgb *= bTex.rgb;
+  bMask = bTex.a;
+#endif`)
+        .replace('#include <color_fragment>', 'diffuseColor.rgb *= mix(vec3(1.0), vColor, bMask) * vBShade;');
+    };
+    return m;
+  });
+}
+
+type V3 = [number, number, number];
+type UV = [number, number];
+// A building's shell, face by face. Every corner carries its atlas coordinate (u in atlas widths, running past 1
+// where a strip repeats; y in the atlas's design pixels) and its part (above). Flattened to one non-indexed
+// geometry, so every face keeps a flat normal. Faces wind counter-clockwise seen from outside; a footprint's walls
+// go front (+z, left to right), right, back, left.
+export class Shell {
+  private p: number[] = []; private t: number[] = []; private c: number[] = [];
+  tri(a: V3, b: V3, c: V3, ua: UV, ub: UV, uc: UV, part: Part) {
+    for (const [v, u] of [[a, ua], [b, ub], [c, uc]] as [V3, UV][]) { this.p.push(...v); this.t.push(u[0], 1 - u[1] / T.ATLAS_H); this.c.push(...part); }
+  }
+  quad(a: V3, b: V3, c: V3, d: V3, ua: UV, ub: UV, uc: UV, ud: UV, part: Part) { this.tri(a, b, c, ua, ub, uc, part); this.tri(a, c, d, ua, uc, ud, part); }
+  // a wall from (ax, az) to (bx, bz), y0 up h metres, showing the strip [top, bottom] (design pixels) from u0 metres
+  // along it, `per` metres to an atlas width
+  wall(ax: number, az: number, bx: number, bz: number, y0: number, h: number, top: number, bottom: number, u0: number, per: number, part: Part) {
+    const u1 = u0 + Math.hypot(bx - ax, bz - az);
+    this.quad([ax, y0, az], [bx, y0, bz], [bx, y0 + h, bz], [ax, y0 + h, az], [u0 / per, bottom], [u1 / per, bottom], [u1 / per, top], [u0 / per, top], part);
+  }
+  // a box's four sides and its top, the sides showing [top, bottom] from the strip's bottom up, the top `lid`
+  box(cx: number, cz: number, w: number, d: number, y0: number, h: number, side: [number, number], lid: [number, number], per: number, part: Part) {
+    const x0 = cx - w / 2, x1 = cx + w / 2, z0 = cz - d / 2, z1 = cz + d / 2, b = side[1], t = b - (h / per) * 1024;
+    for (const [ax, az, bx, bz] of [[x0, z1, x1, z1], [x1, z1, x1, z0], [x1, z0, x0, z0], [x0, z0, x0, z1]]) this.wall(ax, az, bx, bz, y0, h, Math.max(side[0], t), b, 0, per, part);
+    const y = y0 + h;
+    this.quad([x0, y, z1], [x1, y, z1], [x1, y, z0], [x0, y, z0], [0, lid[1]], [w / per, lid[1]], [w / per, lid[0]], [0, lid[0]], part);
+  }
+  geometry(name: string) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.p, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(this.t, 2));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(this.c, 3));
+    g.computeVertexNormals(); g.computeBoundingSphere(); g.name = name;
+    return g;
+  }
+}
+
+// An office block w x d: `floors` storeys of 4 m under a 1 m parapet, each a strip of the facade atlas (the
+// instance picks the style), a membrane roof, rooftop units [x, z, w, d, h] and, on a tower, a metal-panel penthouse.
+function office(w: number, d: number, floors: number, units: [number, number, number, number, number][], pent?: [number, number, number]) {
+  const s = new Shell(), F = T.FACADE, x0 = -w / 2, x1 = w / 2, z0 = -d / 2, z1 = d / 2, top = floors * 4 + 1;
+  for (const [ax, az, bx, bz] of [[x0, z1, x1, z1], [x1, z1, x1, z0], [x1, z0, x0, z0], [x0, z0, x0, z1]]) {
+    for (let f = 0; f < floors; f++) s.wall(ax, az, bx, bz, f * 4, 4, F.parapet, F.parapet + F.storey, 0, F.wallM, FACADE_PART);
+    s.wall(ax, az, bx, bz, floors * 4, 1, 0, F.parapet, 0, F.wallM, FACADE_PART);
+  }
+  const [ra, rb] = F.roof;
+  s.quad([x0, top, z1], [x1, top, z1], [x1, top, z0], [x0, top, z0], [0, rb], [w / F.wallM, rb], [w / F.wallM, ra], [0, ra], PLAIN);
+  const lid: [number, number] = [ra + 40, ra + 120];
+  if (pent) s.box(0, 0, pent[0], pent[1], top, pent[2], [F.penthouse[0], F.penthouse[1]], lid, F.wallM, PLAIN);
+  for (const [x, z, uw, ud, uh] of units) s.box(x, z, uw, ud, top + (pent && Math.abs(x) < pent[0] / 2 && Math.abs(z) < pent[1] / 2 ? pent[2] : 0), uh, [F.mech[0], F.mech[1]], lid, F.wallM, PLAIN);
+  return s.geometry(`office-${floors}`);
+}
+// the three office types: a two-storey block, a three-storey one, an eight-storey tower
+export const buildings = () => once('g.buildings', () => [
+  office(26, 18, 2, [[-5, 2, 3, 2, 1.6], [6, -3, 4, 2.5, 1.8]]),
+  office(34, 20, 3, [[-10, 3, 4, 3, 2], [0, -4, 5, 3, 2.2], [9, 4, 3, 2, 1.6]]),
+  office(22, 22, 8, [[6.5, 6.5, 3, 2, 1.6], [-6.5, -6.5, 3, 2, 1.6], [0, 1, 4, 3, 1.4]], [9, 9, 3.6]),
+]);

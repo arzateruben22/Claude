@@ -4,6 +4,25 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-16: houses and offices look like Orange County, not Monopoly pieces (realism pass, W1)
+
+Before, every house was the same white box with a salmon cone roof and every office a tan box with one window grid.
+Now houses come in four plans (L-shaped ranch, two-storey with garage wing, ranch with gabled garage, two-storey
+gabled), with windows, a panelled front door and sidelight, sectional garage doors, and Spanish-tile, grey-composite
+or shake roofs over OC stucco tints. Offices come in three types (2, 3 and 8 storeys) with curtain wall, tower glass or
+precast facades, rooftop units and a penthouse on the tower. Low keeps the variety with hipped plans only (two house
+draw calls per tile). Each plan or type is one instanced draw call per tile over two shared atlases; the scenery
+layout is unchanged. Details in `PROJECT_OC_TECHNICAL_NOTES.md`; preview page `src/preview/test-buildings.ts`.
+
+- Checked by eye in headless Chromium (SwiftShader) at 960x540, High and Low, chase and hood views; a reviewer
+  pass compared before and after and found no regression.
+- Before: `tests/out/w1-before-high-chase.png`, `w1-before-high-hood.png`, `w1-before-high-office-chase.png`,
+  `w1-before-high-office-hood.png`, `w1-before-low-chase.png`, `w1-before-low-hood.png`.
+- After: `tests/out/w1-after-high-chase.png`, `w1-after-high-hood.png`, `w1-after-high-office-chase.png`,
+  `w1-after-high-office-hood.png`, `w1-after-low-chase.png`, `w1-after-low-hood.png`, crops
+  `tests/out/w1-crop-after-*.png`, preview `tests/out/w1-prev2-office0.png`, atlas `tests/out/w1-atlas.png`.
+- Not measured on a real phone or GPU.
+
 ## 2026-10-16: the game is "OC Ultra", and the OC sunset wordmark replaces the R badge (UI pass, identity)
 
 The owner, looking at the loading screen on their phone: "get rid of that R as the logo and replace it with the new
