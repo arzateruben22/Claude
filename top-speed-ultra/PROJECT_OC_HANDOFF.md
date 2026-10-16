@@ -63,6 +63,21 @@ PROJECT_OC_HANDOFF.md at the end.
   the mouth; hair silhouette (updo reads as a cap from the front).
 - Fix the severity 4–5 findings of `PROJECT_OC_REVIEW_NOTES.md` once it exists.
 
+- Review the store's payment and entitlement security and the pricing before live mode (being built now on
+  `claude/store`: `server/supabase/*`, `src/store/*`, `PROJECT_OC_MONETIZATION.md`). Fable prompt:
+
+  ```
+  OC Ultra (top-speed-ultra), branch claude/store (merged onto claude/always-on once the UI pass lands). Read CLAUDE.md
+  (the money rule), PROJECT_OC_MONETIZATION.md, server/README.md, server/supabase/migrations/*.sql,
+  server/supabase/functions/*, src/store/*. Adversarially review it before the owner turns live mode on: can a player
+  grant themselves an entitlement (RLS, the anon key, the functions' auth checks)? Can a price come from the client?
+  Is the Stripe webhook's signature check constant-time with a timestamp tolerance on the raw body, and idempotent?
+  Do refunds and cancelled subscriptions revoke? Is any secret in the client bundle (grep dist/)? Do the prices survive
+  Stripe's fees, and is anything pay-to-win, a loot box or a premium currency? Are the COPPA 13+ gate and California's
+  auto-renewal terms in place? Fix what is wrong, prove it with `npm test -- --only=store` and a webhook signature
+  test, log it in PROJECT_OC_PROGRESS.md, and list anything the owner must decide.
+  ```
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
