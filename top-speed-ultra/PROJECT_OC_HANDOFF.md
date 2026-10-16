@@ -5,21 +5,19 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-16, 07:10 UTC)
+## State at the last update (2026-10-16, 07:55 UTC, an Opus session)
 
-- Branch `claude/always-on` at `39bd521`: the semi, hand poses, headlight beams, NPC nose, two jaw rounds, four skin
-  rounds, the visual-target, UI-target and model-policy briefs. Test link https://claude.ai/artifact/AsFiTsf6TFF4Hij25U3MR9
-  (version 6, before the flare and overcast work).
-- Worktree `claude/ref-pass` at `368cd01` (`/home/user/Claude/tsu-ref/top-speed-ultra`): live mirrors committed;
-  overcast light kept by its judge but uncommitted; race HUD half-built; palms not started. Its integrator merges
-  onto `claude/always-on` when done.
-- Worktree `claude/drift` (`/home/user/Claude/tsu-drift/top-speed-ultra`): drift physics half-built in
-  `Physics.ts`; skid marks, smoke and readout not started.
-- Main checkout, uncommitted: the flare rewrite with its repaired sunset preset (judged "keep once the preset is
-  retuned"; retuned; re-judge pending), the daytime-stars fix (in progress).
-- Workflow scripts in the session scratchpad are copies of the ones under this repo's `.claude/` if present; if
-  not, the briefs below are enough to re-author them.
-- Pending from the owner: a real-phone Feedback report (first frame rate on real hardware), the UE5 go/no-go.
+- Branch `claude/always-on` at `81939d3`: everything above plus the lens flare at every tier (sunset preset 5.5°
+  at az 292°) and `PROJECT_OC_REVIEW_NOTES.md` (15 unverified findings from two review lenses).
+- Running (Opus workflow `oc-day-1016`): the race HUD repair and the palms in the `tsu-ref` worktree, then the
+  integrator commits R2 (overcast, judged keep) + whatever is kept on `claude/ref-pass`, runs the full suite, and
+  merges onto `claude/always-on`. In parallel, the wordmark assets are prepared in the session scratchpad
+  (`wordmark/final/`); the UI pass copies them into `src/ui/assets/`.
+- Next in this session: the UI pass (`oc-ui-pass.js`, all Opus): UID wordmark and theme, U0 luxury menu, then the
+  rest of the board.
+- Waiting for Fable: the drift physics (`tsu-drift` worktree, `Physics.ts` half-built), the review's refuters and
+  rules lens, the hand, expression and hair specs (see the Fable queue).
+- Pending from the owner: a real-phone Feedback report, the UE5 go/no-go.
 
 ## Prompt for an Opus 5.5 daytime session
 
