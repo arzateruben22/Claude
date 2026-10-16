@@ -118,3 +118,11 @@ P0–P4 core systems are built (see the progress log). Good next steps:
 - houses and parking
 - the Golden Road walkable slice
 - higher-fidelity assets
+
+## Added 2026-10-16
+
+- **Drifting.** Semi-real drift physics on the car: power-over, lift-off and handbrake entries, weight transfer,
+  counter-steer that can catch a slide, a stability control that backs off while the driver counter-steers, at every
+  handling setting; black skid marks laid on the road by slipping tyres; tyre smoke; a drift angle readout.
+- **The main menu** should be more seamless, with a finer luxury, Apple-like aesthetic feel (see
+  `PROJECT_OC_UI_TARGET.md`).

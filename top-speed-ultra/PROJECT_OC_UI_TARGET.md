@@ -18,6 +18,16 @@ the yellow accent is already ours.
   "Messages" as a story system (roadmap; until then the phone shows what exists).
 - **The mock's icons, fonts and artwork.** Re-drawn in our style with our own icons.
 
+## Owner's direction, 2026-10-16: seamless, with a finer luxury feel
+
+"Make the main menu more seamless and have a finer luxury Apple-like aesthetic feel to it." This is the first item
+of the UI pass (U0) and the lens for the rest: Chrome noir's base and yellow accent stay, the angled chips and
+magenta corners go. Frosted-glass panels over the live attract drive, hairline borders, large soft radii, generous
+spacing on an 8 pt rhythm, a refined system font stack for text (San Francisco on Apple devices, zero bytes), light
+and regular weights, one persistent glass sheet whose content cross-fades between screens instead of panels
+re-mounting, a Drive dock that persists, a loading screen that fades into the menu, iOS-style switches and segmented
+controls drawn in CSS, reduced motion respected. Phone first.
+
 ## Panel by panel
 
 | # | Panel | Have today | Build (this pass) | Roadmap |
