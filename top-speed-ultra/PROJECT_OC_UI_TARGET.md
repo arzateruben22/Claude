@@ -28,6 +28,31 @@ and regular weights, one persistent glass sheet whose content cross-fades betwee
 re-mounting, a Drive dock that persists, a loading screen that fades into the menu, iOS-style switches and segmented
 controls drawn in CSS, reduced motion respected. Phone first.
 
+## Identity: the OC sunset wordmark (owner, 2026-10-16)
+
+The owner supplied the game's wordmark: the letters "OC" cut like a racing decal, filled with an Orange County
+sunset (orange to red sky, the sun on the horizon, a downtown skyline, palms, the freeway with tail lights and an
+overpass), on black, with a thin orange-to-red edge and speed streaks. It replaces every "OC" in the HUD and the
+menus, and its theme runs through the rest where it fits without shouting:
+
+- **Assets** (`src/ui/assets/`): the source stays out of the repo (1.2 MB); the repo carries a transparent cut-out
+  (the exterior black keyed to alpha by a border flood fill, so the dark silhouettes inside the letters stay) as
+  WebP at 1200 px and 480 px wide, a 240 px version for small chips, and `oc-mask.png` (the letterform alpha) for
+  CSS masks and the run card. Budget: all variants together under 200 KB in the single-file build.
+- **Where it goes**: the menu's brand block (the wordmark above a quiet "Top Speed · Ultra" line; the chromed
+  "ULTRA" wordmark steps down to a subtitle), the loading screen, the pause screen's header, the results screen,
+  the run card (replacing the "TOP SPEED OC" text line), the HUD's route chip and position box as the 240 px mark
+  where "OC" would read, the radial menu's centre, the phone's status bar, the feedback report header line (text
+  stays "Top Speed OC" there and in the page title: text, not an image).
+- **Theme tokens** (sampled from the wordmark, tuned for 4.5:1 contrast on the violet-black base): `--sunset`
+  (the sky orange), `--ember` (the red edge), `--amber` (the sun's highlight), `--night` (the black), plus a
+  horizontal `--sunset-edge` gradient for hairlines and the Drive dock. The yellow accent becomes this sunset
+  family; the violet-black glass base and the luxury rules stay (one accent, hairlines, generous spacing).
+- **Where it fits**: a sunset-gradient hairline on panel tops, palm and skyline silhouettes at 6–8 % opacity as a
+  watermark on the loading and pause screens (drawn in code from the mask, not a second image), tail-light red
+  for danger states, amber for selection; never a full-bleed orange screen, never the wordmark stretched.
+- **Honesty**: the skyline in the mark is stylised, not a claim of any real building; nothing in it is a brand.
+
 ## Panel by panel
 
 | # | Panel | Have today | Build (this pass) | Roadmap |
