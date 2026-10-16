@@ -318,6 +318,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .carhead .paint { width: 22px; height: 22px; flex: none; transform: skewX(var(--skew)); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--line-3); }
 .gcell.car .row { margin-top: 8px; }
 .gcell.car .row em { font: 500 11.5px/1.2 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--sunset-text); border: 0; padding: 0; margin: 0; }
+/* the "Owner mode" chip beside the garage's heading: black on amber, 12.45:1 */
+.chip { position: relative; isolation: isolate; display: inline-block; margin-left: 16px; padding: 4px 10px; vertical-align: 0.5em;
+  font: 600 11px/1.2 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--night); white-space: nowrap; }
+.chip::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--amber); }
 
 /* route shields: the real sign shapes, sharpened */
 .shield-row { display: inline-flex; gap: 8px; align-items: center; }

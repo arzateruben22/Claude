@@ -24,6 +24,12 @@ export const CARS: CarDef[] = [
 const BASE = { ...SPEC };
 export function carById(id: string) { return CARS.find((c) => c.id === id) ?? CARS[0]; }
 export const slotsFor = (level: number) => Math.min(6, 1 + Math.floor(level / 4));
+// what the garage lists (owner, 2026-10-16): the Vela E stays in the game but shows only in owner mode or once it's
+// yours. Owner mode lists every car.
+export const GARAGE_HIDDEN = ['vela-e'];
+export function garageCars(owner: boolean, owned: string[]) {
+  return CARS.filter((c) => owner || owned.includes(c.id) || !GARAGE_HIDDEN.includes(c.id));
+}
 
 // put a car's numbers into the physics (one car drives at a time)
 export function applyCar(c: CarDef) {

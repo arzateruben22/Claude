@@ -37,6 +37,7 @@ export interface Settings {
   ultraTunnel: boolean;
   ultraShake: boolean;
   ultraMuffle: boolean;
+  owner: boolean;           // owner mode: every car in the garage to drive, for test builds only (a local switch, not security)
 }
 
 export interface QualityPreset {
@@ -104,11 +105,27 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false,
   };
 }
 
+// owner mode from the address: #owner turns it on, #owner=0 off (an artifact link keeps a bare #anchor); null: neither
+export function ownerFromHash(): boolean | null {
+  try {
+    const h = location.hash.toLowerCase();
+    if (h === '#owner' || h === '#owner=1') return true;
+    if (h === '#owner=0') return false;
+  } catch { /* no address to read */ }
+  return null;
+}
+
 export function loadSettings(): Settings {
+  const s = readSettings(), hash = ownerFromHash();
+  if (hash !== null && hash !== s.owner) { s.owner = hash; saveSettings(s); }
+  return s;
+}
+
+function readSettings(): Settings {
   const d = defaults();
   try {
     const raw = localStorage.getItem(KEY);
@@ -128,6 +145,7 @@ export function loadSettings(): Settings {
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
+      owner: v.owner === true,
     };
   } catch { return d; }
 }
