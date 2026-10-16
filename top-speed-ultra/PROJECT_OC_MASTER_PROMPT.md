@@ -128,3 +128,5 @@ P0–P4 core systems are built (see the progress log). Good next steps:
   `PROJECT_OC_UI_TARGET.md`).
 - **Model policy.** Daytime (Pacific) work on Opus 5.5; Fable 5.1 overnight for the hardest problems and for
   reviewing the day's work (details in `CLAUDE.md`).
+- **The name.** The game is **OC Ultra**, with "Top Speed" beneath; the OC sunset wordmark is its logo, replacing
+  the R badge everywhere the R stood for the game (the R stays as the Rossini car brand).

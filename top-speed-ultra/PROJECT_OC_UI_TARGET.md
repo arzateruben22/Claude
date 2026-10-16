@@ -30,6 +30,11 @@ controls drawn in CSS, reduced motion respected. Phone first.
 
 ## Identity: the OC sunset wordmark (owner, 2026-10-16)
 
+**The name (owner, later the same day):** the game is now **OC Ultra**, with **Top Speed** beneath. The R badge is
+no longer the game's logo: the lockup is the OC wordmark with ULTRA and a small "TOP SPEED" line. The R stays
+where it is the car brand (the Rossini badge on the wheel and the bodies). The page title is "OC Ultra: Top Speed";
+the run card, share text (#OCUltra), download name and feedback report use "OC Ultra".
+
 The owner supplied the game's wordmark: the letters "OC" cut like a racing decal, filled with an Orange County
 sunset (orange to red sky, the sun on the horizon, a downtown skyline, palms, the freeway with tail lights and an
 overpass), on black, with a thin orange-to-red edge and speed streaks. It replaces every "OC" in the HUD and the
