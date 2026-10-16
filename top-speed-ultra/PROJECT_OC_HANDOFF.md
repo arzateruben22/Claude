@@ -104,7 +104,9 @@ PROJECT_OC_HANDOFF.md at the end.
      the best handling and traction): an all-wheel-drive split with torque vectoring for it, how its Cold Thrust and
      Ground Lock forces combine with the tyres, and a review of the scripted Thrust Hop's airborne state (landing
      loads, never switching road levels at an interchange, the traffic-collision skip, overpass clearance). Decide
-     whether a free-flight hop is worth its cost; keep the Hyper class separation intact.
+     whether a free-flight hop is worth its cost. Keep the owner's two-tune rule: Unleashed (maxed, with the
+     ability) in Free Drive only; the race tune (the best earnable car's envelope, ability off) in race, time trial
+     and Speed Survival.
   Proof: the drift test script (slip angle and yaw traces for a handbrake entry, a power-over and a lift-off at 40,
   70 and 120 mph per profile), a braking test (60–0 distance per profile, with and without ABS), and
   'npm test -- --only=survival,race,progression,phone' green. Log it in PROJECT_OC_PROGRESS.md with the numbers;
