@@ -2,6 +2,10 @@
 // The adaptive HUD (U1) adds a status row on both styles: a compass strip at the top centre and a chip at the top right
 // with this device's clock and a simulated temperature; and, in Minimal, the round nav bubble that stands in for the
 // corner window while it's tucked away (App.tsx decides when: the `bubble` prop).
+// With a route (U2) a navigation card sits top left (the manoeuvre's arrow, how far, the road it leads to in guide-sign
+// style, the next exit's real sign text) and a destination card top right (the destination road, the time it takes at
+// your pace, the traffic setting, which is simulated); on a phone each folds into one line, the destination above the
+// road chip and the manoeuvre under it.
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import type { CSSProperties } from 'react';
@@ -13,6 +17,26 @@ export interface HudHandle { set: (h: HudData) => void }
 const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
 // how far to the next manoeuvre, the same on the prompt and in the nav bubble
 const toGo = (m: number) => (m > 1609 ? miles(m) : Math.round(m * 3.281 / 10) * 10 + ' ft');
+// the time to the destination at your pace
+const eta = (s: number) => (s < 0 ? '–' : s < 60 ? 'Under 1 min' : s < 3600 ? `${Math.round(s / 60)} min` : `${Math.floor(s / 3600)} h ${String(Math.round(s / 60) % 60).padStart(2, '0')} min`);
+
+// the manoeuvre's arrow: straight on, or a fork to the right (mirrored for the left); styles.css shows the one data-turn names
+function TurnArrow({ size, className }: { size: number; className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" width={size} height={size}>
+      <path className="ahead" d="M16 28V6M9 13l7-7 7 7" />
+      <path className="thru" d="M12 28V6" />
+      <path className="fork" d="M12 28v-8c0-5 8-5 8-10V6M16 10l4-4 4 4" />
+    </svg>
+  );
+}
+// the destination card's icons: a map pin, a clock, a car
+const ICONS = {
+  pin: 'M8 14.5s-4.5-4.6-4.5-8a4.5 4.5 0 0 1 9 0c0 3.4-4.5 8-4.5 8zM8 8.2a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4z',
+  clock: 'M8 14.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13zM8 4.5V8l2.5 1.6',
+  car: 'M2.5 11.5V8.4l1.6-3.6c.2-.5.7-.8 1.2-.8h5.4c.5 0 1 .3 1.2.8l1.6 3.6v3.1M2.5 8.5h11M2.5 11.5h2M11.5 11.5h2M5 11.5v1.5M11 11.5v1.5',
+};
+const Icon = ({ d }: { d: string }) => <svg viewBox="0 0 16 16" width="14" height="14"><path d={d} /></svg>;
 
 // the compass tape: a tick every 15°, the four cardinal letters and the four between them, from -180° to 540° so any
 // heading has half a turn of tape either side of it. The tape slides by --h (the heading); styles.css sets the scale.
@@ -33,6 +57,10 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
   // U1: the compass tape, the clock chip, the nav bubble
   const tape = useRef<HTMLDivElement>(null), clock = useRef<HTMLElement>(null), temp = useRef<HTMLElement>(null);
   const bub = useRef<HTMLDivElement>(null), bubDist = useRef<HTMLElement>(null);
+  // U2: the navigation card and the destination card
+  const nav = useRef<HTMLDivElement>(null), navDist = useRef<HTMLElement>(null), navAct = useRef<HTMLSpanElement>(null), navTo = useRef<HTMLDivElement>(null);
+  const exitKey = useRef<HTMLElement>(null), exitText = useRef<HTMLSpanElement>(null);
+  const dest = useRef<HTMLDivElement>(null), destRoad = useRef<HTMLElement>(null), destDist = useRef<HTMLElement>(null), destEta = useRef<HTMLElement>(null), traffic = useRef<HTMLElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -82,8 +110,27 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
       }
       if (big.current) big.current.classList.toggle('warn', h.mode === 'time' && h.timeLeft < 10);
       put(road.current, 'road', h.road);
+      // with a route the navigation card says what's next; the green prompt under the road chip stands in for it in a
+      // race, where the race box has the top left
+      const navOn = !!h.next && !racing;
       put(next.current, 'next', h.next ? `${h.next} · ${toGo(h.nextDist)}` : '');
-      if (next.current) next.current.hidden = !h.next;
+      if (next.current) next.current.hidden = !h.next || navOn;
+      if (nav.current) { nav.current.hidden = !navOn; if (nav.current.dataset.turn !== h.turn) nav.current.dataset.turn = h.turn; }
+      if (navOn) {
+        put(navDist.current, 'navDist', toGo(h.nextDist)); put(navAct.current, 'navAct', h.navAct); put(navTo.current, 'navTo', h.navTo);
+        // the next exit's sign, or (on a ramp, with no exits along it) the sign it was taken from, or the road you're on
+        put(exitKey.current, 'exitKey', h.exitText ? (h.exitMine ? 'Your exit' : 'Next exit') : 'Now on');
+        put(exitText.current, 'exitText', h.exitText || h.onSign || h.road);
+      }
+      const destOn = !!h.dest && !racing;
+      if (dest.current) dest.current.hidden = !destOn;
+      if (destOn) {
+        // on a phone the destination line leaves its road out when the manoeuvre's sign already names it
+        const same = h.dest === h.navTo && navOn;
+        if (dest.current && dest.current.hasAttribute('data-same') !== same) dest.current.toggleAttribute('data-same', same);
+        put(destRoad.current, 'destRoad', h.dest); put(destDist.current, 'destDist', miles(h.destDist));
+        put(destEta.current, 'destEta', eta(h.eta)); put(traffic.current, 'traffic', h.traffic === 'None' ? 'No traffic' : `${h.traffic} traffic`);
+      }
       if (bub.current) { bub.current.hidden = !h.next; if (bub.current.dataset.turn !== h.turn) bub.current.dataset.turn = h.turn; }
       put(bubDist.current, 'bub', h.next ? toGo(h.nextDist) : '');
       const hd = h.heading.toFixed(1);
@@ -115,14 +162,24 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
       </div>
       <div className="hud-clock"><b ref={clock as React.RefObject<HTMLElement>} /><span><em ref={temp as React.RefObject<HTMLElement>} /> · simulated</span></div>
       <div className={'hud-bubble' + (bubble ? ' on' : '')} ref={bub} hidden>
-        <svg viewBox="0 0 32 32" width="30" height="30">
-          <path className="ahead" d="M16 28V6M9 13l7-7 7 7" />
-          <path className="thru" d="M12 28V6" />
-          <path className="fork" d="M12 28v-8c0-5 8-5 8-10V6M16 10l4-4 4 4" />
-        </svg>
+        <TurnArrow size={30} />
         <b ref={bubDist as React.RefObject<HTMLElement>} />
       </div>
       <div className="hud-road"><div className="hud-roadname"><OcMark size="sm" /><span ref={road} /></div><div className="hud-next" ref={next} hidden /></div>
+      <div className="hud-navs">
+        <div className="hud-nav" ref={nav} hidden>
+          <TurnArrow size={40} className="hud-nav-arrow" />
+          <div className="hud-nav-dist"><b ref={navDist as React.RefObject<HTMLElement>} /><span ref={navAct} /></div>
+          <div className="hud-nav-sign" ref={navTo} />
+          <div className="hud-nav-exit"><i ref={exitKey as React.RefObject<HTMLElement>} /><span ref={exitText} /></div>
+        </div>
+        <div className="hud-dest" ref={dest} hidden>
+          <small>Destination</small>
+          <div className="dest-road"><Icon d={ICONS.pin} /><b ref={destRoad as React.RefObject<HTMLElement>} /><em ref={destDist as React.RefObject<HTMLElement>} /></div>
+          <div className="dest-eta"><Icon d={ICONS.clock} /><b ref={destEta as React.RefObject<HTMLElement>} /><em>at your pace</em></div>
+          <div className="dest-traffic"><Icon d={ICONS.car} /><b ref={traffic as React.RefObject<HTMLElement>} /><em>simulated</em></div>
+        </div>
+      </div>
       <div className="hud-race" ref={race} hidden>
         <div className="hud-pos"><b ref={pos as React.RefObject<HTMLElement>}>–</b><span><i>Position</i><em ref={posOf as React.RefObject<HTMLElement>}>of 4</em></span><span className="hud-timer"><i>Time</i><em ref={timer as React.RefObject<HTMLElement>}>0:00.0</em></span><small ref={prog as React.RefObject<HTMLElement>} /></div>
         <ol className="hud-standings" ref={rows} style={{ '--oc-mark-sm': `url("${OC_LOGO_240}")` } as CSSProperties}>{[0, 1, 2, 3].map((k) => <li key={k} hidden><i /><em /><span /><b /></li>)}</ol>

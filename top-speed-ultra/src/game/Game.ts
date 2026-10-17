@@ -22,6 +22,7 @@ import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
 import * as P from './road/props';
 import { Radio } from './audio/Radio';
+import { RouteChevrons } from './road/chevrons';
 import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
@@ -49,6 +50,12 @@ export interface Hud {
   // the adaptive HUD (U1): the compass bearing the car points along (degrees from north, clockwise), the simulated air
   // temperature (°F) for the clock chip, and which way the next manoeuvre goes for the nav bubble ('' with no route)
   heading: number; tempF: number; turn: Turn;
+  // the navigation card (U2): what to do ('Keep right') and the road it leads to; the next exit along this road with its
+  // real sign text, and whether it's the one the route takes (on a ramp, with no exits along it, the sign it was taken
+  // from); and the destination card: the destination road, how far it
+  // is along the route, the time that takes at your pace (s; -1 when you aren't moving enough to say) and the traffic
+  // setting (simulated, and labelled so). All '' with no route.
+  navAct: string; navTo: string; exitText: string; exitMine: boolean; onSign: string; dest: string; destDist: number; eta: number; traffic: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
@@ -142,6 +149,9 @@ export class Game {
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
+  private pace = 0;                  // your speed over the last few seconds (m/s), for the navigation card's time estimate
+  // the blue chevrons on the road along the route (U2)
+  readonly chevrons = new RouteChevrons({ diverge: (p, j) => this.sideOf(p, j), merge: (r, j) => this.sideOfMerge(r, j) });
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
   visited = new Set<string>();       // freeways driven this session (for tests and the profile)
@@ -164,6 +174,7 @@ export class Game {
     this.env.set(settings.time, settings.weather, true);
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
+    this.scene.add(this.chevrons.mesh);
     this.applyDriver();
     this.applyCarChoice();
     this.input = new Input(canvas);
@@ -291,7 +302,7 @@ export class Game {
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
     this.traffic.fill(this.view());
-    this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0;
+    this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0; this.pace = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
     this.endAbility(); this.ability.reset();
     this.timeLeft = 60; this.nextCheckpoint = 2000; this.countdown = mode === 'time' ? 3 : 0;
@@ -807,6 +818,7 @@ export class Game {
     });
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
+    this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract && !this.race);
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
@@ -926,6 +938,7 @@ export class Game {
     // distance, the streak and the clocks
     const fwd = Math.max(0, view.v) * dt;
     if (!this.attract && !this.wrongWay) this.distance += fwd;
+    if (!this.attract) this.pace = damp(this.pace, Math.max(0, view.v), 1 / 12, dt);
     if (playing) {
       this.prof.t += dt; if (!this.wrongWay) this.prof.dist += fwd;
       this.prof.flush -= dt;
@@ -1059,9 +1072,11 @@ export class Game {
       const x = Math.round(r.x * pr), y = Math.round((H - r.y - r.size) * pr), s = Math.round(r.size * pr);
       this.renderer.setScissorTest(true);
       this.renderer.setScissor(x, y, s, s); this.renderer.setViewport(x, y, s, s);
-      const fog = this.scene.fog; this.scene.fog = null;
+      const fog = this.scene.fog, chev = this.chevrons.mesh.visible; this.scene.fog = null;
       this.car.setOutsideView(true);
+      this.chevrons.mesh.visible = false;              // the chevrons are for the road ahead, not the sky camera
       this.renderer.render(this.scene, this.skyCam);
+      this.chevrons.mesh.visible = chev;
       this.scene.fog = fog;
       this.renderer.setScissorTest(false);
       const size = this.renderer.getSize(new THREE.Vector2());
@@ -1144,19 +1159,56 @@ export class Game {
     if (Math.abs(next - this.renderScale) > 0.001) { this.renderScale = next; this.onResize(); }
   }
 
-  // what's next on the route, how far, and which way it goes
-  private nextManoeuvre(): [string, number, Turn] {
+  // what's next on the route, how far, which way it goes, and the road it leads to: the first freeway along the route
+  // from there (a ramp that splits for both directions of a freeway leads to the one the route takes), or where the
+  // ramp goes
+  private nextManoeuvre(): [string, number, Turn, string, string] {
     const j = this.route[0];
-    if (!j) return ['', 0, ''];
-    const turn: Turn = j.kind === 'diverge' ? (this.sideOf(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
+    if (!j) return ['', 0, '', '', ''];
+    // a diverge, or the end of a ramp that forks (for both directions of a freeway): keep to one side
+    const fork = j.kind === 'diverge' || (j.kind === 'continue' && this.path.out.filter((o) => o.s >= this.path.len - 1).length > 1);
+    const turn: Turn = fork ? (this.sideOf(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
     const side = turn === 'right' ? 'Keep right' : turn === 'left' ? 'Keep left' : 'Continue';
-    const to = j.to.main ? j.to.label : this.net.leadsTo(j.to) || 'the ramp';
-    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s), turn];
+    const main = this.route.find((r) => r.to.main);
+    const to = main ? main.to.label : this.net.leadsTo(j.to) || 'the ramp';
+    return [`${side}: ${to}`, Math.max(0, j.s - this.phys.s), turn, side, to];
+  }
+  // the exits along a road, from the guide signs in the map data: where each ramp leaves (or where its sign stands) and
+  // what the sign says, one per ramp, in order along the road. Worked out once per road.
+  private exitIndex = new Map<Path, { s: number; ramp: Path; text: string }[]>();
+  private exitsAlong(p: Path) {
+    let a = this.exitIndex.get(p);
+    if (!a) {
+      const byRamp = new Map<Path, { s: number; ramp: Path; text: string }>();
+      for (const g of this.net.signs) {
+        if (g.path !== p) continue;
+        const j = p.out.find((o) => o.to === g.ramp), text = g.text.join(' / '), had = byRamp.get(g.ramp);
+        if (!had || text.length > had.text.length) byRamp.set(g.ramp, { s: j ? j.s : g.s, ramp: g.ramp, text });
+      }
+      a = [...byRamp.values()].sort((u, v) => u.s - v.s);
+      this.exitIndex.set(p, a);
+    }
+    return a;
+  }
+  // the sign a ramp was taken from (the longest, where a ramp has more than one), '' for a ramp with none
+  private rampSigns: Map<Path, string> | null = null;
+  private rampSign(p: Path) {
+    if (!this.rampSigns) {
+      this.rampSigns = new Map();
+      for (const g of this.net.signs) { const t = g.text.join(' / '), had = this.rampSigns.get(g.ramp); if (!had || t.length > had.length) this.rampSigns.set(g.ramp, t); }
+    }
+    return this.rampSigns.get(p) ?? '';
   }
 
   private sendHud() {
     const p = this.phys;
-    const [next, nextDist, turn] = this.nextManoeuvre();
+    const [next, nextDist, turn, navAct, navTo] = this.nextManoeuvre();
+    // the navigation card (U2): the next exit along this road, the destination, how far it is along the route and how
+    // long that takes at your pace
+    const routed = this.route.length > 0 && !!this.routeTarget;
+    const exit = routed ? this.exitsAlong(this.path).find((e) => e.s > p.s) : undefined;
+    let destDist = 0;
+    if (routed) { let s = p.s; for (const j of this.route) { destDist += Math.max(0, j.s - s); s = j.toS; } }
     // world x runs east and z south (tools/oc-network/common.py), and the car points along (sin psi, cos psi): its
     // bearing from north is pi - psi
     const heading = ((((Math.PI - p.psi) * 180) / Math.PI) % 360 + 360) % 360;
@@ -1172,6 +1224,9 @@ export class Game {
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
       heading, tempF: this.env.tempF(), turn,
+      navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
+      dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
+      traffic: DENSITY[this.settings.density].label,
     });
   }
 

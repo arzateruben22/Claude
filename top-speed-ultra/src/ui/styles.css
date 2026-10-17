@@ -75,6 +75,7 @@
   --sign-white: #f4f4ee;
   --sign-black: #111111;
   --sign-green: #0a6a3a;
+  --nav: #4aa8ff;                           /* the route on the road (the chevrons) and the card's arrow: 3.9:1 on a HUD plate over white */
   /* masks are alpha only */
   --opaque: #000;
   --clear: transparent;
@@ -568,6 +569,45 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .hud-bubble[data-turn="left"] svg { transform: scaleX(-1); }
 .hud-bubble b { font: 600 13px/1 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 
+/* ------------------------------------------------------------------ navigation (U2): the manoeuvre card and the destination card */
+/* top left, the next manoeuvre: its arrow in the route's blue (the chevrons on the road are its deeper twin, #2f8cff,
+   lit up by their glow), how far, what to do, the road it leads to as a guide sign, and under a hairline the next
+   exit's real sign text (or the road you're on). Fixed height, so the stats plate can sit under it. Top right, under
+   the corner window (App.tsx sets --cw to its size), the destination: the road, how far along the route, the time at
+   your pace, the traffic setting (simulated). */
+.hud-navs { display: contents; }
+.hud-nav { --navh: 116px; position: absolute; top: max(14px, env(safe-area-inset-top)); left: 12px; width: 316px; height: var(--navh); display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto 1fr;
+  column-gap: 12px; row-gap: 6px; padding: 10px 14px 0 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--nav); }
+.hud-nav-arrow { grid-row: 1 / 3; align-self: center; overflow: visible; }
+.hud-nav-arrow path { fill: none; stroke: var(--nav); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.hud-nav-arrow path.thru { stroke: var(--line-3); stroke-width: 2.5; }
+.hud-nav-dist { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.hud-nav-dist b { font: 600 22px/1 var(--f-mono); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hud-nav-dist span { font: 500 10.5px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hud-nav-sign { justify-self: start; max-width: 100%; padding: 3px 10px 2px; font: 600 15px/1.25 var(--f-ui); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--sign-white); background: var(--sign-green); border: 2px solid var(--sign-white); border-radius: 5px; }
+.hud-nav-exit { grid-column: 1 / -1; align-self: stretch; display: flex; align-items: center; gap: 10px; min-width: 0; margin-top: 3px; border-top: 1px solid var(--line); }
+.hud-nav-exit i { flex: none; font: 500 9.5px/1 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.hud-nav-exit span { min-width: 0; font: 500 13px/1.22 var(--f-text); color: var(--ink); overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }   /* long signs take two lines */
+.hud-nav:not([data-turn="ahead"]) .ahead, .hud-nav[data-turn="ahead"] .thru, .hud-nav[data-turn="ahead"] .fork { display: none; }
+.hud-nav[data-turn="left"] .hud-nav-arrow { transform: scaleX(-1); }
+@media not all and (pointer: coarse) {
+  .hud:has(.hud-nav:not([hidden])) .hud-stats { top: calc(max(14px, env(safe-area-inset-top)) + 126px); }
+}
+.hud-dest { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 64px + var(--st) + var(--cw, 0px)); right: 12px; width: 240px; display: grid; gap: 5px; padding: 8px 12px 9px;
+  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--nav); }
+.hud-dest small { font: 500 9.5px/1.2 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.hud-dest div { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.hud-dest svg { display: block; }
+.hud-dest path { fill: none; stroke: var(--dim); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.hud-dest b { min-width: 0; font: 500 13.5px/1.25 var(--f-text); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hud-dest .dest-road b { font-weight: 600; }
+.hud-dest em { font: 500 11px/1.2 var(--f-mono); font-style: normal; color: var(--dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* the Minimal HUD tucks the destination away with the corner window; the manoeuvre card stays */
+.hud-dest { transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
+.app.hud-idle .hud-dest { opacity: 0; visibility: hidden; transform: translateX(calc(100% + 32px));
+  transition: transform 420ms var(--ease-in), opacity 360ms var(--ease-in), visibility 0s linear 420ms; }
+
 /* the ability button: a hexagon whose edge drains while it's on and refills while it recharges */
 .hud-ability { --p: 1; position: absolute; right: 222px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
   display: grid; place-items: center; color: var(--ink); font: 600 10.5px/1.1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
@@ -683,6 +723,28 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .hud-race-note { font-size: 8px; }
   .hud-fps { bottom: auto; top: calc(max(10px, env(safe-area-inset-top)) + 218px + var(--st)); left: 12px; }
   .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 244px + var(--st)); max-width: 92vw; }
+  /* navigation (U2): both cards fold into one line each. The manoeuvre goes under the road chip, where the green prompt
+     was; the destination goes above the chip, in the gap under the speed box and the corner window, so neither covers
+     more of the road than the prompt did (the chevrons are down there). The destination drops its road when the
+     manoeuvre's sign already names it, and its icons but the clock. */
+  .hud-nav, .hud-dest { left: 50%; right: auto; width: max-content; max-width: calc(100vw - 20px); transform: translateX(-50%); }
+  .hud-nav { top: calc(max(10px, env(safe-area-inset-top)) + 282px + var(--st)); height: auto; display: flex; align-items: center; gap: 10px; padding: 5px 12px 5px 9px; }
+  .hud-nav-arrow { width: 24px; height: 24px; flex: none; }
+  .hud-nav-dist span, .hud-nav-exit { display: none; }
+  .hud-nav-dist { flex: none; }
+  .hud-nav-dist b { font-size: 17px; }
+  .hud-nav-sign { min-width: 0; padding: 2px 8px 1px; font-size: 13.5px; }
+  .hud-dest { top: calc(max(10px, env(safe-area-inset-top)) + 212px + var(--st)); display: flex; align-items: center; gap: 0; padding: 5px 12px 5px 10px; font: 400 12px/1.25 var(--f-text); box-shadow: inset 0 0 0 1px var(--line), inset 0 -2px 0 var(--nav); }
+  .hud-dest small, .hud-dest .dest-road em, .hud-dest .dest-road svg, .hud-dest .dest-traffic svg, .hud-dest[data-same] .dest-road { display: none; }
+  .hud-dest div { display: flex; align-items: center; gap: 5px; flex: none; }
+  .hud-dest .dest-road { flex: 0 1 auto; min-width: 0; }
+  .hud-dest div + div::before { content: "·"; margin-left: 6px; color: var(--dim); }
+  .hud-dest[data-same] .dest-eta::before { content: none; }
+  .hud-dest b { font-size: 12px; }
+  .hud-dest em { font: 400 12px/1.2 var(--f-text); }
+  .hud-dest .dest-traffic em::before { content: "· "; }
+  .app.hud-idle .hud-dest { transform: translateX(-50%); }
+  .app:has(.hud-nav:not([hidden])) .toasts { top: 52%; }
   /* in a race the position box is taller than the numbers it replaces: the plate (and the frame rate) go under it */
   .hud:has(.hud-race:not([hidden])) .hud-fps { top: calc(max(10px, env(safe-area-inset-top)) + 282px + var(--st)); }
   .hud:has(.hud-race:not([hidden])) .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 292px + var(--st)); }
@@ -709,7 +771,7 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .panel, .sheet-body, .sheet-ghost > *, .toast, .loadbar i, .hud-revs i, .brand.hero .word span::after { animation: none !important; }
   .overlay.loading-screen.leaving { animation: none !important; visibility: hidden; }
   .btn, .seg button, .mode, .pick, .gcell, .soon, .back, .toggle input, .sheet .brand .lockup { transition: none !important; }
-  .tbar .tbtn, .corner, .hud-bubble, .tbtn .tico { transition: none !important; animation: none !important; }   /* the Minimal HUD just shows and hides */
+  .tbar .tbtn, .corner, .hud-bubble, .tbtn .tico, .hud-dest { transition: none !important; animation: none !important; }   /* the Minimal HUD just shows and hides */
   .btn:hover, .btn:active, .soon:hover { transform: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }

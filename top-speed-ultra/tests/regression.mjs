@@ -709,6 +709,37 @@ await group('phone', async (use) => {
     expect(n === 20, `${n} listed`);
     return `${n} listed`;
   });
+  // the navigation card and the chevrons (U2): picking a freeway in Go to sets a route; on a phone the manoeuvre and the
+  // destination fold into a line each, clear of each other and of the road chip, the destination's time is "at your
+  // pace" and its traffic "simulated", and the chevrons lie on the road. Clear route takes it all away again.
+  await check('Go to: navigation line, destination line and road chevrons; Clear route hides them', async () => {
+    await page.locator('.grid.nav .gcell').filter({ has: page.locator('.shield', { hasText: /^55$/ }) }).filter({ hasText: 'North' }).click();
+    await frames(page, 3);
+    const look = () => game(page, () => {
+      const q = (s) => document.querySelector(s), box = (e) => { if (!e || e.hidden) return null; const b = e.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, h: b.height }; };
+      const nav = q('.hud-nav'), dest = q('.hud-dest'), m = window.__game.chevrons.mesh;
+      return { nav: box(nav), dest: box(dest), chip: box(q('.hud-roadname')), navText: nav.hidden ? '' : nav.innerText.replace(/\s+/g, ' '), destText: dest.hidden ? '' : dest.innerText.replace(/\s+/g, ' '),
+        count: m.count, shown: m.visible, w: innerWidth, side: document.documentElement.scrollWidth > innerWidth,
+        clipped: [nav, dest].some((e) => !e.hidden && e.scrollWidth > e.clientWidth + 1) };
+    });
+    const r = await look();
+    await page.screenshot({ path: path.join(OUT, 'phone-nav.png') });
+    expect(r.nav && r.dest, `the cards: ${JSON.stringify({ nav: !!r.nav, dest: !!r.dest })}`);
+    expect(/CA-55 North/i.test(r.navText), `the navigation line says "${r.navText}"`);
+    expect(/at your pace/.test(r.destText) && /simulated/.test(r.destText), `the destination line says "${r.destText}"`);
+    expect(r.nav.h <= 44 && r.dest.h <= 40, `not one line each: ${fmt(r.nav.h)} and ${fmt(r.dest.h)} px tall`);
+    const apart = (a, b) => a.r <= b.l || b.r <= a.l || a.b <= b.t || b.b <= a.t;
+    expect(apart(r.nav, r.dest) && apart(r.nav, r.chip) && apart(r.dest, r.chip), `overlap: ${JSON.stringify({ nav: r.nav, dest: r.dest, chip: r.chip })}`);
+    expect(r.nav.l >= 0 && r.nav.r <= r.w && r.dest.l >= 0 && r.dest.r <= r.w && !r.side && !r.clipped, 'a line runs off the screen or is cut short');
+    expect(r.shown && r.count > 20, `${r.count} chevrons, ${r.shown ? 'shown' : 'hidden'}`);
+    await page.getByRole('button', { name: 'Go to' }).click();
+    await page.getByRole('button', { name: 'Clear route', exact: true }).click();
+    await frames(page, 2);
+    const c = await look();
+    expect(!c.nav && !c.dest && !c.shown && c.count === 0, `after Clear route: ${JSON.stringify({ nav: !!c.nav, dest: !!c.dest, chevrons: c.count })}`);
+    await page.getByRole('button', { name: 'Go to' }).click();                  // back where the next check expects it
+    return `"${r.navText}" / "${r.destText}"; ${r.count} chevrons; cleared`;
+  });
   // the adaptive HUD (U1): every style has a status row, a compass and a clock chip whose temperature says it's
   // simulated. Minimal tucks the top bar and the corner window away after 4 s of just driving, keeps Pause in reach as
   // a round chip, and a tap on the road brings the rest back.

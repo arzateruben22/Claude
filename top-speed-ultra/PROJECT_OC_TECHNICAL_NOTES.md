@@ -67,6 +67,18 @@ traffic code.
   - `Game.followRoute()` keeps the navigator on track whenever the road under you changes: it ticks off a hand-off,
     plans again if you've left the route, or arrives. If there's no way from the road you're on, it keeps the
     destination and tries again at the next road, and after a turnaround or rejoin.
+  - **What the driver sees (U2).** `Game.nextManoeuvre()` turns `route[0]` into the card's arrow and words (a diverge,
+    or a ramp that forks at its end, is "Keep left/right"; the road named is the first freeway along the route), and
+    `sendHud()` adds the next exit along this road from `net.signs` (`exitsAlong`, one entry per ramp, built once per
+    road), the destination, its distance along the route, and a time at your pace (`pace`: your speed damped over about
+    12 s; no estimate under 4.5 m/s). `road/chevrons.ts` lays the blue chevrons: one `InstancedMesh` (about 80 flat
+    quads, no shadows, no fog, no depth write) whose legs (road, start, end, the lane needed) are rebuilt only when the
+    route or your road changes; each frame places the chevrons every 4 m for 300 m from the car. Lanes: the exit lane
+    within 1600 m of a diverge (the autopilot's distance), the side a forking ramp goes, the outside lane where a ramp
+    merges; the move over is a smoothstep from your lane. Because OSM ramps leave from the middle of the carriageway
+    (below), a leg ends where the ramp line is further out than the exit lane, not at the junction. The blend is
+    premultiplied (`src + dst * (1 - core)`): the glow adds light, the core also covers the road a little so the blue
+    reads on sunlit concrete. Hidden in the attract drive, in races and in the corner's sky camera.
 
 **OSM quirk to know about.** Ramp lines leave from the middle of the carriageway; that's where OSM puts the node.
 For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavement. Two things depend on this:

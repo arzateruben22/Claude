@@ -4,6 +4,51 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
+
+Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set
+(Go to, or `navigateTo`), reuses the route planner and `Game.nextManoeuvre()`, and is hidden in races.
+
+- **Navigation card** (top left on a wide screen): the manoeuvre's arrow in the route's blue (a fork for keep
+  left/right, mirrored for left; straight on otherwise), the distance, "Keep right" and the road it leads to as a green
+  guide sign ("CA-55 NORTH": the first freeway along the route, so a ramp signed for both directions reads the one you
+  want), and under a hairline the next exit along this road with its real sign text from the map data ("Your exit" when
+  it's the one the route takes, "Next exit" otherwise; on a ramp, "Now on" and the sign the ramp was taken from). A ramp
+  that forks at its end now reads "Keep left/right" too, not "Continue". The stats plate moves under the card.
+- **Destination card** (top right, under the corner window): the destination road and its distance along the route,
+  the time at your pace (your speed damped over about 12 s; "–" when you're barely moving) labelled "at your pace", and
+  the traffic setting labelled "simulated". The Minimal HUD tucks it away with the corner window.
+- **Phone**: each folds into one line. The manoeuvre (arrow, distance, sign) sits under the road chip where the green
+  prompt was; the destination line (time at your pace · traffic · simulated, plus the road when the sign doesn't
+  already name it) sits above the chip, under the speed box and the corner window, so neither covers more road than
+  the prompt did.
+- **Chevrons** (`src/game/road/chevrons.ts`): one InstancedMesh of up to 81 flat quads every 4 m for 300 m, 7 cm over
+  the road, fading in over the first 14 m and out over the last 150 m; on the lane the route needs (the exit lane within
+  1600 m of a diverge, moving over from your lane with a smoothstep; the side a forking ramp goes; the outside lane where
+  a ramp joins). Legs are worked out only when the route or your road changes (`chevrons.rebuilds`). A crisp core over
+  an additive glow, blended premultiplied so the blue holds on sunlit concrete (pure additive washed out to near white
+  there: the first capture). Seen from every camera; hidden with no route, in the attract drive, in races and in the
+  corner's sky camera.
+- **Open**: on a phone in the default driver's-seat view the HUD covers most of the chevrons; a layout fix to
+  follow. Screenshots: `tests/out/ui-after/nav-phone.png`, `nav-desktop.png`, `nav-chevrons-chase.png`,
+  `nav-chevrons-ramp.png`, `nav-sky-corner.png`, `tests/out/phone-nav.png` (local, not committed).
+- **Checked**: `npx tsc --noEmit` exits 0. `npm test -- --only=phone,launch,boot`: "19/19 passed", including the new
+  phone check "Go to: navigation line, destination line and road chevrons; Clear route hides them" (picks CA-55 North in
+  Go to on a 390 × 844 phone: both lines one line tall, clear of each other and the road chip, nothing cut short, 72
+  chevrons; Clear route hides both lines and all chevrons). `tests/out/u2-nav-shots.mjs` (Free Drive on I-405 North,
+  route to CA-55 North, the car in lane 2 of 5 about 230 m before the 55's ramp): the chevrons read d = 0 m at 6 m ahead,
+  2.2 m at 46 m, 6.7 m at 86 m and 7.3 m (the centre of lane 4, the exit lane) from 106 m on, then follow the ramp; on
+  the two-lane ramp before it forks they keep to its right lane (d = 1.8 m), the side for the 55 North; the card says
+  "730 ft · Keep right · CA-55 NORTH · Your exit: CA 55 North / CA 55 South / Freeway"; no clipped text, no sideways
+  scroll; Clear route: no cards, 0 chevrons; no page errors at either size.
+- **Screenshots** (tests/out/ui-after/): nav-phone.png, nav-desktop.png, nav-chevrons-chase.png, nav-chevrons-ramp.png,
+  nav-sky-corner.png; tests/out/phone-nav.png from the suite.
+- **Found, not fixed** (outside U2): the corner's sky camera draws in the wrong place when the render scale isn't 1
+  (the Low preset's 0.75 on a desktop): `renderCorner` multiplies the scissor and viewport by the pixel ratio, and three.js
+  multiplies them again, so the picture lands at 0.75 of its place and size on screen and the window stays blank
+  (nav-sky-corner.png). Wherever the renderer's pixel ratio isn't 1 (a phone on Medium or up: 1.5 to 2) it lands
+  scaled by that ratio instead. Passing CSS pixels (no `* pr`) should fix it.
+
 ## 2026-10-16: the adaptive HUD: a HUD style setting, a compass, a clock chip, auto-hide (UI pass, U1)
 
 Panels 1 and 9 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U1).

@@ -220,7 +220,7 @@ export function App() {
       case 'nav': return {
         cls: 'wide', body: <>
           <h2>Go to</h2>
-          <p className="fine">Pick a freeway and direction. The yellow line on the map and the prompt at the top show the way through each interchange.</p>
+          <p className="fine">Pick a freeway and direction. The yellow line on the map, the card at the top and the blue chevrons on the road show the way through each interchange.</p>
           <div className="grid nav">
             {ROUTES.flatMap((r) => (game.current?.mainsLabels ?? []).filter((l) => l.startsWith(r + ' ')).map((l) => (
               <button key={l} className={'gcell' + (navTarget === l ? ' on' : '')} onClick={() => navigate(l)}><Shield label={l} /></button>
@@ -407,7 +407,7 @@ export function App() {
   </>;
 
   return (
-    <div className={'app' + (idle ? ' hud-idle' : '')}>
+    <div className={'app' + (idle ? ' hud-idle' : '')} style={{ '--cw': settings.corner === 'off' ? '0px' : `${cornerPx + 6}px` } as CSSProperties}>
       <div className="stage" ref={host} />
       <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} bubble={idle && settings.corner !== 'off'} onAbility={() => game.current?.useAbility()} />
       {playing && settings.corner !== 'off' && (
