@@ -37,6 +37,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   const [silI, silS] = SIL[P.interior];
   return {
     paint: M.paint(paint, q, B.shutLines(), { key: id, flake: vela ? 0.1 : 0.15, rough: vela ? 0.3 : undefined }),
+    // the door mirrors' pods and stalks: the same paint without the shut lines (the shader draws them by position, so
+    // the door's shut line would cross the stalk); PlayerCar.setPaint tints both
+    mirrorPaint: M.paint(paint, q, [], { key: id + '-mirror', flake: vela ? 0.1 : 0.15, rough: vela ? 0.3 : undefined }),
     frit: M.gloss(0x050505), trim: M.gloss(0x070708), dark,
     glass: M.glass('tint', 0.62, { env: 1.0 }),
     carbon: M.carbon(q), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
@@ -95,7 +98,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   if (full) B.cabinSilhouette(kit);
   if (o.wheels ?? true) addWheels(kit, B, q);          // false: the game adds its own wheels, which spin and steer
   const mats = carMaterials(o.paint ?? P.paint, q, o.caliper ?? P.caliper, id);
-  kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
+  kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
   if (o.contactShadow ?? true) g.add(contactPatch(B.ZR - B.ZF, P.WP.reduce((m, [, w]) => Math.max(m, w), 0) * 2,
     [[-A(B).trackF, B.AXLE.zF], [A(B).trackF, B.AXLE.zF], [-A(B).trackR, B.AXLE.zR], [A(B).trackR, B.AXLE.zR]], (B.ZF + B.ZR) / 2));
   g.userData.materials = mats;

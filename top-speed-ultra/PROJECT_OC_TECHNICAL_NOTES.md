@@ -108,6 +108,21 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     slopes, irrigated green in town, and sand at sea level.
   - Scenery sits on a jittered grid and is always clear of roads. On the flats it's stucco houses with tile roofs
     and office blocks; elsewhere, palms, trees and shrubs.
+  - Buildings (W1). Houses are four plans in `Terrain.ts` `house(plan, detail)`: an L-shaped ranch and a two-storey
+    with a garage wing (hipped), a ranch with a gabled garage and a two-storey gabled house. On Low (`props < 0.6`)
+    plans 2 and 3 fold into 0 and 1, so a tile costs two house draw calls. Offices are three types in `props.ts`
+    `buildings()` (2, 3 and 8 storeys, with rooftop units and a penthouse on the tower). Every building is one
+    InstancedMesh per plan or type per tile, built face by face with `props.ts` `Shell`, over one of two atlases:
+    `textures.ts` `stucco(detail)` (window, upper, front and plain wall strips; Spanish tile, composite and shake
+    roof rows) and `facade(detail)` (curtain wall, tower glass and precast styles, then roof, rooftop units and
+    penthouse panel). Each atlas's alpha is a tint mask, not transparency. `props.ts` `buildingMat` patches
+    MeshStandardMaterial so that the instance colour packs tint.r + 2 × strip in r and tint.g + 2 × shade (one of four) in g. The
+    vertex colour marks what each face is: r tinted, g a baked shade, b whether the strip shift applies. One draw
+    call carries each house's stucco colour, roof row and shade, and each office's glass colour and style. The old
+    house's five random draws are kept in order and the look comes from a third stream, so the rest of the
+    scenery stays where it was. `detail` (props ≥ 1) adds soffits, both atlases' normal maps and the stucco's roughness map (the facade
+    always has one, for its glass).
+    Preview: `src/preview/test-buildings.ts`.
   - Palms (`road/props.ts` `palmTrunk()`, `palmCrown(detail)`; `textures.ts` `bark()`, `frond()`) are one
     InstancedMesh per part per tile. The crown is frond cards folded along the midrib and cut out by the frond
     texture's alpha (alphaTest 0.4, double-sided): 12 live and 5 dead fronds (382 triangles) on High and Ultra, 10 and
@@ -137,6 +152,17 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   visor, a roof fairing in paint, stacks, tanks, frame rails, fifth wheel, west-coast mirrors) placed at the front of
   a 20 m frame, and the 45 ft trailer (box, floor frame, skirts, conspicuity tape, landing gear, door rods, mud flaps,
   underride guard) is trim in that frame; `rig.axles` lists all five axles, so the game instances ten wheels.
+  Since W2 (2026-10-16) the trim also carries the body's details, laid on the loft's own section (`traffic.ts`
+  `bodyDetails()`, per kind from the `DOORS` table): door mirrors (a pod with a back-facing glass on a stalk; a
+  west-coast mirror on two arms on the box truck and the semi), the doors' cut lines as 14 mm dark strips from the
+  sill or arch up to the glass, matt black pillars across the glass band (the B-pillar, the rear door's divider),
+  door handles, wheel-arch liners (a six-segment tunnel and inboard wall), dark sills between the arches, blank
+  licence plates front and back (no text) and an unlit third brake light under the roof's back edge (not on the box
+  truck or semi). Still one trim mesh per class: the phone-tier trim the game instances grows from 30–110 to 188–258
+  triangles a vehicle (sedan 30 to 212, box truck 110 to 258, semi 498 to 578), and the 49 instanced traffic meshes
+  stay 49. The player's door mirror pods and stalks use their own key, `mirrorPaint`: the car's paint without
+  shut lines (the shader draws those by position, so the door's line crossed the stalk); `PlayerCar.setPaint` tints
+  `paint` and `mirrorPaint` together. That is one more mesh on the player's car.
 - **Headlights.** Two narrow soft spotlights (angle 0.20, penumbra 0.88) aimed just above level light traffic and
   walls; the pool on the road is painted: `textures.ts` `beamPool()` on a 12 × 38 m additive strip of 14 rows that
   `PlayerCar` re-lays each frame on the road's height ahead (`path.height`), opacity = beam level × lerp(0.35, 1,

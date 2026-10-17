@@ -306,19 +306,44 @@ await group('survival', async (use) => {
   });
   await check('traffic is the preview\'s bodies, with a 20 m tractor-trailer semi that spawns in the right lanes', async () => {
     const r = await game(page, () => {
-      const g = window.__game, cls = g.traffic.classes.map((c) => ({ id: c.id, len: +c.len.toFixed(1), wid: +c.wid.toFixed(2), wheels: c.wheels.length, trim: !!c.trim, tris: (c.body.index ? c.body.index.count : c.body.attributes.position.count) / 3 }));
+      const n = (g) => (g ? (g.index ? g.index.count : g.attributes.position.count) / 3 : 0);
+      const g = window.__game, cls = g.traffic.classes.map((c) => ({ id: c.id, len: +c.len.toFixed(1), wid: +c.wid.toFixed(2), wheels: c.wheels.length, trim: !!c.trim, tris: n(c.body), trimTris: n(c.trim) }));
+      const meshes = g.traffic.group.children.filter((o) => o.isInstancedMesh).length;
       g.setPaused(true); g.traffic.reseed(7); g.traffic.fill(g.view());
       const semis = g.traffic.cars.filter((c) => g.traffic.classes[c.cls].id === 'semi');
       const lanes = semis.map((c) => [c.lane, c.path.lanes]), right = lanes.filter(([l, n]) => l >= n - 2).length;
-      return { cls, cars: g.traffic.cars.length, semis: semis.length, right, lanes };
+      return { cls, meshes, cars: g.traffic.cars.length, semis: semis.length, right, lanes };
     });
     const semi = r.cls.find((c) => c.id === 'semi');
     expect(r.cls.length === 7, `${r.cls.length} classes, not 7`);
     expect(semi && semi.len === 20 && semi.wheels === 10 && semi.trim, `semi class: ${JSON.stringify(semi)}`);
     expect(r.cls.every((c) => c.tris > 400), 'a class has fewer than 400 triangles: ' + r.cls.map((c) => c.id + ':' + c.tris).join(' '));
+    // the trim carries the body details (mirrors on stalks, door seams, handles, pillars, arch liners, sills, plates,
+    // the third brake light) in the same one instanced mesh per class: seven meshes a class, as before them
+    expect(r.cls.every((c) => c.trimTris >= 150), 'a class\'s trim lacks its body details: ' + r.cls.map((c) => c.id + ':' + c.trimTris).join(' '));
+    expect(r.meshes === r.cls.length * 7, `${r.meshes} instanced traffic meshes for ${r.cls.length} classes, not ${r.cls.length * 7}`);
     expect(r.semis >= 2, `only ${r.semis} semis in ${r.cars} cars`);
     expect(r.right === r.semis, `${r.semis - r.right} of ${r.semis} semis spawned outside the two right lanes: ${JSON.stringify(r.lanes)}`);
-    return `${r.cls.length} classes, semi ${semi.len} m × ${semi.wid} m with ${semi.wheels} wheels; ${r.semis} of ${r.cars} cars are semis, all in the two right lanes`;
+    return `${r.cls.length} classes in ${r.meshes} instanced meshes, trim ${r.cls.map((c) => c.id + ' ' + c.trimTris).join(', ')} triangles; semi ${semi.len} m × ${semi.wid} m with ${semi.wheels} wheels; ${r.semis} of ${r.cars} cars are semis, all in the two right lanes`;
+  });
+  await check('the door mirrors have their own paint, without the shut lines, and follow the car\'s colour', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, car = g.car, cfg = car.config, find = (k) => { let m = null; car.body.traverse((o) => { if (!m && o.isMesh && o.name === k) m = o; }); return m; };
+      if (cfg.car === 'rossini-corsa') return { corsa: true };               // its mirror pods are carbon
+      const paint = find('paint'), mir = find('mirrorPaint');
+      if (!paint || !mir) return { found: `paint ${!!paint}, mirrorPaint ${!!mir}` };
+      const shut = (m) => m.material.userData.uniforms?.uShutN.value ?? -1, hex = () => [paint.material.color.getHex(), mir.material.color.getHex()];
+      const was = cfg.paint, to = was === 0x1d4f9c ? 0xa80d10 : 0x1d4f9c;
+      car.configure({ ...cfg, paint: to }); const after = hex();
+      car.configure({ ...cfg, paint: was }); const back = hex();
+      return { same: paint.material === mir.material, shutPaint: shut(paint), shutMirror: shut(mir), was, to, after, back };
+    });
+    if (r.corsa) return 'the Corsa: carbon mirror pods';
+    expect(!r.found, r.found);
+    expect(!r.same, 'the mirrors share the body\'s paint material');
+    expect(r.shutPaint > 0 && r.shutMirror === 0, `shut lines: body ${r.shutPaint}, mirrors ${r.shutMirror}`);
+    expect(r.after.every((h) => h === r.to) && r.back.every((h) => h === r.was), `repaint ${r.to.toString(16)}: ${r.after.map((h) => h.toString(16))}; back to ${r.was.toString(16)}: ${r.back.map((h) => h.toString(16))}`);
+    return `body ${r.shutPaint} shut lines, mirrors none; repainted #${r.to.toString(16)} and back, both followed`;
   });
   await check('time trial traffic is the same every time', async () => {
     const snap = () => game(page, async () => {
@@ -590,6 +615,39 @@ await group('render', async (use) => {
     expect(r.under[3] === 0 && r.under[0] + r.under[1] + r.under[2] > 60, `a transparent texel holds rgba ${r.under.join(',')}`);
     return `${r.inst} palms in ${r.crowns} crown meshes, ${r.tris} triangles a crown at Low, castShadow set; blade ${fmt(r.gap * 100)}% gaps; transparent texel rgba ${r.under.join(',')}`;
   });
+  // the buildings (W1): house plans (two at Low, four above) and three office types, each one instanced mesh with one material over an
+  // atlas whose alpha is the tint mask; every instance's colour packs its tint and its strip (roof row or facade style)
+  await check('buildings: house plans and office types, one draw call each, a look per instance', async () => {
+    const r = await game(page, () => {
+      const kinds = {}, roofs = new Set(), styles = new Set(), tints = new Set();
+      let single = true, mask = null;
+      window.__game.terrain.group.traverse((o) => {
+        const n = o.isInstancedMesh ? o.geometry.name : '';
+        if (!/^(house|office)-/.test(n)) return;
+        const tris = o.geometry.attributes.position.count / 3;
+        const k = (kinds[n] ??= { meshes: 0, inst: 0, tris });
+        k.meshes++; k.inst += o.count;
+        single &&= !Array.isArray(o.material) && !!o.instanceColor;
+        if (!mask && n.startsWith('house')) { const d = o.material.map.image.data; let a0 = 0, a1 = 0; for (let i = 3; i < d.length; i += 4) d[i] === 0 ? a0++ : d[i] === 255 && a1++; mask = { a0, a1, all: d.length / 4 }; }
+        const c = o.instanceColor?.array ?? [];
+        for (let i = 0; i < o.count; i++) {
+          const kk = Math.floor(c[i * 3] / 2);
+          (n.startsWith('house') ? roofs : styles).add(kk);
+          if (n.startsWith('house')) tints.add([c[i * 3] - 2 * kk, c[i * 3 + 1] % 2, c[i * 3 + 2]].map((v) => v.toFixed(2)).join());
+        }
+      });
+      return { kinds, single, mask, roofs: [...roofs].sort(), styles: [...styles].sort(), tints: tints.size };
+    });
+    const plans = Object.keys(r.kinds).filter((n) => n.startsWith('house')).sort(), offices = Object.keys(r.kinds).filter((n) => n.startsWith('office'));
+    expect(plans.join() === 'house-0,house-1', `house plans built at Low: ${plans.join(', ') || 'none'} (Low builds plans 0 and 1)`);
+    expect(offices.length > 0, 'no office types built on I-405 North');
+    expect(r.single, 'a building mesh has several materials or no instance colours');
+    const worst = Math.max(...plans.map((n) => r.kinds[n].tris));
+    expect(worst <= 48, `a house plan has ${worst} triangles at Low (budget 48)`);
+    expect(r.mask && r.mask.a0 > 0.01 * r.mask.all && r.mask.a1 > 0.5 * r.mask.all, `the stucco atlas's tint mask: ${JSON.stringify(r.mask)}`);
+    expect(r.roofs.length === 3 && r.tints >= 6, `roof rows used ${r.roofs.join(',')}, ${r.tints} stucco tints`);
+    return `${plans.map((n) => `${n} ${r.kinds[n].inst} in ${r.kinds[n].meshes} meshes, ${r.kinds[n].tris} tris`).join('; ')}; ${offices.map((n) => `${n} ${r.kinds[n].inst}`).join(', ')}; roofs ${r.roofs.join(',')}, office styles ${r.styles.join(',')}, ${r.tints} stucco tints; mask ${(100 * r.mask.a0 / r.mask.all).toFixed(1)}% untinted`;
+  });
   await check('Live time follows the real sun over OC', async () => {
     await page.clock.setFixedTime(new Date('2026-10-12T09:13:00Z'));        // 02:13 Pacific
     const night = await sky('live', 'clear');
@@ -642,16 +700,19 @@ await group('render', async (use) => {
         let live = false; g.scene.traverse((o) => { if (o.name === 'rear-view-mirror' && o.target) live = true; });
         // the palm crowns' triangles at this tier (alpha-tested frond cards; fewer fronds below High)
         let crown = 0; g.terrain.group.traverse((o) => { if (o.isInstancedMesh && o.material.alphaTest > 0) crown = (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
-        return { ...g.stats, post: !!g.composer, live, crown };
+        // the house plans built (W1): four on High and Ultra, two on Low
+        const plans = new Set(); g.terrain.group.traverse((o) => { if (o.isInstancedMesh && /^house-/.test(o.geometry.name)) plans.add(o.geometry.name); });
+        return { ...g.stats, post: !!g.composer, live, crown, plans: plans.size };
       }, q);
       crownHigh ||= s.crown;
       expect(s.crown > 0 && s.crown <= 448 && (q === 'low') === (s.crown < crownHigh), `${q}: palm crowns of ${s.crown} triangles (High ${crownHigh})`);
       expect(s.roads > 0 && s.tiles > 0, `${q}: ${s.roads} road chunks, ${s.tiles} tiles`);
+      expect(s.plans === (q === 'low' ? 2 : 4), `${q}: ${s.plans} house plans built`);
       expect(s.post === (q !== 'low'), `${q}: post-processing ${s.post ? 'on' : 'off'}`);
       expect(s.live === (q !== 'low'), `${q}: live mirrors ${s.live ? 'on' : 'off'}`);
       if (slow || q === 'low') await frames(page, 3, 400000);
       if (slow && q !== 'low') await shot(`quality-${q}`);
-      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
+      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles, ${s.plans} house plans${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
     }
     return out.join('; ');
   });

@@ -1,6 +1,8 @@
 // Generic, unbranded traffic vehicles with real proportions: a mid-size sedan, a coupe, a compact SUV, a full-size
 // crew-cab pickup, a high-roof van and a 16 ft box truck. One body loft each with the glass band split into a second
-// material, a trim material carrying tyres, rims, grille, bumpers and mirrors by vertex colour, and the lamps.
+// material, a trim material carrying tyres, rims, grille, bumpers and the body's details (door mirrors on stalks, the
+// doors' cut lines, handles, window pillars, wheel-arch liners, dark sills, blank plates, the third brake light) by
+// vertex colour, and the lamps.
 //
 //   trafficParts(kind, quality?, { wheels? }): { paint, glass, trim, lamps, spec }
 //     Merged, AO-baked geometries in the vehicle's own frame (x right, y up, faces -z, origin on the ground under
@@ -45,6 +47,158 @@ function tint(g: THREE.BufferGeometry, c: readonly number[]) {
   g.setAttribute('color', new THREE.BufferAttribute(a, 3));
   return g;
 }
+// ------------------------------------------------------------------------------------------------ body details
+// Along each side (z in the vehicle's frame, the semi's in its tractor's): the doors' cut lines, the window pillars
+// across the glass band ([z, width], matt black: the B-pillar, and the divider behind a rear door) and the door
+// handles, near each door's back edge
+const DOORS: Record<TrafficKind, { cuts: number[]; pillars: [number, number][]; handles: number[] }> = {
+  sedan: { cuts: [-0.97, 0.08, 0.98], pillars: [[0.08, 0.085], [0.98, 0.04]], handles: [-0.14, 0.78] },
+  coupe: { cuts: [-0.8, 0.5], pillars: [[0.5, 0.05]], handles: [0.28] },
+  suv: { cuts: [-1.02, 0.1, 1.0], pillars: [[0.1, 0.09], [1.0, 0.05]], handles: [-0.12, 0.8] },
+  pickup: { cuts: [-1.14, -0.18, 0.4, 0.6], pillars: [[-0.18, 0.09]], handles: [-0.38, 0.2] },     // 0.6: cab to bed
+  van: { cuts: [-1.82, -0.95, 0.35], pillars: [[-0.95, 0.1], [0.35, 0.06]], handles: [-1.15, -0.8] }, // a sliding door
+  boxTruck: { cuts: [-2.82, -1.62], pillars: [], handles: [-1.8] },
+  semi: { cuts: [-0.9, 0.3], pillars: [[0.3, 0.08]], handles: [0.12] },
+};
+const DETAIL = {
+  seam: [0.012, 0.012, 0.014], sill: [0.045, 0.045, 0.05], liner: [0.02, 0.02, 0.022], handle: [0.09, 0.09, 0.095],
+  plate: [0.8, 0.81, 0.82], glass: [0.34, 0.38, 0.44],
+} as const;
+type Fr = (w: number, h: number, x: number, y: number, z: number, c: readonly number[], back?: boolean) => THREE.BufferGeometry;
+type Section = (z: number) => { row: V3[]; c: number[]; yb: number };
+
+// flat faces in one colour, each wound to face the normal it is given
+class Faces {
+  private pos: number[] = []; private nor: number[] = [];
+  tri(a: V3, b: V3, c: V3, n: V3) {
+    const ok = b.clone().sub(a).cross(c.clone().sub(a)).dot(n) >= 0;
+    for (const v of ok ? [a, b, c] : [a, c, b]) { this.pos.push(v.x, v.y, v.z); this.nor.push(n.x, n.y, n.z); }
+  }
+  quad(a: V3, b: V3, c: V3, d: V3, n: V3) { this.tri(a, b, c, n); this.tri(a, c, d, n); }
+  geo(col: readonly number[]) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(this.pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(this.nor, 3));
+    return tint(g, col);
+  }
+  get empty() { return !this.pos.length; }
+}
+
+// a blank licence plate (no text, no real format) in a black frame, centred at (x, y) on a face at z
+function plate(fr: Fr, x: number, y: number, z: number, back: boolean) {
+  const s = back ? 1 : -1;
+  return [fr(0.335, 0.18, x, y, z + s * 0.004, TRIM.black, back), fr(0.305, 0.152, x, y, z + s * 0.009, DETAIL.plate, back)];
+}
+
+// The details that make a lofted body read as a car, all vertex-coloured trim (the same one mesh per class): door
+// mirrors on stalks (a pod with its glass facing back; a tall west-coast mirror on two arms on a truck), the doors'
+// cut lines as dark recessed strips, the door handles, the B-pillar and the rear door's divider across the glass,
+// wheel-arch liners, dark lower sills between the arches, blank licence plates front and back, and the third brake
+// light under the roof's back edge (not on the box truck or the semi: the rule exempts vehicles 80 in wide or wider).
+function bodyDetails(kind: TrafficKind, S: TrafficSpec, zA: [number, number], section: Section, nr: number, fr: Fr) {
+  const zF = -S.len / 2, zR = S.len / 2, truck = !!S.rig || kind === 'boxTruck', tall = kind === 'van' || kind === 'boxTruck';
+  const out: THREE.BufferGeometry[] = [];
+  const f = { seam: new Faces(), sill: new Faces(), liner: new Faces(), handle: new Faces(), glass: new Faces() };
+  // the side of the section at z between heights y0 and y1: a polyline up the skin, with its outward normals
+  const sidePath = (z: number, side: 1 | -1, y0: number, y1: number) => {
+    const { row } = section(z), pts: V3[] = [];
+    for (let j = 0; j < nr / 2; j++) {
+      const a = row[side > 0 ? j : nr - j], b = row[side > 0 ? j + 1 : nr - j - 1];
+      if (b.y <= y0 || a.y >= y1) continue;
+      if (!pts.length) pts.push(a.clone().lerp(b, Math.max(0, (y0 - a.y) / (b.y - a.y))));
+      pts.push(a.clone().lerp(b, Math.min(1, (y1 - a.y) / (b.y - a.y))));
+    }
+    const nrm = pts.map((_, k) => { const a = pts[Math.max(0, k - 1)], b = pts[Math.min(pts.length - 1, k + 1)]; return v3(side * (b.y - a.y), -side * (b.x - a.x), 0).normalize(); });
+    return { pts, nrm };
+  };
+  const crown = (z: number) => section(z).row[nr / 2].y;
+  // the side glass at z: its lowest and highest points, or null where there is none
+  const glassBand = (z: number): [number, number] | null => {
+    const { row, c } = section(z); let lo = Infinity, hi = -Infinity;
+    for (let j = 0; j <= nr / 2; j++) if (c[j]) { lo = Math.min(lo, row[j].y); hi = Math.max(hi, row[j].y); }
+    return lo < hi ? [lo, hi] : null;
+  };
+  const sillTop = (z: number) => glassBand(z)?.[0] ?? Math.min(S.belt + 0.03, crown(z) - 0.06);
+  // a strip up the side at z from y0 to y1, w long, d proud of the skin
+  const strip = (fc: Faces, z: number, side: 1 | -1, y0: number, y1: number, w: number, d: number, z1 = z + w / 2, z0 = z - w / 2) => {
+    const { pts, nrm } = sidePath(z, side, y0, y1);
+    for (let k = 0; k + 1 < pts.length; k++) {
+      const a = pts[k].clone().addScaledVector(nrm[k], d), b = pts[k + 1].clone().addScaledVector(nrm[k + 1], d);
+      fc.quad(v3(a.x, a.y, z0), v3(a.x, a.y, z1), v3(b.x, b.y, z1), v3(b.x, b.y, z0), nrm[k].clone().add(nrm[k + 1]).normalize());
+    }
+  };
+  // a point d proud of the side at (z, y), and the skin's normal there
+  const sideAt = (z: number, side: 1 | -1, y: number, d = 0) => {
+    const { pts, nrm } = sidePath(z, side, y - 0.01, y + 0.01);
+    if (pts.length < 2) { const x = Math.abs(section(z).row[0].x); return { p: v3(side * (x + d), y, z), n: v3(side, 0, 0) }; }   // above the side
+    const n = nrm[0].clone().add(nrm[nrm.length - 1]).normalize();
+    return { p: pts[0].clone().lerp(pts[pts.length - 1], 0.5).addScaledVector(n, d), n };
+  };
+  const D = DOORS[kind];
+  for (const sd of [1, -1] as const) {
+    // the doors' cut lines: from the sill (or the arch) up to the glass
+    for (const z of D.cuts) strip(f.seam, z, sd, section(z).yb + 0.012, Math.min(sillTop(z), crown(z) - 0.06) - 0.004, 0.014, 0.01);
+    // the pillars across the glass band, a little over its edges
+    for (const [z, w] of D.pillars) { const g = glassBand(z); if (g) strip(f.seam, z, sd, g[0] - 0.012, g[1] + 0.012, w, 0.01); }
+    // handles: a dark grip just below the glass (lower on a truck's tall door)
+    for (const z of D.handles) {
+      const { p, n } = sideAt(z, sd, sillTop(z) - (truck ? 0.38 : 0.08), 0.01), u = v3(0, 0.017, 0);
+      f.handle.quad(v3(p.x, p.y - u.y, z - 0.07), v3(p.x, p.y - u.y, z + 0.07), v3(p.x, p.y + u.y, z + 0.07), v3(p.x, p.y + u.y, z - 0.07), n);
+    }
+  }
+  // door mirrors, at the door's front top corner
+  {
+    const zm = S.ws0 + (S.rig ? 0.1 : 0.2), ym = sillTop(zm);
+    for (const sd of [1, -1] as const) {
+      const xs = Math.abs(sideAt(zm, sd, ym).p.x), box = (w: number, h: number, d: number, x: number, y: number, z: number) => { const b = new THREE.BoxGeometry(w, h, d); b.translate(x, y, z); return b; };
+      if (truck) {
+        const hw = 0.2, hh = 0.42, hd = 0.08, xc = xs + 0.32, yc = ym + 0.3, xa = xc - hw / 2 - xs + 0.03;
+        out.push(tint(box(hw, hh, hd, sd * xc, yc, zm), TRIM.black));
+        for (const dy of [-0.15, 0.15]) out.push(tint(box(xa, 0.025, 0.025, sd * (xs - 0.02 + xa / 2), yc + dy, zm), TRIM.black));
+        f.glass.quad(v3(sd * (xc - hw / 2 + 0.015), yc - hh / 2 + 0.02, zm + hd / 2 + 0.003), v3(sd * (xc + hw / 2 - 0.015), yc - hh / 2 + 0.02, zm + hd / 2 + 0.003),
+          v3(sd * (xc + hw / 2 - 0.015), yc + hh / 2 - 0.02, zm + hd / 2 + 0.003), v3(sd * (xc - hw / 2 + 0.015), yc + hh / 2 - 0.02, zm + hd / 2 + 0.003), v3(0, 0, 1));
+      } else {
+        const big = kind === 'suv' || kind === 'pickup' || kind === 'van';
+        const mw = big ? 0.24 : 0.2, mh = big ? 0.15 : 0.12, md = 0.09, xc = xs + 0.06 + mw / 2, yc = ym + mh / 2 - 0.005;
+        // the pod: a box whose nose is lower and swept back at its outboard end
+        const pod = new THREE.BoxGeometry(mw, mh, md), pp = pod.attributes.position;
+        for (let i = 0; i < pp.count; i++) if (pp.getZ(i) < 0) { pp.setY(i, pp.getY(i) * 0.72); if (pp.getX(i) * sd > 0) pp.setZ(i, pp.getZ(i) + 0.03); }
+        pod.computeVertexNormals(); pod.translate(sd * xc, yc, zm);
+        out.push(tint(pod, TRIM.black), tint(box(0.09, 0.03, 0.05, sd * (xs + 0.035), ym + 0.012, zm + 0.01), TRIM.black));
+        const gw = mw / 2 - 0.016, gh = mh / 2 - 0.016, gz = zm + md / 2 + 0.003;
+        f.glass.quad(v3(sd * (xc - gw), yc - gh, gz), v3(sd * (xc + gw), yc - gh, gz), v3(sd * (xc + gw), yc + gh, gz), v3(sd * (xc - gw), yc + gh, gz), v3(0, 0, 1));
+      }
+    }
+  }
+  if (!S.rig) {
+    // wheel-arch liners: a dark tunnel just inside each arch's cut, closed by a wall on the inboard side
+    const R = (S.r + 0.06) * 0.985, Ry = R * 0.95, n = 6;
+    for (const za of zA) {
+      const xo = Math.abs(section(za).row[0].x) - 0.012, xi = xo - 0.3;
+      const arc = Array.from({ length: n + 1 }, (_, k) => { const t = (Math.PI * k) / n; return [S.r + Ry * Math.sin(t), za - R * Math.cos(t)]; });
+      for (const sd of [1, -1] as const) for (let k = 0; k < n; k++) {
+        const [y0, z0] = arc[k], [y1, z1] = arc[k + 1], tm = (Math.PI * (k + 0.5)) / n;
+        f.liner.quad(v3(sd * xi, y0, z0), v3(sd * xo, y0, z0), v3(sd * xo, y1, z1), v3(sd * xi, y1, z1), v3(0, -Math.sin(tm), Math.cos(tm)));
+        f.liner.tri(v3(sd * xi, S.r, za), v3(sd * xi, y0, z0), v3(sd * xi, y1, z1), v3(sd, 0, 0));
+      }
+    }
+    // the lower sills between the arches, in dark plastic
+    const z0 = zA[0] + S.r + 0.08, z1 = zA[1] - S.r - 0.08;
+    for (const sd of [1, -1] as const) strip(f.sill, (z0 + z1) / 2, sd, S.sill - 0.01, S.sill + (tall ? 0.12 : 0.09), 0, 0.006, z1, z0);
+    // licence plates: the front one between the bumper and the grille, the back one low on the tail
+    out.push(...plate(fr, 0, S.sill + 0.22, zF - 0.016, false), ...plate(fr, 0, S.sill + (kind === 'boxTruck' ? 0.32 : 0.3), zR + 0.016, true));
+  }
+  // the third brake light: centred under the roof's back edge, laid on the slope there
+  if (!truck) {
+    const yc = S.roof - 0.07; let zc = zR;
+    while (zc > 0 && crown(zc) < yc) zc -= 0.005;
+    const slope = (crown(zc + 0.01) - crown(zc - 0.01)) / 0.02, n = v3(0, 1, -slope).normalize();
+    const c = new THREE.PlaneGeometry(0.3, 0.035); c.rotateX(Math.atan2(-n.y, n.z)); c.translate(0, crown(zc), zc); c.translate(n.x * 0.008, n.y * 0.008, n.z * 0.008);
+    out.push(tint(c, TRIM.tail));
+  }
+  for (const [k, fc] of Object.entries(f)) if (!fc.empty) out.push(fc.geo(DETAIL[k as keyof typeof f]));
+  return out;
+}
+
 export function trafficMaterials(paint: number, q: Quality) {
   return {
     paint: M.paint(paint, q, [], { key: 'traffic', flake: 0.2 }),
@@ -83,13 +237,13 @@ export function trafficParts(kind: TrafficKind, quality: Quality = 'high', o: { 
   const topAt = curve([[zF, S.hood - 0.08], [zF + 0.25, S.hood], [S.ws0, S.hood + 0.04], [S.ws1, S.roof], [S.box ? S.box[0] : S.bl0 - 0.05, S.roof], [S.bl0, S.box ? S.roof : S.roof - 0.02], [S.bl1, S.deck], [zR - 0.15, S.deck], [zR, S.deck - 0.06]]);
   const cabTop = (z: number) => (S.bed !== undefined && z > S.bl1 ? S.belt : topAt(z));
   const ns = q === 'high' ? 70 : 44, nr = q === 'high' ? 26 : 18;
-  const rows: V3[][] = [], cls: number[][] = [];
-  for (let i = 0; i <= ns; i++) {
-    const t = i / ns, z = zF + (zR - zF) * t;
+  // the section at z: its points around the half-section (right side up, over, left side down) and which are glass;
+  // the loft samples it ns + 1 times, and the trim's details below are laid on it
+  const section = (z: number) => {
     const endR = Math.min(1, Math.min(z - zF, zR - z) / 0.22), end = 1 - Math.sqrt(Math.max(0, 1 - endR * endR));
     const w = W2 - 0.12 * end - hoodIn * (1 - sstep(S.ws0 - 0.55, S.ws0 + 0.05, z)), top = cabTop(z) - 0.06 * end;
     let yb = S.sill;
-    for (const za of zA) { const dz = Math.abs(z - za), R = S.r + 0.06; if (dz < R) yb = Math.max(yb, S.r + Math.sqrt(R * R - dz * dz) * 0.95); }
+    for (const za of zA) { const e = Math.abs(z - za), R = S.r + 0.06; if (e < R) yb = Math.max(yb, S.r + Math.sqrt(R * R - e * e) * 0.95); }
     const row: V3[] = [], c: number[] = [];
     const green = top > S.belt + 0.05 && !(S.box && z > S.box[0]);
     for (let j = 0; j <= nr; j++) {
@@ -102,8 +256,10 @@ export function trafficParts(kind: TrafficKind, quality: Quality = 'high', o: { 
       row.push(v3(x, y, z));
       c.push(green && y > S.belt + 0.04 && y < top - 0.07 && z > S.ws0 + 0.04 && z < Math.min(S.glassEnd ?? 1e9, Math.max(S.bl1, S.ws1 + 0.3)) - 0.04 ? 1 : 0);
     }
-    rows.push(row); cls.push(c);
-  }
+    return { row, c, yb };
+  };
+  const rows: V3[][] = [], cls: number[][] = [];
+  for (let i = 0; i <= ns; i++) { const sc = section(zF + (zR - zF) * (i / ns)); rows.push(sc.row); cls.push(sc.c); }
   const body = gridGeo(rows, { flip: true });
   const idx = body.index!.array, paintI: number[] = [], glassI: number[] = [];
   for (let i = 0; i < ns; i++) for (let j = 0; j < nr; j++) {
@@ -127,11 +283,8 @@ export function trafficParts(kind: TrafficKind, quality: Quality = 'high', o: { 
   for (const sd of [1, -1]) {
     lamps.push(fr(S.wid * 0.18, 0.09, sd * W2 * 0.7, S.hood - 0.12, zF - 0.014, TRIM.head));
     if (!S.rig) lamps.push(fr(S.wid * 0.12, 0.16, sd * W2 * 0.78, (S.box ? 1.0 : S.deck - 0.14), zR + 0.014, TRIM.tail, true));
-    // mirrors: a small housing on a car, a tall west-coast mirror on an arm on a tractor
-    const m = S.rig ? new THREE.BoxGeometry(0.05, 0.5, 0.16) : new THREE.BoxGeometry(0.06, 0.14, 0.2);
-    m.translate(sd * (W2 + (S.rig ? 0.3 : 0.1)), S.belt + (S.rig ? 0.45 : 0.08), S.ws0 + 0.15); trim.push(tint(m, TRIM.black));
-    if (S.rig) { const arm = new THREE.BoxGeometry(0.3, 0.03, 0.03); arm.translate(sd * (W2 + 0.15), S.belt + 0.7, S.ws0 + 0.15); trim.push(tint(arm, TRIM.black)); }
   }
+  trim.push(...bodyDetails(kind, S, zA, section, nr, fr));
   for (const p of paintParts) if (p.attributes.color) p.deleteAttribute('color');
   if (S.rig) {
     const R = S.rig, [t0, t1] = R.trailer, [y0, y1] = R.trailerY, tw = S.wid + 0.1, tl = t1 - t0, tz = (t0 + t1) / 2;
@@ -141,6 +294,7 @@ export function trafficParts(kind: TrafficKind, quality: Quality = 'high', o: { 
     const tandem = (R.axles[1] + R.axles[2]) / 2 - dz;
     trim.push(fr(S.wid * 0.62, (S.hood - S.sill) * 0.55, 0, S.sill + (S.hood - S.sill) * 0.55, zF - 0.015, TRIM.chrome));
     put(S.wid + 0.1, 0.24, 0.14, 0, S.sill + 0.12, zF + 0.04, TRIM.chrome);
+    trim.push(...plate(fr, 0, S.sill + 0.12, zF - 0.03, false));
     put(S.wid - 0.1, 0.05, 0.4, 0, S.roof - 0.02, S.ws1 - 0.1, TRIM.black);
     paintParts.push(wedge(S.wid - 0.3, S.ws1 + 0.3, S.bl1 - 0.1, S.roof - 0.08, S.roof + 0.05, y1 - 0.1));
     put(0.95, 0.08, 0.95, 0, 1.12, tandem, TRIM.black);
@@ -155,6 +309,7 @@ export function trafficParts(kind: TrafficKind, quality: Quality = 'high', o: { 
     put(tw - 0.2, 0.22, tl - 0.6, 0, y0 - 0.11, tz, TRIM.black);                // the floor frame under it
     put(0.025, y1 - y0 - 0.3, 0.03, 0, (y0 + y1) / 2, t1 + 0.012, TRIM.black);  // the seam between the rear doors
     put(tw - 0.3, 0.12, 0.08, 0, 0.55, t1 - 0.08, TRIM.black);                  // the underride guard
+    trim.push(...plate(fr, -0.62, y0 + 0.17, t1 + 0.02, true));                  // the plate, between the lock rods
     for (const sd of [1, -1]) {
       put(0.14, y0 - 0.3, 0.14, sd * 0.55, (y0 - 0.3) / 2 + 0.3, t0 + 3.4, TRIM.black);   // landing gear
       put(0.62, 0.5, 0.02, sd * (S.track - 0.05), 0.28, R.axles[R.axles.length - 1] + 0.75, TRIM.black);  // mud flaps

@@ -97,6 +97,55 @@ The owner asked for a main menu that feels "more seamless" with "a finer luxury 
   menu-after-desktop.png, u0-crossfade-mid-phone.png, u0-crossfade-mid-desktop.png, u0-focus-phone.png,
   u0-focus-desktop.png, and the full set phone-*.png / desktop-*.png (menu, settings, bests, profile, driver, garage,
   start, course, loading, driving, goto, paused, results).
+## 2026-10-16: traffic cars get door seams, mirrors and pillars; the player's door mirror loses its dark band (realism pass, W2)
+
+Before, traffic bodies were smooth soap bars: no door cut lines, handles, pillars or plates, and a bare black box beside
+each windscreen pillar for a mirror. Now every class carries, in its existing vertex-coloured trim mesh: door mirrors on
+stalks (a pod with a glass facing back; west-coast mirrors on two arms on the box truck and semi), dark recessed
+door-seam strips (front and rear door cuts; the van's sliding door; the pickup's cab-to-bed gap), door handles, a
+black B-pillar and rear-door divider across the glass, wheel-arch liners, darker lower sills, blank licence plates
+front and back (no text, no real format) and a third brake light under the roof's back edge (not on the box truck
+or semi). The player's door mirror pod and stalk now use their own paint (`mirrorPaint`, no shut lines), so the
+door's shut line no longer draws a dark band across the stalk; `PlayerCar.setPaint` tints both. Details in
+`PROJECT_OC_TECHNICAL_NOTES.md` (traffic).
+
+- Draw calls: traffic stays 49 instanced meshes (7 classes x 7). Whole frame at 960x540, High, same seeded road:
+  chase 635 → 637, cockpit 778 → 780, hood 559 → 561; the +2 fits the player's one new mirror mesh in the colour
+  and shadow passes, the only mesh added. Triangles a frame: chase 1,543,728 → 1,570,336 (+1.7%), cockpit
+  2,101,020 → 2,140,932, hood 1,438,855 → 1,465,463.
+- Trim triangles a vehicle as the game instances it (phone geometry): sedan 30 → 212, coupe 30 → 188, SUV 30 → 220,
+  pickup 42 → 236, van 30 → 212, box truck 110 → 258, semi 498 → 578. The player's paint (44,930) is now paint
+  43,010 + mirrorPaint 1,920.
+- Checked by eye in headless Chromium (SwiftShader) at 960x540. Before: `tests/out/w2-before-preview-lineup.png`,
+  `-preview-sedan.png`, `-preview-sedan-rear.png`, `w2-before-chase.png` (crops `-chase-sedans`, `-chase-left4x`),
+  `w2-before-cockpit-mirror.png`, `w2-before-hood.png` (crops `-hood-left3x`, `-hood-right`). After: the same names
+  with `w2-after-`, plus `w2-after-preview-semi.png` and `-boxtruck-rear.png`; side by side in `tests/out/w2-cmp-*.png`.
+- Suite (`--only=survival,race,render`, load average 17 on 4 cores from other renders): 25/28. New checks pass:
+  "traffic is the preview's bodies..." (49 instanced meshes, trim triangles as above) and "the door mirrors have
+  their own paint, without the shut lines, and follow the car's colour". The three failures were timeouts: "pause
+  stops the simulation" and "recovers from a lost WebGL context" both pass when re-run with the suite's own steps
+  and longer waits; "racing slowly..." and "flat out, the autopilot wins..." each wait 10 s for the result and each
+  passed in one run and timed out in another, with the same build.
+- Not measured on a real phone or GPU.
+
+## 2026-10-16: houses and offices look like Orange County, not Monopoly pieces (realism pass, W1)
+
+Before, every house was the same white box with a salmon cone roof and every office a tan box with one window grid.
+Now houses come in four plans (L-shaped ranch, two-storey with garage wing, ranch with gabled garage, two-storey
+gabled), with windows, a panelled front door and sidelight, sectional garage doors, and Spanish-tile, grey-composite
+or shake roofs over OC stucco tints. Offices come in three types (2, 3 and 8 storeys) with curtain wall, tower glass or
+precast facades, rooftop units and a penthouse on the tower. Low keeps the variety with hipped plans only (two house
+draw calls per tile). Each plan or type is one instanced draw call per tile over two shared atlases; the scenery
+layout is unchanged. Details in `PROJECT_OC_TECHNICAL_NOTES.md`; preview page `src/preview/test-buildings.ts`.
+
+- Checked by eye in headless Chromium (SwiftShader) at 960x540, High and Low, chase and hood views; a reviewer
+  pass compared before and after and found no regression.
+- Before: `tests/out/w1-before-high-chase.png`, `w1-before-high-hood.png`, `w1-before-high-office-chase.png`,
+  `w1-before-high-office-hood.png`, `w1-before-low-chase.png`, `w1-before-low-hood.png`.
+- After: `tests/out/w1-after-high-chase.png`, `w1-after-high-hood.png`, `w1-after-high-office-chase.png`,
+  `w1-after-high-office-hood.png`, `w1-after-low-chase.png`, `w1-after-low-hood.png`, crops
+  `tests/out/w1-crop-after-*.png`, preview `tests/out/w1-prev2-office0.png`, atlas `tests/out/w1-atlas.png`.
+- Not measured on a real phone or GPU.
 
 ## 2026-10-16: the game is "OC Ultra", and the OC sunset wordmark replaces the R badge (UI pass, identity)
 

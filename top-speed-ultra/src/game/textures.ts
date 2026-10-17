@@ -348,28 +348,359 @@ export function frond(): THREE.Texture {
   });
 }
 
-// stucco walls with a window grid (beige or office glass), one cell = one storey x one bay
-export function facade(kind: 0 | 1 | 2): THREE.Texture {
-  return once('facade' + kind, () => {
-    const n = 256, [c, g] = mk(n, n), r = rng(100 + kind);
-    const wall = ['#d9cbb2', '#e8e4dc', '#9fb1c2'][kind], glass = ['#3d4b5a', '#566676', '#2b3d52'][kind];
-    g.fillStyle = wall; g.fillRect(0, 0, n, n);
-    for (let i = 0; i < 2000; i++) { g.fillStyle = `rgba(0,0,0,${r() * 0.04})`; g.fillRect(r() * n, r() * n, 2, 2); }
-    if (kind === 2) {                               // curtain wall
-      g.fillStyle = glass; g.fillRect(0, 0, n, n);
-      g.strokeStyle = '#c9d3dc'; g.lineWidth = 6;
-      for (let k = 0; k <= n; k += 64) { g.beginPath(); g.moveTo(k, 0); g.lineTo(k, n); g.moveTo(0, k); g.lineTo(n, k); g.stroke(); }
-      const sky = g.createLinearGradient(0, 0, n, n); sky.addColorStop(0, 'rgba(200,225,250,.35)'); sky.addColorStop(1, 'rgba(255,255,255,0)');
-      g.fillStyle = sky; g.fillRect(0, 0, n, n);
-    } else {
-      for (let yy = 0; yy < 2; yy++) for (let xx = 0; xx < 2; xx++) {
-        const x0 = xx * 128 + 30, y0 = yy * 128 + 34;
-        g.fillStyle = glass; g.fillRect(x0, y0, 68, 58);
-        g.fillStyle = 'rgba(255,255,255,.18)'; g.fillRect(x0, y0, 68, 14);
-        g.fillStyle = 'rgba(0,0,0,.2)'; g.fillRect(x0 - 4, y0 + 58, 76, 6);
+// ---------------------------------------------------------------- buildings
+// Two atlases, painted once: stucco() for the houses and facade() for the offices. Each is a stack of strips that run
+// the whole width and repeat across (u wraps), so a wall of any length shows whole bays. The geometry maps its faces
+// into the strips with the layouts below, given in pixels of a 1024 x 2048 design (y down; v = 1 - y / 2048); the
+// canvases are that size at High and half of it at Low. The alpha channel is a tint mask: 255 where the
+// per-instance colour applies (stucco and roofing on a house, the glass on an office), 0 where it doesn't (window
+// frames, doors, garage doors, precast concrete, metal). Like frond(), the texture is the ImageData itself, so the
+// colour under a zero alpha survives. Gutters between the strips repeat their edge rows, against mip-map bleed.
+export const ATLAS_H = 2048;
+export const STUCCO = {
+  wallM: 18,                                     // metres of wall across the atlas (56.9 px a metre)
+  win: [0, 165], up: [173, 327], front: [335, 500], plain: [508, 673],   // storeys: 2.9, 2.7, 2.9, 2.9 m (top, bottom)
+  roofM: 12, slopeM: 7,                          // a roof row: 12 m along the eave, 7 m up the slope (from its bottom)
+  roof0: 684, roofH: 448, roofPitch: 456,        // three rows: Spanish S-tile, grey laminated composite, brown shake
+  // the front strip's pieces, in metres along it
+  garage: [0, 5.6], entry: [5.6, 8.4], picture: [8.4, 12.4], small: [12.4, 15.2], blank: [15.2, 18],
+} as const;
+export const FACADE = {
+  wallM: 16,                                     // metres of facade across the atlas (64 px a metre)
+  pitch: 336, parapet: 64, storey: 256,          // style k: parapet at y = 336 k, its 4 m storey under it
+  roof: [1016, 1528], mech: [1536, 1792], penthouse: [1800, 2040],      // roof membrane, rooftop units, penthouse panel
+} as const;
+
+type Layers = { c: Ctx; m: Ctx; h: Ctx; r: Ctx };
+// a rectangle on the layers it names: colour (or a gradient), tint mask (1 tinted, 0 not), height and roughness (0-255)
+function lay(L: Layers, x: number, y: number, w: number, h: number, col?: string | CanvasGradient, mask?: 0 | 1, ht?: number, ro?: number) {
+  if (col !== undefined) { L.c.fillStyle = col; L.c.fillRect(x, y, w, h); }
+  if (mask !== undefined) { L.m.fillStyle = mask ? '#fff' : '#000'; L.m.fillRect(x, y, w, h); }
+  if (ht !== undefined) { L.h.fillStyle = `rgb(${ht},${ht},${ht})`; L.h.fillRect(x, y, w, h); }
+  if (ro !== undefined) { L.r.fillStyle = `rgb(${ro},${ro},${ro})`; L.r.fillRect(x, y, w, h); }
+}
+// The layers are CPU canvases (willReadFrequently): they're read back once painted, and on a GPU canvas that
+// readback first flushes every fill through the GPU (in software rendering it took 15 to 35 s an atlas, not 1 to 2).
+function layers(n: number, H: number): [HTMLCanvasElement[], Layers] {
+  const cpu = (): [HTMLCanvasElement, Ctx] => { const cv = document.createElement('canvas'); cv.width = n; cv.height = H; return [cv, cv.getContext('2d', { willReadFrequently: true })!]; };
+  const [c, g] = cpu(), [mc, mg] = cpu(), [hc, hg] = cpu(), [rc, rg] = cpu();
+  const k = n / 1024;
+  for (const x of [g, mg, hg, rg]) x.setTransform(k, 0, 0, k, 0, 0);
+  return [[c, mc, hc, rc], { c: g, m: mg, h: hg, r: rg }];
+}
+// copy each strip's edge rows into the gutter below it (design rows [a, b) take row a - 1, as far as the next strip)
+function gutters(cs: HTMLCanvasElement[], n: number, k: number, gaps: [number, number][]) {
+  for (const cv of cs) {
+    const g = cv.getContext('2d')!;
+    // row copies as ImageData (a canvas drawn onto itself snapshots the whole canvas on every call)
+    for (const [a, b] of gaps) {
+      const ya = Math.round(a * k), yb = Math.round(b * k), mid = (ya + yb) >> 1;
+      const above = g.getImageData(0, ya - 1, n, 1), below = g.getImageData(0, yb, n, 1);
+      for (let y = ya; y < mid; y++) g.putImageData(above, 0, y);
+      for (let y = mid; y < yb; y++) g.putImageData(below, 0, y);
+    }
+  }
+}
+// the finished atlas: colour with the mask as alpha (as ImageData), plus the normal and roughness maps when asked
+export interface Atlas { map: THREE.Texture; normalMap?: THREE.Texture; roughnessMap?: THREE.Texture }
+function finish(cs: HTMLCanvasElement[], n: number, H: number, bump: number, withNormal: boolean, withRough: boolean): Atlas {
+  const [c, mc, hc, rc] = cs;
+  const img = c.getContext('2d')!.getImageData(0, 0, n, H), mask = mc.getContext('2d')!.getImageData(0, 0, n, H).data, d = img.data;
+  for (let i = 0; i < d.length; i += 4) d[i + 3] = mask[i];
+  const map = new THREE.Texture(img);
+  map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = ANISO; map.wrapS = THREE.RepeatWrapping; map.wrapT = THREE.ClampToEdgeWrapping; map.needsUpdate = true;
+  let normal: THREE.Texture | undefined, rough: THREE.Texture | undefined;
+  if (withNormal) {
+    const hd = hc.getContext('2d')!.getImageData(0, 0, n, H).data, h = new Float32Array(n * H);
+    for (let i = 0; i < h.length; i++) h[i] = hd[i * 4] / 255;
+    normal = normalMap(h, n, H, bump); normal.wrapT = THREE.ClampToEdgeWrapping;
+  }
+  if (withRough) { rough = tex(rc, false); rough.wrapT = THREE.ClampToEdgeWrapping; } else rc.width = 1;
+  mc.width = hc.width = c.width = 1;                               // free the canvases the textures don't keep
+  return { map, normalMap: normal, roughnessMap: rough };
+}
+const hashT = (a: number, b: number, s: number) => {
+  let h = Math.imul(a, 374761393) + Math.imul(b, 668265263) + Math.imul(s, 2147483647);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+};
+
+// The house atlas. Stucco is painted near white so the instance's colour is the house's colour (warm white, sand,
+// greige, soft terracotta...). Windows are white vinyl with sky in the glass, some with grids or blinds; the front
+// strip has a two-car sectional garage door, a recessed entry with a panelled door and sidelight, and a gridded
+// picture window. The eave's shadow darkens each storey's top, a weep screed and the slab show at the bottom. The
+// roofs are painted per pixel from their real dimensions: S-tile barrels 0.3 m apart in 0.42 m courses with the
+// bird-stop ends at the eave, laminated composite in 0.14 m courses with random tab widths and shadow bands, and
+// shakes of random widths in 0.25 m courses with grain and gaps.
+export function stucco(detail: boolean): Atlas {
+  return once('stucco' + (detail ? 1 : 0), () => {
+    const n = Math.min(SIZE, 1024), H = n * 2, k = n / 1024, S = STUCCO, ppm = 1024 / S.wallM;
+    const [cs, L] = layers(n, H);
+    // per pixel: the stucco everywhere, then the three roof rows over it
+    const g = L.c, img = g.createImageData(n, H), d = img.data, hImg = L.h.createImageData(n, H), hd = hImg.data, rImg = L.r.createImageData(n, H), rd = rImg.data;
+    const P = 0.3, CT = 0.42, CC = 0.142, CS = 0.25, rows = [0, 1, 2].map((i) => S.roof0 + i * S.roofPitch);
+    // the composite's tabs and the shakes: random widths, per course, as a column -> piece lookup
+    const pieces = (kind: number, course: number) => {
+      const out = new Int16Array(n), rr = rng(500 + kind * 977 + course * 31), lo = kind === 1 ? 0.16 : 0.1, hi = kind === 1 ? 0.42 : 0.3;
+      let x = rr() * hi, id = 0;
+      const edges: number[] = [];
+      while (x < S.roofM) { edges.push(x); x += lo + rr() * (hi - lo); }
+      for (let i = 0; i < n; i++) { const X = (i / n) * S.roofM; while (id < edges.length - 1 && X >= edges[id + 1]) id++; out[i] = X < edges[0] ? edges.length - 1 : id; }
+      return { out, edges };
+    };
+    const cache = new Map<number, ReturnType<typeof pieces>>();
+    const piece = (kind: number, course: number) => { const key = kind * 1000 + course; let p = cache.get(key); if (!p) cache.set(key, (p = pieces(kind, course))); return p; };
+    for (let y = 0; y < H; y++) {
+      const yd = y / k;
+      const row = rows.findIndex((r0) => yd >= r0 - 4 && yd < r0 + S.roofH + 4);
+      for (let x = 0; x < n; x++) {
+        const i = (y * n + x) * 4;
+        let R: number, G: number, B: number, ht: number, ro: number;
+        if (row < 0) {
+          // sand-finish stucco: fine grain, soft blotches; tileable across
+          const fine = tnoise(x * 0.5, y * 0.5, n * 0.5, 151), blot = tfbm(x / n * 6, y / n * 6, 6, 3, 152);
+          const l = 0.93 + (fine - 0.5) * 0.07 + (blot - 0.5) * 0.06;
+          R = 250 * l; G = 247 * l; B = 240 * l; ht = 128 + (fine - 0.5) * 18 + (blot - 0.5) * 10; ro = 235;
+        } else {
+          const bottom = rows[row] + S.roofH, s = Math.max(0, (bottom - yd) / (S.roofH / S.slopeM)), X = (x / n) * S.roofM;
+          const grain = tnoise(x, y, n, 160 + row) - 0.5;
+          if (row === 0) {                                  // Spanish S-tile
+            const ci = Math.floor(s / CT), fs = s / CT - ci, ti = Math.floor(X / P), ph = X / P - ti;
+            const cap = ph < 0.5, q = cap ? ph * 2 : (ph - 0.5) * 2;
+            const prof = cap ? Math.sin(Math.PI * q) : -0.45 * Math.sin(Math.PI * q), slope = cap ? Math.cos(Math.PI * q) : -0.45 * Math.cos(Math.PI * q);
+            const h1 = hashT(ti, ci, 7), h2 = hashT(ti, ci, 8), h3 = hashT(ti, ci, 9);
+            let r = 0.68 + h1 * 0.07, gg = 0.34 + h2 * 0.05, b = 0.23 + h3 * 0.04;
+            if (h3 > 0.9) { r *= 0.82; gg *= 0.78; b *= 0.8; } else if (h3 < 0.05) { r *= 1.04; gg *= 1.07; b *= 1.1; }
+            let l = (cap ? 0.98 + slope * 0.2 + prof * 0.05 : 0.68 + prof * 0.22) * (1 + grain * 0.1);
+            if (fs > 0.86) l *= 0.62 + (1 - fs) * 1.5;      // the shadow under the next course's ends
+            if (s < 0.16) {                                 // the eave: barrel ends with bird stops
+              const dx = (q - 0.5) * P * 0.5, dy = s - 0.02;
+              if (cap && dx * dx + dy * dy < 0.0036) { r = 0.16; gg = 0.12; b = 0.1; l = 1; } else if (!cap) l *= 0.85;
+            }
+            R = 255 * r * l; G = 255 * gg * l; B = 255 * b * l;
+            ht = 128 + prof * 70 + (1 - fs) * 30; ro = 185;
+          } else if (row === 1) {                           // grey laminated composite shingles
+            const ci = Math.floor(s / CC), fs = s / CC - ci, pc = piece(1, ci), t = pc.out[x];
+            const h1 = hashT(t, ci, 21), h2 = hashT(t, ci, 22);
+            const base = 0.36 + h1 * 0.12, warm = h2 < 0.5 ? 1 : 0;
+            let l = 1 + (hashT(x, y, 23) - 0.5) * 0.22 + grain * 0.08;
+            if (h2 > 0.55 && fs < 0.38) l *= 0.72;           // the laminate's shadow band
+            if (fs > 0.9) l *= 0.55;                        // the course above's edge
+            const X0 = pc.edges[t], dX = Math.abs(X - X0);
+            if (dX < 0.008 && fs < 0.6) l *= 0.6;           // the cut between tabs
+            R = 255 * base * l * (warm ? 1.02 : 0.99); G = 255 * base * l; B = 255 * base * l * (warm ? 0.97 : 1.01);
+            if (s < 0.16) { const e = s / 0.16; R = G = B = 214 + e * 18; if (e < 0.2) { R *= 0.7; G *= 0.7; B *= 0.7; } }   // the gutter
+            ht = 128 + (1 - fs) * 50; ro = 245;
+          } else {                                          // brown shake
+            const ci = Math.floor(s / CS), fs = s / CS - ci, pc = piece(2, ci), t = pc.out[x];
+            const h1 = hashT(t, ci, 31), h2 = hashT(t, ci, 32);
+            let r = 0.46 + h1 * 0.08, gg = 0.37 + h1 * 0.06, b = 0.28 + h1 * 0.04;
+            if (h2 < 0.14) { r = 0.49; gg = 0.45; b = 0.4; } else if (h2 > 0.9) { r *= 0.8; gg *= 0.78; b *= 0.78; }
+            const streak = tnoise(X * 60, s * 3, Math.round(S.roofM * 60), 33) - 0.5;
+            let l = 1 + streak * 0.24 + grain * 0.06;
+            if (fs > 0.82) l *= 0.5 + (1 - fs) * 1.6;      // thick butts throw a deep shadow
+            const X0 = pc.edges[t];
+            if (Math.abs(X - X0) < 0.014) l *= 0.35;       // the keyway between shakes
+            if (s < 0.18) { r = 0.42; gg = 0.33; b = 0.25; l = s < 0.03 ? 0.6 : 1 + grain * 0.1; }   // the fascia
+            R = 255 * r * l; G = 255 * gg * l; B = 255 * b * l;
+            ht = 128 + (1 - fs) * 80 + streak * 20; ro = 245;
+          }
+        }
+        d[i] = clamp(R, 0, 255); d[i + 1] = clamp(G, 0, 255); d[i + 2] = clamp(B, 0, 255); d[i + 3] = 255;
+        hd[i] = hd[i + 1] = hd[i + 2] = clamp(ht, 0, 255); hd[i + 3] = 255;
+        rd[i] = rd[i + 1] = rd[i + 2] = ro; rd[i + 3] = 255;
       }
     }
-    return tex(c, true);
+    g.putImageData(img, 0, 0); L.h.putImageData(hImg, 0, 0); L.r.putImageData(rImg, 0, 0);
+    lay(L, 0, 0, 1024, ATLAS_H, undefined, 1);
+    // ------------------------------------------------ the walls, drawn in design pixels
+    const r = rng(171), M = (m: number) => m * ppm;
+    // a window: x, the sill's and the head's heights (m above the floor), its width (m), on a storey whose floor is at y
+    const win = (x: number, floor: number, w: number, sill: number, head: number, o: { grid?: [number, number]; rail?: 'h' | 'v'; blind?: number } = {}) => {
+      const X = M(x), W = M(w), Y = floor - M(head), Hh = M(head - sill), f = 4;
+      lay(L, X - 4, Y - 3, W + 8, Hh + 8, 'rgba(0,0,0,0.13)');                                // the stucco return's shadow
+      lay(L, X - 3, Y + Hh + 1, W + 6, 5, 'rgba(255,255,255,0.28)');                         // a foam sill
+      lay(L, X, Y, W, Hh, '#ebe9e3', 0, 150, 120);                                            // the vinyl frame
+      const gl = L.c.createLinearGradient(0, Y, 0, Y + Hh);
+      const top = r() * 0.25;
+      gl.addColorStop(0, `rgb(${150 + top * 80 | 0},${168 + top * 60 | 0},${184 + top * 40 | 0})`); gl.addColorStop(0.45, '#5b6c7b'); gl.addColorStop(1, '#2c3743');
+      lay(L, X + f, Y + f, W - 2 * f, Hh - 2 * f, gl, 0, 100, 20);
+      if (o.blind) lay(L, X + f, Y + f, W - 2 * f, (Hh - 2 * f) * o.blind, 'rgba(222,214,198,0.82)');
+      L.c.fillStyle = 'rgba(255,255,255,0.12)'; L.c.beginPath(); L.c.moveTo(X + f + W * 0.15, Y + f); L.c.lineTo(X + f + W * 0.35, Y + f); L.c.lineTo(X + f + W * 0.05, Y + Hh - f); L.c.lineTo(X + f, Y + Hh - f); L.c.lineTo(X + f, Y + Hh * 0.55); L.c.closePath(); L.c.fill();
+      if (o.rail === 'h') lay(L, X, Y + Hh / 2 - 2, W, 4, '#e4e2dc', 0, 150, 120);
+      if (o.rail === 'v') lay(L, X + W / 2 - 2, Y, 4, Hh, '#e4e2dc', 0, 150, 120);
+      if (o.grid) {
+        const [gx, gy] = o.grid;
+        for (let a = 1; a < gx; a++) lay(L, X + f + ((W - 2 * f) * a) / gx - 1, Y + f, 2, Hh - 2 * f, '#e8e6e0');
+        for (let a = 1; a < gy; a++) lay(L, X + f, Y + f + ((Hh - 2 * f) * a) / gy - 1, W - 2 * f, 2, '#e8e6e0');
+      }
+      lay(L, X, Y, W, 2, 'rgba(0,0,0,0.25)');                                                 // the head's shadow in the frame
+    };
+    // a storey's top (the eave's shadow) and, at the ground, the weep screed, the slab and a little splash dirt
+    const eave = (top: number) => { const gr = L.c.createLinearGradient(0, top, 0, top + 26); gr.addColorStop(0, 'rgba(40,32,24,0.42)'); gr.addColorStop(1, 'rgba(40,32,24,0)'); lay(L, 0, top, 1024, 26, gr); };
+    const base = (floor: number) => {
+      const gr = L.c.createLinearGradient(0, floor - 30, 0, floor); gr.addColorStop(0, 'rgba(110,95,70,0)'); gr.addColorStop(1, 'rgba(110,95,70,0.16)');
+      lay(L, 0, floor - 30, 1024, 30, gr);
+      lay(L, 0, floor - 8, 1024, 8, '#a9a59c', 0, 110, 230); lay(L, 0, floor - 10, 1024, 2, '#d4d4d0', 0, 170, 140); lay(L, 0, floor - 8, 1024, 1, 'rgba(0,0,0,0.3)');
+    };
+    // ground floor: a run of windows across 18 m
+    {
+      const [t, f] = S.win;
+      eave(t); base(f);
+      win(1.0, f, 1.9, 0.9, 2.1, { rail: 'v', grid: [4, 2] });
+      win(5.2, f, 1.8, 0.9, 2.1, { rail: 'v', blind: 0.35 });
+      win(9.3, f, 0.8, 1.5, 2.1, { rail: 'h' });
+      win(11.6, f, 1.0, 0.9, 2.1, { rail: 'h', grid: [2, 4] });
+      win(14.8, f, 1.6, 0.9, 2.1, { rail: 'v', blind: 0.6 });
+    }
+    // upper floor: smaller windows, a foam belly band at the floor line
+    {
+      const [t, f] = S.up;
+      eave(t);
+      win(1.6, f, 1.5, 0.95, 2.05, { rail: 'v', blind: 0.4 });
+      win(5.8, f, 1.0, 0.95, 2.05, { rail: 'h', grid: [2, 4] });
+      win(8.9, f, 1.0, 0.95, 2.05, { rail: 'h' });
+      win(12.4, f, 1.8, 0.95, 2.05, { rail: 'v', grid: [4, 2] });
+      win(16.2, f, 0.7, 1.4, 2.05, { rail: 'h' });
+      lay(L, 0, f - 15, 1024, 15, 'rgba(255,255,255,0.22)', undefined, 175); lay(L, 0, f - 15, 1024, 2, 'rgba(255,255,255,0.3)'); lay(L, 0, f - 2, 1024, 2, 'rgba(0,0,0,0.18)');
+    }
+    // the front: garage, entry, picture window, small window, blank
+    {
+      const [t, f] = S.front;
+      eave(t); base(f);
+      // the two-car sectional door, 4.9 x 2.15 m, under a stucco header; 4 sections of 8 raised panels
+      const gx = M(S.garage[0] + 0.35), gw = M(4.9), gh = M(2.15), gy = f - gh;
+      lay(L, gx - 5, gy - 5, gw + 10, gh + 5, 'rgba(0,0,0,0.22)');
+      lay(L, gx, gy, gw, gh, '#e9e6de', 0, 120, 160);
+      for (let row = 0; row < 4; row++) {
+        const sy = gy + (gh * row) / 4, sh = gh / 4;
+        lay(L, gx, sy, gw, 1.5, 'rgba(0,0,0,0.35)', undefined, 90);
+        for (let col = 0; col < 8; col++) {
+          const px = gx + 5 + ((gw - 10) * col) / 8, pw = (gw - 10) / 8 - 5, py = sy + 5, ph = sh - 10;
+          lay(L, px, py, pw, ph, '#f1eee7', undefined, 150); lay(L, px, py, pw, 1.5, 'rgba(255,255,255,0.8)'); lay(L, px, py + ph - 1.5, pw, 1.5, 'rgba(0,0,0,0.22)');
+          lay(L, px + pw - 1.5, py, 1.5, ph, 'rgba(0,0,0,0.14)');
+        }
+      }
+      const gg = L.c.createLinearGradient(0, gy, 0, gy + 12); gg.addColorStop(0, 'rgba(0,0,0,0.35)'); gg.addColorStop(1, 'rgba(0,0,0,0)'); lay(L, gx, gy, gw, 12, gg);
+      // coach lights
+      const lamp = (x: number, y: number) => { lay(L, x, y, 9, 15, '#2a2724', 0, 170, 120); lay(L, x + 2, y + 3, 5, 9, '#d8c79a', 0); };
+      lamp(gx - 16, gy + 26); lamp(gx + gw + 7, gy + 26);
+      // the entry: a recessed porch, a panelled door and a sidelight
+      const ex = M(S.entry[0] + 0.2), ew = M(2.4), eh = M(2.55);
+      const pg = L.c.createLinearGradient(0, f - eh, 0, f); pg.addColorStop(0, 'rgba(30,24,18,0.55)'); pg.addColorStop(1, 'rgba(30,24,18,0.3)');
+      lay(L, ex, f - eh, ew, eh, pg, undefined, 60);
+      lay(L, ex - 6, f - eh - 6, ew + 12, 6, 'rgba(255,255,255,0.3)');
+      const dx = ex + M(0.55), dw = M(0.95), dh = M(2.1);
+      lay(L, dx - 4, f - dh - 4, dw + 8 + M(0.42), dh + 4, '#e7e4dc', 0, 120, 140);
+      lay(L, dx, f - dh, dw, dh, '#5a3926', 0, 110, 150);
+      for (let a = 0; a < 3; a++) for (let b = 0; b < 2; b++) {
+        const px = dx + 6 + b * (dw - 12) / 2, py = f - dh + 8 + a * (dh - 16) / 3, pw = (dw - 12) / 2 - 6, ph = (dh - 16) / 3 - 8;
+        lay(L, px, py, pw, ph, '#6a4630'); lay(L, px, py, pw, 1.5, 'rgba(255,220,180,0.25)'); lay(L, px, py + ph - 1.5, pw, 1.5, 'rgba(0,0,0,0.35)');
+      }
+      lay(L, dx + dw - 9, f - dh * 0.48, 4, 4, '#c9a85a');
+      const sl = L.c.createLinearGradient(0, f - dh, 0, f); sl.addColorStop(0, '#8fa2b2'); sl.addColorStop(1, '#2d3640');
+      lay(L, dx + dw + 6, f - dh + 4, M(0.3), dh - 8, sl, 0, 100, 20);
+      lamp(ex + ew - 16, f - dh + 22);
+      // the picture window, gridded, in a foam surround
+      win(S.picture[0] + 0.8, f, 2.4, 0.75, 2.25, { grid: [6, 3] });
+      lay(L, M(S.picture[0] + 0.8) - 7, f - M(2.25) - 7, M(2.4) + 14, 4, 'rgba(255,255,255,0.35)');
+      win(S.small[0] + 0.9, f, 1.0, 0.9, 2.1, { rail: 'h', blind: 0.5 });
+    }
+    // the plain strip: stucco with the slab at the bottom (side walls, gables, soffits)
+    { const [t, f] = S.plain; eave(t); base(f); }
+    gutters(cs, n, k, [[S.win[1], S.up[0]], [S.up[1], S.front[0]], [S.front[1], S.plain[0]], [S.plain[1], S.roof0], ...[1, 2].map((i): [number, number] => [S.roof0 + i * S.roofPitch - 8, S.roof0 + i * S.roofPitch])]);
+    return finish(cs, n, H, 1.6, detail, detail);
+  });
+}
+
+// The office atlas: three facade styles, one storey each with its parapet above, then the roof, the rooftop units
+// and a penthouse's metal panel. Style 0 is an Irvine curtain wall (vision glass in 1.6 m bays, opaque spandrel
+// glass at each floor, silver mullions), style 1 a darker tower glass with aluminium spandrels and deep fins every
+// 2 m, style 2 a Costa Mesa precast block with ribbon windows. The glass is the tinted part (alpha 255), so each
+// building's colour picks its glass (blue, green, silver, bronze); concrete and metal keep their own colour.
+export function facade(detail: boolean): Atlas {
+  return once('facade' + (detail ? 1 : 0), () => {
+    const n = Math.min(SIZE, 1024), H = n * 2, k = n / 1024, F = FACADE, ppm = 1024 / F.wallM;
+    const [cs, L] = layers(n, H);
+    // per pixel: warm precast concrete everywhere (the precast style and the coping keep it), roofing grit below
+    const img = L.c.createImageData(n, H), d = img.data, hImg = L.h.createImageData(n, H), hd = hImg.data;
+    for (let y = 0; y < H; y++) for (let x = 0; x < n; x++) {
+      const i = (y * n + x) * 4, fine = tnoise(x * 0.5, y * 0.5, n * 0.5, 181), blot = tfbm(x / n * 8, y / n * 8, 8, 3, 182);
+      const l = 0.86 + (fine - 0.5) * 0.08 + (blot - 0.5) * 0.08;
+      d[i] = 236 * l; d[i + 1] = 228 * l; d[i + 2] = 212 * l; d[i + 3] = 255;
+      hd[i] = hd[i + 1] = hd[i + 2] = 128 + (fine - 0.5) * 50; hd[i + 3] = 255;
+    }
+    L.c.putImageData(img, 0, 0); L.h.putImageData(hImg, 0, 0);
+    lay(L, 0, 0, 1024, ATLAS_H, undefined, 0, undefined, 225);
+    const r = rng(191), M = (m: number) => m * ppm;
+    const Y = (s: number, m: number) => s * F.pitch + F.parapet + F.storey - M(m);     // m metres above style s's floor
+    // a band of glass from a to b metres, in panes `bay` metres wide: a soft sky reflection, each pane a little different
+    const glass = (s: number, a: number, b: number, bay: number, top: string, bot: string) => {
+      const y0 = Y(s, b), y1 = Y(s, a);
+      for (let x = 0; x < 1024; x += M(bay)) {
+        const gr = L.c.createLinearGradient(0, y0, 0, y1), v = r();
+        gr.addColorStop(0, top); gr.addColorStop(0.5 + v * 0.3, bot); gr.addColorStop(1, bot);
+        lay(L, x, y0, M(bay) + 1, y1 - y0, gr, 1, 105, 12);
+        lay(L, x, y0, M(bay) + 1, y1 - y0, `rgba(${v < 0.5 ? '255,255,255' : '0,10,20'},${0.04 + r() * 0.08})`);
+        L.c.fillStyle = 'rgba(255,255,255,0.07)'; L.c.beginPath(); L.c.moveTo(x + M(bay) * (0.2 + v * 0.5), y0); L.c.lineTo(x + M(bay) * (0.45 + v * 0.5), y0); L.c.lineTo(x + M(bay) * (0.05 + v * 0.3), y1); L.c.lineTo(x, y1); L.c.closePath(); L.c.fill();
+      }
+    };
+    const vlines = (s: number, a: number, b: number, every: number, w: number, col: string, ht = 190) => {
+      for (let x = 0; x <= 1024; x += M(every)) { lay(L, x - w / 2, Y(s, b), w, Y(s, a) - Y(s, b), col, 0, ht, 110); lay(L, x + w / 2, Y(s, b), 1.5, Y(s, a) - Y(s, b), 'rgba(0,0,0,0.3)'); }
+    };
+    const hband = (s: number, a: number, b: number, col: string, mask: 0 | 1, ht: number, ro: number) => lay(L, 0, Y(s, b), 1024, Y(s, a) - Y(s, b), col, mask, ht, ro);
+    const parapet = (s: number, col: string) => {
+      const y = s * F.pitch;
+      lay(L, 0, y, 1024, F.parapet, col, 0, 150, 120);
+      lay(L, 0, y, 1024, 7, '#e9ebec', 0, 200, 90); lay(L, 0, y + 7, 1024, 3, 'rgba(0,0,0,0.35)');
+      lay(L, 0, y + F.parapet - 3, 1024, 3, 'rgba(0,0,0,0.2)');
+    };
+    // style 0: Irvine curtain wall
+    hband(0, 2.95, 4, '#33444f', 1, 120, 30);                                          // spandrel glass
+    glass(0, 0.15, 2.85, 1.6, '#b4c8d6', '#46606e');
+    hband(0, 0, 0.15, '#aab3ba', 0, 170, 110); hband(0, 2.85, 2.95, '#aab3ba', 0, 170, 110); lay(L, 0, Y(0, 4), 1024, 3, '#c3cad0', 0, 180, 110);
+    vlines(0, 0, 4, 1.6, 5, '#b6bec4');
+    parapet(0, '#c5cacd');
+    // style 1: tower glass, aluminium spandrels, fins every 2 m
+    hband(1, 2.65, 4, '#97a1aa', 0, 140, 90);
+    for (let x = 0; x < 1024; x += 16) lay(L, x, Y(1, 4), 1, Y(1, 2.65) - Y(1, 4), 'rgba(0,0,0,0.06)');
+    glass(1, 0.1, 2.6, 1.0, '#9fb0bf', '#34465a');
+    hband(1, 0, 0.1, '#b7bec4', 0, 170, 110); hband(1, 2.6, 2.65, '#b7bec4', 0, 170, 110);
+    vlines(1, 0, 4, 1.0, 3, '#a8b0b6', 170); vlines(1, 0, 4, 2.0, 10, '#d3d8dc', 230);
+    parapet(1, '#aab2b8');
+    // style 2: precast spandrels with ribbon windows; a reveal's shadow over the glass, rain stains under it
+    glass(2, 1.0, 3.1, 1.6, '#a3adb4', '#4a5159');
+    vlines(2, 1.0, 3.1, 1.6, 4, '#3c3833', 150);
+    { const gr = L.c.createLinearGradient(0, Y(2, 3.1), 0, Y(2, 3.1) + 14); gr.addColorStop(0, 'rgba(0,0,0,0.4)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); lay(L, 0, Y(2, 3.1), 1024, 14, gr); }
+    for (let x = 0; x < 1024; x += M(4)) { lay(L, x, Y(2, 4), 2, Y(2, 3.1) - Y(2, 4), 'rgba(60,55,45,0.35)', undefined, 90); lay(L, x, Y(2, 1.0), 2, Y(2, 0) - Y(2, 1.0), 'rgba(60,55,45,0.35)', undefined, 90); }
+    for (let i = 0; i < 40; i++) { const x = r() * 1024, w = 3 + r() * 8; const gr = L.c.createLinearGradient(0, Y(2, 1.0), 0, Y(2, 0.2)); gr.addColorStop(0, `rgba(70,62,50,${0.05 + r() * 0.08})`); gr.addColorStop(1, 'rgba(70,62,50,0)'); lay(L, x, Y(2, 1.0), w, Y(2, 0.2) - Y(2, 1.0), gr); }
+    lay(L, 0, Y(2, 1.0), 1024, 3, 'rgba(255,255,255,0.25)');
+    parapet(2, '#d9d2c3');
+    // the roof: a pale membrane in 3 m rolls with seams, grime and drains
+    {
+      const [a, b] = F.roof;
+      lay(L, 0, a, 1024, b - a, 'rgba(190,190,186,0.9)', 0, 128, 245);
+      for (let y = a; y < b; y += 48) lay(L, 0, y, 1024, 2, 'rgba(255,255,255,0.35)', undefined, 150);
+      for (let i = 0; i < 60; i++) { const x = r() * 1024, y = a + r() * (b - a), s = 10 + r() * 50; L.c.fillStyle = `rgba(80,76,70,${0.02 + r() * 0.04})`; L.c.beginPath(); L.c.ellipse(x, y, s, s * 0.6, r() * 3, 0, Math.PI * 2); L.c.fill(); }
+      for (let i = 0; i < 8; i++) lay(L, r() * 1024, a + r() * (b - a), 8, 8, '#55534f');
+    }
+    // rooftop units: louvred grey metal
+    {
+      const [a, b] = F.mech;
+      lay(L, 0, a, 1024, b - a, '#a9aba6', 0, 140, 140);
+      for (let y = a + 40; y < b - 20; y += 7) lay(L, 0, y, 1024, 3, 'rgba(40,42,44,0.45)', undefined, 100);
+      for (let x = 0; x < 1024; x += 128) lay(L, x, a, 3, b - a, 'rgba(0,0,0,0.3)');
+      lay(L, 0, a, 1024, 8, '#c9cbc7');
+    }
+    // the penthouse: ribbed metal panel
+    {
+      const [a, b] = F.penthouse;
+      lay(L, 0, a, 1024, b - a, '#c2c4c1', 0, 140, 130);
+      for (let x = 0; x < 1024; x += 19) { lay(L, x, a, 3, b - a, 'rgba(255,255,255,0.35)', undefined, 200); lay(L, x + 3, a, 2, b - a, 'rgba(0,0,0,0.18)', undefined, 90); }
+      lay(L, 0, a, 1024, 10, '#dfe1df'); lay(L, 0, a + 10, 1024, 3, 'rgba(0,0,0,0.3)');
+    }
+    gutters(cs, n, k, [[F.parapet + F.storey, F.pitch], [F.pitch + F.parapet + F.storey, 2 * F.pitch], [2 * F.pitch + F.parapet + F.storey, F.roof[0]], [F.roof[1], F.mech[0]], [F.mech[1], F.penthouse[0]]]);
+    return finish(cs, n, H, 1.2, detail, true);
   });
 }
 
