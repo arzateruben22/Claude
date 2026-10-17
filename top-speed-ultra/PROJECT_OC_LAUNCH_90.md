@@ -28,8 +28,8 @@ whole calendar slides as a block, and no marketing happens before the game runs 
   only. It never sells power: no cars faster than earnable ones, no grip or score boosts. It never sells the earned
   credits. There are no random paid rewards (no loot boxes) and no paid premium currency. Everything the game has
   today stays free. No ads at launch, purchases are 13+, and nothing is sold or pre-sold before it's in the game.
-  *(`CLAUDE.md` on this branch already carries this rule in place of the old "No real money" line. This plan
-  doesn't change `CLAUDE.md`.)*
+  *(`CLAUDE.md` on this branch now carries this rule in place of the old "No real money" line: the paywall pass's
+  edit, committed with the launch kit on `claude/store`. This plan doesn't change `CLAUDE.md`.)*
 - **Who does what.** **Claude** builds: code, pages, copy drafts, clips, triage, reports. The **owner** handles
   accounts, credentials, posting, meets, talking to players and every decision. Claude never holds the owner's
   passwords or live keys. Those go into the dashboards and the server's secret store, never into chat.
@@ -50,8 +50,10 @@ Day 1 is the day the owner says go. The dates assume **Monday 19 October 2026**;
 ### The 30-day cut (if the owner wants it shorter)
 
 Do Phase 1 exactly as written, and only cut once Gate 0 (§1) passes. Then shorten the beta to two weeks (Days 15–28,
-25–50 testers), launch publicly on Day 29, and move Phase 4 to "later". Nothing in Phase 1 can be skipped. Every
-item there is either a legal requirement or the proof that the game runs on phones.
+25–50 testers), launch publicly on Day 29, and move Phase 4 to "later". That shortens the business draft's 45-day
+OC-only window to 28 days, and the build's gate date (§2) must move to Day 29. Nothing in Phase 1 can be skipped.
+Every item there is a legal requirement, the proof that the game runs on phones, or something the beta needs on
+Day 15.
 
 ---
 
@@ -80,14 +82,14 @@ stalls on the loading screen can't reach it. That's why step F5 adds a boot repo
 | F1 | **Pick Day 1 and the weekly time budget.** Write both at the top of this file. | Owner | $0 | The date is in this file | Nothing else starts |
 | F2 | **Name and trademark check.** Search the USPTO's free Trademark Search (it replaced TESS on 30 Nov 2023) for OC ULTRA, OCULTRA and TOP SPEED, in class 9 (downloadable game software), class 41 (online games, entertainment) and class 28. Also search the App Store, Google Play, Steam, itch.io and the web, and check that the domain and the #OCUltra tag are free. Claude writes the search list and reads the results with the owner. | Owner (Claude drafts) | $0 | Screenshots of each search saved privately, and a one-paragraph result in `PROJECT_OC_PROGRESS.md` | **Known overlap: "Top Speed" is an existing racing game** (T-Bull, iOS since July 2015, Switch since March 2020, marked "Top Speed™"). Recommendation: the public name is **OC Ultra** alone until a lawyer says otherwise. "Top Speed" stays at most an in-game tagline. If a live mark for "OC Ultra" or something close turns up in classes 9 or 41, stop. Print nothing, pick from five backup names Claude proposes, and re-search. A filing ($350 per class) is optional (§7.2). |
 | F3 | **Accounts and handles**, all on free tiers, with 2FA and a password manager: a project email; a **free GitHub organization** for the game (see F4); Supabase; Stripe (test mode only, no activation yet); Cloudflare (Web Analytics); a Discord server; Kit for email (optional, see F9); TikTok, Instagram, YouTube; Reddit; Hacker News; Product Hunt (a **personal** account, because Product Hunt bans company accounts); itch.io. Use the same handle everywhere. | Owner | $0 | A private table of handle, URL and "2FA on" for each. Claude gets access to the deploy repo through the session's GitHub tool, never through a password | If the handle is taken anywhere, use one fallback everywhere (for example `ocultragame`). Consistency matters more than the perfect handle |
-| F4 | **Hosting on GitHub Pages, away from the client site.** The studio repo's Pages site is the Los Güeros client site. Put the game on its own organization's Pages site: a **public** repo holding only the built files, because Pages on a free account needs a public repo. The source stays where it is. Separate hosting also gives the game its own browser origin, so its saves never mix with the client site's storage. Claude writes a deploy script (`dist/` → the deploy repo, plus the manifest, service worker and icons). | Owner enables Pages. Claude builds the script | $0 | The org's URL loads the current build on the owner's phone **over cellular** | Check the Pages settings. Fallback: Cloudflare Pages (free; 20,000 files and 25 MiB per file on the free plan, and the game is one file of about 3.4 MB, this branch's build on 2026-10-16) |
+| F4 | **Hosting on GitHub Pages, away from the client site.** The studio repo's Pages site is the Los Güeros client site. Put the game on its own organization's Pages site: a **public** repo holding only the built files, because Pages on a free account needs a public repo. The source stays where it is. Separate hosting also gives the game its own browser origin, so its saves never mix with the client site's storage. Claude writes a deploy script (`dist/` → the deploy repo, plus the manifest, service worker and icons). | Owner enables Pages. Claude builds the script | $0 | The org's URL loads the current build on the owner's phone **over cellular** | Check the Pages settings. Fallback: Cloudflare Pages (free; 20,000 files and 25 MiB per file on the free plan, and the game is one file of about 3.5 MB, this branch's build with the store on 2026-10-16) |
 | F5 | **Boot diagnostics, the PWA, and Gate 0.** Claude adds four things. (1) The loading screen names its current stage (script, WebGL, road data, terrain, first frame, menu) with a timer. (2) After 20 s on one stage it offers **"Copy boot report"**. (3) A safe mode (`?safe=1`): Low preset, pixel ratio 1, no shadows, short draw distance, audio only after a tap. (4) PWA install: a manifest, a service worker with an offline cache, and icons from the OC wordmark. The game has none of these today (checked in this worktree on 2026-10-16). Claude also self-hosts the fonts, which today load from Google Fonts. The owner runs the nine Gate 0 runs. The first test is the owner's phone on the **new URL**, not only the claude.ai test link, because a hosted iframe may behave differently (a hypothesis to test, not a known cause). | Claude builds. Owner runs the phones | $0 | Nine reports pasted in the progress log, all "reached menu" at ≥ 30 fps on Low | **No marketing.** Claude works on the stage the boot reports name (memory, shader compile, road-data decode and WebGL context loss are the suspects to check, not conclusions). Re-test every 2–3 days. If Gate 0 isn't passed by Day 14, the beta slips week by week |
 | F6 | **Waitlist page with invite codes and the ZIP self-check.** The page shows the wordmark, a 20-second phone clip, and "Join the OC beta". The form takes an email, the home ZIP and an invite code if the visitor has one. The ZIP is checked **on the device** against Orange County's ZIP areas. Claude builds that list from the Census Bureau's 2020 ZCTA-to-county file, counting every ZIP area that touches the county. Three-digit prefixes don't work: 906 and 907 are shared with LA County, and 928 with Riverside County (Corona, Norco). The page stores only "in OC: yes/no" and the first three digits. A visitor outside OC sees "OC-only until [Day 46]; we'll tell you when it opens" and can still join. Supabase tables: the waitlist (insert-only for the public key, no reads); invite codes (channel, uses, cap); and a redeem function. If Supabase isn't connected, the build falls back to checking codes against a list on the device (a velvet rope, not a lock, as the business draft said). | Claude builds. Owner reviews copy and makes 10 test sign-ups from a phone | $0 | Ten test rows, each showing zip3 only. A code redeems once per device, and its channel count goes up | Fallback for the week: the waitlist is "join the Discord and post your city" |
 | F7 | **Privacy and terms pages**, from the launch kit drafts (§4–5) and **rewritten for what now leaves the device**: the waitlist email, ZIP3, invite codes, anonymous stats (F9), and accounts and purchases once live. The store terms must also cover: (a) what a purchase is, under California's AB 2426 (in force since 1 Jan 2025: a seller of a digital good that is only a licence may say "buy" only with a clear notice before checkout or the buyer's acknowledgement); (b) a refund policy and a contact address (Stripe requires both before it activates an account); (c) purchases 13+ only, with a neutral age question before anything is collected (COPPA; the amended rule was published on 22 Apr 2025, took effect on 23 Jun 2025, and full compliance has been required since 22 Apr 2026); (d) the honesty lines (no live traffic, weather or multiplayer). | Claude drafts. Owner approves | $0 (a lawyer's read is optional, §7.2) | Both pages live and linked from the waitlist, the game's Settings and the store | Collect no email until both pages are up |
-| F8 | **Supabase and Stripe in test mode.** Follow the paywall pass's go-live guide (`server/README.md`, which the paywall pass writes; it wasn't on this branch at the 2026-10-16 check, so until it lands use `PROJECT_OC_MONETIZATION.md` §10's checklist) up to, **but not including**, live keys: create the project, run the migration, add the test secrets, deploy the functions, add the Stripe test webhook. | Owner clicks. Claude writes each step and checks it | $0 | One purchase with the test card **4242 4242 4242 4242** writes an order through the webhook, and the founder paint appears in the garage. The decline card **4000 0000 0000 0002** grants nothing | The store stays in local demo mode (Lumevina's pattern: nothing leaves the browser). Nothing else is blocked |
-| F9 | **Measurement.** *Cloudflare Web Analytics* (free, no DNS change, up to 10 sites not proxied through Cloudflare) counts page visits. It isn't built for custom game events (its FAQ says custom integrations with its endpoint aren't supported), so the game's events go to one anonymous Supabase table: boot stage reached, frame-rate bucket, first play, "came back on day 1", "came back on day 7", session start, device class and preset. There is no ID: the device keeps its first-play date and sends each return flag once. The game asks once, on first launch, "Send anonymous load and frame-rate stats?", and says so in the privacy page. *Email list (optional):* Kit's free plan covers up to 10,000 subscribers. Launch announcements are commercial email under CAN-SPAM, so every one needs a postal address in the footer: a street address, a USPS P.O. box or a private mailbox (§7.2). The $0 alternative is to announce on Discord and the site and keep the waitlist emails for the invite itself. | Claude builds. Owner adds the site in Cloudflare and decides on email | $0 | The owner's own test session appears in both places within an hour | Until it's fixed, Feedback reports cover performance and retention is unknown. Fix it before the beta |
-| F10 | **Discord.** Channels: #announcements, #feedback, #bugs, #run-cards and #founders. Turn on rules screening, verification level Medium (Discord suggests Medium as a reasonable default for small servers), AutoMod keyword and spam filters, and 2FA for anyone who moderates. | Owner sets up. Claude writes the rules and the welcome post | $0 | A test account joins, accepts the rules and posts in #feedback | Feedback goes by email reply in the meantime |
-| F11 | **Start the pre-launch marketing** (the detail is in `PROJECT_OC_MARKETING.md`). The owner joins the target communities **as a person**, commenting usefully and not linking. Reddit's own etiquette page gives a 9:1 rule of thumb (one in ten of your posts may be your own content), so a history built in weeks 1–6 is what makes a Day 46 post welcome. Post the first three clips. | Owner posts. Claude makes clips with the game's own capture tools and drafts captions | $0 | Three clips live, and sign-ups counted by each post's code | Change the hook (an exit-specific clip), not the frequency |
+| F8 | **Supabase and Stripe in test mode.** Follow the paywall pass's go-live guide (`server/README.md`, committed with the launch kit on `claude/store`; `PROJECT_OC_MONETIZATION.md` §10's checklist is the backup) up to, **but not including**, live keys: create the project, run the migration, add the test secrets, deploy the functions, add the Stripe test webhook. | Owner clicks. Claude writes each step and checks it | $0 | One purchase with the test card **4242 4242 4242 4242** writes an order through the webhook, and the founder paint appears in the garage. The decline card **4000 0000 0000 0002** grants nothing | The store stays in local demo mode (Lumevina's pattern: nothing leaves the browser). Nothing else is blocked |
+| F9 | **Measurement.** *Cloudflare Web Analytics* (free, no DNS change, up to 10 sites not proxied through Cloudflare) counts page visits. It doesn't track custom game events (an older copy of its FAQ: "Not yet, but we may add support for this in the future"; the current FAQ couldn't be read here, so verify), so the game's events go to one anonymous Supabase table: boot stage reached, frame-rate bucket, first play, "came back on day 1", "came back on day 7", session start, device class and preset. There is no ID: the device keeps its first-play date and sends each return flag once. The game asks once, on first launch, "Send anonymous load and frame-rate stats?", and says so in the privacy page. *Email list (optional):* Kit's free plan covers up to 10,000 subscribers. Launch announcements are commercial email under CAN-SPAM, so every one needs a postal address in the footer: a street address, a USPS P.O. box or a private mailbox (§7.2). The $0 alternative is to announce on Discord and the site and keep the waitlist emails for the invite itself. | Claude builds. Owner adds the site in Cloudflare and decides on email | $0 | The owner's own test session appears in both places within an hour | Until it's fixed, Feedback reports cover performance and retention is unknown. Fix it before the beta |
+| F10 | **Discord.** Channels: #announcements, #feedback, #bugs, #run-cards and #founders. Turn on rules screening, verification level Medium (a verified email and an account older than five minutes, per Discord's support article; Medium is this plan's choice, not a Discord recommendation), AutoMod keyword and spam filters, and 2FA for anyone who moderates. | Owner sets up. Claude writes the rules and the welcome post | $0 | A test account joins, accepts the rules and posts in #feedback | Feedback goes by email reply in the meantime |
+| F11 | **Start the pre-launch marketing** (the detail is in `PROJECT_OC_MARKETING.md`). The owner joins the target communities **as a person**, commenting usefully and not linking. Reddiquette, Reddit's etiquette page, gives a 9:1 rule of thumb (one in ten of your posts may be your own content; widely quoted, though the page itself couldn't be loaded here), so a history built in weeks 1–6 is what makes a Day 46 post welcome. Post the first three clips. | Owner posts. Claude makes clips with the game's own capture tools and drafts captions | $0 | Three clips live, and sign-ups counted by each post's code | Change the hook (an exit-specific clip), not the frequency |
 | F12 | **Day 14 review.** Is Gate 0 passed? Are there ≥ 50 waitlist sign-ups? Does the Feedback flow work end to end? Does the test purchase work? | Owner decides. Claude writes the one-page status | $0 | A go/no-go line in this file | No-go: slip a week and repeat F12 |
 
 ---
@@ -108,7 +110,7 @@ times a week.
 | B5 | **Waves 2 and 3 (Days 22 and 29)** take the beta to 50, then 100 testers, but **only if** load success is ≥ 90%. | Owner | $0 | Redemptions, and load success holding | Below 90%, hold the wave and spend the week on B3 |
 | B6 | **The Founders crew: 5–10 unpaid testers who post.** The paid ambassadors in the business draft wait until there is money for them (never in these 90 days unless the owner decides to spend). Rewards: their name on the Founders credits screen and early builds. A free Founder Pack, if the owner offers one, is a perk, so that crew member's posts **must disclose it**. The FTC treats free products as a material connection, says "ambassador" alone isn't a disclosure, and wants it in the video itself, not only the caption. No one ever asks for ratings or reviews. | Owner recruits. Claude adapts the launch kit's ambassador guide | $0 | Every perk-holder's post carries "#ad" or "got this free" | Ask for an edit. A second miss ends the perk |
 | B7 | **Store dry run (Days 30–40).** Testers try the test-mode store and say what confused them. The test-mode card form **accepts only Stripe's test numbers**, says so, and never sends what was typed, so no one types a real card. | Claude builds. Owner invites | $0 | ≥ 10 test purchases, and no real card number accepted | Fix the copy and run it again |
-| B8 | **Security review before any live switch.** The Fable queue item in `PROJECT_OC_HANDOFF.md` (committed on `claude/always-on` as 1090f05, not yet on this branch; the same prompt is in `PROJECT_OC_MONETIZATION.md` §11): can a player grant themselves an item? Can a price come from the client? Is the webhook signed and idempotent? Do refunds revoke? Is there a secret in `dist/`? Is the 13+ gate in place? | A Fable session (the owner starts it) | $0 | The review is logged in `PROJECT_OC_PROGRESS.md`, and `npm test -- --only=store` passes | Fix the findings first. The Founder Pack waits; the launch doesn't |
+| B8 | **Security review before any live switch.** The store-review Fable prompt in `PROJECT_OC_HANDOFF.md` (the paywall pass added it to this branch's copy, committed with the launch kit; an earlier version is commit 1090f05 on `claude/always-on`, and `PROJECT_OC_MONETIZATION.md` §11 has another): can a player grant themselves an item? Can a price come from the client? Is the webhook signed and idempotent? Do refunds revoke? Is there a secret in `dist/`? Is the 13+ gate in place? | A Fable session (the owner starts it) | $0 | The review is logged in `PROJECT_OC_PROGRESS.md`, and the handoff prompt's proof passes: `npm run store:check`, `npm test -- --only=store,store-live` and `server/supabase/tests/run-local.sh` | Fix the findings first. The Founder Pack waits; the launch doesn't |
 | B9 | **Launch prep (Days 38–45).** Claude drafts the Show HN post, the Product Hunt page, the Reddit posts (one per community, each to that community's rules), and the press pitch (the launch kit's one-pager, renamed OC Ultra). The owner asks car-meet organisers for permission. Claude updates every piece of copy that says "nothing costs money" to the truth, "free to play, optional cosmetics", if the store will go live. This touches the launch kit's store copy, ambassador answers, age-rating answers ("no purchases"), terms ("There are no purchases") and privacy page. After F2, the run card's **#TopSpeedOC** tag and share title (`src/ui/runCard.ts`) and the kit's hashtags change to the chosen name's tag. Claude also stands up a second host (F4's fallback) and runs a **rollback drill**. | Both | $0 | The rollback drill takes the live URL back one build in under 5 minutes | No launch until the drill passes |
 
 ---
@@ -118,11 +120,11 @@ times a week.
 | # | Step | Who | Cost | Proof it worked | If it didn't |
 | --- | --- | --- | --- | --- | --- |
 | L1 | **Day 46 (Thu 3 Dec): the gate opens, and Show HN goes up.** Show HN's rules ask for something people can try "without barriers such as signups or emails" and call sign-up pages off topic, so the invite gate must be off and the store must not stand in the way. Suggested title: "Show HN: OC Ultra – drive Orange County's real freeways in your phone's browser". The owner answers comments for the day. Never ask anyone to upvote. | Owner posts. Claude drafts | $0 | A fresh phone with no code reaches the menu, and the post is live | If it sinks, move to the next channel. No reposting campaigns |
-| L2 | **Reddit, Days 46–55: one community a day**, each post written for that community, from the owner's own account, after reading its rules that morning. Rules change, and this plan couldn't load the subreddits' rule pages. r/WebGames describes itself as games "with no downloads, signups, or plugins". Never ask for votes: Reddit's etiquette page says vote-asking messages "will result in a ban from the admins". | Owner | $0 | Each post stays up, and the visits and codes from it are counted | A removed post: read the reason, never repost elsewhere the same day, and go on to the next community |
-| L3 | **Product Hunt, Day 51 (Tue 8 Dec)**, from the personal account, launching at 12:01 a.m. Pacific (the usual practice; third-party guides). Product Hunt is free. It forbids asking for upvotes and paid "hunters"; ask for comments and feedback instead. | Owner posts. Claude makes the gallery images and the maker's comment | $0 | The page is live, the comments are answered and the visits are counted | It's one day's traffic, not a verdict. Log it and move on |
+| L2 | **Reddit, Days 46–55: one community a day**, each post written for that community, from the owner's own account, after reading its rules that morning. Rules change, and this plan couldn't load the subreddits' rule pages. r/WebGames describes itself as games "with no downloads, signups, or plugins". Never ask for votes: Reddit's Rules (rule 2) forbid "content manipulation (including spamming, vote manipulation, ban evasion, or subscriber fraud)", and Reddit's admins sanction accounts for it. | Owner | $0 | Each post stays up, and the visits and codes from it are counted | A removed post: read the reason, never repost elsewhere the same day, and go on to the next community |
+| L3 | **Product Hunt, Day 51 (Tue 8 Dec)**, from the personal account, launching at 12:01 a.m. Pacific (the usual practice; third-party guides). Product Hunt is free. It forbids asking for upvotes and buying votes; ask for comments and feedback instead. The owner posts as the maker, so no hunter is needed and none is paid (this plan found no Product Hunt rule on paid hunters either way). | Owner posts. Claude makes the gallery images and the maker's comment | $0 | The page is live, the comments are answered and the visits are counted | It's one day's traffic, not a verdict. Log it and move on |
 | L4 | **Local press.** Pitches go out Day 43 (Mon 30 Nov) to the outlets in the marketing doc, with the updated one-pager and a phone clip. | Owner sends. Claude drafts | $0 | Replies, and any story | Follow up once, after a week. Never twice |
 | L5 | **Car meets, the weekends of Dec 5–6 and 12–13.** Get the organiser's permission first. Bring a phone on a stand and the QR code (on the phone's screen, or a few home-printed sheets). Never imply that the event endorses the game. | Owner | $0 (flyers optional, §7.2) | People played, and the meet's code is counted | If the organiser says no, play as a guest and don't pitch |
-| L6 | **The Founder Pack goes live, if the owner flips the switch.** Preconditions, all of them: Gate 0 holding; B8 done; every item the pack grants is built and shows in the game (at the 2026-10-16 check, five of its paints were still "hook" and the badge, frame and Founders roll "build" in `cosmetics.json`; `CLAUDE.md`: nothing is sold before it exists); the Stripe account activated (Stripe wants contact details, a refund policy and a full description of the goods on the site, and it lists in-game items as restricted unless the seller runs the game, which we do; verify at activation); the domain and a mail sender for sign-in links (§7.2); card entry on **Stripe's hosted Checkout page**, never a card form on our pages (GitHub says Pages sites "shouldn't be used for sensitive transactions like sending passwords or credit card numbers", and the studio's house rule agrees); the AB 2426 notice at checkout; the 13+ gate; receipts; a tested store off-switch; and the **owner's own real purchase, refunded end to end**. | Owner flips. Claude checks the list | Stripe's fee per sale only (§7.3) | The first real order row exists, and the owner's refund removed the item | Switch the store back to test mode (config), refund anyone affected and post what happened in #announcements |
+| L6 | **The Founder Pack goes live, if the owner flips the switch.** Preconditions, all of them: Gate 0 holding; B8 done; every item the pack grants is built and shows in the game (at the 2026-10-16 check, all nine of its paints were still "hook" and the badge, frame and Founders roll "build" in `cosmetics.json`; the paywall pass has since started drawing the badge and frame on run cards, but `cosmetics.json` hadn't moved them; `CLAUDE.md`: nothing is sold before it exists); the Stripe account activated (Stripe wants contact details, a refund policy and a full description of the goods on the site, and it lists in-game items as restricted unless the seller runs the game, which we do; verify at activation); the domain and a mail sender for sign-in links (§7.2); card entry on **Stripe's hosted Checkout page**, never a card form on our pages (GitHub says Pages sites "shouldn't be used for sensitive transactions like sending passwords or credit card numbers", and the studio's house rule agrees); the AB 2426 notice at checkout; the 13+ gate; receipts; a tested store off-switch; and the **owner's own real purchase, refunded end to end**. | Owner flips. Claude checks the list | Stripe's fee per sale only (§7.3) | The first real order row exists, and the owner's refund removed the item | Switch the store back to test mode (config), refund anyone affected and post what happened in #announcements |
 | L7 | **Launch-week watch.** Claude reads load success, the boot stages and errors whenever the owner opens a session. The owner posts status in Discord. | Both | $0 | Load success ≥ 90% across the public mix | A crash rate above that, or a broken build: roll back (B9's drill), then fix |
 
 ---
@@ -131,11 +133,11 @@ times a week.
 
 | # | Step | Who | Cost | Proof it worked | If it didn't |
 | --- | --- | --- | --- | --- | --- |
-| P1 | **Web game portals.** *itch.io* (Days 61–63): free. Upload a zip with `index.html` at the root, at most 1,000 files and 500 MB unpacked. itch's own docs say HTML5 games take payments only as donations, so the itch build hides our store. *CrazyGames* (Days 64–70): only ads through its SDK; in-game purchases only for games it selects; app-store links never allowed in-game; content must fit PEGI 12. New games start in a "Basic launch" and move to full launch on playtime and retention. That calls for a separate build with our store and install prompts removed, and no ad calls while `CLAUDE.md`'s "no ads at launch" rule stands (ask CrazyGames whether a game without ads can reach full launch). *Poki:* it prefers web-exclusive deals, which its pages put at 5 or 7 years (two versions disagree). That clashes with our own site, so skip it unless Poki makes an offer, and read the terms then. | Owner submits. Claude makes the portal builds | $0 | The itch page is live, and CrazyGames has accepted or sent feedback | Log their reasons. Fix in the monthly update and resubmit once |
+| P1 | **Web game portals.** *itch.io* (Days 61–63): free. Upload a zip with `index.html` at the root, at most 1,000 files and 500 MB unpacked (forum posts also mention a 500-file default; our build is one file, so either is fine). Whether itch can charge for a game played in the browser is unclear (forum posts say the in-browser player can't be put behind a payment; itch's docs couldn't be read here), and the itch build hides our store either way. *CrazyGames* (Days 64–70): only ads through its SDK; in-game purchases only for games it selects; app-store links never allowed in-game; content must fit PEGI 12. New games start in a "Basic launch" and move to full launch on playtime and retention. That calls for a separate build with our store and install prompts removed, and no ad calls while `CLAUDE.md`'s "no ads at launch" rule stands (ask CrazyGames whether a game without ads can reach full launch). *Poki:* it prefers web-exclusive deals, which its pages put at 5 or 7 years (two versions disagree). That clashes with our own site, so skip it unless Poki makes an offer, and read the terms then. | Owner submits. Claude makes the portal builds | $0 | The itch page is live, and CrazyGames has accepted or sent feedback | Log their reasons. Fix in the monthly update and resubmit once |
 | P2 | **The first cosmetic drop (week 9, before the holidays)**, from the catalog in `PROJECT_OC_MONETIZATION.md`, only if the store has run clean for 10 days. | Claude builds. Owner approves | $0 | The drop is live, and no support message waits more than 48 h | No live store: ship it as a free, earnable paint set, so players still get it |
 | P3 | **The monthly update.** From Day 60, weekly builds become hotfix-only and a named build ships on the **first Thursday of each month**, starting Thu 7 Jan 2027 (Day 81). It brings one headline item from the most-asked list, patch notes and a clip. | Claude builds. Owner announces | $0 | It ships on the date | If it slips, ship what's ready on the date and move the headline to next month |
 | P4 | **The holiday weeks (Days 64–77).** Press and communities are quiet. Keep up the run-card clips, launch nothing big, and do the progress backup (P7). | Owner (light). Claude | $0 | Two posts a week | Not a failure. Expect low numbers |
-| P5 | **Money and paperwork before 1 Jan 2027 (Day 75).** (a) California's SB 122 taxes electronically delivered software from 1 Jan 2027. Law-firm summaries say its definition leaves out video games. Whether that covers paid in-game items isn't settled (`PROJECT_OC_MONETIZATION.md` §8.6), and the CDTFA's rules are still drafts: check before Day 75. (b) Selling under "OC Ultra" as a sole owner means a fictitious business name statement (§7.2). (c) Store income is taxable even if no Form 1099-K arrives (IRS). | Owner | $0 to check (§7.2 for filing) | A note in this file of what was checked and when | If unsure, switch the store to test mode until it's resolved. The game is unaffected |
+| P5 | **Money and paperwork before 1 Jan 2027 (Day 75).** (a) California's SB 122 (signed 29 Jun 2026) taxes electronically delivered software and SaaS from 1 Jan 2027. Law-firm summaries say its definition leaves out digital video game products, and one summary of the statute and the CDTFA's draft emergency regulations (a discussion paper of 1 Sep 2026) lists in-game purchases among them. The regulations aren't final and other firms list open issues (`PROJECT_OC_MONETIZATION.md` §8.6): check the final rules before Day 75. (b) Selling under "OC Ultra" as a sole owner means a fictitious business name statement (§7.2). (c) Store income is taxable even if no Form 1099-K arrives (IRS). | Owner | $0 to check (§7.2 for filing) | A note in this file of what was checked and when | If unsure, switch the store to test mode until it's resolved. The game is unaffected |
 | P6 | **Optional extras, only if the gates call for them.** Web push for home-screen players (iOS 16.4+ supports it for home-screen web apps, which makes a $0 "it's live" notice possible without email). A "back up my progress" export, because saves live on the device. | Claude | $0 | Works on one iPhone and one Android | Skip it. Nothing depends on it |
 | P7 | **The Day 90 report and the decision gates** (§5). | Claude writes. Owner decides | $0 | The decisions are written in this file | — |
 
@@ -148,9 +150,9 @@ them before Day 60, never on the day.
 
 | Gate | Go if | Then | Otherwise |
 | --- | --- | --- | --- |
-| **A. Keep the web build as the product** | Load success ≥ 90% on phones, D7 return ≥ 6%, and ≥ 300 players reached the menu in the last 30 days | Keep the monthly rhythm. Next 90 days: LA County (the pipeline exists; about 1.2 MB of data per county), more exits and races | Load success under 90%: a performance-only month. D7 under 3% with good load success: the hook or the game loop is wrong. Build the three most-asked features, test one new hook, or pause and say so |
-| **B1. Buy the Google Play account ($25, one time)** | ≥ 150 Android players a week, Android load success ≥ 90%, and **12 testers** willing to stay opted in for 14 days | Register (it can take up to 48 h). Wrap the PWA as a Trusted Web Activity (Bubblewrap or PWABuilder, both free; add `assetlinks.json`). New personal accounts must run a closed test with ≥ 12 testers opted in for 14 straight days before production, so the listing comes about 3 weeks after buying. From 1 Jan 2027 a store app must also read California's OS age signal (AB 1043; `PROJECT_OC_MONETIZATION.md` §8.2) | Stay on the PWA and re-check monthly |
-| **B2. Buy the Apple Developer account ($99 a year)** | ≥ 200 iOS players a week, ≥ 25 players asking for an App Store version, iOS load success ≥ 90% on two iPhone generations, and a plan for Guideline 4.2 | Build the native wrapper with real native features (haptics, offline, share, Game Center), not a website in a frame: apps "not sufficiently different from a mobile browsing experience" are rejected under 4.2. **Check the purchase rules first**: US-storefront apps may link out to web checkout (since 1 May 2025), but the commission Apple may charge on those sales is still in court (the Ninth Circuit sent the rate back to the district court in Dec 2025; the Supreme Court agreed on 30 Jun 2026 to hear Apple's appeal, and a decision could come as late as June 2027; `PROJECT_OC_MONETIZATION.md` §6). The AB 1043 age signal applies here too. Verify at launch | Stay on the PWA. Home-screen web apps already install, work offline and can get push |
+| **A. Keep the web build as the product** | Load success ≥ 90% on phones, D7 return ≥ 6%, and ≥ 300 players reached the menu in the last 30 days | Keep the monthly rhythm. Next 90 days: LA County (the pipeline exists; the roadmap budgets about 1.2 MB of data per county, but OC's road file alone is 2.3 MB, 1.4 MB gzipped, on 2026-10-16, so re-check the budget first), more exits and races | Load success under 90%: a performance-only month. D7 under 3% with good load success: the hook or the game loop is wrong. Build the three most-asked features, test one new hook, or pause and say so |
+| **B1. Buy the Google Play account ($25, one time)** | ≥ 150 Android players a week, Android load success ≥ 90%, and **12 testers** willing to stay opted in for 14 days | Register (allow time for Google's identity verification; this plan couldn't confirm the current wait). Wrap the PWA as a Trusted Web Activity (Bubblewrap or PWABuilder, both free; add `assetlinks.json`). New personal accounts must run a closed test with ≥ 12 testers opted in for 14 straight days before production, so the listing comes about 3 weeks after buying. From 1 Jan 2027 a store app must also read California's OS age signal (AB 1043; `PROJECT_OC_MONETIZATION.md` §8.2) | Stay on the PWA and re-check monthly |
+| **B2. Buy the Apple Developer account ($99 a year)** | ≥ 200 iOS players a week, ≥ 25 players asking for an App Store version, iOS load success ≥ 90% on two iPhone generations, and a plan for Guideline 4.2 | Build the native wrapper with real native features (haptics, offline, share, Game Center), not a website in a frame: apps "not sufficiently different from a mobile browsing experience" are rejected under 4.2. **Check the purchase rules first**: US-storefront apps may link out to web checkout (since 1 May 2025), but the commission Apple may charge on those sales is still in court (the Ninth Circuit upheld the contempt finding and sent the rate back to the district court on 11 Dec 2025; the Supreme Court agreed on 30 Jun 2026 to review the contempt finding while the district court works on the rate, and a decision could come as late as June 2027; `PROJECT_OC_MONETIZATION.md` §6). The AB 1043 age signal applies here too. Verify at launch | Stay on the PWA. Home-screen web apps already install, work offline and can get push |
 | **C. Start the UE5 track** (`PROJECT_OC_UE5_MIGRATION.md`) | Phase 0 only (the spec pack and the engine-free core, doable in cloud sessions at $0) if the web game holds ≥ 1,000 monthly players and the owner wants the desktop game. Phase 1 only once there is a UE-capable PC (RTX 4070 class, 32 GB) or a cloud GPU at about $1–1.50 an hour (that doc's estimate), and the web build's monthly rhythm has held for two months | Phase 0: 2–3 weeks. Phase 1: 4–8 weeks for one engineer (that doc's estimates) | No. The web game is the product; revisit at Day 180 |
 
 ---
@@ -159,8 +161,8 @@ them before Day 60, never on the day.
 
 Every build, beta or public, follows the same eight steps. Claude runs it; the owner says go at step 5.
 
-1. Run the regression suite on the change: `npm run build && npm test` (10–13 minutes in this sandbox), plus the
-   store group once the store exists.
+1. Run the regression suite on the change: `npm run build && npm test` (10–13 minutes in this sandbox, measured
+   before the store and store-live groups were added; it now runs them too), plus `npm run store:check`.
 2. Re-run Gate 0's phone checks if the change touched rendering, loading or memory (the owner, two phones minimum).
 3. Bump the version, which the Feedback and boot reports print. Write patch notes in plain words.
 4. Build the portal variants if any portals are live.
@@ -170,8 +172,9 @@ Every build, beta or public, follows the same eight steps. Claude runs it; the o
 7. Post the patch notes in #announcements and on the site.
 8. If anything is broken: roll back (revert the deploy commit; the drill's under-5-minute path), then fix.
 
-**Bandwidth.** GitHub Pages has a 100 GB-a-month soft limit, about 29,000 first loads of this branch's 3.4 MB build
-(about 27,000 at the UI pass's 3.6 MB build; both measured 2026-10-16, uncompressed, and the JS gzips to about half). The service
+**Bandwidth.** GitHub Pages has a 100 GB-a-month soft limit, about 28,500 first loads of this branch's 3.5 MB build
+with the store (about 27,500 at the UI pass's 3.6 MB build; both measured 2026-10-16, uncompressed, and the build
+gzips to about half, 1.8 MB). The service
 worker makes repeat visits nearly free. A Show HN front page has brought individual projects around 11,000 visitors
 in a day (one maker's report), which fits. A bigger spike would mean the second host, and that switch is only clean
 if the owner owns the domain (§7.2).
@@ -190,26 +193,26 @@ if the owner owns the domain (§7.2).
 | Cloudflare Web Analytics | $0 | Up to 10 sites not proxied through Cloudflare. No custom events |
 | Discord | $0 | — |
 | Kit (email, optional) | $0 | Up to 10,000 subscribers |
-| Resend (mail sender for sign-in links, when live) | $0 | 3,000 emails a month, 100 a day. Sends to other people only from a domain you verify |
+| Resend (mail sender for sign-in links, when live) | $0 | 3,000 emails a month, 100 a day (the daily cap wasn't re-confirmed in the second check; verify). Sends to other people only from a domain you verify |
 | itch.io, CrazyGames, Product Hunt, Show HN, Reddit | $0 | Their rules, §3 and §4 |
 
 ### 7.2 Optional costs and the trigger to spend
 
 | Item | Price (checked 2026-10-16) | Spend when |
 | --- | --- | --- |
-| **Domain** (e.g. ocultra.com, if free) | About $10.46 a year (.com at Cloudflare's at-cost price, per a listing of Oct 2026); about $10–12 elsewhere | **Before the Founder Pack goes live** (sign-in links need a verified sending domain) **or before printing any QR code**, whichever comes first. Free path: stay on the github.io URL forever and print that |
+| **Domain** (e.g. ocultra.com, if free) | About $10.46 a year until 31 Oct 2026, then about **$11.17**: Cloudflare sells .com at cost, and Verisign's wholesale fee rises from $10.26 to $10.97 on 1 Nov 2026 (its Q1 2026 earnings release), plus ICANN's 20¢. Cloudflare's own post-November price couldn't be confirmed; other registrars add a markup | **Before the Founder Pack goes live** (sign-in links need a verified sending domain) **or before printing any QR code**, whichever comes first. Free path: stay on the github.io URL forever and print that |
 | **QR flyers or table cards** | About $25–50 per 100 in colour at a copy shop (a rough estimate from weak sources; get a quote) | After Gate 0 passes and the URL is final, for a meet that said yes. Free path: show the QR on a phone or print a few at home |
 | **Google Play developer account** | $25 once | Gate B1 |
 | **Apple Developer Program** | $99 a year (it renews automatically) | Gate B2 |
 | **USPTO trademark filing** | $350 per class (base application, since 18 Jan 2025); +$100 per class if information is missing, +$200 per class for wording not from the ID Manual | After Day 90, if Gate A says keep going, and before spending on stores or merch. Two classes (9, 41) = $700 |
-| **Fictitious business name (Orange County)** | $23 for one name and one registrant (extra names and registrants are $7 each; see the county's fee schedule), plus a newspaper notice once a week for four weeks (the price varies by paper; the county lists adjudicated papers). It lasts five years | Before the first **live** sale under the name "OC Ultra" if the owner sells as themself, not as an LLC (verify with the county) |
+| **Fictitious business name (Orange County)** | $23 for one name (each extra name is $7, and so is each registrant after the second; the county's fee schedules of Jan and Sep 2026), plus a newspaper notice once a week for four weeks, the first within 45 days of filing or the statement is void (the price varies by paper; the county lists adjudicated papers). It lasts five years | Before the first **live** sale under the name "OC Ultra" if the owner sells as themself, not as an LLC (verify with the county) |
 | **A mailing address for marketing email** | A USPS P.O. box or private mailbox (price varies by location; verify) | Only if the owner sends launch emails and won't put a home address in the footer (CAN-SPAM) |
 | **Supabase Pro** | $25 a month | Only if the free tier's limits or the weekly pause become a real problem with real players |
 | **A lawyer's read of the terms and the name** | Varies; the business draft estimated $300–600 for an hour | Before the stores (Gate B), or before live sales if the owner wants certainty |
 | **City business licence** | Varies by OC city (verify with the owner's city) | Before live sales |
 
-If the owner buys only the domain, the 90 days cost about **$10**. If the owner buys everything on this list except
-the lawyer and the trademark, the items with known prices come to about $260–280: $10.46 + $25–50 + $25 + $99 + $23
+If the owner buys only the domain, the 90 days cost about **$11**. If the owner buys everything on this list except
+the lawyer and the trademark, the items with known prices come to about $260–285: $11.17 + $25–50 + $25 + $99 + $23
 + three months of Supabase Pro at $75. The newspaper notice, the mailbox and the city licence come on top, at prices
 that vary.
 
@@ -222,7 +225,9 @@ Assumptions:
   the rest on $3 items, with refunds and a dispute) gives **$12.02, $155.61 and $663.64** for 200 players at 1%,
   1,000 at 2% and 3,000 at 3%.
 - **Stripe fee:** 2.9% + 30¢ per US card sale, corroborated by third parties because Stripe's page couldn't be loaded
-  here. International cards reportedly add 1.5% and a dispute costs $15.
+  here. International cards add 1.5% (1% more if the currency is converted). A dispute costs a $15 fee that isn't
+  returned, and contesting it costs another $15, returned only if we win (since 17 Jun 2025, per third-party
+  summaries of Stripe's fee page; verify at launch).
 - **Net per sale:** $10.00 − $0.29 − $0.30 = **$9.41**.
 - **Buyer rate:** 1–3% of players, an assumption to test, not a benchmark.
 
@@ -273,7 +278,7 @@ under 4% on day 7 and the top quartile 6–8%. Those are app installs; browser v
 | **Sign-in emails don't arrive** (built-in auth email: 2 an hour, testing only, and only to the project's team members) | Certain if live without a mail sender | During the beta, accounts stay in demo mode (Lumevina's pattern). Live sign-in needs the domain and a mail sender with link-tracking off (L6) |
 | **GitHub's commercial-use clause, or the bandwidth limit** | Low | The store is optional and cards are entered on Stripe's own page. If GitHub objects, or traffic spikes, move to Cloudflare Pages, which is clean only with our own domain |
 | **iPhone saves get wiped** (Safari clears a site's storage after seven days of Safari use without a visit; home-screen apps have their own counter, and a 2022 WebKit bug report describes losses anyway) | Low to medium | Ask iPhone players to install to the Home Screen. Purchases are tied to the account and can be restored. Add the progress backup (P6) |
-| **A promoter forgets the disclosure, or someone pays for reviews** | Medium | The crew guide (B6). Never reward ratings: the FTC's fake-review rule (in force 21 Oct 2024) allows civil penalties of up to $53,088 per violation (the figure the FTC gave in Dec 2025; it's adjusted for inflation each January, so verify the current one) |
+| **A promoter forgets the disclosure, or someone pays for reviews** | Medium | The crew guide (B6). Never reward ratings: the FTC's fake-review rule (in force 21 Oct 2024) allows civil penalties of up to $53,088 per violation (the 2025 figure, which the FTC kept for all of 2026 after the OMB cancelled that year's inflation adjustment, per its Federal Register notice of Sep 2026; it may change in January 2027, so verify then) |
 | **"Speeding on real roads" reads badly** | Medium | The honesty line in every post. No real-world driving footage, ever |
 | **The owner burns out** | Medium | The weekly time budget (F1). Hotfix-only builds and a monthly update after Day 60 (P3). Holiday weeks kept light |
 | **A payment or entitlement bug** | Medium before review | B8's adversarial review before any live switch. Test mode until the owner flips it. Refund first, investigate second |
@@ -344,6 +349,22 @@ team-only rule, the open SB 122 question, and the Supreme Court's grant in Epic 
 every date and weekday in the calendar, the §7 arithmetic, the build size, the missing PWA files, the Google Fonts
 link, where the Feedback button lives, and the catalog (`node tools/store-check-catalog.mjs` passes).
 
+**Second fact-check pass (evening of 2026-10-16).** Direct page fetches were still blocked, so this pass also worked
+from search-result summaries. Corrected: the .com price (Verisign's wholesale rise on 1 Nov 2026), the FTC penalty
+(2025's level kept for 2026), Stripe's second $15 fee for contesting a dispute, the Orange County name-filing
+add-on fees and its 45-day publication rule, Reddit's vote rule (the quoted "ban from the admins" line couldn't be
+found; Reddit's Rules are cited instead), Discord's Medium level (not a Discord-recommended default), Product Hunt's
+"paid hunters" (no such rule found), itch.io's "donations only" (not confirmed), Cloudflare Web Analytics' FAQ
+wording, SB 122's status (signed 29 Jun 2026; draft CDTFA rules of 1 Sep 2026), the Supreme Court grant's scope
+(the contempt finding), the build size (3.5 MB with the store), the Founder Pack's nine "hook" paints, the county data
+size, and `server/README.md` and the store review prompt now being on this branch's disk. Re-confirmed: the
+calendar's dates and weekdays, the §7.3 arithmetic, GitHub Pages and Cloudflare Pages limits, Supabase Free and its
+2-an-hour mailer, Stripe's 2.9% + 30¢ (third-party), Kit's 10,000, Show HN's rules, Product Hunt's personal-account
+rule, CrazyGames and Poki, the USPTO fees, AB 2426, AB 1043, the COPPA dates, Google Play's 12 testers for 14 days,
+Stripe's restricted in-game items, the GameAnalytics benchmarks and the T-Bull game's dates. Not confirmed this
+pass, so verify: Resend's 100-a-day cap, CrazyGames' app-store-link rule, Google Play's registration wait, and
+whether AB 2426 reaches in-game cosmetics.
+
 **Hosting, backend, analytics, email**
 - GitHub Pages limits (size, 100 GB soft bandwidth, builds, commercial use, card numbers):
   https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
@@ -360,6 +381,8 @@ link, where the Feedback button lives, and the catalog (`node tools/store-check-
   https://supabase.com/docs/guides/functions/auth
 - Cloudflare Web Analytics (free, no proxy) and its limits and FAQ: https://developers.cloudflare.com/analytics/web-analytics/about/ ·
   https://developers.cloudflare.com/web-analytics/limits/ · https://developers.cloudflare.com/web-analytics/faq/
+  (10 non-proxied sites, a soft limit per the FAQ; "custom events: not yet" comes from an older mirror of the FAQ,
+  https://cloudflare-docs.justalittlebyte.ovh/web-analytics/faq/)
 - GoatCounter (free for "reasonable public usage"; the homepage is old, and third-party summaries say non-commercial
   only; verify): https://www.goatcounter.com/
 - Kit free plan, up to 10,000 subscribers: https://help.kit.com/en/articles/16627071-the-kit-free-plan · https://kit.com/pricing
@@ -367,7 +390,8 @@ link, where the Feedback button lives, and the catalog (`node tools/store-check-
   https://resend.com/docs/knowledge-base/403-error-resend-dev-domain
 - CAN-SPAM postal address: https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business
 - Discord verification levels and AutoMod: https://support.discord.com/hc/en-us/articles/216679607-Verification-Levels ·
-  https://discord.com/safety/auto-moderation-in-discord
+  https://discord.com/safety/auto-moderation-in-discord · https://discord.com/safety/360043653152-four-steps-to-a-super-safe-server
+  (Medium: a verified email and an account older than five minutes; neither page names Medium as a default)
 - Census 2020 ZCTA-to-county relationship file: https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.2020.html
 - WebKit on home-screen web apps (web push since iOS 16.4; their own storage counter; Safari 26 opens Home Screen
   sites as web apps): https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/ ·
@@ -382,7 +406,12 @@ link, where the Feedback button lives, and the catalog (`node tools/store-check-
 - Stripe test cards: https://docs.stripe.com/testing
 - Stripe's website requirements for activation: https://support.stripe.com/questions/business-website-for-account-activation-faq ·
   https://docs.stripe.com/get-started/checklist/website
-- Stripe's restricted businesses (in-game items): https://stripe.com/legal/restricted-businesses
+- Stripe's restricted businesses (in-game items): https://stripe.com/legal/restricted-businesses ·
+  https://conductatlas.com/platform/stripe/stripe-restricted-businesses-list/provision/CA-P-065553/in-game-currency-sales-operator-restriction/
+  (third-party tracker; the list as updated 20 May 2026: restricted unless the seller operates the game)
+- Stripe's dispute fees ($15 received, not returned; $15 more to contest, returned on a win, since 17 Jun 2025;
+  third-party, 2026): https://www.chargeflow.io/blog/stripe-dispute-fees ·
+  https://redo.com/resources/articles/chargebacks/stripe-chargeback-fees
 
 **App stores**
 - Apple Developer Program, $99 a year: https://developer.apple.com/programs/whats-included/
@@ -395,7 +424,11 @@ link, where the Feedback button lives, and the catalog (`node tools/store-check-
 - Epic v. Apple status (verify at launch): https://www.sullcrom.com/SullivanCromwell/_Assets/PDFs/Memos/sc-publication-ninth-circuit-landmark-epic-games-apple-ruling.pdf ·
   https://macrumors.com/2026/06/11/apple-fights-back-against-epic/ ·
   https://www.supremecourt.gov/DocketPDF/25/25-1311/424150/20260914154510009_2026-09-14%20No.%2025-1311%20Apple-Epic%20Merits%20Opening%20Brief.pdf
-  (Sep 14, 2026; cert granted June 30, 2026) · https://www.macobserver.com/news/supreme-court-apple-epic-appeal-question-1-narrow/
+  (Sep 14, 2026; cert granted June 30, 2026) · https://www.macobserver.com/news/supreme-court-apple-epic-appeal-question-1-narrow/ ·
+  https://www.courthousenews.com/apples-fight-over-commissions-for-linked-out-app-store-purchases-continues-in-district-court/
+  (the grant covers the contempt finding; the rate stays with the district court) ·
+  https://digitalpolicyalert.org/event/39720-apple-applied-to-supreme-court-to-stay-ninth-circuit-mandate-in-epic-games-v-apple-pending-certiorari
+  (the Ninth Circuit's ruling of 11 Dec 2025)
 - Apple's US link-out rule since 1 May 2025: https://developer.apple.com/news/?id=9txfddzf
 - California AB 1043, the OS age signal from 1 Jan 2027 (signed Oct 13, 2025):
   https://www.hunton.com/privacy-and-cybersecurity-law-blog/california-introduces-new-age-verification-requirements-for-software-applications
@@ -407,12 +440,16 @@ link, where the Feedback button lives, and the catalog (`node tools/store-check-
 - The existing "Top Speed" racing game (T-Bull): https://ec.nintendo.com/apps/010082600F1AC000/US ·
   https://appgoblin.info/apps/1001516447
 - Orange County fictitious business name fees and publication: https://ocrecorder.com/clerk-services/fictitious-business-name ·
-  https://ocrecorder.com/sites/ocrecorder/files/2026-01/FeeSchedule.pdf
+  https://ocrecorder.com/services/fictitious-business-name (the 45-day first-publication rule) ·
+  https://ocrecorder.com/sites/ocrecorder/files/2026-01/FeeSchedule.pdf ·
+  https://www.ocrecorder.com/sites/ocrecorder/files/2026-09/2026.09.01%20Fee%20Schedule.pdf (Sep 2026; same fees)
 
 **Law and tax**
 - FTC Consumer Reviews and Testimonials Rule (in force 21 Oct 2024; penalties):
   https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers ·
   https://www.ftc.gov/business-guidance/blog/2025/12/warning-letter-or-ten-businesses-comply-ftcs-consumer-review-rule
+- FTC civil penalties kept at 2025 levels for 2026 (Federal Register notice, Sep 2026, citing an OMB memo of
+  17 Apr 2026): https://public-inspection.federalregister.gov/2026-18853.pdf · https://www.federal-regs.com/title/16/part-1/1.98/
 - FTC Disclosures 101 for influencers: https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers
 - COPPA amended rule (published 22 Apr 2025, in effect 23 Jun 2025, compliance due 22 Apr 2026):
   https://www.ftc.gov/legal-library/browse/federal-register-notices/16-cfr-part-312-coppa-final-rule-amendments ·
@@ -428,28 +465,44 @@ link, where the Feedback button lives, and the catalog (`node tools/store-check-
   https://www.withum.com/resources/california-enacts-sb-122-sales-tax-expansion-to-digital-products/ ·
   https://rsmus.com/insights/tax-alerts/2026/california-expands-sales-tax-to-electronically-delivered-software.html ·
   https://www.pwc.com/us/en/state-local-tax/newsletters/salt-insights/assets/pwc-california-imposes-sales-and-use-tax-on-digital-products-and-saas.pdf
+- SB 122's draft CDTFA emergency regulations (discussion paper of 1 Sep 2026; summaries of Sep–Oct 2026, one of which
+  lists in-game purchases among the excluded video game products):
+  https://www.swlaw.com/publication/cdtfa-proposes-emergency-regulations-to-implement-californias-new-sales-and-use-tax-on-digital-products/ ·
+  https://www.klgates.com/thought-leadership/California-Expands-Sales-and-Use-Tax-to-SaaS-and-Certain-Digital-Products-Starting-1-January-2027-CDTFA-Proposes-Emergency-Regulations-to-Implement-the-New-Law-10-8-2026 ·
+  https://taxnews.ey.com/news/2026-2019-california-proposes-regulations-that-would-address-taxation-of-digital-products-under-sb-122
 - IRS Form 1099-K threshold back to $20,000 and 200 transactions (Oct 2025); the income is still taxable:
   https://www.irs.gov/newsroom/irs-issues-faqs-on-form-1099-k-threshold-under-the-one-big-beautiful-bill-dollar-limit-reverts-to-20000
 
 **Channels**
 - Show HN rules: https://news.ycombinator.com/showhn.html
 - Show HN traffic anecdote (about 11k visitors): https://www.indiehackers.com/post/my-show-hn-reached-hacker-news-front-page-here-is-how-you-can-do-it-44c73fbdc6
-- Product Hunt (free; no upvote asks; no paid hunters): https://www.producthunt.com/launch ·
-  https://www.producthunt.com/launch/sharing-your-launch
+- Product Hunt (free; personal accounts only; no upvote asks or bought votes; no rule on paid hunters found):
+  https://www.producthunt.com/launch · https://www.producthunt.com/launch/sharing-your-launch ·
+  https://www.producthunt.com/p/producthunt/vote-selling-on-product-hunt
 - Product Hunt's 12:01 a.m. PT practice (third-party, 2026): https://app.getlaunchlist.com/blog/how-to-launch-on-product-hunt-2026
 - Reddit spam and etiquette (9:1, no vote asks): https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam ·
-  https://support.reddithelp.com/hc/en-us/articles/205926439-Reddiquette
+  https://support.reddithelp.com/hc/en-us/articles/205926439-Reddiquette (the 9:1 passage as quoted by
+  https://tech.co/?p=151355 and https://opensource.com/promoting-articles)
+- Reddit Rules, rule 2 (no vote manipulation; the wording as reproduced in a Supreme Court filing, and the rule as
+  described in Reddit's Q4 2025 policy report to New York's attorney general):
+  https://www.supremecourt.gov/opinions/URLs_Cited/OT2023/22-277/22-277-8.pdf ·
+  https://ag.ny.gov/sites/default/files/social-media-policy-report/2025-q4-reddit-inc-policy.pdf
 - r/WebGames' description (no subreddit rule pages could be loaded): https://gummysearch.com/r/WebGames
 - CrazyGames requirements: https://docs.crazygames.com/requirements/intro/ · https://docs.crazygames.com/requirements/gameplay/
 - Poki deals and requirements: https://sdk.poki.com/deals · https://sdk.poki.com/requirements
-- itch.io HTML5 (donations only, file limits): https://itch.io/docs/creators/html5
+- itch.io HTML5 (file limits; the docs page couldn't be read here): https://itch.io/docs/creators/html5 · forum
+  posts on the file limit and on charging for browser play: https://itch.io/t/587093/500-file-limit ·
+  https://itch.io/post/259669/view-in-topic
 
 **Benchmarks and prices**
 - GameAnalytics mobile benchmarks, 2025 and 2026 editions (D1 and D7 retention):
   https://investgame.net/wp-content/uploads/2025/02/2025-GameAnalytics-Mobile-Gaming-Benchmarks.pdf ·
   https://gamedevreports.substack.com/p/gameanalytics-mobile-and-pc-game
-- Domain price ($10.46 for a .com at Cloudflare's at-cost registrar, third-party listings of Jul–Oct 2026):
+- Domain price ($10.46 for a .com at Cloudflare's at-cost registrar before the November rise, third-party listings of Jul–Oct 2026):
   https://vpsranking.com/domain/cloudflare/ · https://wellstsai.com/en/post/transfer-domain-to-cloudflare/
+- Verisign's .com wholesale fee, $10.26 to $10.97 from 1 Nov 2026 (Q1 2026 earnings release, 23 Apr 2026), and the
+  $0.20 ICANN fee on top: https://app.edgar.tools/filing/1014473/0001014473-26-000019/q12026earningsrelease.htm ·
+  https://osir.com/en/blog/verisign-com-price-update-2026/ · https://tldes.com/pages/com-price-increase-2026
 - Flyer printing (rough ranges, weak sources): https://www.4over4.com/guide/where-to-print-flyers
 
 **This project**

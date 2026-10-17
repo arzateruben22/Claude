@@ -1,0 +1,84 @@
+// What you own: the set of entitlement ids (cosmetics.json) your purchases granted, for the signed-in account.
+//
+// TEST MODE: kept in this browser's storage per test account, with the test receipts, as in Lumevina's demo.
+// LIVE: read from Supabase's `entitlements` table (row-level security: you read only your own rows; only the Stripe
+// webhook writes them) and cached on the device, so your cosmetics still show offline. restore() reads it again.
+//
+//   has(id), list(), restore(), onStoreChange(fn) (from ./bus) for the change event the game listens to.
+import { CONFIG, sbHeaders } from './config';
+import { load, save, emit, onStoreChange } from './bus';
+import { current, accessToken } from './account';
+import { skuById } from './catalog';
+
+export interface Owned { entitlement: string; sku: string; granted_at: string }
+export interface Receipt {
+  id: string;                     // OCU-TEST-… in test mode, the Stripe Checkout Session id live
+  sku: string;
+  name: string;
+  amount_cents: number;
+  currency: string;
+  card?: string;                  // "Visa •••• 4242" (test mode only; live, Stripe's page took the card)
+  at: string;
+  test: boolean;
+  grants: string[];
+  roll_name?: string | null;
+}
+
+const OWNED_KEY = 'ocu.store.owned';          // { [userId]: { items, at } }: the test ledger, or the live cache
+const RECEIPTS_KEY = 'ocu.store.receipts';    // { [userId]: Receipt[] }  test mode's order history
+type Book = Record<string, { items: Owned[]; at: number }>;
+
+let book = load<Book>(OWNED_KEY, {});
+const mine = (): Owned[] => { const s = current(); return s ? book[s.userId]?.items ?? [] : []; };
+
+export const list = (): Owned[] => mine().slice();
+export const has = (id: string) => mine().some((o) => o.entitlement === id);
+export const ownsSku = (sku: string) => { const s = skuById(sku); return !!s && s.grants.every(has); };
+export const receipts = (): Receipt[] => { const s = current(); return s ? load<Record<string, Receipt[]>>(RECEIPTS_KEY, {})[s.userId] ?? [] : []; };
+
+function put(userId: string, items: Owned[]) {
+  book = { ...load<Book>(OWNED_KEY, {}), [userId]: { items, at: Date.now() } };
+  save(OWNED_KEY, book);
+  emit();
+}
+
+// TEST MODE ONLY: payments.ts calls this after a successful test-card payment
+export function grantTest(r: Receipt) {
+  const s = current();
+  if (CONFIG.live || !s?.test) throw new Error('grantTest is for test mode');
+  const at = r.at, now = mine().filter((o) => !r.grants.includes(o.entitlement));
+  put(s.userId, [...now, ...r.grants.map((g) => ({ entitlement: g, sku: r.sku, granted_at: at }))]);
+  const all = load<Record<string, Receipt[]>>(RECEIPTS_KEY, {});
+  all[s.userId] = [r, ...(all[s.userId] ?? [])].slice(0, 50);
+  save(RECEIPTS_KEY, all);
+}
+
+// read your items again: test mode from this browser, live from the server (and refresh the cache)
+export async function restore(): Promise<{ ok: boolean; count: number; message: string }> {
+  const s = current();
+  if (!s) return { ok: false, count: 0, message: 'Sign in with the email you bought with to restore your items.' };
+  if (!CONFIG.live) {
+    book = load<Book>(OWNED_KEY, {});
+    emit();
+    const n = mine().length;
+    return { ok: true, count: n, message: n ? `${n} item${n === 1 ? '' : 's'} on this account (test mode: kept in this browser).` : 'No test purchases on this account yet.' };
+  }
+  const token = await accessToken();
+  if (!token) return { ok: false, count: mine().length, message: 'Sign in again to restore your items.' };
+  try {
+    const r = await fetch(`${CONFIG.supabaseUrl}/rest/v1/entitlements?select=entitlement,sku,granted_at&revoked_at=is.null&order=granted_at.asc`, { headers: sbHeaders(token, false) });
+    if (!r.ok) return { ok: false, count: mine().length, message: `Your items could not be loaded (${r.status}). The ones on this device still work.` };
+    const rows = await r.json() as Owned[];
+    put(s.userId, rows);
+    return { ok: true, count: rows.length, message: rows.length ? `${rows.length} item${rows.length === 1 ? '' : 's'} restored.` : 'No purchases on this account.' };
+  } catch {
+    return { ok: false, count: mine().length, message: 'No connection. The items on this device still work offline.' };
+  }
+}
+
+// live: after signing in, load what the account owns
+let lastUser: string | null = current()?.userId ?? null;
+onStoreChange(() => {
+  const u = current()?.userId ?? null;
+  if (u !== lastUser) { lastUser = u; if (u && CONFIG.live) void restore(); }
+});

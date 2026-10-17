@@ -80,8 +80,9 @@ Everything that exists today, and the free customisation the UI pass is adding:
 - The radio, the weather and time of day, Ultra Realism, run cards, the local leaderboard, the achievements.
 - Visiting the on-foot hangout (Lot 57), whenever it ships.
 
-Why so much stays free: the launch is built on local trust ("It's your freeway"), and the ambassadors have been
-telling people "nothing costs money" (`PROJECT_OC_LAUNCH_KIT.md`). Players who never pay must not be able to tell
+Why so much stays free: the launch is built on local trust ("It's your freeway"), and the launch kit's drafts tell
+people "nothing costs money" (its ambassador answer and store copy in `PROJECT_OC_LAUNCH_KIT.md`; no ambassadors
+have been recruited yet). Players who never pay must not be able to tell
 that a store exists, except for a Store button.
 
 ## 3. The launch catalog (first 90 days)
@@ -91,8 +92,8 @@ Lean on purpose: 11 items you can buy, all small, all cosmetic, all built from p
 
 | Item | Price | Net | What you get | Ready? |
 | --- | --- | --- | --- | --- |
-| **Founder Pack** | $10 | $9.41 | Founder '26 badge (profile, run card), **Founders Sunset** pearl paint, a Founders run-card frame, your name on the Founders roll in the credits (opt-in, approved by the owner), plus both paint packs (8 paints). Sold until **Dec 31, 2026**, then never again | Paint: needs the finish hook. Badge, frame and roll: to build (small) |
-| **Coast Paint Pack** | $3 | $2.61 | Laguna Tidepool, Crystal Cove Sand, Dana Point Navy (metallic), Newport Sunset, for every car | Hook (a colour change works today, but only in the factory metallic finish) |
+| **Founder Pack** | $10 | $9.41 | Founder '26 badge (profile, run card), **Founders Sunset** pearl paint, a Founders run-card frame, your name on the Founders roll in the credits (opt-in, approved by the owner), plus both paint packs (8 paints). Sold until **Dec 31, 2026**, then never again | Paints: the finish hook is built (store pass), render review pending. Run-card badge and frame: drawn by the store pass. Profile badge and the roll: to build (small) |
+| **Coast Paint Pack** | $3 | $2.61 | Laguna Tidepool, Crystal Cove Sand, Dana Point Navy (metallic), Newport Sunset, for every car | Hook (the store pass built the finish hook, `setPaint(hex, finish)`; the paints stay `hook` until their renders are reviewed) |
 | **Freeway Nights Paint Pack** | $3 | $2.61 | 405 Midnight (metallic), Interchange Orange, Toll Road Graphite (satin), Saddleback Dusk (metallic) | Hook (as above) |
 | **Rossini GT Wheel Set** | $3 | $2.61 | Irvine Silver five-spoke, Fullerton Black centre-lock, Tustin Graphite aero, each with its own calipers | Hook |
 | **Rossini Brio Wheel Set** | $3 | $2.61 | Santa Ana Bronze twin-five, Fullerton Black centre-lock, Laguna Pearl aero | Hook |
@@ -106,9 +107,12 @@ Lean on purpose: 11 items you can buy, all small, all cosmetic, all built from p
 
 **Ready** means it works today: it needs only the entitlement check and the picker. **Hook** means the renderer
 already has the parameter but the player can't choose it yet. Examples: `buildCar` takes a caliper colour, and
-`addWheel` takes a style, but the wheel style comes from the car's fixed shape. Paint is one colour through
+`addWheel` takes a style, but the wheel style comes from the car's fixed shape. Paint was one colour through
 `PlayerCar.setPaint`, always in the factory metallic-flake finish (`paint()` in `src/preview/car-mats.ts`), so every
-paid paint, gloss included, needs the finish hook. The driver looks are fixed per driver in `lookFor`. Each hook is
+paid paint, gloss included, needed the finish hook. The store pass (same day) built it: `setPaint(hex, finish)` now
+takes the finish numbers from `cosmetics.json`, and the Store's Your items picker applies them. The paints stay
+`hook` until a review checks their seat, hood and chase renders (the Fable prompt in `PROJECT_OC_HANDOFF.md`). The
+driver looks are fixed per driver in `lookFor`. Each hook is
 an afternoon of routine (Opus-class) work. A catalog item is sold live only when what it grants shows up in the game
 and has been checked in renders (§9).
 
@@ -124,10 +128,14 @@ and has been checked in renders (§9).
   nobody pays for something they can't use.
 - **Driver styles** fit the game's first-person view: your hands, gloves, sleeves and watch are what you look at for
   the whole drive. The watches are our own designs, named for our own makes (Rossini Notte, Rossini Ora, Vela Pulse).
-  No real watch brand is used on purpose. "Rossini" may also be a real watch maker's name (unverified), so check it
-  in the trademark search before selling these styles (§10).
-- **A Founder Pack** rewards the OC-only launch crowd. It's a one-time thank-you with a real end date, not a
-  pressure tactic:
+  No real watch brand is used on purpose. But "Rossini" is also a real watch maker's name: Zhuhai Rossini Watch
+  Industry, a Chinese maker owned by Citychamp Watch & Jewelry since 2008 ([China Daily][rossini-cd]), filed a US
+  application for the word mark ROSSINI in 2014 (serial 79148981; its current status wasn't checked)
+  ([Justia][rossini-tm]). "Vela" is also the model name of a HiFuture smartwatch ([Sharaf DG][vela-hifuture]). So the
+  three watch names need the class 14 trademark search, and probably new names, before these styles are sold (§10).
+- **A Founder Pack** rewards the launch crowd. It can't go on sale before the OC-only beta ends (Day 46, below), so
+  it sells to anyone in the first four weeks of the public launch, not only to the OC testers. It's a one-time
+  thank-you with a real end date, not a pressure tactic:
   - The date is fixed and never extended.
   - No countdown timers, and no "only N left" (there's no limit to the number sold).
   - Its exclusives (the badge, Founders Sunset and the frame) are never sold again.
@@ -250,9 +258,11 @@ What that means:
   ([Stripe Billing pricing][s-billing]).
 - **Refunds and disputes cost money.** Stripe doesn't return its fee when we refund
   ([Stripe refunds][s-refunds]; [Stripe support][s-refund-fees]), so a refunded $3 sale costs us about $0.39. A card
-  dispute costs a **$15** fee that we don't get back, even when we win ([Stripe disputes][s-disputes]; verify at
-  launch, including whether contesting a dispute adds a fee). One dispute
-  wipes out about six $3 sales. That's why refunds should be easy (§8).
+  dispute costs a **$15** fee that we don't get back, even when we win ([Stripe disputes][s-disputes]). Contesting
+  it adds a second **$15** "counter" fee, returned only if we win, on disputes opened after June 17, 2025
+  ([Stripe, June 2025 dispute pricing][s-dispute-2025]), so a contested dispute we lose costs $30 in fees. Verify
+  both at launch. One dispute wipes out about six $3 sales (about eleven if contested and lost). That's why refunds
+  should be easy (§8).
 - **Tax tools aren't needed at launch.** Stripe Tax costs 0.5 % per transaction (no-code) or $0.50 per transaction
   (API), and only where we're registered to collect ([Stripe Tax pricing][s-tax]). See §8.6 for why we aren't
   registered anywhere yet.
@@ -263,17 +273,18 @@ What that means:
 
 | Game | Item | Price | Source |
 | --- | --- | --- | --- |
-| Forza Horizon 5 | A car pack (several cars) | $4.99 | [traxion.gg][fh5-dlc] |
-| Forza Horizon 5 | Car Pass (34 cars, one a week) | $29.99 | [GameStop][fh5-pass] |
+| Forza Horizon 5 | A car pack (several cars) | $4.99 to $9.99 (Horizon Racing, 4 cars, $4.99; Italian Exotics, 7 cars, $9.99) | [traxion.gg][fh5-dlc]; [Deku Deals][fh5-hr]; [Forza support][fh5-ie] |
+| Forza Horizon 5 | Car Pass (34 cars, one a week, plus 8 Formula Drift cars at once) | $29.99 | [GameStop][fh5-pass] |
 | Rocket League | Credits; Rocket Pass Premium | 500 credits for $4.99; the pass is 1,000 credits (about $10) | [Immortal Boost, 2026][rl-credits] |
 | Fortnite | V-Bucks; Battle Pass | $8.99 buys 800 V-Bucks since March 19, 2026; the pass is 800 | [Shacknews, 2026][fn-vbucks] |
 | Trackmania | Standard; Club access | $9.99 a year; $29.99 a year or $59.99 for three | [Trackmania, 2020][tm-official]; [IsThereAnyDeal, Feb 2026][tm-itad] |
 | WheelMates (indie RC racer) | Supporter Pack (cosmetic) | $4.99 | [Steam][wheelmates] |
 | Go Kart Mania (Switch) | Livery Pack #1 | $0.99 | [Deku Deals][gkm] |
-| Smash Karts (browser and iOS) | Gem bundles (a premium currency: what we avoid) | $0.99 to $19.99 | [AppPricingLab, May 2026][smashkarts] |
+| Smash Karts (browser and iOS) | Gem packs (a premium currency: what we avoid) | $1.99 to $19.99 (its in-app items run $0.99 to $19.99) | [AppPricingLab, May 2026][smashkarts] |
 
-Our $3 packs, $10 Founder Pack and $30-a-year club sit at or below these. A small local game shouldn't charge Forza
-prices, and doesn't need a currency to hide the price.
+Our $3 packs, $10 Founder Pack and $30-a-year club sit at or below most of these. Only the cheapest items cost less
+(Go Kart Mania's $0.99 livery pack, Smash Karts' smallest items), and the fee table above is why we don't go that
+low. A small local game shouldn't charge Forza prices, and doesn't need a currency to hide the price.
 
 ## 6. Where people buy
 
@@ -389,7 +400,7 @@ pressure, so **3 % is optimistic**.
 | **Gross** | **$13** | **$172** | **$764** |
 | Stripe fees ($0.59 per $10, $0.39 per $3, $0.45 per $5) | −$0.98 | −$13.39 | −$59.36 |
 | Refunds (fees not returned) | $0 | −$3 (one $3) | −$16 (two $3, one $10) |
-| Disputes ($15 fee plus the $10 lost) | $0 | $0 | −$25 (one) |
+| Disputes ($15 fee plus the $10 lost; not contested) | $0 | $0 | −$25 (one) |
 | **Net from the store** | **$12.02** | **$155.61** | **$663.64** |
 
 Fees, middle case: 12 × $0.59 + 14 × $0.387 + 2 × $0.445 = $7.08 + $5.42 + $0.89 = $13.39.
@@ -411,8 +422,8 @@ Fees, middle case: 12 × $0.59 + 14 × $0.387 + 2 × $0.445 = $7.08 + $5.42 + $0
 | | Low | Middle | High |
 | --- | --- | --- | --- |
 | Net from the store | $12 | $156 | $664 |
-| After the domain only ($10) | **+$2** | **+$145** | **+$653** |
-| After the domain and three months of Supabase Pro ($85) | **−$73** | **+$70** | **+$578** |
+| After the domain only ($10) | **+$2** | **+$146** | **+$654** |
+| After the domain and three months of Supabase Pro ($85) | **−$73** | **+$71** | **+$579** |
 | After the 90-day plan's full optional list (about $280: domain, flyers, both store accounts, the county name filing, Supabase Pro) | **−$268** | **−$124** | **+$384** |
 
 **Plainly:**
@@ -459,10 +470,11 @@ support it, and a test of whether they will.
 
 ### 8.2 Age: 13+ to buy, with a neutral age gate
 
-- **The gate.** The store asks "What year were you born?" before it collects anything: no default, and no hint
-  that 13 is the cutoff. That's the neutral age screen the FTC's amended COPPA rule expects. The rule took effect
-  June 23, 2025, with full compliance due April 22, 2026 ([Loeb & Loeb, 2025][coppa-loeb];
-  [National Law Review][coppa-nlr]).
+- **The gate.** The store asks "What month and year were you born?" before it collects anything: no default, and no
+  hint that 13 is the cutoff (as built in `src/store/account.ts`; the month means nobody passes early in their
+  thirteenth birthday year). That's a neutral age screen in the FTC's sense: the amended COPPA rule lets
+  mixed-audience services use one to decide who gets COPPA's protections. The rule took effect June 23, 2025, with
+  full compliance due April 22, 2026 ([Loeb & Loeb, 2025][coppa-loeb]; [National Law Review][coppa-nlr]).
 - **Under 13**: no account, no store, nothing stored but the "under 13" result on the device, so going back doesn't
   re-ask. The whole game stays free to play.
 - **13 to 17**: may buy with a parent's or guardian's permission. The terms say so, and the checkout has a checkbox:
@@ -471,22 +483,25 @@ support it, and a test of whether they will.
   from a child under 13 needs verifiable parental consent, which we can't do. A driving game also appeals to kids,
   so market to teens and adults, and never collect anything before the age question.
 - **Minors' refunds.** California lets minors undo contracts (Family Code §6710), and settled cases have produced
-  refunds of minors' in-game purchases ([Faegre Drinker, Mar 2024][minors]). We refund a parent's request for a
+  refunds of minors' in-game purchases ([Faegre Drinker, Mar 2024][minors]). Whether a single in-game purchase is a
+  contract a minor can undo isn't settled (the same article argues it isn't). We refund a parent's request for a
   minor's purchase, no questions asked.
 - **From January 1, 2027**, California's Digital Age Assurance Act (AB 1043, signed October 13, 2025) has operating
   systems and app stores send an age-bracket signal. Apps must ask for it on download and launch, and treat it as
   the main signal of age ([Hunton, 2025][ab1043]). The iOS and Android wrappers must read it. Verify at launch.
 - **Texas's SB 2420** already applies to new Apple Accounts in Texas, since June 4, 2026: age assurance, and a
   parent's or guardian's consent for under-18 downloads and in-app purchases ([Apple, June 3, 2026][apple-tx]). It
-  is about apps in app stores, so it matters for the wrappers, not the web store. Other states may follow. Verify
-  at launch.
+  applies because the Fifth Circuit stayed the district court's injunction pending appeal (June 4, 2026); the appeal
+  itself isn't decided ([Morrison Foerster][tx-mofo]). It is about apps in app stores, so it matters for the
+  wrappers, not the web store. Other states may follow. Verify at launch.
 - **Stripe's own rule** for the account owner: a Stripe account can be opened at 13, but under 18 a guardian must
   own it before it can take charges ([Stripe support][s-age]). That's about the owner's account, not the players.
 
 ### 8.3 Refunds: 14 days for unused items
 
 - **The policy.** Ask for a refund within **14 days** of buying, if you **haven't equipped the item in a drive**. A
-  "Request refund" button in Account sends the request, and the owner approves it within a few days.
+  "Request refund" button in Account sends the request, and the owner approves it within a few days. (The button
+  isn't built yet; until it is, the terms point to a support email, TODO.)
 - Accidental purchases and a minor's purchase without permission are refunded at any time on request.
 - Once refunded, the items leave your account. A refunded Founder Pack takes its badge, frame and name on the roll
   with it.
@@ -509,7 +524,8 @@ support it, and a test of whether they will.
   players ([Supabase custom SMTP][sb-smtp]; [Supabase production checklist][sb-prod]).
 - **The fix.** Live mode needs a custom SMTP sender:
   - Resend's free tier gives 3,000 emails a month and 100 a day ([Resend pricing][resend]).
-  - With custom SMTP, Supabase's default is 30 sign-in emails an hour, and it can be raised.
+  - With custom SMTP, Supabase's default is 30 sign-in emails an hour, and it can be raised (as third-party setup
+    guides report Supabase's Rate Limits page; check the project's own page).
   - A launch-day spike over 100 sign-ins means the $20-a-month Resend plan, for that month only.
 
 ### 8.5 Restore purchases on any device
@@ -519,7 +535,9 @@ support it, and a test of whether they will.
 - The game keeps a copy on the device, so cosmetics still show offline.
 - In test mode everything lives in `localStorage` on the device, as in Lumevina's demo.
 - **The pause risk on Supabase Free.** A paused project doesn't answer Stripe's webhook. Stripe retries for **up to
-  three days** in live mode ([Stripe webhooks][s-webhooks]); after that, resend the event from the Dashboard. Daily
+  three days** in live mode ([Stripe webhooks][s-webhooks]); after that, resend the event from the Dashboard. If
+  failures go on, Stripe emails a warning and can disable the endpoint; re-enable it in the Dashboard (the exact
+  window isn't confirmed; verify at launch). Daily
   sign-ins keep a project active, so the risk is a quiet week. Either check the project weekly, or run Pro ($25 a
   month) for the live months.
 
@@ -528,8 +546,8 @@ support it, and a test of whether they will.
 - **California** doesn't tax electronically delivered digital goods today.
 - **SB 122** (signed June 29, 2026) taxes "digital products" from **January 1, 2027**, but excludes video games
   ([Withum][sb122-withum]; [RSM, 2026][sb122-rsm]; [PwC][sb122-pwc]).
-- Whether **in-game cosmetics** count as part of the excluded "video game" isn't confirmed. The CDTFA was writing
-  regulations through 2026. Check them before January 1, 2027.
+- Whether **in-game cosmetics** count as part of the excluded "video game" isn't confirmed. The CDTFA has proposed
+  emergency regulations ([Snell & Wilmer][sb122-sw]). Check them before January 1, 2027.
 - **Other states** tax digital goods in different ways, but a seller registers in a state only past its
   economic-nexus threshold: $100,000 of sales into the state in most states, with some also counting 200 sales
   ([Avalara][nexus]). We won't get near either.
@@ -562,8 +580,10 @@ An array of items:
 - **Paint packs** use `kind: 'livery'`. There is no separate paint kind.
 - **The tip** adds `custom_amount: { minimum_cents, preset_cents, maximum_cents }`, which maps to Stripe's
   pay-what-you-want settings. Its `price_cents` is the suggested amount.
-- **Prices come from the server, never the page.** The server looks up `price_cents` by `sku`. A live price is a
-  Stripe Price whose `lookup_key` is the sku.
+- **Prices come from the server, never the page.** The server looks up `price_cents` by `sku`. As built,
+  `create-checkout` sends that price to Stripe as `price_data` from the server's copy of the catalog
+  (`npm run store:sync`); only the tip uses a stored Stripe Price, which the function makes once under the lookup key
+  `tip-fuel-the-build` (`server/README.md`).
 - **`available: false`** items are never offered. The checkout refuses them, and refuses a `window` item after its
   `until` date.
 - **`available: true`** means "on the launch list": the item can be bought in test mode now. In live mode the
@@ -598,7 +618,8 @@ and exits 1 on any problem. It checks that:
 - no real brand word appears.
 
 It passed on 2026-10-16 (21 skus, 11 available, 42 entitlements), and it fails as it should on a planted $0.99
-price and a missing grant. Add it to the regression suite with the paywall.
+price and a missing grant. It passed again at the evening fact-check through `npm run store:check`, which also
+checks the server's copy, and the store group of the regression suite now runs both (`tests/regression.mjs`).
 
 ### The wiring (Lumevina's shape, adapted)
 
@@ -606,10 +627,12 @@ price and a missing grant. Add it to the regression suite with the paywall.
 
 - In **test mode**, `process()` validates the demo card (Luhn, expiry, CVC; 4242 4242 4242 4242 succeeds), writes
   the order and the entitlements to `localStorage`, and nothing leaves the browser.
-- In **live mode**, it calls a Supabase Edge Function, `create-checkout`. The function takes the skus and the
-  signed-in user, checks age, availability, windows and car ownership, creates a Stripe Checkout Session from the
-  server-side prices (`client_reference_id` = the user's id; email prefilled), and returns its URL. The page
-  redirects there.
+- In **live mode**, it calls a Supabase Edge Function, `create-checkout`. As built, the function takes one sku and
+  the signed-in user (one item per checkout; the cart is still to build). It checks availability, the window, that a
+  live item is built and in the game, the 13+ profile, the 18-or-guardian tick (and the renewal tick for the club),
+  and that you don't already own everything the item grants. Then it creates a Stripe Checkout Session from the
+  server-side price (`client_reference_id` = the user's id; email prefilled) and returns its URL. The page redirects
+  there. Car ownership is checked in the game, not here (above).
 
 **The simplest live start.**
 
@@ -618,26 +641,33 @@ price and a missing grant. Add it to the regression suite with the paywall.
   ([Stripe Payment Link URL parameters][s-pl-params]). No session-creating server code is needed.
 - This matches the studio's `PAYMENT_LINKS` convention.
 - Move to Checkout Sessions when the cart is wanted (one 30¢ for several items).
+- The store pass went straight to Checkout Sessions (`server/`), so Payment Links are now only a fallback.
 
 **The webhook and the database.**
 
-- A second Edge Function, `stripe-webhook`, verifies Stripe's signature and handles three kinds of event:
-  - `checkout.session.completed`: write the `orders` row and the `entitlements` rows.
-  - `charge.refunded`: remove the entitlements.
-  - The subscription events, later, for the club.
+- A second Edge Function, `stripe-webhook`, verifies Stripe's signature and handles three kinds of event (as
+  built):
+  - `checkout.session.completed` (and `.async_payment_succeeded`): write the `purchases` row and the
+    `entitlements` rows, once per Checkout Session.
+  - `charge.refunded` (a full refund): mark the purchase refunded and revoke its grants, except any that another
+    paid purchase of yours also grants.
+  - `customer.subscription.deleted`: end the club purchase and revoke its while-subscribed grants. The
+    `invoice.paid` handler for each month's club paint is still to build.
 - The game reads `entitlements` after sign-in.
 - Supabase row-level security: a player reads only their own rows, and only the webhook (service role) writes them.
 
 **Sign-in**: a Supabase magic link, as in Lumevina. In test mode it signs straight in.
 
-**Tables** (the paywall build owns the schema):
+**Tables** (the paywall build owns the schema; as built in `server/supabase/migrations/0001_oc_ultra_store.sql`):
 
-- `profiles`: user id, age-gate result (13+ or not; never the birth year), a parental-OK flag for under 18,
-  timestamps.
-- `orders`: id, user id, skus, amount, Stripe session and payment ids, status.
-- `entitlements`: user id, entitlement id, source order, granted at, revoked at.
-- `refund_requests`: user id, order, reason, state.
-- Later, `club_consents`: what was shown, when it was ticked, kept three years.
+- `profiles`: user id, display name, `is_13_plus` (never the birth date), created at. The 18-or-guardian tick is
+  recorded in each Checkout Session's metadata, not on the profile.
+- `purchases`: id, user id, sku, the Stripe session, payment intent and subscription ids, amount, currency, status
+  (paid, refunded or ended), the Founders roll name, timestamps.
+- `entitlements`: user id, entitlement id, the sku that granted it, granted at, revoked at.
+- `waitlist` and `invite_codes`, for the launch plan.
+- Still to build: refund requests (no table yet; the support email until then), and, before the club,
+  `club_consents`: what was shown, when it was ticked, kept three years.
 
 ## 10. Before live mode: checklist
 
@@ -647,20 +677,21 @@ The owner (on their own machine; never share keys in chat):
   (TODO). Automatic receipts on.
 - [ ] Supabase project. Custom SMTP (Resend) for sign-in email. Decide Free with a weekly check, or Pro for the live
   months.
-- [ ] Products and Prices in Stripe, one per available sku, with `lookup_key` = sku, at the catalog's prices (TODO:
-  approve the prices).
+- [ ] Approve the catalog's prices (TODO). The built checkout needs no Stripe Products: it sends each price as
+  `price_data`, and makes the tip's Price itself the first time (`server/README.md`).
 - [ ] The webhook endpoint and its signing secret set in Supabase's function secrets.
 - [ ] Decide individual or LLC (the $800 a year matters at these numbers).
 - [ ] A lawyer's hour: terms, refund policy, privacy policy (and the club terms before the club opens).
 - [ ] Search the trademark office for "OC Ultra" before printing or selling anything under the name (free at USPTO).
   Also search "Rossini" and "Vela" in class 14 (watches) before selling the Rossini Notte, Rossini Ora and Vela
-  Pulse styles.
+  Pulse styles. Both names are already on real watches (§3), so expect to rename the three watches.
 
 The build (routine, Opus-class, each checked in renders and the suite):
 
-- [ ] The hooks: wheel style, rim and caliper overrides per car; paint finishes in `setPaint`; driver-look
-  overrides and watch dial colours; the badge slot, Founder frame and Founders roll. Then switch on each item when
-  it shows in the game.
+- [ ] The hooks: wheel style, rim and caliper overrides per car; paint finishes in `setPaint` (built by the store
+  pass; render review pending); driver-look overrides and watch dial colours; the badge slot (on the run card:
+  built; on the profile: to build), the Founder frame (on the run card: built) and the Founders roll. Then switch on
+  each item when it shows in the game.
 - [ ] The Store screen: item renders on your own car or hands, the price, "Looks only", the AB 2426 licence
   notice, a cart, the age gate, the "Earn the Corsa first" lock.
 - [ ] Account: sign in, your items, restore, request a refund, and (later) manage the club.
@@ -684,7 +715,8 @@ The build (routine, Opus-class, each checked in renders and the suite):
 - The UI pass (U5): its free palette must not clash with the paid paints and wheels (§2).
 - **For a Fable review** (per the triage rule in `CLAUDE.md`, security and business-rule design are Fable-class):
   the paywall's server side (webhook signature check, row-level security, server-side price lookup, refund
-  revocation) and these rules. A ready prompt:
+  revocation) and these rules. A ready prompt (the store pass queued a newer one, naming the built files, under
+  "Fable queue" in `PROJECT_OC_HANDOFF.md`; use that one):
 
 ```
 Fable prompt. Project OC (top-speed-ultra), store review. Read CLAUDE.md, PROJECT_OC_MONETIZATION.md,
@@ -718,7 +750,10 @@ findings with file and line, the fixes for severity 4–5, and the store's regre
 Checked on 2026-10-16 by web search. The date shown is the page's own date where it has one. Stripe pages are
 undated live pages, read through search results because stripe.com couldn't be opened from this machine. A
 fact-check pass the same day could open only developer.apple.com directly (the Apple lines below marked "read
-directly"); every other figure stands as found by search, so re-check it at launch.
+directly"); every other figure stands as found by search, so re-check it at launch. A second, adversarial
+fact-check the same evening re-read the Apple pages directly (unchanged) and re-checked the other figures by search;
+stripe.com, supabase.com and Google's help pages still couldn't be opened from here. The sources it added are marked
+"(fact-check)".
 
 Stripe
 - https://stripe.com/pricing (live page; 2.9 % + 30¢, +1.5 % international, +1 % conversion, no monthly fee)
@@ -729,6 +764,7 @@ Stripe
 - https://docs.stripe.com/refunds (live page; fees not returned)
 - https://support.stripe.com/questions/understanding-fees-for-refunded-payments (live page)
 - https://docs.stripe.com/disputes/how-disputes-work (live page; $15 dispute fee, not returned)
+- https://support.stripe.com/questions/june-2025-pricing-updates-for-disputes (live page; a $15 counter fee on contested disputes opened after June 17, 2025, returned on a win; fact-check)
 - https://docs.stripe.com/payments/checkout/pay-what-you-want (live page)
 - https://stripe.com/payments/checkout (live page; Apple Pay, Google Pay, Link)
 - https://docs.stripe.com/payments/checkout/receipts (live page)
@@ -778,6 +814,8 @@ California and federal law
 - https://www.gtlaw.com/en/insights/2024/12/ab-2426-new-california-law-requires-clear-licensing-disclosures-for-digital-goods (Dec 2024)
 - https://fasken.com/en/knowledge/2025/02/new-california-law-requires-digital-stores-to-disclose-license-only-purchases (Feb 2025)
 - https://termly.io/resources/articles/caloppa/ (live page)
+- https://www.mofo.com/resources/insights/251111-texas-targets-app-stores-with-new-accountability-law (updated 2026; the Fifth Circuit's stay of the SB 2420 injunction; fact-check)
+- https://www.swlaw.com/publication/cdtfa-proposes-emergency-regulations-to-implement-californias-new-sales-and-use-tax-on-digital-products/ (2026; fact-check)
 - https://www.withum.com/resources/california-enacts-sb-122-sales-tax-expansion-to-digital-products/ (2026)
 - https://rsmus.com/insights/tax-alerts/2026/california-expands-sales-tax-to-electronically-delivered-software.html (2026)
 - https://www.pwc.com/us/en/state-local-tax/newsletters/salt-insights/assets/pwc-california-imposes-sales-and-use-tax-on-digital-products-and-saas.pdf (2026)
@@ -793,6 +831,8 @@ Refund norms
 
 Prices in other games
 - https://traxion.gg/a-guide-to-forza-horizon-5s-dlc/ (launch-era guide)
+- https://www.dekudeals.com/items/forza-horizon-5-horizon-racing-car-pack (live listing; $4.99, 4 cars; fact-check)
+- https://support.forza.net/hc/en-us/articles/19615210110483-Forza-Horizon-5-Italian-Exotics-Car-Pack-FAQ (2023; $9.99; fact-check)
 - https://www.gamestop.com/video-games/xbox-series-x%7Cs/products/forza-horizon-5-car-pass-dlc/11171841.html (live listing)
 - https://immortalboost.com/blog/rocket-league/rl-credits/ (2026; a secondary guide)
 - https://www.shacknews.com/article/148255/fortnite-v-bucks-price-increase (March 2026)
@@ -801,6 +841,11 @@ Prices in other games
 - https://store.steampowered.com/app/5108990/WheelMates__Supporter_Pack/ (live listing)
 - https://www.dekudeals.com/items/go-kart-mania-livery-pack-1 (released Aug 23, 2024)
 - https://apppricinglab.com/app/apple/1473010859 (updated May 2026)
+
+Watch names (fact-check)
+- https://trademarks.justia.com/owners/zhuhai-rossini-watch-industry-ltd-2889699 (ROSSINI word mark, serial 79148981, filed May 22, 2014; status not checked)
+- https://govt.chinadaily.com.cn/s/201802/13/WS5b786486498e855160e8e1d4/zhuhai-rossini-watch-industry-ltd.html (2018; Rossini watches, Citychamp since 2008)
+- https://uae.sharafdg.com/product/hifuture-vela-smartwatch-black/ (live listing; the HiFuture VELA smartwatch)
 
 Conversion rates (weakly sourced; used only to say 3 % is optimistic)
 - https://gamesbrief.com/?p=9113 (2012–2013)
@@ -822,6 +867,7 @@ Supabase and email
 [s-refunds]: https://docs.stripe.com/refunds
 [s-refund-fees]: https://support.stripe.com/questions/understanding-fees-for-refunded-payments
 [s-disputes]: https://docs.stripe.com/disputes/how-disputes-work
+[s-dispute-2025]: https://support.stripe.com/questions/june-2025-pricing-updates-for-disputes
 [s-pwyw]: https://docs.stripe.com/payments/checkout/pay-what-you-want
 [s-checkout]: https://stripe.com/payments/checkout
 [s-receipts]: https://docs.stripe.com/payments/checkout/receipts
@@ -872,6 +918,13 @@ Supabase and email
 [fortnite]: https://www.fortnite.com/cancel-purchase
 [fh5-dlc]: https://traxion.gg/a-guide-to-forza-horizon-5s-dlc/
 [fh5-pass]: https://www.gamestop.com/video-games/xbox-series-x%7Cs/products/forza-horizon-5-car-pass-dlc/11171841.html
+[fh5-hr]: https://www.dekudeals.com/items/forza-horizon-5-horizon-racing-car-pack
+[fh5-ie]: https://support.forza.net/hc/en-us/articles/19615210110483-Forza-Horizon-5-Italian-Exotics-Car-Pack-FAQ
+[rossini-tm]: https://trademarks.justia.com/owners/zhuhai-rossini-watch-industry-ltd-2889699
+[rossini-cd]: https://govt.chinadaily.com.cn/s/201802/13/WS5b786486498e855160e8e1d4/zhuhai-rossini-watch-industry-ltd.html
+[vela-hifuture]: https://uae.sharafdg.com/product/hifuture-vela-smartwatch-black/
+[tx-mofo]: https://www.mofo.com/resources/insights/251111-texas-targets-app-stores-with-new-accountability-law
+[sb122-sw]: https://www.swlaw.com/publication/cdtfa-proposes-emergency-regulations-to-implement-californias-new-sales-and-use-tax-on-digital-products/
 [rl-credits]: https://immortalboost.com/blog/rocket-league/rl-credits/
 [fn-vbucks]: https://www.shacknews.com/article/148255/fortnite-v-bucks-price-increase
 [tm-official]: https://www.trackmania.com/news/956

@@ -2,3 +2,10 @@ node_modules/
 dist/
 tests/out/
 tools/anaheim/data/
+# store secrets and Supabase CLI state (server/README.md); the .env.example files are kept
+.env
+.env.*
+!.env.example
+server/supabase/.env
+server/supabase/.temp/
+server/supabase/.branches/

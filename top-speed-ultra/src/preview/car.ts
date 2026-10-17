@@ -28,15 +28,27 @@ export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; ca
 // the colours each interior shows through the glass from outside
 const SIL: Record<string, [number, number]> = { gt: [0x161618, 0x5c2c12], brio: [0x161618, 0x1b2233], corsa: [0x141416, 0x1a1a1c], vela: [0x1a1a1c, 0x8e8981] };
 
+// A paint finish other than the car's factory metallic flake (the store's gloss, metallic, satin and pearl, numbers
+// from src/store/cosmetics.json). flake false: a solid colour with no metallic flake.
+export interface PaintFinish { metalness: number; roughness: number; clearcoat: number; clearcoatRoughness: number; flake: boolean }
+
+// the body paint for a car, in its factory finish or in a store finish; cached per car, colour, quality and finish
+export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', finish: PaintFinish | null = null) {
+  const P = shapeFor(id), B = bodyFor(id), vela = P.brand === 'vela';
+  const flake = vela ? 0.1 : 0.15;
+  if (!finish) return M.paint(paint, q, B.shutLines(), { key: id, flake, rough: vela ? 0.3 : undefined });
+  return M.paint(paint, q, B.shutLines(), { key: id, flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness });
+}
+
 // every material the car's kit can file geometry under
 export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: CarId = 'rossini-gt'): Record<string, THREE.Material> {
-  const P = shapeFor(id), B = bodyFor(id);
+  const P = shapeFor(id);
   const lamps = lampMaterials(P.headStyle);
   const dark = once('m.dark', () => M.patchedStd(0x050506, 0.75));
   const vela = P.brand === 'vela';
   const [silI, silS] = SIL[P.interior];
   return {
-    paint: M.paint(paint, q, B.shutLines(), { key: id, flake: vela ? 0.1 : 0.15, rough: vela ? 0.3 : undefined }),
+    paint: carPaint(paint, q, id),
     frit: M.gloss(0x050505), trim: M.gloss(0x070708), dark,
     glass: M.glass('tint', 0.62, { env: 1.0 }),
     carbon: M.carbon(q), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),

@@ -29,6 +29,8 @@ import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { carById, applyCar } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
+import { equippedPaint } from '../store/locker';
+import { onStoreChange } from '../store/bus';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -130,6 +132,7 @@ export class Game {
   private steps = 0;
   private cands: Hit[] = [];
   readonly profile = new ProfileBook();
+  private offStore: () => void = () => {};
   ability = new Ability(ABILITIES.clear);
   private worldScale = 1;            // Focus Time slows the world (not you)
   private gripBoost = 1;
@@ -162,6 +165,7 @@ export class Game {
     this.scene.add(this.car.root);
     this.applyDriver();
     this.applyCarChoice();
+    this.offStore = onStoreChange(() => this.configureCar());     // a store paint equipped, or no longer owned
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
     canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
@@ -443,10 +447,11 @@ export class Game {
   // a device with a fine pointer; phones keep the environment map whatever the preset.
   private configureCar() {
     const s = this.settings, c = carById(this.profile.p.car), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
+    const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
-      car: c.id as CarId, paint: c.paint, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      car: c.id as CarId, paint: store?.hex ?? c.paint, finish: store?.finish ?? null, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
   }
@@ -1198,6 +1203,7 @@ export class Game {
 
   dispose() {
     cancelAnimationFrame(this.raf);
+    this.offStore();
     removeEventListener('resize', this.onResize);
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();

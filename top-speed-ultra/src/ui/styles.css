@@ -568,3 +568,111 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .loadbar i { left: 31%; }
   .tunnel { display: none; }
 }
+
+/* ------------------------------------------------------------------ the store (src/ui/Store.tsx)
+   Built on the tokens above. The sunset pass may add --sunset, --ember and --amber: the store reads them first and
+   falls back to today's tokens, so it adopts the new look without edits. */
+.store-open { width: 100%; border: 0; font: inherit; text-align: left; cursor: pointer; }
+.store { --st-accent: var(--amber, var(--volt)); --st-hot: var(--ember, var(--mag)); --st-sunset: var(--sunset, linear-gradient(100deg, #ffb347 0%, #e8622c 52%, #8e2c6b 100%)); }
+.store .store-panel { gap: 18px; }
+.store .store-mode { position: relative; isolation: isolate; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; padding: 12px 16px; margin-inline: 4px; }
+.store .store-mode::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--volt-wash); box-shadow: inset 0 0 0 1px var(--volt-line), inset 4px 0 0 var(--volt); }
+.store .store-mode b { font: 700 12px/1.2 var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--volt); }
+.store .store-mode span { color: var(--ink); font-size: 14.5px; font-weight: 600; }
+.store .store-mode.live::before { background: var(--cell); box-shadow: inset 0 0 0 1px var(--line-2), inset 4px 0 0 var(--good); }
+.store .store-mode.live b { color: var(--good); }
+.store .store-lede { color: var(--dim); max-width: 60ch; }
+.store .store-account { display: grid; gap: 12px; padding: 14px 16px; background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
+.store .store-who { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.store .store-who p { display: grid; gap: 2px; color: var(--ink); min-width: 0; overflow-wrap: anywhere; }
+.store .store-who small { font: 500 10.5px/1.3 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
+.store .store-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.store .store-badges li { padding: 5px 12px; font: 600 12px/1.2 var(--f-mono); letter-spacing: 0.08em; color: var(--st-accent); box-shadow: inset 0 0 0 1px var(--line-2); }
+.store .store-badges li.founder { color: var(--ink); background: linear-gradient(var(--night), var(--night)) padding-box, var(--st-sunset) border-box; border: 2px solid transparent; box-shadow: none; }
+.store .store-note { margin: 0; padding: 10px 14px; font-size: 14px; color: var(--ink); background: var(--cell); box-shadow: inset 3px 0 0 var(--chrome); }
+.store .store-note.good { box-shadow: inset 3px 0 0 var(--good); }
+.store .store-note.bad { box-shadow: inset 3px 0 0 var(--bad); }
+.store .store-link { margin-left: 8px; padding: 2px 6px; border: 0; background: none; color: var(--st-accent); font: 600 13px/1 var(--f-mono); text-decoration: underline; cursor: pointer; }
+.store .store-err { margin: 0; color: var(--bad); font-weight: 600; font-size: 14px; }
+
+.store .store-founder { position: relative; display: grid; gap: 10px; padding: 18px 18px 16px; background: linear-gradient(160deg, rgba(232, 98, 44, 0.16), var(--clear) 60%), var(--cell); }
+.store .store-founder::before { content: ""; position: absolute; inset: 0; padding: 2px; pointer-events: none; background: var(--st-sunset);
+  -webkit-mask: var(--frame-mask); -webkit-mask-composite: xor; mask: var(--frame-mask); mask-composite: exclude; }
+.store .store-founder-when { margin: 0; font: 600 11.5px/1.4 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--st-accent); }
+.store .store-founder-head, .store .store-item-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.store .store-founder h3 { margin: 0; font: 800 34px/0.95 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
+.store .store-price { margin: 0; flex: 0 1 auto; min-width: 0; font: 700 20px/1.15 var(--f-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.store .store-founder .store-price { font-size: 28px; color: var(--st-accent); }
+.store .store-price.small { font-size: 14px; letter-spacing: 0.02em; }
+.store .store-desc { font-size: 14px; line-height: 1.45; color: var(--dim); }
+.store .store-grants { display: grid; gap: 4px 14px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin: 0; padding: 0; list-style: none; font-size: 13.5px; color: var(--ink); }
+.store .store-grants li { display: flex; gap: 8px; align-items: center; min-width: 0; }
+.store .store-grants li.got::after { content: "owned"; margin-left: auto; font: 500 10px/1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--good); }
+.store .store-sw { flex: none; display: inline-block; width: 16px; height: 16px; transform: skewX(var(--skew)); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--line-3); }
+.store .store-sw.factory { background: linear-gradient(135deg, var(--chrome-hi), var(--chrome-lo)); }
+.store .store-sw.sunset { background: var(--st-sunset); }
+.store .store-sw.blank { background: none; box-shadow: inset 0 0 0 1px var(--line-3); }
+.store .store-shows { margin: 0; font-size: 12.5px; color: var(--faint); }
+.store .store-act { margin: 2px 0 0; padding-inline: 6px; }
+.store .store-owned, .store .store-locked { font: 600 12px/1.2 var(--f-mono); font-style: normal; letter-spacing: 0.12em; text-transform: uppercase; }
+.store .store-owned { color: var(--good); }
+.store .store-locked { color: var(--dim); }
+
+.store .store-group { display: grid; gap: 10px; }
+.store .store-group .sect { color: var(--mag-ink); }
+.store .store-items { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.store .store-item { display: grid; gap: 8px; align-content: start; padding: 14px 16px; background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
+.store .store-item.owned { box-shadow: inset 0 0 0 1px var(--line), inset 3px 0 0 var(--good); }
+.store .store-item h4 { margin: 0; font: 800 22px/1 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
+
+.store .store-locker { display: grid; gap: 10px; padding: 14px 16px; background: var(--cell); box-shadow: inset 0 0 0 1px var(--line-2); }
+.store .store-q { margin: 0; color: var(--ink); font-weight: 600; }
+.store .store-q.small { font-size: 13.5px; font-weight: 500; color: var(--dim); }
+.store .store-paints { display: flex; flex-wrap: wrap; gap: 8px; }
+.store .store-paint { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; padding: 0 14px; border: 0; cursor: pointer; color: var(--ink); background: var(--night-2); box-shadow: inset 0 0 0 1px var(--line); font: 500 13.5px/1.2 var(--f-ui); }
+.store .store-paint small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.store .store-paint[aria-pressed="true"] { background: linear-gradient(180deg, var(--mag-wash), var(--mag-wash)), var(--night-2); box-shadow: inset 0 0 0 1px var(--st-hot), inset 0 -2px 0 var(--st-hot); }
+.store .store-receipts summary, .store .store-terms summary { cursor: pointer; color: var(--dim); font: 500 12px/1.4 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.store .store-receipts ul, .store .store-terms ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; color: var(--dim); font-size: 13.5px; }
+.store .store-terms { padding: 4px 2px; }
+
+/* the checkout sheet */
+.store.store-sheet { z-index: 5; background: radial-gradient(120% 90% at 50% 45%, var(--scrim-2) 0%, var(--scrim-3) 100%); }
+.store.store-sheet .panel { gap: 14px; }
+/* the sheet's footer keeps Pay and Cancel on one line in the narrow panel, so it stays short over the form */
+.store.store-sheet .panel > .row:last-child { gap: 10px; flex-wrap: nowrap; }
+.store.store-sheet .panel > .row:last-child .btn { padding-inline: 14px; font-size: 13px; letter-spacing: 0.08em; white-space: nowrap; }
+.store.store-sheet .panel > .row:last-child .btn.primary { flex: 1 1 auto; min-width: 0; }
+.store .store-sheet-price { margin: -4px 0 0; font: 700 34px/1 var(--f-mono); color: var(--st-accent); font-variant-numeric: tabular-nums; }
+.store .store-step { display: grid; gap: 10px; }
+.store .store-fields.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.store .store-field { display: grid; gap: 6px; }
+.store .store-field > label { font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+.store .store-field input, .store .store-field select { min-height: 46px; width: 100%; padding: 0 12px; border: 0; border-radius: 0; color: var(--ink); background: var(--night); box-shadow: inset 0 0 0 1px var(--line-2);
+  font: 500 16px/1 var(--f-mono); letter-spacing: 0.04em; user-select: text; -webkit-user-select: text; }
+.store .store-field select { font-family: var(--f-ui); }
+.store .store-field input:focus-visible, .store .store-field select:focus-visible { outline: 2px solid var(--volt); outline-offset: 1px; }
+.store .store-field input::placeholder { color: var(--faint); opacity: 0.8; }
+.store .store-check { display: flex; gap: 12px; align-items: flex-start; min-height: 44px; padding-top: 4px; cursor: pointer; color: var(--ink); font-size: 14.5px; line-height: 1.4; }
+.store .store-check input { flex: none; width: 22px; height: 22px; margin: 0; accent-color: var(--volt); cursor: pointer; }
+.store .store-renew { display: grid; gap: 6px; padding: 12px 14px; background: var(--night); box-shadow: inset 0 0 0 1px var(--line-2), inset 3px 0 0 var(--st-accent); }
+.store .store-renew p { font-size: 13.5px; color: var(--dim); }
+.store .store-renew b { color: var(--ink); }
+.store .store-licence { font-size: 13px; color: var(--dim); }
+.store .store-licence a { color: var(--st-accent); }
+.store .store-card { display: grid; gap: 10px; padding: 12px 14px 14px; background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
+.store .btn[disabled] { opacity: 0.55; cursor: default; }
+.store .store-receipt { display: grid; gap: 8px; }
+.store .store-receipt dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; margin: 0; background: var(--line); box-shadow: 0 0 0 1px var(--line); }
+.store .store-receipt dl div { padding: 8px 10px; background: var(--night); min-width: 0; }
+.store .store-receipt dt { font: 500 10px/1.3 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+.store .store-receipt dd { margin: 3px 0 0; font: 600 15px/1.25 var(--f-ui); overflow-wrap: anywhere; }
+.store .store-receipt dd.mono { font-family: var(--f-mono); font-size: 13px; }
+.store .store-test-line { color: var(--volt) !important; font: 600 12px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+@media (max-width: 560px) {
+  .store .store-items { grid-template-columns: 1fr; }
+  .store .store-grants { grid-template-columns: 1fr; }
+  .store .store-founder h3 { font-size: 30px; }
+  .store .store-mode { margin-inline: 2px; }
+}
+@media (prefers-reduced-motion: reduce) { .store .panel { animation: none !important; } }

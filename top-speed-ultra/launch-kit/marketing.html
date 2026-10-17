@@ -1,0 +1,973 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OC Ultra Marketing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="OC Ultra's $0 pre-launch marketing: the hook, the eight-week clip calendar, and step-by-step guides for clips, the waitlist and invite codes, the press, and the Founders crew with the FTC disclosure.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night drive west into the sunset. Each page is one stretch of freeway: a sunset horizon up top, then
+   sections posted like exit signs, and every guide is a lane with a car that drives from step to step. */
+:root {
+  color-scheme: dark;
+  --night: #0b0812;      /* page ground: the violet-black the game's UI is cut from */
+  --asphalt: #16101d;    /* raised surfaces */
+  --tar: #211829;        /* inputs, code, signs */
+  --stripe: #3b2d45;     /* hairlines and lane lines */
+  --fog: #bcaebb;        /* secondary text (8:1 on night) */
+  --chalk: #f7efe6;      /* text */
+  --sunset: #fd9123;     /* the wordmark's sky orange (8.75:1 on night) */
+  --ember: #ee1e0a;      /* the wordmark's red edge: fills and strokes only */
+  --amber: #febc31;      /* the sun highlight (11.8:1 on night) */
+  --ember-text: #ff8a6e; /* ember lifted for small text */
+  --dusk: #a9c4ff;       /* "Claude" chips: the blue after sunset */
+  --go: #7ee0a8;         /* success: test receipts, done */
+  --glow: linear-gradient(90deg, var(--ember), var(--sunset) 55%, var(--amber));
+  --f-display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --hdr: 57px;
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ---------- base (mirrors the artifact skeleton, so pages served without it look the same) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--night); scroll-padding-top: calc(var(--hdr) + 16px); }
+body { margin: 0; background: var(--night); color: var(--chalk); font: 400 1.0625rem/1.58 var(--f-body);
+  -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--night); }
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--amber); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--chalk); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--sunset); color: var(--night); }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 1.25em; }
+li { margin-bottom: 6px; }
+li::marker { color: var(--sunset); }
+b, strong { font-weight: 600; color: var(--chalk); }
+code, kbd { font: 400 .88em/1.4 var(--f-mono); background: var(--tar); border: 1px solid var(--stripe); border-radius: 5px; padding: 1px 5px; color: var(--chalk); overflow-wrap: anywhere; }
+
+/* ---------- page frame ---------- */
+.page { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; overflow-x: clip; min-height: 100%; }
+.col { max-width: 1120px; margin-inline: auto; }
+.read { max-width: 44rem; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  margin-left: calc(-1 * var(--gl)); margin-right: calc(-1 * var(--gr)); padding-left: var(--gl); padding-right: var(--gr);
+  background: color-mix(in srgb, var(--night) 90%, transparent); border-bottom: 1px solid var(--stripe);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.bar { max-width: 1120px; margin-inline: auto; height: 56px; display: flex; align-items: center; gap: 14px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; color: var(--chalk); text-decoration: none; flex: none; padding: 6px 0; }
+.brand img { height: 26px; width: auto; }
+.brand b { font: italic 800 1.3rem/1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; margin-left: auto; min-width: 0; }
+.nav a { font: 700 .98rem/1 var(--f-display); letter-spacing: .07em; text-transform: uppercase; color: var(--fog);
+  text-decoration: none; padding: 10px 10px; border-radius: 8px; white-space: nowrap; }
+.nav a:hover { color: var(--chalk); background: var(--tar); }
+.nav a[aria-current="page"] { color: var(--night); background: var(--sunset); }
+
+.foot { border-top: 1px solid var(--stripe); margin-top: 24px; padding-top: 22px; color: var(--fog); font-size: .92rem;
+  display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+.foot p { margin: 0; max-width: 44rem; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; padding-block: clamp(34px, 6vw, 76px) clamp(30px, 5vw, 56px); isolation: isolate; }
+.hero::before { content: ""; position: absolute; z-index: -1; right: -10%; top: -40px; width: min(720px, 90vw); height: 420px;
+  background: radial-gradient(closest-side, rgba(253,145,35,.22), rgba(238,30,10,.08) 60%, transparent); pointer-events: none; }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--glow); opacity: .85; }
+.eyebrow { font: 600 .78rem/1.3 var(--f-body); letter-spacing: .16em; text-transform: uppercase; color: var(--sunset); margin: 0 0 14px; }
+h1 { font: italic 800 clamp(2.7rem, 8.4vw, 5.6rem)/.9 var(--f-display); text-transform: uppercase; letter-spacing: .005em;
+  margin: 0; text-wrap: balance; }
+h1 .hl { color: var(--sunset); }
+.lede { font-size: clamp(1.12rem, 2.2vw, 1.32rem); line-height: 1.5; max-width: 42rem; margin: 18px 0 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; padding: 0; list-style: none; }
+.facts li { margin: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border: 1px solid var(--stripe);
+  border-radius: 12px; background: var(--asphalt); min-width: 0; }
+.facts b { font: 800 1.45rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.facts span { font-size: .84rem; color: var(--fog); }
+
+/* ---------- sections, posted like exits ---------- */
+.sec { position: relative; padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--stripe); }
+.sec::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: min(240px, 45%); background: var(--glow);
+  transform-origin: left center; }
+.js .sec::before { transition: transform 1.1s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in)::before { transform: scaleX(0); }
+.sec-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: start; margin-bottom: 26px; max-width: 56rem; }
+.sec-head .sign { grid-row: span 2; margin-top: 2px; }
+h2 { font: 700 clamp(1.95rem, 4.6vw, 3.1rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.kicker { color: var(--fog); margin: 6px 0 0; max-width: 46rem; font-size: 1.05rem; }
+.js .sec-head > :not(.sign) { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in) .sec-head > :not(.sign) { transform: translateY(10px); }
+h3 { font: 700 1.45rem/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 10px; text-wrap: balance; }
+h4 { font: 700 1.22rem/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 6px; text-wrap: balance; }
+.sub { margin-top: 34px; }
+
+/* the exit sign: a number or a day, posted on every section and step */
+.sign { display: inline-grid; place-items: center; align-content: center; min-width: 54px; min-height: 50px; padding: 6px 10px 7px;
+  border-radius: 9px; background: var(--tar); border: 1.5px solid var(--sunset); color: var(--chalk);
+  font: 800 1.4rem/1 var(--f-display); text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sign small { display: block; font: 600 .6rem/1 var(--f-body); letter-spacing: .15em; text-transform: uppercase; color: var(--sunset); margin-bottom: 4px; }
+.sec.in > .col > .sec-head .sign, .sec.in > .sec-head .sign { animation: sign-on .9s ease both; }
+@keyframes sign-on { 0% { box-shadow: 0 0 0 0 rgba(253,145,35,0); } 45% { box-shadow: 0 0 30px 3px rgba(253,145,35,.5); } 100% { box-shadow: 0 0 12px 0 rgba(253,145,35,.16); } }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; padding: 20px; min-width: 0; }
+.card > :last-child { margin-bottom: 0; }
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 980px) { .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .g2, .g3, .g4 { grid-template-columns: minmax(0, 1fr); } }
+.callout { background: color-mix(in srgb, var(--sunset) 8%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--sunset) 38%, transparent);
+  border-radius: 12px; padding: 16px 18px; max-width: 56rem; }
+.callout.warm { background: color-mix(in srgb, var(--ember) 9%, var(--asphalt)); border-color: color-mix(in srgb, var(--ember) 45%, transparent); }
+.callout > .lbl:first-child { display: block; margin-bottom: 6px; }
+.callout > :last-child { margin-bottom: 0; }
+.lbl { font: 600 .74rem/1.3 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--sunset); }
+.muted { color: var(--fog); }
+.small { font-size: .9rem; }
+.fine { font-size: .86rem; color: var(--fog); }
+.num { font-variant-numeric: tabular-nums; }
+.big { font: 800 clamp(2rem, 5vw, 3rem)/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.stack > * + * { margin-top: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* chips: who does it, what it costs, how ready it is */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+.chips li { margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 .74rem/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 9px; border-radius: 999px; border: 1px solid var(--stripe); color: var(--fog); background: var(--night); white-space: nowrap; }
+.chip.owner { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.chip.claude { color: var(--dusk); border-color: color-mix(in srgb, var(--dusk) 45%, transparent); }
+.chip.both { color: var(--chalk); border-color: var(--fog); }
+.chip.cost { color: var(--go); border-color: color-mix(in srgb, var(--go) 40%, transparent); }
+.chip.hot { color: var(--night); background: var(--sunset); border-color: transparent; }
+.chip.warn { color: var(--ember-text); border-color: color-mix(in srgb, var(--ember) 55%, transparent); }
+
+/* tables: a box with a border; on a phone, no number is ever off to the side (see the 600px rules below) */
+.scroll-x { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--stripe); border-radius: 12px; background: var(--asphalt); }
+.tbl { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.tbl th { text-align: left; font: 600 .72rem/1.25 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--fog);
+  padding: 12px 14px; border-bottom: 1px solid var(--stripe); background: var(--tar); vertical-align: bottom; }
+.tbl td { padding: 12px 14px; border-bottom: 1px solid var(--stripe); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tfoot td { font-weight: 600; background: var(--tar); }
+/* the phone version of a table read down its columns: one card per column (build.py writes it from the table, so the numbers are typed once) */
+.flip-cards { display: none; gap: 12px; }
+.flip-cap { margin: 0; color: var(--fog); font-size: .92rem; }
+.flip-card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 12px; padding: 14px 16px 10px; min-width: 0; }
+.flip-card h4 { margin: 0 0 6px; font: italic 800 1.5rem/1 var(--f-display); color: var(--amber); }
+.flip-card dl { margin: 0; }
+.flip-card dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 6px 0;
+  border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+.flip-card dl > div:first-child { border-top: 0; }
+.flip-card dt { color: var(--fog); font-size: .92rem; min-width: 0; }
+.flip-card dt b { color: var(--chalk); }
+.flip-card dd { margin: 0; flex: none; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.flip-card dl > div.tot { margin-inline: -16px; padding-inline: 16px; background: var(--tar); border-top-color: var(--stripe); }
+.flip-card dl > div.tot dt { color: var(--chalk); font-weight: 600; }
+.flip-card dl > div.tot dd { color: var(--chalk); }
+.flip-card dl > div:not(.tot) + .tot { border-top: 2px solid var(--sunset); }
+
+@media (max-width: 600px) {
+  .tbl th, .tbl td { padding: 10px 11px; }
+  /* tables of four or more columns: each row becomes a card, and each value carries its column's name */
+  .tbl.cardrows, .tbl.cardrows tbody, .tbl.cardrows tfoot, .tbl.cardrows tr { display: block; }
+  .tbl.cardrows thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tbl.cardrows tr { padding: 12px 14px 8px; border-bottom: 1px solid var(--stripe); }
+  .tbl.cardrows tbody tr:last-child { border-bottom: 0; }
+  .tbl.cardrows td { display: flow-root; padding: 5px 0; border: 0; text-align: right; white-space: normal; font-variant-numeric: tabular-nums; }
+  .tbl.cardrows td + td { border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+  .tbl.cardrows td::before { content: attr(data-label); content: attr(data-label) / ""; float: left; margin-right: 14px; text-align: left;
+    font: 600 .72rem/1.9 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--fog); }
+  .tbl.cardrows td:first-child { text-align: left; font-weight: 600; padding: 0 0 6px; }
+  .tbl.cardrows td:first-child::before { float: none; display: block; line-height: 1.5; margin: 0 0 2px; }
+  /* a table read down its columns (the store's Low / Middle / High) turns: one card per column */
+  .flipbox > .scroll-x { display: none; }
+  .flipbox > .flip-cards { display: grid; }
+}
+/* the narrowest phones (320px): a long word or an email may break so a three-column table still fits */
+@media (max-width: 380px) { .tbl td { overflow-wrap: anywhere; } }
+
+/* ---------- controls ---------- */
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px;
+  border-radius: 10px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk); font: 700 1.02rem/1 var(--f-display);
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: border-color .2s, color .2s, background-color .2s; }
+.btn:hover { border-color: var(--sunset); color: var(--chalk); }
+.btn.primary { background: linear-gradient(90deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.btn.primary:hover { color: var(--night); filter: brightness(1.06); }
+.btn.ghost { background: transparent; }
+.btn.small { min-height: 36px; padding: 7px 11px; font-size: .9rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.btn .arr { font-family: var(--f-body); font-weight: 600; }
+
+input[type="text"], input[type="email"], input[type="number"], input:not([type]), select, textarea {
+  font: 500 1rem/1.3 var(--f-body); color: var(--chalk); background: var(--tar); border: 1px solid var(--stripe); border-radius: 10px;
+  padding: 11px 12px; width: 100%; min-height: 44px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; border-color: transparent; }
+input::placeholder { color: color-mix(in srgb, var(--fog) 70%, transparent); }
+input[type="range"] { width: 100%; accent-color: var(--sunset); min-height: 28px; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--sunset); flex: none; margin: 2px 0 0; }
+label { cursor: pointer; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field > .lbl2 { font: 600 .8rem/1.2 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--fog); }
+.check { display: flex; gap: 10px; align-items: flex-start; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { min-height: 38px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk);
+  font: 600 .95rem/1 var(--f-body); cursor: pointer; font-variant-numeric: tabular-nums; }
+.seg button[aria-pressed="true"] { background: var(--sunset); color: var(--night); border-color: transparent; }
+
+/* code you can copy */
+.code { background: var(--tar); border: 1px solid var(--stripe); border-radius: 12px; min-width: 0; margin: 10px 0 12px; }
+.code-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 6px 6px 14px; border-bottom: 1px solid var(--stripe); }
+.code-head span { font: 500 .78rem/1.3 var(--f-mono); color: var(--fog); min-width: 0; overflow-wrap: anywhere; }
+.code pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 .86rem/1.6 var(--f-mono); color: var(--chalk); white-space: pre; tab-size: 2; }
+.code pre.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.code pre.tall { max-height: 360px; overflow: auto; }
+.code .fill { color: var(--amber); }
+.copy-msg { font-size: .82rem; color: var(--go); margin-left: 4px; }
+
+/* ---------- the guide: a lane with a car that drives from step to step ---------- */
+.guide { position: relative; margin-top: 6px; }
+.guide-ctl { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hdr)); z-index: 6; background: var(--night);
+  box-shadow: 0 0 0 100vmax var(--night); clip-path: inset(0 -100vmax); padding: 10px 0 12px; margin-bottom: 14px; border-bottom: 1px solid var(--stripe); }
+.road { position: relative; height: 30px; margin: 2px 16px 8px; --p: 0; }
+.road::before { content: ""; position: absolute; left: -16px; right: -16px; top: 9px; height: 12px; border-radius: 6px; background: var(--tar);
+  box-shadow: inset 0 0 0 1px var(--stripe); }
+.road-lane { position: absolute; left: -10px; right: -10px; top: 14px; height: 2px; background: repeating-linear-gradient(90deg, var(--stripe) 0 10px, transparent 10px 20px); }
+.road.moving .road-lane { animation: lane .35s linear infinite; }
+@keyframes lane { to { background-position: -20px 0; } }
+.road-lit { position: absolute; left: -16px; top: 9px; height: 12px; border-radius: 6px; width: calc(var(--p) * 100% + 16px);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ember) 70%, transparent), var(--sunset) 75%, var(--amber)); opacity: .9;
+  transition: width .75s cubic-bezier(.3,.8,.2,1); }
+.tick { position: absolute; top: 7px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: var(--stripe); }
+.tick.done { background: var(--night); opacity: .55; }
+.tick.gap { height: 22px; top: 4px; width: 3px; background: var(--fog); opacity: .8; }
+.car { position: absolute; top: 4px; left: calc(var(--p) * 100%); width: 32px; height: 22px; margin-left: -18px; transition: left .75s cubic-bezier(.3,.8,.2,1);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+.car::after { content: ""; position: absolute; left: 28px; top: 1px; width: 46px; height: 20px; border-radius: 50%;
+  background: radial-gradient(ellipse at left center, rgba(254,188,49,.55), transparent 70%); pointer-events: none; }
+.car svg { width: 32px; height: 22px; display: block; }
+.car .cb { fill: var(--sunset); stroke: var(--ember); stroke-width: 1.2; }
+.car .cw { fill: var(--night); }
+.car .cl { fill: var(--amber); }
+.phases { display: flex; gap: 4px; margin: 0 0 8px; }
+.phases button { flex: 1 1 0; min-width: 0; min-height: 34px; padding: 6px 6px; border: 1px solid var(--stripe); border-radius: 8px; background: var(--asphalt);
+  color: var(--fog); font: 700 .86rem/1.05 var(--f-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phases button[aria-current="step"] { color: var(--night); background: var(--sunset); border-color: transparent; }
+.ctl-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.count { margin: 0; font-size: .95rem; color: var(--fog); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count b { color: var(--chalk); font-variant-numeric: tabular-nums; }
+.count span { color: var(--chalk); }
+@media (max-width: 560px) {
+  .ctl-row { grid-template-columns: auto auto minmax(0, 1fr); }
+  .ctl-row .count { grid-column: 1 / -1; grid-row: 1; white-space: normal; }
+  .ctl-row [data-act="auto"] { justify-self: end; }
+}
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.steps.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 861px) { .steps.two > .step:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+@media (max-width: 860px) { .steps.two { grid-template-columns: minmax(0, 1fr); } }
+.step { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px; margin: 0;
+  background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; overflow: hidden; min-width: 0;
+  scroll-margin-top: calc(var(--hdr) + 140px); scroll-margin-bottom: 24px; transition: border-color .3s, box-shadow .3s; }
+.step > .sign { min-width: 50px; font-size: 1.25rem; align-self: start; }
+.step-body { min-width: 0; }
+.step-body > :last-child { margin-bottom: 0; }
+.step p { margin-bottom: 8px; }
+.step .proof { font-size: .93rem; color: var(--fog); }
+.step .proof b, .step .if b { color: var(--go); font-weight: 600; }
+.step .if { font-size: .93rem; color: var(--fog); }
+.step .if b { color: var(--ember-text); }
+.js .step { cursor: pointer; }
+.step.is-active { border-color: var(--sunset); box-shadow: 0 0 0 1px var(--sunset), 0 18px 50px -26px rgba(253,145,35,.65); }
+.step.is-active .sign { background: linear-gradient(135deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.step.is-active .sign small { color: var(--night); }
+.step.is-active::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(254,188,49,.14) 46%, transparent 62%); transform: translateX(-100%); animation: sweep 1.15s ease-out forwards; }
+@keyframes sweep { to { transform: translateX(100%); } }
+.step.is-done .sign { border-color: var(--amber); }
+.step.is-done .sign::after { content: "done"; display: block; font: 600 .55rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--go); margin-top: 3px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin: 26px 0 12px; }
+.group-head:first-child { margin-top: 0; }
+.group-head h3 { margin: 0; }
+.group-head p { margin: 0; color: var(--fog); }
+
+@media (max-width: 560px) {
+  :root { --hdr: 53px; }
+  .bar { height: 52px; gap: 8px; }
+  .brand b { display: none; }
+  .brand img { height: 22px; }
+  .nav a { font-size: .88rem; padding: 9px 7px; letter-spacing: .05em; }
+  .card { padding: 16px; }
+  .step { padding: 14px; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+  .step > .sign { justify-self: start; display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; min-height: 0; padding: 5px 10px; font-size: 1.05rem; }
+  .step > .sign small { margin: 0; }
+  .step.is-done .sign::after { margin: 0; }
+  .sec-head { gap: 10px 12px; align-items: center; }
+  .sec-head .sign { grid-row: auto; margin-top: 0; min-width: 46px; min-height: 46px; font-size: 1.15rem; }
+  .sec-head .kicker { grid-column: 1 / -1; margin-top: 0; }
+  .phases button { flex-grow: 1 !important; font-size: .8rem; letter-spacing: .03em; padding-inline: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .step.is-active::after { display: none; }
+  .js .sec:not(.in)::before { transform: none; }
+  .js .sec:not(.in) .sec-head > :not(.sign) { transform: none; }
+}
+
+/* ---------- this page ---------- */
+.alts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
+.alts li { margin: 0; font: 700 1.05rem/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; padding: 9px 12px; border-radius: 8px; background: var(--tar); border: 1px solid var(--stripe); }
+.nums { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 16px 0 0; padding: 0; list-style: none; }
+@media (max-width: 860px) { .nums { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nums li:last-child { grid-column: 1 / -1; } }
+.nums li { margin: 0; background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 12px; padding: 12px 14px; }
+.nums b { display: block; font: 800 1.9rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.nums span { font-size: .88rem; color: var(--fog); }
+.places { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 0; padding: 0; list-style: none; }
+@media (max-width: 760px) { .places { grid-template-columns: minmax(0, 1fr); } }
+.places li { margin: 0; padding: 14px 0; border-bottom: 1px solid var(--stripe); display: grid; gap: 4px; }
+.places b { font: 700 1.15rem/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+.places .sg { font: 500 .82rem/1.35 var(--f-mono); color: var(--go); }
+.places p { margin: 0; color: var(--fog); font-size: .95rem; }
+.never { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.never li { margin: 0; font-size: .95rem; padding: 7px 11px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--ember) 55%, transparent); color: var(--ember-text); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--ember) 70%, transparent); }
+.honest { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.honest li { margin: 0; padding-left: 22px; position: relative; }
+.honest li::before { content: ""; position: absolute; left: 2px; top: 9px; width: 9px; height: 9px; border-radius: 2px; background: var(--amber); transform: rotate(45deg); }
+.honest .last { font: 700 1.2rem/1.2 var(--f-display); text-transform: uppercase; letter-spacing: .03em; color: var(--amber); }
+
+.phase3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .phase3 { grid-template-columns: minmax(0, 1fr); } }
+.phase3 .card h3 { margin-bottom: 4px; }
+.phase3 .when { color: var(--sunset); font-weight: 600; margin-bottom: 8px; }
+
+.cal { display: grid; gap: 10px; }
+.wkc { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; padding: 16px; }
+@media (max-width: 700px) { .wkc { grid-template-columns: minmax(0, 1fr); gap: 10px; } }
+.wkc .wn b { display: block; font: 800 1.9rem/1 var(--f-display); color: var(--chalk); }
+.wkc .wn span { display: block; color: var(--fog); font-size: .86rem; margin-top: 4px; }
+.wkc .wn em { font-style: normal; display: inline-block; margin-top: 8px; }
+.wkc h4 { margin: 0 0 8px; color: var(--sunset); }
+.clips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+@media (max-width: 860px) { .clips { grid-template-columns: minmax(0, 1fr); } }
+.clips li { margin: 0; background: var(--tar); border-radius: 10px; padding: 10px 12px; display: grid; gap: 2px; }
+.clips b { font-weight: 600; }
+.clips span { font-size: .86rem; color: var(--fog); }
+.wkc.passed { opacity: .75; }
+.wkc.launch { border-color: var(--sunset); }
+
+.arith { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .arith { grid-template-columns: minmax(0, 1fr); } }
+.srcs { list-style: none; margin: 0; padding: 0; }
+.srcs li { margin: 0; }
+.srcs label { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--stripe); align-items: start; }
+.srcs .what b { display: block; font-weight: 600; }
+.srcs .what span { display: block; font-size: .86rem; color: var(--fog); }
+.srcs .n { font: 800 1.3rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.tally { background: var(--asphalt); border: 1px solid var(--sunset); border-radius: 16px; padding: 20px; display: grid; gap: 12px; }
+.tally .big { font-size: clamp(2.6rem, 6vw, 3.6rem); }
+.meter { height: 14px; background: var(--tar); border-radius: 7px; position: relative; overflow: hidden; }
+.meter i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 7px; background: linear-gradient(90deg, var(--sunset), var(--amber)); transition: width .5s cubic-bezier(.3,.8,.2,1); }
+.meter s { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--chalk); text-decoration: none; }
+.pace { display: grid; gap: 8px; margin-top: 4px; }
+.pace output { font: 800 1.5rem/1 var(--f-display); color: var(--amber); }
+
+.outlets { margin-top: 18px; }
+.outlets td:first-child { font-weight: 600; min-width: 150px; }
+@media (max-width: 600px) { .outlets td:first-child { min-width: 0; } .outlets .sel { font-size: .8em; } }
+.sel { font-family: var(--f-mono); font-size: .9em; color: var(--amber); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+@media (max-width: 700px) { .counts { grid-template-columns: minmax(0, 1fr); } }
+.counts h4 { margin-bottom: 10px; }
+.counts ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.counts li { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--tar); }
+.counts .yes h4 { color: var(--go); }
+.counts .no h4 { color: var(--ember-text); }
+.counts .no li { color: var(--fog); }
+.chan { margin-top: 18px; }
+.norms { counter-reset: n; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
+@media (max-width: 760px) { .norms { grid-template-columns: minmax(0, 1fr); } }
+.norms li { counter-increment: n; margin: 0; padding: 12px 0 12px 44px; border-bottom: 1px solid var(--stripe); position: relative; }
+.norms li::before { content: counter(n); position: absolute; left: 0; top: 10px; width: 32px; text-align: center; font: 800 1.3rem/1.2 var(--f-display); color: var(--sunset); }
+.tpl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .tpl { grid-template-columns: minmax(0, 1fr); } }
+.tpl .card h4 { margin-bottom: 4px; }
+.tpl .card .code { margin-bottom: 0; }
+</style>
+<div class="page">
+<header class="top"><div class="bar"><a class="brand" href="index.html" aria-label="OC Ultra launch kit: the hub"><img src="img/oc-logo-480.webp" width="480" height="171" alt=""><b>Ultra</b></a><nav class="nav" aria-label="Launch kit pages"><a href="plan.html">Plan</a><a href="marketing.html" aria-current="page">Marketing</a><a href="store.html">Store</a><a href="golive.html">Go live</a></nav></div></header>
+<main class="col">
+  <section class="hero" aria-labelledby="mk-h">
+    <p class="eyebrow">OC Ultra · marketing before launch, for $0</p>
+    <h1 id="mk-h">Drive the real 405 <span class="hl">at sunset,</span> on your phone.</h1>
+    <p class="lede">One person, a phone and free accounts. Three short clips a week and fifteen minutes a day in the comments, until one channel lands: a local Reddit post, a campus club or a creator.</p>
+    <ul class="facts">
+      <li><b>3 clips</b><span>a week: Fri, Mon, Wed</span></li>
+      <li><b>15 min</b><span>a day of replies</span></li>
+      <li><b>3–4 h</b><span>a week of owner time (an estimate)</span></li>
+      <li><b>$0</b><span>nothing below needs money</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="hook" aria-labelledby="hook-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>1</span>
+      <h2 id="hook-h">The hook</h2>
+      <p class="kicker">Recognition beats spectacle. Everyone in OC has an exit, and the game starts at it. A clip that shows a viewer's exit sign gets a comment, and a comment asking for <em>their</em> exit is the cheapest engagement there is.</p>
+    </div>
+    <p class="lbl" style="margin:0 0 10px">Shorter versions for on-screen text</p>
+    <ul class="alts" aria-label="Shorter versions for on-screen text"><li>The real 405.</li><li>Your exit. Real sign.</li><li>It's your freeway.</li></ul>
+    <ul class="nums" aria-label="Facts that are true and checkable">
+      <li><b>10</b><span>freeways, 20 carriageways</span></li>
+      <li><b>1,247</b><span>ramp pieces</span></li>
+      <li><b>247</b><span>real street bridges</span></li>
+      <li><b>416</b><span>real exit signs from the map data</span></li>
+      <li><b>450 m</b><span>before your sign is where you start</span></li>
+    </ul>
+    <h3 class="sub">The places OC will recognise</h3>
+    <p class="muted read">All of them are in the game's own sign data, so every clip can show the real sign.</p>
+    <ul class="places">
+      <li><b>The 405 North at sunset</b><span class="sg">Jamboree Road · John Wayne Airport / MacArthur Boulevard · CA 55 North</span><p>The hook clip. The airport sign is the most recognisable sign in central OC.</p></li>
+      <li><b>The El Toro Y, Irvine</b><span class="sg">I 405 North · Lake Forest Drive</span><p>"Where the 405 begins."</p></li>
+      <li><b>The Orange Crush, Orange</b><span class="sg">Long Beach / CA 22 West · CA 57 North / Pomona</span><p>Once called the world's most complex interchange (Guinness World Records, 2002 edition). Say "once called", with the year.</p></li>
+      <li><b>The 55 and 405 tangle, Costa Mesa</b><span class="sg">San Diego / I 405 South · CA 55 North / CA 55 South</span><p>Every commuter's least favourite merge.</p></li>
+      <li><b>The 91 to Riverside</b><span class="sg">Riverside Endurance race · 30 km · 91 East</span><p>A joke about the traffic, never about speed.</p></li>
+      <li><b>The 73 through Newport Coast at night</b><span class="sg">Newport Coast Drive · Bonita Canyon Drive</span><p>Headlights, stars, the toll road's curves.</p></li>
+      <li><b>The 241 Foothill Toll Road</b><span class="sg">Foothill Sprint · 10 km · 241 South</span><p>Hills and sweepers, two lanes.</p></li>
+      <li><b>South county on the 5</b><span class="sg">Avenida Pico · CA 74 / Ortega Highway · Basilone Road</span><p>Sunrise from San Clemente.</p></li>
+      <li><b>Anaheim on the 5</b><span class="sg">Disney Way / Katella Avenue · Ball Road / Harbor Boulevard</span><p>Show the sign; it's a real street. Never put Disney, or any brand, in a caption or tag.</p></li>
+      <li><b>Little Saigon on the 405</b><span class="sg">Bolsa Avenue / Goldenwest Street</span><p>An exit a big part of the county calls home.</p></li>
+    </ul>
+    <div class="grid g2 sub">
+      <div class="card">
+        <h3>The honesty lines</h3>
+        <ul class="honest">
+          <li>The roads, ramps and exit signs are real, from OpenStreetMap via Overture Maps.</li>
+          <li>Traffic and weather are simulated. No live traffic, no live weather, no multiplayer.</li>
+          <li>Scores stay on your phone. There's no online leaderboard.</li>
+          <li>The cars are our own makes, Rossini and Vela. Never call one anything real.</li>
+          <li class="last">A game. Drive the real ones at the limit.</li>
+        </ul>
+        <p class="fine" style="margin:12px 0 0">The last line goes on every clip and every post.</p>
+      </div>
+      <div class="card">
+        <h3>Never say</h3>
+        <ul class="never"><li>Real traffic</li><li>Live weather</li><li>Race your friends</li><li>Online leaderboard</li><li>Lamborghini, Ferrari, Porsche</li><li>Disney, or any business, in a tag</li><li>Lot 57 is a real bar</li><li>Anything that dares people to speed</li></ul>
+        <p class="muted small" style="margin:14px 0 0">The wordmark is the face of every account, the end card and the waitlist page, always next to the honesty line, never next to a speed number on its own. Leave "Top Speed" out of handles, tags, titles, the profile picture, the end card and the press kit until the trademark search clears.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="order" aria-labelledby="order-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>2</span>
+      <h2 id="order-h">The order</h2>
+      <p class="kicker">Nothing that sends anyone to the game goes out before Gate 0. Build-in-public clips link nowhere and ask nobody to play, so they're fine before it. Most clips from a new account get little reach; that's normal, not a verdict.</p>
+    </div>
+    <div class="phase3">
+      <div class="card"><span class="chip">Phase A</span><h3 style="margin-top:10px">Build in public</h3><p class="when">From now until Gate 0 passes</p><p>Clips of the game on a laptop, or stills, labelled as such. No link and no "play now". Captions end: "OC beta in November. Follow to get in."</p></div>
+      <div class="card"><span class="chip">Phase B</span><h3 style="margin-top:10px">The OC-only beta</h3><p class="when">Days 15 to 45 · from Mon 2 Nov</p><p>The waitlist, invite codes and run cards. Captions end: "OC-only beta: join the waitlist (link in bio)."</p></div>
+      <div class="card"><span class="chip hot">Phase C</span><h3 style="margin-top:10px">The public channels</h3><p class="when">From Day 46 · Thu 3 Dec</p><p>Show HN, r/WebGames, Product Hunt and the portals, only once anyone can play without a code. Show HN and r/WebGames require that.</p></div>
+    </div>
+    <div class="callout sub">
+      <span class="lbl">The rules that never bend</span>
+      <p>Disclose every perk. Never ask for votes, stars or reviews. No fake accounts. No fake scarcity. Never claim live traffic, live weather or multiplayer. No real-world driving footage. Every post ends with "A game. Drive the real ones at the limit."</p>
+    </div>
+  </section>
+
+  <section class="sec" id="calendar" aria-labelledby="cal-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>3</span>
+      <h2 id="cal-h">Eight weeks of clips</h2>
+      <p class="kicker">Content weeks run Thursday to Wednesday, counted back from launch Thursday. The build lands Thursday, the owner records that evening, and clips go out Friday, Monday and Wednesday. Each is 12 to 25 seconds, vertical, with the hook in the first two seconds.</p>
+    </div>
+    <div class="callout warm" style="margin-bottom:16px">
+      <span class="lbl">Honest note: seven weeks, not eight</span>
+      <p>W−8 has passed and the accounts don't exist yet. If launch stays on 3 December, clip 8.1 (the hook) is the first post on Mon 19 Oct and 7.1 follows on Wed 21 Oct; 8.2, 8.3, 7.2 and 7.3 go into a bank for quiet days. If Gate 0 slips a week, launch moves to 10 December and all eight weeks fit. Phase B starts when Gate 0 passes, not on a date.</p>
+    </div>
+    <div class="cal">
+      <div class="wkc passed"><div class="wn"><b>W−8</b><span>Oct 8–14 · Phase A</span><em class="chip">Passed: the bank</em></div><div><h4>"It's real"</h4><ul class="clips"><li><b>8.1 The hook · 18 s</b><span>405 North at Jamboree, sunset. "The real 405. At sunset." Posts Mon 19 Oct.</span></li><li><b>8.2 Built from the map · 15 s</b><span>The El Toro Y. "Every ramp from OpenStreetMap."</span></li><li><b>8.3 The wordmark · 12 s</b><span>The 73 at Newport Coast. "OC Ultra."</span></li></ul></div></div>
+      <div class="wkc"><div class="wn"><b>W−7</b><span>Oct 15–21 · Phase A</span></div><div><h4>"Your exit"</h4><ul class="clips"><li><b>7.1 Comment your exit · 16 s</b><span>Starts the exit-requests series. "Comment yours. I'll drive it next."</span></li><li><b>7.2 You asked for it · 18 s</b><span>The most-requested exit. No request yet? Say "Next exit", never "you asked".</span></li><li><b>7.3 The Orange Crush · 20 s</b><span>The 5, the 22 and the 57 at once, Heavy traffic.</span></li></ul></div></div>
+      <div class="wkc"><div class="wn"><b>W−6</b><span>Oct 22–28 · Phase A</span></div><div><h4>"Night and rain"</h4><ul class="clips"><li><b>6.1 The 73 at night · 18 s</b><span>Canyon Radio on. "The 73. Midnight."</span></li><li><b>6.2 It rained in OC · 16 s</b><span>The 55 North in rain. "(In the game.)"</span></li><li><b>6.3 The hands · 14 s</b><span>The dev post: Screenshot Saturday and r/threejs.</span></li></ul></div></div>
+      <div class="wkc"><div class="wn"><b>W−5</b><span>Oct 29–Nov 4 · Phase B</span><em class="chip">From Gate 0</em></div><div><h4>"It's on your phone"</h4><ul class="clips"><li><b>5.1 One take, on a phone · 25 s</b><span>A cold start on the owner's phone, nothing cut.</span></li><li><b>5.2 The first 25 · 15 s</b><span>Mon 2 Nov, wave 1. "25 invites this week."</span></li><li><b>5.3 Your run card · 14 s</b><span>A real Speed Survival run and its card. Real numbers only.</span></li></ul></div></div>
+      <div class="wkc"><div class="wn"><b>W−4</b><span>Nov 5–11 · Phase B</span></div><div><h4>"Speed Survival"</h4><ul class="clips"><li><b>4.1 Over 100 or it's over · 22 s</b><span>"Stay over 100 mph. One crash ends it."</span></li><li><b>4.2 The crash · 12 s</b><span>A real run that ended badly. "Beat it."</span></li><li><b>4.3 Time Trial · 18 s</b><span>"60 seconds. Every 2 km buys 25 more."</span></li></ul></div></div>
+      <div class="wkc"><div class="wn"><b>W−3</b><span>Nov 12–18 · Phase B</span></div><div><h4>"Races"</h4><ul class="clips"><li><b>3.1 The Irvine Sprint · 22 s</b><span>8 km up the 405 North.</span></li><li><b>3.2 The Foothill Sprint · 20 s</b><span>10 km down the 241. Hills and sweepers.</span></li><li><b>3.3 The 91 · 18 s</b><span>"A race on the 91. Still traffic."</span></li></ul></div></div>
+      <div class="wkc"><div class="wn"><b>W−2</b><span>Nov 19–25 · Phase B</span><em class="chip">Thanksgiving</em></div><div><h4>"The Founders"</h4><ul class="clips"><li><b>2.1 The crew's runs · 15 s</b><span>Crew run cards, with their written OK and credit.</span></li><li><b>2.2 What broke · 16 s</b><span>A real bug and its fix. "Fixed Thursday."</span></li><li><b>2.3 Where the 405 begins · 15 s</b><span>The El Toro Y at sunset.</span></li></ul></div></div>
+      <div class="wkc launch"><div class="wn"><b>W−1</b><span>Nov 26–Dec 2 · Countdown</span><em class="chip hot">Launch Thu</em></div><div><h4>"Thursday"</h4><ul class="clips"><li><b>1.1 Free to play · 14 s</b><span>Fri 27 Nov. "Free. Nothing to buy" only while the store stays in test mode.</span></li><li><b>1.2 Three days · 15 s</b><span>Mon 30 Nov, the day press goes out. Sunrise on the 5.</span></li><li><b>1.3 You picked these · 22 s</b><span>Wed 2 Dec. Five exits commenters asked for.</span></li></ul></div></div>
+    </div>
+    <p class="fine sub">Standing series to fill gaps: an exit request every Monday (there are 416), one Screenshot Saturday GIF a week, and a patch-note clip whenever a Thursday build fixes something a tester reported.</p>
+  </section>
+
+  <section class="sec" id="clip" aria-labelledby="clip-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Guide</small>4</span>
+      <h2 id="clip-h">Shoot and post a clip</h2>
+      <p class="kicker">The game's own tools, a phone and $0. This is clip 8.1, the hook; every other clip changes only the settings.</p>
+    </div>
+    <div class="guide" data-guide data-name="Shoot and post a clip">
+      <div class="guide-slot"></div>
+      <ol class="steps two">
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>1</span><div class="step-body"><h4>Start at your exit</h4><p>Start panel → <b>Start at your exit</b> → I-405 North → <b>Jamboree Road</b>. Free Drive. You start 450 m before the sign.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>2</span><div class="step-body"><h4>Set the scene</h4><p>Time <b>Sunset</b>, traffic <b>Moderate</b>, camera <b>Driver's seat</b>. Graphics on the preset the phone holds at 30 fps or better: Low until Gate 0 says otherwise.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>3</span><div class="step-body"><h4>Corner window off</h4><p>Set the corner window to <b>Off</b> for a clean frame. The driving HUD is already minimal.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>4</span><div class="step-body"><h4>Screen record, portrait, sound on</h4><p>Control Center on iPhone, Quick Settings on Android. The radio's music is composed in code, so there's nothing for Content ID to match.</p><p class="proof"><b>Before Gate 0</b> Record on a laptop and label it "dev build · laptop", or post stills. Never caption a desktop run as the phone.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>5</span><div class="step-body"><h4>Drive it: 18 seconds</h4><p>0–2 s the Jamboree Road sign. 2–10 s floor it, two clean passes. 10–14 s switch to <b>Chase</b> as the airport sign goes by. 14–16.5 s back to the seat, the 55 split ahead.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>6</span><div class="step-body"><h4>Trim, text, end card</h4><p>Trim in the phone's own editor to 12–25 s. Text in the middle 70% of the frame: "The real 405. At sunset." then "Every exit is real." Add the 1.5-second wordmark end card.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>7</span><div class="step-body"><h4>Caption and five tags</h4><p>One or two plain sentences, the honesty line, five tags at most: always <b>#OCUltra #OrangeCounty</b>, plus three.</p>
+          <div class="code"><div class="code-head"><span>Caption, clip 8.1</span><button type="button" class="btn small ghost" data-copy="cap81">Copy</button></div><pre class="wrap" id="cap81">I'm building Orange County's real freeways for your phone. This is the 405 North at Jamboree. A game. Drive the real ones at the limit.
+#OCUltra #OrangeCounty #405 #Irvine #gamedev</pre></div></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>8</span><div class="step-body"><h4>Post the original, three times</h4><p>Upload the phone's original recording to TikTok, Reels and Shorts, never a download from another app (watermarked reposts reach fewer people). On TikTok: <b>Content disclosure and ads</b> → <b>Disclose commercial content</b> → <b>Your brand</b>.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>9</span><div class="step-body"><h4>Reply, then count</h4><p>Answer comments for the day. Write the views and the sign-ups by the post's code into the weekly report.</p><p class="proof"><b>Done when</b> The clip is live on three apps and its sign-ups are counted.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="waitlist" aria-labelledby="wl-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Guide</small>5</span>
+      <h2 id="wl-h">The waitlist and invite codes</h2>
+      <p class="kicker">The growth loop. The numbers in it (5 places, 2 codes) are suggestions: change them before the page goes live, never after.</p>
+    </div>
+    <div class="guide" data-guide data-name="The waitlist loop">
+      <div class="guide-slot"></div>
+      <ol class="steps two">
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>1</span><div class="step-body"><h4>Clip, link in bio, waitlist</h4><p>The waitlist page has the wordmark, a 20-second phone clip and "Join the OC beta".</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>2</span><div class="step-body"><h4>Sign up: email, ZIP, code</h4><p>The ZIP is checked <b>on the device</b> against Orange County's ZIP areas. Only "in OC: yes or no" and the first three digits are stored. Visitors outside OC can still join: "OC-only until Thu 3 Dec; we'll tell you when it opens."</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>3</span><div class="step-body"><h4>Show the real place</h4><p>"You're #212." Then "Share your link. Each friend in OC who joins moves you up 5 places." The share text says so too, because moving up is early access, a material connection: "My OC Ultra beta link (I move up the list if you join)."</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>4</span><div class="step-body"><h4>Invite in waves, from the top</h4><p>25 on Day 15, up to 50 on Day 22, up to 100 on Day 29, the later waves only if load success is at least 90%. The owner checks the top 25 by hand before each wave.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>5</span><div class="step-body"><h4>Two codes per tester</h4><p>Each tester gets two <code>FRIEND-xxxx</code> codes to give, counted under the tester's channel. A friend with a code skips the list.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>6</span><div class="step-body"><h4>Run cards bring people back</h4><p>Testers share run cards with #OCUltra, which brings new people to step 1.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>7</span><div class="step-body"><h4>Day 46: the gate opens</h4><p>At 00:00 Pacific on Thu 3 Dec, a date written into the build. The list hears about it on Discord and the site; by email too only once the CAN-SPAM postal-address footer is set up.</p></div></li>
+      </ol>
+    </div>
+    <div class="grid g2 sub">
+      <div class="callout">
+        <span class="lbl">The scarcity is real. Keep it that way.</span>
+        <p>The real limits are OC-only until Day 46, 25 then 50 then 100 testers, and the Founder Pack's "sold until 31 December 2026, then never again". Say exact numbers. Never "only 3 spots left" unless the database counted it that minute. No countdowns that reset: the FTC's 2022 dark-patterns report names false scarcity and baseless timers as deceptive.</p>
+      </div>
+      <div class="callout">
+        <span class="lbl">Referral rewards that stay clean</span>
+        <p>Places on the list and one free, earned-only "Beta '26" badge (never sold, separate from the paid Founder badge). No money, no prizes, and never the Founder Pack as a prize. A credit is provisional until the friend reaches the menu. At most 10 credits per person; twenty sign-ups from one link in a minute is a bot. No referral links where a community bans them.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">Where 300 sign-ups by Day 45 could come from</h3>
+    <p class="muted read">Every rate here is an assumption to replace with real numbers after two weeks. Tick the channels you'll actually run.</p>
+    <div class="arith">
+      <ul class="srcs" id="srcs">
+        <li><label><input type="checkbox" data-n="30" checked><span class="what"><b>20 clips on three apps</b><span>500 views a clip across the three apps, 1% tap the link, 30% of those join</span></span><span class="n">30</span></label></li>
+        <li><label><input type="checkbox" data-n="30" checked><span class="what"><b>One r/orangecounty post, if the mods allow it</b><span>5,000 views, 2% click, 30% join</span></span><span class="n">30</span></label></li>
+        <li><label><input type="checkbox" data-n="18" checked><span class="what"><b>Two city or campus subreddit posts</b><span>1,500 views each, 2% click, 30% join</span></span><span class="n">18</span></label></li>
+        <li><label><input type="checkbox" data-n="40" checked><span class="what"><b>Two campus club sessions</b><span>40 people each, half join on the spot</span></span><span class="n">40</span></label></li>
+        <li><label><input type="checkbox" data-n="36" checked><span class="what"><b>Four car meets, from Gate 0, with permission</b><span>15 people scan at each, 60% join. Untick if the meets wait for the plan's December dates</span></span><span class="n">36</span></label></li>
+        <li><label><input type="checkbox" data-n="100" checked><span class="what"><b>One creator post, unpaid</b><span>20,000 views, 0.5% join</span></span><span class="n">100</span></label></li>
+        <li><label><input type="checkbox" id="ref" checked><span class="what"><b>Referrals</b><span>One in four sign-ups brings one more</span></span><span class="n">+25%</span></label></li>
+      </ul>
+      <div class="tally" aria-live="polite">
+        <p class="lbl" style="margin:0">Sign-ups by Day 45</p>
+        <p class="big" id="t-total" style="margin:0">318</p>
+        <div class="meter" aria-hidden="true"><i id="t-bar" style="width:100%"></i><s id="t-mark" style="left:94%"></s></div>
+        <p class="fine" id="t-say" style="margin:0">Target 300. The clips alone won't get there: one creator, one local Reddit post or two campus nights matter more than a fourth clip.</p>
+        <div class="pace">
+          <label for="t-week" class="lbl">Or work from a weekly pace</label>
+          <input type="range" id="t-week" min="5" max="120" step="1" value="30">
+          <p style="margin:0"><output id="t-week-o" for="t-week">30</output> a week reaches 300 in <b id="t-weeks">10 weeks (Day 70), after Day 45</b>.</p>
+          <p class="fine" style="margin:0">Day 1 to Day 45 is 6.4 weeks, so 300 needs about 47 a week (6.7 a day). Reaching 150 with no creator is still a real local beta, enough for 100 testers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="press" aria-labelledby="press-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Guide</small>6</span>
+      <h2 id="press-h">Pitch the press</h2>
+      <p class="kicker">Student papers during the beta; everyone else on Mon 30 Nov (Day 43) with an embargo to Thu 3 Dec. Outlet status was checked on 16 October 2026: confirm names and addresses on each site before sending.</p>
+    </div>
+    <div class="guide" data-guide data-name="Pitch the press">
+      <div class="guide-slot"></div>
+      <ol class="steps two">
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>1</span><div class="step-body"><h4>Build the list</h4><p>The outlets below, one person per outlet. Check each contact on the outlet's own site that week.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>2</span><div class="step-body"><h4>Get the kit ready</h4><p>The launch kit's one-pager renamed OC Ultra (no "Top Speed"), a 20-second phone clip, and screenshots. A plain link, no attachments over a few MB.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>3</span><div class="step-body"><h4>Student papers first</h4><p>From Day 15, the OC-only beta and campus codes are their angle: New University (UCI), Daily Titan (CSUF), The Panther (Chapman), Coast Report (OCC), Lariat (Saddleback).</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>4</span><div class="step-body"><h4>One personal email each</h4><p>Use the template, changed for the outlet: the Daily Pilot gets the 55/405 and Newport Coast, the Business Journal gets the $0, one-person story. Offer a code so the reporter can play.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>5</span><div class="step-body"><h4>Day 43, with the embargo</h4><p>Everyone else on Mon 30 Nov: "Embargoed until Thursday, December 3, 12:01 a.m. Pacific."</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>6</span><div class="step-body"><h4>Follow up once</h4><p>After a week, one follow-up. Never two, and never two people at the same outlet at once.</p><p class="if"><b>Never</b> Pay for a "sponsored" story: it costs money and must be labelled an ad.</p></div></li>
+      </ol>
+    </div>
+    <div class="scroll-x outlets">
+      <table class="tbl">
+        <thead><tr><th>Outlet</th><th>Status and contact (16 Oct 2026)</th><th>Angle</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Outlet">Orange County Register</td><td data-label="Status and contact (16 Oct 2026)">Publishing. No tip page surfaced; use the Contact Us links on ocregister.com.</td><td data-label="Angle">An OC developer rebuilt the county's freeways as a free phone game.</td></tr>
+          <tr><td data-label="Outlet">Daily Pilot</td><td data-label="Status and contact (16 Oct 2026)">Times Community News (Costa Mesa, Newport, Huntington, Fountain Valley, Laguna). Verify the editor on dailypilot.com.</td><td data-label="Angle">The 55/405, the 73 and Newport Coast, the HB exits.</td></tr>
+          <tr><td data-label="Outlet">LAist</td><td data-label="Status and contact (16 Oct 2026)">Rene Lynch covers OC and asks for story ideas: <span class="sel">rlynch@<wbr>laist.com</span>. General tips: <span class="sel">tips@<wbr>laist.com</span>.</td><td data-label="Angle">Local, free, made by one person, built on open data.</td></tr>
+          <tr><td data-label="Outlet">OC Weekly</td><td data-label="Status and contact (16 Oct 2026)">Print closed in 2019; ocweekly.com publishes in 2026, with a contact page.</td><td data-label="Angle">A short pitch. Never pay for a sponsored piece.</td></tr>
+          <tr><td data-label="Outlet">OC Business Journal</td><td data-label="Status and contact (16 Oct 2026)">Editorial tips and releases: <span class="sel">features@<wbr>ocbj.com</span>.</td><td data-label="Angle">The business of a $0, one-person game. Better after launch, with numbers.</td></tr>
+          <tr><td data-label="Outlet">Student papers</td><td data-label="Status and contact (16 Oct 2026)">New University: <span class="sel">eic@<wbr>newuniversity.org</span> for general inquiries (verify). The others: their contact pages.</td><td data-label="Angle">Drive your campus exit; codes for students.</td></tr>
+          <tr><td data-label="Outlet">Voice of OC</td><td data-label="Status and contact (16 Oct 2026)">An accountability newsroom; press releases don't belong in its tips.</td><td data-label="Angle"><b>Not a fit.</b> Skip.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="code" style="margin-top:18px"><div class="code-head"><span>Press pitch (email): edit the brackets</span><button type="button" class="btn small ghost" data-copy="t-press">Copy</button></div><pre class="wrap" id="t-press">Subject: OC developer rebuilt the county's freeways as a free phone game (start at your own exit)
+
+Hi [first name],
+
+I'm [name], from [city]. I built OC Ultra: a free driving game of Orange County's real freeways (the 5, 405, 55, 57, 91, 73 and the toll roads) that runs in a phone's browser. Every road and exit sign comes from open map data, so you can start at your own exit, all 416 of them.
+
+It's OC-only until Thursday, December 3, then open to everyone. Traffic and weather are simulated, and every clip carries the line "A game. Drive the real ones at the limit."
+
+A 20-second clip and screenshots: [link]. A code so you can play now: [CODE]. I can talk this week, any time.
+
+[name] · [phone] · [email]</pre></div>
+  </section>
+
+  <section class="sec" id="crew" aria-labelledby="crew-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Guide</small>7</span>
+      <h2 id="crew-h">The Founders crew and the FTC rule</h2>
+      <p class="kicker">The business draft's paid ambassadors ($200–500 a month) become an unpaid crew at $0. Being in the crew is a perk, and under the FTC's Endorsement Guides a perk is a material connection, so every crew post about the game discloses, every time.</p>
+    </div>
+    <div class="guide" data-guide data-name="Run the Founders crew">
+      <div class="guide-slot"></div>
+      <ol class="steps two">
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>1</span><div class="step-body"><h4>Recruit 5 to 10</h4><p>Week of 9 Nov. Volunteers who live in OC, are <b>18 or older</b>, already play the beta and post anyway. Nobody under 18 in a promotional role.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>2</span><div class="step-body"><h4>Say what they get</h4><p>Their name on the Founders credits, builds a few days early, their own <code>CREW-[name]</code> code and a #founders channel. Optionally a free Founder Pack once the store is live, granted by 31 Dec 2026. <b>No money.</b></p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>3</span><div class="step-body"><h4>Ask for little</h4><p>Whatever they'd post anyway, two posts a week at most, and one short weekly note: posts, what players asked for, what broke and on which phone.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>4</span><div class="step-body"><h4>Disclose in the video itself</h4><p>On-screen text in the first seconds, readable and not in a corner; said out loud if they talk. A disclosure only in the description or comments isn't enough.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>5</span><div class="step-body"><h4>And at the start of the caption</h4><p>"Ad:", "#ad" or a plain sentence first, not lost among hashtags. Plus the platform's label: TikTok's Branded content, Instagram's paid partnership, YouTube's paid promotion (being renamed "branded content"). The FTC says use the platform's tool as well as your own, not instead.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>6</span><div class="step-body"><h4>Never reviews, never ratings</h4><p>Never ask anyone for a rating or review, and never reward one. The FTC's Consumer Review Rule (in force 21 Oct 2024) bans paying for reviews of a given slant and buying fake followers or views; penalties run up to $53,088 per violation (the 2025 level, kept for 2026; verify in January 2027).</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>7</span><div class="step-body"><h4>Check every post</h4><p>Look at each crew post that week for the disclosure, the honesty line, and no real-world driving.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>8</span><div class="step-body"><h4>The strike rule</h4><p>The first miss gets a polite edit request. A second miss ends the perks.</p><p class="proof"><b>Done when</b> Every perk-holder's post says "#ad" or "got this free".</p></div></li>
+      </ol>
+    </div>
+    <div class="counts">
+      <div class="card yes"><h4>Counts as a disclosure</h4><ul><li>"Ad"</li><li>"#ad"</li><li>"I'm on the OC Ultra Founders crew (early builds)"</li><li>"Got this free from OC Ultra"</li><li>"#OCUltraAmbassador" may be enough per the FTC's FAQ; "#ad" or a plain sentence is safer</li></ul></div>
+      <div class="card no"><h4>Doesn't count</h4><ul><li>"#ambassador" alone: ambiguous unless joined to the brand's name</li><li>"sp", "spon", "collab" or a lone "thanks"</li><li>A disclosure only in the bio, the profile or the comments</li></ul></div>
+    </div>
+    <p class="fine sub read">Creators outside the crew: after Day 46, a creator who gets nothing but a free game anyone can play has no material connection. Before Day 46 the code itself is early access, which the 2023 Endorsement Guides list as a material connection (16 CFR 255.5), so a light "got an early beta code from the dev" keeps it clean.</p>
+  </section>
+
+  <section class="sec" id="posting" aria-labelledby="post-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Guide</small>8</span>
+      <h2 id="post-h">Posting day</h2>
+      <p class="kicker">For every community post, from a subreddit to Show HN. Subreddit rule pages couldn't be loaded on 16 October 2026, so the first step is never optional.</p>
+    </div>
+    <div class="guide" data-guide data-name="Posting day">
+      <div class="guide-slot"></div>
+      <ol class="steps two">
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>1</span><div class="step-body"><h4>Read the rules that morning</h4><p>The sidebar and the wiki, every time. For local subreddits, message the moderators first and ask whether a one-time post is welcome.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>2</span><div class="step-body"><h4>Post once</h4><p>A text post written for that community, from your own account, saying you made it. Never the same text in several places the same day.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>3</span><div class="step-body"><h4>Disclose</h4><p>"I made this." Any perk named. Plain links: no <code>?ref=</code> codes where a community bans referral links, as r/WebGames does.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>4</span><div class="step-body"><h4>Answer for an hour</h4><p>Every comment, that day. Criticism gets thanks and a fix, never an argument.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>5</span><div class="step-body"><h4>Never ask for votes</h4><p>Not on Reddit, Hacker News or Product Hunt, not in Discord, not in a DM. Ask people to play and to say what broke.</p></div></li>
+        <li class="step"><span class="sign" aria-hidden="true"><small>Step</small>6</span><div class="step-body"><h4>Log the sign-ups by code</h4><p>Into the weekly report, against the assumptions above. A removed post: read the reason, thank the mods, move on.</p></div></li>
+      </ol>
+    </div>
+    <div class="scroll-x chan">
+      <table class="tbl">
+        <thead><tr><th>Channel</th><th>Good for</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Channel">Local Reddit: r/<wbr>orangecounty, city and campus subreddits</td><td data-label="Good for">The OC players</td><td data-label="When">Comment now, no links. One post per community after its mods say yes</td></tr>
+          <tr><td data-label="Channel">r/<wbr>WebGames</td><td data-label="Good for">Web players worldwide</td><td data-label="When">Day 46 or later: no sign-ups allowed, no referral links</td></tr>
+          <tr><td data-label="Channel">r/<wbr>IndieGaming, r/<wbr>indiegames, r/<wbr>playmygame, r/<wbr>IndieDev</td><td data-label="Good for">Indie players and developers</td><td data-label="When">Day 46 or later (r/<wbr>playmygame needs a free build)</td></tr>
+          <tr><td data-label="Channel">r/<wbr>threejs; r/<wbr>gamedev's Screenshot Saturday</td><td data-label="Good for">Developers: a technical post</td><td data-label="When">During build in public; Screenshot Saturday weekly</td></tr>
+          <tr><td data-label="Channel">Show HN</td><td data-label="Good for">A one-day spike of technical visitors</td><td data-label="When">Day 46</td></tr>
+          <tr><td data-label="Channel">Product Hunt</td><td data-label="Good for">One day of visitors</td><td data-label="When">Day 51 (make the personal account now)</td></tr>
+          <tr><td data-label="Channel">itch.io</td><td data-label="Good for">A permanent indie listing</td><td data-label="When">Days 61–63, store hidden</td></tr>
+          <tr><td data-label="Channel">TikTok, Reels, Shorts</td><td data-label="Good for">The clips</td><td data-label="When">From now</td></tr>
+          <tr><td data-label="Channel">Discord</td><td data-label="Good for">The players' home</td><td data-label="When">Server up in week 2</td></tr>
+          <tr><td data-label="Channel">Local press</td><td data-label="Good for">Credibility and OC reach</td><td data-label="When">Student papers in the beta; the rest Day 43</td></tr>
+          <tr><td data-label="Channel">Car meets</td><td data-label="Good for">OC car people, face to face</td><td data-label="When">As a guest now; show the game only with the organiser's permission</td></tr>
+          <tr><td data-label="Channel">Campus clubs (UCI VGDC and Esports, CSUF Titan Esports, OCC Esports)</td><td data-label="Good for">OC students</td><td data-label="When">From Gate 0: a talk or a "drive your exit" night</td></tr>
+          <tr><td data-label="Channel">Creators</td><td data-label="Good for">OC audiences</td><td data-label="When">From Gate 0, unpaid, one personal message each</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec" id="templates" aria-labelledby="tpl-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>9</span>
+      <h2 id="tpl-h">Templates</h2>
+      <p class="kicker">Edit the brackets and keep them short. While the store is in test mode, "free" alone is true; if it goes live, add "optional cosmetics, never power" wherever a template describes the game.</p>
+    </div>
+    <div class="tpl">
+      <div class="card"><h4>Creator (DM or email, one at a time)</h4><div class="code"><div class="code-head"><span>Before Day 46</span><button type="button" class="btn small ghost" data-copy="t-creator">Copy</button></div><pre class="wrap" id="t-creator">Hi [name], I love your [specific post] about [the 55 / your exit]. I'm a solo developer in [city] and I built a free game of OC's real freeways. You can start at any real exit. Here's a code for the OC beta if you want to try it: [CODE]. No strings and no ask. If you ever post it, I'd love to see your run card, and since the code is early access, a quick "got an early code from the dev" in the post keeps it clean. — [name]</pre></div></div>
+      <div class="card"><h4>Car-meet organiser (DM)</h4><div class="code"><div class="code-head"><span>Ask before showing anything</span><button type="button" class="btn small ghost" data-copy="t-meet">Copy</button></div><pre class="wrap" id="t-meet">Hi [name], I've been coming to [meet] for [a few weeks]. I'm a local developer and I built a free game of OC's real freeways. Would it be OK if I showed it to people on my phone at a meet? No table, no selling, and I won't use the meet's name or photos anywhere unless you say so. Totally fine if not. — [name]</pre></div></div>
+      <div class="card"><h4>Campus club officers (email)</h4><div class="code"><div class="code-head"><span>A talk or a "drive your exit" night</span><button type="button" class="btn small ghost" data-copy="t-campus">Copy</button></div><pre class="wrap" id="t-campus">Hi [club] officers, I'm a solo developer in OC. I built OC Ultra, a free three.js game of Orange County's real freeways built from OpenStreetMap, which runs in a phone browser. Two offers, whichever helps: a 20-minute talk on how it's built (map data to a drivable world in one 3.5 MB HTML file), or a "drive your exit" night with a code for your members ([CODE]). Free, nothing to sell to your members. — [name], [link]</pre></div></div>
+      <div class="card"><h4>Subreddit moderators (modmail)</h4><div class="code"><div class="code-head"><span>Before any post</span><button type="button" class="btn small ghost" data-copy="t-mods">Copy</button></div><pre class="wrap" id="t-mods">Hi mods, I'm an OC resident who has been around r/[sub] for a while. I built a free browser game of our freeways from open map data: you can start at any real OC exit. Would a one-time text post about it be OK here, and if so, when and in what format? Happy to follow whatever you prefer, or skip it. Thanks.</pre></div></div>
+      <div class="card"><h4>Show HN (Day 46)</h4><div class="code"><div class="code-head"><span>Title (79 characters; HN cuts at 80) and first comment</span><button type="button" class="btn small ghost" data-copy="t-hn">Copy</button></div><pre class="wrap" id="t-hn">Show HN: OC Ultra – drive Orange County's real freeways in your phone's browser
+
+I built this solo. It's one HTML file (about 3.5 MB): three.js, with the road network built from OpenStreetMap via Overture Maps: 20 carriageways, 1,247 ramp pieces and the real exit signs. You can start at any of 416 exits. Traffic uses the Intelligent Driver Model and is simulated; there's no live data and no multiplayer. Physics runs at 120 Hz with a floating origin. Scores stay on your device. I'd most like to hear how it runs on your phone: Pause → Feedback copies a report.</pre></div></div>
+      <div class="card"><h4>Product Hunt maker comment (Day 51)</h4><div class="code"><div class="code-head"><span>Ask for feedback, never votes</span><button type="button" class="btn small ghost" data-copy="t-ph">Copy</button></div><pre class="wrap" id="t-ph">Hi Product Hunt. OC Ultra is a free driving game of Orange County's real freeways, from open map data, in your phone's browser. Start at your own exit. It began as an OC-only beta with local testers, and today it's open to everyone. What I'd love from you: how it runs on your phone, and which part of the first two minutes confused you. Traffic and weather are simulated. A game. Drive the real ones at the limit.</pre></div></div>
+    </div>
+    <div class="code" style="margin-top:14px"><div class="code-head"><span>Discord welcome, pinned in #announcements</span><button type="button" class="btn small ghost" data-copy="t-discord">Copy</button></div><pre class="wrap" id="t-discord">Welcome to OC Ultra. It's a game of Orange County's real freeways. Traffic and weather are simulated, and scores stay on your phone. Post runs in #run-cards, bugs in #bugs (Pause → Feedback copies a report), and ideas in #feedback. Rules: be decent, no spam, no DMs to people who didn't ask, no real-world driving videos, and never ask anyone to rate or review anything. A game. Drive the real ones at the limit.</pre></div>
+  </section>
+
+  <section class="sec" id="norms" aria-labelledby="norms-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>10</span>
+      <h2 id="norms-h">Community norms</h2>
+      <p class="kicker">For the owner, the crew, and anyone who posts for OC Ultra.</p>
+    </div>
+    <ol class="norms">
+      <li><b>One person, one account.</b> No second accounts, no friends posting "I just found this" without saying they know you, no paid comments.</li>
+      <li><b>Never ask for votes, stars, ratings or reviews,</b> anywhere, and never reward one. Ask people to play and to tell us what broke.</li>
+      <li><b>Buy nothing:</b> followers, views, upvotes, ratings or "launch services".</li>
+      <li><b>Disclose every perk.</b> When unsure, disclose.</li>
+      <li><b>No fake scarcity.</b> Real numbers only.</li>
+      <li><b>Only true claims.</b> Real roads, simulated traffic and weather, no multiplayer, our own car makes, Lot 57 is fictional. Numbers on screen come from real runs.</li>
+      <li><b>No real-world driving footage, ever,</b> and nothing that reads as a dare or goes near a sideshow.</li>
+      <li><b>Read the room.</b> Contribute before you promote, post once per community, never cross-post the same text the same day.</li>
+      <li><b>No unsolicited DMs,</b> in bulk, to anyone. One message, one follow-up at most.</li>
+      <li><b>Minors:</b> never DM a student; schools only through teachers or advisors; nobody under 13 targeted; the crew is 18+.</li>
+      <li><b>Criticism gets thanks and a fix.</b> If a post was wrong, correct it in a reply; don't quietly delete it.</li>
+      <li><b>Answer within 48 hours,</b> even if the answer is "logged, not fixed yet".</li>
+    </ol>
+  </section>
+
+  <section class="sec" id="sources" aria-labelledby="sources-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Src</small>§</span>
+      <h2 id="sources-h">Sources</h2>
+      <p class="kicker">Checked by web search on 16 October 2026; direct page loads were blocked, so rules came from search summaries of official pages, or from mirrors where none surfaced. The full list, with dates, is in PROJECT_OC_MARKETING.md.</p>
+    </div>
+    <ul class="small muted read">
+      <li>FTC, Disclosures 101 for social media influencers: <a href="https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers" target="_blank" rel="noopener noreferrer">ftc.gov</a> (2019; guides revised 2023)</li>
+      <li>FTC Consumer Reviews and Testimonials Rule, in force 21 Oct 2024: <a href="https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers" target="_blank" rel="noopener noreferrer">ftc.gov</a>; penalty level kept for 2026 (Federal Register, 15 Sep 2026)</li>
+      <li>Show HN rules: <a href="https://news.ycombinator.com/showhn.html" target="_blank" rel="noopener noreferrer">news.ycombinator.com/showhn.html</a></li>
+      <li>Product Hunt: <a href="https://www.producthunt.com/launch/sharing-your-launch" target="_blank" rel="noopener noreferrer">sharing your launch</a> (no upvote asks; personal accounts only)</li>
+      <li>Reddit spam and etiquette: <a href="https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam" target="_blank" rel="noopener noreferrer">reddithelp.com</a></li>
+      <li>CAN-SPAM postal address: <a href="https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business" target="_blank" rel="noopener noreferrer">ftc.gov</a></li>
+      <li>LAist's OC reporter and tips address: LAist's profile and contact pages; OC Business Journal's contact page; New University's contact page (verify each live)</li>
+      <li>The game's sign counts (416 exit signs, 1,247 ramp pieces) were counted in <code>src/data/oc-network.json</code> on 16 Oct 2026</li>
+    </ul>
+  </section>
+</main>
+<footer class="foot col"><p>OC Ultra launch kit, prepared 16 October 2026 from the project's plan, marketing, store and server documents. Prices, fees and rules were checked by web search that day; anything marked "verify at launch" moves. The store is in <b>test mode</b>: nothing is charged.</p><nav aria-label="All pages"><a href="index.html">Hub</a><a href="plan.html">90-day plan</a><a href="marketing.html">Marketing</a><a href="store.html">Store</a><a href="golive.html">Go live</a></nav></footer>
+</div>
+<script>
+/* OC Ultra launch kit: shared behaviour. The page reads in full without it; this only adds the guides' road, the
+   section reveal and the copy buttons. */
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var calm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* storage for conveniences only (a remembered value); every call survives a blocked or missing store */
+  window.OCU = {
+    calm: calm,
+    load: function (k, d) { try { var v = localStorage.getItem('ocu.deck.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    save: function (k, v) { try { if (v == null) localStorage.removeItem('ocu.deck.' + k); else localStorage.setItem('ocu.deck.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } },
+    money: function (n, exact) { var neg = n < 0; n = Math.abs(n); var s = (exact || Math.round(n * 100) % 100) ? n.toFixed(2) : String(Math.round(n)); s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (neg ? '−$' : '$') + s; }
+  };
+
+  /* ---------- sections light up as they come into view (decoration only: the content is never hidden) ---------- */
+  var secs = [].slice.call(document.querySelectorAll('.sec'));
+  if ('IntersectionObserver' in window && !calm) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
+    secs.forEach(function (s) { io.observe(s); });
+  } else {
+    secs.forEach(function (s) { s.classList.add('in'); });
+  }
+
+  /* ---------- copy buttons: the clipboard when allowed, otherwise the text is selected for the viewer to copy ---------- */
+  function selectText(el) {
+    try { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); return true; } catch (e) { return false; }
+  }
+  function say(btn, text) {
+    var was = btn.getAttribute('data-label') || btn.textContent;
+    btn.setAttribute('data-label', was);
+    btn.textContent = text;
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function () { btn.textContent = was; }, 2200);
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-copy]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    if (!el) return;
+    var text = (el.innerText || el.textContent || '').replace(/ /g, ' ').replace(/\s+$/, '') + (el.tagName === 'PRE' ? '\n' : '');
+    var fallback = function () { if (selectText(el)) say(btn, 'Selected: copy it'); else say(btn, 'Copy by hand'); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { say(btn, 'Copied'); }, fallback);
+      } else fallback();
+    } catch (err) { fallback(); }
+  }, true);
+
+  /* ---------- guides ---------- */
+  var CAR = '<svg viewBox="0 0 32 22" aria-hidden="true" focusable="false"><rect class="cb" x="1.5" y="3" width="28" height="16" rx="6"/>' +
+    '<rect class="cw" x="16.5" y="5.5" width="6.5" height="11" rx="2.2"/><rect class="cw" x="6" y="6" width="5" height="10" rx="2" opacity=".7"/>' +
+    '<rect class="cl" x="27.4" y="4.6" width="2.6" height="3.4" rx="1.2"/><rect class="cl" x="27.4" y="14" width="2.6" height="3.4" rx="1.2"/></svg>';
+
+  function titleOf(step) { var h = step.querySelector('h4, h3'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+  function initGuide(g, gi) {
+    var steps = [].slice.call(g.querySelectorAll('.step'));
+    var n = steps.length;
+    if (!n) return;
+    var name = g.getAttribute('data-name') || 'Guide';
+    var ctl = document.createElement('div');
+    ctl.className = 'guide-ctl';
+    ctl.setAttribute('role', 'group');
+    ctl.setAttribute('aria-label', name + ': step controls');
+
+    /* phases: groups of steps marked data-phase-name, shown as buttons above the road */
+    var groups = [].slice.call(g.querySelectorAll('[data-phase-name]'));
+    var phaseStart = [];
+    var html = '';
+    if (groups.length) {
+      html += '<div class="phases">';
+      groups.forEach(function (grp, k) {
+        var first = grp.querySelector('.step');
+        var idx = steps.indexOf(first);
+        phaseStart.push(idx);
+        html += '<button type="button" data-phase="' + k + '" style="flex-grow:' + grp.querySelectorAll('.step').length + '">' + grp.getAttribute('data-phase-name') + '</button>';
+      });
+      html += '</div>';
+    }
+    var ticks = '';
+    for (var i = 0; i < n; i++) {
+      var gap = phaseStart.indexOf(i) > 0 ? ' gap' : '';
+      ticks += '<i class="tick' + gap + '" style="left:' + (n > 1 ? (i / (n - 1) * 100) : 50).toFixed(3) + '%"></i>';
+    }
+    html += '<div class="road" aria-hidden="true"><div class="road-lane"></div><div class="road-lit"></div>' + ticks + '<div class="car">' + CAR + '</div></div>';
+    html += '<div class="ctl-row">' +
+      '<button type="button" class="btn small ghost" data-act="back"><span class="arr" aria-hidden="true">←</span> Back</button>' +
+      '<p class="count" aria-live="polite"></p>' +
+      '<button type="button" class="btn small" data-act="next">Next <span class="arr" aria-hidden="true">→</span></button>' +
+      '<button type="button" class="btn small ghost" data-act="auto" aria-pressed="false">Auto-play</button>' +
+      '</div>';
+    ctl.innerHTML = html;
+    var slot = g.querySelector('.guide-slot');
+    if (slot) slot.replaceWith(ctl); else g.insertBefore(ctl, g.firstChild);
+
+    var road = ctl.querySelector('.road');
+    var tickEls = [].slice.call(ctl.querySelectorAll('.tick'));
+    var count = ctl.querySelector('.count');
+    var back = ctl.querySelector('[data-act="back"]');
+    var next = ctl.querySelector('[data-act="next"]');
+    var auto = ctl.querySelector('[data-act="auto"]');
+    var phaseBtns = [].slice.call(ctl.querySelectorAll('[data-phase]'));
+    var cur = -1, timer = null, moveT = null, visible = false;
+
+    function inView(el) { var r = el.getBoundingClientRect(); var top = (parseFloat(getComputedStyle(root).getPropertyValue('--hdr')) || 56) + ctl.offsetHeight; return r.top >= top && r.bottom <= window.innerHeight; }
+    function follow(el) { if (!inView(el)) { try { el.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' }); } catch (e) { el.scrollIntoView(false); } } }
+
+    function go(k, how) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      cur = k;
+      steps.forEach(function (s, j) {
+        s.classList.toggle('is-active', j === k);
+        s.classList.toggle('is-done', j < k);
+        if (j === k) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+      });
+      tickEls.forEach(function (t, j) { t.classList.toggle('done', j < k); });
+      road.style.setProperty('--p', n > 1 ? (k / (n - 1)) : 0);
+      if (!calm) { road.classList.add('moving'); clearTimeout(moveT); moveT = setTimeout(function () { road.classList.remove('moving'); }, 760); }
+      var label = steps[k].getAttribute('data-short') || titleOf(steps[k]);
+      count.innerHTML = 'Step <b>' + (k + 1) + '</b> of ' + n + ' <span>· ' + label.replace(/</g, '&lt;') + '</span>';
+      back.disabled = k === 0;
+      next.disabled = k === n - 1;
+      if (phaseBtns.length) {
+        var ph = 0; phaseStart.forEach(function (s, p) { if (k >= s) ph = p; });
+        phaseBtns.forEach(function (b, p) { if (p === ph) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      }
+      if (how === 'user' || (how === 'auto' && visible)) follow(steps[k]);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } auto.setAttribute('aria-pressed', 'false'); auto.textContent = 'Auto-play'; }
+    function start() {
+      if (cur >= n - 1) go(0, 'user');
+      auto.setAttribute('aria-pressed', 'true'); auto.textContent = 'Pause';
+      timer = setInterval(function () {
+        if (document.hidden) return;
+        if (cur >= n - 1) { stop(); return; }
+        go(cur + 1, 'auto');
+        if (cur >= n - 1) stop();
+      }, 4200);
+    }
+    back.addEventListener('click', function () { stop(); go(cur - 1, 'user'); });
+    next.addEventListener('click', function () { stop(); go(cur + 1, 'user'); });
+    auto.addEventListener('click', function () { if (timer) stop(); else start(); });
+    phaseBtns.forEach(function (b, p) { b.addEventListener('click', function () { stop(); go(phaseStart[p], 'user'); }); });
+    ctl.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); stop(); go(cur + 1, 'user'); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); stop(); go(cur - 1, 'user'); }
+    });
+    steps.forEach(function (s, j) {
+      s.addEventListener('click', function (e) {
+        if (e.target.closest('a, button, input, select, textarea, label, summary, pre, code')) return;
+        var sel = window.getSelection && String(window.getSelection());
+        if (sel) return;
+        stop(); go(j, 'click');
+      });
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { visible = e.isIntersecting; if (!visible && timer) stop(); }); }, { threshold: 0 }).observe(g);
+    }
+    go(0, 'init');
+  }
+  [].slice.call(document.querySelectorAll('[data-guide]')).forEach(initGuide);
+})();
+
+</script>
+<script>
+(function () {
+  var list = document.getElementById('srcs');
+  if (!list) return;
+  var boxes = [].slice.call(list.querySelectorAll('input[data-n]'));
+  var ref = document.getElementById('ref');
+  var total = document.getElementById('t-total'), bar = document.getElementById('t-bar'), mark = document.getElementById('t-mark'), say = document.getElementById('t-say');
+  var wk = document.getElementById('t-week'), wkO = document.getElementById('t-week-o'), wks = document.getElementById('t-weeks');
+  var saved = OCU.load('mk-sources', null);
+  if (saved && saved.length === boxes.length + 1) { boxes.forEach(function (b, i) { b.checked = !!saved[i]; }); ref.checked = !!saved[boxes.length]; }
+  function run() {
+    var sum = 0;
+    boxes.forEach(function (b) { if (b.checked) sum += Number(b.getAttribute('data-n')); });
+    var t = sum * (ref.checked ? 1.25 : 1);
+    var shown = Math.round(t);
+    total.textContent = shown.toLocaleString('en-US');
+    var scale = Math.max(330, t);
+    bar.style.width = (t / scale * 100).toFixed(1) + '%';
+    mark.style.left = (300 / scale * 100).toFixed(1) + '%';
+    var creator = boxes[5].checked;
+    say.textContent = t >= 300 ? 'Reaches the target of 300' + (creator ? ', but only with the creator post: without it the same channels give about ' + Math.round((sum - 100) * (ref.checked ? 1.25 : 1)) + '.' : '.')
+      : 'Short of 300 by ' + Math.round(300 - t) + '. The clips alone won\'t get there: one creator, one local Reddit post or two campus nights matter more than a fourth clip.';
+    OCU.save('mk-sources', boxes.map(function (b) { return b.checked; }).concat([ref.checked]));
+  }
+  function pace() {
+    var n = Math.max(1, Number(wk.value) || 1);
+    var w = 300 / n, days = Math.ceil(w * 7);
+    wkO.textContent = n;
+    wks.textContent = (w < 10 ? w.toFixed(1).replace(/\.0$/, '') : String(Math.round(w))) + ' weeks (Day ' + days + ')' + (days <= 45 ? ', in time for Day 45' : ', after Day 45');
+  }
+  boxes.concat([ref]).forEach(function (b) { b.addEventListener('change', run); });
+  wk.addEventListener('input', pace);
+  run(); pace();
+})();
+</script>

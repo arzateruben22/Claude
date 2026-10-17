@@ -4,6 +4,282 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-16: the launch kit: the plan, the marketing, the store in test mode and the presentation, committed
+
+The owner's ask (2026-10-16): a 30–90 day launch plan at minimum up-front cost, free marketing to start before
+launch, a presentation with animated step-by-step guides the way Lumevina's was, a paywall built Lumevina's way but
+not live until Supabase and Stripe are plugged in, and realistic prices for what the game could sell. All of it is
+now committed on `claude/store`, on top of `4756141` (the three documents' first drafts and the catalog). It is not
+merged into `claude/always-on`, where the UI pass is still running; the orchestrator merges it later. Nothing is
+deployed, and nothing can be charged: no Stripe or Supabase account is connected.
+
+**What was made** (the two entries below have the detail):
+
+- `PROJECT_OC_LAUNCH_90.md`, the $0 plan: 13 weeks from Day 1 (Monday, October 19), the OC-only beta on Days 1–45
+  (testers from Day 15), the store on Day 46 at the earliest. Each step names who does it, its cost, the proof it
+  worked and what to do if it didn't. Then the metrics, the gates, the risks, and the optional costs, each with the
+  trigger that justifies it.
+- `PROJECT_OC_MARKETING.md`, the free pre-launch playbook: the hook ("Drive the real 405 at sunset, on your phone"),
+  three clips a week, the waitlist, the press, OC communities and car meets, and the unpaid Founders crew with the FTC
+  disclosure.
+- `PROJECT_OC_MONETIZATION.md`, what the store sells and why. At launch, 11 items: the Founder Pack ($10, sold until
+  December 31, 2026), two paint packs, four wheel sets and three driver styles at $3 each, and a pay-what-you-want tip
+  from $2. Body kits ($5), the Lot 57 hangout outfits ($3; the owner's "get out like a Sims character and go to Golden
+  Road" idea, planned as our own fictional taproom, free to visit, and the store never names Golden Road), the
+  Rossini GT Spider ($5), a
+  livery pack ($5) and a club ($3 a month or $30 a year) are in the catalog as `available: false`. None can be sold
+  until it exists in the game.
+- The store and paywall in test mode: `src/store/`, `src/ui/Store.tsx`, `server/` (the migration, the
+  `create-checkout` and `stripe-webhook` functions, the go-live README), `.env.example`, the secrets lines in
+  `.gitignore`, and the new store rule in `CLAUDE.md` in place of "no real money".
+- The presentation in `launch-kit/`: the hub, the 90-day plan with its calculator, the marketing guides, the store
+  demo and the go-live guide.
+
+**The money, plainly.** Over 90 days, with 200 to 3,000 players reaching the menu and 1–3 % of them buying, the
+store brings in about $12 to $660 after fees (`PROJECT_OC_MONETIZATION.md` §7). The plan's simpler arithmetic gives
+$0 to about $850, most likely under $100. Against the plan's full optional spending list (about $280), the low and
+middle cases lose money. A California LLC's $800 yearly tax would sink all three. Expect little or no profit.
+
+**Fact-checked.** Each document had two adversarial passes on 2026-10-16, by web search. Direct page loads to
+stripe.com, supabase.com and Google's help pages were refused from this machine, so those figures come from search
+summaries, and each document cites its sources with their dates. By the passes' own counts they made 17 corrections
+to the monetization document, 24 to the plan and 34 to the marketing document. Among them:
+
+- Stripe's second $15 fee for contesting a dispute.
+- The .com price, about $11.17 from 1 Nov 2026 (Verisign's $10.97 plus ICANN's 20¢).
+- The FTC penalty, kept at $53,088 for 2026.
+- "Early access" as a material connection: 16 CFR 255.5, not 255.0(e).
+- SB 122: signed 29 Jun 2026, with draft CDTFA rules of 1 Sep 2026.
+- The scope of the Supreme Court's grant in Epic v. Apple: the contempt finding.
+- The Founder Pack's nine paints, all still "hook".
+- The build size: 3.5 MB with the store.
+
+The paywall had an independent check of its own (typecheck clean, the store group 13/13), and the reviewer kept it,
+with fixes recommended before live mode; those belong to the Fable review queued in `PROJECT_OC_HANDOFF.md`. The
+presentation was reviewed and kept. For this commit I changed four dated "uncommitted" notes (three in
+`PROJECT_OC_LAUNCH_90.md`, one in `PROJECT_OC_MARKETING.md`) to say the files are committed.
+
+**Checked for this commit**, in the `tsu-store` worktree. No other pass ran in this worktree, but three other passes'
+renders and suites shared the 4 cores (load average 9 to 18 while the suite ran):
+
+- `npx tsc --noEmit`: clean, exit 0 (`tests/out/commit-tsc.log`).
+- `npm run build`: clean, exit 0. The single file is 3,371 KB of JS and 49.4 KB of CSS (`tests/out/commit-build.log`).
+- `npm run store:check`: "catalog ok: 21 skus (11 available), 42 entitlements" and "server catalog in sync: 21 skus,
+  11 available, 0 with every grant ready".
+- The full suite, `npm test` (`tests/out/commit-suite.log`, 01:25 to 02:39 UTC), exit 1. Its last lines, exactly
+  as printed: "77/78 passed. Failed:" and "pause stops the simulation, resume carries on: page.waitForFunction:
+  Timeout 60000ms exceeded." By group: boot 6/6, interchanges 7/7, survival 7/7, race 6/6, abilities 4/4,
+  progression 5/5, render 12/13, phone 5/5, launch 5/5, store 13/13, store-live 7/7.
+  - The failure is a time-out, not a wrong value. The check waits at most 60 s for 5 frames (`frames()`, unchanged
+    on this branch), and the load average was 13 to 14 at the time. The render group's other checks took 41 to 83 s
+    each, and the context-loss check took 454 s.
+  - Rerunning the render group alone (`tests/out/commit-render-rerun.log`, 02:39 to 03:00 UTC, load 11 to 18)
+    passed that check in 32.3 s. Then the next check, "reset puts the car back on the road, stopped", timed out in
+    the same 5-frame wait (it had passed in the full run, in 64.7 s). That run printed "12/13 passed." Each of the
+    two checks passed in the seven earlier logged runs I found, in this and the other worktrees.
+  - Why I don't think it's the store: the store adds no per-frame work. Its only timers are the test-mode waits
+    inside a purchase or a sign-in, and the paint hook runs only when a store item changes. With no store paint,
+    the car gets the same paint material as before. The two checks don't touch the store. Not proven on an idle
+    machine: no quiet window came up while I worked. Rerun `npm test -- --only=render` when the other passes are
+    idle.
+
+**Open: the owner's decisions.**
+
+- **Prices.** Every price in `catalog.json` is a proposal (TODO, owner).
+- **The Founder window.** It ends 2026-12-31 23:59:59 Pacific (Day 74). Sales start on Day 46 (Thursday, December 3)
+  at the earliest, so the window is about four weeks. If Day 1 moves, decide before sales start: keep December 31 (a
+  shorter window, and the '26 on the badge stays true), or move the end with the calendar. Never extend it once
+  sales start.
+- **Two kinds of Founders.** The business draft promised the 45-day testers a free "Founders" badge, and the plan
+  (B6) puts the unpaid crew's names on the Founders credits. The Founder Pack sells a Founder '26 badge and a place on
+  the Founders roll. Decide how the free and the paid Founders differ.
+- **Founders Sunset.** The pack's exclusive paint (#E8622C pearl, "never sold again") is close to Newport Sunset
+  (#E2603A gloss, in the $3 Coast pack; ΔE76 about 8). Change one of them, or the exclusive may read as hollow.
+- **The Rossini GT Spider** ($5, also earnable for credits). Paying skips its credit price. That isn't power, but it
+  is in tension with "never sell credits". Make it money-only or credits-only.
+- **No upgrade price.** A paint-pack buyer who later buys the Founder Pack pays twice for those paints. The checkout
+  refuses only a buyer who already owns everything in it. The cart isn't built either, so each item pays its own 30¢.
+- **A hypercar.** The session's task list names a "Hypercar Founder Edition … fastest car" and a "$4.99 OC Hypercar
+  Founder Edition SKU on claude/store". Selling a car faster than the earnable ones breaks "never sell power". No
+  such SKU is in this commit. The owner should settle this before one is added.
+- **The store in a public test-mode build.** Hide it, or show it as a labelled demo. Marketing clip 1.1's copy
+  depends on the answer.
+- **The trademark check.** The Rossini Notte, Rossini Ora and Vela Pulse watches: Zhuhai Rossini filed a ROSSINI
+  mark (serial 79148981, status unchecked), and HiFuture sells a VELA smartwatch. Run the USPTO class 14 search and
+  rename the watches before those styles sell. "Top Speed" is T-Bull's racing game, so keep it out of tags (plan F2).
+- **The first real-phone run.** Nothing in this kit has run on a real phone. Gate 0, and every post with a link, wait
+  for it.
+- **The seller** (TODO): an individual or an LLC, the support email, Stripe's statement descriptor, the domain, the
+  Orange County name filing and the city business licence, and a lawyer's look at the terms, the refund and privacy
+  policies, and the club's terms.
+
+**Verify at launch** (each document lists its own, with sources):
+
+- Stripe's fees and its $15 dispute fees (third-party sources only).
+- Supabase Free's limits and its mailer cap (2 or 3 an hour); Resend's 100-a-day cap.
+- Google Play's fees and its Epic settlement (pending court approval).
+- Apple's US link-out commission (in court; Supreme Court argument targeted for January 2027).
+- Texas SB 2420.
+- SB 122's final CDTFA rules, before 1 January 2027.
+- The B&P 17602 notice windows.
+- Whether a minor can disaffirm a single in-game purchase, and whether AB 2426 reaches in-game cosmetics.
+- The FTC penalty, again in January 2027.
+- Each subreddit's rules, on the morning you post; each car meet, with its organiser.
+- The radio call signs KCST, KFWY and KNYN. KFWY is a defunct Washington AM call sign.
+
+**Left inconsistent, for their owners:**
+
+- `PROJECT_OC_MONETIZATION.md` §7 still uses a $10 domain and "about $280". The plan and its calculator use $11.17.
+- §9 names `orders` and `refund_requests`. The built schema has `purchases` and `entitlements`, and no refund
+  table.
+- The built `waitlist` table takes the full 5-digit ZIP, but the plan's F6 says only "in OC: yes/no" and the first
+  three digits are stored. This is a privacy point for the Fable review.
+
+## 2026-10-16: the launch presentation (`launch-kit/`, branch `claude/store`)
+
+The owner's ask for "a whole presentation with animated step-by-step guides", built Lumevina's way as a small site
+in `launch-kit/`: `index.html` (the hub: the OC sunset wordmark, "OC Ultra" with "Top Speed" beneath, a "Try this
+first" strip and a link to the test build), `plan.html` (the 90-day plan: the four phases as one road of 35 steps,
+the release routine, the 13 weeks, the metrics, the gates and risks, and the money calculator), `marketing.html`
+(the hook, the 8-week clip calendar, five guides: clips, the waitlist, the press, the Founders crew with the FTC
+disclosure, posting day; templates with copy buttons), `store.html` (what stays free, the 11 items read from
+`catalog.json` and `cosmetics.json` at build time, a test-mode checkout demo, later items, the rules, the money) and
+`golive.html` (`server/README.md`'s ten steps with the migration and every command ready to copy). Every guide has a
+road rail, a car that drives step to step, Next, Back and optional auto-play. Nothing is deployed or committed; the
+orchestrator publishes it as one artifact. Total 556 KB with the two wordmark images.
+
+**Checked** (headless Chromium through Playwright, from `file://`):
+
+- Every page at 390 × 844 and 1440 × 900 (`tests/out/deck-<page>-{phone,desktop}.png`): no horizontal scroll, no
+  page or console errors, the Google Fonts faces loaded.
+- The store demo follows `src/store/payments.ts`: 4242 succeeds and grants all 12 Founder Pack items; 4000 0000 0000
+  0002 is declined and grants nothing; a valid non-test number (4111…) is refused; a bad Luhn number, a past expiry, a
+  missing age, a bad email and a missing 18-or-guardian tick each give the game's own message; a $1 tip is refused;
+  a car's wheel set needs that car "earned"; Use Founders Sunset repaints the preview car. No card number is stored.
+- The plan calculator matches the plan's §7.3 table ($846.90 at 3,000 players, 3%, $10).
+- With JavaScript off, every step and catalog card is visible; with reduced motion, nothing animates.
+- The copy buttons fall back to selecting the text when the clipboard is refused (headless refuses it).
+
+**Not checked:** a real phone, and the published artifact itself (the platform's wrapper was imitated locally).
+`server/README.md` step 1 says a project ref is "12 letters"; the go-live page avoids stating a length (verify).
+
+## 2026-10-16: the store and paywall, in test mode, built the Lumevina way (branch `claude/store`)
+
+The owner's ask: a paywall "exactly like Lumevina", not live until Supabase and Stripe are plugged in, but with every
+technical piece in place. Built in the `tsu-store` worktree; nothing deployed, nothing committed. The rules are the
+new store rule in `CLAUDE.md`; what is sold and for how much is only `src/store/catalog.json` and `cosmetics.json`
+(unchanged by this pass); the reasons are in `PROJECT_OC_MONETIZATION.md`.
+
+**What was built.**
+
+- **Client** (`src/store/`): `config.ts` (test mode unless `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` and
+  `VITE_PAYMENTS_LIVE=true` are all set at build time), `payments.ts` (the one Stripe integration point: test mode
+  checks Luhn, expiry and CVC and takes Stripe's test cards only, 4242 succeeds and 4000 0000 0000 0002 declines, any
+  other number is refused unread; live mode sends the token and the sku, never a price, to `create-checkout` and goes
+  to Stripe's hosted Checkout page, then confirms the purchase from the server on return), `account.ts` (a neutral
+  month-and-year age question before the email, keeping only 13+ or not; magic-link sign-in that signs straight in
+  during the demo and uses Supabase Auth live; sign-out), `entitlements.ts` (`has`, `list`, `restore`; a ledger in
+  `localStorage` in test mode, the `entitlements` table cached for offline play live), `locker.ts` (the paint each
+  car wears), `bus.ts` (safe storage and the change event), `catalog.ts` (types).
+- **The Store panel** (`src/ui/Store.tsx`, styles under `.store` in `styles.css`): the test-mode banner, the account
+  box with Restore purchases, Your items (the paint picker for your car, test receipts), the Founder Pack with its
+  fixed end date and no countdown, the catalog grouped by kind with prices and what each unlocks, "Earn the … first"
+  for a car you don't own, and a checkout sheet with "Looks only", the AB 2426 licence line, the 18-or-guardian box,
+  the tip's pay-what-you-want amount (floor $2), the Founders roll opt-in, and a subscription's terms above an
+  unticked checkbox. App.tsx: one Store entry in the main menu, one in the pause menu, the panel line, and the store
+  opening by itself after a Stripe return or a sign-in link.
+- **In the game**: store paints go on the car through `PlayerCar.setPaint(hex, finish)`, which now takes the finish
+  numbers from `cosmetics.json` (pearl, gloss, satin, metallic) and swaps the cached material instead of recolouring
+  it (recolouring would have left the next car built in the factory colour wearing the store paint). The run card
+  draws the Founder '26 badge and the Founders frame when owned. Wheels, driver styles, liveries, kits, outfits and
+  the club items are data only: they can be bought in test mode and are listed in Your items, but no hook shows them
+  yet. `cosmetics.json` statuses were left as they were (the paints stay `hook` until a review checks the renders).
+- **Server** (`server/`, not deployed): the migration (`profiles`, `purchases`, `entitlements`, `waitlist`,
+  `invite_codes`, row-level security on all), `create-checkout` and `stripe-webhook` Edge Functions (fetch and Web
+  Crypto, no SDK), the server's catalog copy (`npm run store:sync`; `npm run store:check` runs both catalog checks),
+  `.env.example` files, and `server/README.md` with the go-live steps, each with how to tell it worked.
+
+**Verified.**
+
+- `npx tsc --noEmit` clean; `npm run build` clean (`tests/out/store-continue-tsc.log`, `store-continue-build.log`).
+- Before the change, on the same tree's build: boot, phone and launch **16/16** (from the first builder's notes;
+  that run's log wasn't kept).
+- After, `npm test -- --only=store,store-live,boot,phone,launch` (`tests/out/store-continue-suite.log`, 20:41 to
+  21:21 UTC, with other passes' renders loading the 4 cores to 9 to 13): **36/36 passed**, exit 0. That's boot 6/6,
+  phone 5/5, launch 5/5, store 13/13 and store-live 7/7.
+  - An earlier full run (`store-definitive-suite.log`, 19:20) stopped at the store group's first page. It took more
+    than 120 s to reach the menu while other passes rendered. `tests/regression.mjs` now gives a page up to 5 minutes
+    to boot (`BOOT_MS`, in `open()`, the store reload and the store-live loads). No assertion was changed, and the
+    boot check still prints the real load time (16.7 s in this run).
+  - The store lines:
+    - catalog: the two files agree with each other, the code and the server copy. 21 skus (11 available), 42
+      entitlements; the server catalog is in sync.
+    - webhook signature: RFC 4231 case 2 matches. Good and rolled-secret headers pass. A tampered body, a wrong
+      key, a timestamp ±301 s off, and missing or malformed headers all fail. The form encoding is right.
+    - the store opens from the menu with every available item and its price: 11 items on sale, 10 not offered. The
+      banner reads "TEST MODE Nothing is charged. Use 4242 4242 4242 4242." The Brio wheel set says "Earn the
+      Rossini Brio first".
+    - 4000 0000 0000 0002 is declined and grants nothing: "Your card was declined. Nothing was charged and nothing
+      was added." A non-test card (4111…) is refused. 0 items.
+    - the Founder Pack bought with 4242 grants 12 of 12 entitlements. The receipt reads "RECEIPT · TEST MODE …
+      Founder Pack $10.00 USD, Visa •••• 4242, OCU-TEST-…, Founders roll: Test Founder". The card number is not in
+      storage.
+    - the Founders Sunset paint becomes selectable and goes on the car: #e8622c, metalness 0.35, roughness 0.25,
+      clear coat 1/0.03, on every body-paint mesh. Factory paint puts #a80d10 back.
+    - the tip: $1 is refused ("Choose an amount from $2 to $100."); $7 grants the one badge.
+    - the club (preview only; not on sale): "$30.00 a year, renews automatically every year until you cancel."
+      shows above an unticked checkbox, and Pay stays disabled.
+    - the purchase survives a reload: Founder Pack "Owned", 13 entitlements, the car still in #e8622c, signed in as
+      founder@example.com with the Founder '26 and Fuelled the build badges.
+    - the car in Founders Sunset (chase shot), and the run card's frame pixel at rgb(241,129,54).
+    - phone: the store, the checkout and the receipt fit 390 × 844 with no sideways scroll.
+    - test mode sends nothing to Supabase or Stripe: 19 requests, to file:, fonts.googleapis.com and
+      fonts.gstatic.com only.
+    - live (against the mock project): secure-checkout banner; magic-link request and return; checkout body
+      `{"sku":"founder-pack-2026","roll_name":null,"renewal_agreed":false,"adult_or_guardian":true}`, with no price
+      and no card form; back from Stripe the receipt comes from the purchase row and Founders Sunset is on the car;
+      a refused item shows the server's reason; a cancelled checkout says nothing was charged; 20 mocked calls, to
+      mock-oc-ultra.supabase.co and checkout.stripe.com only.
+- Row-level security, on PostgreSQL 16 with a stub of Supabase's roles (`server/supabase/tests/run-local.sh`,
+  `tests/out/store-rls.log`): the migration runs twice cleanly; a player reads only their own purchases and
+  entitlements and every write to them is refused; a player can upsert only their own profile; an anonymous visitor
+  can add an email to the waitlist and nothing else (no reading it, no setting a referral code, bad emails and ZIPs
+  refused); `invite_codes` is closed to both.
+- The two Edge Functions type-check with the project's TypeScript 5.5 in strict mode, with only `Deno.env.get` and
+  `Deno.serve` declared (a scratch tsconfig; there is no Deno on this machine to run them).
+- Screenshots: `tests/out/store-1440.png`, `store-checkout-1440.png`, `store-receipt-1440.png`,
+  `store-club-terms-1440.png`, `store-390.png`, `store-checkout-390.png`, `store-receipt-390.png`,
+  `store-founders-sunset-chase.png` (the GT in Founders Sunset), `store-run-card-founder.png`,
+  `store-live-checkout-1280.png`, `store-live-receipt-1280.png`.
+
+**Found and fixed on the way:** the tip's price line ran 16 px off a 390 px screen; a select wrapped in its label
+read its whole option list as its name (every field now has its own label); the checkout footer wrapped to two
+lines in the narrow sheet and covered the renewal checkbox; live sign-in cleared the address before setting the
+"reopen the store" flag, so the store would not have reopened after a sign-in link (caught while writing the
+`store-live` group).
+
+**Checked by web search (2026-10-16, second builder).** docs.stripe.com still doesn't resolve from this machine,
+so these come from search results quoting Stripe's and Supabase's pages:
+- the webhook signature scheme and Stripe's 5-minute default tolerance;
+- 4242 succeeds;
+- 4000 0000 0000 0002 is the generic decline (confirmed by third parties only);
+- the literal `{CHECKOUT_SESSION_ID}`, and `client_reference_id` up to 200 characters;
+- `custom_unit_amount` for pay-what-you-want;
+- 2.9 % + 30¢ US card fees;
+- Supabase's `/otp` with `create_user`.
+
+Two things changed. `server/README.md` step 3 no longer says an unlisted redirect URL is refused: Supabase falls
+back to the Site URL. And the README's last section now cites each source.
+
+**Not checked, and left out.** The Edge Functions have never run in Supabase's runtime or against Stripe's API (no
+deployment; `server/README.md` lists each detail still to verify at launch, and its step 9 is the real test). Not built: the club's customer portal and monthly paint (`invoice.paid`), a refund-request button,
+the waitlist form and invite-code redemption, the Founders roll in a credits screen, the badges on the profile card
+(the profile panel lives in App.tsx, which is being reworked), and hooks for wheels, driver styles, liveries and kits.
+`PROJECT_OC_MONETIZATION.md` §9 still names `orders` and `refund_requests` tables; the built schema is `purchases`
+(plus `entitlements`) and has no refund-request table yet. Its §8.2 asks for the birth year; the store asks for the
+month and year, so nobody in their birthday year passes early. Security and business-rule design are Fable-class
+under the triage rule: a review prompt naming these files is queued under "Fable queue" in `PROJECT_OC_HANDOFF.md`.
+
 ## 2026-10-16: the reference pass, R2 to R4, checked together and integrated
 
 Three more deltas from `PROJECT_OC_VISUAL_TARGET.md` were reviewed and kept, and are committed together on

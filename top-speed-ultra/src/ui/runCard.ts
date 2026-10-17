@@ -3,6 +3,7 @@
 // It carries the honesty lines the game lives by: it's a game, scores stay on this device, the map is credited.
 import type { Result } from '../game/Game';
 import { MODES } from '../game/settings';
+import { has } from '../store/entitlements';
 
 const W = 1080, H = 1350;                 // 4:5, the portrait size feeds like
 const FONT = '"Saira Semi Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif';
@@ -61,6 +62,9 @@ export function drawRunCard(r: Result, name: string): HTMLCanvasElement {
   g.fillStyle = '#f5c518'; g.font = `700 30px ${FONT}`; g.textBaseline = 'alphabetic';
   g.fillText(('TOP SPEED OC · ' + MODES[r.mode].label).toUpperCase().split('').join(String.fromCharCode(8202)), pad, pad + 30);
   g.textAlign = 'right'; g.fillStyle = '#b9bcc2'; g.font = `600 30px ${FONT}`; g.fillText(name, W - pad, pad + 30); g.textAlign = 'left';
+  // the store's Founder '26 badge under the name, and its frame round the card (src/store: owned, never sold again)
+  if (has('badge-founder-26')) founderBadge(g, W - pad, pad + 52);
+  if (has('frame-founder-runcard')) founderFrame(g);
   // the road
   let y = pad + 90;
   if (r.road) shield(g, r.road, pad, y, 92);
@@ -94,6 +98,29 @@ export function drawRunCard(r: Result, name: string): HTMLCanvasElement {
   g.fillStyle = '#8f939a'; g.font = `500 22px ${FONT}`;
   g.fillText('Scores stay on this device. Map: OpenStreetMap contributors via Overture Maps (ODbL).', pad, fy - 6);
   return c;
+}
+
+// the Founders' sunset: amber to Founders Sunset orange to dusk plum (catalog: paint-founders-sunset is #E8622C)
+function sunset(g: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number) {
+  const s = g.createLinearGradient(x0, y0, x1, y1);
+  s.addColorStop(0, '#ffb347'); s.addColorStop(0.5, '#e8622c'); s.addColorStop(1, '#8e2c6b');
+  return s;
+}
+function founderBadge(g: CanvasRenderingContext2D, right: number, top: number) {
+  const text = "FOUNDER '26", h = 44;
+  g.font = `800 24px ${FONT}`;
+  const w = g.measureText(text).width + 40, x = right - w;
+  const fill = g.createLinearGradient(x, top, x + w, top); fill.addColorStop(0, '#ffb347'); fill.addColorStop(1, '#e8622c');   // dark text stays 5:1 over it
+  roundRect(g, x, top, w, h, h / 2); g.fillStyle = fill; g.fill();
+  g.fillStyle = '#1a0b05'; g.textBaseline = 'middle'; g.fillText(text, x + 20, top + h / 2 + 1); g.textBaseline = 'alphabetic';
+}
+function founderFrame(g: CanvasRenderingContext2D) {
+  g.save();
+  g.lineWidth = 14; g.strokeStyle = sunset(g, 0, 0, W, H);
+  roundRect(g, 18, 18, W - 36, H - 36, 28); g.stroke();
+  g.lineWidth = 2; g.strokeStyle = 'rgba(255, 179, 71, 0.45)';
+  roundRect(g, 36, 36, W - 72, H - 72, 18); g.stroke();
+  g.restore();
 }
 
 // the hosted page's viewer (claude.ai) blocks plain downloads and offers its own save prompt instead

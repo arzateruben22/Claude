@@ -14,9 +14,11 @@ import { COURSES, bestTime, fmtTime } from '../game/race';
 import { CARS, carById, figures, slotsFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
+import { Store } from './Store';
+import { storeReturnPending } from '../store/payments';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
@@ -27,7 +29,7 @@ export function App() {
   const hud = useRef<HudHandle>(null);
   const mapRef = useRef<HTMLCanvasElement>(null);
   const [screen, setScreen] = useState<Screen>('loading');
-  const [panel, setPanel] = useState<Panel>(null);
+  const [panel, setPanel] = useState<Panel>(() => (storeReturnPending() ? 'store' : null));   // back from Stripe or a sign-in link
   const [busy, setBusy] = useState(true);
   const [loadingText, setLoadingText] = useState('Starting the engine');
   const [settings, setSettings] = useState<Settings>(loadSettings);
@@ -189,6 +191,7 @@ export function App() {
               <button className="btn" onClick={() => setPanel('profile')}>Profile</button>
             </div>
             <div className="menu-aside">
+              <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, mode and car stays free.</span><i aria-hidden="true">›</i></button>
               <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
                 <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span><i aria-hidden="true">↗</i>
               </a>
@@ -210,6 +213,7 @@ export function App() {
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
               {mode === 'free' && <button className="btn" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>}
               <button className="btn" onClick={openFeedback}>Feedback</button>
+              <button className="btn" onClick={() => setPanel('store')}>Store</button>
               <button className="btn" onClick={toMenu}>Main menu</button>
             </div>
           </div>
@@ -341,6 +345,7 @@ export function App() {
       )}
 
       {panel === 'garage' && game.current && <GaragePanel game={game.current} onClose={() => setPanel(null)} />}
+      {panel === 'store' && game.current && <Store game={game.current} onClose={() => setPanel(null)} />}
 
       {panel === 'driver' && (
         <div className="overlay center">

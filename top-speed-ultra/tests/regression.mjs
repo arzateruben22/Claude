@@ -3,7 +3,7 @@
 //
 //   npm run build && npm test             every group
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
-//                                         progression, render, phone, launch)
+//                                         progression, render, phone, launch, store, store-live)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
@@ -12,6 +12,8 @@
 
 import { chromium } from 'playwright';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { createServer } from 'node:http';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
@@ -45,6 +47,9 @@ const browser = await chromium.launch({
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'],
 });
 
+// how long a page may take to boot to the menu: about 13 s on an idle machine, but other passes' renders and builds
+// share these 4 cores, and under that load a boot has taken over 120 s (the boot check prints the real time)
+const BOOT_MS = 300000;
 // a fresh context (empty storage) with these settings saved, loaded to the main menu
 async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   const ctx = await browser.newContext(phone
@@ -56,16 +61,17 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
   // for a frame, so actions get two minutes instead of Playwright's 30 s (a check still fails on what it asserts)
   page.setDefaultTimeout(120000);
-  const errors = [];
+  const errors = [], requests = [];
   page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('request', (r) => requests.push(r.url()));               // the store group checks test mode sends nothing
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
   const t0 = Date.now();
   await page.goto(pathToFileURL(GAME).href);
-  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
   const loadS = (Date.now() - t0) / 1000;
   // keep every result the game reports, so checks can read it
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
-  return { ctx, page, errors, loadS };
+  return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
 // wait for this many rendered frames
@@ -757,6 +763,444 @@ await group('launch', async (use) => {
     expect(w === 1080 && h === 1350, `${w} × ${h}`);
     return `${dl.suggestedFilename()}, ${w} × ${h}, ${Math.round(buf.length / 1024)} KB`;
   });
+});
+
+// ------------------------------------------------------------------------------------------- the store (test mode)
+// The paywall in TEST MODE (the build has no VITE_ store settings): the catalog on show with its prices, a declined
+// test card, the Founder Pack bought with 4242, a reload, the paint on the car, the tip's floor, a subscription's
+// terms, the run-card badge, the phone layout, and no request to Supabase or Stripe. Plus, in Node, the server's
+// webhook signature check against known vectors and its Stripe form encoding.
+const STORE_HOSTS = /(^|\.)(supabase\.(co|in|com)|stripe\.(com|network)|stripecdn\.com)$/i;
+const storeMoney = (c) => '$' + (c % 100 ? (c / 100).toFixed(2) : String(c / 100));
+const storePrice = (s) => (s.kind === 'tip' && s.custom_amount ? `From ${storeMoney(s.custom_amount.minimum_cents)}, pay what you want` : s.mode === 'subscription' ? `${storeMoney(s.price_cents)} a ${s.interval}` : storeMoney(s.price_cents));
+const storeOnSale = (s) => s.available && (!s.window || Date.now() <= Date.parse(s.window.until));
+// a server module (TypeScript for Deno) as an ES module Node can import: types stripped by the TypeScript compiler
+// the project already has, no new dependency
+async function importServerTs(rel) {
+  const ts = (await import('typescript')).default;
+  const src = readFileSync(path.join(ROOT, rel), 'utf8');
+  const js = ts.transpileModule(src, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+  return import('data:text/javascript;base64,' + Buffer.from(js).toString('base64'));
+}
+// in the page: the test-mode ledger's entitlement ids
+const ownedIds = (page) => game(page, () => { try { return Object.values(JSON.parse(localStorage.getItem('ocu.store.owned') || '{}')).flatMap((x) => x.items.map((i) => i.entitlement)); } catch { return []; } });
+// age question, then sign-in (test mode signs straight in), inside the checkout sheet
+async function storeSignIn(sheet, email) {
+  await sheet.getByLabel('Month', { exact: true }).selectOption('6');
+  await sheet.getByLabel('Year', { exact: true }).fill('1990');
+  await sheet.getByRole('button', { name: 'Continue' }).click();
+  await sheet.getByLabel('Email', { exact: true }).fill(email);
+  await sheet.getByRole('button', { name: 'Send my sign-in link' }).click();
+  await sheet.getByLabel('Card number').waitFor();
+}
+// a screenshot once the panels' entrance animations have finished (software rendering starts them late)
+async function storeShot(page, name) {
+  await page.waitForTimeout(350);
+  await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity), null, { timeout: 60000 }).catch(() => {});
+  await page.screenshot({ path: path.join(OUT, name) });
+}
+async function storeCard(sheet, number) {
+  await sheet.getByLabel('Card number', { exact: true }).fill(number);
+  await sheet.getByLabel('Expiry', { exact: true }).fill('12/30');
+  await sheet.getByLabel('CVC', { exact: true }).fill('123');
+}
+
+await group('store', async (use) => {
+  const { page, requests } = await use({ size: [1440, 900] });
+  const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
+  const sale = cat.filter(storeOnSale), founder = cat.find((s) => s.sku === 'founder-pack-2026');
+  const sheet = page.locator('.store-sheet .panel');
+
+  await check('catalog: the two files agree with each other, the code and the server copy', () => {
+    const a = execFileSync('node', [path.join(ROOT, 'tools/store-check-catalog.mjs')], { encoding: 'utf8' }).trim();
+    const b = execFileSync('node', [path.join(ROOT, 'tools/store-sync-catalog.mjs'), '--check'], { encoding: 'utf8' }).trim();
+    return `${a}; ${b}`;
+  });
+
+  await check('webhook: the Stripe-Signature check passes known vectors and refuses tampering, wrong keys and old timestamps', async () => {
+    const m = await importServerTs('server/supabase/functions/_shared/stripe-signature.ts');
+    const { createHmac } = await import('node:crypto');
+    // RFC 4231 test case 2 for HMAC-SHA256
+    const rfc = await m.hmacSha256Hex('Jefe', 'what do ya want for nothing?');
+    expect(rfc === '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843', `RFC 4231 case 2: ${rfc}`);
+    // a Stripe-style delivery, signed independently with node:crypto
+    const secret = 'whsec_test_oc_ultra_secret', t = 1792195200, body = '{"id":"evt_test_1","type":"checkout.session.completed","data":{"object":{"id":"cs_test_a1"}}}';
+    const sig = createHmac('sha256', secret).update(`${t}.${body}`).digest('hex');
+    const v = (b, h, sec = secret, now = t + 30) => m.verifyStripeSignature(b, h, sec, { nowSec: now });
+    const good = await v(body, `t=${t},v1=${sig}`);
+    const rolled = await v(body, `t=${t},v1=${'0'.repeat(64)},v1=${sig},v0=abc`);
+    const tampered = await v(body.replace('cs_test_a1', 'cs_test_a2'), `t=${t},v1=${sig}`);
+    const wrongKey = await v(body, `t=${t},v1=${sig}`, 'whsec_someone_else');
+    const old = await v(body, `t=${t},v1=${sig}`, secret, t + 301);
+    const future = await v(body, `t=${t},v1=${sig}`, secret, t - 301);
+    const noHeader = await v(body, null);
+    const junk = await v(body, 'v1=nothex,t=abc');
+    expect(good.ok && rolled.ok, `good ${JSON.stringify(good)} rolled ${JSON.stringify(rolled)}`);
+    for (const [k, r] of Object.entries({ tampered, wrongKey, old, future, noHeader, junk })) expect(!r.ok, `${k} passed`);
+    const f = await importServerTs('server/supabase/functions/_shared/form.ts');
+    const enc = f.formEncode({ mode: 'payment', line_items: [{ quantity: 1, price_data: { currency: 'usd', unit_amount: 300, product_data: { name: 'Coast Paint Pack' } } }], metadata: { sku: 'paint-pack-coast', roll_name: undefined }, lookup_keys: ['tip-fuel-the-build'] });
+    const want = 'mode=payment&line_items%5B0%5D%5Bquantity%5D=1&line_items%5B0%5D%5Bprice_data%5D%5Bcurrency%5D=usd&line_items%5B0%5D%5Bprice_data%5D%5Bunit_amount%5D=300&line_items%5B0%5D%5Bprice_data%5D%5Bproduct_data%5D%5Bname%5D=Coast%20Paint%20Pack&metadata%5Bsku%5D=paint-pack-coast&lookup_keys%5B0%5D=tip-fuel-the-build';
+    expect(enc === want, `form encoding: ${enc}`);
+    return `RFC 4231 ok; good and rolled-secret headers pass; tampered, wrong key, ±301 s, missing and malformed fail (${old.reason}); form encoding ok`;
+  });
+
+  await check('the store opens from the menu with every available item and its price', async () => {
+    await page.getByRole('button', { name: 'Store', exact: true }).click();
+    await page.waitForSelector('.store-panel');
+    const banner = (await page.locator('.store-panel .store-mode').innerText()).replace(/\s+/g, ' ');
+    expect(/test mode/i.test(banner) && banner.includes('Nothing is charged. Use 4242 4242 4242 4242.'), `banner: ${banner}`);
+    const shown = await page.$$eval('.store-panel [data-sku]', (els) => els.map((e) => ({ sku: e.getAttribute('data-sku'), price: e.querySelector('.store-price')?.textContent?.trim() })));
+    for (const s of sale) {
+      const x = shown.find((y) => y.sku === s.sku);
+      expect(x, `${s.sku} is not shown`);
+      expect(x.price === storePrice(s), `${s.sku} shows "${x.price}", the catalog says "${storePrice(s)}"`);
+    }
+    const extra = shown.filter((x) => !sale.some((s) => s.sku === x.sku));
+    expect(!extra.length, `shown but not on sale: ${extra.map((x) => x.sku).join(', ')}`);
+    await storeShot(page, 'store-1440.png');
+    const brio = await page.locator('[data-sku="wheels-rossini-brio"] .store-act').textContent();
+    expect(/Earn the Rossini Brio first/.test(brio), `Brio wheel set: "${brio}"`);
+    const paintBefore = await page.locator('[data-paint="paint-founders-sunset"]').count();
+    expect(paintBefore === 0, 'Founders Sunset is offered before it is bought');
+    const when = await page.locator('.store-founder-when').innerText();
+    expect(/December 31, 2026/i.test(when), `Founder window: ${when}`);
+    return `${shown.length} items with their prices (${sale.length} on sale; ${cat.length - sale.length} not offered); "${banner}"; Brio wheels: "${brio}"`;
+  });
+
+  await check('4000 0000 0000 0002 is declined and grants nothing', async () => {
+    await page.getByRole('button', { name: /^Buy Coast Paint Pack/ }).click();
+    await storeSignIn(sheet, 'founder@example.com');
+    await sheet.getByLabel(/18 or over/).check();
+    await storeCard(sheet, '4000 0000 0000 0002');
+    await sheet.getByRole('button', { name: /^Pay \$3\.00/ }).click();
+    const err = await sheet.locator('.store-err').innerText();
+    expect(/declined/i.test(err) && /Nothing was charged/.test(err), `message: ${err}`);
+    const o = await ownedIds(page);
+    expect(o.length === 0, `owned after a decline: ${o.join(', ')}`);
+    // a card that isn't one of Stripe's test cards is refused unread
+    await storeCard(sheet, '4111 1111 1111 1111');
+    await sheet.getByRole('button', { name: /^Pay \$3\.00/ }).click();
+    await page.waitForFunction(() => /test cards only/.test(document.querySelector('.store-sheet .store-err')?.textContent ?? ''));
+    expect((await ownedIds(page)).length === 0, 'a non-test card granted something');
+    await sheet.getByRole('button', { name: 'Cancel' }).click();
+    return `"${err}"; a non-test card is refused; 0 items`;
+  });
+
+  await check('buying the Founder Pack with 4242 grants its entitlements and shows a receipt', async () => {
+    await page.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+    await sheet.getByLabel(/18 or over/).check();
+    await sheet.getByLabel(/Founders roll/).check();
+    await sheet.getByLabel(/Name on the roll/).fill('Test Founder');
+    await storeCard(sheet, '4242 4242 4242 4242');
+    await sheet.getByRole('button', { name: /^Pay \$10\.00/ }).scrollIntoViewIfNeeded();
+    await storeShot(page, 'store-checkout-1440.png');
+    await sheet.getByRole('button', { name: /^Pay \$10\.00/ }).click();
+    await sheet.locator('.store-receipt').waitFor();
+    const text = (await sheet.locator('.store-receipt').innerText()).replace(/\s+/g, ' ');
+    expect(/Test mode: nothing was charged/i.test(text) && text.includes('$10.00') && text.includes('Visa •••• 4242') && text.includes('Test Founder'), `receipt: ${text}`);
+    const o = await ownedIds(page), missing = founder.grants.filter((g) => !o.includes(g));
+    expect(!missing.length, `not granted: ${missing.join(', ')}`);
+    const stored = await game(page, () => JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }));
+    expect(!stored.includes('4242424242424242') && !stored.includes('4242 4242 4242 4242'), 'the card number was stored');
+    await storeShot(page, 'store-receipt-1440.png');
+    return `${founder.grants.length} of ${founder.grants.length} entitlements; receipt: ${text.slice(0, 150)}`;
+  });
+
+  await check('the Founders Sunset paint becomes selectable and goes on the car (pearl finish on every body-paint mesh)', async () => {
+    await sheet.getByRole('button', { name: 'Done' }).click();
+    const btn = page.locator('.store-locker [data-paint="paint-founders-sunset"]');
+    await btn.click();
+    expect(await btn.getAttribute('aria-pressed') === 'true', 'not pressed');
+    const read = () => game(page, () => {
+      const c = window.__game.car, m = c.mats.paint, all = [];
+      for (const g of [c.exterior, c.interior?.group]) g?.traverse((o) => { if (o.isMesh && o.material?.name === 'paint') all.push(o.material.color.getHexString()); });
+      return { paint: c.config.paint, finish: c.config.finish, color: m.color.getHexString(), metal: m.metalness, rough: m.roughness, coat: m.clearcoat, coatRough: m.clearcoatRoughness, meshes: all.length, off: all.filter((h) => h !== m.color.getHexString()).length };
+    });
+    const on = await read();
+    expect(on.paint === 0xe8622c && on.color === 'e8622c', JSON.stringify(on));
+    expect(on.metal === 0.35 && on.rough === 0.25 && on.coat === 1 && on.coatRough === 0.03, `finish ${JSON.stringify(on)}`);
+    expect(on.meshes > 0 && on.off === 0, `${on.off} of ${on.meshes} paint meshes not repainted`);
+    await page.locator('.store-locker .store-paint').first().click();          // Factory paint
+    const off = await read();
+    expect(off.finish === null && off.color !== 'e8622c' && off.off === 0, `factory: ${JSON.stringify(off)}`);
+    await btn.click();
+    return `on: #${on.color}, metalness ${on.metal}, roughness ${on.rough}, clear coat ${on.coat}/${on.coatRough}, ${on.meshes} paint meshes; factory: #${off.color}`;
+  });
+
+  await check('the tip is pay what you want from $2, one badge at any amount', async () => {
+    await page.getByRole('button', { name: /^Support Fuel the Build/ }).click();
+    await sheet.getByLabel(/18 or over/).check();
+    await sheet.getByLabel(/Or type an amount/).fill('1');
+    await storeCard(sheet, '4242424242424242');
+    await sheet.getByRole('button', { name: /^Pay \$1\.00/ }).click();
+    const err = await sheet.locator('.store-err').innerText();
+    expect(/from \$2/.test(err), `under the floor: ${err}`);
+    expect(!(await ownedIds(page)).includes('badge-supporter'), 'badge granted under the floor');
+    await sheet.getByLabel(/Or type an amount/).fill('7');
+    await sheet.getByRole('button', { name: /^Pay \$7\.00/ }).click();
+    await sheet.locator('.store-receipt').waitFor();
+    expect((await ownedIds(page)).includes('badge-supporter'), 'no badge after $7');
+    await sheet.getByRole('button', { name: 'Done' }).click();
+    return `$1 refused ("${err}"); $7 grants the badge`;
+  });
+
+  await check('a subscription shows its price and renewal terms before an unticked checkbox (preview; the club is not on sale)', async () => {
+    await game(page, () => window.__store.preview('club-yearly'));
+    await sheet.locator('.store-renew').waitFor();
+    const r = await game(page, () => {
+      const t = document.querySelector('.store-sheet .store-renew');
+      const cb = [...document.querySelectorAll('.store-sheet .store-check')].find((l) => /renewal terms/.test(l.textContent));
+      return { terms: t.innerText, before: !!(t.compareDocumentPosition(cb) & Node.DOCUMENT_POSITION_FOLLOWING), checked: cb.querySelector('input').checked, pay: document.querySelector('.store-sheet .btn.primary').disabled };
+    });
+    expect(r.before && !r.checked && r.pay, JSON.stringify(r));
+    for (const k of ['$30.00 a year', 'until you cancel', 'Cancel online', 'remind you before each yearly renewal']) expect(r.terms.includes(k), `terms lack "${k}"`);
+    await storeShot(page, 'store-club-terms-1440.png');
+    await game(page, () => window.__store.close());
+    return r.terms.split('\n')[0];
+  });
+
+  await check('the purchase survives a reload', async () => {
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    const paint = await game(page, () => window.__game.car.config.paint);
+    await page.getByRole('button', { name: 'Store', exact: true }).click();
+    await page.waitForSelector('.store-panel');
+    const act = await page.locator('[data-sku="founder-pack-2026"] .store-act').textContent();
+    const who = (await page.locator('.store-account').innerText()).replace(/\s+/g, ' ');
+    const o = await ownedIds(page), missing = founder.grants.filter((g) => !o.includes(g));
+    expect(/Owned/i.test(act) && !missing.length, `after reload: "${act}", missing ${missing.join(', ')}`);
+    expect(who.includes('founder@example.com') && who.includes("Founder '26"), `account: ${who}`);
+    expect(paint === 0xe8622c, `car paint after reload #${paint.toString(16)}`);
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    return `Founder Pack "${act}"; ${o.length} entitlements; the car still wears #${paint.toString(16)}; "${who.slice(0, 80)}"`;
+  });
+
+  await check('the car in Founders Sunset, and the Founder badge and frame on the run card', async () => {
+    await drive(page, 'Free Drive');
+    await game(page, () => { const g = window.__game; g.fastForward(6, {}, 30); g.cycleCam(); g.cycleCam(); });
+    await frames(page, 6);
+    await storeShot(page, 'store-founders-sunset-chase.png');
+    await game(page, () => { const g = window.__game; g.fastForward(10, {}, 40); g.endFreeDrive(); });
+    await page.waitForSelector('.result', { timeout: 30000 });
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 90000 }), page.getByRole('button', { name: 'Share run' }).click()]);
+    const file = path.join(OUT, 'store-run-card-founder.png');
+    await dl.saveAs(file);
+    const px = await page.evaluate(async (b64) => {
+      const img = new Image(); img.src = 'data:image/png;base64,' + b64; await img.decode();
+      const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+      const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+      const at = (x, y) => [...g.getImageData(x, y, 1, 1).data].slice(0, 3);
+      return { frame: at(18, 675), corner: at(4, 675), w: img.width, h: img.height };
+    }, readFileSync(file).toString('base64'));
+    const [r, gg, b] = px.frame;
+    expect(px.w === 1080 && px.h === 1350, `${px.w} × ${px.h}`);
+    expect(r > 170 && gg > 50 && gg < 150 && b < 110, `frame pixel rgb(${px.frame})`);
+    return `chase shot saved; run card frame pixel rgb(${px.frame}), outside it rgb(${px.corner})`;
+  });
+
+  await check('phone: the store and the checkout fit a 390 × 844 screen', async () => {
+    await page.close();                      // the 1440 page's renders would starve this one's load in software rendering
+    const ph = await open({ phone: true });
+    try {
+      const p = ph.page, sh = p.locator('.store-sheet .panel');
+      const noSide = () => p.evaluate(() => document.documentElement.scrollWidth <= innerWidth && [...document.querySelectorAll('.overlay')].every((o) => o.scrollWidth <= o.clientWidth + 1));
+      await p.getByRole('button', { name: 'Store', exact: true }).click();
+      await p.waitForSelector('.store-panel');
+      await p.waitForTimeout(500);
+      await storeShot(p, 'store-390.png');
+      const a = await noSide();
+      await p.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+      await storeSignIn(sh, 'phone@example.com');
+      await sh.getByLabel(/18 or over/).check();
+      await storeCard(sh, '4242 4242 4242 4242');
+      await sh.getByLabel('Card number').scrollIntoViewIfNeeded();
+      await storeShot(p, 'store-checkout-390.png');
+      const b = await noSide();
+      await sh.getByRole('button', { name: /^Pay \$10\.00/ }).click();
+      await sh.locator('.store-receipt').waitFor();
+      await storeShot(p, 'store-receipt-390.png');
+      const c = await noSide();
+      expect(a && b && c, `sideways scroll: store ${!a}, checkout ${!b}, receipt ${!c}`);
+      expect(ph.errors.length === 0, ph.errors.slice(0, 2).join(' | '));
+      const bad = ph.requests.filter((u) => { try { return STORE_HOSTS.test(new URL(u).hostname); } catch { return false; } });
+      expect(!bad.length, bad.slice(0, 3).join(' '));
+      return 'store, checkout and receipt at 390 × 844 with no sideways scroll';
+    } finally { await ph.ctx.close(); }
+  });
+
+  await check('test mode sends nothing to Supabase or Stripe', () => {
+    const hosts = [...new Set(requests.map((u) => { try { const x = new URL(u); return x.hostname || x.protocol; } catch { return u.slice(0, 24); } }))];
+    const bad = requests.filter((u) => { try { return STORE_HOSTS.test(new URL(u).hostname); } catch { return false; } });
+    expect(!bad.length, `requests to payment hosts: ${bad.slice(0, 3).join(' ')}`);
+    return `${requests.length} requests, to: ${hosts.join(', ')}`;
+  });
+});
+
+// ------------------------------------------------------------------------------------------- the store, live wiring
+// LIVE mode's client against a mock project: the game built with VITE_PAYMENTS_LIVE=true and a Supabase URL on a
+// host that doesn't exist (mock-oc-ultra.supabase.co), served over http://127.0.0.1, with Playwright answering
+// Supabase Auth, REST and Functions and Stripe Checkout's page. Nothing real is contacted. It checks the magic-link
+// request and return, that the checkout call carries the player's token and a sku but no price, that the card form
+// is never shown, the hand-off to Stripe's page, the return, the receipt from the server's purchase row, the items
+// from the server's entitlements, a cancelled checkout and a refused item.
+await group('store-live', async () => {
+  const MOCK = 'https://mock-oc-ultra.supabase.co', USER = '3f2b6c1e-8a4d-4c2e-9b7a-1d2e3f4a5b6c', EMAIL = 'live@example.com';
+  const outDir = path.join(OUT, 'store-live-build');
+  execFileSync(process.execPath, [path.join(ROOT, 'node_modules/vite/bin/vite.js'), 'build', '--outDir', outDir, '--emptyOutDir', '--logLevel', 'warn'], {
+    cwd: ROOT, env: { ...process.env, VITE_SUPABASE_URL: MOCK, VITE_SUPABASE_ANON_KEY: 'eyJmock.anon.key', VITE_PAYMENTS_LIVE: 'true' }, stdio: 'pipe' });
+  const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml' };
+  const server = createServer((req, res) => {
+    const u = new URL(req.url, 'http://x'), f = path.join(outDir, decodeURIComponent(u.pathname === '/' ? '/index.html' : u.pathname));
+    if (!f.startsWith(outDir) || !existsSync(f)) { res.writeHead(404); res.end(); return; }
+    res.writeHead(200, { 'Content-Type': types[path.extname(f)] ?? 'application/octet-stream' }); res.end(readFileSync(f));
+  });
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  const SITE = `http://127.0.0.1:${server.address().port}/index.html`;
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
+  const errors = [], calls = [];
+  const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
+  const founder = cat.find((s) => s.sku === 'founder-pack-2026');
+  const db = { purchases: [], entitlements: [] };
+  const reply = (route, status, body) => route.fulfill({ status, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) });
+  await ctx.route(`${MOCK}/**`, async (route) => {
+    const r = route.request(), u = new URL(r.url()), auth = r.headers()['authorization'] ?? '';
+    calls.push({ method: r.method(), path: u.pathname, search: u.search, auth, body: r.postData() });
+    if (r.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': '*' } });
+    if (u.pathname === '/auth/v1/otp') return reply(route, 200, {});
+    if (u.pathname === '/auth/v1/user') return auth === 'Bearer at-1' ? reply(route, 200, { id: USER, email: EMAIL }) : reply(route, 401, { msg: 'bad token' });
+    if (u.pathname === '/auth/v1/logout') return reply(route, 204, {});
+    if (u.pathname === '/rest/v1/profiles') return reply(route, 201, {});
+    if (u.pathname === '/rest/v1/purchases') return reply(route, 200, db.purchases.filter((p) => u.search.includes(encodeURIComponent(p.stripe_session_id)) || u.search.includes(p.stripe_session_id)));
+    if (u.pathname === '/rest/v1/entitlements') return reply(route, 200, db.entitlements);
+    if (u.pathname === '/functions/v1/create-checkout' && r.method() === 'GET') return reply(route, 200, { livemode: false, on_sale: cat.filter((s) => s.available).map((s) => s.sku) });
+    if (u.pathname === '/functions/v1/create-checkout') {
+      const b = JSON.parse(r.postData() || '{}');
+      if (auth !== 'Bearer at-1') return reply(route, 401, { error: 'Sign in again to buy.' });
+      if (b.sku === 'wheels-rossini-gt') return reply(route, 409, { error: 'Not on sale yet: it goes on sale once it is in the game.' });
+      return reply(route, 200, { url: `https://checkout.stripe.com/c/pay/cs_test_mock${b.sku === founder.sku ? 'F' : 'X'}` });
+    }
+    return reply(route, 404, { error: 'not mocked: ' + u.pathname });
+  });
+  // Stripe's hosted page: "pay", let the webhook write the rows, and send the player back the way Stripe does
+  await ctx.route('https://checkout.stripe.com/**', async (route) => {
+    const id = new URL(route.request().url()).pathname.split('/').pop();
+    calls.push({ method: 'GET', path: 'stripe:' + id });
+    const cancel = id.endsWith('X');
+    if (!cancel) {
+      db.purchases.push({ stripe_session_id: id, sku: founder.sku, amount_cents: founder.price_cents, currency: 'usd', status: 'paid', created_at: new Date().toISOString() });
+      db.entitlements = founder.grants.map((g) => ({ entitlement: g, sku: founder.sku, granted_at: new Date().toISOString() }));
+    }
+    const back = cancel ? `${SITE}?checkout=cancel` : `${SITE}?checkout=success&session_id=${id}`;
+    return route.fulfill({ status: 200, contentType: 'text/html', body: `<!doctype html><title>Stripe Checkout (mock)</title><p>Paying…</p><script>location.replace(${JSON.stringify(back)})</script>` });
+  });
+  const page = await ctx.newPage();
+  page.setDefaultTimeout(120000);
+  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push('console: ' + m.text()); });
+  const loaded = () => page.waitForFunction(() => window.__game?.net && !document.querySelector('.loadbar'), null, { timeout: BOOT_MS });
+  const sheet = page.locator('.store-sheet .panel');
+  try {
+    await page.goto(SITE);
+    await loaded();
+
+    await check('live: the store says secure checkout and asks the server what is on sale', async () => {
+      await page.getByRole('button', { name: 'Store', exact: true }).click();
+      await page.waitForSelector('.store-panel');
+      const banner = (await page.locator('.store-panel .store-mode').innerText()).replace(/\s+/g, ' ');
+      expect(/secure checkout/i.test(banner) && !/4242/.test(banner), banner);
+      const asked = () => calls.find((c) => c.path === '/functions/v1/create-checkout' && c.method === 'GET');
+      for (let i = 0; i < 100 && !asked(); i++) await page.waitForTimeout(200);
+      const got = asked();
+      expect(got, 'no on-sale request');
+      return `"${banner}"`;
+    });
+
+    await check('live: the sign-in link is requested from Supabase Auth and comes back to the game', async () => {
+      await page.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+      await sheet.getByLabel('Month', { exact: true }).selectOption('3');
+      await sheet.getByLabel('Year', { exact: true }).fill('1988');
+      await sheet.getByRole('button', { name: 'Continue' }).click();
+      await sheet.getByLabel('Email', { exact: true }).fill(EMAIL);
+      await sheet.getByRole('button', { name: 'Send my sign-in link' }).click();
+      await sheet.getByText(/Check your email/).waitFor();
+      const otp = calls.find((c) => c.path === '/auth/v1/otp');
+      const body = JSON.parse(otp.body), back = new URLSearchParams(otp.search).get('redirect_to');
+      expect(body.email === EMAIL && body.create_user === true, otp.body);
+      expect(back === `${SITE}?store=signin`, `redirect_to ${back}`);
+      // the player taps the link: Supabase sends them back with the session in the fragment
+      await page.goto(`${back}#access_token=at-1&refresh_token=rt-1&expires_in=3600&token_type=bearer&type=magiclink`);
+      await loaded();
+      await page.waitForSelector('.store-panel', { timeout: 120000 });
+      const who = (await page.locator('.store-account').innerText()).replace(/\s+/g, ' ');
+      const url = await page.evaluate(() => location.href);
+      expect(who.includes(EMAIL) && !/test account/.test(who), `account: ${who}`);
+      expect(!url.includes('access_token') && !url.includes('store=signin'), `the address still holds the session: ${url}`);
+      return `redirect_to ${back.replace(SITE, '<site>')}; back signed in as ${EMAIL}; address cleaned`;
+    });
+
+    await check('live: checkout sends the token and the sku (no price), shows no card form, and goes to Stripe', async () => {
+      await page.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+      expect(await sheet.getByLabel('Card number').count() === 0, 'a card form in live mode');
+      await sheet.getByLabel(/18 or over/).check();
+      await storeShot(page, 'store-live-checkout-1280.png');
+      await Promise.all([page.waitForURL(/checkout=success/, { timeout: 120000 }), sheet.getByRole('button', { name: /^Checkout/ }).click()]);
+      const prof = calls.find((c) => c.path === '/rest/v1/profiles');
+      expect(prof && JSON.parse(prof.body).is_13_plus === true && prof.auth === 'Bearer at-1', `profile upsert: ${JSON.stringify(prof)}`);
+      const co = calls.find((c) => c.path === '/functions/v1/create-checkout' && c.method === 'POST');
+      const b = JSON.parse(co.body);
+      expect(co.auth === 'Bearer at-1', `auth ${co.auth}`);
+      expect(b.sku === founder.sku && b.adult_or_guardian === true, co.body);
+      const priceKeys = Object.keys(b).filter((k) => /price|amount|cents|total/i.test(k));
+      expect(!priceKeys.length, `the page sent ${priceKeys.join(', ')}`);
+      expect(calls.some((c) => c.path === 'stripe:cs_test_mockF'), 'never reached Stripe');
+      return `create-checkout body ${co.body}`;
+    });
+
+    await check('live: back from Stripe, the server confirms the purchase and the items arrive', async () => {
+      await loaded();
+      await page.waitForSelector('.store-panel .store-receipt', { timeout: 120000 });
+      const r = (await page.locator('.store-panel .store-receipt').innerText()).replace(/\s+/g, ' ');
+      expect(r.includes('$10.00') && /test mode/i.test(r) && r.includes('Founder Pack'), `receipt: ${r}`);
+      await page.locator('.store-locker [data-paint="paint-founders-sunset"]').click();
+      const paint = await page.evaluate(() => window.__game.car.config.paint);
+      const url = await page.evaluate(() => location.href);
+      expect(paint === 0xe8622c, `paint #${paint.toString(16)}`);
+      expect(!/checkout=|session_id=/.test(url), `address not cleaned: ${url}`);
+      const polled = calls.filter((c) => c.path === '/rest/v1/purchases').length;
+      await storeShot(page, 'store-live-receipt-1280.png');
+      return `receipt "${r.slice(0, 110)}"; ${polled} purchase read(s); Founders Sunset on the car`;
+    });
+
+    await check('live: a refused item shows the server\'s reason; a cancelled checkout says nothing was charged', async () => {
+      // (the Founder Pack covers both paint packs, so they show as owned now)
+      await page.getByRole('button', { name: /^Buy Rossini GT Wheel Set/ }).click();
+      await sheet.getByLabel(/18 or over/).check();
+      await sheet.getByRole('button', { name: /^Checkout/ }).click();
+      const err = await sheet.locator('.store-err').innerText();
+      expect(/goes on sale once it is in the game/.test(err), err);
+      await sheet.getByRole('button', { name: 'Cancel' }).click();
+      await Promise.all([page.waitForURL(/checkout=cancel/, { timeout: 120000 }), (async () => {
+        await page.getByRole('button', { name: /^Buy Night Shift Driver Style/ }).click();
+        await sheet.getByLabel(/18 or over/).check();
+        await sheet.getByRole('button', { name: /^Checkout/ }).click();
+      })()]);
+      await loaded();
+      await page.waitForSelector('.store-panel', { timeout: 120000 });
+      const note = await page.locator('.store-panel .store-note').first().innerText();
+      expect(/cancelled\. Nothing was charged/i.test(note), note);
+      return `"${err}"; "${note.replace(/\s+/g, ' ').slice(0, 60)}"`;
+    });
+
+    await check('live: only the mock project and Stripe\'s page were contacted', () => {
+      const hosts = [...new Set(calls.map((c) => (c.path.startsWith('stripe:') ? 'checkout.stripe.com' : 'mock-oc-ultra.supabase.co')))];
+      return `${calls.length} mocked calls to ${hosts.join(', ')}; nothing real`;
+    });
+    await check('store-live: no page errors', () => { expect(errors.length === 0, errors.slice(0, 3).join(' | ')); });
+  } finally {
+    await ctx.close();
+    server.close();
+  }
 });
 
 await browser.close();

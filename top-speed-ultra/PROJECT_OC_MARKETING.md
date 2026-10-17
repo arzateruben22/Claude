@@ -6,7 +6,8 @@ metrics. The ambassador idea comes from `PROJECT_OC_BUSINESS.md` §2. The press 
 in `PROJECT_OC_LAUNCH_KIT.md`. The store and its prices are in `PROJECT_OC_MONETIZATION.md`.
 
 **The constraint:** one person, a phone, free accounts, **$0**. Nothing below needs money. A few things get easier with
-the optional $10 domain in the 90-day plan (§7.2). Each of those says so.
+the optional domain in the 90-day plan (§7.2: about $11 a year for a .com at cost from 1 Nov 2026, when Verisign's
+wholesale fee rises to $10.97). Each of those says so.
 
 **How the rules were checked:** by web search on 2026-10-16. Direct page loads were blocked in this session, so every
 rule here comes from search summaries of the official pages, or from mirrors and guides where no official page
@@ -26,7 +27,8 @@ community's sidebar the morning you post, every time. Platform rules move. Where
 - **The order:**
   1. **Build in public** until the game runs on phones. That's Gate 0 in the 90-day plan. Posts carry no link and no
      "play now".
-  2. **The OC-only beta** from Day 15, with the waitlist, invite codes and run cards.
+  2. **The OC-only beta** from Day 15 to Day 45, with the waitlist, invite codes and run cards. (The business draft's
+     45-day OC-only window counts from Day 1, as the 90-day plan does; testers play for 31 of those days.)
   3. **The public channels** only after the invite gate opens on Day 46 (Thu 3 Dec 2026): Show HN, r/WebGames,
      Product Hunt and the portals. Show HN and r/WebGames require a game anyone can play without signing up (§3.2,
      §3.6), and the rest are planned for after the gate anyway.
@@ -52,7 +54,7 @@ The UI pass in the main checkout owns these files, so these are notes for that p
 
 | What | Where | Why |
 | --- | --- | --- |
-| The run card prints **#TopSpeedOC** and shares with the title "Top Speed OC" | `src/ui/runCard.ts`, lines 92 and 111 | The game is now OC Ultra. The tag has to match the posts. "Top Speed" is an existing racing game's mark (90-day plan F2), so keep it out of tags |
+| The run card prints **#TopSpeedOC** and shares with the title "Top Speed OC" | `src/ui/runCard.ts`, lines 92 and 111 at commit 4756141 (96 and 138 in the launch-kit commit on `claude/store`; search for `#TopSpeedOC`) | The game is now OC Ultra. The tag has to match the posts. "Top Speed" is an existing racing game's mark (90-day plan F2), so keep it out of tags |
 | The Irvine Sprint blurb says "Flat out, four lanes, **real traffic**." | `src/game/race.ts`, line 14 | Traffic is simulated. A clip that shows the course screen would show a false claim. Suggested fix: "simulated traffic" |
 | The launch kit says nothing costs money, or that there are no purchases, in seven places | `PROJECT_OC_LAUNCH_KIT.md`, lines 28, 78, 114, 137, 156, 166 and 198 (counted in this worktree on 2026-10-16) | True while the store is in test mode. If the store goes live, the line becomes "Free to play. Optional cosmetics, never power." (90-day plan B9) |
 | An end card for clips | New: a 1080 × 1920 PNG | The OC sunset wordmark and "A game. Drive the real ones at the limit." **Leave out the "Top Speed" line until the trademark check clears** (90-day plan F2 keeps "Top Speed" to an in-game tagline at most, and an end card is public marketing). The owner's full lockup, with "Top Speed" beneath, goes back on if F2 and a lawyer clear it. Claude makes it from the wordmark assets. The owner adds it to each clip in the phone's editor |
@@ -67,15 +69,17 @@ Opus-class UI work. Until then, use the game as it is. The driving HUD is minima
 - **The hashtag** is **#OCUltra**. A search on 2026-10-16 found no existing OC use of "OC Ultra" or #OCUltra. Search
   each app before the first post anyway.
 - **Product Hunt and Reddit need history.** Make those accounts **now**, even though you won't post the game there
-  until December. A third-party Product Hunt guide says a new personal account waits a week before it can post.
-  Reddit judges self-promotion by your posting history (§3.1).
+  until December. No official Product Hunt rule on account age was found (re-checked 2026-10-16). A maker reports
+  that a brand-new account couldn't launch the same day and had to schedule ahead, and 2026 third-party guides say
+  launches and votes from new accounts count for less. Reddit judges self-promotion by your posting history (§3.1).
 - **TikTok.** Use a personal account for the game, not a Business account. Business accounts are limited
   to TikTok's Commercial Music Library. That doesn't matter much here, because every clip uses the game's own sound
-  (§4.2). (An earlier draft said "creator account": TikTok's separate Creator account type appears to have been
-  folded into personal accounts, so check the account types the app offers on the day.) On each clip that
-  promotes the game, switch on **"Disclose commercial content" → "Your brand"**. That's TikTok's setting for
-  promoting your own business. (TikTok ads help centre; Soundstripe and others on the music library; checked
-  2026-10-16.)
+  (§4.2). (An earlier draft said "creator account": TikTok's own "Types of TikTok accounts" page, updated May 2026,
+  lists only Personal and Business, though some 2026 third-party guides still list a Creator type, so check the
+  account types the app offers on the day.) On each clip that promotes the game, open **"Content disclosure and
+  ads"**, switch on **"Disclose commercial content"** and pick **"Your brand"**. That's TikTok's setting for
+  promoting your own business. (TikTok ads help centre, its disclosure article updated Jan 2026; Soundstripe and
+  others on the music library; checked 2026-10-16.)
 
 ### 1.3 The honesty lines (from the launch kit, renamed)
 
@@ -149,8 +153,9 @@ The OC sunset wordmark is the game's face.
 ### 2.4 Never say
 
 "Real traffic." "Live weather." "Race your friends." "Online leaderboard." "Lamborghini/Ferrari/Porsche." Disney or any
-business in a tag. "Lot 57 is a real bar" (it's our own fictional venue). Anything that dares people to speed for
-real.
+business in a tag. "Lot 57 is a real bar" (it's our own fictional venue; no real OC venue of that name was found on
+2026-10-16, but Lot 579 is a real food hall at Pacific City in Huntington Beach, so never let the two blur). Anything
+that dares people to speed for real.
 
 ---
 
@@ -208,7 +213,8 @@ real.
   - **No referral links.**
   - No reposting a game within three months.
 - **About it:** it describes itself as games with "no downloads, signups, or plugins" and has about 124k members
-  (GummySearch's figure, undated; check the sidebar).
+  (GummySearch's figure, undated; check the sidebar. GummySearch closed to new users after 30 Nov 2025 and shuts
+  down on 1 Dec 2026, per its own notice, so this figure can't be refreshed there).
 - **What to do:** post only after Day 46, with the invite gate off. Use the plain URL, no `?ref=` code. Test the
   desktop build with uBlock on first.
 
@@ -218,7 +224,7 @@ real.
 | --- | --- | --- |
 | **r/IndieGaming** | Rule 6, "Follow our spam and self promotion rules". Its text didn't load (wiki mirror) | Read the rule. Post after Day 46 |
 | **r/indiegames** | Since Aug 2024: no promotion dressed up as a feedback request (mod post, mirror) | Post it as a game, not as "feedback?". After Day 46 |
-| **r/playmygame** | From 2024 rules (mirror): one post per calendar month; the poster is on the dev team; a written description; platform flair; a playable build that's free to access | It fits the public game. Post after Day 46 |
+| **r/playmygame** | From 2024 rules (mirror, 30 Jul 2024): one post per calendar month; the poster is on the dev team; a written description; platform flair; a playable build that's free to access (paid games only on Trailer Tuesday) | It fits the public game. Post after Day 46 |
 | **r/IndieDev** | A moderator comment says self-serving promotion is against the rules; genuine feedback requests are fine | Share real dev questions during build in public |
 
 ### 3.4 r/threejs
@@ -226,7 +232,8 @@ real.
 - **The rules weren't found.** About 32k members (GummySearch's figure, undated).
 - **The post that fits:** a technical one. For example: "How I turned OpenStreetMap freeways into a drivable three.js
   world in one 3.5 MB HTML file," with a GIF and two paragraphs on the method, written for developers. (The build
-  measured 3.4 MB on this branch and 3.6 MB on the UI pass's on 2026-10-16; use the size of the build you post.)
+  measured 3.5 MB on this branch with the store, 3,503,192 bytes, and 3.6 MB on the UI pass's, 3,623,804 bytes, on
+  2026-10-16; it was 3.4 MB on this branch before the store. Use the size of the build you post.)
 - **When:** during build in public. One post. Answer the questions.
 
 ### 3.5 r/gamedev and Screenshot Saturday
@@ -258,8 +265,8 @@ real.
 - **The rules:**
   - Asking for upvotes is against Product Hunt's policies. So are incentivized votes and mass messages asking for
     them. The team may ask you to remove posts that ask. (Product Hunt's "Sharing your launch" page and help centre.)
-  - Company accounts can't post products; post from a personal account. This comes from an aggregator copying
-    Product Hunt's help, so it's unconfirmed.
+  - Company accounts can't post products; post from a personal account. Product Hunt's own Launch Guide says
+    "Company accounts are prohibited" (re-checked 2026-10-16 by search).
   - The day runs from 12:01 a.m. Pacific (third-party guides).
 - **What to do:**
   - Make the personal account now and comment genuinely on a few launches a week.
@@ -270,7 +277,8 @@ real.
 
 - **The rules:**
   - Upload an HTML5 game as a zip with `index.html` inside. The limits are 1,000 files, 500 MB extracted and 200 MB
-    per file (itch's docs, as quoted in its forum).
+    per file (itch's docs, as quoted in its forum; a user's error message gives the extracted cap as 524,288,000
+    bytes, and an itch admin wrote that the file cap was raised from 500 to 1,000).
   - "Currently all HTML5 games on itch.io are set up to only take payments as donations" (docs quoted by users and
     confirmed by staff in the forum, 2020–2023).
 - **What to do:**
@@ -284,10 +292,10 @@ These are optional and come after the OC launch. None helps the OC-only window.
 
 | Portal | What it requires | Ads | Exclusivity | Verdict |
 | --- | --- | --- | --- | --- |
-| **CrazyGames** | From its official docs:<br>• Initial download 50 MB or less (20 MB or less for the mobile homepage); 250 MB and 1,500 files at most<br>• Content fits **PEGI 12**<br>• In-game purchases are **invite-only**, through its Xsolla account<br>• Community links (Discord, a dev site) only on the main menu, and only if they **don't lead to a playable web version**<br>• Cross-promotion of other platforms is prohibited<br>• New games get a two-week **Basic Launch** (limited audience, no monetization), judged on playtime, conversion to gameplay and retention. Full Launch needs its SDK | Only ads served through its SDK are allowed. Revenue is an ad revenue share | Optional. A third-party guide says two months of exclusivity adds 50% | **On hold: it clashes with the "no ads at launch" rule** (`CLAUDE.md`, 2026-10-16). Basic Launch has no monetization, but Full Launch means its SDK's ads. The 90-day plan has it on Days 64–70; that waits for the owner to decide whether portal ads count. If yes: a separate build with no store, no link to our site (it's a playable web version), and our Discord on the menu only |
-| **Poki** | Developer tools are in closed beta, with limited access (Poki's SDK site) | Poki's model. You keep 100% of earnings from players you bring and 50% from players Poki brings | **Web-exclusive by default**: the open web, including Discord and YouTube Playables, not Steam or the app stores. The default term is **5 years** on one Poki page and **7 years** on an older one. The non-exclusive deal is a one-time flat fee | **Skip.** Exclusivity would take the game off our own site. Reconsider only if Poki makes an offer, and read the terms then |
+| **CrazyGames** | From its official docs:<br>• Initial download 50 MB or less (20 MB or less for the mobile homepage); 250 MB and 1,500 files at most<br>• Content fits **PEGI 12**<br>• In-game purchases are **invite-only**, through its Xsolla account<br>• Community links (Discord, a dev site) only on the main menu, and only if they **don't lead to a playable web version**<br>• Cross-promotion of other platforms is prohibited<br>• New games get a two-week **Basic Launch** (limited audience, no monetization), judged on playtime, conversion to gameplay and retention. Full Launch needs its SDK | Only ads served through its SDK are allowed. Revenue is an ad revenue share | Not required, per a July 2026 third-party guide. An earlier draft said two months of exclusivity adds 50%; no official or second source was found for that (a 2018 tutorial mentions a bigger share for a couple of weeks' exclusivity). Ask CrazyGames | **On hold: it clashes with the "no ads at launch" rule** (`CLAUDE.md`, 2026-10-16). Basic Launch has no monetization, but Full Launch means its SDK's ads. The 90-day plan has it on Days 64–70; that waits for the owner to decide whether portal ads count. If yes: a separate build with no store, no link to our site (it's a playable web version), and our Discord on the menu only |
+| **Poki** | Developer tools are in closed beta, with limited access (Poki's SDK site) | Poki's model. You keep 100% of earnings from players you bring and 50% from players Poki brings | **Web-exclusive by default**: the open web, including Discord and YouTube Playables, not Steam or the app stores. The default term is **5 years** on Poki's deals page and **7 years** on its bonus page (which one is current wasn't settled on 2026-10-16). The non-exclusive deal is a one-time flat fee | **Skip.** Exclusivity would take the game off our own site. Reconsider only if Poki makes an offer, and read the terms then |
 | **Newgrounds** | A zipped HTML5 build with relative paths (third-party guide) | Ad revenue share; a game can run without ads (same guide) | None found | A free, low-effort listing after Day 46, **with ads switched off** (the no-ads rule). Verify the terms |
-| **Game Jolt** | A zip with `index.html` at the top level (2019 tutorial) | Ad share; ads can be switched off (2019 tutorial). A 2026 guide mentions a 10% marketplace fee. Verify | None found | Same as Newgrounds: ads off |
+| **Game Jolt** | A zip with `index.html` at the top level (2019 tutorial) | Ad share; ads can be switched off (2019 tutorial). Its marketplace share for sales is set by the developer, up to 10% and as low as 0% (2016 launch reports). Verify | None found | Same as Newgrounds: ads off |
 | **GameDistribution** | Its SDK, syndicated across partner sites (third-party guide) | Ads through its SDK | Not checked | Skip. Our site and store don't fit ad syndication |
 | **Kongregate** | Stopped accepting new games on 1 July 2020 (Wikipedia; PocketGamer.biz) | — | — | Closed |
 
@@ -302,11 +310,14 @@ said it favours original content (Tubefilter; Fast Company).
 | **Length** | Up to 10 min recorded in the app; uploads up to 60 min (third-party guides). Our clips are 12–25 s | Up to 3 min since January 2025 (Mosseri, reported) | Up to 3 min for vertical or square uploads since 15 Oct 2024 (YouTube Help). A Short over 1 minute with an active **Content ID claim is blocked**, one more reason to use only the game's own sound |
 | **Disclosure for our own posts** | "Disclose commercial content" → "Your brand" | Our own account, so no partner label is needed. Say "I made this" | Our own channel. Tick "includes paid promotion" only for a partner's post |
 | **Disclosure for a crew member's post** (if they got a perk) | "Branded content", which shows a "Paid partnership" label | The paid partnership label | Tick "includes paid promotion" |
-| **Hashtags** | Up to 5 (our rule) | **Reportedly capped at 5** per post and Reel since Dec 2025 (several marketing sites; no Instagram page confirmed). Use 5 at most everywhere | Up to 5 (our rule) |
+| **Hashtags** | Up to 5 (our rule) | **Capped at 5** per post and Reel, rolled out gradually from Dec 2025 (Mosseri, reported by Social Media Today and The Verge; no Instagram help page found). Use 5 at most everywhere | Up to 5 (our rule) |
 | **Music** | **Game audio only.** Business accounts get only the Commercial Music Library, and the general library is for personal use | Game audio only | Game audio only |
 
-One unverified report: an Elev8or blog says YouTube announced on 3 Sep 2026 that it will auto-label undisclosed paid
-promotion. No second source was found. It doesn't change what we do, which is to disclose anyway.
+YouTube announced on 3 Sep 2026 that it will auto-label undisclosed branded content on new uploads, and it renamed
+its "paid promotion" policy "branded content" (Elev8or; Tech Times, 4 Sep 2026; no YouTube page was loaded, and
+the rollout date is unclear). So the checkbox above may now carry the new name: use whatever it's called on the
+day. The reports say a creator can certify that a video has no branded content if it's labelled wrongly, which
+may matter for our own channel's posts. It doesn't change what we do, which is to disclose anyway.
 
 **The FTC's position:** don't assume a platform's label is enough on its own; use it as well as your own disclosure
 (FTC, "Disclosures 101"). The disclosure goes in the video itself, plus the caption (§6.2).
@@ -321,9 +332,9 @@ promotion. No second source was found. It doesn't change what we do, which is to
   - Never drop invite links in servers you haven't joined as a member.
   - In OC or car servers, post in a self-promo channel only if one exists. Otherwise ask a moderator first.
 - **Server Discovery.** It needs a Community server, posted rules, a moderator team and activity thresholds that
-  Discord doesn't publish consistently (support pages; check the in-app checklist). Discord's Discovery page has
-  also set a minimum member count (1,000 in the version this fact-check knows; it couldn't be reloaded on
-  2026-10-16). Not a launch tool. Ignore it until the server is near that size.
+  Discord doesn't publish consistently (support pages; check the in-app checklist). Discovery also needs a minimum
+  member count: 1,000, per 2026 third-party guides (Discord's own enabling article, found by search on 2026-10-16,
+  doesn't state the figure). Not a launch tool. Ignore it until the server is near that size.
 
 ### 3.12 Local press
 
@@ -336,10 +347,10 @@ Status was checked on 2026-10-16. **Pitch timing:**
 | Outlet | Status and contact (source) | Angle |
 | --- | --- | --- |
 | **Orange County Register** | Publishing. It advertised a local news reporter job in Dec 2025 (JournalismJobs). No tip page surfaced in search; use the "Contact Us" links on ocregister.com | "An OC developer rebuilt the county's freeways as a free phone game" |
-| **Daily Pilot** (Costa Mesa, Newport Beach, Huntington Beach, Fountain Valley, Laguna Beach) | Published by the Los Angeles Times' Times Community News (Wikipedia, which lists Carol Cormaci as editor; Muck Rack lists its journalists). Verify the editor on dailypilot.com | The 55/405, the 73 and Newport Coast, the HB exits |
-| **LAist** | **Rene Lynch** covers Orange County and asks for story ideas, "especially about Orange County": rlynch@laist.com (LAist profile). LAist reports funding cuts after federal clawbacks | Local, free, made by one person, built on open data |
+| **Daily Pilot** (Costa Mesa, Newport Beach, Huntington Beach, Fountain Valley, Laguna Beach) | Published by the Los Angeles Times' Times Community News (Wikipedia, which lists Carol Cormaci as editor; she was named executive editor in Nov 2022, per Talking Biz News; no 2026 source confirms she still is; Muck Rack lists its journalists). Verify the editor on dailypilot.com | The 55/405, the 73 and Newport Coast, the HB exits |
+| **LAist** | **Rene Lynch** covers Orange County and asks for story ideas, "especially about Orange County": rlynch@laist.com (LAist profile). LAist's general tips address is tips@laist.com (its contact page). LAist cut staff in 2025, citing the loss of federal public-media funding (its own reports) | Local, free, made by one person, built on open data |
 | **OC Weekly** | **Closed in print on 27 Nov 2019** (Duncan McIntosh Co.; Deadline, LAist). An OC Weekly post on X in Jan 2023 said L.A. Weekly's CEO Brian Calle now owns it. **ocweekly.com is publishing in 2026** (music, lifestyle and review pieces, some reading as sponsored), with a contact page and a free "Submit your own event" form | A short pitch to the contact page. The event form only for a real event, such as a launch-night meet-up that has permission. **Never pay for a "sponsored" story**: it costs money and has to be labelled an ad |
-| **Orange County Business Journal** | Irvine; (949) 833-8373 and a contact page (OCBJ about page). It has covered OC game studios and esports companies | The business of a one-person game: $0 launch, open data, local players. Better after launch, with numbers |
+| **Orange County Business Journal** | Irvine; (949) 833-8373 and a contact page (OCBJ about page). Its contact page sends editorial tips and press releases to features@ocbj.com. It has covered OC game studios and esports companies | The business of a one-person game: $0 launch, open data, local players. Better after launch, with numbers |
 | **Student papers:** New University (UCI), Daily Titan (CSUF), The Panther (Chapman), Coast Report (OCC), Lariat (Saddleback) | New University: tips go to the relevant section on its contact page, and other inquiries to eic@newuniversity.org (verify on the live page). The others: use their contact pages | "An OC game you can drive your campus exit in; here are codes for students" |
 | **Voice of OC** | A nonprofit accountability newsroom. Its tips page wants documented, newsworthy tips and says press releases don't belong in its anonymous channels (Voice of OC contact page) | **Not a fit.** Skip |
 
@@ -359,11 +370,11 @@ of date.
 
 | Meet | When and where (source) |
 | --- | --- |
-| South OC Cars and Coffee | Saturdays 9–11 a.m., The Outlets at San Clemente. The listing says 700–1,000 vehicles, rain or shine, no registration (Events with Cars) |
-| An Irvine Saturday meet | Irvine Center Drive, 9–11 a.m. (Get Out Garage listing) |
-| Donut Derelicts | Huntington Beach, Saturdays 5–8 a.m. (Enjoy OC) |
-| Donuts & Dipsticks | Placentia, Saturdays 7–9 a.m. (Enjoy OC) |
-| Cars, Coffee and Culture | Anaheim GardenWalk, 8 a.m.–1 p.m. on its dates (iDriveSoCal) |
+| South OC Cars and Coffee | Saturdays 9–11 a.m., The Outlets at San Clemente. The listing says 700–1,000 vehicles, rain or shine, no registration (Events with Cars). **Its permit was under city review after noise complaints** (ABC7, 17 Jan 2026); it still held its ninth-anniversary meet on 18 Apr 2026 (San Clemente Times). The permit outcome wasn't found |
+| An Irvine Saturday meet | Irvine Center Drive, 9–11 a.m. (Get Out Garage listing). **Unconfirmed:** no 2026 listing was found on 2026-10-16, Enjoy OC's directory (updated 29 Aug 2026) doesn't list it, and the original Cars & Coffee Irvine ended in 2014. Drop it unless the organiser confirms |
+| Donut Derelicts | Huntington Beach (Magnolia St and Adams Ave), Saturdays, early: 5–8 a.m. per Enjoy OC, about 6:30–8:30 a.m. per Wikipedia |
+| Donuts & Dipsticks | Placentia (Kenny's Donut, Orangethorpe Ave), Saturdays 7–9 a.m. (Enjoy OC; American Collectors listings through 26 Sep 2026) |
+| Cars, Coffee and Culture | Anaheim GardenWalk, 8 a.m.–1 p.m. on its dates (iDriveSoCal; Enjoy OC, 2026) |
 
 **How to show up:**
 
@@ -378,11 +389,13 @@ of date.
    permission.
 5. **Ask before you film anyone, or their car.** No plates in posts.
 6. **Never go near takeovers or sideshows**, and never reply to accounts that promote them. California's 2024 law
-   package lets police impound vehicles used in sideshows. AB 3 (2021) lets courts suspend a licence for up to six
-   months for exhibition of speed, from 1 July 2025.
-   San Jose fines people $1,000, with up to six months in jail, for **promoting** a sideshow on social media.
-   San Francisco made promotion a misdemeanour. Long Beach moved to do the same. (KTLA, LAist, Insurance Journal and
-   a law-firm summary, reported. Verify the state law's text before quoting it.)
+   package (four bills signed on 23 Sep 2024: AB 1978, AB 2186, AB 2807 and AB 3085) lets police impound vehicles
+   used in sideshows. AB 3 (2021) lets courts suspend a licence for 90 days to six months for an exhibition of
+   speed, from 1 July 2025 (the CHP describes it as applying when the offence was part of a sideshow).
+   San Jose punishes **promoting** a sideshow on social media as a misdemeanour, with a fine of up to $1,000 and up
+   to six months in jail. San Francisco made promotion a misdemeanour (Ordinance 239-24, 2024). Long Beach's council
+   voted to do the same; its final adoption wasn't confirmed. (Governor's office, CHP, KTLA, LAist, Long Beach Post,
+   Insurance Journal and a law-firm summary. Verify the state law's text before quoting it.)
 7. **Never film real driving.** The game's footage is the game. That protects the owner and the meet.
 
 ### 3.14 Campus and school clubs
@@ -391,7 +404,7 @@ Each club was checked on 2026-10-16.
 
 | School | What exists (source) | Status |
 | --- | --- | --- |
-| **UC Irvine** | **Video Game Development Club (VGDC)**: quarterly project pitches, "over 600 active members", and an annual Game Developers Week of industry talks (New University, 10 May 2026; UCI ICS). **UCI Esports**: the first college esports programme at a public university, since Sept 2016, with an arena in the Student Center (UCI News) | Verified |
+| **UC Irvine** | **Video Game Development Club (VGDC)**: quarterly project pitches, "over 600 active members", and an annual Game Developers Week of industry talks (New University, 10 May 2026; UCI ICS). **UCI Esports**: in UCI's own words the first official esports initiative "of its kind at a public research university", since Sept 2016, with an arena in the Student Center (UCI News) | Verified |
 | **Cal State Fullerton** | **Titan Esports**, a club team since 2019, about 70 students (Daily Titan, 2023), plus ASI's Titan Cup tournaments in fall 2025 (ASI). The **Video Game Design Club** (CSUFVGDC) has a Steam group founded in 2009 with comments from Aug 2025; its site is listed as csufvgdc.com | Esports verified. The game-dev club is likely active; confirm on TitanLink |
 | **Chapman** | No current club found. The university's first esports league launched in Oct 2020, run by Fitness and Recreation (The Panther). Dodge College and engineering teams entered the IEEE GameSIG showcase (Chapman blogs) | **Unverified.** Check Chapman's student-organization directory |
 | **Orange Coast College** | An **Esports Club** had a booth at Coast Day on 14 Apr 2026 and is working to bring esports back as an official programme (Coast Report). Campus esports run through the Mission Control app (OCC esports page) | Verified |
@@ -421,7 +434,8 @@ Each club was checked on 2026-10-16.
   `PROJECT_OC_BUSINESS.md` §2.1 waits for a budget.
 - **Disclosure:** after Day 46, if a creator gets nothing but a free game anyone can play, there's no material
   connection to disclose. **Before Day 46 the code itself is a perk:** it skips a waitlist that everyone else is on,
-  and the 2023 Endorsement Guides list "early access to a product" as a material connection (16 CFR 255.0(e)). So a
+  and the 2023 Endorsement Guides list "early access to a product" as a material connection (16 CFR 255.5, the
+  section on disclosing material connections; an earlier draft cited 255.0(e)). So a
   creator who posts about the beta says so, in a light way ("got an early beta code from the dev"). If they get a
   bigger perk (a free Founder Pack, merch, their name in the credits), they disclose it exactly as in §6.2.
 - **Expect** one or two replies from ten messages. That's an assumption, not a benchmark. One personal message each,
@@ -470,7 +484,7 @@ Content weeks run **Thursday to Wednesday**, counted back from launch Thursday. 
 | **Traffic** | None, Light, Moderate, Heavy, Expert |
 | **Camera button** | Driver's seat → Hood → Chase → Free look |
 | **Corner window** | Road map, Sky camera (150 m up) or Off. **Use Off for clean shots** |
-| **Radio** | KCST 101.5 Coast, KFWY 96.9 Freeway FM, KNYN 88.3 Canyon Radio. The music is composed in code: no licence, no Content ID risk |
+| **Radio** | KCST 101.5 Coast, KFWY 96.9 Freeway FM, KNYN 88.3 Canyon Radio. The music is composed in code: no licence needed, and nothing of anyone else's for Content ID to match (a false claim is still possible; dispute it if one comes) |
 | **Ability button** | Clear Path, Focus Time, Locked In. The driver's hand does a watch check (The Closer), a wave (The Ace) or a hand on the knee (The Wrench) |
 | **Share run** | The run card (1080 × 1350), from the results screen. In Free Drive: Pause → End drive → Share run. **End drive is only in Free Drive's pause menu**; the other modes end on their own and go straight to the results screen |
 
@@ -591,8 +605,10 @@ real run.**
   - 3–17 s: through the interchange in the Driver's seat, with the "CA 57 North / Pomona" sign.
   - 17–18.5 s: Hood camera.
   - 18.5–20 s: end card.
-- *Text:* "The Orange Crush." → "Once called the world's most complex interchange (Guinness, 2002)." Check the edition
-  year in the Wikipedia article's own source before posting; if it can't be confirmed, drop the year.
+- *Text:* "The Orange Crush." → "Once called the world's most complex interchange (Guinness, 2002)." Wikipedia gives
+  the 2002 edition (re-checked by search on 2026-10-16). Check the edition year in the article's own source before
+  posting; if it can't be confirmed, drop the year. Guinness World Records is someone else's mark: a plain-text
+  citation only, never its logo.
 - *Caption:* "The 5, the 22 and the 57, all at once. Would you take this one at rush hour? Traffic is simulated. A game.
   Drive the real ones at the limit."
 - *Tags:* #OCUltra #OrangeCounty #the57 #Orange #drivinggame
@@ -669,7 +685,7 @@ real run.**
   - 9–12.5 s: the run card, centred on screen.
   - 12.5–14 s: end card.
 - *Text:* the run card's own numbers, from **this** run.
-- *Caption:* "Every run makes a card on your phone. Nothing is uploaded unless you post it. Show us yours: #OCUltra. A
+- *Caption:* "Every run makes a card on your phone. The card stays there unless you post it. Show us yours: #OCUltra. A
   game. Drive the real ones at the limit."
 - *Tags:* #OCUltra #OrangeCounty #405 #racinggame #indiegame
 
@@ -789,7 +805,9 @@ real run.**
 - *Text:* "Free to play. Thursday."
 - *Caption:* If the store stays in test mode: "Free. Nothing to buy. Open to everyone Thursday." If it goes live:
   "Free to play. Optional cosmetics, never power. Open to everyone Thursday." Then: "A game. Drive the real ones at
-  the limit."
+  the limit." ("Nothing to buy" is true in test mode, but if the public build shows the test-mode store with its
+  prices, a viewer may read it as a contradiction: either hide the store in that build, or say "Free. The store is
+  a test demo; nothing can be bought.")
 - *Tags:* #OCUltra #OrangeCounty #webgame #indiegame #405
 
 **1.2 Three days** (Mon 30 Nov) · 15 s
@@ -870,7 +888,7 @@ never after.
   - The badge is a new cosmetic for the owner to approve. It's never sold and is separate from the paid Founder '26
     badge.
 - **Even these rewards are a material connection.** Places on the list mean earlier access, and the 2023 Endorsement
-  Guides name "early access to a product" as one (16 CFR 255.0(e)); the FTC's guides also treat points-for-posts
+  Guides name "early access to a product" as one (16 CFR 255.5); the FTC's guides also treat points-for-posts
   rewards as material connections (law-firm summaries of 16 CFR 255). So a post that shares a referral link says so
   in plain words: the share text in §5.1 does it for people.
 - **Don't give away the paid Founder Pack as a referral prize.** It would undercut the people who paid, and it would
@@ -879,8 +897,9 @@ never after.
   the menu** (once they're invited, or with a tester's `FRIEND` code), not when they type an email. Waiting for a
   first play alone wouldn't work in the beta: a friend on the waitlist can't play until invited, so no one would
   ever move up. The owner's hand check of the top 25 before each wave (below) drops provisional credits that look
-  fake. At $0 there are no confirmation emails: Supabase's built-in auth email is limited to 2 an hour, meant for
-  testing, and only sends to the project's own team (90-day plan §7.1).
+  fake. At $0 there are no confirmation emails: Supabase's built-in auth email is limited to 2 an hour (its SMTP
+  guide; its rate-limits page has shown 3, so verify), meant for testing, and since 26 Sep 2024 only sends to the
+  project's own team (Supabase changelog; 90-day plan §7.1).
 - **Caps:** 10 credits per person (50 places). The owner eyeballs the top 25 by hand before each wave. Twenty
   sign-ups from one link within a minute is a bot.
 - **Keep referral links out of communities that ban them** (r/WebGames does, §3.2). Use plain links in posts.
@@ -903,7 +922,7 @@ Every rate below is an **assumption**. Replace each one with real numbers after 
 
 | Source | Assumption | Sign-ups by Day 45 |
 | --- | --- | --- |
-| 20 clips on three apps | 500 views each (new accounts often get less), 1% tap the link, 30% of those join | 30 |
+| 20 clips on three apps | 500 views per clip across the three apps (new accounts often get less), 1% tap the link, 30% of those join | 30 |
 | One r/orangecounty post (if the mods allow it) | 5,000 views, 2% click, 30% join | 30 |
 | Two city or campus subreddit posts | 1,500 views each, 2% click, 30% join | 18 |
 | Two campus club sessions | 40 people each, 50% join on the spot | 40 |
@@ -915,7 +934,7 @@ Every rate below is an **assumption**. Replace each one with real numbers after 
 
 (The arithmetic, checked: 30 + 30 + 18 + 40 + 36 + 100 = 254, × 1.25 = 317.5. Without the creator, 154 × 1.25 =
 192.5. Without the meets, 218 × 1.25 = 272.5 and 118 × 1.25 = 147.5. The 20 clips are the posts from Mon 19 Oct to
-Wed 2 Dec in §4.1.)
+Wed 2 Dec in §4.1: 20 × 500 × 1% × 30% = 30. At 500 views per clip on *each* app it would be 90.)
 
 **What it means:** the clips alone won't get there. One creator, one local Reddit post or two campus nights matter
 more than a fourth clip. That's why §3.13–3.15 get as much of the owner's time as filming does. If the owner reaches
@@ -937,7 +956,9 @@ more than a fourth clip. That's why §3.13–3.15 get as much of the owner's tim
   - Builds a few days early.
   - Their own invite code (`CREW-[name]`).
   - A #founders channel.
-  - Optionally, a free Founder Pack once the store is live, if the owner offers one.
+  - Optionally, a free Founder Pack once the store is live, if the owner offers one. Grant it by 31 Dec 2026: the
+    pack says "Sold until December 31, 2026, then never again" (`src/store/catalog.json`), so handing it out after
+    that would break the promise in §5.2.
   - **No money.**
 - **What they do:** whatever they'd do anyway, at most two posts a week. Plus one short weekly note, using the launch
   kit's template minus the pay lines: posts, what players asked for, what broke and on which phone.
@@ -965,11 +986,13 @@ more than a fourth clip. That's why §3.13–3.15 get as much of the owner's tim
 - **In the video itself,** as superimposed text in the first seconds, readable and not in a corner. Say it out loud
   too if they talk. A disclosure only in the description or comments isn't enough (FTC, "Disclosures 101", which
   says a video's disclosure belongs in the video itself; law-firm summaries of the 2023 guides).
-- **At the start of the caption,** not buried among hashtags. The FTC has said "#ad" in the middle or at the end is
-  less likely to work, and bundling it with other tags is discouraged (FTC FAQ, via Frankfurt Kurnit).
+- **At the start of the caption,** not buried among hashtags. The FTC's FAQ says "#ad" doesn't have to come first
+  if it's easy to notice, but that it's easily missed at the end of a long post or mixed in with other hashtags;
+  starting with "Ad:" or "#ad" is likely to work (FTC FAQ, via Frankfurt Kurnit and Vorys). Putting it first is
+  this plan's stricter rule.
 - **Plus the platform's label:** TikTok's "Branded content" toggle, Instagram's paid-partnership label, YouTube's
-  "includes paid promotion". The FTC says not to assume a platform's tool is good enough on its own; use it as well
-  as your own (FTC, "Disclosures 101").
+  "includes paid promotion" (renamed "branded content" in Sep 2026, per reports in §3.10). The FTC says not to
+  assume a platform's tool is good enough on its own; use it as well as your own (FTC, "Disclosures 101").
 
 **What counts:**
 
@@ -983,15 +1006,18 @@ more than a fourth clip. That's why §3.13–3.15 get as much of the owner's tim
 
 **The penalty:** the FTC's Consumer Review Rule took effect on 21 Oct 2024. It bans fake reviews, paying or rewarding
 people for reviews that must say something positive (or negative), undisclosed insider reviews, and buying fake
-followers or views for a business (16 CFR 465.2–465.8). Civil penalties run up to **$53,088 per violation** (the
-figure reported in Dec 2025 law-firm alerts; the FTC adjusts it for inflation each January, so verify the current
-one).
+followers or views for a business (16 CFR 465.2–465.8; 465.3 is reserved, and 465.8 is the fake-followers ban).
+Civil penalties run up to **$53,088 per violation**, the 2025 figure. The FTC normally adjusts it each January,
+but it made no adjustment for 2026: OMB cancelled that year's adjustment (memo M-26-11, 17 Apr 2026) because the
+October 2025 consumer price index was never produced, and the FTC said it keeps the 2025 levels (Federal Register,
+15 Sep 2026, 91 FR 58446). It may change in January 2027, so verify then.
 
 **Never:** ask anyone for a rating or review. Never reward one. Google Play's policy bans offering "money, goods, or
 the equivalent" for a rating or review (Android Developers Blog, 2017 and 2018). Apple's App Review Guidelines bar
 apps from requiring a rating or review in return for content or compensation (§3.2.2) and bar review manipulation
-(§5.6.3). That's from this fact-check's knowledge of the guidelines, not a page loaded today: verify the wording and
-numbers at Gate B2.
+(§5.6.3). That's from this fact-check's knowledge of the guidelines, not a page loaded today. A second search found
+the §5.6.3 "Discovery Fraud" heading and a summary of it (paid, incentivized or fake reviews can get a developer
+expelled from the program), but not the §3.2.2 text: verify the wording and numbers at Gate B2.
 
 ---
 
@@ -1056,7 +1082,8 @@ taking the pack, please say so in the video, like 'got this free from OC Ultra'.
 **Title:** "Show HN: OC Ultra – drive Orange County's real freeways in your phone's browser" (79 characters; HN cuts
 titles at 80, so don't lengthen it)
 
-**First comment, by the owner** (put in the size of the build you post; 3.4 MB on this branch on 2026-10-16):
+**First comment, by the owner** (put in the size of the build you post; 3.5 MB on this branch with the store on
+2026-10-16, 3.4 MB before it):
 
 > I built this solo. It's one HTML file (about 3.5 MB): three.js, with the road network built from OpenStreetMap via
 > Overture Maps: 20 carriageways, 1,247 ramp pieces and the real exit signs. You can start at any of 416 exits.
@@ -1149,7 +1176,8 @@ titles at 80, so don't lengthen it)
 
 **Launch week (W−1)**
 - [ ] Copy updated to the store's true state ("Free. Nothing to buy" or "Free to play. Optional cosmetics, never
-      power") everywhere: bio, launch kit, press kit, store copy (90-day plan B9).
+      power") everywhere: bio, launch kit, press kit, store copy (90-day plan B9). If the public build shows the
+      test-mode store, see clip 1.1's note on "Nothing to buy".
 - [ ] Press pitches out on Mon 30 Nov, one per outlet, embargo to Thu 3 Dec (§7.1).
 - [ ] Show HN title and first comment drafted (§7.6). Product Hunt page drafted (§7.7).
 - [ ] One Reddit post per community drafted, each to that community's rules, read that morning.
@@ -1210,9 +1238,37 @@ refused, so **no web claim here was re-confirmed online in this pass.** What was
   fire during the beta, and the "Top Speed" line on public assets (F2). Flagged for the owner, not changed: car meets
   and student-paper pitches earlier than L5 and L4, and §1.4's reading of Gate 0.
 - **From primary texts this pass knows but couldn't reload** (verify each): "early access to a product" as a
-  material connection (16 CFR 255.0(e), 2023); Disclosures 101's wording on platform tools, video disclosures and
-  vague tags; the Consumer Review Rule's scope (16 CFR 465); Apple's §3.2.2 and §5.6.3; AB 3's "up to six months";
-  the 1099-NEC indexing from 2027; HN's 80-character title limit; Discord Discovery's member minimum.
+  material connection (cited then as 16 CFR 255.0(e); it is 255.5, see below); Disclosures 101's wording on
+  platform tools, video disclosures and vague tags; the Consumer Review Rule's scope (16 CFR 465); Apple's §3.2.2
+  and §5.6.3; AB 3's "up to six months"; the 1099-NEC indexing from 2027; HN's 80-character title limit; Discord
+  Discovery's member minimum.
+
+**Second fact-check pass (evening of 2026-10-16).** Web search worked again; direct page loads were still refused
+(news.ycombinator.com answered 403 to this pass), so every check below is from search summaries of the named
+pages. Most web claims were searched again. Not re-searched, so still as the first draft found them: r/IndieGaming's
+rule 6, the r/IndieDev comment, r/threejs' size, the OC Register job ad, OC Weekly's 2026 pages, the Chapman,
+Saddleback and CSUF game-dev club rows, GameDistribution, and Disclosures 101's list of vague tags. Changed in the
+text:
+
+- **Corrected:** the FTC penalty line (no 2026 adjustment; the FTC keeps $53,088, its notice of 15 Sep 2026); the
+  "early access" citation (16 CFR 255.5, not 255.0(e)); Product Hunt's company-account rule (now confirmed by its
+  Launch Guide) and its new-account wait (no official rule found); CrazyGames' "+50% for two months' exclusivity"
+  (no source found); Poki's "older" 7-year page (it's the bonus page); Game Jolt's fee (developer-set, up to 10%);
+  AB 3 (90 days to six months, tied to sideshows by the CHP); San Jose's fine ("up to" $1,000); UCI Esports' "first"
+  claim (UCI's own wording); Donut Derelicts' hours (sources disagree); the build size (3.5 MB with the store); the
+  domain price (about $11 from 1 Nov 2026); the run-card line numbers.
+- **Now confirmed by a second source:** Instagram's 5-hashtag cap (Mosseri, Dec 2025); YouTube's 3 Sep 2026
+  auto-label and its rename of "paid promotion" to "branded content"; the 2026 TikTok disclosure steps; itch's
+  limits; CrazyGames' Basic Launch, Xsolla and size rules; Poki's closed beta and split; the 1099-NEC change;
+  COPPA's dates; HN's 80-character limit (a secondary analysis); Discord's 1,000-member Discovery minimum (2026
+  third-party guides); the El Toro Y and Orange Crush figures; the OCBJ phone; Rene Lynch's address; New
+  University's EIC address; Kongregate's closure; the 2024 sideshow package; San Francisco's ordinance.
+- **Flagged, not settled:** the Irvine meet (no 2026 listing); South OC Cars and Coffee's permit; Long Beach's final
+  vote; Supabase's hourly email cap (2 or 3); Apple's §3.2.2 wording; r/WebGames' and the other subreddits' current
+  rules (mirrors only); CrazyGames' link and cross-promotion rules (not found in this pass).
+- **Consistency fixes:** the 45-day OC window spelled out (Days 1–45, testers from Day 15); the clip arithmetic's
+  "500 views" defined as per clip; the free Founder Pack for crew granted inside the pack's sale window; the
+  test-mode "Nothing to buy" caption; the run card's "nothing is uploaded" line (anonymous stats exist, F9).
 
 **Reddit**
 - Reddit spam definition (quoted): https://dev.to/sh20raj/reddit-self-promotion-framework-how-to-post-smart-and-stay-unbanned-1kfg
@@ -1237,11 +1293,16 @@ refused, so **no web claim here was re-confirmed online in this pass.** What was
 - Product Hunt, Can I ask my community to upvote: https://help.producthunt.com/en/articles/484935-can-i-ask-my-community-friends-family-to-upvote-a-product
 - Product Hunt, How do I share my post: https://help.producthunt.com/en/articles/2690626-how-do-i-share-my-post
 - Product Hunt company account rule (aggregator): https://echai.ventures/startingup/from/product-hunt-help-center
+- Product Hunt Launch Guide ("Company accounts are prohibited"; second pass): https://www.producthunt.com/launch/guide
 - Product Hunt account wait and timing (third-party, updated 2026): https://app.getlaunchlist.com/blog/how-to-launch-on-product-hunt-2026 · https://www.tooljunction.io/guides/product-hunt-launch-checklist-2026
+- Product Hunt new account had to schedule ahead (maker report; second pass): https://www.indiehackers.com/post/i-made-a-mistake-on-product-hunt-launching-tomorrow-instead-0a9f70c49c
+- HN 80-character title limit (secondary analysis; second pass): https://scrapingbee.com/blog/quest-best-hacker-news-title
 
 **itch.io and browser portals**
 - itch.io HTML5 limits (forum quoting the docs): https://itch.io/t/5327199/too-many-files-in-zip-to-load-game · https://itch.io/post/10351461
 - itch.io HTML5 donations only (forum, 2020–2023): https://itch.io/t/3322706/where-is-the-donation-button-for-html5-games · https://itch.io/t/769081/require-payment-for-html5-games
+- itch.io HTML5 docs (zip requirements; second pass): https://itch.io/docs/creators/html5
+- CrazyGames in-game purchases, invite-only via Xsolla (second pass): https://docs.crazygames.com/sdk/in-game-purchases/
 - CrazyGames requirements: https://docs.crazygames.com/requirements/intro/
 - CrazyGames technical requirements: https://docs.crazygames.com/requirements/technical
 - CrazyGames gameplay requirements: https://docs.crazygames.com/requirements/gameplay/
@@ -1251,49 +1312,56 @@ refused, so **no web claim here was re-confirmed online in this pass.** What was
 - Poki: https://sdk.poki.com/ · https://sdk.poki.com/deals · https://sdk.poki.com/bonus
 - Poki term comparison (third-party): https://playgama.com/blog/business-faqs/should-i-go-exclusive-with-one-web/
 - Newgrounds, Game Jolt, GameDistribution (third-party): https://app.cinevva.com/guides/publish-web-game · https://construct.net/en/tutorials/publishing-construct-game-295
+- Game Jolt marketplace share, developer-set up to 10% (2016; second pass): https://www.mcvuk.com/development/indie-community-game-jolt-launches-dedicated-marketplace
 - Kongregate closure (1 Jul 2020): https://en.wikipedia.org/wiki/Kongregate · https://www.pocketgamer.biz/kongregate-layoffs-no-new-game-submissions
 
 **Short video**
 - YouTube three-minute Shorts (from 15 Oct 2024): https://support.google.com/youtube/answer/15424877
 - Instagram 3-minute Reels (Jan 2025): https://www.lindseygamble.com/blog/instagram-three-minute-reels · https://routenote.com/blog/instagram-expands-reels-limit-to-3-minutes/
-- Instagram 5-hashtag cap (reported, Dec 2025): https://techbuild.africa/instagram-posts-and-reels-to-five-hashtags/ · https://later.com/blog/instagram-hashtags/amp
+- Instagram 5-hashtag cap (reported, Dec 2025): https://techbuild.africa/instagram-posts-and-reels-to-five-hashtags/ · https://later.com/blog/instagram-hashtags/amp · https://www.socialmediatoday.com/news/instagram-implements-new-limits-on-hashtag-use/808309/
 - Instagram watermark downranking (Feb 2021): https://tubefilter.com/2021/02/10/instagram-reels-with-tiktok-watermark-less-discoverable/
 - Instagram originality ranking (Apr 2022): https://www.fastcompany.com/90744109/instagram-tiktok-algorithm-adam-mosseri
 - TikTok commercial content disclosure: https://ads.tiktok.com/help/article/how-to-turn-on-the-commercial-content-disclosure-setting-in-tiktok · https://ads.tiktok.com/help/article/about-the-content-disclosure-setting-for-creators
 - TikTok video length (third-party, 2025): https://metricool.com/tiktok-video-length/
 - TikTok Commercial Music Library: https://www.soundstripe.com/blogs/why-can-i-only-use-commercial-sounds-on-tiktok · https://nealschaffer.com/tiktok-business-account/
-- YouTube paid promotion: https://diymusician.cdbaby.com/music-promotion/youtube-makes-easier-upfront-literally-fans-paid-promotions/
-- YouTube auto-label (unverified, Sep 2026): https://www.elev8or.io/blog/youtube-auto-labels-undisclosed-brand-deals
+- YouTube paid promotion: https://diymusician.cdbaby.com/music-promotion/youtube-makes-easier-upfront-literally-fans-paid-promotions/ · https://support.google.com/youtube/answer/154235
+- YouTube auto-label and "branded content" rename (3 Sep 2026): https://www.elev8or.io/blog/youtube-auto-labels-undisclosed-brand-deals · https://www.techtimes.com/articles/326629/20260904/youtube-auto-labels-undisclosed-brand-deals-offers-no-clear-appeal-path-false-positives.htm
+- TikTok account types (updated May 2026): https://ads.tiktok.com/help/article/upgrade-your-tiktok-account
 
 **Discord**
 - Community Guidelines: https://discord.com/terms/guidelines-april-2024
 - Spam tips: https://DISCORDAPP.COM/safety/360044104071-tips-against-spam-and-hacking
 - Server Discovery: https://support.discord.com/hc/en-us/articles/360030843331-Enabling-Server-Discovery · https://support.discord.com/hc/articles/360035969312
+- Discovery 1,000-member minimum (third-party, 2026; second pass): https://www.techidea.net/make-discord-server-public/
 
 **Local press**
 - OC Weekly closure (27 Nov 2019): https://deadline.com/2019/11/oc-weekly-orange-county-alt-weekly-closes-1202796634/ · https://laist.com/news/oc-weekly-shuts-down-publishes-last-issue · https://en.wikipedia.org/wiki/OC_Weekly
 - OC Weekly ownership post (Jan 2023): https://x.com/ocweekly?lang=en
 - OC Weekly in 2026: https://www.ocweekly.com/ · https://www.ocweekly.com/contact-us/ · https://www.ocweekly.com/submit-an-event/ · https://www.ocweekly.com/new-to-ramsey-elkholys-monotronic-start-with-you-dont-care-then-work-backward/
-- Daily Pilot: https://en.wikipedia.org/wiki/Daily_Pilot · https://muckrack.com/media-outlet/dailypilot · https://en.wikipedia.org/wiki/Los_Angeles_Times
-- LAist, Rene Lynch: https://laist.com/people/rene-lynch
+- Daily Pilot: https://en.wikipedia.org/wiki/Daily_Pilot · https://muckrack.com/media-outlet/dailypilot · https://en.wikipedia.org/wiki/Los_Angeles_Times · https://talkingbiznews.com/media-moves/la-times-appoints-cormaci-exec-editor-of-daily-pilot/
+- LAist, Rene Lynch: https://laist.com/people/rene-lynch · https://laist.com/contact-us · https://laist.com/news/laist-cuts-staff-by-5-percent
 - OC Register reporter job (Dec 2025): https://www.journalismjobs.com/1692199-local-news-reporter-orange-county-register
-- OCBJ: https://www.ocbj.com/about/
+- OCBJ: https://www.ocbj.com/about/ · https://www.ocbj.com/contact-us/
 - Voice of OC: https://voiceofoc.org/staff-contact-us/
 - New University: https://newuniversity.org/2025/10/19/a-new-year-with-the-new-university/ · https://dev.newuniversity.org/apply/
 - Patch tips: https://patch.com/california/lagunaniguel-danapoint/submit-tip-patch-com-news-tip-line-open-0
 
 **Car meets and the law**
 - South OC Cars and Coffee: https://eventswithcars.com/organizer/south-oc-cars-and-coffee/
+- South OC permit review (17 Jan 2026) and ninth anniversary (Apr 2026): https://abc7.com/post/south-oc-cars-coffee-event-san-clemente-jeopardy-city-reviews-permit/18418583/ · https://www.picketfencemedia.com/sanclementetimes/eye-on-sc/south-oc-cars-coffee-celebrates-9-years-of-community-growth/article_3bcdefbe-6afb-40a5-8c2c-f9309822cd4b.html
+- Donut Derelicts: https://en.wikipedia.org/wiki/Donut_Derelicts
+- Donuts and Dipsticks (Kenny's Donut): https://americancollectors.com/venue/kennys-donut-placentia-ca/
 - Irvine meet: https://www.getoutgarage.com/events/cars-and-coffee/ca/irvine/orange-county-cars-and-coffee-irvine-ca
 - OC car shows: https://enjoyorangecounty.com/car-shows/ · https://orangecoast.com/arts-culture/o-c-events/weekly-car-meets-in-orange-county/
 - Cars, Coffee and Culture: https://www.idrivesocal.com/events/cars-coffee-and-culture/2026-07-04/
 - Sideshow laws (reported): https://westcoasttriallawyers.com/new-street-takeover-law · https://amp.insurancejournal.com/news/west/2024/09/30/794759.htm · https://laist.com/news/criminal-justice/long-beach-will-penalize-people-for-promoting-street-races-car-sideshows · https://ktla.com/news/local-news/los-angeles-officials-to-address-rise-in-street-takeovers/amp/ · https://cnycentral.com/news/nation-world/california-sf-cracking-down-on-dangerous-street-takeovers-by-crowds-and-drifting-cars-traffic-crime-law-enforcement-impound-seizure-gavin-newsom-san-francisco-london-breed-occupy
+- Sideshow laws (second pass): 2024 package, https://www.gov.ca.gov/2024/09/23/governor-newsom-signs-bipartisan-bills-to-address-sideshows-and-street-takeovers/ · AB 3 text, https://legiscan.com/CA/text/AB3/2021 · San Jose, https://www.gov1.com/public-safety/articles/san-jose-is-first-major-city-to-criminalize-promoting-sideshows-online-xFXXx00zWWqSsDXx/ · San Francisco Ordinance 239-24, https://sfbos.org/sites/default/files/o0239-24.pdf · Long Beach, https://lbpost.com/news/illegal-promote-street-racing-sideshows-long-beach
 
 **Campus and school clubs**
 - UCI VGDC (10 May 2026): https://newuniversity.org/2026/05/10/a-behind-the-scenes-of-burnt-out-games-kawaiian-isolation/
 - UCI Informatics student groups: https://www.informatics.uci.edu/?p=93
 - UCI ICS senior spotlight (Apr 2024): https://ics.uci.edu/2024/04/22/senior-spotlight-introducing-indie-game-developer-sam-hansen/
-- UCI Esports (Sep 2016): https://news.uci.edu/2016/09/14/uci-to-launch-esports-arena-introduce-first-ever-varsity-league-of-legends-players · https://news.uci.edu/2021/09/21/uci-esports-celebrates-5-year-anniversary-with-fall-kickoff-event/
+- UCI Esports (Sep 2016): https://news.uci.edu/2016/09/14/uci-to-launch-esports-arena-introduce-first-ever-varsity-league-of-legends-players · https://news.uci.edu/2021/09/21/uci-esports-celebrates-5-year-anniversary-with-fall-kickoff-event/ · https://news.uci.edu/press-releases/uci-to-launch-first-of-its-kind-official-e-sports-initiative-in-the-fall
 - CSUF esports (2023): https://dailytitan.com/sports/csuf-esports-is-more-than-just-gaming/article_de854428-925c-11ee-b42f-1f05ac29f96f.html
 - CSUF Titan Cup (2025): https://asi.fullerton.edu/tag/campusgaming/
 - CSUF Video Game Design Club: https://steamcommunity.com/groups/CSUFVGDC
@@ -1308,6 +1376,8 @@ refused, so **no web claim here was re-confirmed online in this pass.** What was
 - FTC Disclosures 101 (Nov 2019): https://www.ftc.gov/business-guidance/blog/2019/11/disclosures-101-new-ftc-resources-social-media-influencers
 - "#ambassador" and #ad placement (FTC FAQ via law firms): https://advertisinglaw.fkks.com/post/102eo7i/ftc-updates-endorsement-guide-faqs-and-settles-first-ever-action-against-individu · https://www.infolawgroup.com/blog/2017/09/articles/ftc/ftc-revises-endorsement-guide-faqs
 - 2023 Endorsement Guides, video disclosures: https://www.dglaw.com/wp-content/uploads/2023/07/Advertising_The_Deep_Dive-FTC_Updates_Endorsement_Guides-for_Modern_Marketing_and_Advertising-2.pdf · https://www.law.cornell.edu/cfr/text/16/255.0
+- 16 CFR 255.5, material connections incl. "early access to a product" (2025 CFR; second pass): https://www.govinfo.gov/content/pkg/CFR-2025-title16-vol1/pdf/CFR-2025-title16-vol1-sec255-5.pdf
+- FTC FAQ on #ad placement (second pass): https://vorys.com/publication-I-Client-Alert-I-FTC-Revises-Endorsement-FAQs-Provides-Additional-Answers-to-Endorsement-Disclosure-Questions
 - Referral and points-for-posts: https://www.bclplaw.com/en-US/events-insights-news/part-3-what-the-ftcs-final-rule-means-for-incentivized-reviews.html · https://www.prefinery.com/blog/ftc-endorsement-guides-for-referral-programs/
 - FTC Disclosures 101 for influencers (platform tools, video disclosures, vague tags; not reloaded in the
   fact-check pass): https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers
@@ -1316,10 +1386,18 @@ refused, so **no web claim here was re-confirmed online in this pass.** What was
 - Apple App Review Guidelines §3.2.2 and §5.6.3 (not reloaded in the fact-check pass):
   https://developer.apple.com/app-store/review/guidelines/
 - Consumer Review Rule (21 Oct 2024; $53,088 per violation, Dec 2025): https://wsgr.com/en/insights/ftc-issues-final-rule-banning-fake-and-misleading-consumer-reviews-and-testimonials.html · https://www.kelleydrye.com/viewpoints/blogs/ad-law-access/ftc-warns-companies-of-potential-violations-of-the-consumer-review-rule · https://www.khlaw.com/insights/ftc-warns-10-companies-comply-consumer-review-rule
+- Consumer Review Rule text, 16 CFR 465 (Federal Register, 22 Aug 2024; second pass): https://www.govinfo.gov/content/pkg/FR-2024-08-22/html/2024-18519.htm
+- FTC: no 2026 civil-penalty adjustment, 2025 levels kept (Federal Register, 15 Sep 2026, 91 FR 58446; second pass): https://www.federalregister.gov/documents/2026/09/15/2026-18853/civil-penalty-inflation-adjustments
 - FTC dark patterns report (Sep 2022): https://www.venable.com/insights/blogs/2022/09/the-ftc-brings-more-light-to-dark-patterns-in-new
 - COPPA amendments (Apr 2025; compliance 22 Apr 2026): https://www.finnegan.com/en/insights/articles/coppas-amended-rule-is-now-in-full-effect-what-operators-need-to-know.html · https://www.ashurstperkinscoie.com/en/insights/ftc-finally-publishes-amended-coppa-rule-compliance-deadlines-set/
 - Google Play incentivized ratings (2017, 2018): https://android-developers.googleblog.com/2017/06/google-plays-policy-on-incentivized.html · https://android-developers.googleblog.com/2018/12/in-reviews-we-trust-making-google-play.html
-- 1099-NEC $2,000 threshold (2026): https://www.anchin.com/articles/faqs-new-1099-nec-and-1099-misc-rules-beginning-in-2026/ · https://1800accountant.com/blog/irs-1099-reporting-changes-2026
+- 1099-NEC $2,000 threshold (2026): https://www.anchin.com/articles/faqs-new-1099-nec-and-1099-misc-rules-beginning-in-2026/ · https://1800accountant.com/blog/irs-1099-reporting-changes-2026 · https://www.patriotsoftware.com/blog/accounting/1099-reporting-threshold/
+- Apple §5.6.3 summary (secondary; second pass): https://conductatlas.com/platform/apple/apple-app-store-review-guidelines/developer-expulsion-for-review-manipulation-and-fraud/
+
+**Supabase, domains and tools (second pass)**
+- Supabase default email: team-only from 26 Sep 2024: https://supabase.com/changelog/29370-supabase-auth-changes-to-default-email-provider · https://supabase.com/docs/guides/auth/auth-smtp · https://supabase.com/docs/guides/auth/rate-limits
+- Verisign .com wholesale $10.26 → $10.97 on 1 Nov 2026: https://domainnamewire.com/2026/04/23/breaking-verisign-raising-wholesale-com-prices/
+- GummySearch closure notice: https://gummysearch.com/docs/articles/gummysearch-is-now-closed-6533h
 
 **The places**
 - Orange Crush interchange: https://en.wikipedia.org/wiki/Orange_Crush_interchange

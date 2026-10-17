@@ -206,11 +206,12 @@ void shutLines(float pix) {
 `;
 // metallic paint: a base coat with flakes under a clear coat; the flakes are a per-pixel random tilt of the base
 // layer's normal, hashed in the car's own space (so they stay put as you move) at about the size of a pixel
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; key?: string } = {}) {
+// coat and coatRough set the clear coat (default 1 and 0.03): the store's gloss, satin and pearl finishes use them
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
-      color: hex, metalness: o.metal ?? 0.62, roughness: o.rough ?? 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1,
+      color: hex, metalness: o.metal ?? 0.62, roughness: o.rough ?? 0.36, clearcoat: o.coat ?? 1, clearcoatRoughness: o.coatRough ?? 0.03, envMapIntensity: 1,
       clearcoatNormalMap: X.peelNormal(S(q, 256, 128)), clearcoatNormalScale: new THREE.Vector2(0.05, 0.05),
     });
     const peel = m.clearcoatNormalMap!.clone(); peel.repeat.set(4, 4); peel.needsUpdate = true; m.clearcoatNormalMap = peel;
