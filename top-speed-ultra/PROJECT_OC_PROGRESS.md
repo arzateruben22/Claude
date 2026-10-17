@@ -146,6 +146,46 @@ layout is unchanged. Details in `PROJECT_OC_TECHNICAL_NOTES.md`; preview page `s
   `w1-after-high-office-hood.png`, `w1-after-low-chase.png`, `w1-after-low-hood.png`, crops
   `tests/out/w1-crop-after-*.png`, preview `tests/out/w1-prev2-office0.png`, atlas `tests/out/w1-atlas.png`.
 - Not measured on a real phone or GPU.
+## 2026-10-16: owner mode, every car unlocked for the owner (hypercar M0, branch `claude/hypercar`)
+
+The owner wants to "use all the cars I want" right now. Owner mode is a test-build switch, **not security**: anyone
+who types `#owner` gets it. Before any real sale it has to be compiled out of public builds or tied to the owner's
+signed-in account (`PROJECT_OC_HYPERCAR.md` §8, M0, and decision 5).
+
+- **The switch** (`src/game/settings.ts`): the setting `owner` (boolean, default off, only `true` counts when a save
+  is read). Opening the game with `#owner` turns it on and saves it; `#owner=0` turns it off. An artifact link keeps a
+  bare `#anchor`. The hash is also read while the page is open (`hashchange` in `App.tsx`). Settings has a new
+  "Testing" group with the toggle "Owner mode (all cars unlocked, test builds only)".
+- **The garage** (`App.tsx` `GaragePanel`, kept small because another branch is restyling it): a black-on-amber
+  "Owner mode" chip beside the heading (12.45:1) and a line saying the saved garage doesn't change. Every listed car
+  has Drive with no credits, level or slot. Buy and Sell are hidden while owner mode is on.
+- **What the garage lists** (`cars.ts` `garageCars`): the GT, the Brio and the Corsa. The Vela E stays in the game but
+  shows only in owner mode or once the profile owns it (owner, 2026-10-16). The hypercar isn't built yet (M1), so a
+  normal garage lists three cars until then.
+  When it lands, the hypercar is a procedural model built in code, not a finished 3D asset.
+- **Nothing written to the profile** (`Game.ts` `carId`, `chooseOwnerCar`): the owner's pick is kept in its own
+  localStorage key, `tsu.ownerCar`, never in `tsu.profile`. Turning owner mode off brings back the profile's own car.
+  Driving still earns XP and credits as usual; owner mode itself doesn't add cars, spend credits or change the
+  chosen car.
+- **Checked**:
+  - `npx tsc --noEmit` and the game config are clean, and `npm run build` succeeds.
+  - `npm test -- --only=progression,phone`: 11/11. The new `progression` check walks a level-6 profile with the GT
+    and the Brio (both slots full, 11,002 credits) through the real UI:
+    - Off: the garage lists GT, Brio and Corsa, with no chip.
+    - On, from the Settings toggle: the chip shows, and all 4 cars (Vela E included) are drivable with no Buy or Sell.
+      The Vela E was picked: computed top speed 201 → 224 mph, the built car `vela-e`, a Free Drive run in `vela-e`.
+      The saved profile was byte-identical before and after the pick.
+    - Off again: the car is back to the Brio and the shop buttons return.
+    - `#owner` and `#owner=0` on the open page switch it on and off and save it.
+  - Screenshots by `tests/out/m0-owner-shots.mjs`, each from a fresh load (owner mode on comes from opening with
+    `#owner`), all in `tests/out/m0-owner/`:
+    - `garage-{off,on}-{phone,desktop}.png`, at 390 × 844 and 1440 × 900.
+    - `garage-on-vela-{phone,desktop}.png`: the Vela E driven on a level-1 profile. The saved profile stayed `null`,
+      so it was never written.
+    - `settings-on-phone.png`.
+  - No sideways scroll. No page errors.
+  - Frame at the menu (`renderer.info`, Low): phone 313 calls / 537,547 triangles; desktop 343 / 567,153. With the
+    Vela E built: 313 / 529,621 and 333 / 543,559.
 
 ## 2026-10-16: the game is "OC Ultra", and the OC sunset wordmark replaces the R badge (UI pass, identity)
 

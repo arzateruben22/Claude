@@ -27,7 +27,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { carById, applyCar } from './cars';
+import { CARS, carById, applyCar } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
@@ -37,6 +37,7 @@ export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
 const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Hood', chase: 'Chase', free: 'Free look' };
 const DT = 1 / 120;
+const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never part of the profile
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -148,6 +149,8 @@ export class Game {
   private worldScale = 1;            // Focus Time slows the world (not you)
   private gripBoost = 1;
   private carGrip = 1;
+  private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
+  private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
   race: RaceState | null = null;
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
@@ -178,6 +181,7 @@ export class Game {
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
     this.scene.add(this.chevrons.mesh);
+    this.driving = this.carId;
     this.applyDriver();
     this.applyCarChoice();
     this.offStore = onStoreChange(() => this.configureCar());     // a store paint equipped, or no longer owned
@@ -439,8 +443,10 @@ export class Game {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
     if (s.time !== this.settings.time || s.weather !== this.settings.weather) this.env.set(s.time, s.weather);
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
+    const owner = s.owner !== this.settings.owner;
     this.settings = s;
     if (who) this.applyDriver();
+    if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
@@ -450,9 +456,26 @@ export class Game {
     this.onResize();
   }
 
+  // the car you drive: your profile's, or in owner mode the one picked from the whole garage. Owner mode never
+  // writes the profile, so turning it off brings back the car you own and chose.
+  get carId() {
+    if (this.settings.owner) {
+      if (this.ownerPick === undefined) { this.ownerPick = null; try { this.ownerPick = localStorage.getItem(OWNER_CAR); } catch { /* fine */ } }
+      if (this.ownerPick && CARS.some((c) => c.id === this.ownerPick)) return this.ownerPick;
+    }
+    return this.profile.p.car;
+  }
+  get ownerMode() { return this.settings.owner; }
+  // owner mode's Drive button: any car, no credits, level or slot, and nothing saved to the profile
+  chooseOwnerCar(id: string) {
+    if (!this.settings.owner || !CARS.some((c) => c.id === id)) return;
+    this.ownerPick = id;
+    try { localStorage.setItem(OWNER_CAR, id); } catch { /* a convenience */ }
+  }
   // the car from your garage: its numbers into the physics, its body and cockpit into the scene
   applyCarChoice() {
-    const c = carById(this.profile.p.car);
+    const c = carById(this.carId);
+    this.driving = c.id;
     this.carGrip = applyCar(c);
     this.configureCar();
     return c;
@@ -461,7 +484,7 @@ export class Game {
   // mirrors (the road and the traffic behind, one extra low-resolution render a frame) come with High and Ultra on
   // a device with a fine pointer; phones keep the environment map whatever the preset.
   private configureCar() {
-    const s = this.settings, c = carById(this.profile.p.car), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
+    const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
     const high = s.quality === 'high' || s.quality === 'ultra';

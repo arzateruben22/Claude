@@ -10,12 +10,12 @@ import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } fr
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
-import { CARS, carById, figures, slotsFor } from '../game/cars';
+import { carById, figures, slotsFor, garageCars } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { Store } from './Store';
@@ -113,6 +113,13 @@ export function App() {
   }, []);
 
   useEffect(() => { game.current?.setMapCanvas(mapRef.current); });
+  // owner mode from an open page's address: #owner on, #owner=0 off (settings.ts reads it at load)
+  useEffect(() => {
+    const h = () => { const o = ownerFromHash(); if (o !== null) update({ owner: o }); };
+    addEventListener('hashchange', h);
+    return () => removeEventListener('hashchange', h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadingOn = (screen === 'loading' || busy) && !error;
   // the loading screen fades into the menu (and into the drive): it stays up, fading, a moment after loading ends
@@ -183,7 +190,7 @@ export function App() {
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
   const driver = DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0];
-  const car = carById(game.current?.profile.p.car ?? 'rossini-gt');
+  const car = carById(game.current?.carId ?? 'rossini-gt');
   const course = COURSES.find((c) => c.id === settings.course) ?? COURSES[0];
 
   // the panels: what each shows, and how wide it is when it is a card over the pause screen
@@ -348,6 +355,11 @@ export function App() {
                 <Range label="Master volume" min={0} max={1} step={0.05} value={settings.master} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ master: v })} />
                 <Range label="Engine" min={0} max={1} step={0.05} value={settings.engine} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ engine: v })} />
                 <Range label="Road and wind" min={0} max={1} step={0.05} value={settings.ambient} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ ambient: v })} />
+              </section>
+              <section className="sgroup">
+                <h3 className="sect">Testing</h3>
+                <Toggle label="Owner mode (all cars unlocked, test builds only)" value={settings.owner} onChange={(v) => update({ owner: v })} />
+                <p className="fine">Every car in the garage to drive, without credits, a level or a slot. Your saved garage, credits and level stay as you earned them. A switch on this device, not a sign-in; opening the game with #owner turns it on.</p>
               </section>
             </div>
           </div>
@@ -633,15 +645,16 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
-  const p = book.p, level = levelOf(p.xp), slots = slotsFor(level);
+  const p = book.p, level = levelOf(p.xp), slots = slotsFor(level), owner = game.ownerMode;
   const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); };
   return <>
-    <h2>Garage</h2>
+    <h2>Garage{owner && <span className="chip">Owner mode</span>}</h2>
     <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
+    {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only). Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
     <div className="drivers">
-      {CARS.map((c) => {
-        const f = figures(c), owned = p.vehicles.includes(c.id), driving = p.car === c.id, locked = level < c.level;
+      {garageCars(owner, p.vehicles).map((c) => {
+        const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;
         return (
           <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '')}>
             <div className="carhead"><span className="paint" style={{ background: '#' + c.paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
@@ -649,10 +662,11 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
             <span>{c.blurb}</span>
             <div className="row">
               {/* named for its car: the menu's Drive dock stays on screen beside the garage, and is the only plain "Drive" */}
-              {owned ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
+              {owner ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`)}>Drive</button>)
+                : owned ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
                 : locked ? <em>Opens at level {c.level}</em>
                 : <button className="btn primary" onClick={() => act(() => book.buy(c.id, c.price, c.level, slots), `${c.name} is yours`)}>Buy · {c.price.toLocaleString()}</button>}
-              {owned && c.id !== 'rossini-gt' && <button className="btn" onClick={() => act(() => book.sell(c.id, c.price), `Sold for ${Math.round(c.price * 0.6).toLocaleString()} credits`)}>Sell</button>}
+              {!owner && owned && c.id !== 'rossini-gt' && <button className="btn" onClick={() => act(() => book.sell(c.id, c.price), `Sold for ${Math.round(c.price * 0.6).toLocaleString()} credits`)}>Sell</button>}
             </div>
           </div>
         );

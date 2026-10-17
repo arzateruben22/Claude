@@ -358,6 +358,10 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .gcell.car .row em { font: 500 13px/1.2 var(--f-text); color: var(--dim); box-shadow: none; border: 0; padding: 0; margin: 0; }
 .report { width: 100%; padding: 12px 14px; font: 500 12.5px/1.5 var(--f-mono); color: var(--ink); background: var(--fill); border: 0; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--hair);
   resize: none; user-select: text; -webkit-user-select: text; }
+/* the "Owner mode" chip beside the garage's heading: black on amber, 12.45:1 */
+.chip { position: relative; isolation: isolate; display: inline-block; margin-left: 16px; padding: 4px 10px; vertical-align: 0.5em;
+  font: 600 11px/1.2 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--night); white-space: nowrap; }
+.chip::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--amber); }
 
 /* route shields: the real sign shapes */
 .shield-row { display: inline-flex; gap: 8px; align-items: center; }

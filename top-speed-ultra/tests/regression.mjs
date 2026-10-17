@@ -562,6 +562,84 @@ await group('progression', async (use) => {
     expect(state === 'running', `audio ${state}`);
     return `${r.seen.join(' → ')}, audio ${state}`;
   });
+  // owner mode (owner, 2026-10-16): every car to drive for testing, the Vela E listed only with it or once owned, a chip
+  // in the garage, and nothing written to the profile. Here the profile is level 6 with the GT and the Brio (both slots
+  // full) and too few credits, so the Vela E (level 8, 60,000) is out of reach on all three counts without it.
+  await check('owner mode: every car drivable from the garage, the Vela E included, a chip, the profile untouched; off and #owner', async () => {
+    const LABEL = 'Owner mode (all cars unlocked, test builds only)';
+    const toMenu = async () => { await page.waitForSelector('.overlay.menu', { timeout: 120000 }); };
+    const garage = async () => {
+      await page.locator('.pick', { hasText: 'Car' }).first().click();
+      await page.waitForSelector('.panel.profile .gcell.car');
+      const r = await game(page, () => {
+        const panel = document.querySelector('.panel.profile');
+        const cards = [...panel.querySelectorAll('.gcell.car')];
+        return {
+          names: cards.map((c) => c.querySelector('.carhead b').textContent),
+          chip: panel.querySelector('h2 .chip')?.textContent ?? '',
+          drive: cards.filter((c) => [...c.querySelectorAll('button, em')].some((b) => /^(Drive|Driving it)$/.test(b.textContent))).length,
+          shop: [...panel.querySelectorAll('.gcell.car button, .gcell.car em')].map((b) => b.textContent).filter((t) => /^(Buy|Sell|Opens at)/.test(t)),
+        };
+      });
+      return r;
+    };
+    const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done' }).click(); await toMenu(); };
+    const owner = async (on) => {
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      const t = page.getByLabel(LABEL);
+      if (on) await t.check(); else await t.uncheck();
+      await done();
+    };
+    const state = () => game(page, () => {
+      const g = window.__game; g.profile.save();
+      return { car: g.carId, built: g.car.config?.car, top: g.carTop(), owner: g.settings.owner, vehicles: [...g.profile.p.vehicles], chosen: g.profile.p.car,
+        credits: g.profile.p.credits, level: g.profile.level, saved: localStorage.getItem('tsu.profile') };
+    });
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await toMenu();
+    const s0 = await state();
+    const off = await garage(); await done();
+    await owner(true);
+    const on = await garage();
+    await page.locator('.gcell.car', { hasText: 'Vela E' }).getByRole('button', { name: 'Drive' }).click();
+    await page.waitForFunction(() => window.__game.carId === 'vela-e');
+    const s1 = await state();
+    await done();
+    const pick = await game(page, () => [...document.querySelectorAll('.pick')].find((p) => /Car/.test(p.textContent))?.querySelector('b')?.textContent);
+    // a run starts in the owner's car
+    await drive(page, 'Free Drive');
+    const run = await game(page, () => { const g = window.__game; g.setPaused(true); return { built: g.car.config?.car, top: g.carTop() }; });
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await toMenu();
+    await owner(false);
+    const s2 = await state();
+    const back = await garage(); await done();
+    // the address: #owner turns it on and #owner=0 off on an open page (a fresh load reads it too, in settings.ts)
+    const hash = await game(page, async () => {
+      const g = window.__game, wait = () => new Promise((r) => setTimeout(r, 300)), saved = () => JSON.parse(localStorage.getItem('tsu.settings') || '{}').owner;
+      location.hash = 'owner'; await wait();
+      const a = { on: g.settings.owner, saved: saved(), car: g.carId };
+      location.hash = 'owner=0'; await wait();
+      const b = { on: g.settings.owner, saved: saved(), car: g.carId };
+      location.hash = ''; await wait();
+      return { a, b };
+    });
+    expect(s0.level < 8 && s0.vehicles.length >= Math.min(6, 1 + Math.floor(s0.level / 4)) && s0.credits < 60000, `the profile could buy the Vela: ${JSON.stringify(s0)}`);
+    expect(!off.names.includes('Vela E') && off.names.length === 3 && !off.chip, `owner mode off lists ${off.names.join(', ')}, chip "${off.chip}"`);
+    expect(on.chip === 'Owner mode' && on.names.includes('Vela E') && on.names.length === 4, `owner mode on lists ${on.names.join(', ')}, chip "${on.chip}"`);
+    expect(on.drive === on.names.length && on.shop.length === 0, `owner mode: ${on.drive} of ${on.names.length} cards drivable, shop buttons ${on.shop.join(', ')}`);
+    expect(s1.car === 'vela-e' && s1.built === 'vela-e' && s1.top > s0.top, `picked the Vela: car ${s1.car}, built ${s1.built}, top ${fmt(s1.top)} vs ${fmt(s0.top)} m/s`);
+    expect(s1.saved === s0.saved && !s1.vehicles.includes('vela-e') && s1.chosen === s0.chosen, `the profile changed: ${s1.vehicles.join(',')} / ${s1.chosen}`);
+    expect(pick === 'Vela E', `the menu's Car pick says ${pick}`);
+    expect(run.built === 'vela-e' && Math.abs(run.top - s1.top) < 1e-6, `the run drove ${run.built}, top ${fmt(run.top)} m/s`);
+    expect(!s2.owner && s2.car === s0.chosen && s2.built === s0.chosen && Math.abs(s2.top - s0.top) < 1e-6, `owner mode off: car ${s2.car}, built ${s2.built}`);
+    expect(JSON.stringify(s2.vehicles) === JSON.stringify(s0.vehicles) && s2.chosen === s0.chosen, `owner mode off: vehicles ${s2.vehicles.join(',')}, chosen ${s2.chosen}`);
+    expect(!back.chip && !back.names.includes('Vela E') && back.shop.some((t) => /^(Buy|Sell|Opens at)/.test(t)), `off again: ${back.names.join(', ')}, chip "${back.chip}", shop ${back.shop.join(', ')}`);
+    expect(hash.a.on && hash.a.saved === true && hash.a.car === 'vela-e' && !hash.b.on && hash.b.saved === false && hash.b.car === s0.chosen, `#owner: ${JSON.stringify(hash)}`);
+    return `off: ${off.names.join(', ')}; on: chip "${on.chip}", ${on.names.join(', ')}, ${on.drive}/${on.names.length} drivable; Vela E picked at level ${s0.level}, `
+      + `${Math.round(s0.credits).toLocaleString()} credits, ${s0.vehicles.length} slots used: top ${Math.round(s0.top * MPH)} → ${Math.round(s1.top * MPH)} mph, run in ${run.built}; `
+      + `profile unchanged (${s1.vehicles.join(', ')}, driving ${s1.chosen}); off: back to ${s2.car}; #owner on/off: ${hash.a.on}/${hash.b.on}`;
+  });
 });
 
 // SwiftShader here manages under 2 fps on Low and well under 1 fps on High and Ultra (a frame there can take over a
