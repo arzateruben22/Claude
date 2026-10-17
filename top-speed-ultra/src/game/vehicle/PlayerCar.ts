@@ -168,9 +168,9 @@ export class PlayerCar {
     this.arms.setWheelAngle(this.wheelAngle);
   }
 
+  // the body and the door mirrors' pods and stalks (their own paint, without the shut lines)
   private setPaint(hex: number) {
-    const m = this.mats.paint as THREE.MeshPhysicalMaterial | undefined;
-    if (m) m.color.setHex(hex);
+    for (const k of ['paint', 'mirrorPaint']) { const m = this.mats[k] as THREE.MeshPhysicalMaterial | undefined; if (m) m.color.setHex(hex); }
   }
 
   // the driver's look (sleeves, gloves, watch, ring, bracelet, skin) without rebuilding the car

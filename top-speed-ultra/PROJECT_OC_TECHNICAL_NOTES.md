@@ -140,6 +140,17 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   visor, a roof fairing in paint, stacks, tanks, frame rails, fifth wheel, west-coast mirrors) placed at the front of
   a 20 m frame, and the 45 ft trailer (box, floor frame, skirts, conspicuity tape, landing gear, door rods, mud flaps,
   underride guard) is trim in that frame; `rig.axles` lists all five axles, so the game instances ten wheels.
+  Since W2 (2026-10-16) the trim also carries the body's details, laid on the loft's own section (`traffic.ts`
+  `bodyDetails()`, per kind from the `DOORS` table): door mirrors (a pod with a back-facing glass on a stalk; a
+  west-coast mirror on two arms on the box truck and the semi), the doors' cut lines as 14 mm dark strips from the
+  sill or arch up to the glass, matt black pillars across the glass band (the B-pillar, the rear door's divider),
+  door handles, wheel-arch liners (a six-segment tunnel and inboard wall), dark sills between the arches, blank
+  licence plates front and back (no text) and an unlit third brake light under the roof's back edge (not on the box
+  truck or semi). Still one trim mesh per class: the phone-tier trim the game instances grows from 30–110 to 188–258
+  triangles a vehicle (sedan 30 to 212, box truck 110 to 258, semi 498 to 578), and the 49 instanced traffic meshes
+  stay 49. The player's door mirror pods and stalks use their own key, `mirrorPaint`: the car's paint without
+  shut lines (the shader draws those by position, so the door's line crossed the stalk); `PlayerCar.setPaint` tints
+  `paint` and `mirrorPaint` together. That is one more mesh on the player's car.
 - **Headlights.** Two narrow soft spotlights (angle 0.20, penumbra 0.88) aimed just above level light traffic and
   walls; the pool on the road is painted: `textures.ts` `beamPool()` on a 12 × 38 m additive strip of 14 rows that
   `PlayerCar` re-lays each frame on the road's height ahead (`path.height`), opacity = beam level × lerp(0.35, 1,

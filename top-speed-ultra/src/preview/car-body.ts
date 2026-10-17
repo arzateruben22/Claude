@@ -443,7 +443,7 @@ function makeBody(P: ShapeParams) {
     }
     return out;
   };
-  function mirrorParts(kit: Kit, side: 1 | -1, withGlass: boolean, housingKey = P.id === 'rossini-corsa' ? 'carbon' : 'paint') {
+  function mirrorParts(kit: Kit, side: 1 | -1, withGlass: boolean, housingKey = P.id === 'rossini-corsa' ? 'carbon' : 'mirrorPaint') {
     const q = mirrorQ(side), c = v3(side * MIRROR.at.x, MIRROR.at.y, MIRROR.at.z);
     const m = new THREE.Matrix4().compose(c, q, v3(1, 1, 1));
     const rows: V3[][] = [];

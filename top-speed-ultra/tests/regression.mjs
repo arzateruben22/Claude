@@ -306,19 +306,44 @@ await group('survival', async (use) => {
   });
   await check('traffic is the preview\'s bodies, with a 20 m tractor-trailer semi that spawns in the right lanes', async () => {
     const r = await game(page, () => {
-      const g = window.__game, cls = g.traffic.classes.map((c) => ({ id: c.id, len: +c.len.toFixed(1), wid: +c.wid.toFixed(2), wheels: c.wheels.length, trim: !!c.trim, tris: (c.body.index ? c.body.index.count : c.body.attributes.position.count) / 3 }));
+      const n = (g) => (g ? (g.index ? g.index.count : g.attributes.position.count) / 3 : 0);
+      const g = window.__game, cls = g.traffic.classes.map((c) => ({ id: c.id, len: +c.len.toFixed(1), wid: +c.wid.toFixed(2), wheels: c.wheels.length, trim: !!c.trim, tris: n(c.body), trimTris: n(c.trim) }));
+      const meshes = g.traffic.group.children.filter((o) => o.isInstancedMesh).length;
       g.setPaused(true); g.traffic.reseed(7); g.traffic.fill(g.view());
       const semis = g.traffic.cars.filter((c) => g.traffic.classes[c.cls].id === 'semi');
       const lanes = semis.map((c) => [c.lane, c.path.lanes]), right = lanes.filter(([l, n]) => l >= n - 2).length;
-      return { cls, cars: g.traffic.cars.length, semis: semis.length, right, lanes };
+      return { cls, meshes, cars: g.traffic.cars.length, semis: semis.length, right, lanes };
     });
     const semi = r.cls.find((c) => c.id === 'semi');
     expect(r.cls.length === 7, `${r.cls.length} classes, not 7`);
     expect(semi && semi.len === 20 && semi.wheels === 10 && semi.trim, `semi class: ${JSON.stringify(semi)}`);
     expect(r.cls.every((c) => c.tris > 400), 'a class has fewer than 400 triangles: ' + r.cls.map((c) => c.id + ':' + c.tris).join(' '));
+    // the trim carries the body details (mirrors on stalks, door seams, handles, pillars, arch liners, sills, plates,
+    // the third brake light) in the same one instanced mesh per class: seven meshes a class, as before them
+    expect(r.cls.every((c) => c.trimTris >= 150), 'a class\'s trim lacks its body details: ' + r.cls.map((c) => c.id + ':' + c.trimTris).join(' '));
+    expect(r.meshes === r.cls.length * 7, `${r.meshes} instanced traffic meshes for ${r.cls.length} classes, not ${r.cls.length * 7}`);
     expect(r.semis >= 2, `only ${r.semis} semis in ${r.cars} cars`);
     expect(r.right === r.semis, `${r.semis - r.right} of ${r.semis} semis spawned outside the two right lanes: ${JSON.stringify(r.lanes)}`);
-    return `${r.cls.length} classes, semi ${semi.len} m × ${semi.wid} m with ${semi.wheels} wheels; ${r.semis} of ${r.cars} cars are semis, all in the two right lanes`;
+    return `${r.cls.length} classes in ${r.meshes} instanced meshes, trim ${r.cls.map((c) => c.id + ' ' + c.trimTris).join(', ')} triangles; semi ${semi.len} m × ${semi.wid} m with ${semi.wheels} wheels; ${r.semis} of ${r.cars} cars are semis, all in the two right lanes`;
+  });
+  await check('the door mirrors have their own paint, without the shut lines, and follow the car\'s colour', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, car = g.car, cfg = car.config, find = (k) => { let m = null; car.body.traverse((o) => { if (!m && o.isMesh && o.name === k) m = o; }); return m; };
+      if (cfg.car === 'rossini-corsa') return { corsa: true };               // its mirror pods are carbon
+      const paint = find('paint'), mir = find('mirrorPaint');
+      if (!paint || !mir) return { found: `paint ${!!paint}, mirrorPaint ${!!mir}` };
+      const shut = (m) => m.material.userData.uniforms?.uShutN.value ?? -1, hex = () => [paint.material.color.getHex(), mir.material.color.getHex()];
+      const was = cfg.paint, to = was === 0x1d4f9c ? 0xa80d10 : 0x1d4f9c;
+      car.configure({ ...cfg, paint: to }); const after = hex();
+      car.configure({ ...cfg, paint: was }); const back = hex();
+      return { same: paint.material === mir.material, shutPaint: shut(paint), shutMirror: shut(mir), was, to, after, back };
+    });
+    if (r.corsa) return 'the Corsa: carbon mirror pods';
+    expect(!r.found, r.found);
+    expect(!r.same, 'the mirrors share the body\'s paint material');
+    expect(r.shutPaint > 0 && r.shutMirror === 0, `shut lines: body ${r.shutPaint}, mirrors ${r.shutMirror}`);
+    expect(r.after.every((h) => h === r.to) && r.back.every((h) => h === r.was), `repaint ${r.to.toString(16)}: ${r.after.map((h) => h.toString(16))}; back to ${r.was.toString(16)}: ${r.back.map((h) => h.toString(16))}`);
+    return `body ${r.shutPaint} shut lines, mirrors none; repainted #${r.to.toString(16)} and back, both followed`;
   });
   await check('time trial traffic is the same every time', async () => {
     const snap = () => game(page, async () => {
