@@ -1,0 +1,771 @@
+<title>OC Ultra Launch</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="The OC Ultra launch kit: the 90-day plan, pre-launch marketing, the store and its prices, and the go-live guide, with a test build to try.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night drive west into the sunset. Each page is one stretch of freeway: a sunset horizon up top, then
+   sections posted like exit signs, and every guide is a lane with a car that drives from step to step. */
+:root {
+  color-scheme: dark;
+  --night: #0b0812;      /* page ground: the violet-black the game's UI is cut from */
+  --asphalt: #16101d;    /* raised surfaces */
+  --tar: #211829;        /* inputs, code, signs */
+  --stripe: #3b2d45;     /* hairlines and lane lines */
+  --fog: #bcaebb;        /* secondary text (8:1 on night) */
+  --chalk: #f7efe6;      /* text */
+  --sunset: #fd9123;     /* the wordmark's sky orange (8.75:1 on night) */
+  --ember: #ee1e0a;      /* the wordmark's red edge: fills and strokes only */
+  --amber: #febc31;      /* the sun highlight (11.8:1 on night) */
+  --ember-text: #ff8a6e; /* ember lifted for small text */
+  --dusk: #a9c4ff;       /* "Claude" chips: the blue after sunset */
+  --go: #7ee0a8;         /* success: test receipts, done */
+  --glow: linear-gradient(90deg, var(--ember), var(--sunset) 55%, var(--amber));
+  --f-display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --hdr: 57px;
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ---------- base (mirrors the artifact skeleton, so pages served without it look the same) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--night); scroll-padding-top: calc(var(--hdr) + 16px); }
+body { margin: 0; background: var(--night); color: var(--chalk); font: 400 1.0625rem/1.58 var(--f-body);
+  -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--night); }
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--amber); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--chalk); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--sunset); color: var(--night); }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 1.25em; }
+li { margin-bottom: 6px; }
+li::marker { color: var(--sunset); }
+b, strong { font-weight: 600; color: var(--chalk); }
+code, kbd { font: 400 .88em/1.4 var(--f-mono); background: var(--tar); border: 1px solid var(--stripe); border-radius: 5px; padding: 1px 5px; color: var(--chalk); overflow-wrap: anywhere; }
+
+/* ---------- page frame ---------- */
+.page { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; overflow-x: clip; min-height: 100%; }
+.col { max-width: 1120px; margin-inline: auto; }
+.read { max-width: 44rem; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  margin-left: calc(-1 * var(--gl)); margin-right: calc(-1 * var(--gr)); padding-left: var(--gl); padding-right: var(--gr);
+  background: color-mix(in srgb, var(--night) 90%, transparent); border-bottom: 1px solid var(--stripe);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.bar { max-width: 1120px; margin-inline: auto; height: 56px; display: flex; align-items: center; gap: 14px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; color: var(--chalk); text-decoration: none; flex: none; padding: 6px 0; }
+.brand img { height: 26px; width: auto; }
+.brand b { font: italic 800 1.3rem/1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; margin-left: auto; min-width: 0; }
+.nav a { font: 700 .98rem/1 var(--f-display); letter-spacing: .07em; text-transform: uppercase; color: var(--fog);
+  text-decoration: none; padding: 10px 10px; border-radius: 8px; white-space: nowrap; }
+.nav a:hover { color: var(--chalk); background: var(--tar); }
+.nav a[aria-current="page"] { color: var(--night); background: var(--sunset); }
+
+.foot { border-top: 1px solid var(--stripe); margin-top: 24px; padding-top: 22px; color: var(--fog); font-size: .92rem;
+  display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+.foot p { margin: 0; max-width: 44rem; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; padding-block: clamp(34px, 6vw, 76px) clamp(30px, 5vw, 56px); isolation: isolate; }
+.hero::before { content: ""; position: absolute; z-index: -1; right: -10%; top: -40px; width: min(720px, 90vw); height: 420px;
+  background: radial-gradient(closest-side, rgba(253,145,35,.22), rgba(238,30,10,.08) 60%, transparent); pointer-events: none; }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--glow); opacity: .85; }
+.eyebrow { font: 600 .78rem/1.3 var(--f-body); letter-spacing: .16em; text-transform: uppercase; color: var(--sunset); margin: 0 0 14px; }
+h1 { font: italic 800 clamp(2.7rem, 8.4vw, 5.6rem)/.9 var(--f-display); text-transform: uppercase; letter-spacing: .005em;
+  margin: 0; text-wrap: balance; }
+h1 .hl { color: var(--sunset); }
+.lede { font-size: clamp(1.12rem, 2.2vw, 1.32rem); line-height: 1.5; max-width: 42rem; margin: 18px 0 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; padding: 0; list-style: none; }
+.facts li { margin: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border: 1px solid var(--stripe);
+  border-radius: 12px; background: var(--asphalt); min-width: 0; }
+.facts b { font: 800 1.45rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.facts span { font-size: .84rem; color: var(--fog); }
+
+/* ---------- sections, posted like exits ---------- */
+.sec { position: relative; padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--stripe); }
+.sec::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: min(240px, 45%); background: var(--glow);
+  transform-origin: left center; }
+.js .sec::before { transition: transform 1.1s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in)::before { transform: scaleX(0); }
+.sec-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: start; margin-bottom: 26px; max-width: 56rem; }
+.sec-head .sign { grid-row: span 2; margin-top: 2px; }
+h2 { font: 700 clamp(1.95rem, 4.6vw, 3.1rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.kicker { color: var(--fog); margin: 6px 0 0; max-width: 46rem; font-size: 1.05rem; }
+.js .sec-head > :not(.sign) { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in) .sec-head > :not(.sign) { transform: translateY(10px); }
+h3 { font: 700 1.45rem/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 10px; text-wrap: balance; }
+h4 { font: 700 1.22rem/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 6px; text-wrap: balance; }
+.sub { margin-top: 34px; }
+
+/* the exit sign: a number or a day, posted on every section and step */
+.sign { display: inline-grid; place-items: center; align-content: center; min-width: 54px; min-height: 50px; padding: 6px 10px 7px;
+  border-radius: 9px; background: var(--tar); border: 1.5px solid var(--sunset); color: var(--chalk);
+  font: 800 1.4rem/1 var(--f-display); text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sign small { display: block; font: 600 .6rem/1 var(--f-body); letter-spacing: .15em; text-transform: uppercase; color: var(--sunset); margin-bottom: 4px; }
+.sec.in > .col > .sec-head .sign, .sec.in > .sec-head .sign { animation: sign-on .9s ease both; }
+@keyframes sign-on { 0% { box-shadow: 0 0 0 0 rgba(253,145,35,0); } 45% { box-shadow: 0 0 30px 3px rgba(253,145,35,.5); } 100% { box-shadow: 0 0 12px 0 rgba(253,145,35,.16); } }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; padding: 20px; min-width: 0; }
+.card > :last-child { margin-bottom: 0; }
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 980px) { .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .g2, .g3, .g4 { grid-template-columns: minmax(0, 1fr); } }
+.callout { background: color-mix(in srgb, var(--sunset) 8%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--sunset) 38%, transparent);
+  border-radius: 12px; padding: 16px 18px; max-width: 56rem; }
+.callout.warm { background: color-mix(in srgb, var(--ember) 9%, var(--asphalt)); border-color: color-mix(in srgb, var(--ember) 45%, transparent); }
+.callout > .lbl:first-child { display: block; margin-bottom: 6px; }
+.callout > :last-child { margin-bottom: 0; }
+.lbl { font: 600 .74rem/1.3 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--sunset); }
+.muted { color: var(--fog); }
+.small { font-size: .9rem; }
+.fine { font-size: .86rem; color: var(--fog); }
+.num { font-variant-numeric: tabular-nums; }
+.big { font: 800 clamp(2rem, 5vw, 3rem)/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.stack > * + * { margin-top: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* chips: who does it, what it costs, how ready it is */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+.chips li { margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 .74rem/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 9px; border-radius: 999px; border: 1px solid var(--stripe); color: var(--fog); background: var(--night); white-space: nowrap; }
+.chip.owner { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.chip.claude { color: var(--dusk); border-color: color-mix(in srgb, var(--dusk) 45%, transparent); }
+.chip.both { color: var(--chalk); border-color: var(--fog); }
+.chip.cost { color: var(--go); border-color: color-mix(in srgb, var(--go) 40%, transparent); }
+.chip.hot { color: var(--night); background: var(--sunset); border-color: transparent; }
+.chip.warn { color: var(--ember-text); border-color: color-mix(in srgb, var(--ember) 55%, transparent); }
+
+/* tables: a box with a border; on a phone, no number is ever off to the side (see the 600px rules below) */
+.scroll-x { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--stripe); border-radius: 12px; background: var(--asphalt); }
+.tbl { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.tbl th { text-align: left; font: 600 .72rem/1.25 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--fog);
+  padding: 12px 14px; border-bottom: 1px solid var(--stripe); background: var(--tar); vertical-align: bottom; }
+.tbl td { padding: 12px 14px; border-bottom: 1px solid var(--stripe); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tfoot td { font-weight: 600; background: var(--tar); }
+/* the phone version of a table read down its columns: one card per column (build.py writes it from the table, so the numbers are typed once) */
+.flip-cards { display: none; gap: 12px; }
+.flip-cap { margin: 0; color: var(--fog); font-size: .92rem; }
+.flip-card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 12px; padding: 14px 16px 10px; min-width: 0; }
+.flip-card h4 { margin: 0 0 6px; font: italic 800 1.5rem/1 var(--f-display); color: var(--amber); }
+.flip-card dl { margin: 0; }
+.flip-card dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 6px 0;
+  border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+.flip-card dl > div:first-child { border-top: 0; }
+.flip-card dt { color: var(--fog); font-size: .92rem; min-width: 0; }
+.flip-card dt b { color: var(--chalk); }
+.flip-card dd { margin: 0; flex: none; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.flip-card dl > div.tot { margin-inline: -16px; padding-inline: 16px; background: var(--tar); border-top-color: var(--stripe); }
+.flip-card dl > div.tot dt { color: var(--chalk); font-weight: 600; }
+.flip-card dl > div.tot dd { color: var(--chalk); }
+.flip-card dl > div:not(.tot) + .tot { border-top: 2px solid var(--sunset); }
+
+@media (max-width: 600px) {
+  .tbl th, .tbl td { padding: 10px 11px; }
+  /* tables of four or more columns: each row becomes a card, and each value carries its column's name */
+  .tbl.cardrows, .tbl.cardrows tbody, .tbl.cardrows tfoot, .tbl.cardrows tr { display: block; }
+  .tbl.cardrows thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tbl.cardrows tr { padding: 12px 14px 8px; border-bottom: 1px solid var(--stripe); }
+  .tbl.cardrows tbody tr:last-child { border-bottom: 0; }
+  .tbl.cardrows td { display: flow-root; padding: 5px 0; border: 0; text-align: right; white-space: normal; font-variant-numeric: tabular-nums; }
+  .tbl.cardrows td + td { border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+  .tbl.cardrows td::before { content: attr(data-label); content: attr(data-label) / ""; float: left; margin-right: 14px; text-align: left;
+    font: 600 .72rem/1.9 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--fog); }
+  .tbl.cardrows td:first-child { text-align: left; font-weight: 600; padding: 0 0 6px; }
+  .tbl.cardrows td:first-child::before { float: none; display: block; line-height: 1.5; margin: 0 0 2px; }
+  /* a table read down its columns (the store's Low / Middle / High) turns: one card per column */
+  .flipbox > .scroll-x { display: none; }
+  .flipbox > .flip-cards { display: grid; }
+}
+/* the narrowest phones (320px): a long word or an email may break so a three-column table still fits */
+@media (max-width: 380px) { .tbl td { overflow-wrap: anywhere; } }
+
+/* ---------- controls ---------- */
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px;
+  border-radius: 10px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk); font: 700 1.02rem/1 var(--f-display);
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: border-color .2s, color .2s, background-color .2s; }
+.btn:hover { border-color: var(--sunset); color: var(--chalk); }
+.btn.primary { background: linear-gradient(90deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.btn.primary:hover { color: var(--night); filter: brightness(1.06); }
+.btn.ghost { background: transparent; }
+.btn.small { min-height: 36px; padding: 7px 11px; font-size: .9rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.btn .arr { font-family: var(--f-body); font-weight: 600; }
+
+input[type="text"], input[type="email"], input[type="number"], input:not([type]), select, textarea {
+  font: 500 1rem/1.3 var(--f-body); color: var(--chalk); background: var(--tar); border: 1px solid var(--stripe); border-radius: 10px;
+  padding: 11px 12px; width: 100%; min-height: 44px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; border-color: transparent; }
+input::placeholder { color: color-mix(in srgb, var(--fog) 70%, transparent); }
+input[type="range"] { width: 100%; accent-color: var(--sunset); min-height: 28px; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--sunset); flex: none; margin: 2px 0 0; }
+label { cursor: pointer; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field > .lbl2 { font: 600 .8rem/1.2 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--fog); }
+.check { display: flex; gap: 10px; align-items: flex-start; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { min-height: 38px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk);
+  font: 600 .95rem/1 var(--f-body); cursor: pointer; font-variant-numeric: tabular-nums; }
+.seg button[aria-pressed="true"] { background: var(--sunset); color: var(--night); border-color: transparent; }
+
+/* code you can copy */
+.code { background: var(--tar); border: 1px solid var(--stripe); border-radius: 12px; min-width: 0; margin: 10px 0 12px; }
+.code-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 6px 6px 14px; border-bottom: 1px solid var(--stripe); }
+.code-head span { font: 500 .78rem/1.3 var(--f-mono); color: var(--fog); min-width: 0; overflow-wrap: anywhere; }
+.code pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 .86rem/1.6 var(--f-mono); color: var(--chalk); white-space: pre; tab-size: 2; }
+.code pre.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.code pre.tall { max-height: 360px; overflow: auto; }
+.code .fill { color: var(--amber); }
+.copy-msg { font-size: .82rem; color: var(--go); margin-left: 4px; }
+
+/* ---------- the guide: a lane with a car that drives from step to step ---------- */
+.guide { position: relative; margin-top: 6px; }
+.guide-ctl { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hdr)); z-index: 6; background: var(--night);
+  box-shadow: 0 0 0 100vmax var(--night); clip-path: inset(0 -100vmax); padding: 10px 0 12px; margin-bottom: 14px; border-bottom: 1px solid var(--stripe); }
+.road { position: relative; height: 30px; margin: 2px 16px 8px; --p: 0; }
+.road::before { content: ""; position: absolute; left: -16px; right: -16px; top: 9px; height: 12px; border-radius: 6px; background: var(--tar);
+  box-shadow: inset 0 0 0 1px var(--stripe); }
+.road-lane { position: absolute; left: -10px; right: -10px; top: 14px; height: 2px; background: repeating-linear-gradient(90deg, var(--stripe) 0 10px, transparent 10px 20px); }
+.road.moving .road-lane { animation: lane .35s linear infinite; }
+@keyframes lane { to { background-position: -20px 0; } }
+.road-lit { position: absolute; left: -16px; top: 9px; height: 12px; border-radius: 6px; width: calc(var(--p) * 100% + 16px);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ember) 70%, transparent), var(--sunset) 75%, var(--amber)); opacity: .9;
+  transition: width .75s cubic-bezier(.3,.8,.2,1); }
+.tick { position: absolute; top: 7px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: var(--stripe); }
+.tick.done { background: var(--night); opacity: .55; }
+.tick.gap { height: 22px; top: 4px; width: 3px; background: var(--fog); opacity: .8; }
+.car { position: absolute; top: 4px; left: calc(var(--p) * 100%); width: 32px; height: 22px; margin-left: -18px; transition: left .75s cubic-bezier(.3,.8,.2,1);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+.car::after { content: ""; position: absolute; left: 28px; top: 1px; width: 46px; height: 20px; border-radius: 50%;
+  background: radial-gradient(ellipse at left center, rgba(254,188,49,.55), transparent 70%); pointer-events: none; }
+.car svg { width: 32px; height: 22px; display: block; }
+.car .cb { fill: var(--sunset); stroke: var(--ember); stroke-width: 1.2; }
+.car .cw { fill: var(--night); }
+.car .cl { fill: var(--amber); }
+.phases { display: flex; gap: 4px; margin: 0 0 8px; }
+.phases button { flex: 1 1 0; min-width: 0; min-height: 34px; padding: 6px 6px; border: 1px solid var(--stripe); border-radius: 8px; background: var(--asphalt);
+  color: var(--fog); font: 700 .86rem/1.05 var(--f-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phases button[aria-current="step"] { color: var(--night); background: var(--sunset); border-color: transparent; }
+.ctl-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.count { margin: 0; font-size: .95rem; color: var(--fog); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count b { color: var(--chalk); font-variant-numeric: tabular-nums; }
+.count span { color: var(--chalk); }
+@media (max-width: 560px) {
+  .ctl-row { grid-template-columns: auto auto minmax(0, 1fr); }
+  .ctl-row .count { grid-column: 1 / -1; grid-row: 1; white-space: normal; }
+  .ctl-row [data-act="auto"] { justify-self: end; }
+}
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.steps.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 861px) { .steps.two > .step:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+@media (max-width: 860px) { .steps.two { grid-template-columns: minmax(0, 1fr); } }
+.step { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px; margin: 0;
+  background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; overflow: hidden; min-width: 0;
+  scroll-margin-top: calc(var(--hdr) + 140px); scroll-margin-bottom: 24px; transition: border-color .3s, box-shadow .3s; }
+.step > .sign { min-width: 50px; font-size: 1.25rem; align-self: start; }
+.step-body { min-width: 0; }
+.step-body > :last-child { margin-bottom: 0; }
+.step p { margin-bottom: 8px; }
+.step .proof { font-size: .93rem; color: var(--fog); }
+.step .proof b, .step .if b { color: var(--go); font-weight: 600; }
+.step .if { font-size: .93rem; color: var(--fog); }
+.step .if b { color: var(--ember-text); }
+.js .step { cursor: pointer; }
+.step.is-active { border-color: var(--sunset); box-shadow: 0 0 0 1px var(--sunset), 0 18px 50px -26px rgba(253,145,35,.65); }
+.step.is-active .sign { background: linear-gradient(135deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.step.is-active .sign small { color: var(--night); }
+.step.is-active::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(254,188,49,.14) 46%, transparent 62%); transform: translateX(-100%); animation: sweep 1.15s ease-out forwards; }
+@keyframes sweep { to { transform: translateX(100%); } }
+.step.is-done .sign { border-color: var(--amber); }
+.step.is-done .sign::after { content: "done"; display: block; font: 600 .55rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--go); margin-top: 3px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin: 26px 0 12px; }
+.group-head:first-child { margin-top: 0; }
+.group-head h3 { margin: 0; }
+.group-head p { margin: 0; color: var(--fog); }
+
+@media (max-width: 560px) {
+  :root { --hdr: 53px; }
+  .bar { height: 52px; gap: 8px; }
+  .brand b { display: none; }
+  .brand img { height: 22px; }
+  .nav a { font-size: .88rem; padding: 9px 7px; letter-spacing: .05em; }
+  .card { padding: 16px; }
+  .step { padding: 14px; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+  .step > .sign { justify-self: start; display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; min-height: 0; padding: 5px 10px; font-size: 1.05rem; }
+  .step > .sign small { margin: 0; }
+  .step.is-done .sign::after { margin: 0; }
+  .sec-head { gap: 10px 12px; align-items: center; }
+  .sec-head .sign { grid-row: auto; margin-top: 0; min-width: 46px; min-height: 46px; font-size: 1.15rem; }
+  .sec-head .kicker { grid-column: 1 / -1; margin-top: 0; }
+  .phases button { flex-grow: 1 !important; font-size: .8rem; letter-spacing: .03em; padding-inline: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .step.is-active::after { display: none; }
+  .js .sec:not(.in)::before { transform: none; }
+  .js .sec:not(.in) .sec-head > :not(.sign) { transform: none; }
+}
+
+/* ---------- this page ---------- */
+.hub-hero { position: relative; padding-block: clamp(28px, 5vw, 64px) 26px; isolation: isolate; }
+.hub-hero::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 4%; width: min(980px, 120vw); height: 520px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(253,145,35,.20), rgba(238,30,10,.07) 58%, transparent); pointer-events: none; }
+.lockup { margin: 0; display: grid; justify-items: start; gap: 4px; }
+.lockup img { width: min(680px, 100%); height: auto; margin: 0 0 6px -1.5%; }
+.lockup .ultra { font: italic 800 clamp(3rem, 10vw, 6.4rem)/.86 var(--f-display); text-transform: uppercase; letter-spacing: .01em; }
+.lockup .ultra em { font-style: inherit; color: var(--sunset); }
+.lockup .tag { font: 700 clamp(.95rem, 2vw, 1.2rem)/1 var(--f-display); letter-spacing: .42em; text-transform: uppercase; color: var(--amber); padding-left: .2em; }
+.hub-hero .lede { margin-top: 22px; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; align-items: center; }
+.cta .btn { min-height: 50px; padding-inline: 20px; font-size: 1.1rem; }
+.cta .fine { margin: 0; flex-basis: 100%; }
+.tm-note { margin-top: 18px; max-width: 44rem; }
+
+/* the freeway at dusk, under the hero */
+.horizon { position: relative; height: clamp(110px, 15vw, 170px); margin-left: calc(-1 * var(--gl)); margin-right: calc(-1 * var(--gr)); }
+.horizon canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.horizon::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--glow); z-index: 1; box-shadow: 0 0 36px 6px rgba(253,145,35,.28); }
+
+.try .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .try .steps { grid-template-columns: minmax(0, 1fr); } }
+.try .guide-ctl { position: static; box-shadow: none; clip-path: none; }
+.testcard { display: inline-block; font: 600 1.02rem/1.2 var(--f-mono); color: var(--amber); letter-spacing: .04em; white-space: nowrap; }
+
+.doors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .doors { grid-template-columns: minmax(0, 1fr); } }
+.door { position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: 8px; padding: 22px; border-radius: 16px; background: var(--asphalt);
+  border: 1px solid var(--stripe); color: var(--chalk); text-decoration: none; overflow: hidden; transition: border-color .25s, transform .25s; min-width: 0; }
+.door::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--glow); transform: scaleX(.18); transform-origin: left; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.door:hover { border-color: var(--sunset); color: var(--chalk); }
+.door:hover::after, .door:focus-visible::after { transform: scaleX(1); }
+.door .lbl { color: var(--sunset); }
+.door h3 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin: 0; }
+.door p { margin: 0; color: var(--fog); }
+.door .go { font: 700 1rem/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--amber); }
+.door .stat { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 4px 0 0; padding: 0; list-style: none; }
+.door .stat li { margin: 0; font-size: .9rem; color: var(--fog); }
+.door .stat b { font: 800 1.25rem/1 var(--f-display); color: var(--chalk); margin-right: 4px; font-variant-numeric: tabular-nums; }
+
+.shape { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .shape { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .shape { grid-template-columns: minmax(0, 1fr); } }
+.shape .card .big { margin-bottom: 10px; }
+.shape .card p { margin: 0; }
+.rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 28px; list-style: none; padding: 0; margin: 0; max-width: 60rem; }
+@media (max-width: 700px) { .rules { grid-template-columns: minmax(0, 1fr); } }
+.rules li { margin: 0; padding: 12px 0 12px 30px; border-bottom: 1px solid var(--stripe); position: relative; }
+.rules li::before { content: ""; position: absolute; left: 4px; top: 19px; width: 12px; height: 12px; border-radius: 3px; background: var(--sunset); transform: rotate(45deg); }
+.rules li.no::before { background: transparent; border: 2px solid var(--ember-text); transform: none; border-radius: 50%; }
+.who { margin-top: 26px; }
+</style>
+<div class="page">
+<header class="top"><div class="bar"><a class="brand" href="index.html" aria-current="page" aria-label="OC Ultra launch kit: the hub"><img src="img/oc-logo-480.webp" width="480" height="171" alt=""><b>Ultra</b></a><nav class="nav" aria-label="Launch kit pages"><a href="plan.html">Plan</a><a href="marketing.html">Marketing</a><a href="store.html">Store</a><a href="golive.html">Go live</a></nav></div></header>
+<main>
+<div class="col">
+  <section class="hub-hero" aria-labelledby="hub-h">
+    <p class="eyebrow">Launch kit · 16 October 2026</p>
+    <h1 class="lockup" id="hub-h">
+      <img src="img/oc-logo-1200.webp" srcset="img/oc-logo-480.webp 480w, img/oc-logo-1200.webp 1200w" sizes="(max-width: 720px) 92vw, 680px"
+        width="1200" height="429" alt="OC" fetchpriority="high">
+      <span class="ultra">OC <em>Ultra</em></span>
+      <span class="tag">Top Speed</span>
+    </h1>
+    <p class="lede">How OC Ultra goes from a test build to a public Orange County launch in 90 days: $0 up front, a store that sells looks and never speed, and every step written down with who does it and how you know it worked.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://claude.ai/artifact/AsFiTsf6TFF4Hij25U3MR9" target="_blank" rel="noopener noreferrer">Play the test build <span class="arr" aria-hidden="true">↗</span></a>
+      <a class="btn" href="plan.html">Start with the plan <span class="arr" aria-hidden="true">→</span></a>
+      <p class="fine">The test build opens in a new tab. Its store runs in test mode: nothing is charged and no card leaves the browser.</p>
+    </div>
+    <p class="fine tm-note">In public posts, handles and the press kit the name is <b>OC Ultra</b> alone until the trademark search clears (plan step F2): "Top Speed" is already the name of another racing game. Inside the game, and on these private pages, it stays under the wordmark as designed.</p>
+  </section>
+</div>
+
+<div class="horizon" aria-hidden="true"><canvas id="road"></canvas></div>
+
+<div class="col">
+  <section class="sec try" id="try" aria-labelledby="try-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Try</small>3</span>
+      <h2 id="try-h">Try this first</h2>
+      <p class="kicker">Three minutes in the test build shows the whole store working end to end. Nothing is charged: test mode only takes Stripe's test cards.</p>
+    </div>
+    <div class="guide flat" data-guide data-name="Try this first">
+      <div class="guide-slot"></div>
+      <ol class="steps">
+        <li class="step" data-short="Open the store">
+          <span class="sign" aria-hidden="true"><small>Step</small>1</span>
+          <div class="step-body">
+            <h4>Open the store in the game</h4>
+            <p>Open the <a href="https://claude.ai/artifact/AsFiTsf6TFF4Hij25U3MR9" target="_blank" rel="noopener noreferrer">test build</a>. On the main menu, tap the <b>Store</b> card (marked Optional), or pause a drive and tap <b>Store</b>.</p>
+            <p class="proof"><b>You'll see</b> "Test mode · Nothing is charged" at the top, the free list, and the 11 items you can buy.</p>
+          </div>
+        </li>
+        <li class="step" data-short="Buy the Founder Pack">
+          <span class="sign" aria-hidden="true"><small>Step</small>2</span>
+          <div class="step-body">
+            <h4>Buy the Founder Pack with 4242</h4>
+            <p><b>Buy · $10</b>, then your birth month and year, then any email (test mode signs you straight in and sends nothing). Tick "I'm 18 or over, or a parent or guardian has said yes".</p>
+            <p>Card <span class="testcard">4242 4242 4242 4242</span>, any future date, any 3 digits, then <b>Pay $10.00 (test)</b>.</p>
+            <p class="proof"><b>You'll see</b> a receipt marked test mode, with an id like OCU-TEST-…, and the 12 items the pack grants.</p>
+          </div>
+        </li>
+        <li class="step" data-short="See the founder paint">
+          <span class="sign" aria-hidden="true"><small>Step</small>3</span>
+          <div class="step-body">
+            <h4>See the founder paint on your car</h4>
+            <p>Tap <b>Use Founders Sunset</b> on the receipt and drive. The car you drive wears the pearl orange: switch to the Chase camera to see it. Each car in the Garage keeps its own paint, and the Store's <b>Your items</b> lists everything you own.</p>
+            <p class="proof"><b>Try a decline too</b>: <span class="testcard">4000 0000 0000 0002</span> is always declined, and nothing is added.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="pages" aria-labelledby="pages-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Pages</small>4</span>
+      <h2 id="pages-h">The kit</h2>
+      <p class="kicker">Each page reads top to bottom like the drive it describes, and every guide is a numbered run of steps; with JavaScript on, Next, Back and Auto-play drive it one step at a time.</p>
+    </div>
+    <div class="doors">
+      <a class="door" href="plan.html">
+        <span class="lbl">Days 1 to 90</span>
+        <h3>The 90-day plan</h3>
+        <p>Four phases on one road, the 13 weeks with the owner's and Claude's tasks side by side, the metrics and their targets, the Day 90 decision gates, and a calculator for what the store could earn against what you might spend.</p>
+        <ul class="stat"><li><b>35</b>steps</li><li><b>13</b>weeks</li><li><b>4</b>gates</li></ul>
+        <span class="go">Open the plan →</span>
+      </a>
+      <a class="door" href="marketing.html">
+        <span class="lbl">Before launch, for $0</span>
+        <h3>Marketing</h3>
+        <p>The hook, the eight-week clip calendar, and step-by-step guides: shoot and post a clip, run the waitlist and invite codes, pitch the local press, and run the Founders crew with the FTC's disclosure rule.</p>
+        <ul class="stat"><li><b>3</b>clips a week</li><li><b>416</b>real exits</li><li><b>$0</b>budget</li></ul>
+        <span class="go">Open marketing →</span>
+      </a>
+      <a class="door" href="store.html">
+        <span class="lbl">Looks, never speed</span>
+        <h3>The store</h3>
+        <p>What stays free, the 11 launch items with their prices and what's left after Stripe's fee, what comes later and why it isn't sold yet, the rules, and a test-mode checkout you can try on the page.</p>
+        <ul class="stat"><li><b>11</b>items</li><li><b>$2–10</b>prices</li><li><b>0</b>loot boxes</li></ul>
+        <span class="go">Open the store →</span>
+      </a>
+      <a class="door" href="golive.html">
+        <span class="lbl">When you decide</span>
+        <h3>Go live</h3>
+        <p>Ten steps from a fresh Supabase project to live payments, with every command and setting ready to copy and a line telling you how to know each step worked. Stop after step nine until you decide.</p>
+        <ul class="stat"><li><b>10</b>steps</li><li><b>9</b>in test mode</li><li><b>$0</b>a month</li></ul>
+        <span class="go">Open the guide →</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="sec" id="shape" aria-labelledby="shape-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Day</small>0</span>
+      <h2 id="shape-h">The honest shape</h2>
+      <p class="kicker">A hobby-scale launch of a free browser game for Orange County. It should cost about nothing and earn about nothing. The point is players: people in OC driving their own exit, coming back, and telling us what broke.</p>
+    </div>
+    <div class="shape">
+      <div class="card"><p class="big">$0</p><p>required up front. Every paid item in the plan is optional and has a trigger: spend only when it happens.</p></div>
+      <div class="card"><p class="big">≈$0</p><p>earned. The store brings in $0 to about $850 in 90 days, most likely under $100. The plan's calculator shows the arithmetic.</p></div>
+      <div class="card"><p class="big">Day 46</p><p>the public OC launch: Thursday 3 December 2026, if Day 1 is Monday 19 October. Dates slide as a block if a gate fails.</p></div>
+      <div class="card"><p class="big">Gate 0</p><p>comes first: the game must reach the menu at 30 fps or better on three phones before any post sends people to it.</p></div>
+    </div>
+    <div class="callout warm sub">
+      <span class="lbl">Where things stand, 16 October 2026</span>
+      <p>The owner's first run on a real phone stopped at the loading screen. Until Gate 0 passes, posts link nowhere and ask nobody to play. The boot report and safe mode (plan step F5) are the first build job.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="rules" aria-labelledby="rules-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Rule</small>1</span>
+      <h2 id="rules-h">The store rule</h2>
+      <p class="kicker">The owner's decision of 16 October 2026, replacing the old "no real money anywhere". It is in the project's CLAUDE.md, so every session builds to it.</p>
+    </div>
+    <ul class="rules">
+      <li>Payments are built and stay in <b>test mode</b>. Nothing is charged until the owner connects Stripe and Supabase and turns live mode on.</li>
+      <li>Sell <b>cosmetics, expansions and support</b>: paint, wheels, driver styles, a tip. Each item shows exactly what you get before you pay.</li>
+      <li class="no">Never sell power: no car faster than one you can earn, and no grip, handling, score, XP or credit boosts.</li>
+      <li class="no">Never sell the credits you earn by driving. No loot boxes or mystery packs. No premium currency. No ads at launch.</li>
+      <li><b>Everything in the game today stays free</b>: every freeway, mode, car, driver, ability, the radio and the weather.</li>
+      <li>Purchases are <b>13+</b>, and nothing is sold or pre-sold before it exists in the game.</li>
+    </ul>
+    <div class="grid g2 who">
+      <div class="card"><span class="chip claude">Claude</span><p style="margin-top:10px">Builds: code, these pages, copy drafts, clips and run cards, triage of feedback, the weekly report. Never holds the owner's passwords or live keys.</p></div>
+      <div class="card"><span class="chip owner">Owner</span><p style="margin-top:10px">Holds the accounts and keys, posts, goes to meets, talks to players, and makes every decision. About 8 hours a week at first, 15 in launch week, 4 to 6 after.</p></div>
+    </div>
+  </section>
+</div>
+</main>
+<footer class="foot col"><p>OC Ultra launch kit, prepared 16 October 2026 from the project's plan, marketing, store and server documents. Prices, fees and rules were checked by web search that day; anything marked "verify at launch" moves. The store is in <b>test mode</b>: nothing is charged.</p><nav aria-label="All pages"><a href="index.html">Hub</a><a href="plan.html">90-day plan</a><a href="marketing.html">Marketing</a><a href="store.html">Store</a><a href="golive.html">Go live</a></nav></footer>
+</div>
+<script>
+/* OC Ultra launch kit: shared behaviour. The page reads in full without it; this only adds the guides' road, the
+   section reveal and the copy buttons. */
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var calm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* storage for conveniences only (a remembered value); every call survives a blocked or missing store */
+  window.OCU = {
+    calm: calm,
+    load: function (k, d) { try { var v = localStorage.getItem('ocu.deck.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    save: function (k, v) { try { if (v == null) localStorage.removeItem('ocu.deck.' + k); else localStorage.setItem('ocu.deck.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } },
+    money: function (n, exact) { var neg = n < 0; n = Math.abs(n); var s = (exact || Math.round(n * 100) % 100) ? n.toFixed(2) : String(Math.round(n)); s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (neg ? '−$' : '$') + s; }
+  };
+
+  /* ---------- sections light up as they come into view (decoration only: the content is never hidden) ---------- */
+  var secs = [].slice.call(document.querySelectorAll('.sec'));
+  if ('IntersectionObserver' in window && !calm) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
+    secs.forEach(function (s) { io.observe(s); });
+  } else {
+    secs.forEach(function (s) { s.classList.add('in'); });
+  }
+
+  /* ---------- copy buttons: the clipboard when allowed, otherwise the text is selected for the viewer to copy ---------- */
+  function selectText(el) {
+    try { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); return true; } catch (e) { return false; }
+  }
+  function say(btn, text) {
+    var was = btn.getAttribute('data-label') || btn.textContent;
+    btn.setAttribute('data-label', was);
+    btn.textContent = text;
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function () { btn.textContent = was; }, 2200);
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-copy]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    if (!el) return;
+    var text = (el.innerText || el.textContent || '').replace(/ /g, ' ').replace(/\s+$/, '') + (el.tagName === 'PRE' ? '\n' : '');
+    var fallback = function () { if (selectText(el)) say(btn, 'Selected: copy it'); else say(btn, 'Copy by hand'); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { say(btn, 'Copied'); }, fallback);
+      } else fallback();
+    } catch (err) { fallback(); }
+  }, true);
+
+  /* ---------- guides ---------- */
+  var CAR = '<svg viewBox="0 0 32 22" aria-hidden="true" focusable="false"><rect class="cb" x="1.5" y="3" width="28" height="16" rx="6"/>' +
+    '<rect class="cw" x="16.5" y="5.5" width="6.5" height="11" rx="2.2"/><rect class="cw" x="6" y="6" width="5" height="10" rx="2" opacity=".7"/>' +
+    '<rect class="cl" x="27.4" y="4.6" width="2.6" height="3.4" rx="1.2"/><rect class="cl" x="27.4" y="14" width="2.6" height="3.4" rx="1.2"/></svg>';
+
+  function titleOf(step) { var h = step.querySelector('h4, h3'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+  function initGuide(g, gi) {
+    var steps = [].slice.call(g.querySelectorAll('.step'));
+    var n = steps.length;
+    if (!n) return;
+    var name = g.getAttribute('data-name') || 'Guide';
+    var ctl = document.createElement('div');
+    ctl.className = 'guide-ctl';
+    ctl.setAttribute('role', 'group');
+    ctl.setAttribute('aria-label', name + ': step controls');
+
+    /* phases: groups of steps marked data-phase-name, shown as buttons above the road */
+    var groups = [].slice.call(g.querySelectorAll('[data-phase-name]'));
+    var phaseStart = [];
+    var html = '';
+    if (groups.length) {
+      html += '<div class="phases">';
+      groups.forEach(function (grp, k) {
+        var first = grp.querySelector('.step');
+        var idx = steps.indexOf(first);
+        phaseStart.push(idx);
+        html += '<button type="button" data-phase="' + k + '" style="flex-grow:' + grp.querySelectorAll('.step').length + '">' + grp.getAttribute('data-phase-name') + '</button>';
+      });
+      html += '</div>';
+    }
+    var ticks = '';
+    for (var i = 0; i < n; i++) {
+      var gap = phaseStart.indexOf(i) > 0 ? ' gap' : '';
+      ticks += '<i class="tick' + gap + '" style="left:' + (n > 1 ? (i / (n - 1) * 100) : 50).toFixed(3) + '%"></i>';
+    }
+    html += '<div class="road" aria-hidden="true"><div class="road-lane"></div><div class="road-lit"></div>' + ticks + '<div class="car">' + CAR + '</div></div>';
+    html += '<div class="ctl-row">' +
+      '<button type="button" class="btn small ghost" data-act="back"><span class="arr" aria-hidden="true">←</span> Back</button>' +
+      '<p class="count" aria-live="polite"></p>' +
+      '<button type="button" class="btn small" data-act="next">Next <span class="arr" aria-hidden="true">→</span></button>' +
+      '<button type="button" class="btn small ghost" data-act="auto" aria-pressed="false">Auto-play</button>' +
+      '</div>';
+    ctl.innerHTML = html;
+    var slot = g.querySelector('.guide-slot');
+    if (slot) slot.replaceWith(ctl); else g.insertBefore(ctl, g.firstChild);
+
+    var road = ctl.querySelector('.road');
+    var tickEls = [].slice.call(ctl.querySelectorAll('.tick'));
+    var count = ctl.querySelector('.count');
+    var back = ctl.querySelector('[data-act="back"]');
+    var next = ctl.querySelector('[data-act="next"]');
+    var auto = ctl.querySelector('[data-act="auto"]');
+    var phaseBtns = [].slice.call(ctl.querySelectorAll('[data-phase]'));
+    var cur = -1, timer = null, moveT = null, visible = false;
+
+    function inView(el) { var r = el.getBoundingClientRect(); var top = (parseFloat(getComputedStyle(root).getPropertyValue('--hdr')) || 56) + ctl.offsetHeight; return r.top >= top && r.bottom <= window.innerHeight; }
+    function follow(el) { if (!inView(el)) { try { el.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' }); } catch (e) { el.scrollIntoView(false); } } }
+
+    function go(k, how) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      cur = k;
+      steps.forEach(function (s, j) {
+        s.classList.toggle('is-active', j === k);
+        s.classList.toggle('is-done', j < k);
+        if (j === k) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+      });
+      tickEls.forEach(function (t, j) { t.classList.toggle('done', j < k); });
+      road.style.setProperty('--p', n > 1 ? (k / (n - 1)) : 0);
+      if (!calm) { road.classList.add('moving'); clearTimeout(moveT); moveT = setTimeout(function () { road.classList.remove('moving'); }, 760); }
+      var label = steps[k].getAttribute('data-short') || titleOf(steps[k]);
+      count.innerHTML = 'Step <b>' + (k + 1) + '</b> of ' + n + ' <span>· ' + label.replace(/</g, '&lt;') + '</span>';
+      back.disabled = k === 0;
+      next.disabled = k === n - 1;
+      if (phaseBtns.length) {
+        var ph = 0; phaseStart.forEach(function (s, p) { if (k >= s) ph = p; });
+        phaseBtns.forEach(function (b, p) { if (p === ph) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      }
+      if (how === 'user' || (how === 'auto' && visible)) follow(steps[k]);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } auto.setAttribute('aria-pressed', 'false'); auto.textContent = 'Auto-play'; }
+    function start() {
+      if (cur >= n - 1) go(0, 'user');
+      auto.setAttribute('aria-pressed', 'true'); auto.textContent = 'Pause';
+      timer = setInterval(function () {
+        if (document.hidden) return;
+        if (cur >= n - 1) { stop(); return; }
+        go(cur + 1, 'auto');
+        if (cur >= n - 1) stop();
+      }, 4200);
+    }
+    back.addEventListener('click', function () { stop(); go(cur - 1, 'user'); });
+    next.addEventListener('click', function () { stop(); go(cur + 1, 'user'); });
+    auto.addEventListener('click', function () { if (timer) stop(); else start(); });
+    phaseBtns.forEach(function (b, p) { b.addEventListener('click', function () { stop(); go(phaseStart[p], 'user'); }); });
+    ctl.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); stop(); go(cur + 1, 'user'); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); stop(); go(cur - 1, 'user'); }
+    });
+    steps.forEach(function (s, j) {
+      s.addEventListener('click', function (e) {
+        if (e.target.closest('a, button, input, select, textarea, label, summary, pre, code')) return;
+        var sel = window.getSelection && String(window.getSelection());
+        if (sel) return;
+        stop(); go(j, 'click');
+      });
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { visible = e.isIntersecting; if (!visible && timer) stop(); }); }, { threshold: 0 }).observe(g);
+    }
+    go(0, 'init');
+  }
+  [].slice.call(document.querySelectorAll('[data-guide]')).forEach(initGuide);
+})();
+
+</script>
+<script>
+/* the freeway at dusk: lanes running to the horizon, headlights coming, taillights going. One still frame when motion is reduced. */
+(function () {
+  var cv = document.getElementById('road');
+  if (!cv || !cv.getContext) return;
+  var cx = cv.getContext('2d');
+  var css = getComputedStyle(document.documentElement);
+  var col = function (n) { return css.getPropertyValue(n).trim() || '#fd9123'; };
+  var C = { night: col('--night'), sunset: col('--sunset'), ember: col('--ember'), amber: col('--amber'), stripe: col('--stripe'), chalk: col('--chalk') };
+  var W = 0, H = 0, dpr = 1, t0 = performance.now(), raf = 0, on = true;
+  var cars = [];
+  for (var i = 0; i < 18; i++) cars.push({ lane: i % 8, z: Math.random(), v: 0.05 + Math.random() * 0.05 });
+  function size() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function rgba(hex, a) { var h = hex.replace('#', ''); if (h.length === 3) h = h.split('').map(function (c) { return c + c; }).join(''); var n = parseInt(h, 16); return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
+  /* depth s in (0,1]: 1 is at the viewer, small s near the horizon. y = H*s, lateral x scales with s */
+  function px(lat, s) { return W / 2 + lat * s * Math.max(W, 700) * 0.62; }
+  function draw(time) {
+    var sec = (time - t0) / 1000;
+    cx.clearRect(0, 0, W, H);
+    var sky = cx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, rgba(C.sunset, 0.22)); sky.addColorStop(0.35, rgba(C.ember, 0.06)); sky.addColorStop(1, rgba(C.night, 0));
+    cx.fillStyle = sky; cx.fillRect(0, 0, W, H);
+    /* road surface: two carriageways of four lanes, a median between */
+    var edges = [-1.05, -0.05, 0.05, 1.05];
+    cx.fillStyle = rgba(C.stripe, 0.22);
+    [[-1.05, -0.05], [0.05, 1.05]].forEach(function (cw) {
+      cx.beginPath(); cx.moveTo(px(cw[0], 0.02), H * 0.02); cx.lineTo(px(cw[1], 0.02), H * 0.02); cx.lineTo(px(cw[1], 1.2), H * 1.2); cx.lineTo(px(cw[0], 1.2), H * 1.2); cx.closePath(); cx.fill();
+    });
+    cx.lineWidth = 1.2;
+    edges.forEach(function (e) { cx.strokeStyle = rgba(C.sunset, 0.55); cx.beginPath(); cx.moveTo(px(e, 0.02), H * 0.02); cx.lineTo(px(e, 1.2), H * 1.2); cx.stroke(); });
+    /* lane dashes, moving toward the viewer */
+    var shift = (sec * 0.9) % 1;
+    [-0.8, -0.55, -0.3, 0.3, 0.55, 0.8].forEach(function (lat) {
+      for (var k = 0; k < 14; k++) {
+        var z = 1 + k * 1.1 - shift * 1.1; if (z < 0.85) continue;
+        var s1 = 1 / z, s2 = 1 / (z + 0.45);
+        cx.strokeStyle = rgba(C.chalk, Math.min(0.5, 0.65 * s1));
+        cx.lineWidth = Math.max(0.6, 2.4 * s1);
+        cx.beginPath(); cx.moveTo(px(lat, s2), H * s2); cx.lineTo(px(lat, s1), H * s1); cx.stroke();
+      }
+    });
+    /* light trails: headlights on the left carriageway come toward you, taillights on the right go away */
+    var lanesL = [-0.93, -0.68, -0.43, -0.18], lanesR = [0.18, 0.43, 0.68, 0.93];
+    cars.forEach(function (c) {
+      var toward = c.lane < 4;
+      var lat = toward ? lanesL[c.lane] : lanesR[c.lane - 4];
+      var z = toward ? (1 - ((c.z + sec * c.v) % 1)) : ((c.z + sec * c.v * 0.7) % 1);
+      var depth = 1.0 + z * 14;
+      var s = 1 / depth, s2 = 1 / (depth + (toward ? 0.9 : 0.6));
+      var colr = toward ? C.amber : C.ember;
+      cx.strokeStyle = rgba(colr, Math.min(0.95, 0.35 + s));
+      cx.lineWidth = Math.max(1, 5 * s);
+      cx.lineCap = 'round';
+      [-0.035, 0.035].forEach(function (o) { cx.beginPath(); cx.moveTo(px(lat + o, s2), H * s2); cx.lineTo(px(lat + o, s), H * s); cx.stroke(); });
+    });
+    var fade = cx.createLinearGradient(0, H * 0.55, 0, H);
+    fade.addColorStop(0, rgba(C.night, 0)); fade.addColorStop(1, rgba(C.night, 0.92));
+    cx.fillStyle = fade; cx.fillRect(0, 0, W, H);
+  }
+  function loop(t) { draw(t); raf = on ? requestAnimationFrame(loop) : 0; }
+  size();
+  draw(t0 + 2600);
+  window.addEventListener('resize', function () { size(); draw(performance.now()); });
+  if (OCU.calm) return;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { es.forEach(function (e) { on = e.isIntersecting && !document.hidden; if (on && !raf) raf = requestAnimationFrame(loop); }); }).observe(cv);
+  } else raf = requestAnimationFrame(loop);
+  document.addEventListener('visibilitychange', function () { on = !document.hidden; if (on && !raf) raf = requestAnimationFrame(loop); });
+})();
+</script>

@@ -62,6 +62,33 @@ PROJECT_OC_HANDOFF.md at the end.
 - Specs: finger rig for the anatomical hands; expression system coupling cheeks, eyes and the nasolabial fold to
   the mouth; hair silhouette (updo reads as a cap from the front).
 - Fix the severity 4–5 findings of `PROJECT_OC_REVIEW_NOTES.md` once it exists.
+- Adversarial review of the store before live mode (security and business rules are Fable-class). Built 2026-10-16
+  on `claude/store` (`PROJECT_OC_PROGRESS.md`, the store entry):
+
+```
+Fable prompt. Project OC (top-speed-ultra), store review, branch claude/store. Read CLAUDE.md (the store rule),
+PROJECT_OC_MONETIZATION.md, server/README.md and the Store section of PROJECT_OC_TECHNICAL_NOTES.md. Code:
+src/store/*.ts, src/ui/Store.tsx, server/supabase/migrations/0001_oc_ultra_store.sql,
+server/supabase/functions/{create-checkout,stripe-webhook}/index.ts and _shared/*.ts. Rules: test mode until the
+owner turns live on; cosmetics, expansions and support only; no power, credits, loot boxes or premium currency;
+everything in the game today stays free; 13+ to buy; nothing sold before it exists in the game. Review
+adversarially: can a client change a price, buy an unavailable, expired or (live keys) unbuilt item, keep items
+after a refund or a cancelled club, read or write another player's rows, replay or forge a webhook, or get a live
+build to take a card in the page? Is the age question neutral, and are the club's terms and checkbox what
+California's automatic renewal law asks? Do any purchasable items change SPEC, grip, scoring, credits or XP? Check
+the API details server/README.md marks "verify at launch". Then look at the paint renders
+(tests/out/store-founders-sunset-chase.png and new seat/hood/chase renders per finish) and say whether the paint
+entitlements in cosmetics.json can move from "hook" to "ready". Proof: findings with file and line, fixes for
+severity 4-5, `npm run store:check`, `npm test -- --only=store,store-live`, and server/supabase/tests/run-local.sh
+all passing. Log in PROJECT_OC_PROGRESS.md.
+```
+
+- Review the store's payment and entitlement security (`server/supabase/*`, `src/store/*`) and the pricing in
+  `PROJECT_OC_MONETIZATION.md` before live mode. The prompt above covers the security. For the pricing, start from
+  the owner decisions in `PROJECT_OC_PROGRESS.md`'s launch-kit entry (2026-10-16): the Rossini GT Spider sold for
+  money and also earnable for credits, the Founders badge and roll against the testers' free "Founders" promise,
+  Founders Sunset against Newport Sunset, no upgrade price from a paint pack to the Founder Pack, the watch names,
+  and any hypercar SKU against the "never sell power" rule.
 
 - Review the store's payment and entitlement security and the pricing before live mode (being built now on
   `claude/store`: `server/supabase/*`, `src/store/*`, `PROJECT_OC_MONETIZATION.md`). Fable prompt:

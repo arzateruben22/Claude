@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "updated": "2026-10-16",
+  "about": "What each entitlement id in catalog.json unlocks in the game. Cosmetic only: nothing here changes speed, grip, power, weight, wheel size, scoring, credits or XP. Every name is our own (Rossini, Vela, Orange County city and freeway names); no real brand. See PROJECT_OC_MONETIZATION.md.",
+  "status_key": {
+    "ready": "Works through a code path that exists today; needs only the entitlement check and the picker UI.",
+    "hook": "Uses a parameter the renderer already has, but the player cannot choose it yet; needs a small override hook (an afternoon of Opus-class work). Test mode may sell it; live mode only once it is 'ready'.",
+    "build": "Needs new art or a new system before it can be sold. Its catalog item stays available: false until it is built and checked in renders, except the Founder and supporter badges, the Founder frame and the Founders roll, which are built with the store itself; live mode sells those only once they are built."
+  },
+  "free_baseline": {
+    "note": "Stays free for everyone and is never moved behind the store. Paid items must not duplicate anything here.",
+    "items": [
+      "Every freeway, every exit start, every mode (Free Drive, Speed Survival, Races, Time Trial) and every race course",
+      "The four cars, earned with credits by driving: rossini-gt (starter), rossini-brio, rossini-corsa, vela-e",
+      "Each car's factory paint, wheels and interior",
+      "The free Garage palette from the UI pass (PROJECT_OC_UI_TARGET.md, U5): six paints per car and two rim styles per car",
+      "The three drivers (The Closer, The Ace, The Wrench), both presentations, five skin tones, their default looks and watches",
+      "The three abilities (Clear Path, Focus Time, Locked In)",
+      "The radio, the weather and time of day, Ultra Realism, run cards, the local leaderboard, achievements",
+      "Visiting the on-foot hangout (Lot 57) whenever it ships"
+    ]
+  },
+  "paint_finishes": {
+    "note": "Material numbers for MeshPhysicalMaterial. The game's player-car paint today is paint() in src/preview/car-mats.ts, built by carMaterials in src/preview/car.ts: a metallic flake under clear coat (metalness 0.62, roughness 0.36, or 0.30 on the Vela E, clearcoat 1, clearcoatRoughness 0.03). Since the store pass (2026-10-16), PlayerCar.setPaint(hex, finish) takes these numbers (src/store/locker.ts reads them; gloss and satin drop the metallic flake, metallic and pearl keep it), and a colour with no finish still shows the factory finish. The status stays 'hook' until the seat, hood and chase renders of each finish are reviewed. The gloss numbers match the paint material in src/game/vehicle/Cockpit.ts, which the game no longer imports.",
+    "gloss":    { "metalness": 0.15, "roughness": 0.32, "clearcoat": 1, "clearcoatRoughness": 0.04, "status": "hook" },
+    "metallic": { "metalness": 0.6,  "roughness": 0.28, "clearcoat": 1, "clearcoatRoughness": 0.05, "status": "hook" },
+    "satin":    { "metalness": 0.1,  "roughness": 0.55, "clearcoat": 0.6, "clearcoatRoughness": 0.35, "status": "hook" },
+    "pearl":    { "metalness": 0.35, "roughness": 0.25, "clearcoat": 1, "clearcoatRoughness": 0.03, "status": "hook" }
+  },
+  "wheel_styles": {
+    "note": "The four styles that exist in src/preview/car-wheel.ts (type WheelStyle). All four are built at one size (WHEEL in car-wheel.ts) and PlayerCar scales them to each car's own axle (axle in car-shape.ts), so swapping a style keeps the car's wheel and tyre size: the look only (the physics reads cars.ts, not the wheel mesh). The rim hex is the 'rimPaint' material: the face on five and cl10; the barrel and sides on twin5, whose face is machined; the barrel and back on aero, whose turbine cover is its own 'aero' material, fixed at #2A2D33 in carMaterials (src/preview/car.ts), so an aero setup's rim hex needs the hook to colour the cover too. The caliper hex also colours cl10's centre-lock nut.",
+    "twin5": { "name": "Twin-five forged", "default_on": "rossini-gt",    "face": "machined" },
+    "five":  { "name": "Five-spoke",        "default_on": "rossini-brio",  "face": "painted" },
+    "cl10":  { "name": "Ten-spoke centre-lock", "default_on": "rossini-corsa", "face": "painted" },
+    "aero":  { "name": "Aero turbine cover", "default_on": "vela-e",       "face": "aero cover (own material)" }
+  },
+  "factory_wheels": {
+    "note": "From src/preview/car-shape.ts (SHAPES). Paid wheel setups never repeat a car's factory combination.",
+    "rossini-gt":    { "style": "twin5", "rim": "#2B2D31", "caliper": "#E0A800" },
+    "rossini-brio":  { "style": "five",  "rim": "#B8BBBF", "caliper": "#1A1A1C" },
+    "rossini-corsa": { "style": "cl10",  "rim": "#16171A", "caliper": "#C0161C" },
+    "vela-e":        { "style": "aero",  "rim": "#1E2024", "caliper": "#2D6FD8" }
+  },
+  "entitlements": [
+    { "id": "paint-laguna-tidepool",   "type": "paint", "name": "Laguna Tidepool",   "hex": "#1F6F78", "finish": "gloss",    "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish); a colour change alone (CarConfig.paint -> PlayerCar.setPaint(hex)) shows the factory metallic finish" },
+    { "id": "paint-crystal-cove-sand", "type": "paint", "name": "Crystal Cove Sand", "hex": "#C9B58F", "finish": "gloss",    "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish); a colour change alone (CarConfig.paint -> PlayerCar.setPaint(hex)) shows the factory metallic finish" },
+    { "id": "paint-dana-point-navy",   "type": "paint", "name": "Dana Point Navy",   "hex": "#1B2A4A", "finish": "metallic", "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish)" },
+    { "id": "paint-newport-sunset",    "type": "paint", "name": "Newport Sunset",    "hex": "#E2603A", "finish": "gloss",    "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish); a colour change alone (CarConfig.paint -> PlayerCar.setPaint(hex)) shows the factory metallic finish" },
+
+    { "id": "paint-405-midnight",         "type": "paint", "name": "405 Midnight",         "hex": "#0E1626", "finish": "metallic", "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish)" },
+    { "id": "paint-interchange-orange",   "type": "paint", "name": "Interchange Orange",   "hex": "#F26B1D", "finish": "gloss",    "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish); a colour change alone (CarConfig.paint -> PlayerCar.setPaint(hex)) shows the factory metallic finish" },
+    { "id": "paint-toll-road-graphite",   "type": "paint", "name": "Toll Road Graphite",   "hex": "#3A3D42", "finish": "satin",    "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish)" },
+    { "id": "paint-saddleback-dusk",      "type": "paint", "name": "Saddleback Dusk",      "hex": "#4B3A6B", "finish": "metallic", "cars": "all", "status": "hook",  "hook": "setPaint(hex, finish)" },
+
+    { "id": "paint-founders-sunset", "type": "paint", "name": "Founders Sunset", "hex": "#E8622C", "finish": "pearl", "cars": "all", "exclusive": "founder-pack-2026", "never_resold": true, "status": "hook", "hook": "setPaint(hex, finish)" },
+
+    { "id": "livery-twin-405-stripes",  "type": "livery", "name": "Twin 405 Stripes",  "pattern": "twin-centre-stripes", "stripe": { "name": "Freeway White", "hex": "#F2F2F0" }, "base": "the car's chosen paint", "cars": "all", "status": "build", "needs": "A livery mask layer in the player-car paint (UV-mapped stripe and two-tone regions per body in car-body.ts), at phone and high quality, checked in seat, hood and chase renders." },
+    { "id": "livery-coast-side-stripe", "type": "livery", "name": "Coast Side Stripe", "pattern": "shoulder-stripe",     "stripe": { "name": "Laguna Pearl",  "hex": "#E9E7E1" }, "base": "the car's chosen paint", "cars": "all", "status": "build", "needs": "The livery mask layer (as above)." },
+    { "id": "livery-two-tone-roof",     "type": "livery", "name": "Two-Tone Roof",     "pattern": "roof-and-mirror-caps", "stripe": { "name": "Fullerton Black", "hex": "#16171A" }, "base": "the car's chosen paint", "cars": "all", "status": "build", "needs": "The livery mask layer, plus the mirror caps taking the second colour (the mirror housings in src/preview/cockpit.ts use the paint material today)." },
+    { "id": "livery-door-roundel",      "type": "livery", "name": "Door Roundel",      "pattern": "door-number-roundel", "stripe": { "name": "Freeway White", "hex": "#F2F2F0" }, "number": "player picks 0 to 99", "base": "the car's chosen paint", "cars": "all", "status": "build", "needs": "The livery mask layer and a canvas-drawn number decal." },
+
+    { "id": "wheels-gt-irvine-silver-five",     "type": "wheels", "car": "rossini-gt", "name": "Irvine Silver five-spoke",        "style": "five",  "rim": { "name": "Irvine Silver",    "hex": "#C7CACE" }, "caliper": { "name": "Signal Red",    "hex": "#C0161C" }, "status": "hook", "hook": "CarOptions gains wheel and rim overrides; buildCar already takes caliper" },
+    { "id": "wheels-gt-fullerton-black-cl10",   "type": "wheels", "car": "rossini-gt", "name": "Fullerton Black centre-lock",     "style": "cl10",  "rim": { "name": "Fullerton Black",  "hex": "#16171A" }, "caliper": { "name": "Sunset Orange", "hex": "#E8622C" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-gt-tustin-graphite-aero",   "type": "wheels", "car": "rossini-gt", "name": "Tustin Graphite aero",            "style": "aero",  "rim": { "name": "Tustin Graphite",  "hex": "#3A3D42" }, "caliper": { "name": "Coast Blue",    "hex": "#2D6FD8" }, "status": "hook", "hook": "as above" },
+
+    { "id": "wheels-brio-santa-ana-bronze-twin5", "type": "wheels", "car": "rossini-brio", "name": "Santa Ana Bronze twin-five",  "style": "twin5", "rim": { "name": "Santa Ana Bronze", "hex": "#8C6A3F" }, "caliper": { "name": "Amber",         "hex": "#E0A800" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-brio-fullerton-black-cl10",   "type": "wheels", "car": "rossini-brio", "name": "Fullerton Black centre-lock", "style": "cl10",  "rim": { "name": "Fullerton Black",  "hex": "#16171A" }, "caliper": { "name": "Signal Red",    "hex": "#C0161C" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-brio-laguna-pearl-aero",      "type": "wheels", "car": "rossini-brio", "name": "Laguna Pearl aero",           "style": "aero",  "rim": { "name": "Laguna Pearl",     "hex": "#E9E7E1" }, "caliper": { "name": "Coast Blue",    "hex": "#2D6FD8" }, "status": "hook", "hook": "as above" },
+
+    { "id": "wheels-corsa-santa-ana-bronze-twin5", "type": "wheels", "car": "rossini-corsa", "name": "Santa Ana Bronze twin-five", "style": "twin5", "rim": { "name": "Santa Ana Bronze", "hex": "#8C6A3F" }, "caliper": { "name": "Gloss Black",   "hex": "#1A1A1C" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-corsa-laguna-pearl-five",      "type": "wheels", "car": "rossini-corsa", "name": "Laguna Pearl five-spoke",    "style": "five",  "rim": { "name": "Laguna Pearl",     "hex": "#E9E7E1" }, "caliper": { "name": "Sunset Orange", "hex": "#E8622C" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-corsa-anaheim-gunmetal-aero",  "type": "wheels", "car": "rossini-corsa", "name": "Anaheim Gunmetal aero",      "style": "aero",  "rim": { "name": "Anaheim Gunmetal", "hex": "#2B2D31" }, "caliper": { "name": "Amber",         "hex": "#E0A800" }, "status": "hook", "hook": "as above" },
+
+    { "id": "wheels-vela-irvine-silver-twin5",     "type": "wheels", "car": "vela-e", "name": "Irvine Silver twin-five",     "style": "twin5", "rim": { "name": "Irvine Silver",    "hex": "#C7CACE" }, "caliper": { "name": "Coast Blue",    "hex": "#2D6FD8" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-vela-fullerton-black-five",    "type": "wheels", "car": "vela-e", "name": "Fullerton Black five-spoke",  "style": "five",  "rim": { "name": "Fullerton Black",  "hex": "#16171A" }, "caliper": { "name": "Sunset Orange", "hex": "#E8622C" }, "status": "hook", "hook": "as above" },
+    { "id": "wheels-vela-laguna-pearl-cl10",       "type": "wheels", "car": "vela-e", "name": "Laguna Pearl centre-lock",    "style": "cl10",  "rim": { "name": "Laguna Pearl",     "hex": "#E9E7E1" }, "caliper": { "name": "Gloss Black",   "hex": "#1A1A1C" }, "status": "hook", "hook": "as above" },
+
+    { "id": "style-night-shift", "type": "style", "name": "Night Shift",
+      "gloves": { "name": "Black perforated gloves", "hex": "#141416" },
+      "watch":  { "model": "Rossini Notte", "kind": "steel", "dial": { "name": "Midnight blue", "hex": "#1A2A4A" } },
+      "sleeve": { "name": "Charcoal bomber", "hex": "#2A2C30", "end": "knit" },
+      "nails":  { "name": "Plum", "hex": "#4A1530", "applies": "female presentation" },
+      "drivers": "any", "status": "hook", "hook": "DriverLook overrides in lookFor (sleeve colour, glove colour and watch kind are DriverLook fields; nails is CarConfig.nails; a knit or cuff sleeve end follows from gloves on or off in hands-acc.ts). The dial colour needs a parameter in dialTexture (hands-acc.ts), and gloves are a colour only: perforated or suede leather needs a glove texture parameter" },
+    { "id": "style-golden-hour", "type": "style", "name": "Golden Hour",
+      "gloves": null,
+      "watch":  { "model": "Rossini Ora", "kind": "gold", "dial": { "name": "Champagne sunburst", "hex": "#D9C49A" } },
+      "sleeve": { "name": "Cream linen jacket", "hex": "#E9E1CF", "end": "cuff" },
+      "nails":  { "name": "Sunset coral", "hex": "#E0603F", "applies": "female presentation" },
+      "drivers": "any", "status": "hook", "hook": "as above" },
+    { "id": "style-canyon-run", "type": "style", "name": "Canyon Run",
+      "gloves": { "name": "Canyon suede gloves", "hex": "#8A6E4B" },
+      "watch":  { "model": "Vela Pulse", "kind": "smart", "dial": { "name": "Sunset face", "hex": "#E8622C" } },
+      "sleeve": { "name": "Olive field jacket", "hex": "#4F5A3A", "end": "knit" },
+      "nails":  { "name": "Sandstone", "hex": "#C9A27E", "applies": "female presentation" },
+      "drivers": "any", "status": "hook", "hook": "as above" },
+
+    { "id": "badge-founder-26", "type": "badge", "name": "Founder '26", "shows_on": ["profile", "run-card", "results"], "exclusive": "founder-pack-2026", "never_resold": true, "status": "build", "needs": "A badge slot on the profile card and the run card (src/ui/runCard.ts), drawn in code in the sunset theme. The run card's badge was drawn by the store pass (2026-10-16); the profile card and the results screen still need it." },
+    { "id": "frame-founder-runcard", "type": "frame", "name": "Founders run-card frame", "shows_on": ["run-card"], "exclusive": "founder-pack-2026", "never_resold": true, "status": "build", "needs": "An optional frame layer in src/ui/runCard.ts using the UI pass's --sunset-edge gradient (a UID theme token; not in this worktree at the 2026-10-16 check). The store pass (2026-10-16) drew the frame with its own sunset gradient (#FFB347 to #E8622C to #8E2C6B); move it to the UI token when that lands. Status stays 'build' until its render is reviewed." },
+    { "id": "roll-founders", "type": "credits-roll", "name": "Name on the Founders roll", "shows_on": ["credits"], "exclusive": "founder-pack-2026", "opt_in": true, "moderated": true, "status": "build", "needs": "Opt-in at checkout; the owner approves each display name before it is added; the roll is baked into the next build (no live list)." },
+    { "id": "badge-supporter", "type": "badge", "name": "Fuelled the build", "shows_on": ["profile"], "status": "build", "needs": "The same badge slot as the Founder badge. One badge whatever the amount: no tip tiers." },
+
+    { "id": "badge-club", "type": "badge", "name": "Club member", "shows_on": ["profile", "run-card"], "while": "subscribed", "status": "build", "needs": "Badge slot; hidden when the subscription ends." },
+    { "id": "club-monthly-paint", "type": "paint-series", "name": "Club paint of the month", "rule": "One new paint each month while subscribed; every paint received is kept after cancelling.", "status": "build", "needs": "A monthly content cadence decided before the club opens." },
+    { "id": "access-early-builds", "type": "access", "name": "Early test builds", "rule": "A private link to the next test build (a new freeway, a new county) about a week before it is public. Nothing in it affects the public game's scores.", "while": "subscribed", "status": "build", "needs": "A private deploy behind the club sign-in. Not a second GitHub Pages site: Pages sites on a free plan are public (access control needs GitHub Enterprise Cloud), so serve it from something that checks the sign-in, such as Supabase Storage with signed links." },
+
+    { "id": "kit-gt-coast-aero",    "type": "body-kit", "car": "rossini-gt",    "name": "Coast Aero kit",    "parts": ["front splitter", "side skirts", "ducktail"], "handling": "unchanged: looks only, the car's CdA and ClA stay the same", "status": "build", "needs": "Kit parts lofted on each body in car-body.ts, checked from seat, hood and chase cameras." },
+    { "id": "kit-brio-street-kit",  "type": "body-kit", "car": "rossini-brio",  "name": "Street kit",        "parts": ["lip", "skirts", "roof spoiler"], "handling": "unchanged: looks only", "status": "build", "needs": "As above." },
+    { "id": "kit-corsa-track-kit",  "type": "body-kit", "car": "rossini-corsa", "name": "Track kit",         "parts": ["canards", "deeper splitter", "swan-neck wing"], "handling": "unchanged: looks only (the Corsa's downforce is already in its numbers)", "status": "build", "needs": "As above." },
+    { "id": "kit-vela-aero-kit",    "type": "body-kit", "car": "vela-e",        "name": "Aero kit",          "parts": ["aero blades", "diffuser fins", "light bar"], "handling": "unchanged: looks only", "status": "build", "needs": "As above." },
+
+    { "id": "car-rossini-gt-spider", "type": "car", "name": "Rossini GT Spider", "twin_of": "rossini-gt", "stats": "identical to rossini-gt (src/game/cars.ts): same mass, power, torque, gearing, drag, downforce and grip", "earnable": "yes: in the showroom for credits, same as any car", "resale": "a Spider bought with money cannot be sold in the garage for credits (profile.sell pays 60% of the credit price today, which would turn dollars into credits); one bought with credits sells as normal", "status": "build", "needs": "An open-top body variant of the GT in car-body.ts and car-shape.ts, plus its cockpit without the roof." },
+
+    { "id": "outfit-lot57-weekend",   "type": "outfit", "name": "Lot 57 Weekend",   "garments": [{ "kind": "jacket", "fabric": "denim" }, { "kind": "tee", "fabric": "cotton" }, { "kind": "jeans", "fabric": "denim" }, { "kind": "sneakers", "fabric": "leather" }], "for": "the player's avatar on foot", "status": "build", "needs": "The on-foot hangout shipped in the game first. Garment kinds exist in src/onfoot/people/params.ts; the player avatar does not." },
+    { "id": "outfit-lot57-night-out", "type": "outfit", "name": "Lot 57 Night Out", "garments": [{ "kind": "leather", "fabric": "leather" }, { "kind": "shirt", "fabric": "cotton" }, { "kind": "trousers", "fabric": "wool" }, { "kind": "boots", "fabric": "leather" }], "for": "the player's avatar on foot", "status": "build", "needs": "As above." }
+  ]
+}

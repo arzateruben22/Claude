@@ -1,0 +1,1152 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OC Ultra Store</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="What OC Ultra sells and for how much: what stays free, the 11 launch items with prices and net after Stripe's fee, what comes later, the rules, and a test-mode checkout to try.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night drive west into the sunset. Each page is one stretch of freeway: a sunset horizon up top, then
+   sections posted like exit signs, and every guide is a lane with a car that drives from step to step. */
+:root {
+  color-scheme: dark;
+  --night: #0b0812;      /* page ground: the violet-black the game's UI is cut from */
+  --asphalt: #16101d;    /* raised surfaces */
+  --tar: #211829;        /* inputs, code, signs */
+  --stripe: #3b2d45;     /* hairlines and lane lines */
+  --fog: #bcaebb;        /* secondary text (8:1 on night) */
+  --chalk: #f7efe6;      /* text */
+  --sunset: #fd9123;     /* the wordmark's sky orange (8.75:1 on night) */
+  --ember: #ee1e0a;      /* the wordmark's red edge: fills and strokes only */
+  --amber: #febc31;      /* the sun highlight (11.8:1 on night) */
+  --ember-text: #ff8a6e; /* ember lifted for small text */
+  --dusk: #a9c4ff;       /* "Claude" chips: the blue after sunset */
+  --go: #7ee0a8;         /* success: test receipts, done */
+  --glow: linear-gradient(90deg, var(--ember), var(--sunset) 55%, var(--amber));
+  --f-display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --hdr: 57px;
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ---------- base (mirrors the artifact skeleton, so pages served without it look the same) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--night); scroll-padding-top: calc(var(--hdr) + 16px); }
+body { margin: 0; background: var(--night); color: var(--chalk); font: 400 1.0625rem/1.58 var(--f-body);
+  -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--night); }
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--amber); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--chalk); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--sunset); color: var(--night); }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 1.25em; }
+li { margin-bottom: 6px; }
+li::marker { color: var(--sunset); }
+b, strong { font-weight: 600; color: var(--chalk); }
+code, kbd { font: 400 .88em/1.4 var(--f-mono); background: var(--tar); border: 1px solid var(--stripe); border-radius: 5px; padding: 1px 5px; color: var(--chalk); overflow-wrap: anywhere; }
+
+/* ---------- page frame ---------- */
+.page { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; overflow-x: clip; min-height: 100%; }
+.col { max-width: 1120px; margin-inline: auto; }
+.read { max-width: 44rem; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  margin-left: calc(-1 * var(--gl)); margin-right: calc(-1 * var(--gr)); padding-left: var(--gl); padding-right: var(--gr);
+  background: color-mix(in srgb, var(--night) 90%, transparent); border-bottom: 1px solid var(--stripe);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.bar { max-width: 1120px; margin-inline: auto; height: 56px; display: flex; align-items: center; gap: 14px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; color: var(--chalk); text-decoration: none; flex: none; padding: 6px 0; }
+.brand img { height: 26px; width: auto; }
+.brand b { font: italic 800 1.3rem/1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; margin-left: auto; min-width: 0; }
+.nav a { font: 700 .98rem/1 var(--f-display); letter-spacing: .07em; text-transform: uppercase; color: var(--fog);
+  text-decoration: none; padding: 10px 10px; border-radius: 8px; white-space: nowrap; }
+.nav a:hover { color: var(--chalk); background: var(--tar); }
+.nav a[aria-current="page"] { color: var(--night); background: var(--sunset); }
+
+.foot { border-top: 1px solid var(--stripe); margin-top: 24px; padding-top: 22px; color: var(--fog); font-size: .92rem;
+  display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+.foot p { margin: 0; max-width: 44rem; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; padding-block: clamp(34px, 6vw, 76px) clamp(30px, 5vw, 56px); isolation: isolate; }
+.hero::before { content: ""; position: absolute; z-index: -1; right: -10%; top: -40px; width: min(720px, 90vw); height: 420px;
+  background: radial-gradient(closest-side, rgba(253,145,35,.22), rgba(238,30,10,.08) 60%, transparent); pointer-events: none; }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--glow); opacity: .85; }
+.eyebrow { font: 600 .78rem/1.3 var(--f-body); letter-spacing: .16em; text-transform: uppercase; color: var(--sunset); margin: 0 0 14px; }
+h1 { font: italic 800 clamp(2.7rem, 8.4vw, 5.6rem)/.9 var(--f-display); text-transform: uppercase; letter-spacing: .005em;
+  margin: 0; text-wrap: balance; }
+h1 .hl { color: var(--sunset); }
+.lede { font-size: clamp(1.12rem, 2.2vw, 1.32rem); line-height: 1.5; max-width: 42rem; margin: 18px 0 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; padding: 0; list-style: none; }
+.facts li { margin: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border: 1px solid var(--stripe);
+  border-radius: 12px; background: var(--asphalt); min-width: 0; }
+.facts b { font: 800 1.45rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.facts span { font-size: .84rem; color: var(--fog); }
+
+/* ---------- sections, posted like exits ---------- */
+.sec { position: relative; padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--stripe); }
+.sec::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: min(240px, 45%); background: var(--glow);
+  transform-origin: left center; }
+.js .sec::before { transition: transform 1.1s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in)::before { transform: scaleX(0); }
+.sec-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: start; margin-bottom: 26px; max-width: 56rem; }
+.sec-head .sign { grid-row: span 2; margin-top: 2px; }
+h2 { font: 700 clamp(1.95rem, 4.6vw, 3.1rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.kicker { color: var(--fog); margin: 6px 0 0; max-width: 46rem; font-size: 1.05rem; }
+.js .sec-head > :not(.sign) { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in) .sec-head > :not(.sign) { transform: translateY(10px); }
+h3 { font: 700 1.45rem/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 10px; text-wrap: balance; }
+h4 { font: 700 1.22rem/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 6px; text-wrap: balance; }
+.sub { margin-top: 34px; }
+
+/* the exit sign: a number or a day, posted on every section and step */
+.sign { display: inline-grid; place-items: center; align-content: center; min-width: 54px; min-height: 50px; padding: 6px 10px 7px;
+  border-radius: 9px; background: var(--tar); border: 1.5px solid var(--sunset); color: var(--chalk);
+  font: 800 1.4rem/1 var(--f-display); text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sign small { display: block; font: 600 .6rem/1 var(--f-body); letter-spacing: .15em; text-transform: uppercase; color: var(--sunset); margin-bottom: 4px; }
+.sec.in > .col > .sec-head .sign, .sec.in > .sec-head .sign { animation: sign-on .9s ease both; }
+@keyframes sign-on { 0% { box-shadow: 0 0 0 0 rgba(253,145,35,0); } 45% { box-shadow: 0 0 30px 3px rgba(253,145,35,.5); } 100% { box-shadow: 0 0 12px 0 rgba(253,145,35,.16); } }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; padding: 20px; min-width: 0; }
+.card > :last-child { margin-bottom: 0; }
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 980px) { .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .g2, .g3, .g4 { grid-template-columns: minmax(0, 1fr); } }
+.callout { background: color-mix(in srgb, var(--sunset) 8%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--sunset) 38%, transparent);
+  border-radius: 12px; padding: 16px 18px; max-width: 56rem; }
+.callout.warm { background: color-mix(in srgb, var(--ember) 9%, var(--asphalt)); border-color: color-mix(in srgb, var(--ember) 45%, transparent); }
+.callout > .lbl:first-child { display: block; margin-bottom: 6px; }
+.callout > :last-child { margin-bottom: 0; }
+.lbl { font: 600 .74rem/1.3 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--sunset); }
+.muted { color: var(--fog); }
+.small { font-size: .9rem; }
+.fine { font-size: .86rem; color: var(--fog); }
+.num { font-variant-numeric: tabular-nums; }
+.big { font: 800 clamp(2rem, 5vw, 3rem)/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.stack > * + * { margin-top: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* chips: who does it, what it costs, how ready it is */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+.chips li { margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 .74rem/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 9px; border-radius: 999px; border: 1px solid var(--stripe); color: var(--fog); background: var(--night); white-space: nowrap; }
+.chip.owner { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.chip.claude { color: var(--dusk); border-color: color-mix(in srgb, var(--dusk) 45%, transparent); }
+.chip.both { color: var(--chalk); border-color: var(--fog); }
+.chip.cost { color: var(--go); border-color: color-mix(in srgb, var(--go) 40%, transparent); }
+.chip.hot { color: var(--night); background: var(--sunset); border-color: transparent; }
+.chip.warn { color: var(--ember-text); border-color: color-mix(in srgb, var(--ember) 55%, transparent); }
+
+/* tables: a box with a border; on a phone, no number is ever off to the side (see the 600px rules below) */
+.scroll-x { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--stripe); border-radius: 12px; background: var(--asphalt); }
+.tbl { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.tbl th { text-align: left; font: 600 .72rem/1.25 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--fog);
+  padding: 12px 14px; border-bottom: 1px solid var(--stripe); background: var(--tar); vertical-align: bottom; }
+.tbl td { padding: 12px 14px; border-bottom: 1px solid var(--stripe); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tfoot td { font-weight: 600; background: var(--tar); }
+/* the phone version of a table read down its columns: one card per column (build.py writes it from the table, so the numbers are typed once) */
+.flip-cards { display: none; gap: 12px; }
+.flip-cap { margin: 0; color: var(--fog); font-size: .92rem; }
+.flip-card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 12px; padding: 14px 16px 10px; min-width: 0; }
+.flip-card h4 { margin: 0 0 6px; font: italic 800 1.5rem/1 var(--f-display); color: var(--amber); }
+.flip-card dl { margin: 0; }
+.flip-card dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 6px 0;
+  border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+.flip-card dl > div:first-child { border-top: 0; }
+.flip-card dt { color: var(--fog); font-size: .92rem; min-width: 0; }
+.flip-card dt b { color: var(--chalk); }
+.flip-card dd { margin: 0; flex: none; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.flip-card dl > div.tot { margin-inline: -16px; padding-inline: 16px; background: var(--tar); border-top-color: var(--stripe); }
+.flip-card dl > div.tot dt { color: var(--chalk); font-weight: 600; }
+.flip-card dl > div.tot dd { color: var(--chalk); }
+.flip-card dl > div:not(.tot) + .tot { border-top: 2px solid var(--sunset); }
+
+@media (max-width: 600px) {
+  .tbl th, .tbl td { padding: 10px 11px; }
+  /* tables of four or more columns: each row becomes a card, and each value carries its column's name */
+  .tbl.cardrows, .tbl.cardrows tbody, .tbl.cardrows tfoot, .tbl.cardrows tr { display: block; }
+  .tbl.cardrows thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tbl.cardrows tr { padding: 12px 14px 8px; border-bottom: 1px solid var(--stripe); }
+  .tbl.cardrows tbody tr:last-child { border-bottom: 0; }
+  .tbl.cardrows td { display: flow-root; padding: 5px 0; border: 0; text-align: right; white-space: normal; font-variant-numeric: tabular-nums; }
+  .tbl.cardrows td + td { border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+  .tbl.cardrows td::before { content: attr(data-label); content: attr(data-label) / ""; float: left; margin-right: 14px; text-align: left;
+    font: 600 .72rem/1.9 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--fog); }
+  .tbl.cardrows td:first-child { text-align: left; font-weight: 600; padding: 0 0 6px; }
+  .tbl.cardrows td:first-child::before { float: none; display: block; line-height: 1.5; margin: 0 0 2px; }
+  /* a table read down its columns (the store's Low / Middle / High) turns: one card per column */
+  .flipbox > .scroll-x { display: none; }
+  .flipbox > .flip-cards { display: grid; }
+}
+/* the narrowest phones (320px): a long word or an email may break so a three-column table still fits */
+@media (max-width: 380px) { .tbl td { overflow-wrap: anywhere; } }
+
+/* ---------- controls ---------- */
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px;
+  border-radius: 10px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk); font: 700 1.02rem/1 var(--f-display);
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: border-color .2s, color .2s, background-color .2s; }
+.btn:hover { border-color: var(--sunset); color: var(--chalk); }
+.btn.primary { background: linear-gradient(90deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.btn.primary:hover { color: var(--night); filter: brightness(1.06); }
+.btn.ghost { background: transparent; }
+.btn.small { min-height: 36px; padding: 7px 11px; font-size: .9rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.btn .arr { font-family: var(--f-body); font-weight: 600; }
+
+input[type="text"], input[type="email"], input[type="number"], input:not([type]), select, textarea {
+  font: 500 1rem/1.3 var(--f-body); color: var(--chalk); background: var(--tar); border: 1px solid var(--stripe); border-radius: 10px;
+  padding: 11px 12px; width: 100%; min-height: 44px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; border-color: transparent; }
+input::placeholder { color: color-mix(in srgb, var(--fog) 70%, transparent); }
+input[type="range"] { width: 100%; accent-color: var(--sunset); min-height: 28px; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--sunset); flex: none; margin: 2px 0 0; }
+label { cursor: pointer; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field > .lbl2 { font: 600 .8rem/1.2 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--fog); }
+.check { display: flex; gap: 10px; align-items: flex-start; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { min-height: 38px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk);
+  font: 600 .95rem/1 var(--f-body); cursor: pointer; font-variant-numeric: tabular-nums; }
+.seg button[aria-pressed="true"] { background: var(--sunset); color: var(--night); border-color: transparent; }
+
+/* code you can copy */
+.code { background: var(--tar); border: 1px solid var(--stripe); border-radius: 12px; min-width: 0; margin: 10px 0 12px; }
+.code-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 6px 6px 14px; border-bottom: 1px solid var(--stripe); }
+.code-head span { font: 500 .78rem/1.3 var(--f-mono); color: var(--fog); min-width: 0; overflow-wrap: anywhere; }
+.code pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 .86rem/1.6 var(--f-mono); color: var(--chalk); white-space: pre; tab-size: 2; }
+.code pre.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.code pre.tall { max-height: 360px; overflow: auto; }
+.code .fill { color: var(--amber); }
+.copy-msg { font-size: .82rem; color: var(--go); margin-left: 4px; }
+
+/* ---------- the guide: a lane with a car that drives from step to step ---------- */
+.guide { position: relative; margin-top: 6px; }
+.guide-ctl { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hdr)); z-index: 6; background: var(--night);
+  box-shadow: 0 0 0 100vmax var(--night); clip-path: inset(0 -100vmax); padding: 10px 0 12px; margin-bottom: 14px; border-bottom: 1px solid var(--stripe); }
+.road { position: relative; height: 30px; margin: 2px 16px 8px; --p: 0; }
+.road::before { content: ""; position: absolute; left: -16px; right: -16px; top: 9px; height: 12px; border-radius: 6px; background: var(--tar);
+  box-shadow: inset 0 0 0 1px var(--stripe); }
+.road-lane { position: absolute; left: -10px; right: -10px; top: 14px; height: 2px; background: repeating-linear-gradient(90deg, var(--stripe) 0 10px, transparent 10px 20px); }
+.road.moving .road-lane { animation: lane .35s linear infinite; }
+@keyframes lane { to { background-position: -20px 0; } }
+.road-lit { position: absolute; left: -16px; top: 9px; height: 12px; border-radius: 6px; width: calc(var(--p) * 100% + 16px);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ember) 70%, transparent), var(--sunset) 75%, var(--amber)); opacity: .9;
+  transition: width .75s cubic-bezier(.3,.8,.2,1); }
+.tick { position: absolute; top: 7px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: var(--stripe); }
+.tick.done { background: var(--night); opacity: .55; }
+.tick.gap { height: 22px; top: 4px; width: 3px; background: var(--fog); opacity: .8; }
+.car { position: absolute; top: 4px; left: calc(var(--p) * 100%); width: 32px; height: 22px; margin-left: -18px; transition: left .75s cubic-bezier(.3,.8,.2,1);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+.car::after { content: ""; position: absolute; left: 28px; top: 1px; width: 46px; height: 20px; border-radius: 50%;
+  background: radial-gradient(ellipse at left center, rgba(254,188,49,.55), transparent 70%); pointer-events: none; }
+.car svg { width: 32px; height: 22px; display: block; }
+.car .cb { fill: var(--sunset); stroke: var(--ember); stroke-width: 1.2; }
+.car .cw { fill: var(--night); }
+.car .cl { fill: var(--amber); }
+.phases { display: flex; gap: 4px; margin: 0 0 8px; }
+.phases button { flex: 1 1 0; min-width: 0; min-height: 34px; padding: 6px 6px; border: 1px solid var(--stripe); border-radius: 8px; background: var(--asphalt);
+  color: var(--fog); font: 700 .86rem/1.05 var(--f-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phases button[aria-current="step"] { color: var(--night); background: var(--sunset); border-color: transparent; }
+.ctl-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.count { margin: 0; font-size: .95rem; color: var(--fog); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count b { color: var(--chalk); font-variant-numeric: tabular-nums; }
+.count span { color: var(--chalk); }
+@media (max-width: 560px) {
+  .ctl-row { grid-template-columns: auto auto minmax(0, 1fr); }
+  .ctl-row .count { grid-column: 1 / -1; grid-row: 1; white-space: normal; }
+  .ctl-row [data-act="auto"] { justify-self: end; }
+}
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.steps.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 861px) { .steps.two > .step:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+@media (max-width: 860px) { .steps.two { grid-template-columns: minmax(0, 1fr); } }
+.step { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px; margin: 0;
+  background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; overflow: hidden; min-width: 0;
+  scroll-margin-top: calc(var(--hdr) + 140px); scroll-margin-bottom: 24px; transition: border-color .3s, box-shadow .3s; }
+.step > .sign { min-width: 50px; font-size: 1.25rem; align-self: start; }
+.step-body { min-width: 0; }
+.step-body > :last-child { margin-bottom: 0; }
+.step p { margin-bottom: 8px; }
+.step .proof { font-size: .93rem; color: var(--fog); }
+.step .proof b, .step .if b { color: var(--go); font-weight: 600; }
+.step .if { font-size: .93rem; color: var(--fog); }
+.step .if b { color: var(--ember-text); }
+.js .step { cursor: pointer; }
+.step.is-active { border-color: var(--sunset); box-shadow: 0 0 0 1px var(--sunset), 0 18px 50px -26px rgba(253,145,35,.65); }
+.step.is-active .sign { background: linear-gradient(135deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.step.is-active .sign small { color: var(--night); }
+.step.is-active::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(254,188,49,.14) 46%, transparent 62%); transform: translateX(-100%); animation: sweep 1.15s ease-out forwards; }
+@keyframes sweep { to { transform: translateX(100%); } }
+.step.is-done .sign { border-color: var(--amber); }
+.step.is-done .sign::after { content: "done"; display: block; font: 600 .55rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--go); margin-top: 3px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin: 26px 0 12px; }
+.group-head:first-child { margin-top: 0; }
+.group-head h3 { margin: 0; }
+.group-head p { margin: 0; color: var(--fog); }
+
+@media (max-width: 560px) {
+  :root { --hdr: 53px; }
+  .bar { height: 52px; gap: 8px; }
+  .brand b { display: none; }
+  .brand img { height: 22px; }
+  .nav a { font-size: .88rem; padding: 9px 7px; letter-spacing: .05em; }
+  .card { padding: 16px; }
+  .step { padding: 14px; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+  .step > .sign { justify-self: start; display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; min-height: 0; padding: 5px 10px; font-size: 1.05rem; }
+  .step > .sign small { margin: 0; }
+  .step.is-done .sign::after { margin: 0; }
+  .sec-head { gap: 10px 12px; align-items: center; }
+  .sec-head .sign { grid-row: auto; margin-top: 0; min-width: 46px; min-height: 46px; font-size: 1.15rem; }
+  .sec-head .kicker { grid-column: 1 / -1; margin-top: 0; }
+  .phases button { flex-grow: 1 !important; font-size: .8rem; letter-spacing: .03em; padding-inline: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .step.is-active::after { display: none; }
+  .js .sec:not(.in)::before { transform: none; }
+  .js .sec:not(.in) .sec-head > :not(.sign) { transform: none; }
+}
+
+/* ---------- this page ---------- */
+.testmode { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border-radius: 8px; border: 1px solid var(--amber); color: var(--amber);
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--amber) 16%, transparent) 0 8px, transparent 8px 16px), var(--tar);
+  font: 800 .95rem/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+.hero .testmode { margin-top: 22px; }
+.free { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; list-style: none; margin: 0; padding: 0; }
+@media (max-width: 760px) { .free { grid-template-columns: minmax(0, 1fr); } }
+.free li { margin: 0; padding: 12px 0 12px 30px; border-bottom: 1px solid var(--stripe); position: relative; }
+.free li::before { content: ""; position: absolute; left: 3px; top: 17px; width: 13px; height: 8px; border-left: 2.5px solid var(--go); border-bottom: 2.5px solid var(--go); transform: rotate(-45deg); }
+
+.items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .items { grid-template-columns: minmax(0, 1fr); } }
+.item { display: grid; gap: 10px; align-content: start; }
+.item.founder { grid-column: 1 / -1; border-color: var(--sunset); background: linear-gradient(120deg, color-mix(in srgb, var(--sunset) 12%, var(--asphalt)), var(--asphalt) 55%); }
+.item.founder .grants { columns: 3 220px; }
+.item-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+.item-top h3 { margin: 0; }
+.price { margin: 0; text-align: right; flex: none; max-width: 52%; }
+.price b { display: block; font: 800 1.9rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.price span { display: block; font-size: .8rem; color: var(--fog); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.item .chips { margin: 0; }
+.item .desc { margin: 0; color: var(--fog); font-size: .95rem; }
+.grants { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .95rem; }
+.item.founder .grants { display: block; }
+.item.founder .grants li { break-inside: avoid; margin-bottom: 6px; }
+.grants li { margin: 0; }
+.grants small { color: var(--fog); }
+.sw { display: inline-block; width: 16px; height: 16px; border-radius: 50%; vertical-align: -3px; margin-right: 6px; border: 1px solid color-mix(in srgb, var(--chalk) 30%, transparent); flex: none; }
+.sw.mark { background: var(--glow); border-radius: 4px; transform: rotate(45deg) scale(.8); }
+.ready { margin: 0; font-size: .86rem; color: var(--fog); border-top: 1px solid var(--stripe); padding-top: 10px; }
+
+/* the demo */
+.demo { border: 1px solid var(--amber); border-radius: 18px; background: var(--night); overflow: hidden; }
+.demo-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 14px 16px; background: color-mix(in srgb, var(--amber) 7%, var(--asphalt)); border-bottom: 1px solid var(--stripe); }
+.demo-bar p { margin: 0; font-size: .95rem; flex: 1 1 280px; min-width: 0; }
+.demo-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 18px; padding: 18px; align-items: start; }
+@media (max-width: 900px) { .demo-grid { grid-template-columns: minmax(0, 1fr); padding: 14px; } }
+.shop { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.shop li { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; padding: 12px 14px; background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 12px; }
+.shop .nm b { display: block; font-weight: 600; }
+.shop .nm span { display: block; font-size: .85rem; color: var(--fog); }
+.shop .act em { font-style: normal; font-size: .85rem; color: var(--fog); white-space: nowrap; }
+.shop .act em.own { color: var(--go); font-weight: 600; }
+.checkout { background: var(--asphalt); border: 1px solid var(--sunset); border-radius: 14px; padding: 18px; margin-bottom: 14px; display: grid; gap: 14px;
+  box-shadow: 0 24px 60px -36px rgba(253,145,35,.7); scroll-margin-top: calc(var(--hdr) + 16px); }
+.checkout:focus { outline: none; }
+.checkout h3 { margin: 0; }
+.checkout .eyebrow { margin: 0; }
+.co-price { font: 800 2rem/1 var(--f-display); color: var(--amber); margin: 0; font-variant-numeric: tabular-nums; }
+.co-step { display: grid; gap: 10px; padding-top: 12px; border-top: 1px solid var(--stripe); }
+.two-f { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.licence { font-size: .9rem; color: var(--fog); margin: 0; }
+.err { margin: 0; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--ember) 14%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--ember) 50%, transparent); color: var(--chalk); }
+.ok { margin: 0; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--go) 12%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--go) 45%, transparent); }
+.receipt { display: grid; gap: 4px; padding: 12px 14px; border-radius: 10px; background: var(--tar); font-size: .92rem; font-variant-numeric: tabular-nums; }
+.receipt div { display: flex; justify-content: space-between; gap: 12px; }
+.receipt dt { color: var(--fog); }
+.receipt dd { margin: 0; text-align: right; font-weight: 600; overflow-wrap: anywhere; }
+.cardnum { font-family: var(--f-mono); letter-spacing: .04em; }
+.garage { display: grid; gap: 12px; }
+.garage h3 { margin: 0; }
+.carp { width: 100%; height: auto; display: block; --paint: #A80D10; }
+.carp .body { fill: var(--paint); transition: fill .6s ease; }
+.carp .glass { fill: var(--night); opacity: .88; }
+.carp .tyre { fill: var(--night); }
+.carp .rim { fill: var(--fog); }
+.carp .hub { fill: var(--tar); }
+.carp .shadow { fill: var(--night); opacity: .7; }
+.carp .sheen { opacity: var(--sheen, .22); transition: opacity .6s ease; }
+.carp .lamp { fill: var(--amber); }
+.carp .tail { fill: var(--ember); }
+.carp-wrap { background: radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--sunset) 16%, transparent), transparent 70%), var(--tar); border-radius: 12px; padding: 10px 10px 4px; }
+.car-label { margin: 0; font-weight: 600; }
+.car-label small { display: block; color: var(--fog); font-weight: 400; }
+.paintpick { display: flex; flex-wrap: wrap; gap: 6px; }
+.paintpick button { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 10px 6px 8px; border-radius: 999px; border: 1px solid var(--stripe);
+  background: var(--tar); color: var(--chalk); font: 500 .88rem/1 var(--f-body); cursor: pointer; }
+.paintpick button[aria-pressed="true"] { border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber); }
+.paintpick .sw { margin: 0; }
+.earned { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; }
+.earned legend { padding: 0; margin-bottom: 4px; }
+.owned { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .92rem; }
+.owned li { margin: 0; }
+.receipts summary { cursor: pointer; color: var(--fog); }
+.receipts ul { margin: 8px 0 0; padding-left: 1.1em; font-size: .88rem; color: var(--fog); }
+.how { margin: 0; padding: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 22px; list-style: none; }
+@media (max-width: 700px) { .how { grid-template-columns: minmax(0, 1fr); } }
+.how li { margin: 0; font-size: .93rem; color: var(--fog); padding-left: 18px; position: relative; }
+.how li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; background: var(--amber); transform: rotate(45deg); }
+.how b { color: var(--chalk); }
+
+.later { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .later { grid-template-columns: minmax(0, 1fr); } }
+.later .card { display: grid; gap: 8px; align-content: start; }
+.later h3 { margin: 0; }
+.later .why { margin: 0; font-size: .92rem; color: var(--fog); border-top: 1px solid var(--stripe); padding-top: 10px; }
+.later .why b { color: var(--ember-text); }
+.lot57 { grid-column: 1 / -1; border-color: var(--sunset); }
+.rules2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .rules2 { grid-template-columns: minmax(0, 1fr); } }
+.rules2 .card h3 { font-size: 1.3rem; }
+.rules2 ul { margin: 0; }
+</style>
+<div class="page">
+<header class="top"><div class="bar"><a class="brand" href="index.html" aria-label="OC Ultra launch kit: the hub"><img src="img/oc-logo-480.webp" width="480" height="171" alt=""><b>Ultra</b></a><nav class="nav" aria-label="Launch kit pages"><a href="plan.html">Plan</a><a href="marketing.html">Marketing</a><a href="store.html" aria-current="page">Store</a><a href="golive.html">Go live</a></nav></div></header>
+<main class="col">
+  <section class="hero" aria-labelledby="st-h">
+    <p class="eyebrow">OC Ultra · the store and its prices</p>
+    <h1 id="st-h">Looks, <span class="hl">never speed.</span></h1>
+    <p class="lede">Built the way Lumevina's payments were: one payment engine with one place where Stripe plugs in, in test mode until the owner says live. It sells paint, wheels, driver styles and a tip. It never sells power, credits or chance.</p>
+    <p class="testmode" role="note">Test mode · nothing is charged</p>
+    <ul class="facts">
+      <li><b>11</b><span>items on the launch list</span></li>
+      <li><b>$2</b><span>the lowest price: Stripe's 30¢ eats tiny ones</span></li>
+      <li><b>$10</b><span>the Founder Pack, until 31 Dec 2026</span></li>
+      <li><b>0</b><span>loot boxes, currencies, ads or power</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="free" aria-labelledby="free-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>1</span>
+      <h2 id="free-h">What stays free</h2>
+      <p class="kicker">Everything in the game today, and the free customisation the UI pass is adding. The launch is built on local trust, so a player who never pays shouldn't be able to tell a store exists, except for a Store button.</p>
+    </div>
+    <ul class="free">
+      <li>Every freeway, every real exit start, every mode (Free Drive, Speed Survival, Races, Time Trial) and every race course</li>
+      <li>The four cars, earned with credits by driving: Rossini GT (the starter), Rossini Brio, Rossini Corsa, Vela E</li>
+      <li>Each car's factory paint, wheels and interior</li>
+      <li>The free Garage palette: six paints and two rim styles per car. Paid paints sit on top of it, never replace or copy it</li>
+      <li>The three drivers, both presentations, five skin tones, their looks and watches</li>
+      <li>The three abilities: Clear Path, Focus Time and Locked In</li>
+      <li>The radio, the weather and time of day, Ultra Realism, run cards, the local leaderboard and the achievements</li>
+      <li>Visiting the on-foot hangout, Lot 57, whenever it ships</li>
+    </ul>
+  </section>
+
+  <section class="sec" id="catalog" aria-labelledby="cat-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>2</span>
+      <h2 id="cat-h">The launch catalog</h2>
+      <p class="kicker">Eleven small, cosmetic items, all built from parameters the renderer already has. "You keep" is what's left after Stripe's standard US card fee of 2.9% + 30¢. Prices are proposals for the owner to approve. Read straight from the game's catalog files.</p>
+    </div>
+    <div class="items">
+<article class="item card founder" id="sku-founder-pack-2026"><div class="item-top"><h3>Founder Pack</h3><p class="price"><b>$10</b><span>Stripe $0.59 · you keep $9.41</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li><li><span class="chip hot">Until 31 Dec 2026, then never again</span></li></ul><p class="desc">For the people who were here first. The Founder &#x27;26 badge on your profile and run cards, Founders Sunset pearl paint, a Founders run-card frame, your name on the Founders roll in the credits if you want it, and both paint packs (eight more paints). Sold until December 31, 2026, then never again. Looks only: it changes nothing about how any car drives or scores.</p><ul class="grants"><li><i class="sw mark" aria-hidden="true"></i>Founder &#x27;26</li><li><i class="sw" style="background:#E8622C" aria-hidden="true"></i>Founders Sunset <small>pearl</small></li><li><i class="sw mark" aria-hidden="true"></i>Founders run-card frame</li><li><i class="sw mark" aria-hidden="true"></i>Name on the Founders roll</li><li><i class="sw" style="background:#1F6F78" aria-hidden="true"></i>Laguna Tidepool <small>gloss</small></li><li><i class="sw" style="background:#C9B58F" aria-hidden="true"></i>Crystal Cove Sand <small>gloss</small></li><li><i class="sw" style="background:#1B2A4A" aria-hidden="true"></i>Dana Point Navy <small>metallic</small></li><li><i class="sw" style="background:#E2603A" aria-hidden="true"></i>Newport Sunset <small>gloss</small></li><li><i class="sw" style="background:#0E1626" aria-hidden="true"></i>405 Midnight <small>metallic</small></li><li><i class="sw" style="background:#F26B1D" aria-hidden="true"></i>Interchange Orange <small>gloss</small></li><li><i class="sw" style="background:#3A3D42" aria-hidden="true"></i>Toll Road Graphite <small>satin</small></li><li><i class="sw" style="background:#4B3A6B" aria-hidden="true"></i>Saddleback Dusk <small>metallic</small></li></ul><p class="ready">In the game now (test mode): the nine paints, and the badge and frame on run cards. Still to build: the profile badge and the Founders roll. A live sale waits for both, and for the paints’ render check.</p></article>
+<article class="item card" id="sku-paint-pack-coast"><div class="item-top"><h3>Coast Paint Pack</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li></ul><p class="desc">Four paints for every car in your garage: Laguna Tidepool, Crystal Cove Sand, Dana Point Navy (metallic) and Newport Sunset. Included in the Founder Pack.</p><ul class="grants"><li><i class="sw" style="background:#1F6F78" aria-hidden="true"></i>Laguna Tidepool <small>gloss</small></li><li><i class="sw" style="background:#C9B58F" aria-hidden="true"></i>Crystal Cove Sand <small>gloss</small></li><li><i class="sw" style="background:#1B2A4A" aria-hidden="true"></i>Dana Point Navy <small>metallic</small></li><li><i class="sw" style="background:#E2603A" aria-hidden="true"></i>Newport Sunset <small>gloss</small></li></ul><p class="ready">Shows on your car now, in test mode. A live sale waits for the render check of each paint from the seat, hood and chase cameras.</p></article>
+<article class="item card" id="sku-paint-pack-freeway-nights"><div class="item-top"><h3>Freeway Nights Paint Pack</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li></ul><p class="desc">Four paints for every car in your garage: 405 Midnight (metallic), Interchange Orange, Toll Road Graphite (satin) and Saddleback Dusk (metallic). Included in the Founder Pack.</p><ul class="grants"><li><i class="sw" style="background:#0E1626" aria-hidden="true"></i>405 Midnight <small>metallic</small></li><li><i class="sw" style="background:#F26B1D" aria-hidden="true"></i>Interchange Orange <small>gloss</small></li><li><i class="sw" style="background:#3A3D42" aria-hidden="true"></i>Toll Road Graphite <small>satin</small></li><li><i class="sw" style="background:#4B3A6B" aria-hidden="true"></i>Saddleback Dusk <small>metallic</small></li></ul><p class="ready">Shows on your car now, in test mode. A live sale waits for the render check of each paint from the seat, hood and chase cameras.</p></article>
+<article class="item card" id="sku-wheels-rossini-gt"><div class="item-top"><h3>Rossini GT Wheel Set</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li><li><span class="chip">Starter car</span></li></ul><p class="desc">Three wheel setups for the Rossini GT, each with its own calipers: Irvine Silver five-spoke, Fullerton Black centre-lock, Tustin Graphite aero. Same size wheels and tyres: looks only.</p><ul class="grants"><li><i class="sw" style="background:#C7CACE" aria-hidden="true"></i><i class="sw" style="background:#C0161C" aria-hidden="true"></i>Irvine Silver five-spoke <small>signal red calipers</small></li><li><i class="sw" style="background:#16171A" aria-hidden="true"></i><i class="sw" style="background:#E8622C" aria-hidden="true"></i>Fullerton Black centre-lock <small>sunset orange calipers</small></li><li><i class="sw" style="background:#3A3D42" aria-hidden="true"></i><i class="sw" style="background:#2D6FD8" aria-hidden="true"></i>Tustin Graphite aero <small>coast blue calipers</small></li></ul><p class="ready">Saved to your account in test mode; the wheel picker is still to build (an afternoon’s work). Same wheel and tyre size: grip and gearing don’t change.</p></article>
+<article class="item card" id="sku-wheels-rossini-brio"><div class="item-top"><h3>Rossini Brio Wheel Set</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li><li><span class="chip">Earn the Rossini Brio first</span></li></ul><p class="desc">Three wheel setups for the Rossini Brio, each with its own calipers: Santa Ana Bronze twin-five, Fullerton Black centre-lock, Laguna Pearl aero. Same size wheels and tyres: looks only. Earn the Brio by driving to buy it.</p><ul class="grants"><li><i class="sw" style="background:#8C6A3F" aria-hidden="true"></i><i class="sw" style="background:#E0A800" aria-hidden="true"></i>Santa Ana Bronze twin-five <small>amber calipers</small></li><li><i class="sw" style="background:#16171A" aria-hidden="true"></i><i class="sw" style="background:#C0161C" aria-hidden="true"></i>Fullerton Black centre-lock <small>signal red calipers</small></li><li><i class="sw" style="background:#E9E7E1" aria-hidden="true"></i><i class="sw" style="background:#2D6FD8" aria-hidden="true"></i>Laguna Pearl aero <small>coast blue calipers</small></li></ul><p class="ready">Saved to your account in test mode; the wheel picker is still to build (an afternoon’s work). Same wheel and tyre size: grip and gearing don’t change.</p></article>
+<article class="item card" id="sku-wheels-rossini-corsa"><div class="item-top"><h3>Rossini Corsa Wheel Set</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li><li><span class="chip">Earn the Rossini Corsa first</span></li></ul><p class="desc">Three wheel setups for the Rossini Corsa, each with its own calipers: Santa Ana Bronze twin-five, Laguna Pearl five-spoke, Anaheim Gunmetal aero. Same size wheels and tyres: looks only. Earn the Corsa by driving to buy it.</p><ul class="grants"><li><i class="sw" style="background:#8C6A3F" aria-hidden="true"></i><i class="sw" style="background:#1A1A1C" aria-hidden="true"></i>Santa Ana Bronze twin-five <small>gloss black calipers</small></li><li><i class="sw" style="background:#E9E7E1" aria-hidden="true"></i><i class="sw" style="background:#E8622C" aria-hidden="true"></i>Laguna Pearl five-spoke <small>sunset orange calipers</small></li><li><i class="sw" style="background:#2B2D31" aria-hidden="true"></i><i class="sw" style="background:#E0A800" aria-hidden="true"></i>Anaheim Gunmetal aero <small>amber calipers</small></li></ul><p class="ready">Saved to your account in test mode; the wheel picker is still to build (an afternoon’s work). Same wheel and tyre size: grip and gearing don’t change.</p></article>
+<article class="item card" id="sku-wheels-vela-e"><div class="item-top"><h3>Vela E Wheel Set</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li><li><span class="chip">Earn the Vela E first</span></li></ul><p class="desc">Three wheel setups for the Vela E, each with its own calipers: Irvine Silver twin-five, Fullerton Black five-spoke, Laguna Pearl centre-lock. Same size wheels and tyres: looks only. Earn the Vela E by driving to buy it.</p><ul class="grants"><li><i class="sw" style="background:#C7CACE" aria-hidden="true"></i><i class="sw" style="background:#2D6FD8" aria-hidden="true"></i>Irvine Silver twin-five <small>coast blue calipers</small></li><li><i class="sw" style="background:#16171A" aria-hidden="true"></i><i class="sw" style="background:#E8622C" aria-hidden="true"></i>Fullerton Black five-spoke <small>sunset orange calipers</small></li><li><i class="sw" style="background:#E9E7E1" aria-hidden="true"></i><i class="sw" style="background:#1A1A1C" aria-hidden="true"></i>Laguna Pearl centre-lock <small>gloss black calipers</small></li></ul><p class="ready">Saved to your account in test mode; the wheel picker is still to build (an afternoon’s work). Same wheel and tyre size: grip and gearing don’t change.</p></article>
+<article class="item card" id="sku-style-night-shift"><div class="item-top"><h3>Night Shift Driver Style</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li></ul><p class="desc">For any driver: black perforated gloves, the Rossini Notte steel watch with a midnight-blue dial, a charcoal bomber&#x27;s knit cuffs, and plum nails on the female look.</p><ul class="grants"><li><i class="sw" style="background:#141416" aria-hidden="true"></i><i class="sw" style="background:#1A2A4A" aria-hidden="true"></i><i class="sw" style="background:#2A2C30" aria-hidden="true"></i>Black perforated gloves, the Rossini Notte watch, charcoal bomber cuffs</li></ul><p class="ready">Saved to your account in test mode; the driver-look picker is still to build. The watch names need a class 14 trademark search first: Rossini and Vela are already on real watches.</p></article>
+<article class="item card" id="sku-style-golden-hour"><div class="item-top"><h3>Golden Hour Driver Style</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li></ul><p class="desc">For any driver: bare hands, the Rossini Ora gold watch with a champagne sunburst dial, a cream linen jacket&#x27;s cuffs, and sunset-coral nails on the female look.</p><ul class="grants"><li><i class="sw" style="background:#D9C49A" aria-hidden="true"></i><i class="sw" style="background:#E9E1CF" aria-hidden="true"></i>Bare hands, the Rossini Ora watch, cream linen jacket cuffs</li></ul><p class="ready">Saved to your account in test mode; the driver-look picker is still to build. The watch names need a class 14 trademark search first: Rossini and Vela are already on real watches.</p></article>
+<article class="item card" id="sku-style-canyon-run"><div class="item-top"><h3>Canyon Run Driver Style</h3><p class="price"><b>$3</b><span>Stripe $0.39 · you keep $2.61</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li></ul><p class="desc">For any driver: canyon suede gloves, the Vela Pulse smart watch with a sunset face, an olive field jacket&#x27;s knit cuffs, and sandstone nails on the female look.</p><ul class="grants"><li><i class="sw" style="background:#8A6E4B" aria-hidden="true"></i><i class="sw" style="background:#E8622C" aria-hidden="true"></i><i class="sw" style="background:#4F5A3A" aria-hidden="true"></i>Canyon suede gloves, the Vela Pulse watch, olive field jacket cuffs</li></ul><p class="ready">Saved to your account in test mode; the driver-look picker is still to build. The watch names need a class 14 trademark search first: Rossini and Vela are already on real watches.</p></article>
+<article class="item card" id="sku-tip-fuel-the-build"><div class="item-top"><h3>Fuel the Build</h3><p class="price"><b>From $2</b><span>$5 suggested · you keep $1.64 at $2, $4.55 at $5</span></p></div><ul class="chips"><li><span class="chip cost">Test mode: buyable</span></li></ul><p class="desc">Pay what you want, from $2, to help keep OC Ultra going. You get a small Fuelled the Build badge and our thanks. It unlocks nothing else and the badge is the same at any amount.</p><ul class="grants"><li><i class="sw mark" aria-hidden="true"></i>Fuelled the build</li></ul><p class="ready">The badge slot is still to build. The tip can be bought in test mode now.</p></article>
+    </div>
+    <p class="fine sub read">Also in the catalog but not on sale: the <b>Stripes and Roundels Livery Pack</b> ($5: Twin 405 Stripes, Coast Side Stripe, Two-Tone Roof, a Door Roundel with your number). It can't be sold until the paint has a livery layer. A live sale of anything waits until every item it grants shows in the game and has been checked in renders.</p>
+  </section>
+
+  <section class="sec" id="try" aria-labelledby="try-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>3</span>
+      <h2 id="try-h">Try the checkout</h2>
+      <p class="kicker">This page runs the same checks the game's store does, in the same order, with the same messages. It's a demo: the card number is checked here and thrown away, and nothing leaves this page.</p>
+    </div>
+    <div class="demo">
+      <div class="demo-bar"><span class="testmode">Test mode</span><p>Nothing is charged. <span class="cardnum">4242 4242 4242 4242</span> succeeds and <span class="cardnum">4000 0000 0000 0002</span> is declined, with any future date and any 3 digits. Any other number is refused unread.</p></div>
+      <ul class="how" aria-label="What the checkout checks">
+        <li><b>The item:</b> on sale and in its window; the Founder Pack stops on 31 Dec 2026.</li>
+        <li><b>Your age:</b> month and year, asked neutrally; under 13 gets no store, and the game stays free.</li>
+        <li><b>Sign-in:</b> live, a one-tap email link; here and in the game's test mode it signs straight in.</li>
+        <li><b>The tick:</b> "I'm 18 or over, or a parent or guardian has said yes".</li>
+        <li><b>Your garage:</b> a car's wheel set needs that car earned first.</li>
+        <li><b>The card:</b> Luhn, expiry and CVC, then Stripe's test cards only. Live, Stripe's own page takes the card instead.</li>
+      </ul>
+      <div class="demo-grid" id="demo">
+        <div class="demo-shop">
+          <div class="checkout" id="checkout" tabindex="-1" hidden></div>
+          <ul class="shop" id="shop" aria-label="Items you can buy in test mode"></ul>
+          <noscript><p class="muted">The demo needs JavaScript. Everything else on this page reads without it.</p></noscript>
+        </div>
+        <aside class="garage card" aria-labelledby="gar-h">
+          <h3 id="gar-h">Your garage</h3>
+          <div class="carp-wrap">
+            <svg class="carp" id="carp" viewBox="0 0 320 124" role="img" aria-labelledby="car-label">
+              <defs><linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".15"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient></defs>
+              <ellipse class="shadow" cx="162" cy="104" rx="146" ry="9"/>
+              <path class="body" d="M14 86 C14 74 24 67 44 64 L98 58 C116 42 140 32 176 31 C208 30 230 40 250 56 L290 62 C304 64 310 72 310 84 L310 92 L14 92 Z"/>
+              <path class="sheen" fill="url(#sheen)" d="M14 86 C14 74 24 67 44 64 L98 58 C116 42 140 32 176 31 C208 30 230 40 250 56 L290 62 C304 64 310 72 310 84 L310 92 L14 92 Z"/>
+              <path class="glass" d="M112 57 C128 44 148 37 176 37 C198 37 216 44 232 56 Z"/>
+              <rect class="lamp" x="296" y="68" width="12" height="5" rx="2"/><rect class="tail" x="14" y="70" width="9" height="5" rx="2"/>
+              <circle class="tyre" cx="78" cy="92" r="21"/><circle class="rim" cx="78" cy="92" r="13"/><circle class="hub" cx="78" cy="92" r="4"/>
+              <circle class="tyre" cx="250" cy="92" r="21"/><circle class="rim" cx="250" cy="92" r="13"/><circle class="hub" cx="250" cy="92" r="4"/>
+            </svg>
+          </div>
+          <p class="car-label" id="car-label" aria-live="polite">Rossini GT<small>Factory paint</small></p>
+          <div class="field"><label for="g-car">The car you drive</label><select id="g-car"><option value="rossini-gt">Rossini GT</option></select></div>
+          <div class="field"><span class="lbl2">Paint on this car</span><div class="paintpick" id="paints" role="group" aria-label="Paint on this car"></div></div>
+          <fieldset class="earned"><legend class="lbl">Pretend you've earned</legend><div id="earned"></div></fieldset>
+          <div><p class="lbl" style="margin:0 0 6px">Your items</p><ul class="owned" id="owned"><li class="muted">Nothing yet.</li></ul></div>
+          <details class="receipts" id="receipts"><summary>Test receipts (0)</summary><ul></ul></details>
+          <button type="button" class="btn small ghost" id="reset">Reset the demo</button>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="prices" aria-labelledby="pr-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>4</span>
+      <h2 id="pr-h">Prices that survive the fee</h2>
+      <p class="kicker">Stripe's standard US online card price is 2.9% + 30¢ per successful charge, with no setup or monthly fee; international cards add 1.5% and currency conversion 1%. The 30¢ is what decides our prices.</p>
+    </div>
+    <div class="scroll-x">
+      <table role="table" class="tbl cardrows">
+        <thead role="rowgroup"><tr role="row"><th role="columnheader">Price</th><th role="columnheader" class="r">Stripe takes</th><th role="columnheader" class="r">We keep</th><th role="columnheader" class="r">Kept</th><th role="columnheader" class="r">At a 15% app-store cut</th></tr></thead>
+        <tbody role="rowgroup">
+          <tr role="row"><td data-label="Price" role="cell">$0.99</td><td data-label="Stripe takes" role="cell" class="r">$0.33</td><td data-label="We keep" role="cell" class="r"><b>$0.66</b></td><td data-label="Kept" role="cell" class="r">67%</td><td data-label="At a 15% app-store cut" role="cell" class="r">$0.84</td></tr>
+          <tr role="row"><td data-label="Price" role="cell">$2 · the floor (the tip's minimum)</td><td data-label="Stripe takes" role="cell" class="r">$0.36</td><td data-label="We keep" role="cell" class="r">$1.64</td><td data-label="Kept" role="cell" class="r">82%</td><td data-label="At a 15% app-store cut" role="cell" class="r">$1.70</td></tr>
+          <tr role="row"><td data-label="Price" role="cell">$3 · the standard item</td><td data-label="Stripe takes" role="cell" class="r">$0.39</td><td data-label="We keep" role="cell" class="r"><b>$2.61</b></td><td data-label="Kept" role="cell" class="r">87%</td><td data-label="At a 15% app-store cut" role="cell" class="r">$2.55</td></tr>
+          <tr role="row"><td data-label="Price" role="cell">$5 · a bigger pack</td><td data-label="Stripe takes" role="cell" class="r">$0.45</td><td data-label="We keep" role="cell" class="r">$4.55</td><td data-label="Kept" role="cell" class="r">91%</td><td data-label="At a 15% app-store cut" role="cell" class="r">$4.25</td></tr>
+          <tr role="row"><td data-label="Price" role="cell">$10 · the Founder Pack</td><td data-label="Stripe takes" role="cell" class="r">$0.59</td><td data-label="We keep" role="cell" class="r"><b>$9.41</b></td><td data-label="Kept" role="cell" class="r">94%</td><td data-label="At a 15% app-store cut" role="cell" class="r">$8.50</td></tr>
+          <tr role="row"><td data-label="Price" role="cell">$3 a month (plus Billing's 0.7%)</td><td data-label="Stripe takes" role="cell" class="r">$0.41</td><td data-label="We keep" role="cell" class="r">$2.59</td><td data-label="Kept" role="cell" class="r">86%</td><td data-label="At a 15% app-store cut" role="cell" class="r">—</td></tr>
+          <tr role="row"><td data-label="Price" role="cell">$30 a year (plus Billing's 0.7%)</td><td data-label="Stripe takes" role="cell" class="r">$1.38</td><td data-label="We keep" role="cell" class="r">$28.62</td><td data-label="Kept" role="cell" class="r">95%</td><td data-label="At a 15% app-store cut" role="cell" class="r">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid g3 sub">
+      <div class="card"><h3>$0.99 is out</h3><p class="muted" style="margin:0">Stripe would keep a third of it. Whole dollars from $2 read as honest, and Apple has allowed rounded prices since its 2023 pricing change, so the same prices would work in an app later.</p></div>
+      <div class="card"><h3>A cart helps</h3><p class="muted" style="margin:0">Three $3 packs in one checkout pay one 30¢: $8.44 kept instead of $7.84. Stripe's pay-what-you-want can't share a checkout, so the tip always gets its own.</p></div>
+      <div class="card"><h3>Easy refunds are cheaper</h3><p class="muted" style="margin:0">A refund costs Stripe's fee, about 39¢ on $3. A card dispute costs $15 that isn't returned, plus another $15 to contest it (returned only on a win). One dispute wipes out about six $3 sales.</p></div>
+    </div>
+    <h3 class="sub">What the market charges, for scale</h3>
+    <div class="scroll-x">
+      <table class="tbl">
+        <thead><tr><th>Game</th><th>Item</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Game">Forza Horizon 5</td><td data-label="Item">A car pack</td><td data-label="Price">$4.99 (4 cars) to $9.99 (7 cars)</td></tr>
+          <tr><td data-label="Game">Forza Horizon 5</td><td data-label="Item">Car Pass</td><td data-label="Price">$29.99</td></tr>
+          <tr><td data-label="Game">Rocket League</td><td data-label="Item">Credits; Rocket Pass Premium</td><td data-label="Price">500 credits for $4.99; the pass is 1,000 credits (about $10)</td></tr>
+          <tr><td data-label="Game">Fortnite</td><td data-label="Item">V-Bucks; Battle Pass</td><td data-label="Price">$8.99 for 800 V-Bucks since 19 Mar 2026; the pass is 800</td></tr>
+          <tr><td data-label="Game">Trackmania</td><td data-label="Item">Standard; Club access</td><td data-label="Price">$9.99 a year; $29.99 a year</td></tr>
+          <tr><td data-label="Game">WheelMates (indie RC racer)</td><td data-label="Item">Supporter Pack, cosmetic</td><td data-label="Price">$4.99</td></tr>
+          <tr><td data-label="Game">Go Kart Mania (Switch)</td><td data-label="Item">Livery Pack #1</td><td data-label="Price">$0.99</td></tr>
+          <tr><td data-label="Game">Smash Karts (browser and iOS)</td><td data-label="Item">Gem packs: a premium currency, which we avoid</td><td data-label="Price">$1.99 to $19.99</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fine" style="margin-top:10px">A small local game shouldn't charge Forza prices, and doesn't need a currency to hide the price.</p>
+  </section>
+
+  <section class="sec" id="later" aria-labelledby="later-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>5</span>
+      <h2 id="later-h">Later, once each thing exists</h2>
+      <p class="kicker">Nothing here is sold, pre-sold or promised before it's built, shown in the game and checked. Each is already in the catalog as "not on sale", so the paywall can be tested against it.</p>
+    </div>
+    <div class="later">
+      <div class="card lot57">
+        <span class="lbl">Getting out like a Sims character</span>
+        <h3>The Lot 57 hangout</h3>
+        <p>The owner's idea of getting out of the car and going to Golden Road becomes <b>Lot 57</b>: our own fictional taproom and yard at the real spot on Orangewood Avenue in Anaheim. The real venue's name, sign and look are never used, and the store never says "Golden Road"; a real business appears only with a signed deal.</p>
+        <div class="grid g3" style="margin-top:4px">
+          <div><p class="lbl" style="margin:0 0 4px">Free to visit</p><p class="small" style="margin:0">Get out, walk, sit, order from the alcohol-free menu, watch the simulated crowd. It's the most talked-about idea, so it should spread, not sit behind a paywall.</p></div>
+          <div><p class="lbl" style="margin:0 0 4px">Outfits, $3 each</p><p class="small" style="margin:0">The people builder already has the garments. Two examples in the catalog: Lot 57 Weekend and Lot 57 Night Out.</p></div>
+          <div><p class="lbl" style="margin:0 0 4px">Maybe one expansion, about $8</p><p class="small" style="margin:0">A second hangout with its own streets, only if it's big enough to be worth it. Lot 57 itself stays free.</p></div>
+        </div>
+        <p class="why"><b>Why not yet</b> It's a prototype: the game has no on-foot avatar and no way out of the car. No sale, no pre-orders, and no Founder perk tied to it. Crowds are simulated and labelled so; no live occupancy, no multiplayer claim.</p>
+      </div>
+      <div class="card">
+        <span class="lbl">Cars</span>
+        <h3>Earnable first; sold only as a twin</h3>
+        <p>New cars arrive earnable by driving. A car may also be sold only if its numbers equal a car you can already earn: the example is the <b>Rossini GT Spider</b>, $5, an open-top body with exactly the GT's numbers, also in the showroom for credits. Paying skips the credits, never the level.</p>
+        <p class="why"><b>Why not yet</b> The body isn't built. And a bought car can't be sold back for credits (the garage pays 60% of a car's price), or dollars would turn into credits.</p>
+      </div>
+      <div class="card">
+        <span class="lbl">Custom kits</span>
+        <h3>Body kits, $5 each</h3>
+        <p>The GT's Coast Aero kit, the Brio's Street kit, the Corsa's Track kit and the Vela E's Aero kit. Looks only: the drag and downforce numbers stay the same, and the store says so: "The Corsa drives exactly the same."</p>
+        <p class="why"><b>Why not yet</b> Kit parts have to be lofted onto each body and checked from the seat, hood and chase cameras: days of work, so after launch.</p>
+      </div>
+      <div class="card">
+        <span class="lbl">Support, after Day 90</span>
+        <h3>The OC Ultra Club</h3>
+        <p>$3 a month (we keep $2.59) or $30 a year ($28.62): a club badge, a new club paint each month that you keep after cancelling, and early test builds. No gameplay perks and no extra credits.</p>
+        <p class="why"><b>Why not yet</b> Only after Day 90, about 50 buyers and a 12-month paint plan. California's automatic renewal law applies: price and billing shown before Join, an unticked box, a confirmation email, cancel online the same way you joined, a yearly reminder. A lawyer checks the notice windows first.</p>
+      </div>
+      <div class="card">
+        <span class="lbl">Not now, maybe never</span>
+        <h3>Battle pass, ads, paid weather</h3>
+        <p>A battle pass needs new rewards every few weeks, and its "before the season ends" pull runs against the no-pressure rule; if one ever comes, it never expires and costs about $5 to $8. No ads at launch. No paid weather pass: rain changes grip, so it would sell gameplay.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="rules" aria-labelledby="rules-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>6</span>
+      <h2 id="rules-h">The rules</h2>
+      <p class="kicker">From the owner's decision of 16 October 2026 and the store's terms draft. Nothing here is legal or tax advice; the points marked "verify at launch" move often.</p>
+    </div>
+    <div class="rules2">
+      <div class="card"><h3>Cosmetics only</h3><ul>
+        <li>Never power: no car faster than one you can earn, no grip, handling, power, score, XP or credit boosts, no paid abilities or cooldowns.</li>
+        <li>Never the credits you earn by driving: no packs, no doublers, no club bonus. This also keeps the store out of Stripe's rules on virtual currency.</li>
+        <li>No loot boxes, mystery packs or gacha: you see the exact item, on your own car, before you pay. The FTC's $20 million settlement with Genshin Impact's maker (Jan 2025) was over loot boxes and hidden currency prices.</li>
+        <li>No premium currency: one price per item, in dollars.</li></ul></div>
+      <div class="card"><h3>Selling honestly</h3><ul>
+        <li>Before checkout: the item on your car, the price in dollars, and "Looks only: it changes nothing about how any car drives or scores".</li>
+        <li>A confirm step for every purchase; no one-tap buys, no fake timers. The FTC's $245 million Epic order (2023) was over button layouts that caused unwanted charges.</li>
+        <li>"Licence", not "ownership": California's AB 2426 (since 1 Jan 2025) needs a clear notice before checkout. Next to Buy: "You're getting a licence to use these items in OC Ultra, not ownership of them." Never "own forever".</li>
+        <li>No account is ever locked over a dispute.</li></ul></div>
+      <div class="card"><h3>13 and over to buy</h3><ul>
+        <li>A neutral question first, "What month and year were you born?", with no default and no hint of the cutoff, before anything is collected.</li>
+        <li>Under 13: no account and no store; only the "under 13" result stays on the device. The whole game stays free to play.</li>
+        <li>13 to 17: with a parent's or guardian's yes, ticked at checkout.</li>
+        <li>An account holds an email, which COPPA treats as personal information. The amended rule took effect 23 Jun 2025, with compliance due 22 Apr 2026.</li></ul></div>
+      <div class="card"><h3>Refunds, receipts, restore</h3><ul>
+        <li>Refund within 14 days if you haven't used the item in a drive. Accidental purchases and a minor's purchase without permission: any time. A refund takes the items back.</li>
+        <li>Until the in-game button exists, the terms point to a support email (TODO: the owner sets it).</li>
+        <li>Stripe emails a receipt for every payment and refund.</li>
+        <li>Items live on your account: sign in with the same email on any device and tap Restore purchases. In test mode they stay on the device.</li></ul></div>
+      <div class="card"><h3>Where people buy</h3><ul>
+        <li><b>The web, including the installed PWA:</b> no app store and no store cut. Stripe's hosted Checkout page takes the card, with Apple Pay and Google Pay, so card data never touches our code.</li>
+        <li><b>iOS, if a public app ever ships:</b> the US storefront may link out to web checkout since 1 May 2025, but Apple's commission on those sales is still in court (Supreme Court review granted 30 Jun 2026). Decide on the day. Verify at launch.</li>
+        <li><b>Android:</b> under the Epic v. Google injunction until 1 Nov 2027; link-out fees apply from 1 Dec 2026. Decide on the day. Verify at launch.</li></ul></div>
+      <div class="card"><h3>Tax, today</h3><ul>
+        <li>California doesn't tax electronically delivered digital goods today. SB 122 taxes "digital products" from 1 Jan 2027 but excludes video games; whether in-game cosmetics count isn't settled. Check the CDTFA's final rules before then.</li>
+        <li>Other states only past their thresholds ($100,000 of sales in most), so no Stripe Tax at launch.</li>
+        <li>Whatever the store earns is taxable income. Keep records.</li></ul></div>
+    </div>
+  </section>
+
+  <section class="sec" id="money" aria-labelledby="money-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>7</span>
+      <h2 id="money-h">The money, honestly</h2>
+      <p class="kicker">Over 90 days, with 200 to 3,000 players reaching the menu and 1 to 3% of them buying, the store brings in about $12 to $660 after fees. It might pay for its own domain and database. It won't pay for the launch, and that's expected.</p>
+    </div>
+    <div class="flipbox"><div class="scroll-x">
+      <table class="tbl flip">
+        <thead><tr><th>The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5</th><th class="r">Low</th><th class="r">Middle</th><th class="r">High</th></tr></thead>
+        <tbody>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Players reaching the menu by Day 90</td><td data-label="Low" class="r">200</td><td data-label="Middle" class="r">1,000</td><td data-label="High" class="r">3,000</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Buyers (1% / 2% / 3%)</td><td data-label="Low" class="r">2</td><td data-label="Middle" class="r">20</td><td data-label="High" class="r">90</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Founder Packs × $10</td><td data-label="Low" class="r">1 = $10</td><td data-label="Middle" class="r">12 = $120</td><td data-label="High" class="r">54 = $540</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">First $3 items</td><td data-label="Low" class="r">1 = $3</td><td data-label="Middle" class="r">8 = $24</td><td data-label="High" class="r">36 = $108</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Second $3 items</td><td data-label="Low" class="r">0</td><td data-label="Middle" class="r">6 = $18</td><td data-label="High" class="r">27 = $81</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Tips × $5</td><td data-label="Low" class="r">0</td><td data-label="Middle" class="r">2 = $10</td><td data-label="High" class="r">7 = $35</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5"><b>Gross</b></td><td data-label="Low" class="r"><b>$13</b></td><td data-label="Middle" class="r"><b>$172</b></td><td data-label="High" class="r"><b>$764</b></td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Stripe fees</td><td data-label="Low" class="r">−$0.98</td><td data-label="Middle" class="r">−$13.39</td><td data-label="High" class="r">−$59.36</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Refunds (fees not returned)</td><td data-label="Low" class="r">$0</td><td data-label="Middle" class="r">−$3</td><td data-label="High" class="r">−$16</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Disputes ($15 fee plus the $10 lost; not contested)</td><td data-label="Low" class="r">$0</td><td data-label="Middle" class="r">$0</td><td data-label="High" class="r">−$25</td></tr>
+        </tbody>
+        <tfoot><tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">Net from the store</td><td data-label="Low" class="r">$12.02</td><td data-label="Middle" class="r">$155.61</td><td data-label="High" class="r">$663.64</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">After the domain only ($10)</td><td data-label="Low" class="r">+$2</td><td data-label="Middle" class="r">+$146</td><td data-label="High" class="r">+$654</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">After the domain and three months of Supabase Pro ($85)</td><td data-label="Low" class="r">−$73</td><td data-label="Middle" class="r">+$71</td><td data-label="High" class="r">+$579</td></tr>
+          <tr><td data-label="The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5">After the plan's full optional list (about $280)</td><td data-label="Low" class="r">−$268</td><td data-label="Middle" class="r">−$124</td><td data-label="High" class="r">+$384</td></tr></tfoot>
+      </table>
+    </div><div class="flip-cards"><p class="flip-cap">The basket: 60% of buyers take the $10 pack, the rest one $3 item; 30% come back for another; 1 in 400 players tips $5</p><section class="flip-card" aria-label="Low"><h4>Low</h4><dl><div><dt>Players reaching the menu by Day 90</dt><dd>200</dd></div><div><dt>Buyers (1% / 2% / 3%)</dt><dd>2</dd></div><div><dt>Founder Packs × $10</dt><dd>1 = $10</dd></div><div><dt>First $3 items</dt><dd>1 = $3</dd></div><div><dt>Second $3 items</dt><dd>0</dd></div><div><dt>Tips × $5</dt><dd>0</dd></div><div><dt><b>Gross</b></dt><dd><b>$13</b></dd></div><div><dt>Stripe fees</dt><dd>−$0.98</dd></div><div><dt>Refunds (fees not returned)</dt><dd>$0</dd></div><div><dt>Disputes ($15 fee plus the $10 lost; not contested)</dt><dd>$0</dd></div><div class="tot"><dt>Net from the store</dt><dd>$12.02</dd></div><div class="tot"><dt>After the domain only ($10)</dt><dd>+$2</dd></div><div class="tot"><dt>After the domain and three months of Supabase Pro ($85)</dt><dd>−$73</dd></div><div class="tot"><dt>After the plan's full optional list (about $280)</dt><dd>−$268</dd></div></dl></section><section class="flip-card" aria-label="Middle"><h4>Middle</h4><dl><div><dt>Players reaching the menu by Day 90</dt><dd>1,000</dd></div><div><dt>Buyers (1% / 2% / 3%)</dt><dd>20</dd></div><div><dt>Founder Packs × $10</dt><dd>12 = $120</dd></div><div><dt>First $3 items</dt><dd>8 = $24</dd></div><div><dt>Second $3 items</dt><dd>6 = $18</dd></div><div><dt>Tips × $5</dt><dd>2 = $10</dd></div><div><dt><b>Gross</b></dt><dd><b>$172</b></dd></div><div><dt>Stripe fees</dt><dd>−$13.39</dd></div><div><dt>Refunds (fees not returned)</dt><dd>−$3</dd></div><div><dt>Disputes ($15 fee plus the $10 lost; not contested)</dt><dd>$0</dd></div><div class="tot"><dt>Net from the store</dt><dd>$155.61</dd></div><div class="tot"><dt>After the domain only ($10)</dt><dd>+$146</dd></div><div class="tot"><dt>After the domain and three months of Supabase Pro ($85)</dt><dd>+$71</dd></div><div class="tot"><dt>After the plan's full optional list (about $280)</dt><dd>−$124</dd></div></dl></section><section class="flip-card" aria-label="High"><h4>High</h4><dl><div><dt>Players reaching the menu by Day 90</dt><dd>3,000</dd></div><div><dt>Buyers (1% / 2% / 3%)</dt><dd>90</dd></div><div><dt>Founder Packs × $10</dt><dd>54 = $540</dd></div><div><dt>First $3 items</dt><dd>36 = $108</dd></div><div><dt>Second $3 items</dt><dd>27 = $81</dd></div><div><dt>Tips × $5</dt><dd>7 = $35</dd></div><div><dt><b>Gross</b></dt><dd><b>$764</b></dd></div><div><dt>Stripe fees</dt><dd>−$59.36</dd></div><div><dt>Refunds (fees not returned)</dt><dd>−$16</dd></div><div><dt>Disputes ($15 fee plus the $10 lost; not contested)</dt><dd>−$25</dd></div><div class="tot"><dt>Net from the store</dt><dd>$663.64</dd></div><div class="tot"><dt>After the domain only ($10)</dt><dd>+$654</dd></div><div class="tot"><dt>After the domain and three months of Supabase Pro ($85)</dt><dd>+$579</dd></div><div class="tot"><dt>After the plan's full optional list (about $280)</dt><dd>+$384</dd></div></dl></section></div></div>
+    <div class="callout warm sub">
+      <span class="lbl">Plainly</span>
+      <p>At the low end the store pays for its domain and nothing else. In the middle it covers its own database, not the launch's optional costs. Only the high case clears the full optional list. A California LLC's $800 yearly tax is more than any case brings in. The owner has said profit isn't the goal; these numbers agree. The store is a way for people who like the game to support it, and a test of whether they will. The <a href="plan.html#numbers">plan's calculator</a> runs your own numbers.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="sources" aria-labelledby="sources-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Src</small>§</span>
+      <h2 id="sources-h">Sources</h2>
+      <p class="kicker">Checked by web search on 16 October 2026. Stripe's pages couldn't be opened from the build machine, so its figures come from its own pages as indexed by search; re-check at launch. The full list is in PROJECT_OC_MONETIZATION.md.</p>
+    </div>
+    <ul class="small muted read">
+      <li>Stripe pricing (2.9% + 30¢; +1.5% international; +1% conversion): <a href="https://stripe.com/pricing" target="_blank" rel="noopener noreferrer">stripe.com/pricing</a>; minimum charge $0.50: <a href="https://docs.stripe.com/currencies" target="_blank" rel="noopener noreferrer">docs.stripe.com/currencies</a></li>
+      <li>Stripe test cards: <a href="https://docs.stripe.com/testing" target="_blank" rel="noopener noreferrer">docs.stripe.com/testing</a>; disputes ($15; a second $15 to contest since 17 Jun 2025): <a href="https://docs.stripe.com/disputes/how-disputes-work" target="_blank" rel="noopener noreferrer">docs.stripe.com</a></li>
+      <li>Stripe restricted businesses (in-game items allowed for the game's operator): <a href="https://stripe.com/legal/restricted-businesses" target="_blank" rel="noopener noreferrer">stripe.com/legal</a></li>
+      <li>California AB 2426, digital goods as licences: Greenberg Traurig, Dec 2024; ZwillGen</li>
+      <li>California's automatic renewal law as amended by AB 2863 (from 1 Jul 2025): Barnes &amp; Thornburg, 2025</li>
+      <li>COPPA amended rule: <a href="https://www.ftc.gov/legal-library/browse/federal-register-notices/16-cfr-part-312-coppa-final-rule-amendments" target="_blank" rel="noopener noreferrer">ftc.gov</a></li>
+      <li>Apple's US link-out rule: <a href="https://developer.apple.com/news/?id=9txfddzf" target="_blank" rel="noopener noreferrer">developer.apple.com</a> (1 May 2025, read directly 16 Oct 2026)</li>
+      <li>Market prices: traxion.gg, Deku Deals, GameStop, Immortal Boost (2026), Shacknews (2026), IsThereAnyDeal (Feb 2026), Steam, AppPricingLab (May 2026)</li>
+    </ul>
+  </section>
+</main>
+<footer class="foot col"><p>OC Ultra launch kit, prepared 16 October 2026 from the project's plan, marketing, store and server documents. Prices, fees and rules were checked by web search that day; anything marked "verify at launch" moves. The store is in <b>test mode</b>: nothing is charged.</p><nav aria-label="All pages"><a href="index.html">Hub</a><a href="plan.html">90-day plan</a><a href="marketing.html">Marketing</a><a href="store.html">Store</a><a href="golive.html">Go live</a></nav></footer>
+</div>
+<script>
+/* OC Ultra launch kit: shared behaviour. The page reads in full without it; this only adds the guides' road, the
+   section reveal and the copy buttons. */
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var calm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* storage for conveniences only (a remembered value); every call survives a blocked or missing store */
+  window.OCU = {
+    calm: calm,
+    load: function (k, d) { try { var v = localStorage.getItem('ocu.deck.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    save: function (k, v) { try { if (v == null) localStorage.removeItem('ocu.deck.' + k); else localStorage.setItem('ocu.deck.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } },
+    money: function (n, exact) { var neg = n < 0; n = Math.abs(n); var s = (exact || Math.round(n * 100) % 100) ? n.toFixed(2) : String(Math.round(n)); s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (neg ? '−$' : '$') + s; }
+  };
+
+  /* ---------- sections light up as they come into view (decoration only: the content is never hidden) ---------- */
+  var secs = [].slice.call(document.querySelectorAll('.sec'));
+  if ('IntersectionObserver' in window && !calm) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
+    secs.forEach(function (s) { io.observe(s); });
+  } else {
+    secs.forEach(function (s) { s.classList.add('in'); });
+  }
+
+  /* ---------- copy buttons: the clipboard when allowed, otherwise the text is selected for the viewer to copy ---------- */
+  function selectText(el) {
+    try { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); return true; } catch (e) { return false; }
+  }
+  function say(btn, text) {
+    var was = btn.getAttribute('data-label') || btn.textContent;
+    btn.setAttribute('data-label', was);
+    btn.textContent = text;
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function () { btn.textContent = was; }, 2200);
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-copy]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    if (!el) return;
+    var text = (el.innerText || el.textContent || '').replace(/ /g, ' ').replace(/\s+$/, '') + (el.tagName === 'PRE' ? '\n' : '');
+    var fallback = function () { if (selectText(el)) say(btn, 'Selected: copy it'); else say(btn, 'Copy by hand'); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { say(btn, 'Copied'); }, fallback);
+      } else fallback();
+    } catch (err) { fallback(); }
+  }, true);
+
+  /* ---------- guides ---------- */
+  var CAR = '<svg viewBox="0 0 32 22" aria-hidden="true" focusable="false"><rect class="cb" x="1.5" y="3" width="28" height="16" rx="6"/>' +
+    '<rect class="cw" x="16.5" y="5.5" width="6.5" height="11" rx="2.2"/><rect class="cw" x="6" y="6" width="5" height="10" rx="2" opacity=".7"/>' +
+    '<rect class="cl" x="27.4" y="4.6" width="2.6" height="3.4" rx="1.2"/><rect class="cl" x="27.4" y="14" width="2.6" height="3.4" rx="1.2"/></svg>';
+
+  function titleOf(step) { var h = step.querySelector('h4, h3'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+  function initGuide(g, gi) {
+    var steps = [].slice.call(g.querySelectorAll('.step'));
+    var n = steps.length;
+    if (!n) return;
+    var name = g.getAttribute('data-name') || 'Guide';
+    var ctl = document.createElement('div');
+    ctl.className = 'guide-ctl';
+    ctl.setAttribute('role', 'group');
+    ctl.setAttribute('aria-label', name + ': step controls');
+
+    /* phases: groups of steps marked data-phase-name, shown as buttons above the road */
+    var groups = [].slice.call(g.querySelectorAll('[data-phase-name]'));
+    var phaseStart = [];
+    var html = '';
+    if (groups.length) {
+      html += '<div class="phases">';
+      groups.forEach(function (grp, k) {
+        var first = grp.querySelector('.step');
+        var idx = steps.indexOf(first);
+        phaseStart.push(idx);
+        html += '<button type="button" data-phase="' + k + '" style="flex-grow:' + grp.querySelectorAll('.step').length + '">' + grp.getAttribute('data-phase-name') + '</button>';
+      });
+      html += '</div>';
+    }
+    var ticks = '';
+    for (var i = 0; i < n; i++) {
+      var gap = phaseStart.indexOf(i) > 0 ? ' gap' : '';
+      ticks += '<i class="tick' + gap + '" style="left:' + (n > 1 ? (i / (n - 1) * 100) : 50).toFixed(3) + '%"></i>';
+    }
+    html += '<div class="road" aria-hidden="true"><div class="road-lane"></div><div class="road-lit"></div>' + ticks + '<div class="car">' + CAR + '</div></div>';
+    html += '<div class="ctl-row">' +
+      '<button type="button" class="btn small ghost" data-act="back"><span class="arr" aria-hidden="true">←</span> Back</button>' +
+      '<p class="count" aria-live="polite"></p>' +
+      '<button type="button" class="btn small" data-act="next">Next <span class="arr" aria-hidden="true">→</span></button>' +
+      '<button type="button" class="btn small ghost" data-act="auto" aria-pressed="false">Auto-play</button>' +
+      '</div>';
+    ctl.innerHTML = html;
+    var slot = g.querySelector('.guide-slot');
+    if (slot) slot.replaceWith(ctl); else g.insertBefore(ctl, g.firstChild);
+
+    var road = ctl.querySelector('.road');
+    var tickEls = [].slice.call(ctl.querySelectorAll('.tick'));
+    var count = ctl.querySelector('.count');
+    var back = ctl.querySelector('[data-act="back"]');
+    var next = ctl.querySelector('[data-act="next"]');
+    var auto = ctl.querySelector('[data-act="auto"]');
+    var phaseBtns = [].slice.call(ctl.querySelectorAll('[data-phase]'));
+    var cur = -1, timer = null, moveT = null, visible = false;
+
+    function inView(el) { var r = el.getBoundingClientRect(); var top = (parseFloat(getComputedStyle(root).getPropertyValue('--hdr')) || 56) + ctl.offsetHeight; return r.top >= top && r.bottom <= window.innerHeight; }
+    function follow(el) { if (!inView(el)) { try { el.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' }); } catch (e) { el.scrollIntoView(false); } } }
+
+    function go(k, how) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      cur = k;
+      steps.forEach(function (s, j) {
+        s.classList.toggle('is-active', j === k);
+        s.classList.toggle('is-done', j < k);
+        if (j === k) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+      });
+      tickEls.forEach(function (t, j) { t.classList.toggle('done', j < k); });
+      road.style.setProperty('--p', n > 1 ? (k / (n - 1)) : 0);
+      if (!calm) { road.classList.add('moving'); clearTimeout(moveT); moveT = setTimeout(function () { road.classList.remove('moving'); }, 760); }
+      var label = steps[k].getAttribute('data-short') || titleOf(steps[k]);
+      count.innerHTML = 'Step <b>' + (k + 1) + '</b> of ' + n + ' <span>· ' + label.replace(/</g, '&lt;') + '</span>';
+      back.disabled = k === 0;
+      next.disabled = k === n - 1;
+      if (phaseBtns.length) {
+        var ph = 0; phaseStart.forEach(function (s, p) { if (k >= s) ph = p; });
+        phaseBtns.forEach(function (b, p) { if (p === ph) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      }
+      if (how === 'user' || (how === 'auto' && visible)) follow(steps[k]);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } auto.setAttribute('aria-pressed', 'false'); auto.textContent = 'Auto-play'; }
+    function start() {
+      if (cur >= n - 1) go(0, 'user');
+      auto.setAttribute('aria-pressed', 'true'); auto.textContent = 'Pause';
+      timer = setInterval(function () {
+        if (document.hidden) return;
+        if (cur >= n - 1) { stop(); return; }
+        go(cur + 1, 'auto');
+        if (cur >= n - 1) stop();
+      }, 4200);
+    }
+    back.addEventListener('click', function () { stop(); go(cur - 1, 'user'); });
+    next.addEventListener('click', function () { stop(); go(cur + 1, 'user'); });
+    auto.addEventListener('click', function () { if (timer) stop(); else start(); });
+    phaseBtns.forEach(function (b, p) { b.addEventListener('click', function () { stop(); go(phaseStart[p], 'user'); }); });
+    ctl.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); stop(); go(cur + 1, 'user'); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); stop(); go(cur - 1, 'user'); }
+    });
+    steps.forEach(function (s, j) {
+      s.addEventListener('click', function (e) {
+        if (e.target.closest('a, button, input, select, textarea, label, summary, pre, code')) return;
+        var sel = window.getSelection && String(window.getSelection());
+        if (sel) return;
+        stop(); go(j, 'click');
+      });
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { visible = e.isIntersecting; if (!visible && timer) stop(); }); }, { threshold: 0 }).observe(g);
+    }
+    go(0, 'init');
+  }
+  [].slice.call(document.querySelectorAll('[data-guide]')).forEach(initGuide);
+})();
+
+</script>
+<script>
+(function () {
+  var D = {"items":[{"sku":"founder-pack-2026","name":"Founder Pack","kind":"pack","price_cents":1000,"mode":"payment","grants":["badge-founder-26","paint-founders-sunset","frame-founder-runcard","roll-founders","paint-laguna-tidepool","paint-crystal-cove-sand","paint-dana-point-navy","paint-newport-sunset","paint-405-midnight","paint-interchange-orange","paint-toll-road-graphite","paint-saddleback-dusk"],"description":"For the people who were here first. The Founder '26 badge on your profile and run cards, Founders Sunset pearl paint, a Founders run-card frame, your name on the Founders roll in the credits if you want it, and both paint packs (eight more paints). Sold until December 31, 2026, then never again. Looks only: it changes nothing about how any car drives or scores.","available":true,"window":{"until":"2026-12-31T23:59:59-08:00"}},{"sku":"paint-pack-coast","name":"Coast Paint Pack","kind":"livery","price_cents":300,"mode":"payment","grants":["paint-laguna-tidepool","paint-crystal-cove-sand","paint-dana-point-navy","paint-newport-sunset"],"description":"Four paints for every car in your garage: Laguna Tidepool, Crystal Cove Sand, Dana Point Navy (metallic) and Newport Sunset. Included in the Founder Pack.","available":true},{"sku":"paint-pack-freeway-nights","name":"Freeway Nights Paint Pack","kind":"livery","price_cents":300,"mode":"payment","grants":["paint-405-midnight","paint-interchange-orange","paint-toll-road-graphite","paint-saddleback-dusk"],"description":"Four paints for every car in your garage: 405 Midnight (metallic), Interchange Orange, Toll Road Graphite (satin) and Saddleback Dusk (metallic). Included in the Founder Pack.","available":true},{"sku":"livery-pack-stripes","name":"Stripes and Roundels Livery Pack","kind":"livery","price_cents":500,"mode":"payment","grants":["livery-twin-405-stripes","livery-coast-side-stripe","livery-two-tone-roof","livery-door-roundel"],"description":"Four liveries over any paint on any car: Twin 405 Stripes, Coast Side Stripe, Two-Tone Roof and a Door Roundel with your own number. Goes on sale only once the livery layer is in the game.","available":false},{"sku":"wheels-rossini-gt","name":"Rossini GT Wheel Set","kind":"kit","price_cents":300,"mode":"payment","grants":["wheels-gt-irvine-silver-five","wheels-gt-fullerton-black-cl10","wheels-gt-tustin-graphite-aero"],"description":"Three wheel setups for the Rossini GT, each with its own calipers: Irvine Silver five-spoke, Fullerton Black centre-lock, Tustin Graphite aero. Same size wheels and tyres: looks only.","available":true,"car":"rossini-gt"},{"sku":"wheels-rossini-brio","name":"Rossini Brio Wheel Set","kind":"kit","price_cents":300,"mode":"payment","grants":["wheels-brio-santa-ana-bronze-twin5","wheels-brio-fullerton-black-cl10","wheels-brio-laguna-pearl-aero"],"description":"Three wheel setups for the Rossini Brio, each with its own calipers: Santa Ana Bronze twin-five, Fullerton Black centre-lock, Laguna Pearl aero. Same size wheels and tyres: looks only. Earn the Brio by driving to buy it.","available":true,"car":"rossini-brio"},{"sku":"wheels-rossini-corsa","name":"Rossini Corsa Wheel Set","kind":"kit","price_cents":300,"mode":"payment","grants":["wheels-corsa-santa-ana-bronze-twin5","wheels-corsa-laguna-pearl-five","wheels-corsa-anaheim-gunmetal-aero"],"description":"Three wheel setups for the Rossini Corsa, each with its own calipers: Santa Ana Bronze twin-five, Laguna Pearl five-spoke, Anaheim Gunmetal aero. Same size wheels and tyres: looks only. Earn the Corsa by driving to buy it.","available":true,"car":"rossini-corsa"},{"sku":"wheels-vela-e","name":"Vela E Wheel Set","kind":"kit","price_cents":300,"mode":"payment","grants":["wheels-vela-irvine-silver-twin5","wheels-vela-fullerton-black-five","wheels-vela-laguna-pearl-cl10"],"description":"Three wheel setups for the Vela E, each with its own calipers: Irvine Silver twin-five, Fullerton Black five-spoke, Laguna Pearl centre-lock. Same size wheels and tyres: looks only. Earn the Vela E by driving to buy it.","available":true,"car":"vela-e"},{"sku":"style-night-shift","name":"Night Shift Driver Style","kind":"style","price_cents":300,"mode":"payment","grants":["style-night-shift"],"description":"For any driver: black perforated gloves, the Rossini Notte steel watch with a midnight-blue dial, a charcoal bomber's knit cuffs, and plum nails on the female look.","available":true},{"sku":"style-golden-hour","name":"Golden Hour Driver Style","kind":"style","price_cents":300,"mode":"payment","grants":["style-golden-hour"],"description":"For any driver: bare hands, the Rossini Ora gold watch with a champagne sunburst dial, a cream linen jacket's cuffs, and sunset-coral nails on the female look.","available":true},{"sku":"style-canyon-run","name":"Canyon Run Driver Style","kind":"style","price_cents":300,"mode":"payment","grants":["style-canyon-run"],"description":"For any driver: canyon suede gloves, the Vela Pulse smart watch with a sunset face, an olive field jacket's knit cuffs, and sandstone nails on the female look.","available":true},{"sku":"tip-fuel-the-build","name":"Fuel the Build","kind":"tip","price_cents":500,"mode":"payment","grants":["badge-supporter"],"description":"Pay what you want, from $2, to help keep OC Ultra going. You get a small Fuelled the Build badge and our thanks. It unlocks nothing else and the badge is the same at any amount.","available":true,"custom_amount":{"minimum_cents":200,"preset_cents":500,"maximum_cents":10000}},{"sku":"kit-rossini-gt-coast-aero","name":"Rossini GT Coast Aero Kit","kind":"kit","price_cents":500,"mode":"payment","grants":["kit-gt-coast-aero"],"description":"A front splitter, side skirts and a ducktail for the Rossini GT. Looks only: the GT drives exactly the same.","available":false},{"sku":"kit-rossini-brio-street","name":"Rossini Brio Street Kit","kind":"kit","price_cents":500,"mode":"payment","grants":["kit-brio-street-kit"],"description":"A lip, side skirts and a roof spoiler for the Rossini Brio. Looks only: the Brio drives exactly the same.","available":false},{"sku":"kit-rossini-corsa-track","name":"Rossini Corsa Track Kit","kind":"kit","price_cents":500,"mode":"payment","grants":["kit-corsa-track-kit"],"description":"Canards, a deeper splitter and a swan-neck wing for the Rossini Corsa. Looks only: the Corsa drives exactly the same.","available":false},{"sku":"kit-vela-e-aero","name":"Vela E Aero Kit","kind":"kit","price_cents":500,"mode":"payment","grants":["kit-vela-aero-kit"],"description":"Aero blades, diffuser fins and a light bar for the Vela E. Looks only: the Vela E drives exactly the same.","available":false},{"sku":"car-rossini-gt-spider","name":"Rossini GT Spider","kind":"pack","price_cents":500,"mode":"payment","grants":["car-rossini-gt-spider"],"description":"The open-top Rossini GT. Its numbers are exactly the GT's, and it is also in the showroom for credits: buying it here only skips the credits, never the level. A Spider bought here can't be sold in the garage for credits.","available":false},{"sku":"outfit-lot57-weekend","name":"Lot 57 Weekend Outfit","kind":"style","price_cents":300,"mode":"payment","grants":["outfit-lot57-weekend"],"description":"A denim jacket, tee, jeans and sneakers for your driver on foot at Lot 57. Visiting Lot 57 is free.","available":false},{"sku":"outfit-lot57-night-out","name":"Lot 57 Night Out Outfit","kind":"style","price_cents":300,"mode":"payment","grants":["outfit-lot57-night-out"],"description":"A leather jacket, shirt, trousers and boots for your driver on foot at Lot 57. Visiting Lot 57 is free.","available":false},{"sku":"club-monthly","name":"OC Ultra Club (monthly)","kind":"club","price_cents":300,"mode":"subscription","grants":["badge-club","club-monthly-paint","access-early-builds"],"description":"$3 a month, renews monthly until you cancel; cancel online any time in Account. A club badge, a new club paint each month that you keep, and early test builds. No gameplay perks and no extra credits.","available":false,"interval":"month"},{"sku":"club-yearly","name":"OC Ultra Club (yearly)","kind":"club","price_cents":3000,"mode":"subscription","grants":["badge-club","club-monthly-paint","access-early-builds"],"description":"$30 a year, renews yearly until you cancel; cancel online any time in Account, and we email you before each renewal. The same perks as monthly. No gameplay perks and no extra credits.","available":false,"interval":"year"}],"ents":{"paint-laguna-tidepool":{"id":"paint-laguna-tidepool","type":"paint","name":"Laguna Tidepool","status":"hook","hex":"#1F6F78","finish":"gloss","in_game":true},"paint-crystal-cove-sand":{"id":"paint-crystal-cove-sand","type":"paint","name":"Crystal Cove Sand","status":"hook","hex":"#C9B58F","finish":"gloss","in_game":true},"paint-dana-point-navy":{"id":"paint-dana-point-navy","type":"paint","name":"Dana Point Navy","status":"hook","hex":"#1B2A4A","finish":"metallic","in_game":true},"paint-newport-sunset":{"id":"paint-newport-sunset","type":"paint","name":"Newport Sunset","status":"hook","hex":"#E2603A","finish":"gloss","in_game":true},"paint-405-midnight":{"id":"paint-405-midnight","type":"paint","name":"405 Midnight","status":"hook","hex":"#0E1626","finish":"metallic","in_game":true},"paint-interchange-orange":{"id":"paint-interchange-orange","type":"paint","name":"Interchange Orange","status":"hook","hex":"#F26B1D","finish":"gloss","in_game":true},"paint-toll-road-graphite":{"id":"paint-toll-road-graphite","type":"paint","name":"Toll Road Graphite","status":"hook","hex":"#3A3D42","finish":"satin","in_game":true},"paint-saddleback-dusk":{"id":"paint-saddleback-dusk","type":"paint","name":"Saddleback Dusk","status":"hook","hex":"#4B3A6B","finish":"metallic","in_game":true},"paint-founders-sunset":{"id":"paint-founders-sunset","type":"paint","name":"Founders Sunset","status":"hook","hex":"#E8622C","finish":"pearl","exclusive":"founder-pack-2026","in_game":true},"livery-twin-405-stripes":{"id":"livery-twin-405-stripes","type":"livery","name":"Twin 405 Stripes","status":"build","in_game":false},"livery-coast-side-stripe":{"id":"livery-coast-side-stripe","type":"livery","name":"Coast Side Stripe","status":"build","in_game":false},"livery-two-tone-roof":{"id":"livery-two-tone-roof","type":"livery","name":"Two-Tone Roof","status":"build","in_game":false},"livery-door-roundel":{"id":"livery-door-roundel","type":"livery","name":"Door Roundel","status":"build","in_game":false},"wheels-gt-irvine-silver-five":{"id":"wheels-gt-irvine-silver-five","type":"wheels","name":"Irvine Silver five-spoke","status":"hook","car":"rossini-gt","style":"five","rim":{"name":"Irvine Silver","hex":"#C7CACE"},"caliper":{"name":"Signal Red","hex":"#C0161C"},"in_game":false},"wheels-gt-fullerton-black-cl10":{"id":"wheels-gt-fullerton-black-cl10","type":"wheels","name":"Fullerton Black centre-lock","status":"hook","car":"rossini-gt","style":"cl10","rim":{"name":"Fullerton Black","hex":"#16171A"},"caliper":{"name":"Sunset Orange","hex":"#E8622C"},"in_game":false},"wheels-gt-tustin-graphite-aero":{"id":"wheels-gt-tustin-graphite-aero","type":"wheels","name":"Tustin Graphite aero","status":"hook","car":"rossini-gt","style":"aero","rim":{"name":"Tustin Graphite","hex":"#3A3D42"},"caliper":{"name":"Coast Blue","hex":"#2D6FD8"},"in_game":false},"wheels-brio-santa-ana-bronze-twin5":{"id":"wheels-brio-santa-ana-bronze-twin5","type":"wheels","name":"Santa Ana Bronze twin-five","status":"hook","car":"rossini-brio","style":"twin5","rim":{"name":"Santa Ana Bronze","hex":"#8C6A3F"},"caliper":{"name":"Amber","hex":"#E0A800"},"in_game":false},"wheels-brio-fullerton-black-cl10":{"id":"wheels-brio-fullerton-black-cl10","type":"wheels","name":"Fullerton Black centre-lock","status":"hook","car":"rossini-brio","style":"cl10","rim":{"name":"Fullerton Black","hex":"#16171A"},"caliper":{"name":"Signal Red","hex":"#C0161C"},"in_game":false},"wheels-brio-laguna-pearl-aero":{"id":"wheels-brio-laguna-pearl-aero","type":"wheels","name":"Laguna Pearl aero","status":"hook","car":"rossini-brio","style":"aero","rim":{"name":"Laguna Pearl","hex":"#E9E7E1"},"caliper":{"name":"Coast Blue","hex":"#2D6FD8"},"in_game":false},"wheels-corsa-santa-ana-bronze-twin5":{"id":"wheels-corsa-santa-ana-bronze-twin5","type":"wheels","name":"Santa Ana Bronze twin-five","status":"hook","car":"rossini-corsa","style":"twin5","rim":{"name":"Santa Ana Bronze","hex":"#8C6A3F"},"caliper":{"name":"Gloss Black","hex":"#1A1A1C"},"in_game":false},"wheels-corsa-laguna-pearl-five":{"id":"wheels-corsa-laguna-pearl-five","type":"wheels","name":"Laguna Pearl five-spoke","status":"hook","car":"rossini-corsa","style":"five","rim":{"name":"Laguna Pearl","hex":"#E9E7E1"},"caliper":{"name":"Sunset Orange","hex":"#E8622C"},"in_game":false},"wheels-corsa-anaheim-gunmetal-aero":{"id":"wheels-corsa-anaheim-gunmetal-aero","type":"wheels","name":"Anaheim Gunmetal aero","status":"hook","car":"rossini-corsa","style":"aero","rim":{"name":"Anaheim Gunmetal","hex":"#2B2D31"},"caliper":{"name":"Amber","hex":"#E0A800"},"in_game":false},"wheels-vela-irvine-silver-twin5":{"id":"wheels-vela-irvine-silver-twin5","type":"wheels","name":"Irvine Silver twin-five","status":"hook","car":"vela-e","style":"twin5","rim":{"name":"Irvine Silver","hex":"#C7CACE"},"caliper":{"name":"Coast Blue","hex":"#2D6FD8"},"in_game":false},"wheels-vela-fullerton-black-five":{"id":"wheels-vela-fullerton-black-five","type":"wheels","name":"Fullerton Black five-spoke","status":"hook","car":"vela-e","style":"five","rim":{"name":"Fullerton Black","hex":"#16171A"},"caliper":{"name":"Sunset Orange","hex":"#E8622C"},"in_game":false},"wheels-vela-laguna-pearl-cl10":{"id":"wheels-vela-laguna-pearl-cl10","type":"wheels","name":"Laguna Pearl centre-lock","status":"hook","car":"vela-e","style":"cl10","rim":{"name":"Laguna Pearl","hex":"#E9E7E1"},"caliper":{"name":"Gloss Black","hex":"#1A1A1C"},"in_game":false},"style-night-shift":{"id":"style-night-shift","type":"style","name":"Night Shift","status":"hook","watch":{"model":"Rossini Notte","dial":{"name":"Midnight blue","hex":"#1A2A4A"}},"gloves":{"name":"Black perforated gloves","hex":"#141416"},"sleeve":{"name":"Charcoal bomber","hex":"#2A2C30"},"in_game":false},"style-golden-hour":{"id":"style-golden-hour","type":"style","name":"Golden Hour","status":"hook","watch":{"model":"Rossini Ora","dial":{"name":"Champagne sunburst","hex":"#D9C49A"}},"sleeve":{"name":"Cream linen jacket","hex":"#E9E1CF"},"in_game":false},"style-canyon-run":{"id":"style-canyon-run","type":"style","name":"Canyon Run","status":"hook","watch":{"model":"Vela Pulse","dial":{"name":"Sunset face","hex":"#E8622C"}},"gloves":{"name":"Canyon suede gloves","hex":"#8A6E4B"},"sleeve":{"name":"Olive field jacket","hex":"#4F5A3A"},"in_game":false},"badge-founder-26":{"id":"badge-founder-26","type":"badge","name":"Founder '26","status":"build","exclusive":"founder-pack-2026","in_game":true},"frame-founder-runcard":{"id":"frame-founder-runcard","type":"frame","name":"Founders run-card frame","status":"build","exclusive":"founder-pack-2026","in_game":true},"roll-founders":{"id":"roll-founders","type":"credits-roll","name":"Name on the Founders roll","status":"build","exclusive":"founder-pack-2026","in_game":false},"badge-supporter":{"id":"badge-supporter","type":"badge","name":"Fuelled the build","status":"build","in_game":false},"badge-club":{"id":"badge-club","type":"badge","name":"Club member","status":"build","in_game":false},"club-monthly-paint":{"id":"club-monthly-paint","type":"paint-series","name":"Club paint of the month","status":"build","in_game":false},"access-early-builds":{"id":"access-early-builds","type":"access","name":"Early test builds","status":"build","in_game":false},"kit-gt-coast-aero":{"id":"kit-gt-coast-aero","type":"body-kit","name":"Coast Aero kit","status":"build","car":"rossini-gt","in_game":false},"kit-brio-street-kit":{"id":"kit-brio-street-kit","type":"body-kit","name":"Street kit","status":"build","car":"rossini-brio","in_game":false},"kit-corsa-track-kit":{"id":"kit-corsa-track-kit","type":"body-kit","name":"Track kit","status":"build","car":"rossini-corsa","in_game":false},"kit-vela-aero-kit":{"id":"kit-vela-aero-kit","type":"body-kit","name":"Aero kit","status":"build","car":"vela-e","in_game":false},"car-rossini-gt-spider":{"id":"car-rossini-gt-spider","type":"car","name":"Rossini GT Spider","status":"build","in_game":false},"outfit-lot57-weekend":{"id":"outfit-lot57-weekend","type":"outfit","name":"Lot 57 Weekend","status":"build","in_game":false},"outfit-lot57-night-out":{"id":"outfit-lot57-night-out","type":"outfit","name":"Lot 57 Night Out","status":"build","in_game":false}},"cars":{"rossini-gt":{"name":"Rossini GT","paint":"#A80D10","level":1,"credits":0},"rossini-brio":{"name":"Rossini Brio","paint":"#1D4F9C","level":2,"credits":9000},"rossini-corsa":{"name":"Rossini Corsa","paint":"#F5C518","level":5,"credits":30000},"vela-e":{"name":"Vela E","paint":"#F3F1EC","level":8,"credits":60000}}};
+  if (!D) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var money = function (c, exact) { var d = c / 100; return '$' + ((exact || c % 100) ? d.toFixed(2) : String(d)); };
+  var feeC = function (c) { return Math.floor((c * 29 + 500) / 1000) + 30; };
+  var ITEMS = D.items.filter(function (i) { return i.available; });
+  var byId = {}; D.items.forEach(function (i) { byId[i.sku] = i; });
+  var ENT = D.ents, CARS = D.cars;
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var LOOKS_ONLY = 'Looks only: it changes nothing about how any car drives or scores.';
+
+  /* the demo's state; receipts, the age answer, the garage and the paint are kept on this device for convenience (never a card number or an email) */
+  var S = {
+    age: OCU.load('st-age', 'unknown'), user: null,
+    receipts: OCU.load('st-receipts', []), garage: OCU.load('st-garage', ['rossini-gt']),
+    car: OCU.load('st-car', 'rossini-gt'), paint: OCU.load('st-paint', {})
+  };
+  if (S.garage.indexOf('rossini-gt') < 0) S.garage.unshift('rossini-gt');
+  if (S.garage.indexOf(S.car) < 0) S.car = 'rossini-gt';
+  function persist() { OCU.save('st-age', S.age); OCU.save('st-receipts', S.receipts); OCU.save('st-garage', S.garage); OCU.save('st-car', S.car); OCU.save('st-paint', S.paint); }
+  function owned() { var o = {}; S.receipts.forEach(function (r) { r.grants.forEach(function (g) { o[g] = true; }); }); return o; }
+  function has(id) { return !!owned()[id]; }
+  function ownsSku(it) { return it.kind !== 'tip' && it.grants.every(has); }
+  function windowDate(it) { return new Date(it.window.until).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' }); }
+  function saleState(it) {
+    if (!it.available) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
+    if (it.window && Date.now() > Date.parse(it.window.until)) return { ok: false, why: it.name + ' was sold until ' + windowDate(it) + ' and is never sold again.' };
+    return { ok: true };
+  }
+  function carLock(it) { return it.car && S.garage.indexOf(it.car) < 0 ? 'Earn the ' + CARS[it.car].name + ' first' : null; }
+  function sw(hex) { return hex ? '<i class="sw" style="background:' + esc(hex) + '" aria-hidden="true"></i>' : '<i class="sw mark" aria-hidden="true"></i>'; }
+  function grantLine(e) {
+    if (e.type === 'paint') return sw(e.hex) + esc(e.name) + ' <small>' + esc(e.finish) + ' paint</small>';
+    if (e.type === 'wheels') return sw(e.rim.hex) + sw(e.caliper.hex) + esc(e.name) + ' <small>for the ' + esc(CARS[e.car].name) + '</small>';
+    if (e.type === 'style') return sw(e.watch.dial.hex) + esc(e.name) + ' <small>driver style</small>';
+    return sw(null) + esc(e.name);
+  }
+  function short(it) {
+    if (it.kind === 'tip') return 'Pay what you want, from ' + money(it.custom_amount.minimum_cents) + '. A badge, the same at any amount.';
+    if (it.kind === 'style') { var st = ENT[it.grants[0]]; return (st.gloves ? st.gloves.name : 'Bare hands') + ', the ' + st.watch.model + ' watch, ' + st.sleeve.name.toLowerCase() + ' cuffs'; }
+    if (it.sku === 'founder-pack-2026') return 'Founder badge, Founders Sunset, the frame, the roll and 8 paints. Until ' + windowDate(it) + '.';
+    return it.grants.map(function (g) { return ENT[g] ? ENT[g].name : g; }).join(', ');
+  }
+
+  /* ---------- card checks: the game's src/store/payments.ts, line for line ---------- */
+  var digitsOf = function (v) { return String(v).replace(/\D/g, ''); };
+  function luhn(d) { var s = 0, dbl = false; for (var i = d.length - 1; i >= 0; i--) { var n = +d[i]; if (dbl) { n *= 2; if (n > 9) n -= 9; } s += n; dbl = !dbl; } return d.length > 0 && s % 10 === 0; }
+  var cardValid = function (v) { var d = digitsOf(v); return d.length >= 13 && d.length <= 19 && luhn(d); };
+  function expiryValid(v) { var m = /^(\d{2})\s*\/\s*(\d{2})$/.exec(String(v).trim()); if (!m) return false; var mo = +m[1], y = 2000 + +m[2], now = new Date(); if (mo < 1 || mo > 12) return false; return y > now.getFullYear() || (y === now.getFullYear() && mo >= now.getMonth() + 1); }
+  var cvcValid = function (v, brand) { return (brand === 'Amex' ? /^\d{4}$/ : /^\d{3}$/).test(String(v).trim()); };
+  function brandOf(v) { var d = digitsOf(v); if (/^4/.test(d)) return 'Visa'; if (/^(5[1-5]|2[2-7])/.test(d)) return 'Mastercard'; if (/^3[47]/.test(d)) return 'Amex'; if (/^6(011|5)/.test(d)) return 'Discover'; return 'Card'; }
+  var fmtCard = function (v) { return digitsOf(v).slice(0, 19).replace(/(\d{4})(?=\d)/g, '$1 '); };
+  var fmtExp = function (v) { var d = digitsOf(v).slice(0, 4); return d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d; };
+  var TEST = { '4242424242424242': { ok: true }, '5555555555554444': { ok: true }, '378282246310005': { ok: true },
+    '4000000000000002': { ok: false, why: 'Your card was declined.' }, '4000000000009995': { ok: false, why: 'Your card has insufficient funds.' } };
+  function cleanRoll(v) { var t = String(v || '').replace(/\s+/g, ' ').trim(); try { return t && new RegExp("^[\\p{L}\\p{N} .'-]{1,24}$", 'u').test(t) ? t : null; } catch (e) { return t && /^[A-Za-z0-9 .'-]{1,24}$/.test(t) ? t : null; } }
+  function shortId(n) { var a = new Uint8Array(n); try { crypto.getRandomValues(a); } catch (e) { for (var i = 0; i < n; i++) a[i] = Math.floor(Math.random() * 256); } var s = ''; for (var j = 0; j < n; j++) s += 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[a[j] % 32]; return s; }
+
+  /* ---------- the shop list ---------- */
+  function renderShop() {
+    $('shop').innerHTML = ITEMS.map(function (it) {
+      var sale = saleState(it), lock = carLock(it), act;
+      if (it.kind !== 'tip' && ownsSku(it)) act = '<em class="own">Owned</em>';
+      else if (!sale.ok) act = '<em>' + esc(sale.why) + '</em>';
+      else if (lock) act = '<em>' + esc(lock) + '</em>';
+      else act = '<button type="button" class="btn small primary" data-buy="' + it.sku + '" aria-label="' + (it.kind === 'tip' ? 'Support' : 'Buy') + ' ' + esc(it.name) + '">' + (it.kind === 'tip' ? 'Choose an amount' : 'Buy · ' + money(it.price_cents)) + '</button>';
+      return '<li><div class="nm"><b>' + esc(it.name) + '</b><span>' + esc(short(it)) + '</span></div><div class="act">' + act + '</div></li>';
+    }).join('');
+  }
+
+  /* ---------- the checkout sheet ---------- */
+  var C = null;   // { sku, tip, adult, roll, rollName, state: 'form'|'paying'|'done', err, receipt }
+  function open(sku) {
+    C = { sku: sku, tip: byId[sku].custom_amount ? byId[sku].custom_amount.preset_cents : 0, adult: false, roll: false, rollName: '', state: 'form', err: '', receipt: null };
+    renderCheckout(true);
+  }
+  function close() { C = null; $('checkout').hidden = true; $('checkout').innerHTML = ''; renderShop(); }
+  function amount() { var it = byId[C.sku]; return it.kind === 'tip' ? C.tip : it.price_cents; }
+  function renderCheckout(focus) {
+    var box = $('checkout'), it = byId[C.sku], isTip = it.kind === 'tip', sale = saleState(it), h = '';
+    if (C.state === 'done') {
+      var r = C.receipt, paint = r.grants.map(function (g) { return ENT[g]; }).filter(function (e) { return e && e.type === 'paint'; })[0];
+      h += '<p class="eyebrow">Thank you · test mode</p><h3 id="co-h" tabindex="-1">' + (isTip ? 'Thanks for the fuel' : 'It’s yours to use') + '</h3>';
+      h += '<dl class="receipt"><div><dt>Receipt</dt><dd>' + esc(r.id) + '</dd></div><div><dt>Item</dt><dd>' + esc(r.name) + '</dd></div><div><dt>Amount</dt><dd>' + money(r.amount_cents, true) + '</dd></div><div><dt>Card</dt><dd>' + esc(r.card) + '</dd></div><div><dt>When</dt><dd>' + esc(new Date(r.at).toLocaleString('en-US')) + '</dd></div>' + (r.roll_name ? '<div><dt>Founders roll</dt><dd>' + esc(r.roll_name) + ' (the owner approves it)</dd></div>' : '') + '</dl>';
+      h += '<p class="ok">Test mode: nothing was charged.</p>';
+      h += '<ul class="grants">' + r.grants.map(function (g) { return ENT[g] ? '<li>' + grantLine(ENT[g]) + '</li>' : ''; }).join('') + '</ul>';
+      h += '<div class="row">' + (paint ? '<button type="button" class="btn primary" data-use="' + paint.id + '">Use ' + esc(paint.name) + '</button>' : '') + '<button type="button" class="btn' + (paint ? '' : ' primary') + '" data-close>Done</button></div>';
+    } else {
+      h += '<p class="eyebrow">Checkout · test mode</p><h3 id="co-h" tabindex="-1">' + esc(it.name) + '</h3>';
+      h += '<p class="co-price">' + (isTip ? money(Math.max(0, C.tip), true) : money(it.price_cents, true)) + '</p>';
+      h += '<ul class="grants">' + it.grants.map(function (g) { return ENT[g] ? '<li>' + grantLine(ENT[g]) + '</li>' : ''; }).join('') + '</ul>';
+      h += '<p class="licence">' + (isTip ? 'It unlocks nothing else, and the badge is the same at any amount.' : LOOKS_ONLY) + '</p>';
+      if (!sale.ok) h += '<p class="err" role="alert">' + esc(sale.why) + '</p>';
+      if (S.age === 'unknown') {
+        h += '<div class="co-step" role="group" aria-labelledby="age-q"><p id="age-q" style="margin:0"><b>What month and year were you born?</b></p><div class="two-f"><div class="field"><label for="age-m">Month</label><select id="age-m"><option value="">Choose</option>' +
+          MONTHS.map(function (m, i) { return '<option value="' + (i + 1) + '">' + m + '</option>'; }).join('') + '</select></div><div class="field"><label for="age-y">Year</label><input id="age-y" inputmode="numeric" maxlength="4" placeholder="YYYY" autocomplete="off"></div></div>' +
+          (C.err ? '<p class="err" role="alert">' + esc(C.err) + '</p>' : '') + '<div class="row"><button type="button" class="btn" data-age>Continue</button><button type="button" class="btn ghost" data-close>Cancel</button></div></div>';
+      } else if (S.age === 'under13') {
+        h += '<p class="ok">The store is for players 13 and over. Every freeway, mode and car stays free to play.</p><div class="row"><button type="button" class="btn" data-close>Close</button></div>';
+      } else if (!S.user) {
+        h += '<form class="co-step" id="signin" novalidate><p style="margin:0"><b>Sign in, so your items are saved to your account.</b></p><div class="field"><label for="si-email">Email</label><input type="email" id="si-email" autocomplete="off" inputmode="email" placeholder="you@example.com"></div>' +
+          '<p class="fine" style="margin:0">Test mode: this signs you straight in on this page. No email is sent, and the address isn’t saved anywhere.</p>' + (C.err ? '<p class="err" role="alert">' + esc(C.err) + '</p>' : '') +
+          '<div class="row"><button type="submit" class="btn primary">Send my sign-in link</button><button type="button" class="btn ghost" data-close>Cancel</button></div></form>';
+      } else {
+        h += '<p class="fine" style="margin:0">Signed in as ' + esc(S.user) + ' (test account). <button type="button" class="btn small ghost" data-signout>Sign out</button></p>';
+        if (isTip) {
+          var a = it.custom_amount;
+          h += '<div class="co-step" role="group" aria-labelledby="tip-q"><p id="tip-q" style="margin:0"><b>How much?</b></p><div class="seg">' + [2, 5, 10, 20].map(function (d) { return '<button type="button" data-tip="' + d + '" aria-pressed="' + (C.tip === d * 100) + '">$' + d + '</button>'; }).join('') + '</div>' +
+            '<div class="field"><label for="tip-amt">Or type an amount in dollars (' + money(a.minimum_cents) + ' to ' + money(a.maximum_cents) + ')</label><input id="tip-amt" inputmode="numeric" maxlength="3" value="' + (C.tip / 100) + '" autocomplete="off"></div></div>';
+        }
+        if (C.sku === 'founder-pack-2026') {
+          h += '<div class="co-step"><label class="check"><input type="checkbox" id="roll"' + (C.roll ? ' checked' : '') + '><span>Put my name on the Founders roll in the game’s credits (optional; the owner approves each name)</span></label>' +
+            '<div class="field" id="roll-f"' + (C.roll ? '' : ' hidden') + '><label for="roll-n">Name on the roll (letters, numbers, spaces; up to 24)</label><input id="roll-n" maxlength="24" value="' + esc(C.rollName) + '" autocomplete="off"></div></div>';
+        }
+        h += '<div class="co-step"><label class="check"><input type="checkbox" id="adult"' + (C.adult ? ' checked' : '') + '><span>I’m 18 or over, or a parent or guardian has said yes.</span></label>' +
+          '<p class="licence">You’re getting a licence to use ' + (isTip ? 'the badge' : 'these items') + ' in OC Ultra, not ownership of them. <a href="#rules">Terms</a></p></div>';
+        h += '<div class="co-step" role="group" aria-label="Test card"><div class="field"><label for="cc-n">Card number</label><input id="cc-n" class="cardnum" inputmode="numeric" autocomplete="off" placeholder="4242 4242 4242 4242" maxlength="23" aria-describedby="cc-hint"></div>' +
+          '<div class="two-f"><div class="field"><label for="cc-e">Expiry</label><input id="cc-e" inputmode="numeric" autocomplete="off" placeholder="MM/YY" maxlength="5"></div><div class="field"><label for="cc-c">CVC</label><input id="cc-c" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4"></div></div>' +
+          '<p class="fine" id="cc-hint" style="margin:0">Test mode: nothing is charged and nothing leaves this page. 4242 4242 4242 4242 succeeds, 4000 0000 0000 0002 is declined. Use any future date and any 3 digits. Real cards are refused.</p></div>';
+        if (C.err) h += '<p class="err" role="alert">' + esc(C.err) + '</p>';
+        h += '<div class="row"><button type="button" class="btn primary" data-pay' + (C.state === 'paying' || !sale.ok ? ' disabled' : '') + '>' + (C.state === 'paying' ? 'Processing…' : 'Pay ' + money(Math.max(0, amount() || 0), true) + ' (test)') + '</button><button type="button" class="btn ghost" data-close>Cancel</button></div>';
+      }
+    }
+    var keep = {};
+    if (C.state !== 'done') [].slice.call(box.querySelectorAll('input[id], select[id]')).forEach(function (el) { if (el.type !== 'checkbox') keep[el.id] = el.value; });
+    box.innerHTML = h;
+    box.hidden = false;
+    Object.keys(keep).forEach(function (id) { var el = $(id); if (el && keep[id] && !el.value) el.value = keep[id]; });
+    if (focus) {
+      try { box.scrollIntoView({ block: 'start', behavior: OCU.calm ? 'auto' : 'smooth' }); } catch (e) { box.scrollIntoView(); }
+      var hd = $('co-h'); if (hd) hd.focus({ preventScroll: true });
+    }
+  }
+
+  /* the rules every checkout checks first (the game's precheck) */
+  function precheck() {
+    var it = byId[C.sku];
+    if (!it) return 'That item is not in the store.';
+    var sale = saleState(it); if (!sale.ok) return sale.why;
+    if (S.age !== 'ok') return 'The store is for players 13 and over.';
+    if (!S.user) return 'Sign in first, so your items are saved to your account.';
+    if (!C.adult) return 'Tick the box to say you are 18 or over, or that a parent or guardian has said yes.';
+    if (it.car && S.garage.indexOf(it.car) < 0) return 'Earn the ' + CARS[it.car].name + ' first: this set is for that car.';
+    if (it.kind === 'tip') { var a = it.custom_amount; if (!Number.isInteger(C.tip) || C.tip < a.minimum_cents || C.tip > a.maximum_cents) return 'Choose an amount from ' + money(a.minimum_cents) + ' to ' + money(a.maximum_cents) + '.'; }
+    return '';
+  }
+  function pay() {
+    var num = $('cc-n').value, exp = $('cc-e').value, cvc = $('cc-c').value;
+    var fail = function (m) { C.err = m; C.state = 'form'; renderCheckout(false); var e = document.querySelector('#checkout .err'); if (e) e.scrollIntoView({ block: 'nearest' }); };
+    var pre = precheck(); if (pre) return fail(pre);
+    var d = digitsOf(num), brand = brandOf(d);
+    if (!cardValid(d)) return fail('That card number is not valid. Use 4242 4242 4242 4242.');
+    if (!expiryValid(exp)) return fail('Use an expiry date in the future, as MM/YY.');
+    if (!cvcValid(cvc, brand)) return fail(brand === 'Amex' ? 'The CVC is 4 digits on this card.' : 'The CVC is the 3 digits on the back.');
+    var t = TEST[d];
+    if (!t) return fail('Test mode takes Stripe test cards only, so no real card is ever typed here. Use 4242 4242 4242 4242.');
+    C.state = 'paying'; C.err = '';
+    renderCheckout(false);
+    setTimeout(function () {
+      if (!C) return;
+      if (!t.ok) { C.state = 'form'; return fail(t.why + ' Nothing was charged and nothing was added. (Test card ' + fmtCard(d) + ' is always declined.)'); }
+      var it = byId[C.sku];
+      var r = { id: 'OCU-TEST-' + shortId(8), sku: it.sku, name: it.name, amount_cents: amount(), card: brand + ' •••• ' + d.slice(-4), at: new Date().toISOString(), grants: it.grants.slice(), roll_name: it.sku === 'founder-pack-2026' && C.roll ? cleanRoll(C.rollName) : null };
+      S.receipts.unshift(r);
+      persist();
+      C.state = 'done'; C.receipt = r;
+      renderCheckout(true);
+      renderShop(); renderGarage();
+    }, 700);
+  }
+
+  /* ---------- the garage ---------- */
+  var SHEEN = { gloss: .26, metallic: .34, pearl: .42, satin: .08 };
+  function paintsOwned() { var o = owned(); return Object.keys(o).map(function (id) { return ENT[id]; }).filter(function (e) { return e && e.type === 'paint'; }); }
+  function renderGarage() {
+    var sel = $('g-car');
+    sel.innerHTML = S.garage.map(function (c) { return '<option value="' + c + '"' + (c === S.car ? ' selected' : '') + '>' + esc(CARS[c].name) + '</option>'; }).join('');
+    var pid = S.paint[S.car], p = pid && has(pid) ? ENT[pid] : null;
+    if (pid && !p) { delete S.paint[S.car]; persist(); }
+    var svg = $('carp');
+    svg.style.setProperty('--paint', p ? p.hex : CARS[S.car].paint);
+    svg.style.setProperty('--sheen', p ? SHEEN[p.finish] : .3);
+    $('car-label').innerHTML = esc(CARS[S.car].name) + '<small>' + (p ? esc(p.name) + ', ' + esc(p.finish) : 'Factory paint') + '</small>';
+    var paints = paintsOwned();
+    $('paints').innerHTML = '<button type="button" data-paint="" aria-pressed="' + !p + '"><i class="sw" style="background:' + CARS[S.car].paint + '" aria-hidden="true"></i>Factory</button>' +
+      paints.map(function (e) { return '<button type="button" data-paint="' + e.id + '" aria-pressed="' + (p && p.id === e.id) + '">' + sw(e.hex) + esc(e.name) + '</button>'; }).join('') +
+      (paints.length ? '' : '<span class="fine">Buy a paint pack or the Founder Pack to add paints here.</span>');
+    $('earned').innerHTML = ['rossini-brio', 'rossini-corsa', 'vela-e'].map(function (c) {
+      return '<label class="check"><input type="checkbox" data-earn="' + c + '"' + (S.garage.indexOf(c) >= 0 ? ' checked' : '') + '><span>' + esc(CARS[c].name) + ' <span class="fine">(level ' + CARS[c].level + ', ' + CARS[c].credits.toLocaleString('en-US') + ' credits)</span></span></label>';
+    }).join('');
+    var o = Object.keys(owned()).map(function (id) { return ENT[id]; }).filter(Boolean);
+    $('owned').innerHTML = o.length ? o.map(function (e) { return '<li>' + grantLine(e) + (e.in_game ? '' : ' <small class="fine">(saved; shows once the game can fit it)</small>') + '</li>'; }).join('') : '<li class="muted">Nothing yet.</li>';
+    var rc = $('receipts');
+    rc.querySelector('summary').textContent = 'Test receipts (' + S.receipts.length + ')';
+    rc.querySelector('ul').innerHTML = S.receipts.map(function (r) { return '<li><b>' + esc(r.name) + '</b> ' + money(r.amount_cents, true) + ' · ' + esc(new Date(r.at).toLocaleDateString('en-US')) + ' · ' + esc(r.id) + '</li>'; }).join('');
+  }
+
+  /* after "Use <paint>": the garage card's heading, the whole car and its label on screen, below the sticky header */
+  function showCar() {
+    var g = document.querySelector('.garage'), lab = $('car-label'), hd = $('gar-h'), bar = document.querySelector('.top');
+    var room = (bar ? bar.getBoundingClientRect().bottom : 0) + 12;
+    var top = g.getBoundingClientRect().top, bottom = lab.getBoundingClientRect().bottom;
+    if (top < room || bottom > window.innerHeight - 12) {
+      try { window.scrollBy({ top: top - room, behavior: OCU.calm ? 'auto' : 'smooth' }); } catch (err) { window.scrollBy(0, top - room); }
+    }
+    hd.setAttribute('tabindex', '-1');
+    try { hd.focus({ preventScroll: true }); } catch (err) { }
+  }
+
+  /* ---------- events ---------- */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button, a');
+    if (!t || !t.closest('#demo')) return;
+    if (t.hasAttribute('data-buy')) { open(t.getAttribute('data-buy')); return; }
+    if (t.hasAttribute('data-close')) { close(); return; }
+    if (t.hasAttribute('data-age')) {
+      var m = +$('age-m').value, y = +$('age-y').value, now = new Date();
+      if (!m || !y || y < 1900 || y > now.getFullYear()) { C.err = 'Choose a month and type the year, like 1998.'; renderCheckout(false); return; }
+      var months = (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - m);
+      S.age = months > 13 * 12 ? 'ok' : 'under13'; C.err = ''; persist(); renderCheckout(false); return;
+    }
+    if (t.hasAttribute('data-signout')) { S.user = null; renderCheckout(false); return; }
+    if (t.hasAttribute('data-tip')) { C.tip = +t.getAttribute('data-tip') * 100; renderCheckout(false); return; }
+    if (t.hasAttribute('data-pay')) { pay(); return; }
+    if (t.hasAttribute('data-use')) { S.paint[S.car] = t.getAttribute('data-use'); persist(); close(); renderGarage(); showCar(); return; }
+    if (t.hasAttribute('data-paint')) { var v = t.getAttribute('data-paint'); if (v) S.paint[S.car] = v; else delete S.paint[S.car]; persist(); renderGarage(); return; }
+    if (t.id === 'reset') { S.age = 'unknown'; S.user = null; S.receipts = []; S.garage = ['rossini-gt']; S.car = 'rossini-gt'; S.paint = {}; persist(); if (C) close(); renderShop(); renderGarage(); }
+  });
+  document.addEventListener('submit', function (e) {
+    if (e.target.id !== 'signin') return;
+    e.preventDefault();
+    var v = $('si-email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || v.length > 254) { C.err = 'Type a full email address, like you@example.com.'; renderCheckout(false); return; }
+    S.user = v; C.err = ''; renderCheckout(false);
+  });
+  document.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.id === 'cc-n') t.value = fmtCard(t.value);
+    else if (t.id === 'cc-e') t.value = fmtExp(t.value);
+    else if (t.id === 'cc-c') t.value = digitsOf(t.value).slice(0, 4);
+    else if (t.id === 'tip-amt') { t.value = digitsOf(t.value).slice(0, 3); C.tip = (+t.value || 0) * 100; [].slice.call(document.querySelectorAll('[data-tip]')).forEach(function (b) { b.setAttribute('aria-pressed', String(+b.getAttribute('data-tip') * 100 === C.tip)); }); var pb = document.querySelector('[data-pay]'); if (pb && C.state !== 'paying') pb.textContent = 'Pay ' + money(Math.max(0, C.tip), true) + ' (test)'; var cp = document.querySelector('.co-price'); if (cp) cp.textContent = money(Math.max(0, C.tip), true); }
+    else if (t.id === 'roll-n') C.rollName = t.value;
+  });
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.id === 'adult') C.adult = t.checked;
+    else if (t.id === 'roll') { C.roll = t.checked; var f = $('roll-f'); if (f) f.hidden = !t.checked; }
+    else if (t.id === 'g-car') { S.car = t.value; persist(); renderGarage(); }
+    else if (t.hasAttribute && t.hasAttribute('data-earn')) {
+      var c = t.getAttribute('data-earn');
+      if (t.checked) { if (S.garage.indexOf(c) < 0) S.garage.push(c); } else { S.garage = S.garage.filter(function (x) { return x !== c; }); if (S.car === c) S.car = 'rossini-gt'; }
+      persist(); renderShop(); renderGarage();
+    }
+  });
+  renderShop();
+  renderGarage();
+})();
+</script>

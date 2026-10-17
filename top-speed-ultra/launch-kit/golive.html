@@ -1,0 +1,885 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OC Ultra Go-Live</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="The OC Ultra store's go-live guide: ten steps from a new Supabase project to live Stripe payments, each with the exact thing to click or paste and how to know it worked.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night drive west into the sunset. Each page is one stretch of freeway: a sunset horizon up top, then
+   sections posted like exit signs, and every guide is a lane with a car that drives from step to step. */
+:root {
+  color-scheme: dark;
+  --night: #0b0812;      /* page ground: the violet-black the game's UI is cut from */
+  --asphalt: #16101d;    /* raised surfaces */
+  --tar: #211829;        /* inputs, code, signs */
+  --stripe: #3b2d45;     /* hairlines and lane lines */
+  --fog: #bcaebb;        /* secondary text (8:1 on night) */
+  --chalk: #f7efe6;      /* text */
+  --sunset: #fd9123;     /* the wordmark's sky orange (8.75:1 on night) */
+  --ember: #ee1e0a;      /* the wordmark's red edge: fills and strokes only */
+  --amber: #febc31;      /* the sun highlight (11.8:1 on night) */
+  --ember-text: #ff8a6e; /* ember lifted for small text */
+  --dusk: #a9c4ff;       /* "Claude" chips: the blue after sunset */
+  --go: #7ee0a8;         /* success: test receipts, done */
+  --glow: linear-gradient(90deg, var(--ember), var(--sunset) 55%, var(--amber));
+  --f-display: "Barlow Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", system-ui, sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --hdr: 57px;
+  --gl: max(16px, env(safe-area-inset-left, 0px));
+  --gr: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ---------- base (mirrors the artifact skeleton, so pages served without it look the same) ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--night); scroll-padding-top: calc(var(--hdr) + 16px); }
+body { margin: 0; background: var(--night); color: var(--chalk); font: 400 1.0625rem/1.58 var(--f-body);
+  -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--night); }
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--amber); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: var(--chalk); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--sunset); color: var(--night); }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 1.25em; }
+li { margin-bottom: 6px; }
+li::marker { color: var(--sunset); }
+b, strong { font-weight: 600; color: var(--chalk); }
+code, kbd { font: 400 .88em/1.4 var(--f-mono); background: var(--tar); border: 1px solid var(--stripe); border-radius: 5px; padding: 1px 5px; color: var(--chalk); overflow-wrap: anywhere; }
+
+/* ---------- page frame ---------- */
+.page { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; overflow-x: clip; min-height: 100%; }
+.col { max-width: 1120px; margin-inline: auto; }
+.read { max-width: 44rem; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  margin-left: calc(-1 * var(--gl)); margin-right: calc(-1 * var(--gr)); padding-left: var(--gl); padding-right: var(--gr);
+  background: color-mix(in srgb, var(--night) 90%, transparent); border-bottom: 1px solid var(--stripe);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.bar { max-width: 1120px; margin-inline: auto; height: 56px; display: flex; align-items: center; gap: 14px; }
+.brand { display: inline-flex; align-items: center; gap: 8px; color: var(--chalk); text-decoration: none; flex: none; padding: 6px 0; }
+.brand img { height: 26px; width: auto; }
+.brand b { font: italic 800 1.3rem/1 var(--f-display); letter-spacing: .03em; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; margin-left: auto; min-width: 0; }
+.nav a { font: 700 .98rem/1 var(--f-display); letter-spacing: .07em; text-transform: uppercase; color: var(--fog);
+  text-decoration: none; padding: 10px 10px; border-radius: 8px; white-space: nowrap; }
+.nav a:hover { color: var(--chalk); background: var(--tar); }
+.nav a[aria-current="page"] { color: var(--night); background: var(--sunset); }
+
+.foot { border-top: 1px solid var(--stripe); margin-top: 24px; padding-top: 22px; color: var(--fog); font-size: .92rem;
+  display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+.foot p { margin: 0; max-width: 44rem; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; padding-block: clamp(34px, 6vw, 76px) clamp(30px, 5vw, 56px); isolation: isolate; }
+.hero::before { content: ""; position: absolute; z-index: -1; right: -10%; top: -40px; width: min(720px, 90vw); height: 420px;
+  background: radial-gradient(closest-side, rgba(253,145,35,.22), rgba(238,30,10,.08) 60%, transparent); pointer-events: none; }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--glow); opacity: .85; }
+.eyebrow { font: 600 .78rem/1.3 var(--f-body); letter-spacing: .16em; text-transform: uppercase; color: var(--sunset); margin: 0 0 14px; }
+h1 { font: italic 800 clamp(2.7rem, 8.4vw, 5.6rem)/.9 var(--f-display); text-transform: uppercase; letter-spacing: .005em;
+  margin: 0; text-wrap: balance; }
+h1 .hl { color: var(--sunset); }
+.lede { font-size: clamp(1.12rem, 2.2vw, 1.32rem); line-height: 1.5; max-width: 42rem; margin: 18px 0 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; padding: 0; list-style: none; }
+.facts li { margin: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border: 1px solid var(--stripe);
+  border-radius: 12px; background: var(--asphalt); min-width: 0; }
+.facts b { font: 800 1.45rem/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.facts span { font-size: .84rem; color: var(--fog); }
+
+/* ---------- sections, posted like exits ---------- */
+.sec { position: relative; padding-block: clamp(40px, 6vw, 70px); border-top: 1px solid var(--stripe); }
+.sec::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: min(240px, 45%); background: var(--glow);
+  transform-origin: left center; }
+.js .sec::before { transition: transform 1.1s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in)::before { transform: scaleX(0); }
+.sec-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: start; margin-bottom: 26px; max-width: 56rem; }
+.sec-head .sign { grid-row: span 2; margin-top: 2px; }
+h2 { font: 700 clamp(1.95rem, 4.6vw, 3.1rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.kicker { color: var(--fog); margin: 6px 0 0; max-width: 46rem; font-size: 1.05rem; }
+.js .sec-head > :not(.sign) { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.js .sec:not(.in) .sec-head > :not(.sign) { transform: translateY(10px); }
+h3 { font: 700 1.45rem/1.1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 10px; text-wrap: balance; }
+h4 { font: 700 1.22rem/1.15 var(--f-display); text-transform: uppercase; letter-spacing: .02em; margin: 0 0 6px; text-wrap: balance; }
+.sub { margin-top: 34px; }
+
+/* the exit sign: a number or a day, posted on every section and step */
+.sign { display: inline-grid; place-items: center; align-content: center; min-width: 54px; min-height: 50px; padding: 6px 10px 7px;
+  border-radius: 9px; background: var(--tar); border: 1.5px solid var(--sunset); color: var(--chalk);
+  font: 800 1.4rem/1 var(--f-display); text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sign small { display: block; font: 600 .6rem/1 var(--f-body); letter-spacing: .15em; text-transform: uppercase; color: var(--sunset); margin-bottom: 4px; }
+.sec.in > .col > .sec-head .sign, .sec.in > .sec-head .sign { animation: sign-on .9s ease both; }
+@keyframes sign-on { 0% { box-shadow: 0 0 0 0 rgba(253,145,35,0); } 45% { box-shadow: 0 0 30px 3px rgba(253,145,35,.5); } 100% { box-shadow: 0 0 12px 0 rgba(253,145,35,.16); } }
+
+/* ---------- surfaces ---------- */
+.card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; padding: 20px; min-width: 0; }
+.card > :last-child { margin-bottom: 0; }
+.grid { display: grid; gap: 14px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 980px) { .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .g2, .g3, .g4 { grid-template-columns: minmax(0, 1fr); } }
+.callout { background: color-mix(in srgb, var(--sunset) 8%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--sunset) 38%, transparent);
+  border-radius: 12px; padding: 16px 18px; max-width: 56rem; }
+.callout.warm { background: color-mix(in srgb, var(--ember) 9%, var(--asphalt)); border-color: color-mix(in srgb, var(--ember) 45%, transparent); }
+.callout > .lbl:first-child { display: block; margin-bottom: 6px; }
+.callout > :last-child { margin-bottom: 0; }
+.lbl { font: 600 .74rem/1.3 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--sunset); }
+.muted { color: var(--fog); }
+.small { font-size: .9rem; }
+.fine { font-size: .86rem; color: var(--fog); }
+.num { font-variant-numeric: tabular-nums; }
+.big { font: 800 clamp(2rem, 5vw, 3rem)/1 var(--f-display); color: var(--amber); font-variant-numeric: tabular-nums; }
+.stack > * + * { margin-top: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* chips: who does it, what it costs, how ready it is */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+.chips li { margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 .74rem/1 var(--f-body); letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 9px; border-radius: 999px; border: 1px solid var(--stripe); color: var(--fog); background: var(--night); white-space: nowrap; }
+.chip.owner { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.chip.claude { color: var(--dusk); border-color: color-mix(in srgb, var(--dusk) 45%, transparent); }
+.chip.both { color: var(--chalk); border-color: var(--fog); }
+.chip.cost { color: var(--go); border-color: color-mix(in srgb, var(--go) 40%, transparent); }
+.chip.hot { color: var(--night); background: var(--sunset); border-color: transparent; }
+.chip.warn { color: var(--ember-text); border-color: color-mix(in srgb, var(--ember) 55%, transparent); }
+
+/* tables: a box with a border; on a phone, no number is ever off to the side (see the 600px rules below) */
+.scroll-x { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--stripe); border-radius: 12px; background: var(--asphalt); }
+.tbl { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.tbl th { text-align: left; font: 600 .72rem/1.25 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--fog);
+  padding: 12px 14px; border-bottom: 1px solid var(--stripe); background: var(--tar); vertical-align: bottom; }
+.tbl td { padding: 12px 14px; border-bottom: 1px solid var(--stripe); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .r { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl tfoot td { font-weight: 600; background: var(--tar); }
+/* the phone version of a table read down its columns: one card per column (build.py writes it from the table, so the numbers are typed once) */
+.flip-cards { display: none; gap: 12px; }
+.flip-cap { margin: 0; color: var(--fog); font-size: .92rem; }
+.flip-card { background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 12px; padding: 14px 16px 10px; min-width: 0; }
+.flip-card h4 { margin: 0 0 6px; font: italic 800 1.5rem/1 var(--f-display); color: var(--amber); }
+.flip-card dl { margin: 0; }
+.flip-card dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 6px 0;
+  border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+.flip-card dl > div:first-child { border-top: 0; }
+.flip-card dt { color: var(--fog); font-size: .92rem; min-width: 0; }
+.flip-card dt b { color: var(--chalk); }
+.flip-card dd { margin: 0; flex: none; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.flip-card dl > div.tot { margin-inline: -16px; padding-inline: 16px; background: var(--tar); border-top-color: var(--stripe); }
+.flip-card dl > div.tot dt { color: var(--chalk); font-weight: 600; }
+.flip-card dl > div.tot dd { color: var(--chalk); }
+.flip-card dl > div:not(.tot) + .tot { border-top: 2px solid var(--sunset); }
+
+@media (max-width: 600px) {
+  .tbl th, .tbl td { padding: 10px 11px; }
+  /* tables of four or more columns: each row becomes a card, and each value carries its column's name */
+  .tbl.cardrows, .tbl.cardrows tbody, .tbl.cardrows tfoot, .tbl.cardrows tr { display: block; }
+  .tbl.cardrows thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .tbl.cardrows tr { padding: 12px 14px 8px; border-bottom: 1px solid var(--stripe); }
+  .tbl.cardrows tbody tr:last-child { border-bottom: 0; }
+  .tbl.cardrows td { display: flow-root; padding: 5px 0; border: 0; text-align: right; white-space: normal; font-variant-numeric: tabular-nums; }
+  .tbl.cardrows td + td { border-top: 1px solid color-mix(in srgb, var(--stripe) 70%, transparent); }
+  .tbl.cardrows td::before { content: attr(data-label); content: attr(data-label) / ""; float: left; margin-right: 14px; text-align: left;
+    font: 600 .72rem/1.9 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--fog); }
+  .tbl.cardrows td:first-child { text-align: left; font-weight: 600; padding: 0 0 6px; }
+  .tbl.cardrows td:first-child::before { float: none; display: block; line-height: 1.5; margin: 0 0 2px; }
+  /* a table read down its columns (the store's Low / Middle / High) turns: one card per column */
+  .flipbox > .scroll-x { display: none; }
+  .flipbox > .flip-cards { display: grid; }
+}
+/* the narrowest phones (320px): a long word or an email may break so a three-column table still fits */
+@media (max-width: 380px) { .tbl td { overflow-wrap: anywhere; } }
+
+/* ---------- controls ---------- */
+.btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 16px;
+  border-radius: 10px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk); font: 700 1.02rem/1 var(--f-display);
+  letter-spacing: .08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: border-color .2s, color .2s, background-color .2s; }
+.btn:hover { border-color: var(--sunset); color: var(--chalk); }
+.btn.primary { background: linear-gradient(90deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.btn.primary:hover { color: var(--night); filter: brightness(1.06); }
+.btn.ghost { background: transparent; }
+.btn.small { min-height: 36px; padding: 7px 11px; font-size: .9rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.btn .arr { font-family: var(--f-body); font-weight: 600; }
+
+input[type="text"], input[type="email"], input[type="number"], input:not([type]), select, textarea {
+  font: 500 1rem/1.3 var(--f-body); color: var(--chalk); background: var(--tar); border: 1px solid var(--stripe); border-radius: 10px;
+  padding: 11px 12px; width: 100%; min-height: 44px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--amber); outline-offset: 1px; border-color: transparent; }
+input::placeholder { color: color-mix(in srgb, var(--fog) 70%, transparent); }
+input[type="range"] { width: 100%; accent-color: var(--sunset); min-height: 28px; }
+input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--sunset); flex: none; margin: 2px 0 0; }
+label { cursor: pointer; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field > .lbl2 { font: 600 .8rem/1.2 var(--f-body); letter-spacing: .08em; text-transform: uppercase; color: var(--fog); }
+.check { display: flex; gap: 10px; align-items: flex-start; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { min-height: 38px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--stripe); background: var(--tar); color: var(--chalk);
+  font: 600 .95rem/1 var(--f-body); cursor: pointer; font-variant-numeric: tabular-nums; }
+.seg button[aria-pressed="true"] { background: var(--sunset); color: var(--night); border-color: transparent; }
+
+/* code you can copy */
+.code { background: var(--tar); border: 1px solid var(--stripe); border-radius: 12px; min-width: 0; margin: 10px 0 12px; }
+.code-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 6px 6px 14px; border-bottom: 1px solid var(--stripe); }
+.code-head span { font: 500 .78rem/1.3 var(--f-mono); color: var(--fog); min-width: 0; overflow-wrap: anywhere; }
+.code pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 400 .86rem/1.6 var(--f-mono); color: var(--chalk); white-space: pre; tab-size: 2; }
+.code pre.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.code pre.tall { max-height: 360px; overflow: auto; }
+.code .fill { color: var(--amber); }
+.copy-msg { font-size: .82rem; color: var(--go); margin-left: 4px; }
+
+/* ---------- the guide: a lane with a car that drives from step to step ---------- */
+.guide { position: relative; margin-top: 6px; }
+.guide-ctl { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--hdr)); z-index: 6; background: var(--night);
+  box-shadow: 0 0 0 100vmax var(--night); clip-path: inset(0 -100vmax); padding: 10px 0 12px; margin-bottom: 14px; border-bottom: 1px solid var(--stripe); }
+.road { position: relative; height: 30px; margin: 2px 16px 8px; --p: 0; }
+.road::before { content: ""; position: absolute; left: -16px; right: -16px; top: 9px; height: 12px; border-radius: 6px; background: var(--tar);
+  box-shadow: inset 0 0 0 1px var(--stripe); }
+.road-lane { position: absolute; left: -10px; right: -10px; top: 14px; height: 2px; background: repeating-linear-gradient(90deg, var(--stripe) 0 10px, transparent 10px 20px); }
+.road.moving .road-lane { animation: lane .35s linear infinite; }
+@keyframes lane { to { background-position: -20px 0; } }
+.road-lit { position: absolute; left: -16px; top: 9px; height: 12px; border-radius: 6px; width: calc(var(--p) * 100% + 16px);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ember) 70%, transparent), var(--sunset) 75%, var(--amber)); opacity: .9;
+  transition: width .75s cubic-bezier(.3,.8,.2,1); }
+.tick { position: absolute; top: 7px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: var(--stripe); }
+.tick.done { background: var(--night); opacity: .55; }
+.tick.gap { height: 22px; top: 4px; width: 3px; background: var(--fog); opacity: .8; }
+.car { position: absolute; top: 4px; left: calc(var(--p) * 100%); width: 32px; height: 22px; margin-left: -18px; transition: left .75s cubic-bezier(.3,.8,.2,1);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+.car::after { content: ""; position: absolute; left: 28px; top: 1px; width: 46px; height: 20px; border-radius: 50%;
+  background: radial-gradient(ellipse at left center, rgba(254,188,49,.55), transparent 70%); pointer-events: none; }
+.car svg { width: 32px; height: 22px; display: block; }
+.car .cb { fill: var(--sunset); stroke: var(--ember); stroke-width: 1.2; }
+.car .cw { fill: var(--night); }
+.car .cl { fill: var(--amber); }
+.phases { display: flex; gap: 4px; margin: 0 0 8px; }
+.phases button { flex: 1 1 0; min-width: 0; min-height: 34px; padding: 6px 6px; border: 1px solid var(--stripe); border-radius: 8px; background: var(--asphalt);
+  color: var(--fog); font: 700 .86rem/1.05 var(--f-display); letter-spacing: .05em; text-transform: uppercase; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.phases button[aria-current="step"] { color: var(--night); background: var(--sunset); border-color: transparent; }
+.ctl-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; }
+.count { margin: 0; font-size: .95rem; color: var(--fog); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.count b { color: var(--chalk); font-variant-numeric: tabular-nums; }
+.count span { color: var(--chalk); }
+@media (max-width: 560px) {
+  .ctl-row { grid-template-columns: auto auto minmax(0, 1fr); }
+  .ctl-row .count { grid-column: 1 / -1; grid-row: 1; white-space: normal; }
+  .ctl-row [data-act="auto"] { justify-self: end; }
+}
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.steps.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 861px) { .steps.two > .step:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+@media (max-width: 860px) { .steps.two { grid-template-columns: minmax(0, 1fr); } }
+.step { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px; margin: 0;
+  background: var(--asphalt); border: 1px solid var(--stripe); border-radius: 14px; overflow: hidden; min-width: 0;
+  scroll-margin-top: calc(var(--hdr) + 140px); scroll-margin-bottom: 24px; transition: border-color .3s, box-shadow .3s; }
+.step > .sign { min-width: 50px; font-size: 1.25rem; align-self: start; }
+.step-body { min-width: 0; }
+.step-body > :last-child { margin-bottom: 0; }
+.step p { margin-bottom: 8px; }
+.step .proof { font-size: .93rem; color: var(--fog); }
+.step .proof b, .step .if b { color: var(--go); font-weight: 600; }
+.step .if { font-size: .93rem; color: var(--fog); }
+.step .if b { color: var(--ember-text); }
+.js .step { cursor: pointer; }
+.step.is-active { border-color: var(--sunset); box-shadow: 0 0 0 1px var(--sunset), 0 18px 50px -26px rgba(253,145,35,.65); }
+.step.is-active .sign { background: linear-gradient(135deg, var(--sunset), var(--amber)); color: var(--night); border-color: transparent; }
+.step.is-active .sign small { color: var(--night); }
+.step.is-active::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(254,188,49,.14) 46%, transparent 62%); transform: translateX(-100%); animation: sweep 1.15s ease-out forwards; }
+@keyframes sweep { to { transform: translateX(100%); } }
+.step.is-done .sign { border-color: var(--amber); }
+.step.is-done .sign::after { content: "done"; display: block; font: 600 .55rem/1 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--go); margin-top: 3px; }
+.group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin: 26px 0 12px; }
+.group-head:first-child { margin-top: 0; }
+.group-head h3 { margin: 0; }
+.group-head p { margin: 0; color: var(--fog); }
+
+@media (max-width: 560px) {
+  :root { --hdr: 53px; }
+  .bar { height: 52px; gap: 8px; }
+  .brand b { display: none; }
+  .brand img { height: 22px; }
+  .nav a { font-size: .88rem; padding: 9px 7px; letter-spacing: .05em; }
+  .card { padding: 16px; }
+  .step { padding: 14px; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+  .step > .sign { justify-self: start; display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; min-height: 0; padding: 5px 10px; font-size: 1.05rem; }
+  .step > .sign small { margin: 0; }
+  .step.is-done .sign::after { margin: 0; }
+  .sec-head { gap: 10px 12px; align-items: center; }
+  .sec-head .sign { grid-row: auto; margin-top: 0; min-width: 46px; min-height: 46px; font-size: 1.15rem; }
+  .sec-head .kicker { grid-column: 1 / -1; margin-top: 0; }
+  .phases button { flex-grow: 1 !important; font-size: .8rem; letter-spacing: .03em; padding-inline: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .step.is-active::after { display: none; }
+  .js .sec:not(.in)::before { transform: none; }
+  .js .sec:not(.in) .sec-head > :not(.sign) { transform: none; }
+}
+
+/* ---------- this page ---------- */
+.seq { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 0; position: relative; padding: 4px 0; }
+.seq .lane { text-align: center; padding: 10px 6px; border-radius: 10px; background: var(--tar); border: 1px solid var(--stripe); margin: 0 4px; }
+.seq .lane b { display: block; font: 700 1.1rem/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; }
+.seq .lane span { display: block; font-size: .78rem; color: var(--fog); margin-top: 4px; }
+.seq .msg { position: relative; margin: 0 8px; padding: 9px 12px; border-radius: 10px; background: var(--asphalt); border: 1px solid var(--stripe); font-size: .9rem; z-index: 1; min-width: 0; }
+.seq .msg.r::after, .seq .msg.l::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; border-top: 2px solid var(--sunset); border-right: 2px solid var(--sunset); margin-top: -5px; }
+.seq .msg.r::after { right: -6px; transform: rotate(45deg); }
+.seq .msg.l::after { left: -6px; transform: rotate(-135deg); }
+.seq .msg b { color: var(--amber); font-weight: 600; }
+.seq .n { font: 800 .95rem/1 var(--f-display); color: var(--sunset); margin-right: 6px; }
+@media (max-width: 560px) { .seq .msg { font-size: .82rem; padding: 8px 9px; margin: 0 4px; } .seq .lane b { font-size: .95rem; } }
+.keys { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .keys { grid-template-columns: minmax(0, 1fr); } }
+.keys .card h3 { font-size: 1.25rem; }
+.keys .pub h3 { color: var(--go); }
+.keys .sec2 h3 { color: var(--ember-text); }
+.keys ul { margin: 0; }
+.mine { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: end; }
+@media (max-width: 760px) { .mine { grid-template-columns: minmax(0, 1fr); } }
+.mine .fine { grid-column: 1 / -1; margin: 0; }
+.clicks { margin: 0 0 10px; padding-left: 1.3em; }
+.clicks li { margin-bottom: 6px; }
+.clicks b { color: var(--chalk); }
+.worked { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--go) 9%, var(--asphalt)); border: 1px solid color-mix(in srgb, var(--go) 35%, transparent); font-size: .95rem; }
+.worked > b:first-child { display: block; font: 600 .72rem/1.2 var(--f-body); letter-spacing: .12em; text-transform: uppercase; color: var(--go); margin-bottom: 4px; }
+.worked ul { margin: 4px 0 0; }
+.stop { border-color: var(--ember) !important; }
+.stop .sign { border-color: var(--ember); }
+.golive .step h4 { font-size: 1.35rem; }
+.settings { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 6px 0 10px; }
+.settings td { padding: 7px 10px; border-bottom: 1px solid var(--stripe); vertical-align: top; }
+.settings td:first-child { color: var(--fog); width: 40%; }
+.settings code { white-space: nowrap; }
+.checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.checklist li { margin: 0; padding-left: 26px; position: relative; }
+.checklist li::before { content: ""; position: absolute; left: 2px; top: 5px; width: 13px; height: 13px; border: 1.5px solid var(--fog); border-radius: 3px; }
+.lists { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 980px) { .lists { grid-template-columns: minmax(0, 1fr); } }
+.lists ul { margin: 0; font-size: .93rem; }
+.lists .card h3 { font-size: 1.25rem; }
+</style>
+<div class="page">
+<header class="top"><div class="bar"><a class="brand" href="index.html" aria-label="OC Ultra launch kit: the hub"><img src="img/oc-logo-480.webp" width="480" height="171" alt=""><b>Ultra</b></a><nav class="nav" aria-label="Launch kit pages"><a href="plan.html">Plan</a><a href="marketing.html">Marketing</a><a href="store.html">Store</a><a href="golive.html" aria-current="page">Go live</a></nav></div></header>
+<main class="col">
+  <section class="hero" aria-labelledby="gl-h">
+    <p class="eyebrow">OC Ultra · the store's go-live guide</p>
+    <h1 id="gl-h">Ten steps to live payments. <span class="hl">Stop at nine.</span></h1>
+    <p class="lede">Steps 1 to 9 connect Supabase and Stripe in Stripe's test mode: real servers, real webhooks, no real money. Step 10 turns on live keys, and only when you decide. Nothing here is deployed yet.</p>
+    <ul class="facts">
+      <li><b>$0</b><span>a month on the free tiers</span></li>
+      <li><b>2</b><span>Edge Functions</span></li>
+      <li><b>5</b><span>tables with row-level security</span></li>
+      <li><b>~$10</b><span>a year for a domain (sign-in email)</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="map" aria-labelledby="map-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>1</span>
+      <h2 id="map-h">How it fits together</h2>
+      <p class="kicker">The game never sees a card and never sends a price. It sends your sign-in token and the item's id; the server charges what its own copy of the catalog says, and only Stripe's signed message can grant an item.</p>
+    </div>
+    <div class="seq" role="list" aria-label="One purchase, in order">
+      <div class="lane" role="presentation"><b>The game</b><span>in the browser</span></div>
+      <div class="lane" role="presentation"><b>Supabase</b><span>free tier</span></div>
+      <div class="lane" role="presentation"><b>Stripe</b><span>hosted pages</span></div>
+      <div class="msg r" role="listitem" style="grid-column:1 / 3"><span class="n">1</span>Sign in: Auth emails a one-tap link (sent through Resend)</div>
+      <div class="msg r" role="listitem" style="grid-column:1 / 3"><span class="n">2</span>Buy: <b>your token and the sku only</b> to create-checkout</div>
+      <div class="msg r" role="listitem" style="grid-column:2 / 4"><span class="n">3</span>A Checkout Session at the server's own price</div>
+      <div class="msg r" role="listitem" style="grid-column:1 / 4"><span class="n">4</span>You pay on Stripe's page: card, Apple Pay or Google Pay</div>
+      <div class="msg l" role="listitem" style="grid-column:2 / 4"><span class="n">5</span>A <b>signed</b> checkout.session.completed to stripe-webhook</div>
+      <div class="msg" role="listitem" style="grid-column:2 / 3"><span class="n">6</span>The webhook writes purchases and entitlements</div>
+      <div class="msg l" role="listitem" style="grid-column:1 / 3"><span class="n">7</span>The game reads <b>only your own</b> entitlements</div>
+    </div>
+  </section>
+
+  <section class="sec" id="keys" aria-labelledby="keys-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>2</span>
+      <h2 id="keys-h">Keys, before you start</h2>
+      <p class="kicker">Two kinds of key. Mixing them up is the one mistake that can't be undone by a rebuild: if a secret leaks, roll it in the dashboard at once.</p>
+    </div>
+    <div class="keys">
+      <div class="card pub"><h3>Public: goes in the game</h3><ul><li>The Supabase <b>Project URL</b>.</li><li>The <b>anon</b> or <b>publishable</b> key (<code>sb_publishable_…</code>). It's public by design: row-level security is what protects the data.</li></ul></div>
+      <div class="card sec2"><h3>Secret: never in the game, chat, a screenshot or git</h3><ul><li>The service-role key or any <code>sb_secret_…</code> key.</li><li>The Stripe secret key (<code>sk_test_…</code>, later <code>sk_live_…</code>).</li><li>The webhook signing secret (<code>whsec_…</code>).</li><li>They live in Supabase's function secrets only. Claude never asks for them.</li></ul></div>
+    </div>
+    <div class="card sub">
+      <h3>Fill in your details</h3>
+      <p class="muted small">Optional. The commands below update as you type. Both values are public addresses; this page keeps them on this device only. <b>Never type a key here.</b></p>
+      <div class="mine">
+        <div class="field"><label for="f-ref">Supabase project ref (the letters before .supabase.co)</label><input id="f-ref" autocomplete="off" spellcheck="false" placeholder="your project ref"></div>
+        <div class="field"><label for="f-site">The game's address</label><input id="f-site" autocomplete="off" spellcheck="false" placeholder="https://your-org.github.io/" inputmode="url"></div>
+        <p class="fine" id="f-msg" aria-live="polite">Until you fill them in, the commands show placeholders in amber.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec golive" id="steps" aria-labelledby="steps-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>3</span>
+      <h2 id="steps-h">The ten steps</h2>
+      <p class="kicker">Type the commands in a terminal, in the <code>top-speed-ultra</code> folder. The Supabase CLI runs through <code>npx</code>, so there's nothing to install; the first run downloads it. Keep Stripe's Test mode switch on until step 10.</p>
+    </div>
+    <div class="guide" data-guide data-name="Go live">
+      <div class="guide-slot"></div>
+      <ol class="steps">
+        <li class="step" data-short="Create the Supabase project"><span class="sign" aria-hidden="true"><small>Step</small>1</span><div class="step-body">
+          <h4>Create the Supabase project</h4>
+          <ul class="chips"><li><span class="chip owner">Owner clicks</span></li><li><span class="chip cost">$0</span></li><li><span class="chip">2 minutes</span></li></ul>
+          <ol class="clicks"><li>supabase.com → sign in (GitHub is fine) → <b>New project</b>.</li><li>Name <code>oc-ultra</code>. Region <b>West US</b>, closest to Orange County. Set a database password and save it in your password manager. Plan <b>Free</b>.</li><li>Wait a minute or two while it sets up.</li></ol>
+          <div class="worked"><b>It worked when</b>Project Settings → API (may be called Data API or API Keys) shows a <b>Project URL</b> like <code>https://<span class="fill" data-fill="ref">your-ref</span>.supabase.co</code> and an <b>anon</b> or <b>publishable</b> key. The letters before <code>.supabase.co</code> are your project ref: put it in the box above.</div>
+        </div></li>
+
+        <li class="step" data-short="Run the migration"><span class="sign" aria-hidden="true"><small>Step</small>2</span><div class="step-body">
+          <h4>Run the migration</h4>
+          <ul class="chips"><li><span class="chip owner">Owner pastes</span></li><li><span class="chip cost">$0</span></li><li><span class="chip">Safe to run twice</span></li></ul>
+          <ol class="clicks"><li>Supabase dashboard → <b>SQL Editor</b> → <b>New query</b>.</li><li>Copy the whole migration below, paste it, click <b>Run</b>.</li></ol>
+          <div class="code"><div class="code-head"><span>migrations/0001_oc_ultra_store.sql · 6,559 bytes</span><button type="button" class="btn small ghost" data-copy="sql">Copy</button></div><pre class="tall" id="sql">-- OC Ultra store: accounts, purchases, entitlements, the launch waitlist and invite codes.
+-- Run once in the Supabase SQL editor (or `supabase db push`). Safe to read top to bottom: tables, then row-level
+-- security, then grants. Nothing here holds card data: Stripe&#x27;s hosted page takes the card and keeps it.
+--
+-- Who can do what (row-level security is on for every table):
+--   profiles      a player reads, creates and updates only their own row (the 13+ answer; never a birth date)
+--   purchases     a player reads only their own rows; only the service role (the stripe-webhook function) writes
+--   entitlements  a player reads only their own rows; only the service role writes
+--   waitlist      anyone may add an email (and a ZIP and who referred them); nobody but the service role reads
+--   invite_codes  the service role only
+-- The service role bypasses row-level security by design; its key lives only in the Edge Functions&#x27; secrets.
+
+-- ------------------------------------------------------------------------------------------- tables
+create table if not exists public.profiles (
+  id           uuid primary key references auth.users (id) on delete cascade,
+  display_name text check (display_name is null or char_length(display_name) between 1 and 24),
+  is_13_plus   boolean not null default false,
+  created_at   timestamptz not null default now()
+);
+
+create table if not exists public.purchases (
+  id                     uuid primary key default gen_random_uuid(),
+  user_id                uuid not null references auth.users (id) on delete cascade,
+  sku                    text not null,
+  stripe_session_id      text not null unique,          -- one row per Checkout Session: redelivered webhooks change nothing
+  stripe_payment_intent  text,                          -- one-time payments: how a refund finds its purchase
+  stripe_subscription_id text,                          -- the club: how a cancellation finds its purchase
+  amount_cents           integer not null check (amount_cents &gt;= 0),
+  currency               text not null default &#x27;usd&#x27;,
+  status                 text not null default &#x27;paid&#x27; check (status in (&#x27;paid&#x27;, &#x27;refunded&#x27;, &#x27;ended&#x27;)),
+  roll_name              text check (roll_name is null or char_length(roll_name) between 1 and 24),  -- Founder Pack opt-in; the owner approves it
+  created_at             timestamptz not null default now(),
+  refunded_at            timestamptz
+);
+create index if not exists purchases_user_idx on public.purchases (user_id);
+create index if not exists purchases_pi_idx on public.purchases (stripe_payment_intent) where stripe_payment_intent is not null;
+create index if not exists purchases_sub_idx on public.purchases (stripe_subscription_id) where stripe_subscription_id is not null;
+
+create table if not exists public.entitlements (
+  user_id     uuid not null references auth.users (id) on delete cascade,
+  entitlement text not null,                            -- an id from src/store/cosmetics.json
+  sku         text not null,                            -- the purchase that granted it most recently
+  granted_at  timestamptz not null default now(),
+  revoked_at  timestamptz,                              -- set by a refund or the end of a subscription
+  primary key (user_id, entitlement)
+);
+
+create table if not exists public.waitlist (
+  email         text not null unique check (char_length(email) &lt;= 254 and email ~* &#x27;^[^@\s]+@[^@\s]+\.[^@\s]{2,}$&#x27;),
+  zip           text check (zip is null or zip ~ &#x27;^\d{5}$&#x27;),
+  referral_code text not null unique default substr(md5(gen_random_uuid()::text), 1, 10),
+  referred_by   text check (referred_by is null or referred_by ~ &#x27;^[0-9a-f]{10}$&#x27;),
+  created_at    timestamptz not null default now()
+);
+
+create table if not exists public.invite_codes (
+  code       text primary key check (code ~ &#x27;^[A-Z0-9-]{4,32}$&#x27;),
+  max_uses   integer not null default 1 check (max_uses &gt; 0),
+  uses       integer not null default 0 check (uses &gt;= 0 and uses &lt;= max_uses),
+  expires_at timestamptz
+);
+
+-- ------------------------------------------------------------------------------------------- row-level security
+alter table public.profiles     enable row level security;
+alter table public.purchases    enable row level security;
+alter table public.entitlements enable row level security;
+alter table public.waitlist     enable row level security;
+alter table public.invite_codes enable row level security;
+
+drop policy if exists &quot;profiles: read own&quot; on public.profiles;
+create policy &quot;profiles: read own&quot; on public.profiles for select to authenticated using ((select auth.uid()) = id);
+drop policy if exists &quot;profiles: create own&quot; on public.profiles;
+create policy &quot;profiles: create own&quot; on public.profiles for insert to authenticated with check ((select auth.uid()) = id);
+drop policy if exists &quot;profiles: update own&quot; on public.profiles;
+create policy &quot;profiles: update own&quot; on public.profiles for update to authenticated using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
+
+drop policy if exists &quot;purchases: read own&quot; on public.purchases;
+create policy &quot;purchases: read own&quot; on public.purchases for select to authenticated using ((select auth.uid()) = user_id);
+
+drop policy if exists &quot;entitlements: read own&quot; on public.entitlements;
+create policy &quot;entitlements: read own&quot; on public.entitlements for select to authenticated using ((select auth.uid()) = user_id);
+
+drop policy if exists &quot;waitlist: anyone may join&quot; on public.waitlist;
+create policy &quot;waitlist: anyone may join&quot; on public.waitlist for insert to anon, authenticated with check (true);
+
+-- invite_codes: no policy at all, so only the service role reaches it
+
+-- ------------------------------------------------------------------------------------------- grants
+-- Belt and braces under the policies: the roles the page uses get only what they need, whatever the project&#x27;s
+-- default privileges are.
+revoke all on public.profiles, public.purchases, public.entitlements, public.waitlist, public.invite_codes from anon, authenticated;
+grant select, insert on public.profiles to authenticated;
+grant update (id, display_name, is_13_plus) on public.profiles to authenticated;   -- an upsert sets every column it sends; the policy keeps id = you
+grant select on public.purchases to authenticated;
+grant select on public.entitlements to authenticated;
+grant insert (email, zip, referred_by) on public.waitlist to anon, authenticated;
+grant all on public.profiles, public.purchases, public.entitlements, public.waitlist, public.invite_codes to service_role;</pre></div>
+          <div class="worked"><b>It worked when</b>The editor says "Success. No rows returned", and <b>Table Editor</b> lists <code>profiles</code>, <code>purchases</code>, <code>entitlements</code>, <code>waitlist</code> and <code>invite_codes</code>, each marked RLS enabled.</div>
+          <p class="fine" style="margin-top:8px">Optional, with Postgres on your computer: <code>server/supabase/tests/run-local.sh</code> runs the migration on a throwaway database and tries every write a stranger must not make; each prints <code>refused</code>. The copy above was taken from <code>server/supabase/migrations/0001_oc_ultra_store.sql</code> when this page was built; if the file has changed since, copy from the file.</p>
+        </div></li>
+
+        <li class="step" data-short="Sign-in email"><span class="sign" aria-hidden="true"><small>Step</small>3</span><div class="step-body">
+          <h4>Sign-in email: settings and a sender</h4>
+          <ul class="chips"><li><span class="chip owner">Owner</span></li><li><span class="chip cost">$0 + a domain (~$10 a year)</span></li></ul>
+          <p>Supabase's built-in email sends 2 an hour, to your own team only, so players can't sign in until you add a sender.</p>
+          <ol class="clicks"><li><b>Authentication → URL Configuration</b>: set the Site URL and add the Redirect URL below. Sign-in links come back to the page with <code>?store=signin</code>.</li><li><b>Authentication → Sign In / Providers → Email</b>: email sign-in on. Magic links need no password.</li><li>At resend.com: make an account, add your domain and the DNS records it shows, wait for <b>Verified</b>, create an API key. Turn Resend's <b>click tracking off</b>: it rewrites links and can break them.</li><li>Supabase <b>Authentication → Emails → SMTP Settings</b>: custom SMTP on, with the values below. The password is the Resend API key: type it there, nowhere else.</li></ol>
+          <div class="code"><div class="code-head"><span>URL Configuration</span><button type="button" class="btn small ghost" data-copy="urls">Copy</button></div><pre id="urls">Site URL:       <span class="fill" data-fill="site">https://your-org.github.io/</span>
+Redirect URLs:  <span class="fill" data-fill="site">https://your-org.github.io/</span>**</pre></div>
+          <div class="code"><div class="code-head"><span>SMTP Settings</span><button type="button" class="btn small ghost" data-copy="smtp">Copy</button></div><pre id="smtp">Host:         smtp.resend.com
+Port:         465
+Username:     resend
+Password:     (your Resend API key: type it in Supabase only)
+Sender email: signin@<span class="fill">your-domain</span>
+Sender name:  OC Ultra</pre></div>
+          <div class="worked"><b>It worked when</b>You sign in from the game (step 8) with an email that is <b>not</b> on your Supabase team, and the link arrives within a minute.</div>
+        </div></li>
+
+        <li class="step" data-short="Stripe in test mode"><span class="sign" aria-hidden="true"><small>Step</small>4</span><div class="step-body">
+          <h4>Create the Stripe account, in test mode</h4>
+          <ul class="chips"><li><span class="chip owner">Owner</span></li><li><span class="chip cost">$0</span></li><li><span class="chip warn">Don't activate yet</span></li></ul>
+          <ol class="clicks"><li>dashboard.stripe.com/register → create the account. Keep the <b>Test mode</b> switch (top right) on.</li><li><b>Settings → Business → Customer emails</b>: turn on <b>Successful payments</b> and <b>Refunds</b>, so Stripe emails every receipt.</li><li><b>Settings → Public details</b>: statement descriptor <code>OC ULTRA</code> (TODO: or your legal name) and a support email (TODO).</li><li><b>Developers → API keys</b>: copy the <b>Secret key</b> (<code>sk_test_…</code>) for step 5. Paste it nowhere else.</li></ol>
+          <div class="worked"><b>It worked when</b>The dashboard shows the orange Test mode banner and the secret key starts with <code>sk_test_</code>.</div>
+        </div></li>
+
+        <li class="step" data-short="Set the function secrets"><span class="sign" aria-hidden="true"><small>Step</small>5</span><div class="step-body">
+          <h4>Set the function secrets</h4>
+          <ul class="chips"><li><span class="chip owner">Owner, in a terminal</span></li><li><span class="chip cost">$0</span></li></ul>
+          <ol class="clicks"><li>Copy <code>server/supabase/.env.example</code> to <code>server/supabase/.env</code> (git ignores it) and fill it in your text editor: the <code>sk_test_…</code> key from step 4; leave the webhook secret for step 7.</li><li>Then run the commands.</li></ol>
+          <div class="code"><div class="code-head"><span>server/supabase/.env: the two address lines</span><button type="button" class="btn small ghost" data-copy="env1">Copy</button></div><pre id="env1">SITE_URL=<span class="fill" data-fill="site">https://your-org.github.io/</span>
+ALLOWED_ORIGINS=<span class="fill" data-fill="origin">https://your-org.github.io</span></pre></div>
+          <div class="code"><div class="code-head"><span>In top-speed-ultra/server</span><button type="button" class="btn small ghost" data-copy="cmd5">Copy</button></div><pre id="cmd5">npx supabase@latest login
+npx supabase@latest link --project-ref <span class="fill" data-fill="ref">your-ref</span>
+npx supabase@latest secrets set --env-file supabase/.env</pre></div>
+          <p class="fine">Supabase gives every function <code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code> itself: don't set those. If the project only has the newer secret keys, set <code>STORE_SERVICE_KEY</code> to the <code>sb_secret_…</code> key.</p>
+          <div class="worked"><b>It worked when</b><code>npx supabase@latest secrets list</code> shows <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>, <code>SITE_URL</code> and <code>ALLOWED_ORIGINS</code>, values hidden.</div>
+        </div></li>
+
+        <li class="step" data-short="Deploy both functions"><span class="sign" aria-hidden="true"><small>Step</small>6</span><div class="step-body">
+          <h4>Deploy both functions</h4>
+          <ul class="chips"><li><span class="chip owner">Owner</span></li><li><span class="chip claude">Claude can check</span></li><li><span class="chip cost">$0</span></li></ul>
+          <div class="code"><div class="code-head"><span>In top-speed-ultra</span><button type="button" class="btn small ghost" data-copy="cmd6">Copy</button></div><pre id="cmd6">npm run store:sync
+npm run store:check
+cd server
+npx supabase@latest functions deploy create-checkout --no-verify-jwt
+npx supabase@latest functions deploy stripe-webhook --no-verify-jwt</pre></div>
+          <p class="fine"><code>--no-verify-jwt</code> is on purpose: create-checkout checks the player's sign-in itself, and Stripe has no Supabase token, so the Stripe signature is the webhook's check. Re-run the sync and both deploys after <b>any</b> change to the catalog files: the server charges and grants what its own copy says.</p>
+          <div class="code"><div class="code-head"><span>Open in a browser</span><button type="button" class="btn small ghost" data-copy="url6">Copy</button></div><pre id="url6">https://<span class="fill" data-fill="ref">your-ref</span>.supabase.co/functions/v1/create-checkout</pre></div>
+          <div class="worked"><b>It worked when</b>That address shows <code>{"livemode":false,"on_sale":[ …11 skus… ]}</code>.</div>
+        </div></li>
+
+        <li class="step" data-short="Add the webhook"><span class="sign" aria-hidden="true"><small>Step</small>7</span><div class="step-body">
+          <h4>Add the webhook endpoint in Stripe</h4>
+          <ul class="chips"><li><span class="chip owner">Owner</span></li><li><span class="chip cost">$0</span></li><li><span class="chip">Still test mode</span></li></ul>
+          <ol class="clicks"><li>Stripe → <b>Developers → Webhooks</b> → <b>Add endpoint</b> (may be called Add destination).</li><li>Endpoint URL and the four events below. Nothing else is needed; other events get a 200 and are ignored.</li><li>Open the endpoint, reveal the <b>Signing secret</b> (<code>whsec_…</code>), put it in <code>server/supabase/.env</code> as <code>STRIPE_WEBHOOK_SECRET</code>, then run the two commands.</li></ol>
+          <div class="code"><div class="code-head"><span>Endpoint URL</span><button type="button" class="btn small ghost" data-copy="hook">Copy</button></div><pre id="hook">https://<span class="fill" data-fill="ref">your-ref</span>.supabase.co/functions/v1/stripe-webhook</pre></div>
+          <div class="code"><div class="code-head"><span>Events to send</span><button type="button" class="btn small ghost" data-copy="events">Copy</button></div><pre id="events">checkout.session.completed
+checkout.session.async_payment_succeeded
+charge.refunded
+customer.subscription.deleted</pre></div>
+          <div class="code"><div class="code-head"><span>In top-speed-ultra/server</span><button type="button" class="btn small ghost" data-copy="cmd7">Copy</button></div><pre id="cmd7">npx supabase@latest secrets set --env-file supabase/.env
+npx supabase@latest functions deploy stripe-webhook --no-verify-jwt</pre></div>
+          <div class="worked"><b>It worked when</b><ul><li>The endpoint's <b>Send test event</b> with <code>checkout.session.completed</code> shows a <b>200</b> (Stripe's sample has no player in it, so the body says <code>"ignored"</code>).</li><li>A request with no signature fails: the command below answers <code>400 {"error":"bad signature"}</code>.</li></ul></div>
+          <div class="code"><div class="code-head"><span>Signature check</span><button type="button" class="btn small ghost" data-copy="curl7">Copy</button></div><pre id="curl7">curl -X POST https://<span class="fill" data-fill="ref">your-ref</span>.supabase.co/functions/v1/stripe-webhook -d '{}'</pre></div>
+        </div></li>
+
+        <li class="step" data-short="Game settings and rebuild"><span class="sign" aria-hidden="true"><small>Step</small>8</span><div class="step-body">
+          <h4>Set the game's settings and rebuild</h4>
+          <ul class="chips"><li><span class="chip owner">Owner</span></li><li><span class="chip claude">Claude can build</span></li><li><span class="chip cost">$0</span></li></ul>
+          <ol class="clicks"><li>Copy <code>top-speed-ultra/.env.example</code> to <code>top-speed-ultra/.env.production.local</code> (git ignores it) and fill it in as below, with the anon or publishable key from step 1. Only that key, ever: Vite bakes every <code>VITE_</code> value into the page for anyone to read.</li><li><code>npm run build</code>, then deploy <code>dist/top-speed-ultra.html</code> to the game's website the usual way.</li><li>The Claude test build (<code>dist/artifact.html</code>) stays in test mode: move <code>.env.production.local</code> aside, <code>npm run build</code>, republish, move it back.</li></ol>
+          <div class="code"><div class="code-head"><span>.env.production.local</span><button type="button" class="btn small ghost" data-copy="env8">Copy</button></div><pre id="env8">VITE_SUPABASE_URL=https://<span class="fill" data-fill="ref">your-ref</span>.supabase.co
+VITE_SUPABASE_ANON_KEY=<span class="fill">the anon or publishable key from step 1</span>
+VITE_PAYMENTS_LIVE=true</pre></div>
+          <div class="worked"><b>It worked when</b>The Store on the game's website says <b>Secure checkout</b> where it said Test mode, and the checkout button says "Checkout" instead of "Pay … (test)".</div>
+        </div></li>
+
+        <li class="step" data-short="One test purchase"><span class="sign" aria-hidden="true"><small>Step</small>9</span><div class="step-body">
+          <h4>One test purchase, end to end</h4>
+          <ul class="chips"><li><span class="chip owner">Owner, on a phone or computer</span></li><li><span class="chip cost">$0: Stripe test mode</span></li></ul>
+          <ol class="clicks"><li><b>Store → Buy · $3</b> on the Coast Paint Pack → month and year → your email → <b>Send my sign-in link</b>.</li><li>Open the email <b>on the same device</b> and tap the link. The game opens with the Store signed in.</li><li><b>Buy · $3</b> again → tick "I'm 18 or over…" → <b>Checkout · $3.00</b>. Stripe's page opens and says Test mode.</li><li>Card <code>4242 4242 4242 4242</code>, any future date, any CVC, any ZIP → <b>Pay</b>.</li><li>Stripe sends you back. The Store says "Confirming your purchase…", then shows the receipt.</li></ol>
+          <div class="worked"><b>It worked when</b><ul><li><b>purchases</b> has one row: sku <code>paint-pack-coast</code>, status <code>paid</code>, amount <code>300</code>.</li><li><b>entitlements</b> has four rows for you (the four Coast paints), <code>revoked_at</code> empty.</li><li>Stripe <b>Payments</b> shows a $3.00 test payment, Succeeded; the webhook shows the event delivered with 200; a test receipt arrived by email.</li><li>In the game, <b>Your items</b> lists the four paints, and one goes on your car.</li></ul></div>
+          <p style="margin-top:10px"><b>Then the other three paths:</b> <b>Decline</b> with <code>4000 0000 0000 0002</code> on Stripe's page: no new purchases row. <b>Refund</b> the $3.00 in Stripe: within seconds the status becomes <code>refunded</code>, the four rows get a <code>revoked_at</code>, and after Restore purchases the car is back in factory paint. <b>Restore</b>: sign in with the same email in a second browser and tap Restore purchases.</p>
+        </div></li>
+
+        <li class="step stop" data-short="Live keys, when you decide"><span class="sign" aria-hidden="true"><small>Step</small>10</span><div class="step-body">
+          <h4>Live keys, only when you decide</h4>
+          <ul class="chips"><li><span class="chip owner">Owner decides</span></li><li><span class="chip warn">Real money</span></li><li><span class="chip cost">Stripe's fee per sale</span></li></ul>
+          <p><b>Not before every one of these is done:</b></p>
+          <ul class="checklist"><li>The prices approved (every catalog price is a proposal).</li><li>The support email and the statement descriptor set.</li><li>The terms, refund policy and privacy policy read by a lawyer.</li><li>The trademark searches: "OC Ultra", and "Rossini" and "Vela" in class 14 before the watch styles sell.</li><li>Individual seller or LLC decided (an LLC's $800 a year matters at these numbers).</li><li>The security review logged (plan step B8), and every item for sale built and in the game.</li></ul>
+          <ol class="clicks" style="margin-top:12px"><li>Stripe: <b>Activate payments</b> (business details, identity, bank account). Switch Test mode off.</li><li><b>Developers → API keys</b> (live): the <code>sk_live_…</code> key into <code>server/supabase/.env</code> as <code>STRIPE_SECRET_KEY</code>.</li><li><b>Developers → Webhooks</b> (live): the same endpoint and four events again. Live and test endpoints have different signing secrets: the live <code>whsec_…</code> into <code>STRIPE_WEBHOOK_SECRET</code>.</li><li><code>npx supabase@latest secrets set --env-file supabase/.env</code>, then deploy both functions again (step 6).</li><li>Make one real purchase yourself and refund it end to end.</li></ol>
+          <div class="worked"><b>It worked when</b><code>…/functions/v1/create-checkout</code> says <code>"livemode":true</code> and <code>on_sale</code> lists exactly the items you meant to sell.</div>
+          <div class="callout warm" style="margin-top:12px">
+            <span class="lbl">What live keys change</span>
+            <p>With live keys, create-checkout sells only items whose every grant is marked ready in <code>src/store/cosmetics.json</code>. On 16 October 2026 none is: the paints wait for their render check, and the Founder badge, frame and roll are still to build. A live store shows each item as "On sale once it is in the game" until those statuses change, <code>npm run store:sync</code> runs and the functions are redeployed.</p>
+          </div>
+        </div></li>
+      </ol>
+    </div>
+    <div class="grid g2 sub">
+      <div class="callout"><span class="lbl">Keep Supabase awake</span><p>A free project pauses after a week with no activity, and a paused project can't answer Stripe's webhook. Stripe retries for up to three days in live mode; after that, resend the event from the dashboard. Check the project weekly, or run Pro ($25 a month) for the live months.</p></div>
+      <div class="callout"><span class="lbl">Switching the store off</span><p>Set <code>VITE_PAYMENTS_LIVE=false</code> (or delete the file), rebuild and deploy: the store goes back to test mode for everyone. Purchases stay in Supabase and Stripe; refund anyone affected from Stripe.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="checks" aria-labelledby="checks-h">
+    <div class="sec-head">
+      <span class="sign" aria-hidden="true"><small>Exit</small>4</span>
+      <h2 id="checks-h">What's checked, what's not</h2>
+      <p class="kicker">What the server refuses, what is still to build, and what nobody can check until the real services answer. Step 9 is the real test.</p>
+    </div>
+    <div class="lists">
+      <div class="card"><h3>What each part refuses</h3><ul>
+        <li><b>create-checkout:</b> no or expired sign-in (401); an unknown, unavailable or expired item, or with live keys one not yet in the game (409); a missing 18-or-guardian tick, or the club's renewal tick (400); a profile not marked 13+ (403); an item you already own all of (409). It never reads a price from the page.</li>
+        <li><b>stripe-webhook:</b> any delivery whose signature doesn't match (HMAC-SHA256, 5-minute tolerance) gets a 400 and writes nothing. A redelivered event changes nothing. A refund takes back only what no other paid purchase of yours grants.</li>
+        <li><b>Row-level security:</b> players read only their own purchases and entitlements; only the service role writes them. The waitlist takes anonymous sign-ups and shows them to nobody.</li></ul></div>
+      <div class="card"><h3>Not built yet</h3><ul>
+        <li><b>The club:</b> the customer portal for cancelling online, the monthly paint handler, the consent record kept three years, and a lawyer's read of the renewal terms.</li>
+        <li><b>A refund-request button</b> (until then the terms point to a support email, TODO).</li>
+        <li><b>The waitlist form and invite codes:</b> the tables exist; nothing writes to them yet.</li>
+        <li><b>The Founders roll screen:</b> names are stored on the purchase; the credits screen is still to build.</li>
+        <li><b>Disputes</b> are ignored by design: no account is ever locked over one. Answer them in Stripe.</li></ul></div>
+      <div class="card"><h3>Verify at launch</h3><ul>
+        <li>Nothing has run in Supabase's Edge Runtime or against Stripe's API yet; the details come from documentation.</li>
+        <li>Supabase Auth's REST calls and the magic-link return; the Edge Runtime's JSON import and default secrets; <code>--no-verify-jwt</code> with the newer keys.</li>
+        <li>Stripe Checkout Sessions with <code>price_data</code>, the <code>{CHECKOUT_SESSION_ID}</code> placeholder, pay-what-you-want Prices, hosted pages on <code>checkout.stripe.com</code> (a custom checkout domain needs a one-line change in <code>src/store/payments.ts</code>).</li>
+        <li>That an unlisted redirect falls back to the Site URL (a third-party report).</li></ul></div>
+    </div>
+    <p class="fine sub read">Checked on 16 October 2026 in the build machine: the migration ran twice on PostgreSQL 16 with every forbidden write refused; the webhook's signature check passed RFC 4231's HMAC vector and refused tampered bodies, wrong secrets and timestamps 301 s off; both functions type-check in strict mode; and the game's live path ran against a mock project. Stripe's and Supabase's docs couldn't be opened directly that day, so the API details came from search results quoting them: <a href="https://docs.stripe.com/webhooks" target="_blank" rel="noopener noreferrer">docs.stripe.com/webhooks</a>, <a href="https://docs.stripe.com/testing" target="_blank" rel="noopener noreferrer">docs.stripe.com/testing</a>, <a href="https://docs.stripe.com/payments/checkout/pay-what-you-want" target="_blank" rel="noopener noreferrer">pay what you want</a>, <a href="https://supabase.com/docs/guides/auth/auth-smtp" target="_blank" rel="noopener noreferrer">Supabase custom SMTP</a>. The full notes are in <code>server/README.md</code>.</p>
+  </section>
+</main>
+<footer class="foot col"><p>OC Ultra launch kit, prepared 16 October 2026 from the project's plan, marketing, store and server documents. Prices, fees and rules were checked by web search that day; anything marked "verify at launch" moves. The store is in <b>test mode</b>: nothing is charged.</p><nav aria-label="All pages"><a href="index.html">Hub</a><a href="plan.html">90-day plan</a><a href="marketing.html">Marketing</a><a href="store.html">Store</a><a href="golive.html">Go live</a></nav></footer>
+</div>
+<script>
+/* OC Ultra launch kit: shared behaviour. The page reads in full without it; this only adds the guides' road, the
+   section reveal and the copy buttons. */
+(function () {
+  var root = document.documentElement;
+  root.classList.add('js');
+  var calm = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* storage for conveniences only (a remembered value); every call survives a blocked or missing store */
+  window.OCU = {
+    calm: calm,
+    load: function (k, d) { try { var v = localStorage.getItem('ocu.deck.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    save: function (k, v) { try { if (v == null) localStorage.removeItem('ocu.deck.' + k); else localStorage.setItem('ocu.deck.' + k, JSON.stringify(v)); } catch (e) { /* storage blocked */ } },
+    money: function (n, exact) { var neg = n < 0; n = Math.abs(n); var s = (exact || Math.round(n * 100) % 100) ? n.toFixed(2) : String(Math.round(n)); s = s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (neg ? '−$' : '$') + s; }
+  };
+
+  /* ---------- sections light up as they come into view (decoration only: the content is never hidden) ---------- */
+  var secs = [].slice.call(document.querySelectorAll('.sec'));
+  if ('IntersectionObserver' in window && !calm) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
+    secs.forEach(function (s) { io.observe(s); });
+  } else {
+    secs.forEach(function (s) { s.classList.add('in'); });
+  }
+
+  /* ---------- copy buttons: the clipboard when allowed, otherwise the text is selected for the viewer to copy ---------- */
+  function selectText(el) {
+    try { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); return true; } catch (e) { return false; }
+  }
+  function say(btn, text) {
+    var was = btn.getAttribute('data-label') || btn.textContent;
+    btn.setAttribute('data-label', was);
+    btn.textContent = text;
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function () { btn.textContent = was; }, 2200);
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-copy]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var el = document.getElementById(btn.getAttribute('data-copy'));
+    if (!el) return;
+    var text = (el.innerText || el.textContent || '').replace(/ /g, ' ').replace(/\s+$/, '') + (el.tagName === 'PRE' ? '\n' : '');
+    var fallback = function () { if (selectText(el)) say(btn, 'Selected: copy it'); else say(btn, 'Copy by hand'); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { say(btn, 'Copied'); }, fallback);
+      } else fallback();
+    } catch (err) { fallback(); }
+  }, true);
+
+  /* ---------- guides ---------- */
+  var CAR = '<svg viewBox="0 0 32 22" aria-hidden="true" focusable="false"><rect class="cb" x="1.5" y="3" width="28" height="16" rx="6"/>' +
+    '<rect class="cw" x="16.5" y="5.5" width="6.5" height="11" rx="2.2"/><rect class="cw" x="6" y="6" width="5" height="10" rx="2" opacity=".7"/>' +
+    '<rect class="cl" x="27.4" y="4.6" width="2.6" height="3.4" rx="1.2"/><rect class="cl" x="27.4" y="14" width="2.6" height="3.4" rx="1.2"/></svg>';
+
+  function titleOf(step) { var h = step.querySelector('h4, h3'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; }
+
+  function initGuide(g, gi) {
+    var steps = [].slice.call(g.querySelectorAll('.step'));
+    var n = steps.length;
+    if (!n) return;
+    var name = g.getAttribute('data-name') || 'Guide';
+    var ctl = document.createElement('div');
+    ctl.className = 'guide-ctl';
+    ctl.setAttribute('role', 'group');
+    ctl.setAttribute('aria-label', name + ': step controls');
+
+    /* phases: groups of steps marked data-phase-name, shown as buttons above the road */
+    var groups = [].slice.call(g.querySelectorAll('[data-phase-name]'));
+    var phaseStart = [];
+    var html = '';
+    if (groups.length) {
+      html += '<div class="phases">';
+      groups.forEach(function (grp, k) {
+        var first = grp.querySelector('.step');
+        var idx = steps.indexOf(first);
+        phaseStart.push(idx);
+        html += '<button type="button" data-phase="' + k + '" style="flex-grow:' + grp.querySelectorAll('.step').length + '">' + grp.getAttribute('data-phase-name') + '</button>';
+      });
+      html += '</div>';
+    }
+    var ticks = '';
+    for (var i = 0; i < n; i++) {
+      var gap = phaseStart.indexOf(i) > 0 ? ' gap' : '';
+      ticks += '<i class="tick' + gap + '" style="left:' + (n > 1 ? (i / (n - 1) * 100) : 50).toFixed(3) + '%"></i>';
+    }
+    html += '<div class="road" aria-hidden="true"><div class="road-lane"></div><div class="road-lit"></div>' + ticks + '<div class="car">' + CAR + '</div></div>';
+    html += '<div class="ctl-row">' +
+      '<button type="button" class="btn small ghost" data-act="back"><span class="arr" aria-hidden="true">←</span> Back</button>' +
+      '<p class="count" aria-live="polite"></p>' +
+      '<button type="button" class="btn small" data-act="next">Next <span class="arr" aria-hidden="true">→</span></button>' +
+      '<button type="button" class="btn small ghost" data-act="auto" aria-pressed="false">Auto-play</button>' +
+      '</div>';
+    ctl.innerHTML = html;
+    var slot = g.querySelector('.guide-slot');
+    if (slot) slot.replaceWith(ctl); else g.insertBefore(ctl, g.firstChild);
+
+    var road = ctl.querySelector('.road');
+    var tickEls = [].slice.call(ctl.querySelectorAll('.tick'));
+    var count = ctl.querySelector('.count');
+    var back = ctl.querySelector('[data-act="back"]');
+    var next = ctl.querySelector('[data-act="next"]');
+    var auto = ctl.querySelector('[data-act="auto"]');
+    var phaseBtns = [].slice.call(ctl.querySelectorAll('[data-phase]'));
+    var cur = -1, timer = null, moveT = null, visible = false;
+
+    function inView(el) { var r = el.getBoundingClientRect(); var top = (parseFloat(getComputedStyle(root).getPropertyValue('--hdr')) || 56) + ctl.offsetHeight; return r.top >= top && r.bottom <= window.innerHeight; }
+    function follow(el) { if (!inView(el)) { try { el.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' }); } catch (e) { el.scrollIntoView(false); } } }
+
+    function go(k, how) {
+      k = Math.max(0, Math.min(n - 1, k));
+      if (k === cur) return;
+      cur = k;
+      steps.forEach(function (s, j) {
+        s.classList.toggle('is-active', j === k);
+        s.classList.toggle('is-done', j < k);
+        if (j === k) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+      });
+      tickEls.forEach(function (t, j) { t.classList.toggle('done', j < k); });
+      road.style.setProperty('--p', n > 1 ? (k / (n - 1)) : 0);
+      if (!calm) { road.classList.add('moving'); clearTimeout(moveT); moveT = setTimeout(function () { road.classList.remove('moving'); }, 760); }
+      var label = steps[k].getAttribute('data-short') || titleOf(steps[k]);
+      count.innerHTML = 'Step <b>' + (k + 1) + '</b> of ' + n + ' <span>· ' + label.replace(/</g, '&lt;') + '</span>';
+      back.disabled = k === 0;
+      next.disabled = k === n - 1;
+      if (phaseBtns.length) {
+        var ph = 0; phaseStart.forEach(function (s, p) { if (k >= s) ph = p; });
+        phaseBtns.forEach(function (b, p) { if (p === ph) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+      }
+      if (how === 'user' || (how === 'auto' && visible)) follow(steps[k]);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } auto.setAttribute('aria-pressed', 'false'); auto.textContent = 'Auto-play'; }
+    function start() {
+      if (cur >= n - 1) go(0, 'user');
+      auto.setAttribute('aria-pressed', 'true'); auto.textContent = 'Pause';
+      timer = setInterval(function () {
+        if (document.hidden) return;
+        if (cur >= n - 1) { stop(); return; }
+        go(cur + 1, 'auto');
+        if (cur >= n - 1) stop();
+      }, 4200);
+    }
+    back.addEventListener('click', function () { stop(); go(cur - 1, 'user'); });
+    next.addEventListener('click', function () { stop(); go(cur + 1, 'user'); });
+    auto.addEventListener('click', function () { if (timer) stop(); else start(); });
+    phaseBtns.forEach(function (b, p) { b.addEventListener('click', function () { stop(); go(phaseStart[p], 'user'); }); });
+    ctl.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); stop(); go(cur + 1, 'user'); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); stop(); go(cur - 1, 'user'); }
+    });
+    steps.forEach(function (s, j) {
+      s.addEventListener('click', function (e) {
+        if (e.target.closest('a, button, input, select, textarea, label, summary, pre, code')) return;
+        var sel = window.getSelection && String(window.getSelection());
+        if (sel) return;
+        stop(); go(j, 'click');
+      });
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { visible = e.isIntersecting; if (!visible && timer) stop(); }); }, { threshold: 0 }).observe(g);
+    }
+    go(0, 'init');
+  }
+  [].slice.call(document.querySelectorAll('[data-guide]')).forEach(initGuide);
+})();
+
+</script>
+<script>
+(function () {
+  var ref = document.getElementById('f-ref'), site = document.getElementById('f-site'), msg = document.getElementById('f-msg');
+  if (!ref) return;
+  var fills = [].slice.call(document.querySelectorAll('.fill[data-fill]'));
+  fills.forEach(function (f) { f.setAttribute('data-ph', f.textContent); });
+  var saved = OCU.load('golive', null);
+  if (saved) { ref.value = saved.ref || ''; site.value = saved.site || ''; }
+  function apply() {
+    var r = ref.value.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\.supabase\.co.*$/, '');
+    var okRef = /^[a-z0-9]{6,40}$/.test(r);
+    var s = site.value.trim(), u = null;
+    try { if (/^https:\/\//.test(s)) u = new URL(s); } catch (e) { u = null; }
+    var siteVal = u ? u.origin + (u.pathname.endsWith('/') ? u.pathname : u.pathname + '/') : null;
+    fills.forEach(function (f) {
+      var k = f.getAttribute('data-fill'), v = k === 'ref' ? (okRef ? r : null) : k === 'site' ? siteVal : (u ? u.origin : null);
+      f.textContent = v || f.getAttribute('data-ph');
+      f.classList.toggle('fill', !v);
+    });
+    var bad = [];
+    if (ref.value.trim() && !okRef) bad.push('the project ref is only letters and digits');
+    if (s && !u) bad.push('the address should start with https://');
+    if (/^(sk_|rk_|whsec_|sb_secret_|eyJ)/.test(ref.value.trim() + site.value.trim())) bad.push('that looks like a key: clear it, and roll the key if it was a secret');
+    msg.textContent = bad.length ? 'Check: ' + bad.join('; ') + '.' : (okRef || u ? 'The commands below now use your details.' : 'Until you fill them in, the commands show placeholders in amber.');
+    if (!bad.length) OCU.save('golive', { ref: okRef ? r : '', site: u ? siteVal : '' });
+  }
+  ref.addEventListener('input', apply);
+  site.addEventListener('input', apply);
+  apply();
+})();
+</script>

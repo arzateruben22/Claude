@@ -1,0 +1,11 @@
+# Settings the Supabase CLI reads when deploying from top-speed-ultra/server (server/README.md, step 6). Only the
+# functions' JWT setting is set here; everything else keeps the CLI's defaults. Both functions check their own
+# callers: create-checkout asks Supabase Auth whose token it was given, and stripe-webhook checks Stripe's signature.
+# If the CLI asks for a fuller file, run `npx supabase@latest init` here and copy these two blocks into it.
+project_id = "oc-ultra"
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false

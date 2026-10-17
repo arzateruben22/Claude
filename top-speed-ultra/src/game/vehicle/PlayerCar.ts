@@ -12,7 +12,8 @@
 // traffic behind filling the glass. The door mirror keeps the car's flank in view.
 
 import * as THREE from 'three';
-import { buildCar } from '../../preview/car';
+import { buildCar, carPaint } from '../../preview/car';
+import type { PaintFinish } from '../../preview/car';
 import { buildCockpit, Cockpit } from '../../preview/cockpit';
 import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
 import { addWheel } from '../../preview/car-wheel';
@@ -30,7 +31,8 @@ import { clamp, damp, lerp } from '../util';
 
 export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
-export interface CarConfig { car: CarId; paint: number; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null }
+// finish: a store paint's finish (gloss, metallic, satin, pearl); null or absent is the car's factory metallic flake
+export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null }
 export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number }
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
@@ -105,12 +107,12 @@ export class PlayerCar {
   configure(c: CarConfig) {
     const o = this.cfg;
     const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
-    const paintChanged = !carChanged && o!.paint !== c.paint;
+    const paintChanged = !carChanged && (o!.paint !== c.paint || JSON.stringify(o!.finish ?? null) !== JSON.stringify(c.finish ?? null));
     const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
     this.cfg = c;
     const t0 = performance.now();
-    if (carChanged) this.buildCarAndCockpit(c);
-    else if (paintChanged) this.setPaint(c.paint);
+    if (carChanged) { this.buildCarAndCockpit(c); if (c.finish) this.setPaint(c.paint, c.finish); }
+    else if (paintChanged) this.setPaint(c.paint, c.finish ?? null);
     if (handsChanged) this.buildHands(c);
     this.setMirrorExclusions();
     this.stats.buildMs = Math.round(performance.now() - t0);
@@ -168,9 +170,25 @@ export class PlayerCar {
     this.arms.setWheelAngle(this.wheelAngle);
   }
 
-  // the body and the door mirrors' pods and stalks (their own paint, without the shut lines)
-  private setPaint(hex: number) {
-    for (const k of ['paint', 'mirrorPaint']) { const m = this.mats[k] as THREE.MeshPhysicalMaterial | undefined; if (m) m.color.setHex(hex); }
+  // A new colour or finish: swap the body paint material for the cached one of that colour and finish, on every mesh
+  // that wears it (the exterior's merged body, which is also what the seat sees through the glass, since the game
+  // builds the cockpit without its own body; and the cockpit too, should it ever carry painted parts). Swapping rather than recolouring
+  // matters because materials are cached by colour: recolouring the factory one in place would leave the next car
+  // built in that factory colour wearing this paint.
+  setPaint(hex: number, finish: PaintFinish | null = null) {
+    const old = this.mats.paint, c = this.cfg;
+    if (!old || !c) return;
+    const next = carPaint(hex, c.quality, c.car, finish);
+    // the door mirrors wear the same paint without the shut lines, swapped the same way
+    const oldM = this.mats.mirrorPaint, nextM = oldM ? carPaint(hex, c.quality, c.car, finish, true) : undefined;
+    if (next === old && nextM === oldM) return;
+    for (const g of [this.exterior, this.interior?.group]) g?.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      if (m.material === old) m.material = next;
+      else if (oldM && m.material === oldM) m.material = nextM!;
+    });
+    this.mats = { ...this.mats, paint: next, ...(nextM ? { mirrorPaint: nextM } : {}) };
   }
 
   // the driver's look (sleeves, gloves, watch, ring, bracelet, skin) without rebuilding the car

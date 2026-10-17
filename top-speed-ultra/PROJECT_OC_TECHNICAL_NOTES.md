@@ -249,6 +249,8 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   - `navigateTo(label)` sets a route.
   - `stats` returns the path, position, speed, roads and tiles built, path switches, freeways visited and the route.
   - `frames` counts rendered frames.
+- `window.__store` (while the Store panel is open) exposes `open(sku)` (that item's checkout), `preview(sku)` (any
+  item's checkout with paying switched off, for the club's terms) and `close()`.
 - Playwright runs headless Chromium with `--use-angle=swiftshader --enable-unsafe-swiftshader`. Tests use
   `fastForward` for distance (about 25× real time) and real frames only where rendering is the point.
 - In this sandbox SwiftShader draws Low at about 1.6–2.3 fps (at 320×180 as at 640×360, so it's limited by geometry,
@@ -259,11 +261,15 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 - `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
-- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`. Run some with
+- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`, `store`,
+  `store-live`. Run some with
   `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
   (git-ignored).
+- A page gets up to 5 minutes (`BOOT_MS`) to reach the main menu. That's about 13 s on a quiet machine, but other
+  passes' renders and builds share these 4 cores, and under that load a boot has taken more than 2 minutes. The boot
+  check prints the real time.
 - Free Drive and Speed Survival seed their traffic at random. The suite puts the car back on its mark and seeds the
   traffic (`traffic.reseed(n)` and `fill()`), so every run is the same drive. The autopilot isn't a perfect driver:
   in Heavy traffic it crashed in 2 of 12 seeded two-minute Survival runs.
@@ -310,6 +316,92 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **`audio/Radio.ts`.** A sixteenth-note scheduler on the audio clock, looking 250 ms ahead. Each station has a key,
   chords, tempo, swing and style (pads, synthwave or lo-fi). It plays into `AudioEngine.musicBus`, which bypasses the
   Ultra Realism muffle.
+
+## Store (`src/store/`, `src/ui/Store.tsx`, `server/`)
+
+The paywall, built the way Lumevina's was (one payment engine with one Stripe integration point, magic-link sign-in
+that signs straight in during the demo, records on the device in the demo and in Supabase live, a Stripe webhook that
+writes paid orders on the server). It is in **test mode** unless the build sets `VITE_SUPABASE_URL`,
+`VITE_SUPABASE_ANON_KEY` and `VITE_PAYMENTS_LIVE=true` (`src/store/config.ts`; `.env.example`). The rules are in
+`CLAUDE.md`, the reasons and prices in `PROJECT_OC_MONETIZATION.md`, the go-live steps in `server/README.md`.
+
+- **The data.** `src/store/catalog.json` (what is sold, its price, what it grants, `available`) and
+  `src/store/cosmetics.json` (what each grant unlocks, with a `status`: `ready`, `hook` or `build`) are the only
+  source of items and prices. `src/store/catalog.ts` types them. `tools/store-check-catalog.mjs` checks them
+  against each other and the code; `npm run store:sync` writes the server's copy
+  (`server/supabase/functions/_shared/catalog.json`, with `grants_ready` and `while_subscribed` per sku) and
+  `npm run store:check` runs both checks.
+- **The modules.**
+  - `config.ts`: the build-time switch and the Supabase request headers (`apikey` always; a player's token, or a
+    legacy JWT anon key, in `Authorization`).
+  - `account.ts`: the neutral age question (month and year, no default; only "13 or over, or not" is kept, under
+    `ocu.store.age`), magic-link sign-in (test: signs straight in with a test account id derived from the email;
+    live: Supabase Auth's `/auth/v1/otp`, the session read from the link's `#fragment` and cleared, tokens refreshed
+    a minute before expiry), `ensureProfile()` (live: upserts `profiles.is_13_plus`), sign-out.
+  - `entitlements.ts`: what the signed-in account owns, `has(id)`, `list()`, `restore()`. Test mode keeps a ledger and
+    the test receipts per test account in `localStorage` (`ocu.store.owned`, `ocu.store.receipts`). Live reads the
+    `entitlements` table (own rows only, `revoked_at is null`) and caches it in the same key for offline play.
+  - `payments.ts`: the one integration point, `checkout(request, card?)`. `precheck()` applies the store's rules
+    (exists, available, in window, 13+, signed in, the 18-or-guardian tick, the renewal tick for a subscription, the
+    car in your garage for a car's wheel set, the tip between its floor and ceiling). **Test mode:** Luhn, expiry and
+    CVC checks, then Stripe's test cards only (`4242 4242 4242 4242` and two others succeed, `4000 0000 0000 0002`
+    and `4000 0000 0000 9995` decline, any other number is refused unread); the card number is never stored (the
+    receipt keeps brand and last four). **Live:** `POST /functions/v1/create-checkout` with the token and the sku (no
+    price), then `location.assign` to the returned URL, followed only if it is on `checkout.stripe.com`. On return
+    (`?checkout=success&session_id=cs_…`), `confirmReturn()` polls the player's own `purchases` row for up to about
+    20 s, reloads the entitlements and shows the receipt; `?checkout=cancel` says nothing was charged.
+    `storeReturnPending()` tells App.tsx to open the Store at boot after a Stripe return or a sign-in link.
+  - `locker.ts`: the store paint each car wears (`ocu.store.equipped`, per car id), re-checked against `has()` on
+    every read, so a refund or sign-out puts the factory paint back. `inGame(id)` says which grants show in the game
+    today: every paint, and the Founder '26 badge and Founders frame (on the run card).
+  - `bus.ts`: storage that never throws, and the one change event (`onStoreChange`) that the Store panel and the
+    game listen to.
+- **In the game.** `Game.configureCar()` asks `equippedPaint(car)` and passes its colour and finish to
+  `PlayerCar.configure`; the Game re-applies on every store change. `PlayerCar.setPaint(hex, finish)` swaps the body
+  paint material on every mesh that wears it (in the game that is the exterior's one merged body mesh, also what the
+  seat sees through the glass, since the cockpit is built without its own body) for the cached one of that colour
+  and finish (`carPaint` in `src/preview/car.ts`; `paint()` in `car-mats.ts` now takes the clear coat). It swaps
+  rather than recolours, because materials are cached by colour: recolouring the factory material in place would
+  leave the next car built in that colour wearing the store paint. Finishes come from `cosmetics.json`
+  (`paint_finishes`); gloss and satin drop the metallic flake, metallic and pearl keep it. The run card
+  (`src/ui/runCard.ts`) draws the Founder '26 badge under the name and the sunset frame round the card when owned.
+  **Data only, no hook yet:** wheel sets (`CarOptions` has no wheel style or rim override), driver styles (`lookFor`
+  takes no overrides, `dialTexture` no colour), liveries, body kits, the Spider, Lot 57 outfits, the club items, the
+  supporter and club badges on the profile card (the profile panel lives in App.tsx, which is being reworked), and the
+  Founders roll (no credits screen). Test mode can buy them; they are saved to the account and listed in Your items.
+- **The panel** (`src/ui/Store.tsx`, styles under `.store` at the end of `styles.css`, using today's tokens with
+  `var(--sunset, …)`, `var(--ember, …)` and `var(--amber, …)` first so the sunset pass's tokens take over). The test
+  mode banner; the account box (sign in, Restore purchases, sign out, badges); Your items (the paint picker for the
+  car you drive, receipts); the Founder Pack with its fixed end date and no countdown; the catalog grouped by kind
+  with each price, what it unlocks and whether it shows in the game yet; "Earn the … first" for a car you don't have;
+  draft store terms. The checkout sheet asks the age question before the email, shows "Looks only", the AB 2426
+  licence line, the 18-or-guardian box, the tip's amount (test mode; live, Stripe's page asks), the Founders roll
+  opt-in, and a subscription's price, billing and cancellation terms above an unticked checkbox. Test mode card
+  fields use `autocomplete="off"`, so a browser never offers a saved real card. App.tsx has one Store entry in the
+  main menu's aside, one in the pause menu, and the panel line.
+- **The server** (`server/supabase/`, nothing deployed). `migrations/0001_oc_ultra_store.sql`: `profiles`,
+  `purchases` (`stripe_session_id` unique; plus `stripe_subscription_id` and `roll_name` beyond the brief),
+  `entitlements` (primary key user + entitlement), `waitlist` (anonymous insert of email, ZIP and referrer only) and
+  `invite_codes`, all with row-level security and explicit grants. `functions/create-checkout` (GET: what is on sale;
+  POST: checks the token with `/auth/v1/user`, the server catalog, the window, `grants_ready` when the Stripe key is
+  live, `profiles.is_13_plus`, the consent ticks and ownership, then creates the Checkout Session with
+  `client_reference_id`, `metadata.sku` and the success and cancel URLs from `SITE_URL`; the tip uses a Stripe Price
+  with `custom_unit_amount`, found or made by lookup key). `functions/stripe-webhook` (signature check in
+  `_shared/stripe-signature.ts` with Web Crypto; `checkout.session.completed` inserts the purchase with
+  `ignore-duplicates` and upserts the grants unless that purchase is no longer `paid`; `charge.refunded` and
+  `customer.subscription.deleted` revoke what no other paid purchase covers). Both deploy with `--no-verify-jwt` and
+  check their own callers. Stripe and Supabase are called with `fetch`; no SDK and no new npm dependency.
+- **Checks.** The `store` suite group (catalog checks, the signature check against RFC 4231 and a Node-signed
+  delivery, the form encoding, the catalog on show, a decline, the Founder Pack bought with 4242, the paint on the
+  car, the tip's floor, the club's terms, a reload, the run card, the phone layout, and no request to a Supabase or
+  Stripe host). The `store-live` group builds the game a second time with live settings pointed at a mock project
+  (`mock-oc-ultra.supabase.co`, into `tests/out/store-live-build/`), serves it on `http://127.0.0.1`, and answers
+  Supabase Auth, REST and Functions and Stripe's Checkout page with Playwright routes: the magic-link request and
+  return, the profile upsert, a checkout call with the token and the sku and no price, no card form, the hand-off to
+  Stripe and back, the receipt from the purchase row, a refused item and a cancelled checkout.
+  `server/supabase/tests/run-local.sh` runs the migration on a throwaway Postgres and probes its row-level security.
+  The functions themselves have never run in Supabase's Edge Runtime or against Stripe: nothing is deployed
+  (`server/README.md` lists what to verify).
 
 ## Known issues
 

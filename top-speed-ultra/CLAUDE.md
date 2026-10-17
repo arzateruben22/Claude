@@ -21,11 +21,27 @@ here, then read:
   - Republish `dist/artifact.html` to https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV to keep the same link.
 - **Older versions.** `../top-speed-oc/` holds v1/v2 (a single-file canvas game) and `loop.html` (the Loop Lab arcade
   preview). Leave them as they are.
+- **Store.** `src/store/` (catalog, account, entitlements, payments, locker) and `src/ui/Store.tsx`; the server side
+  (Supabase migration, the `create-checkout` and `stripe-webhook` functions) is in `server/`, whose README has the
+  go-live steps. Live mode is a build setting (`.env.example`); keep the artifact build in test mode. After changing
+  `catalog.json` or `cosmetics.json`, run `npm run store:sync` and `npm run store:check`.
 - **The repo root** is a separate client website (Taqueria Los Güeros). Don't touch it for game work.
 
 ## Rules that always apply
 
-- **No real money.** Credits are earned by driving only. A paid weather pass or anything like it is design only.
+- **The store: test mode until the owner says live** (owner, 2026-10-16; this replaces "no real money").
+  - Payments are built but in test mode. Nothing is charged until the owner connects Stripe and Supabase and turns
+    live mode on.
+  - In test mode the card form is a demo: the 4242 4242 4242 4242 test card, and nothing leaves the browser. Live
+    payments go through Stripe's hosted Checkout page, never through our own card fields.
+  - Sell cosmetics, expansions and support only. The catalog is `src/store/catalog.json`, what each item unlocks is
+    `src/store/cosmetics.json`, and the reasons are in `PROJECT_OC_MONETIZATION.md`.
+  - Never sell power: no faster-than-earnable cars, and no grip, handling, score, XP or credit boosts.
+  - Never sell credits. Credits are earned by driving only.
+  - No random paid rewards (no loot boxes), no premium currency, no ads at launch.
+  - Everything the game has today stays free.
+  - Purchases are 13+.
+  - Nothing is sold, or pre-sold, before it exists in the game.
 - **Our own brands.** Rossini, Vela and the "R" badge are ours. No real car brands, logos, Hot Wheels or Rolex.
 - **Honest claims.**
   - No live weather is fed in; it's simulated.
