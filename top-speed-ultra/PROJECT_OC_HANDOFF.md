@@ -10,6 +10,21 @@ model: routine work to `opus`, hard reasoning to `fable`.
 - **Pushes are paused by the owner** (2026-10-17: "without pushing anything til further command"). Everything since
   is committed locally only. Run Fable in this same Claude Code session (`/model`), not a fresh one: a fresh
   session clones GitHub and would miss the local commits.
+- **PAUSED 2026-10-18 22:19 UTC by the owner's rule** ("pause this session when I reach 50% of my session limit";
+  the five-hour window was at about 45% and climbing 1% every 10 s with nine workflows running, so everything was
+  stopped at once). Nothing was lost: every workflow commits per milestone, and interrupted agents' edits stay on disk
+  (their scripts tell the next builder to continue from them). To resume, in this same session (pushes are paused, so
+  a fresh session would miss the local commits), relaunch each with Workflow({scriptPath, resumeFromRunId}) from
+  /tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/:
+  - Opus: oc-hypercar-3.js wf_7f9f9a3a-d82 (M1 body repair was in flight); oc-ui-pass.js wf_2eea3cf4-88f (U3 radial
+    menu judge); oc-realism-2.js wf_6a88409a-2ee (W3 surfaces builder); oc-store-hypercar.js wf_9a01de13-61a (the
+    $4.99 SKU builder).
+  - Fable: oc-f1-dynamics.js wf_5afd6056-420 (designer); oc-f5-people-specs.js wf_aa50a799-e92 (three designers);
+    oc-f2a-store-review.js wf_d2209927-ef1 (lenses); oc-f3a-review.js wf_517aad3b-46a (measure + lenses);
+    oc-f4-budgets.js wf_303fc3f1-753 (designer, worktree tsu-stream on claude/stream).
+  - Then F2-B (fixes in tsu-store after the SKU commits) and F3-B (fixes per branch once idle) from the F2 and F3
+    findings files, and F6 (PROJECT_OC_DECISIONS.md: nine decisions, all pending; the owner answers one at a time).
+  - Resume fewer lanes at a time if the owner wants the window to last: nine at once burn about 6% a minute.
 - Branches and worktrees (all under `/home/user/Claude`):
   - `top-speed-ultra/` on `claude/always-on`: the luxury glass menu (U0), adaptive HUD (U1), navigation card and
     chevrons (U2, `a340f1d`, the last pushed commit); the UI pass continues there (U3 radial menu onward).
