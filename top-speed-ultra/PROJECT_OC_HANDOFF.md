@@ -5,117 +5,193 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-16, 07:55 UTC, an Opus session)
+## State at the last update (2026-10-18, 22:00 UTC, an Opus session)
 
-- Branch `claude/always-on` at `81939d3`: everything above plus the lens flare at every tier (sunset preset 5.5°
-  at az 292°) and `PROJECT_OC_REVIEW_NOTES.md` (15 unverified findings from two review lenses).
-- Running (Opus workflow `oc-day-1016`): the race HUD repair and the palms in the `tsu-ref` worktree, then the
-  integrator commits R2 (overcast, judged keep) + whatever is kept on `claude/ref-pass`, runs the full suite, and
-  merges onto `claude/always-on`. In parallel, the wordmark assets are prepared in the session scratchpad
-  (`wordmark/final/`); the UI pass copies them into `src/ui/assets/`.
-- Next in this session: the UI pass (`oc-ui-pass.js`, all Opus): UID wordmark and theme, U0 luxury menu, then the
-  rest of the board.
-- Waiting for Fable: the drift physics (`tsu-drift` worktree, `Physics.ts` half-built), the review's refuters and
-  rules lens, the hand, expression and hair specs (see the Fable queue).
-- Pending from the owner: a real-phone Feedback report, the UE5 go/no-go.
+- **Pushes are paused by the owner** (2026-10-17: "without pushing anything til further command"). Everything since
+  is committed locally only. Run Fable in this same Claude Code session (`/model`), not a fresh one: a fresh
+  session clones GitHub and would miss the local commits.
+- Branches and worktrees (all under `/home/user/Claude`):
+  - `top-speed-ultra/` on `claude/always-on`: the luxury glass menu (U0), adaptive HUD (U1), navigation card and
+    chevrons (U2, `a340f1d`, the last pushed commit); the UI pass continues there (U3 radial menu onward).
+  - `tsu-ref` on `claude/realism-2`: W1 buildings `36ffbd4`, W2 traffic cars and mirrors `3784a68`; W3–W6 continue.
+  - `tsu-hyper` on `claude/hypercar`: plan `339cca5` (`PROJECT_OC_HYPERCAR.md`), owner mode `16bd03c`; M1 body
+    (in repair) to M6 continue.
+  - `tsu-store` on `claude/store`: the launch kit `bb798e0` (test-mode store, server functions, presentation,
+    fact-checked plans); the $4.99 OC Hypercar Founder Edition SKU continues there.
+  - `tsu-drift` on `claude/drift`: the drift physics draft `0a6a24e`, unverified, waiting for F1.
+  - `tsu-live` on `local/live-preview` (never pushed): all judged work merged by hand (`49a26c4`); its build is
+    live at https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV (33/33 on boot, phone, store, progression).
+- The owner's latest product decisions: the OC Hypercar Founder Edition at $4.99, sold to Dec 31, 2026; two tunes
+  (Unleashed in Free Drive, the race tune at or under the Rossini Corsa in every scored mode, ability off there);
+  four cars in the garage (GT, Brio, Corsa, Hypercar; the Vela E hidden, kept in code); owner mode (`#owner`).
 
 ## Prompt for an Opus 5.5 daytime session
 
 ```
-Project OC (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md, PROJECT_OC_PROGRESS.md (top entries),
-PROJECT_OC_VISUAL_TARGET.md and PROJECT_OC_UI_TARGET.md. Then, with ultracode on, in this order, one lane at a
-time or at most two (the machine has 4 cores; a third lane makes the suite time out):
-1. Integrate what is judged and uncommitted: the overcast light in the tsu-ref worktree (commit on claude/ref-pass),
-   the flare rewrite in the main checkout if its re-judge passed (check the progress log), then merge
-   claude/ref-pass onto claude/always-on, run the full suite, log, push, republish dist/artifact.html to the test link.
-2. Finish the reference pass: race HUD (standings, gaps, lap timer, rev lights, OC city tags) and palm fronds, each
-   judged on renders; then the drift pass items D2 (skid marks) and D3 (smoke and readout) on top of the drift
-   physics once a Fable session has reviewed it.
-3. Run the UI pass from PROJECT_OC_UI_TARGET.md starting with UID (the owner's OC sunset wordmark everywhere "OC"
-   reads, and its theme tokens; assets in src/ui/assets/), then U0, the seamless luxury menu.
-Agents: routine builders, judges and integrators on model 'opus'. Commit only judged work; no model names in
-commits or code; verify before you claim; log in PROJECT_OC_PROGRESS.md. Update PROJECT_OC_HANDOFF.md at the end.
+OC Ultra (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md (State, Opus queue) and the top of
+PROJECT_OC_PROGRESS.md. Pushes stay paused until the owner says otherwise: commit locally only. With ultracode on,
+resume the paused workflows from their scripts in the session scratchpad (oc-hypercar-3.js, oc-ui-pass.js,
+oc-realism-2.js, oc-store-hypercar.js) with their run ids, at most three heavy lanes at once (4 cores). When they
+finish, re-merge every branch into tsu-live (local/live-preview), run the suite groups boot, phone, store,
+progression, render, survival and race, and republish dist/artifact.html to the test link. Agents on 'opus';
+commit only judged work; no model names in commits or code; log in PROJECT_OC_PROGRESS.md; update this file.
 ```
 
 ## Prompt for a Fable 5.1 overnight session
 
 ```
-Project OC (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md and the top of PROJECT_OC_PROGRESS.md. This is
-the hard-reasoning session: do not spend it on renders or suite runs. Run at most two lanes. In this order:
-1. Review the drift physics in the tsu-drift worktree (src/game/vehicle/Physics.ts, the bicycle model at 120 Hz):
-   is the slide catchable, is weight transfer and load sensitivity right, does the stability control back off only
-   under counter-steer, will the autopilot's 134–200 mph runs stay spin-free? Fix what is wrong, prove it with the
-   drift test script and the suite's survival and race groups, commit on claude/drift.
-2. Read PROJECT_OC_REVIEW_NOTES.md (the adversarial review of the day's agent work) and fix the confirmed findings
-   of severity 4 and 5 yourself; queue the rest for the daytime session in this file.
-3. Design, don't build: the finger rig for the anatomical hands (so a wave opens the hand), the expression system
-   that moves cheeks and eyes with the mouth, and the hair silhouette fix, as short specs the daytime agents can
-   implement. Put them in PROJECT_OC_TECHNICAL_NOTES.md under "Specs for the next pass".
-Agents: reviewers and designers on model 'fable', anything that renders or runs the suite on 'opus'. Update
-PROJECT_OC_HANDOFF.md at the end.
+OC Ultra (top-speed-ultra). This is the Fable 5.1 hard-reasoning session. Read CLAUDE.md, PROJECT_OC_HANDOFF.md
+(State and Fable queue) and the top of PROJECT_OC_PROGRESS.md. The newest work is local only (pushes are paused):
+do not push or pull; commit locally. Opus workflows may still be running in tsu-hyper, tsu-ref, tsu-store and the
+main checkout: do not edit files they are working on; F1 works in tsu-drift, the reviews are read-only until they
+fix. Run at most two lanes. Fable agents design, review and fix; anything that renders or runs the suite goes to
+an 'opus' agent. Work the Fable queue in order: F1 vehicle dynamics, F2 store security and pricing, F3 the
+adversarial review of Oct 16-18, F4 streaming and render budgets, F5 the people specs. Keep F6 (decisions) for when
+the owner is here. Log in PROJECT_OC_PROGRESS.md and update PROJECT_OC_HANDOFF.md at the end.
 ```
 
 ## Fable queue (hard items waiting for an overnight session)
 
-- Review and finish the drift physics (`tsu-drift` worktree, `src/game/vehicle/Physics.ts`); see the overnight
-  prompt above.
-- Specs: finger rig for the anatomical hands; expression system coupling cheeks, eyes and the nasolabial fold to
-  the mouth; hair silhouette (updo reads as a cap from the front).
-- Fix the severity 4–5 findings of `PROJECT_OC_REVIEW_NOTES.md` once it exists.
+Each block is ready to paste on its own. Order: F1 to F5 overnight; F6 with the owner.
 
-- Review the store's payment and entitlement security and the pricing before live mode (being built now on
-  `claude/store`: `server/supabase/*`, `src/store/*`, `PROJECT_OC_MONETIZATION.md`). Fable prompt:
+**F1. Vehicle dynamics: drift, weight transfer, ABS, traction control, and the hypercar.**
 
-  ```
-  OC Ultra (top-speed-ultra), branch claude/store (merged onto claude/always-on once the UI pass lands). Read CLAUDE.md
-  (the money rule), PROJECT_OC_MONETIZATION.md, server/README.md, server/supabase/migrations/*.sql,
-  server/supabase/functions/*, src/store/*. Adversarially review it before the owner turns live mode on: can a player
-  grant themselves an entitlement (RLS, the anon key, the functions' auth checks)? Can a price come from the client?
-  Is the Stripe webhook's signature check constant-time with a timestamp tolerance on the raw body, and idempotent?
-  Do refunds and cancelled subscriptions revoke? Is any secret in the client bundle (grep dist/)? Do the prices survive
-  Stripe's fees, and is anything pay-to-win, a loot box or a premium currency? Are the COPPA 13+ gate and California's
-  auto-renewal terms in place? Fix what is wrong, prove it with `npm test -- --only=store` and a webhook signature
-  test, log it in PROJECT_OC_PROGRESS.md, and list anything the owner must decide.
-  ```
+```
+OC Ultra (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md, the top of PROJECT_OC_PROGRESS.md and
+tsu-hyper/top-speed-ultra/PROJECT_OC_HYPERCAR.md (sections 5, 6 and 9). Pushes are paused: commit locally only.
+Work in the tsu-drift worktree, branch claude/drift, file src/game/vehicle/Physics.ts (a bicycle model at 120 Hz).
+Commit 0a6a24e is an unverified draft: lateral and longitudinal load transfer with tyre load sensitivity,
+counter-steer lock, a handbrake yaw kick, kinetic grip for a spun-up rear, stability control that backs off while
+the driver holds a slide, and a drift readout. Review it and finish one vehicle-dynamics model:
+1. Weight transfer: longitudinal and lateral, roll stiffness split per car; braking into a corner rotates the car,
+   throttle on exit squats the rear. Check signs, magnitudes and load sensitivity.
+2. ABS: a slip-ratio controller per axle (not a force cap), strong in Arcade, lighter in Simulation, off-able.
+3. Traction control: a rear slip-ratio target that trims torque; strong in Arcade, permissive in Sport, minimal in
+   Simulation; a held drift must still keep the rear spinning.
+4. The profiles (Arcade 0.15, Sport 0.5, Simulation 0.9 on the existing handling setting) must feel distinct;
+   write down what each assist does at each value.
+5. Per-car parameters from src/game/cars.ts flow through. The OC Hypercar Founder Edition (claude/hypercar, M3 and
+   M5) needs an all-wheel-drive split with torque vectoring, a hook for its Cold Thrust and Ground Lock forces, and
+   the scripted Thrust Hop's airborne state (landing loads, never switching road levels at an interchange, the
+   traffic-collision skip, overpass clearance). If M3 or M5 is not built yet, design the interfaces they plug into
+   and write them in PROJECT_OC_TECHNICAL_NOTES.md. Keep the owner's two-tune rule: Unleashed (maxed, with the
+   ability) only in Free Drive; the race tune at or under the Rossini Corsa, ability off, in every scored mode.
+6. Collision at speed: traffic contacts resolve on the smallest overlap, so a ~120 m/s closing-speed rear-end with
+   a sideways offset reads as a side push and Survival continues. Make it a swept or substepped contact.
+7. Safety: the autopilot's 134-200 mph runs (250+ for Unleashed) stay spin-free; a lift or brake in a fast sweeper
+   never throws the car round in Arcade; a slide is catchable in Sport; every other car is unaffected unless
+   intended.
+Proof: the drift test script (slip angle and yaw traces for a handbrake entry, a power-over and a lift-off at 40,
+70 and 120 mph per profile), a 60-0 braking test per profile with and without ABS, a rear-end test at 120 m/s
+closing speed, and 'npm test -- --only=survival,race,progression,phone,abilities' green. Log the numbers in
+PROJECT_OC_PROGRESS.md; commit on claude/drift. Agents: dynamics design and review on 'fable', test runs on 'opus'.
+```
 
-- Vehicle dynamics: finish the drift physics and add real weight transfer, ABS and traction control, for every car
-  including the OC Hypercar (owner's hypercar directive, 2026-10-16), plus the hypercar's AWD, thrust and hop review. The drift draft is committed as work in
-  progress on `claude/drift` (0a6a24e, unverified). Fable prompt:
+**F2. Store security and pricing, before live mode.**
 
-  ```
-  OC Ultra (top-speed-ultra). Read CLAUDE.md, PROJECT_OC_HANDOFF.md, the top of PROJECT_OC_PROGRESS.md and
-  PROJECT_OC_HYPERCAR.md (on claude/hypercar). Work in the tsu-drift worktree, branch claude/drift, file
-  src/game/vehicle/Physics.ts (the bicycle model at 120 Hz). Commit 0a6a24e is an unverified draft: lateral and
-  longitudinal load transfer with tyre load sensitivity, counter-steer lock, a handbrake yaw kick, kinetic grip for a
-  spun-up rear, stability control that backs off while the driver holds a slide, and a drift readout. Review it and
-  finish it as one vehicle-dynamics model:
-  1. Weight transfer: longitudinal and lateral, with roll stiffness split per car, so braking into a corner rotates
-     the car and throttle on exit squats the rear. Are the signs, magnitudes and load sensitivity right?
-  2. ABS: a slip-ratio controller per axle (not just a force cap), strong in Arcade, lighter in Simulation, off-able.
-  3. Traction control: a rear slip-ratio target that trims torque, strong in Arcade, permissive in Sport, minimal in
-     Simulation; it must still let a held drift keep the rear spinning.
-  4. The three profiles (Arcade 0.15, Sport 0.5, Simulation 0.9 on the existing handling setting; M4 on
-     claude/hypercar adds the Settings UI) must feel distinct: write down what each assist does at each value.
-  5. Per-car parameters from src/game/cars.ts (mass, CdA, ClA, grip; the hypercar's downforce) must flow through;
-     no paid car may out-perform the best earnable one.
-  6. Safety: the autopilot's 134–200 mph runs stay spin-free, a lift or brake in a fast sweeper never throws the car
-     round in Arcade, and a slide is catchable in Sport.
-  7. The OC Hypercar Founder Edition (claude/hypercar, milestones M3 and M5; the owner wants it the fastest car with
-     the best handling and traction): an all-wheel-drive split with torque vectoring for it, how its Cold Thrust and
-     Ground Lock forces combine with the tyres, and a review of the scripted Thrust Hop's airborne state (landing
-     loads, never switching road levels at an interchange, the traffic-collision skip, overpass clearance). Decide
-     whether a free-flight hop is worth its cost. Keep the owner's two-tune rule: Unleashed (maxed, with the
-     ability) in Free Drive only; the race tune (the best earnable car's envelope, ability off) in race, time trial
-     and Speed Survival.
-  Proof: the drift test script (slip angle and yaw traces for a handbrake entry, a power-over and a lift-off at 40,
-  70 and 120 mph per profile), a braking test (60–0 distance per profile, with and without ABS), and
-  'npm test -- --only=survival,race,progression,phone' green. Log it in PROJECT_OC_PROGRESS.md with the numbers;
-  commit on claude/drift. Agents: reviewers and the dynamics design on 'fable', test runs on 'opus'.
-  ```
+```
+OC Ultra (top-speed-ultra), worktree tsu-store, branch claude/store (bb798e0 plus local commits; pushes are paused,
+commit locally only). Read CLAUDE.md (the money rule), PROJECT_OC_MONETIZATION.md, server/README.md,
+server/supabase/migrations/*.sql, server/supabase/functions/*, src/store/* and src/ui/Store.tsx. Adversarially review
+it before the owner turns live mode on:
+- Can a player grant themselves an entitlement (RLS, the anon key, the functions' auth checks)? Can a price, a SKU's
+  availability or the founder window come from the client?
+- Is the Stripe webhook's signature check constant-time, on the raw body, with a timestamp tolerance, in front of
+  everything, and idempotent? Do refunds and cancelled subscriptions revoke?
+- The OC Hypercar Founder Edition ($4.99, to Dec 31, 2026): are serial numbers assigned only by the server, one per
+  payment across webhook retries, never reused, a refunded number retired, No. 0000 reserved for tests? Is the
+  window checked in create-checkout and the webhook?
+- Owner mode (#owner, settings.owner, on claude/hypercar) unlocks every car on the device: it must be compiled out
+  of, or account-gated in, any build that sells the car. Design that.
+- Is any secret in the client bundle (grep dist/)? Do the prices survive Stripe's fees ($4.99 keeps about $4.55)?
+  Is anything a loot box, a premium currency, or pay-to-win where something is scored (check the two-tune rule)?
+  Are the 13+ gate, AB 2426's licence-not-ownership wording and California's auto-renewal terms in place?
+Fix what is wrong, prove it with 'npm test -- --only=store', a webhook signature test and a serial test (one serial
+per event across a retried delivery; a retired number after a refund), log it in PROJECT_OC_PROGRESS.md, and list
+what the owner must decide. Agents: review and fixes on 'fable', test runs on 'opus'.
+```
+
+**F3. Adversarial review of the Oct 16-18 agent output, and the open findings.**
+
+```
+OC Ultra (top-speed-ultra). Pushes are paused: commit locally only. Adversarially review what agents built from
+Oct 16 to Oct 18, read-only first:
+- claude/always-on (main checkout): 0bf284e glass menu, 1bae196 adaptive HUD, a340f1d navigation card and chevrons,
+  and any later local UI commits (radial menu onward).
+- claude/realism-2 (tsu-ref): 36ffbd4 buildings (texture atlases: about 60 MB of GPU memory estimated at High, about
+  1.1 s of first-tile atlas painting at Low), 3784a68 traffic cars and mirrors, and later local commits.
+- claude/hypercar (tsu-hyper): 339cca5 plan, 16bd03c owner mode, and later local milestones.
+- claude/store (tsu-store): bb798e0 and later local commits.
+- local/live-preview (tsu-live): 49a26c4, where the session merged all branches by hand: check the hand-resolved
+  conflicts in src/ui/App.tsx (store and owner-mode hooks on the new menu), PlayerCar.setPaint (swapping the body
+  and mirror paint materials), carPaint's mirror variant in src/preview/car.ts, the run card's Founder badge
+  position in src/ui/runCard.ts, and settings.ts's owner default.
+Three lenses, each a separate 'fable' agent: correctness (bugs, broken saves, per-frame allocation), the rules
+(our own brands only, honest claims, no real money outside test mode, accessibility floor) and phone cost (draw
+calls, memory, first-load time). Then a refuter per finding that tries to disprove it. Write the confirmed findings
+with severity 1-5 to PROJECT_OC_REVIEW_NOTES_2.md, fix the severity 4-5 ones yourself (with 'opus' agents for the
+suite groups that cover them), and also fix the open severity 4-5 findings of PROJECT_OC_REVIEW_NOTES.md (Oct 16).
+Queue the rest under "Opus queue" in PROJECT_OC_HANDOFF.md.
+```
+
+**F4. Streaming and render budgets at the hypercar's speed.**
+
+```
+OC Ultra (top-speed-ultra). Pushes are paused: commit locally only. The OC Hypercar's Unleashed tune reaches about
+339 mph on its tyres and 350 with Cold Thrust (134-156 m/s), far beyond what the world was built for. Design, then
+prove with measurements, the rendering and streaming budgets:
+- World streaming and the road look-ahead (src/game/world/Roads.ts, Terrain.ts): chunks ahead at 156 m/s, build
+  cost per frame, no holes or pop-in; the test harness's fastForward streams only every 24 steps (30 m at speed).
+- Traffic spawn distance and despawn at 120+ m/s closing speeds.
+- Per-tier budgets (Low/phone, High, Ultra): draw calls (the W1 hood frame measured 589 calls and 1.48 M triangles
+  at High), triangles, GPU memory (the building atlases are estimated at about 60 MB at High), first-load time and
+  the single-file size (dist/top-speed-ultra.html is about 3.75 MB).
+Write the design and the budgets in PROJECT_OC_TECHNICAL_NOTES.md ("Budgets"), implement the streaming changes in
+the main checkout only after the UI pass there has finished (or in a new worktree), and prove them with 'opus'
+agents: a 60 s top-speed run on I-405 North with chunk and frame-time logs at High and Low, and
+'npm test -- --only=boot,render,survival,phone' green. Log in PROJECT_OC_PROGRESS.md.
+```
+
+**F5. People specs: fingers, expressions, hair.**
+
+```
+OC Ultra (top-speed-ultra). Design, don't build. Read src/preview/hands.ts (the anatomical hands and their poses:
+wheel, knee, watch, wave), the people builder (src/preview/people*.ts or wherever the NPC faces live; find it) and
+the latest people renders in tests/out. Write three short specs the daytime agents can implement, in
+PROJECT_OC_TECHNICAL_NOTES.md under "Specs for the next pass": (1) a finger rig so a wave opens the hand and the
+wheel grip curls the fingers (bones, weights, the pose data, the phone cost); (2) an expression system that moves
+the cheeks, the eyes and the nasolabial fold with the mouth (blend shapes or bones, the parameters, three test
+expressions); (3) the hair silhouette fix (the updo reads as a cap from the front). Each with its acceptance renders.
+No renders or suite runs on Fable agents.
+```
+
+**F6. Decisions, with the owner (a design conversation; Fable is best for it).**
+
+```
+OC Ultra (top-speed-ultra). The owner is here to decide. Walk me through each open decision one at a time, with
+the facts, the options and your recommendation, and record each answer in PROJECT_OC_DECISIONS.md (create it):
+1. The hypercar's roof: lower the seat 0.15 m on this car only for a 1.12 m roof, or keep the shared driver frame
+   and a 1.25 m roof (PROJECT_OC_HYPERCAR.md section 3).
+2. What "never sold again" covers after Dec 31, 2026: the Founder Edition's exclusives only, or the car itself.
+3. Ground Lock on launch (1.5 s to 60) until all-wheel drive exists, or 2.2 s on tyres alone.
+4. Free Drive's credit earnings capped at the race tune's top speed for the hypercar (recommended).
+5. Owner mode in public builds: compiled out or account-gated.
+6. The founder windows if the launch calendar moves (the $10 Founder Pack and the $4.99 hypercar).
+7. Names: there is a real Rossini watch maker (a US filing exists) and a HiFuture "Vela" smartwatch. Rename the
+   three in-game watches? Keep Rossini and Vela as car brands?
+8. The UE5 go/no-go (PROJECT_OC_UE5_MIGRATION.md).
+9. Pushes: when to resume, and the merge order for claude/realism-2, claude/store, claude/hypercar and claude/drift
+   onto claude/always-on.
+Do not change code in this session beyond recording the decisions.
+```
 
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
+- When the owner resumes pushes: merge claude/realism-2, claude/store, claude/hypercar (and claude/drift once F1
+  passes) onto claude/always-on in that order, reusing the hand resolutions in local/live-preview (49a26c4), run the
+  full suite, then push.
+- The people pass (oc-people-2.js, tsu-people worktree): P4 teeth, P6 mouth corners, P7 brows and beards.
 - From the audits, not yet taken: night lighting (cabin lit as daylight, freeway lamps light nothing), the
   Monopoly houses, the paper mountains, flat clear-day light, traffic bodies' door seams and mirrors, the chase
   camera's hovering rear wheels; teeth, mouth corners, brows and beards on the people.
