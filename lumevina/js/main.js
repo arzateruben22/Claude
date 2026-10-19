@@ -98,9 +98,10 @@
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
       .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.2)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.6)
-      /* the Start here card is the point of the page: it arrives early */
-      .from(".nc", { opacity: 0, y: 22, duration: 0.8 }, 0.7)
-      .from(".nc-back, .hero .hero-cred", { opacity: 0, duration: 0.6, stagger: 0.08 }, 1.0)
+      .from(".hero-actions", { opacity: 0, y: 14, duration: 0.7 }, 0.7)
+      /* what's on the shelf arrives early: it's the point of the page */
+      .from(".hero-shelf", { opacity: 0, y: 22, duration: 0.8 }, 0.8)
+      .from(".hero .hero-cred", { opacity: 0, duration: 0.6 }, 1.0)
       .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 1.0)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.4);
 

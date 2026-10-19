@@ -23,10 +23,17 @@
   var paintFaq = function () { if (faqHours && H) faqHours.textContent = H.prose() + "."; };
   paintFaq();
 
+  /* GlossGenius: the only way to book, or a second door beside the calendar */
+  var cfg = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking) || {};
+  var ggUrl = /^https:\/\//.test(cfg.glossgenius || "") ? cfg.glossgenius : null;
   if (B.external) {
     var gg = root.querySelector(".bkl-gg-go");
     if (gg) gg.href = B.external;
     return;
+  }
+  if (cfg.mode === "both" && ggUrl) {
+    var alt = root.querySelector(".bk-gg-alt");
+    if (alt) { alt.querySelector(".bk-gg-link").href = ggUrl; alt.hidden = false; }
   }
 
   var wrap = root.querySelector(".bkl");
@@ -296,12 +303,28 @@
     renderTimes();
   };
 
-  select.addEventListener("change", function () {
-    state.svc = select.value;
+  var newChips = root.querySelectorAll("[data-new]");
+  var paintNew = function () {
+    newChips.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-new") === state.svc)); });
+  };
+  var chooseService = function (id) {
+    if (!B.service(id)) return;
+    state.svc = id;
+    select.value = id;
     try { sessionStorage.setItem("lumevina_book_svc", state.svc); } catch (e) { /* storage blocked */ }
     state.month = null;
+    paintNew();
     renderAll();
+  };
+  select.addEventListener("change", function () { chooseService(select.value); });
+  newChips.forEach(function (b) {
+    b.addEventListener("click", function () { chooseService(b.getAttribute("data-new")); });
   });
+  /* a link ending in #book-new (Instagram bio, stories) starts a first visit */
+  if (location.hash === "#book-new") {
+    chooseService("new-client-consultation");
+    setTimeout(function () { root.scrollIntoView({ block: "start" }); }, 60);
+  }
 
   goBtn.addEventListener("click", function () {
     if (!state.day || state.slot === null) return;
@@ -312,5 +335,6 @@
   document.addEventListener("lumevina:booking-changed", renderAll);
   if (H) H.onChange(function () { paintFaq(); renderAll(); });
 
+  paintNew();
   renderAll();
 })();

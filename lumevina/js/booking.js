@@ -54,7 +54,8 @@
   var byId = {};
   document.querySelectorAll(".add-to-cart").forEach(function (btn) {
     var id = btn.dataset.id;
-    if (!id || id === "gift-certificate-100" || byId[id]) return;
+    /* products and gift certificates go in the cart, not on the calendar */
+    if (!id || /^(retail-|gift-)/.test(id) || byId[id]) return;
     var s = {
       id: id,
       name: btn.dataset.name,

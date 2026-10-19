@@ -134,7 +134,7 @@
   /* "Closed Sundays and Mondays" */
   var closedLabel = function () {
     var w = read().week, shut = [];
-    [1, 2, 3, 4, 5, 6, 0].forEach(function (i) { if (!w[i]) shut.push(DAY_NAMES[i] + "s"); });
+    [0, 1, 2, 3, 4, 5, 6].forEach(function (i) { if (!w[i]) shut.push(DAY_NAMES[i] + "s"); });
     if (!shut.length) return "Open every day";
     return "Closed " + (shut.length === 1 ? shut[0] : shut.slice(0, -1).join(", ") + " and " + shut[shut.length - 1]);
   };

@@ -55,9 +55,9 @@
   <header class="nav" id="top">
     <a class="nav-brand" href="#top">Lumevina<span class="nav-brand-sub">Aesthetics Spa</span></a>
     <nav class="nav-links" aria-label="Main">
+      <a href="#shop">Shop</a>
       <a href="#book">Book</a>
       <a href="#services">Services</a>
-      <a href="#shop">Shop</a>
       <a href="#about">About</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
@@ -82,15 +82,15 @@
   <div class="mobile-menu" id="mobile-menu" hidden>
     <!-- every section, in page order (numbers match each section's eyebrow) -->
     <nav class="mm-links" aria-label="Menu">
-      <a href="#book" style="--i:0"><span class="mm-num" aria-hidden="true">01</span>Book</a>
-      <a href="#services" style="--i:1"><span class="mm-num" aria-hidden="true">02</span>Services</a>
-      <a href="#shop" style="--i:2"><span class="mm-num" aria-hidden="true">03</span>Shop</a>
+      <a href="#shop" style="--i:0"><span class="mm-num" aria-hidden="true">01</span>Shop</a>
+      <a href="#book" style="--i:1"><span class="mm-num" aria-hidden="true">02</span>Book a facial</a>
+      <a href="#services" style="--i:2"><span class="mm-num" aria-hidden="true">03</span>Services</a>
       <a href="#about" style="--i:3"><span class="mm-num" aria-hidden="true">04</span>About Evelyn</a>
       <a href="#faq" style="--i:4"><span class="mm-num" aria-hidden="true">05</span>FAQ &amp; Policies</a>
       <a href="#contact" style="--i:5"><span class="mm-num" aria-hidden="true">06</span>Contact</a>
     </nav>
     <div class="mm-actions">
-      <a class="mm-new" href="#start">New here? <strong>Start here</strong> <span aria-hidden="true">&rarr;</span></a>
+      <a class="mm-new" href="#book">New here? <strong>Start here</strong> <span aria-hidden="true">&rarr;</span></a>
       <a class="btn btn-solid mm-book" data-open-booking href="#services">Book now</a>
       <div class="mm-quick">
         <button class="mm-tile mobile-cart" type="button">
@@ -121,47 +121,139 @@
       <div class="hero-glow hero-glow-alt" aria-hidden="true"></div>
       <div class="hero-inner">
 
-        <h1 class="hero-title" aria-label="Radiance, beautifully restored.">
-          <span class="line" aria-hidden="true"><span class="line-inner">Radiance,</span></span>
-          <span class="line" aria-hidden="true"><span class="line-inner"><em>beautifully restored.</em></span></span>
+        <h1 class="hero-title" aria-label="Skincare, chosen by Evelyn.">
+          <span class="line" aria-hidden="true"><span class="line-inner">Skincare,</span></span>
+          <span class="line" aria-hidden="true"><span class="line-inner"><em>chosen by Evelyn.</em></span></span>
         </h1>
-        <p class="hero-sub">Personalized facials by Evelyn Romero, licensed esthetician, in Woodland Hills.</p>
-
-        <!-- New clients start here: the first visit from Evelyn's booking page, as one
-             question and a tap on a real time (js/start-here.js fills in the openings) -->
-        <div class="nc" id="start">
-          <p class="nc-eyebrow" id="nc-q"><span class="rb-shiny">New here? What brings you in?</span></p>
-          <div class="nc-pick" role="radiogroup" aria-labelledby="nc-q">
-            <button type="button" role="radio" aria-checked="true" data-nc="glow">Glowing skin</button>
-            <button type="button" role="radio" aria-checked="false" data-nc="acne">Acne &amp; breakouts</button>
-          </div>
-          <div class="nc-svc">
-            <p class="nc-tag" hidden></p>
-            <div class="nc-row">
-              <h2 class="nc-name">New Clients Start Here</h2>
-              <p class="nc-meta"><span class="nc-price">from $220</span><span class="nc-mins">60+ min</span></p>
-            </div>
-            <p class="nc-desc">A consultation, a look at your current routine, and a facial built around what your skin needs.</p>
-            <details class="nc-inc">
-              <summary>What every facial includes</summary>
-              <ul role="list">
-                <li>Double cleanse</li><li>Enzyme exfoliation</li><li>Extractions</li><li>Targeted mask</li>
-                <li>Relaxing massage</li><li>LED</li><li>Cryo globes</li>
-              </ul>
-            </details>
-          </div>
-          <p class="nc-label" hidden>Next openings · tap one to book it</p>
-          <div class="nc-times"></div>
-          <a class="btn btn-solid nc-book" href="#services">Book my first facial</a>
-          <p class="nc-fine">A 50% deposit holds your time · Pay over time with Klarna, Affirm or Afterpay</p>
+        <p class="hero-sub">The professional skincare from Evelyn Romero's treatment room in Woodland Hills:
+        Face Reality, GlyMed Plus, Mixi and Circadia. Shipped to you, or picked up at your visit.</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#shop">Shop skincare</a>
+          <a class="btn btn-ghost" href="#book">Book a facial</a>
         </div>
-        <p class="nc-back"><span class="nc-back-text">Been here before?</span>
-          <a class="nc-back-link" data-open-booking href="#services">Book your next visit <span aria-hidden="true">&rarr;</span></a></p>
+
+        <!-- what's on the shelf right now (js/shop.js) -->
+        <div class="hero-shelf" hidden>
+          <p class="hero-shelf-k">On the shelf now</p>
+          <ul class="hero-shelf-list" role="list"></ul>
+        </div>
         <p class="hero-cred">As featured in
           <a href="https://canvasrebel.com/meet-evelyn-romero/" target="_blank" rel="noopener">CanvasRebel</a>
           <span aria-hidden="true">·</span> Medical-grade skincare</p>
       </div>
       <p class="hero-wordmark" aria-hidden="true">LUMEVINA</p>
+    </section>
+
+    <!-- ═══════════════ SHOP (own retail + the brands we use) ═══════════════ -->
+    <section class="section section-shelf section-tools section-store" id="shop">
+      <div class="section-inner">
+        <div class="shop-head" data-reveal>
+          <p class="eyebrow" data-idx="01">Shop</p>
+          <h2 class="display" data-blur-text>The skincare Evelyn uses, <em>for home.</em></h2>
+          <p class="section-sub">Every product here is one Evelyn stocks for her clients. Search by name,
+          or browse by brand and type. Something out of stock? Request it and she'll order it in.</p>
+        </div>
+
+        <div class="sh-tools" data-reveal>
+          <div class="sh-search">
+            <label class="sh-search-k" for="sh-q">Search the shop</label>
+            <input id="sh-q" type="search" autocomplete="off" placeholder="Cleanser, SPF, mandelic…">
+          </div>
+          <div class="sh-chips sh-brands" role="group" aria-label="Brand"></div>
+          <div class="sh-chips sh-cats" role="group" aria-label="Type of product"></div>
+          <label class="sh-instock"><input type="checkbox" id="sh-instock"> In stock now</label>
+        </div>
+        <p class="sh-count" aria-live="polite"></p>
+        <div class="sh-grid" id="retail-grid"></div>
+        <button class="btn btn-ghost sh-more" type="button" hidden>Show all products</button>
+        <p class="sh-fallback">The shop loads here. To order now, email
+          <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a>
+          with what you'd like.</p>
+        <p class="sh-fine">Shipping is $8, free on orders over $75, or pick up free at your visit.
+        Not sure what's right for your skin? <a class="inline-link" href="#contact">Ask Evelyn</a> first.</p>
+
+        <!-- Glow Routine: the product membership (js/routine.js) -->
+        <div class="shop-row" data-feature="routine">
+          <p class="shop-subhead" data-reveal>Glow Routine <span>your routine, refilled every month</span></p>
+          <article class="routine-card" data-reveal data-spotlight data-tier="1">
+            <div class="rt-copy">
+              <span class="rt-tag">New · no appointment needed · from $75</span>
+              <h3 class="rt-title">Your routine, <em>refilled monthly.</em></h3>
+              <p class="rt-desc">Evelyn picks your refills from our shelf and a daily skin supplement for your focus,
+              then updates the routine each season.</p>
+            </div>
+            <ul class="rt-perks" role="list">
+              <li>Refills and a daily skin supplement, chosen by Evelyn</li>
+              <li>A 15-minute video skin check each quarter</li>
+              <li>10% off facials, and first look at openings</li>
+              <li>Ships, or pick up at your visit · skip or cancel anytime</li>
+            </ul>
+            <div class="rt-buy">
+              <p class="rt-price"><span class="rt-amt">$75</span><span class="rt-per">/month</span></p>
+              <div class="rt-focus" role="radiogroup" aria-label="Your focus">
+                <button type="button" role="radio" aria-checked="true" data-focus="glow">Glow</button>
+                <button type="button" role="radio" aria-checked="false" data-focus="clear">Clear</button>
+                <button type="button" role="radio" aria-checked="false" data-focus="ageless">Ageless</button>
+              </div>
+              <button class="btn btn-solid rt-start" type="button">Start my routine</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Skin School: Evelyn's online course (docs/school → school.html) -->
+        <div class="shop-row" data-feature="school">
+          <p class="shop-subhead" data-reveal>Skin School <span>Evelyn&rsquo;s online course, at your own pace</span></p>
+          <article class="school-card" data-reveal data-spotlight>
+            <div class="rt-copy">
+              <span class="rt-tag">New · 33 short lessons · first one free</span>
+              <h3 class="rt-title">Know your skin, <em>then glow for life.</em></h3>
+              <p class="rt-desc">Three levels, from your first cleanser to treating acne, dark spots and aging.
+              A skin quiz, a routine builder, and Evelyn herself if you want her.</p>
+            </div>
+            <ul class="rt-perks" role="list">
+              <li>Beginner to advanced, 7 to 12 minutes a lesson</li>
+              <li>Add a starter kit, or a 1-on-1 video call with Evelyn</li>
+              <li>Members: Skin Basics included, 25% off any course</li>
+            </ul>
+            <div class="rt-buy">
+              <p class="rt-price"><span class="rt-amt sc-amt">$149</span><span class="rt-per">once, for life</span></p>
+              <a class="btn btn-solid sc-go" href="school.html#learn">Take the free lesson</a>
+              <a class="sc-more" href="school.html#tiers">See the courses <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </article>
+        </div>
+
+        <!-- links out to the brands' own sites: held back while the shop sells them here -->
+        <div class="shop-row" data-feature="partners">
+          <p class="shop-subhead" data-reveal>The professional lines we use <span>shopping our links supports Lumevina</span></p>
+          <div class="shop-home-cards" data-reveal>
+            <article class="shop-card" data-spotlight>
+              <span class="shop-card-tag">Skincare</span>
+              <h3 class="shop-card-name shop-card-logo"><img src="img/brands/glymed-plus-dark.svg" alt="GlyMed Plus" width="120" height="38"></h3>
+              <p class="shop-card-desc">Medical-grade actives and professional peels, the
+              clinical backbone of your results.</p>
+              <a class="shop-card-link" href="https://glymedplus.com/" target="_blank" rel="noopener"
+                data-lp-title="GlyMed Plus" data-lp-desc="Medical-grade actives &amp; peels" data-lp-tint="1">Shop GlyMed Plus <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="shop-card" data-spotlight>
+              <span class="shop-card-tag">Skincare</span>
+              <h3 class="shop-card-name shop-card-logo shop-card-logo--wide"><img src="img/brands/le-mieux-dark.webp" alt="Le Mieux" width="729" height="136"></h3>
+              <p class="shop-card-desc">Peptide and marine hydration to keep skin plump, calm,
+              and luminous between visits.</p>
+              <a class="shop-card-link" href="https://lemieuxskincare.com/?rfsn=6976217.009eb1&amp;utm_campaign=6976217.009eb1&amp;utm_medium=affiliate&amp;utm_source=refersion" target="_blank" rel="noopener"
+                data-lp-title="Le Mieux Skincare" data-lp-desc="Peptide &amp; marine hydration" data-lp-tint="2">Shop Le Mieux <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="shop-card" data-spotlight>
+              <span class="shop-card-tag">Face Tools</span>
+              <h3 class="shop-card-name shop-card-logo shop-card-logo--caps"><img src="img/brands/beautology-lab-dark.svg" alt="Beautology Lab" width="346" height="25"></h3>
+              <p class="shop-card-desc">Gua sha, rollers, and the sculpting tools we reach for
+              in the studio, to de-puff at home.</p>
+              <a class="shop-card-link" href="https://beautologylab.com/?ref=Lumevina" target="_blank" rel="noopener"
+                data-lp-title="Beautology Lab" data-lp-desc="Professional face tools" data-lp-tint="3">Shop Beautology Lab <span aria-hidden="true">→</span></a>
+            </article>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ═══════════════ BOOK (js/book-section.js) ═══════════════
@@ -172,14 +264,24 @@
     <section class="section section-book" id="book">
       <div class="section-inner">
         <div class="book-head" data-reveal>
-          <p class="eyebrow" data-idx="01">Book</p>
+          <p class="eyebrow" data-idx="02">Book a facial</p>
           <h2 class="display" data-blur-text>Every opening, <em>at a glance.</em></h2>
           <p class="section-sub">Choose a treatment and the calendar shows what's open each day.
           Tap a day, tap a time, then hold it with a 50% deposit.</p>
+          <p class="bk-gg-alt" hidden>Already book with Evelyn on GlossGenius?
+            <a class="inline-link bk-gg-link" href="#book" target="_blank" rel="noopener">Book there instead</a>.
+            It's the same calendar.</p>
         </div>
 
         <div class="bkl" data-reveal>
           <div class="bkl-side">
+            <div class="bkl-new" role="group" aria-labelledby="bkl-new-k">
+              <p class="bkl-new-k" id="bkl-new-k">New here? Start with</p>
+              <div class="bkl-new-chips">
+                <button type="button" class="sh-chip" data-new="new-client-consultation">Glowing skin</button>
+                <button type="button" class="sh-chip" data-new="new-client-consultation-acne">Acne &amp; breakouts</button>
+              </div>
+            </div>
             <div class="field bkl-field">
               <label for="bkl-svc">Treatment</label>
               <select id="bkl-svc" class="bkl-select"></select>
@@ -212,7 +314,7 @@
     <section class="section section-shop" id="services">
       <div class="section-inner">
         <div class="shop-head" data-reveal>
-          <p class="eyebrow" data-idx="02">Services &amp; Gift Cards</p>
+          <p class="eyebrow" data-idx="03">Services &amp; Gift Cards</p>
           <h2 class="display" data-blur-text>Your glow, <em>on your schedule.</em></h2>
           <p class="section-sub">Choose a treatment to <strong>book instantly</strong> — pick your
           time and hold it with a 50% deposit. Prefer to give the gift of glow? The
@@ -498,104 +600,6 @@
           <li><strong>Pause it</strong><span>Skip one month a year, no charge.</span></li>
           <li><strong>Cancel online</strong><span>Any time from My Lumevina. Three-month minimum, then month to month.</span></li>
         </ul>
-      </div>
-    </section>
-
-    <!-- ═══════════════ SHOP (own retail + the brands we use) ═══════════════ -->
-    <section class="section section-shelf section-tools" id="shop">
-      <div class="section-inner">
-        <div class="shop-head" data-reveal>
-          <p class="eyebrow" data-idx="03">Shop</p>
-          <h2 class="display" data-blur-text>Take a little glow <em>home.</em></h2>
-          <p class="section-sub">Buy what we stock straight from our shelf, or shop the
-          professional lines behind every treatment.</p>
-        </div>
-
-        <!-- Glow Routine: the product membership (js/routine.js) -->
-        <div class="shop-row" data-feature="routine">
-          <p class="shop-subhead" data-reveal>Glow Routine <span>your routine, refilled every month</span></p>
-          <article class="routine-card" data-reveal data-spotlight data-tier="1">
-            <div class="rt-copy">
-              <span class="rt-tag">New · no appointment needed · from $75</span>
-              <h3 class="rt-title">Your routine, <em>refilled monthly.</em></h3>
-              <p class="rt-desc">Evelyn picks your refills from our shelf and a daily skin supplement for your focus,
-              then updates the routine each season.</p>
-            </div>
-            <ul class="rt-perks" role="list">
-              <li>Refills and a daily skin supplement, chosen by Evelyn</li>
-              <li>A 15-minute video skin check each quarter</li>
-              <li>10% off facials, and first look at openings</li>
-              <li>Ships, or pick up at your visit · skip or cancel anytime</li>
-            </ul>
-            <div class="rt-buy">
-              <p class="rt-price"><span class="rt-amt">$75</span><span class="rt-per">/month</span></p>
-              <div class="rt-focus" role="radiogroup" aria-label="Your focus">
-                <button type="button" role="radio" aria-checked="true" data-focus="glow">Glow</button>
-                <button type="button" role="radio" aria-checked="false" data-focus="clear">Clear</button>
-                <button type="button" role="radio" aria-checked="false" data-focus="ageless">Ageless</button>
-              </div>
-              <button class="btn btn-solid rt-start" type="button">Start my routine</button>
-            </div>
-          </article>
-        </div>
-
-        <!-- Skin School: Evelyn's online course (docs/school → school.html) -->
-        <div class="shop-row" data-feature="school">
-          <p class="shop-subhead" data-reveal>Skin School <span>Evelyn&rsquo;s online course, at your own pace</span></p>
-          <article class="school-card" data-reveal data-spotlight>
-            <div class="rt-copy">
-              <span class="rt-tag">New · 33 short lessons · first one free</span>
-              <h3 class="rt-title">Know your skin, <em>then glow for life.</em></h3>
-              <p class="rt-desc">Three levels, from your first cleanser to treating acne, dark spots and aging.
-              A skin quiz, a routine builder, and Evelyn herself if you want her.</p>
-            </div>
-            <ul class="rt-perks" role="list">
-              <li>Beginner to advanced, 7 to 12 minutes a lesson</li>
-              <li>Add a starter kit, or a 1-on-1 video call with Evelyn</li>
-              <li>Members: Skin Basics included, 25% off any course</li>
-            </ul>
-            <div class="rt-buy">
-              <p class="rt-price"><span class="rt-amt sc-amt">$149</span><span class="rt-per">once, for life</span></p>
-              <a class="btn btn-solid sc-go" href="school.html#learn">Take the free lesson</a>
-              <a class="sc-more" href="school.html#tiers">See the courses <span aria-hidden="true">&rarr;</span></a>
-            </div>
-          </article>
-        </div>
-
-        <div class="shop-row">
-          <p class="shop-subhead" data-reveal>From our shelf <span>shipped to you, or picked up at your visit</span></p>
-          <div class="retail-grid" id="retail-grid"></div>
-        </div>
-
-        <div class="shop-row">
-          <p class="shop-subhead" data-reveal>The professional lines we use <span>shopping our links supports Lumevina</span></p>
-          <div class="shop-home-cards" data-reveal>
-            <article class="shop-card" data-spotlight>
-              <span class="shop-card-tag">Skincare</span>
-              <h3 class="shop-card-name shop-card-logo"><img src="img/brands/glymed-plus-dark.svg" alt="GlyMed Plus" width="120" height="38"></h3>
-              <p class="shop-card-desc">Medical-grade actives and professional peels, the
-              clinical backbone of your results.</p>
-              <a class="shop-card-link" href="https://glymedplus.com/" target="_blank" rel="noopener"
-                data-lp-title="GlyMed Plus" data-lp-desc="Medical-grade actives &amp; peels" data-lp-tint="1">Shop GlyMed Plus <span aria-hidden="true">→</span></a>
-            </article>
-            <article class="shop-card" data-spotlight>
-              <span class="shop-card-tag">Skincare</span>
-              <h3 class="shop-card-name shop-card-logo shop-card-logo--wide"><img src="img/brands/le-mieux-dark.webp" alt="Le Mieux" width="729" height="136"></h3>
-              <p class="shop-card-desc">Peptide and marine hydration to keep skin plump, calm,
-              and luminous between visits.</p>
-              <a class="shop-card-link" href="https://lemieuxskincare.com/?rfsn=6976217.009eb1&amp;utm_campaign=6976217.009eb1&amp;utm_medium=affiliate&amp;utm_source=refersion" target="_blank" rel="noopener"
-                data-lp-title="Le Mieux Skincare" data-lp-desc="Peptide &amp; marine hydration" data-lp-tint="2">Shop Le Mieux <span aria-hidden="true">→</span></a>
-            </article>
-            <article class="shop-card" data-spotlight>
-              <span class="shop-card-tag">Face Tools</span>
-              <h3 class="shop-card-name shop-card-logo shop-card-logo--caps"><img src="img/brands/beautology-lab-dark.svg" alt="Beautology Lab" width="346" height="25"></h3>
-              <p class="shop-card-desc">Gua sha, rollers, and the sculpting tools we reach for
-              in the studio, to de-puff at home.</p>
-              <a class="shop-card-link" href="https://beautologylab.com/?ref=Lumevina" target="_blank" rel="noopener"
-                data-lp-title="Beautology Lab" data-lp-desc="Professional face tools" data-lp-tint="3">Shop Beautology Lab <span aria-hidden="true">→</span></a>
-            </article>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -1022,9 +1026,9 @@
         </a>
       </div>
       <nav class="footer-nav" aria-label="Footer">
-        <a href="#book">Book</a>
-        <a href="#services">Services</a>
         <a href="#shop">Shop</a>
+        <a href="#book">Book a facial</a>
+        <a href="#services">Services</a>
         <a href="#gift">E-Gift Cards</a>
         <a href="#about">About Evelyn</a>
         <a href="#faq">FAQ &amp; Policies</a>
@@ -2049,6 +2053,7 @@
   <script src="js/intro.js"></script>
   <script src="js/payments.js"></script>
   <script src="js/giftcards.js"></script>
+  <script src="js/catalog.js"></script>
   <script src="js/inventory.js"></script>
   <script src="js/shipping.js"></script>
   <script src="js/rewards.js"></script>
@@ -2072,7 +2077,7 @@
   <script src="js/hours.js"></script>
   <script src="js/booking.js"></script>
   <script src="js/book-section.js"></script>
-  <script src="js/start-here.js"></script>
+  <script src="js/shop.js"></script>
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/install.js"></script>
