@@ -6702,27 +6702,52 @@ a.book-btn { text-align: center; }
 .book-glossgenius .only-gg { display: inline; }
 .book-glossgenius .only-site { display: none; }
 
-/* ─── her logo's symbol behind the hero: the circle, profile and roses from
-   her logo (img/logo-mark.svg, vector, the words left out), tinted in the
-   earthy palette through a mask. The outer box only places it; the inner
-   one is what moves (js/main.js), so the centering transform is never
-   overwritten. ─── */
+/* ─── her logo's symbol in the hero: the circle, profile and roses from her
+   logo (img/logo-mark.svg, vector, the words left out), tinted in the earthy
+   palette through a mask. The outer box only places it; the inner ones are
+   what move (js/main.js), so nothing here is ever overwritten.
+   In the art: the profile starts at 50% of the width, the roses end at 99%,
+   and the drawing is 90% as tall as it is wide.
+
+   Phones and tablets: a small emblem above the headline, clear of the words
+   (a flex item in the hero's column, before .hero-inner).
+   Wide screens: beside the headline, her profile looking back at it. ─── */
 .hero-mark {
-  position: absolute; left: 50%; top: 44%; z-index: 0;
-  width: min(46rem, 78vh); aspect-ratio: 1 / 1;
-  transform: translate(-50%, -50%);
+  position: relative; z-index: 1;
+  width: clamp(9.5rem, 40vw, 13.5rem);
+  aspect-ratio: 2064 / 1860;
+  margin: 0 auto clamp(0.9rem, 3vw, 1.6rem);
+  flex: none;
   pointer-events: none;
 }
 .hero-mark-drift { display: block; width: 100%; height: 100%; }
 .hero-mark-art {
   display: block; width: 100%; height: 100%;
-  background: linear-gradient(160deg,
-    rgba(var(--accent-rgb), 0.46) 0%,
-    rgba(146, 106, 80, 0.40) 48%,
-    rgba(var(--accent-rgb), 0.30) 100%);
+  background: linear-gradient(165deg,
+    rgba(146, 106, 80, 0.86) 0%,
+    rgba(var(--accent-rgb), 0.80) 55%,
+    rgba(146, 106, 80, 0.70) 100%);
   -webkit-mask: url("../img/logo-mark.svg") center / contain no-repeat;
   mask: url("../img/logo-mark.svg") center / contain no-repeat;
 }
-@media (max-width: 760px) {
-  .hero-mark { top: 31%; width: min(104vw, 30rem); opacity: 0.62; }
+/* wide screens: the whole profile in the open space beside the headline,
+   her nose just past the end of "chosen by Evelyn." (the headline's second
+   line ends 327px right of centre); the circle trails off to the left and
+   fades behind the words */
+@media (min-width: 1180px) {
+  .hero-mark {
+    --m: min(32rem, calc((50vw - 376px) / 0.486));
+    position: absolute; z-index: 0;
+    width: var(--m); aspect-ratio: 1 / 1; margin: 0;
+    top: calc(90px - var(--m) * 0.05);
+    left: calc(50% + 352px - var(--m) * 0.504);
+    -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0.16) 4%, rgba(0,0,0,0.5) 30%, #000 50%);
+            mask-image: linear-gradient(90deg, rgba(0,0,0,0.16) 4%, rgba(0,0,0,0.5) 30%, #000 50%);
+  }
+  .hero-mark-art {
+    background: linear-gradient(165deg,
+      rgba(146, 106, 80, 0.74) 0%,
+      rgba(var(--accent-rgb), 0.66) 55%,
+      rgba(146, 106, 80, 0.56) 100%);
+  }
 }

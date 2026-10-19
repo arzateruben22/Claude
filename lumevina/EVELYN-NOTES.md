@@ -156,4 +156,4 @@ Evelyn needs 30 minutes after every appointment to clean and sanitize. The websi
 
 ## The logo behind the hero (Oct 19)
 
-The symbol from her logo (the circle, profile and roses; the words lifted out) sits large and quiet behind the headline, tinted in the earthy palette (`img/logo-mark-bg.png`, a mask, so the color is set in CSS). It fades in with the headline once the opening lifts and drifts up gently as you scroll.
+The symbol from her logo (the circle, profile and roses, without the words) is now sharp vector art (`img/logo-mark.svg`), tinted in the earthy palette through a mask. On wide screens it sits to the right of the headline, her profile looking back at "chosen by Evelyn.", with the circle fading out behind the words. On phones and tablets it's a small emblem above the headline, clear of the text. It fades in with the headline once the opening lifts and drifts up gently as you scroll. The opening animation uses the same vector art, with LUMEVINA and AESTHETICS SPA set in Cormorant Garamond (her outlined EV kept).
