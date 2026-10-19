@@ -128,6 +128,19 @@
     .goal-bar { height: 8px; border-radius: 999px; background: var(--edge); overflow: hidden; }
     .goal-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--mauve), var(--plum)); transition: width 400ms ease; }
     .goal-fill.is-met { background: var(--good); }
+    /* gift certificates: use one at the visit */
+    .gc-use { margin: 0.4rem 0 1.4rem; padding: 1rem 1.1rem 1.1rem; border: 1px solid var(--edge); border-radius: 12px; background: var(--panel); }
+    .gc-use-title { margin: 0 0 0.25rem; font-size: 1rem; font-weight: 600; color: var(--ink); }
+    .gc-use-form { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: flex-end; margin-top: 0.8rem; }
+    .gc-use-form label { flex: 1 1 9rem; }
+    .gc-use-form [hidden] { display: none; }
+    .gc-use-form #gc-code { text-transform: uppercase; letter-spacing: 0.04em; }
+    .gc-use-form .bk-export { flex: none; padding: 0.6rem 1.2rem; }
+    .gc-use-form .bk-export:disabled { opacity: 0.45; cursor: not-allowed; }
+    .gc-use-preview { margin: 0.8rem 0 0; font-size: 0.86rem; color: var(--ink-70); min-height: 1.2em; }
+    .gc-use-preview strong, .gc-use-result strong { color: var(--ink); font-weight: 600; }
+    .gc-use-result { margin: 0.35rem 0 0; font-size: 0.86rem; color: var(--good); min-height: 1.2em; }
+    .gc-use-result.is-error { color: var(--data); }
     .goal-form { margin-top: 1rem; }
     .goal-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 0.9rem; }
     .goal-form label, .inv-form label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
@@ -573,6 +586,24 @@
         </div>
         <button class="bk-export" id="gc-csv">Download CSV</button>
       </div>
+
+      <!-- at the visit: spend a certificate against the bill (js/giftcards.js → spend) -->
+      <div class="gc-use">
+        <h3 class="gc-use-title">Use a gift certificate</h3>
+        <p class="sub">At the visit, enter the code and what the visit comes to. The certificate
+        covers what it can: if it's worth more, the rest stays on it for next time; if the visit
+        costs more, the client pays only the difference.</p>
+        <form class="goal-form gc-use-form" id="gc-use-form" autocomplete="off">
+          <label>Code<input type="text" id="gc-code" placeholder="LUM-XXXX-XXXX" autocapitalize="characters" spellcheck="false" required></label>
+          <label>Visit total ($)<input type="number" id="gc-bill" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></label>
+          <label>Note (optional)<input type="text" id="gc-note" placeholder="e.g. Custom facial" maxlength="200"></label>
+          <label class="gc-key" id="gc-key-row" hidden>Studio key<input type="password" id="gc-key" placeholder="From the setup guide"></label>
+          <button type="submit" class="bk-export" id="gc-apply" disabled>Use certificate</button>
+        </form>
+        <p class="gc-use-preview" id="gc-preview" aria-live="polite"></p>
+        <p class="gc-use-result" id="gc-result" role="status"></p>
+      </div>
+
       <div class="bk-tiles" id="gc-tiles"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="gc-table"></table></div>
       <p class="sub" style="margin-top:0.9rem"><strong>For your accountant:</strong> gift-card
@@ -678,6 +709,8 @@
 
   <div class="tip" id="tip"></div>
 
+  <script src="js/site-config.js"></script>
+  <script src="js/giftcards.js"></script>
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
   <script src="js/react-bits.js"></script>
@@ -1509,52 +1542,147 @@
         }).join("") + '</tbody>';
     })();
 
-    /* ── Gift certificates (outstanding liability) ── */
+    /* ── Gift certificates: what's outstanding, and using one at the visit ──
+       A dollar certificate draws down: $100 on a $50 visit covers $50 and
+       keeps $50; on a $120 visit it covers its $100 and the client pays $20.
+       (Older treatment certificates cover their whole treatment once.)
+       Connected (js/site-config.js → shop.supabase), the list and every use
+       go through the gift-cards server function with Evelyn's studio key;
+       until then, this browser's certificates (or a sample). */
     (function () {
-      /* Service gifts (a named treatment) are all-or-nothing: Active until the
-         treatment is booked, then Redeemed. Only VALUE gifts ("$X toward any
-         treatment") carry a rolling balance, so "Partly used" belongs to them. */
-      var cards = GIFTS;
+      var GC = window.LumevinaGiftCards;
       var num = function (n) { return Number(n || 0); };
-
-      var sold = cards.reduce(function (a, c) { return a + num(c.amount); }, 0);
-      var outstanding = cards.reduce(function (a, c) { return a + num(c.balance); }, 0);
-      var redeemed = sold - outstanding;
-      var activeCount = cards.filter(function (c) { return num(c.balance) > 0; }).length;
-
-      var tiles = [
-        { l: "Sold, all time", v: money(Math.round(sold)) },
-        { l: "Redeemed", v: money(Math.round(redeemed)) },
-        { l: "Outstanding (liability)", v: money(Math.round(outstanding)), flag: true },
-        { l: "Active certificates", v: String(activeCount) }
-      ];
-      document.getElementById("gc-tiles").innerHTML = tiles.map(function (t) {
-        return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
-          t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+      var m2 = function (n) { return "$" + num(n).toFixed(2); };
+      var esc = function (t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+      var KEY = "lumevina_studio_key";
+      var studioKey = function () { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } };
+      var setKey = function (k) { try { if (k) localStorage.setItem(KEY, k); else localStorage.removeItem(KEY); } catch (e) {} };
 
       var statusLabel = function (c) {
+        if (c.status === "void") return "Cancelled";
         if (num(c.balance) <= 0) return "Redeemed";
         if (num(c.balance) < num(c.amount)) return "Partly used";
         return "Active";
       };
-      var sorted = cards.slice().sort(function (a, b) { return num(b.balance) - num(a.balance); });
-      var thead = '<thead><tr><th>Code</th><th>Gift</th><th>Recipient</th>' +
-        '<th>Value</th><th>Balance</th><th>Status</th></tr></thead>';
-      var tbody = '<tbody>' + sorted.map(function (c) {
-        return '<tr><td>' + (c.code || "—") + '</td><td>' + (c.label || "—") +
-          '</td><td>' + (c.recipientName || "—") + '</td><td>' + money(num(c.amount)) +
-          '</td><td>' + money(num(c.balance)) + '</td><td>' + statusLabel(c) + '</td></tr>';
-      }).join("") + '</tbody>';
-      document.getElementById("gc-table").innerHTML = thead + tbody;
+      var lastUsed = function (c) {
+        var u = (c.uses || []).slice(-1)[0];
+        var at = (u && u.at) || c.lastUsedAt;
+        return at ? new Date(at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
+      };
+      var shown = [];
+      var render = function (cards) {
+        var sold = cards.reduce(function (a, c) { return a + num(c.amount); }, 0);
+        var outstanding = cards.reduce(function (a, c) { return a + (c.status === "void" ? 0 : num(c.balance)); }, 0);
+        var activeCount = cards.filter(function (c) { return c.status !== "void" && num(c.balance) > 0; }).length;
+        var tiles = [
+          { l: "Sold, all time", v: money(Math.round(sold)) },
+          { l: "Redeemed", v: money(Math.round(sold - outstanding)) },
+          { l: "Outstanding (liability)", v: money(Math.round(outstanding)), flag: true },
+          { l: "Active certificates", v: String(activeCount) }
+        ];
+        document.getElementById("gc-tiles").innerHTML = tiles.map(function (t) {
+          return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
+            t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
+        shown = cards.slice().sort(function (a, b) { return num(b.balance) - num(a.balance); });
+        document.getElementById("gc-table").innerHTML =
+          '<thead><tr><th>Code</th><th>Gift</th><th>Recipient</th><th>Value</th><th>Balance</th><th>Status</th><th>Last used</th></tr></thead>' +
+          '<tbody>' + shown.map(function (c) {
+            return '<tr><td>' + esc(c.code || "—") + '</td><td>' + esc(c.label || "—") + '</td><td>' + esc(c.recipientName || "—") +
+              '</td><td>' + money(num(c.amount)) + '</td><td>' + money(num(c.balance)) + '</td><td>' + statusLabel(c) +
+              '</td><td>' + lastUsed(c) + '</td></tr>';
+          }).join("") + '</tbody>';
+      };
+      var load = function () {
+        if (GC && GC.live) {
+          if (!studioKey()) { render(GIFTS); return; }
+          GC.list(studioKey()).then(render, function () { render(GIFTS); });
+          return;
+        }
+        var stored = lget("lumevina_giftcards");
+        render(stored && stored.length ? stored : GC_SAMPLE);
+      };
+      load();
 
       document.getElementById("gc-csv").addEventListener("click", function () {
-        var head = ["Code", "Gift", "Recipient", "Value", "Balance", "Status", "Purchased"];
-        var csv = [head.join(",")].concat(sorted.map(function (c) {
+        var head = ["Code", "Gift", "Recipient", "Value", "Balance", "Status", "Purchased", "Last used"];
+        var csv = [head.join(",")].concat(shown.map(function (c) {
           return [c.code, '"' + (c.label || "") + '"', '"' + (c.recipientName || "") + '"',
             num(c.amount).toFixed(2), num(c.balance).toFixed(2), statusLabel(c),
-            (c.purchasedAt || "").slice(0, 10)].join(",");
+            (c.purchasedAt || "").slice(0, 10), '"' + lastUsed(c) + '"'].join(",");
         })).join("\r\n");
         saveFile(this, "lumevina-giftcards-" + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
+      });
+
+      /* ── use a certificate at the visit ── */
+      var form = document.getElementById("gc-use-form");
+      if (!form || !GC) return;
+      var codeIn = document.getElementById("gc-code"), billIn = document.getElementById("gc-bill");
+      var noteIn = document.getElementById("gc-note"), keyRow = document.getElementById("gc-key-row");
+      var keyIn = document.getElementById("gc-key"), applyBtn = document.getElementById("gc-apply");
+      var prev = document.getElementById("gc-preview"), res = document.getElementById("gc-result");
+      var card = null, timer = 0, ask = 0;
+      if (GC.live && !studioKey()) keyRow.hidden = false;
+
+      var say = function (el, html, bad) { el.innerHTML = html; if (el === res) res.classList.toggle("is-error", !!bad); };
+      var hold = function (text) { card = null; applyBtn.disabled = true; applyBtn.textContent = "Use certificate"; say(prev, text); };
+      var show = function () {
+        var c = card, bill = num(billIn.value);
+        var head = "<strong>" + esc(c.code) + "</strong> · " + esc(c.kind === "service" ? c.label : "toward any treatment") +
+          " · " + m2(c.balance) + " left of " + m2(c.amount) + ".";
+        if (!(bill > 0)) { applyBtn.disabled = true; applyBtn.textContent = "Use certificate"; say(prev, head + " Enter the visit total."); return; }
+        var p = GC.preview(c, bill);
+        say(prev, head + " On this " + m2(bill) + " visit it covers <strong>" + m2(p.applied) + "</strong>, the client pays <strong>" +
+          m2(p.pay) + "</strong>, and <strong>" + m2(p.left) + "</strong> stays on the certificate.");
+        applyBtn.disabled = false;
+        applyBtn.textContent = "Use " + m2(p.applied);
+      };
+      var lookup = function () {
+        clearTimeout(timer);
+        say(res, "");
+        var code = codeIn.value.trim().toUpperCase();
+        if (!code) { hold(""); return; }
+        if (!/^LUM-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { hold("Codes look like LUM-XXXX-XXXX."); return; }
+        if (card && card.code === code) { show(); return; }
+        var mine = ++ask;
+        timer = setTimeout(function () {
+          GC.check(code).then(function (c) {
+            if (mine !== ask) return;
+            if (!c) { hold("No certificate with that code. Check it against the client's email."); return; }
+            if (c.status === "void") { hold(esc(c.code) + " was cancelled."); return; }
+            if (num(c.balance) <= 0) { hold(esc(c.code) + " is used up (it was worth " + m2(c.amount) + ")."); return; }
+            card = c;
+            show();
+          }, function () { if (mine === ask) hold("Couldn't reach the gift ledger. Check the connection and try again."); });
+        }, 250);
+      };
+      codeIn.addEventListener("input", lookup);
+      billIn.addEventListener("input", function () { if (card) show(); else lookup(); });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!card) return;
+        if (GC.live && !studioKey()) {
+          if (!keyIn.value.trim()) { keyRow.hidden = false; keyIn.focus(); say(res, "Enter the studio key once; this browser remembers it.", true); return; }
+          setKey(keyIn.value.trim());
+        }
+        var used = card.code;
+        applyBtn.disabled = true;
+        GC.spend(used, num(billIn.value), { note: noteIn.value.trim(), studioKey: studioKey() }).then(function (r) {
+          if (!r.ok) {
+            var why = { not_found: "No certificate with that code.", void: "That certificate was cancelled.",
+              empty: "That certificate is used up.", nothing_due: "Enter the visit total.",
+              studio_key: "That studio key didn't work. Enter it again." }[r.reason] || "That didn't go through. Try again.";
+            if (r.reason === "studio_key") { setKey(""); keyIn.value = ""; keyRow.hidden = false; }
+            say(res, why, true);
+            applyBtn.disabled = false;
+            return;
+          }
+          say(res, "Done. " + esc(used) + " covered <strong>" + m2(r.applied) + "</strong>; the client pays <strong>" + m2(r.pay) +
+            "</strong>. " + (r.balance > 0 ? "<strong>" + m2(r.balance) + "</strong> stays on it for next time." : "It's now used up."));
+          form.reset(); keyRow.hidden = !(GC.live && !studioKey());
+          hold("");
+          load();
+        });
       });
     })();
 

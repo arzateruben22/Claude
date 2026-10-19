@@ -143,7 +143,7 @@
       return "Evelyn’s Skin School is her online course: 33 short lessons in three levels, from your first routine to acne, dark spots and aging. The first two lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off. Prefer in person? Skin School Live is a two-hour class at the studio for $129."; },
       acts: [["Take the free lesson", "go:school.html#learn"], ["See the courses", "go:school.html#tiers"], ["Class dates", "go:school.html#live"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
-      return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + "$110" + " card for anything."; },
+      return "Gift certificates come in $50, $100, $200, $400 or any amount you choose, work toward any treatment and never expire. At the visit Evelyn takes it off the bill: anything left stays on it, and if the visit costs more you pay only the difference."; },
       acts: [["Send a gift", "#gift"]] },
     { id: "deposit", node: "cancel", k: /deposit|refund/, a: function () {
       return "Some treatments take a non-refundable deposit when you book: $50 for the acne consultation, $49 for a consultation, $20 or $30 for waxing and acne treatments; facials and peels have none. It goes toward your total, and with 48 hours’ notice it moves to a new date in the same month. If anything comes up after your visit, reach out within 24 hours."; } },
@@ -260,10 +260,10 @@
     "m-bank": info("Busy month? Your facial waits. Up to two bank at a time, and with two waiting we don’t bill you until you book one, so you never pay for a facial you can’t use. You can also send a banked facial to a friend as a gift.", [["Something else", "n:member"]]),
     "m-pause": info("Pause one month a year at no charge. After the 3-month minimum, cancel online any time from My Lumevina.", [["Something else", "n:member"]]),
     "m-ask": info("Members can ask Evelyn anything, any time. Everyday questions are answered right here, and anything about your skin gets her own reply within 24 hours.", [["Join", "#membership"], ["Something else", "n:member"]]),
-    gift: info("Gift certificates never expire. Which kind?", [["A specific treatment", "n:g-one"], ["Any treatment · $110", "n:g-any"], ["Using one", "n:g-use"]]),
-    "g-one": info("Pick the treatment and send it: the certificate covers that facial or service in full.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
-    "g-any": info("A $110 certificate goes toward any treatment, and never expires.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
-    "g-use": info("Enter the code in My Lumevina or at checkout, and it applies to any treatment.", [["Book", "n:book"], ["Something else", "n:gift"]])
+    gift: info("Gift certificates never expire. What would you like to know?", [["Sending one", "n:g-any"], ["Using one", "n:g-use"], ["What's left on mine", "n:g-left"]]),
+    "g-any": info("Choose $50, $100, $200, $400 or your own amount ($25 to $1,000). It's emailed with its own code and goes toward any treatment.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
+    "g-use": info("Show the code at your visit and Evelyn takes it off the bill. If it's worth more than the visit, the rest stays on it for next time; if the visit costs more, you pay only the difference.", [["Book", "n:book"], ["Something else", "n:gift"]]),
+    "g-left": info("Tap Check a gift balance under the gift certificate and enter your code: it shows what's left.", [["Check a balance", "#gift"], ["Something else", "n:gift"]])
   };
   for (var gid in GROUPS) (function (gid) {
     NODES[gid] = { say: GROUPS[gid].ask, opts: function () {

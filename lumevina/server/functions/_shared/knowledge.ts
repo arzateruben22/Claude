@@ -89,7 +89,7 @@ then wait in your car and text before coming up.
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 (free over $75), or pick up at your visit.
 Virtual consultations are $55, Mondays only; reach out first.
-Gift certificates never expire.`;
+Gift certificates never expire, and anything left after a visit stays on them.`;
 
 /** Evelyn's playbook: only the sections she has answered. Empty until she has. */
 export const KNOWLEDGE = ``;

@@ -301,3 +301,88 @@ create policy "clients read their own shipments" on shipments
   for select using (client_id = auth.uid());
 -- writes happen only in edge functions (service role): the webhook inserts,
 -- the dashboard's Mark shipped updates tracking / postage / status.
+
+-- ─────────────────────────────────────────────────────────────
+-- Gift certificates (js/giftcards.js on the site, the gift-cards function)
+-- One row per code. A value certificate ("$100 toward any treatment") draws
+-- down: a $100 certificate used on a $50 visit keeps $50 for next time, and
+-- on a $120 visit it covers $100 and the client pays the $20 difference.
+-- (Older treatment certificates, kind 'service', cover their whole treatment
+-- once.) Every use is a row in gift_redemptions, so the history adds up.
+-- Nothing here is public: only the gift-cards function (service role) reads
+-- or writes, and spending takes Evelyn's studio key.
+-- ─────────────────────────────────────────────────────────────
+create table gift_cards (
+  code text primary key check (code ~ '^LUM-[A-Z2-9]{4}-[A-Z2-9]{4}$'),
+  kind text not null default 'value' check (kind in ('value', 'service')),
+  label text not null default 'Any treatment',
+  service_id text,                                -- kind 'service' only
+  amount_cents int not null check (amount_cents > 0),
+  balance_cents int not null check (balance_cents >= 0 and balance_cents <= amount_cents),
+  status text not null default 'active' check (status in ('active', 'redeemed', 'void')),
+  recipient_name text,
+  recipient_email text,
+  buyer_email text,
+  message text,
+  deliver_to_buyer boolean not null default false,
+  send_date date,
+  source text not null default 'sale' check (source in ('sale', 'studio', 'membership')),
+  stripe_payment_intent text,                     -- the order that paid for it
+  purchased_at timestamptz not null default now(),
+  last_used_at timestamptz
+);
+create index gift_cards_recipient on gift_cards (lower(recipient_email));
+
+create table gift_redemptions (
+  id bigint generated always as identity primary key,
+  code text not null references gift_cards (code),
+  bill_cents int not null check (bill_cents >= 0),        -- what the visit came to
+  applied_cents int not null check (applied_cents > 0),   -- what the certificate covered
+  pay_cents int not null check (pay_cents >= 0),          -- what the client paid on top
+  balance_after_cents int not null check (balance_after_cents >= 0),
+  where_used text not null default 'studio' check (where_used in ('studio', 'online')),
+  booking_id uuid references bookings (id) on delete set null,
+  note text,
+  created_at timestamptz not null default now()
+);
+create index gift_redemptions_code on gift_redemptions (code, created_at);
+
+alter table gift_cards enable row level security;
+alter table gift_redemptions enable row level security;
+-- no policies on purpose: the gift-cards function is the only way in.
+
+-- Spend a certificate against a bill, all in one step (the row is locked, so
+-- two uses at once can't both spend the same dollars). Returns what it
+-- covered, what's left to pay, and the balance left on the certificate.
+create or replace function redeem_gift(p_code text, p_bill_cents int, p_where text default 'studio',
+                                       p_note text default null, p_booking uuid default null)
+returns table (code text, applied_cents int, pay_cents int, balance_cents int, status text)
+language plpgsql security definer set search_path = public as $$
+declare
+  g gift_cards%rowtype;
+  use_cents int;
+  left_cents int;
+begin
+  if p_bill_cents is null or p_bill_cents <= 0 then raise exception 'nothing_due'; end if;
+  select * into g from gift_cards where gift_cards.code = upper(trim(p_code)) for update;
+  if not found then raise exception 'not_found'; end if;
+  if g.status = 'void' then raise exception 'void'; end if;
+  if g.balance_cents <= 0 then raise exception 'empty'; end if;
+  if g.kind = 'service' then
+    use_cents := g.balance_cents;                          -- covers its whole treatment
+  else
+    use_cents := least(g.balance_cents, p_bill_cents);     -- only what the bill needs
+  end if;
+  left_cents := g.balance_cents - use_cents;
+  update gift_cards
+     set balance_cents = left_cents,
+         status = case when left_cents = 0 then 'redeemed' else 'active' end,
+         last_used_at = now()
+   where gift_cards.code = g.code;
+  insert into gift_redemptions (code, bill_cents, applied_cents, pay_cents, balance_after_cents, where_used, booking_id, note)
+  values (g.code, p_bill_cents, use_cents, greatest(p_bill_cents - use_cents, 0), left_cents,
+          coalesce(p_where, 'studio'), p_booking, p_note);
+  return query select g.code, use_cents, greatest(p_bill_cents - use_cents, 0), left_cents,
+                      (case when left_cents = 0 then 'redeemed' else 'active' end)::text;
+end $$;
+revoke all on function redeem_gift(text, int, text, text, uuid) from public, anon, authenticated;

@@ -394,6 +394,34 @@
     customIn.addEventListener("input", readCustom);
   }
 
+  /* ── Check a gift balance (the recipient, any time) ── */
+  var giftCheck = document.getElementById("gift-check");
+  var giftCheckToggle = document.querySelector(".gift-check-toggle");
+  if (giftCheck && giftCheckToggle && window.LumevinaGiftCards) {
+    var gcIn = giftCheck.querySelector("input"), gcOut = giftCheck.querySelector(".gift-check-result");
+    var dollars = function (n) { return "$" + Number(n || 0).toFixed(2); };
+    giftCheckToggle.addEventListener("click", function () {
+      var open = giftCheck.hidden;
+      giftCheck.hidden = !open;
+      giftCheckToggle.setAttribute("aria-expanded", String(open));
+      if (open) gcIn.focus();
+    });
+    giftCheck.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var code = gcIn.value.trim().toUpperCase();
+      if (!/^LUM-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { gcOut.textContent = "Codes look like LUM-XXXX-XXXX, from the certificate email."; return; }
+      gcOut.textContent = "Checking…";
+      window.LumevinaGiftCards.check(code).then(function (c) {
+        if (!c) { gcOut.textContent = "We couldn't find that code. Check it against the certificate email."; return; }
+        if (c.status === "void") { gcOut.textContent = "That certificate was cancelled. Please contact Evelyn."; return; }
+        if (Number(c.balance) <= 0) { gcOut.textContent = c.code + " is used up (it was worth " + dollars(c.amount) + ")."; return; }
+        gcOut.textContent = c.code + " has " + dollars(c.balance) + " left" +
+          (Number(c.balance) < Number(c.amount) ? " of " + dollars(c.amount) : "") +
+          ". Show it at your visit and Evelyn takes it off the bill; you pay only what's over.";
+      }, function () { gcOut.textContent = "We couldn't check right now. Please try again in a moment."; });
+    });
+  }
+
   if (INV && INV.onChange) INV.onChange(render);
 
   /* ── Add-to-cart (delegated, so JS-rendered retail buttons work too) ── */
@@ -656,11 +684,13 @@
       }
     });
     if (!codes.length) { giftCodesEl.hidden = true; return; }
+    var safe = function (t) { return String(t).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); };
     var who = toMe ? "You'll receive"
-      : (giftNameInput.value.trim() + " will receive");
-    var html = '<p class="gift-codes-lead">' + who +
-      ' the certificate' + (codes.length > 1 ? "s" : "") + ' by email. ' +
-      'Keep the code' + (codes.length > 1 ? "s" : "") + ' safe — it’s redeemed at booking:</p>';
+      : (safe(giftNameInput.value.trim()) + " will receive");
+    var many = codes.length > 1;
+    var html = '<p class="gift-codes-lead">' + who + ' the certificate' + (many ? "s" : "") + ' by email. ' +
+      'Keep the code' + (many ? "s" : "") + ' safe and show ' + (many ? "them" : "it") + ' at the visit: Evelyn takes it off the bill. ' +
+      'Anything left stays on the certificate for next time, and if the visit costs more, you pay only the difference.</p>';
     codes.forEach(function (c) {
       html += '<div class="gift-code-row"><span class="gift-code">' + c.code +
         '</span><span class="gift-code-for">' + c.label + " · " + money(c.amount) +

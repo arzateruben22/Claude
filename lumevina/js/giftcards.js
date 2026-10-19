@@ -9,7 +9,7 @@
  *
  *   • service — a named treatment (e.g. "Ageless Grace Facial"). ALL-OR-NOTHING:
  *       it covers that whole treatment once, then it's spent. No partial balance.
- *   • value   — a dollar amount ("$110 toward any treatment"). It becomes CREDIT
+ *   • value   — a dollar amount ("$100 toward any treatment"). It becomes CREDIT
  *       on the recipient's account and draws down across visits, so each account
  *       can see how much it has left.
  */
@@ -143,6 +143,86 @@
     }, 0);
   };
 
+  /* ── Using a certificate against a bill, the way people expect ──
+     A $100 certificate on a $50 visit covers $50 and keeps $50 for next
+     time; on a $120 visit it covers its $100 and the client pays the $20
+     difference. Every use is kept on the certificate (uses), so the
+     dashboard can show the history.
+
+     Once the site is connected (js/site-config.js → shop.supabase), these go
+     to the gift-cards server function and its database ledger
+     (server/schema.sql → gift_cards, redeem_gift), so a certificate bought
+     on one phone works on Evelyn's dashboard and anywhere else. Until then
+     they use this browser's storage, which is the demo. */
+  var cfg = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var LIVE = /^https:\/\//.test(cfg.supabase || "") && !!cfg.key;
+  var call = function (body, studioKey) {
+    var headers = { "Content-Type": "application/json", apikey: cfg.key, Authorization: "Bearer " + cfg.key };
+    if (studioKey) headers["x-studio-key"] = studioKey;
+    return fetch(cfg.supabase.replace(/\/$/, "") + "/functions/v1/gift-cards", {
+      method: "POST", headers: headers, body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) { var e = new Error(j.reason || j.error || "failed"); e.reason = j.reason || "failed"; throw e; }
+        return j;
+      });
+    });
+  };
+  var cents = function (n) { return Math.round((Number(n) || 0) * 100); };
+
+  /* What's on a certificate: { code, kind, label, amount, balance, status } or null */
+  var check = function (code) {
+    if (LIVE) return call({ action: "check", code: norm(code) }).catch(function (e) {
+      if (e.reason === "not_found") return null;
+      throw e;
+    });
+    var g = lookup(code);
+    return Promise.resolve(g ? { code: g.code, kind: g.kind, label: g.label, amount: g.amount,
+      balance: g.balance, status: g.status, uses: g.uses || [] } : null);
+  };
+
+  /* Work out a use without spending anything: what the certificate would
+     cover on this bill, what the client pays, and what would be left. */
+  var preview = function (card, bill) {
+    bill = Math.max(0, Number(bill) || 0);
+    if (!card || card.status === "void" || card.balance <= 0) return { applied: 0, pay: bill, left: card ? card.balance : 0 };
+    var applied = card.kind === "service" ? card.balance : Math.min(card.balance, bill);
+    return { applied: applied, pay: Math.max(0, Math.round((bill - applied) * 100) / 100), left: Math.round((card.balance - applied) * 100) / 100 };
+  };
+
+  /* Spend a certificate against a bill. Resolves { ok, applied, pay, balance,
+     status } or { ok: false, reason: "not_found" | "void" | "empty" |
+     "nothing_due" | "studio_key" }. Live, it needs Evelyn's studio key. */
+  var spend = function (code, bill, opts) {
+    opts = opts || {};
+    if (!(Number(bill) > 0)) return Promise.resolve({ ok: false, reason: "nothing_due" });
+    if (LIVE) {
+      return call({ action: "redeem", code: norm(code), bill_cents: cents(bill), note: opts.note || null,
+        where: opts.where || "studio" }, opts.studioKey)
+        .then(function (r) { return { ok: true, applied: r.applied, pay: r.pay, balance: r.balance, status: r.status }; })
+        .catch(function (e) { return { ok: false, reason: e.reason || "failed" }; });
+    }
+    var list = load();
+    var g = list.filter(function (x) { return x.code === norm(code); })[0];
+    if (!g) return Promise.resolve({ ok: false, reason: "not_found" });
+    if (g.status === "void") return Promise.resolve({ ok: false, reason: "void" });
+    if (g.balance <= 0) return Promise.resolve({ ok: false, reason: "empty" });
+    var p = preview(g, bill);
+    g.balance = p.left;
+    g.status = g.balance <= 0 ? "redeemed" : "active";
+    g.lastUsedAt = new Date().toISOString();
+    (g.uses = g.uses || []).push({ at: g.lastUsedAt, bill: Number(bill), applied: p.applied, pay: p.pay,
+      balanceAfter: g.balance, note: opts.note || "", where: opts.where || "studio" });
+    save(list);
+    return Promise.resolve({ ok: true, applied: p.applied, pay: p.pay, balance: g.balance, status: g.status });
+  };
+
+  /* Every certificate, for Evelyn's dashboard (live: needs her studio key). */
+  var list = function (studioKey) {
+    if (LIVE) return call({ action: "list" }, studioKey).then(function (r) { return r.cards || []; });
+    return Promise.resolve(load());
+  };
+
   window.LumevinaGiftCards = {
     create: create,
     lookup: lookup,
@@ -151,6 +231,11 @@
     claim: claim,
     cardsForEmail: cardsForEmail,
     accountCredit: accountCredit,
-    all: load
+    all: load,
+    live: LIVE,
+    check: check,
+    preview: preview,
+    spend: spend,
+    list: list
   };
 })();

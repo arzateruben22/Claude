@@ -13,7 +13,38 @@ the client across devices (site → iPhone app).
 | `functions/stripe-webhook/` | Confirms payment, holds the booking, writes rewards (multipliers included), fires the confirmation, documents the referral-credit trigger |
 | `functions/send-confirmation/` | Sends confirmation + 24-hour reminder email/SMS (Resend + optional Twilio); also flushes due reminders when run on a schedule |
 | `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
+| `functions/gift-cards/` | Gift certificates: check a balance, use one at the visit (studio key), list them, sell one in person |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
+
+## Gift certificates
+
+`schema.sql` → `gift_cards` (one row per code, with its balance) and
+`gift_redemptions` (every use: the bill, what the certificate covered, what
+the client paid, what was left), plus `redeem_gift`, which spends a
+certificate in one locked step. A dollar certificate draws down: $100 on a
+$50 visit covers $50 and keeps $50; on a $120 visit it covers its $100 and
+the client pays the $20 difference.
+
+`functions/gift-cards/` is the only way in (nothing is public in the tables):
+
+| Action | Who | What |
+| --- | --- | --- |
+| `check` | anyone with the code | balance and status (the site's "Check a gift balance") |
+| `redeem` | the dashboard, with `x-studio-key` | spends it against a visit's total |
+| `list` | the dashboard, with `x-studio-key` | every certificate, with its uses |
+| `issue` | the dashboard, with `x-studio-key` | a certificate sold in person |
+
+```sh
+supabase secrets set STUDIO_KEY="<a long phrase only Evelyn knows>"
+supabase functions deploy gift-cards --no-verify-jwt
+```
+
+Certificates bought on the website: when the shop takes real payments,
+`stripe-webhook` calls `issueGift` (`functions/_shared/gifts.ts`) for each
+paid `gift-any-<amount>` line, after Stripe confirms, and the code is
+emailed. Never issue them from the browser. Until the shop's payments are
+live, the website's demo checkout issues codes in the buyer's browser
+(js/giftcards.js), which is only for trying it out.
 
 ## Notifications (confirmations & reminders)
 

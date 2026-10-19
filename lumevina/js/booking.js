@@ -1461,7 +1461,7 @@
       var remaining = Math.max(0, card.balance - applied);
       giftStatus.textContent = "✓ Applied −" + pay.money(applied) +
         " toward your deposit" +
-        (remaining > 0 ? " · " + pay.money(remaining) + " stays on your account as credit." : ".");
+        (remaining > 0 ? " · the other " + pay.money(remaining) + " on your certificate comes off your bill at the visit." : ".");
       updatePayAmount();
     });
   }

@@ -185,3 +185,15 @@ On phones the cart and checkout now rise from the bottom as sheets, with the pag
 ## The CanvasRebel photo in Meet Evelyn (Oct 19)
 
 The Meet Evelyn box opens with Evelyn's photo from the CanvasRebel interview (`img/press/canvasrebel-evelyn.webp`, 1200 px wide, framed on her face with the logo in the photo whole), linked to the article with a "Featured in CanvasRebel" label.
+
+## Gift certificates: balances that carry over (Oct 19)
+
+A gift certificate is a dollar amount toward any treatment, used at the visit:
+- **Worth more than the visit:** a $100 certificate on a $50 visit covers $50, and $50 stays on it for next time.
+- **Worth less than the visit:** on a $120 visit it covers what's left on it, and the client pays only the difference.
+
+**At the visit (bookings are on GlossGenius for now):** Evelyn opens her dashboard → Gift certificates → **Use a gift certificate**, types the code and the visit total, sees what it covers, what the client pays and what stays on it, and taps Use. Every use is recorded, and the table shows each certificate's balance and last use.
+
+**Clients** can tap **Check a gift balance** under the certificate on the website. After buying, the confirmation explains how it works.
+
+**Going live:** the balances live in the server's gift ledger (`gift_cards`, `gift_redemptions`, the `gift-cards` function), so a certificate bought on one phone works on Evelyn's dashboard and anywhere else. Set a `STUDIO_KEY` secret and type it once into the dashboard. Until then (the demo), certificates live in the browser they were bought in. Tested: the ledger in a real Postgres (the $50 and $120 cases, used-up and unknown codes refused) and the whole flow in the browser.

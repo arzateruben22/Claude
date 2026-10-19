@@ -24,7 +24,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 ## 3. Connect them (Claude can walk through this live)
 
 1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor.
-2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, and the three Google ones from `server/scripts/google-auth.mjs`.
+2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates. She types it once into the dashboard's "Use a gift certificate" box and that browser remembers it.
 3. **Deploy** the server functions: `supabase functions deploy` (the list is in `server/README.md`).
 4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address.
 5. **GlossGenius:** turn on Google Calendar sync, both ways.
@@ -37,6 +37,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 - [ ] Check each one shows in her Google Calendar and blocks the time in GlossGenius.
 - [ ] Buy a product: stock drops by one on the website and in the dashboard.
 - [ ] Ask Lumevina a price question and a skin question (the skin one should go to Evelyn).
+- [ ] Gift certificate: buy a $100 one, then on the dashboard use it on a $50 visit ($50 should stay on it) and on a $120 visit (it covers the last $50; the client pays $70). "Check a gift balance" on the site should show each step, from another phone too.
 - [ ] Switch Stripe to **live** keys.
 
 ## 5. Launch

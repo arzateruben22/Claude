@@ -1061,6 +1061,23 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .gift-cert-add:hover { background: #FFFFFF; border-color: #FFFFFF; color: var(--ink); }
 .gift-cert-add:disabled { opacity: 0.55; cursor: not-allowed; }
 .gift-cert-add:focus-visible { outline: 2px solid var(--camel); outline-offset: 3px; }
+.gift-cert-fine { margin: 0.7rem auto 0; max-width: 26rem; font-size: 0.8rem; line-height: 1.45; color: rgba(245, 241, 234, 0.66); }
+.gift-cert .gift-check-toggle { margin-top: 0.55rem; padding: 0.35rem 0; font-size: 0.85rem; font-weight: 600; color: var(--khaki); text-decoration: underline; text-underline-offset: 3px; background: none; border: 0; cursor: pointer; }
+.gift-cert .gift-check-toggle:hover { color: var(--linen); }
+.gift-check { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.35rem; width: 100%; margin: 0.6rem auto 0; max-width: 26rem; text-align: left; }
+.gift-check[hidden] { display: none; }
+.gift-check-row { display: flex; gap: 0.4rem; }
+.gift-check-row input {
+  flex: 1; min-width: 0; min-height: 44px; padding: 0 0.8rem; border-radius: 12px;
+  background: rgba(245, 241, 234, 0.08); border: 1px solid rgba(215, 201, 184, 0.38); color: var(--linen);
+  font: inherit; font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.gift-check-row input::placeholder { color: rgba(245, 241, 234, 0.4); text-transform: none; letter-spacing: 0; }
+.gift-check-row input:focus { outline: none; border-color: var(--linen); }
+.gift-check-go { flex: none; min-height: 44px; padding: 0 1rem; border-radius: 12px; border: 1px solid var(--linen); background: transparent; color: var(--linen); font: inherit; font-weight: 600; cursor: pointer; }
+.gift-check-go:hover { background: rgba(245, 241, 234, 0.12); }
+.gift-check-result { margin: 0.1rem 0 0; min-height: 1.2em; font-size: 0.85rem; line-height: 1.45; color: rgba(245, 241, 234, 0.85); }
+@media (min-width: 761px) { .gift-cert-fine, .gift-check { margin-left: 0; } }
 /* wider screens: her logo beside the certificate's words */
 @media (min-width: 761px) {
   .gift-cert { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 1.75rem; padding: 2rem 2.25rem; }

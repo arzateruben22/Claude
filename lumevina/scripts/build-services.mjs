@@ -121,6 +121,13 @@ ${GIFT_AMOUNTS.map((n) => `                <button class="gift-amt" type="button
               </div>
               <button class="btn gift-cert-add add-to-cart gift-add" type="button"
                 data-id="gift-any-${GIFT_DEFAULT}" data-name="Gift Card · ${money(GIFT_DEFAULT)} value" data-price="${GIFT_DEFAULT}">Add ${money(GIFT_DEFAULT)} gift to cart</button>
+              <p class="gift-cert-fine">Used at the visit: anything left stays on it, and you pay only what's over.</p>
+              <button class="linklike gift-check-toggle" type="button" aria-expanded="false" aria-controls="gift-check">Check a gift balance</button>
+              <form class="gift-check" id="gift-check" hidden>
+                <label class="gift-custom-label" for="gift-check-code">Certificate code</label>
+                <span class="gift-check-row"><input id="gift-check-code" type="text" placeholder="LUM-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="gift-check-go" type="submit">Check</button></span>
+                <p class="gift-check-result" role="status" aria-live="polite"></p>
+              </form>
             </div>
           </article>
         </div>
