@@ -31,6 +31,12 @@ model: routine work to `opus`, hard reasoning to `fable`.
   pass, realism-2 and F3. Resume lanes in that order, two at a time under the usage rule: F1 oc-f1-dynamics.js
   wf_5afd6056-420 and the hypercar oc-hypercar-3.js wf_7f9f9a3a-d82 first; F4 oc-f4-budgets.js wf_303fc3f1-753 when
   one of them finishes; the store SKU oc-store-hypercar.js wf_9a01de13-61a after the hypercar's M6.
+- **Model change (2026-10-19, 23:22 UTC).** The Fable limit was reached, so this session and every remaining
+  workflow agent now run on Opus. F1 (vehicle dynamics) finished on Fable and is committed (`2e86368` on
+  `claude/drift`); F4's design and F5's expressions spec finished on Fable and replay from cache. The unfinished
+  calls in oc-f4-budgets.js, oc-f5-people-specs.js, oc-f2a-store-review.js and oc-f3a-review.js were switched to
+  `'opus'` (the Fable versions are kept beside them as `*.bak-fable` in the scratchpad). Until Fable is back, the
+  model policy in CLAUDE.md reads as Opus for everything, and the Fable queue's remaining reviews run on Opus.
 - Branches and worktrees (all under `/home/user/Claude`):
   - `top-speed-ultra/` on `claude/always-on`: the luxury glass menu (U0), adaptive HUD (U1), navigation card and
     chevrons (U2, `a340f1d`, the last pushed commit); the UI pass continues there (U3 radial menu onward).
