@@ -355,38 +355,43 @@
   overlay.addEventListener("click", closeDrawer);
   emptyMsg.querySelector("a").addEventListener("click", closeDrawer);
 
-  /* ── Gift a treatment: the groups become tabs (without this script every
-     group simply shows, one under another) ── */
-  var giftMenu = document.querySelector(".gift-menu");
-  if (giftMenu) {
-    var giftTabs = Array.prototype.slice.call(giftMenu.querySelectorAll(".gift-tab"));
-    var giftGroups = Array.prototype.slice.call(giftMenu.querySelectorAll(".gift-group"));
-    var showGiftGroup = function (key, focus) {
-      giftTabs.forEach(function (t) {
-        var on = t.dataset.giftGroup === key;
-        t.setAttribute("aria-selected", String(on));
-        t.tabIndex = on ? 0 : -1;
-        if (on && focus) t.focus();
-        if (on && t.scrollIntoView) {
-          var row = t.parentNode, left = t.offsetLeft - (row.clientWidth - t.offsetWidth) / 2;
-          row.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
-        }
-      });
-      giftGroups.forEach(function (g) { g.hidden = g.dataset.giftGroup !== key; });
+  /* ── Gift certificate: $50, $100, $200, $400 or a custom amount ── */
+  var giftZone = document.getElementById("gift");
+  var giftAddBtn = giftZone && giftZone.querySelector(".gift-add");
+  if (giftAddBtn) {
+    var amtBtns = Array.prototype.slice.call(giftZone.querySelectorAll(".gift-amt"));
+    var customBox = giftZone.querySelector(".gift-custom");
+    var customIn = giftZone.querySelector("#gift-custom-amt");
+    var customHint = giftZone.querySelector(".gift-custom-hint");
+    var GIFT_MIN = 25, GIFT_MAX = 1000;
+    var whole = function (n) { return "$" + n.toLocaleString("en-US"); };
+    var setGift = function (amount) {
+      var ok = amount >= GIFT_MIN && amount <= GIFT_MAX && Math.round(amount) === amount;
+      giftAddBtn.disabled = !ok;
+      giftAddBtn.textContent = ok ? "Add " + whole(amount) + " gift to cart" : "Choose an amount";
+      if (!ok) return;
+      giftAddBtn.dataset.id = "gift-any-" + amount;
+      giftAddBtn.dataset.price = String(amount);
+      giftAddBtn.dataset.name = "Gift Card · " + whole(amount) + " value";
     };
-    giftMenu.classList.add("is-tabbed");
-    showGiftGroup(giftTabs[0].dataset.giftGroup, false);
-    giftMenu.addEventListener("click", function (e) {
-      var t = e.target.closest(".gift-tab");
-      if (t) showGiftGroup(t.dataset.giftGroup, false);
+    var readCustom = function () {
+      var raw = customIn.value.trim();
+      var n = raw === "" ? NaN : Number(raw);
+      var bad = raw !== "" && !(n >= GIFT_MIN && n <= GIFT_MAX && Math.round(n) === n);
+      customHint.classList.toggle("is-error", bad);
+      customHint.textContent = bad ? "Choose a whole amount from $25 to $1,000" : "$25 to $1,000";
+      setGift(n);
+    };
+    giftZone.addEventListener("click", function (e) {
+      var b = e.target.closest(".gift-amt");
+      if (!b) return;
+      amtBtns.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      var custom = b.dataset.amount === "custom";
+      customBox.hidden = !custom;
+      if (custom) { readCustom(); customIn.focus(); }
+      else setGift(Number(b.dataset.amount));
     });
-    giftMenu.querySelector(".gift-tabs").addEventListener("keydown", function (e) {
-      var i = giftTabs.indexOf(document.activeElement);
-      if (i < 0 || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
-      e.preventDefault();
-      var next = giftTabs[(i + (e.key === "ArrowRight" ? 1 : giftTabs.length - 1)) % giftTabs.length];
-      showGiftGroup(next.dataset.giftGroup, true);
-    });
+    customIn.addEventListener("input", readCustom);
   }
 
   if (INV && INV.onChange) INV.onChange(render);

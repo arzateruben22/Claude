@@ -1,6 +1,6 @@
 // Writes Evelyn's menu (js/services.js) into the places that list services:
-//   index.html                          the featured cards, the gifts (the
-//                                       certificate and every service), and the full menu (between the
+//   index.html                          the featured cards, the gift
+//                                       certificate, and the full menu (between the
 //                                       MENU:START / MENU:END markers)
 //   server/functions/_shared/catalog.ts the server's prices, times and deposits
 //
@@ -98,45 +98,31 @@ const card = (f) => {
           </article>`;
 };
 
-// ── gifts: the certificate, then every service on her menu as its own gift ──
-/* every bookable service, by group; a service with options lists each option
-   (each is its own treatment at its own price). Left out: add-ons (they only
-   go with another service), the after-hours fee, and $0 package follow-ups. */
-const giftable = (s) => !s.addon && s.price > 0;
-const giftGroups = S.menu.map((g) => {
-  const items = (g.subs ? g.subs.flatMap((x) => x.items) : g.items)
-    .flatMap((s) => (s.options ? s.options : [s])).filter(giftable);
-  return { key: g.key, name: g.group, items };
-}).filter((g) => g.items.length);
-const giftRow = (s) => `                <li class="gift-row"><span class="gift-row-name">${esc(s.name)}</span><span class="gift-row-price">${money(s.price)}</span><button class="gift-row-add add-to-cart" type="button" data-id="gift-${s.id}" data-name="Gift Card · ${esc(s.name)}" data-price="${s.price}" aria-label="Gift ${esc(s.name)}, ${money(s.price)}">Gift</button></li>`;
-const giftHtml = `        <!-- gifts: the certificate, then every service as its own gift (js/cart.js makes the groups tabs) -->
+// ── the gift certificate: a dollar amount toward any treatment ──
+/* preset amounts, or a custom one ($25 to $1,000); js/cart.js keeps the
+   button's amount in step with the choice */
+const GIFT_AMOUNTS = [50, 100, 200, 400], GIFT_DEFAULT = 100;
+const giftHtml = `        <!-- the gift certificate: pick an amount (js/cart.js), then add it to the cart -->
         <div class="gift-zone" id="gift">
           <article class="gift-cert" data-reveal>
             <div class="gift-cert-art" role="img" aria-label="Lumevina Aesthetics Spa"></div>
             <div class="gift-cert-body">
               <p class="gift-cert-k">E-Gift Certificate</p>
               <h3 class="gift-cert-title">The gift of glow</h3>
-              <p class="gift-cert-desc">$110 toward any treatment, sent by email with its own code. It never expires.</p>
+              <p class="gift-cert-desc">Toward any treatment, sent by email with its own code. It never expires.</p>
+              <div class="gift-amounts" role="group" aria-label="Gift amount">
+${GIFT_AMOUNTS.map((n) => `                <button class="gift-amt" type="button" data-amount="${n}" aria-pressed="${n === GIFT_DEFAULT}">${money(n)}</button>`).join("\n")}
+                <button class="gift-amt" type="button" data-amount="custom" aria-pressed="false" aria-controls="gift-custom">Custom</button>
+              </div>
+              <div class="gift-custom" id="gift-custom" hidden>
+                <label class="gift-custom-label" for="gift-custom-amt">Your amount</label>
+                <span class="gift-custom-field"><span aria-hidden="true">$</span><input id="gift-custom-amt" type="number" inputmode="numeric" min="25" max="1000" step="1" placeholder="150" aria-describedby="gift-custom-hint"></span>
+                <span class="gift-custom-hint" id="gift-custom-hint">$25 to $1,000</span>
+              </div>
               <button class="btn gift-cert-add add-to-cart gift-add" type="button"
-                data-id="gift-any-100" data-name="Gift Card · Any treatment ($110 value)" data-price="110">Add $110 gift to cart</button>
+                data-id="gift-any-${GIFT_DEFAULT}" data-name="Gift Card · ${money(GIFT_DEFAULT)} value" data-price="${GIFT_DEFAULT}">Add ${money(GIFT_DEFAULT)} gift to cart</button>
             </div>
           </article>
-
-          <div class="gift-menu" data-reveal>
-            <div class="gift-menu-head">
-              <h3 class="gift-menu-title">Or gift a treatment</h3>
-              <p class="gift-menu-sub">Every service on Evelyn's menu, as a certificate for that treatment.</p>
-            </div>
-            <div class="gift-tabs" role="tablist" aria-label="Gift a treatment">
-${giftGroups.map((g, i) => `              <button class="gift-tab" type="button" role="tab" id="gift-tab-${g.key}" aria-controls="gift-list-${g.key}" aria-selected="${i === 0}" data-gift-group="${g.key}">${esc(g.name)}</button>`).join("\n")}
-            </div>
-${giftGroups.map((g) => `            <div class="gift-group" id="gift-list-${g.key}" role="tabpanel" aria-labelledby="gift-tab-${g.key}" data-gift-group="${g.key}">
-              <h4 class="gift-group-title">${esc(g.name)}</h4>
-              <ul class="gift-list" role="list">
-${g.items.map(giftRow).join("\n")}
-              </ul>
-            </div>`).join("\n")}
-          </div>
         </div>
 `;
 
