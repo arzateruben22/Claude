@@ -6623,3 +6623,18 @@ a.book-btn { text-align: center; }
 
 .bkl-after { margin: 0.8rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--ink-60); }
 .bkl-after .linklike { font-size: inherit; }
+
+/* her menu (js/services.js): a tag beside the name, time and deposit under it,
+   and services with options shown as a heading with a bookable line per option */
+.wax-note {
+  display: inline-block; margin: 0.15rem 0 0.1rem; padding: 0.1rem 0.5rem; border-radius: 999px;
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-60); background: var(--surface-2); border: 1px solid var(--panel-edge-soft);
+}
+.wax-meta { display: block; margin-top: 0.1rem; font-size: 0.74rem; color: var(--ink-60); font-variant-numeric: tabular-nums; }
+.wax-row--parent { padding-bottom: 0.15rem; }
+.wax-row--parent .wax-item strong { font-weight: 600; }
+.wax-row--option { padding: 0.3rem 0 0.3rem 0.9rem; border-left: 1px solid var(--ink-15); margin-left: 0.15rem; }
+.wax-row--option .wax-opt { font-size: 0.9rem; color: var(--ink); }
+.wax-row--option + .wax-row:not(.wax-row--option) { margin-top: 0.35rem; }
+.wax-ask .wax-book-label { font-weight: 500; }

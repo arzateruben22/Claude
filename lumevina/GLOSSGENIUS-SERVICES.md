@@ -32,3 +32,40 @@ NOTE: price column appears at right of the service row; earlier screenshots were
 26. FULL BACK — $60 · 45 min · $30.00 deposit. Klarna/Affirm/Afterpay. (site: Full Back Wax $90)
 27. HALF BACK — $30 · 25 min · $20.00 deposit. (site: Half Back Wax $48)
 — END of Ruben's screenshots ("This is the last one").
+
+## Prices and times (zoomed-out screenshots)
+
+- New Clients Start Here — 2 options · from $220 · 60+ min (options not shown yet)
+- Lumevina Custom Facial — 2 options · from $200 · 60+ min (site had $195; options not shown yet)
+- New Client Consultation + Treatment (acne) — $220 · 80 min · $50 deposit (site had $225)
+- Monthly Acne Treatment — from $200 · 70 min · $30 deposit (site had $195)
+- Bi-Weekly Acne Treatment — $115 · 45 min · $30 deposit (site had $120)
+- Ageless Grace Facial — 2 options · from $240 · 75+ min (site had $245; options not shown yet)
+- ProCell Microchanneling — 2 options · from $350 · 70+ min (options not shown yet)
+- ProCell Microchanneling Package — 2 options · "$0+" · 60+ min on GlossGenius (the $1,100 is arranged with her; booking holds the time)
+- Refresh Peel — 2 options · from $230 · 10+ min (likely standalone or added to a facial; options not shown yet)
+- Corrective Peel — 2 options · from $230 · 60+ min
+- In-Person Consultation — $50 · 45 min · $49 deposit
+- **Virtual Consultations (still offered)** — $50 · 45 min · $49 deposit. "Have more questions about your skin or not sure where to start? During this consultation, we'll take a deep dive into your skin type, concerns, and long-term goals. I'll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: This service is available on Monday's only. Be sure to reach out beforehand before booking."
+- Brazilian Wax — $75 · 40 min · $30 deposit (site had $80)
+- Wax Wednesday — $65 · 40 min · $30 deposit (site had $70)
+- Bikini Line — $40 · 40 min · $30 deposit (site had $32)
+- Brazilian Wax + Mini Vajacial — $95 · 50 min · $30 deposit (site had $100)
+- Nostril Wax $10 · 15 min · Upper Lip $10 · 10 min · Brow Wax + Tweeze 2 options from $25 · 30+ min
+- Full Arm $60 · 40 min · $30 deposit · Half Arm $30 · 30 min · $20 deposit
+- Full Back $60 · 45 min · $30 deposit · Half Back $30 · 25 min · $20 deposit
+
+## Decisions (Ruben, Oct 19)
+
+- Keep the After-Hours Add-On on the website, now **$50** (was $32).
+- Switch the website to her fixed GlossGenius deposits per service, not 50%.
+
+## The "2 options" services
+
+- Brow Wax + Tweeze: **Brow Wax + Tweeze** $25 · 30 min, or **Brow Wax + Underarm Wax** $45 · 30 min
+- Corrective Peel: **Medium Chemical Peel** $230 · 60 min, or **Medium Chemical Peel + Dermaplaning** $270 · 60 min
+- Refresh Peel: **No Downtime Peel** $230 · 10 min, or **No Downtime Peel + Dermaplaning** $270 · 15 min
+- ProCell Microchanneling Package: **ProCell Microchanneling Package** $1,100 · 60 min, or **Rebook (4 clients who paid in full)** $0 · 60 min
+- Ageless Grace Facial: **Ageless Grace Facial** $240 · 75 min, or **Ageless Grace Facial + Dermaplaning** $280 · 85 min
+- Lumevina Custom Facial: **Lumevina Custom Facial** $200 · 60 min, or **Custom Facial + Dermaplaning** from $230 · 60 min
+- New Clients Start Here: **New Clients Start Here** $220 · 60 min, or **New Client Treatment + Dermaplaning** from $260 · 80 min

@@ -70,7 +70,8 @@
         var o = document.createElement("option");
         o.value = id;
         var row = b.closest(".wax-row");
-        var label = row && row.querySelector(".wax-item strong");
+        /* an option's menu line is short ("With dermaplaning"); the list needs its full name */
+        var label = row && !row.classList.contains("wax-row--option") && row.querySelector(".wax-item strong");
         o.textContent = (label ? label.textContent.trim() : s.name) + " · " + money(s.price);
         group.appendChild(o);
       });
@@ -332,6 +333,25 @@
   });
 
   /* after-hours: she confirms those herself, so the ask goes to the Contact form */
+  /* services she asks clients to message her about first (Virtual
+     Consultation, Mondays only; after-hours visits): the menu's "Ask" button
+     opens the Contact form with the request written for them */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-ask-service]");
+    if (!b) return;
+    var form = document.querySelector(".contact-form");
+    var topic = form && form.querySelector("#ct-topic"), msg = form && form.querySelector("#ct-msg");
+    var id = b.getAttribute("data-ask-service"), name = b.getAttribute("data-name") || "this service";
+    if (topic) topic.value = "booking";
+    if (msg) msg.value = id === "virtual-consultation"
+      ? "I'd like to book a Virtual Consultation (Mondays). Mondays and times that could work for me: "
+      : id === "after-hours-facial" ? "I'd like an after-hours visit. Days and times that could work for me: "
+      : "I'd like to book the " + name + ". Days and times that could work for me: ";
+    var c = document.getElementById("contact");
+    if (c) c.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (msg) setTimeout(function () { msg.focus({ preventScroll: true }); }, 400);
+  });
+
   var afterBtn = root.querySelector(".bkl-after-ask");
   if (afterBtn) afterBtn.addEventListener("click", function () {
     var form = document.querySelector(".contact-form");

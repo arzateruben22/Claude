@@ -12,8 +12,9 @@
    The day is a grid of 30-minute cells; each service occupies its
    rough duration (30 or 60 min) and a session needs consecutive
    free cells that never cross lunch. Capacity per day follows from
-   the session length. A 50% deposit of the session total is
-   collected in step two via the shared payment engine
+   the session length. Evelyn's own deposit for each service (her
+   GlossGenius amounts, js/services.js) is collected in step two via the
+   shared payment engine
    (js/payments.js — see its STRIPE INTEGRATION POINT).
 
    "Availability" is a labeled demo: a deterministic seed marks
@@ -60,7 +61,9 @@
       id: id,
       name: btn.dataset.name,
       price: Number(btn.dataset.price),
-      dur: DUR30[id] ? 30 : 60
+      /* her own time and deposit for it (js/services.js, written into the menu) */
+      dur: Number(btn.dataset.dur) || (DUR30[id] ? 30 : 60),
+      deposit: Number(btn.dataset.deposit || 0)
     };
     byId[id] = s;
     services.push(s);
@@ -267,7 +270,11 @@
 
   var sessionTotal = function () { return payablePrice() - flashDiscount() - memberExtrasOff() - referralOff(); };
 
-  var depositDue = function () { return sessionTotal() / 2; };
+  /* her deposit for each service booked (0 for some), never more than the total */
+  var depositDue = function () {
+    var d = state.services.reduce(function (a, s) { return a + (s.deposit || 0); }, 0);
+    return Math.max(0, Math.min(d, sessionTotal()));
+  };
 
   /* ── Time helpers ── */
   var fmtTime = function (mins) {
@@ -883,7 +890,7 @@
       addRow("Friend’s referral — $" + REF_OFF + " off your first visit", "−" + pay.money(referralOff()), "sc-flash");
     }
     addRow("Total", pay.money(sessionTotal()), "sc-total");
-    addRow("Due now — 50% deposit", pay.money(depositDue()), "sc-due");
+    addRow(depositDue() > 0 ? "Due now — deposit" : "Due now", depositDue() > 0 ? pay.money(depositDue()) : "Nothing", "sc-due");
     addRow("Due in person at your visit", pay.money(sessionTotal() - depositDue()), "sc-rest");
     if (rw && depositDue() > 0) {
       var q = rw.quote(depositDue(), {
@@ -1001,28 +1008,19 @@
   };
 
   /* ── Floating action service picker (sectors → subsectors) ── */
-  var SECTORS = [
-    { name: "Facials", ids: ["new-client-consultation", "lumevina-custom-facial",
-      "ageless-grace-facial", "custom-facial-dermaplaning", "couples-facial",
-      "after-hours-facial"] },
-    { name: "Peels", ids: ["light-chemical-peel", "medium-chemical-peel",
-      "biorepeel-1", "biorepeel-3"] },
-    { name: "Back Facials", ids: ["back-facial-full", "back-facial-half"] },
-    { name: "Acne Program", ids: ["new-client-consultation-acne",
-      "monthly-acne-treatment", "biweekly-acne-treatment"] },
-    { name: "Consultations", ids: ["virtual-consultation", "in-person-consultation"] },
-    { name: "Waxing", subs: [
-      { name: "Face Wax", ids: ["brow-wax-tweeze", "upper-lip-wax", "full-face-wax",
-        "full-face-wax-cooling-mask", "sideburn-wax", "hairline-wax", "nose-wax",
-        "nostril-wax"] },
-      { name: "Body Wax", ids: ["underarm-wax", "full-arm-wax", "half-arm-wax",
-        "full-back-wax", "half-back-wax", "full-leg-wax", "half-leg-wax",
-        "full-stomach-wax", "stomach-strip-wax", "full-butt-wax"] },
-      { name: "Brazilian & Bikini", ids: ["bikini-line-wax", "extended-bikini-line",
-        "brazilian-wax", "first-time-brazilian", "brazilian-wax-mini-vajacial",
-        "inner-thigh-add-on", "wax-wednesday"] }
-    ] }
-  ];
+  var SECTORS = (function () {
+    var M = window.LUMEVINA_SERVICES;
+    if (!M) return [];
+    var ids = function (items) {
+      var out = [];
+      items.forEach(function (it) { (it.options || [it]).forEach(function (o) { if (byId[o.id]) out.push(o.id); }); });
+      return out;
+    };
+    return M.menu.map(function (g) {
+      return g.subs ? { name: g.group, subs: g.subs.map(function (sg) { return { name: sg.group, ids: ids(sg.items) }; }) }
+        : { name: g.group, ids: ids(g.items) };
+    });
+  })();
 
   var famEl = modal.querySelector(".fam");
   var famTrigger = modal.querySelector(".fam-trigger");
@@ -1358,7 +1356,7 @@
     }
   });
 
-  /* ── Step 1 → 2: on to the 50% deposit ── */
+  /* ── Step 1 → 2: on to the deposit ── */
   var whenText = function () {
     var d = new Date(state.dayKey + "T00:00:00");
     return d.toLocaleDateString("en-US", {
@@ -1383,11 +1381,13 @@
   };
 
   var updatePayAmount = function () {
-    depositAmtEl.textContent = pay.money(chargeNow());
-    payBtn.querySelector(".btn-mb-inner").textContent =
-      (chargeNow() === 0 && memberActive())
-        ? "Confirm booking · nothing due today"
-        : "Pay deposit · " + pay.money(chargeNow());
+    var free = chargeNow() === 0;
+    depositAmtEl.textContent = free ? "Nothing" : pay.money(chargeNow());
+    payBtn.querySelector(".btn-mb-inner").textContent = free
+      ? "Confirm booking · nothing due today"
+      : "Pay deposit · " + pay.money(chargeNow());
+    /* nothing due (a service with no deposit, or it's covered): no card needed */
+    payView.classList.toggle("is-free", free);
   };
 
   redeemCheck.addEventListener("change", updatePayAmount);
@@ -1610,7 +1610,7 @@
   /* ── Step 2: pay the deposit (shared engine, Stripe-ready) ── */
   payBtn.addEventListener("click", function () {
     var problems = [];
-    if (!usingSavedCard) {
+    if (!usingSavedCard && chargeNow() > 0) {
       if (!cardNameInput.value.trim()) problems.push("the name on the card");
       if (!pay.cardValid(cardInput.value)) problems.push("a valid card number");
       if (!pay.expiryValid(expiryInput.value)) problems.push("a future expiry (MM/YY)");
@@ -1635,7 +1635,7 @@
     payStatus.textContent = "Processing…";
     pay.process({
       amount: charge,
-      description: "50% deposit — " + sessionName() + " (" + state.dayKey + ")"
+      description: "Deposit — " + sessionName() + " (" + state.dayKey + ")"
     }, function (err, result) {
       payBtn.disabled = false;
       if (err) {

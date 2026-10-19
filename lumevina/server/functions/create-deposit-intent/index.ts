@@ -48,13 +48,18 @@ Deno.serve(async (req) => {
   // Recompute totals from the server-side catalog.
   let totalCents = 0;
   let durMin = 0;
+  let herDepositCents = 0;   // her own deposit per service (js/services.js → catalog.ts)
   for (const id of services) {
     const s = CATALOG[id];
     if (!s) {
       return new Response(JSON.stringify({ error: `unknown service ${id}` }), { status: 400 });
     }
+    if (!s.offered) {
+      return new Response(JSON.stringify({ error: `not booked online: ${id}` }), { status: 400 });
+    }
     totalCents += s.price_cents;
     durMin += s.dur_min;
+    herDepositCents += s.deposit_cents;
   }
 
   // Flash discount only if this day's flash slot matches the request.
@@ -92,7 +97,8 @@ Deno.serve(async (req) => {
     }
   }
 
-  const depositCents = Math.round(totalCents / 2);
+  // her deposit for what's booked (some services have none), never more than the total
+  const depositCents = Math.min(herDepositCents, totalCents);
 
   // Points may cover up to half the deposit — verified against the ledger.
   let redeemed = Math.max(0, Math.floor(body.points_redeemed ?? 0));

@@ -1,7 +1,7 @@
 /* Lumevina — "New here? Start here"
    The hero card that turns Evelyn's first-visit instructions (her booking
    page says: non-acne skin books New Clients Start Here; acne books the
-   Acne Program's New Client Consultation + Treatment) into one question,
+   Acne Bootcamp's New Client Consultation + Treatment) into one question,
    then shows the next three real openings for that visit. Tapping a time
    opens the booking sheet already on it (js/booking.js), so a new client
    goes from the homepage to their deposit in a couple of taps.
@@ -22,16 +22,16 @@
       id: "new-client-consultation",
       fallback: { name: "New Clients Start Here", price: 220 },
       from: true,
-      mins: "60+ min",
+      mins: "60 min",
       desc: "A consultation, a look at your current routine, and a facial built around what your skin needs.",
       includes: true,
       cta: "Book my first facial"
     },
     acne: {
       id: "new-client-consultation-acne",
-      fallback: { name: "New Client Consultation + Treatment (Acne Program)", price: 225 },
-      tag: "Acne Program",
-      mins: "60 min",
+      fallback: { name: "New Client Consultation + Treatment", price: 220 },
+      tag: "Acne Bootcamp",
+      mins: "80 min",
       desc: "A personalized clear-skin plan with Face Reality, the #1 acne line. Best results with a visit every two weeks and home care.",
       includes: false,
       cta: "Start my acne plan"

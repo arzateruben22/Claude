@@ -48,43 +48,46 @@
     return { name: s.name, email: s.email, member: member, plan: member ? LM.plan(r.plan).name : "" };
   };
 
-  /* ── prices, straight from the menu on this page ── */
-  var price = function (name, fallback) {
-    var el = document.querySelector('[data-name="' + name + '"][data-price]');
-    return "$" + (el ? el.getAttribute("data-price") : fallback);
+  /* ── prices, straight from her menu (js/services.js) ── */
+  var SV = window.LUMEVINA_SERVICES || { get: function () { return null; }, all: [], menu: [] };
+  var price = function (id, fallback) {
+    var s = SV.get(id);
+    return (s && s.from ? "from " : "") + "$" + (s ? s.price.toLocaleString("en-US") : fallback);
   };
   var TOPICS = [
     { k: /brazilian|vajacial/, a: function () {
-      return "A Brazilian is " + price("Brazilian Wax", 80) + ", or " + price("Wax Wednesday (Brazilian)", 70) + " on Wax Wednesdays. With a mini vajacial it’s " +
-        price("Brazilian Wax x Mini Vajacial Package", 100) + ", and first-timers are " + price("First Time Brazilian", 80) + "."; } },
+      return "A Brazilian is " + price("brazilian-wax", 75) + ", or " + price("wax-wednesday", 65) + " on Wax Wednesdays. With a mini vajacial (extractions, ingrown hair removal and a cooling mask) it’s " +
+        price("brazilian-wax-mini-vajacial", 95) + ". Each takes a $30 deposit when you book."; } },
     { k: /dermaplan/, a: function () {
-      return "Dermaplaning gently lifts dead skin and peach fuzz so skin looks smoother and your products sink in. It comes with the Custom Facial for " +
-        price("Lumevina Custom Facial + Dermaplaning", 185) + "."; } },
+      return "Dermaplaning comes as an option with New Clients Start Here (" + price("new-client-dermaplaning", 260) + "), the Custom Facial (" + price("custom-facial-dermaplaning", 230) +
+        "), the Ageless Grace Facial (" + price("ageless-grace-dermaplaning", 280) + ") and both peels (" + price("refresh-peel-dermaplaning", 270) + ")."; } },
+    { k: /procell|pro cell|micro.?channel|microneedl|micro needl|collagen induction/, a: function () {
+      return "ProCell Microchanneling is " + price("procell-microchanneling", 350) + " a session: collagen induction with growth factors for acne scars, fine lines, pores and texture, with LED, post-care guidance and a recovery set. Four sessions are the minimum she recommends. " +
+        "Right now the first 10 clients can get four for " + price("procell-package", 1100) + " (regularly $1,400), with payment plans; just ask."; } },
     { k: /biorepeel|bio repeel|bio-repeel/, a: function () {
-      return "BioRePeel is a no-downtime peel that brightens and smooths. One treatment is " + price("BioRePeel - 1 Facial Treatment", 270) +
-        ", or three for " + price("BioRePeel - 3 Facial Treatments", 670) + "."; } },
+      return "BioRePeel isn’t on Evelyn’s menu right now. Her peels are the Refresh Peel (" + price("refresh-peel", 230) + ", no downtime) and the Corrective Peel (" + price("corrective-peel", 230) + ", existing clients)."; } },
     { k: /\bpeels?\b|chemical/, a: function () {
-      return "Peels: Light " + price("Light Chemical Peel", 225) + ", Medium " + price("Medium Chemical Peel", 235) + ", and BioRePeel " +
-        price("BioRePeel - 1 Facial Treatment", 270) + " (three for " + price("BioRePeel - 3 Facial Treatments", 670) + "). Evelyn picks the right strength at your visit."; } },
+      return "Two peels: the Refresh Peel, " + price("refresh-peel", 230) + ", gentle with little or no flaking and a great first peel; and the Corrective Peel, " + price("corrective-peel", 230) +
+        ", a medium-depth peel for existing clients (peeling up to a week, prep first). Either one with dermaplaning is " + price("refresh-peel-dermaplaning", 270) + ". A series works best."; } },
     { k: /back facial|backne|facial for (my )?back/, a: function () {
-      return "Back facials are " + price("Back Facial - Half", 140) + " for half and " + price("Back Facial - Full", 185) + " for the full back."; } },
-    { k: /couple/, a: function () { return "The Couples Facial is " + price("Couples Facial", 325) + " for two, side by side."; } },
+      return "Back facials aren’t on Evelyn’s menu right now. If breakouts on your back are the worry, ask her and she’ll tell you what she’d do."; } },
+    { k: /couple/, a: function () { return "Couples facials aren’t on the menu right now; every facial is one on one with Evelyn."; } },
     { k: /ageless/, a: function () {
-      return "The Ageless Grace Facial is Evelyn’s signature lifting facial, " + price("Ageless Grace Facial", 245) + ". It’s included in the Ageless membership."; } },
-    { k: /acne/, a: function () {
-      return "The Monthly Acne Treatment is " + price("Monthly Acne Treatment", 195) + " and the Bi-Weekly Acne Treatment " + price("Bi-Weekly Acne Treatment", 120) +
-        ". New acne clients start with a consultation and treatment, " + price("New Client Consultation + Treatment (Acne Program)", 225) +
-        ". The Glow membership covers the Monthly Acne Treatment."; } },
+      return "The Ageless Grace Facial is Evelyn’s lifting facial with oxygen therapy and a Tightening Protein Booster, " + price("ageless-grace-facial", 240) +
+        " (75 min), or " + price("ageless-grace-dermaplaning", 280) + " with dermaplaning."; } },
+    { k: /acne|bootcamp/, a: function () {
+      return "Acne starts with the New Client Consultation + Treatment, " + price("new-client-consultation-acne", 220) + " (80 min, $50 deposit). Then it’s the Acne Bootcamp: the Monthly Acne Treatment " +
+        price("monthly-acne-treatment", 200) + ", and the Bi-Weekly Acne Treatment " + price("biweekly-acne-treatment", 115) + " when Evelyn recommends it."; } },
     { k: /consult/, a: function () {
-      return "A consultation is " + price("In-Person Consultation", 55) + " in person or " + price("Virtual Consultation", 55) +
-        " by video. New clients can also start with a consultation and a custom facial, from " + price("New Clients Start Here", 220) + "."; } },
-    { k: /underarm|armpit/, a: function () { return "An underarm wax is " + price("Underarm Wax", 22) + "."; } },
-    { k: /\bbrows?\b|eyebrow/, a: function () { return "Brow wax and tweeze is " + price("Brow Wax + Tweeze", 27) + "."; } },
-    { k: /\blip\b/, a: function () { return "An upper lip wax is " + price("Upper Lip Wax", 9) + "."; } },
-    { k: /\blegs?\b/, a: function () { return "Leg waxing is " + price("Half Leg Wax", 55) + " for half and " + price("Full Leg Wax", 110) + " for full legs."; } },
-    { k: /\barms?\b/, a: function () { return "Arm waxing is " + price("Half Arm Wax", 32) + " for half and " + price("Full Arm Wax", 60) + " for full arms."; } },
-    { k: /bikini/, a: function () { return "A bikini line wax is " + price("Bikini Line Wax", 32) + ", extended " + price("Extended Bikini Line", 55) + "."; } },
-    { k: /face wax|facial wax|full face/, a: function () { return "A full face wax is " + price("Full Face Wax", 38) + ", or " + price("Full Face Wax + Cooling Mask", 55) + " with a cooling mask."; } }
+      return "A consultation is " + price("in-person-consultation", 50) + " in person, or " + price("virtual-consultation", 50) + " by video on Mondays (message Evelyn first). Both take a $49 deposit. " +
+        "Want a facial too? New clients start with New Clients Start Here, " + price("new-client-consultation", 220) + "."; } },
+    { k: /underarm|armpit/, a: function () { return "An underarm wax is " + price("underarm-wax", 20) + ", or " + price("brow-underarm-wax", 45) + " with a brow wax."; } },
+    { k: /\bbrows?\b|eyebrow/, a: function () { return "Brow wax and tweeze is " + price("brow-wax-tweeze", 25) + ", or " + price("brow-underarm-wax", 45) + " with an underarm wax."; } },
+    { k: /\blip\b/, a: function () { return "An upper lip wax is " + price("upper-lip-wax", 10) + "."; } },
+    { k: /\blegs?\b/, a: function () { return "Leg waxing isn’t on Evelyn’s menu right now. Her body waxing covers arms, back, stomach and underarms."; } },
+    { k: /\barms?\b/, a: function () { return "Arm waxing is " + price("half-arm-wax", 30) + " for half (your choice which half) and " + price("full-arm-wax", 60) + " for full arms."; } },
+    { k: /bikini/, a: function () { return "A bikini line wax is " + price("bikini-line-wax", 40) + ", just outside the underwear line. For everything, a Brazilian is " + price("brazilian-wax", 75) + "."; } },
+    { k: /face wax|facial wax|full face|sideburn|hairline/, a: function () { return "Full face waxing isn’t on the menu right now. For the face, Evelyn does brows (" + price("brow-wax-tweeze", 25) + "), upper lip (" + price("upper-lip-wax", 10) + ") and nostrils (" + price("nostril-wax", 10) + ")."; } }
   ];
 
   /* ── everyday answers, in Evelyn's voice ── */
@@ -99,10 +102,9 @@
       return "Skin School Live is Evelyn’s in-person class: two hours at the studio with six people, a skin check under the lamp, your routine built on the spot and a kit to take home, for $129 ($109 for members). Want it just for your friends? A Glow Party is $690 for up to six, at the studio or at your place. Estheticians can join Pro Night for $249."; },
       acts: [["See class dates", "go:school.html#live"], ["Plan a Glow Party", "go:school.html#live"]] },
     { id: "new", node: "p-facials", k: /first time|new client|first visit|never been|haven'?t been/, a: function () {
-      return "Welcome! New clients start here: a consultation, a look at your current routine, and a fully custom facial, from " +
-        price("New Clients Start Here", 220) + ". Every facial includes a double cleanse, enzyme exfoliation, extractions, a targeted mask, massage, LED and cryo globes. " +
-        "If acne is your main concern, start with the Acne Program’s consultation and treatment instead, " +
-        price("New Client Consultation + Treatment (Acne Program)", 225) + "."; },
+      return "Welcome! New clients start with New Clients Start Here: a consultation, a look at your current routine, and a fully custom facial, " +
+        price("new-client-consultation", 220) + " (or " + price("new-client-dermaplaning", 260) + " with dermaplaning). Every facial includes a double cleanse, enzyme exfoliation, extractions, a targeted mask, massage, LED and cryo globes. " +
+        "If acne is your main concern, start with the Acne Bootcamp’s consultation and treatment instead, " + price("new-client-consultation-acne", 220) + "."; },
       acts: [["Book my first facial", "book:new-client-consultation"], ["Acne first visit", "book:new-client-consultation-acne"]] },
     /* membership questions a member asks about their own plan, before "book" and "cancel" catch them */
     { id: "bank", node: "member", k: /\bbank|roll ?over|unused facial|busy month|miss(ed)? (a|my) month|facials? (left|waiting|saved)|how many facials/, a: function () {
@@ -120,12 +122,14 @@
       return "Cancel or reschedule at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you (same month). Same-day changes keep the deposit and add a $43 fee. Saturdays can’t be moved. There’s a 10-minute grace period if you’re running late."; },
       acts: [["Move an appointment", "move"], ["All policies", "#policies"]] },
     { id: "book", node: "book", k: /\bbook|appointment|availab|opening|\bslots?\b|schedule (a|an|my)/, a: function () {
-      return "You can book any time online: pick your treatment and time, and a deposit holds it. Evelyn works Tuesday to Saturday, 8 AM to 6 PM."; },
+      var H = window.LumevinaHours;
+      return "You can book any time online: pick your treatment and a time, and some treatments take a small deposit to hold it. Evelyn’s hours: " +
+        (H ? H.prose() + "." : "Tuesday to Saturday."); },
       acts: [["Book now", "book"]] },
     { id: "hours", k: /hours|what time|when (are|do) you|open (on|today|tomorrow)|closed|sunday|monday|weekend/, a: function () {
       var H = window.LumevinaHours;
       return (H ? H.prose() + ". " + H.closedLabel() + "." : "Tuesday to Saturday, 8 AM to 6 PM. Closed Sundays and Mondays.") +
-        " The calendar on this site shows every opening up to a month ahead. Outside those hours, or on a closed day, she takes after-hours visits for a $32 add-on; ask her first."; },
+        " The calendar on this site shows every opening up to a month ahead. Outside those hours, or on a closed day, she takes after-hours visits for an extra $50; ask her first."; },
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
       return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },
@@ -136,16 +140,16 @@
       return "Evelyn’s Skin School is her online course: 33 short lessons in three levels, from your first routine to acne, dark spots and aging. The first two lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off. Prefer in person? Skin School Live is a two-hour class at the studio for $129."; },
       acts: [["Take the free lesson", "go:school.html#learn"], ["See the courses", "go:school.html#tiers"], ["Class dates", "go:school.html#live"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
-      return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + price("Gift Card · Any treatment ($110 value)", 110) + " card for anything."; },
+      return "Gift certificates never expire and work for any treatment. Send one for a specific facial, or a " + "$110" + " card for anything."; },
       acts: [["Send a gift", "#gift"]] },
     { id: "deposit", node: "cancel", k: /deposit|refund/, a: function () {
-      return "Every booking takes a non-refundable deposit that goes toward your total. With 48 hours’ notice it moves to a new date in the same month. Services themselves are non-refundable, but if anything comes up after your visit, reach out within 24 hours."; } },
+      return "Some treatments take a non-refundable deposit when you book: $50 for the acne consultation, $49 for a consultation, $20 or $30 for waxing and acne treatments; facials and peels have none. It goes toward your total, and with 48 hours’ notice it moves to a new date in the same month. If anything comes up after your visit, reach out within 24 hours."; } },
     { id: "pay", k: /\bpay\b|payment|cash|credit card|\bcard\b|venmo|zelle|apple pay/, a: function () {
       return "Cash is preferred at your visit; cards are accepted with a small fee. The deposit is paid online when you book."; } },
     { id: "prices", node: "prices", k: /price|cost|how much|menu|rates?\b|\$/, a: function () {
-      return "The Lumevina Custom Facial is " + price("Lumevina Custom Facial", 195) + ", with dermaplaning " + price("Lumevina Custom Facial + Dermaplaning", 185) +
-        ", the Ageless Grace " + price("Ageless Grace Facial", 245) + " and the Monthly Acne Treatment " + price("Monthly Acne Treatment", 195) +
-        ". New clients start at " + price("New Clients Start Here", 220) + ". Waxing starts at " + price("Upper Lip Wax", 9) + "; a Brazilian is " + price("Brazilian Wax", 80) + "."; },
+      return "New clients start with New Clients Start Here, " + price("new-client-consultation", 220) + ". The Lumevina Custom Facial is " + price("lumevina-custom-facial", 200) +
+        ", the Ageless Grace " + price("ageless-grace-facial", 240) + ", ProCell Microchanneling " + price("procell-microchanneling", 350) + ", and either peel " + price("refresh-peel", 230) +
+        ". Acne starts at " + price("new-client-consultation-acne", 220) + ". Waxing starts at " + price("upper-lip-wax", 10) + "; a Brazilian is " + price("brazilian-wax", 75) + "."; },
       acts: [["See the menu", "#services"], ["Book", "book"]] },
     { id: "before", node: "before", k: /before (my|the|a) (facial|appointment|visit|treatment)|prep|prepare|stop (using|taking)|botox|filler|shave|shaving|makeup (to|before)/, a: function () {
       return "Before your facial: stop retinol or prescription retinoids 5 to 7 days ahead, pause exfoliating acids 2 to 3 days ahead, and don’t wax or shave your face for 2 days. After Botox or fillers, wait 2 weeks (or book the facial the same day, before injections). Skip booking on the day of a big event."; },
@@ -188,47 +192,43 @@
       if (!best) best = els[i];
       if (d && d.textContent.trim()) { best = els[i]; desc = d.textContent.trim(); break; }
     }
-    return best ? { id: best.getAttribute("data-id"), price: best.getAttribute("data-price"), desc: desc } : null;
+    if (!best) return null;
+    var sv = SV.get(best.getAttribute("data-id"));
+    return { id: best.getAttribute("data-id"), price: best.getAttribute("data-price"), from: !!(sv && sv.from), desc: (sv && sv.desc) || desc };
   };
-  var SHORT = { "Lumevina Custom Facial": "Custom Facial", "Lumevina Custom Facial + Dermaplaning": "Custom + Dermaplaning",
-    "New Clients Start Here": "New client facial", "New Client Consultation + Treatment (Acne Program)": "New acne client",
-    "BioRePeel - 1 Facial Treatment": "BioRePeel", "BioRePeel - 3 Facial Treatments": "BioRePeel · 3 treatments",
-    "Back Facial - Half": "Half back", "Back Facial - Full": "Full back", "Wax Wednesday (Brazilian)": "Wax Wednesday Brazilian",
-    "Brazilian Wax x Mini Vajacial Package": "Brazilian + mini vajacial", "Full Face Wax + Cooling Mask": "Full face + cooling mask",
-    "In-Person Consultation": "In person", "Virtual Consultation": "Virtual" };
-  var short = function (n) { return SHORT[n] || n.replace(/ Wax$/, ""); };
-  var GROUPS = {
-    "p-facials": { label: "Facials", ask: "Which facial?", items: ["Lumevina Custom Facial", "Lumevina Custom Facial + Dermaplaning", "Ageless Grace Facial",
-      "New Clients Start Here", "Couples Facial"] },
-    "p-peels": { label: "Peels", ask: "Which peel?", items: ["Light Chemical Peel", "Medium Chemical Peel", "BioRePeel - 1 Facial Treatment", "BioRePeel - 3 Facial Treatments"] },
-    "p-acne": { label: "Acne program", ask: "Where are you in the acne program?", items: ["New Client Consultation + Treatment (Acne Program)",
-      "Monthly Acne Treatment", "Bi-Weekly Acne Treatment"] },
-    "p-back": { label: "Back facials", ask: "Half or full back?", items: ["Back Facial - Half", "Back Facial - Full"] },
-    "p-wax-face": { label: "Face", ask: "Which area of the face?", items: ["Upper Lip Wax", "Brow Wax + Tweeze", "Nose Wax", "Nostril Wax", "Sideburn Wax",
-      "Hairline Wax", "Full Face Wax", "Full Face Wax + Cooling Mask"] },
-    "p-wax-body": { label: "Body", ask: "Which area?", items: ["Underarm Wax", "Half Arm Wax", "Full Arm Wax", "Half Leg Wax", "Full Leg Wax",
-      "Half Back Wax", "Full Back Wax", "Stomach Strip Wax", "Full Stomach Wax", "Full Butt Wax"] },
-    "p-wax-bikini": { label: "Bikini & Brazilian", ask: "Which one?", items: ["Bikini Line Wax", "Extended Bikini Line", "Brazilian Wax", "First Time Brazilian",
-      "Wax Wednesday (Brazilian)", "Brazilian Wax x Mini Vajacial Package", "Inner Thigh Add-On"] },
-    "p-consult": { label: "Consultations", ask: "In person or by video?", items: ["In-Person Consultation", "Virtual Consultation"] }
+  var short = function (n) { return n; };
+  /* her groups (js/services.js): Facials, ProCell, Peels, Acne Bootcamp, Consultations, Waxing → Brazilian & Bikini, Body, Face */
+  var ASK = { facials: "Which facial?", procell: "One session or the package?", peels: "Which peel?", acne: "Where are you in the Acne Bootcamp?",
+    consult: "In person or by video?" };
+  var GROUPS = {}, WAX = [];
+  var bookables = function (items) {
+    var out = [];
+    items.forEach(function (it) { (it.options || [it]).forEach(function (o) { if (!o.ask) out.push(o.name); }); });
+    return out;
   };
+  SV.menu.forEach(function (g) {
+    if (g.subs) g.subs.forEach(function (sg, i) {
+      GROUPS["p-wax-" + i] = { label: sg.group, ask: "Which one?", items: bookables(sg.items) };
+      WAX.push([sg.group, "n:p-wax-" + i]);
+    });
+    else GROUPS["p-" + g.key] = { label: g.group, ask: ASK[g.key] || "Which one?", items: bookables(g.items) };
+  });
   var groupOf = function (name) { for (var g in GROUPS) if (GROUPS[g].items.indexOf(name) !== -1) return g; return null; };
   var serviceAnswer = function (name) {
     var sv = findService(name);
     if (!sv) return { text: "I couldn’t find that one on the menu. Want me to ask Evelyn?", acts: [["Ask Evelyn", "skin"]] };
-    var LM = window.LumevinaMembership, glow = LM && LM.plan("glow"), covered = glow && glow.covers.indexOf(sv.id) !== -1;
-    var text = short(name) + " · $" + sv.price + "." + (sv.desc ? " " + sv.desc : "") +
-      (covered ? " Or $" + glow.price + " a month with the Glow membership, a facial every month." : "");
+    var full = SV.get(sv.id);
+    var text = short(name) + " · " + (sv.from ? "from " : "") + "$" + Number(sv.price).toLocaleString("en-US") + "." + (sv.desc ? " " + sv.desc : "") +
+      (full && full.deposit ? " A $" + full.deposit + " deposit holds the time." : "");
     var g = groupOf(name);
     return { text: text, acts: [["Book this", "book:" + sv.id]].concat(g ? [["Other " + GROUPS[g].label.toLowerCase(), "n:" + g]] : [], [["All prices", "n:prices"]]) };
   };
+  var MENU_OPTS = SV.menu.map(function (g) { return [g.group, g.subs ? "n:p-wax" : "n:p-" + g.key]; });
   var info = function (text, acts) { return { say: text, opts: acts || [] }; };
   var NODES = {
-    prices: info("Prices for which?", [["Facials", "n:p-facials"], ["Peels", "n:p-peels"], ["Acne program", "n:p-acne"], ["Back facials", "n:p-back"],
-      ["Waxing", "n:p-wax"], ["Consultations", "n:p-consult"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"]]),
-    "p-wax": info("Which area?", [["Face", "n:p-wax-face"], ["Body", "n:p-wax-body"], ["Bikini & Brazilian", "n:p-wax-bikini"]]),
-    book: info("What would you like to book? Pick one and I’ll open the times.", [["Facials", "n:p-facials"], ["Peels", "n:p-peels"], ["Acne program", "n:p-acne"],
-      ["Back facials", "n:p-back"], ["Waxing", "n:p-wax"], ["Consultations", "n:p-consult"], ["Just show me times", "book"]]),
+    prices: info("Prices for which?", MENU_OPTS.concat([["Gift certificates", "n:gift"]])),
+    "p-wax": info("Which area?", WAX),
+    book: info("What would you like to book? Pick one and I’ll open the times.", MENU_OPTS.concat([["Just show me times", "book"]])),
     cancel: info("What do you need?", [["Move my appointment", "n:c-move"], ["Cancel", "n:c-cancel"], ["A same-day change", "n:c-same"],
       ["Running late", "n:c-late"], ["A Saturday booking", "n:c-sat"], ["My deposit", "n:c-dep"]]),
     "c-move": info("Move it at least 48 hours ahead with the link in your confirmation email, and your deposit moves with you to a new date in the same month.", [["Move an appointment", "move"], ["Something else", "n:cancel"]]),

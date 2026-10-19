@@ -24,7 +24,7 @@
   /* the studio's week, from Evelyn (Oct 19, 2026): Tuesday 12 to 7, Wednesday
      and Thursday 11 to 7, Friday 10 to 5, Saturday 9:30 to 6; closed Sunday and
      Monday. No lunch break unless she adds one in the dashboard. After-hours
-     visits outside these, or on a closed day, are a $32 add-on she confirms. */
+     visits outside these, or on a closed day, are an extra $50 she confirms. */
   var H = function (open, close) { return { open: open, close: close, lunch: null, lunchEnd: null }; };
   var STANDARD = H(660, 1140);                 /* a usual day, for extra days she opens */
   var DEFAULT_WEEK = [null, null, H(720, 1140), H(660, 1140), H(660, 1140), H(600, 1020), H(570, 1080)];
