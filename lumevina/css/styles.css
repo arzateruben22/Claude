@@ -7,9 +7,6 @@
 
 /* Self-hosted font: Inter (variable weight + optical size), the open
    cousin of Apple's SF Pro. One file covers every weight on the page. */
-/* her logo's words (the opening animation) */
-@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 500; font-display: block; src: url("../fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); }
-@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 600; font-display: block; src: url("../fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/inter-var.woff2") format("woff2"); }
 
 /* Sand palette — oat-linen ground, cream cards, walnut text, clay accent.
@@ -412,17 +409,12 @@ body.intro-lock { overflow: hidden; }
   margin: 0 auto;
   width: clamp(16rem, 34vw, 25rem);
   height: auto;
-  overflow: visible;
   opacity: 0;
   animation: intro-appear 0.92s ease-out forwards paused;
   animation-delay: 0.08s;
 }
 /* js/intro.js starts the greeting once the logo has loaded */
 .intro.intro-go .intro-mark { animation-play-state: running; }
-.intro-logo-name, .intro-logo-sub { font-family: "Cormorant Garamond", Georgia, serif; fill: var(--intro-ink); }
-.intro-logo-name { font-weight: 600; }
-.intro-logo-sub { font-weight: 500; }
-.intro-logo-ev { fill: none; stroke: var(--intro-ink); stroke-width: 5; }
 
 .intro-word { opacity: 0; will-change: opacity, transform, filter; }
 
@@ -6702,21 +6694,16 @@ a.book-btn { text-align: center; }
 .book-glossgenius .only-gg { display: inline; }
 .book-glossgenius .only-site { display: none; }
 
-/* ─── her logo's symbol in the hero: the circle, profile and roses from her
-   logo (img/logo-mark.svg, vector, the words left out), tinted in the earthy
-   palette through a mask. The outer box only places it; the inner ones are
-   what move (js/main.js), so nothing here is ever overwritten.
-   In the art: the profile starts at 50% of the width, the roses end at 99%,
-   and the drawing is 90% as tall as it is wide.
-
-   Phones and tablets: a small emblem above the headline, clear of the words
-   (a flex item in the hero's column, before .hero-inner).
-   Wide screens: beside the headline, her profile looking back at it. ─── */
+/* ─── her full logo in the hero, centred above the headline: the art traced
+   from her logo and the words as shapes (img/logo-full.svg, vector), tinted
+   in the earthy palette through a mask. It's a flex item in the hero's
+   column, before .hero-inner. The outer box only places it; the inner ones
+   are what move (js/main.js), so nothing here is ever overwritten. ─── */
 .hero-mark {
   position: relative; z-index: 1;
-  width: clamp(9.5rem, 40vw, 13.5rem);
-  aspect-ratio: 2064 / 1860;
-  margin: 0 auto clamp(0.9rem, 3vw, 1.6rem);
+  width: clamp(16rem, 74vw, 19rem);
+  aspect-ratio: 2620 / 1880;
+  margin: 0 auto clamp(0.8rem, 2.4vw, 1.4rem);
   flex: none;
   pointer-events: none;
 }
@@ -6724,30 +6711,14 @@ a.book-btn { text-align: center; }
 .hero-mark-art {
   display: block; width: 100%; height: 100%;
   background: linear-gradient(165deg,
-    rgba(146, 106, 80, 0.86) 0%,
-    rgba(var(--accent-rgb), 0.80) 55%,
-    rgba(146, 106, 80, 0.70) 100%);
-  -webkit-mask: url("../img/logo-mark.svg") center / contain no-repeat;
-  mask: url("../img/logo-mark.svg") center / contain no-repeat;
+    rgba(146, 106, 80, 0.92) 0%,
+    rgba(var(--accent-rgb), 0.88) 55%,
+    rgba(146, 106, 80, 0.80) 100%);
+  -webkit-mask: url("../img/logo-full.svg") center / contain no-repeat;
+  mask: url("../img/logo-full.svg") center / contain no-repeat;
 }
-/* wide screens: the whole profile in the open space beside the headline,
-   her nose just past the end of "chosen by Evelyn." (the headline's second
-   line ends 327px right of centre); the circle trails off to the left and
-   fades behind the words */
-@media (min-width: 1180px) {
-  .hero-mark {
-    --m: min(32rem, calc((50vw - 376px) / 0.486));
-    position: absolute; z-index: 0;
-    width: var(--m); aspect-ratio: 1 / 1; margin: 0;
-    top: calc(90px - var(--m) * 0.05);
-    left: calc(50% + 352px - var(--m) * 0.504);
-    -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0.16) 4%, rgba(0,0,0,0.5) 30%, #000 50%);
-            mask-image: linear-gradient(90deg, rgba(0,0,0,0.16) 4%, rgba(0,0,0,0.5) 30%, #000 50%);
-  }
-  .hero-mark-art {
-    background: linear-gradient(165deg,
-      rgba(146, 106, 80, 0.74) 0%,
-      rgba(var(--accent-rgb), 0.66) 55%,
-      rgba(146, 106, 80, 0.56) 100%);
-  }
+@media (min-width: 900px) {
+  .hero-mark { width: clamp(19rem, 24vw, 23rem); }
+  /* the logo adds height: start a little higher so the shelf stays close */
+  .hero { padding-top: 5.25rem; }
 }
