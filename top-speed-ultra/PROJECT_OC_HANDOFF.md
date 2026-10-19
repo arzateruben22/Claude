@@ -25,6 +25,12 @@ model: routine work to `opus`, hard reasoning to `fable`.
   - Then F2-B (fixes in tsu-store after the SKU commits) and F3-B (fixes per branch once idle) from the F2 and F3
     findings files, and F6 (PROJECT_OC_DECISIONS.md: nine decisions, all pending; the owner answers one at a time).
   - Resume fewer lanes at a time if the owner wants the window to last: nine at once burn about 6% a minute.
+- **Priority order from the owner (2026-10-19, decision 10 in PROJECT_OC_DECISIONS.md):** the hypercar fully
+  drivable first (F1 dynamics, then hypercar M1 to M6, then F4 budgets, then the live merge and suite), then the
+  store SKU and F2, then on foot at Lot 57 (F5 people specs, then PROJECT_OC_ON_FOOT.md Phases 1 to 3), then the UI
+  pass, realism-2 and F3. Resume lanes in that order, two at a time under the usage rule: F1 oc-f1-dynamics.js
+  wf_5afd6056-420 and the hypercar oc-hypercar-3.js wf_7f9f9a3a-d82 first; F4 oc-f4-budgets.js wf_303fc3f1-753 when
+  one of them finishes; the store SKU oc-store-hypercar.js wf_9a01de13-61a after the hypercar's M6.
 - Branches and worktrees (all under `/home/user/Claude`):
   - `top-speed-ultra/` on `claude/always-on`: the luxury glass menu (U0), adaptive HUD (U1), navigation card and
     chevrons (U2, `a340f1d`, the last pushed commit); the UI pass continues there (U3 radial menu onward).
