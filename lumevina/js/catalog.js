@@ -85,9 +85,9 @@
     P(GM, "Vitamin C Cleanser", 47, 0, "Cleansers", { photo: "img/products/glymed-plus-vitamin-c-cleanser.webp", size: "6.75 fl oz / 200 ml", about: "Step 1 of the GlyMed Plus routine: cleanse." }),
 
     /* ── Mixi Skincare: 3 entries ── */
-    P(MX, "Dew Drop", 56, 0, "Serums", { inv: "Dew Drops", slug: "dew-drops", size: "1 fl oz", about: "Silky smooth hydration with beta-glucan. Non-pore-clogging." }),
-    P(MX, "Hydroxi", 40, 2, "Acne & spot care", { size: "1.7 fl oz", about: "Hydrogen peroxide acne cream." }),
-    P(MX, "Mineral SPF 50", 65, 1, "Sun care", { inv: "SPF 50 Mineral SPF", slug: "spf-50-mineral-spf", size: "2 fl oz", about: "UVA/UVB protection. Medical-grade sunscreen.", resolved: "Flag [10] answered by the label photo: Mixi Skincare mineral SPF 50, 2 fl oz. No tint named on the tube." }),
+    P(MX, "Dew Drop", 56, 0, "Serums", { inv: "Dew Drops", slug: "dew-drops", photo: "img/products/mixi-dew-drop.webp", size: "1 fl oz", about: "Silky smooth hydration with beta-glucan. Non-pore-clogging." }),
+    P(MX, "Hydroxi", 40, 2, "Acne & spot care", { photo: "img/products/mixi-hydroxi.webp", size: "1.7 fl oz", about: "Hydrogen peroxide acne cream." }),
+    P(MX, "Mineral SPF 50", 65, 1, "Sun care", { inv: "SPF 50 Mineral SPF", slug: "spf-50-mineral-spf", photo: "img/products/mixi-mineral-spf-50.webp", size: "2 fl oz", about: "UVA/UVB protection. Medical-grade sunscreen.", resolved: "Flag [10] answered by the label photo: Mixi Skincare mineral SPF 50, 2 fl oz. No tint named on the tube." }),
 
     /* ── Circadia: 1 entry ── */
     P(CI, "Vitamin Veil Cleansing Oil", 40, 1, "Cleansers", { inv: "Vitamin Veil Cleanser", slug: "vitamin-veil-cleanser", photo: "img/products/circadia-vitamin-veil-cleansing-oil.webp", size: "6.7 fl oz / 198 ml", about: "A cleansing oil." }),
