@@ -6455,3 +6455,16 @@ a.book-btn { text-align: center; }
   /* the logo adds height: start a little higher so the shelf stays close */
   .hero { padding-top: 5.25rem; }
 }
+
+/* ─── Inside an app's viewer on a phone (js/site-config.js adds html.in-app) ───
+   The app's own buttons float over the top strip of the page and take every
+   tap there, so the header (menu, cart) moves down below them, and everything
+   that makes room for the header follows. */
+html.in-app .nav { padding-top: 3.9rem; }
+html.in-app .nav.scrolled { padding-top: 3.6rem; }
+html.in-app .hero { padding-top: 8.25rem; }
+html.in-app #shop, html.in-app #book, html.in-app #services, html.in-app #about,
+html.in-app #policies, html.in-app #faq, html.in-app #contact { scroll-margin-top: 7.75rem; }
+html.in-app .sh-sec { scroll-margin-top: 11rem; }
+html.in-app .nc { scroll-margin-top: 8.5rem; }
+

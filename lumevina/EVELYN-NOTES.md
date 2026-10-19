@@ -231,3 +231,7 @@ From the ChatGPT idea (Anthropic's iMessage plugin for Claude Code), the safe ve
 ## The menu drops down (Oct 19)
 
 On phones and tablets the two-line button now opens a dropdown card under the header instead of a full-screen page: the six sections, "New here? Start here", Book now, and Cart and My Lumevina. The page stays where it was behind a light shade; tapping outside, a link or Escape closes it. On a computer the links stay in the header as before.
+
+## The menu button inside the Claude app (Oct 19)
+
+In the Claude app on a phone, the app's own × and ⋯ float over the top strip of the site and take every tap there, so the two-line menu (and Cart) never got the tap. When the site is opened inside an app's frame on a phone, the header now sits just below that strip. On its own (a normal browser, or once it's on her domain) the header is unchanged.

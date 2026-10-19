@@ -63,6 +63,13 @@
     touchedAt = Date.now();
     flip();
   });
+  /* an older in-app browser without pointer events: the touch itself opens it */
+  toggle.addEventListener("touchend", function (e) {
+    if (Date.now() - touchedAt < 700) return;
+    touchedAt = Date.now();
+    e.preventDefault();
+    flip();
+  }, { passive: false });
   toggle.addEventListener("click", function () {
     if (Date.now() - touchedAt < 700) return;
     flip();

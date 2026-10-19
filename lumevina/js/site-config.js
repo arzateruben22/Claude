@@ -66,6 +66,12 @@
 
   var root = document.documentElement;
   CONFIG.features.forEach(function (f) { root.classList.add("has-" + f); });
+  /* opened inside an app's viewer on a phone (the Claude app shows the site in
+     a frame, with its own × and ⋯ floating over the top strip, and taps there
+     never reach the page): the header moves down, clear of them (css: html.in-app) */
+  var framed = true;
+  try { framed = window.self !== window.top; } catch (e) { /* a cross-origin frame */ }
+  if (framed && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) root.classList.add("in-app");
   var gg = /^https:\/\//.test(CONFIG.booking.glossgenius || "");
   root.classList.add(CONFIG.booking.mode === "glossgenius" && gg ? "book-glossgenius"
     : CONFIG.booking.mode === "both" && gg ? "book-both" : "book-site");
