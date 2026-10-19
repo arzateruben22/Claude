@@ -47,7 +47,6 @@ The look: warm beige, white and classic black (tokens at the top of `css/styles.
 
 - The invisiClear patches price ($10, partly cut off in her screenshot).
 - How many Retinal B3 Serums she has.
-- The last flagged draft: Mixi SPF 50 Mineral SPF (name clients see, size, any tint).
 - The $83.20 Barrier Repair Cream price (the 4 fl oz Elite tube).
 - Shipping: her inventory has a $6.00 shipping fee; the site charges $8, free over $75.
 - The policies say cash is preferred, but she didn't pick cash in her answers.

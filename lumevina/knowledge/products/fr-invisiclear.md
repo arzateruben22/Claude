@@ -1,0 +1,34 @@
+---
+id: fr-invisiclear
+kind: product
+title: invisiClear Hydrocolloid Spot Patches
+brand: Face Reality
+category: Acne & spot care
+size: 24 patches
+price: 10
+source: label + playbook
+answered: ""
+---
+
+# invisiClear Hydrocolloid Spot Patches
+
+**Brand:** Face Reality  
+**Type:** Acne & spot care  
+**Size:** 24 patches  
+**Price:** $10  
+**On the label:** Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.
+**In her GlossGenius inventory as:** Invisiclear Hydrocoll…
+
+Label facts above come from the product's own packaging. Everything below is Evelyn's.
+
+## Who is it for?
+
+_(not answered yet)_
+
+## How to use it
+
+_(not answered yet)_
+
+## Your tip
+
+_(not answered yet)_
