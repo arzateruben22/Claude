@@ -131,3 +131,17 @@ Sent at the same link: https://claude.ai/artifact/YChu6itk5K1NpWfrQdF5Ak. 21 que
 - The questionnaire the assistant learns from: https://claude.ai/artifact/R1pRrnH79BwaUoBZexefVQ. Six sections, 120 questions plus optional notes per product. It saves each section as she types, so she can leave and come back; for the saving to reach us, invite her email from the page's Share menu with Contributor access or higher and no public link. "Copy all my answers" is the backup.
 - **Speaking her answers:** the mic key on her phone keyboard dictates into any box. The page can't open the microphone itself inside the preview viewer.
 - **Voice memos:** each item has "Add a recording" for a voice memo from her phone's recorder (.m4a works). They stay with her answers for a later voice assistant in her own voice. That needs her consent, a voice provider, and the real website, where the microphone works.
+
+## Her current menu (Oct 19, from her GlossGenius page)
+
+Only what's on GlossGenius is offered now. The full list, with her descriptions, prices, times, deposits and the "2 options", is in `GLOSSGENIUS-SERVICES.md`; the site reads it from `js/services.js`.
+
+- **New:** ProCell Microchanneling (from $350); the ProCell package, 4 for $1,100 (regularly $1,400), first 10 clients, payment plans; Refresh Peel and Corrective Peel ($230, or $270 with dermaplaning); dermaplaning options on New Clients Start Here ($260+), the Custom Facial ($230+) and Ageless Grace ($280); Brows + underarms ($45).
+- **Gone (hidden, not deleted):** Couples Facial, Back Facials, BioRePeel, First Time Brazilian, Extended Bikini, leg waxing, nose, sideburn, hairline and full-face waxing.
+- **Renamed:** the Acne Program is the Acne Bootcamp.
+- **Deposits are hers, per service** (Ruben, Oct 19): $50 acne consultation, $49 consultations, $30 Brazilian / Wax Wednesday / Bikini / Mini Vajacial / Full Arm / Full Back / acne treatments, $20 Half Arm / Half Back / Full Butt; facials, peels and ProCell have none.
+- **After-hours visits: an extra $50** (was $32). Booked by message.
+- **Virtual Consultation:** $50, Mondays only, message first.
+- **Glow Membership repriced** (still held back): Glow $169 (Custom Facial or Monthly Acne, a $200 value), Ageless $209 (Ageless Grace, a $240 value, plus dermaplaning every other visit). Dermaplaning is no longer covered by Glow, since it's now a $30–$40 option.
+
+**Still to confirm:** ProCell Microchanneling's two options; whether facials, peels and ProCell should take a deposit online; the new membership prices; a ProCell photo.

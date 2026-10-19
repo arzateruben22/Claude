@@ -1,12 +1,12 @@
 ---
-id: back-facials
+id: procell
 kind: treatment
-title: Back facials
+title: ProCell Microchanneling
 source: playbook
 answered: ""
 ---
 
-# Back facials: aftercare
+# ProCell Microchanneling: aftercare
 
 ## The first 24 hours
 

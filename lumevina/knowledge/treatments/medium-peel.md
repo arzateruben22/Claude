@@ -1,12 +1,12 @@
 ---
 id: medium-peel
 kind: treatment
-title: Medium Chemical Peel
+title: Corrective Peel (medium depth)
 source: playbook
 answered: ""
 ---
 
-# Medium Chemical Peel: aftercare
+# Corrective Peel (medium depth): aftercare
 
 ## The first 24 hours
 

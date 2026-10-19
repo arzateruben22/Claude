@@ -1,12 +1,12 @@
 ---
 id: waxing
 kind: treatment
-title: Waxing (face and body)
+title: Waxing (brows, lip, underarms and body)
 source: playbook
 answered: ""
 ---
 
-# Waxing (face and body): aftercare
+# Waxing (brows, lip, underarms and body): aftercare
 
 ## The first 24 hours
 

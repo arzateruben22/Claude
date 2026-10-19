@@ -44,12 +44,19 @@ const polBlock = html.slice(html.indexOf('<div class="policies-list"'), html.ind
 const faq = details(faqBlock), policies = details(polBlock);
 if (!faq.length || !policies.length) throw new Error("couldn't read the FAQ or policies from index.html");
 
+// ── her menu (js/services.js), as one line for the assistant ──
+await import(path.join(root, "js/services.js"));
+const SV = globalThis.window.LUMEVINA_SERVICES;
+const MENU_LINE = SV.all.map((x) => `${x.name} ${x.from ? "from " : ""}$${x.price}${x.min ? ` (${x.min} min)` : ""}`).join("; ") +
+  ". Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.";
+
 // ── studio facts that aren't in the FAQ ──
 globalThis.window.LumevinaHours = undefined;
 const FACTS = [
   "# The studio",
   "Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.",
-  "Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book \"New Clients Start Here\"; for breakouts, the Acne Program's \"New Client Consultation + Treatment\". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website. After-hours visits, outside her hours or on a closed day, are a $32 add-on that she confirms first (the client asks through the Contact form).",
+  "Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead. Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. New clients book \"New Clients Start Here\"; for breakouts, the Acne Bootcamp's \"New Client Consultation + Treatment\". The Virtual Consultation is Mondays only, by message first. Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).",
+  "Her menu, with prices (from her GlossGenius page): " + MENU_LINE,
   "Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
   "Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused).",

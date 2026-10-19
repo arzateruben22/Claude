@@ -1,12 +1,12 @@
 ---
 id: light-peel
 kind: treatment
-title: Light Chemical Peel
+title: Refresh Peel (no downtime)
 source: playbook
 answered: ""
 ---
 
-# Light Chemical Peel: aftercare
+# Refresh Peel (no downtime): aftercare
 
 ## The first 24 hours
 

@@ -15,14 +15,14 @@ For each of: Breakouts and acne; Purging vs. a breakout; Dark spots and post-acn
 - **Night: what do you recommend from your shelf?** Tap products from her shelf (every live product in js/catalog.js, grouped by type), then how to use them. Plus a box: "In your words".
 - **What should they avoid?** Products, habits, ingredients, mixing.
 - **How long until they see results?** Pick one: About 2 weeks · 4 to 6 weeks · 2 to 3 months · 3 to 6 months · It varies a lot. Plus a box: "What to expect along the way".
-- **When should they book a facial, and which one?** Tap from her menu: New Clients Start Here · Lumevina Custom Facial · Custom Facial + Dermaplaning · Ageless Grace Facial · Light Chemical Peel · Medium Chemical Peel · BioRePeel · Back Facial · Acne Program (New Client Consultation + Treatment) · Monthly Acne Treatment · Bi-Weekly Acne Treatment · In-Person Consultation · Virtual Consultation. Plus a box: "When, and how often".
+- **When should they book a facial, and which one?** Tap from her menu: New Clients Start Here · Lumevina Custom Facial · Custom Facial + Dermaplaning · Ageless Grace Facial · ProCell Microchanneling · Refresh Peel · Corrective Peel · Acne Bootcamp (New Client Consultation + Treatment) · Monthly Acne Treatment · Bi-Weekly Acne Treatment · In-Person Consultation · Virtual Consultation. Plus a box: "When, and how often".
 - **When must this come to you, or to a doctor?** The signs that mean the assistant should stop and hand it to you.
 
 ## Aftercare
 
 What you tell clients after each treatment.
 
-For each of: Facials; Light Chemical Peel; Medium Chemical Peel; Dermaplaning; Back facials; Waxing (face and body); Brazilian and bikini.
+For each of: Facials; ProCell Microchanneling; Refresh Peel (no downtime); Corrective Peel (medium depth); Dermaplaning; Waxing (brows, lip, underarms and body); Brazilian, bikini and the mini vajacial.
 
 - **The first 24 hours** What to do and not do right after.
 - **The first week**

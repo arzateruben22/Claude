@@ -23,7 +23,9 @@ export const FACTS = `# The studio
 
 Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.
 
-Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book "New Clients Start Here"; for breakouts, the Acne Program's "New Client Consultation + Treatment". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website. After-hours visits, outside her hours or on a closed day, are a $32 add-on that she confirms first (the client asks through the Contact form).
+Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead. Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. New clients book "New Clients Start Here"; for breakouts, the Acne Bootcamp's "New Client Consultation + Treatment". The Virtual Consultation is Mondays only, by message first. Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).
+
+Her menu, with prices (from her GlossGenius page): New Clients Start Here $220 (60 min); New Client Treatment + Dermaplaning from $260 (80 min); Lumevina Custom Facial $200 (60 min); Custom Facial + Dermaplaning from $230 (60 min); Ageless Grace Facial $240 (75 min); Ageless Grace Facial + Dermaplaning $280 (85 min); After-Hours Add-On $50; ProCell Microchanneling from $350 (70 min); ProCell Package · 4 treatments $1100 (60 min); ProCell Package · next session $0 (60 min); Refresh Peel $230 (10 min); Refresh Peel + Dermaplaning $270 (15 min); Corrective Peel $230 (60 min); Corrective Peel + Dermaplaning $270 (60 min); New Client Consultation + Treatment $220 (80 min); Monthly Acne Treatment from $200 (70 min); Bi-Weekly Acne Treatment $115 (45 min); In-Person Consultation $50 (45 min); Virtual Consultation $50 (45 min); Brazilian Wax $75 (40 min); Wax Wednesday $65 (40 min); Brazilian Wax + Mini Vajacial $95 (50 min); Bikini Line $40 (40 min); Inner Thigh Add-On $25 (15 min); Underarm Wax $20 (20 min); Full Arm $60 (40 min); Half Arm $30 (30 min); Full Back $60 (45 min); Half Back $30 (25 min); Full Stomach Wax $35 (45 min); Stomach Strip Add-On $10 (10 min); Full Butt $40 (45 min); Brow Wax + Tweeze $25 (30 min); Brow Wax + Underarm Wax $45 (30 min); Upper Lip $10 (10 min); Nostril Wax $10 (15 min). Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.
 
 Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.
 
@@ -38,7 +40,7 @@ Not offered: lashes, brows, nails, memberships, an online course or a rewards pr
 Q: I'm new. What should I book?
 A: Book New Clients Start Here: a consultation, a look at your current
 routine, and a facial built around what your skin needs, from $220. For acne and
-breakouts, start with the Acne Program's New Client Consultation +
+breakouts, start with the Acne Bootcamp's New Client Consultation +
 Treatment ($225) instead.
 
 Q: What are your hours?
@@ -46,11 +48,12 @@ A: Tuesday 12 to 7 PM; Wednesday and Thursday 11 AM to 7 PM;
 Friday 10 AM to 5 PM; Saturday 9:30 AM to 6 PM. Closed Sundays and Mondays.
 The calendar on this page shows her real
 openings up to a month ahead. Need a time outside those hours, or on a day she's closed?
-Evelyn takes after-hours visits for a $32 add-on; ask her first.
+Evelyn takes after-hours visits for an extra $50; ask her first.
 
 Q: How does the deposit work?
-A: A 50% deposit holds your time when you book. It goes toward your
-total, and the rest is due at your visit. Deposits are non-refundable, but with 48
+A: Some treatments take a deposit when you book: $50 for the acne consultation,
+$49 for a consultation, $20 or $30 for waxing and acne treatments; the menu shows each one.
+It goes toward your total, and the rest is due at your visit. Deposits are non-refundable, but with 48
 hours' notice yours moves with you to a new date in the same month.
 
 Q: How do I pay the rest?

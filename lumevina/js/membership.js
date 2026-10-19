@@ -6,7 +6,7 @@
  * waiting, billing holds: that month isn't charged, and billing picks up
  * again once one is booked or gifted. Nobody pays for a facial they can't use.
  *
- *   Glow      $159/mo  Lumevina Custom Facial, Custom + Dermaplaning, or the
+ *   Glow      $169/mo  Lumevina Custom Facial or the
  *                      Monthly Acne Treatment for clients on the acne program
  *   Ageless   $209/mo  Ageless Grace Facial, plus a finishing add-on every
  *                      other visit (added in the room)
@@ -48,25 +48,28 @@
   var KIT = [{ id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser" },
              { id: "spf-30", name: "Face Reality Daily SPF 30 Plus" }];
   var KIT_VALUE = 75;
-  var ADDON_VALUE = 27;     /* what the free LED or dermaplaning add-on is worth; no product cost */
+  var ADDON_VALUE = 40;     /* what the free dermaplaning add-on is worth (Ageless Grace + Dermaplaning is $40 more); no product cost */
   var SALES_KEY = "lumevina_retail_sales";
 
   /* Ageless includes everything in Glow. */
   var PLANS = [
-    { id: "glow", name: "Glow", price: 159, value: 195, popular: true, retail: 0.10,
+    /* repriced Oct 19, 2026 for her current menu: the Custom Facial and the
+       Monthly Acne Treatment are $200, the Ageless Grace $240, dermaplaning
+       now its own option (+$30 to +$40), so it's a member add-on, not covered */
+    { id: "glow", name: "Glow", price: 169, value: 200, popular: true, retail: 0.10,
       primary: "lumevina-custom-facial",
-      covers: ["lumevina-custom-facial", "custom-facial-dermaplaning", "monthly-acne-treatment"],
+      covers: ["lumevina-custom-facial", "monthly-acne-treatment"],
       facial: "Lumevina Custom Facial",
       line: "Your monthly Lumevina Custom Facial, or your acne treatment",
-      perks: ["One facial a month: the Custom Facial, Custom + Dermaplaning, or the Monthly Acne Treatment",
+      perks: ["One facial a month: the Lumevina Custom Facial or the Monthly Acne Treatment",
               "10% off skincare from our shelf, and free shipping",
               "A home routine from Evelyn, refreshed each season, with a check-in between visits",
               "15% off add-ons and anything else booked the same visit",
               "Ask Evelyn any time: instant answers, and her own reply within 24 hours",
               "First word on flash openings"] },
-    { id: "ageless", name: "Ageless", price: 209, value: 245, retail: 0.15, includes: "glow",
+    { id: "ageless", name: "Ageless", price: 209, value: 240, retail: 0.15, includes: "glow",
       primary: "ageless-grace-facial",
-      covers: ["ageless-grace-facial", "monthly-acne-treatment", "lumevina-custom-facial", "custom-facial-dermaplaning"],
+      covers: ["ageless-grace-facial", "monthly-acne-treatment", "lumevina-custom-facial"],
       facial: "Ageless Grace Facial",
       line: "Everything in Glow, plus the signature lifting facial",
       perks: ["Upgrade to the Ageless Grace Facial any month",
@@ -578,7 +581,7 @@
     };
     if (!r || (r.status === "cancelled" && !usable(r))) {
       el.appendChild(h("p", "mem-acct-empty",
-        "A facial every month, banked if you're busy, from $159. Members also get 10% off skincare from our shelf." +
+        "A facial every month, banked if you're busy, from $169. Members also get 10% off skincare from our shelf." +
         (fiveLeft() > 0 ? " The first five members get a free welcome skincare kit." : "")));
       var see = h("a", "btn btn-ghost mem-acct-see", "See memberships");
       see.href = "#membership";

@@ -1,12 +1,12 @@
 ---
 id: brazilian
 kind: treatment
-title: Brazilian and bikini
+title: Brazilian, bikini and the mini vajacial
 source: playbook
 answered: ""
 ---
 
-# Brazilian and bikini: aftercare
+# Brazilian, bikini and the mini vajacial: aftercare
 
 ## The first 24 hours
 

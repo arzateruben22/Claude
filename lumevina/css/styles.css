@@ -6638,3 +6638,6 @@ a.book-btn { text-align: center; }
 .wax-row--option .wax-opt { font-size: 0.9rem; color: var(--ink); }
 .wax-row--option + .wax-row:not(.wax-row--option) { margin-top: 0.35rem; }
 .wax-ask .wax-book-label { font-weight: 500; }
+/* nothing due today (a service with no deposit): no card to enter */
+.booking-pay-view.is-free .booking-card-fields,
+.booking-pay-view.is-free .saved-card { display: none; }

@@ -12,10 +12,11 @@
 //               free text. Nothing here states a medical or product claim:
 //               the options are her own product and treatment names.
 
+// her menu as of Oct 19, 2026 (js/services.js, from her GlossGenius page)
 export const TREATMENTS = [
   "New Clients Start Here", "Lumevina Custom Facial", "Custom Facial + Dermaplaning",
-  "Ageless Grace Facial", "Light Chemical Peel", "Medium Chemical Peel", "BioRePeel",
-  "Back Facial", "Acne Program (New Client Consultation + Treatment)", "Monthly Acne Treatment",
+  "Ageless Grace Facial", "ProCell Microchanneling", "Refresh Peel", "Corrective Peel",
+  "Acne Bootcamp (New Client Consultation + Treatment)", "Monthly Acne Treatment",
   "Bi-Weekly Acne Treatment", "In-Person Consultation", "Virtual Consultation"
 ];
 
@@ -43,14 +44,15 @@ export const CONCERN_FIELDS = [
   { key: "escalate", kind: "text", q: "When must this come to you, or to a doctor?", hint: "The signs that mean the assistant should stop and hand it to you." }
 ];
 
+// ids stay put when a treatment is renamed, so answers she already saved still show
 export const TREATMENT_AFTERCARE = [
   { id: "facials", title: "Facials" },
-  { id: "light-peel", title: "Light Chemical Peel" },
-  { id: "medium-peel", title: "Medium Chemical Peel" },
+  { id: "procell", title: "ProCell Microchanneling" },
+  { id: "light-peel", title: "Refresh Peel (no downtime)" },
+  { id: "medium-peel", title: "Corrective Peel (medium depth)" },
   { id: "dermaplaning", title: "Dermaplaning" },
-  { id: "back-facials", title: "Back facials" },
-  { id: "waxing", title: "Waxing (face and body)" },
-  { id: "brazilian", title: "Brazilian and bikini" }
+  { id: "waxing", title: "Waxing (brows, lip, underarms and body)" },
+  { id: "brazilian", title: "Brazilian, bikini and the mini vajacial" }
 ];
 
 export const AFTERCARE_FIELDS = [
