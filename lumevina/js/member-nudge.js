@@ -2,10 +2,10 @@
  *
  * Two quiet ways a browsing visitor meets the membership:
  *
- *   1. On the facial cards: "Or $169 a month as a member" under the price
+ *   1. On the facial cards: "Or $175 a month as a member" under the price
  *      (members see what their plan already includes instead).
  *   2. A small card that slides up once someone who has booked before
- *      scrolls past the services: a facial every month from $169, the savings, and the
+ *      scrolls past the services: a facial every month from $175, the savings, and the
  *      Founding Five spots left. It stays out of the way: hidden while the
  *      membership section is on screen, behind any open window or the
  *      home-screen card, never shown to members, and gone for a week once
@@ -92,7 +92,7 @@
     '<button type="button" class="mem-nudge-x" aria-label="Close">' +
       '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>' +
     '<p class="mem-nudge-chip"><span class="mem-founding-dot" aria-hidden="true"></span><span class="mem-nudge-five"></span></p>' +
-    '<p class="mem-nudge-h">A facial every month, <span>from $169.</span></p>' +
+    '<p class="mem-nudge-h">A facial every month, <span>from $175.</span></p>' +
     '<p class="mem-nudge-b"></p>' +
     '<a class="mem-nudge-go" href="#membership">See the plans <span aria-hidden="true">→</span></a>';
   document.body.appendChild(card);
@@ -113,7 +113,7 @@
       return;
     }
     card.setAttribute("aria-label", "Glow Membership");
-    h.innerHTML = "A facial every month, <span>from $169.</span>";
+    h.innerHTML = "A facial every month, <span>from $175.</span>";
     go.innerHTML = 'See the plans <span aria-hidden="true">→</span>';
     var left = LM.fiveLeft();
     var chip = card.querySelector(".mem-nudge-chip");

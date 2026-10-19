@@ -157,7 +157,7 @@
     { id: "after", node: "after", k: /after (my|the|a) (facial|appointment|visit|treatment)|aftercare|work ?out|exercise|gym|sweat|makeup after/, a: function () {
       return "After your facial: skip makeup for the rest of the day, avoid workouts and heavy sweating for 24 hours (a week after a body peel), and don’t wax or shave your face for 2 days. If anything feels off, message within 24 hours."; } },
     { id: "member", node: "member", k: /member|monthly plan|subscri|\bglow plan|join/, a: function () {
-      return "Two plans. Glow, $169 a month: a Custom Facial or the Monthly Acne Treatment every month. Ageless, $209: everything in Glow plus the Ageless Grace Facial and dermaplaning every other visit. Bank a facial you can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours."; },
+      return "Two plans. Glow, $175 a month: a Custom Facial or the Monthly Acne Treatment every month. Ageless, $225: everything in Glow plus the Ageless Grace Facial and dermaplaning every other visit. Bank a facial you can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours."; },
       acts: [["See memberships", "#membership"]] },
     { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|toner|mask|what do you sell/, a: function () {
       return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8, free over $75, or pick up free at your visit. Not sure what’s right for your skin? Ask her and she’ll reply."; },
@@ -250,10 +250,10 @@
     "a-makeup": info("Skip makeup for the rest of the day so your skin can take in everything from the treatment.", [["Something else", "n:after"]]),
     "a-work": info("Give it 24 hours: no workouts or heavy sweating. After a body peel, give it a week.", [["Something else", "n:after"]]),
     "a-wax": info("No waxing or shaving your face for 2 days after your facial.", [["Something else", "n:after"]]),
-    member: info("Two plans. What would you like to know?", [["Glow · $169", "n:m-glow"], ["Ageless · $209", "n:m-ageless"], ["Banking a facial", "n:m-bank"],
+    member: info("Two plans. What would you like to know?", [["Glow · $175", "n:m-glow"], ["Ageless · $225", "n:m-ageless"], ["Banking a facial", "n:m-bank"],
       ["Pausing or cancelling", "n:m-pause"], ["Ask Evelyn any time", "n:m-ask"], ["Join", "#membership"]]),
-    "m-glow": info("Glow, $169 a month: one facial every month (the Custom Facial or the Monthly Acne Treatment), 10% off the shelf, 15% off add-ons, a home routine from Evelyn, and first word on flash openings.", [["Join", "#membership"], ["Compare Ageless", "n:m-ageless"]]),
-    "m-ageless": info("Ageless, $209 a month: everything in Glow, plus the Ageless Grace Facial any month, dermaplaning every other visit, and 15% off the shelf.", [["Join", "#membership"], ["Compare Glow", "n:m-glow"]]),
+    "m-glow": info("Glow, $175 a month: one facial every month (the Custom Facial or the Monthly Acne Treatment), 10% off the shelf, 15% off add-ons, a home routine from Evelyn, and first word on flash openings.", [["Join", "#membership"], ["Compare Ageless", "n:m-ageless"]]),
+    "m-ageless": info("Ageless, $225 a month: everything in Glow, plus the Ageless Grace Facial any month, dermaplaning every other visit, and 15% off the shelf.", [["Join", "#membership"], ["Compare Glow", "n:m-glow"]]),
     "m-bank": info("Busy month? Your facial waits. Up to two bank at a time, and with two waiting we don’t bill you until you book one, so you never pay for a facial you can’t use. You can also send a banked facial to a friend as a gift.", [["Something else", "n:member"]]),
     "m-pause": info("Pause one month a year at no charge. After the 3-month minimum, cancel online any time from My Lumevina.", [["Something else", "n:member"]]),
     "m-ask": info("Members can ask Evelyn anything, any time. Everyday questions are answered right here, and anything about your skin gets her own reply within 24 hours.", [["Join", "#membership"], ["Something else", "n:member"]]),

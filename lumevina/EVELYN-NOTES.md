@@ -142,6 +142,6 @@ Only what's on GlossGenius is offered now. The full list, with her descriptions,
 - **Deposits are hers, per service** (Ruben, Oct 19): $50 acne consultation, $49 consultations, $30 Brazilian / Wax Wednesday / Bikini / Mini Vajacial / Full Arm / Full Back / acne treatments, $20 Half Arm / Half Back / Full Butt; facials, peels and ProCell have none.
 - **After-hours visits: an extra $50** (was $32). Booked by message.
 - **Virtual Consultation:** $50, Mondays only, message first.
-- **Glow Membership repriced** (still held back): Glow $169 (Custom Facial or Monthly Acne, a $200 value), Ageless $209 (Ageless Grace, a $240 value, plus dermaplaning every other visit). Dermaplaning is no longer covered by Glow, since it's now a $30–$40 option.
+- **Glow Membership repriced** (still held back): Glow **$175** (Custom Facial or Monthly Acne, a $200 value), Ageless **$225** (Ageless Grace, a $240 value, plus dermaplaning every other visit, about $260 a month in all). Ruben, Oct 19: "increase membership prices" — the perks (shelf discount, free shipping, add-on discount) carry the rest of the value. Dermaplaning is no longer covered by Glow, since it's now a $30–$40 option.
 
-**Still to confirm:** ProCell Microchanneling's two options; whether facials, peels and ProCell should take a deposit online; the new membership prices; a ProCell photo.
+**Still to confirm:** ProCell Microchanneling's two options; whether facials, peels and ProCell should take a deposit online; a ProCell photo. Calendar stays in 30-minute steps (Ruben, Oct 19).
