@@ -36,6 +36,9 @@
 (function () {
   "use strict";
 
+  /* held back on the website for now (js/site-config.js) */
+  if (window.LumevinaFeatures && !window.LumevinaFeatures.on("membership")) return;
+
   var KEY = "lumevina_memberships";
   var BANK_CAP = 2;
   var MIN_MONTHS = 3;

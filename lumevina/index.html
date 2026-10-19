@@ -19,6 +19,8 @@
   <link rel="stylesheet" href="css/styles.css">
   <!-- the arrival greeting plays once per visit, and never on a link to a specific spot -->
   <script>try{if(sessionStorage.getItem("lumevina_intro_seen")||location.hash)document.documentElement.classList.add("no-intro")}catch(e){}</script>
+  <!-- what's switched on, and where clients book: one file to change (js/site-config.js) -->
+  <script src="js/site-config.js"></script>
 </head>
 <body>
 
@@ -53,19 +55,19 @@
   <header class="nav" id="top">
     <a class="nav-brand" href="#top">Lumevina<span class="nav-brand-sub">Aesthetics Spa</span></a>
     <nav class="nav-links" aria-label="Main">
+      <a href="#book">Book</a>
       <a href="#services">Services</a>
-      <a href="#membership">Membership</a>
-      <a href="#spa">The Spa</a>
-      <a href="school.html">Skin School</a>
-      <a href="#policies">Policies</a>
-      <a href="#journal">Journal</a>
+      <a href="#shop">Shop</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
     </nav>
     <a class="btn btn-solid nav-book" data-open-booking href="#services">Book now</a>
     <button class="btn btn-ghost nav-account" type="button" data-open-account
       aria-label="Open My Lumevina">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     </button>
-    <button class="btn btn-ghost nav-rewards" type="button" data-open-rewards
+    <button class="btn btn-ghost nav-rewards" type="button" data-open-rewards data-feature="rewards"
       aria-label="Open Glow Rewards">
       ✦ <span class="rw-count">0</span>
     </button>
@@ -80,14 +82,12 @@
   <div class="mobile-menu" id="mobile-menu" hidden>
     <!-- every section, in page order (numbers match each section's eyebrow) -->
     <nav class="mm-links" aria-label="Menu">
-      <a href="#services" style="--i:0"><span class="mm-num" aria-hidden="true">01</span>Services</a>
-      <a href="#membership" style="--i:1"><span class="mm-num" aria-hidden="true">02</span>Membership</a>
-      <a href="#spa" style="--i:2"><span class="mm-num" aria-hidden="true">03</span>The Spa</a>
-      <a href="#shop" style="--i:3"><span class="mm-num" aria-hidden="true">04</span>Shop</a>
-      <a href="school.html" style="--i:4"><span class="mm-num" aria-hidden="true">05</span>Skin School</a>
-      <a href="#policies" style="--i:5"><span class="mm-num" aria-hidden="true">06</span>Policies</a>
-      <a href="#rewards" style="--i:6"><span class="mm-num" aria-hidden="true">07</span>Glow Rewards</a>
-      <a href="#journal" style="--i:7"><span class="mm-num" aria-hidden="true">08</span>Journal</a>
+      <a href="#book" style="--i:0"><span class="mm-num" aria-hidden="true">01</span>Book</a>
+      <a href="#services" style="--i:1"><span class="mm-num" aria-hidden="true">02</span>Services</a>
+      <a href="#shop" style="--i:2"><span class="mm-num" aria-hidden="true">03</span>Shop</a>
+      <a href="#about" style="--i:3"><span class="mm-num" aria-hidden="true">04</span>About Evelyn</a>
+      <a href="#faq" style="--i:4"><span class="mm-num" aria-hidden="true">05</span>FAQ &amp; Policies</a>
+      <a href="#contact" style="--i:5"><span class="mm-num" aria-hidden="true">06</span>Contact</a>
     </nav>
     <div class="mm-actions">
       <a class="mm-new" href="#start">New here? <strong>Start here</strong> <span aria-hidden="true">&rarr;</span></a>
@@ -98,7 +98,7 @@
           <span class="mm-label">Cart</span>
           <span class="mm-count nav-cart-count">0</span>
         </button>
-        <button class="mm-tile" type="button" data-open-rewards>
+        <button class="mm-tile" type="button" data-open-rewards data-feature="rewards">
           <span class="mm-icon mm-icon-glyph" aria-hidden="true">✦</span>
           <span class="mm-label">Glow Rewards</span>
           <span class="mm-count rw-count">0</span>
@@ -164,11 +164,55 @@
       <p class="hero-wordmark" aria-hidden="true">LUMEVINA</p>
     </section>
 
+    <!-- ═══════════════ BOOK (js/book-section.js) ═══════════════
+         Every opening on one calendar, right on the page: pick a treatment,
+         a day and a time, then the booking sheet opens on that time for a
+         name and the deposit. The days come from Evelyn's own hours
+         (js/hours.js), which she sets in the dashboard. -->
+    <section class="section section-book" id="book">
+      <div class="section-inner">
+        <div class="book-head" data-reveal>
+          <p class="eyebrow" data-idx="01">Book</p>
+          <h2 class="display" data-blur-text>Every opening, <em>at a glance.</em></h2>
+          <p class="section-sub">Choose a treatment and the calendar shows what's open each day.
+          Tap a day, tap a time, then hold it with a 50% deposit.</p>
+        </div>
+
+        <div class="bkl" data-reveal>
+          <div class="bkl-side">
+            <div class="field bkl-field">
+              <label for="bkl-svc">Treatment</label>
+              <select id="bkl-svc" class="bkl-select"></select>
+            </div>
+            <p class="bkl-meta" aria-live="polite"></p>
+            <p class="booking-label bkl-when" id="bkl-when">Pick a day</p>
+            <div class="bkl-times" role="group" aria-labelledby="bkl-when"></div>
+            <button class="btn btn-solid bkl-go" type="button" disabled>Pick a time to continue</button>
+            <p class="bkl-fine">Booking more than one treatment? Add it in the next step and they book back to back.</p>
+          </div>
+          <div class="bkl-cal"></div>
+
+          <!-- shown until the calendar loads, and if it can't -->
+          <p class="bkl-fallback">To book, email
+            <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a>
+            or DM <a class="inline-link" href="https://www.instagram.com/lumevina" target="_blank" rel="noopener">@lumevina</a>
+            with the treatment and a few days that work for you.</p>
+        </div>
+
+        <!-- when booking runs on GlossGenius (js/site-config.js), this replaces the calendar -->
+        <div class="bkl-gg" data-reveal>
+          <p>Evelyn's calendar lives on GlossGenius. Pick your treatment and time there,
+          and your deposit is taken in the same step.</p>
+          <a class="btn btn-solid bkl-gg-go" href="#book" target="_blank" rel="noopener">See openings and book</a>
+        </div>
+      </div>
+    </section>
+
     <!-- ═══════════════ SERVICES ═══════════════ -->
     <section class="section section-shop" id="services">
       <div class="section-inner">
         <div class="shop-head" data-reveal>
-          <p class="eyebrow" data-idx="01">Services &amp; Gift Cards</p>
+          <p class="eyebrow" data-idx="02">Services &amp; Gift Cards</p>
           <h2 class="display" data-blur-text>Your glow, <em>on your schedule.</em></h2>
           <p class="section-sub">Choose a treatment to <strong>book instantly</strong> — pick your
           time and hold it with a 50% deposit. Prefer to give the gift of glow? The
@@ -181,7 +225,7 @@
             <div class="product-visual visual-ageless" aria-hidden="true"><img src="img/services/ageless.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
             <h3 class="product-name">Ageless Grace Facial</h3>
             <p class="product-desc">Our signature lifting facial — peptides, sculpting massage, and LED light therapy.</p>
-            <a class="mem-hint" href="#membership" data-mem-hint="ageless-grace-facial">Or $209 a month as a member</a>
+            <a class="mem-hint" data-feature="membership" href="#membership" data-mem-hint="ageless-grace-facial">Or $209 a month as a member</a>
             <div class="product-foot">
               <span class="product-price">$245</span>
               <button class="btn btn-solid add-to-cart" type="button"
@@ -193,7 +237,7 @@
             <div class="product-visual visual-custom" aria-hidden="true"><img src="img/services/custom.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
             <h3 class="product-name">Lumevina Custom Facial</h3>
             <p class="product-desc">The returning-client facial — customized actives, extractions, LED therapy, and cryo globes.</p>
-            <a class="mem-hint" href="#membership" data-mem-hint="lumevina-custom-facial">Or $159 a month as a member</a>
+            <a class="mem-hint" data-feature="membership" href="#membership" data-mem-hint="lumevina-custom-facial">Or $159 a month as a member</a>
             <div class="product-foot">
               <span class="product-price">$195</span>
               <button class="btn btn-solid add-to-cart" type="button"
@@ -205,7 +249,7 @@
             <div class="product-visual visual-dermaplane" aria-hidden="true"><img src="img/services/dermaplane.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
             <h3 class="product-name">Custom Facial + Dermaplaning</h3>
             <p class="product-desc">The Lumevina custom facial finished with dermaplaning — glass-smooth, extra glow.</p>
-            <a class="mem-hint" href="#membership" data-mem-hint="custom-facial-dermaplaning">Or $159 a month as a member</a>
+            <a class="mem-hint" data-feature="membership" href="#membership" data-mem-hint="custom-facial-dermaplaning">Or $159 a month as a member</a>
             <div class="product-foot">
               <span class="product-price">$185</span>
               <button class="btn btn-solid add-to-cart" type="button"
@@ -416,10 +460,10 @@
     </section>
 
     <!-- ═══════════════ GLOW MEMBERSHIP (js/membership.js) ═══════════════ -->
-    <section class="section section-membership" id="membership">
+    <section class="section section-membership" id="membership" data-feature="membership">
       <div class="section-inner">
         <div class="mem-head" data-reveal>
-          <p class="eyebrow" data-idx="02">Glow Membership</p>
+          <p class="eyebrow">Glow Membership</p>
           <h2 class="display" data-blur-text>Your skin, <em>on a schedule.</em></h2>
           <p class="section-sub">Skin renews about every four weeks. A monthly facial keeps it
           there, and a membership makes it automatic: one treatment a month, banked if you're
@@ -457,51 +501,18 @@
       </div>
     </section>
 
-    <!-- ═══════════════ THE SPA ═══════════════ -->
-    <section class="section section-ritual section-spa-ritual" id="spa">
-      <canvas class="ritual-light" aria-hidden="true"></canvas>
-      <div class="ritual-scrim" aria-hidden="true"></div>
-      <div class="section-inner">
-        <div class="grid-2 spa-story">
-          <div data-reveal>
-            <p class="eyebrow" data-idx="03">The Spa</p>
-            <h2 class="display" data-blur-text>Skincare that <em>honors your skin.</em></h2>
-          </div>
-          <div class="story-copy" data-reveal data-reel data-reel-label="The Spa story">
-            <div class="spa-slide" data-reel-name="Approach">
-              <p class="spa-slide-label">Our approach</p>
-              <p>Lumevina begins with a conversation, not a menu. Every treatment starts
-              with a close look at your skin — its history, its sensitivities, what it's
-              asking for right now — and becomes a facial built just for you.</p>
-            </div>
-            <div class="spa-slide" data-reel-name="The room">
-              <p class="spa-slide-label">The room</p>
-              <p>Medical-grade actives, unhurried hands, and a room that lets your
-              shoulders finally drop. <em>This is skincare as care.</em></p>
-            </div>
-            <a class="press-link" data-reel-name="Press" href="https://canvasrebel.com/meet-evelyn-romero/" target="_blank" rel="noopener">
-              <span class="press-eyebrow">Featured Article</span>
-              <span class="press-text">Meet Evelyn Romero — the esthetician behind Lumevina, in conversation with CanvasRebel</span>
-              <span class="press-arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
     <!-- ═══════════════ SHOP (own retail + the brands we use) ═══════════════ -->
     <section class="section section-shelf section-tools" id="shop">
       <div class="section-inner">
         <div class="shop-head" data-reveal>
-          <p class="eyebrow" data-idx="04">Shop</p>
+          <p class="eyebrow" data-idx="03">Shop</p>
           <h2 class="display" data-blur-text>Take a little glow <em>home.</em></h2>
           <p class="section-sub">Buy what we stock straight from our shelf, or shop the
           professional lines behind every treatment.</p>
         </div>
 
         <!-- Glow Routine: the product membership (js/routine.js) -->
-        <div class="shop-row">
+        <div class="shop-row" data-feature="routine">
           <p class="shop-subhead" data-reveal>Glow Routine <span>your routine, refilled every month</span></p>
           <article class="routine-card" data-reveal data-spotlight data-tier="1">
             <div class="rt-copy">
@@ -529,7 +540,7 @@
         </div>
 
         <!-- Skin School: Evelyn's online course (docs/school → school.html) -->
-        <div class="shop-row">
+        <div class="shop-row" data-feature="school">
           <p class="shop-subhead" data-reveal>Skin School <span>Evelyn&rsquo;s online course, at your own pace</span></p>
           <article class="school-card" data-reveal data-spotlight>
             <div class="rt-copy">
@@ -552,7 +563,7 @@
         </div>
 
         <div class="shop-row">
-          <p class="shop-subhead" data-reveal>From our shelf <span>free shipping for members, or pick up at your visit</span></p>
+          <p class="shop-subhead" data-reveal>From our shelf <span>shipped to you, or picked up at your visit</span></p>
           <div class="retail-grid" id="retail-grid"></div>
         </div>
 
@@ -588,18 +599,154 @@
       </div>
     </section>
 
+    <!-- ═══════════════ ABOUT EVELYN ═══════════════ -->
+    <section class="section section-ritual section-spa-ritual" id="about">
+      <span class="anchor-alias" id="spa" aria-hidden="true"></span>
+      <canvas class="ritual-light" aria-hidden="true"></canvas>
+      <div class="ritual-scrim" aria-hidden="true"></div>
+      <div class="section-inner">
+        <div class="grid-2 spa-story">
+          <div data-reveal>
+            <p class="eyebrow" data-idx="04">About Evelyn</p>
+            <h2 class="display" data-blur-text>Skincare that <em>honors your skin.</em></h2>
+          </div>
+          <div class="story-copy" data-reveal data-reel data-reel-label="About Evelyn">
+            <!-- TODO: a few lines from Evelyn in her own words (how she started, what she loves treating) -->
+            <div class="spa-slide" data-reel-name="Evelyn">
+              <p class="spa-slide-label">Meet Evelyn</p>
+              <p>Evelyn Romero is the licensed esthetician behind Lumevina, a private
+              studio in Woodland Hills. Every visit is with her, from your first
+              consultation to the routine you take home.</p>
+            </div>
+            <div class="spa-slide" data-reel-name="Approach">
+              <p class="spa-slide-label">Our approach</p>
+              <p>Lumevina begins with a conversation, not a menu. Every treatment starts
+              with a close look at your skin — its history, its sensitivities, what it's
+              asking for right now — and becomes a facial built just for you.</p>
+            </div>
+            <div class="spa-slide" data-reel-name="The room">
+              <p class="spa-slide-label">The room</p>
+              <p>Medical-grade actives, unhurried hands, and a room that lets your
+              shoulders finally drop. <em>This is skincare as care.</em></p>
+            </div>
+            <a class="press-link" data-reel-name="Press" href="https://canvasrebel.com/meet-evelyn-romero/" target="_blank" rel="noopener">
+              <span class="press-eyebrow">Featured Article</span>
+              <span class="press-text">Meet Evelyn Romero — the esthetician behind Lumevina, in conversation with CanvasRebel</span>
+              <span class="press-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+        <p class="about-cta" data-reveal><a class="btn btn-solid" href="#book">Book with Evelyn</a></p>
+      </div>
+    </section>
+
     <!-- ═══════════════ POLICIES ═══════════════ -->
     <section class="section section-policies" id="policies">
       <div class="section-inner">
         <div class="policies-head" data-reveal>
-          <p class="eyebrow" data-idx="05">Before You Book</p>
+          <p class="eyebrow" data-idx="05">FAQ &amp; Policies</p>
           <h2 class="display" data-blur-text>Good to know, <em>before you glow.</em></h2>
-          <p class="section-sub">Please review our policies before booking any service —
-          and fill out all required intake forms. Questions? DM
-          <a class="inline-link" href="https://www.instagram.com/lumevina" target="_blank" rel="noopener">@lumevina</a>
-          or email
-          <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a>.</p>
+          <p class="section-sub">The questions clients ask most, then the policies to read before
+          you book. Still wondering about something?
+          <a class="inline-link" href="#contact">Ask Evelyn</a>.</p>
         </div>
+
+        <!-- Frequently asked questions: plain accordion on every screen -->
+        <div class="faq" id="faq" data-reveal>
+          <h3 class="faq-title">Questions clients ask</h3>
+          <div class="faq-list">
+            <details class="policy" name="faq">
+              <summary>I'm new. What should I book?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>Book <strong>New Clients Start Here</strong>: a consultation, a look at your current
+                routine, and a facial built around what your skin needs, from $220. For acne and
+                breakouts, start with the Acne Program's <strong>New Client Consultation +
+                Treatment</strong> ($225) instead.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>What are your hours?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p><span class="faq-hours">Tuesday to Saturday, 8:00 AM to 6:00 PM.</span> The
+                <a class="inline-link" href="#book">calendar above</a> always shows Evelyn's real
+                openings, including any extra days she opens.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>How does the deposit work?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>A <strong>50% deposit</strong> holds your time when you book. It goes toward your
+                total, and the rest is due at your visit. Deposits are non-refundable, but with 48
+                hours' notice yours moves with you to a new date in the same month.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>How do I pay the rest?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>At your visit. <strong>Cash is preferred</strong>, and card is accepted with a fee.
+                You can also pay over time with Klarna, Affirm or Afterpay.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>Where are you, and where do I park?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>In <strong>Woodland Hills, CA</strong>. The exact address is in your confirmation
+                email. There's a free parking lot. When you arrive, wait in your car and send a text
+                before coming up.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>Can I move my appointment?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>Yes, at least <strong>48 hours</strong> ahead, from the link in your confirmation
+                email or with <button class="linklike policy-resched-start" type="button">Move an appointment</button>.
+                Saturday appointments can't be moved or cancelled.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>Can I buy products without an appointment?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>Yes. Order from <a class="inline-link" href="#shop">the shelf</a> and choose
+                shipping or pickup at your next visit. Shipping is $8, and free on orders over $75.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>Do you offer virtual consultations?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>Yes: a deep dive into your skin and goals, with a custom plan and product picks,
+                for $55. They're on Mondays only, so please <a class="inline-link" href="#contact">reach
+                out</a> before booking one.</p>
+              </div>
+            </details>
+            <details class="policy" name="faq">
+              <summary>Do gift certificates expire?
+                <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="policy-body">
+                <p>Never. They arrive by email with a code and work toward any treatment.
+                <a class="inline-link" href="#gift">Send one</a>.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <h3 class="faq-title faq-title--policies" data-reveal>Policies</h3>
 
         <div class="policies-list" data-reveal>
           <details class="policy" name="policies" open>
@@ -746,13 +893,13 @@
     </section>
 
     <!-- ═══════════════ GLOW REWARDS ═══════════════ -->
-    <section class="section section-app section-rewards-connect" id="rewards">
+    <section class="section section-app section-rewards-connect" id="rewards" data-feature="rewards">
       <div class="section-inner">
         <div class="rc-grid">
           <!-- Glow Rewards -->
           <div class="rc-rewards">
             <div class="app-head" data-reveal>
-              <p class="eyebrow" data-idx="06">Glow Rewards</p>
+              <p class="eyebrow">Glow Rewards</p>
               <h2 class="display" data-blur-text>Every visit <em>gives back.</em></h2>
               <p class="section-sub">Earn Glow Points on every deposit and gift — live on this
               site today, and soon in the Lumevina app for iPhone, where your points carry over.</p>
@@ -806,22 +953,52 @@
       </div>
     </section>
 
-    <!-- ═══════════════ JOURNAL / NEWSLETTER ═══════════════ -->
-    <section class="section section-journal" id="journal">
+    <!-- ═══════════════ REACH OUT (js/contact.js) ═══════════════
+         Replaces the journal. A question sent here lands in Evelyn's
+         dashboard (Client questions), the same place the chat sends to. -->
+    <section class="section section-journal section-contact" id="contact">
+      <span class="anchor-alias" id="journal" aria-hidden="true"></span>
       <div class="section-inner journal-inner">
         <div data-reveal>
-          <p class="eyebrow" data-idx="07">The Journal</p>
-          <h2 class="display" data-blur-text>Spa notes, <em>monthly.</em></h2>
-          <p class="section-sub">Skin science without the jargon — seasonal skincare,
-          treatment spotlights, and first access to new offerings.</p>
+          <p class="eyebrow" data-idx="06">Contact</p>
+          <h2 class="display" data-blur-text>Questions? <em>Just ask.</em></h2>
+          <p class="section-sub">About a treatment, your appointment, an order, or whether something
+          is right for your skin. Evelyn reads every message herself and replies within two days.</p>
+          <ul class="contact-lines" role="list">
+            <li><span class="contact-k">Email</span>
+              <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a></li>
+            <li><span class="contact-k">Instagram</span>
+              <a class="inline-link" href="https://www.instagram.com/lumevina" target="_blank" rel="noopener">DM @lumevina</a></li>
+            <li><span class="contact-k">Studio</span>
+              <span>Woodland Hills, CA · the address comes with your confirmation</span></li>
+          </ul>
         </div>
-        <form class="newsletter-form" data-reveal novalidate>
-          <div class="field">
-            <label for="nl-email">Email address</label>
-            <input id="nl-email" name="email" type="email" autocomplete="email"
-              placeholder="you@example.com" required>
+        <form class="newsletter-form contact-form" data-reveal novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="ct-name">Your name</label>
+              <input id="ct-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="ct-email">Email</label>
+              <input id="ct-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            </div>
           </div>
-          <button class="btn btn-solid" type="submit">Join the journal</button>
+          <div class="field">
+            <label for="ct-topic">It's about</label>
+            <select id="ct-topic" name="topic" class="bkl-select">
+              <option value="booking">Booking or an appointment</option>
+              <option value="treatment">A treatment</option>
+              <option value="skin">My skin</option>
+              <option value="order">An order or product</option>
+              <option value="other">Something else</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ct-msg">Your question</label>
+            <textarea id="ct-msg" name="message" rows="4" required></textarea>
+          </div>
+          <button class="btn btn-solid" type="submit">Send to Evelyn</button>
           <p class="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -845,11 +1022,13 @@
         </a>
       </div>
       <nav class="footer-nav" aria-label="Footer">
+        <a href="#book">Book</a>
         <a href="#services">Services</a>
-        <a href="#membership">Membership</a>
-        <a href="#spa">The Spa</a>
+        <a href="#shop">Shop</a>
         <a href="#gift">E-Gift Cards</a>
-        <a data-open-booking href="#services">Book Online</a>
+        <a href="#about">About Evelyn</a>
+        <a href="#faq">FAQ &amp; Policies</a>
+        <a href="#contact">Contact</a>
       </nav>
       <p class="footer-fine">© <span id="year">2026</span> Lumevina Aesthetics Spa · Woodland Hills, CA ·
         <a class="inline-link" href="privacy.html">Privacy</a> · Demo storefront — no real payments are processed.</p>
@@ -1072,7 +1251,7 @@
         <p class="rw-ref-note" hidden></p>
 
         <!-- magic mirror: one tap, one small surprise per booking -->
-        <div class="mirror">
+        <div class="mirror" data-feature="rewards">
           <button class="mirror-btn" type="button">
             <span class="mirror-wrap" aria-hidden="true"><svg class="mirror-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8l1.3 1.5h-2.6z" fill="currentColor"/><ellipse cx="12" cy="9.4" rx="6.3" ry="7.3" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse class="mirror-glass" cx="12" cy="9.4" rx="4.3" ry="5.3"/><path class="mirror-shine" d="M9.6 6.8l2.7-1.8M9.7 9.2l1.5-1"/><path d="M12 16.8v5.4M10.1 18.6h3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span>
             Mirror, mirror&hellip; tap for a little something extra
@@ -1569,7 +1748,7 @@
         <p class="acct-since"></p>
         <p class="acct-welcome" hidden></p>
 
-        <div class="acct-glow">
+        <div class="acct-glow" data-feature="rewards">
           <div class="acct-glow-line">
             <span class="acct-points">0</span>
             <span class="acct-glow-label">Glow Points ✦</span>
@@ -1577,8 +1756,8 @@
           <button class="btn btn-ghost acct-open-rewards" type="button">Open Glow Rewards</button>
         </div>
 
-        <p class="booking-label">Membership</p>
-        <div class="acct-member"></div>
+        <p class="booking-label" data-feature="membership">Membership</p>
+        <div class="acct-member" data-feature="membership"></div>
 
         <p class="booking-label">Gift credit</p>
         <div class="acct-credit">
@@ -1605,11 +1784,11 @@
         <p class="acct-intake-line"><span class="acct-intake-status"></span></p>
         <button class="btn btn-ghost acct-intake" type="button">Complete pre-visit form</button>
 
-        <p class="booking-label">Your referral code</p>
-        <p class="acct-ref"><code class="acct-ref-code"></code> — a friend gets $15 off their
+        <p class="booking-label" data-feature="rewards">Your referral code</p>
+        <p class="acct-ref" data-feature="rewards"><code class="acct-ref-code"></code> — a friend gets $15 off their
         first visit, and you earn 150 ✦ ($15) once it's complete.</p>
-        <button class="btn btn-ghost acct-share" type="button">Share my code</button>
-        <p class="acct-ref acct-share-status" role="status" hidden></p>
+        <button class="btn btn-ghost acct-share" type="button" data-feature="rewards">Share my code</button>
+        <p class="acct-ref acct-share-status" role="status" hidden data-feature="rewards"></p>
 
         <button class="btn btn-ghost acct-signout" type="button">Sign out</button>
       </div>
@@ -1890,12 +2069,15 @@
   <script src="js/react-bits.js"></script>
   <script src="js/reel.js"></script>
   <script src="js/extra-days.js"></script>
+  <script src="js/hours.js"></script>
   <script src="js/booking.js"></script>
+  <script src="js/book-section.js"></script>
   <script src="js/start-here.js"></script>
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/install.js"></script>
   <script src="js/ask-typos.js"></script>
   <script src="js/ask.js"></script>
+  <script src="js/contact.js"></script>
 </body>
 </html>

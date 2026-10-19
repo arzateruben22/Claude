@@ -2,10 +2,12 @@
    Client-side booking for every service except gift certificates,
    including MULTI-SERVICE sessions: add several services (say, a
    Brazilian wax + custom facial) and they book back-to-back as one
-   block. Hours Tuesday–Saturday, 8:00 AM–6:00 PM, lunch 12:00–12:30.
-   Closed Sundays and Mondays, except the extra Mondays Evelyn opens to
-   clear banked facials (js/extra-days.js): members book those first,
-   everyone else from the Friday before.
+   block. Opening hours come from Evelyn's own settings (js/hours.js,
+   edited in the dashboard): the usual week, days off, extra days she
+   opens, and times she blocks out. Usually Tuesday–Saturday, 8:00 AM–
+   6:00 PM, lunch 12:00–12:30. With the Glow Membership switched on,
+   extra Mondays for banked facials (js/extra-days.js) open to members
+   first, everyone else from the Friday before.
 
    The day is a grid of 30-minute cells; each service occupies its
    rough duration (30 or 60 min) and a session needs consecutive
@@ -24,10 +26,16 @@
   var STORAGE_KEY = "lumevina_bookings";
 
   var CELL = 30;
-  var OPEN_MIN = 8 * 60;
-  var CLOSE_MIN = 18 * 60;
-  var LUNCH_START = 12 * 60;
-  var LUNCH_END = 12 * 60 + 30;
+  /* the usual day, used when hours.js isn't on the page */
+  var STD = { open: 8 * 60, close: 18 * 60, lunch: 12 * 60, lunchEnd: 12 * 60 + 30 };
+  var H = window.LumevinaHours || null;
+  /* v2 switches (js/site-config.js): which held-back features are on,
+     and whether Book buttons go to Evelyn's GlossGenius page instead */
+  var feat = function (f) { return !window.LumevinaFeatures || window.LumevinaFeatures.on(f); };
+  var GG = (function () {
+    var b = window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking;
+    return b && b.mode === "glossgenius" && /^https:\/\//.test(b.glossgenius || "") ? b.glossgenius : null;
+  })();
 
   /* rough 30-minute services; everything else books at 60 */
   var DUR30 = {
@@ -185,7 +193,7 @@
     var todayKey = dateKey(new Date());
     var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
     var userSet = userBusyCells(dayKey);
-    var opts = candidateStarts(dur).filter(function (t) {
+    var opts = candidateStarts(dur, dayKey).filter(function (t) {
       if (dayKey === todayKey && t <= nowMins) return false;
       return blockFree(dayKey, t, dur, userSet);
     });
@@ -282,12 +290,27 @@
     for (var i = 0; i < str.length; i++) {
       h = (h * 31 + str.charCodeAt(i)) >>> 0;
     }
-    /* an extra Monday was opened on purpose, so it starts emptier */
-    return (h % 100) < (XD && XD.isExtra(keyDate(dayKey)) ? 10 : 22);
+    /* an extra day was opened on purpose, so it starts emptier */
+    return (h % 100) < (extraKind(keyDate(dayKey)) ? 10 : 22);
   };
 
-  /* ── extra Mondays (js/extra-days.js) ── */
-  var XD = window.LumevinaExtraDays || null;
+  /* ── extra Mondays (js/extra-days.js): only with the Glow Membership on,
+     since they exist to clear banked facials ── */
+  var XD = feat("membership") ? (window.LumevinaExtraDays || null) : null;
+
+  /* ── the day's hours, or null when closed ── */
+  var hoursOf = function (dayKey) {
+    var d = keyDate(dayKey);
+    var h = H ? H.hoursFor(d) : (d.getDay() === 0 || d.getDay() === 1 ? null : STD);
+    if (!h && XD && XD.isExtra(d) && !(H && H.isOff(d))) h = STD;
+    return h;
+  };
+  /* "monday" for a members' extra Monday, "day" for a day Evelyn opened, or "" */
+  var extraKind = function (d) {
+    if (H && H.isExtra(d)) return "day";
+    if (XD && XD.isExtra(d) && !(H && H.isOff(d)) && !(H ? H.hoursFor(d) : false)) return "monday";
+    return "";
+  };
   var keyDate = function (key) {
     var p = String(key).split("-");
     return new Date(+p[0], +p[1] - 1, +p[2]);
@@ -326,34 +349,48 @@
     return set;
   };
 
-  var overlapsLunch = function (start, dur) {
-    return start < LUNCH_END && start + dur > LUNCH_START;
+  var overlapsLunch = function (start, dur, h) {
+    return h.lunch != null && start < h.lunchEnd && start + dur > h.lunch;
+  };
+  /* a time Evelyn blocked out in the dashboard */
+  var overlapsBlock = function (dayKey, start, dur) {
+    return !!H && H.blocksFor(dayKey).some(function (b) { return start < b[1] && start + dur > b[0]; });
   };
 
-  /* a session block fits if every cell is open and lunch is clear */
+  /* a session block fits if the day is open, every cell is free,
+     and it stays clear of lunch and anything blocked out */
   var blockFree = function (dayKey, start, dur, userSet) {
-    if (overlapsLunch(start, dur)) return false;
+    var h = hoursOf(dayKey);
+    if (!h || start < h.open || start + dur > h.close) return false;
+    if (overlapsLunch(start, dur, h) || overlapsBlock(dayKey, start, dur)) return false;
     for (var t = start; t < start + dur; t += CELL) {
       if (cellSeedBusy(dayKey, t) || userSet[t]) return false;
     }
     return true;
   };
 
-  var candidateStarts = function (dur) {
-    var out = [];
-    for (var t = OPEN_MIN; t + dur <= CLOSE_MIN; t += CELL) {
-      if (overlapsLunch(t, dur)) continue;
+  /* every start time the day's hours allow for a session this long */
+  var candidateStarts = function (dur, dayKey) {
+    var out = [], h = hoursOf(dayKey);
+    if (!h) return out;
+    for (var t = h.open; t + dur <= h.close; t += CELL) {
+      if (overlapsLunch(t, dur, h)) continue;
       out.push(t);
     }
     return out;
   };
 
-  var dayCapacity = function (dur) {
-    /* how many sessions of this length fit mathematically:
-       morning block 8–12, afternoon block 12:30–6 */
-    var morning = Math.floor((LUNCH_START - OPEN_MIN) / dur);
-    var afternoon = Math.floor((CLOSE_MIN - LUNCH_END) / dur);
-    return morning + afternoon;
+  var dayCapacity = function (dur, h) {
+    /* how many sessions of this length fit in a usual day, either side of lunch */
+    h = h || STD;
+    if (h.lunch == null) return Math.floor((h.close - h.open) / dur);
+    return Math.floor((h.lunch - h.open) / dur) + Math.floor((h.close - h.lunchEnd) / dur);
+  };
+  /* the usual day: the first open weekday in Evelyn's week */
+  var usualHours = function () {
+    var w = H ? H.week() : [null, null, STD, STD, STD, STD, STD];
+    for (var i = 2; i < 9; i++) if (w[i % 7]) return w[i % 7];
+    return STD;
   };
 
   /* ── Rendering ── */
@@ -361,18 +398,18 @@
   /* earliest bookable start for the current day & session length —
      it anchors the rail's clock times before a slot is chosen */
   var projectedStart = function () {
-    if (!state.dayKey || !state.services.length) return OPEN_MIN;
+    if (!state.dayKey || !state.services.length) return (hoursOf(state.dayKey || dateKey(new Date())) || usualHours()).open;
     var dur = totalDur();
     var todayKey = dateKey(new Date());
     var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
     var userSet = userBusyCells(state.dayKey);
-    var starts = candidateStarts(dur);
+    var starts = candidateStarts(dur, state.dayKey);
     for (var i = 0; i < starts.length; i++) {
       var t = starts[i];
       if (state.dayKey === todayKey && t <= nowMins) continue;
       if (blockFree(state.dayKey, t, dur, userSet)) return t;
     }
-    return OPEN_MIN;
+    return (hoursOf(state.dayKey) || usualHours()).open;
   };
 
   /* the session builder is a mini calendar: services stack as
@@ -462,9 +499,9 @@
     metaEl.textContent =
       (n > 1 ? n + " services, back to back · " : "") +
       dur + " min · " + pay.money(totalPrice()) +
-      " · up to " + dayCapacity(dur) + " session" +
-      (dayCapacity(dur) === 1 ? "" : "s") +
-      " a day · Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30" +
+      " · up to " + dayCapacity(dur, usualHours()) + " session" +
+      (dayCapacity(dur, usualHours()) === 1 ? "" : "s") +
+      " a day · " + (H ? H.summary() : "Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30") +
       (XD && XD.label() ? ", plus " + XD.label() : "");
     setConfirmLabel(true);
   };
@@ -495,17 +532,17 @@
     var todayKey = dateKey(new Date());
     var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
     var userSet = userBusyCells(key);
-    return candidateStarts(dur).filter(function (t) {
+    return candidateStarts(dur, key).filter(function (t) {
       return !(key === todayKey && t <= nowMins) && blockFree(key, t, dur, userSet);
     }).length;
   };
 
   var dayInfo = function (d) {
-    var extra = !!XD && XD.isExtra(d);
-    var info = { date: d, key: dateKey(d), extra: extra, locked: false, count: null, state: "open" };
+    var kind = extraKind(d);
+    var info = { date: d, key: dateKey(d), extra: !!kind, kind: kind, locked: false, count: null, state: "open" };
     if (d < startOfDay(new Date()) || d > lastBookable()) { info.state = "out"; return info; }
-    if ((d.getDay() === 0 || d.getDay() === 1) && !extra) { info.state = "closed"; return info; }
-    info.locked = extra && lockedForVisitor(d);
+    if (!hoursOf(info.key)) { info.state = "closed"; return info; }
+    info.locked = kind === "monday" && lockedForVisitor(d);
     info.count = openCount(d);
     if (info.count === 0) info.state = "full";
     else if (info.count !== null && info.count <= FEW_LEFT) info.state = "few";
@@ -529,7 +566,8 @@
     if (info.state === "full") return when + ", fully booked";
     var what = info.count === null ? "open"
       : info.count + (info.count === 1 ? " opening" : " openings") + (info.state === "few" ? " left" : "");
-    if (info.extra) what += info.locked ? ", an extra Monday, members first" : ", an extra Monday";
+    if (info.kind === "monday") what += info.locked ? ", an extra Monday, members first" : ", an extra Monday";
+    else if (info.kind === "day") what += ", an extra day";
     return when + ", " + what;
   };
 
@@ -664,7 +702,8 @@
     legend.className = "cal-legend";
     legend.innerHTML = '<span><i class="cal-dot"></i>Open</span>' +
       '<span><i class="cal-dot is-few"></i>A few left</span>' +
-      '<span>Closed Sundays and Mondays' + (XD && XD.label && XD.label() ? ", except extra Mondays" : "") + '</span>';
+      '<span>' + (H ? H.closedLabel() : "Closed Sundays and Mondays") +
+      (XD && XD.label && XD.label() ? ", except extra Mondays" : "") + '</span>';
     cal.appendChild(legend);
     daysEl.appendChild(cal);
   };
@@ -723,7 +762,7 @@
     var userSet = userBusyCells(state.dayKey);
     var fs = flashStart();
     var open = 0;
-    candidateStarts(dur).forEach(function (mins) {
+    candidateStarts(dur, state.dayKey).forEach(function (mins) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "slot-btn";
@@ -766,7 +805,8 @@
     note.textContent = open + " opening" + (open === 1 ? "" : "s") +
       " for this " + dur + "-minute session" +
       (fs !== null ? " · ⚡ the starred time books at 10% off" : "") +
-      (XD && XD.isExtra(dayD) ? " · an extra Monday, opened for banked facials" : "");
+      (extraKind(dayD) === "monday" ? " · an extra Monday, opened for banked facials"
+        : extraKind(dayD) === "day" ? " · an extra day Evelyn opened" : "");
     slotsEl.appendChild(note);
   };
 
@@ -1048,18 +1088,17 @@
     var out = [];
     /* a morning, an afternoon, a late morning: three real openings that
        give a choice of time of day, not three 8:00 AMs */
-    var PREFER = [0, LUNCH_END, 10 * 60];
+    var PREFER = [0, STD.lunchEnd, 10 * 60];
     var now = new Date();
     var todayKey = dateKey(now);
     var soon = now.getHours() * 60 + now.getMinutes() + 60;
     for (var i = 0; i < 21 && out.length < (n || 3); i++) {
       var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
-      var extra = !!XD && XD.isExtra(d);
-      if ((d.getDay() === 0 || d.getDay() === 1) && !extra) continue;
-      if (lockedForVisitor(d)) continue;
       var key = dateKey(d);
+      if (!hoursOf(key)) continue;
+      if (extraKind(d) === "monday" && lockedForVisitor(d)) continue;
       var userSet = userBusyCells(key);
-      var free = candidateStarts(s.dur).filter(function (t) {
+      var free = candidateStarts(s.dur, key).filter(function (t) {
         return !(key === todayKey && t <= soon) && blockFree(key, t, s.dur, userSet);
       });
       if (!free.length) continue;
@@ -1077,6 +1116,8 @@
   /* openModal(serviceId, pick) — pick = { dayKey, slot } opens the sheet
      on that exact time (from the homepage's "Start here" card) */
   var openModal = function (serviceId, pick) {
+    /* booking runs on GlossGenius for now: every Book button goes there */
+    if (GG) { window.open(GG, "_blank", "noopener"); return; }
     lastFocus = document.activeElement;
     rescheduleMode = false;
     modal.classList.remove("rescheduling");
@@ -1104,7 +1145,7 @@
     statusEl.textContent = "";
     payStatus.textContent = "";
     /* referral code: first visit only, filled in when they came from a shared link */
-    refField.hidden = loadBookings().length > 0;
+    refField.hidden = !rw || loadBookings().length > 0;
     if (!refField.hidden && !refInput.value && incomingRef && !(rw && incomingRef === rw.refCode())) refInput.value = incomingRef;
     paintRefHint();
     /* signed-in clients skip retyping name & email */
@@ -1819,8 +1860,45 @@
     openModal();
   });
 
+  /* ── for the calendar on the page (js/book-section.js) ──
+     the same rules as the booking sheet, for one service's length */
+  var startsOpen = function (key, dur) {
+    var todayKey = dateKey(new Date());
+    var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+    var userSet = userBusyCells(key);
+    return candidateStarts(dur, key).filter(function (t) {
+      return !(key === todayKey && t <= nowMins) && blockFree(key, t, dur, userSet);
+    });
+  };
+  var publicDay = function (d, serviceId) {
+    var s = byId[serviceId];
+    var kind = extraKind(d);
+    var info = { date: d, key: dateKey(d), extra: !!kind, kind: kind, locked: false, count: 0, state: "open" };
+    if (d < startOfDay(new Date()) || d > lastBookable()) { info.state = "out"; return info; }
+    if (!hoursOf(info.key)) { info.state = "closed"; return info; }
+    info.locked = kind === "monday" && lockedForVisitor(d);
+    info.count = s ? startsOpen(info.key, s.dur).length : 0;
+    info.state = info.count === 0 ? "full" : info.count <= FEW_LEFT ? "few" : "open";
+    return info;
+  };
+
   window.LumevinaBooking = {
     open: openModal,
+    external: GG,
+    list: function () { return services.slice(); },
+    ahead: BOOK_AHEAD_DAYS,
+    day: publicDay,
+    /* every start the day's hours allow, each marked free or taken */
+    times: function (key, serviceId) {
+      var s = byId[serviceId];
+      if (!s) return [];
+      var free = startsOpen(key, s.dur), fs = flashFor(key, s.dur);
+      return candidateStarts(s.dur, key).map(function (t) {
+        return { slot: t, time: fmtTime(t), free: free.indexOf(t) !== -1, flash: t === fs };
+      });
+    },
+    closedLabel: function () { return H ? H.closedLabel() : "Closed Sundays and Mondays"; },
+    summary: function () { return H ? H.summary() : "Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30"; },
     reschedule: openReschedule,
     startReschedule: startReschedule,
     openings: openings,

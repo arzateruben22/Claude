@@ -46,10 +46,11 @@
     if (e.key === "Escape" && !mobileMenu.hidden) setMenu(false);
   });
 
-  /* ── Newsletter form → client-side thanks ── */
+  /* ── Newsletter form → client-side thanks (held back in v2: the
+     Contact form took its place and has its own script, js/contact.js) ── */
   /* TODO: wire to your email service (Mailchimp / Buttondown / Formspree). */
-  var form = document.querySelector(".newsletter-form");
-  form.addEventListener("submit", function (e) {
+  var form = document.querySelector(".newsletter-form:not(.contact-form)");
+  if (form) form.addEventListener("submit", function (e) {
     e.preventDefault();
     var status = form.querySelector(".form-status");
     if (!form.reportValidity()) return;

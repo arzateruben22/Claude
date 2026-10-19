@@ -21,6 +21,9 @@
 (function () {
   "use strict";
 
+  /* held back on the website for now (js/site-config.js) */
+  if (window.LumevinaFeatures && !window.LumevinaFeatures.on("rewards")) return;
+
   var STORAGE_KEY = "lumevina_rewards";
   var BLOCK_POINTS = 100;  /* one reward block…    */
   var BLOCK_VALUE = 10;    /* …is worth $10 off    */

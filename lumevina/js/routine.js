@@ -19,6 +19,9 @@
 (function () {
   "use strict";
 
+  /* held back on the website for now (js/site-config.js) */
+  if (window.LumevinaFeatures && !window.LumevinaFeatures.on("routine")) return;
+
   var KEY = "lumevina_routines";
   var SALES_KEY = "lumevina_retail_sales";
   var PRICE = 75;                          /* the entry tier; each focus sets its own below */
