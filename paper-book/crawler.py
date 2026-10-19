@@ -28,11 +28,11 @@ TRUST = 30             # trades before a desk's win rate means much
 STREAK = 6             # losses in a row worth a flag
 DRAWDOWN = 20.0        # % below the desk's high worth a flag
 COLORS = {"memecoins": "#3cc3f2", "majors": "#f2bd4f", "stocks": "#a08cff", "memecoins_wild": "#ff9a4d",
-          "stocks_wild": "#d7f25f", "open": "#5fe3a1", "patterns": "#e98bff"}
+          "stocks_wild": "#d7f25f", "stocks_fade": "#3fd3c0", "open": "#5fe3a1", "patterns": "#e98bff"}
 NAMES = {"memecoins": "memecoins", "majors": "big coins", "stocks": "stocks", "memecoins_wild": "wild memecoins",
-         "stocks_wild": "wild stocks"}
+         "stocks_wild": "wild stocks", "stocks_fade": "fade stocks"}
 ABBR = {"memecoins": "MEM", "majors": "BIG", "stocks": "STK", "memecoins_wild": "WMEM", "stocks_wild": "WSTK",
-        "open": "OPN", "patterns": "PAT"}
+        "stocks_fade": "FADE", "open": "OPN", "patterns": "PAT"}
 
 
 def is_flag(t: pb.Trade) -> bool:

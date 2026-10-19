@@ -8,6 +8,7 @@
   python -m scanner journal           last few journal rows
   python -m scanner doctor            check keys and connectivity
   python -m scanner scan --book wild  the same, with the wild rules (criteria-wild.toml) on their own paper bank
+  python -m scanner lookback --book fade   the fade rules on the main book's graded picks (hindsight only)
 
 Before real money (paper only, they change nothing):
   python -m scanner scorecard         every gate, pass or fail
@@ -155,6 +156,16 @@ def cmd_journal(args) -> int:
     base = _book(args)[1]
     out_dir = base / "demo" if args.demo else base
     print(journal.recent(out_dir / "journal.csv", args.limit))
+    return 0
+
+
+def cmd_lookback(args) -> int:
+    """This book's rules on another book's already-graded picks (in-sample: it explains, it never proves)."""
+    crit = _crit(args)
+    provider, _, _ = _setup(args)
+    base = book_paths(args.against, OUTPUT)[1]
+    src = (base / "demo" if provider.name == "demo" else base) / "journal.csv"
+    print(journal.lookback(provider, crit, src, args.book, args.against))
     return 0
 
 
@@ -330,6 +341,11 @@ def main(argv=None) -> int:
     p = sub.add_parser("grade", help="grade finished picks in the journal")
     _provider_args(p)
     p.set_defaults(func=cmd_grade)
+
+    p = sub.add_parser("lookback", help="this book's rules on another book's graded picks (hindsight, not evidence)")
+    _provider_args(p)
+    p.add_argument("--against", default="main", metavar="BOOK", help="whose picks to look back on (default main)")
+    p.set_defaults(func=cmd_lookback)
 
     for name, func in (("stats", cmd_stats), ("journal", cmd_journal)):
         p = sub.add_parser(name)

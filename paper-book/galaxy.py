@@ -150,10 +150,10 @@ def desk_patterns(desk: str, trades: List[pb.Trade], tz) -> List[dict]:
 
 
 def pairs(desks) -> List[tuple]:
-    """Which desks to compare: each pair of markets, and each wild desk with the desk it's a riskier copy of."""
-    base = [d for d in desks if not d.endswith("_wild")]
+    """Which desks to compare: each pair of markets, and each copy (wild, fade) with the desk it copies."""
+    base = [d for d in desks if d not in pb.VARIANT_OF]
     out = [(a, b) for i, a in enumerate(base) for b in base[i + 1:]]
-    return out + [(d[:-5], d) for d in desks if d.endswith("_wild") and d[:-5] in desks]
+    return out + [(pb.VARIANT_OF[d], d) for d in desks if pb.VARIANT_OF.get(d) in desks]
 
 
 def shared_patterns(book: pb.Book) -> List[dict]:

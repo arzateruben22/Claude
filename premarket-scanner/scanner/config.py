@@ -37,6 +37,7 @@ class Criteria:
     exclude_warrants_units: bool = True
     show_near_misses: bool = True
 
+    side: str = "long"           # long buys at the open; short sells at the open and buys back later
     target_pct: float = 10.0
     stop_pct: float = 5.0
     cost_pct: float = 0.5
@@ -57,6 +58,8 @@ class Criteria:
             parts.append("not halted")
         if self.require_catalyst:
             parts.append("news catalyst")
+        if self.side == "short":
+            parts.append("SOLD SHORT at the open")
         return " · ".join(parts)
 
 
@@ -91,6 +94,8 @@ def load_criteria(path: Path | None = None) -> Criteria:
     c = Criteria(**flat)
     if c.sort_by not in ("gap", "rvol", "volume"):
         raise ValueError("sort_by must be gap, rvol or volume")
+    if c.side not in ("long", "short"):
+        raise ValueError("side must be long or short")
     return c
 
 

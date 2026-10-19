@@ -1078,7 +1078,7 @@
   // ---------------------------------------------------------------- results
 
   const NAME = { memecoins: 'memecoins', majors: 'big coins', stocks: 'stocks',
-    memecoins_wild: 'wild memecoins', stocks_wild: 'wild stocks' };
+    memecoins_wild: 'wild memecoins', stocks_wild: 'wild stocks', stocks_fade: 'fade stocks' };
   function colorOf(key) { const s = secs.find((x) => x.key === key); return s ? s.color : C.pink; }
 
   function showShip() {

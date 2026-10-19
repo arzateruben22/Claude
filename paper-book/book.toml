@@ -32,6 +32,14 @@ start_bank = 100.0
 share_bank = true
 ticket_usd = 100.0
 
+[stocks_fade]                             # the scanner's fade rules (premarket-scanner/criteria-fade.toml): the
+journal = "../premarket-scanner/output/fade/journal.csv"   # stock desk's picks, sold short at the open
+demo_journal = ""
+rules = "../premarket-scanner/criteria-fade.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
 [report]
 timezone = "America/Los_Angeles"
 

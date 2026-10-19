@@ -9,8 +9,8 @@
   const tok = (n, d) => css.getPropertyValue(n).trim() || d;
   // Each desk keeps its own hue, whichever desks are in the book; a desk without one takes the next spare.
   const HUE_OF = { memecoins: tok("--meme", "#6f9bff"), majors: tok("--major", "#f2c45c"), stocks: tok("--stock", "#c895f5"),
-    memecoins_wild: "#ff9a4d", stocks_wild: "#d7f25f" };
-  const SPARE = ["#7fe3e0", "#ff9de2", "#9ef07a"];
+    memecoins_wild: "#ff9a4d", stocks_wild: "#d7f25f", stocks_fade: "#7fe3e0" };
+  const SPARE = ["#ff9de2", "#9ef07a", "#b9c2ff"];
   const WIN = tok("--win", "#5fe0a0"), LOSS = tok("--loss", "#ff6f61"), INK = tok("--ink", "#e9ecff"), DIM = tok("--dim", "#a7add0");
   const WARM = "#fff3cf", SILK = "#dfe6ff";
   const CORE = 26, ARM = 34, TILT = 0.72;

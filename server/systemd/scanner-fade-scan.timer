@@ -1,0 +1,10 @@
+[Unit]
+Description=Fade-rules scanner runs, two minutes after the main scans so they don't hit Alpaca at once
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 17:04:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 05:37:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 06:04:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

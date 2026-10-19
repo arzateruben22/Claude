@@ -10,8 +10,10 @@ nothing in this repo can place a real order.
 | **Stocks**: premarket scanner (`premarket-scanner/`) | US stocks gapping up before the open | $100 bank, split equally between each weekday's picks | picks before the open; graded after the close, weekdays |
 | **Wild memecoins**: Night Desk's wild rulebook (`night-desk/desk-wild.toml`) | the same coins and rug checks, with looser entry rules and bigger, longer bets | its own $100 bank | alongside the memecoin desk |
 | **Wild stocks**: the scanner's wild rules (`premarket-scanner/criteria-wild.toml`) | smaller gaps, no news needed, +20% / −8% exits | its own $100 bank | a minute after each stock scan |
+| **Fade stocks**: the scanner's fade rules (`premarket-scanner/criteria-fade.toml`) | the stock desk's picks, sold short at the open: gains when they fall | its own $100 bank | two minutes after each stock scan |
 
-The wild desks are riskier copies run side by side, so the book shows whether taking more risk pays. They don't
+The wild desks are riskier copies run side by side, so the book shows whether taking more risk pays. The fade
+desk takes the opposite side of the stock desk, because most of its early picks fell after the open. They don't
 change the original desks or their four-week test. A desk is in the book when `book.toml` has a section for it.
 
 ```bash
