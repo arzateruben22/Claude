@@ -8,6 +8,8 @@
 //   client-questions.json, concerns.json, treatments.json, aftercare.json, visits.json,
 //   routine.json, products.json, materials.json, hard-lines.json, voice.json
 // each shaped { "id": "<section>", "data": { "answers": { "<item>.<field>": ... } } } or just the answers object.
+// (interview.json, the Talk it through conversation, is a record only: the
+// answers it gathered are already in the section files.)
 //
 // Every file gets today's date in "answered:". A question she skipped keeps
 // "_(not answered yet)_" so the assistant knows to hand it to her. What her

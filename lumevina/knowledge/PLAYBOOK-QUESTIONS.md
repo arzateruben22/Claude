@@ -4,6 +4,8 @@ The questionnaire Evelyn fills in over several sittings. Her answers become the 
 
 Nothing is pre-filled. Every tap option is one of her own product or treatment names, never a claim.
 
+**Talk it through** (the first tab): Claude asks these same questions one at a time, follows up when an answer is vague, and saves her words into the matching answers below. It runs on her own Claude account; the conversation is kept in `playbook/interview`.
+
 Every card also has **Add screenshots** (old texts, aftercare cards, product guides, Instagram posts; images or PDFs) and **Add a recording** (voice memos). `read-screenshots.mjs` transcribes the screenshots so the assistant can learn from them.
 
 ## Questions clients ask

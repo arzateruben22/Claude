@@ -125,6 +125,43 @@
   .btn-ghost { background: transparent; color: var(--ink); border-color: var(--edge); }
   .note { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
   .copybox { width: 100%; min-height: 12rem; font-size: 0.85rem; }
+  /* Talk it through: Claude interviews her and fills in the answers */
+  .tab-talk { border-color: var(--accent); font-weight: 600; }
+  .tab-talk svg { flex: none; }
+  .talk-intro { display: grid; gap: 0.8rem; padding: 1rem 1.05rem; background: var(--card); border: 1px solid var(--edge); border-radius: 16px; }
+  .talk-intro p { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
+  .talk-topics { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .talk-log { display: grid; gap: 0.7rem; margin: 1rem 0; }
+  .msg { max-width: 88%; padding: 0.7rem 0.9rem; border-radius: 18px; font-size: 0.97rem; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.claude { justify-self: start; background: var(--card); border: 1px solid var(--edge); border-bottom-left-radius: 6px; }
+  .msg.evelyn { justify-self: end; background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 6px; }
+  .msg.wait { color: var(--ink-soft); }
+  .msg.wait span { display: inline-block; animation: talk-dot 1.2s infinite ease-in-out; }
+  .msg.wait span:nth-child(2) { animation-delay: 0.15s; } .msg.wait span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes talk-dot { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+  .saved { justify-self: start; display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: -0.3rem; max-width: 92%; }
+  .saved-k { font-size: 0.74rem; color: var(--sage); font-weight: 600; align-self: center; }
+  .saved button { font: inherit; font-size: 0.74rem; padding: 0.25rem 0.6rem; border-radius: 999px; border: 1px solid rgba(78, 106, 69, 0.35); background: rgba(78, 106, 69, 0.08); color: var(--ink); cursor: pointer; max-width: 100%; text-align: left; }
+  .talk-form { position: sticky; bottom: 0; z-index: 4; display: grid; gap: 0.4rem; padding: 0.6rem 0 calc(0.6rem + env(safe-area-inset-bottom, 0px)); background: var(--ground); border-top: 1px solid var(--edge); }
+  .talk-bar { display: flex; gap: 0.45rem; align-items: flex-end; }
+  .talk-bar textarea { flex: 1; min-height: 46px; max-height: 9rem; padding: 0.7rem 0.85rem; resize: none; border-radius: 22px; }
+  .talk-bar .btn { flex: none; min-height: 46px; padding: 0.7rem 1.15rem; }
+  .talk-mic { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--edge); background: var(--card); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+  .talk-mic[hidden], .talk-in[hidden] { display: none; }
+  .talk-in[hidden] + .talk-send { flex: 1; }
+  .talk-mic[aria-pressed="true"] { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .talk-topics[hidden], .talk-topic-toggle[hidden] { display: none; }
+  .talk-intro .talk-where { font-size: 0.86rem; color: var(--ink); }
+  .talk-intro .talk-topic-toggle { justify-self: start; }
+  .talk-opts { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center; font-size: 0.82rem; color: var(--ink-soft); }
+  .talk-opts label { display: inline-flex; gap: 0.4rem; align-items: center; cursor: pointer; }
+  .linkish { font: inherit; font-size: 0.82rem; background: none; border: 0; padding: 0.3rem 0; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .talk-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); }
+  .talk-status:empty { display: none; }
+  .talk-opts { margin-top: 0.4rem; }
+  .talk-status.is-bad { color: var(--danger); }
+  .talk-where { margin: 0; font-size: 0.78rem; color: var(--ink-soft); }
+  @media (prefers-reduced-motion: reduce) { .msg.wait span { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .meter span { transition: none; } }
 </style>
 
@@ -134,8 +171,8 @@
     <h1>Evelyn's <em>Skin Playbook</em></h1>
     <p class="lede">Everything you'd tell a client, in your own words. The website's assistant answers only from
     what you write here, and hands you anything it can't find. Fill it in over a few sittings; it saves as you go,
-    and nothing is pre-filled. Type, speak (the mic key on your keyboard), or add screenshots of things you've
-    already written: old texts to clients, aftercare cards, Instagram posts.</p>
+    and nothing is pre-filled. Type, speak (the mic key on your keyboard), add screenshots of things you've
+    already written, or open <strong>Talk it through</strong> and let Claude interview you.</p>
   </header>
 
   <div class="bar">
@@ -473,12 +510,12 @@
 
   /* ── showing answers ── */
   var paint = function () {
-    main.querySelectorAll(".chip").forEach(function (b) {
+    main.querySelectorAll(".chip[data-sid]").forEach(function (b) {
       var v = state[b.dataset.sid][b.dataset.key];
       var on = b.dataset.single ? v === b.dataset.v : Array.isArray(v) && v.indexOf(b.dataset.v) !== -1;
       b.setAttribute(b.dataset.single ? "aria-checked" : "aria-pressed", String(!!on));
     });
-    main.querySelectorAll("textarea").forEach(function (t) {
+    main.querySelectorAll("textarea[data-key]").forEach(function (t) {
       if (t === document.activeElement) return;
       var v = state[t.dataset.sid][t.dataset.key];
       t.value = (t.dataset.n != null ? (Array.isArray(v) ? v[+t.dataset.n] : "") : v) || "";
@@ -540,6 +577,7 @@
     });
     var all = 0;
     tabsEl.querySelectorAll(".tab").forEach(function (t) {
+      if (t.dataset.sid === "talk") return;
       var c = sectionDone(t.dataset.sid);
       all += c.done;
       t.querySelector(".tab-n").textContent = t.dataset.sid === "products" ? (c.done ? String(c.done) : "") : c.done + "/" + c.total;
@@ -594,7 +632,7 @@
   };
 
   main.addEventListener("click", function (e) {
-    var b = e.target.closest(".chip");
+    var b = e.target.closest(".chip[data-sid]");
     if (!b) return;
     var a = state[b.dataset.sid], k = b.dataset.key, v = b.dataset.v;
     if (b.dataset.single) a[k] = a[k] === v ? "" : v;
@@ -649,12 +687,373 @@
     try { navigator.clipboard.writeText(text).then(function () { note.textContent = "Copied. Paste it into a message to Ruben."; }, showBox); } catch (e) { showBox(); }
   });
 
+  /* ── Talk it through: Claude interviews her, one question at a time, and
+     what she says lands in the same answers as the tabs (so the assistant
+     learns it the same way). The conversation is kept in playbook/interview.
+     It runs on her own Claude (the page's "sample" capability); without it,
+     the tab says so and the typed questions work as always. ── */
+  var talk = { turns: [], skips: [], focus: "auto" };
+  var Rec = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null, micOff = false;
+  var sample = null, talking = false, ctl = null, talkReady = false;
+  var TALK_ORDER = ["client-questions", "treatments", "aftercare", "concerns", "visits", "routine", "hard-lines", "voice"];
+  var BY_ID = {};
+  FIELDS.forEach(function (f) { BY_ID[f.sid + "/" + f.key] = f; });
+  var sectionTitle = function (sid) { for (var i = 0; i < SPEC.sections.length; i++) if (SPEC.sections[i].id === sid) return SPEC.sections[i].title; return sid; };
+  var itemEl = function (sid, item) { return main.querySelector('details.item[data-sid="' + sid + '"][data-item="' + item + '"]'); };
+  var itemTitle = function (sid, item) { var d = itemEl(sid, item); return d ? d.querySelector("summary > span").firstChild.textContent : item; };
+  var itemsOf = function (sid) {
+    var seen = {}, out = [];
+    FIELDS.forEach(function (f) { if (f.sid === sid && !seen[f.item]) { seen[f.item] = true; out.push(f.item); } });
+    return out;
+  };
+  var skippedField = function (f) { return talk.skips.indexOf(f.sid + "/" + f.key) !== -1; };
+  var openFields = function (sid, item) {
+    return FIELDS.filter(function (f) { return f.sid === sid && f.item === item && !answeredKey(sid, f.key) && !skippedField(f); });
+  };
+  var upcoming = function (n) {
+    var order = talk.focus === "auto" ? TALK_ORDER : [talk.focus], out = [];
+    order.forEach(function (sid) {
+      itemsOf(sid).forEach(function (item) { if (out.length < n && openFields(sid, item).length) out.push({ sid: sid, item: item }); });
+    });
+    return out;
+  };
+  var describe = function (f) {
+    var k = f.field.kind, s = "- " + f.sid + "/" + f.key + ": " + f.field.q;
+    if (f.field.hint) s += " (" + f.field.hint + ")";
+    if (f.field.options) s += " She may pick from: " + f.field.options.join("; ") + ".";
+    if (k === "products") s += " She names products from her shelf, and how to use them.";
+    if (k === "treatments") s += " She names treatments from her menu.";
+    if (k === "list") s += " Real replies she has sent clients, names removed: save each one she shares as its own value.";
+    return s;
+  };
+  var RULES = [
+    "You are interviewing Evelyn Romero, the licensed esthetician who owns Lumevina Aesthetics Spa, to fill in her Skin Playbook. Her answers become what her website's assistant tells clients, so they must be hers. She is on her phone, typing or dictating.",
+    "",
+    "How to talk:",
+    "- Warm, brief, plain. One question at a time, with at most one short sentence before it.",
+    "- Work through the questions listed below, in order, in your own natural words. If an answer is vague or incomplete for a client to act on (no timing, no product name, no amount or frequency, \"it depends\" without on what), ask one short follow-up, then move on.",
+    "- Never suggest answers, products, timings or claims, and never give skin or medical advice yourself. If she asks what she should say, ask what she tells clients now.",
+    "- If she'd rather skip a question, or doesn't know, say that's fine and move on: put its id in \"skip\".",
+    "- If she says she's done for now, thank her briefly, tell her everything is saved, ask nothing more, and set \"pause\" to true.",
+    "",
+    "Saving: whenever her message answers one of the listed questions, save it.",
+    "- \"value\" is her answer in her own words, lightly cleaned: drop filler and false starts; keep her phrasing, product names and numbers; first person the way she spoke. Never add anything she didn't say. If she corrects herself, save the corrected version.",
+    "- One entry per question answered; one message can answer several. A follow-up answer to the same question is saved again with just the new part.",
+    "- Only use the ids listed below.",
+    "",
+    "Reply with only this JSON: {\"say\": \"your next message to her\", \"save\": [{\"field\": \"<id>\", \"value\": \"...\"}], \"skip\": [\"<id>\"], \"pause\": false}"
+  ].join("\n");
+  var context = function () {
+    var next = upcoming(2);
+    if (!next.length) return "Where we are: every question in " + (talk.focus === "auto" ? "the main sections" : sectionTitle(talk.focus)) +
+      " is answered or skipped. Thank her, and ask whether she'd like to pick another topic (the buttons above the chat) or stop for today. Set pause to true.";
+    return next.map(function (at, i) {
+      var open = openFields(at.sid, at.item);
+      var done = FIELDS.filter(function (f) { return f.sid === at.sid && f.item === at.item && answeredKey(at.sid, f.key); });
+      return (i === 0 ? "Where we are: " : "Then the next card: ") + sectionTitle(at.sid) + " > " + itemTitle(at.sid, at.item) + "\n" +
+        "Questions still open on this card, in order:\n" + open.map(describe).join("\n") +
+        (done.length ? "\nAlready answered on this card (don't ask again): " + done.map(function (f) { return f.field.q; }).join(" | ") : "");
+    }).join("\n\n");
+  };
+  var buildInput = function (note) {
+    var turns = [{ role: "user", content: RULES + "\n\n" + context() }];
+    talk.turns.slice(-14).forEach(function (t) { turns.push({ role: t.who === "claude" ? "assistant" : "user", content: t.text }); });
+    if (note) turns.push({ role: "user", content: note });
+    else if (turns[turns.length - 1].role !== "user") turns.push({ role: "user", content: "(Evelyn is ready for the next question.)" });
+    return turns;
+  };
+
+  /* her answer into the playbook: a text box, a numbered slot, or a tap option when it matches one */
+  var applySaves = function (saves) {
+    var ids = [], touched = {};
+    (Array.isArray(saves) ? saves : []).forEach(function (sv) {
+      var f = BY_ID[String(sv && sv.field || "")], v = String(sv && sv.value || "").trim();
+      if (!f || !v) return;
+      var a = state[f.sid], kind = f.field.kind;
+      if (kind === "list") {
+        var l = Array.isArray(a[f.key]) ? a[f.key].slice() : [], slot = -1;
+        for (var i = 0; i < l.length; i++) if (!has(l[i])) { slot = i; break; }
+        if (slot === -1) { if (l.length >= f.field.count) return; slot = l.length; }
+        l[slot] = v; a[f.key] = l;
+      } else {
+        var opt = (f.field.options || []).filter(function (o) { return o.toLowerCase() === v.toLowerCase(); })[0];
+        if (opt && kind === "one") a[f.key] = opt;
+        else if (opt && kind === "multi") { var m = Array.isArray(a[f.key]) ? a[f.key].slice() : []; if (m.indexOf(opt) === -1) m.push(opt); a[f.key] = m; }
+        else {
+          var k = kind === "text" ? f.key : f.key + ".text", old = String(a[k] || "").trim();
+          if (old.indexOf(v) === -1) a[k] = old ? old + "\n" + v : v;
+        }
+      }
+      ids.push(f.sid + "/" + f.key); touched[f.sid] = true;
+    });
+    Object.keys(touched).forEach(function (sid) { schedule(sid, 0); });
+    return ids;
+  };
+
+  /* the conversation: kept on this phone and online, one write at a time */
+  var talkWriting = false, talkAgain = false;
+  var saveTalk = function () {
+    if (talk.turns.length > 300) talk.turns = talk.turns.slice(-300);
+    try { localStorage.setItem(LOCAL + "talk", JSON.stringify(talk)); } catch (e) { /* storage off */ }
+    if (!db || canSave === false) return;
+    if (talkWriting) { talkAgain = true; return; }
+    talkWriting = true;
+    db.doc(COLL + "/interview").set(JSON.parse(JSON.stringify({ turns: talk.turns, skips: talk.skips, focus: talk.focus, updatedAt: new Date().toISOString() })))
+      .catch(function () { /* the answers themselves save separately */ })
+      .then(function () { talkWriting = false; if (talkAgain) { talkAgain = false; saveTalk(); } });
+  };
+
+  /* ── the tab ── */
+  var CHAT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/></svg>';
+  var talkTab = el("button", "tab tab-talk");
+  talkTab.type = "button"; talkTab.setAttribute("role", "tab"); talkTab.dataset.sid = "talk";
+  talkTab.innerHTML = CHAT;
+  talkTab.appendChild(document.createTextNode("Talk it through"));
+  tabsEl.insertBefore(talkTab, tabsEl.firstChild);
+  var talkSec = el("section", "section talk");
+  talkSec.id = "s-talk";
+  talkSec.setAttribute("aria-labelledby", "h-talk");
+  talkSec.innerHTML =
+    '<div class="section-head"><h2 id="h-talk">Talk it through</h2>' +
+    "<p>Rather talk than fill in boxes? Claude asks you the playbook's questions one at a time, asks a follow-up when it needs more, and saves your answers into the other tabs as you go. Type or speak (the mic key on your keyboard works here too).</p></div>" +
+    '<div class="talk-intro"><p class="talk-where"></p>' +
+      '<button class="linkish talk-topic-toggle" type="button" aria-expanded="false" hidden>Change topic</button>' +
+      '<div class="talk-topics chips" role="group" aria-label="What should we talk about?"></div></div>' +
+    '<div class="talk-log" aria-live="polite"></div>' +
+    '<form class="talk-form" autocomplete="off">' +
+      '<p class="talk-status" role="status"></p>' +
+      '<div class="talk-bar"><button class="talk-mic" type="button" aria-pressed="false" aria-label="Speak your answer" hidden>' + MIC + "</button>" +
+      '<textarea class="talk-in" rows="1" placeholder="Your answer" aria-label="Your answer"></textarea>' +
+      '<button class="btn talk-send" type="submit">Start talking</button></div>' +
+    "</form>" +
+    '<div class="talk-opts"><label><input type="checkbox" class="talk-aloud"> Read Claude\'s questions aloud</label>' +
+      '<button class="linkish talk-skip" type="button">Skip this card</button><button class="linkish talk-reset" type="button">Start the conversation over</button></div>';
+  main.insertBefore(talkSec, main.firstChild);
+  var $t = function (sel) { return talkSec.querySelector(sel); };
+  var logEl = $t(".talk-log"), inEl = $t(".talk-in"), sendEl = $t(".talk-send"), statusEl = $t(".talk-status"), micEl = $t(".talk-mic"), aloudEl = $t(".talk-aloud");
+  var setTalkStatus = function (t, bad) { statusEl.textContent = t || ""; statusEl.className = "talk-status" + (bad ? " is-bad" : ""); };
+
+  /* every section points here too */
+  main.querySelectorAll(".section-head .hint").forEach(function (h) {
+    var b = el("button", "linkish", "Or talk it through with Claude");
+    b.type = "button";
+    b.style.marginLeft = "0.25rem";
+    b.addEventListener("click", function () { var sid = h.closest(".section").id.slice(2); if (TALK_ORDER.indexOf(sid) !== -1 || sid === "products") talk.focus = sid; show("talk"); paintTalk(); });
+    h.appendChild(b);
+  });
+
+  var topics = $t(".talk-topics");
+  [["auto", "Claude picks"]].concat(SPEC.sections.filter(function (s) { return s.id !== "materials"; }).map(function (s) { return [s.id, s.title]; })).forEach(function (t) {
+    var b = el("button", "chip", t[1]);
+    b.type = "button"; b.dataset.focus = t[0];
+    topics.appendChild(b);
+  });
+  $t(".talk-topic-toggle").addEventListener("click", function () {
+    var tg = $t(".talk-topic-toggle"), open = tg.getAttribute("aria-expanded") !== "true";
+    tg.setAttribute("aria-expanded", String(open));
+    paintTalk();
+  });
+  topics.addEventListener("click", function (e) {
+    var b = e.target.closest(".chip");
+    if (!b || talking) return;
+    $t(".talk-topic-toggle").setAttribute("aria-expanded", "false");
+    talk.focus = b.dataset.focus;
+    saveTalk();
+    paintTalk();
+    if (talk.turns.length && sample) ask("(Evelyn chose a topic: " + (talk.focus === "auto" ? "whatever's next" : sectionTitle(talk.focus)) + ". Ask the first open question there.)");
+  });
+
+  var shortQ = function (id) { var f = BY_ID[id]; if (!f) return id; var q = f.field.q.replace(/^"|"$/g, ""); return (q.length > 46 ? q.slice(0, 44) + "…" : q); };
+  var paintTalk = function () {
+    topics.querySelectorAll(".chip").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.focus === talk.focus)); });
+    var next = upcoming(1)[0], started = talk.turns.length > 0;
+    $t(".talk-where").textContent = !started ? "What should we talk about? Claude can pick, starting where it helps most."
+      : next ? "Now: " + sectionTitle(next.sid) + " · " + itemTitle(next.sid, next.item) : "Everything here is answered or skipped. Change topic, or check your answers in the tabs.";
+    var tog = $t(".talk-topic-toggle");
+    tog.hidden = !started;
+    topics.hidden = started && tog.getAttribute("aria-expanded") !== "true";
+    logEl.textContent = "";
+    talk.turns.forEach(function (t) {
+      logEl.appendChild(el("div", "msg " + (t.who === "claude" ? "claude" : "evelyn"), t.text));
+      if (t.saved && t.saved.length) {
+        var row = el("div", "saved");
+        row.appendChild(el("span", "saved-k", "Saved:"));
+        t.saved.forEach(function (id) {
+          var b = el("button", null, shortQ(id));
+          b.type = "button"; b.dataset.goto = id;
+          b.setAttribute("aria-label", "Open the saved answer: " + shortQ(id));
+          row.appendChild(b);
+        });
+        logEl.appendChild(row);
+      }
+    });
+    if (talking) { var w = el("div", "msg claude wait"); w.innerHTML = "<span>•</span><span>•</span><span>•</span>"; w.setAttribute("aria-label", "Claude is writing"); logEl.appendChild(w); }
+    sendEl.textContent = talk.turns.length ? "Send" : "Start talking";
+    sendEl.disabled = talking || !sample;
+    inEl.hidden = !talk.turns.length;
+    micEl.hidden = !talk.turns.length || !Rec || micOff;
+    $t(".talk-skip").hidden = !talk.turns.length || !next;
+    $t(".talk-reset").hidden = !talk.turns.length;
+  };
+  logEl.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-goto]");
+    if (!b) return;
+    var f = BY_ID[b.dataset.goto];
+    if (!f) return;
+    show(f.sid);
+    var d = itemEl(f.sid, f.item);
+    if (d) { d.open = true; d.scrollIntoView({ block: "start" }); }
+  });
+
+  var speak = function (text) {
+    if (!aloudEl.checked || !window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+    try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text)); } catch (e) { /* no voice here */ }
+  };
+  try { aloudEl.checked = localStorage.getItem(LOCAL + "aloud") === "1"; } catch (e) { /* storage off */ }
+  aloudEl.addEventListener("change", function () {
+    try { localStorage.setItem(LOCAL + "aloud", aloudEl.checked ? "1" : "0"); } catch (e) { /* storage off */ }
+    if (!aloudEl.checked && window.speechSynthesis) speechSynthesis.cancel();
+  });
+
+  var FAIL = {
+    rate_limited: "Claude needs a moment (too many messages, or your usage limit). Try again in a minute; nothing you said is lost.",
+    session_expired: "Your Claude sign-in expired. Sign in again, then come back.",
+    refused: "Claude couldn't continue with that one. Try saying it another way, or skip this card.",
+    invalid_json: "That reply came back garbled. Tap Send to try again.",
+    empty_completion: "No reply came back. Tap Send to try again.",
+    upstream_error: "The connection dropped. Tap Send to try again; nothing you said is lost."
+  };
+  var OFF = { not_granted: 1, sampling_disabled: 1, not_declared: 1, capability_disabled: 1, capability_removed: 1 };
+  var ask = function (note) {
+    if (!sample || talking) return;
+    talking = true;
+    ctl = new AbortController();
+    setTalkStatus("");
+    paintTalk();
+    logEl.lastChild.scrollIntoView({ block: "nearest" });
+    sample.json(buildInput(note), { modelTier: "quick", cache: false, signal: ctl.signal }).then(function (r) {
+      var say = String(r && r.say || "").trim() || "Got it. Shall we keep going?";
+      var saved = applySaves(r && r.save);
+      (Array.isArray(r && r.skip) ? r.skip : []).forEach(function (id) { if (BY_ID[id] && talk.skips.indexOf(id) === -1) talk.skips.push(id); });
+      talk.turns.push({ who: "claude", text: say, at: new Date().toISOString(), saved: saved });
+      talking = false;
+      saveTalk();
+      paintTalk();
+      speak(say);
+      logEl.lastChild.scrollIntoView({ block: "nearest" });
+    }, function (err) {
+      talking = false;
+      var code = err && err.code;
+      if (OFF[code]) { sample = null; setTalkStatus("Claude isn't available on this link for you, so the typed questions in the other tabs are the way to go. Everything you said so far is saved.", true); }
+      else if (code !== "cancelled") setTalkStatus(FAIL[code] || FAIL.upstream_error, true);
+      paintTalk();
+    });
+  };
+  $t(".talk-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (talking || !sample) return;
+    var text = inEl.value.trim();
+    if (!talk.turns.length) { ask("(Evelyn just opened Talk it through. Greet her in a few words and ask the first question.)"); return; }
+    var last = talk.turns[talk.turns.length - 1];
+    if (!text) { if (last && last.who === "evelyn") ask(); return; }    /* a reply that failed: ask again */
+    talk.turns.push({ who: "evelyn", text: text, at: new Date().toISOString() });
+    inEl.value = "";
+    saveTalk();
+    ask();
+  });
+  inEl.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey && window.matchMedia("(hover: hover)").matches) { e.preventDefault(); $t(".talk-form").requestSubmit(); }
+  });
+  $t(".talk-skip").addEventListener("click", function () {
+    var at = upcoming(1)[0];
+    if (!at || talking) return;
+    openFields(at.sid, at.item).forEach(function (f) { talk.skips.push(f.sid + "/" + f.key); });
+    saveTalk();
+    paintTalk();
+    ask("(Evelyn skipped the card \"" + itemTitle(at.sid, at.item) + "\". Move on to the next one.)");
+  });
+  var resetArmed = null;
+  $t(".talk-reset").addEventListener("click", function () {
+    var b = $t(".talk-reset");
+    if (!resetArmed) { b.textContent = "Tap again to start over (your answers stay)"; resetArmed = setTimeout(function () { resetArmed = null; b.textContent = "Start the conversation over"; }, 4000); return; }
+    clearTimeout(resetArmed); resetArmed = null; b.textContent = "Start the conversation over";
+    if (ctl) ctl.abort();
+    talking = false;
+    talk = { turns: [], skips: [], focus: talk.focus };
+    saveTalk();
+    paintTalk();
+  });
+
+  /* speaking: the browser's own speech recognition, where this viewer allows the microphone */
+  if (Rec) {
+    micEl.addEventListener("click", function () {
+      if (rec) { rec.stop(); return; }
+      try { rec = new Rec(); } catch (e) { micOff = true; paintTalk(); return; }
+      var before = inEl.value ? inEl.value.replace(/\s*$/, " ") : "";
+      rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false;
+      rec.onresult = function (ev) {
+        var t = "";
+        for (var i = 0; i < ev.results.length; i++) t += ev.results[i][0].transcript;
+        inEl.value = before + t;
+      };
+      rec.onerror = function (ev) {
+        if (ev.error === "not-allowed" || ev.error === "service-not-allowed" || ev.error === "audio-capture") {
+          micOff = true; micEl.hidden = true;
+          setTalkStatus("The microphone isn't available here. Tap the mic key on your keyboard to speak instead.");
+        }
+      };
+      rec.onend = function () {
+        rec = null;
+        micEl.setAttribute("aria-pressed", "false"); micEl.setAttribute("aria-label", "Speak your answer");
+        if (inEl.value.trim() && inEl.value.trim() !== before.trim()) $t(".talk-form").requestSubmit();
+      };
+      if (window.speechSynthesis) speechSynthesis.cancel();
+      micEl.setAttribute("aria-pressed", "true"); micEl.setAttribute("aria-label", "Listening; tap to stop");
+      setTalkStatus("Listening… tap the mic again when you're done.");
+      try { rec.start(); } catch (e) { rec = null; micOff = true; paintTalk(); }
+    });
+  }
+
+  var startTalk = function () {
+    try { var local = JSON.parse(localStorage.getItem(LOCAL + "talk")); if (local && Array.isArray(local.turns)) talk = { turns: local.turns, skips: local.skips || [], focus: local.focus || "auto" }; } catch (e) { /* storage off */ }
+    paintTalk();
+    if (!window.claude || !window.claude.use) { setTalkStatus("Talking it through works inside the Claude app or claude.ai. The typed questions work everywhere."); return; }
+    window.claude.use("sample").then(function (s) {
+      sample = s;
+      if (!s) setTalkStatus("Claude isn't available on this link for you, so the typed questions in the other tabs are the way to go.");
+      paintTalk();
+    });
+  };
+  var loadTalk = function () {
+    if (!db) return;
+    db.doc(COLL + "/interview").get().then(function (d) {
+      var v = d && d.exists ? d.data() : null;
+      if (v && Array.isArray(v.turns) && v.turns.length > talk.turns.length && !talking) {
+        talk = { turns: v.turns, skips: Array.isArray(v.skips) ? v.skips : [], focus: v.focus || "auto" };
+        try { localStorage.setItem(LOCAL + "talk", JSON.stringify(talk)); } catch (e) { /* storage off */ }
+      }
+      paintTalk();
+    }, function () { /* this phone's copy stands */ });
+  };
+
+  /* treatments renamed since she answered: her saved picks follow the new name */
+  var RENAMED = { "Acne Program (New Client Consultation + Treatment)": "Acne Bootcamp (New Client Consultation + Treatment)" };
+  var migrate = function (sid) {
+    var a = state[sid], changed = false;
+    Object.keys(a).forEach(function (k) {
+      if (!Array.isArray(a[k])) return;
+      a[k] = a[k].map(function (v) { if (RENAMED[v]) { changed = true; return RENAMED[v]; } return v; });
+    });
+    return changed;
+  };
+
   /* ── start: this phone's draft first, then what's saved online ── */
   var boot = function (data) {
     SPEC.sections.forEach(function (s) { state[s.id] = (data && data[s.id]) || readLocal(s.id); });
     var tab = null; try { tab = localStorage.getItem(LOCAL + "tab"); } catch (e) { /* storage off */ }
-    show(SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : SPEC.sections[0].id);
+    show(tab === "talk" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : SPEC.sections[0].id);
     paint();
+    startTalk();
     if (!window.claude || !window.claude.use) { setSave("Saved on this phone"); return; }
     Promise.all([window.claude.use("db"), window.claude.use("user"), window.claude.use("assets")]).then(function (r) {
       db = r[0];
@@ -670,11 +1069,13 @@
           var extra = false;
           Object.keys(local).forEach(function (k) { if (!has(merged[k]) && has(local[k])) { merged[k] = local[k]; extra = true; } });
           state[s.id] = merged;
+          if (migrate(s.id)) extra = true;
           writeLocal(s.id);
           if (extra && online) schedule(s.id, 0);
           else if (!online && Object.keys(local).some(function (k) { return has(local[k]); })) schedule(s.id, 0);
         });
         paint();
+        loadTalk();
         if (canSave !== false && !Object.keys(timers).some(function (k) { return timers[k]; })) setSave("Saved", "is-ok");
       }, function () { setSave("Saved on this phone"); });
     });

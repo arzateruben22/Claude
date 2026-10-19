@@ -217,3 +217,9 @@ In the dashboard, open any client under **Clients** → **Write a plan** (or **W
 **About Evelyn:** her CanvasRebel photo now sits above the swipe cards and is the one link to the interview ("Featured in CanvasRebel →"). The separate Press card, which linked to the same article and was mostly empty space, is gone; the cards are Meet Evelyn, Our approach and The room.
 
 **Service details:** tap any service (a featured card, or a line in Explore Every Service) and its details open: her full description from GlossGenius, the time, the deposit (or "nothing due until your visit"), its options each with their own Book button, and Keep looking. On phones it rises from the bottom; on a computer it's a centered card. Book works exactly like the page's own Book buttons (her GlossGenius page for now).
+
+## Talk it through: Claude interviews Evelyn (Oct 19)
+
+The Skin Playbook now opens on **Talk it through**. Claude asks the playbook's questions one at a time (she can let it pick, starting with the questions clients text her, or choose a topic), asks a short follow-up when an answer is too vague for a client to act on ("for how many days?", "which cleanser?"), and saves her words, lightly cleaned, into the same answers as the other tabs. Each saved answer appears as a chip under Claude's message; tapping it opens that card so she can check or edit it. She can type, use the mic key on her keyboard, or the mic button where her browser allows; Claude's questions can be read aloud. **Skip this card**, **Change topic** and **Start the conversation over** (answers stay) are there too. Claude never suggests answers or gives advice. It runs on her own Claude account (Claude asks her to allow it the first time); the conversation is kept with the playbook. Same link as before.
+
+Her saved answers so far (Skin concerns → breakouts) are untouched; a treatment she ticked under its old name ("Acne Program …") now shows under the current name ("Acne Bootcamp …").
