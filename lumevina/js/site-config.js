@@ -36,6 +36,15 @@
       endpoint: "",   /* e.g. https://<project>.supabase.co/functions/v1/ask */
       key: ""         /* the Supabase anon key (public), sent with each question */
     },
+    /* the shop's live stock and checkout (server/: products table, the
+       shelf and create-checkout functions). Empty = demo: stock is kept in
+       this browser and the card form is a test. Filled in = one shared
+       count for the website and the dashboard, and real payments through
+       Stripe Checkout. */
+    shop: {
+      supabase: "",   /* e.g. https://<project>.supabase.co */
+      key: ""         /* the Supabase anon key (public) */
+    },
     booking: {
       /* new clients book here; clients who already book with Evelyn on
          GlossGenius can still use it for now, with a note that everything
