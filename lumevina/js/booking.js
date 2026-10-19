@@ -469,62 +469,221 @@
     setConfirmLabel(true);
   };
 
-  var renderDays = function () {
-    daysEl.textContent = "";
-    var today = new Date();
-    var shown = 0;
-    var firstKey = null;
-    for (var i = 0; shown < 12 && i < 21; i++) {
-      var d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
-      var extra = !!XD && XD.isExtra(d);
-      /* closed Sundays and Mondays, unless Evelyn opened an extra Monday */
-      if ((d.getDay() === 0 || d.getDay() === 1) && !extra) continue;
-      var key = dateKey(d);
-      if (!firstKey) firstKey = key;
-      var chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "day-chip";
-      chip.dataset.key = key;
-      var wd = document.createElement("span");
-      wd.className = "day-chip-wd";
-      wd.textContent = d.toLocaleDateString("en-US", { weekday: "short" });
-      var num = document.createElement("span");
-      num.className = "day-chip-num";
-      num.textContent = d.getDate();
-      chip.appendChild(wd);
-      chip.appendChild(num);
-      if (extra) {
-        var locked = lockedForVisitor(d);
-        chip.classList.add("is-extra");
-        chip.classList.toggle("is-members", locked);
-        var tag = document.createElement("span");
-        tag.className = "day-chip-tag";
-        tag.textContent = locked ? "Members" : "Extra";
-        chip.appendChild(tag);
-        chip.title = locked
-          ? "An extra Monday for members' banked facials. Opens to everyone " +
-            XD.openToAllFrom(d).toLocaleDateString("en-US", { weekday: "long" }) + "."
-          : "An extra Monday, opened for banked facials";
-      }
-      chip.addEventListener("click", function () {
-        state.dayKey = this.dataset.key;
-        state.slot = null;
-        renderDays();
-        renderSlots();
-        renderChips();
-        renderPreview();
-      });
-      daysEl.appendChild(chip);
-      shown++;
-    }
-    if (!state.dayKey) state.dayKey = firstKey;
-    daysEl.querySelectorAll(".day-chip").forEach(function (c) {
-      c.classList.toggle("selected", c.dataset.key === state.dayKey);
-    });
+  /* ── The calendar ──
+     A month at a time, about eight weeks ahead. Each open day shows how
+     much is left for this session's length: plenty (a sage dot), a few
+     left (how many), or full. Sundays and Mondays are closed unless
+     Evelyn opened an extra Monday (js/extra-days.js). Arrow keys move
+     between days, and the chosen day's times appear below. */
+  var BOOK_AHEAD_DAYS = 60;
+  var FEW_LEFT = 3;
+  var WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var calMonth = null;            /* the 1st of the month on screen */
+
+  var startOfDay = function (d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); };
+  var lastBookable = function () {
+    var t = startOfDay(new Date());
+    t.setDate(t.getDate() + BOOK_AHEAD_DAYS);
+    return t;
   };
 
+  /* how many start times are still open that day for this session
+     (null until a service is picked) */
+  var openCount = function (d) {
+    if (!state.services.length) return null;
+    var key = dateKey(d), dur = totalDur();
+    var todayKey = dateKey(new Date());
+    var nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+    var userSet = userBusyCells(key);
+    return candidateStarts(dur).filter(function (t) {
+      return !(key === todayKey && t <= nowMins) && blockFree(key, t, dur, userSet);
+    }).length;
+  };
+
+  var dayInfo = function (d) {
+    var extra = !!XD && XD.isExtra(d);
+    var info = { date: d, key: dateKey(d), extra: extra, locked: false, count: null, state: "open" };
+    if (d < startOfDay(new Date()) || d > lastBookable()) { info.state = "out"; return info; }
+    if ((d.getDay() === 0 || d.getDay() === 1) && !extra) { info.state = "closed"; return info; }
+    info.locked = extra && lockedForVisitor(d);
+    info.count = openCount(d);
+    if (info.count === 0) info.state = "full";
+    else if (info.count !== null && info.count <= FEW_LEFT) info.state = "few";
+    return info;
+  };
+  var bookable = function (info) { return info.state === "open" || info.state === "few"; };
+
+  var firstOpenDay = function () {
+    var d = startOfDay(new Date());
+    for (var i = 0; i <= BOOK_AHEAD_DAYS; i++) {
+      var info = dayInfo(new Date(d.getFullYear(), d.getMonth(), d.getDate() + i));
+      if (bookable(info) && !info.locked) return info.key;
+    }
+    return null;
+  };
+
+  var dayLabel = function (info) {
+    var when = info.date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    if (info.state === "closed") return when + ", closed";
+    if (info.state === "out") return when + ", not bookable yet";
+    if (info.state === "full") return when + ", fully booked";
+    var what = info.count === null ? "open"
+      : info.count + (info.count === 1 ? " opening" : " openings") + (info.state === "few" ? " left" : "");
+    if (info.extra) what += info.locked ? ", an extra Monday, members first" : ", an extra Monday";
+    return when + ", " + what;
+  };
+
+  var pickDay = function (key, keepFocus) {
+    state.dayKey = key;
+    state.slot = null;
+    renderDays();
+    renderSlots();
+    renderChips();
+    renderPreview();
+    if (keepFocus) {
+      var b = daysEl.querySelector('.cal-day[data-key="' + key + '"]');
+      if (b) b.focus();
+    }
+  };
+
+  var moveMonth = function (dir, focusKey) {
+    calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + dir, 1);
+    renderDays();
+    var b = focusKey && daysEl.querySelector('.cal-day[data-key="' + focusKey + '"]:not(:disabled)');
+    (b || daysEl.querySelector('.cal-day[tabindex="0"]') || daysEl.querySelector(".cal-nav")).focus();
+  };
+
+  var renderDays = function () {
+    /* keep the chosen day while it can still be booked, otherwise the first that can */
+    var before = state.dayKey;
+    if (state.dayKey && !bookable(dayInfo(keyDate(state.dayKey)))) state.dayKey = null;
+    if (!state.dayKey) state.dayKey = firstOpenDay();
+    var sel = state.dayKey ? keyDate(state.dayKey) : startOfDay(new Date());
+    if (!calMonth || state.dayKey !== before) calMonth = new Date(sel.getFullYear(), sel.getMonth(), 1);
+
+    var now = new Date();
+    var firstMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    var endMonth = new Date(lastBookable().getFullYear(), lastBookable().getMonth(), 1);
+    var todayKey = dateKey(now);
+
+    daysEl.textContent = "";
+    var cal = document.createElement("div");
+    cal.className = "cal";
+
+    var head = document.createElement("div");
+    head.className = "cal-head";
+    var nav = function (dir, label, on) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "cal-nav";
+      b.setAttribute("aria-label", label);
+      b.innerHTML = dir < 0 ? "&#8249;" : "&#8250;";
+      b.disabled = !on;
+      b.addEventListener("click", function () { moveMonth(dir); });
+      return b;
+    };
+    var title = document.createElement("p");
+    title.className = "cal-title";
+    title.id = "cal-title";
+    title.setAttribute("aria-live", "polite");
+    title.textContent = calMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    head.appendChild(nav(-1, "Previous month", calMonth > firstMonth));
+    head.appendChild(title);
+    head.appendChild(nav(1, "Next month", calMonth < endMonth));
+    cal.appendChild(head);
+
+    var grid = document.createElement("div");
+    grid.className = "cal-grid";
+    grid.setAttribute("role", "group");
+    grid.setAttribute("aria-labelledby", "cal-title");
+    WEEKDAYS.forEach(function (w) {
+      var s = document.createElement("span");
+      s.className = "cal-wd";
+      s.setAttribute("aria-hidden", "true");
+      s.textContent = w;
+      grid.appendChild(s);
+    });
+    for (var pad = 0; pad < calMonth.getDay(); pad++) {
+      var gap = document.createElement("span");
+      gap.className = "cal-gap";
+      grid.appendChild(gap);
+    }
+
+    var days = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+    var focusable = null;
+    for (var n = 1; n <= days; n++) {
+      var info = dayInfo(new Date(calMonth.getFullYear(), calMonth.getMonth(), n));
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "cal-day is-" + info.state + (info.extra && info.state !== "out" ? " is-extra" : "") +
+        (info.locked ? " is-members" : "") + (info.key === todayKey ? " is-today" : "") +
+        (info.key === state.dayKey ? " is-selected" : "");
+      b.dataset.key = info.key;
+      b.disabled = !bookable(info);
+      b.tabIndex = -1;
+      b.setAttribute("aria-label", dayLabel(info));
+      b.setAttribute("aria-pressed", String(info.key === state.dayKey));
+      var num = document.createElement("span");
+      num.className = "cal-num";
+      num.textContent = n;
+      var note = document.createElement("span");
+      note.className = "cal-note";
+      note.setAttribute("aria-hidden", "true");
+      if (info.extra && bookable(info)) note.textContent = info.locked ? "Members" : "Extra";
+      else if (info.state === "few") note.textContent = info.count + " left";
+      else if (info.state === "full") note.textContent = "Full";
+      b.appendChild(num);
+      b.appendChild(note);
+      if (info.key === state.dayKey) focusable = b;
+      b.addEventListener("click", function () { pickDay(this.dataset.key, true); });
+      grid.appendChild(b);
+    }
+    /* one day in the tab order: the chosen one, or the month's first open day */
+    (focusable || grid.querySelector(".cal-day:not(:disabled)") || { tabIndex: 0 }).tabIndex = 0;
+
+    grid.addEventListener("keydown", function (e) {
+      var step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+      var from = e.target.closest && e.target.closest(".cal-day");
+      if (!step || !from) return;
+      e.preventDefault();
+      var d = keyDate(from.dataset.key);
+      for (var i = 0; i < 62; i++) {
+        d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + step);
+        if (d < startOfDay(new Date()) || d > lastBookable()) return;
+        if (!bookable(dayInfo(d))) continue;
+        var key = dateKey(d);
+        if (d.getMonth() !== calMonth.getMonth()) { moveMonth(d > calMonth ? 1 : -1, key); return; }
+        var t = grid.querySelector('.cal-day[data-key="' + key + '"]');
+        if (t) { from.tabIndex = -1; t.tabIndex = 0; t.focus(); }
+        return;
+      }
+    });
+    cal.appendChild(grid);
+
+    var legend = document.createElement("p");
+    legend.className = "cal-legend";
+    legend.innerHTML = '<span><i class="cal-dot"></i>Open</span>' +
+      '<span><i class="cal-dot is-few"></i>A few left</span>' +
+      '<span>Closed Sundays and Mondays' + (XD && XD.label && XD.label() ? ", except extra Mondays" : "") + '</span>';
+    cal.appendChild(legend);
+    daysEl.appendChild(cal);
+  };
+
+  var slotsLabel = slotsEl.previousElementSibling;
   var renderSlots = function () {
     slotsEl.textContent = "";
+    if (slotsLabel && slotsLabel.classList.contains("booking-label")) {
+      slotsLabel.textContent = state.dayKey && state.services.length
+        ? "Pick a time · " + keyDate(state.dayKey).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })
+        : "Pick a time";
+    }
+    if (!state.dayKey && state.services.length) {
+      var none = document.createElement("p");
+      none.className = "booking-open-note";
+      none.textContent = "No openings for this session in the next eight weeks. Try a shorter session, or ask Evelyn about an extra day.";
+      slotsEl.appendChild(none);
+      return;
+    }
     if (!state.services.length) {
       var empty = document.createElement("p");
       empty.className = "booking-open-note";
@@ -959,6 +1118,7 @@
     payView.hidden = true;
     successView.hidden = true;
     repickView.hidden = true;
+    calMonth = null;
     renderAll();
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
@@ -993,6 +1153,7 @@
     payView.hidden = true;
     successView.hidden = true;
     repickView.hidden = true;
+    calMonth = null;
     renderAll();
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;

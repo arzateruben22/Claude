@@ -130,8 +130,8 @@
      One fixed canvas over the whole page (not one per button), drawn
      only while sparks are alive. Same geometry as React Bits: lines
      fly out from the tap and shorten as they go, easing out. Each line
-     has a thin dark edge, so it still reads on the rose buttons. */
-  var SPARK = { color: "#f2bfcf", size: 15, radius: 30, count: 8, duration: 460 };
+     has a thin light edge, so it still reads on the clay buttons. */
+  var SPARK = { color: "#A8705A", size: 15, radius: 30, count: 8, duration: 460 };
   var canvas = null, ctx = null, sparks = [], raf = null, dpr = 1;
 
   var sizeCanvas = function () {
@@ -157,7 +157,7 @@
       ctx.beginPath();
       ctx.moveTo(s.x + d * c, s.y + d * n);
       ctx.lineTo(s.x + (d + len) * c, s.y + (d + len) * n);
-      ctx.strokeStyle = "rgba(24, 12, 18, 0.55)";
+      ctx.strokeStyle = "rgba(251, 248, 243, 0.7)";
       ctx.lineWidth = s.width + 2.5;
       ctx.stroke();
       ctx.strokeStyle = s.color;
@@ -204,7 +204,7 @@
       if (!r.width) return;
       var x = r.left + r.width / 2, y = r.top + r.height / 2;
       spark(x, y, { count: 12, radius: 64, size: 18, duration: 760, width: 2.2 });
-      spark(x, y, { count: 12, radius: 38, size: 10, duration: 620, color: "#f6dbe3", stagger: 90 });
+      spark(x, y, { count: 12, radius: 38, size: 10, duration: 620, color: "#C49A6C", stagger: 90 });
     });
   };
 

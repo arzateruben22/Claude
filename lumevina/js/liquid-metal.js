@@ -1,5 +1,5 @@
-/* Lumevina — liquid metal hero background
-   A WebGL "liquid rose-gold" shader (inspired by paper-design's
+/* Lumevina — liquid silk hero background
+   A WebGL "liquid sand silk" shader (inspired by paper-design's
    LiquidMetal) rendered behind the hero. Vanilla port so the site
    keeps its no-build stack. If WebGL is unavailable the canvas is
    removed and the CSS glow fallback stays visible. */
@@ -20,9 +20,9 @@
     "void main(){ gl_Position = vec4(a_pos, 0.0, 1.0); }"
   ].join("\n");
 
-  /* domain-warped fbm mapped to the noir palette: near-black body,
-     deep plum and bronze undertones, rose-gold light catching the
-     crests — liquid satin in a dark room */
+  /* domain-warped fbm mapped to the sand palette: an oat-linen body,
+     soft sand folds with a little clay warmth in the deepest ones, and
+     cream light on the crests — raw silk in daylight */
   var FRAG = [
     "precision highp float;",
     "uniform vec2 u_res;",
@@ -54,15 +54,15 @@
     "  float band = sin((n * 4.5 + r.x * 2.0) * 3.14159 + t * 3.0);",
     "  float spec = smoothstep(0.55, 0.95, band);",
     "  float shade = n * 0.6 + 0.4;",
-    "  vec3 night  = vec3(0.010, 0.008, 0.010);",
-    "  vec3 plum   = vec3(0.150, 0.080, 0.112);",
-    "  vec3 rose   = vec3(0.918, 0.725, 0.784);",
-    "  vec3 gold   = vec3(0.890, 0.706, 0.561);",
-    /* mostly black; soft plum depth; thin rose-gold light on the crests */
-    "  vec3 col = mix(night, plum, smoothstep(0.35, 0.95, shade));",
-    "  float crest = pow(max(band, 0.0), 14.0);",
-    "  vec3 light = mix(rose, gold, clamp(q.y * 1.2, 0.0, 1.0));",
-    "  col += light * crest * 0.42 * smoothstep(0.3, 0.8, n);",
+    "  vec3 linen = vec3(0.957, 0.933, 0.902);",
+    "  vec3 fold  = vec3(0.850, 0.788, 0.714);",
+    "  vec3 clay  = vec3(0.776, 0.640, 0.560);",
+    "  vec3 cream = vec3(1.000, 0.992, 0.975);",
+    /* mostly linen; sand in the folds; cream light on the crests */
+    "  vec3 col = mix(fold, linen, smoothstep(0.30, 0.90, shade));",
+    "  col = mix(col, clay, smoothstep(0.62, 0.30, shade) * 0.28);",
+    "  float crest = pow(max(band, 0.0), 10.0);",
+    "  col = mix(col, cream, crest * 0.6 * smoothstep(0.3, 0.8, n));",
     "  gl_FragColor = vec4(col, 1.0);",
     "}"
   ].join("\n");
