@@ -72,6 +72,20 @@
   /* ── Motion (GSAP + ScrollTrigger) ── */
   if (typeof gsap === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);
+  /* Pinch-zooming on a phone fires resize events. Left alone, ScrollTrigger
+     re-measures every scroll animation on each one, and the page jumps as if
+     it reloaded. Re-measure only when the page's own width really changes
+     (rotating the phone, resizing a window), never for a zoom or the
+     address bar sliding away. */
+  ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: "visibilitychange,DOMContentLoaded,load" });
+  var layoutW = document.documentElement.clientWidth, refreshT = 0;
+  window.addEventListener("resize", function () {
+    var w = document.documentElement.clientWidth;
+    if (w === layoutW) return;
+    layoutW = w;
+    clearTimeout(refreshT);
+    refreshT = setTimeout(function () { ScrollTrigger.refresh(); }, 200);
+  }, { passive: true });
 
   var mm = gsap.matchMedia();
 
@@ -101,8 +115,7 @@
   mm.add("(prefers-reduced-motion: no-preference)", function () {
     splitChars(".hero-title .line-inner");
 
-    /* Hero entrance */
-    /* it waits for the opening greeting (js/intro.js) to lift, so it's seen */
+    /* Hero entrance: plays as soon as the page opens */
     var intro = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
     intro.timeScale(1.25);  /* the whole entrance plays a touch brisker */
     intro
@@ -117,14 +130,7 @@
       .from(".hero .hero-cred", { opacity: 0, duration: 0.6 }, 1.0)
       .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 1.0)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.4);
-    var heroStarted = false;
-    var startHero = function () { if (heroStarted) return; heroStarted = true; intro.play(0); };
-    var veil = document.getElementById("intro");
-    if (!veil || veil.classList.contains("intro-done") || document.documentElement.classList.contains("intro-lifted")) startHero();
-    else {
-      document.addEventListener("lumevina:intro-lift", startHero, { once: true });
-      setTimeout(startHero, 12000);   /* never leave the hero hidden */
-    }
+    intro.play(0);
 
     /* her logo's symbol rises gently and fades as you leave the hero */
     gsap.fromTo(".hero-mark-drift",
@@ -142,7 +148,7 @@
        the true resting opacity (0.3) as its start — the earlier version
        captured a stale ~0 during the entrance and flickered on the
        first scroll. invalidateOnRefresh recomputes cleanly after the
-       font loads / the intro lifts. */
+       font loads. */
     gsap.fromTo(".hero-wordmark",
       { opacity: 0.3 },
       {

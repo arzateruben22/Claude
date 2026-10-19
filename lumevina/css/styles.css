@@ -62,7 +62,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* a pinch or a pull at the top never spills over into the browser's or
+     the Claude app's pull-to-refresh, which reloads the whole page */
+  overscroll-behavior-y: contain;
+}
 
 body {
   margin: 0;
@@ -318,171 +323,6 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 
 @media (prefers-reduced-motion: reduce) {
   .btn-mb-glow { display: none; }
-}
-
-/* ─── Intro / arrival overlay (js/intro.js) ─── */
-
-.intro {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  /* v1's arrival, in the new palette: a classic black veil with warm
-     linen light, lifting to the beige site */
-  --intro-ink: #F2EAE0;
-  --intro-sand-rgb: 214, 194, 166;
-  background:
-    radial-gradient(50% 45% at 50% 42%, rgba(var(--intro-sand-rgb), 0.12), transparent 70%),
-    radial-gradient(40% 40% at 80% 85%, rgba(var(--intro-sand-rgb), 0.07), transparent 70%),
-    #0E0D0C;
-  color: var(--intro-ink);
-  cursor: pointer;
-  transition: opacity 720ms ease, transform 720ms ease;
-}
-
-.intro.intro-out {
-  opacity: 0;
-  transform: translateY(-2%);
-  pointer-events: none;
-  transition: opacity 620ms ease, transform 620ms ease;
-}
-
-/* strip the heavy blur/grid/motes the instant we start lifting, so the
-   fade-out doesn't composite over the hero's first scroll */
-.intro.intro-out .intro-glow,
-.intro.intro-out .intro-grid,
-.intro.intro-out .intro-float { display: none; }
-
-.intro.intro-done { display: none; }
-.no-intro .intro { display: none; }
-
-/* scroll lock via class so main.js's inline overflow reset can't clobber it */
-body.intro-lock { overflow: hidden; }
-
-.intro-grid { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-
-.intro-gl {
-  stroke: rgb(var(--intro-sand-rgb));
-  stroke-width: 0.5;
-  opacity: 0;
-  stroke-dasharray: 6 6;
-  stroke-dashoffset: 1000;
-  animation: intro-grid-draw 1.6s ease-out forwards paused;
-}
-.intro.intro-go .intro-gl { animation-play-state: running; }
-
-@keyframes intro-grid-draw {
-  0% { stroke-dashoffset: 1000; opacity: 0; }
-  55% { opacity: 0.22; }
-  100% { stroke-dashoffset: 0; opacity: 0.13; }
-}
-
-.intro-float {
-  position: absolute;
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--intro-ink);
-  opacity: 0;
-  animation: intro-float 4s ease-in-out infinite;
-}
-
-@keyframes intro-float {
-  0%, 100% { transform: translate(0, 0); opacity: 0.18; }
-  25% { transform: translate(5px, -10px); opacity: 0.5; }
-  50% { transform: translate(-3px, -5px); opacity: 0.35; }
-  75% { transform: translate(7px, -15px); opacity: 0.6; }
-}
-
-.intro-inner {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 0 1.5rem;
-}
-
-.intro-mark {
-  display: block;
-  margin: 0 auto;
-  width: clamp(16rem, 34vw, 25rem);
-  height: auto;
-  opacity: 0;
-  animation: intro-appear 0.92s ease-out forwards paused;
-  animation-delay: 0.08s;
-}
-/* js/intro.js starts the greeting once the logo has loaded */
-.intro.intro-go .intro-mark { animation-play-state: running; }
-
-.intro-word { opacity: 0; will-change: opacity, transform, filter; }
-
-.intro-word.intro-anim { animation: intro-appear 0.6s ease-out forwards; }
-
-.intro-mark-word {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.29rem, 8vw, 4.05rem);
-  letter-spacing: -0.022em;
-  line-height: 1;
-  color: var(--intro-ink);
-  margin-top: 0.4rem;
-}
-
-.intro-tag {
-  margin-top: 1.4rem;
-  font-family: var(--font-display);
-  font-weight: 650;
-  font-size: clamp(1.4rem, 3.4vw, 2.2rem);
-  letter-spacing: -0.03em;
-  color: var(--intro-ink);
-}
-
-.intro-tag .intro-word { display: inline-block; margin: 0 0.18em; }
-
-.intro-glow {
-  position: fixed;
-  width: 22rem; height: 22rem;
-  border-radius: 9999px;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle,
-    rgba(var(--intro-sand-rgb), 0.16), rgba(var(--intro-sand-rgb), 0.08), transparent 70%);
-  filter: blur(40px);
-  opacity: 0;
-  will-change: left, top, opacity;
-  transition: left 80ms linear, top 80ms linear, opacity 320ms ease-out;
-}
-
-.intro-ripple {
-  position: fixed;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: rgba(var(--intro-sand-rgb), 0.6);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 210;
-  animation: intro-ripple 900ms ease-out forwards;
-}
-
-@keyframes intro-ripple {
-  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(14); }
-}
-
-@keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes intro-appear {
-  0% { opacity: 0; transform: translateY(26px) scale(0.86); filter: blur(9px); }
-  55% { opacity: 0.85; transform: translateY(8px) scale(0.97); filter: blur(2px); }
-  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Reduce Motion still gets the greeting, as a soft fade with no movement */
-  .intro-mark, .intro-word.intro-anim { animation-name: intro-fade; }
-  .intro-gl, .intro-float { animation: none; opacity: 0.12; }
-  .intro-glow { display: none; }
 }
 
 /* ─── Nav ─── */

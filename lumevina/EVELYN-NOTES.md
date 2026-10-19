@@ -124,7 +124,7 @@ Sent at the same link: https://claude.ai/artifact/YChu6itk5K1NpWfrQdF5Ak. 21 que
 - **Her hours (from Evelyn):** Tuesday 12–7, Wednesday 11–7, Thursday 11–7, Friday 10–5, Saturday 9:30–6, closed Sunday and Monday. Now the site's default week (js/hours.js); the calendar, the FAQ and the assistant read it. No lunch break is set; add one in the dashboard if she takes one.
 - **After-hours facials:** outside her hours, or on a closed day, for the $32 After-Hours Add-On already on her menu. The site doesn't book those on its own: the Book section and the FAQ send the client to the Contact form with the request pre-written, and she confirms.
 - **Booking in both places for now (Ruben):** new clients book on the website's calendar. Clients who already book with her on GlossGenius can still use it, with a note under the Book heading that all booking is moving here. Set in js/site-config.js (booking.mode "both").
-- **The opening logo animation** was checked on a fresh visit: the black logo loads, the words play, the intro clears, and the headline animates in.
+- **The opening logo animation was removed (Oct 19)** at Ruben's request: the site opens straight to the homepage, and the hero plays its entrance right away.
 
 ## The Skin Playbook (Oct 19)
 
@@ -154,6 +154,10 @@ Evelyn wants to get used to the website before clients book on it. Every Book bu
 
 Evelyn needs 30 minutes after every appointment to clean and sanitize. The website's booking (when it's switched on) never starts an appointment within 30 minutes of another one ending, on either side; several treatments booked together count as one visit, with the 30 minutes after the whole visit. The database enforces the same gap, and the server's check against her Google Calendar includes it. **While booking runs on GlossGenius:** set a 30-minute buffer after each service in GlossGenius (its service settings have a buffer or "processing time" option; the exact name may differ in her app).
 
-## Her logo on the homepage and in the opening (Oct 19)
+## Her logo on the homepage (Oct 19)
 
-Her full logo (the circle, profile and roses, with LUMEVINA and AESTHETICS SPA) is sharp vector art: `img/logo-full.svg` on the homepage, centred above the headline and tinted in the earthy palette through a mask, and `img/logo-full-cream.svg` in the opening animation. The art is traced from her logo; the words are Cormorant Garamond turned into shapes, so nothing depends on a font loading, and her outlined EV has a soft fill so the whole word reads on a phone. The homepage logo fades in with the headline once the opening lifts and drifts up gently as you scroll. If Evelyn has the original logo file (PDF, AI or SVG) from her designer, swap it in for an exact match.
+Her full logo (the circle, profile and roses, with LUMEVINA and AESTHETICS SPA) is sharp vector art: `img/logo-full.svg` on the homepage, centred above the headline and tinted in the earthy palette through a mask. The art is traced from her logo; the words are Cormorant Garamond turned into shapes, so nothing depends on a font loading, and her outlined EV has a soft fill so the whole word reads on a phone. The homepage logo fades in with the headline and drifts up gently as you scroll. If Evelyn has the original logo file (PDF, AI or SVG) from her designer, swap it in for an exact match.
+
+## Pinch-zoom no longer jolts the page (Oct 19)
+
+Pinch-zooming on a phone fires resize events, and the scroll animations used to re-measure on every one, so the page jumped as if it had reloaded. They now re-measure only when the page's real width changes (rotating the phone or resizing a window). The page also keeps a pull at the top from spilling into the browser's or the Claude app's pull-to-refresh, which reloads the whole page.

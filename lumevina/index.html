@@ -17,41 +17,10 @@
   <link rel="preload" href="fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
-  <!-- the arrival greeting plays once per visit, and never on a link to a specific spot -->
-  <!-- the arrival (js/intro.js) plays every time the site opens -->
   <!-- what's switched on, and where clients book: one file to change (js/site-config.js) -->
   <script src="js/site-config.js"></script>
 </head>
 <body>
-
-  <!-- ═══════════════ INTRO / ARRIVAL ═══════════════
-       A brief serene greeting on open (js/intro.js). Warm-palette port
-       of the 21st.dev "Digital Serenity" landing. Short, skippable on
-       any interaction, and skipped entirely under reduced-motion. -->
-  <div class="intro" id="intro" aria-hidden="true">
-    <svg class="intro-grid" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="none">
-      <line class="intro-gl" x1="0" y1="22%" x2="100%" y2="22%" style="animation-delay:.4s"></line>
-      <line class="intro-gl" x1="0" y1="78%" x2="100%" y2="78%" style="animation-delay:.8s"></line>
-      <line class="intro-gl" x1="20%" y1="0" x2="20%" y2="100%" style="animation-delay:1.1s"></line>
-      <line class="intro-gl" x1="80%" y1="0" x2="80%" y2="100%" style="animation-delay:1.4s"></line>
-    </svg>
-    <span class="intro-float" style="top:26%;left:16%;animation-delay:.5s"></span>
-    <span class="intro-float" style="top:62%;left:84%;animation-delay:1s"></span>
-    <span class="intro-float" style="top:38%;left:11%;animation-delay:1.5s"></span>
-    <span class="intro-float" style="top:74%;left:88%;animation-delay:2s"></span>
-
-    <div class="intro-inner">
-      <!-- her full logo, vector (sharp at any size): the art traced from her logo, the words as shapes -->
-      <img class="intro-mark" src="img/logo-full-cream.svg" alt="" aria-hidden="true" width="400" height="287">
-      <p class="intro-tag">
-        <span class="intro-word" data-delay="520">Where</span>
-        <span class="intro-word" data-delay="620">glow</span>
-        <span class="intro-word" data-delay="720">begins.</span>
-      </p>
-    </div>
-
-    <div class="intro-glow" id="intro-glow" aria-hidden="true"></div>
-  </div>
 
   <header class="nav" id="top">
     <a class="nav-brand" href="#top">Lumevina<span class="nav-brand-sub">Aesthetics Spa</span></a>
@@ -2095,7 +2064,6 @@
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>
   <script src="js/save-file.js"></script>
-  <script src="js/intro.js"></script>
   <script src="js/payments.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/catalog.js"></script>
