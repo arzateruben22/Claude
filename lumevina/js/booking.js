@@ -285,7 +285,38 @@
   };
 
   /* deterministic pseudo-availability, per 30-minute cell */
+  /* LIVE (js/site-config.js → booking.availability): every taken stretch of
+     each day, from both calendars at once — website bookings and her Google
+     Calendar, which carries her GlossGenius appointments
+     (server/functions/availability). Read on load, when the page comes back
+     into view, and every two minutes; the server checks again before any
+     deposit, so a time taken a moment ago can't be booked twice. */
+  var AV = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking && window.LUMEVINA_CONFIG.booking.availability) || "";
+  var liveBusy = null;
+  var liveTaken = function (dayKey, start, dur) {
+    return (liveBusy && liveBusy[dayKey] || []).some(function (b) { return start < b[1] && start + dur > b[0]; });
+  };
+  var pullBusy = function () {
+    if (!AV || !window.fetch) return;
+    var from = new Date(), to = new Date();
+    to.setDate(to.getDate() + BOOK_AHEAD_DAYS + 1);
+    var k = function (d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); };
+    fetch(AV + (AV.indexOf("?") === -1 ? "?" : "&") + "from=" + k(from) + "&to=" + k(to))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) {
+        liveBusy = j.busy || {};
+        document.dispatchEvent(new CustomEvent("lumevina:availability"));
+      })
+      .catch(function () { /* unreachable: times show as open; the server still refuses a taken one */ });
+  };
+  if (AV) {
+    setTimeout(pullBusy, 0);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) pullBusy(); });
+    setInterval(function () { if (!document.hidden) pullBusy(); }, 120000);
+  }
+
   var cellSeedBusy = function (dayKey, cell) {
+    if (AV) return false;   /* live: real bookings only, no sample busy times */
     var str = dayKey + ":c:" + cell;
     var h = 0;
     for (var i = 0; i < str.length; i++) {
@@ -363,7 +394,7 @@
   var blockFree = function (dayKey, start, dur, userSet) {
     var h = hoursOf(dayKey);
     if (!h || start < h.open || start + dur > h.close) return false;
-    if (overlapsLunch(start, dur, h) || overlapsBlock(dayKey, start, dur)) return false;
+    if (overlapsLunch(start, dur, h) || overlapsBlock(dayKey, start, dur) || liveTaken(dayKey, start, dur)) return false;
     for (var t = start; t < start + dur; t += CELL) {
       if (cellSeedBusy(dayKey, t) || userSet[t]) return false;
     }

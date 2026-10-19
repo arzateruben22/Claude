@@ -212,6 +212,53 @@ dashboard's **Shipping** card works from it. To make it real:
    includes an email. To send it from Lumevina instead, have
    `send-confirmation` email the tracking link when a row turns `shipped`.
 
+## Running both calendars
+
+New clients book on the website; clients who already use GlossGenius keep
+booking there for now. Both have to see each other's appointments, or the
+same time gets booked twice. GlossGenius has no public API, but it syncs
+with **Google Calendar both ways**, so her Google Calendar is the meeting
+point and the website only talks to Google:
+
+```
+GlossGenius  ⇄  her Google Calendar  ⇄  website (server/functions)
+```
+
+- **GlossGenius → website:** GlossGenius puts each appointment in her Google
+  Calendar. `functions/availability` reads her busy times (Google freeBusy)
+  plus the website's own bookings, and the Book section greys those times
+  out. `create-deposit-intent` checks Google once more before taking a
+  deposit.
+- **Website → GlossGenius:** when a deposit is paid, `stripe-webhook` writes
+  the booking into her Google Calendar (`_shared/google.ts`), and
+  GlossGenius blocks that time.
+
+Setup, once:
+
+1. **In GlossGenius:** connect her Google Calendar in the app's calendar
+   sync settings, and make sure it's two-way (her Google events block
+   times in GlossGenius). Note which Google calendar GlossGenius writes to.
+2. **Google Cloud:** create a project, enable the Google Calendar API, make
+   an OAuth client of type "Desktop app", then run
+   `GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... node server/scripts/google-auth.mjs`
+   and sign in with that same Google account.
+3. **Secrets:** `supabase secrets set GOOGLE_CLIENT_ID=... GOOGLE_CLIENT_SECRET=... GOOGLE_REFRESH_TOKEN=...`
+   If GlossGenius writes to a calendar other than her primary one, also set
+   `GOOGLE_BUSY_CALENDARS=primary,<that calendar's id>`.
+4. **Deploy:** `supabase functions deploy availability --no-verify-jwt`
+   (and redeploy `create-deposit-intent` and `stripe-webhook`).
+5. **Website:** in `js/site-config.js`, set `booking.availability` to
+   `https://<project>.supabase.co/functions/v1/availability`.
+
+How close to real time: the website reads Google every time the Book
+section opens and every two minutes, and checks again before charging, so
+a GlossGenius booking blocks the website within however long GlossGenius
+takes to push it to Google (usually a minute or two). The other way is
+the same: a website booking reaches GlossGenius as fast as GlossGenius
+reads Google. In that small window, two people could pick the same time
+on the two systems; if it happens, the second one is the one to move.
+To close it entirely, she moves all booking to the website (`mode: "site"`).
+
 ## Ask Lumevina (client questions)
 
 `js/ask.js` runs the chat in the browser today: keyword matching answers the

@@ -50,7 +50,11 @@
          GlossGenius can still use it for now, with a note that everything
          is moving here */
       mode: "both",
-      glossgenius: "https://lumevina.glossgenius.com/"
+      glossgenius: "https://lumevina.glossgenius.com/",
+      /* both calendars in sync: the server's availability function
+         (website bookings + her Google Calendar, where GlossGenius writes
+         its appointments). Empty = sample times. */
+      availability: ""   /* e.g. https://<project>.supabase.co/functions/v1/availability */
     }
   };
 

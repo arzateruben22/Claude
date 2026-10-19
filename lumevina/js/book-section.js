@@ -347,6 +347,8 @@
   document.addEventListener("lumevina:booked", renderAll);
   document.addEventListener("lumevina:booking-changed", renderAll);
   if (H) H.onChange(function () { paintFaq(); renderAll(); });
+  /* both calendars' taken times arrived from the server (js/booking.js) */
+  document.addEventListener("lumevina:availability", function () { renderAll(); });
 
   paintNew();
   renderAll();
