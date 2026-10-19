@@ -1,105 +1,136 @@
 // Lumevina — Supabase Edge Function: ask
 //
-// The live version of Ask Lumevina (js/ask.js). Everyday questions get an
-// instant answer from Claude, grounded only in Lumevina's own facts below.
-// Anything personal goes to Evelyn: it's saved to `questions` with a drafted
-// reply she checks and sends from the dashboard (Client questions).
+// The live Ask Lumevina. A client's question comes in; Claude answers it from
+// Evelyn's own playbook, the FAQ and policies, and her shelf (all packed into
+// ../_shared/knowledge.ts by knowledge/scripts/build-bundle.mjs), in her
+// voice, ending with a next step. Anything personal or medical, anything her
+// playbook doesn't cover, and anything on her hard-lines list goes to her:
+// it's saved to `questions` with a drafted reply she checks and sends from
+// the dashboard (Client questions).
 //
-// Safety comes first and doesn't depend on the model: the same keyword rules
-// as the website run before any AI call, so reactions, pregnancy,
-// medications, skin conditions and "what should I use on my skin" always go
-// to Evelyn, and anything that sounds like an emergency is told to call 911.
-// The model can also hand off on its own (the hand_to_evelyn tool) when a
-// question isn't covered by the facts. It never diagnoses, and never answers
-// for Evelyn on a personal question.
+// Safety doesn't depend on the model. The same hand-off rules as the website
+// (js/ask-rules.js, copied into the bundle) run before any AI call, so
+// reactions, pregnancy, medications, named conditions, "my skin" questions and
+// emergencies always go to Evelyn. The model can also hand off on its own with
+// the hand_to_evelyn tool. A safety refusal from the model is treated as a
+// hand-off too. The website keeps its keyword answers for when this function
+// isn't reachable.
 //
-// Request:  POST { message, history?: [{role, content}], name?, email? }
-//           with the client's Supabase session, if signed in (members are
-//           looked up from it and promised a reply within 24 hours).
-// Response: { answer } or { handoff: kind, due_at, urgent? }
+// Request:  POST { message, history?: [{role, content}], name?, email?, handoff? }
+//           with the client's Supabase session when signed in. `handoff` (a
+//           kind) skips the answer and saves the question for Evelyn.
+// Response: { answer } or { handoff: kind, due_at?, needs_contact?, urgent? }
+//           or, when Claude can't be reached, a 5xx { error } that tells the
+//           website to fall back to its keyword answers.
 //
 // Deploy:  supabase functions deploy ask
 // Secrets: supabase secrets set ANTHROPIC_API_KEY=...
+// Cost: the stable part of the prompt (instructions, FAQ, playbook, shelf) is
+// cached for an hour, so each question pays mostly for its own few hundred
+// tokens. Check usage.cache_read_input_tokens in the logs.
 
+import Anthropic from "npm:@anthropic-ai/sdk@0.131.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { CATALOG } from "../_shared/catalog.ts";
+import {
+  BUILT_AT, PROMPT, FACTS, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
+} from "../_shared/knowledge.ts";
 
-const MODEL = "claude-haiku-4-5-20251001";     // fast and inexpensive for FAQ-sized answers
+const MODEL = "claude-opus-5-5";
 const MEMBER_HOURS = 24;
 const GUEST_HOURS = 48;
+const KIND_SET = new Set(["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"]);
 
 const admin = () => createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+const anthropic = new Anthropic({ apiKey: Deno.env.get("ANTHROPIC_API_KEY") });
 
-// ── the same hand-off rules as js/ask.js ──
-const URGENT = /(can'?t|cannot|hard to|trouble|struggling to) breathe|throat (is )?(closing|swelling|tight)|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out/i;
-const KINDS: [string, RegExp][] = [
-  ["reaction", /react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\bpus\b|ooz|scab|stinging|irritat|peeling/i],
-  ["pregnancy", /pregnan|expecting|breastfeed|nursing|trying to conceive/i],
-  ["medication", /accutane|isotretinoin|tretinoin|retin-?a|prescri|medicat|antibiotic|spironolactone|birth control|chemo|radiation|laser|surgery/i],
-  ["condition", /eczema|psoriasis|rosacea|dermatitis|lupus|cold sore|herpes|melasma|mole|lump|cyst|fungal|perioral/i],
-  ["skin", /\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|wrinkles|texture)\b|for my skin|purging|(breaking|broke|break) ?out after/i],
-];
-const ruleKind = (t: string) => URGENT.test(t) ? "urgent" : (KINDS.find(([, re]) => re.test(t))?.[0] ?? null);
+// ── the rules: plain code, before any AI ──
+const rx = (r: Rule) => new RegExp(r.source, r.flags);
+const URGENT = rx(RULES.urgent);
+const KINDS = RULES.kinds.map((k) => ({ kind: k.kind, any: k.any.map(rx), both: k.both?.map(rx) }));
+const ruleKind = (t: string): string | null => {
+  if (URGENT.test(t)) return "urgent";
+  for (const k of KINDS) {
+    if (k.any.some((r) => r.test(t)) || (k.both && k.both.every((r) => r.test(t)))) return k.kind;
+  }
+  return null;
+};
 
-// ── what the assistant may say: Lumevina's facts, nothing else ──
-const menu = Object.values(CATALOG)
-  .filter((s) => s.price_cents > 0)
-  .map((s) => `- ${s.name}: $${s.price_cents / 100}`).join("\n");
-const FACTS = `Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn.
-Hours: Tuesday to Saturday, 8 AM to 6 PM. Closed Sundays and Mondays, except extra Mondays every other week, members first.
-Location: exact address in the confirmation email. Free parking lot. On arrival, wait in the car and text before coming up.
-Booking: online, any time. Every booking takes a non-refundable deposit that goes toward the total.
-New clients: book "New Clients Start Here" (from $220, 60+ minutes): a consultation, a review of their current routine, and a fully customized facial. It's for non-acne skin; for acne, book the Acne Program's New Client Consultation + Treatment ($225). Every facial includes a double cleanse, enzyme exfoliation, extractions, a targeted mask, a relaxing massage, LED and cryo globes. Pay over time with Klarna, Affirm or Afterpay.
-Cancelling: at least 48 hours ahead with the link in the confirmation email; the deposit moves to a new date in the same month. Same-day changes keep the deposit and add a $43 fee. Saturdays can't be moved or cancelled. No-shows are charged 50%. 10-minute grace period for late arrivals.
-Payment: cash preferred; cards accepted with a fee. Services are non-refundable; reach out within 24 hours if anything comes up after a visit.
-Before a facial: stop retinol or prescription retinoids 5-7 days before; pause exfoliating acids 2-3 days before; no facial waxing or shaving for 2 days; wait 2 weeks after Botox or fillers (or book the facial the same day before injections); wait 2 weeks after permanent makeup; don't book on the day of a big event. Accutane, recent laser, cosmetic surgery, radiation or chemo: wait 6-12 months or bring physician clearance.
-After a facial: no makeup the rest of the day; no workouts or heavy sweating for 24 hours (a week after a body peel); no facial waxing or shaving for 2 days.
-Memberships: Glow $159/month (one Custom Facial, Custom + Dermaplaning, or Monthly Acne Treatment a month) and Ageless $209/month (everything in Glow plus the Ageless Grace Facial, a finishing add-on every other visit, 15% off the shelf). Bank up to 2 facials (with 2 waiting, billing holds until one is booked, so nobody pays for a facial they can't use), pause one month a year, cancel online after 3 months, 10% off the shelf, 15% off add-ons, and members can ask Evelyn anything with a reply within 24 hours.
-Gift certificates never expire and work for any treatment.
-Glow Routine: Evelyn's product picks sent monthly, from $75.
-Shipping for shelf products: free for members; otherwise $8, free over $75. Pickup at a visit is always free.
-Skin School: Evelyn's online course at /school.html. 33 short lessons in three levels (Skin Basics, Actives & Routines, Treat Your Concern); the first two lessons are free. Skin Basics alone $49; The Course $149; Course + Kit $229; Course + Evelyn $449 with a 45-minute 1-on-1 video consult (6 a month). Members get Skin Basics free and 25% off.
-Skin School Live: in-person classes at the studio on Sundays 2–4 PM and Monday evenings 6:30–8:30 PM. Six seats, $129 a seat ($109 for members): a skin check under the lamp, a routine built on the spot, a take-home kit and Skin Basics online. Glow Party: a private class for 4 to 8 guests, $690 for up to 6 then $95 a guest, +$75 at the host's home, half down to hold the date. Pro Night for estheticians: $249, includes the Esthetician Business Kit. Book at /school.html#live.
-Menu:
-${menu}`;
+// ── what the assistant knows: stable text, cached; stock last, never cached ──
+const shelfLine = (p: typeof SHELF[number]) =>
+  `- ${p.name} (${p.brand}, ${p.type}${p.size ? ", " + p.size : ""}): $${p.price}${p.about ? ". " + p.about : ""}`;
+const STABLE = [
+  PROMPT,
+  "# About the studio, FAQ and policies\n\n" + FACTS,
+  "# Evelyn's Skin Playbook\n\n" + (KNOWLEDGE_EMPTY
+    ? "Evelyn hasn't filled her playbook in yet. So there is nothing here about skin concerns, aftercare details, routines or how to use her products: every question of that kind goes to her with hand_to_evelyn. You can still answer from the FAQ, the policies and the shelf list."
+    : KNOWLEDGE),
+  HARD_LINES ? "# Her hard lines\n\n" + HARD_LINES : "",
+  VOICE ? "# Her voice\n\n" + VOICE : "",
+  "# Her shelf (every product the website sells)\n\n" + SHELF.map(shelfLine).join("\n"),
+].filter(Boolean).join("\n\n");
 
-const SYSTEM = `You are Ask Lumevina, the assistant for Evelyn's spa. Answer in a warm, short, personal voice (1-3 sentences), using ONLY the facts below.
-If a question is about the client's own skin, a reaction, a condition, pregnancy, medication, which product suits them, or anything the facts don't cover, do not answer it: call hand_to_evelyn.
-Never diagnose, never guess a price or a policy, never promise results.
+const stockWord = (n: number | null) => n == null ? "ask Evelyn" : n <= 0 ? "out of stock, can be requested" : n <= 3 ? `only ${n} left` : "in stock";
+const stockBlock = async (db: ReturnType<typeof admin>) => {
+  // live counts from the products table when it exists; otherwise the catalog's
+  const live = new Map<string, number | null>();
+  try {
+    const { data } = await db.from("products").select("id, stock");
+    for (const row of data ?? []) live.set(row.id, row.stock);
+  } catch { /* no products table yet: the bundle's counts stand */ }
+  return "# Stock right now\n\n" + SHELF.map((p) => `- ${p.name}: ${stockWord(live.has(p.id) ? live.get(p.id)! : p.stock)}`).join("\n");
+};
 
-${FACTS}`;
-
-const DRAFT_SYSTEM = `Draft a reply from Evelyn, a licensed esthetician, to a client's question. Evelyn will read and edit it before sending; it is never sent automatically.
-Warm, short, first person, signed "— Evelyn". Don't diagnose. Ask for a photo in natural light when seeing the skin would help.
-For reactions, name the red flags (spreading, worsening, swelling around eyes or lips) and say to see a doctor if they appear. For pregnancy or medications, suggest checking with their doctor.
-Use only these facts about the spa:
-${FACTS}`;
-
-async function claude(body: Record<string, unknown>) {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": Deno.env.get("ANTHROPIC_API_KEY")!,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
+const HANDOFF_TOOL = {
+  name: "hand_to_evelyn",
+  description: "Send this question to Evelyn instead of answering it. Use it for anything personal or medical, anything about the client's own skin or which products suit them that her playbook doesn't answer, anything on her hard-lines list, anything not covered by what you know, and any request to talk to her. For an emergency use kind \"urgent\".",
+  strict: true,
+  input_schema: {
+    type: "object",
+    properties: {
+      kind: { type: "string", enum: ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"] },
+      why: { type: "string", description: "One short line for Evelyn: what the client is asking for." },
     },
-    body: JSON.stringify({ model: MODEL, max_tokens: 400, ...body }),
-  });
-  if (!res.ok) throw new Error(`Claude ${res.status}: ${await res.text()}`);
-  return await res.json();
-}
+    required: ["kind", "why"],
+    additionalProperties: false,
+  },
+} as const;
 
-const text = (msg: { content: { type: string; text?: string }[] }) =>
-  msg.content.filter((b) => b.type === "text").map((b) => b.text).join("").trim();
+const DRAFT = [
+  "Draft a reply from Evelyn, a licensed esthetician, to a client's question. Evelyn reads and edits every draft before it's sent; nothing goes out automatically.",
+  "Write in her voice (her notes are below when she has written them): warm, short, first person. Don't diagnose. Ask for a photo in natural light when seeing the skin would help.",
+  "For a reaction, name the signs that mean a doctor: spreading, worsening, swelling around the eyes or lips. For pregnancy or medications, suggest checking with their doctor too.",
+  "Use only the facts below. Recommend only products from her shelf, and only if her playbook supports it.",
+  "", "# Facts", FACTS, "", KNOWLEDGE_EMPTY ? "" : "# Her playbook\n" + KNOWLEDGE, HARD_LINES ? "# Her hard lines\n" + HARD_LINES : "", VOICE ? "# Her voice\n" + VOICE : "",
+  "# Her shelf", SHELF.map(shelfLine).join("\n"),
+].filter((s) => s !== "").join("\n");
+
+const textOf = (msg: { content: { type: string; text?: string }[] }) =>
+  msg.content.filter((b) => b.type === "text").map((b) => b.text ?? "").join("").trim();
+
+/* consecutive turns of one role are joined, so the history always alternates */
+type Turn = { role: "user" | "assistant"; content: string };
+const tidy = (history: unknown): Turn[] => {
+  const out: Turn[] = [];
+  for (const h of Array.isArray(history) ? history.slice(-8) : []) {
+    const role = h?.role === "assistant" ? "assistant" : "user";
+    const content = String(h?.content ?? "").trim().slice(0, 1200);
+    if (!content) continue;
+    const last = out[out.length - 1];
+    if (last && last.role === role) last.content += "\n" + content; else out.push({ role, content });
+  }
+  while (out.length && out[0].role !== "user") out.shift();
+  if (out.length && out[out.length - 1].role === "user") out.pop();
+  return out;
+};
 
 Deno.serve(async (req) => {
-  const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, content-type" };
+  const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type" };
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   const json = (b: unknown, status = 200) =>
     new Response(JSON.stringify(b), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
-  const { message, history = [], name, email } = await req.json();
-  const q = String(message ?? "").trim().slice(0, 600);
+  const body = await req.json().catch(() => ({}));
+  const q = String(body.message ?? "").trim().slice(0, 600);
   if (!q) return json({ error: "Empty question" }, 400);
 
   // who's asking: a signed-in client, and whether they're a member
@@ -107,7 +138,7 @@ Deno.serve(async (req) => {
   let client: { id: string; name: string; email: string } | null = null;
   let member = false;
   const jwt = req.headers.get("Authorization")?.replace("Bearer ", "");
-  if (jwt) {
+  if (jwt && jwt !== Deno.env.get("SUPABASE_ANON_KEY")) {
     const { data } = await db.auth.getUser(jwt);
     if (data.user) {
       const { data: c } = await db.from("clients").select("id, name, email").eq("id", data.user.id).single();
@@ -118,34 +149,66 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 1) the rules, before any AI
-  let kind = ruleKind(q);
+  // 1) the rules, before any AI; or a hand-off the website already decided on
+  let kind: string | null = KIND_SET.has(String(body.handoff)) ? String(body.handoff) : ruleKind(q.toLowerCase());
+  let why = "";
 
-  // 2) everyday questions: Claude, with a way to hand off
-  if (!kind) {
-    const reply = await claude({
-      system: SYSTEM,
-      messages: [...history.slice(-8), { role: "user", content: q }],
-      tools: [{
-        name: "hand_to_evelyn",
-        description: "Send the question to Evelyn when it's personal, medical, about the client's own skin or products for it, or not covered by the facts.",
-        input_schema: { type: "object", properties: {
-          kind: { type: "string", enum: ["reaction", "pregnancy", "medication", "condition", "skin", "request", "other"] } },
-          required: ["kind"] },
-      }],
+  try {
+    // 2) an everyday question: Claude, from the bundle, with a way to hand off
+    if (!kind) {
+      const reply = await anthropic.beta.messages.create({
+        model: MODEL,
+        max_tokens: 1024,                              // answers are a few sentences by design
+        betas: ["server-side-fallback-2026-07-01"],
+        fallbacks: "default",                          // a safety decline re-runs on a fallback model
+        output_config: { effort: "low" },              // a chat route: quick, short answers
+        system: [
+          { type: "text", text: STABLE, cache_control: { type: "ephemeral", ttl: "1h" } },
+          { type: "text", text: await stockBlock(db) },
+        ],
+        tools: [HANDOFF_TOOL],
+        tool_choice: { type: "auto" },
+        messages: [...tidy(body.history), { role: "user", content: q }],
+      });
+      console.log(JSON.stringify({ built: BUILT_AT, stop: reply.stop_reason, cached: reply.usage.cache_read_input_tokens, wrote: reply.usage.cache_creation_input_tokens, out: reply.usage.output_tokens }));
+
+      if (reply.stop_reason === "refusal") kind = "other";
+      const call = reply.content.find((b) => b.type === "tool_use");
+      if (call && call.type === "tool_use") {
+        const input = call.input as { kind?: string; why?: string };
+        kind = KIND_SET.has(String(input.kind)) ? String(input.kind) : "other";
+        why = String(input.why ?? "");
+      } else if (!kind) {
+        const answer = textOf(reply);
+        if (answer) return json({ answer });
+        kind = "other";                                // nothing usable came back: Evelyn answers
+      }
+    }
+
+    // 3) hand-off: save it for Evelyn with a drafted reply, once we know who's asking
+    const who = client ?? { id: null, name: String(body.name ?? "").trim(), email: String(body.email ?? "").trim() };
+    if (!who.name || !who.email) return json({ handoff: kind, needs_contact: true, urgent: kind === "urgent" });
+    const draftMsg = await anthropic.beta.messages.create({
+      model: MODEL,
+      max_tokens: 600,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      output_config: { effort: "low" },
+      system: [{ type: "text", text: DRAFT, cache_control: { type: "ephemeral", ttl: "1h" } }],
+      messages: [{ role: "user", content: `Client: ${who.name}\nKind: ${kind}${why ? `\nWhat they need: ${why}` : ""}\nQuestion: ${q}` }],
     });
-    const call = reply.content.find((b: { type: string }) => b.type === "tool_use");
-    if (!call) return json({ answer: text(reply) });
-    kind = call.input.kind ?? "other";
+    const draft = draftMsg.stop_reason === "refusal" ? "" : textOf(draftMsg);
+    const due_at = new Date(Date.now() + (member ? MEMBER_HOURS : GUEST_HOURS) * 36e5).toISOString();
+    await db.from("questions").insert({
+      client_id: who.id, name: who.name, email: who.email, member, kind, text: q, draft, due_at,
+    });
+    return json({ handoff: kind, due_at, urgent: kind === "urgent" });
+  } catch (err) {
+    // the website falls back to its keyword answers on any 5xx
+    if (err instanceof Anthropic.AuthenticationError) return json({ error: "assistant_not_configured" }, 500);
+    if (err instanceof Anthropic.RateLimitError) return json({ error: "assistant_busy" }, 503);
+    if (err instanceof Anthropic.APIConnectionError) return json({ error: "assistant_unreachable" }, 503);
+    if (err instanceof Anthropic.APIError) return json({ error: "assistant_error", status: err.status }, 502);
+    throw err;
   }
-
-  // 3) hand-off: save it with a drafted reply for Evelyn
-  const who = client ?? { id: null, name: String(name ?? "").trim(), email: String(email ?? "").trim() };
-  if (!who.name || !who.email) return json({ handoff: kind, needs_contact: true, urgent: kind === "urgent" });
-  const draftMsg = await claude({ system: DRAFT_SYSTEM, messages: [{ role: "user", content: `Client: ${who.name}\nQuestion: ${q}` }] });
-  const due_at = new Date(Date.now() + (member ? MEMBER_HOURS : GUEST_HOURS) * 36e5).toISOString();
-  await db.from("questions").insert({
-    client_id: who.id, name: who.name, email: who.email, member, kind, text: q, draft: text(draftMsg), due_at,
-  });
-  return json({ handoff: kind, due_at, urgent: kind === "urgent" });
 });

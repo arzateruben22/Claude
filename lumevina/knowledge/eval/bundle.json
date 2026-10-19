@@ -1,0 +1,504 @@
+{
+ "builtAt": "2026-10-19",
+ "prompt": "You are Ask Lumevina, the assistant on the website of Lumevina Aesthetics Spa in Woodland Hills, California. Evelyn Romero, a licensed esthetician, owns the studio and does every treatment herself. You answer her clients the way she would, from what she has written, and you hand her anything else.\n\nWhat you know comes only from the sections below: the studio's FAQ and policies, her shelf of products, and her Skin Playbook, written in her words. Treat it as the whole of your knowledge. If the playbook doesn't cover something, you don't know it.\n\nHow to answer:\n- Keep it short, two to four sentences, in her voice (her voice notes are below when she has written them). Warm, plain, specific.\n- Recommend only products on her shelf, by their exact names, and say when one is out of stock or low. Never name a product she doesn't carry.\n- When a good answer depends on the client's skin type, what they use now, or sensitivities, and they haven't said, ask one or two short questions first instead of answering.\n- End every answer with one clear next step: a product from the shelf, a facial booked in the Book section of this website, or asking Evelyn. Clients who already book with Evelyn on GlossGenius may still book there for now; everyone new books on the website.\n- Prices, hours, deposits, cancellations and shipping come from the FAQ and policies as written. Don't guess a number or a rule.\n- Never diagnose, never promise results, never compare her products to other brands, and never mention another store.\n\nWhen to hand a question to Evelyn instead of answering: call the hand_to_evelyn tool, with the kind that fits, and say nothing else. Do this for anything personal or medical: a reaction, rash, burning, swelling or peeling; pregnancy or breastfeeding; Accutane, prescriptions, antibiotics or recent procedures; a named skin condition; and any question about the client's own skin or which products suit them that her playbook doesn't answer. Also hand off anything on her hard-lines list, anything not covered below, and any request to speak with her. If a message sounds like an emergency, trouble breathing or swelling of the lips, tongue or throat, call the tool with kind \"urgent\".",
+ "facts": "# The studio\n\nLumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.\n\nBooking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book \"New Clients Start Here\"; for breakouts, the Acne Program's \"New Client Consultation + Treatment\". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website.\n\nShop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.\n\nContact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.\n\nNot offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused).\n\n\n\n# FAQ\n\nQ: I'm new. What should I book?\nA: Book New Clients Start Here: a consultation, a look at your current\nroutine, and a facial built around what your skin needs, from $220. For acne and\nbreakouts, start with the Acne Program's New Client Consultation +\nTreatment ($225) instead.\n\nQ: What are your hours?\nA: Tuesday to Saturday, 8:00 AM to 6:00 PM.\nThe calendar on this page shows her real\nopenings up to a month ahead.\n\nQ: How does the deposit work?\nA: A 50% deposit holds your time when you book. It goes toward your\ntotal, and the rest is due at your visit. Deposits are non-refundable, but with 48\nhours' notice yours moves with you to a new date in the same month.\n\nQ: How do I pay the rest?\nA: At your visit. Cash is preferred, and card is accepted with a fee.\nYou can also pay over time with Klarna, Affirm or Afterpay.\n\nQ: Where are you, and where do I park?\nA: In Woodland Hills, CA. The exact address is in your confirmation\nemail. There's a free parking lot. When you arrive, wait in your car and send a text\nbefore coming up.\n\nQ: Can I move my appointment?\nA: Yes, at least 48 hours ahead, from the link in your booking\nconfirmation. Saturday appointments can't be moved or cancelled.\n\nQ: Can I buy products without an appointment?\nA: Yes. Order from the shelf and choose\nshipping or pickup at your next visit. Shipping is $8, and free on orders over $75.\n\nQ: Do you offer virtual consultations?\nA: Yes: a deep dive into your skin and goals, with a custom plan and product picks,\nfor $55. They're on Mondays only, so please reach\nout before booking one.\n\nQ: Do gift certificates expire?\nA: Never. They arrive by email with a code and work toward any treatment.\nSend one.\n\n\n\n# Policies\n\n## Deposits\nAll appointments require a non-refundable deposit at the\ntime of booking — no exceptions. Your deposit secures your appointment and\ngoes toward your total. With 48 hours' notice, it can be used to reschedule\nwithin the same month.\n\n## Cancellations & rescheduling\n- Cancel or reschedule at least 48 hours in advance, using the link in your confirmation email.\n\n- Rescheduling on time keeps your deposit — as long as your new date is within the same month.\n\n- Same-day changes count as last-minute cancellations: the deposit is kept, a $43 fee is charged to the card on file, and a new deposit is required to rebook.\n\n- No-call/no-shows are charged 50% of the booked service and may not be able to rebook.\n\nNeed to reschedule?\nMove an appointment →\n\n## Saturday appointments\nSaturdays are in high demand, so we can no longer accommodate reschedules\nor cancellations on Saturdays — no exceptions. Please only\nbook a Saturday if you're certain you can attend. Rescheduling requires a new\ndeposit (the original is kept); cancelling forfeits the deposit and a\ncancellation fee is charged to the card on file. Please notify us as early as\npossible either way — thank you for understanding.\n\n## Before your facial\n- Don't book your facial the same day as a major event — makeup isn't recommended right after treatment.\n\n- Sunburn, windburn, open wounds, or an active cold sore? Let us know as soon as possible to reschedule — skin must be healthy to treat safely.\n\n- Stop retinol or prescription retinoids 5–7 days before your facial.\n\n- Pause exfoliants (salicylic acid, benzoyl peroxide, glycolic acid, other AHAs/BHAs) 2–3 days before.\n\n- Recent permanent makeup? Wait 2 weeks before a facial (a facial is fine up to 1 week before your PMU service).\n\n- Recent Botox or fillers? Wait 2 weeks — or book your facial the same day before your injections.\n\n- No waxing or shaving your face for 2 days before (and after) your facial.\n\n- Accutane, recent laser, cosmetic surgery, radiation, or chemotherapy: wait 6–12 months or bring physician clearance.\n\n## After your facial\n- Skip makeup immediately after treatment so your skin can absorb the full benefit.\n\n- Avoid exercise and heavy sweating for 24 hours — and up to one week after a body peel.\n\n- No waxing or shaving your face for 2 days after your facial.\n\n## Payments, late arrivals & refunds\n- Cash is preferred; card is accepted with a fee.\n\n- Appointments run back to back, so there's a 10-minute grace period. After that your appointment is cancelled and the deposit is lost — unless Lumevina determines there's still time to accommodate you. A new deposit is needed to rebook.\n\n- All services are non-refundable, no exceptions. If any issue arises after your service, you have a 24-hour window to reach out and avoid any fees.\n\n- Please read each service description in full before booking.\n\n## Location & arrival\nWoodland Hills, CA — the exact address arrives in your\nconfirmation email. A free parking lot is available. When you arrive, please\nwait in your car and send a text before coming up.\n\n## Lash fills\nFilling over another artist's work is considered a foreign\nfill, which we don't offer. You're welcome to book a removal and a\nfull set instead.",
+ "knowledge": "",
+ "knowledgeEmpty": true,
+ "hardLines": "",
+ "voice": "",
+ "shelf": [
+  {
+   "id": "fr-11pct-mandelic-serum",
+   "name": "11% L-Mandelic Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 46,
+   "stock": 0,
+   "about": "Exfoliates and brightens."
+  },
+  {
+   "id": "fr-15pct-mandelic-serum",
+   "name": "15% L-Mandelic Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 48,
+   "stock": 0,
+   "about": "Exfoliates and brightens."
+  },
+  {
+   "id": "fr-2-5pct-adv-acne-med",
+   "name": "2.5% Advanced Acne Med",
+   "brand": "Face Reality",
+   "type": "Acne & spot care",
+   "size": "1.5 fl oz / 44 ml",
+   "price": 29,
+   "stock": 1,
+   "about": "Benzoyl peroxide acne medication."
+  },
+  {
+   "id": "fr-5pct-adv-acne-med",
+   "name": "5% Advanced Acne Med",
+   "brand": "Face Reality",
+   "type": "Acne & spot care",
+   "size": "1.5 fl oz / 44 ml",
+   "price": 30,
+   "stock": 0,
+   "about": "Benzoyl peroxide acne medication."
+  },
+  {
+   "id": "fr-5pct-mandelic-serum",
+   "name": "5% L-Mandelic Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 42,
+   "stock": 0,
+   "about": "Exfoliates and brightens."
+  },
+  {
+   "id": "fr-8pct-mandelic-serum",
+   "name": "8% L-Mandelic Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 44,
+   "stock": 1,
+   "about": "Exfoliates and brightens."
+  },
+  {
+   "id": "fr-antioxidant-eye-gel",
+   "name": "Antioxidant Peptide Eye Gel",
+   "brand": "Face Reality",
+   "type": "Eye care",
+   "size": "0.4 fl oz / 12 ml",
+   "price": 48,
+   "stock": 1,
+   "about": "Smooths and visibly depuffs."
+  },
+  {
+   "id": "fr-barrier-cream-cleanser",
+   "name": "Barrier Balance Creamy Cleanser",
+   "brand": "Face Reality",
+   "type": "Cleansers",
+   "size": "6 fl oz / 180 ml",
+   "price": 37,
+   "stock": 0,
+   "about": "A daily calming wash. Acne-safe."
+  },
+  {
+   "id": "fr-barrier-gel-cream",
+   "name": "Barrier Care Gel Cream",
+   "brand": "Face Reality",
+   "type": "Moisturizers",
+   "size": "2 fl oz / 60 ml",
+   "price": 38,
+   "stock": 0,
+   "about": "Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe."
+  },
+  {
+   "id": "fr-brilliant-defense-50",
+   "name": "Brilliant Defense SPF 50",
+   "brand": "Face Reality",
+   "type": "Sun care",
+   "size": "2 fl oz / 60 ml",
+   "price": 42,
+   "stock": 0,
+   "about": "Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe."
+  },
+  {
+   "id": "fr-clear-skin-balance",
+   "name": "Clear Skin Balance",
+   "brand": "Face Reality",
+   "type": "Supplements",
+   "size": "60 softgels",
+   "price": 44,
+   "stock": 1,
+   "about": "Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin."
+  },
+  {
+   "id": "fr-cran-peptide-cream",
+   "name": "Cran-Peptide Cream",
+   "brand": "Face Reality",
+   "type": "Moisturizers",
+   "size": "2 fl oz / 60 ml",
+   "price": 33,
+   "stock": 0,
+   "about": "Rich and restorative. Acne-safe."
+  },
+  {
+   "id": "fr-daily-spf-30",
+   "name": "Daily SPF 30 Plus",
+   "brand": "Face Reality",
+   "type": "Sun care",
+   "size": "2 fl oz / 60 ml",
+   "price": 36,
+   "stock": 0,
+   "about": "Broad-spectrum SPF 30 sunscreen. Acne-safe."
+  },
+  {
+   "id": "fr-gentle-gel-cleanser",
+   "name": "Ultra Gentle Gel Cleanser (travel size)",
+   "brand": "Face Reality",
+   "type": "Cleansers",
+   "size": "2 fl oz / 60 ml",
+   "price": 14,
+   "stock": 0,
+   "about": "A daily antioxidant wash. Acne-safe."
+  },
+  {
+   "id": "fr-glowtone-corrective",
+   "name": "GlowTone Corrective Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 64,
+   "stock": 0,
+   "about": "Targets discoloration, with Hexa-Bright Complex."
+  },
+  {
+   "id": "fr-hydrabalance-gel",
+   "name": "HydraBalance Gel",
+   "brand": "Face Reality",
+   "type": "Moisturizers",
+   "size": "1.7 fl oz / 50 ml",
+   "price": 34,
+   "stock": 0,
+   "about": "Hydrates and balances oil. Acne-safe."
+  },
+  {
+   "id": "fr-hydraremedy-gel-serum",
+   "name": "HydraRemedy Gel Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1.7 fl oz / 50 ml",
+   "price": 46,
+   "stock": 0,
+   "about": "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe."
+  },
+  {
+   "id": "fr-hydrcalm-mask",
+   "name": "HydraCalm Mask",
+   "brand": "Face Reality",
+   "type": "Masks",
+   "size": "2.5 fl oz / 73 ml",
+   "price": 42,
+   "stock": 0,
+   "about": "Soothes and boosts hydration."
+  },
+  {
+   "id": "fr-invisiclear",
+   "name": "invisiClear Hydrocolloid Spot Patches",
+   "brand": "Face Reality",
+   "type": "Acne & spot care",
+   "size": "24 patches",
+   "price": 10,
+   "stock": 0,
+   "about": "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types."
+  },
+  {
+   "id": "fr-mandelic-face-and-body",
+   "name": "L-Mandelic Face and Body Wash",
+   "brand": "Face Reality",
+   "type": "Cleansers",
+   "size": "6 fl oz / 180 ml",
+   "price": 38,
+   "stock": 0,
+   "about": "Cleanses and brightens. Acne-safe."
+  },
+  {
+   "id": "fr-mineral-matte-spf-28",
+   "name": "Mineral Matte SPF 28",
+   "brand": "Face Reality",
+   "type": "Sun care",
+   "size": "2 fl oz / 60 ml",
+   "price": 36,
+   "stock": 0,
+   "about": "Broad-spectrum SPF 28 sunscreen. Acne-safe."
+  },
+  {
+   "id": "fr-moisture-balance-toner",
+   "name": "Moisture Balance Toner",
+   "brand": "Face Reality",
+   "type": "Toners & mists",
+   "size": "6 fl oz / 180 ml",
+   "price": 34,
+   "stock": 2,
+   "about": "Hydrates and replenishes."
+  },
+  {
+   "id": "fr-moisture-balance-toner-14",
+   "name": "Moisture Balance Toner (2 fl oz)",
+   "brand": "Face Reality",
+   "type": "Toners & mists",
+   "size": "2 fl oz / 60 ml",
+   "price": 14,
+   "stock": 1,
+   "about": "Hydrates and replenishes."
+  },
+  {
+   "id": "fr-omni-clear-mist",
+   "name": "Omni Clear Mist",
+   "brand": "Face Reality",
+   "type": "Toners & mists",
+   "size": "3.4 fl oz / 100 ml",
+   "price": 40,
+   "stock": 4,
+   "about": "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested."
+  },
+  {
+   "id": "fr-powdermineral-spf-50",
+   "name": "PowerMineral SPF 50",
+   "brand": "Face Reality",
+   "type": "Sun care",
+   "size": "2 fl oz / 60 ml",
+   "price": 42,
+   "stock": 3,
+   "about": "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe."
+  },
+  {
+   "id": "fr-retinal-b3-serum",
+   "name": "Retinal B3 Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 54,
+   "stock": null,
+   "about": "Gently corrects and renews. Acne-safe."
+  },
+  {
+   "id": "fr-retinol-peptide-serum",
+   "name": "Retinol Peptide Serum",
+   "brand": "Face Reality",
+   "type": "Serums",
+   "size": "1 fl oz / 30 ml",
+   "price": 60,
+   "stock": 0,
+   "about": "Intensely corrects and renews."
+  },
+  {
+   "id": "fr-soothing-radiance-toner",
+   "name": "Soothing Radiance Toner",
+   "brand": "Face Reality",
+   "type": "Toners & mists",
+   "size": "6 fl oz / 180 ml",
+   "price": 32,
+   "stock": 0,
+   "about": "Calms and nourishes."
+  },
+  {
+   "id": "fr-sulfur-spot-treatment",
+   "name": "Sulfur Spot Treatment",
+   "brand": "Face Reality",
+   "type": "Acne & spot care",
+   "size": "1.5 fl oz / 44 ml",
+   "price": 35,
+   "stock": 0,
+   "about": "A 6% sulfur acne treatment."
+  },
+  {
+   "id": "fr-ultra-gentle-cleanser",
+   "name": "Ultra Gentle Gel Cleanser",
+   "brand": "Face Reality",
+   "type": "Cleansers",
+   "size": "6 fl oz / 180 ml",
+   "price": 33,
+   "stock": 0,
+   "about": "A daily antioxidant wash. Acne-safe."
+  },
+  {
+   "id": "gm-barrier-repair-cream",
+   "name": "Barrier Repair Cream",
+   "brand": "GlyMed Plus",
+   "type": "Moisturizers",
+   "size": "4 fl oz / 118 ml",
+   "price": 83.2,
+   "stock": 0,
+   "about": "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance."
+  },
+  {
+   "id": "gm-cell-protection-balm",
+   "name": "Cell Protection Balm",
+   "brand": "GlyMed Plus",
+   "type": "Moisturizers",
+   "size": "2 fl oz / 59 ml",
+   "price": 34,
+   "stock": 0,
+   "about": "Step 3 of the GlyMed Plus routine: balance."
+  },
+  {
+   "id": "gm-eye-calm",
+   "name": "Eye Calm",
+   "brand": "GlyMed Plus",
+   "type": "Eye care",
+   "size": "0.3 fl oz / 10 ml",
+   "price": 48,
+   "stock": 0,
+   "about": "Step 3 of the GlyMed Plus routine: balance."
+  },
+  {
+   "id": "gm-firming-eye-cream",
+   "name": "Firming Eye Cream",
+   "brand": "GlyMed Plus",
+   "type": "Eye care",
+   "size": "0.3 oz / 10 ml",
+   "price": 70,
+   "stock": 0,
+   "about": "Part of the GlyMed Plus Elite line; step 3 of its routine: balance."
+  },
+  {
+   "id": "gm-firming-serum",
+   "name": "Firming Serum with Phyto-Stem Cells",
+   "brand": "GlyMed Plus",
+   "type": "Serums",
+   "size": "1 oz / 30 ml",
+   "price": 142,
+   "stock": 0,
+   "about": "Part of the GlyMed Plus Elite line; step 2 of its routine: treat."
+  },
+  {
+   "id": "gm-glycolic-cleanser",
+   "name": "Glycolic Facial Cleanser",
+   "brand": "GlyMed Plus",
+   "type": "Cleansers",
+   "size": "8 fl oz / 236 ml",
+   "price": 41,
+   "stock": 0,
+   "about": "With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse."
+  },
+  {
+   "id": "gm-revitalizing-essence-nadplus",
+   "name": "Revitalizing Essence with NAD+",
+   "brand": "GlyMed Plus",
+   "type": "Serums",
+   "size": "1.35 oz / 40 ml",
+   "price": 50,
+   "stock": 0,
+   "about": "Part of the GlyMed Plus Elite line; step 2 of its routine: treat."
+  },
+  {
+   "id": "gm-skin-recovery-mist",
+   "name": "Skin Recovery Mist",
+   "brand": "GlyMed Plus",
+   "type": "Toners & mists",
+   "size": "4 fl oz / 118 ml",
+   "price": 46,
+   "stock": 0,
+   "about": "Step 2 of the GlyMed Plus routine: treat."
+  },
+  {
+   "id": "gm-vitamin-c-cleanser",
+   "name": "Vitamin C Cleanser",
+   "brand": "GlyMed Plus",
+   "type": "Cleansers",
+   "size": "6.75 fl oz / 200 ml",
+   "price": 47,
+   "stock": 0,
+   "about": "Step 1 of the GlyMed Plus routine: cleanse."
+  },
+  {
+   "id": "mx-dew-drops",
+   "name": "Dew Drop",
+   "brand": "Mixi Skincare",
+   "type": "Serums",
+   "size": "1 fl oz",
+   "price": 56,
+   "stock": 0,
+   "about": "Silky smooth hydration with beta-glucan. Non-pore-clogging."
+  },
+  {
+   "id": "mx-hydroxi",
+   "name": "Hydroxi",
+   "brand": "Mixi Skincare",
+   "type": "Acne & spot care",
+   "size": "1.7 fl oz",
+   "price": 40,
+   "stock": 2,
+   "about": "Hydrogen peroxide acne cream."
+  },
+  {
+   "id": "mx-spf-50-mineral-spf",
+   "name": "Mineral SPF 50",
+   "brand": "Mixi Skincare",
+   "type": "Sun care",
+   "size": "2 fl oz",
+   "price": 65,
+   "stock": 1,
+   "about": "UVA/UVB protection. Medical-grade sunscreen."
+  },
+  {
+   "id": "ci-vitamin-veil-cleanser",
+   "name": "Vitamin Veil Cleansing Oil",
+   "brand": "Circadia",
+   "type": "Cleansers",
+   "size": "6.7 fl oz / 198 ml",
+   "price": 40,
+   "stock": 1,
+   "about": "A cleansing oil."
+  }
+ ],
+ "rules": {
+  "urgent": {
+   "source": "(can'?t|cannot|hard to|trouble|struggling to) breathe|throat (is )?(closing|swelling|tight)|tongue.*swell|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out",
+   "flags": "i"
+  },
+  "kinds": [
+   {
+    "kind": "reaction",
+    "any": [
+     {
+      "source": "react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\\bpus\\b|ooz|scab|stinging|irritat|red(ness)? (won'?t|isn'?t|still)|peeling",
+      "flags": "i"
+     }
+    ]
+   },
+   {
+    "kind": "pregnancy",
+    "any": [
+     {
+      "source": "pregnan|expecting|breastfeed|nursing|trying to conceive",
+      "flags": "i"
+     }
+    ]
+   },
+   {
+    "kind": "medication",
+    "any": [
+     {
+      "source": "accutane|isotretinoin|tretinoin|retin-?a\\b|prescri|medicat|antibiotic|spironolactone|birth control|chemo|radiation|laser|surgery|botox|filler",
+      "flags": "i"
+     }
+    ]
+   },
+   {
+    "kind": "condition",
+    "any": [
+     {
+      "source": "eczema|psoriasis|rosacea|dermatitis|lupus|cold sore|herpes|melasma|mole\\b|lump|cyst|fungal|perioral",
+      "flags": "i"
+     }
+    ]
+   },
+   {
+    "kind": "skin",
+    "any": [
+     {
+      "source": "\\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|dark spots|wrinkles|texture|cheeks|chin|forehead)\\b|for my skin|purging|(breaking|broke|break) ?out after",
+      "flags": "i"
+     }
+    ],
+    "both": [
+     {
+      "source": "\\bi (have|got|keep getting|am getting|'m getting)\\b|is (it|this) normal|should i\\b|what should i use|right for me|recommend",
+      "flags": "i"
+     },
+     {
+      "source": "skin|face|acne|break ?out|breaking out|pimple|pore|spots?\\b|scar|pigment|wrinkle|\\bdry\\b|oily|sensitive|redness|texture|serum|routine|product",
+      "flags": "i"
+     }
+    ]
+   }
+  ]
+ }
+}

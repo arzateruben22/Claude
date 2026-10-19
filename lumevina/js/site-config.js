@@ -30,9 +30,17 @@
 
   var CONFIG = window.LUMEVINA_CONFIG = {
     features: [],
+    /* the assistant: Claude answers from Evelyn's playbook through the server
+       (server/functions/ask). Empty = the keyword answers in js/ask.js. */
+    ask: {
+      endpoint: "",   /* e.g. https://<project>.supabase.co/functions/v1/ask */
+      key: ""         /* the Supabase anon key (public), sent with each question */
+    },
     booking: {
-      /* Evelyn's answer: stay on GlossGenius for now */
-      mode: "glossgenius",
+      /* new clients book here; clients who already book with Evelyn on
+         GlossGenius can still use it for now, with a note that everything
+         is moving here */
+      mode: "both",
       glossgenius: "https://lumevina.glossgenius.com/"
     }
   };

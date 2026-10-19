@@ -282,8 +282,13 @@
             <h2 class="display" data-blur-text>Every opening, <em>at a glance.</em></h2>
             <p class="section-sub">Choose a treatment and the calendar shows what's open each day.
             Tap a day, tap a time, then hold it with a 50% deposit.</p>
-            <p class="bk-gg-alt" hidden>Already book with Evelyn on GlossGenius?
-              <a class="inline-link bk-gg-link" href="#book" target="_blank" rel="noopener">Book there instead</a>.</p>
+            <!-- shown while booking runs in both places (js/site-config.js → booking.mode "both") -->
+            <div class="bk-notice" hidden>
+              <p><strong>New here?</strong> Book right here: pick a treatment, a day and a time, and a 50% deposit holds it.</p>
+              <p><strong>Already book with Evelyn on GlossGenius?</strong> You can still
+                <a class="inline-link bk-gg-link" href="#book" target="_blank" rel="noopener">book there</a> for now.
+                All booking is moving to this page, so please book your next visit here.</p>
+            </div>
           </div>
           <div class="bk-head-gg">
             <h2 class="display" data-blur-text>Book with Evelyn, <em>in a minute.</em></h2>
@@ -704,8 +709,8 @@
               </summary>
               <div class="policy-body">
                 <p><span class="faq-hours">Tuesday to Saturday, 8:00 AM to 6:00 PM.</span>
-                <a class="inline-link" href="https://lumevina.glossgenius.com/" target="_blank" rel="noopener">Her booking page</a>
-                always shows her real openings, up to a month ahead.</p>
+                The <a class="inline-link" href="#book">calendar on this page</a> shows her real
+                openings up to a month ahead.</p>
               </div>
             </details>
             <details class="policy" name="faq">
@@ -2108,6 +2113,7 @@
   <script src="js/main.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/install.js"></script>
+  <script src="js/ask-rules.js"></script>
   <script src="js/ask-typos.js"></script>
   <script src="js/ask.js"></script>
   <script src="js/contact.js"></script>

@@ -6583,3 +6583,15 @@ a.book-btn { text-align: center; }
 @media (prefers-reduced-motion: reduce) {
   .xt-tab, .xt-label, .sh-switch-track, .sh-switch-dot { transition: none; }
 }
+
+/* booking in both places for now: the note under the Book heading */
+.bk-notice {
+  display: grid; gap: 0.5rem; margin: 0.9rem 0 0; padding: 0.9rem 1.05rem; max-width: 40rem;
+  background: var(--field); border: 1px solid var(--panel-edge); border-left: 3px solid var(--plum); border-radius: 14px;
+  font-size: 0.92rem; color: var(--ink-60);
+}
+.bk-notice p { margin: 0; }
+.bk-notice strong { color: var(--ink); font-weight: 600; }
+
+/* Ask Lumevina: waiting on the server */
+.ask-msg.thinking { opacity: 0.55; letter-spacing: 0.2em; }

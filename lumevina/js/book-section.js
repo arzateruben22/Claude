@@ -32,7 +32,7 @@
     return;
   }
   if (cfg.mode === "both" && ggUrl) {
-    var alt = root.querySelector(".bk-gg-alt");
+    var alt = root.querySelector(".bk-notice");
     if (alt) { alt.querySelector(".bk-gg-link").href = ggUrl; alt.hidden = false; }
   }
 

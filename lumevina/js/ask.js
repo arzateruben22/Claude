@@ -123,7 +123,9 @@
       return "You can book any time online: pick your treatment and time, and a deposit holds it. Evelyn works Tuesday to Saturday, 8 AM to 6 PM."; },
       acts: [["Book now", "book"]] },
     { id: "hours", k: /hours|what time|when (are|do) you|open (on|today|tomorrow)|closed|sunday|monday|weekend/, a: function () {
-      return "Tuesday to Saturday, 8 AM to 6 PM. Closed Sundays and Mondays, except the extra Mondays Evelyn opens every other week, members first. Need a time outside that? Ask about the after-hours add-on."; },
+      var H = window.LumevinaHours;
+      return (H ? H.prose() + ". " + H.closedLabel() + "." : "Tuesday to Saturday, 8 AM to 6 PM. Closed Sundays and Mondays.") +
+        " The calendar on this site shows every opening up to a month ahead."; },
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
       return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },
@@ -153,27 +155,17 @@
     { id: "member", node: "member", k: /member|monthly plan|subscri|\bglow plan|join/, a: function () {
       return "Two plans. Glow, $159 a month: a Custom Facial, Custom + Dermaplaning or the Monthly Acne Treatment every month. Ageless, $209: everything in Glow plus the Ageless Grace Facial and a finishing add-on every other visit. Bank a facial you can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours."; },
       acts: [["See memberships", "#membership"]] },
-    { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|glow routine/, a: function () {
-      return "Evelyn’s shelf has the cleansers, serums and SPF she uses in the room, and the Glow Routine sends her picks every month from $75. Shipping is free for members, otherwise $8 and free over $75, or pick up free at your visit. For what’s right for your skin, she’ll want to choose it herself; ask her and she’ll reply."; },
-      acts: [["Shop the shelf", "#shop"]] },
+    { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|toner|mask|what do you sell/, a: function () {
+      return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8, free over $75, or pick up free at your visit. Not sure what’s right for your skin? Ask her and she’ll reply."; },
+      acts: [["See the shop", "#shop"], ["Ask Evelyn", "skin"]] },
     { id: "lashes", k: /lash|nails?\b|manicure|pedicure|tint|lamination/, a: function () {
       return "Lumevina’s menu is facials, peels and waxing. For lashes, brows and nails, Evelyn is happy to point you to artists she trusts."; } }
   ];
 
-  /* ── what goes to Evelyn ── */
-  var URGENT = /(can'?t|cannot|hard to|trouble|struggling to) breathe|throat (is )?(closing|swelling|tight)|tongue.*swell|swell.*(lips?|tongue|throat)|(lips?|tongue|throat).*swell|anaphyla|faint|pass(ed|ing) out/;
-  var KINDS = [
-    { kind: "reaction", k: /react|rash|burn|swell|swollen|itch|hives|allerg|blister|bleed|infect|\bpus\b|ooz|scab|stinging|irritat|red(ness)? (won'?t|isn'?t|still)|peeling/ },
-    { kind: "pregnancy", k: /pregnan|expecting|breastfeed|nursing|trying to conceive/ },
-    { kind: "medication", k: /accutane|isotretinoin|tretinoin|retin-?a|prescri|medicat|antibiotic|spironolactone|birth control|chemo|radiation|laser|surgery/ },
-    { kind: "condition", k: /eczema|psoriasis|rosacea|dermatitis|lupus|cold sore|herpes|melasma|mole|lump|cyst|fungal|perioral/ },
-    { kind: "skin", k: {
-      test: function (t) {
-        if (/\bmy (skin|face|acne|breakouts?|pores|spots|scars?|pigment|dark spots|wrinkles|texture|cheeks|chin|forehead)\b|for my skin|purging|(breaking|broke|break) ?out after/.test(t)) return true;
-        return /\bi (have|got|keep getting|am getting|'m getting)\b|is (it|this) normal|should i\b|what should i use|right for me|recommend/.test(t) &&
-          /skin|face|acne|break ?out|breaking out|pimple|pore|spots?\b|scar|pigment|wrinkle|\bdry\b|oily|sensitive|redness|texture|serum|routine|product/.test(t);
-      } } }
-  ];
+  /* ── what goes to Evelyn: the shared rules (js/ask-rules.js), the same on the server ── */
+  var RULES = window.LumevinaAskRules || null;
+  /* held-back parts of the site (js/site-config.js) get a short "paused" answer */
+  var off = function (f) { return !!(window.LumevinaFeatures && !window.LumevinaFeatures.on(f)); };
   /* a price or "what is" question, or a bare name like "brazilian?" */
   var ASKS_ABOUT = /how much|price|cost|\$|what('?s| is| are)|tell me about|do you (do|offer|have)|explain/;
   var DRAFTS = {
@@ -287,8 +279,11 @@
     /* typos and texting shorthand read as the word they meant ("facail", "cancle", "appt") */
     var t = TY ? TY.fix(text) : raw;
     /* safety first, on what they typed and on what they meant */
-    if (URGENT.test(raw) || URGENT.test(t)) return { handoff: "urgent" };
-    for (var i = 0; i < KINDS.length; i++) if (KINDS[i].k.test(raw) || KINDS[i].k.test(t)) return { handoff: KINDS[i].kind };
+    var rk = RULES ? RULES.kind(raw, t) : null;
+    if (rk) return { handoff: rk };
+    if (off("membership") && /member|monthly plan|subscri|\bglow plan|join\b|\bbank/.test(t)) return { answer: "Memberships are paused right now. Facials book one at a time on the calendar here, and Evelyn’s shelf is open on this site.", acts: [["Book", "book"], ["See the shop", "#shop"]] };
+    if (off("school") && /\bcourses?\b|\bclass(es)?\b|skin school|\blessons?\b|glow party|pro night|workshop/.test(t)) return { answer: "Skin School and classes are paused right now. Evelyn is happy to answer questions one on one.", acts: [["Ask Evelyn", "skin"]] };
+    if (off("rewards") && /\brefer|referral|points\b|rewards?\b|friend'?s code/.test(t)) return { answer: "Glow Rewards is paused right now, so there are no points or referral codes at the moment.", acts: [["Book", "book"]] };
     var topical = ASKS_ABOUT.test(t) || t.split(/\s+/).length <= 3;
     if (topical) for (var j = 0; j < TOPICS.length; j++) if (TOPICS[j].k.test(t)) return { answer: TOPICS[j].a(), acts: [["Book", "book"]] };
     for (var n = 0; n < KB.length; n++) {
@@ -350,9 +345,10 @@
   var chipsEl = panel.querySelector(".ask-chips");
   var form = panel.querySelector(".ask-form");
   var input = panel.querySelector("#ask-in");
-  var CHIPS = [["Prices", "n:prices"], ["Book", "n:book"], ["Before my facial", "n:before"], ["After my facial", "n:after"],
-    ["Cancel or reschedule", "n:cancel"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"], ["Parking", "t:Where do I park?"],
-    ["A question about my skin", "skin"]];
+  var CHIPS = [["Prices", "n:prices"], ["Book", "n:book"], ["Products", "t:What products do you sell?"], ["Before my facial", "n:before"],
+    ["After my facial", "n:after"], ["Cancel or reschedule", "n:cancel"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"],
+    ["Parking", "t:Where do I park?"], ["A question about my skin", "skin"]]
+    .filter(function (c) { return !(c[1] === "n:member" && off("membership")); });
 
   var state = chat();
   var save = function () { write(CHAT_KEY, state); };
@@ -388,7 +384,7 @@
   var render = function () {
     logEl.innerHTML = "";
     var who = me();
-    bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! Ask me about prices, booking, prep, aftercare or memberships. Anything about your own skin, I’ll pass to Evelyn."));
+    bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! Ask me about prices, booking, prep, aftercare or products. Anything about your own skin, I’ll pass to Evelyn."));
     var answered = {};
     replies().forEach(function (q) { answered[q.id] = q; });
     var lastBot = -1;
@@ -445,11 +441,54 @@
     again: "Still not catching it, sorry. Want me to send your message to Evelyn as it is?"
   };
 
+  /* ── the server (js/site-config.js → ask.endpoint): Claude answers from Evelyn's
+     playbook, in her voice (server/functions/ask). Without an endpoint, or when it
+     can't be reached, the keyword answers above take over. Hand-offs never wait
+     for the server: the shared rules decide those here, instantly. ── */
+  var CFG = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.ask) || {};
+  var ENDPOINT = /^https:\/\//.test(CFG.endpoint || "") ? CFG.endpoint : "";
+  var post = function (body) {
+    var headers = { "Content-Type": "application/json" };
+    if (CFG.key) { headers.apikey = CFG.key; headers.Authorization = "Bearer " + CFG.key; }
+    var ctrl = typeof AbortController === "function" ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 20000) : null;
+    return fetch(ENDPOINT, { method: "POST", headers: headers, body: JSON.stringify(body), signal: ctrl ? ctrl.signal : undefined })
+      .then(function (res) { if (!res.ok) throw new Error("ask " + res.status); return res.json(); })
+      .finally(function () { if (timer) clearTimeout(timer); });
+  };
+  var history = function () {
+    return state.log.filter(function (m) { return (m.who === "you" || m.who === "bot") && m.text; }).slice(-8)
+      .map(function (m) { return { role: m.who === "you" ? "user" : "assistant", content: m.text }; });
+  };
+  var nextActs = function (answer) {
+    var acts = [];
+    if (/\bbook|facial|appointment|calendar/i.test(answer)) acts.push(["Book", "book"]);
+    if (/shelf|shop|order|cleanser|serum|\bspf\b|sunscreen|moisturi|toner|mask|patch/i.test(answer)) acts.push(["See the shop", "#shop"]);
+    acts.push(["Ask Evelyn", "skin"]);
+    return acts;
+  };
+  var remote = function (text) {
+    if (!ENDPOINT || /^about my skin:/i.test(text)) return false;
+    var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
+    if (RULES && RULES.kind(raw, t)) return false;
+    var who = me();
+    bubble("bot", "…", "thinking");
+    logEl.scrollTop = logEl.scrollHeight;
+    post({ message: text, history: history(), name: who ? who.name : "", email: who ? who.email : "" }).then(function (r) {
+      if (r && r.answer) settle(text, { answer: String(r.answer), acts: nextActs(String(r.answer)) });
+      else if (r && r.handoff) settle(text, { handoff: String(r.handoff) });
+      else settle(text, classify(text));
+    }, function () { settle(text, classify(text)); });
+    return true;
+  };
+
   var ask = function (text) {
     text = String(text || "").trim();
     if (!text) return;
     push({ who: "you", text: text });
-    var r = classify(text);
+    if (!remote(text)) settle(text, classify(text));
+  };
+  var settle = function (text, r) {
     if (r.unclear) {
       state.unclear = (state.unclear || 0) + 1;
       if (state.unclear === 1) {
@@ -502,6 +541,7 @@
     push({ who: "sent", qid: q.id, text: "“" + p.text + "” · Evelyn will reply by " + when(q.dueAt) + ", here and by email." });
     render();
     document.dispatchEvent(new CustomEvent("lumevina:question-sent", { detail: q }));
+    if (ENDPOINT) post({ message: q.text, handoff: q.kind, name: q.name, email: q.email }).catch(function () { /* this browser's copy still reaches the dashboard */ });
   };
 
   var open = function (prefill) {
@@ -533,6 +573,7 @@
       return;
     }
     if (target.indexOf("t:") === 0) return ask(target.slice(2));
+    if (target === "n:member" && off("membership")) return ask("memberships");
     var out = target.indexOf("n:") === 0 ? node(target.slice(2)) : target.indexOf("s:") === 0 ? serviceAnswer(target.slice(2)) : null;
     if (!out) return;
     state.pending = null;
