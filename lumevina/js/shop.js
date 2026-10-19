@@ -232,6 +232,7 @@
   var inStock = document.getElementById("sh-instock");
   var countEl = shop && shop.querySelector(".sh-count");
   var state = { brand: "", q: "", inStock: false };
+  var calm = matchMedia("(prefers-reduced-motion: reduce)");
   var secId = function (c) { return "shop-" + c.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/-$/, ""); };
 
   var chip = function (label, value, key, count) {
@@ -243,31 +244,113 @@
     if (count != null) b.appendChild(el("span", "sh-chip-n", String(count)));
     return b;
   };
+
+  /* brands: quiet text tabs with a thin underline on the one chosen */
   var buildChips = function () {
-    if (!brandsEl || !catsEl) return;
+    if (!brandsEl) return;
     var list = INV.live();
     brandsEl.textContent = "";
-    brandsEl.appendChild(chip("All brands", "", "brand", list.length));
+    var tab = function (label, value, n) {
+      var b = el("button", "sh-brand-tab");
+      b.type = "button";
+      b.dataset.key = "brand";
+      b.dataset.value = value;
+      b.appendChild(document.createTextNode(label));
+      b.appendChild(el("span", "sh-brand-n", String(n)));
+      return b;
+    };
+    brandsEl.appendChild(tab("All brands", "", list.length));
     INV.brands.forEach(function (b) {
       var n = list.filter(function (p) { return p.brand === b; }).length;
-      if (n) brandsEl.appendChild(chip(b, b, "brand", n));
-    });
-  };
-  /* the type buttons: one per section that has something in it right now */
-  var paintCats = function (groups) {
-    if (!catsEl) return;
-    catsEl.textContent = "";
-    groups.forEach(function (g) {
-      var b = chip(g.cat, g.cat, "jump", g.items.length);
-      b.setAttribute("aria-controls", secId(g.cat));
-      catsEl.appendChild(b);
+      if (n) brandsEl.appendChild(tab(b, b, n));
     });
   };
   var paintChips = function () {
     if (!brandsEl) return;
-    brandsEl.querySelectorAll(".sh-chip").forEach(function (b) {
+    brandsEl.querySelectorAll(".sh-brand-tab").forEach(function (b) {
       b.setAttribute("aria-pressed", String(state.brand === b.dataset.value));
     });
+  };
+
+  /* ── Expandable Tabs (21st.dev, by ShadCN-style author; ported from React
+     + framer-motion to plain JS and CSS transitions). One line icon per
+     type; the chosen one opens to show its name. A divider separates the
+     routine (cleanse → protect) from the extras. Line icons drawn here,
+     1.6px strokes on a 24px grid. ── */
+  var ICON = {
+    "Cleansers": '<rect x="6.5" y="9" width="11" height="12" rx="2.5"/><path d="M10 9V6.5h4V9M12 6.5V3.5h3"/>',
+    "Toners & mists": '<rect x="7" y="10" width="10" height="11" rx="2.5"/><path d="M9.5 10V7h5v3M14.5 7.5h2.5"/><path d="M20 4.5v.01M20 7.5v.01M21.5 6v.01"/>',
+    "Serums": '<rect x="9.5" y="2.5" width="5" height="4" rx="1.5"/><path d="M10.5 6.5h3l-.4 9.2a1.1 1.1 0 0 1-2.2 0z"/><path d="M12 19.5v.01"/>',
+    "Acne & spot care": '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/>',
+    "Moisturizers": '<rect x="5" y="10" width="14" height="10" rx="2.5"/><rect x="4" y="6" width="16" height="4" rx="1.5"/>',
+    "Eye care": '<path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.6"/>',
+    "Sun care": '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+    "Masks": '<path d="M12 3c4 0 7 3.1 7 8.2S15.9 21 12 21s-7-4.7-7-9.8S8 3 12 3z"/><path d="M9 10.5h1.6M13.4 10.5H15M10.6 15.5h2.8"/>',
+    "Supplements": '<path d="M10.6 20.4a4.9 4.9 0 0 1-7-7l6-6a4.9 4.9 0 0 1 7 7z"/><path d="M8.6 8.6l6.8 6.8"/>',
+    "More": '<circle cx="7.5" cy="7.5" r="1.6"/><circle cx="16.5" cy="7.5" r="1.6"/><circle cx="7.5" cy="16.5" r="1.6"/><circle cx="16.5" cy="16.5" r="1.6"/>'
+  };
+  var EXTRAS = ["Masks", "Supplements", "More"];
+  var activeCat = null;
+  var paintCats = function (groups) {
+    if (!catsEl) return;
+    catsEl.textContent = "";
+    var sep = false;
+    groups.forEach(function (g) {
+      if (!sep && EXTRAS.indexOf(g.cat) !== -1 && catsEl.children.length) {
+        var line = el("span", "xt-sep");
+        line.setAttribute("aria-hidden", "true");
+        catsEl.appendChild(line);
+        sep = true;
+      }
+      var b = el("button", "xt-tab");
+      b.type = "button";
+      b.dataset.key = "jump";
+      b.dataset.value = g.cat;
+      b.setAttribute("aria-controls", secId(g.cat));
+      b.setAttribute("aria-label", (g.cat === "More" ? "More from the shelf" : g.cat) + ", " + g.items.length);
+      b.title = g.cat === "More" ? "More from the shelf" : g.cat;
+      b.innerHTML = '<svg class="xt-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        (ICON[g.cat] || ICON.More) + '</svg>';
+      var label = el("span", "xt-label");
+      label.setAttribute("aria-hidden", "true");
+      label.appendChild(document.createTextNode(g.cat === "More" ? "More" : g.cat));
+      label.appendChild(el("span", "xt-n", String(g.items.length)));
+      b.appendChild(label);
+      catsEl.appendChild(b);
+    });
+    if (!groups.some(function (g) { return g.cat === activeCat; })) activeCat = groups.length ? groups[0].cat : null;
+    paintActive(false);
+    watchSections();
+  };
+  /* the open tab follows the section on screen */
+  var paintActive = function (scrollBar) {
+    if (!catsEl) return;
+    var on = null;
+    catsEl.querySelectorAll(".xt-tab").forEach(function (b) {
+      var is = b.dataset.value === activeCat;
+      b.classList.toggle("is-active", is);
+      b.setAttribute("aria-current", is ? "true" : "false");
+      if (is) on = b;
+    });
+    /* keep the open tab in view inside the bar, without moving the page */
+    if (on && scrollBar !== false && catsEl.scrollWidth > catsEl.clientWidth) {
+      var left = on.offsetLeft - (catsEl.clientWidth - on.offsetWidth) / 2;
+      catsEl.scrollTo({ left: Math.max(0, left), behavior: calm.matches ? "auto" : "smooth" });
+    }
+  };
+  var spy = null, jumping = 0;
+  var watchSections = function () {
+    if (!window.IntersectionObserver || !grid) return;
+    if (spy) spy.disconnect();
+    spy = new IntersectionObserver(function (entries) {
+      if (Date.now() < jumping) return;
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var cat = en.target.getAttribute("data-cat");
+        if (cat && cat !== activeCat) { activeCat = cat; paintActive(); }
+      });
+    }, { rootMargin: "-35% 0px -60% 0px" });
+    grid.querySelectorAll(".sh-sec").forEach(function (sec) { spy.observe(sec); });
   };
 
   var matches = function (p) {
@@ -290,6 +373,7 @@
     groups.forEach(function (g) {
       var sec = el("section", "sh-sec");
       sec.id = secId(g.cat);
+      sec.setAttribute("data-cat", g.cat);
       sec.setAttribute("aria-labelledby", sec.id + "-h");
       var head = el("div", "sh-sec-head");
       var h = el("h3", "sh-sec-title", g.cat === "More" ? "More from the shelf" : g.cat);
@@ -322,10 +406,12 @@
       " · " + inNow + " on the shelf now";
   };
 
-  var calm = matchMedia("(prefers-reduced-motion: reduce)");
   var jump = function (cat) {
     var target = document.getElementById(secId(cat));
     if (!target) return;
+    activeCat = cat;
+    jumping = Date.now() + 900;
+    paintActive();
     target.scrollIntoView({ behavior: calm.matches ? "auto" : "smooth", block: "start" });
     target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
@@ -333,8 +419,8 @@
 
   if (shop) {
     shop.addEventListener("click", function (e) {
-      var b = e.target.closest(".sh-chip");
-      if (!b || !shop.contains(b) || b.closest(".bkl")) return;
+      var b = e.target.closest(".sh-brand-tab, .xt-tab");
+      if (!b || !shop.contains(b)) return;
       if (b.dataset.key === "jump") { jump(b.dataset.value); return; }
       if (b.dataset.key !== "brand") return;
       state.brand = b.dataset.value;

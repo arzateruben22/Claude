@@ -154,16 +154,29 @@
           or browse by brand and type. Something out of stock? Request it and she'll order it in.</p>
         </div>
 
-        <div class="sh-tools" data-reveal>
-          <div class="sh-search">
-            <label class="sh-search-k" for="sh-q">Search the shop</label>
-            <input id="sh-q" type="search" autocomplete="off" placeholder="Cleanser, SPF, mandelic…">
+        <!-- one toolbar: search and the stock switch, then brands as quiet tabs -->
+        <div class="sh-toolbar" data-reveal>
+          <div class="sh-toolbar-top">
+            <div class="sh-search">
+              <label class="sh-search-k" for="sh-q">Search the shop</label>
+              <input id="sh-q" type="search" autocomplete="off" placeholder="Search cleanser, SPF, mandelic…">
+            </div>
+            <label class="sh-switch">
+              <input type="checkbox" id="sh-instock" role="switch">
+              <span class="sh-switch-track" aria-hidden="true"><span class="sh-switch-dot"></span></span>
+              <span class="sh-switch-k">In stock only</span>
+            </label>
           </div>
-          <div class="sh-chips sh-brands" role="group" aria-label="Brand"></div>
-          <nav class="sh-chips sh-cats" aria-label="Jump to a type of product"></nav>
-          <label class="sh-instock"><input type="checkbox" id="sh-instock"> In stock now</label>
+          <div class="sh-brands" role="group" aria-label="Brand"></div>
         </div>
-        <p class="sh-count" aria-live="polite"></p>
+
+        <!-- Expandable Tabs (21st.dev, ported to plain JS in js/shop.js): one line icon per
+             type of product; the section on screen opens to show its name. Sticks under the
+             header while the shop scrolls by. -->
+        <nav class="sh-nav" aria-label="Jump to a type of product">
+          <div class="xt sh-cats"></div>
+          <p class="sh-count" aria-live="polite"></p>
+        </nav>
         <div class="sh-grid" id="retail-grid"></div>
         <p class="sh-fallback">The shop loads here. To order now, email
           <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a>
