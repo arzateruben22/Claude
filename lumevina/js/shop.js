@@ -354,13 +354,100 @@
     grid.querySelectorAll(".sh-sec").forEach(function (sec) { spy.observe(sec); });
   };
 
+  /* ── search in everyday words: "sunscreen" finds the SPFs, "pimple" the
+     acne care, "wrinkles" the retinoids and peptides. Each group pairs the
+     words clients type with words on her products (name, type, label). ── */
+  var WORDS = [
+    { say: ["sunscreen", "sun screen", "sunblock", "sun block", "sun", "spf", "uv", "uva", "uvb", "sunburn", "sun protection"], find: ["spf", "sunscreen", "sun care"], cat: "Sun care" },
+    { say: ["cleanser", "cleanse", "cleansing", "face wash", "facewash", "wash", "soap", "makeup remover", "remover"], find: ["cleanser", "wash", "cleansing"], cat: "Cleansers" },
+    { say: ["moisturizer", "moisturiser", "moisturize", "moisturizing", "lotion", "cream", "hydrate", "hydrating", "hydration", "dry", "dryness", "dehydrated"], find: ["moistur", "cream", "hydra", "balm"], cat: "Moisturizers" },
+    { say: ["toner", "tonic", "mist", "spray", "essence"], find: ["toner", "mist", "essence"], cat: "Toners & mists" },
+    { say: ["serum", "ampoule", "booster"], find: ["serum", "essence"], cat: "Serums" },
+    { say: ["acne", "pimple", "breakout", "zit", "blemish", "whitehead", "blackhead", "clogged", "spot treatment", "clear skin"], find: ["acne", "breakout", "spot", "sulfur", "benzoyl", "mandelic", "patch", "clear"], cat: "Acne & spot care" },
+    { say: ["patch", "pimple patch", "sticker", "hydrocolloid"], find: ["patch"] },
+    { say: ["eye", "under eye", "undereye", "dark circles", "puffy", "puffiness", "eye bags", "crows feet"], find: ["eye"], cat: "Eye care" },
+    { say: ["anti aging", "anti-aging", "antiaging", "aging", "wrinkle", "fine lines", "lines", "firm", "firming", "lift", "lifting", "sagging", "collagen", "mature"], find: ["retin", "peptide", "firming", "nad", "renews", "stem cells"] },
+    { say: ["retinol", "retinal", "retinoid", "retin a", "vitamin a"], find: ["retin"] },
+    { say: ["dark spots", "dark spot", "hyperpigmentation", "pigmentation", "discoloration", "brighten", "brightening", "glow", "dull", "uneven", "even tone"], find: ["bright", "discoloration", "glowtone", "vitamin c", "mandelic"] },
+    { say: ["exfoliate", "exfoliant", "exfoliating", "exfoliation", "peel", "aha", "acid", "scrub", "texture", "resurface"], find: ["mandelic", "glycolic", "exfoliat", "acid"] },
+    { say: ["vitamin c", "vit c", "vitc", "ascorbic"], find: ["vitamin c"] },
+    { say: ["sensitive", "redness", "red", "calm", "calming", "soothe", "soothing", "irritated", "irritation", "barrier", "gentle"], find: ["calm", "sooth", "barrier", "recovery", "gentle"] },
+    { say: ["oily", "oil control", "shine", "shiny", "matte", "mattifying", "greasy"], find: ["balances oil", "matte"] },
+    { say: ["mask", "masque", "sheet mask"], find: ["mask"], cat: "Masks" },
+    { say: ["supplement", "vitamin", "vitamins", "pill", "pills", "omega", "softgel", "capsule"], find: ["supplement", "softgel", "omega"], cat: "Supplements" },
+    { say: ["travel", "travel size", "mini", "small", "trial"], find: ["travel"] },
+    { say: ["body", "back", "chest", "bacne"], find: ["body"] }
+  ];
+  var norm = function (t) { return String(t || "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9%+.\s-]/g, " ").replace(/\s+/g, " ").trim(); };
+  var hayOf = function (p) {
+    if (p._hay) return p._hay;
+    /* "Acne-safe" on a label isn't an acne product; the 2 fl oz sizes are the travel sizes */
+    var about = (p.about || "").replace(/acne-safe/gi, "");
+    return (p._hay = norm(p.name + " " + (p.inv || "") + " " + p.brand + " " + p.cat + " " + about + " " + (p.size || "") +
+      (/travel|\(2 fl oz\)/i.test(p.name) ? " travel" : "")));
+  };
+  /* the query as terms: known phrases kept whole ("dark spots"), then words */
+  var PHRASES = [];
+  WORDS.forEach(function (g) { g.say.forEach(function (w) { if (w.indexOf(" ") !== -1) PHRASES.push(w); }); });
+  PHRASES.sort(function (a, b) { return b.length - a.length; });
+  var termsOf = function (raw) {
+    var t = " " + norm(raw) + " ", out = [];
+    PHRASES.forEach(function (ph) {
+      if (t.indexOf(" " + ph + " ") !== -1) { out.push(ph); t = t.replace(" " + ph + " ", " "); }
+    });
+    return out.concat(t.trim() ? t.trim().split(" ") : []);
+  };
+  /* what a term can match: itself, plus the product words of any group it
+     belongs to, also while it's still being typed ("sunsc") or plural */
+  var cats = function (term) { return groupsOf(term).map(function (g) { return g.cat; }).filter(Boolean); };
+  var groupsOf = function (term) {
+    /* the word as typed, and its singular: "wrinkles" → "wrinkle", "patches" → "patch" */
+    var forms = [term];
+    if (term.length > 3 && term.indexOf(" ") === -1) {
+      if (/s$/.test(term)) forms.push(term.slice(0, -1));
+      if (/es$/.test(term)) forms.push(term.slice(0, -2));
+    }
+    return WORDS.filter(function (g) {
+      return g.say.some(function (w) {
+        if (forms.indexOf(w) !== -1) return true;
+        /* still typing: "sunsc" → "sunscreen" */
+        if (term.length >= 3 && w.indexOf(term) === 0) return true;
+        /* a longer form of one word: "moisturizers", "exfoliating" */
+        return term.indexOf(" ") === -1 && w.indexOf(" ") === -1 && w.length >= 4 &&
+          forms.some(function (f) { return f.indexOf(w) === 0 && f.length - w.length <= 3; });
+      });
+    });
+  };
+  var alts = function (term) {
+    var out = [term];
+    groupsOf(term).forEach(function (g) { out = out.concat(g.find); });
+    if (/s$/.test(term) && term.length > 3) out.push(term.slice(0, -1));
+    return out;
+  };
+  /* how well a product answers the search: 0 = not at all. Every term has to
+     match something; a match in the name counts most. */
+  var score = function (p, query) {
+    var terms = termsOf(query);
+    if (!terms.length) return 1;
+    var hay = hayOf(p), name = norm(p.name), total = 0;
+    for (var i = 0; i < terms.length; i++) {
+      var a = alts(terms[i]), best = 0;
+      /* the type of product the word means ("sunscreen" → Sun care) comes first */
+      if (cats(terms[i]).indexOf(p.cat) !== -1) best = 5;
+      for (var j = 0; j < a.length; j++) {
+        if (name.indexOf(a[j]) !== -1) best = Math.max(best, j === 0 ? 4 : 3);
+        else if (hay.indexOf(a[j]) !== -1) best = Math.max(best, j === 0 ? 2 : 1);
+      }
+      if (!best) return 0;
+      total += best;
+    }
+    return total;
+  };
+
   var matches = function (p) {
     if (state.brand && p.brand !== state.brand) return false;
     if (state.inStock && !(INV.status(p) === "in" || INV.status(p) === "low")) return false;
-    if (state.q) {
-      var hay = (p.name + " " + (p.inv || "") + " " + p.brand + " " + p.cat + " " + (p.about || "")).toLowerCase();
-      return state.q.toLowerCase().split(/\s+/).every(function (w) { return hay.indexOf(w) !== -1; });
-    }
+    if (state.q) return score(p, state.q) > 0;
     return true;
   };
 
@@ -431,9 +518,91 @@
   }
   if (q) {
     var t = null;
+    /* ── suggestions that pop up under the search bar as you type: the
+       closest products (photo, name, price), tap one to open it; Enter
+       shows them all in the shop below ── */
+    var box = q.closest(".sh-search");
+    var pop = el("div", "sh-suggest");
+    pop.id = "sh-suggest";
+    pop.setAttribute("role", "listbox");
+    pop.setAttribute("aria-label", "Suggestions");
+    pop.hidden = true;
+    box.appendChild(pop);
+    q.setAttribute("role", "combobox");
+    q.setAttribute("aria-autocomplete", "list");
+    q.setAttribute("aria-controls", "sh-suggest");
+    q.setAttribute("aria-expanded", "false");
+    var picks = [], active = -1;
+    var closePop = function () { pop.hidden = true; q.setAttribute("aria-expanded", "false"); q.removeAttribute("aria-activedescendant"); active = -1; };
+    var showAll = function () {
+      closePop();
+      state.q = q.value.trim(); paintGrid();
+      var target = document.getElementById("retail-grid");
+      if (target) target.scrollIntoView({ block: "start", behavior: calm.matches ? "auto" : "smooth" });
+    };
+    var mark = function (i) {
+      active = i;
+      pop.querySelectorAll(".sh-sg-item").forEach(function (o, n) { o.setAttribute("aria-selected", String(n === i)); });
+      if (i >= 0) q.setAttribute("aria-activedescendant", "sh-sg-" + i); else q.removeAttribute("aria-activedescendant");
+    };
+    var paintPop = function () {
+      var query = q.value.trim();
+      if (norm(query).length < 2) { closePop(); return; }
+      var ranked = INV.live().map(function (p) { return { p: p, s: score(p, query) }; })
+        .filter(function (x) { return x.s > 0; })
+        .sort(function (a, b) { return (b.s - a.s) || (STATUS_ORDER[INV.status(a.p)] - STATUS_ORDER[INV.status(b.p)]) || a.p.name.localeCompare(b.p.name); });
+      picks = ranked.slice(0, 6).map(function (x) { return x.p; });
+      pop.textContent = "";
+      var head = el("p", "sh-sg-head", ranked.length
+        ? ranked.length + (ranked.length === 1 ? " product" : " products") + " for “" + query + "”"
+        : "Nothing on the shelf for “" + query + "” yet.");
+      pop.appendChild(head);
+      picks.forEach(function (p, i) {
+        var o = el("button", "sh-sg-item");
+        o.type = "button"; o.id = "sh-sg-" + i; o.tabIndex = -1;
+        o.setAttribute("role", "option"); o.setAttribute("aria-selected", "false");
+        var th = el("span", "sh-sg-thumb");
+        if (p.photo) { var im = el("img"); im.src = p.photo; im.alt = ""; im.width = 44; im.height = 44; th.appendChild(im); }
+        o.appendChild(th);
+        var tx = el("span", "sh-sg-text");
+        tx.appendChild(el("span", "sh-sg-name", p.name));
+        tx.appendChild(el("span", "sh-sg-meta", p.brand + " · " + p.cat));
+        o.appendChild(tx);
+        var right = el("span", "sh-sg-right");
+        right.appendChild(el("span", "sh-sg-price", money(p.price)));
+        right.appendChild(el("span", "sh-sg-stock sh-stock is-" + INV.status(p), stockText(p)));
+        o.appendChild(right);
+        o.addEventListener("mousedown", function (e) { e.preventDefault(); });
+        o.addEventListener("click", function () { closePop(); showDetail(p, q); });
+        pop.appendChild(o);
+      });
+      var foot = el("button", "sh-sg-all", ranked.length > picks.length ? "See all " + ranked.length + " in the shop" : ranked.length ? "Show them in the shop" : "Ask Evelyn for it");
+      foot.type = "button"; foot.tabIndex = -1;
+      foot.addEventListener("mousedown", function (e) { e.preventDefault(); });
+      foot.addEventListener("click", function () {
+        if (ranked.length) showAll(); else { closePop(); request({ name: query, brand: "", price: 0 }); }
+      });
+      pop.appendChild(foot);
+      pop.hidden = false;
+      q.setAttribute("aria-expanded", "true");
+      mark(-1);
+    };
     q.addEventListener("input", function () {
       clearTimeout(t);
-      t = setTimeout(function () { state.q = q.value.trim(); paintGrid(); }, 120);
+      paintPop();
+      t = setTimeout(function () { state.q = q.value.trim(); paintGrid(); }, 160);
+    });
+    q.addEventListener("focus", function () { if (q.value.trim()) paintPop(); });
+    q.addEventListener("blur", function () { setTimeout(closePop, 120); });
+    q.addEventListener("keydown", function (e) {
+      if (pop.hidden) { if (e.key === "Enter") { e.preventDefault(); showAll(); } return; }
+      if (e.key === "ArrowDown") { e.preventDefault(); mark(Math.min(picks.length - 1, active + 1)); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); mark(Math.max(-1, active - 1)); }
+      else if (e.key === "Escape") { closePop(); }
+      else if (e.key === "Enter") {
+        e.preventDefault();
+        if (active >= 0 && picks[active]) { var pk = picks[active]; closePop(); showDetail(pk, q); } else showAll();
+      }
     });
   }
   if (inStock) inStock.addEventListener("change", function () { state.inStock = inStock.checked; paintGrid(); });
