@@ -9,7 +9,9 @@
 //
 // Request:  GET ?from=YYYY-MM-DD&to=YYYY-MM-DD   (up to 45 days)
 // Response: { busy: { "2026-10-21": [[720, 780], …] }, google: true|false }
-//           minutes after midnight, studio time (Los Angeles)
+//           minutes after midnight, studio time (Los Angeles); the appointments
+//           themselves. The website adds Evelyn's 30 minutes of cleaning time
+//           on each side (js/booking.js → CLEAN), and the database enforces it.
 //
 // Deploy:  supabase functions deploy availability --no-verify-jwt
 

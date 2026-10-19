@@ -2,7 +2,8 @@
    Client-side booking for every service except gift certificates,
    including MULTI-SERVICE sessions: add several services (say, a
    Brazilian wax + custom facial) and they book back-to-back as one
-   block. Opening hours come from Evelyn's own settings (js/hours.js,
+   block, with her 30 minutes of cleaning time after every appointment.
+   Opening hours come from Evelyn's own settings (js/hours.js,
    edited in the dashboard): the usual week, days off, extra days she
    opens, and times she blocks out. Tuesday 12–7, Wednesday and Thursday
    11–7, Friday 10–5, Saturday 9:30–6; closed Sunday and Monday. With the Glow Membership switched on,
@@ -27,6 +28,12 @@
   var STORAGE_KEY = "lumevina_bookings";
 
   var CELL = 30;
+  /* Evelyn needs 30 minutes after every appointment to clean and sanitize
+     the room, so no appointment starts within 30 minutes of another one
+     ending, on either side. Several treatments booked together are one
+     appointment: the 30 minutes come after the whole visit. It doesn't
+     apply to times she blocks herself or to the end of her day. */
+  var CLEAN = 30;
   /* the usual day, used when hours.js isn't on the page */
   var STD = { open: 11 * 60, close: 19 * 60, lunch: null, lunchEnd: null };
   var H = window.LumevinaHours || null;
@@ -301,7 +308,8 @@
   var AV = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking && window.LUMEVINA_CONFIG.booking.availability) || "";
   var liveBusy = null;
   var liveTaken = function (dayKey, start, dur) {
-    return (liveBusy && liveBusy[dayKey] || []).some(function (b) { return start < b[1] && start + dur > b[0]; });
+    /* with her cleaning time on both sides of every appointment */
+    return (liveBusy && liveBusy[dayKey] || []).some(function (b) { return start - CLEAN < b[1] && start + dur + CLEAN > b[0]; });
   };
   var pullBusy = function () {
     if (!AV || !window.fetch) return;
@@ -402,7 +410,9 @@
     var h = hoursOf(dayKey);
     if (!h || start < h.open || start + dur > h.close) return false;
     if (overlapsLunch(start, dur, h) || overlapsBlock(dayKey, start, dur) || liveTaken(dayKey, start, dur)) return false;
-    for (var t = start; t < start + dur; t += CELL) {
+    /* the appointment, plus her cleaning time before (after the last client)
+       and after (before the next one) */
+    for (var t = start - CLEAN; t < start + dur + CLEAN; t += CELL) {
       if (cellSeedBusy(dayKey, t) || userSet[t]) return false;
     }
     return true;

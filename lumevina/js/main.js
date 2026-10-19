@@ -91,10 +91,12 @@
     splitChars(".hero-title .line-inner");
 
     /* Hero entrance */
-    var intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+    /* it waits for the opening greeting (js/intro.js) to lift, so it's seen */
+    var intro = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
     intro.timeScale(1.25);  /* the whole entrance plays a touch brisker */
     intro
       .from(".hero-liquid", { opacity: 0, duration: 1.8, ease: "power2.out" }, 0)
+      .from(".hero-mark-art", { opacity: 0, scale: 0.94, duration: 2.4, ease: "power2.out" }, 0.05)
       .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
       .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.2)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.6)
@@ -104,6 +106,25 @@
       .from(".hero .hero-cred", { opacity: 0, duration: 0.6 }, 1.0)
       .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 1.0)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.4);
+    var heroStarted = false;
+    var startHero = function () { if (heroStarted) return; heroStarted = true; intro.play(0); };
+    var veil = document.getElementById("intro");
+    if (!veil || veil.classList.contains("intro-done") || document.documentElement.classList.contains("intro-lifted")) startHero();
+    else {
+      document.addEventListener("lumevina:intro-lift", startHero, { once: true });
+      setTimeout(startHero, 12000);   /* never leave the hero hidden */
+    }
+
+    /* her logo's symbol rises gently and fades as you leave the hero */
+    gsap.fromTo(".hero-mark-drift",
+      { opacity: 1, yPercent: 0 },
+      {
+        yPercent: -8,
+        opacity: 0.15,
+        ease: "none",
+        immediateRender: false,
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true, invalidateOnRefresh: true }
+      });
 
     /* Wordmark drifts down and fades as you leave the hero. Written as
        an explicit fromTo with immediateRender:false so the scrub reads

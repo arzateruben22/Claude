@@ -80,7 +80,7 @@
      viewer (and a slow phone) shows the page after it loads, so a greeting
      timed from the first byte would play behind the loading screen. The
      veil covers the page while it loads; then the logo and words play.
-     Never hold the page past 8 seconds. */
+     Never wait more than 4 seconds for it. */
   var go = function () {
     if (started || done) return;
     if (document.hidden) {
@@ -96,7 +96,7 @@
   };
   if (document.readyState === "complete") setTimeout(go, 120);
   else window.addEventListener("load", function () { setTimeout(go, 120); });
-  timers.push(setTimeout(go, 8000));
+  timers.push(setTimeout(go, 4000));
 
   /* soft glow follows the cursor (desktop; harmless on touch) */
   var glow = document.getElementById("intro-glow");
@@ -129,6 +129,9 @@
     window.removeEventListener("touchmove", onWheel, { passive: true });
     intro.classList.add("intro-out");
     document.body.classList.remove("intro-lock");
+    /* the hero's entrance starts now (js/main.js) */
+    document.documentElement.classList.add("intro-lifted");
+    try { document.dispatchEvent(new CustomEvent("lumevina:intro-lift")); } catch (e) { /* very old browser: main.js's timer starts it */ }
     /* land on the hero (or the section the link named) now that we're unlocked */
     land();
     /* positions were measured while scroll was locked — recompute now

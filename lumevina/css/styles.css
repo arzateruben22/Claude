@@ -6691,3 +6691,28 @@ a.book-btn { text-align: center; }
 .only-gg { display: none; }
 .book-glossgenius .only-gg { display: inline; }
 .book-glossgenius .only-site { display: none; }
+
+/* ─── her logo's symbol behind the hero: the circle, profile and roses from
+   her logo (img/logo-mark-bg.png, the words lifted out), tinted in the
+   earthy palette through a mask. The outer box only places it; the inner
+   one is what moves (js/main.js), so the centering transform is never
+   overwritten. ─── */
+.hero-mark {
+  position: absolute; left: 50%; top: 44%; z-index: 0;
+  width: min(46rem, 78vh); aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-mark-drift { display: block; width: 100%; height: 100%; }
+.hero-mark-art {
+  display: block; width: 100%; height: 100%;
+  background: linear-gradient(160deg,
+    rgba(var(--accent-rgb), 0.46) 0%,
+    rgba(146, 106, 80, 0.40) 48%,
+    rgba(var(--accent-rgb), 0.30) 100%);
+  -webkit-mask: url("../img/logo-mark-bg.png") center / contain no-repeat;
+  mask: url("../img/logo-mark-bg.png") center / contain no-repeat;
+}
+@media (max-width: 760px) {
+  .hero-mark { top: 31%; width: min(104vw, 30rem); opacity: 0.62; }
+}

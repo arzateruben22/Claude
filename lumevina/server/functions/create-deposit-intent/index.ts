@@ -116,7 +116,8 @@ Deno.serve(async (req) => {
   // Her other calendar: a GlossGenius appointment or a personal block in her
   // Google Calendar takes the time too (server/functions/_shared/google.ts).
   try {
-    if (await isBusy(body.date, body.start_min, durMin)) {
+    // with her 30 minutes of cleaning time on both sides (the same rule as the website)
+    if (await isBusy(body.date, body.start_min - 30, durMin + 60)) {
       return new Response(JSON.stringify({ error: "slot_taken" }), { status: 409 });
     }
   } catch (err) {

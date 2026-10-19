@@ -149,3 +149,11 @@ Only what's on GlossGenius is offered now. The full list, with her descriptions,
 ## Booking on the website: on hold (Oct 19)
 
 Evelyn wants to get used to the website before clients book on it. Every Book button opens her GlossGenius page, and the Book section says "Coming soon: booking right here on the website." The website's own calendar, deposits and calendar sync are built and waiting. When she's ready: `js/site-config.js` → `booking.mode: "both"` (both places), later `"site"`.
+
+## Cleaning time between clients (Oct 19)
+
+Evelyn needs 30 minutes after every appointment to clean and sanitize. The website's booking (when it's switched on) never starts an appointment within 30 minutes of another one ending, on either side; several treatments booked together count as one visit, with the 30 minutes after the whole visit. The database enforces the same gap, and the server's check against her Google Calendar includes it. **While booking runs on GlossGenius:** set a 30-minute buffer after each service in GlossGenius (its service settings have a buffer or "processing time" option; the exact name may differ in her app).
+
+## The logo behind the hero (Oct 19)
+
+The symbol from her logo (the circle, profile and roses; the words lifted out) sits large and quiet behind the headline, tinted in the earthy palette (`img/logo-mark-bg.png`, a mask, so the color is set in CSS). It fades in with the headline once the opening lifts and drifts up gently as you scroll.

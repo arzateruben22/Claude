@@ -52,12 +52,14 @@ create table bookings (
   created_at timestamptz not null default now()
 );
 
--- THE double-booking guard: two live bookings can never overlap.
+-- THE double-booking guard: two live bookings can never overlap, and each
+-- one carries Evelyn's 30 minutes of cleaning time after it, so the next
+-- appointment starts at least 30 minutes after the last one ends.
 -- This is what localStorage could not do — one calendar for everyone.
 alter table bookings add constraint no_overlap
   exclude using gist (
     date with =,
-    int4range(start_min, start_min + dur_min) with &&
+    int4range(start_min, start_min + dur_min + 30) with &&
   ) where (status in ('pending', 'held', 'completed'));
 
 create index bookings_by_day on bookings (date) where status in ('pending', 'held');
