@@ -349,6 +349,9 @@
     });
   }
   drawer.querySelector(".cart-close").addEventListener("click", closeDrawer);
+  /* a second way out, at the bottom where a thumb is: inside an app's
+     viewer the corner close button can sit under the app's own buttons */
+  drawer.querySelector(".cart-keep").addEventListener("click", closeDrawer);
   overlay.addEventListener("click", closeDrawer);
   emptyMsg.querySelector("a").addEventListener("click", closeDrawer);
 

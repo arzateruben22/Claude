@@ -177,3 +177,7 @@ The two-line menu now opens the moment a finger lifts, not only on the click tha
 ## Gifts (Oct 19)
 
 Right under the featured services: the **E-Gift Certificate** as its own black card (her vector logo in Khaki, "$110 toward any treatment", one button), and right below it **Or gift a treatment**: every bookable service on her menu (32, in tabs by group) with its price and a Gift button that puts that treatment's certificate in the cart. Add-ons, the after-hours fee and the $0 ProCell follow-up session are left out, since they can't be booked on their own. All of it is generated from `js/services.js` by `node scripts/build-services.mjs`, so a new price or service shows up in the gift list too. The acne New Client Consultation + Treatment is $220 everywhere (the FAQ said $225).
+
+## Cart and checkout on phones (Oct 19)
+
+On phones the cart and checkout now rise from the bottom as sheets, with the page dimmed above them: tap the page, the ×, or **Keep shopping** to close. Before, the cart filled the whole screen and its × sat in the top-right corner, right under the Claude app's own ⋯ button, so there was no way out inside the app.
