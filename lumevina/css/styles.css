@@ -853,9 +853,13 @@ body.intro-lock { overflow: hidden; }
   .hero-wordmark { bottom: 0.05em; }
 }
 
+/* centered by the box itself, not a transform: the scroll animation in
+   js/main.js moves it with transforms, which would replace a translateX */
 .hero-wordmark {
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
@@ -6186,7 +6190,7 @@ html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
 .hero-shelf-list {
   list-style: none; margin: 0; padding: 0.2rem 0.1rem 0.6rem;
   display: flex; gap: 0.75rem; overflow-x: auto; justify-content: safe center;
-  scroll-snap-type: x mandatory; scrollbar-width: thin;
+  scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: rgba(var(--line-rgb), 0.22) transparent;
 }
 .hero-shelf-list > li { flex: 0 0 10.75rem; scroll-snap-align: start; display: flex; }
 .hero-shelf-list .sh-card { width: 100%; background: rgba(var(--glass-rgb), 0.86); }
