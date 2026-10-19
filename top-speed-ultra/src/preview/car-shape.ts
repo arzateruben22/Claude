@@ -1,5 +1,5 @@
-// The four garage cars as numbers: one parametric body (car-body.ts) and one set of wheels, interiors and trims
-// (car-wheel.ts, cockpit.ts), shaped by these. All four are our own designs: Rossini (the "R" badge) and Vela.
+// The garage cars as numbers: one parametric body (car-body.ts) and one set of wheels, interiors and trims
+// (car-wheel.ts, cockpit.ts), shaped by these. All are our own designs: Rossini (the "R" badge), Vela and OC.
 //
 //   rossini-gt     the base: a balanced mid-engine coupe, red. 4.60 x 1.97 m, 2.65 m wheelbase.
 //   rossini-brio   smaller and lighter: shorter overhangs, narrower, a softer round nose, blue. 4.22 x 1.88 m.
@@ -7,18 +7,23 @@
 //                  intakes, a roof scoop, a carbon roof, centre-lock wheels, yellow. 4.78 x 2.03 m (splitter to wing).
 //   vela-e         electric (our other brand): a smooth closed nose with a light bar, flush door handles, a glass
 //                  roof, a fastback, aero wheels, no exhausts, white. 4.76 x 1.99 m, 2.80 m wheelbase.
+//   oc-hyper       the OC Hypercar Prototype 01 (the owner's reference sheet, PROJECT_OC_HYPERCAR.md): a procedural
+//                  model built in code, not a finished 3D asset. Very low and wide, light silver, a deep stepped
+//                  carbon splitter, ice-blue LED blades and strips, deep side intakes, a big wing on swan necks, a
+//                  full-width red tail bar. 4.72 x 2.02 m, 3.00 m wheelbase, staggered 0.70 / 0.74 m tyres.
 //
 // Every car shares the driver's frame (spec.ts EYE, WHEEL_AT): the cabin stays where the driver sits; the body
 // changes round it. Lengths in metres, car frame (x right, y up, the car faces -z, origin under the middle).
-export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e';
-export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e'];
+import type { PaintMask } from './car-mats';
+export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper';
+export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'];
 type K = [number, number][];
 
 export interface ShapeParams {
-  id: CarId; name: string; brand: 'rossini' | 'vela';
+  id: CarId; name: string; brand: 'rossini' | 'vela' | 'oc';
   paint: number;                         // the garage colour (sRGB)
   ZF: number; ZR: number; YSILL: number; // nose and tail z, sill height
-  axle: { zF: number; zR: number; r: number; trackF: number; trackR: number; wF: number; wR: number };
+  axle: { zF: number; zR: number; r: number; rR?: number; trackF: number; trackR: number; wF: number; wR: number };   // rR: a bigger rear tyre (staggered)
   arch: [number, number];                // wheel-arch radius front, rear (centred on the axle)
   // keyed curves along z: plan half-width, fender crest height, centre deck height, roof height, canopy half-width
   WP: K; FH: K; CC: K; RH: K; GB: K;
@@ -26,9 +31,9 @@ export interface ShapeParams {
   DROP: number; ROLL: number; P: number; K: number;
   nose: { R: number; p: number; Ry: number; tuck: number; tuckY: number };   // plan rounding, elevation rounding, chin set-back
   tail: { R: number; p: number; Ry: number; tuck: number; tuckY: number };
-  scallop: { depth: number; z0: number; z1: number; e0: number; e1: number; yc: number; h: number };
+  scallop: { depth: number; z0: number; z1: number; e0: number; e1: number; yc: number; h: number; tilt?: number; pow?: number; rake?: number };   // tilt: the scoop's centre rises this much toward the rear; pow: edge sharpness (4); rake: its front and rear ends lean back this many metres per metre down (diagonal ends)
   WS: { zb: number; zt: number; xb: number; xt: number };
-  SG: { fb: [number, number]; rb: [number, number]; rt: [number, number]; ftZ: number };
+  SG: { fb: [number, number]; rb: [number, number]; rt: [number, number]; ftZ: number; ftA?: number };   // ftA: the front-top corner's half-width (0.66)
   RG: { x0: number; x1: number; z0: number; z1: number };
   roofGlass: { z0: number; z1: number; x: number } | null;
   carbonRoof: boolean;
@@ -37,25 +42,47 @@ export interface ShapeParams {
   door: [number, number][];              // door shut line (side plane, z y)
   frontLid: [number, number][];          // bonnet shut line (top plane, x z)
   head: [number, number][];              // headlamp patch on the fender top (x, z): inner-front, outer-front, outer-rear, inner-rear
-  headStyle: 'twin' | 'round' | 'slim';
-  noseStyle: 'gt' | 'brio' | 'corsa' | 'vela';
-  tailStyle: 'gt' | 'brio' | 'corsa' | 'vela';
+  bladeSweep?: number;                   // the blade's outer end sweeps this much further back (z += sweep * u^3 along it), so it climbs the fender's corner
+  headStyle: 'twin' | 'round' | 'slim' | 'blade';
+  noseStyle: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
+  tailStyle: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   noseIntake: [number, number][];        // the main front opening (x, y), convex; inside the nose face's outline
   cornerIntake: [number, number][] | null; // an opening in each front corner (|x|, y): inner-bottom, outer-bottom, outer-top, inner-top
   rearMesh: { w: number; h: number; cy: number } | null;
   exhaust: 'twin' | 'single' | 'high' | 'none';
-  diffuser: { half: number; h: number; z0: number; fins: number[] };
+  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor)
   splitter: { w: number; d: number; proud: number; canards: boolean };
-  wing: { span: number; chord: number; y: number; z: number; mountX: number } | null;
+  wing: { span: number; chord: number; y: number; z: number; mountX: number; plate?: [number, number] } | null;   // plate: end-plate length, height
   scoop: boolean;
   bonnetVent: boolean;
   fenderVents: boolean;
   handles: 'hidden' | 'flush';
   mirrorAt: [number, number, number];
   cabinW: number;                        // inner door-card half-width
-  wheel: 'twin5' | 'five' | 'cl10' | 'aero';
+  wheel: 'twin5' | 'five' | 'cl10' | 'aero' | 'multi';
   rimColor: number; caliper: number;
   interior: 'gt' | 'brio' | 'corsa' | 'vela';
+  // the OC Hypercar's own pieces (absent on the other cars, which then build exactly as before)
+  sidewall?: number;                     // tyre sidewall height as a share of the standard one (a low profile, a bigger rim)
+  seatDrop?: number;                     // how far this car's driver sits below the shared frame (spec.ts EYE): the
+                                         // exterior's cabin silhouette uses it now; the cockpit and camera wait for the
+                                         // owner's decision on the seat drop (PROJECT_OC_HYPERCAR.md section 12, item 1)
+  led?: { color: number; halo: number };  // ice-blue LED strips: splitter edge, front corners, sills, diffuser, wing plates
+  bar?: { len: number; h: number };      // the full-width red tail bar
+  fins?: { x: [number, number]; z: [number, number]; h: number };   // twin fins on the rear deck, front to back
+  bonnetVents?: { x: [number, number]; z: [number, number]; n: number };   // a louvred vent each side of the bonnet's centre
+  plate?: { w: number; h: number; y: number };   // the rear plate (the OC mark)
+  splitterStep?: { w: number; d: number; h: number };   // a second, raised splitter tier behind the blade
+  thrusters?: { x: number; y: number; r: number };   // two small nozzles set into the diffuser (fired in a later milestone)
+  intakeQ?: [number, number][];          // a side intake shaped as a quad (side plane z, y): bottom-front, bottom-rear, top-rear, top-front
+  lowCarbon?: [number, number];          // the skin ahead of the front wheels and behind the rears is carbon up to these shares of the side's height
+  crown?: number;                        // the deck's profile across: rises as u^crown from the centre to the fender crest (a sunken bonnet between peaked crests)
+  masks?: PaintMask[];                   // gloss-black regions of the paint (the two-tone), drawn by the paint shader
+  paintFinish?: { metal: number; rough: number };
+  tyreTint?: number; discTint?: number;  // darker rubber, a dark grey carbon-ceramic disc
+  ventsQ?: [number, number][][];         // louvred vents as quads on the top surface (x, z: inner-front, outer-front, outer-rear, inner-rear; mirrored)
+  seatX?: number;                        // the outside view's cabin silhouette: the seats' |x| (0.37, the shared driver's frame)
+  deckRibs?: { x: [number, number]; z: number[] };   // silver ribs across the rear deck's openings (the structure seen under the wing)
 }
 
 const GT: ShapeParams = {
@@ -189,6 +216,109 @@ const VELA: ShapeParams = {
   wheel: 'aero', rimColor: 0x1e2024, caliper: 0x2d6fd8, interior: 'vela',
 };
 
+// The OC Hypercar Prototype 01, from the owner's reference sheet (PROJECT_OC_HYPERCAR.md section 3 and 4.2: 8.0 mm/px
+// on the SIDE panel, anchored on the tyres; the width from the plate on the REAR panel). Its roof is 1.12 m, not the
+// sheet's 1.05 m: the shared driver's frame needs room (section 3, "What the game's shared frame forces").
+const HYPER: ShapeParams = {
+  ...CORSA, id: 'oc-hyper', name: 'OC Hypercar Prototype 01', brand: 'oc', paint: 0xc8d3e8,
+  ZF: -2.43, ZR: 2.29, YSILL: 0.07,
+  // 3.00 m wheelbase; 0.70 / 0.74 m tyres; tracks 1.72 / 1.69 m
+  axle: { zF: -1.52, zR: 1.48, r: 0.35, rR: 0.37, trackF: 0.86, trackR: 0.845, wF: 0.275, wR: 0.345 },
+  arch: [0.4, 0.42],
+  WP: [[-2.43, 0.88], [-2.2, 0.955], [-1.9, 0.99], [-1.52, 1.0], [-1.1, 0.975], [-0.6, 0.94], [0.0, 0.925], [0.5, 0.955], [1.0, 1.0], [1.48, 1.02], [1.9, 1.01], [2.15, 0.99], [2.29, 0.96]],
+  FH: [[-2.43, 0.37], [-2.27, 0.43], [-2.1, 0.53], [-1.9, 0.65], [-1.7, 0.745], [-1.52, 0.79], [-1.25, 0.77], [-0.9, 0.74], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.2, 0.87], [1.48, 0.875], [1.9, 0.84], [2.15, 0.79], [2.29, 0.75]],
+  // the deck's centre: low between the front fenders (the sunken bonnet) and between the rear haunches (the recess
+  // the spine and the openings sit in), up to a lip across the tail that carries the red bar
+  CC: [[-2.43, 0.33], [-2.25, 0.36], [-2.0, 0.42], [-1.75, 0.48], [-1.52, 0.53], [-1.15, 0.62], [-0.6, 0.74], [0.0, 0.82], [0.6, 0.84], [1.0, 0.78], [1.4, 0.72], [1.8, 0.69], [2.1, 0.7], [2.29, 0.72]],
+  // (the windscreen springs from the deck at the cowl: no step under it)
+  RH: [[-1.15, 0.64], [-1.05, 0.745], [-0.9, 0.86], [-0.6, 0.97], [-0.4, 1.04], [-0.2, 1.09], [0.0, 1.115], [0.2, 1.12], [0.5, 1.1], [0.9, 1.03], [1.3, 0.96], [1.7, 0.9], [2.0, 0.86]],
+  // the canopy: a narrow teardrop, about half the body's width at the cabin (the sheet's TOP), running back into a
+  // narrow spine to the wing
+  GB: [[-1.15, 0.47], [-0.7, 0.5], [-0.1, 0.5], [0.35, 0.45], [0.7, 0.32], [1.0, 0.24], [1.4, 0.17], [1.8, 0.13], [2.0, 0.11]],
+  ZC0: -1.15, ZC1: 2.0, DROP: 0.1, ROLL: 0.2, P: 4, K: 0.035,
+  crown: 2.6,
+  nose: { R: 0.3, p: 2.8, Ry: 0.12, tuck: 0.13, tuckY: 0.4 },
+  tail: { R: 0.14, p: 2.7, Ry: 0.02, tuck: 0.08, tuckY: 0.5 },
+  // the door's scoop: a deep, sharp-edged recess whose front and rear ends lean back down the side (the sheet's
+  // fender trailing edge and the diagonal into the intake)
+  scallop: { depth: 0.16, z0: -0.92, z1: -0.68, e0: 0.16, e1: 0.4, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
+  WS: { zb: -1.15, zt: -0.3, xb: 0.47, xt: 0.38 },
+  SG: { fb: [-0.95, 0.76], rb: [0.42, 0.87], rt: [0.28, 1.05], ftZ: -0.3, ftA: 0.38 },
+  RG: { x0: 0.22, x1: 0.13, z0: 0.48, z1: 1.0 },
+  // smoked glass across most of the roof, under the scoop, running into the rear screen and the spine behind it: from
+  // above the canopy reads as one dark teardrop between silver flanks (the sheet's TOP); the camera of the side, front
+  // and hero views is below the roof, so they still see the silver flanks (the sheet's SIDE and FRONT)
+  roofGlass: { z0: -0.26, z1: 0.47, x: 0.6 }, carbonRoof: false,
+  intake: null, intakeQ: [[0.3, 0.25], [0.56, 0.25], [0.2, 0.63], [0.06, 0.63]],
+  louvre: null,
+  door: [[-0.56, 0.29], [0.1, 0.29], [0.14, 0.82], [-0.98, 0.8]],   // its front and lower edges lie along the scoop's creases
+  frontLid: [[-0.5, -2.25], [0.5, -2.25], [0.55, -1.25], [-0.55, -1.25]],
+  // the blade: a slim lamp along the fender's lower front edge, sweeping up and out to the corner: its outer end
+  // bends back up the fender's corner (bladeSweep), so in the FRONT view it climbs from 0.38 m at the inner end to
+  // about 0.52 m at the outer end (the sheet: about 0.30 to 0.48 m), where a straight blade turned down over the corner
+  head: [[0.45, -2.335], [0.9, -2.185], [0.915, -2.13], [0.47, -2.285]], headStyle: 'blade', bladeSweep: 0.125,
+  noseStyle: 'hyper', tailStyle: 'hyper',
+  noseIntake: [[-0.48, 0.09], [0.48, 0.09], [0.43, 0.26], [-0.43, 0.26]],
+  // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
+  cornerIntake: [[0.6, 0.1], [0.8, 0.1], [0.84, 0.3], [0.67, 0.27]],
+  rearMesh: { w: 1.2, h: 0.22, cy: 0.5 },
+  exhaust: 'none',
+  // the diffuser's mouth: a wide trapezoid under the plate (the sheet's REAR: its LED outline runs across at about
+  // half the tail's width and angles down and out to the tail's lower corners)
+  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.6, -0.43, -0.26, -0.09, 0.09, 0.26, 0.43, 0.6], top: 0.47 },
+  splitter: { w: 1.94, d: 0.66, proud: 0.24, canards: false },
+  wing: { span: 1.71, chord: 0.36, y: 0.98, z: 1.98, mountX: 0.42, plate: [0.55, 0.25] },
+  scoop: true, bonnetVent: false, fenderVents: false, handles: 'hidden',
+  mirrorAt: [0.98, 0.86, -0.92], cabinW: 0.8,
+  wheel: 'multi', rimColor: 0x101318, caliper: 0x1f4fd8,
+  interior: 'corsa',
+  sidewall: 0.75, seatDrop: 0.15, seatX: 0.27,
+  led: { color: 0xa6dcff, halo: 0x2f8fe8 },
+  bar: { len: 1.66, h: 0.02 },
+  fins: { x: [0.68, 0.62], z: [0.95, 2.08], h: 0.08 },
+  // two long vents along the front fenders' inner walls, by the cowl
+  ventsQ: [[[0.37, -1.86], [0.47, -1.88], [0.6, -1.24], [0.47, -1.22]]],
+  plate: { w: 0.52, h: 0.11, y: 0.46 },
+  splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
+  thrusters: { x: 0.2, y: 0.26, r: 0.03 },
+  lowCarbon: [0.62, 0.7],
+  // a light, cool silver: at metalness 0.3 the faces turned away from the sun take the sky's light and still read
+  // light (the front and rear views), and a warm sky doesn't turn the paint bronze
+  paintFinish: { metal: 0.3, rough: 0.27 },
+  tyreTint: 0x7a818e, discTint: 0x5c6068,
+  deckRibs: { x: [0.3, 0.74], z: [1.12, 1.32, 1.52] },
+  // the gloss-black two-tone (x, z in plan; mirrored): the V from the badge to the cowl, the spine from the rear
+  // screen to the tail, the openings either side of it, and a channel along each side of the cowl
+  masks: [
+    { plane: 'top', mirror: true, pts: [[-0.05, -2.2], [0.03, -2.2], [0.35, -1.1], [-0.05, -1.1]], soft: 0.006 },
+    // below each blade: the nose's front slope and its rounding turn black out to the corner (the blade then sits on
+    // the fender's lower edge, silver above it, the dark corner and its fang intake below)
+    // (in five convex pieces whose edges follow the swept blade's front edge, 5 mm under the lamp; each overlaps the
+    // next by 3 to 6 cm along its own chord, so no half-tone seam shows where two pieces meet)
+    { plane: 'top', mirror: true, pts: [[0.4, -2.6], [0.66, -2.6], [0.66, -2.2507], [0.45, -2.33]], soft: 0.004 },
+    { plane: 'top', mirror: true, pts: [[0.6, -2.6], [0.795, -2.6], [0.795, -2.1642], [0.6, -2.2798]], soft: 0.004 },
+    { plane: 'top', mirror: true, pts: [[0.735, -2.6], [0.876, -2.6], [0.876, -2.0874], [0.735, -2.2076]], soft: 0.004 },
+    { plane: 'top', mirror: true, pts: [[0.816, -2.6], [0.9, -2.6], [0.9, -2.055], [0.816, -2.1452]], soft: 0.004 },
+    { plane: 'top', mirror: true, pts: [[0.87, -2.6], [1.05, -2.6], [1.05, -2.055], [0.87, -2.055]], soft: 0.004 },
+    { plane: 'front', mirror: true, side: -1, pts: [[0.4, 0.0], [1.05, 0.0], [1.05, 0.44], [0.45, 0.383]], soft: 0.004, range: [-3, -2.2] },
+    // and across the middle: the whole lower nose below the bonnet's leading edge is black (the sheet's FRONT), so
+    // the silver bonnet comes down to a gentle V at the badge and the blades sit on one dark band, not in two
+    // 'eyes' with a silver bumper between them (it overlaps the corner's region, so no seam where they meet)
+    { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.5, 0.0], [0.5, 0.388], [-0.05, 0.35]], soft: 0.004, range: [-3, -2.3] },
+    // the spine: the top of the canopy's tail behind the rear screen, tapering to the wing (its steep flanks stay
+    // silver: the buttresses), and the deck's centre over the tail
+    { plane: 'top', mirror: true, pts: [[-0.05, 0.98], [0.16, 0.98], [0.07, 2.05], [-0.05, 2.05]], soft: 0.006 },
+    { plane: 'top', mirror: true, pts: [[-0.05, 1.86], [0.42, 1.86], [0.5, 2.4], [-0.05, 2.4]], soft: 0.008, range: [0, 0.8] },
+    // a dark channel along each side of the canopy's base, from the cowl vents back into the openings, so the
+    // front fenders and the rear haunches read as separate silver pods (the sheet's TOP); two halves that overlap
+    { plane: 'top', mirror: true, pts: [[0.47, -1.26], [0.6, -1.26], [0.625, -0.05], [0.5, -0.05]], soft: 0.008 },
+    { plane: 'top', mirror: true, pts: [[0.5, -0.15], [0.625, -0.15], [0.625, 0.9], [0.44, 0.9]], soft: 0.008 },
+    // (each opening is a lens, as two convex halves)
+    { plane: 'top', mirror: true, pts: [[0.44, 0.84], [0.62, 0.82], [0.76, 1.25], [0.33, 1.25]], soft: 0.008 },
+    { plane: 'top', mirror: true, pts: [[0.33, 1.249], [0.76, 1.249], [0.66, 1.72], [0.45, 1.74]], soft: 0.008 },
+  ],
+};
+
 // The front lids sit fuller and higher than the first cut: a real mid-engine car's lid meets its nose at 0.55 to
 // 0.62 m (pedestrian-impact rules), not 0.45. The game's hood camera (0, 1.0, -1.45) then sees the lid's leading
 // edge along the bottom of the frame, and the driver sees the wings and the lid's crown over the dash.
@@ -201,5 +331,9 @@ function liftNose(P: ShapeParams, dy: number): ShapeParams {
 
 export const SHAPES: Record<CarId, ShapeParams> = {
   'rossini-gt': liftNose(GT, 0.075), 'rossini-brio': liftNose(BRIO, 0.07), 'rossini-corsa': liftNose(CORSA, 0.065), 'vela-e': liftNose(VELA, 0.085),
+  // the hypercar keeps its nose low (the sheet's nose is about 0.40-0.45 m at the tip): a token lift only
+  'oc-hyper': liftNose(HYPER, 0.02),
 };
+// the rear tyre's radius (the hypercar's are bigger than its fronts)
+export const rearR = (P: ShapeParams) => P.axle.rR ?? P.axle.r;
 export const shapeFor = (id: CarId = 'rossini-gt') => SHAPES[id] ?? GT;

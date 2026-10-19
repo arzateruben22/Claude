@@ -134,7 +134,13 @@ export interface ShutLine {
   seg?: boolean;
   side?: -1 | 0 | 1;                       // only x>0 (1), x<0 (-1) or both (0); for 'front', z sign
 }
-const MAX_SHUT = 14;
+// A paint mask (the OC Hypercar's two-tone): a convex polygon in one of the car's planes inside which the paint turns
+// to gloss black (no metal, a darker, slightly rougher base under the same clear coat). Drawn by the paint shader, so
+// its edge is crisp at any distance and nothing is laid over the skin (no z-fighting). mirror: test |x| (one polygon
+// for both sides); soft: the edge's blend width in metres; range: limits on the plane's own axis (top: y, front: z,
+// side: x), so a mask on one face leaves the faces behind it alone.
+export interface PaintMask { plane: 'top' | 'front' | 'side'; pts: [number, number][]; side?: -1 | 0 | 1; mirror?: boolean; soft?: number; range?: [number, number] }
+const MAX_SHUT = 14, MAX_MASK = 16;
 // inset a convex polygon by r (edges moved inward and re-intersected)
 function inset(pts: [number, number][], r: number): [number, number][] {
   const n = pts.length;
@@ -163,6 +169,18 @@ function packShut(lines: ShutLine[]) {
     a[k * 3].set(l.seg ? 1 : 0, plane, l.side ?? 0, l.seg ? 0 : (l.r ?? 0));
     a[k * 3 + 1].set(p[0][0], p[0][1], p[1][0], p[1][1]);
     a[k * 3 + 2].set(p[2][0], p[2][1], p[3][0], p[3][1]);
+  });
+  return a;
+}
+function packMask(masks: PaintMask[]) {
+  const a = new Array<THREE.Vector4>(MAX_MASK * 4).fill(new THREE.Vector4()).map(() => new THREE.Vector4());
+  masks.slice(0, MAX_MASK).forEach((l, k) => {
+    let p = l.pts;
+    while (p.length < 4) p = [...p, p[p.length - 1]];
+    a[k * 4].set(l.mirror ? 1 : 0, l.plane === 'side' ? 0 : l.plane === 'top' ? 1 : 2, l.side ?? 0, l.soft ?? 0.004);
+    a[k * 4 + 1].set(p[0][0], p[0][1], p[1][0], p[1][1]);
+    a[k * 4 + 2].set(p[2][0], p[2][1], p[3][0], p[3][1]);
+    a[k * 4 + 3].set(l.range?.[0] ?? -1e3, l.range?.[1] ?? 1e3, 0, 0);
   });
   return a;
 }
@@ -204,9 +222,32 @@ void shutLines(float pix) {
   }
 }
 `;
+// the masks' part, compiled only into a paint that has masks (a program of its own), so every other car's paint
+// shader is exactly what it was before the masks existed: no mask loop and no mask uniforms (64 vec4s a phone GPU's
+// fragment uniform budget doesn't have to find)
+const MASK_PARS = /* glsl */`
+uniform vec4 uMask[${MAX_MASK * 4}];
+uniform int uMaskN;
+float paintMaskV = 0.0;
+void paintMasks(float pix) {
+  for (int k = 0; k < ${MAX_MASK}; k++) {
+    if (k >= uMaskN) break;
+    vec4 A = uMask[k * 4], B = uMask[k * 4 + 1], C = uMask[k * 4 + 2], D = uMask[k * 4 + 3];
+    int plane = int(A.y + 0.5);
+    float x = A.x > 0.5 ? abs(vOP.x) : vOP.x;
+    vec2 p; float ok, w;
+    if (plane == 0) { p = vOP.zy; w = vOP.x; ok = smoothstep(0.2, 0.35, abs(vON.x)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.x * A.z)); }
+    else if (plane == 1) { p = vec2(x, vOP.z); w = vOP.y; ok = smoothstep(0.2, 0.35, vON.y); }
+    else { p = vec2(x, vOP.y); w = vOP.z; ok = smoothstep(0.2, 0.35, abs(vON.z)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.z * A.z)); }
+    ok *= step(D.x, w) * step(w, D.y);
+    float e = A.w * 0.5 + pix;
+    paintMaskV = max(paintMaskV, ok * smoothstep(e, -e, shPoly(p, B.xy, B.zw, C.xy, C.zw)));
+  }
+}
+`;
 // metallic paint: a base coat with flakes under a clear coat; the flakes are a per-pixel random tilt of the base
 // layer's normal, hashed in the car's own space (so they stay put as you move) at about the size of a pixel
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; key?: string } = {}) {
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; key?: string; masks?: PaintMask[] } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
@@ -215,19 +256,30 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
     });
     const peel = m.clearcoatNormalMap!.clone(); peel.repeat.set(4, 4); peel.needsUpdate = true; m.clearcoatNormalMap = peel;
     m.name = 'paint';
-    const uniforms = { uShut: { value: packShut(lines) }, uShutN: { value: Math.min(MAX_SHUT, lines.length) }, uFlake: { value: q === 'high' ? (o.flake ?? 0.15) : 0 } };
+    const masks = o.masks ?? [], M = masks.length > 0;
+    const uniforms = { uShut: { value: packShut(lines) }, uShutN: { value: Math.min(MAX_SHUT, lines.length) }, uFlake: { value: q === 'high' ? (o.flake ?? 0.15) : 0 },
+      ...(M ? { uMask: { value: packMask(masks) }, uMaskN: { value: Math.min(MAX_MASK, masks.length) } } : {}) };
     (m.userData as { uniforms: typeof uniforms }).uniforms = uniforms;
-    patch(m, 'paint' + q, (sh) => {
+    patch(m, 'paint' + q + (M ? '+mask' : ''), (sh) => {
       Object.assign(sh.uniforms, uniforms);
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vOP;\nvarying vec3 vON;')
         .replace('#include <begin_vertex>', '#include <begin_vertex>\nvOP = position; vON = normal;');
       sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', '#include <common>\n' + PAINT_PARS)
+        .replace('#include <common>', '#include <common>\n' + PAINT_PARS + (M ? MASK_PARS : ''))
         .replace('#include <color_fragment>', `#include <color_fragment>
           float pixW = length(fwidth(vOP)) * 0.7 + 1e-5;
           shutLines(pixW);
-          diffuseColor.rgb *= (1.0 - 0.94 * shutLine) * (1.0 - 0.3 * shutHalo);`)
+          diffuseColor.rgb *= (1.0 - 0.94 * shutLine) * (1.0 - 0.3 * shutHalo);` + (M ? `
+          paintMasks(pixW);
+          if (paintMaskV > 0.0) diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.016, 0.017, 0.019), paintMaskV);` : ''));
+      // the masked regions: gloss black (no metal, a slightly rougher base, a softer clear coat, no flake)
+      if (M) sh.fragmentShader = sh.fragmentShader
+        .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+          if (paintMaskV > 0.0) roughnessFactor = mix(roughnessFactor, 0.42, paintMaskV);`)
+        .replace('#include <metalnessmap_fragment>', `#include <metalnessmap_fragment>
+          if (paintMaskV > 0.0) metalnessFactor = mix(metalnessFactor, 0.0, paintMaskV);`);
+      sh.fragmentShader = sh.fragmentShader
         .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
           if (uFlake > 0.0) {
             vec3 fp = vOP * 2400.0;
@@ -237,9 +289,10 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
             vec3 h1 = flakeHash(floor(fp / exp2(l0 + 1.0)) + 17.0) * 2.0 - 1.0;
             vec3 fh = mix(h0, h1, lt);
             float fk = uFlake * pow(exp2(l0), -1.2);
-            normal = normalize(normal + normalize(normalMatrix * fh) * fk * length(fh) * (1.0 - shutLine));
+            normal = normalize(normal + normalize(normalMatrix * fh) * fk * length(fh) * (1.0 - ${M ? 'max(shutLine, paintMaskV)' : 'shutLine'}));
           }`)
-        .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
+        .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>${M ? `
+          if (paintMaskV > 0.0) material.clearcoat *= 1.0 - 0.6 * paintMaskV;` : ''}
           material.clearcoat *= 1.0 - shutLine;
           material.roughness = mix(material.roughness, 0.9, shutLine);`);
     });
@@ -253,10 +306,13 @@ export function setShutLines(m: THREE.Material, lines: ShutLine[]) {
 }
 
 // ------------------------------------------------------------------------------------------------ running gear
-export function tyre(q: Quality, treadV: [number, number]) {
-  return once('tyre' + q + treadV.join(), () => {
+// tint: a darker rubber (the OC Hypercar's black-on-black wheels); the other cars take the map as it is
+export function tyre(q: Quality, treadV: [number, number], tint?: number) {
+  return once('tyre' + q + treadV.join() + (tint === undefined ? '' : 't' + tint), () => {
     const t = X.tyreMaps(S(q, 1024, 512), treadV);
-    return withAO(Object.assign(new THREE.MeshStandardMaterial({ map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.8, 0.8), roughnessMap: t.roughnessMap, roughness: 1, envMapIntensity: 0.7 }), { name: 'tyre' }));
+    const m = new THREE.MeshStandardMaterial({ map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.8, 0.8), roughnessMap: t.roughnessMap, roughness: 1, envMapIntensity: 0.7 });
+    if (tint !== undefined) m.color.set(tint);
+    return withAO(Object.assign(m, { name: 'tyre' }));
   });
 }
 // a machined face: bright, concentric lathe marks (UV u runs round the wheel), anisotropic along them
@@ -268,13 +324,16 @@ export function machined(q: Quality) {
     return withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0xd6d9dd, metalness: 1, roughness: 1.0, roughnessMap: rough, normalMap: nm, normalScale: new THREE.Vector2(0.08, 0.08), anisotropy: q === 'high' ? 0.85 : 0, clearcoat: 0.6, clearcoatRoughness: 0.08 }), { name: 'machined' }));
   });
 }
-export function rimPaint(color = 0x2b2d31) {
-  return once('rimpaint' + color, () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color, metalness: 0.75, roughness: 0.42, clearcoat: 0.7, clearcoatRoughness: 0.12 }), { name: 'rimpaint' })));
+export function rimPaint(color = 0x2b2d31, rough = 0.42) {
+  return once('rimpaint' + color + (rough === 0.42 ? '' : 'r' + rough), () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color, metalness: 0.75, roughness: rough, clearcoat: 0.7, clearcoatRoughness: rough < 0.3 ? 0.04 : 0.12 }), { name: 'rimpaint' })));
 }
-export function disc(q: Quality) {
-  return once('disc' + q, () => {
+// tint: a dark grey carbon-ceramic disc (the OC Hypercar), so the wheel's face reads black through the spokes
+export function disc(q: Quality, tint?: number) {
+  return once('disc' + q + (tint === undefined ? '' : 't' + tint), () => {
     const t = X.discMaps(S(q, 512, 256));
-    return withAO(Object.assign(new THREE.MeshStandardMaterial({ map: t.map, roughnessMap: t.roughnessMap, normalMap: t.normalMap, roughness: 1, metalness: 0.25 }), { name: 'disc' }));
+    const m = new THREE.MeshStandardMaterial({ map: t.map, roughnessMap: t.roughnessMap, normalMap: t.normalMap, roughness: 1, metalness: 0.25 });
+    if (tint !== undefined) { m.color.set(tint); m.metalness = 0.1; }
+    return withAO(Object.assign(m, { name: 'disc' }));
   });
 }
 export function caliper(color = 0xe0a800) {
@@ -284,6 +343,13 @@ export function caliper(color = 0xe0a800) {
 // ------------------------------------------------------------------------------------------------ lamps and grilles
 export function emissive(name: string, color: number, intensity: number, base = 0x111111) {
   return once('emis' + name + color + intensity, () => Object.assign(new THREE.MeshStandardMaterial({ color: base, emissive: color, emissiveIntensity: intensity, roughness: 0.3 }), { name: 'emissive-' + name }));
+}
+// an LED strip (the OC Hypercar's ice blue): emissive through a core-and-halo map across the strip's width (v), well
+// over the bloom pass's threshold (0.92) on High and Ultra; the phone tier (Low and Medium, no bloom) runs it dimmer
+export function led(core: number, halo: number, q: Quality) {
+  return once('led' + core + halo + q, () => Object.assign(new THREE.MeshStandardMaterial({
+    color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
+  }), { name: 'led' }));
 }
 export function honeycomb(q: Quality, tile = 0.09) {
   return once('honey' + q + tile, () => {

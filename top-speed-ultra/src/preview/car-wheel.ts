@@ -3,6 +3,9 @@
 //   five  (Rossini Brio)  19-inch five-spoke, painted silver with a machined lip
 //   cl10  (Rossini Corsa) ten straight spokes in satin black, a centre-lock hub with a red hex nut
 //   aero  (Vela E)        a dished aero cover with five curved turbine slots over a gunmetal rim
+//   multi (OC Hypercar)   five spokes in gloss black, each splitting in two toward the rim (ten prongs at the rim,
+//                         the reference sheet's WHEEL DETAIL), a deep concave, a gloss-black lip (no polished ring), the
+//                         OC mark on a bigger centre cap; built with a lower sidewall (a 22-inch look)
 // Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
 // lettering); drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour.
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
@@ -51,14 +54,27 @@ function tyre(w: number, segs: number) {
   return lathe(prof, vs, segs, true);
 }
 
-export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero';
-export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number }
+export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero' | 'multi';
+// sidewall: the tyre's sidewall height as a share of the standard one; below 1 the rim, spokes, hub and brake grow
+// to meet it (a low-profile tyre on a bigger rim, the same outside diameter)
+export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number; sidewall?: number }
 // add one wheel (built for the right side) to a kit; m places it, out = -1 mirrors it for the left
 export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -1, spin?: Kit) {
   const high = o.q === 'high', segs = high ? 120 : 56, style = o.style ?? 'twin5';
   const w = o.w ?? (o.front ? WHEEL.wF : WHEEL.wR), hw = w / 2;
   const S = spin ?? kit;                 // spinning parts can go to their own kit
+  const sw = o.sidewall ?? 1, R0 = WHEEL.R, bead = 0.256, sRim = (R0 - (R0 - bead) * sw) / bead;
   const put = (k: Kit, key: string, g: THREE.BufferGeometry) => {
+    if (sw !== 1) {
+      // a lower sidewall: the tyre's radii pulled toward the tread, everything inside it scaled up to the new bead
+      const p = g.attributes.position;
+      for (let i = 0; i < p.count; i++) {
+        const y = p.getY(i), z = p.getZ(i), r = Math.hypot(y, z);
+        const f = key === 'tyre' ? (r > 1e-6 && r < R0 ? (R0 - (R0 - r) * sw) / r : 1) : sRim;
+        p.setY(i, y * f); p.setZ(i, z * f);
+      }
+      p.needsUpdate = true;
+    }
     if (out < 0) {
       mirrorX(g);
       // decals read the right way round on the left side too
@@ -70,7 +86,7 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   put(S, 'tyre', tyre(w, segs));
   // rim lip (machined) and barrel (painted)
   const lip: [number, number][] = [[0.257, hw - 0.01], [0.268, hw - 0.002], [0.2705, hw + 0.006], [0.2665, hw + 0.0118], [0.256, hw + 0.0132], [0.245, hw + 0.0105], [0.2385, hw + 0.003]];
-  put(S, 'machined', lathe(lip, lip.map((p) => p[0] * 6), segs, false));
+  put(S, style === 'multi' ? 'rimPaint' : 'machined', lathe(lip, lip.map((p) => p[0] * 6), segs, false));
   const barrel: [number, number][] = [[0.2385, hw + 0.003], [0.236, hw - 0.016], [0.236, -hw + 0.01], [0.246, -hw - 0.004], [0.256, -hw - 0.006]];
   put(S, 'rimPaint', lathe(barrel, barrel.map((p) => p[1] * 4), high ? 72 : 40, false));
 
@@ -80,18 +96,25 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   if (style === 'twin5') for (let pr = 0; pr < 5; pr++) for (const s of [-1, 1]) spokes.push([(pr / 5) * Math.PI * 2 + Math.PI / 2, s]);
   if (style === 'five') for (let k = 0; k < 5; k++) spokes.push([(k / 5) * Math.PI * 2 + Math.PI / 2, 0]);
   if (style === 'cl10') for (let k = 0; k < 10; k++) spokes.push([(k / 10) * Math.PI * 2 + Math.PI / 2, 0]);
+  // multi: each of five spokes is built as two halves side by side that part toward the rim (a split spoke)
+  if (style === 'multi') for (let k = 0; k < 5; k++) for (const s of [-1, 1]) spokes.push([(k / 5) * Math.PI * 2 + Math.PI / 2, s]);
   const faceKey = style === 'twin5' ? 'machined' : 'rimPaint';
   for (const [pc, s] of spokes) {
     const faceRows: V3[][] = [], sideL: V3[][] = [], sideR: V3[][] = [];
     for (let i = 0; i <= nR; i++) {
       const f = i / nR, r = rh + (rr - rh) * f;
-      const th = pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
-      // five: broad spokes that taper and thin toward the rim; cl10: slim straight ones, a shallow concave
-      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : 0.026 - 0.009 * f;
-      const dep = style === 'five' ? 0.032 - 0.01 * f : 0.036 - 0.012 * f;
-      const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : 0.62);
+      // multi: the halves part at 36 % of the spoke's length and run straight to the rim (the sheet's WHEEL DETAIL
+      // forks are straight Ys): the gap grows linearly with the radius, 0.17 rad either side at the rim
+      const split = style === 'multi' ? Math.min(1, Math.max(0, (f - 0.36) / 0.64)) : 0;
+      const th = style === 'multi' ? pc + s * Math.atan2(rr * Math.sin(0.17) * split, r) : pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
+      // five: broad spokes that taper and thin toward the rim; cl10: slim straight ones, a shallow concave; multi:
+      // a half of a slim spoke, offset to its side until the halves part
+      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : style === 'multi' ? 0.029 - 0.012 * f : 0.026 - 0.009 * f;
+      const dep = style === 'five' ? 0.032 - 0.01 * f : style === 'multi' ? 0.03 - 0.012 * f : 0.036 - 0.012 * f;
+      const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : style === 'multi' ? 0.5 : 0.62);
+      const off = style === 'multi' ? s * wdt * 0.5 * (1 - split) : 0;
       const Rd = v3(0, Math.cos(th), Math.sin(th)), T = v3(0, -Math.sin(th), Math.cos(th));
-      const at = (x: number, t: number) => Rd.clone().multiplyScalar(r).add(T.clone().multiplyScalar(t)).setX(x);
+      const at = (x: number, t: number) => Rd.clone().multiplyScalar(r).add(T.clone().multiplyScalar(t + off)).setX(x);
       const fl = at(xf, -wdt * 0.36), fr = at(xf, wdt * 0.36), cl = at(xf - 0.005, -wdt / 2), cr = at(xf - 0.005, wdt / 2);
       const bl = at(xf - dep, -wdt * 0.42), br = at(xf - dep, wdt * 0.42);
       faceRows.push([fl, fr]); sideL.push([bl, cl, fl]); sideR.push([fr, cr, br]);
@@ -151,7 +174,7 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   } else if (style !== 'aero') {
     const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.07, xh + 0.004], [0.088, xh + 0.001], [0.096, xh - 0.008], [0.098, xh - 0.034]];
     put(S, style === 'twin5' ? 'machined' : 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
-    for (let k = 0; k < 5; k++) {
+    for (let k = 0; k < (style === 'multi' ? 0 : 5); k++) {   // multi: the big centre cap covers the bolts
       const a = (k / 5) * Math.PI * 2 + Math.PI / 2 + Math.PI / 5, y = Math.cos(a) * 0.056, z = Math.sin(a) * 0.056;
       const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0055, y, z);
       put(S, 'dark', rec);
@@ -161,7 +184,7 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   }
   if (style !== 'cl10') {
     // the badge reads upright: CircleGeometry's u runs to -z (forward), which is right as seen from outboard
-    const cap = new THREE.CircleGeometry(0.0295, 32); cap.rotateY(Math.PI / 2); cap.translate(style === 'aero' ? xr - 0.031 : xh + 0.0078, 0, 0);
+    const cap = new THREE.CircleGeometry(style === 'multi' ? 0.042 : 0.0295, 32); cap.rotateY(Math.PI / 2); cap.translate(style === 'aero' ? xr - 0.031 : style === 'multi' ? xh + 0.0105 : xh + 0.0078, 0, 0);
     put(S, 'badge', cap);
     if (style === 'aero') { const cr = latheGeo([[0.05, xr - 0.032], [0.05, xr - 0.06]], 32, 'x', { flip: false }); put(S, 'dark', cr); }
   }

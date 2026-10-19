@@ -4,6 +4,266 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-17 to 19: the OC Hypercar's body repaired after review (hypercar M1 repair, branch `claude/hypercar`)
+
+Two reviews (art and code) rejected M1: honest and in budget, but not recognisably the sheet's car outside the side
+view, with a headlamp show-through the report left out and a cost comparison that mixed measures. The M1 code was
+fixed in place, not reverted. It is still a **procedural model built in code**, not a finished 3D asset, and it still
+has no `CarDef` (the garage and the game can't reach it until M3).
+
+The repair took ten passes. The first nine (October 17 to 19) stopped before they finished: their logs end
+part-way through the final renders, the suite run or the report (the sixth pass's suite run also lost its browser in
+the `phone` group). This is the tenth pass's report, on the code as it now stands. **Every render, number and check
+below is from the last two passes, on the same code** (October 19): the ninth pass rendered the side, the phone
+side, the front, the rear and the two Corsa budget rows (21:58 to 22:03 UTC); the tenth rendered the rest (from
+22:57), re-ran the body-number probes (the same figures as the ninth's, to the millimetre), and produced the sheet,
+the crops, the colour samples, the other cars' check, the suite run and this entry. Two things come from earlier
+passes and are named where used: the "before" renders of the other cars' check (renders of the unchanged copy of the
+code, which can't have changed), and figures quoted as history of what a pass changed. Neither pass changed the car's code; the ninth added a preview-only camera (`test-car.ts`
+`&cam=x,y,z&at=x,y,z&fov=`, for close looks at one detail; no view uses it unless asked). The last changes to the
+car are the sixth pass's (the paint's metalness and the blades' light guide) and the seventh's (the wheel's prongs);
+both are described below.
+
+- **A two-tone drawn by the paint shader** (`car-mats.ts` `PaintMask`, `ShapeParams.masks`): convex regions in the
+  car's top, front or side plane where the paint turns gloss black (no metal, a rougher base, a softer clear coat),
+  with an optional limit on the plane's own axis. Nothing is laid over the skin, so it can't z-fight, and the edges
+  are crisp at any distance. The mask code is compiled only into a paint that has masks (its own program), so the
+  other four cars' paint shaders are exactly what they were. The hypercar uses 14 of the 16 mask slots.
+- **TOP** (`hyper-top-r2`, overlay in `hyper-vs-ref-r2`):
+  - The canopy is a narrow teardrop: half-width 0.50 m at the cabin against the body's 0.925 m (54 %; was 0.75 m),
+    and the windscreen's base 0.47 m against 0.976 m at the cowl (48 %; was 0.70 m, 72 %). It narrows to 0.11 m at the wing. The roof from the windscreen's
+    header back to the rear screen is smoked glass (`roofGlass`), so from above the canopy reads as one dark teardrop
+    between silver flanks.
+  - A dark spine runs from the rear screen to the tail; the canopy's steep flanks either side stay silver (the
+    buttresses). Either side of it, a lens-shaped opening on the deck with three silver ribs across it, and the
+    tail's deck centre is dark. The rectangular louvre panel and the engine-lid shut line are gone.
+  - At the front, a dark V runs from behind the badge to the windscreen, and two long louvred vents lie along the
+    fenders' inner walls by the cowl (`ventsQ`, a new quad vent). The four square vent patches are gone.
+  - A dark channel runs along each side of the canopy's base, from the cowl vent back into the opening on the deck
+    (|x| 0.47 to 0.63 m; two mask regions that overlap, so no seam). With it the front fenders and the rear haunches
+    read as separate silver pods.
+- **FRONT** (`hyper-front-r2` and `hyper-front-night-r2`, camera 1.0 m up; was 1.6 m):
+  - The bonnet is sunk between peaked fender crests: a new `crown` makes the deck rise as u^2.6 from the centre to
+    the crest. At the front axle the bonnet's centre is 0.533 m and the crests 0.792 m (at |x| 0.765 m).
+  - The blades are slim: the lamp patch is about 5.5 cm deep (was 12 to 15). They sit on the fender's lower edge,
+    silver above, and there is no dark field round them. Each one's outer end bends back up the fender's corner
+    (`bladeSweep` 0.125: z += 0.125 u^3 along the blade, the lens kept square to its front edge so it doesn't shear):
+    its front edge climbs steadily from 0.384 m at the inner end to 0.527 m at the outer (nine points along it; the
+    sheet's FRONT reads about 0.30 to 0.48 m). The black below the blades follows the curve in five convex mask pieces, each overlapping the next by
+    3 to 6 cm, so no half-tone seam shows where two meet.
+  - **Sixth pass: a bolder light guide.** The ice-blue line along each blade's front edge is bolder: a fifth of the lens's
+    depth at the inner end to a third at the outer (it was a ninth to a quarter), with its halo following it (`lampTex` `'blade'`, used only by this car). The sheet's HEADLIGHT DETAIL shows a thick,
+    hard-glowing line; the thin one read as a scratch at a distance.
+  - The whole lower nose below the bonnet's leading edge is gloss black across the full width: the silver bonnet
+    comes down to a gentle V at the badge (0.35 m up in the middle), and the blades, the fangs and the main intake
+    sit in one black band, as on the sheet's FRONT. The OC badge is on the silver just above the edge.
+  - A tall 'fang' corner intake under each blade's outer half (|x| 0.60 to 0.84 m, 0.10 to 0.30 m up), with its LED
+    running down the intake's outer edge and forward along the splitter to its corner (it was an S-curve on the
+    fender's side).
+  - The canopy springs from the deck at the cowl: the 0.10 m step under the windscreen is gone.
+- **REAR** (`hyper-rear-r2` and `hyper-rear-night-r2`, camera 1.0 m up; was 1.3 m):
+  - The deck's centre is lowered between the haunches, so the haunch crests (0.875 m at the rear axle, |x| 0.785 m) stand 0.15 m above the deck
+    at |x| 0.3 m (0.725 m). The spine, the ribbed openings and the fins sit
+    in that recess under the wing.
+  - The tail below the bar is a recessed black well (1.2 × 0.22 m, 0.1 m deep, a mesh 0.03 m in) with the plate in it.
+  - The diffuser's mouth is a wide trapezoid under the plate: 0.47 m half-width at its top, 0.67 m at the floor, with
+    eight carbon strakes. Its LED outline runs across the top, down the slanted sides and out along the floor to the
+    tail's corners, as on the sheet's REAR.
+- **WHEELS** (`hyper-wheel-r2`): five spokes, each splitting in two toward the rim (ten prongs, from the WHEEL DETAIL
+  panel; was ten split spokes), a gloss-black lip (no polished ring), a dark grey disc (tint 0x5c6068) and darker
+  rubber (tint 0x7a818e). **Seventh pass: straight prongs.** The halves of each spoke now part linearly from 36 % of
+  its length (the gap grows with the radius, 0.17 rad either side at the rim), so each prong runs straight to the
+  rim as the sheet's forks do; the sixth pass's smoothstep made them S-curves that read as tentacles in the wheel
+  render. Same triangles. Sampled in the wheel render (mean sRGB of 9 × 9 boxes): the disc (23, 19, 16) and (1, 1, 1), the
+  sidewall (31, 24, 19) and (29, 22, 17), so the face and the tyre read black, not bronze; the drilled disc keeps a
+  faint warm cast in the golden-hour light. A thin reflection still runs round the lip.
+- **PAINT**: 0xc8d3e8 at metalness 0.3, roughness 0.27 (M1 had 0xbfc4cc at 0.8 and 0.22; the fifth pass 0.5). **Sixth
+  pass:** the front and rear views face away from the golden-hour sun, so at metalness 0.5 they read mid grey; at 0.3
+  the paint takes more of the sky's light and reads lighter there, with the same reflections in the side view.
+  (The sixth pass measured the front view's fender at (123, 134, 156) at metalness 0.5.) Sampled (mean sRGB of 9 × 9 boxes;
+  the boxes are marked in the session scratchpad, `m1r11/it/sample-*.png`):
+  - side view, lit by the low sun: the door (204, 198, 197) and the rear quarter (218, 211, 208). Light and close to
+    neutral, with a faint warm cast from the golden-hour test sky's pink horizon.
+  - front and rear views, which face away from the sun: the front fender (139, 148, 167), the bonnet
+    (140, 148, 165) and the rear haunch (140, 147, 161). A cool mid grey, not the sheet's bright silver (see the gaps).
+  - under the preview's showroom key at night: the front fender (209, 216, 229) and the bonnet (176, 186, 205) in the
+    front view. Surfaces that face away from the overhead strips stay dark: the rear haunch (49, 61, 88) in the rear
+    view, and the door (62, 72, 97) in the hero.
+- **Night**: the preview has `&key=showroom` (three overhead strip lights, preview only, not the game's light), so
+  the silver reads as it does on the sheet (`hyper-hero-r2`, `hyper-rear34-r2`, `hyper-front-night-r2`,
+  `hyper-rear-night-r2`). The game's own night is unchanged.
+- **Artefacts**:
+  - The gloss-black field under each blade is gone (found in review: the silver skin pierced it in ragged islands on
+    both builds; see the M1 gaps below). The dark is now the paint's own mask. The 3× crop of the nose
+    (`hyper-nose-3x-r2`, x 140-420, y 250-380 of the golden-hour hero, `high` above `phone`) is clean on both builds: no silver islands, no seams and no dark speckle at the far corner. The lamp patch
+    stands 5 mm off the skin on `high` and 8 mm on `phone`, as does the corner intake's frame.
+  - The phone build's zigzag on the scoop's front crease and the stepped highlights round the side intake
+    (`hyper-scoop-3x-r2`, x 300-600, y 230-340 of the side view, `high` above `phone`): the zigzag and the steps are gone on both builds; a faint wave remains at the intake's upper rear
+    corner on `phone`. Through each raked
+    end of the scoop the stations are finer (0.018 m on `high`, 0.03 m on `phone`), and each quad there is split
+    along the diagonal that lies closer to the surface.
+- **WING**: a legible close render (`hyper-wing-r2`, golden hour): the carbon weave on the main plane, both swan
+  necks, the end plates and their LEDs, the flap's LED, the spine, the ribbed openings and the fins.
+- **Lineup** (`hyper-lineup-r2`): all five cars nose to tail on one floor (the view opens its lens to fit them).
+- **Body numbers** (from the body functions, esbuild + node, re-run by the tenth pass, equal to the ninth's): roof peak 1.121 m at z 0.15 (sheet 1.05); rear haunch
+  0.875 m (0.85); tail top 0.700 m in the middle, 0.650 m at the shoulder (0.73).
+- **Budget** (the page's JSON line, side view, the same measure for every row; own cost = car shown minus car hidden,
+  scene = the whole frame with the car shown; both include the shadow pass. The stage's last-frame
+  `renderer.info` is not used, because it may or may not include the shadow pass):
+
+  | Car | Own cost: calls / triangles | Scene: calls / triangles | Plan budget (own) |
+  | --- | --- | --- | --- |
+  | Hypercar `high` | 29 / 245,994 | 33 / 248,008 | ≤ 40 / 260,000 |
+  | Hypercar `phone` | 29 / 125,756 | 33 / 127,770 | ≤ 36 / 135,000 |
+  | Corsa `high` | 31 / 219,861 | 35 / 221,875 | |
+  | Corsa `phone` | 31 / 114,157 | 35 / 116,171 | |
+
+  Against the Corsa, like for like: two calls fewer on both builds, and 11.9 % more triangles on `high` (+26,133)
+  and 10.2 % more on `phone` (+11,599). The repair added 8,307 triangles on `high` (237,687 before) and 417 on
+  `phone` (125,339); the sixth and seventh passes' changes add none. No NaN positions: the page's geometry check reported
+  none in any of the 14 hypercar renders listed below, nor in the two Corsa rows.
+- **The other four cars are unchanged, within render noise.** Eleven views of them rendered by the tenth pass
+  from this worktree (GT side, front and seat; Brio side, hood and rear; Corsa side on both builds, and chase; Vela
+  side, and top on `phone`), each compared pixel by pixel with a render of a copy of the code before M1 (equal to git
+  HEAD for all 128 tracked `src` and `tools` files, re-checked by the tenth pass; those renders were made by earlier
+  passes, October 17 and 19, plus two by the tenth for noise pairs; the log is `m1r11/diff.log` in the session
+  scratchpad):
+  - Identical (0 pixels): GT side and Corsa side `high`.
+  - A few pixels by one level: Brio side 4, Brio rear 2, Corsa side `phone` 1, Vela side 1, Vela top `phone` 8.
+  - GT front: 60 pixels by one level, in the band where two renders of the unchanged copy differ by 64.
+  - GT seat: 86 pixels (up to 122 levels), in the box where two renders of the unchanged copy differ by 85.
+  - Brio hood 3,624 and Corsa chase 814 pixels, by one level, all in the sky above the horizon (rows 0 to 165 and 0
+    to 115); no pixel of any car changed. That band varies from one render to the next: two renders of the
+    unchanged copy's chase differ by 1,799 pixels, and this worktree's hood and chase from the sixth pass and from
+    the tenth differ by 915 and 1,433 (the code between those two differs only in the hypercar's wheel and a preview
+    camera, neither of which these cars use). Two renders of the unchanged copy's hood happened to match exactly.
+  - The lineup (`hyper-lineup-r2`) shows all five cars together on one floor.
+- **Renders** (`tests/out/preview/`, 960 × 540, from the ninth and tenth passes as above): `hyper-side-r2`, `-front-r2`,
+  `-front-night-r2`, `-rear-r2`, `-rear-night-r2`, `-top-r2`, `-wheel-r2`, `-wing-r2`, `-hero-sunset-r2`,
+  `-hero-r2` (night, showroom key, bloom), `-rear34-r2` (the same), `-phone-side-r2`, `-phone-hero-sunset-r2`,
+  `-lineup-r2`, `hyper-corsa-high-side-r2` and `hyper-corsa-phone-side-r2` (the budget rows), the crops
+  `hyper-nose-3x-r2` and `hyper-scoop-3x-r2`, and the sheet `hyper-vs-ref-r2.png` (every reference panel beside its
+  render, with 50/50 overlays for the side and the top). The pre-repair renders, including the stale
+  `hyper-back-ortho.png` and `hyper-wheel-side.png`, were moved out of the folder (to the session scratchpad,
+  `m1r/superseded`), so it shows only the current car. (The plan's two Corsa renders, `hyper-plan-corsa-*-side.png`,
+  stay: they are the plan's own evidence.)
+- **Gaps, honestly:**
+  - **The seat drop still isn't built** (decision 1). The narrower canopy lowers the roof over the shared eye (x −0.37, z 0.10) to
+    1.067 m, 0.093 m below the 1.16 m eye. With the 0.15 m drop (eye 1.01 m) it leaves 0.057 m of headroom, and at
+    the eye's height the canopy's flank is 0.43 m out, 0.06 m from the eye. M2's cockpit should seat this car's driver further in
+    (the sheet's occupants sit about ±0.25 m from the centre; the outside view's cabin silhouette already does,
+    `seatX` 0.27), or the canopy must widen again.
+  - **The TOP is closer, not identical.** The sheet's plan is a sculpted dark canopy with flying buttresses and deep
+    openings into an engine bay; ours draws the openings as gloss-black regions of the paint with ribs over them,
+    not holes. The front fenders' outer vents aren't built, and the sheet's TOP and SIDE disagree (§3 of the plan).
+    The front fenders in the top view show a stepped edge in their reflection, and in the golden-hour hero the clear
+    coat (roughness 0.03) mirrors a torn dark streak on the front fender over the arch: both come from the preview's
+    reflection probe, a 128-pixel cube shared with every car. It is preview only (the game gives the car no probe;
+    `car-probe.ts` is imported only by `test-car.ts`), so it was not changed.
+  - **The blades** are bolder now but still a line on a slim lens: the sheet's lamp has a deeper dark lens with a
+    small module above the line.
+  - **The REAR**: the cabin's rounded back still shows over the deck between the wing's mounts, where the sheet has
+    a busier structure. The bar's ends don't sweep down as on the sheet. Where the carbon lower body meets the silver
+    at the rear corners (`lowCarbon`, whole skin triangles sent to carbon) the edge is stepped, seen in the rear and
+    rear 3/4 views.
+  - **Warm light on the dark parts.** In the golden-hour test light the carbon and the gloss black reflect the warm
+    horizon at grazing angles, so the splitter's top and the lower ends read brown-grey in the side and hero views
+    where the sheet's night showroom shows them black.
+  - **The dark V** reads grey at low angles: it reflects the sky.
+  - **Silver in shade.** The sheet's paint is bright cool silver everywhere; ours reads that way only where light
+    falls on it. In the golden-hour test light the front and rear views (facing away from the sun) read a cool mid
+    grey, about (140, 148, 165).
+  - **The night look** comes from the preview's showroom key. On the game's freeway at night the car still reads dark.
+  - **The caliper's OC mark** is clipped by the caliper's upper edge in the wheel render and reads as a fragment.
+  - The interior is the Corsa's until M2's `'hyper'` interior.
+- **Blockers for M3** (recorded in the plan's M3 row): the seat drop (and the driver's position) must land before the
+  car gets a `CarDef`. `PlayerCar.update` spins both axles at `vx / SPEC.wheelR` (0.345 m), but this car's tyres are
+  0.35 and 0.37 m, so each axle's spin must be scaled by `SPEC.wheelR / r`.
+- **Checked** (tenth pass, October 19, 22:56 to 23:26 UTC; logs in the session scratchpad, `m1r11/`):
+  - `npx tsc --noEmit` is clean on both configs (`tsconfig.json`, which includes all of `src`, and
+    `tsconfig.game.json`), and `npm run build` succeeds (single file 3,494 KB of JS).
+  - `npm test -- --only=boot,render,phone`: 24/24 pass, exit 0 (boot 6, render 13, phone 5). These groups never
+    reach the hypercar (it has no `CarDef`); they show that the shared code the repair touched (`car-body.ts`,
+    `car-mats.ts`, `car-wheel.ts`, `car.ts`, `PlayerCar.ts`) still builds and drives the other cars.
+  - Every render named above was looked at by eye, and the nose and scoop at 3× (`hyper-nose-3x-r2`,
+    `hyper-scoop-3x-r2`).
+  - The diff names no real car maker or product.
+
+## 2026-10-17: the OC Hypercar's body, paint, LEDs, wheels and badge (hypercar M1, branch `claude/hypercar`)
+
+The OC Hypercar Prototype 01 from the owner's reference sheet, as a **procedural model built in code**: one
+parametric body, with its materials, lights and textures generated at load. It's not a finished 3D asset, a scan or
+a downloaded model. It exists in the previews only: it has no `CarDef` until M3, so the garage and the game don't
+offer it yet.
+
+- **The car** (`car-shape.ts` `HYPER`): `CarId` `'oc-hyper'`, brand `'oc'` (new in the brand union; `badgeTex`,
+  `carMaterials` and the cockpit's hub badge take it). 4.72 m long, 3.00 m wheelbase, staggered 0.70 / 0.74 m tyres
+  (`axle.rR`), from `PROJECT_OC_HYPERCAR.md` §3.
+- **Nose and tail styles `'hyper'`** (`car-body.ts`):
+  - At the front: the deep stepped carbon splitter (a raised second tier, tall end plates, an LED along its edge),
+    the central opening with carbon blades and a centre fin, `'blade'` headlamps on gloss-black fields, and an LED
+    from each blade down the corner into the splitter. Louvred bonnet vents ahead of the cowl, and a centre crease
+    up to a carbon fin.
+  - Along the sides: a deep door scoop whose ends lean back down the side (new `scallop.rake`, with `pow`), a black
+    diagonal intake ahead of the rear wheel, and taller carbon skirts with two LED lines.
+  - At the rear: twin fins on the deck, the big wing on swan necks with end plates (`wing.plate`) and LEDs, and the
+    full-width red bar (`tail` material, so it brightens on the brakes in M2). A carbon diffuser with eight fins, an
+    LED round its mouth, the OC plate, and two small thruster nozzles set dark into the diffuser for M5.
+- **Materials**:
+  - Paint: cool light silver (0xbfc4cc), metalness 0.8, roughness 0.22, fine flake on High, clear coat 1.
+  - LEDs (`car-mats.ts` `led`): ice blue (core 0xa6dcff, halo 0x2f8fe8), emissive 2.8 on the `high` build (over
+    the 0.92 bloom threshold on High and Ultra) and 1.7 on `phone`.
+  - Carbon on the aero, the skirts and the lower ends.
+- **Wheels** (`car-wheel.ts` `'multi'`): ten thin gloss-black spokes that split toward the rim, a lower sidewall
+  (`sidewall: 0.75`, a 22-inch look), blue calipers (0x1f4fd8) and a bigger OC centre cap. No tyre lettering (M2,
+  optional).
+- **The OC mark** (`oc-mark.ts`): traced once from the owner's mask (960 × 343) to two outlines. The car draws it in
+  code, never stretched, on the nose badge, the rear plate, the wheel caps and the calipers.
+- **Measured from the body functions** (sheet value in brackets): roof peak 1.121 m at z 0.15 (1.05), rear haunch
+  0.869 m (0.85), tail top 0.726 m (0.73).
+- **Renders** (`test-car.ts`, 960 × 540), in `tests/out/preview/` (moved to the session scratchpad, `m1r/superseded`,
+  by the repair above, whose `-r2` renders replace them):
+  - `hyper-front`, `-rear`, `-side`, `-top`, `-hero` (night, bloom), `-hero-sunset`, `-rear34` (night, bloom) and
+    `-wheel`
+  - `hyper-phone-side` and `hyper-phone-hero-sunset`
+  - `hyper-vs-ref.png`: every reference panel beside its render, with a 50/50 side overlay with the hubs aligned
+  - The preview gained views `hero`, `rear34`, `back-ortho`, `top-full` and `wheel-side`, and the options
+    `&time=night`, `&bloom=1` (the game's bloom pass) and `&cy=`.
+- **Budget** (the page's JSON line, side view; own cost = car shown minus car hidden, shadow pass included):
+
+  | Car | Own cost: calls / triangles | Plan budget |
+  | --- | --- | --- |
+  | Hypercar `high` | 29 / 237,687 | ≤ 40 / 260,000 |
+  | Hypercar `phone` | 29 / 125,339 | ≤ 36 / 135,000 |
+  | Corsa `high` | 31 / 219,861 | |
+  | Corsa `phone` | 31 / 114,157 | |
+
+  No NaN positions on either build (the page's geometry check logged none).
+- **The other cars are unchanged.** Renders from a copy of the code before this work, compared with renders after
+  it:
+  - Corsa side `high`: identical, 0 pixels.
+  - Corsa side `phone`: 2 pixels, by 1 level.
+  - Vela top `phone`: 10 pixels, by 1 level.
+  - Brio rear `high`: 2 pixels, by 1 level.
+  - GT front `high`: 76 pixels, by 1 level. Two renders of the unchanged copy differ by 64 pixels in the same band,
+    so this is render noise.
+- **Gaps, honestly:**
+  - **The seat drop isn't built** (the owner's decision 1). The roof over the shared eye is 1.113 m, 0.047 m
+    *below* the eye (1.16 m). So the cockpit view of this car is unusable until the seat drop lands, which has to be
+    before M3 makes it drivable.
+  - **The top view** shows rectangular glass panels and louvres, not the sheet's dark teardrop canopy with its
+    flying buttresses.
+  - **The roof** is 1.12 m against the sheet's 1.05 m.
+  - **The night preview** has no street lamps or headlights, so the body reads dark and the LEDs carry it.
+  - **The phone build** shows a small stepped highlight on the scoop's front crease.
+  - **Found in review, not in this report:** the gloss-black field under each blade (lifted 2.8 mm along the skin's
+    normal) was pierced by the silver skin on both builds: ragged silver islands in the dark field and dark speckle
+    round the far lamp. Fixed in the repair above (the field is gone; the dark is drawn by the paint).
+  - The interior is the Corsa's until M2's `'hyper'` interior.
+- **Checked**:
+  - `npx tsc --noEmit` (both configs) is clean, and `npm run build` succeeds.
+  - `npm test -- --only=boot,render,phone`: 24/24.
+
 ## 2026-10-16: owner mode, every car unlocked for the owner (hypercar M0, branch `claude/hypercar`)
 
 The owner wants to "use all the cars I want" right now. Owner mode is a test-build switch, **not security**: anyone

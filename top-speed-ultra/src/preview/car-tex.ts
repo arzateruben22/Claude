@@ -5,6 +5,7 @@
 // Conventions: albedo maps are sRGB, everything else linear. Normal maps are tangent space (OpenGL, +y up).
 // Roughness maps put roughness in G (three reads G). Anisotropy maps: RG direction (2x-1), B strength.
 import * as THREE from 'three';
+import { drawOcMark } from './oc-mark';
 
 const cache = new Map<string, unknown>();
 export function once<V>(key: string, make: () => V): V {
@@ -409,7 +410,17 @@ export function contactShadow(len: number, wid: number, wheels: [number, number]
 
 // ------------------------------------------------------------------------------------------------ the R badge
 // our make's mark: a yellow enamel disc with a black italic R, in a thin bright ring
-export function badgeTex(n = 256, brand: 'rossini' | 'vela' = 'rossini'): THREE.Texture {
+export function badgeTex(n = 256, brand: 'rossini' | 'vela' | 'oc' = 'rossini'): THREE.Texture {
+  if (brand === 'oc') return once('badgeOC' + n, () => {
+    // OC: a gloss-black enamel disc, a thin satin-silver ring and the owner's OC mark (traced, never stretched)
+    const [c, g] = canvas(n, n), h = n / 2;
+    const gr = g.createRadialGradient(h * 0.7, h * 0.6, 0, h, h, h);
+    gr.addColorStop(0, '#1c2430'); gr.addColorStop(1, '#06080b');
+    g.fillStyle = gr; g.beginPath(); g.arc(h, h, h, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = '#c6ccd4'; g.lineWidth = n * 0.035; g.beginPath(); g.arc(h, h, h * 0.9, 0, Math.PI * 2); g.stroke();
+    drawOcMark(g, n * 0.17, n * 0.3, n * 0.66, n * 0.4, '#eef2f6');
+    return canvasTex(c, true);
+  });
   if (brand === 'vela') return once('badgeV' + n, () => {
     // Vela: a deep blue-black enamel disc, a satin silver ring and a V drawn as two sails
     const [c, g] = canvas(n, n), h = n / 2;
@@ -442,6 +453,41 @@ export function wordmarkTex(text: string, w = 1024, h = 128, colour = '#ffffff')
     g.fillStyle = colour; g.font = `600 ${h * 0.62}px Arial, Helvetica, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
     const letters = text.split(''), sp = w / (letters.length + 1);
     letters.forEach((ch, i) => g.fillText(ch, sp * (i + 1), h * 0.54));
+    return canvasTex(c, true);
+  });
+}
+
+// ------------------------------------------------------------------------------------------------ the OC mark
+// the owner's OC mark on transparent, white (tinted by the material), fitted in a w x h canvas with its aspect kept
+export function ocMarkTex(w = 512, h = 192, colour = '#ffffff'): THREE.Texture {
+  return once('ocmark' + w + h + colour, () => {
+    const [c, g] = canvas(w, h);
+    g.clearRect(0, 0, w, h);
+    drawOcMark(g, w * 0.04, h * 0.06, w * 0.92, h * 0.88, colour);
+    return canvasTex(c, true);
+  });
+}
+// the OC Hypercar's rear plate: a satin-black plate with a fine silver edge and the OC mark in brushed silver
+export function plateTex(w = 1024, h = 216): THREE.Texture {
+  return once('plateOC' + w, () => {
+    const [c, g] = canvas(w, h);
+    const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#20242a'); bg.addColorStop(1, '#0b0d10');
+    g.fillStyle = bg; g.beginPath(); g.roundRect(0, 0, w, h, h * 0.12); g.fill();
+    g.strokeStyle = '#8f969f'; g.lineWidth = h * 0.035; g.beginPath(); g.roundRect(h * 0.05, h * 0.05, w - h * 0.1, h * 0.9, h * 0.09); g.stroke();
+    const mg = g.createLinearGradient(0, h * 0.2, 0, h * 0.8); mg.addColorStop(0, '#f4f6f8'); mg.addColorStop(0.55, '#b7bdc5'); mg.addColorStop(1, '#e2e6ea');
+    drawOcMark(g, w * 0.3, h * 0.18, w * 0.4, h * 0.64, mg);
+    return canvasTex(c, true);
+  });
+}
+// an LED strip's light across its width (v): a white-blue core and a blue halo either side, on black (an emissive map)
+export function ledTex(core: number, halo: number): THREE.Texture {
+  return once('led' + core + halo, () => {
+    const [c, g] = canvas(4, 64);
+    const hex = (n: number) => '#' + n.toString(16).padStart(6, '0');
+    const gr = g.createLinearGradient(0, 0, 0, 64);
+    gr.addColorStop(0, '#000000'); gr.addColorStop(0.18, hex(halo)); gr.addColorStop(0.42, hex(core)); gr.addColorStop(0.58, hex(core));
+    gr.addColorStop(0.82, hex(halo)); gr.addColorStop(1, '#000000');
+    g.fillStyle = gr; g.fillRect(0, 0, 4, 64);
     return canvasTex(c, true);
   });
 }

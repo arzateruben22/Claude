@@ -1,9 +1,13 @@
-// Test page for the car part: the four garage cars inside and out, from every camera the game has.
+// Test page for the car part: the garage cars inside and out, from every camera the game has.
 //   ?view= seat | free-left | free-right | free-up | hood | chase | back | sky | sky-zoom | dash | beauty | rear | wheel |
-//          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck
-//   &car=rossini-gt | rossini-brio | rossini-corsa | vela-e      &q=high|phone   &world=0 to skip the game's roads
+//          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck | hero | rear34 | wing
+//   &car=rossini-gt | rossini-brio | rossini-corsa | vela-e | oc-hyper      &q=high|phone   &world=0 to skip the game's roads
+//   &time=night (the game's night sky; default the golden-hour test light)   &bloom=1 (the game's High/Ultra bloom pass)
+//   &key=showroom (preview only, not the game's light: three overhead strip lights, cool white, as rect-area lights
+//                  with lit strips the reflection probe and the paint pick up; the reference sheet's night showroom)
+//   &cy=metres (front and back-ortho: the camera's height, default 0.75)
 //   &paint=hex   &s=metres from the stretch start   &mirrors=live|env   &hands=1 (the hands part on the rim)
-//   &portrait=1 (the game's portrait-phone camera numbers)
+//   &portrait=1 (the game's portrait-phone camera numbers)   &cam=x,y,z&at=x,y,z&fov=deg (any camera, car's frame)
 // The game's cameras (src/game/Game.ts updateCamera), in the car's frame:
 //   seat: EYE, pitched -0.085 rad (portrait -0.27), FOV 58 (portrait 96); free: the same eye, FOV 66
 //   hood: (0, 1.0, -1.45), pitched -0.04 rad, FOV 62 (portrait 92)
@@ -24,13 +28,13 @@ const quality = (q.get('q') ?? 'high') as 'high' | 'phone';
 const car = (q.get('car') ?? 'rossini-gt') as CarId;
 const paint = q.get('paint') ? parseInt(q.get('paint')!, 16) : undefined;
 const portrait = q.get('portrait') === '1';
-const debug = ['side', 'top', 'front', 'lineup', 'lineup-top'].includes(view);
+const debug = ['side', 'top', 'front', 'lineup', 'lineup-top', 'back-ortho', 'wheel-side', 'top-full'].includes(view);
 const wantWorld = !debug && q.get('world') !== '0';
 const interior = ['seat', 'free-left', 'free-right', 'free-up', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view);
 
 const FOV: Record<string, number> = {
   seat: portrait ? 96 : 58, 'free-left': 66, 'free-right': 66, 'free-up': 66, hood: portrait ? 92 : 62, chase: portrait ? 80 : 60, sky: 50, 'sky-zoom': 7, back: 62,
-  dash: 50, wheelck: 50, door: 60, wheel: 34, dmirror: 16, grip: 28, garage: 34,
+  dash: 50, wheelck: 50, door: 60, wheel: 34, dmirror: 16, grip: 28, garage: 34, hero: 30, rear34: 30, wing: 26,
 };
 const stage = await makeStage({ stretch: !debug, fov: FOV[view] ?? 30, near: view === 'chase' ? 0.15 : 0.02 });
 const { scene, camera, renderer } = stage;
@@ -38,7 +42,9 @@ const env = stage.useGameSky((q.get('time') as 'sunset') ?? 'sunset');
 // Test light only: the game's 'sunset' preset has the sun at 3 degrees, where the sound walls shade the whole
 // freeway. Golden hour in October with the sun at ~9 degrees (about 45 minutes before sunset) shows the car in
 // sunlight. The atmosphere part owns the final scene's light.
-{
+const night = q.get('time') === 'night';
+if (night) env.set('night', 'clear', true);
+else {
   const alt = Number(q.get('alt') ?? 9) * Math.PI / 180;
   const E = env as unknown as { targetFor(d: Date): { alt: number } };
   const orig = E.targetFor.bind(env);
@@ -110,7 +116,8 @@ if (interior) {
   });
   log.buildMs = ms;
   if (view === 'garage') look(L(-5.2, 1.35, -9.5), L(2.6, 0.55, 0.4));
-  if (view === 'lineup') { camera.fov = 1.7; look(L(-180, 0.7, 0), L(0, 0.7, 0)); }
+  // (the long lens is opened to fit every car, nose to tail, centred on the middle one)
+  if (view === 'lineup') { const mid = -8.1 + 5.4 * (CAR_IDS.length - 1) / 2, span = 5.4 * (CAR_IDS.length - 1) + 5.4; camera.fov = 2 * Math.atan(span / 2 / camera.aspect / 180) * 180 / Math.PI; look(L(-180, 0.7, mid), L(0, 0.7, mid)); }
   if (view === 'lineup-top') { camera.fov = 7.5; look(L(0, 180, 0.01), L(0, 0, 0)); }
 } else {
   const c = buildCar({ car, paint, quality });
@@ -118,9 +125,20 @@ if (interior) {
   log.buildMs = Math.round(performance.now() - t0);
   if (view === 'side') look(L(-14, 0.62, 0), L(0, 0.62, 0));
   if (view === 'top') look(L(0, 16, 0.01), L(0, 0, 0));
-  if (view === 'front') look(L(0, 0.75, -14), L(0, 0.62, 0));
+  if (view === 'top-full') look(L(0, 21, 0.01), L(0, 0, 0));   // the whole car, splitter to wing
+  // &cy= raises the front and back cameras (the reference sheet's FRONT and REAR panels look down a little)
+  const cy = Number(q.get('cy') ?? 0.75);
+  if (view === 'front') look(L(0, cy, -14), L(0, 0.62 - (cy - 0.75) * 0.3, 0));
   if (view === 'beauty') look(L(-3.9, 1.0, -4.6), L(0.1, 0.5, 0.2));
   if (view === 'rear') look(L(-3.4, 1.05, 5.0), L(0.15, 0.55, 0.1));
+  // the reference sheet's hero: low and wide from the front left, a long lens; rear34 the same from behind
+  if (view === 'hero') look(L(-4.7, 0.8, -6.1), L(0.2, 0.45, 0.25));
+  if (view === 'rear34') look(L(-5.4, 1.1, 7.6), L(0.1, 0.5, -0.1));
+  // the wing up close from behind and above the left end plate: the carbon, a swan neck, the plates and their LEDs
+  if (view === 'wing') look(L(-1.75, 1.62, 3.55), L(-0.3, 0.98, 1.95));
+  if (view === 'back-ortho') look(L(0, cy, 14), L(0, 0.62 - (cy - 0.75) * 0.3, 0));
+  // the front wheel square on, from outboard (a close look at the rim, the caliper and the centre cap)
+  if (view === 'wheel-side') { const { bodyFor } = await import('./car-body'); const A = bodyFor(car).AXLE; look(L(-9, A.r, A.zF), L(0, A.r, A.zF)); }
   if (view === 'wheel') look(L(-2.0, 0.55, -2.25), L(-0.85, 0.36, -1.33));
   if (view === 'hood') carCam(new THREE.Vector3(0, 1.0, -1.45), 0, -0.04);
   if (view === 'back') carCam(new THREE.Vector3(0, 1.15, 2.6), Math.PI, 0);
@@ -132,7 +150,14 @@ if (interior) {
     if (view === 'sky-zoom') { camera.position.copy(L(0, 150, 0)); camera.lookAt(L(0, 0, 0.001)); }
   }
 }
-if (debug && !view.startsWith('lineup')) camera.fov = 16;
+if (debug && !view.startsWith('lineup')) camera.fov = view === 'wheel-side' ? 5.2 : 16;
+if (view === 'garage' && CAR_IDS.length > 4) camera.fov = 40;
+// &cam=x,y,z&at=x,y,z[&fov=deg]: any camera in the car's frame (a close look at one detail); overrides the view's
+if (q.get('cam') && q.get('at')) {
+  const [cx, cy2, cz] = q.get('cam')!.split(',').map(Number), [ax, ay, az] = q.get('at')!.split(',').map(Number);
+  look(L(cx, cy2, cz), L(ax, ay, az));
+  if (q.get('fov')) camera.fov = Number(q.get('fov'));
+}
 camera.updateProjectionMatrix();
 // the sun's shadow box follows what we're looking at
 env.follow(frame.getWorldPosition(new THREE.Vector3()), camera, 0, 0);
@@ -156,6 +181,19 @@ function measure(s: Stage, obj: THREE.Object3D) {
   });
   if (bad.length) log.nan = bad;
 }
+// &key=showroom: the preview's showroom key (not the game's light): three overhead strips over the car's length
+if (q.get('key') === 'showroom') {
+  const { RectAreaLightUniformsLib } = await import('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
+  RectAreaLightUniformsLib.init();
+  const stripMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0xe6efff).multiplyScalar(4) });
+  for (const x of [-1.6, 0, 1.6]) {
+    const l = new THREE.RectAreaLight(0xdfe9ff, 7, 0.25, 6.5);
+    l.position.copy(L(x, 4.2, 0)); l.lookAt(L(x, 0, 0)); scene.add(l);
+    const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.25, 6.5), stripMat);
+    strip.position.copy(L(x, 4.21, 0)); strip.lookAt(L(x, 0, 0)); scene.add(strip);
+  }
+  log.key = 'showroom';
+}
 // the car's reflection probe (&probe=0 to see the sky preset's environment instead): the real road, walls and sky
 // round the car in the paint, the glass, the chrome and the mirrors. Captured once the sky has run a frame or two.
 if (q.get('probe') !== '0') {
@@ -168,6 +206,18 @@ if (q.get('probe') !== '0') {
   else probe.apply(part);
   log.probeMs = Math.round(performance.now() - t1);
   stage.onFrame(() => probe.tick([part]));
+}
+// &bloom=1: the game's bloom pass on High and Ultra (strength 0.22, radius 0.45, threshold 0.92) and its output pass
+if (q.get('bloom') === '1') {
+  const [{ EffectComposer }, { RenderPass }, { UnrealBloomPass }, { OutputPass }] = await Promise.all([
+    import('three/examples/jsm/postprocessing/EffectComposer.js'), import('three/examples/jsm/postprocessing/RenderPass.js'),
+    import('three/examples/jsm/postprocessing/UnrealBloomPass.js'), import('three/examples/jsm/postprocessing/OutputPass.js'),
+  ]);
+  const size = renderer.getDrawingBufferSize(new THREE.Vector2());
+  const c = new EffectComposer(renderer, new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType }));
+  c.addPass(new RenderPass(scene, camera)); c.addPass(new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.22, 0.45, 0.92)); c.addPass(new OutputPass());
+  stage.setRender(() => c.render());
+  log.bloom = true;
 }
 await stage.ready(2);
 if (q.get('measure') !== '0') Object.assign(log, measure(stage, part));
