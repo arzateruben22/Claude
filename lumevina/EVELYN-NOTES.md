@@ -181,3 +181,7 @@ One **E-Gift Certificate** card under the featured services: her vector logo in 
 ## Cart and checkout on phones (Oct 19)
 
 On phones the cart and checkout now rise from the bottom as sheets, with the page dimmed above them: tap the page, the ×, or **Keep shopping** to close. Before, the cart filled the whole screen and its × sat in the top-right corner, right under the Claude app's own ⋯ button, so there was no way out inside the app.
+
+## The CanvasRebel photo in Meet Evelyn (Oct 19)
+
+The Meet Evelyn box opens with Evelyn's photo from the CanvasRebel interview (`img/press/canvasrebel-evelyn.webp`, 1200 px wide, framed on her face with the logo in the photo whole), linked to the article with a "Featured in CanvasRebel" label.
