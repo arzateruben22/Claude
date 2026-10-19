@@ -112,3 +112,9 @@ Seen in chat but not received as files (label details added; the photos go up on
 **Same product, two sizes:** Moisture Balance Toner (6 fl oz $34, 2 fl oz $14) and Ultra Gentle Gel Cleanser (6 fl oz $33, 2 fl oz travel size $14). Each size stays its own listing with its own stock. No other photos repeat, apart from Daily SPF 30 Plus, which already had an older photo.
 
 **To confirm:** the invisiClear $10 price (partly clipped) and the Retinal B3 Serum quantity.
+
+## Round two questionnaire (Oct 19)
+
+Sent at the same link: https://claude.ai/artifact/YChu6itk5K1NpWfrQdF5Ak. 21 questions in four parts: quick confirmations (invisiClear price, Retinal B3 count, the two remaining drafts, the "cash preferred" line, products that need a consult first), shipping and pickup (fee, where, how fast, pickup, returns), her shop (where stock lives, who writes product copy, photos, the site's voice, why buy from her), and ideas to try (routine bundles, refill reminders, a skin quiz, automatic answers, extras in orders, her About story).
+
+**Round two answers:** _(add when they arrive)_
