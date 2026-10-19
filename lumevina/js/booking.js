@@ -513,7 +513,7 @@
      left (how many), or full. Sundays and Mondays are closed unless
      Evelyn opened an extra Monday (js/extra-days.js). Arrow keys move
      between days, and the chosen day's times appear below. */
-  var BOOK_AHEAD_DAYS = 60;
+  var BOOK_AHEAD_DAYS = 31;      /* Evelyn: clients book up to a month ahead */
   var FEW_LEFT = 3;
   var WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   var calMonth = null;            /* the 1st of the month on screen */
@@ -1826,28 +1826,45 @@
   /* Services are booked (pick a time + 50% deposit), not bought — so the
      card's primary action is Book. Only the gift certificate stays a cart
      purchase, keeping "book" and "buy" from reading as the same thing. */
+  /* With booking on GlossGenius, every Book control is a real link to her
+     page: a link opens a new tab everywhere, where a script-opened window
+     can be blocked */
+  var bookControl = function () {
+    if (!GG) { var bt = document.createElement("button"); bt.type = "button"; return bt; }
+    var a = document.createElement("a");
+    a.href = GG;
+    a.target = "_blank";
+    a.rel = "noopener";
+    return a;
+  };
+  if (GG) {
+    document.querySelectorAll("a[data-open-booking]").forEach(function (a) {
+      a.href = GG;
+      a.target = "_blank";
+      a.rel = "noopener";
+    });
+  }
+
   document.querySelectorAll(".product-foot .add-to-cart").forEach(function (btn) {
     if (btn.closest("#gift")) return;  // the gift card is a purchase, not a booking
-    var b = document.createElement("button");
-    b.type = "button";
+    var b = bookControl();
     b.className = "btn btn-solid book-btn";
     b.textContent = "Book";
     /* keep the menu data on the page (Ask Lumevina reads prices from it) */
     b.setAttribute("data-id", btn.dataset.id); b.setAttribute("data-name", btn.dataset.name); b.setAttribute("data-price", btn.dataset.price);
-    b.addEventListener("click", function () { openModal(btn.dataset.id); });
+    if (!GG) b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn);
     btn.remove();
   });
 
   document.querySelectorAll(".wax-add").forEach(function (btn) {
-    var b = document.createElement("button");
-    b.type = "button";
+    var b = bookControl();
     b.className = "wax-book";
     b.innerHTML = CAL_ICON + '<span class="wax-book-label">Book</span>';
     /* keep the menu data on the page (Ask Lumevina reads prices from it) */
     b.setAttribute("data-id", btn.dataset.id); b.setAttribute("data-name", btn.dataset.name); b.setAttribute("data-price", btn.dataset.price);
     b.setAttribute("aria-label", "Book " + btn.dataset.name);
-    b.addEventListener("click", function () { openModal(btn.dataset.id); });
+    if (!GG) b.addEventListener("click", function () { openModal(btn.dataset.id); });
     btn.parentNode.insertBefore(b, btn.nextSibling);
     btn.remove();
   });
@@ -1857,6 +1874,7 @@
     var el = e.target && e.target.closest &&
       e.target.closest("[data-open-booking]");
     if (!el) return;
+    if (GG && el.tagName === "A") return;   /* a real link to her GlossGenius page */
     e.preventDefault();
     openModal();
   });

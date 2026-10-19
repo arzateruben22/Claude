@@ -18,35 +18,35 @@
      sand       gold                 blush      tinted surface */
 :root {
   color-scheme: light;
-  /* ground and surfaces: oat linen, sand, cream paper */
-  --linen: #F4EEE6;
-  --linen-2: #ECE3D7;
-  --porcelain: #FBF8F3;
-  --surface-2: #F3ECE2;
-  --field: #FFFDF9;
-  --panel-edge: rgba(70, 54, 42, 0.16);
-  --panel-edge-soft: rgba(70, 54, 42, 0.09);
-  /* text: walnut, then two taupes that still clear 4.5:1 on every ground */
-  --ink: #2C241E;
-  --ink-60: #665749;
-  --ink-35: #6B5E52;
-  --ink-15: rgba(44, 36, 30, 0.14);
-  /* accent: clay (white text on it is 6:1), deeper clay, gold, sage */
-  --mauve: #845240;
-  --plum: #241D18;
-  --rose: #6F4433;
-  --blush: #EADDD0;
-  --sand: #7A5D36;
+  /* warm beige, white and classic black (Evelyn's product guide) */
+  --linen: #F2EDE6;
+  --linen-2: #E7E0D6;
+  --porcelain: #FFFFFF;
+  --surface-2: #F6F2EC;
+  --field: #FFFFFF;
+  --panel-edge: rgba(22, 20, 18, 0.14);
+  --panel-edge-soft: rgba(22, 20, 18, 0.08);
+  /* text: classic black, then two warm grays that clear 4.5:1 on every ground */
+  --ink: #161412;
+  --ink-60: #5C564F;
+  --ink-35: #6A635B;
+  --ink-15: rgba(22, 20, 18, 0.13);
+  /* the accent is the black itself (white on it is 18:1); sage marks "in stock" */
+  --mauve: #161412;
+  --plum: #0E0D0C;
+  --rose: #3A3632;
+  --blush: #ECE5DB;
+  --sand: #6E5F4B;
   --sage: #4E6A45;
   --danger: #A4432F;
   --on-accent: #FFFFFF;
-  --grad-rose: linear-gradient(95deg, #966250 0%, #845240 50%, #6F4433 100%);
-  /* channels, for tints at any strength */
-  --accent-rgb: 132, 82, 64;
-  --gold-rgb: 154, 116, 66;
-  --line-rgb: 44, 36, 30;
-  --shadow-rgb: 58, 42, 28;
-  --glass-rgb: 251, 248, 243;
+  --grad-rose: linear-gradient(95deg, #4A443E 0%, #161412 50%, #3A3632 100%);
+  /* channels, for tints at any strength: tints stay warm, never gray */
+  --accent-rgb: 120, 104, 88;
+  --gold-rgb: 150, 128, 98;
+  --line-rgb: 22, 20, 18;
+  --shadow-rgb: 30, 24, 18;
+  --glass-rgb: 255, 255, 255;
   --sage-rgb: 78, 106, 69;
   --danger-rgb: 164, 67, 47;
   --font-display: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
@@ -138,7 +138,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 }
 
 /* Keynote-style headline: the second clause steps back in gray */
-.display em { color: #8A7A6B; font-style: normal; font-weight: 700; }
+.display em { color: #8C8379; font-style: normal; font-weight: 700; }
 
 .eyebrow {
   font-size: 1.0625rem;
@@ -813,7 +813,7 @@ body.intro-lock { overflow: hidden; }
   margin-bottom: var(--space-4);
 }
 
-.hero-title em { color: var(--mauve); font-weight: 400; }
+.hero-title em { color: #8C8379; font-weight: 400; }
 
 .hero-title .line { display: block; overflow: hidden; }
 .hero-title .line-inner { display: inline-block; }
@@ -6109,7 +6109,7 @@ html.sheet-open { overflow: hidden; }
 /* ShinyText: a slow light across a line, 2.4s across then a pause.
    It takes the text's own color, so it works on any line. */
 .rb-shiny {
-  background-image: linear-gradient(120deg, currentColor 0%, currentColor 35%, #C9A27E 50%, currentColor 65%, currentColor 100%);
+  background-image: linear-gradient(120deg, currentColor 0%, currentColor 35%, #B9AFA4 50%, currentColor 65%, currentColor 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -6329,10 +6329,25 @@ html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
 .bkl-gg { display: none; }
 .book-glossgenius .bkl { display: none; }
 .book-glossgenius .bkl-gg {
-  display: grid; gap: 1rem; justify-items: start; max-width: 34rem; padding: 1.4rem;
-  background: var(--field); border: 1px solid var(--panel-edge); border-radius: 18px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem 2.75rem; align-items: center;
+  padding: clamp(1.4rem, 3vw, 2.4rem); background: var(--field); border: 1px solid var(--panel-edge); border-radius: 22px;
 }
-.book-glossgenius .bkl-gg p { margin: 0; color: var(--ink-60); }
+.bkl-gg-lead { margin: 0 0 1rem; max-width: 36rem; font-size: 1.06rem; color: var(--ink); }
+.bkl-gg-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 40rem; font-size: 0.93rem; color: var(--ink-60); }
+.bkl-gg-steps strong { font-weight: 600; color: var(--ink); }
+.bkl-gg-steps em { font-style: normal; color: var(--ink); }
+.bkl-gg-cta { display: grid; justify-items: center; gap: 0.55rem; }
+.bkl-gg-fine { margin: 0; font-size: 0.78rem; color: var(--ink-60); }
+@media (max-width: 760px) {
+  .book-glossgenius .bkl-gg { grid-template-columns: 1fr; }
+  .bkl-gg-cta { justify-items: stretch; text-align: center; }
+  .bkl-gg-go { text-align: center; }
+}
+/* one heading per way of booking */
+.bk-head-gg { display: none; }
+.book-glossgenius .bk-head-site { display: none; }
+.book-glossgenius .bk-head-gg { display: block; }
+.book-glossgenius .policy-resched { display: none; }
 @media (max-width: 860px) {
   .bkl { grid-template-columns: 1fr; gap: 0; }
   .bkl-side { display: contents; }
@@ -6367,3 +6382,104 @@ html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
 @media (max-width: 480px) {
   .contact-lines li { grid-template-columns: 1fr; gap: 0.15rem; }
 }
+
+/* ─── Shop sections, product photos, the detail view ─── */
+:root { --photo-ground: #FAF6F0; }
+.sh-grid { display: block; }
+.sh-sec { scroll-margin-top: 5rem; }
+.sh-sec:focus { outline: none; }
+.sh-sec + .sh-sec { margin-top: 2.75rem; }
+.sh-sec-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1rem;
+  margin-bottom: 1rem; padding-bottom: 0.65rem; border-bottom: 1px solid var(--ink-15);
+}
+.sh-sec-title { margin: 0; font-size: 1.4rem; font-weight: 650; letter-spacing: -0.03em; color: var(--plum); }
+.sh-sec-n { font-size: 0.8rem; color: var(--ink-60); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sh-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(13.25rem, 1fr)); gap: 1rem; }
+.sh-row > li { display: flex; min-width: 0; }
+.sh-row .sh-card { width: 100%; }
+@media (max-width: 600px) {
+  /* phones: each section is a row to swipe through */
+  .sh-row {
+    display: flex; gap: 0.7rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin: 0 calc(-1 * clamp(1.25rem, 5vw, 3rem)); padding: 0 clamp(1.25rem, 5vw, 3rem) 0.4rem;
+    scroll-padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+  .sh-row::-webkit-scrollbar { display: none; }
+  .sh-row > li { flex: 0 0 44vw; max-width: 12.5rem; scroll-snap-align: start; }
+}
+
+/* every product picture is square, so rows line up */
+.sh-label { aspect-ratio: 1 / 1; }
+.sh-card--compact .sh-label { aspect-ratio: 1 / 1; min-height: 0; }
+.sh-label.has-photo { background: var(--photo-ground); }
+/* the studio-gray product shots take on the page's warm white */
+.sh-label.has-photo img { mix-blend-mode: multiply; object-fit: cover; transition: transform 500ms ease; }
+.sh-card:hover .sh-label.has-photo img { transform: scale(1.035); }
+.sh-open {
+  display: block; width: 100%; margin: 0; padding: 0; border: 0; background: none;
+  font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.sh-open:focus-visible { outline: 2px solid var(--mauve); outline-offset: -3px; }
+@media (prefers-reduced-motion: reduce) { .sh-label.has-photo img, .sh-card:hover .sh-label.has-photo img { transition: none; transform: none; } }
+
+.pd {
+  width: min(58rem, calc(100vw - 2rem)); max-width: none; max-height: calc(100dvh - 2rem);
+  margin: auto; padding: 0; border: 0; border-radius: 24px; overflow: auto;
+  background: var(--porcelain); color: var(--ink);
+  box-shadow: 0 40px 100px -40px rgba(var(--shadow-rgb), 0.6);
+}
+.pd::backdrop { background: rgba(var(--line-rgb), 0.45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+html.pd-open { overflow: hidden; }
+.pd-inner { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.pd-pic { min-width: 0; }
+.pd-pic .sh-label { height: 100%; padding: 2.4rem 2rem 2rem; }
+.pd-pic .sh-label.has-photo { padding: 0; }
+.pd-pic .sh-brand { top: 1.4rem; left: 1.6rem; }
+.pd-pic .sh-big { font-size: clamp(3.4rem, 8vw, 5rem); }
+.pd-pic .sh-label-name { font-size: 1.5rem; }
+.pd-info { display: flex; flex-direction: column; gap: 0.55rem; padding: 2.4rem 2.2rem 2rem; min-width: 0; }
+.pd-brand { margin: 0; font-size: 0.72rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-60); }
+.pd-name { margin: 0; font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 700; line-height: 1.06; letter-spacing: -0.04em; color: var(--plum); text-wrap: balance; }
+.pd-size { margin: 0; font-size: 0.9rem; color: var(--ink-60); }
+.pd-about { margin: 0.25rem 0 0; color: var(--ink); }
+.pd-buy { display: flex; align-items: baseline; gap: 0.9rem; margin-top: 0.7rem; }
+.pd-price { font-size: 1.55rem; font-weight: 650; color: var(--plum); font-variant-numeric: tabular-nums; }
+.pd-action { margin-top: 0.3rem; }
+.pd-action .btn { width: 100%; text-align: center; }
+.pd-notes {
+  list-style: none; margin: 0.8rem 0 0; padding: 0.95rem 0 0; border-top: 1px solid var(--ink-15);
+  display: grid; gap: 0.45rem; font-size: 0.86rem; color: var(--ink-60);
+}
+.pd-close {
+  position: absolute; top: 0.85rem; right: 0.85rem; z-index: 2; width: 42px; height: 42px;
+  display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--panel-edge);
+  background: rgba(var(--glass-rgb), 0.94); color: var(--ink); font: 400 1.5rem/1 var(--font-body); cursor: pointer;
+}
+.pd-close:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .pd[open] { animation: pd-in 280ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+  @keyframes pd-in { from { opacity: 0; transform: translateY(18px); } }
+}
+@media (max-width: 700px) {
+  /* phones: a sheet from the bottom */
+  .pd { width: 100%; max-height: 92dvh; margin: auto 0 0; border-radius: 22px 22px 0 0; }
+  .pd-inner { grid-template-columns: 1fr; }
+  .pd-pic .sh-label { aspect-ratio: 1 / 1; height: auto; max-height: 46dvh; width: 100%; }
+  .pd-info { padding: 1.2rem 1.25rem calc(1.4rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* photos in the cart and at checkout */
+.cart-item.has-thumb { grid-template-columns: 56px minmax(0, 1fr) auto; }
+.cart-item.has-thumb .cart-thumb { grid-column: 1; grid-row: 1 / span 3; }
+.cart-item.has-thumb .cart-item-name { grid-column: 2; grid-row: 1; }
+.cart-item.has-thumb .cart-item-line { grid-column: 3; grid-row: 1; }
+.cart-item.has-thumb .cart-item-unit { grid-column: 2; grid-row: 2; }
+.cart-item.has-thumb .cart-item-controls { grid-column: 2 / -1; grid-row: 3; }
+.cart-thumb, .co-thumb { border-radius: 12px; object-fit: cover; background: var(--photo-ground); mix-blend-mode: multiply; }
+.cart-thumb { width: 56px; height: 56px; }
+.co-thumb { width: 36px; height: 36px; border-radius: 9px; margin-right: 0.6rem; vertical-align: middle; }
+
+/* Book links (booking on GlossGenius) look the same as the Book buttons */
+a.wax-book { text-decoration: none; }
+a.book-btn { text-align: center; }

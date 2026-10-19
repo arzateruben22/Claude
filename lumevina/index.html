@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="180x180" href="img/favicon.png">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#F4EEE6">
+  <meta name="theme-color" content="#F2EDE6">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Lumevina">
@@ -41,7 +41,7 @@
     <span class="intro-float" style="top:74%;left:88%;animation-delay:2s"></span>
 
     <div class="intro-inner">
-      <img class="intro-mark" src="img/logo-clay.png" alt="Lumevina Aesthetics Spa" aria-hidden="true" width="320" height="200">
+      <img class="intro-mark" src="img/logo-ink.png" alt="Lumevina Aesthetics Spa" aria-hidden="true" width="320" height="200">
       <p class="intro-tag">
         <span class="intro-word" data-delay="520">Where</span>
         <span class="intro-word" data-delay="620">glow</span>
@@ -160,12 +160,11 @@
             <input id="sh-q" type="search" autocomplete="off" placeholder="Cleanser, SPF, mandelic…">
           </div>
           <div class="sh-chips sh-brands" role="group" aria-label="Brand"></div>
-          <div class="sh-chips sh-cats" role="group" aria-label="Type of product"></div>
+          <nav class="sh-chips sh-cats" aria-label="Jump to a type of product"></nav>
           <label class="sh-instock"><input type="checkbox" id="sh-instock"> In stock now</label>
         </div>
         <p class="sh-count" aria-live="polite"></p>
         <div class="sh-grid" id="retail-grid"></div>
-        <button class="btn btn-ghost sh-more" type="button" hidden>Show all products</button>
         <p class="sh-fallback">The shop loads here. To order now, email
           <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a>
           with what you'd like.</p>
@@ -265,12 +264,17 @@
       <div class="section-inner">
         <div class="book-head" data-reveal>
           <p class="eyebrow" data-idx="02">Book a facial</p>
-          <h2 class="display" data-blur-text>Every opening, <em>at a glance.</em></h2>
-          <p class="section-sub">Choose a treatment and the calendar shows what's open each day.
-          Tap a day, tap a time, then hold it with a 50% deposit.</p>
-          <p class="bk-gg-alt" hidden>Already book with Evelyn on GlossGenius?
-            <a class="inline-link bk-gg-link" href="#book" target="_blank" rel="noopener">Book there instead</a>.
-            It's the same calendar.</p>
+          <!-- one heading per way of booking (js/site-config.js decides which shows) -->
+          <div class="bk-head-site">
+            <h2 class="display" data-blur-text>Every opening, <em>at a glance.</em></h2>
+            <p class="section-sub">Choose a treatment and the calendar shows what's open each day.
+            Tap a day, tap a time, then hold it with a 50% deposit.</p>
+            <p class="bk-gg-alt" hidden>Already book with Evelyn on GlossGenius?
+              <a class="inline-link bk-gg-link" href="#book" target="_blank" rel="noopener">Book there instead</a>.</p>
+          </div>
+          <div class="bk-head-gg">
+            <h2 class="display" data-blur-text>Book with Evelyn, <em>in a minute.</em></h2>
+          </div>
         </div>
 
         <div class="bkl" data-reveal>
@@ -303,9 +307,20 @@
 
         <!-- when booking runs on GlossGenius (js/site-config.js), this replaces the calendar -->
         <div class="bkl-gg" data-reveal>
-          <p>Evelyn's calendar lives on GlossGenius. Pick your treatment and time there,
-          and your deposit is taken in the same step.</p>
-          <a class="btn btn-solid bkl-gg-go" href="#book" target="_blank" rel="noopener">See openings and book</a>
+          <div class="bkl-gg-copy">
+            <p class="bkl-gg-lead">Evelyn's calendar, deposits and reminders are on GlossGenius.
+            Choose your treatment and time there, in about a minute.</p>
+            <ul class="bkl-gg-steps" role="list">
+              <li><strong>New here?</strong> Book <em>New Clients Start Here</em>. For breakouts, book the
+              Acne Program's <em>New Client Consultation + Treatment</em>.</li>
+              <li><strong>Been before?</strong> Pick your facial, wax or peel, and your usual time.</li>
+              <li><strong>A 50% deposit</strong> holds your time, and the rest is due at your visit.</li>
+            </ul>
+          </div>
+          <div class="bkl-gg-cta">
+            <a class="btn btn-solid bkl-gg-go" href="https://lumevina.glossgenius.com/" target="_blank" rel="noopener">See openings and book</a>
+            <p class="bkl-gg-fine">Opens lumevina.glossgenius.com</p>
+          </div>
         </div>
       </div>
     </section>
@@ -316,9 +331,9 @@
         <div class="shop-head" data-reveal>
           <p class="eyebrow" data-idx="03">Services &amp; Gift Cards</p>
           <h2 class="display" data-blur-text>Your glow, <em>on your schedule.</em></h2>
-          <p class="section-sub">Choose a treatment to <strong>book instantly</strong> — pick your
-          time and hold it with a 50% deposit. Prefer to give the gift of glow? The
-          <a class="inline-link" href="#gift">gift certificate</a> is a quick add to your cart.</p>
+          <p class="section-sub">Every treatment and price. Tap <strong>Book</strong> to choose your
+          time, and hold it with a 50% deposit. Giving one as a present? The
+          <a class="inline-link" href="#gift">gift certificate</a> goes straight in your cart.</p>
         </div>
 
         <div class="shop-grid">
@@ -372,7 +387,7 @@
           </article>
 
           <article class="product-card product-card--gift" id="gift" data-reveal data-spotlight>
-            <div class="product-visual visual-gift" aria-hidden="true" data-glare><img class="gift-logo" src="img/logo-gift-clay.webp" alt="" loading="lazy" decoding="async" width="663" height="474"></div>
+            <div class="product-visual visual-gift" aria-hidden="true" data-glare><img class="gift-logo" src="img/logo-gift-ink.webp" alt="" loading="lazy" decoding="async" width="663" height="474"></div>
             <h3 class="product-name">E-Gift Certificate</h3>
             <p class="product-desc">The gift of glow — pick a treatment to gift, or a $110 value
             toward any service. Delivered by email with a unique code; certificates never expire.</p>
@@ -675,9 +690,9 @@
                 <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </summary>
               <div class="policy-body">
-                <p><span class="faq-hours">Tuesday to Saturday, 8:00 AM to 6:00 PM.</span> The
-                <a class="inline-link" href="#book">calendar above</a> always shows Evelyn's real
-                openings, including any extra days she opens.</p>
+                <p><span class="faq-hours">Tuesday to Saturday, 8:00 AM to 6:00 PM.</span>
+                <a class="inline-link" href="https://lumevina.glossgenius.com/" target="_blank" rel="noopener">Her booking page</a>
+                always shows her real openings, up to a month ahead.</p>
               </div>
             </details>
             <details class="policy" name="faq">
@@ -714,9 +729,8 @@
                 <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </summary>
               <div class="policy-body">
-                <p>Yes, at least <strong>48 hours</strong> ahead, from the link in your confirmation
-                email or with <button class="linklike policy-resched-start" type="button">Move an appointment</button>.
-                Saturday appointments can't be moved or cancelled.</p>
+                <p>Yes, at least <strong>48 hours</strong> ahead, from the link in your booking
+                confirmation. Saturday appointments can't be moved or cancelled.</p>
               </div>
             </details>
             <details class="policy" name="faq">
@@ -1053,8 +1067,8 @@
         <span>Subtotal</span>
         <span class="cart-subtotal-value">$0.00</span>
       </div>
-      <p class="cart-fine">Demo store — no card is charged. Booking a visit instead?
-        <a class="inline-link" data-open-booking href="#services">Open our calendar</a>.</p>
+      <p class="cart-fine">Demo store — no card is charged. Booking a facial instead?
+        <a class="inline-link" data-open-booking href="#book">Book with Evelyn</a>.</p>
       <button class="btn btn-solid cart-checkout" type="button" disabled>Checkout</button>
     </div>
   </aside>

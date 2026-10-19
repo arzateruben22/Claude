@@ -12,6 +12,13 @@
  *   stock: null   The quantity wasn't visible in the screenshot.
  *   cat           Grouped by what the name says (a cleanser, a serum…);
  *                 anything the name doesn't make clear goes under "More".
+ *   photo         The product shot, in img/products/, named after the
+ *                 product (face-reality-11-mandelic-serum.webp). To add
+ *                 one, drop the file there and add photo: "…" to its line.
+ *   size, about   As printed on the product's own label in its photo.
+ *   inv           The title in her GlossGenius inventory, when the label's
+ *                 full name differs (the name clients see comes from the
+ *                 label: "Brilliant Defense SPF 50", not "Brilliant Defense 50").
  *
  * Not in the list on purpose: "Shipping Fee - $6.00" (a checkout setting,
  * not a product; see EVELYN-NOTES.md) and anything not in her inventory.
@@ -35,36 +42,36 @@
 
   var LIST = [
     /* ── Face Reality: 30 entries ── */
-    P(FR, "11% Mandelic Serum", 46, 0, "Serums"),
-    P(FR, "15% Mandelic Serum", 48, 0, "Serums"),
-    P(FR, "2.5% ADV Acne Med", 29, 1, "Acne & spot care"),
-    P(FR, "5% ADV Acne Med", 30, 0, "Acne & spot care"),
-    P(FR, "5% Mandelic Serum", 42, 0, "Serums"),
-    P(FR, "8% Mandelic Serum", 44, 1, "Serums"),
-    P(FR, "Antioxidant Eye Gel", 48, 1, "Eye care"),
-    P(FR, "Barrier Cream Cleanser", 37, 0, "Cleansers"),
-    P(FR, "Barrier Gel Cream", 38, 0, "Moisturizers"),
-    P(FR, "Brilliant Defense 50", 42, 0, "More"),
-    P(FR, "Clear Skin Balance - SUP…", 44, 1, "More", { draft: true, slug: "clear-skin-balance", note: "Name cut off (\"Clear Skin Balance - SUP…\"): confirm the full title, the supplement format and the bottle count." }),
-    P(FR, "Cran-Peptide Cream", 33, 0, "Moisturizers"),
-    P(FR, "Daily SPF 30", 36, 0, "Sun protection", { photo: "img/retail/daily-spf-30.webp" }),
-    P(FR, "Gentle Gel Cleanser - TR…", 14, 0, "Cleansers", { draft: true, slug: "gentle-gel-cleanser", note: "Name cut off (\"Gentle Gel Cleanser - TR…\"): probably a travel size. Confirm the name and the exact volume." }),
-    P(FR, "Glowtone Corrective SE…", 64, 0, "Serums", { draft: true, slug: "glowtone-corrective", note: "Name cut off (\"Glowtone Corrective SE…\"): probably GlowTone Corrective Serum. Confirm the title and size." }),
-    P(FR, "Hydrabalance Gel", 34, 0, "More"),
-    P(FR, "HydraRemedy Gel Serum", 46, 0, "Serums"),
-    P(FR, "Hydrcalm Mask", 42, 0, "Masks", { draft: true, note: "The inventory spells it \"HYDRCALM MASK\". Confirm whether it should read HydraCalm Mask." }),
-    P(FR, "Invisiclear Hydrocoll…", 10, 0, "Acne & spot care", { draft: true, slug: "invisiclear", note: "Name cut off (\"Invisiclear Hydrocoll…\"): confirm the full title and the patch count. The $10 price was partly clipped." }),
-    P(FR, "Mandelic Face and Body…", 38, 0, "More", { draft: true, slug: "mandelic-face-and-body", note: "Name cut off: confirm whether this is the wash, the scrub, or another product." }),
-    P(FR, "Mineral Matte SPF 28", 36, 0, "Sun protection"),
-    P(FR, "Moisture Balance Toner", 34, 2, "Toners & mists"),
-    P(FR, "Moisture Balance Toner…", 14, 1, "Toners & mists", { draft: true, slug: "moisture-balance-toner-14", note: "A second Moisture Balance Toner at $14, name cut off. Confirm whether it's a smaller size, and its volume." }),
-    P(FR, "Omni Clear Mist", 40, 4, "Toners & mists"),
-    P(FR, "PowderMineral SPF 50", 42, 3, "Sun protection"),
-    P(FR, "Retinal B3 Serum", 54, null, "Serums", { draft: true, note: "Row clipped in the screenshot: confirm the brand line, the $54 price and the quantity." }),
-    P(FR, "Retinol Peptide Serum", 60, 0, "Serums"),
-    P(FR, "Soothing Radiance Toner", 32, 0, "Toners & mists"),
-    P(FR, "Sulfur Spot Treatment", 35, 0, "Acne & spot care"),
-    P(FR, "Ultra Gentle Cleanser", 33, 0, "Cleansers"),
+    P(FR, "11% L-Mandelic Serum", 46, 0, "Serums", { inv: "11% Mandelic Serum", slug: "11pct-mandelic-serum", photo: "img/products/face-reality-11-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "15% L-Mandelic Serum", 48, 0, "Serums", { inv: "15% Mandelic Serum", slug: "15pct-mandelic-serum", photo: "img/products/face-reality-15-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "2.5% Advanced Acne Med", 29, 1, "Acne & spot care", { inv: "2.5% ADV Acne Med", slug: "2-5pct-adv-acne-med", photo: "img/products/face-reality-2-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
+    P(FR, "5% Advanced Acne Med", 30, 0, "Acne & spot care", { inv: "5% ADV Acne Med", slug: "5pct-adv-acne-med", photo: "img/products/face-reality-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
+    P(FR, "5% L-Mandelic Serum", 42, 0, "Serums", { inv: "5% Mandelic Serum", slug: "5pct-mandelic-serum", photo: "img/products/face-reality-5-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "8% L-Mandelic Serum", 44, 1, "Serums", { inv: "8% Mandelic Serum", slug: "8pct-mandelic-serum", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "Antioxidant Peptide Eye Gel", 48, 1, "Eye care", { inv: "Antioxidant Eye Gel", slug: "antioxidant-eye-gel", size: "0.4 fl oz / 12 ml", about: "Smooths and visibly depuffs." }),
+    P(FR, "Barrier Balance Creamy Cleanser", 37, 0, "Cleansers", { inv: "Barrier Cream Cleanser", slug: "barrier-cream-cleanser", size: "6 fl oz / 180 ml", about: "A daily calming wash. Acne-safe." }),
+    P(FR, "Barrier Care Gel Cream", 38, 0, "Moisturizers", { inv: "Barrier Gel Cream", slug: "barrier-gel-cream", size: "2 fl oz / 60 ml", about: "Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe." }),
+    P(FR, "Brilliant Defense SPF 50", 42, 0, "Sun care", { inv: "Brilliant Defense 50", slug: "brilliant-defense-50", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe." }),
+    P(FR, "Clear Skin Balance", 44, 1, "Supplements", { inv: "Clear Skin Balance - SUP…", slug: "clear-skin-balance", size: "60 softgels", about: "Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin.", resolved: "Flag [1] answered by the label photo: Clear Skin Balance, softgel dietary supplement, 60 softgels." }),
+    P(FR, "Cran-Peptide Cream", 33, 0, "Moisturizers", { size: "2 fl oz / 60 ml", about: "Rich and restorative. Acne-safe." }),
+    P(FR, "Daily SPF 30 Plus", 36, 0, "Sun care", { inv: "Daily SPF 30", slug: "daily-spf-30", photo: "img/retail/daily-spf-30.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 30 sunscreen. Acne-safe." }),
+    P(FR, "Ultra Gentle Gel Cleanser (2 fl oz)", 14, 0, "Cleansers", { inv: "Gentle Gel Cleanser - TR…", slug: "gentle-gel-cleanser", size: "2 fl oz / 60 ml", about: "A daily antioxidant wash. Acne-safe.", check: "Matched by its 2 fl oz label photo: the travel size of the $33 cleanser. Confirm.", resolved: "Flag [2]: the 2 fl oz Ultra Gentle Gel Cleanser photo matches this travel-size entry." }),
+    P(FR, "GlowTone Corrective Serum", 64, 0, "Serums", { inv: "Glowtone Corrective SE…", slug: "glowtone-corrective", size: "1 fl oz / 30 ml", about: "Targets discoloration, with Hexa-Bright Complex.", resolved: "Flag [3] answered by the label photo: GlowTone Corrective Serum, 1 fl oz / 30 ml." }),
+    P(FR, "HydraBalance Gel", 34, 0, "Moisturizers", { inv: "Hydrabalance Gel", slug: "hydrabalance-gel", size: "1.7 fl oz / 50 ml", about: "Hydrates and balances oil. Acne-safe." }),
+    P(FR, "HydraRemedy Gel Serum", 46, 0, "Serums", { size: "1.7 fl oz / 50 ml", about: "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe." }),
+    P(FR, "HydraCalm Mask", 42, 0, "Masks", { inv: "Hydrcalm Mask", slug: "hydrcalm-mask", size: "2.5 fl oz / 73 ml", about: "Soothes and boosts hydration.", resolved: "Flag [4] answered by the label photo: HydraCalm Mask, 2.5 fl oz / 73 ml." }),
+    P(FR, "invisiClear Hydrocolloid Spot Patches", 10, 0, "Acne & spot care", { inv: "Invisiclear Hydrocoll…", slug: "invisiclear", size: "24 patches", about: "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.", check: "Confirm the $10 price: that row was partly clipped in the screenshot.", resolved: "Flag [5] answered by the package photo: invisiClear hydrocolloid spot patches, 24 patches." }),
+    P(FR, "L-Mandelic Face and Body Wash", 38, 0, "Cleansers", { inv: "Mandelic Face and Body…", slug: "mandelic-face-and-body", size: "6 fl oz / 180 ml", about: "Cleanses and brightens. Acne-safe.", resolved: "Flag [6] answered by the label photo: it's the L-Mandelic Face and Body Wash, 6 fl oz / 180 ml." }),
+    P(FR, "Mineral Matte SPF 28", 36, 0, "Sun care", { photo: "img/products/face-reality-mineral-matte-spf-28.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 28 sunscreen. Acne-safe." }),
+    P(FR, "Moisture Balance Toner", 34, 2, "Toners & mists", { photo: "img/products/face-reality-moisture-balance-toner-6oz.webp", size: "6 fl oz / 180 ml", about: "Hydrates and replenishes." }),
+    P(FR, "Moisture Balance Toner (2 fl oz)", 14, 1, "Toners & mists", { inv: "Moisture Balance Toner…", slug: "moisture-balance-toner-14", photo: "img/products/face-reality-moisture-balance-toner-2oz.webp", size: "2 fl oz / 60 ml", about: "Hydrates and replenishes.", resolved: "Flag [7] answered by the label photo: the $14 entry is the 2 fl oz / 60 ml bottle." }),
+    P(FR, "Omni Clear Mist", 40, 4, "Toners & mists", { photo: "img/products/face-reality-omni-clear-mist.webp", size: "3.4 fl oz / 100 ml", about: "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested." }),
+    P(FR, "PowerMineral SPF 50", 42, 3, "Sun care", { inv: "PowderMineral SPF 50", slug: "powdermineral-spf-50", photo: "img/products/face-reality-powermineral-spf-50.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe." }),
+    P(FR, "Retinal B3 Serum", 54, null, "Serums", { size: "1 fl oz / 30 ml", about: "Gently corrects and renews. Acne-safe.", check: "Confirm the quantity on hand (not visible in the screenshot).", resolved: "Flag [8] answered by the label photo: a Face Reality serum, 1 fl oz / 30 ml." }),
+    P(FR, "Retinol Peptide Serum", 60, 0, "Serums", { size: "1 fl oz / 30 ml", about: "Intensely corrects and renews." }),
+    P(FR, "Soothing Radiance Toner", 32, 0, "Toners & mists", { size: "6 fl oz / 180 ml", about: "Calms and nourishes." }),
+    P(FR, "Sulfur Spot Treatment", 35, 0, "Acne & spot care", { size: "1.5 fl oz / 44 ml", about: "A 6% sulfur acne treatment." }),
+    P(FR, "Ultra Gentle Gel Cleanser", 33, 0, "Cleansers", { inv: "Ultra Gentle Cleanser", slug: "ultra-gentle-cleanser", size: "6 fl oz / 180 ml", about: "A daily antioxidant wash. Acne-safe." }),
 
     /* ── GlyMed Plus: 9 entries ── */
     P(GM, "Barrier Repair Cream", 83.20, 0, "Moisturizers", { check: "Confirm the $83.20 price is intended." }),
@@ -80,7 +87,7 @@
     /* ── Mixi Skincare: 3 entries ── */
     P(MX, "Dew Drops", 56, 0, "More"),
     P(MX, "Hydroxi", 40, 2, "More"),
-    P(MX, "SPF 50 Mineral SPF", 65, 1, "Sun protection", { draft: true, note: "Confirm the name clients should see, the size, and any tint or shade." }),
+    P(MX, "SPF 50 Mineral SPF", 65, 1, "Sun care", { draft: true, note: "Confirm the name clients should see, the size, and any tint or shade." }),
 
     /* ── Circadia: 1 entry ── */
     P(CI, "Vitamin Veil Cleanser", 40, 1, "Cleansers")
@@ -89,7 +96,8 @@
   window.LUMEVINA_CATALOG = {
     asOf: "2026-10-18",
     brands: [FR, GM, MX, CI],
-    categories: ["Cleansers", "Toners & mists", "Serums", "Moisturizers", "Eye care", "Sun protection", "Acne & spot care", "Masks", "More"],
+    /* in routine order: cleanse, tone, treat, moisturize, protect */
+    categories: ["Cleansers", "Toners & mists", "Serums", "Acne & spot care", "Moisturizers", "Eye care", "Sun care", "Masks", "Supplements", "More"],
     products: LIST
   };
 })();

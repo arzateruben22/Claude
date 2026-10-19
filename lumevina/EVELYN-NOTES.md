@@ -91,3 +91,24 @@ Started Monday, October 19, 2026. Her words come first, then what it means for t
 
 - Her GlossGenius booking link, if Book buttons should go there.
 - If booking moves onto the site, GlossGenius booking would need to be turned off so nobody double-books.
+
+## Done after her answers (Oct 19)
+
+- **Booking goes to GlossGenius:** every Book button on the site is a link to https://lumevina.glossgenius.com/ (js/site-config.js). The website's own calendar stays built and switched off.
+- **The look:** warm beige, white and classic black, from her product guide. Black buttons, white cards, a warm beige page.
+- **The shop is in sections, like a routine:** cleansers, toners and mists, serums, acne and spot care, moisturizers, eye care, sun care, supplements, and more from the shelf. Type buttons jump to each section; on phones each section swipes sideways.
+- **Product photos:** tapping a product opens it large, with its size, what the label says, price, stock and Add to cart. Photos also show in the cart and at checkout.
+- **Names from the labels:** photographed products use the name printed on the product ("Brilliant Defense SPF 50", "11% L-Mandelic Serum"); her inventory title is kept beside it.
+- **Two guide flags answered by the label photos:** Clear Skin Balance (60 softgels, a dietary supplement) and GlowTone Corrective Serum (1 fl oz / 30 ml) are now live. Eight flagged drafts remain.
+
+### Photos
+
+On the site now (files received): 5%, 11% and 15% L-Mandelic Serum; 2.5% and 5% Advanced Acne Med; Mineral Matte SPF 28; Moisture Balance Toner (6 fl oz and 2 fl oz); Omni Clear Mist; PowerMineral SPF 50; plus the older Daily SPF 30 Plus and GlyMed Glycolic Cleanser shots.
+
+Seen in chat but not received as files (label details added; the photos go up once the files arrive): 8% L-Mandelic Serum, Antioxidant Peptide Eye Gel, Barrier Balance Creamy Cleanser, Barrier Care Gel Cream, Brilliant Defense SPF 50, Clear Skin Balance, Cran-Peptide Cream, Daily SPF 30 Plus (new shot), Ultra Gentle Gel Cleanser, GlowTone Corrective Serum, HydraBalance Gel, HydraRemedy Gel Serum, HydraCalm Mask, invisiClear Spot Patches, L-Mandelic Face and Body Wash, Retinal B3 Serum, Retinol Peptide Serum, Soothing Radiance Toner, Sulfur Spot Treatment, Ultra Gentle Gel Cleanser (6 fl oz and 2 fl oz).
+
+**Guide flags answered by label photos:** [1] Clear Skin Balance, [3] GlowTone Corrective Serum, [4] HydraCalm Mask, [5] invisiClear patches (24), [6] L-Mandelic Face and Body Wash, [7] the $14 Moisture Balance Toner is the 2 fl oz bottle, [8] Retinal B3 Serum (Face Reality, 1 fl oz), and very likely [2]: the 2 fl oz Ultra Gentle Gel Cleanser is the $14 travel size. Still drafts: [9] GlyMed Firming Serum w/ Phyto…, [10] Mixi SPF 50 Mineral SPF.
+
+**Same product, two sizes:** Moisture Balance Toner (6 fl oz $34, 2 fl oz $14) and Ultra Gentle Gel Cleanser (6 fl oz $33, 2 fl oz $14). Each size stays its own listing with its own stock. No other photos repeat, apart from Daily SPF 30 Plus, which already had an older photo.
+
+**To confirm:** that the $14 "Gentle Gel Cleanser - TR…" is the 2 fl oz Ultra Gentle Gel Cleanser; the invisiClear $10 price (partly clipped); and the Retinal B3 Serum quantity.

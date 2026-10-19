@@ -15,11 +15,11 @@
  *                    those lines here
  *
  * 2. Where clients book.
+ *      "glossgenius"  every Book button opens her GlossGenius page (now:
+ *                     she keeps her calendar, deposits and checkout there)
  *      "both"         this website's calendar, plus a "Book there instead"
- *                     link to Evelyn's GlossGenius page (the default: she
- *                     keeps GlossGenius while the website takes bookings)
+ *                     link to her GlossGenius page
  *      "site"         this website's calendar only
- *      "glossgenius"  every Book button opens her GlossGenius page
  *    With "both", the two calendars have to see each other's bookings or
  *    the same time could be booked twice. Until the server reads her
  *    GlossGenius calendar link (server/README.md → Running both
@@ -31,8 +31,9 @@
   var CONFIG = window.LUMEVINA_CONFIG = {
     features: [],
     booking: {
-      mode: "both",
-      glossgenius: ""   /* TODO: Evelyn's GlossGenius booking link, starting https:// */
+      /* Evelyn's answer: stay on GlossGenius for now */
+      mode: "glossgenius",
+      glossgenius: "https://lumevina.glossgenius.com/"
     }
   };
 

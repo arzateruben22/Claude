@@ -7,7 +7,7 @@
                  see styles.css)
      GlareHover  a streak of light crosses a card when it first scrolls
                  into view, and again on hover ([data-glare])
-     ClickSpark  a small burst of rose sparks wherever a button is tapped,
+     ClickSpark  a small burst of fine black sparks wherever a button is tapped,
                  and a bigger one when an appointment is confirmed
      CountUp     numbers count into place: Glow Points, and the money
                  tiles on the owner dashboard
@@ -131,7 +131,7 @@
      only while sparks are alive. Same geometry as React Bits: lines
      fly out from the tap and shorten as they go, easing out. Each line
      has a thin light edge, so it still reads on the clay buttons. */
-  var SPARK = { color: "#A8705A", size: 15, radius: 30, count: 8, duration: 460 };
+  var SPARK = { color: "#161412", size: 15, radius: 30, count: 8, duration: 460 };
   var canvas = null, ctx = null, sparks = [], raf = null, dpr = 1;
 
   var sizeCanvas = function () {
@@ -204,7 +204,7 @@
       if (!r.width) return;
       var x = r.left + r.width / 2, y = r.top + r.height / 2;
       spark(x, y, { count: 12, radius: 64, size: 18, duration: 760, width: 2.2 });
-      spark(x, y, { count: 12, radius: 38, size: 10, duration: 620, color: "#C49A6C", stagger: 90 });
+      spark(x, y, { count: 12, radius: 38, size: 10, duration: 620, color: "#8C8379", stagger: 90 });
     });
   };
 

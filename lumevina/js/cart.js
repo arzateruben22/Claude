@@ -201,6 +201,17 @@
       controls.appendChild(plus);
       controls.appendChild(remove);
 
+      /* a product's photo beside it (js/shop.js), so the cart reads at a glance */
+      var photo = window.LumevinaShop && window.LumevinaShop.photo(id);
+      if (photo) {
+        var thumb = document.createElement("img");
+        thumb.className = "cart-thumb";
+        thumb.src = photo;
+        thumb.alt = "";
+        thumb.width = 56; thumb.height = 56;
+        li.classList.add("has-thumb");
+        li.appendChild(thumb);
+      }
       li.appendChild(name);
       li.appendChild(line);
       li.appendChild(unit);
@@ -319,7 +330,17 @@
       var item = cart[id];
       var li = document.createElement("li");
       var label = document.createElement("span");
-      label.textContent = item.name + " × " + item.qty;
+      label.className = "co-line-name";
+      var coPhoto = window.LumevinaShop && window.LumevinaShop.photo(id);
+      if (coPhoto) {
+        var coThumb = document.createElement("img");
+        coThumb.className = "co-thumb";
+        coThumb.src = coPhoto;
+        coThumb.alt = "";
+        coThumb.width = 36; coThumb.height = 36;
+        label.appendChild(coThumb);
+      }
+      label.appendChild(document.createTextNode(item.name + " × " + item.qty));
       var amount = document.createElement("span");
       amount.textContent = money(item.price * item.qty);
       li.appendChild(label);
