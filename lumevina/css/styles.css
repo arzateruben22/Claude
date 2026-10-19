@@ -4842,6 +4842,20 @@ p.install-steps { padding-left: 0; }
 
 /* ─── The Spa: step numbers + phone swipe reels (js/reel.js) ─── */
 .spa-slide-label { display: none; }
+/* the CanvasRebel article's photo, inside the Meet Evelyn box */
+.spa-article {
+  position: relative; display: block; overflow: hidden; max-width: 26rem; margin: 0 0 1.1rem;
+  aspect-ratio: 16 / 10; border-radius: 14px; background: var(--linen-2); text-decoration: none;
+}
+.spa-article-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; transition: transform 450ms ease; }
+.spa-article:hover .spa-article-img { transform: scale(1.03); }
+.spa-article:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.spa-article-tag {
+  position: absolute; left: 0.6rem; bottom: 0.6rem; padding: 0.35rem 0.75rem; border-radius: 999px;
+  background: rgba(22, 20, 18, 0.8); color: var(--linen); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.01em;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+@media (prefers-reduced-motion: reduce) { .spa-article-img { transition: none; } }
 .ritual-card { position: relative; overflow: hidden; }
 /* the step number, drawn large and outlined behind each card */
 .ritual-card::after {
