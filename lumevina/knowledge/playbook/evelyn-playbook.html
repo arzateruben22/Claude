@@ -694,6 +694,10 @@
      the tab says so and the typed questions work as always. ── */
   var talk = { turns: [], skips: [], focus: "auto" };
   var Rec = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null, micOff = false;
+  /* inside the Claude app (and any viewer that frames the page) the page may
+     not use the microphone, so the in-page mic would only fail: the keyboard's
+     own dictation is the way to talk there */
+  try { if (window.self !== window.top) micOff = true; } catch (e) { micOff = true; }
   var sample = null, talking = false, ctl = null, talkReady = false;
   var TALK_ORDER = ["client-questions", "treatments", "aftercare", "concerns", "visits", "routine", "hard-lines", "voice"];
   var BY_ID = {};
@@ -815,7 +819,7 @@
   talkSec.setAttribute("aria-labelledby", "h-talk");
   talkSec.innerHTML =
     '<div class="section-head"><h2 id="h-talk">Talk it through</h2>' +
-    "<p>Rather talk than fill in boxes? Claude asks you the playbook's questions one at a time, asks a follow-up when it needs more, and saves your answers into the other tabs as you go. Type or speak (the mic key on your keyboard works here too).</p></div>" +
+    "<p>Rather talk than fill in boxes? Claude asks you the playbook's questions one at a time, asks a follow-up when it needs more, and saves your answers into the other tabs as you go. To talk instead of typing, tap into the answer box, then the mic on your keyboard (no mic? Settings, General, Keyboard, Enable Dictation).</p></div>" +
     '<div class="talk-intro"><p class="talk-where"></p>' +
       '<button class="linkish talk-topic-toggle" type="button" aria-expanded="false" hidden>Change topic</button>' +
       '<div class="talk-topics chips" role="group" aria-label="What should we talk about?"></div></div>' +
@@ -823,7 +827,7 @@
     '<form class="talk-form" autocomplete="off">' +
       '<p class="talk-status" role="status"></p>' +
       '<div class="talk-bar"><button class="talk-mic" type="button" aria-pressed="false" aria-label="Speak your answer" hidden>' + MIC + "</button>" +
-      '<textarea class="talk-in" rows="1" placeholder="Your answer" aria-label="Your answer"></textarea>' +
+      '<textarea class="talk-in" rows="1" placeholder="Type, or tap the keyboard\'s mic to talk" aria-label="Your answer"></textarea>' +
       '<button class="btn talk-send" type="submit">Start talking</button></div>' +
     "</form>" +
     '<div class="talk-opts"><label><input type="checkbox" class="talk-aloud"> Read Claude\'s questions aloud</label>' +
