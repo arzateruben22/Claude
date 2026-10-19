@@ -211,3 +211,9 @@ In the dashboard, open any client under **Clients** → **Write a plan** (or **W
 **The client** sees it under **My Lumevina → Your skin plan** once signed in with that email, with an **Ask about my routine** button. **Ask Lumevina** greets them knowing the plan and answers "what do I use at night?", "what's my routine?", "what should I avoid?", "what's next?" straight from it. Asking to change it ("can I add vitamin C?"), a reaction, pregnancy, medications or a condition still goes to Evelyn, and when the server is connected her drafted reply already knows their plan, pre-visit form, visits and what she told them before.
 
 **Sign-in:** connected, "Send my sign-in link" emails a real one-tap link (Supabase Auth); the demo signs straight in. Tested: the plan from the dashboard to the account and the chat at phone and desktop sizes, and the live sign-in (link, session refresh, an expired link, sign-out) against a stand-in server.
+
+## About Evelyn and service details (Oct 19)
+
+**About Evelyn:** her CanvasRebel photo now sits above the swipe cards and is the one link to the interview ("Featured in CanvasRebel →"). The separate Press card, which linked to the same article and was mostly empty space, is gone; the cards are Meet Evelyn, Our approach and The room.
+
+**Service details:** tap any service (a featured card, or a line in Explore Every Service) and its details open: her full description from GlossGenius, the time, the deposit (or "nothing due until your visit"), its options each with their own Book button, and Keep looking. On phones it rises from the bottom; on a computer it's a centered card. Book works exactly like the page's own Book buttons (her GlossGenius page for now).

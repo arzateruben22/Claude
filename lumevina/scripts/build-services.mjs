@@ -32,7 +32,7 @@ const row = (s) => {
     : `<button class="wax-add add-to-cart" type="button" data-id="${s.id}" data-name="${esc(s.name)}" data-price="${s.price}" data-dur="${s.block}" data-deposit="${s.deposit}"${s.from ? ' data-from="1"' : ""}${s.addon ? ' data-addon="1"' : ""} aria-label="Add ${esc(s.name)} to cart">+</button>`;
   const price = s.addon && s.id === "after-hours-facial" ? "+" + money(s.price) : priceLabel(s);
   const label = s.short ? `<strong class="wax-opt">${esc(s.short)}</strong>` : `<strong>${esc(s.name)}</strong>`;
-  return `                <li class="wax-row"><span class="wax-item">${label}${note}${desc}${m}</span><span class="dots"></span><span class="wax-price">${price}</span>${btn}</li>`;
+  return `                <li class="wax-row" data-service="${s.id}"><span class="wax-item" role="button" tabindex="0" aria-label="${esc(s.name)}: full details">${label}${note}${desc}${m}</span><span class="dots"></span><span class="wax-price">${price}</span>${btn}</li>`;
 };
 /* a service with options: its own line (name, description, deposit), then a
    bookable line per option, each at its own price and time */
@@ -40,7 +40,7 @@ const parentRow = (s) => {
   const note = s.note ? `<span class="wax-note">${esc(s.note)}</span>` : "";
   const desc = s.desc ? `<span class="wax-desc">${esc(s.desc)}</span>` : "";
   const m = s.deposit ? `<span class="wax-meta">${esc(money(s.deposit) + " deposit")}</span>` : "";
-  return `                <li class="wax-row wax-row--parent"><span class="wax-item"><strong>${esc(s.name)}</strong>${note}${desc}${m}</span></li>`;
+  return `                <li class="wax-row wax-row--parent" data-service="${s.id}"><span class="wax-item" role="button" tabindex="0" aria-label="${esc(s.name)}: full details"><strong>${esc(s.name)}</strong>${note}${desc}${m}</span></li>`;
 };
 const optionRow = (o) => row({ ...o, desc: "", note: "", deposit: 0 }).replace('class="wax-row"', 'class="wax-row wax-row--option"')
   .replace(/data-deposit="0"/, `data-deposit="${o.deposit}"`);
@@ -85,10 +85,10 @@ const FEATURED = [
 ];
 const card = (f) => {
   const s = S.get(f.id);
-  return `          <article class="product-card${f.hero ? " product-card--hero" : ""}" data-reveal data-spotlight>
+  return `          <article class="product-card${f.hero ? " product-card--hero" : ""}" data-service="${s.id}" data-reveal data-spotlight>
             <span class="product-badge">${esc(f.badge)}</span>
             <div class="product-visual ${f.cls}" aria-hidden="true"><img src="img/services/${f.img}.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
-            <h3 class="product-name">${esc(s.name)}</h3>
+            <h3 class="product-name"><button class="svc-open" type="button" aria-label="${esc(s.name)}: full details">${esc(s.name)}</button></h3>
             <p class="product-desc">${esc(s.desc)}</p>
             <div class="product-foot">
               <span class="product-price">${priceLabel(s)}</span>
