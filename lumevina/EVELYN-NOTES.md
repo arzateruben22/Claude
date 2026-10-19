@@ -63,7 +63,29 @@ Started Monday, October 19, 2026. Her words come first, then what it means for t
 10. If the site did only three things perfectly, which three would they be?
 11. Is there anything on the current site you want gone or changed?
 
-**Answers:** _(fill in as she answers)_
+**Evelyn's answers (Oct 19, sent by Ruben):**
+
+1. **Worries:** learning something new, clients getting confused, payments going wrong, how long setup takes. *"Checkout being easy for me. When I check out clients on GlossGenius I am able to add products and services and give them a total upfront. They can also pay with tap or card on file, all on my app."*
+2. **Most time:** answering DMs, shipping orders. *"Answering clients' individual questions about skin concerns and products."*
+3. **Clients ask most:** aftercare, skin concerns, product concerns.
+4. **Booking:** stay on GlossGenius for now. *Would hate to lose:* "The convenience, and I just switched to GlossGenius."
+5. **Hours:** the same every week. Clients can book **1 month** ahead.
+6. **Before a first visit:** intake form, deposit, signed consent, their current products. *"I would like there to be an option to add photos of their skin."*
+7. **How clients pay:** card, tap to pay, Zelle, Klarna or Afterpay. (Cash wasn't picked.)
+8. **Dashboard:** on her **phone**.
+9. **Tell her right away:** new bookings, cancellations, orders to ship, low stock, client questions. By **text and email**.
+10. **Three things to get perfect:** (1) checkout being convenient and seamless, (2) a seamless online shop for clients, (3) automated responses for recurring questions.
+11. **Change:** the colors and aesthetic. Keep it easy for clients and for her to navigate.
+
+**What her answers mean for the site:**
+- **Booking stays on GlossGenius.** Every Book button opens her GlossGenius page; the website's own calendar stays built but switched off (js/site-config.js). Needed: her GlossGenius booking link.
+- **Visit checkout stays on GlossGenius** too: it already does what she wants (products and services, a total upfront, tap or card on file). The dashboard doesn't need its own checkout screen for now.
+- **The website's job is the shop:** a seamless online shop and checkout for clients, and shipping that takes as little of her time as possible.
+- **Automated answers:** the "Ask Lumevina" chat should answer aftercare and product questions on its own, from her catalog, and pass real skin concerns to her.
+- **Colors and aesthetic:** to change. Her product guide suggests warm beige, white and classic black.
+- **Dashboard:** built for her phone first. Alerts by text and email (needs the server).
+- **Skin photos:** an option for new clients to add photos. GlossGenius holds her intake forms, so check whether its forms can take photos first.
+- **Confirm:** the policies say "cash is preferred", but she didn't pick cash.
 
 ## Open questions for her
 
