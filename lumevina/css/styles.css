@@ -6483,3 +6483,14 @@ html.pd-open { overflow: hidden; }
 /* Book links (booking on GlossGenius) look the same as the Book buttons */
 a.wax-book { text-decoration: none; }
 a.book-btn { text-align: center; }
+
+/* the shelf limit in the cart, and a returning buyer's address */
+.qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.qty-btn:disabled:hover { border-color: var(--ink-35); color: var(--ink); }
+.cart-item-note { grid-column: 1 / -1; margin: 0.15rem 0 0; font-size: 0.8rem; color: var(--ink-60); }
+.cart-item.has-thumb .cart-item-note { grid-column: 2 / -1; }
+.cart-notice {
+  margin: var(--space-3) var(--space-4) 0; padding: 0.75rem 0.9rem; border-radius: 12px;
+  background: var(--surface-2); border: 1px solid var(--panel-edge-soft); font-size: 0.86rem; color: var(--ink);
+}
+.co-addr-note { margin: 0 0 0.75rem; font-size: 0.85rem; color: var(--sage); }

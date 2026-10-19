@@ -136,8 +136,44 @@
   };
   var orderTotal = function () { return subtotal() - memberOff() + shipping().fee; };
 
+  /* ── The shelf limit: a product can't go in the cart more times than
+     Evelyn has it on the shelf (js/inventory.js). Unknown counts aren't
+     limited; the shop asks clients to request those instead. ── */
+  var INV = window.LumevinaInventory || null;
+  var shelfMax = function (id) {
+    if (!INV || id.indexOf("retail-") !== 0) return Infinity;
+    var p = INV.get(id);
+    return p && p.stock != null ? Math.max(0, Number(p.stock) || 0) : Infinity;
+  };
+  var limitNote = {};        /* id → a line shown under that item */
+  var noticeEl = document.createElement("p");
+  noticeEl.className = "cart-notice";
+  noticeEl.setAttribute("role", "status");
+  noticeEl.hidden = true;
+  itemsList.parentNode.insertBefore(noticeEl, itemsList);
+  /* stock can drop while something waits in the cart (a sale in the
+     dashboard, an order in another tab): bring the cart back in line */
+  var fitToShelf = function () {
+    var gone = [], changed = false;
+    Object.keys(cart).forEach(function (id) {
+      var max = shelfMax(id);
+      if (cart[id].qty <= max) return;
+      changed = true;
+      if (max === 0) { gone.push(cart[id].name); delete cart[id]; delete limitNote[id]; return; }
+      cart[id].qty = max;
+      limitNote[id] = "Only " + max + " left now, so we updated your cart.";
+    });
+    if (gone.length) {
+      noticeEl.textContent = gone.join(" and ") + (gone.length === 1 ? " just sold out and was" : " just sold out and were") +
+        " taken out of your cart. Request it from the shop and Evelyn will order it in.";
+      noticeEl.hidden = false;
+    }
+    if (changed) save();
+  };
+
   /* ── Rendering ── */
   var render = function () {
+    fitToShelf();
     var ids = Object.keys(cart);
     var count = itemCount();
 
@@ -188,6 +224,11 @@
       plus.textContent = "+";
       plus.setAttribute("aria-label", "Increase quantity of " + item.name);
       plus.addEventListener("click", function () { changeQty(id, 1); });
+      var max = shelfMax(id);
+      if (item.qty >= max) {
+        plus.disabled = true;
+        plus.setAttribute("aria-label", "That's all on the shelf: " + max + " of " + item.name);
+      }
 
       var remove = document.createElement("button");
       remove.type = "button";
@@ -216,24 +257,45 @@
       li.appendChild(line);
       li.appendChild(unit);
       li.appendChild(controls);
+      if (limitNote[id]) {
+        var note = document.createElement("p");
+        note.className = "cart-item-note";
+        note.textContent = limitNote[id];
+        li.appendChild(note);
+      }
       itemsList.appendChild(li);
     });
   };
 
   /* ── Mutations ── */
   var addItem = function (id, name, price) {
+    var max = shelfMax(id);
+    var have = cart[id] ? cart[id].qty : 0;
+    if (have + 1 > max) {
+      limitNote[id] = max === 1 ? "Evelyn has just 1 on the shelf, and it's in your cart."
+        : "Evelyn has " + max + " on the shelf, and they're all in your cart.";
+      render();
+      return;
+    }
     if (cart[id]) {
       cart[id].qty += 1;
     } else {
       cart[id] = { id: id, name: name, price: price, qty: 1 };
     }
+    noticeEl.hidden = true;
     save();
     render();
   };
 
   var changeQty = function (id, delta) {
     if (!cart[id]) return;
+    if (delta > 0 && cart[id].qty + delta > shelfMax(id)) {
+      limitNote[id] = "That's all Evelyn has on the shelf.";
+      render();
+      return;
+    }
     cart[id].qty += delta;
+    if (delta < 0) delete limitNote[id];
     if (cart[id].qty <= 0) delete cart[id];
     save();
     render();
@@ -307,6 +369,8 @@
     giftSelect.addEventListener("change", syncGift);
     syncGift();
   }
+
+  if (INV && INV.onChange) INV.onChange(render);
 
   /* ── Add-to-cart (delegated, so JS-rendered retail buttons work too) ── */
   document.addEventListener("click", function (e) {
@@ -393,7 +457,7 @@
       var note = modal.querySelector(".ship-note");
       var member = isMember(), over = retailSubtotal() - off >= FREE_OVER;
       note.textContent = member ? "Free: a member perk" : over ? "Free on orders over $75" :
-        "$8 · free over $75, or free for members";
+        (window.LumevinaMembership ? "$8 · free over $75, or free for members" : "$8 · free on orders over $75");
       note.classList.toggle("is-free", member || over);
     }
     totalEl.textContent = money(orderTotal());
@@ -424,7 +488,33 @@
     if (SH) SH.fillAddress(modal, "co", SH.lastAddress(memberEmail() || (acct && acct.email)));
   };
   var coEmail = document.getElementById("co-email");
+  /* a returning buyer who isn't signed in: their last shipping address
+     fills in as soon as their email is in, if they haven't started typing one */
+  var fillFromEmail = function () {
+    var SH = window.LumevinaShip;
+    var street = modal.querySelector("#co-street");
+    if (!SH || !coEmail || !street || street.value.trim()) return;
+    var email = coEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+    var a = SH.lastAddress(email);
+    if (!a) return;
+    ["street", "apt", "city", "state", "zip"].forEach(function (f) {
+      var e = modal.querySelector("#co-" + f);
+      if (e && a[f] != null) e.value = a[f];
+    });
+    var note = modal.querySelector(".co-addr-note");
+    if (!note) {
+      note = document.createElement("p");
+      note.className = "co-addr-note";
+      note.setAttribute("role", "status");
+      street.closest(".field").parentNode.insertBefore(note, street.closest(".field"));
+    }
+    note.textContent = "Welcome back. We filled in the address you used last time. Change anything that's new.";
+    if (typeof syncShip === "function") syncShip();
+  };
   if (coEmail) {
+    coEmail.addEventListener("change", fillFromEmail);
+    coEmail.addEventListener("blur", fillFromEmail);
     coEmail.addEventListener("change", function () { renderMemberLine(); });
     coEmail.addEventListener("input", function () { renderMemberLine(); });
   }
