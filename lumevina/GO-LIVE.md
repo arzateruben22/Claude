@@ -42,7 +42,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 ## 5. Launch
 
 - [ ] Instagram bio and Google Business profile link to the new site.
-- [ ] Keep the "already book on GlossGenius?" note for a few months, then switch booking to the website only (`booking.mode: "site"`).
+- [ ] Booking stays on GlossGenius at launch (Evelyn's choice): the site says "booking right here is coming soon". When she's ready, set `booking.mode: "both"` in `js/site-config.js`, and later `"site"`.
 - [ ] When she wants them: Glow Membership (Glow $175, Ageless $225) is one switch in `js/site-config.js`.
 
 **Not charging clients extra for the app.** Running costs are small (a few dollars to ~$50 a month to start, plus card fees). In-person services and physical products sold in the app aren't subject to Apple's in-app purchase cut; only digital products, like a future online course, would be.

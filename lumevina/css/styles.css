@@ -6676,3 +6676,18 @@ a.book-btn { text-align: center; }
 .sh-sg-item:focus-visible, .sh-sg-all:focus-visible { outline: 2px solid var(--mauve); outline-offset: -2px; }
 .sh-console { position: relative; z-index: 25; }   /* its suggestions sit over the sticky type bar */
 .sh-search input::-webkit-search-cancel-button { filter: grayscale(1) brightness(0.35); cursor: pointer; }
+
+/* booking on the website: coming soon (js/site-config.js → booking.soon) */
+.bk-soon { display: none; }
+.book-soon .bk-soon {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; margin: 1rem 0 0; max-width: 44rem;
+  font-size: 1rem; line-height: 1.5; color: var(--ink-60);
+}
+.bk-soon-tag {
+  display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--porcelain); background: var(--plum);
+}
+.only-gg { display: none; }
+.book-glossgenius .only-gg { display: inline; }
+.book-glossgenius .only-site { display: none; }

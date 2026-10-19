@@ -123,13 +123,16 @@
       acts: [["Move an appointment", "move"], ["All policies", "#policies"]] },
     { id: "book", node: "book", k: /\bbook|appointment|availab|opening|\bslots?\b|schedule (a|an|my)/, a: function () {
       var H = window.LumevinaHours;
-      return "You can book any time online: pick your treatment and a time, and some treatments take a small deposit to hold it. Evelyn’s hours: " +
+      var gg = window.LumevinaBooking && window.LumevinaBooking.external;
+      return (gg ? "For now, Evelyn takes every booking through GlossGenius (booking right here on the website is coming soon): pick your treatment and a time there, and some treatments take a small deposit to hold it."
+        : "You can book any time online: pick your treatment and a time, and some treatments take a small deposit to hold it.") + " Evelyn’s hours: " +
         (H ? H.prose() + "." : "Tuesday to Saturday."); },
       acts: [["Book now", "book"]] },
     { id: "hours", k: /hours|what time|when (are|do) you|open (on|today|tomorrow)|closed|sunday|monday|weekend/, a: function () {
       var H = window.LumevinaHours;
       return (H ? H.prose() + ". " + H.closedLabel() + "." : "Tuesday to Saturday, 8 AM to 6 PM. Closed Sundays and Mondays.") +
-        " The calendar on this site shows every opening up to a month ahead. Outside those hours, or on a closed day, she takes after-hours visits for an extra $50; ask her first."; },
+        (window.LumevinaBooking && window.LumevinaBooking.external ? " Book through GlossGenius for now; booking right here is coming soon." : " The calendar on this site shows every opening up to a month ahead.") +
+        " Outside those hours, or on a closed day, she takes after-hours visits for an extra $50; ask her first."; },
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
       return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },

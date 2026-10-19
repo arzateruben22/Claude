@@ -145,3 +145,7 @@ Only what's on GlossGenius is offered now. The full list, with her descriptions,
 - **Glow Membership repriced** (still held back): Glow **$175** (Custom Facial or Monthly Acne, a $200 value), Ageless **$225** (Ageless Grace, a $240 value, plus dermaplaning every other visit, about $260 a month in all). Ruben, Oct 19: "increase membership prices" — the perks (shelf discount, free shipping, add-on discount) carry the rest of the value. Dermaplaning is no longer covered by Glow, since it's now a $30–$40 option.
 
 **Still to confirm:** ProCell Microchanneling's two options; whether facials, peels and ProCell should take a deposit online; a ProCell photo. Calendar stays in 30-minute steps (Ruben, Oct 19).
+
+## Booking on the website: on hold (Oct 19)
+
+Evelyn wants to get used to the website before clients book on it. Every Book button opens her GlossGenius page, and the Book section says "Coming soon: booking right here on the website." The website's own calendar, deposits and calendar sync are built and waiting. When she's ready: `js/site-config.js` → `booking.mode: "both"` (both places), later `"site"`.

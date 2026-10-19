@@ -16,7 +16,8 @@
  *
  * 2. Where clients book.
  *      "glossgenius"  every Book button opens her GlossGenius page (now:
- *                     she keeps her calendar, deposits and checkout there)
+ *                     she keeps her calendar, deposits and checkout there;
+ *                     soon: true adds "booking right here is coming soon")
  *      "both"         this website's calendar, plus a "Book there instead"
  *                     link to her GlossGenius page
  *      "site"         this website's calendar only
@@ -49,7 +50,12 @@
       /* new clients book here; clients who already book with Evelyn on
          GlossGenius can still use it for now, with a note that everything
          is moving here */
-      mode: "both",
+      /* Evelyn, Oct 19: hold off on booking through the website while she
+         gets used to it. Every Book button opens her GlossGenius page, and
+         the Book section says booking right here is coming soon. When she's
+         ready: mode "both" (both places), later "site" (website only). */
+      mode: "glossgenius",
+      soon: true,
       glossgenius: "https://lumevina.glossgenius.com/",
       /* both calendars in sync: the server's availability function
          (website bookings + her Google Calendar, where GlossGenius writes
@@ -63,6 +69,7 @@
   var gg = /^https:\/\//.test(CONFIG.booking.glossgenius || "");
   root.classList.add(CONFIG.booking.mode === "glossgenius" && gg ? "book-glossgenius"
     : CONFIG.booking.mode === "both" && gg ? "book-both" : "book-site");
+  if (CONFIG.booking.mode === "glossgenius" && gg && CONFIG.booking.soon) root.classList.add("book-soon");
 
   window.LumevinaFeatures = {
     on: function (f) { return CONFIG.features.indexOf(f) !== -1; }
