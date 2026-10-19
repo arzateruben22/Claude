@@ -6386,7 +6386,6 @@ html:not(.has-partners) [data-feature~="partners"] { display: none !important; }
 /* ─── Shop sections, product photos, the detail view ─── */
 :root { --photo-ground: #FAF6F0; }
 .sh-grid { display: block; }
-.sh-sec { scroll-margin-top: 5rem; }
 .sh-sec:focus { outline: none; }
 .sh-sec + .sh-sec { margin-top: 2.75rem; }
 .sh-sec-head {
@@ -6495,20 +6494,22 @@ a.book-btn { text-align: center; }
 }
 .co-addr-note { margin: 0 0 0.75rem; font-size: 0.85rem; color: var(--sage); }
 
-/* ─── Shop toolbar: search and stock switch, brands as quiet tabs ─── */
+/* ─── Shop console: search and the stock switch, then brands as one
+   segmented control. Below it, types of product as tabs with a sliding
+   underline, sticky under the header. ─── */
 .sh-tools { display: none; }
-.sh-toolbar {
-  display: grid; gap: 0.35rem; margin-bottom: 1.1rem; padding: 0.9rem 1.1rem 0;
-  background: var(--porcelain); border: 1px solid var(--panel-edge-soft); border-radius: 22px;
-  box-shadow: 0 18px 50px -36px rgba(var(--shadow-rgb), 0.45);
+.sh-console {
+  display: grid; gap: 0.75rem; padding: 0.75rem;
+  background: var(--porcelain); border: 1px solid var(--panel-edge-soft); border-radius: 20px;
+  box-shadow: 0 18px 50px -40px rgba(var(--shadow-rgb), 0.5);
 }
-.sh-toolbar-top { display: flex; align-items: center; gap: 1rem; }
-.sh-toolbar .sh-search { flex: 1; min-width: 0; }
-.sh-toolbar .sh-search input {
-  min-height: 46px; border-color: transparent; background-color: var(--surface-2);
+.sh-console-top { display: flex; align-items: center; gap: 1rem; padding-right: 0.35rem; }
+.sh-console .sh-search { flex: 1; min-width: 0; }
+.sh-console .sh-search input {
+  min-height: 48px; border: 1px solid transparent; border-radius: 13px; background-color: var(--surface-2);
   padding-left: 2.6rem; background-position: 0.95rem center;
 }
-.sh-toolbar .sh-search input:focus { border-color: var(--mauve); background-color: var(--field); }
+.sh-console .sh-search input:focus { border-color: var(--ink); background-color: var(--field); box-shadow: none; }
 /* "In stock only": a switch, not a checkbox */
 .sh-switch { display: inline-flex; align-items: center; gap: 0.6rem; flex: none; cursor: pointer; font-size: 0.88rem; color: var(--ink); }
 .sh-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
@@ -6523,65 +6524,78 @@ a.book-btn { text-align: center; }
 .sh-switch input:checked + .sh-switch-track { background: var(--plum); }
 .sh-switch input:checked + .sh-switch-track .sh-switch-dot { transform: translateX(16px); }
 .sh-switch input:focus-visible + .sh-switch-track { outline: 2px solid var(--mauve); outline-offset: 2px; }
-.sh-brands {
-  display: flex; gap: 1.6rem; overflow-x: auto; scrollbar-width: none;
-  margin: 0 -1.1rem; padding: 0 1.1rem; border-top: 1px solid var(--ink-15); margin-top: 0.75rem;
+
+/* brands: a track with a black thumb that slides to the one chosen */
+.sh-seg {
+  position: relative; display: flex; gap: 2px; padding: 4px; min-width: 0;
+  background: var(--surface-2); border-radius: 13px;
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
 }
-.sh-brands::-webkit-scrollbar { display: none; }
+.sh-seg::-webkit-scrollbar { display: none; }
+.sh-seg-thumb {
+  position: absolute; top: 4px; bottom: 4px; left: 0; width: 0; border-radius: 10px;
+  background: var(--plum); box-shadow: 0 8px 18px -10px rgba(var(--shadow-rgb), 0.7);
+  opacity: 0; pointer-events: none;
+}
+.sh-seg-thumb.is-set { opacity: 1; transition: transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1), width 420ms cubic-bezier(0.2, 0.9, 0.2, 1); }
 .sh-brand-tab {
-  flex: none; display: inline-flex; align-items: baseline; gap: 0.35rem; padding: 0.95rem 0 0.85rem;
-  border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none;
-  font: inherit; font-size: 0.9rem; color: var(--ink-60); cursor: pointer; transition: color 150ms ease, border-color 150ms ease;
+  position: relative; z-index: 1; flex: 1 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+  min-height: 40px; padding: 0 1rem; border: 0; border-radius: 10px; background: none; white-space: nowrap;
+  font: inherit; font-size: 0.88rem; font-weight: 500; color: var(--ink-60); cursor: pointer; transition: color 250ms ease;
 }
 .sh-brand-tab:hover { color: var(--ink); }
-.sh-brand-tab[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--plum); font-weight: 600; }
-.sh-brand-tab:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; border-radius: 4px; }
-.sh-brand-n { font-size: 0.72rem; color: var(--ink-60); font-weight: 400; font-variant-numeric: tabular-nums; }
+.sh-brand-tab[aria-pressed="true"] { color: var(--porcelain); }
+.sh-brand-tab:focus-visible { outline: 2px solid var(--mauve); outline-offset: -2px; }
+.sh-brand-n { font-size: 0.72rem; font-weight: 400; opacity: 0.72; font-variant-numeric: tabular-nums; }
 
-/* ─── Expandable Tabs: the type navigator, sticky under the header ─── */
+/* types: tabs with a sliding underline, on a hairline that runs the width
+   of the shop; sticks under the header on a linen band */
 .sh-nav {
   position: sticky; top: calc(4.6rem + env(safe-area-inset-top, 0px)); z-index: 20;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  margin: 0 0 1.5rem; pointer-events: none;
+  display: flex; align-items: center; gap: 1.5rem; margin: 1rem 0 1.75rem;
+  border-bottom: 1px solid var(--ink-15);
+  transition: background-color 200ms ease, box-shadow 200ms ease;
 }
-.sh-nav > * { pointer-events: auto; }
-.xt {
-  display: flex; align-items: center; gap: 0.2rem; min-width: 0; max-width: 100%;
-  padding: 0.3rem; border: 1px solid var(--panel-edge-soft); border-radius: 18px;
-  background: rgba(var(--glass-rgb), 0.92); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-  box-shadow: 0 12px 30px -20px rgba(var(--shadow-rgb), 0.5);
-  overflow-x: auto; scrollbar-width: none;
+/* once it sticks under the header, a linen band runs the full width behind it */
+.sh-nav.is-stuck { background: var(--linen); box-shadow: 0 0 0 100vmax var(--linen); clip-path: inset(0 -100vmax); }
+.sh-tabs {
+  position: relative; display: flex; align-items: center; gap: 1.45rem; flex: 1; min-width: 0;
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
 }
-.xt::-webkit-scrollbar { display: none; }
-.xt-tab {
-  flex: none; display: inline-flex; align-items: center; gap: 0; height: 40px; padding: 0 0.6rem;
-  border: 0; border-radius: 13px; background: none; color: var(--ink-60); font: inherit; font-size: 0.86rem; font-weight: 500;
-  cursor: pointer; transition: background-color 300ms ease, color 300ms ease, padding 600ms cubic-bezier(0.2, 0.9, 0.2, 1), gap 600ms cubic-bezier(0.2, 0.9, 0.2, 1);
+.sh-tabs::-webkit-scrollbar { display: none; }
+.sh-tab {
+  flex: none; display: inline-flex; align-items: baseline; gap: 0.35rem; padding: 0.95rem 0 0.9rem;
+  border: 0; background: none; white-space: nowrap;
+  font: inherit; font-size: 0.92rem; font-weight: 500; color: var(--ink-60); cursor: pointer; transition: color 200ms ease;
 }
-.xt-tab:hover { background: var(--surface-2); color: var(--ink); }
-.xt-tab:focus-visible { outline: 2px solid var(--mauve); outline-offset: 1px; }
-.xt-icon { flex: none; }
-.xt-label {
-  display: inline-flex; align-items: baseline; gap: 0.35rem; max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
-  transition: max-width 600ms cubic-bezier(0.2, 0.9, 0.2, 1) 100ms, opacity 350ms ease 100ms;
+.sh-tab:hover, .sh-tab.is-active { color: var(--ink); }
+.sh-tab:focus-visible { outline: 2px solid var(--mauve); outline-offset: -2px; border-radius: 4px; }
+.sh-tab-n { font-size: 0.72rem; font-weight: 400; color: var(--ink-60); font-variant-numeric: tabular-nums; }
+.sh-tabs-sep { flex: none; width: 1px; height: 16px; background: var(--ink-15); }
+.sh-tabs-bar {
+  position: absolute; left: 0; bottom: 0; width: 0; height: 2px; border-radius: 2px; background: var(--plum);
+  opacity: 0; pointer-events: none;
 }
-.xt-n { font-size: 0.72rem; font-weight: 400; color: var(--ink-60); font-variant-numeric: tabular-nums; }
-.xt-tab.is-active { gap: 0.5rem; padding: 0 0.95rem 0 0.8rem; background: var(--plum); color: var(--porcelain); }
-.xt-tab.is-active .xt-label { max-width: 12rem; opacity: 1; }
-.xt-tab.is-active .xt-n { color: rgba(255, 255, 255, 0.7); }
-.xt-sep { flex: none; width: 1px; height: 22px; margin: 0 0.3rem; background: var(--ink-15); }
-.sh-nav .sh-count { margin: 0; flex: none; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(var(--glass-rgb), 0.85); }
+.sh-tabs-bar.is-set { opacity: 1; transition: transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1), width 420ms cubic-bezier(0.2, 0.9, 0.2, 1); }
+.sh-count { margin: 0; font-size: 0.8rem; color: var(--ink-60); font-variant-numeric: tabular-nums; }
+.sh-nav .sh-count { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sh-count--under { margin: 0.75rem 0.35rem 0; }
+.sh-sec { scroll-margin-top: 8.5rem; }
 @media (max-width: 760px) {
-  .sh-toolbar { padding: 0.75rem 0.85rem 0; border-radius: 18px; }
-  .sh-toolbar-top { flex-wrap: wrap; gap: 0.7rem; }
-  .sh-toolbar .sh-search { flex-basis: 100%; }
-  .sh-brands { margin: 0.55rem -0.85rem 0; padding: 0 0.85rem; gap: 1.3rem; }
-  .sh-nav { top: calc(4rem + env(safe-area-inset-top, 0px)); flex-direction: column; align-items: stretch; gap: 0.5rem; }
-  .xt { align-self: flex-start; }
-  .sh-nav .sh-count { align-self: flex-start; padding: 0; background: none; }
+  .sh-console { padding: 0.6rem; border-radius: 18px; gap: 0.6rem; }
+  .sh-console-top { flex-wrap: wrap; gap: 0.6rem; padding: 0 0.25rem 0 0; }
+  .sh-console .sh-search { flex-basis: 100%; }
+  .sh-switch { padding-left: 0.3rem; }
+  .sh-brand-tab { flex: none; padding: 0 0.85rem; }
+  .sh-nav { top: calc(4rem + env(safe-area-inset-top, 0px)); margin-top: 0.4rem; }
+  .sh-count--under { margin: 0.65rem 0.25rem 0; }
+  .sh-tabs { gap: 1.3rem; }
+  /* the row scrolls: fade its far edge so it reads as more to see */
+  .sh-tabs, .sh-seg { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
+  .sh-sec { scroll-margin-top: 7.75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .xt-tab, .xt-label, .sh-switch-track, .sh-switch-dot { transition: none; }
+  .sh-seg-thumb.is-set, .sh-tabs-bar.is-set, .sh-switch-track, .sh-switch-dot, .sh-brand-tab, .sh-tab { transition: none; }
 }
 
 /* booking in both places for now: the note under the Book heading */

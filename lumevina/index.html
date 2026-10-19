@@ -154,9 +154,10 @@
           or browse by brand and type. Something out of stock? Request it and she'll order it in.</p>
         </div>
 
-        <!-- one toolbar: search and the stock switch, then brands as quiet tabs -->
-        <div class="sh-toolbar" data-reveal>
-          <div class="sh-toolbar-top">
+        <!-- the shop console: search and the stock switch, then brands as one
+             segmented control (a black thumb slides to the brand chosen) -->
+        <div class="sh-console" data-reveal>
+          <div class="sh-console-top">
             <div class="sh-search">
               <label class="sh-search-k" for="sh-q">Search the shop</label>
               <input id="sh-q" type="search" autocomplete="off" placeholder="Search cleanser, SPF, mandelic…">
@@ -167,14 +168,14 @@
               <span class="sh-switch-k">In stock only</span>
             </label>
           </div>
-          <div class="sh-brands" role="group" aria-label="Brand"></div>
+          <div class="sh-seg sh-brands" role="group" aria-label="Brand"></div>
         </div>
+        <p class="sh-count sh-count--under" aria-hidden="true"></p>
 
-        <!-- Expandable Tabs (21st.dev, ported to plain JS in js/shop.js): one line icon per
-             type of product; the section on screen opens to show its name. Sticks under the
-             header while the shop scrolls by. -->
+        <!-- types of product as tabs with a sliding underline; the section on
+             screen is underlined. Sticks under the header while the shop scrolls. -->
         <nav class="sh-nav" aria-label="Jump to a type of product">
-          <div class="xt sh-cats"></div>
+          <div class="sh-tabs sh-cats"></div>
           <p class="sh-count" aria-live="polite"></p>
         </nav>
         <div class="sh-grid" id="retail-grid"></div>
