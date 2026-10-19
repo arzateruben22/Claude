@@ -20,7 +20,7 @@ Everything the website's assistant may say lives here, in Evelyn's words, plus t
    ```sh
    node knowledge/scripts/build-bundle.mjs
    ```
-   It writes `server/functions/_shared/knowledge.ts` (what the edge function imports) and `eval/bundle.json` (what the eval runs against). Run it again after any change here, in the FAQ, in the catalog, or in `prompt.md`, then redeploy: `supabase functions deploy ask`.
+   It writes `server/functions/_shared/knowledge.ts` (what the edge function imports), `eval/bundle.json` (what the eval runs against) and `../texting/knowledge.md` (what Evelyn's texting assistant reads, see `texting/SETUP.md`). Run it again after any change here, in the FAQ, in the catalog, or in `prompt.md`, then redeploy: `supabase functions deploy ask`.
 
 ## The files
 
