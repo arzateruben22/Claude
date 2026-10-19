@@ -79,10 +79,10 @@
     P(GM, "Eye Calm", 48, 0, "Eye care", { photo: "img/products/glymed-plus-eye-calm.webp", size: "0.3 fl oz / 10 ml", about: "Step 3 of the GlyMed Plus routine: balance." }),
     P(GM, "Firming Eye Cream", 70, 0, "Eye care", { photo: "img/products/glymed-plus-firming-eye-cream.webp", size: "0.3 oz / 10 ml", about: "Part of the GlyMed Plus Elite line; step 3 of its routine: balance." }),
     P(GM, "Firming Serum with Phyto-Stem Cells", 142, 0, "Serums", { inv: "Firming Serum w/ Phyto…", slug: "firming-serum", photo: "img/products/glymed-plus-firming-serum.webp", size: "1 oz / 30 ml", about: "Part of the GlyMed Plus Elite line; step 2 of its routine: treat.", resolved: "Flag [9] answered by the label photo: Firming Serum with Phyto-Stem Cells, 1 oz / 30 ml." }),
-    P(GM, "Glycolic Cleanser", 41, 0, "Cleansers", { photo: "img/retail/glymed-cleanser.webp" }),
-    P(GM, "Revitalizing Essence NAD+", 50, 0, "More"),
-    P(GM, "Skin Recovery Mist", 46, 0, "Toners & mists"),
-    P(GM, "Vitamin C Cleanser", 47, 0, "Cleansers"),
+    P(GM, "Glycolic Facial Cleanser", 41, 0, "Cleansers", { inv: "Glycolic Cleanser", slug: "glycolic-cleanser", photo: "img/products/glymed-plus-glycolic-facial-cleanser.webp", size: "8 fl oz / 236 ml", about: "With 10% glycolic acid. Step 1 of the GlyMed Plus routine: cleanse." }),
+    P(GM, "Revitalizing Essence with NAD+", 50, 0, "Serums", { inv: "Revitalizing Essence NAD+", slug: "revitalizing-essence-nadplus", photo: "img/products/glymed-plus-revitalizing-essence-nad.webp", size: "1.35 oz / 40 ml", about: "Part of the GlyMed Plus Elite line; step 2 of its routine: treat." }),
+    P(GM, "Skin Recovery Mist", 46, 0, "Toners & mists", { photo: "img/products/glymed-plus-skin-recovery-mist.webp", size: "4 fl oz / 118 ml", about: "Step 2 of the GlyMed Plus routine: treat." }),
+    P(GM, "Vitamin C Cleanser", 47, 0, "Cleansers", { photo: "img/products/glymed-plus-vitamin-c-cleanser.webp", size: "6.75 fl oz / 200 ml", about: "Step 1 of the GlyMed Plus routine: cleanse." }),
 
     /* ── Mixi Skincare: 3 entries ── */
     P(MX, "Dew Drops", 56, 0, "More"),

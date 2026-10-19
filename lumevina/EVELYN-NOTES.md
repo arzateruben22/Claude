@@ -103,7 +103,7 @@ Started Monday, October 19, 2026. Her words come first, then what it means for t
 
 ### Photos
 
-On the site now (files received): 5%, 11% and 15% L-Mandelic Serum; 2.5% and 5% Advanced Acne Med; Mineral Matte SPF 28; Moisture Balance Toner (6 fl oz and 2 fl oz); Omni Clear Mist; PowerMineral SPF 50; GlyMed Plus Barrier Repair Cream, Cell Protection Balm, Eye Calm, Firming Eye Cream and Firming Serum with Phyto-Stem Cells; plus the older Daily SPF 30 Plus and GlyMed Glycolic Cleanser shots.
+On the site now (files received): 5%, 11% and 15% L-Mandelic Serum; 2.5% and 5% Advanced Acne Med; Mineral Matte SPF 28; Moisture Balance Toner (6 fl oz and 2 fl oz); Omni Clear Mist; PowerMineral SPF 50; all nine GlyMed Plus products (Barrier Repair Cream, Cell Protection Balm, Eye Calm, Firming Eye Cream, Firming Serum with Phyto-Stem Cells, Glycolic Facial Cleanser, Revitalizing Essence with NAD+, Skin Recovery Mist, Vitamin C Cleanser); plus the older Daily SPF 30 Plus shot.
 
 Seen in chat but not received as files (label details added; the photos go up once the files arrive): 8% L-Mandelic Serum, Antioxidant Peptide Eye Gel, Barrier Balance Creamy Cleanser, Barrier Care Gel Cream, Brilliant Defense SPF 50, Clear Skin Balance, Cran-Peptide Cream, Daily SPF 30 Plus (new shot), Ultra Gentle Gel Cleanser, GlowTone Corrective Serum, HydraBalance Gel, HydraRemedy Gel Serum, HydraCalm Mask, invisiClear Spot Patches, L-Mandelic Face and Body Wash, Retinal B3 Serum, Retinol Peptide Serum, Soothing Radiance Toner, Sulfur Spot Treatment, Ultra Gentle Gel Cleanser (6 fl oz and 2 fl oz).
 
