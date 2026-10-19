@@ -8,7 +8,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { trafficParts, TrafficKind } from '../../preview/traffic';
 
 export interface CarClass {
-  id: string; len: number; wid: number; mass: number; weight: number; lanes: number[];
+  id: string; len: number; wid: number; height: number; mass: number; weight: number; lanes: number[];   // height: the roof (a semi: its trailer's top)
   body: THREE.BufferGeometry; glass: THREE.BufferGeometry; tail: THREE.BufferGeometry; head: THREE.BufferGeometry;
   trim?: THREE.BufferGeometry;       // grille, bumpers, mirrors, box, bed: vertex-coloured, one shared material
   wheels: [number, number, number][]; wheelR: number; blink: [number, number, number][];
@@ -35,7 +35,7 @@ function fromPreview(id: string, kind: TrafficKind, opts: { mass: number; weight
   const tail = lights([[0.36, 0.11, -W2 * 0.78, tailY, L + 0.005], [0.36, 0.11, W2 * 0.78, tailY, L + 0.005]], [0.55, 0.04, 0.05]);
   const head = lights([[0.32, 0.09, -W2 * 0.7, headY, -L - 0.005], [0.32, 0.09, W2 * 0.7, headY, -L - 0.005]], [0.9, 0.9, 0.85]);
   return {
-    id, len: S.len, wid: S.wid, lanes: opts.lanes ?? [0, 1, 2, 3], body: p.paint, glass: p.glass, trim: p.trim, tail, head, wheelR: S.r,
+    id, len: S.len, wid: S.wid, height: S.rig ? S.rig.trailerY[1] : S.roof, lanes: opts.lanes ?? [0, 1, 2, 3], body: p.paint, glass: p.glass, trim: p.trim, tail, head, wheelR: S.r,
     wheels: S.axles.flatMap((z) => [[-S.track, S.r, z], [S.track, S.r, z]] as [number, number, number][]),
     blink: [[-W2 + 0.08, tailY + 0.1, L + 0.01], [W2 - 0.08, tailY + 0.1, L + 0.01]],
     mass: opts.mass, weight: opts.weight, speed: opts.speed, fixedColor: opts.fixedColor,

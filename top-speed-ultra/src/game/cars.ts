@@ -8,6 +8,10 @@ export interface CarDef {
   id: string; name: string; blurb: string; price: number; level: number;
   mass: number; power: number; torque: number; redline: number; CdA: number; ClA: number; grip: number; paint: number;
   final: number;                     // final drive: shorter (bigger) is quicker off the line, lower at the top
+  // optional chassis fields (the hypercar's; an earnable car carries none and gets the physics' defaults)
+  Cf?: number; Cr?: number; steerGain?: number; brakeG?: number; brakeBias?: number; halfL?: number; halfW?: number;
+  track?: number; rollF?: number; loadSens?: number; kx?: number; IwF?: number; IwR?: number; Ieng?: number;
+  driveFront?: number; vector?: number; steerRate?: number; csRate?: number; hbKick?: number;
 }
 
 export const CARS: CarDef[] = [
@@ -33,6 +37,14 @@ export function applyCar(c: CarDef) {
   SPEC.CdA = c.CdA; SPEC.ClA = c.ClA; SPEC.final = c.final;
   // yaw inertia scales with mass
   SPEC.Iz = BASE.Iz * (c.mass / BASE.mass);
+  // the optional chassis fields, or the base values
+  SPEC.Cf = c.Cf ?? BASE.Cf; SPEC.Cr = c.Cr ?? BASE.Cr; SPEC.steerGain = c.steerGain ?? BASE.steerGain;
+  SPEC.brakeG = c.brakeG ?? BASE.brakeG; SPEC.brakeBias = c.brakeBias ?? BASE.brakeBias;
+  SPEC.halfL = c.halfL ?? BASE.halfL; SPEC.halfW = c.halfW ?? BASE.halfW;
+  SPEC.track = c.track ?? BASE.track; SPEC.rollF = c.rollF ?? BASE.rollF; SPEC.loadSens = c.loadSens ?? BASE.loadSens;
+  SPEC.kx = c.kx ?? BASE.kx; SPEC.IwF = c.IwF ?? BASE.IwF; SPEC.IwR = c.IwR ?? BASE.IwR; SPEC.Ieng = c.Ieng ?? BASE.Ieng;
+  SPEC.driveFront = c.driveFront ?? BASE.driveFront; SPEC.vector = c.vector ?? BASE.vector;
+  SPEC.steerRate = c.steerRate ?? BASE.steerRate; SPEC.csRate = c.csRate ?? BASE.csRate; SPEC.hbKick = c.hbKick ?? BASE.hbKick;
   return c.grip;
 }
 

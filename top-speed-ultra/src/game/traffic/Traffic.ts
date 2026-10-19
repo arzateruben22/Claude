@@ -10,6 +10,7 @@ import type { Network } from '../world/Network';
 import { buildClasses, wheelGeometry, CarClass, PAINTS } from './carModels';
 import * as M from '../../preview/car-mats';
 import { clamp, rng, smoothstep } from '../util';
+import { sweptContact } from './contact';
 
 export interface TrafficCar {
   cls: number; path: Path; s: number; d: number; v: number; v0: number;
@@ -23,6 +24,8 @@ export interface TrafficCar {
 export interface PlayerView {
   path: Path; s: number; d: number; v: number; vd: number; rel: number; len: number; wid: number;
   x: number; z: number; y: number; psi: number; wx: number; wz: number;
+  px: number; pz: number; ppsi: number;                  // the pose at the start of the step (the swept contact)
+  altitude: number;                                      // height above the road (a hop)
 }
 export interface Contact { car: TrafficCar; speed: number; nx: number; nz: number; depth: number }
 export interface PassEvent { car: TrafficCar; clean: boolean; close: boolean; gap: number; rel: number }
@@ -256,33 +259,23 @@ export class Traffic {
     return true;
   }
 
-  // you against the traffic: two oriented boxes in the world (separating axes), on any road, at your height
-  collide(player: PlayerView): Contact[] {
-    const out: Contact[] = [];
-    const pf = [Math.sin(player.psi), Math.cos(player.psi)], pr = [-Math.cos(player.psi), Math.sin(player.psi)];
-    const hl = player.len / 2, hw = player.wid / 2;
-    for (const c of this.cars) {
+  // you against the traffic: two oriented boxes in the world, swept over the step (contact.ts), on any road, at your
+  // height. `dtCar` is the time the traffic moved by this step (dt × the world scale under Focus Time). Fills
+  // `contacts` (reused records, at most 8) and returns how many.
+  readonly contacts: Contact[] = [];
+  collide(player: PlayerView, dt: number, dtCar = dt) {
+    let n = 0;
+    const cars = this.cars, reach = 25 + Math.abs(player.v) * dt;
+    for (let i = 0; i < cars.length && n < 8; i++) {
+      const c = cars[i];
       const dx = c.x - player.x, dz = c.z - player.z;
-      if (Math.abs(dx) > 25 || Math.abs(dz) > 25 || Math.abs(c.y - player.y) > 2.5) continue;
+      if (Math.abs(dx) > reach || Math.abs(dz) > reach || Math.abs(c.y - player.y) > 2.5) continue;
       const cl = this.classes[c.cls];
-      const cf = [Math.sin(c.h), Math.cos(c.h)], cr = [-Math.cos(c.h), Math.sin(c.h)];
-      const cl2 = cl.len / 2, cw = cl.wid / 2;
-      let best = 1e9, nX = 0, nZ = 0, separated = false;
-      for (const ax of [pf, pr, cf, cr]) {
-        const proj = (f: number[], r: number[], l: number, w: number) => l * Math.abs(f[0] * ax[0] + f[1] * ax[1]) + w * Math.abs(r[0] * ax[0] + r[1] * ax[1]);
-        const pa = proj(pf, pr, hl, hw), ca = proj(cf, cr, cl2, cw);
-        const dist = dx * ax[0] + dz * ax[1];
-        const over = pa + ca - Math.abs(dist);
-        if (over <= 0) { separated = true; break; }
-        if (over < best) { best = over; const sg = dist > 0 ? -1 : 1; nX = ax[0] * sg; nZ = ax[1] * sg; }
-      }
-      if (separated) continue;
-      // closing speed along the push direction (n points from the car toward you)
-      const cvx = Math.sin(c.h) * c.v, cvz = Math.cos(c.h) * c.v;
-      const vrel = -((player.wx - cvx) * nX + (player.wz - cvz) * nZ);
-      out.push({ car: c, speed: Math.max(0, vrel), nx: nX, nz: nZ, depth: best });
+      if (n >= this.contacts.length) this.contacts.push({ car: c, speed: 0, nx: 0, nz: 0, depth: 0 });
+      const out = this.contacts[n];
+      if (sweptContact(player, c, cl.len, cl.wid, cl.height, dtCar, out)) { out.car = c; n++; }
     }
-    return out;
+    return n;
   }
 
   bump(c: TrafficCar, dv: number, time: number) {
