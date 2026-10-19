@@ -30,9 +30,8 @@
   };
   if (!location.hash) resetTop();   /* a link to #services and the like keeps its place */
 
-  /* every fresh open of the site plays it; a link that points somewhere
-     specific (#services, #book-new…) or the browser's Back/Forward skips
-     it so nobody waits twice (the head script already hid it) */
+  /* it plays every time the site opens (Ruben, Oct 19: "make it every
+     time"); any tap, key or scroll lifts it early */
   var seen = document.documentElement.classList.contains("no-intro");
   try { sessionStorage.setItem("lumevina_intro_seen", "1"); } catch (e) { /* storage blocked */ }
   if (seen) {
@@ -41,15 +40,7 @@
     return;
   }
 
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (reduce.matches) {
-    /* CSS already hides it; make sure nothing is locked, and still
-       land at the top on refresh (catch late restores too) */
-    intro.classList.add("intro-done");
-    [0, 120, 350].forEach(function (t) { setTimeout(resetTop, t); });
-    window.addEventListener("load", resetTop);
-    return;
-  }
+  /* Reduce Motion: the same greeting as a soft fade (styles.css), nothing moves */
 
   /* hold the page still while the veil is up — via a class, so main.js
      resetting inline body overflow on load can't unlock us early */
@@ -60,8 +51,15 @@
 
   /* keep snapping to top under the veil until well past any late
      scroll restoration */
-  [60, 200, 500, 900].forEach(function (t) { timers.push(setTimeout(resetTop, t)); });
-  window.addEventListener("load", resetTop);
+  /* a link to a section (#book…) lands there instead of the top */
+  var land = function () {
+    var t = location.hash && document.getElementById(location.hash.slice(1));
+    if (t) t.scrollIntoView({ block: "start" }); else resetTop();
+  };
+  if (!location.hash) {
+    [60, 200, 500, 900].forEach(function (t) { timers.push(setTimeout(resetTop, t)); });
+    window.addEventListener("load", resetTop);
+  }
 
   /* the greeting starts once the logo is on screen (not while the page is
      still loading, or it would be over before anyone sees it): the mark
@@ -117,8 +115,8 @@
     window.removeEventListener("touchmove", onWheel, { passive: true });
     intro.classList.add("intro-out");
     document.body.classList.remove("intro-lock");
-    /* land on the hero now that we're unlocked */
-    resetTop();
+    /* land on the hero (or the section the link named) now that we're unlocked */
+    land();
     /* positions were measured while scroll was locked — recompute now
        that the page is scrollable, so the first scroll is accurate */
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();

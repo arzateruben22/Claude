@@ -18,9 +18,7 @@
   <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <!-- the arrival greeting plays once per visit, and never on a link to a specific spot -->
-  <!-- the arrival plays on every fresh open of the site; skipped for a link to a
-       section (#book…) and for the browser's Back/Forward, so nobody waits twice -->
-  <script>try{var nv=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];if(location.hash||(nv&&nv.type==="back_forward"))document.documentElement.classList.add("no-intro")}catch(e){}</script>
+  <!-- the arrival (js/intro.js) plays every time the site opens -->
   <!-- what's switched on, and where clients book: one file to change (js/site-config.js) -->
   <script src="js/site-config.js"></script>
 </head>

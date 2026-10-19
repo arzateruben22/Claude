@@ -469,6 +469,7 @@ body.intro-lock { overflow: hidden; }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(14); }
 }
 
+@keyframes intro-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes intro-appear {
   0% { opacity: 0; transform: translateY(26px) scale(0.86); filter: blur(9px); }
   55% { opacity: 0.85; transform: translateY(8px) scale(0.97); filter: blur(2px); }
@@ -476,7 +477,10 @@ body.intro-lock { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro { display: none; }
+  /* Reduce Motion still gets the greeting, as a soft fade with no movement */
+  .intro-mark, .intro-word.intro-anim { animation-name: intro-fade; }
+  .intro-gl, .intro-float { animation: none; opacity: 0.12; }
+  .intro-glow { display: none; }
 }
 
 /* ─── Nav ─── */
