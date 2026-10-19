@@ -39,7 +39,7 @@ Not offered: lashes, brows, nails, memberships, an online course or a rewards pr
 
 ## New here? What to book
 New Clients Start Here (from $220): a consultation and a facial built for your skin.
-For acne, start with the Acne Bootcamp's New Client Consultation + Treatment ($225).
+For acne, start with the Acne Bootcamp's New Client Consultation + Treatment ($220).
 
 ## Hours
 Tuesday 12 to 7 PM; Wednesday and Thursday 11 AM to 7 PM;

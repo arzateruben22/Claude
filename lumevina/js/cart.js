@@ -352,22 +352,38 @@
   overlay.addEventListener("click", closeDrawer);
   emptyMsg.querySelector("a").addEventListener("click", closeDrawer);
 
-  /* ── Gift certificate: pick a treatment (or a value) ── */
-  var giftSelect = document.getElementById("gift-service");
-  if (giftSelect) {
-    var giftCard = giftSelect.closest("#gift");
-    var giftPrice = giftCard.querySelector(".product-price");
-    var giftBtn = giftCard.querySelector(".gift-add");
-    var syncGift = function () {
-      var opt = giftSelect.options[giftSelect.selectedIndex];
-      var price = Number(opt.dataset.price);
-      giftPrice.textContent = money(price);
-      giftBtn.dataset.id = opt.value;
-      giftBtn.dataset.price = String(price);
-      giftBtn.dataset.name = "Gift Card · " + opt.dataset.label;
+  /* ── Gift a treatment: the groups become tabs (without this script every
+     group simply shows, one under another) ── */
+  var giftMenu = document.querySelector(".gift-menu");
+  if (giftMenu) {
+    var giftTabs = Array.prototype.slice.call(giftMenu.querySelectorAll(".gift-tab"));
+    var giftGroups = Array.prototype.slice.call(giftMenu.querySelectorAll(".gift-group"));
+    var showGiftGroup = function (key, focus) {
+      giftTabs.forEach(function (t) {
+        var on = t.dataset.giftGroup === key;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+        if (on && t.scrollIntoView) {
+          var row = t.parentNode, left = t.offsetLeft - (row.clientWidth - t.offsetWidth) / 2;
+          row.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+        }
+      });
+      giftGroups.forEach(function (g) { g.hidden = g.dataset.giftGroup !== key; });
     };
-    giftSelect.addEventListener("change", syncGift);
-    syncGift();
+    giftMenu.classList.add("is-tabbed");
+    showGiftGroup(giftTabs[0].dataset.giftGroup, false);
+    giftMenu.addEventListener("click", function (e) {
+      var t = e.target.closest(".gift-tab");
+      if (t) showGiftGroup(t.dataset.giftGroup, false);
+    });
+    giftMenu.querySelector(".gift-tabs").addEventListener("keydown", function (e) {
+      var i = giftTabs.indexOf(document.activeElement);
+      if (i < 0 || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
+      e.preventDefault();
+      var next = giftTabs[(i + (e.key === "ArrowRight" ? 1 : giftTabs.length - 1)) % giftTabs.length];
+      showGiftGroup(next.dataset.giftGroup, true);
+    });
   }
 
   if (INV && INV.onChange) INV.onChange(render);
