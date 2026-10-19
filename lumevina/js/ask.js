@@ -125,7 +125,7 @@
     { id: "hours", k: /hours|what time|when (are|do) you|open (on|today|tomorrow)|closed|sunday|monday|weekend/, a: function () {
       var H = window.LumevinaHours;
       return (H ? H.prose() + ". " + H.closedLabel() + "." : "Tuesday to Saturday, 8 AM to 6 PM. Closed Sundays and Mondays.") +
-        " The calendar on this site shows every opening up to a month ahead."; },
+        " The calendar on this site shows every opening up to a month ahead. Outside those hours, or on a closed day, she takes after-hours visits for a $32 add-on; ask her first."; },
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
       return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },

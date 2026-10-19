@@ -6595,3 +6595,6 @@ a.book-btn { text-align: center; }
 
 /* Ask Lumevina: waiting on the server */
 .ask-msg.thinking { opacity: 0.55; letter-spacing: 0.2em; }
+
+.bkl-after { margin: 0.8rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--ink-60); }
+.bkl-after .linklike { font-size: inherit; }

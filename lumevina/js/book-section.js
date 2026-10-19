@@ -20,7 +20,7 @@
 
   /* hours in the FAQ, from the same settings as the calendar */
   var faqHours = document.querySelector(".faq-hours");
-  var paintFaq = function () { if (faqHours && H) faqHours.textContent = H.prose() + "."; };
+  var paintFaq = function () { if (faqHours && H) faqHours.textContent = H.prose() + ". " + H.closedLabel() + "."; };
   paintFaq();
 
   /* GlossGenius: the only way to book, or a second door beside the calendar */
@@ -329,6 +329,19 @@
   goBtn.addEventListener("click", function () {
     if (!state.day || state.slot === null) return;
     B.open(state.svc, { dayKey: state.day, slot: state.slot });
+  });
+
+  /* after-hours: she confirms those herself, so the ask goes to the Contact form */
+  var afterBtn = root.querySelector(".bkl-after-ask");
+  if (afterBtn) afterBtn.addEventListener("click", function () {
+    var form = document.querySelector(".contact-form");
+    var topic = form && form.querySelector("#ct-topic"), msg = form && form.querySelector("#ct-msg");
+    var s = B.service(state.svc);
+    if (topic) topic.value = "booking";
+    if (msg) msg.value = "I'd like an after-hours visit" + (s ? " for the " + s.name : "") + ". Days and times that could work for me: ";
+    var c = document.getElementById("contact");
+    if (c) c.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (msg) setTimeout(function () { msg.focus({ preventScroll: true }); }, 400);
   });
 
   document.addEventListener("lumevina:booked", renderAll);

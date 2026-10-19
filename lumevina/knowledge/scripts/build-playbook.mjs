@@ -130,6 +130,15 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   .list label { display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.5rem; align-items: start; font-size: 0.85rem; color: var(--ink-soft); padding-top: 0.6rem; }
   .chip:focus-visible, textarea:focus-visible, input:focus-visible, .tab:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  .hint { display: flex; align-items: center; gap: 0.45rem; margin: 0.2rem 0 0; font-size: 0.84rem; color: var(--ink-soft); }
+  .hint svg { flex: none; }
+  .voice { display: grid; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px dashed var(--edge); }
+  .opt { font-size: 0.74rem; font-weight: 500; color: var(--ink-soft); margin-left: 0.4rem; }
+  .btn.small { min-height: 40px; padding: 0.6rem 1rem; font-size: 0.88rem; width: max-content; display: inline-flex; align-items: center; gap: 0.45rem; }
+  .notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .notes li { display: grid; gap: 0.3rem; font-size: 0.82rem; color: var(--ink-soft); }
+  .notes audio { width: 100%; max-width: 100%; }
+  .voice-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); min-height: 1.2em; }
   .finish { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--edge); display: grid; gap: 0.75rem; }
   .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .btn { font: 500 0.95rem/1 var(--font); padding: 0.85rem 1.3rem; min-height: 46px; border-radius: 999px; border: 1px solid var(--accent); cursor: pointer; background: var(--accent); color: var(--on-accent); }
@@ -145,7 +154,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     <h1>Evelyn's <em>Skin Playbook</em></h1>
     <p class="lede">Everything you'd tell a client, in your own words. The website's assistant answers only from
     what you write here, and hands you anything it can't find. Fill it in over a few sittings; it saves as you go,
-    and nothing is pre-filled.</p>
+    and nothing is pre-filled. Type, or speak: the mic key on your keyboard works in every box. You can also add
+    voice memos, which stay with your answers.</p>
   </header>
 
   <div class="bar">
@@ -271,9 +281,70 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     d.appendChild(s);
     var b = el("div", "body");
     fields.forEach(function (f) { b.appendChild(question(sid, it.id, f)); });
+    b.appendChild(voiceRow(sid, it.id));
     d.appendChild(b);
     return d;
   };
+
+  /* ── voice memos: recorded in her phone's own recorder, kept with the answers.
+     (The page itself can't open the microphone inside this viewer.) ── */
+  var assets = null;
+  var voiceRow = function (sid, itemId) {
+    var v = el("div", "voice");
+    var t = el("p", "q-t");
+    t.appendChild(document.createTextNode("Voice note"));
+    t.appendChild(el("span", "opt", "optional"));
+    v.appendChild(t);
+    v.appendChild(el("p", "q-h", "Record a voice memo on your phone and add it here. It stays with your answers, and later it can help a voice assistant sound like you."));
+    var lab = el("label", "btn btn-ghost small");
+    lab.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+    lab.appendChild(document.createTextNode("Add a recording"));
+    var inp = el("input");
+    inp.type = "file"; inp.accept = "audio/*,video/*"; inp.hidden = true;
+    inp.dataset.sid = sid; inp.dataset.item = itemId;
+    inp.setAttribute("aria-label", "Add a voice note");
+    lab.appendChild(inp);
+    v.appendChild(lab);
+    var list = el("ul", "notes");
+    list.dataset.sid = sid; list.dataset.item = itemId;
+    v.appendChild(list);
+    v.appendChild(el("p", "voice-status"));
+    return v;
+  };
+  /* what the store accepts: MP4 and WebM containers, so a phone voice memo
+     (.m4a, an MP4 container) is stored as video/mp4 and plays back as audio */
+  var mediaType = function (file) {
+    var n = (file.name || "").toLowerCase(), t = (file.type || "").toLowerCase();
+    if (/\.(m4a|mp4|aac|mov|m4v)$/.test(n) || /^(audio|video)\/(mp4|x-m4a|m4a|aac|quicktime|x-m4v)$/.test(t)) return "video/mp4";
+    if (/\.(webm|weba)$/.test(n) || /webm/.test(t)) return "video/webm";
+    return null;
+  };
+  main.addEventListener("change", function (e) {
+    var inp = e.target;
+    if (!inp.matches || !inp.matches("input[type=file]")) return;
+    var file = inp.files && inp.files[0];
+    if (!file) return;
+    var status = inp.closest(".voice").querySelector(".voice-status");
+    var sid = inp.dataset.sid, itemId = inp.dataset.item;
+    inp.value = "";
+    if (!assets) { status.textContent = "This link can't store recordings. Text the memo to Ruben instead; your typed answers still save."; return; }
+    var type = mediaType(file);
+    if (!type) { status.textContent = "That file type can't be stored here. A voice memo (.m4a) or a video works, or text it to Ruben."; return; }
+    if (file.size > 20 * 1024 * 1024) { status.textContent = "That one's over 20 MB. A shorter memo, or text it to Ruben."; return; }
+    status.textContent = "Uploading…";
+    assets.upload(file, { type: type }).then(function (r) {
+      var a = state[sid], list = Array.isArray(a[itemId + ".voice"]) ? a[itemId + ".voice"].slice() : [];
+      list.push({ id: r.id, name: file.name || "Voice note", at: new Date().toISOString(), size: r.sizeBytes, type: r.contentType });
+      a[itemId + ".voice"] = list;
+      status.textContent = "Added.";
+      schedule(sid, 0);
+    }, function (err) {
+      var code = err && err.code;
+      status.textContent = code === "not_granted" ? "This link can't store recordings from you. Text the memo to Ruben instead."
+        : code === "too_large" ? "That one's too big. A shorter memo, or text it to Ruben."
+        : "Couldn't upload that. Try again, or text the memo to Ruben.";
+    });
+  });
 
   SPEC.sections.forEach(function (s, i) {
     var tab = el("button", "tab");
@@ -289,6 +360,10 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     var h = el("h2", null, s.title); h.id = "h-" + s.id;
     head.appendChild(h);
     head.appendChild(el("p", null, s.intro));
+    var hint = el("p", "hint");
+    hint.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+    hint.appendChild(document.createTextNode("Speak instead of typing: tap the mic key on your keyboard, in any box."));
+    head.appendChild(hint);
     sec.appendChild(head);
 
     if (s.id === "concerns") SPEC.concerns.forEach(function (c) { sec.appendChild(item("concerns", c, SPEC.concernFields)); });
@@ -315,9 +390,22 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       var v = state[t.dataset.sid][t.dataset.key];
       t.value = (t.dataset.n != null ? (Array.isArray(v) ? v[+t.dataset.n] : "") : v) || "";
     });
+    main.querySelectorAll("ul.notes").forEach(function (ul) {
+      var list = state[ul.dataset.sid][ul.dataset.item + ".voice"] || [];
+      ul.textContent = "";
+      list.forEach(function (n) {
+        var li = el("li");
+        li.appendChild(el("span", "note-name", (n.name || "Voice note") + " · " + new Date(n.at).toLocaleDateString("en-US", { month: "short", day: "numeric" })));
+        var au = el("audio");
+        au.controls = true; au.preload = "none"; au.src = "/_blob/" + n.id;
+        li.appendChild(au);
+        ul.appendChild(li);
+      });
+    });
     main.querySelectorAll("details.item").forEach(function (d) {
       var c = itemDone(d.dataset.sid, d.dataset.item), pill = d.querySelector(".pill");
-      pill.textContent = c.done ? c.done + " of " + c.total : "";
+      var vn = (state[d.dataset.sid][d.dataset.item + ".voice"] || []).length;
+      pill.textContent = (c.done ? c.done + " of " + c.total : "") + (vn ? (c.done ? " · " : "") + vn + " voice" : "");
       pill.classList.toggle("is-done", c.done === c.total && c.total > 0);
     });
     var all = 0;
@@ -416,6 +504,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
           var val = Array.isArray(v) ? v.filter(Boolean).map(function (x, i) { return f.field.kind === "list" ? (i + 1) + ". " + x : x; }).join(f.field.kind === "list" ? "\n" : ", ") : (v || "");
           lines.push("- " + f.field.q + (val ? "\n  " + val.replace(/\n/g, "\n  ") : "") + (has(extra) ? "\n  " + String(extra).replace(/\n/g, "\n  ") : ""));
         });
+        var vn = state[s.id][itemId + ".voice"];
+        if (vn && vn.length) lines.push("- Voice notes: " + vn.map(function (n) { return n.name; }).join(", "));
         if (lines.length) out.push("", "## " + itemId, lines.join("\n"));
       });
     });
@@ -434,9 +524,10 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     show(SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : SPEC.sections[0].id);
     paint();
     if (!window.claude || !window.claude.use) { setSave("Saved on this phone"); return; }
-    Promise.all([window.claude.use("db"), window.claude.use("user")]).then(function (r) {
+    Promise.all([window.claude.use("db"), window.claude.use("user"), window.claude.use("assets")]).then(function (r) {
       db = r[0];
       var user = r[1];
+      assets = r[2];
       if (!db) { setSave("Saved on this phone"); document.getElementById("copy-note").textContent = "This link can't save online. Use Copy all my answers and send them to Ruben."; return; }
       if (user && user.can) Promise.resolve(user.can("data.write")).then(function (ok) { if (ok === false) { canSave = false; setSave("Can't save here", "is-bad"); } });
       db.collection(COLL).get().then(function (snap) {

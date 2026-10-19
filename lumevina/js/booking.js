@@ -4,8 +4,8 @@
    Brazilian wax + custom facial) and they book back-to-back as one
    block. Opening hours come from Evelyn's own settings (js/hours.js,
    edited in the dashboard): the usual week, days off, extra days she
-   opens, and times she blocks out. Usually Tuesday–Saturday, 8:00 AM–
-   6:00 PM, lunch 12:00–12:30. With the Glow Membership switched on,
+   opens, and times she blocks out. Tuesday 12–7, Wednesday and Thursday
+   11–7, Friday 10–5, Saturday 9:30–6; closed Sunday and Monday. With the Glow Membership switched on,
    extra Mondays for banked facials (js/extra-days.js) open to members
    first, everyone else from the Friday before.
 
@@ -27,7 +27,7 @@
 
   var CELL = 30;
   /* the usual day, used when hours.js isn't on the page */
-  var STD = { open: 8 * 60, close: 18 * 60, lunch: 12 * 60, lunchEnd: 12 * 60 + 30 };
+  var STD = { open: 11 * 60, close: 19 * 60, lunch: null, lunchEnd: null };
   var H = window.LumevinaHours || null;
   /* v2 switches (js/site-config.js): which held-back features are on,
      and whether Book buttons go to Evelyn's GlossGenius page instead */
@@ -1089,7 +1089,7 @@
     var out = [];
     /* a morning, an afternoon, a late morning: three real openings that
        give a choice of time of day, not three 8:00 AMs */
-    var PREFER = [0, STD.lunchEnd, 10 * 60];
+    var PREFER = [0, 15 * 60, 12 * 60];
     var now = new Date();
     var todayKey = dateKey(now);
     var soon = now.getHours() * 60 + now.getMinutes() + 60;

@@ -23,7 +23,7 @@ export const FACTS = `# The studio
 
 Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.
 
-Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book "New Clients Start Here"; for breakouts, the Acne Program's "New Client Consultation + Treatment". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website.
+Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book "New Clients Start Here"; for breakouts, the Acne Program's "New Client Consultation + Treatment". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website. After-hours visits, outside her hours or on a closed day, are a $32 add-on that she confirms first (the client asks through the Contact form).
 
 Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.
 
@@ -42,9 +42,11 @@ breakouts, start with the Acne Program's New Client Consultation +
 Treatment ($225) instead.
 
 Q: What are your hours?
-A: Tuesday to Saturday, 8:00 AM to 6:00 PM.
+A: Tuesday 12 to 7 PM; Wednesday and Thursday 11 AM to 7 PM;
+Friday 10 AM to 5 PM; Saturday 9:30 AM to 6 PM. Closed Sundays and Mondays.
 The calendar on this page shows her real
-openings up to a month ahead.
+openings up to a month ahead. Need a time outside those hours, or on a day she's closed?
+Evelyn takes after-hours visits for a $32 add-on; ask her first.
 
 Q: How does the deposit work?
 A: A 50% deposit holds your time when you book. It goes toward your

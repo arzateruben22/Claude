@@ -29,6 +29,10 @@ Everything the website's assistant may say lives here, in Evelyn's words, plus t
 | `voice.md` | Real replies she has sent, words she uses and avoids, how she opens and signs off. |
 | `eval/questions.json` | 50 client questions with what a good answer must and must not say. `eval/run-eval.mjs` runs them. |
 
+## Her voice memos
+
+The playbook also takes voice memos per item: recorded in her phone's own recorder, then added with "Add a recording". They're kept in the questionnaire's file store, and the import lists each one under "Voice notes" with its asset id. To fetch one, use the Artifact tool's read with that id as `path`. They're for a later voice assistant in her own voice, which needs her consent, a voice provider, and the real website (the microphone doesn't work inside the preview viewer).
+
 ## Rules that don't depend on her answers, or on the model
 
 `js/ask-rules.js` is plain code: reactions, pregnancy, medications, named conditions, "my skin" questions and emergencies always go to Evelyn before any AI runs, on the website and on the server alike. The bundle builder copies the same rules into the server's TypeScript and the eval.

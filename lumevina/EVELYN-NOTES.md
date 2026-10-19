@@ -118,3 +118,16 @@ Seen in chat but not received as files (label details added; the photos go up on
 Sent at the same link: https://claude.ai/artifact/YChu6itk5K1NpWfrQdF5Ak. 21 questions in four parts: quick confirmations (invisiClear price, Retinal B3 count, the two remaining drafts, the "cash preferred" line, products that need a consult first), shipping and pickup (fee, where, how fast, pickup, returns), her shop (where stock lives, who writes product copy, photos, the site's voice, why buy from her), and ideas to try (routine bundles, refill reminders, a skin quiz, automatic answers, extras in orders, her About story).
 
 **Round two answers:** _(add when they arrive)_
+
+## Hours, after-hours and booking in both places (Oct 19, later)
+
+- **Her hours (from Evelyn):** Tuesday 12–7, Wednesday 11–7, Thursday 11–7, Friday 10–5, Saturday 9:30–6, closed Sunday and Monday. Now the site's default week (js/hours.js); the calendar, the FAQ and the assistant read it. No lunch break is set; add one in the dashboard if she takes one.
+- **After-hours facials:** outside her hours, or on a closed day, for the $32 After-Hours Add-On already on her menu. The site doesn't book those on its own: the Book section and the FAQ send the client to the Contact form with the request pre-written, and she confirms.
+- **Booking in both places for now (Ruben):** new clients book on the website's calendar. Clients who already book with her on GlossGenius can still use it, with a note under the Book heading that all booking is moving here. Set in js/site-config.js (booking.mode "both").
+- **The opening logo animation** was checked on a fresh visit: the black logo loads, the words play, the intro clears, and the headline animates in.
+
+## The Skin Playbook (Oct 19)
+
+- The questionnaire the assistant learns from: https://claude.ai/artifact/R1pRrnH79BwaUoBZexefVQ. Six sections, 120 questions plus optional notes per product. It saves each section as she types, so she can leave and come back; for the saving to reach us, invite her email from the page's Share menu with Contributor access or higher and no public link. "Copy all my answers" is the backup.
+- **Speaking her answers:** the mic key on her phone keyboard dictates into any box. The page can't open the microphone itself inside the preview viewer.
+- **Voice memos:** each item has "Add a recording" for a voice memo from her phone's recorder (.m4a works). They stay with her answers for a later voice assistant in her own voice. That needs her consent, a voice provider, and the real website, where the microphone works.

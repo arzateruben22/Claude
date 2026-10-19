@@ -41,7 +41,12 @@ const render = (f, v, extra) => {
   return out;
 };
 const file = (rel, front, title, lead, fields, answers, itemId) => {
-  const body = fields.map((f) => `## ${f.q}\n\n${render(f, answers[itemId + "." + f.key], answers[itemId + "." + f.key + ".text"])}\n`).join("\n");
+  let body = fields.map((f) => `## ${f.q}\n\n${render(f, answers[itemId + "." + f.key], answers[itemId + "." + f.key + ".text"])}\n`).join("\n");
+  const notes = answers[itemId + ".voice"];
+  if (Array.isArray(notes) && notes.length) {
+    // her recordings stay in the questionnaire's file store; fetch one with the Artifact tool (read, path = the asset id)
+    body += `\n## Voice notes\n\n` + notes.map((n) => `- ${n.name || "Voice note"} (asset ${n.id}, ${String(n.at || "").slice(0, 10)})`).join("\n") + "\n";
+  }
   const answered = fields.some((f) => has(answers[itemId + "." + f.key]) || has(answers[itemId + "." + f.key + ".text"])) ? today : "";
   const fm = "---\n" + Object.entries({ ...front, answered }).map(([k, v]) => `${k}: ${v === "" ? '""' : v}`).join("\n") + "\n---\n";
   fs.mkdirSync(path.dirname(path.join(K, rel)), { recursive: true });

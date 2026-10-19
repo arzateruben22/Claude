@@ -49,7 +49,7 @@ globalThis.window.LumevinaHours = undefined;
 const FACTS = [
   "# The studio",
   "Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.",
-  "Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book \"New Clients Start Here\"; for breakouts, the Acne Program's \"New Client Consultation + Treatment\". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website.",
+  "Booking: in the Book section of this website, where the calendar shows every opening up to a month ahead and a 50% deposit holds the time. New clients book \"New Clients Start Here\"; for breakouts, the Acne Program's \"New Client Consultation + Treatment\". Clients who already book with Evelyn on GlossGenius (https://lumevina.glossgenius.com/) can still use it for now; all booking is moving to the website. After-hours visits, outside her hours or on a closed day, are a $32 add-on that she confirms first (the client asks through the Contact form).",
   "Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
   "Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused).",

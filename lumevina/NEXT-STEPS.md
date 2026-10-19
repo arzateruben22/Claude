@@ -42,6 +42,8 @@ The look: warm beige, white and classic black (tokens at the top of `css/styles.
 5. **Dashboard on her phone:** daily jobs first (orders to ship, client questions, low stock); the Inventory card should use the real catalog.
 6. **Launch plan:** Stripe, Supabase (shared stock, orders, saved addresses), text and email alerts, domain, and how stock stays in sync with her GlossGenius in-person sales (GlossGenius has no public API).
 7. **Privacy page and the preview hub** to match the new look.
+8. **Ask Lumevina, live:** `knowledge/README.md` has the flow. Once Evelyn's playbook answers are in: export the `playbook` collection from https://claude.ai/artifact/R1pRrnH79BwaUoBZexefVQ, run import-playbook.mjs and build-bundle.mjs, deploy `server/functions/ask`, set `ask.endpoint` and `ask.key` in js/site-config.js, then run the eval live (`node knowledge/eval/run-eval.mjs --live`).
+9. **A voice assistant in her voice:** later. Needs her consent, her voice memos from the playbook, a voice provider, and the real website on its own domain (the microphone doesn't work inside the preview viewer).
 
 ## Still to confirm with Evelyn
 
