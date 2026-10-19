@@ -30,7 +30,8 @@ const dataUri = (ref) => {
   return cache.get(rel);
 };
 // a path to one of the site's images or fonts, in HTML, CSS or a script
-const ASSET = /(?:\.\.\/)?(?:img|fonts)\/[A-Za-z0-9_\-/.]+\.(?:png|webp|jpe?g|gif|svg|woff2)/g;
+// only real references, in quotes or url(…), never a file name mentioned in a comment
+const ASSET = /(?<=["']|url\()(?:\.\.\/)?(?:img|fonts)\/[A-Za-z0-9_\-/.]+\.(?:png|webp|jpe?g|gif|svg|woff2)/g;
 const inlineAssets = (text) => text.replace(ASSET, (m) => dataUri(m) || m);
 // a script's text can't contain "</script" inside an inline <script>
 const safeScript = (js) => js.replace(/<\/script/gi, "<\\/script").replace(/<!--/g, "<\\!--");

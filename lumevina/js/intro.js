@@ -94,8 +94,15 @@
     }
     begin();
   };
-  if (document.readyState === "complete") setTimeout(go, 120);
-  else window.addEventListener("load", function () { setTimeout(go, 120); });
+  // the logo's words are real type: wait for her serif too (it's already inside the single file)
+  var ready = function () {
+    var f = document.fonts;
+    if (!f || !f.load) return setTimeout(go, 120);
+    Promise.all([f.load('600 40px "Cormorant Garamond"'), f.load('500 40px "Cormorant Garamond"')])
+      .then(function () { setTimeout(go, 120); }, function () { setTimeout(go, 120); });
+  };
+  if (document.readyState === "complete") ready();
+  else window.addEventListener("load", ready);
   timers.push(setTimeout(go, 4000));
 
   /* soft glow follows the cursor (desktop; harmless on touch) */
