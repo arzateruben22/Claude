@@ -30,9 +30,9 @@
   };
   if (!location.hash) resetTop();   /* a link to #services and the like keeps its place */
 
-  /* once per visit: a second page load in the same session, or a link
-     that points somewhere specific (#services, #book-new…), skips the
-     greeting so nobody waits twice (the head script already hid it) */
+  /* every fresh open of the site plays it; a link that points somewhere
+     specific (#services, #book-new…) or the browser's Back/Forward skips
+     it so nobody waits twice (the head script already hid it) */
   var seen = document.documentElement.classList.contains("no-intro");
   try { sessionStorage.setItem("lumevina_intro_seen", "1"); } catch (e) { /* storage blocked */ }
   if (seen) {
@@ -63,11 +63,28 @@
   [60, 200, 500, 900].forEach(function (t) { timers.push(setTimeout(resetTop, t)); });
   window.addEventListener("load", resetTop);
 
-  /* word-by-word reveal, driven by each element's data-delay */
-  intro.querySelectorAll("[data-delay]").forEach(function (el) {
-    var delay = parseInt(el.getAttribute("data-delay"), 10) || 0;
-    timers.push(setTimeout(function () { el.classList.add("intro-anim"); }, delay));
-  });
+  /* the greeting starts once the logo is on screen (not while the page is
+     still loading, or it would be over before anyone sees it): the mark
+     settles in, the words follow one by one, then the veil lifts */
+  var started = false;
+  var begin = function () {
+    if (started || done) return;
+    started = true;
+    intro.classList.add("intro-go");
+    intro.querySelectorAll("[data-delay]").forEach(function (el) {
+      var delay = parseInt(el.getAttribute("data-delay"), 10) || 0;
+      timers.push(setTimeout(function () { el.classList.add("intro-anim"); }, delay));
+    });
+    /* auto-lift: it's a greeting, not a wait (the words land by ~1.3s) */
+    timers.push(setTimeout(function () { dismiss(); }, 2600));
+  };
+  var mark = intro.querySelector(".intro-mark");
+  if (!mark || (mark.complete && mark.naturalWidth)) setTimeout(begin, 60);
+  else {
+    mark.addEventListener("load", begin);
+    mark.addEventListener("error", begin);
+    timers.push(setTimeout(begin, 1500));   /* a slow logo never holds the page */
+  }
 
   /* soft glow follows the cursor (desktop; harmless on touch) */
   var glow = document.getElementById("intro-glow");
@@ -116,6 +133,4 @@
   window.addEventListener("wheel", onWheel, { passive: true });
   window.addEventListener("touchmove", onWheel, { passive: true });
 
-  /* auto-lift soon: it's a greeting, not a wait (the words land by ~1.1s) */
-  timers.push(setTimeout(function () { dismiss(); }, 1500));
 })();

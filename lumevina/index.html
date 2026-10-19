@@ -18,7 +18,9 @@
   <link rel="preload" href="fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <!-- the arrival greeting plays once per visit, and never on a link to a specific spot -->
-  <script>try{if(sessionStorage.getItem("lumevina_intro_seen")||location.hash)document.documentElement.classList.add("no-intro")}catch(e){}</script>
+  <!-- the arrival plays on every fresh open of the site; skipped for a link to a
+       section (#book…) and for the browser's Back/Forward, so nobody waits twice -->
+  <script>try{var nv=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];if(location.hash||(nv&&nv.type==="back_forward"))document.documentElement.classList.add("no-intro")}catch(e){}</script>
   <!-- what's switched on, and where clients book: one file to change (js/site-config.js) -->
   <script src="js/site-config.js"></script>
 </head>
@@ -41,7 +43,7 @@
     <span class="intro-float" style="top:74%;left:88%;animation-delay:2s"></span>
 
     <div class="intro-inner">
-      <img class="intro-mark" src="img/logo-ink.png" alt="Lumevina Aesthetics Spa" aria-hidden="true" width="320" height="200">
+      <img class="intro-mark" src="img/logo-cream.png" alt="Lumevina Aesthetics Spa" aria-hidden="true" width="320" height="200">
       <p class="intro-tag">
         <span class="intro-word" data-delay="520">Where</span>
         <span class="intro-word" data-delay="620">glow</span>
