@@ -32,3 +32,11 @@ _(not answered yet)_
 ## Your tip
 
 _(not answered yet)_
+
+## Pairs well with, and what not to use it with
+
+_(not answered yet)_
+
+## How long it usually lasts
+
+_(not answered yet)_

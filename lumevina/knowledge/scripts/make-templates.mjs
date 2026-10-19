@@ -1,8 +1,10 @@
 // Writes the empty knowledge files Evelyn's playbook answers fill:
-//   knowledge/concerns/<id>.md      one per skin concern
-//   knowledge/treatments/<id>.md    one per treatment's aftercare
-//   knowledge/products/<id>.md      one per live product (label facts filled, her notes empty)
-//   knowledge/routine.md, hard-lines.md, voice.md
+//   knowledge/client-questions/<id>.md   one per group of questions clients text her
+//   knowledge/concerns/<id>.md           one per skin concern
+//   knowledge/treatments/explained/<id>.md  one per treatment: what to expect
+//   knowledge/treatments/<id>.md         one per treatment's aftercare
+//   knowledge/products/<id>.md           one per live product (label facts filled, her notes empty)
+//   knowledge/visits.md, routine.md, materials.md, hard-lines.md, voice.md
 //
 // Safe to run again: a file that already has answers in it is left alone.
 //   node knowledge/scripts/make-templates.mjs      (from lumevina/)
@@ -29,6 +31,17 @@ const write = (file, text) => {
   fs.writeFileSync(file, text);
 };
 
+for (const g of S.CLIENT_QUESTION_GROUPS) {
+  write(path.join(K, "client-questions", g.id + ".md"),
+    front({ id: g.id, kind: "client-questions", title: g.title, source: "playbook", answered: "" }) +
+    `\n# Questions clients ask: ${g.title}\n\nThe exact questions clients text Evelyn, with her answers. Empty sections mean she hasn't answered yet: the assistant hands those questions to her.\n\n` +
+    g.questions.map(section).join("\n"));
+}
+for (const t of S.TREATMENT_DETAILS) {
+  write(path.join(K, "treatments", "explained", t.id + ".md"),
+    front({ id: t.id, kind: "treatment-explained", title: t.title, source: "playbook", answered: "" }) +
+    `\n# ${t.title}: what to expect\n\n` + S.TREATMENT_DETAIL_FIELDS.map(section).join("\n"));
+}
 for (const c of S.CONCERNS) {
   write(path.join(K, "concerns", c.id + ".md"),
     front({ id: c.id, kind: "concern", title: c.title, source: "playbook", answered: "" }) +
@@ -49,6 +62,11 @@ for (const p of CAT.products.filter((x) => !x.draft)) {
     `\nLabel facts above come from the product's own packaging. Everything below is Evelyn's.\n\n` +
     S.PRODUCT_FIELDS.map(section).join("\n"));
 }
+write(path.join(K, "visits.md"), front({ id: "visits", kind: "visits", title: "Visits and the studio", source: "playbook", answered: "" }) +
+  "\n# Visits and the studio\n\n" + S.VISIT_FIELDS.map(section).join("\n"));
+write(path.join(K, "materials.md"), front({ id: "materials", kind: "materials", title: "Her own materials", source: "playbook", answered: "" }) +
+  "\n# Her own materials\n\nThings Evelyn already had written (aftercare cards, product guides, posts, texts she sends a lot), from her screenshots.\n\n" +
+  S.MATERIALS_FIELDS.map(section).join("\n"));
 write(path.join(K, "routine.md"), front({ id: "routine", kind: "routine", title: "Her products, in order", source: "playbook", answered: "" }) +
   "\n# Her products, in order\n\n" + S.ROUTINE_FIELDS.map(section).join("\n"));
 write(path.join(K, "hard-lines.md"), front({ id: "hard-lines", kind: "hard-lines", title: "Hard lines", source: "playbook", answered: "" }) +

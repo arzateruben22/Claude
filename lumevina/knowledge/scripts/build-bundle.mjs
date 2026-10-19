@@ -4,7 +4,8 @@
 //
 //   node knowledge/scripts/build-bundle.mjs      (from lumevina/)
 //
-// Sources: knowledge/prompt.md, every knowledge *.md with answers in it, the
+// Sources: knowledge/prompt.md, every knowledge *.md with answers in it (her
+// screenshots' transcripts are already folded into those by import-playbook.mjs), the
 // homepage's FAQ and policies (index.html), the catalog (js/catalog.js), the
 // studio facts below, and the hand-off rules (js/ask-rules.js).
 
@@ -68,18 +69,26 @@ const FACTS = [
 // ── her playbook: only sections with answers ──
 const md = (p) => fs.existsSync(p) ? read(p) : "";
 const answered = (t) => /answered: "?\d{4}/.test(t);
-const body = (t) => t.replace(/^---[\s\S]*?---\s*/, "").replace(/\n## [^\n]+\n\n_\(not answered yet\)_\n?/g, "\n").trim();
+const body = (t) => t.replace(/^---[\s\S]*?---\s*/, "").replace(/<!--[\s\S]*?-->\n?/g, "")
+  .replace(/\n## [^\n]+\n\n_\(not answered yet\)_\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 const dir = (d) => fs.existsSync(path.join(K, d)) ? fs.readdirSync(path.join(K, d)).filter((f) => f.endsWith(".md")).sort().map((f) => md(path.join(K, d, f))) : [];
 const pick = (list) => list.filter(answered).map(body);
 const concerns = pick(dir("concerns")), treatments = pick(dir("treatments")), products = pick(dir("products"));
+const clientQs = pick(dir("client-questions")), explained = pick(dir("treatments/explained"));
+const one = (f) => answered(md(path.join(K, f))) ? body(md(path.join(K, f))) : "";
+const visits = one("visits.md"), materials = one("materials.md");
 const routine = answered(md(path.join(K, "routine.md"))) ? body(md(path.join(K, "routine.md"))) : "";
 const hardLines = answered(md(path.join(K, "hard-lines.md"))) ? body(md(path.join(K, "hard-lines.md"))) : "";
 const voice = answered(md(path.join(K, "voice.md"))) ? body(md(path.join(K, "voice.md"))) : "";
 const knowledge = [
-  concerns.length ? "# Skin concerns, in Evelyn's words\n\n" + concerns.join("\n\n---\n\n") : "",
+  clientQs.length ? "# Questions clients ask, answered in Evelyn's words\n\n" + clientQs.join("\n\n---\n\n") : "",
+  explained.length ? "# Treatments explained, in Evelyn's words\n\n" + explained.join("\n\n---\n\n") : "",
   treatments.length ? "# Aftercare, in Evelyn's words\n\n" + treatments.join("\n\n---\n\n") : "",
+  concerns.length ? "# Skin concerns, in Evelyn's words\n\n" + concerns.join("\n\n---\n\n") : "",
+  visits ? "# Visits and the studio, in Evelyn's words\n\n" + visits : "",
   routine ? "# Her routine and starting actives\n\n" + routine : "",
-  products.length ? "# Her notes on products\n\n" + products.join("\n\n---\n\n") : ""
+  products.length ? "# Her notes on products\n\n" + products.join("\n\n---\n\n") : "",
+  materials ? "# From her own materials\n\n" + materials : ""
 ].filter(Boolean).join("\n\n");
 const empty = !knowledge;
 
@@ -124,4 +133,4 @@ export type RuleKind = { kind: string; any: Rule[]; both?: Rule[] };
 export const RULES: { urgent: Rule; kinds: RuleKind[] } = ${JSON.stringify(rules, null, 1)};
 `;
 fs.writeFileSync(path.join(root, "server/functions/_shared/knowledge.ts"), ts);
-console.log(`bundle: prompt ${PROMPT.length} chars, facts ${FACTS.length} (${policies.length} FAQ & policy items), playbook ${knowledge.length} chars (${empty ? "empty" : `${concerns.length} concerns, ${treatments.length} treatments, ${products.length} product notes`}), shelf ${shelf.length}`);
+console.log(`bundle: prompt ${PROMPT.length} chars, facts ${FACTS.length} (${policies.length} FAQ & policy items), playbook ${knowledge.length} chars (${empty ? "empty" : `${clientQs.length} client-question groups, ${explained.length} treatments explained, ${treatments.length} aftercare, ${concerns.length} concerns, ${products.length} product notes${visits ? ", visits" : ""}${materials ? ", materials" : ""}`}), shelf ${shelf.length}`);

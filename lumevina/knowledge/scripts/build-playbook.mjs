@@ -23,7 +23,11 @@ const label = (p) => p.name + (p.brand !== "Face Reality" ? " (" + p.brand + ")"
 // ── the question list, as data the page renders ──
 const spec = {
   sections: S.SECTIONS,
+  clientQuestions: S.CLIENT_QUESTION_GROUPS.map((g) => ({ id: g.id, title: g.title,
+    fields: g.questions.map((x) => ({ key: x.key, kind: "text", q: x.q, ph: "Your answer, as you'd text it", rows: 2 })) })),
   concerns: S.CONCERNS, concernFields: S.CONCERN_FIELDS,
+  treatmentDetails: S.TREATMENT_DETAILS, treatmentDetailFields: S.TREATMENT_DETAIL_FIELDS,
+  visitFields: S.VISIT_FIELDS, materialsFields: S.MATERIALS_FIELDS,
   aftercare: S.TREATMENT_AFTERCARE, aftercareFields: S.AFTERCARE_FIELDS,
   routineFields: S.ROUTINE_FIELDS,
   products: byType.map((g) => ({ cat: g.cat, items: g.items.map((p) => ({ id: p.id, name: label(p), size: p.size || "" })) })),
@@ -80,6 +84,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   }
   .tabs { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.45rem; }
   .tabs::-webkit-scrollbar { display: none; }
+  @media (min-width: 720px) { .tabs { flex-wrap: wrap; overflow: visible; } }
   .tab {
     flex: none; display: inline-flex; align-items: center; gap: 0.4rem; min-height: 38px; padding: 0.4rem 0.8rem;
     border: 1px solid var(--edge); border-radius: 999px; background: var(--card); color: var(--ink);
@@ -106,7 +111,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     padding: 0.95rem 1.05rem; font-weight: 600; font-size: 1rem;
   }
   details.item > summary::-webkit-details-marker { display: none; }
-  details.item > summary .pill { flex: none; font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--wash); font-variant-numeric: tabular-nums; }
+  details.item > summary .pill { flex: none; white-space: nowrap; font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--wash); font-variant-numeric: tabular-nums; }
+  details.item > summary .pill:empty { display: none; }
   details.item > summary .pill.is-done { background: rgba(78, 106, 69, 0.14); color: var(--sage); }
   details.item > summary .sub { display: block; font-size: 0.78rem; font-weight: 400; color: var(--ink-soft); }
   details.item[open] > summary { border-bottom: 1px solid var(--edge); }
@@ -132,13 +138,27 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
 
   .hint { display: flex; align-items: center; gap: 0.45rem; margin: 0.2rem 0 0; font-size: 0.84rem; color: var(--ink-soft); }
   .hint svg { flex: none; }
-  .voice { display: grid; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px dashed var(--edge); }
+  .media { display: grid; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px dashed var(--edge); }
   .opt { font-size: 0.74rem; font-weight: 500; color: var(--ink-soft); margin-left: 0.4rem; }
   .btn.small { min-height: 40px; padding: 0.6rem 1rem; font-size: 0.88rem; width: max-content; display: inline-flex; align-items: center; gap: 0.45rem; }
   .notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
   .notes li { display: grid; gap: 0.3rem; font-size: 0.82rem; color: var(--ink-soft); }
   .notes audio { width: 100%; max-width: 100%; }
-  .voice-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); min-height: 1.2em; }
+  .media-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); min-height: 1.2em; }
+  .shots { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr)); gap: 0.5rem; }
+  .shots:empty { display: none; }
+  .shots li { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden; border: 1px solid var(--edge); background: var(--field); }
+  .shots a { display: block; width: 100%; height: 100%; color: var(--ink-soft); text-decoration: none; }
+  .shots img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .shots .file { display: grid; place-content: center; gap: 0.2rem; height: 100%; padding: 0.4rem; text-align: center; font-size: 0.7rem; overflow-wrap: anywhere; }
+  .shots .file b { font-size: 0.8rem; color: var(--ink); }
+  .shot-x {
+    position: absolute; top: 4px; right: 4px; min-width: 30px; height: 30px; padding: 0 0.45rem; border-radius: 999px;
+    border: 0; background: rgba(22, 20, 18, 0.72); color: #fff; font: 500 0.78rem/1 var(--font); cursor: pointer;
+  }
+  .shot-x[data-armed] { background: var(--danger); }
+  .shot-x:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .media.is-lead { padding-top: 0; border-top: 0; }
   .finish { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--edge); display: grid; gap: 0.75rem; }
   .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .btn { font: 500 0.95rem/1 var(--font); padding: 0.85rem 1.3rem; min-height: 46px; border-radius: 999px; border: 1px solid var(--accent); cursor: pointer; background: var(--accent); color: var(--on-accent); }
@@ -154,8 +174,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     <h1>Evelyn's <em>Skin Playbook</em></h1>
     <p class="lede">Everything you'd tell a client, in your own words. The website's assistant answers only from
     what you write here, and hands you anything it can't find. Fill it in over a few sittings; it saves as you go,
-    and nothing is pre-filled. Type, or speak: the mic key on your keyboard works in every box. You can also add
-    voice memos, which stay with your answers.</p>
+    and nothing is pre-filled. Type, speak (the mic key on your keyboard), or add screenshots of things you've
+    already written: old texts to clients, aftercare cards, Instagram posts.</p>
   </header>
 
   <div class="bar">
@@ -200,7 +220,11 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       FIELDS.push({ sid: sid, key: itemId + "." + f.key, item: itemId, field: f, text: itemId + "." + f.key + ".text" });
     });
   };
+  SPEC.clientQuestions.forEach(function (g) { addFields("client-questions", g.id, g.fields); });
   SPEC.concerns.forEach(function (c) { addFields("concerns", c.id, SPEC.concernFields); });
+  SPEC.treatmentDetails.forEach(function (t) { addFields("treatments", t.id, SPEC.treatmentDetailFields); });
+  addFields("visits", "visits", SPEC.visitFields);
+  addFields("materials", "materials", SPEC.materialsFields);
   SPEC.aftercare.forEach(function (t) { addFields("aftercare", t.id, SPEC.aftercareFields); });
   addFields("routine", "routine", SPEC.routineFields);
   SPEC.products.forEach(function (g) { g.items.forEach(function (p) { addFields("products", p.id, SPEC.productFields); }); });
@@ -265,11 +289,11 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       }
       q.appendChild(l);
     }
-    if (f.kind === "text") q.appendChild(box(sid, key, "", f.q, 3));
+    if (f.kind === "text") q.appendChild(box(sid, key, f.ph || "", f.q, f.rows || 3));
     else if (f.kind !== "list") q.appendChild(box(sid, key + ".text", f.text || "In your words", (f.text || "More") + ": " + f.q, 2));
     return q;
   };
-  var item = function (sid, it, fields, sub) {
+  var item = function (sid, it, fields, sub, shotsFirst) {
     var d = el("details", "item");
     d.dataset.sid = sid; d.dataset.item = it.id;
     var s = el("summary");
@@ -280,37 +304,54 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     s.appendChild(el("span", "pill", ""));
     d.appendChild(s);
     var b = el("div", "body");
+    if (shotsFirst) b.appendChild(shotsRow(sid, it.id, true));
     fields.forEach(function (f) { b.appendChild(question(sid, it.id, f)); });
+    if (!shotsFirst) b.appendChild(shotsRow(sid, it.id));
     b.appendChild(voiceRow(sid, it.id));
     d.appendChild(b);
     return d;
   };
 
-  /* ── voice memos: recorded in her phone's own recorder, kept with the answers.
-     (The page itself can't open the microphone inside this viewer.) ── */
+  /* ── voice memos and screenshots, kept with the answers. Voice memos are
+     recorded in her phone's own recorder (the page can't open the microphone
+     inside this viewer); screenshots come from her photo library. ── */
   var assets = null;
-  var voiceRow = function (sid, itemId) {
-    var v = el("div", "voice");
+  var MIC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+  var PIC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>';
+  var mediaRow = function (sid, itemId, kind, title, hint, button, icon, accept, lead) {
+    var v = el("div", "media" + (lead ? " is-lead" : ""));
     var t = el("p", "q-t");
-    t.appendChild(document.createTextNode("Voice note"));
-    t.appendChild(el("span", "opt", "optional"));
+    t.appendChild(document.createTextNode(title));
+    if (!lead) t.appendChild(el("span", "opt", "optional"));
     v.appendChild(t);
-    v.appendChild(el("p", "q-h", "Record a voice memo on your phone and add it here. It stays with your answers, and later it can help a voice assistant sound like you."));
-    var lab = el("label", "btn btn-ghost small");
-    lab.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-    lab.appendChild(document.createTextNode("Add a recording"));
-    var inp = el("input");
-    inp.type = "file"; inp.accept = "audio/*,video/*"; inp.hidden = true;
-    inp.dataset.sid = sid; inp.dataset.item = itemId;
-    inp.setAttribute("aria-label", "Add a voice note");
-    lab.appendChild(inp);
-    v.appendChild(lab);
-    var list = el("ul", "notes");
+    v.appendChild(el("p", "q-h", hint));
+    var list = el("ul", kind === "shots" ? "shots" : "notes");
     list.dataset.sid = sid; list.dataset.item = itemId;
-    v.appendChild(list);
-    v.appendChild(el("p", "voice-status"));
+    var lab = el("label", "btn btn-ghost small");
+    lab.innerHTML = icon;
+    lab.appendChild(document.createTextNode(button));
+    var inp = el("input");
+    inp.type = "file"; inp.accept = accept; inp.hidden = true;
+    if (kind === "shots") inp.multiple = true;
+    inp.dataset.sid = sid; inp.dataset.item = itemId; inp.dataset.kind = kind;
+    inp.setAttribute("aria-label", button);
+    lab.appendChild(inp);
+    if (kind === "shots") { v.appendChild(list); v.appendChild(lab); } else { v.appendChild(lab); v.appendChild(list); }
+    v.appendChild(el("p", "media-status"));
     return v;
   };
+  var voiceRow = function (sid, itemId) {
+    return mediaRow(sid, itemId, "voice", "Voice note",
+      "Record a voice memo on your phone and add it here. It stays with your answers, and later it can help a voice assistant sound like you.",
+      "Add a recording", MIC, "audio/*,video/*");
+  };
+  var shotsRow = function (sid, itemId, lead) {
+    return mediaRow(sid, itemId, "shots", lead ? "Add your screenshots" : "Screenshots",
+      lead ? "Add as many as you like, a few at a time. Photos of printed cards work too."
+        : "Already answered this somewhere? Screenshot the text, card or post and add it here; it doesn't matter which question it answers. The assistant reads them alongside what you type.",
+      "Add screenshots", PIC, "image/*,application/pdf", lead);
+  };
+
   /* what the store accepts: MP4 and WebM containers, so a phone voice memo
      (.m4a, an MP4 container) is stored as video/mp4 and plays back as audio */
   var mediaType = function (file) {
@@ -319,18 +360,77 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     if (/\.(webm|weba)$/.test(n) || /webm/.test(t)) return "video/webm";
     return null;
   };
-  main.addEventListener("change", function (e) {
-    var inp = e.target;
-    if (!inp.matches || !inp.matches("input[type=file]")) return;
-    var file = inp.files && inp.files[0];
-    if (!file) return;
-    var status = inp.closest(".voice").querySelector(".voice-status");
-    var sid = inp.dataset.sid, itemId = inp.dataset.item;
-    inp.value = "";
+  var MAX = 20 * 1024 * 1024;
+  var shotType = function (file) {
+    var n = (file.name || "").toLowerCase(), t = (file.type || "").toLowerCase();
+    if (t === "image/jpg") t = "image/jpeg";
+    if (/^(image\/(png|jpeg|webp|gif)|application\/pdf)$/.test(t)) return t;
+    if (/\.png$/.test(n)) return "image/png";
+    if (/\.jpe?g$/.test(n)) return "image/jpeg";
+    if (/\.webp$/.test(n)) return "image/webp";
+    if (/\.pdf$/.test(n)) return "application/pdf";
+    return null;
+  };
+  /* an iPhone photo the store can't take (HEIC), or one over the limit:
+     redrawn as a JPEG, at most 2400px on its long side */
+  var asJpeg = function (file) {
+    var draw = function (src, w, h) {
+      var k = Math.min(1, 2400 / Math.max(w, h)), c = document.createElement("canvas");
+      c.width = Math.round(w * k); c.height = Math.round(h * k);
+      c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+      return new Promise(function (ok, no) { c.toBlob(function (b) { b ? ok(b) : no(new Error("encode")); }, "image/jpeg", 0.88); });
+    };
+    if (window.createImageBitmap) {
+      return createImageBitmap(file).then(function (bm) { return draw(bm, bm.width, bm.height); });
+    }
+    return new Promise(function (ok, no) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () { URL.revokeObjectURL(url); draw(img, img.naturalWidth, img.naturalHeight).then(ok, no); };
+      img.onerror = function () { URL.revokeObjectURL(url); no(new Error("decode")); };
+      img.src = url;
+    });
+  };
+  var shotFailure = function (code) {
+    return code === "not_granted" ? "this link can't store screenshots from you"
+      : code === "too_large" ? "it's over 20 MB"
+      : code === "unsupported_type" ? "that kind of file can't be stored here (a screenshot or PDF works)"
+      : code === "quota_or_state" ? "storage for this link is full"
+      : "the upload didn't go through";
+  };
+  var addShot = function (file) {
+    var type = shotType(file);
+    var isImage = /^image\//i.test(file.type || "") || /\.(heic|heif|png|jpe?g|webp|gif|bmp|tiff?)$/i.test(file.name || "");
+    if (type && file.size <= MAX) return assets.upload(file, { type: type });
+    if (!isImage) return Promise.reject({ code: type ? "too_large" : "unsupported_type" });
+    return asJpeg(file).then(function (jpg) { return assets.upload(jpg, { type: "image/jpeg" }); },
+      function () { return Promise.reject({ code: "unsupported_type" }); });
+  };
+  var addShots = function (sid, itemId, files, status) {
+    if (!assets) { status.textContent = "This link can't store screenshots. Text them to Ruben instead; your typed answers still save."; return; }
+    var added = 0, failed = [], i = 0;
+    var next = function () {
+      if (i >= files.length) {
+        status.textContent = (added ? "Added " + (added === 1 ? "1 screenshot" : added + " screenshots") + "." : "")
+          + (failed.length ? (added ? " " : "") + (failed.length === 1 ? "One" : failed.length) + " couldn't be added: " + failed[0] + ". Text " + (failed.length === 1 ? "it" : "them") + " to Ruben instead." : "");
+        return;
+      }
+      var file = files[i++];
+      status.textContent = files.length > 1 ? "Uploading " + i + " of " + files.length + "…" : "Uploading…";
+      addShot(file).then(function (r) {
+        var a = state[sid], k = itemId + ".shots", list = Array.isArray(a[k]) ? a[k].slice() : [];
+        list.push({ id: r.id, name: file.name || "Screenshot", at: new Date().toISOString(), size: r.sizeBytes, type: r.contentType });
+        a[k] = list;
+        added++;
+        schedule(sid, 0);
+      }, function (err) { failed.push(shotFailure(err && err.code)); }).then(next);
+    };
+    next();
+  };
+  var addVoice = function (sid, itemId, file, status) {
     if (!assets) { status.textContent = "This link can't store recordings. Text the memo to Ruben instead; your typed answers still save."; return; }
     var type = mediaType(file);
     if (!type) { status.textContent = "That file type can't be stored here. A voice memo (.m4a) or a video works, or text it to Ruben."; return; }
-    if (file.size > 20 * 1024 * 1024) { status.textContent = "That one's over 20 MB. A shorter memo, or text it to Ruben."; return; }
+    if (file.size > MAX) { status.textContent = "That one's over 20 MB. A shorter memo, or text it to Ruben."; return; }
     status.textContent = "Uploading…";
     assets.upload(file, { type: type }).then(function (r) {
       var a = state[sid], list = Array.isArray(a[itemId + ".voice"]) ? a[itemId + ".voice"].slice() : [];
@@ -344,6 +444,31 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         : code === "too_large" ? "That one's too big. A shorter memo, or text it to Ruben."
         : "Couldn't upload that. Try again, or text the memo to Ruben.";
     });
+  };
+  main.addEventListener("change", function (e) {
+    var inp = e.target;
+    if (!inp.matches || !inp.matches("input[type=file]")) return;
+    var files = Array.prototype.slice.call(inp.files || []);
+    inp.value = "";
+    if (!files.length) return;
+    var status = inp.closest(".media").querySelector(".media-status");
+    if (inp.dataset.kind === "shots") addShots(inp.dataset.sid, inp.dataset.item, files, status);
+    else addVoice(inp.dataset.sid, inp.dataset.item, files[0], status);
+  });
+  /* removing a screenshot takes two taps; the file itself is deleted with it */
+  main.addEventListener("click", function (e) {
+    var x = e.target.closest(".shot-x");
+    if (!x) return;
+    e.preventDefault();
+    if (!x.hasAttribute("data-armed")) {
+      x.setAttribute("data-armed", ""); x.textContent = "Remove";
+      setTimeout(function () { if (x.isConnected) { x.removeAttribute("data-armed"); x.textContent = "×"; } }, 4000);
+      return;
+    }
+    var ul = x.closest("ul.shots"), sid = ul.dataset.sid, k = ul.dataset.item + ".shots", id = x.dataset.id;
+    state[sid][k] = (state[sid][k] || []).filter(function (n) { return n.id !== id; });
+    schedule(sid, 0);
+    if (assets && assets.delete) assets.delete(id).catch(function () { /* already gone, or not ours to delete */ });
   });
 
   SPEC.sections.forEach(function (s, i) {
@@ -361,12 +486,20 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     head.appendChild(h);
     head.appendChild(el("p", null, s.intro));
     var hint = el("p", "hint");
-    hint.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-    hint.appendChild(document.createTextNode("Speak instead of typing: tap the mic key on your keyboard, in any box."));
+    hint.innerHTML = MIC;
+    hint.appendChild(document.createTextNode("Speak instead of typing: tap the mic key on your keyboard, in any box. Or add screenshots on any card."));
     head.appendChild(hint);
     sec.appendChild(head);
 
+    if (s.id === "client-questions") SPEC.clientQuestions.forEach(function (g, gi) {
+      var d = item("client-questions", g, g.fields);
+      if (gi === 0) d.open = true;
+      sec.appendChild(d);
+    });
     if (s.id === "concerns") SPEC.concerns.forEach(function (c) { sec.appendChild(item("concerns", c, SPEC.concernFields)); });
+    if (s.id === "treatments") SPEC.treatmentDetails.forEach(function (t) { sec.appendChild(item("treatments", t, SPEC.treatmentDetailFields)); });
+    if (s.id === "visits") { var vi = item("visits", { id: "visits", title: "Before they walk in" }, SPEC.visitFields); vi.open = true; sec.appendChild(vi); }
+    if (s.id === "materials") { var mt = item("materials", { id: "materials", title: "Screenshots and photos" }, SPEC.materialsFields, null, true); mt.open = true; sec.appendChild(mt); }
     if (s.id === "aftercare") SPEC.aftercare.forEach(function (t) { sec.appendChild(item("aftercare", t, SPEC.aftercareFields)); });
     if (s.id === "routine") { var r = item("routine", { id: "routine", title: "Routine and starting actives" }, SPEC.routineFields); r.open = true; sec.appendChild(r); }
     if (s.id === "products") SPEC.products.forEach(function (g) {
@@ -392,6 +525,9 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     });
     main.querySelectorAll("ul.notes").forEach(function (ul) {
       var list = state[ul.dataset.sid][ul.dataset.item + ".voice"] || [];
+      var sig = list.map(function (n) { return n.id; }).join(",");
+      if (ul.dataset.sig === sig) return;
+      ul.dataset.sig = sig;
       ul.textContent = "";
       list.forEach(function (n) {
         var li = el("li");
@@ -402,10 +538,44 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         ul.appendChild(li);
       });
     });
+    main.querySelectorAll("ul.shots").forEach(function (ul) {
+      var list = state[ul.dataset.sid][ul.dataset.item + ".shots"] || [];
+      var sig = list.map(function (n) { return n.id; }).join(",");
+      if (ul.dataset.sig === sig) return;
+      ul.dataset.sig = sig;
+      ul.textContent = "";
+      list.forEach(function (n) {
+        var li = el("li"), a = el("a");
+        a.href = "/_blob/" + n.id; a.target = "_blank"; a.rel = "noopener";
+        a.setAttribute("aria-label", "Open " + (n.name || "screenshot"));
+        if (/^image\//.test(n.type || "")) {
+          var im = el("img");
+          im.alt = ""; im.loading = "lazy"; im.decoding = "async"; im.src = "/_blob/" + n.id;
+          im.onerror = function () { a.textContent = ""; var f = el("span", "file"); f.appendChild(el("b", null, "Can't show")); f.appendChild(document.createTextNode(n.name || "")); a.appendChild(f); };
+          a.appendChild(im);
+        } else {
+          var f = el("span", "file");
+          f.appendChild(el("b", null, "PDF"));
+          f.appendChild(document.createTextNode(n.name || ""));
+          a.appendChild(f);
+        }
+        li.appendChild(a);
+        var x = el("button", "shot-x", "×");
+        x.type = "button"; x.dataset.id = n.id;
+        x.setAttribute("aria-label", "Remove " + (n.name || "screenshot"));
+        li.appendChild(x);
+        ul.appendChild(li);
+      });
+    });
     main.querySelectorAll("details.item").forEach(function (d) {
       var c = itemDone(d.dataset.sid, d.dataset.item), pill = d.querySelector(".pill");
       var vn = (state[d.dataset.sid][d.dataset.item + ".voice"] || []).length;
-      pill.textContent = (c.done ? c.done + " of " + c.total : "") + (vn ? (c.done ? " · " : "") + vn + " voice" : "");
+      var sn = (state[d.dataset.sid][d.dataset.item + ".shots"] || []).length;
+      var bits = [];
+      if (c.done) bits.push(c.done + " of " + c.total);
+      if (sn) bits.push(sn + (sn === 1 ? " pic" : " pics"));
+      if (vn) bits.push(vn + " voice");
+      pill.textContent = bits.join(" · ");
       pill.classList.toggle("is-done", c.done === c.total && c.total > 0);
     });
     var all = 0;
@@ -506,6 +676,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         });
         var vn = state[s.id][itemId + ".voice"];
         if (vn && vn.length) lines.push("- Voice notes: " + vn.map(function (n) { return n.name; }).join(", "));
+        var sn = state[s.id][itemId + ".shots"];
+        if (sn && sn.length) lines.push("- Screenshots (saved with the playbook): " + sn.map(function (n) { return n.name; }).join(", "));
         if (lines.length) out.push("", "## " + itemId, lines.join("\n"));
       });
     });
@@ -561,7 +733,8 @@ fs.writeFileSync(path.join(root, "knowledge/playbook/evelyn-playbook.html"), htm
 const md = [];
 md.push("# Evelyn's Skin Playbook: the questions", "",
   "The questionnaire Evelyn fills in over several sittings. Her answers become the knowledge the website's assistant answers from (see knowledge/README.md). Generated from knowledge/scripts/playbook-spec.mjs; edit that file, not this one.", "",
-  "Nothing is pre-filled. Every tap option is one of her own product or treatment names, never a claim.", "");
+  "Nothing is pre-filled. Every tap option is one of her own product or treatment names, never a claim.", "",
+  "Every card also has **Add screenshots** (old texts, aftercare cards, product guides, Instagram posts; images or PDFs) and **Add a recording** (voice memos). `read-screenshots.mjs` transcribes the screenshots so the assistant can learn from them.", "");
 const fieldLine = (f) => {
   let s = `- **${f.q}**`;
   if (f.hint) s += ` ${f.hint}`;
@@ -576,9 +749,23 @@ const fieldLine = (f) => {
 };
 for (const s of S.SECTIONS) {
   md.push(`## ${s.title}`, "", s.intro, "");
+  if (s.id === "client-questions") S.CLIENT_QUESTION_GROUPS.forEach((g) => {
+    md.push(`### ${g.title}`, "");
+    g.questions.forEach((x) => md.push(`- ${x.q}`));
+    md.push("");
+  });
   if (s.id === "concerns") {
     md.push("For each of: " + S.CONCERNS.map((c) => c.title).join("; ") + ".", "");
     S.CONCERN_FIELDS.forEach((f) => md.push(fieldLine(f)));
+  }
+  if (s.id === "treatments") {
+    md.push("For each of: " + S.TREATMENT_DETAILS.map((t) => t.title).join("; ") + ".", "");
+    S.TREATMENT_DETAIL_FIELDS.forEach((f) => md.push(fieldLine(f)));
+  }
+  if (s.id === "visits") S.VISIT_FIELDS.forEach((f) => md.push(fieldLine(f)));
+  if (s.id === "materials") {
+    md.push("Screenshots first, as many as she likes. Then:", "");
+    S.MATERIALS_FIELDS.forEach((f) => md.push(fieldLine(f)));
   }
   if (s.id === "aftercare") {
     md.push("For each of: " + S.TREATMENT_AFTERCARE.map((t) => t.title).join("; ") + ".", "");
@@ -594,7 +781,11 @@ for (const s of S.SECTIONS) {
   md.push("");
 }
 md.push("## Where the answers go", "",
-  "Each section saves to its own document (`playbook/<section>`) in the questionnaire's database as she types. `knowledge/scripts/import-playbook.mjs` turns an export of those documents into the knowledge files, one per concern, treatment and product, with the date. `build-bundle.mjs` then packs them, with the FAQ, policies and catalog, into what the server's assistant reads.", "");
+  "Each section saves to its own document (`playbook/<section>`) in the questionnaire's database as she types; screenshots and voice memos are stored with the questionnaire and listed in those documents. `knowledge/scripts/read-screenshots.mjs` downloads and transcribes the screenshots, `knowledge/scripts/import-playbook.mjs` turns an export of the documents into the knowledge files, one per concern, treatment and product, with the date and what her screenshots say. `build-bundle.mjs` then packs them, with the FAQ, policies and catalog, into what the server's assistant reads.", "");
 fs.writeFileSync(path.join(root, "knowledge/PLAYBOOK-QUESTIONS.md"), md.join("\n"));
-console.log("wrote knowledge/playbook/evelyn-playbook.html (" + Math.round(html.length / 1024) + " KB) and knowledge/PLAYBOOK-QUESTIONS.md; fields:",
-  S.CONCERNS.length * S.CONCERN_FIELDS.length + S.TREATMENT_AFTERCARE.length * S.AFTERCARE_FIELDS.length + S.ROUTINE_FIELDS.length + S.HARD_LINE_FIELDS.length + S.VOICE_FIELDS.length, "required +", live.length * S.PRODUCT_FIELDS.length, "optional product notes");
+const clientQs = S.CLIENT_QUESTION_GROUPS.reduce((n, g) => n + g.questions.length, 0);
+console.log("wrote knowledge/playbook/evelyn-playbook.html (" + Math.round(html.length / 1024) + " KB) and knowledge/PLAYBOOK-QUESTIONS.md; questions:",
+  clientQs + S.CONCERNS.length * S.CONCERN_FIELDS.length + S.TREATMENT_DETAILS.length * S.TREATMENT_DETAIL_FIELDS.length
+  + S.TREATMENT_AFTERCARE.length * S.AFTERCARE_FIELDS.length + S.VISIT_FIELDS.length + S.MATERIALS_FIELDS.length
+  + S.ROUTINE_FIELDS.length + S.HARD_LINE_FIELDS.length + S.VOICE_FIELDS.length,
+  "(" + clientQs + " client texts) +", live.length * S.PRODUCT_FIELDS.length, "optional product notes");

@@ -34,6 +34,14 @@ _(not answered yet)_
 
 _(not answered yet)_
 
+## The most common mistakes clients make with this
+
+_(not answered yet)_
+
+## Habits and everyday tips you give
+
+_(not answered yet)_
+
 ## When must this come to you, or to a doctor?
 
 _(not answered yet)_

@@ -6,6 +6,8 @@
 //   make-templates.mjs   the empty knowledge files her answers fill
 //   import-playbook.mjs  her saved answers → knowledge/*.md
 //
+// Every card also takes screenshots (Add screenshots), and voice memos.
+//
 // Field kinds:  text (a box), one (pick one), multi (tap all that apply),
 //               products (tap products from her shelf), treatments (tap from
 //               her menu), list (numbered boxes). Every tap field also takes
@@ -31,7 +33,10 @@ export const CONCERNS = [
   { id: "texture", title: "Texture" },
   { id: "under-eyes", title: "Under-eyes" },
   { id: "back-body-breakouts", title: "Back and body breakouts" },
-  { id: "ingrown-hairs", title: "Ingrown hairs after waxing" }
+  { id: "ingrown-hairs", title: "Ingrown hairs after waxing" },
+  { id: "blackheads-congestion", title: "Blackheads and congestion" },
+  { id: "hormonal-breakouts", title: "Hormonal breakouts (jawline, around periods)" },
+  { id: "melasma", title: "Melasma and sun spots" }
 ];
 
 export const CONCERN_FIELDS = [
@@ -41,7 +46,37 @@ export const CONCERN_FIELDS = [
   { key: "avoid", kind: "text", q: "What should they avoid?", hint: "Products, habits, ingredients, mixing." },
   { key: "timeline", kind: "one", q: "How long until they see results?", options: ["About 2 weeks", "4 to 6 weeks", "2 to 3 months", "3 to 6 months", "It varies a lot"], text: "What to expect along the way" },
   { key: "facial", kind: "treatments", q: "When should they book a facial, and which one?", text: "When, and how often" },
+  { key: "mistakes", kind: "text", q: "The most common mistakes clients make with this", hint: "Over-exfoliating, picking, switching products too fast: whatever you see most." },
+  { key: "habits", kind: "text", q: "Habits and everyday tips you give", hint: "Pillowcases, phone screens, hair products, makeup, diet, sleep, workouts: only what you actually tell clients." },
   { key: "escalate", kind: "text", q: "When must this come to you, or to a doctor?", hint: "The signs that mean the assistant should stop and hand it to you." }
+];
+
+// What clients ask before they book each treatment. ids stay put when a
+// treatment is renamed, so saved answers still show.
+export const TREATMENT_DETAILS = [
+  { id: "explain-new-client", title: "New Clients Start Here" },
+  { id: "explain-custom-facial", title: "Lumevina Custom Facial" },
+  { id: "explain-ageless-grace", title: "Ageless Grace Facial" },
+  { id: "explain-procell", title: "ProCell Microchanneling" },
+  { id: "explain-refresh-peel", title: "Refresh Peel" },
+  { id: "explain-corrective-peel", title: "Corrective Peel" },
+  { id: "explain-dermaplaning", title: "Dermaplaning (as an add-on)" },
+  { id: "explain-acne-bootcamp", title: "Acne Bootcamp (consultation, monthly and bi-weekly)" },
+  { id: "explain-consultations", title: "In-Person and Virtual Consultations" },
+  { id: "explain-brazilian", title: "Brazilian, bikini and the mini vajacial" },
+  { id: "explain-body-face-wax", title: "Body and face waxing" }
+];
+
+export const TREATMENT_DETAIL_FIELDS = [
+  { key: "steps", kind: "text", q: "What happens, step by step", hint: "As you'd walk a nervous first-timer through it." },
+  { key: "feel", kind: "text", q: "Does it hurt? How does it feel?" },
+  { key: "downtime", kind: "text", q: "How they'll look after, and for how long", hint: "Pink for an hour, flaking on day 3, nothing at all: what to plan around." },
+  { key: "how_often", kind: "one", q: "How often should they book it?", options: ["Every 2 weeks", "Every 3 to 4 weeks", "Every 4 to 6 weeks", "Every 6 to 8 weeks", "A series, then maintenance", "Once, or as needed"], text: "Anything that changes it" },
+  { key: "results", kind: "text", q: "When will they see results, and how long do they last?" },
+  { key: "best_for", kind: "text", q: "Who it's best for, and who should book something else", hint: "So the assistant can point people to the right treatment." },
+  { key: "wait", kind: "text", q: "Who has to wait, or can't have it", hint: "Your own rules: recent procedures, products to stop, conditions you won't treat. The assistant still hands medical questions to you." },
+  { key: "before", kind: "text", q: "Anything to do before this one, beyond your general list" },
+  { key: "pairs", kind: "treatments", q: "Good add-ons or pairings", text: "When you'd suggest them" }
 ];
 
 // ids stay put when a treatment is renamed, so answers she already saved still show
@@ -60,6 +95,72 @@ export const AFTERCARE_FIELDS = [
   { key: "week", kind: "text", q: "The first week" },
   { key: "normal", kind: "text", q: "What's normal", hint: "Redness, flaking, bumps, tenderness: what you tell clients not to worry about." },
   { key: "not_normal", kind: "text", q: "What isn't normal", hint: "The signs that mean they should message you, or see a doctor." }
+];
+
+// The exact questions clients text her, so the assistant can answer them in
+// her words. (Pregnancy, medications, reactions and named conditions are not
+// here on purpose: those always go to her.)
+export const CLIENT_QUESTION_GROUPS = [
+  { id: "cq-before", title: "Before a visit", questions: [
+    { key: "stop_products", q: "\"Do I need to stop my products before my facial? Which ones, and for how long?\"" },
+    { key: "period", q: "\"Can I still come in if I'm on my period?\"" },
+    { key: "breaking_out", q: "\"I'm breaking out right now. Should I still come in?\"" },
+    { key: "hair_length", q: "\"How long does my hair need to be for a wax?\"" },
+    { key: "shave_before", q: "\"Should I shave or trim before my wax?\"" },
+    { key: "sun_before", q: "\"I'm going on vacation / I just got some sun. Can I still get my treatment?\"" },
+    { key: "first_wax", q: "\"It's my first Brazilian. Any tips?\"" }
+  ] },
+  { id: "cq-after", title: "Right after a visit", questions: [
+    { key: "makeup_after", q: "\"When can I wear makeup again?\"" },
+    { key: "workout_after", q: "\"Can I work out, swim, sauna or do hot yoga after?\"" },
+    { key: "wash_after", q: "\"When can I wash my face, and with what?\"" },
+    { key: "breakout_after", q: "\"I broke out after my facial. Is that normal?\"" },
+    { key: "peeling_after", q: "\"My skin is peeling after my peel. What do I do?\"" },
+    { key: "actives_after", q: "\"When can I go back to my retinol or acids?\"" },
+    { key: "bumps_after_wax", q: "\"I have little bumps after my wax. What should I do?\"" }
+  ] },
+  { id: "cq-routine", title: "Routines and products", questions: [
+    { key: "own_products", q: "\"Can I keep using my own products with the ones you gave me?\"" },
+    { key: "buy_everything", q: "\"Do I need everything you recommended, or what should I start with?\"" },
+    { key: "sunscreen", q: "\"Which sunscreen should I use?\"" },
+    { key: "run_out", q: "\"I'm running out before my next visit. What should I do?\"" },
+    { key: "how_long_lasts", q: "\"How long does a bottle usually last?\"" },
+    { key: "missed_days", q: "\"I skipped my routine for a few days. Do I start over?\"" },
+    { key: "travel", q: "\"I'm traveling. What should I bring?\"" }
+  ] },
+  { id: "cq-results", title: "Results and how often", questions: [
+    { key: "how_many_facials", q: "\"How many facials until I see a difference?\"" },
+    { key: "how_often_facial", q: "\"How often should I get a facial?\"" },
+    { key: "acne_how_long", q: "\"How long until my acne clears up?\"" },
+    { key: "wax_how_often", q: "\"How often should I get waxed? How long does it last?\"" },
+    { key: "wax_pain", q: "\"Does waxing hurt less over time?\"" },
+    { key: "between_visits", q: "\"What can I do between visits to keep my results?\"" }
+  ] },
+  { id: "cq-booking", title: "Booking and the day itself", questions: [
+    { key: "switch_treatment", q: "\"Can I switch to a different treatment when I get there?\"" },
+    { key: "add_on_day", q: "\"Can I add something on the day, like dermaplaning?\"" },
+    { key: "with_friend", q: "\"Can I book with a friend, back to back?\"" },
+    { key: "which_facial", q: "\"I don't know which facial to book. Which one is for me?\"" }
+  ] }
+];
+
+// Visits and the studio: the practical questions before someone walks in
+export const VISIT_FIELDS = [
+  { key: "wear_bring", kind: "text", q: "What should they wear or bring?" },
+  { key: "makeup_arrive", kind: "one", q: "Can they arrive wearing makeup?", options: ["Yes, I'll remove it", "Please come bare-faced", "Light makeup is fine"], text: "Anything else" },
+  { key: "guests", kind: "text", q: "Can they bring a friend, partner or child?" },
+  { key: "first_visit", kind: "text", q: "What happens at a first visit, from the moment they arrive?" },
+  { key: "teens", kind: "one", q: "Do you see clients under 18?", options: ["Yes, with a parent there", "Yes, with signed consent", "16 and up only", "No"], text: "What they need" },
+  { key: "men", kind: "text", q: "Anything different for men?" },
+  { key: "payment_other", kind: "text", q: "Ways to pay beyond cash and card", hint: "Zelle, Venmo, HSA/FSA cards, payment plans: only what you take." },
+  { key: "product_returns", kind: "text", q: "Product returns and exchanges", hint: "Opened, unopened, a reaction, a wrong order." },
+  { key: "reply_time", kind: "text", q: "How fast you usually reply, and the best way to reach you" },
+  { key: "anything_else", kind: "text", q: "Anything else clients always ask before a visit" }
+];
+
+// Anything she already has written somewhere: screenshots teach the assistant too
+export const MATERIALS_FIELDS = [
+  { key: "what", kind: "text", q: "What are these, and when do you use them?", hint: "For example: my aftercare card for peels, the product guide I text new acne clients, my Instagram FAQ highlight." }
 ];
 
 export const ROUTINE_FIELDS = [
@@ -95,14 +196,20 @@ export const VOICE_FIELDS = [
 export const PRODUCT_FIELDS = [
   { key: "who", kind: "text", q: "Who is it for?", hint: "The skin and concern you reach for it with." },
   { key: "how", kind: "text", q: "How to use it", hint: "Amount, when, how often, how to start." },
-  { key: "tip", kind: "text", q: "Your tip", hint: "What you tell clients at the counter." }
+  { key: "tip", kind: "text", q: "Your tip", hint: "What you tell clients at the counter." },
+  { key: "pairs", kind: "text", q: "Pairs well with, and what not to use it with" },
+  { key: "lasts", kind: "text", q: "How long it usually lasts" }
 ];
 
 export const SECTIONS = [
+  { id: "client-questions", title: "Questions clients ask", intro: "The exact texts you get, answered once, in your words. Every one you answer is one the assistant can handle for you. Screenshots of your old replies work too." },
   { id: "concerns", title: "Skin concerns", intro: "One at a time. Skip any you don't see much; come back whenever you like." },
+  { id: "treatments", title: "Treatments, explained", intro: "What clients ask before they book: how it feels, how they'll look after, how often to come back." },
   { id: "aftercare", title: "Aftercare", intro: "What you tell clients after each treatment." },
+  { id: "visits", title: "Visits and the studio", intro: "The practical questions before someone walks in." },
   { id: "routine", title: "Your products, in order", intro: "How a routine fits together, and how clients start the stronger products." },
   { id: "products", title: "Product by product", intro: "Optional. A line or two per product, in your words. Label facts are already on the site." },
+  { id: "materials", title: "Your materials", intro: "Anything you already have written: aftercare cards, product guides, your GlossGenius descriptions, Instagram FAQ highlights, texts you send a lot. Add screenshots and the assistant learns from them." },
   { id: "hard-lines", title: "Hard lines", intro: "What the assistant must never answer for you." },
   { id: "voice", title: "Your voice", intro: "So it sounds like you, not a robot." }
 ];

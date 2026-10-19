@@ -44,6 +44,7 @@
   }
   .tabs { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.45rem; }
   .tabs::-webkit-scrollbar { display: none; }
+  @media (min-width: 720px) { .tabs { flex-wrap: wrap; overflow: visible; } }
   .tab {
     flex: none; display: inline-flex; align-items: center; gap: 0.4rem; min-height: 38px; padding: 0.4rem 0.8rem;
     border: 1px solid var(--edge); border-radius: 999px; background: var(--card); color: var(--ink);
@@ -70,7 +71,8 @@
     padding: 0.95rem 1.05rem; font-weight: 600; font-size: 1rem;
   }
   details.item > summary::-webkit-details-marker { display: none; }
-  details.item > summary .pill { flex: none; font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--wash); font-variant-numeric: tabular-nums; }
+  details.item > summary .pill { flex: none; white-space: nowrap; font-size: 0.72rem; font-weight: 500; color: var(--ink-soft); padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--wash); font-variant-numeric: tabular-nums; }
+  details.item > summary .pill:empty { display: none; }
   details.item > summary .pill.is-done { background: rgba(78, 106, 69, 0.14); color: var(--sage); }
   details.item > summary .sub { display: block; font-size: 0.78rem; font-weight: 400; color: var(--ink-soft); }
   details.item[open] > summary { border-bottom: 1px solid var(--edge); }
@@ -96,13 +98,27 @@
 
   .hint { display: flex; align-items: center; gap: 0.45rem; margin: 0.2rem 0 0; font-size: 0.84rem; color: var(--ink-soft); }
   .hint svg { flex: none; }
-  .voice { display: grid; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px dashed var(--edge); }
+  .media { display: grid; gap: 0.5rem; padding-top: 0.9rem; border-top: 1px dashed var(--edge); }
   .opt { font-size: 0.74rem; font-weight: 500; color: var(--ink-soft); margin-left: 0.4rem; }
   .btn.small { min-height: 40px; padding: 0.6rem 1rem; font-size: 0.88rem; width: max-content; display: inline-flex; align-items: center; gap: 0.45rem; }
   .notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
   .notes li { display: grid; gap: 0.3rem; font-size: 0.82rem; color: var(--ink-soft); }
   .notes audio { width: 100%; max-width: 100%; }
-  .voice-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); min-height: 1.2em; }
+  .media-status { margin: 0; font-size: 0.82rem; color: var(--ink-soft); min-height: 1.2em; }
+  .shots { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr)); gap: 0.5rem; }
+  .shots:empty { display: none; }
+  .shots li { position: relative; aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden; border: 1px solid var(--edge); background: var(--field); }
+  .shots a { display: block; width: 100%; height: 100%; color: var(--ink-soft); text-decoration: none; }
+  .shots img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .shots .file { display: grid; place-content: center; gap: 0.2rem; height: 100%; padding: 0.4rem; text-align: center; font-size: 0.7rem; overflow-wrap: anywhere; }
+  .shots .file b { font-size: 0.8rem; color: var(--ink); }
+  .shot-x {
+    position: absolute; top: 4px; right: 4px; min-width: 30px; height: 30px; padding: 0 0.45rem; border-radius: 999px;
+    border: 0; background: rgba(22, 20, 18, 0.72); color: #fff; font: 500 0.78rem/1 var(--font); cursor: pointer;
+  }
+  .shot-x[data-armed] { background: var(--danger); }
+  .shot-x:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .media.is-lead { padding-top: 0; border-top: 0; }
   .finish { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--edge); display: grid; gap: 0.75rem; }
   .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .btn { font: 500 0.95rem/1 var(--font); padding: 0.85rem 1.3rem; min-height: 46px; border-radius: 999px; border: 1px solid var(--accent); cursor: pointer; background: var(--accent); color: var(--on-accent); }
@@ -118,8 +134,8 @@
     <h1>Evelyn's <em>Skin Playbook</em></h1>
     <p class="lede">Everything you'd tell a client, in your own words. The website's assistant answers only from
     what you write here, and hands you anything it can't find. Fill it in over a few sittings; it saves as you go,
-    and nothing is pre-filled. Type, or speak: the mic key on your keyboard works in every box. You can also add
-    voice memos, which stay with your answers.</p>
+    and nothing is pre-filled. Type, speak (the mic key on your keyboard), or add screenshots of things you've
+    already written: old texts to clients, aftercare cards, Instagram posts.</p>
   </header>
 
   <div class="bar">
@@ -146,7 +162,7 @@
 <script>
 (function () {
   "use strict";
-  var SPEC = {"sections":[{"id":"concerns","title":"Skin concerns","intro":"One at a time. Skip any you don't see much; come back whenever you like."},{"id":"aftercare","title":"Aftercare","intro":"What you tell clients after each treatment."},{"id":"routine","title":"Your products, in order","intro":"How a routine fits together, and how clients start the stronger products."},{"id":"products","title":"Product by product","intro":"Optional. A line or two per product, in your words. Label facts are already on the site."},{"id":"hard-lines","title":"Hard lines","intro":"What the assistant must never answer for you."},{"id":"voice","title":"Your voice","intro":"So it sounds like you, not a robot."}],"concerns":[{"id":"breakouts-and-acne","title":"Breakouts and acne"},{"id":"purging-vs-breakout","title":"Purging vs. a breakout"},{"id":"dark-spots","title":"Dark spots and post-acne marks"},{"id":"redness-sensitivity","title":"Redness and sensitivity"},{"id":"dryness-dehydration","title":"Dryness and dehydration"},{"id":"oily-large-pores","title":"Oily skin and large pores"},{"id":"fine-lines-firmness","title":"Fine lines and firmness"},{"id":"texture","title":"Texture"},{"id":"under-eyes","title":"Under-eyes"},{"id":"back-body-breakouts","title":"Back and body breakouts"},{"id":"ingrown-hairs","title":"Ingrown hairs after waxing"}],"concernFields":[{"key":"first_questions","kind":"text","q":"What do you ask a client first?","hint":"The questions that tell you what's really going on."},{"key":"morning","kind":"products","q":"Morning: what do you recommend from your shelf?","hint":"Tap products, then add how to use them."},{"key":"night","kind":"products","q":"Night: what do you recommend from your shelf?"},{"key":"avoid","kind":"text","q":"What should they avoid?","hint":"Products, habits, ingredients, mixing."},{"key":"timeline","kind":"one","q":"How long until they see results?","options":["About 2 weeks","4 to 6 weeks","2 to 3 months","3 to 6 months","It varies a lot"],"text":"What to expect along the way"},{"key":"facial","kind":"treatments","q":"When should they book a facial, and which one?","text":"When, and how often"},{"key":"escalate","kind":"text","q":"When must this come to you, or to a doctor?","hint":"The signs that mean the assistant should stop and hand it to you."}],"aftercare":[{"id":"facials","title":"Facials"},{"id":"procell","title":"ProCell Microchanneling"},{"id":"light-peel","title":"Refresh Peel (no downtime)"},{"id":"medium-peel","title":"Corrective Peel (medium depth)"},{"id":"dermaplaning","title":"Dermaplaning"},{"id":"waxing","title":"Waxing (brows, lip, underarms and body)"},{"id":"brazilian","title":"Brazilian, bikini and the mini vajacial"}],"aftercareFields":[{"key":"first24","kind":"text","q":"The first 24 hours","hint":"What to do and not do right after."},{"key":"week","kind":"text","q":"The first week"},{"key":"normal","kind":"text","q":"What's normal","hint":"Redness, flaking, bumps, tenderness: what you tell clients not to worry about."},{"key":"not_normal","kind":"text","q":"What isn't normal","hint":"The signs that mean they should message you, or see a doctor."}],"routineFields":[{"key":"order","kind":"text","q":"The order of steps, morning and night","hint":"Cleanser, toner, serum, treatment, moisturizer, SPF: in your words, with anything that changes it."},{"key":"mandelic","kind":"text","q":"Starting the mandelic serums","hint":"Which strength first (5%, 8%, 11%, 15%), how often, and when to move up."},{"key":"acne_med","kind":"text","q":"Starting the Advanced Acne Med","hint":"2.5% vs. 5%, how much, how often, and how to build up."},{"key":"retinal_vs_retinol","kind":"text","q":"Retinal B3 Serum vs. Retinol Peptide Serum","hint":"Who gets which, and how to start."},{"key":"dont_mix","kind":"text","q":"What not to mix, or not on the same night"},{"key":"sun","kind":"text","q":"Anything you always say about sunscreen"}],"products":[{"cat":"Cleansers","items":[{"id":"fr-barrier-cream-cleanser","name":"Barrier Balance Creamy Cleanser","size":"6 fl oz / 180 ml"},{"id":"fr-gentle-gel-cleanser","name":"Ultra Gentle Gel Cleanser (travel size)","size":"2 fl oz / 60 ml"},{"id":"fr-mandelic-face-and-body","name":"L-Mandelic Face and Body Wash","size":"6 fl oz / 180 ml"},{"id":"fr-ultra-gentle-cleanser","name":"Ultra Gentle Gel Cleanser","size":"6 fl oz / 180 ml"},{"id":"gm-glycolic-cleanser","name":"Glycolic Facial Cleanser (GlyMed Plus)","size":"8 fl oz / 236 ml"},{"id":"gm-vitamin-c-cleanser","name":"Vitamin C Cleanser (GlyMed Plus)","size":"6.75 fl oz / 200 ml"},{"id":"ci-vitamin-veil-cleanser","name":"Vitamin Veil Cleansing Oil (Circadia)","size":"6.7 fl oz / 198 ml"}]},{"cat":"Toners & mists","items":[{"id":"fr-moisture-balance-toner","name":"Moisture Balance Toner","size":"6 fl oz / 180 ml"},{"id":"fr-moisture-balance-toner-14","name":"Moisture Balance Toner (2 fl oz)","size":"2 fl oz / 60 ml"},{"id":"fr-omni-clear-mist","name":"Omni Clear Mist","size":"3.4 fl oz / 100 ml"},{"id":"fr-soothing-radiance-toner","name":"Soothing Radiance Toner","size":"6 fl oz / 180 ml"},{"id":"gm-skin-recovery-mist","name":"Skin Recovery Mist (GlyMed Plus)","size":"4 fl oz / 118 ml"}]},{"cat":"Serums","items":[{"id":"fr-11pct-mandelic-serum","name":"11% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-15pct-mandelic-serum","name":"15% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-5pct-mandelic-serum","name":"5% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-8pct-mandelic-serum","name":"8% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-glowtone-corrective","name":"GlowTone Corrective Serum","size":"1 fl oz / 30 ml"},{"id":"fr-hydraremedy-gel-serum","name":"HydraRemedy Gel Serum","size":"1.7 fl oz / 50 ml"},{"id":"fr-retinal-b3-serum","name":"Retinal B3 Serum","size":"1 fl oz / 30 ml"},{"id":"fr-retinol-peptide-serum","name":"Retinol Peptide Serum","size":"1 fl oz / 30 ml"},{"id":"gm-firming-serum","name":"Firming Serum with Phyto-Stem Cells (GlyMed Plus)","size":"1 oz / 30 ml"},{"id":"gm-revitalizing-essence-nadplus","name":"Revitalizing Essence with NAD+ (GlyMed Plus)","size":"1.35 oz / 40 ml"},{"id":"mx-dew-drops","name":"Dew Drop (Mixi Skincare)","size":"1 fl oz"}]},{"cat":"Acne & spot care","items":[{"id":"fr-2-5pct-adv-acne-med","name":"2.5% Advanced Acne Med","size":"1.5 fl oz / 44 ml"},{"id":"fr-5pct-adv-acne-med","name":"5% Advanced Acne Med","size":"1.5 fl oz / 44 ml"},{"id":"fr-invisiclear","name":"invisiClear Hydrocolloid Spot Patches","size":"24 patches"},{"id":"fr-sulfur-spot-treatment","name":"Sulfur Spot Treatment","size":"1.5 fl oz / 44 ml"},{"id":"mx-hydroxi","name":"Hydroxi (Mixi Skincare)","size":"1.7 fl oz"}]},{"cat":"Moisturizers","items":[{"id":"fr-barrier-gel-cream","name":"Barrier Care Gel Cream","size":"2 fl oz / 60 ml"},{"id":"fr-cran-peptide-cream","name":"Cran-Peptide Cream","size":"2 fl oz / 60 ml"},{"id":"fr-hydrabalance-gel","name":"HydraBalance Gel","size":"1.7 fl oz / 50 ml"},{"id":"gm-barrier-repair-cream","name":"Barrier Repair Cream (GlyMed Plus)","size":"4 fl oz / 118 ml"},{"id":"gm-cell-protection-balm","name":"Cell Protection Balm (GlyMed Plus)","size":"2 fl oz / 59 ml"}]},{"cat":"Eye care","items":[{"id":"fr-antioxidant-eye-gel","name":"Antioxidant Peptide Eye Gel","size":"0.4 fl oz / 12 ml"},{"id":"gm-eye-calm","name":"Eye Calm (GlyMed Plus)","size":"0.3 fl oz / 10 ml"},{"id":"gm-firming-eye-cream","name":"Firming Eye Cream (GlyMed Plus)","size":"0.3 oz / 10 ml"}]},{"cat":"Sun care","items":[{"id":"fr-brilliant-defense-50","name":"Brilliant Defense SPF 50","size":"2 fl oz / 60 ml"},{"id":"fr-daily-spf-30","name":"Daily SPF 30 Plus","size":"2 fl oz / 60 ml"},{"id":"fr-mineral-matte-spf-28","name":"Mineral Matte SPF 28","size":"2 fl oz / 60 ml"},{"id":"fr-powdermineral-spf-50","name":"PowerMineral SPF 50","size":"2 fl oz / 60 ml"},{"id":"mx-spf-50-mineral-spf","name":"Mineral SPF 50 (Mixi Skincare)","size":"2 fl oz"}]},{"cat":"Masks","items":[{"id":"fr-hydrcalm-mask","name":"HydraCalm Mask","size":"2.5 fl oz / 73 ml"}]},{"cat":"Supplements","items":[{"id":"fr-clear-skin-balance","name":"Clear Skin Balance","size":"60 softgels"}]}],"productFields":[{"key":"who","kind":"text","q":"Who is it for?","hint":"The skin and concern you reach for it with."},{"key":"how","kind":"text","q":"How to use it","hint":"Amount, when, how often, how to start."},{"key":"tip","kind":"text","q":"Your tip","hint":"What you tell clients at the counter."}],"hardLineFields":[{"key":"always_evelyn","kind":"multi","q":"The assistant must never answer these. It always hands them to you.","options":["Pregnancy or breastfeeding","Accutane, past or present","Prescription retinoids or antibiotics","Any other prescription","A reaction, rash, burning or swelling","Eczema, rosacea, psoriasis or another condition","Cold sores","Clients under 18","Anything about results or guarantees","Discounts or price exceptions"],"text":"Anything else that should always come to you"},{"key":"handoff_wording","kind":"text","q":"What should it say while handing a question to you?","hint":"One or two sentences, in your words. For example, that you'll answer personally and when."},{"key":"never_say","kind":"text","q":"Anything it should never say or promise?","hint":"Words, claims, comparisons, brands."}],"voiceFields":[{"key":"replies","kind":"list","count":10,"q":"Real replies you've sent clients","hint":"Paste 5 to 10, with names removed. These teach the assistant how you talk."},{"key":"words_use","kind":"text","q":"Words and phrases you use a lot"},{"key":"words_avoid","kind":"text","q":"Words you never use"},{"key":"signoff","kind":"one","q":"How do you sign off?","options":["— Evelyn","xo, Evelyn","Evelyn","No sign-off"],"text":"Or something else"},{"key":"emoji","kind":"one","q":"Emoji?","options":["Never","Sometimes, one at most","Often"]},{"key":"greeting","kind":"one","q":"How do you open a reply?","options":["Hi [name]!","Hey [name],","Hello [name],","Straight to the answer"],"text":"Or something else"}],"treatments":["New Clients Start Here","Lumevina Custom Facial","Custom Facial + Dermaplaning","Ageless Grace Facial","ProCell Microchanneling","Refresh Peel","Corrective Peel","Acne Bootcamp (New Client Consultation + Treatment)","Monthly Acne Treatment","Bi-Weekly Acne Treatment","In-Person Consultation","Virtual Consultation"],"shelf":[{"cat":"Cleansers","items":["Barrier Balance Creamy Cleanser","Ultra Gentle Gel Cleanser (travel size)","L-Mandelic Face and Body Wash","Ultra Gentle Gel Cleanser","Glycolic Facial Cleanser (GlyMed Plus)","Vitamin C Cleanser (GlyMed Plus)","Vitamin Veil Cleansing Oil (Circadia)"]},{"cat":"Toners & mists","items":["Moisture Balance Toner","Moisture Balance Toner (2 fl oz)","Omni Clear Mist","Soothing Radiance Toner","Skin Recovery Mist (GlyMed Plus)"]},{"cat":"Serums","items":["11% L-Mandelic Serum","15% L-Mandelic Serum","5% L-Mandelic Serum","8% L-Mandelic Serum","GlowTone Corrective Serum","HydraRemedy Gel Serum","Retinal B3 Serum","Retinol Peptide Serum","Firming Serum with Phyto-Stem Cells (GlyMed Plus)","Revitalizing Essence with NAD+ (GlyMed Plus)","Dew Drop (Mixi Skincare)"]},{"cat":"Acne & spot care","items":["2.5% Advanced Acne Med","5% Advanced Acne Med","invisiClear Hydrocolloid Spot Patches","Sulfur Spot Treatment","Hydroxi (Mixi Skincare)"]},{"cat":"Moisturizers","items":["Barrier Care Gel Cream","Cran-Peptide Cream","HydraBalance Gel","Barrier Repair Cream (GlyMed Plus)","Cell Protection Balm (GlyMed Plus)"]},{"cat":"Eye care","items":["Antioxidant Peptide Eye Gel","Eye Calm (GlyMed Plus)","Firming Eye Cream (GlyMed Plus)"]},{"cat":"Sun care","items":["Brilliant Defense SPF 50","Daily SPF 30 Plus","Mineral Matte SPF 28","PowerMineral SPF 50","Mineral SPF 50 (Mixi Skincare)"]},{"cat":"Masks","items":["HydraCalm Mask"]},{"cat":"Supplements","items":["Clear Skin Balance"]}]};
+  var SPEC = {"sections":[{"id":"client-questions","title":"Questions clients ask","intro":"The exact texts you get, answered once, in your words. Every one you answer is one the assistant can handle for you. Screenshots of your old replies work too."},{"id":"concerns","title":"Skin concerns","intro":"One at a time. Skip any you don't see much; come back whenever you like."},{"id":"treatments","title":"Treatments, explained","intro":"What clients ask before they book: how it feels, how they'll look after, how often to come back."},{"id":"aftercare","title":"Aftercare","intro":"What you tell clients after each treatment."},{"id":"visits","title":"Visits and the studio","intro":"The practical questions before someone walks in."},{"id":"routine","title":"Your products, in order","intro":"How a routine fits together, and how clients start the stronger products."},{"id":"products","title":"Product by product","intro":"Optional. A line or two per product, in your words. Label facts are already on the site."},{"id":"materials","title":"Your materials","intro":"Anything you already have written: aftercare cards, product guides, your GlossGenius descriptions, Instagram FAQ highlights, texts you send a lot. Add screenshots and the assistant learns from them."},{"id":"hard-lines","title":"Hard lines","intro":"What the assistant must never answer for you."},{"id":"voice","title":"Your voice","intro":"So it sounds like you, not a robot."}],"clientQuestions":[{"id":"cq-before","title":"Before a visit","fields":[{"key":"stop_products","kind":"text","q":"\"Do I need to stop my products before my facial? Which ones, and for how long?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"period","kind":"text","q":"\"Can I still come in if I'm on my period?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"breaking_out","kind":"text","q":"\"I'm breaking out right now. Should I still come in?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"hair_length","kind":"text","q":"\"How long does my hair need to be for a wax?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"shave_before","kind":"text","q":"\"Should I shave or trim before my wax?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"sun_before","kind":"text","q":"\"I'm going on vacation / I just got some sun. Can I still get my treatment?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"first_wax","kind":"text","q":"\"It's my first Brazilian. Any tips?\"","ph":"Your answer, as you'd text it","rows":2}]},{"id":"cq-after","title":"Right after a visit","fields":[{"key":"makeup_after","kind":"text","q":"\"When can I wear makeup again?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"workout_after","kind":"text","q":"\"Can I work out, swim, sauna or do hot yoga after?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"wash_after","kind":"text","q":"\"When can I wash my face, and with what?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"breakout_after","kind":"text","q":"\"I broke out after my facial. Is that normal?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"peeling_after","kind":"text","q":"\"My skin is peeling after my peel. What do I do?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"actives_after","kind":"text","q":"\"When can I go back to my retinol or acids?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"bumps_after_wax","kind":"text","q":"\"I have little bumps after my wax. What should I do?\"","ph":"Your answer, as you'd text it","rows":2}]},{"id":"cq-routine","title":"Routines and products","fields":[{"key":"own_products","kind":"text","q":"\"Can I keep using my own products with the ones you gave me?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"buy_everything","kind":"text","q":"\"Do I need everything you recommended, or what should I start with?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"sunscreen","kind":"text","q":"\"Which sunscreen should I use?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"run_out","kind":"text","q":"\"I'm running out before my next visit. What should I do?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"how_long_lasts","kind":"text","q":"\"How long does a bottle usually last?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"missed_days","kind":"text","q":"\"I skipped my routine for a few days. Do I start over?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"travel","kind":"text","q":"\"I'm traveling. What should I bring?\"","ph":"Your answer, as you'd text it","rows":2}]},{"id":"cq-results","title":"Results and how often","fields":[{"key":"how_many_facials","kind":"text","q":"\"How many facials until I see a difference?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"how_often_facial","kind":"text","q":"\"How often should I get a facial?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"acne_how_long","kind":"text","q":"\"How long until my acne clears up?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"wax_how_often","kind":"text","q":"\"How often should I get waxed? How long does it last?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"wax_pain","kind":"text","q":"\"Does waxing hurt less over time?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"between_visits","kind":"text","q":"\"What can I do between visits to keep my results?\"","ph":"Your answer, as you'd text it","rows":2}]},{"id":"cq-booking","title":"Booking and the day itself","fields":[{"key":"switch_treatment","kind":"text","q":"\"Can I switch to a different treatment when I get there?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"add_on_day","kind":"text","q":"\"Can I add something on the day, like dermaplaning?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"with_friend","kind":"text","q":"\"Can I book with a friend, back to back?\"","ph":"Your answer, as you'd text it","rows":2},{"key":"which_facial","kind":"text","q":"\"I don't know which facial to book. Which one is for me?\"","ph":"Your answer, as you'd text it","rows":2}]}],"concerns":[{"id":"breakouts-and-acne","title":"Breakouts and acne"},{"id":"purging-vs-breakout","title":"Purging vs. a breakout"},{"id":"dark-spots","title":"Dark spots and post-acne marks"},{"id":"redness-sensitivity","title":"Redness and sensitivity"},{"id":"dryness-dehydration","title":"Dryness and dehydration"},{"id":"oily-large-pores","title":"Oily skin and large pores"},{"id":"fine-lines-firmness","title":"Fine lines and firmness"},{"id":"texture","title":"Texture"},{"id":"under-eyes","title":"Under-eyes"},{"id":"back-body-breakouts","title":"Back and body breakouts"},{"id":"ingrown-hairs","title":"Ingrown hairs after waxing"},{"id":"blackheads-congestion","title":"Blackheads and congestion"},{"id":"hormonal-breakouts","title":"Hormonal breakouts (jawline, around periods)"},{"id":"melasma","title":"Melasma and sun spots"}],"concernFields":[{"key":"first_questions","kind":"text","q":"What do you ask a client first?","hint":"The questions that tell you what's really going on."},{"key":"morning","kind":"products","q":"Morning: what do you recommend from your shelf?","hint":"Tap products, then add how to use them."},{"key":"night","kind":"products","q":"Night: what do you recommend from your shelf?"},{"key":"avoid","kind":"text","q":"What should they avoid?","hint":"Products, habits, ingredients, mixing."},{"key":"timeline","kind":"one","q":"How long until they see results?","options":["About 2 weeks","4 to 6 weeks","2 to 3 months","3 to 6 months","It varies a lot"],"text":"What to expect along the way"},{"key":"facial","kind":"treatments","q":"When should they book a facial, and which one?","text":"When, and how often"},{"key":"mistakes","kind":"text","q":"The most common mistakes clients make with this","hint":"Over-exfoliating, picking, switching products too fast: whatever you see most."},{"key":"habits","kind":"text","q":"Habits and everyday tips you give","hint":"Pillowcases, phone screens, hair products, makeup, diet, sleep, workouts: only what you actually tell clients."},{"key":"escalate","kind":"text","q":"When must this come to you, or to a doctor?","hint":"The signs that mean the assistant should stop and hand it to you."}],"treatmentDetails":[{"id":"explain-new-client","title":"New Clients Start Here"},{"id":"explain-custom-facial","title":"Lumevina Custom Facial"},{"id":"explain-ageless-grace","title":"Ageless Grace Facial"},{"id":"explain-procell","title":"ProCell Microchanneling"},{"id":"explain-refresh-peel","title":"Refresh Peel"},{"id":"explain-corrective-peel","title":"Corrective Peel"},{"id":"explain-dermaplaning","title":"Dermaplaning (as an add-on)"},{"id":"explain-acne-bootcamp","title":"Acne Bootcamp (consultation, monthly and bi-weekly)"},{"id":"explain-consultations","title":"In-Person and Virtual Consultations"},{"id":"explain-brazilian","title":"Brazilian, bikini and the mini vajacial"},{"id":"explain-body-face-wax","title":"Body and face waxing"}],"treatmentDetailFields":[{"key":"steps","kind":"text","q":"What happens, step by step","hint":"As you'd walk a nervous first-timer through it."},{"key":"feel","kind":"text","q":"Does it hurt? How does it feel?"},{"key":"downtime","kind":"text","q":"How they'll look after, and for how long","hint":"Pink for an hour, flaking on day 3, nothing at all: what to plan around."},{"key":"how_often","kind":"one","q":"How often should they book it?","options":["Every 2 weeks","Every 3 to 4 weeks","Every 4 to 6 weeks","Every 6 to 8 weeks","A series, then maintenance","Once, or as needed"],"text":"Anything that changes it"},{"key":"results","kind":"text","q":"When will they see results, and how long do they last?"},{"key":"best_for","kind":"text","q":"Who it's best for, and who should book something else","hint":"So the assistant can point people to the right treatment."},{"key":"wait","kind":"text","q":"Who has to wait, or can't have it","hint":"Your own rules: recent procedures, products to stop, conditions you won't treat. The assistant still hands medical questions to you."},{"key":"before","kind":"text","q":"Anything to do before this one, beyond your general list"},{"key":"pairs","kind":"treatments","q":"Good add-ons or pairings","text":"When you'd suggest them"}],"visitFields":[{"key":"wear_bring","kind":"text","q":"What should they wear or bring?"},{"key":"makeup_arrive","kind":"one","q":"Can they arrive wearing makeup?","options":["Yes, I'll remove it","Please come bare-faced","Light makeup is fine"],"text":"Anything else"},{"key":"guests","kind":"text","q":"Can they bring a friend, partner or child?"},{"key":"first_visit","kind":"text","q":"What happens at a first visit, from the moment they arrive?"},{"key":"teens","kind":"one","q":"Do you see clients under 18?","options":["Yes, with a parent there","Yes, with signed consent","16 and up only","No"],"text":"What they need"},{"key":"men","kind":"text","q":"Anything different for men?"},{"key":"payment_other","kind":"text","q":"Ways to pay beyond cash and card","hint":"Zelle, Venmo, HSA/FSA cards, payment plans: only what you take."},{"key":"product_returns","kind":"text","q":"Product returns and exchanges","hint":"Opened, unopened, a reaction, a wrong order."},{"key":"reply_time","kind":"text","q":"How fast you usually reply, and the best way to reach you"},{"key":"anything_else","kind":"text","q":"Anything else clients always ask before a visit"}],"materialsFields":[{"key":"what","kind":"text","q":"What are these, and when do you use them?","hint":"For example: my aftercare card for peels, the product guide I text new acne clients, my Instagram FAQ highlight."}],"aftercare":[{"id":"facials","title":"Facials"},{"id":"procell","title":"ProCell Microchanneling"},{"id":"light-peel","title":"Refresh Peel (no downtime)"},{"id":"medium-peel","title":"Corrective Peel (medium depth)"},{"id":"dermaplaning","title":"Dermaplaning"},{"id":"waxing","title":"Waxing (brows, lip, underarms and body)"},{"id":"brazilian","title":"Brazilian, bikini and the mini vajacial"}],"aftercareFields":[{"key":"first24","kind":"text","q":"The first 24 hours","hint":"What to do and not do right after."},{"key":"week","kind":"text","q":"The first week"},{"key":"normal","kind":"text","q":"What's normal","hint":"Redness, flaking, bumps, tenderness: what you tell clients not to worry about."},{"key":"not_normal","kind":"text","q":"What isn't normal","hint":"The signs that mean they should message you, or see a doctor."}],"routineFields":[{"key":"order","kind":"text","q":"The order of steps, morning and night","hint":"Cleanser, toner, serum, treatment, moisturizer, SPF: in your words, with anything that changes it."},{"key":"mandelic","kind":"text","q":"Starting the mandelic serums","hint":"Which strength first (5%, 8%, 11%, 15%), how often, and when to move up."},{"key":"acne_med","kind":"text","q":"Starting the Advanced Acne Med","hint":"2.5% vs. 5%, how much, how often, and how to build up."},{"key":"retinal_vs_retinol","kind":"text","q":"Retinal B3 Serum vs. Retinol Peptide Serum","hint":"Who gets which, and how to start."},{"key":"dont_mix","kind":"text","q":"What not to mix, or not on the same night"},{"key":"sun","kind":"text","q":"Anything you always say about sunscreen"}],"products":[{"cat":"Cleansers","items":[{"id":"fr-barrier-cream-cleanser","name":"Barrier Balance Creamy Cleanser","size":"6 fl oz / 180 ml"},{"id":"fr-gentle-gel-cleanser","name":"Ultra Gentle Gel Cleanser (travel size)","size":"2 fl oz / 60 ml"},{"id":"fr-mandelic-face-and-body","name":"L-Mandelic Face and Body Wash","size":"6 fl oz / 180 ml"},{"id":"fr-ultra-gentle-cleanser","name":"Ultra Gentle Gel Cleanser","size":"6 fl oz / 180 ml"},{"id":"gm-glycolic-cleanser","name":"Glycolic Facial Cleanser (GlyMed Plus)","size":"8 fl oz / 236 ml"},{"id":"gm-vitamin-c-cleanser","name":"Vitamin C Cleanser (GlyMed Plus)","size":"6.75 fl oz / 200 ml"},{"id":"ci-vitamin-veil-cleanser","name":"Vitamin Veil Cleansing Oil (Circadia)","size":"6.7 fl oz / 198 ml"}]},{"cat":"Toners & mists","items":[{"id":"fr-moisture-balance-toner","name":"Moisture Balance Toner","size":"6 fl oz / 180 ml"},{"id":"fr-moisture-balance-toner-14","name":"Moisture Balance Toner (2 fl oz)","size":"2 fl oz / 60 ml"},{"id":"fr-omni-clear-mist","name":"Omni Clear Mist","size":"3.4 fl oz / 100 ml"},{"id":"fr-soothing-radiance-toner","name":"Soothing Radiance Toner","size":"6 fl oz / 180 ml"},{"id":"gm-skin-recovery-mist","name":"Skin Recovery Mist (GlyMed Plus)","size":"4 fl oz / 118 ml"}]},{"cat":"Serums","items":[{"id":"fr-11pct-mandelic-serum","name":"11% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-15pct-mandelic-serum","name":"15% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-5pct-mandelic-serum","name":"5% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-8pct-mandelic-serum","name":"8% L-Mandelic Serum","size":"1 fl oz / 30 ml"},{"id":"fr-glowtone-corrective","name":"GlowTone Corrective Serum","size":"1 fl oz / 30 ml"},{"id":"fr-hydraremedy-gel-serum","name":"HydraRemedy Gel Serum","size":"1.7 fl oz / 50 ml"},{"id":"fr-retinal-b3-serum","name":"Retinal B3 Serum","size":"1 fl oz / 30 ml"},{"id":"fr-retinol-peptide-serum","name":"Retinol Peptide Serum","size":"1 fl oz / 30 ml"},{"id":"gm-firming-serum","name":"Firming Serum with Phyto-Stem Cells (GlyMed Plus)","size":"1 oz / 30 ml"},{"id":"gm-revitalizing-essence-nadplus","name":"Revitalizing Essence with NAD+ (GlyMed Plus)","size":"1.35 oz / 40 ml"},{"id":"mx-dew-drops","name":"Dew Drop (Mixi Skincare)","size":"1 fl oz"}]},{"cat":"Acne & spot care","items":[{"id":"fr-2-5pct-adv-acne-med","name":"2.5% Advanced Acne Med","size":"1.5 fl oz / 44 ml"},{"id":"fr-5pct-adv-acne-med","name":"5% Advanced Acne Med","size":"1.5 fl oz / 44 ml"},{"id":"fr-invisiclear","name":"invisiClear Hydrocolloid Spot Patches","size":"24 patches"},{"id":"fr-sulfur-spot-treatment","name":"Sulfur Spot Treatment","size":"1.5 fl oz / 44 ml"},{"id":"mx-hydroxi","name":"Hydroxi (Mixi Skincare)","size":"1.7 fl oz"}]},{"cat":"Moisturizers","items":[{"id":"fr-barrier-gel-cream","name":"Barrier Care Gel Cream","size":"2 fl oz / 60 ml"},{"id":"fr-cran-peptide-cream","name":"Cran-Peptide Cream","size":"2 fl oz / 60 ml"},{"id":"fr-hydrabalance-gel","name":"HydraBalance Gel","size":"1.7 fl oz / 50 ml"},{"id":"gm-barrier-repair-cream","name":"Barrier Repair Cream (GlyMed Plus)","size":"4 fl oz / 118 ml"},{"id":"gm-cell-protection-balm","name":"Cell Protection Balm (GlyMed Plus)","size":"2 fl oz / 59 ml"}]},{"cat":"Eye care","items":[{"id":"fr-antioxidant-eye-gel","name":"Antioxidant Peptide Eye Gel","size":"0.4 fl oz / 12 ml"},{"id":"gm-eye-calm","name":"Eye Calm (GlyMed Plus)","size":"0.3 fl oz / 10 ml"},{"id":"gm-firming-eye-cream","name":"Firming Eye Cream (GlyMed Plus)","size":"0.3 oz / 10 ml"}]},{"cat":"Sun care","items":[{"id":"fr-brilliant-defense-50","name":"Brilliant Defense SPF 50","size":"2 fl oz / 60 ml"},{"id":"fr-daily-spf-30","name":"Daily SPF 30 Plus","size":"2 fl oz / 60 ml"},{"id":"fr-mineral-matte-spf-28","name":"Mineral Matte SPF 28","size":"2 fl oz / 60 ml"},{"id":"fr-powdermineral-spf-50","name":"PowerMineral SPF 50","size":"2 fl oz / 60 ml"},{"id":"mx-spf-50-mineral-spf","name":"Mineral SPF 50 (Mixi Skincare)","size":"2 fl oz"}]},{"cat":"Masks","items":[{"id":"fr-hydrcalm-mask","name":"HydraCalm Mask","size":"2.5 fl oz / 73 ml"}]},{"cat":"Supplements","items":[{"id":"fr-clear-skin-balance","name":"Clear Skin Balance","size":"60 softgels"}]}],"productFields":[{"key":"who","kind":"text","q":"Who is it for?","hint":"The skin and concern you reach for it with."},{"key":"how","kind":"text","q":"How to use it","hint":"Amount, when, how often, how to start."},{"key":"tip","kind":"text","q":"Your tip","hint":"What you tell clients at the counter."},{"key":"pairs","kind":"text","q":"Pairs well with, and what not to use it with"},{"key":"lasts","kind":"text","q":"How long it usually lasts"}],"hardLineFields":[{"key":"always_evelyn","kind":"multi","q":"The assistant must never answer these. It always hands them to you.","options":["Pregnancy or breastfeeding","Accutane, past or present","Prescription retinoids or antibiotics","Any other prescription","A reaction, rash, burning or swelling","Eczema, rosacea, psoriasis or another condition","Cold sores","Clients under 18","Anything about results or guarantees","Discounts or price exceptions"],"text":"Anything else that should always come to you"},{"key":"handoff_wording","kind":"text","q":"What should it say while handing a question to you?","hint":"One or two sentences, in your words. For example, that you'll answer personally and when."},{"key":"never_say","kind":"text","q":"Anything it should never say or promise?","hint":"Words, claims, comparisons, brands."}],"voiceFields":[{"key":"replies","kind":"list","count":10,"q":"Real replies you've sent clients","hint":"Paste 5 to 10, with names removed. These teach the assistant how you talk."},{"key":"words_use","kind":"text","q":"Words and phrases you use a lot"},{"key":"words_avoid","kind":"text","q":"Words you never use"},{"key":"signoff","kind":"one","q":"How do you sign off?","options":["— Evelyn","xo, Evelyn","Evelyn","No sign-off"],"text":"Or something else"},{"key":"emoji","kind":"one","q":"Emoji?","options":["Never","Sometimes, one at most","Often"]},{"key":"greeting","kind":"one","q":"How do you open a reply?","options":["Hi [name]!","Hey [name],","Hello [name],","Straight to the answer"],"text":"Or something else"}],"treatments":["New Clients Start Here","Lumevina Custom Facial","Custom Facial + Dermaplaning","Ageless Grace Facial","ProCell Microchanneling","Refresh Peel","Corrective Peel","Acne Bootcamp (New Client Consultation + Treatment)","Monthly Acne Treatment","Bi-Weekly Acne Treatment","In-Person Consultation","Virtual Consultation"],"shelf":[{"cat":"Cleansers","items":["Barrier Balance Creamy Cleanser","Ultra Gentle Gel Cleanser (travel size)","L-Mandelic Face and Body Wash","Ultra Gentle Gel Cleanser","Glycolic Facial Cleanser (GlyMed Plus)","Vitamin C Cleanser (GlyMed Plus)","Vitamin Veil Cleansing Oil (Circadia)"]},{"cat":"Toners & mists","items":["Moisture Balance Toner","Moisture Balance Toner (2 fl oz)","Omni Clear Mist","Soothing Radiance Toner","Skin Recovery Mist (GlyMed Plus)"]},{"cat":"Serums","items":["11% L-Mandelic Serum","15% L-Mandelic Serum","5% L-Mandelic Serum","8% L-Mandelic Serum","GlowTone Corrective Serum","HydraRemedy Gel Serum","Retinal B3 Serum","Retinol Peptide Serum","Firming Serum with Phyto-Stem Cells (GlyMed Plus)","Revitalizing Essence with NAD+ (GlyMed Plus)","Dew Drop (Mixi Skincare)"]},{"cat":"Acne & spot care","items":["2.5% Advanced Acne Med","5% Advanced Acne Med","invisiClear Hydrocolloid Spot Patches","Sulfur Spot Treatment","Hydroxi (Mixi Skincare)"]},{"cat":"Moisturizers","items":["Barrier Care Gel Cream","Cran-Peptide Cream","HydraBalance Gel","Barrier Repair Cream (GlyMed Plus)","Cell Protection Balm (GlyMed Plus)"]},{"cat":"Eye care","items":["Antioxidant Peptide Eye Gel","Eye Calm (GlyMed Plus)","Firming Eye Cream (GlyMed Plus)"]},{"cat":"Sun care","items":["Brilliant Defense SPF 50","Daily SPF 30 Plus","Mineral Matte SPF 28","PowerMineral SPF 50","Mineral SPF 50 (Mixi Skincare)"]},{"cat":"Masks","items":["HydraCalm Mask"]},{"cat":"Supplements","items":["Clear Skin Balance"]}]};
   var COLL = "playbook";
   var LOCAL = "lumevina_playbook_";
   var el = function (tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
@@ -164,7 +180,11 @@
       FIELDS.push({ sid: sid, key: itemId + "." + f.key, item: itemId, field: f, text: itemId + "." + f.key + ".text" });
     });
   };
+  SPEC.clientQuestions.forEach(function (g) { addFields("client-questions", g.id, g.fields); });
   SPEC.concerns.forEach(function (c) { addFields("concerns", c.id, SPEC.concernFields); });
+  SPEC.treatmentDetails.forEach(function (t) { addFields("treatments", t.id, SPEC.treatmentDetailFields); });
+  addFields("visits", "visits", SPEC.visitFields);
+  addFields("materials", "materials", SPEC.materialsFields);
   SPEC.aftercare.forEach(function (t) { addFields("aftercare", t.id, SPEC.aftercareFields); });
   addFields("routine", "routine", SPEC.routineFields);
   SPEC.products.forEach(function (g) { g.items.forEach(function (p) { addFields("products", p.id, SPEC.productFields); }); });
@@ -229,11 +249,11 @@
       }
       q.appendChild(l);
     }
-    if (f.kind === "text") q.appendChild(box(sid, key, "", f.q, 3));
+    if (f.kind === "text") q.appendChild(box(sid, key, f.ph || "", f.q, f.rows || 3));
     else if (f.kind !== "list") q.appendChild(box(sid, key + ".text", f.text || "In your words", (f.text || "More") + ": " + f.q, 2));
     return q;
   };
-  var item = function (sid, it, fields, sub) {
+  var item = function (sid, it, fields, sub, shotsFirst) {
     var d = el("details", "item");
     d.dataset.sid = sid; d.dataset.item = it.id;
     var s = el("summary");
@@ -244,37 +264,54 @@
     s.appendChild(el("span", "pill", ""));
     d.appendChild(s);
     var b = el("div", "body");
+    if (shotsFirst) b.appendChild(shotsRow(sid, it.id, true));
     fields.forEach(function (f) { b.appendChild(question(sid, it.id, f)); });
+    if (!shotsFirst) b.appendChild(shotsRow(sid, it.id));
     b.appendChild(voiceRow(sid, it.id));
     d.appendChild(b);
     return d;
   };
 
-  /* ── voice memos: recorded in her phone's own recorder, kept with the answers.
-     (The page itself can't open the microphone inside this viewer.) ── */
+  /* ── voice memos and screenshots, kept with the answers. Voice memos are
+     recorded in her phone's own recorder (the page can't open the microphone
+     inside this viewer); screenshots come from her photo library. ── */
   var assets = null;
-  var voiceRow = function (sid, itemId) {
-    var v = el("div", "voice");
+  var MIC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+  var PIC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>';
+  var mediaRow = function (sid, itemId, kind, title, hint, button, icon, accept, lead) {
+    var v = el("div", "media" + (lead ? " is-lead" : ""));
     var t = el("p", "q-t");
-    t.appendChild(document.createTextNode("Voice note"));
-    t.appendChild(el("span", "opt", "optional"));
+    t.appendChild(document.createTextNode(title));
+    if (!lead) t.appendChild(el("span", "opt", "optional"));
     v.appendChild(t);
-    v.appendChild(el("p", "q-h", "Record a voice memo on your phone and add it here. It stays with your answers, and later it can help a voice assistant sound like you."));
-    var lab = el("label", "btn btn-ghost small");
-    lab.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-    lab.appendChild(document.createTextNode("Add a recording"));
-    var inp = el("input");
-    inp.type = "file"; inp.accept = "audio/*,video/*"; inp.hidden = true;
-    inp.dataset.sid = sid; inp.dataset.item = itemId;
-    inp.setAttribute("aria-label", "Add a voice note");
-    lab.appendChild(inp);
-    v.appendChild(lab);
-    var list = el("ul", "notes");
+    v.appendChild(el("p", "q-h", hint));
+    var list = el("ul", kind === "shots" ? "shots" : "notes");
     list.dataset.sid = sid; list.dataset.item = itemId;
-    v.appendChild(list);
-    v.appendChild(el("p", "voice-status"));
+    var lab = el("label", "btn btn-ghost small");
+    lab.innerHTML = icon;
+    lab.appendChild(document.createTextNode(button));
+    var inp = el("input");
+    inp.type = "file"; inp.accept = accept; inp.hidden = true;
+    if (kind === "shots") inp.multiple = true;
+    inp.dataset.sid = sid; inp.dataset.item = itemId; inp.dataset.kind = kind;
+    inp.setAttribute("aria-label", button);
+    lab.appendChild(inp);
+    if (kind === "shots") { v.appendChild(list); v.appendChild(lab); } else { v.appendChild(lab); v.appendChild(list); }
+    v.appendChild(el("p", "media-status"));
     return v;
   };
+  var voiceRow = function (sid, itemId) {
+    return mediaRow(sid, itemId, "voice", "Voice note",
+      "Record a voice memo on your phone and add it here. It stays with your answers, and later it can help a voice assistant sound like you.",
+      "Add a recording", MIC, "audio/*,video/*");
+  };
+  var shotsRow = function (sid, itemId, lead) {
+    return mediaRow(sid, itemId, "shots", lead ? "Add your screenshots" : "Screenshots",
+      lead ? "Add as many as you like, a few at a time. Photos of printed cards work too."
+        : "Already answered this somewhere? Screenshot the text, card or post and add it here; it doesn't matter which question it answers. The assistant reads them alongside what you type.",
+      "Add screenshots", PIC, "image/*,application/pdf", lead);
+  };
+
   /* what the store accepts: MP4 and WebM containers, so a phone voice memo
      (.m4a, an MP4 container) is stored as video/mp4 and plays back as audio */
   var mediaType = function (file) {
@@ -283,18 +320,77 @@
     if (/\.(webm|weba)$/.test(n) || /webm/.test(t)) return "video/webm";
     return null;
   };
-  main.addEventListener("change", function (e) {
-    var inp = e.target;
-    if (!inp.matches || !inp.matches("input[type=file]")) return;
-    var file = inp.files && inp.files[0];
-    if (!file) return;
-    var status = inp.closest(".voice").querySelector(".voice-status");
-    var sid = inp.dataset.sid, itemId = inp.dataset.item;
-    inp.value = "";
+  var MAX = 20 * 1024 * 1024;
+  var shotType = function (file) {
+    var n = (file.name || "").toLowerCase(), t = (file.type || "").toLowerCase();
+    if (t === "image/jpg") t = "image/jpeg";
+    if (/^(image\/(png|jpeg|webp|gif)|application\/pdf)$/.test(t)) return t;
+    if (/\.png$/.test(n)) return "image/png";
+    if (/\.jpe?g$/.test(n)) return "image/jpeg";
+    if (/\.webp$/.test(n)) return "image/webp";
+    if (/\.pdf$/.test(n)) return "application/pdf";
+    return null;
+  };
+  /* an iPhone photo the store can't take (HEIC), or one over the limit:
+     redrawn as a JPEG, at most 2400px on its long side */
+  var asJpeg = function (file) {
+    var draw = function (src, w, h) {
+      var k = Math.min(1, 2400 / Math.max(w, h)), c = document.createElement("canvas");
+      c.width = Math.round(w * k); c.height = Math.round(h * k);
+      c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+      return new Promise(function (ok, no) { c.toBlob(function (b) { b ? ok(b) : no(new Error("encode")); }, "image/jpeg", 0.88); });
+    };
+    if (window.createImageBitmap) {
+      return createImageBitmap(file).then(function (bm) { return draw(bm, bm.width, bm.height); });
+    }
+    return new Promise(function (ok, no) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () { URL.revokeObjectURL(url); draw(img, img.naturalWidth, img.naturalHeight).then(ok, no); };
+      img.onerror = function () { URL.revokeObjectURL(url); no(new Error("decode")); };
+      img.src = url;
+    });
+  };
+  var shotFailure = function (code) {
+    return code === "not_granted" ? "this link can't store screenshots from you"
+      : code === "too_large" ? "it's over 20 MB"
+      : code === "unsupported_type" ? "that kind of file can't be stored here (a screenshot or PDF works)"
+      : code === "quota_or_state" ? "storage for this link is full"
+      : "the upload didn't go through";
+  };
+  var addShot = function (file) {
+    var type = shotType(file);
+    var isImage = /^image\//i.test(file.type || "") || /\.(heic|heif|png|jpe?g|webp|gif|bmp|tiff?)$/i.test(file.name || "");
+    if (type && file.size <= MAX) return assets.upload(file, { type: type });
+    if (!isImage) return Promise.reject({ code: type ? "too_large" : "unsupported_type" });
+    return asJpeg(file).then(function (jpg) { return assets.upload(jpg, { type: "image/jpeg" }); },
+      function () { return Promise.reject({ code: "unsupported_type" }); });
+  };
+  var addShots = function (sid, itemId, files, status) {
+    if (!assets) { status.textContent = "This link can't store screenshots. Text them to Ruben instead; your typed answers still save."; return; }
+    var added = 0, failed = [], i = 0;
+    var next = function () {
+      if (i >= files.length) {
+        status.textContent = (added ? "Added " + (added === 1 ? "1 screenshot" : added + " screenshots") + "." : "")
+          + (failed.length ? (added ? " " : "") + (failed.length === 1 ? "One" : failed.length) + " couldn't be added: " + failed[0] + ". Text " + (failed.length === 1 ? "it" : "them") + " to Ruben instead." : "");
+        return;
+      }
+      var file = files[i++];
+      status.textContent = files.length > 1 ? "Uploading " + i + " of " + files.length + "…" : "Uploading…";
+      addShot(file).then(function (r) {
+        var a = state[sid], k = itemId + ".shots", list = Array.isArray(a[k]) ? a[k].slice() : [];
+        list.push({ id: r.id, name: file.name || "Screenshot", at: new Date().toISOString(), size: r.sizeBytes, type: r.contentType });
+        a[k] = list;
+        added++;
+        schedule(sid, 0);
+      }, function (err) { failed.push(shotFailure(err && err.code)); }).then(next);
+    };
+    next();
+  };
+  var addVoice = function (sid, itemId, file, status) {
     if (!assets) { status.textContent = "This link can't store recordings. Text the memo to Ruben instead; your typed answers still save."; return; }
     var type = mediaType(file);
     if (!type) { status.textContent = "That file type can't be stored here. A voice memo (.m4a) or a video works, or text it to Ruben."; return; }
-    if (file.size > 20 * 1024 * 1024) { status.textContent = "That one's over 20 MB. A shorter memo, or text it to Ruben."; return; }
+    if (file.size > MAX) { status.textContent = "That one's over 20 MB. A shorter memo, or text it to Ruben."; return; }
     status.textContent = "Uploading…";
     assets.upload(file, { type: type }).then(function (r) {
       var a = state[sid], list = Array.isArray(a[itemId + ".voice"]) ? a[itemId + ".voice"].slice() : [];
@@ -308,6 +404,31 @@
         : code === "too_large" ? "That one's too big. A shorter memo, or text it to Ruben."
         : "Couldn't upload that. Try again, or text the memo to Ruben.";
     });
+  };
+  main.addEventListener("change", function (e) {
+    var inp = e.target;
+    if (!inp.matches || !inp.matches("input[type=file]")) return;
+    var files = Array.prototype.slice.call(inp.files || []);
+    inp.value = "";
+    if (!files.length) return;
+    var status = inp.closest(".media").querySelector(".media-status");
+    if (inp.dataset.kind === "shots") addShots(inp.dataset.sid, inp.dataset.item, files, status);
+    else addVoice(inp.dataset.sid, inp.dataset.item, files[0], status);
+  });
+  /* removing a screenshot takes two taps; the file itself is deleted with it */
+  main.addEventListener("click", function (e) {
+    var x = e.target.closest(".shot-x");
+    if (!x) return;
+    e.preventDefault();
+    if (!x.hasAttribute("data-armed")) {
+      x.setAttribute("data-armed", ""); x.textContent = "Remove";
+      setTimeout(function () { if (x.isConnected) { x.removeAttribute("data-armed"); x.textContent = "×"; } }, 4000);
+      return;
+    }
+    var ul = x.closest("ul.shots"), sid = ul.dataset.sid, k = ul.dataset.item + ".shots", id = x.dataset.id;
+    state[sid][k] = (state[sid][k] || []).filter(function (n) { return n.id !== id; });
+    schedule(sid, 0);
+    if (assets && assets.delete) assets.delete(id).catch(function () { /* already gone, or not ours to delete */ });
   });
 
   SPEC.sections.forEach(function (s, i) {
@@ -325,12 +446,20 @@
     head.appendChild(h);
     head.appendChild(el("p", null, s.intro));
     var hint = el("p", "hint");
-    hint.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-    hint.appendChild(document.createTextNode("Speak instead of typing: tap the mic key on your keyboard, in any box."));
+    hint.innerHTML = MIC;
+    hint.appendChild(document.createTextNode("Speak instead of typing: tap the mic key on your keyboard, in any box. Or add screenshots on any card."));
     head.appendChild(hint);
     sec.appendChild(head);
 
+    if (s.id === "client-questions") SPEC.clientQuestions.forEach(function (g, gi) {
+      var d = item("client-questions", g, g.fields);
+      if (gi === 0) d.open = true;
+      sec.appendChild(d);
+    });
     if (s.id === "concerns") SPEC.concerns.forEach(function (c) { sec.appendChild(item("concerns", c, SPEC.concernFields)); });
+    if (s.id === "treatments") SPEC.treatmentDetails.forEach(function (t) { sec.appendChild(item("treatments", t, SPEC.treatmentDetailFields)); });
+    if (s.id === "visits") { var vi = item("visits", { id: "visits", title: "Before they walk in" }, SPEC.visitFields); vi.open = true; sec.appendChild(vi); }
+    if (s.id === "materials") { var mt = item("materials", { id: "materials", title: "Screenshots and photos" }, SPEC.materialsFields, null, true); mt.open = true; sec.appendChild(mt); }
     if (s.id === "aftercare") SPEC.aftercare.forEach(function (t) { sec.appendChild(item("aftercare", t, SPEC.aftercareFields)); });
     if (s.id === "routine") { var r = item("routine", { id: "routine", title: "Routine and starting actives" }, SPEC.routineFields); r.open = true; sec.appendChild(r); }
     if (s.id === "products") SPEC.products.forEach(function (g) {
@@ -356,6 +485,9 @@
     });
     main.querySelectorAll("ul.notes").forEach(function (ul) {
       var list = state[ul.dataset.sid][ul.dataset.item + ".voice"] || [];
+      var sig = list.map(function (n) { return n.id; }).join(",");
+      if (ul.dataset.sig === sig) return;
+      ul.dataset.sig = sig;
       ul.textContent = "";
       list.forEach(function (n) {
         var li = el("li");
@@ -366,10 +498,44 @@
         ul.appendChild(li);
       });
     });
+    main.querySelectorAll("ul.shots").forEach(function (ul) {
+      var list = state[ul.dataset.sid][ul.dataset.item + ".shots"] || [];
+      var sig = list.map(function (n) { return n.id; }).join(",");
+      if (ul.dataset.sig === sig) return;
+      ul.dataset.sig = sig;
+      ul.textContent = "";
+      list.forEach(function (n) {
+        var li = el("li"), a = el("a");
+        a.href = "/_blob/" + n.id; a.target = "_blank"; a.rel = "noopener";
+        a.setAttribute("aria-label", "Open " + (n.name || "screenshot"));
+        if (/^image\//.test(n.type || "")) {
+          var im = el("img");
+          im.alt = ""; im.loading = "lazy"; im.decoding = "async"; im.src = "/_blob/" + n.id;
+          im.onerror = function () { a.textContent = ""; var f = el("span", "file"); f.appendChild(el("b", null, "Can't show")); f.appendChild(document.createTextNode(n.name || "")); a.appendChild(f); };
+          a.appendChild(im);
+        } else {
+          var f = el("span", "file");
+          f.appendChild(el("b", null, "PDF"));
+          f.appendChild(document.createTextNode(n.name || ""));
+          a.appendChild(f);
+        }
+        li.appendChild(a);
+        var x = el("button", "shot-x", "×");
+        x.type = "button"; x.dataset.id = n.id;
+        x.setAttribute("aria-label", "Remove " + (n.name || "screenshot"));
+        li.appendChild(x);
+        ul.appendChild(li);
+      });
+    });
     main.querySelectorAll("details.item").forEach(function (d) {
       var c = itemDone(d.dataset.sid, d.dataset.item), pill = d.querySelector(".pill");
       var vn = (state[d.dataset.sid][d.dataset.item + ".voice"] || []).length;
-      pill.textContent = (c.done ? c.done + " of " + c.total : "") + (vn ? (c.done ? " · " : "") + vn + " voice" : "");
+      var sn = (state[d.dataset.sid][d.dataset.item + ".shots"] || []).length;
+      var bits = [];
+      if (c.done) bits.push(c.done + " of " + c.total);
+      if (sn) bits.push(sn + (sn === 1 ? " pic" : " pics"));
+      if (vn) bits.push(vn + " voice");
+      pill.textContent = bits.join(" · ");
       pill.classList.toggle("is-done", c.done === c.total && c.total > 0);
     });
     var all = 0;
@@ -470,6 +636,8 @@
         });
         var vn = state[s.id][itemId + ".voice"];
         if (vn && vn.length) lines.push("- Voice notes: " + vn.map(function (n) { return n.name; }).join(", "));
+        var sn = state[s.id][itemId + ".shots"];
+        if (sn && sn.length) lines.push("- Screenshots (saved with the playbook): " + sn.map(function (n) { return n.name; }).join(", "));
         if (lines.length) out.push("", "## " + itemId, lines.join("\n"));
       });
     });
