@@ -74,11 +74,11 @@
     P(FR, "Ultra Gentle Gel Cleanser", 33, 0, "Cleansers", { inv: "Ultra Gentle Cleanser", slug: "ultra-gentle-cleanser", size: "6 fl oz / 180 ml", about: "A daily antioxidant wash. Acne-safe." }),
 
     /* ── GlyMed Plus: 9 entries ── */
-    P(GM, "Barrier Repair Cream", 83.20, 0, "Moisturizers", { check: "Confirm the $83.20 price is intended." }),
-    P(GM, "Cell Protection Balm", 34, 0, "Moisturizers"),
-    P(GM, "Eye Calm", 48, 0, "Eye care"),
-    P(GM, "Firming Eye Cream", 70, 0, "Eye care"),
-    P(GM, "Firming Serum w/ Phyto…", 142, 0, "Serums", { draft: true, slug: "firming-serum", note: "Name cut off (\"Firming Serum w/ Phyto…\"): probably Firming Serum with Phyto Stem Cells. Confirm the title and size." }),
+    P(GM, "Barrier Repair Cream", 83.20, 0, "Moisturizers", { photo: "img/products/glymed-plus-barrier-repair-cream.webp", size: "4 fl oz / 118 ml", about: "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.", check: "Confirm the $83.20 price is intended (it's the 4 fl oz Elite tube)." }),
+    P(GM, "Cell Protection Balm", 34, 0, "Moisturizers", { photo: "img/products/glymed-plus-cell-protection-balm.webp", size: "2 fl oz / 59 ml", about: "Step 3 of the GlyMed Plus routine: balance." }),
+    P(GM, "Eye Calm", 48, 0, "Eye care", { photo: "img/products/glymed-plus-eye-calm.webp", size: "0.3 fl oz / 10 ml", about: "Step 3 of the GlyMed Plus routine: balance." }),
+    P(GM, "Firming Eye Cream", 70, 0, "Eye care", { photo: "img/products/glymed-plus-firming-eye-cream.webp", size: "0.3 oz / 10 ml", about: "Part of the GlyMed Plus Elite line; step 3 of its routine: balance." }),
+    P(GM, "Firming Serum with Phyto-Stem Cells", 142, 0, "Serums", { inv: "Firming Serum w/ Phyto…", slug: "firming-serum", photo: "img/products/glymed-plus-firming-serum.webp", size: "1 oz / 30 ml", about: "Part of the GlyMed Plus Elite line; step 2 of its routine: treat.", resolved: "Flag [9] answered by the label photo: Firming Serum with Phyto-Stem Cells, 1 oz / 30 ml." }),
     P(GM, "Glycolic Cleanser", 41, 0, "Cleansers", { photo: "img/retail/glymed-cleanser.webp" }),
     P(GM, "Revitalizing Essence NAD+", 50, 0, "More"),
     P(GM, "Skin Recovery Mist", 46, 0, "Toners & mists"),
