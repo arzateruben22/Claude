@@ -74,15 +74,29 @@
       timers.push(setTimeout(function () { el.classList.add("intro-anim"); }, delay));
     });
     /* auto-lift: it's a greeting, not a wait (the words land by ~1.3s) */
-    timers.push(setTimeout(function () { dismiss(); }, 2600));
+    timers.push(setTimeout(function () { dismiss(); }, 3000));
   };
-  var mark = intro.querySelector(".intro-mark");
-  if (!mark || (mark.complete && mark.naturalWidth)) setTimeout(begin, 60);
-  else {
-    mark.addEventListener("load", begin);
-    mark.addEventListener("error", begin);
-    timers.push(setTimeout(begin, 1500));   /* a slow logo never holds the page */
-  }
+  /* start only once the page has fully loaded AND is on screen: the preview
+     viewer (and a slow phone) shows the page after it loads, so a greeting
+     timed from the first byte would play behind the loading screen. The
+     veil covers the page while it loads; then the logo and words play.
+     Never hold the page past 8 seconds. */
+  var go = function () {
+    if (started || done) return;
+    if (document.hidden) {
+      var onShow = function () {
+        if (document.hidden) return;
+        document.removeEventListener("visibilitychange", onShow);
+        setTimeout(begin, 120);
+      };
+      document.addEventListener("visibilitychange", onShow);
+      return;
+    }
+    begin();
+  };
+  if (document.readyState === "complete") setTimeout(go, 120);
+  else window.addEventListener("load", function () { setTimeout(go, 120); });
+  timers.push(setTimeout(go, 8000));
 
   /* soft glow follows the cursor (desktop; harmless on touch) */
   var glow = document.getElementById("intro-glow");
