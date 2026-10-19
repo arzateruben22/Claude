@@ -35,7 +35,7 @@ The look: warm beige, white and classic black (tokens at the top of `css/styles.
 ## Still to do, in order
 
 1. **Product detail panel:** size buttons for products sold in two sizes (Moisture Balance Toner, Ultra Gentle Gel Cleanser), then short optional sections: description, "Good for" tags, how to use, key ingredients, Evelyn's tip. No ratings or reviews.
-2. **Checkout:** the cart's + button can exceed the shelf count; a returning buyer who types their email doesn't get their last address filled in.
+2. ~~**Checkout:** the cart's + button can exceed the shelf count; a returning buyer who types their email doesn't get their last address filled in.~~ Done Oct 19: the cart stops at the shelf count and a returning buyer's address fills in from their email.
 3. **Photos:** 15 products were shown in chat but not received as files (list in EVELYN-NOTES.md → Photos).
 4. **Ask Lumevina chat:** automatic answers for aftercare and product questions from the catalog; drop membership, rewards and Skin School answers while those are held back; booking questions go to GlossGenius.
 5. **Dashboard on her phone:** daily jobs first (orders to ship, client questions, low stock); the Inventory card should use the real catalog.
