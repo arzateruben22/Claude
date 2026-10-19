@@ -9,11 +9,22 @@
 
   /* ── Nav ── */
   var nav = document.querySelector(".nav");
+  /* --nav-bottom: where the header really ends, so anything that sticks
+     under it (the shop's type bar) sits flush against it on every phone,
+     inside an app's viewer too, where the notch inset doesn't apply */
+  var navBottom = -1;
+  var measureNav = function () {
+    var b = Math.round(nav.getBoundingClientRect().bottom);
+    if (b !== navBottom && b > 0) { navBottom = b; document.documentElement.style.setProperty("--nav-bottom", b + "px"); }
+  };
   var onScroll = function () {
     nav.classList.toggle("scrolled", window.scrollY > 24);
+    measureNav();
   };
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", measureNav);
+  nav.addEventListener("transitionend", measureNav);
 
   /* Brand → glide back to the top. The #top target is the fixed nav,
      which some browsers treat as always in view and won't scroll to,

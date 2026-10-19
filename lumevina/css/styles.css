@@ -6568,10 +6568,11 @@ a.book-btn { text-align: center; }
 /* types: tabs with a sliding underline, on a hairline that runs the width
    of the shop; sticks under the header on a linen band */
 .sh-nav {
-  position: sticky; top: calc(4.6rem + env(safe-area-inset-top, 0px)); z-index: 20;
+  /* flush under the header: js/main.js measures where it ends (--nav-bottom) */
+  position: sticky; top: var(--nav-bottom, 4.6rem); z-index: 20;
   display: flex; align-items: center; gap: 1.5rem; margin: 1rem 0 1.75rem;
   border-bottom: 1px solid var(--ink-15);
-  transition: background-color 200ms ease, box-shadow 200ms ease;
+  transition: background-color 200ms ease, box-shadow 200ms ease, transform 280ms ease, opacity 220ms ease;
 }
 /* once it sticks under the header, a linen band runs the full width behind it */
 .sh-nav.is-stuck { background: var(--linen); box-shadow: 0 0 0 100vmax var(--linen); clip-path: inset(0 -100vmax); }
@@ -6604,7 +6605,9 @@ a.book-btn { text-align: center; }
   .sh-console .sh-search { flex-basis: 100%; }
   .sh-switch { padding-left: 0.3rem; }
   .sh-brand-tab { flex: none; padding: 0 0.85rem; }
-  .sh-nav { top: calc(4rem + env(safe-area-inset-top, 0px)); margin-top: 0.4rem; }
+  .sh-nav { top: var(--nav-bottom, 4rem); margin-top: 0.4rem; }
+  /* scrolling down through the products: tucked up under the header */
+  .sh-nav.is-stuck.is-tucked { transform: translateY(calc(-100% - 1px)); opacity: 0; pointer-events: none; }
   .sh-count--under { margin: 0.65rem 0.25rem 0; }
   .sh-tabs { gap: 1.3rem; }
   /* the row scrolls: fade its far edge so it reads as more to see */

@@ -606,14 +606,23 @@
     });
   }
   if (inStock) inStock.addEventListener("change", function () { state.inStock = inStock.checked; paintGrid(); });
-  /* the type bar gets its linen band only once it sticks under the header */
+  /* the type bar gets its linen band only once it sticks under the header.
+     On phones it tucks away while you scroll down through the products and
+     comes back as soon as you scroll up (or tap a type and land on it). */
   var nav = shop && shop.querySelector(".sh-nav");
   if (nav) {
-    var stuckTick = false;
+    var stuckTick = false, lastY = window.scrollY;
+    var phone = window.matchMedia("(max-width: 760px)");
     var checkStuck = function () {
       stuckTick = false;
       var top = parseFloat(getComputedStyle(nav).top) || 0;
-      nav.classList.toggle("is-stuck", nav.getBoundingClientRect().top <= top + 1 && shop.getBoundingClientRect().bottom > top + nav.offsetHeight);
+      var stuck = nav.getBoundingClientRect().top <= top + 1 && shop.getBoundingClientRect().bottom > top + nav.offsetHeight;
+      nav.classList.toggle("is-stuck", stuck);
+      var y = window.scrollY, dy = y - lastY;
+      if (!stuck || !phone.matches || Date.now() < jumping || nav.contains(document.activeElement)) nav.classList.remove("is-tucked");
+      else if (dy > 6) nav.classList.add("is-tucked");
+      else if (dy < -6) nav.classList.remove("is-tucked");
+      if (Math.abs(dy) > 6) lastY = y;
     };
     window.addEventListener("scroll", function () { if (!stuckTick) { stuckTick = true; requestAnimationFrame(checkStuck); } }, { passive: true });
     checkStuck();
