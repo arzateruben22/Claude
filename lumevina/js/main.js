@@ -38,13 +38,18 @@
     });
   }
 
+  /* the menu drops down from the header under the two-line button; the page
+     stays where it is behind a light scrim. Tap outside, a link, or Escape. */
   var toggle = document.querySelector(".nav-toggle");
   var mobileMenu = document.getElementById("mobile-menu");
+  var scrim = document.querySelector(".mm-scrim");
   var setMenu = function (open) {
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     mobileMenu.hidden = !open;
-    document.body.style.overflow = open ? "hidden" : "";
+    if (scrim) scrim.hidden = !open;
+    document.documentElement.classList.toggle("menu-open", open);
+    if (open) measureNav();
   };
   setMenu(false);
   /* a finger lifting on the button opens the menu straight away; the click
@@ -63,11 +68,16 @@
     flip();
   });
   mobileMenu.addEventListener("click", function (e) {
-    if (e.target.closest("a")) setMenu(false);
+    if (e.target.closest("a, button")) setMenu(false);
   });
+  if (scrim) scrim.addEventListener("click", function () { setMenu(false); });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !mobileMenu.hidden) setMenu(false);
+    if (e.key === "Escape" && !mobileMenu.hidden) { setMenu(false); toggle.focus(); }
   });
+  /* the menu belongs to small screens: close it if the window grows past them */
+  window.addEventListener("resize", function () {
+    if (!mobileMenu.hidden && getComputedStyle(toggle).display === "none") setMenu(false);
+  }, { passive: true });
 
   /* ── Newsletter form → client-side thanks (held back in v2: the
      Contact form took its place and has its own script, js/contact.js) ── */

@@ -227,3 +227,7 @@ Her saved answers so far (Skin concerns → breakouts) are untouched; a treatmen
 ## Texting assistant: drafts by texting herself (Oct 19)
 
 From the ChatGPT idea (Anthropic's iMessage plugin for Claude Code), the safe version: Evelyn texts herself a client's question from her iPhone, and Claude on her Mac texts back a draft reply from her Skin Playbook, FAQ and shelf for her to copy and send. Only her own self-chat reaches it (clients are never added), SMS stays off, and the `texting/` folder blocks Claude from opening files, running commands or browsing. Personal and medical questions come back marked "this one's yours to answer". Setup: `texting/SETUP.md` (about 15 minutes on her Mac; needs a Claude Pro or Max plan). It reads `texting/knowledge.md`, rebuilt with the rest of the knowledge. Automatic drafts for client texts, approved by her before anything is sent, is a separate build, not started.
+
+## The menu drops down (Oct 19)
+
+On phones and tablets the two-line button now opens a dropdown card under the header instead of a full-screen page: the six sections, "New here? Start here", Book now, and Cart and My Lumevina. The page stays where it was behind a light shade; tapping outside, a link or Escape closes it. On a computer the links stay in the header as before.
