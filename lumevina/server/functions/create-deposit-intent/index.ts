@@ -23,6 +23,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 // Single source of truth for prices/durations on the server.
 // Generated from the site's catalog — keep in sync with index.html.
 import { CATALOG } from "../_shared/catalog.ts";
+import { isBusy } from "../_shared/google.ts";
 
 const FLASH_OFF = 0.10;
 const REFERRAL_OFF_CENTS = 1500; // a friend's code: $15 off a first visit
@@ -105,6 +106,16 @@ Deno.serve(async (req) => {
     redeemed = 0;
   }
   const chargeCents = depositCents - redeemed * POINT_VALUE_CENTS;
+
+  // Her other calendar: a GlossGenius appointment or a personal block in her
+  // Google Calendar takes the time too (server/functions/_shared/google.ts).
+  try {
+    if (await isBusy(body.date, body.start_min, durMin)) {
+      return new Response(JSON.stringify({ error: "slot_taken" }), { status: 409 });
+    }
+  } catch (err) {
+    console.error(String(err));   // Google unreachable: the website's own bookings still guard the time
+  }
 
   // Insert as pending — the no_overlap constraint is the availability check.
   const { data: booking, error } = await supabase.from("bookings").insert({

@@ -31,7 +31,7 @@ create table bookings (
   guest_name text,                 -- guest checkout stays supported
   guest_email text,
   date date not null,
-  start_min int not null check (start_min between 480 and 1050),
+  start_min int not null check (start_min between 0 and 1439),  -- her hours, plus after-hours visits
   dur_min int not null check (dur_min > 0 and dur_min % 30 = 0),
   services jsonb not null,         -- ["brazilian-wax", "lumevina-custom-facial"]
   total_cents int not null,
@@ -46,6 +46,7 @@ create table bookings (
     check (source in ('web', 'app', 'admin')),  -- app-vs-web split in the
                                      -- owner dashboard; captured from booking #1
   stripe_payment_intent text,
+  google_event_id text,            -- the event in her Google Calendar (GlossGenius reads it)
   status text not null default 'pending'
     check (status in ('pending', 'held', 'completed', 'cancelled', 'no_show')),
   created_at timestamptz not null default now()

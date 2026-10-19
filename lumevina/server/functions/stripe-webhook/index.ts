@@ -17,6 +17,8 @@
 // payment_intent.payment_failed) at this function's URL.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { addBooking } from "../_shared/google.ts";
+import { CATALOG } from "../_shared/catalog.ts";
 
 const encoder = new TextEncoder();
 
@@ -92,6 +94,18 @@ Deno.serve(async (req) => {
     status: "held",
     paid_cents: intent.amount,
   }).eq("id", bookingId);
+
+  // Into her Google Calendar, so GlossGenius sees the time as taken
+  // (server/functions/_shared/google.ts). Never blocks the webhook.
+  try {
+    const names = (booking.services as string[]).map((id) => CATALOG[id]?.name ?? id).join(" + ");
+    const who = booking.guest_name || "website client";
+    const eventId = await addBooking({ id: bookingId, date: booking.date, start_min: booking.start_min,
+      dur_min: booking.dur_min, title: `${names} · ${who}`, note: "Deposit paid online." });
+    if (eventId) await supabase.from("bookings").update({ google_event_id: eventId }).eq("id", bookingId);
+  } catch (err) {
+    console.error("google calendar:", String(err));
+  }
 
   // Fire the confirmation email/SMS and queue the 24h reminder.
   await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-confirmation`, {
