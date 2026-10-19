@@ -28,19 +28,10 @@
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { issueGift, publicCard } from "../_shared/gifts.ts";
+import { studioOk } from "../_shared/studio.ts";
 
 const CODE = /^LUM-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 const REASONS = new Set(["not_found", "void", "empty", "nothing_due"]);
-
-// the studio key, compared in constant time
-const studioOk = (req: Request) => {
-  const want = Deno.env.get("STUDIO_KEY") ?? "";
-  const got = req.headers.get("x-studio-key") ?? "";
-  if (want.length < 12 || got.length !== want.length) return false;
-  let diff = 0;
-  for (let i = 0; i < want.length; i++) diff |= want.charCodeAt(i) ^ got.charCodeAt(i);
-  return diff === 0;
-};
 
 Deno.serve(async (req) => {
   const cors = {

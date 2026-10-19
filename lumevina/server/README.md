@@ -14,6 +14,7 @@ the client across devices (site → iPhone app).
 | `functions/send-confirmation/` | Sends confirmation + 24-hour reminder email/SMS (Resend + optional Twilio); also flushes due reminders when run on a schedule |
 | `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
 | `functions/gift-cards/` | Gift certificates: check a balance, use one at the visit (studio key), list them, sell one in person |
+| `functions/client-plans/` | Skin plans: Evelyn writes each client's routine (studio key); the signed-in client reads theirs |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
 
 ## Gift certificates
@@ -45,6 +46,44 @@ paid `gift-any-<amount>` line, after Stripe confirms, and the code is
 emailed. Never issue them from the browser. Until the shop's payments are
 live, the website's demo checkout issues codes in the buyer's browser
 (js/giftcards.js), which is only for trying it out.
+
+## Skin plans, and what the chat knows about a signed-in client
+
+`schema.sql` → `client_plans`: the routine Evelyn writes for each client in
+her dashboard (Clients → Skin plan): skin type, what they're working on,
+where they are now, morning, night and weekly steps from her shelf, what to
+avoid, the next step, a note, and dated visit notes. Keyed by email, so she
+can write one for a GlossGenius client before they ever sign in. Clients
+read only their own (row-level security on their sign-in email);
+`functions/client-plans/` is the only way to write:
+
+| Action | Who | What |
+| --- | --- | --- |
+| `mine` | the signed-in client (their session) | their plan, for My Lumevina |
+| `list` / `save` / `remove` | the dashboard, with `x-studio-key` | every plan; write or delete one |
+
+```sh
+supabase functions deploy client-plans --no-verify-jwt
+```
+
+**Ask Lumevina, signed in.** When the website sends a client's session
+(`Authorization: Bearer <their access token>`), `functions/ask` builds their
+file (`functions/_shared/plans.ts`): the plan, a few pre-visit form answers
+(goals, challenges, what they use, last retinol and exfoliation, plus
+pregnancy, medications, conditions and allergies as cautions), their visits,
+and the last questions Evelyn answered for them. It goes into the prompt
+after the cached part, for that request only. With a plan on file, "what do
+I use tonight?" is answered from it instead of waiting for her; changing the
+plan, a reaction, pregnancy, medications and named conditions still go to
+her, and her drafted reply for those uses the same file.
+
+**Sign-in links.** My Lumevina signs clients in with Supabase Auth's emailed
+link (no password, no extra library: `js/account.js`). In Supabase → Authentication:
+- **URL Configuration:** Site URL = the website's address; add it (and the
+  preview address, if any) under Redirect URLs.
+- **Email Templates → Magic Link:** Evelyn's wording, if she likes.
+- Email sign-ins are on by default; for her own sending address, set up
+  custom SMTP with the same Resend account as the confirmations.
 
 ## Notifications (confirmations & reminders)
 

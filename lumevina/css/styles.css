@@ -4073,6 +4073,50 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 
 .acct-credit-empty { font-size: 0.82rem; color: var(--ink-60); margin: 0.7rem 0 0; }
 
+/* ── Your skin plan, from Evelyn (js/skin-plans.js) ── */
+.acct-status.is-ok { color: var(--sage); }
+.acct-plan { margin-bottom: var(--space-4); }
+.acct-plan-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; }
+.acct-plan-meta { font-size: 0.75rem; color: var(--ink-35); margin: 0 0 var(--space-2); }
+.acct-plan-card {
+  background: var(--field);
+  border: 1px solid var(--panel-edge-soft);
+  border-radius: 12px;
+  padding: var(--space-3) var(--space-4);
+  display: grid;
+  gap: 0.2rem;
+}
+.acct-plan-about { font-size: 0.85rem; color: var(--ink); font-weight: 500; margin: 0 0 0.3rem; }
+.acct-plan-k {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cocoa); margin: 0.65rem 0 0.15rem;
+}
+.acct-plan-t { font-size: 0.875rem; color: var(--ink); margin: 0; line-height: 1.5; }
+.acct-plan-steps { margin: 0.1rem 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 0.35rem; }
+.acct-plan-steps li {
+  counter-increment: step; display: grid; grid-template-columns: 1.35rem 1fr; column-gap: 0.35rem;
+  font-size: 0.875rem; color: var(--ink); line-height: 1.4;
+}
+.acct-plan-steps li::before {
+  content: counter(step); grid-row: span 2; width: 1.35rem; height: 1.35rem; border-radius: 50%;
+  background: var(--ink); color: var(--linen); font-size: 0.7rem; font-weight: 600;
+  display: grid; place-items: center; margin-top: 0.05rem; font-variant-numeric: tabular-nums;
+}
+.acct-plan-steps small { grid-column: 2; font-size: 0.78rem; color: var(--ink-60); }
+.acct-plan-note {
+  margin: 0.75rem 0 0; padding: 0.6rem 0.8rem; border-left: 2px solid var(--camel);
+  font-size: 0.875rem; color: var(--ink); background: rgba(var(--accent-rgb), 0.1); border-radius: 0 8px 8px 0;
+}
+.acct-plan-note cite { display: block; margin-top: 0.3rem; font-style: normal; font-size: 0.75rem; color: var(--ink-60); }
+.acct-plan-note cite::before { content: "— "; }
+.acct-plan-log { margin-top: 0.6rem; font-size: 0.82rem; color: var(--ink-60); }
+.acct-plan-log summary { cursor: pointer; font-weight: 500; color: var(--ink); padding: 0.25rem 0; }
+.acct-plan-log ul { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.4rem; }
+.acct-plan-log b { font-weight: 600; color: var(--ink); margin-right: 0.25rem; }
+.acct-plan-empty { font-size: 0.85rem; color: var(--ink-60); margin: 0; line-height: 1.5; }
+.acct-plan-ask { margin-top: 0.8rem; width: 100%; justify-content: center; text-align: center; }
+.acct-plan[hidden], .acct-plan-ask[hidden] { display: none; }
+
 .acct-credit-add { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
 
 .acct-credit-input {

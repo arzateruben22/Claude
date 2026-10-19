@@ -259,6 +259,27 @@ create policy "clients read their own questions" on questions
 -- the dashboard's Send reply updates reply / status / answered_at.
 
 -- ─────────────────────────────────────────────────────────────
+-- Skin plans: the routine Evelyn writes for each client (dashboard →
+-- Clients → Skin plan). Keyed by email, so she can write one before the
+-- client ever signs in. The client sees it in My Lumevina, and Ask
+-- Lumevina answers their routine questions from it (functions/ask), along
+-- with their pre-visit form, visits and the questions she has answered.
+-- ─────────────────────────────────────────────────────────────
+create table client_plans (
+  email text primary key check (email = lower(email)),
+  client_id uuid references clients (id) on delete set null,
+  name text,
+  plan jsonb not null,             -- { skinType, concerns[], goal, phase, morning[], night[], weekly[],
+                                   --   avoid, next, note, log[] }: see functions/_shared/plans.ts
+  updated_at timestamptz not null default now()
+);
+
+alter table client_plans enable row level security;
+create policy "clients read their own plan" on client_plans
+  for select using (email = lower(auth.jwt() ->> 'email'));
+-- writes happen only in functions/client-plans (service role, studio key).
+
+-- ─────────────────────────────────────────────────────────────
 -- Shipping: everything that goes out by mail (js/shipping.js)
 -- Shelf orders, Glow Routine boxes and Skin School kits. stripe-webhook
 -- inserts a row for each paid order that ships (payment_intent.succeeded

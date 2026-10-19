@@ -17,6 +17,12 @@
  *
  *   Members hear back within 24 hours; everyone else within 2 days.
  *
+ *   Signed in, with a skin plan from Evelyn (js/skin-plans.js): "what do I
+ *   use tonight?", "what should I avoid?", "what's next?" are answered from
+ *   that plan. Changing it, or anything the rules above catch, still goes to
+ *   her. Live, the server sees the same plan, plus the client's pre-visit
+ *   form, visits and the questions she has answered for them.
+ *
  * DEMO: questions live in localStorage ("lumevina_questions"), shared with
  * the dashboard when both run from the same place, and matching is by
  * keywords. LIVE: the server's ask function (server/README.md → Ask
@@ -38,7 +44,18 @@
   var questions = function () { return read(KEY, []); };
   var chat = function () { return read(CHAT_KEY, { log: [], seen: {} }); };
 
-  /* ── who's asking ── */
+  /* ── who's asking, and the plan Evelyn wrote for them ── */
+  var PL = window.LumevinaPlans;
+  var myPlan = function () {
+    var s = window.LumevinaAccount && window.LumevinaAccount.current();
+    var p = s && PL ? PL.get(s.email) : null;
+    return p && !PL.empty(p) ? p : null;
+  };
+  var fromPlan = function (text) {
+    var p = myPlan(), who = me();
+    var a = p ? PL.answer(p, text, who ? who.name.split(" ")[0] : "") : null;
+    return a ? { answer: a, acts: [["See my plan", "account"], ["Ask Evelyn", "skin"]], plan: true } : null;
+  };
   var me = function () {
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
     if (!s) return null;
@@ -283,7 +300,11 @@
     var t = TY ? TY.fix(text) : raw;
     /* safety first, on what they typed and on what they meant */
     var rk = RULES ? RULES.kind(raw, t) : null;
+    /* "my routine" from a client with a plan: her plan answers it; anything else the rules catch goes to her */
+    if ((!rk || rk === "skin") && fromPlan(t)) return fromPlan(t);
     if (rk) return { handoff: rk };
+    /* changing their plan ("can I add vitamin C to my routine?") is Evelyn's call */
+    if (myPlan() && /\bmy (routine|regimen|plan|products|skin ?care)\b/.test(t)) return { handoff: "skin" };
     if (off("membership") && /member|monthly plan|subscri|\bglow plan|join\b|\bbank/.test(t)) return { answer: "Memberships are paused right now. Facials book one at a time on the calendar here, and Evelyn’s shelf is open on this site.", acts: [["Book", "book"], ["See the shop", "#shop"]] };
     if (off("school") && /\bcourses?\b|\bclass(es)?\b|skin school|\blessons?\b|glow party|pro night|workshop/.test(t)) return { answer: "Skin School and classes are paused right now. Evelyn is happy to answer questions one on one.", acts: [["Ask Evelyn", "skin"]] };
     if (off("rewards") && /\brefer|referral|points\b|rewards?\b|friend'?s code/.test(t)) return { answer: "Glow Rewards is paused right now, so there are no points or referral codes at the moment.", acts: [["Book", "book"]] };
@@ -387,7 +408,9 @@
   var render = function () {
     logEl.innerHTML = "";
     var who = me();
-    bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! Ask me about prices, booking, prep, aftercare or products. Anything about your own skin, I’ll pass to Evelyn."));
+    bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! " + (myPlan()
+      ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
+      : "Ask me about prices, booking, prep, aftercare or products. Anything about your own skin, I’ll pass to Evelyn.")));
     var answered = {};
     replies().forEach(function (q) { answered[q.id] = q; });
     var lastBot = -1;
@@ -452,7 +475,8 @@
   var ENDPOINT = /^https:\/\//.test(CFG.endpoint || "") ? CFG.endpoint : "";
   var post = function (body) {
     var headers = { "Content-Type": "application/json" };
-    if (CFG.key) { headers.apikey = CFG.key; headers.Authorization = "Bearer " + CFG.key; }
+    var token = window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : "";
+    if (CFG.key) { headers.apikey = CFG.key; headers.Authorization = "Bearer " + (token || CFG.key); }
     var ctrl = typeof AbortController === "function" ? new AbortController() : null;
     var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 20000) : null;
     return fetch(ENDPOINT, { method: "POST", headers: headers, body: JSON.stringify(body), signal: ctrl ? ctrl.signal : undefined })
@@ -473,7 +497,10 @@
   var remote = function (text) {
     if (!ENDPOINT || /^about my skin:/i.test(text)) return false;
     var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
-    if (RULES && RULES.kind(raw, t)) return false;
+    var rk = RULES ? RULES.kind(raw, t) : null;
+    /* a "my skin" question still goes to the server when it can see this client's plan */
+    var signedIn = window.LumevinaAccount && window.LumevinaAccount.token && window.LumevinaAccount.token();
+    if (rk && !(rk === "skin" && signedIn && myPlan())) return false;
     var who = me();
     bubble("bot", "…", "thinking");
     logEl.scrollTop = logEl.scrollHeight;
@@ -644,12 +671,17 @@
   classify = function (text) {
     if (/^about my skin:/i.test(text)) {
       var r = baseClassify(text.replace(/^about my skin:\s*/i, ""));
-      return r.handoff ? r : { handoff: "skin" };
+      return r.handoff || r.plan ? r : { handoff: "skin" };
     }
     return baseClassify(text);
   };
 
-  document.addEventListener("lumevina:account-changed", function () { if (!panel.hidden) render(); else paintFab(); });
+  document.addEventListener("lumevina:account-changed", function () {
+    if (PL && PL.live) PL.mine();             /* fetch the signed-in client's plan, so it's ready for their first question */
+    if (!panel.hidden) render(); else paintFab();
+  });
+  document.addEventListener("lumevina:plan-changed", function () { if (!panel.hidden) render(); });
+  if (PL && PL.live && window.LumevinaAccount && window.LumevinaAccount.current()) PL.mine();
   window.addEventListener("storage", function (e) { if (e.key === KEY) { if (!panel.hidden) render(); else paintFab(); } });
   document.querySelectorAll("[data-open-ask]").forEach(function (a) {
     a.addEventListener("click", function (e) { e.preventDefault(); open(); });

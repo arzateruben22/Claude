@@ -3,12 +3,16 @@
    tracks under one roof: Glow Points, upcoming appointments (with
    the 48-hour cancellation rule), and your referral code.
 
-   The sign-in is a MAGIC-LINK mock: in production the "Send my
-   sign-in link" button calls the server (Supabase auth — see
-   server/README.md), which emails a one-tap link; here it signs
-   straight in so the whole flow is testable. The panel API stays
-   identical when the real backend lands. Guest booking always
-   remains available — signing in is the rewards path, not a gate. */
+   The sign-in is a MAGIC LINK. Connected (js/site-config.js → shop),
+   "Send my sign-in link" asks Supabase to email a one-tap link; it
+   comes back to this page with the session, which is kept in this
+   browser and refreshed before it runs out (token() hands it to the
+   chat, so Ask Lumevina knows who's asking). In the demo it signs
+   straight in so the whole flow is testable. Guest booking always
+   remains available — signing in is the rewards path, not a gate.
+
+   Signed in, the panel also shows the skin plan Evelyn wrote for the
+   client (js/skin-plans.js), when there is one. */
 
 (function () {
   "use strict";
@@ -65,6 +69,73 @@
     var ampm = h >= 12 ? "PM" : "AM";
     var hh = h % 12 === 0 ? 12 : h % 12;
     return hh + ":" + (m < 10 ? "0" + m : m) + " " + ampm;
+  };
+
+  /* ── Live sign-in: Supabase Auth's emailed link (no library: four calls) ── */
+  var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var AUTH = /^https:\/\//.test(SHOP.supabase || "") && SHOP.key ? SHOP.supabase.replace(/\/$/, "") + "/auth/v1" : "";
+  var AUTH_KEY = "lumevina_auth";          /* { access, refresh, expiresAt } */
+  var NAME_KEY = "lumevina_auth_name";     /* the name typed before the link was sent */
+  var auth = null, refreshTimer = null;
+  var authCall = function (path, body, token) {
+    var headers = { apikey: SHOP.key, "Content-Type": "application/json" };
+    if (token) headers.Authorization = "Bearer " + token;
+    return fetch(AUTH + path, { method: body ? "POST" : "GET", headers: headers, body: body ? JSON.stringify(body) : undefined })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { j.status = r.status; throw j; } return j; });
+      });
+  };
+  var keepAuth = function (a) {
+    auth = a;
+    try { if (a) localStorage.setItem(AUTH_KEY, JSON.stringify(a)); else localStorage.removeItem(AUTH_KEY); } catch (e) { /* private mode */ }
+  };
+  var tokensFrom = function (j) {
+    return { access: j.access_token, refresh: j.refresh_token, expiresAt: Date.now() + (Number(j.expires_in) || 3600) * 1000 };
+  };
+  var scheduleRefresh = function () {
+    clearTimeout(refreshTimer);
+    if (auth) refreshTimer = setTimeout(refresh, Math.max(5000, auth.expiresAt - Date.now() - 120000));
+  };
+  var refresh = function () {
+    if (!auth || !auth.refresh) return Promise.resolve(null);
+    return authCall("/token?grant_type=refresh_token", { refresh_token: auth.refresh }).then(function (j) {
+      keepAuth(tokensFrom(j));
+      scheduleRefresh();
+      return auth;
+    }, function (err) {
+      /* offline: keep the session and try again later; refused: signed out */
+      if (err instanceof TypeError) { refreshTimer = setTimeout(refresh, 60000); return null; }
+      endSession();
+      return null;
+    });
+  };
+  var endSession = function () {
+    keepAuth(null);
+    session = null;
+    save();
+    if (typeof render === "function") render();
+    document.dispatchEvent(new CustomEvent("lumevina:account-changed"));
+  };
+  /* the link lands here: #access_token=…&refresh_token=…&expires_in=… (or #error_description=…) */
+  var linkError = "";
+  var arrive = function () {
+    if (!AUTH || !/access_token=|error_description=/.test(location.hash)) return null;
+    var q = {};
+    location.hash.slice(1).split("&").forEach(function (kv) {
+      var i = kv.indexOf("=");
+      if (i > 0) q[decodeURIComponent(kv.slice(0, i))] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " "));
+    });
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { /* old browser */ }
+    if (!q.access_token) { linkError = /expired/i.test(q.error_description || "") ? "That sign-in link has expired. Send yourself a new one." : "That sign-in link didn't work. Send yourself a new one."; return null; }
+    keepAuth(tokensFrom(q));
+    return authCall("/user", null, auth.access).then(function (u) {
+      var typed = ""; try { typed = localStorage.getItem(NAME_KEY) || ""; localStorage.removeItem(NAME_KEY); } catch (e) { /* private mode */ }
+      var meta = u.user_metadata || {};
+      session = { name: meta.name || typed || String(u.email).split("@")[0], email: u.email, since: Date.parse(u.created_at) || Date.now() };
+      save();
+      scheduleRefresh();
+      return true;
+    }, function () { keepAuth(null); linkError = "That sign-in link didn't work. Send yourself a new one."; return null; });
   };
 
   /* ── Modal elements ── */
@@ -235,7 +306,60 @@
     renderIntake();
     renderCredit();
     renderMember();
+    renderPlan();
   };
+
+  /* ── Your skin plan, from Evelyn (js/skin-plans.js) ── */
+  var planWrap = modal.querySelector(".acct-plan");
+  var planBody = modal.querySelector(".acct-plan-body");
+  var planMeta = modal.querySelector(".acct-plan-meta");
+  var planAsk = modal.querySelector(".acct-plan-ask");
+  var esc = function (t) { var d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; };
+  var drawPlan = function (p) {
+    var PL = window.LumevinaPlans;
+    if (!planWrap) return;
+    planWrap.hidden = !PL;
+    if (!PL) return;
+    if (!p || PL.empty(p)) {
+      planMeta.textContent = "";
+      planBody.innerHTML = '<p class="acct-plan-empty">After your visit, Evelyn writes your routine here: what to use morning and night, ' +
+        "what to avoid for now, and what comes next. Ask Lumevina answers from it, any time.</p>";
+      planAsk.hidden = true;
+      return;
+    }
+    planMeta.textContent = "From Evelyn" + (p.updatedAt ? " · updated " + new Date(p.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "");
+    var steps = function (title, list) {
+      if (!list.length) return "";
+      return '<p class="acct-plan-k">' + title + '</p><ol class="acct-plan-steps">' + list.map(function (s) {
+        return "<li><span>" + esc(s.name) + "</span>" + (s.how ? "<small>" + esc(s.how) + "</small>" : "") + "</li>";
+      }).join("") + "</ol>";
+    };
+    var line = function (title, text) { return text ? '<p class="acct-plan-k">' + title + '</p><p class="acct-plan-t">' + esc(text) + "</p>" : ""; };
+    var about = [p.skinType ? p.skinType + " skin" : "", p.concerns.length ? "working on " + p.concerns.join(", ").toLowerCase() : ""].filter(Boolean).join(" · ");
+    planBody.innerHTML =
+      (about ? '<p class="acct-plan-about">' + esc(about) + "</p>" : "") +
+      line("Where you are now", p.phase) +
+      steps("Morning", p.morning) + steps("Night", p.night) + steps("Once or twice a week", p.weekly) +
+      line("Avoid for now", p.avoid) + line("Next step", p.next) +
+      (p.note ? '<blockquote class="acct-plan-note">' + esc(p.note) + "<cite>Evelyn</cite></blockquote>" : "") +
+      (p.log.length ? '<details class="acct-plan-log"><summary>Visit notes</summary><ul>' + p.log.slice(0, 6).map(function (e) {
+        return "<li><b>" + esc(new Date(e.at + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })) + "</b> " + esc(e.text) + "</li>";
+      }).join("") + "</ul></details>" : "");
+    planAsk.hidden = false;
+  };
+  var renderPlan = function () {
+    var PL = window.LumevinaPlans;
+    if (!session || !PL) return drawPlan(null);
+    drawPlan(PL.get(session.email));
+    if (PL.live) PL.mine().then(function (p) { if (session) drawPlan(p); });
+  };
+  if (planAsk) planAsk.addEventListener("click", function () {
+    closeModal();
+    if (window.LumevinaAsk) window.LumevinaAsk.open();
+  });
+  document.addEventListener("lumevina:plan-changed", function () {
+    if (session && modal.getAttribute("aria-hidden") === "false" && window.LumevinaPlans) drawPlan(window.LumevinaPlans.get(session.email));
+  });
 
   /* ── Membership card (drawn by js/membership.js) ── */
   var memberEl = modal.querySelector(".acct-member");
@@ -375,7 +499,22 @@
       return;
     }
     signinBtn.disabled = true;
+    statusEl.classList.remove("is-ok");
     statusEl.textContent = "Sending your sign-in link…";
+    if (AUTH) {
+      try { localStorage.setItem(NAME_KEY, name); } catch (e) { /* private mode */ }
+      authCall("/otp?redirect_to=" + encodeURIComponent(location.origin + location.pathname), { email: email, create_user: true, data: { name: name } })
+        .then(function () {
+          statusEl.classList.add("is-ok");
+          statusEl.textContent = "Check your email: we sent a sign-in link to " + email + ". Open it on this phone or computer.";
+        }, function (err) {
+          statusEl.textContent = err && err.status === 429
+            ? "A link was just sent. Check your email, or try again in a minute."
+            : "Couldn't send the link just now. Try again in a minute.";
+        })
+        .then(function () { signinBtn.disabled = false; });
+      return;
+    }
     setTimeout(function () {
       signinBtn.disabled = false;
       statusEl.textContent = "";
@@ -395,10 +534,9 @@
   });
 
   modal.querySelector(".acct-signout").addEventListener("click", function () {
-    session = null;
-    save();
-    render();
-    document.dispatchEvent(new CustomEvent("lumevina:account-changed"));
+    if (AUTH && auth) authCall("/logout", {}, auth.access).catch(function () { /* the session ends here either way */ });
+    clearTimeout(refreshTimer);
+    endSession();
   });
 
   modal.querySelector(".acct-open-rewards").addEventListener("click", function () {
@@ -424,6 +562,21 @@
 
   /* ── Boot ── */
   load();
+  if (AUTH) {
+    var fine = modal.querySelector(".acct-fine");
+    if (fine) fine.textContent = "We'll email you a one-tap sign-in link: no password to remember.";
+    try { auth = JSON.parse(localStorage.getItem(AUTH_KEY)) || null; } catch (e) { auth = null; }
+    if (!auth) { session = null; save(); }                 /* a demo session isn't a real sign-in */
+    else if (auth.expiresAt - Date.now() < 120000) refresh(); else scheduleRefresh();
+    var landing = arrive();
+    if (landing) landing.then(function (ok) {
+      if (!ok) return;
+      if (rw()) rw().claimWelcome();
+      document.dispatchEvent(new CustomEvent("lumevina:account-changed"));
+      openModal();
+    });
+    if (linkError) setTimeout(function () { openModal(); statusEl.textContent = linkError; }, 0);
+  }
 
   /* sign in without the form, e.g. right after joining a membership */
   var signIn = function (name, email) {
@@ -436,6 +589,8 @@
 
   window.LumevinaAccount = {
     current: function () { return session; },
+    /* the live session for the server (Ask Lumevina, the skin plan); "" in the demo */
+    token: function () { return auth && session && auth.expiresAt - Date.now() > 10000 ? auth.access : ""; },
     open: openModal,
     signIn: signIn
   };

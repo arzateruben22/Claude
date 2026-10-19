@@ -8,6 +8,12 @@
 // it's saved to `questions` with a drafted reply she checks and sends from
 // the dashboard (Client questions).
 //
+// A signed-in client also brings their file (../_shared/plans.ts): the skin
+// plan Evelyn wrote for them, a few answers from their pre-visit form, their
+// visits, and questions she has already answered. With a plan on file, "my
+// routine" questions are answered from it instead of waiting for her; changing
+// the plan, or anything about a reaction, still goes to her.
+//
 // Safety doesn't depend on the model. The same hand-off rules as the website
 // (js/ask-rules.js, copied into the bundle) run before any AI call, so
 // reactions, pregnancy, medications, named conditions, "my skin" questions and
@@ -17,7 +23,8 @@
 // isn't reachable.
 //
 // Request:  POST { message, history?: [{role, content}], name?, email?, handoff? }
-//           with the client's Supabase session when signed in. `handoff` (a
+//           with the client's Supabase session when signed in (Authorization:
+//           Bearer <their access token>; the anon key otherwise). `handoff` (a
 //           kind) skips the answer and saves the question for Evelyn.
 // Response: { answer } or { handoff: kind, due_at?, needs_contact?, urgent? }
 //           or, when Claude can't be reached, a 5xx { error } that tells the
@@ -34,6 +41,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import {
   BUILT_AT, PROMPT, FACTS, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
 } from "../_shared/knowledge.ts";
+import { clientFile } from "../_shared/plans.ts";
 
 const MODEL = "claude-opus-5-5";
 const MEMBER_HOURS = 24;
@@ -79,6 +87,20 @@ const stockBlock = async (db: ReturnType<typeof admin>) => {
   } catch { /* no products table yet: the bundle's counts stand */ }
   return "# Stock right now\n\n" + SHELF.map((p) => `- ${p.name}: ${stockWord(live.has(p.id) ? live.get(p.id)! : p.stock)}`).join("\n");
 };
+
+// the signed-in client's file: after the cached part, never cached, never shown to anyone else
+const fileBlock = (name: string, file: { hasPlan: boolean; text: string }) => [
+  `# The client you're talking to`,
+  `${name || "This client"} is signed in. Their file, from Evelyn's records:`,
+  file.text,
+  `How to use this file:`,
+  file.hasPlan
+    ? `- Answer questions about their own routine from Evelyn's plan: which product, when, in what order, how much, how often, what to avoid, what comes next. Say it's from the plan Evelyn wrote for them, and use their first name now and then.`
+    : `- Evelyn hasn't written a plan for them yet, so questions about their own routine go to her with hand_to_evelyn (kind "skin").`,
+  `- Never change or add to the plan. Adding, stopping or swapping a product, moving up a strength, a new concern, or anything about how their skin is reacting goes to Evelyn with hand_to_evelyn.`,
+  `- If anything under "Cautions on file" bears on the question, hand it to Evelyn.`,
+  `- The file is theirs, so you may tell them what's in it. Keep answers as short as always.`,
+].join("\n\n");
 
 const HANDOFF_TOOL = {
   name: "hand_to_evelyn",
@@ -133,24 +155,31 @@ Deno.serve(async (req) => {
   const q = String(body.message ?? "").trim().slice(0, 600);
   if (!q) return json({ error: "Empty question" }, 400);
 
-  // who's asking: a signed-in client, and whether they're a member
+  // who's asking: a signed-in client, whether they're a member, and their file
   const db = admin();
-  let client: { id: string; name: string; email: string } | null = null;
+  let client: { id: string | null; name: string; email: string } | null = null;
   let member = false;
+  let file: Awaited<ReturnType<typeof clientFile>> = null;
   const jwt = req.headers.get("Authorization")?.replace("Bearer ", "");
   if (jwt && jwt !== Deno.env.get("SUPABASE_ANON_KEY")) {
     const { data } = await db.auth.getUser(jwt);
-    if (data.user) {
-      const { data: c } = await db.from("clients").select("id, name, email").eq("id", data.user.id).single();
-      client = c;
+    const user = data.user;
+    if (user?.email) {
+      const { data: c } = await db.from("clients").select("id, name, email").eq("id", user.id).maybeSingle();
+      client = { id: c?.id ?? null, name: c?.name || String(user.user_metadata?.name ?? "") || String(body.name ?? "").trim(), email: user.email };
       const { count } = await db.from("memberships").select("id", { count: "exact", head: true })
-        .eq("client_id", data.user.id).neq("status", "cancelled");
+        .eq("client_id", user.id).neq("status", "cancelled");
       member = (count ?? 0) > 0;
+      file = await clientFile(db, user.email, c?.id ?? null).catch((e) => { console.error(e); return null; });
     }
   }
 
-  // 1) the rules, before any AI; or a hand-off the website already decided on
-  let kind: string | null = KIND_SET.has(String(body.handoff)) ? String(body.handoff) : ruleKind(q.toLowerCase());
+  // 1) the rules, before any AI; or a hand-off the website already decided on.
+  //    A "my skin" question from a client with a plan on file goes to Claude
+  //    with their plan; everything else the rules catch still goes to Evelyn.
+  const decided = KIND_SET.has(String(body.handoff));
+  let kind: string | null = decided ? String(body.handoff) : ruleKind(q.toLowerCase());
+  if (kind === "skin" && !decided && file?.hasPlan) kind = null;
   let why = "";
 
   try {
@@ -164,13 +193,14 @@ Deno.serve(async (req) => {
         output_config: { effort: "low" },              // a chat route: quick, short answers
         system: [
           { type: "text", text: STABLE, cache_control: { type: "ephemeral", ttl: "1h" } },
+          ...(file && client ? [{ type: "text" as const, text: fileBlock(client.name, file) }] : []),
           { type: "text", text: await stockBlock(db) },
         ],
         tools: [HANDOFF_TOOL],
         tool_choice: { type: "auto" },
         messages: [...tidy(body.history), { role: "user", content: q }],
       });
-      console.log(JSON.stringify({ built: BUILT_AT, stop: reply.stop_reason, cached: reply.usage.cache_read_input_tokens, wrote: reply.usage.cache_creation_input_tokens, out: reply.usage.output_tokens }));
+      console.log(JSON.stringify({ built: BUILT_AT, file: file ? (file.hasPlan ? "plan" : "file") : "none", stop: reply.stop_reason, cached: reply.usage.cache_read_input_tokens, wrote: reply.usage.cache_creation_input_tokens, out: reply.usage.output_tokens }));
 
       if (reply.stop_reason === "refusal") kind = "other";
       const call = reply.content.find((b) => b.type === "tool_use");
@@ -195,7 +225,8 @@ Deno.serve(async (req) => {
       fallbacks: "default",
       output_config: { effort: "low" },
       system: [{ type: "text", text: DRAFT, cache_control: { type: "ephemeral", ttl: "1h" } }],
-      messages: [{ role: "user", content: `Client: ${who.name}\nKind: ${kind}${why ? `\nWhat they need: ${why}` : ""}\nQuestion: ${q}` }],
+      messages: [{ role: "user", content: `Client: ${who.name}\nKind: ${kind}${why ? `\nWhat they need: ${why}` : ""}\nQuestion: ${q}` +
+        (file ? `\n\nTheir file (use it to make the draft specific to them; don't change their plan in the draft unless Evelyn would):\n${file.text}` : "") }],
     });
     const draft = draftMsg.stop_reason === "refusal" ? "" : textOf(draftMsg);
     const due_at = new Date(Date.now() + (member ? MEMBER_HOURS : GUEST_HOURS) * 36e5).toISOString();

@@ -233,6 +233,62 @@
     .crm-ans .k { color: var(--ink-45); }
     .crm-ans .v { color: var(--ink); }
     .crm-none { color: var(--ink-45); font-style: normal; font-size: 0.9rem; padding: 1rem 0; }
+    /* Skin plans (js/skin-plans.js): what she writes per client */
+    .crm-chip.plan { color: #f0d6b8; background: rgba(227,180,143,0.14); margin-left: 0.3rem; }
+    .crm-chips { justify-self: end; display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: flex-end; }
+    .crm-chips .crm-chip { margin: 0; }
+    .crm-new { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: flex-end; margin: -0.2rem 0 1rem; }
+    .crm-new label, .pe label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
+    .crm-new label { flex: 1 1 11rem; }
+    .crm-new input, .pe input, .pe select, .pe textarea { font: inherit; font-size: 0.88rem; padding: 0.5rem 0.65rem; border: 1px solid var(--edge);
+      border-radius: 8px; background: #161616; color: var(--ink); min-width: 0; width: 100%; }
+    .pe textarea { min-height: 3.6rem; resize: vertical; }
+    .crm-new .bk-export, .pe .bk-export { flex: none; padding: 0.6rem 1.2rem; }
+    .crm-new-status { flex-basis: 100%; font-size: 0.8rem; color: var(--bad); min-height: 0; }
+    .crm-plan { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px dashed var(--edge); }
+    .crm-plan-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .crm-plan-head h3 { margin: 0; }
+    .crm-plan-when { font-size: 0.76rem; color: var(--ink-45); }
+    .crm-plan-view { margin-top: 0.6rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 0.4rem 1.4rem; font-size: 0.85rem; color: var(--ink-70); }
+    .crm-plan-view .k { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-45); margin: 0.45rem 0 0.15rem; }
+    .crm-plan-view ol { margin: 0; padding-left: 1.2rem; }
+    .crm-plan-view li { margin: 0.12rem 0; }
+    .crm-plan-view small { color: var(--ink-45); }
+    .crm-plan-empty { margin: 0.5rem 0 0.8rem; font-size: 0.85rem; color: var(--ink-60); max-width: 44rem; }
+    .crm-plan-btn { font: inherit; font-size: 0.8rem; color: var(--ink); background: none; border: 1px solid var(--edge); border-radius: 999px; padding: 0.4rem 0.9rem; cursor: pointer; }
+    .crm-plan-btn:hover { border-color: var(--ink-45); }
+    .pe { display: grid; gap: 0.9rem; margin-top: 0.8rem; }
+    .pe-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 0.8rem; }
+    .pe-k { font-size: 0.72rem; color: var(--ink-45); margin-bottom: 0.35rem; }
+    .pe-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .pe-chip { font: inherit; font-size: 0.8rem; padding: 0.35rem 0.75rem; border-radius: 999px; border: 1px solid var(--edge); background: #161616; color: var(--ink-70); cursor: pointer; }
+    .pe-chip[aria-pressed="true"] { background: var(--plum); color: #000; border-color: var(--plum); }
+    .pe-steps { display: grid; gap: 0.45rem; }
+    .pe-step { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 2rem; gap: 0.45rem; align-items: start; }
+    .pe-step select { grid-column: 1; grid-row: 1; }
+    .pe-step .pe-how { grid-column: 2; grid-row: 1; }
+    .pe-step .pe-x { grid-column: 3; grid-row: 1; }
+    .pe-step .pe-other { grid-column: 1; grid-row: 2; }
+    .pe-x { width: 2rem; height: 2.25rem; border-radius: 8px; border: 1px solid var(--edge); background: none; color: var(--ink-45); cursor: pointer; font-size: 1rem; }
+    .pe-add { font: inherit; font-size: 0.8rem; color: var(--ink-70); background: none; border: 1px dashed var(--edge); border-radius: 8px; padding: 0.45rem 0.8rem; cursor: pointer; justify-self: start; }
+    .pe-log { list-style: none; margin: 0 0 0.5rem; padding: 0; display: grid; gap: 0.35rem; font-size: 0.84rem; color: var(--ink-70); }
+    .pe-log li { display: flex; gap: 0.6rem; align-items: baseline; }
+    .pe-log b { color: var(--ink); font-weight: 500; white-space: nowrap; }
+    .pe-log button { margin-left: auto; font: inherit; font-size: 0.75rem; background: none; border: 0; color: var(--ink-45); cursor: pointer; }
+    .pe-lognew { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) auto; gap: 0.45rem; }
+    .pe-foot { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; }
+    .pe-foot .crm-plan-btn { padding: 0.55rem 1.1rem; }
+    .pe-note { font-size: 0.8rem; color: var(--ink-45); flex-basis: 100%; }
+    .pe-status { font-size: 0.82rem; color: var(--good); }
+    .pe-status.is-error { color: var(--bad); }
+    .pe [hidden] { display: none; }
+    @media (max-width: 720px) {
+      .pe-step { grid-template-columns: minmax(0, 1fr) 2rem; }
+      .pe-step .pe-how, .pe-step .pe-other { grid-column: 1; grid-row: auto; }
+      .pe-step .pe-x { grid-row: 1; grid-column: 2; }
+      .pe-lognew { grid-template-columns: 1fr; }
+      .crm-chips { grid-column: 1 / -1; justify-self: start; justify-content: flex-start; }
+    }
     @media (max-width: 720px) {
       .crm-summary { grid-template-columns: 1fr auto; }
       .crm-meta, .crm-chip { grid-column: 1 / -1; justify-self: start; }
@@ -688,10 +744,16 @@
       <div class="crm-head">
         <div>
           <h2>Clients</h2>
-          <p class="sub" id="crm-sub">Every client, their visits, spend, and pre-visit form.</p>
+          <p class="sub" id="crm-sub">Every client, their visits, spend, pre-visit form and skin plan.</p>
         </div>
         <input class="crm-search" id="crm-search" type="search" placeholder="Search name or email…" aria-label="Search clients">
       </div>
+      <form class="crm-new" id="crm-new" autocomplete="off">
+        <label>Name<input id="crm-new-name" type="text" placeholder="A client from GlossGenius"></label>
+        <label>Email<input id="crm-new-email" type="email" placeholder="the email they sign in with"></label>
+        <button class="bk-export" type="submit">Write a skin plan</button>
+        <p class="crm-new-status" id="crm-new-status" role="status"></p>
+      </form>
       <ul class="crm-list" id="crm-list"></ul>
     </div>
 
@@ -710,6 +772,8 @@
   <div class="tip" id="tip"></div>
 
   <script src="js/site-config.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/skin-plans.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
@@ -2035,6 +2099,166 @@
       });
     })();
 
+    /* ── Skin plans: what Evelyn writes for each client (js/skin-plans.js).
+       The client sees it in My Lumevina; Ask Lumevina answers their routine
+       questions from it. Live, saving takes her studio key. ── */
+    var PLAN = window.LumevinaPlans;
+    var plans = {};
+    var esc = function (t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); };
+    var studioKey = function () { try { return localStorage.getItem("lumevina_studio_key") || ""; } catch (e) { return ""; } };
+    var planFor = function (email) {
+      var p = plans[String(email || "").toLowerCase()];
+      return p && PLAN && !PLAN.empty(p) ? p : null;
+    };
+    var CONCERNS = ["Breakouts and acne", "Hormonal breakouts", "Blackheads and congestion", "Dark spots and post-acne marks",
+      "Melasma and sun spots", "Redness and sensitivity", "Dryness and dehydration", "Oily skin and large pores",
+      "Fine lines and firmness", "Texture", "Under-eyes", "Back and body breakouts", "Ingrown hairs"];
+    var shortDate = function (iso) { return new Date(iso.length === 10 ? iso + "T12:00:00" : iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }); };
+
+    var showPlan = function (box, c) {
+      if (!PLAN) { box.hidden = true; return; }
+      var p = planFor(c.email), first = (c.name || "").split(" ")[0] || "They";
+      var steps = function (t, list) {
+        return list.length ? '<div><span class="k">' + t + '</span><ol>' + list.map(function (x) {
+          return "<li>" + esc(x.name) + (x.how ? " <small>" + esc(x.how) + "</small>" : "") + "</li>"; }).join("") + "</ol></div>" : "";
+      };
+      var line = function (t, v) { return v ? '<div><span class="k">' + t + "</span>" + esc(v) + "</div>" : ""; };
+      box.innerHTML = '<div class="crm-plan-head"><h3>Skin plan</h3>' +
+        (p && p.updatedAt ? '<span class="crm-plan-when">Updated ' + shortDate(p.updatedAt) + "</span>" : "") + "</div>" +
+        (p ? '<div class="crm-plan-view">' +
+            line("Skin", [p.skinType, p.concerns.join(", ")].filter(Boolean).join(" · ")) + line("Their goal", p.goal) + line("Where they are now", p.phase) +
+            steps("Morning", p.morning) + steps("Night", p.night) + steps("Once or twice a week", p.weekly) +
+            line("Avoid for now", p.avoid) + line("Next step", p.next) + line("Your note to them", p.note) +
+            (p.log.length ? line("Last visit note", shortDate(p.log[0].at) + ": " + p.log[0].text) : "") + "</div>"
+          : '<p class="crm-plan-empty">No plan yet. Write their routine once: ' + esc(first) + " sees it in My Lumevina, and Ask Lumevina answers their routine questions from it (what to use tonight, what to avoid, what's next), so fewer of them wait on you.</p>") +
+        '<button class="crm-plan-btn" type="button" style="margin-top:0.8rem">' + (p ? "Edit plan" : "Write a plan") + "</button>";
+      box.querySelector(".crm-plan-btn").addEventListener("click", function () { editPlan(box, c); });
+    };
+
+    var productOptions = function (sel) {
+      var groups = {}, order = [];
+      PLAN.shelf().forEach(function (p) { if (!groups[p.cat]) { groups[p.cat] = []; order.push(p.cat); } groups[p.cat].push(p); });
+      return '<option value="">Choose a product…</option>' + order.map(function (cat) {
+        return '<optgroup label="' + esc(cat) + '">' + groups[cat].map(function (p) {
+          return '<option value="' + esc(p.id) + '"' + (p.id === sel ? " selected" : "") + ">" + esc(p.name) + "</option>"; }).join("") + "</optgroup>";
+      }).join("") + '<option value="__other"' + (sel === "__other" ? " selected" : "") + ">Something else (type it)</option>";
+    };
+    var stepRow = function (s) {
+      var row = document.createElement("div");
+      row.className = "pe-step";
+      var other = s && !s.id && s.name;
+      row.innerHTML = '<select aria-label="Product">' + productOptions(other ? "__other" : (s && s.id) || "") + "</select>" +
+        '<input class="pe-other" type="text" placeholder="Product name" aria-label="Product name" value="' + esc(other ? s.name : "") + '"' + (other ? "" : " hidden") + ">" +
+        '<input class="pe-how" type="text" placeholder="How: amount, how often, how to start" aria-label="How to use it" value="' + esc(s && s.how) + '">' +
+        '<button class="pe-x" type="button" aria-label="Remove this step">×</button>';
+      var sel = row.querySelector("select"), oth = row.querySelector(".pe-other");
+      sel.addEventListener("change", function () { oth.hidden = sel.value !== "__other"; if (!oth.hidden) oth.focus(); });
+      row.querySelector(".pe-x").addEventListener("click", function () { row.remove(); });
+      return row;
+    };
+    var stepsBlock = function (title, list) {
+      var wrap = document.createElement("div");
+      wrap.innerHTML = '<p class="pe-k">' + title + '</p><div class="pe-steps"></div><button class="pe-add" type="button">+ Add a step</button>';
+      var holder = wrap.querySelector(".pe-steps");
+      (list.length ? list : [null]).forEach(function (st) { holder.appendChild(stepRow(st)); });
+      wrap.querySelector(".pe-add").addEventListener("click", function () { var r = stepRow(null); holder.appendChild(r); r.querySelector("select").focus(); });
+      wrap.read = function () {
+        return Array.prototype.map.call(holder.querySelectorAll(".pe-step"), function (r) {
+          var v = r.querySelector("select").value, prod = v && v !== "__other" ? PLAN.shelf().filter(function (p) { return p.id === v; })[0] : null;
+          return { id: prod ? prod.id : "", name: prod ? prod.name : (v === "__other" ? r.querySelector(".pe-other").value.trim() : ""), how: r.querySelector(".pe-how").value.trim() };
+        }).filter(function (x) { return x.name; });
+      };
+      return wrap;
+    };
+
+    var editPlan = function (box, c) {
+      var p = planFor(c.email) || PLAN.clean({});
+      var first = (c.name || "").split(" ")[0] || "They";
+      var log = p.log.slice();
+      var today = new Date().toISOString().slice(0, 10);
+      box.innerHTML = '<div class="crm-plan-head"><h3>Skin plan</h3><span class="crm-plan-when">' + esc(c.name || c.email) + "</span></div>";
+      var f = document.createElement("form");
+      f.className = "pe";
+      f.setAttribute("autocomplete", "off");
+      var chipRow = function (key, opts, picked, single) {
+        return '<div class="pe-chips" data-key="' + key + '"' + (single ? ' data-single="1"' : "") + ">" + opts.map(function (o) {
+          return '<button type="button" class="pe-chip" aria-pressed="' + (single ? picked === o : picked.indexOf(o) !== -1) + '">' + esc(o) + "</button>"; }).join("") + "</div>";
+      };
+      f.innerHTML =
+        '<div><p class="pe-k">Skin type</p>' + chipRow("skinType", PLAN.SKIN_TYPES, p.skinType, true) + "</div>" +
+        '<div><p class="pe-k">Working on</p>' + chipRow("concerns", CONCERNS, p.concerns, false) + "</div>" +
+        '<div class="pe-row"><label>Their goal<input name="goal" type="text" value="' + esc(p.goal) + '" placeholder="In their words, or yours"></label>' +
+        '<label>Next step<input name="next" type="text" value="' + esc(p.next) + '" placeholder="e.g. Bi-Weekly Acne Treatment in 2 weeks"></label></div>' +
+        '<label>Where they are now<textarea name="phase" placeholder="e.g. Week 3 of Acne Bootcamp. 5% mandelic every other night; move to nightly if no irritation.">' + esc(p.phase) + "</textarea></label>" +
+        '<div class="pe-morning"></div><div class="pe-night"></div><div class="pe-weekly"></div>' +
+        '<label>Avoid for now<textarea name="avoid" placeholder="Products, habits, treatments to hold off on">' + esc(p.avoid) + "</textarea></label>" +
+        '<label>A note to ' + esc(first) + '<textarea name="note" placeholder="Shown in their plan, in your words">' + esc(p.note) + "</textarea></label>" +
+        '<div><p class="pe-k">Visit notes (they see these too)</p><ul class="pe-log"></ul>' +
+        '<div class="pe-lognew"><input name="logat" type="date" value="' + today + '" aria-label="Visit date"><input name="logtext" type="text" placeholder="e.g. Corrective Peel. Calmer; moved to 8% mandelic." aria-label="Visit note">' +
+        '<button class="crm-plan-btn" type="button" data-addlog>Add note</button></div></div>' +
+        '<label data-keyrow' + (PLAN.live && !studioKey() ? "" : " hidden") + '>Studio key (once, on this device)<input name="studiokey" type="password" autocomplete="off"></label>' +
+        '<div class="pe-foot"><button class="bk-export" type="submit">Save plan</button><button class="crm-plan-btn" type="button" data-cancel>Cancel</button>' +
+        '<span class="pe-status" role="status"></span>' +
+        '<p class="pe-note">' + esc(first) + " sees this in My Lumevina once signed in with " + esc(c.email || "their email") + ", and Ask Lumevina answers their routine questions from it. Changes to the plan, reactions and anything medical still come to you.</p></div>";
+      var mo = stepsBlock("Morning", p.morning), ni = stepsBlock("Night", p.night), we = stepsBlock("Once or twice a week (optional)", p.weekly);
+      f.querySelector(".pe-morning").appendChild(mo);
+      f.querySelector(".pe-night").appendChild(ni);
+      f.querySelector(".pe-weekly").appendChild(we);
+      var logEl = f.querySelector(".pe-log");
+      var drawLog = function () {
+        logEl.innerHTML = log.map(function (e, i) { return "<li><b>" + shortDate(e.at) + "</b><span>" + esc(e.text) + '</span><button type="button" data-rm="' + i + '">Remove</button></li>'; }).join("");
+      };
+      drawLog();
+      logEl.addEventListener("click", function (e) { var b = e.target.closest("[data-rm]"); if (b) { log.splice(+b.getAttribute("data-rm"), 1); drawLog(); } });
+      var addLog = function () {
+        var t = f.logtext.value.trim();
+        if (!t) return;
+        log.unshift({ at: f.logat.value || today, text: t });
+        log.sort(function (a, b) { return a.at < b.at ? 1 : -1; });
+        f.logtext.value = "";
+        drawLog();
+      };
+      f.querySelector("[data-addlog]").addEventListener("click", addLog);
+      f.logtext.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); addLog(); } });
+      f.addEventListener("click", function (e) {
+        var b = e.target.closest(".pe-chip");
+        if (!b) return;
+        var row = b.parentNode;
+        if (row.getAttribute("data-single")) row.querySelectorAll(".pe-chip").forEach(function (x) { if (x !== b) x.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", String(b.getAttribute("aria-pressed") !== "true"));
+      });
+      f.querySelector("[data-cancel]").addEventListener("click", function () { showPlan(box, c); });
+      var status = f.querySelector(".pe-status");
+      f.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (f.logtext.value.trim()) addLog();
+        var picked = function (key) { return Array.prototype.filter.call(f.querySelectorAll('[data-key="' + key + '"] .pe-chip'), function (x) { return x.getAttribute("aria-pressed") === "true"; }).map(function (x) { return x.textContent; }); };
+        var plan = {
+          skinType: picked("skinType")[0] || "", concerns: picked("concerns"),
+          goal: f.goal.value, phase: f.phase.value, next: f.next.value, avoid: f.avoid.value, note: f.note.value,
+          morning: mo.read(), night: ni.read(), weekly: we.read(), log: log
+        };
+        var typedKey = f.studiokey.value.trim();
+        if (typedKey) { try { localStorage.setItem("lumevina_studio_key", typedKey); } catch (err) { /* private mode */ } }
+        status.className = "pe-status";
+        status.textContent = "Saving…";
+        PLAN.save(c.email, c.name, plan, typedKey || studioKey()).then(function (saved) {
+          plans[String(c.email).toLowerCase()] = Object.assign(saved, { name: c.name });
+          showPlan(box, c);
+          var chip = box.closest(".crm-row").querySelector(".crm-chip.plan");
+          if (!chip) box.closest(".crm-row").querySelector(".crm-chips").insertAdjacentHTML("beforeend", '<span class="crm-chip plan">Skin plan</span>');
+        }, function (err) {
+          status.className = "pe-status is-error";
+          if (err && err.reason === "studio_key") {
+            f.querySelector("[data-keyrow]").hidden = false;
+            try { localStorage.removeItem("lumevina_studio_key"); } catch (e2) { /* private mode */ }
+            status.textContent = "Add your studio key to save.";
+          } else status.textContent = "Couldn't save just now. Your changes are still here; try again.";
+        });
+      });
+      box.appendChild(f);
+    };
+
     /* ── Client list + detail ── */
     var listEl = document.getElementById("crm-list");
     document.getElementById("crm-sub").textContent = usingSample
@@ -2064,8 +2288,9 @@
         '<div class="crm-name">' + (c.name || "—") + '<small>' + (c.email || "") + '</small></div>' +
         '<div class="crm-meta">' + visits.length + ' visit' + (visits.length === 1 ? "" : "s") +
           ' · ' + money(c.spent) + (last ? ' · last ' + fmtDate(last.date) : "") + '</div>' +
-        '<span class="crm-chip ' + (hasForm ? "on" : "off") + '">' +
+        '<span class="crm-chips"><span class="crm-chip ' + (hasForm ? "on" : "off") + '">' +
           (hasForm ? "Form on file" : "No form yet") + '</span>' +
+          (planFor(c.email) ? '<span class="crm-chip plan">Skin plan</span>' : "") + '</span>' +
         '<span class="crm-caret">›</span>';
       li.appendChild(sum);
 
@@ -2093,16 +2318,34 @@
       detail.innerHTML =
         '<div class="crm-cols"><div><h3>Visit history</h3>' + visitsHtml + '</div>' +
         '<div><h3>Pre-visit form</h3>' + ansHtml + '</div></div>';
+      var planBox = document.createElement("div");
+      planBox.className = "crm-plan";
+      detail.appendChild(planBox);
+      showPlan(planBox, c);
       li.appendChild(detail);
 
       sum.addEventListener("click", function () { li.classList.toggle("open"); });
       return li;
     };
 
+    /* clients she has written a plan for who haven't booked on this site (her GlossGenius clients) */
+    var added = [];   /* typed into "Write a skin plan", not saved yet */
+    var crmClients = function () {
+      var have = {}, extra = [];
+      clients.forEach(function (c) { have[(c.email || "").toLowerCase()] = true; });
+      added.forEach(function (c) { if (!have[c.email]) { have[c.email] = true; extra.push(c); } });
+      Object.keys(plans).forEach(function (email) {
+        if (!have[email] && (!usingSample || SAMPLE.every(function (x) { return x.email !== email; }))) {
+          have[email] = true;
+          extra.push({ name: plans[email].name || email, email: email, visits: [], spent: 0, intake: null });
+        }
+      });
+      return usingSample && extra.length ? extra : clients.concat(extra);
+    };
     var draw = function (filter) {
       listEl.textContent = "";
       var f = (filter || "").toLowerCase();
-      var shown = clients.filter(function (c) {
+      var shown = crmClients().filter(function (c) {
         return !f || (c.name || "").toLowerCase().indexOf(f) !== -1 ||
           (c.email || "").toLowerCase().indexOf(f) !== -1;
       });
@@ -2118,6 +2361,31 @@
     draw("");
     document.getElementById("crm-search").addEventListener("input", function () {
       draw(this.value);
+    });
+    if (PLAN) PLAN.all(studioKey()).then(function (map) {
+      plans = map;
+      draw(document.getElementById("crm-search").value);
+    });
+    /* a plan for someone new: a client who books on GlossGenius */
+    document.getElementById("crm-new").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = document.getElementById("crm-new-name").value.trim();
+      var email = document.getElementById("crm-new-email").value.trim().toLowerCase();
+      var st = document.getElementById("crm-new-status");
+      if (!PLAN) return;
+      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { st.textContent = "Add their name and the email they'll sign in with."; return; }
+      st.textContent = "";
+      var c = crmClients().filter(function (x) { return (x.email || "").toLowerCase() === email; })[0];
+      if (!c) { c = { name: name, email: email, visits: [], spent: 0, intake: null }; added.push(c); }
+      document.getElementById("crm-search").value = "";
+      draw("");
+      var row = Array.prototype.filter.call(listEl.querySelectorAll(".crm-row"), function (li) { return li.querySelector(".crm-name small").textContent.toLowerCase() === email; })[0];
+      if (row) {
+        row.classList.add("open");
+        editPlan(row.querySelector(".crm-plan"), c);
+        row.scrollIntoView({ block: "start", behavior: "smooth" });
+      }
+      this.reset();
     });
   })();
   </script>

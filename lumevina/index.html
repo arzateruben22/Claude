@@ -1607,12 +1607,12 @@
       <button class="account-close" type="button" aria-label="Close account">×</button>
       <h2 class="booking-title" id="account-title">My Lumevina</h2>
 
-      <!-- signed out: magic-link sign in (demo — see js/account.js) -->
+      <!-- signed out: magic-link sign in (js/account.js: Supabase Auth when connected, instant in the demo) -->
       <div class="acct-out">
-        <p class="acct-intro">Sign in to keep your Glow Points, see your upcoming
-        appointments, and share your referral code — booking as a guest always
-        stays available. Your first sign-in comes with <strong>50 ✦ on the
-        house</strong>.</p>
+        <p class="acct-intro">Sign in to see the skin plan Evelyn writes for you, your
+        upcoming appointments and your gift credit. Ask Lumevina will know your routine
+        too. Booking as a guest always stays available.<span data-feature="rewards"> Your
+        first sign-in comes with <strong>50 ✦ on the house</strong>.</span></p>
         <div class="field">
           <label for="acct-name">Name</label>
           <input id="acct-name" name="name" type="text" autocomplete="name" required>
@@ -1627,11 +1627,22 @@
         <p class="form-status acct-status" role="alert"></p>
       </div>
 
-      <!-- signed in: points, bookings, referral -->
+      <!-- signed in: skin plan, points, bookings, referral -->
       <div class="acct-in" hidden>
         <p class="acct-greeting"></p>
         <p class="acct-since"></p>
         <p class="acct-welcome" hidden></p>
+
+        <div class="acct-plan" hidden>
+          <div class="acct-plan-head">
+            <p class="booking-label">Your skin plan</p>
+            <p class="acct-plan-meta"></p>
+          </div>
+          <div class="acct-plan-card">
+            <div class="acct-plan-body"></div>
+            <button class="btn btn-ghost acct-plan-ask" type="button" hidden>Ask about my routine</button>
+          </div>
+        </div>
 
         <div class="acct-glow" data-feature="rewards">
           <div class="acct-glow-line">
@@ -1937,6 +1948,7 @@
   <script src="js/inventory.js"></script>
   <script src="js/shipping.js"></script>
   <script src="js/rewards.js"></script>
+  <script src="js/skin-plans.js"></script>
   <script src="js/account.js"></script>
   <script src="js/membership.js"></script>
   <script src="js/member-nudge.js"></script>
