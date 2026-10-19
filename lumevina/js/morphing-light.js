@@ -37,10 +37,10 @@
     "  lum *= smoothstep(1.05, 0.05, c);",
     /* hue drifts vertically over time (original: pink→cyan; here clay→taupe) */
     "  float hueMix = clamp(0.5 + (uv.y - 0.35 * sin(u_time * 0.3)) * 0.9, 0.0, 1.0);",
-    "  vec3 linen = vec3(0.949, 0.929, 0.902);",
-    "  vec3 clay  = vec3(0.780, 0.750, 0.710);",
-    "  vec3 taupe = vec3(0.690, 0.660, 0.620);",
-    "  vec3 sand  = vec3(0.880, 0.850, 0.800);",
+    "  vec3 linen = vec3(0.961, 0.945, 0.918);",
+    "  vec3 clay  = vec3(0.843, 0.788, 0.722);",
+    "  vec3 taupe = vec3(0.698, 0.588, 0.490);",
+    "  vec3 sand  = vec3(0.902, 0.863, 0.812);",
     "  vec3 glow = mix(clay, taupe, hueMix);",
     "  glow = mix(glow, sand, clamp(uv.x * 0.6 + 0.2, 0.0, 1.0) * 0.35);",
     /* a soft cream core where the rings begin */

@@ -35,126 +35,61 @@ Not offered: lashes, brows, nails, memberships, an online course or a rewards pr
 
 
 
-# FAQ
+# FAQ & Policies
 
-Q: I'm new. What should I book?
-A: Book New Clients Start Here: a consultation, a look at your current
-routine, and a facial built around what your skin needs, from $220. For acne and
-breakouts, start with the Acne Bootcamp's New Client Consultation +
-Treatment ($225) instead.
+## New here? What to book
+New Clients Start Here (from $220): a consultation and a facial built for your skin.
+For acne, start with the Acne Bootcamp's New Client Consultation + Treatment ($225).
 
-Q: What are your hours?
-A: Tuesday 12 to 7 PM; Wednesday and Thursday 11 AM to 7 PM;
+## Hours
+Tuesday 12 to 7 PM; Wednesday and Thursday 11 AM to 7 PM;
 Friday 10 AM to 5 PM; Saturday 9:30 AM to 6 PM. Closed Sundays and Mondays.
-The calendar on this page shows her real
-openings up to a month ahead.See her openings and book in the Book section.
-Need a time outside those hours, or on a day she's closed?
-Evelyn takes after-hours visits for an extra $50; ask her first.
+See openings in Book. After-hours visits are an extra $50;
+ask first.
 
-Q: How does the deposit work?
-A: Some treatments take a deposit when you book: $50 for the acne consultation,
-$49 for a consultation, $20 or $30 for waxing and acne treatments; the menu shows each one.
-It goes toward your total, and the rest is due at your visit. Deposits are non-refundable, but with 48
-hours' notice yours moves with you to a new date in the same month.
+## Deposits & payment
+Some treatments take a non-refundable deposit when you book (the menu shows each one).
+It holds your spot, goes toward your total, and with 48 hours' notice moves to a new date in the same month.
+Pay the rest at your visit: cash preferred, card with a fee, or Klarna, Affirm or Afterpay.
 
-Q: How do I pay the rest?
-A: At your visit. Cash is preferred, and card is accepted with a fee.
-You can also pay over time with Klarna, Affirm or Afterpay.
+## Cancelling & rescheduling
+- Change or cancel at least 48 hours ahead, from the link in your confirmation.
 
-Q: Where are you, and where do I park?
-A: In Woodland Hills, CA. The exact address is in your confirmation
-email. There's a free parking lot. When you arrive, wait in your car and send a text
-before coming up.
+- Same-day changes: the deposit is kept, a $43 fee goes to the card on file, and rebooking takes a new deposit.
 
-Q: Can I move my appointment?
-A: Yes, at least 48 hours ahead, from the link in your booking
-confirmation. Saturday appointments can't be moved or cancelled.
+- No-shows are charged 50% of the service and may not be able to rebook.
 
-Q: Can I buy products without an appointment?
-A: Yes. Order from the shelf and choose
-shipping or pickup at your next visit. Shipping is $8, and free on orders over $75.
-
-Q: Do you offer virtual consultations?
-A: Yes: a deep dive into your skin and goals, with a custom plan and product picks,
-for $55. They're on Mondays only, so please reach
-out before booking one.
-
-Q: Do gift certificates expire?
-A: Never. They arrive by email with a code and work toward any treatment.
-Send one.
-
-
-
-# Policies
-
-## Deposits
-All appointments require a non-refundable deposit at the
-time of booking — no exceptions. Your deposit secures your appointment and
-goes toward your total. With 48 hours' notice, it can be used to reschedule
-within the same month.
-
-## Cancellations & rescheduling
-- Cancel or reschedule at least 48 hours in advance, using the link in your confirmation email.
-
-- Rescheduling on time keeps your deposit — as long as your new date is within the same month.
-
-- Same-day changes count as last-minute cancellations: the deposit is kept, a $43 fee is charged to the card on file, and a new deposit is required to rebook.
-
-- No-call/no-shows are charged 50% of the booked service and may not be able to rebook.
+- Saturdays can't be moved or cancelled. Moving one takes a new deposit; cancelling forfeits it and adds a fee.
 
 Need to reschedule?
 Move an appointment →
 
-## Saturday appointments
-Saturdays are in high demand, so we can no longer accommodate reschedules
-or cancellations on Saturdays — no exceptions. Please only
-book a Saturday if you're certain you can attend. Rescheduling requires a new
-deposit (the original is kept); cancelling forfeits the deposit and a
-cancellation fee is charged to the card on file. Please notify us as early as
-possible either way — thank you for understanding.
+## Late arrivals & refunds
+There's a 10-minute grace period; after that the appointment may be cancelled and the deposit lost.
+Services are non-refundable. If anything comes up after your visit, reach out within 24 hours.
+Please read each service description before booking.
 
-## Before your facial
-- Don't book your facial the same day as a major event — makeup isn't recommended right after treatment.
+## Before & after your facial
+- Stop retinoids 5–7 days before, and exfoliants (salicylic, glycolic, benzoyl peroxide, AHAs/BHAs) 2–3 days before.
 
-- Sunburn, windburn, open wounds, or an active cold sore? Let us know as soon as possible to reschedule — skin must be healthy to treat safely.
+- No waxing or shaving your face 2 days before or after.
 
-- Stop retinol or prescription retinoids 5–7 days before your facial.
+- Botox, fillers or permanent makeup: wait 2 weeks (or have your facial first, the same day or a week before).
 
-- Pause exfoliants (salicylic acid, benzoyl peroxide, glycolic acid, other AHAs/BHAs) 2–3 days before.
+- Accutane, recent laser, surgery, radiation or chemo: wait 6–12 months or bring physician clearance.
 
-- Recent permanent makeup? Wait 2 weeks before a facial (a facial is fine up to 1 week before your PMU service).
+- Sunburn, windburn, open wounds or a cold sore? Tell us so we can reschedule.
 
-- Recent Botox or fillers? Wait 2 weeks — or book your facial the same day before your injections.
+- Afterwards: no makeup right away, and no workouts or heavy sweating for 24 hours (a week after a body peel). Avoid booking the day of a big event.
 
-- No waxing or shaving your face for 2 days before (and after) your facial.
+## Location & parking
+Woodland Hills, CA; the exact address is in your confirmation email. Park free in the lot,
+then wait in your car and text before coming up.
 
-- Accutane, recent laser, cosmetic surgery, radiation, or chemotherapy: wait 6–12 months or bring physician clearance.
-
-## After your facial
-- Skip makeup immediately after treatment so your skin can absorb the full benefit.
-
-- Avoid exercise and heavy sweating for 24 hours — and up to one week after a body peel.
-
-- No waxing or shaving your face for 2 days after your facial.
-
-## Payments, late arrivals & refunds
-- Cash is preferred; card is accepted with a fee.
-
-- Appointments run back to back, so there's a 10-minute grace period. After that your appointment is cancelled and the deposit is lost — unless Lumevina determines there's still time to accommodate you. A new deposit is needed to rebook.
-
-- All services are non-refundable, no exceptions. If any issue arises after your service, you have a 24-hour window to reach out and avoid any fees.
-
-- Please read each service description in full before booking.
-
-## Location & arrival
-Woodland Hills, CA — the exact address arrives in your
-confirmation email. A free parking lot is available. When you arrive, please
-wait in your car and send a text before coming up.
-
-## Lash fills
-Filling over another artist's work is considered a foreign
-fill, which we don't offer. You're welcome to book a removal and a
-full set instead.`;
+## Products, virtual visits & gift cards
+Order from the shelf anytime: shipping is $8 (free over $75), or pick up at your visit.
+Virtual consultations are $55, Mondays only; reach out first.
+Gift certificates never expire.`;
 
 /** Evelyn's playbook: only the sections she has answered. Empty until she has. */
 export const KNOWLEDGE = ``;

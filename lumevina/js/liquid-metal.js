@@ -54,9 +54,9 @@
     "  float band = sin((n * 4.5 + r.x * 2.0) * 3.14159 + t * 3.0);",
     "  float spec = smoothstep(0.55, 0.95, band);",
     "  float shade = n * 0.6 + 0.4;",
-    "  vec3 linen = vec3(0.949, 0.929, 0.902);",
-    "  vec3 fold  = vec3(0.870, 0.845, 0.810);",
-    "  vec3 clay  = vec3(0.800, 0.770, 0.730);",
+    "  vec3 linen = vec3(0.961, 0.945, 0.918);",
+    "  vec3 fold  = vec3(0.902, 0.863, 0.812);",
+    "  vec3 clay  = vec3(0.843, 0.788, 0.722);",
     "  vec3 cream = vec3(1.000, 1.000, 1.000);",
     /* mostly linen; sand in the folds; cream light on the crests */
     "  vec3 col = mix(fold, linen, smoothstep(0.30, 0.90, shade));",

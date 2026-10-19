@@ -39,10 +39,10 @@ const text = (h) => h
   .replace(/[ \t]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 const details = (block) => [...block.matchAll(/<details class="policy"[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<div class="policy-body">([\s\S]*?)<\/div>\s*<\/details>/g)]
   .map((m) => ({ q: text(m[1]), a: text(m[2]) }));
-const faqBlock = html.slice(html.indexOf('<div class="faq-list">'), html.indexOf('faq-title--policies'));
-const polBlock = html.slice(html.indexOf('<div class="policies-list"'), html.indexOf('<!-- Desktop: the accordion'));
-const faq = details(faqBlock), policies = details(polBlock);
-if (!faq.length || !policies.length) throw new Error("couldn't read the FAQ or policies from index.html");
+// the FAQ and the policies are one list on the page (<div class="fp-list"> … <!-- /fp-list -->)
+const fpBlock = html.slice(html.indexOf('<div class="fp-list"'), html.indexOf('<!-- /fp-list -->'));
+const policies = details(fpBlock);
+if (!policies.length) throw new Error("couldn't read the FAQ & Policies list from index.html");
 
 // ── her menu (js/services.js), as one line for the assistant ──
 await import(path.join(root, "js/services.js"));
@@ -61,10 +61,7 @@ const FACTS = [
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
   "Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused).",
   "",
-  "# FAQ",
-  ...faq.map((f) => `Q: ${f.q}\nA: ${f.a}`),
-  "",
-  "# Policies",
+  "# FAQ & Policies",
   ...policies.map((p) => `## ${p.q}\n${p.a}`)
 ].join("\n\n");
 
@@ -127,4 +124,4 @@ export type RuleKind = { kind: string; any: Rule[]; both?: Rule[] };
 export const RULES: { urgent: Rule; kinds: RuleKind[] } = ${JSON.stringify(rules, null, 1)};
 `;
 fs.writeFileSync(path.join(root, "server/functions/_shared/knowledge.ts"), ts);
-console.log(`bundle: prompt ${PROMPT.length} chars, facts ${FACTS.length} (${faq.length} FAQ, ${policies.length} policies), playbook ${knowledge.length} chars (${empty ? "empty" : `${concerns.length} concerns, ${treatments.length} treatments, ${products.length} product notes`}), shelf ${shelf.length}`);
+console.log(`bundle: prompt ${PROMPT.length} chars, facts ${FACTS.length} (${policies.length} FAQ & policy items), playbook ${knowledge.length} chars (${empty ? "empty" : `${concerns.length} concerns, ${treatments.length} treatments, ${products.length} product notes`}), shelf ${shelf.length}`);

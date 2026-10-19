@@ -161,3 +161,15 @@ Her full logo (the circle, profile and roses, with LUMEVINA and AESTHETICS SPA) 
 ## Pinch-zoom no longer jolts the page (Oct 19)
 
 Pinch-zooming on a phone fires resize events, and the scroll animations used to re-measure on every one, so the page jumped as if it had reloaded. They now re-measure only when the page's real width changes (rotating the phone or resizing a window). The page also keeps a pull at the top from spilling into the browser's or the Claude app's pull-to-refresh, which reloads the whole page.
+
+## FAQ & Policies, condensed (Oct 19)
+
+The questions and the policies are now one short list of 8 (one open at a time, two columns on wide screens): New here, Hours, Deposits & payment, Cancelling & rescheduling, Late arrivals & refunds, Before & after your facial, Location & parking, and Products, virtual visits & gift cards. Duplicates were merged and every policy term kept (48 hours, the $43 same-day fee, 50% for no-shows, Saturdays can't be moved, the 10-minute grace period, the 24-hour window). The desktop card shelf and the phone tiles are gone. **Lash fills are removed**: Evelyn doesn't offer them. Ask Lumevina reads the same list (`node knowledge/scripts/build-bundle.mjs` after any edit).
+
+## Her coffee-neutral palette (Oct 19)
+
+Linen #F5F1EA (the page), Khaki #D7C9B8, Camel #B2967D (tints), Cocoa #7D5A44 ("chosen by Evelyn." and every headline accent, quiet notes), Espresso #4A342A (secondary text), with black kept for headings, buttons and outline buttons. Tokens at the top of `css/styles.css`.
+
+## Menu button (Oct 19)
+
+The two-line menu now opens the moment a finger lifts, not only on the click that follows: some in-app viewers can lose that click.

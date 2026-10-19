@@ -204,7 +204,7 @@
       if (!r.width) return;
       var x = r.left + r.width / 2, y = r.top + r.height / 2;
       spark(x, y, { count: 12, radius: 64, size: 18, duration: 760, width: 2.2 });
-      spark(x, y, { count: 12, radius: 38, size: 10, duration: 620, color: "#8C8379", stagger: 90 });
+      spark(x, y, { count: 12, radius: 38, size: 10, duration: 620, color: "#B2967D", stagger: 90 });
     });
   };
 

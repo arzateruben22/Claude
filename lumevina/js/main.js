@@ -47,8 +47,20 @@
     document.body.style.overflow = open ? "hidden" : "";
   };
   setMenu(false);
+  /* a finger lifting on the button opens the menu straight away; the click
+     that follows is skipped. Some phone viewers (an app's in-page browser)
+     can lose the click after a tap, and then the menu never opened. Mouse
+     and keyboard keep using the click. */
+  var touchedAt = 0;
+  var flip = function () { setMenu(toggle.getAttribute("aria-expanded") !== "true"); };
+  toggle.addEventListener("pointerup", function (e) {
+    if (e.pointerType === "mouse") return;
+    touchedAt = Date.now();
+    flip();
+  });
   toggle.addEventListener("click", function () {
-    setMenu(toggle.getAttribute("aria-expanded") !== "true");
+    if (Date.now() - touchedAt < 700) return;
+    flip();
   });
   mobileMenu.addEventListener("click", function (e) {
     if (e.target.closest("a")) setMenu(false);
