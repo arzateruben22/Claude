@@ -167,10 +167,37 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 ## Simulation
 
 - Fixed 120 Hz physics with an accumulator and interpolation.
-- **`CarPhysics.step(dt, controls, path, net)`.**
-  - The bicycle model and drivetrain are unchanged.
+- **`CarPhysics.step(dt, controls, path, net)`** (the model is specified and measured in `PROJECT_OC_DYNAMICS.md`).
+  - A single-track (bicycle) body with longitudinal and lateral load transfer and tyre load sensitivity
+    (`SPEC.track`, `rollF`, `loadSens`, `h`), one combined-slip tyre law for both axles (a friction circle in
+    normalised slip with a falloff past the peak that grows with the handling slider), and a wheel-speed state per
+    axle (`wF`, `wR`; slip ratios `kF`, `kR`) updated by a linearised backward-Euler step in two substeps. The body
+    receives the force the implicit step solved for, so the wheel and the body exchange the same impulse.
+  - ABS (`absP.f/r`) and traction control (`tcM`) are dead-beat slip-ratio controllers on those states: each substep
+    they set the brake pressure / drive torque that lands the axle on a target slip given in normalised slip (so it
+    follows the road's grip and the axle's load); ABS dumps at once and re-applies at 8/s. A value under 0.95 is the
+    warning light. The switches `abs` / `tc` exist for the harness; the game never turns them off. In a held drift
+    (counter-steer, the handbrake flick, or the throttle past the arcade profiles) the TC's target lifts out of reach
+    and the stability control backs off.
+  - The drivetrain reflects the engine's inertia to the driven axle through the gearing; the tach reads the wheel, so
+    wheelspin flares it. The handbrake goes with the clutch in (the clutch kick): the rear locks on its own inertia,
+    the engine revs free, and the clutch comes back over 0.25 s after the pull; the automatic holds its gear meanwhile.
+  - The hypercar's interfaces: `ext.fx` (a body force, Cold Thrust) and `ext.fz` (a load pressed onto the axles 45/55,
+    Ground Lock) are the caller's to write every step; `driveFront`, `vector` (torque vectoring on the rear), `hop()`
+    and the `airborne` state (a scripted parabola bound to the road, `altitude` for the car's mesh, a `'land'` impact).
+    Every optional `CarDef` field is copied by `applyCar` with a default that changes nothing for the earnable cars.
+  - Nothing in the step depends on the step size (exact exponentials for every filter, the velocity turned through
+    the step's yaw exactly, the implicit wheel update). `tests/dynamics.mjs` runs the whole matrix at 120 and 240 Hz.
+  - Allocation: the step holds no object, array or closure of its own (the tyre law writes into module-level records,
+    the walls and the traffic contacts into preallocated buffers). What remains is the JIT's: V8 boxes the double
+    arguments of the calls it does not inline into `step` (`tyre`, `loadMu`, `steerLock`, `maxDelta`; seen with
+    `--trace-turbo-inlining`), measured at 80-180 B per step in optimised code after warm-up (the parent commit's step:
+    3-180 B), about 10-20 KB/s at 120 Hz, a minor GC every couple of minutes; in the first second, while the function
+    is still interpreted, 1-2 KB per step. Measured in Node 22 with `--expose-gc`, `heapUsed` over 20,000 steps after
+    1.2 M warm-up steps, a semi-space large enough that no scavenge fell in the window.
   - After moving, the car is projected onto the current path for s, d, height and grade. It then collides with
-    barrier segments from `net.wallsNear`.
+    barrier segments from `net.wallsNear`. In the air (a hop) the pose is taken from the road directly and
+    `Game.trackPath()` is skipped.
 - **`Game.trackPath()`.**
   - If the car is outside its path's lanes (or every fourth step anyway), it scores the surfaces under the car. The
     score rewards being inside a path's lanes, heading alignment, the current path (stickiness), and the route's
@@ -181,7 +208,16 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     changes with gap checks, yielding to a fast player.
   - At a freeway's end a car carries on into `next`; otherwise it despawns.
   - Collisions are oriented boxes in world space, within 2.5 m of height, so they work across roads and at
-    junctions.
+    junctions. The player's box is swept over the step (`traffic/contact.ts`, pure, no three.js): the first
+    sub-position that overlaps is the contact and its normal is the axis the approach came along, so a rear-end at
+    120 m/s reads as a rear-end (100 % of the closing speed along the nose at every offset up to 1.6 m) rather than
+    a sideways rub, and ends a Speed Survival run. `collide()` fills a preallocated buffer and returns a count; a car
+    below the player's altitude (a hop) is skipped.
+  - The dynamics harness: `node tests/dynamics.mjs` (about 15 s, no browser) bundles the physics with esbuild and
+    writes `tests/out/dynamics-report.md`: the control table against the parent commit, brakes/TC, the drift
+    scenarios, the stability runs, the swept contact and the 120/240 Hz comparison. It exits non-zero on a failed
+    bound. `tests/out/` is gitignored: the report is regenerated by every run, and the committed record of the numbers
+    is `PROJECT_OC_DYNAMICS.md` §11.
   - Spawning is deterministic for a seed, at cars per km per lane. It happens beyond 72% of the view distance, so
     nothing pops in close.
 - **Autopilot** (the menu demo, and the test driver).
