@@ -39,6 +39,7 @@
   var wrap = root.querySelector(".bkl");
   var select = root.querySelector("#bkl-svc");
   var metaEl = root.querySelector(".bkl-meta");
+  var pick = root.querySelector(".bkl-pick");
   var calEl = root.querySelector(".bkl-cal");
   var whenEl = root.querySelector(".bkl-when");
   var timesEl = root.querySelector(".bkl-times");
@@ -103,10 +104,41 @@
     return null;
   };
 
+  /* the picker card: a texture swatch for the kind of treatment (the same
+     photos as the menu), its name, and time, price and her deposit for it */
+  var SWATCH = {
+    custom: "img/services/custom.webp", ageless: "img/services/ageless.webp", dermaplane: "img/services/dermaplane.webp",
+    consult: "img/services/consult.webp", acne: "img/services/acne.webp", peel: "img/services/brazilian.webp", wax: "img/services/underarm.webp"
+  };
+  var SV = window.LUMEVINA_SERVICES;
+  var swatchOf = function (id) {
+    var sector = (SV && SV.get(id) || {}).sector;
+    if (id === "new-client-consultation" || sector === "consult") return SWATCH.consult;
+    if (/ageless/.test(id) || sector === "procell") return SWATCH.ageless;
+    if (/dermaplan/.test(id)) return SWATCH.dermaplane;
+    return SWATCH[{ acne: "acne", peels: "peel", waxing: "wax" }[sector]] || SWATCH.custom;
+  };
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var paintMeta = function () {
     var s = B.service(state.svc);
     if (!s) { metaEl.textContent = ""; return; }
-    metaEl.textContent = s.dur + " min · " + money(s.price) + " · " + money(s.price / 2) + " deposit to book";
+    /* the treatment's own time, as on the menu (the calendar holds a 30-minute block) */
+    var min = (SV && SV.get(state.svc) || {}).min || s.dur;
+    var line = (min ? min + " min · " : "") + money(s.price) + " · " + (s.deposit ? money(s.deposit) + " deposit to book" : "no deposit");
+    metaEl.textContent = line;
+    if (!pick) return;
+    var opt = select.options[select.selectedIndex];
+    pick.querySelector(".bkl-pick-name").textContent = opt ? opt.textContent.replace(/ · \$[\d.,]+$/, "") : s.name;
+    pick.querySelector(".bkl-pick-meta").textContent = line;
+    var img = pick.querySelector(".bkl-pick-swatch img"), src = swatchOf(state.svc);
+    if (img.getAttribute("src") === src) return;
+    if (!img.getAttribute("src") || reduceMotion) { img.src = src; return; }
+    /* a new kind of treatment: the swatch fades across */
+    pick.classList.add("is-swapping");
+    setTimeout(function () {
+      img.onload = img.onerror = function () { pick.classList.remove("is-swapping"); };
+      img.src = src;
+    }, 160);
   };
 
   var dayLabel = function (info) {

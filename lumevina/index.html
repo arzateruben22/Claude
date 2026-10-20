@@ -280,7 +280,13 @@
             </div>
             <div class="field bkl-field">
               <label for="bkl-svc">Treatment</label>
-              <select id="bkl-svc" class="bkl-select"></select>
+              <!-- the phone's own picker, dressed as a card: a texture swatch for the
+                   kind of treatment, its name, and time, price and deposit (js/book-section.js) -->
+              <div class="bkl-pick">
+                <span class="bkl-pick-swatch" aria-hidden="true"><img alt="" decoding="async" width="56" height="56"></span>
+                <span class="bkl-pick-text" aria-hidden="true"><span class="bkl-pick-name"></span><span class="bkl-pick-meta"></span></span>
+                <select id="bkl-svc" class="bkl-select"></select>
+              </div>
             </div>
             <p class="bkl-meta" aria-live="polite"></p>
             <p class="booking-label bkl-when" id="bkl-when">Pick a day</p>
