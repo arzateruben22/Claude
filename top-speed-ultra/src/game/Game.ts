@@ -293,7 +293,7 @@ export class Game {
 
   async start(mode: Mode, startLabel = this.settings.start, courseId = this.settings.course) {
     this.endRace();
-    this.applyCarChoice();
+    this.applyCarChoice(mode);
     if (mode === 'race') return this.startRace(COURSES.find((c) => c.id === courseId) ?? COURSES[0]);
     this.audio.start();
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
@@ -319,7 +319,7 @@ export class Game {
     this.setPaused(false);
     this.ev.loading(false);
     this.last = performance.now();
-    const what = mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive';
+    const what = (mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive') + (this.driving === 'oc-hyper' ? (mode === 'free' ? ' · Unleashed' : ' · race tune') : '');
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
@@ -473,10 +473,10 @@ export class Game {
     try { localStorage.setItem(OWNER_CAR, id); } catch { /* a convenience */ }
   }
   // the car from your garage: its numbers into the physics, its body and cockpit into the scene
-  applyCarChoice() {
+  applyCarChoice(mode: string = this.mode) {
     const c = carById(this.carId);
     this.driving = c.id;
-    this.carGrip = applyCar(c);
+    this.carGrip = applyCar(c, mode);
     this.configureCar();
     return c;
   }

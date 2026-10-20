@@ -42,12 +42,20 @@ try {
 const { MPH, DEG } = LIB;
 let cars = [...CUR.CARS, LIB.TUNES.unleashed, LIB.TUNES.race];
 if (CARS_ARG !== 'all') cars = cars.filter((c) => CARS_ARG.split(',').includes(c.id));
-const EARNABLE = CUR.CARS.map((c) => c.id);
+// the Founder Edition hypercar is not earnable: it is left out of the earnable ordering, and the checks that assume a
+// rear-drive car (power-over and held-drift entries, the ABS-off lock time) are reported for it, not bound: its
+// all-wheel drive, torque vectoring and stiffer tyres are built to stop exactly those slides (PROJECT_OC_HYPERCAR.md §5)
+const FOUNDER = new Set(CUR.CARS.filter((c) => c.founder).map((c) => c.id));
+const EARNABLE = CUR.CARS.filter((c) => !c.founder).map((c) => c.id);
 const short = (id) => ({ 'rossini-gt': 'GT', 'rossini-brio': 'Brio', 'rossini-corsa': 'Corsa', 'vela-e': 'Vela E', unleashed: 'Unleashed-like', race: 'Race-tune-like' })[id] ?? id;
 const profile = (h) => (h <= 0.35 ? 'arcade' : h <= 0.5 ? 'sport' : 'sim');
 const f = (x, d = 2) => (x === undefined || x === null || Number.isNaN(x) ? '-' : typeof x === 'number' ? (x < 0 && d > 0 && x > -0.5 * 10 ** -d ? (0).toFixed(d) : x.toFixed(d)) : String(x));
 const checks = [], advisories = [];
-const check = (group, name, pass, detail) => { checks.push({ group, name, pass: !!pass, detail }); if (!pass) log(`  FAIL ${group}: ${name} — ${detail}`); return pass; };
+const check = (group, name, pass, detail) => {
+  const founderOnly = [...FOUNDER].some((id) => group.includes(id)) && /power-over|held drift|ABS off/.test(name);
+  if (founderOnly) { advisories.push({ group, name, pass: !!pass, detail: 'reported for the Founder car, not bound: ' + detail }); return pass; }
+  checks.push({ group, name, pass: !!pass, detail }); if (!pass) log(`  FAIL ${group}: ${name} — ${detail}`); return pass;
+};
 const traces = [];
 const keep = (name, lines) => { if (lines && lines.length) traces.push(`## ${name}\n${lines.join('\n')}`); };
 

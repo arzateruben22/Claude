@@ -20,8 +20,9 @@ import { addWheel } from '../../preview/car-wheel';
 import { Kit } from '../../preview/car-kit';
 import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
-import { CarId, shapeFor } from '../../preview/car-shape';
+import { CarId, shapeFor, rearR } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
+const HYPER_EYE = new THREE.Vector3(0.07, -0.13, -0.02);
 import { CarPhysics, SPEC } from './Physics';
 import { ORIGIN } from '../world/Path';
 import type { Path } from '../world/Path';
@@ -132,6 +133,10 @@ export class PlayerCar {
     for (const w of this.wheels) disposeGeometry(w.steer);
     this.wheels = [];
     let t = performance.now();
+    // the hypercar's roof (1.07 m over the shared eye point) is lower than the shared driver's frame: until the full seat
+    // drop lands (PROJECT_OC_HYPERCAR.md, M3), its driver sits lower and a little further in, the way the sheet's occupants do
+    this.eye.position.copy(EYE);
+    if (c.car === 'oc-hyper') this.eye.position.add(HYPER_EYE);
     const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false });
     this.stats.carMs = Math.round(performance.now() - t);
     this.exterior = ext; this.body.add(ext);
@@ -144,17 +149,17 @@ export class PlayerCar {
     ck.wheel.rotation.z = this.wheelAngle;
     // wheels: the preview builds them rigid into the body; here each gets its own groups so it spins, and the
     // fronts steer. The calipers stay on the hub (the non-spinning kit); the tyre, rim and disc turn.
-    const B = bodyFor(c.car), P = shapeFor(c.car), A = B.AXLE, k = A.r / 0.345;
+    const B = bodyFor(c.car), P = shapeFor(c.car), A = B.AXLE;
     this.buildSunOccluder(B, ck);
-    const scale = new THREE.Matrix4().makeScale(1, k, k);
     for (const [z, track, front] of [[A.zF, A.trackF, true], [A.zR, A.trackR, false]] as [number, number, boolean][]) {
+      const r = front ? A.r : rearR(P), k = r / 0.345, scale = new THREE.Matrix4().makeScale(1, k, k);
       for (const out of [1, -1] as const) {
         const hub = new Kit(), spinKit = new Kit();
-        addWheel(hub, { q: c.quality, front, style: P.wheel, w: front ? A.wF : A.wR }, scale, out, spinKit);
+        addWheel(hub, { q: c.quality, front, style: P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall }, scale, out, spinKit);
         const steer = new THREE.Group(), spin = new THREE.Group();
         hub.build(this.mats, steer, { shadow: () => false });
         spinKit.build(this.mats, spin, { shadow: (key) => key === 'tyre' || key === 'rimPaint' });
-        steer.position.set(out * track, A.r, z); steer.add(spin);
+        steer.position.set(out * track, r, z); steer.add(spin);
         this.root.add(steer);
         this.wheels.push({ steer, spin, front });
       }
