@@ -21,7 +21,7 @@ Then tell me what's left before you change anything.
 
 ## The vision
 
-- **The core idea.** A freeway driving game that starts with Orange County and grows: LA County next, then beyond.
+- **The core idea.** A driving game set in Orange County, the whole county done deeply: every freeway, every street, roundabouts, malls. (The owner stopped LA County and beyond on 2026-10-20.)
   - You see how fast different cars can really go.
   - Survive in traffic at top speed.
   - Climb a scoreboard for how long you stay at max speed without crashing.
@@ -38,7 +38,7 @@ Built items are marked ✅. Everything else is still to do.
 
 - ✅ Real, connected OC freeways: I-5, I-405, CA-22, 55, 57, 73, 91, 133, 241, 261. You can take any interchange.
   Chunk streaming, navigation with route picking, signs and destinations.
-  - Next: LA County, more of SoCal.
+  - Next: every OC street, roundabout and mall; the freeway gaps (I-605 at Seal Beach, the SR-90 expressway). LA County is stopped (2026-10-20).
 - ✅ Traffic levels: None, Light, Moderate, Heavy, Expert. Deterministic traffic.
 - ✅ Speed Survival: max speed, longest clean streak over 100 mph, distance, near misses, clean passes, collisions,
   score, personal best. Exploit-resistant. Local leaderboard, clearly labelled local.
@@ -113,7 +113,7 @@ P0–P4 core systems are built (see the progress log). Good next steps:
 - performance on real phones
 - painted nails and finer hands
 - tuning ability lengths toward about 5 s
-- LA County
+- every street in Orange County (LA County is stopped)
 - the playable arcade track
 - houses and parking
 - the Golden Road walkable slice
@@ -130,3 +130,10 @@ P0–P4 core systems are built (see the progress log). Good next steps:
   reviewing the day's work (details in `CLAUDE.md`).
 - **The name.** The game is **OC Ultra**, with "Top Speed" beneath; the OC sunset wordmark is its logo, replacing
   the R badge everywhere the R stood for the game (the R stays as the Rossini car brand).
+
+## Added 2026-10-20
+
+- **The map is Orange County only.** "put a full stop into the la count and solely focus on the OC map including all
+  freewats, neighborhood streets, roundabouts, etc." Every freeway and expressway in the county, every public street
+  with intersections and signals, roundabouts, malls and their parking structures. LA County and beyond are stopped.
+  Decision 11 in PROJECT_OC_DECISIONS.md.

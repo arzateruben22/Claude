@@ -68,7 +68,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | --- | --- | --- |
 | Ultra Realism Mode | Done | Opens at level 5. Tunnel vision, camera shake and muffling, each switched on its own. Shake follows reduced-motion. |
 | Radio | Done (framework) | Three fictional stations (KCST 101.5 Coast, KFWY 96.9 Freeway FM, KNYN 88.3 Canyon Radio) play music composed live in code. Nothing is recorded, licensed or streamed. More stations or licensed audio can plug into the same `Radio` class. |
-| City expansion | Roadmap | The pipeline already pulls arterial streets. Driving them needs intersections and signals. |
+| OC streets (every street in Orange County) | Next after the hypercar (owner, 2026-10-20) | All of Anaheim's streets are pulled (about 10,000 named segments and their intersections). Driving them needs a tiled street model, intersections, signals and stop signs, roundabouts, surface traffic and pedestrians; malls and parking structures from Overture buildings. First slice: the drive from the 57 into the Lot 57 spot. Design first (PROJECT_OC_HANDOFF.md, Fable prompt "OC streets"). |
 | Golden Road vertical slice on foot | Roadmap | Simulated crowds. It must never claim live occupancy. |
 | On foot: Lot 57, our own hangout on Orangewood Ave, Anaheim | Planned (prototype in progress) | Plan in `PROJECT_OC_ON_FOOT.md`. A fictional taproom and yard (no real business's name or look) at the real spot, on the real streets from OpenStreetMap via Overture. Get out of the car, walk, sit, order, talk to NPCs. Crowds are simulated by time and day and labelled so. No live occupancy, events or multiplayer. |
 
@@ -79,7 +79,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Multiplayer | Roadmap only | It doesn't exist and isn't claimed. It needs a server, accounts and anti-cheat. |
 | Arcade track | Coming soon (shown) | A "Coming soon" card in the menu links to the Loop Lab preview: loop-the-loop, banking, boost pads. |
 | Housing, commercial features | Roadmap | Not started. Payments stay out entirely. |
-| LA County and beyond | Roadmap | Same pipeline with a bigger bounding box. The data budget is the constraint: about 1.2 MB per county. |
+| LA County and beyond | Stopped (owner, 2026-10-20) | The map is Orange County only, done deeply (decision 11 in PROJECT_OC_DECISIONS.md). The OC freeway gaps to add: I-605 at Seal Beach and Los Alamitos, and the SR-90 Imperial Highway expressway. |
 
 ## How realistic can it get?
 

@@ -25,6 +25,9 @@ model: routine work to `opus`, hard reasoning to `fable`.
   - Then F2-B (fixes in tsu-store after the SKU commits) and F3-B (fixes per branch once idle) from the F2 and F3
     findings files, and F6 (PROJECT_OC_DECISIONS.md: nine decisions, all pending; the owner answers one at a time).
   - Resume fewer lanes at a time if the owner wants the window to last: nine at once burn about 6% a minute.
+- **Map scope from the owner (2026-10-20, decision 11):** LA County is stopped; the map is Orange County only, every
+  freeway, street, roundabout and mall. After the hypercar and the sky-camera and debris fixes, OC streets come next
+  (Fable prompt "OC streets" below), with the drive into Lot 57 as their first slice.
 - **Priority order from the owner (2026-10-19, decision 10 in PROJECT_OC_DECISIONS.md):** the hypercar fully
   drivable first (F1 dynamics, then hypercar M1 to M6, then F4 budgets, then the live merge and suite), then the
   store SKU and F2, then on foot at Lot 57 (F5 people specs, then PROJECT_OC_ON_FOOT.md Phases 1 to 3), then the UI
@@ -210,6 +213,32 @@ the facts, the options and your recommendation, and record each answer in PROJEC
 9. Pushes: when to resume, and the merge order for claude/realism-2, claude/store, claude/hypercar and claude/drift
    onto claude/always-on.
 Do not change code in this session beyond recording the decisions.
+```
+
+### Fable prompt: OC streets (every street in Orange County), queued 2026-10-20
+
+```
+OC Ultra (top-speed-ultra), the OC streets design. The owner (2026-10-20, decision 11 in PROJECT_OC_DECISIONS.md): stop LA
+County; the map is Orange County only, done deeply: every freeway and expressway, every public street with intersections,
+signals and stop signs, roundabouts, malls and their parking structures. Design it, then build its first slice.
+Read: CLAUDE.md, PROJECT_OC_DECISIONS.md (10 and 11), PROJECT_OC_TECHNICAL_NOTES.md (roads, streaming, the single-file
+build, the F4 "Budgets" section on claude/stream), PROJECT_OC_ON_FOOT.md (the Anaheim data, Phases 2-3, the 804 m drive in
+from the 57), tools/anaheim/README.md and its pipeline, src/data/anaheim/*.json, src/game/world/ (Network, Roads, Path),
+src/game/traffic/, PROJECT_OC_DYNAMICS.md.
+Design (write "OC streets" in PROJECT_OC_TECHNICAL_NOTES.md): (1) the data: every OC city's streets, connectors,
+roundabouts, signals and stop signs where tagged, malls and parking structures, from Overture/OpenStreetMap only (credited;
+never Google), measured counts and sizes per city; (2) a tiled street model that fits the single-file artifact (16 MB cap;
+today 3.75 MB) with streaming by distance and speed; (3) intersections: geometry, lane inference without lane counts, signal
+phases, stop-sign rules, turn lanes, roundabout entry and yield; (4) the freeway-to-street hand-off at every ramp terminal;
+(5) surface traffic (the IDM on streets, yielding, turning) and pedestrians at crossings; (6) phone budgets per tier;
+(7) the freeway gaps (I-605 at Seal Beach, the SR-90 expressway); (8) milestones with checks. Then build slice 1: the drive
+from the 57 South exit into the Lot 57 lot (on-foot Phase 3b) on real streets with working signals.
+Rules: OSM/Overture only and credited; no live data claims; static-first, no downloaded assets; honest labels; commits on a
+branch off claude/always-on, local only while the owner's push hold stands; no model names in code or commits.
+Proof: per-city data counts against the source; the autopilot drives from the 57 to the lot without touching a kerb or
+running a red; a scan finds no street geometry inside any freeway travel lane; draw calls and triangles at Low and High in a
+dense city block; npm test groups boot, interchanges, render, phone plus a new streets group. Log in PROJECT_OC_PROGRESS.md.
+If Fable is unavailable, run it on Opus with a design judge pair before any build.
 ```
 
 ## Opus queue (routine items waiting for a daytime session)
