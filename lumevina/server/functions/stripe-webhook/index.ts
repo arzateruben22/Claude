@@ -1,32 +1,38 @@
 // Lumevina — Supabase Edge Function: stripe-webhook
 //
-// Stripe calls this when a deposit payment succeeds (or fails).
-// On success the booking flips from 'pending' to 'held' and the Glow
-// Rewards ledger is written server-side: redemption debit, earn credit
-// with the same multipliers as js/rewards.js (double Wax Wednesday,
-// +25 rebooking streak within 5 weeks, +50 birthday month once/year).
+// Stripe tells the site what happened on its pages. Every page the site
+// opens is a Checkout Session whose metadata says what it was for:
 //
-// Referral credit (150 ✦ to the referrer) is granted when the owner
-// marks the referred client's first booking 'completed' after the
-// visit — see grant_referral_credit at the bottom, called from a
-// database trigger on that status change.
+//   booking     (functions/book) the deposit is paid or the card saved:
+//               the booking is confirmed (../_shared/bookings.ts →
+//               confirmBooking). An abandoned page frees the time.
+//   card        (studio-book → card_link) a client Evelyn booked added
+//               their card: it goes on the booking and their contact.
+//   visit       (studio-book → checkout by pay link) the client paid the
+//               visit on their phone: it's checked out (../_shared/visits.ts).
+//   membership  (functions/membership → join) the subscription started: the
+//               membership is made (../_shared/membership.ts).
+//   (none)      a shop order (functions/create-checkout, ../_shared/orders.ts).
 //
-// Shop orders (functions/create-checkout) finish here too: Stripe Checkout's
-// checkout.session.* events mark the order paid, take the stock off, issue
-// gift certificates, queue the shipment, email the receipt and alert Evelyn
-// (../_shared/orders.ts).
+// And for memberships: invoice.paid adds the month's facial (two waiting
+// holds billing); customer.subscription.updated / .deleted mirror a
+// cancellation, its date, or a new billing card.
 //
 // Deploy:  supabase functions deploy stripe-webhook --no-verify-jwt
 // Secrets: supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
 // Then point a Stripe webhook at this function's URL with the events
-// payment_intent.succeeded, payment_intent.payment_failed,
 // checkout.session.completed, checkout.session.async_payment_succeeded,
-// checkout.session.async_payment_failed and checkout.session.expired.
+// checkout.session.async_payment_failed, checkout.session.expired,
+// invoice.paid, customer.subscription.updated and customer.subscription.deleted.
 
+// deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { addBooking } from "../_shared/google.ts";
-import { CATALOG } from "../_shared/catalog.ts";
 import { cancelOrder, fulfillOrder } from "../_shared/orders.ts";
+import { confirmBooking } from "../_shared/bookings.ts";
+import { completeVisit } from "../_shared/visits.ts";
+import { creditInvoice, ensureMembership, syncSubscription, PLANS } from "../_shared/membership.ts";
+import { notifyOwner } from "../_shared/notify.ts";
+import { cardLabel, stripe } from "../_shared/stripe.ts";
 
 const encoder = new TextEncoder();
 
@@ -60,9 +66,19 @@ async function verifyStripeSignature(
   return diff === 0;
 }
 
-const STREAK_DAYS = 35;
-const STREAK_BONUS = 25;
-const BIRTHDAY_BONUS = 50;
+/** The card a finished Checkout Session left on file, and what it charged. */
+async function cardFrom(s: any) {
+  const customer = typeof s.customer === "string" ? s.customer : s.customer?.id ?? null;
+  let pm: string | null = null, pi: string | null = null;
+  if (s.mode === "payment") {
+    pi = typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent?.id ?? null;
+    if (pi) pm = (await stripe(`payment_intents/${pi}`)).data?.payment_method ?? null;
+  } else if (s.mode === "setup") {
+    const si = typeof s.setup_intent === "string" ? s.setup_intent : s.setup_intent?.id ?? null;
+    if (si) pm = (await stripe(`setup_intents/${si}`)).data?.payment_method ?? null;
+  }
+  return { customer, payment_method: pm, card_label: (await cardLabel(pm)) || null, payment_intent: pi, paid_cents: s.mode === "payment" ? Number(s.amount_total ?? 0) : 0 };
+}
 
 Deno.serve(async (req) => {
   const payload = await req.text();
@@ -73,157 +89,88 @@ Deno.serve(async (req) => {
   if (!ok) return new Response("bad signature", { status: 400 });
 
   const event = JSON.parse(payload);
+  const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const o = event.data?.object ?? {};
+  const done = (msg = "ok") => new Response(msg, { status: 200 });
 
-  // shop orders (Stripe Checkout)
-  if (String(event.type).startsWith("checkout.session.")) {
-    const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-    const s = event.data?.object ?? {};
-    if ((event.type === "checkout.session.completed" && s.payment_status === "paid") ||
-        event.type === "checkout.session.async_payment_succeeded") {
-      return new Response(await fulfillOrder(db, s), { status: 200 });
+  // ── memberships: billing ──
+  if (event.type === "invoice.paid") {
+    const m = await creditInvoice(db, o);
+    return done(m ? "credited" : "ignored");
+  }
+  if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
+    await syncSubscription(db, o, event.type === "customer.subscription.deleted");
+    return done();
+  }
+  if (!String(event.type).startsWith("checkout.session.")) return done("ignored");
+
+  const kind = o.metadata?.kind ?? "";
+  const finished = (event.type === "checkout.session.completed" && (o.payment_status === "paid" || o.payment_status === "no_payment_required" || o.mode === "setup")) ||
+    event.type === "checkout.session.async_payment_succeeded";
+  const failed = event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed";
+
+  // ── a booking's deposit or card ──
+  if (kind === "booking") {
+    const id = o.metadata?.booking_id;
+    if (!id) return done("ignored");
+    if (failed) {
+      await db.from("bookings").update({ status: "cancelled", cancelled_at: new Date().toISOString() }).eq("id", id).eq("status", "pending");
+      return done();
     }
-    if (event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") {
-      await cancelOrder(db, s);
+    if (!finished) return done("ignored");
+    const card = await cardFrom(o);
+    const r = await confirmBooking(db, id, card);
+    if (!r.ok && card.paid_cents > 0 && card.payment_intent) {
+      // paid after the time was given up (they left Stripe's page open past its half hour): refund it
+      const { data: b } = await db.from("bookings").select("status, stripe_payment_intent").eq("id", id).maybeSingle();
+      if (b?.status === "cancelled") {
+        await stripe("refunds", { payment_intent: card.payment_intent, metadata: { booking_id: id } }, { idempotency: `refund-late-${id}` });
+        await notifyOwner(db, { kind: "booking", title: "A deposit was refunded", body: "A client paid after their held time had been released, so the deposit went back to them automatically.", url: "dashboard.html#appointments" }).catch(() => {});
+      }
     }
-    return new Response("ok", { status: 200 });
+    return done(r.ok ? "confirmed" : "already");
   }
 
-  const intent = event.data?.object;
-  const bookingId = intent?.metadata?.booking_id;
-  if (!bookingId) return new Response("ignored", { status: 200 });
-
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
-
-  if (event.type === "payment_intent.payment_failed") {
-    await supabase.from("bookings")
-      .update({ status: "cancelled" }).eq("id", bookingId).eq("status", "pending");
-    return new Response("ok", { status: 200 });
+  // ── a client Evelyn booked added their card ──
+  if (kind === "card") {
+    if (!finished) return done("ignored");
+    const id = o.metadata?.booking_id;
+    const card = await cardFrom(o);
+    if (id && card.payment_method) {
+      const { data: b } = await db.from("bookings").update({ stripe_customer: card.customer, payment_method: card.payment_method, card_label: card.card_label })
+        .eq("id", id).select("guest_email, guest_name").maybeSingle();
+      if (b?.guest_email) await db.from("contacts").update({ stripe_customer: card.customer, payment_method: card.payment_method, card_label: card.card_label }).eq("email", String(b.guest_email).toLowerCase());
+      await notifyOwner(db, { kind: "booking", title: `Card added: ${b?.guest_name ?? "a client"}`, body: card.card_label ?? "", url: "dashboard.html#appointments" }).catch(() => {});
+    }
+    return done();
   }
 
-  if (event.type !== "payment_intent.succeeded") {
-    return new Response("ignored", { status: 200 });
+  // ── a visit paid by link, on the client's phone ──
+  if (kind === "visit") {
+    if (!finished) return done("ignored");
+    const id = o.metadata?.booking_id;
+    const { data: b } = await db.from("bookings").select("*").eq("id", id).maybeSingle();
+    if (b && b.status !== "completed") {
+      const card = await cardFrom(o);
+      await completeVisit(db, b, b.checkout?.pending ?? {}, { method: "link", charge_id: card.payment_intent, charged_cents: card.paid_cents });
+    }
+    return done();
   }
 
-  const { data: booking } = await supabase.from("bookings")
-    .select().eq("id", bookingId).single();
-  if (!booking || booking.status !== "pending") {
-    return new Response("ok", { status: 200 }); // idempotent
+  // ── a new membership ──
+  if (kind === "membership") {
+    if (!finished || !o.subscription) return done("ignored");
+    const m = await ensureMembership(db, typeof o.subscription === "string" ? o.subscription : o.subscription.id);
+    if (m) {
+      await notifyOwner(db, { kind: "member", email: true, url: "dashboard.html#members",
+        title: `New member: ${m.name || m.email}`,
+        body: `${PLANS[m.plan]?.name} at $${m.price_cents / 100} a month${m.founding ? " (founding rate)" : ""}.${m.five_no ? ` Founding Five #${m.five_no}: set their welcome kit aside.` : ""}` }).catch(() => {});
+    }
+    return done();
   }
 
-  await supabase.from("bookings").update({
-    status: "held",
-    paid_cents: intent.amount,
-  }).eq("id", bookingId);
-
-  // Into her Google Calendar, so GlossGenius sees the time as taken
-  // (server/functions/_shared/google.ts). Never blocks the webhook.
-  try {
-    const names = (booking.services as string[]).map((id) => CATALOG[id]?.name ?? id).join(" + ");
-    const who = booking.guest_name || "website client";
-    const eventId = await addBooking({ id: bookingId, date: booking.date, start_min: booking.start_min,
-      dur_min: booking.dur_min, title: `${names} · ${who}`, note: "Deposit paid online." });
-    if (eventId) await supabase.from("bookings").update({ google_event_id: eventId }).eq("id", bookingId);
-  } catch (err) {
-    console.error("google calendar:", String(err));
-  }
-
-  // Fire the confirmation email/SMS and queue the 24h reminder.
-  await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-confirmation`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ booking_id: bookingId, kind: "confirmation" }),
-  }).catch(() => {}); // never block the webhook on notifications
-
-  // Claim the flash slot so it can't be reused.
-  if (booking.flash) {
-    await supabase.from("flash_slots")
-      .update({ claimed_by: bookingId }).eq("date", booking.date);
-  }
-
-  // Rewards only accrue to signed-in clients (guests are invited to
-  // create an account to claim them — points can be backfilled by email).
-  if (!booking.client_id) return new Response("ok", { status: 200 });
-
-  const { data: client } = await supabase.from("clients")
-    .select().eq("id", booking.client_id).single();
-  if (!client) return new Response("ok", { status: 200 });
-
-  // Redemption debit first.
-  if (booking.points_redeemed > 0) {
-    await supabase.from("rewards_ledger").insert({
-      client_id: client.id,
-      delta: -booking.points_redeemed,
-      label: "Redeemed on deposit",
-      booking_id: bookingId,
-    });
-  }
-
-  // Earn on the amount actually charged, with the site's multipliers.
-  const base = Math.round(intent.amount / 100);
-  const day = new Date(`${booking.date}T00:00:00`);
-  const doubled = day.getDay() === 3 ||
-    (booking.services as string[]).includes("wax-wednesday");
-  // Rebooking bonus: non-members only (members already have a facial every
-  // month), when this visit falls within 5 weeks after their last one.
-  const { data: membership } = await supabase.from("memberships")
-    .select("id").eq("client_id", client.id).neq("status", "cancelled").maybeSingle();
-  const sinceLast = client.last_visit
-    ? (day.getTime() - new Date(`${client.last_visit}T00:00:00`).getTime()) / 864e5 : -1;
-  const streak = !membership && sinceLast > 0 && sinceLast <= STREAK_DAYS;
-  const birthday = client.birth_month === day.getMonth() &&
-    client.birthday_claimed_year !== day.getFullYear();
-
-  const points = base * (doubled ? 2 : 1) +
-    (streak ? STREAK_BONUS : 0) + (birthday ? BIRTHDAY_BONUS : 0);
-
-  await supabase.from("rewards_ledger").insert({
-    client_id: client.id,
-    delta: points,
-    label: `Deposit — ${(booking.services as string[]).join(" + ")}`,
-    booking_id: bookingId,
-  });
-
-  // What this booking earned, so a cancellation in time hands exactly this
-  // back (the return_booking_points trigger in schema.sql).
-  await supabase.from("bookings").update({
-    points_earned: points, prev_last_visit: client.last_visit ?? null,
-  }).eq("id", bookingId);
-
-  await supabase.from("clients").update({
-    last_visit: !client.last_visit || booking.date > client.last_visit ? booking.date : client.last_visit,
-    ...(birthday ? { birthday_claimed_year: day.getFullYear() } : {}),
-  }).eq("id", client.id);
-
-  return new Response("ok", { status: 200 });
+  // ── shop orders (Stripe Checkout) ──
+  if (finished) return done(await fulfillOrder(db, o));
+  if (failed) await cancelOrder(db, o);
+  return done();
 });
-
-/* ── Referral credit (database side) ─────────────────────────────────
-   Run once in the SQL editor; fires when a first booking completes:
-
-   create or replace function grant_referral_credit() returns trigger
-   language plpgsql security definer as $$
-   declare referrer clients;
-   begin
-     if new.status = 'completed' and old.status <> 'completed'
-        and new.client_id is not null then
-       select c.* into referrer from clients c
-         join clients ref on ref.referred_by = c.ref_code
-         where ref.id = new.client_id and ref.referral_credited = false;
-       if found then
-         insert into rewards_ledger (client_id, delta, label, booking_id)
-           values (referrer.id, 150, 'Referral — friend completed first visit', new.id);
-         update clients set referral_credited = true where id = new.client_id;
-       end if;
-     end if;
-     return new;
-   end $$;
-
-   create trigger referral_credit after update on bookings
-     for each row execute function grant_referral_credit();
-*/

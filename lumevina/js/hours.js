@@ -13,8 +13,11 @@
  * DEMO: saved in this browser (lumevina_hours), so the dashboard and the
  * website share it when both are opened on the same device. A change in
  * one tab reaches the other straight away.
- * LIVE: one availability row in Supabase (server/schema.sql), read by
- * the calendar and checked again when a deposit is taken.
+ * LIVE (js/site-config.js → shop): the site_settings row "hours" in
+ * Supabase. Every page reads it on load (and keeps the last copy in this
+ * browser, so the calendar never waits); the dashboard saves each change
+ * there with Evelyn's studio key (functions/studio → hours_set), and
+ * functions/book refuses a time outside them.
  */
 (function () {
   "use strict";
@@ -54,11 +57,38 @@
   };
 
   var listeners = [];
+  var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var LIVE = /^https:\/\//.test(SHOP.supabase || "") && !!SHOP.key;
+  var base = LIVE ? SHOP.supabase.replace(/\/$/, "") : "";
+  var saveStatus = null;   /* the dashboard's last save: "saved", "saving", "failed", "no_key" */
   var write = function (s) {
     s.at = new Date().toISOString();
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* private mode */ }
     listeners.forEach(function (fn) { fn(); });
+    if (!LIVE) return;
+    var key = "";
+    try { key = localStorage.getItem("lumevina_studio_key") || ""; } catch (e) { /* private mode */ }
+    if (!key) { saveStatus = "no_key"; return; }
+    saveStatus = "saving";
+    fetch(base + "/functions/v1/studio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + SHOP.key, "x-studio-key": key },
+      body: JSON.stringify({ action: "hours_set", value: { week: s.week, off: s.off, extra: s.extra, blocks: s.blocks } })
+    }).then(function (r) { saveStatus = r.ok ? "saved" : "failed"; }, function () { saveStatus = "failed"; })
+      .then(function () { listeners.forEach(function (fn) { fn(); }); });
   };
+  /* live: the hours everyone books against */
+  if (LIVE && window.fetch) {
+    fetch(base + "/rest/v1/site_settings?key=eq.hours&select=value", { headers: { apikey: SHOP.key, Authorization: "Bearer " + SHOP.key } })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (rows) {
+        var v = rows && rows[0] && rows[0].value;
+        if (!v) return;
+        v.at = new Date().toISOString();
+        try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* private mode */ }
+        listeners.forEach(function (fn) { fn(); });
+      }, function () { /* offline: the last copy stands */ });
+  }
   /* the dashboard in one tab, the website in another */
   window.addEventListener("storage", function (e) {
     if (e.key === KEY) listeners.forEach(function (fn) { fn(); });
@@ -188,7 +218,8 @@
     summary: summary, prose: prose, closedLabel: closedLabel, fmt: fmt, fmtShort: fmtShort,
     setWeekday: setWeekday, setOff: setOff, setExtra: setExtra,
     addBlock: addBlock, removeBlock: removeBlock, reset: reset,
-    keyOf: keyOf, dateOf: dateOf,
+    keyOf: keyOf, dateOf: dateOf, live: LIVE,
+    saveStatus: function () { return saveStatus; },
     onChange: function (fn) { listeners.push(fn); }
   };
 })();

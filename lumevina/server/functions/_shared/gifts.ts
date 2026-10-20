@@ -23,17 +23,22 @@ export type NewGift = {
   sendDate?: string | null;
   source?: "sale" | "studio" | "membership";
   paymentIntent?: string;
+  /* a treatment certificate (a gifted membership facial): covers that one service */
+  kind?: "value" | "service";
+  serviceId?: string;
+  label?: string;
 };
 
 const clip = (v: unknown, n: number) => (v == null || v === "" ? null : String(v).slice(0, n));
 
-/** Store a new dollar-value certificate and return its row (with its code). */
+/** Store a new certificate (a dollar value, or one treatment) and return its row (with its code). */
 export async function issueGift(db: any, g: NewGift) {
   for (let tries = 0; tries < 5; tries++) {
     const row = {
       code: newCode(),
-      kind: "value",
-      label: "Any treatment",
+      kind: g.kind === "service" ? "service" : "value",
+      label: g.kind === "service" ? clip(g.label, 120) ?? "One treatment" : "Any treatment",
+      service_id: g.kind === "service" ? clip(g.serviceId, 80) : null,
       amount_cents: g.amountCents,
       balance_cents: g.amountCents,
       recipient_name: clip(g.recipientName, 120),

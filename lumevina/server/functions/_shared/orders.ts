@@ -8,6 +8,8 @@
 import { issueGift } from "./gifts.ts";
 import { esc, money, page, sendEmail } from "./mail.ts";
 import { notifyOwner } from "./notify.ts";
+import { earn } from "./points.ts";
+import { upsertContact } from "./contacts.ts";
 
 const site = () => (Deno.env.get("SITE_URL") ?? "").replace(/\/$/, "");
 
@@ -28,7 +30,7 @@ const shipBy = () => {
 const today = () => new Date().toISOString().slice(0, 10);
 
 /** The certificate email: to the recipient, or to the buyer when it's theirs to hand over. */
-export async function emailGift(card: { code: string; amount_cents: number; recipient_name: string | null; recipient_email: string | null; buyer_email: string | null; message: string | null; deliver_to_buyer: boolean }, fromName: string) {
+export async function emailGift(card: { code: string; amount_cents: number; recipient_name: string | null; recipient_email: string | null; buyer_email: string | null; message: string | null; deliver_to_buyer: boolean; kind?: string; label?: string | null }, fromName: string) {
   const to = card.deliver_to_buyer ? card.buyer_email : card.recipient_email;
   if (!to) return false;
   const hi = card.recipient_name ? `Hi ${esc(card.recipient_name)},` : "Hi,";
@@ -38,7 +40,7 @@ export async function emailGift(card: { code: string; amount_cents: number; reci
     (card.message ? `<p style="font-size:15px;line-height:1.5;padding:12px 14px;background:#fff;border-left:2px solid #B2967D;border-radius:0 8px 8px 0">${esc(card.message)}</p>` : "") +
     `<p style="margin:18px 0 6px;font-size:13px;color:#7D5A44">Certificate</p>` +
     `<p style="margin:0;font-size:24px;font-weight:700;letter-spacing:.06em">${esc(card.code)}</p>` +
-    `<p style="margin:4px 0 16px;font-size:15px">${money(card.amount_cents)} toward any treatment, and it never expires.</p>` +
+    `<p style="margin:4px 0 16px;font-size:15px">${card.kind === "service" ? `One ${esc(card.label ?? "treatment")}, on the house` : `${money(card.amount_cents)} toward any treatment`}, and it never expires.</p>` +
     `<p style="font-size:14px;line-height:1.5;color:#4A342A">Book with Evelyn${site() ? ` at <a href="${esc(site())}#services" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>` : ""}, and show this code at your visit. Anything left stays on it for next time; if the visit costs more, you pay only the difference.</p>`;
   return sendEmail(to, card.deliver_to_buyer ? "Your Lumevina gift certificate" : "A gift for you from Lumevina", page("A gift of glow", body));
 }
@@ -119,6 +121,13 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
   await sendEmail(order.email, `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
     `<p style="margin:0 0 12px;font-size:13px;color:#7D5A44">Order number <strong style="color:#161412;letter-spacing:.04em">${esc(order.ref)}</strong></p>` + table +
     (next || track ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}${track}</p>` : "")));
+
+  // Glow Points on the products and gift certificates (not shipping or tax), and her client list
+  await upsertContact(db, { email: order.email, name: name || undefined });
+  const earned = order.subtotal_cents > 0
+    ? await earn(db, order.email, order.subtotal_cents, { label: "Shop order", order_id: order.id }).catch((e) => { console.error("points", e); return null; })
+    : null;
+  if (earned?.points) console.log(JSON.stringify({ order: order.id, points: earned.points }));
 
   // Evelyn
   const what = [...order.items.map((i: any) => `${i.qty} × ${i.name}`), ...order.gifts.map((g: any) => `gift certificate ${money(g.amount_cents)}`)].join(", ");

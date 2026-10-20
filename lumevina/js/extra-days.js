@@ -9,7 +9,7 @@
  *
  * Demo: the choice lives in this browser (lumevina_extra_mondays).
  * Live: one row in a site_settings table, read by the calendar and checked
- * again in create-deposit-intent (server/README.md).
+ * again in functions/book (server/README.md).
  */
 (function () {
   "use strict";

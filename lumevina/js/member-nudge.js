@@ -3,6 +3,7 @@
  * Two quiet ways a browsing visitor meets the membership:
  *
  *   1. On the facial cards: "Or $175 a month as a member" under the price
+ *      (today's price: the founding rate while it lasts, js/membership.js)
  *      (members see what their plan already includes instead).
  *   2. A small card that slides up once someone who has booked before
  *      scrolls past the services: a facial every month from $175, the savings, and the
@@ -72,7 +73,7 @@
         a.hidden = true;
       } else {
         /* the long line for full cards, a short one for the two-up phone cards */
-        a.innerHTML = '<span class="mh-long">Or $' + plan.price + ' a month as a member</span>' +
+        a.innerHTML = '<span class="mh-long">Or $' + LM.priceNow(plan.id) + ' a month as a member</span>' +
           '<span class="mh-short">Members: $' + plan.price + '/mo</span>';
         a.classList.remove("is-mine");
       }
@@ -92,7 +93,7 @@
     '<button type="button" class="mem-nudge-x" aria-label="Close">' +
       '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>' +
     '<p class="mem-nudge-chip"><span class="mem-founding-dot" aria-hidden="true"></span><span class="mem-nudge-five"></span></p>' +
-    '<p class="mem-nudge-h">A facial every month, <span>from $175.</span></p>' +
+    '<p class="mem-nudge-h">A facial every month, <span>from $' + LM.priceNow("glow") + '.</span></p>' +
     '<p class="mem-nudge-b"></p>' +
     '<a class="mem-nudge-go" href="#membership">See the plans <span aria-hidden="true">→</span></a>';
   document.body.appendChild(card);
@@ -113,15 +114,18 @@
       return;
     }
     card.setAttribute("aria-label", "Glow Membership");
-    h.innerHTML = "A facial every month, <span>from $175.</span>";
+    h.innerHTML = "A facial every month, <span>from $" + LM.priceNow("glow") + ".</span>";
     go.innerHTML = 'See the plans <span aria-hidden="true">→</span>';
-    var left = LM.fiveLeft();
+    var left = LM.foundingLeft();
     var chip = card.querySelector(".mem-nudge-chip");
     chip.hidden = left === 0;
-    card.querySelector(".mem-nudge-five").textContent = "Founding Five · " + left + (left === 1 ? " spot" : " spots") + " left";
-    card.querySelector(".mem-nudge-b").textContent = left > 0
-      ? "Save up to $432 a year, bank a month you're busy, and the first five members get a free skincare kit."
-      : "Save up to $432 a year, bank a month you're busy, and save on skincare from our shelf.";
+    card.querySelector(".mem-nudge-five").textContent = "Founding rate · " + left + (left === 1 ? " spot" : " spots") + " left";
+    /* a year of facials at today's price against booking them one at a time (Ageless: plus its add-ons) */
+    var save = Math.max.apply(null, LM.plans.map(function (p) {
+      return (p.value - LM.priceNow(p.id)) * 12 + (p.id === "ageless" ? 6 * LM.ADDON_VALUE : 0);
+    }));
+    card.querySelector(".mem-nudge-b").textContent = "Save up to $" + save + " a year, bank a month you're busy, and book with no deposit" +
+      (LM.fiveLeft() > 0 ? ". The first five members get a free skincare kit." : ".");
   };
 
   var passedServices = false, seeingPlans = false, shown = false, gone = {};

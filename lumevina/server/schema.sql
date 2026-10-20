@@ -28,8 +28,13 @@ create table clients (
 create table bookings (
   id uuid primary key default gen_random_uuid(),
   client_id uuid references clients (id) on delete set null,
-  guest_name text,                 -- guest checkout stays supported
-  guest_email text,
+  guest_name text,                 -- who booked (signed in or not)
+  guest_email text,                -- their email: contacts, points and reminders key on it
+  phone text,
+  sms_ok boolean not null default false,   -- reminders by text, if they said yes
+  note text,                       -- from the client when booking, or Evelyn's when she books for them
+  manage_token text unique not null default replace(gen_random_uuid()::text, '-', ''),  -- the link in their emails: cancel, move
+  consent jsonb,                   -- { signature, signedAt } from the booking form
   date date not null,
   start_min int not null check (start_min between 0 and 1439),  -- her hours, plus after-hours visits
   dur_min int not null check (dur_min > 0 and dur_min % 30 = 0),
@@ -46,9 +51,27 @@ create table bookings (
     check (source in ('web', 'app', 'admin')),  -- app-vs-web split in the
                                      -- owner dashboard; captured from booking #1
   stripe_payment_intent text,
+  stripe_session text,             -- the Stripe page that took the deposit or saved the card
+  stripe_customer text,            -- the card on file: Evelyn charges the visit, a tip or a fee to it
+  payment_method text,
+  card_label text,                 -- "Visa •••• 4242"
+  membership_id uuid,              -- a membership facial: the credit it used (memberships)
+  gift_code text,                  -- a gift certificate applied when booking
+  gift_applied_cents int not null default 0,
+  credit_applied_cents int not null default 0,  -- a deposit carried over from a booking cancelled in time
+  first_bonus boolean not null default false,   -- earned the 100 points for a first booking here
   google_event_id text,            -- the event in her Google Calendar (GlossGenius reads it)
   status text not null default 'pending'
     check (status in ('pending', 'held', 'completed', 'cancelled', 'no_show')),
+  cancelled_at timestamptz,
+  cancel_kind text check (cancel_kind in ('in_time', 'late', 'evelyn')),
+  -- checkout at the visit (functions/studio-book → checkout)
+  checkout jsonb,                  -- { services, products, discounts, method, receipt }
+  balance_paid_cents int,          -- paid at the visit, tip not included
+  tip_cents int not null default 0,
+  completed_at timestamptz,
+  fee_cents int,                   -- a late-cancel or no-show fee Evelyn charged
+  fee_kind text check (fee_kind in ('late_cancel', 'no_show')),
   created_at timestamptz not null default now()
 );
 
@@ -63,21 +86,27 @@ alter table bookings add constraint no_overlap
   ) where (status in ('pending', 'held', 'completed'));
 
 create index bookings_by_day on bookings (date) where status in ('pending', 'held');
+create index bookings_by_email on bookings (lower(guest_email));
 
 -- ── Glow Rewards ledger ─────────────────────────────────────────────
 -- Append-only. The balance is the sum — same shape as js/rewards.js.
+-- Keyed by email (lower case), so points earned before someone signs in
+-- are already theirs when they do.
 create table rewards_ledger (
   id bigint generated always as identity primary key,
-  client_id uuid not null references clients (id) on delete cascade,
+  email text not null check (email = lower(email)),
+  client_id uuid references clients (id) on delete set null,
   delta int not null,              -- positive earn, negative redeem
-  label text not null,             -- "Deposit — Brazilian Wax", "Mystery petal"
+  label text not null,             -- "Visit — Lumevina Custom Facial", "First booking here"
   booking_id uuid references bookings (id),
+  order_id uuid,                   -- a shop order (orders)
   created_at timestamptz not null default now()
 );
+create index rewards_by_email on rewards_ledger (email);
 
 create view reward_balances as
-  select client_id, coalesce(sum(delta), 0) as points
-  from rewards_ledger group by client_id;
+  select email, coalesce(sum(delta), 0)::int as points
+  from rewards_ledger group by email;
 
 -- A booking cancelled in time hands back the points it earned (its rebooking
 -- bonus included), and the visit it counted as stops counting.
@@ -85,11 +114,11 @@ create or replace function return_booking_points() returns trigger
 language plpgsql security definer as $$
 begin
   if new.status = 'cancelled' and old.status <> 'cancelled'
-     and new.client_id is not null and new.points_earned > 0 then
-    insert into rewards_ledger (client_id, delta, label, booking_id)
-      values (new.client_id, -new.points_earned, 'Cancelled booking — points returned', new.id);
-    update clients set last_visit = new.prev_last_visit
-      where id = new.client_id and last_visit = new.date;
+     and new.guest_email is not null and new.points_earned > 0 then
+    insert into rewards_ledger (email, client_id, delta, label, booking_id)
+      values (lower(new.guest_email), new.client_id, -new.points_earned, 'Cancelled booking: points returned', new.id);
+    update contacts set last_visit = new.prev_last_visit
+      where email = lower(new.guest_email) and last_visit = new.date;
   end if;
   return new;
 end $$;
@@ -157,10 +186,10 @@ create policy "own profile" on clients
   for all using (auth.uid() = id) with check (auth.uid() = id);
 
 create policy "own bookings" on bookings
-  for select using (auth.uid() = client_id);
+  for select using (auth.uid() = client_id or lower(guest_email) = lower(auth.jwt() ->> 'email'));
 
 create policy "own ledger" on rewards_ledger
-  for select using (auth.uid() = client_id);
+  for select using (email = lower(auth.jwt() ->> 'email'));
 
 create policy "own tokens" on push_tokens
   for all using (auth.uid() = client_id) with check (auth.uid() = client_id);
@@ -184,12 +213,14 @@ $$;
 -- See server/README.md → Memberships.
 create table memberships (
   id uuid primary key default gen_random_uuid(),
-  client_id uuid not null references clients (id) on delete cascade,
+  email text not null check (email = lower(email)),   -- who it belongs to; signing in with it shows it
+  name text,
+  client_id uuid references clients (id) on delete set null,
   plan text not null check (plan in ('glow', 'ageless')),
   price_cents int not null,                 -- locked founding price
   status text not null default 'active'
     check (status in ('active', 'cancelling', 'cancelled')),
-  credits int not null default 1 check (credits >= 0),
+  credits int not null default 0 check (credits >= 0),   -- each paid invoice adds one
   started_at timestamptz not null default now(),
   min_ends_at timestamptz not null,         -- started_at + 3 months
   next_bill_at timestamptz not null,
@@ -205,10 +236,12 @@ create table memberships (
   five_addon text check (five_addon in ('ready', 'used')),
   stripe_customer_id text,
   stripe_subscription_id text unique,
+  payment_method text,                      -- the card the subscription bills: booking needs no other
+  card_label text,
   created_at timestamptz not null default now()
 );
-create unique index one_live_membership_per_client
-  on memberships (client_id) where status <> 'cancelled';
+create unique index one_live_membership_per_email
+  on memberships (email) where status <> 'cancelled';
 
 create table membership_ledger (
   id bigint generated always as identity primary key,
@@ -217,15 +250,16 @@ create table membership_ledger (
   amount_cents int,
   booking_id uuid references bookings (id) on delete set null,
   gift_code text,
+  invoice_id text unique,          -- a 'billed' row's Stripe invoice: each counts once
   created_at timestamptz not null default now()
 );
 
 alter table memberships enable row level security;
 alter table membership_ledger enable row level security;
 create policy "members read their own membership" on memberships
-  for select using (client_id = auth.uid());
+  for select using (email = lower(auth.jwt() ->> 'email'));
 create policy "members read their own ledger" on membership_ledger
-  for select using (membership_id in (select id from memberships where client_id = auth.uid()));
+  for select using (membership_id in (select id from memberships where email = lower(auth.jwt() ->> 'email')));
 -- writes happen only in edge functions (service role): join, pause,
 -- cancel, keep, gift, and the webhook's billed / cancelled events.
 
@@ -500,7 +534,7 @@ create policy "clients read their own orders" on orders
 -- ─────────────────────────────────────────────────────────────
 create table studio_alerts (
   id bigint generated always as identity primary key,
-  kind text not null check (kind in ('order', 'question', 'low_stock', 'gift', 'test')),
+  kind text not null check (kind in ('order', 'question', 'low_stock', 'gift', 'test', 'booking', 'cancel', 'member', 'waitlist')),
   title text not null,
   body text,
   url text,                                       -- where the dashboard should open
@@ -515,3 +549,81 @@ create table studio_push (
 alter table studio_alerts enable row level security;
 alter table studio_push enable row level security;
 -- no policies: only edge functions (service role) read or write these.
+
+
+-- ─────────────────────────────────────────────────────────────
+-- v3: booking moves home (functions/book, studio-book, membership,
+-- rewards, client-reminders). See server/README.md → v3.
+-- ─────────────────────────────────────────────────────────────
+
+-- Evelyn's client list: everyone who books or buys, and everyone she
+-- imports from GlossGenius (dashboard → Clients → Import). Keyed by email.
+create table contacts (
+  email text primary key check (email = lower(email)),
+  name text,
+  phone text,
+  birthday text,                   -- as GlossGenius exports it ("May 14"); birth_month is what points use
+  birth_month int check (birth_month between 0 and 11),
+  birthday_claimed_year int,
+  notes text,                      -- Evelyn's own, never shown to the client
+  source text not null default 'website' check (source in ('website', 'glossgenius', 'studio')),
+  sms_ok boolean not null default false,
+  email_ok boolean not null default true,      -- false once they unsubscribe (functions/client-prefs)
+  stripe_customer text,            -- their card on file
+  payment_method text,
+  card_label text,
+  deposit_credit_cents int not null default 0, -- a deposit carried over from a booking cancelled in time
+  deposit_credit_until date,                   -- the end of that booking's month
+  ref_code text unique,            -- GLOW-XXXX: a friend's first visit $15 off, 150 points to them
+  referred_by text,                -- the friend's code they used
+  referral_credited boolean not null default false,
+  first_booked_at timestamptz,     -- the 100-point first booking here
+  last_visit date,
+  visits int not null default 0,   -- completed visits (GlossGenius history counts on import)
+  imported_at timestamptz,
+  invited_at timestamptz,          -- the "book with me on the website now" email
+  created_at timestamptz not null default now()
+);
+alter table contacts enable row level security;
+create policy "clients read their own contact" on contacts
+  for select using (email = lower(auth.jwt() ->> 'email'));
+-- writes only in edge functions (service role).
+
+-- A full day: clients wait for a time to open (js/booking.js → Join the
+-- waitlist). A cancellation emails and texts everyone waiting on that day.
+create table waitlist (
+  id uuid primary key default gen_random_uuid(),
+  date date not null,
+  services jsonb not null default '[]',
+  name text not null,
+  email text not null check (email = lower(email)),
+  phone text,
+  sms_ok boolean not null default false,
+  status text not null default 'waiting' check (status in ('waiting', 'offered', 'booked', 'removed')),
+  offered_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index waitlist_by_day on waitlist (date) where status in ('waiting', 'offered');
+alter table waitlist enable row level security;
+
+-- Every automatic message, once: reminders, review requests, "time for
+-- your next facial", "running low?", waitlist offers (functions/client-reminders).
+create table sent_messages (
+  id bigint generated always as identity primary key,
+  kind text not null,              -- 'reminder', 'text_reminder', 'review', 'rebook', 'restock', 'waitlist', 'invite'
+  ref text not null,               -- the booking, order or contact it was about
+  email text,
+  sent_at timestamptz not null default now(),
+  unique (kind, ref)
+);
+alter table sent_messages enable row level security;
+
+-- Settings the website reads: Evelyn's hours (js/hours.js), edited in the
+-- dashboard through functions/studio (hours_set).
+create table site_settings (
+  key text primary key,
+  value jsonb not null,
+  updated_at timestamptz not null default now()
+);
+alter table site_settings enable row level security;
+create policy "anyone reads the site settings" on site_settings for select using (true);

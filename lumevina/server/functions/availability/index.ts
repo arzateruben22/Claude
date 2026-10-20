@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
       for (const [day, list] of Object.entries(g)) for (const [a, z] of list) add(day, a, z);
     } catch (err) {
       // Google unreachable: say so, and the website still won't double-book its
-      // own times; create-deposit-intent checks Google again before charging
+      // own times; functions/book checks Google again before holding a time
       console.error(String(err));
       google = false;
     }

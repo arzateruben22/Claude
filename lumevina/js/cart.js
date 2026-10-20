@@ -798,6 +798,16 @@
     });
   };
 
+  /* the "running low?" email (functions/client-reminders): ?reorder=id,id puts
+     those products back in the bag, the ones still on the shelf */
+  var reorder = function () {
+    var q = /[?&]reorder=([a-z0-9,-]+)/i.exec(location.search);
+    if (!q) return;
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* old browser */ }
+    var added = q[1].split(",").slice(0, 12).filter(function (id) { return window.LumevinaCart.add(id).ok; });
+    if (added.length) openDrawer();
+  };
+
   /* back from Stripe: ?order=done (paid) or ?order=cancelled */
   var returned = function () {
     var q = /[?&]order=(done|cancelled)/.exec(location.search);
@@ -937,4 +947,5 @@
   load();
   render();
   if (LIVE) returned();
+  reorder();
 })();

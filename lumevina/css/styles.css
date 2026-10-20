@@ -3978,7 +3978,11 @@ html.svc-open { overflow: hidden; }
 
 /* ─── My Lumevina (account) ─── */
 
-.nav-account { display: inline-flex; align-items: center; }
+.nav-account { display: inline-flex; align-items: center; gap: 0.45rem; }
+/* Glow Points ride on the account button (js/rewards.js shows them once there are some) */
+.nav-pts { font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.nav-pts[hidden] { display: none; }
+.mm-count.nav-pts[hidden] { display: none; }
 
 .nav-account svg { display: block; }
 
@@ -4455,7 +4459,7 @@ a.appstore-badge:hover { transform: translateY(-2px); }
      in the menu ("My Lumevina"), the rest compact and breathe */
   .nav { gap: 0.55rem; padding-left: 1rem; padding-right: 1rem; }
   .nav-account { display: none; }
-  .nav-rewards { margin-left: auto; }
+  .nav-rewards, .nav-cart { margin-left: auto; }
   .nav-brand { font-size: 1.3rem; }
   .nav-rewards, .nav-cart { padding: 0.55rem 0.85rem; font-size: 0.75rem; }
 }
@@ -4739,6 +4743,10 @@ p.install-steps { padding-left: 0; }
 }
 .mem-per { color: var(--ink-60); font-size: 0.95rem; }
 .mem-value { font-size: 0.875rem; color: var(--ink-60); margin-bottom: 1.2rem; }
+/* the founding rate, and what it becomes after the first 25 (js/membership.js) */
+.mem-rate { font-size: 0.8rem; color: var(--mauve); margin: 0.1rem 0 0.35rem; }
+.mem-rate:empty { display: none; }
+.mem-founding[hidden] { display: none; }
 /* "Everything in <tier below>, plus" — the ladder, said once */
 .mem-plus {
   display: flex;
@@ -4821,6 +4829,51 @@ p.install-steps { padding-left: 0; }
   .mem-grid { grid-template-columns: 1fr; }
   .mem-how { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ─── Glow Points: one quiet row under the membership (v3) ─── */
+.section-points { padding-top: 0; }
+.pts {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 2.1fr);
+  gap: var(--space-4) var(--space-5);
+  align-items: start;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--panel-edge);
+}
+.pts-head { display: grid; gap: 0.6rem; justify-items: start; }
+.pts-head .eyebrow { margin: 0; }
+.pts-title { font-size: clamp(1.45rem, 2.4vw, 1.9rem); font-weight: 650; letter-spacing: -0.03em; line-height: 1.15; text-wrap: balance; margin: 0; }
+.pts-title em { font-style: normal; color: var(--mauve); }
+.pts-see { margin-top: 0.4rem; }
+.pts-facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.pts-facts li { display: grid; gap: 0.3rem; align-content: start; padding-left: 0.9rem; border-left: 1px solid var(--panel-edge); }
+.pts-facts strong { font-weight: 600; font-size: 0.975rem; }
+.pts-facts span { font-size: 0.9rem; color: var(--ink-60); line-height: 1.45; }
+@media (max-width: 900px) {
+  .pts { grid-template-columns: 1fr; }
+  .pts-head { grid-template-columns: 1fr auto; align-items: end; }
+  .pts-head .eyebrow { grid-column: 1 / -1; }
+  .pts-see { margin-top: 0; }
+}
+@media (max-width: 600px) {
+  .pts-head { grid-template-columns: 1fr; }
+  .pts-see { justify-self: start; }
+  .pts-facts { grid-template-columns: 1fr; gap: 0.9rem; }
+}
+
+/* moving over from GlossGenius (v3, js/site-config.js) */
+.bk-move { margin: 0.9rem 0 0; font-size: 0.9rem; color: var(--ink-60); max-width: 40rem; }
+html:not(.book-site) .bk-move { display: none; }
+
+/* ?preview=v3: a small note to leave the preview */
+.preview-note {
+  position: fixed; right: 16px; bottom: 16px; z-index: 95;
+  padding: 0.45rem 0.85rem; border-radius: 999px;
+  font: 600 0.78rem/1.2 var(--font-body); color: var(--on-accent); background: var(--ink);
+  text-decoration: none; box-shadow: 0 8px 24px rgba(var(--shadow-rgb), 0.25);
+}
+.preview-note span { font-weight: 400; opacity: 0.8; }
+.preview-note:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
 @media (max-width: 520px) {
   .mem-founding { border-radius: 16px; text-align: left; }
 }
@@ -6483,3 +6536,45 @@ html.in-app #policies, html.in-app #faq, html.in-app #contact { scroll-margin-to
 html.in-app .sh-sec { scroll-margin-top: 11rem; }
 html.in-app .nc { scroll-margin-top: 8.5rem; }
 
+
+/* ─── v3: booking for real (js/booking.js, live) ─── */
+.booking-modal.is-live .booking-card-fields,
+.booking-modal.is-live .saved-card,
+.booking-modal.is-live .booking-demo-note,
+.booking-modal.is-live .success-order { display: none; }
+.bk-live-note { font-size: 0.875rem; line-height: 1.5; color: var(--ink-60); margin: 0 0 1rem; }
+.bk-live-note[hidden] { display: none; }
+.bk-phone-row { align-items: end; }
+.bk-sms { align-self: center; margin: 0; }
+@media (max-width: 480px) { .bk-sms { align-self: start; } }
+/* a full day: the waitlist */
+.booking-waitlist { display: grid; gap: 0.6rem; justify-items: start; padding: 0.9rem 1rem; border-radius: 14px;
+  background: rgba(var(--accent-rgb), 0.06); border: 1px solid rgba(var(--accent-rgb), 0.18); }
+.booking-waitlist p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--ink-60); }
+.booking-waitlist strong { color: var(--ink); font-weight: 600; }
+.booking-waitlist .wl-status:empty { display: none; }
+.booking-waitlist .wl-status { color: var(--ink); }
+
+/* manage an appointment (js/manage.js) */
+.mg-overlay { position: fixed; inset: 0; z-index: 88; background: rgba(var(--shadow-rgb), 0.38); }
+.mg-overlay[hidden], .mg-modal[hidden] { display: none; }
+.mg-modal {
+  position: fixed; z-index: 89; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(30rem, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto;
+  padding: 1.5rem 1.4rem 1.3rem; border-radius: 22px; color: var(--ink);
+  background: rgba(var(--glass-rgb), 0.98); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.22), 0 30px 80px rgba(var(--shadow-rgb), 0.25);
+  display: grid; gap: 0.5rem;
+}
+.mg-modal:focus { outline: none; }
+.mg-x { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: 0; border-radius: 50%; font-size: 1.3rem; line-height: 1;
+  color: var(--ink-60); background: var(--surface-2); cursor: pointer; }
+.mg-pill { justify-self: start; margin: 0; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.72rem; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase;
+  background: rgba(var(--accent-rgb), 0.12); color: var(--mauve); }
+.mg-pill.is-cancelled, .mg-pill.is-no_show { background: var(--surface-2); color: var(--ink-60); }
+.mg-title { margin: 0.2rem 2rem 0 0; font-size: 1.35rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; text-wrap: balance; }
+.mg-when { margin: 0; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.mg-line { margin: 0; font-size: 0.9rem; color: var(--ink-60); }
+.mg-rule { margin: 0.4rem 0 0; font-size: 0.875rem; line-height: 1.5; color: var(--ink-60); }
+.mg-note { margin: 0.4rem 0 0; padding: 0.6rem 0.8rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.45; background: rgba(var(--accent-rgb), 0.08); }
+.mg-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
+.mg-actions:empty { display: none; }

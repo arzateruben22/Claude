@@ -16,6 +16,15 @@
 //                                                    last 30 days answered, each photo as an hour-long link
 // POST { action: "answer", id, reply }             her reply, emailed to the client (reply-to: her), and the
 //                                                    question marked answered; reply "" = handled another way
+// v3, her clients and her hours:
+// POST { action: "contacts", q? }                  → { contacts }  her client list (search by name, email, phone)
+// POST { action: "contact_note", email, notes }    her private notes on a client
+// POST { action: "import_clients", rows }          → { added, updated, skipped }  the GlossGenius client export
+//                                                    (dashboard → Clients → Import parses the CSV)
+// POST { action: "invite", dry? }                  → { count } or { sent }: "book with me on the website now",
+//                                                    to imported clients who haven't booked here or been invited
+// POST { action: "hours_get" } / { action: "hours_set", value }   her hours (site_settings → js/hours.js)
+// POST { action: "members" }                       → { members }  every membership with its facials and billing
 //
 // Deploy:  supabase functions deploy studio --no-verify-jwt
 // Secrets: STUDIO_KEY, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, OWNER_EMAIL (+ RESEND_API_KEY for replies)
@@ -26,6 +35,30 @@ import { notifyOwner, pushAll } from "../_shared/notify.ts";
 import { studioOk } from "../_shared/studio.ts";
 import { BUCKET } from "../_shared/photos.ts";
 import { esc, page, sendEmail } from "../_shared/mail.ts";
+import { EMAIL, norm, unsubscribeUrl } from "../_shared/contacts.ts";
+import { cleanHours } from "../_shared/hours.ts";
+import { FIRST_BOOKING_BONUS } from "../_shared/points.ts";
+import { PLANS } from "../_shared/membership.ts";
+import { site } from "../_shared/bookings.ts";
+
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+/** "May 14", "05/14/1990", "1990-05-14" → 4 (May), or null */
+const monthOf = (v: unknown) => {
+  const t = String(v ?? "").trim().toLowerCase();
+  const named = MONTHS.findIndex((m) => t.startsWith(m) || t.includes(" " + m));
+  if (named !== -1) return named;
+  const iso = /^\d{4}-(\d{1,2})-\d{1,2}/.exec(t), us = /^(\d{1,2})\/\d{1,2}/.exec(t);
+  const n = Number(iso?.[1] ?? us?.[1]);
+  return n >= 1 && n <= 12 ? n - 1 : null;
+};
+const dayOf = (v: unknown) => {
+  const t = String(v ?? "").trim();
+  const iso = /^(\d{4})-(\d{2})-(\d{2})/.exec(t);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const us = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/.exec(t);
+  if (us) return `${us[3].length === 2 ? "20" + us[3] : us[3]}-${us[1].padStart(2, "0")}-${us[2].padStart(2, "0")}`;
+  return null;
+};
 
 Deno.serve(async (req) => {
   const cors = {
@@ -126,6 +159,87 @@ Deno.serve(async (req) => {
           Deno.env.get("OWNER_EMAIL") ?? undefined);
       }
       return json({ ok: true, emailed });
+    }
+    case "contacts": {
+      const q = String(body.q ?? "").trim().toLowerCase().replace(/[%,()]/g, "");
+      let query = db.from("contacts").select("*").order("last_visit", { ascending: false, nullsFirst: false }).limit(Math.min(limit * 10, 500));
+      if (q) query = query.or(`email.ilike.%${q}%,name.ilike.%${q}%,phone.ilike.%${q}%`);
+      const { data } = await query;
+      return json({ contacts: (data ?? []).map((c: any) => ({ ...c, stripe_customer: undefined, payment_method: undefined })) });
+    }
+    case "contact_note": {
+      const email = norm(body.email);
+      if (!EMAIL.test(email)) return json({ reason: "email" }, 400);
+      await db.from("contacts").update({ notes: String(body.notes ?? "").slice(0, 4000) || null }).eq("email", email);
+      return json({ ok: true });
+    }
+    case "import_clients": {
+      const rows = Array.isArray(body.rows) ? body.rows.slice(0, 5000) : [];
+      let added = 0, updated = 0, skipped = 0;
+      const now = new Date().toISOString();
+      for (const r of rows) {
+        const email = norm(r?.email);
+        if (!EMAIL.test(email)) { skipped++; continue; }
+        const row: Record<string, unknown> = {
+          name: String(r.name ?? "").trim().slice(0, 120) || null, phone: String(r.phone ?? "").trim().slice(0, 40) || null,
+          birthday: String(r.birthday ?? "").trim().slice(0, 40) || null, birth_month: monthOf(r.birthday),
+          notes: String(r.notes ?? "").trim().slice(0, 2000) || null, last_visit: dayOf(r.last_visit),
+          visits: Math.max(0, Math.round(Number(r.visits) || 0)), sms_ok: !!r.sms_ok, imported_at: now,
+        };
+        const { data: had } = await db.from("contacts").select("*").eq("email", email).maybeSingle();
+        if (!had) {
+          const { error } = await db.from("contacts").insert({ email, source: "glossgenius", ...row });
+          if (error) skipped++; else added++;
+          continue;
+        }
+        const patch: Record<string, unknown> = { imported_at: now };
+        for (const k of ["name", "phone", "birthday", "birth_month", "notes"]) if (row[k] != null && had[k] == null) patch[k] = row[k];
+        if (row.last_visit && (!had.last_visit || String(row.last_visit) > had.last_visit)) patch.last_visit = row.last_visit;
+        if (Number(row.visits) > (had.visits ?? 0)) patch.visits = row.visits;
+        await db.from("contacts").update(patch).eq("email", email);
+        updated++;
+      }
+      return json({ added, updated, skipped });
+    }
+    case "invite": {
+      const { data: list } = await db.from("contacts").select("email, name").eq("source", "glossgenius")
+        .eq("email_ok", true).is("invited_at", null).is("first_booked_at", null).limit(body.dry ? 2000 : Math.min(Number(body.limit) || 50, 200));
+      if (body.dry) return json({ count: (list ?? []).length });
+      let sent = 0;
+      for (const c of list ?? []) {
+        const first = String(c.name ?? "").split(" ")[0];
+        const ok = await sendEmail(c.email, "Book with Evelyn on her new website", page(`Hi${first ? " " + esc(first) : ""},`,
+          `<p style="font-size:15px;line-height:1.55">I've moved my booking to my own website. It takes about a minute: pick your treatment, a day and a time, and your card stays on file for next time. Reminders come by email (and text, if you'd like), and you can move or cancel from the link in them.</p>` +
+          `<p style="font-size:15px;line-height:1.55">Your first booking there comes with <strong>${FIRST_BOOKING_BONUS} Glow Points</strong> ($10 off a future visit), and every visit after earns more.</p>` +
+          `<p style="margin:22px 0 8px"><a href="${esc(site())}/#book" style="background:#161412;color:#F5F1EA;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600;display:inline-block">Book my next visit</a></p>` +
+          `<p style="font-size:14px;line-height:1.5">Already booked on GlossGenius? That appointment stands, nothing to do.</p>` +
+          `<p style="font-size:15px">— Evelyn</p>` +
+          `<p style="font-size:12px;color:#7D5A44;margin-top:24px"><a href="${esc(await unsubscribeUrl(c.email))}" style="color:#7D5A44">Stop these emails</a></p>`),
+          Deno.env.get("OWNER_EMAIL") ?? undefined);
+        if (ok) { sent++; await db.from("contacts").update({ invited_at: new Date().toISOString() }).eq("email", c.email); }
+      }
+      return json({ sent });
+    }
+    case "hours_get": {
+      const { data } = await db.from("site_settings").select("value").eq("key", "hours").maybeSingle();
+      return json({ value: data?.value ? cleanHours(data.value) : null });
+    }
+    case "hours_set": {
+      const value = cleanHours(body.value);
+      await db.from("site_settings").upsert({ key: "hours", value, updated_at: new Date().toISOString() });
+      return json({ value });
+    }
+    case "members": {
+      const { data } = await db.from("memberships").select("*").order("created_at", { ascending: false }).limit(200);
+      return json({ members: (data ?? []).map((m: any) => ({
+        email: m.email, name: m.name, plan: PLANS[m.plan]?.name ?? m.plan, price_cents: m.price_cents, status: m.status, credits: m.credits,
+        next_bill_at: m.next_bill_at, on_hold: m.on_hold, paused_bill_at: m.paused_bill_at, cancel_at: m.cancel_at, founding: m.founding,
+        five_no: m.five_no, five_kit: m.five_kit, started_at: m.started_at, card: m.card_label,
+      })) });
+    }
+    case "five_kit": {
+      await db.from("memberships").update({ five_kit: "given" }).eq("email", norm(body.email)).not("five_no", "is", null);
+      return json({ ok: true });
     }
     default:
       return json({ error: "unknown action" }, 400);

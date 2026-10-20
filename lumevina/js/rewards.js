@@ -1,22 +1,25 @@
 /* Lumevina — Glow Rewards
-   The loyalty layer: 1 Glow Point per $1 paid in-site (booking
-   deposits and shop orders), double points on Wednesdays or any
+   The loyalty layer: 1 Glow Point per $1 paid (booking deposits, shop
+   orders and gift certificates on the site; the rest of the visit when
+   Evelyn checks it out at the studio), 100 points for a client's first
+   booking on this website (the nudge off GlossGenius), double points on Wednesdays or any
    session with Wax Wednesday, +25 for non-members whose next visit
    is within 5 weeks of their last (members already have a facial
    every month), handed back if that booking is cancelled,
    +50 once a year during your birthday month, a referral code that
    gives a friend $15 off their first visit and is worth 150 points
    ($15) to you when that visit is complete,
-   and a magic-mirror bonus after each confirmed appointment.
    100 points = $10 off, redeemable against up to half a deposit.
    (Flash openings — the daily ⚡ starred time at 10% off — live
    in js/booking.js; in the app they become push notifications.)
 
-   Everything persists in localStorage. When the site becomes the
-   app, this same ledger moves server-side so points follow the
-   client across devices — the API below stays the same. Referral
-   completion credit (150 ✦ to the referrer) needs that server:
-   the demo records the code and explains the credit. */
+   DEMO: everything persists in localStorage, and the referral credit
+   (150 ✦ to the referrer) is explained rather than paid.
+   LIVE (v3, js/site-config.js → shop): the server keeps the ledger
+   (functions/rewards; points are written where the money is: bookings,
+   checkouts and shop orders), so this shows a signed-in client's own
+   balance, history and referral code on any device. The API below is the
+   same either way. */
 
 (function () {
   "use strict";
@@ -31,18 +34,31 @@
   var STREAK_BONUS = 25;
   var BIRTHDAY_BONUS = 50;
   var REFERRAL_BONUS = 150;
-  var WELCOME_BONUS = 50;  /* first sign-in, once per ledger */
+  var WELCOME_BONUS = 0;   /* retired in v3: one starting bonus, the first booking's 100 */
+  var FIRST_BOOKING_BONUS = 100;  /* a client's first booking on this website, once */
 
   var money = function (n) { return "$" + n.toFixed(2); };
+  var SHOPCFG = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var LIVE = /^https:\/\//.test(SHOPCFG.supabase || "") && !!SHOPCFG.key;
+  var liveShare = "";
+  var signedToken = function () { return window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : ""; };
+  var liveApi = function (body) {
+    return fetch(SHOPCFG.supabase.replace(/\/$/, "") + "/functions/v1/rewards", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOPCFG.key, Authorization: "Bearer " + signedToken() },
+      body: JSON.stringify(body)
+    }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  };
 
   /* ── Ledger ── */
   var data = {
     points: 0, history: [], lastVisit: null,
     birthMonth: null, birthdayClaimed: null, refCode: null,
-    welcomeClaimed: false
+    welcomeClaimed: false, firstBooked: false
   };
 
   var load = function () {
+    if (LIVE) return;   /* the server's ledger (refreshLive) */
     try {
       var raw = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (raw) {
@@ -53,6 +69,7 @@
         if (isFinite(raw.birthdayClaimed)) data.birthdayClaimed = Number(raw.birthdayClaimed);
         if (typeof raw.refCode === "string") data.refCode = raw.refCode;
       if (raw.welcomeClaimed) data.welcomeClaimed = true;
+        if (raw.firstBooked) data.firstBooked = true;
       }
     } catch (err) { /* corrupt storage: start fresh */ }
     if (!data.refCode) {
@@ -67,11 +84,13 @@
   };
 
   var save = function () {
+    if (LIVE) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
     catch (err) { /* private mode: points won't persist */ }
   };
 
   var record = function (delta, label) {
+    if (LIVE) return;   /* the server writes the ledger; refreshLive shows it */
     data.points = Math.max(0, data.points + delta);
     data.history.unshift({ ts: Date.now(), label: label, delta: delta });
     if (data.history.length > 40) data.history.length = 40;
@@ -107,19 +126,23 @@
       (opts.serviceIds || []).indexOf("wax-wednesday") !== -1;
     var streak = rebookEligible(opts.dayKey, opts.member);
     var birthday = birthdayEligible(opts.dayKey);
+    var first = !!opts.booking && !data.firstBooked;
     var pts = base * (doubled ? 2 : 1) +
       (streak ? STREAK_BONUS : 0) +
-      (birthday ? BIRTHDAY_BONUS : 0);
+      (birthday ? BIRTHDAY_BONUS : 0) +
+      (first ? FIRST_BOOKING_BONUS : 0);
     var notes = [];
+    if (first) notes.push("+" + FIRST_BOOKING_BONUS + " for your first booking here");
     if (doubled) notes.push("double points — Wax Wednesday");
     if (streak) notes.push("+" + STREAK_BONUS + " for rebooking within 5 weeks");
-    if (birthday) notes.push("+" + BIRTHDAY_BONUS + " birthday month 🎂");
+    if (birthday) notes.push("+" + BIRTHDAY_BONUS + " birthday month");
     return { points: pts, doubled: doubled, streak: streak,
-      birthday: birthday, notes: notes };
+      birthday: birthday, first: first, notes: notes };
   };
 
   var award = function (amount, opts, label) {
     var q = quote(amount, opts);
+    if (q.first) data.firstBooked = true;
     record(q.points, label || "Payment");
     if (opts && opts.dayKey) {
       /* the latest appointment is the one the next rebooking is measured from */
@@ -139,6 +162,7 @@
     record(-b.points, "Cancelled booking — points returned");
     if (b.date && data.lastVisit === b.date) data.lastVisit = b.prevLastVisit || null;
     if (b.birthdayBonus) data.birthdayClaimed = null;
+    if (b.firstBonus) data.firstBooked = false;
     save();
     return b.points;
   };
@@ -155,6 +179,7 @@
      WhatsApp…), or a copy to paste where there isn't one ── */
   var SITE = "https://lumevina.com";   /* the live address: set it when the domain is final */
   var shareLink = function () {
+    if (liveShare) return liveShare;
     var live = /^https?:$/.test(location.protocol) &&
       !/claude|usercontent|localhost|127\.0\.0\.1/.test(location.hostname);
     return (live ? location.origin + location.pathname : SITE + "/") + "?ref=" + encodeURIComponent(data.refCode);
@@ -178,36 +203,20 @@
     } else copy();
   };
 
-  /* ── Welcome bonus: claimed by the first sign-in ── */
+  /* ── Welcome bonus: claimed by the first sign-in (retired in v3: 0) ── */
   var claimWelcome = function () {
-    if (data.welcomeClaimed) return 0;
+    if (data.welcomeClaimed || !WELCOME_BONUS) return 0;
     data.welcomeClaimed = true;
     record(WELCOME_BONUS, "Welcome to Glow Rewards");
     return WELCOME_BONUS;
   };
 
-  /* ── Magic mirror: one small surprise per confirmed booking ── */
-  var MIRROR = [
-    { pts: 10, label: "10 bonus points, and a little extra glow" },
-    { pts: 10, label: "10 bonus points, and a little extra glow" },
-    { pts: 15, label: "15 bonus points, a sparkle in the glass" },
-    { pts: 15, label: "15 bonus points, a sparkle in the glass" },
-    { pts: 25, label: "25 bonus points, the fairest skin in town" },
-    { pts: 25, label: "25 bonus points, the fairest skin in town" },
-    { pts: 50, label: "50 bonus points, the fairest of them all ✦" }
-  ];
-
-  var mirrorReveal = function () {
-    var pick = MIRROR[Math.floor(Math.random() * MIRROR.length)];
-    record(pick.pts, "Magic mirror");
-    return pick;
-  };
-
-  /* ── Nav badge ── */
+  /* ── on the account button, once there are points ── */
   var refresh = function () {
     document.querySelectorAll(".rw-count").forEach(function (el) {
       el.textContent = String(data.points);
     });
+    document.querySelectorAll(".nav-pts").forEach(function (el) { el.hidden = data.points <= 0; });
   };
 
   /* ── Rewards modal ── */
@@ -287,6 +296,7 @@
       data.birthMonth = this.value === "" ? null : Number(this.value);
       data.birthdayClaimed = null;
       save();
+      if (LIVE && data.birthMonth !== null && signedToken()) liveApi({ action: "birthday", month: data.birthMonth }).catch(function () { /* try again next time */ });
     });
     modal.querySelector(".rw-share").addEventListener("click", function () {
       share(modal.querySelector(".rw-share-status"));
@@ -321,9 +331,36 @@
     });
   }
 
+  /* ── live: the signed-in client's ledger ── */
+  var refreshLive = function () {
+    if (!LIVE) return;
+    if (!signedToken()) {
+      data.points = 0; data.history = []; liveShare = "";
+      refresh();
+      return;
+    }
+    liveApi({ action: "status" }).then(function (j) {
+      data.points = Number(j.points) || 0;
+      data.history = Array.isArray(j.history) ? j.history : [];
+      if (j.ref_code) data.refCode = j.ref_code;
+      data.birthMonth = j.birth_month == null ? null : Number(j.birth_month);
+      data.firstBooked = !!j.first_booked;
+      liveShare = j.share_link || "";
+      refresh();
+      if (modal && modal.getAttribute("aria-hidden") === "false") renderModal();
+      document.dispatchEvent(new CustomEvent("lumevina:points-changed"));
+    }, function () { /* offline: keep what's shown */ });
+  };
+  if (LIVE) {
+    document.addEventListener("lumevina:account-changed", refreshLive);
+    /* the booking's points land when Stripe's confirmation reaches the server */
+    document.addEventListener("lumevina:booked", function () { setTimeout(refreshLive, 2500); });
+  }
+
   /* ── Boot ── */
   load();
   refresh();
+  if (LIVE) refreshLive();
 
   window.LumevinaRewards = {
     points: function () { return data.points; },
@@ -342,8 +379,10 @@
     refCode: function () { return data.refCode; },
     share: share,
     shareLink: shareLink,
-    mirrorReveal: mirrorReveal,
-    petalReveal: mirrorReveal,   /* older name, kept for anything still calling it */
-    open: openModal
+    firstBookingBonus: FIRST_BOOKING_BONUS,
+    firstBooked: function () { return data.firstBooked; },
+    open: openModal,
+    refresh: refreshLive,
+    live: LIVE
   };
 })();

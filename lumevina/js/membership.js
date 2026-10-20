@@ -6,18 +6,23 @@
  * waiting, billing holds: that month isn't charged, and billing picks up
  * again once one is booked or gifted. Nobody pays for a facial they can't use.
  *
- *   Glow      $175/mo  Lumevina Custom Facial or the
+ *   Glow      $185/mo  Lumevina Custom Facial or the
  *                      Monthly Acne Treatment for clients on the acne program
- *   Ageless   $225/mo  Ageless Grace Facial, plus dermaplaning every
+ *   Ageless   $235/mo  Ageless Grace Facial, plus dermaplaning every
  *                      other visit (added in the room)
+ *
+ *   Founding rate: the first 25 members pay $175 / $225, locked for as
+ *   long as their membership continues (priceNow()). Raised Oct 20 for v3:
+ *   members now also book with no deposit (their card on file holds it).
  *
  * Two plans, not three: clear-skin clients join Glow and pick the acne
  * treatment. Records saved under the old "clear" plan read as Glow.
  *
  * Every plan: 10% off skincare from our shelf (free shipping on it), a home routine from Evelyn
  * refreshed each season, 15% off add-ons and anything else booked in the
- * same visit as a membership facial, Ask Evelyn any time (js/ask.js: her own
- * reply within 24 hours), first word on flash openings.
+ * same visit as a membership facial, no deposits (the card on file holds the
+ * booking), Ask Evelyn any time (js/ask.js: her own reply within 24 hours),
+ * first word on flash openings.
  *
  * Founding Five: the first five members, on any plan, get a welcome
  * skincare kit (GlyMed+ Glycolic Facial Cleanser + Face Reality Daily SPF
@@ -30,8 +35,11 @@
  * paused per year; the price stays locked while the membership continues.
  *
  * DEMO: records live in localStorage and billing is simulated. LIVE: a
- * Stripe Billing subscription per member (server/README.md → Memberships),
- * with invoice.paid webhooks adding the month's facial on the server.
+ * Stripe Billing subscription per member (functions/membership): joining
+ * opens Stripe's page, each paid invoice adds the month's facial on the
+ * server, and My Lumevina's buttons (pause, cancel, gift, change card) go
+ * to the server. The signed-in member's record is fetched and kept here in
+ * the same shape as the demo's, so the booking calendar reads it the same way.
  */
 (function () {
   "use strict";
@@ -40,6 +48,10 @@
   if (window.LumevinaFeatures && !window.LumevinaFeatures.on("membership")) return;
 
   var KEY = "lumevina_memberships";
+  /* live (js/site-config.js → shop): Stripe Billing through functions/membership */
+  var SHOPCFG = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var LIVE = /^https:\/\//.test(SHOPCFG.supabase || "") && !!SHOPCFG.key;
+  var liveFounding = null;   /* founding spots left, from the server */
   var BANK_CAP = 2;
   var MIN_MONTHS = 3;
   var BANK_AFTER_CANCEL_DAYS = 60;
@@ -56,7 +68,7 @@
     /* repriced Oct 19, 2026 for her current menu: the Custom Facial and the
        Monthly Acne Treatment are $200, the Ageless Grace $240, dermaplaning
        now its own option (+$30 to +$40), so it's a member add-on, not covered */
-    { id: "glow", name: "Glow", price: 175, value: 200, popular: true, retail: 0.10,
+    { id: "glow", name: "Glow", price: 185, founding: 175, value: 200, popular: true, retail: 0.10,
       primary: "lumevina-custom-facial",
       covers: ["lumevina-custom-facial", "monthly-acne-treatment"],
       facial: "Lumevina Custom Facial",
@@ -65,9 +77,10 @@
               "10% off skincare from our shelf, and free shipping",
               "A home routine from Evelyn, refreshed each season, with a check-in between visits",
               "15% off add-ons and anything else booked the same visit",
+              "No deposits: your card on file holds each booking",
               "Ask Evelyn any time: instant answers, and her own reply within 24 hours",
               "First word on flash openings"] },
-    { id: "ageless", name: "Ageless", price: 225, value: 240, retail: 0.15, includes: "glow",
+    { id: "ageless", name: "Ageless", price: 235, founding: 225, value: 240, retail: 0.15, includes: "glow",
       primary: "ageless-grace-facial",
       covers: ["ageless-grace-facial", "monthly-acne-treatment", "lumevina-custom-facial"],
       facial: "Ageless Grace Facial",
@@ -90,6 +103,39 @@
   };
   var changed = function () {
     document.dispatchEvent(new CustomEvent("lumevina:membership-changed"));
+  };
+
+  /* ── live: functions/membership ── */
+  var liveCache = {};   /* email → the signed-in member's record, in the demo's shape */
+  var signedToken = function () { return window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : ""; };
+  var memberApi = function (body) {
+    var tk = signedToken();
+    return fetch(SHOPCFG.supabase.replace(/\/$/, "") + "/functions/v1/membership", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOPCFG.key, Authorization: "Bearer " + (tk || SHOPCFG.key) },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j._ok = r.ok; return j; }); });
+  };
+  var fromServer = function (m, email) {
+    var card = m.card ? /^(.*) •••• (\d{4})$/.exec(m.card) : null;
+    return {
+      email: email, name: "", plan: m.plan, price: m.price_cents / 100, status: m.status, credits: m.credits,
+      startedAt: m.started_at, minEndsAt: m.min_ends_at, nextBillAt: m.next_bill_at, pausedMonth: m.paused_bill_at,
+      lastPauseAt: m.last_pause_at, cancelAt: m.cancel_at, founding: m.founding, live: true, onHoldServer: !!m.on_hold,
+      five: m.five_no ? { no: m.five_no, kit: m.five_kit, addon: m.five_addon } : null,
+      card: card ? { brand: card[1], last4: card[2] } : null, history: []
+    };
+  };
+  var refreshLive = function () {
+    if (!LIVE) return Promise.resolve();
+    memberApi({ action: "plans" }).then(function (j) { if (j._ok && typeof j.founding_left === "number") { liveFounding = j.founding_left; changed(); } });
+    var s = window.LumevinaAccount && window.LumevinaAccount.current();
+    if (!s || !signedToken()) { liveCache = {}; return Promise.resolve(); }
+    return memberApi({ action: "status" }).then(function (j) {
+      liveCache = {};
+      if (j.member) liveCache[emailKey(s.email)] = fromServer(j.member, s.email);
+      changed();
+    }, function () { /* offline: keep what we had */ });
   };
 
   /* ── dates ── */
@@ -147,6 +193,7 @@
   var get = function (email) {
     var k = emailKey(email);
     if (!k) return null;
+    if (LIVE) return liveCache[k] || null;
     var all = loadAll();
     var r = all[k];
     if (!r) return null;
@@ -177,6 +224,7 @@
 
   /* billing holds while BANK_CAP facials are waiting (a paused month skips anyway) */
   var onHold = function (r) {
+    if (r && r.live) return isMember(r) && r.onHoldServer;
     return isMember(r) && !r.pausedMonth && r.credits >= BANK_CAP;
   };
 
@@ -189,13 +237,13 @@
     var now = new Date().toISOString();
     var r = {
       email: who.email.trim(), name: (who.name || "").trim(), plan: plan.id,
-      price: plan.price,                     /* founding price, locked while it continues */
+      price: priceNow(plan.id),              /* today's price, locked while it continues */
       status: "active", startedAt: now,
       minEndsAt: addMonths(now, MIN_MONTHS),
       nextBillAt: addMonths(now, 1),
       credits: 1, used: 0, pausedMonth: null, lastPauseAt: null, cancelAt: null,
-      card: who.card || null, founding: true,
-      history: [{ at: now, type: "joined", amount: plan.price, note: "First month billed" }]
+      card: who.card || null, founding: foundingLeft() > 0,
+      history: [{ at: now, type: "joined", amount: priceNow(plan.id), note: "First month billed" }]
     };
     /* the first five members, any plan: a welcome kit and a free add-on.
        A spot stays claimed once given, even if that member later leaves. */
@@ -366,7 +414,13 @@
     return { ok: true, record: r };
   };
   var foundingLeft = function () {
+    if (LIVE && liveFounding != null) return liveFounding;
     return Math.max(0, FOUNDING_CAP - all().filter(function (r) { return r.founding && r.status !== "cancelled"; }).length);
+  };
+  /* what joining costs today: the founding rate while spots are left */
+  var priceNow = function (planId) {
+    var p = byId[planId];
+    return p ? (foundingLeft() > 0 ? p.founding : p.price) : 0;
   };
 
   var api = {
@@ -375,9 +429,9 @@
     get: get, isMember: isMember, onHold: onHold, usable: usable, covers: covers,
     join: join, useCredit: useCredit, returnCredit: returnCredit,
     canPause: canPause, pause: pause, unpause: unpause, cancel: cancel, keep: keep,
-    giftCredit: giftCredit, demoAdvance: demoAdvance,
+    giftCredit: giftCredit, demoAdvance: demoAdvance, refresh: refreshLive, live: LIVE,
     retailRate: retailRate, extrasRate: extrasRate,
-    all: all, foundingLeft: foundingLeft, fmtDate: fmtDate, money: money,
+    all: all, foundingLeft: foundingLeft, priceNow: priceNow, fmtDate: fmtDate, money: money,
     FIVE_CAP: FIVE_CAP, KIT: KIT, KIT_VALUE: KIT_VALUE, ADDON_VALUE: ADDON_VALUE,
     fiveLeft: fiveLeft, fiveAddonReady: fiveAddonReady, useFiveAddon: useFiveAddon, giveKit: giveKit
   };
@@ -419,12 +473,18 @@
       btn.textContent = mine ? "Your plan · manage" : "Join " + byId[btn.getAttribute("data-join")].name;
       btn.classList.toggle("is-mine", mine);
     });
-    var five = section.querySelector(".mem-five");
-    if (five) {
-      var n = fiveLeft();
-      five.classList.toggle("is-full", n === 0);
-      five.querySelector(".mem-five-left").textContent = n === 0 ? "All five spots are taken"
-        : n === 1 ? "1 spot left" : n + " of " + FIVE_CAP + " spots left";
+    var left = foundingLeft();
+    PLANS.forEach(function (p) {
+      var amt = section.querySelector('[data-price="' + p.id + '"]');
+      if (amt) amt.textContent = money(isMember(r) && r.plan === p.id ? r.price : priceNow(p.id));
+      var rate = section.querySelector('[data-rate="' + p.id + '"]');
+      if (rate) rate.textContent = isMember(r) && r.plan === p.id ? "Your rate, locked while you stay"
+        : left > 0 ? "Founding rate · regularly " + money(p.price) : "";
+    });
+    var fl = section.querySelector(".mem-founding");
+    if (fl) {
+      fl.hidden = left === 0;
+      fl.querySelector(".mem-founding-left").textContent = left === 1 ? "1 spot left" : left + " of " + FOUNDING_CAP + " spots left";
     }
   };
 
@@ -443,15 +503,16 @@
     $(".mj-done").hidden = true;
     $(".mj-plan-name").textContent = chosen.name + " Membership";
     $(".mj-plan-line").textContent = chosen.line;
-    $(".mj-price").textContent = money(chosen.price);
+    var price = priceNow(chosen.id);
+    $(".mj-price").textContent = money(price);
     var next = addMonths(new Date().toISOString(), 1);
     var terms = $(".mj-terms");
     terms.textContent = "";
-    [["Today", money(chosen.price) + " · your first facial is ready to book"],
-     ["Then", money(chosen.price) + " on the " + ordinal(new Date(next).getDate()) + " of each month"],
+    [["Today", money(price) + " · your first facial is ready to book"],
+     ["Then", money(price) + " on the " + ordinal(new Date(next).getDate()) + " of each month"],
      ["Minimum", MIN_MONTHS + " months, then month to month"],
      ["Cancel", "Online, any time: it ends after your minimum or the month you've paid for"],
-     ["Price", "Locked at " + money(chosen.price) + " for as long as you stay"]].forEach(function (row) {
+     ["Price", "Locked at " + money(price) + " for as long as you stay" + (price < chosen.price ? " (founding rate)" : "")]].forEach(function (row) {
       var li = document.createElement("li");
       var a = document.createElement("span"); a.textContent = row[0];
       var b = document.createElement("span"); b.textContent = row[1];
@@ -462,7 +523,7 @@
       fiveEl.hidden = fl === 0;
       if (fl > 0) fiveEl.querySelector(".mj-five-no").textContent = "#" + (FIVE_CAP - fl + 1) + " of " + FIVE_CAP;
     }
-    $(".mj-agree-text").textContent = "I agree to be billed " + money(chosen.price) +
+    $(".mj-agree-text").textContent = "I agree to be billed " + money(price) +
       " today and every month until I cancel. I can cancel online any time; a " + MIN_MONTHS +
       "-month minimum applies. Unused facials bank up to " + BANK_CAP + "; with " + BANK_CAP +
       " waiting, I'm not billed until I book one.";
@@ -470,7 +531,9 @@
     $("#mj-email").value = s ? s.email : "";
     $("#mj-agree").checked = false;
     $(".mj-status").textContent = "";
-    $(".mj-pay .btn-mb-inner").textContent = "Start membership · " + money(chosen.price);
+    $(".mj-pay .btn-mb-inner").textContent = (LIVE ? "Continue to payment · " : "Start membership · ") + money(price);
+    var fine = $(".mj-fine");
+    if (fine && LIVE) fine.textContent = "Stripe's secure page takes the first month and keeps your card on file for the months after, and for booking your facials in one tap.";
     setupCard();
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
@@ -484,6 +547,7 @@
   };
 
   var setupCard = function () {
+    if (LIVE) { $(".mj-saved").hidden = true; $(".mj-card-fields").hidden = true; usingSaved = true; return; }
     var card = pay && pay.getCard && pay.getCard($("#mj-email").value);
     usingSaved = !!card;
     $(".mj-saved").hidden = !card;
@@ -518,9 +582,26 @@
       return;
     }
     var btn = $(".mj-pay");
+    if (LIVE) {
+      btn.disabled = true;
+      $(".mj-status").textContent = "Opening the secure payment page…";
+      memberApi({ action: "join", plan: chosen.id, name: name, email: email, agreed: true, returnUrl: location.href.split(/[?#]/)[0] }).then(function (j) {
+        btn.disabled = false;
+        if (j.url) {
+          var framed = true;
+          try { framed = window.self !== window.top; } catch (e) { /* cross-origin */ }
+          if (framed) { if (!window.open(j.url, "_blank", "noopener")) $(".mj-status").innerHTML = 'Tap to <a href="' + j.url.replace(/"/g, "&quot;") + '" target="_blank" rel="noopener">open the secure payment page</a>.'; }
+          else location.assign(j.url);
+          return;
+        }
+        $(".mj-status").textContent = j.reason === "already" ? "That email already has a membership. Sign in and open My Lumevina to manage it."
+          : j.reason === "email" ? "Check your name and email." : "Payments aren't available right now. Please try again in a few minutes.";
+      }, function () { btn.disabled = false; $(".mj-status").textContent = "Couldn't reach the payment page. Check your connection and try again."; });
+      return;
+    }
     btn.disabled = true;
     $(".mj-status").textContent = "Starting your membership…";
-    pay.process({ amount: chosen.price, description: chosen.name + " Membership — first month" }, function (err, res) {
+    pay.process({ amount: priceNow(chosen.id), description: chosen.name + " Membership — first month" }, function (err, res) {
       btn.disabled = false;
       if (err) { $(".mj-status").textContent = "Payment failed — please try again."; return; }
       $(".mj-status").textContent = "";
@@ -581,7 +662,7 @@
     };
     if (!r || (r.status === "cancelled" && !usable(r))) {
       el.appendChild(h("p", "mem-acct-empty",
-        "A facial every month, banked if you're busy, from $175. Members also get 10% off skincare from our shelf." +
+        "A facial every month, banked if you're busy, from " + money(priceNow("glow")) + ". Members also get 10% off skincare from our shelf and book with no deposit." +
         (fiveLeft() > 0 ? " The first five members get a free welcome skincare kit." : "")));
       var see = h("a", "btn btn-ghost mem-acct-see", "See memberships");
       see.href = "#membership";
@@ -634,18 +715,28 @@
     };
     var note = h("p", "mem-acct-note");
     note.setAttribute("role", "status");
+    /* an action: the server's, live; this browser's, in the demo */
+    var act = function (name, local, extra, after) {
+      if (!r.live) { var out = local(); renderAccount(el, email); if (after) after(out); return; }
+      note.textContent = "One moment…";
+      memberApi(Object.assign({ action: name }, extra || {})).then(function (j) {
+        if (!j._ok) { note.textContent = "That didn't go through. Try again in a moment."; return; }
+        refreshLive().then(function () { renderAccount(el, email); if (after) after(j); });
+      }, function () { note.textContent = "Couldn't reach the server. Check your connection."; });
+    };
     if (usable(r)) btn("Book my facial", "btn-solid", function () {
       var c = document.querySelector(".account-close"); if (c) c.click();
       if (window.LumevinaBooking) window.LumevinaBooking.open(plan.primary);
     });
     if (usable(r)) btn("Gift a facial", "btn-ghost", function () { showGift(); });
-    if (r.status === "active" && r.pausedMonth) btn("Undo pause", "btn-ghost", function () { unpause(r.email); renderAccount(el, email); });
+    if (r.status === "active" && r.pausedMonth) btn("Undo pause", "btn-ghost", function () { act("unpause", function () { return unpause(r.email); }); });
     else if (canPause(r)) btn("Pause next month", "btn-ghost", function () {
-      var out = pause(r.email);
-      renderAccount(el, email);
-      if (out.ok) el.querySelector(".mem-acct-note").textContent = "Paused: " + fmtDate(out.record.pausedMonth) + " won't be billed. One pause per year.";
+      var skip = r.nextBillAt;
+      act("pause", function () { return pause(r.email); }, null, function () {
+        el.querySelector(".mem-acct-note").textContent = "Paused: " + fmtDate(skip) + " won't be billed. One pause per year.";
+      });
     });
-    if (r.status === "cancelling") btn("Keep my membership", "btn-ghost", function () { keep(r.email); renderAccount(el, email); });
+    if (r.status === "cancelling") btn("Keep my membership", "btn-ghost", function () { act("keep", function () { return keep(r.email); }); });
     else if (r.status === "active") {
       var c = btn("Cancel membership", "btn-ghost mem-cancel", function () {
         if (c.dataset.arm !== "1") {
@@ -654,10 +745,12 @@
           c.textContent = "Tap again to confirm: ends " + fmtDate(end);
           return;
         }
-        cancel(r.email);
-        renderAccount(el, email);
+        act("cancel", function () { return cancel(r.email); });
       });
     }
+    if (r.live && r.status !== "cancelled") btn("Change billing card", "btn-ghost", function () {
+      memberApi({ action: "card", returnUrl: location.href.split(/[?#]/)[0] }).then(function (j) { if (j.url) location.assign(j.url); else note.textContent = "That isn't available right now."; });
+    });
     el.appendChild(actions);
     el.appendChild(note);
 
@@ -677,22 +770,42 @@
       if (!gn.value.trim() || !ge.value.trim() || !ge.checkValidity()) {
         note.textContent = "Add your friend's name and a valid email."; return;
       }
-      var out = giftCredit(r.email, { name: gn.value.trim(), email: ge.value.trim() });
-      renderAccount(el, email);
-      el.querySelector(".mem-acct-note").textContent = out.ok
-        ? "✓ Gift sent to " + out.card.recipientName + " · code " + out.card.code
-        : "That facial couldn't be gifted right now.";
+      var to = { name: gn.value.trim(), email: ge.value.trim() };
+      act("gift", function () { return giftCredit(r.email, to); }, to, function (out) {
+        el.querySelector(".mem-acct-note").textContent = out && (out.ok || out.sent_to)
+          ? "✓ Gift sent to " + to.name + (out.card ? " · code " + out.card.code : ". It's on its way to their inbox.")
+          : "That facial couldn't be gifted right now.";
+      });
     });
 
     /* demo: show the monthly cycle without waiting a month */
-    var demo = h("button", "mem-demo", "Demo · skip to next billing date");
-    demo.type = "button";
-    demo.addEventListener("click", function () { demoAdvance(r.email); renderAccount(el, email); });
-    el.appendChild(demo);
+    if (!r.live) {
+      var demo = h("button", "mem-demo", "Demo · skip to next billing date");
+      demo.type = "button";
+      demo.addEventListener("click", function () { demoAdvance(r.email); renderAccount(el, email); });
+      el.appendChild(demo);
+    }
   };
   api.renderAccount = renderAccount;
 
   document.addEventListener("lumevina:membership-changed", renderSection);
-  document.addEventListener("lumevina:account-changed", renderSection);
+  document.addEventListener("lumevina:account-changed", function () { renderSection(); refreshLive(); });
+  document.addEventListener("lumevina:booked", function () { if (LIVE) refreshLive(); });
   renderSection();
+  if (LIVE) refreshLive();
+
+  /* back from Stripe: ?joined=<plan> (the webhook makes the membership a moment later) */
+  var joined = /[?&]joined=(glow|ageless|cancelled)\b/.exec(location.search);
+  if (joined && LIVE) {
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* old browser */ }
+    if (joined[1] !== "cancelled") {
+      var N = window.LumevinaNotice;
+      var plan = byId[joined[1]];
+      if (N) N.show("Welcome to " + plan.name + ".", "Your membership is starting: your first " + plan.facial +
+        " appears in My Lumevina in a moment (sign in with the email you used). Book it any time, with no deposit.");
+      var tries = 0;
+      var poll = function () { refreshLive().then(function () { var s0 = window.LumevinaAccount && window.LumevinaAccount.current(); if (!(s0 && get(s0.email)) && ++tries < 5) setTimeout(poll, 2000); }); };
+      poll();
+    }
+  }
 })();

@@ -20,7 +20,15 @@
 
    "Availability" is a labeled demo: a deterministic seed marks
    some cells busy so days look real, and the visitor's own
-   bookings persist in localStorage and block those cells. */
+   bookings persist in localStorage and block those cells.
+
+   LIVE (v3, js/site-config.js → shop filled in, booking on the site): the
+   visit goes to functions/book, which prices it on the server, holds the
+   time and opens Stripe's page for the deposit and the card on file (or
+   books it at once for a member, or a signed-in client with a card already
+   on file). Stripe sends them back with ?booked=<token>. Moving a booking
+   from its email link (js/manage.js) uses the same calendar. A full day
+   offers the waitlist. */
 
 (function () {
   "use strict";
@@ -44,6 +52,17 @@
     var b = window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking;
     return b && b.mode === "glossgenius" && /^https:\/\//.test(b.glossgenius || "") ? b.glossgenius : null;
   })();
+  var SHOPCFG = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var LIVE = !GG && /^https:\/\//.test(SHOPCFG.supabase || "") && !!SHOPCFG.key;
+  /* functions/book: the client's own sign-in rides along when there is one */
+  var bookApi = function (body) {
+    var token = window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : "";
+    return fetch(SHOPCFG.supabase.replace(/\/$/, "") + "/functions/v1/book", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOPCFG.key, Authorization: "Bearer " + (token || SHOPCFG.key) },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, status: r.status, j: j }; }); });
+  };
 
   /* rough 30-minute services; everything else books at 60 */
   var DUR30 = {
@@ -89,6 +108,10 @@
   var daysEl = modal.querySelector(".booking-days");
   var slotsEl = modal.querySelector(".booking-slots");
   var nameInput = modal.querySelector("#bk-name");
+  var phoneInput = modal.querySelector("#bk-phone");
+  var smsCheck = modal.querySelector("#bk-sms");
+  var liveNote = modal.querySelector(".bk-live-note");
+  if (LIVE) { modal.classList.add("is-live"); if (liveNote) liveNote.hidden = false; }
   var emailInput = modal.querySelector("#bk-email");
   var confirmBtn = modal.querySelector(".booking-confirm");
   var statusEl = modal.querySelector(".booking-status");
@@ -124,7 +147,7 @@
   var saveCardCheck = modal.querySelector("#bk-save-card");
   var usingSavedCard = false;
 
-  /* Glow Rewards (js/rewards.js): earning, redemption, the magic mirror */
+  /* Glow Rewards (js/rewards.js): earning and redemption */
   var rw = window.LumevinaRewards;
   var redeemRow = modal.querySelector(".rw-redeem");
   var redeemCheck = modal.querySelector("#bk-use-points");
@@ -153,8 +176,6 @@
     refHint.classList.toggle("is-ok", !!referralCode());
   };
   refInput.addEventListener("input", function () { paintRefHint(); renderPreview(); });
-  var petalBtn = modal.querySelector(".mirror-btn");
-  var petalResult = modal.querySelector(".mirror-result");
   var calBtn = modal.querySelector(".booking-cal");
   var gcalLink = modal.querySelector(".booking-gcal");
   var intakeBtn = modal.querySelector(".booking-intake-open");
@@ -277,8 +298,16 @@
 
   var sessionTotal = function () { return payablePrice() - flashDiscount() - memberExtrasOff() - referralOff(); };
 
+  /* a current member books with no deposit: the card on file holds it */
+  var visitorMember = function () {
+    var LM = window.LumevinaMembership;
+    if (!LM) return false;
+    var email = emailInput.value.trim() || ((window.LumevinaAccount && window.LumevinaAccount.current()) || {}).email;
+    return !!(email && LM.isMember(LM.get(email)));
+  };
   /* her deposit for each service booked (0 for some), never more than the total */
   var depositDue = function () {
+    if (visitorMember()) return 0;
     var d = state.services.reduce(function (a, s) { return a + (s.deposit || 0); }, 0);
     return Math.max(0, Math.min(d, sessionTotal()));
   };
@@ -305,7 +334,8 @@
      (server/functions/availability). Read on load, when the page comes back
      into view, and every two minutes; the server checks again before any
      deposit, so a time taken a moment ago can't be booked twice. */
-  var AV = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking && window.LUMEVINA_CONFIG.booking.availability) || "";
+  var AV = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking && window.LUMEVINA_CONFIG.booking.availability) ||
+    (LIVE ? SHOPCFG.supabase.replace(/\/$/, "") + "/functions/v1/availability" : "");
   var liveBusy = null;
   var liveTaken = function (dayKey, start, dur) {
     /* with her cleaning time on both sides of every appointment */
@@ -622,6 +652,7 @@
 
   var pickDay = function (key, keepFocus) {
     state.dayKey = key;
+    state.waitlistDay = dayInfo(keyDate(key)).state === "full" ? key : null;
     state.slot = null;
     renderDays();
     renderSlots();
@@ -643,7 +674,8 @@
   var renderDays = function () {
     /* keep the chosen day while it can still be booked, otherwise the first that can */
     var before = state.dayKey;
-    if (state.dayKey && !bookable(dayInfo(keyDate(state.dayKey)))) state.dayKey = null;
+    /* a day that isn't bookable lets go, except a full one the client chose for the waitlist */
+    if (state.dayKey && !bookable(dayInfo(keyDate(state.dayKey))) && !(state.waitlistDay === state.dayKey && !rescheduleMode)) state.dayKey = null;
     if (!state.dayKey) state.dayKey = firstOpenDay();
     var sel = state.dayKey ? keyDate(state.dayKey) : startOfDay(new Date());
     if (!calMonth || state.dayKey !== before) calMonth = new Date(sel.getFullYear(), sel.getMonth(), 1);
@@ -706,7 +738,8 @@
         (info.locked ? " is-members" : "") + (info.key === todayKey ? " is-today" : "") +
         (info.key === state.dayKey ? " is-selected" : "");
       b.dataset.key = info.key;
-      b.disabled = !bookable(info);
+      /* a full day still opens, to offer the waitlist (not while moving a booking) */
+      b.disabled = !bookable(info) && !(info.state === "full" && !rescheduleMode);
       b.tabIndex = -1;
       b.setAttribute("aria-label", dayLabel(info));
       b.setAttribute("aria-pressed", String(info.key === state.dayKey));
@@ -803,6 +836,17 @@
         lock.appendChild(jn);
       }
       slotsEl.appendChild(lock);
+      return;
+    }
+    /* a full day: the waitlist */
+    if (dayInfo(dayD).state === "full") {
+      var wl = document.createElement("div");
+      wl.className = "booking-waitlist";
+      wl.innerHTML = '<p><strong>' + dayD.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) +
+        ' is full.</strong> Join the waitlist: if a time opens that day, you hear first, and the first to book it gets it.</p>' +
+        '<button type="button" class="btn btn-ghost wl-join">Join the waitlist</button><p class="wl-status" role="status" aria-live="polite"></p>';
+      wl.querySelector(".wl-join").addEventListener("click", function () { joinWaitlist(state.dayKey, wl); });
+      slotsEl.appendChild(wl);
       return;
     }
     var dur = totalDur();
@@ -902,13 +946,13 @@
     addRow("Total", pay.money(sessionTotal()), "sc-total");
     addRow(depositDue() > 0 ? "Due now — deposit" : "Due now", depositDue() > 0 ? pay.money(depositDue()) : "Nothing", "sc-due");
     addRow("Due in person at your visit", pay.money(sessionTotal() - depositDue()), "sc-rest");
-    if (rw && depositDue() > 0) {
+    if (rw) {
       var q = rw.quote(depositDue(), {
-        dayKey: state.dayKey, member: visitorIsMember(),
+        dayKey: state.dayKey, member: visitorIsMember(), booking: true,
         serviceIds: state.services.map(function (s) { return s.id; })
       });
-      addRow("✦ Glow Points on this deposit" +
-        (q.notes.length ? " — " + q.notes.join(", ") : ""),
+      /* the rest earns when Evelyn checks the visit out */
+      if (q.points > 0) addRow("✦ Glow Points now" + (q.notes.length ? " — " + q.notes.join(", ") : ""),
         "+" + q.points + " ✦", "sc-earn");
     }
   };
@@ -1160,6 +1204,7 @@
     if (GG) { window.open(GG, "_blank", "noopener"); return; }
     lastFocus = document.activeElement;
     rescheduleMode = false;
+    liveMove = null;
     modal.classList.remove("rescheduling");
     rescheduleNote.hidden = true;
     resetGift();
@@ -1215,9 +1260,13 @@
 
   /* ── Reschedule an existing booking ── deposit already paid & consent
      already given, so we only re-pick a day/time and move the record. */
+  var liveMove = null;   /* { token, done } while moving a live booking from its email link */
+  var moveNoteText = rescheduleNote.textContent;
   var openReschedule = function (booking, index) {
     lastFocus = document.activeElement;
     rescheduleMode = true;
+    rescheduleNote.textContent = moveNoteText;
+    if (index !== -1) liveMove = null;
     rescheduleIndex = index;
     var svcs = (booking.services || []).map(function (id) { return byId[id]; })
       .filter(Boolean);
@@ -1306,6 +1355,13 @@
   };
 
   var startReschedule = function () {
+    if (LIVE) {
+      /* live: every booking has its own link; signed in, My Lumevina lists them */
+      if (window.LumevinaAccount && window.LumevinaAccount.current()) { closeModal(); window.LumevinaAccount.open(); return; }
+      showNotice("Use the link in your confirmation email",
+        "Every confirmation and reminder email has a Cancel or move it button. Signed in? Your appointments are under My Lumevina too.");
+      return;
+    }
     var now = Date.now();
     var upcoming = loadBookings()
       .map(function (b, i) { return { b: b, i: i, start: bookingStartOf(b) }; })
@@ -1393,7 +1449,9 @@
   var updatePayAmount = function () {
     var free = chargeNow() === 0;
     depositAmtEl.textContent = free ? "Nothing" : pay.money(chargeNow());
-    payBtn.querySelector(".btn-mb-inner").textContent = free
+    payBtn.querySelector(".btn-mb-inner").textContent = LIVE
+      ? (free ? (visitorMember() ? "Confirm my booking" : "Hold my time · add a card") : "Continue to pay · " + pay.money(chargeNow()))
+      : free
       ? "Confirm booking · nothing due today"
       : "Pay deposit · " + pay.money(chargeNow());
     /* nothing due (a service with no deposit, or it's covered): no card needed */
@@ -1466,20 +1524,33 @@
     });
   }
 
-  petalBtn.addEventListener("click", function () {
-    if (petalBtn.disabled || !rw) return;
-    var pick = rw.mirrorReveal();
-    petalBtn.disabled = true;
-    petalBtn.classList.add("is-lit");
-    petalResult.textContent = "✦ The mirror says: " + pick.label + " · balance " +
-      rw.points() + " ✦";
-    petalResult.hidden = false;
-  });
 
   /* reschedule: just move the existing booking to the new slot */
   /* move an existing booking to the newly picked slot (reschedule mode) */
   var doReschedule = function () {
     if (!state.slot) { statusEl.textContent = "Please pick a new time."; return; }
+    if (liveMove) {
+      var mv = liveMove;
+      confirmBtn.disabled = true;
+      statusEl.textContent = "Moving it…";
+      bookApi({ action: "reschedule", token: mv.token, date: state.dayKey, start_min: state.slot }).then(function (r) {
+        confirmBtn.disabled = false;
+        if (r.j.booking) {
+          statusEl.textContent = "";
+          liveMove = null;
+          closeModal();
+          showNotice("Appointment moved", r.j.booking.names + " is now " + r.j.booking.when + ". Your deposit came with it; a new confirmation is on its way.");
+          if (mv.done) mv.done(r.j.booking);
+          return;
+        }
+        statusEl.textContent = r.j.reason === "slot_taken" ? "That time was just taken. Pick another." :
+          r.j.reason === "late" ? "It's within 48 hours now, so it can't be moved online. Reply to your confirmation email and Evelyn will help." :
+          r.j.reason === "saturday" ? "Saturday appointments can't be moved (see policies)." :
+          r.j.reason === "hours" ? "That time isn't open. Pick another." : "It didn't move. Check your connection and try again.";
+        if (r.j.reason === "slot_taken") pullBusy();
+      }, function () { confirmBtn.disabled = false; statusEl.textContent = "It didn't move. Check your connection and try again."; });
+      return;
+    }
     var all = loadBookings();
     var b = all[rescheduleIndex];
     if (b) {
@@ -1619,6 +1690,7 @@
 
   /* ── Step 2: pay the deposit (shared engine, Stripe-ready) ── */
   payBtn.addEventListener("click", function () {
+    if (LIVE) { liveBook(); return; }
     var problems = [];
     if (!usingSavedCard && chargeNow() > 0) {
       if (!cardNameInput.value.trim()) problems.push("the name on the card");
@@ -1659,7 +1731,7 @@
       }
       /* what this booking earns, worked out before it's saved, so a cancellation
          in time can hand back exactly these points (js/account.js) */
-      var earnOpts = { dayKey: state.dayKey, member: visitorIsMember(), serviceIds: state.services.map(function (s) { return s.id; }) };
+      var earnOpts = { dayKey: state.dayKey, member: visitorIsMember(), booking: true, serviceIds: state.services.map(function (s) { return s.id; }) };
       var earnQ = rw ? rw.quote(charge, earnOpts) : null;
       var prevLastVisit = rw ? rw.lastVisit() : null;
       saveBooking({
@@ -1668,6 +1740,7 @@
         points: earnQ ? earnQ.points : 0,
         rebookBonus: earnQ && earnQ.streak ? rw.rebookBonus : 0,
         birthdayBonus: !!(earnQ && earnQ.birthday),
+        firstBonus: !!(earnQ && earnQ.first),
         prevLastVisit: prevLastVisit,
         date: state.dayKey,
         time: state.slot,
@@ -1676,6 +1749,8 @@
         /* who booked — lets the owner CRM group bookings by client */
         name: nameInput.value.trim(),
         email: emailInput.value.trim(),
+        phone: phoneInput ? phoneInput.value.trim() : "",
+        sms: !!(smsCheck && smsCheck.checked),
         order: result.id,
         deposit: deposit,
         /* what the card was actually charged (0 when a treatment gift covers
@@ -1757,10 +1832,6 @@
       } else {
         refNoteEl.hidden = true;
       }
-      petalBtn.disabled = false;
-      petalBtn.classList.remove("is-lit");
-      petalResult.hidden = true;
-      petalResult.textContent = "";
 
       /* remember this booking for add-to-calendar + the pre-visit form */
       lastBooking = {
@@ -1920,6 +1991,151 @@
     openModal();
   });
 
+  /* ── LIVE (v3): the server books it (functions/book) ── */
+  var framedPage = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+  var go = function (url) {
+    if (framedPage) {
+      var w = window.open(url, "_blank", "noopener");
+      if (!w) payStatus.innerHTML = 'Tap to <a href="' + url.replace(/"/g, "&quot;") + '" target="_blank" rel="noopener">open the secure payment page</a>.';
+    } else location.assign(url);
+  };
+  var REASONS = {
+    slot_taken: "That time was just taken. Go back and pick another.",
+    hours: "That time isn't open any more. Go back and pick another.",
+    time: "That time can't be booked online (it's too soon or too far ahead). Go back and pick another.",
+    services: "One of these treatments can't be booked online. Ask Evelyn and she'll book it for you.",
+    email: "Check your name and email (signed in? book with your own email).",
+    consent: "Please sign the consent first.",
+    payment_unavailable: "Payments aren't available right now. Please try again in a few minutes."
+  };
+  var liveBook = function () {
+    payBtn.disabled = true;
+    payStatus.textContent = "Holding your time…";
+    bookApi({
+      action: "create", date: state.dayKey, start_min: state.slot,
+      services: state.services.map(function (x) { return x.id; }),
+      name: nameInput.value.trim(), email: emailInput.value.trim(),
+      phone: phoneInput ? phoneInput.value.trim() : "", sms_ok: !!(smsCheck && smsCheck.checked),
+      consent: { signature: consentSignature }, flash: flashActive(), ref_code: referralCode() || "",
+      points: (rw && redeemCheck.checked) ? pendingBlocks * rw.blockPoints : 0,
+      gift_code: giftCode || "", use_member: memberUse,
+      returnUrl: location.href.split(/[?#]/)[0]
+    }).then(function (r) {
+      payBtn.disabled = false;
+      if (r.j.url) {
+        payStatus.textContent = "Opening the secure payment page…";
+        try { sessionStorage.setItem("lumevina_booking_token", r.j.token); } catch (e) { /* private mode */ }
+        go(r.j.url);
+        return;
+      }
+      if (r.j.confirmed) { showServerSuccess(r.j.booking); return; }
+      payStatus.textContent = REASONS[r.j.reason] || "It didn't go through. Check your connection and try again.";
+      if (r.j.reason === "slot_taken") pullBusy();
+    }, function () {
+      payBtn.disabled = false;
+      payStatus.textContent = "Couldn't reach the booking server. Check your connection and try again.";
+    });
+  };
+
+  /* the success view, from the server's booking */
+  var showServerSuccess = function (v) {
+    var hhmm = function (m) { return fmtTime(m) + " – " + fmtTime(m + v.dur_min); };
+    summaryEl.textContent = v.names + " · " + keyDate(v.date).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) + " · " + hhmm(v.start_min);
+    modal.querySelector(".booking-paid").textContent = v.member ? "Your membership facial: nothing to pay today."
+      : v.paid_cents ? "Deposit paid: " + pay.money(v.paid_cents / 100) + ". It goes toward your total."
+      : "Your card holds the time" + (v.card ? " (" + v.card + ")" : "") + ". Nothing was charged.";
+    modal.querySelector(".success-order").hidden = true;
+    if (v.points_earned) {
+      earnedEl.textContent = "✦ +" + v.points_earned + " Glow Points" + (v.first_bonus ? ", including 100 for your first booking here" : "");
+      earnedEl.hidden = false;
+    } else earnedEl.hidden = true;
+    refNoteEl.hidden = true;
+    var sub = modal.querySelector(".booking-success-sub");
+    if (sub) sub.textContent = "A confirmation email is on its way, with a link to move or cancel up to 48 hours before. The balance is due at your visit.";
+    lastBooking = { title: "Lumevina — " + v.names, start: v.date, startMin: v.start_min, durMin: v.dur_min,
+      name: v.name || nameInput.value.trim(), email: emailInput.value.trim() };
+    if (gcalLink) {
+      gcalLink.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(lastBooking.title) +
+        "&dates=" + icsStamp(v.date, v.start_min) + "/" + icsStamp(v.date, v.start_min + v.dur_min) + "&ctz=America/Los_Angeles" +
+        "&location=" + encodeURIComponent("Lumevina Aesthetics Spa, Woodland Hills, CA");
+    }
+    calBtn.hidden = !!(window.LumevinaSave && !window.LumevinaSave.canSave("ics"));
+    intakeStatusEl.hidden = true;
+    if (modal.getAttribute("aria-hidden") !== "false") {
+      lastFocus = document.activeElement;
+      modal.setAttribute("aria-hidden", "false");
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+    }
+    formView.hidden = true; consentView.hidden = true; payView.hidden = true; repickView.hidden = true;
+    successView.hidden = false;
+    if (window.LumevinaFX) window.LumevinaFX.burst(successView.querySelector(".success-glyph"));
+    document.dispatchEvent(new CustomEvent("lumevina:booked", { detail: { live: true, booking: v } }));
+    modal.querySelector(".booking-done").focus();
+  };
+
+  /* back from Stripe: ?booked=<token> (the webhook confirms it a moment later),
+     or ?booked=cancelled&b=<token> (the time is let go) */
+  var returned = function () {
+    var q = /[?&]booked=([0-9a-f]{32}|cancelled)/.exec(location.search);
+    if (!q || !LIVE) return;
+    var token = q[1] === "cancelled" ? (/[?&]b=([0-9a-f]{32})/.exec(location.search) || [])[1] : q[1];
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* old browser */ }
+    if (q[1] === "cancelled") {
+      if (token) bookApi({ action: "release", token: token });
+      openModal();
+      statusEl.textContent = "Your time wasn't held and nothing was charged. Pick a time to try again.";
+      return;
+    }
+    var tries = 0;
+    var look = function () {
+      bookApi({ action: "get", token: token }).then(function (r) {
+        var b = r.j.booking;
+        if (b && b.status === "pending" && ++tries < 6) { setTimeout(look, 1500); return; }
+        if (b) showServerSuccess(b);
+      });
+    };
+    look();
+  };
+
+  /* moving a live booking (js/manage.js): the calendar, then functions/book → reschedule */
+  var openLiveMove = function (v, done) {
+    openReschedule({ services: v.services }, -1);
+    liveMove = { token: v.token, done: done };
+    rescheduleNote.textContent = "Moving " + v.names + " (now " + v.when + "). Pick a new day and time: your deposit comes with it.";
+  };
+
+  /* ── a full day: the waitlist ── */
+  var joinWaitlist = function (key, box) {
+    var name = nameInput.value.trim(), email = emailInput.value.trim();
+    var say = box.querySelector(".wl-status");
+    if (!name || !email || !emailInput.checkValidity()) {
+      say.textContent = "Add your name and email below first, then tap Join the waitlist.";
+      nameInput.focus();
+      return;
+    }
+    var entry = { date: key, services: state.services.map(function (x) { return x.id; }), name: name, email: email,
+      phone: phoneInput ? phoneInput.value.trim() : "", sms_ok: !!(smsCheck && smsCheck.checked) };
+    var done = function () {
+      say.textContent = "You're on the waitlist. If a time opens that day, you'll hear by email" + (entry.sms_ok && entry.phone ? " and text" : "") + ", and the first to book gets it.";
+      box.querySelector(".wl-join").disabled = true;
+    };
+    if (LIVE) {
+      bookApi(Object.assign({ action: "waitlist" }, entry)).then(function (r) { if (r.ok) done(); else say.textContent = "That didn't go through. Try again."; },
+        function () { say.textContent = "Couldn't reach the server. Try again."; });
+      return;
+    }
+    /* demo: this browser keeps it, and the dashboard shows it */
+    try {
+      var list = JSON.parse(localStorage.getItem("lumevina_waitlist")) || [];
+      if (!list.some(function (w) { return w.date === key && w.email.toLowerCase() === email.toLowerCase(); })) {
+        list.push(Object.assign({ id: "w" + Date.now().toString(36), at: new Date().toISOString(), status: "waiting" }, entry));
+        localStorage.setItem("lumevina_waitlist", JSON.stringify(list));
+      }
+    } catch (e) { /* private mode */ }
+    done();
+  };
+
   /* ── for the calendar on the page (js/book-section.js) ──
      the same rules as the booking sheet, for one service's length */
   var startsOpen = function (key, dur) {
@@ -1961,6 +2177,8 @@
     summary: function () { return H ? H.summary() : "Tue–Sat, 8:00 AM–6:00 PM · lunch 12:00–12:30"; },
     reschedule: openReschedule,
     startReschedule: startReschedule,
+    moveLive: openLiveMove,
+    live: LIVE,
     openings: openings,
     service: function (id) { return byId[id] || null; },
     hasBooked: function () { return loadBookings().length > 0; },
@@ -1972,4 +2190,5 @@
       return starts[0] || null;
     }
   };
+  returned();
 })();

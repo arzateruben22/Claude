@@ -194,13 +194,63 @@
   }
   window.LumevinaNotice = { show: notice };
 
+  /* live points arrive after the panel opens (js/rewards.js → functions/rewards) */
+  document.addEventListener("lumevina:points-changed", function () {
+    if (!session || !rw()) return;
+    pointsEl.textContent = String(rw().points());
+    refEl.textContent = rw().refCode();
+  });
+
   /* re-render the account's bookings when one is moved elsewhere */
   document.addEventListener("lumevina:booking-changed", function () {
     if (session && modal.getAttribute("aria-hidden") === "false") renderBookings();
   });
 
+  /* live (v3): their appointments from the server, each with its own Change or cancel */
+  var acctToken = function () { return window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : ""; };
+  var liveBookings = function () {
+    var B = window.LumevinaBooking;
+    return !!(B && B.live && acctToken() && window.LumevinaManage);
+  };
+  var renderLiveBookings = function () {
+    listEl.innerHTML = '<li class="acct-none">Finding your appointments…</li>';
+    fetch(SHOP.supabase.replace(/\/$/, "") + "/functions/v1/book", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + acctToken() },
+      body: JSON.stringify({ action: "mine" })
+    }).then(function (r) { return r.json(); }).then(function (j) {
+      listEl.textContent = "";
+      var today = new Date().toISOString().slice(0, 10);
+      var up = (j.bookings || []).filter(function (b) { return b.status === "held" && b.date >= today; });
+      if (j.credit_cents) {
+        var cr = document.createElement("li");
+        cr.className = "acct-none";
+        cr.textContent = "$" + (j.credit_cents / 100) + " deposit carried over: it comes off your next booking this month.";
+        listEl.appendChild(cr);
+      }
+      if (!up.length) {
+        var none = document.createElement("li");
+        none.className = "acct-none";
+        none.textContent = "No upcoming appointments — the calendar is a tap away.";
+        listEl.appendChild(none);
+        return;
+      }
+      up.forEach(function (b) {
+        var li = document.createElement("li");
+        li.className = "acct-booking";
+        li.innerHTML = '<span class="acct-bk-when"></span><span class="acct-bk-what"></span><span class="acct-bk-meta"></span><div class="acct-bk-actions"><button type="button" class="acct-bk-cancel">Change or cancel</button></div>';
+        li.querySelector(".acct-bk-when").textContent = b.when;
+        li.querySelector(".acct-bk-what").textContent = b.names;
+        li.querySelector(".acct-bk-meta").textContent = b.member ? "Membership facial" : b.paid_cents ? "Deposit $" + (b.paid_cents / 100) + " paid" : (b.card ? "Held by " + b.card : "Booked");
+        li.querySelector("button").addEventListener("click", function () { window.LumevinaManage.open(b.token); });
+        listEl.appendChild(li);
+      });
+    }, function () { listEl.innerHTML = '<li class="acct-none">Couldn\u2019t load your appointments. Check your connection.</li>'; });
+  };
+
   /* ── Rendering ── */
   var renderBookings = function () {
+    if (liveBookings()) { renderLiveBookings(); return; }
     listEl.textContent = "";
     var now = Date.now();
     var upcoming = loadBookings()

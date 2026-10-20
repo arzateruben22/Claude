@@ -36,10 +36,8 @@
     <button class="btn btn-ghost nav-account" type="button" data-open-account
       aria-label="Open My Lumevina">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </button>
-    <button class="btn btn-ghost nav-rewards" type="button" data-open-rewards data-feature="rewards"
-      aria-label="Open Glow Rewards">
-      ✦ <span class="rw-count">0</span>
+      <!-- Glow Points, once there are some (js/rewards.js) -->
+      <span class="nav-pts" data-feature="rewards" hidden><span aria-hidden="true">✦</span> <span class="rw-count">0</span><span class="sr-only"> Glow Points</span></span>
     </button>
     <button class="btn btn-ghost nav-cart" type="button" aria-label="Open cart, 0 items">
       Cart · <span class="nav-cart-count">0</span>
@@ -69,14 +67,10 @@
           <span class="mm-label">Cart</span>
           <span class="mm-count nav-cart-count">0</span>
         </button>
-        <button class="mm-tile" type="button" data-open-rewards data-feature="rewards">
-          <span class="mm-icon mm-icon-glyph" aria-hidden="true">✦</span>
-          <span class="mm-label">Glow Rewards</span>
-          <span class="mm-count rw-count">0</span>
-        </button>
         <button class="mm-tile" type="button" data-open-account>
           <svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span class="mm-label">My Lumevina</span>
+          <span class="mm-count nav-pts" data-feature="rewards" hidden><span aria-hidden="true">✦</span> <span class="rw-count">0</span></span>
         </button>
       </div>
     </div>
@@ -256,6 +250,9 @@
             <h2 class="display" data-blur-text>Every opening, <em>at a glance.</em></h2>
             <p class="section-sub">Choose a treatment and the calendar shows what's open each day.
             Tap a day, tap a time, and it's held for you (some treatments take a small deposit).</p>
+            <!-- v3: everything books here (js/site-config.js) -->
+            <p class="bk-move" data-feature="rewards">Already booked on GlossGenius? That visit stands. Book the
+            next one here: your first booking on this website comes with 100 Glow Points.</p>
             <!-- shown while booking runs in both places (js/site-config.js → booking.mode "both") -->
             <div class="bk-notice" hidden>
               <p><strong>New here?</strong> Book right here: pick a treatment, a day and a time, and it's yours.</p>
@@ -590,23 +587,26 @@
           <p class="section-sub">Skin renews about every four weeks. A monthly facial keeps it
           there, and a membership makes it automatic: one treatment a month, banked if you're
           busy, with member pricing on everything else.</p>
-          <p class="mem-founding mem-five"><span class="mem-founding-dot" aria-hidden="true"></span>
-          <span><strong>Founding Five:</strong> the first five members on any plan get a free skincare kit
-          and add-on · <span class="mem-five-left rb-shiny">5 of 5 spots left</span></span></p>
+          <!-- js/membership.js keeps the count and the prices current -->
+          <p class="mem-founding"><span class="mem-founding-dot" aria-hidden="true"></span>
+          <span><strong>Founding members</strong> keep the founding rate for as long as they stay, and the
+          first five get a skincare kit too · <span class="mem-founding-left">25 of 25 spots left</span></span></p>
         </div>
 
         <div class="mem-grid" data-reel data-reel-tabs data-reel-label="Membership plans">
           <article class="mem-plan is-popular" data-reveal data-glare data-reel-name="Glow" data-tier="1">
             <span class="mem-tag">Most popular</span>
             <h3 class="mem-name">Glow</h3>
-            <p class="mem-price"><span class="mem-amt">$175</span><span class="mem-per">/month</span></p>
+            <p class="mem-price"><span class="mem-amt" data-price="glow">$175</span><span class="mem-per">/month</span></p>
+            <p class="mem-rate" data-rate="glow">Founding rate · regularly $185</p>
             <p class="mem-value">A facial every month, custom or acne · a $200 value</p>
-            <ul class="mem-perks" role="list"><li>One facial a month: the Lumevina Custom Facial or the Monthly Acne Treatment</li><li>10% off skincare from our shelf, and free shipping</li><li>A home routine from Evelyn, refreshed each season, with a check-in between visits</li><li>15% off add-ons and anything else booked the same visit</li><li>Ask Evelyn any time: instant answers, and her own reply within 24 hours</li><li>First word on flash openings</li></ul>
+            <ul class="mem-perks" role="list"><li>One facial a month: the Lumevina Custom Facial or the Monthly Acne Treatment</li><li>10% off skincare from our shelf, and free shipping</li><li>15% off add-ons and anything else booked the same visit</li><li>No deposits: your card on file holds each booking</li><li>A home routine from Evelyn, refreshed each season</li><li>Ask Evelyn any time, with her own reply within 24 hours</li></ul>
             <button class="btn btn-solid mem-join" type="button" data-join="glow">Join Glow</button>
           </article>
           <article class="mem-plan" data-reveal data-glare data-reel-name="Ageless" data-tier="3">
             <h3 class="mem-name">Ageless</h3>
-            <p class="mem-price"><span class="mem-amt">$225</span><span class="mem-per">/month</span></p>
+            <p class="mem-price"><span class="mem-amt" data-price="ageless">$225</span><span class="mem-per">/month</span></p>
+            <p class="mem-rate" data-rate="ageless">Founding rate · regularly $235</p>
             <p class="mem-value">Any of the facials, up to the Ageless Grace · a $240 value</p>
             <p class="mem-plus"><span aria-hidden="true">+</span> Everything in Glow, plus</p>
             <ul class="mem-perks" role="list"><li>Upgrade to the Ageless Grace Facial any month</li><li>Dermaplaning added every other visit (a $40 value)</li><li>15% off skincare from our shelf, up from 10%</li></ul>
@@ -620,6 +620,25 @@
           <li><strong>Pause it</strong><span>Skip one month a year, no charge.</span></li>
           <li><strong>Cancel online</strong><span>Any time from My Lumevina. Three-month minimum, then month to month.</span></li>
         </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════ GLOW POINTS (js/rewards.js) ═══════════════
+         For everyone who books here, member or not: one quiet row. -->
+    <section class="section section-points" id="rewards" data-feature="rewards">
+      <div class="section-inner">
+        <div class="pts" data-reveal>
+          <div class="pts-head">
+            <p class="eyebrow">Glow Points</p>
+            <h2 class="pts-title">Every visit booked here <em>gives back.</em></h2>
+            <button class="btn btn-ghost pts-see" type="button" data-open-account>See my points</button>
+          </div>
+          <ul class="pts-facts" role="list">
+            <li><strong>1 point for every $1</strong><span>On visits, products and gift certificates, paid here or at the studio. 100 points take $10 off.</span></li>
+            <li><strong>100 points to start</strong><span>Your first booking on this website, on us, whether you're new or you've been seeing Evelyn for years.</span></li>
+            <li><strong>Friends and birthdays</strong><span>A friend's first visit: $15 off for them, 150 points for you. Another 50 in your birthday month.</span></li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -776,66 +795,6 @@
     </section>
 
     <!-- ═══════════════ GLOW REWARDS ═══════════════ -->
-    <section class="section section-app section-rewards-connect" id="rewards" data-feature="rewards">
-      <div class="section-inner">
-        <div class="rc-grid">
-          <!-- Glow Rewards -->
-          <div class="rc-rewards">
-            <div class="app-head" data-reveal>
-              <p class="eyebrow">Glow Rewards</p>
-              <h2 class="display" data-blur-text>Every visit <em>gives back.</em></h2>
-              <p class="section-sub">Earn Glow Points on every deposit and gift — live on this
-              site today, and soon in the Lumevina app for iPhone, where your points carry over.</p>
-            </div>
-            <div class="app-perks" data-reveal data-reel data-reel-auto="4500" data-reel-label="Glow Rewards perks">
-              <div class="app-perk" data-reel-name="Glow Points">
-                <span class="app-perk-glyph" aria-hidden="true">✦</span>
-                <h3>Glow Points</h3>
-                <p>1 point per $1 on deposits and gifts — every 100 points is $10 off. Double
-                on Wax Wednesday, +25 when you rebook within five weeks (members already have their monthly facial).</p>
-              </div>
-              <div class="app-perk" data-reel-name="Flash">
-                <span class="app-perk-glyph" aria-hidden="true">⚡</span>
-                <h3>Flash openings</h3>
-                <p>One starred time each day books at 10% off. In the app, freed slots go out
-                as push notifications first — first tap wins.</p>
-              </div>
-              <div class="app-perk" data-reel-name="Refer">
-                <span class="app-perk-glyph" aria-hidden="true">🎂</span>
-                <h3>Refer &amp; celebrate</h3>
-                <p>Refer a friend: they get $15 off their first visit, you get 150 points ($15)
-                when it’s done — plus a +50 bonus in your birthday month, every year.</p>
-              </div>
-              <div class="app-perk" data-reel-name="Mirror">
-                <span class="app-perk-glyph app-perk-mirror" aria-hidden="true"><svg class="mirror-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8l1.3 1.5h-2.6z" fill="currentColor"/><ellipse cx="12" cy="9.4" rx="6.3" ry="7.3" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse class="mirror-glass" cx="12" cy="9.4" rx="4.3" ry="5.3"/><path class="mirror-shine" d="M9.6 6.8l2.7-1.8M9.7 9.2l1.5-1"/><path d="M12 16.8v5.4M10.1 18.6h3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span>
-                <h3>Magic mirror</h3>
-                <p>After each confirmed appointment, ask the mirror for a small surprise: bonus
-                points, and sometimes the fairest prize of all.</p>
-              </div>
-            </div>
-            <div class="rc-cta" data-reveal>
-              <button class="btn-mb rc-points-btn" type="button" data-open-rewards>
-                <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
-                <span class="btn btn-solid btn-mb-inner">✦ Check your Glow Points</span>
-              </button>
-              <!-- App Store badge — pre-launch. When live: wrap in <a href="apps.apple.com/…">,
-                   change top line to "Download on the" (see APP.md → After launch). -->
-              <div class="appstore-badge" role="img" aria-label="Coming soon to the App Store">
-                <svg class="appstore-apple" viewBox="0 0 384 512" aria-hidden="true">
-                  <path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-                </svg>
-                <span class="appstore-text">
-                  <span class="appstore-pre">Coming soon to the</span>
-                  <span class="appstore-store">App Store</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
     <!-- ═══════════════ REACH OUT (js/contact.js) ═══════════════
          Replaces the journal. A question sent here lands in Evelyn's
          dashboard (Client questions), the same place the chat sends to. -->
@@ -992,6 +951,16 @@
             <input id="bk-email" name="email" type="email" autocomplete="email" required>
           </div>
         </div>
+        <div class="field-row bk-phone-row">
+          <div class="field">
+            <label for="bk-phone">Mobile <span class="rw-ref-opt">(optional)</span></label>
+            <input id="bk-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(818) 555-0134">
+          </div>
+          <label class="save-card bk-sms">
+            <input type="checkbox" id="bk-sms">
+            <span>Text me a reminder the day before</span>
+          </label>
+        </div>
         <!-- first visit only: a friend's Glow Rewards referral code -->
         <div class="field rw-ref-field" hidden>
           <label for="bk-ref">Referral code <span class="rw-ref-opt">(optional — first visit)</span></label>
@@ -1045,6 +1014,10 @@
         <p class="booking-demo-note">Some treatments take a non-refundable deposit to hold the
         time (see policies); it goes toward your total. The balance is due at your visit — cash
         preferred, card with a fee. Card payments are Stripe-ready; this demo does not charge.</p>
+        <!-- live (v3): Stripe's own page takes the deposit and keeps the card on file -->
+        <p class="bk-live-note" hidden>Next is Stripe's secure page: it takes any deposit and keeps your
+        card on file for this visit. Nothing else is charged unless you choose to pay with it, or for a
+        late cancellation or no-show (see policies).</p>
 
         <div class="checkout-summary">
           <ul class="checkout-lines booking-lines" role="list"></ul>
@@ -1134,16 +1107,7 @@
         <p class="rw-earned" hidden></p>
         <p class="rw-ref-note" hidden></p>
 
-        <!-- magic mirror: one tap, one small surprise per booking -->
-        <div class="mirror" data-feature="rewards">
-          <button class="mirror-btn" type="button">
-            <span class="mirror-wrap" aria-hidden="true"><svg class="mirror-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8l1.3 1.5h-2.6z" fill="currentColor"/><ellipse cx="12" cy="9.4" rx="6.3" ry="7.3" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse class="mirror-glass" cx="12" cy="9.4" rx="4.3" ry="5.3"/><path class="mirror-shine" d="M9.6 6.8l2.7-1.8M9.7 9.2l1.5-1"/><path d="M12 16.8v5.4M10.1 18.6h3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span>
-            Mirror, mirror&hellip; tap for a little something extra
-          </button>
-          <p class="mirror-result" role="status" aria-live="polite" hidden></p>
-        </div>
-
-        <p class="success-sub">Your deposit goes toward your total — the balance is due at
+        <p class="success-sub booking-success-sub">Your deposit goes toward your total — the balance is due at
         your visit (cash preferred, card with a fee). A confirmation email is on its way.
         Demo mode: no card was charged.</p>
 
@@ -1649,7 +1613,7 @@
             <span class="acct-points">0</span>
             <span class="acct-glow-label">Glow Points ✦</span>
           </div>
-          <button class="btn btn-ghost acct-open-rewards" type="button">Open Glow Rewards</button>
+          <button class="btn btn-ghost acct-open-rewards" type="button">History, referrals and birthday</button>
         </div>
 
         <p class="booking-label" data-feature="membership">Membership</p>
@@ -1889,22 +1853,21 @@
       <div class="rw-bar" aria-hidden="true"><span class="rw-bar-fill"></span></div>
       <p class="rw-progress-note"></p>
 
-      <!-- signed-out visitors: the welcome bonus (50 ✦ on first sign-in) -->
+      <!-- signed-out visitors: one place for their points -->
       <div class="rw-signup" hidden>
-        <p>New to Glow Rewards? <strong>Sign in and take 50 ✦ on us</strong> —
-        that's halfway to your first $10 off.</p>
-        <button class="btn btn-solid rw-signup-btn" type="button">Sign in · claim 50 ✦</button>
+        <p>Sign in with your email to keep your points, history and referral code in one place.
+        <strong>Your first booking here comes with 100 points.</strong></p>
+        <button class="btn btn-solid rw-signup-btn" type="button">Sign in</button>
       </div>
 
       <p class="booking-label">How to earn</p>
       <ul class="rw-rules" role="list">
-        <li><span aria-hidden="true">✦</span> 1 point per $1 on deposits &amp; gifts paid here</li>
+        <li><span aria-hidden="true">✦</span> 1 point per $1 on visits, products and gift certificates, paid here or at the studio</li>
+        <li><span aria-hidden="true">+</span> 100 points for your first booking on this website</li>
         <li><span aria-hidden="true">✦✦</span> Double points on Wax Wednesday sessions</li>
         <li><span aria-hidden="true">↻</span> +25 points when your next visit is within 5 weeks of your last (non-members; handed back if you cancel it)</li>
-        <li><span aria-hidden="true">⚡</span> The starred flash opening each day is 10% off</li>
-        <li><span aria-hidden="true">🎂</span> +50 points once a year in your birthday month</li>
         <li><span aria-hidden="true">✉</span> Refer a friend: they get $15 off their first visit, you get 150 points ($15) when it’s done</li>
-        <li><span aria-hidden="true" class="rw-mirror"><svg class="mirror-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .8l1.3 1.5h-2.6z" fill="currentColor"/><ellipse cx="12" cy="9.4" rx="6.3" ry="7.3" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse class="mirror-glass" cx="12" cy="9.4" rx="4.3" ry="5.3"/><path class="mirror-shine" d="M9.6 6.8l2.7-1.8M9.7 9.2l1.5-1"/><path d="M12 16.8v5.4M10.1 18.6h3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></span> Magic mirror after every confirmed booking</li>
+        <li><span aria-hidden="true">✦</span> +50 points once a year in your birthday month</li>
       </ul>
       <p class="rw-fine">100 points = $10 off · points cover up to half of any deposit.</p>
 
@@ -1967,6 +1930,7 @@
   <script src="js/hours.js"></script>
   <script src="js/services.js"></script>
   <script src="js/booking.js"></script>
+  <script src="js/manage.js"></script>
   <script src="js/service-sheet.js"></script>
   <script src="js/book-section.js"></script>
   <script src="js/shop.js"></script>
