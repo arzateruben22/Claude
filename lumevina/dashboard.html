@@ -361,6 +361,30 @@
     .crm-plan-view li { margin: 0.12rem 0; }
     .crm-plan-view small { color: var(--ink-45); }
     .crm-plan-empty { margin: 0.5rem 0 0.8rem; font-size: 0.85rem; color: var(--ink-60); max-width: 44rem; }
+    .crm-mem { list-style: none; margin: 0.1rem 0 0; padding: 0; display: grid; gap: 0.2rem; }
+    .crm-mem small { color: var(--ink-45); }
+    /* Teach the chat (js/studio-learn.js) */
+    #teach { margin-bottom: 1.4rem; }
+    .tc-msg { margin: 0 0 0.8rem; font-size: 0.85rem; color: var(--good); }
+    .tc-msg:empty { display: none; }
+    .tc-msg.is-bad { color: var(--bad); }
+    .tc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+    .tc { display: grid; gap: 0.6rem; padding: 1rem; border: 1px solid var(--edge); border-radius: 14px; background: var(--panel); }
+    .tc-from { margin: 0; font-size: 0.75rem; color: var(--ink-45); }
+    .tc-k { display: grid; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
+    .tc-k input, .tc-k textarea, .tc-new input, .tc-new textarea { font: inherit; font-size: 0.9rem; padding: 0.55rem 0.7rem; border: 1px solid var(--edge);
+      border-radius: 10px; background: #161616; color: var(--ink); width: 100%; resize: vertical; }
+    .tc.is-known { gap: 0.3rem; }
+    .tc-kq { margin: 0; font-weight: 600; color: var(--plum); font-size: 0.9rem; }
+    .tc-ka { margin: 0; font-size: 0.86rem; color: var(--ink-70); white-space: pre-wrap; }
+    .tc.is-known .settle-btn { justify-self: start; margin-top: 0.3rem; }
+    .tc-add { margin-top: 1rem; }
+    .tc-add summary, .tc-known summary { cursor: pointer; font-size: 0.85rem; color: var(--ink-60); }
+    .tc-new { display: grid; gap: 0.6rem; margin-top: 0.7rem; max-width: 40rem; }
+    .tc-new label { display: grid; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
+    .tc-new .bk-export { justify-self: start; }
+    .cq-teach { display: flex; align-items: center; gap: 0.45rem; margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--ink-60); cursor: pointer; }
+    .cq-teach input { accent-color: var(--mauve); }
     .crm-plan-btn { font: inherit; font-size: 0.8rem; color: var(--ink); background: none; border: 1px solid var(--edge); border-radius: 999px; padding: 0.4rem 0.9rem; cursor: pointer; }
     .crm-plan-btn:hover { border-color: var(--ink-45); }
     .pe { display: grid; gap: 0.9rem; margin-top: 0.8rem; }
@@ -683,6 +707,9 @@
       <details class="cq-done" id="cq-done" hidden><summary></summary><ul class="cq-list" id="cq-done-list"></ul></details>
     </div>
 
+    <!-- ── Teach the chat: her replies become answers for everyone, once she approves (js/studio-learn.js) ── -->
+    <div class="card" id="teach"></div>
+
     <!-- ── Settle visits (collect the in-person balance). v2 only: in v3,
          Appointments above checks out each visit. ── -->
     <div class="card" id="settle">
@@ -927,6 +954,7 @@
   <script src="js/services.js"></script>
   <script src="js/payments.js"></script>
   <script src="js/studio-appointments.js"></script>
+  <script src="js/studio-learn.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
@@ -2482,9 +2510,16 @@
       planBox.className = "crm-plan";
       detail.appendChild(planBox);
       showPlan(planBox, c);
+      /* what they told us in My Lumevina, and the chat's notes (js/studio-learn.js) */
+      var profileBox = document.createElement("div");
+      profileBox.className = "crm-plan";
+      if (window.LumevinaStudioProfile && c.email) { window.LumevinaStudioProfile.attach(profileBox, c.email); detail.appendChild(profileBox); }
       li.appendChild(detail);
 
-      sum.addEventListener("click", function () { li.classList.toggle("open"); });
+      sum.addEventListener("click", function () {
+        li.classList.toggle("open");
+        if (li.classList.contains("open") && profileBox.load) profileBox.load();
+      });
       return li;
     };
 
@@ -2643,6 +2678,8 @@
       return '<li class="cq' + (q.member ? " is-member" : "") + (q.kind === "urgent" ? " is-urgent" : "") + '" data-id="' + esc(q.id) + '">' + top +
         '<label class="cq-draft-k" for="cq-' + esc(q.id) + '">Drafted reply · check it and change anything</label>' +
         '<textarea id="cq-' + esc(q.id) + '">' + esc(q.draft || "") + '</textarea>' +
+        /* everyday skin questions can teach the chat; medical and personal ones never do */
+        (q.kind === "skin" || q.kind === "other" ? '<label class="cq-teach"><input type="checkbox" data-teach checked> Teach the chat from this reply (you check it first, in Teach the chat)</label>' : "") +
         '<div class="cq-actions"><button type="button" class="cq-send" data-do="send">Send reply</button>' +
         '<button type="button" class="settle-btn" data-do="handled">Handled another way</button>' +
         '<span class="cq-hint">' + esc(q.email) + '</span></div><p class="cq-msg" role="alert"></p></li>';
@@ -2702,9 +2739,11 @@
         /* the server emails the reply (she's the reply-to) and marks it answered */
         li.querySelectorAll("button").forEach(function (x) { x.disabled = true; });
         li.querySelector(".cq-msg").textContent = "";
-        call({ action: "answer", id: q.id, reply: reply }).then(function (j) {
+        var teachBox = li.querySelector("[data-teach]"), teach = !!(teachBox && teachBox.checked);
+        call({ action: "answer", id: q.id, reply: reply, teach: teach }).then(function (j) {
           q.status = "answered"; q.answeredAt = new Date().toISOString(); q.reply = reply;
           paint();
+          if (j && j.lesson) document.dispatchEvent(new Event("lumevina:lessons"));
           if (reply && j && j.emailed === false) alert("Saved, but the email didn't go out (is email set up? GO-LIVE.md). Send it to " + q.email + " yourself this time.");
         }, function (err) {
           li.querySelectorAll("button").forEach(function (x) { x.disabled = false; });
@@ -2713,6 +2752,8 @@
         });
         return;
       }
+      var teachLocal = li.querySelector("[data-teach]");
+      if (reply && teachLocal && teachLocal.checked && window.LumevinaTeach) window.LumevinaTeach.suggestFrom(q, reply);
       q.status = "answered";
       q.answeredAt = new Date().toISOString();
       q.reply = reply;

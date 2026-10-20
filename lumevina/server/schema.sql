@@ -323,6 +323,61 @@ create policy "clients read their own plan" on client_plans
 -- writes happen only in functions/client-plans (service role, studio key).
 
 -- ─────────────────────────────────────────────────────────────
+-- Skin profiles and what the chat remembers: each client's own.
+-- The profile is what they tell us in My Lumevina (skin, what they're
+-- working on, the products they use morning and night, supplements,
+-- treatments they've had, what their skin reacts to, their goal), saved
+-- only with their yes. The memory is what they've told the chat since
+-- (functions/ask → remember), one short line each, which they can see and
+-- delete. Both go into their chat file and Evelyn's view of them, and
+-- never to anyone else. Writes happen only in functions/profile and
+-- functions/ask (service role); see functions/_shared/profiles.ts.
+-- ─────────────────────────────────────────────────────────────
+create table client_profiles (
+  email text primary key check (email = lower(email)),
+  profile jsonb not null,          -- { skinType, concerns[], goal, morning, night, weekly,
+                                   --   supplements, treatments, sensitivities }
+  consent_at timestamptz not null, -- when they said yes to saving it
+  updated_at timestamptz not null default now()
+);
+alter table client_profiles enable row level security;
+create policy "clients read their own profile" on client_profiles
+  for select using (email = lower(auth.jwt() ->> 'email'));
+
+create table client_memory (
+  id uuid primary key default gen_random_uuid(),
+  email text not null check (email = lower(email)),
+  kind text not null default 'other'
+    check (kind in ('skin', 'concern', 'product', 'supplement', 'treatment', 'sensitivity', 'goal', 'other')),
+  fact text not null,              -- "Uses CeraVe Hydrating Cleanser at night"
+  source text not null default 'chat' check (source in ('chat', 'evelyn')),
+  created_at timestamptz not null default now()
+);
+create index client_memory_email on client_memory (email, created_at desc);
+alter table client_memory enable row level security;
+create policy "clients read their own memory" on client_memory
+  for select using (email = lower(auth.jwt() ->> 'email'));
+
+-- ─────────────────────────────────────────────────────────────
+-- What the chat learns from Evelyn. When she replies to a question the
+-- chat handed her, Claude suggests a general version of it (no names, no
+-- details about that client); she approves, edits or dismisses it in the
+-- dashboard (Teach the chat), and approved answers join what the chat
+-- knows for everyone (functions/ask). Server only: no policies.
+-- ─────────────────────────────────────────────────────────────
+create table learned_answers (
+  id uuid primary key default gen_random_uuid(),
+  question text not null,
+  answer text not null,
+  kind text,
+  source_question uuid references questions (id) on delete set null,
+  status text not null default 'suggested' check (status in ('suggested', 'approved', 'dismissed')),
+  created_at timestamptz not null default now(),
+  decided_at timestamptz
+);
+alter table learned_answers enable row level security;
+
+-- ─────────────────────────────────────────────────────────────
 -- Shipping: everything that goes out by mail (js/shipping.js)
 -- Shelf orders, Glow Routine boxes and Skin School kits. stripe-webhook
 -- inserts a row for each paid order that ships (payment_intent.succeeded

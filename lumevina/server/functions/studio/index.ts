@@ -26,6 +26,11 @@
 // POST { action: "hours_get" } / { action: "hours_set", value }   her hours (site_settings → js/hours.js)
 // POST { action: "extra_mondays_set", every: 0 | 1 | 2 }  extra Mondays (site_settings → js/extra-days.js)
 // POST { action: "members" }                       → { members }  every membership with its facials and billing
+// POST { action: "client_profile", email }         → { profile, updated_at, memories }  what a client told us, and the chat
+// POST { action: "lessons" }                       → { lessons }  suggested and approved answers (Teach the chat)
+// POST { action: "lesson_save", id, question?, answer?, status? }   edit, approve ("approved") or dismiss ("dismissed")
+// POST { action: "lesson_add", question, answer }  one of her own, approved
+// "answer" also suggests a general answer from her reply (teach: false to skip): ../_shared/learn.ts
 //
 // Deploy:  supabase functions deploy studio --no-verify-jwt
 // Secrets: STUDIO_KEY, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, OWNER_EMAIL (+ RESEND_API_KEY for replies)
@@ -40,6 +45,8 @@ import { EMAIL, norm, unsubscribeUrl } from "../_shared/contacts.ts";
 import { cleanHours, cleanMondays } from "../_shared/hours.ts";
 import { FIRST_BOOKING_BONUS } from "../_shared/points.ts";
 import { PLANS } from "../_shared/membership.ts";
+import { getProfile, memories } from "../_shared/profiles.ts";
+import { suggestLesson } from "../_shared/learn.ts";
 import { site } from "../_shared/bookings.ts";
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
@@ -159,7 +166,9 @@ Deno.serve(async (req) => {
           `<p style="margin-top:20px;font-size:13px;color:#7D5A44">You asked: “${esc(q.text)}”<br>Reply to this email to write back to Evelyn.</p>`),
           Deno.env.get("OWNER_EMAIL") ?? undefined);
       }
-      return json({ ok: true, emailed });
+      /* a general answer for the chat, from her reply, for her to approve */
+      const lesson = reply && body.teach !== false ? await suggestLesson(db, q, reply) : null;
+      return json({ ok: true, emailed, lesson });
     }
     case "contacts": {
       const q = String(body.q ?? "").trim().toLowerCase().replace(/[%,()]/g, "");
@@ -234,6 +243,36 @@ Deno.serve(async (req) => {
       const every = cleanMondays({ every: body.every });
       await db.from("site_settings").upsert({ key: "extra_mondays", value: { every }, updated_at: new Date().toISOString() });
       return json({ every });
+    }
+    case "client_profile": {
+      const email = norm(body.email);
+      if (!EMAIL.test(email)) return json({ reason: "email" }, 400);
+      const p = await getProfile(db, email);
+      const mem = await memories(db, email, 60);
+      return json({ profile: p?.profile ?? null, updated_at: p?.updated_at ?? null,
+        memories: mem.map((m) => ({ id: m.id, kind: m.kind, fact: m.fact, at: m.created_at })) });
+    }
+    case "lessons": {
+      const { data } = await db.from("learned_answers").select("id, question, answer, kind, status, created_at, decided_at")
+        .in("status", ["suggested", "approved"]).order("created_at", { ascending: false }).limit(200);
+      return json({ lessons: data ?? [] });
+    }
+    case "lesson_save": {
+      const id = String(body.id ?? "");
+      const patch: Record<string, unknown> = {};
+      if (typeof body.question === "string" && body.question.trim()) patch.question = body.question.trim().slice(0, 300);
+      if (typeof body.answer === "string" && body.answer.trim()) patch.answer = body.answer.trim().slice(0, 1500);
+      if (["approved", "dismissed", "suggested"].includes(body.status)) { patch.status = body.status; patch.decided_at = new Date().toISOString(); }
+      if (!Object.keys(patch).length) return json({ reason: "nothing" }, 400);
+      const { data } = await db.from("learned_answers").update(patch).eq("id", id).select("id, question, answer, kind, status, created_at, decided_at").maybeSingle();
+      return data ? json({ lesson: data }) : json({ reason: "not_found" }, 404);
+    }
+    case "lesson_add": {
+      const question = String(body.question ?? "").trim().slice(0, 300), answer = String(body.answer ?? "").trim().slice(0, 1500);
+      if (!question || !answer) return json({ reason: "empty" }, 400);
+      const { data } = await db.from("learned_answers").insert({ question, answer, kind: "evelyn", status: "approved", decided_at: new Date().toISOString() })
+        .select("id, question, answer, kind, status, created_at, decided_at").single();
+      return json({ lesson: data });
     }
     case "members": {
       const { data } = await db.from("memberships").select("*").order("created_at", { ascending: false }).limit(200);

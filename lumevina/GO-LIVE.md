@@ -75,7 +75,16 @@ One switch, when Evelyn is ready: everything below is built and tested; it needs
    - [ ] Book for a client from the dashboard with "email a card link"; the client adds a card from the email.
    - [ ] The hourly run: a reminder email for a booking 3 days out; the text the day before (if Twilio is set up).
    - [ ] Glow Points: the first booking shows 100 + the deposit's points in My Lumevina.
+   - [ ] Skin profile: sign in, My Lumevina → Build my skin profile, save it; ask the chat a prep question that mentions a product you use ("I use a vitamin C serum…"): the answer fits, and "Noted in your skin profile" appears; forget the note in My Lumevina.
+   - [ ] Teach the chat: answer an everyday skin question in Client questions with "Teach the chat" ticked; a general version appears in Teach the chat; approve it; ask the chat the same question from another browser and it answers in her words.
 5. **Switch:** set `version: "v3"` in `js/site-config.js` and publish. Then Clients → **Invite**: one email to each imported client (their first booking here comes with 100 Glow Points; anything already booked on GlossGenius stands).
 6. **The weeks after:** GlossGenius appointments already booked stay on her calendar (the two calendars keep seeing each other through Google). Once none are left, GlossGenius can be cancelled.
 
 Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep the founding rate, **$175** and **$225**, for as long as they stay.
+
+## 7. Making the chat know Evelyn (any time, v2 or v3)
+
+- [ ] **Her 10 minutes:** the Skin Playbook link → Talk it through → **Start the 10 minutes**. Claude asks the 26 questions clients ask most, one after another; she talks or types. Her answers save as she goes; then they're exported, imported and bundled for the chat (`knowledge/README.md`, steps 3 and 4), and `ask` is redeployed.
+- [ ] The rest of the playbook whenever she likes (Claude picks, or a topic).
+- [ ] After that it grows by itself, with her approval: every everyday question she answers becomes a suggested answer in **Teach the chat**, and each signed-in client's skin profile and notes make answers specific to them.
+

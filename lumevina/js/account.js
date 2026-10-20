@@ -357,6 +357,7 @@
     renderCredit();
     renderMember();
     renderPlan();
+    if (window.LumevinaProfile) window.LumevinaProfile.paint();   /* your skin profile (js/profile.js) */
   };
 
   /* ── Your skin plan, from Evelyn (js/skin-plans.js) ── */

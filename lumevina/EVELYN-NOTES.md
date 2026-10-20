@@ -274,3 +274,19 @@ Ruben, Oct 20: give clients and Evelyn no reason to keep booking through GlossGe
 
 **To ask her:** the no-show fee (50% of the service, with the deposit counting toward it, or on top of it?); her Google review link; whether she wants text reminders (Twilio, about $2 a month plus a cent a text, after a few days' registration); the studio address for confirmations.
 
+## The chat learns: her 10 minutes, client profiles, and Teach the chat (Oct 20)
+
+Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, nonstop, in 5 to 10 minutes; a profile for every client (the products, supplements and services they use and have had) that the chat remembers and gets better from.
+
+**Her 10 minutes.** The Skin Playbook link now opens Talk it through on the **10-minute version**: the 26 questions clients ask most, one after another (before a visit, right after, routines, results, which facial, facial aftercare, the order of a routine, what not to mix, a first visit, and her hard lines). A line under the question says where she is ("12 of 26 · about 5 minutes left") with a thin progress bar; after each answer the box is ready for the next one, so she can keep talking (the keyboard's mic, or the questions read aloud). At the end Claude thanks her and stops. Everything else in the playbook can wait ("Claude picks", or a topic). A conversation she already started gets a "Switch to the 10-minute version" link. Same link as before; her saved answers are untouched.
+
+**Every client's skin profile.** In My Lumevina, signed in: **Build my skin profile**, nine short questions in about two minutes, one at a time (tap for skin type and concerns, a line for the rest): what they use morning and night (any brand), anything weekly, supplements, treatments they've had here or elsewhere and roughly when, what their skin reacts to, and their goal. Then they look it over and tick a box to save it. They can edit or delete it any time. Medicines and health conditions aren't asked for here: those stay on the pre-visit form, for Evelyn.
+
+**The chat remembers.** When a signed-in client tells the chat something lasting ("I take collagen every morning", "fragrance breaks me out"), it keeps a one-line note, shows "Noted in your skin profile" under its answer, and knows it next time. Clients see every note in My Lumevina and can forget one or all. It never keeps medicines, prescriptions, pregnancy or conditions, and it never advises on supplements (those questions go to Evelyn). With a profile, the chat answers from her playbook made specific to the client (for example, naming which of their products to stop before a facial); anything that changes their routine still goes to her.
+
+**Evelyn sees it all.** Each client's card in the dashboard's Clients now shows their skin profile and what they've told the chat.
+
+**Teach the chat.** When she answers an everyday skin question in Client questions (with "Teach the chat" ticked, the default for those), Claude writes a general version of her answer: no names, nothing about that client, in her words, nothing added. It waits in the new **Teach the chat** card; she checks it, edits it, and taps Approve, and from then on the chat answers that question for every client. She can add her own answers there too, and remove any. Questions about reactions, pregnancy, medication, conditions and emergencies are never suggested.
+
+**How it "gets better", honestly:** Claude isn't retrained on anyone's data. It gets better three ways, all visible and all hers to control: her playbook (the 10 minutes, then the rest), the answers she approves in Teach the chat, and each client's own profile and notes, which only that client and Evelyn ever see.
+

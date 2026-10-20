@@ -9,12 +9,14 @@
 //   log: [{ at: "YYYY-MM-DD", text }]               her visit notes, newest first
 //
 // clientFile() gathers what the assistant may know about a signed-in client:
-// the plan, a few answers from their pre-visit form, their visits, and the
-// questions Evelyn has already answered for them.
+// the plan, their skin profile and what they've told the chat before
+// (profiles.ts), a few answers from their pre-visit form, their visits, and
+// the questions Evelyn has already answered for them.
 
 // deno-lint-ignore-file no-explicit-any
 import { CATALOG } from "./catalog.ts";
 import { SHELF } from "./knowledge.ts";
+import { profileParts } from "./profiles.ts";
 
 export const SKIN_TYPES = ["Dry", "Normal", "Combination", "Oily", "Sensitive", "Acne-prone"];
 
@@ -84,13 +86,14 @@ export async function clientFile(db: any, email: string, clientId: string | null
   const visits = (col: string, v: string): Promise<any[]> => db.from("bookings").select("id, date, services")
     .eq(col, v).in("status", ["pending", "held", "completed"]).order("date", { ascending: false }).limit(8)
     .then((r: any) => r.data ?? [], () => []);
-  const [planRow, intake, asGuest, asClient, answered] = await Promise.all([
+  const [planRow, intake, asGuest, asClient, answered, mine] = await Promise.all([
     db.from("client_plans").select("plan, updated_at").eq("email", email).maybeSingle().then((r: any) => r.data, () => null),
     db.from("intake_forms").select("answers, signed_at").eq("email", email).maybeSingle().then((r: any) => r.data, () => null),
     visits("guest_email", email),
     clientId ? visits("client_id", clientId) : Promise.resolve([] as any[]),
     db.from("questions").select("text, reply, answered_at").eq("email", email).eq("status", "answered")
       .order("answered_at", { ascending: false }).limit(4).then((r: any) => r.data ?? [], () => []),
+    profileParts(db, email).catch(() => ({ parts: [] as string[], hasProfile: false, supplements: false })),
   ]);
   const seen = new Set();
   const bookings = [...asGuest, ...asClient].filter((b: any) => !seen.has(b.id) && seen.add(b.id))
@@ -99,6 +102,7 @@ export async function clientFile(db: any, email: string, clientId: string | null
   const parts: string[] = [];
   const plan = planRow ? cleanPlan(planRow.plan) : null;
   if (plan) parts.push(planText(plan, planRow.updated_at));
+  parts.push(...mine.parts);
 
   const a = intake?.answers ?? null;
   if (a) {
@@ -137,5 +141,5 @@ export async function clientFile(db: any, email: string, clientId: string | null
   }
 
   if (!parts.length) return null;
-  return { hasPlan: !!plan, plan, text: parts.join("\n\n") };
+  return { hasPlan: !!plan, plan, hasProfile: mine.hasProfile, supplements: mine.supplements, text: parts.join("\n\n") };
 }

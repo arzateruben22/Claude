@@ -56,6 +56,7 @@
 
   /* ── who's asking, and the plan Evelyn wrote for them ── */
   var PL = window.LumevinaPlans;
+  var myProfile = function () { return !!(window.LumevinaProfile && window.LumevinaProfile.has()); };
   var myPlan = function () {
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
     var p = s && PL ? PL.get(s.email) : null;
@@ -571,6 +572,7 @@
     var who = me();
     bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! " + (myPlan()
       ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
+      : myProfile() ? "I have your skin profile, so ask me about prep, aftercare, products or booking and I’ll keep your routine in mind. Changes to your routine, I’ll pass to Evelyn."
       : "Ask me about prices, booking, prep, aftercare or products, or where your order is. Anything about your own skin, I’ll pass to Evelyn.")));
     var answered = {};
     replies().forEach(function (q) { answered[q.id] = q; });
@@ -580,6 +582,8 @@
     state.log.forEach(function (m, i) {
       if (m.who === "you") bubble("you", esc(m.text));
       else if (m.who === "bot") bubble("bot", esc(m.text) + actsHtml(m.acts, i === lastBot && !state.pending), m.warn ? "warn" : "");
+      else if (m.who === "note") bubble("note", '<span class="ask-tag">Noted in your skin profile</span>' + esc(m.text) +
+        ' <button type="button" class="ask-note-see" data-act="account">See or change it</button>');
       else if (m.who === "sent") {
         bubble("bot", '<span class="ask-tag">Sent to Evelyn' + (m.photos ? " · " + m.photos + (m.photos === 1 ? " photo" : " photos") : "") + '</span>' + esc(m.text));
         var q = answered[m.qid];
@@ -664,8 +668,8 @@
     if (!ENDPOINT || /^about my skin:/i.test(text)) return false;
     var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
     var rk = RULES ? RULES.kind(raw, t) : null;
-    /* a "my skin" question still goes to the server when it can see this client's plan */
-    if (rk && !(rk === "skin" && token() && myPlan())) return false;
+    /* a "my skin" question still goes to the server when it can see this client's plan or skin profile */
+    if (rk && !(rk === "skin" && token() && (myPlan() || myProfile()))) return false;
     var who = me();
     bubble("bot", "…", "thinking");
     logEl.scrollTop = logEl.scrollHeight;
@@ -675,6 +679,8 @@
         var links = (Array.isArray(r.links) ? r.links : []).filter(function (l) { return l && /^https:\/\//.test(l.url); })
           .slice(0, 3).map(function (l) { return [String(l.label || "Track my package"), "go:" + l.url]; });
         settle(text, { answer: answer, acts: bagActs(ids).concat(links, nextActs(answer, ids.length > 0)) });
+        noted(Array.isArray(r.remembered) ? r.remembered.map(String) : []);
+        if (r.remembered && window.LumevinaProfile) window.LumevinaProfile.remembered();
       } else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "" });
       else settle(text, classify(text));
     }, function () { settle(text, classify(text)); });
@@ -686,7 +692,17 @@
     if (!text) return;
     push({ who: "you", text: text });
     if (giftCheck(text)) return;
-    if (!remote(text)) settle(text, classify(text));
+    if (!remote(text)) {
+      settle(text, classify(text));
+      /* demo: what a signed-in client says about their own routine is noted in their skin profile */
+      if (!ENDPOINT && window.LumevinaProfile) noted(window.LumevinaProfile.learn(text));
+    }
+  };
+  /* a quiet line under the answer: what the chat kept for next time, and where to see it */
+  var noted = function (facts) {
+    if (!facts || !facts.length) return;
+    push({ who: "note", text: facts.join(" · ") });
+    render();
   };
   var settle = function (text, r) {
     if (r.unclear) {

@@ -14,17 +14,18 @@ below is the checklist.
 | `functions/book/` | (v3) Website booking: prices the visit, checks her hours and both calendars, holds the time, and opens Stripe Checkout for the deposit and the card on file; get, move, cancel, waitlist, and a client's own list |
 | `functions/membership/` | (v3) Glow Membership on Stripe Billing: plans and founding spots, join, and the member's pause, cancel, keep, billing card and gift |
 | `functions/rewards/` | (v3) A signed-in client's Glow Points, history, referral link and birthday month |
+| `functions/profile/` | A signed-in client's skin profile and the chat's notes about them: see, save (with their yes), forget, delete |
 | `functions/studio-book/` | (v3) Evelyn's Appointments: the list, checkout at the visit (tip, products, card on file, cash or a pay link), fees, cancel, booking for a client, card requests, the waitlist |
 | `functions/client-reminders/` | (v3) Run hourly: reminder email, the day-before text, review request, rebook nudge, running-low refill, each once |
 | `functions/client-prefs/` | (v3) The unsubscribe link in client emails |
 | `functions/availability/` | Busy times for the booking calendar: website bookings plus her Google Calendar (where GlossGenius writes) |
 | `functions/stripe-webhook/` | Every Stripe event: paid orders, bookings, saved cards, visit pay links, membership invoices and subscription changes |
 | `functions/calendar-feed/` | Her appointments as a private calendar feed (.ics) |
-| `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
+| `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts and the answers Evelyn approved, specific to a signed-in client's profile; remembers what they tell it; hands personal ones to Evelyn with a drafted reply |
 | `functions/gift-cards/` | Gift certificates: check a balance, use one at the visit (studio key), list them, sell one in person |
 | `functions/client-plans/` | Skin plans: Evelyn writes each client's routine (studio key); the signed-in client reads theirs |
 | `functions/create-checkout/` | The shop's real checkout: prices the cart from the products table and opens Stripe Checkout (cards, Apple/Google Pay, pay-over-time, Stripe Tax, shipping or pickup, gift certificates) |
-| `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices, client questions; in v3 also her hours and extra Mondays, the GlossGenius client import and invitation, and the members list (studio key) |
+| `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices, client questions; in v3 also her hours and extra Mondays, the GlossGenius client import and invitation, the members list, each client's skin profile, and Teach the chat (studio key) |
 | `functions/studio-digest/` | Her morning email and notification; sends gift certificates dated for today (run daily by cron) |
 | `functions/_shared/orders.ts`, `notify.ts`, `mail.ts`, `sms.ts` | Finishing a paid order; alerting Evelyn (feed, push, email); sending email and texts |
 | `functions/_shared/bookings.ts`, `visits.ts`, `membership.ts`, `points.ts`, `contacts.ts`, `hours.ts`, `stripe.ts` | (v3) Pricing and confirming a booking, cancelling, the policy; checking out a visit; membership credits and billing hold; Glow Points; client records; her hours and extra Mondays; Stripe calls |
@@ -60,8 +61,8 @@ site's address (that browser only); the dashboard follows the same switch.
 ### Checklist
 
 1. **Schema.** Run the current `schema.sql` (new: `contacts`, `waitlist`,
-   `sent_messages`, `site_settings`, and new columns on `bookings` and
-   `memberships`).
+   `sent_messages`, `site_settings`, `client_profiles`, `client_memory`,
+   `learned_answers`, and new columns on `bookings` and `memberships`).
 2. **Secrets.**
 
    ```sh
@@ -81,7 +82,7 @@ site's address (that browser only); the dashboard follows the same switch.
 3. **Deploy.**
 
    ```sh
-   for f in book membership rewards studio-book studio client-reminders client-prefs availability stripe-webhook ask; do
+   for f in book membership rewards studio-book studio client-reminders client-prefs availability stripe-webhook ask profile; do
      supabase functions deploy $f --no-verify-jwt
    done
    ```
@@ -176,6 +177,57 @@ after the cached part, for that request only. With a plan on file, "what do
 I use tonight?" is answered from it instead of waiting for her; changing the
 plan, a reaction, pregnancy, medications and named conditions still go to
 her, and her drafted reply for those uses the same file.
+
+## Skin profiles, the chat's memory, and learning from Evelyn
+
+**Skin profile** (`client_profiles`, `functions/profile`, `js/profile.js`).
+In My Lumevina a signed-in client answers nine short questions in about two
+minutes: skin type, what they're working on, what they use morning and
+night (any brand), anything weekly, supplements, treatments they've had
+here or elsewhere, what their skin reacts to, and their goal. It's saved
+only with their yes (`consent: true`), and they can edit or delete it.
+Medicines and health conditions aren't asked for here; those stay on the
+pre-visit form.
+
+**The chat's memory** (`client_memory`). `functions/ask` offers Claude a
+`remember` tool: when a signed-in client tells it something lasting about
+their skin or routine ("I take collagen every morning"), it saves one short
+line. The server refuses anything about medicines, prescriptions, pregnancy
+or conditions, skips repeats, and keeps the newest 60. The client sees each
+note in My Lumevina and can forget one or all; the chat shows "Noted in your
+skin profile" under its answer when it keeps one.
+
+Both go into the client's file (`_shared/profiles.ts` → `profileParts`), so
+answers from Evelyn's playbook come out specific to them. A "my skin"
+question from a client with a profile now reaches Claude instead of going
+straight to Evelyn (as it already did with a plan); Claude still hands her
+anything that changes their routine, and never advises on supplements.
+Evelyn sees the profile and the notes on each client's card (`studio` →
+`client_profile`).
+
+| `profile` action | What |
+| --- | --- |
+| `get` | the profile and the chat's notes |
+| `save` (`profile`, `consent: true`) | saves it |
+| `forget` (`id`) / `forget_all` | one note, or all of them |
+| `delete` | the profile and every note |
+
+**Learning from Evelyn** (`learned_answers`, `_shared/learn.ts`). When she
+sends a reply from Client questions to an everyday question (kind `skin` or
+`other`, with "Teach the chat" ticked), Claude reads the question and her
+reply and, if there's a general answer in it, writes one: no names, nothing
+about that client, in her words, nothing added. It waits in the dashboard's
+**Teach the chat** card until she approves it (editing first if she likes)
+or dismisses it; she can also add her own and remove any. Approved answers
+go into every chat, after the playbook, cached like it. Reactions,
+pregnancy, medication, conditions and emergencies are never suggested. This
+is how the chat gets better: her playbook, her approved answers, and each
+client's own profile. Claude itself isn't retrained on anyone's data.
+
+```sh
+supabase functions deploy profile --no-verify-jwt
+# ask and studio carry the rest; ANTHROPIC_API_KEY is already set for ask
+```
 
 **Sign-in links.** My Lumevina signs clients in with Supabase Auth's emailed
 link (no password, no extra library: `js/account.js`). In Supabase → Authentication:

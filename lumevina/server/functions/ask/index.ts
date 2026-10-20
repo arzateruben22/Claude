@@ -59,6 +59,8 @@ import {
   BUILT_AT, PROMPT, FACTS, FACTS_V3, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
 } from "../_shared/knowledge.ts";
 import { clientFile } from "../_shared/plans.ts";
+import { MEMORY_KINDS, remember } from "../_shared/profiles.ts";
+import { learnedBlock } from "../_shared/learn.ts";
 import { notifyOwner } from "../_shared/notify.ts";
 import { EMAIL, giftBalance, lookUpOrder } from "../_shared/lookups.ts";
 import { readPhotos, savePhotos, type Photo } from "../_shared/photos.ts";
@@ -125,16 +127,18 @@ const stockBlock = async (db: ReturnType<typeof admin>) => {
 };
 
 // the signed-in client's file: after the cached part, never cached, never shown to anyone else
-const fileBlock = (name: string, file: { hasPlan: boolean; text: string }) => [
+const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean; supplements?: boolean; text: string }) => [
   `# The client you're talking to`,
   `${name || "This client"} is signed in. Their file, from Evelyn's records:`,
   file.text,
   `How to use this file:`,
   file.hasPlan
     ? `- Answer questions about their own routine from Evelyn's plan: which product, when, in what order, how much, how often, what to avoid, what comes next. Say it's from the plan Evelyn wrote for them, and use their first name now and then.`
-    : `- Evelyn hasn't written a plan for them yet, so questions about their own routine go to her with hand_to_evelyn (kind "skin").`,
+    : `- Evelyn hasn't written a plan for them yet. You may answer from her playbook, made specific with their profile below; anything about changing their routine (which products to add, stop or swap for their skin) goes to her with hand_to_evelyn (kind "skin").`,
   `- Never change or add to the plan. Adding, stopping or swapping a product, moving up a strength, a new concern, or anything about how their skin is reacting goes to Evelyn with hand_to_evelyn.`,
   `- If anything under "Cautions on file" bears on the question, hand it to Evelyn.`,
+  `- Their skin profile and what they've told you before are in their own words. Use them to make an answer from Evelyn's playbook specific to them (for example, when they ask what to stop before a facial, name the products they listed that it applies to). Don't recommend changes to their routine yourself: that goes to Evelyn.`,
+  ...(file.supplements ? [`- They take supplements. Never advise on supplements (whether to take, stop, mix or dose one); hand any supplement question to Evelyn with kind "skin".`] : []),
   `- The file is theirs, so you may tell them what's in it. Keep answers as short as always.`,
 ].join("\n\n");
 
@@ -192,7 +196,23 @@ const SHOW_TOOL = {
   },
 } as const;
 
-const TOOLS = [HANDOFF_TOOL, ORDER_TOOL, GIFT_TOOL, SHOW_TOOL];
+const REMEMBER_TOOL = {
+  name: "remember",
+  description: "Only for a signed-in client. When they tell you something lasting about themselves that isn't already in their file, save it so later chats know it: their skin type, a concern, a product they use (any brand, and when), a supplement they take, a treatment they've had (here or elsewhere, and roughly when), something their skin reacts to, or a goal. One short line in the third person, in their words (\"Uses CeraVe Hydrating Cleanser at night\", \"Had a chemical peel elsewhere in August\"). Never save medications, prescriptions, pregnancy or health conditions (those are for Evelyn), anything about someone else, or guesses. Call it alongside your answer; don't mention it unless they ask.",
+  strict: true,
+  input_schema: {
+    type: "object",
+    properties: {
+      fact: { type: "string" },
+      kind: { type: "string", enum: MEMORY_KINDS },
+    },
+    required: ["fact", "kind"],
+    additionalProperties: false,
+  },
+} as const;
+
+const TOOLS = [HANDOFF_TOOL, ORDER_TOOL, GIFT_TOOL, SHOW_TOOL, REMEMBER_TOOL];
+const QUIET = new Set(["show_products", "remember"]);   // calls that need no second round once the answer is written
 
 const draftFor = (site: Site) => [
   "Draft a reply from Evelyn, a licensed esthetician, to a client's question. Evelyn reads and edits every draft before it's sent; nothing goes out automatically.",
@@ -346,21 +366,33 @@ Deno.serve(async (req) => {
   //    plan on file goes to Claude with their plan; everything else the rules
   //    catch goes to Evelyn (the website asks the client first).
   let kind: string | null = ruleKind(q.toLowerCase());
-  if (kind === "skin" && file?.hasPlan) kind = null;
+  if (kind === "skin" && (file?.hasPlan || file?.hasProfile)) kind = null;   // their plan or profile lets Claude answer from the playbook, specific to them
   if (kind) return json({ handoff: kind, urgent: kind === "urgent" });
 
   // 2) an everyday question: Claude, from the bundle, with look-ups and a way to hand off
   try {
     const signedIn = client?.email ?? null;
     const messages: Anthropic.Beta.Messages.BetaMessageParam[] = [...tidy(body.history), { role: "user", content: q }];
+    const learned = await learnedBlock(db).catch(() => "");
     const system = [
       { type: "text" as const, text: STABLE[site], cache_control: { type: "ephemeral" as const, ttl: "1h" as const } },
+      /* what she approved from her own replies (dashboard → Teach the chat); cached too, until she approves another */
+      ...(learned ? [{ type: "text" as const, text: learned, cache_control: { type: "ephemeral" as const, ttl: "1h" as const } }] : []),
       ...(file && client ? [{ type: "text" as const, text: fileBlock(client.name, file) }] : []),
-      { type: "text" as const, text: (signedIn ? `The client is signed in as ${signedIn}, so look_up_order finds their own orders without details.` : "The client isn't signed in.") +
+      { type: "text" as const, text: (signedIn ? `The client is signed in as ${signedIn}, so look_up_order finds their own orders without details, and remember saves what they tell you about their skin and routine.` : "The client isn't signed in, so don't use remember.") +
         "\n\n" + await stockBlock(db) },
     ];
     const products: string[] = [];
+    const remembered: string[] = [];
     const links: { label: string; url: string }[] = [];
+    /* what they told the chat, kept for next time (signed in only; never health or medicine) */
+    const keep = async (c: Anthropic.Beta.Messages.BetaToolUseBlock) => {
+      const input = c.input as { fact?: string; kind?: string };
+      if (!signedIn) return "Not saved: the client isn't signed in.";
+      const r = await remember(db, signedIn, input.fact, input.kind).catch(() => "empty");
+      if (r === "saved") remembered.push(String(input.fact).trim().slice(0, 200));
+      return r === "saved" ? "Saved." : r === "known" ? "Already in their file." : r === "health" ? "Not saved: medicines and health stay with Evelyn." : "Not saved.";
+    };
     let why = "";
 
     for (let round = 0; round < ROUNDS; round++) {
@@ -386,19 +418,22 @@ Deno.serve(async (req) => {
         why = String(input.why ?? "");
         break;
       }
+      const kept: Record<string, string> = {};
       for (const c of calls) {
+        if (c.name === "remember") kept[c.id] = await keep(c);
         if (c.name !== "show_products") continue;
         for (const id of (c.input as { ids?: string[] }).ids ?? []) if (!products.includes(id)) products.push(id);
       }
       const answer = textOf(reply);
-      // done: no look-ups pending (Add to bag buttons need no second round once the answer is written)
-      if (reply.stop_reason !== "tool_use" || (answer && calls.every((c) => c.name === "show_products"))) {
+      // done: no look-ups pending (Add to bag buttons and remembering need no second round once the answer is written)
+      if (reply.stop_reason !== "tool_use" || (answer && calls.every((c) => QUIET.has(c.name)))) {
         if (!answer) break;
-        return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}) });
+        return json({ answer, ...(products.length ? { products: products.slice(0, 6) } : {}), ...(links.length ? { links } : {}),
+          ...(remembered.length ? { remembered } : {}) });
       }
       messages.push({ role: "assistant", content: reply.content });
       const results = [];
-      for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: await runLookup(db, signedIn, c, links) });
+      for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: kept[c.id] ?? await runLookup(db, signedIn, c, links) });
       messages.push({ role: "user", content: results });
     }
     return json({ handoff: kind ?? "other", ...(why ? { why } : {}), urgent: kind === "urgent" });   // nothing usable came back: Evelyn answers

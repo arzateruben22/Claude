@@ -37,7 +37,8 @@ Everything GlossGenius does (from its own feature pages and review listings, Oct
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Client profiles: history, notes, purchases | 🟡 | The server keeps every client by email (`contacts`: visits, last visit, card label, notes, where they came from); the dashboard's Clients card shows visits, spend, the pre-visit form and the skin plan. |
+| Client profiles: history, notes, purchases | 🟡 | The server keeps every client by email (`contacts`: visits, last visit, card label, notes, where they came from); the dashboard's Clients card shows visits, spend, the pre-visit form, the skin plan, and the client's own skin profile with what they've told the chat. |
+| A skin profile the client keeps, and a chat that remembers them | ✅ (GlossGenius has nothing like it) | My Lumevina: their routine, supplements, treatments and sensitivities in two minutes; the chat's notes from what they tell it; both make answers specific to them. |
 | Free data import | ✅ v3 | Dashboard → Clients: choose the GlossGenius client export (CSV): names, emails, phones, birthdays, notes, visit counts. Then Invite. |
 | Before/after photos on the profile | ⬜ | Private photos per client, Evelyn only: later. |
 | Forms, waivers, consent with signature | ✅ | Pre-visit form, consent signed at booking. |

@@ -152,7 +152,8 @@
   .talk-mic[aria-pressed="true"] { background: var(--danger); border-color: var(--danger); color: #fff; }
   .talk-topics[hidden], .talk-topic-toggle[hidden] { display: none; }
   .talk-intro .talk-where { font-size: 0.86rem; color: var(--ink); }
-  .talk-intro .talk-topic-toggle { justify-self: start; }
+  .talk-intro .talk-topic-toggle, .talk-intro .talk-quick-go { justify-self: start; }
+  .talk-quick-go[hidden] { display: none; }
   .talk-opts { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center; font-size: 0.82rem; color: var(--ink-soft); }
   .talk-opts label { display: inline-flex; gap: 0.4rem; align-items: center; cursor: pointer; }
   .linkish { font: inherit; font-size: 0.82rem; background: none; border: 0; padding: 0.3rem 0; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
@@ -161,6 +162,10 @@
   .talk-opts { margin-top: 0.4rem; }
   .talk-status.is-bad { color: var(--danger); }
   .talk-where { margin: 0; font-size: 0.78rem; color: var(--ink-soft); }
+  .talk-progress { height: 4px; border-radius: 999px; background: var(--wash); overflow: hidden; }
+  .talk-progress[hidden] { display: none; }
+  .talk-progress span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--sage); transition: width 400ms ease; }
+  @media (prefers-reduced-motion: reduce) { .talk-progress span { transition: none; } }
   @media (prefers-reduced-motion: reduce) { .msg.wait span { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .meter span { transition: none; } }
 </style>
@@ -692,7 +697,7 @@
      learns it the same way). The conversation is kept in playbook/interview.
      It runs on her own Claude (the page's "sample" capability); without it,
      the tab says so and the typed questions work as always. ── */
-  var talk = { turns: [], skips: [], focus: "auto" };
+  var talk = { turns: [], skips: [], focus: "quick" };
   var Rec = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null, micOff = false;
   /* inside the Claude app (and any viewer that frames the page) the page may
      not use the microphone, so the in-page mic would only fail: the keyboard's
@@ -700,9 +705,24 @@
   try { if (window.self !== window.top) micOff = true; } catch (e) { micOff = true; }
   var sample = null, talking = false, ctl = null, talkReady = false;
   var TALK_ORDER = ["client-questions", "treatments", "aftercare", "concerns", "visits", "routine", "hard-lines", "voice"];
+  /* the 10-minute version: the questions clients ask most, asked back to back
+     (about 20 seconds each); everything else can wait for another day */
+  var QUICK = [
+    "client-questions/cq-before.stop_products", "client-questions/cq-before.breaking_out", "client-questions/cq-before.hair_length",
+    "client-questions/cq-before.shave_before", "client-questions/cq-before.sun_before",
+    "client-questions/cq-after.makeup_after", "client-questions/cq-after.workout_after", "client-questions/cq-after.wash_after",
+    "client-questions/cq-after.breakout_after", "client-questions/cq-after.actives_after", "client-questions/cq-after.bumps_after_wax",
+    "client-questions/cq-routine.own_products", "client-questions/cq-routine.buy_everything", "client-questions/cq-routine.sunscreen",
+    "client-questions/cq-results.how_many_facials", "client-questions/cq-results.how_often_facial", "client-questions/cq-results.acne_how_long",
+    "client-questions/cq-results.wax_how_often", "client-questions/cq-booking.which_facial",
+    "aftercare/facials.normal", "aftercare/facials.not_normal",
+    "routine/routine.order", "routine/routine.dont_mix", "visits/visits.first_visit",
+    "hard-lines/hard-lines.always_evelyn", "hard-lines/hard-lines.never_say"
+  ];
+  var SECS_PER_Q = 20;
   var BY_ID = {};
   FIELDS.forEach(function (f) { BY_ID[f.sid + "/" + f.key] = f; });
-  var sectionTitle = function (sid) { for (var i = 0; i < SPEC.sections.length; i++) if (SPEC.sections[i].id === sid) return SPEC.sections[i].title; return sid; };
+  var sectionTitle = function (sid) { if (sid === "quick") return "the 10-minute version"; for (var i = 0; i < SPEC.sections.length; i++) if (SPEC.sections[i].id === sid) return SPEC.sections[i].title; return sid; };
   var itemEl = function (sid, item) { return main.querySelector('details.item[data-sid="' + sid + '"][data-item="' + item + '"]'); };
   var itemTitle = function (sid, item) { var d = itemEl(sid, item); return d ? d.querySelector("summary > span").firstChild.textContent : item; };
   var itemsOf = function (sid) {
@@ -711,15 +731,30 @@
     return out;
   };
   var skippedField = function (f) { return talk.skips.indexOf(f.sid + "/" + f.key) !== -1; };
+  var quickOnly = function (f) { return talk.focus !== "quick" || QUICK.indexOf(f.sid + "/" + f.key) !== -1; };
   var openFields = function (sid, item) {
-    return FIELDS.filter(function (f) { return f.sid === sid && f.item === item && !answeredKey(sid, f.key) && !skippedField(f); });
+    return FIELDS.filter(function (f) { return f.sid === sid && f.item === item && !answeredKey(sid, f.key) && !skippedField(f) && quickOnly(f); });
   };
   var upcoming = function (n) {
-    var order = talk.focus === "auto" ? TALK_ORDER : [talk.focus], out = [];
+    var out = [], seen = {};
+    if (talk.focus === "quick") {
+      QUICK.forEach(function (id) {
+        var f = BY_ID[id];
+        if (!f || out.length >= n || seen[f.sid + "|" + f.item] || !openFields(f.sid, f.item).length) return;
+        seen[f.sid + "|" + f.item] = true;
+        out.push({ sid: f.sid, item: f.item });
+      });
+      return out;
+    }
+    var order = talk.focus === "auto" ? TALK_ORDER : [talk.focus];
     order.forEach(function (sid) {
       itemsOf(sid).forEach(function (item) { if (out.length < n && openFields(sid, item).length) out.push({ sid: sid, item: item }); });
     });
     return out;
+  };
+  /* the 10-minute version's progress: answered or skipped, of all of them */
+  var quickDone = function () {
+    return QUICK.filter(function (id) { var f = BY_ID[id]; return !f || answeredKey(f.sid, f.key) || skippedField(f); }).length;
   };
   var describe = function (f) {
     var k = f.field.kind, s = "- " + f.sid + "/" + f.key + ": " + f.field.q;
@@ -749,9 +784,15 @@
   ].join("\n");
   var context = function () {
     var next = upcoming(2);
+    var quick = talk.focus === "quick";
+    if (!next.length && quick) return "Where we are: the 10-minute version is done (the " + QUICK.length + " questions clients ask most). Thank her warmly in one or two sentences, " +
+      "tell her the website's assistant can now answer those for her, and ask whether she'd like to keep going another time with the rest (\"Claude picks\" above the chat). Set pause to true.";
     if (!next.length) return "Where we are: every question in " + (talk.focus === "auto" ? "the main sections" : sectionTitle(talk.focus)) +
       " is answered or skipped. Thank her, and ask whether she'd like to pick another topic (the buttons above the chat) or stop for today. Set pause to true.";
-    return next.map(function (at, i) {
+    return (quick ? "This is the 10-minute version: " + QUICK.length + " questions, the ones clients ask most, back to back (" + quickDone() + " done). Keep it moving: " +
+      "just the next question, with no preamble or recap; a few words of thanks at most; a follow-up only when an answer can't be used as it is; then straight on to the next." +
+      (QUICK.length - quickDone() === 1 ? " This is the last one: once she has answered it, thank her warmly in one or two sentences, tell her the website's assistant can now answer the questions clients ask most, and ask nothing more. Set pause to true." : "") + "\n\n" : "") +
+      next.map(function (at, i) {
       var open = openFields(at.sid, at.item);
       var done = FIELDS.filter(function (f) { return f.sid === at.sid && f.item === at.item && answeredKey(at.sid, f.key); });
       return (i === 0 ? "Where we are: " : "Then the next card: ") + sectionTitle(at.sid) + " > " + itemTitle(at.sid, at.item) + "\n" +
@@ -819,8 +860,10 @@
   talkSec.setAttribute("aria-labelledby", "h-talk");
   talkSec.innerHTML =
     '<div class="section-head"><h2 id="h-talk">Talk it through</h2>' +
-    "<p>Rather talk than fill in boxes? Claude asks you the playbook's questions one at a time, asks a follow-up when it needs more, and saves your answers into the other tabs as you go. To talk instead of typing, tap into the answer box, then the mic on your keyboard (no mic? Settings, General, Keyboard, Enable Dictation).</p></div>" +
+    "<p>Rather talk than fill in boxes? Start with the 10-minute version: Claude asks the questions clients ask most, one after another, asks a follow-up when it needs more, and saves your answers into the other tabs as you go. To talk instead of typing, tap into the answer box, then the mic on your keyboard (no mic? Settings, General, Keyboard, Enable Dictation).</p></div>" +
     '<div class="talk-intro"><p class="talk-where"></p>' +
+      '<div class="talk-progress" role="progressbar" aria-label="The 10-minute version" aria-valuemin="0" aria-valuemax="' + QUICK.length + '" aria-valuenow="0" hidden><span></span></div>' +
+      '<button class="linkish talk-quick-go" type="button" hidden></button>' +
       '<button class="linkish talk-topic-toggle" type="button" aria-expanded="false" hidden>Change topic</button>' +
       '<div class="talk-topics chips" role="group" aria-label="What should we talk about?"></div></div>' +
     '<div class="talk-log" aria-live="polite"></div>' +
@@ -847,10 +890,17 @@
   });
 
   var topics = $t(".talk-topics");
-  [["auto", "Claude picks"]].concat(SPEC.sections.filter(function (s) { return s.id !== "materials"; }).map(function (s) { return [s.id, s.title]; })).forEach(function (t) {
+  [["quick", "10-minute version"], ["auto", "Claude picks"]].concat(SPEC.sections.filter(function (s) { return s.id !== "materials"; }).map(function (s) { return [s.id, s.title]; })).forEach(function (t) {
     var b = el("button", "chip", t[1]);
     b.type = "button"; b.dataset.focus = t[0];
     topics.appendChild(b);
+  });
+  $t(".talk-quick-go").addEventListener("click", function () {
+    if (talking) return;
+    talk.focus = "quick";
+    saveTalk();
+    paintTalk();
+    if (sample) ask("(Evelyn switched to the 10-minute version. Ask its first open question.)");
   });
   $t(".talk-topic-toggle").addEventListener("click", function () {
     var tg = $t(".talk-topic-toggle"), open = tg.getAttribute("aria-expanded") !== "true";
@@ -870,11 +920,24 @@
   var shortQ = function (id) { var f = BY_ID[id]; if (!f) return id; var q = f.field.q.replace(/^"|"$/g, ""); return (q.length > 46 ? q.slice(0, 44) + "…" : q); };
   var paintTalk = function () {
     topics.querySelectorAll(".chip").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.focus === talk.focus)); });
-    var next = upcoming(1)[0], started = talk.turns.length > 0;
-    $t(".talk-where").textContent = !started ? "What should we talk about? Claude can pick, starting where it helps most."
-      : next ? "Now: " + sectionTitle(next.sid) + " · " + itemTitle(next.sid, next.item) : "Everything here is answered or skipped. Change topic, or check your answers in the tabs.";
+    var next = upcoming(1)[0], started = talk.turns.length > 0, quick = talk.focus === "quick";
+    var qd = quickDone(), left = QUICK.length - qd, mins = Math.max(1, Math.round(left * SECS_PER_Q / 60));
+    $t(".talk-where").textContent = !started
+      ? (quick ? "The 10-minute version: the " + QUICK.length + " questions clients ask most, one after another" + (qd ? " (" + qd + " already done)" : "") + ". Or pick a topic below."
+        : "What should we talk about? Claude can pick, starting where it helps most.")
+      : next ? "Now: " + (quick ? itemTitle(next.sid, next.item) + " · " + qd + " of " + QUICK.length + " · about " + mins + (mins === 1 ? " minute" : " minutes") + " left"
+        : sectionTitle(next.sid) + " · " + itemTitle(next.sid, next.item))
+      : quick ? "The 10 minutes are done: the questions clients ask most are answered. Pick a topic to keep going another time." : "Everything here is answered or skipped. Change topic, or check your answers in the tabs.";
+    var bar = $t(".talk-progress");
+    bar.hidden = !quick;
+    bar.querySelector("span").style.width = Math.round(qd / QUICK.length * 100) + "%";
+    bar.setAttribute("aria-valuenow", String(qd));
     var tog = $t(".talk-topic-toggle");
     tog.hidden = !started;
+    /* a conversation already going: the 10-minute version is one tap away */
+    var qg = $t(".talk-quick-go");
+    qg.hidden = !started || quick || !left;
+    qg.textContent = "Switch to the 10-minute version (" + left + " to go)";
     topics.hidden = started && tog.getAttribute("aria-expanded") !== "true";
     logEl.textContent = "";
     talk.turns.forEach(function (t) {
@@ -892,7 +955,7 @@
       }
     });
     if (talking) { var w = el("div", "msg claude wait"); w.innerHTML = "<span>•</span><span>•</span><span>•</span>"; w.setAttribute("aria-label", "Claude is writing"); logEl.appendChild(w); }
-    sendEl.textContent = talk.turns.length ? "Send" : "Start talking";
+    sendEl.textContent = talk.turns.length ? "Send" : quick ? "Start the 10 minutes" : "Start talking";
     sendEl.disabled = talking || !sample;
     inEl.hidden = !talk.turns.length;
     micEl.hidden = !talk.turns.length || !Rec || micOff;
@@ -945,6 +1008,8 @@
       paintTalk();
       speak(say);
       logEl.lastChild.scrollIntoView({ block: "nearest" });
+      /* nonstop: the answer box is ready for the next one (unless Claude is wrapping up) */
+      if (!(r && r.pause) && document.activeElement && talkSec.contains(document.activeElement)) inEl.focus();
     }, function (err) {
       talking = false;
       var code = err && err.code;
@@ -1019,7 +1084,7 @@
   }
 
   var startTalk = function () {
-    try { var local = JSON.parse(localStorage.getItem(LOCAL + "talk")); if (local && Array.isArray(local.turns)) talk = { turns: local.turns, skips: local.skips || [], focus: local.focus || "auto" }; } catch (e) { /* storage off */ }
+    try { var local = JSON.parse(localStorage.getItem(LOCAL + "talk")); if (local && Array.isArray(local.turns)) talk = { turns: local.turns, skips: local.skips || [], focus: local.focus || (local.turns.length ? "auto" : "quick") }; } catch (e) { /* storage off */ }
     paintTalk();
     if (!window.claude || !window.claude.use) { setTalkStatus("Talking it through works inside the Claude app or claude.ai. The typed questions work everywhere."); return; }
     window.claude.use("sample").then(function (s) {
