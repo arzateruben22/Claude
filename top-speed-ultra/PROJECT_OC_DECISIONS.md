@@ -118,3 +118,19 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
 - **Facts it was made on.** The weekly limit read 0 at 23:43 UTC on Oct 20 after hitting 1.0 at about 15:30; the machine
   has 4 cores shared by all the workflows' Playwright renders; the five-hour and weekly limits, not the number of lanes,
   set the total amount of work per day, so more lanes trade depth for breadth.
+
+### 13. The UI target: the owner's reference image (home screen, HUD, sky camera, cockpit)
+
+- **Decision** (the owner in chat, 2026-10-21 just after 00:00 UTC, with a concept image): "Okay this is a PERFECT example
+  of how I want the sky camera, HUD main screen, cockpit, etc". The image (kept outside the repo, in the session scratchpad
+  as `ref/ui-reference-2026-10-21.png`) becomes the UI target and replaces the yellow "Chrome noir" accent: navy-black
+  glass, an electric blue accent with glow, a left rail home screen with the car in a night garage, a profile chip, four
+  mode tiles; a driving HUD with the objective top left, a circular minimap bottom left (the owner's "sky camera"),
+  overhead guide-sign callouts, the mirror top right, a quick menu on the right edge and a big italic speed block; a
+  hexagonal digital cluster and blue ambient strips in the cockpit.
+- **What we don't take.** "Online" (no multiplayer), a dollar balance (Credits only), "PROJECT OC" (our OC Ultra
+  wordmark), a real person's photo as the portrait, race types the game doesn't have, invented skylines or sign text.
+- **How.** A UI workflow on claude/ui-ref (off the live preview): UI1 home screen, UI2 HUD, UI3 the circular minimap in
+  two styles (vector map and the live sky camera clipped into the circle, after merging the sky camera's alignment fix),
+  UI4 the cockpit cluster (after the hypercar's cockpit work), UI5 a match pass. The running sky camera fix finishes its
+  alignment work first.
