@@ -4,6 +4,27 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
+
+The owner asked for the hypercar "ASAP". Branch `claude/hypercar-drive` = the body (`a137e50`) + the vehicle-dynamics
+model (`claude/drift`) + its car entry. It is a procedural model built in code, not a finished 3D asset.
+
+- **Two tunes.** Free Drive runs Unleashed (1,690 kg, 1.5 MW, 2,000 Nm, all-wheel drive 40% front, torque vectoring,
+  fan-level downforce ClA 2.2, tyres 1.8× stiffer, 2 g brakes); Races, Time Trial and Survival run the race tune
+  (1,500 kg, 620 kW, ClA 1.0, default tyres and brakes). The tune is picked when a run starts (`tuneFor`), and the start
+  toast says which ("Free Drive · Unleashed", "Time Trial · race tune").
+- **Measured** (`node tests/dynamics.mjs`, 1,742 passed, 0 failed): Unleashed 338 mph, 0-60 2.20-2.82 s, 100-0
+  56-68 m, lateral g 1.58 / 1.44 / 1.05 at 25 / 40 / 80 m/s (h 0.15); first on every metric. The rear-drive-only checks
+  (power-over and held-drift entries, the ABS-off lock time) are reported for it, not bound: its all-wheel drive and
+  vectoring stop those slides by design. In the game (owner mode, I-405 North, autopilot): 53 mph after 2 s, 261 mph
+  within 45 s, no page errors; frames in tests/out/hyper-drive/.
+- **Garage.** It shows as the fourth card ("Founder Edition · not on sale yet (test build)"); never bought or sold for
+  credits (`profile.buy`/`sell` refuse it); drivable in owner mode. Groups `boot` and `progression` 12/12.
+- **Not done yet.** The full seat drop (for now its eye sits 0.13 m lower and 0.07 m further in, so the roof clears
+  the view; the dash top still crosses the lower view), the lights and its own cockpit touches (M2), Cold Thrust /
+  Ground Lock / Thrust Hop (M5), the Founder exclusives (M6), the face and rear fidelity (M1b), and the axle spin
+  scaled to its tyre sizes.
+
 ## 2026-10-17 to 19: the OC Hypercar's body repaired after review (hypercar M1 repair, branch `claude/hypercar`)
 
 Two reviews (art and code) rejected M1: honest and in budget, but not recognisably the sheet's car outside the side

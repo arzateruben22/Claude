@@ -21,6 +21,7 @@ import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
 import { CarId, shapeFor, rearR } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
+const HYPER_EYE = new THREE.Vector3(0.07, -0.13, -0.02);
 import { CarPhysics, SPEC } from './Physics';
 import { ORIGIN } from '../world/Path';
 import type { Path } from '../world/Path';
@@ -130,6 +131,10 @@ export class PlayerCar {
     for (const w of this.wheels) disposeGeometry(w.steer);
     this.wheels = [];
     let t = performance.now();
+    // the hypercar's roof (1.07 m over the shared eye point) is lower than the shared driver's frame: until the full seat
+    // drop lands (PROJECT_OC_HYPERCAR.md, M3), its driver sits lower and a little further in, the way the sheet's occupants do
+    this.eye.position.copy(EYE);
+    if (c.car === 'oc-hyper') this.eye.position.add(HYPER_EYE);
     const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false });
     this.stats.carMs = Math.round(performance.now() - t);
     this.exterior = ext; this.body.add(ext);
