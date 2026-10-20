@@ -16,7 +16,9 @@
  * reads. A paid online order takes stock off in the Stripe webhook; Sell
  * in the dashboard takes it off through server/functions/shelf. This file
  * reads the live counts on load, when the page comes back into view, and
- * every minute, and lays them over the catalog.
+ * every minute, and lays them over the catalog. The dashboard's changes (a
+ * recount, a price, Sell for an in-person sale) go to the server through
+ * functions/studio with her studio key, so every device shows one count.
  */
 (function () {
   "use strict";
@@ -100,14 +102,49 @@
     return num(p.stock) <= LOW ? "low" : "in";
   };
 
+  /* live: a change from the dashboard goes to the server (functions/studio,
+     with her studio key); the reply becomes this device's live count */
+  var studioKey = function () { try { return localStorage.getItem("lumevina_studio_key") || ""; } catch (e) { return ""; } };
+  var remote = function (body) {
+    if (!isLive) return Promise.resolve(null);
+    var key = studioKey();
+    if (!key) return Promise.reject({ reason: "studio_key" });
+    return fetch(SHOP.supabase.replace(/\/$/, "") + "/functions/v1/studio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + SHOP.key, "x-studio-key": key },
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw j; return j; });
+    }).then(function (row) {
+      if (row && row.id) {
+        var was = LIVE[row.id] || {};
+        LIVE[row.id] = { stock: row.stock, price: row.price_cents == null ? was.price : row.price_cents / 100,
+          hidden: row.hidden == null ? was.hidden : row.hidden };
+        lay();
+        listeners.forEach(function (fn) { fn(); });
+      }
+      return row;
+    });
+  };
+
   var decrement = function (id, qty) {
     var p = get(id);
     if (!p || p.stock == null) return;
     p.stock = Math.max(0, num(p.stock) - num(qty || 1));
     persist();
   };
-  var setStock = function (id, n) { var p = get(id); if (!p) return; p.stock = Math.max(0, Math.round(num(n))); persist(); };
-  var setPrice = function (id, n) { var p = get(id); if (!p) return; p.price = Math.max(0, Math.round(num(n) * 100) / 100); p.priceSet = true; persist(); };
+  /* an in-person sale (the dashboard's Sell) */
+  var sell = function (id, qty) { decrement(id, qty); var p = get(id); return p ? remote({ action: "sell", id: p.id, qty: num(qty || 1) }) : Promise.resolve(null); };
+  var setStock = function (id, n) {
+    var p = get(id); if (!p) return Promise.resolve(null);
+    p.stock = n === null ? null : Math.max(0, Math.round(num(n))); persist();
+    return remote({ action: "shelf_set", id: p.id, stock: p.stock });
+  };
+  var setPrice = function (id, n) {
+    var p = get(id); if (!p) return Promise.resolve(null);
+    p.price = Math.max(0, Math.round(num(n) * 100) / 100); p.priceSet = true; persist();
+    return remote({ action: "shelf_set", id: p.id, price: p.price });
+  };
   /* a flagged draft, checked by Evelyn: optionally with its corrected name */
   var confirm = function (id, name) {
     var p = get(id);
@@ -116,7 +153,11 @@
     if (name && name.trim()) p.name = name.trim();
     persist();
   };
-  var setHidden = function (id, on) { var p = get(id); if (!p) return; p.hidden = !!on; persist(); };
+  var setHidden = function (id, on) {
+    var p = get(id); if (!p) return Promise.resolve(null);
+    p.hidden = !!on; persist();
+    return remote({ action: "shelf_set", id: p.id, hidden: p.hidden });
+  };
   var setCost = function (id, n) { var p = get(id); if (!p) return; p.cost = Math.max(0, Math.round(num(n) * 100) / 100); persist(); };
   /* a product she brings in that isn't in the guide yet */
   var add = function (o) {
@@ -128,6 +169,8 @@
       cat: o.cat || "More", custom: true };
     inv.push(p);
     persist();
+    remote({ action: "shelf_add", id: p.id, name: p.name, brand: p.brand, category: p.cat, price: p.price, stock: p.stock })
+      .catch(function () { /* the dashboard says so */ });
     return p;
   };
 
@@ -161,7 +204,7 @@
     brands: CAT.brands, categories: CAT.categories, asOf: CAT.asOf,
     all: function () { return inv; },
     live: live, get: get, status: status,
-    decrement: decrement, setStock: setStock, setPrice: setPrice,
+    decrement: decrement, sell: sell, setStock: setStock, setPrice: setPrice,
     confirm: confirm, setHidden: setHidden, setCost: setCost, add: add,
     isLive: isLive, refresh: pull,
     render: render,

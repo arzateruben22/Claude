@@ -1,14 +1,19 @@
-/* Lumevina Aesthetics Spa — cart & demo checkout
-   Client-side only: the cart persists to localStorage and the
-   checkout is a DEMO — it validates the card locally and never
-   sends anything anywhere. For real payments, POST the cart to
-   your server and create a Stripe PaymentIntent there.
-   // TODO: POST to your server → Stripe PaymentIntent */
+/* Lumevina Aesthetics Spa — cart & checkout
+   The cart persists to localStorage.
+   DEMO (js/site-config.js → shop empty): the checkout validates a test
+   card locally and never sends anything anywhere.
+   LIVE (shop filled in): the cart goes to the create-checkout function,
+   which prices it on the server and opens Stripe's own payment page
+   (card, Apple Pay / Google Pay, pay-over-time where switched on, sales
+   tax). Stripe sends the buyer back with ?order=done; the Stripe webhook
+   takes the stock off, issues gift certificates and emails the receipt. */
 
 (function () {
   "use strict";
 
   var STORAGE_KEY = "lumevina_cart";
+  var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var LIVE = /^https:\/\//.test(SHOP.supabase || "") && !!SHOP.key;
 
   /* cart: { [id]: { id, name, price, qty } } */
   var cart = {};
@@ -472,6 +477,18 @@
     var gp = giftDetails.querySelector(".checkout-subhead--pay");
     if (gp) gp.hidden = cartHasRetail();
 
+    if (LIVE) {
+      /* Stripe's page takes the card and the shipping address */
+      modal.querySelectorAll("[data-card]").forEach(function (el) { el.hidden = true; });
+      shipAddress.hidden = true;
+      modal.querySelector(".co-live-note").hidden = false;
+      modal.querySelectorAll(".checkout-demo-note").forEach(function (n) { n.hidden = true; });
+      var nameLabel = modal.querySelector('label[for="co-name"]');
+      if (nameLabel) nameLabel.textContent = "Your name";
+      checkoutForm.elements.name.setAttribute("autocomplete", "name");
+      modal.querySelector(".checkout-pay .btn-mb-inner").textContent = "Continue to payment";
+    }
+
     formView.hidden = false;
     successView.hidden = true;
     checkoutStatus.textContent = "";
@@ -620,21 +637,24 @@
     mark(emailInput, !emailOk);
     if (!emailOk) problems.push("a valid email");
 
-    var cardOk = pay.cardValid(cardInput.value);
-    mark(cardInput, !cardOk);
-    if (!cardOk) problems.push("a valid card number");
+    if (!LIVE) {                      /* live: Stripe's page takes the card */
+      var cardOk = pay.cardValid(cardInput.value);
+      mark(cardInput, !cardOk);
+      if (!cardOk) problems.push("a valid card number");
 
-    var expOk = pay.expiryValid(expiryInput.value);
-    mark(expiryInput, !expOk);
-    if (!expOk) problems.push("a future expiry (MM/YY)");
+      var expOk = pay.expiryValid(expiryInput.value);
+      mark(expiryInput, !expOk);
+      if (!expOk) problems.push("a future expiry (MM/YY)");
 
-    var cvcOk = pay.cvcValid(cvcInput.value);
-    mark(cvcInput, !cvcOk);
-    if (!cvcOk) problems.push("a 3–4 digit CVC");
+      var cvcOk = pay.cvcValid(cvcInput.value);
+      mark(cvcInput, !cvcOk);
+      if (!cvcOk) problems.push("a 3–4 digit CVC");
+    }
 
     /* shelf products being shipped need somewhere to go: street, city,
-       state and ZIP each in their own field, the way a label needs them */
-    if (cartHasRetail() && delivery() === "ship" && window.LumevinaShip) {
+       state and ZIP each in their own field, the way a label needs them
+       (live: Stripe's page collects the address) */
+    if (!LIVE && cartHasRetail() && delivery() === "ship" && window.LumevinaShip) {
       var addr = window.LumevinaShip.readAddress(modal, "co");
       problems = problems.concat(addr.problems);
     }
@@ -700,7 +720,84 @@
     giftCodesEl.hidden = false;
   };
 
-  /* ── Submit → demo success ── */
+  /* ── Live: the server prices the cart and opens Stripe's payment page ── */
+  var liveCheckout = function () {
+    var payBtn = checkoutForm.querySelector(".checkout-pay");
+    var items = [], gifts = [];
+    var toMe = giftToMe.checked;
+    Object.keys(cart).forEach(function (id) {
+      var item = cart[id];
+      if (id.indexOf("retail-") === 0) items.push({ id: id.replace("retail-", ""), qty: item.qty });
+      else if (isGiftId(id)) {
+        for (var i = 0; i < item.qty; i++) gifts.push({
+          amount: item.price, toBuyer: toMe,
+          recipientName: toMe ? "" : giftNameInput.value.trim(),
+          recipientEmail: toMe ? "" : giftEmailInput.value.trim(),
+          message: (modal.querySelector("#co-gift-msg").value || "").trim(),
+          sendDate: modal.querySelector("#co-gift-date").value || ""
+        });
+      }
+    });
+    payBtn.disabled = true;
+    checkoutStatus.textContent = "Opening the secure payment page…";
+    var url = SHOP.supabase.replace(/\/$/, "") + "/functions/v1/create-checkout";
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + SHOP.key },
+      body: JSON.stringify({
+        items: items, gifts: gifts, delivery: delivery(),
+        email: checkoutForm.elements.email.value.trim(), name: checkoutForm.elements.name.value.trim(),
+        returnUrl: location.href.split(/[?#]/)[0]
+      })
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (j) { return { ok: res.ok, j: j }; });
+    }).then(function (r) {
+      if (r.ok && r.j.url) {
+        checkoutStatus.textContent = "Taking you to Stripe…";
+        /* Stripe's page can't open inside a frame (an app's viewer): give it its own tab there */
+        var framed = true;
+        try { framed = window.self !== window.top; } catch (err) { /* cross-origin frame */ }
+        if (framed) {
+          var w = window.open(r.j.url, "_blank", "noopener");
+          if (!w) checkoutStatus.innerHTML = 'Tap to <a href="' + r.j.url.replace(/"/g, "&quot;") + '" target="_blank" rel="noopener">open the secure payment page</a>.';
+          payBtn.disabled = false;
+        } else location.assign(r.j.url);
+        return;
+      }
+      payBtn.disabled = false;
+      var j = r.j || {};
+      checkoutStatus.textContent =
+        j.reason === "stock" ? (j.left ? "Only " + j.left + " of " + (j.name || "one item") + " left. Lower the amount in your cart and try again." : (j.name || "One item") + " just sold out. Take it out of your cart and try again.")
+        : j.reason === "unavailable" ? "One item isn't available any more. Take it out of your cart and try again."
+        : j.reason === "email" ? "Check your email address."
+        : j.reason === "gift_email" ? "Check the recipient's email address."
+        : "Payments aren't available right now. Please try again in a few minutes.";
+    }, function () {
+      payBtn.disabled = false;
+      checkoutStatus.textContent = "Couldn't reach the payment page. Check your connection and try again.";
+    });
+  };
+
+  /* back from Stripe: ?order=done (paid) or ?order=cancelled */
+  var returned = function () {
+    var q = /[?&]order=(done|cancelled)/.exec(location.search);
+    if (!q) return;
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* old browser */ }
+    if (q[1] === "cancelled") { if (Object.keys(cart).length) openDrawer(); return; }
+    clearCart();
+    modal.querySelector(".checkout-success .checkout-title").textContent = "Thank you!";
+    modal.querySelector(".success-sub").textContent = "Your payment went through. The receipt is on its way to your email, and any gift certificates go out to their recipients.";
+    modal.querySelector(".success-order").hidden = true;
+    modal.querySelectorAll(".checkout-demo-note").forEach(function (n) { n.hidden = true; });
+    formView.hidden = true;
+    successView.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    modalOverlay.hidden = false;
+    document.body.style.overflow = "hidden";
+    modal.querySelector(".checkout-done").focus();
+  };
+
+  /* ── Submit → live checkout, or the demo's success ── */
   checkoutForm.addEventListener("submit", function (e) {
     e.preventDefault();
     var problems = validateCheckout();
@@ -708,6 +805,7 @@
       checkoutStatus.textContent = "Please check: " + problems.join(", ") + ".";
       return;
     }
+    if (LIVE) { liveCheckout(); return; }
 
     /* Processing runs through the shared engine — see the Stripe
        integration notes at the top of js/payments.js. */
@@ -809,4 +907,5 @@
   /* ── Boot ── */
   load();
   render();
+  if (LIVE) returned();
 })();

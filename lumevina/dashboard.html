@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lumevina — Owner Dashboard</title>
+  <!-- Lumevina Studio: on her phone's home screen, with notifications (studio.webmanifest, sw.js) -->
+  <link rel="manifest" href="studio.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Studio">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📊%3C/text%3E%3C/svg%3E">
   <style>
     @font-face { font-family: "Inter"; font-weight: 100 900; font-style: normal; src: url("fonts/inter-var.woff2") format("woff2"); font-display: swap; }
@@ -233,6 +240,26 @@
     .crm-ans .k { color: var(--ink-45); }
     .crm-ans .v { color: var(--ink); }
     .crm-none { color: var(--ink-45); font-style: normal; font-size: 0.9rem; padding: 1rem 0; }
+    /* Lumevina Studio: notifications on her phone */
+    .studio-card { margin-bottom: 1.4rem; }
+    .st-steps { margin: 0.2rem 0 1rem 1.1rem; padding: 0; display: grid; gap: 0.3rem; font-size: 0.86rem; color: var(--ink-70); }
+    .st-row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: flex-end; margin-bottom: 0.8rem; }
+    .st-row label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); flex: 1 1 14rem; }
+    .st-row input { font: inherit; font-size: 0.9rem; padding: 0.55rem 0.7rem; border: 1px solid var(--edge); border-radius: 8px; background: #161616; color: var(--ink); }
+    .st-row .bk-export { padding: 0.6rem 1.1rem; }
+    .st-row .bk-export:disabled { opacity: 0.45; cursor: not-allowed; }
+    .st-status { font-size: 0.82rem; color: var(--ink-60); flex-basis: 100%; min-height: 1.2em; }
+    .st-status.is-bad { color: var(--bad); } .st-status.is-ok { color: var(--good); }
+    .st-feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+    .st-feed li { display: grid; grid-template-columns: auto 1fr auto; gap: 0.7rem; align-items: baseline; padding: 0.6rem 0; border-top: 1px solid var(--edge); font-size: 0.86rem; }
+    .st-feed .k { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--ink-70); }
+    .st-feed .k.order, .st-feed .k.gift { background: rgba(50,215,75,0.14); color: #a8dcb9; }
+    .st-feed .k.question { background: rgba(234,185,200,0.16); color: var(--mauve); }
+    .st-feed .k.low_stock { background: rgba(255,122,107,0.14); color: var(--bad); }
+    .st-feed b { color: var(--ink); font-weight: 500; display: block; }
+    .st-feed small { color: var(--ink-60); }
+    .st-feed time { color: var(--ink-45); font-size: 0.76rem; white-space: nowrap; }
+
     /* Skin plans (js/skin-plans.js): what she writes per client */
     .crm-chip.plan { color: #f0d6b8; background: rgba(227,180,143,0.14); margin-left: 0.3rem; }
     .crm-chips { justify-self: end; display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: flex-end; }
@@ -458,6 +485,28 @@
       <div class="period">Reporting period<br><strong id="period-range">Jan – Sep 2026</strong></div>
     </header>
     <span class="demo-tag">Sample data — a preview of your live command center once bookings run through the site &amp; app</span>
+
+    <!-- ── Lumevina Studio: this dashboard as an app on her phone ── -->
+    <div class="card studio-card" id="studio">
+      <h2>Lumevina Studio</h2>
+      <p class="sub" id="st-sub">This dashboard, as an app on your phone: new orders, client questions and low stock arrive as notifications, and a short email comes each morning with what's waiting.</p>
+      <ol class="st-steps" id="st-steps">
+        <li>On your iPhone, open this page in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</li>
+        <li>Open <strong>Studio</strong> from your home screen.</li>
+        <li>Add your studio key below once, then tap <strong>Turn on notifications</strong> and allow them.</li>
+      </ol>
+      <div class="st-row">
+        <label>Studio key (once, on this device)<input id="st-key" type="password" autocomplete="off" placeholder="the long phrase only you know"></label>
+        <button class="bk-export" id="st-key-save" type="button">Save key</button>
+      </div>
+      <div class="st-row">
+        <button class="bk-export" id="st-push" type="button">Turn on notifications</button>
+        <button class="crm-plan-btn" id="st-test" type="button">Send a test</button>
+        <p class="st-status" id="st-status" role="status"></p>
+      </div>
+      <h3 style="font-size:0.95rem;margin:0.6rem 0 0.2rem">Recent</h3>
+      <ul class="st-feed" id="st-feed"></ul>
+    </div>
 
     <h2>This month at a glance</h2>
     <p class="sub">September 2026, compared with the month before.</p>
@@ -705,11 +754,11 @@
     </div>
 
     <!-- ── Inventory ── -->
-    <div class="card">
+    <div class="card" id="inventory">
       <div class="crm-head">
         <div>
           <h2>Inventory</h2>
-          <p class="sub">Retail stock you carry — units, value, and low-stock alerts. Add products as you bring them in.</p>
+          <p class="sub">Your shelf: the same count the website shows. Online orders take stock off by themselves; tap Sell for an in-person sale, or − / + after a recount.</p>
         </div>
         <button class="bk-export" id="inv-add-toggle">+ Add product</button>
       </div>
@@ -720,6 +769,7 @@
         <input type="number" id="inv-price" placeholder="Retail $" min="0" step="0.01" required>
         <button type="submit" class="bk-export">Add</button>
       </form>
+      <p class="sub" id="inv-msg" role="status" style="color:var(--bad)"></p>
       <div class="bk-tiles" id="inv-tiles"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="inv-table"></table></div>
       <p class="sub" id="inv-sold" style="margin-top:0.9rem"></p>
@@ -774,6 +824,7 @@
   <script src="js/site-config.js"></script>
   <script src="js/catalog.js"></script>
   <script src="js/skin-plans.js"></script>
+  <script src="js/inventory.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
@@ -1954,29 +2005,22 @@
       });
     })();
 
-    /* ── Inventory: retail stock ── */
+    /* ── Inventory: her shelf (js/inventory.js), the same count the website
+       shows. Live, a recount, a price or Sell goes to the server with her
+       studio key, so the website and every phone agree. ── */
     (function () {
-      var IKEY = "lumevina_inventory", LOW = 3;
-      var SAMPLE = [
-        { id: "gm-cleanser", name: "GlyMed+ Glycolic Facial Cleanser", stock: 8, cost: 18, price: 41 },
-        { id: "lm-serum", name: "Le Mieux TGF-β Booster", stock: 3, cost: 32, price: 80 },
-        { id: "spf-30", name: "Face Reality Daily SPF 30 Plus", stock: 12, cost: 14, price: 34 }
-      ];
-      var stored = lget(IKEY);
-      var inv = (stored && stored.length) ? stored : SAMPLE.slice();
-      /* retired from the shelf (see js/inventory.js) */
-      inv = inv.filter(function (p) { return p.id !== "gua-sha"; });
-      /* names follow the shelf catalog (js/inventory.js) */
-      var NAMES = { "gm-cleanser": "GlyMed+ Glycolic Facial Cleanser", "spf-30": "Face Reality Daily SPF 30 Plus", "lm-serum": "Le Mieux TGF-β Booster" };
-      inv.forEach(function (p) { if (NAMES[p.id]) p.name = NAMES[p.id]; });
-      /* the shelf's price list (matches js/inventory.js): catalog prices apply once per list */
-      var PRICE_LIST = "2026-10";
-      inv.forEach(function (p) {
-        var c = SAMPLE.filter(function (x) { return x.id === p.id; })[0];
-        if (c && p.priceList !== PRICE_LIST) { p.price = c.price; p.priceList = PRICE_LIST; }
-      });
+      var INV = window.LumevinaInventory;
+      if (!INV) return;
+      var LOW = INV.LOW;
       var num = function (n) { return Number(n || 0); };
-      var save = function () { try { localStorage.setItem(IKEY, JSON.stringify(inv)); } catch (e) { /* private mode */ } };
+      var esc = function (t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); };
+      var msg = document.getElementById("inv-msg");
+      var fail = function (e) {
+        msg.textContent = e && e.reason === "studio_key"
+          ? "To change the live shelf, add your studio key under Lumevina Studio at the top."
+          : "Couldn't save that to the live shelf. Check the connection and try again.";
+      };
+      var ok = function () { msg.textContent = ""; };
 
       var SALES_KEY = "lumevina_retail_sales";
       var sales = lget(SALES_KEY) || [];
@@ -1989,28 +2033,36 @@
       var mm = now.getMonth() + 1;
       var monthKey = now.getFullYear() + "-" + (mm < 10 ? "0" + mm : mm);
 
+      var shelf = function () {
+        return INV.all().filter(function (p) { return !p.draft; }).slice().sort(function (a, b) {
+          return (a.cat || "").localeCompare(b.cat || "") || a.name.localeCompare(b.name);
+        });
+      };
       var render = function () {
-        var units = inv.reduce(function (a, p) { return a + num(p.stock); }, 0);
-        var value = inv.reduce(function (a, p) { return a + num(p.stock) * num(p.price); }, 0);
-        var low = inv.filter(function (p) { return num(p.stock) <= LOW; }).length;
+        var list = shelf();
+        var counted = list.filter(function (p) { return p.stock != null; });
+        var units = counted.reduce(function (a, p) { return a + num(p.stock); }, 0);
+        var value = counted.reduce(function (a, p) { return a + num(p.stock) * num(p.price); }, 0);
+        var low = counted.filter(function (p) { return num(p.stock) <= LOW && !p.hidden; }).length;
         var tiles = [
-          { l: "Products", v: String(inv.length) },
-          { l: "Units in stock", v: String(units) },
+          { l: "Products", v: String(list.length) },
+          { l: "Units on the shelf", v: String(units) },
           { l: "Retail value", v: money(Math.round(value)) },
-          { l: "Low stock", v: String(low), flag: low > 0 }
+          { l: "Low or sold out", v: String(low), flag: low > 0 }
         ];
         document.getElementById("inv-tiles").innerHTML = tiles.map(function (t) {
           return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' +
             t.v + '</div><div class="bk-tl">' + t.l + '</div></div>'; }).join("");
         var thead = '<thead><tr><th>Product</th><th>Stock</th><th>Cost</th><th>Retail</th><th>Value</th><th>Status</th><th></th></tr></thead>';
-        var tbody = '<tbody>' + inv.map(function (p, i) {
-          var st = num(p.stock);
-          return '<tr><td>' + p.name + '</td><td><span class="inv-adjust">' +
-            '<button class="inv-btn" data-d="-1" data-i="' + i + '" aria-label="decrease">−</button>' + st +
-            '<button class="inv-btn" data-d="1" data-i="' + i + '" aria-label="increase">+</button></span></td>' +
+        var tbody = '<tbody>' + list.map(function (p) {
+          var st = p.stock == null ? null : num(p.stock);
+          var status = p.hidden ? "Off the site" : st == null ? "Not counted" : st === 0 ? '<span class="inv-low">Sold out</span>' : st <= LOW ? '<span class="inv-low">Low</span>' : "OK";
+          return '<tr><td style="text-align:left">' + esc(p.name) + '<br><small style="color:var(--ink-45)">' + esc(p.brand || "") + (p.cat ? " · " + esc(p.cat) : "") + '</small></td><td><span class="inv-adjust">' +
+            '<button class="inv-btn" data-d="-1" data-id="' + esc(p.id) + '" aria-label="One fewer ' + esc(p.name) + '">−</button>' + (st == null ? "—" : st) +
+            '<button class="inv-btn" data-d="1" data-id="' + esc(p.id) + '" aria-label="One more ' + esc(p.name) + '">+</button></span></td>' +
             '<td>' + money(num(p.cost)) + '</td><td>' + money(num(p.price)) + '</td>' +
-            '<td>' + money(st * num(p.price)) + '</td><td>' + (st <= LOW ? '<span class="inv-low">Low</span>' : 'OK') + '</td>' +
-            '<td>' + (st > 0 ? '<button class="inv-sell" data-i="' + i + '">Sell</button>' : '—') + '</td></tr>';
+            '<td>' + (st == null ? "—" : money(st * num(p.price))) + '</td><td>' + status + '</td>' +
+            '<td>' + (st > 0 ? '<button class="inv-sell" data-id="' + esc(p.id) + '">Sell</button>' : '—') + '</td></tr>';
         }).join("") + '</tbody>';
         document.getElementById("inv-table").innerHTML = thead + tbody;
 
@@ -2022,32 +2074,29 @@
           if ((s.at || "").slice(0, 7) !== monthKey) return;
           mUnits += q; mRev += (s.paid != null ? num(s.paid) : num(s.price)) * q; mCost += costOf(s) * q;
         });
-        var held = Math.max(0, 5 - MEMBERS.filter(function (m) { return m.five; }).length);
         document.getElementById("inv-sold").innerHTML = (mUnits
           ? "<strong>Retail sold this month:</strong> " + money(Math.round(mRev)) + " · " + mUnits + (mUnits === 1 ? " unit · " : " units · ") +
             money(Math.round(mCost)) + " at cost"
           : "No retail sold yet this month.") +
-          (kitUnits ? "<br><strong>Founding Five kits:</strong> " + kitUnits + " units given free · " + money(kitCost) + " at cost" : "") +
-          (held ? "<br><strong>Hold back for the Founding Five:</strong> " + held + " cleanser" + (held === 1 ? "" : "s") +
-            " and " + held + " SPF for the " + held + (held === 1 ? " spot" : " spots") + " left" : "");
+          (kitUnits ? "<br><strong>Founding Five kits:</strong> " + kitUnits + " units given free · " + money(kitCost) + " at cost" : "");
       };
+      INV.onChange(render);
       render();
 
       document.getElementById("inv-table").addEventListener("click", function (e) {
         var adj = e.target.closest(".inv-btn");
         if (adj) {
-          var ai = Number(adj.dataset.i);
-          inv[ai].stock = Math.max(0, num(inv[ai].stock) + Number(adj.dataset.d));
-          save(); render();
+          var p = INV.get(adj.dataset.id);
+          if (!p) return;
+          INV.setStock(p.id, Math.max(0, num(p.stock) + Number(adj.dataset.d))).then(ok, fail);
           return;
         }
         var sell = e.target.closest(".inv-sell");
         if (sell) {
-          var si = Number(sell.dataset.i);
-          if (num(inv[si].stock) <= 0) return;
-          inv[si].stock = num(inv[si].stock) - 1;
-          logSale(inv[si], "in-person");
-          save(); render();
+          var sp = INV.get(sell.dataset.id);
+          if (!sp || num(sp.stock) <= 0) return;
+          logSale(sp, "in-person");
+          INV.sell(sp.id, 1).then(ok, fail);
         }
       });
       var form = document.getElementById("inv-form");
@@ -2056,11 +2105,9 @@
         e.preventDefault();
         var name = document.getElementById("inv-name").value.trim();
         if (!name) return;
-        inv.push({ id: name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          name: name, stock: num(document.getElementById("inv-stock").value),
-          cost: num(document.getElementById("inv-cost").value),
-          price: num(document.getElementById("inv-price").value) });
-        save(); render(); form.reset(); form.hidden = true;
+        INV.add({ name: name, stock: document.getElementById("inv-stock").value,
+          cost: document.getElementById("inv-cost").value, price: document.getElementById("inv-price").value });
+        form.reset(); form.hidden = true;
       });
     })();
 
@@ -2812,6 +2859,103 @@
       run();
       new MutationObserver(run).observe(box, { childList: true });
     });
+  })();
+  </script>
+  <script>
+  /* ── Lumevina Studio: notifications on her phone, and the feed of what
+     happened (functions/studio; the server pushes through sw.js) ── */
+  (function () {
+    var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+    var LIVE = /^https:\/\//.test(SHOP.supabase || "") && !!SHOP.key;
+    var $ = function (id) { return document.getElementById(id); };
+    var KEY = "lumevina_studio_key";
+    var key = function () { try { return localStorage.getItem(KEY) || ""; } catch (e) { return ""; } };
+    var status = function (t, cls) { $("st-status").textContent = t || ""; $("st-status").className = "st-status" + (cls ? " " + cls : ""); };
+    var esc = function (t) { return String(t == null ? "" : t).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); };
+    var call = function (body) {
+      return fetch(SHOP.supabase.replace(/\/$/, "") + "/functions/v1/studio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + SHOP.key, "x-studio-key": key() },
+        body: JSON.stringify(body)
+      }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw j; return j; }); });
+    };
+    var ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    var standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+    var canPush = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+
+    if (key()) $("st-key").placeholder = "saved on this device";
+    $("st-key-save").addEventListener("click", function () {
+      var k = $("st-key").value.trim();
+      if (k.length < 12) { status("That key looks too short.", "is-bad"); return; }
+      try { localStorage.setItem(KEY, k); } catch (e) { /* private mode */ }
+      $("st-key").value = ""; $("st-key").placeholder = "saved on this device";
+      status("Saved on this device.", "is-ok");
+      feed();
+    });
+
+    if (!LIVE) {
+      $("st-sub").textContent += " It switches on once the website is connected to its server (GO-LIVE.md); for now this is the preview.";
+      ["st-push", "st-test", "st-key-save"].forEach(function (id) { $(id).disabled = true; });
+      $("st-feed").innerHTML = '<li><span class="k">preview</span><span><b>New order: $86</b><small>Ana: 1 × Ultra Gentle Gel Cleanser, gift certificate $50. Ship by Wed.</small></span><time>sample</time></li>' +
+        '<li><span class="k">preview</span><span><b>New question from Maya</b><small>"Can I use my retinol the night after a peel?" A reply is drafted for you.</small></span><time>sample</time></li>';
+      return;
+    }
+
+    var b64 = function (s) {
+      var pad = "=".repeat((4 - s.length % 4) % 4), raw = atob((s + pad).replace(/-/g, "+").replace(/_/g, "/"));
+      return Uint8Array.from(raw, function (c) { return c.charCodeAt(0); });
+    };
+    $("st-push").addEventListener("click", function () {
+      if (!key()) { status("Add your studio key first.", "is-bad"); return; }
+      if (ios && !standalone) { status("On iPhone, notifications work from the home-screen app: Share, Add to Home Screen, then open Studio and tap this again.", "is-bad"); return; }
+      if (!canPush) { status("This browser can't receive notifications. The morning email still comes.", "is-bad"); return; }
+      status("Asking…");
+      Notification.requestPermission().then(function (p) {
+        if (p !== "granted") throw { reason: "denied" };
+        return navigator.serviceWorker.register("sw.js").then(function () { return navigator.serviceWorker.ready; });
+      }).then(function (reg) {
+        return call({ action: "vapid" }).then(function (r) {
+          if (!r.key) throw { reason: "vapid" };
+          return reg.pushManager.getSubscription().then(function (old) {
+            return old || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(r.key) });
+          });
+        });
+      }).then(function (sub) {
+        return call({ action: "push_subscribe", subscription: sub.toJSON(), label: ios ? "iPhone" : "This device" });
+      }).then(function () {
+        status("Notifications are on for this device. Tap Send a test to check.", "is-ok");
+      }).catch(function (e) {
+        status(e && e.reason === "denied" ? "Notifications are blocked. Allow them in Settings → Notifications → Studio, then try again."
+          : e && e.reason === "studio_key" ? "The studio key doesn't match. Check it and save it again."
+          : e && e.reason === "vapid" ? "Notifications aren't set up on the server yet (VAPID keys, GO-LIVE.md)."
+          : "Couldn't turn notifications on. Try again in a moment.", "is-bad");
+      });
+    });
+    $("st-test").addEventListener("click", function () {
+      status("Sending…");
+      call({ action: "push_test" }).then(function (r) {
+        status(r.sent ? "Sent to " + r.sent + (r.sent === 1 ? " device." : " devices.") : "No devices have notifications on yet.", r.sent ? "is-ok" : "is-bad");
+      }, function (e) { status(e && e.reason === "studio_key" ? "Add or check your studio key first." : "Couldn't send a test just now.", "is-bad"); });
+    });
+
+    var ago = function (iso) {
+      var m = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+      return m < 1 ? "now" : m < 60 ? m + " min" : m < 1440 ? Math.round(m / 60) + " h" : new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    };
+    var LABEL = { order: "order", gift: "gift", question: "question", low_stock: "stock", test: "test" };
+    var feed = function () {
+      if (!key()) { $("st-feed").innerHTML = '<li><span></span><small>Add your studio key to see what\'s happened.</small><span></span></li>'; return; }
+      call({ action: "alerts", limit: 20 }).then(function (r) {
+        var list = r.alerts || [];
+        $("st-feed").innerHTML = list.length ? list.map(function (a) {
+          return '<li><span class="k ' + esc(a.kind) + '">' + esc(LABEL[a.kind] || a.kind) + '</span><span><b>' + esc(a.title) + '</b>' +
+            (a.body ? '<small>' + esc(a.body) + '</small>' : "") + '</span><time datetime="' + esc(a.created_at) + '">' + ago(a.created_at) + '</time></li>';
+        }).join("") : '<li><span></span><small>Nothing yet. New orders and client questions show up here.</small><span></span></li>';
+      }, function () { /* offline: keep what's shown */ });
+    };
+    feed();
+    setInterval(function () { if (!document.hidden) feed(); }, 60000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) feed(); });
   })();
   </script>
 </body>

@@ -11,14 +11,22 @@
 // visit — see grant_referral_credit at the bottom, called from a
 // database trigger on that status change.
 //
+// Shop orders (functions/create-checkout) finish here too: Stripe Checkout's
+// checkout.session.* events mark the order paid, take the stock off, issue
+// gift certificates, queue the shipment, email the receipt and alert Evelyn
+// (../_shared/orders.ts).
+//
 // Deploy:  supabase functions deploy stripe-webhook --no-verify-jwt
 // Secrets: supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
-// Then point a Stripe webhook (payment_intent.succeeded,
-// payment_intent.payment_failed) at this function's URL.
+// Then point a Stripe webhook at this function's URL with the events
+// payment_intent.succeeded, payment_intent.payment_failed,
+// checkout.session.completed, checkout.session.async_payment_succeeded,
+// checkout.session.async_payment_failed and checkout.session.expired.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { addBooking } from "../_shared/google.ts";
 import { CATALOG } from "../_shared/catalog.ts";
+import { cancelOrder, fulfillOrder } from "../_shared/orders.ts";
 
 const encoder = new TextEncoder();
 
@@ -65,6 +73,21 @@ Deno.serve(async (req) => {
   if (!ok) return new Response("bad signature", { status: 400 });
 
   const event = JSON.parse(payload);
+
+  // shop orders (Stripe Checkout)
+  if (String(event.type).startsWith("checkout.session.")) {
+    const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const s = event.data?.object ?? {};
+    if ((event.type === "checkout.session.completed" && s.payment_status === "paid") ||
+        event.type === "checkout.session.async_payment_succeeded") {
+      return new Response(await fulfillOrder(db, s), { status: 200 });
+    }
+    if (event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") {
+      await cancelOrder(db, s);
+    }
+    return new Response("ok", { status: 200 });
+  }
+
   const intent = event.data?.object;
   const bookingId = intent?.metadata?.booking_id;
   if (!bookingId) return new Response("ignored", { status: 200 });

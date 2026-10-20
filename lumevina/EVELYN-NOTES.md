@@ -235,3 +235,13 @@ On phones and tablets the two-line button now opens a dropdown card under the he
 ## The menu button inside the Claude app (Oct 19)
 
 In the Claude app on a phone, the app's own × and ⋯ float over the top strip of the site and take every tap there, so the two-line menu (and Cart) never got the tap. When the site is opened inside an app's frame on a phone, the header now sits just below that strip. On its own (a normal browser, or once it's on her domain) the header is unchanged.
+
+## Products first: real checkout, one stock count, Lumevina Studio (Oct 20)
+
+Booking stays on GlossGenius; the website starts with products. `GLOSSGENIUS-PARITY.md` lists everything GlossGenius does next to what the site has, and the order to close the gaps (products and her app now; client care next; booking-only features only if booking ever moves).
+
+**Checkout (live once the server is connected):** the cart hands off to Stripe's own payment page: card, Apple Pay, Google Pay, and pay-over-time where she switches it on, with California sales tax by Stripe Tax. Shipping is $8, free over $75; pickup at a visit is free. Gift certificates go through the same checkout and are emailed to the recipient (or saved for a chosen date). After paying, the site says thank you and the receipt comes by email. Until then, the demo checkout works as before.
+
+**One stock count:** the website and the dashboard read the same shelf. An online order takes stock off by itself; in the dashboard's Inventory (now her real 43 products), Sell takes one off for an in-person sale and − / + fix a recount.
+
+**Lumevina Studio:** the dashboard on her iPhone's home screen. New orders, gift certificate sales, client questions from Ask Lumevina and low stock arrive as notifications and in a Recent feed, orders and questions also by email, and each morning a short email lists new orders, what's waiting to ship, questions waiting for her and what's running low. Setup is in GO-LIVE.md (6c).

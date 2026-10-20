@@ -5,7 +5,7 @@
  *   • fonts and images  — cache first (they never change in place)
  * Bump VERSION when an offline-page or caching rule changes. */
 
-var VERSION = "lumevina-v2";
+var VERSION = "lumevina-v3";
 var SHELL = [
   "./",
   "index.html",
@@ -36,6 +36,33 @@ self.addEventListener("activate", function (e) {
 var isStatic = function (url) {
   return /\.(woff2|png|jpe?g|webp|avif|svg|ico)$/i.test(url.pathname);
 };
+
+/* Lumevina Studio (the dashboard on Evelyn's phone): notifications from
+   the server (functions/_shared/notify.ts) arrive here as { title, body, url, tag } */
+self.addEventListener("push", function (e) {
+  var d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { body: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.title || "Lumevina Studio", {
+    body: d.body || "",
+    tag: d.tag || undefined,
+    icon: "img/icon-192.png",
+    badge: "img/icon-192.png",
+    data: { url: d.url || "dashboard.html" }
+  }));
+});
+self.addEventListener("notificationclick", function (e) {
+  e.notification.close();
+  var url = new URL((e.notification.data && e.notification.data.url) || "dashboard.html", self.registration.scope).href;
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      if (/dashboard\.html/.test(list[i].url) && "focus" in list[i]) {
+        if ("navigate" in list[i]) list[i].navigate(url);
+        return list[i].focus();
+      }
+    }
+    return self.clients.openWindow(url);
+  }));
+});
 
 self.addEventListener("fetch", function (e) {
   var req = e.request;

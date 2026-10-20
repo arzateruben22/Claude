@@ -349,6 +349,7 @@ create table gift_cards (
   send_date date,
   source text not null default 'sale' check (source in ('sale', 'studio', 'membership')),
   stripe_payment_intent text,                     -- the order that paid for it
+  delivered_at timestamptz,                       -- when its email went out (dated gifts wait for studio-digest)
   purchased_at timestamptz not null default now(),
   last_used_at timestamptz
 );
@@ -407,3 +408,99 @@ begin
                       (case when left_cents = 0 then 'redeemed' else 'active' end)::text;
 end $$;
 revoke all on function redeem_gift(text, int, text, text, uuid) from public, anon, authenticated;
+
+-- ─────────────────────────────────────────────────────────────
+-- The shop: products, one stock count, and orders
+-- js/inventory.js reads the `shelf` view (counts and prices only) on the
+-- website and the dashboard. A paid online order takes stock off in the
+-- Stripe webhook; an in-person sale, a recount or a new price goes through
+-- functions/studio (Evelyn's studio key). Seed the rows from the catalog
+-- with server/seed-products.sql (scripts/seed-products.mjs writes it).
+-- ─────────────────────────────────────────────────────────────
+create table products (
+  id text primary key,                            -- the catalog's id (js/catalog.js)
+  name text not null,
+  brand text,
+  category text,
+  price_cents int not null check (price_cents >= 0),
+  stock int check (stock is null or stock >= 0),  -- null: not counted
+  low_at int not null default 3,                  -- tell Evelyn when it gets this low
+  hidden boolean not null default false,          -- off the website (drafts, discontinued)
+  updated_at timestamptz not null default now()
+);
+alter table products enable row level security;  -- no policies: the view below is the public part
+
+create view shelf as select id, stock, price_cents, hidden from products;
+grant select on shelf to anon, authenticated;
+
+-- take stock off for a list of [{ "id", "qty" }], in one step, never below
+-- zero; returns each product's count after, and whether it's now low
+create or replace function take_stock(p_items jsonb)
+returns table (id text, name text, stock int, low boolean)
+language plpgsql security definer set search_path = public as $$
+declare it jsonb;
+begin
+  for it in select * from jsonb_array_elements(p_items) loop
+    update products
+       set stock = greatest(products.stock - greatest((it->>'qty')::int, 0), 0), updated_at = now()
+     where products.id = it->>'id' and products.stock is not null;
+  end loop;
+  return query
+    select p.id, p.name, p.stock, (p.stock is not null and p.stock <= p.low_at)
+      from products p
+     where p.id in (select x->>'id' from jsonb_array_elements(p_items) x);
+end $$;
+revoke all on function take_stock(jsonb) from public, anon, authenticated;
+
+-- One row per checkout. functions/create-checkout writes it as 'pending'
+-- with the prices it charged; the Stripe webhook marks it 'paid' with the
+-- real totals (tax and shipping included), the address Stripe collected,
+-- and the gift certificate codes it issued.
+create table orders (
+  id uuid primary key default gen_random_uuid(),
+  status text not null default 'pending' check (status in ('pending', 'paid', 'cancelled', 'refunded')),
+  email text not null,
+  name text,
+  client_id uuid references clients (id) on delete set null,
+  items jsonb not null default '[]',              -- [{ "id", "name", "qty", "price_cents" }]
+  gifts jsonb not null default '[]',              -- [{ "amount_cents", "recipient_name", "recipient_email", "message", "send_date", "to_buyer" }]
+  delivery text not null default 'none' check (delivery in ('ship', 'pickup', 'none')),
+  subtotal_cents int not null,
+  shipping_cents int not null default 0,
+  tax_cents int not null default 0,
+  total_cents int,
+  address jsonb,                                  -- { name, street, apt, city, state, zip }
+  gift_codes text[] not null default '{}',
+  stripe_session text unique,
+  stripe_payment_intent text,
+  paid_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index orders_paid on orders (paid_at desc) where status = 'paid';
+alter table orders enable row level security;
+create policy "clients read their own orders" on orders
+  for select using (lower(email) = lower(auth.jwt() ->> 'email'));
+
+-- ─────────────────────────────────────────────────────────────
+-- Lumevina Studio: what Evelyn's phone is told (functions/_shared/notify.ts)
+-- Every alert is kept (the dashboard's feed), pushed to each phone she
+-- turned notifications on for, and summed up in the morning email
+-- (functions/studio-digest).
+-- ─────────────────────────────────────────────────────────────
+create table studio_alerts (
+  id bigint generated always as identity primary key,
+  kind text not null check (kind in ('order', 'question', 'low_stock', 'gift', 'test')),
+  title text not null,
+  body text,
+  url text,                                       -- where the dashboard should open
+  created_at timestamptz not null default now()
+);
+create table studio_push (
+  endpoint text primary key,                      -- the phone's push address
+  subscription jsonb not null,
+  label text,                                     -- "Evelyn's iPhone"
+  created_at timestamptz not null default now()
+);
+alter table studio_alerts enable row level security;
+alter table studio_push enable row level security;
+-- no policies: only edge functions (service role) read or write these.

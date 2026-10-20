@@ -15,6 +15,10 @@ the client across devices (site → iPhone app).
 | `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
 | `functions/gift-cards/` | Gift certificates: check a balance, use one at the visit (studio key), list them, sell one in person |
 | `functions/client-plans/` | Skin plans: Evelyn writes each client's routine (studio key); the signed-in client reads theirs |
+| `functions/create-checkout/` | The shop's real checkout: prices the cart from the products table and opens Stripe Checkout (cards, Apple/Google Pay, pay-over-time, Stripe Tax, shipping or pickup, gift certificates) |
+| `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices (studio key) |
+| `functions/studio-digest/` | Her morning email and notification; sends gift certificates dated for today (run daily by cron) |
+| `functions/_shared/orders.ts`, `notify.ts`, `mail.ts` | Finishing a paid order; alerting Evelyn (feed, push, email); sending email |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
 
 ## Gift certificates
@@ -84,6 +88,67 @@ link (no password, no extra library: `js/account.js`). In Supabase → Authentic
 - **Email Templates → Magic Link:** Evelyn's wording, if she likes.
 - Email sign-ins are on by default; for her own sending address, set up
   custom SMTP with the same Resend account as the confirmations.
+
+## The shop: checkout, stock and orders
+
+`schema.sql` → `products` (one row per product, with the one stock count;
+the public `shelf` view shows counts and prices only), `take_stock` (takes
+stock off in one step, never below zero, and says what's now low), and
+`orders`. Seed the products with `server/seed-products.sql`
+(`node scripts/seed-products.mjs` writes it from `js/catalog.js`; running it
+again updates names but keeps her stock, prices and hidden flags).
+
+1. The cart posts to `create-checkout`: it re-prices everything from
+   `products` (never the browser's prices), refuses more than is on the
+   shelf, saves a `pending` order and opens Stripe Checkout. Shipping is
+   $8, free over $75 (as on the site); pickup is free. Gift certificates
+   are $25–$1,000, not taxed.
+2. Stripe sends the buyer back to `SITE_URL?order=done`; the site clears
+   the cart and says thank you.
+3. `stripe-webhook` gets `checkout.session.completed` and runs
+   `fulfillOrder` (`_shared/orders.ts`): the order turns `paid` with the
+   real totals and address, `take_stock` runs, gift certificates are issued
+   and emailed (dated ones wait for the morning run), a shipped order goes
+   on the `shipments` list, the buyer gets a receipt, and Evelyn gets a
+   "New order" alert (plus "Low stock" for anything that ran low).
+
+```sh
+supabase functions deploy create-checkout
+supabase secrets set SITE_URL=https://her-domain STRIPE_TAX=on   # STRIPE_TAX once Stripe Tax is set up
+```
+
+## Lumevina Studio (Evelyn's phone)
+
+The dashboard installs to her home screen (`studio.webmanifest`); `sw.js`
+shows the notifications. `_shared/notify.ts → notifyOwner` records every
+alert in `studio_alerts` (the dashboard's Recent feed), pushes it to each
+phone in `studio_push`, and emails `OWNER_EMAIL` for orders and client
+questions. Alerts today: new order, new gift certificate sale, low stock,
+a client question handed to her by Ask Lumevina.
+
+```sh
+npx web-push generate-vapid-keys          # once; keep both
+supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... OWNER_EMAIL=evelyn@...
+supabase functions deploy studio --no-verify-jwt
+supabase functions deploy studio-digest --no-verify-jwt
+```
+
+The morning email (`studio-digest`): store the studio key in Supabase Vault
+as `studio_key`, then schedule it in the SQL editor (pg_cron and pg_net are
+built in; 15:00 UTC is 8 AM in Los Angeles in summer, 7 AM in winter):
+
+```sql
+select cron.schedule('studio-digest', '0 15 * * *', $$
+  select net.http_post(
+    url := 'https://<project>.supabase.co/functions/v1/studio-digest',
+    headers := jsonb_build_object('Content-Type', 'application/json',
+      'x-studio-key', (select decrypted_secret from vault.decrypted_secrets where name = 'studio_key')),
+    body := '{}'::jsonb);
+$$);
+```
+
+On iPhone, notifications from a website need iOS 16.4 or later and work
+only from the home-screen app (Share → Add to Home Screen → open Studio).
 
 ## Notifications (confirmations & reminders)
 

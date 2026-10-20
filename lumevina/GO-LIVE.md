@@ -4,9 +4,11 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 
 ## 1. Finish the last build pieces (Claude)
 
-- [ ] **Real card payments.** The booking deposit and the shop checkout still use the 4242 test card. Connect both to Stripe (Stripe Checkout: cards, Apple Pay, Google Pay, Klarna, Affirm, Afterpay).
-- [ ] **Shared stock.** Products table on the server, so an online sale and a Sell in the dashboard take from the same count.
-- [ ] **Dashboard Inventory** on her real 43 products.
+- [x] **Shop checkout through Stripe** (built Oct 20): cards, Apple Pay, Google Pay, pay-over-time where switched on, sales tax by Stripe Tax, shipping or pickup, gift certificates. It turns on when `js/site-config.js → shop` is filled in.
+- [x] **Shared stock** (built Oct 20): the products table; an online sale and a Sell in the dashboard take from the same count.
+- [x] **Dashboard Inventory** on her real 43 products (built Oct 20).
+- [x] **Lumevina Studio** (built Oct 20): the dashboard on her phone, with notifications and a morning email.
+- [ ] Booking deposits stay on GlossGenius for now (her choice); the website's own deposit checkout is built for later.
 
 ## 2. Create the accounts (about 30 minutes, in Evelyn's name)
 
@@ -23,20 +25,24 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 
 ## 3. Connect them (Claude can walk through this live)
 
-1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor.
-2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates and save skin plans. She types it once into the dashboard (the "Use a gift certificate" box, or a skin plan's Save) and that browser remembers it.
+1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor, then `server/seed-products.sql` (her 43 products, from `node scripts/seed-products.mjs`).
+2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates, save skin plans, change stock and see orders. She types it once into the dashboard (Lumevina Studio, at the top) and that device remembers it. Also: **`SITE_URL`** (the website's address), **`OWNER_EMAIL`** (where her order alerts and morning email go), and **`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`** for phone notifications (make the pair once with `npx web-push generate-vapid-keys`).
 3. **Deploy** the server functions: `supabase functions deploy` (the list is in `server/README.md`).
-4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address.
+4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address, with the events listed at the top of `server/functions/stripe-webhook/index.ts` (payment_intent.* and checkout.session.*).
+4b. **Stripe for the shop:** Settings → Payment methods: turn on Apple Pay, Google Pay and any of Klarna / Afterpay / Affirm she wants. **Sales tax:** set up Stripe Tax (her business address and California registration), then add the secret `STRIPE_TAX=on`. Selling products in California generally needs a seller's permit; her accountant should confirm the setup.
 5. **GlossGenius:** turn on Google Calendar sync, both ways.
 5b. **Client sign-in:** in Supabase → Authentication → URL Configuration, set the Site URL to the website's address and add it to Redirect URLs (the emailed sign-in link comes back there).
 6. **The website's settings** (`js/site-config.js`): fill in the Supabase address and public key for the shop, the calendar sync and Ask Lumevina.
+6b. **Morning email:** schedule `studio-digest` once with Supabase cron (`server/README.md` → Lumevina Studio).
+6c. **Evelyn's phone:** open `<her site>/dashboard.html` in Safari → Share → Add to Home Screen → open **Studio** → add the studio key → Turn on notifications → Send a test.
 7. **Domain:** point it at Netlify or Cloudflare (they show the two records to add).
 
 ## 4. Test before real money
 
 - [ ] Book a waxing (deposit), a facial (nothing due) and the acne consultation, with Stripe in **test mode**.
 - [ ] Check each one shows in her Google Calendar and blocks the time in GlossGenius.
-- [ ] Buy a product: stock drops by one on the website and in the dashboard.
+- [ ] Buy a product with Stripe's test card (4242 4242 4242 4242): Stripe's page opens, the receipt email arrives, stock drops by one on the website and in the dashboard, the order shows on her Shipping list, and her phone gets a "New order" notification.
+- [ ] Buy a $50 gift certificate for someone else: they get the code by email; one dated for tomorrow goes out with the next morning email.
 - [ ] Ask Lumevina a price question and a skin question (the skin one should go to Evelyn).
 - [ ] Skin plan: write one in the dashboard for a test email, sign in on the website with that email (the link arrives by email), see it under My Lumevina, then ask the chat "what do I use at night?" (answered from the plan) and "can I add vitamin C?" (goes to Evelyn).
 - [ ] Gift certificate: buy a $100 one, then on the dashboard use it on a $50 visit ($50 should stay on it) and on a $120 visit (it covers the last $50; the client pays $70). "Check a gift balance" on the site should show each step, from another phone too.

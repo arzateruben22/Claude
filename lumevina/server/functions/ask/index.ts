@@ -42,6 +42,7 @@ import {
   BUILT_AT, PROMPT, FACTS, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
 } from "../_shared/knowledge.ts";
 import { clientFile } from "../_shared/plans.ts";
+import { notifyOwner } from "../_shared/notify.ts";
 
 const MODEL = "claude-opus-5-5";
 const MEMBER_HOURS = 24;
@@ -233,6 +234,11 @@ Deno.serve(async (req) => {
     await db.from("questions").insert({
       client_id: who.id, name: who.name, email: who.email, member, kind, text: q, draft, due_at,
     });
+    await notifyOwner(db, {
+      kind: "question", email: true, url: "dashboard.html#client-questions",
+      title: kind === "urgent" ? `Urgent: ${who.name} needs you` : `New question from ${who.name}`,
+      body: q.slice(0, 200) + (draft ? "\n\nA reply is drafted for you in the dashboard." : ""),
+    }).catch((e) => console.error("notify", e));
     return json({ handoff: kind, due_at, urgent: kind === "urgent" });
   } catch (err) {
     // the website falls back to its keyword answers on any 5xx

@@ -37,11 +37,11 @@
       endpoint: "",   /* e.g. https://<project>.supabase.co/functions/v1/ask */
       key: ""         /* the Supabase anon key (public), sent with each question */
     },
-    /* the shop's live stock and checkout (server/: products table, the
-       shelf and create-checkout functions). Empty = demo: stock is kept in
-       this browser and the card form is a test. Filled in = one shared
-       count for the website and the dashboard, and real payments through
-       Stripe Checkout. */
+    /* the shop's live stock and checkout (server/: the products table and
+       shelf view, the create-checkout and studio functions). Empty = demo:
+       stock is kept in this browser and the card form is a test. Filled
+       in = one shared count for the website and the dashboard, real
+       payments through Stripe Checkout, and Lumevina Studio's notifications. */
     shop: {
       supabase: "",   /* e.g. https://<project>.supabase.co */
       key: ""         /* the Supabase anon key (public) */

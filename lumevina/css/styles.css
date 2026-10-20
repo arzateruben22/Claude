@@ -2397,6 +2397,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 }
 
 .cart-fine { font-size: 0.8125rem; color: var(--ink-35); margin-bottom: var(--space-3); }
+.checkout-form [data-card][hidden], .co-live-note[hidden], .checkout-demo-note[hidden], .success-order[hidden] { display: none; }
+.co-live-note { font-size: 0.85rem; line-height: 1.5; color: var(--ink-60); margin: 0.2rem 0 0.9rem; }
 
 /* ─── A service, in full (js/service-sheet.js) ─── */
 .product-card[data-service] { cursor: pointer; }
