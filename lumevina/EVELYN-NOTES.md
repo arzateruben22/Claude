@@ -142,7 +142,7 @@ Only what's on GlossGenius is offered now. The full list, with her descriptions,
 - **Deposits are hers, per service** (Ruben, Oct 19): $50 acne consultation, $49 consultations, $30 Brazilian / Wax Wednesday / Bikini / Mini Vajacial / Full Arm / Full Back / acne treatments, $20 Half Arm / Half Back / Full Butt; facials, peels and ProCell have none.
 - **After-hours visits: an extra $50** (was $32). Booked by message.
 - **Virtual Consultation:** $50, Mondays only, message first.
-- **Glow Membership repriced** (still held back): Glow **$175** (Custom Facial or Monthly Acne, a $200 value), Ageless **$225** (Ageless Grace, a $240 value, plus dermaplaning every other visit, about $260 a month in all). Ruben, Oct 19: "increase membership prices" — the perks (shelf discount, free shipping, add-on discount) carry the rest of the value. Dermaplaning is no longer covered by Glow, since it's now a $30–$40 option.
+- **Glow Membership repriced** (still held back; raised again in v3, below): Glow **$175** (Custom Facial or Monthly Acne, a $200 value), Ageless **$225** (Ageless Grace, a $240 value, plus dermaplaning every other visit, about $260 a month in all). Ruben, Oct 19: "increase membership prices" — the perks (shelf discount, free shipping, add-on discount) carry the rest of the value. Dermaplaning is no longer covered by Glow, since it's now a $30–$40 option.
 
 **Still to confirm:** ProCell Microchanneling's two options; whether facials, peels and ProCell should take a deposit online; a ProCell photo. Calendar stays in 30-minute steps (Ruben, Oct 19).
 
@@ -255,3 +255,22 @@ Booking stays on GlossGenius; the website starts with products. `GLOSSGENIUS-PAR
 **Replying:** live, Send reply on the dashboard emails the client (their reply comes back to her inbox), and a signed-in client also sees it in the chat. Nothing reaches her until the client taps Send to Evelyn.
 
 **Fixed along the way:** the chat's typo fixer read "running" as "burning", so "I'm running late" went to Evelyn as a skin reaction. It no longer swaps the first letter of a word unless it's a one-letter typo.
+
+## v3: no reason to go back to GlossGenius (Oct 20)
+
+Ruben, Oct 20: give clients and Evelyn no reason to keep booking through GlossGenius; bring in Glow Points and the membership as the reason to book here, behind an on/off switch, without crowding the site; raise the membership prices to cover running the site instead of GlossGenius.
+
+**The switch.** `js/site-config.js → version`: `"v2"` is today's site (booking on GlossGenius, membership and points held back); `"v3"` moves everything home. Anyone can try v3 first with `?preview=v3` at the end of the address (only that browser, with a small "Previewing v3 · leave" note). The dashboard follows the same switch. GO-LIVE.md section 6 is the switch-over, step by step.
+
+**What v3 adds, calmly.** No new header button and no pop-ups: Glow Points is one quiet band with three facts, and the points count appears in the header only once there are some. The membership section shows the founding rate and how many founding spots are left. The book section carries one line for GlossGenius clients ("that visit stands; your first booking here comes with 100 Glow Points"). The magic mirror and emoji cards are gone.
+
+**Prices.** Glow **$185**, Ageless **$235** a month. The first 25 members keep the founding rate, **$175** and **$225**, for as long as they stay. Running the site instead of GlossGenius costs less (about $45–85 a month against GlossGenius's $24–168), so the increase is for what the membership now includes (no deposits, a card on file, member pricing on the shelf with free shipping), not to cover costs.
+
+**For clients:** booking with a deposit or just a card on file (members: neither); a confirmation and a reminder by email, a text the day before if they want one; move or cancel from the link in every email (her 48-hour and Saturday rules hold); a waitlist on full days; Glow Points (1 per $1, 100 on the first booking here, referrals, birthdays); the membership for real (bank, gift, pause, cancel online, change the billing card); members' shelf discount and free shipping in the shop.
+
+**For Evelyn (dashboard → Appointments):** today and what's coming; **Check out** a visit the way she described it above: the service and the deposit already paid, add products from her shelf, a discount, Glow Points, a tip (15/20/25% or her own), then charge the card on file, record cash or "Other" (Zelle), or send a pay link the client opens on their phone (Apple Pay, Google Pay, pay over time). No card reader: tap to pay on her phone isn't part of this. **No-show** and **late-cancel fees** in one tap: $43 for a late cancellation, and for a no-show 50% of the service as her policy says, with the deposit already kept counting toward it (to confirm with her). **Book for a client** (phone or in person, any time) with an email asking for a card. The **waitlist**. **Clients → import the GlossGenius client list** (its CSV export), then **Invite** them once. **Members** with their facials and billing. **Extra Mondays** are off until she turns them on; members book them first.
+
+**Automatic messages** (hourly): the reminder email, the day-before text, a review request the day after a visit (needs her Google review link), "time for your next facial" four weeks after a visit with nothing booked (not members), and "running low?" about two months after a shop order.
+
+**To ask her:** the no-show fee (50% of the service, with the deposit counting toward it, or on top of it?); her Google review link; whether she wants text reminders (Twilio, about $2 a month plus a cent a text, after a few days' registration); the studio address for confirmations.
+

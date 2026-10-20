@@ -24,6 +24,7 @@
 // POST { action: "invite", dry? }                  → { count } or { sent }: "book with me on the website now",
 //                                                    to imported clients who haven't booked here or been invited
 // POST { action: "hours_get" } / { action: "hours_set", value }   her hours (site_settings → js/hours.js)
+// POST { action: "extra_mondays_set", every: 0 | 1 | 2 }  extra Mondays (site_settings → js/extra-days.js)
 // POST { action: "members" }                       → { members }  every membership with its facials and billing
 //
 // Deploy:  supabase functions deploy studio --no-verify-jwt
@@ -36,7 +37,7 @@ import { studioOk } from "../_shared/studio.ts";
 import { BUCKET } from "../_shared/photos.ts";
 import { esc, page, sendEmail } from "../_shared/mail.ts";
 import { EMAIL, norm, unsubscribeUrl } from "../_shared/contacts.ts";
-import { cleanHours } from "../_shared/hours.ts";
+import { cleanHours, cleanMondays } from "../_shared/hours.ts";
 import { FIRST_BOOKING_BONUS } from "../_shared/points.ts";
 import { PLANS } from "../_shared/membership.ts";
 import { site } from "../_shared/bookings.ts";
@@ -228,6 +229,11 @@ Deno.serve(async (req) => {
       const value = cleanHours(body.value);
       await db.from("site_settings").upsert({ key: "hours", value, updated_at: new Date().toISOString() });
       return json({ value });
+    }
+    case "extra_mondays_set": {
+      const every = cleanMondays({ every: body.every });
+      await db.from("site_settings").upsert({ key: "extra_mondays", value: { every }, updated_at: new Date().toISOString() });
+      return json({ every });
     }
     case "members": {
       const { data } = await db.from("memberships").select("*").order("created_at", { ascending: false }).limit(200);

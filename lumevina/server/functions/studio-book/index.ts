@@ -11,8 +11,9 @@
 //   card: charged to the card on file now. link: a Stripe page the client pays on
 //   their phone (→ { url }); the webhook finishes it. cash / other: recorded.
 //   → { ok, quote, points } or { reason } (a declined card: try the link instead)
-// POST { action: "fee", id, kind: "late_cancel" | "no_show", cents? }  charges the card on file
-//   ($43 unless she says otherwise); a no-show is marked no-show either way
+// POST { action: "fee", id, kind: "late_cancel" | "no_show", cents? }  charges the card on file:
+//   $43 for a late cancellation, 50% of the service for a no-show (less a deposit
+//   already kept), unless she says otherwise; a no-show is marked no-show either way
 // POST { action: "no_show", id }        marks it, without a fee
 // POST { action: "cancel", id, refund? }  Evelyn cancels: the deposit is refunded (unless refund: false),
 //                                          a membership facial comes back, the client is told
@@ -29,7 +30,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { studioOk } from "../_shared/studio.ts";
 import { EMAIL, getContact, norm, upsertContact } from "../_shared/contacts.ts";
 import { chargeOnFile, customerFor, stripe } from "../_shared/stripe.ts";
-import { cancelBooking, confirmBooking, fmtWhen, LATE_FEE_CENTS, names, priceVisit, sendBookingMessage, site } from "../_shared/bookings.ts";
+import { cancelBooking, confirmBooking, fmtWhen, LATE_FEE_CENTS, names, noShowFeeCents, priceVisit, sendBookingMessage, site } from "../_shared/bookings.ts";
 import { completeVisit, quoteVisit } from "../_shared/visits.ts";
 import { memberFor, PLANS } from "../_shared/membership.ts";
 import { esc, money, page, sendEmail } from "../_shared/mail.ts";
@@ -145,7 +146,9 @@ Deno.serve(async (req) => {
       if (!b) return json({ reason: "not_found" }, 404);
       const kind = body.kind === "no_show" ? "no_show" : "late_cancel";
       if (b.fee_cents) return json({ reason: "already" }, 409);
-      const cents = Math.max(100, Math.min(50000, Math.round(Number(body.cents) || LATE_FEE_CENTS)));
+      const dflt = kind === "no_show" ? noShowFeeCents(b) : LATE_FEE_CENTS;
+      if (!Number(body.cents) && dflt < 100) return json({ reason: "covered" }, 409);   // the deposit kept already covers it
+      const cents = Math.max(100, Math.min(50000, Math.round(Number(body.cents) || dflt)));
       const card = await cardOf(b);
       if (!card) return json({ reason: "no_card" }, 409);
       const r = await chargeOnFile({ customer: card.customer, paymentMethod: card.pm, cents,

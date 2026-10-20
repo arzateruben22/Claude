@@ -126,6 +126,85 @@
       .settle-row { grid-template-columns: 1fr; gap: 0.4rem; }
       .settle-money, .settle-actions, .settle-state { text-align: left; justify-content: flex-start; }
     }
+    /* appointments (v3, js/studio-appointments.js) */
+    .ap-card { margin-bottom: 1.4rem; }
+    .ap-msg { margin: 0 0 1rem; font-size: 0.85rem; color: var(--good); }
+    .ap-msg:empty { display: none; }
+    .ap-msg.is-bad { color: var(--bad); }
+    .ap-h { margin: 1.3rem 0 0.3rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-45); }
+    .ap-ul, .ap-wl { list-style: none; margin: 0; padding: 0; }
+    .ap-row { display: grid; grid-template-columns: 5.4rem 1fr; gap: 1rem; padding: 0.9rem 0; border-top: 1px solid var(--edge); }
+    .ap-ul .ap-row:first-child { border-top: none; }
+    .ap-row.is-cancelled .ap-main > :not(.ap-acts):not(.ap-panel), .ap-row.is-completed .ap-main > :not(.ap-panel),
+    .ap-row.is-no_show .ap-main > :not(.ap-acts):not(.ap-panel), .ap-row:is(.is-cancelled, .is-completed, .is-no_show) .ap-time { opacity: 0.6; }
+    .ap-time { font-size: 0.95rem; font-weight: 600; line-height: 1.25; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .ap-time small { display: block; font-size: 0.74rem; font-weight: 400; color: var(--ink-45); }
+    .ap-main { min-width: 0; }
+    .ap-who { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
+    .ap-who strong { font-weight: 600; color: var(--plum); }
+    .ap-what { font-size: 0.88rem; color: var(--ink-70); }
+    .ap-facts { margin-top: 0.15rem; font-size: 0.78rem; color: var(--ink-45); }
+    .ap-facts a { color: var(--ink-70); }
+    .ap-warn { color: var(--data); }
+    .ap-note { margin-top: 0.25rem; font-size: 0.82rem; font-style: italic; color: var(--ink-60); }
+    .ap-state { margin-top: 0.3rem; font-size: 0.82rem; color: var(--ink-70); }
+    .ap-acts { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.65rem; }
+    .ap-acts button:disabled, .ap-co-go button:disabled { opacity: 0.5; cursor: progress; }
+    .ap-panel { margin-top: 0.8rem; }
+    .ap-co, .ap-new { display: grid; gap: 0.85rem; padding: 1rem; border: 1px solid var(--edge); border-radius: 14px; background: var(--panel); }
+    .ap-co > *, .ap-co-row > * { min-width: 0; }
+    .ap-co select { max-width: 100%; }
+    .ap-new { margin: 0 0 1.3rem; }
+    .ap-new[hidden], .ap-co-row[hidden] { display: none; }
+    .ap-co-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.7rem; }
+    .ap-k { flex: none; width: 5.6rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-45); }
+    .ap-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .ap-chip { display: inline-flex; align-items: center; gap: 0.2rem; max-width: 100%; padding: 0.2rem 0.25rem 0.2rem 0.7rem; border: 1px solid var(--edge);
+      border-radius: 999px; background: #161616; font-size: 0.8rem; color: var(--ink); }
+    .ap-chip button { width: 1.5rem; height: 1.5rem; border: 0; border-radius: 50%; background: none; color: var(--ink-45);
+      font: inherit; line-height: 1; cursor: pointer; }
+    .ap-chip button:hover { background: var(--edge); color: var(--ink); }
+    .ap-co select, .ap-co input[type=number], .ap-new input:not([type=checkbox]), .ap-new select {
+      font: inherit; font-size: 0.85rem; padding: 0.45rem 0.6rem; border: 1px solid var(--edge); border-radius: 8px;
+      background: #161616; color: var(--ink); min-width: 0; }
+    .ap-co input[type=number] { width: 7rem; }
+    .ap-seg { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; }
+    .ap-seg button { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.85rem; border: 1px solid var(--edge); border-radius: 999px;
+      background: #161616; color: var(--ink-70); cursor: pointer; }
+    .ap-seg button:hover { border-color: var(--ink-45); }
+    .ap-seg button.on { background: var(--plum); border-color: var(--plum); color: #000; }
+    .ap-pts label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; color: var(--ink-70); }
+    .ap-lines { list-style: none; margin: 0; padding: 0; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+    .ap-lines li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.18rem 0; color: var(--ink-70); }
+    .ap-lines .ap-sum { margin-top: 0.3rem; padding-top: 0.45rem; border-top: 1px solid var(--edge); color: var(--ink); }
+    .ap-lines .ap-total { font-size: 0.95rem; font-weight: 600; color: var(--plum); }
+    .ap-co-go { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+    .ap-co-msg { font-size: 0.82rem; color: var(--ink-60); }
+    .ap-co-msg:empty { display: none; }
+    .ap-co-msg a { color: var(--mauve); }
+    .ap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0.7rem; }
+    .ap-grid label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.72rem; color: var(--ink-45); }
+    .ap-wide { grid-column: 1 / -1; }
+    .ap-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--ink-70); }
+    .ap-check input, .ap-pts input { accent-color: var(--mauve); }
+    .ap-wl li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.8rem; padding: 0.65rem 0;
+      border-top: 1px solid var(--edge); font-size: 0.86rem; color: var(--ink-70); }
+    .ap-wl li:first-child { border-top: none; }
+    .ap-wl-c { font-size: 0.78rem; color: var(--ink-45); }
+    .ap-wl li .settle-btn { margin-left: auto; }
+    .ap-import { margin-top: 1.5rem; padding-top: 0.3rem; border-top: 1px solid var(--edge); }
+    .ap-file { position: relative; display: inline-flex; align-items: center; }
+    .ap-file input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    .ap-file:focus-within, .ap-seg button:focus-visible, .ap-chip button:focus-visible, .ap-acts button:focus-visible,
+    .ap-co-go button:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+    #members-live { margin-top: 1rem; }
+    @media (max-width: 640px) {
+      .ap-row { grid-template-columns: 1fr; gap: 0.2rem; }
+      .ap-time { display: flex; align-items: baseline; gap: 0.5rem; }
+      .ap-k { width: 100%; }
+      .ap-card .crm-head { flex-wrap: wrap; align-items: flex-start; gap: 0.6rem; }
+    }
     /* goals */
     .goal-list { display: grid; gap: 1.15rem; }
     .goal-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; font-size: 0.9rem; }
@@ -520,6 +599,11 @@
       <ul class="st-feed" id="st-feed"></ul>
     </div>
 
+    <!-- ── Appointments (v3): today, checkout with tips, fees, book for a
+         client, waitlist (js/studio-appointments.js). In v2 it stays hidden
+         and Settle visits below does the after-visit job. ── -->
+    <div class="card ap-card" id="appointments" hidden></div>
+
     <h2>This month at a glance</h2>
     <p class="sub">September 2026, compared with the month before.</p>
     <div class="kpis" id="kpis"></div>
@@ -599,8 +683,9 @@
       <details class="cq-done" id="cq-done" hidden><summary></summary><ul class="cq-list" id="cq-done-list"></ul></details>
     </div>
 
-    <!-- ── Settle visits (collect the in-person balance) ── -->
-    <div class="card">
+    <!-- ── Settle visits (collect the in-person balance). v2 only: in v3,
+         Appointments above checks out each visit. ── -->
+    <div class="card" id="settle">
       <div class="crm-head">
         <div>
           <h2>Settle visits</h2>
@@ -691,6 +776,7 @@
       <div class="mem-five" id="mem-five"></div>
       <div class="mem-launch" id="mem-launch"></div>
       <div class="bk-table-wrap"><table class="bk-table" id="mem-table"></table></div>
+      <div id="members-live" hidden></div>
     </div>
 
     <!-- ── Gift certificates ── -->
@@ -817,6 +903,7 @@
         <p class="crm-new-status" id="crm-new-status" role="status"></p>
       </form>
       <ul class="crm-list" id="crm-list"></ul>
+      <div class="ap-import" id="clients-import" hidden></div>
     </div>
 
     <div class="proof">
@@ -837,6 +924,9 @@
   <script src="js/catalog.js"></script>
   <script src="js/skin-plans.js"></script>
   <script src="js/inventory.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/payments.js"></script>
+  <script src="js/studio-appointments.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>
@@ -1232,7 +1322,9 @@
     /* ── Shared: members, dues and the retail/giveaway log ──
        Used by Bookkeeping (income, costs, profit) and the Glow Membership card
        (launch ledger). Real records when there are any, else a small sample. */
-    var MPLANS = { glow: { name: "Glow", price: 159, value: 195 }, ageless: { name: "Ageless", price: 209, value: 245 } };
+    /* the sample members are founding members (the first 25 keep $175 /
+       $225; after them it's $185 / $235, js/membership.js) */
+    var MPLANS = { glow: { name: "Glow", price: 175, value: 200 }, ageless: { name: "Ageless", price: 225, value: 240 } };
     MPLANS.clear = MPLANS.glow;   /* the retired Clear Skin plan reads as Glow */
     var dAgo = function (daysAgo) { return new Date(Date.now() - daysAgo * 864e5).toISOString(); };
     var MEM_SAMPLE = [
@@ -1550,8 +1642,17 @@
       };
       document.querySelector(".xm-sw").addEventListener("click", function (e) {
         var b = e.target.closest("[data-every]");
-        if (b && XD) { XD.set(+b.getAttribute("data-every")); xmPaint(); }
+        if (!b || !XD) return;
+        var done = XD.set(+b.getAttribute("data-every"));
+        xmPaint();
+        /* live: saved for every browser, with her studio key */
+        if (XD.live && done) done.then(function () {
+          var st = XD.saveStatus(), note = document.getElementById("xm-next");
+          if (st === "no_key") note.textContent += " Not saved for the website yet: add your studio key under Lumevina Studio, then choose again.";
+          else if (st === "failed") note.textContent += " Couldn't save it. Check the connection and choose again.";
+        });
       });
+      document.addEventListener("lumevina:extra-days", xmPaint);
       xmPaint();
 
       /* banked facials are paid for but still owed: say when they call for an extra day */

@@ -27,6 +27,9 @@ import { stripe } from "./stripe.ts";
 
 export const TZ = "America/Los_Angeles";
 export const LATE_FEE_CENTS = 4300;
+/** Her policy: a no-show is charged 50% of the service; a deposit already kept counts toward it. */
+export const noShowFeeCents = (b: { services: string[]; paid_cents?: number | null }) =>
+  Math.max(0, Math.round((b.services ?? []).reduce((a, id) => a + (CATALOG[id]?.price_cents ?? 0), 0) * 0.5) - (b.paid_cents ?? 0));
 export const CANCEL_HOURS = 48;
 const FLASH_OFF = 0.10;
 const REFERRAL_OFF_CENTS = 1500;
@@ -275,7 +278,7 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
     (b.card_label ? row("Card on file", esc(b.card_label) + "<br><span style=\"font-size:13px;color:#7D5A44\">Nothing is charged to it unless you choose to pay with it, or for a late cancellation or no-show.</span>") : "") +
     `</table>`;
   const manage = button(manageUrl(b), "Cancel or move it");
-  const policy = `<p style="font-size:13px;line-height:1.5;color:#7D5A44">Change or cancel at least 48 hours ahead and your deposit moves with you to a new date that month. Later than that, the deposit is kept and a $43 fee may apply. Saturdays can't be moved. There's a 10-minute grace period if you're running late.</p>`;
+  const policy = `<p style="font-size:13px;line-height:1.5;color:#7D5A44">Change or cancel at least 48 hours ahead and your deposit moves with you to a new date that month. Later than that, the deposit is kept and a $43 fee may apply; a missed appointment is charged 50% of the service. Saturdays can't be moved. There's a 10-minute grace period if you're running late.</p>`;
   const arrive = `<p style="font-size:14px;line-height:1.5">Free parking in the lot. When you arrive, wait in your car and text Evelyn before coming up.</p>`;
   const formLine = form ? "" : `<p style="font-size:14px;line-height:1.5">Please fill in your pre-visit form before you come: <a href="${esc(site())}/?intake=1" style="color:#161412">open it here</a> (two minutes).</p>`;
   let subject = "", title = "", body = "", sms = "";
@@ -284,7 +287,7 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
     subject = `You're booked: ${svc}`;
     title = `You're booked${first ? ", " + first : ""}.`;
     body = details + pts + formLine + arrive + manage + policy;
-    sms = `Lumevina: you're booked for ${svc}, ${when}. Change it up to 48h before: ${manageUrl(b)}`;
+    sms = `Lumevina: you're booked for ${svc}, ${when}. Change it up to 48h before: ${manageUrl(b)} Reply STOP to stop texts.`;
   } else if (kind === "reminder") {
     subject = `See you ${when.replace(/,.*? at /, " at ")}`;
     title = `See you soon${first ? ", " + first : ""}.`;

@@ -1,75 +1,75 @@
 # GlossGenius vs. the Lumevina site: what's covered, what isn't
 
-Evelyn keeps booking on GlossGenius for now and starts the website with products. This list is everything GlossGenius does (from its own feature pages and review listings, Oct 2026; its site couldn't be opened directly, so a few items are marked unverified), next to what the website has, and the order to close the gaps in.
+Everything GlossGenius does (from its own feature pages and review listings, Oct 2026; its site couldn't be opened directly, so a few items are marked unverified), next to what the website has. **v2** is the site today: products first, booking on GlossGenius. **v3** is the switch that moves booking, Glow Membership and Glow Points to the website and gives Evelyn GlossGenius's jobs in her dashboard (`js/site-config.js → version`; try it with `?preview=v3`; GO-LIVE.md section 6).
 
-**Status:** ✅ built · 🟡 partly / built but not live · ⬜ not built · ➖ not needed while GlossGenius keeps booking
+**Status:** ✅ built · 🟡 partly · ⬜ not built · ➖ not needed
 
 ## Booking and the calendar
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Online booking page | ✅ | Every Book button opens her GlossGenius page today; the site's own calendar is built and switched off (`booking.mode`). |
+| Online booking page | ✅ v3 | The Book section: a month calendar with her real openings. v2 opens her GlossGenius page. |
 | Service menu with descriptions, prices, times | ✅ | Same menu as GlossGenius, with a full-description pop-up. |
-| Deposits per service | ✅ built, not live | `create-deposit-intent` + Stripe. Off while GlossGenius books. |
-| Card on file | ⬜ | Needed only if booking moves (Stripe SetupIntent). |
-| No-show and late-cancellation fees | ⬜ | Needs card on file. Policy text is on the site. |
-| Cancellation policy shown everywhere | ✅ | FAQ & Policies, booking, confirmations. |
-| Automated waitlist for cancelled slots | ⬜ | ➖ while GlossGenius books. |
-| Calendar sync (Google) | ✅ built, not live | `availability`, `calendar-feed`. |
-| Rebooking reminders ("time for your next facial") | ⬜ | Phase 3. |
-| Reserve with Google / Instagram Book button | ⬜ unverified | Her GlossGenius link works in her Instagram bio today. |
+| Deposits per service | ✅ v3 | `functions/book` + Stripe Checkout. Members pay none. |
+| Card on file | ✅ v3 | Saved by Stripe when booking (or on its own when nothing is due); Evelyn can email a card link. |
+| No-show and late-cancellation fees | ✅ v3 | Dashboard → Appointments: $43 for a late cancellation, 50% of the service for a no-show (a deposit already kept counts toward it), charged to the card on file. |
+| Clients cancel or move online | ✅ v3 | The link in every email and My Lumevina, with her 48-hour and Saturday rules. |
+| Cancellation policy shown everywhere | ✅ | FAQ & Policies, booking, every confirmation. |
+| Automated waitlist for cancelled slots | ✅ v3 | A full day offers the waitlist; a cancellation emails the first person waiting. |
+| Calendar sync (Google) | ✅ | `availability` and `confirmBooking` through her Google Calendar; `calendar-feed`. |
+| Rebooking reminders ("time for your next facial") | ✅ v3 | 4 weeks after a visit with nothing booked (members skipped). |
+| Evelyn books for a client (phone, in person) | ✅ v3 | Dashboard → Book for a client, any time, with an optional card-request email. |
+| Reserve with Google / Instagram Book button | ⬜ unverified | The website's address works in her Instagram bio and Google profile. |
 
 ## Client communication
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Booking confirmations, reminders, follow-ups (email + text) | ✅ built, not live | `send-confirmation` (Resend email, optional Twilio SMS). Only for website bookings. |
-| Pre-visit instructions and forms in reminders | 🟡 | Intake form exists; not attached to reminders yet. |
-| Two-way texting with clients | ⬜ | The texting assistant drafts replies for Evelyn (texting/). A client texting line is a separate build. |
-| Email and SMS marketing campaigns | ⬜ | Phase 2: email to opted-in clients. |
-| Review requests after a visit | ⬜ | Phase 2 (after product orders too). |
-| Birthday messages | 🟡 | Birthday month is stored (rewards, off). |
-| AI receptionist (GlossGenius "Reception AI", reportedly a paid add-on; unverified) | ✅ more on the website | Ask Lumevina: answers from Evelyn's own words, hands medical/personal questions to her with a drafted reply (photos attached, described for her, never diagnosed), remembers signed-in clients' skin plans, says where an order is, checks gift balances, and puts Add to bag buttons under the products it names. No phone/voice line yet. |
+| Confirmations and reminders (email + text) | ✅ v3 | Confirmation, moved and cancelled emails; a reminder 3 days before; a text the day before for clients who ask (Twilio). |
+| Pre-visit instructions and forms in reminders | ✅ v3 | The reminder links the pre-visit form when it's missing, with prep notes. |
+| Two-way texting with clients | ⬜ | Texts go out only. The texting assistant drafts her replies (texting/). |
+| Email and SMS marketing campaigns | 🟡 | Automatic: the invitation to GlossGenius clients, rebook and "running low?" emails, each with an unsubscribe link. No campaign builder. |
+| Review requests after a visit | ✅ v3 | The day after, with her Google review link (`REVIEW_URL`), at most once in 90 days. |
+| Birthday messages | 🟡 | Birthday month in My Lumevina gives 50 Glow Points; no birthday email yet. |
+| AI receptionist (GlossGenius "Reception AI", reportedly a paid add-on; unverified) | ✅ more on the website | Ask Lumevina: answers from Evelyn's own words, hands medical and personal questions to her with a drafted reply (photos described, never diagnosed), remembers signed-in clients' skin plans, finds orders, checks gift balances, adds products to the bag. Knows v2 or v3. No phone line. |
 
 ## Clients
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Client profiles: history, notes, purchases | 🟡 | Dashboard Clients: visits, spend, pre-visit form, skin plan. Online orders will join it (Phase 1). Private notes not yet. |
-| Before/after photos on the profile | ⬜ | Phase 2 (private photos per client, Evelyn only). |
-| Forms, waivers, consent with signature | ✅ | Pre-visit intake + acne consent with signature. |
-| SOAP/treatment notes | 🟡 | Skin plan visit notes (shared with the client). Private treatment notes: Phase 2. |
-| Client sign-in | ✅ built, not live | Emailed sign-in link (Supabase Auth). |
+| Client profiles: history, notes, purchases | 🟡 | The server keeps every client by email (`contacts`: visits, last visit, card label, notes, where they came from); the dashboard's Clients card shows visits, spend, the pre-visit form and the skin plan. |
+| Free data import | ✅ v3 | Dashboard → Clients: choose the GlossGenius client export (CSV): names, emails, phones, birthdays, notes, visit counts. Then Invite. |
+| Before/after photos on the profile | ⬜ | Private photos per client, Evelyn only: later. |
+| Forms, waivers, consent with signature | ✅ | Pre-visit form, consent signed at booking. |
+| SOAP/treatment notes | 🟡 | Skin plan visit notes (shared with the client). Private treatment notes: later. |
+| Client sign-in | ✅ | Emailed sign-in link (Supabase Auth). |
 | Skin plan the client sees and the chat uses | ✅ (GlossGenius has nothing like it) | |
 
 ## Money
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Checkout at the visit (Tap to Pay, card reader) | ⬜ | ➖ while GlossGenius books: she checks out in GlossGenius. |
-| Tips | ⬜ | ➖ same. |
+| Checkout at the visit | ✅ v3 | Appointments → Check out: services, products from her shelf, discount, Glow Points; pay by the card on file, cash, or a pay link on the client's phone (Apple Pay, Google Pay, pay over time). No card reader. |
+| Tips | ✅ v3 | 15 / 20 / 25% or her own amount, at checkout. |
 | Same-day / instant payouts | 🟡 | Stripe pays out on its schedule; instant payouts are a Stripe setting. |
-| Buy now, pay later (Affirm, Afterpay, Klarna) | **Phase 1** | Stripe Checkout offers them for shop orders (switched on in Stripe). |
-| Gift cards | ✅ more on the website | Any amount, balances that carry over, used at the visit from the dashboard. |
-| Memberships | ✅ built, off | Glow Membership, held back by choice. |
-| Packages / series | 🟡 | ProCell package of 4 is on the menu; package tracking is booking-side. |
-| Product sales online | **Phase 1** | The shop works but its checkout is a demo. Phase 1 makes it real. |
-| Retail inventory | 🟡 → **Phase 1** | Counts kept in the browser; Phase 1 moves them to the server so the site and the dashboard share one count. |
-| Sales tax on products | **Phase 1** | Stripe Tax (her accountant should confirm the setup). |
+| Buy now, pay later (Affirm, Afterpay, Klarna) | ✅ | Stripe Checkout, for the shop and pay links (switched on in Stripe). |
+| Gift cards | ✅ more on the website | Any amount, balances that carry over, used at checkout. |
+| Memberships | ✅ v3 | Glow $185, Ageless $235 a month (founding $175 / $225 for the first 25) on Stripe Billing: bank, gift, pause, cancel online. |
+| Loyalty points | ✅ v3 (GlossGenius has none built in) | Glow Points: 1 per $1, 100 on the first booking here, referrals, birthdays. |
+| Packages / series | 🟡 | The ProCell package of 4 is on the menu; no package tracking. |
+| Product sales online | ✅ | Stripe Checkout, shipping or pickup; members get their discount and free shipping. |
+| Retail inventory | ✅ | One count on the server for the website and the dashboard. |
+| Sales tax on products | ✅ | Stripe Tax (her accountant should confirm the setup). |
 | Reports | 🟡 | Dashboard reports run on sample/browser data until the server is live. |
 
 ## Evelyn's side
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Owner mobile app with notifications | **Phase 1** | "Lumevina Studio": the dashboard on her home screen, with notifications for new orders, client questions and low stock, plus a morning email. |
+| Owner mobile app with notifications | ✅ | "Lumevina Studio": the dashboard on her home screen; notifications for bookings, cancellations, members, orders, client questions and low stock, plus a morning email. |
+| Hours, days off, blocks | ✅ | Dashboard hours, with extra Mondays for members (v3). |
 | Team, payroll, commissions | ➖ | Solo studio. |
-| Free data import | ➖ | |
 
-## The order to build it in
+## Still open
 
-**Phase 1, products first (now):** real checkout through Stripe (cards, Apple Pay and Google Pay, pay-over-time where Stripe offers it), sales tax, shipping or pickup, gift certificates through the same checkout, one stock count on the server, order emails to the buyer and to Evelyn, and the Studio app with notifications and a daily email.
-
-**Phase 2, client care that doesn't depend on booking:** review requests, "running low?" restock reminders from each product's usual lifespan, an email list with simple campaigns, private client notes and before/after photos. (Done early: the chat checks order status and gift balances, adds products to the bag, and takes photos with questions for Evelyn.)
-
-**Phase 3, only if booking moves to the website:** card on file and no-show fees, the cancellation waitlist, rebooking reminders, forms attached to reminders, checkout at the visit with tips.
+Two-way texting, a campaign builder, birthday emails, private client notes and before/after photos, package tracking, and a card reader at the studio. None of these keep a client on GlossGenius: booking, paying, reminders, cancelling and rebooking all work on the website in v3.

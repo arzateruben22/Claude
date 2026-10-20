@@ -13,12 +13,17 @@
 //        email, name?, returnUrl }
 // → { url }   (the Stripe page)   or { reason } with a 4xx
 //
+// Glow members (v3), signed in (Authorization: Bearer <their token>), get
+// their plan's skincare discount (10% Glow, 15% Ageless) and free shipping,
+// as js/cart.js shows them.
+//
 // Deploy:  supabase functions deploy create-checkout
 // Secrets: STRIPE_SECRET_KEY, SITE_URL (her website's address, for the
 //          return links), STRIPE_TAX=on once Stripe Tax is set up
 
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { isLive, memberFor, PLANS } from "../_shared/membership.ts";
 
 const SHIP_CENTS = 800, FREE_OVER_CENTS = 7500;           // same rule as js/cart.js
 const GIFT_MIN = 25, GIFT_MAX = 1000;
@@ -39,6 +44,16 @@ Deno.serve(async (req) => {
   if (!EMAIL.test(email)) return json({ reason: "email" }, 400);
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
+  // a signed-in member buying for themselves: their plan's shelf discount, free shipping
+  let rate = 0;
+  const jwt = req.headers.get("Authorization")?.replace("Bearer ", "");
+  if (jwt && jwt !== Deno.env.get("SUPABASE_ANON_KEY")) {
+    const { data } = await db.auth.getUser(jwt);
+    const signedIn = String(data.user?.email ?? "").toLowerCase();
+    const m = signedIn === email ? await memberFor(db, email) : null;
+    if (isLive(m)) rate = PLANS[m.plan]?.retail ?? 0;
+  }
+
   // ── what's in the cart, priced by the server ──
   const want = new Map<string, number>();
   for (const it of Array.isArray(body.items) ? body.items.slice(0, 50) : []) {
@@ -52,7 +67,7 @@ Deno.serve(async (req) => {
       const p = (rows ?? []).find((r: any) => r.id === id);
       if (!p || p.hidden) return json({ reason: "unavailable", id }, 409);
       if (p.stock != null && qty > p.stock) return json({ reason: "stock", id, left: p.stock, name: p.name }, 409);
-      items.push({ id, name: p.name, qty, price_cents: p.price_cents });
+      items.push({ id, name: p.name, qty, price_cents: rate ? Math.round(p.price_cents * (1 - rate)) : p.price_cents });
     }
   }
   const gifts: any[] = [];
@@ -74,7 +89,7 @@ Deno.serve(async (req) => {
 
   const retailCents = items.reduce((s, i) => s + i.price_cents * i.qty, 0);
   const delivery = !items.length ? "none" : body.delivery === "pickup" ? "pickup" : "ship";
-  const shippingCents = delivery === "ship" && retailCents < FREE_OVER_CENTS ? SHIP_CENTS : 0;
+  const shippingCents = delivery === "ship" && !rate && retailCents < FREE_OVER_CENTS ? SHIP_CENTS : 0;
   const subtotal = retailCents + gifts.reduce((s, g) => s + g.amount_cents, 0);
 
   // ── the pending order ──
@@ -107,14 +122,14 @@ Deno.serve(async (req) => {
     if (tax) f.set(`line_items[${n}][price_data][tax_behavior]`, "exclusive");
     n++;
   };
-  items.forEach((i) => line(i.name, i.price_cents, i.qty, TAX_GOODS));
+  items.forEach((i) => line(i.name + (rate ? ` (member ${Math.round(rate * 100)}% off)` : ""), i.price_cents, i.qty, TAX_GOODS));
   gifts.forEach((g) => line(`Lumevina e-gift certificate · $${g.amount_cents / 100}` + (g.recipient_name ? ` for ${g.recipient_name}` : ""), g.amount_cents, 1, TAX_NONE));
   if (delivery === "ship") {
     f.set("shipping_address_collection[allowed_countries][0]", "US");
     f.set("shipping_options[0][shipping_rate_data][type]", "fixed_amount");
     f.set("shipping_options[0][shipping_rate_data][fixed_amount][amount]", String(shippingCents));
     f.set("shipping_options[0][shipping_rate_data][fixed_amount][currency]", "usd");
-    f.set("shipping_options[0][shipping_rate_data][display_name]", shippingCents ? "Shipping (USPS)" : "Free shipping (orders over $75)");
+    f.set("shipping_options[0][shipping_rate_data][display_name]", shippingCents ? "Shipping (USPS)" : rate ? "Free shipping (members)" : "Free shipping (orders over $75)");
     if (tax) {
       f.set("shipping_options[0][shipping_rate_data][tax_behavior]", "exclusive");
       f.set("shipping_options[0][shipping_rate_data][tax_code]", TAX_SHIPPING);

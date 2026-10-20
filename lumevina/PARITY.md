@@ -2,7 +2,9 @@
 
 An honest running scorecard: what the Lumevina site already does, what's
 scaffolded (frontend built, needs the backend switched on), and what's still
-missing. Updated as we close gaps.
+missing. Updated as we close gaps. The current, item-by-item comparison with
+v2 and v3 is GLOSSGENIUS-PARITY.md; rows marked v3 are built and turn on with
+the v3 switch (GO-LIVE.md section 6).
 
 Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · ⬜ not built yet
 
@@ -11,23 +13,23 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Feature | Lumevina | GlossGenius | Notes |
 | --- | --- | --- | --- |
 | Online booking | ✅ | ✅ | Multi-service, back-to-back; opens on a service picker |
-| Deposits at booking | 🟡 | ✅ | 50% deposit; Stripe-ready (demo now) |
+| Deposits at booking | ✅ v3 | ✅ | Her per-service deposits, by Stripe Checkout; members none |
 | On-screen confirmation | ✅ | ✅ | Order id + summary |
-| Confirmation email/SMS | 🟡 | ✅ | `send-confirmation` fn; needs Resend/Twilio keys |
-| 24-hour reminder | 🟡 | ✅ | Queued by webhook; flush documented |
+| Confirmation email/SMS | ✅ v3 | ✅ | `_shared/bookings.ts`; Resend, Twilio for texts |
+| Reminders | ✅ v3 | ✅ | Email 3 days before, text the day before (`client-reminders`, hourly) |
 | Add to calendar (.ics) | ✅ | ✅ | Works now, 1-day alarm |
 | Pre-visit intake / consent | ✅ | ✅ | Real form, validation, e-signature |
 | Loyalty / points | ✅ | ✅ | Glow Rewards — deeper than GG |
 | Referrals · birthday · welcome | ✅ | partial | GG has some; ours is richer |
 | Flash-opening discounts | ✅ | ⬜ | Dynamic pricing to fill slow slots |
 | Gift certificates | ✅ | ✅ | Gift a specific service or a value; full code lifecycle |
-| Memberships (monthly facial) | 🟡 | ✅ | 2 plans (Glow, Ageless), banked facials (billing holds at 2), pause, online cancel, gift a facial; billing flips on with Stripe Billing |
+| Memberships (monthly facial) | ✅ v3 | ✅ | Glow $185, Ageless $235 (founding $175 / $225); banked facials (billing holds at 2), pause, online cancel, gift a facial; Stripe Billing |
 | Ask Lumevina (client questions) | 🟡 | not checked | Demo works now: instant answers to everyday questions; anything personal goes to Evelyn with a drafted reply (dashboard: Client questions). Members hear back within 24 hours. Live: `server/functions/ask` with Claude |
-| Self-service cancel (48-hr) | ✅ | ✅ | In My Lumevina |
-| Self-service reschedule | ✅ | ✅ | In-flow link; 48-hr rule enforced |
-| Saved card for rebooking / auto no-show fee | ⬜ | ✅ | Stripe supports it; not wired |
+| Self-service cancel (48-hr) | ✅ | ✅ | The link in every email, and My Lumevina |
+| Self-service reschedule | ✅ | ✅ | Same; 48-hr and Saturday rules enforced on the server |
+| Saved card for rebooking / no-show fee | ✅ v3 | ✅ | Card on file from booking; fees from Appointments |
 | Two-way texting with the spa | ⬜ | ✅ | Needs messaging backend |
-| Emailed receipts | 🟡 | ✅ | Rides on the email piece |
+| Emailed receipts | ✅ | ✅ | Shop orders, visits checked out, fees |
 
 ## For the owner (business-facing)
 
@@ -39,17 +41,18 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | Booking source (app vs web) | ✅ | ⬜ | Captured from booking #1 |
 | Client CRM (profiles, history, forms) | ✅ | ✅ | Searchable → visit history + intake answers |
 | New-member retention cohort | ✅ | partial | Returned vs first-time |
-| In-person balance settlement (cash/card) | ✅ | ✅ | "Settle visits": mark paid cash/card |
+| Checkout at the visit, with tips | ✅ v3 | ✅ | Appointments: card on file, cash or a pay link; products, discount, points (v2: "Settle visits") |
 | No-show tracking (deposit kept) | ✅ | ✅ | Deposit kept, balance written off |
-| Auto-charge no-show/late-cancel fee | 🟡 | ✅ | Needs saved card (Stripe off-session) |
+| Charge a no-show/late-cancel fee | ✅ v3 | ✅ | One tap, to the card on file |
 | Gift-certificate liability tracking | ✅ | partial | Outstanding balance tile + per-cert table |
 | Bookkeeping / tax (income, costs, profit) | ✅ | partial | Services, dues, retail, gifts in; card fees, product cost, Founding Five kits, expenses out; monthly profit; CSV |
 | Calendar sync (Google/Apple) | ✅ | ✅ | Owner .ics feed |
 | Intake forms visible to owner | ✅ | ✅ | Per client in the CRM |
-| Automated confirmations/reminders | 🟡 | ✅ | `send-confirmation` function |
-| Marketing campaigns (email/SMS blasts) | ⬜ | ✅ | Newsletter stub only |
-| Waitlist (auto-fill cancellations) | ⬜ | ✅ | Flash openings are a cousin |
-| Reviews / reputation management | ⬜ | ✅ | Planned |
+| Automated confirmations/reminders | ✅ v3 | ✅ | `client-reminders`, hourly |
+| Marketing campaigns (email/SMS blasts) | 🟡 | ✅ | Automatic invitation, rebook and restock emails; no campaign builder |
+| Waitlist (auto-fill cancellations) | ✅ v3 | ✅ | A cancellation emails the first person waiting |
+| Reviews / reputation management | 🟡 v3 | ✅ | Review request the day after a visit (her Google link) |
+| Import clients from GlossGenius | ✅ v3 | — | The client CSV, then one invitation email |
 | Memberships / recurring billing | ✅ | ✅ | Glow Membership: 2 plans, banked facials (billing holds at 2), Founding Five, launch ledger |
 | Product subscriptions | ✅ | partial | Glow Routine: $75/month refills + skin supplement, ship or pick up, logged at cost |
 | Staff / team management | ⬜ | ✅ | Single-provider today |

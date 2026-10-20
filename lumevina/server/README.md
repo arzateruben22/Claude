@@ -1,25 +1,121 @@
 # Lumevina — server (Supabase + Stripe)
 
-The backend that turns the site's demo booking/rewards into the real thing:
-one shared calendar, real deposits, and a Glow Rewards ledger that follows
-the client across devices (site → iPhone app).
+The backend that turns the site's demo into the real thing: the shop's
+checkout, Evelyn's studio app, the assistant, and in v3 (`js/site-config.js →
+version: "v3"`) booking, Glow Membership and Glow Points on the website, with
+everything she did in GlossGenius done from her dashboard. **Turning on v3**
+below is the checklist.
 
 ## What's here
 
 | File | Purpose |
 | --- | --- |
-| `schema.sql` | Postgres schema: clients, bookings (with a database-level double-booking guard), rewards ledger, flash slots, push tokens, row-level security |
-| `functions/create-deposit-intent/` | Recomputes the price server-side, inserts the booking, creates the Stripe PaymentIntent for the 50% deposit |
-| `functions/stripe-webhook/` | Confirms payment, holds the booking, writes rewards (multipliers included), fires the confirmation, documents the referral-credit trigger |
-| `functions/send-confirmation/` | Sends confirmation + 24-hour reminder email/SMS (Resend + optional Twilio); also flushes due reminders when run on a schedule |
+| `schema.sql` | Postgres schema: contacts (every client by email, imported from GlossGenius or not), bookings (with a database-level double-booking guard), memberships, the Glow Points ledger, waitlist, orders, gift certificates, site settings, row-level security |
+| `functions/book/` | (v3) Website booking: prices the visit, checks her hours and both calendars, holds the time, and opens Stripe Checkout for the deposit and the card on file; get, move, cancel, waitlist, and a client's own list |
+| `functions/membership/` | (v3) Glow Membership on Stripe Billing: plans and founding spots, join, and the member's pause, cancel, keep, billing card and gift |
+| `functions/rewards/` | (v3) A signed-in client's Glow Points, history, referral link and birthday month |
+| `functions/studio-book/` | (v3) Evelyn's Appointments: the list, checkout at the visit (tip, products, card on file, cash or a pay link), fees, cancel, booking for a client, card requests, the waitlist |
+| `functions/client-reminders/` | (v3) Run hourly: reminder email, the day-before text, review request, rebook nudge, running-low refill, each once |
+| `functions/client-prefs/` | (v3) The unsubscribe link in client emails |
+| `functions/availability/` | Busy times for the booking calendar: website bookings plus her Google Calendar (where GlossGenius writes) |
+| `functions/stripe-webhook/` | Every Stripe event: paid orders, bookings, saved cards, visit pay links, membership invoices and subscription changes |
+| `functions/calendar-feed/` | Her appointments as a private calendar feed (.ics) |
 | `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts, hands personal ones to Evelyn with a drafted reply |
 | `functions/gift-cards/` | Gift certificates: check a balance, use one at the visit (studio key), list them, sell one in person |
 | `functions/client-plans/` | Skin plans: Evelyn writes each client's routine (studio key); the signed-in client reads theirs |
 | `functions/create-checkout/` | The shop's real checkout: prices the cart from the products table and opens Stripe Checkout (cards, Apple/Google Pay, pay-over-time, Stripe Tax, shipping or pickup, gift certificates) |
-| `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices (studio key) |
+| `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices, client questions; in v3 also her hours and extra Mondays, the GlossGenius client import and invitation, and the members list (studio key) |
 | `functions/studio-digest/` | Her morning email and notification; sends gift certificates dated for today (run daily by cron) |
-| `functions/_shared/orders.ts`, `notify.ts`, `mail.ts` | Finishing a paid order; alerting Evelyn (feed, push, email); sending email |
+| `functions/_shared/orders.ts`, `notify.ts`, `mail.ts`, `sms.ts` | Finishing a paid order; alerting Evelyn (feed, push, email); sending email and texts |
+| `functions/_shared/bookings.ts`, `visits.ts`, `membership.ts`, `points.ts`, `contacts.ts`, `hours.ts`, `stripe.ts` | (v3) Pricing and confirming a booking, cancelling, the policy; checking out a visit; membership credits and billing hold; Glow Points; client records; her hours and extra Mondays; Stripe calls |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
+
+## Turning on v3: booking, Glow Membership and Glow Points
+
+v3 moves the client side home from GlossGenius and gives Evelyn the same
+jobs in her dashboard. Try it first with `?preview=v3` at the end of the
+site's address (that browser only); the dashboard follows the same switch.
+
+### What runs where
+
+| The client | Function | What happens |
+| --- | --- | --- |
+| Books (Book section) | `book` → `create` | Checks her hours and extra Mondays (`site_settings`), her Google Calendar and the database's overlap guard; uses Glow Points (signed in, up to half the deposit), a gift certificate or a deposit carried over; saves a `pending` booking for 31 minutes and opens Stripe Checkout: the deposit with the card saved, or just the card when nothing is due. A member's facial, or a signed-in client with a card on file and nothing due, is confirmed at once. |
+| Pays | `stripe-webhook` (`checkout.session.completed`, `metadata.kind = booking`) | `confirmBooking`: held, card saved on the client, points (100 extra on a first booking here), the membership facial used, her Google Calendar, the confirmation email (and a text if they asked), her alert |
+| Moves or cancels | `book` → `get`, `reschedule`, `cancel` (the link in every email, `?manage=<token>`, and My Lumevina) | 48 hours or more ahead, not a Saturday: move it, or cancel with the deposit carried to a new date that month. Later: cancelling keeps the deposit and Evelyn decides on the fee. |
+| Finds a day full | `book` → `waitlist` | A cancellation emails the first person waiting |
+| Joins a membership | `membership` → `join`, then `stripe-webhook` | Stripe Checkout in subscription mode at today's price (the founding rate for the first 25, kept while the subscription continues); the webhook makes the membership, and each `invoice.paid` adds that month's facial |
+| Manages it (My Lumevina) | `membership` → `status`, `pause`, `unpause`, `cancel`, `keep`, `card`, `gift` | Pause skips one billing (once a year); cancel ends after the 3-month minimum or the month paid for; billing holds at 2 banked facials and picks up when one is booked; `card` opens Stripe's billing portal |
+| Sees their points | `rewards` → `status`, `birthday` | The ledger, keyed by email, so points earned before signing in are there |
+| Unsubscribes | `client-prefs` | Marketing emails stop (appointment emails continue) |
+
+| Evelyn (dashboard, studio key) | Function | |
+| --- | --- | --- |
+| Appointments | `studio-book` | `list`, `quote`, `checkout` (`card` on file, `cash`, `link` for a pay link they open on their phone, `other`; tip, products, discount, points), `fee` ($43 for a late cancellation; a no-show is 50% of the service, with a deposit already kept counting toward it), `no_show`, `cancel` (refunds the deposit), `book` (for a client, any time; `request_card` emails a card link), `card_link`, `waitlist`, `waitlist_remove` |
+| Clients | `studio` | `import_clients` (the GlossGenius client CSV, in chunks of 500), `invite` (one email to each imported client who hasn't booked here: 100 Glow Points on their first booking; `dry: true` counts), `contacts`, `contact_note` |
+| Hours, extra Mondays | `studio` | `hours_set`, `extra_mondays_set` (both in `site_settings`, which the website reads) |
+| Members | `studio` | `members`, `five_kit` |
+| Automatic messages | `client-reminders` (hourly cron) | Reminder email 3 days before; a text the day before to clients who said yes; a review request the day after (`REVIEW_URL`); "time for your next facial" 4 weeks after a visit with nothing booked (members skipped); "running low?" about two months after a shop order, with a link that refills the bag. Each goes once (`sent_messages`). |
+
+### Checklist
+
+1. **Schema.** Run the current `schema.sql` (new: `contacts`, `waitlist`,
+   `sent_messages`, `site_settings`, and new columns on `bookings` and
+   `memberships`).
+2. **Secrets.**
+
+   ```sh
+   supabase secrets set STRIPE_SECRET_KEY=sk_live_... STRIPE_WEBHOOK_SECRET=whsec_... \
+     SITE_URL=https://her-domain STUDIO_KEY="<a long phrase only Evelyn knows>" \
+     RESEND_API_KEY=re_... FROM_EMAIL="Lumevina <hello@her-domain>" OWNER_EMAIL=evelyn@... \
+     SITE_VERSION=v3
+   # texts (optional; US texting needs an A2P 10DLC registration in Twilio first):
+   supabase secrets set TWILIO_SID=AC... TWILIO_TOKEN=... TWILIO_FROM=+1...   # or TWILIO_MESSAGING_SID=MG...
+   # optional:
+   supabase secrets set REVIEW_URL=https://g.page/r/... STUDIO_ADDRESS="<the studio's address, for confirmations>" PREFS_SECRET=<random>
+   ```
+
+   `SITE_VERSION` is the assistant's default; the website also tells it which
+   version it runs, so a `?preview=v3` visitor gets v3 answers. Without
+   `PREFS_SECRET`, unsubscribe links are signed with the studio key.
+3. **Deploy.**
+
+   ```sh
+   for f in book membership rewards studio-book studio client-reminders client-prefs availability stripe-webhook ask; do
+     supabase functions deploy $f --no-verify-jwt
+   done
+   ```
+
+4. **Stripe.** Webhook endpoint: the `stripe-webhook` function's URL, with
+   `checkout.session.completed`, `checkout.session.expired`,
+   `checkout.session.async_payment_succeeded`,
+   `checkout.session.async_payment_failed`, `invoice.paid`,
+   `customer.subscription.updated` and `customer.subscription.deleted`.
+   Turn on the **customer portal** (Settings → Billing → Customer portal,
+   with "update payment method") so Change billing card works. Nothing to
+   create for the membership prices: each subscription carries its price.
+5. **Cron** (SQL editor, the studio key in Vault as for the morning email):
+
+   ```sql
+   select cron.schedule('client-reminders', '7 * * * *', $$
+     select net.http_post(
+       url := 'https://<project>.supabase.co/functions/v1/client-reminders',
+       headers := jsonb_build_object('Content-Type', 'application/json',
+         'x-studio-key', (select decrypted_secret from vault.decrypted_secrets where name = 'studio_key')),
+       body := '{}'::jsonb);
+   $$);
+   ```
+
+6. **Website.** In `js/site-config.js`: `version: "v3"`, `shop.supabase`
+   and `shop.key`, and `booking.availability`. Sign-in links: Supabase →
+   Authentication → URL Configuration (below, under Skin plans).
+7. **Dashboard.** Save the studio key under Lumevina Studio; set her hours
+   and, when she wants them, extra Mondays (Glow Membership card; off until
+   she chooses); Clients → import the GlossGenius CSV, then Invite.
+8. **Test in Stripe's test mode first** (card 4242 4242 4242 4242): a guest
+   booking with a deposit, one with no deposit, moving and cancelling from
+   the email link, a membership join and its first facial, a checkout with a
+   tip, a pay link, a late-cancel fee. GO-LIVE.md has the full list.
 
 ## Gift certificates
 
@@ -154,24 +250,14 @@ only from the home-screen app (Share → Add to Home Screen → open Studio).
 
 ## Notifications (confirmations & reminders)
 
-The site collects the client's email at booking and a phone on the intake
-form. To turn on real messages:
-
-1. Create a [Resend](https://resend.com) account, verify your sending domain,
-   and set the secrets:
-
-   ```sh
-   supabase secrets set RESEND_API_KEY=re_...  FROM_EMAIL="Lumevina <hello@yourdomain>"
-   # optional SMS:
-   supabase secrets set TWILIO_SID=AC... TWILIO_TOKEN=... TWILIO_FROM=+1...
-   ```
-
-2. Deploy: `supabase functions deploy send-confirmation`. The webhook already
-   calls it on every paid booking (confirmation now + a queued 24h reminder).
-
-3. Schedule the reminder flush — in the Supabase dashboard add a cron job
-   (Database → Cron) every 15 minutes hitting the function with `{ "due": true }`,
-   which sends any reminder rows whose time has arrived.
+Email goes through [Resend](https://resend.com) (verify the sending domain,
+then `RESEND_API_KEY` and `FROM_EMAIL`); texts through Twilio, optional.
+The booking's own messages (confirmed, moved, cancelled, card requests) go
+out from `_shared/bookings.ts` as they happen; the scheduled ones (reminders,
+the day-before text, review, rebook, running low) from `client-reminders`,
+hourly (Turning on v3 → Cron). The booking form asks for a mobile number and
+whether to text a reminder; nobody is texted without that yes. The older
+`notifications` table in `schema.sql` is no longer used.
 
 ## Intake forms
 
@@ -186,8 +272,7 @@ the table editor). Nothing else changes on the client.
 2. Install the CLI: `npm i -g supabase`, then `supabase login` and
    `supabase link --project-ref <your-project-ref>`.
 3. Apply the schema: `supabase db push` (or paste `schema.sql` into the SQL
-   editor). Also run the `grant_referral_credit` trigger from the bottom of
-   `stripe-webhook/index.ts`.
+   editor).
 4. In Supabase Auth settings, enable **Email (magic link)** — no passwords.
 5. Create a [Stripe](https://stripe.com) account. Copy the **secret key** and
    set the function secrets (keys live only here — never in the repo or app):
@@ -197,32 +282,27 @@ the table editor). Nothing else changes on the client.
    supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
    ```
 
-6. Deploy the functions:
+6. Deploy the functions and add the Stripe webhook: Turning on v3 → Deploy
+   and Stripe (for the shop alone, `create-checkout` and `stripe-webhook`).
 
-   ```sh
-   supabase functions deploy create-deposit-intent
-   supabase functions deploy stripe-webhook --no-verify-jwt
-   ```
+## How the website talks to the server
 
-7. In the Stripe dashboard, add a webhook endpoint pointing at the
-   `stripe-webhook` function URL for events `payment_intent.succeeded` and
-   `payment_intent.payment_failed`.
+Every module checks `js/site-config.js → shop` and runs in demo mode (this
+browser only, test cards) until it's filled in:
 
-## Wiring the client
+- `js/booking.js` → `book` (and `availability`); `js/manage.js` → `book`
+  for the link in each email.
+- `js/membership.js` → `membership`; `js/rewards.js` → `rewards`;
+  `js/account.js` → Supabase Auth (the emailed sign-in link) and `book` →
+  `mine` for the client's appointments.
+- `js/hours.js` and `js/extra-days.js` → `site_settings` (read) and
+  `studio` (her saves).
+- `js/cart.js` → `create-checkout`; `js/ask.js` → `ask`.
+- The dashboard → `studio`, `studio-book`, `gift-cards`, `client-plans`.
 
-The swap points are already marked in the site code:
-
-- `js/payments.js` → `process()` calls `create-deposit-intent`, then confirms
-  the PaymentIntent with Stripe.js / the Stripe iOS SDK (Apple Pay comes free
-  via `automatic_payment_methods`).
-- `js/booking.js` → replace `cellSeedBusy` (the demo availability) with a
-  fetch of `day_availability(date)`; keep the same cell math.
-- `js/rewards.js` → read the balance from `reward_balances`, write nothing
-  locally; the ledger is server-side. The public API of `LumevinaRewards`
-  stays the same, so no UI changes.
-- `js/account.js` → swap the mock sign-in for
-  `supabase.auth.signInWithOtp({ email })` — the UI is already magic-link
-  shaped.
+Card numbers never touch the website or the server: Stripe's own pages take
+them, and the server keeps only Stripe's customer and card ids and a label
+like "Visa •••• 4242".
 
 ## Regenerating the catalog
 
@@ -250,54 +330,30 @@ console.log("services:",seen.size);'
 
 ## Memberships (Stripe Billing)
 
-`js/membership.js` runs the whole Glow Membership flow in the browser today
-(join, monthly facials, bank up to 2 with billing held at 2, pause, cancel,
-gift a banked facial).
-To make it real:
+Built (v3): `functions/membership` and `_shared/membership.ts`, with the
+browser's rules from `js/membership.js` (the demo) mirrored on the server.
 
-1. In Stripe, create one **Product** per plan (Glow, Ageless) with a
-   monthly **Price** ($175 / $225). Clear-skin clients join Glow, which covers
-   the Monthly Acne Treatment. Founding members keep the price they
-   joined at: never edit a Price, add a new one for new members instead.
-2. Join = a Stripe **Subscription** created server-side for the client's
-   customer, using the card saved at join (`payment_behavior:
-   default_incomplete`, confirmed with Stripe.js), then an insert into
-   `memberships` (schema.sql) with `min_ends_at = now() + 3 months`.
-3. In `stripe-webhook`, handle:
-   - `invoice.paid` → `credits = credits + 1`, ledger row `billed`
-   - `invoice.voided` on a held subscription → ledger row `held`
-   - `customer.subscription.updated` / `deleted` → mirror `status`, `cancel_at`
-4. Billing hold at 2 banked facials (so no one pays for a facial they can't
-   use). After every change to `credits` (a paid invoice, a booking, a
-   returned or gifted facial), run one `sync_hold` step:
-   - `credits >= 2` and not already held → set the subscription's
-     `pause_collection = { behavior: 'void' }` (no `resumes_at`), set
-     `on_hold = true`, and send the member one email and text: "You have 2
-     facials waiting, so we won't bill you on {date}. Book one and your
-     monthly facial picks up again."
-   - `credits < 2` and held → clear `pause_collection`, `on_hold = false`.
-   - Three days before a held billing date, send one booking reminder.
-   The member's own pause (step 6) takes priority: while `paused_bill_at` is
-   set, leave `pause_collection` as the pause set it, and re-run `sync_hold`
-   when it resumes.
-5. Cancel = `cancel_at` on the subscription set to the later of the minimum
-   end or the current period end. It must be available online from My Lumevina
-   (California's automatic-renewal law requires online cancellation when the
-   signup was online), and the terms shown at join must state the price,
-   billing frequency, minimum term and how to cancel: they already do.
-6. Pause = `pause_collection` for the one skipped billing date (once per 12
-   months), mirrored in `paused_bill_at`.
-7. Booking with a credit: `create-deposit-intent` checks the client has a
-   `usable` membership covering the service, prices that service at $0 (and
-   takes 15% off the rest of the visit), and decrements `credits` in the same
-   transaction as the booking insert.
-8. Founding Five: in the join transaction, if fewer than five memberships have
-   a `five_no`, set the next number with `five_kit = 'ready'` and
-   `five_addon = 'ready'`, and decrement the two kit products (GlyMed+
-   Glycolic Facial Cleanser, Face Reality Daily SPF 30 Plus) in `products` so
-   the shop never oversells them. The first booking that uses a membership
-   credit sets `five_addon = 'used'`; the owner dashboard sets
-   `five_kit = 'given'` when the kit is handed over.
+- **Prices.** Glow $185 and Ageless $235 a month; the first 25 members join
+  at the founding rate, $175 and $225, kept for as long as the subscription
+  continues (`PLANS` in `_shared/membership.ts` and `js/membership.js`; keep
+  them the same). Each subscription is created with its own price, so a
+  later price change never touches existing members.
+- **Join** = Stripe Checkout in subscription mode (the terms are shown on
+  Stripe's page too). The webhook creates the `memberships` row
+  (`ensureMembership`): the Founding Five number and kit for the first five,
+  `min_ends_at` three months out.
+- **Each paid month** (`invoice.paid`, `creditInvoice`) adds one facial.
+  With two banked, billing holds (`pause_collection: void`, `on_hold`) and
+  picks up when one is booked (`resumeBilling` in `confirmBooking`).
+- **Pause** skips the next billing, once a year. **Cancel** sets `cancel_at`
+  to the later of the minimum and the month paid for; banked facials stay
+  usable 60 days after. California's automatic-renewal law wants online
+  cancellation when the signup was online, and the price, frequency, minimum
+  and how to cancel shown at join: both are in place.
+- **Booking with a membership facial** costs nothing and needs no deposit;
+  the rest of the visit is 15% off for members; skincare 10% (Glow) or 15%
+  (Ageless) off at checkout.
+- **Gift** a banked facial: a gift certificate for that facial, emailed.
 
 Have the member terms reviewed before launch.
 
@@ -305,10 +361,11 @@ Have the member terms reviewed before launch.
 
 `js/extra-days.js` holds the owner's choice (off, every other Monday, every
 Monday), set from the dashboard's Glow Membership card. The calendar opens
-those Mondays; members book them first and everyone else from the Friday
-before. Live: store it as one row in a `site_settings` table, read it in the
-calendar, and have `create-deposit-intent` reject a Monday that isn't open
-(or a members-only one for a non-member) so the rule holds server-side.
+those Mondays (11 to 7); members book them first and everyone else from the
+Friday before. Live, it's one row in `site_settings` (`extra_mondays`),
+saved through `studio` → `extra_mondays_set`, read by every browser, and
+checked again in `book` (`_shared/hours.ts`: `members_first` for a
+non-member before the Friday). Off until she turns it on.
 
 ### Glow Routine (product subscription)
 
@@ -332,8 +389,8 @@ dashboard's **Shipping** card works from it. To make it real:
 1. Run the `shipments` table in `schema.sql`.
 2. Checkout sends the address as separate fields (street, apt, city, state,
    ZIP). Validate them in the function that creates the PaymentIntent, and
-   in `stripe-webhook`, on `payment_intent.succeeded` for an order with
-   shipped items, insert a `shipments` row: package and weight from the same
+   in `stripe-webhook`, when an order with shipped items is paid, insert a
+   `shipments` row: package and weight from the same
    table as `js/shipping.js` (`PACKS` and `ITEMS`), `ship_by` two business
    days out. For the Glow Routine, insert one on each `invoice.paid` with
    `ship_by` set to that month's box date.
@@ -346,13 +403,13 @@ dashboard's **Shipping** card works from it. To make it real:
    API (Shippo or EasyPost, a few cents a label) can buy the label from the
    dashboard in one tap; the row already has everything it needs.
 5. Optional: Pirate Ship emails the client their tracking when the import
-   includes an email. To send it from Lumevina instead, have
-   `send-confirmation` email the tracking link when a row turns `shipped`.
+   includes an email. To send it from Lumevina instead, email the tracking
+   link (`_shared/mail.ts`) when a row turns `shipped`.
 
 ## Running both calendars
 
-New clients book on the website; clients who already use GlossGenius keep
-booking there for now. Both have to see each other's appointments, or the
+While GlossGenius appointments are still on her calendar (v2 with
+`mode: "both"`, or the first weeks of v3), the two have to see each other. Both have to see each other's appointments, or the
 same time gets booked twice. GlossGenius has no public API, but it syncs
 with **Google Calendar both ways**, so her Google Calendar is the meeting
 point and the website only talks to Google:
@@ -364,11 +421,10 @@ GlossGenius  ⇄  her Google Calendar  ⇄  website (server/functions)
 - **GlossGenius → website:** GlossGenius puts each appointment in her Google
   Calendar. `functions/availability` reads her busy times (Google freeBusy)
   plus the website's own bookings, and the Book section greys those times
-  out. `create-deposit-intent` checks Google once more before taking a
-  deposit.
-- **Website → GlossGenius:** when a deposit is paid, `stripe-webhook` writes
-  the booking into her Google Calendar (`_shared/google.ts`), and
-  GlossGenius blocks that time.
+  out. `book` checks Google once more before holding the time.
+- **Website → GlossGenius:** when a booking is confirmed, `confirmBooking`
+  writes it into her Google Calendar (`_shared/google.ts`), and
+  GlossGenius blocks that time. Moves and cancellations update it.
 
 Setup, once:
 
@@ -383,7 +439,7 @@ Setup, once:
    If GlossGenius writes to a calendar other than her primary one, also set
    `GOOGLE_BUSY_CALENDARS=primary,<that calendar's id>`.
 4. **Deploy:** `supabase functions deploy availability --no-verify-jwt`
-   (and redeploy `create-deposit-intent` and `stripe-webhook`).
+   (and redeploy `book`, `studio-book` and `stripe-webhook`).
 5. **Website:** in `js/site-config.js`, set `booking.availability` to
    `https://<project>.supabase.co/functions/v1/availability`.
 
@@ -442,25 +498,24 @@ with photos adds the images once.
 
 ## Glow Points, rebooking and referrals
 
-The +25 rebooking bonus is for **non-members** (members already have a
-facial every month): it's earned when a visit falls within 5 weeks after the
-client's last one. `stripe-webhook` records what each booking earned in
-`bookings.points_earned`; when a booking is cancelled in time, the
-`return_booking_points` trigger hands those points back and the visit stops
-counting toward the next rebooking bonus. The website does the same today
-(`js/rewards.js` `reverse`, called from My Lumevina's cancel).
+The ledger is `rewards_ledger`, keyed by email (`_shared/points.ts`, the
+same rules as `js/rewards.js`): 1 point per $1 paid (deposits, the rest of
+the visit at checkout, shop orders, gift certificates; never the tip),
+double on a Wednesday or a Wax Wednesday booking, +100 on a client's first
+booking on the website (not when Evelyn books it for them), +50 once a year
+in their birthday month, and +25 when a **non-member's** next visit is
+within 5 weeks of the last (members already have a facial every month).
+100 points take $10 off; points cover up to half of a deposit, or any part
+of a visit at checkout. A booking cancelled in time hands its points back
+(the `return_booking_points` trigger).
 
 Referrals give both sides $15: the friend gets **$15 off their first visit**
-(`create-deposit-intent` checks the code belongs to another client and that
-it's the booker's first booking, and records it in `bookings.referral_code`),
-and the client who shared it gets **150 points ($15)** once that visit is
-completed. **Share my code** (Glow Rewards and My Lumevina) opens the phone's
-share menu with a link like `https://lumevina.com/?ref=GLOW-AB12`, or copies
-it where there's no share menu. A visitor arriving with `?ref=` has the code
-remembered and filled in on their first booking; the referral-credit trigger
-at the end of `functions/stripe-webhook/index.ts` pays the 150 points once
-that first visit is completed. Set the live address in `js/rewards.js`
-(`SITE`) when the domain is final.
+(`book` records the code from `?ref=` in `bookings.referral_code` when it's
+their first booking and someone else's code), and the client who shared it
+gets **150 points** when that first visit is checked out (`completeVisit`,
+once per friend). **Share my code** (My Lumevina) opens the phone's share
+menu with a link like `https://her-domain/?ref=GLOW-AB12`, built from
+`SITE_URL`.
 
 ## Skin School (the online course)
 

@@ -763,7 +763,8 @@
     var url = SHOP.supabase.replace(/\/$/, "") + "/functions/v1/create-checkout";
     fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + SHOP.key },
+      /* signed in: a member's shelf discount and free shipping are applied by the server too */
+      headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + ((window.LumevinaAccount && window.LumevinaAccount.token && window.LumevinaAccount.token()) || SHOP.key) },
       body: JSON.stringify({
         items: items, gifts: gifts, delivery: delivery(),
         email: checkoutForm.elements.email.value.trim(), name: checkoutForm.elements.name.value.trim(),

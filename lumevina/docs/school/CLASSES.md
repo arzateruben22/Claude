@@ -71,9 +71,9 @@ full Pro Night about 2.6 times.
 The numbers above are only the night itself. Each class also:
 
 - **Books facials.** Everyone leaves with 15% off a facial booked that night. If two of six book a
-  $195 facial, that's about $330 more.
+  $200 facial, that's about $340 more.
 - **Grows the membership.** A guest who has just had their skin checked and a routine built is the
-  easiest membership conversation there is. One new Glow member is $159 a month.
+  easiest membership conversation there is. One new Glow member is $175 a month at the founding rate ($185 after the first 25).
 - **Sells the shelf.** The kit is travel size on purpose: the full sizes are on the shelf.
 - **Fills the email list.** Every guest has Skin Basics online, so they're already in Skin School.
 - **Pro Night sells the Etsy shop.** Estheticians who come will tell others where the kit is sold.

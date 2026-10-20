@@ -643,6 +643,8 @@
     if (CFG.key) { headers.apikey = CFG.key; headers.Authorization = "Bearer " + (token() || CFG.key); }
     var ctrl = typeof AbortController === "function" ? new AbortController() : null;
     var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, ms || 20000) : null;
+    /* which version the website runs (v2: booking on GlossGenius; v3: here, with membership and points) */
+    body.site = (window.LumevinaFeatures && window.LumevinaFeatures.version) || "v2";
     return fetch(ENDPOINT, { method: "POST", headers: headers, body: JSON.stringify(body), signal: ctrl ? ctrl.signal : undefined })
       .then(function (res) { if (!res.ok) throw new Error("ask " + res.status); return res.json(); })
       .finally(function () { if (timer) clearTimeout(timer); });

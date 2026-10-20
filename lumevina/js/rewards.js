@@ -360,7 +360,11 @@
   /* ── Boot ── */
   load();
   refresh();
-  if (LIVE) refreshLive();
+  /* after the page's scripts: the sign-in (js/account.js) loads after this one */
+  if (LIVE) {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", refreshLive);
+    else refreshLive();
+  }
 
   window.LumevinaRewards = {
     points: function () { return data.points; },

@@ -1045,6 +1045,8 @@
     /* a member's email unlocks extra Mondays that are still members-only */
     if (XD) { renderDays(); renderSlots(); }
   });
+  /* live: her extra-Mondays choice arrives from the server */
+  document.addEventListener("lumevina:extra-days", function () { if (XD) { renderDays(); renderSlots(); } });
 
   /* ── Session building ── */
   var addService = function (id) {
@@ -2002,6 +2004,7 @@
   var REASONS = {
     slot_taken: "That time was just taken. Go back and pick another.",
     hours: "That time isn't open any more. Go back and pick another.",
+    members_first: "That Monday is for members until the Friday before. Pick another day, or book it from then.",
     time: "That time can't be booked online (it's too soon or too far ahead). Go back and pick another.",
     services: "One of these treatments can't be booked online. Ask Evelyn and she'll book it for you.",
     email: "Check your name and email (signed in? book with your own email).",

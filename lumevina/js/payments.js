@@ -1,19 +1,14 @@
-/* Lumevina — shared payment engine
-   One module owns card formatting, validation, and processing for
-   BOTH checkouts (the cart and the booking deposit), so real
-   payments plug in at exactly one point.
+/* Lumevina — the demo's card form
+   Card formatting, validation and a simulated charge for the demo
+   checkouts (the cart, booking deposits, the membership), so the site can
+   be tried with Stripe's test card (4242 4242 4242 4242) before anything
+   is connected. Nothing leaves the browser.
 
-   ═══ STRIPE INTEGRATION POINT ═══
-   To go live, replace process() below with the real flow:
-     1. Server: create a PaymentIntent (secret key stays server-side)
-          POST /create-payment-intent  { amount, currency: "usd", description }
-          → returns { clientSecret }
-     2. Client: confirm with Stripe.js Elements
-          stripe.confirmCardPayment(clientSecret, { payment_method: {...} })
-     3. On success, call cb(null, { id: paymentIntent.id })
-   Stripe Elements also brings Apple Pay / Google Pay with no extra
-   markup. Until then, process() simulates a successful charge and
-   nothing leaves the browser. */
+   Live (js/site-config.js → shop), card numbers never touch this page:
+   the cart (functions/create-checkout), booking (functions/book) and the
+   membership (functions/membership) each hand off to Stripe's own
+   payment page, with Apple Pay and Google Pay, and the card on file is
+   kept by Stripe. getCard() still answers for the demo's saved cards. */
 
 (function () {
   "use strict";

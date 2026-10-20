@@ -8,7 +8,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 - [x] **Shared stock** (built Oct 20): the products table; an online sale and a Sell in the dashboard take from the same count.
 - [x] **Dashboard Inventory** on her real 43 products (built Oct 20).
 - [x] **Lumevina Studio** (built Oct 20): the dashboard on her phone, with notifications and a morning email.
-- [ ] Booking deposits stay on GlossGenius for now (her choice); the website's own deposit checkout is built for later.
+- [x] **v3** (built Oct 20): booking on the website (deposits, a card on file, reminders by email and text, moving and cancelling online, a waitlist), Glow Membership and Glow Points for real, and her GlossGenius jobs in the dashboard (Appointments: checkout with tips, fees, booking for a client; the GlossGenius client import and invitation). Off until `version: "v3"` in `js/site-config.js`; try it any time with `?preview=v3`. Section 6 is the switch-over.
 
 ## 2. Create the accounts (about 30 minutes, in Evelyn's name)
 
@@ -19,6 +19,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 | **Supabase** (supabase.com) | the shared calendar, stock, orders and client questions | free to start |
 | **Netlify** or **Cloudflare Pages**, connected to the GitHub repo, folder `lumevina` | hosting the website | free |
 | **Resend** (resend.com) | booking and order emails | free to start |
+| v3: **Twilio** (twilio.com), optional | the day-before text reminder (US texting needs its A2P registration, a few days) | ~$2 a month plus about a cent a text |
 | **Google Cloud**, signed in with the Google account GlossGenius syncs to | keeping the two calendars in sync | free |
 | **Anthropic** (console.anthropic.com) | Ask Lumevina's answers | a few dollars a month |
 | Later: **Apple Developer** and **Google Play** | the app in the stores | $99 a year; $25 once |
@@ -28,7 +29,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor, then `server/seed-products.sql` (her 43 products, from `node scripts/seed-products.mjs`).
 2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates, save skin plans, change stock and see orders. She types it once into the dashboard (Lumevina Studio, at the top) and that device remembers it. Also: **`SITE_URL`** (the website's address), **`OWNER_EMAIL`** (where her order alerts and morning email go), and **`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`** for phone notifications (make the pair once with `npx web-push generate-vapid-keys`).
 3. **Deploy** the server functions: `supabase functions deploy` (the list is in `server/README.md`).
-4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address, with the events listed at the top of `server/functions/stripe-webhook/index.ts` (payment_intent.* and checkout.session.*).
+4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address, with the events in `server/README.md` → Turning on v3 → Stripe (the checkout.session.* ones for the shop; v3 adds invoice.paid and customer.subscription.*).
 4b. **Stripe for the shop:** Settings → Payment methods: turn on Apple Pay, Google Pay and any of Klarna / Afterpay / Affirm she wants. **Sales tax:** set up Stripe Tax (her business address and California registration), then add the secret `STRIPE_TAX=on`. Selling products in California generally needs a seller's permit; her accountant should confirm the setup.
 5. **GlossGenius:** turn on Google Calendar sync, both ways.
 5b. **Client sign-in:** in Supabase → Authentication → URL Configuration, set the Site URL to the website's address and add it to Redirect URLs (the emailed sign-in link comes back there).
@@ -53,7 +54,28 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 ## 5. Launch
 
 - [ ] Instagram bio and Google Business profile link to the new site.
-- [ ] Booking stays on GlossGenius at launch (Evelyn's choice): the site says "booking right here is coming soon". When she's ready, set `booking.mode: "both"` in `js/site-config.js`, and later `"site"`.
-- [ ] When she wants them: Glow Membership (Glow $175, Ageless $225) is one switch in `js/site-config.js`.
+- [ ] Booking stays on GlossGenius at launch (Evelyn's choice): the site says "booking right here is coming soon". When she's ready, section 6.
 
 **Not charging clients extra for the app.** Running costs are small (a few dollars to ~$50 a month to start, plus card fees). In-person services and physical products sold in the app aren't subject to Apple's in-app purchase cut; only digital products, like a future online course, would be.
+
+## 6. Switching to v3 (booking, membership and points here)
+
+One switch, when Evelyn is ready: everything below is built and tested; it needs the accounts above and these steps (`server/README.md` → Turning on v3 has the commands).
+
+1. **Preview it first.** Open the site with `?preview=v3` at the end of the address (and `dashboard.html?preview=v3`). Only that browser sees it; "Previewing v3 · leave" in the corner ends it.
+2. **Server:** run the current `server/schema.sql`, add the v3 secrets (`SITE_VERSION=v3`; Twilio, `REVIEW_URL` and `STUDIO_ADDRESS` if wanted), deploy the v3 functions, add the webhook events, turn on Stripe's customer portal, and schedule `client-reminders` hourly.
+3. **Her dashboard:** check her hours; Clients → choose the GlossGenius client export (a CSV) → Import. Nothing is sent yet.
+4. **Test mode run** (Stripe test keys, card 4242 4242 4242 4242):
+   - [ ] A guest books a Brazilian: Stripe's page takes the $30 deposit; the confirmation email has "Cancel or move it"; it's in her Google Calendar and Appointments.
+   - [ ] A facial with no deposit: Stripe's page only saves the card.
+   - [ ] From the email link: move it (48+ hours ahead), then cancel it; book again the same month and the deposit comes off.
+   - [ ] A full day offers the waitlist; cancelling a booking that day emails the person waiting.
+   - [ ] Join Glow: Stripe's page at $175 (founding); My Lumevina shows 1 facial; book it with no deposit; pause, cancel, keep.
+   - [ ] In Appointments: check out a visit with a product and a 20% tip by the card on file; a pay link (open it on a phone); cash. Mark a no-show and charge the fee.
+   - [ ] Book for a client from the dashboard with "email a card link"; the client adds a card from the email.
+   - [ ] The hourly run: a reminder email for a booking 3 days out; the text the day before (if Twilio is set up).
+   - [ ] Glow Points: the first booking shows 100 + the deposit's points in My Lumevina.
+5. **Switch:** set `version: "v3"` in `js/site-config.js` and publish. Then Clients → **Invite**: one email to each imported client (their first booking here comes with 100 Glow Points; anything already booked on GlossGenius stands).
+6. **The weeks after:** GlossGenius appointments already booked stay on her calendar (the two calendars keep seeing each other through Google). Once none are left, GlossGenius can be cancelled.
+
+Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep the founding rate, **$175** and **$225**, for as long as they stay.

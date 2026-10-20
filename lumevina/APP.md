@@ -52,14 +52,12 @@ In Xcode:
 
 - [ ] **Apple Pay** — in Stripe: Settings → Payment methods → Apple Pay →
       register the merchant ID; in Xcode add the Apple Pay capability with
-      that merchant ID. The PaymentIntent from `create-deposit-intent`
-      already enables it (`automatic_payment_methods`).
+      that merchant ID. Stripe Checkout (deposits, the shop, pay links)
+      shows Apple Pay by itself once her domain is verified in Stripe.
 - [ ] **Push notifications for flash openings** — create an APNs key in the
       Apple Developer portal (Keys → +, enable APNs), upload it to your push
       provider (Supabase edge function with APNs, or OneSignal), and register
       tokens via `@capacitor/push-notifications` (already a dependency).
-- [ ] **Haptics on the magic mirror** — one line where the mirror reveals:
-      `Haptics.impact({ style: ImpactStyle.Light })` from `@capacitor/haptics`.
 
 ## 4. TestFlight (real phones, before review)
 
@@ -94,8 +92,8 @@ Draft copy (edit to taste):
 
 Screenshots (required sizes: 6.9" and 6.5" iPhones — take them in the iOS
 Simulator via Xcode): hero, booking calendar with the ⚡ flash slot, the
-session builder with clock times, Glow Rewards modal, booking success with
-the magic mirror.
+session builder with clock times, Glow Points in My Lumevina, and the
+booking confirmation.
 
 ## 6. Submit for review
 

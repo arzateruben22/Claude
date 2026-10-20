@@ -56,7 +56,7 @@
 import Anthropic from "npm:@anthropic-ai/sdk@0.131.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import {
-  BUILT_AT, PROMPT, FACTS, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
+  BUILT_AT, PROMPT, FACTS, FACTS_V3, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
 } from "../_shared/knowledge.ts";
 import { clientFile } from "../_shared/plans.ts";
 import { notifyOwner } from "../_shared/notify.ts";
@@ -88,9 +88,15 @@ const ruleKind = (t: string): string | null => {
 // ── what the assistant knows: stable text, cached; stock last, never cached ──
 const shelfLine = (p: typeof SHELF[number]) =>
   `- ${p.name} (${p.brand}, ${p.type}${p.size ? ", " + p.size : ""}): $${p.price}${p.about ? ". " + p.about : ""}`;
-const STABLE = [
+// v2 or v3 facts (booking on GlossGenius or here, membership and points): the
+// website says which it runs (js/site-config.js, ?preview=v3 included), else
+// the SITE_VERSION secret. Each is cached on its own.
+type Site = "v2" | "v3";
+const siteOf = (v: unknown): Site => v === "v3" || v === "v2" ? v : Deno.env.get("SITE_VERSION") === "v3" ? "v3" : "v2";
+const factsFor = (site: Site) => site === "v3" ? FACTS_V3 : FACTS;
+const stableFor = (site: Site) => [
   PROMPT,
-  "# About the studio, FAQ and policies\n\n" + FACTS,
+  "# About the studio, FAQ and policies\n\n" + factsFor(site),
   "# Evelyn's Skin Playbook\n\n" + (KNOWLEDGE_EMPTY
     ? "Evelyn hasn't filled her playbook in yet. So there is nothing here about skin concerns, aftercare details, routines or how to use her products: every question of that kind goes to her with hand_to_evelyn. You can still answer from the FAQ, the policies and the shelf list."
     : KNOWLEDGE),
@@ -105,6 +111,7 @@ const STABLE = [
     "- A refund, a return, a missing or damaged package, a wrong item or a new shipping address: hand it to Evelyn (kind \"request\").",
   ].join("\n"),
 ].filter(Boolean).join("\n\n");
+const STABLE: Record<Site, string> = { v2: stableFor("v2"), v3: stableFor("v3") };
 
 const stockWord = (n: number | null) => n == null ? "ask Evelyn" : n <= 0 ? "out of stock, can be requested" : n <= 3 ? `only ${n} left` : "in stock";
 const stockBlock = async (db: ReturnType<typeof admin>) => {
@@ -187,7 +194,7 @@ const SHOW_TOOL = {
 
 const TOOLS = [HANDOFF_TOOL, ORDER_TOOL, GIFT_TOOL, SHOW_TOOL];
 
-const DRAFT = [
+const draftFor = (site: Site) => [
   "Draft a reply from Evelyn, a licensed esthetician, to a client's question. Evelyn reads and edits every draft before it's sent; nothing goes out automatically.",
   "Write in her voice (her notes are below when she has written them): warm, short, first person. Don't diagnose. Ask for a photo in natural light when seeing the skin would help.",
   "For a reaction, name the signs that mean a doctor: spreading, worsening, swelling around the eyes or lips. For pregnancy or medications, suggest checking with their doctor too.",
@@ -196,9 +203,10 @@ const DRAFT = [
   "When the client sent photos, they're attached. Look at them only to make the draft specific to what they asked about, and to judge whether they're clear enough. Never name, guess or rule out a condition from a photo, and never call it normal or fine: Evelyn decides that. If a photo is blurry, dark, filtered, too far away or doesn't show the area, the draft asks for another, close up in daylight. With a clear photo, the draft doesn't ask for one again.",
   "",
   "Reply with JSON: \"draft\" is the message to the client. \"photo_note\" is one or two plain lines for Evelyn on what the photos show (which area; colour, size, spread, texture; whether they're clear enough to judge), describing, never diagnosing; \"\" when there are no photos.",
-  "", "# Facts", FACTS, "", KNOWLEDGE_EMPTY ? "" : "# Her playbook\n" + KNOWLEDGE, HARD_LINES ? "# Her hard lines\n" + HARD_LINES : "", VOICE ? "# Her voice\n" + VOICE : "",
+  "", "# Facts", factsFor(site), "", KNOWLEDGE_EMPTY ? "" : "# Her playbook\n" + KNOWLEDGE, HARD_LINES ? "# Her hard lines\n" + HARD_LINES : "", VOICE ? "# Her voice\n" + VOICE : "",
   "# Her shelf", SHELF.map(shelfLine).join("\n"),
 ].filter((s) => s !== "").join("\n");
+const DRAFT: Record<Site, string> = { v2: draftFor("v2"), v3: draftFor("v3") };
 
 const DRAFT_FORMAT = {
   type: "json_schema" as const,
@@ -248,7 +256,7 @@ const runLookup = async (db: ReturnType<typeof admin>, signedIn: string | null, 
 };
 
 // the draft Evelyn checks, and a plain line on what any photos show; never fails the save
-const writeDraft = async (who: { name: string }, kind: string, why: string, q: string, fileText: string | null, photos: Photo[]) => {
+const writeDraft = async (site: Site, who: { name: string }, kind: string, why: string, q: string, fileText: string | null, photos: Photo[]) => {
   try {
     const msg = await anthropic.beta.messages.create({
       model: MODEL,
@@ -256,7 +264,7 @@ const writeDraft = async (who: { name: string }, kind: string, why: string, q: s
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       output_config: { effort: "low", format: DRAFT_FORMAT },
-      system: [{ type: "text", text: DRAFT, cache_control: { type: "ephemeral", ttl: "1h" } }],
+      system: [{ type: "text", text: DRAFT[site], cache_control: { type: "ephemeral", ttl: "1h" } }],
       messages: [{
         role: "user",
         content: [
@@ -284,6 +292,7 @@ Deno.serve(async (req) => {
 
   const body = await req.json().catch(() => ({}));
   const q = String(body.message ?? "").trim().slice(0, 600);
+  const site = siteOf(body.site);
   if (!q) return json({ error: "Empty question" }, 400);
 
   // who's asking: a signed-in client, whether they're a member, and their file
@@ -317,7 +326,7 @@ Deno.serve(async (req) => {
     const why = String(body.why ?? "").trim().slice(0, 200);
     const photos = readPhotos(body.photos);
     const paths = await savePhotos(db, id, photos);
-    const { draft, note } = await writeDraft(who, kind, why, q, file?.text ?? null, photos);
+    const { draft, note } = await writeDraft(site, who, kind, why, q, file?.text ?? null, photos);
     const due_at = new Date(Date.now() + (member ? MEMBER_HOURS : GUEST_HOURS) * 36e5).toISOString();
     const { error } = await db.from("questions").insert({
       id, client_id: who.id, name: who.name, email: who.email, member, kind, text: q, why: why || null,
@@ -345,7 +354,7 @@ Deno.serve(async (req) => {
     const signedIn = client?.email ?? null;
     const messages: Anthropic.Beta.Messages.BetaMessageParam[] = [...tidy(body.history), { role: "user", content: q }];
     const system = [
-      { type: "text" as const, text: STABLE, cache_control: { type: "ephemeral" as const, ttl: "1h" as const } },
+      { type: "text" as const, text: STABLE[site], cache_control: { type: "ephemeral" as const, ttl: "1h" as const } },
       ...(file && client ? [{ type: "text" as const, text: fileBlock(client.name, file) }] : []),
       { type: "text" as const, text: (signedIn ? `The client is signed in as ${signedIn}, so look_up_order finds their own orders without details.` : "The client isn't signed in.") +
         "\n\n" + await stockBlock(db) },

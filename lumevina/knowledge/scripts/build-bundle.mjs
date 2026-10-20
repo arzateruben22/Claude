@@ -53,19 +53,35 @@ const MENU_LINE = SV.all.map((x) => `${x.name} ${x.from ? "from " : ""}$${x.pric
   ". Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.";
 
 // ── studio facts that aren't in the FAQ ──
+// Two versions (js/site-config.js → version): v2 books on GlossGenius with
+// membership and points held back; v3 books here, with both. The ask
+// function picks one by what the website says it runs.
 globalThis.window.LumevinaHours = undefined;
-const FACTS = [
+const DEPOSITS = "Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none.";
+const WHAT_TO_BOOK = "New clients book \"New Clients Start Here\"; for breakouts, the Acne Bootcamp's \"New Client Consultation + Treatment\". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).";
+const BOOKING = {
+  v2: "Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). " + DEPOSITS + " " + WHAT_TO_BOOK,
+  v3: "Booking: right here on the website, in the Book section: pick a treatment, a day and a time. " + DEPOSITS + " The deposit is paid by card on Stripe's secure page, and the card stays on file to hold the booking; a treatment with no deposit just needs a card on file. Glow members pay no deposits. The confirmation email has a link to move or cancel the appointment (also in My Lumevina, signed in with the same email), and a reminder comes before the visit, by text too if they ask for one. A full day has a waitlist: a cancellation emails the first person waiting. Appointments already booked on GlossGenius stand as they are; new ones are booked here. " + WHAT_TO_BOOK
+};
+/* membership and points, from what the website shows (js/membership.js, js/rewards.js) */
+const MEMBERSHIP_V3 = "Glow Membership (the Membership section; join online, billed monthly). Glow, $185 a month: one facial a month, the Lumevina Custom Facial or the Monthly Acne Treatment (a $200 value); 10% off skincare from her shelf and free shipping; 15% off add-ons and anything else booked the same visit; no deposits; a home routine from Evelyn each season; and Ask Evelyn any time, with her own reply within 24 hours. Ageless, $235 a month: any of the facials up to the Ageless Grace Facial (a $240 value), everything in Glow, plus dermaplaning every other visit and 15% off skincare. Founding members (the first 25) pay $175 and $225 instead, kept for as long as they stay, and the first five also get a skincare kit; the Membership section shows how many founding spots are left. Unused facials bank, up to two, and with two waiting they aren't billed until they book one. A banked facial can be sent to a friend as a gift certificate. One month a year can be skipped at no charge. Three-month minimum, then cancel online any time from My Lumevina.";
+const POINTS_V3 = "Glow Points (for everyone who books here, member or not; shown in My Lumevina): 1 point for every $1 paid on visits, products and gift certificates, on the website or at the studio, and double on a Wednesday or a Wax Wednesday. 100 points take $10 off, and points can cover up to half of a deposit. 100 points for the first booking on this website, whether they're new or have been seeing Evelyn for years. When a friend books their first visit with a client's code, the friend gets $15 off and the client gets 150 points. 50 more in their birthday month (they set it in My Lumevina). Non-members also get 25 when their next visit is within five weeks of the last.";
+const factsFor = (v) => [
   "# The studio",
   "Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.",
-  "Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. New clients book \"New Clients Start Here\"; for breakouts, the Acne Bootcamp's \"New Client Consultation + Treatment\". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).",
+  BOOKING[v],
   "Her menu, with prices (from her GlossGenius page): " + MENU_LINE,
   "Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
-  "Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused).",
+  ...(v === "v3" ? [MEMBERSHIP_V3, POINTS_V3, "Not offered: lashes, brows, nails, or an online course."]
+    : ["Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused)."]),
   "",
   "# FAQ & Policies",
   ...policies.map((p) => `## ${p.q}\n${p.a}`)
 ].join("\n\n");
+const FACTS = factsFor("v2"), FACTS_V3 = factsFor("v3");
+/* Evelyn's texting assistant follows the version the site runs now */
+const SITE = (/version:\s*"(v[23])"/.exec(read(path.join(root, "js/site-config.js"))) || [, "v2"])[1];
 
 // ── her playbook: only sections with answers ──
 const md = (p) => fs.existsSync(p) ? read(p) : "";
@@ -100,7 +116,7 @@ const shelf = CAT.products.filter((p) => !p.draft).map((p) => ({
 
 const PROMPT = read(path.join(K, "prompt.md")).trim();
 const builtAt = new Date().toISOString().slice(0, 10);
-const bundle = { builtAt, prompt: PROMPT, facts: FACTS, knowledge, knowledgeEmpty: empty, hardLines, voice, shelf, rules };
+const bundle = { builtAt, prompt: PROMPT, facts: FACTS, factsV3: FACTS_V3, knowledge, knowledgeEmpty: empty, hardLines, voice, shelf, rules };
 
 fs.mkdirSync(path.join(K, "eval"), { recursive: true });
 fs.writeFileSync(path.join(K, "eval/bundle.json"), JSON.stringify(bundle, null, 1));
@@ -114,8 +130,11 @@ export const BUILT_AT = "${builtAt}";
 /** The assistant's instructions (knowledge/prompt.md). */
 export const PROMPT = ${lit(PROMPT)};
 
-/** Studio facts, the FAQ and the policies, from the homepage. */
+/** Studio facts, the FAQ and the policies, from the homepage: v2 (booking on GlossGenius). */
 export const FACTS = ${lit(FACTS)};
+
+/** The same for v3: booking here, Glow Membership and Glow Points. */
+export const FACTS_V3 = ${lit(FACTS_V3)};
 
 /** Evelyn's playbook: only the sections she has answered. Empty until she has. */
 export const KNOWLEDGE = ${lit(knowledge)};
@@ -143,7 +162,7 @@ fs.writeFileSync(path.join(root, "texting/knowledge.md"), [
   "",
   "# What Evelyn's texting assistant knows",
   "",
-  FACTS,
+  SITE === "v3" ? FACTS_V3 : FACTS,
   "",
   "# Evelyn's Skin Playbook",
   "",

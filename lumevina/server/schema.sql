@@ -151,10 +151,10 @@ alter table intake_forms enable row level security;
 create policy "own intake" on intake_forms
   for all using (auth.uid() = client_id) with check (auth.uid() = client_id);
 
--- ── Appointment notifications (confirmations + reminders) ────────────
--- Rows queued by the webhook; a scheduled function sends what's due and
--- stamps sent_at. Confirmation fires immediately; reminder is dated to
--- 24h before the appointment. See send-confirmation + README.
+-- ── Appointment notifications (older queue, unused since v3) ──────────
+-- v3 sends booking messages as they happen (functions/_shared/bookings.ts)
+-- and the scheduled ones from functions/client-reminders, recorded once
+-- each in sent_messages. Kept so an existing database needs no migration.
 create table notifications (
   id bigint generated always as identity primary key,
   booking_id uuid references bookings (id) on delete cascade,

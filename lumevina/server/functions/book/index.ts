@@ -12,7 +12,8 @@
 // POST { action: "create", services, date, start_min, name, email, phone?, sms_ok?, note?,
 //        consent: { signature }, flash?, ref_code?, points?, gift_code?, use_member?, returnUrl }
 //   → { url } (Stripe) or { confirmed: true, booking } or { reason }
-//     reasons: services, time, hours, slot_taken, email, consent, payment_unavailable
+//     reasons: services, time, hours, members_first, slot_taken, email, consent, payment_unavailable
+//     (an extra Monday is for members until the Friday before: members_first)
 // POST { action: "get", token }                       → { booking }   (the link in every email)
 // POST { action: "cancel", token }                    → { kind: in_time | late, booking }
 // POST { action: "reschedule", token, date, start_min } → { booking } or { reason }
@@ -28,7 +29,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { CATALOG } from "../_shared/catalog.ts";
 import { addBooking, isBusy, removeBooking } from "../_shared/google.ts";
-import { fitsHours, loadHours } from "../_shared/hours.ts";
+import { fitsHours, isExtraMonday, loadHours, MEMBERS_FIRST_HOURS, type Hours } from "../_shared/hours.ts";
+import { isLive, memberFor } from "../_shared/membership.ts";
 import { EMAIL, getContact, norm, upsertContact } from "../_shared/contacts.ts";
 import { balance, BLOCK_CENTS, BLOCK_POINTS } from "../_shared/points.ts";
 import { customerFor, stripe } from "../_shared/stripe.ts";
@@ -41,6 +43,9 @@ const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[0-9a-f]{32}$/;
 const AHEAD_DAYS = 62;
 const clip = (v: unknown, n: number) => String(v ?? "").trim().slice(0, n);
+/** An extra Monday still in its members-first days, for someone who isn't a member. */
+const membersOnly = async (db: any, h: Hours, date: string, email: string) =>
+  isExtraMonday(h, date) && hoursUntil(date, 0) > MEMBERS_FIRST_HOURS && !isLive(await memberFor(db, email));
 
 /** What the website shows about a booking (never the card itself). */
 const view = (b: any) => ({
@@ -96,7 +101,9 @@ Deno.serve(async (req) => {
       if (!price.ok) return json({ reason: price.reason }, 400);
 
       // her hours, then her other calendar (GlossGenius appointments and personal blocks)
-      if (!fitsHours(await loadHours(db), date, start, price.dur_min)) return json({ reason: "hours" }, 409);
+      const hours = await loadHours(db);
+      if (!fitsHours(hours, date, start, price.dur_min)) return json({ reason: "hours" }, 409);
+      if (await membersOnly(db, hours, date, email)) return json({ reason: "members_first" }, 409);
       try {
         if (await isBusy(date, start - 30, price.dur_min + 60)) return json({ reason: "slot_taken" }, 409);
       } catch (e) { console.error("google", String(e)); }   // unreachable: the database still guards website bookings
@@ -213,7 +220,9 @@ Deno.serve(async (req) => {
       if (!DAY.test(date) || !(start >= 0 && start < 1440) || start % 30) return json({ reason: "time" }, 400);
       const lead = hoursUntil(date, start);
       if (lead < 2 || lead > AHEAD_DAYS * 24) return json({ reason: "time" }, 400);
-      if (!fitsHours(await loadHours(db), date, start, b.dur_min)) return json({ reason: "hours" }, 409);
+      const hours = await loadHours(db);
+      if (!fitsHours(hours, date, start, b.dur_min)) return json({ reason: "hours" }, 409);
+      if (await membersOnly(db, hours, date, norm(b.guest_email))) return json({ reason: "members_first" }, 409);
       try {
         if (b.google_event_id) await removeBooking(b.google_event_id);   // its own time shouldn't count against it
         if (await isBusy(date, start - 30, b.dur_min + 60)) {
