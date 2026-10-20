@@ -19,9 +19,19 @@
  *
  *   Signed in, with a skin plan from Evelyn (js/skin-plans.js): "what do I
  *   use tonight?", "what should I avoid?", "what's next?" are answered from
- *   that plan. Changing it, or anything the rules above catch, still goes to
- *   her. Live, the server sees the same plan, plus the client's pre-visit
- *   form, visits and the questions she has answered for them.
+ *   that plan, with Add to bag buttons for its products. Changing it, or
+ *   anything the rules above catch, still goes to her. Live, the server sees
+ *   the same plan, plus the client's pre-visit form, visits and the
+ *   questions she has answered for them.
+ *
+ *   Looks things up: where a shop order is (this browser's orders in the
+ *   demo; live, the server's look_up_order), and what's left on a gift
+ *   certificate when a code is typed (js/giftcards.js, both modes). Products
+ *   it names get Add to bag buttons (js/cart.js → LumevinaCart).
+ *
+ *   Photos: a question going to Evelyn can carry up to three, shrunk to
+ *   JPEGs here. Demo: small copies go in the question in this browser.
+ *   Live: the server stores them privately and only Evelyn sees them.
  *
  * DEMO: questions live in localStorage ("lumevina_questions"), shared with
  * the dashboard when both run from the same place, and matching is by
@@ -40,7 +50,7 @@
 
   /* ── storage ── */
   var read = function (k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
-  var write = function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ } };
+  var write = function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; /* private mode, or full */ } };
   var questions = function () { return read(KEY, []); };
   var chat = function () { return read(CHAT_KEY, { log: [], seen: {} }); };
 
@@ -54,7 +64,24 @@
   var fromPlan = function (text) {
     var p = myPlan(), who = me();
     var a = p ? PL.answer(p, text, who ? who.name.split(" ")[0] : "") : null;
-    return a ? { answer: a, acts: [["See my plan", "account"], ["Ask Evelyn", "skin"]], plan: true } : null;
+    if (!a) return null;
+    var ids = PL.products && PL.part ? PL.products(p, PL.part(text)) : [];
+    return { answer: a, acts: bagActs(ids).concat([["See my plan", "account"], ["Ask Evelyn", "skin"]]), plan: true };
+  };
+
+  /* ── Add to bag (js/cart.js), for products on the shelf right now ── */
+  var onShelf = function (id) {
+    var INV = window.LumevinaInventory, p = INV ? INV.get(id) : null;
+    if (!p || p.hidden || p.draft) return null;
+    var st = INV.status(p);
+    return st === "in" || st === "low" ? p : null;
+  };
+  var bagActs = function (ids) {
+    if (!window.LumevinaCart) return [];
+    var ps = (ids || []).map(onShelf).filter(Boolean);
+    var acts = ps.length <= 3 ? ps.map(function (p) { return ["Add " + p.name + " · $" + p.price, "add:" + p.id]; }) : [];
+    if (ps.length > 1) acts.push(["Add all " + ps.length + " to my bag", "addall:" + ps.map(function (p) { return p.id; }).join(",")]);
+    return acts;
   };
   var me = function () {
     var s = window.LumevinaAccount && window.LumevinaAccount.current();
@@ -203,6 +230,16 @@
     other: "Hi {name}, thanks for your question! — Evelyn"
   };
 
+  /* the demo's draft; with photos attached it thanks them instead of asking for one (live, the server writes it) */
+  var draftFor = function (kind, first, n) {
+    var d = (DRAFTS[kind] || DRAFTS.other).replace("{name}", first);
+    if (!n) return d;
+    var thanks = "Thank you for the photo" + (n > 1 ? "s" : "") + ".";
+    if (!/Could you send (me )?a photo/.test(d)) return d.replace(/ — Evelyn$/, " " + thanks + " — Evelyn");
+    return d.replace(/Could you send (me )?a photo in (natural light|daylight) and tell me/, thanks + " Could you tell me")
+      .replace(/Could you send (me )?a photo in (natural light|daylight)\?/, thanks);
+  };
+
   /* ── step-by-step menus: prices → facials → one facial → book it ── */
   var findService = function (name) {
     var els = document.querySelectorAll('[data-name="' + name + '"][data-price]'), best = null, desc = "";
@@ -280,7 +317,7 @@
     gift: info("Gift certificates never expire. What would you like to know?", [["Sending one", "n:g-any"], ["Using one", "n:g-use"], ["What's left on mine", "n:g-left"]]),
     "g-any": info("Choose $50, $100, $200, $400 or your own amount ($25 to $1,000). It's emailed with its own code and goes toward any treatment.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
     "g-use": info("Show the code at your visit and Evelyn takes it off the bill. If it's worth more than the visit, the rest stays on it for next time; if the visit costs more, you pay only the difference.", [["Book", "n:book"], ["Something else", "n:gift"]]),
-    "g-left": info("Tap Check a gift balance under the gift certificate and enter your code: it shows what's left.", [["Check a balance", "#gift"], ["Something else", "n:gift"]])
+    "g-left": info("Type the code from the certificate email here (it looks like LUM-AB12-CD34) and I'll check what's left.", [["Something else", "n:gift"]])
   };
   for (var gid in GROUPS) (function (gid) {
     NODES[gid] = { say: GROUPS[gid].ask, opts: function () {
@@ -291,6 +328,62 @@
     var n = NODES[id];
     if (!n) return null;
     return { text: typeof n.say === "function" ? n.say() : n.say, acts: typeof n.opts === "function" ? n.opts() : n.opts };
+  };
+
+  /* ── where an order is: this browser's orders in the demo (js/cart.js),
+     with their shipping status (js/shipping.js). Live, the server looks it up. ── */
+  var ORDER_NO = /\blum-([a-z0-9]{8})\b(?!-)/i;
+  var ORDER_ASK = /where('?s| is) my (order|package|delivery|stuff)|order status|status of my order|track(ing)? (my |an |the )?(order|package)|tracking (number|info|link)|(has|did) my (order|package)|my (order|package) (ship|come|arrive|go out)|when (will|does) my (order|package)|(order|package) (hasn'?t|didn'?t|never|still hasn'?t) (come|arrive|show|ship)|haven'?t (got|gotten|received) my (order|package)/;
+  var day = function (iso) { return new Date(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }); };
+  var orderAnswer = function (text) {
+    if (ENDPOINT) return { answer: "I can’t look orders up right this moment. Your receipt email has the order number, and the tracking link comes by email once it ships. Want me to ask Evelyn?",
+      acts: [["Ask Evelyn", "t:Ask Evelyn about my order"]] };
+    var mine = read("lumevina_orders", []);
+    var m = ORDER_NO.exec(text), who = me();
+    var list = m ? mine.filter(function (o) { return o.id.toUpperCase() === "LUM-" + m[1].toUpperCase(); })
+      : who ? mine.filter(function (o) { return o.email === who.email.toLowerCase(); }) : mine;
+    if (!list.length) return m
+      ? { answer: "I couldn’t find order LUM-" + m[1].toUpperCase() + ". Check the number at the top of your receipt email, or I can ask Evelyn.", acts: [["Ask Evelyn", "t:Ask Evelyn about my order"]] }
+      : { answer: "Type your order number here (it’s at the top of your receipt email and starts with LUM-) and I’ll check where it is." };
+    var SH = window.LumevinaShip, ships = SH ? SH.list() : [], acts = [];
+    var lines = list.slice(0, 3).map(function (o) {
+      var rec = ships.filter(function (r) { return r.order === o.id; })[0];
+      var what = o.items.map(function (i) { return i.qty + " × " + i.name; }).join(", ") || (o.gifts ? "gift certificates" : "your order");
+      var where = o.delivery === "pickup" ? "it’s waiting for you at your next visit."
+        : rec && rec.status === "shipped" ? "it shipped " + day(rec.shippedAt) + (rec.carrier ? " by " + rec.carrier : "") + "."
+        : rec ? "it’s being packed and ships by " + day(rec.due) + "."
+        : o.gifts && !o.items.length ? "the certificates went out by email." : "it’s paid and being packed.";
+      if (rec && rec.status === "shipped" && rec.tracking && SH) acts.push([list.length > 1 ? "Track " + o.id : "Track my package", "go:" + SH.trackUrl(rec.tracking)]);
+      return o.id + " (" + day(o.at) + ", " + what + "): " + where;
+    });
+    return { answer: (lines.length > 1 ? "Your latest orders. " : "Order ") + lines.join(" ") + " Anything missing or damaged, Evelyn will sort it out.",
+      acts: acts.concat([["Ask Evelyn", "t:Ask Evelyn about my order"]]) };
+  };
+
+  /* ── what's left on a gift certificate, when a code is typed (both modes) ── */
+  var GIFT_CODE = /\blum-[a-z2-9]{4}-[a-z2-9]{4}\b/i;
+  var GIFT_LEFT = /\b(balance|left|remaining)\b.*(gift|certificate)|(gift|certificate).*\b(balance|left on|remaining)\b/;
+  var giftWords = function (c, code) {
+    var end = code.slice(-4);
+    if (!c) return { answer: "I couldn’t find a certificate with that code. Check it against the email it came in: LUM-, four characters, a dash, four more.", acts: [["Ask Evelyn", "t:Ask Evelyn about my gift certificate"]] };
+    if (c.status === "void") return { answer: "The certificate ending " + end + " was cancelled. Evelyn can tell you more.", acts: [["Ask Evelyn", "t:Ask Evelyn about my gift certificate"]] };
+    if (c.status === "redeemed" || !(c.balance > 0)) return { answer: "The certificate ending " + end + " has been used in full.", acts: [["Send a gift", "#gift"]] };
+    var m = function (n) { return "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: n % 1 ? 2 : 0 }); };
+    return { answer: c.kind === "service"
+      ? "The certificate ending " + end + " covers " + (c.label || "one treatment") + " and hasn’t been used yet. It never expires: show the code at your visit."
+      : "The certificate ending " + end + " has " + m(c.balance) + " left" + (c.amount && c.amount !== c.balance ? " of " + m(c.amount) : "") +
+        ", toward any treatment. It never expires: show the code at your visit and Evelyn takes it off the bill.", acts: [["Book", "book"]] };
+  };
+  var giftCheck = function (text) {
+    var m = GIFT_CODE.exec(text), G = window.LumevinaGiftCards;
+    if (!m || !G) return false;
+    var code = m[0].toUpperCase();
+    bubble("bot", "…", "thinking");
+    logEl.scrollTop = logEl.scrollHeight;
+    G.check(code).then(function (c) { settle(text, giftWords(c, code)); }, function () {
+      settle(text, { answer: "I couldn’t check that code just now. Try again in a minute, or use Check a gift balance under the gift certificate.", acts: [["Check a balance", "#gift"]] });
+    });
+    return true;
   };
 
   var TY = window.LumevinaTypos;
@@ -305,6 +398,8 @@
     if (rk) return { handoff: rk };
     /* changing their plan ("can I add vitamin C to my routine?") is Evelyn's call */
     if (myPlan() && /\bmy (routine|regimen|plan|products|skin ?care)\b/.test(t)) return { handoff: "skin" };
+    if (ORDER_ASK.test(t) || ORDER_NO.test(text)) return orderAnswer(text);
+    if (GIFT_LEFT.test(t)) return { answer: NODES["g-left"].say, acts: [["Gift certificates", "n:gift"]] };
     if (off("membership") && /member|monthly plan|subscri|\bglow plan|join\b|\bbank/.test(t)) return { answer: "Memberships are paused right now. Facials book one at a time on the calendar here, and Evelyn’s shelf is open on this site.", acts: [["Book", "book"], ["See the shop", "#shop"]] };
     if (off("school") && /\bcourses?\b|\bclass(es)?\b|skin school|\blessons?\b|glow party|pro night|workshop/.test(t)) return { answer: "Skin School and classes are paused right now. Evelyn is happy to answer questions one on one.", acts: [["Ask Evelyn", "skin"]] };
     if (off("rewards") && /\brefer|referral|points\b|rewards?\b|friend'?s code/.test(t)) return { answer: "Glow Rewards is paused right now, so there are no points or referral codes at the moment.", acts: [["Book", "book"]] };
@@ -369,7 +464,7 @@
   var chipsEl = panel.querySelector(".ask-chips");
   var form = panel.querySelector(".ask-form");
   var input = panel.querySelector("#ask-in");
-  var CHIPS = [["Prices", "n:prices"], ["Book", "n:book"], ["Products", "t:What products do you sell?"], ["Before my facial", "n:before"],
+  var CHIPS = [["Prices", "n:prices"], ["Book", "n:book"], ["Products", "t:What products do you sell?"], ["Where’s my order?", "t:Where is my order?"], ["Before my facial", "n:before"],
     ["After my facial", "n:after"], ["Cancel or reschedule", "n:cancel"], ["Memberships", "n:member"], ["Gift certificates", "n:gift"],
     ["Parking", "t:Where do I park?"], ["A question about my skin", "skin"]]
     .filter(function (c) { return !(c[1] === "n:member" && off("membership")); });
@@ -378,11 +473,13 @@
   var save = function () { write(CHAT_KEY, state); };
   var push = function (m) { state.log.push(m); if (state.log.length > 80) state.log = state.log.slice(-80); save(); };
 
-  /* answers Evelyn has sent for this browser's questions */
+  /* answers Evelyn has sent for this browser's questions (live: fetched for a signed-in client, below) */
+  var liveReplies = {};
   var replies = function () {
     var mine = {};
     state.log.forEach(function (m) { if (m.qid) mine[m.qid] = true; });
-    return questions().filter(function (q) { return mine[q.id] && q.status === "answered" && q.reply; });
+    return questions().filter(function (q) { return mine[q.id] && q.status === "answered" && q.reply; })
+      .concat(Object.keys(liveReplies).filter(function (id) { return mine[id]; }).map(function (id) { return liveReplies[id]; }));
   };
   var unread = function () { return replies().filter(function (q) { return !state.seen[q.id]; }).length; };
 
@@ -405,12 +502,66 @@
     }).join("") + '</div>';
   };
 
+  /* ── photos for Evelyn: up to three, shrunk here; only she sees them ── */
+  var MAX_SHOTS = 3;
+  var shots = [];                    /* [{ full, small }] data URLs, for the question being written */
+  var typed = { name: "", email: "" }, sending = false, sendErr = "";
+  var shotsHtml = function () {
+    return '<div class="ask-shots">' + shots.map(function (sh, i) {
+      return '<span class="ask-shot"><img src="' + sh.small + '" alt="Photo ' + (i + 1) + '"><button type="button" class="ask-shot-x" data-act="unshot:' + i +
+        '" aria-label="Remove photo ' + (i + 1) + '">&times;</button></span>';
+    }).join("") + (shots.length < MAX_SHOTS ? '<label class="ask-shot-add"><input type="file" accept="image/*" multiple class="sr-only">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>' +
+      (shots.length ? "Add another" : "Add a photo") + '</label>' : "") + '</div>' +
+      '<p class="ask-shot-note">' + (shots.length ? "Only Evelyn sees your photos." : "A close-up in daylight helps Evelyn answer. Only she sees it.") + '</p>';
+  };
+  var shrink = function (file, max, quality) {
+    return new Promise(function (ok, bad) {
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function () {
+        var k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(img.naturalWidth * k));
+        c.height = Math.max(1, Math.round(img.naturalHeight * k));
+        var g = c.getContext("2d");
+        g.fillStyle = "#fff";
+        g.fillRect(0, 0, c.width, c.height);
+        g.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        ok(c.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); bad(new Error("photo")); };
+      img.src = url;
+    });
+  };
+  var addShots = function (files) {
+    var list = Array.prototype.slice.call(files || [], 0, MAX_SHOTS - shots.length);
+    if (!list.length) return;
+    sendErr = "";
+    Promise.all(list.map(function (f) {
+      return shrink(f, 1568, 0.85).then(function (full) {
+        return shrink(f, 480, 0.72).then(function (small) { return { full: full, small: small }; });
+      }).catch(function () { return null; });
+    })).then(function (got) {
+      var bad = got.filter(function (x) { return !x; }).length;
+      shots = shots.concat(got.filter(Boolean)).slice(0, MAX_SHOTS);
+      if (bad) sendErr = bad === 1 ? "That photo didn’t open. Try a screenshot of it, or a JPEG." : "Some photos didn’t open. Try screenshots of them, or JPEGs.";
+      render();
+    });
+  };
+  var uuid = function () {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (ch) {
+      var r = Math.random() * 16 | 0; return (ch === "x" ? r : (r & 3 | 8)).toString(16);
+    });
+  };
+
   var render = function () {
     logEl.innerHTML = "";
     var who = me();
     bubble("bot", esc("Hi" + (who ? " " + who.name.split(" ")[0] : "") + "! " + (myPlan()
       ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
-      : "Ask me about prices, booking, prep, aftercare or products. Anything about your own skin, I’ll pass to Evelyn.")));
+      : "Ask me about prices, booking, prep, aftercare or products, or where your order is. Anything about your own skin, I’ll pass to Evelyn.")));
     var answered = {};
     replies().forEach(function (q) { answered[q.id] = q; });
     var lastBot = -1;
@@ -420,7 +571,7 @@
       if (m.who === "you") bubble("you", esc(m.text));
       else if (m.who === "bot") bubble("bot", esc(m.text) + actsHtml(m.acts, i === lastBot && !state.pending), m.warn ? "warn" : "");
       else if (m.who === "sent") {
-        bubble("bot", '<span class="ask-tag">Sent to Evelyn</span>' + esc(m.text));
+        bubble("bot", '<span class="ask-tag">Sent to Evelyn' + (m.photos ? " · " + m.photos + (m.photos === 1 ? " photo" : " photos") : "") + '</span>' + esc(m.text));
         var q = answered[m.qid];
         if (q) bubble("evelyn", '<span class="ask-tag">Evelyn replied</span>' + esc(q.reply));
       }
@@ -432,10 +583,11 @@
       var f = document.createElement("div");
       f.className = "ask-handoff";
       f.innerHTML = (who2 ? "" :
-        '<label class="sr-only" for="ask-name">Your name</label><input id="ask-name" type="text" placeholder="Your name" autocomplete="name">' +
-        '<label class="sr-only" for="ask-email">Your email</label><input id="ask-email" type="email" placeholder="Email for Evelyn’s reply" autocomplete="email">') +
-        '<div class="ask-acts"><button type="button" class="ask-act is-primary" data-act="send">Send to Evelyn</button>' +
-        '<button type="button" class="ask-act" data-act="nevermind">Not now</button></div><p class="ask-err" role="alert"></p>';
+        '<label class="sr-only" for="ask-name">Your name</label><input id="ask-name" type="text" placeholder="Your name" autocomplete="name" value="' + esc(typed.name) + '">' +
+        '<label class="sr-only" for="ask-email">Your email</label><input id="ask-email" type="email" placeholder="Email for Evelyn’s reply" autocomplete="email" value="' + esc(typed.email) + '">') +
+        shotsHtml() +
+        '<div class="ask-acts"><button type="button" class="ask-act is-primary" data-act="send"' + (sending ? " disabled" : "") + '>' + (sending ? "Sending…" : "Send to Evelyn") + '</button>' +
+        '<button type="button" class="ask-act" data-act="nevermind">Not now</button></div><p class="ask-err" role="alert">' + esc(sendErr) + '</p>';
       box.appendChild(f);
     }
     chipsEl.parentNode.hidden = state.log.length > 0 && !!pending;
@@ -468,17 +620,19 @@
   };
 
   /* ── the server (js/site-config.js → ask.endpoint): Claude answers from Evelyn's
-     playbook, in her voice (server/functions/ask). Without an endpoint, or when it
-     can't be reached, the keyword answers above take over. Hand-offs never wait
-     for the server: the shared rules decide those here, instantly. ── */
+     playbook, in her voice (server/functions/ask), and looks up orders and gift
+     balances. Without an endpoint, or when it can't be reached, the keyword
+     answers above take over. Hand-offs never wait for the server: the shared
+     rules decide those here, instantly, and nothing reaches Evelyn until the
+     client taps Send. ── */
   var CFG = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.ask) || {};
   var ENDPOINT = /^https:\/\//.test(CFG.endpoint || "") ? CFG.endpoint : "";
-  var post = function (body) {
+  var token = function () { return window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : ""; };
+  var post = function (body, ms) {
     var headers = { "Content-Type": "application/json" };
-    var token = window.LumevinaAccount && window.LumevinaAccount.token ? window.LumevinaAccount.token() : "";
-    if (CFG.key) { headers.apikey = CFG.key; headers.Authorization = "Bearer " + (token || CFG.key); }
+    if (CFG.key) { headers.apikey = CFG.key; headers.Authorization = "Bearer " + (token() || CFG.key); }
     var ctrl = typeof AbortController === "function" ? new AbortController() : null;
-    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 20000) : null;
+    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, ms || 20000) : null;
     return fetch(ENDPOINT, { method: "POST", headers: headers, body: JSON.stringify(body), signal: ctrl ? ctrl.signal : undefined })
       .then(function (res) { if (!res.ok) throw new Error("ask " + res.status); return res.json(); })
       .finally(function () { if (timer) clearTimeout(timer); });
@@ -487,10 +641,10 @@
     return state.log.filter(function (m) { return (m.who === "you" || m.who === "bot") && m.text; }).slice(-8)
       .map(function (m) { return { role: m.who === "you" ? "user" : "assistant", content: m.text }; });
   };
-  var nextActs = function (answer) {
+  var nextActs = function (answer, hasProducts) {
     var acts = [];
     if (/\bbook|facial|appointment|calendar/i.test(answer)) acts.push(["Book", "book"]);
-    if (/shelf|shop|order|cleanser|serum|\bspf\b|sunscreen|moisturi|toner|mask|patch/i.test(answer)) acts.push(["See the shop", "#shop"]);
+    if (!hasProducts && /shelf|shop|cleanser|serum|\bspf\b|sunscreen|moisturi|toner|mask|patch/i.test(answer)) acts.push(["See the shop", "#shop"]);
     acts.push(["Ask Evelyn", "skin"]);
     return acts;
   };
@@ -499,14 +653,17 @@
     var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
     var rk = RULES ? RULES.kind(raw, t) : null;
     /* a "my skin" question still goes to the server when it can see this client's plan */
-    var signedIn = window.LumevinaAccount && window.LumevinaAccount.token && window.LumevinaAccount.token();
-    if (rk && !(rk === "skin" && signedIn && myPlan())) return false;
+    if (rk && !(rk === "skin" && token() && myPlan())) return false;
     var who = me();
     bubble("bot", "…", "thinking");
     logEl.scrollTop = logEl.scrollHeight;
     post({ message: text, history: history(), name: who ? who.name : "", email: who ? who.email : "" }).then(function (r) {
-      if (r && r.answer) settle(text, { answer: String(r.answer), acts: nextActs(String(r.answer)) });
-      else if (r && r.handoff) settle(text, { handoff: String(r.handoff) });
+      if (r && r.answer) {
+        var answer = String(r.answer), ids = Array.isArray(r.products) ? r.products.map(String) : [];
+        var links = (Array.isArray(r.links) ? r.links : []).filter(function (l) { return l && /^https:\/\//.test(l.url); })
+          .slice(0, 3).map(function (l) { return [String(l.label || "Track my package"), "go:" + l.url]; });
+        settle(text, { answer: answer, acts: bagActs(ids).concat(links, nextActs(answer, ids.length > 0)) });
+      } else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "" });
       else settle(text, classify(text));
     }, function () { settle(text, classify(text)); });
     return true;
@@ -516,6 +673,7 @@
     text = String(text || "").trim();
     if (!text) return;
     push({ who: "you", text: text });
+    if (giftCheck(text)) return;
     if (!remote(text)) settle(text, classify(text));
   };
   var settle = function (text, r) {
@@ -539,7 +697,8 @@
       push({ who: "bot", text: r.answer, acts: (r.acts || []).concat(r.node ? [["More on this", "n:" + r.node]] : []) });
     } else {
       var who = me();
-      state.pending = { text: text, kind: r.handoff, lead: (state.unclear >= 2 ? LEADS.again : LEADS[r.handoff]) || LEADS.other, member: !!(who && who.member) };
+      state.pending = { id: uuid(), text: text, kind: r.handoff, why: r.why || "", lead: (state.unclear >= 2 ? LEADS.again : LEADS[r.handoff]) || LEADS.other, member: !!(who && who.member) };
+      shots = []; sendErr = ""; sending = false;
       if (state.unclear >= 2) state.unclear = 0;
       if (r.handoff === "urgent") push({ who: "bot", text: LEADS.urgent, warn: true });
       if (r.handoff === "urgent") state.pending.lead = "Send your message to Evelyn too?";
@@ -550,28 +709,66 @@
 
   var send = function () {
     var p = state.pending;
-    if (!p) return;
+    if (!p || sending) return;
     var who = me();
-    var err = panel.querySelector(".ask-err");
-    var name = who ? who.name : (panel.querySelector("#ask-name").value || "").trim();
-    var email = who ? who.email : (panel.querySelector("#ask-email").value || "").trim();
+    var name = who ? who.name : typed.name.trim();
+    var email = who ? who.email : typed.email.trim();
     if (!who && (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
-      err.textContent = "Add your name and email so Evelyn can reply.";
-      return;
+      sendErr = "Add your name and email so Evelyn can reply.";
+      return render();
     }
     var member = !!(who && who.member);
-    var q = {
-      id: "q" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      at: new Date().toISOString(), name: name, email: email, member: member, plan: who ? who.plan : "",
-      text: p.text, kind: p.kind, status: "waiting", dueAt: dueFor(member),
-      draft: (DRAFTS[p.kind] || DRAFTS.other).replace("{name}", name.split(" ")[0])
+    var id = p.id || (p.id = uuid()), n = shots.length;    /* one id per question, so a retry saves it once */
+    var done = function (dueAt, saved) {
+      state.pending = null;
+      shots = []; sending = false; sendErr = "";
+      push({ who: "sent", qid: id, live: !!ENDPOINT, photos: saved, text: "“" + p.text + "” · Evelyn will reply by " + when(dueAt) + ", " + (ENDPOINT && !who ? "by email." : "here and by email.") });
+      render();
     };
-    var all = questions(); all.push(q); write(KEY, all);
-    state.pending = null;
-    push({ who: "sent", qid: q.id, text: "“" + p.text + "” · Evelyn will reply by " + when(q.dueAt) + ", here and by email." });
-    render();
+    var q = {
+      id: id, at: new Date().toISOString(), name: name, email: email, member: member, plan: who ? who.plan : "",
+      text: p.text, kind: p.kind, status: "waiting", dueAt: dueFor(member),
+      draft: draftFor(p.kind, name.split(" ")[0], n),
+      photos: shots.map(function (sh) { return sh.small; })
+    };
+    if (ENDPOINT) {
+      /* live: the server saves it (photos stored privately), drafts a reply and tells Evelyn */
+      sending = true; sendErr = ""; render();
+      post({ id: id, message: p.text, handoff: p.kind, why: p.why || "", name: name, email: email,
+        photos: shots.map(function (sh) { return sh.full; }) }, 60000).then(function (r) {
+        if (r && r.needs_contact) { sending = false; sendErr = "Add your name and email so Evelyn can reply."; return render(); }
+        document.dispatchEvent(new CustomEvent("lumevina:question-sent", { detail: q }));
+        done(r && r.due_at ? r.due_at : q.dueAt, r && r.photos != null ? r.photos : n);
+      }, function () {
+        sending = false;
+        sendErr = "It didn’t send. Check your connection and tap Send again.";
+        render();
+      });
+      return;
+    }
+    /* demo: this browser keeps it, shared with the dashboard; photos as small copies */
+    var all = questions(); all.push(q);
+    if (!write(KEY, all)) { q.photos = []; n = 0; all[all.length - 1] = q; write(KEY, all); }
     document.dispatchEvent(new CustomEvent("lumevina:question-sent", { detail: q }));
-    if (ENDPOINT) post({ message: q.text, handoff: q.kind, name: q.name, email: q.email }).catch(function () { /* this browser's copy still reaches the dashboard */ });
+    done(q.dueAt, n);
+  };
+
+  /* live: Evelyn's replies to a signed-in client's questions (the questions table, their own rows only) */
+  var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+  var fetchReplies = function () {
+    var tk = token();
+    if (!ENDPOINT || !tk || !/^https:\/\//.test(SHOP.supabase || "") || !SHOP.key) return;
+    var ids = state.log.filter(function (m) { return m.who === "sent" && m.live && /^[0-9a-f-]{36}$/i.test(m.qid) && !liveReplies[m.qid]; })
+      .map(function (m) { return m.qid; });
+    if (!ids.length) return;
+    fetch(SHOP.supabase.replace(/\/$/, "") + "/rest/v1/questions?select=id,status,reply&id=in.(" + ids.join(",") + ")",
+      { headers: { apikey: SHOP.key, Authorization: "Bearer " + tk } })
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .then(function (rows) {
+        var got = 0;
+        (rows || []).forEach(function (q) { if (q.status === "answered" && q.reply) { liveReplies[q.id] = { id: q.id, status: "answered", reply: q.reply }; got++; } });
+        if (got) { if (!panel.hidden) render(); else paintFab(); }
+      }, function () { /* offline: they still get the email */ });
   };
 
   var open = function (prefill) {
@@ -579,6 +776,7 @@
     fab.setAttribute("aria-expanded", "true");
     document.documentElement.classList.add("ask-open");
     render();
+    fetchReplies();
     requestAnimationFrame(function () { panel.classList.add("show"); });
     if (prefill) ask(prefill);
     setTimeout(function () { input.focus({ preventScroll: true }); }, calm ? 0 : 120);
@@ -651,7 +849,10 @@
     if (isStep(act)) return go(b.textContent, act);
     if (act.indexOf("book:") === 0) { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(act.slice(5)); return; }
     if (act === "send") return send();
-    if (act === "nevermind") { state.pending = null; push({ who: "bot", text: "No problem. Anything else?" }); return render(); }
+    if (act === "nevermind") { state.pending = null; shots = []; sendErr = ""; push({ who: "bot", text: "No problem. Anything else?" }); return render(); }
+    if (act.indexOf("unshot:") === 0) { shots.splice(Number(act.slice(7)), 1); sendErr = ""; return render(); }
+    if (act.indexOf("add:") === 0 || act.indexOf("addall:") === 0) return addToBag(act.slice(act.indexOf(":") + 1).split(","), act.indexOf("addall:") === 0);
+    if (act === "bag") { close(); if (window.LumevinaCart) window.LumevinaCart.open(); return; }
     if (act === "book") { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(); return; }
     if (act === "move") { close(); if (window.LumevinaBooking) window.LumevinaBooking.startReschedule(); return; }
     if (act === "account") { close(); if (window.LumevinaAccount) window.LumevinaAccount.open(); return; }
@@ -666,6 +867,34 @@
       if (t) t.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
     }
   });
+  /* the photo picker, and the name and email a guest types (kept while the box redraws) */
+  logEl.addEventListener("change", function (e) {
+    if (e.target.closest && e.target.closest(".ask-shot-add")) { addShots(e.target.files); e.target.value = ""; }
+  });
+  logEl.addEventListener("input", function (e) {
+    if (e.target.id === "ask-name") typed.name = e.target.value;
+    if (e.target.id === "ask-email") typed.email = e.target.value;
+  });
+
+  /* Add to bag from an answer: one product, or all of them (skipping what's already in the bag) */
+  var addToBag = function (ids, all) {
+    var C = window.LumevinaCart;
+    if (!C) return;
+    var added = [], full = [], gone = [];
+    ids.forEach(function (id) {
+      if (all && C.has(id)) return;
+      var r = C.add(id);
+      (r.ok ? added : r.reason === "max" ? full : gone).push(r.name || "That product");
+    });
+    var words = function (l) { return l.length > 2 ? l.slice(0, -1).join(", ") + " and " + l[l.length - 1] : l.join(" and "); };
+    var text = (added.length ? "Added " + words(added) + " to your bag." : all && !full.length && !gone.length ? "Those are already in your bag." : "") +
+      (full.length ? " That’s all Evelyn has of " + words(full) + " on the shelf." : "") +
+      (gone.length ? " " + words(gone) + " just sold out; you can request " + (gone.length === 1 ? "it" : "them") + " from the shop." : "");
+    state.pending = null;
+    push({ who: "bot", text: text.trim(), acts: C.count() ? [["Check out", "bag"]] : [] });
+    render();
+  };
+
   /* "About my skin: " counts as a skin question even if the rest is short */
   var baseClassify = classify;
   classify = function (text) {
@@ -678,6 +907,7 @@
 
   document.addEventListener("lumevina:account-changed", function () {
     if (PL && PL.live) PL.mine();             /* fetch the signed-in client's plan, so it's ready for their first question */
+    fetchReplies();
     if (!panel.hidden) render(); else paintFab();
   });
   document.addEventListener("lumevina:plan-changed", function () { if (!panel.hidden) render(); });
@@ -687,6 +917,7 @@
     a.addEventListener("click", function (e) { e.preventDefault(); open(); });
   });
   paintFab();
+  fetchReplies();
 
   window.LumevinaAsk = { open: open, ask: function (t) { open(t); }, classify: classify, questions: questions };
 })();

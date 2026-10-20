@@ -246,6 +246,9 @@ create table questions (
   draft text,                                     -- written by the assistant, never sent as is
   status text not null default 'waiting' check (status in ('waiting', 'answered')),
   due_at timestamptz not null,
+  why text,                                       -- the assistant's one line on what they need
+  photos text[] not null default '{}',            -- paths in the private question-photos bucket
+  photo_note text,                                -- what the photos show, in plain words (never a diagnosis)
   reply text,                                     -- what Evelyn actually sent
   answered_at timestamptz,
   created_at timestamptz not null default now()
@@ -254,9 +257,15 @@ create index questions_waiting on questions (due_at) where status = 'waiting';
 
 alter table questions enable row level security;
 create policy "clients read their own questions" on questions
-  for select using (client_id = auth.uid());
+  for select using (client_id = auth.uid() or lower(email) = lower(auth.jwt() ->> 'email'));
 -- writes happen only in edge functions (service role): ask inserts,
--- the dashboard's Send reply updates reply / status / answered_at.
+-- the dashboard's Send reply (functions/studio) updates reply / status / answered_at.
+
+-- Photos a client adds to a question: private. Only the edge functions
+-- (service role) upload them or make the short-lived links Evelyn's
+-- dashboard shows, so there are no storage policies on purpose.
+insert into storage.buckets (id, name, public) values ('question-photos', 'question-photos', false)
+  on conflict (id) do nothing;
 
 -- ─────────────────────────────────────────────────────────────
 -- Skin plans: the routine Evelyn writes for each client (dashboard →
@@ -458,6 +467,7 @@ revoke all on function take_stock(jsonb) from public, anon, authenticated;
 -- and the gift certificate codes it issued.
 create table orders (
   id uuid primary key default gen_random_uuid(),
+  ref text generated always as ('LUM-' || upper(left(id::text, 8))) stored,   -- the order number on the receipt
   status text not null default 'pending' check (status in ('pending', 'paid', 'cancelled', 'refunded')),
   email text not null,
   name text,
@@ -477,6 +487,7 @@ create table orders (
   created_at timestamptz not null default now()
 );
 create index orders_paid on orders (paid_at desc) where status = 'paid';
+create index orders_ref on orders (ref);
 alter table orders enable row level security;
 create policy "clients read their own orders" on orders
   for select using (lower(email) = lower(auth.jwt() ->> 'email'));

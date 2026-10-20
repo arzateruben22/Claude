@@ -158,18 +158,38 @@
     { part: "avoid", k: /\b(avoid|stay away|not supposed to|shouldn'?t (use|do)|can'?t use)\b/ },
     { part: "next", k: /\bnext (step|visit|appointment|treatment|facial)|when (do|should) i (come|book|go) (back|in)\b|when'?s my next/ },
     { part: "phase", k: /\bwhere am i\b|what (week|stage|phase)|my progress|how am i doing/ },
+    { part: "buy", k: /\b(re-?order|order (more|again)|buy (my|more|again)|running (low|out)|ran out|restock)\b/ },
     { part: "all", k: /\bmy (routine|regimen|plan|skin ?care( routine)?|products)\b|what (do|should) i (use|put on|apply)|(which|what) order|what'?s my (routine|plan)/ }
   ];
   var CHANGES = /\b(add|adding|switch|swap|stop|stopping|change|replace|instead|combine|mix|layer .* with|start using|try|new|more often|increase|move up|stronger|higher)\b/;
 
+  /* which part of the plan a question is about, or null */
+  var part = function (text) {
+    var t = String(text || "").toLowerCase();
+    if (CHANGES.test(t)) return null;
+    for (var i = 0; i < ASKS.length; i++) if (ASKS[i].k.test(t)) return ASKS[i].part;
+    return null;
+  };
+  /** The shelf products (ids) in that part of their plan, for the chat's Add to bag. */
+  var products = function (plan, which) {
+    if (!plan) return [];
+    var lists = which === "morning" ? [plan.morning] : which === "night" ? [plan.night] : which === "weekly" ? [plan.weekly]
+      : which === "all" || which === "buy" ? [plan.morning, plan.night, plan.weekly] : [];
+    var ids = [];
+    lists.forEach(function (l) { (l || []).forEach(function (s) { if (s.id && ids.indexOf(s.id) === -1) ids.push(s.id); }); });
+    return ids;
+  };
+
   /** An answer from the plan, or null when the plan doesn't cover the question. */
   var answer = function (plan, text, firstName) {
     if (!plan || empty(plan)) return null;
-    var t = String(text || "").toLowerCase();
-    if (CHANGES.test(t)) return null;
-    var ask = null;
-    for (var i = 0; i < ASKS.length; i++) if (ASKS[i].k.test(t)) { ask = ASKS[i].part; break; }
+    var ask = part(text);
     if (!ask) return null;
+    if (ask === "buy") {
+      var names = products(plan, "buy").map(function (id) { var p = product(id); return p ? p.name : ""; }).filter(Boolean);
+      return names.length ? "From the plan Evelyn wrote for you" + (firstName ? ", " + firstName : "") + ", these are on her shelf: " + names.join(", ") +
+        ". Add any of them to your bag below. Thinking of changing something? Ask Evelyn first." : null;
+    }
     var lead = "From the plan Evelyn wrote for you" + (firstName ? ", " + firstName : "") + ": ";
     var parts = [];
     if (ask === "morning" || ask === "all") if (plan.morning.length) parts.push("Morning: " + stepText(plan.morning));
@@ -193,6 +213,8 @@
     clean: clean,
     empty: empty,
     answer: answer,
+    part: part,
+    products: products,
     stepText: stepText,
     shelf: shelf
   };

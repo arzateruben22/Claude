@@ -245,3 +245,13 @@ Booking stays on GlossGenius; the website starts with products. `GLOSSGENIUS-PAR
 **One stock count:** the website and the dashboard read the same shelf. An online order takes stock off by itself; in the dashboard's Inventory (now her real 43 products), Sell takes one off for an in-person sale and − / + fix a recount.
 
 **Lumevina Studio:** the dashboard on her iPhone's home screen. New orders, gift certificate sales, client questions from Ask Lumevina and low stock arrive as notifications and in a Recent feed, orders and questions also by email, and each morning a short email lists new orders, what's waiting to ship, questions waiting for her and what's running low. Setup is in GO-LIVE.md (6c).
+
+## Ask Lumevina looks things up, and takes photos (Oct 20)
+
+**Looking things up:** clients can ask the chat where their order is. Signed in, it finds their own orders; otherwise it asks for the order number (now at the top of every receipt email, LUM- and 8 characters) and the email they ordered with. It says whether it's being packed, shipped (with a Track my package button) or waiting for pickup, and never shows an address. Typing a gift certificate code tells them what's left on it. When the chat names products from her shelf that are in stock, Add to bag buttons appear under the answer, and a signed-in client with a skin plan can add their whole routine in one tap ("I'm running low, can I reorder?").
+
+**Photos with questions:** when a question goes to Evelyn, the client can add up to three photos before tapping Send. Only she sees them. Live, the assistant looks at them to write her draft and adds a plain line on what they show (where, colour, size, whether the photo is clear enough), never a diagnosis; if a photo is too dark or blurry, the draft asks for a better one. They show on the dashboard's Client questions; tap one to see it full size.
+
+**Replying:** live, Send reply on the dashboard emails the client (their reply comes back to her inbox), and a signed-in client also sees it in the chat. Nothing reaches her until the client taps Send to Evelyn.
+
+**Fixed along the way:** the chat's typo fixer read "running" as "burning", so "I'm running late" went to Evelyn as a skin reaction. It no longer swaps the first letter of a word unless it's a one-letter typo.

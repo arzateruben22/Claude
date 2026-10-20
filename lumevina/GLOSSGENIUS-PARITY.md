@@ -29,7 +29,7 @@ Evelyn keeps booking on GlossGenius for now and starts the website with products
 | Email and SMS marketing campaigns | ⬜ | Phase 2: email to opted-in clients. |
 | Review requests after a visit | ⬜ | Phase 2 (after product orders too). |
 | Birthday messages | 🟡 | Birthday month is stored (rewards, off). |
-| AI receptionist (GlossGenius "Reception AI", reportedly a paid add-on; unverified) | ✅ more on the website | Ask Lumevina: answers from Evelyn's own words, hands medical/personal questions to her with a drafted reply, remembers signed-in clients' skin plans. No phone/voice line yet. |
+| AI receptionist (GlossGenius "Reception AI", reportedly a paid add-on; unverified) | ✅ more on the website | Ask Lumevina: answers from Evelyn's own words, hands medical/personal questions to her with a drafted reply (photos attached, described for her, never diagnosed), remembers signed-in clients' skin plans, says where an order is, checks gift balances, and puts Add to bag buttons under the products it names. No phone/voice line yet. |
 
 ## Clients
 
@@ -70,6 +70,6 @@ Evelyn keeps booking on GlossGenius for now and starts the website with products
 
 **Phase 1, products first (now):** real checkout through Stripe (cards, Apple Pay and Google Pay, pay-over-time where Stripe offers it), sales tax, shipping or pickup, gift certificates through the same checkout, one stock count on the server, order emails to the buyer and to Evelyn, and the Studio app with notifications and a daily email.
 
-**Phase 2, client care that doesn't depend on booking:** review requests, "running low?" restock reminders from each product's usual lifespan, an email list with simple campaigns, private client notes and before/after photos, the chat checking order status and gift balances.
+**Phase 2, client care that doesn't depend on booking:** review requests, "running low?" restock reminders from each product's usual lifespan, an email list with simple campaigns, private client notes and before/after photos. (Done early: the chat checks order status and gift balances, adds products to the bag, and takes photos with questions for Evelyn.)
 
 **Phase 3, only if booking moves to the website:** card on file and no-show fees, the cancellation waitlist, rebooking reminders, forms attached to reminders, checkout at the visit with tips.

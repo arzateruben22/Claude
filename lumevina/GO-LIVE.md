@@ -44,6 +44,8 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 - [ ] Buy a product with Stripe's test card (4242 4242 4242 4242): Stripe's page opens, the receipt email arrives, stock drops by one on the website and in the dashboard, the order shows on her Shipping list, and her phone gets a "New order" notification.
 - [ ] Buy a $50 gift certificate for someone else: they get the code by email; one dated for tomorrow goes out with the next morning email.
 - [ ] Ask Lumevina a price question and a skin question (the skin one should go to Evelyn).
+- [ ] After the test product order: ask the chat "where's my order?" signed in (it finds it), then signed out with the order number from the receipt email (LUM-…) and the same email. Mark it shipped on the dashboard with a tracking number and ask again: a Track my package button appears. Type a gift code into the chat: it says what's left.
+- [ ] Send a skin question with a photo: it shows on the dashboard's Client questions with the photo and a line on what it shows; Send reply emails the test address, and (signed in) the reply appears in the chat.
 - [ ] Skin plan: write one in the dashboard for a test email, sign in on the website with that email (the link arrives by email), see it under My Lumevina, then ask the chat "what do I use at night?" (answered from the plan) and "can I add vitamin C?" (goes to Evelyn).
 - [ ] Gift certificate: buy a $100 one, then on the dashboard use it on a $50 visit ($50 should stay on it) and on a $120 visit (it covers the last $50; the client pays $70). "Check a gift balance" on the site should show each step, from another phone too.
 - [ ] Switch Stripe to **live** keys.

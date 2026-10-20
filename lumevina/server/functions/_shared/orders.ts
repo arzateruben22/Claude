@@ -115,14 +115,16 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
   const next = order.delivery === "ship" ? "It ships within two business days, and the tracking number comes by email."
     : order.delivery === "pickup" ? "It will be waiting for you at your next visit."
     : order.gifts.some((g: any) => !g.to_buyer) ? "Each certificate is emailed to its recipient (on the date you chose, if you picked one)." : "";
-  await sendEmail(order.email, "Your Lumevina order", page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
-    table + (next ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}</p>` : "")));
+  const track = order.items.length ? ` Ask Lumevina on the website${site() ? ` (<a href="${esc(site())}" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>)` : ""} can tell you where it is any time with this number and your email.` : "";
+  await sendEmail(order.email, `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
+    `<p style="margin:0 0 12px;font-size:13px;color:#7D5A44">Order number <strong style="color:#161412;letter-spacing:.04em">${esc(order.ref)}</strong></p>` + table +
+    (next || track ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}${track}</p>` : "")));
 
   // Evelyn
   const what = [...order.items.map((i: any) => `${i.qty} × ${i.name}`), ...order.gifts.map((g: any) => `gift certificate ${money(g.amount_cents)}`)].join(", ");
   await notifyOwner(db, {
     kind: order.gifts.length && !order.items.length ? "gift" : "order",
-    title: `New order: ${money(total)}`,
+    title: `New order ${order.ref}: ${money(total)}`,
     body: `${name || order.email}: ${what}. ${order.delivery === "ship" ? "Ship by " + new Date(shipBy()).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) + "." : order.delivery === "pickup" ? "Pickup at their visit." : ""}`,
     url: "dashboard.html#shipping", email: true,
   });

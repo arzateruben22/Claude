@@ -428,6 +428,18 @@
     .cq-done .cq { opacity: 0.8; margin-top: 0.6rem; }
     .cq-reply { margin: 0.55rem 0 0; padding-left: 0.75rem; border-left: 2px solid var(--mauve); color: var(--ink-70); font-size: 0.88rem; line-height: 1.45; }
     .cq-empty { color: var(--ink-45); font-size: 0.9rem; padding: 0.5rem 0; }
+    .cq-why { margin: 0.35rem 0 0; font-size: 0.8rem; color: var(--ink-60); }
+    .cq-photos { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.7rem; }
+    .cq-photo { width: 84px; height: 84px; padding: 0; border: 1px solid var(--edge); border-radius: 10px; overflow: hidden; background: #0e0e10; cursor: zoom-in; }
+    .cq-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cq-photo:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+    .cq-note { margin: 0.5rem 0 0; font-size: 0.82rem; line-height: 1.45; color: var(--ink-70); }
+    .cq-note b { color: var(--ink); font-weight: 600; }
+    .cq-msg { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--bad); }
+    .cq-msg:empty { display: none; }
+    .cq-view { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 1rem; background: rgba(0,0,0,0.82); border: 0; cursor: zoom-out; }
+    .cq-view[hidden] { display: none; }
+    .cq-view img { max-width: 100%; max-height: 100%; border-radius: 12px; }
     /* shipping (js/shipping.js) */
     .sh-status { min-height: 1.2em; font-size: 0.82rem; color: var(--mauve); margin: -0.5rem 0 0.8rem; }
     .sh-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
@@ -2466,9 +2478,37 @@
     ];
     var sample = false;
     var load = function () {
+      if (LIVE) return liveQs || [];
       var real = read();
       sample = !real.length;
       return sample ? SAMPLE : real;
+    };
+    /* LIVE: the questions table through functions/studio (her studio key), photos as hour-long links */
+    var SHOP = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.shop) || {};
+    var LIVE = /^https:\/\//.test(SHOP.supabase || "") && !!SHOP.key;
+    var liveQs = null, liveNote = "";
+    var studioKey = function () { try { return localStorage.getItem("lumevina_studio_key") || ""; } catch (e) { return ""; } };
+    var call = function (body) {
+      return fetch(SHOP.supabase.replace(/\/$/, "") + "/functions/v1/studio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SHOP.key, Authorization: "Bearer " + SHOP.key, "x-studio-key": studioKey() },
+        body: JSON.stringify(body)
+      }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw j; return j; }); });
+    };
+    var fromRow = function (r) {
+      return { id: r.id, at: r.created_at, name: r.name, email: r.email, member: r.member, plan: "", kind: r.kind, status: r.status,
+        dueAt: r.due_at, text: r.text, why: r.why || "", draft: r.draft || "", reply: r.reply || "", answeredAt: r.answered_at,
+        photos: r.photo_urls || [], photoNote: r.photo_note || "" };
+    };
+    var pull = function () {
+      if (!LIVE) return;
+      if (!studioKey()) { liveQs = []; liveNote = "Save your studio key under Lumevina Studio above, and client questions show up here."; qs = load(); return paint(); }
+      call({ action: "questions", limit: 100 }).then(function (j) {
+        liveQs = (j.questions || []).map(fromRow); liveNote = ""; qs = load(); paint();
+      }, function (e) {
+        liveNote = e && e.reason === "studio_key" ? "That studio key wasn't accepted. Save it again under Lumevina Studio." : "Couldn't load questions just now. Pull to refresh in a moment.";
+        qs = load(); paint();
+      });
     };
     var KIND = { urgent: "Urgent", reaction: "Reaction", pregnancy: "Pregnancy", medication: "Medication", condition: "Skin condition",
                  skin: "Skin advice", request: "Asked for you", other: "Other" };
@@ -2493,14 +2533,18 @@
         '<span class="cq-pill' + (q.kind === "urgent" ? " cq-pill--urgent" : "") + '">' + esc(KIND[q.kind] || "Other") + '</span>' +
         (due ? '<span class="cq-due ' + due.c + '">' + due.t + '</span>' :
                '<span class="cq-due">Answered ' + new Date(q.answeredAt || q.at).toLocaleDateString("en-US", { month: "short", day: "numeric" }) + '</span>') + '</div>' +
-        '<p class="cq-q">' + esc(q.text) + '</p>';
+        '<p class="cq-q">' + esc(q.text) + '</p>' + (q.why ? '<p class="cq-why">What they need: ' + esc(q.why) + '</p>' : "") +
+        ((q.photos || []).length ? '<div class="cq-photos">' + q.photos.map(function (src, i) {
+          return '<button type="button" class="cq-photo" data-photo="' + esc(src) + '" aria-label="See photo ' + (i + 1) + ' from ' + esc(q.name) + '"><img src="' + esc(src) + '" alt="" loading="lazy"></button>';
+        }).join("") + '</div>' : "") +
+        (q.photoNote ? '<p class="cq-note"><b>What the photos show</b> (the assistant’s description, so look for yourself): ' + esc(q.photoNote) + '</p>' : "");
       if (q.status !== "waiting") return '<li class="cq">' + top + '<p class="cq-reply">' + esc(q.reply || "Handled outside the chat.") + '</p></li>';
       return '<li class="cq' + (q.member ? " is-member" : "") + (q.kind === "urgent" ? " is-urgent" : "") + '" data-id="' + esc(q.id) + '">' + top +
         '<label class="cq-draft-k" for="cq-' + esc(q.id) + '">Drafted reply · check it and change anything</label>' +
         '<textarea id="cq-' + esc(q.id) + '">' + esc(q.draft || "") + '</textarea>' +
         '<div class="cq-actions"><button type="button" class="cq-send" data-do="send">Send reply</button>' +
         '<button type="button" class="settle-btn" data-do="handled">Handled another way</button>' +
-        '<span class="cq-hint">' + esc(q.email) + '</span></div></li>';
+        '<span class="cq-hint">' + esc(q.email) + '</span></div><p class="cq-msg" role="alert"></p></li>';
     };
 
     var paint = function () {
@@ -2518,12 +2562,31 @@
       document.getElementById("cq-tiles").innerHTML = tiles.map(function (t) {
         return '<div class="bk-tile' + (t.flag ? ' bk-tile--flag' : '') + '"><div class="bk-tv">' + t.v + '</div><div class="bk-tl">' + t.l + '</div></div>';
       }).join("");
-      list.innerHTML = waiting.length ? waiting.map(item).join("") :
-        '<li class="cq-empty">Nothing waiting. Everyday questions are being answered for you.</li>';
+      list.innerHTML = liveNote ? '<li class="cq-empty">' + esc(liveNote) + '</li>' : waiting.length ? waiting.map(item).join("") :
+        '<li class="cq-empty">' + (LIVE && !liveQs ? "Loading questions…" : "Nothing waiting. Everyday questions are being answered for you.") + '</li>';
       doneBox.hidden = !done.length;
       doneBox.querySelector("summary").textContent = "Answered (" + done.length + ")" + (sample ? " · sample questions until real ones arrive" : "");
       doneList.innerHTML = done.map(item).join("");
     };
+
+    /* a photo, full size; tap anywhere to close */
+    var viewer = document.createElement("button");
+    viewer.type = "button"; viewer.className = "cq-view"; viewer.hidden = true;
+    viewer.setAttribute("aria-label", "Close photo");
+    viewer.innerHTML = '<img alt="">';
+    document.body.appendChild(viewer);
+    var lastPhoto = null;
+    viewer.addEventListener("click", function () { viewer.hidden = true; if (lastPhoto) lastPhoto.focus(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !viewer.hidden) viewer.click(); });
+    var card = document.getElementById("client-questions");
+    card.addEventListener("click", function (e) {
+      var ph = e.target.closest("[data-photo]");
+      if (!ph) return;
+      lastPhoto = ph;
+      viewer.querySelector("img").src = ph.getAttribute("data-photo");
+      viewer.hidden = false;
+      viewer.focus();
+    });
 
     list.addEventListener("click", function (e) {
       var b = e.target.closest("[data-do]");
@@ -2533,9 +2596,25 @@
       if (!q) return;
       var text = li.querySelector("textarea").value.trim();
       if (b.getAttribute("data-do") === "send" && !text) { li.querySelector("textarea").focus(); return; }
+      var reply = b.getAttribute("data-do") === "send" ? text : "";
+      if (LIVE) {
+        /* the server emails the reply (she's the reply-to) and marks it answered */
+        li.querySelectorAll("button").forEach(function (x) { x.disabled = true; });
+        li.querySelector(".cq-msg").textContent = "";
+        call({ action: "answer", id: q.id, reply: reply }).then(function (j) {
+          q.status = "answered"; q.answeredAt = new Date().toISOString(); q.reply = reply;
+          paint();
+          if (reply && j && j.emailed === false) alert("Saved, but the email didn't go out (is email set up? GO-LIVE.md). Send it to " + q.email + " yourself this time.");
+        }, function (err) {
+          li.querySelectorAll("button").forEach(function (x) { x.disabled = false; });
+          li.querySelector(".cq-msg").textContent = err && err.reason === "not_found" ? "Already answered (maybe from another device). Refreshing…" : "Didn't send. Check the connection and try again.";
+          if (err && err.reason === "not_found") setTimeout(pull, 900);
+        });
+        return;
+      }
       q.status = "answered";
       q.answeredAt = new Date().toISOString();
-      q.reply = b.getAttribute("data-do") === "send" ? text : "";
+      q.reply = reply;
       if (!sample) {
         var all = read();
         all.forEach(function (x) { if (x.id === q.id) { x.status = q.status; x.answeredAt = q.answeredAt; x.reply = q.reply; } });
@@ -2543,8 +2622,11 @@
       }
       paint();
     });
-    window.addEventListener("storage", function (e) { if (e.key === KEY) { qs = load(); paint(); } });
+    window.addEventListener("storage", function (e) { if (e.key === KEY && !LIVE) { qs = load(); paint(); } });
+    document.addEventListener("lumevina:studio-key", pull);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) pull(); });
     paint();
+    pull();
   })();
   </script>
   <script>
@@ -2891,6 +2973,7 @@
       $("st-key").value = ""; $("st-key").placeholder = "saved on this device";
       status("Saved on this device.", "is-ok");
       feed();
+      document.dispatchEvent(new CustomEvent("lumevina:studio-key"));
     });
 
     if (!LIVE) {

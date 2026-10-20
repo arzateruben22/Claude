@@ -280,7 +280,7 @@
       limitNote[id] = max === 1 ? "Evelyn has just 1 on the shelf, and it's in your cart."
         : "Evelyn has " + max + " on the shelf, and they're all in your cart.";
       render();
-      return;
+      return false;
     }
     if (cart[id]) {
       cart[id].qty += 1;
@@ -290,6 +290,7 @@
     noticeEl.hidden = true;
     save();
     render();
+    return true;
   };
 
   var changeQty = function (id, delta) {
@@ -428,6 +429,25 @@
   }
 
   if (INV && INV.onChange) INV.onChange(render);
+
+  /* ── For Ask Lumevina (js/ask.js): its Add to bag buttons. A shelf product
+     by its catalog id → { ok, name, reason: "unknown" | "unavailable" | "max" } ── */
+  var bump = function () { navCart.classList.remove("bump"); void navCart.offsetWidth; navCart.classList.add("bump"); };
+  window.LumevinaCart = {
+    add: function (productId) {
+      var p = INV ? INV.get(productId) : null;
+      if (!p) return { ok: false, reason: "unknown" };
+      var s = INV.status(p);
+      var name = p.brand + " " + p.name;
+      if (p.hidden || p.draft || (s !== "in" && s !== "low")) return { ok: false, name: name, reason: "unavailable" };
+      if (!addItem("retail-" + p.id, name, Number(p.price))) return { ok: false, name: name, reason: "max" };
+      bump();
+      return { ok: true, name: name };
+    },
+    has: function (productId) { return !!cart["retail-" + String(productId).replace(/^retail-/, "")]; },
+    count: function () { return itemCount(); },
+    open: openDrawer
+  };
 
   /* ── Add-to-cart (delegated, so JS-rendered retail buttons work too) ── */
   document.addEventListener("click", function (e) {
@@ -822,6 +842,15 @@
         }
         checkoutStatus.textContent = "";
         orderIdEl.textContent = result.id;
+        /* this browser's orders, so Ask Lumevina can say where one is (live: the orders table) */
+        try {
+          var mine = JSON.parse(localStorage.getItem("lumevina_orders")) || [];
+          mine.unshift({ id: result.id, at: new Date().toISOString(), email: checkoutForm.elements.email.value.trim().toLowerCase(),
+            items: Object.keys(cart).filter(function (id) { return id.indexOf("retail-") === 0; })
+              .map(function (id) { return { id: id, name: cart[id].name, qty: cart[id].qty }; }),
+            gifts: Object.keys(cart).filter(isGiftId).length, delivery: cartHasRetail() ? delivery() : "none", total: total });
+          localStorage.setItem("lumevina_orders", JSON.stringify(mine.slice(0, 30)));
+        } catch (e) { /* private mode */ }
 
         /* Glow Rewards: gifts & orders earn 1 ✦ per $1 */
         var rw = window.LumevinaRewards;

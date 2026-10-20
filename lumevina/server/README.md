@@ -124,7 +124,9 @@ shows the notifications. `_shared/notify.ts → notifyOwner` records every
 alert in `studio_alerts` (the dashboard's Recent feed), pushes it to each
 phone in `studio_push`, and emails `OWNER_EMAIL` for orders and client
 questions. Alerts today: new order, new gift certificate sale, low stock,
-a client question handed to her by Ask Lumevina.
+a client question handed to her by Ask Lumevina (with how many photos).
+The same function serves the dashboard's Client questions card
+(`questions`, `answer`).
 
 ```sh
 npx web-push generate-vapid-keys          # once; keep both
@@ -396,30 +398,47 @@ To close it entirely, she moves all booking to the website (`mode: "site"`).
 
 ## Ask Lumevina (client questions)
 
-`js/ask.js` runs the chat in the browser today: keyword matching answers the
-everyday questions, and personal ones are saved to localStorage for the
-dashboard's **Client questions** card. To make it real:
+`js/ask.js` is the chat. With `ask.endpoint` set in `js/site-config.js` it
+sends each question to `functions/ask`; without it (or when the function
+can't be reached) its keyword answers take over.
 
-1. `supabase secrets set ANTHROPIC_API_KEY=...` and
-   `supabase functions deploy ask`. Run the `questions` table in
-   `schema.sql`.
-2. In `js/ask.js`, send each question to the function instead of
-   `classify()`: `POST /functions/v1/ask` with `{ message, history, name,
-   email }` and the client's session. It returns `{ answer }`, or
-   `{ handoff, due_at }` once the question is saved for Evelyn
-   (`needs_contact: true` means ask for a name and email first).
-3. The dashboard reads `questions where status = 'waiting'` (members, then
-   soonest due), and Send writes `reply`, `status = 'answered'` and
-   `answered_at`, then emails the reply with `send-confirmation`'s
-   `sendEmail`. The client's chat shows it from their own rows.
+```sh
+supabase secrets set ANTHROPIC_API_KEY=...
+supabase functions deploy ask
+```
 
-How it stays safe: the hand-off rules (reactions, pregnancy, medications,
-skin conditions, "what should I use on my skin", emergencies) run as plain
-code before any AI call, so they never depend on the model. Claude only
-answers from the facts in the function, can hand off on its own when a
-question isn't covered, and drafts replies that Evelyn always reviews.
-Cost: at a small spa's volume, a few dollars a month (the fast, inexpensive
-model is set in `MODEL`).
+What the function does with a question:
+
+- **The rules first.** Reactions, pregnancy, medications, skin conditions,
+  "what should I use on my skin" and emergencies are caught by plain code
+  (`js/ask-rules.js`, copied into the bundle) before any AI call, and go to
+  Evelyn. They never depend on the model.
+- **Everyday questions:** Claude answers from the bundle (her playbook, the FAQ
+  and policies, the shelf with live stock), in her voice. A signed-in client's
+  skin plan and file come along (`_shared/plans.ts`).
+- **Look-ups** (`_shared/lookups.ts`), as tools the model can call:
+  `look_up_order` (a signed-in client's own orders; anyone else needs the order
+  number from the receipt, `orders.ref`, plus the email they ordered with; never
+  an address or a gift code), `gift_balance` (by code, like the site's balance
+  check), and `show_products` (Add to bag buttons under the answer). Up to four
+  rounds, then it hands the question to Evelyn instead of looping.
+- **Hand-offs:** the model can call `hand_to_evelyn`; nothing is saved until
+  the client taps **Send to Evelyn**. Then the website posts `{ handoff, id,
+  message, why, name, email, photos }`: the function stores up to three photos
+  (JPEGs the website shrank) in the private `question-photos` bucket, writes a
+  draft with Claude (it sees the photos, describes them for Evelyn in
+  `photo_note`, never diagnoses, and asks for a clearer one when needed), saves
+  the row and tells her (push + email). The `id` makes a retry safe.
+
+The dashboard's **Client questions** card reads them through `functions/studio`
+(`questions`: every waiting question and the last 30 days answered, photos as
+hour-long links) and **Send reply** calls `answer`, which emails the client
+(reply-to: `OWNER_EMAIL`) and marks it answered. A signed-in client also sees
+Evelyn's reply in their chat (their own rows in `questions`).
+
+Cost: the stable part of the prompt is cached for an hour, so a question costs
+mostly its own few hundred tokens; a look-up adds one short round, and a draft
+with photos adds the images once.
 
 ## Glow Points, rebooking and referrals
 

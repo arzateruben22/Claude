@@ -12,14 +12,20 @@
 // POST { action: "shelf_set", id, stock?, price?, hidden? }   a recount, a new price, on/off the site
 // POST { action: "sell", id, qty }                 → { stock }  an in-person sale takes stock off
 // POST { action: "shelf_add", id, name, brand?, category?, price, stock? }   a product she brings in
+// POST { action: "questions", limit? }             → { questions }  Client questions: every one waiting, and the
+//                                                    last 30 days answered, each photo as an hour-long link
+// POST { action: "answer", id, reply }             her reply, emailed to the client (reply-to: her), and the
+//                                                    question marked answered; reply "" = handled another way
 //
 // Deploy:  supabase functions deploy studio --no-verify-jwt
-// Secrets: STUDIO_KEY, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, OWNER_EMAIL
+// Secrets: STUDIO_KEY, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, OWNER_EMAIL (+ RESEND_API_KEY for replies)
 
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { notifyOwner, pushAll } from "../_shared/notify.ts";
 import { studioOk } from "../_shared/studio.ts";
+import { BUCKET } from "../_shared/photos.ts";
+import { esc, page, sendEmail } from "../_shared/mail.ts";
 
 Deno.serve(async (req) => {
   const cors = {
@@ -92,6 +98,34 @@ Deno.serve(async (req) => {
       const row = data[0];
       if (row.low) await notifyOwner(db, { kind: "low_stock", title: `Low stock: ${row.name}`, body: row.stock === 0 ? "Sold out on the website now." : `${row.stock} left.`, url: "dashboard.html#inventory" });
       return json({ id: row.id, stock: row.stock });
+    }
+    case "questions": {
+      const since = new Date(Date.now() - 30 * 864e5).toISOString();
+      const { data } = await db.from("questions").select("*").or(`status.eq.waiting,answered_at.gte."${since}"`)
+        .order("created_at", { ascending: false }).limit(limit);
+      const rows = data ?? [];
+      const paths = rows.flatMap((q: any) => q.photos ?? []);
+      const links = new Map<string, string>();
+      if (paths.length) {
+        const { data: signed } = await db.storage.from(BUCKET).createSignedUrls(paths, 3600);
+        for (const s of signed ?? []) if (s.signedUrl && s.path) links.set(s.path, s.signedUrl);
+      }
+      return json({ questions: rows.map((q: any) => ({ ...q, photo_urls: (q.photos ?? []).map((p: string) => links.get(p)).filter(Boolean) })) });
+    }
+    case "answer": {
+      const reply = String(body.reply ?? "").trim().slice(0, 4000);
+      const { data: q } = await db.from("questions").update({ status: "answered", reply: reply || null, answered_at: new Date().toISOString() })
+        .eq("id", String(body.id ?? "")).eq("status", "waiting").select("*").maybeSingle();
+      if (!q) return json({ reason: "not_found" }, 404);
+      let emailed = false;
+      if (reply) {
+        const first = String(q.name ?? "").split(" ")[0];
+        emailed = await sendEmail(q.email, "Evelyn replied to your question", page(first ? `Hi ${first},` : "Hi,",
+          reply.split(/\n{2,}/).map((para) => `<p style="font-size:15px;line-height:1.55">${esc(para).replace(/\n/g, "<br>")}</p>`).join("") +
+          `<p style="margin-top:20px;font-size:13px;color:#7D5A44">You asked: “${esc(q.text)}”<br>Reply to this email to write back to Evelyn.</p>`),
+          Deno.env.get("OWNER_EMAIL") ?? undefined);
+      }
+      return json({ ok: true, emailed });
     }
     default:
       return json({ error: "unknown action" }, 400);

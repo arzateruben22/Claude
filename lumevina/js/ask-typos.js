@@ -42,7 +42,9 @@
     "since because though right left long short hurt hurts feel feels felt normal okay safe start started stop " +
     "try tried again pay paid buy bought sell send sent get call text email phone number name come stay leave " +
     "bring wear wearing hair face body back chest neck lip lips arm leg feet hand hands eyes ear ears nose " +
-    "love nice cool wait sorry maybe probably also another any else").split(" ");
+    "love nice cool wait sorry maybe probably also another any else run runs running ran low order orders ordered " +
+    "reorder package packages ship ships shipped track tracking tracked deliver delivered delivery arrive arrived " +
+    "pickup bag cart code balance").split(" ");
 
   var KNOWN = {}, TOPIC = {};
   VOCAB.concat(COMMON).forEach(function (w) { KNOWN[w] = true; });
@@ -77,6 +79,7 @@
       var v = VOCAB[i];
       if (Math.abs(v.length - w.length) > max) continue;
       var dd = dist(w, v);
+      if (dd > 1 && v[0] !== w[0]) continue;                  /* "running" isn't "burning": a new first letter takes a one-letter typo */
       if (dd < bestD) { best = v; bestD = dd; tie = false; }
       else if (dd === bestD && v !== best) tie = true;
     }
