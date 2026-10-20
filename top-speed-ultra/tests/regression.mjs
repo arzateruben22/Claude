@@ -677,6 +677,42 @@ await group('render', async (use) => {
     await sky('day', 'clear');
     return `02:13 Pacific: daylight ${fmt(night.day)}; 13:00: ${fmt(noon)}`;
   });
+  // the OC Hypercar's lights and cockpit (PROJECT_OC_HYPERCAR.md M2). It has no CarDef until M3, so its body,
+  // wheels and cockpit go on the player's car directly (the GT's physics), then back to the profile's car.
+  await check('OC Hypercar: seat, beams from the blades, brake bar, turn signals, reversing lamps (M2)', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, c = g.car, cfg = c.config;
+      g.fastForward(3, {}, 30);
+      c.configure({ ...cfg, car: 'oc-hyper', paint: 0xc8d3e8 });
+      const ext = c.exterior, lamps = ['sigL', 'sigR', 'reverse'].map((k) => ext.getObjectByName(k));
+      const out = { eye: c.eye.position.toArray(), beam: c.beams[1].position.toArray(), built: lamps.every(Boolean), hidden: lamps.every((m) => m && !m.visible) };
+      c.update(0, 1, g.phys, true, g.time); out.brake = c.mats.tail.emissiveIntensity;
+      c.update(0, 1, g.phys, false, g.time); out.free = c.mats.tail.emissiveIntensity;
+      const d0 = g.phys.d;
+      for (let k = 0; k < 40 && !out.lane; k++) {
+        g.fastForward(0.05, { steer: k < 12 ? 0.22 : 0, throttle: 0.3, brake: 0 });
+        c.update(0, 1, g.phys, false, g.time);
+        const s = c.lightState;
+        if (s.signal > 0 && s.blink) out.lane = { t: (k + 1) * 0.05, dd: g.phys.d - d0, R: lamps[1].visible, L: lamps[0].visible };
+      }
+      g.fastForward(5, { steer: 0, throttle: 0, brake: 1 }); g.fastForward(1.5, { steer: 0, throttle: 0, brake: 1 });
+      c.update(0, 1, g.phys, false, g.time);
+      out.rev = { gear: g.phys.gear, vx: g.phys.vx, on: lamps[2].visible };
+      Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0 });
+      out.gauge = !!c.interior.gaugeAt; out.rearView = !!c.interior.group.getObjectByName('rear-view-mirror');
+      c.configure({ ...cfg });
+      out.back = c.config.car; out.was = cfg.car;
+      return out;
+    });
+    expect(r.built && r.hidden, `switched lamps built ${r.built}, hidden until lit ${r.hidden}`);
+    expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 0.96) < 0.005, `the hypercar's eye at ${r.eye.map(fmt)} (want -0.27, 0.96)`);
+    expect(r.beam[2] < -2.2 && r.beam[1] < 0.5 && r.beam[0] > 0.3, `beam at ${r.beam.map(fmt)}: not from the blade`);
+    expect(r.brake === 5 && r.free === 1.6, `red bar ${r.free} → ${r.brake} on the brakes`);
+    expect(r.lane && r.lane.R && !r.lane.L, `lane change right: ${JSON.stringify(r.lane)}`);
+    expect(r.rev.gear < 0 && r.rev.on, `reversing: ${JSON.stringify(r.rev)}`);
+    expect(r.gauge && !r.rearView && r.back === r.was, `gauge pod ${r.gauge}, rear-view ${r.rearView}, back to ${r.back} (was ${r.was})`);
+    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)}; bar ${r.free} → ${r.brake}; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); reverse lamps on in gear ${r.rev.gear}`;
+  });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
     await frames(page, 5);

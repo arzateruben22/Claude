@@ -12,8 +12,8 @@ const FONT = 'Arial, Helvetica, sans-serif';
 
 function tex(c: HTMLCanvasElement) { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; }
 
-export function tachTextures(n = 1024) {
-  return once('tach' + n, () => {
+export function tachTextures(n = 1024, brand = 'R O S S I N I') {
+  return once('tach' + n + brand, () => {
     const [c, g] = canvas(n, n), [ce, ge] = canvas(n, n);
     const cx = n / 2, cy = n / 2, R = n * 0.48;
     // face: graphite, a lighter chapter ring, concentric graining
@@ -47,7 +47,7 @@ export function tachTextures(n = 1024) {
       k.fillStyle = lit ? 'rgba(255,240,220,0.55)' : '#9da2a8'; k.textAlign = 'center'; k.textBaseline = 'middle';
       k.font = `500 ${R * 0.055}px ${FONT}`; k.fillText('x1000 r/min', cx, cy + R * 0.21);
       k.font = `600 ${R * 0.06}px ${FONT}`;
-      const word = 'R O S S I N I'; k.fillText(word, cx, cy - R * 0.3);
+      const word = brand; k.fillText(word, cx, cy - R * 0.3);
     });
     // the digital window: gear and speed
     const wx = cx - R * 0.2, wy = cy + R * 0.34, ww = R * 0.4, wh = R * 0.3;

@@ -15,7 +15,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { Kit, V3, v3, curve, clamp, sstep, gridGeo, roundPoly, roundRect, mat, tubeGeo, latheGeo, extrude } from './car-kit';
 import type { ShutLine } from './car-mats';
 import { EYE } from './spec';
-import { CarId, ShapeParams, shapeFor, rearR } from './car-shape';
+import { CarId, ShapeParams, shapeFor, rearR, seatOffset } from './car-shape';
 
 export interface Arch { z: number; yc: number; R: number; cut: number }
 export interface BodyOptions {
@@ -456,12 +456,17 @@ function makeBody(P: ShapeParams) {
   // ---------------------------------------------------------------------------------------------- door mirrors
   // a wedge-nosed pod on a blade from the door's top front corner; the glass faces back, flush in its rim
   const MIRROR = { at: v3(...P.mirrorAt), w: 0.205, h: 0.094, d: 0.12, glass: [0.172, 0.074] as [number, number] };
+  // the headlamp beams' origin, right side (PlayerCar mirrors it): the blade's middle on the hypercar, set when its
+  // lamps are built; the other cars keep the game's fixed lamp point
+  const beamAt = v3(0.62, 0.55, -2.2);
+  // this car's driver's eye (the hypercar's driver sits lower and further in: car-shape seatOffset)
+  const eye = EYE.clone().add(v3(...seatOffset(P)));
   // Each mirror is aimed for the driver, as a driver would set it: the glass's normal halves the angle between the
   // eye and the view it should show (straight back, so the inboard edge just shows the flank)
   const mirrorQ = (side: 1 | -1) => {
     const c = v3(side * MIRROR.at.x, MIRROR.at.y, MIRROR.at.z + MIRROR.d / 2);
     const view = v3(side * 0.05, -0.02, 1).normalize();
-    const nn = EYE.clone().sub(c).normalize().add(view).normalize();
+    const nn = eye.clone().sub(c).normalize().add(view).normalize();
     const x = v3(0, 1, 0).cross(nn).normalize(), y = nn.clone().cross(x);
     return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x, y, nn));
   };
@@ -572,8 +577,9 @@ function makeBody(P: ShapeParams) {
     const HEAD = P.head;
     const hyper = P.noseStyle === 'hyper', racy = P.noseStyle === 'corsa' || hyper;   // carbon frames and trims
     // an LED strip (the hypercar's ice blue): a ribbon w wide centred on the path, facing nrm(i), lifted off the
-    // surface; u runs along it, v across it (the LED map's core and halo)
-    const ledStrip = (pts: V3[], nrm: (i: number) => V3, w: number, lift = 0.0015) => {
+    // surface; u runs along it, v across it (the LED map's core and halo). key: the turn signals' amber overlays
+    // ('sigL', 'sigR') use the same ribbon under their own keys
+    const ledStrip = (pts: V3[], nrm: (i: number) => V3, w: number, lift = 0.0015, key = 'led') => {
       if (!P.led || pts.length < 2) return;
       const rows: V3[][] = [];
       for (let i = 0; i < pts.length; i++) {
@@ -586,10 +592,73 @@ function makeBody(P: ShapeParams) {
       if (gn.getX(0) * n0.x + gn.getY(0) * n0.y + gn.getZ(0) * n0.z < 0) g = gridGeo(rows, { flip: true });
       const uv = g.attributes.uv as THREE.BufferAttribute;
       for (let i = 0; i < rows.length; i++) for (let j = 0; j < 2; j++) uv.setXY(i * 2 + j, i / (rows.length - 1), j);
-      kit.add('led', g);
+      kit.add(key, g);
     };
+    // the hypercar's blades (M2): a lit face standing on the nose, its foot along the black lower nose's top edge from
+    // blade.x0 off the centre to the head quad's inner end, then along the quad's swept front edge round the fender's
+    // corner; over it a dark lamp socket (the smoked lens, the module at its outer end) runs back to the skin, rising
+    // blade.socket metres in the FRONT view. All in the lamp material (face and lens are two bands of its map), with
+    // a gloss-black cap at each end. PlayerCar's beams start from beamAt.
+    if (P.blade && keep(v3(0.6, 0.6, ZF + 0.3))) for (const sd of [1, -1]) {
+      const BL = P.blade, xh = HEAD[0][0], xo = HEAD[1][0], yh = body.top(HEAD[0][1], xh);
+      // the foot in plan: dense, then resampled by length
+      const foot: [number, number][] = [];
+      for (let k = 0; k <= 30; k++) {
+        const x = BL.x0 + (xh - BL.x0) * (k / 30), y = BL.y0 + (yh - BL.y0) * (k / 30);
+        let lo = ZF, hi = HEAD[0][1] + 0.05;
+        for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if (body.top(m, x) < y) lo = m; else hi = m; }
+        foot.push([x, (lo + hi) / 2]);
+      }
+      for (let k = 1; k <= 40; k++) {
+        const u = k / 40, sw = P.bladeSweep ?? 0, z = HEAD[0][1] + (HEAD[1][1] - HEAD[0][1]) * u + sw * u * u * u;
+        foot.push([Math.min(xh + (xo - xh) * u, body.shoulder(z).Ws - 0.01), z]);
+      }
+      const cum = [0];
+      for (let k = 1; k < foot.length; k++) cum.push(cum[k - 1] + Math.hypot(foot[k][0] - foot[k - 1][0], foot[k][1] - foot[k - 1][1]));
+      const L = cum[cum.length - 1], N = high ? 44 : 26, at = (d: number): [number, number] => {
+        let k = 1; while (k < cum.length - 1 && cum[k] < d) k++;
+        const t = (d - cum[k - 1]) / Math.max(1e-6, cum[k] - cum[k - 1]);
+        return [foot[k - 1][0] + (foot[k][0] - foot[k - 1][0]) * t, foot[k - 1][1] + (foot[k][1] - foot[k - 1][1]) * t];
+      };
+      const F: V3[] = [], T: V3[] = [], S: V3[] = [], us: number[] = [];
+      for (let i = 0; i <= N; i++) {
+        const u = i / N, [x, z] = at(L * u), [xa, za] = at(L * Math.max(0, u - 0.01)), [xb, zb] = at(L * Math.min(1, u + 0.01));
+        let tx = xb - xa, tz = zb - za; const tl = Math.hypot(tx, tz) || 1; tx /= tl; tz /= tl;
+        const nx = -tz, nz = tx;                                      // across the blade in plan: back and in
+        const f = v3(sd * x, body.top(z, x), z).addScaledVector(body.topNormal(sd * x, z), high ? 0.004 : 0.006);
+        const t = f.clone().add(v3(0, BL.h, 0));
+        // the socket's back edge: on along the plan normal until the skin stands blade.socket over the face's top
+        const rise = BL.socket[0] + (BL.socket[1] - BL.socket[0]) * u * u;
+        let d = 0.004, sx = x, sz = z;
+        for (; d < 0.3; d += 0.003) { sx = x + nx * d; sz = z + nz * d; if (body.top(sz, Math.min(sx, body.shoulder(sz).Ws - 0.01)) >= t.y + rise) break; }
+        sx = Math.min(sx, body.shoulder(sz).Ws - 0.01);
+        F.push(f); T.push(t); us.push(u);
+        S.push(v3(sd * sx, body.top(sz, sx), sz).addScaledVector(body.topNormal(sd * sx, sz), high ? 0.003 : 0.005));
+      }
+      // the face (map rows 2..46 of 128) and the lens (rows 54..126), each turned to face out of the skin
+      const k = Math.floor(N / 2), [xm, zm] = at(L * 0.5), outN = body.topNormal(sd * xm, zm);
+      const band = (a: V3[], b: V3[], v0: number, v1: number) => {
+        let g = gridGeo([a, b], { flip: false });
+        const n = g.attributes.normal as THREE.BufferAttribute;
+        if (n.getX(k) * outN.x + n.getY(k) * outN.y + n.getZ(k) * outN.z < 0) g = gridGeo([a, b], { flip: true });
+        const uv = g.attributes.uv as THREE.BufferAttribute;
+        for (let i = 0; i <= N; i++) { uv.setXY(i, us[i], v0); uv.setXY(N + 1 + i, us[i], v1); }
+        return g;
+      };
+      kit.add('lamp', band(F, T, 1 - 46 / 128, 1 - 2 / 128));
+      kit.add('lamp', band(T, S, 1 - 54 / 128, 1 - 126 / 128));
+      // the ends: a gloss-black cap closing the wedge, facing along the blade (in at the inner end, back at the outer)
+      for (const i of [0, N]) {
+        const j = i ? N - 1 : 1, along = F[i].clone().sub(F[j]).normalize();
+        const cap = new THREE.BufferGeometry().setFromPoints([F[i], T[i], S[i]]); cap.setIndex([0, 1, 2]); cap.computeVertexNormals();
+        const cn = cap.attributes.normal as THREE.BufferAttribute;
+        if (cn.getX(0) * along.x + cn.getY(0) * along.y + cn.getZ(0) * along.z < 0) { cap.setIndex([0, 2, 1]); cap.computeVertexNormals(); }
+        kit.add('trim', cap, null, 0.05);
+      }
+      if (sd > 0) beamAt.copy(F[Math.round(N * 0.55)]).lerp(T[Math.round(N * 0.55)], 0.5).add(v3(0, 0, -0.03));
+    }
     // headlamps: a param patch on the fender tops, a hair proud of the paint
-    if (keep(v3(0.6, 0.6, ZF + 0.3))) for (const sd of [1, -1]) {
+    else if (keep(v3(0.6, 0.6, ZF + 0.3))) for (const sd of [1, -1]) {
       const rows: V3[][] = [];
       for (let i = 0; i <= 6; i++) {
         const r: V3[] = [];
@@ -735,6 +804,8 @@ function makeBody(P: ShapeParams) {
         const S = P.splitter, last = pts[pts.length - 1], yS = YSILL - 0.003;
         for (let k = 1; k <= 5; k++) { const t = k / 5; pts.push(v3(last.x + sd * 0.07 * t, last.y + (yS - last.y) * Math.min(1, t * 2.5), last.z - (S.proud - 0.08) * t)); ns.push(v3(sd * 0.6, 0.8, -0.2).normalize()); }
         ledStrip(pts, (i) => ns[i], 0.012, 0.002);
+        // the front turn signal: the corner LED's upper two thirds turn amber (PlayerCar shows it when it blinks)
+        ledStrip(pts.slice(0, 10), (i) => ns[i], 0.014, 0.0035, sd < 0 ? 'sigL' : 'sigR');
       }
       kit.add('dark', gridGeo([ring(hyper ? rl - 0.002 : 0.001, -0.009), ring(-0.07, -0.009)], { closeU: true, flip: fl }), null, 0.2);
       const hc = gridGeo(grid(-0.02), { flip: fl }), hu = hc.attributes.uv as THREE.BufferAttribute, hp = hc.attributes.position;
@@ -835,6 +906,14 @@ function makeBody(P: ShapeParams) {
         const bu = bg.attributes.uv as THREE.BufferAttribute, bp = bg.attributes.position;
         for (let k = 0; k < bu.count; k++) bu.setXY(k, 0.5 * (bp.getX(k) + hw) / (2 * hw), 0.3 + 0.4 * (bp.getY(k) - (yb - Bh / 2)) / Bh);
         kit.add('tail', bg);
+        // the rear turn signals: the bar's outer 0.26 m each side, amber, a hair proud (shown by PlayerCar when lit)
+        for (const sd of [-1, 1]) {
+          const ss = new THREE.Shape(), x0 = hw - 0.26, h2 = Bh / 2 + 0.001;
+          ss.moveTo(x0, yb - h2); ss.lineTo(hw - tp, yb - h2); ss.lineTo(hw + 0.002, yb); ss.lineTo(hw - tp, yb + h2); ss.lineTo(x0, yb + h2); ss.closePath();
+          const sg = new THREE.ShapeGeometry(ss, 1); if (sd < 0) { sg.scale(-1, 1, 1); const ix = sg.index!; for (let i = 0; i < ix.count; i += 3) { const a = ix.getX(i + 1); ix.setX(i + 1, ix.getX(i + 2)); ix.setX(i + 2, a); } }
+          sg.translate(0, 0, ZR + 0.0065); sg.computeVertexNormals();
+          kit.add(sd < 0 ? 'sigL' : 'sigR', sg, null, 0.05);
+        }
       } else {
         // Vela: one lit line across the whole tail, wrapping round the corners, over a gloss-black band
         const hw = tailX(yl) - 0.006;
@@ -927,6 +1006,13 @@ function makeBody(P: ShapeParams) {
           kit.add('plate', pl);
           const pb = new RoundedBoxGeometry(P.plate.w + 0.02, P.plate.h + 0.02, 0.012, 2, 0.004); pb.translate(0, P.plate.y, ZR + 0.007);
           kit.add('trim', pb, null, 0.1);
+          // the reversing lamps: a slim lens either side of the plate in a gloss-black housing; the lit face
+          // ('reverse') is shown by PlayerCar while the car is in reverse
+          for (const sd of [-1, 1]) {
+            const x = sd * (P.plate.w / 2 + 0.11);
+            const hb = new RoundedBoxGeometry(0.15, 0.034, 0.012, 2, 0.005); hb.translate(x, P.plate.y, ZR + 0.007); kit.add('trim', hb, null, 0.1);
+            const lf = new THREE.PlaneGeometry(0.13, 0.016); lf.translate(x, P.plate.y, ZR + 0.0135); kit.add('reverse', lf);
+          }
         }
         // the LED outlines the mouth on the valance just outside it: across its top, down its slanted sides, and out
         // along the floor to the tail's corners (the sheet's REAR: the outline angles up from the corners)
@@ -1189,7 +1275,7 @@ function makeBody(P: ShapeParams) {
       put('seatSil', rb(0.27, 0.2, 0.11, 0.05), mat(sx, 1.02, 0.52, tilt));
     }
     // the Corsa's roll hoop behind the seats
-    if (P.interior === 'corsa') {
+    if (P.interior === 'corsa' || P.interior === 'hyper') {
       const hoop: V3[] = [];
       for (let k = 0; k <= 16; k++) { const t = k / 16, a = Math.PI * t; hoop.push(v3(-Math.cos(a) * 0.7, 0.3 + Math.sin(a) * 0.86, 0.5)); }
       const hg = tubeGeo(hoop, () => 0.022, 8); if (drop) hg.translate(0, -drop, 0);
@@ -1200,7 +1286,7 @@ function makeBody(P: ShapeParams) {
   // the hypercar's two cold-gas nozzles (their mouths, in the car's frame, before the tail's lean), for the jets
   const thrusters = P.thrusters ? [-1, 1].map((sd) => v3(sd * P.thrusters!.x, P.thrusters!.y, ZR - 0.01)) : [];
   return {
-    thrusters, P, ZF, ZR, YSILL, AXLE, ARCHES, body, WS, wsXZ, wsPoint, SG, sgZY, sgPoint, RG, rgPoint, RF, rfPoint, MIRROR, mirrorGlassPlacement,
+    thrusters, beamAt, eye, P, ZF, ZR, YSILL, AXLE, ARCHES, body, WS, wsXZ, wsPoint, SG, sgZY, sgPoint, RG, rgPoint, RF, rfPoint, MIRROR, mirrorGlassPlacement,
     mirrorParts, shutLines, buildBody, cabinSilhouette, windscreenRows, sideGlassRows, roofRows, warp,
   };
 }
@@ -1241,23 +1327,27 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       for (const [ctx, col] of [[g, '#e8eef6'], [ge, '#ffffff']] as const) { ctx.strokeStyle = col; ctx.lineWidth = 8; ctx.beginPath(); ctx.ellipse(x, y, r * 1.55, r * 1.5, 0, 0, Math.PI * 2); ctx.stroke(); }
       projector(w * 0.86, h * 0.55, h * 0.13);
     } else if (style === 'blade') {
-      // blade (the OC Hypercar): a smoked lens over a dark chrome-ribbed reflector; along its lower (front) edge an
-      // ice-blue light guide that thickens toward the outer end (a fifth of the lens's depth at the inner end, a third
-      // at the outer: the sheet's HEADLIGHT DETAIL), and a small three-cell module at the outer end
-      const lg = g.createLinearGradient(0, 0, 0, h); lg.addColorStop(0, '#0d1218'); lg.addColorStop(0.6, '#07090c'); lg.addColorStop(1, '#030405');
-      g.fillStyle = lg; g.fillRect(0, 0, w, h);
-      for (let x = 30; x < w - 60; x += 22) { g.fillStyle = 'rgba(150,170,195,0.10)'; g.fillRect(x, 54, 3, 60); }
-      g.fillStyle = 'rgba(190,205,225,0.28)'; g.fillRect(0, 50, w, 2);
-      for (const [ctx, col] of [[g, '#d9efff'], [ge, '#8fd0ff']] as const) {
-        ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(6, 4); ctx.lineTo(w - 8, 2); ctx.lineTo(w - 8, 48); ctx.lineTo(6, 30); ctx.closePath(); ctx.fill();
+      // blade (the OC Hypercar, M2): two bands. Rows 0-48: the lit face, an ice-white core inside an ice-blue edge
+      // (the sheet's HEADLIGHT DETAIL), a little brighter toward the outer end. Rows 50-128: the lamp socket's smoked
+      // lens over a dark reflector with faint chrome ribs, and the three-cell projector module at its outer end
+      g.fillStyle = '#04060a'; g.fillRect(0, 0, w, h);
+      for (const [ctx, edge, core] of [[g, '#7cc4ff', '#eef8ff'], [ge, '#3d9cff', '#dff2ff']] as const) {
+        const fg = ctx.createLinearGradient(0, 2, 0, 46);
+        fg.addColorStop(0, edge); fg.addColorStop(0.3, core); fg.addColorStop(0.7, core); fg.addColorStop(1, edge);
+        ctx.fillStyle = fg; ctx.fillRect(0, 2, w, 44);
       }
-      ge.fillStyle = 'rgba(47,143,232,0.5)'; ge.beginPath(); ge.moveTo(0, 28); ge.lineTo(w, 44); ge.lineTo(w, 54); ge.lineTo(0, 36); ge.closePath(); ge.fill();
+      const lift = ge.createLinearGradient(0, 0, w, 0); lift.addColorStop(0, 'rgba(0,0,0,0.25)'); lift.addColorStop(0.5, 'rgba(0,0,0,0)'); lift.addColorStop(1, 'rgba(0,0,0,0)');
+      ge.fillStyle = lift; ge.fillRect(0, 2, w, 44);
+      const lg = g.createLinearGradient(0, 50, 0, h); lg.addColorStop(0, '#0e141b'); lg.addColorStop(0.5, '#080b0f'); lg.addColorStop(1, '#030405');
+      g.fillStyle = lg; g.fillRect(0, 50, w, h - 50);
+      for (let x = 14; x < w - 110; x += 18) { g.fillStyle = 'rgba(150,170,195,0.12)'; g.fillRect(x, 56, 2, 66); }
+      g.fillStyle = 'rgba(190,205,225,0.3)'; g.fillRect(0, 52, w, 2);
       for (let k = 0; k < 3; k++) {
-        const x = w - 120 + k * 34, y = 84;
-        g.fillStyle = '#5d646c'; g.fillRect(x - 13, y - 15, 26, 30);
-        const cg = g.createLinearGradient(x, y - 12, x, y + 12); cg.addColorStop(0, '#9fc6ee'); cg.addColorStop(0.45, '#14202e'); cg.addColorStop(1, '#05070a');
-        g.fillStyle = cg; g.fillRect(x - 10, y - 12, 20, 24);
-        ge.fillStyle = 'rgba(150,200,255,0.35)'; ge.fillRect(x - 6, y - 6, 12, 12);
+        const x = w - 92 + k * 30, y = 90;
+        g.fillStyle = '#5d646c'; g.fillRect(x - 12, y - 22, 24, 44);
+        const cg = g.createLinearGradient(x, y - 18, x, y + 18); cg.addColorStop(0, '#9fc6ee'); cg.addColorStop(0.45, '#14202e'); cg.addColorStop(1, '#05070a');
+        g.fillStyle = cg; g.fillRect(x - 9, y - 18, 18, 36);
+        ge.fillStyle = 'rgba(150,200,255,0.3)'; ge.fillRect(x - 6, y - 10, 12, 20);
       }
     } else {
       // slim: a light guide along the top edge, five matrix cells under it

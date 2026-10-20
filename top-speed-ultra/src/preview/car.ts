@@ -27,7 +27,10 @@ export type { CarId } from './car-shape';
 export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; cabin?: 'full' | 'shell'; caliper?: number; contactShadow?: boolean; wheels?: boolean }
 
 // the colours each interior shows through the glass from outside
-const SIL: Record<string, [number, number]> = { gt: [0x161618, 0x5c2c12], brio: [0x161618, 0x1b2233], corsa: [0x141416, 0x1a1a1c], vela: [0x1a1a1c, 0x8e8981] };
+const SIL: Record<string, [number, number]> = { gt: [0x161618, 0x5c2c12], brio: [0x161618, 0x1b2233], corsa: [0x141416, 0x1a1a1c], vela: [0x1a1a1c, 0x8e8981], hyper: [0x141416, 0x1a1a1c] };
+// the lamps that are off until the player's car lights them (PlayerCar): the turn signals' amber overlays and the
+// reversing lamps. Built hidden, so they cost nothing until lit.
+export const SWITCHED_LAMPS = ['sigL', 'sigR', 'reverse'];
 
 // every material the car's kit can file geometry under
 export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: CarId = 'rossini-gt'): Record<string, THREE.Material> {
@@ -41,7 +44,13 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   const paintO = oc ? { key: id, flake: 0.2, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks: P.masks } : { key: id, flake: vela ? 0.1 : 0.15, rough: vela ? 0.3 : undefined };
   const word = (w: number, h: number) => (oc ? ocMarkTex(w / 2, h * 1.5) : wordmarkTex(vela ? 'VELA' : 'ROSSINI', w, h));
   const extra: Record<string, THREE.Material> = {};
-  if (P.led) extra.led = M.led(P.led.color, P.led.halo, q);
+  if (P.led) {
+    extra.led = M.led(P.led.color, P.led.halo, q);
+    // the turn signals (amber, about 1.5x the brake level of the red bar's map) and the reversing lamps (white)
+    const sig = once('m.signal', () => Object.assign(new THREE.MeshStandardMaterial({ color: 0x2a1600, emissive: 0xff9326, emissiveIntensity: 3.2, roughness: 0.3 }), { name: 'signal' }));
+    extra.sigL = sig; extra.sigR = sig;
+    extra.reverse = once('m.reverse', () => Object.assign(new THREE.MeshStandardMaterial({ color: 0x202224, emissive: 0xf4f7ff, emissiveIntensity: 2.6, roughness: 0.3 }), { name: 'reverse' }));
+  }
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
   return {
     ...extra,
@@ -106,6 +115,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   if (o.wheels ?? true) addWheels(kit, B, q);          // false: the game adds its own wheels, which spin and steer
   const mats = carMaterials(o.paint ?? P.paint, q, o.caliper ?? P.caliper, id);
   kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
+  for (const k of SWITCHED_LAMPS) { const m = g.getObjectByName(k); if (m) m.visible = false; }
   g.userData.thrusters = B.thrusters;
   if (o.contactShadow ?? true) g.add(contactPatch(B.ZR - B.ZF, P.WP.reduce((m, [, w]) => Math.max(m, w), 0) * 2,
     [[-A(B).trackF, B.AXLE.zF], [A(B).trackF, B.AXLE.zF], [-A(B).trackR, B.AXLE.zR], [A(B).trackR, B.AXLE.zR]], (B.ZF + B.ZR) / 2));
