@@ -37,7 +37,9 @@
  * the dashboard when both run from the same place, and matching is by
  * keywords. LIVE: the server's ask function (server/README.md → Ask
  * Lumevina) answers with Claude using the same facts and the same
- * hand-off rules, and saves hand-offs to the questions table.
+ * hand-off rules, and saves hand-offs to the questions table. PREVIEW (the
+ * single-file page on claude.ai): Claude answers on the viewer's own account
+ * from the same bundle, streaming, with the same rules first (see preview()).
  */
 (function () {
   "use strict";
@@ -687,13 +689,172 @@
     return true;
   };
 
+  /* ── the preview (the single-file page on claude.ai, with no server): Claude
+     answers on the viewer's own Claude account (the page's "sample"
+     capability), from the same bundle the server uses
+     (knowledge/scripts/build-bundle.mjs; scripts/build-single-file.mjs puts it
+     in the page as window.LUMEVINA_ASK_BUNDLE). The same rules decide hand-offs
+     first, here, before Claude sees anything. Without Claude, the keyword
+     answers stand, and her playbook answers in her own words when one clearly
+     matches. ── */
+  var BUNDLE = (!ENDPOINT && window.LUMEVINA_ASK_BUNDLE) || null;
+  var sampler = null, asking = null;
+  if (BUNDLE && window.claude && window.claude.use) {
+    window.claude.use("sample").then(function (fn) { sampler = fn || null; }, function () { sampler = null; });
+  }
+  var KINDS = ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"];
+  var MEM_KINDS = ["skin", "concern", "product", "supplement", "treatment", "sensitivity", "goal", "other"];
+  var GONE = { not_granted: 1, sampling_disabled: 1, not_declared: 1, capability_disabled: 1, capability_removed: 1 };
+  var stockNote = function (id) {
+    var INV = window.LumevinaInventory, it = INV ? INV.get(id) : null, st = it ? INV.status(it) : "";
+    return st === "out" ? " (out of stock; can be requested)" : st === "low" ? " (only a few left)" : "";
+  };
+  var PROFILE_LABELS = [["morning", "Morning"], ["night", "Night"], ["weekly", "Once or twice a week"], ["supplements", "Supplements"],
+    ["treatments", "Treatments they've had"], ["sensitivities", "Reacts to"], ["goal", "Their goal"]];
+  var clientBlock = function (who) {
+    var LP = window.LumevinaProfile, snap = LP && LP.snapshot ? LP.snapshot() : null, p = snap && snap.profile, lines = [];
+    if (p) {
+      if (p.skinType) lines.push("Skin type: " + p.skinType);
+      if ((p.concerns || []).length) lines.push("Working on: " + p.concerns.join(", "));
+      PROFILE_LABELS.forEach(function (f) { if (p[f[0]]) lines.push(f[1] + ": " + p[f[0]]); });
+    }
+    var mem = ((snap && snap.memories) || []).slice(0, 30).map(function (m) { return "- " + m.fact; });
+    return [
+      "# The client you're talking to",
+      who.name + " is signed in" + (who.member ? ", a " + who.plan + " member" : "") + ".",
+      lines.length ? "Their skin profile, in their own words:\n" + lines.join("\n") : "They haven't filled in a skin profile yet.",
+      mem.length ? "What they've told you before:\n" + mem.join("\n") : "",
+      "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\")." +
+        (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"skin\")." : "") +
+        " Use their first name now and then."
+    ].filter(Boolean).join("\n\n");
+  };
+  var previewRules = function () {
+    var v3 = window.LumevinaFeatures && window.LumevinaFeatures.version === "v3", who = me();
+    return [
+      BUNDLE.prompt,
+      "# About the studio, FAQ and policies\n\n" + (v3 ? BUNDLE.factsV3 : BUNDLE.facts),
+      "# Evelyn's Skin Playbook\n\n" + (BUNDLE.knowledgeEmpty
+        ? "Evelyn hasn't filled her playbook in yet. So there is nothing here about skin concerns, aftercare details, routines or how to use her products: every question of that kind goes to her. You can still answer from the FAQ, the policies, her treatments and the shelf list."
+        : BUNDLE.knowledge),
+      BUNDLE.hardLines ? "# Her hard lines\n\n" + BUNDLE.hardLines : "",
+      BUNDLE.voice ? "# Her voice\n\n" + BUNDLE.voice : "",
+      "# Her shelf (every product the website sells)\n\n" + BUNDLE.shelf.map(function (p) {
+        return "- " + p.name + " (" + p.brand + ", " + p.type + (p.size ? ", " + p.size : "") + "): $" + p.price + stockNote(p.id) + (p.about ? ". " + p.about : "") + " [id: " + p.id + "]";
+      }).join("\n"),
+      who ? clientBlock(who) : "",
+      [
+        "# How to reply here",
+        "- There are no tools in this chat: where the instructions above say to call hand_to_evelyn, show_products or remember, write the matching line below instead. Order look-ups and gift balances are answered by the website itself.",
+        "- This is a chat bubble on her website: plain text, no Markdown (no headings, bold or tables). A short list with \"- \" is fine for steps.",
+        "- To hand a question to Evelyn instead of answering (everything the instructions above send to her), reply with only this line: [[evelyn: <kind> | <one short line for Evelyn: what the client is asking>]], kind being one of " + KINDS.join(", ") + ".",
+        "- When you name shelf products the client can buy right now (they asked about one, want to reorder, or want what fits the routine Evelyn described), end with a line [[products: <id>, <id>]] using ids from her shelf list, so Add to bag buttons appear. Only products in stock or with a few left.",
+        who ? "- When the client tells you something lasting about themselves that isn't already above (skin type, a concern, a product they use and when, a supplement they take, a treatment they've had and roughly when, something their skin reacts to, a goal), end with a line [[remember: <one short line in the third person, in their words> | <kind: " + MEM_KINDS.join(", ") + ">]]. Never medications, prescriptions, pregnancy or health conditions, anything about someone else, or guesses." : "",
+        "- The website reads the [[...]] lines and never shows them; don't mention them."
+      ].filter(Boolean).join("\n")
+    ].filter(Boolean).join("\n\n");
+  };
+  var MARK = /\[\[\s*(evelyn|products|remember)\s*:([^\]]*)\]\]/gi;
+  var shown = function (t) {
+    return String(t).replace(/\[\[[\s\S]*?(\]\]|$)/g, "").replace(/\*\*([^*]+)\*\*/g, "$1").replace(/^#+\s*/gm, "")
+      .replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  };
+  var marks = function (t) {
+    var out = { handoff: null, why: "", ids: [], facts: [] }, m;
+    MARK.lastIndex = 0;
+    while ((m = MARK.exec(t))) {
+      var parts = m[2].split("|").map(function (x) { return x.trim(); }), what = m[1].toLowerCase();
+      if (what === "evelyn") { out.handoff = KINDS.indexOf(parts[0].toLowerCase()) !== -1 ? parts[0].toLowerCase() : "other"; out.why = parts[1] || ""; }
+      else if (what === "products") out.ids = out.ids.concat(parts[0].split(/[\s,]+/).filter(function (id) { return BUNDLE.shelf.some(function (p) { return p.id === id; }); }));
+      else if (parts[0]) out.facts.push([parts[0], MEM_KINDS.indexOf((parts[1] || "").toLowerCase()) !== -1 ? parts[1].toLowerCase() : "other"]);
+    }
+    return out;
+  };
+  var CHITCHAT = /^(hi|hey|hello|thanks?|thank you|ty|ok|okay|k|cool|great|got it|perfect|nice|yes|no)[\s!.]*$/;
+  var preview = function (text) {
+    if (!sampler || /^about my skin:/i.test(text)) return false;
+    var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
+    var rk = RULES ? RULES.kind(raw, t) : null;
+    /* a "my skin" question still goes to Claude when it can see this client's skin profile */
+    if (rk && !(rk === "skin" && myProfile())) return false;
+    /* her plan, order look-ups and small talk answer here, instantly */
+    if (fromPlan(t) || ORDER_ASK.test(t) || ORDER_NO.test(text) || GIFT_LEFT.test(t) || CHITCHAT.test(t)) return false;
+    var who = me(), live = bubble("bot", "…", "thinking");
+    logEl.scrollTop = logEl.scrollHeight;
+    if (asking) asking.abort();
+    var ctl = asking = new AbortController();
+    sampler([{ role: "user", content: previewRules() }].concat(history()), {
+      modelTier: "quick", cache: false, signal: ctl.signal,
+      onText: function (u) {
+        var now = shown(u.text);
+        if (!now || !live.isConnected) return;
+        live.classList.remove("thinking");
+        live.textContent = now;
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+    }).then(function (r) {
+      if (asking === ctl) asking = null;
+      var mk = marks(r.text), answer = shown(r.text);
+      if (mk.handoff) return settle(text, { handoff: mk.handoff, why: mk.why });
+      if (!answer) return settle(text, local(text));
+      settle(text, { answer: answer, acts: bagActs(mk.ids).concat(nextActs(answer, mk.ids.length > 0)) });
+      var LP = window.LumevinaProfile;
+      if (who && LP && LP.note) noted(mk.facts.filter(function (f) { return LP.note(f[0], f[1]); }).map(function (f) { return f[0]; }));
+    }, function (e) {
+      if (asking === ctl) asking = null;
+      if (e && e.code === "cancelled") return;
+      if (e && GONE[e.code]) sampler = null;
+      settle(text, local(text));
+    });
+    return true;
+  };
+
+  /* no Claude here: her playbook still answers in her own words when one of her answers clearly matches */
+  var STOP = /^(the|a|an|and|or|to|of|in|on|for|my|me|i|is|it|its|do|does|did|can|could|what|whats|how|when|should|you|your|with|this|that|be|are|was|will|would|after|before|get|have|has|if|im|about|any|just|so|at|from|they|them|their)$/;
+  var words = function (t) {
+    return String(t).toLowerCase().replace(/[^a-z0-9%\s]/g, " ").split(/\s+/).filter(function (w) { return w.length > 2 && !STOP.test(w); })
+      .map(function (w) { return w.replace(/(ing|ed|es|s)$/, ""); });
+  };
+  var CHUNKS = [];
+  if (BUNDLE && !BUNDLE.knowledgeEmpty) {
+    var topic = "";
+    BUNDLE.knowledge.split(/\n(?=#{1,2} )/).forEach(function (part) {
+      var m = /^(#{1,2}) ([^\n]+)\n?([\s\S]*)$/.exec(part.trim());
+      if (!m) return;
+      if (m[1] === "#") { if (!/in Evelyn's words$|^Her |^From her/.test(m[2])) topic = m[2]; return; }
+      var a = m[3].replace(/\n---\s*$/, "").replace(/_\(How to read this:[^)]*\)_/g, "").trim();
+      if (a) CHUNKS.push({ topic: topic, q: m[2], a: a, head: words(topic + " " + m[2]), body: words(a) });
+    });
+  }
+  var NOT_PLAYBOOK = /price|cost|how much|\$|\bbook|appointment|hours|open|cancel|deposit|gift|order|ship|member/;
+  var playbookHit = function (text) {
+    var ws = words(text), best = null;
+    if (!ws.length) return null;
+    CHUNKS.forEach(function (c) {
+      var score = 0, head = 0;
+      ws.forEach(function (w) { if (c.head.indexOf(w) !== -1) { score += 2; head++; } else if (c.body.indexOf(w) !== -1) score += 1; });
+      if (head && (!best || score > best.score)) best = { score: score, c: c };
+    });
+    if (!best || best.score < 3) return null;
+    var a = best.c.a.length > 700 ? best.c.a.slice(0, 700).replace(/\s\S*$/, "") + "…" : best.c.a;
+    return { score: best.score, answer: "From Evelyn, on " + best.c.topic.toLowerCase() + " (" + best.c.q.replace(/\?$/, "").toLowerCase() + "):\n\n" + a };
+  };
+  var local = function (text) {
+    var r = classify(text);
+    if (!CHUNKS.length || (r.handoff && !r.unsure) || r.plan || r.unclear) return r;
+    var t = TY ? TY.fix(text) : text.toLowerCase();
+    var hit = playbookHit(text);
+    if (hit && (r.unsure || (hit.score >= 4 && !NOT_PLAYBOOK.test(t)))) return { answer: hit.answer, acts: [["Book", "book"], ["Ask Evelyn", "skin"]] };
+    return r;
+  };
+
   var ask = function (text) {
     text = String(text || "").trim();
     if (!text) return;
     push({ who: "you", text: text });
     if (giftCheck(text)) return;
-    if (!remote(text)) {
-      settle(text, classify(text));
+    if (!remote(text) && !preview(text)) {
+      settle(text, local(text));
       /* demo: what a signed-in client says about their own routine is noted in their skin profile */
       if (!ENDPOINT && window.LumevinaProfile) noted(window.LumevinaProfile.learn(text));
     }

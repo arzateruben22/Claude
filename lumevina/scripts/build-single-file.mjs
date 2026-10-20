@@ -43,15 +43,27 @@ html = html.replace(/\s*<link rel="preload"[^>]*>/g, "").replace(/\s*<link rel="
 html = inlineAssets(html);
 // the stylesheet, with its fonts and images inside
 html = html.replace(/<link rel="stylesheet" href="(css\/[^"]+)">/g, (_, href) => `<style>\n${inlineAssets(read(href))}\n</style>`);
+// what Ask Lumevina knows (knowledge/eval/bundle.json, from knowledge/scripts/build-bundle.mjs),
+// so in the preview Claude answers from it on the viewer's own account (js/ask.js); the live
+// site's chat asks the server instead
+const bundlePath = path.join(root, "knowledge/eval/bundle.json");
+let bundle = "";
+if (fs.existsSync(bundlePath)) {
+  const b = JSON.parse(fs.readFileSync(bundlePath, "utf8"));
+  const keep = { builtAt: b.builtAt, prompt: b.prompt, facts: b.facts, factsV3: b.factsV3, knowledge: b.knowledge, knowledgeEmpty: b.knowledgeEmpty,
+    hardLines: b.hardLines, voice: b.voice, shelf: b.shelf.map(({ id, name, brand, type, size, price, about }) => ({ id, name, brand, type, size, price, about })) };
+  bundle = `<script>/* knowledge/eval/bundle.json */\nwindow.LUMEVINA_ASK_BUNDLE = ${JSON.stringify(keep).replace(/</g, "\\u003c")};\n</script>\n  `;
+}
 // every script, in the same order
 let scripts = 0;
 html = html.replace(/<script src="((?:js)\/[^"]+)"><\/script>/g, (_, src) => {
   scripts++;
-  return `<script>/* ${src} */\n${safeScript(inlineAssets(read(src)))}\n</script>`;
+  return (src === "js/ask.js" ? bundle : "") + `<script>/* ${src} */\n${safeScript(inlineAssets(read(src)))}\n</script>`;
 });
 
 fs.mkdirSync(path.join(root, "dist"), { recursive: true });
 fs.writeFileSync(path.join(root, "dist/lumevina.html"), html);
 const left = (html.match(/(?:src|href)="(?:css|js|img|fonts)\//g) || []).length;
 console.log(`dist/lumevina.html: ${(Buffer.byteLength(html) / 1048576).toFixed(2)} MB, ${scripts} scripts and ${cache.size} images/fonts inside` +
+  (bundle ? ", the chat's knowledge" : "; no knowledge/eval/bundle.json, so the preview chat uses keywords only (run knowledge/scripts/build-bundle.mjs)") +
   (missing.size ? `; not found: ${[...missing].join(", ")}` : "") + (left ? `; ${left} file links left` : "; nothing left to fetch"));

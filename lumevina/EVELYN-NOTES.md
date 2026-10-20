@@ -290,3 +290,10 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 
 **How it "gets better", honestly:** Claude isn't retrained on anyone's data. It gets better three ways, all visible and all hers to control: her playbook (the 10 minutes, then the rest), the answers she approves in Teach the chat, and each client's own profile and notes, which only that client and Evelyn ever see.
 
+## Her first answers reach the chat (Oct 20)
+
+- **What she has answered so far:** one card, Skin concerns → Breakouts and acne: what she asks a client first, her morning products, what to avoid, how long results take ("3 to 6 months"; "give it 90 days"), and which facial to book. It's in the chat's knowledge now (`knowledge/concerns/breakouts-and-acne.md`), along with every treatment on her menu in her own GlossGenius words.
+- **Her routines by skin type** (dry/normal and oily/combo) were typed in the Night box but say "for morning routine", so they were moved to the Morning box word for word. The Night question is open again, so the chat hands night-routine questions to her until she answers it.
+- **Still open on that card:** her night routine, the most common mistakes, everyday habits, and when it must come to her. Everything else in the playbook is unanswered; the 10-minute version (Talk it through) covers the 26 questions clients ask most.
+- **Answered questions fold away** in the questionnaire ("5 questions answered already", tap to check or change), so she only sees what's left.
+- **The preview's chat answers with Claude** from all of it (on the viewer's own Claude account), streaming like a normal chat, with the same hand-off rules first. The live website's chat uses the server once `supabase functions deploy ask` has run with the new bundle.

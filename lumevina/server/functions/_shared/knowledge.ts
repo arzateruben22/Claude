@@ -25,7 +25,7 @@ Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romer
 
 Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. New clients book "New Clients Start Here"; for breakouts, the Acne Bootcamp's "New Client Consultation + Treatment". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).
 
-Her menu, with prices (from her GlossGenius page): New Clients Start Here $220 (60 min); New Client Treatment + Dermaplaning from $260 (80 min); Lumevina Custom Facial $200 (60 min); Custom Facial + Dermaplaning from $230 (60 min); Ageless Grace Facial $240 (75 min); Ageless Grace Facial + Dermaplaning $280 (85 min); After-Hours Add-On $50; ProCell Microchanneling from $350 (70 min); ProCell Package · 4 treatments $1100 (60 min); ProCell Package · next session $0 (60 min); Refresh Peel $230 (10 min); Refresh Peel + Dermaplaning $270 (15 min); Corrective Peel $230 (60 min); Corrective Peel + Dermaplaning $270 (60 min); New Client Consultation + Treatment $220 (80 min); Monthly Acne Treatment from $200 (70 min); Bi-Weekly Acne Treatment $115 (45 min); In-Person Consultation $50 (45 min); Virtual Consultation $50 (45 min); Brazilian Wax $75 (40 min); Wax Wednesday $65 (40 min); Brazilian Wax + Mini Vajacial $95 (50 min); Bikini Line $40 (40 min); Inner Thigh Add-On $25 (15 min); Underarm Wax $20 (20 min); Full Arm $60 (40 min); Half Arm $30 (30 min); Full Back $60 (45 min); Half Back $30 (25 min); Full Stomach Wax $35 (45 min); Stomach Strip Add-On $10 (10 min); Full Butt $40 (45 min); Brow Wax + Tweeze $25 (30 min); Brow Wax + Underarm Wax $45 (30 min); Upper Lip $10 (10 min); Nostril Wax $10 (15 min). Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.
+Her menu: every treatment, with prices, times and her own descriptions, is under "Her treatments, in her words" below. Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.
 
 Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.
 
@@ -89,7 +89,147 @@ then wait in your car and text before coming up.
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 (free over $75), or pick up at your visit.
 Virtual consultations are $55, Mondays only; reach out first.
-Gift certificates never expire, and anything left after a visit stays on them.`;
+Gift certificates never expire, and anything left after a visit stays on them.
+
+
+
+# Her treatments, in her words
+
+From her GlossGenius page: prices, times, deposits and her own descriptions.
+
+## Facials
+
+### New Clients Start Here (New clients)
+Consultation + custom facial: $220, 60 min · With dermaplaning: from $260, 80 min. No deposit.
+Ready to understand your skin and what truly works for you? This service includes a consultation, review of your current routine, and a fully customized facial based on your skin’s needs. All facials include a double cleanse, enzyme exfoliation, extractions, targeted mask, relaxing massage, LED, and cryo globes. This service is for non-acne clients. For acne concerns, select “Acne Program” or “New Client Consultation + Treatment.”
+
+### Lumevina Custom Facial (Returning clients)
+Custom facial: $200, 60 min · With dermaplaning: from $230, 60 min. No deposit.
+A customized facial for returning clients that includes a double cleanse, enzyme or gentle acid exfoliation, extractions (as needed), targeted mask, facial massage, LED therapy, and cryo globes. Best for clients following a customized skincare routine for continued skin progress. New clients: please book New Clients Start Here. Acne concerns: please book the Acne Program. If you’re unsure what to book, feel free to reach out.
+
+### Ageless Grace Facial (Signature)
+Ageless Grace: $240, 75 min · With dermaplaning: $280, 85 min. No deposit.
+Lift, firm, and brighten your skin with this advanced age-supporting facial. Featuring oxygen therapy and a professional Tightening Protein Booster, this treatment helps improve circulation, boost hydration, and leave your skin firmer, smoother, and more radiant. Suitable for all skin types. For enhanced results, add dermaplaning and/or a chemical peel to maximize exfoliation, hydration, and glow. I’ll help determine whether one or both add-ons are the best fit for your skin and goals.
+
+### After-Hours Add-On
+$50. No deposit. Message Evelyn first; she confirms the time. Only alongside another service.
+A visit outside her hours, or on a closed day. Message Evelyn first and she’ll confirm the time.
+
+## ProCell Microchanneling
+
+### ProCell Microchanneling (New)
+from $350, 70 min. No deposit.
+*Promo pricing is available for a limited time.* Advanced Collagen Induction Therapy: a powerful skin-renewing treatment designed to improve the appearance of acne scars, fine lines, enlarged pores, uneven texture, and overall skin quality. It works with your skin’s natural healing process to stimulate collagen production while infusing growth factors to support smoother, healthier-looking skin. Each treatment includes LED light therapy, personalized post-care guidance, and a recovery skincare set to help support your results. For best results, a minimum of 4 treatments is recommended; depending on your skin concerns and goals, a series of up to 8 sessions may be recommended. Package options are available and will be discussed during your consultation.
+
+### ProCell Microchanneling Package · 4 treatments (First 10 clients)
+Four sessions, paid in full: $1100, 60 min · Next session (package already paid): $0, 60 min. No deposit.
+Invest in your skin and save with this limited-time introductory package: 4 ProCell Microchanneling treatments (a $1,400 value) for $1,100, saving $300. Payment plans are available, just ask for details. This exclusive client offer is limited to the first 10 clients only. Once all spots have been claimed, this package will no longer be available and standard pricing will apply. ProCell Microchanneling is ideal for improving acne scars, uneven texture, fine lines, pigmentation, and overall skin rejuvenation by stimulating your skin’s natural collagen production.
+
+## Peels
+
+### Refresh Peel
+No-downtime peel: $230, 10 min · With dermaplaning: $270, 15 min. No deposit.
+Perfect for new and existing clients, this peel gently exfoliates to renew and brighten the skin with minimal downtime. Some clients may experience 2–3 days of light flaking, while others may not visibly peel, and both are completely normal. Ideal as your first peel or for deeper exfoliation during the summer months. A series is recommended for optimal results. Required aftercare products must be purchased before beginning a peel series.
+
+### Corrective Peel (Existing clients)
+Medium chemical peel: $230, 60 min · With dermaplaning: $270, 60 min. No deposit.
+This is a medium-depth peel for existing clients only. Peeling may last up to one week; results and visible peeling may vary. This treatment helps improve sun damage, fine lines, wrinkles, and acne scars by deeply exfoliating and renewing the skin. A series is recommended for best results. Prep and a specific homecare routine are required before booking this service.
+
+## Acne Bootcamp
+
+### New Client Consultation + Treatment (Start here for acne)
+$220, 80 min. $50 deposit when booked.
+Struggling with acne and feel like nothing works? You’re not alone, and you’re not out of options. With a personalized plan and Face Reality, voted the #1 acne line, we’ll get your skin on track. There are different types of acne, and every skin is unique. I’ll create a regimen tailored to your skin type. For best results, clients typically come in every two weeks and use Face Reality products at home, but monthly visits are available if biweekly isn’t doable. Clear, healthy skin starts here.
+
+### Monthly Acne Treatment (Bootcamp clients)
+from $200, 70 min. $30 deposit when booked.
+This service is for clients already enrolled in the Acne Bootcamp Program. First-time clients must book the Consultation + Treatment. Includes double cleanse, enzyme/chemical exfoliation, extractions, high frequency, custom mask, LED therapy, and finishing products. If a peel is added, extra time will be needed.
+
+### Bi-Weekly Acne Treatment (By Evelyn’s recommendation)
+$115, 45 min. $30 deposit when booked.
+Recommended for clients who need additional support during their acne journey, especially during the first few months or while purging. Bi-weekly treatments can help accelerate progress, minimize setbacks, and keep your skin on track. This service is by recommendation only and is not appropriate for everyone; I will determine if bi-weekly visits are beneficial based on your skin’s condition and severity. Treatments are customized at each visit and may include a peel, hydration-focused care, or other corrective treatments. First-time clients: please book Consultation + Treatment.
+
+## Consultations
+
+### In-Person Consultation
+$50, 45 min. $49 deposit when booked.
+Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready.
+
+### Virtual Consultation (Mondays only)
+$50, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
+Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking.
+
+## Waxing: Brazilian & Bikini
+
+### Brazilian Wax
+$75, 40 min. $30 deposit when booked.
+Everything from the front, sides, labia and between the cheeks, completely smooth, or leave a small strip.
+
+### Wax Wednesday (Wednesdays only)
+$65, 40 min. $30 deposit when booked.
+$10 off a Brazilian on any Wednesday. Please book it on a Wednesday only.
+
+### Brazilian Wax + Mini Vajacial
+$95, 50 min. $30 deposit when booked.
+A full Brazilian, extractions if needed, ingrown hair removal and a cooling, hydrating mask to soothe and prevent ingrowns.
+
+### Bikini Line
+$40, 40 min. $30 deposit when booked.
+Just outside the underwear line, about four fingers out. Doesn’t include the butt strip.
+
+### Inner Thigh Add-On
+$25, 15 min. No deposit. Only alongside another service.
+All hair on the inner thigh, past the four fingers a Brazilian already covers.
+
+## Waxing: Body
+
+### Underarm Wax
+$20, 20 min. No deposit.
+
+
+### Full Arm
+$60, 40 min. $30 deposit when booked.
+All hair on the arm.
+
+### Half Arm
+$30, 30 min. $20 deposit when booked.
+Half of the arms; your choice of which half.
+
+### Full Back
+$60, 45 min. $30 deposit when booked.
+
+
+### Half Back
+$30, 25 min. $20 deposit when booked.
+
+
+### Full Stomach Wax
+$35, 45 min. No deposit.
+All the hair on the abdomen and between the breasts.
+
+### Stomach Strip Add-On
+$10, 10 min. No deposit. Only alongside another service.
+The line of hair under the belly button, toward the bikini.
+
+### Full Butt
+$40, 45 min. $20 deposit when booked.
+The entire area, including the cheeks and between them.
+
+## Waxing: Face
+
+### Brows
+Brow wax + tweeze: $25, 30 min · Brows + underarms: $45, 30 min. No deposit.
+
+
+### Upper Lip
+$10, 10 min. No deposit.
+
+
+### Nostril Wax
+$10, 15 min. No deposit.
+Hair removal from inside the nose.
+
+Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.`;
 
 /** The same for v3: booking here, Glow Membership and Glow Points. */
 export const FACTS_V3 = `# The studio
@@ -98,7 +238,7 @@ Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romer
 
 Booking: right here on the website, in the Book section: pick a treatment, a day and a time. Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. The deposit is paid by card on Stripe's secure page, and the card stays on file to hold the booking; a treatment with no deposit just needs a card on file. Glow members pay no deposits. The confirmation email has a link to move or cancel the appointment (also in My Lumevina, signed in with the same email), and a reminder comes before the visit, by text too if they ask for one. A full day has a waitlist: a cancellation emails the first person waiting. Appointments already booked on GlossGenius stand as they are; new ones are booked here. New clients book "New Clients Start Here"; for breakouts, the Acne Bootcamp's "New Client Consultation + Treatment". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).
 
-Her menu, with prices (from her GlossGenius page): New Clients Start Here $220 (60 min); New Client Treatment + Dermaplaning from $260 (80 min); Lumevina Custom Facial $200 (60 min); Custom Facial + Dermaplaning from $230 (60 min); Ageless Grace Facial $240 (75 min); Ageless Grace Facial + Dermaplaning $280 (85 min); After-Hours Add-On $50; ProCell Microchanneling from $350 (70 min); ProCell Package · 4 treatments $1100 (60 min); ProCell Package · next session $0 (60 min); Refresh Peel $230 (10 min); Refresh Peel + Dermaplaning $270 (15 min); Corrective Peel $230 (60 min); Corrective Peel + Dermaplaning $270 (60 min); New Client Consultation + Treatment $220 (80 min); Monthly Acne Treatment from $200 (70 min); Bi-Weekly Acne Treatment $115 (45 min); In-Person Consultation $50 (45 min); Virtual Consultation $50 (45 min); Brazilian Wax $75 (40 min); Wax Wednesday $65 (40 min); Brazilian Wax + Mini Vajacial $95 (50 min); Bikini Line $40 (40 min); Inner Thigh Add-On $25 (15 min); Underarm Wax $20 (20 min); Full Arm $60 (40 min); Half Arm $30 (30 min); Full Back $60 (45 min); Half Back $30 (25 min); Full Stomach Wax $35 (45 min); Stomach Strip Add-On $10 (10 min); Full Butt $40 (45 min); Brow Wax + Tweeze $25 (30 min); Brow Wax + Underarm Wax $45 (30 min); Upper Lip $10 (10 min); Nostril Wax $10 (15 min). Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.
+Her menu: every treatment, with prices, times and her own descriptions, is under "Her treatments, in her words" below. Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.
 
 Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.
 
@@ -166,11 +306,204 @@ then wait in your car and text before coming up.
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 (free over $75), or pick up at your visit.
 Virtual consultations are $55, Mondays only; reach out first.
-Gift certificates never expire, and anything left after a visit stays on them.`;
+Gift certificates never expire, and anything left after a visit stays on them.
+
+
+
+# Her treatments, in her words
+
+From her GlossGenius page: prices, times, deposits and her own descriptions.
+
+## Facials
+
+### New Clients Start Here (New clients)
+Consultation + custom facial: $220, 60 min · With dermaplaning: from $260, 80 min. No deposit.
+Ready to understand your skin and what truly works for you? This service includes a consultation, review of your current routine, and a fully customized facial based on your skin’s needs. All facials include a double cleanse, enzyme exfoliation, extractions, targeted mask, relaxing massage, LED, and cryo globes. This service is for non-acne clients. For acne concerns, select “Acne Program” or “New Client Consultation + Treatment.”
+
+### Lumevina Custom Facial (Returning clients)
+Custom facial: $200, 60 min · With dermaplaning: from $230, 60 min. No deposit.
+A customized facial for returning clients that includes a double cleanse, enzyme or gentle acid exfoliation, extractions (as needed), targeted mask, facial massage, LED therapy, and cryo globes. Best for clients following a customized skincare routine for continued skin progress. New clients: please book New Clients Start Here. Acne concerns: please book the Acne Program. If you’re unsure what to book, feel free to reach out.
+
+### Ageless Grace Facial (Signature)
+Ageless Grace: $240, 75 min · With dermaplaning: $280, 85 min. No deposit.
+Lift, firm, and brighten your skin with this advanced age-supporting facial. Featuring oxygen therapy and a professional Tightening Protein Booster, this treatment helps improve circulation, boost hydration, and leave your skin firmer, smoother, and more radiant. Suitable for all skin types. For enhanced results, add dermaplaning and/or a chemical peel to maximize exfoliation, hydration, and glow. I’ll help determine whether one or both add-ons are the best fit for your skin and goals.
+
+### After-Hours Add-On
+$50. No deposit. Message Evelyn first; she confirms the time. Only alongside another service.
+A visit outside her hours, or on a closed day. Message Evelyn first and she’ll confirm the time.
+
+## ProCell Microchanneling
+
+### ProCell Microchanneling (New)
+from $350, 70 min. No deposit.
+*Promo pricing is available for a limited time.* Advanced Collagen Induction Therapy: a powerful skin-renewing treatment designed to improve the appearance of acne scars, fine lines, enlarged pores, uneven texture, and overall skin quality. It works with your skin’s natural healing process to stimulate collagen production while infusing growth factors to support smoother, healthier-looking skin. Each treatment includes LED light therapy, personalized post-care guidance, and a recovery skincare set to help support your results. For best results, a minimum of 4 treatments is recommended; depending on your skin concerns and goals, a series of up to 8 sessions may be recommended. Package options are available and will be discussed during your consultation.
+
+### ProCell Microchanneling Package · 4 treatments (First 10 clients)
+Four sessions, paid in full: $1100, 60 min · Next session (package already paid): $0, 60 min. No deposit.
+Invest in your skin and save with this limited-time introductory package: 4 ProCell Microchanneling treatments (a $1,400 value) for $1,100, saving $300. Payment plans are available, just ask for details. This exclusive client offer is limited to the first 10 clients only. Once all spots have been claimed, this package will no longer be available and standard pricing will apply. ProCell Microchanneling is ideal for improving acne scars, uneven texture, fine lines, pigmentation, and overall skin rejuvenation by stimulating your skin’s natural collagen production.
+
+## Peels
+
+### Refresh Peel
+No-downtime peel: $230, 10 min · With dermaplaning: $270, 15 min. No deposit.
+Perfect for new and existing clients, this peel gently exfoliates to renew and brighten the skin with minimal downtime. Some clients may experience 2–3 days of light flaking, while others may not visibly peel, and both are completely normal. Ideal as your first peel or for deeper exfoliation during the summer months. A series is recommended for optimal results. Required aftercare products must be purchased before beginning a peel series.
+
+### Corrective Peel (Existing clients)
+Medium chemical peel: $230, 60 min · With dermaplaning: $270, 60 min. No deposit.
+This is a medium-depth peel for existing clients only. Peeling may last up to one week; results and visible peeling may vary. This treatment helps improve sun damage, fine lines, wrinkles, and acne scars by deeply exfoliating and renewing the skin. A series is recommended for best results. Prep and a specific homecare routine are required before booking this service.
+
+## Acne Bootcamp
+
+### New Client Consultation + Treatment (Start here for acne)
+$220, 80 min. $50 deposit when booked.
+Struggling with acne and feel like nothing works? You’re not alone, and you’re not out of options. With a personalized plan and Face Reality, voted the #1 acne line, we’ll get your skin on track. There are different types of acne, and every skin is unique. I’ll create a regimen tailored to your skin type. For best results, clients typically come in every two weeks and use Face Reality products at home, but monthly visits are available if biweekly isn’t doable. Clear, healthy skin starts here.
+
+### Monthly Acne Treatment (Bootcamp clients)
+from $200, 70 min. $30 deposit when booked.
+This service is for clients already enrolled in the Acne Bootcamp Program. First-time clients must book the Consultation + Treatment. Includes double cleanse, enzyme/chemical exfoliation, extractions, high frequency, custom mask, LED therapy, and finishing products. If a peel is added, extra time will be needed.
+
+### Bi-Weekly Acne Treatment (By Evelyn’s recommendation)
+$115, 45 min. $30 deposit when booked.
+Recommended for clients who need additional support during their acne journey, especially during the first few months or while purging. Bi-weekly treatments can help accelerate progress, minimize setbacks, and keep your skin on track. This service is by recommendation only and is not appropriate for everyone; I will determine if bi-weekly visits are beneficial based on your skin’s condition and severity. Treatments are customized at each visit and may include a peel, hydration-focused care, or other corrective treatments. First-time clients: please book Consultation + Treatment.
+
+## Consultations
+
+### In-Person Consultation
+$50, 45 min. $49 deposit when booked.
+Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready.
+
+### Virtual Consultation (Mondays only)
+$50, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
+Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking.
+
+## Waxing: Brazilian & Bikini
+
+### Brazilian Wax
+$75, 40 min. $30 deposit when booked.
+Everything from the front, sides, labia and between the cheeks, completely smooth, or leave a small strip.
+
+### Wax Wednesday (Wednesdays only)
+$65, 40 min. $30 deposit when booked.
+$10 off a Brazilian on any Wednesday. Please book it on a Wednesday only.
+
+### Brazilian Wax + Mini Vajacial
+$95, 50 min. $30 deposit when booked.
+A full Brazilian, extractions if needed, ingrown hair removal and a cooling, hydrating mask to soothe and prevent ingrowns.
+
+### Bikini Line
+$40, 40 min. $30 deposit when booked.
+Just outside the underwear line, about four fingers out. Doesn’t include the butt strip.
+
+### Inner Thigh Add-On
+$25, 15 min. No deposit. Only alongside another service.
+All hair on the inner thigh, past the four fingers a Brazilian already covers.
+
+## Waxing: Body
+
+### Underarm Wax
+$20, 20 min. No deposit.
+
+
+### Full Arm
+$60, 40 min. $30 deposit when booked.
+All hair on the arm.
+
+### Half Arm
+$30, 30 min. $20 deposit when booked.
+Half of the arms; your choice of which half.
+
+### Full Back
+$60, 45 min. $30 deposit when booked.
+
+
+### Half Back
+$30, 25 min. $20 deposit when booked.
+
+
+### Full Stomach Wax
+$35, 45 min. No deposit.
+All the hair on the abdomen and between the breasts.
+
+### Stomach Strip Add-On
+$10, 10 min. No deposit. Only alongside another service.
+The line of hair under the belly button, toward the bikini.
+
+### Full Butt
+$40, 45 min. $20 deposit when booked.
+The entire area, including the cheeks and between them.
+
+## Waxing: Face
+
+### Brows
+Brow wax + tweeze: $25, 30 min · Brows + underarms: $45, 30 min. No deposit.
+
+
+### Upper Lip
+$10, 10 min. No deposit.
+
+
+### Nostril Wax
+$10, 15 min. No deposit.
+Hair removal from inside the nose.
+
+Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.`;
 
 /** Evelyn's playbook: only the sections she has answered. Empty until she has. */
-export const KNOWLEDGE = ``;
-export const KNOWLEDGE_EMPTY = true;
+export const KNOWLEDGE = `# Skin concerns, in Evelyn's words
+
+# Breakouts and acne
+
+Evelyn's own words, from her Skin Playbook. Empty sections mean she hasn't answered yet: the assistant hands those questions to her.
+
+## What do you ask a client first?
+
+what are your skin concerns and what does your current routine look like?
+
+## Morning: what do you recommend from your shelf?
+
+- Barrier Balance Creamy Cleanser
+- Soothing Radiance Toner
+- 8% L-Mandelic Serum
+- 5% L-Mandelic Serum
+- 15% L-Mandelic Serum
+- 11% L-Mandelic Serum
+- Ultra Gentle Gel Cleanser
+- HydraRemedy Gel Serum
+- Dew Drop (Mixi Skincare)
+- Cran-Peptide Cream
+- Barrier Care Gel Cream
+- HydraBalance Gel
+- Antioxidant Peptide Eye Gel
+- Brilliant Defense SPF 50
+- PowerMineral SPF 50
+- Mineral SPF 50 (Mixi Skincare)
+
+for morning routine with dry/normal skin clients look like barrier cream cleanser, hydraremedy gel serum, soothing radiance toner, 5%-8% (depends on clients tolorance), cran peptide, eye gel and mineral spf or brilliant defense 
+for oily/combo/normal it usually looks like ultra gentle gel cleanser, moisture balance, eye gel, 8-15% mandelic (depends on tolerance), barrier gel cream or mineral spf or brilliant
+sometimes its mixed around really varies
+
+## What should they avoid?
+
+do not over exfoliate avoid using actives without being given aftercare instuctions first, always follow aftercare instructions and if anything is burning, stinging or sensitive reach out immediately to make changes. If skin is experiencing Eczema,dermatitis, Psoriasis or any unusual reactions/flare ups stop actives immediately (list examples of active ingredients for them so they are aware of what to stop)
+
+## How long until they see results?
+
+3 to 6 months
+
+i tell everyone give it 90 days to start seeing real results but it varies by severity of skin concerns, consistency, and proper home care and following it correctly
+
+## When should they book a facial, and which one?
+
+- New Clients Start Here
+- Acne Bootcamp (New Client Consultation + Treatment)
+
+all new clients who don't have acne concerns book - new clients start here
+all new clients who do have acne concerns book - acne program
+lumevina custom facial - this is for returning monthly clients - no acne concerns
+monthly acne treatment - this is for returning clients w/ acne concerns bcs this includes more time for acne peels and extractions
+bi weekly acne treatment - is for returning acne clients who are on my acne program and would benefit because they have severe acne
+ageless grace`;
+export const KNOWLEDGE_EMPTY = false;
 
 /** Her hard lines and her voice, when written. */
 export const HARD_LINES = ``;

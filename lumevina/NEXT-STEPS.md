@@ -57,4 +57,4 @@ The look: warm beige, white and classic black (tokens at the top of `css/styles.
 
 ## Republishing the preview
 
-The preview is the homepage with its `<head>` folded into the page body: drop the charset and viewport tags, set the title to "Lumevina v2", and keep everything else. Publish it with `root` set to a folder holding `css/`, `js/`, `img/`, `fonts/` and `manifest.webmanifest`, to the same v2 link. Only changed files need sending on an update.
+The preview is one self-contained page: run `node knowledge/scripts/build-bundle.mjs`, then `node scripts/build-single-file.mjs` (→ `dist/lumevina.html`, with the chat's knowledge inside). Fold its `<head>` into the page body (our own `<title>`, no outer skeleton; the v3 preview also switches `version` to `"v3"`) and publish it to the same link with `capabilities: {"sample": {}}`, so the chat can answer with Claude on the viewer's own account.

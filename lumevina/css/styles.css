@@ -5906,6 +5906,8 @@ html:not(.book-site) .bk-move { display: none; }
 .ask-log { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0.9rem 0.9rem 0.4rem; display: flex; flex-direction: column; gap: 0.55rem; }
 .ask-msg { max-width: 88%; padding: 0.6rem 0.8rem; border-radius: 16px; font-size: 0.9rem; line-height: 1.45; }
 .ask-msg.bot { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 6px; }
+.ask-msg.bot, .ask-msg.evelyn { white-space: pre-line; }   /* Claude's paragraphs and short lists */
+.ask-msg .ask-acts, .ask-msg .ask-handoff { white-space: normal; }
 .ask-msg.you { align-self: flex-end; color: var(--on-accent); background: var(--grad-rose); border-bottom-right-radius: 6px; }
 .ask-msg.evelyn { align-self: flex-start; background: var(--blush); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.255); border-bottom-left-radius: 6px; }
 .ask-msg.note { align-self: flex-start; max-width: 88%; padding: 0.45rem 0.7rem; font-size: 0.8rem; color: var(--ink-60);

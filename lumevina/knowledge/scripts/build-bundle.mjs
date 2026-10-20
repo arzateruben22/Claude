@@ -46,11 +46,23 @@ const fpBlock = html.slice(html.indexOf('<div class="fp-list"'), html.indexOf('<
 const policies = details(fpBlock);
 if (!policies.length) throw new Error("couldn't read the FAQ & Policies list from index.html");
 
-// ── her menu (js/services.js), as one line for the assistant ──
+// ── her menu (js/services.js) ──
 await import(path.join(root, "js/services.js"));
 const SV = globalThis.window.LUMEVINA_SERVICES;
-const MENU_LINE = SV.all.map((x) => `${x.name} ${x.from ? "from " : ""}$${x.price}${x.min ? ` (${x.min} min)` : ""}`).join("; ") +
-  ". Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.";
+const NOT_OFFERED = "Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.";
+// every treatment with its price, time, deposit and her own description, so the
+// assistant can say what a facial includes and which one fits, the way she would
+const $ = (x) => `${x.from ? "from " : ""}$${x.price}${x.min ? `, ${x.min} min` : ""}`;
+const treatment = (i) => [
+  `### ${i.name}${i.note ? ` (${i.note})` : ""}`,
+  (i.options ? i.options.map((o) => `${o.short || o.name}: ${$(o)}`).join(" · ") : $(i)) + ". " +
+    (i.deposit ? `$${i.deposit} deposit when booked.` : "No deposit.") +
+    (i.ask ? " Message Evelyn first; she confirms the time." : "") + (i.addon ? " Only alongside another service." : ""),
+  i.about || i.desc
+].join("\n");
+const groups = SV.menu.flatMap((g) => g.subs ? g.subs.map((s) => ({ title: `${g.group}: ${s.group}`, items: s.items })) : [{ title: g.group, items: g.items }]);
+const TREATMENTS = "# Her treatments, in her words\n\nFrom her GlossGenius page: prices, times, deposits and her own descriptions.\n\n" +
+  groups.map((g) => `## ${g.title}\n\n` + g.items.map(treatment).join("\n\n")).join("\n\n") + "\n\n" + NOT_OFFERED;
 
 // ── studio facts that aren't in the FAQ ──
 // Two versions (js/site-config.js → version): v2 books on GlossGenius with
@@ -70,14 +82,16 @@ const factsFor = (v) => [
   "# The studio",
   "Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.",
   BOOKING[v],
-  "Her menu, with prices (from her GlossGenius page): " + MENU_LINE,
+  "Her menu: every treatment, with prices, times and her own descriptions, is under \"Her treatments, in her words\" below. " + NOT_OFFERED,
   "Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
   ...(v === "v3" ? [MEMBERSHIP_V3, POINTS_V3, "Not offered: lashes, brows, nails, or an online course."]
     : ["Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused)."]),
   "",
   "# FAQ & Policies",
-  ...policies.map((p) => `## ${p.q}\n${p.a}`)
+  ...policies.map((p) => `## ${p.q}\n${p.a}`),
+  "",
+  TREATMENTS
 ].join("\n\n");
 const FACTS = factsFor("v2"), FACTS_V3 = factsFor("v3");
 /* Evelyn's texting assistant follows the version the site runs now */

@@ -78,6 +78,20 @@
   details.item[open] > summary { border-bottom: 1px solid var(--edge); }
   .body { padding: 0.9rem 1.05rem 1.1rem; display: grid; gap: 1.1rem; }
   .q { display: grid; gap: 0.5rem; }
+  /* answered questions fold away (and fully answered cards, to the end of their tab): still there to check or change */
+  .done-qs > summary, .done-items > summary {
+    list-style: none; cursor: pointer; display: block; padding: 0.45rem 0; line-height: 1.4;
+    font-size: 0.84rem; font-weight: 500; color: var(--sage);
+  }
+  .done-qs > summary svg, .done-items > summary svg { vertical-align: -2px; margin-right: 0.15rem; }
+  .done-qs > summary::-webkit-details-marker, .done-items > summary::-webkit-details-marker { display: none; }
+  .done-qs > summary .more, .done-items > summary .more { color: var(--ink-soft); font-weight: 400; }
+  .done-qs[open] > summary .more, .done-items[open] > summary .more { display: none; }
+  .done-qs { border-top: 1px dashed var(--edge); padding-top: 0.55rem; }
+  .done-qs > .q { margin-top: 1.1rem; }
+  .done-qs > .q:first-of-type { margin-top: 0.6rem; }
+  .done-items { margin-top: 1.2rem; }
+  .done-items[open] > summary { margin-bottom: 0.6rem; }
   .q-t { margin: 0; font-weight: 500; font-size: 0.98rem; }
   .q-h { margin: -0.3rem 0 0; font-size: 0.8rem; color: var(--ink-soft); }
   .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
@@ -243,6 +257,7 @@
   };
 
   /* ── building the page ── */
+  var MANY = { "client-questions": 1, concerns: 1, treatments: 1, aftercare: 1 };
   var tabsEl = document.getElementById("tabs");
   var main = document.getElementById("sections");
 
@@ -269,8 +284,9 @@
     t.dataset.sid = sid; t.dataset.key = key;
     return t;
   };
-  var question = function (sid, itemId, f) {
+  var question = function (sid, itemId, f, i) {
     var q = el("div", "q");
+    q.dataset.sid = sid; q.dataset.key = itemId + "." + f.key; q.dataset.i = String(i);
     var t = el("p", "q-t", f.q);
     q.appendChild(t);
     if (f.hint) q.appendChild(el("p", "q-h", f.hint));
@@ -307,7 +323,11 @@
     d.appendChild(s);
     var b = el("div", "body");
     if (shotsFirst) b.appendChild(shotsRow(sid, it.id, true));
-    fields.forEach(function (f) { b.appendChild(question(sid, it.id, f)); });
+    fields.forEach(function (f, i) { b.appendChild(question(sid, it.id, f, i)); });
+    var fold = el("details", "done-qs");
+    fold.hidden = true;
+    fold.appendChild(el("summary"));
+    b.appendChild(fold);
     if (!shotsFirst) b.appendChild(shotsRow(sid, it.id));
     b.appendChild(voiceRow(sid, it.id));
     d.appendChild(b);
@@ -508,10 +528,60 @@
       sec.appendChild(el("p", "group-k", g.cat));
       g.items.forEach(function (p) { sec.appendChild(item("products", { id: p.id, title: p.name }, SPEC.productFields, p.size)); });
     });
+    if (MANY[s.id]) {
+      sec.querySelectorAll("details.item").forEach(function (d, i) { d.dataset.i = String(i); });
+      var doneBox = el("details", "done-items");
+      doneBox.hidden = true;
+      doneBox.appendChild(el("summary"));
+      sec.appendChild(doneBox);
+    }
     if (s.id === "hard-lines") { var hl = item("hard-lines", { id: "hard-lines", title: "Always to Evelyn" }, SPEC.hardLineFields); hl.open = true; sec.appendChild(hl); }
     if (s.id === "voice") { var v = item("voice", { id: "voice", title: "How you talk to clients" }, SPEC.voiceFields); v.open = true; sec.appendChild(v); }
     main.appendChild(sec);
   });
+
+  /* ── what she has answered moves out of the way: each card's answered
+     questions fold under "Answered already", and a card with every question
+     answered folds to the end of its tab. Only on opening the page, a tab or
+     a card, never while she types, and never the box she's in. ── */
+  var CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>';
+  var busy = function (node) { return node.contains(document.activeElement) && document.activeElement !== document.body; };
+  var byIndex = function (a, b) { return +a.dataset.i - +b.dataset.i; };
+  var foldLabel = function (fold, n, what) {
+    var sm = fold.querySelector("summary");
+    sm.innerHTML = CHECK;
+    sm.appendChild(document.createTextNode(" " + n + " " + what + " "));
+    sm.appendChild(el("span", "more", "· tap to check or change"));
+    fold.hidden = !n;
+  };
+  var tidyItem = function (d) {
+    var body = d.querySelector(".body"), fold = body.querySelector(".done-qs"), n = 0;
+    Array.prototype.slice.call(body.querySelectorAll(".q[data-key]")).sort(byIndex).forEach(function (q) {
+      var done = answeredKey(q.dataset.sid, q.dataset.key);
+      if (done) n++;
+      if (busy(q)) return;
+      if (done) fold.appendChild(q); else body.insertBefore(q, fold);
+    });
+    foldLabel(fold, n, n === 1 ? "question answered already" : "questions answered already");
+    if (n === body.querySelectorAll(".q[data-key]").length && !busy(fold)) fold.open = false;
+  };
+  var tidy = function (sid) {
+    SPEC.sections.forEach(function (s) {
+      if (sid && s.id !== sid) return;
+      var sec = document.getElementById("s-" + s.id);
+      sec.querySelectorAll("details.item").forEach(tidyItem);
+      var box = sec.querySelector(".done-items");
+      if (!box) return;
+      var n = 0;
+      Array.prototype.slice.call(sec.querySelectorAll("details.item")).sort(byIndex).forEach(function (d) {
+        var c = itemDone(s.id, d.dataset.item), done = c.total > 0 && c.done === c.total;
+        if (done) n++;
+        if (busy(d)) return;
+        if (done) { d.open = false; box.appendChild(d); } else sec.insertBefore(d, box);
+      });
+      foldLabel(box, n, n === 1 ? "card answered" : "cards answered");
+    });
+  };
 
   /* ── showing answers ── */
   var paint = function () {
@@ -596,12 +666,14 @@
   var current = null;
   var show = function (sid) {
     current = sid;
+    if (sid !== "talk" && document.getElementById("s-" + sid)) tidy(sid);
     main.querySelectorAll(".section").forEach(function (s) { s.classList.toggle("is-on", s.id === "s-" + sid); });
     tabsEl.querySelectorAll(".tab").forEach(function (t) { t.setAttribute("aria-current", String(t.dataset.sid === sid)); });
     try { localStorage.setItem(LOCAL + "tab", sid); } catch (e) { /* storage off */ }
     window.scrollTo({ top: 0 });
   };
   tabsEl.addEventListener("click", function (e) { var t = e.target.closest(".tab"); if (t) show(t.dataset.sid); });
+  main.addEventListener("toggle", function (e) { if (e.target.matches && e.target.matches("details.item") && e.target.open) tidyItem(e.target); }, true);
 
   /* ── saving: one write at a time per section, after she pauses ── */
   var saveEl = document.getElementById("save");
@@ -969,7 +1041,13 @@
     if (!f) return;
     show(f.sid);
     var d = itemEl(f.sid, f.item);
-    if (d) { d.open = true; d.scrollIntoView({ block: "start" }); }
+    if (!d) return;
+    var box = d.closest(".done-items");
+    if (box) box.open = true;
+    d.open = true;
+    var q = d.querySelector('.q[data-key="' + f.key + '"]'), fold = q && q.closest(".done-qs");
+    if (fold) fold.open = true;
+    (q || d).scrollIntoView({ block: "start" });
   });
 
   var speak = function (text) {
@@ -1120,8 +1198,9 @@
   var boot = function (data) {
     SPEC.sections.forEach(function (s) { state[s.id] = (data && data[s.id]) || readLocal(s.id); });
     var tab = null; try { tab = localStorage.getItem(LOCAL + "tab"); } catch (e) { /* storage off */ }
-    show(tab === "talk" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : SPEC.sections[0].id);
     paint();
+    show(tab === "talk" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : SPEC.sections[0].id);
+    tidy();
     startTalk();
     if (!window.claude || !window.claude.use) { setSave("Saved on this phone"); return; }
     Promise.all([window.claude.use("db"), window.claude.use("user"), window.claude.use("assets")]).then(function (r) {
@@ -1136,7 +1215,11 @@
         SPEC.sections.forEach(function (s) {
           var online = saved[s.id], local = state[s.id], merged = online ? JSON.parse(JSON.stringify(online)) : {};
           var extra = false;
-          Object.keys(local).forEach(function (k) { if (!has(merged[k]) && has(local[k])) { merged[k] = local[k]; extra = true; } });
+          /* an answer only this phone has comes back, unless the same words are saved under another question (it was moved there) */
+          var saved2 = online ? Object.keys(online).map(function (k) { return JSON.stringify(online[k]); }) : [];
+          Object.keys(local).forEach(function (k) {
+            if (!has(merged[k]) && has(local[k]) && saved2.indexOf(JSON.stringify(local[k])) === -1) { merged[k] = local[k]; extra = true; }
+          });
           state[s.id] = merged;
           if (migrate(s.id)) extra = true;
           writeLocal(s.id);
@@ -1144,6 +1227,7 @@
           else if (!online && Object.keys(local).some(function (k) { return has(local[k]); })) schedule(s.id, 0);
         });
         paint();
+        tidy();
         loadTalk();
         if (canSave !== false && !Object.keys(timers).some(function (k) { return timers[k]; })) setSave("Saved", "is-ok");
       }, function () { setSave("Saved on this phone"); });

@@ -37,9 +37,22 @@ const render = (f, v, extra) => {
   if (has(extra)) out += (out ? "\n\n" : "") + String(extra).trim();
   return out;
 };
+// Her words stay exactly as she wrote them. When an answer clearly belongs to
+// another question (her routines "for morning" typed in the Night box), a
+// note under it tells the assistant how to read it, and that the other
+// question is still open.
+const noteFor = (f, v, extra) => {
+  const t = [v, extra].filter(has).map((x) => Array.isArray(x) ? x.join(" ") : String(x)).join(" ");
+  if (f.key === "night" && /\bmorning\b/i.test(t) && !/\b(night|evening|pm|bed(time)?)\b/i.test(t))
+    return "\n\n_(How to read this: she wrote her morning routines by skin type in this box. Her night routine isn't answered yet: hand night-routine questions to her.)_";
+  return "";
+};
 let unread = 0;
 const file = (rel, front, title, lead, fields, answers, itemId) => {
-  let body = fields.map((f) => `## ${f.q}\n\n${render(f, answers[itemId + "." + f.key], answers[itemId + "." + f.key + ".text"])}\n`).join("\n");
+  let body = fields.map((f) => {
+    const v = answers[itemId + "." + f.key], extra = answers[itemId + "." + f.key + ".text"];
+    return `## ${f.q}\n\n${render(f, v, extra)}${noteFor(f, v, extra)}\n`;
+  }).join("\n");
   // her screenshots, as read by read-screenshots.mjs (the files stay in the questionnaire's asset store)
   const shots = Array.isArray(answers[itemId + ".shots"]) ? answers[itemId + ".shots"] : [];
   const kept = [];

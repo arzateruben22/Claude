@@ -302,7 +302,21 @@
     /* the chat: does this client have a profile, and note what the server remembered */
     has: function () { var s = session(); return !!s && cache.email === s.email && !empty(cache.profile); },
     remembered: function () { if (LIVE) load(); },
-    refresh: load
+    refresh: load,
+    /* the preview chat (js/ask.js): what this client told us, and one more fact to keep (demo only, same filter as learn) */
+    snapshot: function () { var s = session(); return s && cache.email === s.email ? { profile: cache.profile, memories: cache.memories || [] } : null; },
+    note: function (fact, kind) {
+      var s = session();
+      fact = String(fact || "").trim().slice(0, 160);
+      if (LIVE || !s || fact.length < 3 || HEALTH.test(fact)) return false;
+      var mem = lget("lumevina_memory"), k = s.email.toLowerCase(), list = mem[k] || [];
+      if (list.some(function (x) { return x.fact.toLowerCase() === fact.toLowerCase(); })) return false;
+      list.push({ id: "m" + Date.now().toString(36) + list.length, fact: fact, kind: String(kind || "other"), at: new Date().toISOString() });
+      mem[k] = list.slice(-60);
+      lset("lumevina_memory", mem);
+      demoRead(s.email);
+      return true;
+    }
   };
   load();
 })();
