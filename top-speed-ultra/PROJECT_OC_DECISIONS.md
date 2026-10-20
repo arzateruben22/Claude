@@ -109,6 +109,12 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   found no business of that name; asked the owner whether it is a real Anaheim place (and where) or their own concept. A
   real business's name and look can't be used unless it is the owner's or they have permission; otherwise it is built as
   our own venue at the real site, like Lot 57.
+- **The owner's answer** (2026-10-21 about 00:00 UTC, with a map of it): "Yes it's real". It is a sports bar; Overture
+  places has it at 1759 S Claudina Way, Anaheim 92805 (33.80449 N, 117.90152 W, just east of I-5 between Cerritos and
+  Katella, about 2.6 km from Lot 57). The owner did not say it is theirs or that they have its permission, so it is built
+  as our own sports bar at that site, with our own name in one constant that can be swapped if they get permission.
+  Phase 0 (the site data and PROJECT_OC_SPORTS_BAR.md) runs now on claude/sports-bar; the build (S1 to S4) starts once
+  Lot 57's first milestone gives it the shared on-foot engine.
 - **Facts it was made on.** The weekly limit read 0 at 23:43 UTC on Oct 20 after hitting 1.0 at about 15:30; the machine
   has 4 cores shared by all the workflows' Playwright renders; the five-hour and weekly limits, not the number of lanes,
   set the total amount of work per day, so more lanes trade depth for breadth.
