@@ -4,6 +4,27 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
+
+The owner asked for the hypercar "ASAP". Branch `claude/hypercar-drive` = the body (`a137e50`) + the vehicle-dynamics
+model (`claude/drift`) + its car entry. It is a procedural model built in code, not a finished 3D asset.
+
+- **Two tunes.** Free Drive runs Unleashed (1,690 kg, 1.5 MW, 2,000 Nm, all-wheel drive 40% front, torque vectoring,
+  fan-level downforce ClA 2.2, tyres 1.8× stiffer, 2 g brakes); Races, Time Trial and Survival run the race tune
+  (1,500 kg, 620 kW, ClA 1.0, default tyres and brakes). The tune is picked when a run starts (`tuneFor`), and the start
+  toast says which ("Free Drive · Unleashed", "Time Trial · race tune").
+- **Measured** (`node tests/dynamics.mjs`, 1,742 passed, 0 failed): Unleashed 338 mph, 0-60 2.20-2.82 s, 100-0
+  56-68 m, lateral g 1.58 / 1.44 / 1.05 at 25 / 40 / 80 m/s (h 0.15); first on every metric. The rear-drive-only checks
+  (power-over and held-drift entries, the ABS-off lock time) are reported for it, not bound: its all-wheel drive and
+  vectoring stop those slides by design. In the game (owner mode, I-405 North, autopilot): 53 mph after 2 s, 261 mph
+  within 45 s, no page errors; frames in tests/out/hyper-drive/.
+- **Garage.** It shows as the fourth card ("Founder Edition · not on sale yet (test build)"); never bought or sold for
+  credits (`profile.buy`/`sell` refuse it); drivable in owner mode. Groups `boot` and `progression` 12/12.
+- **Not done yet.** The full seat drop (for now its eye sits 0.13 m lower and 0.07 m further in, so the roof clears
+  the view; the dash top still crosses the lower view), the lights and its own cockpit touches (M2), Cold Thrust /
+  Ground Lock / Thrust Hop (M5), the Founder exclusives (M6), the face and rear fidelity (M1b), and the axle spin
+  scaled to its tyre sizes.
+
 ## 2026-10-17 to 19: the OC Hypercar's body repaired after review (hypercar M1 repair, branch `claude/hypercar`)
 
 Two reviews (art and code) rejected M1: honest and in budget, but not recognisably the sheet's car outside the side
@@ -578,6 +599,35 @@ it fills the middle of the rear-view, with the median, the lane line, a second c
 wall; 2x crops `fix-R1-cockpit-{rearview,door}.png`; `fix-R1-before-cockpit*.png` is the `'env'` state). `npm test
 -- --only=render` **12 of 12** (the High/Ultra/Low preset switch now also checks the mirror mode: live, live, env),
 `npx tsc --noEmit` clean. Not measured on a real GPU.
+## 2026-10-18: semi-real drift physics, measured and kept
+
+The car model now shifts weight: braking loads the front, throttle loads the rear, and cornering loads the outside
+tyres, and a tyre gives less grip per unit of load the more it carries (load sensitivity). Steering has a counter-steer
+lock, the handbrake gives a yaw kick, a spun-up rear slides on kinetic grip, and stability control backs off while the
+driver holds a slide. A drift readout (angle, active, time) is exposed. Rear-end contacts with traffic now use the
+closing direction, so a 120 m/s rear-end with a sideways offset is a crash, not a side push (`traffic/contact.ts`).
+
+How it was checked: `node tests/dynamics.mjs` steps the car at 120 Hz in node against the parent commit a89d4f0 with the
+same method; 1574 checks passed, 0 failed (report: `tests/out/dynamics-report.md`, deterministic run to run).
+
+- Control table, Corsa (best earnable car), parent → now, Arcade (h 0.15) / Sport (0.5) / Simulation (0.9):
+  0-60 2.95 → 3.09 / 3.25 → 3.71 / 4.06 → 4.71 s; top speed 232 → 229 mph; 100-0 83.2 → 71.1 / 85.2 → 76.3 /
+  88.2 → 84.0 m; lateral g at 40 m/s 1.07 → 1.04 / 1.20 → 1.15 / 1.16 → 1.12; handbrake catch caught in
+  0.75 / 1.24 / 1.35 s, no spin. The other earnable cars move the same way and stay inside the bounds of
+  PROJECT_OC_DYNAMICS.md §7.7.
+- Stability (autopilot-gain lane follower, straights at 134/168/201 mph with a lane change and yaw shove, a 600 m
+  sweeper with a lift and a brake): worst body slip for the earnable cars 2.09° (GT, h 1, sweeper at 123 mph), at most
+  1.43° after 7 s. The Unleashed-like test car peaks at 10.98° in the same sweeper at h 1 and settles to 4.11°.
+- Contact: a stopped sedan or semi hit at 60/120/150 m/s with 0 to 1.6 m offset is a contact in 25 of 25 phases every
+  time; 2.0 m (sedan) / 2.3 m (semi) is always a miss.
+- 240 Hz against 120 Hz: worst difference 2.04% on 0-60 (Corsa, h 0.9).
+- Advisory for the hypercar race tune: the plan's race-tune-like car is 0.6 mph over the Corsa's top speed, and over on
+  lateral g at 80 m/s in Simulation; the race tune must be re-set on claude/hypercar.
+- Build and type check pass. Browser suite (survival, race, progression, phone, abilities): 25/26 passed; the failure
+  is "ramming a stopped car ends the run and shows the local board" timing out waiting for the result overlay after
+  the crash was registered (g.over true).
+
+Kept by two reviewers.
 
 ## 2026-10-15: first realism pass by agents: headlight beams, the NPC nose, the jaw and neck
 

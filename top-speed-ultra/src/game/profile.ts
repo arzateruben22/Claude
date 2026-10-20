@@ -129,6 +129,7 @@ export class ProfileBook {
 
   // the showroom: credits only, a free garage slot, and the level it asks for. Returns why not, or null.
   buy(id: string, price: number, level: number, slots: number): string | null {
+    if (id === 'oc-hyper') return 'The Founder Edition is never sold for credits';
     const p = this.p;
     if (p.vehicles.includes(id)) return 'Already in your garage';
     if (this.level < level) return `Opens at level ${level}`;
@@ -138,6 +139,7 @@ export class ProfileBook {
     return null;
   }
   sell(id: string, price: number): string | null {
+    if (id === 'oc-hyper') return 'The Founder Edition can\'t be sold for credits';
     const p = this.p;
     if (id === 'rossini-gt') return 'Your first car stays';
     if (!p.vehicles.includes(id)) return 'Not yours';

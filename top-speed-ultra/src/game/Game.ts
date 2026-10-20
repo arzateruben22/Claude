@@ -274,7 +274,7 @@ export class Game {
 
   async start(mode: Mode, startLabel = this.settings.start, courseId = this.settings.course) {
     this.endRace();
-    this.applyCarChoice();
+    this.applyCarChoice(mode);
     if (mode === 'race') return this.startRace(COURSES.find((c) => c.id === courseId) ?? COURSES[0]);
     this.audio.start();
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
@@ -300,7 +300,7 @@ export class Game {
     this.setPaused(false);
     this.ev.loading(false);
     this.last = performance.now();
-    const what = mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive';
+    const what = (mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive') + (this.driving === 'oc-hyper' ? (mode === 'free' ? ' · Unleashed' : ' · race tune') : '');
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
@@ -454,10 +454,10 @@ export class Game {
     try { localStorage.setItem(OWNER_CAR, id); } catch { /* a convenience */ }
   }
   // the car from your garage: its numbers into the physics, its body and cockpit into the scene
-  applyCarChoice() {
+  applyCarChoice(mode: string = this.mode) {
     const c = carById(this.carId);
     this.driving = c.id;
-    this.carGrip = applyCar(c);
+    this.carGrip = applyCar(c, mode);
     this.configureCar();
     return c;
   }
@@ -623,6 +623,7 @@ export class Game {
     return {
       path, s: p.s, d: p.d, v: p.vx * Math.cos(rel) + p.vy * Math.sin(rel), vd: -p.vx * Math.sin(rel) - p.vy * Math.cos(rel), rel,
       len: SPEC.halfL * 2, wid: SPEC.halfW * 2, x: p.x, z: p.z, y: p.y, psi: p.psi, wx: sf * p.vx + cf * p.vy, wz: cf * p.vx - sf * p.vy,
+      px: p.px, pz: p.pz, ppsi: p.ppsi, altitude: p.altitude,
     };
   }
 
@@ -888,13 +889,14 @@ export class Game {
     const c = this.input.c;
     p.grip = this.env.grip * this.gripBoost * this.carGrip;
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
-    this.trackPath();
+    if (!p.airborne) this.trackPath();                            // a hop always lands on the road it left
     // the end of the road: turned around or put back on, and the route planned again from there
     if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
     this.car.snapshot(p);
     const playing = !this.attract && !this.over;
     // walls
     for (const im of p.impacts) {
+      if (im.kind === 'land') { this.audio.thump(im.speed); this.shake = Math.max(this.shake, Math.min(1, im.speed / 10)); continue; }
       if (im.speed > 1.2) { this.scrape = Math.min(1, this.scrape + im.speed * 0.08); this.shake = Math.max(this.shake, Math.min(1, im.speed / 14)); }
       if (im.speed > 3) this.streak = 0;
       if (im.speed > 6) { this.audio.thump(im.speed); this.combo = 1; if (playing) this.collisions++; }
@@ -906,7 +908,9 @@ export class Game {
     if (this.ability.update(dt) === 'end') this.endAbility();
     if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.setPose(null); }
     const passes = this.traffic.step(dt * this.worldScale, view, this.time);
-    for (const contact of this.traffic.collide(view)) {
+    const nContacts = this.traffic.collide(view, dt, dt * this.worldScale);
+    for (let ci = 0; ci < nContacts; ci++) {
+      const contact = this.traffic.contacts[ci];
       p.x += contact.nx * contact.depth; p.z += contact.nz * contact.depth;
       if (contact.speed <= 0) continue;
       const cl = this.traffic.classes[contact.car.cls];
