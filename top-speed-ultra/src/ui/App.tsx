@@ -168,6 +168,13 @@ export function App() {
     c.connect(base, token, car.id, car.paint);
   };
   const liveInfoRef = useRef<LiveInfo>(LIVE_OFF);
+  // the live address to a friend: the phone's share sheet, or the clipboard
+  const invite = async () => {
+    const url = liveBase(settingsRef.current.liveUrl) + '/';
+    const text = `Drive Orange County's freeways with me in OC Ultra (live alpha): ${url}`;
+    if (typeof navigator.share === 'function') { try { await navigator.share({ title: 'OC Ultra', text, url }); return; } catch { /* cancelled, or not allowed: copy instead */ } }
+    toast((await copyText(text, null)) ? 'Invite copied' : url, 'good');
+  };
   const stopLive = () => { live.current?.close(); live.current = null; game.current?.setLive(null); liveStatus.current = 'off'; setLiveInfo(LIVE_OFF); };
   const drive = (m: Mode = mode) => {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
@@ -446,6 +453,7 @@ export function App() {
         </button>
       </div>
       <Toggle label="Drive live: other drivers' cars appear on the freeway" value={settings.live} onChange={(v) => { if (v && !liveName) { setPanel('account'); return; } update({ live: v }); }} />
+      {liveBase(settings.liveUrl) && <div className="row"><button type="button" className="btn invite" onClick={() => void invite()}>Invite a friend</button></div>}
       <p className="fine">One small server, a limited number of drivers at a time; past that you wait in line. Other drivers are ghosts: no collisions, nothing scored. Your progress stays on this device.</p>
     </section>
     <div className="menu-aside">
