@@ -7,8 +7,8 @@ list, captions and labels, and the same frame engine. It sits on this branch so 
 the Lumevina branch changes until her session adopts it.
 
 ```
+kits/cinema/cinema3d.js         the kit (repo root): one file, three.js r160 core only; render.mjs reads it from there
 films/skin-school-pilot/
-  motion/cinema3d.js            the kit: one file, three.js r160 core only
   motion/scenes3d.mjs           8-2 directed in the film style (changes marked "directed:")
   motion/scenes3d-original.mjs  her 8-2 as it is on the Lumevina branch, for A/B
   motion/render.mjs             her frame engine with the finish added (changes marked "cinema:")
@@ -30,7 +30,7 @@ node films/skin-school-pilot/motion/render.mjs --scenes original --plain   # her
 node films/skin-school-pilot/motion/render.mjs --quick --times 4,9.5,19.3 --label check   # stills → build/review/
 ```
 
-## What the kit does (cinema3d.js)
+## What the kit does (kits/cinema/cinema3d.js)
 
 Each frame becomes a short exposure instead of one sharp instant, and it stays a pure function of `t`:
 
@@ -73,13 +73,14 @@ though, and its floor fade has never been seen rendered. It needs a look before 
 
 ## Adopting it in Skin School (for the Lumevina session)
 
-1. Copy `cinema3d.js` next to `studio3d.js`.
+1. Copy `kits/cinema/cinema3d.js` (at this repo's root) next to `studio3d.js`.
 2. In `render.mjs`, insert it right after the three.js import (before `studio3d.js`), rewrite
    `new THREE.WebGLRenderer(` → `cinemaRenderer(`, and call `window.cinemaFrame(t)` instead of
    `window.seek(t)` when it exists. All three changes are marked `cinema:` in the pilot's
    `render.mjs`.
 3. Per scene: add `window.CINEMA_FOCUS` (focus keys on the label anchors) and replace the orbit with
    camera keys. The finish works without them, but the look comes mostly from the direction.
+   `scenes3d.mjs` inlines both; `kits/cinema/keys.js` has the same logic as a small module.
 
 ## Cost
 

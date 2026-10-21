@@ -1,25 +1,29 @@
-// cinema3d.js — the film finish for the solid scenes. render.mjs puts it right after each scene
-// module's three.js import and builds the scene's renderer through cinemaRenderer().
+// cinema3d.js — the studio's film finish (kits/cinema), one file, three.js r160+ core only.
+// Paste or inject it right after a scene module's three.js import (it needs THREE in scope and
+// window.seek(t), the scene's own pure function of time, which ends in renderer.render(scene, camera)),
+// and build that scene's renderer through cinemaRenderer() instead of new THREE.WebGLRenderer().
+// kits/cinema/README.md has the full contract; films/skin-school-pilot shows an adoption.
 //
 // A frame becomes a short exposure instead of one sharp instant:
 //   1. probe   the scene is sought at both ends of a 180° shutter; how far things move on screen
 //              decides how many sub-frames the exposure needs (K)
 //   2. accum   the scene is sought at K moments across the shutter, each drawn with a sub-pixel
 //              jitter into a float target and averaged: real motion blur, and anti-aliasing for free
-//   3. depth   the scene is sought at the frame's own moment once more (this also leaves the labels
-//              and captions where they belong) and its depth is drawn
+//   3. depth   the scene is sought at the frame's own moment once more (this also leaves any DOM
+//              labels and captions where they belong) and its depth is drawn
 //   4. post    a bokeh depth of field focused where the scene says (window.CINEMA_FOCUS), bloom on
 //              whatever is brighter than white, then ACES and sRGB into the scene's canvas
 // Everything is still a pure function of t: K, the jitter and the focus all come from it.
-// window.cinemaFrame(t) does all four; render.mjs calls it instead of seek when it exists.
+// window.cinemaFrame(t) does all four; the frame loop calls it instead of seek when it exists.
+// Plain window.seek(t) still draws the scene unfinished (CINEMA.mode "direct"), for previews and audits.
 const CINEMA = (window.CINEMA = {
   mode: "direct", fps: 30, shutter: 0.5, kMin: 2, kMax: 32, pxPerSample: 3.5,
   fstop: 0.45, bloom: 0.6, threshold: 0.85, maxCoc: 0.032, probe: new Map(), K: 1, s: 0, last: null
 });
 // three r160 assigns render() on each renderer instance (in its constructor), so a patch on
-// WebGLRenderer.prototype.render never runs — which is also why studio3d.js's set dressing and
-// drift don't appear in the clips today. The finish therefore attaches to the instance:
-// render.mjs rewrites `new THREE.WebGLRenderer(` to `cinemaRenderer(`.
+// WebGLRenderer.prototype.render never runs (a set-dressing patch written that way was found
+// missing from every rendered clip). The finish therefore attaches to the instance:
+// the frame engine rewrites `new THREE.WebGLRenderer(` to `cinemaRenderer(` in the scene source.
 {
   const _render = function (scene, camera) { return this.__baseRender(scene, camera); };
   const halton = (i, b) => { let f = 1, r = 0; while (i > 0) { f /= b; r += f * (i % b); i = Math.floor(i / b); } return r; };

@@ -17,6 +17,8 @@ This repository is both a live site and the studio template:
   unique design system per client, reuse the proven machinery listed in the
   skill's reuse map, verify in Playwright at 1440/375, deliver an Artifact
   preview, and only then commit/push.
+- **`kits/cinema`** + the **`cinema-kit`** skill = code-rendered films (motion clips,
+  explainers, lessons, "the film look" for a three.js scene): invoke the skill and follow it.
 
 House rules that always apply:
 

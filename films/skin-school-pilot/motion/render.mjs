@@ -59,12 +59,13 @@ const runtime = fs.readFileSync(path.join(here, "motion.js"), "utf8");
 // the solid scenes share one studio set (studio3d.js): rounded blocks, a warm floor, a drifting camera.
 // Every box a scene makes becomes a SoftBox, then the set goes in right after the three.js import.
 const studio3d = fs.readFileSync(path.join(here, "studio3d.js"), "utf8");
-// cinema: the finish goes in before the studio set, so the studio's camera drift wraps it
-const cinema3d = plain ? "" : fs.readFileSync(path.join(here, "cinema3d.js"), "utf8");
+// cinema: the finish goes in before the studio set, so the studio's camera drift wraps it.
+// It is the studio's cinema kit (kits/cinema/cinema3d.js at the repo root), read from there.
+const cinema3d = plain ? "" : fs.readFileSync(path.join(here, "../../../kits/cinema/cinema3d.js"), "utf8");
 const studioModule = (src) => {
   const imp = 'import * as THREE from "../vendor/three.module.min.js";';
   let body = src.split("new THREE.BoxGeometry(").join("new SoftBox(");
-  if (cinema3d) body = body.split("new THREE.WebGLRenderer(").join("cinemaRenderer(");   // cinema: see cinema3d.js (r160 instance render)
+  if (cinema3d) body = body.split("new THREE.WebGLRenderer(").join("cinemaRenderer(");   // cinema: see kits/cinema/cinema3d.js (r160 instance render)
   const at = body.indexOf(imp);
   return at < 0 ? body : body.slice(0, at + imp.length) + "\n" + cinema3d + "\n" + studio3d + "\n" + body.slice(at + imp.length);
 };
