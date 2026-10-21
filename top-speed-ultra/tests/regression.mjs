@@ -1138,6 +1138,8 @@ await group('livephone', async (use) => {
       clearInterval(ticker);
       ticker = setInterval(() => peer.send(JSON.stringify({ t: 's', x: me.x, y: me.y, z: me.z, h: me.h, v: 0, b: 1 })), 100);
       await page.waitForFunction(() => window.__game.liveCars.tail.instanceColor.getX(0) > 3, null, { timeout: 30000 });
+      // the sky eases into night: wait for the dark before the picture
+      await page.waitForFunction(() => window.__game.env.daylight < 0.15, null, { timeout: 120000 });
       await frames(page, 3);
       await page.screenshot({ path: path.join(OUT, 'livephone-night-ghost.png') });
       const r = await game(page, () => { const lc = window.__game.liveCars; return { head: lc.head.count, tail: lc.tail.count, brake: lc.tail.instanceColor.getX(0) }; });
