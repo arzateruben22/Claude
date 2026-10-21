@@ -1168,8 +1168,8 @@ await group('livephone', async (use) => {
       return `"${head}"; the outside peer is hidden`;
     });
     await check('phone: an invite link greets a first-time player once, and Sign up opens the account panel', async () => {
-      // the last check here: the first phone is still driving, so stop it (its page errors are already collected)
-      await page.goto('about:blank');
+      // the first phone is still driving: pause it so this one gets the CPU
+      await game(page, () => window.__game.setPaused(true));
       const { ctx: c2, page: p2 } = await open({ phone: true, settings: { liveUrl: base } });
       try {
         await p2.goto(pathToFileURL(GAME).href + '?crew=wxyz');
@@ -1183,6 +1183,9 @@ await group('livephone', async (use) => {
         const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
         await p2.screenshot({ path: path.join(OUT, 'livephone-welcome.png') });
         expect(/invited to crew WXYZ/.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));
+        // the card sits on top of the menu: a tap on its button lands on the button, not on the menu under it
+        const onTop = await p2.evaluate(() => { const b = [...document.querySelectorAll('.welcome button')].find((x) => /Sign up/.test(x.textContent)), r = b.getBoundingClientRect(); return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === b; });
+        expect(onTop, 'the menu covers the welcome card');
         await p2.getByRole('button', { name: 'Sign up and drive live', exact: true }).click();
         await p2.waitForSelector('#live-name', { timeout: 15000 });
         const crew = await p2.evaluate(() => JSON.parse(localStorage.getItem('tsu.settings')).crew);

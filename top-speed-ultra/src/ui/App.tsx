@@ -546,23 +546,6 @@ export function App() {
       )}
 
       {error && <div className="overlay center"><div className="panel narrow"><Brand /><p>{error}</p></div></div>}
-      {welcome && screen === 'menu' && !busy && !panel && (
-        <div className="overlay center welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-          <div className="panel narrow">
-            <p className="eyebrow">Live · alpha</p>
-            <h2 id="welcome-title">{welcome !== '-' ? `You're invited to crew ${welcome}` : 'Drive OC with other people'}</h2>
-            <ul className="welcome-list">
-              <li>Orange County's real freeways, from the driver's seat.</li>
-              <li>{welcome !== '-' ? 'Your crew drives together: you see, hear and honk at each other.' : 'Other drivers appear as ghost cars with their names. No collisions, no chat.'}</li>
-              <li>A free account is a name and a password. Up to 25 drive at once to start; past that you wait in line.</li>
-            </ul>
-            <div className="row">
-              <button className="btn primary" onClick={() => closeWelcome(true)}>Sign up and drive live</button>
-              <button className="btn" onClick={() => closeWelcome(false)}>Just drive</button>
-            </div>
-          </div>
-        </div>
-      )}
       {lost && <div className="overlay center"><div className="panel narrow"><h2>Graphics reset</h2><p>The browser dropped the 3D context for a moment. It's coming back on its own; press Resume when it does.</p><button className="btn primary" onClick={resume}>Resume</button></div></div>}
 
       {inMenu && (
@@ -591,6 +574,24 @@ export function App() {
         </div>
       )}
 
+      {/* after the menu, so it sits on top of it and takes the taps */}
+      {welcome && screen === 'menu' && !busy && !panel && (
+        <div className="overlay center welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+          <div className="panel narrow">
+            <p className="eyebrow">Live · alpha</p>
+            <h2 id="welcome-title">{welcome !== '-' ? `You're invited to crew ${welcome}` : 'Drive OC with other people'}</h2>
+            <ul className="welcome-list">
+              <li>Orange County's real freeways, from the driver's seat.</li>
+              <li>{welcome !== '-' ? 'Your crew drives together: you see, hear and honk at each other.' : 'Other drivers appear as ghost cars with their names. No collisions, no chat.'}</li>
+              <li>A free account is a name and a password. Up to 25 drive at once to start; past that you wait in line.</li>
+            </ul>
+            <div className="row">
+              <button className="btn primary" onClick={() => closeWelcome(true)}>Sign up and drive live</button>
+              <button className="btn" onClick={() => closeWelcome(false)}>Just drive</button>
+            </div>
+          </div>
+        </div>
+      )}
       {screen === 'paused' && !panel && (
         <div className="overlay center">
           <div className="panel narrow paused">
