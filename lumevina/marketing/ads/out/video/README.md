@@ -30,7 +30,9 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 24 | `12-2-9x16.mp4` | After your facial: the first day, then the week | What you keep off your face for 24 hours decides the result. | 21 s |
 | 25 | `7-2-9x16.mp4` | Facial massage: slip, direction, a light hand | Three rules before you touch your face with a gua sha. | 20 s |
 | 26 | `13-2-9x16.mp4` | After a wax: bumps, ingrowns, how often | Red bumps after a wax: here's what's normal and what isn't. | 21 s |
-| 27 | *rendering* | AHAs, BHAs and PHAs | Three acid families, three different jobs. |  |
-| 28 | *rendering* | After a treatment: what's normal, what isn't | Pink and tight is the treatment working. Spreading and hot is not. |  |
+| 27 | `4-1-9x16.mp4` | AHAs, BHAs and PHAs | Three acid families, three different jobs. | 22 s |
+| 28 | `12-3-9x16.mp4` | After a treatment: what's normal, what isn't | Pink and tight is the treatment working. Spreading and hot is not. | 22 s |
+| 29 | *rendering* | Build your first routine | Three steps, twice a day. Everything else, one at a time. |  |
+| 30 | *rendering* | How acne really forms | Acne is four things going wrong at once. |  |
 
 Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
