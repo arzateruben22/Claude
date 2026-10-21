@@ -914,6 +914,8 @@ function makeBody(P: ShapeParams) {
           sg.translate(0, 0, ZR + 0.0065); sg.computeVertexNormals();
           kit.add(sd < 0 ? 'sigL' : 'sigR', sg, null, 0.05);
         }
+        // the stop light's haze (PlayerCar shows it on the brakes): a soft quad 0.11 m tall over the bar and its channel
+        const gw = new THREE.PlaneGeometry(hw * 2 + 0.12, 0.11); gw.translate(0, yb, ZR + 0.008); kit.add('brakeGlow', gw);
       } else {
         // Vela: one lit line across the whole tail, wrapping round the corners, over a gloss-black band
         const hw = tailX(yl) - 0.006;
@@ -1331,15 +1333,25 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       // (the sheet's HEADLIGHT DETAIL), a little brighter toward the outer end. Rows 50-128: the lamp socket's smoked
       // lens over a dark reflector with faint chrome ribs, and the three-cell projector module at its outer end
       g.fillStyle = '#04060a'; g.fillRect(0, 0, w, h);
-      for (const [ctx, edge, core] of [[g, '#7cc4ff', '#eef8ff'], [ge, '#3d9cff', '#dff2ff']] as const) {
+      // (the face's emissive is the car's LED blue at both edges and a pale ice core in its middle third: the tone
+      // map keeps the edges blue at the night level, so the blade reads ice blue as on the sheet, not white)
+      for (const [ctx, edge, core] of [[g, '#4aa2f4', '#d6eeff'], [ge, '#2f8fe8', '#a6dcff']] as const) {
         const fg = ctx.createLinearGradient(0, 2, 0, 46);
-        fg.addColorStop(0, edge); fg.addColorStop(0.3, core); fg.addColorStop(0.7, core); fg.addColorStop(1, edge);
+        fg.addColorStop(0, edge); fg.addColorStop(0.22, edge); fg.addColorStop(0.42, core); fg.addColorStop(0.58, core); fg.addColorStop(0.78, edge); fg.addColorStop(1, edge);
         ctx.fillStyle = fg; ctx.fillRect(0, 2, w, 44);
       }
       const lift = ge.createLinearGradient(0, 0, w, 0); lift.addColorStop(0, 'rgba(0,0,0,0.25)'); lift.addColorStop(0.5, 'rgba(0,0,0,0)'); lift.addColorStop(1, 'rgba(0,0,0,0)');
       ge.fillStyle = lift; ge.fillRect(0, 2, w, 44);
       const lg = g.createLinearGradient(0, 50, 0, h); lg.addColorStop(0, '#0e141b'); lg.addColorStop(0.5, '#080b0f'); lg.addColorStop(1, '#030405');
       g.fillStyle = lg; g.fillRect(0, 50, w, h - 50);
+      // the blade's light spilling up into the lens over it (the socket band starts at row 54): blue, fading out
+      // over the first fifth of the socket, as the sheet's HEADLIGHT DETAIL glows into its recess. Mostly light (the
+      // emissive map), hardly paint: the lens stays smoked by day, so from the hood camera, which looks down on the
+      // sockets, they read as dark glass with a glow along the blade, not as blue panels
+      for (const [ctx, a] of [[g, 0.12], [ge, 0.5]] as const) {
+        const sp = ctx.createLinearGradient(0, 54, 0, 72); sp.addColorStop(0, `rgba(47,143,232,${a})`); sp.addColorStop(1, 'rgba(47,143,232,0)');
+        ctx.fillStyle = sp; ctx.fillRect(0, 54, w, 18);
+      }
       for (let x = 14; x < w - 110; x += 18) { g.fillStyle = 'rgba(150,170,195,0.12)'; g.fillRect(x, 56, 2, 66); }
       g.fillStyle = 'rgba(190,205,225,0.3)'; g.fillRect(0, 52, w, 2);
       for (let k = 0; k < 3; k++) {
@@ -1361,6 +1373,16 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       }
       g.fillStyle = '#5a3a10'; g.fillRect(20, 40, 90, 22);
     }
+  } else if (style === 'blade') {
+    // the hypercar's full-width bar (u 0..0.5, v 0.3..0.7 of this map): a smoked lens that reads dark red when the
+    // bar is only a tail light, over a light guide whose emissive fills the band with a hotter core. The diffuse is
+    // kept dark so the sun doesn't light the bar as if it were on, and the brake level (lampMaterials' levels) shows
+    // as a clear step in daylight, not only at night
+    g.fillStyle = '#120103'; g.fillRect(0, 0, w, h);
+    for (let x = 0; x < w; x += 8) { g.fillStyle = x % 16 ? '#2a0407' : '#1c0205'; g.fillRect(x, h * 0.3, 4, h * 0.4); }
+    const eg = ge.createLinearGradient(0, h * 0.3, 0, h * 0.7);
+    eg.addColorStop(0, '#5a0408'); eg.addColorStop(0.3, '#ff2626'); eg.addColorStop(0.5, '#ff5a50'); eg.addColorStop(0.7, '#ff2626'); eg.addColorStop(1, '#5a0408');
+    ge.fillStyle = eg; ge.fillRect(0, h * 0.3, w, h * 0.4);
   } else {
     // left half: a bar lens (vertical optics, a bright core band); right half: a round lens (rings, a bright ring)
     const W2 = w / 2;
@@ -1380,13 +1402,20 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
   return { map: t, emissiveMap: te };
 }
 const lampCache = new Map<string, { lamp: THREE.Material; tail: THREE.Material }>();
+// the tail material's emissive level as a tail light and on the brakes (PlayerCar reads them from the material's
+// userData.levels): 1.6 and 5 for every car's lamps, and for the hypercar's thin bar a dim tail light and a bright
+// stop, because a 2 cm bar of saturated red reads the same at 1.6 and 5 once the tone map has clipped it
+const TAIL_LEVELS: Record<'std' | 'blade', [number, number]> = { std: [1.6, 5], blade: [0.5, 6] };
 export function lampMaterials(style: 'twin' | 'round' | 'slim' | 'blade' = 'twin') {
   if (!lampCache.has(style)) {
     const head = lampTex('head', style), tail = lampTex('tail', style);
     lampCache.set(style, {
-      lamp: new THREE.MeshPhysicalMaterial({ map: head.map, emissive: 0xffffff, emissiveMap: head.emissiveMap, emissiveIntensity: 2.4, metalness: 0.4, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.02 }),
-      tail: new THREE.MeshPhysicalMaterial({ map: tail.map, emissive: 0xffffff, emissiveMap: tail.emissiveMap, emissiveIntensity: 1.6, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.02 }),
+      // (the blade's socket is a smoked lens in a black recess: it keeps a third of the sky's reflection, so it reads
+      // dark over the lit face as on the sheet, not as a pale ledge)
+      lamp: new THREE.MeshPhysicalMaterial({ map: head.map, emissive: 0xffffff, emissiveMap: head.emissiveMap, emissiveIntensity: 2.4, metalness: style === 'blade' ? 0.1 : 0.4, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: style === 'blade' ? 0.3 : 1 }),
+      tail: new THREE.MeshPhysicalMaterial({ map: tail.map, emissive: 0xffffff, emissiveMap: tail.emissiveMap, emissiveIntensity: TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'][0], roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.02 }),
     });
+    lampCache.get(style)!.tail.userData.levels = TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'];
   }
   return lampCache.get(style)!;
 }

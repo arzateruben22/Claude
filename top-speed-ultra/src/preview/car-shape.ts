@@ -262,10 +262,11 @@ const HYPER: ShapeParams = {
   // bends back up the fender's corner (bladeSweep), so in the FRONT view it climbs from 0.38 m at the inner end to
   // about 0.52 m at the outer end (the sheet: about 0.30 to 0.48 m), where a straight blade turned down over the corner
   head: [[0.45, -2.335], [0.9, -2.185], [0.915, -2.13], [0.47, -2.285]], headStyle: 'blade', bladeSweep: 0.125,
-  // M2 (M1b item 2): the blade is the face's main feature, about 0.8 m a side from 0.14 m off the centre (its foot at
+  // M2 (M1b item 2): the blade is the face's main feature, 0.85 m a side in plan from 0.14 m off the centre (its foot at
   // 0.362 m, just under the black lower nose's top edge, rising to the head quad's front edge) out round the corner:
-  // a lit face 25 mm tall under a dark socket that shows 12 mm (inner end) to 40 mm (outer end) above it from ahead
-  blade: { x0: 0.14, y0: 0.362, h: 0.025, socket: [0.012, 0.04] },
+  // a lit face 25 mm tall under a dark socket that shows 12 mm (inner end) to 55 mm (outer end) above it from ahead
+  // (the sheet's FRONT: about 55 mm of dark recess over the blade's outer end, none at its inner end)
+  blade: { x0: 0.14, y0: 0.362, h: 0.025, socket: [0.012, 0.055] },
   noseStyle: 'hyper', tailStyle: 'hyper',
   noseIntake: [[-0.48, 0.09], [0.48, 0.09], [0.43, 0.26], [-0.43, 0.26]],
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
