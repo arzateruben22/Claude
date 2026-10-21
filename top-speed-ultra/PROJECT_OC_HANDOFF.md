@@ -50,19 +50,31 @@ is verified; then take the next item below, prove it on renders (`tools/grade-sh
 decisions under "Decisions waiting" and move to the next item. Never spend real money, add a paid service, or
 publish anything beyond the owner's private test artifact. Stop when the owner says stop (delete the scheduled task).
 
-### Improvement queue (top first)
+### This session (session_01SwssTo7t6RP6BjTKo6BMvm, on `claude/hypercar`): built, handed over, next (06:25 UTC)
 
-1. Merge the verified Ultra world pass and the driver clothing pass from their lanes; run `npm test` in full.
-2. Republish the test build to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS after each merged milestone.
-3. The hypercar's seat view: the canopy header and the dash top crowd the view (the seat drop, M1 and M3 notes in
-   `PROJECT_OC_HYPERCAR.md`); the rim clips the display's top.
-4. Hypercar body fidelity M1b items 1, 3, 4, 6, 7 (`PROJECT_OC_HYPERCAR.md` section 8), each against the sheet.
-5. The full-screen World Map (U4 in `PROJECT_OC_UI_TARGET.md`), in the library's ULTRA map style.
-6. Garage tabs (U5): paint and wheels, applied live; then the radio panel (U7) and the phone (U6).
-7. Night: freeway lamps and wet road reflections at High (after the world pass lands), checked against the
-   library's ULTRA night boards.
-8. Traffic bodies: door seams, mirrors and tinted glass (if the world pass did not), then a second sedan shape.
-9. Performance: Ultra's draw calls and triangles after each pass, logged; Low unchanged.
+Built and pushed on `claude/hypercar`, each proven on frames and logged in `PROJECT_OC_PROGRESS.md`:
+- the reference's home screen and driving HUD (the glass rail, the player card, the four picture mode cards, the
+  guide-sign road plate, the icon rail, the speed block with chips, the round minimap bottom left with a mouse);
+- the colour per car (`<html data-car>`): the starter Rossini GT in the OC sunset orange of decision 13, the
+  hypercar in the reference's ice blue, the Brio aqua, the Corsa yellow, the Vela E violet; the driver's colour on
+  the human elements (`data-driver`); the run card takes the colours on screen;
+- the style guide from the owner's three-mode library (`PROJECT_OC_STYLE_GUIDE.md`, `style-references/`);
+- the hypercar's live driver display (speed, gear, power, revs, tune) and its LEDs tuned to tone-map to ice blue;
+- the cinematic camera, and the menu filmed with it (the car outside, right of the rail, as on the reference);
+- the World Map (U4); the Ultra grade (vignette, edge aberration, grain), Ultra only;
+- a "Look" setting (Futuristic / Realistic). **For the graphics-modes lane (decision 15):** fold it into the three
+  modes rather than keep a separate control: Ultra sets `<html data-look="ultra">`, HD sets `data-look="hd"` (the
+  tokens already exist in `styles.css`), Low a retro token set when RS1 has one; then remove the Look row.
+
+Stopped here because another session's lane owns the work (their branches have the snapshots):
+- the hypercar seat view and seat drop: `claude/wip-c-seat` (a first pass, unjudged) for the `tsu-hyper` lane;
+- the Ultra world pass (road wear, lamp pools, lit windows, houses, chain-link, skids, our-brand billboards, skyline,
+  night env map): `claude/wip-c-world` (unjudged) for the `realism-2` and `gfx` lanes to take from or drop.
+
+Next here, all outside the lanes above: the garage tabs (U5: paint and wheels applied live), the radio panel (U7), the
+in-game phone (U6), the driver clothing lane (running), the suite and the test build at
+https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS. The UI-to-reference lane (`claude/ui-ref`) and this branch touch the
+same files (`App.tsx`, `HUD.tsx`, `styles.css`): building on what is here saves a rebuild.
 
 ### Decisions waiting (the owner's)
 
