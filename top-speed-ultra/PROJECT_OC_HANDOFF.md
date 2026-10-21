@@ -183,6 +183,14 @@ PROJECT_OC_HANDOFF.md at the end.
   test, log it in PROJECT_OC_PROGRESS.md, and list anything the owner must decide.
   ```
 
+- **Freeway guide signs (for the realism-2 lane when it resumes; written 22:40 UTC by this session's Fable audit).**
+  Spec: `docs/specs/SIGNS_SPEC.md` (seven ranked items: a Highway Gothic look-alike laid out in metres; Caltrans panel
+  content with the yellow EXIT ONLY band, shields, two destinations, control cities, LEFT plaques; night
+  retroreflection; a galvanised box-truss structure; a refcounted texture cache and phone resolution; one structure for
+  closely spaced exits; exit numbers from OSM junction:ref). Ready-to-paste prompt: `docs/specs/SIGNS_PROMPT.md`.
+  Census: `tools/signs-census.ts` (416 signs, 122 dropping a destination, 73 of 396 exit pairs under 800 m; reproduced).
+  It needs one Game.ts hook (`roads.setNight(dark)`) from whoever owns Game.ts.
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
