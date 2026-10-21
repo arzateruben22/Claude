@@ -771,6 +771,50 @@ await group('phone', async (use) => {
     await page.waitForSelector('.panel.paused', { timeout: 30000 });
     return `compass ${row.h}°, "${row.clock}"; tucked away ${fmt(s)} s after Resume; a tap brought it back; the chip paused`;
   });
+  // the radial quick menu (U3): Pause held 300 ms opens six choices around the centre; sliding onto one and letting go
+  // picks it (Camera: the view changes and the drive carries on); let go where it opened, it stays open to tap, and its
+  // centre closes it. Tab held opens it too: the arrows move the choice, Escape closes it without pausing. (A tap on
+  // Pause still pauses: the check above.)
+  await check('Quick menu: hold Pause, slide onto Camera and let go; let go in place to tap; Tab held, arrows, Escape', async () => {
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    const cdp = await page.context().newCDPSession(page);                         // a real held touch (touchscreen only taps)
+    const touch = (type, p) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: p ? [{ x: p.x, y: p.y, id: 1 }] : [] });
+    const mid = async (loc) => { const b = await loc.boundingBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2 }; };
+    const menu = page.getByRole('menu', { name: 'Quick menu' });
+    const shut = () => page.waitForFunction(() => !document.querySelector('.quick'), null, { timeout: 60000, polling: 250 });
+    const cam0 = await game(page, () => window.__game.cam);
+    const chip = await mid(page.getByRole('button', { name: 'Pause', exact: true }));
+    await touch('touchStart', chip);
+    await menu.waitFor({ state: 'visible', timeout: 60000 });
+    const items = await menu.getByRole('menuitem').evaluateAll((els) => els.map((e) => e.textContent));
+    expect(items.join(',') === 'Map,Go to,Garage,Radio,Camera,Settings', `the menu has ${items.join(', ')}`);
+    await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity), null, { timeout: 30000, polling: 250 });
+    const to = await mid(menu.getByRole('menuitem', { name: 'Camera' }));
+    for (let i = 1; i <= 3; i++) await touch('touchMove', { x: chip.x + ((to.x - chip.x) * i) / 3, y: chip.y + ((to.y - chip.y) * i) / 3 });
+    await page.waitForFunction(() => document.querySelector('.quick [role="menuitem"].on')?.textContent === 'Camera', null, { timeout: 60000, polling: 250 });
+    await touch('touchEnd');
+    await shut();
+    const after = await game(page, () => ({ cam: window.__game.cam, paused: window.__game.isPaused }));
+    expect(after.cam !== cam0 && !after.paused, `after Camera: ${JSON.stringify({ from: cam0, ...after })}`);
+    await touch('touchStart', chip);
+    await menu.waitFor({ state: 'visible', timeout: 60000 });
+    await touch('touchEnd');
+    await page.waitForTimeout(500);
+    expect(await menu.isVisible(), 'let go where it opened, the menu closed');
+    await page.getByRole('button', { name: 'Close quick menu' }).tap();
+    await shut();
+    await page.keyboard.down('Tab');
+    await page.waitForTimeout(450);
+    await page.keyboard.up('Tab');
+    await menu.waitFor({ state: 'visible', timeout: 60000 });
+    await page.keyboard.press('ArrowRight');
+    const focused = await game(page, () => document.activeElement?.textContent);
+    await page.keyboard.press('Escape');
+    await shut();
+    const paused = await game(page, () => window.__game.isPaused);
+    expect(focused === 'Go to' && !paused, `Tab held, ArrowRight: focus on "${focused}"; after Escape the drive is ${paused ? 'paused' : 'running'}`);
+    return `${items.length} choices; Camera: ${cam0} → ${after.cam}, still driving; let go in place stays open, centre closes; Tab held, ArrowRight → ${focused}, Escape closes`;
+  });
 });
 
 // the local-launch features: start at your own exit, and the run card you can share
