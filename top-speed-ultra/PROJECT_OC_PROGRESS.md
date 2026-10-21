@@ -20,7 +20,9 @@ available, so frame rates on real hardware are **not** measured.
   - Cars & Coffee pays once this week, not again, and again next week;
   - a race job needs both its course and its place.
 - **Not yet checked in the browser:** the events are typechecked and unit-tested only; the build and a launch-group
-  run come next (a full-suite run on the previous build was still going when this was committed).
+  run come next.
+- **Full suite on the build before the events** (25eb3f2: homes, the story, errands, the panels' Done bar): `npm test`,
+  all groups, **66/66** (run 16:40 to 17:15 UTC, slow beside other renders).
 
 ## 2026-10-21 (17:30 UTC): activities: timed errands to real exits
 
