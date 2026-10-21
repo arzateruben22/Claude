@@ -14,13 +14,14 @@ import { STARTS } from '../game/settings';
 // the network's projection (tools/oc-network/common.py): metres east (x) and south (z) of 33.72 N, 117.83 W
 const LAT0 = 33.72, LON0 = -117.83, KX = 111320 * Math.cos((LAT0 * Math.PI) / 180), KZ = 110574;
 const proj = (lat: number, lon: number): [number, number] => [(lon - LON0) * KX, -(lat - LAT0) * KZ];
-// city centres (public coordinates), for orientation only; nothing here claims a boundary
+// city centres (public coordinates), for orientation only; nothing here claims a boundary. The first eight are the
+// largest and show at every zoom; the rest only when there is room
 const CITIES: [string, number, number][] = [
-  ['Anaheim', 33.8366, -117.9143], ['Santa Ana', 33.7455, -117.8677], ['Irvine', 33.6846, -117.8265], ['Orange', 33.7879, -117.8531],
-  ['Huntington Beach', 33.6595, -117.9988], ['Newport Beach', 33.6189, -117.9289], ['Costa Mesa', 33.6411, -117.9187],
-  ['Fullerton', 33.8704, -117.9242], ['Garden Grove', 33.7743, -117.938], ['Tustin', 33.7459, -117.8262], ['Brea', 33.9167, -117.9001],
-  ['Yorba Linda', 33.8886, -117.8131], ['Lake Forest', 33.647, -117.6892], ['Mission Viejo', 33.6, -117.672], ['Laguna Beach', 33.5427, -117.7854],
-  ['Dana Point', 33.4669, -117.6981], ['San Clemente', 33.427, -117.612], ['Westminster', 33.7513, -117.9940], ['Placentia', 33.8722, -117.8703],
+  ['Anaheim', 33.8366, -117.9143], ['Santa Ana', 33.7455, -117.8677], ['Irvine', 33.6846, -117.8265], ['Huntington Beach', 33.6595, -117.9988],
+  ['Garden Grove', 33.7743, -117.938], ['Fullerton', 33.8704, -117.9242], ['Costa Mesa', 33.6411, -117.9187], ['Mission Viejo', 33.6, -117.672],
+  ['Orange', 33.7879, -117.8531], ['Newport Beach', 33.6189, -117.9289], ['Westminster', 33.7513, -117.994], ['Lake Forest', 33.647, -117.6892],
+  ['Tustin', 33.7459, -117.8262], ['Yorba Linda', 33.8886, -117.8131], ['San Clemente', 33.427, -117.612], ['Laguna Beach', 33.5427, -117.7854],
+  ['Brea', 33.9167, -117.9001], ['Placentia', 33.8722, -117.8703], ['Dana Point', 33.4669, -117.6981],
 ];
 // our own places (fictional), at their real spots
 const PLACES = [{ id: 'lot57', name: 'Lot 57', blurb: 'Our own taproom and yard on Orangewood Avenue, Anaheim. On foot: coming later.', x: -5121, z: -8345 }];
@@ -47,8 +48,12 @@ function bounds(paths: Path[]) {
   for (const p of paths) { x0 = Math.min(x0, p.minX); x1 = Math.max(x1, p.maxX); z0 = Math.min(z0, p.minZ); z1 = Math.max(z1, p.maxZ); }
   return { x0, x1, z0, z1 };
 }
-function fit(b: { x0: number; x1: number; z0: number; z1: number }, w: number, h: number, pad = 60): View {
-  return { cx: (b.x0 + b.x1) / 2, cz: (b.z0 + b.z1) / 2, mpp: Math.max((b.x1 - b.x0) / Math.max(1, w - pad * 2), (b.z1 - b.z0) / Math.max(1, h - pad * 2), 2) };
+// the part of the screen the map is seen in: left of the side list on a wide screen, above the sheet on a phone
+function region(w: number, h: number) { return w > 760 ? { x: 0, y: 0, w: w - 360, h } : { x: 0, y: 0, w, h: h * 0.54 }; }
+// a view that fits the bounds into that part of the screen, centred in it
+function fit(b: { x0: number; x1: number; z0: number; z1: number }, w: number, h: number, pad = 48): View {
+  const r = region(w, h), mpp = Math.max((b.x1 - b.x0) / Math.max(1, r.w - pad * 2), (b.z1 - b.z0) / Math.max(1, r.h - pad * 2), 2);
+  return { cx: (b.x0 + b.x1) / 2 - (r.x + r.w / 2 - w / 2) * mpp, cz: (b.z0 + b.z1) / 2 - (r.y + r.h / 2 - h / 2) * mpp, mpp };
 }
 
 export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, onRace }: Props) {
@@ -96,7 +101,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
   const onWheel = (e: React.WheelEvent) => { const r = wrap.current!.getBoundingClientRect(); zoomAt(Math.exp(e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top); };
 
   // pick a freeway or a course: select it and frame it
-  const frame = (paths: Path[]) => { const el = wrap.current; if (el && paths.length) setView(fit(bounds(paths), el.clientWidth * (el.clientWidth > 760 ? 0.7 : 1), el.clientHeight * (el.clientWidth > 760 ? 1 : 0.55), 40)); };
+  const frame = (paths: Path[]) => { const el = wrap.current; if (el && paths.length) setView(fit(bounds(paths), el.clientWidth, el.clientHeight, 40)); };
   const pickFreeway = (label: string) => { setSel(label); setCourse(null); frame(mains.filter((m) => m.label === label)); };
   const pickCourse = (id: string) => { setCourse(id); const c = COURSES.find((x) => x.id === id); if (c) { setSel(c.road); frame(mains.filter((m) => m.label === c.road)); } };
 
@@ -151,23 +156,37 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
       const p = mains.find((m) => m.label === sel), pt = { x: 0, y: 0, z: 0, h: 0 };
       if (p) for (const e of exits) { p.at(e.s, 0, pt); const x = sx(pt.x), y = sy(pt.z); if (x < -20 || y < -20 || x > w + 20 || y > h + 20) continue; g.fillStyle = T.cyan; g.beginPath(); g.arc(x, y, 3.5, 0, Math.PI * 2); g.fill(); if (view.mpp < 7) { g.fillStyle = T.dim; g.font = '500 11px system-ui, sans-serif'; g.fillText(e.text, x + 7, y + 4); } }
     }
-    // cities, quiet
+    // labels never overlap: each takes a box, and a later one that would overlap is left out (shields first, then
+    // the places, then the cities from the largest)
+    const boxes: [number, number, number, number][] = [];
+    const free = (x0: number, y0: number, x1: number, y1: number) => { if (boxes.some(([a, b, c, d]) => x0 < c && x1 > a && y0 < d && y1 > b)) return false; boxes.push([x0, y0, x1, y1]); return true; };
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = `500 ${view.mpp > 60 ? 10 : 12}px var(--f-mono, monospace)`;
-    for (const [name, lat, lon] of CITIES) { const [x, z] = proj(lat, lon), X = sx(x), Y = sy(z); if (X < 0 || Y < 0 || X > w || Y > h) continue; g.fillStyle = hexA(T.dim, 0.7); g.fillText(name.toUpperCase().split('').join(' '), X, Y); }
-    // our places: a ring and the name
-    for (const pl of PLACES) { const X = sx(pl.x), Y = sy(pl.z); if (X < 0 || Y < 0 || X > w || Y > h) continue; g.strokeStyle = T.cyan; g.lineWidth = 2; g.beginPath(); g.arc(X, Y, 7, 0, Math.PI * 2); g.stroke(); g.fillStyle = T.ink; g.font = '600 12px system-ui, sans-serif'; g.textAlign = 'left'; g.fillText(pl.name, X + 11, Y); g.textAlign = 'center'; }
     // route shields: one per route, at the point of it nearest the middle of the view
     const done = new Set<string>();
     for (const p of mains) {
       const key = p.route ?? p.label; if (done.has(key) || !vis(p)) continue;
       let bi = -1, bd = Infinity; for (let i = 0; i < p.n; i += 20) { const d = (p.xs[i] - view.cx) ** 2 + (p.zs[i] - view.cz) ** 2; if (d < bd) { bd = d; bi = i; } }
-      if (bi < 0) continue; const X = sx(p.xs[bi]), Y = sy(p.zs[bi]); if (X < 16 || Y < 12 || X > w - 16 || Y > h - 12) continue;
+      if (bi < 0) continue; const X = sx(p.xs[bi]), Y = sy(p.zs[bi]); if (X < 16 || Y < 12 || X > w - 16 || Y > h - 12 || !free(X - 16, Y - 11, X + 16, Y + 11)) continue;
       done.add(key); const inter = p.label.startsWith('I-'), no = routeNo(p.label);
       g.fillStyle = inter ? '#1d4f9c' : '#f4f4ee'; g.beginPath(); g.roundRect(X - 14, Y - 9, 28, 18, inter ? [4, 4, 9, 9] : [9, 9, 4, 4]); g.fill();
       if (inter) { g.fillStyle = '#c8102e'; g.fillRect(X - 12, Y - 8, 24, 4); }
       g.fillStyle = inter ? '#ffffff' : '#111111'; g.font = '700 11px system-ui, sans-serif'; g.fillText(no, X, Y + 1.5);
     }
+    // our places: a ring, and the name where it fits
+    for (const pl of PLACES) {
+      const X = sx(pl.x), Y = sy(pl.z); if (X < 0 || Y < 0 || X > w || Y > h) continue;
+      g.strokeStyle = T.cyan; g.lineWidth = 2; g.beginPath(); g.arc(X, Y, 7, 0, Math.PI * 2); g.stroke();
+      g.font = '600 12px system-ui, sans-serif'; const tw = g.measureText(pl.name).width;
+      if (free(X + 9, Y - 8, X + 13 + tw, Y + 8)) { g.fillStyle = T.ink; g.textAlign = 'left'; g.fillText(pl.name, X + 11, Y); g.textAlign = 'center'; }
+    }
+    // cities, quiet: the eight largest at any zoom, the rest when zoomed in, none over another label
+    g.font = `500 ${view.mpp > 60 ? 10 : 12}px var(--f-mono, monospace)`;
+    CITIES.forEach(([name, lat, lon], i) => {
+      if (i >= 8 && view.mpp > 45) return;
+      const [x, z] = proj(lat, lon), X = sx(x), Y = sy(z), txt = name.toUpperCase().split('').join(' '), tw = g.measureText(txt).width;
+      if (X < tw / 2 || Y < 8 || X > w - tw / 2 || Y > h - 8 || !free(X - tw / 2 - 3, Y - 8, X + tw / 2 + 3, Y + 8)) return;
+      g.fillStyle = hexA(T.dim, 0.75); g.fillText(txt, X, Y);
+    });
     // you: an arrow along your heading
     if (driving) {
       const X = sx(game.phys.x), Y = sy(game.phys.z), a = Math.atan2(Math.cos(game.phys.psi), Math.sin(game.phys.psi));
