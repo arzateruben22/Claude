@@ -651,21 +651,21 @@ export const SCENES = {
     css: `
 .r10 { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.4vmin; }
 .row10 { display: flex; gap: 1.6vmin; align-items: stretch; }
-.tile10 { flex: 1; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.2vmin; opacity: 0; }
-.tile10 .n { font-size: 2vmin; color: #f4c9d6; font-weight: 700; } .tile10 b { display: block; font-size: 3vmin; font-weight: 650; margin-top: .4vmin; line-height: 1.15; } .tile10 span { display: block; font-size: 2.1vmin; color: #8e8e93; margin-top: .6vmin; }
+.tile10 { flex: 1; min-height: 17vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 2.8vmin; opacity: 0; display: flex; flex-direction: column; justify-content: flex-end; }
+.tile10 .n { font-size: 2.2vmin; color: #f4c9d6; font-weight: 700; } .tile10 b { display: block; font-size: 3.8vmin; font-weight: 650; margin-top: .4vmin; line-height: 1.1; letter-spacing: -.01em; } .tile10 span { display: block; font-size: 2.4vmin; color: #8e8e93; margin-top: .8vmin; }
 .pm .tile10 .n { color: #e2b08c; }
 .badge10 { position: absolute; top: -1.6vmin; right: 1.4vmin; padding: .7vmin 1.4vmin; border-radius: 999px; background: #e2b08c; color: #1a1210; font-size: 1.9vmin; font-weight: 700; white-space: nowrap; opacity: 0; }
 .tile10 { position: relative; }
 .lane { display: grid; grid-template-columns: 30vmin 1fr; align-items: center; gap: 2vmin; opacity: 0; }
 .lane .who { font-size: 2.6vmin; font-weight: 650; line-height: 1.2; } .lane .who i { display: block; font-style: normal; font-size: 2.1vmin; color: #8e8e93; font-weight: 500; }
-.lane .bar { position: relative; height: 5.2vmin; border-radius: 999px; background: rgba(255,255,255,.07); overflow: hidden; }
+.lane .bar { position: relative; height: 6vmin; border-radius: 999px; background: rgba(255,255,255,.07); overflow: hidden; }
 .lane .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
 .lane.strong .fill { background: #6e6e73; }
 .lane .tick { position: absolute; top: 50%; width: 1vmin; height: 1vmin; margin: -.5vmin 0 0 -.5vmin; border-radius: 50%; background: #fff; opacity: 0; }
 .lane .flare { position: absolute; right: 2vmin; top: 50%; transform: translateY(-50%); font-size: 2.1vmin; color: #ff7a6b; font-weight: 600; opacity: 0; }
 .weeks { display: flex; justify-content: space-between; font-size: 2vmin; color: #6e6e73; padding: 0 0 0 32vmin; opacity: 0; }
 .verdict { align-self: flex-start; padding: 1.2vmin 2vmin; border-radius: 999px; background: #f4c9d6; color: #1a1210; font-size: 2.4vmin; font-weight: 700; opacity: 0; }
-@media (orientation: portrait) { .row10 { flex-direction: column; } .lane { grid-template-columns: 1fr; gap: 1vmin; } .weeks { padding-left: 0; } }`,
+@media (orientation: portrait) { .row10 { flex-direction: column; } .tile10 { min-height: 11vmin; padding: 2.2vmin 2.6vmin; } .lane { grid-template-columns: 1fr; gap: 1vmin; } .weeks { padding-left: 0; } }`,
     html: `
 <div class="r10">
   <div class="row10 am" id="am"><div class="tile10"><span class="n">1</span><b>Vitamin C</b><span>on clean skin</span></div><div class="tile10"><span class="n">2</span><b>Moisturizer</b><span>then the neck and chest</span></div><div class="tile10"><span class="n">3</span><b>Sunscreen</b><span>SPF 30 or more, last</span><em class="badge10" id="b-spf">does most of the work</em></div></div>
@@ -687,6 +687,7 @@ export const SCENES = {
       if (i === 0) enter($("#b-spf"), lt, 3.2, { y: 0, s: 0.6, d: 0.5 }); else set($("#b-spf"), { o: 0 });
       if (i === 1) { enter($("#b-slow"), lt, 2.8, { y: 0, s: 0.6, d: 0.5 }); enter($("#b-neck"), lt, 4.4, { y: 0, s: 0.6, d: 0.5 }); } else { set($("#b-slow"), { o: 0 }); set($("#b-neck"), { o: 0 }); }
       $("#am").style.display = i === 2 && lt > 0.7 ? "none" : "flex"; $("#pm").style.display = i === 2 && lt > 0.7 ? "none" : "flex";
+      [$("#lane-g"), $("#lane-s"), $("#weeks"), $("#verdict")].forEach((el) => { el.style.display = i === 2 ? "" : "none"; });   // hidden ones take no room
       if (i === 2) {
         enter($("#lane-g"), lt, 0.8, { y: 12 }); enter($("#lane-s"), lt, 1.1, { y: 12 }); enter($("#weeks"), lt, 1.3, { y: 6 });
         const p = E.lin(seg(lt, 1.6, 7.6));                             // eight weeks pass

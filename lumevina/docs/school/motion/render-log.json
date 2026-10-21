@@ -7479,7 +7479,7 @@
    "w": 1280,
    "h": 720,
    "bytes": 0,
-   "hash": "f4b02e1c4adbcf0145a20815cc63ab4107cfd39c",
+   "hash": "140463ae8c79d8db9479f00ccb8d466f5e3f06c0",
    "samples": [
     [
      0,
@@ -7487,39 +7487,39 @@
     ],
     [
      15,
-     "5b7116e4189789187bbd83cdb60c893ed6c80248"
+     "a1aef43d47f38dc175b2316394841ddef042bdb3"
     ],
     [
      30,
-     "5a532b72c92117dee4154911b4ac5cd66b8d7c06"
+     "c45f130e9b1f7c29197bf32d8abc1555c19fe4df"
     ],
     [
      45,
-     "73fa3f7ec1e8ef75eefd9b75cf5ddedc0f32e360"
+     "c366292e27a53b01d79b4b5772e53d8177bc6083"
     ],
     [
      60,
-     "85f1c3a37fa7cd44704e4f3b5a37b357fdc3bb7b"
+     "8d532949cc745b42bb1e057c17280bcce4b84051"
     ],
     [
      75,
-     "a8ab56d8353f2f4867706de8c5e5803579ab2fec"
+     "74c485e8749e97edae8a7ad8fceff6f927e88df5"
     ],
     [
      90,
-     "4d8d2e30a09a93d0ea724354692119cceff31cd3"
+     "dd19276d637d39dda580463b1f143e7caeac73dd"
     ],
     [
      105,
-     "acd2c4e893475e7638f8d5b8a52c7280c19c4e6f"
+     "bb83ed8157e364136b18444f6613996ca170aa42"
     ],
     [
      120,
-     "d26a1e07162fa55500b9ab3e69ee7b0eac4641b2"
+     "af8b691eff9be50277ed4ea57d03fe91575bd400"
     ]
    ],
    "warnings": [],
-   "renderSec": 17.6,
+   "renderSec": 17.1,
    "renderedAt": "2026-10-21",
    "quick": true
   }
