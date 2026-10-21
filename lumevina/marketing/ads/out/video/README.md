@@ -32,7 +32,9 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 26 | `13-2-9x16.mp4` | After a wax: bumps, ingrowns, how often | Red bumps after a wax: here's what's normal and what isn't. | 21 s |
 | 27 | `4-1-9x16.mp4` | AHAs, BHAs and PHAs | Three acid families, three different jobs. | 22 s |
 | 28 | `12-3-9x16.mp4` | After a treatment: what's normal, what isn't | Pink and tight is the treatment working. Spreading and hot is not. | 22 s |
-| 29 | *rendering* | Build your first routine | Three steps, twice a day. Everything else, one at a time. |  |
-| 30 | *rendering* | How acne really forms | Acne is four things going wrong at once. |  |
+| 29 | `3-2-9x16.mp4` | Build your first routine | Three steps, twice a day. Everything else, one at a time. | 22 s |
+| 30 | `8-1-9x16.mp4` | How acne really forms | Acne is four things going wrong at once. | 22 s |
+| 31 | *rendering* | The supporting cast | Four quiet ingredients that make everything else work better. |  |
+| 32 | *rendering* | Brighteners that work | Two brighteners beat one. Sunscreen beats both. |  |
 
 Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
