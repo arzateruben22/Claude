@@ -4,6 +4,51 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
+
+The owner: "share it with the desks server and do anything you can at maximum capacity", then "keep rendering and
+improving ... until I say stop". Branch `claude/live-server` (pushed). The push onto `claude/always-on` was refused by
+the session's permission check (a production deploy), so the desks' machine doesn't have it until the owner allows
+or merges it.
+
+- **On the desks' machine.** `server/setup.sh` now runs `server/live-install.sh` (never fatal to the desks).
+  `server/live.sh` makes it public through Tailscale Funnel (free) or a domain with Caddy, and checks the API, the
+  page and the socket through the public address. Run here end to end with a systemd stand-in. The installer built the
+  game, created `oclive`, copied the server and the page to /opt/oc-live (root-owned, data/ 0700 oclive), and wrote
+  /etc/oc-live.env (0600). The service ran as oclive with its database 0600. `live-cap.sh` (30, then 25; refuses
+  `5/e` and 9999), `live-ban.sh` (refuses a name with quotes), `live-env.sh` (stores `a#b&c\d` exactly) and
+  `live-status.sh` (with the ladder's verdict) all behaved. The build peaks near 530 MB (vite 528 MB, tsc 491 MB, the
+  single-file step 21 MB), so the installer adds a 1 GB swap file under 2 GB of memory. The page is served at 3.7 MB, or
+  1.9 MB gzipped.
+- **New for players.** Name plates over ghost cars, the 2 s roster (map dots, the who's-on list with each driver's
+  freeway), Drive with, the horn, change password and delete account, the pause screen's live line, Invite a friend,
+  the DJ every three minutes, and toasts long enough to read.
+- **New for the owner.** The nearest-32 rule cut outbound at 250 drivers from 550 to 190 MB a minute. Restarts now
+  reconnect (code 4001). The name filter (slurs, profanity with number-for-letter spellings, staff names; "Scunthorpe"
+  is the known miss) and bans. The measured ladder: hourly records, `/api/ladder`, and the verdict in `live-status.sh`.
+- **The security review** (an independent agent, read-only, probes in the scratchpad) found 15 issues, 8 of them
+  reproduced. All are fixed, with 9 tests in `live/test/hardening.test.mjs` that run behind a simulated proxy:
+  - 4 malformed request targets each crashed the process; now each gets a 400 and the server stays up.
+  - `/health` took 868 ms during 20 parallel log-ins; now under 150 ms, with scrypt on the thread pool, at most 4 at once.
+  - Ten wrong passwords from elsewhere locked a driver out; now failures count per name and address.
+  - The first X-Forwarded-For entry was used, and a missing header exempted the client; now the last entry is used,
+    a missing header is refused, and IPv6 counts by /64.
+  - Idle sockets could hold the lobby; now a driver idle 60 s gives the spot to someone waiting (4002), with at most
+    3 sockets per address and 200 sockets still saying hello.
+  - Admin access came through the proxy; now it is local-only, with a constant-time token check.
+  - The line had no limit; now it holds 500.
+  - Log-out left the socket open; now log-out and a password change end the account's sockets.
+  - A symlink could reach outside the page folder; now it isn't served.
+  - On the machine: a dedicated user, a hardened unit, the database 0600, the token off the command line, and
+    script arguments checked.
+  Found on the way: the standalone `deploy/setup.sh` didn't parse (an apostrophe inside `${VAR:?…}`) and would have
+  copied the server without the modules it imports. Both are fixed.
+- **Tests.** `cd live && npm test`: 40 of 40, four runs in a row. The game typecheck is clean.
+- **Browser** (the `live` group, before the security fixes): 8 of 9. Plates, the who's-on list ("Driving now · 2 of 2
+  live_ui you live_b I-405 North Drive with"), Drive with (A 79.96 m behind B on I-405 North), realistic mode and the
+  billboards passed. The waiting-line check timed out loading C's page while a review agent and the server tests were
+  using the CPU; the rerun is below.
+
 ## 2026-10-21: the live server (alpha), the realistic mode, the talk bank and billboards
 
 Decisions 16 and 17. Branch `claude/live-server`. Everything below was run in this sandbox; nothing is deployed, so no
