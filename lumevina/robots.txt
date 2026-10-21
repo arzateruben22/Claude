@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /dist/
+Disallow: /server/
+Disallow: /knowledge/
+Disallow: /marketing/
+Disallow: /scripts/
