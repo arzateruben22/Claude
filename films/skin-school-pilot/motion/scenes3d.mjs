@@ -23,7 +23,7 @@ export const SCENES = {
 .lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
 .lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
 .dayc { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
-.dayc b { font-size: 8vmin; font-weight: 700; letter-spacing: -.03em; } .dayc span { font-size: 2.6vmin; color: #a1a1a6; }
+.dayc b { font-size: 8vmin; font-weight: 700; letter-spacing: -.03em; text-shadow: 0 .4vmin 2.4vmin rgba(0,0,0,.75); } .dayc span { font-size: 2.6vmin; color: #a1a1a6; }
 @media (orientation: portrait) { .dayc { bottom: 1vmin; } }`,
     html: `
 <section class="shot"><span class="lab3" id="l-hair" style="left:52%;top:4%"><i style="background:#5a3a2e"></i>hair</span><span class="lab3" id="l-gland" style="left:62%;top:46%"><i style="background:#e8c96a"></i>oil gland</span><span class="lab3" id="l-oil" style="left:30%;top:22%"><i style="background:#f1d57a"></i>oil, on its way out</span></section>
@@ -139,15 +139,15 @@ const CAM = [
   { t: 18.9, pos: [3.6, 19.6, 17.6], look: [0.0, 16.4, 3.5], fov: 34, ease: "p3" },
   { t: 21.5, pos: [4.2, 18.8, 18.4], look: [0.2, 15.8, 3.5], fov: 34, ease: "sine" },
   { t: 22.8, pos: [4.0, 19.2, 18.0], look: [0.4, 16.0, 3.6], fov: 34, ease: "sine" },
-  { t: 24.4, pos: [10.4, 14.6, 29.0], look: [0.3, 10.4, 1.6], fov: 32, ease: "p3" },
-  { t: 26.0, pos: [9.8, 14.2, 27.8], look: [0.3, 10.4, 1.6], fov: 32, ease: "sine" }
+  { t: 24.4, pos: [10.4, 14.6, 29.0], look: [0.3, 10.4, 1.6], pl: [0.3, 7.4, 1.6], fov: 32, ease: "p3" },
+  { t: 26.0, pos: [9.8, 14.2, 27.8], look: [0.3, 10.4, 1.6], pl: [0.3, 7.4, 1.6], fov: 32, ease: "sine" }
 ];
 const vA = new THREE.Vector3(), vB = new THREE.Vector3(), lk = new THREE.Vector3();
 const place = (t) => {
   let i = CAM.findIndex((k) => k.t > t); if (i < 0) i = CAM.length - 1; if (i < 1) i = 1;
   const a = CAM[i - 1], b = CAM[i], e = EZ[b.ease || "p2"](Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))));
   const sc = portrait ? 1.32 : 1;
-  const L = lk.fromArray(a.look).lerp(vB.fromArray(b.look), e);
+  const L = lk.fromArray(portrait && a.pl ? a.pl : a.look).lerp(vB.fromArray(portrait && b.pl ? b.pl : b.look), e);   // pl: a portrait-only look target
   const P = vA.fromArray(a.pos).lerp(vB.fromArray(b.pos), e).sub(L).multiplyScalar(sc).add(L);
   // a hand on the camera: tiny, slow, deterministic
   P.x += Math.sin(t * 0.9) * 0.05 + Math.sin(t * 2.3 + 1) * 0.02; P.y += Math.sin(t * 1.1 + 2) * 0.04;
@@ -180,13 +180,14 @@ window.CINEMA_FOCUS = (t) => {
 const ANCHOR = { "l-hair": [0.4, 16.6, PZ], "l-gland": [3, 6.6, PZ + 0.5], "l-oil": [-0.6, 12, PZ + 0.5], "l-plug": [0.8, 11.2, PZ + 0.5], "l-black": [-0.6, 14.4, PZ + 0.5], "l-bact": [0.9, 10.6, PZ + 0.5], "l-red": [-2.8, 14.2, PZ + 0.5], "l-mand": [-1.2, 17.5, PZ], "l-bp": [1.4, 17.3, PZ] };
 const OFF = { "l-hair": [1, -1], "l-gland": [1, 0], "l-oil": [-1, 0], "l-plug": [1, 0], "l-black": [-1, -1], "l-bact": [1, 0], "l-red": [-1, -1], "l-mand": [-1, -1], "l-bp": [1, -1] };
 const v3 = new THREE.Vector3();
-const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; const pw = el.offsetParent ? el.offsetParent.clientWidth : W; el.style.left = Math.min(pw - w - 6, Math.max(6, x + (ox > 0 ? 14 : -w - 14))) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };   // directed: labels stay inside the frame
 window.seek = function (t) {
   const st = M.stage(t), { i, lt } = st;
   place(t); pin();
   // healthy oil, until the clog
   const oilOn = i === 0 ? 1 : i === 1 ? 1 - seg(lt, 0, 1.5) : 0;
-  oils.forEach((o, k) => { const ph = (t * 0.32 + k * 0.2) % 1; o.visible = oilOn > 0; o.position.set(0 + Math.sin(ph * 9 + k) * 0.25, 7 + ph * 8.5, PZ + Math.cos(ph * 7 + k) * 0.2); o.scale.setScalar((0.7 + 0.5 * ph) * oilOn); });
+  // directed: each drop grows in at the gland and shrinks away at the top, so the loop's wrap is never seen (or blurred)
+  oils.forEach((o, k) => { const ph = (t * 0.32 + k * 0.2) % 1, life = Math.min(1, ph / 0.08, (1 - ph) / 0.1); const sc = (0.7 + 0.5 * ph) * oilOn * life * life * (3 - 2 * life); o.visible = sc > 0.02; o.position.set(0 + Math.sin(ph * 9 + k) * 0.25, 7 + ph * 8.5, PZ + Math.cos(ph * 7 + k) * 0.2); o.scale.setScalar(Math.max(0.001, sc)); });
   // the plug fills from shot 1, dissolves in shot 3
   const fillP = i === 0 ? 0 : i >= 2 ? 1 : seg(lt, 0.3, 4.8);
   const clearP = i === 3 ? seg(lt, 1.4, 4.6) : 0;

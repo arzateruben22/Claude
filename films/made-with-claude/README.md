@@ -16,17 +16,25 @@ node films/made-with-claude/scripts/render.cjs                         # both fo
 node films/made-with-claude/scripts/render.cjs --contact               # pre-render contact sheets
 node films/made-with-claude/scripts/render.cjs --range 4-5.5 --format 9x16   # re-render a section
 node films/made-with-claude/scripts/render.cjs --scale 0.5 --q preview # fast draft
-node films/made-with-claude/scripts/probe.cjs && python3 -I films/made-with-claude/scripts/qa.py pass1   # measured review
+node films/made-with-claude/scripts/render.cjs --frames 60,75,90 --resume   # any frames; --resume keeps what's on disk
+node films/made-with-claude/scripts/probe.cjs && python3 -I films/made-with-claude/scripts/qa.py pass3   # measured review
 node films/made-with-claude/scripts/framing.cjs 9x16                   # where the mascot sits, every frame
+python3 -I films/made-with-claude/scripts/probe_range.py 9x16 4 5 0.1 glow,title   # copy and framing over a window
+node films/made-with-claude/scripts/camsolve.cjs 9x16 keys.json glow,title          # try camera keys without rendering
+node films/made-with-claude/scripts/signatures.cjs all > sigs.json      # per-frame scene hashes
+node films/made-with-claude/scripts/signatures.cjs --diff old.json new.json     # → the frames an edit touched
 ```
+
+`out/` holds the delivery files: H.264 at CRF 19 with grain tuning, AAC 256k, −14 LUFS. The
+near-lossless masters (CRF 15) go to `build/`, which isn't committed.
 
 You need Node 18+ with Playwright and its bundled Chromium, plus ffmpeg and Python 3 with
 numpy and Pillow. There's no build step and no network access: three.js r170 (MIT) and the
 Inter and Montserrat fonts (OFL) are vendored in `vendor/`.
 
-A full final-quality render takes about 50 minutes for both formats on a 4-core CPU with
-SwiftShader (software WebGL). Drafts at `--scale 0.5 --q preview` take a few seconds per
-frame.
+A full final-quality render takes 4–5 hours for both formats on a 4-core CPU with SwiftShader
+(software WebGL). Fast moves get up to 64 motion-blur sub-frames, and the shatter and the streak
+get at least 40 and 24. Drafts at `--scale 0.5 --q preview` take a few seconds per frame.
 
 To preview and scrub, run `npx http-server films/made-with-claude` and open
 `/src/index.html?format=16x9&t=4.4` (`?scale=0.5` is faster).
@@ -67,6 +75,17 @@ ffmpeg encodes it and numpy synthesizes the sound.
 | `src/audio.py` | Score and foley synthesized from the timeline (seeded) |
 | `scripts/render.cjs` | Capture → audio → loudness → H.264 → posters → contact sheets |
 | `scripts/probe.cjs` · `qa.py` · `framing.cjs` | Measured review tooling |
-| `scripts/camkeys.py` | Edit camera keys from the command line |
+| `scripts/camkeys.py` · `camsolve.cjs` | Edit camera keys from the command line · sweep candidate keys against the probes |
+| `scripts/signatures.cjs` | Per-frame scene hashes: which frames an edit touches |
 | `review/` | Scorecards and the human-review note |
 | `out/` | Final videos, posters and contact sheets |
+
+## Passes
+
+1. **Pass 1**: the first full render, then a measured QA and a five-reviewer panel (hook,
+   readability, continuity, motion; the sound review failed to run).
+2. **Pass 2**: the three worst defects: double-exposed landings, the "glow" beat, and stepped
+   motion blur. Rendered for the breakout and first landings (`review/pass1-vs-pass2-sections.jpg`).
+   It was then superseded, because pass 3 touches every frame.
+3. **Pass 3**: the rest of the panel's list, the verifiers' framing notes, the stacked 9:16 end
+   card, and a calmer mix. Full render; scorecard in `review/scorecard.md`.
