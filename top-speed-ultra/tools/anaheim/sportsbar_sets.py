@@ -10,8 +10,8 @@ outside, overhead), so nothing in them can appear or vanish at a door:
   (6.4, 16.5), where -0.932 u + 0.362 v >= 0, or beyond the line of the arm's south wall, (0, 0) to (75.2, 0.9), where
   v <= 0.012 u. Any ray from inside the unit through its glazing ends in them.
 - the far set, the rest of the slice, drawn simple at Low and HD (the cheap set) and in full at Ultra. Its split into
-  the part in the glazed sectors ("view") and the part wholly outside them ("behind") is printed for the plan's
-  fallback (hide "behind" from inside).
+  the part in the glazed sectors ("view") and the part wholly outside them ("behind") is printed for reference only:
+  the plan never hides "behind", because the courtyard past the north-east corner is in view from the front door.
 Building 61 (the venue's host, in the venue's own row) and the pieces in site.dropSegs are in neither set. The land
 cover (two 'urban' pieces over the whole box) isn't drawn, as at Lot 57.
 
@@ -23,6 +23,14 @@ sidewalks, no markings or crosswalk paint, fences without posts, and of the poin
 signals and lamps). The simple set is drawn untextured in vertex colour, so its batches merge into four: opaque, the
 lamp heads (glow), the chain-link and the wires. Also places our own street trees by the plan's rule and checks
 them. S1 measures the real figures with breakdown().
+
+Bridges, ramps and tunnels, the plan's drawing rule for engine/streets.ts (ours; Lot 57's data.ts has none, L14): every
+drivable piece lies on the ground except over its br spans, where it's a deck (top TOP m up, a 1 m slab, piers every
+28 m), and its tn spans, which aren't drawn. Between ground and deck it ramps at GRADE along the drivable network: a
+point's height is TOP * max(0, 1 - D / (TOP / GRADE)), D its distance along the network to the nearest br span, so
+every piece meeting at a connector has the same height there. The script prints the pieces a ramp raises without a br
+span of their own, and every crossing without a junction that isn't 5.5 m apart in height (a 1 m deck over 4.5 m of
+headroom) or in a tunnel span. The cost model adds the decks' and the ramps' sides (4 per edge) and the piers (32 each).
 """
 import json, math, os, sys
 from collections import Counter, defaultdict
@@ -62,6 +70,48 @@ PT = {'power:power_pole': 36, 'power:power_tower': 56, 'transportation:street_la
 PT_SIMPLE = {'power:power_pole', 'power:power_tower', 'transportation:street_lamp', 'transportation:traffic_signals'}
 MERGE = {'lamp-heads': 'far-glow', 'chain': 'chain', 'wires': 'wires'}   # simple mode: everything else is 'far'
 
+# ------------------------------------------------------------------ bridges, ramps and tunnels (the plan's rule)
+import heapq, itertools
+TOP, GRADE, CLEAR = 7.6, 0.05, 5.5      # the deck's top (m), the ramps' grade and the clearance asked of a crossing: ours
+RAMP = TOP / GRADE                      # 152 m from ground to deck
+def spans(r, key): v = r.get(key); return v if isinstance(v, list) else [[0, 1]] if v == 1 else []
+net, src, info = defaultdict(list), [], {}
+for i, s in enumerate(d['seg']):
+    if i in DROP_SEGS or seg_cls(s) not in DRIVE: continue
+    p = dec(s['p']); c = [0.0]
+    for a, b in zip(p, p[1:]): c.append(c[-1] + math.dist(a, b))
+    L, k, br = c[-1], s.get('k', []), spans(s, 'br')
+    marks = sorted([(c[k[j]], ('c', k[j + 1])) for j in range(0, len(k), 2)] + [(0.0, ('v', i, 0)), (L, ('v', i, 1))]
+                   + [(a * L, ('s', i, n)) for n, (a, b) in enumerate(br)] + [(b * L, ('e', i, n)) for n, (a, b) in enumerate(br)],
+                   key=lambda t: t[0])
+    for (sa, na), (sb, nb) in zip(marks, marks[1:]):
+        w = 0.0 if any(a * L - 1e-6 <= sa and sb <= b * L + 1e-6 for a, b in br) else sb - sa
+        net[na].append((nb, w)); net[nb].append((na, w))
+    src += [(e, i, n) for n in range(len(br)) for e in ('s', 'e')]
+    info[i] = (p, L, marks, br)
+DIST, tie = {n: 0.0 for n in src}, itertools.count()
+pq = [(0.0, next(tie), n) for n in src]
+while pq:
+    dd, _, n = heapq.heappop(pq)
+    if dd > DIST.get(n, 1e18): continue
+    for m, w in net[n]:
+        if dd + w < DIST.get(m, 1e18): DIST[m] = dd + w; heapq.heappush(pq, (dd + w, next(tie), m))
+def height(i, t):                       # the drawn height at t metres along piece i
+    p, L, marks, br = info[i]
+    if any(a * L <= t <= b * L for a, b in br): return TOP
+    for (sa, na), (sb, nb) in zip(marks, marks[1:]):
+        if sa - 1e-6 <= t <= sb + 1e-6:
+            return TOP * max(0.0, 1 - min(DIST.get(na, 1e18) + t - sa, DIST.get(nb, 1e18) + sb - t) / RAMP)
+    return 0.0
+for i, (p, L, marks, br) in info.items():
+    up = 0.0                            # the length a ramp raises, off the br spans: it gets embankment sides
+    for (sa, na), (sb, nb) in zip(marks, marks[1:]):
+        if sb - sa < 1e-9 or any(a * L - 1e-6 <= sa and sb <= b * L + 1e-6 for a, b in br): continue
+        r1 = min(sb, sa + max(0.0, RAMP - DIST.get(na, 1e18))); r2 = max(sa, sb - max(0.0, RAMP - DIST.get(nb, 1e18)))
+        up += (sb - sa) if r1 >= r2 else (r1 - sa) + (sb - r2)
+    d['seg'][i]['_ramp'], d['seg'][i]['_tn'] = up / L if L else 0.0, frac(d['seg'][i].get('tn'))
+
+PAINT = Counter()                      # the road markings' and crosswalk paint's own triangles, by mode
 def cost(layer, rec, pts, mode):
     """(triangles, batch names) for one feature at one detail level: 'near', 'full' or 'simple'."""
     E, L = len(pts) - 1, length(pts)
@@ -70,14 +120,20 @@ def cost(layer, rec, pts, mode):
         if cls in ('steps', 'unknown'): return 0, set()
         if cls.startswith('rail'): return (2 if mode == 'simple' else 6) * E, {'rail'}
         if cls in DRIVE:
-            t, b = 2 * E, {'roads'}
+            tn, up = rec.get('_tn', 0.0), rec.get('_ramp', 0.0)                  # a tunnel span isn't drawn
+            t, b = 2 * E * (1 - tn), {'roads'}
             br = frac(rec.get('br'))
             if br: t += br * (4 * E + 32 * L / 28); b |= {'walk', 'steel'}          # deck sides, piers every 28 m
+            if up: t += up * 4 * E; b.add('walk')                                  # the ramps' embankment sides
+            m = 0.0
             if mode == 'near' and cls in ('motorway', 'primary', 'secondary'):
-                t += (4 * E + 2 * L / 12) if rec.get('ow') else (8 * E + 8 * L / 12); b.add('markings')
-            elif mode == 'near' and cls in ('tertiary', 'residential', 'unclassified'): t += 4 * E; b.add('markings')
-            return round(t), b
-        if sub == 'crosswalk': return (0, set()) if mode == 'simple' else (round(2 * L / 1.2), {'markings'})
+                m = ((4 * E + 2 * L / 12) if rec.get('ow') else (8 * E + 8 * L / 12)) * (1 - tn); b.add('markings')
+            elif mode == 'near' and cls in ('tertiary', 'residential', 'unclassified'): m = 4 * E * (1 - tn); b.add('markings')
+            PAINT[mode] += round(t + m) - round(t)
+            return round(t + m), b
+        if sub == 'crosswalk':
+            if mode == 'simple': return 0, set()
+            PAINT[mode] += round(2 * L / 1.2); return round(2 * L / 1.2), {'markings'}
         if sub == 'sidewalk' and mode != 'simple': return 6 * E, {'walk'}
         return 2 * E, {'walk'}
     if layer == 'buildings':
@@ -133,7 +189,7 @@ for layer, i, lab, f, geom, rec in F:
         t, b = cost(layer, rec, f, mode); tri[mode] += t; bat[mode] |= b
         if w == 'behind': tri['behind ' + mode] += t
         if mode == 'simple': bat['merged'] |= {MERGE.get(x, 'far') for x in b}
-        if w == 'near': by['markings' if 'markings' in b else 'props' if layer == 'infrastructure points' else 'rest'] += t
+        if w == 'near': by['props' if layer == 'infrastructure points' else 'rest'] += t
         elif mode == 'simple' and layer == 'infrastructure points': by['far props'] += t
 
 print(f'{SLICE}\nNear set: any part in the glazed sectors within {R:.0f} m of frame {CENTRE}. '
@@ -169,24 +225,50 @@ print(f"  The light streams run on {streams}: {sum(seg[i][1].length for i in str
       f"{max(math.dist(q, CENTRE) for i in streams for q in seg[i][0]):.0f} m.")
 
 print(f"\nEstimated triangles (cost model, not measured): near {tri['near']:,} in {len(bat['near'])} batches "
-      f"(markings {by['markings']:,}, point props {by['props']:,}, the rest {by['rest']:,}); "
+      f"(of it: road markings and crosswalk paint {PAINT['near']:,}, point props {by['props']:,}); "
       f"far {tri['full']:,} in full ({len(bat['full'])} batches), {tri['simple']:,} simple "
       f"({len(bat['simple'])} batches by material, {len(bat['merged'])} merged: {', '.join(sorted(bat['merged']))}; "
       f"its poles, towers, signals and lamps {by['far props']:,}). Of the far set, wholly behind the glazed sectors: "
       f"{tri['behind simple']:,} simple, {tri['behind full']:,} full.")
 print(f"Near batches: {', '.join(sorted(bat['near']))}.")
 
+raised = [i for i, (p, L, marks, br) in info.items() if not br and max(height(i, t) for t, _ in marks) > 0.01]
+conn = {i: {n[1] for _, n in marks if n[0] == 'c'} for i, (p, L, marks, br) in info.items()}
+lines = {i: LineString(info[i][0]) for i in info}; tight, tunnelled = [], 0
+for a, b in itertools.combinations(sorted(info), 2):
+    if conn[a] & conn[b] or not lines[a].intersects(lines[b]): continue
+    x = lines[a].intersection(lines[b])
+    for q in [g for g in ([x] if x.geom_type == 'Point' else getattr(x, 'geoms', [])) if g.geom_type == 'Point']:
+        ta, tb = lines[a].project(q), lines[b].project(q)
+        if any(u * info[i][1] <= t <= v * info[i][1] for i, t in ((a, ta), (b, tb)) for u, v in spans(d['seg'][i], 'tn')):
+            tunnelled += 1; continue
+        if abs(height(a, ta) - height(b, tb)) < CLEAR: tight.append((a, b, round(height(a, ta), 1), round(height(b, tb), 1)))
+print(f"\nBridges (the plan's rule: deck top {TOP} m, ramps at {GRADE:.0%}, so {RAMP:.0f} m): "
+      f"{sum(1 for i in info if info[i][3])} drivable pieces have br spans; a ramp raises "
+      f"{', '.join(f'{i} {seg_cls(d["seg"][i])}' for i in raised) or 'none'} without one of its own; every connector has "
+      f"one height. Crossings without a junction: {'all' if not tight else 'NOT all'} at least {CLEAR} m apart in height "
+      f"or in a tunnel span ({tunnelled} in tunnels){'' if not tight else ': ' + str(tight)}.")
+
 # ------------------------------------------------------------------ our street trees (ours: nothing is mapped)
 ROAD_W = {'primary': (12, 24), 'secondary': (11.5, 30), 'tertiary': (14, 14), 'residential': (11, 11),
-          'unclassified': (11, 11), 'service': (6, 6), 'motorway': (14, 14)}          # Lot 57's data.ts widths; motorway ours
+          'unclassified': (11, 11), 'service': (6, 6), 'motorway': (14, 28)}          # Lot 57's data.ts widths; motorway ours
+LINK_W = (8, 16)                                                                     # a motorway link, ours
 def dfr(du, ds): return (du * N[0] + ds * S[0], du * N[1] + ds * S[1])      # front-wall frame: d out, s along
 aisle = [fr(q) for q in dec(d['seg'][416]['p'])[:4]] + [fr(q) for q in ((-6613.4, -9324.8), (-6611.6, -9327.3),
          (-6610.7, -9330.5), (-6609.2, -9357.2), (-6613.2, -9374.9))]          # aisle 416 as we draw it, 4.5 m
 ribbons = [LineString(aisle).buffer(2.25)]
+def drawn_w(r):                       # engine/streets.ts's width for a drivable piece, or None
+    cls = seg_cls(r); sub = DI['sub'][r['s']] if 's' in r else ''; w = ROAD_W.get(cls)
+    if not w or sub in ('sidewalk', 'crosswalk'): return None
+    if cls == 'service': return {'parking_aisle': 7, 'driveway': 6, 'alley': 5}.get(sub, 6)
+    if cls == 'motorway' and sub == 'link': w = LINK_W
+    return w[0] if r.get('ow') else w[1]
 for i, (f, g, r) in seg.items():
-    cls = seg_cls(r); w = ROAD_W.get(cls)
-    if w and 's' not in r or (w and DI['sub'][r['s']] in ('driveway', 'parking_aisle')):
-        ribbons.append(g.buffer((w[0] if r.get('ow') else w[1]) / 2))
+    w = drawn_w(r)
+    if w: ribbons.append(g.buffer(w / 2))
+print('  Drawn I-5 (width x length less any tunnel, so the area): ' + ', '.join(
+    f"{i} {drawn_w(seg[i][2])} m x {seg[i][1].length * (1 - seg[i][2].get('_tn', 0)):.0f} m" for i in
+    NAMED['I-5 northbound carriageway'] + NAMED['I-5 southbound carriageway'] + [360, 361, 365, 424, 425, 561, 562]))
 roads = unary_union(ribbons)
 poles = [Point(f[0]) for ly, i, lab, f, g, r in F if ly == 'infrastructure points' and r == 'power:power_pole']
 host = Polygon([fr(q) for q in dec(d['bld'][HOST_BLD]['p'])]); patio = box(2.0, -5.5, 24.0, 0.0)

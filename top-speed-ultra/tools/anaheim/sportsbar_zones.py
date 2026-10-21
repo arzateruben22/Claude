@@ -8,11 +8,14 @@
    spots radius 0.3 m (Lot 57's RADIUS as measured). Seats that one piece of furniture spaces are exempt from each other:
    the booth run's seats, one high-top's four stools, one patio table's four seats. Touching is allowed; overlapping
    by more than 1 mm isn't.
-2. Walking, on a model of Lot 57's walk grid as measured (world-aligned 0.5 m cells, so 24.5 degrees off the frame; a
-   cell is free when its centre is 0.32 m (RADIUS + 0.02) from every wall and collider; 8-connected with no corner
-   cutting), at 25 grid offsets: from just inside the front door, every seat's and spot's stand point has a reachable
-   free cell within 0.6 m, the staff hand-off point H is reached, and no reached cell lies in the bartenders' lane or
-   the staff flap (closed to guests and the player). The colliders are our furniture sizes, listed below.
+2. Walking, on a model of Lot 57's walk grid as measured (L12: world-aligned 0.5 m cells, so 24.5 degrees off the
+   frame; a cell is in the region when its centre is; a cell is free when it and its four neighbours are in the region
+   and its centre is 0.32 m (RADIUS + 0.02) from every wall and collider; 8-connected with no corner cutting), at 25
+   grid offsets. The region is painted as S1 paints it: over the walls and the patio fence, to 0.5 m past their inner
+   faces (they're colliders, so the four-neighbour rule never binds beside them), less the bartenders' lane and the
+   staff flap. From just inside the front door, every seat's and spot's stand point has a reachable free cell within
+   0.6 m and the staff hand-off point H is reached. A second fill puts the lane and the flap back in the region, so
+   only the colliders close them: no reached cell lies in either. The colliders are our furniture sizes, listed below.
 3. The bartenders' lane path (staff only, off the walk grid): the 0.3 m body along it clears every collider.
 The standing floor's 20 spots and the pool and darts watchers aren't modelled. The layout below is copied from the
 plan by hand: change both together.
@@ -133,30 +136,36 @@ def frame(x, z): return ((x - O[0]) * A[0] + (z - O[1]) * A[1], (x - O[0]) * B[0
 bu0, bv0, bu1, bv1 = WALK.bounds
 xs, zs = zip(*(world(u, v) for u, v in ((bu0, bv0), (bu0, bv1), (bu1, bv0), (bu1, bv1))))
 TARGETS = [(n, sp) for n, own, grp, u, v, r, sp in SLOTS + PSLOTS]
+PAINT = WALK.buffer(0.5, join_style=2)  # the region over the walls and the fence, 0.5 m past their inner faces (S1)
+REGION = PAINT.difference(LANE)        # less the lane and the flap
+FOUR = ((1, 0), (-1, 0), (0, 1), (0, -1))
 worst, fails = {}, set()
 for ox, oz in itertools.product([k * 0.1 for k in range(5)], repeat=2):
     x0, z0 = min(xs) - 1 + ox, min(zs) - 1 + oz
     nx, nz = int((max(xs) - x0) / 0.5) + 2, int((max(zs) - z0) / 0.5) + 2
-    free = set()
-    for i in range(nx):
-        for j in range(nz):
-            p = Point(frame(x0 + (i + 0.5) * 0.5, z0 + (j + 0.5) * 0.5))
-            if WALK.contains(p) and EDGE.distance(p) >= 0.32 and SOLIDS.distance(p) >= 0.32: free.add((i, j))
+    def centre(i, j): return frame(x0 + (i + 0.5) * 0.5, z0 + (j + 0.5) * 0.5)
+    inpaint = {(i, j) for i in range(nx) for j in range(nz) if PAINT.contains(Point(centre(i, j)))}
+    inreg = {c for c in inpaint if REGION.contains(Point(centre(*c)))}
+    clear = {c for c in inpaint if WALK.contains(Point(centre(*c))) and EDGE.distance(Point(centre(*c))) >= 0.32
+             and SOLIDS.distance(Point(centre(*c))) >= 0.32}       # only the room's cells: the walls and fence are colliders
     def cell(u, v): x, z = world(u, v); return (int((x - x0) // 0.5), int((z - z0) // 0.5))
-    seen, todo = set(), [min(free, key=lambda c: math.dist(c, cell(*START)))]
-    seen.add(todo[0])
-    while todo:
-        i, j = todo.pop()
-        for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
-            q = (i + di, j + dj)
-            if q in free and q not in seen and (not (di and dj) or ((i + di, j) in free and (i, j + dj) in free)):
-                seen.add(q); todo.append(q)
-    centres = [frame(x0 + (i + 0.5) * 0.5, z0 + (j + 0.5) * 0.5) for i, j in seen]
-    for n, sp in TARGETS + [('H', H)]:
-        dmin = min(math.dist(c, sp) for c in centres)
-        worst[n] = max(worst.get(n, 0), dmin)
-        if dmin > 0.6: fails.add(n)
-    if any(LANE.contains(Point(c)) for c in centres): fails.add('the lane is reachable')
+    for region in (inreg, inpaint):    # as built; then with the lane and flap in the region, closed by colliders only
+        free = {(i, j) for (i, j) in clear if (i, j) in region and all((i + a, j + b) in region for a, b in FOUR)}
+        seen, todo = set(), [min(free, key=lambda c: math.dist(c, cell(*START)))]
+        seen.add(todo[0])
+        while todo:
+            i, j = todo.pop()
+            for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+                q = (i + di, j + dj)
+                if q in free and q not in seen and (not (di and dj) or ((i + di, j) in free and (i, j + dj) in free)):
+                    seen.add(q); todo.append(q)
+        centres = [centre(i, j) for i, j in seen]
+        if region is inreg:
+            for n, sp in TARGETS + [('H', H)]:
+                dmin = min(math.dist(c, sp) for c in centres)
+                worst[n] = max(worst.get(n, 0), dmin)
+                if dmin > 0.6: fails.add(n)
+        elif any(LANE.contains(Point(c)) for c in centres): fails.add('the lane is reachable')
 for n in sorted(fails): fail(f'walk grid: {n} (worst {worst.get(n, 0):.2f} m from a reachable cell)')
 print(f"Walk grid: {len(TARGETS)} stand points and H reached at all 25 offsets within "
       f"{max(worst.values()):.2f} m; the lane and the flap unreachable" if not fails else 'Walk grid: see failures')
