@@ -10,4 +10,4 @@ Type=oneshot
 User=@USER@
 WorkingDirectory=@DIR@/premarket-scanner
 ExecStart=@DIR@/.venv/bin/python -m scanner grade --books all
-ExecStart=@DIR@/.venv/bin/python -m scanner nightly --books all
+ExecStart=-@DIR@/.venv/bin/python -m scanner nightly --books all

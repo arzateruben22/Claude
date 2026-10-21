@@ -233,3 +233,12 @@ def test_every_build_writes_the_standings_and_serves_them(tmp_path):
     assert text.startswith("STANDINGS (DEMO markets)") and len([ln for ln in text.splitlines() if ln.strip()[:2].strip().isdigit()]) == 30
     assert pb.SERVED["/standings"] == "standings.txt" and pb.TYPES[".txt"].startswith("text/plain")
     assert len(b.desks) == 30
+
+
+def test_the_standings_are_kept_as_a_file_on_each_read_date(tmp_path):
+    c = cfg()
+    c["report"]["checkpoints"] = {"first look": NOW.astimezone(LA).date(), "month end": date(2026, 10, 31)}
+    pb.build(c, True, tmp_path / "out", NOW)
+    kept = tmp_path / "out" / f"standings-{NOW.astimezone(LA).date().isoformat()}.txt"
+    assert kept.exists() and kept.read_text().startswith("FIRST LOOK · Tue 20 Oct 2026\nSTANDINGS")
+    assert not (tmp_path / "out" / "standings-2026-10-31.txt").exists()

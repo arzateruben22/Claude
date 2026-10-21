@@ -818,7 +818,13 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     out.mkdir(parents=True, exist_ok=True)
     book.benchmark = benchmark.load(out, book)
     write_ledger(book, out / "ledger.csv")
-    (out / "standings.txt").write_text(render_standings(book) + "\n", encoding="utf-8")
+    standings = render_standings(book) + "\n"
+    (out / "standings.txt").write_text(standings, encoding="utf-8")
+    for label, when in (book.checkpoints or {}).items():       # the first look and the month-end read, kept as files
+        when = when.date() if isinstance(when, datetime) else when
+        if when == book.now.astimezone(book.tz).date():
+            (out / f"standings-{when.isoformat()}.txt").write_text(f"{label.upper()} · {when:%a %d %b %Y}\n{standings}",
+                                                                   encoding="utf-8")
     frag = render_html(book)
     (out / "paper-book.fragment.html").write_text(frag, encoding="utf-8")
     (out / "paper-book.html").write_text(page(frag), encoding="utf-8")
