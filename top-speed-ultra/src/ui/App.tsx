@@ -191,7 +191,7 @@ export function App() {
               <button className="btn" onClick={() => setPanel('profile')}>Profile</button>
             </div>
             <div className="menu-aside">
-              <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, mode and car stays free.</span><i aria-hidden="true">›</i></button>
+              <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, every mode and every car you can earn stays free.</span><i aria-hidden="true">›</i></button>
               <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
                 <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span><i aria-hidden="true">↗</i>
               </a>
@@ -487,7 +487,7 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
     <div className="overlay center">
       <div className="panel profile">
         <h2>Garage</h2>
-        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
+        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {book.slotsUsed} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
         {msg && <p className="good" role="status">{msg}</p>}
         <div className="drivers">
           {CARS.map((c) => {
