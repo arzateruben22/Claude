@@ -65,6 +65,25 @@ export class Traffic {
     this.group.name = 'traffic';
   }
 
+  // The corner's sky camera sees a few tens of metres round the player (owner, 2026-10-20), and every kind of car is
+  // drawn for the whole freeway in view (instanced, not culled): hideFar() hides each kind with no car within r metres
+  // of (x, z) (the scene's coordinates) and every wheel, under the bodies from up there; showAll() puts back exactly
+  // those. Seven draw calls a kind, so most of the traffic's cost in that view.
+  private farHidden: THREE.Object3D[] = [];
+  hideFar(x: number, z: number, r: number) {
+    const r2 = r * r;
+    for (const m of this.meshes) {
+      const a = m.body.instanceMatrix.array;
+      let near = false;
+      for (let i = 0; i < m.body.count && !near; i++) { const dx = a[i * 16 + 12] - x, dz = a[i * 16 + 14] - z; near = dx * dx + dz * dz < r2; }
+      for (const im of near ? [m.wheels] : [m.body, m.glass, m.tail, m.head, m.wheels, m.blink, m.trim]) if (im && im.visible) { im.visible = false; this.farHidden.push(im); }
+    }
+  }
+  showAll() {
+    for (const o of this.farHidden) o.visible = true;
+    this.farHidden.length = 0;
+  }
+
   reseed(seed: number) { this.r = rng(seed); this.nextId = 1; this.cars = []; }
   clear() { this.cars = []; }
   private heavy(c: CarClass) { return c.id === 'truck' || c.id === 'semi'; }

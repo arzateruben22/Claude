@@ -509,8 +509,10 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .tbtn.on { color: var(--sunset-text); }
 .tbtn.on::before { box-shadow: inset 0 0 0 1px var(--sunset-line), inset 0 -2px 0 var(--sunset); }
 
-/* the corner window: a square frame with locked-on corners (the sky camera draws inside its box) */
-.corner { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px + var(--st)); right: 12px; padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: 0 10px 28px var(--shadow); }
+/* the corner window: a square frame with locked-on corners. The sky camera draws exactly inside its border (Game.skyBox
+   measures this box every frame), so the map and the sky share one frame: a light hairline outside and a dark one just
+   inside it, which reads over the dark map and over a sunlit road alike, and the same label plate (MAP, SKY) */
+.corner { position: absolute; top: calc(max(12px, env(safe-area-inset-top)) + 52px + var(--st)); right: 12px; padding: 0; border: 1px solid var(--line-2); border-radius: 0; background: var(--clear); cursor: pointer; box-shadow: inset 0 0 0 1px var(--shadow), 0 10px 28px var(--shadow); }
 .corner::after { content: ""; position: absolute; inset: -4px; pointer-events: none;
   background:
     linear-gradient(var(--chrome) 0 0) left top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left top / 2px 12px no-repeat,
@@ -518,7 +520,6 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
     linear-gradient(var(--chrome) 0 0) left bottom / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left bottom / 2px 12px no-repeat,
     linear-gradient(var(--sunset) 0 0) right bottom / 12px 2px no-repeat, linear-gradient(var(--sunset) 0 0) right bottom / 2px 12px no-repeat; }
 .corner canvas { display: block; width: 100%; height: 100%; }
-.corner.sky { border-color: var(--line-3); }
 .corner-tag { position: absolute; left: 0; bottom: 0; padding: 3px 7px; font: 500 9.5px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); background: var(--hud); pointer-events: none; }
 
 /* ------------------------------------------------------------------ the status row (U1): a compass and a clock chip */
@@ -752,6 +753,14 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
   .seg button { min-height: 44px; }
   .back { min-height: 44px; }
   .hud-ability { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
+}
+/* a phone on its side: the corner window fills the right of the screen under the buttons, where the ability button
+   sat (over the sky camera's car) and the gas pedal's top reached its frame. The ability goes left of the pedals and
+   the gas pedal is a little shorter, clear of the frame. */
+@media (pointer: coarse) and (max-height: 560px) and (min-width: 561px) {
+  .hud-ability { right: 196px; bottom: max(14px, env(safe-area-inset-bottom)); }
+  .app:has(.touch-shift) .hud-ability { right: 262px; }     /* manual: left of the shift buttons too */
+  .pedal.gas { height: 110px; }
 }
 /* a narrow window with a mouse: the desktop HUD, with the compass and the route chip under the corner window and the
    clock chip on two lines (as on a phone) so the stats plate keeps the left of the status row */
