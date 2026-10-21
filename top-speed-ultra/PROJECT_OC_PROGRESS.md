@@ -24,8 +24,19 @@ The owner resumed the loop ("keep going til everything is finished") with a 75% 
   read ~135 m and ~30 m/s held; a ban hid it; a delete removed it. `cd live && npm test`: 58 of 58 (board module 9,
   the wiring 1). The hardening file failed 3 of its timing tests once while a browser group loaded the machine, and
   passed 9 of 9 alone and in the full run after.
-- `live` group: 12 of 12 before the board (this afternoon's run); the rerun with the board check is logged below
-  when it finishes.
+- `live` group: 12 of 12 before the board (this afternoon's run).
+- **Evening, after a worker restart:**
+  - The board panel flashed "Nobody on the board yet" on its first frame, before it had asked the server; it now shows
+    its loading bar until the first answer. Found by the new `live` check, which then passed: "distance today:
+    live_b 209 m".
+  - The pause screen of a live drive says where you stand on today's board ("#n for distance (x mi) · y mph held"),
+    from the server, with your token.
+  - `/health` and `server/live-status.sh` show the board's counters (drivers tracked, rows written, poses ignored).
+  - The hardening tests 5, 11 and 12 failed now and then while a browser suite loaded the machine: fixed sleeps of
+    300 and 400 ms, and a failed test 5 left sockets that broke 11 and 12. They now wait for conditions and always
+    close their sockets: `npm test` 58 of 58 twice with the browser suite running, the hardening file 9 of 9 three
+    times.
+  - A Fable prompt is queued in the handoff for an adversarial review of the board's rules before it goes public.
 
 ## 2026-10-21 (morning, the scheduled continuation): crews, cruise nights, password reset, and two realistic-mode fixes
 
