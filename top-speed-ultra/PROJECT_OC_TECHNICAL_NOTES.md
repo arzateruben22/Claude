@@ -187,6 +187,38 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   dimmer and warmer than day, which the regression suite's sunset check requires.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
   a camera 150 m above the car.
+- **The Retro style (`render/style.ts`, RS1).** Low's look while `Settings.style` is `'retro'` (for now a switch under
+  Low in Settings, "Style: Retro"; RS2 makes it Low itself): full resolution and crisp, drawn the way an early-2000s
+  PC game looked. `presetFor(settings)` gives the `RETRO` preset (Low's world: 0.9 km of road, 0.45 scenery, 512
+  textures; render scale 1, the pixel ratio between 1 and 2, a 1024 shadow map, no composer) and `Game.applyStyle()`
+  attaches a `RetroStyle` to the scene with the road and terrain groups as roots, or detaches it when the tier or the
+  switch changes (every original material put back, every toon material, texture and target disposed). `configureCar`
+  unstyles the car before it rebuilds and restyles it after. Three parts, one module:
+  - `Stylizer`: walks a subtree once (a chunk or tile when it's first built, the scene's own children when they
+    appear) and swaps each physically based material (Standard, Physical, Lambert, Phong) for a `MeshToonMaterial`
+    with a 10-texel two-tone gradient map (a narrow mid band past the terminator), keeping its colour, map, emissive,
+    alpha, blending, vertex and instance colours and skinning. A near-uniform texture (asphalt, concrete, a wall) goes
+    flat, keeping on the built world what stands clear of its average as lines (slab joints, courses); the rest (signs,
+    facades, gauges) is posterized to 7 levels. Glass gets a stepped rim of sky, chrome and mirrors a banded sky and
+    ground, lane markings a least size on screen (so far Botts' dots read as a dotted line without multisampling),
+    additive road glows (the headlights' pool) fall off in four bands, additive films on the glass are put away, and a
+    material whose own `onBeforeCompile` needs the physical lighting (the driver's skin) is left as it is. Each
+    original-and-toon pair is cached and dies together (whichever the game disposes takes the other), so a dropped
+    chunk or a reconfigured car leaks nothing. `style.stylizer.counts` says what it converted.
+  - `RetroSky`: a sphere of flat bands from the fog's colour at the horizon (so the far road melts into it) to the
+    zenith, a hard sun disc with two stepped rings and warm bands along the horizon at the ends of the day, a hard
+    moon at night; the realistic sky is hidden, the cloud deck alpha-cut to hard edges, the lens flare kept off.
+  - `RetroPass`: the scene into a half-float target with a depth texture, then one full-screen pass: ACES at the
+    renderer's exposure, a vibrance, ink on silhouettes and creases where the second difference of 1/z says an edge
+    is (zero across any plane, so roads and walls stay clean at any distance; a CSS pixel wide, fading past 170 m),
+    and the 32/64/32 palette with a 4×4 Bayer dither. The sky's pixels (nothing written to depth) skip the tone map.
+  - Shadows are `BasicShadowMap` with a four-texel compare cut at one half (a clean line between texels, not a row
+    of squares), a reach limit (a caster further than 24 m along the light shades nothing, so a wall's long sunset
+    shadow doesn't break the road into blobs) and a normal bias that grows as the light grazes a surface. Fog falls
+    in six dithered bands like the sky's. `window.__game.style` is the style while it's on.
+  - `tests/modes-retro.mjs` is its script: `shots` (the six frames of a build and look at 1280×720 and 390×844, the
+    HUD up on request, a guide sign close up with `--only`), `perf` (frame time, draw calls and triangles per frame on
+    the phone profile, several runs alternating on one seeded drive) and `diag` (what was left physically based).
 
 ## UI
 
@@ -309,6 +341,10 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - Free Drive and Speed Survival seed their traffic at random. The suite puts the car back on its mark and seeds the
   traffic (`traffic.reseed(n)` and `fill()`), so every run is the same drive. The autopilot isn't a perfect driver:
   in Heavy traffic it crashed in 2 of 12 seeded two-minute Survival runs.
+- The Retro style (RS1) has a check in `render` (switched on mid-drive: toon materials, one-step shadows, the banded
+  sky, the pass at the canvas's size; switched back, every original material, program and attribute returns) and
+  one in `phone` (the switch under Low in Settings, full resolution, the speed readout over it). Its frames and its
+  phone cost come from `tests/modes-retro.mjs` (see Rendering).
 
 ## Game systems added after the network
 

@@ -8,6 +8,8 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
+import { presetFor, retroOn } from './settings';
+import { RetroStyle } from './render/style';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -440,7 +442,7 @@ export class Game {
   get isPaused() { return this.paused; }
 
   updateSettings(s: Settings) {
-    const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
+    const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density, st = this.settings.style !== s.style;
     if (s.time !== this.settings.time || s.weather !== this.settings.weather) this.env.set(s.time, s.weather);
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
@@ -453,6 +455,7 @@ export class Game {
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
+    else if (st) this.applyQuality();
     this.onResize();
   }
 
@@ -488,10 +491,12 @@ export class Game {
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
     const high = s.quality === 'high' || s.quality === 'ultra';
+    this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? c.paint, finish: store?.finish ?? null, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
+    this.style?.restyle(this.car.root);
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -546,7 +551,7 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- graphics quality
   private applyQuality(rebuild = false) {
-    const q = QUALITY[this.settings.quality];
+    const q = presetFor(this.settings);
     this.renderScale = q.renderScale;
     this.renderer.shadowMap.enabled = q.shadows > 0;
     const far = q.drawDistance * 1.15;
@@ -576,13 +581,23 @@ export class Game {
       c.addPass(out); this.outputSat = sat;
       this.composer = c;
     }
+    this.applyStyle();
     this.onResize();
+  }
+  // RS1: the Retro style (src/game/render/style.ts) on Low while Settings.style says so: attached with the tier, its
+  // materials, sky and pass all undone when it goes. The road chunks and terrain tiles are styled as they're built.
+  private style: RetroStyle | null = null;
+  private applyStyle() {
+    const on = retroOn(this.settings), roots = this.roads ? [this.roads.group, this.terrain.group] : [];
+    if (!on && this.style) { this.style.detach(); this.style = null; }
+    if (on && !this.style) { this.style = new RetroStyle(this.renderer); this.style.attach(this.scene, roots); }
+    this.style?.watch(roots);
   }
 
   private onResize = () => {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
-    const q = QUALITY[this.settings.quality];
-    const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, q.maxPixelRatio);
+    const q = presetFor(this.settings);
+    const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, Math.min(q.minPixelRatio ?? 0.5, window.devicePixelRatio || 1), q.maxPixelRatio);
     this.renderer.setPixelRatio(pr);
     this.renderer.setSize(w, h, false);
     this.composer?.setPixelRatio(pr); this.composer?.setSize(w, h);
@@ -853,7 +868,7 @@ export class Game {
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
-    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
+    if (this.composer) this.composer.render(dt); else if (this.style) this.style.render(this.scene, this.camera, this.env); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderCorner(dt);
     if (!this.attract) {
@@ -1184,7 +1199,7 @@ export class Game {
     this.scaleT += dt;
     if (this.scaleT < 1.2) return;
     this.scaleT = 0;
-    const q = QUALITY[this.settings.quality];
+    const q = presetFor(this.settings);
     let next = this.renderScale;
     if (this.frameAvg > 20) next = Math.max(0.5, this.renderScale - 0.08);
     else if (this.frameAvg < 14.5) next = Math.min(q.renderScale, this.renderScale + 0.05);
@@ -1274,7 +1289,7 @@ export class Game {
       pointer: typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'touch' : 'mouse',
       cores: navigator.hardwareConcurrency || 0, memoryGB: nav.deviceMemory ?? null,
       gpu: dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'not reported',
-      quality: QUALITY[this.settings.quality].label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
+      quality: presetFor(this.settings).label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
       buffer: `${el.width}×${el.height}`, fps: this.fps, calls: info.render.calls, tris: info.render.triangles, textures: info.memory.textures,
       mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
@@ -1302,6 +1317,7 @@ export class Game {
     removeEventListener('resize', this.onResize);
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();
+    this.style?.detach(); this.style = null;
     this.renderer.dispose();
   }
 }
