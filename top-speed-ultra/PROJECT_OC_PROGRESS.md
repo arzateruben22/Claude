@@ -22,7 +22,14 @@ available, so frame rates on real hardware are **not** measured.
 - **The garage's Paint tab (U5)**: `npm test -- --only=launch` **7/7 passed**, including the new check (Sunset Orange
   reaches the car, `car.config.paint` 0xe5620b, and the saved settings; back to Rossini Red) and the theme/Look check;
   `tests/out/launch-paint.png` shows the GT behind the panel in Sunset Orange. Wheels and Upgrades say "coming later".
-- **The radio card (U7)** (`RadioCard.tsx`): type-checked; its frame is below when shot.
+- **The radio card (U7)** (`RadioCard.tsx`, `tools/radio-shot.mjs`): frames at 1280 × 720 and 390 × 844
+  (`tests/out/radio/`, no errors): KCST tuned from the card and playing a generated title, the starred station sorted
+  first, volume, Off; on a phone it sits under the top bar, clear of the steering and pedals. Its stars were low in
+  their rows; centred.
+- **The phone (U6)** (`Phone.tsx`, `tools/phone-shot.mjs`): from the pause screen, at 1280 × 720 and 390 × 844
+  (`tests/out/phone/`, no errors): the device clock, the driver's colour on the level line, nine working apps and
+  Messages and Contacts greyed "Roadmap"; Credits shows the balance and how credits are earned; the Map app opens the
+  World Map (checked by the script). Races had the same trophy icon as Bests; it takes the wheel.
 
 ## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
 
