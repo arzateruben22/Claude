@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lot 57 on Foot</title>
+<meta name="description" content="Lot 57, our own fictional taproom and yard on Orangewood Avenue in Anaheim, to walk on foot. The crowd is simulated from the time of day and the day of the week; nothing here is live.">
+<meta name="theme-color" content="#12333A">
+<style>
+  :root {
+    --teal: #12333A; --teal-2: #0c2328; --cream: #F3E6C4; --red: #9E3322; --red-hi: #C8462F; --patina: #4F7F6A; --brick: #8E4A36;
+    --panel: rgba(12, 35, 40, 0.82); --line: rgba(243, 230, 196, 0.28);
+    --sans: "Avenir Next", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --cond: "Avenir Next Condensed", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--teal-2); color: var(--cream); font-family: var(--sans); overflow: hidden; }
+  body { -webkit-tap-highlight-color: transparent; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #view { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--cream); outline-offset: 2px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .pill { min-height: 44px; min-width: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid var(--line); background: var(--panel); font-weight: 700; font-size: 15px; letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 8px; }
+  .pill:hover { background: rgba(18, 51, 58, 0.95); }
+  .pill svg { width: 20px; height: 20px; }
+  #hud { position: fixed; inset: 0; pointer-events: none; }
+  #hud > * { pointer-events: auto; }
+  #tl { position: absolute; top: calc(10px + var(--safe-t)); left: calc(10px + var(--safe-l)); display: flex; gap: 8px; }
+  #tr { position: absolute; top: calc(10px + var(--safe-t)); right: calc(10px + var(--safe-r)); display: flex; gap: 8px; }
+  #tc { position: absolute; top: calc(10px + var(--safe-t)); left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; max-width: calc(100% - 250px); }
+  #place { padding: 6px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; text-align: center; }
+  #place b { font-family: var(--cond); font-weight: 800; letter-spacing: 0.06em; font-size: 15px; }
+  #crowd { min-height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid rgba(243, 230, 196, 0.5); background: rgba(56, 98, 80, 0.95); color: #fff8e6; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  #crowd .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--cream); margin-right: 7px; vertical-align: 1px; }
+  #act, #act2 { position: absolute; border-radius: 50%; border: 2px solid rgba(243, 230, 196, 0.75); background: var(--red); color: #fff4dc; font-weight: 800; font-family: var(--cond); letter-spacing: 0.04em; display: none; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  #act { width: 76px; height: 76px; font-size: 19px; right: calc(18px + var(--safe-r)); bottom: calc(44px + var(--safe-b)); }
+  #act2 { width: 56px; height: 56px; font-size: 15px; right: calc(104px + var(--safe-r)); bottom: calc(52px + var(--safe-b)); background: var(--teal); }
+  #act.on, #act2.on { display: block; }
+  #stick { position: absolute; left: 0; top: 0; width: 128px; height: 128px; border-radius: 50%; border: 2px solid rgba(243, 230, 196, 0.55); background: rgba(12, 35, 40, 0.28); display: none; pointer-events: none; }
+  #knob { position: absolute; left: 36px; top: 36px; width: 56px; height: 56px; border-radius: 50%; background: rgba(243, 230, 196, 0.85); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+  #hint { position: absolute; left: 50%; bottom: calc(126px + var(--safe-b)); transform: translateX(-50%); padding: 10px 16px; font-size: 15px; font-weight: 600; text-align: center; max-width: calc(100% - 40px); transition: opacity 0.6s; pointer-events: none; }
+  #toast { position: absolute; left: 50%; top: calc(98px + var(--safe-t)); transform: translateX(-50%); padding: 10px 16px; font-size: 14px; font-weight: 600; max-width: calc(100% - 40px); text-align: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  #toast.on { opacity: 1; }
+  #credit { position: absolute; left: calc(8px + var(--safe-l)); bottom: calc(6px + var(--safe-b)); max-width: min(760px, calc(100% - 120px)); padding: 4px 8px; border-radius: 8px; background: rgba(12, 35, 40, 0.8); color: #efe3c4; font-size: 11px; line-height: 1.35; pointer-events: none; }
+  #loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: radial-gradient(ellipse at 50% 40%, #1b4650 0%, var(--teal) 45%, var(--teal-2) 100%); z-index: 5; text-align: center; padding: 24px; }
+  #loading h1 { margin: 0; font-family: var(--cond); font-weight: 800; font-size: clamp(44px, 9vw, 88px); letter-spacing: 0.04em; line-height: 0.95; }
+  #loading h1 small { display: block; font-size: 0.24em; letter-spacing: 0.32em; color: var(--red-hi); margin-top: 8px; }
+  #loading p { margin: 0; max-width: 440px; font-size: 14px; line-height: 1.5; opacity: 0.9; }
+  #bar { width: min(320px, 70vw); height: 4px; border-radius: 2px; background: rgba(243, 230, 196, 0.2); overflow: hidden; }
+  #bar i { display: block; height: 100%; width: 0%; background: var(--cream); transition: width 0.2s; }
+  #status { font-size: 13px; opacity: 0.8; min-height: 18px; }
+  .sheet { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(6, 18, 21, 0.55); z-index: 4; padding: 16px; }
+  .sheet.on { display: flex; }
+  .sheet .panel { width: min(460px, 100%); max-height: calc(100% - 20px); overflow: auto; padding: 18px 18px 14px; }
+  .sheet h2 { margin: 0 0 8px; font-family: var(--cond); font-weight: 800; letter-spacing: 0.04em; font-size: 22px; }
+  .sheet p { margin: 0 0 10px; font-size: 15px; line-height: 1.5; }
+  .sheet .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0; }
+  .sheet .row > span { min-width: 92px; font-size: 14px; font-weight: 700; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .seg button { min-height: 40px; padding: 0 12px; border: 0; background: transparent; font-size: 14px; font-weight: 600; }
+  .seg button[aria-pressed="true"] { background: var(--cream); color: var(--teal); }
+  .sheet select, .sheet input[type=range] { min-height: 40px; font: inherit; font-size: 14px; color: var(--teal); background: var(--cream); border-radius: 10px; border: 0; padding: 0 8px; }
+  .sheet input[type=range] { padding: 0; accent-color: var(--red-hi); background: transparent; width: 160px; }
+  .sheet .go { margin-top: 8px; min-height: 46px; width: 100%; border-radius: 12px; border: 0; background: var(--cream); color: var(--teal); font-weight: 800; font-size: 16px; }
+  .small { font-size: 12px !important; opacity: 0.85; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  body.rm * { transition: none !important; animation: none !important; }
+  @media (max-width: 520px) {
+    #tc { top: calc(62px + var(--safe-t)); max-width: calc(100% - 20px); }
+    #toast { top: calc(140px + var(--safe-t)); }
+    #place { font-size: 12px; }
+  }
+  @media (max-height: 420px) {
+    #act { bottom: calc(30px + var(--safe-b)); }
+    #act2 { bottom: calc(38px + var(--safe-b)); }
+    #hint { bottom: calc(96px + var(--safe-b)); }
+    #toast { top: calc(88px + var(--safe-t)); }
+  }
+</style>
+</head>
+<body>
+<noscript><div style="padding:24px;font:16px/1.5 system-ui;color:#F3E6C4;background:#12333A">Lot 57 on foot is a 3D page: it needs JavaScript and WebGL. Lot 57 is our own fictional taproom and yard on Orangewood Avenue in Anaheim. Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar.</div></noscript>
+<canvas id="view" tabindex="0" aria-label="Lot 57, on foot. Drag left to walk, drag right to look, tap to go. Keyboard: W A S D to walk, Shift to jog, E for the action, V for the view, C for your car, Escape to pause."></canvas>
+<div id="hud" hidden>
+  <div id="tl"><button id="car" class="pill" aria-label="Walk back to your car (long press to skip the walk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 15l2-6a2 2 0 0 1 2-1.4h10A2 2 0 0 1 19 9l2 6v3h-2.5M3 15v3h2.5M3 15h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg>Car</button></div>
+  <div id="tc">
+    <div id="place" class="panel"><b>LOT 57</b> · <span id="clock">—</span> · <span id="hours">—</span></div>
+    <button id="crowd" aria-haspopup="dialog"><span class="dot" aria-hidden="true"></span><span id="crowdText">Simulated crowd</span></button>
+  </div>
+  <div id="tr">
+    <button id="viewBtn" class="pill" aria-label="Switch to third person"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg><span id="viewLabel">3rd</span></button>
+    <button id="menu" class="pill" aria-label="Pause and settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button>
+  </div>
+  <div id="stick" aria-hidden="true"><div id="knob"></div></div>
+  <button id="act2" aria-label="Second action"></button>
+  <button id="act" aria-label="Action"></button>
+  <div id="hint" class="panel" role="note">Drag left to walk · drag right to look · tap to go</div>
+  <div id="toast" class="panel" role="status" aria-live="polite"></div>
+  <div id="credit">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar. Lot 57 and everyone in it are fictional.</div>
+</div>
+<div id="about" class="sheet" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+  <div class="panel">
+    <h2 id="aboutTitle">Simulated crowd</h2>
+    <p>Lot 57 is a fictional hangout. The crowd is simulated from the time of day and the day of the week. Nothing here is live, and nobody here is a real person or another player.</p>
+    <p class="small">The hours, the menu, the trucks and the sign are ours. The streets are the real ones, as OpenStreetMap maps them.</p>
+    <button class="go" data-close>Got it</button>
+  </div>
+</div>
+<div id="pause" class="sheet" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+  <div class="panel">
+    <h2 id="pauseTitle">Paused</h2>
+    <div class="row"><span>View</span><div class="seg" id="segView"><button data-v="first">First person</button><button data-v="third">Third person</button></div></div>
+    <div class="row"><span>Graphics</span><div class="seg" id="segQ"><button data-q="low">Low</button><button data-q="high">High</button><button data-q="ultra">Ultra</button></div></div>
+    <div class="row"><span>Clock</span><div class="seg" id="segClock"><button data-c="live">This device</button><button data-c="set">Set</button></div></div>
+    <div class="row" id="clockSet"><span></span>
+      <select id="day" aria-label="Day"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select>
+      <input id="hour" type="range" min="0" max="23.75" step="0.25" aria-label="Hour"><output id="hourOut" for="hour"></output>
+    </div>
+    <div class="row"><span>Motion</span><div class="seg" id="segMotion"><button data-m="full">Full</button><button data-m="reduced">Reduced</button></div></div>
+    <p class="small">The clock is simulated: it sets the sun and Lot 57's fictional hours and crowd. Reduced motion turns off the head bob and the transitions.</p>
+    <p class="small">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar.</p>
+    <button class="go" data-close>Resume</button>
+  </div>
+</div>
+<div id="loading" role="status" aria-live="polite">
+  <h1>LOT 57<small>TAPROOM · YARD · TRUCKS</small></h1>
+  <p>Our own fictional taproom and yard on Orangewood Avenue, Anaheim. Built in code at load: the Shed, the yard, the lights and the lot.</p>
+  <div id="bar"><i></i></div>
+  <div id="status">Loading…</div>
+</div>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>
