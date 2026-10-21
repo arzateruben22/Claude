@@ -5,22 +5,32 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-21, a Fable session: the live server)
+## State at the last update (2026-10-21, Opus: the live server shares the desks' machine; continuous improvement)
 
-- **The live server exists** (owner's decision 16): `top-speed-ultra/live/` (server.mjs, its tests, deploy scripts,
-  README with the costs and the capacity ladder), `src/live/client.ts`, `src/game/live/LiveCars.ts`, `src/ui/Live.tsx`,
-  hooks in Game.ts and App.tsx, settings `live` and `liveUrl`, and the suite's `live` group. Branch
-  `claude/live-server` off `claude/always-on`, pushed as a backup (decision 14). Not deployed: it needs a domain and
-  a box (README, "Put it on the internet"). The cap starts at 25; `deploy/cap.sh` raises it.
-- **Also built (decision 17):** the realistic mode (live weather from the NWS and live freeway flow from TomTom via
-  the server's `/api/now`, simulated when there is no feed; the Realistic preset in Settings), the talk bank and the
-  Coastal League (`src/talk/`, `tests/talk.mjs`), the radio DJ lines, and twelve billboards near the venues
-  (`src/data/ads.json`, `src/game/road/billboards.ts`). To turn the feeds on: `NOW_WEATHER=nws NOW_TRAFFIC=tomtom
-  TOMTOM_KEY=…` in `/etc/oc-live.env` (the key is a free TomTom developer sign-up).
-- **Next for the live server** (Opus-class unless marked): names over the ghost cars; binary poses and the
-  nearest-32 rule before the cap passes 50 (Fable-class: the relay's format and its proof); email verification and
-  password reset with Resend; a name-moderation list and a `banned` column; a "who's driving" list on the pause
-  screen; the artifact link's page can't reach a server, so the served page at the domain is the public way in.
+- **The owner's standing order (2026-10-21):** keep improving and rendering, and keep going until they say stop. A
+  scheduled task ("OC Ultra: keep improving", every 2 hours at :36) wakes this session to continue from this list.
+- **The live server** (decisions 16 and 17): `top-speed-ultra/live/` and the game's live code are on branch
+  `claude/live-server`, pushed. It shares the desks' always-on machine (the owner's choice): `server/setup.sh` runs
+  `server/live-install.sh` (Node 22, the game page built on the box, the `oc-live` service on 127.0.0.1:8791), and
+  `sudo bash server/live.sh` makes it public for free through Tailscale Funnel (or `LIVE_DOMAIN=` with Caddy), checked
+  end to end. `server/live-cap.sh`, `live-ban.sh`, `live-status.sh` (with the ladder's verdict).
+- **Blocked on the owner:** the push of `claude/live-server` onto `claude/always-on` (the branch the desks' machine
+  pulls) was refused by the session's permission check as a production deploy. Until the owner allows it or merges
+  it, the desks' machine doesn't have the live server. On the machine they can also run
+  `git fetch origin claude/live-server && git merge origin/claude/live-server && sudo bash server/setup.sh`.
+- **Built since the first version:** gzip and ETag for the page (3.7 to 1.9 MB), the nearest-32 rule (outbound at 250
+  drivers 550 to 190 MB a minute), reconnect after a restart (close code 4001), a name filter and bans, name plates
+  over ghost cars, the 2 s roster (map dots, who's on and where, Drive with), the horn (G, 500 m, panned), change
+  password and delete account, the measured ladder (`/api/ladder`), the DJ every three minutes, readable long toasts,
+  Invite a friend.
+- **Next** (in order; Opus-class unless marked):
+  1. Run the `live` suite group on the latest build (plates, list, Drive with, honk, account panel checks were added)
+     and log it; a phone-size screenshot of the Live section and the top bar with the chip and the horn.
+  2. Fixes from the security review of the live server (an agent's report; apply the confirmed ones, with tests).
+  3. Email verification and password reset with Resend (free tier) once the owner has a sending domain.
+  4. Binary poses (12 bytes a row) before the cap passes 100 (Fable-class: the format and its proof).
+  5. A "who's driving" line on the pause screen; ghosts that fade in and out instead of popping at 3 km.
+  6. The talk bank in the on-foot scenes once Lot 57 is in the game.
 - Everything below this line is the state from 2026-10-18 and still applies to the other lanes.
 
 ## State at the update before (2026-10-18, 22:00 UTC, an Opus session)
