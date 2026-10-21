@@ -78,6 +78,7 @@ export interface Report {
   quality: string; adaptive: boolean; pixelRatio: number; buffer: string; fps: number; calls: number; tris: number; textures: number;
   mode: Mode; attract: boolean; road: string; mph: number; density: string; cars: number; runSeconds: number;
   time: string; weather: string; ultra: boolean;
+  live: string;                      // the live server: off, or its state, the lobby, the crew and the ghosts in view (no names)
 }
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
@@ -1346,6 +1347,7 @@ export class Game {
       mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
       time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
+      live: !this.live ? 'off' : `${this.live.info.status}${this.live.info.cap ? ` ${this.live.info.online}/${this.live.info.cap}` : ''}${this.live.crew ? ` · crew ${this.live.crew}` : ''} · ${this.live.peers.size} known, ${this.liveCars?.count ?? 0} drawn${this.live.info.error ? ` · ${this.live.info.error}` : ''} · feeds ${this.now.source}`,
     };
   }
   // testing aids: run the simulation ahead with fixed controls (or the autopilot), without waiting for frames

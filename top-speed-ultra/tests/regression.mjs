@@ -839,7 +839,7 @@ await group('launch', async (use) => {
     await page.getByRole('button', { name: 'Feedback', exact: true }).click();
     const text = await page.locator('textarea.report').inputValue();
     await page.screenshot({ path: path.join(OUT, 'launch-feedback.png') });
-    for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road]) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
+    for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road, 'Live: off']) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
     // the game is "OC Ultra" (owner, 2026-10-16): the report's first line names it
     expect(/^OC Ultra \S+ · feedback report/.test(text), `the report starts "${text.split('\n')[0]}"`);
     await page.getByRole('button', { name: 'Copy', exact: true }).click();
