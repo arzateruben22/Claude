@@ -29,7 +29,7 @@ from datetime import date, datetime, timezone
 
 from . import gates, journal, report, review
 from .config import OUTPUT, ROOT, book_paths, load_criteria, load_env
-from .engine import run_scan
+from .engine import run_scans
 from .market import ET, SESSIONS, detect_session, fmt_pt, in_pt_window, parse_pt, previous_trading_day, trade_date_for
 from .providers import NAMES, ProviderError, make_provider
 
@@ -57,6 +57,22 @@ def _crit(args):
     return load_criteria(_book(args)[0])
 
 
+def all_books() -> list:
+    """Every rulebook in the folder: main (criteria.toml) and each criteria-<name>.toml."""
+    return ["main"] + sorted(p.stem[len("criteria-"):] for p in ROOT.glob("criteria-*.toml"))
+
+
+def _books(args) -> list:
+    """--books all, --books main,wild, or just --book."""
+    raw = getattr(args, "books", None)
+    if not raw:
+        return [args.book]
+    names = all_books() if raw == "all" else [b.strip() for b in raw.split(",") if b.strip()]
+    for b in names:
+        book_paths(b)
+    return names
+
+
 def _setup(args):
     name = "demo" if args.demo else args.provider
     provider = make_provider(name)
@@ -69,8 +85,9 @@ def _setup(args):
 
 
 def cmd_scan(args) -> int:
-    crit = _crit(args)
-    provider, now, out_dir = _setup(args)
+    books = _books(args)
+    crits = {b: load_criteria(book_paths(b)[0]) for b in books}
+    provider, now, _ = _setup(args)
     if args.window and not args.at and not in_pt_window(now, args.window):
         print(f"Outside the {args.window} PT window ({fmt_pt(now)}); skipping.")
         return 0
@@ -85,36 +102,46 @@ def cmd_scan(args) -> int:
         print(f"Market is closed today ({fmt_pt(now)}): weekend or holiday. Nothing to scan.")
         return 0
 
-    res = run_scan(provider, crit, now, session)
-    print(report.terminal(res, crit))
-    if not args.no_save:
-        paths = report.write_outputs(res, crit, out_dir)
-        added = journal.record(res, out_dir / "journal.csv", rules=gates.rules_id(crit))
-        print(f"\nSaved {_rel(paths[0])} (+ .md, .csv); open "
-              f"{_rel(paths[-1])} in a browser. {added} new pick(s) in the journal.")
-        if args.open:
-            import webbrowser
+    results = run_scans(provider, crits, now, session)     # one market read, every book judged on it
+    for b in books:
+        res, crit = results[b], crits[b]
+        base = book_paths(b, OUTPUT)[1]
+        out_dir = base / "demo" if provider.name == "demo" else base
+        if len(books) > 1:
+            print(f"\n== {b} rules ==")
+        print(report.terminal(res, crit))
+        if not args.no_save:
+            paths = report.write_outputs(res, crit, out_dir)
+            added = journal.record(res, out_dir / "journal.csv", rules=gates.rules_id(crit))
+            print(f"\nSaved {_rel(paths[0])} (+ .md, .csv); open "
+                  f"{_rel(paths[-1])} in a browser. {added} new pick(s) in the journal.")
+            if args.open and len(books) == 1:
+                import webbrowser
 
-            webbrowser.open(paths[-1].resolve().as_uri())
-    if args.notify:
-        from . import html_report
-        from .notify import send
+                webbrowser.open(paths[-1].resolve().as_uri())
+        if args.notify and (b == "main" or len(books) == 1):     # one push, not ten
+            from . import html_report
+            from .notify import send
 
-        label = report.SESSION_LABEL[res.session] + ("" if args.book == "main" else f" ({args.book} rules)")
-        sent = send(f"{label} scan: {len(res.passed)} pick(s)", report.push_text(res),
-                    page=html_report.page(res, crit), summary=report.one_line(res))
-        print(f"Notified: {', '.join(sent) or 'nothing (set NTFY_TOPIC or DISCORD_WEBHOOK_URL)'}")
+            label = report.SESSION_LABEL[res.session] + ("" if b == "main" else f" ({b} rules)")
+            sent = send(f"{label} scan: {len(res.passed)} pick(s)", report.push_text(res),
+                        page=html_report.page(res, crit), summary=report.one_line(res))
+            print(f"Notified: {', '.join(sent) or 'nothing (set NTFY_TOPIC or DISCORD_WEBHOOK_URL)'}")
     return 0
 
 
 def cmd_grade(args) -> int:
-    crit = _crit(args)
-    provider, now, out_dir = _setup(args)
-    graded, pending = journal.grade(provider, crit, now, out_dir / "journal.csv")
-    print(f"Graded {graded} pick(s); {pending} waiting for their trade day to finish.")
-    if graded:
-        print()
-        print(journal.stats(crit, out_dir / "journal.csv"))
+    provider, now, _ = _setup(args)
+    many = bool(getattr(args, "books", None))
+    for b in _books(args):
+        crit = load_criteria(book_paths(b)[0])
+        base = book_paths(b, OUTPUT)[1]
+        out_dir = base / "demo" if provider.name == "demo" else base
+        graded, pending = journal.grade(provider, crit, now, out_dir / "journal.csv")
+        print(f"{b + ': ' if many else ''}Graded {graded} pick(s); {pending} waiting for their trade day to finish.")
+        if graded and not many:
+            print()
+            print(journal.stats(crit, out_dir / "journal.csv"))
     return 0
 
 
@@ -259,6 +286,12 @@ def cmd_nightly(args) -> int:
     if args.window and not in_pt_window(now, args.window):
         print(f"Outside the {args.window} PT window ({fmt_pt(now)}); skipping.")
         return 0
+    if getattr(args, "books", None):                       # every book in turn, each on its own folder
+        for b in _books(args):
+            print(f"\n== {b} rules ==")
+            args.book, args.books = b, None
+            cmd_nightly(args)
+        return 0
     crit, settings, folder, analyst = _review_setup(args)
     night = _lessons(crit, settings, folder, args.demo, now, analyst)
     officer = _officer(crit, settings, folder, args.demo, now, analyst)
@@ -321,6 +354,7 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("scan", help="run a scan")
     _provider_args(p)
+    p.add_argument("--books", metavar="all|a,b", help="every rulebook (or these) on one market read, each to its own folder")
     p.add_argument("--session", choices=("auto",) + SESSIONS, default="auto")
     p.add_argument("--window", metavar="HH:MM-HH:MM", help="only run inside this Pacific-time window (for schedulers)")
     p.add_argument("--notify", action="store_true", help="push results via ntfy/Discord")
@@ -340,6 +374,7 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("grade", help="grade finished picks in the journal")
     _provider_args(p)
+    p.add_argument("--books", metavar="all|a,b", help="every rulebook (or these) in turn")
     p.set_defaults(func=cmd_grade)
 
     p = sub.add_parser("lookback", help="this book's rules on another book's graded picks (hindsight, not evidence)")
@@ -365,6 +400,7 @@ def main(argv=None) -> int:
         p.add_argument("--ai", action="store_true", help="demo only: use Claude on the demo data too")
         if name == "nightly":
             p.add_argument("--window", metavar="HH:MM-HH:MM", help="only run inside this Pacific-time window")
+            p.add_argument("--books", metavar="all|a,b", help="every rulebook (or these) in turn")
         p.set_defaults(func=func)
 
     p = sub.add_parser("doctor", help="check setup")
@@ -378,6 +414,9 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     try:                               # a bad rulebook name, said plainly before anything runs
         book_paths(args.book)
+        if getattr(args, "books", None):
+            for b in _books(args):
+                book_paths(b)
     except ValueError as exc:
         print(f"✗ {exc}", file=sys.stderr)
         return 2

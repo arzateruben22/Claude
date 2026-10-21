@@ -15,7 +15,7 @@
   const WIN = tok("--win", "#5fe0a0"), LOSS = tok("--loss", "#ff6f61"), INK = tok("--ink", "#e9ecff"), DIM = tok("--dim", "#a7add0");
   const WARM = "#fff3cf", SILK = "#dfe6ff";
   const CORE = 26, ARM = 34, TILT = 0.72;
-  const deskColor = (i) => HUE_OF[(G.desks[i] || {}).key] || SPARE[i % SPARE.length];
+  const deskColor = (i) => (G.desks[i] || {}).color || HUE_OF[(G.desks[i] || {}).key] || SPARE[i % SPARE.length];
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

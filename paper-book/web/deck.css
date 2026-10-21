@@ -1,4 +1,5 @@
-/* Trading Deck: one dark screen. A thin header, ten lanes of light that fill the height, a ticker at the foot.
+/* Trading Deck: one dark screen. A thin header, a row of market chips, lanes of light (as many as there are
+   desks; they scroll when thirty won't fit), a ticker at the foot, and a standings table one tap away.
    One look only, on purpose: it's a piece to leave open, not a form. */
 :root {
   --void: #05070d;
@@ -33,7 +34,7 @@ body {
   max-width: 100vw;
   overflow: hidden;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -46,7 +47,6 @@ body {
   gap: 8px 24px;
   padding: 14px 20px 10px;
   min-width: 0;
-  border-bottom: 1px solid var(--rail);
   background: linear-gradient(180deg, var(--void-2), var(--void));
 }
 .brand h1 {
@@ -66,7 +66,7 @@ body {
 .totals dd { margin: 0; font: 500 16px/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .totals dd small { font-size: 11px; color: var(--dim); font-weight: 400; }
 .totals .up { color: var(--win); } .totals .down { color: var(--loss); }
-.totals .clock dd { color: var(--ink-2); min-width: 22ch; }   /* the clock's text changes; the header's height mustn't */
+.totals .clock dd { color: var(--ink-2); min-width: 23ch; }   /* the clock's text changes; the header's height mustn't */
 
 .controls { display: flex; align-items: center; gap: 6px; }
 .ctl {
@@ -74,18 +74,43 @@ body {
   padding: 0 11px; height: 28px; font: 500 11px var(--mono); letter-spacing: 0.04em; cursor: pointer;
 }
 .ctl:hover { color: var(--ink); border-color: var(--ink-2); }
-.ctl[aria-pressed="true"] { color: var(--ink); border-color: var(--ink-2); }
-.ctl:focus-visible, .more a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.ctl[aria-pressed="true"], .ctl[aria-expanded="true"] { color: var(--ink); border-color: var(--ink-2); }
+.ctl:focus-visible, .more a:focus-visible, .chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .more { display: flex; gap: 2px; margin-left: 10px; }
 .more a { color: var(--dim); text-decoration: none; padding: 6px 7px; font-size: 11px; border-radius: 2px; }
 .more a:hover { color: var(--ink); }
 
+/* -- the bar: market chips, the dates the book is read on ---------------------------------------------- */
+.bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap;
+  padding: 0 20px 7px; min-width: 0;
+  border-bottom: 1px solid var(--rail);
+}
+.chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chip {
+  background: transparent; color: var(--dim); border: 1px solid transparent; border-radius: 2px;
+  padding: 0 9px; height: 24px; font: 400 8.5px var(--display); letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; white-space: nowrap;
+}
+.chip small { color: var(--dim); margin-left: 7px; font: 400 10px var(--mono); letter-spacing: 0; text-transform: none; }
+.chip:hover { color: var(--ink-2); }
+.chip[aria-pressed="true"] { color: var(--ink); border-color: var(--rail-2); background: var(--void-2); }
+.chip[aria-pressed="true"] small { color: var(--ink-2); }
+.checks { margin: 0; color: var(--dim); font-size: 11px; display: flex; gap: 14px; white-space: nowrap; min-width: 0; overflow: hidden; }
+.checks span b { color: var(--gold); font-weight: 500; }
+.checks span.past { color: var(--dim); } .checks span.past b { color: var(--ink-2); }
+.checks span.past::before { content: "✓ "; color: var(--win); }
+
 /* -- lanes -------------------------------------------------------------------------------------------- */
-.lanes { position: relative; min-height: 0; overflow: hidden; background: var(--void); }
-#lanes { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: ew-resize; }
+.lanes {
+  position: relative; min-height: 0; overflow-y: auto; overflow-x: hidden; background: var(--void);
+  scrollbar-width: thin; scrollbar-color: var(--rail-2) transparent;
+}
+#axis { position: sticky; top: 0; z-index: 2; display: block; width: 100%; height: 30px; background: linear-gradient(180deg, var(--void) 75%, transparent); }
+#lanes { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: ew-resize; }
 #lanes.scrubbing { cursor: grabbing; }
 #scrub {
-  position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 22px; margin: 0;
+  position: sticky; bottom: 0; z-index: 3; display: block; width: 100%; height: 22px; margin: -22px 0 0;
   opacity: 0; cursor: ew-resize;
 }
 #scrub:focus-visible { opacity: 1; accent-color: var(--gold); outline: 2px solid var(--gold); outline-offset: -2px; }
@@ -116,6 +141,30 @@ body {
 .tape-track .desk { font: 400 8.5px var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--c, var(--ink-2)); }
 .tape .empty { color: var(--dim); padding-left: 20px; }
 
+/* -- standings: the same numbers as a table, one tap away ----------------------------------------------- */
+.standings {
+  position: fixed; inset: 0; z-index: 20; overflow: auto; box-sizing: border-box;
+  background: rgba(5, 7, 13, 0.94); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 20px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+.standings .head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+.standings h2 { margin: 0; font: 400 13px/1 var(--display); letter-spacing: 0.2em; text-transform: uppercase; }
+.standings .rule { margin: 8px 0 0; color: var(--dim); font-size: 11px; max-width: 100ch; }
+.standings .rule b { color: var(--ink-2); font-weight: 500; }
+.standings .scroll { overflow-x: auto; }
+.standings table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 640px; }
+.standings th { text-align: left; font: 400 8.5px var(--display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); padding: 8px 12px 6px 0; border-bottom: 1px solid var(--rail-2); white-space: nowrap; }
+.standings td { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rail); vertical-align: top; }
+.standings td.n, .standings th.n { text-align: right; white-space: nowrap; }
+.standings td small { display: block; color: var(--dim); font-size: 10.5px; margin-top: 2px; }
+.standings .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); margin-right: 8px; vertical-align: middle; }
+.standings .name { font: 400 10px var(--display); letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); white-space: nowrap; }
+.standings .idea { color: var(--ink-2); }
+.standings .up { color: var(--win); } .standings .down { color: var(--loss); }
+.standings .gw { display: inline-block; margin-left: 8px; padding: 2px 6px; border: 1px solid var(--win); color: var(--win); border-radius: 2px; font: 600 8px var(--display); letter-spacing: 0.12em; text-transform: uppercase; vertical-align: middle; }
+.standings tr.lead td { background: linear-gradient(90deg, rgba(242, 189, 79, 0.06), transparent); }
+.standings .empty { color: var(--dim); padding: 24px 0; }
+
 /* -- phones ------------------------------------------------------------------------------------------- */
 @media (max-width: 760px) {
   .top { grid-template-columns: 1fr auto; gap: 8px 12px; padding: 10px 14px 8px; }
@@ -130,10 +179,21 @@ body {
   .more { display: none; }
   .ctl { padding: 0 8px; height: 30px; font-size: 10.5px; }
   .controls { gap: 4px; }
+  .bar { padding: 0 10px 6px; }
+  .chip { padding: 0 7px; height: 28px; font-size: 8px; }
+  .chip small { display: none; }
+  .checks { display: none; }
   .tape-track span { font-size: 11px; }
+  .standings { padding-left: 14px; padding-right: 14px; }
+  .standings .idea, .standings .verdict, .standings .day { display: none; }
+  .standings table { min-width: 0; }
+  .standings th, .standings td { padding-right: 8px; }
+  .standings .name { white-space: normal; }
+  .standings td small { font-size: 10px; }
 }
-@media (pointer: coarse) { .ctl { min-height: 34px; } }
+@media (pointer: coarse) { .ctl { min-height: 34px; } .chip { min-height: 30px; } }
 @media (prefers-reduced-motion: reduce) {
   .tape-track.run { animation: none; }
   .tape { overflow-x: auto; }
+  .standings { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(5, 7, 13, 0.98); }
 }

@@ -42,7 +42,21 @@ python -m majors backtest --days 365 --book 4h # the 4-hour rules over the past 
 python -m majors why --book 4h                 # every command takes --book 4h
 ```
 
-Both rulebooks share the hourly price cache in `output/cache/`.
+## Eight more rulebooks, one process
+
+Each `majors-<name>.toml` is the main rulebook with a few numbers changed, on its own $100 of paper money and its
+own `output/<name>/`: **daily** (daily candles, long windows), **fast** (short windows, 2 ATR stop), **tight**
+(hourly, 1.5 ATR stop), **loose** (4-hour candles, 5 ATR stop, 96-candle exit), **btc** (Bitcoin only, 4-hour
+candles, 80% of the bank in one position), **alts** (SOL, XRP, ADA, DOGE only), **single** (one position, 80% of
+the bank, 2% risk) and **slow** (daily candles, the longest windows). The server runs all ten in one process:
+
+```bash
+python -m majors run --with 4h --with daily --with fast --with tight --with loose --with btc --with alts --with single --with slow
+python -m majors sim --days 30 --book slow     # every command takes --book <name>
+```
+
+Every rulebook shares the hourly price cache in `output/cache/`; one process reads Coinbase once an hour for all
+of them, and each desk decides when its own candle closes (hourly, 4-hour or daily, aligned to midnight UTC).
 
 ## Read the backtest honestly
 

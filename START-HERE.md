@@ -33,15 +33,21 @@ sudo bash server/setup.sh
 **Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
 starts with $100 of paper money.
 
-**Ten desks, one month, one scoreboard.** Each desk is a different idea on its own $100 of paper money, all
-running through the same weeks on the same markets, so at the end you can line them up, keep what made money and
-cut the rest:
+**Thirty desks, one month, one scoreboard.** Ten rulebooks per market, each on its own $100 of paper money, all
+running through the same weeks on the same markets, so you can line them up, keep what made money and cut the rest:
 
-| Market | Desks |
+| Market | Ten rulebooks |
 |---|---|
-| Memecoins | **main**; **wild** (younger coins, bigger bets); **strict** (older coins, smaller bets, quicker exits) |
-| Big coins | **hourly**; **4h** (the same rules on 4-hour candles: fewer trades, less paid in fees) |
-| Stocks | **main** (buy gap-ups, +10% / −5%); **wild** (smaller gaps, no news); **fade** (sold short); **quick** (+5% / −3%); **early** (out by 10:30 New York time) |
+| Memecoins | **main**; **wild** (younger coins, bigger bets); **strict** (older coins, smaller bets, quicker exits); **sniper** (3–10 minutes old, out in 30); **momentum** (only coins still being bought); **patient** (an hour old, big pools, up to 6 hours); **scalper** (+12 / −8, out in 20 minutes); **whale** (big pools only, 15% bets); **runner** (lets a winner run, trailing stop); **tiny** (2% bets, eight at once) |
+| Big coins | **hourly**; **4h**; **daily**; **fast** (short windows); **tight** (1.5 ATR stop); **loose** (4h, 5 ATR stop); **btc** (Bitcoin only, 80% in); **alts** (SOL, XRP, ADA, DOGE); **single** (one coin at a time, 80% in); **slow** (daily, the longest windows) |
+| Stocks | **main** (buy gap-ups, +10% / −5%); **wild** (smaller gaps, no news); **fade** (sold short); **quick** (+5% / −3%); **early** (out by 10:30 New York time); **bigcap** ($5–100 stocks); **tight** (3% stop); **hold** (+25% / −10%); **cheap** ($1–5 stocks, 15% gaps); **highvol** (8× volume) |
+
+The plan: a **first look on Friday 23 October**, the **assessment at the end of October**, and after that the
+survivors keep running until one desk shows a **green week**: traded on three or more of the last seven days, net
+up over the seven, and no single day's loss bigger than the week's gain. The Trading Deck marks both dates on its
+time axis, its **standings** button ranks every desk with its last seven days, and the evening push names the
+week's best, worst and any green weeks. With thirty variations, a few will look good by Friday from luck alone;
+the month-end read and the green week are what count.
 
 Already set up? One update adds them all and keeps every paper trade so far:
 `cd ~/desks && git pull && sudo bash server/setup.sh`. The rules of every desk were set before it started and stay

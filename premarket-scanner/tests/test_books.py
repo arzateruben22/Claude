@@ -195,3 +195,56 @@ def test_early_book_grades_with_the_timed_exit(tmp_path, monkeypatch, capsys):
     capsys.readouterr()
     assert cli.main(["stats", "--demo", "--book", "early"]) == 0
     assert "the 10:30 ET exit" in capsys.readouterr().out
+
+
+# -- ten books on one market read -----------------------------------------------------------------------
+
+from datetime import datetime as _dt  # noqa: E402
+from zoneinfo import ZoneInfo  # noqa: E402
+
+from scanner import engine  # noqa: E402
+from scanner.providers import make_provider  # noqa: E402
+
+
+def _picks(result):
+    return [(c.symbol, tuple(c.failures), tuple(c.warnings), tuple(c.tags), c.float_shares, c.halted_now) for c in result.passed]
+
+
+def test_all_books_lists_every_criteria_file_main_first():
+    books = cli.all_books()
+    assert books[0] == "main" and set(books) >= {"wild", "fade", "quick", "early", "bigcap", "tight", "hold", "cheap", "highvol"}
+    assert len(books) == 10 and len({gates.rules_id(config.load_criteria(config.book_paths(b)[0])) for b in books}) == 10
+
+
+def test_run_scans_gives_each_book_exactly_what_it_gets_on_its_own():
+    provider = make_provider("demo")
+    now = _dt(2026, 10, 6, 5, 45, tzinfo=ZoneInfo("America/Los_Angeles"))
+    crits = {b: config.load_criteria(config.book_paths(b)[0]) for b in cli.all_books()}
+    together = engine.run_scans(provider, crits, now, "premarket")
+    assert set(together) == set(crits)
+    for b, crit in crits.items():
+        alone = engine.run_scan(provider, crit, now, "premarket")
+        assert _picks(together[b]) == _picks(alone), b
+        assert [c.symbol for c in together[b].near_misses] == [c.symbol for c in alone.near_misses], b
+        assert together[b].checked == alone.checked and together[b].universe == alone.universe
+    assert len(together["wild"].passed) > len(together["main"].passed)          # each book kept its own rules
+    assert _picks(together["fade"]) == _picks(together["main"])                  # the same picks, the other side
+    # a candidate object is never shared between books: one book's verdict can't leak into another's
+    ids = [id(c) for r in together.values() for c in r.passed + r.near_misses]
+    assert len(ids) == len(set(ids))
+
+
+def test_scan_grade_and_nightly_take_every_book_at_once(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    assert cli.main(["scan", "--demo", "--books", "all", "--at", "2026-10-06 05:45"]) == 0
+    out = capsys.readouterr().out
+    assert "== wild rules ==" in out and "== highvol rules ==" in out
+    for b in cli.all_books():
+        rows = _rows(tmp_path / ("demo" if b == "main" else f"{b}/demo") / "journal.csv")
+        assert rows and {r["rules"] for r in rows} == {gates.rules_id(config.load_criteria(config.book_paths(b)[0]))}, b
+    assert cli.main(["grade", "--demo", "--books", "all", "--at", "2026-10-07 14:00"]) == 0
+    for b in ("main", "cheap"):
+        rows = _rows(tmp_path / ("demo" if b == "main" else f"{b}/demo") / "journal.csv")
+        assert all(r["graded_at"] for r in rows), b
+    assert cli.main(["scan", "--demo", "--books", "main,hold", "--at", "2026-10-07 05:45"]) == 0
+    assert cli.main(["scan", "--demo", "--books", "main,nope", "--at", "2026-10-07 05:45"]) == 2

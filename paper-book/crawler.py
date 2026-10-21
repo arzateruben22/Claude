@@ -27,14 +27,8 @@ BIG_LOSS = -50.0       # % of the stake: a trade that lost half or more gets fla
 TRUST = 30             # trades before a desk's win rate means much
 STREAK = 6             # losses in a row worth a flag
 DRAWDOWN = 20.0        # % below the desk's high worth a flag
-COLORS = {"memecoins": "#3cc3f2", "memecoins_wild": "#ff9a4d", "memecoins_strict": "#6b7cff",
-          "majors": "#f2bd4f", "majors_4h": "#ffe28a",
-          "stocks": "#a08cff", "stocks_wild": "#d7f25f", "stocks_fade": "#3fd3c0", "stocks_quick": "#ff8c8c",
-          "stocks_early": "#c48a5a", "open": "#5fe3a1", "patterns": "#e98bff"}
-NAMES = {d: pb.LABEL[d].lower() for d in pb.DESKS}
-ABBR = {"memecoins": "MEM", "memecoins_wild": "WMEM", "memecoins_strict": "SMEM", "majors": "BIG", "majors_4h": "BIG4",
-        "stocks": "STK", "stocks_wild": "WSTK", "stocks_fade": "FADE", "stocks_quick": "QSTK", "stocks_early": "ESTK",
-        "open": "OPN", "patterns": "PAT"}
+COLORS = {**pb.COLORS, "open": "#5fe3a1", "patterns": "#e98bff"}
+ABBR = {**pb.ABBR, "open": "OPN", "patterns": "PAT"}
 
 
 def is_flag(t: pb.Trade) -> bool:
@@ -78,7 +72,7 @@ def flags(book: pb.Book) -> List[dict]:
 
     for d in book.desks:
         ts = sorted(book.trades[d], key=lambda t: t.closed)
-        label, n = pb.LABEL[d], len(ts)
+        label, n = book.label(d), len(ts)
         if not n:
             add(notes, d, "no trades", f"{label}: no closed paper trades yet.")
             continue
@@ -133,7 +127,7 @@ def flags(book: pb.Book) -> List[dict]:
             continue
         mine, n = benchmark.desk_return(book, d), len(book.trades[d])
         since = datetime.fromisoformat(b["since"]).astimezone(book.tz)
-        text = f"{pb.LABEL[d]} {_pct(mine)} against BTC bought and held {_pct(b['pct'])} since {since:%a %d %b}."
+        text = f"{book.label(d)} {_pct(mine)} against BTC bought and held {_pct(b['pct'])} since {since:%a %d %b}."
         if mine < b["pct"]:
             add(found if n >= 20 else notes, d, "vs BTC", text + " So far, just holding BTC did better.")
         else:
@@ -162,7 +156,7 @@ def _trade_section(book: pb.Book, d: str) -> dict:
     if earlier:
         sub += f" · walking the last {SHOWN}"
     return {
-        "key": d, "name": NAMES[d], "abbr": ABBR[d], "color": COLORS[d], "kind": "trades", "sub": sub,
+        "key": d, "name": book.label(d).lower(), "abbr": book.abbr(d), "color": book.color(d), "kind": "trades", "sub": sub,
         "earlier": {"n": len(earlier), "pnl": round(sum(t.pnl for t in earlier), 2),
                     "wins": sum(t.pnl > 0 for t in earlier),
                     "losses": sum(t.pnl < 0 for t in earlier), "flags": sum(is_flag(t) for t in earlier),
@@ -189,19 +183,20 @@ def data(book: pb.Book) -> dict:
         "words": [[h.symbol, h.desk, round(h.cost, 2), None if h.value is None else round(h.value, 2),
                    int(h.opened.timestamp())] for h in sorted(held, key=lambda h: h.opened)],
     })
-    pats = [p for d in book.desks for p in galaxy.desk_patterns(d, book.trades[d], book.tz)] + galaxy.shared_patterns(book)
+    pats = [p for d in book.desks for p in galaxy.desk_patterns(d, book.trades[d], book.tz, book.label(d), book.kind(d))]
+    pats += galaxy.shared_patterns(book)
     sections.append({
         "key": "patterns", "name": "patterns", "abbr": ABBR["patterns"], "color": COLORS["patterns"], "kind": "patterns",
         "sub": f"{sum(p['unlocked'] for p in pats)} of {len(pats)} patterns unlocked by enough trades",
         # title, desk (MEM, BIG, STK, or two joined by +), unlocked, detail
-        "words": [[p["title"], ABBR[p["desk"]] if p["desk"] != "*" else "+".join(ABBR[x] for x in p["desks"]),
+        "words": [[p["title"], book.abbr(p["desk"]) if p["desk"] != "*" else "+".join(book.abbr(x) for x in p["desks"]),
                    int(p["unlocked"]), p["detail"]] for p in pats],
     })
     desks = []
     for d in book.desks:
         s = pb.stats(book.trades[d], book.banks[d])
         pf = s["profit_factor"]
-        desks.append({"key": d, "label": pb.LABEL[d], "bank": book.banks[d], "trades": s["trades"], "net": s["net"],
+        desks.append({"key": d, "label": book.label(d), "bank": book.banks[d], "trades": s["trades"], "net": s["net"],
                       "win_rate": s["win_rate"], "open": len(book.held[d]),
                       "pf": None if pf is None else (99.0 if pf == float("inf") else pf),
                       "dd": s["max_drawdown_pct"]})

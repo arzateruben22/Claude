@@ -1,0 +1,31 @@
+# Majors Desk, BTC rulebook: Bitcoin only, and all in.
+#
+# One coin, four-hour candles, up to 80% of the bank in it, risking 2% a trade. The question it answers:
+# is the desk better off ignoring everything but BTC?
+# Fees and slippage are the main desk's. Every window is in hours, whatever the candle.
+# Run it with the main desk: python -m majors run --with btc. Results live in output/btc/.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0                                   # paper dollars
+coins = ["BTC"]              # only Bitcoin (main: ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"])
+quote = "USD"
+candle_hours = 4             # (main: 1)
+
+# Trend following on hourly candles: buy a breakout while the trend is up, then ride it with a
+# trailing stop. Most trades lose a little; the few long trends pay for them. Decisions are made
+# on each hour's closing price.
+[rules]
+trend_hours = 200            # (main: 100)
+breakout_hours = 72          # (main: 48)
+exit_hours = 48              # (main: 24)
+atr_hours = 56               # (main: 14)
+stop_atr = 3.0             # ...or sell when it falls 3 of those moves below its best close since buying
+risk_pct = 2.0               # (main: 1.0)
+max_position_pct = 80.0      # all in, nearly (main: 25.0)
+max_positions = 1            # (main: 4)
+cooldown_hours = 12          # (main: 6)
+
+[costs]                    # charged on every paper buy and sell
+fee_pct = 0.40             # per side: a typical exchange fee for a small account (check yours)
+slippage_pct = 0.05        # per side: the price moves a little against you when you fill

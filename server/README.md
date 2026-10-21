@@ -7,16 +7,11 @@ Everything on one small Linux machine that never sleeps:
 | Service | What it does | Starts |
 |---|---|---|
 | `postdesk` | your X account: drafts, your approvals, scheduled posts | once you've connected X (step 5) |
-| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7; also runs the **wild** and **strict** rulebooks on their own $100 each (dashboards at `/wild/` and `/strict/`) | right away |
-| `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices, hourly | right away |
-| `majors-4h` | the same big coins and rules on 4-hour candles, its own $100 | right away |
-| `scanner-scan` / `scanner-grade` | stocks, paper picks before the open, graded after the close | once your Alpaca paper keys are in (step 6) |
-| `scanner-wild-scan` / `scanner-wild-grade` | the same with the wild stock rules, a minute later, on their own $100 | with the stock scans |
-| `scanner-fade-scan` / `scanner-fade-grade` | the stock picks sold short on paper (the fade rules), two minutes later, on their own $100 | with the stock scans |
-| `scanner-quick-scan` / `scanner-quick-grade` | the same picks sold at +5% or −3% (the quick rules), on their own $100 | with the stock scans |
-| `scanner-early-scan` / `scanner-early-grade` | the same picks, out by 10:30 New York time (the early rules), on their own $100 | with the stock scans |
-| `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Trading Deck, Trade Crawler and Paper Galaxy on port 8790 | right away |
-| `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for all three rulebooks | right away |
+| `nightdesk` | memecoins (new Solana coins), paper money, live prices, 24/7: all ten memecoin rulebooks in one process on one price feed, each on its own $100 (dashboards at `/wild/`, `/strict/`, `/sniper/`...) | right away |
+| `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices: all ten big-coin rulebooks in one process, each deciding at its own candle close (hourly, 4-hour or daily), each on its own $100 | right away |
+| `scanner-scan` / `scanner-grade` | stocks, paper picks before the open and graded after the close, for all ten stock rulebooks at once (`--books all`: one market read, ten journals, ten $100 banks) | once your Alpaca paper keys are in (step 6) |
+| `paperbook` | one ledger of every paper trade from all thirty desks, refreshed every 15 minutes, plus the Trading Deck (the home page), Trade Crawler and Paper Galaxy on port 8790 | right away |
+| `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for all ten memecoin rulebooks | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
 

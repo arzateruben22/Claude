@@ -1,5 +1,5 @@
 [Unit]
-Description=Premarket scanner: grade today's paper picks, then the nightly review
+Description=Premarket scanner: grade every rulebook's paper picks, then the nightly reviews
 After=network-online.target
 Wants=network-online.target
 ConditionPathExists=@DIR@/premarket-scanner/.env
@@ -9,5 +9,5 @@ Environment=PYTHONUNBUFFERED=1
 Type=oneshot
 User=@USER@
 WorkingDirectory=@DIR@/premarket-scanner
-ExecStart=@DIR@/.venv/bin/python -m scanner grade
-ExecStart=@DIR@/.venv/bin/python -m scanner nightly
+ExecStart=@DIR@/.venv/bin/python -m scanner grade --books all
+ExecStart=@DIR@/.venv/bin/python -m scanner nightly --books all

@@ -15,11 +15,23 @@ nothing in this repo can place a real order.
 | **Big coins 4h**: Majors Desk's 4-hour rulebook (`majors-desk/majors-4h.toml`) | the same coins and rules on 4-hour candles: fewer trades, less in fees | its own $100 bank | once per finished 4-hour candle |
 | **Quick stocks**: the scanner's quick rules (`premarket-scanner/criteria-quick.toml`) | the stock desk's picks, +5% / −3% | its own $100 bank | with the stock scans |
 | **Early-out stocks**: the scanner's early rules (`premarket-scanner/criteria-early.toml`) | the stock desk's picks, sold by 10:30 New York time | its own $100 bank | with the stock scans |
+| **Seven more memecoin desks**: sniper, momentum, patient, scalper, whale, runner, tiny (`night-desk/desk-<name>.toml`) | the same coins and rug checks under seven more rulebooks | $100 each | alongside the memecoin desk |
+| **Eight more big-coin desks**: daily, fast, tight stop, loose, Bitcoin only, alt coins only, one bet, slow (`majors-desk/majors-<name>.toml`) | the same coins and prices under eight more rulebooks, on hourly, 4-hour or daily candles | $100 each | at each one's own candle close |
+| **Five more stock desks**: big-cap, tight-stop, hold, cheap, high-volume (`premarket-scanner/criteria-bigcap.toml`...) | the scanner's picks under five more rulebooks | $100 each | with the stock scans |
 
-Ten desks, one scoreboard: each is a different idea on the same markets over the same weeks, so the book shows
-which ideas make paper money and which don't. The wild desks take more risk, strict takes less, fade takes the
-other side of the stock desk, quick and early sell the same stock picks sooner, and 4h trades the big coins slower. They don't
-change the original desks or their four-week test. A desk is in the book when `book.toml` has a section for it.
+Thirty desks, one scoreboard: ten rulebooks per market, each a different idea on the same markets over the same
+weeks, so the book shows which ideas make paper money and which don't. None of them changes the original desks or
+their four-week test. A desk is in the book when `book.toml` has a section for it: the first ten are known by
+name; any other section says its `label`, `kind` (coins or stocks), `market` (memecoins, big coins or stocks),
+`of` (the desk it varies), `color` and where its results are.
+
+**The plan**, as `[report] checkpoints` in `book.toml`: a first look on **Fri 23 Oct**, the assessment at **month
+end, Sat 31 Oct**, and after that the survivors run until one shows a **green week** (`deck.week`): traded on three
+or more of the last seven days, net up over the seven, no single day's loss bigger than the week's gain. The Trading
+Deck marks the dates on its time axis, filters the lanes by market, and its **standings** button ranks every desk
+with its last seven days and a green-week badge. The evening push names the week's best and worst and any green
+weeks. Thirty variations means a few will look good by Friday from luck alone; the month-end read and the green
+week are what count.
 
 ```bash
 python paper-book/paperbook.py             # the ledger and the report, now

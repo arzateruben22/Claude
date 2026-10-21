@@ -3,9 +3,9 @@
 # The backup timer runs it at 3:30am Pacific. By hand, from the repo folder:
 #   sudo bash server/backup.sh
 # To restore one: stop the desks, then unpack it over the repo folder:
-#   sudo systemctl stop nightdesk majors majors-4h paperbook
+#   sudo systemctl stop nightdesk majors paperbook
 #   sudo tar -xzf /var/backups/desks/desks-YYYY-MM-DD-HHMM.tar.gz -C ~/desks
-#   sudo systemctl start nightdesk majors majors-4h paperbook
+#   sudo systemctl start nightdesk majors paperbook
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/backup.sh"; exit 1; }
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -18,14 +18,11 @@ mkdir -p "$DEST"
 chmod 700 "$DEST"
 
 cd "$DIR"
-for p in night-desk/output/live night-desk/output/archive night-desk/output/wild/live night-desk/output/wild/archive \
-         night-desk/output/strict/live night-desk/output/strict/archive \
-         majors-desk/output/live majors-desk/output/archive majors-desk/output/4h/live majors-desk/output/4h/archive \
+# Every rulebook's live results and archives, whichever rulebooks exist (never keys, tokens or price caches).
+for p in night-desk/output/live night-desk/output/archive night-desk/output/*/live night-desk/output/*/archive \
+         majors-desk/output/live majors-desk/output/archive majors-desk/output/*/live majors-desk/output/*/archive \
          premarket-scanner/output/journal.csv premarket-scanner/output/archive \
-         premarket-scanner/output/wild/journal.csv premarket-scanner/output/wild/archive \
-         premarket-scanner/output/fade/journal.csv premarket-scanner/output/fade/archive \
-         premarket-scanner/output/quick/journal.csv premarket-scanner/output/quick/archive \
-         premarket-scanner/output/early/journal.csv premarket-scanner/output/early/archive \
+         premarket-scanner/output/*/journal.csv premarket-scanner/output/*/archive \
          paper-book/output/ledger.csv paper-book/output/benchmark.json paper-book/output/archive; do
   if [ -e "$p" ]; then
     cp -a --parents "$p" "$WORK/"

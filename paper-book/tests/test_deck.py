@@ -87,6 +87,8 @@ def test_written_page_is_safe_and_served_at_the_root(tmp_path):
     assert "<title>Trading Deck</title>" in page and "window.TRADING_DECK=" in page
     assert page.count("</script>") == 2 and "<\\/script>" in page           # the symbol can't break out of the JSON
     assert payload["meta"]["trades"] == 1
+    for part in ('id="chips"', 'id="standings"', 'id="checks"', 'id="axis"', "renderStandings", "deck.market"):
+        assert part in page, part                                       # the chips, the standings table, the dates
     assert pb.SERVED["/"] == "deck.html" and pb.SERVED["/crawler"] == "crawler.html" and pb.SERVED["/deck.json"] == "deck.json"
 
 

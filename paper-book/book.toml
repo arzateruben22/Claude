@@ -66,8 +66,230 @@ start_bank = 100.0
 share_bank = true
 ticket_usd = 100.0
 
+# The tournament: ten rulebooks per market, each on its own $100 of paper money, all running at once.
+# A section is a desk; delete one to leave that desk out. Labels, colours and markets are set here because
+# these desks aren't known to the code by name (see the top of paperbook.py).
+
+[memecoins_sniper]                        # coins 3–10 minutes old, 5% bets, +60% / −30%, out in 30 minutes
+label = "Sniper memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#9df1e3"
+folder = "../night-desk/output/sniper/live"           # night-desk/desk-sniper.toml
+demo_folder = "../night-desk/output/sniper/demo"
+start_bank = 100.0
+
+[memecoins_momentum]                      # only coins still being bought, +80% with a trailing stop
+label = "Momentum memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#29ff94"
+folder = "../night-desk/output/momentum/live"           # night-desk/desk-momentum.toml
+demo_folder = "../night-desk/output/momentum/demo"
+start_bank = 100.0
+
+[memecoins_patient]                       # coins over an hour old with big pools, +30% / −15%, up to 6 hours
+label = "Patient memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#52ffff"
+folder = "../night-desk/output/patient/live"           # night-desk/desk-patient.toml
+demo_folder = "../night-desk/output/patient/demo"
+start_bank = 100.0
+
+[memecoins_scalper]                       # +12% / −8%, out in 20 minutes, four at once
+label = "Scalper memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#7ac1ff"
+folder = "../night-desk/output/scalper/live"           # night-desk/desk-scalper.toml
+demo_folder = "../night-desk/output/scalper/demo"
+start_bank = 100.0
+
+[memecoins_whale]                         # big pools and market caps only, 15% bets, +20% / −10%
+label = "Whale memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#6ef7b3"
+folder = "../night-desk/output/whale/live"           # night-desk/desk-whale.toml
+demo_folder = "../night-desk/output/whale/demo"
+start_bank = 100.0
+
+[memecoins_runner]                        # lets a winner run: +1000% cap, trailing 15% / 10%, 4 hours
+label = "Runner memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#29ffdb"
+folder = "../night-desk/output/runner/live"           # night-desk/desk-runner.toml
+demo_folder = "../night-desk/output/runner/demo"
+start_bank = 100.0
+
+[memecoins_tiny]                          # 2% bets, eight open at once
+label = "Tiny-bet memecoins"
+kind = "coins"
+market = "memecoins"
+of = "memecoins"
+color = "#299bff"
+folder = "../night-desk/output/tiny/live"           # night-desk/desk-tiny.toml
+demo_folder = "../night-desk/output/tiny/demo"
+start_bank = 100.0
+
+[majors_daily]                            # daily candles, long windows
+label = "Big coins daily"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#ff5e29"
+folder = "../majors-desk/output/daily/live"          # majors-desk/majors-daily.toml
+demo_folder = "../majors-desk/output/daily/demo"
+start_bank = 100.0
+
+[majors_fast]                             # short windows, 2 ATR stop
+label = "Big coins fast"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#fffb29"
+folder = "../majors-desk/output/fast/live"          # majors-desk/majors-fast.toml
+demo_folder = "../majors-desk/output/fast/demo"
+start_bank = 100.0
+
+[majors_tight]                            # hourly, 1.5 ATR stop
+label = "Big coins tight stop"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#f6675a"
+folder = "../majors-desk/output/tight/live"          # majors-desk/majors-tight.toml
+demo_folder = "../majors-desk/output/tight/demo"
+start_bank = 100.0
+
+[majors_loose]                            # 4-hour candles, 5 ATR stop, 96-candle exit
+label = "Big coins loose"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#f1b79d"
+folder = "../majors-desk/output/loose/live"          # majors-desk/majors-loose.toml
+demo_folder = "../majors-desk/output/loose/demo"
+start_bank = 100.0
+
+[majors_btc]                              # BTC only, 4-hour candles, 80% of the bank in one position
+label = "Bitcoin only"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#ffeb52"
+folder = "../majors-desk/output/btc/live"          # majors-desk/majors-btc.toml
+demo_folder = "../majors-desk/output/btc/demo"
+start_bank = 100.0
+
+[majors_alts]                             # SOL, XRP, ADA, DOGE only, hourly
+label = "Alt coins only"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#d7f434"
+folder = "../majors-desk/output/alts/live"          # majors-desk/majors-alts.toml
+demo_folder = "../majors-desk/output/alts/demo"
+start_bank = 100.0
+
+[majors_single]                           # one position, 80% of the bank, 2% risk
+label = "Big coins one bet"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#ffd129"
+folder = "../majors-desk/output/single/live"          # majors-desk/majors-single.toml
+demo_folder = "../majors-desk/output/single/demo"
+start_bank = 100.0
+
+[majors_slow]                             # daily candles, the longest windows
+label = "Big coins slow"
+kind = "coins"
+market = "big coins"
+of = "majors"
+color = "#ff8929"
+folder = "../majors-desk/output/slow/live"          # majors-desk/majors-slow.toml
+demo_folder = "../majors-desk/output/slow/demo"
+start_bank = 100.0
+
+[stocks_bigcap]                           # $5–100 stocks, 5% gaps, +6% / −3%
+label = "Big-cap stocks"
+kind = "stocks"
+market = "stocks"
+of = "stocks"
+color = "#ff29f1"
+journal = "../premarket-scanner/output/bigcap/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-bigcap.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
+[stocks_tight]                            # the main rules with a 3% stop
+label = "Tight-stop stocks"
+kind = "stocks"
+market = "stocks"
+of = "stocks"
+color = "#ff8ff4"
+journal = "../premarket-scanner/output/tight/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-tight.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
+[stocks_hold]                             # the main rules, +25% / −10%
+label = "Hold stocks"
+kind = "stocks"
+market = "stocks"
+of = "stocks"
+color = "#f65abd"
+journal = "../premarket-scanner/output/hold/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-hold.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
+[stocks_cheap]                            # $1–5 stocks, 15% gaps, +15% / −7%
+label = "Cheap stocks"
+kind = "stocks"
+market = "stocks"
+of = "stocks"
+color = "#d166ff"
+journal = "../premarket-scanner/output/cheap/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-cheap.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
+[stocks_highvol]                          # 8× volume, +10% / −5%
+label = "High-volume stocks"
+kind = "stocks"
+market = "stocks"
+of = "stocks"
+color = "#ff8fbf"
+journal = "../premarket-scanner/output/highvol/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-highvol.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
 [report]
 timezone = "America/Los_Angeles"
+# The dates the book is read on: the first look at the tournament, then the end-of-month assessment. The deck
+# marks them on its time axis. After the month, the bar is a green week (see deck.py) for one desk.
+checkpoints = { "first look" = 2026-10-23, "month end" = 2026-10-31 }
 
 [alerts]                                  # phone pushes from watchdog.py (turn on with: bash server/alerts.sh)
 day_loss_pct = 10.0                       # tell me when a desk loses this much of its bank in one day

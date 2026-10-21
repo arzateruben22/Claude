@@ -5,6 +5,7 @@
 start_bank = 100.0                                   # paper dollars
 coins = ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"]  # traded against US dollars on Coinbase
 quote = "USD"
+candle_hours = 1                                     # decide on finished hourly candles (4 = 4-hour candles, 24 = daily)
 
 # Trend following on hourly candles: buy a breakout while the trend is up, then ride it with a
 # trailing stop. Most trades lose a little; the few long trends pay for them. Decisions are made

@@ -1,0 +1,83 @@
+# Night Desk, SNIPER rulebook: in and out of the very youngest coins.
+#
+# Buys coins between 3 and 10 minutes old, before the main desk even looks, with tiny tickets, a wide stop
+# and never more than half an hour held. Most of these go to zero; it's betting the few that fly pay for them.
+# Rug checks ([kill]), fees and the scorecard ([gates]) are the main desk's, word for word.
+# Run it with the main desk: python -m nightdesk run --with sniper. Results live in output/sniper/.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0           # paper dollars
+discover_seconds = 60        # how often the crawler sweeps for new coins
+poll_seconds = 15            # how often watched coins and positions are re-priced
+watch_minutes = 20           # it either goes now or it doesn't (main: 90)
+
+[kill]
+max_top_wallet_pct = 5.0     # biggest single holder, pools excluded
+max_top10_pct = 35.0         # top 10 holders together, pools excluded
+max_dev_pct = 5.0            # creator still holding more than this
+require_mint_revoked = true  # creator can't print more coins
+require_freeze_revoked = true  # creator can't freeze your coins
+min_lp_locked_pct = 90.0     # pool money locked or burned (when reported)
+kill_on_danger_flags = true  # any RugCheck "danger" flag
+
+[ready]
+min_age_minutes = 3          # the youngest coins (main: 15)
+max_age_hours = 0.17         # ten minutes: after that it's the main desk's (main: 24)
+min_liquidity_usd = 8000     # a smaller pool is fine this early (main: 12000)
+min_volume_h1_usd = 5000     # volume hasn't had time (main: 15000)
+min_mcap_usd = 20000         # small (main: 60000)
+max_mcap_usd = 5000000
+min_trades_h1 = 50           # fewer trades this early (main: 150)
+
+[scan]
+min_buy_pressure = 0.55      # buys ÷ all trades, last hour
+min_buy_pressure_now = 0.55  # same, last 5 minutes (is the buying still happening)
+max_momentum_spent = 0.60    # 1.0 = already up 300% this hour
+min_heat = 0.5               # it must be trading hard right now (main: 0.30)
+min_liquidity_fit = 0.60     # can the pool take a full-size ticket
+min_social = 0.0             # no time for socials (main: 0.34)
+
+[judge]
+use_ai = false               # the rules decide: free (main: true)
+model = "claude-opus-5-5"    # "claude-haiku-4-5" is the tiny, cheaper option
+effort = "low"
+min_confidence = 0.6
+
+[size]
+ticket_pct = 5.0             # tiny tickets (main: 10.0)
+max_pct_of_liquidity = 1.0   # never more than this % of the pool
+max_open = 5                 # many small bets (main: 3)
+fee_pct = 1.0                # per side: DEX fee plus priority tip
+slippage_pct = 1.0           # per side, on top of price impact
+
+[risk]
+take_profit_pct = 60.0       # a quick double-ish (main: 40.0)
+stop_loss_pct = 30.0         # wide: early coins whip (main: 20.0)
+trail_arm_pct = 25.0         # once up a quarter... (main: 20.0)
+trail_pct = 15.0             # ...give back no more than this (main: 15.0)
+max_hold_minutes = 30        # out within half an hour (main: 120)
+rug_liquidity_drop_pct = 50.0  # pool lost this much since entry: get out
+daily_loss_limit_pct = 15.0  # stop buying for the day after losing this much
+cooldown_minutes = 30        #  (main: 60)
+
+# Before real money: the scorecard (python -m nightdesk scorecard).
+# Only trades made under the current rulebook count. Change any number above
+# and the scorecard starts over: a changed desk has to earn its way back.
+[gates]
+min_trades = 100             # closed paper trades
+min_days = 30                # days of paper trading
+min_profit_factor = 1.3      # money won ÷ money lost
+min_sharpe = 1.0             # daily returns, annualized over 365 days
+max_drawdown_pct = 25.0      # worst fall from a high point
+best_trades_share = 0.05     # still profitable without the best 5% of trades (at least 3)
+cost_multiplier = 2.0        # still profitable with fees and slippage doubled
+recent_share = 0.33          # the newest third of trades must make money too
+
+# The risk officer and the nightly review (python -m nightdesk nightly).
+# They only write reports and proposals. Nothing they say changes the desk.
+[review]
+use_ai = true                # needs ANTHROPIC_API_KEY; otherwise rule-based
+model = "claude-opus-5-5"
+effort = "high"              # runs once a night, so let it think
+lookback_days = 7            # the nightly review compares this window with everything before it

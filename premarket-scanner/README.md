@@ -135,6 +135,22 @@ python -m scanner scan --book quick     # journal in output/quick/
 python -m scanner scan --book early     # journal in output/early/
 ```
 
+### Five more rulebooks, and all ten in one scan
+
+**bigcap** ($5–100 stocks, 5% gaps, 2× volume, floats to 200M, +6% / −3%), **tight** (the main rules with a 3%
+stop), **hold** (the main rules, +25% / −10%), **cheap** ($1–5 stocks, 15% gaps, 5× volume, +15% / −7%, 1% a
+trade) and **highvol** (8× volume, 500k shares). `--books all` runs every `criteria-*.toml` over **one** market
+read: each book picks its own candidates exactly as it would alone, and the bars, halts, news and floats those
+picks need are fetched once and shared, so ten books cost the data provider about what one does. Each book keeps
+its own journal in `output/<name>/` and its own $100 in the paper book.
+
+```bash
+python -m scanner scan --books all --notify      # what the server runs before the open
+python -m scanner grade --books all              # ...and after the close
+python -m scanner nightly --books all
+python -m scanner scan --books main,hold         # or just some
+```
+
 ## 4. Daily routine (Pacific time)
 
 | When | Command | Why |
@@ -313,7 +329,8 @@ python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premar
                            [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
 python -m scanner scorecard | risk | lessons | nightly [--demo] [--ai]    # nightly also takes --window
-# every command also takes --book wild, fade, quick or early (criteria-<book>.toml, results in output/<book>/)
+# every command also takes --book <name> (criteria-<name>.toml, results in output/<name>/);
+# scan, grade and nightly take --books all | a,b to run several rulebooks over one market read
 python -m scanner lookback --book fade [--against main] [--demo]   # one book's rules on another's graded picks
 ```
 

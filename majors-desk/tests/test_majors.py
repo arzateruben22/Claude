@@ -271,3 +271,16 @@ def test_command_line_takes_a_book(tmp_path, monkeypatch, capsys):
     assert "last 4-hour candle" in capsys.readouterr().out and "200h average" in capsys.readouterr().out or True
     assert cli.main(["status", "--book", "nope"]) == 2
     assert "majors-nope.toml" in capsys.readouterr().err
+
+
+def test_run_checks_every_rulebook_it_is_given_before_starting(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    assert cli.main(["run", "--with", "4h", "--with", "nope"]) == 2
+    assert "majors-nope.toml" in capsys.readouterr().err
+    for b in ("daily", "fast", "tight", "loose", "btc", "alts", "single", "slow", "4h"):
+        path, base = cli.book_paths(b, tmp_path)
+        assert path.exists() and base == tmp_path / b, b
+    hours = {b: config.load(cli.book_paths(b)[0]).desk.candle_hours for b in ("daily", "slow", "4h", "loose", "btc", "fast")}
+    assert hours == {"daily": 24, "slow": 24, "4h": 4, "loose": 4, "btc": 4, "fast": 1}
+    assert config.load(cli.book_paths("btc")[0]).desk.coins == ["BTC"]
+    assert set(config.load(cli.book_paths("alts")[0]).desk.coins) == {"SOL", "XRP", "ADA", "DOGE"}
