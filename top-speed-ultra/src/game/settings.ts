@@ -9,6 +9,7 @@ export type Corner = 'map' | 'sky' | 'off';
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
+export type Style = 'standard' | 'retro';   // RS1: the Retro look on Low (temporary switch until RS2 makes it Low itself)
 
 export type Look = 'ultra' | 'hd';
 export interface Settings {
@@ -39,6 +40,7 @@ export interface Settings {
   ultraShake: boolean;
   ultraMuffle: boolean;
   owner: boolean;           // owner mode: every car in the garage to drive, for test builds only (a local switch, not security)
+  style: Style;             // RS1: 'retro' draws Low in the Retro style (src/game/render/style.ts)
   // the art direction of the interface (the owner's style library, PROJECT_OC_STYLE_GUIDE.md): 'ultra' futuristic
   // luxury (the default), 'hd' modern realistic. The car still sets the accent; the look sets the surfaces and shapes
   look: Look;
@@ -60,6 +62,7 @@ export interface QualityPreset {
   props: number;            // scenery density multiplier
   texture: number;          // procedural texture size
   grade: boolean;           // the Ultra grade pass: a soft vignette, edge chromatic aberration and faint film grain
+  minPixelRatio?: number;   // the adaptive resolution's floor (Retro: never under the screen's CSS pixels)
 }
 
 export const QUALITY: Record<Quality, QualityPreset> = {
@@ -68,6 +71,12 @@ export const QUALITY: Record<Quality, QualityPreset> = {
   high:   { label: 'High',   renderScale: 1,    maxPixelRatio: 2,   shadows: 2048, post: true,  bloom: true,  ao: false, msaa: 4, drawDistance: 1800, props: 1,    texture: 1024, grade: false },
   ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048, grade: true },
 };
+
+// RS1, the Retro style on Low: Low's world (draw distance, scenery, textures) at full resolution, the device's pixel
+// ratio up to 2 and never under 1, with hard one-step sun shadows and its own single post pass (no composer)
+export const RETRO: QualityPreset = { ...QUALITY.low, label: 'Low · Retro', renderScale: 1, maxPixelRatio: 2, minPixelRatio: 1, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0 };
+export const retroOn = (s: Pick<Settings, 'quality' | 'style'>) => s.quality === 'low' && s.style === 'retro';
+export const presetFor = (s: Pick<Settings, 'quality' | 'style'>): QualityPreset => (retroOn(s) ? RETRO : QUALITY[s.quality]);
 
 // cars per kilometre per lane, and the share of aggressive drivers
 export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: number }> = {
@@ -113,7 +122,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
   };
 }
 
@@ -154,6 +163,7 @@ function readSettings(): Settings {
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       owner: v.owner === true,
+      style: v.style === 'retro' ? 'retro' : 'standard',
       look: v.look === 'hd' ? 'hd' : 'ultra',
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
