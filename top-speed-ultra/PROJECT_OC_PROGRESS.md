@@ -4,6 +4,37 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (morning, the scheduled continuation): crews, cruise nights, password reset, and two realistic-mode fixes
+
+The owner's standing order is to keep improving until they say stop. A scheduled task wakes the session every 2 hours.
+
+- **Crews.** A code of 4 to 8 letters or numbers puts friends in a room of their own. The server keeps snapshots, the
+  roster, honks, join and leave, and the welcome list inside the crew; the cap and the line stay shared. The Live
+  section has a crew field and New code. Invite carries `?crew=CODE`, and opening that link sets it. Server test (B
+  sees A, not an outsider 50 m away; the honk stays in the crew; everyone counts toward one cap). Browser, in the
+  `livephone` group: with crew OC405 and the scripted peer outside it, 0 peers were seen, and the list read "Crew OC405 ·
+  1 here · 2 of 25 live".
+- **Cruise nights.** `CRUISE="Fri 20:00, Sun 18:00"` in Pacific time; the menu shows the next one, or that one is on
+  now (2 hours). The desks' machine starts with Friday 8 pm. Tests cover parsing, Pacific time across daylight saving,
+  "on now", and the sooner of two. `live-env.sh` now quotes values with spaces so a shell reading the file sees one word.
+- **Password reset by email** (Resend; off until `RESEND_KEY` and `MAIL_FROM` are set). A 6-digit code, 15 minutes, 5
+  tries. The answer is the same whether or not a name exists or has an email. The account email can be set or cleared
+  with the password. Five server tests. In the browser, the panel's forgot-password flow took the code from the test
+  server's mail log, set a new password and signed in.
+- **The radio** sometimes gives the real live count and the busiest freeway when other drivers are out. **The menu**
+  shows "N of 25 driving now" from the public health check, which screen readers can hear. **Ghosts** grow in over
+  0.6 s. **The watchdog** sends a phone alert if `oc-live` stops, once it's installed (paper-book's watchdog tests:
+  9 of 9).
+- **Two realistic-mode bugs found by the live group, fixed:**
+  - The simulated typical day read the device's own clock, so on a UTC device 06:44 counted as OC's morning rush. It
+    now runs on Pacific time wherever the player is.
+  - A fresh feed waited up to 2 s to be applied. It now applies at once, and the check requires the density to match
+    the road's ratio exactly.
+- **Server tests:** 48 of 48. **Browser** (live + livephone, run 13): 16 of 17. Crews, the reset, the third driver
+  (with the longer load allowance), the who's-on list, Drive with and the honk passed. The realistic-mode check timed out
+  waiting for the feed under the load of three browsers; in isolation the feed arrives within a second. The wait is now
+  90 s and reports the feed's state; the rerun is below.
+
 ## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
 
 The owner: "share it with the desks server and do anything you can at maximum capacity", then "keep rendering and
