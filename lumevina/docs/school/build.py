@@ -41,6 +41,7 @@ for key, val in [
     ("__CURRICULUM__", script(read(HERE, "curriculum.js"))),
     ("__NOTES__", script(read(HERE, "notes.js")) if os.path.exists(os.path.join(HERE, "notes.js")) else "window.SCHOOL_NOTES = {};"),
     ("__VISUALS__", script(read(HERE, "visuals.js")) if os.path.exists(os.path.join(HERE, "visuals.js")) else "window.SCHOOL_VISUALS = [];"),
+    ("__VIDEOS__", script(read(HERE, "videos.js")) if os.path.exists(os.path.join(HERE, "videos.js")) else "window.SCHOOL_VIDEOS = {};"),
     ("__PAYMENTS__", script(read(SITE, "js", "payments.js"))),
     ("__SHIPPING__", script(read(SITE, "js", "shipping.js"))),
     ("__HERO__", script(read(HERE, "hero.js"))),

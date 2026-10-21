@@ -311,7 +311,15 @@
 
   /* ── lesson parts, shared by the preview and the player ── */
   var PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12.5-7.5z"/></svg>';
+  var VIDEOS = window.SCHOOL_VIDEOS || {};
   var videoHtml = function (ls) {
+    var v = VIDEOS[ls.id];
+    if (v) {
+      var src = "img/school/video/" + esc(ls.id);
+      return '<div class="ls-video has-clip"><video src="' + src + '.mp4" poster="' + src + '.jpg" playsinline preload="metadata" aria-label="' + esc(ls.t) + ', the explainer"></video>' +
+        '<button type="button" class="ls-play" aria-label="Play the explainer">' + PLAY + '</button>' +
+        '<div class="ls-vcap"><span>Explainer · ' + Math.round(v.dur) + ' s</span><span>Evelyn\u2019s video next</span></div></div>';
+    }
     return '<div class="ls-video"><button type="button" class="ls-play" aria-label="Play the video">' + PLAY + '</button>' +
       '<div class="ls-vcap"><span>Video · Evelyn</span><span>' + ls.min + ' min</span></div></div>';
   };
@@ -368,6 +376,22 @@
       return;
     }
     var p = e.target.closest(".ls-play");
+    if (p && p.closest(".has-clip")) {
+      var box = p.closest(".ls-video"), vid = $("video", box);
+      var fail = function () {
+        box.classList.remove("playing"); vid.controls = false;
+        var n0 = document.createElement("p"); n0.className = "ls-vnote"; n0.textContent = "The explainer isn\u2019t available in this preview. The lesson notes are right below.";
+        box.appendChild(n0); setTimeout(function () { n0.remove(); }, 3200);
+      };
+      if (!box.dataset.wired) {
+        box.dataset.wired = "1";
+        vid.addEventListener("ended", function () { box.classList.remove("playing"); vid.controls = false; });
+        vid.addEventListener("error", fail);
+      }
+      box.classList.add("playing"); vid.controls = true;
+      var pr = vid.play(); if (pr && pr.catch) pr.catch(fail);
+      return;
+    }
     if (p) {
       var v = p.closest(".ls-video"), old = $(".ls-vnote", v);
       if (old) old.remove();

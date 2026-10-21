@@ -52,3 +52,7 @@ Phase 1 (first 4 weeks): 20 miles around Woodland Hills: the San Fernando Valley
 ## What Claude does every week (the scheduled task)
 
 Every Monday morning a scheduled task drafts the week into `marketing/weekly/<date>.md`: five posts in her voice, two ad variants for the running campaign, and, if `marketing/results/` has a new export, a short read of what worked and what to change. It pushes the draft to the branch and sends Ruben a notification. Nothing is posted or spent by it.
+
+## Video: eight Skin School explainers, cut for Reels
+
+`marketing/ads/out/video/` holds the 9:16 cut (720×1280, H.264, silent, captioned) of each Skin School explainer: skin layers, the barrier, sunscreen amount, the retinoid ramp, the order of steps, what not to mix, purging vs. a breakout, the 90-day acne calendar. They are rendered from code in `docs/school/motion/` (see the README there), so a wording change re-renders in a minute and every frame is reproducible. Post them as Reels with the lesson's caption as the first line and "Skin School, free lesson on the site" as the call to action; the welcome code stays at checkout. They carry no claims beyond the general layer and her own words.
