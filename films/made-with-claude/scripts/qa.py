@@ -117,14 +117,14 @@ def picture(fmt, frames_dir):
     # and against the letter gaps (non-glyph pixels inside the box: what a heavy halo floods)
     pad = 24
     X0, X1, Y0, Y1 = max(0, x0 - 4 * pad), min(W, x1 + 4 * pad), max(0, y0 - 4 * pad), min(H, y1 + 4 * pad)
-    L = lum(img[Y0:Y1, X0:X1])
-    inbox = np.zeros(L.shape, bool); inbox[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = True
-    core = (L > 0.6) & inbox
+    Lt = lum(img[Y0:Y1, X0:X1])
+    inbox = np.zeros(Lt.shape, bool); inbox[y0 - Y0:y1 - Y0, x0 - X0:x1 - X0] = True
+    core = (Lt > 0.6) & inbox
     if core.sum() > 20:
         dil = np.asarray(Image.fromarray((core * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(41))) > 0
-        glyph, bg = float(np.median(L[core])), float(np.median(L[~dil])) if (~dil).sum() else 0.0
+        glyph, bg = float(np.median(Lt[core])), float(np.median(Lt[~dil])) if (~dil).sum() else 0.0
         near = np.asarray(Image.fromarray((core * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5))) > 0
-        gap = float(np.median(L[inbox & ~near])) if (inbox & ~near).sum() else bg
+        gap = float(np.median(Lt[inbox & ~near])) if (inbox & ~near).sum() else bg
     else:
         glyph, bg, gap = 0.0, 0.0, 0.0
     r["final_title_contrast"] = round((glyph + 0.05) / (bg + 0.05), 2)
