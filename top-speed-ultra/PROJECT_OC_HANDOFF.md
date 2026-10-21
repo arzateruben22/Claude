@@ -103,13 +103,14 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
   (16:35): this session builds the online board as NEW files only (live/board.mjs, live/test/board.test.mjs,
   src/live/board.ts, src/ui/OnlineBoard.tsx) on `claude/live-board` cut from `claude/live-server`, from server-observed
   poses only (distance, 3 s sustained top speed, longest unbroken drive per Pacific day; no client-submitted scores, no
-  Survival streaks or near misses); that session wires server.mjs and the menu. A Fable agent is building it (anti-cheat
-  is Fable-class). Chat stays out (13+); races against people are an owner decision for later;
+  Survival streaks or near misses); that session wires server.mjs and the menu. Built and pushed (17:45): `claude/live-board`
+  9c76011, 99c5fd4, board tests 9/9; the wiring snippet and API sent to that session for its wiring and review. Chat stays out (13+); races against people are an owner decision for later;
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
 ### Decisions waiting (the owner's)
 
+- The online board: the speed ceiling 110 m/s (raise to the hypercar's top speed +5 % when it ships), the 3,000 km daily ceiling, an all-time board (not built), public vs signed-in only (public now, names only), and an independent adversarial review of its rules before it goes public.
 - Online, for later: races against real people on the live server (the live-server session's view: a design question for the owner); chat stays out for a 13+ audience unless the owner decides on moderation.
 - Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`
   replaced on the `style-references` branch (see the style guide's "Decisions for the owner").

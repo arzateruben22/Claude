@@ -4,6 +4,36 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (17:45 UTC): the online board (live server), from server-observed poses only
+
+Agreed with the live-server session (session_014twwPd83rJxBkHT9T8yEiQ, which owns `claude/live-server`): this session
+builds the board as new files; that session wires it into `server.mjs` and the menu. A Fable agent designed and built it
+(anti-cheat is Fable-class) on **`claude/live-board`** (cut from `claude/live-server` 6d16421; commits 9c76011, 99c5fd4).
+
+- **Files.** Four new files only: `live/board.mjs`, `live/test/board.test.mjs`, `src/live/board.ts` (the GET
+  /api/board client) and `src/ui/OnlineBoard.tsx` (the panel, reusing the existing panel and board styles).
+- **Rules** (documented at the top of `board.mjs`):
+  - Only poses the relay accepted count, on the server's clock; no score from a phone is trusted.
+  - Distance comes from displacement, metered by a token bucket capped at the reported speed and 110 m/s, so a
+    teleport, a reconnect or a parked car reporting speed earns nothing. The daily ceiling is 3,000 km.
+  - Top speed is the speed held for 3 s, cross-checked against ground speed.
+  - The longest unbroken drive breaks on more than 3 s without a pose (the relay's own freshness window) or less than
+    3 m per 3 s.
+  - The day is Pacific, DST-correct; today and the rolling week.
+  - Banned and deleted players are hidden through the server's `players` table; the output is names and numbers only.
+  - At most one write per driver per 5 s; rows kept 35 days.
+  - Speed Survival streaks and near misses are off the board: computer traffic exists only on the phone.
+- **Checked.**
+  - `node --test test/board.test.mjs` **9/9**, reproduced by this session. It covers teleport, reconnect and parked
+    cases; a spike, a 2.9 s burst and a 3 s hold; drive splits; both 2026 DST dates; ordering, limits, names only, bans
+    and deletions; `forget()`; a bot at 199 m/s for an hour capped at 110 m/s; and 24 writes for 1,200 poses.
+  - The agent's run of the live server's `npm test` was **57/57**, and `tsc` was clean.
+  - The agent also proved the wiring snippet end to end on a scratch copy of `server.mjs`.
+- **Not done here:** the wiring (that session's), and an independent adversarial review of the rules before the board
+  goes public.
+- **Honest gap:** a modified client driving a perfect straight line at the ceiling can't be told apart by poses alone.
+  It is bounded by the ceiling, shows under its name in a lobby slot, and a ban removes it.
+
 ## 2026-10-21 (17:50 UTC): weekly events (activities); the story's logic tested without a browser
 
 - **Weekly events** (`story.ts` `EVENTS`): three simulated meets, each at set hours of the device's local week:
