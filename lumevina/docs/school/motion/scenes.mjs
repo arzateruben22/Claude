@@ -751,5 +751,65 @@ export const SCENES = {
       $(".note12").style.display = i === 2 ? "" : "none";
       $("#legend").style.display = i === 2 && lt > 0.4 ? "none" : "";   // the cards take the legend's place, so the whole thing fits a phone
     }
+  },
+
+  /* ───────── 13-1 Before a wax: a grain of rice ───────── */
+  "13-1": {
+    id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
+    shots: [
+      { at: 0, name: "length", cap: "The wax needs something to grip: about a quarter inch of hair, a grain of rice. Too short and it can't; very long can be trimmed, never shorter." },
+      { at: 7, name: "timing", cap: "That's about two to three weeks after shaving, four to six after a wax. Book from there; brows, lip and underarms every three to four." },
+      { at: 14, name: "shave", cap: "No shaving between waxes: it resets the growth and makes the next one patchier. Exfoliate gently in the days before, nothing scented that morning." }
+    ],
+    css: `
+.wx { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3.2vmin; }
+.ruler { position: relative; height: 16vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
+.ruler .line { position: absolute; left: 6vmin; right: 6vmin; top: 8.6vmin; height: .5vmin; background: #2a2a2d; border-radius: 1vmin; }
+.ruler .tk { position: absolute; top: 6.4vmin; width: .35vmin; height: 2.6vmin; background: #6e6e73; }
+.ruler .tl { position: absolute; top: 10.2vmin; font-size: 2vmin; color: #8e8e93; transform: translateX(-50%); }
+.ruler .hair { position: absolute; left: 6vmin; top: 3.4vmin; height: 3.4vmin; width: 0; border-radius: 1vmin; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.ruler .rice { position: absolute; top: 2.2vmin; padding: .6vmin 1.4vmin; border-radius: 999px; background: #e2b08c; color: #1a1210; font-size: 2vmin; font-weight: 700; white-space: nowrap; transform: translateX(-50%); opacity: 0; }
+.ruler .zone { position: absolute; top: 2.8vmin; height: 4.6vmin; border-radius: 1vmin; border: .3vmin solid #eab9c8; background: rgba(244,201,214,.18); opacity: 0; }
+.ruler .zl { position: absolute; top: 12.6vmin; font-size: 2.1vmin; font-weight: 650; color: #f4c9d6; transform: translateX(-50%); white-space: nowrap; opacity: 0; }
+.tl3 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vmin; }
+.wk { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.4vmin; opacity: 0; }
+.wk b { display: block; font-size: 3.4vmin; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; } .wk span { display: block; font-size: 2.2vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
+.wk .bar { position: relative; height: 1.4vmin; border-radius: 999px; background: rgba(255,255,255,.07); margin-top: 1.4vmin; overflow: hidden; } .wk .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.rules { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.6vmin; }
+.rule { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.2vmin; opacity: 0; }
+.rule b { display: block; font-size: 2.7vmin; font-weight: 650; line-height: 1.15; } .rule span { display: block; font-size: 2.1vmin; color: #a1a1a6; margin-top: .7vmin; line-height: 1.35; }
+.rule.no b { color: #ff7a6b; } .rule.yes b { color: #32d74b; }
+@media (orientation: portrait) { .rules { grid-template-columns: 1fr; } .tl3 { grid-template-columns: 1fr; } }`,
+    html: `
+<div class="wx">
+  <div class="ruler" id="ruler"><div class="line"></div>
+    ${[0, 1, 2, 3, 4].map((k) => `<i class="tk" style="left:calc(6vmin + ${k} * 22%)"></i><span class="tl" style="left:calc(6vmin + ${k} * 22%)">${k === 0 ? "0" : k + "/4\\""}</span>`).join("")}
+    <div class="hair" id="hair"></div><span class="rice" id="rice">a grain of rice</span>
+    <div class="zone" id="zone" style="left:calc(6vmin + 0.8 * 22%);width:calc(0.5 * 22%)"></div><span class="zl" id="zl" style="left:calc(6vmin + 1.05 * 22%)">about ¼ inch: the wax can grip</span>
+  </div>
+  <div class="tl3" id="tl3"><div class="wk" id="wk-shave"><b>2 to 3 weeks</b><span>after shaving, the hair is long enough</span><div class="bar"><i id="bar-shave"></i></div></div><div class="wk" id="wk-wax"><b>4 to 6 weeks</b><span>after a wax: the rhythm that thins the hair over time (brows, lip and underarms: 3 to 4)</span><div class="bar"><i id="bar-wax"></i></div></div></div>
+  <div class="rules" id="rules"><div class="rule no" id="r-shave"><b>No shaving between</b><span>It resets the growth and makes the next wax patchier.</span></div><div class="rule yes" id="r-exf"><b>Exfoliate gently</b><span>In the two or three days before, so the hair comes out clean.</span></div><div class="rule" id="r-day"><b>That morning</b><span>Clean skin, nothing scented, no tanning; loose clothes to leave in.</span></div></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      // shot 0: the ruler; the hair grows to a quarter inch, the rice badge rides its tip, the zone lights
+      set($("#ruler"), { o: Math.min(1, seg(t, 0, 0.6) * 1.5), y: 10 * (1 - E.out(seg(t, 0, 0.6))) });
+      const grow = i === 0 ? E.out(seg(lt, 0.8, 3.6)) : 1;
+      const hairW = 22 * 1.0 * grow;                                       // one tick = a quarter inch
+      $("#hair").style.width = "calc(" + hairW + "% )";
+      const rice = $("#rice"); rice.style.left = "calc(6vmin + " + hairW + "%)";
+      if (i === 0) enter(rice, lt, 2.4, { y: 6 }); else set(rice, { o: 1 });
+      if (i === 0) { enter($("#zone"), lt, 3.8, { y: 0, s: 0.8, d: 0.5 }); enter($("#zl"), lt, 4.2, { y: 6 }); } else { set($("#zone"), { o: 1 }); set($("#zl"), { o: 1 }); }
+      // shot 1: the timing cards and their bars fill
+      $("#tl3").style.display = i === 1 ? "" : "none";
+      if (i === 1) { enter($("#wk-shave"), lt, 0.4, { y: 12 }); enter($("#wk-wax"), lt, 1.0, { y: 12 }); $("#bar-shave").style.width = (100 * E.out(seg(lt, 1.2, 3.6))) + "%"; $("#bar-wax").style.width = (100 * E.out(seg(lt, 1.8, 5.0))) + "%"; }
+      // shot 2: the three rules
+      $("#rules").style.display = i === 2 ? "" : "none";
+      if (i === 2) { enter($("#r-shave"), lt, 0.4, { y: 12 }); enter($("#r-exf"), lt, 1.6, { y: 12 }); enter($("#r-day"), lt, 2.8, { y: 12 }); }
+      // the ruler shrinks a little once the cards take the stage
+      set($("#ruler"), { o: 1, s: i === 0 ? 1 : 0.92, y: i === 0 ? 0 : -4 });
+    }
   }
 };
