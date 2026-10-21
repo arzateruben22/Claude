@@ -132,6 +132,8 @@ export function App() {
   const av = AVATARS[prof?.avatar ?? 0];
   // the atmosphere follows the car (owner, 2026-10-21): styles.css re-points the tokens by <html data-car>
   useEffect(() => { document.documentElement.dataset.car = carNow.id; }, [carNow.id]);
+  // and the driver signs the human elements (the ability ring, the Driver row, the avatar) with their colour
+  useEffect(() => { document.documentElement.dataset.driver = settings.driver; }, [settings.driver]);
   return (
     <div className="app">
       <div className="stage" ref={host} />
@@ -185,7 +187,7 @@ export function App() {
                 <button className="pick" onClick={() => setPanel('garage')}>
                   <Ico name="garage" /><small>Car</small><b>{carById(game.current?.carId ?? 'rossini-gt').name}</b><span>{figures(carById(game.current?.carId ?? 'rossini-gt')).hp} hp</span><i aria-hidden="true">›</i>
                 </button>
-                <button className="pick" onClick={() => setPanel('driver')}>
+                <button className="pick drv" onClick={() => setPanel('driver')}>
                   <Ico name="driver" /><small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
                 </button>
                 {mode === 'race' && (

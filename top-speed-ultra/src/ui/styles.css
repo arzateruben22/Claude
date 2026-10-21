@@ -140,6 +140,23 @@
   --cyan: #ff7ad9; --cyan-line: rgba(255, 122, 217, 0.6); --cyan-wash: rgba(255, 122, 217, 0.13); --cyan-glow: rgba(255, 122, 217, 0.35);
   --ice-edge: linear-gradient(90deg, #e6d6ff 0%, #b48cff 50%, #6a3fcf 100%);
   --chrome: #ddd4ee; --chrome-lo: #726a8c; --chrome-deep: #2d2540; }
+/* The driver's layer (owner, 2026-10-21: "the same for each driver"): the car sets the world (base and accent); the
+   driver signs the human elements with their own colour, --drv: the ability ring, the Driver row, the avatar's ring,
+   the Driver panel's choice and the level line. App.tsx sets <html data-driver>. Contrast on the darkest base
+   (#04070d): gold 13:1, lavender 16:1, green 15:1. */
+:root { --drv: var(--cyan); --drv-line: var(--cyan-line); --drv-wash: var(--cyan-wash); --drv-glow: var(--cyan-glow); }
+:root[data-driver="closer"] { --drv: #ffd166; --drv-line: rgba(255, 209, 102, 0.6); --drv-wash: rgba(255, 209, 102, 0.13); --drv-glow: rgba(255, 209, 102, 0.35); }   /* the gold watch */
+:root[data-driver="ace"] { --drv: #d4dbff; --drv-line: rgba(212, 219, 255, 0.6); --drv-wash: rgba(212, 219, 255, 0.13); --drv-glow: rgba(212, 219, 255, 0.35); }      /* focus: cool, clear */
+:root[data-driver="wrench"] { --drv: #7dffa8; --drv-line: rgba(125, 255, 168, 0.6); --drv-wash: rgba(125, 255, 168, 0.13); --drv-glow: rgba(125, 255, 168, 0.35); }   /* grip: the smart watch's green */
+
+/* ------------------------------------------------------------------ futuristic details (owner, 2026-10-21)
+   A hex lattice behind the glass, chamfered plates, scanlines on the HUD's plates, a holo sweep along the rail's
+   edge and brackets that lock onto the speed. All decoration: nothing here carries information or contrast. */
+:root {
+  --hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 1 54 16v31L28 62 2 47V16zM28 63l26 15v18M28 63 2 78v18' fill='none' stroke='%23ffffff' stroke-opacity='.07' stroke-width='1'/%3E%3C/svg%3E");
+  --scan: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.028) 0 1px, var(--clear) 1px 3px);
+  --chamfer: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
 body { background: var(--void); color: var(--ink); font: 500 15px/1.45 var(--f-ui); overflow: hidden; -webkit-font-smoothing: antialiased; }
@@ -159,7 +176,7 @@ button { -webkit-tap-highlight-color: var(--clear); }
 /* a panel: smoked violet glass, a chrome hairline frame with a sunset edge along the top, two corners cut. The last
    row (Done, Back) stays in reach. */
 .panel { --px: 28px; --pb: 24px; position: relative; width: min(600px, 100%); display: grid; gap: 16px; padding: 28px var(--px) var(--pb);
-  background: linear-gradient(180deg, var(--glass-hi), var(--glass-2) 160px);
+  background: var(--hex) left top / 56px 97px, linear-gradient(180deg, var(--glass-hi), var(--glass-2) 160px);
   -webkit-backdrop-filter: blur(16px) saturate(1.25); backdrop-filter: blur(16px) saturate(1.25);
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
   animation: panel-in 0.3s var(--ease) both; }
@@ -299,11 +316,13 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   grid-template-areas: "brand player" "nav hero" "nav modes" "foot aside"; column-gap: 32px; row-gap: 14px;
   padding: max(16px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
 .menu-grid::before { content: ""; grid-area: 1 / 1 / -1 / 2; margin: -6px -12px; pointer-events: none;
-  background: var(--ice-edge) left top / 100% 2px no-repeat, linear-gradient(180deg, var(--glass-hi), var(--glass-2) 240px);
+  background: var(--ice-edge) left top / 200% 2px no-repeat, var(--hex) left top / 56px 97px, linear-gradient(180deg, var(--glass-hi), var(--glass-2) 240px);
+  animation: sweep 9s linear infinite;
   -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2); box-shadow: inset 0 0 0 1px var(--line);
   clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%); }
 .menu-grid > * { animation: col-in 0.45s var(--ease) both; }
 @keyframes col-in { from { opacity: 0; transform: translateX(-14px); } }
+@keyframes sweep { from { background-position: 0 0, left top, left top; } to { background-position: -200% 0, left top, left top; } }
 @keyframes fade-in { from { opacity: 0; } }
 
 .m-brand { grid-area: brand; display: grid; gap: 10px; padding: 6px 6px 0; }
@@ -312,9 +331,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* the player card: who you are, your level, your credits (earned by driving, never bought) */
 .player { grid-area: player; justify-self: end; align-self: start; display: grid; grid-template-columns: auto auto auto; gap: 14px; align-items: center; padding: 7px 16px 7px 8px;
-  border: 0; cursor: pointer; text-align: left; color: var(--ink); background: var(--glass); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice);
+  border: 0; cursor: pointer; text-align: left; color: var(--ink); background: var(--hex) left top / 56px 97px, var(--glass); clip-path: var(--chamfer); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice);
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
-.player .avatar { width: 46px; height: 46px; font-size: 24px; }
+.player .avatar { width: 46px; height: 46px; font-size: 24px; box-shadow: 0 0 0 2px var(--drv), 0 0 14px var(--drv-glow); }
+.player-main small { color: var(--drv); }
 .player-main { display: grid; gap: 4px; }
 .player-main b { font: 600 15px/1 var(--f-ui); letter-spacing: 0.1em; text-transform: uppercase; }
 .player-main small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ice-text); }
@@ -348,6 +368,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .pick { position: relative; display: grid; grid-template-columns: 22px 60px minmax(0, 1fr) 22px; grid-template-areas: "ic k v i" "ic k s i"; column-gap: 10px; row-gap: 2px; align-items: center;
   min-height: 54px; padding: 8px 8px 8px 12px; text-align: left; cursor: pointer; border: 0; color: var(--ink); background: var(--clear); box-shadow: inset 0 -1px 0 var(--line); }
 .pick > .ico { grid-area: ic; color: var(--dim); }
+.pick.drv > .ico, .pick.drv > span:not(.shield-row) { color: var(--drv); }
 .pick > small { grid-area: k; font: 500 9.5px/1.25 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint); }
 .pick > b, .pick > .shield-row { grid-area: v; justify-self: start; }
 .pick > b { font: 600 15px/1.15 var(--f-ui); }
@@ -423,6 +444,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .gcell.driver { gap: 4px; padding: 14px 16px; align-content: start; }
 .gcell.driver b { font: 800 26px/0.95 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; }
 .gcell.driver small { font: 500 11px/1.4 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ice-text); }
+.drivers .gcell.driver:not(.car).on { box-shadow: inset 0 0 0 1px var(--drv-line), inset 3px 0 0 var(--drv); }
+.drivers .gcell.driver:not(.car).on::after { --r: var(--drv); }
 .gcell.driver em { font-style: normal; font-size: 13.5px; line-height: 1.4; color: var(--ink); padding-left: 10px; border-left: 2px solid var(--ice-line); margin-top: 4px; }
 .gcell.driver small .shield-row { vertical-align: middle; gap: 6px; }
 .gcell.driver small .shield { min-width: 30px; height: 22px; font-size: 12px; }
@@ -477,7 +500,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* ------------------------------------------------------------------ profile */
 .panel.profile { width: min(720px, 100%); }
 .who { display: flex; gap: 16px; align-items: center; }
-.avatar { width: 66px; height: 66px; flex: none; display: grid; place-items: center; font: 900 36px/1 var(--f-display);
+.avatar { width: 66px; height: 66px; flex: none; display: grid; place-items: center; font: 900 36px/1 var(--f-display); box-shadow: 0 0 0 2px var(--drv), 0 0 18px var(--drv-glow);
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)); }
 .who-main { display: grid; gap: 4px; min-width: 0; flex: 1; }
 .who-main .name { width: 100%; min-width: 0; padding: 2px 0 4px; border: 0; border-bottom: 1px solid var(--line-2); background: var(--clear); border-radius: 0;
@@ -505,7 +528,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
    icons on the right, the speed block bottom right with the revs as a slanted ice bar and chips under the number,
    and the round map bottom left (the corner rules). Nothing sits over the road ahead. */
 .hud { position: absolute; inset: 0; pointer-events: none; }
-.hud-stats { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; display: grid; gap: 3px; padding: 8px 14px 9px 14px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); }
+.hud-stats { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; display: grid; gap: 3px; padding: 8px 14px 9px 14px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
 .hud-stats .oc-mark { width: 44px; margin-bottom: 2px; }
 .hud-mode { margin-bottom: 3px; font: 600 12.5px/1.2 var(--f-ui); font-style: normal; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); }
 .hud-stats div:has(b:empty) { display: none; }
@@ -517,7 +540,13 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* the speed block */
 .hud-speed { position: absolute; right: 18px; bottom: max(16px, env(safe-area-inset-bottom)); display: flex; gap: 16px; align-items: stretch; padding: 10px 16px 10px 14px;
-  background: linear-gradient(90deg, var(--scrim-0), var(--hud) 26%); }
+  background: var(--scan), linear-gradient(90deg, var(--scrim-0), var(--hud) 26%); }
+/* brackets lock onto the speed */
+.hud-speed::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(var(--ice) 0 0) right top / 14px 2px no-repeat, linear-gradient(var(--ice) 0 0) right top / 2px 14px no-repeat,
+    linear-gradient(var(--ice) 0 0) right bottom / 14px 2px no-repeat, linear-gradient(var(--ice) 0 0) right bottom / 2px 14px no-repeat,
+    linear-gradient(var(--line-3) 0 0) left bottom / 14px 2px no-repeat, linear-gradient(var(--line-3) 0 0) left bottom / 2px 14px no-repeat; }
 .hud-rpm { flex: none; width: 14px; margin: 2px 4px 2px 0; transform: skewX(var(--skew)); background: var(--line-2); overflow: hidden; }
 .hud-rpm div { height: 100%; background: linear-gradient(0deg, var(--ice-deep), var(--ice) 60%, var(--cyan)); transform-origin: center bottom; transform: scaleY(0); }
 .hud-rpm div.red { background: var(--ember); }
@@ -545,7 +574,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* the race HUD (replaces the numbers top left): position of N with the race clock beside it, then the standings with
    the gap in seconds (your row in ice). Nothing of it sits over the road; the corner window stays the track map. */
-.hud-race { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); }
+.hud-race { position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
 .hud-pos { display: grid; grid-template-columns: auto 1fr auto; column-gap: 10px; align-items: end; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
 .hud-pos > b { grid-row: 1 / 3; min-width: 1ch; font: 800 46px/0.82 var(--f-display); letter-spacing: 0.02em; color: var(--ice-text); }
 .hud-pos > span { display: flex; flex-direction: column; gap: 3px; }
@@ -619,12 +648,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* the ability button: a hexagon whose edge drains while it's on and refills while it recharges */
 .hud-ability { --p: 1; position: absolute; right: 300px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
   display: grid; place-items: center; color: var(--ink); font: 600 10.5px/1.1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
-  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--ice) calc(var(--p) * 1turn), var(--line-2) 0); }
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--drv) calc(var(--p) * 1turn), var(--line-2) 0); }
 .hud-ability::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
 .hud-ability span { max-width: 54px; }
 .hud-ability.cool { color: var(--dim); background: conic-gradient(var(--chrome) calc(var(--p) * 1turn), var(--line) 0); }
-.hud-ability.on { color: var(--ice-text); }
-.hud-ability.on::before { background: radial-gradient(circle, var(--ice-wash), var(--clear) 70%), var(--glass-2); }
+.hud-ability.on { color: var(--drv); }
+.hud-ability.on::before { background: radial-gradient(circle, var(--drv-wash), var(--clear) 70%), var(--glass-2); }
 .hud-ability:focus-visible { outline: none; }
 .hud-ability:focus-visible::before { background: var(--night-3); }
 
@@ -767,7 +796,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* motion is a garnish: off when asked */
 @media (prefers-reduced-motion: reduce) {
-  .panel, .menu-grid > *, .toast, .loadbar i, .gcell.on::after, .hud-revs i,
+  .panel, .menu-grid > *, .menu-grid::before, .toast, .loadbar i, .gcell.on::after, .hud-revs i,
   .brand.hero .word span::after { animation: none !important; }
   .loadbar i { left: 31%; }
   .tunnel { display: none; }

@@ -51,5 +51,17 @@ for (const [id, name] of CARS) {
     await page.waitForSelector('.overlay.menu', { timeout: 20000 }).catch(() => {});
   }
 }
+// the driver's layer on top of the car's world: each driver picked through the Driver panel, on the hypercar
+for (const [id, name] of [['closer', 'The Closer'], ['ace', 'The Ace'], ['wrench', 'The Wrench']]) {
+  try {
+    await page.locator('.pick', { hasText: 'Driver' }).first().click();
+    await page.locator('.gcell.driver', { hasText: name }).first().click();
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.waitForFunction((want) => document.documentElement.dataset.driver === want, id, { timeout: 5000 });
+    await page.waitForTimeout(300); await settled();
+    await page.screenshot({ path: path.join(outDir, `driver-${id}-menu.png`), timeout: 180000 });
+    shots.push('driver-' + id);
+  } catch (e) { errors.push(`driver ${id}: ${String(e.message || e).split('\n')[0]}`); await page.keyboard.press('Escape').catch(() => {}); }
+}
 await browser.close();
 console.log(JSON.stringify({ outDir, shots, errors }, null, 1));

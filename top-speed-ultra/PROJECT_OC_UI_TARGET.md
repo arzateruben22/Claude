@@ -108,6 +108,18 @@ what the game now does:
   comment. The 3D clusters were already per car (the GT's amber tach, the Vela's blue display, the hypercar's ice).
   Drivers do not change the atmosphere yet; that is the next step if wanted (a second attribute, `data-driver`).
 
+- **The driver's layer and a more futuristic language** (owner, later the same day: "do the same for each driver,
+  keep upscaling the ultra graphics, adapt to a more futuristic theme, including freeways, trees, other NPC cars,
+  fashion clothes"). The car sets the world; the driver signs the human elements with their own colour, `--drv`
+  (`<html data-driver>`): **The Closer** gold (the watch), **The Ace** a cool lavender-white (focus), **The Wrench**
+  a vivid green (the smart watch's grip readout). It lights the ability hexagon, the Driver row, the avatar's ring and
+  level line, and the Driver panel's choice. The futuristic details are decoration only: a hex lattice behind the
+  rail, the panels and the player card, chamfered HUD plates with faint scanlines, brackets that lock onto the speed,
+  and a slow sweep of the accent along the rail's top edge (off with reduced motion). The world itself (freeways,
+  trees, traffic, night lighting), the menu's attract drive taking each car's time and weather, an Ultra-only grade
+  (vignette, edge chromatic aberration, grain) and each driver's clothes are separate lanes, logged in
+  `PROJECT_OC_PROGRESS.md` when judged.
+
 What was not taken: the mock's car photo, fonts and icons (ours are drawn), the "$" (credits are earned), "Online"
 as a feature, and the mock's showroom floor as the menu hero (the attract drive stays the hero; a showroom stage for
 the hypercar is M6's reveal stage).
