@@ -7479,7 +7479,7 @@
    "w": 1280,
    "h": 720,
    "bytes": 0,
-   "hash": "140463ae8c79d8db9479f00ccb8d466f5e3f06c0",
+   "hash": "4f5af93c15743c49f412358ea5881bc41f3645fe",
    "samples": [
     [
      0,
@@ -7487,23 +7487,23 @@
     ],
     [
      15,
-     "a1aef43d47f38dc175b2316394841ddef042bdb3"
+     "ff15b5eab9d874a9203bdc589f5999eade3b8290"
     ],
     [
      30,
-     "c45f130e9b1f7c29197bf32d8abc1555c19fe4df"
+     "a6ff6cbb41c13b6ebbce1d09e71e44410898acae"
     ],
     [
      45,
-     "c366292e27a53b01d79b4b5772e53d8177bc6083"
+     "22006f8e848c2a8d53daed32f2da498dc1d3c0ab"
     ],
     [
      60,
-     "8d532949cc745b42bb1e057c17280bcce4b84051"
+     "ddc49c8ecd0ad0b4de1317d19ae82298cbb6bcfc"
     ],
     [
      75,
-     "74c485e8749e97edae8a7ad8fceff6f927e88df5"
+     "236422c74ef7b898ba5834691def23c9b0b3af19"
     ],
     [
      90,
@@ -7519,7 +7519,7 @@
     ]
    ],
    "warnings": [],
-   "renderSec": 17.1,
+   "renderSec": 17.8,
    "renderedAt": "2026-10-21",
    "quick": true
   }
