@@ -4,6 +4,110 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-20 to 21: the OC Hypercar's lights and cockpit (hypercar M2, branch `claude/hypercar`)
+
+Still a **procedural model built in code**, not a finished 3D asset. The first M2 pass was cut off by a usage pause
+and its work was committed unjudged (`d2f046b`). Later passes left edits on disk: the blades rebuilt to the sheet, the
+brake haze, and fixes to the signals and the bulkhead. The pass of 2026-10-21 reviewed both, kept them, re-measured
+the numbers and logged them here. Every number below is from the code as it stands.
+
+- **Headlamp blades, the face's main feature** (M1b item 2, ticked in the plan). They are built to the sheet's FRONT
+  panel, where each blade's inner tip sits about 0.47 m off the centre, with silver nose between the two tips. Read
+  again on 2026-10-21 from the panel at 3×, the tips sit 0.46 and 0.48 m off the centre and the outer ends at 0.92 m.
+  - Each blade is a lit face 25 mm tall along the head quad's swept front edge. It runs from (0.45, 0.39, −2.34) m
+    out round the fender's corner to (0.90, 0.53, −2.06) m: 0.54 m in plan, 0.56 m along its path. It narrows to
+    6 mm over its inner eighth.
+  - Over it, a smoked socket stands 74 mm over the face at the outer end, where the three-cell module sits. It tapers
+    to nothing about halfway in, and is 2 cm deep in plan at the tip and 16 cm at the outer end.
+  - The lens keeps a third of the sky's reflection, and the blade's blue glow reaches only its lower fifth. So from
+    the hood camera, which looks down on them, the sockets read as dark glass with a blue edge.
+  - Measured from the built geometry with `tests/out/m2g-measure/run.mjs`. Against the sheet:
+    `tests/out/preview/m2g/blades-sheet-vs-render.png` (the sheet's FRONT over the preview's front view, at night and
+    by day).
+  - An earlier pass (`tests/out/m2e/`) ran the blades in to 0.14 m along the lower nose, so they nearly met as one
+    curved bar. That version is gone.
+- **Beams from the blades.** The two spot beams and the road pool start 55 % of the way out along each blade, at
+  (±0.72, 0.49, −2.25) m (`CarBody.beamAt`), aimed at (±0.72, 0.9, −70). Measured in the game: off by day; at night
+  on (intensity 70, pool opacity 1), with the blades' emissive going from 2.4 to 5.4.
+- **The red bar on the brakes.**
+  - The bar's levels are 0.5 as a tail light and 6 on the brakes (`lampMaterials('blade')`, read by `PlayerCar`
+    through the tail material's `userData.levels`). Every other car keeps 1.6 → 5.
+  - While braking, a red haze spreads round the bar (`brakeGlow`: one additive quad 1.68 × 0.11 m, 2 triangles, one
+    draw call only while lit). The bar is 2 cm tall, one or two pixels from the chase camera, so its level alone
+    barely shows there.
+  - Red pixels round the bar in the game's chase frames go from 136 to 704 by day, and from 192 to 885 at night
+    (`tests/out/m2g/day-chase-free-vs-brake-x4.png`, `night-chase-free-vs-brake-x4.png`). Counted in the box x
+    370–590, y 320–400, where a pixel is red if r ≥ 120 and r is more than 1.8× both g and b.
+- **Turn signals and reversing lamps.** They are built hidden and switched by visibility (`SWITCHED_LAMPS`).
+  - The amber signals cover the upper two thirds of each front corner LED (y 0.18–0.33 m) and the bar's outer
+    0.26 m. They flash at 1.5 Hz on a lane change (sideways faster than 0.6 m/s for 0.2 s above 6 m/s, held 1 s),
+    and while the front wheels are steered past 0.12 rad under 12 m/s.
+  - White reversing lenses sit either side of the plate.
+  - Signals are for driving forward only: backing up never signals. An earlier run caught the left signal blinking
+    while the car backed up at 22 mph and weaved.
+  - In the game at night:
+    - The right-hand signals lit 0.45 s into a lane change (0.63 m across), and the left-hand ones 0.45 s into one
+      the other way (0.55 m).
+    - Full-lock turns at 5 mph signalled the side turned to.
+    - The reversing lamps came on in gear −1 at 18 mph, with no signal.
+  - Frames: `tests/out/m2g/night-signal-right-and-reverse-x4.png`, `night-front34-signal-right-x4.png`, and
+    `tests/out/m2h/hyper-night-chase-signal-left.png`, `hyper-night-front34-signal-left.png`.
+- **Cockpit `'hyper'`:**
+  - The Corsa's carbon buckets, roll hoop and Alcantara wheel, with ice-blue stitching and rim stripe, and blue
+    harnesses.
+  - An ice-blue ambient line along the dash and both door cards.
+  - The OC badge on the wheel's boss, and "O C" on the tachometer.
+  - A gauge pod on the dash for M5's tank gauge (`Cockpit.gaugeAt`).
+  - No rear-view mirror: under the low header it would hang across the road.
+  - The driver sits 0.20 m lower and 0.10 m further in (measured eye in the game (−0.27, 0.96, 0.10) m). This
+    replaces the drive branch's temporary `HYPER_EYE`. The hood camera is at 0.85 m.
+- **Fixed in review of the earlier passes' code:**
+  - The bulkhead behind the seats had widened by 12 mm a side on every car. Now only the hypercar's follows its wall.
+  - The night shot script read the lamps before the car's update, so its signal frame was frozen in the off phase.
+    The scripts now read them after it, with the traffic cleared round the car.
+  - The suite's M2 check left the player's car rolling backwards at about 8 m/s (it backs up for the reversing
+    lamps). The `pause` and `reset` checks after it drive on the autopilot for a few seconds and expect forward
+    speed, so on a loaded machine they failed (s went backwards on resume; 20 m/s where they want 30). The check now
+    puts the car back in its nearest lane, driving forward at the speed it came in at, and asserts that it did.
+- **In-game frames.** High, 960 × 540, I-405 North, owner mode, Free Drive (the Unleashed tune), with the hypercar
+  picked as the owner's car. Script `tests/out/m2g-lights.mjs`; logs `tests/out/m2h-lights-day.log` and
+  `m2h-lights-night.log`, no page errors. The frames:
+  - `tests/out/m2g/hyper-{day,night}-{cockpit,hood,chase,chase-braking,front34}.png`
+  - `hyper-night-chase-signal-right.png`, `hyper-night-front34-signal-right.png`, `hyper-night-chase-reverse.png`
+  - the left-hand signals, in `tests/out/m2h/` (`m2h-signal-left.mjs`)
+
+  These frames were shot from the build of 04:47. This pass's `npm run build` (09:55) is byte-identical to it
+  (`cmp` of `dist/top-speed-ultra.html` and `dist/artifact.html`), so they show this code.
+- **Cost.** The player's car's whole-frame cost: every pass, the car shown minus the car hidden. Compared with the
+  Rossini Corsa at the same moment (`m2h-lights-day.log`):
+  - From the seat: 182 calls / 875,092 triangles, against the Corsa's 264 / 1,268,590. The Corsa also renders a
+    rear-view mirror, which the hypercar doesn't have.
+  - Chase: 123 / 446,402, against the Corsa's 131 / 422,745.
+  - Hood: 47 / 339,691.
+  - Braking adds 1 call and 2 triangles (124 / 446,404).
+  - The exterior on the preview page (side view): 29 calls / 246,566 triangles on `high` and 29 / 126,184 on
+    `phone` (`tests/out/preview/m2i/hyper-side.png`, `hyper-phone-side.png`). That is 572 and 428 triangles over M1
+    and no extra draw call; the blades' rebuild kept their sample count. Every switched lamp lit adds 4 calls and 48
+    triangles (33 / 246,614, `m2i/hyper-chase-lit.png`). Inside the budget (40 / 260,000 on `high`, 36 / 135,000 on
+    `phone`).
+- **Other cars unchanged:**
+  - The Corsa's side view re-rendered in this pass is pixel for pixel the M1 render: `tests/out/preview/m2i/corsa-side.png`
+    against `hyper-corsa-high-side-r2.png` of 2026-10-19, 0 pixels differ, 31 calls / 219,861 triangles.
+  - The new lamp code sits behind the hypercar's own lamp style (`'blade'`) and shape keys (`bar`, `blade`, `led`).
+    The other cars' tail levels stay 1.6 → 5, and their bulkhead is back at M1's 0.866 m.
+  - In the earlier M2 pass, the GT's seat view differed from the pre-M2 render in 178 pixels: the tachometer
+    needle's idle flutter (`tests/out/preview/m2g/gt-seat-before-after-tach-x4.png`), with the same 62 calls and
+    169,572 triangles.
+- **Checks:** `npx tsc --noEmit` and `-p tsconfig.game.json` clean; `npm run build`; `node tests/dynamics.mjs` 1,742
+  passed, 0 failed; SUITE.
+- **Seen, not M2's:** at night the scripts' front three-quarter camera (not one of the game's cameras) shows a lit
+  patch with a ragged top edge on the sound wall behind the car (`tests/out/m2g/hyper-night-front34.png`). Its cause
+  was not traced.
+- **Not done:**
+  - the optional tyre lettering
+  - the pressure gauge's face (M5)
+  - the rest of M1b (nose, bonnet, splitter, side scoop, plan, rear), which waits for the fidelity pass
+
 ## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
 
 The owner asked for the hypercar "ASAP". Branch `claude/hypercar-drive` = the body (`a137e50`) + the vehicle-dynamics
