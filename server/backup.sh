@@ -31,6 +31,12 @@ for p in night-desk/output/live night-desk/output/archive night-desk/output/wild
     cp -a --parents "$p" "$WORK/"
   fi
 done
+if [ -f top-speed-ultra/live/data/live.db ]; then     # the game's accounts (password hashes only), a consistent copy
+  mkdir -p "$WORK/top-speed-ultra/live/data"
+  "$DIR/.venv/bin/python" -c 'import sqlite3, sys
+src, dst = sqlite3.connect(sys.argv[1]), sqlite3.connect(sys.argv[2])
+src.backup(dst); dst.close(); src.close()' top-speed-ultra/live/data/live.db "$WORK/top-speed-ultra/live/data/live.db"
+fi
 if [ -f post-desk/output/live/desk.db ]; then          # a consistent copy, even while Post Desk is writing
   mkdir -p "$WORK/post-desk/output/live"
   "$DIR/.venv/bin/python" -c 'import sqlite3, sys

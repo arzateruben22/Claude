@@ -105,6 +105,29 @@ of Part 3 (`sudo bash server/phone.sh`), at the address it prints, port 8790.
 
 Drafts start arriving within minutes. **Nothing posts until you approve it.**
 
+## Part 4: Put OC Ultra live on the internet (10 minutes, free)
+
+The same machine also runs the game's **live server**: accounts, a lobby of 25 drivers at a time (the rest wait in
+line), other drivers' cars on the freeway with you, and live weather. `setup.sh` already installed it; it's private
+until you run:
+
+```bash
+sudo bash server/live.sh
+```
+
+It gives the game a free public https address through Tailscale (the same app as Part 3, step 6), checks it end to
+end, and prints the link. The first time, Tailscale may ask you to turn on **Funnel** for this machine; the script
+says how. Open the link on your phone, tap **Account** under "Live · alpha", sign up, turn on **Drive live**, and drive.
+Send the same link to anyone.
+
+- **Live freeway traffic** (optional, free): sign up at **developer.tomtom.com**, copy the API key, run
+  `sudo bash server/live.sh` again and paste it when asked.
+- **Your own domain** instead of the Tailscale address: `sudo LIVE_DOMAIN=live.yourdomain.com bash server/live.sh`
+  (point the domain at this machine first).
+- **More drivers at once:** `sudo bash server/live-cap.sh 50`. Raise it a rung at a time (25, 50, 100); the ladder
+  and when to climb it are in `top-speed-ultra/live/README.md`.
+- `bash server/live-status.sh` shows who's driving, who's waiting, and the public address.
+
 ## Every day (10–20 minutes)
 
 - **Morning:** open the Post Desk dashboard and approve, edit or reject the day's drafts.
@@ -121,12 +144,13 @@ Drafts start arriving within minutes. **Nothing posts until you approve it.**
 | Claude | about $6–10 (hard cap $0.40 a day) |
 | X Premium (needed for creator payouts; get it once you're posting daily) | X's price |
 | paper trading | free |
+| OC Ultra live server (on the same machine; Tailscale address, weather and traffic feeds) | free |
 
 ## If something looks wrong
 
 ```bash
 bash server/status.sh               # what's running, what's waiting
-journalctl -u postdesk -n 50        # Post Desk's recent messages (or: majors, nightdesk, paperbook)
+journalctl -u postdesk -n 50        # Post Desk's recent messages (or: majors, nightdesk, paperbook, oc-live)
 git pull && sudo bash server/setup.sh   # get the newest version
 ```
 

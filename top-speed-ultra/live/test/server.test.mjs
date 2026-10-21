@@ -137,3 +137,9 @@ test('the relay: near drivers see each other, far ones do not, bad poses are dro
   assert.equal(A.got.bye.why, 'Signed in somewhere else');
   for (const c of [A2, B, F]) c.sock.close();
 });
+
+test('behind a local proxy with no client address, sign-ups are not throttled as one shared address', async () => {
+  // every request in this suite comes from 127.0.0.1 with no X-Forwarded-For: well past IP_MAX would be refused if
+  // loopback counted as one client
+  for (let i = 0; i < 12; i++) assert.equal((await post('/api/signup', { name: 'proxy_' + i, password: 'correct horse battery', over13: true })).status, 200);
+});

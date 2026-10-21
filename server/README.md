@@ -16,6 +16,7 @@ Everything on one small Linux machine that never sleeps:
 | `scanner-quick-scan` / `scanner-quick-grade` | the same picks sold at +5% or −3% (the quick rules), on their own $100 | with the stock scans |
 | `scanner-early-scan` / `scanner-early-grade` | the same picks, out by 10:30 New York time (the early rules), on their own $100 | with the stock scans |
 | `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Trading Deck, Trade Crawler and Paper Galaxy on port 8790 | right away |
+| `oc-live` | the OC Ultra game's live server: accounts, a lobby of 25 at a time, the game page and live weather, on 127.0.0.1:8791; `sudo bash server/live.sh` makes it public (`top-speed-ultra/live/README.md`) | right away (private until live.sh) |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for all three rulebooks | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.

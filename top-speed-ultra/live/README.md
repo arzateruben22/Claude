@@ -54,7 +54,24 @@ In the game (dev server or the built page): Live · alpha on the menu → Accoun
 second account drives on the same freeway and each sees the other's car. The suite's `live` group does exactly
 this with three browsers against a cap of two: `npm test -- --only=live` from `top-speed-ultra/`.
 
-## Put it on the internet
+## On the desks' machine (the owner's choice, 2026-10-21)
+
+The live server shares the always-on machine with the trading desks. `sudo bash server/setup.sh` installs it with
+everything else (`server/live-install.sh`: Node 22, the game page built on the machine, a 1 GB swap file when memory
+is short, `/etc/oc-live.env`, the `oc-live` service on 127.0.0.1:8791 with the weather feed on). A failure there never
+stops the desks. Then:
+
+```bash
+sudo bash server/live.sh          # a free public https address (Tailscale Funnel), checked end to end, plus the TomTom key
+sudo bash server/live-cap.sh 50   # the cap
+bash server/live-status.sh        # who's driving, who's waiting, the feeds, the public address
+```
+
+Backups: `server/backup.sh` copies `live.db` with the desks' records every night. The cost of sharing is about $1 a
+month for nothing (no domain is needed with Funnel); the cap stays at 25 until the numbers on the ladder below say the
+box can take more next to the desks.
+
+## Put it on the internet (its own machine)
 
 The browser only opens a socket from an https page to a `wss://` server, so the server needs HTTPS, so it needs a
 domain. Steps (about 30 minutes, once):

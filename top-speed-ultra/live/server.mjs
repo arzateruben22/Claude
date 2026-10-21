@@ -14,7 +14,8 @@
 // Run:  MAX_PLAYERS=25 PORT=8791 node server.mjs      (see README.md and deploy/ for the real thing, behind Caddy)
 
 import { createServer } from 'node:http';
-import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, existsSync, mkdirSync, statSync } from 'node:fs';
+import { gzipSync } from 'node:zlib';
 import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { WebSocketServer } from 'ws';
@@ -26,6 +27,7 @@ const HOST = process.env.HOST || '127.0.0.1';          // Caddy sits in front; b
 const DB_PATH = process.env.DB_PATH || new URL('./data/live.db', import.meta.url).pathname;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';      // empty: the admin endpoints are off
 const PUBLIC_DIR = process.env.PUBLIC_DIR || '';        // serve the built game from here at / (optional)
+const PUBLIC_INDEX = process.env.PUBLIC_INDEX || 'index.html';   // the page served at / (the desks use dist/top-speed-ultra.html)
 const CAP_MIN = 1, CAP_MAX = 500;
 // the realistic mode's feeds (now.mjs): 'nws' / 'tomtom' for the real ones, 'mock' for a typical day, 'off'
 const NOW_WEATHER = process.env.NOW_WEATHER || 'off', NOW_TRAFFIC = process.env.NOW_TRAFFIC || 'off', TOMTOM_KEY = process.env.TOMTOM_KEY || '';
@@ -146,9 +148,28 @@ function readJson(req) {
   });
 }
 const ipOf = (req) => (process.env.TRUST_PROXY ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '') || req.socket.remoteAddress || '?';
+// behind a local proxy that doesn't say who the client is, every request comes from loopback: one shared bucket would
+// lock everyone out after a few sign-ups, so the per-address limit only applies to an address that names a client
+const LOOPBACK = /^(127\.|::1$|::ffff:127\.)/;
+const ipLimited = (req) => { const ip = ipOf(req); return !LOOPBACK.test(ip) && limited('ip:' + ip, IP_MAX); };
 const bearer = (req) => { const m = /^Bearer (.+)$/.exec(String(req.headers.authorization || '')); return m ? m[1] : ''; };
 const now = createNow({ weather: NOW_WEATHER, traffic: NOW_TRAFFIC, tomtomKey: TOMTOM_KEY, log: (ev, d) => log(ev, d) });
 const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
+
+// a static file, gzipped once per version (the game page is about 3.7 MB, 1.2 MB gzipped), with an ETag so a phone
+// that has it already gets a 304
+const fileCache = new Map();
+function sendFile(req, res, file, type) {
+  const st = statSync(file), key = file + ':' + st.mtimeMs + ':' + st.size;
+  let c = fileCache.get(file);
+  if (!c || c.key !== key) { const raw = readFileSync(file); c = { key, raw, gz: gzipSync(raw, { level: 9 }), etag: '"' + createHash('sha1').update(raw).digest('base64url').slice(0, 16) + '"' }; fileCache.set(file, c); }
+  const head = { 'content-type': type, 'cache-control': 'no-cache', etag: c.etag, vary: 'accept-encoding' };
+  if (req.headers['if-none-match'] === c.etag) { res.writeHead(304, head); return res.end(); }
+  const gz = /\bgzip\b/.test(String(req.headers['accept-encoding'] || ''));
+  const body = gz ? c.gz : c.raw;
+  res.writeHead(200, { ...head, 'content-length': body.length, ...(gz ? { 'content-encoding': 'gzip' } : {}) });
+  return res.end(req.method === 'HEAD' ? undefined : body);
+}
 
 async function handle(req, res) {
   const url = new URL(req.url, 'http://x'), path = url.pathname;
@@ -158,7 +179,7 @@ async function handle(req, res) {
     if (path === '/api/now') return send(res, 200, now.snapshot());
     if (path === '/api/traffic') return send(res, 200, now.snapshot().traffic);
     if (path === '/api/signup' && req.method === 'POST') {
-      if (limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (!LOOPBACK.test(ipOf(req)) && limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const b = await readJson(req);
       const name = String(b.name || '').trim(), pw = String(b.password || ''), email = b.email ? String(b.email).trim().toLowerCase() : null;
       if (!NAME_RE.test(name)) return send(res, 400, { error: 'A name is 3 to 16 letters, numbers or underscores.' });
@@ -173,7 +194,7 @@ async function handle(req, res) {
     if (path === '/api/login' && req.method === 'POST') {
       const b = await readJson(req);
       const name = String(b.name || '').trim(), pw = String(b.password || '');
-      if (limited('ip:' + ipOf(req), IP_MAX) || limited('name:' + name.toLowerCase())) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (ipLimited(req) || limited('name:' + name.toLowerCase())) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const p = q.byName.get(name.toLowerCase());
       const ok = checkPassword(pw, p ? p.pass : DUMMY) && !!p;
       if (!ok) return send(res, 401, { error: 'Wrong name or password.' });
@@ -198,11 +219,11 @@ async function handle(req, res) {
       admitFromQueue();
       return send(res, 200, health());
     }
-    if (PUBLIC_DIR && req.method === 'GET') {
-      const rel = path === '/' ? '/index.html' : path;
+    if (PUBLIC_DIR && (req.method === 'GET' || req.method === 'HEAD')) {
+      const rel = path === '/' ? '/' + PUBLIC_INDEX : path;
       const file = PUBLIC_DIR + rel.replace(/\.\./g, '');
       const ext = file.split('.').pop();
-      if (PUBLIC_TYPES[ext] && existsSync(file)) { res.writeHead(200, { 'content-type': PUBLIC_TYPES[ext], 'cache-control': 'no-cache' }); return res.end(readFileSync(file)); }
+      if (PUBLIC_TYPES[ext] && existsSync(file)) return sendFile(req, res, file, PUBLIC_TYPES[ext]);
     }
     return send(res, 404, 'not found');
   } catch (e) {

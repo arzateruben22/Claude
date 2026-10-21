@@ -35,6 +35,10 @@ systemctl enable nightdesk.service majors.service majors-4h.service paperbook.se
 systemctl restart nightdesk.service majors.service majors-4h.service paperbook.service postdesk.service
 
 echo
+echo "Installing the OC Ultra live server (the game's accounts and lobby)..."
+bash "$DIR/server/live-install.sh" || echo "WARNING: the live server didn't install (the desks are fine). See above, or: sudo bash server/live-install.sh"
+
+echo
 bash "$DIR/server/status.sh"
 cat <<MSG
 
@@ -46,5 +50,6 @@ Next:
   bash server/keys.sh        your keys (Alpaca for stocks; X and Claude for posting)
   bash server/connect-x.sh   connect your X account, then posting starts
   bash server/alerts.sh      phone alerts if a desk stops or has a bad day, plus an evening summary
+  sudo bash server/live.sh   put OC Ultra live on a public https address (free), so people can sign up and drive
 Backups of the paper records run every night (sudo bash server/backup.sh to make one now).
 MSG

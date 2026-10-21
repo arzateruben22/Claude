@@ -1,0 +1,27 @@
+[Unit]
+Description=OC Ultra live server: accounts, the capped lobby (25 to start), the position relay, the game page and the live weather/traffic feed
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@DIR@/top-speed-ultra/live
+Environment=NODE_NO_WARNINGS=1
+Environment=PORT=8791
+Environment=HOST=127.0.0.1
+Environment=MAX_PLAYERS=25
+Environment=DB_PATH=@DIR@/top-speed-ultra/live/data/live.db
+Environment=PUBLIC_DIR=@DIR@/top-speed-ultra/dist
+Environment=PUBLIC_INDEX=top-speed-ultra.html
+Environment=TRUST_PROXY=1
+Environment=NOW_WEATHER=nws
+# the cap, the admin token, and the TomTom key for live traffic live here (server/live.sh writes it); it wins over the lines above
+EnvironmentFile=-/etc/oc-live.env
+ExecStart=/usr/bin/env node server.mjs
+Restart=always
+RestartSec=3
+MemoryMax=300M
+
+[Install]
+WantedBy=multi-user.target
