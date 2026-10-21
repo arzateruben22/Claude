@@ -73,12 +73,14 @@ export function setTier(t: number) {
 export function setNight(dark: number) {
   glow.dark = dark;
   if (!glow.tier) return;
-  // the windows come on through dusk: offices brighter than homes, and a little over the Ultra bloom's threshold so
-  // the brightest panes glow
+  // the windows and the boards come on through dusk. All of them stay under the bloom's threshold (Ultra 0.85, High
+  // 0.92, in linear luminance before the exposure): the brightest office pane is about 0.7, a home's about 0.5, a
+  // board's white type 0.5, so a skyline of them reads as lit glass and not a field of glare, and nothing they add
+  // can wash out a sign or the mirrors
   const lit = smoothstep(0.3, 0.85, dark);
-  for (const k of [0, 1, 2] as const) mats.facade(k).emissiveIntensity = 1.35 * lit;
-  mats.houseWall().emissiveIntensity = 1.1 * lit;
-  for (const b of T.BRANDS) mats.billboard(b).emissiveIntensity = 0.06 + 0.8 * lit;
+  for (const k of [0, 1, 2] as const) mats.facade(k).emissiveIntensity = 0.9 * lit;
+  mats.houseWall().emissiveIntensity = 0.8 * lit;
+  for (const b of T.BRANDS) mats.billboard(b).emissiveIntensity = 0.06 + 0.44 * lit;
   (mats.lampPool().color as THREE.Color).setRGB(1, 1, 1).multiplyScalar(0.55 * smoothstep(0.4, 0.9, dark));
 }
 

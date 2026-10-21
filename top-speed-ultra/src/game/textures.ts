@@ -474,24 +474,26 @@ export function lampPool(): THREE.Texture {
 }
 
 // the lit windows of facade(kind) at night: the same window grid over 4 x 4 of facade's tiles (set its repeat to 0.25
-// against the facade's 1, so the lit pattern repeats every 8 windows, not every 2), a share of the cells lit (warm
-// or cool, each its own brightness, some with a blind half drawn), the rest black. An emissive map; the material's
-// emissiveIntensity brings it up with the dark.
+// against the facade's 1, so the pattern repeats every 8 windows, not every 2). Lit by floor, as an office tower is
+// late at night: about one floor in three is on (nearly every pane, one even cool white), the rest dark but for the
+// odd pane; a few panes warm. One restrained tone rather than a confetti of colours and brightnesses, which read as
+// glitter at a distance. 512 px (128 a facade tile) is enough for an emissive mask. The material's emissiveIntensity
+// brings it up with the dark (props.setNight).
 export function facadeLit(kind: 0 | 1 | 2): THREE.Texture {
   return once('facadeLit' + kind, () => {
-    const n = 1024, [c, g] = mk(n, n), r = rng(300 + kind);
+    const n = 512, [c, g] = mk(n, n), r = rng(300 + kind), T4 = n / 4, s = T4 / 256;
     g.fillStyle = '#000'; g.fillRect(0, 0, n, n);
-    const lit = (x: number, y: number, w: number, h: number) => {
-      if (r() > (kind === 2 ? 0.42 : 0.55)) return;
-      const warm = r() < 0.7, k = 0.45 + r() * 0.55;
-      g.fillStyle = warm ? `rgb(${255 * k | 0},${214 * k | 0},${150 * k | 0})` : `rgb(${200 * k | 0},${226 * k | 0},${255 * k | 0})`;
-      g.fillRect(x, y, w, h);
-      if (r() < 0.3) { g.fillStyle = 'rgba(0,0,0,0.5)'; g.fillRect(x, y, w * (0.3 + r() * 0.4), h); }   // a drawn blind
-    };
-    for (let ty = 0; ty < 4; ty++) for (let tx = 0; tx < 4; tx++) {
-      const ox = tx * 256, oy = ty * 256;
-      if (kind === 2) { for (let yy = 0; yy < 4; yy++) for (let xx = 0; xx < 4; xx++) lit(ox + xx * 64 + 4, oy + yy * 64 + 4, 56, 56); }
-      else { for (let yy = 0; yy < 2; yy++) for (let xx = 0; xx < 2; xx++) lit(ox + xx * 128 + 30, oy + yy * 128 + 34, 68, 58); }
+    const rows = kind === 2 ? 16 : 8, cols = kind === 2 ? 16 : 8;
+    for (let row = 0; row < rows; row++) {
+      const floorOn = r() < (kind === 2 ? 0.38 : 0.3);
+      for (let col = 0; col < cols; col++) {
+        if (r() > (floorOn ? 0.88 : 0.05)) continue;
+        const warm = r() < 0.12, k = 0.82 + r() * 0.18;
+        g.fillStyle = warm ? `rgb(${246 * k | 0},${218 * k | 0},${178 * k | 0})` : `rgb(${214 * k | 0},${230 * k | 0},${246 * k | 0})`;
+        const tx = Math.floor(col / (cols / 4)), ty = Math.floor(row / (rows / 4)), xx = col % (cols / 4), yy = row % (rows / 4);
+        if (kind === 2) g.fillRect(tx * T4 + (xx * 64 + 4) * s, ty * T4 + (yy * 64 + 4) * s, 56 * s, 56 * s);
+        else g.fillRect(tx * T4 + (xx * 128 + 30) * s, ty * T4 + (yy * 128 + 34) * s, 68 * s, 58 * s);
+      }
     }
     const t = tex(c, true); t.repeat.set(0.25, 0.25); return t;
   });
@@ -521,7 +523,7 @@ export function houseWall(): { map: THREE.Texture; lit: THREE.Texture } {
       g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(wx, wy, w, 12);                           // the sky in the glass
       g.fillStyle = '#f2ede2'; g.fillRect(wx + w / 2 - 2, wy, 4, h); g.fillRect(wx, wy + h / 2 - 2, w, 4);   // mullions
       g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(wx - 5, wy + h + 5, w + 10, 6);                 // the sill's shadow
-      if (r() < 0.6) { const k = 0.5 + r() * 0.5; lg.fillStyle = `rgb(${255 * k | 0},${205 * k | 0},${140 * k | 0})`; lg.fillRect(wx, wy, w, h); }
+      if (r() < 0.45) { const k = 0.6 + r() * 0.3; lg.fillStyle = `rgb(${250 * k | 0},${214 * k | 0},${168 * k | 0})`; lg.fillRect(wx, wy, w, h); }
     }
     return { map: tex(c, true), lit: tex(lc, true) };
   });
@@ -580,56 +582,61 @@ export function skid(): THREE.Texture {
 }
 
 // a billboard for one of our own brands (nothing real goes on a board): Rossini and Vela (our car marques), the
-// three radio stations and Lot 57 (our taproom on Orangewood). 1024 x 384, lit at night through the same texture
-// as an emissive map.
+// three radio stations (Radio.ts) and Lot 57 (our hangout, PROJECT_OC_ON_FOOT.md, in its own teal, cream and red).
+// 1024 x 384, lit at night through the same texture as an emissive map, so the dark grounds stay dark and only the
+// type and one accent line glow: restrained boards on dark grounds, not light boxes. Every line is fitted to the
+// board (fit), whatever font the canvas falls back to.
 export const BRANDS = ['rossini', 'vela', 'kfwy', 'kcst', 'knyn', 'lot57'] as const;
 export type Brand = typeof BRANDS[number];
 export function billboard(brand: Brand): THREE.Texture {
   return once('billboard' + brand, () => {
     const w = 1024, h = 384, [c, g] = mk(w, h);
-    const sans = (wt: number, px: number) => `${wt} ${px}px "Saira Semi Condensed", "Arial Narrow", Arial, sans-serif`;
-    const serif = (wt: number, px: number) => `${wt} ${px}px Georgia, "Times New Roman", serif`;
-    g.textBaseline = 'middle';
+    const sans = (wt: number) => (px: number) => `${wt} ${px}px "Saira Semi Condensed", "Arial Narrow", Arial, sans-serif`;
+    const serif = (wt: number) => (px: number) => `${wt} ${px}px Georgia, "Times New Roman", serif`;
+    g.textBaseline = 'middle'; g.textAlign = 'left';
+    // text at (x, y) in a colour or gradient, its size brought down until it fits maxW
+    const fit = (text: string, font: (px: number) => string, px: number, x: number, y: number, maxW: number, col: string | CanvasGradient) => {
+      g.font = font(px); while (px > 12 && g.measureText(text).width > maxW) g.font = font(--px);
+      g.fillStyle = col; g.fillText(text, x, y);
+    };
     const band = (c0: string, c1: string) => { const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, c0); gr.addColorStop(1, c1); g.fillStyle = gr; g.fillRect(0, 0, w, h); };
+    // a station: the frequency big, the call sign and name beside it, a rule in the accent, the strapline under it
+    const station = (bg: [string, string], freq: string, call: string, name: string, strap: string, cFreq: string, cCall: string, cText: string, x2: number) => {
+      band(bg[0], bg[1]);
+      fit(freq, sans(800), 200, 60, 150, x2 - 100, cFreq);
+      fit(call, sans(700), 92, x2, 118, w - 60 - x2, cCall);
+      fit(name, sans(500), 54, x2, 200, w - 60 - x2, cText);
+      g.fillStyle = cCall; g.fillRect(60, 268, 904, 4);
+      fit(strap, sans(500), 46, 60, 318, 904, cText);
+    };
     switch (brand) {
-      case 'rossini':
-        band('#0d1322', '#1b2742');
-        g.fillStyle = '#e8c87a'; g.font = serif(700, 150); g.textAlign = 'left'; g.fillText('ROSSINI', 70, 160);
-        g.font = sans(500, 44); g.fillStyle = '#d7dbe4'; g.fillText('GT  ·  BRIO  ·  CORSA', 76, 268);
-        g.fillStyle = '#e8c87a'; g.fillRect(70, 212, 560, 3);
-        g.font = serif(700, 220); g.textAlign = 'right'; g.fillStyle = 'rgba(232,200,122,0.18)'; g.fillText('R', w - 60, 200);
+      case 'rossini': {                                  // the OC sunset over violet-black, the wordmark's colours
+        band('#0c0814', '#1a0f26');
+        const sun = g.createLinearGradient(70, 0, 640, 0); sun.addColorStop(0, '#ffb35c'); sun.addColorStop(1, '#f2707a');
+        fit('ROSSINI', serif(700), 150, 70, 158, 620, sun);
+        g.fillStyle = '#ffb35c'; g.fillRect(72, 236, 300, 3);
+        fit('G T', sans(500), 48, 76, 292, 400, '#d9dce6');
+        g.font = serif(700)(230); g.textAlign = 'right'; g.fillStyle = 'rgba(255,179,92,0.12)'; g.fillText('R', w - 64, 196);
         break;
-      case 'vela':
-        band('#f3f5f7', '#dfe6ee');
-        g.fillStyle = '#10243a'; g.font = sans(800, 190); g.textAlign = 'left'; g.fillText('VELA', 70, 170);
-        g.fillStyle = '#2b7de0'; g.fillRect(70, 250, 300, 8);
-        g.font = sans(500, 46); g.fillStyle = '#10243a'; g.fillText('Electric. Quiet. Quick.', 76, 300);
-        g.strokeStyle = '#2b7de0'; g.lineWidth = 10; g.beginPath(); g.moveTo(760, 300); g.lineTo(880, 90); g.lineTo(1000, 300); g.stroke();
+      }
+      case 'vela':                                       // obsidian and platinum, the Vela E's violet the one accent
+        band('#06080f', '#120c22');
+        fit('VELA', sans(800), 190, 70, 162, 560, '#e6ecf5');
+        g.fillStyle = '#9b7bff'; g.fillRect(72, 250, 260, 6);
+        fit('Electric. Quiet. Quick.', sans(500), 46, 76, 300, 620, '#b9c6da');
+        g.strokeStyle = '#9b7bff'; g.lineWidth = 8; g.beginPath(); g.moveTo(770, 300); g.lineTo(880, 96); g.lineTo(990, 300); g.stroke();
         break;
-      case 'kfwy':
-        band('#2a0a3a', '#7a1f6c');
-        g.fillStyle = '#ffd166'; g.font = sans(800, 210); g.textAlign = 'left'; g.fillText('96.9', 60, 170);
-        g.fillStyle = '#ffffff'; g.font = sans(700, 92); g.fillText('KFWY', 520, 130);
-        g.font = sans(500, 54); g.fillText('FREEWAY FM  ·  synthwave all night', 520, 215);
-        g.fillStyle = '#ffd166'; g.fillRect(60, 280, 904, 6);
-        break;
-      case 'kcst':
-        band('#06385a', '#0f6b8c');
-        g.fillStyle = '#ffffff'; g.font = sans(800, 210); g.textAlign = 'left'; g.fillText('101.5', 60, 170);
-        g.fillStyle = '#9fe3ff'; g.font = sans(700, 92); g.fillText('KCST', 600, 130);
-        g.fillStyle = '#ffffff'; g.font = sans(500, 54); g.fillText('COAST  ·  the sound of the shoreline', 60, 300);
-        break;
-      case 'knyn':
-        band('#2d2415', '#5a4a2a');
-        g.fillStyle = '#f0e2c0'; g.font = sans(800, 210); g.textAlign = 'left'; g.fillText('88.3', 60, 170);
-        g.fillStyle = '#c8e28a'; g.font = sans(700, 92); g.fillText('KNYN', 540, 130);
-        g.fillStyle = '#f0e2c0'; g.font = sans(500, 54); g.fillText('CANYON RADIO  ·  slow mornings, late nights', 60, 300);
-        break;
-      case 'lot57':
-        band('#1b1b1b', '#2e2a26');
-        g.fillStyle = '#ff9a3c'; g.font = sans(800, 230); g.textAlign = 'left'; g.fillText('LOT 57', 60, 160);
-        g.fillStyle = '#f4efe6'; g.font = sans(500, 54); g.fillText('taproom & yard  ·  Orangewood Ave, Anaheim  ·  open late', 64, 300);
-        g.strokeStyle = '#ff9a3c'; g.lineWidth = 6; g.strokeRect(24, 24, w - 48, h - 48);
+      case 'kfwy': station(['#0b0a1e', '#24103a'], '96.9', 'KFWY', 'FREEWAY FM', 'synthwave, all night', '#ffc35a', '#ffc35a', '#d8ccf4', 520); break;
+      case 'kcst': station(['#04121e', '#082a3c'], '101.5', 'KCST', 'COAST', 'the sound of the shoreline', '#eef8ff', '#8bd6ff', '#cfe6f4', 600); break;
+      case 'knyn': station(['#14110b', '#2a2416'], '88.3', 'KNYN', 'CANYON RADIO', 'slow mornings, late nights', '#f0e2c0', '#c8e28a', '#e4d8bc', 520); break;
+      case 'lot57':                                      // the venue's sign: cream on night teal, the red line under it
+        band('#0e2a30', '#12333a');
+        fit('LOT 57', sans(800), 210, 250, 150, 700, '#f3e6c4');
+        fit('TAPROOM  ·  YARD  ·  TRUCKS', sans(600), 52, 254, 290, 720, '#c8462f');
+        // the glyph: three lane lines converging on a single bulb
+        g.strokeStyle = '#f3e6c4'; g.lineWidth = 9; g.lineCap = 'round';
+        for (const x of [70, 125, 180]) { g.beginPath(); g.moveTo(x, 330); g.lineTo(125 + (x - 125) * 0.12, 124); g.stroke(); }
+        g.fillStyle = '#f3e6c4'; g.beginPath(); g.arc(125, 86, 26, 0, Math.PI * 2); g.fill();
         break;
     }
     const t = tex(c, true); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;

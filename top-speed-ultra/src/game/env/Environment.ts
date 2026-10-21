@@ -147,11 +147,12 @@ export class Environment {
       const R = 4200;
       this.ridge[i] = h;
       pos.push(Math.cos(a) * R, -60, Math.sin(a) * R, Math.cos(a) * R, h, Math.sin(a) * R);
-      // High and Ultra: the ridges are not one flat tone. Aerial perspective lightens and warms the base and leaves
-      // the crest darker and bluer, and a slow mottle along the ring (spurs catching the light) breaks the cut-out
-      // look. By day the material's colour is the haze, so these multiply it; at night the base carries a faint glow
-      const m = 0.9 + 0.2 * fbm2(Math.cos(a) * 9 + 3, Math.sin(a) * 9, 3, 8), crest = 0.66 + 0.22 * (1 - smoothstep(180, 700, h));
-      mcol.push(1.04 * m, 1.0 * m, 0.96 * m, crest * m, crest * 1.02 * m, crest * 1.1 * m);
+      // High and Ultra: the ridges are not one flat tone. The haze lies thicker at the base (a touch lighter and
+      // warmer) and thinner at the crest (a little darker and bluer, more so on the high peaks), and a slow mottle
+      // along the ring breaks the cut-out look. Kept within about 12 % of the haze colour the material carries, so
+      // the ring still sits back in the distance (a stronger gradient read as a dark cardboard cut-out by day)
+      const m = 0.96 + 0.08 * fbm2(Math.cos(a) * 9 + 3, Math.sin(a) * 9, 3, 8), crest = 0.88 + 0.07 * (1 - smoothstep(180, 700, h));
+      mcol.push(1.03 * m, 1.01 * m, 0.98 * m, crest * m, crest * 1.01 * m, crest * 1.05 * m);
       if (i < n) { const k = i * 2; idx.push(k, k + 2, k + 1, k + 1, k + 2, k + 3); }
     }
     const mg = new THREE.BufferGeometry();
@@ -312,7 +313,9 @@ export class Environment {
       this.sun.intensity = 3.1 * lerp(c.sun, direct, day) * smoothstep(-0.02, 0.12, c.alt);
     }
     const moon = 1 - day;
-    if (moon > 0.5) { this.sun.color.setRGB(0.55, 0.66, 1); this.sun.intensity = 0.32 * c.sun + 0.08; dirFrom(0.7, 2.8, this.sunDir); }
+    // (High and Ultra: a dimmer moon, 0.6 of it. The moon was what lit the cabin's leather and the hands as if by an
+    // overcast day; with the lamps' pools and the lit city carrying the night, the cabin can go dark)
+    if (moon > 0.5) { this.sun.color.setRGB(0.55, 0.66, 1); this.sun.intensity = (0.32 * c.sun + 0.08) * (this.tier >= 1 ? 0.6 : 1); dirFrom(0.7, 2.8, this.sunDir); }
     this.hemi.color.setRGB(lerp(0.12, 0.74, day), lerp(0.16, 0.82, day), lerp(0.28, 0.93, day)).lerp(OVERCAST_SKY, overcast);
     this.hemi.groundColor.setRGB(lerp(0.03, 0.48, day), lerp(0.03, 0.42, day), lerp(0.04, 0.33, day)).lerp(OVERCAST_GROUND, overcast);
     this.hemi.intensity = lerp(0.25, 0.55, day) * (1 + (1 - c.sun) * lerp(0.15, 1.6 * c.sky, day));
