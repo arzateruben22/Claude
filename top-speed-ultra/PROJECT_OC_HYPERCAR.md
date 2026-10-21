@@ -570,6 +570,14 @@ code, the UI, commits or player-facing text.
   hard the button is held (touch is on/off). So about 2 g off the line, 1.5 g at 60 mph, and gone by 180 mph except a
   0.05 g floor. The floor lifts the top speed a little: measured 339 → **350 mph**.
 - **Measured.** 0-60 in 0.76 s on thrust alone, 0.66 s with Ground Lock. Peak acceleration 4.4 g.
+- **As built (M5, 2026-10-20, on the merged dynamics model).** The force is 2.6 g × (1 − smoothstep(0, 80, v)) + 0.05 g
+  through `ext.fx`. On the finished model the push transfers load off the front axle, and the traction control trims
+  the all-wheel drive to what the front can take, so 2.0 g of force netted only about 1.1 g over the tyres and fans
+  (0-60 in 0.97 s). At 2.6 g the car nets about 2 g extra at launch (headless, Arcade: 1.86 g from 5 to 10 m/s, 1.55 g from 10 to
+  15, 1.3 g by 20 m/s).
+  Measured in the built game (Arcade): 0-60 in **0.79 s** with THRUST and Ground Lock (1.34 s fans only, 2.26 s
+  tyres only), 0-100 in 1.47 s, peak 4.53 g; one tank from flat out lifts 335 → 341 mph (the tank lasts 6 s, so the
+  asymptotic 350 is not reached).
 - **The body and camera.** The head and pitch offsets in `updateCamera` and `PlayerCar` are already clamped, so a
   4 g launch doesn't throw the view.
 - **Off at once.** On release, an empty tank, or the brake.
@@ -583,6 +591,12 @@ code, the UI, commits or player-facing text.
 - **Cost.** 3 % of the tank a second. It's off below 5 %.
 - **Measured.** Lateral 1.96 g at 25 m/s and 1.93 g at 40 m/s in Arcade, 2.05 g at 40 m/s in Simulation ("about
   2 g at low and middle speeds"). It makes the 1.50 s launch. 100-0 is 54.5 m.
+- **As built (M5, 2026-10-20).** On the merged model (tyre load sensitivity), 0.5 × weight gave 1.91 g at 25 m/s and
+  1.73 g at 40 m/s, so the suction is 0.8 × weight to 90 mph, easing to 0.3 × by 200 mph. Measured (the harness's
+  steering sweep): 2.04 / 1.81 / 1.22 g at 25 / 40 / 80 m/s in Arcade (tyres alone 1.54 / 1.49 / 1.18), 2.02 / 1.97 /
+  1.57 g in Simulation (1.36 / 1.42 / 1.45). Arcade at 40 m/s is held at 1.81 g by Arcade's steering lock (full lock
+  there is 3.2°), not by the fans; that is M4's grip-scaled stability control. The compressor pauses while the fans
+  spin (they share its drive), so the 3 % a second is a real cost: 4 s of cornering at 25 m/s takes 12 %.
 
 ### 6.4 Thrust Hop (double-tap)
 
@@ -610,6 +624,18 @@ A short scripted ballistic hop:
   - Barrier contact is off while the lateral position is clamped.
 - **The landing.** Tyres back on. A heave impulse into `PlayerCar`'s suspension proportional to the vertical speed,
   a camera bump, and a thump (`audio.thump`).
+- **As built (M5, 2026-10-20).** `planHop` in `HyperAbility.ts` clears the nearest vehicle it is closing on by 0.35 m
+  (peak 1.5–7.5 m, air time 0.6–2.5 s, the arc's fall at most 2.5 g and at least 0.55 g where an arc allows). Every other vehicle in the lane
+  that it could reach in the air or within 1.5 s of touching down must be cleared too, or the hop is refused ("No room
+  to land"). The plan allows for each vehicle braking as hard as the traffic model ever brakes (10 m/s², to a stop at
+  most) while the car could be over it, ordinary hard braking (4 m/s²) for the landing room, and speeding up as hard as
+  an aggressive driver does (2.24 m/s²) for the time over it; the numbers live in `traffic/limits.ts`, which
+  `Traffic.ts` reads too. A car changing lanes counts in the lane it is moving to. The scan reads each vehicle's level against
+  this road's own height where it is: the first build compared it with the height under the car, so on a grade it
+  missed vehicles 100 m ahead and landed on them (found by the suite's semi check in heavy traffic). Refusals: "Thrust
+  Hop: tank low", "Need more speed", "Too close to clear", "No room to land", "Road splits ahead: no hop", "No hop:
+  overpass ahead", "No hop: sign gantry ahead", "No hop: bridge overhead". Keys: Left Shift (hold, double-tap) and J
+  for the hop; D-pad up; the phone's THRUST button sits beside the driver's ability, over BRAKE.
 
 ### 6.5 Controls
 
