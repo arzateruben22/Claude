@@ -651,6 +651,151 @@ window.seek = function (t) {
 `
   },
 
+  /* ───────── 5-1 Vitamin C: the morning antioxidant, and the bottle that turns brown ───────── */
+  "5-1": {
+    id: "5-1", kicker: "Vitamin C", title: `Vitamin C works in the morning, <span class="grad">under your sunscreen.</span>`, dur: 22, poster: 9,
+    shots: [
+      { at: 0, name: "radicals", cap: "Daylight and city air make free radicals: unstable bits that bounce around the skin and chip at collagen. Sunscreen stops most, not all." },
+      { at: 7, name: "serum", cap: "Vitamin C in the morning catches the rest: an antioxidant, on clean skin, before moisturizer and sunscreen. L-ascorbic acid at 10 to 20% is the most studied form." },
+      { at: 14, name: "brown", cap: "It oxidizes. Pale straw is fresh; dark orange or brown is past its best. Keep it cool, dark and closed. A slight tingle is normal; burning is not." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.bottle5 { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: flex-end; gap: 1.6vmin; opacity: 0; }
+.bottle5 .vial { position: relative; width: 7vmin; height: 16vmin; border-radius: 1.4vmin 1.4vmin 2.4vmin 2.4vmin; border: .3vmin solid rgba(255,255,255,.35); overflow: hidden; background: rgba(255,255,255,.04); }
+.bottle5 .vial::before { content: ""; position: absolute; left: 2vmin; right: 2vmin; top: -1.6vmin; height: 2.4vmin; border-radius: .6vmin; background: #2a2a2e; }
+.bottle5 .juice { position: absolute; left: 0; right: 0; bottom: 0; height: 78%; background: #f3e3a0; }
+.bottle5 .txt { font-size: 2.3vmin; line-height: 1.3; color: #d9d9de; max-width: 30vmin; } .bottle5 .txt b { display: block; font-size: 2.7vmin; color: #fff; }
+.order5 { position: absolute; left: 0; bottom: 2vmin; display: flex; gap: .8vmin; opacity: 0; }
+.order5 span { padding: 1vmin 1.6vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.1vmin; font-weight: 600; color: #d9d9de; }
+.order5 span.c { background: #ffc46b; color: #1a1210; border-color: #ffc46b; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-rad"><i style="background:#ff6a5a"></i>free radicals</span><span class="lab3" id="l-col"><i style="background:#b77a80"></i>collagen, chipped</span><span class="lab3" id="l-spf"><i style="background:#f6f0e8"></i>sunscreen stops most</span></section>
+<section class="shot"><span class="lab3" id="l-c"><i style="background:#ffc46b"></i>vitamin C, on clean skin</span><span class="lab3" id="l-catch"><i style="background:#ffc46b"></i>caught before they land</span><div class="order5" id="order5"><span>cleanser</span><span class="c">vitamin C</span><span>moisturizer</span><span>sunscreen</span></div></section>
+<section class="shot"><span class="lab3" id="l-fresh"><i style="background:#f3e3a0"></i>pale straw: fresh</span><span class="lab3" id="l-old"><i style="background:#8a4a1c"></i>brown: past its best</span><div class="bottle5" id="bottle5"><div class="vial"><div class="juice" id="juice"></div></div><div class="txt"><b id="vialn">week 1</b>cool, dark, closed</div></div></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(-14, 20, 10); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0xffc46b, 0.35); fill2.position.set(12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block: epidermis on top, collagen (dermis) below
+const NY = 12, NZ = 9, cells = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = x * 1000 + y * 20 + z, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 9) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v + (y === 11 ? 0.04 : 0));
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  cells.push({ x, y, z, c, base: c.clone(), wx: x + 0.5, wz: z + 0.5 - NZ / 2, j: hash(i + 9) });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.wx, c.y, c.wz); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+// the sun and the sunscreen film
+const sun = new THREE.Mesh(new THREE.SphereGeometry(1.4, 24, 18), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+sun.position.set(-12.5, 19, 3); scene.add(sun);
+const sunGlow = new THREE.PointLight(0xffd27a, 40, 60, 1.6); sunGlow.position.copy(sun.position); scene.add(sunGlow);
+const shield = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.5, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf6f0e8, roughness: 0.3, transmission: 0.35, opacity: 0.75, transparent: true }));
+shield.position.set(0, 12.1, 0); shield.castShadow = true; shield.visible = false; scene.add(shield);
+// free radicals: spiky red bits that fly in from the light and chip at the collagen on the cut face
+const radGeo = new THREE.OctahedronGeometry(0.3), radMat = new THREE.MeshStandardMaterial({ color: 0xff6a5a, emissive: 0x8a1a12, emissiveIntensity: 0.8, roughness: 0.4, transparent: true, opacity: 1 });
+const CZ = NZ / 2 + 0.4;
+const rads = Array.from({ length: 16 }, (_, k) => { const m = new THREE.Mesh(radGeo, radMat.clone()); m.visible = false; scene.add(m); return { m, k, x: -6.5 + hash(k + 20) * 13, y0: 16 + hash(k + 21) * 4, y1: 3.5 + hash(k + 22) * 5, ph: hash(k + 23) }; });
+// chipped collagen: cells on the cut face near where radicals landed go dark and shrink a little
+const hits = rads.map((r) => ({ x: r.x, y: r.y1 }));
+const TIRED = new THREE.Color(0x6e4348), tmp = new THREE.Color();
+const paint = (dmg) => {
+  cells.forEach((c, i) => {
+    if (c.z !== NZ - 1 || c.y < 3 || c.y > 8) return;
+    let k = 0;
+    hits.forEach((h, j) => { const d = Math.hypot(c.wx - h.x, c.y - h.y); if (d < 1.6) k = Math.max(k, dmg[j] * (1 - d / 1.6)); });
+    tmp.copy(c.base).lerp(TIRED, Math.min(1, k)); block.setColorAt(i, tmp);
+    dummy.position.set(c.wx, c.y, c.wz); dummy.scale.setScalar(1 - 0.14 * Math.min(1, k)); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix);
+  });
+  block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
+};
+// the vitamin C: an amber drop that spreads into a thin glow over the surface; radicals that reach it fizzle
+const drop = new THREE.Mesh(new THREE.SphereGeometry(0.85, 24, 18), new THREE.MeshPhysicalMaterial({ color: 0xffc46b, roughness: 0.15, transmission: 0.2, opacity: 0.95, transparent: true }));
+drop.visible = false; drop.castShadow = true; scene.add(drop);
+const glow = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.36, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xffc46b, roughness: 0.2, emissive: 0x7a4a10, emissiveIntensity: 0.5, opacity: 0.0, transparent: true }));
+glow.position.set(0, 11.75, 0); scene.add(glow);
+const fizzGeo = new THREE.SphereGeometry(0.12, 8, 6), fizzMat = new THREE.MeshBasicMaterial({ color: 0xfff0c0, transparent: true, opacity: 1 });
+const fizz = Array.from({ length: 24 }, (_, k) => { const m = new THREE.Mesh(fizzGeo, fizzMat.clone()); m.visible = false; scene.add(m); return { m, k, r: rads[k % rads.length], a: hash(k + 50) * 6.28 }; });
+const look = new THREE.Vector3(0, 8, 0);
+const place = (t) => {
+  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-rad": [-7, 15.5, 3], "l-col": [-2, 5.5, 4.6], "l-spf": [7.5, 12.8, 1.5], "l-c": [7.5, 13.2, 1.5], "l-catch": [-3, 13.4, 4.2], "l-fresh": [7.5, 12.8, 1.5], "l-old": [7.5, 12.8, 1.5] };
+const OFF = { "l-rad": [1, -1], "l-col": [1, 0], "l-spf": [-1, -1], "l-c": [-1, -1], "l-catch": [-1, -1], "l-fresh": [-1, -1], "l-old": [-1, -1] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // the shield is on from 4 s of shot 0; the vitamin C from 2 s of shot 1
+  const shieldOn = i === 0 ? E.out(seg(lt, 4.0, 5.0)) : 1;
+  shield.visible = shieldOn > 0.01; shield.material.opacity = 0.75 * shieldOn; shield.scale.set(1, Math.max(0.02, shieldOn), 1);
+  const cOn = i === 1 ? E.out(seg(lt, 2.2, 3.4)) : i === 2 ? 1 : 0;
+  glow.material.opacity = 0.7 * cOn; glow.material.emissiveIntensity = 0.5 + 0.4 * Math.sin(t * 3) * cOn;
+  drop.visible = i === 1 && lt > 1.0 && lt < 3.4;
+  if (drop.visible) { const f = E.in(seg(lt, 1.0, 1.9)), sp = seg(lt, 1.9, 2.8), fade = seg(lt, 2.8, 3.4); drop.position.set(-1, 22 - 9.6 * f, 1); drop.scale.set(1 + 2.2 * sp, 1 - 0.7 * sp, 1 + 2.2 * sp); drop.material.opacity = 0.95 * (1 - fade); }
+  // radicals: before the shield they all go in; with the shield most bounce (fewer get through); with vitamin C the rest fizzle at the glow
+  const dmg = rads.map(() => 0);
+  rads.forEach((r, k) => {
+    const speed = 0.22, ph = (t * speed + r.ph) % 1;
+    const through = shieldOn < 0.5 ? true : (k % 4 === 0);           // a quarter slip past the sunscreen
+    const stopY = cOn > 0.5 ? 12.2 : r.y1;
+    const y = r.y0 - (r.y0 - stopY) * E.lin(ph);
+    const arrived = through && ph > 0.92;
+    r.m.visible = i < 3 && (through ? ph < 0.95 : ph < 0.6);
+    const bounce = !through && ph > 0.45 ? (ph - 0.45) * 8 : 0;
+    r.m.position.set(r.x + Math.sin(t * 6 + k) * 0.25, through ? y : Math.max(12.6, r.y0 - (r.y0 - 12.6) * (ph / 0.45) + bounce), CZ + (through ? 0 : 0.3));
+    r.m.rotation.set(t * 5 + k, t * 3, 0); r.m.material.opacity = through ? 1 : 1 - seg(ph, 0.45, 0.6);
+    if (through && cOn < 0.5) dmg[k] = i === 0 ? Math.min(1, 0.3 + 0.7 * seg(lt, 1.5 + k * 0.3, 5.5 + k * 0.3)) : 1;
+    else if (through) dmg[k] = i === 1 ? 1 - 0.35 * cOn : 0.65;
+  });
+  paint(dmg);
+  fizz.forEach((f) => { const on = cOn > 0.5 && (f.r.k % 4 === 0); f.m.visible = on; if (!on) return; const ph = (t * 1.3 + f.k * 0.07) % 1; f.m.position.set(f.r.x + Math.cos(f.a + ph * 4) * ph * 1.4, 12.3 + ph * 1.6, CZ + Math.sin(f.a) * 0.4); f.m.material.opacity = 1 - ph; f.m.scale.setScalar(1 - 0.6 * ph); });
+  // labels, the order chips, the vial (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-rad"), lt, 0.6, { y: 8 }); enter($("#l-col"), lt, 2.6, { y: 8 }); enter($("#l-spf"), lt, 4.4, { y: 8 }); }
+  if (i === 1) { enter($("#l-c"), lt, 1.4, { y: 8 }); enter($("#l-catch"), lt, 3.2, { y: 8 }); enter($("#order5"), lt, 4.4, { y: 10 }); }
+  if (i === 2) {
+    enter($("#bottle5"), lt, 0.4, { y: 10 }); enter($("#l-fresh"), lt, 0.8, { y: 8 }); if (lt > 3.6) $("#l-fresh").style.opacity = 1 - seg(lt, 3.6, 4.1);
+    const age = E.lin(seg(lt, 1.6, 6.0));                                  // straw → orange → brown over the weeks
+    const col = age < 0.5 ? M.lerpColor([243, 227, 160], [232, 154, 60], age * 2) : M.lerpColor([232, 154, 60], [122, 63, 20], (age - 0.5) * 2);
+    $("#juice").style.background = col; $("#vialn").textContent = "week " + (1 + Math.round(11 * age));
+    enter($("#l-old"), lt, 4.2, { y: 8 });
+  }
+  renderer.render(scene, camera);
+};
+`
+  },
+
   /* ───────── 9-3 Heat, light and patience: why a dark spot is slow ───────── */
   "9-3": {
     id: "9-3", kicker: "Heat, light and patience", title: `Why a dark spot takes <span class="grad">months, not weeks.</span>`, dur: 24, poster: 9,
