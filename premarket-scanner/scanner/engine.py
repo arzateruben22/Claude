@@ -10,8 +10,9 @@
 """
 from __future__ import annotations
 
+import copy
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from . import metrics as metrics_mod
 from .config import Criteria
@@ -42,13 +43,8 @@ def quick_failures(c: Candidate, crit: Criteria) -> int:
     )
 
 
-def run_scan(provider: Provider, crit: Criteria, now: datetime, session: str,
-             quotes: Optional[List[Quote]] = None) -> ScanResult:
-    """`quotes` replaces the live screen (backtests pass a historical one)."""
-    asof = now - timedelta(minutes=provider.delay_minutes)
-    if quotes is None:
-        quotes = provider.screen(now, session)
-
+def _prefilter(quotes: List[Quote], crit: Criteria):
+    """The loose cut and the top gappers one rulebook would look at in detail."""
     pool = []
     for q in quotes:
         if not symbol_allowed(q.symbol, q.name, crit.exclude_warrants_units):
@@ -59,59 +55,97 @@ def run_scan(provider: Provider, crit: Criteria, now: datetime, session: str,
         if gaps and max(gaps) >= crit.min_gap_pct * LOOSE_GAP:
             pool.append((max(gaps), q))
     pool.sort(key=lambda x: x[0], reverse=True)
-    picked = {q.symbol: q for _, q in pool[: crit.max_candidates]}
+    return pool, {q.symbol: q for _, q in pool[: crit.max_candidates]}
 
-    notes: List[str] = []
-    if len(pool) > crit.max_candidates:
-        notes.append(f"{len(pool)} loose gappers; checked the top {crit.max_candidates} (raise max_candidates to see more)")
 
-    cands: List[Candidate] = []
-    if picked:
+def run_scan(provider: Provider, crit: Criteria, now: datetime, session: str,
+             quotes: Optional[List[Quote]] = None) -> ScanResult:
+    """`quotes` replaces the live screen (backtests pass a historical one)."""
+    return run_scans(provider, {"main": crit}, now, session, quotes)["main"]
+
+
+def run_scans(provider: Provider, crits: Dict[str, Criteria], now: datetime, session: str,
+              quotes: Optional[List[Quote]] = None) -> Dict[str, ScanResult]:
+    """Several rulebooks over one market read. Each book picks its own candidates exactly as it would alone;
+    the bars, halts, news and floats those picks need are fetched once and shared, so ten books cost the
+    provider about what one does."""
+    asof = now - timedelta(minutes=provider.delay_minutes)
+    if quotes is None:
+        quotes = provider.screen(now, session)
+
+    picks = {}                                   # book -> its own top gappers
+    notes: Dict[str, List[str]] = {}
+    for name, crit in crits.items():
+        pool, picked = _prefilter(quotes, crit)
+        picks[name] = picked
+        notes[name] = []
+        if len(pool) > crit.max_candidates:
+            notes[name].append(f"{len(pool)} loose gappers; checked the top {crit.max_candidates} "
+                               "(raise max_candidates to see more)")
+
+    every = {}                                   # symbol -> quote, across every book
+    for picked in picks.values():
+        every.update(picked)
+    lookback = max(c.lookback_days for c in crits.values())
+    metrics: Dict[str, Optional[object]] = {}
+    if every:
         # ~1.4 calendar days per trading day, plus slack for holidays.
-        start = asof - timedelta(days=int(crit.lookback_days * 1.4) + 5)
-        bars = provider.intraday_bars(list(picked), start, asof)
-        for sym, q in picked.items():
-            m = metrics_mod.compute(bars.get(sym, []), session, asof, crit.lookback_days)
-            if m is not None:
-                cands.append(Candidate(sym, q.name, m, spread_pct=q.spread_pct))
+        start = asof - timedelta(days=int(lookback * 1.4) + 5)
+        bars = provider.intraday_bars(list(every), start, asof)
+        for sym in every:
+            metrics[sym] = metrics_mod.compute(bars.get(sym, []), session, asof, lookback)
 
-    if cands:
+    halts, halt_note = {}, ""
+    if any(m is not None for m in metrics.values()):
         today = now.astimezone(ET).date()
         try:
             halts = provider.halts([previous_trading_day(today), today])
         except Exception as exc:  # optional data: never sink the scan over it
-            halts = {}
-            notes.append(f"Halt check unavailable ({str(exc)[:80]}); halted stocks aren't filtered this run")
-        for c in cands:
-            hs = halts.get(c.symbol, [])
-            active = [h for h in hs if h.active(now)]
-            c.halted_now = active[-1].code if active else ""
-            c.halts = [h for h in hs if h.halted_at <= now and not h.active(now)]  # never the future
+            halt_note = f"Halt check unavailable ({str(exc)[:80]}); halted stocks aren't filtered this run"
 
-    enrich = [c for c in cands if quick_failures(c, crit) <= 1]
-    if enrich:
-        syms = [c.symbol for c in enrich]
-        news = provider.news(syms, now - timedelta(hours=crit.news_lookback_hours), until=now)
+    def candidate(sym: str) -> Optional[Candidate]:
+        m = metrics.get(sym)
+        if m is None:
+            return None
+        q = every[sym]
+        c = Candidate(sym, q.name, copy.copy(m), spread_pct=q.spread_pct)
+        hs = halts.get(sym, [])
+        active = [h for h in hs if h.active(now)]
+        c.halted_now = active[-1].code if active else ""
+        c.halts = [h for h in hs if h.halted_at <= now and not h.active(now)]  # never the future
+        return c
+
+    cands = {name: [c for c in (candidate(s) for s in picks[name]) if c] for name in crits}
+    enrich = {name: [c for c in cs if quick_failures(c, crits[name]) <= 1] for name, cs in cands.items()}
+    syms = sorted({c.symbol for cs in enrich.values() for c in cs})
+    news, floats = {}, {}
+    if syms:
+        hours = max(c.news_lookback_hours for c in crits.values())
+        news = provider.news(syms, now - timedelta(hours=hours), until=now)
         floats = provider.floats(syms)
-        for c in enrich:
-            c.news = sorted(news.get(c.symbol, []), key=lambda n: n.published, reverse=True)
+
+    out = {}
+    for name, crit in crits.items():
+        since = now - timedelta(hours=crit.news_lookback_hours)
+        for c in enrich[name]:
+            c.news = sorted((n for n in news.get(c.symbol, []) if n.published >= since),
+                            key=lambda n: n.published, reverse=True)
             c.tags = tag_news(c.news, crit.catalysts)
             c.float_shares = floats.get(c.symbol)
-
-    for c in cands:
-        evaluate(c, crit)
-    passed = rank([c for c in cands if c.passed], crit.sort_by)
-    near = rank([c for c in cands if len(c.failures) == 1], crit.sort_by) if crit.show_near_misses else []
-
-    return ScanResult(
-        session=session,
-        now=now,
-        asof=asof,
-        provider=provider.name,
-        delay_minutes=provider.delay_minutes,
-        universe=len(quotes),
-        checked=len(cands),
-        passed=passed,
-        near_misses=near[:MAX_NEAR_MISSES],
-        notes=notes,
-    )
+        for c in cands[name]:
+            evaluate(c, crit)
+        passed = rank([c for c in cands[name] if c.passed], crit.sort_by)
+        near = rank([c for c in cands[name] if len(c.failures) == 1], crit.sort_by) if crit.show_near_misses else []
+        out[name] = ScanResult(
+            session=session,
+            now=now,
+            asof=asof,
+            provider=provider.name,
+            delay_minutes=provider.delay_minutes,
+            universe=len(quotes),
+            checked=len(cands[name]),
+            passed=passed,
+            near_misses=near[:MAX_NEAR_MISSES],
+            notes=notes[name] + ([halt_note] if halt_note else []),
+        )
+    return out

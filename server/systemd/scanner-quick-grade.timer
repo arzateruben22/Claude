@@ -1,8 +1,0 @@
-[Unit]
-Description=Grade the quick-rules stock picks once the close is in
-
-[Timer]
-OnCalendar=Mon..Fri *-*-* 13:51:00 America/Los_Angeles
-
-[Install]
-WantedBy=timers.target

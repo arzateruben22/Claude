@@ -7,21 +7,23 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 STAMP="$(date +%Y-%m-%d-%H%M)"
 
-echo "This starts every one of the ten desks over from today: each goes back to the"
+echo "This starts every desk over from today: each goes back to the"
 echo "paper bank in their settings, and the results so far move to an archive folder."
 read -r -p "Start over now? (y/n) " ok
 case "$ok" in y|Y|yes|Yes|YES) ;; *) echo "Nothing changed."; exit 0 ;; esac
 
-systemctl stop nightdesk.service majors.service majors-4h.service paperbook.service
-for base in night-desk/output night-desk/output/wild night-desk/output/strict majors-desk/output majors-desk/output/4h; do
+systemctl stop nightdesk.service majors.service paperbook.service
+# Every coin rulebook keeps its live results in <desk>/output/live or <desk>/output/<book>/live.
+for live in "$DIR"/night-desk/output/live "$DIR"/night-desk/output/*/live "$DIR"/majors-desk/output/live "$DIR"/majors-desk/output/*/live; do
+  base="${live%/live}"; base="${base#$DIR/}"
   if [ -d "$DIR/$base/live" ]; then
     mkdir -p "$DIR/$base/archive"
     mv "$DIR/$base/live" "$DIR/$base/archive/live-$STAMP"
     echo "archived $base/live -> $base/archive/live-$STAMP"
   fi
 done
-for base in premarket-scanner/output premarket-scanner/output/wild premarket-scanner/output/fade \
-            premarket-scanner/output/quick premarket-scanner/output/early; do
+for journal in "$DIR"/premarket-scanner/output/journal.csv "$DIR"/premarket-scanner/output/*/journal.csv; do
+  base="${journal%/journal.csv}"; base="${base#$DIR/}"
   if [ -f "$DIR/$base/journal.csv" ]; then
     mkdir -p "$DIR/$base/archive"
     mv "$DIR/$base/journal.csv" "$DIR/$base/archive/journal-$STAMP.csv"
@@ -32,7 +34,7 @@ if [ -f "$DIR/paper-book/output/benchmark.json" ]; then     # BTC buy-and-hold s
   mkdir -p "$DIR/paper-book/output/archive"
   mv "$DIR/paper-book/output/benchmark.json" "$DIR/paper-book/output/archive/benchmark-$STAMP.json"
 fi
-systemctl start nightdesk.service majors.service majors-4h.service paperbook.service
+systemctl start nightdesk.service majors.service paperbook.service
 sleep 5
 
 echo

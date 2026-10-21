@@ -1,0 +1,31 @@
+# Majors Desk, FAST rulebook: quick hourly breakouts.
+#
+# A two-day trend, a twelve-hour breakout, a six-hour exit and a tighter stop: it trades much more often
+# than the main desk and pays for it in fees. Here to find out whether speed earns its keep.
+# Fees and slippage are the main desk's. Every window is in hours, whatever the candle.
+# Run it with the main desk: python -m majors run --with fast. Results live in output/fast/.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0                                   # paper dollars
+coins = ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"]  # traded against US dollars on Coinbase
+quote = "USD"
+candle_hours = 1                                     # decide on finished hourly candles (4 = 4-hour candles, 24 = daily)
+
+# Trend following on hourly candles: buy a breakout while the trend is up, then ride it with a
+# trailing stop. Most trades lose a little; the few long trends pay for them. Decisions are made
+# on each hour's closing price.
+[rules]
+trend_hours = 48             # two days (main: 100)
+breakout_hours = 12          # half a day (main: 48)
+exit_hours = 6               # (main: 24)
+atr_hours = 14             # how far a coin normally moves in an hour, averaged over 14 hours
+stop_atr = 2.0               # tighter (main: 3.0)
+risk_pct = 1.0             # each trade risks 1% of the bank between the buy and the stop
+max_position_pct = 25.0    # never more than 25% of the bank in one coin
+max_positions = 4
+cooldown_hours = 2           # (main: 6)
+
+[costs]                    # charged on every paper buy and sell
+fee_pct = 0.40             # per side: a typical exchange fee for a small account (check yours)
+slippage_pct = 0.05        # per side: the price moves a little against you when you fill

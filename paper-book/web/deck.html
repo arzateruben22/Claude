@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trading Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<!--BODY-->
+<div class="deck" id="deck">
+  <header class="top">
+    <div class="brand">
+      <h1>Trading Deck</h1>
+      <p class="sub"><span id="badge" class="badge" hidden>demo prices</span><span>paper money only</span><span class="when" id="updated">updated</span></p>
+    </div>
+    <dl class="totals" aria-label="All desks together">
+      <div><dt>all desks</dt><dd><span id="t-net">$0.00</span> <small id="t-bank">of $0</small></dd></div>
+      <div><dt>BTC held</dt><dd id="t-btc">—</dd></div>
+      <div><dt>trades</dt><dd id="t-n">0</dd></div>
+      <div class="clock"><dt>clock</dt><dd id="t-time">day one</dd></div>
+    </dl>
+    <div class="controls">
+      <button type="button" class="ctl" id="play" aria-pressed="true">pause</button>
+      <button type="button" class="ctl" id="replay">replay</button>
+      <button type="button" class="ctl" id="now">now</button>
+      <button type="button" class="ctl" id="standings-btn" aria-expanded="false" aria-controls="standings">standings</button>
+      <nav class="more" aria-label="Other views">
+        <a href="crawler.html">crawler</a><a href="galaxy.html">galaxy</a><a href="paper-book.html">book</a>
+      </nav>
+    </div>
+  </header>
+  <div class="bar">
+    <div class="chips" id="chips" role="group" aria-label="Which desks to show"></div>
+    <p class="checks" id="checks"></p>
+  </div>
+  <section class="lanes" id="stage" aria-label="Every desk's paper profit over time, one lane each, sorted by return">
+    <canvas id="axis" aria-hidden="true"></canvas>
+    <canvas id="lanes" role="img" aria-label="Lanes of light: each desk's paper profit since day one, with every trade as a spark, the dates the book is read on, and each desk's day 28"></canvas>
+    <label class="sr-only" for="scrub">Replay time, from day one to now</label>
+    <input type="range" id="scrub" min="0" max="1000" value="1000" step="1">
+    <p class="sr-only" id="announce" aria-live="polite"></p>
+  </section>
+  <footer class="tape" aria-label="Latest closed paper trades">
+    <div class="tape-track" id="tape"></div>
+  </footer>
+  <section class="standings" id="standings" hidden aria-label="Standings" tabindex="-1">
+    <div class="head">
+      <div>
+        <h2>Standings</h2>
+        <p class="rule" id="standings-rule"></p>
+      </div>
+      <button type="button" class="ctl" id="standings-close">close</button>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr>
+          <th class="n">#</th><th>Desk</th><th class="idea">Idea</th><th class="n day">Day</th><th class="n">Since day one</th>
+          <th class="n">Last 7 days</th><th class="n">Trades</th><th class="verdict">So far</th>
+        </tr></thead>
+        <tbody id="standings-body"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<!--/BODY-->
+<script>window.TRADING_DECK = null;</script>
+<script src="deck.js"></script>
+</body>
+</html>

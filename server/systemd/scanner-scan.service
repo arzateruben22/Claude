@@ -1,5 +1,5 @@
 [Unit]
-Description=Premarket scanner: pick gap-up stocks (paper)
+Description=Premarket scanner: every rulebook's paper picks from one market read
 After=network-online.target
 Wants=network-online.target
 # Waits for your Alpaca paper keys in premarket-scanner/.env
@@ -10,4 +10,4 @@ Environment=PYTHONUNBUFFERED=1
 Type=oneshot
 User=@USER@
 WorkingDirectory=@DIR@/premarket-scanner
-ExecStart=@DIR@/.venv/bin/python -m scanner scan --notify
+ExecStart=@DIR@/.venv/bin/python -m scanner scan --books all --notify

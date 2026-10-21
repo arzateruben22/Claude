@@ -33,10 +33,10 @@ def test_a_stopped_desk_is_reported_once_and_its_return_too():
     status["nightdesk"] = ("activating", 0)                         # a quick restart: not worth a push
     assert wd.check_units(NOW, state, units, ["nightdesk"]) == []
     status["nightdesk"] = ("failed", 0)
-    assert titles(wd.check_units(NOW, state, units, ["nightdesk"])) == ["Memecoin desk stopped"]
+    assert titles(wd.check_units(NOW, state, units, ["nightdesk"])) == ["Memecoin desks stopped"]
     assert wd.check_units(NOW, state, units, ["nightdesk"]) == []   # once, not every 5 minutes
     status["nightdesk"] = ("active", 0)
-    assert titles(wd.check_units(NOW, state, units, ["nightdesk"])) == ["Memecoin desk is running again"]
+    assert titles(wd.check_units(NOW, state, units, ["nightdesk"])) == ["Memecoin desks are running again"]
 
 
 def test_crashes_are_reported_but_not_every_time():
@@ -44,7 +44,7 @@ def test_crashes_are_reported_but_not_every_time():
     units = lambda n: status[n]                                     # noqa: E731
     wd.check_units(NOW, state, units, ["majors"])
     status["majors"] = ("active", 1)
-    assert titles(wd.check_units(NOW, state, units, ["majors"])) == ["Big-coin desk crashed and restarted itself"]
+    assert titles(wd.check_units(NOW, state, units, ["majors"])) == ["Big-coin desks crashed and restarted"]
     status["majors"] = ("active", 2)
     assert wd.check_units(NOW + timedelta(hours=1), state, units, ["majors"]) == []
     status["majors"] = ("active", 3)
@@ -55,7 +55,8 @@ def test_a_running_desk_that_saves_nothing_has_gone_quiet(tmp_path):
     state = {"units": {"majors": {"active": "active"}, "nightdesk": {"active": "failed"}}}
     old = lambda p: NOW - timedelta(hours=3)                        # noqa: E731
     pushes = wd.check_quiet(NOW, state, old, tmp_path)
-    assert titles(pushes) == ["Big-coin desk has gone quiet"]       # the stopped one is reported as stopped instead
+    assert titles(pushes) == ["5 big-coin desks have gone quiet"]   # the hourly ones; the stopped memecoin desks are reported as stopped
+    assert "Big-coin desk, Big-coin fast desk" in pushes[0].body and "journalctl -u majors" in pushes[0].body
     assert wd.check_quiet(NOW + timedelta(hours=1), state, old, tmp_path) == []
     later = NOW + timedelta(hours=8)
     fresh = lambda p: later - timedelta(minutes=10)                 # noqa: E731

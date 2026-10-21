@@ -69,44 +69,31 @@ else:
 PYEOF
 }
 
-echo "MEMECOINS"
+echo "MEMECOINS (main)"
 memecoins "$DIR/night-desk/output/live/state.json"
+for f in "$DIR"/night-desk/desk-*.toml; do
+  b="$(basename "$f" .toml)"; b="${b#desk-}"
+  echo; echo "MEMECOINS: $b rules (own \$100)"
+  memecoins "$DIR/night-desk/output/$b/live/state.json"
+done
 
 echo
-echo "WILD MEMECOINS (same coins, riskier rules, own \$100)"
-memecoins "$DIR/night-desk/output/wild/live/state.json"
-
-echo
-echo "STRICT MEMECOINS (same coins, pickier rules and smaller bets, own \$100)"
-memecoins "$DIR/night-desk/output/strict/live/state.json"
-
-echo
-echo "BIG COINS"
+echo "BIG COINS (main)"
 (cd "$DIR/majors-desk" && "$PY" -m majors why | sed 's/^/  /')
+for f in "$DIR"/majors-desk/majors-*.toml; do
+  b="$(basename "$f" .toml)"; b="${b#majors-}"
+  echo; echo "BIG COINS: $b rules (own \$100)"
+  (cd "$DIR/majors-desk" && "$PY" -m majors why --book "$b" | sed 's/^/  /')
+done
 
 echo
-echo "BIG COINS 4H (same rules on 4-hour candles, own \$100)"
-(cd "$DIR/majors-desk" && "$PY" -m majors why --book 4h | sed 's/^/  /')
-
-echo
-echo "STOCKS"
+echo "STOCKS (main)"
 stocks "$DIR/premarket-scanner/output/journal.csv"
-
-echo
-echo "QUICK STOCKS (the same picks, sold at +5% or -3%, own \$100)"
-stocks "$DIR/premarket-scanner/output/quick/journal.csv"
-
-echo
-echo "EARLY-OUT STOCKS (the same picks, out by 10:30 New York time, own \$100)"
-stocks "$DIR/premarket-scanner/output/early/journal.csv"
-
-echo
-echo "WILD STOCKS (smaller gaps, no news needed, own \$100)"
-stocks "$DIR/premarket-scanner/output/wild/journal.csv"
-
-echo
-echo "FADE STOCKS (the stock picks, sold short at the open, own \$100: it wins when they fall)"
-stocks "$DIR/premarket-scanner/output/fade/journal.csv"
+for f in "$DIR"/premarket-scanner/criteria-*.toml; do
+  b="$(basename "$f" .toml)"; b="${b#criteria-}"
+  echo; echo "STOCKS: $b rules (own \$100)"
+  stocks "$DIR/premarket-scanner/output/$b/journal.csv"
+done
 last="$(pacific "$(systemctl show scanner-scan.service -p ExecMainExitTimestamp --value 2>/dev/null)")"
 next="$(pacific "$(systemctl show scanner-scan.timer -p NextElapseUSecRealtime --value 2>/dev/null)")"
 [ -n "$last" ] && echo "  last scan: $last"

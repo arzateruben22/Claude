@@ -1,5 +1,5 @@
 [Unit]
-Description=Night Desk: nightly lessons, risk officer and scorecard (paper only, changes nothing)
+Description=Night Desk: nightly lessons, risk officer and scorecard for every rulebook (paper only, changes nothing)
 
 [Service]
 Environment=PYTHONUNBUFFERED=1
@@ -9,3 +9,10 @@ WorkingDirectory=@DIR@/night-desk
 ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly
 ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book wild
 ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book strict
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book sniper
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book momentum
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book patient
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book scalper
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book whale
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book runner
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book tiny

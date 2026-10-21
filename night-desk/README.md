@@ -166,9 +166,21 @@ The opposite of wild, on its own $100: only coins past their first 30 minutes wi
 once, profit taken at +25%, losses cut at −12%, and nothing held past an hour. Rug checks, fees and the
 scorecard are identical to the main desk's.
 
+## Seven more rulebooks
+
+Each `desk-<name>.toml` is the main rulebook with a few numbers changed, on its own $100 of paper money and its own
+`output/<name>/`, with the rug checks, fees and scorecard identical: **sniper** (coins 3–10 minutes old, 5% bets,
++60% / −30%, out in 30 minutes), **momentum** (only coins still being bought, +80% with a trailing stop),
+**patient** (coins over an hour old with big pools, +30% / −15%, up to 6 hours), **scalper** (+12% / −8%, out in
+20 minutes, four at once), **whale** (big pools and market caps only, 15% bets, +20% / −10%), **runner** (lets a
+winner run: +1000% cap, trailing 15% / 10%, 4 hours) and **tiny** (2% bets, eight at once). None of them calls
+Claude, so they cost nothing to run.
+
 ```bash
 python -m nightdesk run --with wild --with strict   # all three, one shared feed; /wild/ and /strict/ dashboards
-python -m nightdesk report --book wild              # every command takes --book wild or --book strict
+python -m nightdesk run --with wild --with strict --with sniper --with momentum --with patient --with scalper \
+                        --with whale --with runner --with tiny      # all ten (what the server runs)
+python -m nightdesk report --book wild              # every command takes --book <name>
 python -m nightdesk sim --days 30 --book strict
 ```
 

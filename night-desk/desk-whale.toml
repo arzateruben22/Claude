@@ -1,0 +1,83 @@
+# Night Desk, WHALE rulebook: only the biggest new coins.
+#
+# A pool of at least $100K and a market cap from $500K to $50M: coins with real money in them, where a ticket
+# barely moves the price. Bigger tickets, modest targets, up to four hours held.
+# Rug checks ([kill]), fees and the scorecard ([gates]) are the main desk's, word for word.
+# Run it with the main desk: python -m nightdesk run --with whale. Results live in output/whale/.
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0           # paper dollars
+discover_seconds = 60        # how often the crawler sweeps for new coins
+poll_seconds = 15            # how often watched coins and positions are re-priced
+watch_minutes = 90           # drop a coin that hasn't qualified by then
+
+[kill]
+max_top_wallet_pct = 5.0     # biggest single holder, pools excluded
+max_top10_pct = 35.0         # top 10 holders together, pools excluded
+max_dev_pct = 5.0            # creator still holding more than this
+require_mint_revoked = true  # creator can't print more coins
+require_freeze_revoked = true  # creator can't freeze your coins
+min_lp_locked_pct = 90.0     # pool money locked or burned (when reported)
+kill_on_danger_flags = true  # any RugCheck "danger" flag
+
+[ready]
+min_age_minutes = 15         # let it survive the first sniper wave
+max_age_hours = 24
+min_liquidity_usd = 100000   # a pool of $100K or more (main: 12000)
+min_volume_h1_usd = 50000    #  (main: 15000)
+min_mcap_usd = 500000        # half a million up (main: 60000)
+max_mcap_usd = 50000000      # up to $50M (main: 5000000)
+min_trades_h1 = 300          #  (main: 150)
+
+[scan]
+min_buy_pressure = 0.55      # buys ÷ all trades, last hour
+min_buy_pressure_now = 0.55  # same, last 5 minutes (is the buying still happening)
+max_momentum_spent = 0.60    # 1.0 = already up 300% this hour
+min_heat = 0.30              # is it still trading now (last 5 min vs last hour)
+min_liquidity_fit = 0.60     # can the pool take a full-size ticket
+min_social = 0.34            # website / X / Telegram: at least one of three
+
+[judge]
+use_ai = false               # the rules decide: free (main: true)
+model = "claude-opus-5-5"    # "claude-haiku-4-5" is the tiny, cheaper option
+effort = "low"
+min_confidence = 0.6
+
+[size]
+ticket_pct = 15.0            # bigger tickets, the pool can take it (main: 10.0)
+max_pct_of_liquidity = 0.5   #  (main: 1.0)
+max_open = 3
+fee_pct = 1.0                # per side: DEX fee plus priority tip
+slippage_pct = 1.0           # per side, on top of price impact
+
+[risk]
+take_profit_pct = 20.0       # modest (main: 40.0)
+stop_loss_pct = 10.0         #  (main: 20.0)
+trail_arm_pct = 10.0         #  (main: 20.0)
+trail_pct = 6.0              #  (main: 15.0)
+max_hold_minutes = 240       # four hours (main: 120)
+rug_liquidity_drop_pct = 50.0  # pool lost this much since entry: get out
+daily_loss_limit_pct = 15.0  # stop buying for the day after losing this much
+cooldown_minutes = 60        # don't re-buy a coin you just sold
+
+# Before real money: the scorecard (python -m nightdesk scorecard).
+# Only trades made under the current rulebook count. Change any number above
+# and the scorecard starts over: a changed desk has to earn its way back.
+[gates]
+min_trades = 100             # closed paper trades
+min_days = 30                # days of paper trading
+min_profit_factor = 1.3      # money won ÷ money lost
+min_sharpe = 1.0             # daily returns, annualized over 365 days
+max_drawdown_pct = 25.0      # worst fall from a high point
+best_trades_share = 0.05     # still profitable without the best 5% of trades (at least 3)
+cost_multiplier = 2.0        # still profitable with fees and slippage doubled
+recent_share = 0.33          # the newest third of trades must make money too
+
+# The risk officer and the nightly review (python -m nightdesk nightly).
+# They only write reports and proposals. Nothing they say changes the desk.
+[review]
+use_ai = false               # rules only: the main book's nightly review is the one that uses Claude
+model = "claude-opus-5-5"
+effort = "high"              # runs once a night, so let it think
+lookback_days = 7            # the nightly review compares this window with everything before it

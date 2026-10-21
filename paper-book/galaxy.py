@@ -40,8 +40,11 @@ def _hours(minutes: float) -> str:
 
 # -- constellations -------------------------------------------------------------------------------
 
-def desk_patterns(desk: str, trades: List[pb.Trade], tz) -> List[dict]:
-    label, n = pb.LABEL[desk], len(trades)
+def desk_patterns(desk: str, trades: List[pb.Trade], tz, label: Optional[str] = None,
+                  kind: Optional[str] = None) -> List[dict]:
+    label = label or pb.LABEL.get(desk, desk.replace("_", " ").capitalize())
+    kind = kind or pb.KIND.get(desk, "stocks" if desk.startswith("stocks") else "coins")
+    n = len(trades)
     out: List[dict] = []
 
     def add(pid: str, title: str, need: int, make) -> None:
@@ -141,7 +144,7 @@ def desk_patterns(desk: str, trades: List[pb.Trade], tz) -> List[dict]:
     add("exits", f"How {label.lower()} trades end", NEED["exits"], exits)
     add("sources", "Where the winnings came from", NEED["sources"], sources)
     add("streaks", "Streaks", NEED["streaks"], streaks)
-    if pb.KIND[desk] == "stocks":
+    if kind == "stocks":
         add("weekday", "Day of the week", NEED["weekday"], weekday)
     else:
         add("hold", "Holding time", NEED["hold"], hold)
@@ -149,21 +152,22 @@ def desk_patterns(desk: str, trades: List[pb.Trade], tz) -> List[dict]:
     return out
 
 
-def pairs(desks) -> List[tuple]:
-    """Which desks to compare: each pair of markets, and each copy (wild, fade) with the desk it copies."""
-    base = [d for d in desks if d not in pb.VARIANT_OF]
+def pairs(book: pb.Book) -> List[tuple]:
+    """Which desks to compare: each pair of markets, and each copy (wild, fade...) with the desk it copies."""
+    desks = book.desks
+    base = [d for d in desks if not book.variant_of(d)]
     out = [(a, b) for i, a in enumerate(base) for b in base[i + 1:]]
-    return out + [(pb.VARIANT_OF[d], d) for d in desks if pb.VARIANT_OF.get(d) in desks]
+    return out + [(book.variant_of(d), d) for d in desks if book.variant_of(d) in desks]
 
 
 def shared_patterns(book: pb.Book) -> List[dict]:
     """Do two desks win and lose on the same days? That decides whether they spread the risk."""
     days = {d: pb.daily(book.trades[d], book.tz) for d in book.desks}
     out = []
-    for a, b in pairs(book.desks):
+    for a, b in pairs(book):
         common = sorted(set(days[a]) & set(days[b]))
         item = {"id": f"{a}+{b}", "desk": "*", "desks": [a, b], "symbols": [],
-                "title": f"{pb.LABEL[a]} and {pb.LABEL[b].lower()} together", "n": len(common),
+                "title": f"{book.label(a)} and {book.label(b).lower()} together", "n": len(common),
                 "need": SHARED_DAYS, "unlocked": len(common) >= SHARED_DAYS}
         if not item["unlocked"]:
             item["detail"] = (f"Unlocks after {SHARED_DAYS} days with trades on both "
@@ -242,9 +246,10 @@ def data(book: pb.Book) -> dict:
     desks = []
     for d in book.desks:
         s = pb.stats(book.trades[d], book.banks[d])
-        desks.append({"key": d, "label": pb.LABEL[d], "bank": book.banks[d], "trades": s["trades"],
+        desks.append({"key": d, "label": book.label(d), "color": book.color(d), "bank": book.banks[d], "trades": s["trades"],
                       "net": s["net"], "win_rate": s["win_rate"], "open": len(book.held[d])})
-    pats = [p for d in book.desks for p in desk_patterns(d, book.trades[d], book.tz)] + shared_patterns(book)
+    pats = [p for d in book.desks for p in desk_patterns(d, book.trades[d], book.tz, book.label(d), book.kind(d))]
+    pats += shared_patterns(book)
     return {
         "meta": {"demo": book.demo, "updated": book.now.isoformat(), "now": int(book.now.timestamp()),
                  "tz": str(book.tz), "updated_local": book.now.astimezone(book.tz).strftime("%a %d %b %Y, %H:%M")},

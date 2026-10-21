@@ -15,7 +15,7 @@
   const WIN = tok("--win", "#5fe0a0"), LOSS = tok("--loss", "#ff6f61"), INK = tok("--ink", "#e9ecff"), DIM = tok("--dim", "#a7add0");
   const WARM = "#fff3cf", SILK = "#dfe6ff";
   const CORE = 26, ARM = 34, TILT = 0.72;
-  const deskColor = (i) => HUE_OF[(G.desks[i] || {}).key] || SPARE[i % SPARE.length];
+  const deskColor = (i) => (G.desks[i] || {}).color || HUE_OF[(G.desks[i] || {}).key] || SPARE[i % SPARE.length];
 
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -61,11 +61,31 @@
     const rows = [];
     for (let i = 0; i < D; i++) rows.push(i ? rows[i - 1] + (galR[i - 1] + galR[i]) * 0.75 + 90 : 0);
     const mid = (rows[0] + rows[D - 1]) / 2;
+    // More than ten galaxies (the thirty-desk tournament) sit in a grid, market by market in rows: five across
+    // on a screen, two across on a phone. Each column is as wide as its widest galaxy, each row as tall as its
+    // tallest, so one huge galaxy only spaces out its own row and column.
+    const grid = D > 10;
+    const cols = !grid ? 0 : column ? 2 : [5, 6, 4, 7].find((c) => D % c === 0 && c <= Math.ceil(Math.sqrt(D * 1.6))) || Math.min(6, Math.ceil(Math.sqrt(D * 1.5)));
+    const colW = [], rowH = [];
+    if (grid) {
+      for (let i = 0; i < D; i++) {
+        const c = i % cols, r = Math.floor(i / cols);
+        colW[c] = Math.max(colW[c] || 0, 2 * galR[i] + (column ? 80 : 130));
+        rowH[r] = Math.max(rowH[r] || 0, 2 * galR[i] * TILT + (column ? 90 : 120));
+      }
+    }
+    const sum = (a) => a.reduce((x, y) => x + y, 0);
+    const before = (a, k) => sum(a.slice(0, k));
     const place = (i) => {
+      if (grid) {
+        const c = i % cols, r = Math.floor(i / cols);
+        return [before(colW, c) + colW[c] / 2 - sum(colW) / 2, before(rowH, r) + rowH[r] / 2 - sum(rowH) / 2];
+      }
       if (column) return [(i % 2 ? 1 : -1) * (galR[i] + 60), rows[i] - mid];
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(1, D);
       return [Math.cos(a) * ring, Math.sin(a) * ring * 0.86];
     };
+    const cell = grid ? Math.min(...colW) : Infinity;             // world units; labels shrink when it's narrow on screen
     const gals = G.desks.map((d, i) => {
       const [gx, gy] = place(i);
       const g = { i, key: d.key, label: d.label, color: deskColor(i), x: gx, y: gy,
@@ -121,7 +141,7 @@
         done.push(si);
       });
     });
-    W = { gals, pos, bySym, heldBySym, t0, t1, nova, links };
+    W = { cell, gals, pos, bySym, heldBySym, t0, t1, nova, links };
   }
 
   // -- the universe at one moment -----------------------------------------------------------------
@@ -170,6 +190,12 @@
     let z = Math.min((VW - 2 * side) / (x1 - x0), (VH - top - bottom) / (y1 - y0));
     z = Math.min((VW - 2 * side) / (x1 - x0 + (2 * label) / z), (VH - top - bottom) / (y1 - y0));
     cam.tx = (x0 + x1) / 2; cam.ty = (y0 + y1) / 2 - (top - bottom) / 2 / Math.max(z, 1e-3);
+    if (isFinite(W.cell) && cam.focus < 0 && W.cell * z < 150) {
+      // a packed grid on a narrow screen (thirty galaxies on a phone): fit the width instead and start at the
+      // top; the rest is a drag away, and the names stay readable
+      z = (VW - 2 * side) / (x1 - x0);
+      cam.ty = y0 + (VH / 2 - top) / z;
+    }
     cam.tz = Math.max(0.012, Math.min(2.4, z));      // low enough for a phone to hold ten galaxies in one column
     if (follow && spider) {                 // ride along with the spider, a few times closer
       cam.tz = Math.max(0.06, Math.min(3, z * 3.2));
@@ -352,20 +378,23 @@
     }
     if (spider) drawSpider(spider);
 
-    // galaxy names. A phone holding many galaxies has room for the names alone, in one line each.
-    const crowded = VW < 520 && W.gals.length > 6;
+    // galaxy names. A phone holding many galaxies, or a packed grid, has room for smaller names, and the
+    // narrowest cells for the names alone, in one line each.
+    const cellPx = W.cell * z;                                     // how wide a grid cell is on screen right now
+    const crowded = (VW < 520 && W.gals.length > 6) || cellPx < 260;
+    const tight = cellPx < 150;
     for (const g of W.gals) {
       const has = S.deskBorn[g.i] > 0;
       const y = sy(g.y + (galRadiusNow(g) + 20) * TILT) + (crowded ? 12 : 18), x = sx(g.x);
       ctx.textAlign = "center";
       ctx.fillStyle = g.color;
-      ctx.font = `700 ${crowded ? 10 : Math.round(Math.max(12, Math.min(18, 15 * Math.sqrt(z * 3))))}px Unbounded, "Arial Black", sans-serif`;
+      ctx.font = `700 ${tight ? 8.5 : crowded ? 10 : Math.round(Math.max(12, Math.min(18, 15 * Math.sqrt(z * 3))))}px Unbounded, "Arial Black", sans-serif`;
       ctx.fillText(g.label.toUpperCase(), x, y);
-      if (!crowded) {
-        ctx.font = `500 12px "IBM Plex Mono", monospace`;
+      if (!tight) {
+        ctx.font = `500 ${crowded ? 10.5 : 12}px "IBM Plex Mono", monospace`;
         ctx.fillStyle = has ? (S.deskNet[g.i] >= 0 ? WIN : LOSS) : DIM;
-        ctx.fillText(has ? `${usd(S.deskNet[g.i])} · ${S.deskN[g.i]} trades` : VW < 520 ? "no trades yet" : "waiting for its first trade",
-          x, y + 17);
+        ctx.fillText(has ? `${usd(S.deskNet[g.i])} · ${S.deskN[g.i]} trades` : (crowded ? "no trades yet" : "waiting for its first trade"),
+          x, y + (crowded ? 14 : 17));
       }
       ctx.textAlign = "left";
     }

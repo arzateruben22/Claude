@@ -16,10 +16,17 @@ A desk is in the book when book.toml has a section for it.
   python paperbook.py               update the ledger and the report once
   python paperbook.py --watch 15    ...every 15 minutes, while the desks run
   python paperbook.py --demo        the same, from the desks' demo markets
+  python paperbook.py --standings   every desk ranked, with its last seven days; nothing written
 
-Writes output/ledger.csv (one row per closed paper trade) and output/paper-book.html,
-plus the Trade Crawler (output/crawler.html) and the Paper Galaxy (output/galaxy.html).
+Writes output/ledger.csv (one row per closed paper trade), output/standings.txt (every desk ranked, with its
+last seven days; also served at /standings) and output/paper-book.html, plus the Trading Deck (output/deck.html, the home page), the Trade Crawler (output/crawler.html) and the
+Paper Galaxy (output/galaxy.html).
 Paper money only. Nothing here can place a real order.
+
+A desk is in the book when book.toml has a section for it: any section with a `folder` (a coin desk's results)
+or a `journal` (a stock desk's). The ten desks above are known by name; any other section needs `label`,
+`kind` ("coins" or "stocks") and `market` ("memecoins", "big coins" or "stocks"), and may set `of` (the desk it
+is a variation of), `color` and `abbr`.
 """
 from __future__ import annotations
 
@@ -43,7 +50,8 @@ except ModuleNotFoundError:  # Python 3.10
 
 HERE = Path(__file__).resolve().parent
 ET = ZoneInfo("America/New_York")
-# every desk the book knows, in order: each market, then its variants
+# The desks the book knows by name, in order: each market, then its variants. Any other desk is described by its
+# own section in book.toml (see the top of this file).
 DESKS = ("memecoins", "memecoins_wild", "memecoins_strict", "majors", "majors_4h",
          "stocks", "stocks_wild", "stocks_fade", "stocks_quick", "stocks_early")
 LABEL = {"memecoins": "Memecoins", "memecoins_wild": "Wild memecoins", "memecoins_strict": "Strict memecoins",
@@ -51,11 +59,47 @@ LABEL = {"memecoins": "Memecoins", "memecoins_wild": "Wild memecoins", "memecoin
          "stocks": "Stocks", "stocks_wild": "Wild stocks", "stocks_fade": "Fade stocks", "stocks_quick": "Quick stocks",
          "stocks_early": "Early-out stocks"}
 KIND = {d: ("stocks" if d.startswith("stocks") else "coins") for d in DESKS}
+MARKET = {d: ("stocks" if d.startswith("stocks") else "big coins" if d.startswith("majors") else "memecoins") for d in DESKS}
 VARIANT_OF = {d: d.split("_")[0] for d in DESKS if "_" in d}         # copies of another desk, and which
 STOCK_RULES = {"stocks": "../premarket-scanner/criteria.toml", "stocks_wild": "../premarket-scanner/criteria-wild.toml",
                "stocks_fade": "../premarket-scanner/criteria-fade.toml",
                "stocks_quick": "../premarket-scanner/criteria-quick.toml",
                "stocks_early": "../premarket-scanner/criteria-early.toml"}
+COLORS = {"memecoins": "#3cc3f2", "memecoins_wild": "#ff9a4d", "memecoins_strict": "#6b7cff",
+          "majors": "#f2bd4f", "majors_4h": "#ffe28a",
+          "stocks": "#a08cff", "stocks_wild": "#d7f25f", "stocks_fade": "#3fd3c0", "stocks_quick": "#ff8c8c",
+          "stocks_early": "#c48a5a"}
+ABBR = {"memecoins": "MEM", "memecoins_wild": "WMEM", "memecoins_strict": "SMEM", "majors": "BIG", "majors_4h": "BIG4",
+        "stocks": "STK", "stocks_wild": "WSTK", "stocks_fade": "FADE", "stocks_quick": "QSTK", "stocks_early": "ESTK"}
+NOT_DESKS = ("report", "alerts")
+MARKETS = ("memecoins", "big coins", "stocks")                        # the order the book lists them in
+
+
+def _abbr(key: str) -> str:
+    """A short tag for a desk the tables don't know: M, B or S for its market, then its rulebook (memecoins_sniper: MSNI)."""
+    base, _, book = key.partition("_")
+    if not book:
+        return key[:4]
+    return {"memecoins": "M", "majors": "B", "stocks": "S"}.get(base, base[0]) + book[:3]
+
+
+def desk_meta(key: str, section: dict) -> dict:
+    """What the book shows for a desk: the known ten from the tables above, anything else from its section."""
+    kind = section.get("kind") or KIND.get(key) or ("stocks" if "journal" in section else "coins")
+    if kind not in ("coins", "stocks"):
+        raise ValueError(f"[{key}] kind must be coins or stocks, not {kind!r}")
+    market = section.get("market") or MARKET.get(key) or ("stocks" if kind == "stocks" else "memecoins")
+    if market not in ("memecoins", "big coins", "stocks"):
+        raise ValueError(f"[{key}] market must be memecoins, big coins or stocks, not {market!r}")
+    label = section.get("label") or LABEL.get(key)
+    if not label:
+        raise ValueError(f"[{key}] needs a label in book.toml")
+    base = key.partition("_")[0]
+    of = section.get("of", VARIANT_OF.get(key) or (base if "_" in key and base in DESKS else None))
+    color = section.get("color") or COLORS.get(key) or "#9fb3c8"
+    abbr = (section.get("abbr") or ABBR.get(key) or _abbr(key)).upper()
+    prefix = section.get("prefix", "" if market == "big coins" else "$")
+    return {"label": label, "kind": kind, "market": market, "of": of, "color": color, "abbr": abbr, "prefix": prefix}
 
 
 @dataclass
@@ -192,11 +236,44 @@ class Book:
     # target %, stop %, cost % from each stock desk's own rules, and the time it's out by ("" = the close)
     stock_rules: Dict[str, Tuple[float, float, float]] = field(default_factory=lambda: {"stocks": (10.0, 5.0, 0.5)})
     stock_exit: Dict[str, str] = field(default_factory=dict)
+    meta: Dict[str, dict] = field(default_factory=dict)             # per desk: label, kind, market, of, color, abbr
+    order: Tuple[str, ...] = ()                                     # the desks in book.toml order
+    checkpoints: Optional[dict] = None                              # [report] checkpoints: label -> date the book is read
 
     @property
     def desks(self) -> Tuple[str, ...]:
-        """The desks in this book, in DESKS order."""
-        return tuple(d for d in DESKS if d in self.trades)
+        """The desks in this book: market by market (memecoins, big coins, stocks), the known ten first in each,
+        then the rest in book.toml order."""
+        listed = list(self.order) + [d for d in self.trades if d not in self.order]
+
+        def rank(d: str) -> Tuple[int, int, int]:
+            m = self.market(d)
+            return (MARKETS.index(m) if m in MARKETS else len(MARKETS),
+                    DESKS.index(d) if d in DESKS else len(DESKS), listed.index(d))
+        return tuple(sorted(self.trades, key=rank))
+
+    def _meta(self, d: str) -> dict:
+        if d not in self.meta:
+            self.meta[d] = desk_meta(d, {})
+        return self.meta[d]
+
+    def label(self, d: str) -> str:
+        return self._meta(d)["label"]
+
+    def kind(self, d: str) -> str:
+        return self._meta(d)["kind"]
+
+    def market(self, d: str) -> str:
+        return self._meta(d)["market"]
+
+    def variant_of(self, d: str) -> Optional[str]:
+        return self._meta(d)["of"]
+
+    def color(self, d: str) -> str:
+        return self._meta(d)["color"]
+
+    def abbr(self, d: str) -> str:
+        return self._meta(d)["abbr"]
 
     @property
     def bank_total(self) -> float:
@@ -210,8 +287,8 @@ class Book:
     def unrealized(self) -> float:
         return sum(h.value - h.cost for d in self.desks for h in self.held[d] if h.value is not None)
 
-    def kind(self, kind: str) -> List[str]:
-        return [d for d in self.desks if KIND[d] == kind]
+    def of_kind(self, kind: str) -> List[str]:
+        return [d for d in self.desks if self.kind(d) == kind]
 
 
 def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
@@ -221,15 +298,17 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
     sources: Dict[str, str] = {}
     rules: Dict[str, Tuple[float, float, float]] = {}
     exits: Dict[str, str] = {}
-    first_stocks = next((cfg[d] for d in DESKS if KIND[d] == "stocks" and d in cfg), {})
-    for d in DESKS:
-        c = cfg.get(d)
-        if c is None:
-            continue
+    meta: Dict[str, dict] = {}
+    order = [d for d in cfg if d not in NOT_DESKS and isinstance(cfg[d], dict)]
+    for d in order:
+        meta[d] = desk_meta(d, cfg[d])
+    first_stocks = next((cfg[d] for d in order if meta[d]["kind"] == "stocks"), {})
+    for d in order:
+        c = cfg[d]
         banks[d] = float(c["start_bank"])
-        if KIND[d] == "coins":
+        if meta[d]["kind"] == "coins":
             folder = (HERE / (c["demo_folder"] if demo else c["folder"])).resolve()
-            trades[d], held[d] = load_coins(folder, d, "" if d.startswith("majors") else "$")
+            trades[d], held[d] = load_coins(folder, d, meta[d]["prefix"])
             sources[d] = str(folder)
             continue
         live = (HERE / c["journal"]).resolve()
@@ -238,11 +317,13 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
         share = bool(c.get("share_bank", False))
         trades[d], held[d] = load_stocks(journal, float(c["ticket_usd"]), banks[d] if share else None, desk=d)
         sources[d] = str(journal)
-        rules[d] = stock_rules(HERE / c.get("rules", STOCK_RULES[d]))
-        exits[d] = stock_exit_by(HERE / c.get("rules", STOCK_RULES[d]))
+        rules_path = HERE / c.get("rules", STOCK_RULES.get(d, "../premarket-scanner/criteria.toml"))
+        rules[d] = stock_rules(rules_path)
+        exits[d] = stock_exit_by(rules_path)
     return Book(trades, held, banks, sources, demo, now or datetime.now(timezone.utc),
                 ZoneInfo(cfg["report"]["timezone"]), float(first_stocks.get("ticket_usd", 100.0)),
-                bool(first_stocks.get("share_bank", False)), stock_rules=rules, stock_exit=exits)
+                bool(first_stocks.get("share_bank", False)), stock_rules=rules, stock_exit=exits,
+                meta=meta, order=tuple(order), checkpoints=cfg["report"].get("checkpoints"))
 
 
 def stock_rules(path: Path) -> Tuple[float, float, float]:
@@ -290,13 +371,13 @@ def render_text(book: Book) -> str:
              f"{book.now.astimezone(book.tz):%a %d %b %H:%M %Z}", ""]
     for d in book.desks:
         s = stats(book.trades[d], book.banks[d])
-        lines.append(f"  {LABEL[d].lower():<17} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
+        lines.append(f"  {book.label(d).lower():<19} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
                      f"${book.banks[d]:,.0f})  won {s['win_rate']:.0f}%  profit factor {_pf(s['profit_factor'])}  "
                      f"worst drawdown {s['max_drawdown_pct']:.1f}%")
-    lines.append(f"  {'total':<17} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
+    lines.append(f"  {'total':<19} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
                  f"({all_s['return_pct']:+.1f}% of ${total_start:,.0f})")
-    open_coins = [h for d in book.kind("coins") for h in book.held[d]]
-    waiting = [h for d in book.kind("stocks") for h in book.held[d]]
+    open_coins = [h for d in book.of_kind("coins") for h in book.held[d]]
+    waiting = [h for d in book.of_kind("stocks") for h in book.held[d]]
     if open_coins:
         lines.append(f"  open coins: {len(open_coins)}, unrealized {_usd(book.unrealized)} (before exit costs)")
     if waiting:
@@ -314,6 +395,43 @@ def render_text(book: Book) -> str:
         lines.append("  No closed paper trades yet. Each one shows up here as soon as a desk closes it.")
     elif all_s["trades"] < 50:
         lines.append(f"  Only {all_s['trades']} trades: far too few to judge anything yet.")
+    return "\n".join(lines)
+
+
+def render_standings(book: Book) -> str:
+    """Every desk ranked by paper return, with its last seven days and whether that's a green week. The same
+    numbers as the deck's standings table, for a terminal (server/status.sh)."""
+    import benchmark
+    import deck
+
+    today = book.now.astimezone(book.tz).date()
+    checks = " · ".join(f"{label} {deck._as_date(day):%a %d %b}" for label, day in (book.checkpoints or {}).items()
+                        if deck._as_date(day))
+    lines = [f"STANDINGS{' (DEMO markets)' if book.demo else ''} · paper money only · "
+             f"{book.now.astimezone(book.tz):%a %d %b %H:%M %Z}" + (f" · {checks}" if checks else ""),
+             f"  {'#':>2}  {'desk':<21} {'market':<9} {'day':>5}  {'since day one':>24}  {'last 7 days':>20}  "
+             f"{'trades':>6}  so far"]
+    rows = []
+    for d in book.desks:
+        s = stats(book.trades[d], book.banks[d])
+        start = deck.started(book, d)
+        day = min(deck.MONTH_DAYS, (book.now - start).days + 1) if start else 0
+        rows.append((s["return_pct"], d, s, day, deck.week(book, d, today)))
+    rows.sort(key=lambda r: (-r[0], book.desks.index(r[1])))
+    for k, (ret, d, s, day, w) in enumerate(rows, 1):
+        since = f"{_usd(s['net']):>11} {ret:+8.1f}%" if day else f"{'—':>20}"
+        week = f"{_usd(w['net']):>10} {w['green']}g {w['red']}r" if w["traded"] else f"{'—':>16}"
+        so_far = deck.verdict(s["trades"], s) + (" · GREEN WEEK" + (f" ×{w['streak']}" if w["streak"] > 1 else "") if w["green_week"] else "")
+        lines.append(f"  {k:>2}  {book.label(d).lower():<21} {book.market(d):<9} {f'{day}/{deck.MONTH_DAYS}' if day else '—':>5}  "
+                     f"{since:>24}  {week:>20}  {s['trades']:>6}  {so_far}")
+    all_s = stats(book.all_trades, book.bank_total)
+    lines.append(f"  {'':>2}  {'all desks':<21} {'':<9} {'':>5}  {_usd(all_s['net']):>11} {all_s['return_pct']:+8.1f}%  "
+                 f"{'':>20}  {all_s['trades']:>6}")
+    green = [book.label(d) + (f" ×{w['streak']}" if w["streak"] > 1 else "") for _, d, _, _, w in rows if w["green_week"]]
+    lines.append("  green week: " + (", ".join(green) if green else "none yet") +
+                 "  (traded 3+ of the last 7 days, net up, no day's loss bigger than the week's gain)")
+    if book.benchmark:
+        lines.append("  " + benchmark.line(book))
     return "\n".join(lines)
 
 
@@ -351,6 +469,10 @@ h2 { font: 700 13px/1.2 var(--display); letter-spacing: .14em; text-transform: u
 .tiles.many .tile { padding: 10px 11px; }
 .tiles.many .tile b { font-size: clamp(17px, 1.9vw, 23px); }
 .tiles.many .tile span { font-size: 10.5px; }
+.tiles.crowd .tile { padding: 8px 9px; }
+.tiles.crowd .tile b { font-size: clamp(15px, 1.4vw, 19px); }
+.tiles.crowd .tile span { font-size: 9.5px; }
+.tiles.crowd .tile small { font-size: 9.5px; }
 .tile { padding: 12px 14px; min-width: 0; background: var(--paper); }
 .tile span { display: block; font: 600 11.5px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .tile b { display: block; font: 500 clamp(19px, 3.2vw, 27px)/1.2 var(--mono); font-variant-numeric: tabular-nums; margin-top: 4px; }
@@ -448,7 +570,8 @@ def _equity_svg(book: Book) -> str:
             continue
         d = f"M{x(t0):.1f} {y(0):.1f} " + " ".join(f"H{x(t):.1f} V{y(v):.1f}" for t, v in s)   # steps: P&L moves at each close
         d += f" H{x(t1):.1f}"
-        out.append(f'<path class="l-{k}" d="{d}" stroke-linejoin="round"/>')
+        cls = f"l-{k}" + ("" if k == "total" or k in COLORS else " l-any")
+        out.append(f'<path class="{cls}" d="{d}" stroke-linejoin="round"/>')
     out.append(f'<text x="{L}" y="{H - 8}">{t0.astimezone(book.tz):%d %b}</text>')
     out.append(f'<text x="{W - R}" y="{H - 8}" text-anchor="end">{t1.astimezone(book.tz):%d %b}</text>')
     out.append("</svg>")
@@ -506,12 +629,12 @@ def render_html(book: Book) -> str:
                       f'{benchmark.desk_return(book, "majors"):+.1f}%</small></div>')
     else:
         bench_tile = ""
-    coins_held = sum(len(book.held[d]) for d in book.kind("coins"))
-    picks_waiting = sum(len(book.held[d]) for d in book.kind("stocks"))
+    coins_held = sum(len(book.held[d]) for d in book.of_kind("coins"))
+    picks_waiting = sum(len(book.held[d]) for d in book.of_kind("stocks"))
     tile_list = (
         [f'<div class="tile"><span>Net, all paper trades</span><b class="{_cls(all_s["net"])}">{e(_usd(all_s["net"]))}</b>'
          f'<small>{all_s["return_pct"]:+.1f}% of ${total:,.0f}</small></div>']
-        + [f'<div class="tile"><span>{LABEL[d]}</span><b class="{_cls(per[d]["net"])}">{e(_usd(per[d]["net"]))}</b>'
+        + [f'<div class="tile"><span>{e(book.label(d))}</span><b class="{_cls(per[d]["net"])}">{e(_usd(per[d]["net"]))}</b>'
            f'<small>{per[d]["trades"]} trades · won {per[d]["win_rate"]:.0f}%</small></div>' for d in book.desks]
         + [f'<div class="tile"><span>Open right now</span><b class="{_cls(book.unrealized)}">{e(_usd(book.unrealized))}</b>'
            f'<small>{coins_held} coins held · {picks_waiting} stock picks waiting</small></div>']
@@ -525,14 +648,16 @@ def render_html(book: Book) -> str:
     elif n <= 7:
         cols = (n + 1) // 2
         tile_cls = "tiles" + (" wide-first" if n % 2 else "") + (" lone-last" if n % 2 == 0 else "")
-    else:
+    elif n <= 16:
         cells = n + 1 + (n + 1) % 2
         cols = cells // 2
         tile_cls = "tiles many" + (" fill-last" if (n + 1) % 2 else "")
+    else:                                   # a crowd (thirty desks): plain rows of eight, the total still two cells wide
+        cols, tile_cls = 8, "tiles many crowd"
     tiles = f'<div class="{tile_cls}" style="--cols:{cols}">' + "".join(tile_list) + "</div>"
 
     rows = "".join(
-        f"<tr><th scope=\"row\">{LABEL[d]}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
+        f"<tr><th scope=\"row\">{e(book.label(d))}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
         f"<td class=n>{e(_usd(per[d]['avg_win']))}</td><td class=n>{e(_usd(per[d]['avg_loss']))}</td>"
         f"<td class=n>{_pf(per[d]['profit_factor'])}</td><td class=n>{per[d]['max_drawdown_pct']:.1f}%</td>"
         f"<td class=\"n {_cls(per[d]['net'])}\">{e(_usd(per[d]['net']))}</td></tr>" for d in book.desks)
@@ -543,7 +668,7 @@ def render_html(book: Book) -> str:
     held = [h for d in book.desks for h in book.held[d]]
     if held:
         hrows = "".join(
-            f"<tr><td>{LABEL[h.desk]}</td><td>{e(h.symbol)}</td><td>{h.opened.astimezone(book.tz):%d %b %H:%M}</td>"
+            f"<tr><td>{e(book.label(h.desk))}</td><td>{e(h.symbol)}</td><td>{h.opened.astimezone(book.tz):%d %b %H:%M}</td>"
             f"<td class=n>{e(_usd(h.cost, False))}</td>"
             f"<td class=\"n {_cls((h.value or h.cost) - h.cost)}\">{'—' if h.value is None else e(_usd(h.value - h.cost))}</td>"
             f"<td>{e(h.note)}</td></tr>" for h in held)
@@ -555,7 +680,7 @@ def render_html(book: Book) -> str:
     recent = book.all_trades[-40:][::-1]
     if recent:
         trows = "".join(
-            f"<tr><td>{t.closed.astimezone(book.tz):%d %b %H:%M}</td><td>{LABEL[t.desk]}</td><td>{e(t.symbol[:14])}</td>"
+            f"<tr><td>{t.closed.astimezone(book.tz):%d %b %H:%M}</td><td>{e(book.label(t.desk))}</td><td>{e(t.symbol[:14])}</td>"
             f"<td>{e(t.exit)}</td><td class=\"n {_cls(t.pnl_pct)}\">{t.pnl_pct:+.1f}%</td>"
             f"<td class=\"n {_cls(t.pnl)}\">{e(_usd(t.pnl))}</td></tr>" for t in recent)
         trades_html = (f'<div class="scroll"><table><thead><tr><th>Closed</th><th>Desk</th><th>Symbol</th><th>Exit</th>'
@@ -566,11 +691,16 @@ def render_html(book: Book) -> str:
     few = ("" if all_s["trades"] >= 50 else
            f"<p><b>{all_s['trades']} trades is far too few to judge.</b> Let the desks run for weeks before reading "
            "anything into these numbers.</p>")
-    notes = "\n    ".join(_note(book, d) for d in NOTE_ORDER if d in book.desks)
-    key = "".join(f'<span class="k-{d}"><i></i>{LABEL[d].lower()}</span>' for d in book.desks)
+    notes = "\n    ".join(_note(book, d) for d in (list(NOTE_ORDER) + [d for d in book.desks if d not in NOTE_ORDER])
+                          if d in book.desks)
+    key = "".join(f'<span class="k-{d}" style="--c:{book.color(d)}"><i></i>{e(book.label(d).lower())}</span>' for d in book.desks)
+    swatches = "".join(f".chart .l-{d} {{ stroke: {book.color(d)}; }}\n" for d in book.desks if d not in COLORS)
     return f"""<title>Paper Book</title>
 {FONTS}
-<style>{CSS}</style>
+<style>{CSS}
+.chart .l-any {{ stroke-width: 1.4; fill: none; }}
+.key span[style] {{ color: var(--c); }}
+{swatches}</style>
 <main class="sheet">
   <header class="top">
     <h1>Paper Book</h1>
@@ -625,6 +755,12 @@ def _note(book: Book, d: str) -> str:
         return (f"<p><b>Wild memecoins</b> (Night Desk, wild rules): its own {bank} of paper money on the same coins, "
                 "prices, fees and\n      rug checks as Memecoins, with looser entry rules and bigger, longer bets "
                 "(night-desk/desk-wild.toml).\n      It's there to find out faster whether taking more risk pays.</p>")
+    if d not in NOTE_ORDER and book.market(d) != "stocks":       # a desk described only by book.toml
+        what = {"memecoins": "the same coins, prices, fees and rug checks as Memecoins, under its own rules "
+                             f"(night-desk/desk-{d.split('_', 1)[-1]}.toml)",
+                "big coins": "the same coins, prices and fees as Big coins, under its own rules "
+                             f"(majors-desk/majors-{d.split('_', 1)[-1]}.toml)"}[book.market(d)]
+        return f"<p><b>{html.escape(book.label(d))}</b>: its own {bank} of paper money on {what}.</p>"
     stake = (f"each weekday's picks split {bank} of paper money equally" if book.share_bank else
              f"${book.ticket:,.0f} of paper money per pick, out of {bank}")
     target, stop, cost = book.stock_rules.get(d, (10.0, 5.0, 0.5))
@@ -638,7 +774,8 @@ def _note(book: Book, d: str) -> str:
             "stocks_wild": "<b>Wild stocks</b> (premarket scanner, wild rules: smaller gaps, no news needed)",
             "stocks_quick": "<b>Quick stocks</b> (premarket scanner, quick rules: the same picks, profit taken fast)",
             "stocks_early": "<b>Early-out stocks</b> (premarket scanner, early rules: the same picks, out of the "
-                            "market early)"}[d]
+                            "market early)"}.get(d) or (f"<b>{html.escape(book.label(d))}</b> (premarket scanner, "
+                                                       f"premarket-scanner/criteria-{d.split('_', 1)[-1]}.toml)")
     end = f"by {book.stock_exit[d]} ET" if book.stock_exit.get(d) else "the\n      close"
     return (f"<p>{name}: {stake}.\n      Each pick is bought at the 9:30 ET open and sold at +{target:g}%, −{stop:g}% "
             f"or {end}, whichever comes first, minus {cost:g}% for spread and slippage. When one five-minute bar\n"
@@ -660,25 +797,32 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     out.mkdir(parents=True, exist_ok=True)
     book.benchmark = benchmark.load(out, book)
     write_ledger(book, out / "ledger.csv")
+    (out / "standings.txt").write_text(render_standings(book) + "\n", encoding="utf-8")
     frag = render_html(book)
     (out / "paper-book.fragment.html").write_text(frag, encoding="utf-8")
     (out / "paper-book.html").write_text(page(frag), encoding="utf-8")
     import crawler                                 # the same numbers, crawled trade by trade
+    import deck                                    # ...as lanes of light on one time axis (the home page)
     import galaxy                                  # ...and drawn as a universe
 
     crawler.write(book, out)
     galaxy.write(book, out)
+    deck.write(book, out)
     return book
 
 
-SERVED = {"/": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
+SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/deck.json": "deck.json",
+          "/crawler": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
           "/galaxy": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
-          "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv"}
-TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8"}
+          "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv",
+          "/standings": "standings.txt", "/standings.txt": "standings.txt"}
+TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8",
+         ".txt": "text/plain; charset=utf-8"}
 
 
 def serve(out: Path, host: str = "127.0.0.1", port: int = 8790):
-    """Read-only: the crawler, the galaxy, the paper book and the ledger, nothing else. Answers only to its own address."""
+    """Read-only: the deck, the crawler, the galaxy, the paper book and the ledger, nothing else. Answers only to its
+    own address."""
     import threading
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -714,18 +858,19 @@ def main(argv=None) -> int:
     ap.add_argument("--demo", action="store_true", help="read the desks' demo results instead of live ones")
     ap.add_argument("--watch", type=float, metavar="MINUTES", help="keep updating every few minutes")
     ap.add_argument("--print", action="store_true", dest="print_only", help="just print the totals; write nothing")
-    ap.add_argument("--serve", type=int, metavar="PORT", help="also show the crawler, galaxy and book at http://HOST:PORT")
+    ap.add_argument("--standings", action="store_true", help="just print every desk ranked, with its last 7 days")
+    ap.add_argument("--serve", type=int, metavar="PORT", help="also show the deck, crawler, galaxy and book at http://HOST:PORT")
     ap.add_argument("--host", default="127.0.0.1", help="with --serve: the address to answer on (default this machine only)")
     ap.add_argument("--config", default=str(HERE / "book.toml"))
     args = ap.parse_args(argv)
     with open(args.config, "rb") as fh:
         cfg = tomllib.load(fh)
-    if args.print_only:
+    if args.print_only or args.standings:
         import benchmark
 
         book = load(cfg, args.demo)
         book.benchmark = benchmark.load(HERE / "output" / ("demo" if args.demo else ""), book)
-        print(render_text(book))
+        print(render_standings(book) if args.standings else render_text(book))
         return 0
     out = HERE / "output" / ("demo" if args.demo else "")
     server = None
@@ -733,10 +878,10 @@ def main(argv=None) -> int:
         book = build(cfg, args.demo, out)
         print(render_text(book))
         print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}\n"
-              f"Crawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
+              f"Deck: {out / 'deck.html'}\nCrawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
         if args.serve and server is None:
             server = serve(out, args.host, args.serve)
-            print(f"Showing the crawler at http://{args.host}:{args.serve}/  (the galaxy: /galaxy, the book: /book)")
+            print(f"Showing the deck at http://{args.host}:{args.serve}/  (crawler: /crawler, galaxy: /galaxy, book: /book)")
             if not args.watch:
                 args.watch = 15                     # serving means staying up, so keep the numbers fresh
         if not args.watch:

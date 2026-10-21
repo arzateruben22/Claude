@@ -22,26 +22,29 @@ sudo -u "$OWNER" "$DIR/.venv/bin/pip" install -q -r "$DIR/night-desk/requirement
   -r "$DIR/majors-desk/requirements.txt"
 
 echo "Installing the services (they run as $OWNER)..."
+# Units from older versions (one service per rulebook): every rulebook now runs inside its market's service.
+for old in majors-4h scanner-wild-scan scanner-wild-grade scanner-fade-scan scanner-fade-grade \
+           scanner-quick-scan scanner-quick-grade scanner-early-scan scanner-early-grade; do
+  for f in /etc/systemd/system/$old.service /etc/systemd/system/$old.timer; do
+    if [ -e "$f" ]; then systemctl disable --now "$(basename "$f")" 2>/dev/null || true; rm -f "$f"; fi
+  done
+done
 for f in "$DIR"/server/systemd/*.service "$DIR"/server/systemd/*.timer; do
   sed -e "s#@DIR@#$DIR#g" -e "s#@USER@#$OWNER#g" "$f" > "/etc/systemd/system/$(basename "$f")"
 done
 systemctl daemon-reload
-systemctl enable --now scanner-scan.timer scanner-grade.timer scanner-wild-scan.timer scanner-wild-grade.timer \
-  scanner-fade-scan.timer scanner-fade-grade.timer scanner-quick-scan.timer scanner-quick-grade.timer \
-  scanner-early-scan.timer scanner-early-grade.timer nightdesk-review.timer watchdog.timer backup.timer
-systemctl enable nightdesk.service majors.service majors-4h.service paperbook.service postdesk.service
+systemctl enable --now scanner-scan.timer scanner-grade.timer nightdesk-review.timer watchdog.timer backup.timer
+systemctl enable nightdesk.service majors.service paperbook.service postdesk.service
 # (Re)start so a `git pull` takes effect. The desks save open paper positions on the way out and resume them.
 # Post Desk only starts once X is connected.
-systemctl restart nightdesk.service majors.service majors-4h.service paperbook.service postdesk.service
+systemctl restart nightdesk.service majors.service paperbook.service postdesk.service
 
 echo
 bash "$DIR/server/status.sh"
 cat <<MSG
 
-Running now (paper money): ten desks, each on its own \$100 of paper money, and the paper book.
-  memecoins: main, wild (riskier) and strict (pickier, smaller bets)
-  big coins: hourly, and the same rules on 4-hour candles
-  stocks: main, wild (smaller gaps), fade (sold short), quick (+5% / -3%) and early (out by 10:30 ET)
+Running now (paper money): thirty desks, ten ideas per market, each on its own \$100 of paper money, and the
+paper book. The Trading Deck lines them all up: bash server/status.sh shows where to open it.
 Next:
   bash server/keys.sh        your keys (Alpaca for stocks; X and Claude for posting)
   bash server/connect-x.sh   connect your X account, then posting starts

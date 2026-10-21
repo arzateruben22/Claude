@@ -33,20 +33,40 @@ sudo bash server/setup.sh
 **Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
 starts with $100 of paper money.
 
-**Ten desks, one month, one scoreboard.** Each desk is a different idea on its own $100 of paper money, all
-running through the same weeks on the same markets, so at the end you can line them up, keep what made money and
-cut the rest:
+**Thirty desks, one month, one scoreboard.** Ten rulebooks per market, each on its own $100 of paper money, all
+running through the same weeks on the same markets, so you can line them up, keep what made money and cut the rest:
 
-| Market | Desks |
+| Market | Ten rulebooks |
 |---|---|
-| Memecoins | **main**; **wild** (younger coins, bigger bets); **strict** (older coins, smaller bets, quicker exits) |
-| Big coins | **hourly**; **4h** (the same rules on 4-hour candles: fewer trades, less paid in fees) |
-| Stocks | **main** (buy gap-ups, +10% / −5%); **wild** (smaller gaps, no news); **fade** (sold short); **quick** (+5% / −3%); **early** (out by 10:30 New York time) |
+| Memecoins | **main**; **wild** (younger coins, bigger bets); **strict** (older coins, smaller bets, quicker exits); **sniper** (3–10 minutes old, out in 30); **momentum** (only coins still being bought); **patient** (an hour old, big pools, up to 6 hours); **scalper** (+12 / −8, out in 20 minutes); **whale** (big pools only, 15% bets); **runner** (lets a winner run, trailing stop); **tiny** (2% bets, eight at once) |
+| Big coins | **hourly**; **4h**; **daily**; **fast** (short windows); **tight** (1.5 ATR stop); **loose** (4h, 5 ATR stop); **btc** (Bitcoin only, 80% in); **alts** (SOL, XRP, ADA, DOGE); **single** (one coin at a time, 80% in); **slow** (daily, the longest windows) |
+| Stocks | **main** (buy gap-ups, +10% / −5%); **wild** (smaller gaps, no news); **fade** (sold short); **quick** (+5% / −3%); **early** (out by 10:30 New York time); **bigcap** ($5–100 stocks); **tight** (3% stop); **hold** (+25% / −10%); **cheap** ($1–5 stocks, 15% gaps); **highvol** (8× volume) |
+
+The plan: a **first look on Friday 23 October**, the **assessment at the end of October**, and after that the
+survivors keep running until one desk shows a **green week**: traded on three or more of the last seven days, net
+up over the seven, and no single day's loss bigger than the week's gain. The Trading Deck marks both dates on its
+time axis, its **standings** button ranks every desk with its last seven days, and the evening push names the
+week's best, worst and any green weeks. With thirty variations, a few will look good by Friday from luck alone;
+the month-end read and the green week are what count.
+
+None of this adds to a Claude bill: only the main memecoin and stock desks use Claude for their nightly review,
+and only if you gave them a key. The other twenty-eight desks judge and review by rules alone.
 
 Already set up? One update adds them all and keeps every paper trade so far:
 `cd ~/desks && git pull && sudo bash server/setup.sh`. The rules of every desk were set before it started and stay
 fixed for the month: changing a desk mid-test, or keeping only the one that got lucky, is how people fool
 themselves. A winner has to pass its scorecard, then do it again on other months, before anyone trusts it.
+
+**To read the standings at any time:** `bash server/status.sh` ranks all thirty with their last seven days, and the
+same table is at `http://127.0.0.1:8790/standings` next to the deck. Your phone gets a push the moment any desk has a
+green week, and again if it keeps the streak (×2, ×3...).
+
+**To cut a desk after the month-end read:** take its name out of the server's lists and restart. A memecoin
+desk is one `--with <name>` in `server/systemd/nightdesk.service` (and one `ExecStart` line in
+`nightdesk-review.service`); a big-coin desk is one `--with <name>` in `majors.service`; a stock desk comes out of
+`--books all` by renaming its `premarket-scanner/criteria-<name>.toml` (say, to `criteria-<name>.toml.off`). Then
+delete its section from `paper-book/book.toml` and run `sudo bash server/setup.sh`. Its paper records stay on disk;
+nothing is deleted. Don't cut before the read: a desk that looks dead on day 10 can be the one standing on day 28.
 
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
 everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.
@@ -73,11 +93,12 @@ $1.20 a month on the $6 plan).
 bash server/status.sh
 ```
 
-**To watch it:** the **Trade Crawler** sends a sixteen-legged crawler through every paper trade,
-one desk at a time. Wins light up, big losses get flagged in pink, and it finishes with a list of
-**flags to check** before any real money. The **Paper Galaxy** (`/galaxy`) draws the same trades as
-a universe that grows. Open both on your phone after step 6 of Part 3
-(`sudo bash server/phone.sh`), at the address it prints, port 8790.
+**To watch it:** the **Trading Deck** is one screen with every desk as a lane of light: its paper profit
+since day one, every trade as a spark, its own day-28 finish line, sorted live so the order is the
+scoreboard. It replays from day one when it opens. From there, the **Trade Crawler** (`/crawler`) walks
+every paper trade and finishes with a list of **flags to check** before any real money, and the **Paper
+Galaxy** (`/galaxy`) draws the same trades as a universe that grows. Open them on your phone after step 6
+of Part 3 (`sudo bash server/phone.sh`), at the address it prints, port 8790.
 
 ## Part 3: Start posting on X (about 30 minutes, once)
 
@@ -98,7 +119,7 @@ a universe that grows. Open both on your phone after step 6 of Part 3
    - Copy the whole address from the address bar, paste it back into the server, and press Enter.
 6. **Approve from your phone (optional):** run `sudo bash server/phone.sh` and follow what it
    prints. Install the Tailscale app, sign in, and open the addresses it gives you: Post Desk
-   on port 8788, and the Trade Crawler on port 8790.
+   on port 8788, and the Trading Deck on port 8790.
 7. **On X:** turn on the **Automated** label (Settings → Your account → Account information →
    Automation).
 

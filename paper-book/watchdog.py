@@ -6,7 +6,8 @@
   python watchdog.py --dry-run    print what it would send, send nothing
 
 You hear about it when a desk stops or keeps crashing, goes quiet (running but saving nothing, usually
-no prices), loses a lot in a day, or the nightly backup stops happening. Pushes go through ntfy (free app,
+no prices), loses a lot in a day, has a green week (the bar the tournament waits for), or the nightly backup
+stops happening. Pushes go through ntfy (free app,
 no account) to the topic in ../server/.alerts, made by server/alerts.sh. Without a topic it does nothing.
 It only reads: paper money only, and it never changes a desk.
 """
@@ -37,15 +38,17 @@ ALERTS = ROOT / "server" / ".alerts"
 STATE = HERE / "output" / "watchdog.json"
 BACKUPS = Path("/var/backups/desks")
 NTFY = "https://ntfy.sh"
-UNITS = {"nightdesk": "Memecoin desk", "majors": "Big-coin desk", "majors-4h": "Big-coin 4h desk",
-         "paperbook": "Paper book and crawler",
+UNITS = {"nightdesk": "Memecoin desks", "majors": "Big-coin desks", "paperbook": "Paper book and deck",
          "postdesk": "Post Desk"}
-# What should keep saving while its service runs: name -> (service, file, minutes, label)
-QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Memecoin desk"),     # every minute
-         "nightdesk-wild": ("nightdesk", "night-desk/output/wild/live/state.json", 20, "Wild memecoin desk"),
-         "nightdesk-strict": ("nightdesk", "night-desk/output/strict/live/state.json", 20, "Strict memecoin desk"),
-         "majors": ("majors", "majors-desk/output/live/state.json", 150, "Big-coin desk"),         # every hour
-         "majors-4h": ("majors-4h", "majors-desk/output/4h/live/state.json", 330, "Big-coin 4h desk")}  # every 4 hours
+# What should keep saving while its service runs: name -> (service, file, minutes, label). The memecoin desks save
+# every minute; a big-coin desk saves once per finished candle, so the slack is a candle and a half plus an hour.
+QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Memecoin desk"),
+         "majors": ("majors", "majors-desk/output/live/state.json", 150, "Big-coin desk")}
+for _b in ("wild", "strict", "sniper", "momentum", "patient", "scalper", "whale", "runner", "tiny"):
+    QUIET[f"nightdesk-{_b}"] = ("nightdesk", f"night-desk/output/{_b}/live/state.json", 20, f"{_b.title()} memecoin desk")
+for _b, _h in (("4h", 4), ("daily", 24), ("fast", 1), ("tight", 1), ("loose", 4), ("btc", 4), ("alts", 1),
+               ("single", 1), ("slow", 24)):
+    QUIET[f"majors-{_b}"] = ("majors", f"majors-desk/output/{_b}/live/state.json", 90 * _h + 60, f"Big-coin {_b} desk")
 
 
 @dataclass
@@ -118,18 +121,19 @@ def check_units(now: datetime, state: dict, units: Callable[[str], Tuple[str, in
         label = UNITS[name]
         if active == "active":
             if u["alerted"]:
-                out.append(Push(f"{label} is running again", "Back to normal. Nothing was lost: open paper "
+                verb = "are" if label.endswith("desks") else "is"
+                out.append(Push(f"{label} {verb} running again", "Back to normal. Nothing was lost: open paper "
                                 "positions were saved and picked up again.", 3, ("white_check_mark",)))
             u["bad"], u["alerted"] = 0, False
         else:
             u["bad"] += 1                                   # two checks in a row (5+ minutes), not a quick restart
             if u["bad"] >= 2 and not u["alerted"]:
-                out.append(Push(f"{label} stopped", f"It has been '{active}' for over 5 minutes. To see why, on the "
-                                f"server run: journalctl -u {name} -n 30 --no-pager", 4, ("warning",)))
+                out.append(Push(f"{label} stopped", f"The service has been '{active}' for over 5 minutes. To see why, "
+                                f"on the server run: journalctl -u {name} -n 30 --no-pager", 4, ("warning",)))
                 u["alerted"] = True
         if restarts > u.get("restarts", restarts) and not u["alerted"] and _ago(now, u.get("crash_at"), 3):
-            out.append(Push(f"{label} crashed and restarted itself",
-                            f"{restarts} automatic restart{'s' if restarts > 1 else ''} so far. It's running, but if this "
+            out.append(Push(f"{label} crashed and restarted",
+                            f"{restarts} automatic restart{'s' if restarts > 1 else ''} so far. Running again, but if this "
                             f"keeps happening, check: journalctl -u {name} -n 50 --no-pager", 3, ("arrows_counterclockwise",)))
             u["crash_at"] = now.isoformat()
         u["restarts"] = restarts
@@ -138,8 +142,10 @@ def check_units(now: datetime, state: dict, units: Callable[[str], Tuple[str, in
 
 
 def check_quiet(now: datetime, state: dict, mtime_of: Callable[[Path], Optional[datetime]], root: Path = ROOT) -> List[Push]:
+    """One push per service, however many of its desks have gone quiet at once (they share one price feed)."""
     out: List[Push] = []
     sent = state.setdefault("sent", {})
+    quiet: Dict[str, List[Tuple[str, float]]] = {}
     for name, (unit, rel, minutes, label) in QUIET.items():
         if state.get("units", {}).get(unit, {}).get("active") != "active":
             continue                                        # a stopped desk is already reported as stopped
@@ -148,10 +154,18 @@ def check_quiet(now: datetime, state: dict, mtime_of: Callable[[Path], Optional[
             continue
         age = (now - m).total_seconds() / 60
         if age > minutes and _ago(now, sent.get(f"quiet:{name}"), 6):
-            out.append(Push(f"{label} has gone quiet",
-                            f"It's running but hasn't saved anything for {age:.0f} minutes, usually because it can't get "
-                            f"prices. To see why: journalctl -u {unit} -n 30 --no-pager", 4, ("zzz",)))
+            quiet.setdefault(unit, []).append((label, age))
             sent[f"quiet:{name}"] = now.isoformat()
+    for unit, desks in quiet.items():
+        if len(desks) == 1:
+            title = f"{desks[0][0]} has gone quiet"
+            body = f"It's running but hasn't saved anything for {desks[0][1]:.0f} minutes, usually because it can't get prices."
+        else:
+            kind = UNITS[unit].lower().rstrip("s")
+            title = f"{len(desks)} {kind}s have gone quiet"
+            body = (f"They're running but haven't saved anything for {max(a for _, a in desks):.0f} minutes, usually "
+                    f"because they can't get prices ({', '.join(label for label, _ in desks)}).")
+        out.append(Push(title, body + f" To see why: journalctl -u {unit} -n 30 --no-pager", 4, ("zzz",)))
     return out
 
 
@@ -167,8 +181,28 @@ def check_losses(now: datetime, state: dict, book: pb.Book, limit_pct: float, ni
         body = f"{day / bank * 100:+.1f}% of its ${bank:,.0f} paper bank in trades closed today."
         if d == "memecoins" and day <= -night_limit_pct / 100 * bank:
             body += f" It hit its own {night_limit_pct:g}% daily limit, so it has stopped buying until tomorrow."
-        out.append(Push(f"{pb.LABEL[d]} down {_usd(day)} today", body + " Paper money only.", 4, ("chart_with_downwards_trend",)))
+        out.append(Push(f"{book.label(d)} down {_usd(day)} today", body + " Paper money only.", 4, ("chart_with_downwards_trend",)))
         sent[f"loss:{d}"] = today.isoformat()
+    return out
+
+
+def check_green(now: datetime, state: dict, book: pb.Book) -> List[Push]:
+    """The push the whole tournament waits for: a desk has a green week (deck.week). Once per desk per week."""
+    import deck
+
+    out: List[Push] = []
+    sent = state.setdefault("sent", {})
+    today = now.astimezone(book.tz).date()
+    for d in book.desks:
+        w = deck.week(book, d, today)
+        if not w["green_week"] or not _ago(now, sent.get(f"green:{d}"), 24 * 7):
+            continue
+        sent[f"green:{d}"] = now.isoformat()
+        times = f", {w['streak']} weeks in a row" if w["streak"] > 1 else ""
+        out.append(Push(f"{book.label(d)} has a green week{times}",
+                        f"{_usd(w['net'])} over the last 7 days: {w['green']} green day{'s' if w['green'] != 1 else ''}, "
+                        f"{w['red']} red, traded on {w['traded']} of 7, and no day lost more than the week made. "
+                        "Paper money only: one green week is a start, not proof.", 3, ("seedling",)))
     return out
 
 
@@ -182,21 +216,52 @@ def check_backup(now: datetime, state: dict, newest: Optional[datetime], folder_
 
 
 def summary(book: pb.Book, day: date) -> Push:
-    lines, today_total, since_total = [], 0.0, 0.0
+    """The evening push: every desk's day with a few desks; with a crowd of them, today's best and worst, the
+    week's best and worst, and which desks have a green week (deck.week) so far."""
+    import deck
+
+    lines, today_total, since_total, rows = [], 0.0, 0.0, []
     for d in book.desks:
         trades = book.trades[d]
         closed = [t for t in trades if t.closed.astimezone(book.tz).date() == day]
         today_pnl, net = sum(t.pnl for t in closed), sum(t.pnl for t in trades)
         today_total += today_pnl
         since_total += net
-        lines.append(f"{pb.LABEL[d]}: {_usd(today_pnl)} today ({len(closed)} closed) · {_usd(net)} since the start")
+        rows.append((d, today_pnl, len(closed), net, deck.week(book, d, day)))
+    if len(rows) <= 6:
+        lines += [f"{book.label(d)}: {_usd(t)} today ({n} closed) · {_usd(net)} since the start" for d, t, n, net, _ in rows]
+    else:
+        active = [r for r in rows if r[2]]
+        if active:
+            best, worst = max(active, key=lambda r: r[1]), min(active, key=lambda r: r[1])
+            lines.append(f"Today: {len(active)} of {len(rows)} desks traded · best {book.label(best[0])} {_usd(best[1])}"
+                         + (f" · worst {book.label(worst[0])} {_usd(worst[1])}" if worst is not best else ""))
+        else:
+            lines.append(f"Today: none of the {len(rows)} desks closed a trade")
+        weekly = [r for r in rows if r[4]["traded"]]
+        if weekly:
+            best, worst = max(weekly, key=lambda r: r[4]["net"]), min(weekly, key=lambda r: r[4]["net"])
+            lines.append(f"Last 7 days: best {book.label(best[0])} {_usd(best[4]['net'])} · worst {book.label(worst[0])} "
+                         f"{_usd(worst[4]['net'])}")
+        green = [book.label(d) + (f" ×{w['streak']}" if w["streak"] > 1 else "") for d, _, _, _, w in rows if w["green_week"]]
+        lines.append("Green week: " + (", ".join(green) if green else "none yet"))
     held = [h for d in book.desks for h in book.held[d]]
     bank = book.bank_total
     lines.append(f"All desks: {_usd(since_total)} ({since_total / bank * 100:+.1f}% of ${bank:,.0f})"
                  + (f" · {len(held)} open, {_usd(book.unrealized)} not banked" if held else ""))
     if book.benchmark:
         lines.append(benchmark.line(book))
-    return Push(f"Paper book · {day:%a %d %b}: {_usd(today_total)} today", "\n".join(lines), 2, ("spider",))
+    # on a date the book is read (first look, month end): the ranking, top and bottom, in the same push
+    reads = {deck._as_date(when): label for label, when in (book.checkpoints or {}).items() if deck._as_date(when)}
+    title = f"Paper book · {day:%a %d %b}: {_usd(today_total)} today"
+    if day in reads and len(rows) > 1:
+        ranked = sorted(rows, key=lambda r: (-(r[3] / book.banks[r[0]]), book.desks.index(r[0])))
+        line = lambda r: f"{book.label(r[0])} {_usd(r[3])} ({r[3] / book.banks[r[0]] * 100:+.1f}%)".replace("(-", "(−")  # noqa: E731
+        n = min(5, len(ranked) // 2)
+        lines.insert(0, f"{reads[day].capitalize()}, day {day:%d %b}. Top {n}: " + "; ".join(line(r) for r in ranked[:n]) + ".")
+        lines.insert(1, f"Bottom {n}: " + "; ".join(line(r) for r in ranked[-n:]) + ".")
+        title = f"{reads[day].capitalize()} · {day:%a %d %b}: {_usd(since_total)} since the start"
+    return Push(title, "\n".join(lines), 2, ("spider",))
 
 
 def check_summary(now: datetime, state: dict, book: pb.Book, at: time) -> List[Push]:
@@ -237,7 +302,7 @@ def run_once(now: datetime, state: dict, *, units=unit_state, mtime_of=mtime, bo
             sent["book"] = now.isoformat()
             pushes.append(Push("Couldn't read the paper results", f"{type(exc).__name__}: {exc}", 3, ("warning",)))
         return pushes
-    pushes += check_losses(now, state, book, limit, night)
+    pushes += check_losses(now, state, book, limit, night) + check_green(now, state, book)
     if backups is None:
         backups = (newest_backup(), BACKUPS.is_dir())
     pushes += check_backup(now, state, *backups)

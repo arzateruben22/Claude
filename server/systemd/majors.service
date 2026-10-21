@@ -1,5 +1,5 @@
 [Unit]
-Description=Majors Desk: paper trading on BTC, ETH, SOL, XRP, ADA, DOGE (Coinbase prices)
+Description=Majors Desk: paper trading on BTC, ETH, SOL, XRP, ADA, DOGE (ten rulebooks, one Coinbase feed)
 After=network-online.target
 Wants=network-online.target
 
@@ -7,7 +7,7 @@ Wants=network-online.target
 Environment=PYTHONUNBUFFERED=1
 User=@USER@
 WorkingDirectory=@DIR@/majors-desk
-ExecStart=@DIR@/.venv/bin/python -m majors run
+ExecStart=@DIR@/.venv/bin/python -m majors run --with 4h --with daily --with fast --with tight --with loose --with btc --with alts --with single --with slow
 Restart=always
 RestartSec=60
 

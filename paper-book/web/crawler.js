@@ -917,9 +917,14 @@
     $('h-num').textContent = String(i + 1).padStart(2, '0');
     $('h-name').textContent = s.name;
     $('h-sub').textContent = s.sub;
-    Array.from($('tabs').children).forEach((b, k) => {
+    const tabs = $('tabs');
+    Array.from(tabs.children).forEach((b, k) => {
       b.classList.toggle('done', k < i);
-      if (k === i) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      if (k === i) {
+        b.setAttribute('aria-current', 'step');
+        if (tabs.scrollWidth > tabs.clientWidth + 1)        // a scrolling strip: bring the current tab into view
+          tabs.scrollLeft = Math.max(0, b.offsetLeft - tabs.clientWidth / 2 + b.offsetWidth / 2);
+      } else b.removeAttribute('aria-current');
     });
   }
 

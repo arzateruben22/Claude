@@ -1,6 +1,7 @@
 """Majors Desk command line. Paper money only: nothing here can place a real order.
 
   python -m majors run                  paper trade live, one decision per coin every hour
+  python -m majors run --with 4h        ...plus other rulebooks in the same process, each on its own paper bank
   python -m majors status               the paper bank, open positions, latest trades
   python -m majors backtest --days 180  the same rules over real past prices, vs just holding
   python -m majors sim --days 30        a month of an invented market (for trying it out)
@@ -45,34 +46,48 @@ def _market(cfg, demo: bool = False, seed: int = 7):
 
 
 def cmd_run(args) -> int:
-    cfg, base = _book(args)
-    desk = Desk(cfg, _market(cfg), base / "live")
-    if desk.resume():
-        print(f"Resumed the paper bank: ${desk.value():,.2f}, {len(desk.positions)} open.")
-    else:
-        print(f"New paper bank: ${cfg.desk.start_bank:,.2f}.")
-    print(f"Watching {', '.join(cfg.desk.coins)} on Coinbase prices, one decision per coin per finished "
-          f"{cfg.rules.candle_word()}. Ctrl+C to stop.")
+    """One process, one price feed, any number of rulebooks: each decides when its own candle closes."""
+    books = list(dict.fromkeys([args.book] + (getattr(args, "also", None) or [])))
+    coinbase = Coinbase(cache_dir=OUTPUT / "cache")          # shared: every book reads the same hourly candles
+    desks = []
+    for book in books:
+        path, base = book_paths(book, OUTPUT)
+        cfg = config.load(path)
+        market = Bucketed(coinbase, cfg.desk.candle_hours) if cfg.desk.candle_hours > 1 else coinbase
+        desk = Desk(cfg, market, base / "live")
+        tag = "" if book == "main" else f" [{book}]"
+        if desk.resume():
+            print(f"Resumed the paper bank{tag}: ${desk.value():,.2f}, {len(desk.positions)} open.")
+        else:
+            print(f"New paper bank{tag}: ${cfg.desk.start_bank:,.2f}.")
+        print(f"  watching {', '.join(cfg.desk.coins)} on Coinbase prices, one decision per coin per finished "
+              f"{cfg.rules.candle_word()}")
+        desks.append([book, cfg, desk, _now()])
+    print("Ctrl+C to stop.")
 
     def stop(*_):
         raise KeyboardInterrupt
 
     signal.signal(signal.SIGTERM, stop)
-    next_at = _now()
     try:
         while True:
             now = _now()
-            if now >= next_at:
+            for entry in desks:
+                book, cfg, desk, next_at = entry
+                if now < next_at:
+                    continue
                 before = len(desk.log)
                 desk.step(now)
+                tag = "" if book == "main" else f" [{book}]"
                 for line in list(desk.log)[: len(desk.log) - before][::-1]:
-                    print(line, flush=True)
-                print(f"{now:%Y-%m-%d %H:%M} bank ${desk.value():,.2f} · {len(desk.positions)} open", flush=True)
+                    print(line + tag, flush=True)
+                print(f"{now:%Y-%m-%d %H:%M}{tag} bank ${desk.value():,.2f} · {len(desk.positions)} open", flush=True)
                 h = cfg.desk.candle_hours                                 # just after the next candle closes
-                next_at = floor_to(now, h) + h * HOUR + timedelta(seconds=90)
+                entry[3] = floor_to(now, h) + h * HOUR + timedelta(seconds=90)
             time.sleep(20)
     except KeyboardInterrupt:
-        desk.save()
+        for _, _, desk, _ in desks:
+            desk.save()
         print("\nSaved. Open positions resume on the next run.")
     return 0
 
@@ -211,7 +226,9 @@ def cmd_why(args) -> int:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m majors", description="Paper trading on the big coins.")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("run", help="paper trade live (hourly decisions)")
+    p = sub.add_parser("run", help="paper trade live (one decision per finished candle)")
+    p.add_argument("--with", dest="also", action="append", metavar="BOOK",
+                   help="also run another rulebook in this process, on its own paper bank (e.g. --with 4h)")
     p.set_defaults(func=cmd_run)
     p = sub.add_parser("status", help="paper bank, open positions, latest trades")
     p.add_argument("--demo", action="store_true")
@@ -237,7 +254,8 @@ def main(argv=None) -> int:
                        help="which rulebook: main (majors.toml, the default) or another, e.g. 4h (majors-4h.toml)")
     args = ap.parse_args(argv)
     try:                               # a bad rulebook name, said plainly before anything runs
-        book_paths(args.book)
+        for book in [args.book] + (getattr(args, "also", None) or []):
+            book_paths(book)
     except ValueError as exc:
         print(f"✗ {exc}", file=sys.stderr)
         return 2
