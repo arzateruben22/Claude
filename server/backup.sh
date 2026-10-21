@@ -23,7 +23,8 @@ for p in night-desk/output/live night-desk/output/archive night-desk/output/*/li
          majors-desk/output/live majors-desk/output/archive majors-desk/output/*/live majors-desk/output/*/archive \
          premarket-scanner/output/journal.csv premarket-scanner/output/archive \
          premarket-scanner/output/*/journal.csv premarket-scanner/output/*/archive \
-         paper-book/output/ledger.csv paper-book/output/benchmark.json paper-book/output/archive; do
+         paper-book/output/ledger.csv paper-book/output/benchmark.json paper-book/output/archive \
+         paper-book/output/standings-*.txt; do
   if [ -e "$p" ]; then
     cp -a --parents "$p" "$WORK/"
   fi

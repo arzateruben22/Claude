@@ -348,7 +348,8 @@
       const s = document.createElement('span');
       if (c.at <= m.now) s.className = 'past';
       const b = document.createElement('b'); b.textContent = c.label;
-      s.append(b, ' ' + c.local);
+      const days = Math.floor((c.at - m.now) / DAY);             // c.at is the end of that day: whole days left
+      s.append(b, ' ' + c.local + (c.at <= m.now ? '' : days < 1 ? ' · today' : days === 1 ? ' · tomorrow' : ` · in ${days} days`));
       checks.appendChild(s);
     }
   }
