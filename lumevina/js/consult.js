@@ -35,7 +35,35 @@
   };
   var approved = function (id) { return state.approved === "all" || (state.approved || []).indexOf(id) !== -1; };
   var waiting = function (id) { return (state.waiting || []).indexOf(id) !== -1; };
-  var changed = function () { document.dispatchEvent(new CustomEvent("lumevina:consult-changed")); };
+  var changed = function () { paintAccount(); document.dispatchEvent(new CustomEvent("lumevina:consult-changed")); };
+
+  /* My Lumevina → Your consults: what Evelyn is looking at, what she unlocked */
+  var nameOf = function (id) {
+    var C = window.LUMEVINA_CATALOG, p = C && C.products.filter(function (x) { return x.id === id; })[0];
+    return p ? p.name : id;
+  };
+  var paintAccount = function () {
+    var box = document.querySelector(".acct-consults"), card = document.querySelector(".acct-cs-card"), meta = document.querySelector(".acct-cs-meta");
+    if (!box || !card) return;
+    var esc = function (t) { return String(t == null ? "" : t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+    var w = state.waiting || [], ap = state.approved === "all" ? "all" : (state.approved || []);
+    if (!w.length && (ap === "all" ? false : !ap.length) && ap !== "all") { box.hidden = true; return; }
+    box.hidden = false;
+    meta.textContent = email() ? "for " + email() : "";
+    var h = "";
+    if (w.length) h += '<p class="acct-cs-line"><b>Evelyn is looking at:</b> ' + esc(w.map(nameOf).join(", ")) + '. She replies within a day, by email.</p>';
+    if (ap === "all") h += '<p class="acct-cs-line"><b>Unlocked for you:</b> every active on the shelf. Use this email at checkout.</p>';
+    else if (ap.length) h += '<p class="acct-cs-line"><b>Unlocked for you:</b></p><ul class="acct-cs-list">' + ap.map(function (id) {
+      return '<li>' + esc(nameOf(id)) + ' <button type="button" class="linklike acct-cs-add" data-id="' + esc(id) + '">Add to cart</button></li>';
+    }).join("") + '</ul>';
+    card.innerHTML = h;
+  };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".acct-cs-add");
+    if (!b || !window.LumevinaCart) return;
+    var r = window.LumevinaCart.add(b.dataset.id);
+    b.textContent = r.ok ? "In your cart" : r.reason === "max" ? "In your cart" : "Not available right now";
+  });
 
   var call = function (body) {
     var token = window.LumevinaAccount && window.LumevinaAccount.token && window.LumevinaAccount.token();

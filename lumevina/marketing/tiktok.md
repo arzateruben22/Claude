@@ -1,0 +1,35 @@
+# TikTok, the first ten weeks: one explainer a week, with its caption
+
+The clips are in `marketing/ads/out/video/` (9:16, 720×1280, silent, captions on screen). Post one a week on the same weekday, Evelyn's face for the other posts. Each caption below is the first line (the hook, shown before "more"), the body, and five hashtags. Nothing claims a result; the facts are the lesson's. The link in bio is the shop; the call to action is the free lesson or the online consult, never a discount.
+
+How to post: upload the mp4, keep the sound off or add TikTok's library music low, cover = the first frame, caption pasted as is, "Skin School" sticker optional. Reply to comments with one line, in her voice; anything personal ("is this purging?") gets "send me a photo in daylight through the site" rather than an answer in public.
+
+| Week | Clip | Hook (first line) | Body | Hashtags |
+|---|---|---|---|---|
+| 1 | `8-2-9x16.mp4` Inside a pore | What acne actually is, in 26 seconds. | A pore, a hair, an oil gland. Dead skin and oil pack it, bacteria feed on it, the wall swells. Mandelic acid keeps it clear, benzoyl peroxide clears the bacteria, and you judge it at 8 to 12 weeks, not 8 to 12 days. Free lesson on the site, link in bio. | #acne #skincareeducation #esthetician #woodlandhills #skinschool |
+| 2 | `3-3-9x16.mp4` Ninety nights | Why "consistency" isn't a cliché. | Ninety nights, one at a time. Skip a few and nothing resets; pick it back up at the same strength. A week or more away from a retinoid or an acid: go back to a few nights a week first. Day 90 is where routines get judged. | #skincareroutine #retinol #consistency #esthetician #skinschool |
+| 3 | `6-2-9x16.mp4` Not on the same night | Six pairs I'd never put on the same night. | Retinoid and acid: alternate nights. Two exfoliants: pick one. Benzoyl peroxide and retinol: morning and night. Vitamin C and an acid: morning and night. Niacinamide and vitamin C: fine together, that one's outdated. Any active on freshly treated skin: wait the days the aftercare says. | #skincaretips #retinol #vitaminc #skincareeducation #esthetician |
+| 4 | `1-1-9x16.mp4` Your skin in three layers | Your skin, in three layers, and why results take weeks. | Home products work on the top layer. Professional treatments reach deeper. A new cell takes about four weeks to reach the surface, slower with age. So judge a routine at 8 to 12 weeks. | #skinscience #skincare101 #esthetician #losangeles #skinschool |
+| 5 | `2-3-9x16.mp4` Sunscreen, enough | The one anti-aging step with the evidence behind it. | Two finger lengths for face and neck, every morning. Outside, reapply every two hours; a window doesn't stop UVA. Clouds too. | #sunscreen #spf #antiaging #esthetician #skincaretips |
+| 6 | `1-3-9x16.mp4` The barrier | "My skin suddenly hates everything" has a name. | Skin cells are the bricks, your own oils the mortar. Too many actives, hot water and scrubbing wear it down: water out, irritants in. Fewer actives, a gentle cleanser, ceramides, SPF. It seals again in days to weeks. | #skinbarrier #sensitiveskin #skincareeducation #esthetician #skinschool |
+| 7 | `5-2-9x16.mp4` Retinoids, low and slow | How to start a retinoid without the peeling era. | A pea for the whole face. Two nights a week, then three, then more as your skin allows. Eight weeks to build up. Buffer with moisturizer; a new sting or flaking means slow down, not push through. | #retinol #retinoid #skincareroutine #esthetician #skincaretips |
+| 8 | `6-1-9x16.mp4` The order of things | Thin to thick, SPF last. The whole order in 22 seconds. | Morning: cleanser, toner, vitamin C, moisturizer, sunscreen last, always. Night: cleanse (twice if you wore makeup or SPF), treat, moisturize. The active goes on clean, dry skin. | #skincareroutine #skincare101 #spf #esthetician #skinschool |
+| 9 | `6-3-9x16.mp4` Purging vs. a breakout | Purging or a reaction? Here's how you tell. | Purging: your usual spots, two to six weeks after a new active, then gone. A reaction: new places, itchy or stinging, and it keeps going. One means keep going, the other means stop. Not sure? A photo in daylight, no filter, through the site. | #purging #acne #skincareeducation #esthetician #skinschool |
+| 10 | `8-3-9x16.mp4` Acne clears on a calendar | I tell everyone: give it 90 days. | In her words, from her playbook. Purging is common in weeks two to six, real results start around day 90, mostly clear by three to six months with consistency. A visit every two to four weeks, home care that decides it, and a doctor too when it's cystic or scarring. | #acnejourney #acne #esthetician #woodlandhills #skinschool |
+
+## Between the clips (her face, 20 to 40 seconds, phone in hand)
+
+- "Three things in every facial here" (the room, the lamp, the LED).
+- "The question I get most in the room this week", answered in one line.
+- A product from the shelf, the label's line read out loud, who she reaches for it with.
+- "Not local? The online Skin Consult is 15 minutes, $35, and the $35 comes back on your first order." (the one sales post a week)
+
+## Not in any post
+
+- Before and after photos, "cures", "medical-grade", prices under the shelf price, the welcome code (it lives at checkout).
+- "Do you have acne?" style lines (the personal-attributes rule on paid versions of these). "Breakouts? Start a plan" is fine.
+- Anything about a specific client, even without a name.
+
+## When the brands answer (STOREFRONT.md step 0)
+
+If Face Reality or another brand allows TikTok Shop, the same ten clips become the shop's video, product tagged. Until then the link goes to the website, which is allowed for every brand.
