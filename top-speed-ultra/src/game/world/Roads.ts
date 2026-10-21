@@ -5,11 +5,12 @@
 
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { Path, STEP, LANE_W, ORIGIN } from './Path';
+import { Path, Junction, STEP, LANE_W, ORIGIN } from './Path';
 import { Network, Overpass, Sign, DIR_WORD, ROUTE_LABEL } from './Network';
 import * as P from '../road/props';
 import * as T from '../textures';
 import { fbm2, rng, clamp } from '../util';
+import { slabVariety, asphaltVariety, markerShading } from './roadShading';
 import type { QualityPreset } from '../settings';
 
 export const CHUNK = 160;
@@ -19,6 +20,7 @@ const TOLL = new Set(['SR-73', 'SR-133', 'SR-241', 'SR-261']);
 interface Desc { key: number; path: Path | null; k: number; over: Overpass | null; x: number; z: number; r: number }
 interface Built { desc: Desc; group: THREE.Group; ox: number; oz: number }
 interface Row { x: number; y: number; z: number; h: number; s: number; ax: number; az: number }
+interface Gore { side: number; pts: [number, number][] }
 
 const DCELL = 400;
 const dKey = (cx: number, cz: number) => (cx + 512) * 1024 + (cz + 512);
@@ -30,20 +32,26 @@ export class Roads {
   private built = new Map<number, Built>();
   private m: Record<string, THREE.Material>;
   private signsBy = new Map<number, Sign[]>();
+  private beam = { value: 0 };                       // the headlights' level, for the raised markers' shine
+  private gores = new Map<string, Gore | null>();
 
   constructor(private net: Network, private q: QualityPreset) {
-    const a = T.asphalt(), sh = T.shoulder(), c = T.concrete(), pc = T.pcc(), bw = T.blockWall();
+    const a = T.asphalt(), sh = T.shoulder(), c = T.concrete(), pc = T.pcc(), bw = T.blockWall(), br = T.barrier();
     const off = (m: THREE.MeshStandardMaterial, f: number) => { m.polygonOffset = true; m.polygonOffsetFactor = f; m.polygonOffsetUnits = f; return m; };
     this.m = {
       asphalt: off(new THREE.MeshStandardMaterial({ map: a.map, normalMap: a.normalMap, roughnessMap: a.roughnessMap, normalScale: new THREE.Vector2(0.6, 0.6), color: 0xb9b7b2 }), -1),
       shoulder: off(new THREE.MeshStandardMaterial({ map: sh.map, normalMap: sh.normalMap, roughness: 0.95, color: 0xa8a49c }), -1),
       pcc: off(new THREE.MeshStandardMaterial({ map: pc.map, normalMap: pc.normalMap, roughnessMap: pc.roughnessMap, normalScale: new THREE.Vector2(0.5, 0.5), color: 0xd8d4cc }), -1),
-      concrete: new THREE.MeshStandardMaterial({ map: c.map, normalMap: c.normalMap, roughness: 0.9, color: 0xe0dcd3, side: THREE.DoubleSide }),
-      wall: new THREE.MeshStandardMaterial({ map: bw.map, normalMap: bw.normalMap, roughness: 0.95, color: 0xf0e8da, side: THREE.DoubleSide }),
+      concrete: new THREE.MeshStandardMaterial({ map: br.map, normalMap: br.normalMap, roughness: 0.9, color: 0xe0dcd3, side: THREE.DoubleSide }),
+      wall: new THREE.MeshStandardMaterial({ map: bw.map, normalMap: bw.normalMap, roughness: 0.95, color: 0xf0e8da, side: THREE.DoubleSide, vertexColors: true }),
       under: new THREE.MeshStandardMaterial({ map: c.map, roughness: 0.95, color: 0x9d988f, side: THREE.DoubleSide }),
-      paint: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
+      paint: new THREE.MeshStandardMaterial({ vertexColors: true, map: T.paintWear(), roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
       cushion: new THREE.MeshStandardMaterial({ color: 0xf2c21b, roughness: 0.6 }),
     };
+    const detail = q.props >= 1;
+    slabVariety(this.m.pcc as THREE.MeshStandardMaterial, detail);
+    asphaltVariety(this.m.asphalt as THREE.MeshStandardMaterial, detail);
+    markerShading(this.m.paint as THREE.MeshStandardMaterial, this.beam);
     this.group.name = 'roads';
     for (const p of net.paths) {
       const n = Math.max(1, Math.ceil(p.len / CHUNK));
@@ -76,6 +84,9 @@ export class Roads {
     sh.roughness = 0.95 - 0.5 * w; sh.color.setHex(0xa8a49c).multiplyScalar(1 - 0.3 * w);
     pc.roughness = 1 - 0.55 * w; pc.color.setHex(0xd8d4cc).multiplyScalar(1 - 0.3 * w); pc.envMapIntensity = 1 + 1.0 * w;
   }
+
+  // the headlights' level (0 to 1): the raised reflective markers shine back in the beams
+  setBeams(v: number) { this.beam.value = v; }
 
   // build what's within the draw distance (nearest and in front first), drop what's well beyond it
   update(x: number, z: number, hx: number, hz: number, budget = 1) {
@@ -152,16 +163,31 @@ export class Roads {
 
     // -------------------------------------------------------------- surfaces: lanes and shoulders
     const lanesProf: number[] = []; for (let i = 0; i <= p.lanes; i++) lanesProf.push(p.edgeL + LANE_W * i);
-    const vOff = (s0 / LANE_W) % 1000;
-    const vRow = (row: Row, scale: number) => vOff * (LANE_W / scale) + (row.s - s0) / scale;
+    // v counts tiles along the road, kept small by wrapping a whole number of them (1024, so the slabs, the asphalt's
+    // two-tile repeat and its eight-tile overlays all carry on across the wrap without a seam)
+    const vRow = (row: Row, scale: number) => ((s0 / scale) % 1024) + (row.s - s0) / scale;
     // the interstates and state routes are concrete slabs; the toll roads and every ramp are asphalt
     const pcc = p.main && !TOLL.has(p.route ?? '');
     const lanes = this.strip(rows, lanesProf.map((d) => [d, 0]), (row, j) => [j, vRow(row, pcc ? T.SLAB : LANE_W)], (i, j) => !covered((rows[i].s + rows[i + 1].s) / 2, (lanesProf[j] + lanesProf[j + 1]) / 2, rows[i].y));
     if (lanes) own(new THREE.Mesh(lanes, pcc ? this.m.pcc : this.m.asphalt));
-    const shL = this.strip(rows, [[p.paveL - 0.4, -0.05], [p.paveL, 0], [p.edgeL, 0]], (row, j) => [j * 0.9, vRow(row, 3)], (i) => !covered((rows[i].s + rows[i + 1].s) / 2, (p.paveL + p.edgeL) / 2, rows[i].y));
-    const shR = this.strip(rows, [[p.edgeR, 0], [p.paveR, 0], [p.paveR + 0.4, -0.05]], (row, j) => [j * 1.1, vRow(row, 3)], (i) => !covered((rows[i].s + rows[i + 1].s) / 2, (p.paveR + p.edgeR) / 2, rows[i].y));
-    const sh = [shL, shR].filter(Boolean) as THREE.BufferGeometry[];
-    if (sh.length) own(new THREE.Mesh(mergeGeometries(sh)!, this.m.shoulder));
+    // shoulders: u is the distance out from the lanes' edge, in T.shoulder()'s left half on a freeway (the one with the
+    // rumble strip) and its right half on a ramp, or on a freeway's shoulder where a ramp runs alongside (its barrier is
+    // open there), so the rumble strip stops at every exit and entrance; the runs split where that changes
+    const sh: THREE.BufferGeometry[] = [], si0 = Math.round(s0 / STEP);
+    for (const side of ['L', 'R'] as const) {
+      const prof: [number, number][] = side === 'L' ? [[p.paveL - 0.4, -0.05], [p.paveL, 0], [p.edgeL, 0]] : [[p.edgeR, 0], [p.paveR, 0], [p.paveR + 0.4, -0.05]];
+      const edge = side === 'L' ? p.edgeL : p.edgeR, mid = side === 'L' ? (p.paveL + p.edgeL) / 2 : (p.paveR + p.edgeR) / 2;
+      const plain = rows.map((_r, ri) => !p.main || !net.hasWall(p, Math.min(p.n - 1, si0 + ri), side));
+      for (let a = 0; a < rows.length - 1;) {
+        let b = a + 1;
+        while (b < rows.length - 1 && plain[b] === plain[a]) b++;
+        const half = plain[a] ? 0.5 : 0, a0 = a;
+        const g = this.strip(rows.slice(a, b + 1), prof, (row, j) => [half + Math.abs(prof[j][0] - edge) / (2 * T.SHOULDER_U), vRow(row, T.SHOULDER_V)], (i) => !covered((rows[a0 + i].s + rows[a0 + i + 1].s) / 2, mid, rows[a0 + i].y));
+        if (g) sh.push(g);
+        a = b;
+      }
+    }
+    if (sh.length) own(new THREE.Mesh(sh.length > 1 ? mergeGeometries(sh)! : sh[0], this.m.shoulder));
 
     // -------------------------------------------------------------- paint
     const paint = this.markings(p, s0, s1, ox, oz, covered);
@@ -184,7 +210,11 @@ export class Roads {
           ? [[w, 0], [w, 4.6], [w + 0.3 * sg, 4.7], [w + 0.6 * sg, 4.6], [w + 0.6 * sg, -1.4]]
           : [[w, 0], [w + 0.05 * sg, 0.08], [w + 0.2 * sg, 0.33], [w + 0.35 * sg, 0.82], [w + 0.53 * sg, 0.82], [w + 0.6 * sg, -1.4]];
         const pr = side === 'L' ? prof.slice().reverse() : prof;
-        const g = this.strip(run, pr, (row, _j, acc) => [acc / (sound ? 4 : 2), (row.s - s0) / (sound ? 4 : 2)]);
+        // u is the height on the barrier, on both faces (the textures' grime at the foot, streaks under the top); v
+        // counts tiles from a whole tile before the chunk, so the barrier's joints and scuffs carry on into the next
+        const bv0 = Math.floor(s0 / T.BARRIER_V) * T.BARRIER_V;
+        const g = this.strip(run, pr, (row, j) => (sound ? [pr[j][1] / T.WALL_U, (row.s - s0) / T.WALL_V] : [pr[j][1] / T.BARRIER_U, (row.s - bv0) / T.BARRIER_V]));
+        if (g && sound) wallTone(g, run, pr);
         if (g) { const mesh = own(new THREE.Mesh(g, sound ? this.m.wall : this.m.concrete)); mesh.castShadow = true; }
       }
     }
@@ -281,17 +311,39 @@ export class Roads {
     return g;
   }
 
-  // dashed lane lines, a yellow line on the left edge, a white one on the right, raised reflectors in the gaps
+  // dashed lane lines, a yellow line on the left edge, a white one on the right, raised reflectors in the gaps, and
+  // the gore at each exit and entrance
   private markings(p: Path, s0: number, s1: number, ox: number, oz: number, covered: (s: number, d: number, y: number) => boolean) {
-    const pos: number[] = [], col: number[] = [], idx: number[] = [];
+    const pos: number[] = [], col: number[] = [], uvs: number[] = [], idx: number[] = [];
     const white = [0.93, 0.93, 0.9], yellow = [0.95, 0.74, 0.12];
-    const quad = (sa: number, sb: number, d: number, w: number, c: number[], lift = 0.015) => {
+    // the wear texture runs along the line from a whole tile before the chunk, so it carries on into the next chunk
+    const v0 = Math.floor(s0 / T.PAINT_V) * T.PAINT_V;
+    // kind 0 is painted line (u 0..1 across it, the wear texture along it); a raised reflective marker (1) and a Botts'
+    // dot (2) get u and v of 2k..2k+1 across the quad, which roadShading.ts cuts to shape
+    const quad = (sa: number, sb: number, d: number, w: number, c: number[], lift = 0.015, kind = 0) => {
       const a = p.at(sa, d), ax = a.x, ay = a.y, az = a.z, ah = a.h;
       if (covered((sa + sb) / 2, d, ay)) return;
       const b = p.at(sb, d);
       const base = pos.length / 3;
-      for (const [x, y, z, h] of [[ax, ay, az, ah], [b.x, b.y, b.z, b.h]]) for (const e of [-w / 2, w / 2]) {
-        pos.push(x - Math.cos(h) * e - ox, y + lift, z + Math.sin(h) * e - oz); col.push(c[0], c[1], c[2]);
+      for (const [x, y, z, h, s, end] of [[ax, ay, az, ah, sa, 0], [b.x, b.y, b.z, b.h, sb, 1]]) {
+        // stretches of line worn thinner than others, tens of metres long
+        const f = 0.7 + 0.36 * fbm2(x * 0.035, z * 0.035, 2, 77);
+        for (const e of [-w / 2, w / 2]) {
+          pos.push(x - Math.cos(h) * e - ox, y + lift, z + Math.sin(h) * e - oz); col.push(c[0] * f, c[1] * f, c[2] * f);
+          uvs.push(2 * kind + (e < 0 ? 0 : 1), kind ? 2 * kind + end : (s - v0) / T.PAINT_V);
+        }
+      }
+      idx.push(base, base + 1, base + 2, base + 1, base + 3, base + 2);
+    };
+    // painted line between any four points (s, d): A0 and A1 at one end, B0 and B1 at the other; wound as quad() is
+    const quad4 = (A0: number[], A1: number[], B0: number[], B1: number[], c: number[]) => {
+      const sm = (A0[0] + A1[0] + B0[0] + B1[0]) / 4, dm = (A0[1] + A1[1] + B0[1] + B1[1]) / 4;
+      if (covered(sm, dm, p.at(sm, dm).y)) return;
+      if ((A1[0] - A0[0]) * (B0[1] - A0[1]) - (A1[1] - A0[1]) * (B0[0] - A0[0]) > 0) { [A0, A1] = [A1, A0]; [B0, B1] = [B1, B0]; }
+      const base = pos.length / 3;
+      for (const [q, u] of [[A0, 0], [A1, 1], [B0, 0], [B1, 1]] as const) {
+        const a = p.at(q[0], q[1]), f = 0.7 + 0.36 * fbm2(a.x * 0.035, a.z * 0.035, 2, 77);
+        pos.push(a.x - ox, a.y + 0.015, a.z - oz); col.push(c[0] * f, c[1] * f, c[2] * f); uvs.push(u, (q[0] - v0) / T.PAINT_V);
       }
       idx.push(base, base + 1, base + 2, base + 1, base + 3, base + 2);
     };
@@ -306,17 +358,65 @@ export class Roads {
         // California lane lines: four raised Botts' dots where other states paint a dash
         for (let k = 0; k < 4; k++) {
           const cx = st + 0.45 + k * 0.92;
-          if (cx >= s0 && cx < s1) quad(cx - 0.06, cx + 0.06, d, 0.11, white, 0.02);
+          if (cx >= s0 && cx < s1) quad(cx - 0.06, cx + 0.06, d, 0.11, white, 0.02, 2);
         }
         const m = st + DASH + GAP / 2;
-        if (m >= s0 && m < s1) quad(m - 0.05, m + 0.05, d, 0.1, [1.2, 1.2, 1.1], 0.03);
+        if (m >= s0 && m < s1) quad(m - 0.05, m + 0.05, d, 0.1, [1.2, 1.2, 1.1], 0.03, 1);
+      }
+    }
+    // gores: the ramp's near edge line runs in across the shoulder from the freeway's edge line, and chevrons stripe
+    // the wedge between the two, every 6 m, until the nose (where the freeway's barrier starts again)
+    if (p.main) for (const [list, leaving] of [[p.out, true], [p.inc, false]] as const) for (const j of list) {
+      if (j.kind !== (leaving ? 'diverge' : 'merge') || j.s < s0 - 420 || j.s > s1 + 420) continue;
+      const gr = this.gore(p, j, leaving);
+      if (!gr) continue;
+      const sg = gr.side, edge = sg > 0 ? p.edgeR : -p.edgeL, outer = sg > 0 ? p.paveR : -p.paveL, pts = gr.pts;
+      for (let k = 0; k + 1 < pts.length; k++) {
+        const [sa, da] = pts[k], [sb, db] = pts[k + 1], sm = (sa + sb) / 2;
+        if (sm < s0 || sm >= s1 || Math.min(da, db) < edge + 0.2 || Math.max(da, db) > outer - 0.05) continue;
+        quad4([sa, sg * da - 0.075], [sa, sg * da + 0.075], [sb, sg * db - 0.075], [sb, sg * db + 0.075], white);
+      }
+      const dir = leaving ? 1 : -1;
+      for (let sk = Math.ceil(s0 / 6) * 6; sk < s1; sk += 6) {
+        let dd = -1;
+        for (let k = 0; k + 1 < pts.length; k++) {
+          const [sa, da] = pts[k], [sb, db] = pts[k + 1];
+          if ((sk - sa) * (sk - sb) <= 0 && sa !== sb) { dd = da + ((db - da) * (sk - sa)) / (sb - sa); break; }
+        }
+        if (dd < edge + 1.1 || this.net.hasWall(p, Math.min(p.n - 1, Math.round(sk / STEP)), sg > 0 ? 'R' : 'L')) continue;
+        const inner = edge + 0.3, out = Math.min(dd - 0.25, outer - 0.15), L = out - inner;
+        if (L < 0.5) continue;
+        quad4([sk, sg * inner], [sk + 0.45, sg * inner], [sk + dir * L, sg * out], [sk + dir * L + 0.45, sg * out], white);
       }
     }
     if (!idx.length) return null;
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     g.setIndex(idx); g.computeVertexNormals();
+    return g;
+  }
+
+  // the near edge of a ramp leaving (or joining) p, in p's own s and its distance out from p's centre line, walked 2 m
+  // at a time from the split until it's well clear of p's pavement; side is +1 for a ramp on the right. Cached: the
+  // chunks either side of a gore both ask
+  private gore(p: Path, j: Junction, leaving: boolean): Gore | null {
+    const key = `${p.id}:${j.to.id}:${Math.round(j.s)}:${leaving ? 1 : 0}`, hit = this.gores.get(key);
+    if (hit !== undefined) return hit;
+    const r = j.to, dir = leaving ? 1 : -1;
+    const probe = r.at(clamp(j.toS + dir * 150, 0, r.len), 0);
+    const side = p.project(probe.x, probe.z, clamp(j.s + dir * 150, 0, p.len)).d >= 0 ? 1 : -1;
+    const near = side > 0 ? r.edgeL : r.edgeR, outer = side > 0 ? p.paveR : -p.paveL, pts: [number, number][] = [];
+    for (let k = 0; k <= 200; k++) {
+      const rs = j.toS + dir * k * 2;
+      if (rs < 0 || rs > r.len) break;
+      const a = r.at(rs, near), pr = p.project(a.x, a.z, clamp(j.s + dir * k * 2, 0, p.len));
+      pts.push([pr.s, pr.d * side]);
+      if (pr.d * side > outer + 4) break;
+    }
+    const g = pts.length > 2 ? { side, pts } : null;
+    this.gores.set(key, g);
     return g;
   }
 
@@ -403,5 +503,19 @@ export function signText(text: string[]) {
 }
 
 const soundWall = (x: number, z: number) => fbm2(x * 0.0021, z * 0.0021, 2, 13) > 0.45;
+// A sound wall's slow tone wander, as vertex colours on its strip (rows along the wall, the profile across): stretches
+// tens of metres long a little lighter or darker, warmer or greyer (block batches, sun and age), and the foot a shade
+// darker than the top. The texture repeats every 8 m; this doesn't.
+function wallTone(g: THREE.BufferGeometry, run: Row[], prof: [number, number][]) {
+  const cols = prof.length, col = new Float32Array(run.length * cols * 3);
+  run.forEach((row, i) => {
+    const t = fbm2(row.ax * 0.02, row.az * 0.02, 3, 61), hue = fbm2(row.ax * 0.008, row.az * 0.008, 2, 62) - 0.5;
+    for (let j = 0; j < cols; j++) {
+      const k = (0.8 + 0.28 * t) * (prof[j][1] < 1 ? 0.94 : 1), o = (i * cols + j) * 3;
+      col[o] = k; col[o + 1] = k * (1 + hue * 0.04); col[o + 2] = k * (1 + hue * 0.14);
+    }
+  });
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+}
 const UP = new THREE.Vector3(0, 1, 0), ONE3 = new THREE.Vector3(1, 1, 1);
 void rng; void clamp;

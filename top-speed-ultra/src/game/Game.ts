@@ -835,7 +835,9 @@ export class Game {
     this.roads.setWet(e.wet);
     const dark = 1 - e.daylight, gloom = Math.max(dark, e.visibility < 0.3 ? 0.6 : 0, e.wet > 0.5 ? 0.5 : 0);
     // a ramp, not a switch: the beams stay off through sunset, come up faintly through dusk and reach full at night
-    this.car.setHeadlights(smoothstep(0.35, 0.8, gloom), dark);
+    const beams = smoothstep(0.35, 0.8, gloom);
+    this.car.setHeadlights(beams, dark);
+    this.roads.setBeams(beams);                       // the raised reflective markers shine back in them
     const lamp = P.mats.lampHead() as THREE.MeshStandardMaterial;
     lamp.emissive.setRGB(1, 0.86, 0.62); lamp.emissiveIntensity = dark > 0.4 ? 3.2 * dark : 0.05;
     if (!this.attract) this.audio.setRain(e.wet > 0.5 && e.visibility > 0.3 ? e.wet : 0);
