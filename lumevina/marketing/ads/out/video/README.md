@@ -25,5 +25,9 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 19 | `9-1-9x16.mp4` | Three kinds of dark spots | Sun spots, post-breakout marks or melasma? They look alike. | 22 s |
 | 20 | `10-2-9x16.mp4` | The anti-aging short list | Consistency beats strength. Here's the whole routine. | 22 s |
 | 21 | `12-1-9x16.mp4` | The week before your facial | The week before your facial decides the result. | 22 s |
+| 22 | `13-1-9x16.mp4` | Before a wax: a quarter inch | How long does the hair need to be for a wax? A grain of rice. | 20 s |
+| 23 | `1-2-9x16.mp4` | Find your real skin type | Oily skin can still be dehydrated. Here's the one-hour test. | 21 s |
+| 24 | *rendering* | After your facial: the first day, then the week | What you keep off your face for 24 hours decides the result. |  |
+| 25 | *rendering* | Facial massage: slip, direction, a light hand | Three rules before you touch your face with a gua sha. |  |
 
 Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
