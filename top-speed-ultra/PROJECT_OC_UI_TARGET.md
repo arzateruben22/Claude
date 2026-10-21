@@ -58,6 +58,30 @@ menus, and its theme runs through the rest where it fits without shouting:
   for danger states, amber for selection; never a full-bleed orange screen, never the wordmark stretched.
 - **Honesty**: the skyline in the mark is stylised, not a claim of any real building; nothing in it is a brand.
 
+## 2026-10-21 reference
+
+The owner sent a concept image (a generated mock of a home screen over a driving view, not stored in the repo):
+"Okay this is a PERFECT example of how I want the sky camera, HUD main screen, cockpit, etc", then minutes later "Let's
+go with the exact aesthetic and then implement the OC orange color way we've done". So the reference's layout, dark
+glass, hairlines, glow, thin wide-tracked capitals, big italic numerals, chrome and wet night mood are the target, on
+its deep navy blacks, and everywhere it glows blue we glow the OC sunset tokens (`--sunset`, `--amber`, `--ember`,
+`--sunset-edge`). UI1 (the look and the home screen) is built; the HUD and the cockpit are the next milestones.
+
+| Reference panel | Built (UI1) | What we don't take |
+| --- | --- | --- |
+| Tokens | `styles.css`: navy-black base `#050b13` and glass sampled from the reference; ink, greys and hairlines cooled to match; radii 3-10 px; thin uppercase labels; the chosen thing glows sunset. `--nav` and the road chevrons went from blue to sunset (`#ffa040` / `#ff8418`). | Blue anywhere but real road signs (Interstate shields stay blue and red, guide signs green). |
+| Logo, top of the rail | The OC sunset wordmark with a thin chrome rim, the chromed ULTRA and TOP SPEED under it. | "PROJECT OC". |
+| Left rail | Glass rail: Drive (glowing sunset outline, chevron and tick), World Map, Garage, Customization, Career, Settings, each with a line icon; the Store as a quieter row; "Orange County, California" at the foot. Drive drives from the home screen and brings you back to it from any other. World Map is the ten freeways drawn from the map data with Start on under it; Customization the driver and look; Career your profile (personal bests a tap in). On a phone held upright it is the dock: Drive across, five tabs under it. | "Online": there is no multiplayer. |
+| Hero: car in a night garage | `src/game/Showroom.ts`: your own car and paint (the PlayerCar's model, shared, not rebuilt) on a wet floor that reflects it (a half-resolution Reflector, streaked down the screen), a concrete wall with the OC sign in sunset neon, sunset strips under the slab and down the corner pillar, palms and Orange County's low-rise lights, hills and a freeway's light streams behind. Drawn by the game's renderer instead of the attract drive while the menu is up. | The hypercar shape, the downtown towers (OC has no skyline like that), the script "Orange County" and "Freeway Simulator" on the wall. |
+| Profile chip | Avatar initial on your colour, name, level, XP bar in sunset, Credits; opens Career. | A real person's photo; the dollar sign; the "+" (credits are earned by driving and never sold, and there is no Credits screen yet). |
+| Four tiles | Free Drive "Explore Orange County" (starts one), Races "Sprint / Checkpoint / Endurance" (the race list), Events "Speed Survival / Time Trial" (the two scored challenges, the Loop Lab teaser), Garage "Your cars / Showroom"; pictures rendered by the game at night at load (`Game.captureTiles`), never downloaded. On a phone a row you swipe. | "Free Roam" (the mode is called Free Drive everywhere else), "Touge" (no such race), "Build / Tune" (no upgrades yet). |
+| (not in the reference) | The setup bar between the hero and the tiles: the mode, then driver, car and where you start (or which race), with the mode's line above it. The game needs them; they keep their names and roles. Traffic moved into Settings. | |
+| Driving HUD: mode and objective, circular minimap (the sky camera), guide signs, mirror, quick menu, speed block | Next milestone. Already sunset: the route chevrons and the nav card's arrow. | Invented sign text: guide signs come from the OpenStreetMap data only. |
+| Cockpit: hexagonal cluster, ambient strips | A later milestone, with the hypercar's cockpit work. | |
+
+Phone first: every home screen state was shot at 390 × 844, 844 × 390, 1280 × 720 and 1440 × 900 beside the reference
+crop (`tools/uiref-shots.mjs`, `tests/out/uiref/`).
+
 ## Panel by panel
 
 | # | Panel | Have today | Build (this pass) | Roadmap |

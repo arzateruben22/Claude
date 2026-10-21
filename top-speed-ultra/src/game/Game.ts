@@ -32,6 +32,8 @@ import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestT
 import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
 import { onStoreChange } from '../store/bus';
+import { Showroom } from './Showroom';
+import type { TileKind } from './Showroom';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -156,7 +158,13 @@ export class Game {
   private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
   private pace = 0;                  // your speed over the last few seconds (m/s), for the navigation card's time estimate
-  // the blue chevrons on the road along the route (U2)
+  // the main menu's hero: your car in a garage at night, drawn instead of the attract drive while the menu is up
+  // (owner's reference, 2026-10-21; src/game/Showroom.ts), and the menu's four tile pictures, taken at load
+  readonly showroom = new Showroom();
+  private showroomOn = false;
+  private showroomT = 0;
+  tiles: Partial<Record<TileKind, string>> = {};
+  // the sunset-orange chevrons on the road along the route (U2)
   readonly chevrons = new RouteChevrons({ diverge: (p, j) => this.sideOf(p, j), merge: (r, j) => this.sideOfMerge(r, j) });
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
@@ -203,6 +211,12 @@ export class Game {
     this.input.attach();
     this.startAttract();
     await this.prebuild('Building the freeway');
+    this.ev.loading(true, 'Lighting the garage');
+    await new Promise((r) => setTimeout(r, 0));
+    this.showroom.build(this.renderer);
+    this.showroom.setCar(this.car.showroomModel());
+    this.onResize();
+    this.captureTiles();
     this.ev.loading(false);
     this.last = performance.now();
     this.raf = requestAnimationFrame(this.frame);
@@ -492,6 +506,7 @@ export class Game {
       car: c.id as CarId, paint: store?.hex ?? c.paint, finish: store?.finish ?? null, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
+    this.showroom?.setCar(this.car.showroomModel());          // the menu's showroom shows the same car, in the same paint
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -588,6 +603,7 @@ export class Game {
     this.composer?.setPixelRatio(pr); this.composer?.setSize(w, h);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    this.showroom.resize(w, h, pr);
   };
   private onVisibility = () => { if (document.hidden && !this.attract) this.setPaused(true); };
 
@@ -827,8 +843,14 @@ export class Game {
     dt = Math.min(dt, 0.1);
     this.fpsN++; this.fpsT += dt;
     if (this.fpsT >= 0.5) { this.fps = Math.round(this.fpsN / this.fpsT); this.fpsN = 0; this.fpsT = 0; }
-    this.adapt(dt);
     this.actions();
+    // the main menu: the showroom instead of the world (the attract drive waits where it is), at up to 32 frames a second
+    if (this.showroomOn && this.attract && this.showroom.built) {
+      this.showroomT += dt;
+      if (this.showroomT >= 1 / 32) { this.showroom.render(this.renderer, this.showroomT, !REDUCED_MOTION); this.showroomT = 0; }
+      return;
+    }
+    this.adapt(dt);
     if (!this.paused) {
       this.input.update(dt, Math.abs(this.phys.vx));
       if (this.attract) this.autopilot(this.input.c);
@@ -1296,8 +1318,49 @@ export class Game {
       visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
   }
 
+  // ----------------------------------------------------------------------------------------- the main menu
+  // the showroom on while the main menu is up (App.tsx), and where the car sits on screen: its centre as fractions of
+  // the window and the share of the width it may take
+  setShowroom(on: boolean) { if (on !== this.showroomOn) { this.showroomOn = on; this.showroomT = 1; } }
+  frameShowroom(cx: number, cy: number, span: number) { this.showroom.setFrame(cx, cy, span); this.showroomT = 1; }
+
+  // The menu's four tile pictures, rendered once at load by this renderer from the showroom's night set and kept as
+  // small JPEGs (never downloaded): Free Drive, the palms and the basin's lights over the wet floor; Races, low in front
+  // of your car with its lamps lit; Events, looking down on it among the floor's sunset reflections; Garage, close on
+  // its front wheel (Showroom.renderTile). The set is a small scene, so the four together cost a fraction of one
+  // freeway frame, and nothing in the world is relit for them (that would recompile its shaders).
+  private captureTiles() {
+    const r = this.renderer, W = 480, H = 270;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    if (!g || !this.showroom.built) return;
+    const t0 = performance.now();
+    r.setPixelRatio(1); r.setSize(W, H, false);
+    for (const k of ['free', 'race', 'events', 'garage'] as TileKind[]) {
+      try {
+        this.showroom.renderTile(r, k, W / H);
+        g.drawImage(r.domElement, 0, 0, W, H);
+        this.tiles[k] = c.toDataURL('image/jpeg', 0.84);
+      } catch { /* a tile without its picture shows its plain night gradient */ }
+    }
+    this.onResize();
+    this.tileMs = Math.round(performance.now() - t0);
+  }
+  tileMs = 0;
+
+  // the freeways for the menu's World Map: each carriageway as points (world metres, x east and z south), thinned
+  mapLines(step = 6) {
+    return this.net.mains.map((m) => {
+      const pts: [number, number][] = [];
+      for (let i = 0; i < m.n; i += step) pts.push([m.xs[i], m.zs[i]]);
+      pts.push([m.xs[m.n - 1], m.zs[m.n - 1]]);
+      return { label: m.label, pts };
+    });
+  }
+
   dispose() {
     cancelAnimationFrame(this.raf);
+    this.showroom.dispose();
     this.offStore();
     removeEventListener('resize', this.onResize);
     document.removeEventListener('visibilitychange', this.onVisibility);
