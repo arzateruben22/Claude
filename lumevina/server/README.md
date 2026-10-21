@@ -637,3 +637,5 @@ alter table products add column if not exists consult boolean not null default f
 create or replace view shelf as select id, stock, price_cents, hidden, kind, consult from products;
 -- then the consults table from schema.sql (it has owner_nudged_at), and: node scripts/seed-products.mjs (it carries kind and consult)
 ```
+
+**Buy again** (`js/buy-again.js`, My Lumevina): a signed-in client's past shelf purchases, one tap back into the bag. Live, the website reads `orders` straight through PostgREST with the client's own token (`select=items,paid_at&status=eq.paid`); the policy `clients read their own orders` in schema.sql limits it to rows whose email matches the signed-in email, so no function is involved. Gated actives go through the consult gate as usual.

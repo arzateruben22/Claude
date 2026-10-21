@@ -4190,6 +4190,23 @@ html.svc-open { overflow: hidden; }
 /* ─── Your skin profile, and what the chat remembers (js/profile.js) ─── */
 .acct-profile { margin-bottom: var(--space-4); }
 .acct-pf-card .acct-pf-build { margin-top: 0.8rem; width: 100%; justify-content: center; text-align: center; }
+
+/* My Lumevina → Buy again: what they bought before, one tap back in the bag (js/buy-again.js) */
+.acct-ag-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.acct-ag-item { display: grid; grid-template-columns: 1fr auto auto; align-items: baseline; gap: 0.6rem; font-size: 0.92rem; }
+.acct-ag-name { min-width: 0; }
+.acct-ag-price { color: var(--ink-60); font-variant-numeric: tabular-nums; }
+.acct-ag-state { color: var(--ink-60); font-size: 0.85rem; }
+.acct-ag-item .linklike { font-size: 0.85rem; white-space: nowrap; }
+.acct-ag-item .linklike.is-in { color: var(--ink-60); }
+.acct-ag-all { margin-top: 0.8rem; width: 100%; justify-content: center; text-align: center; }
+@media (max-width: 480px) {
+  .acct-ag-item { grid-template-columns: auto 1fr; grid-template-areas: "name name" "price act"; row-gap: 0.1rem; }
+  .acct-ag-name { grid-area: name; }
+  .acct-ag-price { grid-area: price; font-size: 0.85rem; }
+  .acct-ag-item .linklike, .acct-ag-state { grid-area: act; justify-self: end; }
+  .acct-ag-item + .acct-ag-item { padding-top: 0.45rem; border-top: 1px solid var(--panel-edge-soft); }
+}
 .acct-pf-mem-k { margin-top: 1rem; }
 .acct-pf-mem { list-style: none; margin: 0.2rem 0 0; padding: 0; display: grid; gap: 0.35rem; }
 .acct-pf-mem li { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem;

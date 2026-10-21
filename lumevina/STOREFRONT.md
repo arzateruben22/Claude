@@ -42,7 +42,7 @@ Ready-to-send text:
 3. **Product pages from the labels.** Every description is the label's own line, the size, the ingredient list the brand publishes, and her note where she has written one in the Skin Playbook. No claims beyond the label.
 4. **Prices at the brand's retail price.** Never under it in a listing or an ad; the welcome code applies at checkout only where the brand allows discounting.
 5. **Shipping and pickup at checkout** (exists), order emails with tracking (exists), low stock in the dashboard's Today card (exists).
-6. **Buy again in one tap** for signed-in clients, and the "running low" message that already goes out at the right week.
+6. **Buy again in one tap** (built) for signed-in clients: My Lumevina lists what they bought before, each a tap back into the bag, with "Add all" when there is more than one; a sold-out one says so and an active she hasn't unlocked for them opens the consult sheet. The "running low" message already goes out at the right week with the same one-tap link.
 
 ## Step 3 · Get found (weeks two and three)
 

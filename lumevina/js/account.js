@@ -515,6 +515,7 @@
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
     modal.focus();
+    document.dispatchEvent(new CustomEvent("lumevina:account-opened"));   // Buy again, consults: fetch what's fresh
   };
 
   var closeModal = function () {
