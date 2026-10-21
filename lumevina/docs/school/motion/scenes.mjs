@@ -762,30 +762,31 @@ export const SCENES = {
       { at: 14, name: "shave", cap: "No shaving between waxes: it resets the growth and makes the next one patchier. Exfoliate gently in the days before, nothing scented that morning." }
     ],
     css: `
-.wx { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3.2vmin; }
-.ruler { position: relative; height: 16vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
-.ruler .line { position: absolute; left: 6vmin; right: 6vmin; top: 8.6vmin; height: .5vmin; background: #2a2a2d; border-radius: 1vmin; }
-.ruler .tk { position: absolute; top: 6.4vmin; width: .35vmin; height: 2.6vmin; background: #6e6e73; }
-.ruler .tl { position: absolute; top: 10.2vmin; font-size: 2vmin; color: #8e8e93; transform: translateX(-50%); }
-.ruler .hair { position: absolute; left: 6vmin; top: 3.4vmin; height: 3.4vmin; width: 0; border-radius: 1vmin; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
-.ruler .rice { position: absolute; top: 2.2vmin; padding: .6vmin 1.4vmin; border-radius: 999px; background: #e2b08c; color: #1a1210; font-size: 2vmin; font-weight: 700; white-space: nowrap; transform: translateX(-50%); opacity: 0; }
-.ruler .zone { position: absolute; top: 2.8vmin; height: 4.6vmin; border-radius: 1vmin; border: .3vmin solid #eab9c8; background: rgba(244,201,214,.18); opacity: 0; }
-.ruler .zl { position: absolute; top: 12.6vmin; font-size: 2.1vmin; font-weight: 650; color: #f4c9d6; transform: translateX(-50%); white-space: nowrap; opacity: 0; }
-.tl3 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vmin; }
-.wk { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.4vmin; opacity: 0; }
-.wk b { display: block; font-size: 3.4vmin; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; } .wk span { display: block; font-size: 2.2vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
-.wk .bar { position: relative; height: 1.4vmin; border-radius: 999px; background: rgba(255,255,255,.07); margin-top: 1.4vmin; overflow: hidden; } .wk .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
-.rules { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.6vmin; }
-.rule { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.2vmin; opacity: 0; }
-.rule b { display: block; font-size: 2.7vmin; font-weight: 650; line-height: 1.15; } .rule span { display: block; font-size: 2.1vmin; color: #a1a1a6; margin-top: .7vmin; line-height: 1.35; }
+.wx { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 4vmin; }
+.ruler { position: relative; height: 24vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
+.ruler .line { position: absolute; left: 6vmin; right: 6vmin; top: 12.8vmin; height: .6vmin; background: #2a2a2d; border-radius: 1vmin; }
+.ruler .tk { position: absolute; top: 9.6vmin; width: .4vmin; height: 3.8vmin; background: #6e6e73; }
+.ruler .tl { position: absolute; top: 14.6vmin; font-size: 2.7vmin; color: #8e8e93; transform: translateX(-50%); }
+.ruler .hair { position: absolute; left: 6vmin; top: 5.4vmin; height: 5vmin; width: 0; border-radius: 1vmin; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.ruler .rice { position: absolute; top: 1.6vmin; padding: .7vmin 1.6vmin; border-radius: 999px; background: #e2b08c; color: #1a1210; font-size: 2.5vmin; font-weight: 700; white-space: nowrap; transform: translateX(-50%); opacity: 0; }
+.ruler .zone { position: absolute; top: 4.4vmin; height: 7vmin; border-radius: 1vmin; border: .3vmin solid #eab9c8; background: rgba(244,201,214,.18); opacity: 0; }
+.ruler .zl { position: absolute; top: 18.8vmin; left: calc(6vmin + 1.32 * 22%); font-size: 2.7vmin; font-weight: 650; color: #f4c9d6; white-space: nowrap; opacity: 0; }
+.ruler .hint { position: absolute; font-size: 2.3vmin; color: #8e8e93; white-space: nowrap; opacity: 0; } .ruler .hint.lo { left: 6vmin; top: 18.9vmin; } .ruler .hint.hi { right: 6vmin; top: 18.9vmin; }
+.tl3 { display: grid; grid-template-columns: 1fr 1fr; gap: 2vmin; }
+.wk { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.8vmin 3vmin; opacity: 0; }
+.wk b { display: block; font-size: 4.6vmin; font-weight: 700; letter-spacing: -.02em; line-height: 1.05; } .wk span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: 1vmin; line-height: 1.35; }
+.wk .bar { position: relative; height: 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.07); margin-top: 1.4vmin; overflow: hidden; } .wk .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.rules { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2vmin; }
+.rule { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 2.8vmin; opacity: 0; }
+.rule b { display: block; font-size: 3.4vmin; font-weight: 650; line-height: 1.15; } .rule span { display: block; font-size: 2.6vmin; color: #a1a1a6; margin-top: .7vmin; line-height: 1.35; }
 .rule.no b { color: #ff7a6b; } .rule.yes b { color: #32d74b; }
-@media (orientation: portrait) { .rules { grid-template-columns: 1fr; } .tl3 { grid-template-columns: 1fr; } }`,
+@media (orientation: portrait) { .rules { grid-template-columns: 1fr; } .tl3 { grid-template-columns: 1fr; } .ruler .hint { display: none; } .ruler .zl { font-size: 2.3vmin; left: calc(6vmin + 1.05 * 22%); transform: translateX(-50%); } }`,
     html: `
 <div class="wx">
   <div class="ruler" id="ruler"><div class="line"></div>
     ${[0, 1, 2, 3, 4].map((k) => `<i class="tk" style="left:calc(6vmin + ${k} * 22%)"></i><span class="tl" style="left:calc(6vmin + ${k} * 22%)">${k === 0 ? "0" : k + '/4\u2033'}</span>`).join("")}
     <div class="hair" id="hair"></div><span class="rice" id="rice">a grain of rice</span>
-    <div class="zone" id="zone" style="left:calc(6vmin + 0.8 * 22%);width:calc(0.5 * 22%)"></div><span class="zl" id="zl" style="left:calc(6vmin + 1.05 * 22%)">about ¼ inch: the wax can grip</span>
+    <div class="zone" id="zone" style="left:calc(6vmin + 0.8 * 22%);width:calc(0.5 * 22%)"></div><span class="zl" id="zl">about ¼ inch: the wax can grip</span><span class="hint lo" id="h-lo">shorter than that: the wax slides off</span><span class="hint hi" id="h-hi">longer: trim it, never shave it down</span>
   </div>
   <div class="tl3" id="tl3"><div class="wk" id="wk-shave"><b>2 to 3 weeks</b><span>after shaving, the hair is long enough</span><div class="bar"><i id="bar-shave"></i></div></div><div class="wk" id="wk-wax"><b>4 to 6 weeks</b><span>after a wax: the rhythm that thins the hair over time (brows, lip and underarms: 3 to 4)</span><div class="bar"><i id="bar-wax"></i></div></div></div>
   <div class="rules" id="rules"><div class="rule no" id="r-shave"><b>No shaving between</b><span>It resets the growth and makes the next wax patchier.</span></div><div class="rule yes" id="r-exf"><b>Exfoliate gently</b><span>In the two or three days before, so the hair comes out clean.</span></div><div class="rule" id="r-day"><b>That morning</b><span>Clean skin, nothing scented, no tanning; loose clothes to leave in.</span></div></div>
@@ -801,7 +802,7 @@ export const SCENES = {
       $("#hair").style.width = "calc(" + hairW + "% )";
       const rice = $("#rice"); rice.style.left = "calc(6vmin + " + hairW + "%)";
       if (i === 0) enter(rice, lt, 2.4, { y: 6 }); else set(rice, { o: 1 });
-      if (i === 0) { enter($("#zone"), lt, 3.8, { y: 0, s: 0.8, d: 0.5 }); enter($("#zl"), lt, 4.2, { y: 6 }); } else { set($("#zone"), { o: 1 }); set($("#zl"), { o: 1 }); }
+      if (i === 0) { enter($("#zone"), lt, 3.8, { y: 0, s: 0.8, d: 0.5 }); enter($("#zl"), lt, 4.2, { y: 6 }); enter($("#h-lo"), lt, 5.0, { y: 4 }); enter($("#h-hi"), lt, 5.6, { y: 4 }); } else { set($("#zone"), { o: 1 }); set($("#zl"), { o: 1 }); set($("#h-lo"), { o: 1 }); set($("#h-hi"), { o: 1 }); }
       // shot 1: the timing cards and their bars fill
       $("#tl3").style.display = i === 1 ? "" : "none";
       if (i === 1) { enter($("#wk-shave"), lt, 0.4, { y: 12 }); enter($("#wk-wax"), lt, 1.0, { y: 12 }); $("#bar-shave").style.width = (100 * E.out(seg(lt, 1.2, 3.6))) + "%"; $("#bar-wax").style.width = (100 * E.out(seg(lt, 1.8, 5.0))) + "%"; }
