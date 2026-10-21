@@ -498,20 +498,20 @@ export const SCENES = {
     ],
     css: `
 .lab { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 4vmin; z-index: 1; }
-.bottle { position: relative; width: 44vmin; height: 62vmin; border-radius: 4vmin; background: #16161a; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 3vmin 8vmin rgba(0,0,0,.5); overflow: hidden; }
+.bottle { position: relative; width: 48vmin; height: 68vmin; border-radius: 4vmin; background: #16161a; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 3vmin 8vmin rgba(0,0,0,.5); overflow: hidden; }
 .bottle .cap { position: absolute; left: 50%; top: -2.6vmin; width: 14vmin; height: 5vmin; margin-left: -7vmin; border-radius: 1.2vmin; background: #2a2a2e; }
 .front, .back { position: absolute; inset: 0; padding: 7vmin 4vmin 4vmin; display: flex; flex-direction: column; }
 .front { align-items: center; text-align: center; justify-content: center; gap: 1.6vmin; }
-.front .name { font-size: 5vmin; font-weight: 750; letter-spacing: -.02em; line-height: 1; }
+.front .name { font-size: 5.6vmin; font-weight: 750; letter-spacing: -.02em; line-height: 1; }
 .front .sub { font-size: 2.4vmin; color: #a1a1a6; }
 .claims { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vmin; margin-top: 2vmin; }
-.claims span { position: relative; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(244,201,214,.14); border: 1px solid rgba(244,201,214,.4); color: #f4c9d6; font-size: 2.2vmin; font-weight: 600; }
+.claims span { position: relative; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(244,201,214,.14); border: 1px solid rgba(244,201,214,.4); color: #f4c9d6; font-size: 2.5vmin; font-weight: 600; }
 .claims span i { position: absolute; left: 1.2vmin; right: 1.2vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform: scaleX(0); transform-origin: left; }
 .nolaw { margin-top: 2.4vmin; font-size: 2.3vmin; color: #ff7a6b; font-weight: 600; opacity: 0; }
 .back { opacity: 0; }
 .back .h { font-size: 2.1vmin; letter-spacing: .12em; text-transform: uppercase; color: #a1a1a6; margin-bottom: 1.4vmin; }
 .ing { list-style: none; margin: 0; padding: 0; display: grid; gap: .5vmin; counter-reset: ing; }
-.ing li { position: relative; display: flex; align-items: center; gap: 1.2vmin; font-size: 2.35vmin; line-height: 1.2; padding: .55vmin .9vmin; border-radius: 1vmin; background: transparent; }
+.ing li { position: relative; display: flex; align-items: center; gap: 1.2vmin; font-size: 2.7vmin; line-height: 1.2; padding: .6vmin 1vmin; border-radius: 1vmin; background: transparent; }
 .ing li::before { counter-increment: ing; content: counter(ing); width: 3vmin; font-size: 1.9vmin; color: #6e6e73; font-variant-numeric: tabular-nums; }
 .ing li.five { background: rgba(244,201,214,.12); }
 .ing li.frag { background: rgba(255,122,107,.16); }
@@ -519,10 +519,10 @@ export const SCENES = {
 .ing li .pct { margin-left: auto; font-size: 1.9vmin; color: #a1a1a6; }
 .oneline { position: relative; margin: .6vmin 0; height: .3vmin; background: repeating-linear-gradient(90deg, #a1a1a6 0 1.4vmin, transparent 1.4vmin 2.6vmin); opacity: 0; }
 .oneline b { position: absolute; right: 0; top: -2.6vmin; font-size: 1.9vmin; color: #a1a1a6; font-weight: 600; }
-.side { width: 44vmin; display: grid; gap: 2vmin; align-content: center; }
-.pill { padding: 1.6vmin 2.2vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); font-size: 2.6vmin; line-height: 1.3; opacity: 0; }
+.side { width: 46vmin; display: grid; gap: 2vmin; align-content: center; }
+.pill { padding: 1.8vmin 2.4vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); font-size: 2.9vmin; line-height: 1.3; opacity: 0; }
 .pill b { color: #f4c9d6; } .pill.warn b { color: #ff7a6b; } .pill.good b { color: #e2b08c; }
-@media (orientation: portrait) { .lab { flex-direction: column; gap: 2.5vmin; } .bottle { width: 62vmin; height: 70vmin; } .side { width: 62vmin; } }`,
+@media (orientation: portrait) { .lab { flex-direction: column; gap: 2.5vmin; } .bottle { width: 64vmin; height: 72vmin; } .side { width: 64vmin; } }`,
     html: `
 <div class="lab" id="lab">
   <div class="bottle" id="bottle"><div class="cap"></div>
