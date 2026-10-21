@@ -11,13 +11,14 @@
 //                         wheels are)
 // The garage's Wheels tab (cars.ts WHEELS) offers each car its own style and one second style.
 // Spoke faces are crowned (a highlight runs along each spoke); the five-bolt styles sit on a boss a third of the
-// rim's radius.
+// rim's radius with chamfered hex nuts in dark recesses, and every open style has a valve stem at the barrel.
 // Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
-// lettering); drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour.
+// lettering); finely drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour
+// with the wordmark on an 8:1 strip.
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
 // caller's matrix scales the radius for smaller wheels.
 import * as THREE from 'three';
-import { Kit, V3, v3, gridGeo, latheGeo } from './car-kit';
+import { Kit, V3, v3, gridGeo, latheGeo, between } from './car-kit';
 
 export const WHEEL = { R: 0.345, rim: 0.254, wF: 0.245, wR: 0.305 };
 export const TREAD_V: [number, number] = [0.3, 0.7];
@@ -222,8 +223,10 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
       const a = (k / 5) * Math.PI * 2 + Math.PI / 2 + Math.PI / 5, y = Math.cos(a) * 0.056, z = Math.sin(a) * 0.056;
       const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0065, y, z);
       put(S, 'dark', rec);
-      const bolt = new THREE.CylinderGeometry(0.0105, 0.0105, 0.016, 6); bolt.rotateZ(-Math.PI / 2); bolt.translate(xh + 0.006, y, z);
-      put(S, 'chrome', bolt.toNonIndexed());
+      // a 19 mm hex nut, 12 mm tall, under a chamfer cap that takes its corners down to a 12 mm flat; faceted
+      const hex = (rt: number, rb: number, h: number, x: number, open: boolean) => { const g = new THREE.CylinderGeometry(rt, rb, h, 6, 1, open).toNonIndexed(); g.computeVertexNormals(); g.rotateZ(-Math.PI / 2); g.translate(x, y, z); return g; };
+      put(S, 'chrome', hex(0.0095, 0.0095, 0.012, xh + 0.012, true));
+      put(S, 'chrome', hex(0.006, 0.0095, 0.003, xh + 0.0195, false));
     }
   }
   if (style !== 'cl10') {
@@ -231,6 +234,18 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const cap = new THREE.CircleGeometry(style === 'multi' ? 0.042 : 0.0295, 32); cap.rotateY(Math.PI / 2); cap.translate(style === 'aero' ? xr - 0.031 : style === 'multi' ? xh + 0.0105 : xh + 0.0078, 0, 0);
     put(S, 'badge', cap);
     if (style === 'aero') { const cr = latheGeo([[0.05, xr - 0.032], [0.05, xr - 0.06]], 32, 'x', { flip: false }); put(S, 'dark', cr); }
+  }
+  // the valve: a rubber stem out of the barrel between two spokes, leaning 25 deg outboard, under a chrome cap (the
+  // aero cover hides the barrel, so that style has none). The stem is 'dark' (the recesses' near-black), not 'rubber':
+  // in the game every key is a mesh per wheel, and a key of its own would cost four draw calls a car
+  if (style !== 'aero') {
+    const av = Math.PI / 2 + (style === 'cl10' || style === 'mesh' ? Math.PI / 10 : style === 'blade' ? 0.6 + Math.PI / 7 : Math.PI / 5);
+    const Rv = v3(0, Math.cos(av), Math.sin(av)), dir = Rv.clone().multiplyScalar(-Math.cos(0.436)).setX(Math.sin(0.436));
+    const base = Rv.clone().multiplyScalar(0.238).setX(hw - 0.02), tip = base.clone().addScaledVector(dir, 0.028);
+    put(S, 'dark', new THREE.CylinderGeometry(0.004, 0.004, 1, 8, 1, true).applyMatrix4(between(base, tip)));
+    // the cap: chrome where the wheel has chrome nuts already; black on the hypercar's black-on-black multi (no
+    // chrome there, so a chrome cap would be a mesh of its own on each wheel)
+    put(S, style === 'multi' ? 'dark' : 'chrome', new THREE.CylinderGeometry(0.0045, 0.0045, 1, 8).applyMatrix4(between(base.clone().addScaledVector(dir, 0.02), tip)));
   }
 
   // brake: drilled carbon-ceramic friction ring on an anodised bell
@@ -240,8 +255,13 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   for (let i = 0; i <= 3; i++) { const r = ri + (Rd - ri) * (i / 3), row: V3[] = []; for (let j = 0; j <= dsegs; j++) { const a = (j / dsegs) * Math.PI * 2; row.push(v3(xo, Math.cos(a) * r, Math.sin(a) * r)); } ringRows.push(row); }
   const ring = gridGeo(ringRows, { flip: false });
   const ruv = ring.attributes.uv as THREE.BufferAttribute;
-  for (let i = 0; i <= 3; i++) for (let j = 0; j <= dsegs; j++) ruv.setXY(i * (dsegs + 1) + j, j / dsegs, i / 3);
+  // u round the ring repeats the map four times, so its holes (drawn round in texels, 24 a repeat) come out 7 x 8 mm,
+  // 96 a row at a 10.7 mm pitch: a finely drilled ring, not the 28 x 8 mm ovals one repeat stretched them to. An
+  // integer repeat, so the pattern meets itself at the seam
+  for (let i = 0; i <= 3; i++) for (let j = 0; j <= dsegs; j++) ruv.setXY(i * (dsegs + 1) + j, 4 * j / dsegs, i / 3);
   put(S, 'disc', ring);
+  // the edge stays 'dark': a heat-tinted edge (the exhaust tips' iridescent steel) was tried and showed from no
+  // wheel view (edge-on from the side, behind the lip at 3/4), and in the game a key of its own is a mesh per wheel
   put(S, 'dark', lathe([[Rd, xi], [Rd, xo]], [0, 1], dsegs, false));
   const bell: [number, number][] = [[ri + 0.004, xo + 0.0005], [ri - 0.004, xo + 0.016], [hb + 0.002, xo + 0.026], [hb, xh - 0.034]];
   put(S, 'rimPaint', lathe(bell, bell.map((p) => p[0] * 6), high ? 48 : 24, false));
@@ -261,9 +281,10 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals();
     put(kit, 'caliper', g);
   }
-  // the wordmark along the caliper's outer face
+  // the wordmark along the caliper's outer face: a 16 mm strip over 0.75 rad (128 mm at r 0.17), 8:1 like its map,
+  // so ROSSINI and the OC mark read unsquashed (the old 36 mm x 109 mm strip stood them up 2.7 times too tall)
   const tRows: V3[][] = [];
-  for (let i = 0; i <= 1; i++) { const r = 0.152 + 0.036 * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + 0.32 - 0.64 * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
+  for (let i = 0; i <= 1; i++) { const r = 0.162 + 0.016 * i, row: V3[] = []; for (let j = 0; j <= 12; j++) { const a = thc + 0.375 - 0.75 * (j / 12); row.push(v3(xo + 0.0352, Math.cos(a) * r, Math.sin(a) * r)); } tRows.push(row); }
   const tg = gridGeo(tRows, { flip: true });
   const tuv = tg.attributes.uv as THREE.BufferAttribute;
   for (let i = 0; i <= 1; i++) for (let j = 0; j <= 12; j++) tuv.setXY(i * 13 + j, j / 12, i);
