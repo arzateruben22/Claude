@@ -4,6 +4,29 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (11:00 UTC): the drivers' clothes, a black-frame bug fixed
+
+A lane on this session (worktree, merged as one commit) finished the drivers' clothing pass from the parked work,
+rendered on the preview (`tests/out/preview/fashion2/` in its worktree, every frame looked at) and in the game:
+- **The Closer**: a pressed white (ivory for her) cuff with an edge stitch and a gold cufflink (a pearl button for
+  her), the gold bracelet watch with an index ring, blued hands and a crown, red polish on her nails.
+- **The Ace**: black ribbed fire-suit sleeves with a small Rossini R chevron patch, black stitched gloves with knuckle
+  pads and a lavender (#b9a6ff, the UI's Ace colour) stripe at the wrist.
+- **The Wrench**: an olive work shirt rolled twice above the forearm with a hem stitch and a slight tan line, a
+  polished titanium smart watch whose black screen shows a green grip readout.
+- **A bug found and fixed**: the Wrench's cockpit rendered entirely black in the game (both presentations, 960 × 540).
+  The smart watch's glass had 28 vertices with zero-length normals; the shader turned them into NaN and the
+  post-processing spread it over the frame. The mesh builder now widens its stencil where points coincide and never
+  emits a zero normal; the frames render (`game/wrench-m.png`, read by eye here too). Why the baseline's identical
+  glass did not go black is not explained.
+- **Numbers** (the preview's JSON, budget 12 calls, 220k triangles): Closer 75,744 / 6 (male), Ace 57,180 / 3, Wrench
+  110,292 / 6; arms build 1.7 to 2.6 s on the shared software renderer (baseline 1.6 to 1.9 s).
+- **Checked**: `npx tsc --noEmit` clean, `npm run build` clean, `npm test -- --only=boot,abilities` 10/10 on the lane.
+- **Here**: the game now passes each driver's own nail colour (it hard-coded a burgundy for every female presentation,
+  so the Closer's red never showed and the Wrench had polish she shouldn't).
+- **Still off**: the glove stripe takes the default colour (hands.ts does not pass the accent; right for the Ace only);
+  the Wrench's roll never shows from the seat; the knuckle pads read as round patches; the Closer's weave is faint.
+
 ## 2026-10-21 (06:30 UTC): the World Map, the garage's paint, the radio card; the two sessions coordinated
 
 - **Two sessions.** Another session (the always-on one) runs lanes for the seat view, body fidelity, the freeways,

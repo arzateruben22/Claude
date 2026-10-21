@@ -508,10 +508,11 @@ export class Game {
   private configureCar() {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
+    const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
       car: c.id as CarId, paint: paintFor(c, s.paints), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
+      look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
   }
 
