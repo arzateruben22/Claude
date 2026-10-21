@@ -85,6 +85,13 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 16:30 App.tsx, styles.css, WorldMap.tsx, Phone.tsx: Lifestyle (homes): the rail's Lifestyle row opens `Homes.tsx`; a Homes phone app; homes on the World Map; the garage's slots include homes; `.panel > .row:last-child` sticks to the screen's real bottom edge.
 - 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
+**In flight here (from about 18:20 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
+(audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
+the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
+the physics (`src/game/vehicle/Physics.ts`, against `PROJECT_OC_DYNAMICS.md`). Branches `fable/<area>`, merged here only
+once judged. The freeway signs stay the realism-2 lane's: the workflow writes them a spec instead of code. Lanes: please
+leave these files to it until its results are logged.
+
 Next here (updated 16:30 UTC; the owner, about 15:45: the life half and online toward 95 %; homes and walk-in
 interiors first; online on a free-tier backend; the map OC-only; no real-phone test for now):
 - done: homes (Lifestyle), the panels' Done bar, characters and story (phone Messages, Contacts, jobs), errands;
