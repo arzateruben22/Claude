@@ -811,8 +811,16 @@
     var q = /[?&]reorder=([a-z0-9,-]+)/i.exec(location.search);
     if (!q) return;
     try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* old browser */ }
-    var added = q[1].split(",").slice(0, 12).filter(function (id) { return window.LumevinaCart.add(id).ok; });
+    var gated = [];
+    var added = q[1].split(",").slice(0, 12).filter(function (id) {
+      var r = window.LumevinaCart.add(id);
+      if (!r.ok && r.reason === "consult") gated.push(id);
+      return r.ok;
+    });
     if (added.length) openDrawer();
+    /* an active Evelyn hasn't cleared for this browser yet: ask her, from the same tap */
+    var CS = window.LumevinaConsult, INV = window.LumevinaInventory;
+    if (gated.length && CS && INV && INV.get(gated[0])) setTimeout(function () { CS.open(INV.get(gated[0])); }, added.length ? 900 : 200);
   };
 
   /* back from Stripe: ?order=done (paid) or ?order=cancelled */
