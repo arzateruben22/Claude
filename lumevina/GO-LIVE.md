@@ -26,7 +26,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 
 ## 3. Connect them (Claude can walk through this live)
 
-1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor, then `server/seed-products.sql` (her 43 products, from `node scripts/seed-products.mjs`).
+1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor, then `server/seed-products.sql` (her 43 products and the online Skin Consult, from `node scripts/seed-products.mjs`; `products.consult` marks the actives that need her yes first, `server/README.md` → The consult gate).
 2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates, save skin plans, change stock and see orders. She types it once into the dashboard (Lumevina Studio, at the top) and that device remembers it. Also: **`SITE_URL`** (the website's address), **`OWNER_EMAIL`** (where her order alerts and morning email go), and **`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`** for phone notifications (make the pair once with `npx web-push generate-vapid-keys`).
 3. **Deploy** the server functions: `supabase functions deploy` (the list is in `server/README.md`).
 4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address, with the events in `server/README.md` → Turning on v3 → Stripe (the checkout.session.* ones for the shop; v3 adds invoice.paid and customer.subscription.*).
