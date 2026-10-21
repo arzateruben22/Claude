@@ -500,7 +500,7 @@ export function App() {
       </div>
       {liveBase(settings.liveUrl) && <div className="row"><button type="button" className="btn invite" onClick={() => void invite()}>{settings.crew ? 'Invite to your crew' : 'Invite a friend'}</button></div>}
       {lobby?.cruise && <p className="cruise">{lobby.cruise.live ? 'OC cruise night is on now. Jump in.' : `Next OC cruise night: ${new Date(lobby.cruise.at).toLocaleString(undefined, { weekday: 'long', hour: 'numeric', minute: '2-digit' })}`}</p>}
-      <p className="fine">One small server, a limited number of drivers at a time; past that you wait in line. Other drivers are ghosts: no collisions, nothing scored. Your progress stays on this device.</p>
+      <p className="fine">One small server, a limited number of drivers at a time; past that you wait in line. Other drivers are ghosts: no collisions, nothing scored. While you drive live the computer traffic stays light, so the real people stand out. Your progress stays on this device.</p>
     </section>
     <div className="menu-aside">
       <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">

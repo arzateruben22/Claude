@@ -1004,15 +1004,20 @@ await group('live', async (use) => {
       await frames(A, 3);
       const r = await game(A, () => { const g = window.__game; const road = g.path.main ? g.path.label : g.settings.start; return { road, ratio: g.now.ratioFor(road), level: g.traffic.level, weather: g.now.snapshot.weather, note: document.querySelector('.dest-traffic em')?.textContent, label: document.querySelector('.dest-traffic b')?.textContent, roads: Object.keys(g.now.snapshot.traffic.roads).length }; });
       expect(r.roads === 20, `${r.roads} roads in the feed`);
-      expect(r.ratio > 0 && r.ratio <= 1 && r.level.perKmLane >= 2.2 && r.level.perKmLane <= 9.5, JSON.stringify(r));
-      // the density follows this road's ratio exactly (the mapping in src/live/now.ts)
-      const want = r.ratio >= 0.95 ? 2.2 : r.ratio >= 0.8 ? 2.2 + ((0.95 - r.ratio) / 0.15) * 2.8 : r.ratio >= 0.6 ? 5 + ((0.8 - r.ratio) / 0.2) * 4 : r.ratio >= 0.45 ? 9 + ((0.6 - r.ratio) / 0.15) * 0.5 : 9.5;
+      expect(r.ratio > 0 && r.ratio <= 1 && r.level.perKmLane >= 1.2 && r.level.perKmLane <= 3.5 && r.level.bold === 0, JSON.stringify(r));
+      // the density follows this road's ratio exactly (the mapping in src/live/now.ts), kept light while driving live
+      // (lightForLive in src/game/settings.ts: 2.2 to 9.5 cars/km/lane becomes 1.2 to 3.5)
+      const full = Math.round((r.ratio >= 0.95 ? 2.2 : r.ratio >= 0.8 ? 2.2 + ((0.95 - r.ratio) / 0.15) * 2.8 : r.ratio >= 0.6 ? 5 + ((0.8 - r.ratio) / 0.2) * 4 : r.ratio >= 0.45 ? 9 + ((0.6 - r.ratio) / 0.15) * 0.5 : 9.5) * 10) / 10;
+      const want = 1.2 + Math.max(0, Math.min(1, (full - 2.2) / 7.3)) * 2.3;
       expect(Math.abs(r.level.perKmLane - Math.round(want * 10) / 10) < 0.11, `ratio ${r.ratio} should give ${want.toFixed(1)} cars/km/lane, got ${r.level.perKmLane}`);
-      // the mock feed stands in for a real one on the server; the player is told it is simulated
-      expect(/simulated/.test(r.note || '') && /Live/.test(r.label || ''), `HUD says "${r.label} / ${r.note}"`);
+      // the mock feed stands in for a real one on the server; the player is told it is simulated, and that it's kept light
+      expect(/simulated/.test(r.note || '') && /light while live/.test(r.note || '') && /Live/.test(r.label || ''), `HUD says "${r.label} / ${r.note}"`);
+      // a preset is capped at Light while live, and comes back when live is off
+      const heavy = await game(A, () => { const g = window.__game, c = g.live; g.updateSettings({ ...g.settings, density: 'heavy' }); const on = { ...g.traffic.level }; g.setLive(null); const off = { ...g.traffic.level }; g.setLive(c); return { on, off, back: { ...g.traffic.level } }; });
+      expect(heavy.on.perKmLane === 2.2 && heavy.on.bold === 0 && heavy.off.perKmLane === 9 && heavy.back.perKmLane === 2.2, JSON.stringify(heavy));
       expect(['clear', 'cloudy', 'rain', 'fog', 'mist'].includes(r.weather.kind), JSON.stringify(r.weather));
       await game(A, () => { const g = window.__game; g.navigateTo(null); g.updateSettings({ ...g.settings, density: 'moderate', weather: 'clear' }); });
-      return `${r.road}: ratio ${r.ratio} → ${r.level.perKmLane} cars/km/lane, bold ${r.level.bold}; weather ${r.weather.kind} ${r.weather.tempF}°F (${r.weather.source}); HUD "${r.label} · ${r.note}"`;
+      return `${r.road}: ratio ${r.ratio} → ${r.level.perKmLane} cars/km/lane, bold ${r.level.bold}; weather ${r.weather.kind} ${r.weather.tempF}°F (${r.weather.source}); HUD "${r.label} · ${r.note}"; Heavy while live ${heavy.on.perKmLane}, off ${heavy.off.perKmLane}`;
     });
     await check('the billboards stand on their freeways near the two venues (our own places only)', async () => {
       const b = await game(A, () => window.__game.billboards.children.map((g) => ({ road: g.userData.road, s: Math.round(g.userData.s), creative: g.userData.creative })));
@@ -1167,7 +1172,10 @@ await group('livephone', async (use) => {
       try {
         await p2.goto(pathToFileURL(GAME).href + '?crew=wxyz');
         await p2.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
-        await p2.waitForSelector('.welcome', { timeout: 30000 });
+        await p2.waitForSelector('.welcome', { timeout: 30000 }).catch(async (e) => {
+          const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className) }));
+          throw new Error(`no welcome card: ${JSON.stringify(st)} (${String(e).split('\n')[0]})`);
+        });
         const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
         await p2.screenshot({ path: path.join(OUT, 'livephone-welcome.png') });
         expect(/invited to crew WXYZ/.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));

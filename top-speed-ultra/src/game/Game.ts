@@ -7,7 +7,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
+import { Settings, QUALITY, DENSITY, lightForLive, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -238,10 +238,12 @@ export class Game {
     if (this.settings.density === 'live') {
       // the freeway you're on (or came from), at its measured share of free-flow speed
       const road = this.path?.main ? this.path.label : this.lastMain?.label ?? this.settings.start;
-      this.traffic.level = densityForRatio(this.now.ratioFor(road));
+      const l = densityForRatio(this.now.ratioFor(road));
+      this.traffic.level = this.live ? lightForLive(l, true) : l;
       return;
     }
-    this.traffic.level = { perKmLane: d.perKmLane, bold: d.bold };
+    const l = { perKmLane: d.perKmLane, bold: d.bold };
+    this.traffic.level = this.live ? lightForLive(l, false) : l;
   }
   // the realistic mode: keep the feed running while a Live setting is on, and apply it every couple of seconds
   private applyNow() {
@@ -1325,8 +1327,9 @@ export class Game {
       heading, ...this.temperature(), turn, clock: this.env.clockText(),
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
-      traffic: DENSITY[this.settings.density].label,
-      trafficNote: this.settings.density === 'live' ? this.now.note('traffic') : 'simulated',
+      // while driving live the computer cars are kept light (lightForLive), and the HUD says so
+      traffic: this.live && ['moderate', 'heavy', 'expert'].includes(this.settings.density) ? 'Light' : DENSITY[this.settings.density].label,
+      trafficNote: (this.settings.density === 'live' ? this.now.note('traffic') : 'simulated') + (this.live && this.settings.density !== 'none' ? ' · light while live' : ''),
     });
   }
 
@@ -1370,6 +1373,7 @@ export class Game {
   }
   setLive(c: LiveClient | null) {
     this.live = c;
+    if (this.traffic) this.applyDensity();
     if (c) c.onHonk = (peer) => this.heardHonk(peer);
   }
   honks = 0;                          // honks heard (for tests)

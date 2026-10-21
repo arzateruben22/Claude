@@ -75,6 +75,15 @@ export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: 
   live:     { label: 'Live',     perKmLane: 5,   bold: 0.04 },   // follows the freeway's real flow from the live server's feed (simulated when there is none); src/live/now.ts
 };
 
+// while you drive live the computer cars stay light: the other people are the traffic, they're easier to pick out,
+// and a phone keeps its frames for them. A preset is capped at Light; the live feed keeps its rush hour, scaled into
+// 1.2 to 3.5 cars per km per lane. No aggressive drivers either way.
+export function lightForLive(l: { perKmLane: number; bold: number }, feed: boolean): { perKmLane: number; bold: number } {
+  if (!feed) return { perKmLane: Math.min(l.perKmLane, DENSITY.light.perKmLane), bold: 0 };
+  const t = Math.max(0, Math.min(1, (l.perKmLane - 2.2) / 7.3));
+  return { perKmLane: Math.round((1.2 + t * 2.3) * 10) / 10, bold: 0 };
+}
+
 export const MODES: Record<Mode, { label: string; blurb: string }> = {
   free:     { label: 'Free Drive',     blurb: 'All of Orange County\'s freeways, no clock. Take any interchange.' },
   survival: { label: 'Speed Survival', blurb: 'Stay over 100 mph. Near misses and clean passes build the streak. One real crash ends it.' },

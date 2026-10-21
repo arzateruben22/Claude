@@ -235,3 +235,18 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   NWS on screen (it does, in Settings and the HUD note); the sports bar's working name; whether any ad slot is ever
   sold, and at what price (the business plan's "no real business names without a deal" stands); the first trends
   list each week.
+
+### 18. Computer traffic stays light while you drive live
+
+- **The owner's ask** (in chat, 2026-10-21 about 15:40 UTC): "for any live freeway traffic online and in the server
+  keep it light all the time, or what do you think?"
+- **Decided:** yes for the computer cars. While Drive live is on, a traffic preset is capped at Light (2.2 cars per km
+  per lane) with no aggressive drivers, and Live traffic keeps its rush hour but scaled into 1.2 to 3.5 cars per km per
+  lane (`lightForLive` in `src/game/settings.ts`). Off live, every setting is as before. The HUD says "light while
+  live", and the Live section says so in its small print.
+- **Why:** the other people are the traffic that matters online; they stand out among fewer computer cars; a phone
+  keeps its frames for the ghosts and their name plates; and the computer cars are drawn on each phone, never on the
+  server, so this doesn't change the server's load.
+- **The server is already light:** it relays only real drivers (the nearest 32 within 3 km, 10 times a second), and
+  at 25 drivers it measured 2.9% of one core and 142 MB (decision 16's load table). Nothing to cut there before the
+  binary poses (F7) at 100+.
