@@ -1150,6 +1150,48 @@ export const SCENES = {
       $("#skl").textContent = i === 0 ? "the surface: loose cells lift" : i === 1 ? "inside the pore: the oil clears" : i === 2 ? "the surface, gently" : "every morning: sunscreen on top";
     }
   },
+  "12-3": {
+    id: "12-3", kicker: "After a treatment: what's normal, what isn't", title: `Pink and tight is the treatment working. <span class="grad">Spreading and hot is not.</span>`, dur: 22, poster: 9,
+    shots: [
+      { at: 0, name: "normal", cap: "Normal: pink for a few hours, tightness for a day or two, light flaking on days two to five, a few small bumps after extractions." },
+      { at: 7, name: "message", cap: "Message Evelyn: redness that spreads or worsens after the first day, burning that doesn't settle, bumps turning into pus-filled spots. Send a photo in daylight." },
+      { at: 13, name: "doctor", cap: "A doctor, today: swelling around the eyes or lips, hives, blistering, pus with heat or fever, a cold sore starting." },
+      { at: 19, name: "911", cap: "Trouble breathing or a swelling throat is 911, not a text." }
+    ],
+    css: `
+.lad { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.8vmin; }
+.rung { position: relative; border-radius: 2.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.8vmin 2.6vmin 1.8vmin 3.6vmin; opacity: 0; overflow: hidden; }
+.rung::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1.2vmin; background: var(--c); }
+.rung .h { display: flex; align-items: center; gap: 1.6vmin; font-size: 3.2vmin; font-weight: 700; letter-spacing: -.02em; color: var(--c); }
+.rung .h small { font-size: 2.3vmin; font-weight: 600; color: #8e8e93; letter-spacing: 0; }
+.rung .items { display: flex; flex-wrap: wrap; gap: 1.2vmin; margin-top: 1.4vmin; }
+.rung .it { padding: 1.1vmin 2vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 2.6vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.rung .it.act { background: color-mix(in srgb, var(--c) 18%, transparent); border-color: var(--c); }
+.rung.off .items { display: none; } .rung.off { padding-top: 1.4vmin; padding-bottom: 1.4vmin; } .rung.off .h { font-size: 2.7vmin; }
+.rung.hot { border-color: var(--c); box-shadow: 0 0 0 .3vmin color-mix(in srgb, var(--c) 35%, transparent); }
+@media (orientation: portrait) { .lad { gap: 2vmin; } .rung .h { font-size: 3.4vmin; } .rung .it { font-size: 2.6vmin; } }`,
+    html: `
+<div class="lad">
+  <div class="rung" id="r0" style="--c:#32d74b"><div class="h">Normal <small>the treatment working</small></div><div class="items"><span class="it">pink for a few hours</span><span class="it">tightness for a day or two</span><span class="it">light flaking, days 2 to 5</span><span class="it">a few small bumps after extractions</span></div></div>
+  <div class="rung" id="r1" style="--c:#ffd27a"><div class="h">Message Evelyn <small>a photo in daylight</small></div><div class="items"><span class="it">redness that spreads or worsens after day one</span><span class="it">burning that doesn't settle</span><span class="it">bumps turning into pus-filled spots</span><span class="it act">send a photo in daylight</span></div></div>
+  <div class="rung" id="r2" style="--c:#ff7a6b"><div class="h">A doctor, today</div><div class="items"><span class="it">swelling around the eyes or lips</span><span class="it">hives</span><span class="it">blistering</span><span class="it">pus with heat or fever</span><span class="it">a cold sore starting</span></div></div>
+  <div class="rung" id="r3" style="--c:#ff3b30"><div class="h">911 <small>not a text</small></div><div class="items"><span class="it">trouble breathing</span><span class="it">a swelling throat</span></div></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      const rungs = [$("#r0"), $("#r1"), $("#r2"), $("#r3")];
+      rungs.forEach((r, k) => {
+        const open = k === i;
+        r.classList.toggle("off", !open); r.classList.toggle("hot", open && lt > 0.3);
+        // the first shot brings the ladder in rung by rung; later shots keep every rung and open the next one
+        if (i === 0) enter(r, lt, 0.2 + k * 0.25, { y: 12 }); else set(r, { o: k > i ? 0.55 : 1 });
+        const items = r.querySelectorAll(".it");
+        items.forEach((it, n) => { if (open) enter(it, lt, (i === 0 ? 1.4 : 0.5) + n * 0.45, { y: 8, d: 0.5 }); else set(it, { o: 0 }); });
+      });
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
