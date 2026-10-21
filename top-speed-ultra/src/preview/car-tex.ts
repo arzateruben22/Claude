@@ -479,14 +479,15 @@ export function plateTex(w = 1024, h = 216): THREE.Texture {
     return canvasTex(c, true);
   });
 }
-// an LED strip's light across its width (v): a white-blue core and a blue halo either side, on black (an emissive map)
-export function ledTex(core: number, halo: number): THREE.Texture {
-  return once('led' + core + halo, () => {
+// an LED strip's light across its width (v): a hot core, the strip's body (halo) either side and an outer glow (edge,
+// the halo unless given), on black (an emissive map)
+export function ledTex(core: number, halo: number, edge = halo): THREE.Texture {
+  return once('led' + core + halo + (edge === halo ? '' : 'e' + edge), () => {
     const [c, g] = canvas(4, 64);
     const hex = (n: number) => '#' + n.toString(16).padStart(6, '0');
     const gr = g.createLinearGradient(0, 0, 0, 64);
-    gr.addColorStop(0, '#000000'); gr.addColorStop(0.18, hex(halo)); gr.addColorStop(0.42, hex(core)); gr.addColorStop(0.58, hex(core));
-    gr.addColorStop(0.82, hex(halo)); gr.addColorStop(1, '#000000');
+    gr.addColorStop(0, '#000000'); gr.addColorStop(0.1, hex(edge)); gr.addColorStop(0.26, hex(halo)); gr.addColorStop(0.44, hex(core)); gr.addColorStop(0.56, hex(core));
+    gr.addColorStop(0.74, hex(halo)); gr.addColorStop(0.9, hex(edge)); gr.addColorStop(1, '#000000');
     g.fillStyle = gr; g.fillRect(0, 0, 4, 64);
     return canvasTex(c, true);
   });

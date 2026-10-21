@@ -10,9 +10,12 @@ import * as T from './textures';
 export type RaceKind = 'sprint' | 'checkpoint' | 'endurance';
 export interface Course { id: string; name: string; kind: RaceKind; road: string; at: number; length: number; cps: number; reward: number[]; blurb: string }
 
+// Santa Ana Checkpoints starts at 0.565 (2026-10-21): it sat at 0.38, between Mission Viejo and Lake Forest, which
+// the World Map showed; I-5 North passes Santa Ana at 0.629 of its length (1.6 km from the city centre), so the 12 km
+// now run through it. Best times set on the old stretch stay saved under the same id.
 export const COURSES: Course[] = [
   { id: 'irvine', name: 'Irvine Sprint', kind: 'sprint', road: 'I-405 North', at: 0.1, length: 8000, cps: 0, reward: [1500, 800, 400, 150], blurb: '8 km up the 405 from Irvine. Flat out, four lanes, real traffic.' },
-  { id: 'santa-ana', name: 'Santa Ana Checkpoints', kind: 'checkpoint', road: 'I-5 North', at: 0.38, length: 12000, cps: 5, reward: [2200, 1200, 600, 200], blurb: '12 km of the 5 through Santa Ana, five gates to clear in order.' },
+  { id: 'santa-ana', name: 'Santa Ana Checkpoints', kind: 'checkpoint', road: 'I-5 North', at: 0.565, length: 12000, cps: 5, reward: [2200, 1200, 600, 200], blurb: '12 km of the 5 through Santa Ana, five gates to clear in order.' },
   { id: 'foothill', name: 'Foothill Sprint', kind: 'sprint', road: 'CA-241 South', at: 0.15, length: 10000, cps: 0, reward: [1800, 1000, 500, 200], blurb: '10 km down the 241 toll road: two lanes, hills, sweepers.' },
   { id: 'riverside', name: 'Riverside Endurance', kind: 'endurance', road: 'CA-91 East', at: 0.12, length: 30000, cps: 3, reward: [5000, 2500, 1200, 400], blurb: '30 km out the 91 toward Riverside. Pace yourself through the traffic.' },
 ];

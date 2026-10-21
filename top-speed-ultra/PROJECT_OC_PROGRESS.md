@@ -4,6 +4,177 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (12:45 UTC): the two sessions' reference screens merged on the reference lane (SYNC, `claude/ui-ref`)
+
+- **Merged** `origin/claude/hypercar` (up to `00f266b`: its home screen and HUD for the 2026-10-21 reference, the colour
+  per car and driver, the live hypercar display, the cinematic camera, U3 to U8, the Ultra grade, the Look) into
+  `claude/ui-ref`, on top of this lane's UI1 first pass (committed as `8fb174c`). One version of each screen; which
+  came from where is the dated note in `PROJECT_OC_UI_TARGET.md` ("2026-10-21 reference") and the merge commit.
+- **Type check and build** pass (`npx tsc --noEmit`; `npm run build`, 3551 KB of script in the single file).
+- **Frames beside the reference crops** (`tools/uiref-sync-shots.mjs`, night, Low; `tests/out/uiref/`): `sync1-home`
+  and `sync1-hud` at 1440 × 900, `sync2-home` and `sync2-hud` at 390 × 844, each with a `-vs-ref` composite; no page
+  errors, no sideways scroll, one Drive button, the starter car's sunset theme. Read by eye: one rail, the player card,
+  the four mode cards over the night showroom; the HUD's guide-sign plate, icon rail, speed block and round map with
+  the U1/U2 cards round them, nothing overlapping. The first phone frame (`sync1-home-390x844`) showed two merge
+  faults: the pinned Drive lay under the mode cards (the shot tool's tap on Drive was taken by the cards and timed
+  out) and the car was hidden under the menu's full-screen scrim. Both fixed (`styles.css`, the sheet's phone rules;
+  `App.tsx`, the car re-framed as the phone column scrolls); `sync2` shows the car in its hero window and Drive on
+  top, and the drive started from the tap. The 1440 × 900 frames are from the build before that phone-only fix.
+- **Suite** (`npm test -- --only=boot,phone,progression`) on a machine shared with other lanes (load 43 to 55 on 4
+  cores): 15/20 (boot 6/6, progression 5/6, phone 4/8); `phone,progression` again: 11/14 (progression 5/6, phone 6/8:
+  the navigation-card check passed in 296 s, the Minimal HUD check passed including a tap on the round Pause chip).
+  Every failure is a timeout: Ultra Realism (15 frames not drawn in 60 s) and, on the phone after a drive starts,
+  `page.screenshot` over its 120 s.
+- **The same groups on the pre-merge build** (`8fb174c`, built in the scratchpad, its own suite, same load): 13/14.
+  Ultra Realism failed with the same timeout; the two phone checks passed in 185 s and 119.9 s, against a 120 s
+  screenshot limit. A bracketed A/B of the phone driving HUD (390 × 844, day, Low, one page at a time): pre-merge
+  boot 236 s, screenshots 87.2 s and 153.0 s at 0.2 and 0 frames a second; merged boot 163 s, screenshots 81.3 s and
+  145.8 s at 0.29 and 0.2. The merged build is no slower; the failures are the machine's load. To re-run when the
+  machine is quiet.
+- **Noticed, not changed** (before this merge, on the live preview): the store's styles use `--volt` (6 places), which
+  no token block defines since the re-theme; those colours fall back to inherited ones.
+
+## 2026-10-21 (06:30 UTC): the World Map, the garage's paint, the radio card; the two sessions coordinated
+
+- **Two sessions.** Another session (the always-on one) runs lanes for the seat view, body fidelity, the freeways,
+  Ultra graphics, the UI to the reference, the graphics modes and the store (`PROJECT_OC_HANDOFF.md`). This session
+  stopped its overlapping lanes and pushed their unjudged work as `claude/wip-c-seat` and `claude/wip-c-world`; the
+  other session agreed to build on this branch's UI and to bind the Look tokens to its three graphics modes.
+- **World Map (U4)** (`WorldMap.tsx`, `tools/map-shots.mjs`): proven at 1280 × 720 and 390 × 844 in three rounds
+  (`tests/out/map`, `map2`, `map3`), no errors. Round one showed labels over each other and phone views framed behind
+  the sheet; labels now take boxes (shields, the race's markers and our places first, then cities from the largest)
+  and every fit frames the visible part of the screen; a picked race frames its own stretch.
+  Round three (`map3`, read by eye) framed the Santa Ana course clear of the sheet and the shields, and showed a real
+  bug: **Santa Ana Checkpoints** ("12 km of the 5 through Santa Ana") ran between Mission Viejo and Lake Forest. I-5
+  North passes Santa Ana at 0.629 of its length (measured in the game: 1.6 km from the city centre), so the course
+  now starts at 0.565 instead of 0.38 (`race.ts`); old best times on it stay under the same id. Fits now also keep
+  clear of the map's title (the Finish label sat under it).
+- **The garage's Paint tab (U5)**: `npm test -- --only=launch` **7/7 passed**, including the new check (Sunset Orange
+  reaches the car, `car.config.paint` 0xe5620b, and the saved settings; back to Rossini Red) and the theme/Look check;
+  `tests/out/launch-paint.png` shows the GT behind the panel in Sunset Orange. Wheels and Upgrades say "coming later".
+- **The radio card (U7)** (`RadioCard.tsx`, `tools/radio-shot.mjs`): frames at 1280 × 720 and 390 × 844
+  (`tests/out/radio/`, no errors): KCST tuned from the card and playing a generated title, the starred station sorted
+  first, volume, Off; on a phone it sits under the top bar, clear of the steering and pedals. Its stars were low in
+  their rows; centred.
+- **The phone (U6)** (`Phone.tsx`, `tools/phone-shot.mjs`): from the pause screen, at 1280 × 720 and 390 × 844
+  (`tests/out/phone/`, no errors): the device clock, the driver's colour on the level line, nine working apps and
+  Messages and Contacts greyed "Roadmap"; Credits shows the balance and how credits are earned; the Map app opens the
+  World Map (checked by the script). Races had the same trophy icon as Bests; it takes the wheel.
+
+## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
+
+The owner uploaded their style library (branch `style-references`) and asked for continuous improvement. Logged here:
+
+- **The style guide.** `PROJECT_OC_STYLE_GUIDE.md` reads the library (three art directions, tokens, cameras,
+  navigation) against the game; its text files are copied to `style-references/`. The default and hypercar
+  atmosphere uses the library's ULTRA tokens exactly (background #030915, accent #408CFF 6.1:1, secondary #8BD6FF,
+  primary #DDE9F3, foreground #F6FBFF, success #6FF7DE).
+- **The hypercar's display is live** (`car-gauges.ts` `hyperScreen`, `cockpit.ts`, `PlayerCar.ts`): a base drawn once,
+  the speed, gear, power in use, revs and tune repainted at most 15 times a second, only when they change. The right
+  pod (a battery charge and a range, meaningless on a combustion car) is the rev bar. Proof: an in-game frame at
+  1280 × 720, High, day (`tests/out/cluster/hyper-live-day.png`, `tools/grade-shot.mjs`): the display reads 66 MPH in
+  3rd while the HUD reads 66 and 3; no page errors. The previews keep the 132-in-sixth still.
+- **Look: Futuristic or Realistic** (Settings, Display; `settings.look`, `<html data-look>`): Realistic takes the
+  library's HD tokens for the surfaces, ink and shapes (graphite #0a111d, HUD plates at 86 %, 8 px corners, no skew,
+  hex lattice or scanlines, a contemporary display sans); the car keeps its accent, and on the hypercar the accent is
+  HD's muted blue with champagne for what's selected (contrast in the stylesheet: ink 17.3:1, blue 8.3:1, champagne
+  6.9:1). Proof: `tools/atmo-shots.mjs --look=hd` on the hypercar and the GT, menu and drive (`tests/out/look-hd/`),
+  no errors, read by eye: flat rounded controls, a steel-blue Drive plate, champagne selection, the GT's orange
+  accent inside the Realistic shapes. A greyed Lifestyle row ("Roadmap") joins Online, from the library's navigation.
+- **The run card takes the atmosphere** (`runCard.ts`): its background, glow, lane lines, hairline and accents are
+  read from the page's tokens when it is drawn (falling back to the OC sunset).
+- **A suite check** (launch group): the theme follows the car and driver, and the Look switches, re-points the base
+  and is saved. Its first run is with the merged branch (below).
+- **A cinematic camera; the menu is filmed with it** (`Game.ts` `SHOTS`, `view3`): four long-lens tracking shots cut
+  hard (a low hero front three-quarter pushing in, the profile, a low rear three-quarter, a high drone), all within
+  5 m of the car so none needs to know where the walls are; "Cinematic" is last in the View cycle; the menu's attract
+  drive uses it, a run still opens in the driver's seat. Proof (`tools/atmo-shots.mjs --shot=0`): the first frames
+  (`tests/out/cine/`, hypercar and GT, no errors) put the car's lower body behind the mode cards, so the hero tilts
+  down 0.07 rad; the reshoot after the atmosphere settled (`tests/out/cine2/oc-hyper-menu.png`, no errors) shows the
+  hypercar at dusk, its ice-blue blades and splitter strip lit, clear of the cards and right of the rail, as on the
+  library's ULTRA home screens.
+
+## 2026-10-21: the ice reference: the UI re-themed, the menu and drive HUD rebuilt, the hypercar's lights and cluster judged (branch `claude/hypercar`)
+
+The owner sent a second concept board (the menu with the hypercar as its hero, and the cockpit HUD, in a navy and
+ice-blue colour world) with "keep rendering graphics for this car and HUD interface as well as overall themes of
+colour". What it maps to is written in `PROJECT_OC_UI_TARGET.md` ("Owner's direction, 2026-10-21"). Two lanes ran at
+once: the UI (theme, menu, HUD) and the hypercar's lights and cluster (M2, judged for the first time).
+
+- **Theme ("Ice noir", `src/ui/styles.css`).** The sunset tokens became the ice family with the same roles (`--ice`
+  press and focus, `--cyan` selected, `--ember` danger only); the base went from violet-black to navy-black; chrome is
+  a touch cooler. Contrast is in the token comments. Every screen re-themed from the tokens; no rule needed its own
+  colour. The page's theme colour is #04070d.
+- **The OC mark in chrome** (`Mark.tsx`, `.oc-mark`): the owner's letterform alpha filled with brushed chrome, lit from
+  below in ice. The 480 px sunset cut-out stays for the run card; the 1200 and 240 px cut-outs are out of the repo
+  (the bundle's images went from about 157 KB to 58.5 KB inlined). The name stays OC Ultra: Top Speed.
+- **The menu** (`App.tsx`, `ModeArt.tsx`, `Icons.tsx`): the rail (brand, Drive, Car / Driver / Start on or Race with
+  line icons, the traffic chips labelled simulated, Profile, Bests, Settings, Online greyed "Roadmap"), the player card
+  (avatar, name, level with an XP bar, credits without a currency sign), the live attract drive as the hero, the four
+  modes as picture cards (four SVG night scenes drawn in code) with the brief above them, the Loop Lab card and the
+  data credits under them. Phones: one column, Drive fixed under the thumb. Every accessible name the suite and
+  `tools/ui-shots.mjs` use is unchanged (Drive, Settings, Bests, Profile, the `.pick` rows, the mode radios).
+- **The drive HUD** (`HUD.tsx`): the mode line and the small chrome OC on the top-left plate; the road as a guide sign
+  (the route shield, then the direction; the OC mark left the route chip for the mode plate); the controls as an icon
+  rail down the right with a mouse, a strip along the top on phones; the speed block with the revs as a slanted ice
+  bar (scaleY now), big numerals, the gear in an outlined box, and chips: the handling profile (Arcade under 0.35,
+  Sport under 0.75, Sim), ABS and TCS (both run at every handling setting in `Physics.ts`), Unleashed for the
+  hypercar in Free Drive; the round road map bottom left with a mouse (the game reads the window's rect from the DOM,
+  so the sky camera still draws where its box is). The ability hexagon moved left of the wider block.
+- **The hypercar (M2 judged, `src/preview/car-*.ts`, `cockpit.ts`, `car-gauges.ts`, `PlayerCar.ts` lamp colours).**
+  The night renders of the WIP showed every LED blown out to white under ACES (a pale material colour at emissive
+  2.4 to 2.8). The material blues are now deeper so the tone-mapped result lands on the reference's screen colours:
+  `led: { color: 0x5eb8ff, halo: 0x1e6fd8, edge: 0x0c4fb8 }` (hypercar only; `ledTex` gained an optional edge stop
+  with the cache key unchanged when it is omitted); the blade lamp texture the same family; the dash line's intensity
+  1.4. Sampled in the hero render (sRGB): splitter (151, 201, 240), blade (128, 153, 186), sill (133, 162, 194)
+  against the reference's (122, 152, 190) strips and (176, 219, 245) core. A driver display of its own
+  (`hyperScreenTex`: OC, 132, MPH, the gear in a box, hexagonal ice frame, a kW pod and a segment bar, the centre
+  screen SPORT / ABS TCS) replaces the Vela's on the hypercar's binnacle, centred on its driver at 88 % on a carbon
+  plinth; beams 0xd4e8ff and an ice-tinted road pool for the hypercar only (the other cars keep 0xfff4e6 and the
+  white pool). Calipers already read royal blue; the OC centre cap already reads.
+  - Renders (960 × 540, night, showroom key, `tests/out/preview/ice/`): hero, front, rear34, wheel, seat, dash, with
+    the before pair for hero, front, seat and dash. Own cost unchanged: 32 calls / 246,612 triangles on `high`
+    (budget 40 / 260k); the interior went from 63 / 170,307 to 60 / 167,389 (one screen replaces the tach assembly).
+  - The Corsa's side view before and after: 0 of 518,400 pixels differ by more than one level (max 0).
+  - Still off against the reference: the rim's top band clips the small OC mark in the seat view (it fits in the
+    dash view); the caliper's OC lettering is clipped (M1b item 9); the rear LEDs read thin at the rear 3/4 distance;
+    "132" is not a true light weight (headless Chromium has no light face); the body's shape gaps stay M1b's. The
+    beam colour change is type-checked and rendered in the preview, not yet looked at in a game night frame.
+- **The atmosphere follows the car** (owner, later the same day: "every specific car we choose, each one representing
+  a different atmosphere"). `App.tsx` sets `<html data-car>` from the car in the garage (the garage re-renders the
+  App when a car is picked, so it switches live), and `styles.css` re-points the tokens per car: the hypercar is the
+  ice reference; the Rossini GT keeps the owner's OC sunset over violet-black (the wordmark's colours, so the starter
+  car opens in the identity the owner gave on 2026-10-16); the Brio is aqua over deep sea green; the Corsa racing
+  yellow on graphite (its Drive plate takes black ink, `--on-deep`); the Vela E violet over plum with a magenta
+  flash. The Drive plate's fill and ink come from tokens (`--ice-deep-2`, `--on-deep`). Contrast per block is in the
+  stylesheet. Proof: `tools/atmo-shots.mjs` (new) picks each car through the garage and shoots the menu and a drive
+  frame into `tests/out/atmo/`; on the final build it shot all five cars with no errors (`tests/out/atmo/<car>-menu.png` and `<car>-drive.png`, 1280 × 720), each read by eye: the rail, the player card, the cards and the HUD take each car's colours, the Drive plate keeps its ink readable on every fill, and the hypercar's drive frame shows the Unleashed chip. Known and by design: the hypercar's cluster is a static texture (it reads 132 while the HUD reads the live speed), like the GT's digital window; a live cluster is a later step. The first run of the tool timed out on screenshots while the suite ran beside it; the tool now waits up to 180 s for a frame and returns to the menu after a failure.
+- **The driver's layer, the futuristic details, the menu's atmosphere per car, an Ultra grade** (owner, later the same
+  day: "do the same for each driver ... keep upscaling the ultra graphics ... a more futuristic theme"). The driver
+  signs the human elements with `--drv` (`<html data-driver>`): The Closer gold #ffd166, The Ace lavender #b9a6ff
+  (the first lavender-white, #d4dbff, read as plain ink in the shot and was changed; 9.6:1 on the darkest base), The
+  Wrench green #7dffa8. Decoration: a hex lattice behind the glass, chamfered HUD plates with scanlines, brackets on
+  the speed block, a slow accent sweep on the rail (off with reduced motion). The menu's attract drive takes the car's
+  atmosphere (`CarDef.atmosphere`, `Game.syncAtmosphere`): hypercar night, GT sunset, Brio cloudy sunset, Corsa clear
+  day, Vela E misty sunrise; a run uses the player's settings; the car's atmosphere holds on the menu only until the
+  player changes time or weather that session and never reaches the saved settings. Ultra only
+  (`QualityPreset.grade`): a grade pass (vignette, radial chromatic aberration about 1.5 px at the corners, a grain
+  proportional to the pixel so the night's blacks stay black; the lane's first version added the grain linearly,
+  which would lift black by about 28 levels, and was changed before any render) and a bloom at threshold 0.85,
+  strength 0.3. Proof: `tools/atmo-shots.mjs` on a clean worktree (HEAD plus only these files, since two other lanes
+  had unbuilt work in the tree): all five cars and all three drivers shot with no errors (`tests/out/atmo3/`), each
+  read by eye: the GT at sunset with its flare, the Vela in a hazy dawn, the hypercar at night with its beams on the
+  road (its first menu shot caught the sky mid-ease, by design a few seconds), the Corsa in daylight; the Closer's
+  gold and the Wrench's green on the Driver row and the avatar ring. The hypercar at night in a run (`tools/grade-shot.mjs`, 640 × 360, `tests/out/attract/ultra-night.png` and `high-night.png`, no page errors): the two frames read close to identical at this size, the grade is subtle by design (a slightly darker rim on Ultra, no visible fringing or grain at 640 px, no lifted blacks), and the bloom change does not blow out the sky. At 640 × 360 the HUD covers much of the frame; a larger frame is the better judge once the world lane lands.
+- **Checked:** `npx tsc --noEmit` (both configs) clean. `npm run build` clean. `tools/ui-shots.mjs` at 390 × 844 and
+  1280 × 720 (`tests/out/ui-ice2/`), every screen read by eye: the rail, the player card, the cards, the sign plate,
+  the icon rail, the speed block and the round map all read; one layout bug found and fixed on the first pass (the
+  rail's nav row was too short, clipping the traffic chips and the rows under them; the nav now takes the rows above
+  the cards). `npm test -- --only=boot,phone,launch` on the final build: **16/16 passed** (boot 6, phone 5 including "menu fits a 390 × 844 phone" and "driving HUD: top bar clear of the gear readout", launch 5 including the run card download). Run before the one-line short-window rule that hides the lede under 760 px tall.
+- **Not done:** the `render` and `race` suite groups were not run in this session (the HUD's race plate was
+  re-themed, not restructured); a real-phone look; the owner's wording "Project OC / Orange County Freeway Simulator"
+  in the lockup is the owner's call (one line in `Mark.tsx`).
+
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
 Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set

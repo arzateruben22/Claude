@@ -8,6 +8,9 @@
 //   &cy=metres (front and back-ortho: the camera's height, default 0.75)
 //   &paint=hex   &s=metres from the stretch start   &mirrors=live|env   &hands=1 (the hands part on the rim)
 //   &portrait=1 (the game's portrait-phone camera numbers)   &cam=x,y,z&at=x,y,z&fov=deg (any camera, car's frame)
+//   &lit=1 (outside views: every switched lamp on, as PlayerCar lights them: the brake level on the tail lamps, the
+//          turn signals and the reversing lamps; &head=night the headlamps at the game's night level)
+// The interior views follow the car's driver (car-shape seatOffset: the hypercar's sits lower and further in).
 // The game's cameras (src/game/Game.ts updateCamera), in the car's frame:
 //   seat: EYE, pitched -0.085 rad (portrait -0.27), FOV 58 (portrait 96); free: the same eye, FOV 66
 //   hood: (0, 1.0, -1.45), pitched -0.04 rad, FOV 62 (portrait 92)
@@ -18,7 +21,7 @@
 import * as THREE from 'three';
 import { makeStage, Stage } from './stage';
 import { buildCar } from './car';
-import { CAR_IDS, CarId } from './car-shape';
+import { CAR_IDS, CarId, shapeFor, seatOffset } from './car-shape';
 import { EYE } from './spec';
 import { carProbe } from './car-probe';
 
@@ -64,6 +67,9 @@ if (debug) {
   frame = stage.driverView(st.s0 + Number(q.get('s') ?? 1500));
 }
 const L = (x: number, y: number, z: number) => frame.localToWorld(new THREE.Vector3(x, y, z));
+// the same in the driver's frame (moved by this car's seat offset)
+const SO = seatOffset(shapeFor(car)), EYE_C = EYE.clone().add(new THREE.Vector3(...SO));
+const Ld = (x: number, y: number, z: number) => L(x + SO[0], y + SO[1], z + SO[2]);
 function look(from: THREE.Vector3, at: THREE.Vector3) { camera.position.copy(from); camera.up.set(0, 1, 0); camera.lookAt(at); }
 // a camera fixed in the car's frame: position, then yaw (left +) and pitch (up +) from straight ahead
 function carCam(p: THREE.Vector3, yaw: number, pitch: number) {
@@ -92,16 +98,16 @@ if (interior) {
       log.hands = 'ok';
     } catch (e) { log.hands = String(e); }
   }
-  if (view === 'seat') carCam(EYE, 0, portrait ? -0.27 : -0.085);
-  if (view === 'free-left') carCam(EYE, 1.2, -0.22);
-  if (view === 'free-right') carCam(EYE, -1.05, -0.3);
-  if (view === 'free-up') carCam(EYE, -0.25, 0.75);
-  if (view === 'dash') look(L(-0.3, 1.02, -0.02), L(-0.4, 0.83, -0.6));
-  if (view === 'mirror') look(L(-0.37, 1.16, 0.1), L(0.05, 1.18, -0.3));
-  if (view === 'dmirror') look(L(-0.37, 1.16, 0.1), L(-1.02, 0.975, -0.66));
-  if (view === 'door') look(L(-0.3, 1.12, 0.12), L(-0.86, 0.72, -0.35));
-  if (view === 'wheelck') look(L(-0.37, 1.16, 0.1), L(-0.37, 0.84, -0.42));
-  if (view === 'grip') look(L(-0.1, 1.08, -0.05), L(-0.22, 0.9, -0.45));
+  if (view === 'seat') carCam(EYE_C, 0, portrait ? -0.27 : -0.085);
+  if (view === 'free-left') carCam(EYE_C, 1.2, -0.22);
+  if (view === 'free-right') carCam(EYE_C, -1.05, -0.3);
+  if (view === 'free-up') carCam(EYE_C, -0.25, 0.75);
+  if (view === 'dash') look(Ld(-0.3, 1.02, -0.02), Ld(-0.4, 0.83, -0.6));
+  if (view === 'mirror') look(Ld(-0.37, 1.16, 0.1), Ld(0.05, 1.18, -0.3));
+  if (view === 'dmirror') look(Ld(-0.37, 1.16, 0.1), L(-1.02, 0.975, -0.66));
+  if (view === 'door') look(Ld(-0.3, 1.12, 0.12), L(-0.86, 0.72 + SO[1] * 0.5, -0.35));
+  if (view === 'wheelck') look(Ld(-0.37, 1.16, 0.1), Ld(-0.37, 0.84, -0.42));
+  if (view === 'grip') look(Ld(-0.1, 1.08, -0.05), Ld(-0.22, 0.9, -0.45));
 } else if (view === 'garage' || view === 'lineup' || view === 'lineup-top') {
   // all four: side by side across the lanes (garage), or nose to tail on a plain floor (lineup, for proportions)
   const grp = new THREE.Group(); frame.add(grp); part = grp;
@@ -122,6 +128,13 @@ if (interior) {
 } else {
   const c = buildCar({ car, paint, quality });
   frame.add(c); part = c;
+  if (q.get('lit') === '1') {
+    const m = c.userData.materials as Record<string, THREE.MeshStandardMaterial>;
+    if (m.tail) m.tail.emissiveIntensity = 5;
+    for (const k of ['sigL', 'sigR', 'reverse']) { const o = c.getObjectByName(k); if (o) o.visible = true; }
+    log.lit = true;
+  }
+  if (q.get('head') === 'night') { const m = c.userData.materials as Record<string, THREE.MeshStandardMaterial>; if (m.lamp) m.lamp.emissiveIntensity = 5.4; log.head = 'night'; }
   log.buildMs = Math.round(performance.now() - t0);
   if (view === 'side') look(L(-14, 0.62, 0), L(0, 0.62, 0));
   if (view === 'top') look(L(0, 16, 0.01), L(0, 0, 0));
@@ -140,7 +153,7 @@ if (interior) {
   // the front wheel square on, from outboard (a close look at the rim, the caliper and the centre cap)
   if (view === 'wheel-side') { const { bodyFor } = await import('./car-body'); const A = bodyFor(car).AXLE; look(L(-9, A.r, A.zF), L(0, A.r, A.zF)); }
   if (view === 'wheel') look(L(-2.0, 0.55, -2.25), L(-0.85, 0.36, -1.33));
-  if (view === 'hood') carCam(new THREE.Vector3(0, 1.0, -1.45), 0, -0.04);
+  if (view === 'hood') carCam(new THREE.Vector3(0, shapeFor(car).hoodY ?? 1.0, -1.45), 0, -0.04);
   if (view === 'back') carCam(new THREE.Vector3(0, 1.15, 2.6), Math.PI, 0);
   if (view === 'chase') look(L(0, portrait ? 2.9 : 2.25, portrait ? 8.2 : 6.6), L(0, 0.9, -3.5));
   if (view === 'sky' || view === 'sky-zoom') {
