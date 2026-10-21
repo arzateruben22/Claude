@@ -797,6 +797,20 @@ await group('launch', async (use) => {
     expect(ahead > 430 && ahead < 470, `${fmt(ahead)} m before the sign`);
     return `${exits.length} exits on ${road}; started ${fmt(ahead)} m before "${want.text}"`;
   });
+  await check('a Lot 57 billboard stands on the 57 before the Orangewood exit, and is drawn', async () => {
+    const bb = await game(page, (r) => { const g = window.__game; return g.billboards.children.filter((b) => b.userData.road === r).map((b) => ({ s: b.userData.s, creative: b.userData.creative, ahead: b.userData.s - g.phys.s })); }, road);
+    expect(bb.length === 2, `${bb.length} billboards on ${road}`);
+    const next = bb.filter((b) => b.ahead > 0).sort((a, b) => a.ahead - b.ahead)[0];
+    expect(next, `none ahead: ${JSON.stringify(bb)}`);
+    // drive to 45 m short of it and look
+    await game(page, (d) => { const g = window.__game; while (g.billboards && (d - 45) - (g.phys.s - 0) > 0 && g.phys.s < d - 45) g.fastForward(0.5, {}, 28); }, next.s);
+    await game(page, () => window.__game.setCam('hood'));
+    await frames(page, 3);
+    await page.screenshot({ path: path.join(OUT, 'launch-billboard.png') });
+    const s = await game(page, () => window.__game.phys.s);
+    expect(next.s - s > 20 && next.s - s < 90, `${fmt(next.s - s)} m short of the sign`);
+    return `${next.creative} billboard ${fmt(next.ahead)} m ahead at the start; screenshot launch-billboard.png from ${fmt(next.s - s)} m`;
+  });
   await check('Clear Path with no traffic says so and keeps its charge', async () => {
     const r = await game(page, () => {
       const g = window.__game;
@@ -849,7 +863,7 @@ await group('live', async (use) => {
   const port = 21000 + Math.floor(Math.random() * 10000), base = `http://127.0.0.1:${port}`;
   const db = path.join(OUT, 'live-test.db');
   for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
-  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', DB_PATH: db }, stdio: ['ignore', 'pipe', 'inherit'] });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', DB_PATH: db, NOW_WEATHER: 'mock', NOW_TRAFFIC: 'mock' }, stdio: ['ignore', 'pipe', 'inherit'] });
   await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
   const signup = async (name) => { const r = await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) }); expect(r.ok, `sign-up ${r.status}`); return (await r.json()).token; };
   const extra = [];
@@ -908,7 +922,7 @@ await group('live', async (use) => {
       const sa = await status(A), sb = await status(B);
       expect(sa.cap === 2 && sb.cap === 2 && sb.peers === 1, JSON.stringify({ sa, sb }));
       const chip = await A.locator('.livechip').innerText();
-      expect(chip === 'Live 2/2', `the chip says "${chip}"`);
+      expect(chip.toLowerCase() === 'live 2/2', `the chip says "${chip}"`);
       await game(A, () => window.__game.setCam('chase'));
       await frames(A, 2);
       await A.screenshot({ path: path.join(OUT, 'live-ghost.png') });
@@ -921,7 +935,7 @@ await group('live', async (use) => {
       step('C asked to drive');
       await until(C, () => window.__game.live?.info.status === 'queued' && window.__game.live.info.position === 1, 'C queued at #1');
       const chip = await C.locator('.livechip').innerText();
-      expect(chip === 'In line #1', `the chip says "${chip}"`);
+      expect(chip.toLowerCase() === 'in line #1', `the chip says "${chip}"`);
       const h1 = await (await fetch(base + '/health')).json();
       expect(h1.online === 2 && h1.queued === 1, JSON.stringify(h1));
       // B goes back to the main menu: its slot frees and C is let in
@@ -943,6 +957,28 @@ await group('live', async (use) => {
       const h1 = await (await fetch(base + '/health')).json();
       expect(h1.posesDropped - h0.posesDropped === 2, `${h1.posesDropped - h0.posesDropped} dropped`);
       return `2 bad poses dropped (${h1.posesDropped} in all)`;
+    });
+    await check('realistic mode: Live traffic and Live weather follow the server\'s feed, and the HUD says where it comes from', async () => {
+      await game(A, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'live', weather: 'live' }); });
+      await until(A, () => window.__game.now.source === 'server' && window.__game.now.snapshot.traffic.source === 'mock', 'the feed from the server');
+      await game(A, () => window.__game.fastForward(3));
+      await frames(A, 2);
+      const r = await game(A, () => { const g = window.__game; const road = g.path.main ? g.path.label : g.settings.start; return { road, ratio: g.now.ratioFor(road), level: g.traffic.level, weather: g.now.snapshot.weather, note: document.querySelector('.dest-traffic em')?.textContent, label: document.querySelector('.dest-traffic b')?.textContent, roads: Object.keys(g.now.snapshot.traffic.roads).length }; });
+      expect(r.roads === 20, `${r.roads} roads in the feed`);
+      expect(r.ratio > 0 && r.ratio <= 1 && r.level.perKmLane >= 2.2 && r.level.perKmLane <= 9.5, JSON.stringify(r));
+      // the mock feed stands in for a real one on the server; the player is told it is simulated
+      expect(/simulated/.test(r.note || '') && /Live/.test(r.label || ''), `HUD says "${r.label} / ${r.note}"`);
+      expect(['clear', 'cloudy', 'rain', 'fog', 'mist'].includes(r.weather.kind), JSON.stringify(r.weather));
+      await game(A, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'moderate', weather: 'clear' }); });
+      return `${r.road}: ratio ${r.ratio} → ${r.level.perKmLane} cars/km/lane, bold ${r.level.bold}; weather ${r.weather.kind} ${r.weather.tempF}°F (${r.weather.source}); HUD "${r.label} · ${r.note}"`;
+    });
+    await check('the billboards stand on their freeways near the two venues (our own places only)', async () => {
+      const b = await game(A, () => window.__game.billboards.children.map((g) => ({ road: g.userData.road, s: Math.round(g.userData.s), creative: g.userData.creative })));
+      expect(b.length === 12, `${b.length} billboards placed of 12 slots`);
+      const roads = new Set(b.map((x) => x.road));
+      expect(roads.has('CA-57 North') && roads.has('I-5 South') && roads.has('CA-91 East') && roads.has('CA-22 West'), [...roads].join(', '));
+      expect(b.every((x) => x.creative === 'lot57' || x.creative === 'dugout'), 'only our own creatives');
+      return b.map((x) => `${x.road} @ ${(x.s / 1000).toFixed(1)} km ${x.creative}`).join('; ');
     });
   } finally {
     for (const h of extra) await h.ctx.close();

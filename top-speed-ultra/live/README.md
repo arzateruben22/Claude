@@ -26,12 +26,25 @@ What it doesn't do yet (honest list): email verification and password reset (nee
 free tier covers it), name moderation, chat, names over cars, races against real people, an online leaderboard
 (that needs anti-cheat, and the relay has none worth the name), and more than one lobby.
 
+## The realistic mode's feeds (`now.mjs`)
+
+`GET /api/now` carries three things the game's **Live** settings follow, each with a real provider and a mock:
+
+| Feed | Provider | Cost | Switch |
+| --- | --- | --- | --- |
+| Weather | National Weather Service, latest observation at John Wayne Airport (KSNA); free, open data, no key | $0 | `NOW_WEATHER=nws` |
+| Freeway flow | TomTom Traffic Flow Segment Data, one point per carriageway (`traffic-points.json`), every 15 minutes = 1,920 requests a day | $0 on the free tier (2,500 a day; TomTom moved to monthly free tiers in July 2026, check the figure before relying on it) | `NOW_TRAFFIC=tomtom TOMTOM_KEY=…` |
+| Trends | `trends.json`, edited by hand; a blocklist drops anything political | $0 | always on |
+
+With a feed off (`off`, the default) or failing, the game falls back to a simulated typical day and says so. Google's
+live busyness is not available to anyone (no API; scraping is against its terms), so a venue's crowd is never live.
+
 ## Run it here
 
 ```bash
 cd top-speed-ultra/live
 npm install
-MAX_PLAYERS=25 node server.mjs          # http://127.0.0.1:8791/health
+MAX_PLAYERS=25 NOW_WEATHER=mock NOW_TRAFFIC=mock node server.mjs    # http://127.0.0.1:8791/health, /api/now
 npm test                                # 6 tests: accounts, the cap and the line, the relay, what it refuses
 node test/load.mjs 100 20               # 100 pretend drivers for 20 s: CPU, bandwidth, snapshots per second
 ```
@@ -88,6 +101,8 @@ digitalocean.com/pricing before buying). Everything is monthly unless marked.
 | TLS certificate | Yes | $0 | Let's Encrypt, fetched and renewed by Caddy. |
 | Bandwidth | Included | $0 up to 1 TB, then $0.01 per GiB | See the budget below: a full lobby of 25 all day, every day, would use about 0.9 TB; real use is a small fraction. |
 | Email for password reset (Resend) | Later, optional | $0 | Free tier: 3,000 emails a month, 100 a day. |
+| Weather feed (National Weather Service) | For the realistic mode | $0 | Open data, no key. |
+| Freeway flow feed (TomTom free tier) | For the realistic mode | $0 | 1,920 requests a day of 2,500 free; above the free tier about €0.75 per 1,000. |
 | Cloudflare in front (DDoS, caching) | Optional | $0 | The free plan proxies WebSockets. |
 | Alerts (ntfy, as the desks use) | Optional | $0 | |
 | **Total, own server** | | **about $7 to $8 a month** | $6 + $1.20 backups + the domain. |

@@ -60,7 +60,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
   // U2: the navigation card and the destination card
   const nav = useRef<HTMLDivElement>(null), navDist = useRef<HTMLElement>(null), navAct = useRef<HTMLSpanElement>(null), navTo = useRef<HTMLDivElement>(null);
   const exitKey = useRef<HTMLElement>(null), exitText = useRef<HTMLSpanElement>(null);
-  const dest = useRef<HTMLDivElement>(null), destRoad = useRef<HTMLElement>(null), destDist = useRef<HTMLElement>(null), destEta = useRef<HTMLElement>(null), traffic = useRef<HTMLElement>(null);
+  const dest = useRef<HTMLDivElement>(null), destRoad = useRef<HTMLElement>(null), destDist = useRef<HTMLElement>(null), destEta = useRef<HTMLElement>(null), traffic = useRef<HTMLElement>(null), trafficNote = useRef<HTMLElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -129,7 +129,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
         const same = h.dest === h.navTo && navOn;
         if (dest.current && dest.current.hasAttribute('data-same') !== same) dest.current.toggleAttribute('data-same', same);
         put(destRoad.current, 'destRoad', h.dest); put(destDist.current, 'destDist', miles(h.destDist));
-        put(destEta.current, 'destEta', eta(h.eta)); put(traffic.current, 'traffic', h.traffic === 'None' ? 'No traffic' : `${h.traffic} traffic`);
+        put(destEta.current, 'destEta', eta(h.eta)); put(traffic.current, 'traffic', h.traffic === 'None' ? 'No traffic' : `${h.traffic} traffic`); put(trafficNote.current, 'trafficNote', h.trafficNote);
       }
       if (bub.current) { bub.current.hidden = !h.next; if (bub.current.dataset.turn !== h.turn) bub.current.dataset.turn = h.turn; }
       put(bubDist.current, 'bub', h.next ? toGo(h.nextDist) : '');
@@ -177,7 +177,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
           <small>Destination</small>
           <div className="dest-road"><Icon d={ICONS.pin} /><b ref={destRoad as React.RefObject<HTMLElement>} /><em ref={destDist as React.RefObject<HTMLElement>} /></div>
           <div className="dest-eta"><Icon d={ICONS.clock} /><b ref={destEta as React.RefObject<HTMLElement>} /><em>at your pace</em></div>
-          <div className="dest-traffic"><Icon d={ICONS.car} /><b ref={traffic as React.RefObject<HTMLElement>} /><em>simulated</em></div>
+          <div className="dest-traffic"><Icon d={ICONS.car} /><b ref={traffic as React.RefObject<HTMLElement>} /><em ref={trafficNote as React.RefObject<HTMLElement>}>simulated</em></div>
         </div>
       </div>
       <div className="hud-race" ref={race} hidden>

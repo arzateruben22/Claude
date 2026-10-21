@@ -285,6 +285,35 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   chords, tempo, swing and style (pads, synthwave or lo-fi). It plays into `AudioEngine.musicBus`, which bypasses the
   Ultra Realism muffle.
 
+## The live server, the realistic mode, the talk bank and the billboards (2026-10-21)
+
+- **The live server** (`live/`, its own README): one Node 22 process, `ws` its only dependency, SQLite through
+  `node:sqlite`. HTTP for accounts (`/api/signup`, `/api/login`, `/api/logout`, `/api/me`), `/health`, the feeds
+  (`/api/now`, `/api/traffic`), an admin cap endpoint, and the built game served at `/` when `PUBLIC_DIR` is set. One
+  WebSocket at `/ws`: `hello` with the session token, then poses `{t:'s', x, y, z, h, v, b}` in the game's world frame
+  (absolute metres, `h` = `psi`), and snapshots `{t:'p', n:[[id, x, y, z, h, v, b], …]}` ten times a second with the
+  drivers within 3 km. The cap (`MAX_PLAYERS`) and a FIFO waiting line (`queued` with a position; `welcome` on
+  admission). Poses are plausibility-checked (map bounds, 200 m/s, a 240 m/s jump) and the relay never scores.
+- **The client** (`src/live/client.ts`): `LiveClient` connects when a drive starts with Drive live on, sends at
+  10 Hz from `Game.liveTick`, keeps each peer's last two poses and blends 150 ms in the past (`poseOf`), extrapolating
+  up to 0.3 s on a late packet. `LiveCars` (`src/game/live/LiveCars.ts`) draws peers as instanced coupes from the
+  traffic's `sports` class, in each driver's paint, at `(x - ORIGIN.x, y, z - ORIGIN.z)` with `rotation.y = h + π`.
+  Ghosts: no collision, no sound. `stats.livePeers` / `stats.liveDrawn` for tests.
+- **The now feed** (`live/now.mjs` on the server, `src/live/now.ts` in the game): weather (NWS KSNA → the five skies),
+  freeway flow (TomTom flow segment at one point per carriageway, `live/traffic-points.json`, every 15 minutes;
+  `ratio` = current / free-flow speed) and trends (`live/trends.json`, blocklisted). The game polls `/api/now` every
+  5 minutes while a Live setting is on and otherwise simulates a typical day with the same curves as the server's
+  mocks. `densityForRatio` maps the ratio to cars per km per lane (≥0.95 → 2.2 … ≤0.45 → 9.5, bold above 0.6 slow).
+  `Environment.setLiveWeather` feeds the sky; `Hud.trafficNote` names the source and age.
+- **The talk bank** (`src/talk/bank.ts`) and the Coastal League (`src/talk/league.ts`): templates per topic with
+  slots filled from the feed, a mood lead-in (12 moods) and an energy's delivery (3). `enumerateAll` walks every
+  combination with a mixed-radix counter for an exact count (`tests/talk.mjs`, which runs on Node's type stripping).
+  The league: eight clubs, four games a day Apr 1 to Sep 30, playoffs to Oct 15, every result a hash of the date and
+  the clubs, so all devices agree without a server. The radio's DJ one-liner (`djLine`) uses it on each tune.
+- **Billboards** (`src/game/road/billboards.ts`, `src/data/ads.json`): a slot names a carriageway, a point in game
+  metres, a side and a distance back; the panel is found by sampling the path every 40 m then every 4 m, built in
+  the race gates' frame, and rebased with the floating origin in `Game.recentre`. One canvas texture per creative.
+
 ## Known issues
 
 - **Unresolved crossings.** 4 of 506 crossings don't fully clear (the builder prints them): a ramp clips another road

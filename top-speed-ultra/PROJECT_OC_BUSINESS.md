@@ -74,8 +74,15 @@ cost per player (*estimates*):
 6. **Local press and newsletters:** a one-pager with a 30-second phone clip. "Local developer builds a game of the
    405" is a story.
 
-What not to do: no fake accounts, no astroturfing, no "live traffic" or "multiplayer" claims (neither exists), no
-real business names in the game without a signed deal, no collecting players' addresses to "prove" they live in OC.
+What not to do: no fake accounts, no astroturfing, no "live traffic" or "multiplayer" claims beyond what exists (since
+2026-10-21: a live server in alpha with a cap, and live weather and freeway flow when the feeds are on; say exactly
+that), no real business names in the game without a signed deal, no collecting players' addresses to "prove" they
+live in OC.
+
+**In-game billboards (2026-10-21).** Twelve panels on the 5, 57, 91 and 22 near Lot 57 and our sports bar
+(`src/data/ads.json`). They carry our own venues. A real business can take a slot only with a signed deal that names
+the creative, the dates and the price; the owner decides the price (a local car wash or taqueria is a different deal
+from a brewery). Nothing in a creative may claim live data or a partnership that doesn't exist.
 
 ---
 

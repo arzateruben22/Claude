@@ -33,6 +33,12 @@ import type { TrafficCar } from './traffic/Traffic';
 import { LiveCars } from './live/LiveCars';
 import { wheelGeometry } from './traffic/carModels';
 import type { LiveClient } from '../live/client';
+import { liveBase } from '../live/client';
+import { NowFeed, densityForRatio } from '../live/now';
+import { djLine, TalkNow } from '../talk/bank';
+import { leagueDay } from '../talk/league';
+import { buildBillboards, Ads } from './road/billboards';
+import ADS from '../data/ads.json';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -59,6 +65,7 @@ export interface Hud {
   // is along the route, the time that takes at your pace (s; -1 when you aren't moving enough to say) and the traffic
   // setting (simulated, and labelled so). All '' with no route.
   navAct: string; navTo: string; exitText: string; exitMine: boolean; onSign: string; dest: string; destDist: number; eta: number; traffic: string;
+  trafficNote: string;               // where the traffic setting comes from: 'simulated', or the live feed's source and age
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
@@ -104,6 +111,9 @@ export class Game {
   private traffic!: Traffic;
   private liveCars!: LiveCars;        // the other drivers on the live server, drawn as ghosts
   live: LiveClient | null = null;     // set by the UI while a live drive is on
+  readonly now = new NowFeed();       // the realistic mode's feed: weather, freeway flow, trends (live server or simulated)
+  private nowT = 0;
+  billboards: THREE.Group | null = null;   // the ad panels beside the freeway (src/data/ads.json)
   private car: PlayerCar;
   readonly phys = new CarPhysics();
   path!: Path;                       // the road you're on
@@ -194,6 +204,7 @@ export class Game {
     this.ev.loading(true, 'Loading Orange County');
     try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch { /* fonts are optional */ }
     this.net = await Network.load();
+    this.now.setLabels(this.net.mains.map((m) => m.label));
     this.buildWorld();
     this.applyQuality();
     this.onResize();
@@ -212,6 +223,7 @@ export class Game {
     this.roads = new Roads(this.net, q); this.scene.add(this.roads.group);
     this.terrain = new Terrain(this.net, q); this.scene.add(this.terrain.group);
     if (!this.traffic) { this.traffic = new Traffic(this.net); this.scene.add(this.traffic.group); }
+    if (!this.billboards) { this.billboards = buildBillboards(this.net, ADS as unknown as Ads); this.scene.add(this.billboards); }
     if (!this.liveCars) { this.liveCars = new LiveCars(this.traffic.classes.find((c) => c.id === 'sports') ?? this.traffic.classes[0], wheelGeometry()); this.scene.add(this.liveCars.group); }
     this.traffic.viewAhead = q.drawDistance * 0.95;
     this.env.setFlareOccluders([this.roads.group, this.traffic.group], [this.terrain.group], (o, d) => this.car.sunBlocked(o, d));
@@ -219,7 +231,32 @@ export class Game {
   }
   private applyDensity() {
     const d = DENSITY[this.settings.density];
+    if (this.settings.density === 'live') {
+      // the freeway you're on (or came from), at its measured share of free-flow speed
+      const road = this.path?.main ? this.path.label : this.lastMain?.label ?? this.settings.start;
+      this.traffic.level = densityForRatio(this.now.ratioFor(road));
+      return;
+    }
     this.traffic.level = { perKmLane: d.perKmLane, bold: d.bold };
+  }
+  // the realistic mode: keep the feed running while a Live setting is on, and apply it every couple of seconds
+  private applyNow() {
+    const s = this.settings, on = s.density === 'live' || s.weather === 'live';
+    this.now.want(on, liveBase(s.liveUrl));
+    if (!on) return;
+    if (s.density === 'live') this.applyDensity();
+    if (s.weather === 'live') this.env.setLiveWeather(this.now.snapshot.weather.kind);
+  }
+  private nowTick(dt: number) {
+    this.nowT -= dt;
+    if (this.nowT > 0) return;
+    this.nowT = 2;
+    this.applyNow();
+  }
+  // what the talk bank needs to know about right now (the radio's DJs; the on-foot NPCs later)
+  talkNow(): TalkNow {
+    const n = this.now.snapshot;
+    return { weather: { kind: n.weather.kind, tempF: n.weather.tempF, source: n.weather.source }, traffic: { roads: n.traffic.roads, source: n.traffic.source }, trends: n.trends.list, league: leagueDay(), road: this.path?.main ? this.path.label : this.lastMain?.label ?? '', venue: 'Lot 57' };
   }
 
   // build everything in view before showing it (yielding now and then so the page stays alive)
@@ -271,6 +308,7 @@ export class Game {
     ORIGIN.x += dx; ORIGIN.z += dz;
     this.roads?.rebase(); this.terrain?.rebase(this.phys.x, this.phys.z);
     if (this.race) for (const g of this.race.gates.children) g.position.set(g.userData.ax - ORIGIN.x, g.position.y, g.userData.az - ORIGIN.z);
+    if (this.billboards) for (const g of this.billboards.children) g.position.set(g.userData.ax - ORIGIN.x, g.position.y, g.userData.az - ORIGIN.z);
     this.camera.position.x -= dx; this.camera.position.z -= dz;
     this.chasePos.x -= dx; this.chasePos.z -= dz;
     this.camFrom.p.x -= dx; this.camFrom.p.z -= dz;
@@ -322,7 +360,13 @@ export class Game {
   }
 
   quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
-  cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
+  cycleRadio() {
+    if (this.attract) return;
+    this.audio.start(); this.audio.setMusicVolume(this.settings.music);
+    this.ev.toast(this.radio.cycle(), 'info');
+    // the DJ says something about right now (the weather, the freeways, the Coastal League, the week's talk)
+    if (this.radio.current) this.ev.toast(djLine(Math.random, this.talkNow(), this.radio.current.call), 'info');
+  }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }
   private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }
@@ -448,6 +492,7 @@ export class Game {
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
+    if (this.traffic) this.applyNow();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
     this.onResize();
   }
@@ -827,6 +872,7 @@ export class Game {
     this.updateCamera(dt);
     this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract && !this.race);
     this.weatherTick(dt);
+    this.nowTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
@@ -1234,6 +1280,7 @@ export class Game {
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,
+      trafficNote: this.settings.density === 'live' ? this.now.note('traffic') : 'simulated',
     });
   }
 

@@ -9,8 +9,8 @@ import * as T from '../textures';
 import { fbm2, clamp, lerp, smoothstep } from '../util';
 
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
-export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
-type Sky5 = Exclude<Weather, 'changing'>;
+export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing' | 'live';
+type Sky5 = Exclude<Weather, 'changing' | 'live'>;
 
 export const HAZE = new THREE.Color(0xa9bfd6);
 const LAT = 33.72, LON = -117.83;
@@ -208,7 +208,10 @@ export class Environment {
   }
 
   // the weather that's in force now ("Changing" moves through a cycle on the clock, about 4 minutes a step)
+  private liveKind: Sky5 = 'clear';   // 'live': the sky the now feed reports (src/live/now.ts), set by the game
+  setLiveWeather(k: Sky5) { if (k !== this.liveKind) { this.liveKind = k; this.tgt = this.targetFor(new Date()); this.envDirty = true; } }
   private currentWeather(now: Date): Sky5 {
+    if (this.weather === 'live') return this.liveKind;
     if (this.weather !== 'changing') return this.weather;
     const cycle: Sky5[] = ['clear', 'cloudy', 'rain', 'cloudy', 'clear', 'mist', 'clear', 'fog', 'mist'];
     return cycle[Math.floor(now.getTime() / 240000) % cycle.length];

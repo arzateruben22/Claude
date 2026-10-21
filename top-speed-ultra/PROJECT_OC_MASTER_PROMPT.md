@@ -85,6 +85,15 @@ Built items are marked ✅. Everything else is still to do.
   - simulated crowds
   - never claiming real "live" occupancy or traffic from any website
 - ⬜ City streets beyond the freeways (surface roads, intersections).
+- ✅ (2026-10-21, alpha) The live server: log-ins, 25 drivers at a time to start, the cap raised rung by rung, other
+  drivers on the freeway with you as ghosts. See decision 15.
+- ✅ (2026-10-21) Being there virtually: a Realistic mode (live time, live weather from the NWS, live freeway traffic
+  from TomTom's flow) and a custom mode; venue busyness stays simulated because Google's live data is not available
+  to anyone (decision 16).
+- ✅ (2026-10-21) The talk bank: over 100,000 conversations (173,601 openers, 68.7 million two-line exchanges for a
+  day) from moods and energies, matched to the weather, the freeways, the made-up Coastal League and a hand-written
+  trends list; nothing political. The radio DJs use it now; the on-foot NPCs next.
+- ✅ (2026-10-21) Billboards on the 5, 57, 91 and 22 near the two venues, our own places only until a deal is signed.
 
 ## Rules that always apply
 

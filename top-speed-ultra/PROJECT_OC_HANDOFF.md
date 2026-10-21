@@ -12,6 +12,11 @@ model: routine work to `opus`, hard reasoning to `fable`.
   hooks in Game.ts and App.tsx, settings `live` and `liveUrl`, and the suite's `live` group. Branch
   `claude/live-server` off `claude/always-on`, pushed as a backup (decision 14). Not deployed: it needs a domain and
   a box (README, "Put it on the internet"). The cap starts at 25; `deploy/cap.sh` raises it.
+- **Also built (decision 16):** the realistic mode (live weather from the NWS and live freeway flow from TomTom via
+  the server's `/api/now`, simulated when there is no feed; the Realistic preset in Settings), the talk bank and the
+  Coastal League (`src/talk/`, `tests/talk.mjs`), the radio DJ lines, and twelve billboards near the venues
+  (`src/data/ads.json`, `src/game/road/billboards.ts`). To turn the feeds on: `NOW_WEATHER=nws NOW_TRAFFIC=tomtom
+  TOMTOM_KEY=…` in `/etc/oc-live.env` (the key is a free TomTom developer sign-up).
 - **Next for the live server** (Opus-class unless marked): names over the ghost cars; binary poses and the
   nearest-32 rule before the cap passes 50 (Fable-class: the relay's format and its proof); email verification and
   password reset with Resend; a name-moderation list and a `banned` column; a "who's driving" list on the pause

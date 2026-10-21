@@ -340,8 +340,9 @@ export function App() {
               <section className="sgroup">
                 <h3 className="sect">World</h3>
                 <div className="field"><label>Time of day</label><Seg label="Time of day" value={settings.time} options={['live', 'sunrise', 'day', 'sunset', 'night'] as TimeOfDay[]} labels={(t) => ({ live: 'Live', sunrise: 'Sunrise', day: 'Day', sunset: 'Sunset', night: 'Night' })[t]} onChange={(t) => update({ time: t })} /></div>
-                <div className="field"><label>Weather</label><Seg label="Weather" value={settings.weather} options={['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as Weather[]} labels={(w) => ({ clear: 'Clear', cloudy: 'Cloudy', rain: 'Rain', fog: 'Fog', mist: 'Mist', changing: 'Changing' })[w]} onChange={(w) => update({ weather: w })} /></div>
-                <p className="fine">Live puts the sun where it is over Orange County right now, from this device's clock. Weather is simulated here (no live weather feed). Rain cuts grip by about a fifth.</p>
+                <div className="field"><label>Weather</label><Seg label="Weather" value={settings.weather} options={['live', 'clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as Weather[]} labels={(w) => ({ live: 'Live', clear: 'Clear', cloudy: 'Cloudy', rain: 'Rain', fog: 'Fog', mist: 'Mist', changing: 'Changing' })[w]} onChange={(w) => update({ weather: w })} /></div>
+                <p className="fine">Live time puts the sun where it is over Orange County right now, from this device's clock. Live weather and Live traffic follow the live server's feed (the National Weather Service at John Wayne Airport; TomTom's flow on each freeway, one point per carriageway, every 15 minutes); with no server in reach they follow a simulated typical day, and the drive says which. Rain cuts grip by about a fifth.</p>
+                <div className="row"><button className="btn" onClick={() => update({ time: 'live', weather: 'live', density: 'live' })} aria-pressed={settings.time === 'live' && settings.weather === 'live' && settings.density === 'live'}>Realistic: live time, weather and traffic</button></div>
               </section>
               <section className="sgroup">
                 <h3 className="sect">Driving</h3>

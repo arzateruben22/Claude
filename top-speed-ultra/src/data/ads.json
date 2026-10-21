@@ -1,0 +1,21 @@
+{
+  "note": "Billboards along the freeways. Only our own places until a business signs a deal (PROJECT_OC_BUSINESS.md: no real business names in the game without one). A slot names a carriageway, a point in game metres (x east, z south from 33.72 N, 117.83 W), which side of the road, and how many metres before that point the sign stands, so it comes up before the exit. src/game/road/billboards.ts draws them.",
+  "creatives": {
+    "lot57": { "title": "LOT 57", "line": "Taproom & yard · Orangewood Ave at the 57", "tag": "A fictional hangout in OC Ultra", "bg": "#1b3a2d", "fg": "#f4ead0", "accent": "#e8a356" },
+    "dugout": { "title": "THE DUGOUT", "line": "Sports bar · Claudina Way, off the 5 at Katella", "tag": "Coastal League on every screen", "bg": "#14233f", "fg": "#f2f2ee", "accent": "#fd9123" }
+  },
+  "slots": [
+    { "road": "I-5 North", "near": [-6623, -9343], "side": "R", "before": 700, "creative": "dugout" },
+    { "road": "I-5 South", "near": [-6623, -9343], "side": "R", "before": 700, "creative": "dugout" },
+    { "road": "I-5 North", "near": [-6623, -9343], "side": "L", "before": 1500, "creative": "lot57" },
+    { "road": "I-5 South", "near": [-6623, -9343], "side": "L", "before": 1500, "creative": "lot57" },
+    { "road": "CA-57 North", "near": [-4430, -8419], "side": "R", "before": 650, "creative": "lot57" },
+    { "road": "CA-57 South", "near": [-4430, -8419], "side": "R", "before": 650, "creative": "lot57" },
+    { "road": "CA-57 North", "near": [-4430, -8419], "side": "L", "before": 1400, "creative": "dugout" },
+    { "road": "CA-57 South", "near": [-4430, -8419], "side": "L", "before": 1400, "creative": "dugout" },
+    { "road": "CA-91 East", "near": [-4430, -6900], "side": "R", "before": 900, "creative": "lot57" },
+    { "road": "CA-91 West", "near": [-4430, -6900], "side": "R", "before": 900, "creative": "dugout" },
+    { "road": "CA-22 East", "near": [-6400, -11300], "side": "R", "before": 900, "creative": "dugout" },
+    { "road": "CA-22 West", "near": [-6400, -11300], "side": "R", "before": 900, "creative": "lot57" }
+  ]
+}

@@ -18,6 +18,7 @@ import { readFileSync, existsSync, mkdirSync } from 'node:fs';
 import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { WebSocketServer } from 'ws';
+import { createNow } from './now.mjs';
 
 // ------------------------------------------------------------------------------------------------ configuration
 const PORT = Number(process.env.PORT || 8791);
@@ -26,6 +27,8 @@ const DB_PATH = process.env.DB_PATH || new URL('./data/live.db', import.meta.url
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';      // empty: the admin endpoints are off
 const PUBLIC_DIR = process.env.PUBLIC_DIR || '';        // serve the built game from here at / (optional)
 const CAP_MIN = 1, CAP_MAX = 500;
+// the realistic mode's feeds (now.mjs): 'nws' / 'tomtom' for the real ones, 'mock' for a typical day, 'off'
+const NOW_WEATHER = process.env.NOW_WEATHER || 'off', NOW_TRAFFIC = process.env.NOW_TRAFFIC || 'off', TOMTOM_KEY = process.env.TOMTOM_KEY || '';
 let MAX_PLAYERS = clampInt(process.env.MAX_PLAYERS, CAP_MIN, CAP_MAX, 25);
 
 const SESSION_DAYS = 30;
@@ -144,13 +147,16 @@ function readJson(req) {
 }
 const ipOf = (req) => (process.env.TRUST_PROXY ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '') || req.socket.remoteAddress || '?';
 const bearer = (req) => { const m = /^Bearer (.+)$/.exec(String(req.headers.authorization || '')); return m ? m[1] : ''; };
-const health = () => ({ ok: true, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
+const now = createNow({ weather: NOW_WEATHER, traffic: NOW_TRAFFIC, tomtomKey: TOMTOM_KEY, log: (ev, d) => log(ev, d) });
+const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
 
 async function handle(req, res) {
   const url = new URL(req.url, 'http://x'), path = url.pathname;
   if (req.method === 'OPTIONS') return send(res, 204, '');
   try {
     if (path === '/health' || path === '/api/health') return send(res, 200, health());
+    if (path === '/api/now') return send(res, 200, now.snapshot());
+    if (path === '/api/traffic') return send(res, 200, now.snapshot().traffic);
     if (path === '/api/signup' && req.method === 'POST') {
       if (limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const b = await readJson(req);
@@ -326,5 +332,6 @@ setInterval(() => {
 setInterval(tick, TICK_MS).unref();
 
 function log(ev, data) { console.log(JSON.stringify({ at: new Date().toISOString(), ev, ...data })); }
+now.start();
 server.listen(PORT, HOST, () => log('listen', { host: HOST, port: PORT, cap: MAX_PLAYERS, db: DB_PATH, players: Number(q.count.get().n) }));
 for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting'); server.close(); db.close(); process.exit(0); });

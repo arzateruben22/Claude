@@ -4,10 +4,10 @@ export const VERSION = '0.1.0';   // keep in step with package.json; shown in fe
 
 export type Quality = 'low' | 'medium' | 'high' | 'ultra';
 export type Mode = 'free' | 'survival' | 'race' | 'time';
-export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';
+export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert' | 'live';
 export type Corner = 'map' | 'sky' | 'off';
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
-export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
+export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing' | 'live';
 export type Transmission = 'auto' | 'manual';
 export type HudStyle = 'modern' | 'minimal';
 
@@ -71,6 +71,7 @@ export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: 
   moderate: { label: 'Moderate', perKmLane: 5,   bold: 0.04 },
   heavy:    { label: 'Heavy',    perKmLane: 9,   bold: 0.08 },
   expert:   { label: 'Expert',   perKmLane: 9.5, bold: 0.45 },
+  live:     { label: 'Live',     perKmLane: 5,   bold: 0.04 },   // follows the freeway's real flow from the live server's feed (simulated when there is none); src/live/now.ts
 };
 
 export const MODES: Record<Mode, { label: string; blurb: string }> = {
@@ -127,7 +128,7 @@ export function loadSettings(): Settings {
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
       exit: typeof v.exit === 'string' ? v.exit : '',
       time: (['live', 'sunrise', 'day', 'sunset', 'night'] as const).includes(v.time as TimeOfDay) ? v.time! : d.time,
-      weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
+      weather: (['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing', 'live'] as const).includes(v.weather as Weather) ? v.weather! : d.weather,
       driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),

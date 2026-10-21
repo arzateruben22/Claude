@@ -178,3 +178,44 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   before the first public rung; a name-moderation list; when the artifact link should point at the server-served
   page (the artifact page itself can't reach a server, so live play is from the served page or the downloaded
   file with the address typed in).
+
+### 16. Being there virtually: live traffic and weather, a realistic mode, ads near the venues, and 100,000 conversations
+
+- **The owner's ask** (in chat, 2026-10-21 about 02:40 UTC, after the live server went up): make it "super compatible
+  to essentially wanting to be there virtually if you can't do it in person"; go off a live traffic feed of how busy
+  it is and simulate that, including Google's live busyness for restaurants and stores; a realistic mode with current
+  live traffic simulating everything, and a custom mode; push heavy ads in the Anaheim / OC traffic areas first,
+  around Golden Road and Lopez and Lefty's, for marketing; and simulate 100,000 conversations of every mood and energy,
+  matched to live news where it applies, nothing political, with weather, sports (made-up baseball teams) and live
+  trends.
+- **What is legitimate and what isn't** (checked 2026-10-21):
+  - **Freeway traffic, live: yes.** TomTom's Traffic Flow Segment Data API is licensed for this, commercial use
+    included, with a free tier (2,500 requests a day, no card; TomTom's pricing moved to monthly free tiers in July
+    2026, check the figure). One sample point per carriageway every 15 minutes is 1,920 requests a day. HERE's
+    freemium would also work. Caltrans' CWWP2 feeds carry incidents, lane closures and message signs, not flow, and
+    PeMS needs an account; both are open and can be added later.
+  - **Weather, live: yes.** The National Weather Service API is free, open data; the latest observation at John
+    Wayne Airport (KSNA) maps onto the game's five skies.
+  - **A venue's live busyness: no.** Google's popular times and live busyness have no public API; Google's terms forbid
+    scraping them, and the one commercial estimator in the market (BestTime) is an estimate with no live data for most
+    venues. So a venue's crowd stays **simulated** by time and day as planned in PROJECT_OC_ON_FOOT.md, nudged by the
+    live freeway flow nearby (a jammed 57 on a Friday evening reads as a busier Lot 57), and labelled simulated.
+  - **Live news and trends: by hand, not by feed.** There is no free, licensed trends feed (X's API is pay-per-use,
+    Google Trends has no official API), and no automatic feed can be trusted to keep politics out. So the week's
+    talk is a short list the owner edits (`live/trends.json`), with a blocklist behind it; weather and the freeways
+    are live, and the sport is the **Coastal League**, eight made-up clubs whose season plays itself from the
+    calendar, the same on every device.
+  - **Ads: our own places first.** Real business names stay out of the game without a signed deal (PROJECT_OC_BUSINESS.md).
+    The billboards carry Lot 57 and our own sports bar (named "The Dugout" in one constant in `src/data/ads.json`,
+    swappable if Lopez and Lefty's signs). Golden Road and Lopez and Lefty's themselves are not named anywhere.
+- **What was built** (this session): the server's `/api/now` feed (`live/now.mjs`: NWS, TomTom, trends, with mocks and
+  tests), the game's now feed with a simulated typical day as the fallback (`src/live/now.ts`), **Live** as a weather
+  choice and a traffic choice, a **Realistic** preset button (live time, weather and traffic) with the normal
+  settings as the custom mode, the HUD naming the traffic's source and age, the talk bank (`src/talk/bank.ts`: 12 moods
+  × 3 energies × 10 topics; 173,601 distinct openers and 68.7 million two-line conversations for one day's feed,
+  counted by `tests/talk.mjs`), the Coastal League (`src/talk/league.ts`), the radio DJs' one-liners from it, and
+  twelve billboards on the 5, the 57, the 91 and the 22 near the two venues (`src/game/road/billboards.ts`).
+- **Open for the owner.** A TomTom key (free sign-up) for the live feed; whether the HUD should name TomTom and the
+  NWS on screen (it does, in Settings and the HUD note); the sports bar's working name; whether any ad slot is ever
+  sold, and at what price (the business plan's "no real business names without a deal" stands); the first trends
+  list each week.

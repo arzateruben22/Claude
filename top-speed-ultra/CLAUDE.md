@@ -28,8 +28,13 @@ here, then read:
 - **No real money.** Credits are earned by driving only. A paid weather pass or anything like it is design only.
 - **Our own brands.** Rossini, Vela and the "R" badge are ours. No real car brands, logos, Hot Wheels or Rolex.
 - **Honest claims.**
-  - No live weather is fed in; it's simulated.
-  - No live occupancy for the future Golden Road area.
+  - Weather and freeway traffic are simulated unless the player picks **Live** and a live server with the feeds is
+    in reach (the National Weather Service at KSNA; TomTom flow, one point per carriageway every 15 minutes); the
+    HUD and Settings name the source and its age, and say "simulated" otherwise. Never claim live without the feed.
+  - No live occupancy for Lot 57, the sports bar or the Golden Road area: Google's busyness has no public API and
+    its terms forbid scraping. Crowds are simulated by time and day and labelled so.
+  - The Coastal League is made up. Trends come from `live/trends.json`, by hand, never from a news feed; nothing
+    political. Billboards carry only our own venues until a business signs a deal.
   - Live driving is an **alpha** (2026-10-21): `live/` is a real server with accounts and a capped lobby (25 to
     start) that relays where each car is, and the game draws other drivers as ghosts. Say exactly that: no races
     against people, no online leaderboard, no chat, and it only works where a server is running. Never call it
