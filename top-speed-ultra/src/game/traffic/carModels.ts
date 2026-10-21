@@ -11,6 +11,9 @@ export interface CarClass {
   id: string; len: number; wid: number; height: number; mass: number; weight: number; lanes: number[];   // height: the roof (a semi: its trailer's top)
   body: THREE.BufferGeometry; glass: THREE.BufferGeometry; tail: THREE.BufferGeometry; head: THREE.BufferGeometry;
   trim?: THREE.BufferGeometry;       // grille, bumpers, mirrors, box, bed: vertex-coloured, one shared material
+  // High and Ultra (Traffic swaps them in by props.glow.tier; Low and Medium keep the two above): on the sedan, coupe
+  // and SUV, an LED bar between the tail lamps, and door seams and handles on the trim
+  tailHi?: THREE.BufferGeometry; trimHi?: THREE.BufferGeometry;
   wheels: [number, number, number][]; wheelR: number; blink: [number, number, number][];
   speed: [number, number];           // m/s range they like
   fixedColor?: number[];             // trucks: white, a few fleet colours
@@ -28,13 +31,48 @@ function lights(spots: [number, number, number, number, number][], color: [numbe
   return g;
 }
 
+// the trim with extra boxes merged in, each given the trim's own attributes (its colour from the list, the rest zero)
+function withParts(base: THREE.BufferGeometry, parts: [THREE.BufferGeometry, number[]][]) {
+  const keys = Object.keys(base.attributes);
+  const gs = parts.map(([g, col]) => {
+    for (const k of Object.keys(g.attributes)) if (!keys.includes(k)) g.deleteAttribute(k);
+    for (const k of keys) {
+      if (g.attributes[k]) continue;
+      const n = g.attributes.position.count, sz = base.attributes[k].itemSize, a = new Float32Array(n * sz);
+      if (k === 'color') for (let i = 0; i < n; i++) for (let c = 0; c < sz; c++) a[i * sz + c] = col[c] ?? 1;
+      g.setAttribute(k, new THREE.BufferAttribute(a, sz));
+    }
+    return base.index ? g : g.toNonIndexed();
+  });
+  return mergeGeometries([base, ...gs])!;
+}
+
 // a class from the preview's traffic bodies, with the game's own wheels (they turn) and lamps (they brake and blink)
 function fromPreview(id: string, kind: TrafficKind, opts: { mass: number; weight: number; speed: [number, number]; lanes?: number[]; fixedColor?: number[] }): CarClass {
   const p = trafficParts(kind, 'phone', { wheels: false }), S = p.spec, L = S.len / 2, W2 = S.wid / 2;
   const tailY = S.box ? 1.0 : S.rig ? S.rig.trailerY[0] - 0.08 : S.deck - 0.14, headY = S.hood - 0.12;
   const tail = lights([[0.36, 0.11, -W2 * 0.78, tailY, L + 0.005], [0.36, 0.11, W2 * 0.78, tailY, L + 0.005]], [0.55, 0.04, 0.05]);
   const head = lights([[0.32, 0.09, -W2 * 0.7, headY, -L - 0.005], [0.32, 0.09, W2 * 0.7, headY, -L - 0.005]], [0.9, 0.9, 0.85]);
+  let tailHi: THREE.BufferGeometry | undefined, trimHi: THREE.BufferGeometry | undefined;
+  if (kind === 'sedan' || kind === 'coupe' || kind === 'suv') {
+    tailHi = lights([[0.36, 0.11, -W2 * 0.78, tailY, L + 0.005], [0.36, 0.11, W2 * 0.78, tailY, L + 0.005], [W2 * 1.24, 0.035, 0, tailY + 0.02, L + 0.006]], [0.55, 0.04, 0.05]);
+    // door seams (a shut line down each door's edges, from over the sill or the wheel arch to the belt) and handles
+    const doors = kind === 'coupe' ? [S.ws0 + 0.08, S.ws0 + 1.25] : [S.ws0 + 0.08, S.ws0 + 1.15, Math.min(S.bl0 + 0.2, S.ws0 + 2.15)];
+    const archTop = (z: number) => { let y = S.sill; for (const za of [-S.wb / 2 - 0.15, S.wb / 2 - 0.15]) { const dz = Math.abs(z - za), R = S.r + 0.06; if (dz < R) y = Math.max(y, S.r + Math.sqrt(R * R - dz * dz) * 0.95); } return y; };
+    const parts: [THREE.BufferGeometry, number[]][] = [];
+    for (const sd of [1, -1]) {
+      for (const z of doors) {
+        const y0 = archTop(z) + 0.06, y1 = S.belt - 0.015;
+        const g = new THREE.BoxGeometry(0.012, y1 - y0, 0.012); g.translate(sd * (W2 + 0.004), (y0 + y1) / 2, z); parts.push([g, [0.04, 0.04, 0.045]]);
+      }
+      for (let k = 0; k < doors.length - 1; k++) {
+        const g = new THREE.BoxGeometry(0.03, 0.03, 0.17); g.translate(sd * (W2 + 0.012), S.belt - 0.11, doors[k + 1] - 0.16); parts.push([g, [0.32, 0.32, 0.34]]);
+      }
+    }
+    trimHi = withParts(p.trim, parts);
+  }
   return {
+    tailHi, trimHi,
     id, len: S.len, wid: S.wid, height: S.rig ? S.rig.trailerY[1] : S.roof, lanes: opts.lanes ?? [0, 1, 2, 3], body: p.paint, glass: p.glass, trim: p.trim, tail, head, wheelR: S.r,
     wheels: S.axles.flatMap((z) => [[-S.track, S.r, z], [S.track, S.r, z]] as [number, number, number][]),
     blink: [[-W2 + 0.08, tailY + 0.1, L + 0.01], [W2 - 0.08, tailY + 0.1, L + 0.01]],

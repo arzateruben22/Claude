@@ -1,13 +1,24 @@
-// What the driver wears on the arms: shirt sleeves to the shoulders (a pressed shirt's buttoned cuffs, a racing top's
-// knit sleeves, or a work shirt rolled to below the elbow), the watch on the left wrist (our own unbranded designs:
-// a gold or steel three-hand watch with a domed crystal, polished bezel, applied indices and a link bracelet, or a
-// smart watch with a lit face on a sport band), a ring and a rope bangle for the female look.
+// What the driver wears on the arms, one outfit per driver (drivers.ts lookFor: outfit, accent):
+//   'shirt'  the Closer: a pressed shirt's barrel cuff with its edge stitch, the cuff seam the sleeve gathers into, a
+//            placket with a gold cufflink (him) or a pearl button (her), an oxford weave; the gold watch (index ring,
+//            blued dauphine hands, a fluted crown, a date), the ring, her rope bangle
+//   'suit'   the Ace: a fire suit's quilted sleeve over a ribbed knit cuff, a small Rossini "R" chevron patch on the
+//            forearm (our own badge, no team or brand); the racing gloves are the skin shader's (hands-skin.ts)
+//   'work'   the Wrench: an olive work shirt rolled up past the forearm (a fat roll of folded cloth, a felled seam
+//            with its double row of stitching, a twill), the smart watch with its green grip readout on a sport band
 // Everything is built round the arm's actual skin (rays cast into the hand's distance field), in the grip frame G
 // (mm) as the right arm, and mirrored to the left where it's worn there. All of it is skinned to the arm's bones.
+// Cloth seams, stitches, the rib and the quilting are drawn by the cloth shader from a per-vertex seam coordinate
+// (aCloth) so they stay crisp at any distance; the weaves are canvas tiles in millimetres.
 import * as THREE from 'three';
 import type { DriverLook } from '../game/drivers';
 import { Anatomy, V3, add, cross, dot, len, madd, mul, norm, perp, sub, lerp3, G_FINGER } from './hands-sdf';
-import type { Quality } from './hands-skin';
+import { BUMP_GLSL, Quality, rollAt } from './hands-skin';
+import { EYE } from './spec';
+
+export type Outfit = 'shirt' | 'suit' | 'work';
+export function outfitOf(look: DriverLook): Outfit { return look.outfit ?? (look.sleeve === null ? 'work' : look.gloves !== null ? 'suit' : 'shirt'); }
+export function accentOf(look: DriverLook): number { return look.accent ?? (outfitOf(look) === 'suit' ? 0xd4dbff : outfitOf(look) === 'work' ? 0x7dffa8 : 0xffd166); }
 
 export interface AccOptions {
   anatomy: Anatomy; look: DriverLook; female: boolean; quality: Quality; watchTime: [number, number, number];
@@ -16,13 +27,15 @@ export interface AccOptions {
 export interface Accessories { meshes: THREE.SkinnedMesh[]; sleeveFrom: number }
 
 // ------------------------------------------------------------------------------------------------ mesh builder
+type Cloth = [number, number, number, number];   // lateral mm to the lengthwise seam (99 none), mm to a ring seam (99 none), mm from the open end, zone
+const NO_CLOTH: Cloth = [99, 99, 0, 0];
 class MB {
-  pos: number[] = []; nrm: number[] = []; uv: number[] = []; col: number[] = []; pbr: number[] = []; si: number[] = []; sw: number[] = []; idx: number[] = [];
-  color: [number, number, number] = [1, 1, 1]; metal = 0; rough = 0.5; bone = 0; bone2 = 0; w2 = 0;
+  pos: number[] = []; nrm: number[] = []; uv: number[] = []; col: number[] = []; pbr: number[] = []; si: number[] = []; sw: number[] = []; idx: number[] = []; cloth: number[] = [];
+  color: [number, number, number] = [1, 1, 1]; metal = 0; rough = 0.5; bone = 0; bone2 = 0; w2 = 0; clothV: Cloth = NO_CLOTH;
   constructor(public side: number, public o: AccOptions) {}
   v(p: V3, n: V3, u = 0, w = 0) {
     this.pos.push(...this.o.toCar(p, this.side)); this.nrm.push(...this.o.dirToCar(norm(n), this.side)); this.uv.push(u, w);
-    this.col.push(...this.color); this.pbr.push(this.metal, this.rough);
+    this.col.push(...this.color); this.pbr.push(this.metal, this.rough); this.cloth.push(...this.clothV);
     const b0 = this.side * 3;
     this.si.push(b0 + this.bone, b0 + this.bone2, 0, 0); this.sw.push(1 - this.w2, this.w2, 0, 0);
     return this.pos.length / 3 - 1;
@@ -31,7 +44,7 @@ class MB {
   t(a: number, b: number, c: number) { if (this.side === 0) this.idx.push(a, c, b); else this.idx.push(a, b, c); }
   q(a: number, b: number, c: number, d: number) { this.t(a, b, c); this.t(a, c, d); }
   // a grid of rings: pts[i][j], closed round j, with smooth normals; flip if the rings run the other way
-  grid(pts: V3[][], closed = true, uvs?: [number, number][][], flip = false) {
+  grid(pts: V3[][], closed = true, uvs?: [number, number][][], flip = false, cloth?: Cloth[][]) {
     const ni = pts.length, nj = pts[0].length, ids: number[][] = [];
     for (let i = 0; i < ni; i++) {
       const row: number[] = [];
@@ -40,10 +53,12 @@ class MB {
         const ip = Math.min(ni - 1, i + 1), im = Math.max(0, i - 1);
         let n = cross(sub(pts[ip][j], pts[im][j]), sub(pts[i][jp], pts[i][jm]));
         if (flip) n = mul(n, -1);
+        if (cloth) this.clothV = cloth[i][j];
         row.push(this.v(pts[i][j], n, uvs ? uvs[i][j][0] : 0, uvs ? uvs[i][j][1] : 0));
       }
       ids.push(row);
     }
+    this.clothV = NO_CLOTH;
     const nq = closed ? nj : nj - 1;
     for (let i = 0; i < ni - 1; i++) for (let j = 0; j < nq; j++) {
       const a = ids[i][j], b = ids[i + 1][j], c = ids[i + 1][(j + 1) % nj], d = ids[i][(j + 1) % nj];
@@ -51,12 +66,13 @@ class MB {
     }
     return ids;
   }
-  // revolve a profile [radius, height] about an axis (frame: centre c, axis up, reference x), outward-facing
-  lathe(c: V3, up: V3, x: V3, prof: [number, number][], seg: number, flip = false) {
+  // revolve a profile [radius, height] about an axis (frame: centre c, axis up, reference x), outward-facing;
+  // sx, sy stretch it into an oval; flutes > 0 alternate the radius every other segment (a fluted crown)
+  lathe(c: V3, up: V3, x: V3, prof: [number, number][], seg: number, flip = false, sx = 1, sy = 1, flutes = 0) {
     const y = cross(up, x), pts: V3[][] = [];
     for (const [r, h] of prof) {
       const ring: V3[] = [];
-      for (let j = 0; j < seg; j++) { const a = (j / seg) * Math.PI * 2; ring.push(madd(madd(madd(c, up, h), x, Math.cos(a) * r), y, Math.sin(a) * r)); }
+      for (let j = 0; j < seg; j++) { const a = (j / seg) * Math.PI * 2, f = r > 0.1 ? 1 + flutes * (j % 2 ? 1 : -1) : 1; ring.push(madd(madd(madd(c, up, h), x, Math.cos(a) * r * sx * f), y, Math.sin(a) * r * sy * f)); }
       pts.push(ring);
     }
     return this.grid(pts, true, undefined, !flip);
@@ -84,9 +100,20 @@ class MB {
     };
     f(ax, ay, az); f(mul(ax, -1), az, ay); f(ay, az, ax); f(mul(ay, -1), ax, az); f(az, ax, ay); f(mul(az, -1), ay, ax);
   }
+  // a flat polygon (counter-clockwise seen from its normal n) extruded by h against n: top, bottom and sides, flat-shaded
+  extrude(poly: V3[], n: V3, h: number) {
+    const nn = norm(n), top = poly, bot = poly.map((p) => madd(p, nn, -h)), m = poly.length;
+    const tv = top.map((p) => this.v(p, nn)), bv = bot.map((p) => this.v(p, mul(nn, -1)));
+    for (let i = 1; i < m - 1; i++) { this.t(tv[0], tv[i], tv[i + 1]); this.t(bv[0], bv[i + 1], bv[i]); }
+    for (let i = 0; i < m; i++) {
+      const j = (i + 1) % m, e = sub(top[j], top[i]), sn = norm(cross(e, nn));
+      const a = this.v(top[i], sn), b = this.v(top[j], sn), c = this.v(bot[j], sn), d = this.v(bot[i], sn);
+      this.q(a, b, c, d);
+    }
+  }
   append(o: MB) {
     const base = this.pos.length / 3;
-    this.pos.push(...o.pos); this.nrm.push(...o.nrm); this.uv.push(...o.uv); this.col.push(...o.col); this.pbr.push(...o.pbr); this.si.push(...o.si); this.sw.push(...o.sw);
+    this.pos.push(...o.pos); this.nrm.push(...o.nrm); this.uv.push(...o.uv); this.col.push(...o.col); this.pbr.push(...o.pbr); this.si.push(...o.si); this.sw.push(...o.sw); this.cloth.push(...o.cloth);
     for (const i of o.idx) this.idx.push(i + base);
   }
   geometry() {
@@ -96,6 +123,7 @@ class MB {
     g.setAttribute('uv', new THREE.Float32BufferAttribute(this.uv, 2));
     g.setAttribute('color', new THREE.Float32BufferAttribute(this.col, 3));
     g.setAttribute('aPbr', new THREE.Float32BufferAttribute(this.pbr, 2));
+    g.setAttribute('aCloth', new THREE.Float32BufferAttribute(this.cloth, 4));
     g.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(this.si, 4));
     g.setAttribute('skinWeight', new THREE.Float32BufferAttribute(this.sw, 4));
     g.setIndex(this.idx);
@@ -104,6 +132,8 @@ class MB {
 }
 
 const lin = (hex: number): [number, number, number] => { const c = new THREE.Color(hex); return [c.r, c.g, c.b]; };
+const shade = (c: [number, number, number], k: number): [number, number, number] => [c[0] * k, c[1] * k, c[2] * k];
+const angDiff = (a: number, b: number) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
 
 // ------------------------------------------------------------------------------------------------ the arm's surface
 // distance from the forearm's axis (through the wrist joint along the forearm) to the skin, toward direction d
@@ -122,53 +152,83 @@ function armFrame(A: Anatomy) {
 }
 
 // ------------------------------------------------------------------------------------------------ sleeves
-interface SleeveSpec { kind: 'cuff' | 'knit' | 'rolled'; color: number; end: number }
-function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number) {
-  const { fd, fu } = armFrame(A);
-  const nT = q === 'high' ? 44 : 28;
+interface SleeveSpec { kind: Outfit; color: number; end: number }
+interface Station { c: V3; ax: V3; along: number; s: number; up: V3; lat: V3 }
+// the sleeve's surface as built: rings of nT points per station, for draping things on it (the placket, the patch)
+interface SleeveSurf { rings: V3[][]; st: Station[]; nT: number; cuffLen: number; thPk: number }
+function onSleeve(S: SleeveSurf, along: number, th: number): { p: V3; n: V3 } {
+  const P = (al: number, t: number): V3 => {
+    let i = 0; while (i < S.st.length - 2 && S.st[i + 1].along <= al) i++;
+    const a0 = S.st[i].along, a1 = S.st[i + 1].along, k = Math.max(0, Math.min(1, (al - a0) / (a1 - a0)));
+    const jf = (((t / (2 * Math.PI)) * S.nT) % S.nT + S.nT) % S.nT, j0 = Math.floor(jf) % S.nT, j1 = (j0 + 1) % S.nT, u = jf - Math.floor(jf);
+    return lerp3(lerp3(S.rings[i][j0], S.rings[i][j1], u), lerp3(S.rings[i + 1][j0], S.rings[i + 1][j1], u), k);
+  };
+  const p = P(along, th), dA = sub(P(along + 2, th), P(along - 2, th)), dT = sub(P(along, th + 0.05), P(along, th - 0.05));
+  let n = norm(cross(dA, dT));
+  let i = 0; while (i < S.st.length - 2 && S.st[i + 1].along <= along) i++;
+  if (dot(n, sub(p, S.st[i].c)) < 0) n = mul(n, -1);
+  return { p, n };
+}
+
+function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number): SleeveSurf {
+  const { fd, fu, fl } = armFrame(A);
+  const nT = q === 'high' ? 48 : 28;
   const elbowAlong = A.fore, upperLen = len(sub(A.shoulder, A.elbow));
   const upDir = norm(sub(A.shoulder, A.elbow));
   const rnd = (k: number) => Math.sin(seed * 12.9898 + k * 78.233) * 0.5 + 0.5;
-  // stations along the arm: forearm from the sleeve's end to the elbow, then the upper arm to the shoulder
-  const st: { c: V3; ax: V3; along: number; s: number }[] = [];
+  const female = A.scale < 1;
+  const cuffLen = s.kind === 'shirt' ? (female ? 56 : 62) : s.kind === 'suit' ? (female ? 46 : 52) : 0;
+  // stations along the arm: forearm from the sleeve's end to the elbow (close together through the cuff and the
+  // gather above it), then the upper arm to the shoulder
+  const st: Station[] = [];
   const start = s.end;
-  for (let a = start; a < elbowAlong; a += a < start + 40 ? 4 : 9) st.push({ c: madd(A.wrist, fd, a), ax: fd, along: a, s: a - start });
+  const mk = (c: V3, ax: V3, along: number): Station => { const up = perp(fu, ax); return { c, ax, along, s: along - start, up, lat: cross(ax, up) }; };
+  for (let a = start; a < elbowAlong; a += a - start < cuffLen + 24 || a < start + 40 ? 4 : 9) st.push(mk(madd(A.wrist, fd, a), fd, a));
   for (let t = 0; t <= upperLen + 1; t += 14) {
     const k = Math.min(1, t / 60), ax = norm(lerp3(fd, upDir, k * k * (3 - 2 * k)));
-    st.push({ c: madd(A.elbow, upDir, t), ax, along: elbowAlong + t, s: elbowAlong - start + t });
+    st.push(mk(madd(A.elbow, upDir, t), ax, elbowAlong + t));
   }
-  const knit = s.kind === 'knit', cuff = s.kind === 'cuff';
-  const rings: V3[][] = [], uvs: [number, number][][] = [], shade: number[][] = [];
+  // the placket (and the cuff's button) on the outer side of the wrist; the felled seam runs under the arm
+  const thPk = Math.atan2(dot(fl, st[0].lat), dot(fl, st[0].up)), thSeam = Math.PI;
+  const rRef = female ? 31 : 35;         // the weave's circumferential millimetres are measured on one radius, so the quilting lines up ring to ring
+  const rings: V3[][] = [], uvs: [number, number][][] = [], shades: number[][] = [], cloths: Cloth[][] = [];
   let prevR: number[] | null = null;
   for (const S of st) {
-    const ax = S.ax, up = perp(fu, ax), lat = cross(ax, up);
-    const ring: V3[] = [], uvr: [number, number][] = [], sh: number[] = [];
+    const { up, lat } = S;
+    const ring: V3[] = [], uvr: [number, number][] = [], sh: number[] = [], cl: Cloth[] = [];
     const rr: number[] = [];
     for (let j = 0; j < nT; j++) {
       const th = (j / nT) * Math.PI * 2, dir = norm(add(mul(up, Math.cos(th)), mul(lat, Math.sin(th))));
       let r = S.along < elbowAlong - 10 ? skinR(A, S.along, dir) : -1;
-      const upperR = 47 * (A.scale < 1 ? 0.86 : 1) * (1 + 0.1 * Math.cos(2 * th));
+      const upperR = 47 * (female ? 0.86 : 1) * (1 + 0.1 * Math.cos(2 * th));
       if (r < 0) r = S.along >= elbowAlong ? upperR : (prevR ? prevR[j] : 40);
-      // ease over the skin: snug at a knit cuff, a shirt's room up the arm
-      const cuffZone = Math.max(0, 1 - S.s / (cuff ? 62 : 22));
-      let ease = knit ? 2.2 + 3.5 * Math.min(1, S.s / 70) : 3.2 + 10 * Math.min(1, S.s / 90);
-      if (cuff && S.s < 62) ease = 3.4 + 0.012 * S.s;
+      const inCuff = S.s < cuffLen;
+      // ease over the skin: a stiff barrel cuff with the fuller sleeve gathered into it, a snug knit cuff under the
+      // suit's roomier sleeve, a shirt's room up the arm
+      let ease: number, zone = 0, foldK = 1;
+      if (s.kind === 'shirt') { ease = inCuff ? 3.4 + 0.012 * S.s : 4.4 + 8 * Math.min(1, (S.s - cuffLen) / 80); zone = inCuff ? 1 : 0; foldK = inCuff ? 0 : 1; }
+      else if (s.kind === 'suit') { ease = inCuff ? 2.0 + 0.6 * S.s / cuffLen : 4.5 + 6 * Math.min(1, (S.s - cuffLen) / 80); zone = inCuff ? 3 : 0; foldK = inCuff ? 0 : 0.45; }
+      else { ease = 3.2 + 10 * Math.min(1, S.s / 90); }
       // folds: drape and twist up the forearm, crumple in the crook of the elbow, bunching above a cuff
       const crook = Math.exp(-(((S.along - elbowAlong) / 45) ** 2)) * Math.max(0, -Math.cos(th) * 0.8 + 0.4);
-      const bunch = cuff ? Math.exp(-(((S.s - 75) / 18) ** 2)) : 0;
-      const zone = 1 - cuffZone;
+      const bunch = s.kind === 'shirt' ? Math.exp(-(((S.s - cuffLen - 12) / 16) ** 2)) : 0;
       const f1 = Math.sin(th * 2 + S.s * 0.05 + rnd(1) * 6) * 1.6, f2 = Math.sin(th * 3 - S.s * 0.08 + rnd(2) * 6) * 1.1;
       const f3 = Math.sin(S.s * 0.36 + th * 1.3 + rnd(3) * 6) * Math.sin(th * 5 + rnd(4) * 6) * 2.4;
-      const fold = (knit ? 0.35 : 1) * zone * (f1 + f2 + (crook * 2.4 + bunch * 1.6) * f3 + crook * 2.5 + bunch * 2);
+      const gather = bunch * (0.5 + 0.5 * Math.sin(th * 9 + rnd(5) * 6)) * 2.2;     // the gathers: close pleats round the cuff seam
+      const fold = foldK * (f1 + f2 + (crook * 2.4 + bunch * 1.6) * f3 + crook * 2.5 + gather);
       r = r + ease + fold;
-      // the open end: a turned edge so the cloth has thickness
       rr.push(r);
       ring.push(madd(S.c, dir, r));
-      uvr.push([(j / nT) * (2 * Math.PI * r) / 5.5, S.along / 5.5]);
-      sh.push(Math.max(0.55, Math.min(1.08, 1 + fold * 0.05 - crook * 0.12)));
+      uvr.push([(j / nT) * (2 * Math.PI * rRef), S.along]);
+      sh.push(Math.max(0.55, Math.min(1.08, 1 + fold * 0.05 - crook * 0.12 - (bunch ? 0.05 * (0.5 + 0.5 * Math.cos(th * 9 + rnd(5) * 6)) : 0))));
+      // the seam coordinates: lateral mm to the felled seam, mm to the nearest ring seam (the cuff's edge stitch, the cuff seam)
+      const seamL = s.kind === 'suit' ? 99 : r * angDiff(th, thSeam);
+      const ringSeams = s.kind === 'shirt' ? [3, cuffLen] : s.kind === 'suit' ? [cuffLen] : [];
+      let seamR = 99; for (const rs of ringSeams) if (Math.abs(S.s - rs) < Math.abs(seamR)) seamR = S.s - rs;
+      cl.push([seamL, seamR, S.s, zone]);
     }
     prevR = rr;
-    rings.push(ring); uvs.push(uvr); shade.push(sh);
+    rings.push(ring); uvs.push(uvr); shades.push(sh); cloths.push(cl);
   }
   // weights: forearm below the elbow, upper arm above, blended through it
   const b0 = mb.bone, ids: number[][] = [];
@@ -179,11 +239,12 @@ function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number) {
       const nT2 = ring.length, jp = (j + 1) % nT2, jm = (j - 1 + nT2) % nT2, ip = Math.min(rings.length - 1, i + 1), im = Math.max(0, i - 1);
       const n = cross(sub(rings[ip][j], rings[im][j]), sub(ring[jp], ring[jm]));
       mb.bone = 1; mb.bone2 = 0; mb.w2 = wu;
-      const c = lin(s.color); mb.color = [c[0] * shade[i][j], c[1] * shade[i][j], c[2] * shade[i][j]];
+      mb.color = shade(lin(s.color), shades[i][j]); mb.clothV = cloths[i][j];
       row.push(mb.v(p, mul(n, -1), uvs[i][j][0], uvs[i][j][1]));
     });
     ids.push(row);
   });
+  mb.clothV = NO_CLOTH;
   for (let i = 0; i < ids.length - 1; i++) for (let j = 0; j < nT; j++) {
     const a = ids[i][j], b = ids[i + 1][j], c = ids[i + 1][(j + 1) % nT], d = ids[i][(j + 1) % nT];
     mb.q(a, d, c, b);
@@ -193,10 +254,10 @@ function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number) {
   const ax0 = st[0].ax;
   first.forEach((p) => { const out = norm(sub(p, st[0].c)); lip.push(madd(madd(p, ax0, -0.9), out, -0.9)); inner.push(madd(madd(p, out, -1.8), ax0, 6)); });
   const c0 = lin(s.color);
-  mb.color = [c0[0] * 0.9, c0[1] * 0.9, c0[2] * 0.9]; mb.bone = 1; mb.w2 = 0;
+  mb.color = shade(c0, 0.9); mb.bone = 1; mb.w2 = 0;
   const L0 = first.map((p, j) => mb.v(p, sub(p, st[0].c), uvs[0][j][0], uvs[0][j][1]));
   const L1 = lip.map((p) => mb.v(p, mul(ax0, -1), 0, 0));
-  mb.color = [c0[0] * 0.45, c0[1] * 0.45, c0[2] * 0.45];
+  mb.color = shade(c0, 0.45);
   const L2 = inner.map((p) => mb.v(p, sub(st[0].c, p), 0, 0));
   for (let j = 0; j < nT; j++) {
     const jn = (j + 1) % nT;
@@ -204,15 +265,113 @@ function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number) {
     mb.q(L1[j], L2[j], L2[jn], L1[jn]);
   }
   mb.bone = b0;
-  return { rings, st };
+  return { rings, st, nT, cuffLen, thPk };
+}
+
+// the shirt cuff's placket: the overlap where the cuff closes, a flap one cloth thickness proud with a free edge on
+// one side (sewn down on the other), edge-stitched; the cufflink or button sits on it
+function placket(mb: MB, S: SleeveSurf, color: number, q: Quality) {
+  const nS = q === 'high' ? 12 : 7, L = S.cuffLen - 3, half = 8;
+  const cols: { x: number; lift: number }[] = [{ x: -half, lift: 0.1 }, { x: -half + 3, lift: 1.0 }, { x: half - 1, lift: 1.0 }, { x: half, lift: 1.0 }, { x: half, lift: -0.2 }];
+  const pts: V3[][] = [], cl: Cloth[][] = [], uvs: [number, number][][] = [];
+  for (let i = 0; i <= nS; i++) {
+    const s = 1.5 + (i / nS) * L, along = S.st[0].along + s;
+    const row: V3[] = [], cr: Cloth[] = [], ur: [number, number][] = [];
+    for (const c of cols) {
+      const r = len(sub(onSleeve(S, along, S.thPk).p, S.st[0].c)), th = S.thPk + c.x / r;
+      const { p, n } = onSleeve(S, along, th);
+      // the flap's edge is a step: the top layer ends, the cuff beneath goes on
+      row.push(madd(p, n, c.lift)); cr.push([c.x - half, 99, s, 2]); ur.push([c.x + 40, along]);
+    }
+    pts.push(row); cl.push(cr); uvs.push(ur);
+  }
+  mb.bone = 1; mb.w2 = 0; mb.color = lin(color);
+  mb.grid(pts, false, uvs, false, cl);
+  mb.clothV = NO_CLOTH;
+}
+
+// a gold cufflink (an oval, bevelled, polished) or a pearl button with its thread cross, on the placket
+function cuffFastener(mb: MB, S: SleeveSurf, female: boolean, shirt: number) {
+  const along = S.st[0].along + S.cuffLen * 0.42, r = len(sub(onSleeve(S, along, S.thPk).p, S.st[0].c));
+  const { p, n } = onSleeve(S, along, S.thPk + 1.5 / r);
+  const c = madd(p, n, 1.0), x = perp(S.st[0].ax, n);
+  mb.bone = 1; mb.w2 = 0;
+  if (!female) {
+    mb.color = lin(GOLD); mb.metal = 1; mb.rough = 0.12; mb.soft = 0;
+    mb.lathe(c, n, x, [[0.01, 0], [0.86, 0], [1, 0.5], [1, 1.3], [0.88, 1.8], [0.55, 2.05], [0.01, 2.1]], 28, false, 5.2, 3.6);
+    // a small raised bar across it (the link's design: a plain bar, no monogram)
+    mb.rough = 0.08;
+    mb.box(madd(c, n, 2.15), mul(x, 2.6), mul(cross(n, x), 0.45), mul(n, 0.2));
+  } else {
+    mb.color = lin(0xf1ece2); mb.metal = 0; mb.rough = 0.22;
+    mb.lathe(c, n, x, [[0.01, 0], [4.0, 0], [4.6, 0.5], [4.6, 1.3], [4.0, 1.95], [2.6, 2.1], [1.6, 1.9], [0.01, 1.85]], 24);
+    // four holes and the thread cross
+    mb.color = [0.08, 0.07, 0.06]; mb.rough = 0.6;
+    const y = cross(n, x);
+    for (const [hx, hy] of [[-1.1, -1.1], [1.1, -1.1], [1.1, 1.1], [-1.1, 1.1]]) mb.lathe(madd(madd(c, x, hx), y, hy), n, x, [[0.01, 1.7], [0.42, 1.7], [0.42, 1.95], [0.01, 1.95]], 10, true);
+    mb.color = shade(lin(shirt), 0.85); mb.rough = 0.7;
+    mb.box(madd(c, n, 1.95), mul(norm(add(x, y)), 1.65), mul(norm(sub(x, y)), 0.2), mul(n, 0.16));
+    mb.box(madd(c, n, 1.95), mul(norm(sub(x, y)), 1.65), mul(norm(add(x, y)), 0.2), mul(n, 0.16));
+  }
+}
+
+// the Rossini "R" chevron patch on the fire suit's forearm: a thin embroidered rectangle lifted off the quilting,
+// with a merrowed border (the accent) round it; the face is a canvas texture (patchTexture)
+function patch(mb: MB, S: SleeveSurf, female: boolean, accent: number) {
+  const W = female ? 24 : 27, H = female ? 17 : 19, along0 = S.st[0].along + S.cuffLen + (female ? 38 : 44);
+  // turned round the sleeve to face the driver's eye (wheel straight), so it reads from the seat
+  let th0 = 0, best = -2;
+  for (let k = 0; k < 72; k++) {
+    const th = (k / 72) * Math.PI * 2, { p, n } = onSleeve(S, along0, th);
+    const pc = mb.o.toCar(p, mb.side), nc = mb.o.dirToCar(n, mb.side);
+    const e = norm([EYE.x - pc[0], EYE.y - pc[1], EYE.z - pc[2]]), f = dot(norm(nc), e);
+    if (f > best) { best = f; th0 = th; }
+  }
+  const nx = 7, ny = 5, pts: V3[][] = [], uvs: [number, number][][] = [];
+  const r = len(sub(onSleeve(S, along0, th0).p, S.st[0].c));
+  for (let i = 0; i <= ny; i++) {
+    const row: V3[] = [], ur: [number, number][] = [];
+    for (let j = 0; j <= nx; j++) {
+      const u = j / nx, v = i / ny, along = along0 + (v - 0.5) * H, th = th0 + ((u - 0.5) * W) / r;
+      const { p, n } = onSleeve(S, along, th);
+      row.push(madd(p, n, 1.2)); ur.push([u, 1 - v]);
+    }
+    pts.push(row); uvs.push(ur);
+  }
+  // the left arm is the right's mirror image: flip the face's u where that would make the R read backwards (u to the
+  // right and the texture's v up must make a right-handed pair with the outward normal, in the car's frame)
+  {
+    const c = (p: V3) => mb.o.toCar(p, mb.side), mi = ny >> 1, mj = nx >> 1;
+    const tu = sub(c(pts[mi][nx]), c(pts[mi][0])), tv = sub(c(pts[0][mj]), c(pts[ny][mj]));
+    const nC = mb.o.dirToCar(onSleeve(S, along0, th0).n, mb.side);
+    if (dot(cross(tu, tv), nC) < 0) for (const row of uvs) for (const uv of row) uv[0] = 1 - uv[0];
+  }
+  mb.bone = 1; mb.w2 = 0; mb.color = [1, 1, 1]; mb.metal = 0; mb.rough = 0.75;
+  // (flip: rows run along the arm and columns round it, so the grid's own normals point into the sleeve)
+  mb.grid(pts, false, uvs, true);
+  // the border's skirt down to the cloth, in the accent colour
+  mb.color = lin(accent);
+  const edge: [number, number][] = [];
+  for (let j = 0; j <= nx; j++) edge.push([0, j]);
+  for (let i = 1; i <= ny; i++) edge.push([i, nx]);
+  for (let j = nx - 1; j >= 0; j--) edge.push([ny, j]);
+  for (let i = ny - 1; i >= 1; i--) edge.push([i, 0]);
+  const ctr = onSleeve(S, along0, th0);
+  for (let k = 0; k < edge.length; k++) {
+    const [i0, j0] = edge[k], [i1, j1] = edge[(k + 1) % edge.length];
+    const a = pts[i0][j0], b = pts[i1][j1], out = norm(sub(lerp3(a, b, 0.5), ctr.p));
+    const a0 = mb.v(a, out, uvs[i0][j0][0], uvs[i0][j0][1]), b0 = mb.v(b, out, uvs[i1][j1][0], uvs[i1][j1][1]);
+    const a1 = mb.v(madd(a, ctr.n, -1.4), out, uvs[i0][j0][0], uvs[i0][j0][1]), b1 = mb.v(madd(b, ctr.n, -1.4), out, uvs[i1][j1][0], uvs[i1][j1][1]);
+    mb.q(a0, b0, b1, a1);
+  }
 }
 
 // the rolled sleeve's roll: a fat, slightly lumpy band of folded cloth
 function roll(mb: MB, A: Anatomy, at: number, color: number, q: Quality, seed: number) {
   const { fd, fu } = armFrame(A);
-  const nT = q === 'high' ? 44 : 28, nP = q === 'high' ? 14 : 9;
+  const nT = q === 'high' ? 48 : 28, nP = q === 'high' ? 14 : 9;
   const c = lin(color), pts: V3[][] = [], cols: number[][] = [];
-  const W = 38, Hh = 9;
+  const W = 40, Hh = 10;
   for (let i = 0; i <= nP; i++) {
     const t = i / nP, along = at - W / 2 + t * W, ring: V3[] = [], cr: number[] = [];
     for (let j = 0; j < nT; j++) {
@@ -234,8 +393,8 @@ function roll(mb: MB, A: Anatomy, at: number, color: number, q: Quality, seed: n
     ring.forEach((p, j) => {
       const jp = (j + 1) % nT, jm = (j - 1 + nT) % nT, ip = Math.min(nP, i + 1), im = Math.max(0, i - 1);
       const n = cross(sub(pts[ip][j], pts[im][j]), sub(ring[jp], ring[jm]));
-      mb.color = [c[0] * cols[i][j], c[1] * cols[i][j], c[2] * cols[i][j]];
-      row.push(mb.v(p, mul(n, -1), (j / nT) * 40, i * 1.2));
+      mb.color = shade(c, cols[i][j]);
+      row.push(mb.v(p, mul(n, -1), (j / nT) * 2 * Math.PI * 38, at + i * 3));
     });
     ids.push(row);
   });
@@ -243,7 +402,7 @@ function roll(mb: MB, A: Anatomy, at: number, color: number, q: Quality, seed: n
 }
 
 // ------------------------------------------------------------------------------------------------ watches
-const GOLD = 0xe8b65c, STEEL = 0xd9dde2, ALU = 0x55595f;
+const GOLD = 0xe8b65c, STEEL = 0xd9dde2, ALU = 0x55595f, BLUED = 0x1a1d26;
 function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 'steel' | 'smart', female: boolean, time: [number, number, number], q: Quality) {
   const { fd, fu, fl } = armFrame(A);
   const along = 30;
@@ -265,15 +424,14 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     mbMetal.lathe(base, N, X, [[R * 0.82, 0], [R * 0.96, 0.6], [R, 2], [R * 1.005, H * 0.62], [R * 0.99, H * 0.7]], seg);
     // the case back (closed: where the wrist falls away beside the case, the dial's underside showed through)
     mbMetal.disc(base, N, X, R * 0.83, seg);
-    mbMetal.rough = 0.12;
+    mbMetal.rough = 0.1;
     mbMetal.lathe(base, N, X, [[R * 0.99, H * 0.7], [R * 0.985, H * 0.78], [R * 0.95, H * 0.86], [R * 0.9, H * 0.9], [R * 0.86, H * 0.9]], seg);
     // the inner wall (rehaut) down to the dial
     mbMetal.rough = 0.3;
     mbMetal.lathe(base, N, X, [[R * 0.86, H * 0.9], [R * 0.845, H * 0.78]], seg, true);
-    // the crown at 3 o'clock, fluted (a pattern of lighter and darker vertex colours)
-    mbMetal.rough = 0.2;
-    mbMetal.lathe(madd(madd(base, N, H * 0.42), X, R * 0.98), X, N, [[2.6 * k, 0], [2.8 * k, 0.6], [2.8 * k, 3.4 * k], [2.2 * k, 4 * k], [0.01, 4.1 * k]], 16);
-    // lugs: four short bars from the case to the bracelet
+    // the crown at 3 o'clock: fluted, with a domed cap
+    mbMetal.rough = 0.18;
+    mbMetal.lathe(madd(madd(base, N, H * 0.42), X, R * 0.98), X, N, [[2.0 * k, 0], [2.7 * k, 0.6], [3.0 * k, 1.2], [3.0 * k, 3.6 * k], [2.6 * k, 4.2 * k], [1.4 * k, 4.6 * k], [0.01, 4.7 * k]], 24, false, 1, 1, 0.1);
     // lugs: four short horns from the case down toward the wrist, the bracelet's end links between them
     for (const sy of [-1, 1]) for (const sx of [-1, 1]) {
       const c = madd(madd(madd(base, Y, sy * R * 1.0), X, sx * R * 0.48), N, H * 0.3);
@@ -284,22 +442,27 @@ function watch(mbMetal: MB, mbDial: MB, mbGlass: MB, A: Anatomy, kind: 'gold' | 
     const dz = H * 0.78, dr = R * 0.84;
     mbDial.bone = 1; mbDial.color = [1, 1, 1];
     mbDial.disc(madd(base, N, dz), N, X, dr, seg, 1);
-    // applied indices (polished) and the hands
-    mbMetal.rough = 0.1;
+    // applied indices (polished gold batons, a double at 12) inside the printed index ring
+    mbMetal.rough = 0.1; mbMetal.color = lin(metal);
     for (let i = 0; i < 12; i++) {
       const a = (i / 12) * Math.PI * 2, rd = norm(add(mul(Y, Math.cos(a)), mul(X, Math.sin(a)))), tg = cross(N, rd);
-      const long = i % 3 === 0 ? 1.45 : 1;
-      mbMetal.box(madd(madd(base, N, dz + 0.35), rd, dr * 0.78), mul(rd, 1.9 * long * k), mul(tg, (i === 0 ? 1.4 : 0.6) * k), mul(N, 0.35));
+      const long = i % 3 === 0 ? 1.3 : 1;
+      if (i === 0) { for (const o of [-1, 1]) mbMetal.box(madd(madd(madd(base, N, dz + 0.3), rd, dr * 0.76), tg, o * 0.85 * k), mul(rd, 1.6 * long * k), mul(tg, 0.5 * k), mul(N, 0.3)); }
+      else mbMetal.box(madd(madd(base, N, dz + 0.3), rd, dr * 0.76), mul(rd, 1.6 * long * k), mul(tg, 0.6 * k), mul(N, 0.3));
     }
+    // blued-steel dauphine hands (dark: they read on the silvered dial), a thin seconds hand, a gold centre cap
     const [h, m, s] = time;
-    const hand = (ang: number, L: number, W: number, z: number, tail = 0) => {
-      const rd = norm(add(mul(Y, Math.cos(ang)), mul(X, Math.sin(ang)))), tg = cross(N, rd);
-      const c = madd(madd(base, N, dz + z), rd, (L - tail) / 2);
-      mbMetal.box(c, mul(rd, (L + tail) / 2), mul(tg, W / 2), mul(N, 0.18));
+    mbMetal.color = lin(BLUED); mbMetal.metal = 1; mbMetal.rough = 0.22;
+    const hand = (ang: number, L: number, W: number, z: number, tail: number) => {
+      const rd = norm(add(mul(Y, Math.cos(ang)), mul(X, Math.sin(ang)))), tg = cross(N, rd), o = madd(base, N, dz + z);
+      const pt = (a: number, b: number) => madd(madd(o, rd, a), tg, b);
+      mbMetal.extrude([pt(-tail, -W * 0.4), pt(L * 0.3, -W), pt(L, 0), pt(L * 0.3, W), pt(-tail, W * 0.4)], N, 0.3);
     };
     const ha = ((h % 12) + m / 60) / 12 * Math.PI * 2, ma = (m + s / 60) / 60 * Math.PI * 2, sa = (s / 60) * Math.PI * 2;
-    hand(ha, dr * 0.55, 1.7 * k, 0.9); hand(ma, dr * 0.82, 1.2 * k, 1.3); hand(sa, dr * 0.88, 0.3 * k, 1.7, 4);
-    mbMetal.lathe(madd(base, N, dz + 1.5), N, X, [[1.1 * k, 0], [1.1 * k, 0.6], [0.01, 0.7]], 12);
+    hand(ha, dr * 0.56, 1.5 * k, 0.9, 2.2 * k); hand(ma, dr * 0.86, 1.1 * k, 1.3, 2.6 * k);
+    { const rd = norm(add(mul(Y, Math.cos(sa)), mul(X, Math.sin(sa)))), tg = cross(N, rd); mbMetal.box(madd(madd(base, N, dz + 1.7), rd, (dr * 0.9 - 4) / 2), mul(rd, (dr * 0.9 + 4) / 2), mul(tg, 0.16 * k), mul(N, 0.12)); }
+    mbMetal.color = lin(metal); mbMetal.rough = 0.1;
+    mbMetal.lathe(madd(base, N, dz + 1.6), N, X, [[1.2 * k, 0], [1.2 * k, 0.5], [0.01, 0.75]], 12);
     // the crystal: domed sapphire
     const cr = R * 0.88, prof: [number, number][] = [];
     for (let i = 0; i <= 6; i++) { const t = i / 6; prof.push([cr * Math.cos(t * Math.PI / 2) + 0.01, H * 0.9 + 0.9 * Math.sin(t * Math.PI / 2)]); }
@@ -371,20 +534,20 @@ function bracelet3(mb: MB, A: Anatomy, along: number, N: V3, metal: number, R: n
     let n = norm(cross(fd, t)); if (dot(n, add(a.n, b.n)) < 0) n = mul(n, -1);
     return { t, n, L: len(sub(b.p, a.p)) };
   };
-  // one articulated band: the outer pieces of each link, the polished centre pieces staggered over the joints
-  // (they hold neighbouring links together, as the pins do), and the pins' bar under it all, so no light shows
-  // through between the rows
+  // one articulated band: the outer pieces of each link (brushed), the polished centre pieces staggered over the
+  // joints (they hold neighbouring links together, as the pins do), and the pins' bar under it all, so no light
+  // shows through between the rows
   mb.soft = 0.7;
   for (let i = 0; i < path.length - 1; i++) {
     const a = path[i], b = path[i + 1], c = lerp3(a.p, b.p, 0.5), { t, n, L } = frame(a, b);
-    mb.color = lin(metal); mb.metal = 1; mb.rough = 0.34;
+    mb.color = lin(metal); mb.metal = 1; mb.rough = 0.3;
     for (const sx of [-1, 1]) mb.box(madd(madd(c, fd, sx * W * 0.345), n, 1.9), mul(t, L * 0.48), mul(fd, W * 0.15), mul(n, 1.5));
     // the bar under the link, across the whole width (darker: it is mostly in shadow between the pieces)
-    mb.color = lin(metal).map((x) => x * 0.55) as [number, number, number]; mb.rough = 0.45;
+    mb.color = shade(lin(metal), 0.55); mb.rough = 0.45;
     mb.box(madd(c, n, 1.2), mul(t, L * 0.5), mul(fd, W * 0.47), mul(n, 0.75));
     if (i + 2 < path.length) {
       const nx = path[i + 2], f2 = frame(b, nx), tc = norm(add(t, f2.t)), nc = norm(add(n, f2.n));
-      mb.color = lin(metal); mb.rough = 0.1;
+      mb.color = lin(metal); mb.rough = 0.07;
       mb.box(madd(b.p, nc, 2.15), mul(tc, (L + f2.L) * 0.24), mul(fd, W * 0.2), mul(nc, 1.55));
     }
   }
@@ -396,7 +559,7 @@ function sportBand(mb: MB, A: Anatomy, along: number, N: V3, Hh0: number, female
   const gap = Math.asin(Math.min(0.9, (Hh0 / 2) / 30));
   const path = bandPath(A, along, N, q === 'high' ? 40 : 24, gap, attach);
   const bw = (female ? 18 : 21), T = 2.6;
-  mb.color = lin(0x2a2c30); mb.metal = 0; mb.rough = 0.72;
+  mb.color = lin(0x22282a); mb.metal = 0; mb.rough = 0.72;
   const rows: V3[][] = path.map((s) => {
     const o = madd(s.p, s.n, 0.6);
     return [madd(o, fd, -bw / 2), madd(madd(o, fd, -bw / 2 + 1), s.n, T), madd(madd(o, fd, bw / 2 - 1), s.n, T), madd(o, fd, bw / 2)];
@@ -437,7 +600,7 @@ function ring(mbMetal: MB, mbGlass: MB, A: Anatomy, female: boolean, q: Quality)
     pts.push(row);
   }
   pts.push(pts[0]);
-  mbMetal.bone = 2; mbMetal.w2 = 0; mbMetal.color = lin(GOLD); mbMetal.metal = 1; mbMetal.rough = 0.1;
+  mbMetal.bone = 2; mbMetal.w2 = 0; mbMetal.color = lin(GOLD); mbMetal.metal = 1; mbMetal.rough = 0.07;
   mbMetal.grid(pts, true, undefined, true);
   if (female) {
     // a small stone in a rub-over (bezel) setting on top: low, so nothing catches
@@ -459,7 +622,7 @@ function bangle(mb: MB, A: Anatomy, q: Quality) {
     let r = skinR(A, along + 4 * Math.cos(th), dir); if (r < 0) r = 28;
     centre.push({ p: madd(madd(A.wrist, fd, along + 4 * Math.cos(th)), dir, r + 2.2 + 2.5 * (1 - Math.cos(th)) * 0.5), n: dir });
   }
-  mb.bone = 1; mb.w2 = 0; mb.color = lin(GOLD); mb.metal = 1; mb.rough = 0.16;
+  mb.bone = 1; mb.w2 = 0; mb.color = lin(GOLD); mb.metal = 1; mb.rough = 0.12;
   for (let strand = 0; strand < 2; strand++) {
     const rows: V3[][] = [];
     for (let i = 0; i <= n; i++) {
@@ -475,31 +638,61 @@ function bangle(mb: MB, A: Anatomy, q: Quality) {
 }
 
 // ------------------------------------------------------------------------------------------------ materials
-let weaveCache: Map<string, THREE.Texture> | null = null;
-function weave(kind: 'poplin' | 'knit' | 'twill'): THREE.Texture {
+// the weaves: a height field drawn on a canvas tile of `mm` millimetres, as a colour map (the threads' shading) and a
+// normal map; the sleeve's UVs are in millimetres, so the tile repeats 1/mm times per unit
+interface Weave { map: THREE.Texture; normalMap: THREE.Texture; mm: number }
+let weaveCache: Map<string, Weave> | null = null;
+function weave(kind: 'oxford' | 'twill' | 'ripstop'): Weave {
   weaveCache ??= new Map();
   const hit = weaveCache.get(kind);
   if (hit) return hit;
-  const n = 128, h = new Float32Array(n * n);
-  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+  const n = 256, h = new Float32Array(n * n);
+  // the tile in mm and the height at (x, y) mm
+  const mm = kind === 'oxford' ? 3.2 : kind === 'twill' ? 4 : 6;
+  const hash = (x: number, y: number) => (Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1;
+  for (let yi = 0; yi < n; yi++) for (let xi = 0; xi < n; xi++) {
+    const x = (xi / n) * mm, y = (yi / n) * mm;
     let v: number;
-    if (kind === 'knit') { const u = x / 4, w = y / 8; v = Math.abs(Math.sin((u + Math.abs(((w % 2) + 2) % 2 - 1) * 0.5) * Math.PI)) * Math.abs(Math.sin(w * Math.PI)); }
-    else if (kind === 'twill') { const d = (x + y) % 8; v = d < 4 ? 0.5 + 0.5 * Math.sin((d / 4) * Math.PI) : 0.2; v *= 0.8 + 0.2 * Math.sin((x - y) * 0.8); }
-    else { const over = ((x >> 1) + (y >> 1)) & 1; v = over ? 0.5 + 0.5 * Math.sin(((x % 2) / 2 + 0.25) * Math.PI) : 0.5 + 0.5 * Math.sin(((y % 2) / 2 + 0.25) * Math.PI); v *= 0.85; }
-    h[y * n + x] = v + (Math.sin(x * 12.9898 + y * 78.233) * 43758.5453 % 1) * 0.08;
+    if (kind === 'oxford') {
+      // a basket weave: pairs of threads 0.8 mm wide going over and under
+      const cx = Math.floor(x / 0.8), cy = Math.floor(y / 0.8), over = (cx + cy) & 1;
+      const tx = (x / 0.8) % 1, ty = (y / 0.8) % 1;
+      const warp = Math.sin(((tx * 2) % 1) * Math.PI), weft = Math.sin(((ty * 2) % 1) * Math.PI);   // two threads per cell
+      v = over ? 0.55 + 0.45 * warp * Math.pow(Math.sin(ty * Math.PI), 0.4) : 0.35 + 0.45 * weft * Math.pow(Math.sin(tx * Math.PI), 0.4);
+    } else if (kind === 'twill') {
+      // a 2/1 twill: diagonal wales 1.33 mm apart, each a rounded ridge
+      const d = ((x + y) / 1.333) % 1;
+      v = 0.3 + 0.7 * Math.pow(Math.sin(d * Math.PI), 1.5);
+      v *= 0.85 + 0.15 * Math.sin(((x - y) / 0.5) * Math.PI);
+    } else {
+      // ripstop: a fine plain weave with a heavier thread every 6 mm each way
+      const fx = Math.sin((x / 0.45) * Math.PI), fy = Math.sin((y / 0.45) * Math.PI);
+      v = 0.45 + 0.25 * fx * fy;
+      const gx = Math.exp(-((Math.min(x, mm - x) / 0.35) ** 2)), gy = Math.exp(-((Math.min(y, mm - y) / 0.35) ** 2));
+      v += 0.35 * Math.max(gx, gy);
+    }
+    h[yi * n + xi] = v + hash(xi, yi) * 0.08;
   }
-  const d = new Uint8Array(n * n * 4);
+  const col = new Uint8Array(n * n * 4), nrm = new Uint8Array(n * n * 4);
+  const hAt = (x: number, y: number) => h[((y + n) % n) * n + ((x + n) % n)];
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-    const hx = h[y * n + ((x + 1) % n)] - h[y * n + ((x - 1 + n) % n)], hy = h[((y + 1) % n) * n + x] - h[((y - 1 + n) % n) * n + x];
-    const s = 1.6, nx = -hx * s, ny = -hy * s, l = Math.hypot(nx, ny, 1);
-    const o = (y * n + x) * 4;
-    d[o] = ((nx / l) * 0.5 + 0.5) * 255; d[o + 1] = ((ny / l) * 0.5 + 0.5) * 255; d[o + 2] = ((1 / l) * 0.5 + 0.5) * 255; d[o + 3] = 255;
+    const o = (y * n + x) * 4, v = hAt(x, y);
+    // the colour: threads lit from above, the dips between them darker (a faint weave, not a checkerboard)
+    const c = 255 * (0.88 + 0.12 * v);
+    col[o] = col[o + 1] = col[o + 2] = c; col[o + 3] = 255;
+    const hx = hAt(x + 1, y) - hAt(x - 1, y), hy = hAt(x, y + 1) - hAt(x, y - 1);
+    const s = kind === 'ripstop' ? 1.4 : 2.2, nx = -hx * s, ny = -hy * s, l = Math.hypot(nx, ny, 1);
+    nrm[o] = ((nx / l) * 0.5 + 0.5) * 255; nrm[o + 1] = ((ny / l) * 0.5 + 0.5) * 255; nrm[o + 2] = ((1 / l) * 0.5 + 0.5) * 255; nrm[o + 3] = 255;
   }
-  const t = new THREE.DataTexture(d, n, n, THREE.RGBAFormat);
-  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
-  t.anisotropy = 8; t.needsUpdate = true;
-  weaveCache.set(kind, t);
-  return t;
+  const tex = (d: Uint8Array, srgb: boolean) => {
+    const t = new THREE.DataTexture(d, n, n, THREE.RGBAFormat);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.magFilter = THREE.LinearFilter; t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
+    t.anisotropy = 8; t.repeat.set(1 / mm, 1 / mm); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.needsUpdate = true;
+    return t;
+  };
+  const w = { map: tex(col, true), normalMap: tex(nrm, false), mm };
+  weaveCache.set(kind, w);
+  return w;
 }
 
 function accMaterial() {
@@ -514,20 +707,107 @@ function accMaterial() {
   return m;
 }
 
-function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, number]) {
+// the cloth: the weave's colour and normal maps under a procedural layer drawn from aCloth (seam distances in mm):
+// the felled seam's ridge with its two rows of stitching, the cuff's edge stitch and the cuff seam, the placket's
+// edge stitch, the knit cuff's ribs, the fire suit's diamond quilting with its stitched lines. Thread and stitches
+// fade out where a pixel is wider than a thread, so nothing sparkles from the seat.
+function clothMaterial(color: number, outfit: Outfit, q: Quality) {
+  const kind = outfit === 'shirt' ? 'oxford' : outfit === 'work' ? 'twill' : 'ripstop';
+  const w = weave(kind);
+  // the sheen: a soft cotton halo on the shirts; the fire suit's black stays black (a strong pale sheen greyed it)
+  const sheenC = new THREE.Color(color).lerp(new THREE.Color(1, 1, 1), outfit === 'suit' ? 0.12 : 0.35);
+  const sheen = (outfit === 'suit' ? 0.3 : 0.7) * (q === 'high' ? 1 : 0.45);
+  const m = new THREE.MeshPhysicalMaterial({
+    // (the display colour as an albedo a touch darker, as the skin does: the pressed white otherwise burnt out flat)
+    color: new THREE.Color(0.88, 0.88, 0.88),
+    vertexColors: true, roughness: outfit === 'suit' ? 0.8 : 0.86, metalness: 0, sheen, sheenColor: sheenC, sheenRoughness: 0.55,
+    map: w.map, normalMap: w.normalMap, normalScale: new THREE.Vector2(0.7, 0.7), envMapIntensity: 0.7,
+  });
+  // the thread: a tone of the cloth on the shirt, grey on the suit, a contrasting tan triple-stitch on the work shirt
+  const thread = new THREE.Color(outfit === 'shirt' ? color : outfit === 'suit' ? 0x45454b : 0xc9a86a);
+  if (outfit === 'shirt') thread.multiplyScalar(0.82);
+  const uniforms = { uThread: { value: thread }, uOutfit: { value: outfit === 'shirt' ? 0 : outfit === 'suit' ? 1 : 2 } };
+  m.customProgramCacheKey = () => `hands-cloth-${outfit}`;
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, uniforms);
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute vec4 aCloth; varying vec4 vCloth; varying vec2 vMm;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvCloth = aCloth; vMm = uv;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', /* glsl */ `#include <common>
+varying vec4 vCloth; varying vec2 vMm; uniform vec3 uThread; uniform float uOutfit;
+float ln(float d, float w) { return 1.0 - smoothstep(w, w + 0.3, abs(d)); }
+${BUMP_GLSL}`)
+      .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
+float pixC = length(fwidth(vMm));                 // mm per pixel
+float sharp = smoothstep(1.4, 0.45, pixC);
+float sx = vCloth.x, sr = vCloth.y, ss = vCloth.z, zone = vCloth.w;
+float stitch = 0.0, groove = 0.0, HC = 0.0;
+float dashL = step(0.5, fract(ss / 2.4)), dashR = step(0.5, fract(vMm.x / 2.4));
+if (zone < 1.5 && sx < 50.0) {
+  // the felled seam: a ridge with a row of stitching either side
+  stitch += (ln(sx - 3.0, 0.3) + ln(sx + 3.0, 0.3)) * dashL;
+  groove += 0.6 * (1.0 - smoothstep(0.0, 4.5, abs(sx)));
+  HC += 0.35 * (1.0 - smoothstep(0.0, 3.2, abs(sx)));
+}
+if (zone > 1.5 && zone < 2.5) { stitch += ln(sx + 2.2, 0.3) * dashL; HC -= 0.1 * ln(sx + 2.2, 0.5); }   // the placket, edge-stitched
+if (sr < 50.0) { stitch += ln(sr, 0.3) * dashR; groove += 0.5 * (1.0 - smoothstep(0.0, 1.6, abs(sr))); HC -= 0.2 * (1.0 - smoothstep(0.0, 1.2, abs(sr))); }
+if (zone > 2.5 && zone < 3.5) {
+  // the knit cuff: ribs along the sleeve, 1.4 mm apart
+  float rib = 0.5 + 0.5 * cos(vMm.x / 1.4 * 6.2832);
+  HC += 0.35 * rib * sharp; diffuseColor.rgb *= 0.84 + 0.2 * rib;
+}
+if (uOutfit > 0.5 && uOutfit < 1.5 && zone < 0.5) {
+  // the fire suit's quilting: diamonds 15 mm on the diagonal, puffed between the stitched lines
+  vec2 dq = vec2(vMm.x + vMm.y, vMm.x - vMm.y) / 15.0; vec2 fq = abs(fract(dq) - 0.5); float dl = min(fq.x, fq.y) * 15.0 * 0.7071;
+  float onA = step(fq.y, fq.x);
+  stitch += ln(dl, 0.28) * step(0.5, fract(mix(vMm.x - vMm.y, vMm.x + vMm.y, onA) / 2.4));
+  float puff = smoothstep(0.0, 5.5, dl);
+  HC += 0.8 * puff - 0.3 * (1.0 - smoothstep(0.0, 1.0, dl)); diffuseColor.rgb *= 0.88 + 0.12 * puff;
+}
+stitch = clamp(stitch, 0.0, 1.0) * sharp;
+diffuseColor.rgb *= 1.0 - 0.22 * groove;
+diffuseColor.rgb = mix(diffuseColor.rgb, uThread, stitch);
+HC += 0.12 * stitch;
+`)
+      .replace('#include <normal_fragment_maps>', '#include <normal_fragment_maps>\nnormal = bumpNormal(-vViewPosition, normal, HC * 0.001, faceDirection);')
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = clamp(roughnessFactor - 0.12 * stitch, 0.3, 1.0);');
+  };
+  return m;
+}
+
+function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, number], accent: number) {
   const n = 512, c = document.createElement('canvas'); c.width = c.height = n;
   const g = c.getContext('2d')!;
   const cx = n / 2;
   if (kind === 'smart') {
-    g.fillStyle = '#020203'; g.fillRect(0, 0, n, n);
-    // a simple face: big time, a date line and three activity rings (our own design)
-    g.fillStyle = '#f2f2f0'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = '600 150px system-ui, Helvetica, Arial, sans-serif';
-    g.fillText(`${time[0]}:${String(time[1]).padStart(2, '0')}`, cx, cx - 30);
-    g.font = '500 44px system-ui, Helvetica, Arial, sans-serif'; g.fillStyle = '#ff8a3d';
-    g.fillText('TUE 13', cx, cx + 80);
-    const ringsC = ['#ff3b5c', '#9cff3d', '#3de0ff'];
-    ringsC.forEach((col, i) => { g.strokeStyle = col; g.lineWidth = 13; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cx + 172, 50 - i * 16, -Math.PI / 2, -Math.PI / 2 + (0.55 + i * 0.15) * Math.PI * 2); g.stroke(); });
+    // the Wrench's face: a tyre-grip readout (our own design) lit in the driver's green: the grip left as an arc
+    // gauge and a big number, the four tyres' bite as bars, the time small at the top
+    const green = '#' + accent.toString(16).padStart(6, '0'), dim = 'rgba(125,255,168,0.28)';
+    g.fillStyle = '#020403'; g.fillRect(0, 0, n, n);
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = '#cfd8d2'; g.font = '500 40px system-ui, Helvetica, Arial, sans-serif';
+    g.fillText(`${time[0]}:${String(time[1]).padStart(2, '0')}`, cx, 54);
+    // the gauge: a 270-degree track, the grip filled on it
+    const grip = 0.92, r = 150, a0 = Math.PI * 0.75, a1 = a0 + Math.PI * 1.5;
+    g.lineCap = 'round'; g.lineWidth = 22;
+    g.strokeStyle = dim; g.beginPath(); g.arc(cx, cx + 10, r, a0, a1); g.stroke();
+    g.strokeStyle = green; g.beginPath(); g.arc(cx, cx + 10, r, a0, a0 + (a1 - a0) * grip); g.stroke();
+    // the ticks on the track
+    g.lineWidth = 3; g.strokeStyle = 'rgba(207,216,210,0.5)';
+    for (let i = 0; i <= 10; i++) { const a = a0 + (a1 - a0) * (i / 10); g.beginPath(); g.moveTo(cx + Math.cos(a) * (r + 20), cx + 10 + Math.sin(a) * (r + 20)); g.lineTo(cx + Math.cos(a) * (r + 30), cx + 10 + Math.sin(a) * (r + 30)); g.stroke(); }
+    g.fillStyle = green; g.font = '700 118px system-ui, Helvetica, Arial, sans-serif';
+    g.fillText(`${Math.round(grip * 100)}`, cx, cx - 8);
+    g.font = '600 34px system-ui, Helvetica, Arial, sans-serif'; g.fillStyle = '#cfd8d2';
+    g.fillText('GRIP %', cx, cx + 68);
+    // the tyres: four bars, front left to rear right
+    const bites = [0.94, 0.9, 0.88, 0.93], labels = ['FL', 'FR', 'RL', 'RR'];
+    bites.forEach((b, i) => {
+      const x = cx - 105 + i * 70, y0 = n - 60, hgt = 72;
+      g.fillStyle = dim; g.fillRect(x - 14, y0 - hgt, 28, hgt);
+      g.fillStyle = green; g.fillRect(x - 14, y0 - hgt * b, 28, hgt * b);
+      g.fillStyle = '#cfd8d2'; g.font = '500 22px system-ui, Helvetica, Arial, sans-serif'; g.fillText(labels[i], x, n - 34);
+    });
   } else {
     // a sunburst dial: radial brushing as fine light and dark spokes over the base colour
     const base = kind === 'gold' ? [226, 224, 216] : [18, 22, 30];   // gold watch: a silvered white dial
@@ -537,14 +817,21 @@ function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, nu
       g.strokeStyle = `rgba(${l > 0 ? 255 : 0},${l > 0 ? 255 : 0},${l > 0 ? 255 : 0},${Math.abs(l) * 0.06})`;
       g.lineWidth = 1.2; g.beginPath(); g.moveTo(cx, cx); g.lineTo(cx + Math.cos(a) * cx, cx + Math.sin(a) * cx); g.stroke();
     }
-    // the minute track and our name
     const ink = kind === 'gold' ? '#2a2420' : '#e9e6df';
     g.strokeStyle = ink; g.fillStyle = ink;
+    // the index ring: a printed chapter ring (two circles) with the minute track between them, the hour marks bolder
+    g.lineWidth = 2.5; g.beginPath(); g.arc(cx, cx, cx * 0.925, 0, Math.PI * 2); g.stroke();
+    g.lineWidth = 1.2; g.beginPath(); g.arc(cx, cx, cx * 0.97, 0, Math.PI * 2); g.stroke();
     for (let i = 0; i < 60; i++) {
-      const a = (i / 60) * Math.PI * 2, r0 = cx * 0.94, r1 = cx * (i % 5 === 0 ? 0.88 : 0.91);
-      g.lineWidth = i % 5 === 0 ? 3 : 1.6; g.beginPath(); g.moveTo(cx + Math.sin(a) * r0, cx - Math.cos(a) * r0); g.lineTo(cx + Math.sin(a) * r1, cx - Math.cos(a) * r1); g.stroke();
+      const a = (i / 60) * Math.PI * 2, r0 = cx * 0.97, r1 = cx * (i % 5 === 0 ? 0.895 : 0.925);
+      g.lineWidth = i % 5 === 0 ? 4 : 1.6; g.beginPath(); g.moveTo(cx + Math.sin(a) * r0, cx - Math.cos(a) * r0); g.lineTo(cx + Math.sin(a) * r1, cx - Math.cos(a) * r1); g.stroke();
     }
+    // a fine inner circle the batons sit on, and the date at 3
+    g.lineWidth = 1; g.strokeStyle = 'rgba(42,36,32,0.45)'; g.beginPath(); g.arc(cx, cx, cx * 0.62, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = '#f7f5ef'; g.fillRect(cx + cx * 0.56 - 22, cx - 17, 44, 34);
+    g.strokeStyle = ink; g.lineWidth = 2; g.strokeRect(cx + cx * 0.56 - 22, cx - 17, 44, 34);
     g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillStyle = ink; g.font = '600 26px Georgia, "Times New Roman", serif'; g.fillText('21', cx + cx * 0.56, cx + 1);
     g.font = '600 34px Georgia, "Times New Roman", serif'; g.fillText('ROSSINI', cx, cx - 95);
     g.font = '500 17px Georgia, "Times New Roman", serif'; g.fillText('AUTOMATIC', cx, cx + 100);
     g.font = '500 13px Georgia, serif'; g.fillText('ORANGE COUNTY', cx, cx + 128);
@@ -554,81 +841,106 @@ function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, nu
   return t;
 }
 
+// the Rossini "R" chevron patch: a black twill ground, the chevron and a serif R embroidered in the accent, a
+// merrowed border; our own badge
+function patchTexture(suit: number, accent: number) {
+  const W = 256, H = 180, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d')!;
+  const bg = new THREE.Color(suit).lerp(new THREE.Color(1, 1, 1), 0.015), acc = '#' + accent.toString(16).padStart(6, '0');
+  g.fillStyle = '#' + bg.getHexString(); g.fillRect(0, 0, W, H);
+  // the ground's twill
+  g.strokeStyle = 'rgba(255,255,255,0.05)'; g.lineWidth = 2;
+  for (let i = -H; i < W + H; i += 6) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + H, H); g.stroke(); }
+  // the merrowed border: a dense zigzag of thread
+  g.strokeStyle = acc; g.lineWidth = 3; g.lineCap = 'round';
+  const b = 7;
+  for (let i = 0; i < W; i += 4) { g.beginPath(); g.moveTo(i, 1); g.lineTo(i + 2, b * 2); g.stroke(); g.beginPath(); g.moveTo(i, H - 1); g.lineTo(i + 2, H - b * 2); g.stroke(); }
+  for (let i = 0; i < H; i += 4) { g.beginPath(); g.moveTo(1, i); g.lineTo(b * 2, i + 2); g.stroke(); g.beginPath(); g.moveTo(W - 1, i); g.lineTo(W - b * 2, i + 2); g.stroke(); }
+  // the chevron across the top, pointing down, as satin stitch (slanted hatching inside its outline)
+  g.save();
+  g.beginPath(); g.moveTo(40, 24); g.lineTo(W / 2, 58); g.lineTo(W - 40, 24); g.lineTo(W - 40, 42); g.lineTo(W / 2, 78); g.lineTo(40, 42); g.closePath();
+  g.clip(); g.fillStyle = acc; g.fillRect(0, 0, W, H);
+  g.strokeStyle = 'rgba(0,0,0,0.22)'; g.lineWidth = 1;
+  for (let i = -H; i < W + H; i += 3) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 40, H); g.stroke(); }
+  g.restore();
+  // the R
+  g.fillStyle = acc; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = '700 84px Georgia, "Times New Roman", serif'; g.fillText('R', W / 2, 124);
+  g.strokeStyle = 'rgba(0,0,0,0.25)'; g.lineWidth = 1;
+  g.save(); g.beginPath(); g.rect(W / 2 - 45, 88, 90, 74); g.clip();
+  for (let i = -60; i < 130; i += 3) { g.beginPath(); g.moveTo(W / 2 - 45 + i, 88); g.lineTo(W / 2 - 45 + i + 20, 162); g.stroke(); }
+  g.restore();
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  return t;
+}
+
 // ------------------------------------------------------------------------------------------------ assemble
 // The accessories' geometry (sampled from the arm's field, the slow part) is kept per presentation, quality and look;
 // each build clones it, so a second driver with the same look costs only the materials.
-interface AccGeo { cloth: THREE.BufferGeometry | null; metal: THREE.BufferGeometry | null; dial: THREE.BufferGeometry | null; glass: THREE.BufferGeometry | null; sleeveFrom: number; weaveKind: 'poplin' | 'knit' | 'twill'; sleeveColor: number }
+interface AccGeo { cloth: THREE.BufferGeometry | null; patch: THREE.BufferGeometry | null; metal: THREE.BufferGeometry | null; dial: THREE.BufferGeometry | null; glass: THREE.BufferGeometry | null; sleeveFrom: number; outfit: Outfit; sleeveColor: number }
 const accCache = new Map<string, AccGeo>();
 function accGeometry(o: AccOptions): AccGeo {
-  const A = o.anatomy, look = o.look, q = o.quality;
-  const key = [A.pres, q, look.sleeve, look.gloves, look.watch, look.ring, look.bracelet, o.female, o.watchTime.join(':')].join('|');
+  const A = o.anatomy, look = o.look, q = o.quality, outfit = outfitOf(look), accent = accentOf(look);
+  const key = [A.pres, q, look.sleeve, look.gloves, look.watch, look.ring, look.bracelet, o.female, outfit, accent, o.watchTime.join(':')].join('|');
   const hit = accCache.get(key);
   if (hit) return hit;
-  const metal = new MB(0, o), dial = new MB(0, o), glass = new MB(0, o), cloth = new MB(0, o);
-  const sides = [new MB(0, o), new MB(1, o)];
-  let sleeveFrom = 1e9;
-  let weaveKind: 'poplin' | 'knit' | 'twill' = 'poplin';
+  const metal = new MB(0, o), dial = new MB(0, o), glass = new MB(0, o), cloth = new MB(0, o), patchMB = new MB(0, o);
   // ---- sleeves
-  const kinds: SleeveSpec | null = look.sleeve !== null
-    ? (look.gloves !== null ? { kind: 'knit', color: look.sleeve, end: 16 } : { kind: 'cuff', color: look.sleeve, end: 52 })
-    : { kind: 'rolled', color: 0x2b3a52, end: Math.round(A.fore * 0.66) };
-  weaveKind = kinds.kind === 'knit' ? 'knit' : kinds.kind === 'rolled' ? 'twill' : 'poplin';
-  const clothSides = [new MB(0, o), new MB(1, o)];
+  const color = look.sleeve ?? 0x55603c;
+  const kinds: SleeveSpec = outfit === 'suit' ? { kind: 'suit', color, end: 16 } : outfit === 'shirt' ? { kind: 'shirt', color, end: 52 } : { kind: 'work', color, end: rollAt(o.female) };
+  const clothSides = [new MB(0, o), new MB(1, o)], metalSides = [new MB(0, o), new MB(1, o)], patchSides = [new MB(0, o), new MB(1, o)];
   for (let side = 0; side < 2; side++) {
     const mb = clothSides[side];
-    if (kinds.kind === 'rolled') {
+    if (kinds.kind === 'work') {
+      // rolled up past the forearm: the sleeve body starts above the roll
       sleeve(mb, A, { ...kinds, end: kinds.end + 12 }, q, side + 1);
       roll(mb, A, kinds.end + 4, kinds.color, q, side + 3);
-    } else sleeve(mb, A, kinds, q, side + 1);
-    if (kinds.kind === 'cuff') {
-      // the cuff's button, on the outer side of the wrist
-      const { fd, fl } = armFrame(A), at = kinds.end + 22;
-      const r = skinR(A, at, mul(fl, 1)) + 3.6;
-      mb.color = lin(0xeeeae2); mb.metal = 0; mb.rough = 0.35; mb.bone = 1;
-      mb.lathe(madd(madd(A.wrist, fd, at), fl, r), fl, fd, [[5, 0], [5.2, 0.6], [4.8, 1.6], [0.01, 2]], 18);
+    } else {
+      const S = sleeve(mb, A, kinds, q, side + 1);
+      if (kinds.kind === 'shirt') { placket(mb, S, kinds.color, q); cuffFastener(metalSides[side], S, o.female, kinds.color); }
+      if (kinds.kind === 'suit') patch(patchSides[side], S, o.female, accent);
     }
   }
-  sleeveFrom = (kinds.kind === 'rolled' ? kinds.end + 30 : kinds.end + 22);
+  const sleeveFrom = kinds.kind === 'work' ? kinds.end + 30 : kinds.end + 22;
   for (const c of clothSides) cloth.append(c);
-  void sides;
+  for (const p of patchSides) patchMB.append(p);
   // ---- the watch, ring and bangle
   const metalL = new MB(1, o), dialL = new MB(1, o), glassL = new MB(1, o);
   if (look.watch) watch(metalL, dialL, glassL, A, look.watch, o.female, o.watchTime, q);
   const metalR = new MB(0, o), glassR = new MB(0, o);
   if (look.ring) { const mL = new MB(1, o), gL = new MB(1, o); ring(mL, gL, A, o.female, q); metalL.append(mL); glassL.append(gL); }
   if (look.bracelet) bangle(metalR, A, q);
-  metal.append(metalL); metal.append(metalR); dial.append(dialL); glass.append(glassL); glass.append(glassR);
+  metal.append(metalL); metal.append(metalR); for (const m of metalSides) metal.append(m);
+  dial.append(dialL); glass.append(glassL); glass.append(glassR);
 
   const g = (mb: MB) => (mb.idx.length ? mb.geometry() : null);
-  const res: AccGeo = { cloth: g(cloth), metal: g(metal), dial: g(dial), glass: g(glass), sleeveFrom, weaveKind, sleeveColor: kinds.color };
+  const res: AccGeo = { cloth: g(cloth), patch: g(patchMB), metal: g(metal), dial: g(dial), glass: g(glass), sleeveFrom, outfit, sleeveColor: kinds.color };
   accCache.set(key, res);
   return res;
 }
 
 export function buildAccessories(o: AccOptions): Accessories {
-  const look = o.look, q = o.quality;
+  const look = o.look, q = o.quality, accent = accentOf(look);
   const G = accGeometry(o);
   const meshes: THREE.SkinnedMesh[] = [];
-  const weaveKind = G.weaveKind, sleeveFrom = G.sleeveFrom, kinds = { color: G.sleeveColor };
   const mk = (geo: THREE.BufferGeometry | null, mat: THREE.Material, name: string) => {
     if (!geo) { mat.dispose(); return; }
     const m = new THREE.SkinnedMesh(geo.clone(), mat); m.name = name; meshes.push(m);
   };
-  const sheenC = new THREE.Color(kinds.color).lerp(new THREE.Color(1, 1, 1), 0.35);
-  const clothMat = new THREE.MeshPhysicalMaterial({
-    vertexColors: true, roughness: weaveKind === 'knit' ? 0.78 : 0.86, metalness: 0, sheen: q === 'high' ? 0.7 : 0.3, sheenColor: sheenC, sheenRoughness: 0.55,
-    normalMap: weave(weaveKind), normalScale: new THREE.Vector2(0.55, 0.55), envMapIntensity: 0.7,
-  });
-  mk(G.cloth, clothMat, 'sleeves');
+  mk(G.cloth, clothMaterial(G.sleeveColor, G.outfit, q), 'sleeves');
+  mk(G.patch, new THREE.MeshPhysicalMaterial({ map: patchTexture(G.sleeveColor, accent), vertexColors: true, roughness: 0.78, metalness: 0, sheen: 0.15, sheenColor: new THREE.Color(accent), sheenRoughness: 0.6, envMapIntensity: 0.6 }), 'patch');
   mk(G.metal, accMaterial(), 'metal');
   if (look.watch) {
-    const dt = dialTexture(look.watch, o.watchTime);
+    const dt = dialTexture(look.watch, o.watchTime, accent);
     const dm = look.watch === 'smart'
-      ? new THREE.MeshStandardMaterial({ map: dt, emissiveMap: dt, emissive: 0xffffff, emissiveIntensity: 0.55, color: 0x050505, roughness: 0.3, side: THREE.DoubleSide })
-      : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.42, metalness: 0, clearcoat: 0.4, clearcoatRoughness: 0.2, side: THREE.DoubleSide })   // lacquered, not metal: a metal dial took the warm sky's colour and read as skin;
+      ? new THREE.MeshStandardMaterial({ map: dt, emissiveMap: dt, emissive: 0xffffff, emissiveIntensity: 1.1, color: 0x050505, roughness: 0.3, side: THREE.DoubleSide })
+      : new THREE.MeshPhysicalMaterial({ map: dt, roughness: 0.42, metalness: 0, clearcoat: 0.4, clearcoatRoughness: 0.2, side: THREE.DoubleSide });   // lacquered, not metal: a metal dial took the warm sky's colour and read as skin;
     // (double sided: the dial disc's winding faced into the case, so it was culled and the wrist showed through)
     mk(G.dial, dm, 'dial');
   }
-  mk(G.glass, new THREE.MeshPhysicalMaterial({ color: 0xf4f8ff, roughness: 0.02, metalness: 0, transparent: true, opacity: 0.16, envMapIntensity: 2.4, clearcoat: 1, clearcoatRoughness: 0.02, depthWrite: false, ior: 1.77 }), 'crystal');
-  return { meshes, sleeveFrom };
+  // the smart watch's flat glass over a black screen: a fainter reflection, or the sky washed the lit face out grey
+  const smart = look.watch === 'smart';
+  mk(G.glass, new THREE.MeshPhysicalMaterial({ color: 0xf4f8ff, roughness: 0.02, metalness: 0, transparent: true, opacity: smart ? 0.06 : 0.16, envMapIntensity: smart ? 0.7 : 2.4, clearcoat: smart ? 0.4 : 1, clearcoatRoughness: 0.02, depthWrite: false, ior: smart ? 1.5 : 1.77 }), 'crystal');
+  return { meshes, sleeveFrom: G.sleeveFrom };
 }

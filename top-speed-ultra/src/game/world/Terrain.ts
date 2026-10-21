@@ -170,6 +170,9 @@ export class Terrain {
   private scenery(group: THREE.Group, tx: number, tz: number, heightAt: (x: number, z: number) => number) {
     const net = this.net, x0 = tx * TILE, z0 = tz * TILE, dens = this.q.props;
     const r = rng(tx * 7919 + tz * 104729 + 17), r2 = rng(tx * 31 + tz * 17 + 5);   // r2: the palms' lean, crown size and yaw
+    // Ultra only (tier 2), from its own stream so the layout every tier shares is untouched: palms in front yards,
+    // more of the street trees as palms, a share of them tall skinny fan palms, and eucalyptus for a share of the rest
+    const ultra = P.glow.tier >= 2, r3 = rng(tx * 104729 + tz * 7919 + 77);
     const clear = (x: number, z: number, m: number) => {
       for (const h of net.near(x, z, m + 2)) if (h.d > h.path.paveL - m && h.d < h.path.paveR + m && h.s > -m && h.s < h.path.len + m) return false;
       return true;
@@ -177,7 +180,15 @@ export class Terrain {
     const mat = (x: number, z: number, yaw: number, s: number, sy = s) =>
       new THREE.Matrix4().compose(new THREE.Vector3(x - x0, heightAt(x, z) - 0.15, z - z0), new THREE.Quaternion().setFromAxisAngle(UPV, yaw), new THREE.Vector3(s, sy, s));
     const houses: THREE.Matrix4[] = [], houseCol: THREE.Color[] = [], offices: THREE.Matrix4[][] = [[], [], []];
-    const palmT: THREE.Matrix4[] = [], palmC: THREE.Matrix4[] = [], trees: THREE.Matrix4[] = [], shrubs: THREE.Matrix4[] = [];
+    const palmT: THREE.Matrix4[] = [], palmC: THREE.Matrix4[] = [], trees: THREE.Matrix4[] = [], shrubs: THREE.Matrix4[] = [], eucs: THREE.Matrix4[] = [];
+    // a palm: a slight lean (up to 3.5 degrees, in a random direction), the crown on the leaning trunk's top. At Ultra
+    // some are fan palms: 20 to 30 m, a trunk 0.7 as thick and a smaller crown (the skyline's silhouettes)
+    const palm = (x: number, z: number, h: number, yaw: number) => {
+      const fan = ultra && r3() < 0.45, hh = fan ? 20 + r3() * 10 : h, tw = fan ? 0.7 : 1;
+      const cs = (1 + r2() * 0.25) * (fan ? 0.78 : 1), m = mat(x, z, yaw, 1).multiply(new THREE.Matrix4().makeRotationZ((r2() - 0.5) * 0.12));
+      palmT.push(m.clone().multiply(new THREE.Matrix4().makeScale(tw, hh, tw)));
+      palmC.push(m.clone().multiply(new THREE.Matrix4().makeTranslation(0, hh, 0)).multiply(new THREE.Matrix4().makeRotationY(r2() * 6)).multiply(new THREE.Matrix4().makeScale(cs, cs, cs)));
+    };
     // a jittered grid; what grows where depends on how urban the spot is
     const cell = 26 / Math.sqrt(Math.max(0.2, dens));
     for (let gz = z0 + cell / 2; gz < z0 + TILE; gz += cell) for (let gx = x0 + cell / 2; gx < x0 + TILE; gx += cell) {
@@ -196,15 +207,23 @@ export class Terrain {
         } else {
           houses.push(mat(x, z, yaw, 0.9 + r() * 0.3, 0.9 + r() * 0.5));
           houseCol.push(new THREE.Color().setHSL(0.09 + r() * 0.04, 0.25 + r() * 0.2, 0.78 + r() * 0.12));
+          if (ultra && r3() < 0.4) {                                  // a palm in the front yard
+            const px = x + Math.sin(yaw) * 10 + (r3() - 0.5) * 4, pz = z + Math.cos(yaw) * 10 + (r3() - 0.5) * 4;
+            if (net.ground(px, pz) >= 1.5 && clear(px, pz, 4)) palm(px, pz, 12 + r3() * 11, r3() * 6);
+          }
         }
       } else if (pick < 0.62 * u + 0.16) {
         if (!clear(x, z, 4)) continue;
         if (u > 0.3 && r() < 0.45) {
-          // a slight lean (up to 3.5 degrees, in a random direction), the crown on the leaning trunk's top
-          const h = 12 + r() * 13, cs = 1 + r2() * 0.25, m = mat(x, z, r() * 6, 1).multiply(new THREE.Matrix4().makeRotationZ((r2() - 0.5) * 0.12));
-          palmT.push(m.clone().multiply(new THREE.Matrix4().makeScale(1, h, 1)));
-          palmC.push(m.clone().multiply(new THREE.Matrix4().makeTranslation(0, h, 0)).multiply(new THREE.Matrix4().makeRotationY(r2() * 6)).multiply(new THREE.Matrix4().makeScale(cs, cs, cs)));
-        } else { const s = 0.7 + r() * 0.9; trees.push(mat(x, z, r() * 6, s, s * (0.9 + r() * 0.3))); }
+          const h = 12 + r() * 13;
+          palm(x, z, h, r() * 6);
+        } else {
+          const s = 0.7 + r() * 0.9, m = mat(x, z, r() * 6, s, s * (0.9 + r() * 0.3));
+          if (!ultra) trees.push(m);
+          else if (u > 0.3 && r3() < 0.35) palm(x, z, 12 + r3() * 13, r3() * 6);
+          else if (r3() < 0.45) { const k = 0.8 + r3() * 0.45; eucs.push(mat(x, z, r3() * 6, k, k * (0.9 + r3() * 0.25))); }
+          else trees.push(m);
+        }
       } else if (pick < 0.62 * u + 0.4 && clear(x, z, 2)) {
         const s = 0.8 + r() * 1.4; shrubs.push(mat(x, z, r() * 6, s));
       }
@@ -216,17 +235,21 @@ export class Terrain {
       im.castShadow = cast; im.receiveShadow = true; im.computeBoundingSphere();
       group.add(im);
     };
-    inst(house(), houseMat(), houses, true, houseCol);
+    // High and Ultra: the stucco wall with its windows and door (lit at night) and the S-tile roof; Low and Medium
+    // keep the flat vertex-coloured house
+    if (P.glow.tier >= 1) inst(houseTextured(), [P.mats.houseWall(), P.mats.roofTile()], houses, true, houseCol);
+    else inst(house(), houseMat(), houses, true, houseCol);
     const types = P.buildings(), bm = [P.mats.facade(0), P.mats.facade(1), P.mats.facade(2)], roof = P.mats.roof();
     offices.forEach((ms, t) => inst(types[t], [bm[t], bm[t], roof, roof, bm[t], bm[t]], ms));
     inst(P.palmTrunk(), P.mats.bark(), palmT); inst(P.palmCrown(this.q.props < 1 ? 0 : 1), P.mats.frond(), palmC);
     inst(P.treeCanopy(this.q.props < 1 ? 1 : 3), P.mats.foliage(), trees); inst(P.treeTrunk(), P.mats.trunk(), trees);
     inst(P.shrub(), P.mats.foliage(), shrubs, false);
+    inst(P.eucalyptusCrown(), P.mats.foliage(), eucs); inst(P.eucalyptusWood(), P.mats.euBark(), eucs);
   }
 }
 
 // a one- or two-storey stucco house with a hipped tile roof, as one geometry with vertex colours
-const memo: { house?: THREE.BufferGeometry; mat?: THREE.MeshStandardMaterial } = {};
+const memo: { house?: THREE.BufferGeometry; houseTex?: THREE.BufferGeometry; mat?: THREE.MeshStandardMaterial } = {};
 function house() {
   if (memo.house) return memo.house;
   const w = 15, d = 11, h = 5.2;
@@ -239,6 +262,26 @@ function house() {
   memo.house = mergeGeometries([b2, r2])!;
   memo.house.computeVertexNormals();
   return memo.house;
+}
+// the same house for High and Ultra, with UVs and two material groups: the walls (houseWall's 3.6 m cells; the
+// front, +z, takes the row with the door, the other walls the row of windows, one storey to the eaves) and the roof
+// (roofTile, 2.5 m a tile, its courses along each eave and up each slope)
+function houseTextured() {
+  if (memo.houseTex) return memo.houseTex;
+  const w = 15, d = 11, h = 5.2, cellW = 7.2;
+  const body = new THREE.BoxGeometry(w, h, d); body.translate(0, h / 2, 0);
+  const uv = body.attributes.uv, dims = [d, d, w, w, w, w];
+  for (let f = 0; f < 6; f++) for (let k = 0; k < 4; k++) { const i = f * 4 + k; uv.setXY(i, (uv.getX(i) * dims[f]) / cellW, (f === 4 ? 0 : 0.5) + 0.5 * uv.getY(i)); }
+  const roof = new THREE.ConeGeometry(Math.hypot(w, d) / 2 * 1.02, 2.6, 4, 1); roof.rotateY(Math.PI / 4); roof.scale(w / Math.hypot(w, d) * 1.414, 1, d / Math.hypot(w, d) * 1.414); roof.translate(0, h + 1.3, 0);
+  const rf = roof.toNonIndexed(); rf.computeVertexNormals();
+  const p = rf.attributes.position, n = rf.attributes.normal, ruv = rf.attributes.uv;
+  for (let t = 0; t < p.count; t += 3) {
+    // the face's own frame: along its eave (u) and up its slope (v), from its normal
+    const nx = n.getX(t), ny = n.getY(t), nz = n.getZ(t), hl = Math.hypot(nx, nz) || 1, sinA = Math.max(0.2, hl);
+    for (let k = t; k < t + 3; k++) { const x = p.getX(k), y = p.getY(k), z = p.getZ(k); ruv.setXY(k, (x * -nz / hl + z * nx / hl) / 2.5, ny > 0 ? (y - h) / sinA / 2.5 : 0); }
+  }
+  memo.houseTex = mergeGeometries([body.toNonIndexed(), rf], true)!;
+  return memo.houseTex;
 }
 function houseMat() { return memo.mat ?? (memo.mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 })); }
 const UPV = new THREE.Vector3(0, 1, 0);

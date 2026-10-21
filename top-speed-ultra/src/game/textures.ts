@@ -5,7 +5,9 @@ import { tfbm, tnoise, rng, clamp, smoothstep } from './util';
 
 let SIZE = 1024;
 let ANISO = 8;
+let DETAIL = 0;     // 0 Low/Medium (every texture as it was), 1 High/Ultra: heavier road wear (setTextureDetail, before the road textures are first made)
 export function configureTextures(size: number, maxAniso: number) { SIZE = size; ANISO = Math.min(16, maxAniso); }
+export function setTextureDetail(d: number) { DETAIL = d; }
 
 type Ctx = CanvasRenderingContext2D;
 function mk(w: number, h: number): [HTMLCanvasElement, Ctx] {
@@ -45,7 +47,8 @@ export interface PBR { map: THREE.Texture; normalMap: THREE.Texture; roughnessMa
 
 // Freeway asphalt, one lane wide: aggregate, darker polished wheel paths, tar-sealed cracks, oil down the middle.
 export function asphalt(): PBR {
-  return once('asphalt', () => {
+  // keyed by the detail, so a switch to or from High/Ultra mid-drive paints the right one (Low/Medium keep 'asphalt')
+  return once(DETAIL ? 'asphaltW' : 'asphalt', () => {
     const n = Math.min(SIZE, 1024), r = rng(11);
     const [c, g] = mk(n, n), [rc, rg] = mk(n, n);
     const img = g.createImageData(n, n), d = img.data, rimg = rg.createImageData(n, n), rd = rimg.data;
@@ -56,12 +59,15 @@ export function asphalt(): PBR {
       const coarse = tfbm(u * 8, v * 8, 8, 4, 5);
       const path = Math.exp(-Math.pow((u - 0.28) / 0.07, 2)) + Math.exp(-Math.pow((u - 0.72) / 0.07, 2));
       const oil = Math.exp(-Math.pow((u - 0.5) / 0.05, 2)) * (0.5 + 0.5 * tfbm(u * 4, v * 16, 4, 3, 9));
-      let lum = 0.36 + (coarse - 0.5) * 0.12 + (grain - 0.5) * 0.16 - path * 0.05 - oil * 0.06;
+      // High/Ultra: the wheel paths are rubber-darkened and polished, as on the concrete slabs, and the darkening
+      // wanders along the lane (tfbm along v) so it reads as wear and not a printed stripe
+      const wear = DETAIL ? path * (0.08 + 0.05 * tfbm(u * 2, v * 6, 2, 2, 12)) : path * 0.05;
+      let lum = 0.36 + (coarse - 0.5) * 0.12 + (grain - 0.5) * 0.16 - wear - oil * 0.06;
       const stone = grain > 0.86 ? (grain - 0.86) * 2.2 : 0;
       lum += stone;
       const i = (y * n + x) * 4;
       d[i] = clamp(lum * 255 * 1.0, 0, 255); d[i + 1] = clamp(lum * 255 * 0.99, 0, 255); d[i + 2] = clamp(lum * 255 * 0.97, 0, 255); d[i + 3] = 255;
-      const rough = clamp(0.92 - path * 0.18 - oil * 0.2 + (grain - 0.5) * 0.1, 0.35, 1);
+      const rough = clamp(0.92 - path * (DETAIL ? 0.26 : 0.18) - oil * 0.2 + (grain - 0.5) * 0.1, 0.35, 1);
       rd[i] = rd[i + 1] = rd[i + 2] = rough * 255; rd[i + 3] = 255;
       height[y * n + x] = grain * 0.7 + coarse * 0.3 + stone;
     }
@@ -446,6 +452,187 @@ export function beamPool(): THREE.Texture {
     }
     g.putImageData(img, 0, 0);
     const t = tex(c, false); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; t.anisotropy = ANISO; return t;
+  });
+}
+
+// ------------------------------------------------------------------------------- High and Ultra scenery textures
+
+// a freeway lamp's pool on the road: a soft ellipse, warm at the heart (a high-pressure sodium / warm LED head),
+// painted in linear light for an additive decal; the alpha carries the fall-off
+export function lampPool(): THREE.Texture {
+  return once('lampPool', () => {
+    const n = 128, [c, g] = mk(n, n), img = g.createImageData(n, n), d = img.data;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const u = (x + 0.5) / n * 2 - 1, v = (y + 0.5) / n * 2 - 1, r = Math.hypot(u, v);
+      const a = Math.pow(Math.max(0, 1 - r * r), 1.6), m = Math.pow(a, 0.5);
+      const i = (y * n + x) * 4;
+      d[i] = 255; d[i + 1] = (0.78 + 0.12 * m) * 255; d[i + 2] = (0.5 + 0.2 * m) * 255; d[i + 3] = a * 255;
+    }
+    g.putImageData(img, 0, 0);
+    const t = tex(c, false); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;
+  });
+}
+
+// the lit windows of facade(kind) at night: the same window grid over 4 x 4 of facade's tiles (set its repeat to 0.25
+// against the facade's 1, so the lit pattern repeats every 8 windows, not every 2), a share of the cells lit (warm
+// or cool, each its own brightness, some with a blind half drawn), the rest black. An emissive map; the material's
+// emissiveIntensity brings it up with the dark.
+export function facadeLit(kind: 0 | 1 | 2): THREE.Texture {
+  return once('facadeLit' + kind, () => {
+    const n = 1024, [c, g] = mk(n, n), r = rng(300 + kind);
+    g.fillStyle = '#000'; g.fillRect(0, 0, n, n);
+    const lit = (x: number, y: number, w: number, h: number) => {
+      if (r() > (kind === 2 ? 0.42 : 0.55)) return;
+      const warm = r() < 0.7, k = 0.45 + r() * 0.55;
+      g.fillStyle = warm ? `rgb(${255 * k | 0},${214 * k | 0},${150 * k | 0})` : `rgb(${200 * k | 0},${226 * k | 0},${255 * k | 0})`;
+      g.fillRect(x, y, w, h);
+      if (r() < 0.3) { g.fillStyle = 'rgba(0,0,0,0.5)'; g.fillRect(x, y, w * (0.3 + r() * 0.4), h); }   // a drawn blind
+    };
+    for (let ty = 0; ty < 4; ty++) for (let tx = 0; tx < 4; tx++) {
+      const ox = tx * 256, oy = ty * 256;
+      if (kind === 2) { for (let yy = 0; yy < 4; yy++) for (let xx = 0; xx < 4; xx++) lit(ox + xx * 64 + 4, oy + yy * 64 + 4, 56, 56); }
+      else { for (let yy = 0; yy < 2; yy++) for (let xx = 0; xx < 2; xx++) lit(ox + xx * 128 + 30, oy + yy * 128 + 34, 68, 58); }
+    }
+    const t = tex(c, true); t.repeat.set(0.25, 0.25); return t;
+  });
+}
+
+// a stucco house wall: 2 x 2 cells, each one storey high with a window; the lower row has a front door (with its
+// porch light) in its second cell, and the house maps that row to its front and the upper one to its other walls.
+// Its lit windows at night are a second texture on the same grid. The roof's S-tile courses (roofTile) are 2.5 m
+// a tile.
+export function houseWall(): { map: THREE.Texture; lit: THREE.Texture } {
+  return once('houseWall', () => {
+    const n = 256, [c, g] = mk(n, n), [lc, lg] = mk(n, n), r = rng(321);
+    g.fillStyle = '#e4d6bc'; g.fillRect(0, 0, n, n);
+    for (let i = 0; i < 3000; i++) { g.fillStyle = `rgba(${r() < 0.5 ? '0,0,0' : '255,255,255'},${r() * 0.05})`; g.fillRect(r() * n, r() * n, 2, 2); }
+    lg.fillStyle = '#000'; lg.fillRect(0, 0, n, n);
+    for (let yy = 0; yy < 2; yy++) for (let xx = 0; xx < 2; xx++) {
+      const x0 = xx * 128, y0 = yy * 128;
+      if (xx === 1 && yy === 1) {                                    // the front door, with a porch light beside it
+        g.fillStyle = '#f2ede2'; g.fillRect(x0 + 40, y0 + 52, 48, 76); g.fillStyle = '#6b4a30'; g.fillRect(x0 + 44, y0 + 56, 40, 72); g.fillStyle = 'rgba(255,255,255,.15)'; g.fillRect(x0 + 50, y0 + 62, 28, 26);
+        g.fillStyle = '#3a3a3a'; g.fillRect(x0 + 96, y0 + 62, 8, 10);
+        lg.fillStyle = 'rgb(255,200,120)'; lg.fillRect(x0 + 95, y0 + 61, 10, 12);
+        continue;
+      }
+      const w = 54 + (r() * 20 | 0), h = 46 + (r() * 12 | 0), wx = x0 + 64 - w / 2, wy = y0 + 40;
+      g.fillStyle = '#f2ede2'; g.fillRect(wx - 5, wy - 5, w + 10, h + 10);                       // the frame
+      g.fillStyle = '#3c4a58'; g.fillRect(wx, wy, w, h);
+      g.fillStyle = 'rgba(255,255,255,.2)'; g.fillRect(wx, wy, w, 12);                           // the sky in the glass
+      g.fillStyle = '#f2ede2'; g.fillRect(wx + w / 2 - 2, wy, 4, h); g.fillRect(wx, wy + h / 2 - 2, w, 4);   // mullions
+      g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(wx - 5, wy + h + 5, w + 10, 6);                 // the sill's shadow
+      if (r() < 0.6) { const k = 0.5 + r() * 0.5; lg.fillStyle = `rgb(${255 * k | 0},${205 * k | 0},${140 * k | 0})`; lg.fillRect(wx, wy, w, h); }
+    }
+    return { map: tex(c, true), lit: tex(lc, true) };
+  });
+}
+export function roofTile(): PBR {
+  return once('roofTile', () => {
+    const n = 256, [c, g] = mk(n, n), img = g.createImageData(n, n), d = img.data, height = new Float32Array(n * n), r = rng(331);
+    const course = 32, tile = 24;
+    const tint = new Float32Array(400); for (let i = 0; i < 400; i++) tint[i] = 0.82 + r() * 0.36;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const row = Math.floor(y / course), yy = y - row * course, xo = (x + (row % 2) * (tile / 2)) % n, col = Math.floor(xo / tile), xx = xo - col * tile;
+      const curve = Math.sin((xx / tile) * Math.PI);                     // the S-tile's barrel
+      const lip = yy < 4 ? 0.55 : 1;                                     // the shadow under each course
+      const k = tint[(row * 16 + col) % 400] * (0.75 + 0.25 * curve) * lip * (0.94 + 0.12 * tnoise(x * 0.5, y * 0.5, n * 0.5, 332));
+      const i = (y * n + x) * 4;
+      d[i] = clamp(196 * k, 0, 255); d[i + 1] = clamp(112 * k, 0, 255); d[i + 2] = clamp(78 * k, 0, 255); d[i + 3] = 255;
+      height[y * n + x] = curve * 0.6 * lip + (yy < 4 ? 0 : 0.4);
+    }
+    g.putImageData(img, 0, 0);
+    return { map: tex(c, true), normalMap: normalMap(height, n, n, 2) };
+  });
+}
+
+// chain-link fence on a transparent ground: the wire's diamonds, 1 m square a tile
+export function chainLink(): THREE.Texture {
+  return once('chainLink', () => {
+    const n = 128, [c, g] = mk(n, n), img = g.createImageData(n, n), d = img.data;
+    const cell = n / 10;                                               // 10 cm diamonds
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const u = ((x % cell) / cell + (y % cell) / cell) % 1, v = (((x % cell) / cell - (y % cell) / cell) % 1 + 1) % 1;
+      const wire = Math.min(Math.abs(u - 0.5), Math.abs(v - 0.5)) < 0.08 ? 1 : 0;
+      const i = (y * n + x) * 4;
+      d[i] = 150; d[i + 1] = 156; d[i + 2] = 160; d[i + 3] = wire * 255;
+    }
+    g.putImageData(img, 0, 0);
+    return tex(c, true);
+  });
+}
+
+// two tyres' skid near a gore point: dark rubber streaks with soft edges, breaking up along their length; the
+// alpha carries the mark, on a 2.1 m strip along the road (v runs along it)
+export function skid(): THREE.Texture {
+  return once('skid', () => {
+    const w = 64, h = 256, [c, g] = mk(w, h), img = g.createImageData(w, h), d = img.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const u = (x + 0.5) / w, v = (y + 0.5) / h;
+      const wobble = (tfbm(0.5, v * 3, 1, 2, 401) - 0.5) * 0.08;
+      const tyre = Math.exp(-(((u - 0.12 + wobble) / 0.04) ** 2)) + Math.exp(-(((u - 0.88 + wobble) / 0.04) ** 2));   // 1.6 m apart on a 2.1 m strip
+      const along = smoothstep(0, 0.25, v) * (1 - smoothstep(0.75, 1, v)) * (0.5 + 0.5 * tfbm(u * 2, v * 8, 2, 3, 402));
+      const i = (y * w + x) * 4;
+      d[i] = 14; d[i + 1] = 13; d[i + 2] = 13; d[i + 3] = clamp(tyre * along * 0.85, 0, 1) * 255;
+    }
+    g.putImageData(img, 0, 0);
+    const t = tex(c, true); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;
+  });
+}
+
+// a billboard for one of our own brands (nothing real goes on a board): Rossini and Vela (our car marques), the
+// three radio stations and Lot 57 (our taproom on Orangewood). 1024 x 384, lit at night through the same texture
+// as an emissive map.
+export const BRANDS = ['rossini', 'vela', 'kfwy', 'kcst', 'knyn', 'lot57'] as const;
+export type Brand = typeof BRANDS[number];
+export function billboard(brand: Brand): THREE.Texture {
+  return once('billboard' + brand, () => {
+    const w = 1024, h = 384, [c, g] = mk(w, h);
+    const sans = (wt: number, px: number) => `${wt} ${px}px "Saira Semi Condensed", "Arial Narrow", Arial, sans-serif`;
+    const serif = (wt: number, px: number) => `${wt} ${px}px Georgia, "Times New Roman", serif`;
+    g.textBaseline = 'middle';
+    const band = (c0: string, c1: string) => { const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, c0); gr.addColorStop(1, c1); g.fillStyle = gr; g.fillRect(0, 0, w, h); };
+    switch (brand) {
+      case 'rossini':
+        band('#0d1322', '#1b2742');
+        g.fillStyle = '#e8c87a'; g.font = serif(700, 150); g.textAlign = 'left'; g.fillText('ROSSINI', 70, 160);
+        g.font = sans(500, 44); g.fillStyle = '#d7dbe4'; g.fillText('GT  ·  BRIO  ·  CORSA', 76, 268);
+        g.fillStyle = '#e8c87a'; g.fillRect(70, 212, 560, 3);
+        g.font = serif(700, 220); g.textAlign = 'right'; g.fillStyle = 'rgba(232,200,122,0.18)'; g.fillText('R', w - 60, 200);
+        break;
+      case 'vela':
+        band('#f3f5f7', '#dfe6ee');
+        g.fillStyle = '#10243a'; g.font = sans(800, 190); g.textAlign = 'left'; g.fillText('VELA', 70, 170);
+        g.fillStyle = '#2b7de0'; g.fillRect(70, 250, 300, 8);
+        g.font = sans(500, 46); g.fillStyle = '#10243a'; g.fillText('Electric. Quiet. Quick.', 76, 300);
+        g.strokeStyle = '#2b7de0'; g.lineWidth = 10; g.beginPath(); g.moveTo(760, 300); g.lineTo(880, 90); g.lineTo(1000, 300); g.stroke();
+        break;
+      case 'kfwy':
+        band('#2a0a3a', '#7a1f6c');
+        g.fillStyle = '#ffd166'; g.font = sans(800, 210); g.textAlign = 'left'; g.fillText('96.9', 60, 170);
+        g.fillStyle = '#ffffff'; g.font = sans(700, 92); g.fillText('KFWY', 520, 130);
+        g.font = sans(500, 54); g.fillText('FREEWAY FM  ·  synthwave all night', 520, 215);
+        g.fillStyle = '#ffd166'; g.fillRect(60, 280, 904, 6);
+        break;
+      case 'kcst':
+        band('#06385a', '#0f6b8c');
+        g.fillStyle = '#ffffff'; g.font = sans(800, 210); g.textAlign = 'left'; g.fillText('101.5', 60, 170);
+        g.fillStyle = '#9fe3ff'; g.font = sans(700, 92); g.fillText('KCST', 600, 130);
+        g.fillStyle = '#ffffff'; g.font = sans(500, 54); g.fillText('COAST  ·  the sound of the shoreline', 60, 300);
+        break;
+      case 'knyn':
+        band('#2d2415', '#5a4a2a');
+        g.fillStyle = '#f0e2c0'; g.font = sans(800, 210); g.textAlign = 'left'; g.fillText('88.3', 60, 170);
+        g.fillStyle = '#c8e28a'; g.font = sans(700, 92); g.fillText('KNYN', 540, 130);
+        g.fillStyle = '#f0e2c0'; g.font = sans(500, 54); g.fillText('CANYON RADIO  ·  slow mornings, late nights', 60, 300);
+        break;
+      case 'lot57':
+        band('#1b1b1b', '#2e2a26');
+        g.fillStyle = '#ff9a3c'; g.font = sans(800, 230); g.textAlign = 'left'; g.fillText('LOT 57', 60, 160);
+        g.fillStyle = '#f4efe6'; g.font = sans(500, 54); g.fillText('taproom & yard  ·  Orangewood Ave, Anaheim  ·  open late', 64, 300);
+        g.strokeStyle = '#ff9a3c'; g.lineWidth = 6; g.strokeRect(24, 24, w - 48, h - 48);
+        break;
+    }
+    const t = tex(c, true); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t;
   });
 }
 

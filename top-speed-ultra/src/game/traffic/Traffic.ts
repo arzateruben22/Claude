@@ -10,6 +10,7 @@ import type { Network } from '../world/Network';
 import { buildClasses, wheelGeometry, CarClass, PAINTS } from './carModels';
 import * as M from '../../preview/car-mats';
 import { clamp, rng, smoothstep } from '../util';
+import { glow } from '../road/props';
 import { sweptContact } from './contact';
 
 export interface TrafficCar {
@@ -44,6 +45,8 @@ export class Traffic {
   scale = 1;                                           // a temporary thinning (the Clear Path ability)
   pace = 1;                                            // how fast everyone drives (slower in rain and fog)
   viewAhead = 1600;
+  private tier = 0;                                    // props.glow.tier the meshes were last set for
+  private glassM: THREE.Material; private glassHi: THREE.Material;
 
   constructor(private net: Network, capacity = 320) {
     const wheel = wheelGeometry();
@@ -52,6 +55,10 @@ export class Traffic {
     const bodyM = M.paint(0xffffff, 'phone', [], { key: 'traffic', flake: 0.2 });
     const trimM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, metalness: 0.25 });
     const glassM = new THREE.MeshStandardMaterial({ color: 0x0c1016, metalness: 0.85, roughness: 0.06, envMapIntensity: 1.4 });
+    // High and Ultra: a smoked tint that carries more of the sky's reflection (a mirror-smooth coat over a blue-grey
+    // tint), so the glass reads as glass against the paint by day and keeps a navy sheen at night
+    this.glassM = glassM;
+    this.glassHi = new THREE.MeshPhysicalMaterial({ color: 0x18222e, metalness: 0.55, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 2.4, emissive: 0x03060b });
     const lightM = new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
     const wheelM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.6, metalness: 0.3 });
     const blinkM = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 1.1, 0.1), toneMapped: false });
@@ -326,7 +333,22 @@ export class Traffic {
   private m4 = new THREE.Matrix4(); private q = new THREE.Quaternion(); private e = new THREE.Euler(0, 0, 0, 'YXZ');
   private p3 = new THREE.Vector3(); private sc = new THREE.Vector3(1, 1, 1); private w4 = new THREE.Matrix4(); private wq = new THREE.Quaternion();
 
+  // swap in the High/Ultra tail bar, trim and glass (or back) when the tier changes; same draw calls either way
+  private setTier(t: number) {
+    this.tier = t;
+    this.meshes.forEach((m, k) => {
+      const c = this.classes[k];
+      m.tail.geometry = (t && c.tailHi) || c.tail;
+      if (m.trim) m.trim.geometry = (t && c.trimHi) || c.trim!;
+      m.glass.material = t ? this.glassHi : this.glassM;
+    });
+  }
+
   render(alpha: number, time: number) {
+    if (glow.tier !== this.tier) this.setTier(glow.tier);
+    // the tail lamps: as they were at Low and Medium (1, braking 3.2); at High and Ultra they light up with the dark
+    // (4.5 at night, braking 10, over the bloom's threshold) so a stream of traffic reads as red lights at night
+    const night = this.tier ? smoothstep(0.3, 0.85, glow.dark) : 0, tailOn = 1 + 3.5 * night, tailBrake = 3.2 + 6.8 * night;
     const counts = this.meshes.map(() => 0);
     const blinkOn = Math.floor(time * 2.6) % 2 === 0;
     for (const c of this.cars) {
@@ -343,7 +365,7 @@ export class Traffic {
       this.m4.compose(this.p3, this.q, this.sc);
       m.body.setMatrixAt(i, this.m4); m.glass.setMatrixAt(i, this.m4); m.tail.setMatrixAt(i, this.m4); m.head.setMatrixAt(i, this.m4); m.trim?.setMatrixAt(i, this.m4);
       m.body.setColorAt(i, c.color);
-      const brake = c.acc < -0.9 || c.stopT > 0 ? 3.2 : 1;
+      const brake = c.acc < -0.9 || c.stopT > 0 ? tailBrake : tailOn;
       m.tail.instanceColor!.setXYZ(i, brake, brake, brake);
       cl.wheels.forEach(([x, y, z], w) => {
         this.wq.setFromAxisAngle(X_AXIS, -c.spin);

@@ -6,7 +6,8 @@
 import * as THREE from 'three';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import * as T from '../textures';
-import { fbm2, clamp, lerp, smoothstep } from '../util';
+import * as P from '../road/props';
+import { fbm2, clamp, lerp, smoothstep, rng } from '../util';
 
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
@@ -84,6 +85,9 @@ export class Environment {
   private envT = 0;
   private envDirty = true;
   private envTex: THREE.Texture | null = null;
+  private envGround: THREE.MeshBasicMaterial;
+  private tier = 0;                // 0 Low/Medium (everything as it was), 1 High, 2 Ultra: from the shadow size (setQuality)
+  readonly skyline: THREE.Points;  // the lit city on the horizon at night (High and Ultra)
   time: TimeOfDay = 'day';
   weather: Weather = 'clear';
   private cur: State; private tgt: State;
@@ -99,7 +103,10 @@ export class Environment {
     scene.add(this.sky);
     this.envSky = new Sky(); this.envSky.scale.setScalar(900); tameSky(this.envSky, 0.36);
     this.envScene.add(this.envSky);
-    const ground = new THREE.Mesh(new THREE.CircleGeometry(800, 32), new THREE.MeshBasicMaterial({ color: 0x8a8070 }));
+    // the ground under the environment map: by day a tan floor (the sky's bounce off the land); on High and Ultra it
+    // goes dark with the daylight (apply), since an unlit floor lit the cabin's plastics and the hands as if by day
+    this.envGround = new THREE.MeshBasicMaterial({ color: 0x8a8070 });
+    const ground = new THREE.Mesh(new THREE.CircleGeometry(800, 32), this.envGround);
     ground.rotation.x = -Math.PI / 2; ground.position.y = -2; this.envScene.add(ground);
 
     this.sun = new THREE.DirectionalLight(0xfff1dc, 3.1);
@@ -133,17 +140,23 @@ export class Environment {
     this.flareRay.far = 400;
 
     // distant mountains: a ring of hazy ridges that travels with you (the real ones nearby come from the terrain)
-    const n = 256, pos: number[] = [], idx: number[] = [];
+    const n = 256, pos: number[] = [], idx: number[] = [], mcol: number[] = [];
     this.ridge = new Float32Array(n + 1);
     for (let i = 0; i <= n; i++) {
       const a = (i / n) * Math.PI * 2, h = 180 + 520 * fbm2(Math.cos(a) * 3 + 10, Math.sin(a) * 3, 5, 3) ** 1.6 * 2.2;
       const R = 4200;
       this.ridge[i] = h;
       pos.push(Math.cos(a) * R, -60, Math.sin(a) * R, Math.cos(a) * R, h, Math.sin(a) * R);
+      // High and Ultra: the ridges are not one flat tone. Aerial perspective lightens and warms the base and leaves
+      // the crest darker and bluer, and a slow mottle along the ring (spurs catching the light) breaks the cut-out
+      // look. By day the material's colour is the haze, so these multiply it; at night the base carries a faint glow
+      const m = 0.9 + 0.2 * fbm2(Math.cos(a) * 9 + 3, Math.sin(a) * 9, 3, 8), crest = 0.66 + 0.22 * (1 - smoothstep(180, 700, h));
+      mcol.push(1.04 * m, 1.0 * m, 0.96 * m, crest * m, crest * 1.02 * m, crest * 1.1 * m);
       if (i < n) { const k = i * 2; idx.push(k, k + 2, k + 1, k + 1, k + 2, k + 3); }
     }
     const mg = new THREE.BufferGeometry();
     mg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); mg.setIndex(idx);
+    mg.setAttribute('color', new THREE.Float32BufferAttribute(mcol, 3));
     // it writes depth, so the clouds (drawn later, being transparent) stop showing through the ridges; the stars
     // are drawn just before it (see below) and it paints over them
     this.mountains = new THREE.Mesh(mg, new THREE.MeshBasicMaterial({ color: 0xa3abb6, fog: false, side: THREE.DoubleSide, depthWrite: true }));
@@ -183,6 +196,35 @@ export class Environment {
     this.stars.renderOrder = -2.5;
     this.stars.frustumCulled = false;
     scene.add(this.stars);
+
+    // the lit city on the horizon, for the night on High and Ultra: a band of warm and cool points from 0.1° to
+    // 1.5° up all round the compass, denser in a few clusters where towers stack the lights higher (to 3°), as a
+    // distant skyline reads at night. The points sit inside the mountain ring (0.76 × far against the ring's 0.8),
+    // so they show in front of its silhouette; anything nearer in the world draws over them. Same point shader as
+    // the stars; the brightest is 0.85, under the bloom threshold, so none blooms to a blob. One draw call.
+    const kp: number[] = [], kc: number[] = [], ks: number[] = [], kr = rng(23);
+    const clusters = [0.3, 1.1, 2.0, 2.9, 3.8, 4.9].map((a) => [a + kr() * 0.3, 0.6 + kr() * 0.6] as const);     // azimuth, half-width
+    while (ks.length < 1100) {
+      const th = kr() * Math.PI * 2;
+      let tower = 0;
+      for (const [ca, cw] of clusters) { const d = Math.abs(Math.atan2(Math.sin(th - ca), Math.cos(th - ca))); tower = Math.max(tower, 1 - smoothstep(0, cw, d)); }
+      if (kr() > 0.25 + 0.75 * tower) continue;                   // sparse between the clusters
+      const altDeg = 0.1 + kr() * (1.4 + 1.6 * tower * kr()), y = Math.sin((altDeg * Math.PI) / 180), r = Math.cos((altDeg * Math.PI) / 180);
+      const warm = kr(), b = 0.85 * (0.12 + 0.88 * kr() ** 2.2) * lerp(0.6, 1, tower);
+      kp.push(r * Math.cos(th), y, r * Math.sin(th));
+      kc.push(b * lerp(0.75, 1, warm), b * lerp(0.85, 0.82, warm), b * lerp(1, 0.55, warm));   // cool white to sodium
+      ks.push(1.2 + 1.8 * (b / 0.85));
+    }
+    const kg = new THREE.BufferGeometry();
+    kg.setAttribute('position', new THREE.Float32BufferAttribute(kp, 3));
+    kg.setAttribute('aColor', new THREE.Float32BufferAttribute(kc, 3));
+    kg.setAttribute('aSize', new THREE.Float32BufferAttribute(ks, 1));
+    const km = sm.clone(); km.uniforms = { uOpacity: { value: 0 }, uPR: { value: 1 } };
+    this.skyline = new THREE.Points(kg, km);
+    this.skyline.renderOrder = -0.5;
+    this.skyline.frustumCulled = false;
+    this.skyline.visible = false;
+    scene.add(this.skyline);
 
     this.cur = this.targetFor(new Date());
     this.tgt = { ...this.cur, haze: this.cur.haze.clone() };
@@ -292,6 +334,19 @@ export class Environment {
     const sm = this.stars.material as THREE.ShaderMaterial;
     sm.uniforms.uOpacity.value = smoothstep(-0.02, -0.16, c.alt) * smoothstep(0.3, 0.8, c.sun);
     this.stars.visible = sm.uniforms.uOpacity.value > 0.002;
+    // High and Ultra, at night: the city's lights come on through dusk (haze and fog dim them with distance), the
+    // environment map's floor goes dark with the daylight (a faint navy, so the cabin takes the night's light), and the
+    // ridges keep their vertex shading. Low and Medium keep the flat floor and ridge they had
+    const night = smoothstep(0.02, -0.12, c.alt), km = this.skyline.material as THREE.ShaderMaterial;
+    km.uniforms.uOpacity.value = this.tier >= 1 ? night * smoothstep(0.25, 0.7, c.fogFar) : 0;
+    this.skyline.visible = km.uniforms.uOpacity.value > 0.002;
+    const mm = this.mountains.material as THREE.MeshBasicMaterial;
+    if (mm.vertexColors !== this.tier >= 1) { mm.vertexColors = this.tier >= 1; mm.needsUpdate = true; }
+    if (this.tier >= 1) this.envGround.color.setHex(0x8a8070).multiplyScalar(0.02 + 0.98 * day).lerp(c.haze, 0.3 * (1 - day));
+    else this.envGround.color.setHex(0x8a8070);
+    // the scenery's night lights on High and Ultra (lit windows, billboards, the lamps' pools, traffic's tail lamps)
+    // follow the same dark the game's lamp heads use (props.glow; nothing changes at Low and Medium)
+    P.setNight(1 - day);
     // exposure set for the outside: under cloud the camera opens up a little, as a real one would, so the sky
     // reads bright and the road mid-grey while the cockpit stays the darker thing in frame
     this.renderer.toneMappingExposure = lerp(1.25, 0.92, day) * (1 + 0.2 * overcast * c.sky);
@@ -312,7 +367,10 @@ export class Environment {
     this.clouds.scale.setScalar((far * 0.86) / 5200);
     this.mountains.scale.setScalar((far * 0.8) / 4200);
     this.stars.scale.setScalar(far * 0.85);
+    this.skyline.scale.setScalar(far * 0.76);
     this.farPlane = far;
+    this.tier = shadowSize >= 4096 ? 2 : shadowSize >= 2048 ? 1 : 0;
+    this.envDirty = true;
     this.apply();
     if (shadowSize === this.shadowSize) return;
     this.shadowSize = shadowSize;
@@ -345,7 +403,9 @@ export class Environment {
     this.clouds.rotation.y = time * 0.002;
     this.mountains.position.set(cp.x, cp.y - this.farPlane * 0.01, cp.z);
     this.stars.position.copy(cp);
+    this.skyline.position.set(cp.x, cp.y - this.farPlane * 0.01, cp.z);
     (this.stars.material as THREE.ShaderMaterial).uniforms.uPR.value = this.renderer.getPixelRatio();
+    (this.skyline.material as THREE.ShaderMaterial).uniforms.uPR.value = this.renderer.getPixelRatio();
     this.updateFlare(camera);
     this.updateRain(dt, cp, carVel);
   }
