@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
     if (await sendEmail(o.email, "Running low?", page(`Hi${first ? " " + esc(first) : ""},`,
       `<p style="font-size:15px;line-height:1.55">It's been about two months since your order, so you may be close to the bottom of:</p>` +
       `<ul style="font-size:15px;line-height:1.6">${items.map((i) => `<li>${esc(i.name)}</li>`).join("")}</ul>` +
-      btn(link, "Put them back in my bag") + `<p style="font-size:14px;line-height:1.5">Shipping is free over $75, or pick up free at your next visit.</p>` + await footer(o.email)))) sent.restock++;
+      btn(link, "Put them back in my bag") + `<p style="font-size:14px;line-height:1.5">Shipping is free over $75, or pick up free at your next visit. Signed in, everything you've bought before is under My Lumevina → Buy again.</p>` + await footer(o.email)))) sent.restock++;
   }
 
   // ── Evelyn: a client question past its promised reply time (24 h members, 48 h others), nudged once ──

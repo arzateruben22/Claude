@@ -74,7 +74,7 @@ Ready-to-send text:
 | Days | Who | What |
 |---|---|---|
 | 1 | Evelyn | Three brand emails; confirm seller's permit and LA business certificate |
-| 1 to 3 | Claude | Consult gate, online consult product, policy pages, label copy |
+| 1 to 3 | Claude | Consult gate, online consult product, policy pages, Buy again, search data (built Oct 21); label copy as the brands answer |
 | 4 to 5 | Evelyn | Stripe live and Stripe Tax on (GO-LIVE.md), shipping account, boxes |
 | 6 to 7 | Both | Test orders with the test card, one real $1 order, one refund |
 | 8 | Evelyn | Shop public; Claude submits the feeds to Google and Meta |
