@@ -13,8 +13,9 @@
 //                  full-width red tail bar. 4.72 x 2.02 m, 3.00 m wheelbase, staggered 0.70 / 0.74 m tyres.
 //
 // Every car shares the driver's frame (spec.ts EYE, WHEEL_AT): the cabin stays where the driver sits; the body
-// changes round it. The hypercar alone moves its driver lower and inboard (seatOffset below: seatDrop, seatX), so the
-// eye sits under its 1.12 m roof. Lengths in metres, car frame (x right, y up, the car faces -z, origin under the middle).
+// changes round it. The hypercar alone moves its driver lower, inboard and forward (seatOffset below: seatDrop, seatX,
+// seatFwd), so the eye sits under its 1.12 m roof. Lengths in metres, car frame (x right, y up, the car faces -z, origin
+// under the middle).
 import type { PaintMask } from './car-mats';
 export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper';
 export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'];
@@ -89,6 +90,8 @@ export interface ShapeParams {
   ventsQ?: [number, number][][];         // louvred vents as quads on the top surface (x, z: inner-front, outer-front, outer-rear, inner-rear; mirrored)
   hoodY?: number;                        // the game's hood camera's height (1.0 m; the hypercar's bonnet sits lower)
   seatX?: number;                        // the seats' |x| (0.37, the shared driver's frame): the driver, the wheel and both seats move to it
+  seatFwd?: number;                      // how far this car's driver sits ahead of the shared frame: the eye, the wheel, the hands, the
+                                         // seats and the dash move forward (-z) by it (seatOffset)
   deckRibs?: { x: [number, number]; z: number[] };   // silver ribs across the rear deck's openings (the structure seen under the wing)
 }
 
@@ -249,13 +252,17 @@ const HYPER: ShapeParams = {
   // the door's scoop: a deep, sharp-edged recess whose front and rear ends lean back down the side (the sheet's
   // fender trailing edge and the diagonal into the intake)
   scallop: { depth: 0.16, z0: -0.92, z1: -0.68, e0: 0.16, e1: 0.4, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
-  WS: { zb: -1.15, zt: -0.3, xb: 0.47, xt: 0.38 },
-  SG: { fb: [-0.95, 0.76], rb: [0.42, 0.87], rt: [0.28, 1.05], ftZ: -0.3, ftA: 0.38 },
+  // the windscreen runs 0.1 m further up the canopy than the first cut (its top at z -0.2, 1.09 m), and the side
+  // glass's front-top corner moves back with it so the A-pillar keeps its width: from the seat the header and its frit
+  // then sit above the top of the frame (they crossed the top third of it at -0.3)
+  WS: { zb: -1.15, zt: -0.2, xb: 0.47, xt: 0.38 },
+  SG: { fb: [-0.95, 0.76], rb: [0.42, 0.87], rt: [0.28, 1.05], ftZ: -0.2, ftA: 0.38 },
   RG: { x0: 0.22, x1: 0.13, z0: 0.48, z1: 1.0 },
   // smoked glass across most of the roof, under the scoop, running into the rear screen and the spine behind it: from
   // above the canopy reads as one dark teardrop between silver flanks (the sheet's TOP); the camera of the side, front
   // and hero views is below the roof, so they still see the silver flanks (the sheet's SIDE and FRONT)
-  roofGlass: { z0: -0.26, z1: 0.47, x: 0.6 }, carbonRoof: false,
+  // (it starts 0.04 m behind the windscreen's top, as before the windscreen grew)
+  roofGlass: { z0: -0.16, z1: 0.47, x: 0.6 }, carbonRoof: false,
   intake: null, intakeQ: [[0.3, 0.25], [0.56, 0.25], [0.2, 0.63], [0.06, 0.63]],
   louvre: null,
   door: [[-0.56, 0.29], [0.1, 0.29], [0.14, 0.82], [-0.98, 0.8]],   // its front and lower edges lie along the scoop's creases
@@ -284,10 +291,14 @@ const HYPER: ShapeParams = {
   wheel: 'multi', rimColor: 0x101318, caliper: 0x1f4fd8,
   // the Corsa's carbon buckets, harnesses and roll hoop with the hypercar's own trim (cockpit.ts 'hyper')
   interior: 'hyper',
-  // the driver sits 0.20 m lower and 0.10 m further in than the shared frame (eye 0.96 m, x -0.27): under this roof
-  // the windscreen's header is 1.03-1.05 m at the driver's x, which at the plan's 0.15 m drop lies 2-6 degrees above
-  // the eye line, across the road at the horizon; at 0.20 m it is 8-13 degrees up, with 0.12 m of headroom
-  sidewall: 0.75, seatDrop: 0.2, seatX: 0.27,
+  // the driver sits 0.20 m lower, 0.10 m further in and 0.10 m further forward than the shared frame (eye at
+  // (-0.27, 0.96, 0.0) m): under this roof a 0.15 m drop put the old header (1.03-1.05 m at the driver's x) 2-6 degrees
+  // above the eye line, across the road at the horizon; at 0.20 m it is clear, with 0.14 m to the roof's skin over the
+  // eye (0.12 m to the headliner). Forward, the eye looks down more steeply over the fixed cowl (in the seat view at
+  // 960 x 540 the road shows 8 to 19 px further down; the dash, the wheel and the display come forward with the
+  // driver), and the header's frit (WS above) lies 27 degrees up or more ahead of the eye, above the frame's top (the
+  // seat camera's half-height is 29 degrees, pitched 5 down)
+  sidewall: 0.75, seatDrop: 0.2, seatX: 0.27, seatFwd: 0.1,
   // its bonnet is 0.25 m lower than the others': the hood camera comes down 0.15 m so its crests and V stay in frame
   hoodY: 0.85,
   // the LED family, as material colours: under ACES at the strip's 2.8x emissive a pale ice (the old 0xa6dcff) tone-maps
@@ -357,7 +368,7 @@ export const SHAPES: Record<CarId, ShapeParams> = {
 };
 // the driver's frame for this car, as an offset from the shared one (spec.ts EYE, WHEEL_AT, GRIP): [x, y, z] for
 // the driver's side (the passenger's seat mirrors x). Zero for every car but the hypercar.
-export const seatOffset = (P: ShapeParams): [number, number, number] => [P.seatX !== undefined ? 0.37 - P.seatX : 0, -(P.seatDrop ?? 0), 0];
+export const seatOffset = (P: ShapeParams): [number, number, number] => [P.seatX !== undefined ? 0.37 - P.seatX : 0, -(P.seatDrop ?? 0), -(P.seatFwd ?? 0)];
 // the rear tyre's radius (the hypercar's are bigger than its fronts)
 export const rearR = (P: ShapeParams) => P.axle.rR ?? P.axle.r;
 export const shapeFor = (id: CarId = 'rossini-gt') => SHAPES[id] ?? GT;

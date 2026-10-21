@@ -308,6 +308,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   if (hyper && mats.amb) {
     const [lz, ly] = LIP[LIP.length - 1];
     kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, ly - 0.004, lz + 0.0035)), v3(0, 1, 0), 0.005));
+    // and a second line along the dash top's crest, door to door, lying on it (the reference's trim lines across a
+    // low dash): from the seat it runs just under the road, at the rim's top
+    { const [cz, cy] = sh([[-0.81, 0.861]])[0]; kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, cy + 0.0015, cz)), v3(0, 0, 1), 0.004)); }
     const gm = mat(0.06, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
     kit.add('alu', latheGeo([[r - 0.002, 0.004], [r + 0.003, 0.009], [r + 0.008, 0.006], [r + 0.009, -0.03]], high ? 48 : 28, 'z', { flip: true, vScale: 0.05 }), gm);
     const face = new THREE.CircleGeometry(r, 40); face.translate(0, 0, -0.002); kit.add('gloss', face, gm, 0.05);
@@ -321,9 +324,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const clM = mat(-0.37 + sX, 0.835 + sY, -0.62 + sZ, -0.41);
   if (T.binnacle === 'screen') {
     // the Vela's wide display, free-standing over the dash on a leather-wrapped plinth (the hypercar's: the same
-    // display centred on its driver, 12 % smaller and 2 cm lower so the whole screen sits between the rim's top and
-    // the hub from its low seat, on a carbon plinth, with its own screen)
-    const ds = hyper ? 0.88 : 1, dy = hyper ? -0.02 : 0;
+    // display centred on its driver, on a carbon plinth, with its own screen, 34 % smaller and 4.5 cm lower so from
+    // its driver's eye the whole screen shows through the wheel's upper opening: its bezel's top just under the rim's
+    // inner top edge, the gear box just above the spoke bar; at 88 % and 2 cm down the rim crossed its top)
+    const ds = hyper ? 0.66 : 1, dy = hyper ? -0.045 : 0;
     const vM = mat((hyper ? -0.37 : -0.17) + sX, 0.862 + dy + sY, -0.635 + sZ, -0.36);
     const bez = extrude(roundRect(0.64 * ds, 0.168 * ds, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
     const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;
@@ -727,7 +731,14 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       if (tt > 0.03 && tt < 0.95 && Math.abs(Pp.x) < half - 0.04) keepIdx.push(t, t + 1, t + 2);
     }
     src.setIndex(keepIdx);
-    const gm = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x2a2622, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
+    // (the hypercar: its long screen shows the reflection's far edge as a hard line across the sky from its forward
+    // seat, so the ghost fades out up the glass, from 30 to 60 % of the way to the header, and stays low as glare)
+    if (hyper) for (let i = 0; i < P.count; i++) {
+      const dir = v3(P.getX(i), P.getY(i), P.getZ(i)).sub(E), den = n.dot(dir); if (Math.abs(den) < 1e-6) continue;
+      const tt = (E.z + dir.z * (d - n.dot(E)) / den - WS.zb) / (WS.zt - WS.zb), k = 1 - sstep(0.3, 0.6, tt);
+      col[i * 3] *= k; col[i * 3 + 1] *= k; col[i * 3 + 2] *= k;
+    }
+    const gm =new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x2a2622, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
     const gh = new THREE.Mesh(src, gm); gh.name = 'windscreen-reflection'; gh.renderOrder = 3;
     group.add(gh);
   }

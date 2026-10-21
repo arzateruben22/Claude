@@ -1221,8 +1221,10 @@ function makeBody(P: ShapeParams) {
       for (let k = 0; k <= 6; k++) { const z = z0 + 0.01 + (z1 - z0 - 0.02) * (k / 6); rowsH.push([v3(sd * (body.side(z, y - 0.006) + 0.0012), y - 0.006, z), v3(sd * (body.side(z, y + 0.006) + 0.0012), y + 0.006, z)]); }
       kit.add('chrome', gridGeo(rowsH, { flip: sd > 0 }), null, 0.05);
     }
-    // wipers parked along the base of the windscreen
-    if (keep(v3(0, 0.9, WS.zb + 0.05))) for (const [px, len] of [[-0.06, 0.6], [0.6, 0.5]] as [number, number][]) {
+    // wipers parked along the base of the windscreen (not on the hypercar: its narrow screen's wiper would park under
+    // the cowl, out of sight, and isn't modelled; the two standard ones reached past its glass and lay across the
+    // driver's view of the road as two dark bars)
+    if (P.noseStyle !== 'hyper' && keep(v3(0, 0.9, WS.zb + 0.05))) for (const [px, len] of [[-0.06, 0.6], [0.6, 0.5]] as [number, number][]) {
       const path: V3[] = [];
       for (let k = 0; k <= 10; k++) { const x = px - len * (k / 10), z = WS.zb + 0.05 + 0.012 * (k / 10); path.push(v3(x, body.top(z, Math.abs(x)) + 0.016, z)); }
       kit.add('dark', tubeGeo(path, () => 0.007, 6, { rb: () => 0.004 }), null, 0.1);
@@ -1248,9 +1250,10 @@ function makeBody(P: ShapeParams) {
   // for outside views only: the shapes of the cockpit (dash and binnacle, the wheel, two bucket seats with their
   // bolsters and head sections, the console, the bulkhead) in flat materials, so the windows look into a cabin
   function cabinSilhouette(kit: Kit) {
-    // a car whose driver sits lower (the hypercar's seatDrop) has its seats, wheel and hoop lowered with them
-    const drop = P.seatDrop ?? 0;
-    const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, drop ? g.applyMatrix4(m).translate(0, -drop, 0) : g.applyMatrix4(m), null, 0.3);
+    // a car whose driver sits lower (the hypercar's seatDrop) has its seats, wheel and hoop lowered with them (and,
+    // seated further forward, its seats, wheel and dash moved forward: seatFwd; the hoop and bulkhead stay)
+    const drop = P.seatDrop ?? 0, fwd = P.seatFwd ?? 0;
+    const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, drop || fwd ? g.applyMatrix4(m).translate(0, -drop, -fwd) : g.applyMatrix4(m), null, 0.3);
     const rb = (w: number, h: number, d: number, r: number) => new RoundedBoxGeometry(w, h, d, 2, r);
     const D = P.cabinW;
     put('interior', rb(D * 2 - 0.01, 0.2, 0.46, 0.06), mat(0, 0.755, -0.88, -0.08));
