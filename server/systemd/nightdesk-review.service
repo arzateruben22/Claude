@@ -8,3 +8,4 @@ User=@USER@
 WorkingDirectory=@DIR@/night-desk
 ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly
 ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book wild
+ExecStart=@DIR@/.venv/bin/python -m nightdesk nightly --book strict

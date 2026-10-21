@@ -20,6 +20,7 @@ from helpers import T0
 
 MAIN = config.load()
 WILD = config.load(config.book_paths("wild")[0])
+STRICT = config.load(config.book_paths("strict")[0])
 
 
 def test_book_paths():
@@ -146,3 +147,30 @@ def test_commands_take_a_book(tmp_path, monkeypatch, capsys):
     assert str(tmp_path / "wild" / "live") in capsys.readouterr().out
     assert main(["report", "--book", "nope"]) == 2
     assert "desk-nope.toml" in capsys.readouterr().err
+
+
+def test_strict_is_pickier_and_smaller_with_the_same_rug_checks_and_bar():
+    assert asdict(STRICT.kill) == asdict(MAIN.kill) and asdict(STRICT.gates) == asdict(MAIN.gates)
+    assert (STRICT.size.fee_pct, STRICT.size.slippage_pct) == (MAIN.size.fee_pct, MAIN.size.slippage_pct)
+    assert STRICT.ready.min_age_minutes > MAIN.ready.min_age_minutes
+    assert STRICT.ready.min_liquidity_usd > MAIN.ready.min_liquidity_usd
+    assert STRICT.size.ticket_pct < MAIN.size.ticket_pct and STRICT.size.max_open < MAIN.size.max_open
+    assert STRICT.risk.stop_loss_pct < MAIN.risk.stop_loss_pct and STRICT.risk.take_profit_pct < MAIN.risk.take_profit_pct
+    assert STRICT.judge.use_ai is False
+    assert len({gates.rulebook_id(c, "rules") for c in (MAIN, WILD, STRICT)}) == 3
+
+
+def test_three_books_run_together_on_one_feed():
+    market = Counting(T0, seed=3)
+    shared = SharedSource(market)
+    desks = [Desk(MAIN, shared, RulesJudge(MAIN.judge), T0),
+             Desk(WILD, shared, RulesJudge(WILD.judge), T0, book="wild"),
+             Desk(STRICT, shared, RulesJudge(STRICT.judge), T0, book="strict")]
+    _step(desks, hours=2)
+    alone = Counting(T0, seed=3)
+    _step([Desk(MAIN, alone, RulesJudge(MAIN.judge), T0)], hours=2)
+    assert market.calls["discover"] == alone.calls["discover"]
+    assert market.calls["snapshot"] <= alone.calls["snapshot"] * 1.5
+    assert desks[2].counts["bought"] <= desks[0].counts["bought"] <= desks[1].counts["bought"]
+    runner = Runner(desks, clock=lambda: T0)
+    assert set(runner.states) == {"main", "wild", "strict"}

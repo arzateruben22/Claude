@@ -40,6 +40,32 @@ start_bank = 100.0
 share_bank = true
 ticket_usd = 100.0
 
+[memecoins_strict]                        # Night Desk's strict rulebook (night-desk/desk-strict.toml)
+folder = "../night-desk/output/strict/live"
+demo_folder = "../night-desk/output/strict/demo"
+start_bank = 100.0
+
+[majors_4h]                               # Majors Desk on 4-hour candles (majors-desk/majors-4h.toml)
+folder = "../majors-desk/output/4h/live"
+demo_folder = "../majors-desk/output/4h/demo"
+start_bank = 100.0
+
+[stocks_quick]                            # the scanner's quick rules (criteria-quick.toml): +5% / -3%
+journal = "../premarket-scanner/output/quick/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-quick.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
+[stocks_early]                            # the scanner's early rules (criteria-early.toml): out by 10:30 ET
+journal = "../premarket-scanner/output/early/journal.csv"
+demo_journal = ""
+rules = "../premarket-scanner/criteria-early.toml"
+start_bank = 100.0
+share_bank = true
+ticket_usd = 100.0
+
 [report]
 timezone = "America/Los_Angeles"
 

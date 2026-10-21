@@ -19,8 +19,12 @@
   const LEGS = 16, TENTACLES = 22, HOLD = 14;
   // Where each cluster sits in the web, in crawl order: the desks, the open positions, the patterns.
   const CENTERS = [[0, 0], [-430, -560], [-1150, -190], [-990, 640], [-140, 880], [780, 650], [930, -250]];
-  // More clusters than that: keep going round the outside.
-  const centerOf = (i) => CENTERS[i] || [Math.round(1500 * Math.cos(i * 1.1)), Math.round(1300 * Math.sin(i * 1.1))];
+  // More clusters than that: lay every cluster out round one big ring instead, evenly spaced.
+  function centerOf(i, n) {
+    if (n <= CENTERS.length) return CENTERS[i];
+    const a = -Math.PI / 2 + (i * 2 * Math.PI) / n, R = 190 * n;
+    return [Math.round(R * Math.cos(a)), Math.round(R * 0.8 * Math.sin(a))];
+  }
   const SHIP = { key: 'ship', name: 'ship', color: C.pink, sub: 'flags to check before any real money' };
   const AXES = ['WIN', 'PF', 'R:R', 'DD', 'GREEN', 'N'];
   const GREY = [205, 212, 220], WHITE = [240, 244, 248], CREAM = [246, 231, 166];
@@ -85,7 +89,7 @@
   function buildWorld() {
     const small = window.innerWidth < 700;
     return secs.map((s, i) => {
-      const [cx, cy] = centerOf(i);
+      const [cx, cy] = centerOf(i, secs.length);
       const r = rng(4049 + i * 7919);
       const blobs = [];
       const nb = 6 + Math.floor(r() * 4);
@@ -893,6 +897,7 @@
 
   function buildPanels() {
     const tabs = secs.concat([SHIP]);
+    $('tabs').classList.toggle('many', tabs.length > 8);
     $('tabs').innerHTML = tabs.map((s, i) => {
       const miss = s.words && !s.words.length ? ' class="miss"' : '';
       return `<button type="button" data-i="${i}" style="--c:${s.color}"${miss}>${esc(s.name)}</button>`;
@@ -1077,8 +1082,9 @@
 
   // ---------------------------------------------------------------- results
 
-  const NAME = { memecoins: 'memecoins', majors: 'big coins', stocks: 'stocks',
-    memecoins_wild: 'wild memecoins', stocks_wild: 'wild stocks', stocks_fade: 'fade stocks' };
+  const NAME = { memecoins: 'memecoins', memecoins_wild: 'wild memecoins', memecoins_strict: 'strict memecoins',
+    majors: 'big coins', majors_4h: 'big coins 4h', stocks: 'stocks', stocks_wild: 'wild stocks',
+    stocks_fade: 'fade stocks', stocks_quick: 'quick stocks', stocks_early: 'early-out stocks' };
   function colorOf(key) { const s = secs.find((x) => x.key === key); return s ? s.color : C.pink; }
 
   function showShip() {

@@ -17,18 +17,18 @@ def ema(values: Sequence[float], n: int) -> float:
 
 
 def atr(cs: Sequence[Candle], n: int) -> float:
-    """Average true range over the last n hours: how far the coin normally moves in an hour, in dollars."""
+    """Average true range over the last n candles: how far the coin normally moves in one, in dollars."""
     trs = [max(c.h - c.l, abs(c.h - p.c), abs(c.l - p.c)) for p, c in zip(cs[-n - 1:-1], cs[-n:])]
     return sum(trs) / len(trs) if trs else 0.0
 
 
 def entry(cs: List[Candle], r: RulesCfg) -> Tuple[bool, str]:
-    """Buy when the hour closes above the trend average AND above the previous breakout_hours' high."""
+    """Buy when the candle closes above the trend average AND above the previous breakout window's high."""
     if len(cs) < r.candles_needed():
         return False, "not enough history yet"
     last = cs[-1]
-    trend = ema([c.c for c in cs], r.trend_hours)
-    high = max(c.h for c in cs[-1 - r.breakout_hours:-1])
+    trend = ema([c.c for c in cs], r.trend)
+    high = max(c.h for c in cs[-1 - r.breakout:-1])
     if last.c <= trend:
         return False, f"below its {r.trend_hours}h average"
     if last.c <= high:
@@ -37,12 +37,12 @@ def entry(cs: List[Candle], r: RulesCfg) -> Tuple[bool, str]:
 
 
 def exit_reason(cs: List[Candle], peak_close: float, r: RulesCfg) -> Optional[str]:
-    """Sell on the trailing stop, or when the hour closes below the previous exit_hours' low."""
+    """Sell on the trailing stop, or when the candle closes below the previous exit window's low."""
     last = cs[-1]
-    stop = peak_close - r.stop_atr * atr(cs, r.atr_hours)
+    stop = peak_close - r.stop_atr * atr(cs, r.atr)
     if last.c < stop:
         return "trailing stop"
-    low = min(c.l for c in cs[-1 - r.exit_hours:-1])
+    low = min(c.l for c in cs[-1 - r.exit:-1])
     if last.c < low:
         return f"trend over ({r.exit_hours}h low)"
     return None

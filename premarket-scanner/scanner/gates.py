@@ -29,6 +29,7 @@ except ModuleNotFoundError:  # Python < 3.11
 from .config import ROOT, Criteria
 
 DISPLAY_ONLY = ("sort_by", "show_near_misses")   # settings that change the report, not the picks
+NEUTRAL = {"side": "long", "exit_by": ""}        # newer settings, at the value that means "as before"
 
 
 @dataclass
@@ -80,8 +81,8 @@ def load_settings(path: Optional[Path] = None) -> Settings:
 
 def rules_id(crit: Criteria) -> str:
     """Short fingerprint of every setting that changes which stocks get picked, or how they're graded."""
-    # A long book leaves `side` out, so the fingerprints of rules written before it existed don't change.
-    data = {k: v for k, v in asdict(crit).items() if k not in DISPLAY_ONLY and not (k == "side" and v == "long")}
+    # A setting at its "off" value is left out, so the fingerprints of rules written before it existed don't change.
+    data = {k: v for k, v in asdict(crit).items() if k not in DISPLAY_ONLY and NEUTRAL.get(k, object()) != v}
     return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()[:8]
 
 

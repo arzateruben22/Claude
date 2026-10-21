@@ -1,4 +1,5 @@
-"""The desk: a paper bank, the open positions, and one decision per coin per finished hour.
+"""The desk: a paper bank, the open positions, and one decision per coin per finished candle (an hour,
+or a 4-hour candle on the 4h rulebook).
 
 Fills: at the hour's closing price, moved against you by the slippage, plus the exchange fee on
 both the buy and the sell. Sizing: each trade risks risk_pct of the bank between the buy and the
@@ -16,7 +17,7 @@ from typing import Dict, List, Optional
 
 from . import rules
 from .config import Config
-from .market import HOUR, Candle, MarketError
+from .market import HOUR, Candle, MarketError, floor_to
 
 TRADE_FIELDS = ["opened", "closed", "symbol", "qty", "entry_price", "exit_price", "cost", "proceeds", "pnl",
                 "pnl_pct", "exit", "held_min"]
@@ -128,7 +129,7 @@ class Desk:
                 continue
             ok, why = rules.entry(cs, r)
             if ok:
-                stop = r.stop_atr * rules.atr(cs, r.atr_hours)
+                stop = r.stop_atr * rules.atr(cs, r.atr)
                 p = self._buy(coin, last.c, last.closed_at, stop)
                 if p:
                     said.append(f"bought {coin} at ${p.entry_price:,.6g} (${p.cost:,.2f}): {why}")
@@ -201,20 +202,22 @@ class Desk:
 
 def replay(cfg: Config, market, start: datetime, end: datetime, folder: Optional[Path] = None,
            close_at_end: bool = True) -> dict:
-    """Run the desk hour by hour through history. Returns the desk and the buy-and-hold comparison."""
+    """Run the desk candle by candle through history. Returns the desk and the buy-and-hold comparison."""
     need = cfg.rules.candles_needed()
-    data = {c: market.history(c, cfg.desk.quote, start - need * HOUR, end) for c in cfg.desk.coins}
+    step = cfg.desk.candle_hours * HOUR
+    start = floor_to(start, cfg.desk.candle_hours)
+    data = {c: market.history(c, cfg.desk.quote, start - need * step, end) for c in cfg.desk.coins}
     desk = Desk(cfg, market, folder)
     index = {c: {x.t: i for i, x in enumerate(cs)} for c, cs in data.items()}
     t = start
-    while t + HOUR <= end:
+    while t + step <= end:
         history = {}
         for coin, cs in data.items():
             i = index[coin].get(t)
             if i is not None and i + 1 >= need:
                 history[coin] = cs[i + 1 - need:i + 1]
         desk.decide(history)
-        t += HOUR
+        t += step
     if close_at_end:                                   # close what's left at the last price, so the totals are real
         for coin in list(desk.positions):
             cs = data[coin]

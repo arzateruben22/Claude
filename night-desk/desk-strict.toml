@@ -1,0 +1,86 @@
+# Night Desk, STRICT rulebook: the opposite of wild. Fewer, more established coins, smaller bets, tighter exits,
+# run next to the main desk on its own paper bank.
+#
+# Same three kinds of rule as desk.toml ([kill], [ready], [scan]), and the rug checks are word-for-word
+# the same. Everything else is pickier or smaller, so this desk waits for coins that have already
+# survived their first half hour and have real money behind them, then risks less on each:
+#   * buys coins at 30 minutes old, not 15 (past the first sniper wave AND the first dump)
+#   * twice the pool, volume and trade-count minimums
+#   * half the ticket (5% of the bank) and at most 2 coins at once
+#   * takes profit sooner (+25%) and cuts losses sooner (-12%), never holds past an hour
+#
+# Run it with the main desk: python -m nightdesk run --with wild --with strict
+# Its results live in output/strict/. The paper book shows it as "Strict memecoins".
+# Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0           # paper dollars
+discover_seconds = 60
+poll_seconds = 15
+watch_minutes = 120          # main: 90. It waits longer, so coins get longer to qualify
+
+[kill]                       # identical to desk.toml on purpose
+max_top_wallet_pct = 5.0
+max_top10_pct = 35.0
+max_dev_pct = 5.0
+require_mint_revoked = true
+require_freeze_revoked = true
+min_lp_locked_pct = 90.0
+kill_on_danger_flags = true
+
+[ready]
+min_age_minutes = 30         # main: 15
+max_age_hours = 24
+min_liquidity_usd = 25000    # main: 12000
+min_volume_h1_usd = 30000    # main: 15000
+min_mcap_usd = 100000        # main: 60000
+max_mcap_usd = 5000000
+min_trades_h1 = 300          # main: 150
+
+[scan]
+min_buy_pressure = 0.58      # main: 0.55
+min_buy_pressure_now = 0.58  # main: 0.55
+max_momentum_spent = 0.60    # main: 0.60
+min_heat = 0.40              # main: 0.30
+min_liquidity_fit = 0.80     # main: 0.60 (the pool must take the ticket easily)
+min_social = 0.34            # main: 0.34 (one of website, X and Telegram)
+
+[judge]
+use_ai = false               # the rules decide, so this desk never costs anything to run
+model = "claude-opus-5-5"
+effort = "low"
+min_confidence = 0.65        # main: 0.6
+
+[size]
+ticket_pct = 5.0             # main: 10
+max_pct_of_liquidity = 0.5   # main: 1.0
+max_open = 2                 # main: 3
+fee_pct = 1.0                # costs stay honest: same fees and slippage as the main desk
+slippage_pct = 1.0
+
+[risk]
+take_profit_pct = 25.0       # main: 40
+stop_loss_pct = 12.0         # main: 20
+trail_arm_pct = 12.0         # main: 20
+trail_pct = 8.0              # main: 15
+max_hold_minutes = 60        # main: 120
+rug_liquidity_drop_pct = 50.0
+daily_loss_limit_pct = 10.0  # main: 15
+cooldown_minutes = 120       # main: 60
+
+# The bar before real money is the same as every other rulebook's.
+[gates]
+min_trades = 100
+min_days = 30
+min_profit_factor = 1.3
+min_sharpe = 1.0
+max_drawdown_pct = 25.0
+best_trades_share = 0.05
+cost_multiplier = 2.0
+recent_share = 0.33
+
+[review]
+use_ai = true                # needs ANTHROPIC_API_KEY; otherwise rule-based
+model = "claude-opus-5-5"
+effort = "high"
+lookback_days = 7

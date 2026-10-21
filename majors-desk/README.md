@@ -30,6 +30,20 @@ waves.
 Expect most trades to lose a little and a few long trends to pay for them; a win rate around 35–40%
 is normal for this style. Long sideways stretches lose slowly to fees.
 
+## The 4-hour rulebook: `majors-4h.toml`
+
+The same trend following, deciding once per finished **4-hour candle** (built from Coinbase's hourly prices,
+aligned to midnight UTC) instead of every hour, on its own $100 of paper money. Fewer trades, longer holds,
+and the exchange fee bites far less. Every window in the file is still in hours (200 hours = 50 candles).
+
+```bash
+python -m majors run --book 4h                 # live, results in output/4h/
+python -m majors backtest --days 365 --book 4h # the 4-hour rules over the past year, vs just holding
+python -m majors why --book 4h                 # every command takes --book 4h
+```
+
+Both rulebooks share the hourly price cache in `output/cache/`.
+
 ## Read the backtest honestly
 
 `backtest` runs the exact same rules over real past prices (kept on disk after the first download)

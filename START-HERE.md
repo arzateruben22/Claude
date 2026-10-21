@@ -33,15 +33,20 @@ sudo bash server/setup.sh
 **Memecoins and big coins are now paper trading.** They need no account and no keys. Each desk
 starts with $100 of paper money.
 
-**The wild desks** run next to the memecoin and stock desks: the same markets with riskier rules (younger coins,
-bigger bets, smaller stock gaps, wider exits), each on its own $100 of paper money. They show side by side whether
-taking more risk pays, without changing the original desks. Already set up? One update adds them:
-`cd ~/desks && git pull && sudo bash server/setup.sh` (it keeps every paper trade so far).
+**Ten desks, one month, one scoreboard.** Each desk is a different idea on its own $100 of paper money, all
+running through the same weeks on the same markets, so at the end you can line them up, keep what made money and
+cut the rest:
 
-**The fade desk** takes the opposite side of the stock desk: the same picks, sold short at the open on paper, so
-it gains when they fall. It exists because most of the stock desk's early picks closed below their open. See how
-fading would have done on the picks so far (hindsight only): `cd ~/desks/premarket-scanner && ../.venv/bin/python
--m scanner lookback --book fade`.
+| Market | Desks |
+|---|---|
+| Memecoins | **main**; **wild** (younger coins, bigger bets); **strict** (older coins, smaller bets, quicker exits) |
+| Big coins | **hourly**; **4h** (the same rules on 4-hour candles: fewer trades, less paid in fees) |
+| Stocks | **main** (buy gap-ups, +10% / −5%); **wild** (smaller gaps, no news); **fade** (sold short); **quick** (+5% / −3%); **early** (out by 10:30 New York time) |
+
+Already set up? One update adds them all and keeps every paper trade so far:
+`cd ~/desks && git pull && sudo bash server/setup.sh`. The rules of every desk were set before it started and stay
+fixed for the month: changing a desk mid-test, or keeping only the one that got lucky, is how people fool
+themselves. A winner has to pass its scorecard, then do it again on other months, before anyone trusts it.
 
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
 everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.

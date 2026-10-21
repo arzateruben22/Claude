@@ -1,4 +1,4 @@
-"""Loads majors.toml into typed settings."""
+"""Loads majors.toml (or another rulebook, majors-<name>.toml) into typed settings."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field, fields
@@ -20,6 +20,7 @@ class DeskCfg:
     start_bank: float = 1000.0
     coins: List[str] = field(default_factory=lambda: ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"])
     quote: str = "USD"
+    candle_hours: int = 1        # decide on 1-hour candles, or on 4-hour (6, 12, 24...) candles built from them
 
 
 @dataclass
@@ -33,10 +34,31 @@ class RulesCfg:
     max_position_pct: float = 25.0
     max_positions: int = 4
     cooldown_hours: float = 6
+    candle_hours: int = 1        # copied from [desk] by load(); every window above is in hours, whatever the candle
+
+    # The windows as candle counts: on 4-hour candles, trend_hours = 200 means 50 candles.
+    @property
+    def trend(self) -> int:
+        return self.trend_hours // self.candle_hours
+
+    @property
+    def breakout(self) -> int:
+        return self.breakout_hours // self.candle_hours
+
+    @property
+    def exit(self) -> int:
+        return self.exit_hours // self.candle_hours
+
+    @property
+    def atr(self) -> int:
+        return self.atr_hours // self.candle_hours
 
     def candles_needed(self) -> int:
         """History each decision looks at: twice the trend average (so it has settled), or a full breakout window."""
-        return max(2 * self.trend_hours, self.breakout_hours + 1, self.exit_hours + 1, self.atr_hours + 1)
+        return max(2 * self.trend, self.breakout + 1, self.exit + 1, self.atr + 1)
+
+    def candle_word(self) -> str:
+        return "hour" if self.candle_hours == 1 else f"{self.candle_hours}-hour candle"
 
 
 @dataclass
@@ -52,11 +74,27 @@ class Config:
     costs: CostsCfg = field(default_factory=CostsCfg)
 
 
+def book_paths(book: str = "main", output: Path | None = None) -> tuple[Path, Path]:
+    """Each rulebook has its own settings file and results folder:
+    main = majors.toml and output/; any other name = majors-<name>.toml and output/<name>/."""
+    output = output or OUTPUT
+    if book == "main":
+        return ROOT / "majors.toml", output
+    if not book.replace("-", "").isalnum() or not book.islower():
+        raise ValueError(f"A rulebook name is lowercase letters, digits and dashes, not {book!r}")
+    path = ROOT / f"majors-{book}.toml"
+    if not path.exists():
+        raise ValueError(f"No rulebook called {book!r}: {path.name} doesn't exist")
+    return path, output / book
+
+
 def load(path: Path | None = None) -> Config:
     path = path or ROOT / "majors.toml"
     with open(path, "rb") as fh:
         raw = tomllib.load(fh)
     cfg = Config()
+    if "candle_hours" in raw.get("rules", {}):
+        raise ValueError(f"[rules] candle_hours belongs under [desk] in {path.name}")
     for section in fields(Config):
         values = raw.pop(section.name, {})
         target = getattr(cfg, section.name)
@@ -78,9 +116,16 @@ def validate(cfg: Config) -> None:
         raise ValueError("[desk] coins is empty")
     if cfg.desk.start_bank <= 0:
         raise ValueError("[desk] start_bank must be above 0")
+    h = cfg.desk.candle_hours
+    if not isinstance(h, int) or h < 1 or 24 % h:
+        raise ValueError("[desk] candle_hours must be 1, 2, 3, 4, 6, 8, 12 or 24")
+    r.candle_hours = h
+    for name in ("trend_hours", "breakout_hours", "exit_hours", "atr_hours"):
+        if getattr(r, name) % h:
+            raise ValueError(f"[rules] {name} must be a multiple of candle_hours ({h})")
     if r.candles_needed() > MAX_CANDLES:
-        raise ValueError(f"[rules] needs {r.candles_needed()} hours of history; the most one request returns is "
-                         f"{MAX_CANDLES}. Keep trend_hours at {MAX_CANDLES // 2} or less.")
+        raise ValueError(f"[rules] needs {r.candles_needed()} {r.candle_word()}s of history; the most it reads is "
+                         f"{MAX_CANDLES}. Keep trend_hours at {MAX_CANDLES // 2 * h} or less.")
     for name in ("trend_hours", "breakout_hours", "exit_hours", "atr_hours", "max_positions"):
         if getattr(r, name) < 1:
             raise ValueError(f"[rules] {name} must be at least 1")

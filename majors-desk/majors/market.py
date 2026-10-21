@@ -1,7 +1,9 @@
 """Hourly candles: from Coinbase's public market data (no account, no key), or an invented demo market.
 
 Only finished candles are used. The hour that's still trading is dropped, so a decision never
-sees a price that can still change.
+sees a price that can still change. Longer candles (4-hour, 6-hour...) are built from the hourly
+ones by `Bucketed`, aligned to midnight UTC, and a bucket counts as finished only once every hour
+in it has finished.
 """
 from __future__ import annotations
 
@@ -23,20 +25,59 @@ class MarketError(RuntimeError):
 
 @dataclass(frozen=True)
 class Candle:
-    t: datetime          # when the hour started (UTC)
+    t: datetime          # when the candle started (UTC)
     o: float
     h: float
     l: float             # noqa: E741 (low)
     c: float
     v: float = 0.0
+    hours: int = 1       # how long the candle spans
 
     @property
     def closed_at(self) -> datetime:
-        return self.t + HOUR
+        return self.t + self.hours * HOUR
 
 
 def floor_hour(dt: datetime) -> datetime:
     return dt.astimezone(timezone.utc).replace(minute=0, second=0, microsecond=0)
+
+
+def floor_to(dt: datetime, hours: int) -> datetime:
+    """The start of the `hours`-long bucket holding dt, counted from midnight UTC."""
+    f = floor_hour(dt)
+    return f - (f.hour % hours) * HOUR
+
+
+def aggregate(candles: List[Candle], hours: int) -> List[Candle]:
+    """Hourly candles -> `hours`-long candles. A bucket is kept only when every hour in it is present."""
+    if hours == 1:
+        return list(candles)
+    buckets: Dict[datetime, List[Candle]] = {}
+    for c in sorted(candles, key=lambda c: c.t):
+        buckets.setdefault(floor_to(c.t, hours), []).append(c)
+    out = []
+    for t, cs in sorted(buckets.items()):
+        if len(cs) != hours or {c.t for c in cs} != {t + i * HOUR for i in range(hours)}:
+            continue
+        out.append(Candle(t, cs[0].o, max(c.h for c in cs), min(c.l for c in cs), cs[-1].c, sum(c.v for c in cs), hours))
+    return out
+
+
+class Bucketed:
+    """A market of longer candles, built from an hourly market's candles (kept on disk by that market)."""
+
+    def __init__(self, inner, hours: int):
+        self.inner, self.hours, self.name = inner, hours, inner.name
+
+    def recent(self, coin: str, quote: str, now: datetime, n: int) -> List[Candle]:
+        end = floor_to(now, self.hours)
+        got = self.inner.history(coin, quote, end - n * self.hours * HOUR, end)
+        return [c for c in aggregate(got, self.hours) if c.closed_at <= now][-n:]
+
+    def history(self, coin: str, quote: str, start: datetime, end: datetime) -> List[Candle]:
+        start, end = floor_to(start, self.hours), floor_to(end, self.hours)
+        return [c for c in aggregate(self.inner.history(coin, quote, start, end), self.hours)
+                if start <= c.t and c.closed_at <= end]
 
 
 def _iso(dt: datetime) -> str:
@@ -118,7 +159,9 @@ class Coinbase:
             return
         p.parent.mkdir(parents=True, exist_ok=True)
         rows = [[int(c.t.timestamp()), c.o, c.h, c.l, c.c, c.v] for c in candles]
-        p.write_bytes(gzip.compress(json.dumps(rows).encode()))
+        tmp = p.with_suffix(p.suffix + ".tmp")          # two desks may share this cache: never leave it half-written
+        tmp.write_bytes(gzip.compress(json.dumps(rows).encode()))
+        tmp.replace(p)
 
 
 class DemoMarket:

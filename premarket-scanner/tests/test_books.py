@@ -73,6 +73,8 @@ from datetime import datetime, timedelta, timezone  # noqa: E402
 from scanner.models import Bar  # noqa: E402
 
 FADE = config.load_criteria(config.book_paths("fade")[0])
+QUICK = config.load_criteria(config.book_paths("quick")[0])
+EARLY = config.load_criteria(config.book_paths("early")[0])
 
 
 def test_fade_mirrors_the_main_picks_and_only_changes_the_side_stop_and_cost():
@@ -83,13 +85,11 @@ def test_fade_mirrors_the_main_picks_and_only_changes_the_side_stop_and_cost():
     assert asdict(gates.load_settings(config.book_paths("fade")[0]).gates) == asdict(main_set.gates)
 
 
-def test_adding_side_left_the_long_books_fingerprints_alone():
-    """Picks are counted by rules fingerprint: a new setting must not quietly restart the main or wild tests."""
-    def before(crit):     # rules_id as it was before `side` existed
-        data = {k: v for k, v in asdict(crit).items() if k not in gates.DISPLAY_ONLY and k != "side"}
-        return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()[:8]
-    assert gates.rules_id(MAIN) == before(MAIN) and gates.rules_id(WILD) == before(WILD)
-    assert gates.rules_id(FADE) != gates.rules_id(MAIN)
+def test_new_settings_never_restart_the_running_books():
+    """Picks are counted by rules fingerprint. These are the ids the live books have been journaling under;
+    a new setting at its "off" value must leave them exactly as they are."""
+    assert gates.rules_id(MAIN) == "7f4288c6" and gates.rules_id(WILD) == "bc619cd8" and gates.rules_id(FADE) == "2c54912a"
+    assert len({gates.rules_id(c) for c in (MAIN, WILD, FADE, QUICK, EARLY)}) == 5
 
 
 T = datetime(2026, 10, 19, 13, 30, tzinfo=timezone.utc)
@@ -138,3 +138,60 @@ def test_fade_scans_keep_their_own_journal(tmp_path, monkeypatch):
     for r in graded:
         if r["sim_exit"] == "close":
             assert float(r["sim_pnl_pct"]) == pytest.approx(-float(r["close_vs_open_pct"]) - FADE.cost_pct, abs=0.02)
+
+
+# -- the quick and early books: the main picks, out sooner ------------------------------------------
+
+from pathlib import Path  # noqa: E402
+
+from scanner.market import ET  # noqa: E402
+
+
+def test_quick_and_early_change_only_how_the_main_picks_are_sold():
+    a = asdict(MAIN)
+    assert sorted(k for k in a if a[k] != asdict(QUICK)[k]) == ["stop_pct", "target_pct"]
+    assert sorted(k for k in a if a[k] != asdict(EARLY)[k]) == ["exit_by"]
+    assert QUICK.target_pct < MAIN.target_pct and QUICK.stop_pct < MAIN.stop_pct
+    assert EARLY.exit_by == "10:30" and "out by 10:30 ET" in EARLY.summary()
+    for bad in ("10:32", "08:00", "noon", "16:05"):
+        with pytest.raises(ValueError, match="exit_by"):
+            config.load_criteria(_toml(f'[paper]\nexit_by = "{bad}"\n'))
+
+
+def _toml(text):
+    import tempfile
+    f = tempfile.NamedTemporaryFile("w", suffix=".toml", delete=False)
+    f.write(text)
+    f.close()
+    return Path(f.name)
+
+
+def day_bars(path):
+    """A trading day of 5-minute bars following `path`: (ET hh:mm, open, high, low, close)."""
+    return [Bar(datetime(2026, 10, 19, int(hm[:2]), int(hm[3:]), tzinfo=ET), o, h, low, c, 1000)
+            for hm, o, h, low, c in path]
+
+
+def test_exit_by_closes_whatever_is_still_open_at_that_time():
+    sim = journal.simulate
+    slow = day_bars([("09:30", 10, 10.2, 9.9, 10.1), ("10:00", 10.1, 10.3, 10.0, 10.2), ("10:25", 10.2, 10.4, 10.1, 10.3),
+                     ("10:30", 10.3, 11.5, 10.2, 11.2), ("15:55", 11.2, 11.3, 11.0, 11.1)])
+    assert sim(slow, 10, 5) == ("target", 10)                                   # the main book waits for +10%
+    assert sim(slow, 10, 5, exit_by="10:30") == ("timed", pytest.approx(3.0))   # early: out at the 10:25 bar's close
+    fast = day_bars([("09:30", 10, 10.2, 9.9, 10.1), ("09:45", 10.1, 11.2, 10.0, 11.1)])
+    assert sim(fast, 10, 5, exit_by="10:30") == ("target", 10)                  # a quick winner is still a target
+    assert sim(fast, 10, 5, exit_by="09:35") == ("timed", pytest.approx(1.0))   # nothing before 09:35: out at the first bar
+    assert sim(slow, 10, 5, exit_by="16:00") == ("target", 10)                  # 16:00 is the normal close
+
+
+def test_early_book_grades_with_the_timed_exit(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    for book in ("quick", "early"):
+        assert cli.main(["scan", "--demo", "--book", book, "--at", "2026-10-06 05:45"]) == 0
+        assert cli.main(["grade", "--demo", "--book", book, "--at", "2026-10-07 14:00"]) == 0
+        rows = [r for r in _rows(tmp_path / book / "demo" / "journal.csv") if r["graded_at"]]
+        assert rows and {r["rules"] for r in rows} == {gates.rules_id(QUICK if book == "quick" else EARLY)}
+        assert all(r["sim_exit"] in ("target", "stop", "close", "timed") for r in rows)
+    capsys.readouterr()
+    assert cli.main(["stats", "--demo", "--book", "early"]) == 0
+    assert "the 10:30 ET exit" in capsys.readouterr().out
