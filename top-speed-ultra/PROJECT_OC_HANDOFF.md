@@ -84,8 +84,10 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 
 Next here, all outside the lanes above (updated 12:00 UTC): done: the World Map (U4), the garage's Paint and Wheels
 tabs (U5), the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes, the
-run card's save in the viewer, the glove stripe from the driver's accent. Then: polish passes (phone-size checks of the
-other new panels; the aero cover's close-up shadow edge is the shadow map's resolution, logged, left as is).
+run card's save in the viewer, the glove stripe from the driver's accent. Phone-size checks of the new panels done (12:10).
+The queue here is empty of unowned items: traffic, trees and the world are touched by six lanes' branches
+(`wip-ref`, `wip-gfx`, `wip-modes`, `wip-ui`, `wip-hx`, `wip-fix-sky`), so this session leaves them. Next: what the
+owner asks, or what the lanes hand over.
 
 ### Decisions waiting (the owner's)
 

@@ -32,6 +32,12 @@ available, so frame rates on real hardware are **not** measured.
 - **Customize tab** added to the garage as "coming later" (U5's last tab). `tools/garage-shot.mjs` (new,
   `tests/out/garage/`): every tab at 1280 × 720 and 390 × 844, no page errors, no sideways scroll; on a phone the five
   tabs wrap to two rows. `npm test -- --only=render` **14/14**; launch rerun on the final build **8/8**.
+- **Phone size (390 × 844, touch) for the other new panels**, on this build:
+  - the World Map: `tools/map-shots.mjs`, no errors;
+  - the radio card: `tools/radio-shot.mjs`, tuned Coast, no errors; the card fits under the top bar, with stars,
+    volume and Off/Close in reach;
+  - the phone: `tools/phone-shot.mjs`, home and Credits, no errors; the Map app opened the World Map.
+  - Shots are in `tests/out/phone390/`.
 - **Glove stripe.** `hands.ts` now passes the driver's accent to the glove's wrist stripe. No visible change today:
   the Ace is the only gloved driver and its accent equals the old default.
 
