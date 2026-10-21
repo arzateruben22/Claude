@@ -78,11 +78,12 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - Commits from this session carry no model names from here on (the Co-Authored-By line names only Claude).
 - 06:40 race.ts: Santa Ana Checkpoints starts at 0.565 of I-5 North (it ran between Mission Viejo and Lake Forest).
 - 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
+- 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
 
-Next here, all outside the lanes above: the garage tabs (U5: paint and wheels applied live), the radio panel (U7), the
-in-game phone (U6), the driver clothing lane (running), the suite and the test build at
-https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS. The UI-to-reference lane (`claude/ui-ref`) and this branch touch the
-same files (`App.tsx`, `HUD.tsx`, `styles.css`): building on what is here saves a rebuild.
+Next here, all outside the lanes above (updated 06:40 UTC): done since: the garage's Paint tab (U5), the radio card
+(U7), the phone (U6), the World Map (U4). Running: the driver clothing lane, the full suite, then the test build at
+https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS. Then, in order: the Settings sections rail (U8); the hold-for-radial
+quick menu (U3); the garage's second wheel style per car (the rest of U5); then polish passes on these screens.
 
 ### Decisions waiting (the owner's)
 
