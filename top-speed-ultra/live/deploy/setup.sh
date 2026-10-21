@@ -9,7 +9,7 @@
 # again after a git pull to update: the database in /opt/oc-live/data is kept.
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "run with sudo"; exit 1; }
-: "${LIVE_DOMAIN:?set LIVE_DOMAIN=your.domain (pointed at this machine's IP) before running}"
+: "${LIVE_DOMAIN:?set LIVE_DOMAIN=your.domain, pointed at the IP of this machine, before running}"
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 CAP="${MAX_PLAYERS:-25}"
 
