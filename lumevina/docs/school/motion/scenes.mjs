@@ -698,5 +698,55 @@ export const SCENES = {
         enter($("#verdict"), lt, 8.0, { y: 8 });
       } else { [$("#lane-g"), $("#lane-s"), $("#weeks"), $("#verdict")].forEach((el) => set(el, { o: 0, y: 12 })); }
     }
+  },
+
+  /* ───────── 12-1 Before your facial, peel or wax: the week of prep ───────── */
+  "12-1": {
+    id: "12-1", kicker: "Before your facial, peel or wax", title: `The week before <span class="grad">decides the result.</span>`, dur: 22, poster: 9,
+    shots: [
+      { at: 0, name: "pause", cap: "Retinol and acids off three to five days before a facial, peel, dermaplaning or wax. A prescription retinoid: about a week, and tell Evelyn." },
+      { at: 7, name: "skin", cap: "No treatment on sunburned or freshly tanned skin, no waxing or shaving the face for two days, and no trip planned for two or three days after." },
+      { at: 14, name: "come", cap: "Breaking out is a reason to come in, not to cancel. Open, raw or infected skin is the one thing that waits. Tell her about medications, pregnancy or a recent procedure, every time." }
+    ],
+    css: `
+.cal { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.days { display: grid; grid-template-columns: repeat(9, 1fr); gap: 1vmin; }
+.day { position: relative; border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin 1vmin 1.4vmin; text-align: center; opacity: 0; min-height: 15vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
+.day .d { font-size: 2.1vmin; color: #8e8e93; font-weight: 600; } .day .n { font-size: 3.6vmin; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+.day.visit { background: #f4c9d6; border-color: #f4c9d6; } .day.visit .d, .day.visit .n { color: #1a1210; }
+.day .mark { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; margin-top: .4vmin; opacity: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 1vmin 1.6vmin; }
+.legend span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.legend i { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; }
+.note12 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vmin; }
+.card12 { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.4vmin; opacity: 0; }
+.card12 b { display: block; font-size: 2.9vmin; font-weight: 650; line-height: 1.15; } .card12 span { display: block; font-size: 2.2vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
+.card12.go b { color: #32d74b; } .card12.wait b { color: #ff7a6b; }
+@media (orientation: portrait) { .days { grid-template-columns: repeat(3, 1fr); } .day { min-height: 13vmin; } .note12 { grid-template-columns: 1fr; } }`,
+    html: `
+<div class="cal">
+  <div class="days" id="days">
+    ${[-7, -6, -5, -4, -3, -2, -1, 0, 2].map((d) => `<div class="day${d === 0 ? " visit" : ""}" data-d="${d}"><span class="d">${d === 0 ? "visit" : d > 0 ? "day +" + d : "day " + d}</span><span class="n">${d === 0 ? "✦" : Math.abs(d)}</span><i class="mark m-rx" style="background:#e2b08c"></i><i class="mark m-act" style="background:#f4c9d6"></i><i class="mark m-sun" style="background:#ffd27a"></i><i class="mark m-wax" style="background:#8fd3ff"></i><i class="mark m-trip" style="background:#6e6e73"></i></div>`).join("")}
+  </div>
+  <div class="legend" id="legend"><span id="lg-rx"><i style="background:#e2b08c"></i>prescription retinoid off</span><span id="lg-act"><i style="background:#f4c9d6"></i>retinol and acids off</span><span id="lg-sun"><i style="background:#ffd27a"></i>no sunburn or fresh tan</span><span id="lg-wax"><i style="background:#8fd3ff"></i>no waxing or shaving the face</span><span id="lg-trip"><i style="background:#6e6e73"></i>no trip right after</span></div>
+  <div class="note12"><div class="card12 go" id="c-go"><b>Breaking out? Come in.</b><span>It's a reason to come, not to cancel.</span></div><div class="card12 wait" id="c-wait"><b>Open, raw or infected skin waits.</b><span>The one thing that does. Tell her about medications, pregnancy or a recent procedure, every time: the pre-visit form is where it goes.</span></div></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      const days = $$(".day");
+      days.forEach((d, k) => enter(d, lt + (i > 0 ? 9 : 0), 0.3 + k * 0.12, { y: 14 }));
+      const on = (sel, from, pred, at) => { $$(sel).forEach((m) => { const d = +m.parentElement.dataset.d; const show = pred(d); set(m, { o: show ? (i > from ? 1 : i === from ? E.out(seg(lt, at, at + 0.5)) : 0) : 0, s: show && i === from ? 0.6 + 0.4 * E.out(seg(lt, at, at + 0.5)) : 1 }); }); };
+      on(".m-rx", 0, (d) => d >= -7 && d < 0, 1.6);
+      on(".m-act", 0, (d) => d >= -5 && d < 0, 2.8);
+      on(".m-sun", 1, (d) => d >= -3 && d <= 0, 1.0);
+      on(".m-wax", 1, (d) => d >= -2 && d < 0, 2.4);
+      on(".m-trip", 1, (d) => d === 2, 3.8);
+      const lg = (id, from, at) => { const el = $("#" + id); if (i > from) set(el, { o: 1 }); else if (i === from) enter(el, lt, at, { y: 8 }); else set(el, { o: 0, y: 8 }); };
+      lg("lg-rx", 0, 1.8); lg("lg-act", 0, 3.0); lg("lg-sun", 1, 1.2); lg("lg-wax", 1, 2.6); lg("lg-trip", 1, 4.0);
+      if (i === 2) { enter($("#c-go"), lt, 0.6, { y: 12 }); enter($("#c-wait"), lt, 2.2, { y: 12 }); } else { set($("#c-go"), { o: 0, y: 12 }); set($("#c-wait"), { o: 0, y: 12 }); }
+      $(".note12").style.display = i === 2 ? "" : "none";
+    }
   }
 };
