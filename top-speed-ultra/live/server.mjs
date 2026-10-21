@@ -254,7 +254,7 @@ async function sendMail(to, subject, text) {
   if (!r.ok) { log('mail-error', { status: r.status }); return false; }
   return true;
 }
-const health = () => ({ ok: true, cruise: nextCruise(CRUISE), feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length, mail: mailOn() }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
+const health = () => ({ ok: true, cruise: nextCruise(CRUISE), feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length, mail: mailOn() }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), board: board.live(), ...stats });
 
 // a static file, gzipped once per version (the game page is about 3.7 MB, 1.2 MB gzipped), with an ETag so a phone
 // that has it already gets a 304

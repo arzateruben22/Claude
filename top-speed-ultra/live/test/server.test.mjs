@@ -293,6 +293,8 @@ test('the online board: a live drive shows on GET /api/board; a ban hides it, de
   const row = pub.body.distance.find((r) => r.name === 'board_driver');
   assert.ok(row && row.value > 110 && row.value <= 140, `distance ${JSON.stringify(pub.body.distance)}`);
   assert.equal(pub.body.you, undefined, 'no "you" without a token');
+  const h = await get('/health');
+  assert.ok(h.body.board.writes >= 1 && h.body.board.posesIn >= 46, JSON.stringify(h.body.board));
   assert.deepEqual(Object.keys(pub.body.distance[0]).sort(), ['name', 'rank', 'value'], 'names and numbers only');
   await sleep(2100);                                                 // past the 2 s memo
   const mine = await get('/api/board?period=week', t);

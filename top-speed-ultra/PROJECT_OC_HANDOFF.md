@@ -301,6 +301,20 @@ dense city block; npm test groups boot, interchanges, render, phone plus a new s
 If Fable is unavailable, run it on Opus with a design judge pair before any build.
 ```
 
+### Fable prompt: an adversarial review of the online board's rules, queued 2026-10-21
+
+> You are reviewing OC Ultra's online board before it goes public. Read `top-speed-ultra/live/board.mjs` (its header
+> states every rule), its tests `live/test/board.test.mjs`, the wiring in `live/server.mjs` (search `board.`), the
+> relay's pose checks (`onPose`: SPEED_MAX 200 m/s, JUMP_MAX 240 m/s, the 3 s freshness window) and
+> `src/ui/OnlineBoard.tsx`. Rules that apply: CLAUDE.md's honest claims (the board ranks only what the server saw;
+> never phone-kept scores), no real money, names only in public output. Try to beat it as a modified client that
+> stays inside the relay's limits: post more distance, a higher held speed or a longer drive than honest driving
+> could; make it list a banned or deleted player; make it leak an id, a position or a time of day; make it cost the
+> server (writes, memory, queries) out of proportion. For each attack, say whether it works, what it would post,
+> and the smallest fix. Prove fixes with new cases in `live/test/board.test.mjs` and `cd live && npm test` green.
+> Owner decisions to recommend on, not decide: the 110 m/s ceiling vs the hypercar, 3,000 km a day, an all-time
+> board, public vs signed-in only. Log in PROJECT_OC_PROGRESS.md; commit on `claude/live-server`.
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
