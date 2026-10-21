@@ -1103,7 +1103,8 @@ export class Game {
       const look = root.clone().addScaledVector(F, sh.at); look.y += 0.55;
       this.wantQ.setFromRotationMatrix(new THREE.Matrix4().lookAt(this.wantP, look, new THREE.Vector3(0, 1, 0)));
       // on the menu the hero sits right of centre, clear of the rail (a turn to the left moves the subject right)
-      if (this.attract && !portrait && this.cineShot === 0) { this.tmpQ.setFromEuler(this.tmpE.set(0, 0.16, 0)); this.wantQ.multiply(this.tmpQ); }
+      // and tilted down a touch so it sits above the mode cards along the bottom
+      if (this.attract && !portrait && this.cineShot === 0) { this.tmpQ.setFromEuler(this.tmpE.set(-0.07, 0.16, 0)); this.wantQ.multiply(this.tmpQ); }
       fov = (portrait ? sh.fov * 1.6 : sh.fov) + speedK * 3;
     } else {
       const root = this.car.root.position, psi = p.psi;

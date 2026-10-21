@@ -1,5 +1,5 @@
 // Screenshot the menu and a driving frame in every car's atmosphere (the theme follows the car, owner 2026-10-21).
-//   npm run build && node tools/atmo-shots.mjs [outDir] [--size=1280x720] [--look=ultra|hd] [--cars=id,id] [--drivers=0] [--shot=N]
+//   npm run build && node tools/atmo-shots.mjs [outDir] [--size=1280x720] [--look=ultra|hd] [--cars=id,id] [--drivers=0] [--shot=N] [--settle=seconds]
 // Opens the build in owner mode, picks each car through the garage (the real path, so the attribute switch is what
 // a player gets), shoots the menu, drives for a moment and shoots the HUD. Prints the cars shot and any page errors.
 import { chromium } from 'playwright';
@@ -36,7 +36,7 @@ for (const [id, name] of CARS.filter(([i]) => !ONLY || ONLY.includes(i))) {
     await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
     await page.waitForFunction((want) => document.documentElement.dataset.car === want, id, { timeout: 5000 });
     // --shot=N pins the menu's cinematic camera on one shot (0 the hero) a few seconds in, for a like-for-like frame
-    if (opt('shot', '') !== '') { await page.evaluate((n) => { const g = window.__game; g.cineShot = n; g.cineT = 3; }, Number(opt('shot', '0'))); const f0 = await page.evaluate(() => window.__game.frames); await page.waitForFunction((t) => window.__game.frames >= t, f0 + 3); }
+    if (opt('shot', '') !== '') { await page.waitForTimeout(Number(opt('settle', '0')) * 1000); await page.evaluate((n) => { const g = window.__game; g.cineShot = n; g.cineT = 3; }, Number(opt('shot', '0'))); const f0 = await page.evaluate(() => window.__game.frames); await page.waitForFunction((t) => window.__game.frames >= t, f0 + 3); }
     await page.waitForTimeout(300); await settled();
     await page.screenshot({ path: path.join(outDir, `${id}-menu.png`), timeout: 180000 });
     await page.getByRole('button', { name: 'Drive', exact: true }).click();
