@@ -169,10 +169,11 @@ for (const scene of Object.values(SCENES)) {
     const mp4 = path.join(outDir, `${base}.mp4`), poster = path.join(outDir, `${base}.jpg`);
     let ff = null;
     if (verify) {
-      const prev = ((log[scene.id] || {})[aspect] || {}).samples || [];
+      const logged = (log[scene.id] || {})[aspect] || {}, prev = logged.samples || [];
       let same = 0, diff = 0;
       for (const [i, h] of prev) {
-        await pg.evaluate((t) => window.seek(t), i / fps);
+        // cinema: the same call as the frame loop (a plain seek draws the scene unfinished, so it can never match)
+        await pg.evaluate(([t, fps]) => { if (window.cinemaFrame) { window.CINEMA.fps = fps; return window.cinemaFrame(t); } window.seek(t); return null; }, [i / (logged.fps || fps), Number(opt("fps", 30))]);
         const { data } = await cdp.send("Page.captureScreenshot", { format: "png", optimizeForSpeed: true });
         if (sha(Buffer.from(data, "base64")) === h) same++; else diff++;
       }
