@@ -570,6 +570,14 @@ code, the UI, commits or player-facing text.
   hard the button is held (touch is on/off). So about 2 g off the line, 1.5 g at 60 mph, and gone by 180 mph except a
   0.05 g floor. The floor lifts the top speed a little: measured 339 → **350 mph**.
 - **Measured.** 0-60 in 0.76 s on thrust alone, 0.66 s with Ground Lock. Peak acceleration 4.4 g.
+- **As built (M5, 2026-10-20, on the merged dynamics model).** The force is 2.6 g × (1 − smoothstep(0, 80, v)) + 0.05 g
+  through `ext.fx`. On the finished model the push transfers load off the front axle, and the traction control trims
+  the all-wheel drive to what the front can take, so 2.0 g of force netted only about 1.1 g over the tyres and fans
+  (0-60 in 0.97 s). At 2.6 g the car nets about 2 g extra at launch (headless, Arcade: 1.86 g from 5 to 10 m/s, 1.55 g from 10 to
+  15, 1.3 g by 20 m/s).
+  Measured in the built game (Arcade): 0-60 in **0.79 s** with THRUST and Ground Lock (1.34 s fans only, 2.26 s
+  tyres only), 0-100 in 1.47 s, peak 4.53 g; one tank from flat out lifts 335 → 341 mph (the tank lasts 6 s, so the
+  asymptotic 350 is not reached).
 - **The body and camera.** The head and pitch offsets in `updateCamera` and `PlayerCar` are already clamped, so a
   4 g launch doesn't throw the view.
 - **Off at once.** On release, an empty tank, or the brake.
@@ -583,6 +591,12 @@ code, the UI, commits or player-facing text.
 - **Cost.** 3 % of the tank a second. It's off below 5 %.
 - **Measured.** Lateral 1.96 g at 25 m/s and 1.93 g at 40 m/s in Arcade, 2.05 g at 40 m/s in Simulation ("about
   2 g at low and middle speeds"). It makes the 1.50 s launch. 100-0 is 54.5 m.
+- **As built (M5, 2026-10-20).** On the merged model (tyre load sensitivity), 0.5 × weight gave 1.91 g at 25 m/s and
+  1.73 g at 40 m/s, so the suction is 0.8 × weight to 90 mph, easing to 0.3 × by 200 mph. Measured (the harness's
+  steering sweep): 2.04 / 1.81 / 1.22 g at 25 / 40 / 80 m/s in Arcade (tyres alone 1.54 / 1.49 / 1.18), 2.02 / 1.97 /
+  1.57 g in Simulation (1.36 / 1.42 / 1.45). Arcade at 40 m/s is held at 1.81 g by Arcade's steering lock (full lock
+  there is 3.2°), not by the fans; that is M4's grip-scaled stability control. The compressor pauses while the fans
+  spin (they share its drive), so the 3 % a second is a real cost: 4 s of cornering at 25 m/s takes 12 %.
 
 ### 6.4 Thrust Hop (double-tap)
 
@@ -610,13 +624,47 @@ A short scripted ballistic hop:
   - Barrier contact is off while the lateral position is clamped.
 - **The landing.** Tyres back on. A heave impulse into `PlayerCar`'s suspension proportional to the vertical speed,
   a camera bump, and a thump (`audio.thump`).
+- **As built (M5, 2026-10-20).** `planHop` in `HyperAbility.ts` clears the nearest vehicle it is closing on by 0.35 m
+  (peak 1.5–7.5 m, air time 0.6–2.5 s, the arc's fall at most 2.5 g and at least 0.55 g where an arc allows). Every other vehicle in the lane
+  that it could reach in the air or within 1.5 s of touching down must be cleared too, or the hop is refused ("No room
+  to land"). The plan allows for each vehicle braking as hard as the traffic model ever brakes (10 m/s², to a stop at
+  most) while the car could be over it, ordinary hard braking (4 m/s²) for the landing room, and speeding up as hard as
+  an aggressive driver does (2.24 m/s²) for the time over it; the numbers live in `traffic/limits.ts`, which
+  `Traffic.ts` reads too. A car changing lanes counts in the lane it is moving to. The scan reads each vehicle's level against
+  this road's own height where it is: the first build compared it with the height under the car, so on a grade it
+  missed vehicles 100 m ahead and landed on them (found by the suite's semi check in heavy traffic). Refusals: "Thrust
+  Hop: tank low", "Need more speed", "Too close to clear", "No room to land", "Get closer to clear", "Need more speed
+  to clear", "Junction ahead: no hop", "No hop: overpass ahead", "No hop: sign gantry ahead", "No hop: bridge
+  overhead". Keys: Left Shift (hold, double-tap) and J for the hop; D-pad up; the phone's THRUST button sits beside
+  the driver's ability, over BRAKE.
+- **Repair (M5 review, 2026-10-21).**
+  - **The driver's Focus Time.** The hop is planned for the traffic at the world's pace at take-off (0.7× under
+    Focus Time). The first build let Focus Time end in the air: the world snapped back to 1×, a semi went from 15.8 to
+    22.6 m/s under the car, and the car touched its trailer 19 times in the air, 0.27 m under its roof (the judge's
+    run, seed 25). Now the driver's ability never changes the world's pace during a hop. A Focus Time that runs out
+    in the air holds the world at 0.7× until touchdown (`Game.abilityEndHeld`). One asked for in the air waits for
+    touchdown ("Focus Time on landing", `Game.focusOnLand`). Clear Path and Locked In don't change the pace; their
+    ends hold to touchdown too, which is harmless.
+  - **A vehicle too far ahead to clear in one hop.** At low closing speeds the nearest vehicle is often too far to
+    clear in 2.5 s. The hop then comes down at least `HOP.landGap` (1.5 s) short of it, with every other vehicle's
+    need met (toast "Thrust Hop · short of the sedan"). When even that doesn't fit, it says "Get closer to clear" if
+    the vehicle could be cleared from 0.3–0.8 s behind its tail, else "Need more speed to clear".
+  - **Smaller fixes.**
+    - The HUD's hop label and the dash gauge say "charging" only while the compressor runs ("Hop: tank low" / "LOW"
+      otherwise).
+    - The refusal past a road's end now says "Junction ahead: no hop".
+    - The gauge counts in 10 bar at most 4 times a second on the phone build (5 bar, 10 a second on High).
+    - The thrust sounds are built the first time the hypercar uses them.
+    - The gantry offsets are one constant (`GANTRY_AHEAD` in `Network.ts`), used by `Roads.ts` and the hop's
+      clearance check.
+    - THRUST lets go when a gamepad is unplugged with D-pad up held.
 
 ### 6.5 Controls
 
 | Device | Cold Thrust | Thrust Hop |
 | --- | --- | --- |
-| Phone | One **THRUST** button above GAS (in `Touch.tsx`, shown only when the ability is live). Thrust starts after 120 ms of holding, so a tap isn't a burst | A second tap within 300 ms. The button's ring is the tank gauge |
-| Keyboard | Hold **Left Shift** | Double-tap Left Shift (Shift is unused today; F stays the driver's ability) |
+| Phone | One **THRUST** button beside the driver's ability, over BRAKE (in `HUD.tsx`, shown only when the ability is live; held sideways, the two sit low in the middle). Thrust starts after 120 ms of holding (at once under 5 m/s), so a tap isn't a burst | A second tap within 300 ms. The button's ring is the tank gauge |
+| Keyboard | Hold **Left Shift** | Double-tap Left Shift, or **J** (Shift is unused today; F stays the driver's ability) |
 | Gamepad | Hold D-pad up (button 12; unused today) | Double-tap D-pad up |
 
 ### 6.6 Visuals, sound, HUD and cockpit
@@ -672,7 +720,7 @@ Every milestone ends with `npm run build`, the named suite groups, renders read 
 | **M2 Lights and cockpit** | LED material and strips (splitter, sills, diffuser, wing plates), the blades, the red bar (brake-lit through `mats.tail`), headlight beams moved to the blades, bloom on High and Ultra; interior `'hyper'` (Corsa buckets, display binnacle, pressure gauge, ambient strip). Optional tyre lettering in our own text | Night and sunset renders: beauty, rear, chase, seat, dash. In-game frames: braking raises the bar (emissive 1.6 → 5); beams on at night. Groups `render`, `phone` |
 | **M3 The fastest car: two tunes** | `CarDef` with `unleashed` and `race` sets; `applyCar(c, tune)` latched at `start()`; new `SPEC` fields (brake gain, `Cf`/`Cr`, steering gain, collision box); HUD chip; garage card from measured numbers; the Free Drive earnings cap; the swept traffic collision; streaming at speed. **Blockers from M1, before the `CarDef`:** the seat drop must land first (the roof over the shared eye is 1.067 m, 0.093 m below it), and the narrow canopy puts its flank 0.06 m from the eye at x −0.37 m once dropped, so the driver should sit further in (the sheet's occupants are about ±0.25 m out). `PlayerCar.update` spins both axles at `vx / SPEC.wheelR` (0.345 m) while this car's tyres are 0.35 / 0.37 m: scale each axle's spin by `SPEC.wheelR / r` (§3) | A headless physics test (this document's harness, promoted to `tests/`) asserts: Unleashed ≥ §5.2's numbers and first on every metric; the race tune ≤ the Corsa on every metric at handling 0.35 and 1.0. In-game: Free Drive applies Unleashed (`SPEC.power` 1.5 MW); Races, Time Trial and Survival apply the race tune; nothing changes mid-run. The ten checks in §5.5. Groups `boot`, `race`, `survival`, `progression`, `interchanges`, and a new `hypercar` group |
 | **M4 Driving profiles: Arcade, Sport, Simulation** | Named points on the handling slider (Arcade 0.0–0.35, Sport about 0.6, Simulation 1.0) with their assists shown; the stability control's yaw target scaled by the car's grip, so the rKin / (1 + 0.0009 v²) cap doesn't throttle a 1.2 g car | Each profile's 0-60, 100-0 and lateral g logged for all five cars and both hypercar tunes. No spins at 200 mph in Arcade (the existing claim) and at 300 mph on straights in the hypercar. Race tune still ≤ the Corsa in every profile |
-| **M5 Cold Thrust, Ground Lock, Thrust Hop** | Thrust force, fan suction, tank, airborne state, controls, jets, sound, HUD and cockpit gauge, the rules of §6 | `abilities`: thrust 0-60 ≤ 0.8 s; tank drains and refills to §6.1's numbers; off in race, time and survival, in a countdown and while paused; Ground Lock ≥ 1.9 g at 40 m/s; a hop clears a parked sedan and a moving semi at set closing speeds with no contact and lands on the same path (path id unchanged, inside the lanes); refused under an overpass and a gantry. `phone`: the THRUST button's hold and double-tap at 375 × 812. Chase-view renders of the jets |
+| **M5 Cold Thrust, Ground Lock, Thrust Hop** | **Built 2026-10-20, repaired after review 2026-10-21** (logged in `PROJECT_OC_PROGRESS.md`; as built in §6.2-6.4). Thrust force, fan suction, tank, airborne state, controls, jets, sound, HUD and cockpit gauge, the rules of §6 | `abilities`: thrust 0-60 ≤ 0.8 s; tank drains and refills to §6.1's numbers; off in race, time and survival, in a countdown and while paused; Ground Lock ≥ 1.9 g at 40 m/s; a hop clears a parked sedan and a moving semi at set closing speeds with no contact and lands on the same path (path id unchanged, inside the lanes); refused under an overpass and a gantry. `phone`: the THRUST button's hold and double-tap at 375 × 812. Chase-view renders of the jets |
 | **M6 Founder Edition exclusives** | Plaque (sill and console), reserved paint and LEDs, the wake-up sweep, the reveal stage, the run-card badge | Renders: the door sill and console (plaque reads "No. 0000 · TEST" in owner mode), the reveal stage, a run card. The reserved paint can't be chosen for another car. No real serials anywhere until the store's entitlement exists |
 
 ## 9. Physics: what exists, what each milestone adds, what waits
