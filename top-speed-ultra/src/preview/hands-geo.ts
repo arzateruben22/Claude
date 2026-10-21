@@ -56,8 +56,9 @@ export function buildArmGeometry(pres: Pres, h: number): ArmGeometry {
     for (let k = thumb ? 1 : 0; k < 3; k++) {
       const prev = k === 0 ? g.dirs[0] : g.dirs[k - 1], next = g.dirs[k];
       const up = norm(add(k === 0 ? A.palm.N : g.dorsal[k - 1], g.dorsal[k]));
-      const s = thumb ? (k === 2 ? 0.95 : 0.55) : k === 1 ? 1 : k === 2 ? 0.72 : 0.5;
-      joints.push({ p: g.joints[k], ax: norm(add(prev, next)), up, r: g.halfW[k] + 4, s, kind: k === 0 ? 1 : 0 });
+      // the thumb's MCP is a knuckle (its folds), its IP a finger-like crease
+      const s = thumb ? (k === 2 ? 0.95 : 0.8) : k === 1 ? 1 : k === 2 ? 0.72 : 0.5;
+      joints.push({ p: g.joints[k], ax: norm(add(prev, next)), up, r: g.halfW[k] + 4, s, kind: k === 0 || (thumb && k === 1) ? 1 : 0 });
     }
   });
   joints.push({ p: madd(A.wrist, A.foreDir, 6), ax: A.foreDir, up: A.foreUp, r: A.wristHalf[0] + 6, s: 0.35, kind: 2 });

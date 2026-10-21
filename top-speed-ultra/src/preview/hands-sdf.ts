@@ -75,7 +75,7 @@ export class Field {
   n = 0;
   type: number[] = []; group: number[] = []; k: number[] = []; tag: number[] = [];
   F: number[] = [];
-  kThumb = 6; kWeb = 4.5; kFF = 1.6;
+  kThumb = 3; kWeb = 4.5; kFF = 1.6;
   clear = -0.3;           // how far the skin stays off the rim (mm): a hair into the leather, so no slit of light shows between them (the mesh wanders ~0.5 mm)
   contactK = 2.2;         // how round the edge of the skin pressed on the rim is (mm)
   bulge = 0.7;            // flesh displaced where it presses on the rim (mm)
@@ -251,7 +251,7 @@ function dims(pres: Pres): Dims {
     fan: [5, 1.5, -2.5, -6.5],          // metacarpals converge toward the wrist (deg)
     thumb: { len: [44, 34, 29], halfW: [12.0, 9.8, 9.4], dors: [7.2, 6.3, 5.2], palm: [11.0, 9.2, 8.0] },
     wrist: [29, 19.5], carpus: 17, foreLen: 262, upperLen: 300, tendon: 2.2,
-    nail: [0.37, 0.37, 0.37, 0.37, 0.4], nailFree: 0.2,
+    nail: [0.37, 0.37, 0.37, 0.37, 0.45], nailFree: 0.2,
     forearm: [[28.5, 19.5], [32, 22.5], [37, 28], [41.5, 32.5], [43, 36]],
   };
   if (pres === 'm') return m;
@@ -271,8 +271,9 @@ function dims(pres: Pres): Dims {
 
 // The grip, as a real hand holds a rim at ten and two: the palm wraps the OUTSIDE of the rim (its distal part on the
 // rim's outer front, the back of the hand toward the driver and out), the knuckles stand on the rim's outer face, the
-// four fingers wrap round the far side (toward the dash) and come back round the inner edge, and the short thumb
-// crosses the front face and hooks over the inner front edge with its nail toward the driver.
+// four fingers wrap round the far side (toward the dash) and come back round the inner edge, and the thumb lies
+// along the rim's front face pointing up toward twelve (the pad on the leather, the nail to the driver), the first
+// web space open between it and the index knuckle.
 export const POSE = {
   alpha: 28 * DEG,         // where the palm meets the rim: the section's normal there, from straight out toward the driver
   palmT: 13,             // the metacarpal heads' axis above the palm's skin there (mm)
@@ -285,12 +286,17 @@ export const POSE = {
   squeeze: 7,            // how far the finger pads press into the padded leather (mm); the skin flattens on it
   squeezeK: [1.3, 1.1, 0.75], // ... per phalanx (the fingertips press less, so they stand proud round the inner edge)
   // the thumb: its base in the heel of the hand [along R, N, P from the index metacarpal's base (mm)]; where its tip
-  // rests (section angle range, deg; mm along the rim from the index knuckle); how far the IP stands off the leather;
-  // MCP and IP flexion [min, max, preferred]; how much the two joints' hinges may disagree (deg); the nail toward the
-  // driver (min cosine); how high the MCP knuckle may stand (mm off the leather); how far (mm, as the eye sees it) it
-  // keeps off the middle, ring and little fingertips; pad squeeze; weights [tip place, nail]
-  thumb: { cmc: [14, -14, 17], tipPhi: [145, 160], tipDx: -2, ipGap: 2, ipPhi: [85, 140], mcpFlex: [10, 60, 35], ipFlex: [20, 80, 45],
-    roll: 15, twistW: 0.5, twistMax: 180, across: 0.6, acrossW: 0, mxGap: -4, cmcW: 0.15, cmcBox: [[-12, 12], [-6, 12], [-12, 12], [0, 15]], nail: 0.35, mcpHigh: 14, sep: 12, squeeze: 3.5, w: [0.5, 8], q: { m: [3.25, 145, 18.5, -0.5, 0, -6, -12, 15], f: [1.75, 130, 24.5, -0.5, 1.5, -6, -12, 15] } as Record<Pres, number[] | null> },
+  // rests (section angle range, deg: 90 is the crest of the front face; mm along the rim past the index knuckle);
+  // how far the IP stands off the leather; MCP and IP flexion [min, max, preferred] and the IP preference's weight;
+  // how much the two joints' hinges may disagree (deg); the nail toward the driver (min cosine); how high the MCP
+  // knuckle may stand (mm off the leather); how far (mm, as the eye sees it) it keeps off the middle, ring and little
+  // fingertips; pad squeeze; weights [tip place, nail]; the open first web space: the MCP's least distance from the
+  // index metacarpal (mm) and its weight; the coarse search's grid, and the pinned result per presentation (q: null
+  // searches again, ~1-2 s; tools/preview-hands-thumb.mjs prints the q to pin)
+  thumb: { cmc: [14, -14, 17], tipPhi: [95, 115], tipDx: 12, ipGap: 0, ipPhi: [85, 140], mcpFlex: [10, 55, 45], ipFlex: [5, 60, 15], ipW: 0.1,
+    roll: 15, twistW: 1.0, twistMax: 45, across: 0.6, acrossW: 0, mxGap: -4, cmcW: 0.15, cmcBox: [[-12, 24], [-10, 12], [-16, 0], [0, 15]], nail: 0.35, mcpHigh: 16, sep: 12, squeeze: 3.5, w: [0.5, 8], web: 22, webW: 1.0,
+    grid: { dx: [-6, 12, 6], pt: 5, psi: [40, 90, 10], incl: [0, 40, 8] },
+    q: { m: [18.5, 100, 77, 11, 9, -10, -16, 12], f: [18.75, 96.5, 77.5, 11.5, 9, -2.5, -16, 15] } as Record<Pres, number[] | null> },
   conv: [2, 0, -3, -5],     // the fingers converge toward the thenar as they close (deg, about the back of the hand)
   twist: [0, 0, 0, 0],     // each finger's flexion axis turned about the finger (deg): the tips drift along the rim
   align: 1,                // how far each finger's flexion axis turns from square to its metacarpal to the rim's axis
@@ -379,14 +385,25 @@ function closeFinger(M: V3, d0: V3, n0: V3, axis: V3, L: number[], pal: number[]
 
 // two-bone reach from the shoulder to the wrist, elbows down and out; the shoulder comes forward (protraction)
 // when the wheel is out of reach, so the arms stay a little bent
-export function reach(shoulder: V3, wrist: V3, L1: number, L2: number, pole: V3, bend = 0.94) {
-  let S = shoulder;
-  const dist = len(sub(wrist, S)), want = (L1 + L2) * bend;
-  if (dist > want) S = madd(wrist, norm(sub(S, wrist)), want);
-  const toW = sub(wrist, S), d = Math.min(len(toW), L1 + L2 - 1e-3), dir = norm(toW);
+// (scalar math, written into `out` when given: hands.ts runs this every frame for both arms)
+export function reach(shoulder: V3, wrist: V3, L1: number, L2: number, pole: V3, bend = 0.94, out?: { shoulder: V3; elbow: V3 }) {
+  const o = out ?? { shoulder: [0, 0, 0] as V3, elbow: [0, 0, 0] as V3 }, S = o.shoulder, E = o.elbow;
+  S[0] = shoulder[0]; S[1] = shoulder[1]; S[2] = shoulder[2];
+  let dx = wrist[0] - S[0], dy = wrist[1] - S[1], dz = wrist[2] - S[2];
+  const dist = Math.hypot(dx, dy, dz), want = (L1 + L2) * bend;
+  if (dist > want) {
+    const k = want / dist;
+    S[0] = wrist[0] - dx * k; S[1] = wrist[1] - dy * k; S[2] = wrist[2] - dz * k;
+    dx = wrist[0] - S[0]; dy = wrist[1] - S[1]; dz = wrist[2] - S[2];
+  }
+  const l = Math.hypot(dx, dy, dz), d = Math.min(l, L1 + L2 - 1e-3), il = l || 1, ux = dx / il, uy = dy / il, uz = dz / il;
   const a = (L1 * L1 - L2 * L2 + d * d) / (2 * d), hh = Math.sqrt(Math.max(0, L1 * L1 - a * a));
-  const p = perp(pole, dir);
-  return { shoulder: S, elbow: madd(madd(S, dir, a), p, hh) };
+  // the pole's part perpendicular to the shoulder-wrist line: the elbow goes that way
+  const pd = pole[0] * ux + pole[1] * uy + pole[2] * uz;
+  let px = pole[0] - ux * pd, py = pole[1] - uy * pd, pz = pole[2] - uz * pd;
+  const pl = Math.hypot(px, py, pz) || 1; px /= pl; py /= pl; pz /= pl;
+  E[0] = S[0] + ux * a + px * hh; E[1] = S[1] + uy * a + py * hh; E[2] = S[2] + uz * a + pz * hh;
+  return o;
 }
 
 /** how well the last thumb solve met its targets (0 = all of them), for the pose tools */
@@ -520,7 +537,7 @@ export function buildAnatomy(pres: Pres): Anatomy {
       if (dot(sub(d1, d2), u2) < -0.05) { thumbRej.flex++; continue; }   // the IP bends the pad toward the leather, never back
       let sc = T.cmcW * Math.hypot(co[0], co[1], co[2]) + T.cmcW * 0.6 * (co[3] ?? 0);
       sc += 0.05 * Math.abs(fM - T.mcpFlex[2]) + 0.4 * Math.max(0, fM - T.mcpFlex[1]) + 0.4 * Math.max(0, T.mcpFlex[0] - fM);
-      sc += 0.05 * Math.abs(fI - T.ipFlex[2]);
+      sc += T.ipW * Math.abs(fI - T.ipFlex[2]);
       // the first phalanx crosses the front face (toward the hub), it does not run along the rim toward twelve
       sc += T.acrossW * Math.max(0, Math.abs(d1[0]) - T.across);
       sc += T.twistW * Math.max(0, twist - T.roll);
@@ -548,10 +565,14 @@ export function buildAnatomy(pres: Pres): Anatomy {
         cover += Math.max(0, T.sep - dd);
       }
       sc += 0.6 * cover;
+      // the first web space stays open: the thumb's MCP keeps off the index's metacarpal (abduction), so the web is
+      // a saddle between two digits and not the thumb lying flat against the side of the palm
+      const webD = segDist(m, base[0], mcp[0]);
+      sc += T.webW * Math.max(0, T.web - webD);
       sc += T.w[0] * Math.abs(dx - T.tipDx);
       if (!best || sc < best.s) {
         best = { j: [C, m, ip, tip], d: [d0, d1, d2], u: [u0, u1, u2], k: kI, f: [0, fM, fI], s: sc, q: [dx, pt, psi, incl, ...co],
-          terms: { fM, fI, twist, padOn, nail, sink, clash, hM, cover, ipPhi, tipPhi: pt, dx, cx: cmc0[0], cy: cmc0[1], cz: cmc0[2], cphi: sectionAngle(cmc0), cD: rimSdfG(cmc0[0], cmc0[1], cmc0[2]) } };
+          terms: { fM, fI, twist, padOn, nail, sink, clash, hM, cover, webD, ipPhi, tipPhi: pt, dx, cx: cmc0[0], cy: cmc0[1], cz: cmc0[2], cphi: sectionAngle(cmc0), cD: rimSdfG(cmc0[0], cmc0[1], cmc0[2]) } };
       }
     }
   };
@@ -559,9 +580,14 @@ export function buildAnatomy(pres: Pres): Anatomy {
   const fixedT = T.q[pres];
   if (fixedT) tryTip(fixedT[0], fixedT[1], fixedT[2], fixedT[3], fixedT.slice(4));
   if (!best) {
-    for (let c0 = T.cmcBox[0][0]; c0 <= T.cmcBox[0][1]; c0 += 12) for (let c1 = T.cmcBox[1][0]; c1 <= T.cmcBox[1][1]; c1 += 9) for (let c2 = T.cmcBox[2][0]; c2 <= T.cmcBox[2][1]; c2 += 12) for (let c3 = 0; c3 <= T.cmcBox[3][1]; c3 += 7.5)
-      for (let dx = T.tipDx - 6; dx <= T.tipDx + 6; dx += 6) for (let pt = T.tipPhi[0]; pt <= T.tipPhi[1]; pt += 10) for (let psi = 0; psi <= 70; psi += 10)
-        for (let incl = 10; incl <= 55; incl += 15) tryTip(dx, pt, psi, incl, [c0, c1, c2, c3]);
+    // the coarse search (POSE.thumb.grid: [from, to, step] per axis; the CMC box is stepped in thirds), then three
+    // passes of refinement round the best. It costs ~1-2 s, so the result is pinned in POSE.thumb.q per presentation
+    const span = (r: number[]) => { const o: number[] = []; for (let v = r[0]; v <= r[1] + 1e-9; v += r[2]) o.push(v); return o; };
+    const thirds = (b: number[]) => [b[0], (b[0] + b[1]) / 2, b[1]];
+    const G = T.grid;
+    for (const c0 of thirds(T.cmcBox[0])) for (const c1 of thirds(T.cmcBox[1])) for (const c2 of thirds(T.cmcBox[2])) for (const c3 of thirds(T.cmcBox[3]))
+      for (const dx of span([T.tipDx + G.dx[0], T.tipDx + G.dx[1], G.dx[2]])) for (const pt of span([T.tipPhi[0], T.tipPhi[1], G.pt])) for (const psi of span(G.psi))
+        for (const incl of span(G.incl)) tryTip(dx, pt, psi, incl, [c0, c1, c2, c3]);
     if (!best) throw new Error('hands: no thumb pose');
     for (let pass = 0; pass < 3; pass++) {
       const q = (best as Sol).q, hh = [3, 1.5, 0.75][pass];
@@ -603,7 +629,8 @@ export function buildAnatomy(pres: Pres): Anatomy {
   f.ell(madd(madd(O, P, 9), N, -12.5 * fem), R, N, 36 * fem, 7 * fem, 8.5 * fem, G_PALM, 8, 31);
   f.ell(madd(madd(baseMid, P, 6), N, -8 * fem), R, N, 25 * fem, 14 * fem, 17 * fem, G_PALM, 12, 32);
   // the back of the hand: arched across (a low dome over the metacarpals, lower toward the little finger)
-  f.ell(madd(madd(lerp3(O, baseMid, 0.5), N, -15 * fem), R, 2), P, N, 34 * fem, 13 * fem, 36 * fem, G_PALM, 5, 36);
+  // (its thumb-side edge stops short of the thumb, so the thumb's own crest stands clear of the back of the hand)
+  f.ell(madd(madd(lerp3(O, baseMid, 0.5), N, -15 * fem), R, -2), P, N, 34 * fem, 13 * fem, 33 * fem, G_PALM, 5, 36);
   // hypothenar: the fleshy edge under the little finger
   const hyC = madd(madd(lerp3(base[3], mcp[3], 0.45), N, -9 * fem), R, -6 * fem);
   f.ell(hyC, sub(mcp[3], base[3]), N, 30 * fem, 11 * fem, 10.5 * fem, G_PALM, 9, 33);
@@ -612,20 +639,21 @@ export function buildAnatomy(pres: Pres): Anatomy {
   f.ell(thC, t0, tn, 24 * fem, 12.5 * fem, 14.5 * fem, G_PALM, 10, 34);
   // first dorsal interosseous: the muscle between thumb and index on the back of the hand
   // (full when the thumb is drawn in to grip: it fills the hollow between the index knuckle and the thumb)
-  const fdiA = lerp3(base[0], mcp[0], 0.7), fdiC = madd(lerp3(fdiA, tj[1], 0.36), N, 4.5);
-  f.ell(fdiC, sub(tj[1], fdiA), N, len(sub(tj[1], fdiA)) * 0.6, 14 * fem, 12 * fem, G_PALM, 12, 35);
-  // ... and the dorsal web over it, from the index knuckle to the thumb's MCP: in a grip the first web space is
-  // filled (no pinched notch between the index knuckle and the thumb)
+  // (kept below the thumb's own crest: the thumb lies along the rim as a digit of its own, the web a saddle beside it)
+  const fdiA = lerp3(base[0], mcp[0], 0.7), fdiC = madd(lerp3(fdiA, tj[1], 0.3), N, 2.0);
+  f.ell(fdiC, sub(tj[1], fdiA), N, len(sub(tj[1], fdiA)) * 0.6, 7 * fem, 12 * fem, G_PALM, 12, 35);
+  // ... and the dorsal web over it, from the index knuckle to the thumb's MCP: a thin membrane, so the first web
+  // space reads as a saddle between the index knuckle and the thumb (the rim's leather under it, never through it)
   {
     const wa = madd(mcp[0], N, -2), wb = madd(tj[1], tn, -2), wc = lerp3(wa, wb, 0.5);
-    f.ell(madd(wc, N, -1), sub(wb, wa), N, len(sub(wb, wa)) * 0.5, 9 * fem, 9 * fem, G_PALM, 10, 38);
+    f.ell(madd(wc, N, -4), sub(wb, wa), N, len(sub(wb, wa)) * 0.5, 5 * fem, 7 * fem, G_PALM, 10, 38);
   }
   // ... and the groove along the thumb's metacarpal on the back of the hand filled to a shallow valley: left deep and
   // narrow, the rim showed through it as a line of dark pixels from the seat
   {
     const a0 = lerp3(cmc, tj[1], 0.3), a1 = lerp3(cmc, tj[1], 0.92), ix = lerp3(base[0], mcp[0], 0.55);
     const c0 = madd(lerp3(lerp3(a0, a1, 0.5), ix, 0.42), N, 1.5);
-    f.ell(c0, sub(a1, a0), N, len(sub(a1, a0)) * 0.55, 8.5 * fem, 9 * fem, G_PALM, 10, 39);
+    f.ell(c0, sub(a1, a0), N, len(sub(a1, a0)) * 0.55, 5 * fem, 9 * fem, G_PALM, 10, 39);
   }
   // the web of the thumb, and the adductor under it
   f.ell(madd(lerp3(lerp3(mcp[0], base[0], 0.3), lerp3(tj[1], tj[2], 0.2), 0.5), N, -8 * fem), sub(tj[1], mcp[0]), N, len(sub(tj[1], mcp[0])) * 0.5, 7 * fem, 9 * fem, G_PALM, 9, 37);
@@ -704,7 +732,7 @@ function addDigit(f: Field, g: Digit, group: number, k: number, slim: number, kc
   const hw = g.halfW.map((w) => w * slim);
   const r = (b: number) => (g.dors[b] + g.palm[b]) / 2, sh = (b: number) => (g.palm[b] - g.dors[b]) / 2;
   // half width at a joint: the condyles a little proud of both shafts
-  const jointW = (b: number) => Math.max(hw[b - 1] * 0.96, hw[b]) * 1.015;
+  const jointW = (b: number) => Math.max(hw[b - 1] * 0.96, hw[b]) * (thumb ? 1.05 : 1.015);   // the thumb's IP condyles show
   for (let b = b0; b < 3; b++) {
     const a = J[b], e = J[b + 1], dir = g.dirs[b], up = g.dorsal[b], L = len(sub(e, a)), last = b === 2;
     const rA = r(b), shA = sh(b), wA = b === b0 ? hw[b] : jointW(b);
@@ -725,7 +753,9 @@ function addDigit(f: Field, g: Digit, group: number, k: number, slim: number, kc
       const pu = g.dorsal[b - 1], pd = g.dirs[b - 1];
       const flex = Math.acos(Math.max(-1, Math.min(1, dot(pd, dir))));
       const s = Math.min(1, flex / (75 * DEG));
-      if (s > 0.1) f.ell(madd(madd(a, pu, g.dors[b - 1] * 0.55), pd, -2.2), pd, pu, 4.5, 1.2 + 0.5 * s, hw[b - 1] * 0.6, group, 2.6, 120 + b);
+      // (the thumb's MCP head is the knuckle the driver sees at the root of the thumb: bigger, and a little prouder)
+      const kb = thumb && b === 1 ? 1.4 : 1;
+      if (s > 0.1) f.ell(madd(madd(a, pu, g.dors[b - 1] * (thumb && b === 1 ? 0.62 : 0.55)), pd, -2.2), pd, pu, 4.5 * kb, (1.2 + 0.5 * s) * kb, hw[b - 1] * 0.6 * kb, group, 2.6, 120 + b);
     }
   }
   // the fingertip's pulp, fuller than the nail bed
