@@ -66,13 +66,15 @@ export function asphalt(): PBR {
       height[y * n + x] = grain * 0.7 + coarse * 0.3 + stone;
     }
     g.putImageData(img, 0, 0); rg.putImageData(rimg, 0, 0);
-    // tar-sealed cracks: dark, smooth, wandering lines
+    // tar-sealed cracks: dark, smooth, wandering lines, sized for the 1024 px design (q): drawn in pixels, on the phone
+    // tier's 512 px texture they came out twice as long and thick, black scribbles a lane wide repeating every 3.7 m
+    const q = n / 1024;
     for (let k = 0; k < 9; k++) {
       let x = r() * n, y = r() * n, a = r() * Math.PI * 2;
       g.strokeStyle = 'rgba(18,18,20,0.75)'; rg.strokeStyle = 'rgba(90,90,90,1)';
-      g.lineWidth = rg.lineWidth = 2 + r() * 4;
+      g.lineWidth = rg.lineWidth = (2 + r() * 4) * q;
       g.beginPath(); rg.beginPath(); g.moveTo(x, y); rg.moveTo(x, y);
-      for (let s = 0; s < 40; s++) { a += (r() - 0.5) * 0.6; x += Math.cos(a) * 8; y += Math.sin(a) * 8; g.lineTo(x, y); rg.lineTo(x, y); }
+      for (let s = 0; s < 40; s++) { a += (r() - 0.5) * 0.6; x += Math.cos(a) * 8 * q; y += Math.sin(a) * 8 * q; g.lineTo(x, y); rg.lineTo(x, y); }
       g.stroke(); rg.stroke();
     }
     return { map: tex(c, true), normalMap: normalMap(height, n, n, 2.2), roughnessMap: tex(rc, false) };
@@ -143,11 +145,13 @@ export function pcc(): PBR {
       height[y * n + x] = grain * 0.35 + coarse * 0.25 + tine * 0.25 - joint * 0.8;
     }
     g.putImageData(img, 0, 0); rg.putImageData(rimg, 0, 0);
-    g.strokeStyle = 'rgba(40,38,36,0.45)'; g.lineWidth = 1.5;
+    // hairline cracks, sized for the 1024 px design like the asphalt's
+    const q = n / 1024;
+    g.strokeStyle = 'rgba(40,38,36,0.45)'; g.lineWidth = 1.5 * q;
     for (let k = 0; k < 2; k++) {
       let x = r() * n, y = r() * n, a = r() * Math.PI * 2;
       g.beginPath(); g.moveTo(x, y);
-      for (let s = 0; s < 30; s++) { a += (r() - 0.5) * 0.8; x += Math.cos(a) * 6; y += Math.sin(a) * 6; g.lineTo(x, y); }
+      for (let s = 0; s < 30; s++) { a += (r() - 0.5) * 0.8; x += Math.cos(a) * 6 * q; y += Math.sin(a) * 6 * q; g.lineTo(x, y); }
       g.stroke();
     }
     return { map: tex(c, true), normalMap: normalMap(height, n, n, 1.6), roughnessMap: tex(rc, false) };
