@@ -5,18 +5,41 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-21, a Fable session on the owner's direct request)
+## State at the last update (2026-10-21, ~06:00 UTC)
 
-- Branch `claude/hypercar` (this session's checkout; `claude/always-on` is not on this remote): the UI re-themed to
-  the owner's ice reference ("Ice noir" tokens, the chrome OC mark, the rail menu with picture cards, the drive HUD
-  with the sign plate, the icon rail, the speed block and the round map), and the hypercar's M2 lights and cluster
-  judged on renders and re-tuned (see the 2026-10-21 entry in `PROJECT_OC_PROGRESS.md` and the 2026-10-21 section
-  of `PROJECT_OC_UI_TARGET.md`). Suite groups run: boot, phone, launch. Not run: render, race, the rest.
-- Next in the UI pass: the reference's pieces not built (Photo mode, the Phone, a showroom hero for the hypercar on
-  the menu), then U1 to U8 as listed in `PROJECT_OC_UI_TARGET.md`, all in the ice tokens.
-- Hypercar: M1b (body fidelity) and M3 to M6 as before; the seat view's rim clips the cluster's OC mark.
-- Pending from the owner: whether the lockup should read the mock's "Project OC / Orange County Freeway Simulator"
-  instead of "OC Ultra / Top Speed"; a real-phone Feedback report; the UE5 go/no-go.
+- Branch `claude/hypercar` holds everything judged: the ice reference UI, per-car and per-driver atmospheres, the
+  style guide from the owner's library (`PROJECT_OC_STYLE_GUIDE.md`), the ULTRA tokens, the Look setting
+  (Futuristic / Realistic), the live hypercar display, the Ultra grade, the run card's colours, the cinematic camera
+  (the menu is filmed with it). `claude/ultra-world-wip` holds the parked world and clothing work; two lanes are
+  finishing it in isolated worktrees and merge only when verified.
+
+## Standing instruction (owner, 2026-10-21): keep improving until the owner says stop
+
+An hourly scheduled task wakes this session. Each run: read notifications and background results first; merge what
+is verified; then take the next item below, prove it on renders (`tools/grade-shot.mjs`, `tools/atmo-shots.mjs`,
+`tools/ui-shots.mjs`, `tools/preview-shoot.mjs`), run the suite groups it touches, log it in
+`PROJECT_OC_PROGRESS.md`, commit and push to `claude/hypercar`, tick it here. Never block on a question: put owner
+decisions under "Decisions waiting" and move to the next item. Never spend real money, add a paid service, or
+publish anything beyond the owner's private test artifact. Stop when the owner says stop (delete the scheduled task).
+
+### Improvement queue (top first)
+
+1. Merge the verified Ultra world pass and the driver clothing pass from their lanes; run `npm test` in full.
+2. Republish the test build to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS after each merged milestone.
+3. The hypercar's seat view: the canopy header and the dash top crowd the view (the seat drop, M1 and M3 notes in
+   `PROJECT_OC_HYPERCAR.md`); the rim clips the display's top.
+4. Hypercar body fidelity M1b items 1, 3, 4, 6, 7 (`PROJECT_OC_HYPERCAR.md` section 8), each against the sheet.
+5. The full-screen World Map (U4 in `PROJECT_OC_UI_TARGET.md`), in the library's ULTRA map style.
+6. Garage tabs (U5): paint and wheels, applied live; then the radio panel (U7) and the phone (U6).
+7. Night: freeway lamps and wet road reflections at High (after the world pass lands), checked against the
+   library's ULTRA night boards.
+8. Traffic bodies: door seams, mirrors and tinted glass (if the world pass did not), then a second sedan shape.
+9. Performance: Ultra's draw calls and triangles after each pass, logged; Low unchanged.
+
+### Decisions waiting (the owner's)
+
+- Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`
+  replaced on the `style-references` branch (see the style guide's "Decisions for the owner").
 
 ## Prompt for an Opus 5.5 daytime session
 
