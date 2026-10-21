@@ -156,8 +156,16 @@ Start at 25. Raise it one rung at a time, after a week at the current rung in wh
 | 4 | **200** | 2 vCPU Droplet ($18), or a second lobby (north and south county) on the same box. |
 | 5 | **500** (`CAP_MAX`) | The relay moves to per-region rooms and a dedicated box; by then it earns its keep. |
 
-The measured numbers from `node test/load.mjs` on each machine belong in the progress log; the ones from this
-sandbox are there under 2026-10-21.
+Measured here (`node test/load.mjs N 20`, drivers in five clusters, CPU as a share of one core):
+
+| Drivers | Server CPU | Memory | Out, MB a minute |
+| --- | --- | --- | --- |
+| 25 | 2.3% | 91 MB | 5.4 |
+| 100 | 6.3% | 105 MB | 87.5 |
+| 250 | 20.9% | 126 MB | 550 |
+
+CPU and memory are not the limit; bandwidth is. Run the same test on the real machine before each rung and log it in
+`PROJECT_OC_PROGRESS.md`.
 
 ## Security notes, for the next review
 

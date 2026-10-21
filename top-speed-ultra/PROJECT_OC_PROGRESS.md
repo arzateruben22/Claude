@@ -4,6 +4,55 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21: the live server (alpha), the realistic mode, the talk bank and billboards
+
+Decisions 15 and 16. Branch `claude/live-server`. Everything below was run in this sandbox; nothing is deployed, so no
+real phone, real network or real player has touched it.
+
+- **Server tests** (`cd live && npm test`, Node 22.22): 11 of 11 pass. Accounts: the name, password and age rules,
+  case-insensitive uniqueness, a wrong password and an unknown name both 401, log-out kills the token, the per-name
+  log-in limit returns 429. The lobby: 30 drivers against a cap of 25 gives 25 online and 5 in line at #1 to #5; one
+  leaving lets #1 in and moves the rest up; raising the cap to 35 at run time lets the line in (a wrong admin token
+  gets a 404). The relay: a driver 100 m away is seen with the exact pose and brake light, one 30 km away isn't; a
+  teleport, 500 m/s and a non-number are each dropped and the last good pose stands; a second log-in on the same
+  account replaces the first. The feeds (`now.mjs`): the NWS text to the five skies, the mock day's shape (weekday
+  rush slower than night, Saturday easier), a political trend dropped by the blocklist, the real providers called
+  only when switched on (one NWS call, 20 TomTom calls), a dead network logged not fatal, a good answer kept, and
+  `/api/now` served with 20 roads.
+- **Load** (`node live/test/load.mjs N 20`: N pretend drivers in five clusters sending poses at 10 Hz for 20 s,
+  on this sandbox's CPU; percentages are of one core):
+
+| Drivers | Online | Server CPU | Memory | Peers seen (avg) | Out, MB a minute | Poses dropped |
+| --- | --- | --- | --- | --- | --- | --- |
+| 25 | 25 | 2.3% | 91 MB | 8.6 | 5.4 | 0 of 4,975 |
+| 100 | 100 | 6.3% | 105 MB | 35.6 | 87.5 | 0 of 19,900 |
+| 250 | 250 | 20.9% | 126 MB | 80.7 | 550 | 0 of 49,750 |
+
+  CPU and memory are far from limits even at 250; outbound bandwidth is what grows (with the square of a cluster's
+  size). At 25 a full lobby around the clock is about 230 GB a month, inside a $6 Droplet's 1 TB; 100 bunched
+  together would need binary poses and the nearest-32 rule first, as the ladder in `live/README.md` says.
+- **The talk bank** (`node tests/talk.mjs`): 173,601 distinct openers and 3,960 replies; 68,745,996 distinct two-line
+  conversations for one day's feed; 0 lines trip the no-politics blocklist; 0 lines with an unfilled slot. The
+  Coastal League: four games a day with every club playing once, the same result on every run, mid-July standings
+  that balance (ANA 59-46 … NB 44-61), January off-season and early October playoffs.
+- **Suite** (`npm run build && npm test -- --only=…`, headless Chromium with SwiftShader):
+  - `boot` and `phone`: 14 of 14 pass with the live code in (the menu fits 390 × 844 with the new Live section).
+  - `live` (three signed-in browsers against a cap of two): the Live section and the account form; a sign-up from the
+    panel; two drivers online and each sees the other (A drew B's car; the chip read LIVE 2/2; screenshot
+    `tests/out/live-ghost.png`, B's red coupe ahead on I-405 North); a third driver waits at #1 and is let in when one
+    goes back to the menu (server peak 2, admitted 3, 800 poses in, 0 dropped); a 500 m/s pose and a non-number
+    dropped through a real socket; no page errors. The first two runs failed only on the chip's case (CSS upper-cases
+    it) and are fixed.
+  - `launch`: the existing checks pass; the new billboard check found the Lot 57 panel on the 57 ahead of the
+    Orangewood exit (screenshot `tests/out/launch-billboard.png`: the green LOT 57 panel beside the 57, facing the
+    driver, before the Orangewood guide signs).
+  - Found and fixed on the way: the four 91 and 22 billboard slots had their points mirrored north to south (5 to 7
+    km off those roads), so 8 of 12 placed; moved to where each road passes closest to the venues. The realistic-mode
+    check read the HUD's traffic line without a route set; that line lives on the destination card, which shows only
+    with a route, so the check now sets one.
+- **Not verified:** the real NWS and TomTom feeds (this sandbox can't reach either host; the providers are tested
+  with recorded answers), any real phone, a real deployment behind Caddy, and more than three browsers at once.
+
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
 Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set

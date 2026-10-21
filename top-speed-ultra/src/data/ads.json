@@ -13,9 +13,9 @@
     { "road": "CA-57 South", "near": [-4430, -8419], "side": "R", "before": 650, "creative": "lot57" },
     { "road": "CA-57 North", "near": [-4430, -8419], "side": "L", "before": 1400, "creative": "dugout" },
     { "road": "CA-57 South", "near": [-4430, -8419], "side": "L", "before": 1400, "creative": "dugout" },
-    { "road": "CA-91 East", "near": [-4430, -6900], "side": "R", "before": 900, "creative": "lot57" },
-    { "road": "CA-91 West", "near": [-4430, -6900], "side": "R", "before": 900, "creative": "dugout" },
-    { "road": "CA-22 East", "near": [-6400, -11300], "side": "R", "before": 900, "creative": "dugout" },
-    { "road": "CA-22 West", "near": [-6400, -11300], "side": "R", "before": 900, "creative": "lot57" }
+    { "road": "CA-91 East", "near": [-3612, -14024], "side": "R", "before": 900, "creative": "lot57" },
+    { "road": "CA-91 West", "near": [-3612, -14024], "side": "R", "before": 900, "creative": "dugout" },
+    { "road": "CA-22 East", "near": [-5100, -6510], "side": "R", "before": 900, "creative": "dugout" },
+    { "road": "CA-22 West", "near": [-5100, -6510], "side": "R", "before": 900, "creative": "lot57" }
   ]
 }

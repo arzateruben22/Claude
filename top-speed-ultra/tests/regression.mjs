@@ -962,15 +962,16 @@ await group('live', async (use) => {
     await check('realistic mode: Live traffic and Live weather follow the server\'s feed, and the HUD says where it comes from', async () => {
       await game(A, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'live', weather: 'live' }); });
       await until(A, () => window.__game.now.source === 'server' && window.__game.now.snapshot.traffic.source === 'mock', 'the feed from the server');
-      await game(A, () => window.__game.fastForward(3));
-      await frames(A, 2);
+      // the traffic line lives on the destination card, which shows only with a route
+      await game(A, () => { window.__game.navigateTo('CA-55 North'); window.__game.fastForward(3); });
+      await frames(A, 3);
       const r = await game(A, () => { const g = window.__game; const road = g.path.main ? g.path.label : g.settings.start; return { road, ratio: g.now.ratioFor(road), level: g.traffic.level, weather: g.now.snapshot.weather, note: document.querySelector('.dest-traffic em')?.textContent, label: document.querySelector('.dest-traffic b')?.textContent, roads: Object.keys(g.now.snapshot.traffic.roads).length }; });
       expect(r.roads === 20, `${r.roads} roads in the feed`);
       expect(r.ratio > 0 && r.ratio <= 1 && r.level.perKmLane >= 2.2 && r.level.perKmLane <= 9.5, JSON.stringify(r));
       // the mock feed stands in for a real one on the server; the player is told it is simulated
       expect(/simulated/.test(r.note || '') && /Live/.test(r.label || ''), `HUD says "${r.label} / ${r.note}"`);
       expect(['clear', 'cloudy', 'rain', 'fog', 'mist'].includes(r.weather.kind), JSON.stringify(r.weather));
-      await game(A, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'moderate', weather: 'clear' }); });
+      await game(A, () => { const g = window.__game; g.navigateTo(null); g.updateSettings({ ...g.settings, density: 'moderate', weather: 'clear' }); });
       return `${r.road}: ratio ${r.ratio} → ${r.level.perKmLane} cars/km/lane, bold ${r.level.bold}; weather ${r.weather.kind} ${r.weather.tempF}°F (${r.weather.source}); HUD "${r.label} · ${r.note}"`;
     });
     await check('the billboards stand on their freeways near the two venues (our own places only)', async () => {
