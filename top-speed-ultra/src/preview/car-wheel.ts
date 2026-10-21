@@ -12,9 +12,9 @@
 // The garage's Wheels tab (cars.ts WHEELS) offers each car its own style and one second style.
 // Spoke faces are crowned (a highlight runs along each spoke); the five-bolt styles sit on a boss a third of the
 // rim's radius with chamfered hex nuts in dark recesses, and every open style has a valve stem at the barrel.
-// Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
-// lettering); finely drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour
-// with the wordmark on an 8:1 strip.
+// Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves on
+// high; no lettering); finely drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the
+// car's colour with the wordmark on an 8:1 strip.
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
 // caller's matrix scales the radius for smaller wheels.
 import * as THREE from 'three';
@@ -42,14 +42,16 @@ function lathe(profile: [number, number][], vs: number[], segs: number, flip: bo
 }
 const pathLen = (pts: [number, number][]) => { const c = [0]; for (let i = 1; i < pts.length; i++) c.push(c[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); return c; };
 
-function tyre(w: number, segs: number) {
+// grooves: the three circumferential grooves (6.8 mm deep, 12 profile points) are cut only on high; no phone camera
+// can see them and the tread's normal map carries the pattern (about 1,340 triangles a wheel saved there)
+function tyre(w: number, segs: number, grooves: boolean) {
   const hw = w / 2, R = WHEEL.R;
   const side: [number, number][] = [
     [0.256, hw - 0.012], [0.266, hw + 0.001], [0.276, hw + 0.009], [0.283, hw + 0.012], [0.289, hw + 0.008], [0.298, hw + 0.01],
     [0.312, hw + 0.011], [0.325, hw + 0.007], [0.334, hw - 0.001], [0.34, hw - 0.012], [0.3438, hw - 0.025], [R, hw - 0.038],
   ];
   const tread: [number, number][] = [];
-  for (const gx of [0.5, 0.12, -0.3].map((k) => k * hw)) tread.push([R, gx + 0.0055], [R - 0.0068, gx + 0.0042], [R - 0.0068, gx - 0.0042], [R, gx - 0.0055]);
+  if (grooves) for (const gx of [0.5, 0.12, -0.3].map((k) => k * hw)) tread.push([R, gx + 0.0055], [R - 0.0068, gx + 0.0042], [R - 0.0068, gx - 0.0042], [R, gx - 0.0055]);
   const inner = side.map(([r, x]) => [r, -x] as [number, number]).reverse();
   const prof = [...side, ...tread, ...inner];
   // v: outer sidewall 0..0.3, tread 0.3..0.7, inner sidewall 0.7..1 (each by arc length)
@@ -90,7 +92,7 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     k.add(key, g, m);
   };
 
-  put(S, 'tyre', tyre(w, segs));
+  put(S, 'tyre', tyre(w, segs, high));
   // rim lip (machined) and barrel (painted)
   const lip: [number, number][] = [[0.257, hw - 0.01], [0.268, hw - 0.002], [0.2705, hw + 0.006], [0.2665, hw + 0.0118], [0.256, hw + 0.0132], [0.245, hw + 0.0105], [0.2385, hw + 0.003]];
   put(S, style === 'multi' ? 'rimPaint' : 'machined', lathe(lip, lip.map((p) => p[0] * 6), segs, false));
