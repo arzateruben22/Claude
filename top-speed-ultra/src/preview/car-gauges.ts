@@ -4,6 +4,7 @@
 // (what the face looks like by day) and an emissive map (what the backlight lights up).
 import * as THREE from 'three';
 import { once, canvas } from './car-tex';
+import { drawOcMark } from './oc-mark';
 
 export const TACH = { start: (225 * Math.PI) / 180, sweep: (270 * Math.PI) / 180, max: 10000, red: 8500 };
 // the needle's angle (radians, counter-clockwise from 3 o'clock) for an rpm
@@ -12,8 +13,8 @@ const FONT = 'Arial, Helvetica, sans-serif';
 
 function tex(c: HTMLCanvasElement) { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; }
 
-export function tachTextures(n = 1024) {
-  return once('tach' + n, () => {
+export function tachTextures(n = 1024, brand = 'R O S S I N I') {
+  return once('tach' + n + brand, () => {
     const [c, g] = canvas(n, n), [ce, ge] = canvas(n, n);
     const cx = n / 2, cy = n / 2, R = n * 0.48;
     // face: graphite, a lighter chapter ring, concentric graining
@@ -47,7 +48,7 @@ export function tachTextures(n = 1024) {
       k.fillStyle = lit ? 'rgba(255,240,220,0.55)' : '#9da2a8'; k.textAlign = 'center'; k.textBaseline = 'middle';
       k.font = `500 ${R * 0.055}px ${FONT}`; k.fillText('x1000 r/min', cx, cy + R * 0.21);
       k.font = `600 ${R * 0.06}px ${FONT}`;
-      const word = 'R O S S I N I'; k.fillText(word, cx, cy - R * 0.3);
+      const word = brand; k.fillText(word, cx, cy - R * 0.3);
     });
     // the digital window: gear and speed
     const wx = cx - R * 0.2, wy = cy + R * 0.34, ww = R * 0.4, wh = R * 0.3;
@@ -147,6 +148,95 @@ export function velaScreenTex() {
     g.restore();
   }));
 }
+
+// the OC Hypercar's displays, the Vela's atlas layout (the top half the driver display, the bottom right the centre
+// screen) so the cockpit reuses the same display geometry. Static, like the Vela's: the driver display is a dark
+// screen in an angular ice-blue frame with the OC mark small at the top, a big light-weight speed, MPH under it and
+// the gear in an outlined box below; an angular pod either side (a tick ring on the left, a segment bar on the
+// right). The colours are the car's LED family as they read on screen (#5eb8ff lines, a #bfe8ff hot white-blue).
+// The OC Hypercar's displays, one atlas like the Vela's: the top half is the wide driver display, the bottom right the
+// centre screen. Live (2026-10-21): the frame, the pods' outlines, the labels and the substrate grid are drawn once
+// onto a base canvas; `draw(readout)` repaints only what moves (the speed, the gear, the power dial, the rev bar and
+// the mode) on top of it, about 15 times a second from the cockpit's update. The right pod was a battery charge and a
+// range, which mean nothing on a combustion car; it is the rev bar now.
+export interface HyperReadout { mph: number; gear: string; kw: number; kwMax: number; rpm: number; rpmFrac: number; mode: string }
+const HY = { ICE: '#5eb8ff', DEEP: '#1e6fd8', HOT: '#bfe8ff', TXT: '#e8f2ff', DIM: '#8fa6c0', OFF: '#17283f' };
+const hexPath = (g: CanvasRenderingContext2D, cx: number, cy: number, hw: number, hh: number, cut: number) => { g.beginPath(); g.moveTo(cx - hw + cut, cy - hh); g.lineTo(cx + hw - cut, cy - hh); g.lineTo(cx + hw, cy); g.lineTo(cx + hw - cut, cy + hh); g.lineTo(cx - hw + cut, cy + hh); g.lineTo(cx - hw, cy); g.closePath(); };
+const POD_L = 512 - 300, POD_R = 512 + 300;   // the pods' centres
+function hyperBase(g: CanvasRenderingContext2D) {
+  const { ICE, DEEP, HOT, TXT, DIM, OFF } = HY;
+  g.fillStyle = '#03050a'; g.fillRect(0, 0, 1024, 512);
+  const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(20,50,100,0.28)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 1024, 256);
+  g.lineJoin = 'miter'; g.lineCap = 'butt';
+  // the frame: a wide hexagon in the deep blue, an inner echo in the ice
+  g.strokeStyle = DEEP; g.lineWidth = 4; hexPath(g, 512, 128, 486, 116, 70); g.stroke();
+  g.strokeStyle = ICE; g.lineWidth = 1.5; hexPath(g, 512, 128, 474, 106, 66); g.stroke();
+  // the side pods: an angular half-frame each, open toward the centre, with a hot corner
+  for (const sd of [-1, 1]) {
+    const cx = sd < 0 ? POD_L : POD_R;
+    g.strokeStyle = ICE; g.lineWidth = 3; g.beginPath();
+    g.moveTo(cx - sd * 40, 44); g.lineTo(cx + sd * 60, 44); g.lineTo(cx + sd * 110, 128); g.lineTo(cx + sd * 60, 212); g.lineTo(cx - sd * 40, 212); g.stroke();
+    g.strokeStyle = HOT; g.lineWidth = 5; g.beginPath(); g.moveTo(cx + sd * 84, 84); g.lineTo(cx + sd * 110, 128); g.lineTo(cx + sd * 84, 172); g.stroke();
+    g.strokeStyle = DEEP; g.lineWidth = 1.5; g.beginPath();
+    g.moveTo(cx - sd * 40, 58); g.lineTo(cx + sd * 50, 58); g.lineTo(cx + sd * 94, 128); g.lineTo(cx + sd * 50, 198); g.lineTo(cx - sd * 40, 198); g.stroke();
+  }
+  // the pods' fixed labels and their unlit scales
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillStyle = DIM; g.font = `500 14px ${FONT}`; g.fillText('kW', POD_L + 10, 146);
+  for (let k = 0; k < 12; k++) { const y = 196 - k * 11.5; g.fillStyle = OFF; g.fillRect(POD_R - 44, y - 4, 34 - k * 1.2, 7); }
+  g.textAlign = 'left'; g.fillStyle = DIM; g.font = `500 14px ${FONT}`; g.fillText('x1000 RPM', POD_R + 2, 122);
+  // the centre's fixed parts: the OC mark small at the top, MPH, the gear's outlined box
+  drawOcMark(g, 476, 22, 72, 26, TXT);
+  g.textAlign = 'center'; g.fillStyle = DIM; g.font = `500 22px ${FONT}`; g.fillText('MPH', 512, 176);
+  g.strokeStyle = ICE; g.lineWidth = 2; g.beginPath(); g.roundRect(492, 196, 40, 40, 5); g.stroke();
+  // faint grid lines through the dark, as a display's substrate
+  g.strokeStyle = 'rgba(94,184,255,0.08)'; g.lineWidth = 1; for (let x = 140; x < 900; x += 40) { g.beginPath(); g.moveTo(x, 30); g.lineTo(x, 226); g.stroke(); }
+  // the centre screen (716..1024 x 256..512): a dark panel with an angular frame, the mode (live) and the assists
+  const x0 = 716, y0 = 256;
+  g.save(); g.beginPath(); g.rect(x0, y0, 308, 256); g.clip();
+  g.fillStyle = '#05080f'; g.fillRect(x0, y0, 308, 256);
+  g.strokeStyle = DEEP; g.lineWidth = 3; hexPath(g, x0 + 154, y0 + 128, 140, 110, 30); g.stroke();
+  g.strokeStyle = ICE; g.lineWidth = 1.5; hexPath(g, x0 + 154, y0 + 128, 130, 100, 28); g.stroke();
+  drawOcMark(g, x0 + 124, y0 + 44, 60, 22, TXT);
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillStyle = DIM; g.font = `600 18px ${FONT}`; g.fillText('ABS   TCS', x0 + 154, y0 + 150);
+  g.fillStyle = HOT; g.fillRect(x0 + 60, y0 + 178, 188, 2);
+  g.restore();
+}
+function hyperLive(g: CanvasRenderingContext2D, r: HyperReadout) {
+  const { ICE, DEEP, HOT, TXT } = HY, clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+  g.lineCap = 'butt'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  // the power dial: the ticks lit up to the share of the car's power in use, the arc following them
+  const pf = clamp01(r.kw / Math.max(1, r.kwMax)), lit = Math.round(pf * 20), cx = POD_L + 10;
+  for (let k = 0; k <= 20; k++) {
+    const a = Math.PI * (0.75 + 1.5 * (k / 20)), r0 = k % 5 ? 56 : 48, r1 = 64;
+    g.strokeStyle = k <= lit && lit > 0 ? (k > 16 ? HOT : ICE) : DEEP; g.lineWidth = k % 5 ? 1.5 : 3;
+    g.beginPath(); g.moveTo(cx + Math.cos(a) * r0, 128 + Math.sin(a) * r0); g.lineTo(cx + Math.cos(a) * r1, 128 + Math.sin(a) * r1); g.stroke();
+  }
+  if (pf > 0.01) { g.strokeStyle = ICE; g.lineWidth = 4; g.beginPath(); g.arc(cx, 128, 42, Math.PI * 0.75, Math.PI * (0.75 + 1.5 * pf)); g.stroke(); }
+  g.fillStyle = TXT; g.font = `600 26px ${FONT}`; g.fillText(String(Math.round(r.kw)), cx, 124);
+  // the rev bar: twelve segments, the last three hot; the revs in thousands beside it
+  const seg = Math.round(clamp01(r.rpmFrac) * 12);
+  for (let k = 0; k < seg; k++) { const y = 196 - k * 11.5; g.fillStyle = k > 8 ? HOT : ICE; g.fillRect(POD_R - 44, y - 4, 34 - k * 1.2, 7); }
+  g.textAlign = 'left'; g.fillStyle = TXT; g.font = `600 22px ${FONT}`; g.fillText((r.rpm / 1000).toFixed(1), POD_R + 2, 100);
+  // the speed, big and light, and the gear in its box
+  g.textAlign = 'center'; g.fillStyle = '#f4f8ff'; g.font = `300 112px ${FONT}`; g.fillText(String(Math.round(r.mph)), 512, 118);
+  g.fillStyle = TXT; g.font = `600 ${r.gear.length > 1 ? 20 : 28}px ${FONT}`; g.fillText(r.gear, 512, 217);
+  // the centre screen's mode
+  g.fillStyle = ICE; g.font = `700 30px ${FONT}`; g.fillText(r.mode, 716 + 154, 256 + 116);
+}
+export function hyperScreen() {
+  return once('scrH', () => {
+    const [base, bg] = canvas(1024, 512), [c, g] = canvas(1024, 512);
+    hyperBase(bg);
+    const t = tex(c);
+    const draw = (r: HyperReadout) => { g.drawImage(base, 0, 0); hyperLive(g, r); t.needsUpdate = true; };
+    // the still the previews show: the owner's reference reads 132 in sixth
+    draw({ mph: 132, gear: '6', kw: 186, kwMax: 1500, rpm: 6200, rpmFrac: 0.62, mode: 'SPORT' });
+    return { tex: t, draw };
+  });
+}
+export function hyperScreenTex() { return hyperScreen().tex; }
 
 // small labels for buttons: an atlas of 8 icons, 64 px each, white on black
 export function iconAtlas() {

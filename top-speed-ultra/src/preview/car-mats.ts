@@ -347,9 +347,9 @@ export function emissive(name: string, color: number, intensity: number, base = 
 }
 // an LED strip (the OC Hypercar's ice blue): emissive through a core-and-halo map across the strip's width (v), well
 // over the bloom pass's threshold (0.92) on High and Ultra; the phone tier (Low and Medium, no bloom) runs it dimmer
-export function led(core: number, halo: number, q: Quality) {
-  return once('led' + core + halo + q, () => Object.assign(new THREE.MeshStandardMaterial({
-    color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
+export function led(core: number, halo: number, q: Quality, edge = halo) {
+  return once('led' + core + halo + 'e' + edge + q, () => Object.assign(new THREE.MeshStandardMaterial({
+    color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo, edge), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
   }), { name: 'led' }));
 }
 export function honeycomb(q: Quality, tile = 0.09) {

@@ -10,7 +10,7 @@ import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } fr
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -21,11 +21,16 @@ import { Touch } from './Touch';
 import { Store } from './Store';
 import { storeReturnPending } from '../store/payments';
 import { OcLockup, OcWatermark } from './Mark';
+import { Ico } from './Icons';
+import { ModeArt } from './ModeArt';
+import { WorldMap } from './WorldMap';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store' | 'map';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+// the mode cards' one-line subtitles (the menu)
+const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph', race: 'Sprint / checkpoints / endurance', time: '60 s on the clock' };
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 const MODE_LIST = Object.keys(MODES) as Mode[];
@@ -57,6 +62,7 @@ export function App() {
   const [report, setReport] = useState('');                           // the Feedback panel's text
   const [entering, setEntering] = useState(false);                    // the sheet's new content is fading in
   const [loadShown, setLoadShown] = useState(true);                   // the loading screen, kept up while it fades out
+  const [, rerender] = useState(0);                                   // the garage changed the car: the atmosphere follows
   const reportRef = useRef<HTMLTextAreaElement>(null);
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
@@ -69,11 +75,14 @@ export function App() {
   panelNow.current = panel; roadNow.current = exitRoad;
   // every change of what the sheet shows goes through here, so it cross-fades (outside the menu there is no sheet and
   // this is a plain state change)
-  const fade = useCallback(() => {
+  // (the menu's own screen fills the overlay while a screen opened from it sits in the sheet's column: a switch between
+  // the two changes the sheet's shape, so the outgoing copy would land in the wrong place and only the new content fades in)
+  const fade = useCallback((reshape = false) => {
     switched.current = true;
+    if (reshape) { if (sheetBody.current && !reducedMotion()) setEntering(true); return; }
     if (crossFade(sheetMain.current, sheetBody.current, ghost.current, ghostTimer)) setEntering(true);
   }, []);
-  const setPanel = useCallback((p: Panel) => { if (p !== panelNow.current) { fade(); panelNow.current = p; } setPanelState(p); }, [fade]);
+  const setPanel = useCallback((p: Panel) => { if (p !== panelNow.current) { fade(!inSheet(p) || !inSheet(panelNow.current)); panelNow.current = p; } setPanelState(p); }, [fade]);
   const setExitRoad = useCallback((r: string | null) => { if (r !== roadNow.current) { fade(); roadNow.current = r; } setExitRoadState(r); }, [fade]);
 
   const toast = useCallback((text: string, kind = 'info') => {
@@ -192,6 +201,18 @@ export function App() {
   const driver = DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0];
   const car = carById(game.current?.carId ?? 'rossini-gt');
   const course = COURSES.find((c) => c.id === settings.course) ?? COURSES[0];
+  // the drive HUD's chips under the speed: the handling profile (where the slider sits), the assists the physics runs
+  // at every setting (ABS and traction control), and the hypercar's tune when it is off the leash
+  const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(car.race && mode === 'free' ? ['Unleashed'] : [])];
+  // the player card on the menu
+  const prof = game.current?.profile.p, level = prof ? levelOf(prof.xp) : 1, xpLo = xpFor(level), xpHi = xpFor(level + 1);
+  const av = AVATARS[prof?.avatar ?? 0];
+  // the atmosphere follows the car (owner, 2026-10-21): styles.css re-points the tokens by <html data-car>
+  useEffect(() => { document.documentElement.dataset.car = car.id; }, [car.id]);
+  // and the driver signs the human elements (the ability ring, the Driver row, the avatar) with their colour
+  useEffect(() => { document.documentElement.dataset.driver = settings.driver; }, [settings.driver]);
+  // and the look: the interface's art direction from the owner's style library (styles.css :root[data-look])
+  useEffect(() => { document.documentElement.dataset.look = settings.look; }, [settings.look]);
 
   // the panels: what each shows, and how wide it is when it is a card over the pause screen
   const panelView = (): { cls: string; body: ReactNode } | null => {
@@ -254,7 +275,7 @@ export function App() {
         </>,
       };
       case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
-      case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
+      case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} /> } : null;
       case 'course': return {
         cls: '', body: <>
           <h2>Races</h2>
@@ -334,6 +355,7 @@ export function App() {
             <div className="scol">
               <section className="sgroup">
                 <h3 className="sect">Display</h3>
+                <div className="field"><label>Look</label><Seg label="Look" value={settings.look} options={['ultra', 'hd'] as Look[]} labels={(l) => (l === 'ultra' ? 'Futuristic' : 'Realistic')} onChange={(l) => update({ look: l })} /></div>
                 <div className="field"><label>Graphics</label><Seg label="Graphics" value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
                 <p className="fine">{qualityNote(settings.quality)}</p>
                 <div className="field"><label>Corner window</label><Seg label="Corner window" value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>
@@ -372,59 +394,79 @@ export function App() {
   };
   const pv = panelView();
 
-  // the main menu's own content: the lede, the mode, the loadout, the traffic, then the extras
-  const home = <>
-    <p className="lede">Orange County's real freeways (the 5, 405, 55, 57, 22, 91, 73, 133, 241 and 261) and every interchange between them, from the driver's seat of a 711 hp coupe.</p>
-    <section className="menu-sec">
-      <p className="sect" aria-hidden="true">Mode</p>
-      <div className="modes" role="radiogroup" aria-label="Mode" onKeyDown={modeKeys}>
-        {MODE_LIST.map((m) => (
-          <button key={m} type="button" className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} tabIndex={mode === m ? 0 : -1}
-            aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
-            <b>{MODES[m].label}</b><small>{modeStat(m)}</small>
-          </button>
-        ))}
+  // the main menu's own screen (the owner's 2026-10-21 reference): a glass rail on the left (the brand, the loadout, the
+  // rest of the menu), the player card top right, the live scene as the hero in the middle, and the four mode cards
+  // along the bottom. It is the sheet's home: Drive, Settings, Bests and Profile are the sheet's dock, which stays put
+  // under the rail while the sheet changes what it shows. On a phone it is one column (styles.css .menu-grid).
+  const home = (
+    <div className="menu-grid">
+      <div className="m-brand">
+        <Brand hero />
+        <p className="lede">Orange County's real freeways and every interchange between them, from the driver's seat.</p>
       </div>
-      <p className="mode-brief" id="mode-brief">{MODES[mode].blurb}</p>
-    </section>
-    <section className="menu-sec">
-      <p className="sect" aria-hidden="true">Loadout</p>
-      <div className="picks">
-        <button className="pick" onClick={() => setPanel('driver')}>
-          <small>Driver</small><b>{driver.name}</b><span>{ABILITIES[driver.ability].name}</span><Chevron />
-        </button>
-        <button className="pick" onClick={() => setPanel('garage')}>
-          <small>Car</small><b>{car.name}</b><span>{figures(car).hp} hp</span><Chevron />
-        </button>
-        {mode === 'race' && (
-          <button className="pick" onClick={() => setPanel('course')}>
-            <small>Race</small><b>{course.name}</b><span>{course.road}</span><Chevron />
+      <button type="button" className="player" aria-label="Your profile" onClick={() => setPanel('profile')}>
+        <span className="avatar" style={{ background: av.bg, color: av.fg }} aria-hidden="true">{(prof?.username || 'D').slice(0, 1).toUpperCase()}</span>
+        <span className="player-main"><b>{prof?.username || 'Driver'}</b><small>Level {level}</small>
+          <span className="xp-mini" aria-hidden="true"><i style={{ width: `${Math.min(100, (((prof?.xp ?? 0) - xpLo) / Math.max(1, xpHi - xpLo)) * 100).toFixed(1)}%` }} /></span></span>
+        <span className="player-credits"><b>{Math.floor(prof?.credits ?? 0).toLocaleString()}</b><small>credits</small></span>
+      </button>
+      <nav className="m-nav" aria-label="Main menu">
+        <div className="picks">
+          <button type="button" className="pick" onClick={() => setPanel('garage')}>
+            <Ico name="garage" /><small>Car</small><b>{car.name}</b><span>{figures(car).hp} hp</span><i aria-hidden="true">›</i>
           </button>
-        )}
-        {mode !== 'time' && mode !== 'race' && (
-          <button className="pick" onClick={() => { setExitRoadState(null); roadNow.current = null; setPanel('start'); }}>
-            <small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><Chevron />
+          <button type="button" className="pick drv" onClick={() => setPanel('driver')}>
+            <Ico name="driver" /><small>Driver</small><b>{driver.name}</b><span>{ABILITIES[driver.ability].name}</span><i aria-hidden="true">›</i>
           </button>
-        )}
+          {mode === 'race' && (
+            <button type="button" className="pick" onClick={() => setPanel('course')}>
+              <Ico name="bests" /><small>Race</small><b>{course.name}</b><span>{course.road}</span><i aria-hidden="true">›</i>
+            </button>
+          )}
+          {mode !== 'time' && mode !== 'race' && (
+            <button type="button" className="pick" onClick={() => { setExitRoadState(null); roadNow.current = null; setPanel('start'); }}>
+              <Ico name="map" /><small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
+            </button>
+          )}
+        </div>
+        <div className="field traffic"><label>Traffic · simulated</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
+        <button type="button" className="rail-btn" onClick={() => setPanel('map')}><Ico name="map" />World Map</button>
+        <span className="rail-btn off" aria-disabled="true"><Ico name="driver" />Lifestyle<small>Roadmap</small></span>
+        <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
+      </nav>
+      <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
+      <section className="m-modes">
+        <p className="mode-brief" id="mode-brief"><b>{MODES[mode].label}</b>{MODES[mode].blurb}</p>
+        <div className="modes" role="radiogroup" aria-label="Mode" onKeyDown={modeKeys}>
+          {MODE_LIST.map((m, i) => (
+            <button key={m} type="button" className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} tabIndex={mode === m ? 0 : -1}
+              aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
+              <ModeArt kind={m} />
+              <span className="mode-text">
+                <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
+                <b>{MODES[m].label}</b>
+                <span>{MODE_SUB[m]}</span>
+                {m !== 'free' && <em>{modeStat(m)}</em>}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+      <div className="menu-aside">
+        <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, mode and car stays free.</span><i aria-hidden="true">›</i></button>
+        <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
+          <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span><i aria-hidden="true">↗</i>
+        </a>
+        <p className="fine">Freeway geometry: OpenStreetMap contributors via Overture Maps (ODbL). Elevation: USGS via AWS Terrain Tiles. The car, its badge and everything you see are our own, made in code.</p>
       </div>
-    </section>
-    <section className="menu-sec">
-      <div className="field"><label>Traffic</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
-    </section>
-    <div className="menu-aside">
-      <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, mode and car stays free.</span><i aria-hidden="true">›</i></button>
-      <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
-        <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span>
-        <i aria-hidden="true"><svg viewBox="0 0 14 14" width="14" height="14"><path d="M4 2.5h7.5V10M11.5 2.5L2.5 11.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></i>
-      </a>
-      <p className="fine">Freeway geometry: OpenStreetMap contributors via Overture Maps (ODbL). Elevation: USGS via AWS Terrain Tiles. The car, its badge and everything you see are our own, made in code.</p>
+      <i className="m-dock" aria-hidden="true" />
     </div>
-  </>;
+  );
 
   return (
     <div className={'app' + (idle ? ' hud-idle' : '')} style={{ '--cw': settings.corner === 'off' ? '0px' : `${cornerPx + 6}px` } as CSSProperties}>
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} bubble={idle && settings.corner !== 'off'} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} bubble={idle && settings.corner !== 'off'} chips={chips} onAbility={() => game.current?.useAbility()} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -434,14 +476,14 @@ export function App() {
       )}
       {playing && (
         <div className="tbar">
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}>View</button>
-          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
-          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" />View</button>
+          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" />Map</button>}
+          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" />Go to</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station"><Ico name="radio" />Radio</button>
           {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
               pause button in the corner (styles.css). Its name stays "Pause" either way. */}
           <button type="button" className="tbtn menu" onClick={() => game.current?.setPaused(true)}>
-            <svg className="tico" viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M4.5 3v8M9.5 3v8" /></svg><span>Pause</span>
+            <Ico name="pause" /><span>Pause</span>
           </button>
         </div>
       )}
@@ -458,10 +500,10 @@ export function App() {
           <div className={'sheet ' + (pv ? 'sub' : 'home')}>
             <div className="sheet-main" ref={sheetMain}>
               <div className="sheet-scroll" ref={sheetScroll}>
-                <Brand hero />
                 <div className={'sheet-body' + (entering ? ' enter' : '')} key={view} ref={sheetBody} tabIndex={-1}
                   onAnimationEnd={(e) => { if (e.target === e.currentTarget) setEntering(false); }}>
                   {pv ? <>
+                    <Brand hero />
                     <button type="button" className="back" onClick={() => setPanel(null)}><Chevron left />Menu</button>
                     <div className={'panel in-sheet ' + pv.cls}>{pv.body}</div>
                   </> : home}
@@ -487,6 +529,7 @@ export function App() {
             <h2>Paused</h2>
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
+              <button className="btn" onClick={() => setPanel('map')}>World map</button>
               <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
@@ -536,6 +579,14 @@ export function App() {
       {/* away from the main menu (pause, results) a panel is a card of its own over the paused drive */}
       {!inMenu && pv && <div className="overlay center"><div className={'panel ' + pv.cls}>{pv.body}</div></div>}
       {panel === 'store' && game.current && <Store game={game.current} onClose={() => setPanel(null)} />}
+      {/* the World Map fills the screen over the menu or the paused drive (WorldMap.tsx) */}
+      {panel === 'map' && game.current && (
+        <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} onClose={() => setPanel(null)}
+          onNavigate={(l) => navigate(l)}
+          onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
+          onStartExit={(k) => { update({ exit: k }); setPanel(null); }}
+          onRace={(id) => { update({ course: id }); setMode('race'); setPanel(null); }} />
+      )}
 
       {/* last, so it lies over the menu while it fades into it; it lets taps through as it goes */}
       {(loadingOn || loadShown) && !error && (
@@ -546,6 +597,9 @@ export function App() {
     </div>
   );
 }
+
+// which panels the sheet shows in its column (the rest are screens of their own over it: the store, the World Map)
+function inSheet(p: Panel) { return p !== null && p !== 'store' && p !== 'map'; }
 
 // The sheet's cross-fade: a copy of the outgoing content is laid over the sheet exactly where it stood, inert and
 // hidden from assistive tech, and fades out while React mounts the new content (which fades in, styles.css). Returns
@@ -641,12 +695,12 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
 }
 
 // the garage (what you own, pick one) and the showroom (what credits can buy, by level)
-function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
+function GaragePanel({ game, onClose, onPick }: { game: Game; onClose: () => void; onPick: () => void }) {
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
   const p = book.p, level = levelOf(p.xp), slots = slotsFor(level), owner = game.ownerMode;
-  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); };
+  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
   return <>
     <h2>Garage{owner && <span className="chip">Owner mode</span>}</h2>
     <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>

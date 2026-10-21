@@ -5,19 +5,41 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-16, 07:55 UTC, an Opus session)
+## State at the last update (2026-10-21, ~06:00 UTC)
 
-- Branch `claude/always-on` at `81939d3`: everything above plus the lens flare at every tier (sunset preset 5.5°
-  at az 292°) and `PROJECT_OC_REVIEW_NOTES.md` (15 unverified findings from two review lenses).
-- Running (Opus workflow `oc-day-1016`): the race HUD repair and the palms in the `tsu-ref` worktree, then the
-  integrator commits R2 (overcast, judged keep) + whatever is kept on `claude/ref-pass`, runs the full suite, and
-  merges onto `claude/always-on`. In parallel, the wordmark assets are prepared in the session scratchpad
-  (`wordmark/final/`); the UI pass copies them into `src/ui/assets/`.
-- Next in this session: the UI pass (`oc-ui-pass.js`, all Opus): UID wordmark and theme, U0 luxury menu, then the
-  rest of the board.
-- Waiting for Fable: the drift physics (`tsu-drift` worktree, `Physics.ts` half-built), the review's refuters and
-  rules lens, the hand, expression and hair specs (see the Fable queue).
-- Pending from the owner: a real-phone Feedback report, the UE5 go/no-go.
+- Branch `claude/hypercar` holds everything judged: the ice reference UI, per-car and per-driver atmospheres, the
+  style guide from the owner's library (`PROJECT_OC_STYLE_GUIDE.md`), the ULTRA tokens, the Look setting
+  (Futuristic / Realistic), the live hypercar display, the Ultra grade, the run card's colours, the cinematic camera
+  (the menu is filmed with it). `claude/ultra-world-wip` holds the parked world and clothing work; two lanes are
+  finishing it in isolated worktrees and merge only when verified.
+
+## Standing instruction (owner, 2026-10-21): keep improving until the owner says stop
+
+An hourly scheduled task wakes this session. Each run: read notifications and background results first; merge what
+is verified; then take the next item below, prove it on renders (`tools/grade-shot.mjs`, `tools/atmo-shots.mjs`,
+`tools/ui-shots.mjs`, `tools/preview-shoot.mjs`), run the suite groups it touches, log it in
+`PROJECT_OC_PROGRESS.md`, commit and push to `claude/hypercar`, tick it here. Never block on a question: put owner
+decisions under "Decisions waiting" and move to the next item. Never spend real money, add a paid service, or
+publish anything beyond the owner's private test artifact. Stop when the owner says stop (delete the scheduled task).
+
+### Improvement queue (top first)
+
+1. Merge the verified Ultra world pass and the driver clothing pass from their lanes; run `npm test` in full.
+2. Republish the test build to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS after each merged milestone.
+3. The hypercar's seat view: the canopy header and the dash top crowd the view (the seat drop, M1 and M3 notes in
+   `PROJECT_OC_HYPERCAR.md`); the rim clips the display's top.
+4. Hypercar body fidelity M1b items 1, 3, 4, 6, 7 (`PROJECT_OC_HYPERCAR.md` section 8), each against the sheet.
+5. The full-screen World Map (U4 in `PROJECT_OC_UI_TARGET.md`), in the library's ULTRA map style.
+6. Garage tabs (U5): paint and wheels, applied live; then the radio panel (U7) and the phone (U6).
+7. Night: freeway lamps and wet road reflections at High (after the world pass lands), checked against the
+   library's ULTRA night boards.
+8. Traffic bodies: door seams, mirrors and tinted glass (if the world pass did not), then a second sedan shape.
+9. Performance: Ultra's draw calls and triangles after each pass, logged; Low unchanged.
+
+### Decisions waiting (the owner's)
+
+- Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`
+  replaced on the `style-references` branch (see the style guide's "Decisions for the owner").
 
 ## Prompt for an Opus 5.5 daytime session
 
