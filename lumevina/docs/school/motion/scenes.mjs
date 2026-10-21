@@ -754,6 +754,98 @@ export const SCENES = {
   },
 
   /* ───────── 13-1 Before a wax: a grain of rice ───────── */
+  "1-2": {
+    id: "1-2", kicker: "Find your real skin type", title: `Oil is your type. <span class="grad">The rest is condition.</span>`, dur: 21, poster: 4,
+    shots: [
+      { at: 0, name: "types", cap: "Four types: dry makes little oil, oily a lot, combination is an oily T-zone with drier cheeks, and normal sits in between." },
+      { at: 7, name: "test", cap: "The bare-face test: cleanse, put nothing on, wait an hour, then look. Shine everywhere is oily; T-zone only is combination; tight and flaky is dry." },
+      { at: 14, name: "conditions", cap: "Conditions come and go on top of your type: dehydrated, sensitive, acne-prone, sun-damaged. Oily skin can still be dehydrated. Check again every few months." }
+    ],
+    css: `
+.st { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.4vmin; }
+.row4 { display: flex; justify-content: center; gap: 5vmin; }
+.fc { position: relative; width: 21vmin; opacity: 0; }
+.face2 { position: relative; width: 21vmin; height: 26vmin; border-radius: 10.5vmin 10.5vmin 9vmin 9vmin / 12vmin 12vmin 10vmin 10vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); overflow: hidden; }
+.face2 .nose { position: absolute; left: 50%; top: 8.5vmin; width: 2.8vmin; height: 6.5vmin; margin-left: -1.4vmin; border-radius: 1.6vmin; background: rgba(0,0,0,.08); }
+.face2 .lip { position: absolute; left: 50%; bottom: 4.6vmin; width: 6.5vmin; height: 1.1vmin; margin-left: -3.25vmin; border-radius: 1vmin; background: #b9786b; }
+.face2 .shine { position: absolute; inset: 0; background: radial-gradient(60% 55% at 50% 42%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%); opacity: 0; }
+.face2 .tz { position: absolute; left: 50%; top: 3vmin; width: 12vmin; height: 4vmin; margin-left: -6vmin; border-radius: 3vmin; background: rgba(255,255,255,.45); filter: blur(.8vmin); opacity: 0; }
+.face2 .tz2 { position: absolute; left: 50%; top: 6vmin; width: 4.6vmin; height: 13vmin; margin-left: -2.3vmin; border-radius: 3vmin; background: rgba(255,255,255,.4); filter: blur(.8vmin); opacity: 0; }
+.face2 .fl { position: absolute; width: 1.1vmin; height: 1.1vmin; border-radius: 30%; background: #f1dccf; opacity: 0; }
+.face2 .tight { position: absolute; inset: 0; box-shadow: inset 0 0 0 1.2vmin rgba(255,255,255,.14); border-radius: inherit; opacity: 0; }
+.fc .nm { display: block; text-align: center; margin-top: 1.2vmin; font-size: 2.7vmin; font-weight: 700; }
+.fc .sub { display: block; text-align: center; margin-top: .3vmin; font-size: 2.1vmin; color: #a1a1a6; line-height: 1.3; min-height: 5.6vmin; }
+.fc.dim { opacity: .35 !important; }
+.fc .sub.hit { color: #e2b08c; font-weight: 650; } .fc .sub.hot { color: #9ad6ff; font-weight: 650; }
+.panel { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.6vmin 3vmin; width: 100%; min-height: 13vmin; }
+.steps { display: flex; gap: 1.6vmin; align-items: center; }
+.step { padding: 1.3vmin 2.2vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 2.5vmin; font-weight: 600; color: #d9d9de; white-space: nowrap; opacity: 0; }
+.step.on { background: rgba(234,185,200,.16); border-color: rgba(234,185,200,.6); color: #f4c9d6; }
+.clock { position: relative; width: 14vmin; height: 14vmin; border-radius: 50%; border: .5vmin solid rgba(255,255,255,.18); background: #111113; opacity: 0; flex: none; }
+.clock i { position: absolute; left: 50%; top: 50%; width: .6vmin; height: 5.4vmin; margin-left: -.3vmin; margin-top: -5.4vmin; border-radius: 1vmin; background: #f4c9d6; transform-origin: 50% 100%; }
+.clock b { position: absolute; left: 50%; top: 50%; width: 1.4vmin; height: 1.4vmin; margin: -.7vmin 0 0 -.7vmin; border-radius: 50%; background: #e2b08c; }
+.clock em { position: absolute; left: 50%; bottom: -3.4vmin; transform: translateX(-50%); font-style: normal; font-size: 2.1vmin; color: #a1a1a6; white-space: nowrap; }
+.conds { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.6vmin; }
+.cond { padding: 1.3vmin 2.4vmin; border-radius: 999px; border: 1.5px solid #8e8e93; color: #d9d9de; font-size: 2.6vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.cond.hot { border-color: #6ec6ff; color: #9ad6ff; }
+.again { flex-basis: 100%; font-size: 2.4vmin; color: #a1a1a6; text-align: center; opacity: 0; }
+@media (orientation: portrait) { .st { gap: 4vmin; } .row4 { flex-wrap: wrap; gap: 4vmin 8vmin; width: 100%; } .fc { width: 30vmin; } .face2 { width: 30vmin; height: 37vmin; border-radius: 15vmin 15vmin 13vmin 13vmin / 17vmin 17vmin 14vmin 14vmin; } .face2 .nose { top: 12vmin; width: 3.6vmin; height: 9vmin; margin-left: -1.8vmin; } .face2 .lip { bottom: 6.5vmin; width: 9vmin; margin-left: -4.5vmin; height: 1.5vmin; } .face2 .tz { top: 4.5vmin; width: 17vmin; margin-left: -8.5vmin; height: 5.6vmin; } .face2 .tz2 { top: 8.5vmin; width: 6.5vmin; margin-left: -3.25vmin; height: 18vmin; } .face2 .fl { width: 1.5vmin; height: 1.5vmin; } .fc .nm { font-size: 3.3vmin; } .fc .sub { min-height: 4vmin; font-size: 2.5vmin; } .panel { gap: 2.4vmin 3vmin; min-height: 0; } .steps { flex-wrap: wrap; justify-content: center; gap: 1.4vmin; max-width: 62vmin; } .step { font-size: 2.6vmin; } .clock { width: 14vmin; height: 14vmin; margin-bottom: 3vmin; } .cond { font-size: 2.7vmin; } .again { font-size: 2.7vmin; } }`,
+    html: `
+<div class="st">
+  <div class="row4" id="row4">
+    <div class="fc" id="fc-dry"><div class="face2"><div class="nose"></div><div class="lip"></div><div class="tight" id="tight"></div></div><b class="nm">Dry</b><span class="sub" id="sb-dry">little oil</span></div>
+    <div class="fc" id="fc-oily"><div class="face2"><div class="nose"></div><div class="lip"></div><div class="shine" id="sh-oily"></div></div><b class="nm">Oily</b><span class="sub" id="sb-oily">a lot of oil</span></div>
+    <div class="fc" id="fc-combo"><div class="face2"><div class="nose"></div><div class="lip"></div><div class="tz" id="tz1"></div><div class="tz2" id="tz2"></div></div><b class="nm">Combination</b><span class="sub" id="sb-combo">oily T-zone, drier cheeks</span></div>
+    <div class="fc" id="fc-norm"><div class="face2"><div class="nose"></div><div class="lip"></div></div><b class="nm">Normal</b><span class="sub" id="sb-norm">balanced</span></div>
+  </div>
+  <div class="panel" id="panel">
+    <div class="steps" id="steps"><span class="step" id="s1">cleanse</span><span class="step" id="s2">nothing on</span><span class="step" id="s3">wait an hour</span><span class="step" id="s4">look in daylight</span></div>
+    <div class="clock" id="clock"><i id="hand"></i><b></b><em id="mins">0 min</em></div>
+    <div class="conds" id="conds"><span class="cond" id="c1">dehydrated</span><span class="cond" id="c2">sensitive</span><span class="cond" id="c3">acne-prone</span><span class="cond" id="c4">sun-damaged</span></div>
+    <p class="again" id="again">Seasons, hormones and age shift it: check again every few months.</p>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {
+      const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
+      // dry: a scatter of pale flakes on the cheeks
+      const dry = M.$("#fc-dry .face2");
+      for (let k = 0; k < 16; k++) { const i = document.createElement("i"); i.className = "fl"; i.style.left = (14 + hash(k + 40) * 70) + "%"; i.style.top = (38 + hash(k + 41) * 44) + "%"; i.style.transform = "rotate(" + Math.round(hash(k + 42) * 90) + "deg)"; dry.appendChild(i); }
+    },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set, tw } = M;
+      const fcs = [$("#fc-dry"), $("#fc-oily"), $("#fc-combo"), $("#fc-norm")];
+      // shot 0: the four faces arrive left to right, then each shows its oil
+      if (i === 0) fcs.forEach((f, k) => enter(f, lt, 0.2 + k * 0.35, { y: 16 })); else fcs.forEach((f) => set(f, { o: 1 }));
+      const show = (k) => i > 0 ? 1 : E.out(seg(lt, 2.0 + k * 0.5, 3.0 + k * 0.5));
+      $$("#fc-dry .fl").forEach((d, n) => { d.style.opacity = 0.9 * show(0) * (n % 2 ? 1 : 0.8); });
+      $("#tight").style.opacity = 0.9 * show(0);
+      const breath = i === 0 ? 1 - 0.12 * (0.5 + 0.5 * Math.sin((lt - 3.5) * 2.4)) * seg(lt, 3.5, 4.5) : 1;
+      $("#sh-oily").style.opacity = show(1) * breath;
+      $("#tz1").style.opacity = show(2) * breath; $("#tz2").style.opacity = show(2) * breath;
+      // shot 1: the test; the steps light one by one, the clock sweeps one hour, the readouts land on each face
+      const steps = [$("#s1"), $("#s2"), $("#s3"), $("#s4")], clock = $("#clock");
+      $("#steps").style.display = i === 1 ? "" : "none"; clock.style.display = i === 1 ? "" : "none";
+      if (i === 1) {
+        steps.forEach((s, k) => { enter(s, lt, 0.3 + k * 0.5, { y: 8 }); s.classList.toggle("on", lt >= 0.6 + k * 0.5 && (k < 3 || lt >= 4.6)); });
+        enter(clock, lt, 1.2, { y: 8, s: 0.8 });
+        const m = 60 * E.inout(seg(lt, 1.6, 4.4));
+        $("#hand").style.transform = "rotate(" + (m * 6) + "deg)"; $("#mins").textContent = Math.round(m) + " min";
+      }
+      const subs = { dry: ["little oil", "tight, flaky: dry", 6.0], oily: ["a lot of oil", "shine all over: oily", 4.8], combo: ["oily T-zone, drier cheeks", "T-zone shine: combination", 5.4], norm: ["balanced", "neither: normal", 6.5] };
+      Object.keys(subs).forEach((k) => { const el = $("#sb-" + k), [base, read, at] = subs[k]; const on = i > 1 || (i === 1 && lt >= at); el.textContent = on ? read : base; el.classList.toggle("hit", on); if (i === 1 && lt >= at) enter(el, lt, at, { y: 4, d: 0.4 }); else set(el, { o: 1 }); });
+      // shot 2: the conditions float in over the types; the oily face carries "dehydrated" too
+      $("#conds").style.display = i === 2 ? "" : "none";
+      const conds = [$("#c1"), $("#c2"), $("#c3"), $("#c4")];
+      if (i === 2) {
+        conds.forEach((c, k) => enter(c, lt, 0.4 + k * 0.45, { y: 10 }));
+        const hot = lt >= 2.8; conds[0].classList.toggle("hot", hot);
+        const so = $("#sb-oily"); if (hot) { so.textContent = "oily + dehydrated"; so.classList.add("hot"); enter(so, lt, 2.8, { y: 4, d: 0.4 }); }
+        fcs.forEach((f, k) => f.classList.toggle("dim", lt >= 2.8 && k !== 1));
+        $("#again").style.display = ""; enter($("#again"), lt, 4.4, { y: 8 });
+      } else { $("#again").style.display = "none"; $("#sb-oily").classList.remove("hot"); fcs.forEach((f) => f.classList.remove("dim")); conds.forEach((c) => c.classList.remove("hot")); set($("#again"), { o: 0 }); }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
