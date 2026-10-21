@@ -138,3 +138,16 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   way we've done". The reference's look is matched exactly (layout, glass, glow, type, chrome, night mood), and everything
   it lights in blue is lit in the OC sunset orange family already in `src/ui/styles.css` (`--sunset`, `--amber`, `--ember`,
   `--sunset-edge`, sampled from the owner's OC sunset wordmark), with the wordmark as the logo. Real road-sign colours stay.
+
+### 14. Backups to GitHub
+
+- **Decision** (the owner, 2026-10-21 about 00:05 UTC, asked whether to back up the local work: "Yes if you recommend
+  that then yes"). The hold on pushes is lifted for backups: every lane branch is pushed to GitHub as it stands and again
+  whenever a reviewed milestone commits, and the builders' uncommitted edits are snapshotted to `claude/wip-<worktree>`
+  branches (a commit made from a temporary index, so the builders' working trees are never touched). Still no pull
+  requests, nothing into `main`, the Los Güeros site untouched.
+- **First backup.** Pushed: claude/always-on (merged with the remote's Trade Crawler commit first), claude/drift,
+  claude/hypercar, claude/hypercar-drive, claude/fix-sky, claude/fix-road, claude/onfoot, claude/people-2, claude/stream,
+  claude/gfx, claude/sports-bar, claude/ui-ref, local/live-preview; snapshots claude/wip-hyper, -hx, -fix-road, -foot,
+  -ref, -bar, -main. The sky-camera and Ultra-tier snapshots (wip-fix-sky, wip-gfx) were refused by the session's
+  permission check three times; their branches are pushed, and their edits land in the next milestone push.
