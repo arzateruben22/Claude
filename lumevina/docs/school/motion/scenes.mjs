@@ -1268,6 +1268,80 @@ export const SCENES = {
       }
     }
   },
+  "8-1": {
+    id: "8-1", kicker: "How acne really forms", title: `Four things going wrong <span class="grad">at once.</span>`, dur: 22, poster: 6,
+    shots: [
+      { at: 0, name: "four", cap: "The four causes: too much oil, dead cells clogging the pore, acne bacteria, and inflammation. Treat all four and it calms down." },
+      { at: 8, name: "kinds", cap: "Blackheads and whiteheads are clogged pores. Red bumps and pus-filled pimples are inflamed ones. Deep, painful cysts and nodules can scar: those need a dermatologist." },
+      { at: 15.5, name: "weeks", cap: "Acne starts forming weeks before you see it, which is why results take two to three months." }
+    ],
+    css: `
+.ac8 { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4vmin; }
+.cause { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.4vmin 2.2vmin; opacity: 0; }
+.cause .ring { position: relative; width: 16vmin; height: 16vmin; margin: 0 auto 1.6vmin; border-radius: 50%; background: conic-gradient(var(--c) 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); }
+.cause .ring::after { content: ""; position: absolute; inset: 2.2vmin; border-radius: 50%; background: #111113; }
+.cause .ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4.4vmin; font-weight: 700; z-index: 1; }
+.cause .nm { display: block; text-align: center; font-size: 3vmin; font-weight: 700; } .cause .sub { display: block; text-align: center; font-size: 2.3vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.3; }
+.calm { display: inline-flex; align-self: center; padding: 1.4vmin 2.8vmin; border-radius: 999px; border: 1.5px solid rgba(50,215,75,.6); color: #7fe39a; font-size: 3vmin; font-weight: 650; opacity: 0; }
+.kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4vmin; }
+.kind { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.6vmin; opacity: 0; }
+.kind .sk { position: relative; height: 14vmin; border-radius: 1.6vmin; background: #d9b5a0; overflow: hidden; margin-bottom: 1.6vmin; }
+.kind .sk i { position: absolute; border-radius: 50%; }
+.kind b { display: block; font-size: 3vmin; font-weight: 700; } .kind span { display: block; font-size: 2.3vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.3; }
+.kind.derm { border-color: rgba(255,122,107,.6); } .kind.derm b { color: #ff9a8b; }
+.tl8 { position: relative; height: 18vmin; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; opacity: 0; }
+.tl8 .line { position: absolute; left: 6vmin; right: 6vmin; top: 9vmin; height: .6vmin; background: #2a2a2d; border-radius: 1vmin; }
+.tl8 .fill { position: absolute; left: 6vmin; top: 9vmin; height: .6vmin; width: 0; background: linear-gradient(90deg, #f4c9d6, #e2b08c); border-radius: 1vmin; }
+.tl8 .pt { position: absolute; top: 9.3vmin; width: 2.6vmin; height: 2.6vmin; margin: -1.3vmin 0 0 -1.3vmin; border-radius: 50%; background: #2a2a2d; border: .4vmin solid #111113; }
+.tl8 .pt.on { background: #e2b08c; }
+.tl8 .lb { position: absolute; top: 12.6vmin; font-size: 2.3vmin; color: #a1a1a6; white-space: nowrap; transform: translateX(-50%); font-weight: 600; }
+.tl8 .tag8 { position: absolute; top: 2.6vmin; padding: .8vmin 1.8vmin; border-radius: 999px; background: #1a1a1d; border: 1.5px solid #f4c9d6; color: #f4c9d6; font-size: 2.4vmin; font-weight: 650; white-space: nowrap; transform: translateX(-50%); opacity: 0; }
+.tl8 .tag8.amber { border-color: #e2b08c; color: #e2b08c; }
+@media (orientation: portrait) { .four { grid-template-columns: 1fr 1fr; } .cause .ring { width: 14vmin; height: 14vmin; } .kinds { grid-template-columns: 1fr; gap: 1.6vmin; } .kind { display: flex; align-items: center; gap: 2.4vmin; padding: 1.8vmin 2.2vmin; } .kind .sk { flex: none; width: 16vmin; height: 12vmin; margin: 0; } .tl8 { height: 22vmin; } .tl8 .lb { font-size: 2vmin; } .tl8 .tag8 { font-size: 2.1vmin; } }`,
+    html: `
+<div class="ac8">
+  <div class="four" id="four">
+    <div class="cause" id="c1" style="--c:#e2b08c"><div class="ring"><b>1</b></div><b class="nm">Too much oil</b><span class="sub">the pore fills</span></div>
+    <div class="cause" id="c2" style="--c:#f1dccf"><div class="ring"><b>2</b></div><b class="nm">Dead cells</b><span class="sub">clog the opening</span></div>
+    <div class="cause" id="c3" style="--c:#c9b6ff"><div class="ring"><b>3</b></div><b class="nm">Acne bacteria</b><span class="sub">feed on the mix</span></div>
+    <div class="cause" id="c4" style="--c:#ff7a6b"><div class="ring"><b>4</b></div><b class="nm">Inflammation</b><span class="sub">the wall swells</span></div>
+  </div>
+  <span class="calm" id="calm">treat all four and it calms down</span>
+  <div class="kinds" id="kinds">
+    <div class="kind" id="k1"><div class="sk"><i style="left:22%;top:38%;width:3vmin;height:3vmin;background:#3a2520"></i><i style="left:58%;top:48%;width:3vmin;height:3vmin;background:#f3e6dc;box-shadow:inset 0 0 0 .4vmin #e5cdbd"></i></div><b>Clogged pores</b><span>blackheads (open) and whiteheads (closed)</span></div>
+    <div class="kind" id="k2"><div class="sk"><i style="left:24%;top:30%;width:5vmin;height:5vmin;background:#d7585a"></i><i style="left:56%;top:44%;width:5vmin;height:5vmin;background:#d7585a"></i><i style="left:57.6%;top:47%;width:2.6vmin;height:2.6vmin;background:#f3e2a8"></i></div><b>Inflamed pores</b><span>red bumps and pus-filled pimples</span></div>
+    <div class="kind derm" id="k3"><div class="sk"><i style="left:30%;top:22%;width:9vmin;height:9vmin;background:#b23a3f;box-shadow:0 0 0 1.4vmin rgba(215,88,90,.45)"></i></div><b>Cysts and nodules</b><span>deep and painful; they can scar: a dermatologist, not just a facial</span></div>
+  </div>
+  <div class="tl8" id="tl8"><div class="line"></div><div class="fill" id="fill"></div>
+    ${[0, 0.25, 0.5, 0.75, 1].map((p, k) => `<i class="pt" id="pt${k}" style="left:calc(6vmin + ${p} * (100% - 12vmin))"></i><span class="lb" style="left:calc(6vmin + ${p} * (100% - 12vmin))">${["today", "week 3", "week 6", "week 9", "week 12"][k]}</span>`).join("")}
+    <span class="tag8" id="t-form" style="left:calc(6vmin + 0.12 * (100% - 12vmin))">forming under the skin for weeks</span><span class="tag8 amber" id="t-see" style="left:calc(6vmin + 0.5 * (100% - 12vmin))">what you see today started weeks ago</span><span class="tag8" id="t-res" style="left:calc(6vmin + 0.86 * (100% - 12vmin))">results: two to three months</span>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      // shot 0: four rings fill one after another, then the calm line
+      $("#four").style.display = i === 0 ? "" : "none"; $("#calm").style.display = i === 0 ? "" : "none";
+      if (i === 0) {
+        ["c1", "c2", "c3", "c4"].forEach((id, k) => { const el = $("#" + id); enter(el, lt, 0.2 + k * 0.5, { y: 12 }); el.querySelector(".ring").style.setProperty("--p", (100 * E.out(seg(lt, 0.8 + k * 0.5, 2.0 + k * 0.5))) + "%"); });
+        enter($("#calm"), lt, 4.2, { y: 8 });
+        const b = 0.5 + 0.5 * Math.sin(lt * 2.6); set($("#c4 .ring"), { s: lt > 3.6 ? 1 + 0.05 * b : 1 });
+      }
+      // shot 1: the three kinds
+      $("#kinds").style.display = i === 1 ? "" : "none";
+      if (i === 1) { ["k1", "k2", "k3"].forEach((id, k) => enter($("#" + id), lt, 0.3 + k * 0.9, { y: 12 })); const b = 0.5 + 0.5 * Math.sin(lt * 2.6); set($("#k3 .sk i"), { s: lt > 2.6 ? 1 + 0.06 * b : 1 }); }
+      // shot 2: the timeline fills from today to week 12
+      $("#tl8").style.display = i === 2 ? "" : "none";
+      if (i === 2) {
+        enter($("#tl8"), lt, 0.2, { y: 10 });
+        const p = E.out(seg(lt, 0.8, 4.4)); $("#fill").style.width = "calc(" + p + " * (100% - 12vmin))";
+        [0, 0.25, 0.5, 0.75, 1].forEach((q, k) => $("#pt" + k).classList.toggle("on", p >= q - 0.001));
+        enter($("#t-form"), lt, 1.0, { y: 6 }); enter($("#t-see"), lt, 2.4, { y: 6 }); enter($("#t-res"), lt, 4.0, { y: 6 });
+      }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
