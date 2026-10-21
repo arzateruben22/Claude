@@ -80,9 +80,34 @@ function unlocked(m: Message, p: Profile, level: number, st: StoryState) {
   if (u.after) { const prev = MESSAGES.find((x) => x.id === u.after); if (prev && (prev.job ? !st.done.includes(prev.id) : !st.read.includes(prev.id))) return false; }
   return true;
 }
-// the messages you have, newest last
-export function inbox(p: Profile, level: number) { const st = storyOf(p); return MESSAGES.filter((m) => unlocked(m, p, level, st)); }
-export function unread(p: Profile, level: number) { const st = storyOf(p); return inbox(p, level).filter((m) => !st.read.includes(m.id)).length; }
+// Weekly events (activities): simulated meets at set times of the device's week, hosted by the story's characters.
+// While one is on, its invitation is a message (id: event@week) with an errand to get there; each pays once a week.
+// Nothing here is a real event or a gathering of real players (the live server's crews are its own feature).
+export interface WeeklyEvent { id: string; from: string; name: string; day: number; start: number; end: number; level: number; text: string; job: Job; credits: number; xp: number; done: string }
+export const EVENTS: WeeklyEvent[] = [
+  { id: 'cars-coffee', from: 'dee', name: 'Cars & Coffee', day: 6, start: 7, end: 11, level: 2, credits: 2000, xp: 500,
+    text: 'Cars & Coffee is on in the hills until 11. Come through: 73 South, Glenwood Drive. Park nice, there\'ll be kids looking.',
+    job: { kind: 'errand', key: 'meet-cars-coffee', road: 'CA-73 South', exit: 'Glenwood Drive', seconds: 900, what: 'Cars & Coffee in the hills' }, done: 'You made it! Grab a coffee. The GT already has a crowd.' },
+  { id: 'friday-meet', from: 'dee', name: 'Friday Night Meet', day: 5, start: 19, end: 23, level: 3, credits: 2500, xp: 600,
+    text: 'Friday meet at the canyon lot tonight, till 11. 91 East, Weir Canyon Road. Lights on, music low, no burnouts.',
+    job: { kind: 'errand', key: 'meet-friday', road: 'CA-91 East', exit: 'Weir Canyon Road', seconds: 900, what: 'the Friday night meet' }, done: 'Look who showed up. Best-looking car here tonight, don\'t let it go to your head.' },
+  { id: 'sunday-run', from: 'jun', name: 'Sunday Canyon Run', day: 0, start: 8, end: 12, level: 4, credits: 1800, xp: 450,
+    text: 'Sunday run, before the toll road gets busy. Ten easy miles on the 241 South with me. No timing, just driving.',
+    job: { kind: 'drive', road: 'CA-241 South', miles: 10 }, done: 'That\'s how a Sunday should start.' },
+];
+// the week an event belongs to (local time): its Monday's date, so every phone in a timezone agrees
+function weekOf(d: Date) { const m = new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7)); return `${m.getFullYear()}-${m.getMonth() + 1}-${m.getDate()}`; }
+export function eventsNow(now = new Date()) {
+  const h = now.getHours() + now.getMinutes() / 60;
+  return EVENTS.filter((e) => now.getDay() === e.day && h >= e.start && h < e.end);
+}
+function eventMessages(level: number, now = new Date()): Message[] {
+  return eventsNow(now).filter((e) => level >= e.level).map((e) => ({ id: `${e.id}@${weekOf(now)}`, from: e.from, text: `${e.name} · ${e.text}`, job: e.job, credits: e.credits, xp: e.xp, done: e.done }));
+}
+
+// the messages you have, newest last: the story's, then any event on right now
+export function inbox(p: Profile, level: number, now = new Date()) { const st = storyOf(p); return [...MESSAGES.filter((m) => unlocked(m, p, level, st)), ...eventMessages(level, now)]; }
+export function unread(p: Profile, level: number, now = new Date()) { const st = storyOf(p); return inbox(p, level, now).filter((m) => !st.read.includes(m.id)).length; }
 // the people you've heard from
 export function contacts(p: Profile, level: number) { const from = new Set(inbox(p, level).map((m) => m.from)); return CHARACTERS.filter((c) => from.has(c.id)); }
 
@@ -110,8 +135,8 @@ export function meets(j: Job, r: RunFacts) {
     case 'errand': return !!r.errands?.includes(j.key);
   }
 }
-export function settle(p: Profile, level: number, r: RunFacts): Message[] {
+export function settle(p: Profile, level: number, r: RunFacts, now = new Date()): Message[] {
   const st = storyOf(p), paid: Message[] = [];
-  for (const m of inbox(p, level)) if (m.job && !st.done.includes(m.id) && meets(m.job, r)) { st.done.push(m.id); paid.push(m); }
+  for (const m of inbox(p, level, now)) if (m.job && !st.done.includes(m.id) && meets(m.job, r)) { st.done.push(m.id); paid.push(m); }
   return paid;
 }

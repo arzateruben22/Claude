@@ -4,6 +4,24 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (17:50 UTC): weekly events (activities); the story's logic tested without a browser
+
+- **Weekly events** (`story.ts` `EVENTS`): three simulated meets, each at set hours of the device's local week:
+  - Dee's Cars & Coffee, Saturday 7:00 to 11:00, Glenwood Drive off the 73 South;
+  - the Friday Night Meet, Friday 19:00 to 23:00, Weir Canyon Road off the 91 East;
+  - Jun's Sunday Canyon Run, Sunday 8:00 to 12:00, 10 miles on the 241 South.
+  While one is on, its invitation is a message in the phone (id `event@week`) with the job to get there. Each pays
+  once a week. They are not real events and not gatherings of real players.
+- **`tests/story.mjs`** (new, `npm run test:story`, about a second, no browser), **14/14**:
+  - the unlock chains (fresh: only Mara; after her first at level 2: her second and Sal's; a home opens Dee's);
+  - every job pays; every chain points at a real message; errand keys are unique;
+  - events by day and hour (Saturday 9:00 Cars & Coffee, 12:00 none, Friday 20:30 the meet, Sunday 9:00 the run,
+    none below their level);
+  - Cars & Coffee pays once this week, not again, and again next week;
+  - a race job needs both its course and its place.
+- **Not yet checked in the browser:** the events are typechecked and unit-tested only; the build and a launch-group
+  run come next (a full-suite run on the previous build was still going when this was committed).
+
 ## 2026-10-21 (17:30 UTC): activities: timed errands to real exits
 
 - **Errands** (story job kind `errand`): six errands from five of the characters.
