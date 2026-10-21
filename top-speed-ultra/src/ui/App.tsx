@@ -19,9 +19,10 @@ import { Ico } from './Icons';
 import { ModeArt } from './ModeArt';
 import { WorldMap } from './WorldMap';
 import { RadioCard } from './RadioCard';
+import { Phone, PhoneApp } from './Phone';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map' | 'phone';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 // the mode cards' one-line subtitles (the menu)
@@ -251,6 +252,7 @@ export function App() {
             <h2>Paused</h2>
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
+              <button className="btn" onClick={() => setPanel('phone')}>Phone</button>
               <button className="btn" onClick={() => setPanel('map')}>World map</button>
               <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
@@ -366,6 +368,16 @@ export function App() {
       )}
 
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
+
+      {panel === 'phone' && game.current && (
+        <Phone name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} onClose={() => setPanel(null)}
+          onOpen={(a: PhoneApp) => {
+            if (a === 'radio') { resume(); setRadioOpen(true); return; }
+            if (a === 'feedback') { openFeedback(); return; }
+            if (a === 'board') setBoardMode(mode === 'free' ? 'survival' : mode);
+            setPanel(a);
+          }} />
+      )}
 
       {panel === 'map' && game.current && (
         <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} onClose={() => setPanel(null)}

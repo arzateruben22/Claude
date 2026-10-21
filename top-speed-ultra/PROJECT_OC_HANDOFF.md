@@ -76,6 +76,8 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 06:20 App.tsx, styles.css: the garage's tabs (Vehicles, Paint, Wheels, Upgrades); paint per car in `settings.paints`.
 - 06:25 App.tsx, styles.css: the radio card (`RadioCard.tsx`); the top bar's Radio toggles it instead of cycling (B still cycles).
 - Commits from this session carry no model names from here on (the Co-Authored-By line names only Claude).
+- 06:40 race.ts: Santa Ana Checkpoints starts at 0.565 of I-5 North (it ran between Mission Viejo and Lake Forest).
+- 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
 
 Next here, all outside the lanes above: the garage tabs (U5: paint and wheels applied live), the radio panel (U7), the
 in-game phone (U6), the driver clothing lane (running), the suite and the test build at

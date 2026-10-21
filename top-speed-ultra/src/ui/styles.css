@@ -905,9 +905,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .rc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .rc-list li { display: grid; grid-template-columns: 1fr 44px; box-shadow: inset 0 -1px 0 var(--line); }
 .rc-list li.on { background: var(--cyan-wash); box-shadow: inset 3px 0 0 var(--cyan), inset 0 -1px 0 var(--line); }
-.rc-tune { display: grid; grid-template-columns: 52px 46px 1fr; align-items: baseline; gap: 8px; min-height: 44px; padding: 0 10px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); }
+.rc-tune { display: grid; grid-template-columns: 52px 46px 1fr; align-items: center; gap: 8px; min-height: 44px; padding: 0 10px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); }
 .rc-tune b { font: 700 15px/1 var(--f-ui); letter-spacing: 0.06em; } .rc-tune span { font: 500 12px/1 var(--f-mono); color: var(--dim); } .rc-tune em { font-style: normal; font-size: 13px; color: var(--dim); }
-.rc-star { border: 0; cursor: pointer; background: var(--clear); color: var(--faint); font-size: 18px; }
+.rc-star { align-self: stretch; display: grid; place-items: center; border: 0; cursor: pointer; background: var(--clear); color: var(--faint); font-size: 18px; }
 .rc-star.on { color: var(--drv); }
 .rc-vol { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; font: 500 11px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .rc-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -915,3 +915,35 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .radio-card .fine { font-size: 11px; }
 @media (pointer: coarse), (max-width: 760px) { .radio-card { right: 8px; left: 8px; top: calc(max(12px, env(safe-area-inset-top)) + 58px); transform: none; width: auto; } }
 @media (prefers-reduced-motion: reduce) { .rc-eq em, .radio-card { animation: none !important; } }
+
+/* ------------------------------------------------------------------ the phone (U6, Phone.tsx): a handset over the pause screen */
+.overlay.phone-wrap { display: grid; place-items: center end; padding-right: max(40px, 6vw); background: var(--scrim); }
+.phone { position: relative; width: 300px; height: min(600px, 86vh); display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; padding: 12px 16px 14px;
+  border-radius: 38px; background: radial-gradient(120% 70% at 50% 0%, var(--night-3), var(--night-1) 70%); box-shadow: 0 0 0 2px var(--chrome-lo), 0 0 0 6px var(--chrome-deep), 0 0 0 7px var(--line-2), 0 30px 80px var(--shadow), 0 0 40px var(--ice-glow);
+  animation: phone-in 0.32s var(--ease) both; }
+@keyframes phone-in { from { opacity: 0; transform: translateX(40px); } }
+.ph-status { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font: 600 12px/1 var(--f-ui); color: var(--ink); }
+.ph-status span:last-child { justify-self: end; font: 500 10px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ice-text); }
+.ph-notch { width: 84px; height: 22px; border-radius: 12px; background: var(--void); }
+.ph-hello { display: grid; gap: 2px; padding: 4px 4px 0; }
+.ph-hello small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--drv); }
+.ph-hello b { font: 700 22px/1.1 var(--f-ui); }
+.ph-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; align-content: start; }
+.ph-app { position: relative; display: grid; justify-items: center; gap: 6px; padding: 0; border: 0; cursor: pointer; background: none; color: var(--ink); font: 500 11.5px/1.1 var(--f-ui); }
+.ph-app i { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 16px; color: var(--ink);
+  background: linear-gradient(160deg, var(--ice), var(--ice-deep)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 14px var(--shadow); }
+.ph-app:nth-child(3n+2) i { background: linear-gradient(160deg, var(--cyan), var(--ice-deep)); }
+.ph-app:nth-child(3n) i { background: linear-gradient(160deg, var(--chrome), var(--chrome-lo)); color: var(--night); }
+.ph-app.off { cursor: default; opacity: 0.45; }
+.ph-app em { position: absolute; top: -6px; right: 4px; padding: 2px 5px; border-radius: 6px; font: 600 8px/1 var(--f-mono); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; color: var(--night); background: var(--chrome); }
+.ph-app:focus-visible { outline: none; } .ph-app:focus-visible i { outline: 2px solid var(--ice); outline-offset: 3px; }
+@media (hover: hover) { .ph-app:not(.off):hover i { filter: brightness(1.12); } }
+.ph-credits { display: grid; align-content: start; gap: 10px; padding: 4px; }
+.ph-credits small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ice-text); }
+.ph-credits b { font: 600 44px/1 var(--f-mono); letter-spacing: -0.03em; }
+.ph-credits p { margin: 0; color: var(--dim); font-size: 13.5px; line-height: 1.45; }
+.ph-back { justify-self: start; padding: 4px 0; border: 0; background: none; cursor: pointer; color: var(--ice-text); font: 600 13px/1 var(--f-ui); }
+.ph-home { justify-self: center; width: 110px; height: 5px; padding: 0; border: 0; border-radius: 3px; cursor: pointer; background: var(--line-3); }
+.ph-home:focus-visible { outline: 2px solid var(--ice); outline-offset: 4px; }
+@media (max-width: 560px) { .overlay.phone-wrap { place-items: center; padding: 16px; } .phone { width: min(320px, 100%); } }
+@media (prefers-reduced-motion: reduce) { .phone { animation: none !important; } }
