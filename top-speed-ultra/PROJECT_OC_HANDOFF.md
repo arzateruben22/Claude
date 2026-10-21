@@ -27,6 +27,9 @@ model: routine work to `opus`, hard reasoning to `fable`.
   service runs as `oclive` from /opt/oc-live with a hardened unit; password reset by email (Resend, off until
   `RESEND_KEY`/`MAIL_FROM`), the account email setting, the menu's "N of 25 driving now", the pause screen's live
   line, Invite a friend, and a watchdog alert if `oc-live` stops. `cd live && npm test`: 45 of 45.
+- **The owner's checkpoint (2026-10-21, 17:20 UTC):** at 75% of the session's usage, pause, assess and ask questions.
+  No session can read the plan's usage meter, so the gauge is the session's token budget (under 25% left) or the
+  owner saying so. The scheduled task's prompt carries the same rule: it disables itself, reports, and asks.
 - **Afternoon, 2026-10-21:** the owner resumed the loop ("keep going til everything is finished") and asked whether
   live traffic should stay light: decision 18, computer cars capped light while driving live. The welcome-card check
   in `livephone` timed out because of the test, not the game (the card renders at full size in a lone page); the check
