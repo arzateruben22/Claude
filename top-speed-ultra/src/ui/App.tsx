@@ -414,7 +414,7 @@ export function App() {
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
           {settings.corner === 'map' && <canvas ref={mapRef} />}
-          <span className="corner-tag">{settings.corner === 'map' ? 'Map' : 'Sky cam'}</span>
+          <span className="corner-tag">{settings.corner === 'map' ? 'Map' : 'Sky'}</span>
         </button>
       )}
       {playing && (

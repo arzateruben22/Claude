@@ -38,6 +38,8 @@ const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
 // the beam pool strip: rows along its length (the road's profile is sampled at each), its height above the road,
 // and the light it adds at full (linear, before the tone map: the night road sits near 0.003, a lit lane near 0.2)
 const POOL_ROWS = 14, POOL_LIFT = 0.025, POOL_LEVEL = 0.18;
+// the sky camera's lift on the paint at night (a share of the paint's colour, as emissive): PlayerCar.skyView
+const SKY_GLOW = 0.45;
 
 function disposeGeometry(o: THREE.Object3D) {
   o.traverse((c) => { const m = c as THREE.Mesh; if (m.isMesh) m.geometry.dispose(); });   // materials are shared caches
@@ -184,6 +186,27 @@ export class PlayerCar {
   setOutsideView(v: boolean) {
     for (const o of this.outsideParts) o.visible = v;
     if (this.interior) for (const m of this.interior.mirrors) m.active = !v;
+  }
+  // the corner's sky camera sees the car from straight above: its outside (the glass and the cabin silhouette under
+  // it, as from any outside view), not the cockpit, the driver's arms or the wheels, which sit under the roof and the
+  // body and would only cost draw calls. skyView(true, _, glow) before that render; skyView(false, outside) after it
+  // puts back what the main camera had. glow (0 by day, up to 1 at night) lifts the paint by that share of its own
+  // colour for that render, as a street light would from above: a dark car on a dark road at night is otherwise only
+  // its headlamps' pool from up there. It's the paint's emissive colour, a uniform, so no shader changes.
+  private skyHidden: THREE.Object3D[] = [];
+  private skyEmissive = new THREE.Color();
+  skyView(on: boolean, outside = false, glow = 0) {
+    const paint = this.mats.paint as THREE.MeshStandardMaterial | undefined;
+    if (on) {
+      this.setOutsideView(true);
+      for (const o of [this.interior?.group, this.arms?.group, ...this.wheels.map((w) => w.steer)]) if (o && o.visible) { o.visible = false; this.skyHidden.push(o); }
+      if (paint?.emissive) { this.skyEmissive.copy(paint.emissive); paint.emissive.copy(paint.color).multiplyScalar(glow * SKY_GLOW).add(this.skyEmissive); }
+      return;
+    }
+    if (paint?.emissive) paint.emissive.copy(this.skyEmissive);
+    for (const o of this.skyHidden) o.visible = true;
+    this.skyHidden.length = 0;
+    this.setOutsideView(outside);
   }
 
   // The cabin as the sun's lens flare sees it: a box with the glass as openings (the windscreen under its header
