@@ -1,4 +1,4 @@
-// The garage cars' wheels, one generator in four styles:
+// The garage cars' wheels, one generator in seven styles:
 //   twin5 (Rossini GT)    20-inch forged twin-five-spoke rims, machined faces, gunmetal sides, a deep concave
 //   five  (Rossini Brio)  19-inch five-spoke, painted silver with a machined lip
 //   cl10  (Rossini Corsa) ten straight spokes in satin black, a centre-lock hub with a red hex nut
@@ -10,6 +10,8 @@
 //   blade (garage option) seven blades swept toward the rim like a turbine's (mirrored on the left, as directional
 //                         wheels are)
 // The garage's Wheels tab (cars.ts WHEELS) offers each car its own style and one second style.
+// Spoke faces are crowned (a highlight runs along each spoke); the five-bolt styles sit on a boss a third of the
+// rim's radius.
 // Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
 // lettering); drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour.
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
@@ -94,8 +96,9 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   const barrel: [number, number][] = [[0.2385, hw + 0.003], [0.236, hw - 0.016], [0.236, -hw + 0.01], [0.246, -hw - 0.004], [0.256, -hw - 0.006]];
   put(S, 'rimPaint', lathe(barrel, barrel.map((p) => p[1] * 4), high ? 72 : 40, false));
 
-  // spokes: (centre angle, splay sign) for each spoke, and how each style shapes them
-  const xh = hw - 0.062, xr = hw + 0.009, rh = 0.088, rr = 0.239, nR = high ? 14 : 8;
+  // spokes: (centre angle, splay sign) for each spoke, and how each style shapes them. The five-bolt styles' spokes
+  // grow from a boss of r 0.082 (34 % of the rim, as forged five-bolt wheels are); the Corsa's centre-lock boss is bigger
+  const xh = hw - 0.062, xr = hw + 0.009, hb = style === 'cl10' ? 0.098 : 0.082, rh = style === 'cl10' ? 0.088 : 0.074, rr = 0.239, nR = high ? 14 : 8;
   const spokes: [number, number][] = [];
   if (style === 'twin5') for (let pr = 0; pr < 5; pr++) for (const s of [-1, 1]) spokes.push([(pr / 5) * Math.PI * 2 + Math.PI / 2, s]);
   if (style === 'five') for (let k = 0; k < 5; k++) spokes.push([(k / 5) * Math.PI * 2 + Math.PI / 2, 0]);
@@ -117,19 +120,29 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
         : style === 'mesh' ? pc + s * 0.15 * (1 - 2 * f)          // the pair crosses at half the spoke's length
         : style === 'blade' ? pc + 0.6 * Math.pow(f, 1.4)        // swept back toward the rim
         : pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
-      // five: broad spokes that taper and thin toward the rim; cl10: slim straight ones, a shallow concave; multi:
-      // a half of a slim spoke, offset to its side until the halves part
-      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : style === 'multi' ? 0.029 - 0.012 * f
-        : style === 'mesh' ? 0.015 - 0.004 * f : style === 'blade' ? 0.036 - 0.016 * f : 0.026 - 0.009 * f;
+      // widths: forged faces of 28-44 mm at the hub tapering to the rim (twin5, cl10, blade; the old 22-36 mm read
+      // as wire); five: broad spokes that taper and thin toward the rim; multi: a half of a slim spoke, offset to
+      // its side until the halves part (the sheet's slim prongs); mesh: slim laces
+      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.028 - 0.008 * f : style === 'multi' ? 0.029 - 0.012 * f
+        : style === 'mesh' ? 0.015 - 0.004 * f : style === 'blade' ? 0.044 - 0.018 * f : 0.036 - 0.012 * f;
       const dep = style === 'five' ? 0.032 - 0.01 * f : style === 'multi' ? 0.03 - 0.012 * f : style === 'mesh' ? 0.024 - 0.008 * f : 0.036 - 0.012 * f;
       // mesh: the two spokes of a pair sit 3 mm apart in depth where they cross, so neither face fights the other
       const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : style === 'multi' ? 0.5 : style === 'blade' ? 0.55 : 0.62) + (style === 'mesh' ? s * 0.0015 : 0);
       const off = style === 'multi' ? s * wdt * 0.5 * (1 - split) : 0;
       const Rd = v3(0, Math.cos(th), Math.sin(th)), T = v3(0, -Math.sin(th), Math.cos(th));
       const at = (x: number, t: number) => Rd.clone().multiplyScalar(r).add(T.clone().multiplyScalar(t + off)).setX(x);
-      const fl = at(xf, -wdt * 0.36), fr = at(xf, wdt * 0.36), cl = at(xf - 0.005, -wdt / 2), cr = at(xf - 0.005, wdt / 2);
-      const bl = at(xf - dep, -wdt * 0.42), br = at(xf - dep, wdt * 0.42);
-      faceRows.push([fl, fr]); sideL.push([bl, cl, fl]); sideR.push([fr, cr, br]);
+      // the face's edges, across the spoke. A twin5 pair's two spokes overlap out to about 40 % of their length,
+      // so there each face stops at the pair's centre line: one Y-shaped face with a seam down its stem, instead
+      // of two crowns cutting through each other
+      let tl = -wdt * 0.36, tr = wdt * 0.36;
+      if (style === 'twin5') { const tc = r * Math.sin(pc - th); if (s > 0) tl = Math.max(tl, tc); else tr = Math.min(tr, tc); }
+      // the face is crowned: its middle sits up to 3 mm proud of its edges, so the smooth normals turn through
+      // about 20 deg across it and a highlight runs along the spoke, where a flat face went all black or all white
+      const cw = tr - tl, crown = Math.min(0.003, 0.11 * cw);
+      const fl = at(xf, tl), fm1 = at(xf + crown, tl + 0.3 * cw), fm2 = at(xf + crown, tl + 0.7 * cw), fr = at(xf, tr);
+      const cl = at(xf - 0.005, tl - 0.14 * wdt), cr = at(xf - 0.005, tr + 0.14 * wdt);
+      const bl = at(xf - dep, tl - 0.06 * wdt), br = at(xf - dep, tr + 0.06 * wdt);
+      faceRows.push([fl, fm1, fm2, fr]); sideL.push([bl, cl, fl]); sideR.push([fr, cr, br]);
     }
     const face = gridGeo(faceRows, { flip: false });
     const fuv = face.attributes.uv as THREE.BufferAttribute, fp = face.attributes.position;
@@ -201,11 +214,13 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     const cone = latheGeo([[0.0, xh + 0.046], [0.018, xh + 0.044], [0.03, xh + 0.03]], 24, 'x', { flip: true }); put(S, 'chrome', cone);
     const peg = new THREE.CylinderGeometry(0.005, 0.005, 0.012, 8); peg.rotateZ(-Math.PI / 2); peg.translate(xh + 0.006, 0.07, 0); put(S, 'chrome', peg);
   } else if (style !== 'aero') {
-    const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.07, xh + 0.004], [0.088, xh + 0.001], [0.096, xh - 0.008], [0.098, xh - 0.034]];
-    put(S, style === 'twin5' ? 'machined' : 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
+    // the boss: a centre-cap ring, a flat bolt face (the bolt circle at r 0.056, its recesses out to 0.0715) and a
+    // bevel down to the bell at r 0.082; the mesh style's is machined like its laces
+    const hub: [number, number][] = [[0.0, xh + 0.0075], [0.031, xh + 0.0075], [0.0345, xh + 0.0095], [0.038, xh + 0.006], [0.062, xh + 0.004], [0.074, xh + 0.001], [0.0805, xh - 0.008], [hb, xh - 0.034]];
+    put(S, style === 'twin5' || style === 'mesh' ? 'machined' : 'rimPaint', lathe(hub, hub.map((p) => p[0] * 6), high ? 64 : 32, true));
     for (let k = 0; k < (style === 'multi' ? 0 : 5); k++) {   // multi: the big centre cap covers the bolts
       const a = (k / 5) * Math.PI * 2 + Math.PI / 2 + Math.PI / 5, y = Math.cos(a) * 0.056, z = Math.sin(a) * 0.056;
-      const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0055, y, z);
+      const rec = new THREE.CircleGeometry(0.0155, 16); rec.rotateY(Math.PI / 2); rec.translate(xh + 0.0065, y, z);
       put(S, 'dark', rec);
       const bolt = new THREE.CylinderGeometry(0.0105, 0.0105, 0.016, 6); bolt.rotateZ(-Math.PI / 2); bolt.translate(xh + 0.006, y, z);
       put(S, 'chrome', bolt.toNonIndexed());
@@ -228,7 +243,7 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   for (let i = 0; i <= 3; i++) for (let j = 0; j <= dsegs; j++) ruv.setXY(i * (dsegs + 1) + j, j / dsegs, i / 3);
   put(S, 'disc', ring);
   put(S, 'dark', lathe([[Rd, xi], [Rd, xo]], [0, 1], dsegs, false));
-  const bell: [number, number][] = [[ri + 0.004, xo + 0.0005], [ri - 0.004, xo + 0.016], [0.1, xo + 0.026], [0.098, xh - 0.034]];
+  const bell: [number, number][] = [[ri + 0.004, xo + 0.0005], [ri - 0.004, xo + 0.016], [hb + 0.002, xo + 0.026], [hb, xh - 0.034]];
   put(S, 'rimPaint', lathe(bell, bell.map((p) => p[0] * 6), high ? 48 : 24, false));
 
   // caliper (does not spin): a U round the disc edge, rear-top of the disc
