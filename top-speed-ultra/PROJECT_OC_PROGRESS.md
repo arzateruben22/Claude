@@ -4,6 +4,25 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (21:55 UTC): both workflows cut off by the usage limit; resumed
+
+- **What the limit cut off.** At about 18:30 UTC the session's five-hour usage limit stopped every running agent; it
+  reset at 21:50 UTC.
+  - **The Fable overdrive:** six audits had finished (hands, signs, wheels, face, physics, hair, under
+    `scratchpad/fable/<area>/before/`). The body audit, the signs spec, every implementer and the critic were cut off.
+  - **The hands implementer** had begun only plan item 1, the thumb re-solve parameters, uncommitted and unproven. It
+    was saved as `scratchpad/fable/hands/partial-thumb-params.patch` and the worktree removed so the rerun starts clean.
+  - **The Retro port** had made its three commits on `retro/port` (9e29640 the render style and its settings pieces,
+    619ae83 Game's hooks and the switch under Low, c6d03c4 the two suite checks and `tests/modes-retro.mjs`) but proved
+    nothing.
+- **The 75 % checkpoint** (20:35) fired during the outage. The owner then said "continue and don't stop", so it is
+  replaced by a usage guard: no new agents while the limit is hit.
+- **Resumed at 21:55.**
+  - The overdrive resumes from its journal: the six audits replay, and the rest runs live.
+  - A new workflow verifies the Retro port on its own branch against the agreed merge bar (tsc clean; boot, render and
+    phone groups pass), then an adversarial judge decides.
+  - Nothing from either is merged yet.
+
 ## 2026-10-21 (17:45 UTC): the online board (live server), from server-observed poses only
 
 Agreed with the live-server session (session_014twwPd83rJxBkHT9T8yEiQ, which owns `claude/live-server`): this session
