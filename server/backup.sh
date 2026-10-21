@@ -6,6 +6,8 @@
 #   sudo systemctl stop nightdesk majors majors-4h paperbook
 #   sudo tar -xzf /var/backups/desks/desks-YYYY-MM-DD-HHMM.tar.gz -C ~/desks
 #   sudo systemctl start nightdesk majors majors-4h paperbook
+# The game's live accounts are in it as oc-live/data/live.db; to restore them:
+#   sudo systemctl stop oc-live && sudo install -o oclive -g oclive -m 600 oc-live/data/live.db /opt/oc-live/data/ && sudo systemctl start oc-live
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/backup.sh"; exit 1; }
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -31,11 +33,11 @@ for p in night-desk/output/live night-desk/output/archive night-desk/output/wild
     cp -a --parents "$p" "$WORK/"
   fi
 done
-if [ -f top-speed-ultra/live/data/live.db ]; then     # the game's accounts (password hashes only), a consistent copy
-  mkdir -p "$WORK/top-speed-ultra/live/data"
+if [ -f /opt/oc-live/data/live.db ]; then           # the game's accounts (password hashes only), a consistent copy
+  mkdir -p "$WORK/oc-live/data"
   "$DIR/.venv/bin/python" -c 'import sqlite3, sys
 src, dst = sqlite3.connect(sys.argv[1]), sqlite3.connect(sys.argv[2])
-src.backup(dst); dst.close(); src.close()' top-speed-ultra/live/data/live.db "$WORK/top-speed-ultra/live/data/live.db"
+src.backup(dst); dst.close(); src.close()' /opt/oc-live/data/live.db "$WORK/oc-live/data/live.db"
 fi
 if [ -f post-desk/output/live/desk.db ]; then          # a consistent copy, even while Post Desk is writing
   mkdir -p "$WORK/post-desk/output/live"

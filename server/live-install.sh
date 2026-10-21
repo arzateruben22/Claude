@@ -4,8 +4,9 @@
 #   sudo bash server/live-install.sh
 # It installs Node 22 if needed, builds the game page (about 530 MB of memory at its peak, so a 1 GB swap file is
 # added when the machine has less than 2 GB and no swap), installs the server's one package, writes
-# /etc/oc-live.env the first time (the cap of 25 and a random admin token), and (re)starts oc-live on
-# 127.0.0.1:8791. Nobody outside can reach it until server/live.sh puts it on a public address.
+# /etc/oc-live.env the first time (the cap of 25 and a random admin token), copies the server and the page to
+# /opt/oc-live, and (re)starts oc-live on 127.0.0.1:8791 as its own locked-down user, oclive (it can write only
+# /opt/oc-live/data). Nobody outside can reach it until server/live.sh puts it on a public address.
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/live-install.sh"; exit 1; }
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -37,10 +38,23 @@ cd "$GAME"
 as_owner npm ci --no-audit --no-fund --loglevel=error > /dev/null
 as_owner env NODE_OPTIONS=--max-old-space-size=900 npx vite build --logLevel error > /dev/null
 as_owner node scripts/single-file.mjs
-echo "Live server: installing its package..."
-cd "$GAME/live"
-as_owner npm ci --omit=dev --no-audit --no-fund --loglevel=error > /dev/null
-sudo -u "$OWNER" mkdir -p "$GAME/live/data"
+echo "Live server: installing it in /opt/oc-live (user oclive)..."
+id oclive > /dev/null 2>&1 || useradd --system --home-dir /opt/oc-live --no-create-home --shell /usr/sbin/nologin oclive
+OPT=/opt/oc-live
+mkdir -p "$OPT/public" "$OPT/data"
+for f in server.mjs now.mjs names.mjs ladder.mjs package.json package-lock.json trends.json traffic-points.json; do
+  [ -f "$GAME/live/$f" ] && install -m 644 "$GAME/live/$f" "$OPT/$f"
+done
+install -m 644 "$GAME/dist/top-speed-ultra.html" "$OPT/public/top-speed-ultra.html"
+(cd "$OPT" && npm ci --omit=dev --no-audit --no-fund --loglevel=error > /dev/null)
+# an older install kept its accounts in the repo: move them once
+if [ -f "$GAME/live/data/live.db" ] && [ ! -f "$OPT/data/live.db" ]; then
+  systemctl stop oc-live.service 2> /dev/null || true
+  cp -a "$GAME/live/data/." "$OPT/data/" && rm -rf "$GAME/live/data"
+fi
+chown -R root:root "$OPT"; chmod 755 "$OPT"
+chown -R oclive:oclive "$OPT/data"; chmod 700 "$OPT/data"
+find "$OPT/data" -type f -exec chmod 600 {} +
 
 if [ ! -f /etc/oc-live.env ]; then
   umask 077
@@ -56,7 +70,7 @@ ENV
   chmod 600 /etc/oc-live.env
 fi
 
-sed -e "s#@DIR@#$DIR#g" -e "s#@USER@#$OWNER#g" "$DIR/server/systemd/oc-live.service" > /etc/systemd/system/oc-live.service
+install -m 644 "$DIR/server/systemd/oc-live.service" /etc/systemd/system/oc-live.service
 systemctl daemon-reload
 systemctl enable oc-live.service > /dev/null 2>&1
 systemctl restart oc-live.service

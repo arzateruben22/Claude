@@ -17,7 +17,7 @@ before(async () => {
   dir = mkdtempSync(join(tmpdir(), 'oc-live-'));
   const port = 20000 + Math.floor(Math.random() * 20000);
   proc = spawn(process.execPath, [new URL('../server.mjs', import.meta.url).pathname], {
-    env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: String(CAP), DB_PATH: join(dir, 'test.db'), ADMIN_TOKEN: 'admin-secret', IP_MAX: '1000' }, stdio: ['ignore', 'pipe', 'inherit'],
+    env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: String(CAP), DB_PATH: join(dir, 'test.db'), ADMIN_TOKEN: 'admin-secret', IP_MAX: '1000', SOCKETS_PER_IP: '1000' }, stdio: ['ignore', 'pipe', 'inherit'],
   });
   base = `http://127.0.0.1:${port}`; ws = `ws://127.0.0.1:${port}/ws`;
   await new Promise((resolve, reject) => { proc.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); proc.on('exit', reject); });

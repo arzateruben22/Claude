@@ -5,8 +5,11 @@
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/live-cap.sh 50"; exit 1; }
 CAP="${1:?how many drivers at once, e.g. 50}"
-TOKEN="$(grep '^ADMIN_TOKEN=' /etc/oc-live.env | cut -d= -f2)"
-curl -fsS -X POST http://127.0.0.1:8791/admin/cap -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' -d "{\"cap\":$CAP}" > /dev/null
-if grep -q '^MAX_PLAYERS=' /etc/oc-live.env; then sed -i "s/^MAX_PLAYERS=.*/MAX_PLAYERS=$CAP/" /etc/oc-live.env; else echo "MAX_PLAYERS=$CAP" >> /etc/oc-live.env; fi
+[[ "$CAP" =~ ^[0-9]{1,3}$ ]] && [ "$CAP" -ge 1 ] && [ "$CAP" -le 500 ] || { echo "The cap is a number from 1 to 500."; exit 1; }
+DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# the token goes to curl on its standard input, never on a command line other users can read with ps
+grep '^ADMIN_TOKEN=' /etc/oc-live.env | sed 's/^ADMIN_TOKEN=/authorization: Bearer /' \
+  | curl -fsS -X POST http://127.0.0.1:8791/admin/cap -H @- -H 'content-type: application/json' -d "{\"cap\":$CAP}" > /dev/null
+bash "$DIR/server/live-env.sh" MAX_PLAYERS "$CAP"
 echo "The cap is now $CAP drivers at once (kept for restarts)."
 bash "$(dirname "$0")/live-status.sh"

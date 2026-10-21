@@ -28,10 +28,12 @@ fi
 echo "== user and files"
 id oclive >/dev/null 2>&1 || useradd --system --home /opt/oc-live --shell /usr/sbin/nologin oclive
 mkdir -p /opt/oc-live/data /opt/oc-live/public
-cp "$HERE/server.mjs" "$HERE/package.json" "$HERE/package-lock.json" /opt/oc-live/ 2>/dev/null || cp "$HERE/server.mjs" "$HERE/package.json" /opt/oc-live/
+for f in server.mjs now.mjs names.mjs ladder.mjs package.json package-lock.json trends.json traffic-points.json; do
+  [ -f "$HERE/$f" ] && install -m 644 "$HERE/$f" "/opt/oc-live/$f"
+done
 (cd /opt/oc-live && npm install --omit=dev --no-audit --no-fund)
 if [ -f "$HERE/../dist/top-speed-ultra.html" ]; then cp "$HERE/../dist/top-speed-ultra.html" /opt/oc-live/public/index.html; echo "   the game page is served at https://$LIVE_DOMAIN/"; fi
-chown -R oclive:oclive /opt/oc-live
+chown -R root:root /opt/oc-live && chown -R oclive:oclive /opt/oc-live/data && chmod 700 /opt/oc-live/data
 
 echo "== settings (/etc/oc-live.env)"
 if [ ! -f /etc/oc-live.env ]; then

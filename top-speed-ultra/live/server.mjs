@@ -14,9 +14,9 @@
 // Run:  MAX_PLAYERS=25 PORT=8791 node server.mjs      (see README.md and deploy/ for the real thing, behind Caddy)
 
 import { createServer } from 'node:http';
-import { readFileSync, existsSync, mkdirSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, mkdirSync, statSync, realpathSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
-import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
+import { randomBytes, scryptSync, scrypt as scryptCb, timingSafeEqual, createHash } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { WebSocketServer } from 'ws';
 import { createNow } from './now.mjs';
@@ -47,6 +47,10 @@ const JUMP_MAX = 240;                // m/s implied by two consecutive poses: be
 const STRIKES_MAX = 40;              // bad poses before a disconnect
 const HELLO_MS = 8000;               // a socket must identify itself this fast
 const PING_MS = 20000, DEAD_MS = 45000;
+const IDLE_MS = Number(process.env.IDLE_MS || 60000);   // admitted but no pose this long while others wait: the spot goes to the next in line
+const SOCKETS_PER_IP = clampInt(process.env.SOCKETS_PER_IP, 1, 1000, 3);   // sockets one address may hold (online, in line or saying hello)
+const PENDING_MAX = 200;             // sockets that haven't said hello yet, across everyone
+const QUEUE_MAX = clampInt(process.env.QUEUE_MAX, 1, 100000, 500);      // the line's length; past it, "the line is full"
 const LOGIN_WINDOW_MS = 15 * 60 * 1000, LOGIN_MAX = 10;   // wrong passwords per name
 const IP_MAX = clampInt(process.env.IP_MAX, 1, 1e6, 40);  // sign-ups or log-ins per IP in that window (a shared phone network needs room)
 const BODY_MAX = 4096;
@@ -54,7 +58,9 @@ const BODY_MAX = 4096;
 function clampInt(v, lo, hi, dflt) { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.max(lo, Math.min(hi, n)) : dflt; }
 
 // ------------------------------------------------------------------------------------------------ the database
-mkdirSync(new URL('.', 'file://' + DB_PATH).pathname, { recursive: true });
+// the database holds password hashes and emails: only this process's user can read what it writes
+process.umask(0o077);
+mkdirSync(new URL('.', 'file://' + DB_PATH).pathname, { recursive: true, mode: 0o700 });
 const db = new DatabaseSync(DB_PATH);
 db.exec(`
   PRAGMA journal_mode = WAL;
@@ -102,17 +108,33 @@ const q = {
 // ------------------------------------------------------------------------------------------------ passwords and tokens
 const SCRYPT = { N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
 const b64 = (buf) => Buffer.from(buf).toString('base64url');
-function hashPassword(pw) {
+// scrypt runs on libuv's thread pool (never on the event loop, so the relay keeps its 10 Hz), and at most HASH_MAX
+// at once; past HASH_WAIT waiting, a request is told the server is busy rather than piling up
+const HASH_MAX = 4, HASH_WAIT = 64;
+let hashing = 0;
+const hashWaiters = [];
+class Busy extends Error {}
+async function withHashSlot(fn) {
+  if (hashing >= HASH_MAX) {
+    if (hashWaiters.length >= HASH_WAIT) throw new Busy('busy');
+    await new Promise((resolve) => hashWaiters.push(resolve));
+  }
+  hashing++;
+  try { return await fn(); } finally { hashing--; hashWaiters.shift()?.(); }
+}
+const scryptAsync = (pw, salt, len, opts) => new Promise((resolve, reject) => scryptCb(pw, salt, len, opts, (e, k) => (e ? reject(e) : resolve(k))));
+async function hashPassword(pw) {
   const salt = randomBytes(16);
-  return `scrypt$${SCRYPT.N}$${b64(salt)}$${b64(scryptSync(pw, salt, 32, SCRYPT))}`;
+  const key = await withHashSlot(() => scryptAsync(pw, salt, 32, SCRYPT));
+  return `scrypt$${SCRYPT.N}$${b64(salt)}$${b64(key)}`;
 }
 // a hash of a password nobody has: a failed log-in for an unknown name costs the same time as a wrong password
-const DUMMY = hashPassword(b64(randomBytes(12)));
-function checkPassword(pw, stored) {
+const DUMMY = `scrypt$${SCRYPT.N}$${b64(randomBytes(16))}$${b64(scryptSync(b64(randomBytes(12)), randomBytes(16), 32, SCRYPT))}`;
+async function checkPassword(pw, stored) {
   const [kind, N, salt, hash] = String(stored).split('$');
   if (kind !== 'scrypt') return false;
   const want = Buffer.from(hash, 'base64url');
-  const got = scryptSync(pw, Buffer.from(salt, 'base64url'), want.length, { ...SCRYPT, N: Number(N) });
+  const got = await withHashSlot(() => scryptAsync(pw, Buffer.from(salt, 'base64url'), want.length, { ...SCRYPT, N: Number(N) }));
   return want.length === got.length && timingSafeEqual(want, got);
 }
 const tokenHash = (t) => createHash('sha256').update(String(t)).digest('base64url');
@@ -141,6 +163,8 @@ function limited(key, max = LOGIN_MAX) {
   list.push(now);
   return false;
 }
+const hits = (key) => { const now = Date.now(), list = (attempts.get(key) || []).filter((t) => now - t < LOGIN_WINDOW_MS); attempts.set(key, list); return list.length; };
+const hit = (key) => { const list = attempts.get(key) || []; list.push(Date.now()); attempts.set(key, list); };
 setInterval(() => { const now = Date.now(); for (const [k, l] of attempts) if (!l.some((t) => now - t < LOGIN_WINDOW_MS)) attempts.delete(k); q.sweep.run(now); }, 60000).unref();
 
 // ------------------------------------------------------------------------------------------------ HTTP
@@ -155,10 +179,14 @@ function recordHour() {
   hourly.peak = Math.max(hourly.peak, online.size); hourly.queuedPeak = Math.max(hourly.queuedPeak, queue.length);
   hourly.rss = Math.max(hourly.rss, Math.round(process.memoryUsage().rss / 1048576));
 }
-function writeHour() {
+function hourRow() {
   const c = process.cpuUsage(hourly.cpu), b = hourly.base;
-  db.prepare('INSERT OR REPLACE INTO hourly VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(hourly.key, hourly.peak, MAX_PLAYERS, hourly.queuedPeak,
-    stats.queuedEver - b.queuedEver, stats.admitted - b.admitted, stats.posesIn - b.posesIn, stats.posesDropped - b.posesDropped, stats.bytesOut - b.bytesOut, Math.round((c.user + c.system) / 1000), hourly.rss);
+  return { hour: hourly.key, peak: hourly.peak, cap: MAX_PLAYERS, queuedPeak: hourly.queuedPeak, waited: stats.queuedEver - b.queuedEver, admitted: stats.admitted - b.admitted,
+    posesIn: stats.posesIn - b.posesIn, posesDropped: stats.posesDropped - b.posesDropped, bytesOut: stats.bytesOut - b.bytesOut, cpuMs: Math.round((c.user + c.system) / 1000), rssMb: hourly.rss };
+}
+function writeHour() {
+  const h = hourRow();
+  db.prepare('INSERT OR REPLACE INTO hourly VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(h.hour, h.peak, h.cap, h.queuedPeak, h.waited, h.admitted, h.posesIn, h.posesDropped, h.bytesOut, h.cpuMs, h.rssMb);
 }
 const hoursSince = (days) => db.prepare('SELECT hour, peak, cap, queued_peak AS queuedPeak, waited, poses_in AS posesIn, poses_dropped AS posesDropped, bytes_out AS bytesOut, cpu_ms AS cpuMs, rss_mb AS rssMb FROM hourly WHERE hour >= ? ORDER BY hour')
   .all(new Date(Date.now() - days * 86400000).toISOString().slice(0, 13));
@@ -177,11 +205,28 @@ function readJson(req) {
     req.on('error', reject);
   });
 }
-const ipOf = (req) => (process.env.TRUST_PROXY ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '') || req.socket.remoteAddress || '?';
-// behind a local proxy that doesn't say who the client is, every request comes from loopback: one shared bucket would
-// lock everyone out after a few sign-ups, so the per-address limit only applies to an address that names a client
+// the client's address: behind the proxy (TRUST_PROXY), the LAST X-Forwarded-For entry, the one the proxy itself
+// added (Tailscale Funnel and Caddy both set it); anything before it came from the client and can be forged. With
+// no header behind a proxy the address is unknown ('' ). IPv6 addresses count by their /64, the block one home gets.
+const TRUST_PROXY = !!process.env.TRUST_PROXY;
+function ipOf(req) {
+  let ip = '';
+  if (TRUST_PROXY) { const parts = String(req.headers['x-forwarded-for'] || '').split(',').map((x) => x.trim()).filter(Boolean); ip = parts.at(-1) || ''; }
+  else ip = req.socket.remoteAddress || '';
+  ip = ip.replace(/^::ffff:/, '');
+  if (ip.includes(':')) ip = ip.split(':').slice(0, 4).map((h) => h || '0').join(':') + '::/64';
+  return ip;
+}
+// sign-ups and log-ins need a known address (behind a proxy that didn't say, they are refused rather than counted
+// as one shared client or not counted at all)
+const unknownIp = (req) => TRUST_PROXY && !ipOf(req);
+const ipLimited = (req) => limited('ip:' + ipOf(req), IP_MAX);
+// the admin endpoints answer only to this machine itself: a loopback socket with no forwarding header (Funnel and
+// Caddy always add one), and the right token, compared in constant time
 const LOOPBACK = /^(127\.|::1$|::ffff:127\.)/;
-const ipLimited = (req) => { const ip = ipOf(req); return !LOOPBACK.test(ip) && limited('ip:' + ip, IP_MAX); };
+const sha = (v) => createHash('sha256').update(String(v)).digest();
+const isLocal = (req) => LOOPBACK.test(req.socket.remoteAddress || '') && !req.headers['x-forwarded-for'] && !req.headers['forwarded'];
+const isAdmin = (req) => !!ADMIN_TOKEN && isLocal(req) && timingSafeEqual(sha(bearer(req)), sha(ADMIN_TOKEN));
 const bearer = (req) => { const m = /^Bearer (.+)$/.exec(String(req.headers.authorization || '')); return m ? m[1] : ''; };
 const now = createNow({ weather: NOW_WEATHER, traffic: NOW_TRAFFIC, tomtomKey: TOMTOM_KEY, log: (ev, d) => log(ev, d) });
 const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
@@ -189,6 +234,7 @@ const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, tr
 // a static file, gzipped once per version (the game page is about 3.7 MB, 1.2 MB gzipped), with an ETag so a phone
 // that has it already gets a 304
 const fileCache = new Map();
+const PUBLIC_REAL = PUBLIC_DIR && existsSync(PUBLIC_DIR) ? realpathSync(PUBLIC_DIR) : '';
 function sendFile(req, res, file, type) {
   const st = statSync(file), key = file + ':' + st.mtimeMs + ':' + st.size;
   let c = fileCache.get(file);
@@ -202,15 +248,18 @@ function sendFile(req, res, file, type) {
 }
 
 async function handle(req, res) {
-  const url = new URL(req.url, 'http://x'), path = url.pathname;
+  const url = URL.parse(req.url || '/', 'http://x');
+  if (!url) return send(res, 400, 'bad request');
+  const path = url.pathname;
   if (req.method === 'OPTIONS') return send(res, 204, '');
   try {
     if (path === '/health' || path === '/api/health') return send(res, 200, health());
     if (path === '/api/now') return send(res, 200, now.snapshot());
-    if (path === '/api/ladder') { recordHour(); writeHour(); return send(res, 200, verdict(hoursSince(8), MAX_PLAYERS)); }
+    if (path === '/api/ladder') { if (!isLocal(req)) return send(res, 404, 'not found'); recordHour(); return send(res, 200, verdict([...hoursSince(8).filter((h) => h.hour !== hourly.key), hourRow()], MAX_PLAYERS)); }
     if (path === '/api/traffic') return send(res, 200, now.snapshot().traffic);
     if (path === '/api/signup' && req.method === 'POST') {
-      if (!LOOPBACK.test(ipOf(req)) && limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (unknownIp(req)) return send(res, 400, { error: 'Bad request.' });
+      if (limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const b = await readJson(req);
       const name = String(b.name || '').trim(), pw = String(b.password || ''), email = b.email ? String(b.email).trim().toLowerCase() : null;
       if (!NAME_RE.test(name)) return send(res, 400, { error: 'A name is 3 to 16 letters, numbers or underscores.' });
@@ -220,35 +269,39 @@ async function handle(req, res) {
       if (email && !EMAIL_RE.test(email)) return send(res, 400, { error: 'That email address doesn\'t look right.' });
       if (b.over13 !== true) return send(res, 400, { error: 'You must be 13 or older to make an account.' });
       if (q.byName.get(name.toLowerCase())) return send(res, 409, { error: 'That name is taken.' });
-      const r = q.insert.run(name, name.toLowerCase(), email, hashPassword(pw), Date.now());
+      const r = q.insert.run(name, name.toLowerCase(), email, await hashPassword(pw), Date.now());
       const id = Number(r.lastInsertRowid);
       return send(res, 200, { token: issueSession(id), player: { id, name } });
     }
     if (path === '/api/login' && req.method === 'POST') {
       const b = await readJson(req);
       const name = String(b.name || '').trim(), pw = String(b.password || '');
-      if (ipLimited(req) || limited('name:' + name.toLowerCase())) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (unknownIp(req)) return send(res, 400, { error: 'Bad request.' });
+      // wrong passwords count per name and address, so nobody can lock a driver out from elsewhere; a success clears it
+      const failKey = 'fail:' + name.toLowerCase() + '|' + ipOf(req);
+      if (ipLimited(req) || hits(failKey) >= LOGIN_MAX) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const p = q.byName.get(name.toLowerCase());
-      const ok = checkPassword(pw, p ? p.pass : DUMMY) && !!p;
-      if (!ok) return send(res, 401, { error: 'Wrong name or password.' });
+      const ok = (await checkPassword(pw, p ? p.pass : DUMMY)) && !!p;
+      if (!ok) { hit(failKey); return send(res, 401, { error: 'Wrong name or password.' }); }
+      attempts.delete(failKey);
       if (p.banned) return send(res, 403, { error: 'This account is suspended.' });
       q.seen.run(Date.now(), p.id);
       return send(res, 200, { token: issueSession(Number(p.id)), player: { id: Number(p.id), name: p.name } });
     }
     if (path === '/api/logout' && req.method === 'POST') {
       const s = sessionFor(bearer(req));
-      if (s) q.drop.run(s.hash);
+      if (s) { q.drop.run(s.hash); dropSockets(s.id, 'Logged out'); }
       return send(res, 200, { ok: true });
     }
     // change the password (the old one is needed); every other session ends, this one gets a fresh token
     if (path === '/api/password' && req.method === 'POST') {
       const s = sessionFor(bearer(req));
       if (!s) return send(res, 401, { error: 'Not logged in.' });
-      if (limited('pw:' + s.id)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (hits('pw:' + s.id) >= LOGIN_MAX) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const b = await readJson(req), p = q.byId.get(s.id), next = String(b.next || '');
-      if (!checkPassword(String(b.current || ''), p.pass)) return send(res, 401, { error: 'The current password is wrong.' });
+      if (!(await checkPassword(String(b.current || ''), p.pass))) { hit('pw:' + s.id); return send(res, 401, { error: 'The current password is wrong.' }); }
       if (next.length < 8 || next.length > 128) return send(res, 400, { error: 'A password is at least 8 characters.' });
-      q.setPass.run(hashPassword(next), s.id); q.dropAll.run(s.id);
+      q.setPass.run(await hashPassword(next), s.id); q.dropAll.run(s.id); dropSockets(s.id, 'Password changed');
       log('password', { id: s.id });
       return send(res, 200, { token: issueSession(s.id), player: { id: s.id, name: s.name } });
     }
@@ -256,11 +309,10 @@ async function handle(req, res) {
     if (path === '/api/delete' && req.method === 'POST') {
       const s = sessionFor(bearer(req));
       if (!s) return send(res, 401, { error: 'Not logged in.' });
-      if (limited('pw:' + s.id)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      if (hits('pw:' + s.id) >= LOGIN_MAX) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
       const b = await readJson(req), p = q.byId.get(s.id);
-      if (!checkPassword(String(b.password || ''), p.pass)) return send(res, 401, { error: 'The password is wrong.' });
-      const c = online.get(s.id) || queue.find((o) => o.player && o.player.id === s.id);
-      if (c) kick(c, 'Account deleted');
+      if (!(await checkPassword(String(b.password || ''), p.pass))) { hit('pw:' + s.id); return send(res, 401, { error: 'The password is wrong.' }); }
+      dropSockets(s.id, 'Account deleted');
       q.remove.run(s.id);                                     // sessions go with it (ON DELETE CASCADE)
       log('deleted', { id: s.id });
       return send(res, 200, { ok: true });
@@ -271,21 +323,20 @@ async function handle(req, res) {
       return send(res, 200, { player: { id: s.id, name: s.name }, online: online.size, cap: MAX_PLAYERS, queued: queue.length });
     }
     if (path === '/admin/ban' && req.method === 'POST') {
-      if (!ADMIN_TOKEN || bearer(req) !== ADMIN_TOKEN) return send(res, 404, 'not found');
+      if (!isAdmin(req)) return send(res, 404, 'not found');
       const b = await readJson(req), key = String(b.name || '').trim().toLowerCase(), on = b.banned !== false;
       const p = q.byName.get(key);
       if (!p) return send(res, 404, { error: 'No such driver.' });
       q.ban.run(on ? 1 : 0, key);
       if (on) {
         q.dropAll.run(p.id);                                     // signed out everywhere
-        const c = online.get(Number(p.id)) || queue.find((o) => o.player && o.player.id === Number(p.id));
-        if (c) kick(c, 'Account suspended');
+        dropSockets(Number(p.id), 'Account suspended');
       }
       log(on ? 'ban' : 'unban', { id: Number(p.id), name: p.name });
       return send(res, 200, { name: p.name, banned: on });
     }
     if (path === '/admin/cap' && req.method === 'POST') {
-      if (!ADMIN_TOKEN || bearer(req) !== ADMIN_TOKEN) return send(res, 404, 'not found');
+      if (!isAdmin(req)) return send(res, 404, 'not found');
       const b = await readJson(req), cap = clampInt(b.cap, CAP_MIN, CAP_MAX, NaN);
       if (!Number.isFinite(cap)) return send(res, 400, { error: `cap must be ${CAP_MIN} to ${CAP_MAX}` });
       MAX_PLAYERS = cap; log('cap', { cap });
@@ -296,10 +347,12 @@ async function handle(req, res) {
       const rel = path === '/' ? '/' + PUBLIC_INDEX : path;
       const file = PUBLIC_DIR + rel.replace(/\.\./g, '');
       const ext = file.split('.').pop();
-      if (PUBLIC_TYPES[ext] && existsSync(file)) return sendFile(req, res, file, PUBLIC_TYPES[ext]);
+      if (PUBLIC_TYPES[ext] && existsSync(file) && realpathSync(file).startsWith(PUBLIC_REAL + '/')) return sendFile(req, res, file, PUBLIC_TYPES[ext]);
     }
     return send(res, 404, 'not found');
   } catch (e) {
+    if (e instanceof Busy) return send(res, 503, { error: 'Busy. Try again in a moment.' });
+    if (e.message !== 'too big' && e.message !== 'bad json') log('error', { path, error: String(e && e.stack || e).slice(0, 400) });
     return send(res, 400, { error: e.message === 'too big' || e.message === 'bad json' ? 'Bad request.' : 'Something went wrong.' });
   }
 }
@@ -311,7 +364,7 @@ const queue = [];
 let nextClientId = 1;
 
 function makeClient(ws, ip) {
-  return { ws, ip, cid: nextClientId++, player: null, name: '', car: 'rossini-gt', paint: 0xa80d10, admitted: false, alive: true, lastPing: Date.now(),
+  return { ws, ip, cid: nextClientId++, player: null, name: '', car: 'rossini-gt', paint: 0xa80d10, admitted: false, admittedAt: 0, alive: true, lastPing: Date.now(),
     pose: null, poseAt: 0, poseTimes: [], strikes: 0, seen: new Set() };
 }
 const sendTo = (c, msg) => { if (c.ws.readyState === 1) { const s = JSON.stringify(msg); stats.bytesOut += s.length; c.ws.send(s); } };
@@ -319,7 +372,7 @@ const broadcast = (msg, except) => { for (const c of online.values()) if (c !== 
 const roster = (c) => ({ id: c.player.id, name: c.name, car: c.car, paint: c.paint });
 
 function admit(c) {
-  c.admitted = true;
+  c.admitted = true; c.admittedAt = Date.now();
   online.set(c.player.id, c);
   stats.admitted++; stats.peak = Math.max(stats.peak, online.size); hourly.peak = Math.max(hourly.peak, online.size);
   sendTo(c, { t: 'welcome', id: c.player.id, name: c.name, cap: MAX_PLAYERS, online: online.size, peers: [...online.values()].filter((o) => o !== c).map(roster) });
@@ -342,8 +395,13 @@ function leave(c, why) {
   admitFromQueue();
 }
 // close codes: 4000 means don't come back on your own (logged out, signed in elsewhere, bad data); 4001 means the
-// server is restarting, so the game reconnects by itself a few seconds later
-function kick(c, why, code = 4000) { stats.kicked++; sendTo(c, { t: 'bye', why, retry: code === 4001 }); leave(c, why); try { c.ws.close(code, why); } catch { /* closing */ } }
+// server is restarting, so the game reconnects by itself a few seconds later; 4002 means your spot went to someone
+// waiting while you sat still, and the game rejoins the back of the line after 10 s
+function kick(c, why, code = 4000) { stats.kicked++; sendTo(c, { t: 'bye', why, retry: code !== 4000 }); leave(c, why); try { c.ws.close(code, why); } catch { /* closing */ } }
+// every socket an account holds (online or in line), ended with this reason
+function dropSockets(playerId, why) {
+  for (const c of [...online.values(), ...queue]) if (c.player && c.player.id === playerId) kick(c, why);
+}
 
 function onHello(c, m) {
   const s = sessionFor(m.token);
@@ -356,6 +414,7 @@ function onHello(c, m) {
   const qd = queue.find((o) => o.player && o.player.id === s.id);
   if (qd && qd !== c) kick(qd, 'Signed in somewhere else');
   if (online.size < MAX_PLAYERS) admit(c);
+  else if (queue.length >= QUEUE_MAX) kick(c, 'The line is full. Try again soon.');
   else { queue.push(c); stats.queuedEver++; sendTo(c, { t: 'queued', position: queue.length, cap: MAX_PLAYERS, online: online.size }); log('queued', { id: s.id, name: s.name, position: queue.length }); }
 }
 const finite = (v) => typeof v === 'number' && Number.isFinite(v);
@@ -424,25 +483,50 @@ function rosterTick() {
 const r1 = (v) => Math.round(v * 10) / 10, r3 = (v) => Math.round(v * 1000) / 1000;
 
 // ------------------------------------------------------------------------------------------------ sockets
-const server = createServer(handle);
+const server = createServer((req, res) => {
+  handle(req, res).catch((e) => { log('error', { error: String(e && e.stack || e).slice(0, 400) }); try { if (!res.headersSent) send(res, 500, 'error'); else res.end(); } catch { /* gone */ } });
+});
+server.on('clientError', (err, socket) => { try { socket.end('HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n'); } catch { /* gone */ } });
+process.on('unhandledRejection', (e) => log('unhandled', { error: String(e && e.stack || e).slice(0, 400) }));
 const wss = new WebSocketServer({ server, path: '/ws', maxPayload: 1024 });
+// sockets per address and sockets still saying hello: both capped, so nobody can hold memory or slots with silent ones
+const perIp = new Map();
+let pending = 0;
 wss.on('connection', (ws, req) => {
-  const c = makeClient(ws, ipOf(req));
-  const helloTimer = setTimeout(() => { if (!c.player) kick(c, 'No hello'); }, HELLO_MS);
+  const ip = ipOf(req);
+  if ((TRUST_PROXY && !ip) || (perIp.get(ip) || 0) >= SOCKETS_PER_IP || pending >= PENDING_MAX) {
+    try { ws.close(4000, 'Too many connections'); } catch { /* closing */ }
+    setTimeout(() => ws.terminate(), 1000).unref();
+    return;
+  }
+  perIp.set(ip, (perIp.get(ip) || 0) + 1); pending++;
+  let counted = true, saidHello = false;
+  const release = () => { if (!counted) return; counted = false; if (!saidHello) pending--; const n = (perIp.get(ip) || 1) - 1; if (n) perIp.set(ip, n); else perIp.delete(ip); };
+  const c = makeClient(ws, ip);
+  const helloTimer = setTimeout(() => { if (!c.player) { kick(c, 'No hello'); ws.terminate(); } }, HELLO_MS);
   ws.on('message', (raw) => {
     let m;
     try { m = JSON.parse(raw.toString()); } catch { return; }
     if (!m || typeof m !== 'object') return;
-    if (m.t === 'hello') { if (!c.player) { clearTimeout(helloTimer); onHello(c, m); } return; }
+    if (m.t === 'hello') { if (!c.player && !saidHello) { saidHello = true; pending--; clearTimeout(helloTimer); onHello(c, m); } return; }
     if (!c.admitted) return;
     if (m.t === 's') onPose(c, m);
     else if (m.t === 'e' && m.k === 'honk') onHonk(c);
     else if (m.t === 'leave') kick(c, 'Left');
   });
   ws.on('pong', () => { c.lastPing = Date.now(); });
-  ws.on('close', () => { clearTimeout(helloTimer); leave(c, 'closed'); });
-  ws.on('error', () => { clearTimeout(helloTimer); leave(c, 'error'); });
+  ws.on('close', () => { clearTimeout(helloTimer); release(); leave(c, 'closed'); });
+  ws.on('error', () => { clearTimeout(helloTimer); release(); leave(c, 'error'); });
 });
+setInterval(evictIdle, Math.min(10000, IDLE_MS / 2)).unref();
+function evictIdle() {
+  if (!queue.length) return;
+  const now = Date.now();
+  for (const c of online.values()) {
+    if (!queue.length) break;
+    if (now - Math.max(c.poseAt, c.admittedAt) > IDLE_MS) kick(c, 'Your spot went to the next in line while you were stopped', 4002);
+  }
+}
 setInterval(() => {
   const now = Date.now();
   for (const c of [...online.values(), ...queue]) {

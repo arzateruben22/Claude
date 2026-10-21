@@ -5,23 +5,46 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=@USER@
-WorkingDirectory=@DIR@/top-speed-ultra/live
+# its own user, away from the desks: an internet-facing process gets nothing of theirs (server/live-install.sh
+# makes the user and copies the server and the built page to /opt/oc-live; only data/ is writable)
+User=oclive
+Group=oclive
+WorkingDirectory=/opt/oc-live
 Environment=NODE_NO_WARNINGS=1
 Environment=PORT=8791
 Environment=HOST=127.0.0.1
 Environment=MAX_PLAYERS=25
-Environment=DB_PATH=@DIR@/top-speed-ultra/live/data/live.db
-Environment=PUBLIC_DIR=@DIR@/top-speed-ultra/dist
+Environment=DB_PATH=/opt/oc-live/data/live.db
+Environment=PUBLIC_DIR=/opt/oc-live/public
 Environment=PUBLIC_INDEX=top-speed-ultra.html
 Environment=TRUST_PROXY=1
 Environment=NOW_WEATHER=nws
 # the cap, the admin token, and the TomTom key for live traffic live here (server/live.sh writes it); it wins over the lines above
 EnvironmentFile=-/etc/oc-live.env
-ExecStart=/usr/bin/env node server.mjs
+ExecStart=/usr/bin/node server.mjs
 Restart=always
 RestartSec=3
 MemoryMax=300M
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/oc-live/data
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+SystemCallArchitectures=native
 
 [Install]
 WantedBy=multi-user.target

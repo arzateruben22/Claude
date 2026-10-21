@@ -9,9 +9,7 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
 curl -fs http://127.0.0.1:8791/health > /dev/null || bash "$DIR/server/live-install.sh"
 
-set_env() {   # set_env KEY VALUE in /etc/oc-live.env
-  if grep -q "^$1=" /etc/oc-live.env; then sed -i "s#^$1=.*#$1=$2#" /etc/oc-live.env; else echo "$1=$2" >> /etc/oc-live.env; fi
-}
+set_env() { bash "$DIR/server/live-env.sh" "$1" "$2"; }
 
 if [ -n "${LIVE_DOMAIN:-}" ]; then
   echo "Public address: https://$LIVE_DOMAIN with Caddy (its A record must point at this machine)..."
@@ -49,7 +47,10 @@ fi
 # live traffic: a free TomTom developer key (developer.tomtom.com); Enter keeps what's there (or leaves it off)
 if [ -t 0 ]; then
   read -r -p "TomTom key for live freeway traffic (Enter to skip): " KEY
-  if [ -n "$KEY" ]; then set_env NOW_TRAFFIC tomtom; set_env TOMTOM_KEY "$KEY"; systemctl restart oc-live; sleep 2; fi
+  if [ -n "$KEY" ]; then
+    [[ "$KEY" =~ ^[A-Za-z0-9_-]{8,128}$ ]] || { echo "That doesn't look like a TomTom key (letters and numbers)."; exit 1; }
+    set_env NOW_TRAFFIC tomtom; set_env TOMTOM_KEY "$KEY"; systemctl restart oc-live; sleep 2
+  fi
 fi
 
 echo "Checking $URL end to end..."

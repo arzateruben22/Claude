@@ -5,6 +5,7 @@
 set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "Run it with sudo: sudo bash server/live-ban.sh NAME [off]"; exit 1; }
 NAME="${1:?the driver name}"; ON=true; [ "${2:-}" = off ] && ON=false
-TOKEN="$(grep '^ADMIN_TOKEN=' /etc/oc-live.env | cut -d= -f2)"
-curl -fsS -X POST http://127.0.0.1:8791/admin/ban -H "authorization: Bearer $TOKEN" -H 'content-type: application/json' \
-  -d "{\"name\":\"$NAME\",\"banned\":$ON}" && echo
+[[ "$NAME" =~ ^[A-Za-z0-9_]{3,16}$ ]] || { echo "A driver name is 3 to 16 letters, numbers or underscores."; exit 1; }
+# the token goes to curl on its standard input, never on a command line other users can read with ps
+grep '^ADMIN_TOKEN=' /etc/oc-live.env | sed 's/^ADMIN_TOKEN=/authorization: Bearer /' \
+  | curl -fsS -X POST http://127.0.0.1:8791/admin/ban -H @- -H 'content-type: application/json' -d "{\"name\":\"$NAME\",\"banned\":$ON}" && echo
