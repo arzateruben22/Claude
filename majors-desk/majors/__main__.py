@@ -45,6 +45,32 @@ def _market(cfg, demo: bool = False, seed: int = 7):
     return Bucketed(m, cfg.desk.candle_hours) if cfg.desk.candle_hours > 1 else m
 
 
+RETRY = timedelta(minutes=5)
+
+
+def step_due(desks: list, now: datetime) -> None:
+    """Step every desk whose candle has closed. A desk whose step fails unexpectedly says so and tries again in
+    five minutes; it never takes the other desks down with it."""
+    for entry in desks:
+        book, cfg, desk, next_at = entry
+        if now < next_at:
+            continue
+        tag = "" if book == "main" else f" [{book}]"
+        before = len(desk.log)
+        try:
+            desk.step(now)
+        except Exception as exc:  # noqa: BLE001 - one rulebook's surprise mustn't stop the rest
+            print(f"{now:%Y-%m-%d %H:%M}{tag} step failed: {type(exc).__name__}: {exc}; trying again in 5 minutes",
+                  flush=True)
+            entry[3] = now + RETRY
+            continue
+        for line in list(desk.log)[: len(desk.log) - before][::-1]:
+            print(line + tag, flush=True)
+        print(f"{now:%Y-%m-%d %H:%M}{tag} bank ${desk.value():,.2f} · {len(desk.positions)} open", flush=True)
+        h = cfg.desk.candle_hours                                 # just after the next candle closes
+        entry[3] = floor_to(now, h) + h * HOUR + timedelta(seconds=90)
+
+
 def cmd_run(args) -> int:
     """One process, one price feed, any number of rulebooks: each decides when its own candle closes."""
     books = list(dict.fromkeys([args.book] + (getattr(args, "also", None) or [])))
@@ -71,19 +97,7 @@ def cmd_run(args) -> int:
     signal.signal(signal.SIGTERM, stop)
     try:
         while True:
-            now = _now()
-            for entry in desks:
-                book, cfg, desk, next_at = entry
-                if now < next_at:
-                    continue
-                before = len(desk.log)
-                desk.step(now)
-                tag = "" if book == "main" else f" [{book}]"
-                for line in list(desk.log)[: len(desk.log) - before][::-1]:
-                    print(line + tag, flush=True)
-                print(f"{now:%Y-%m-%d %H:%M}{tag} bank ${desk.value():,.2f} · {len(desk.positions)} open", flush=True)
-                h = cfg.desk.candle_hours                                 # just after the next candle closes
-                entry[3] = floor_to(now, h) + h * HOUR + timedelta(seconds=90)
+            step_due(desks, _now())
             time.sleep(20)
     except KeyboardInterrupt:
         for _, _, desk, _ in desks:

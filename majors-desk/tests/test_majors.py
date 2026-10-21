@@ -284,3 +284,36 @@ def test_run_checks_every_rulebook_it_is_given_before_starting(tmp_path, monkeyp
     assert hours == {"daily": 24, "slow": 24, "4h": 4, "loose": 4, "btc": 4, "fast": 1}
     assert config.load(cli.book_paths("btc")[0]).desk.coins == ["BTC"]
     assert set(config.load(cli.book_paths("alts")[0]).desk.coins) == {"SOL", "XRP", "ADA", "DOGE"}
+
+
+def test_one_rulebooks_failed_step_never_stops_the_others(capsys):
+    class Boom:
+        log, positions = [], []
+
+        def step(self, now):
+            raise RuntimeError("cache went bad")
+
+    class Fine:
+        def __init__(self):
+            self.log, self.positions, self.stepped = [], [], 0
+
+        def step(self, now):
+            self.stepped += 1
+            self.log.append("bought BTC")
+
+        def value(self):
+            return 100.0
+
+    now = datetime(2026, 10, 21, 5, 1, 30, tzinfo=timezone.utc)
+    fine = Fine()
+    desks = [["main", SimpleNamespace(desk=SimpleNamespace(candle_hours=1)), Boom(), now],
+             ["4h", SimpleNamespace(desk=SimpleNamespace(candle_hours=4)), fine, now],
+             ["slow", SimpleNamespace(desk=SimpleNamespace(candle_hours=24)), Fine(), now + timedelta(hours=1)]]
+    cli.step_due(desks, now)
+    out = capsys.readouterr().out
+    assert "step failed: RuntimeError: cache went bad; trying again in 5 minutes" in out and "bought BTC [4h]" in out
+    assert fine.stepped == 1 and desks[2][2].stepped == 0                                  # not due yet
+    assert desks[0][3] == now + timedelta(minutes=5)                                       # the failed one retries soon
+    assert desks[1][3] == datetime(2026, 10, 21, 8, 1, 30, tzinfo=timezone.utc)            # the next 4-hour close + 90 s
+    cli.step_due(desks, now + timedelta(minutes=5))
+    assert "trying again" in capsys.readouterr().out and fine.stepped == 1
