@@ -1090,33 +1090,34 @@ export const SCENES = {
     ],
     css: `
 .ac { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 5vmin; }
-.skin { position: relative; flex: none; width: 74vmin; height: 34vmin; border-radius: 2.4vmin; overflow: hidden; background: linear-gradient(#d9b5a0 0, #d9b5a0 58%, #c98f7a 58%, #b9786b 100%); border: 1px solid rgba(255,255,255,.12); }
-.skin .pl { position: absolute; top: 1vmin; width: 4.6vmin; height: 2.4vmin; border-radius: .6vmin; background: #e9cdbc; border: 1px solid rgba(0,0,0,.08); }
-.skin .pore { position: absolute; left: 44%; top: 0; width: 7vmin; height: 22vmin; background: #3a2520; border-radius: 0 0 3.5vmin 3.5vmin; overflow: hidden; }
+.skin { position: relative; flex: none; width: 86vmin; height: 40vmin; border-radius: 2.4vmin; overflow: hidden; background: linear-gradient(#d9b5a0 0, #d9b5a0 58%, #c98f7a 58%, #b9786b 100%); border: 1px solid rgba(255,255,255,.12); }
+.skin .pl { position: absolute; top: 1vmin; width: 5.2vmin; height: 3.4vmin; border-radius: .7vmin; background: #f3dccd; border: 1px solid rgba(0,0,0,.18); box-shadow: 0 .3vmin .6vmin rgba(0,0,0,.12); }
+.skin .pore { position: absolute; left: 44%; top: 0; width: 8vmin; height: 26vmin; background: #3a2520; border-radius: 0 0 3.5vmin 3.5vmin; overflow: hidden; }
 .skin .oil { position: absolute; left: 1vmin; right: 1vmin; top: 1.2vmin; bottom: 1.4vmin; border-radius: 2.5vmin; background: #e2b08c; }
 .skin .plug { position: absolute; left: 1.4vmin; right: 1.4vmin; top: .6vmin; height: 3vmin; border-radius: 1.5vmin; background: #2a1a14; }
-.skin .hair { position: absolute; left: 50%; top: -1vmin; width: .9vmin; height: 24vmin; margin-left: -.45vmin; background: #2a1a14; border-radius: 1vmin; }
-.skin .drop { position: absolute; width: 5vmin; height: 7vmin; opacity: 0; }
-.skin .drop::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
-.skin .drop::after { content: ""; position: absolute; left: 50%; top: 0; width: 0; height: 0; margin-left: -2.5vmin; border-left: 2.5vmin solid transparent; border-right: 2.5vmin solid transparent; border-bottom: 3vmin solid var(--c, #f4c9d6); }
-.skin .glow { position: absolute; left: 0; right: 0; top: 0; height: 10vmin; background: linear-gradient(rgba(255,255,255,.55), rgba(255,255,255,0)); opacity: 0; }
+.skin .hair { position: absolute; left: 50%; top: -1vmin; width: 1vmin; height: 28vmin; margin-left: -.45vmin; background: #2a1a14; border-radius: 1vmin; }
+.skin .drop { position: absolute; width: 7vmin; height: 9.5vmin; opacity: 0; }
+.skin .drop::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 7vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
+.skin .drop::after { content: ""; position: absolute; left: 50%; top: 0; width: 0; height: 0; margin-left: -3.5vmin; border-left: 3.5vmin solid transparent; border-right: 3.5vmin solid transparent; border-bottom: 4vmin solid var(--c, #f4c9d6); }
+.skin .tint { position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: radial-gradient(60% 40% at 50% 30%, rgba(143,211,255,.7), rgba(143,211,255,0) 70%); opacity: 0; }
+.skin .glow { position: absolute; left: 0; right: 0; top: 0; height: 12vmin; background: linear-gradient(rgba(255,255,255,.55), rgba(255,255,255,0)); opacity: 0; }
 .skin .soft { position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 20%, rgba(244,201,214,.55), rgba(244,201,214,0) 70%); opacity: 0; }
-.skin .lbl { position: absolute; left: 2vmin; bottom: 1.6vmin; font-size: 2.3vmin; color: rgba(26,18,16,.75); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
-.fam { display: flex; flex-direction: column; gap: 1.8vmin; width: 66vmin; }
+.skin .lbl { position: absolute; left: 2.4vmin; bottom: 1.8vmin; font-size: 2.6vmin; color: rgba(26,18,16,.75); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+.fam { display: flex; flex-direction: column; gap: 2vmin; width: 74vmin; }
 .fcard { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; opacity: .35; }
 .fcard.on { opacity: 1; border-color: var(--c, #f4c9d6); }
-.fcard b { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.4vmin; font-weight: 700; letter-spacing: -.02em; } .fcard b i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
-.fcard span { display: block; font-size: 2.4vmin; color: #a1a1a6; margin-top: .6vmin; line-height: 1.35; }
+.fcard b { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.8vmin; font-weight: 700; letter-spacing: -.02em; } .fcard b i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
+.fcard span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: .6vmin; line-height: 1.35; }
 .fcard.on span { color: #f5f5f7; }
 .sunrow { display: flex; align-items: center; gap: 2.4vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,210,122,.5); padding: 2vmin 2.6vmin; opacity: 0; }
 .sunrow .sun { flex: none; width: 7vmin; height: 7vmin; border-radius: 50%; background: radial-gradient(circle, #ffe9a8, #ffd27a 60%, rgba(255,210,122,0) 62%); box-shadow: 0 0 3vmin rgba(255,210,122,.5); }
-.sunrow b { display: block; font-size: 3vmin; font-weight: 700; } .sunrow span { display: block; font-size: 2.4vmin; color: #a1a1a6; margin-top: .4vmin; }
-@media (orientation: portrait) { .ac { flex-direction: column; gap: 3vmin; } .skin { width: 100%; height: 36vmin; } .skin .pl { width: 5vmin; } .fam { width: 100%; } .fcard { padding: 2vmin 2.4vmin; } .fcard b { font-size: 3.2vmin; } .fcard span { font-size: 2.4vmin; } }`,
+.sunrow b { display: block; font-size: 3.4vmin; font-weight: 700; } .sunrow span { display: block; font-size: 2.7vmin; color: #a1a1a6; margin-top: .4vmin; }
+@media (orientation: portrait) { .ac { flex-direction: column; gap: 3vmin; } .skin { width: 100%; height: 42vmin; } .fam { width: 100%; } .fcard { padding: 2vmin 2.4vmin; } .fcard b { font-size: 3.2vmin; } .fcard span { font-size: 2.4vmin; } }`,
     html: `
 <div class="ac">
   <div class="skin" id="skin">
-    ${Array.from({ length: 15 }, (_, k) => `<i class="pl" style="left:calc(1vmin + ${k} * 5vmin)"></i>`).join("")}
-    <div class="pore"><div class="oil" id="oil"></div><div class="plug" id="plug"></div></div><div class="hair"></div>
+    ${Array.from({ length: 15 }, (_, k) => `<i class="pl" style="left:calc(1vmin + ${k} * 5.7vmin)"></i>`).join("")}
+    <div class="pore"><div class="oil" id="oil"></div><div class="plug" id="plug"></div><div class="tint" id="tint"></div></div><div class="hair"></div>
     <div class="glow" id="glow"></div><div class="soft" id="soft"></div>
     <div class="drop" id="d-aha" style="--c:#f4c9d6; left: 12vmin"></div><div class="drop" id="d-bha" style="--c:#8fd3ff; left: calc(44% + 1vmin)"></div><div class="drop" id="d-pha" style="--c:#c9b6ff; left: 58vmin"></div>
     <span class="lbl" id="skl">the surface, and a pore</span>
@@ -1137,13 +1138,14 @@ export const SCENES = {
       // shot 0: the AHA drop lands; the loose plates lift off the surface and a glow is left
       const plates = $$(".pl");
       const ahaDone = i === 0 ? fall("d-aha", 0.8, 0) : (set($("#d-aha"), { o: 0 }), i > 0);
-      plates.forEach((pl, k) => { const p = i > 0 ? 1 : i === 0 && lt >= 1.5 ? E.out(seg(lt, 1.5 + (k % 5) * 0.25, 2.6 + (k % 5) * 0.25)) : 0; const lifts = k % 3 !== 1; set(pl, { o: lifts ? 1 - p : 1, y: lifts ? -10 * p : 0, r: lifts ? 12 * p * (k % 2 ? 1 : -1) : 0 }); });
-      $("#glow").style.opacity = i > 0 ? 0.5 : E.out(seg(lt, 2.6, 4.0)) * 0.9;
+      plates.forEach((pl, k) => { const p = i > 0 ? 1 : i === 0 && lt >= 1.5 ? E.out(seg(lt, 1.5 + (k % 5) * 0.25, 2.6 + (k % 5) * 0.25)) : 0; const lifts = k % 3 !== 1; set(pl, { o: lifts ? 1 - p : 1, y: lifts ? -22 * p : 0, r: lifts ? 30 * p * (k % 2 ? 1 : -1) : 0, s: lifts ? 1 + 0.3 * p : 1 }); });
+      const breath = 0.5 + 0.5 * Math.sin(lt * 2.2);
+      $("#glow").style.opacity = i > 0 ? 0.5 : E.out(seg(lt, 2.6, 4.0)) * (0.75 + 0.25 * breath);
       // shot 1: the BHA drop sinks down the pore and the oil plug clears
-      if (i === 1) { const d = $("#d-bha"); const p = seg(lt, 0.8, 2.6); set(d, { o: lt >= 0.8 && lt < 2.7 ? 1 : 0, y: -16 + 30 * E.in(seg(lt, 0.8, 1.5)) + 60 * seg(lt, 1.5, 2.6), s: 1 - 0.3 * seg(lt, 1.5, 2.6) }); const clear = E.out(seg(lt, 2.4, 4.4)); $("#oil").style.opacity = 1 - clear; $("#plug").style.opacity = 1 - clear; $("#oil").style.transform = "scaleY(" + (1 - 0.6 * clear) + ")"; $("#oil").style.transformOrigin = "50% 100%"; }
-      else { set($("#d-bha"), { o: 0 }); const c = i > 1 ? 0 : 1; $("#oil").style.opacity = c; $("#plug").style.opacity = c; $("#oil").style.transform = i > 1 ? "scaleY(.4)" : ""; }
+      if (i === 1) { const d = $("#d-bha"); const p = seg(lt, 0.8, 2.6); set(d, { o: lt >= 0.8 && lt < 2.7 ? 1 : 0, y: -16 + 30 * E.in(seg(lt, 0.8, 1.5)) + 60 * seg(lt, 1.5, 2.6), s: 1 - 0.3 * seg(lt, 1.5, 2.6) }); const clear = E.out(seg(lt, 2.4, 4.4)); $("#oil").style.opacity = 1 - clear; $("#plug").style.opacity = 1 - clear; $("#oil").style.transform = "scaleY(" + (1 - 0.6 * clear) + ")"; $("#oil").style.transformOrigin = "50% 100%"; $("#tint").style.opacity = clear * (0.55 + 0.45 * breath); }
+      else { set($("#d-bha"), { o: 0 }); const c = i > 1 ? 0 : 1; $("#oil").style.opacity = c; $("#plug").style.opacity = c; $("#oil").style.transform = i > 1 ? "scaleY(.4)" : ""; $("#tint").style.opacity = i > 1 ? 0.5 : 0; }
       // shot 2: the PHA drop spreads into a soft tint, nothing lifts
-      if (i === 2) { fall("d-pha", 0.8, 0); $("#soft").style.opacity = E.out(seg(lt, 1.5, 3.2)); } else { set($("#d-pha"), { o: 0 }); $("#soft").style.opacity = i > 2 ? 1 : 0; }
+      if (i === 2) { fall("d-pha", 0.8, 0); $("#soft").style.opacity = E.out(seg(lt, 1.5, 3.2)) * (0.8 + 0.2 * breath); } else { set($("#d-pha"), { o: 0 }); $("#soft").style.opacity = i > 2 ? 1 : 0; }
       // the cards light with their shot; the sun row takes the last one
       [["c-aha", 0], ["c-bha", 1], ["c-pha", 2]].forEach(([id, k]) => { const el = $("#" + id); el.classList.toggle("on", i === k || (i === 3)); if (i === k) enter(el, lt, 0.3, { y: 8, d: 0.5 }); else set(el, { o: i === 3 ? 0.9 : i > k ? 0.55 : 0.3 }); });
       const sun = $("#sunrow"); sun.style.display = i === 3 ? "" : "none"; if (i === 3) enter(sun, lt, 0.3, { y: 10 });
@@ -1159,17 +1161,17 @@ export const SCENES = {
       { at: 19, name: "911", cap: "Trouble breathing or a swelling throat is 911, not a text." }
     ],
     css: `
-.lad { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.8vmin; }
-.rung { position: relative; border-radius: 2.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.8vmin 2.6vmin 1.8vmin 3.6vmin; opacity: 0; overflow: hidden; }
-.rung::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1.2vmin; background: var(--c); }
-.rung .h { display: flex; align-items: center; gap: 1.6vmin; font-size: 3.2vmin; font-weight: 700; letter-spacing: -.02em; color: var(--c); }
-.rung .h small { font-size: 2.3vmin; font-weight: 600; color: #8e8e93; letter-spacing: 0; }
-.rung .items { display: flex; flex-wrap: wrap; gap: 1.2vmin; margin-top: 1.4vmin; }
-.rung .it { padding: 1.1vmin 2vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 2.6vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.lad { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.2vmin; }
+.rung { position: relative; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 3vmin 2.2vmin 4.2vmin; opacity: 0; overflow: hidden; }
+.rung::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1.4vmin; background: var(--c); }
+.rung .h { display: flex; align-items: center; gap: 1.8vmin; font-size: 4vmin; font-weight: 700; letter-spacing: -.02em; color: var(--c); }
+.rung .h small { font-size: 2.6vmin; font-weight: 600; color: #8e8e93; letter-spacing: 0; }
+.rung .items { display: flex; flex-wrap: wrap; gap: 1.4vmin; margin-top: 1.8vmin; }
+.rung .it { padding: 1.3vmin 2.4vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 3vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
 .rung .it.act { background: color-mix(in srgb, var(--c) 18%, transparent); border-color: var(--c); }
-.rung.off .items { display: none; } .rung.off { padding-top: 1.4vmin; padding-bottom: 1.4vmin; } .rung.off .h { font-size: 2.7vmin; }
+.rung.off .items { display: none; } .rung.off { padding-top: 1.6vmin; padding-bottom: 1.6vmin; } .rung.off .h { font-size: 3vmin; }
 .rung.hot { border-color: var(--c); box-shadow: 0 0 0 .3vmin color-mix(in srgb, var(--c) 35%, transparent); }
-@media (orientation: portrait) { .lad { gap: 2vmin; } .rung .h { font-size: 3.4vmin; } .rung .it { font-size: 2.6vmin; } }`,
+@media (orientation: portrait) { .lad { gap: 2.4vmin; } .rung .h { font-size: 3.8vmin; } .rung .it { font-size: 2.8vmin; } }`,
     html: `
 <div class="lad">
   <div class="rung" id="r0" style="--c:#32d74b"><div class="h">Normal <small>the treatment working</small></div><div class="items"><span class="it">pink for a few hours</span><span class="it">tightness for a day or two</span><span class="it">light flaking, days 2 to 5</span><span class="it">a few small bumps after extractions</span></div></div>
@@ -1185,6 +1187,7 @@ export const SCENES = {
       rungs.forEach((r, k) => {
         const open = k === i;
         r.classList.toggle("off", !open); r.classList.toggle("hot", open && lt > 0.3);
+        const b = 0.5 + 0.5 * Math.sin(lt * 2.4); r.style.boxShadow = open && lt > 0.3 ? "0 0 " + (1 + 3 * b) + "vmin " + (0.2 + 0.5 * b) + "vmin color-mix(in srgb, var(--c) 45%, transparent)" : "none";
         // the first shot brings the ladder in rung by rung; later shots keep every rung and open the next one
         if (i === 0) enter(r, lt, 0.2 + k * 0.25, { y: 12 }); else set(r, { o: k > i ? 0.55 : 1 });
         const items = r.querySelectorAll(".it");
