@@ -919,6 +919,79 @@ export const SCENES = {
       }
     }
   },
+  "7-2": {
+    id: "7-2", kicker: "Facial massage and gua sha", title: `Slip, direction, <span class="grad">and a light hand.</span>`, dur: 20, poster: 9,
+    shots: [
+      { at: 0, name: "slip", cap: "Always use slip: a face oil or a rich serum. Never drag dry skin." },
+      { at: 6, name: "direction", cap: "Go from the center outward, then downward along the neck, toward the lymph nodes." },
+      { at: 13, name: "pressure", cap: "Light pressure. It should feel good, never hurt, and never leave marks. Skip over active breakouts, broken skin, or right after a peel." }
+    ],
+    css: `
+.ms { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 6vmin; }
+.ms svg { width: 46vmin; height: 56vmin; flex: none; overflow: visible; }
+.ms .side { display: flex; flex-direction: column; gap: 1.8vmin; width: 60vmin; }
+.ms .pill { display: inline-flex; align-self: flex-start; align-items: center; gap: 1.2vmin; padding: 1.4vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; color: #f5f5f7; opacity: 0; }
+.ms .pill.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; } .ms .pill.no { border-color: rgba(255,122,107,.6); color: #ff9a8b; } .ms .pill.ok { border-color: rgba(50,215,75,.6); color: #7fe39a; }
+.ms .meter { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; opacity: 0; }
+.ms .meter b { display: block; font-size: 2.4vmin; color: #8e8e93; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.2vmin; }
+.ms .bar { position: relative; height: 2.4vmin; border-radius: 999px; background: linear-gradient(90deg, #32d74b 0%, #32d74b 38%, #ffd27a 60%, #ff7a6b 100%); opacity: .9; }
+.ms .bar i { position: absolute; top: -1vmin; width: 4.4vmin; height: 4.4vmin; margin-left: -2.2vmin; border-radius: 50%; background: #fff; border: .5vmin solid #111113; box-shadow: 0 .4vmin 1.2vmin rgba(0,0,0,.5); }
+.ms .bar em { position: absolute; top: 3.6vmin; font-style: normal; font-size: 2.2vmin; color: #a1a1a6; white-space: nowrap; } .ms .bar em.r { right: 0; } .ms .bar em.l { left: 0; }
+.ms .meter .sp { height: 5.5vmin; }
+@media (orientation: portrait) { .ms { flex-direction: column; gap: 3vmin; } .ms svg { width: 50vmin; height: 61vmin; } .ms .side { width: 100%; align-items: center; } .ms .pill { align-self: center; font-size: 2.6vmin; } .ms .meter { width: 100%; } }`,
+    html: `
+<div class="ms">
+  <svg viewBox="0 0 100 124" fill="none">
+    <defs><radialGradient id="sheen" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fff" stop-opacity=".55"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+    <path d="M38 86 L36 104 Q50 110 64 104 L62 86 Z" fill="#cfa58f"/>
+    <path d="M20 112 Q50 100 80 112" stroke="#8e8e93" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+    <ellipse cx="50" cy="48" rx="31" ry="40" fill="#d9b5a0" stroke="rgba(255,255,255,.14)" stroke-width=".6"/>
+    <rect x="47" y="38" width="6" height="18" rx="3" fill="rgba(0,0,0,.08)"/>
+    <rect x="42" y="68" width="16" height="3" rx="1.5" fill="#b9786b"/>
+    <ellipse id="sheen" cx="50" cy="48" rx="31" ry="40" fill="url(#sheen)" opacity="0"/>
+    <g id="drop" opacity="0"><path d="M63 20 q-4 6 -4 9 a4 4 0 0 0 8 0 q0 -3 -4 -9z" fill="#e2b08c"/></g>
+    <g id="arrows" stroke="#f4c9d6" stroke-width="1.6" stroke-linecap="round" fill="none">
+      <path class="ar" d="M50 18 Q62 16 74 26"/><path class="ar" d="M50 18 Q38 16 26 26"/>
+      <path class="ar" d="M50 50 Q64 46 76 54"/><path class="ar" d="M50 50 Q36 46 24 54"/>
+      <path class="ar" d="M50 76 Q66 74 76 64"/><path class="ar" d="M50 76 Q34 74 24 64"/>
+      <path class="ar dn" d="M70 86 Q68 98 72 110"/><path class="ar dn" d="M30 86 Q32 98 28 110"/>
+    </g>
+    <g id="nodes" fill="#8fd3ff" opacity="0"><circle cx="72" cy="111" r="2.2"/><circle cx="28" cy="111" r="2.2"/><circle cx="50" cy="109" r="1.6"/></g>
+    <g id="skip" opacity="0"><circle cx="36" cy="60" r="3" fill="#d7585a"/><circle cx="62" cy="38" r="2.4" fill="#d7585a"/><circle cx="44" cy="30" r="2" fill="#d7585a"/><circle cx="36" cy="60" r="6" stroke="#ff7a6b" stroke-width="1" stroke-dasharray="2 1.5"/><circle cx="62" cy="38" r="5.2" stroke="#ff7a6b" stroke-width="1" stroke-dasharray="2 1.5"/><circle cx="44" cy="30" r="4.6" stroke="#ff7a6b" stroke-width="1" stroke-dasharray="2 1.5"/></g>
+  </svg>
+  <div class="side">
+    <span class="pill rose" id="p-slip">a face oil or a rich serum</span>
+    <span class="pill no" id="p-dry">never on dry skin</span>
+    <span class="pill rose" id="p-out">center → outward</span>
+    <span class="pill rose" id="p-down">down the neck, toward the lymph nodes</span>
+    <div class="meter" id="meter"><b>Pressure</b><div class="bar"><i id="knob"></i><em class="l">feels good</em><em class="r">hurts, leaves marks</em></div><div class="sp"></div></div>
+    <span class="pill no" id="p-skip">skip breakouts, broken skin, a fresh peel</span>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => { M.$$(".ar").forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.l = L; }); },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set, tw } = M;
+      const svg = $(".ms svg"); set(svg, { o: Math.min(1, seg(t, 0, 0.6) * 1.5), y: 10 * (1 - E.out(seg(t, 0, 0.6))) });
+      // shot 0: a drop falls onto the cheek and spreads into a sheen
+      const drop = $("#drop"), sheen = $("#sheen");
+      if (i === 0) {
+        const fall = E.in(seg(lt, 0.8, 1.6)); drop.setAttribute("opacity", lt >= 0.8 && lt < 1.65 ? 1 : 0); drop.setAttribute("transform", "translate(0 " + (-14 + 14 * fall) + ")");
+        const spread = E.out(seg(lt, 1.6, 3.2)); sheen.setAttribute("opacity", spread); sheen.setAttribute("transform", "translate(" + (63 - 63 * spread) + " " + (30 - 30 * spread) + ") scale(" + (0.15 + 0.85 * spread) + ")"); sheen.setAttribute("transform-origin", "0 0");
+      } else { drop.setAttribute("opacity", 0); sheen.setAttribute("opacity", 1); sheen.removeAttribute("transform"); }
+      const pill = (id, from, at) => { const el = $("#" + id); el.style.display = (i === from) ? "" : "none"; if (i === from) enter(el, lt, at, { y: 8 }); };
+      pill("p-slip", 0, 1.8); pill("p-dry", 0, 3.6);
+      // shot 1: the strokes draw from the center outward, then down the neck
+      $$(".ar").forEach((p, k) => { const L = +p.dataset.l; const dn = p.classList.contains("dn"); const at = dn ? 3.2 + (k - 6) * 0.3 : 0.6 + Math.floor(k / 2) * 0.7; const q = i > 1 ? 1 : i === 1 ? E.out(seg(lt, at, at + 0.9)) : 0; p.style.strokeDashoffset = L * (1 - q); p.style.opacity = i === 2 ? 0.45 : 1; });
+      $("#nodes").setAttribute("opacity", i > 1 ? 0.8 : i === 1 ? E.out(seg(lt, 4.2, 4.8)) : 0);
+      pill("p-out", 1, 1.4); pill("p-down", 1, 3.6);
+      // shot 2: the pressure knob settles at light; the skip zones light red
+      const meter = $("#meter"); meter.style.display = i === 2 ? "" : "none";
+      if (i === 2) { enter(meter, lt, 0.4, { y: 10 }); const k = 0.12 + 0.6 * Math.sin(Math.PI * seg(lt, 1.0, 2.6)) * (1 - seg(lt, 2.6, 3.2)) + 0.1 * seg(lt, 2.6, 3.2); $("#knob").style.left = (100 * Math.min(0.95, Math.max(0.05, k))) + "%"; }
+      $("#skip").setAttribute("opacity", i === 2 ? E.out(seg(lt, 3.4, 4.0)) : 0);
+      pill("p-skip", 2, 3.6);
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
