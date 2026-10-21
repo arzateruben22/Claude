@@ -81,10 +81,11 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
 - 06:55 App.tsx, styles.css: the radial quick menu (`RadialMenu.tsx`): hold Pause or Tab for 300 ms while driving; a tap on Pause still pauses.
 
-Next here, all outside the lanes above (updated 06:40 UTC): done since: the garage's Paint tab (U5), the radio card
-(U7), the phone (U6), the World Map (U4). Running: the driver clothing lane, the full suite, then the test build at
-https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS. Then, in order: the Settings sections rail (U8); the hold-for-radial
-quick menu (U3); the garage's second wheel style per car (the rest of U5); then polish passes on these screens.
+Next here, all outside the lanes above (updated 11:45 UTC): done: the World Map (U4), the garage's Paint tab (U5),
+the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes; the full suite
+62/62 and the test build republished. Then, in order: the run card's save inside the artifact viewer (the viewer's
+downloads capability, falling back to today's download and share sheet outside it); the garage's second wheel style
+per car (the rest of U5); the glove stripe in each driver's colour (hands.ts passes the accent); polish passes.
 
 ### Decisions waiting (the owner's)
 

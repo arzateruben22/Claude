@@ -4,6 +4,17 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (11:45 UTC): the full suite green on the merged branch; the test build republished
+
+- `npm test` (all groups) after the clothing merge: **62/62**. The intermittent reset check passed this time.
+- **Settings rail (U8) and radial menu (U3)** (`tools/quick-shots.mjs`, `tests/out/quick/`, 1280 × 720 and 390 × 844,
+  no errors): the rail jumps to a section (Sound lit); on a phone the rail is a scrolling strip. Holding Pause opens
+  the six wedges round a hub that names the wedge under the pointer; releasing over the upper-right wedge opened
+  "Go to" at both sizes (read back from the page), and the drive was not paused.
+- **Test build** republished to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS (version 2) from this build. The
+  publish noted that the run card's download does nothing inside the artifact viewer (it does not grant plain
+  downloads); queued below.
+
 ## 2026-10-21 (11:10 UTC): the full suite on this session's work
 
 - `npm test` (all groups) on the branch at 06:55 (World Map, paint, radio, phone, settings rail, radial menu; before
