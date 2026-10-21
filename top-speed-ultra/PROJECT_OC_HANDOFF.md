@@ -85,6 +85,14 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 16:30 App.tsx, styles.css, WorldMap.tsx, Phone.tsx: Lifestyle (homes): the rail's Lifestyle row opens `Homes.tsx`; a Homes phone app; homes on the World Map; the garage's slots include homes; `.panel > .row:last-child` sticks to the screen's real bottom edge.
 - 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
+**Also in flight here (from 18:00 UTC):** the Retro render (the modes lane's RS1, from its snapshot `wip-modes` 94b0d52)
+ported onto `retro/port` behind that lane's own switch (Settings: "Style: Retro", Low only, default off), the owner
+asked to see it now. Only the retro pieces come over (`src/game/render/style.ts`, settings' Style/RETRO/presetFor,
+Game's hooks, the toggle, the two RS1 checks, `tests/modes-retro.mjs`). The always-on session (18:07): no objection;
+the snapshot is a mid-edit state that never reached a judge, so merge only if tsc and the boot, render and phone groups
+pass on the ported branch; the lane's later judged RS1 takes precedence over the port in its merge, so the file set stays
+small. RS2/RS3 (Low = Retro, the LOW UI tokens, the Look row's removal) stay that lane's.
+
 **In flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
 (audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
 the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
