@@ -64,7 +64,7 @@ const OPT = Object.assign({ shadow: "vsm", samples: 4, dof: 1, glow: 0.35, vigne
     if (x && x.isVector3) STUDIO.focus.copy(x); else STUDIO.focus.set(x, y, z);
     STUDIO.hasFocus = true;
     _lookAt.call(this, STUDIO.focus);
-    if (OPT.drift) {
+    if (OPT.drift && !window.CINEMA_FOCUS) {   // a directed scene keys its own camera
       const t = (window.M && window.M.t) || 0, dur = (window.SCENE && window.SCENE.dur) || 20, d = this.position.distanceTo(STUDIO.focus);
       this.updateMatrix(); this.matrix.extractBasis(ax, ay, az);
       this.position.addScaledVector(ax, Math.sin(t * 0.37) * d * 0.016)
@@ -293,12 +293,14 @@ const keepLabelsIn = (W, H) => {
     STUDIO.busy = true;
     try {
       if (!STUDIO.dressed) dressSet(renderer, scene, camera);
-      const focus = STUDIO.hasFocus ? STUDIO.focus : STUDIO.center;
+      // a directed scene racks focus itself (window.CINEMA_FOCUS(t): a point and an f-stop); otherwise the lens focuses where the camera looks
+      const cf = window.CINEMA_FOCUS ? window.CINEMA_FOCUS((window.M && window.M.t) || 0) : null;
+      const focus = cf ? cf.point : STUDIO.hasFocus ? STUDIO.focus : STUDIO.center;
       if (STUDIO.key) { STUDIO.key.position.copy(focus).add(STUDIO.keyOff); STUDIO.key.target.position.copy(focus); STUDIO.key.target.updateMatrixWorld(); }
       const P = STUDIO.post || (STUDIO.post = makePost(renderer));
       keepLabelsIn(renderer.domElement.width, renderer.domElement.height);
       const fd = camera.position.distanceTo(focus);
-      P.u.uNear.value = camera.near; P.u.uFar.value = camera.far; P.u.uFocus.value = fd; P.u.uRange.value = fd * 0.16; P.u.uBack.value = fd * 0.6; P.u.uFront.value = fd * 0.3;
+      P.u.uNear.value = camera.near; P.u.uFar.value = camera.far; P.u.uFocus.value = fd; P.u.uRange.value = fd * 0.16 * (cf ? cf.fstop / 0.45 : 1); P.u.uBack.value = fd * 0.6; P.u.uFront.value = fd * 0.3;
       P.u.uProj.value.set(1 / camera.projectionMatrix.elements[0], 1 / camera.projectionMatrix.elements[5]);
       P.ao.uniforms.uRadius.value = Math.max(0.5, Math.min(1.2, STUDIO.radius * 0.09));
       renderer.setRenderTarget(P.rtScene);
