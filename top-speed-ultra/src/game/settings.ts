@@ -10,6 +10,7 @@ export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
 
+export type Look = 'ultra' | 'hd';
 export interface Settings {
   quality: Quality;
   adaptive: boolean;        // scale resolution to hold the frame rate
@@ -38,6 +39,9 @@ export interface Settings {
   ultraShake: boolean;
   ultraMuffle: boolean;
   owner: boolean;           // owner mode: every car in the garage to drive, for test builds only (a local switch, not security)
+  // the art direction of the interface (the owner's style library, PROJECT_OC_STYLE_GUIDE.md): 'ultra' futuristic
+  // luxury (the default), 'hd' modern realistic. The car still sets the accent; the look sets the surfaces and shapes
+  look: Look;
 }
 
 export interface QualityPreset {
@@ -106,7 +110,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false, look: 'ultra',
   };
 }
 
@@ -147,6 +151,7 @@ function readSettings(): Settings {
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       owner: v.owner === true,
+      look: v.look === 'hd' ? 'hd' : 'ultra',
     };
   } catch { return d; }
 }

@@ -298,7 +298,11 @@ export class PlayerCar {
     this.wheelAngle = damp(this.wheelAngle, target, 30, dt);
     if (this.interior) {
       this.interior.wheel.rotation.z = this.wheelAngle;
-      this.interior.setInstruments?.({ rpm: s.rpm });
+      // the tach's needle, and (the hypercar's live display only) the speed, the gear, the power in use (the throttle's
+      // share of the power the engine makes at these revs, a display figure) and the tune: Unleashed above 1 MW
+      const kwMax = SPEC.power / 1000, kw = s.throttle * kwMax * clamp((s.rpm / SPEC.redline) * 1.25, 0.15, 1);
+      this.interior.setInstruments?.({ rpm: s.rpm, mph: s.speed * 2.236936, gear: s.gear < 0 ? 'R' : s.gear === 0 ? 'N' : String(s.gear),
+        kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE' });
       this.interior.update?.(dt);
     }
     this.arms?.setWheelAngle(this.wheelAngle);

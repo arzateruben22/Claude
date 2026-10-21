@@ -59,7 +59,8 @@ export interface Cockpit {
   group: THREE.Group;
   wheel: THREE.Object3D;
   update?(dt: number): void;
-  setInstruments?(o: { rpm?: number }): void;
+  // rpm moves the tachometer's needle; the hypercar's live display takes the rest (car-gauges hyperScreen)
+  setInstruments?(o: { rpm?: number } & Partial<G.HyperReadout>): void;
   rearView?: { at: THREE.Vector3; normal: THREE.Vector3; w: number; h: number };   // the rear-view mirror's face: centre, normal, size
   mirrors: CarMirror[];
   // the hypercar's gauge pod on the dash, kept for M5's Cold Thrust tank gauge: the face's centre, its normal (toward
@@ -783,9 +784,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     }
   }
 
-  const setInstruments = (s: { rpm?: number }) => { if (s.rpm !== undefined) rpm = s.rpm; };
+  // the hypercar's display: the latest readout, repainted at most 15 times a second and only when it changed
+  const disp: G.HyperReadout = { mph: 0, gear: 'N', kw: 0, kwMax: 1500, rpm: 0, rpmFrac: 0, mode: 'SPORT' };
+  let liveT = 0, liveKey = '';
+  const setInstruments = (s: { rpm?: number } & Partial<G.HyperReadout>) => { if (s.rpm !== undefined) rpm = s.rpm; if (hyper) Object.assign(disp, s); };
   const update = (dt: number) => {
     flutter += dt;
+    if (hyper && (liveT += dt) >= 1 / 15) {
+      liveT = 0;
+      const key = `${Math.round(disp.mph)}|${disp.gear}|${Math.round(disp.kw / 10)}|${Math.round(disp.rpmFrac * 12)}|${(disp.rpm / 1000).toFixed(1)}|${disp.mode}`;
+      if (key !== liveKey) { liveKey = key; G.hyperScreen().draw(disp); }
+    }
     rpmShown += (rpm - rpmShown) * Math.min(1, dt * 8);
     setNeedle(rpmShown + Math.sin(flutter * 23) * 12 + Math.sin(flutter * 7.3) * 18);
   };

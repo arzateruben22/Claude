@@ -6,7 +6,7 @@ import type { CSSProperties } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, Look, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -134,6 +134,8 @@ export function App() {
   useEffect(() => { document.documentElement.dataset.car = carNow.id; }, [carNow.id]);
   // and the driver signs the human elements (the ability ring, the Driver row, the avatar) with their colour
   useEffect(() => { document.documentElement.dataset.driver = settings.driver; }, [settings.driver]);
+  // and the look: the interface's art direction from the owner's style library (styles.css :root[data-look])
+  useEffect(() => { document.documentElement.dataset.look = settings.look; }, [settings.look]);
   return (
     <div className="app">
       <div className="stage" ref={host} />
@@ -205,6 +207,7 @@ export function App() {
               <button className="rail-btn" onClick={() => setPanel('profile')}><Ico name="career" />Profile</button>
               <button className="rail-btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}><Ico name="bests" />Bests</button>
               <button className="rail-btn" onClick={() => setPanel('settings')}><Ico name="settings" />Settings</button>
+              <span className="rail-btn off" aria-disabled="true"><Ico name="driver" />Lifestyle<small>Roadmap</small></span>
               <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
             </nav>
             <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
@@ -449,6 +452,7 @@ export function App() {
               <div className="scol">
                 <section className="sgroup">
                   <h3 className="sect">Display</h3>
+                  <div className="field"><label>Look</label><Seg value={settings.look} options={['ultra', 'hd'] as Look[]} labels={(l) => (l === 'ultra' ? 'Futuristic' : 'Realistic')} onChange={(l) => update({ look: l })} /></div>
                   <div className="field"><label>Graphics</label><Seg value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
                   <p className="fine">{qualityNote(settings.quality)}</p>
                   <div className="field"><label>Corner window</label><Seg value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>

@@ -814,6 +814,23 @@ await group('launch', async (use) => {
   const { page } = await use({ settings: { start: 'I-405 North' } });
   const road = 'CA-57 North';
   let want = null;
+  // the theme follows the car and the driver, and the Look setting switches the art direction (owner, 2026-10-21;
+  // PROJECT_OC_STYLE_GUIDE.md): <html data-car>, data-driver and data-look re-point the tokens in styles.css
+  await check('the theme follows the car and the driver; the Look setting switches the art direction and is saved', async () => {
+    const attrs = () => game(page, () => { const d = document.documentElement; return { car: d.dataset.car, driver: d.dataset.driver, look: d.dataset.look, carId: window.__game.carId, base: getComputedStyle(d).getPropertyValue('--void').trim() }; });
+    const a = await attrs();
+    expect(a.car === a.carId && a.driver === 'closer' && a.look === 'ultra', JSON.stringify(a));
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.getByRole('button', { name: 'Realistic', exact: true }).click();
+    const b = await attrs();
+    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings') || '{}').look);
+    expect(b.look === 'hd' && b.base === '#0a111d' && saved === 'hd', `after Realistic: ${JSON.stringify(b)}, saved ${saved}`);
+    await page.getByRole('button', { name: 'Futuristic', exact: true }).click();
+    const c = await attrs();
+    expect(c.look === 'ultra' && c.base !== '#0a111d', `after Futuristic: ${JSON.stringify(c)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    return `car ${a.car}, driver ${a.driver}; Realistic base ${b.base}, saved; back to Futuristic`;
+  });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);

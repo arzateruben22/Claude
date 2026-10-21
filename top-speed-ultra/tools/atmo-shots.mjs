@@ -1,5 +1,5 @@
 // Screenshot the menu and a driving frame in every car's atmosphere (the theme follows the car, owner 2026-10-21).
-//   npm run build && node tools/atmo-shots.mjs [outDir] [--size=1280x720]
+//   npm run build && node tools/atmo-shots.mjs [outDir] [--size=1280x720] [--look=ultra|hd] [--cars=id,id] [--drivers=0]
 // Opens the build in owner mode, picks each car through the garage (the real path, so the attribute switch is what
 // a player gets), shoots the menu, drives for a moment and shoots the HUD. Prints the cars shot and any page errors.
 import { chromium } from 'playwright';
@@ -18,7 +18,8 @@ const CARS = [['rossini-gt', 'Rossini GT'], ['rossini-brio', 'Rossini Brio'], ['
 
 const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const ctx = await browser.newContext({ viewport: { width: w, height: h } });
-await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: true })));
+const LOOK = opt('look', 'ultra');
+await ctx.addInitScript((look) => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: true, look })), LOOK);
 const page = await ctx.newPage();
 page.setDefaultTimeout(120000);          // a busy machine renders slowly in software
 const errors = [], shots = [];
@@ -26,7 +27,8 @@ page.on('pageerror', (e) => errors.push(String(e)));
 await page.goto(pathToFileURL(GAME).href);
 await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
 const settled = () => page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity), null, { timeout: 8000 }).catch(() => {});
-for (const [id, name] of CARS) {
+const ONLY = opt('cars', '') ? opt('cars', '').split(',') : null;
+for (const [id, name] of CARS.filter(([i]) => !ONLY || ONLY.includes(i))) {
   try {
     await page.locator('.pick', { hasText: 'Car' }).first().click();
     const card = page.locator('.gcell.car', { hasText: name });
@@ -53,7 +55,7 @@ for (const [id, name] of CARS) {
   }
 }
 // the driver's layer on top of the car's world: each driver picked through the Driver panel, on the hypercar
-for (const [id, name] of [['closer', 'The Closer'], ['ace', 'The Ace'], ['wrench', 'The Wrench']]) {
+for (const [id, name] of opt('drivers', '1') === '0' ? [] : [['closer', 'The Closer'], ['ace', 'The Ace'], ['wrench', 'The Wrench']]) {
   try {
     await page.locator('.pick', { hasText: 'Driver' }).first().click();
     await page.locator('.gcell.driver', { hasText: name }).first().click();

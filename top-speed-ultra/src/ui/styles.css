@@ -140,6 +140,41 @@
   --cyan: #ff7ad9; --cyan-line: rgba(255, 122, 217, 0.6); --cyan-wash: rgba(255, 122, 217, 0.13); --cyan-glow: rgba(255, 122, 217, 0.35);
   --ice-edge: linear-gradient(90deg, #e6d6ff 0%, #b48cff 50%, #6a3fcf 100%);
   --chrome: #ddd4ee; --chrome-lo: #726a8c; --chrome-deep: #2d2540; }
+/* ------------------------------------------------------------------ the look: the interface's art direction (Settings)
+   The owner's style library has three art directions for one game (PROJECT_OC_STYLE_GUIDE.md). Futuristic (ULTRA) is
+   the default above. Realistic (HD: "modern photography composition, understated elegant UI, real-world materials")
+   takes the library's HD tokens for the surfaces, ink and shapes: graphite glass, HUD plates at 86 %, 8 px corners, no
+   skew, no hex lattice or scanlines, a contemporary sans for display type. It comes after the car blocks, so it wins
+   on the surfaces while the car keeps its accent; on the hypercar (and before a car is known) the accent is HD's own
+   muted blue with champagne for what's selected. Contrast on #0a111d: ink 17.3:1, dim 11.4:1, faint 7.3:1, blue
+   8.3:1, champagne 6.9:1; ink on the Drive plate's deep blue 5:1. App.tsx sets <html data-look>. */
+:root[data-look="hd"] {
+  --void: #0a111d; --night-1: #0d1522; --night-2: #121c2b; --night-3: #192536;
+  --glass: rgba(14, 22, 34, 0.82); --glass-2: rgba(10, 17, 29, 0.9); --glass-hi: rgba(26, 38, 56, 0.9); --cell: rgba(8, 13, 22, 0.72); --foot: rgba(10, 17, 29, 0.97); --hud: rgba(10, 17, 29, 0.86);
+  --scrim: rgba(10, 17, 29, 0.5); --scrim-2: rgba(10, 17, 29, 0.84); --scrim-3: rgba(10, 17, 29, 0.93); --scrim-0: rgba(10, 17, 29, 0);
+  --ink: #f3f5f7; --dim: #c3cad3; --faint: #97a2b0; --line: rgba(220, 226, 234, 0.16); --line-2: rgba(220, 226, 234, 0.3); --line-3: rgba(243, 245, 247, 0.6);
+  --chrome: #e8ecef; --chrome-lo: #6f7a88; --chrome-deep: #2a323e; --good: #6ac7ae;
+  --skew: 0deg; --cut: 8px; --hex: none; --scan: linear-gradient(var(--clear), var(--clear)); --chamfer: inset(0 round 8px);
+  --f-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+:root[data-look="hd"]:not([data-car]), :root[data-look="hd"][data-car="oc-hyper"] {
+  --ice: #61b4e8; --ice-text: #8fcbf0; --ice-hi: #cfe8f7; --ice-deep: #2a6f9e; --ice-deep-2: #235d85;
+  --ice-line: rgba(97, 180, 232, 0.55); --ice-wash: rgba(97, 180, 232, 0.1); --ice-glow: rgba(97, 180, 232, 0.28);
+  --cyan: #cb904e; --cyan-line: rgba(203, 144, 78, 0.6); --cyan-wash: rgba(203, 144, 78, 0.13); --cyan-glow: rgba(203, 144, 78, 0.3);
+  --ice-edge: linear-gradient(90deg, #cfe8f7 0%, #61b4e8 50%, #2a6f9e 100%);
+  --haze-ice: rgba(203, 144, 78, 0.12); --haze-deep: rgba(97, 180, 232, 0.08);
+}
+/* HD's shapes: soft corners where Futuristic cuts and skews */
+:root[data-look="hd"] .btn::before, :root[data-look="hd"] .seg button::before, :root[data-look="hd"] .tbtn::before,
+:root[data-look="hd"] .mode, :root[data-look="hd"] .gcell, :root[data-look="hd"] .soon, :root[data-look="hd"] .hud-speed,
+:root[data-look="hd"] .hud-chips i, :root[data-look="hd"] .hud-gear, :root[data-look="hd"] .corner:not(.map) { border-radius: 8px; }
+:root[data-look="hd"] .mode, :root[data-look="hd"] .rail-btn.primary, :root[data-look="hd"] .player { clip-path: inset(0 round 8px); }
+:root[data-look="hd"] .panel, :root[data-look="hd"] .menu-grid::before { clip-path: inset(0 round 14px); }
+:root[data-look="hd"] .hud-speed::after, :root[data-look="hd"] .mode::after { border-radius: 8px; }
+:root[data-look="hd"] .menu-grid::before { animation: none; background: var(--ice-edge) left top / 100% 2px no-repeat, linear-gradient(180deg, var(--glass-hi), var(--glass-2) 240px); }
+:root[data-look="hd"] .word { transform: none; }
+:root[data-look="hd"] .word::before, :root[data-look="hd"] .word::after { display: none; }
+
 /* The driver's layer (owner, 2026-10-21: "the same for each driver"): the car sets the world (base and accent); the
    driver signs the human elements with their own colour, --drv: the ability ring, the Driver row, the avatar's ring,
    the Driver panel's choice and the level line. App.tsx sets <html data-driver>. Contrast on the darkest base
