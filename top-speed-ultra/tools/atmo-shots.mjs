@@ -20,6 +20,7 @@ const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--ena
 const ctx = await browser.newContext({ viewport: { width: w, height: h } });
 await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: true })));
 const page = await ctx.newPage();
+page.setDefaultTimeout(120000);          // a busy machine renders slowly in software
 const errors = [], shots = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 await page.goto(pathToFileURL(GAME).href);

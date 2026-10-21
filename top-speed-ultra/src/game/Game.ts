@@ -7,7 +7,8 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { Settings, QUALITY, DENSITY, Mode, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -99,6 +100,7 @@ export class Game {
   private bloom: UnrealBloomPass | null = null;
   private gtao: GTAOPass | null = null;
   private outputSat: THREE.IUniform<number> | null = null;   // the output pass's saturation, under cloud
+  private grade: ShaderPass | null = null;                    // Ultra's grade: vignette, edge aberration, film grain
   private settings: Settings;
   private raf = 0;
   private last = 0;
@@ -106,6 +108,8 @@ export class Game {
   private time = 0;
   private paused = false;
   private attract = true;
+  private attractAtmo = true;        // the menu shows the chosen car's atmosphere, until the player touches time or weather
+  private shown: { time: TimeOfDay; weather: Weather } | null = null;   // what the environment was last set to
   private mode: Mode = 'free';
   private cam: CamMode = 'cockpit';
   private camBlend = 1;
@@ -166,6 +170,7 @@ export class Game {
     this.driving = this.carId;
     this.applyDriver();
     this.applyCarChoice();
+    this.syncAtmosphere(true);         // the menu opens in the car's atmosphere, no fade from the settings' sky
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
     canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
@@ -262,6 +267,7 @@ export class Game {
 
   private startAttract() {
     this.attract = true; this.over = false; this.mode = 'free';
+    this.syncAtmosphere();
     const m = this.findMain('I-405 North');
     this.placeCar(m, m.len * 0.12, 1, 28);
     this.apLane = 1;
@@ -280,6 +286,7 @@ export class Game {
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
     this.mode = mode; this.attract = false; this.over = false;
+    this.syncAtmosphere(true);         // a run opens in the player's own time and weather, behind the loading screen
     // the time trial always starts in the same place with the same traffic, so times compare
     const st = mode === 'time' ? STARTS[0] : STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
     // "start at your exit": on that exit's carriageway, 450 m before its sign, so the first thing you see is your exit
@@ -316,6 +323,7 @@ export class Game {
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
     this.mode = 'race'; this.attract = false; this.over = false;
+    this.syncAtmosphere(true);
     const m = this.findMain(course.road), s0 = m.len * course.at, L = course.length;
     this.placeCar(m, s0, Math.min(1, m.lanes - 1), 0);
     this.setRoute(null);
@@ -422,10 +430,13 @@ export class Game {
 
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
-    if (s.time !== this.settings.time || s.weather !== this.settings.weather) this.env.set(s.time, s.weather);
+    const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
     this.settings = s;
+    // the player touched time or weather: from now on the menu shows their choice, not the car's atmosphere (the
+    // settings themselves never take the car's atmosphere; it lives only in the environment)
+    if (atmo) { this.attractAtmo = false; this.syncAtmosphere(); }
     if (who) this.applyDriver();
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
@@ -459,7 +470,21 @@ export class Game {
     this.driving = c.id;
     this.carGrip = applyCar(c, mode);
     this.configureCar();
+    if (this.attract) this.syncAtmosphere();   // the menu's attract drive takes the car's atmosphere
     return c;
+  }
+  // The atmosphere on screen (owner, 2026-10-21: "every car we choose represents a different atmosphere"). On the
+  // menu the attract drive runs in the chosen car's time and weather (cars.ts); a run runs in the player's settings.
+  // The rule: the car's atmosphere holds on the menu only until the player touches time or weather in Settings this
+  // session (attractAtmo); from then on the menu shows what they chose, so a change made on the menu is seen. The
+  // car's atmosphere never reaches the saved settings: it lives only in the environment. Same env.set as always:
+  // eased over a few seconds, or instant behind a loading screen (instant also re-snaps an unchanged atmosphere).
+  private syncAtmosphere(instant = false) {
+    const car = carById(this.driving).atmosphere, s = this.settings, fromCar = this.attract && this.attractAtmo;
+    const time = fromCar ? car.time : s.time, weather = fromCar ? car.weather : s.weather;
+    if (!instant && this.shown && this.shown.time === time && this.shown.weather === weather) return;
+    this.shown = { time, weather };
+    this.env.set(time, weather, instant);
   }
   // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed. Live
   // mirrors (the road and the traffic behind, one extra low-resolution render a frame) come with High and Ultra on
@@ -539,14 +564,41 @@ export class Game {
       const p = this.phys;
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
     }
-    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null;
+    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null; this.grade = null;
     if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
       const rt = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, samples: q.msaa });
       const c = new EffectComposer(this.renderer, rt);
       c.addPass(new RenderPass(this.scene, this.camera));
       if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
-      if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.22, 0.45, 0.92); c.addPass(this.bloom); }
+      // Ultra's bloom is set so the hypercar's LEDs bloom at night without the sky blowing out: a lower threshold
+      // (0.85) lets the lamps and the cluster through, a touch more strength (0.3); High keeps its lighter bloom
+      if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), q.grade ? 0.3 : 0.22, 0.45, q.grade ? 0.85 : 0.92); c.addPass(this.bloom); }
+      // Ultra's grade, one small pass between the bloom and the output pass, on the linear HDR frame: a soft
+      // vignette, a chromatic aberration that is zero in the centre and about 1.5 px at the corners (red pushed out,
+      // blue pulled in, radially), and a faint film grain (about ±5 % of each pixel's own value) that moves with time
+      if (q.grade) {
+        this.grade = new ShaderPass({
+          uniforms: { tDiffuse: { value: null }, resolution: { value: new THREE.Vector2(size.x, size.y) }, time: { value: 0 }, aberration: { value: 1.5 }, grain: { value: 0.012 }, vignette: { value: 0.32 } },
+          vertexShader: 'varying vec2 vUv;\nvoid main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+          fragmentShader: `
+            uniform sampler2D tDiffuse; uniform vec2 resolution; uniform float time; uniform float aberration; uniform float grain; uniform float vignette;
+            varying vec2 vUv;
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+            void main() {
+              vec2 c = vUv - 0.5;
+              float r2 = dot(c, c) * 2.0;                                   // 0 in the centre, 1 at the corners
+              vec2 off = c * r2 * 1.4142 * aberration / resolution;         // radial, |off| = aberration px at a corner
+              vec4 g = texture2D(tDiffuse, vUv);
+              vec3 col = vec3(texture2D(tDiffuse, vUv + off).r, g.g, texture2D(tDiffuse, vUv - off).b);
+              float n = hash(gl_FragCoord.xy + vec2(fract(time * 7.31) * 977.0, fract(time * 3.17) * 613.0)) * 2.0 - 1.0;
+              col *= 1.0 + n * grain * 4.0;                                  // proportional: an added grain on the linear frame would lift the night's blacks to grey speckle (0.012 linear is about 28 levels near black after the sRGB curve)
+              col *= 1.0 - vignette * smoothstep(0.25, 1.1, r2);
+              gl_FragColor = vec4(col, g.a);
+            }`,
+        });
+        c.addPass(this.grade);
+      }
       // the output pass with a saturation control folded into its shader (no extra pass): the grade under cloud
       const out = new OutputPass(), sat: THREE.IUniform<number> = { value: 1 };
       (out.uniforms as Record<string, THREE.IUniform>).saturation = sat;
@@ -566,6 +618,7 @@ export class Game {
     this.renderer.setPixelRatio(pr);
     this.renderer.setSize(w, h, false);
     this.composer?.setPixelRatio(pr); this.composer?.setSize(w, h);
+    if (this.grade) (this.grade.uniforms.resolution.value as THREE.Vector2).set(w * pr, h * pr);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
   };
@@ -832,6 +885,7 @@ export class Game {
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
+    if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderCorner(dt);
