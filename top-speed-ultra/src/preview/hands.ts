@@ -9,18 +9,19 @@
 //     o.nails         polish colour (hex), or null for natural nails. Default: natural for 'm', a deep red for 'f'
 //     o.quality       'phone' (3 mm skin mesh, lighter shader) | 'high' (2.25 mm, full skin detail). Default 'high'
 //     o.watchTime     [h, m, s] shown on the watch (default 10:09:36)
-//   returns { group, setWheelAngle(rad), setPose(pose), setTone(hex), dispose(), stats, grip }
+//   returns { group, setWheelAngle(rad, dt?), setPose(pose), setTone(hex), dispose(), stats, grip }
 //     group           a THREE.Group in the car's frame (x right, y up, -z forward, metres); add it to the car
 //     setWheelAngle   the wheel's rotation (the cockpit's wheelSpin.rotation.z); the hands turn with the rim and the
 //                     arms follow (two-bone reach, shoulders, elbows down and out). Reads right to about ±1 rad.
+//                     dt (seconds) advances the off-wheel blend and the wave; without it the wall clock does.
 //     setTone         change the skin tone (hex) without rebuilding
 //     stats           { buildMs, tris, calls, meshMs, accMs } (calls: draw calls in the colour pass, without shadows;
 //                     meshMs: the cached-per-presentation skin mesh, accMs: sleeves, watch, ring, bangle)
 //     grip            { right, left }: the middle of each grip (knuckles to fingertips), car frame, wheel straight
 //
 // Each hand is one smooth surface meshed once from an anatomical distance field (hands-sdf.ts, hands-mesh.ts): four
-// fingers curled round the rim's far side with their tips and nails coming back round its inner edge, a short bent
-// thumb over the inner front edge with its nail to the driver, a knuckle ridge and an arched back of the hand. The
+// fingers curled round the rim's far side with their tips and nails coming back round its inner edge, the thumb lying
+// along the rim's front face toward twelve with its nail to the driver, a knuckle ridge and an arched back of the hand. The
 // mesh is cached per presentation and quality, the sleeves/watch/ring/bangle geometry per look (hands-acc.ts), so a
 // second call costs only the materials and the per-arm buffers.
 import * as THREE from 'three';
@@ -44,7 +45,9 @@ export interface HandsOptions {
 export type HandPose = 'wheel' | 'knee' | 'watch' | 'wave';
 export interface DriverArms {
   group: THREE.Group;
-  setWheelAngle(rad: number): void;
+  /** the wheel's angle this frame; dt (s) advances the off-wheel blend and the wave (a paused game passes 0), the
+   *  wall clock does when it is left out */
+  setWheelAngle(rad: number, dt?: number): void;
   /** blend a hand off the wheel (0.3 s) and back; immediate skips the blend (test pages) */
   setPose(pose: HandPose, immediate?: boolean): void;
   setTone(hex: number): void;
@@ -145,20 +148,30 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
     wave: poseFor(1, new THREE.Vector3(-0.58, 1.02, -0.4), V(-0.1, 0.95, -0.3), V(0.85, 0.2, 0.5), true),          // left hand up at the window, palm out
   };
   const off = sides.map(() => ({ t: 0, goal: 0, pos: new THREE.Vector3(), quat: new THREE.Quaternion(), wave: false, axis: new THREE.Vector3(0, 1, 0) }));
-  let lastT = performance.now();
-  const pose = (angle: number, bind: boolean) => {
-    const now = performance.now(), dt = bind ? 0 : Math.min(0.1, (now - lastT) / 1000); lastT = now;
-    wq.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angle).premultiply(qTilt);
+  // the pose runs every frame on every tier (PlayerCar.updateCockpit): its scratch lives here, nothing is allocated
+  // per call. The blend and the wave advance by the caller's dt when it gives one (so a paused game holds still and
+  // a slowed one slows), else by the wall clock
+  let lastT = performance.now(), wavePhase = 0;
+  const Z = new THREE.Vector3(0, 0, 1), dq = new THREE.Quaternion(), twistQ = new THREE.Quaternion();
+  const wristV = new THREE.Vector3(), Sv = new THREE.Vector3(), Ev = new THREE.Vector3();
+  const wristA: V3 = [0, 0, 0], ik = { shoulder: [0, 0, 0] as V3, elbow: [0, 0, 0] as V3 };
+  const pose = (angle: number, bind: boolean, dtIn?: number) => {
+    const now = performance.now();
+    const dt = bind ? 0 : dtIn !== undefined ? Math.min(0.1, Math.max(0, dtIn)) : Math.min(0.1, (now - lastT) / 1000);
+    lastT = now;
+    wavePhase += dt * 13.8;
+    wq.setFromAxisAngle(Z, angle).premultiply(qTilt);
     for (const s of sides) {
       const o = off[s.side];
       o.t += Math.max(-dt / 0.3, Math.min(dt / 0.3, o.goal - o.t));
       const k = o.t * o.t * (3 - 2 * o.t);
       s.hand.position.copy(WHEEL_AT).lerp(o.pos, k); s.hand.quaternion.copy(wq).slerp(o.quat, k);
-      if (o.wave && k > 0) s.hand.quaternion.premultiply(waveQ.setFromAxisAngle(o.axis, Math.sin(now * 0.0138) * 0.35 * k));
-      const dq = s.hand.quaternion.clone().multiply(qTiltInv);     // the hand's rotation from its bind orientation
-      const wrist = s.wristW_m.clone().applyQuaternion(s.hand.quaternion).add(s.hand.position);
-      const r = reach(s.shoulder0, [wrist.x, wrist.y, wrist.z], L1, L2, s.pole);
-      const S = new THREE.Vector3(...r.shoulder), E = new THREE.Vector3(...r.elbow);
+      if (o.wave && k > 0) s.hand.quaternion.premultiply(waveQ.setFromAxisAngle(o.axis, Math.sin(wavePhase) * 0.35 * k));
+      dq.copy(s.hand.quaternion).multiply(qTiltInv);     // the hand's rotation from its bind orientation
+      const wrist = wristV.copy(s.wristW_m).applyQuaternion(s.hand.quaternion).add(s.hand.position);
+      wristA[0] = wrist.x; wristA[1] = wrist.y; wristA[2] = wrist.z;
+      reach(s.shoulder0, wristA, L1, L2, s.pole, 0.94, ik);
+      const S = Sv.set(ik.shoulder[0], ik.shoulder[1], ik.shoulder[2]), E = Ev.set(ik.elbow[0], ik.elbow[1], ik.elbow[2]);
       const fdir = vA.copy(wrist).sub(E).normalize(), udir = vB.copy(E).sub(S).normalize();
       if (bind) {
         s.bindFore.copy(basis(fdir, s.foreUp)); s.bindForeDir.copy(fdir);
@@ -167,7 +180,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
       // the forearm takes half the hand's roll about it, so the wrist doesn't wring
       const swing = tmpQ.setFromUnitVectors(s.bindForeDir, fdir);
       const tw = 2 * Math.atan2(dq.x * fdir.x + dq.y * fdir.y + dq.z * fdir.z, dq.w);
-      const twist = new THREE.Quaternion().setFromAxisAngle(fdir, tw * 0.5);
+      const twist = twistQ.setFromAxisAngle(fdir, tw * 0.5);
       s.fore.position.copy(E); s.fore.quaternion.copy(twist).multiply(swing).multiply(s.bindFore);
       s.upper.position.copy(S); s.upper.quaternion.setFromUnitVectors(s.bindUpperDir, udir).multiply(s.bindUpper);
     }
@@ -263,7 +276,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   const buildMs = performance.now() - t0;
   return {
     group,
-    setWheelAngle(rad: number) { pose(rad, false); },
+    setWheelAngle(rad: number, dt?: number) { pose(rad, false, dt); },
     setPose(p: HandPose, immediate = false) {
       for (const o of off) o.goal = 0;
       if (p !== 'wheel') { const P = POSES[p], o = off[P.side]; o.pos.copy(P.pos); o.quat.copy(P.quat); o.wave = P.wave; o.axis.copy(P.axis); o.goal = 1; }
