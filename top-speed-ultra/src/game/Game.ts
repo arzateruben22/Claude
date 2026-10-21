@@ -28,7 +28,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar } from './cars';
+import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
@@ -348,6 +348,8 @@ export class Game {
 
   quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
+  // tune a station directly (the radio card), -1 for off
+  tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }
   private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }
@@ -468,11 +470,14 @@ export class Game {
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
+    const cur = carById(this.driving);
+    const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
     this.settings = s;
     // the player touched time or weather: from now on the menu shows their choice, not the car's atmosphere (the
     // settings themselves never take the car's atmosphere; it lives only in the environment)
     if (atmo) { this.attractAtmo = false; this.syncAtmosphere(); }
     if (who) this.applyDriver();
+    else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
@@ -528,10 +533,11 @@ export class Game {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
+    const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
-      car: c.id as CarId, paint: store?.hex ?? c.paint, finish: store?.finish ?? null, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
+      car: c.id as CarId, paint: store?.hex ?? paintFor(c, s.paints), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
   }
 

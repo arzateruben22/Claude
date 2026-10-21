@@ -981,6 +981,42 @@ await group('launch', async (use) => {
     await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
     return `car ${a.car}, driver ${a.driver}; Realistic base ${b.base}, saved; back to Futuristic`;
   });
+  // the garage's Paint tab (U5): six paints per car, applied live to the car and kept for that car
+  await check("the garage's Paint tab repaints the car live and keeps the choice", async () => {
+    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.getByRole('button', { name: 'Paint', exact: true }).click();
+    await page.getByRole('radio', { name: 'Sunset Orange' }).click();
+    await frames(page, 2);
+    const r = await game(page, () => ({ paint: window.__game.car.config.paint, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').paints?.['rossini-gt'] }));
+    await page.screenshot({ path: path.join(OUT, 'launch-paint.png') });
+    expect(r.paint === 0xe5620b && r.saved === 0xe5620b, `car wears ${r.paint?.toString(16)}, saved ${r.saved?.toString(16)}`);
+    await page.getByRole('radio', { name: 'Rossini Red' }).click();
+    const back = await game(page, () => window.__game.car.config.paint);
+    expect(back === 0xa80d10, `back to ${back?.toString(16)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    return 'Sunset Orange on the car and saved; back to Rossini Red';
+  });
+  // the garage's Wheels tab (U5): two rim styles per car, fitted live (only the wheels rebuilt, never stacked) and kept
+  await check("the garage's Wheels tab fits the second rim style live and keeps the choice", async () => {
+    const count = () => game(page, () => { const c = window.__game.car; return { wheels: c.wheels.length, inScene: c.wheels.filter((w) => !!w.steer.parent).length, root: c.root.children.length, style: c.config.wheel }; });
+    const a = await count();
+    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.getByRole('button', { name: 'Wheels', exact: true }).click();
+    const chips = await page.locator('.wheel-chip').count();
+    await page.getByRole('radio', { name: /Cross Lace/ }).click();
+    await frames(page, 2);
+    const b = await count();
+    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings') || '{}').wheels?.['rossini-gt']);
+    await page.screenshot({ path: path.join(OUT, 'launch-wheels.png') });
+    expect(chips === 2, `${chips} rim styles listed`);
+    expect(b.style === 'mesh' && saved === 'mesh', `car wears ${b.style}, saved ${saved}`);
+    expect(b.wheels === 4 && b.inScene === 4 && b.root === a.root, `wheels ${b.wheels} (${b.inScene} in the scene), root children ${a.root} → ${b.root}`);
+    await page.getByRole('radio', { name: /Forged Twin/ }).click();
+    const c = await count();
+    expect(c.style === 'twin5' && c.root === a.root, `back to ${c.style}, root children ${c.root}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    return `2 styles; Cross Lace fitted and saved, 4 wheels, root ${a.root} children throughout; back to Forged Twin`;
+  });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);

@@ -4,6 +4,43 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (12:00 UTC): the garage's Wheels tab (U5 done); the run card saves in the viewer; the aero cover's streaks
+
+- **Wheels tab (U5).** Two rim styles per car (`cars.ts` `WHEELS`, our own names), fitted live to the car behind the
+  panel and kept per car in `settings.wheels` (validated in `readSettings`). Only the four wheels are rebuilt
+  (`PlayerCar.buildWheels`); the body, cockpit and hands stay. Two new rim designs in `car-wheel.ts`:
+  - **Cross Lace** (`mesh`): twenty slim spokes in crossing pairs, machined faces. Second style for the GT and the Brio.
+  - **Turbine Blade** (`blade`): seven blades swept toward the rim, mirrored on the left. Second style for the Corsa and
+    the Vela E.
+  - The hypercar's second style is the **Aero Disc** cover.
+  - Each choice has a small face-on rim drawing (SVG, `RimIcon` in `App.tsx`).
+- **Checked.** Close-up renders (`tools/preview-shoot.mjs src/preview/test-car.ts`, `view=wheel-side`, new `rim=`
+  query; `tests/out/wheels/`): GT Cross Lace, Corsa Turbine Blade, hypercar and Vela E Aero Disc. New launch check:
+  the tab lists 2 styles; Cross Lace is fitted and saved; 4 wheels in the scene; the car's root keeps 11 children
+  through both changes. `npm test -- --only=launch` **8/8**.
+- **Found and fixed: the Aero Disc cover was shaded in heavy streaks** (pre-existing on the Vela E's own wheels; the
+  hypercar render showed it). The dished cover's normals were averaged over the cap's long sliver triangles; they now
+  come from the dish's formula. The heavy faceting is gone. Faint streaks remain in the 0.5 m close-up only. A matte
+  cover kept them (not reflections); a high sun made them worse; at the garage line-up's distance they don't show. So
+  they are the shadow map's resolution where the tyre's bulge shadows the cover, not the cover's shape.
+- **Not a bug: old wheels on a car change.** The old code disposed of the previous wheels without removing them; a
+  check on the previous build (GT, hypercar, Corsa, GT in owner mode) found the root at 11 children throughout, so
+  nothing was left behind. `buildWheels` removes them explicitly anyway.
+- **Run card in the viewer.** The save through the viewer's prompt was already in `runCard.ts` (fd7c0c3); the test
+  artifact had never declared it. Republished with `downloads` declared (version 3); the publish no longer warns.
+  Not yet tried by a person inside the viewer.
+- **Customize tab** added to the garage as "coming later" (U5's last tab). `tools/garage-shot.mjs` (new,
+  `tests/out/garage/`): every tab at 1280 × 720 and 390 × 844, no page errors, no sideways scroll; on a phone the five
+  tabs wrap to two rows. `npm test -- --only=render` **14/14**; launch rerun on the final build **8/8**.
+- **Phone size (390 × 844, touch) for the other new panels**, on this build:
+  - the World Map: `tools/map-shots.mjs`, no errors;
+  - the radio card: `tools/radio-shot.mjs`, tuned Coast, no errors; the card fits under the top bar, with stars,
+    volume and Off/Close in reach;
+  - the phone: `tools/phone-shot.mjs`, home and Credits, no errors; the Map app opened the World Map.
+  - Shots are in `tests/out/phone390/`.
+- **Glove stripe.** `hands.ts` now passes the driver's accent to the glove's wrist stripe. No visible change today:
+  the Ace is the only gloved driver and its accent equals the old default.
+
 ## 2026-10-21 (merge): `claude/hypercar` into the live build (`local/live-preview`)
 
 The live build now has both lines of UI work: the U0-U2 passes (the glass sheet with the Drive dock, the adaptive HUD
@@ -24,6 +61,77 @@ sunset tokens stay defined (the GT's atmosphere and the store read them).
   and dock, the four mode cards) and `drive.png` (the driver's seat at 66 mph on I-405 North with a route to CA-55
   North: nav card, destination card, compass, clock chip, mode plate, speed block, icon rail, round map, chevrons).
   No page errors; the HUD panels' boxes do not overlap; read by eye.
+
+## 2026-10-21 (11:45 UTC): the full suite green on the merged branch; the test build republished
+
+- `npm test` (all groups) after the clothing merge: **62/62**. The intermittent reset check passed this time.
+- **Settings rail (U8) and radial menu (U3)** (`tools/quick-shots.mjs`, `tests/out/quick/`, 1280 × 720 and 390 × 844,
+  no errors): the rail jumps to a section (Sound lit); on a phone the rail is a scrolling strip. Holding Pause opens
+  the six wedges round a hub that names the wedge under the pointer; releasing over the upper-right wedge opened
+  "Go to" at both sizes (read back from the page), and the drive was not paused.
+- **Test build** republished to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS (version 2) from this build. The
+  publish noted that the run card's download does nothing inside the artifact viewer (it does not grant plain
+  downloads); queued below.
+
+## 2026-10-21 (11:10 UTC): the full suite on this session's work
+
+- `npm test` (all groups) on the branch at 06:55 (World Map, paint, radio, phone, settings rail, radial menu; before
+  the clothing merge): **61/62**. The one failure: "reset puts the car back on the road, stopped" (`7.92 → 0.54 m/s`:
+  the car never reached the 30 m/s the check drives up to before resetting).
+- Rerun of the `render` group alone, side by side: the current code **14/14** (reset `40 → 0.01 m/s`) and this
+  session's starting commit (07f46ac) **14/14** (`40.02 → 0.02 m/s`). Intermittent and not reproduced on either; the
+  cause is not known (the check's speed-up is simulated time, so machine load should not matter). Watch it.
+
+## 2026-10-21 (11:00 UTC): the drivers' clothes, a black-frame bug fixed
+
+A lane on this session (worktree, merged as one commit) finished the drivers' clothing pass from the parked work,
+rendered on the preview (`tests/out/preview/fashion2/` in its worktree, every frame looked at) and in the game:
+- **The Closer**: a pressed white (ivory for her) cuff with an edge stitch and a gold cufflink (a pearl button for
+  her), the gold bracelet watch with an index ring, blued hands and a crown, red polish on her nails.
+- **The Ace**: black ribbed fire-suit sleeves with a small Rossini R chevron patch, black stitched gloves with knuckle
+  pads and a lavender (#b9a6ff, the UI's Ace colour) stripe at the wrist.
+- **The Wrench**: an olive work shirt rolled twice above the forearm with a hem stitch and a slight tan line, a
+  polished titanium smart watch whose black screen shows a green grip readout.
+- **A bug found and fixed**: the Wrench's cockpit rendered entirely black in the game (both presentations, 960 × 540).
+  The smart watch's glass had 28 vertices with zero-length normals; the shader turned them into NaN and the
+  post-processing spread it over the frame. The mesh builder now widens its stencil where points coincide and never
+  emits a zero normal; the frames render (`game/wrench-m.png`, read by eye here too). Why the baseline's identical
+  glass did not go black is not explained.
+- **Numbers** (the preview's JSON, budget 12 calls, 220k triangles): Closer 75,744 / 6 (male), Ace 57,180 / 3, Wrench
+  110,292 / 6; arms build 1.7 to 2.6 s on the shared software renderer (baseline 1.6 to 1.9 s).
+- **Checked**: `npx tsc --noEmit` clean, `npm run build` clean, `npm test -- --only=boot,abilities` 10/10 on the lane.
+- **Here**: the game now passes each driver's own nail colour (it hard-coded a burgundy for every female presentation,
+  so the Closer's red never showed and the Wrench had polish she shouldn't).
+- **Still off**: the glove stripe takes the default colour (hands.ts does not pass the accent; right for the Ace only);
+  the Wrench's roll never shows from the seat; the knuckle pads read as round patches; the Closer's weave is faint.
+
+## 2026-10-21 (06:30 UTC): the World Map, the garage's paint, the radio card; the two sessions coordinated
+
+- **Two sessions.** Another session (the always-on one) runs lanes for the seat view, body fidelity, the freeways,
+  Ultra graphics, the UI to the reference, the graphics modes and the store (`PROJECT_OC_HANDOFF.md`). This session
+  stopped its overlapping lanes and pushed their unjudged work as `claude/wip-c-seat` and `claude/wip-c-world`; the
+  other session agreed to build on this branch's UI and to bind the Look tokens to its three graphics modes.
+- **World Map (U4)** (`WorldMap.tsx`, `tools/map-shots.mjs`): proven at 1280 × 720 and 390 × 844 in three rounds
+  (`tests/out/map`, `map2`, `map3`), no errors. Round one showed labels over each other and phone views framed behind
+  the sheet; labels now take boxes (shields, the race's markers and our places first, then cities from the largest)
+  and every fit frames the visible part of the screen; a picked race frames its own stretch.
+  Round three (`map3`, read by eye) framed the Santa Ana course clear of the sheet and the shields, and showed a real
+  bug: **Santa Ana Checkpoints** ("12 km of the 5 through Santa Ana") ran between Mission Viejo and Lake Forest. I-5
+  North passes Santa Ana at 0.629 of its length (measured in the game: 1.6 km from the city centre), so the course
+  now starts at 0.565 instead of 0.38 (`race.ts`); old best times on it stay under the same id. Fits now also keep
+  clear of the map's title (the Finish label sat under it).
+- **The garage's Paint tab (U5)**: `npm test -- --only=launch` **7/7 passed**, including the new check (Sunset Orange
+  reaches the car, `car.config.paint` 0xe5620b, and the saved settings; back to Rossini Red) and the theme/Look check;
+  `tests/out/launch-paint.png` shows the GT behind the panel in Sunset Orange. Wheels and Upgrades say "coming later".
+- **The radio card (U7)** (`RadioCard.tsx`, `tools/radio-shot.mjs`): frames at 1280 × 720 and 390 × 844
+  (`tests/out/radio/`, no errors): KCST tuned from the card and playing a generated title, the starred station sorted
+  first, volume, Off; on a phone it sits under the top bar, clear of the steering and pedals. Its stars were low in
+  their rows; centred.
+- **The phone (U6)** (`Phone.tsx`, `tools/phone-shot.mjs`): from the pause screen, at 1280 × 720 and 390 × 844
+  (`tests/out/phone/`, no errors): the device clock, the driver's colour on the level line, nine working apps and
+  Messages and Contacts greyed "Roadmap"; Credits shows the balance and how credits are earned; the Map app opens the
+  World Map (checked by the script). Races had the same trophy icon as Bests; it takes the wheel.
+
 
 ## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
 

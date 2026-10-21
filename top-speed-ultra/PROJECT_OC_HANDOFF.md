@@ -13,6 +13,34 @@ model: routine work to `opus`, hard reasoning to `fable`.
   (the menu is filmed with it). `claude/ultra-world-wip` holds the parked world and clothing work; two lanes are
   finishing it in isolated worktrees and merge only when verified.
 
+## Other sessions in flight (read before picking an item; updated 2026-10-21 06:15 UTC)
+
+The owner runs several sessions on this project at once. The always-on session (session_01NkQ41gebWX6mPbmCQZBc81)
+runs judged build lanes in git worktrees, each on its own branch, and merges what is kept into `local/live-preview`
+(worktree `tsu-live`), builds it, runs `npm test -- --only=boot,race,survival,progression,phone` and republishes the
+owner's main live link https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV (the artifact named in `CLAUDE.md`). It also
+merges `claude/hypercar` into `local/live-preview` as commits land there (the merge of ba4f99f began at 06:05 UTC;
+`rerere` is on in this repository, so conflict resolutions are reused). Its lanes, so nobody builds the same thing twice:
+
+| Branch (worktree) | In flight | Notes |
+| --- | --- | --- |
+| `claude/hypercar` (tsu-hyper) | M2 lights and cockpit (the lane's own finish of the WIP d2f046b), then a sync merge of this remote branch, then SEAT (the 0.15 m seat drop, the roof, the view from the seat) and M1b body fidelity | the lane's local branch is at 07f46ac plus uncommitted work until M2 commits; the uncommitted work is snapshotted hourly on `claude/wip-hyper` |
+| `claude/hypercar-drive` (tsu-hx) | M5 Cold Thrust / Ground Lock / Thrust Hop (repair), M4 driving profiles, M6 Founder exclusives | merged into `claude/hypercar` by the lane's last step |
+| `claude/fix-sky`, `claude/fix-road` | the sky-camera fix and the debris fix | integrated into `local/live-preview` by their workflow |
+| `claude/onfoot` (tsu-foot) | Lot 57 on foot, P1a venue and avatar, P1b things to do, P1c 40 NPCs, P1d the three graphics modes | its own page under `src/onfoot`, published as its own artifact |
+| `claude/gfx` (tsu-gfx) | G1 the Ultra render tier, G2 showroom and photo mode, G3 hypercar materials at Ultra | |
+| `claude/realism-2` (tsu-ref) | FW1 to FW6: every OC freeway's surfaces, furniture and signs, interchanges, night, I-605 and SR-90 | |
+| `claude/ui-ref` (tsu-ui) | UI1 to UI5: the home screen, HUD, circular minimap, cockpit cluster to the owner's reference image, in the OC sunset orange colourway (`PROJECT_OC_DECISIONS.md`, decision 13) | |
+| `claude/modes` (tsu-modes) | RS1 to RS3: exactly three graphics modes, Low (full-res, retro), HD, Ultra; Ultra an entitlement flag only (decision 15) | |
+| `claude/store` (tsu-store) | ST1 the Founder SKU and the catalog check, ST2 the Ultra test-mode SKU | |
+| `claude/sports-bar` (tsu-bar) | the sports bar plan (`PROJECT_OC_SPORTS_BAR.md`), then S1 to S4 | our own venue at the Lopez & Lefty's site, our own name |
+
+Hourly snapshots of each lane's uncommitted work go to `claude/wip-<name>`. Items 3 (the seat view and the seat
+drop) and anything on the lists above are already being built there; a session picking from the queue below gets
+more done by taking something else, and by noting what it has taken in "State" above so the lanes can skip it.
+This session publishes to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS; the always-on session publishes to
+3RkEetQBRvcm3dpNeVwMgV, so the two builds never overwrite each other.
+
 ## Standing instruction (owner, 2026-10-21): keep improving until the owner says stop
 
 An hourly scheduled task wakes this session. Each run: read notifications and background results first; merge what
@@ -22,19 +50,44 @@ is verified; then take the next item below, prove it on renders (`tools/grade-sh
 decisions under "Decisions waiting" and move to the next item. Never spend real money, add a paid service, or
 publish anything beyond the owner's private test artifact. Stop when the owner says stop (delete the scheduled task).
 
-### Improvement queue (top first)
+### This session (session_01SwssTo7t6RP6BjTKo6BMvm, on `claude/hypercar`): built, handed over, next (06:25 UTC)
 
-1. Merge the verified Ultra world pass and the driver clothing pass from their lanes; run `npm test` in full.
-2. Republish the test build to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS after each merged milestone.
-3. The hypercar's seat view: the canopy header and the dash top crowd the view (the seat drop, M1 and M3 notes in
-   `PROJECT_OC_HYPERCAR.md`); the rim clips the display's top.
-4. Hypercar body fidelity M1b items 1, 3, 4, 6, 7 (`PROJECT_OC_HYPERCAR.md` section 8), each against the sheet.
-5. The full-screen World Map (U4 in `PROJECT_OC_UI_TARGET.md`), in the library's ULTRA map style.
-6. Garage tabs (U5): paint and wheels, applied live; then the radio panel (U7) and the phone (U6).
-7. Night: freeway lamps and wet road reflections at High (after the world pass lands), checked against the
-   library's ULTRA night boards.
-8. Traffic bodies: door seams, mirrors and tinted glass (if the world pass did not), then a second sedan shape.
-9. Performance: Ultra's draw calls and triangles after each pass, logged; Low unchanged.
+Built and pushed on `claude/hypercar`, each proven on frames and logged in `PROJECT_OC_PROGRESS.md`:
+- the reference's home screen and driving HUD (the glass rail, the player card, the four picture mode cards, the
+  guide-sign road plate, the icon rail, the speed block with chips, the round minimap bottom left with a mouse);
+- the colour per car (`<html data-car>`): the starter Rossini GT in the OC sunset orange of decision 13, the
+  hypercar in the reference's ice blue, the Brio aqua, the Corsa yellow, the Vela E violet; the driver's colour on
+  the human elements (`data-driver`); the run card takes the colours on screen;
+- the style guide from the owner's three-mode library (`PROJECT_OC_STYLE_GUIDE.md`, `style-references/`);
+- the hypercar's live driver display (speed, gear, power, revs, tune) and its LEDs tuned to tone-map to ice blue;
+- the cinematic camera, and the menu filmed with it (the car outside, right of the rail, as on the reference);
+- the World Map (U4); the Ultra grade (vignette, edge aberration, grain), Ultra only;
+- a "Look" setting (Futuristic / Realistic). **For the graphics-modes lane (decision 15):** fold it into the three
+  modes rather than keep a separate control: Ultra sets `<html data-look="ultra">`, HD sets `data-look="hd"` (the
+  tokens already exist in `styles.css`), Low a retro token set when RS1 has one; then remove the Look row.
+
+Stopped here because another session's lane owns the work (their branches have the snapshots):
+- the hypercar seat view and seat drop: `claude/wip-c-seat` (a first pass, unjudged) for the `tsu-hyper` lane;
+- the Ultra world pass (road wear, lamp pools, lit windows, houses, chain-link, skids, our-brand billboards, skyline,
+  night env map): `claude/wip-c-world` (unjudged) for the `realism-2` and `gfx` lanes to take from or drop.
+
+Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, styles.css), one line each:
+- 06:00 App.tsx, styles.css: the World Map (`WorldMap.tsx`, panel 'map'), a World Map row on the menu rail and the pause screen.
+- 06:20 App.tsx, styles.css: the garage's tabs (Vehicles, Paint, Wheels, Upgrades); paint per car in `settings.paints`.
+- 06:25 App.tsx, styles.css: the radio card (`RadioCard.tsx`); the top bar's Radio toggles it instead of cycling (B still cycles).
+- Commits from this session carry no model names from here on (the Co-Authored-By line names only Claude).
+- 06:40 race.ts: Santa Ana Checkpoints starts at 0.565 of I-5 North (it ran between Mission Viejo and Lake Forest).
+- 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
+- 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
+- 06:55 App.tsx, styles.css: the radial quick menu (`RadialMenu.tsx`): hold Pause or Tab for 300 ms while driving; a tap on Pause still pauses.
+- 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
+
+Next here, all outside the lanes above (updated 12:00 UTC): done: the World Map (U4), the garage's Paint and Wheels
+tabs (U5), the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes, the
+run card's save in the viewer, the glove stripe from the driver's accent. Phone-size checks of the new panels done (12:10).
+The queue here is empty of unowned items: traffic, trees and the world are touched by six lanes' branches
+(`wip-ref`, `wip-gfx`, `wip-modes`, `wip-ui`, `wip-hx`, `wip-fix-sky`), so this session leaves them. Next: what the
+owner asks, or what the lanes hand over.
 
 ### Decisions waiting (the owner's)
 

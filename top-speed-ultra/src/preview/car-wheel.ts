@@ -6,6 +6,10 @@
 //   multi (OC Hypercar)   five spokes in gloss black, each splitting in two toward the rim (ten prongs at the rim,
 //                         the reference sheet's WHEEL DETAIL), a deep concave, a gloss-black lip (no polished ring), the
 //                         OC mark on a bigger centre cap; built with a lower sidewall (a 22-inch look)
+//   mesh  (garage option) twenty slim spokes laced in crossing pairs (each pair crosses halfway out), machined faces
+//   blade (garage option) seven blades swept toward the rim like a turbine's (mirrored on the left, as directional
+//                         wheels are)
+// The garage's Wheels tab (cars.ts WHEELS) offers each car its own style and one second style.
 // Tyres are modelled in section (rim protector, sidewall bulge, rounded shoulders, three circumferential grooves; no
 // lettering); drilled carbon-ceramic discs on anodised bells; six-piston monobloc calipers in the car's colour.
 // Built in the wheel's own frame (axle along x, +x outboard) at the GT's 0.345 m radius and filed into a Kit; the
@@ -54,7 +58,7 @@ function tyre(w: number, segs: number) {
   return lathe(prof, vs, segs, true);
 }
 
-export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero' | 'multi';
+export type WheelStyle = 'twin5' | 'five' | 'cl10' | 'aero' | 'multi' | 'mesh' | 'blade';
 // sidewall: the tyre's sidewall height as a share of the standard one; below 1 the rim, spokes, hub and brake grow
 // to meet it (a low-profile tyre on a bigger rim, the same outside diameter)
 export interface WheelOptions { q: 'phone' | 'high'; front: boolean; style?: WheelStyle; w?: number; sidewall?: number }
@@ -98,7 +102,10 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
   if (style === 'cl10') for (let k = 0; k < 10; k++) spokes.push([(k / 10) * Math.PI * 2 + Math.PI / 2, 0]);
   // multi: each of five spokes is built as two halves side by side that part toward the rim (a split spoke)
   if (style === 'multi') for (let k = 0; k < 5; k++) for (const s of [-1, 1]) spokes.push([(k / 5) * Math.PI * 2 + Math.PI / 2, s]);
-  const faceKey = style === 'twin5' ? 'machined' : 'rimPaint';
+  // mesh: ten pairs, each spoke running from one side of its pair's line at the hub to the other side at the rim
+  if (style === 'mesh') for (let k = 0; k < 10; k++) for (const s of [-1, 1]) spokes.push([(k / 10) * Math.PI * 2 + Math.PI / 2, s]);
+  if (style === 'blade') for (let k = 0; k < 7; k++) spokes.push([(k / 7) * Math.PI * 2 + Math.PI / 2, 0]);
+  const faceKey = style === 'twin5' || style === 'mesh' ? 'machined' : 'rimPaint';
   for (const [pc, s] of spokes) {
     const faceRows: V3[][] = [], sideL: V3[][] = [], sideR: V3[][] = [];
     for (let i = 0; i <= nR; i++) {
@@ -106,12 +113,17 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
       // multi: the halves part at 36 % of the spoke's length and run straight to the rim (the sheet's WHEEL DETAIL
       // forks are straight Ys): the gap grows linearly with the radius, 0.17 rad either side at the rim
       const split = style === 'multi' ? Math.min(1, Math.max(0, (f - 0.36) / 0.64)) : 0;
-      const th = style === 'multi' ? pc + s * Math.atan2(rr * Math.sin(0.17) * split, r) : pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
+      const th = style === 'multi' ? pc + s * Math.atan2(rr * Math.sin(0.17) * split, r)
+        : style === 'mesh' ? pc + s * 0.15 * (1 - 2 * f)          // the pair crosses at half the spoke's length
+        : style === 'blade' ? pc + 0.6 * Math.pow(f, 1.4)        // swept back toward the rim
+        : pc + s * (0.055 + 0.085 * Math.pow(f, 1.3));
       // five: broad spokes that taper and thin toward the rim; cl10: slim straight ones, a shallow concave; multi:
       // a half of a slim spoke, offset to its side until the halves part
-      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : style === 'multi' ? 0.029 - 0.012 * f : 0.026 - 0.009 * f;
-      const dep = style === 'five' ? 0.032 - 0.01 * f : style === 'multi' ? 0.03 - 0.012 * f : 0.036 - 0.012 * f;
-      const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : style === 'multi' ? 0.5 : 0.62);
+      const wdt = style === 'five' ? 0.058 - 0.026 * f : style === 'cl10' ? 0.022 - 0.006 * f : style === 'multi' ? 0.029 - 0.012 * f
+        : style === 'mesh' ? 0.015 - 0.004 * f : style === 'blade' ? 0.036 - 0.016 * f : 0.026 - 0.009 * f;
+      const dep = style === 'five' ? 0.032 - 0.01 * f : style === 'multi' ? 0.03 - 0.012 * f : style === 'mesh' ? 0.024 - 0.008 * f : 0.036 - 0.012 * f;
+      // mesh: the two spokes of a pair sit 3 mm apart in depth where they cross, so neither face fights the other
+      const xf = xh + (xr - xh) * Math.pow(f, style === 'cl10' ? 0.85 : style === 'five' ? 0.7 : style === 'multi' ? 0.5 : style === 'blade' ? 0.55 : 0.62) + (style === 'mesh' ? s * 0.0015 : 0);
       const off = style === 'multi' ? s * wdt * 0.5 * (1 - split) : 0;
       const Rd = v3(0, Math.cos(th), Math.sin(th)), T = v3(0, -Math.sin(th), Math.cos(th));
       const at = (x: number, t: number) => Rd.clone().multiplyScalar(r).add(T.clone().multiplyScalar(t + off)).setX(x);
@@ -148,7 +160,15 @@ export function addWheel(kit: Kit, o: WheelOptions, m: THREE.Matrix4, out: 1 | -
     // dish it: the face sits proud at the rim and steps in toward the hub, then turn it to face +x
     const dp = disc.attributes.position;
     for (let k = 0; k < dp.count; k++) { const y = dp.getX(k), z = dp.getY(k), r = Math.hypot(y, z); dp.setXYZ(k, xr - 0.004 - 0.028 * Math.pow(Math.max(0, 1 - r / 0.238), 1.6), y, z); }
-    disc.computeVertexNormals();
+    // the dish's normals from its formula (x = h(r)): the cap's triangulation has long slivers, and normals averaged
+    // over them shaded the cover in streaks
+    const dn = new Float32Array(dp.count * 3);
+    for (let k = 0; k < dp.count; k++) {
+      const y = dp.getY(k), z = dp.getZ(k), r = Math.hypot(y, z), dh = 0.028 * 1.6 * Math.pow(Math.max(0, 1 - r / 0.238), 0.6) / 0.238;
+      const n = v3(1, r > 1e-6 ? -dh * y / r : 0, r > 1e-6 ? -dh * z / r : 0).normalize();
+      dn[k * 3] = n.x; dn[k * 3 + 1] = n.y; dn[k * 3 + 2] = n.z;
+    }
+    disc.setAttribute('normal', new THREE.BufferAttribute(dn, 3));
     const du = disc.attributes.uv as THREE.BufferAttribute; for (let k = 0; k < du.count; k++) { const y = dp.getY(k), z = dp.getZ(k); du.setXY(k, Math.atan2(z, y) / (Math.PI * 2), Math.hypot(y, z) * 6); }
     // (the cap faced +z in its own plane; the cyclic swap of axes above keeps its winding, so it now faces +x)
     put(S, 'aero', disc);

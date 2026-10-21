@@ -1,0 +1,23 @@
+// Screenshot the radio card while driving: tune Coast from the card, then shoot.   node tools/radio-shot.mjs <out.png> [WxH]
+import { chromium } from 'playwright';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const [out, size = '1280x720'] = process.argv.slice(2), [W, H] = size.split('x').map(Number);
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const ctx = await browser.newContext({ viewport: { width: W, height: H }, ...(W < 600 ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {}) });
+await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'light', radioFavs: ['canyon'] })));
+const page = await ctx.newPage(); page.setDefaultTimeout(180000);
+const errors = []; page.on('pageerror', (e) => errors.push(String(e)));
+await page.goto(pathToFileURL(path.join(ROOT, 'dist', 'top-speed-ultra.html')).href);
+await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'));
+await page.getByRole('button', { name: 'Drive', exact: true }).click();
+await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'));
+await page.evaluate(() => { const g = window.__game; g.setPaused(true); g.fastForward(4, {}, 30); g.setPaused(false); });
+await page.getByRole('button', { name: 'Radio', exact: true }).click();
+await page.locator('.rc-tune', { hasText: 'KCST' }).click();
+await page.waitForTimeout(800);
+const r = await page.evaluate(() => ({ station: window.__game.radio.current?.name ?? 'off' }));
+await page.screenshot({ path: path.resolve(out), timeout: 180000 });
+console.log(JSON.stringify({ out, ...r, errors }));
+await browser.close();

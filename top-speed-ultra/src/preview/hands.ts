@@ -30,7 +30,7 @@ import { V3, gToW, dirGToW, wToCar, reach } from './hands-sdf';
 import { buildArmGeometry, ArmGeometry } from './hands-geo';
 import { skinMaterial, nailMaterial, Quality } from './hands-skin';
 import { buildNails, NailGeometry } from './hands-nails';
-import { buildAccessories } from './hands-acc';
+import { buildAccessories, accentOf } from './hands-acc';
 
 export interface HandsOptions {
   look: DriverLook;
@@ -215,7 +215,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
 
   const N = A.palm.N, holeN: number[] = [];
   for (let i = 0; i < 5; i++) holeN.push(N[0], N[1], N[2]);
-  const skinMat = skinMaterial({ tone: look.skin, glove: look.gloves, quality: q, female, veins: A.veins, holes: A.holes, holeNormals: holeN });
+  const skinMat = skinMaterial({ tone: look.skin, glove: look.gloves, accent: accentOf(look), quality: q, female, veins: A.veins, holes: A.holes, holeNormals: holeN });
   const skin = new THREE.SkinnedMesh(g, skinMat);
   skin.name = 'skin';
   const meshes: THREE.SkinnedMesh[] = [skin];

@@ -1142,7 +1142,11 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
    Built on the tokens above. The sunset pass may add --sunset, --ember and --amber: the store reads them first and
    falls back to today's tokens, so it adopts the new look without edits. */
 .store-open { border: 0; font: inherit; text-align: left; cursor: pointer; }
-.store { --st-accent: var(--amber, var(--volt)); --st-hot: var(--ember, var(--mag)); --st-sunset: var(--sunset, linear-gradient(100deg, #ffb347 0%, #e8622c 52%, #8e2c6b 100%)); }
+.store { --st-accent: var(--amber, var(--volt)); --st-hot: var(--ember, var(--mag)); --st-sunset: var(--sunset, linear-gradient(100deg, #ffb347 0%, #e8622c 52%, #8e2c6b 100%));
+  /* the store's own accents, on the sunset tokens: the old volt/magenta tokens it was drawn with are gone from :root
+     since the ice re-theme, and an undefined var() left the test-mode tag, the mode banner and the focus ring unset */
+  --volt: var(--amber); --volt-line: rgba(254, 188, 49, 0.55); --volt-wash: rgba(254, 188, 49, 0.1);
+  --mag: var(--ember); --mag-ink: #ff8a73; --mag-wash: rgba(238, 30, 10, 0.16); }
 .store .store-panel { gap: 18px; }
 .store .store-mode { position: relative; isolation: isolate; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; padding: 12px 16px; margin-inline: 4px; }
 .store .store-mode::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--volt-wash); box-shadow: inset 0 0 0 1px var(--volt-line), inset 4px 0 0 var(--volt); }
@@ -1261,3 +1265,120 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .store .store-mode { margin-inline: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { .store .panel { animation: none !important; } }
+
+/* ------------------------------------------------------------------ the garage's Paint tab (U5) */
+.paints { display: grid; gap: 12px; }
+.paint-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.paint-grid.wheel-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.paint-chip { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 12px 6px 8px; border: 0; cursor: pointer; text-align: left; color: var(--ink); background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
+.paint-chip .sw { flex: none; width: 30px; height: 30px; border-radius: 50%; box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.35), inset 0 4px 8px rgba(255, 255, 255, 0.25), 0 0 0 1px var(--line-2); }
+.paint-chip b { font: 600 14px/1.2 var(--f-ui); }
+.paint-chip.on { background: var(--cyan-wash); box-shadow: inset 0 0 0 1px var(--cyan-line), inset 3px 0 0 var(--cyan); }
+@media (hover: hover) { .paint-chip:not(.on):hover { box-shadow: inset 0 0 0 1px var(--line-3); } }
+/* the Wheels tab: a face-on rim drawing, the name and a short note (U5) */
+.wheel-chip { display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 12px; padding: 8px 12px 8px 8px; }
+.wheel-chip .rim-ico { grid-row: 1 / 3; width: 44px; height: 44px; }
+.wheel-chip b { align-self: end; }
+.wheel-chip small { align-self: start; font: 500 12px/1.3 var(--f-ui); color: var(--dim); }
+.rim-ico .tyre { fill: #0b0d10; }
+.rim-ico .lip { fill: none; stroke: var(--chrome); stroke-width: 1.2; opacity: 0.85; }
+.rim-ico .disc { fill: #2a2d33; }
+.rim-ico .slot { fill: none; stroke: #0b0d10; stroke-width: 2.4; stroke-linecap: round; }
+.rim-ico .spoke { stroke: var(--chrome); stroke-linecap: round; fill: none; }
+.rim-ico .hub { fill: var(--chrome); }
+.wheel-chip.on .rim-ico .lip, .wheel-chip.on .rim-ico .hub { stroke: var(--cyan); }
+.soon-note { padding: 14px; box-shadow: inset 0 0 0 1px var(--line); }
+
+/* ------------------------------------------------------------------ the radio card (U7, RadioCard.tsx): beside the controls */
+.radio-card { position: absolute; right: 170px; top: 50%; transform: translateY(-50%); width: 300px; display: grid; gap: 12px; padding: 14px; pointer-events: auto;
+  background: var(--hex) left top / 56px 97px, var(--glass-2); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice); clip-path: var(--chamfer); animation: pop 0.22s var(--ease); }
+.rc-now { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: center; }
+.rc-art { position: relative; display: grid; align-content: center; justify-items: center; gap: 2px; width: 84px; height: 84px; overflow: hidden;
+  background: radial-gradient(circle at 30% 25%, var(--ice-hi), var(--ice) 45%, var(--ice-deep)); color: var(--night); }
+.rc-now.synthwave .rc-art { background: linear-gradient(160deg, var(--cyan), var(--ice-deep) 60%, var(--night-3)); color: var(--ink); }
+.rc-now.lofi .rc-art { background: linear-gradient(200deg, var(--ice-hi), var(--chrome-lo)); }
+.rc-now.off .rc-art { background: var(--cell); color: var(--faint); box-shadow: inset 0 0 0 1px var(--line); }
+.rc-art b { font: 800 24px/1 var(--f-display); letter-spacing: 0.06em; }
+.rc-art span { font: 600 12px/1 var(--f-mono); }
+.rc-eq { position: absolute; left: 10px; right: 10px; bottom: 8px; display: flex; gap: 3px; align-items: flex-end; height: 14px; }
+.rc-eq em { flex: 1; height: 30%; background: currentColor; opacity: 0.7; animation: eq 0.9s ease-in-out infinite alternate; }
+.rc-eq em:nth-child(2) { animation-delay: -0.3s; } .rc-eq em:nth-child(3) { animation-delay: -0.6s; } .rc-eq em:nth-child(4) { animation-delay: -0.15s; }
+@keyframes eq { to { height: 100%; } }
+.rc-meta { display: grid; gap: 3px; min-width: 0; }
+.rc-meta small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ice-text); }
+.rc-meta b { font: 700 18px/1.15 var(--f-ui); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rc-meta span { font-size: 12.5px; color: var(--dim); }
+.rc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.rc-list li { display: grid; grid-template-columns: 1fr 44px; box-shadow: inset 0 -1px 0 var(--line); }
+.rc-list li.on { background: var(--cyan-wash); box-shadow: inset 3px 0 0 var(--cyan), inset 0 -1px 0 var(--line); }
+.rc-tune { display: grid; grid-template-columns: 52px 46px 1fr; align-items: center; gap: 8px; min-height: 44px; padding: 0 10px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); }
+.rc-tune b { font: 700 15px/1 var(--f-ui); letter-spacing: 0.06em; } .rc-tune span { font: 500 12px/1 var(--f-mono); color: var(--dim); } .rc-tune em { font-style: normal; font-size: 13px; color: var(--dim); }
+.rc-star { align-self: stretch; display: grid; place-items: center; border: 0; cursor: pointer; background: var(--clear); color: var(--faint); font-size: 18px; }
+.rc-star.on { color: var(--drv); }
+.rc-vol { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; font: 500 11px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.rc-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rc-foot .btn { min-height: 40px; }
+.radio-card .fine { font-size: 11px; }
+@media (pointer: coarse), (max-width: 760px) { .radio-card { right: 8px; left: 8px; top: calc(max(12px, env(safe-area-inset-top)) + 58px); transform: none; width: auto; } }
+@media (prefers-reduced-motion: reduce) { .rc-eq em, .radio-card { animation: none !important; } }
+
+/* ------------------------------------------------------------------ the phone (U6, Phone.tsx): a handset over the pause screen */
+.overlay.phone-wrap { display: grid; place-items: center end; padding-right: max(40px, 6vw); background: var(--scrim); }
+.phone { position: relative; width: 300px; height: min(600px, 86vh); display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; padding: 12px 16px 14px;
+  border-radius: 38px; background: radial-gradient(120% 70% at 50% 0%, var(--night-3), var(--night-1) 70%); box-shadow: 0 0 0 2px var(--chrome-lo), 0 0 0 6px var(--chrome-deep), 0 0 0 7px var(--line-2), 0 30px 80px var(--shadow), 0 0 40px var(--ice-glow);
+  animation: phone-in 0.32s var(--ease) both; }
+@keyframes phone-in { from { opacity: 0; transform: translateX(40px); } }
+.ph-status { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font: 600 12px/1 var(--f-ui); color: var(--ink); }
+.ph-status span:last-child { justify-self: end; font: 500 10px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ice-text); }
+.ph-notch { width: 84px; height: 22px; border-radius: 12px; background: var(--void); }
+.ph-hello { display: grid; gap: 2px; padding: 4px 4px 0; }
+.ph-hello small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--drv); }
+.ph-hello b { font: 700 22px/1.1 var(--f-ui); }
+.ph-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; align-content: start; }
+.ph-app { position: relative; display: grid; justify-items: center; gap: 6px; padding: 0; border: 0; cursor: pointer; background: none; color: var(--ink); font: 500 11.5px/1.1 var(--f-ui); }
+.ph-app i { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 16px; color: var(--ink);
+  background: linear-gradient(160deg, var(--ice), var(--ice-deep)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 14px var(--shadow); }
+.ph-app:nth-child(3n+2) i { background: linear-gradient(160deg, var(--cyan), var(--ice-deep)); }
+.ph-app:nth-child(3n) i { background: linear-gradient(160deg, var(--chrome), var(--chrome-lo)); color: var(--night); }
+.ph-app.off { cursor: default; opacity: 0.45; }
+.ph-app em { position: absolute; top: -6px; right: 4px; padding: 2px 5px; border-radius: 6px; font: 600 8px/1 var(--f-mono); font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; color: var(--night); background: var(--chrome); }
+.ph-app:focus-visible { outline: none; } .ph-app:focus-visible i { outline: 2px solid var(--ice); outline-offset: 3px; }
+@media (hover: hover) { .ph-app:not(.off):hover i { filter: brightness(1.12); } }
+.ph-credits { display: grid; align-content: start; gap: 10px; padding: 4px; }
+.ph-credits small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ice-text); }
+.ph-credits b { font: 600 44px/1 var(--f-mono); letter-spacing: -0.03em; }
+.ph-credits p { margin: 0; color: var(--dim); font-size: 13.5px; line-height: 1.45; }
+.ph-back { justify-self: start; padding: 4px 0; border: 0; background: none; cursor: pointer; color: var(--ice-text); font: 600 13px/1 var(--f-ui); }
+.ph-home { justify-self: center; width: 110px; height: 5px; padding: 0; border: 0; border-radius: 3px; cursor: pointer; background: var(--line-3); }
+.ph-home:focus-visible { outline: 2px solid var(--ice); outline-offset: 4px; }
+@media (max-width: 560px) { .overlay.phone-wrap { place-items: center; padding: 16px; } .phone { width: min(320px, 100%); } }
+@media (prefers-reduced-motion: reduce) { .phone { animation: none !important; } }
+
+/* ------------------------------------------------------------------ the Settings rail (U8): the sections, sticky on the left */
+.panel.settings { width: min(1060px, 100%); }
+.s-layout { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 28px; align-items: start; }
+.s-rail { position: sticky; top: 0; display: grid; gap: 2px; padding-top: 2px; }
+.s-tab { min-height: 40px; padding: 0 12px; border: 0; text-align: left; cursor: pointer; color: var(--dim); background: var(--clear); font: 600 12.5px/1 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; box-shadow: inset 0 -1px 0 var(--line); }
+.s-tab.on { color: var(--ink); background: var(--ice-wash); box-shadow: inset 2px 0 0 var(--ice), inset 0 -1px 0 var(--line); }
+@media (hover: hover) { .s-tab:not(.on):hover { color: var(--ink); background: var(--cell); } }
+.sgroup { scroll-margin-top: 16px; }
+@media (max-width: 760px) {
+  .s-layout { grid-template-columns: 1fr; gap: 14px; }
+  .s-rail { position: static; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  .s-tab { flex: none; min-height: 36px; box-shadow: inset 0 0 0 1px var(--line); }
+}
+
+/* ------------------------------------------------------------------ the radial quick menu (U3, RadialMenu.tsx) */
+.radial { position: absolute; z-index: 20; width: 0; height: 0; }
+.radial::before { content: ""; position: absolute; left: -190px; top: -190px; width: 380px; height: 380px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--scrim-2) 0 34%, var(--scrim) 60%, var(--scrim-0) 72%); }
+.radial-hub { position: absolute; left: -54px; top: -54px; width: 108px; height: 108px; display: grid; place-items: center; border-radius: 50%; text-align: center;
+  font: 600 12px/1.2 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2), 0 0 24px var(--ice-glow); }
+.radial-w { position: absolute; left: -44px; top: -44px; width: 88px; height: 88px; display: grid; place-content: center; justify-items: center; gap: 6px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  color: var(--ink); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2); font: 600 11px/1 var(--f-ui); letter-spacing: 0.1em; text-transform: uppercase;
+  transform: translate(var(--x), var(--y)); animation: fan 0.22s var(--ease) both; animation-delay: calc(var(--i) * 18ms); }
+.radial-w .ico { width: 22px; height: 22px; color: var(--dim); }
+.radial-w.on { background: var(--ice-deep); box-shadow: inset 0 0 0 1px var(--ice), 0 0 22px var(--ice-glow); }
+.radial-w.on .ico { color: var(--ink); }
+@keyframes fan { from { opacity: 0; transform: translate(0, 0) scale(0.6); } }
+@media (prefers-reduced-motion: reduce) { .radial-w { animation: none !important; } }

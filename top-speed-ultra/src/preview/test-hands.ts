@@ -6,10 +6,15 @@
 //   ?view=female   the female presentation in two panels: the left hand from outside the rim (the ring, the
 //                  fingers round the rim), the right from the driver's side (painted nails, the bangle)
 //   ?view=tones    the five skin tones (drivers.ts SKINS) side by side, the right hand in each
-//   ?view=gloves   the Ace's leather driving gloves (knuckle holes, stitching), the right hand from the driver's side
+//   ?view=gloves   the Ace's racing gloves (knuckle pads, finger seams, the accent stripe), the right hand from the driver's side
 //   ?view=wrench   rolled sleeves and the smart watch
+//   ?view=outfit   both forearms from just above the eye, any driver (the wrench view's framing): the sleeves, cuffs and
+//                  watch as they read from the seat
 //   ?view=watch    the left wrist close up
+//   ?view=cuff     the left forearm from outside and above, framed per driver: the Closer's cuff, cufflink or button
+//                  and watch; the Ace's glove, knit cuff and R patch; the Wrench's roll, tan line and smart watch
 //   ?driver=closer|ace|wrench &pres=m|f &skin=0..4 &quality=phone|high &wheel=rad &time=day|sunset &hud=1
+//   ?nails=hex|none overrides the polish (default: the look's own, lookFor's nails)
 import * as THREE from 'three';
 import { makeStage } from './stage';
 import { buildDriverArms, HandPose } from './hands';
@@ -28,6 +33,8 @@ const preset: Record<string, { driver: DriverId; pres: Presentation; skin: numbe
   gloves: { driver: 'ace', pres: 'm', skin: 2, fov: 28 },
   wrench: { driver: 'wrench', pres: 'm', skin: 3, fov: 38 },
   watch: { driver: 'closer', pres: 'm', skin: 2, fov: 34 },
+  cuff: { driver: 'closer', pres: 'm', skin: 2, fov: 34 },
+  outfit: { driver: 'closer', pres: 'm', skin: 1, fov: 38 },
 };
 const P = preset[view] ?? preset.seat;
 const driver = (q.get('driver') as DriverId) ?? P.driver;
@@ -96,7 +103,7 @@ const spin = new THREE.Group(); wheel.add(spin);
 const build = (skin: number, drv = driver, pr = pres) => {
   const t0 = performance.now();
   const look = lookFor(drv, pr, skin);
-  const nails = q.has('nails') ? (q.get('nails') === 'none' ? null : parseInt(q.get('nails')!, 16)) : undefined;
+  const nails = q.has('nails') ? (q.get('nails') === 'none' ? null : parseInt(q.get('nails')!, 16)) : look.nails;
   const arms = buildDriverArms({ look, presentation: pr, quality, nails });
   return { arms, ms: performance.now() - t0 };
 };
@@ -127,8 +134,18 @@ else if (view === 'close') { const at = handR.clone().add(new THREE.Vector3(0.00
 else if (view === 'tones') { const at = handR.clone().add(new THREE.Vector3(-0.012, -0.006, 0.014)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.36)).add(new THREE.Vector3(0.04, 0.02, 0.0)), at); }
 else if (view === 'female') look(new THREE.Vector3(-0.3, 1.12, -0.06), new THREE.Vector3(-0.3, 0.88, -0.42));   // (two panels below)
 else if (view === 'gloves') { const at = handR.clone().add(new THREE.Vector3(0.0, 0.004, 0.012)); look(at.clone().add(EYE.clone().sub(at).normalize().multiplyScalar(0.3)).add(new THREE.Vector3(0.07, 0.03, 0.0)), at); }
-else if (view === 'wrench') look(new THREE.Vector3(-0.37, 1.13, -0.03), new THREE.Vector3(-0.37, 0.86, -0.42));
+else if (view === 'wrench' || view === 'outfit') look(new THREE.Vector3(-0.37, 1.13, -0.03), new THREE.Vector3(-0.37, 0.86, -0.42));
 else if (view === 'watch') look(new THREE.Vector3(-0.66, 1.02, -0.25), new THREE.Vector3(-0.555, 0.865, -0.375));   // the left wrist's back, from above and outside
+else if (view === 'cuff') {
+  // a point on the left forearm (the grip toward the elbow bone), from the watch view's direction; farther out and
+  // farther up the arm for the Wrench (the roll is ~20 cm up) and the Ace (the patch)
+  const E = arms.group.getObjectByName('fore1')!.position.clone(), G = arms.grip.left.clone();
+  // (?at=t&dist=m&dir=x,y,z override the framing)
+  const t = Number(q.get('at') ?? (driver === 'wrench' ? 0.56 : driver === 'ace' ? 0.4 : 0.36));
+  const dist = Number(q.get('dist') ?? (driver === 'wrench' ? 0.46 : driver === 'ace' ? 0.36 : 0.3));
+  const at = G.lerp(E, t), dir = new THREE.Vector3(...((q.get('dir') ?? '-0.06,0.2,0.1').split(',').map(Number) as [number, number, number])).normalize();
+  look(at.clone().add(dir.multiplyScalar(dist)), at);
+}
 
 // ---- the grip in three panels: the driver's eye, above, the dash side
 if (view === 'fingers') {
