@@ -27,6 +27,14 @@ model: routine work to `opus`, hard reasoning to `fable`.
   service runs as `oclive` from /opt/oc-live with a hardened unit; password reset by email (Resend, off until
   `RESEND_KEY`/`MAIL_FROM`), the account email setting, the menu's "N of 25 driving now", the pause screen's live
   line, Invite a friend, and a watchdog alert if `oc-live` stops. `cd live && npm test`: 45 of 45.
+- **Afternoon, 2026-10-21:** the owner resumed the loop ("keep going til everything is finished") and asked whether
+  live traffic should stay light: decision 18, computer cars capped light while driving live. The welcome-card check
+  in `livephone` timed out because of the test, not the game (the card renders at full size in a lone page); the check
+  now blanks the first phone and polls on a timer. **The online board:** session_01SwssTo7t6RP6BjTKo6BMvm
+  (claude/hypercar) offered to build it. Agreed: it is built from poses the server itself accepted (distance, top
+  speed held 3 s, longest drive), never from client-submitted scores; that session writes `live/board.mjs`,
+  `live/test/board.test.mjs`, `src/live/board.ts`, `src/ui/Board.tsx`; this lane wires `server.mjs` and the menu and
+  reviews. Anti-cheat rules are Fable-class: have a Fable session review them before the board goes public.
 - **Next** (in order; Opus-class unless marked):
   1. Done: every suite group passes on the latest build (core 62 of 62, `live` 12 of 12, `livephone` 5 of 5). Crews,
      cruise nights, password reset and the realistic-mode fixes are in (progress log, the morning entry).
