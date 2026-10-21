@@ -39,7 +39,7 @@ BACKUPS = Path("/var/backups/desks")
 NTFY = "https://ntfy.sh"
 UNITS = {"nightdesk": "Memecoin desk", "majors": "Big-coin desk", "majors-4h": "Big-coin 4h desk",
          "paperbook": "Paper book and crawler",
-         "postdesk": "Post Desk"}
+         "postdesk": "Post Desk", "oc-live": "OC Ultra live server"}
 # What should keep saving while its service runs: name -> (service, file, minutes, label)
 QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Memecoin desk"),     # every minute
          "nightdesk-wild": ("nightdesk", "night-desk/output/wild/live/state.json", 20, "Wild memecoin desk"),
@@ -228,6 +228,7 @@ def run_once(now: datetime, state: dict, *, units=unit_state, mtime_of=mtime, bo
              backups: Tuple[Optional[datetime], bool] = None) -> List[Push]:
     cfg, limit, at, night = settings()
     names = [n for n in UNITS if n != "postdesk" or (ROOT / "post-desk" / ".secrets" / "x_tokens.json").exists()]
+    names = [n for n in names if n != "oc-live" or Path("/etc/systemd/system/oc-live.service").exists()]   # only once installed
     pushes = check_units(now, state, units, names) + check_quiet(now, state, mtime_of)
     try:
         book = book_of() if book_of else pb.load(cfg, False, now)
