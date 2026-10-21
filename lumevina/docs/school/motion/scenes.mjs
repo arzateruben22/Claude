@@ -497,7 +497,7 @@ export const SCENES = {
       { at: 14, name: "star", cap: "If the star ingredient comes after the fragrance, there's very little of it. \"Fragrance\" can hide dozens of ingredients; sensitive skin often does better without." }
     ],
     css: `
-.lab { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; gap: 4vmin; }
+.lab { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 4vmin; z-index: 1; }
 .bottle { position: relative; width: 44vmin; height: 62vmin; border-radius: 4vmin; background: #16161a; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 3vmin 8vmin rgba(0,0,0,.5); overflow: hidden; }
 .bottle .cap { position: absolute; left: 50%; top: -2.6vmin; width: 14vmin; height: 5vmin; margin-left: -7vmin; border-radius: 1.2vmin; background: #2a2a2e; }
 .front, .back { position: absolute; inset: 0; padding: 7vmin 4vmin 4vmin; display: flex; flex-direction: column; }
@@ -511,7 +511,7 @@ export const SCENES = {
 .back { opacity: 0; }
 .back .h { font-size: 2.1vmin; letter-spacing: .12em; text-transform: uppercase; color: #a1a1a6; margin-bottom: 1.4vmin; }
 .ing { list-style: none; margin: 0; padding: 0; display: grid; gap: .5vmin; counter-reset: ing; }
-.ing li { position: relative; display: flex; align-items: center; gap: 1.2vmin; font-size: 2.35vmin; line-height: 1.2; padding: .55vmin .9vmin; border-radius: 1vmin; }
+.ing li { position: relative; display: flex; align-items: center; gap: 1.2vmin; font-size: 2.35vmin; line-height: 1.2; padding: .55vmin .9vmin; border-radius: 1vmin; background: transparent; }
 .ing li::before { counter-increment: ing; content: counter(ing); width: 3vmin; font-size: 1.9vmin; color: #6e6e73; font-variant-numeric: tabular-nums; }
 .ing li.five { background: rgba(244,201,214,.12); }
 .ing li.frag { background: rgba(255,122,107,.16); }
@@ -524,14 +524,14 @@ export const SCENES = {
 .pill b { color: #f4c9d6; } .pill.warn b { color: #ff7a6b; } .pill.good b { color: #e2b08c; }
 @media (orientation: portrait) { .lab { flex-direction: column; gap: 2.5vmin; } .bottle { width: 62vmin; height: 70vmin; } .side { width: 62vmin; } }`,
     html: `
-<section class="shot"><div class="lab">
+<div class="lab" id="lab">
   <div class="bottle" id="bottle"><div class="cap"></div>
     <div class="front" id="front"><div class="name">Glow Serum</div><div class="sub">with niacinamide</div>
       <div class="claims"><span>clean<i></i></span><span>natural<i></i></span><span>hypoallergenic<i></i></span><span>dermatologist tested<i></i></span></div>
       <div class="nolaw" id="nolaw">no legal definition</div></div>
     <div class="back" id="back"><div class="h">Ingredients</div>
       <ul class="ing" id="ing">
-        <li>Water (Aqua)<span class="pct"></span></li><li>Glycerin</li><li>Caprylic/Capric Triglyceride</li><li>Cetearyl Alcohol</li><li>Butylene Glycol</li>
+        <li>Water (Aqua)</li><li>Glycerin</li><li>Caprylic/Capric Triglyceride</li><li>Cetearyl Alcohol</li><li>Butylene Glycol</li>
         <li>Dimethicone</li><li>Phenoxyethanol<span class="pct" id="pct1">about 1%</span></li>
         <li id="frag">Fragrance (Parfum)</li><li id="star">Niacinamide</li><li>Tocopherol</li><li>Citric Acid</li>
       </ul></div>
@@ -542,10 +542,12 @@ export const SCENES = {
     <div class="pill warn" id="p-frag"><b>Fragrance</b> is usually under 1%, and can hide dozens of ingredients.</div>
     <div class="pill good" id="p-star"><b>Niacinamide, after it:</b> very little. The name on the front, a trace on the back.</div>
   </div>
-</div></section>`,
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
     setup: (M) => {},
     seek: (t, st, M) => {
       const { lt, i } = st, { $, $$, enter, tw, seg, E, set } = M;
+      set($("#lab"), { o: Math.min(1, seg(t, 0, 0.6) * 1.5), y: 10 * (1 - E.out(seg(t, 0, 0.6))) });
       const flipAt = 4.6;                                           // the bottle turns around at the end of shot 0
       const flip = i === 0 ? E.inout(seg(lt, flipAt, flipAt + 1.4)) : 1;
       const sx = Math.abs(Math.cos(flip * Math.PI));
@@ -556,12 +558,21 @@ export const SCENES = {
         $$(".claims span").forEach((c, k) => { enter(c, lt, 0.4 + k * 0.25, { y: 8 }); c.querySelector("i").style.transform = "scaleX(" + E.out(seg(lt, 2.0 + k * 0.18, 2.6 + k * 0.18)) + ")"; });
         enter($("#nolaw"), lt, 3.0, { y: 6 });
       }
-      // the list: the first five, the 1% line, the fragrance, the star
+      // the list: the first five light up one by one, the 1% line, the rows after it shuffle, then the fragrance and the star
       const rows = $$("#ing li");
-      rows.forEach((r, k) => { r.classList.toggle("five", k < 5 && (i >= 1 && (i > 1 || lt > 0.6))); r.classList.toggle("frag", r.id === "frag" && i === 2 && lt > 0.6); r.classList.toggle("star", r.id === "star" && i === 2 && lt > 2.2); r.style.opacity = i === 0 ? (showBack ? 1 : 0) : 1; });
-      $("#pct1").style.opacity = i >= 1 ? seg(i === 1 ? lt : 9, 2.6, 3.2) : 0;
+      const rowH = rows[1].offsetTop - rows[0].offsetTop;
+      rows.forEach((r, k) => {
+        r.classList.toggle("five", k < 5 && (i > 1 || (i === 1 && lt > 0.5 + k * 0.3)));
+        r.classList.toggle("frag", r.id === "frag" && i === 2 && lt > 0.6);
+        r.classList.toggle("star", r.id === "star" && i === 2 && lt > 2.2);
+        r.style.opacity = i === 0 ? (showBack ? 1 : 0) : 1;
+        let dy = 0;
+        if (i === 1 && k >= 7) { const p = E.inout(seg(lt, 4.6, 5.8)), q = E.inout(seg(lt, 5.9, 6.9)); dy = k === 7 ? 3 * rowH * (p - q) : -rowH * (p - q); }   // any order: the last four trade places, then settle
+        set(r, { y: dy });
+      });
+      $("#pct1").style.opacity = i >= 1 ? seg(i === 1 ? lt : 9, 2.4, 3.0) : 0;
       $$(".pill").forEach((p) => { if (!(i === 1 && (p.id === "p-five" || p.id === "p-one")) && !(i === 2 && (p.id === "p-frag" || p.id === "p-star"))) set(p, { o: 0, y: 10 }); });
-      if (i === 1) { enter($("#p-five"), lt, 0.8, { y: 10 }); enter($("#p-one"), lt, 3.0, { y: 10 }); }
+      if (i === 1) { enter($("#p-five"), lt, 1.4, { y: 10 }); enter($("#p-one"), lt, 3.4, { y: 10 }); }
       if (i === 2) { enter($("#p-frag"), lt, 0.8, { y: 10 }); enter($("#p-star"), lt, 2.6, { y: 10 }); }
     }
   }
