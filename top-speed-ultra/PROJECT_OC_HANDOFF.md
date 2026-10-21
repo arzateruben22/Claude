@@ -96,3 +96,4 @@ all passing. Log in PROJECT_OC_PROGRESS.md.
 - From the audits, not yet taken: night lighting (cabin lit as daylight, freeway lamps light nothing), the
   Monopoly houses, the paper mountains, flat clear-day light, traffic bodies' door seams and mirrors, the chase
   camera's hovering rear wheels; teeth, mouth corners, brows and beards on the people.
+- Merge note (store lane ST1, 2026-10-21): claude/modes had no Ultra entitlement yet, so `claude/store` defines it in `src/store/entitlements.ts` (`ULTRA_ENTITLEMENT = 'graphics-ultra'`, `ultraUnlocked({ owner })`; no sku or price): RS2 should read that flag, not define its own.

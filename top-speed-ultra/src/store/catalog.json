@@ -6,7 +6,7 @@
     "price_cents": 1000,
     "currency": "usd",
     "mode": "payment",
-    "window": { "until": "2026-12-31T23:59:59-08:00" },
+    "window": { "until": "FOUNDER_UNTIL" },
     "grants": [
       "badge-founder-26",
       "paint-founders-sunset",
@@ -21,8 +21,22 @@
       "paint-toll-road-graphite",
       "paint-saddleback-dusk"
     ],
-    "description": "For the people who were here first. The Founder '26 badge on your profile and run cards, Founders Sunset pearl paint, a Founders run-card frame, your name on the Founders roll in the credits if you want it, and both paint packs (eight more paints). Sold until December 31, 2026, then never again. Looks only: it changes nothing about how any car drives or scores.",
+    "description": "For the people who were here first. The Founder '26 badge on your profile and run cards, Founders Sunset pearl paint, a Founders run-card frame, your name on the Founders roll in the credits if you want it, and both paint packs (eight more paints). Sold until December 31, 2026, then never again. Looks only: it changes nothing about how any car drives or scores. It does not include the OC Hypercar Founder Edition, which is a separate item.",
     "available": true
+  },
+  {
+    "sku": "hypercar-founder",
+    "name": "OC Hypercar Founder Edition",
+    "kind": "pack",
+    "price_cents": 499,
+    "currency": "usd",
+    "mode": "payment",
+    "window": { "until": "FOUNDER_UNTIL" },
+    "serial": true,
+    "grants": ["car-oc-hyper", "plaque-founder-edition", "paint-oc-founder-silver"],
+    "description": "The OC Hypercar, numbered by the server when you buy it: a Founder Edition plaque with your number on the sill and the console, and OC Founder Silver paint with Founder Ice lights, reserved to this car. It runs Unleashed in Free Drive only: no clock and no rivals, your Free Drive bests stay on your device, and its Unleashed runs and run cards are marked. In Races, Time Trial and Speed Survival it runs a race tune at or under the Rossini Corsa, with its ability off. It doesn't take a garage slot and can't be sold for credits. Sold until December 31, 2026.",
+    "available": false,
+    "unavailable_reason": "Not on sale yet: the OC Hypercar is still being built and isn't in the game yet. It goes on sale only once it is in the game and checked."
   },
   {
     "sku": "paint-pack-coast",
@@ -99,7 +113,8 @@
     "mode": "payment",
     "grants": ["wheels-vela-irvine-silver-twin5", "wheels-vela-fullerton-black-five", "wheels-vela-laguna-pearl-cl10"],
     "description": "Three wheel setups for the Vela E, each with its own calipers: Irvine Silver twin-five, Fullerton Black five-spoke, Laguna Pearl centre-lock. Same size wheels and tyres: looks only. Earn the Vela E by driving to buy it.",
-    "available": true
+    "available": true,
+    "caveat": "The hypercar branch hides the Vela E from new players (PROJECT_OC_HYPERCAR.md §1 and §11): once that ships, a new player can never earn the Vela E, so this set is unsellable to them (the store's \"Earn the Vela E first\" lock refuses it) and sells only to players who already own one. Decide before that merge: retire the set, or keep it for Vela E owners and change \"Earn the Vela E by driving to buy it\"."
   },
   {
     "sku": "style-night-shift",

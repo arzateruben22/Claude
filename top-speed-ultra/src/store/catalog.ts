@@ -4,6 +4,12 @@
 // that copy says, never what the page sends.
 import catalogJson from './catalog.json';
 import cosmeticsJson from './cosmetics.json';
+import founderJson from './founder.json';
+
+// The one founder window (src/store/founder.json): the Founder Pack and the OC Hypercar Founder Edition are sold until
+// the last second of December 31, 2026, Pacific time. catalog.json's founder items name it ("FOUNDER_UNTIL"); the
+// server's copy and the checker read the same file.
+export const FOUNDER_UNTIL: string = founderJson.FOUNDER_UNTIL;
 
 export type Kind = 'pack' | 'livery' | 'kit' | 'style' | 'tip' | 'club';
 export type Status = 'ready' | 'hook' | 'build';
@@ -18,10 +24,13 @@ export interface Sku {
   mode: 'payment' | 'subscription';
   interval?: 'month' | 'year';
   window?: { until: string };
+  serial?: boolean;                // the server numbers each sale (migration 0002); the device never does
   custom_amount?: { minimum_cents: number; preset_cents: number; maximum_cents: number };
   grants: string[];
   description: string;
   available: boolean;
+  unavailable_reason?: string;     // why it can't be sold yet, in words the store shows
+  caveat?: string;                 // a note for the owner (not shown in the store)
 }
 
 export interface Swatch { name: string; hex: string }
@@ -46,6 +55,10 @@ export interface Entitlement {
   never_resold?: boolean;
   needs?: string;
   hook?: string;
+  vehicle?: string;                // a car the store grants: its id in src/game/cars.ts
+  outside_slots?: boolean;         // ...which takes no garage slot
+  sell_back?: boolean;             // false: never sold back for credits
+  leds?: Swatch & { accent: string };
 }
 
 export interface Finish { metalness: number; roughness: number; clearcoat: number; clearcoatRoughness: number; status: Status }
@@ -56,7 +69,7 @@ interface Cosmetics {
   paint_finishes: Record<FinishName, Finish> & { note?: string };
 }
 
-export const CATALOG = catalogJson as unknown as Sku[];
+export const CATALOG = (catalogJson as unknown as Sku[]).map((s) => (s.window?.until === 'FOUNDER_UNTIL' ? { ...s, window: { until: FOUNDER_UNTIL } } : s));
 export const COSMETICS = cosmeticsJson as unknown as Cosmetics;
 const ENTS = new Map(COSMETICS.entitlements.map((e) => [e.id, e]));
 const SKUS = new Map(CATALOG.map((s) => [s.sku, s]));
@@ -64,6 +77,7 @@ const SKUS = new Map(CATALOG.map((s) => [s.sku, s]));
 export const skuById = (id: string) => SKUS.get(id) ?? null;
 export const entById = (id: string) => ENTS.get(id) ?? null;
 export const FOUNDER_SKU = 'founder-pack-2026';
+export const HYPERCAR_SKU = 'hypercar-founder';
 
 // the order and the headings the store shows
 export const KINDS: { kind: Kind; label: string; blurb: string }[] = [
@@ -79,16 +93,18 @@ export const CAR_NAMES: Record<string, string> = { 'rossini-gt': 'Rossini GT', '
 
 // on sale right now? (available, and inside its window if it has one)
 export function saleState(s: Sku, now = Date.now()): { ok: true } | { ok: false; why: string } {
-  if (!s.available) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
-  if (s.window && now > Date.parse(s.window.until)) return { ok: false, why: `${s.name} was sold until ${windowDate(s)} and is never sold again.` };
+  if (!s.available) return { ok: false, why: s.unavailable_reason ?? 'Not on sale yet: it goes on sale once it is in the game.' };
+  // "never sold again" is the Founder Pack's promise only: for the OC Hypercar Founder Edition, what it covers is the
+  // owner's open decision (PROJECT_OC_MONETIZATION.md §12), so its copy gives the end date and no more
+  if (s.window && now > Date.parse(s.window.until)) return { ok: false, why: `${s.name} was sold until ${windowDate(s)}${s.sku === FOUNDER_SKU ? ' and is never sold again' : ''}.` };
   return { ok: true };
 }
 export const forSale = (now = Date.now()) => CATALOG.filter((s) => saleState(s, now).ok);
 
-// "December 31, 2026", in the window's own (Pacific) time
-export function windowDate(s: Sku) {
+// "December 31, 2026" (or "Dec 31, 2026" short), in the window's own (Pacific) time
+export function windowDate(s: Sku, month: 'long' | 'short' = 'long') {
   if (!s.window) return '';
-  return new Date(s.window.until).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' });
+  return new Date(s.window.until).toLocaleDateString('en-US', { month, day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' });
 }
 
 // $3 on a card, $3.00 on a receipt
@@ -114,7 +130,8 @@ export const grantsReady = (s: Sku) => s.grants.every((g) => ENTS.get(g)?.status
 // a short line for each grant: what it is, for the item card
 export function grantLine(e: Entitlement): string {
   switch (e.type) {
-    case 'paint': return `${e.name} paint (${e.finish})`;
+    case 'paint': return `${e.name} paint (${e.finish})${e.leds ? `, ${e.leds.name} lights` : ''}`;
+    case 'plaque': return `${e.name}, numbered`;
     case 'wheels': return `${e.name} wheels, ${e.caliper?.name.toLowerCase()} calipers`;
     case 'style': return `${e.name}: ${[e.gloves?.name ?? 'bare hands', e.watch ? `the ${e.watch.model} watch` : '', e.sleeve?.name.toLowerCase()].filter(Boolean).join(', ')}`;
     case 'badge': return `${e.name} badge`;
