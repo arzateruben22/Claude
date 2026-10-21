@@ -48,6 +48,12 @@ The owner's standing order is to keep improving until they say stop. A scheduled
     and `boot`: 14 of 14, with the Day preset's chip reading "12:30 PM".
   - With Live weather and the real feed, the chip now shows the observed temperature and "NWS KSNA" rather than the
     simulated one. In the `phone` group the injected reading showed "61° · NWS KSNA": 8 of 8.
+- **Ghost cars' lamps.** Ghosts now carry head and tail lamps like the traffic's, and the tail lamps brighten when
+  that driver brakes. The new night check found a real bug: a ghost standing still ignored repeated poses, which also
+  dropped a change in its brake light. It now updates the brake and speed on a repeated pose. `livephone`: 6 of 6,
+  with 1 ghost, both lamps, brake lamp 3.2 after the sky darkened (`tests/out/livephone-night-ghost.png`; the ghost is
+  60 m ahead, so small at phone size). The night road still reads bright; that is the night-lighting item in the Opus
+  queue, not this change.
 
 ## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
 
