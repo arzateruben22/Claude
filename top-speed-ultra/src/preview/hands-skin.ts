@@ -7,10 +7,28 @@
 //  - roughness varied (shinier knuckles and fingertips), a soft sheen, a faint oily second lobe (clearcoat)
 //  - a cheap subsurface look: wrapped diffuse lighting tinted red at the terminator, light through the thin
 //    fingers when they are against the light, and baked ambient occlusion from the distance field (rim included)
-//  - GLOVE: leather over the hand with round knuckle holes, an open back, stitched edges and a wrist strap
+//  - GLOVE: a racing glove: leather over the whole hand, padded knuckles (raised, ribbed, stitched round), panel
+//    seams down the fingers and round the back, a wrist strap with an accent stripe across its closure
+//  - a faint tan line just under the rolled work shirt (rollAt), where the sleeve usually covers the arm
 import * as THREE from 'three';
 
 export type Quality = 'phone' | 'high';
+
+/** bumpNormal(pos, n, H, faceDir): a bump from a height in metres; shared with the cloth shader (hands-acc.ts) */
+export const BUMP_GLSL = /* glsl */ `
+// bump mapping from a height in metres, with the surface's own screen derivatives (Mikkelsen, unnormalised)
+vec3 bumpNormal(vec3 pos, vec3 n, float H, float faceDir) {
+  vec3 sx = dFdx(pos), sy = dFdy(pos);
+  vec3 r1 = cross(sy, n), r2 = cross(n, sx);
+  float det = dot(sx, r1) * faceDir;
+  vec3 g = sign(det) * (dFdx(H) * r1 + dFdy(H) * r2);
+  vec3 v = abs(det) * n - g;
+  float l2 = dot(v, v);
+  // degenerate derivatives (silhouettes, tiny triangles) would give a NaN normal: a black speck
+  vec3 b = l2 > 1e-30 ? v * inversesqrt(l2) : n;
+  return dot(b, n) > 0.2 ? b : n;
+}
+`;
 
 const NOISE = /* glsl */ `
 float hh13(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
@@ -32,18 +50,7 @@ vec2 cells(vec3 p) {
   return vec2(sqrt(d1), sqrt(d2) - sqrt(d1));
 }
 float segd(vec3 p, vec3 a, vec3 b) { vec3 pa = p - a, ba = b - a; float t = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * t); }
-// bump mapping from a height in metres, with the surface's own screen derivatives (Mikkelsen, unnormalised)
-vec3 bumpNormal(vec3 pos, vec3 n, float H, float faceDir) {
-  vec3 sx = dFdx(pos), sy = dFdy(pos);
-  vec3 r1 = cross(sy, n), r2 = cross(n, sx);
-  float det = dot(sx, r1) * faceDir;
-  vec3 g = sign(det) * (dFdx(H) * r1 + dFdy(H) * r2);
-  vec3 v = abs(det) * n - g;
-  float l2 = dot(v, v);
-  // degenerate derivatives (silhouettes, tiny triangles) would give a NaN normal: a black speck
-  vec3 b = l2 > 1e-30 ? v * inversesqrt(l2) : n;
-  return dot(b, n) > 0.2 ? b : n;
-}
+${BUMP_GLSL}
 `;
 
 // direct light with a subsurface look: wrapped, red-tinted diffuse and light coming through thin parts
@@ -70,7 +77,12 @@ export interface SkinOptions {
   veins: number[];              // segments in the hand frame (mm): x0 y0 z0 x1 y1 z1 r, then the skin's up there
   holes: number[];              // glove openings (mm): x y z r (4 knuckles, then the back)
   holeNormals: number[];        // their outward normals
+  accent?: number;              // the glove's stripe at the wrist closure (hex; default the Ace's lavender, #b9a6ff: hands.ts doesn't pass it)
 }
+
+/** where the Wrench's rolled sleeve ends, mm from the wrist (hands-acc.ts rolls it there; the skin's tan line sits
+ *  just below it). Under the other outfits the skin there is covered, so the tan line never shows. */
+export const rollAt = (female: boolean) => Math.round(204 * (female ? 0.92 : 1));
 
 export interface SkinMaterial extends THREE.MeshPhysicalMaterial {
   setTone(hex: number): void;
@@ -96,6 +108,8 @@ export function skinMaterial(o: SkinOptions): SkinMaterial {
     uHoles: { value: Array.from({ length: 5 }, (_, i) => new THREE.Vector4(o.holes[i * 4] ?? 0, o.holes[i * 4 + 1] ?? 0, o.holes[i * 4 + 2] ?? 0, o.holes[i * 4 + 3] ?? 0)) },
     uHoleN: { value: Array.from({ length: 5 }, (_, i) => new THREE.Vector3(o.holeNormals[i * 3] ?? 0, o.holeNormals[i * 3 + 1] ?? 0, o.holeNormals[i * 3 + 2] ?? 1)) },
     uLeather: { value: new THREE.Color(o.glove ?? 0x111111) },
+    uAccent: { value: new THREE.Color(o.accent ?? 0xb9a6ff) },
+    uTanAt: { value: rollAt(o.female) - 32 },     // mm from the wrist: paler skin above this (the roll starts 16 mm below rollAt)
     uFem: { value: o.female ? 1 : 0 },
     uDbg: { value: 0 },             // debugging (test page ?skindbg=): 1 no relief, 2 no occlusion, 3 flat colour
   };
@@ -121,10 +135,12 @@ varying vec3 vHand; varying vec4 vSkin; varying vec4 vJoint; varying vec2 vArm;
 #ifdef GLOVE
 uniform vec4 uHoles[5];
 varying float vLeather;
-float leatherAt(vec3 hp, float along) {
-  float cover = 1.0 - smoothstep(18.0, 22.0, along);
-  for (int i = 0; i < 5; i++) { float d = length(hp - uHoles[i].xyz) - uHoles[i].w; cover *= smoothstep(-0.6, 0.6, d); }
-  return cover;
+// a racing glove covers the whole hand to its gauntlet; where a driving glove had knuckle holes it has pads
+float leatherAt(float along) { return 1.0 - smoothstep(18.0, 22.0, along); }
+float padAt(vec3 hp) {
+  float pad = 0.0;
+  for (int i = 0; i < 4; i++) { float d = length(hp - uHoles[i].xyz) - uHoles[i].w * 1.15; pad = max(pad, smoothstep(0.8, -1.6, d)); }
+  return pad;
 }
 #endif
 `;
@@ -133,15 +149,15 @@ float leatherAt(vec3 hp, float along) {
       .replace('#include <begin_vertex>', /* glsl */ `#include <begin_vertex>
 vHand = aHand; vSkin = aSkin; vJoint = aJoint; vArm = aArm;
 #ifdef GLOVE
-vLeather = leatherAt(aHand * 1000.0, aArm.x);
-transformed += normal * 0.0009 * vLeather;
+vLeather = leatherAt(aArm.x);
+transformed += normal * (0.0009 + 0.0011 * padAt(aHand * 1000.0)) * vLeather;
 #endif`);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', /* glsl */ `#include <common>
 varying vec3 vHand; varying vec4 vSkin; varying vec4 vJoint; varying vec2 vArm;
-uniform vec3 uTone; uniform float uDark; uniform vec4 uVeins[${NV * 3}]; uniform float uVeinAmt; uniform float uFem; uniform float uDbg;
+uniform vec3 uTone; uniform float uDark; uniform vec4 uVeins[${NV * 3}]; uniform float uVeinAmt; uniform float uFem; uniform float uDbg; uniform float uTanAt;
 #ifdef GLOVE
-uniform vec4 uHoles[5]; uniform vec3 uHoleN[5]; uniform vec3 uLeather; varying float vLeather;
+uniform vec4 uHoles[5]; uniform vec3 uHoleN[5]; uniform vec3 uLeather; uniform vec3 uAccent; varying float vLeather;
 #endif
 ${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', sssLights())
@@ -177,6 +193,8 @@ c *= mix(vec3(1.0), redT, clamp(red, 0.0, 1.0) * 0.6);   // subtle: strong red r
 vec3 palmTone = mix(c * vec3(1.05, 0.97, 0.95), vec3(0.5, 0.33, 0.27), 0.12 + 0.42 * uDark);
 c = mix(c, palmTone, clamp(palmar * 0.9, 0.0, 1.0) * (0.35 + 0.5 * uDark));
 c *= mix(vec3(1.0), mix(vec3(0.86, 0.93, 1.03), vec3(0.86, 0.84, 0.86), uDark), vein * 0.55);   // blue-grey under light skin, darker under dark
+// the tan line: the skin the rolled sleeve usually covers is a shade paler (less so on dark skin), a soft edge
+c *= mix(vec3(1.0), vec3(1.2, 1.14, 1.1), smoothstep(uTanAt - 2.0, uTanAt + 2.0, vArm.x) * (1.0 - 0.6 * uDark));
 // (no pigment-spot term: from the seat its dots read as dirt or stubble)
 // ---- relief (mm), turned into metres for the bump
 float H = 0.0;
@@ -213,20 +231,29 @@ float leather = 0.0;
 #ifdef GLOVE
 leather = smoothstep(0.35, 0.65, vLeather);
 {
-  // edge binding and stitching round each opening
-  float edge = 0.0, stitch = 0.0;
+  // the knuckle pads: raised, ribbed across, a groove and a row of stitching round each; the back of the hand is a
+  // separate panel, its seam stitched
+  float edge = 0.0, stitch = 0.0, pad = 0.0, rib = 0.0;
   for (int i = 0; i < 5; i++) {
     vec3 q = hp - uHoles[i].xyz, n = uHoleN[i];
-    float d = length(q) - uHoles[i].w;
+    float r = uHoles[i].w * (i < 4 ? 1.15 : 1.0);
+    float d = length(q) - r;
     vec3 e1 = normalize(cross(n, vec3(0.31, 0.95, 0.07))), e2 = cross(n, e1);
-    float ang = atan(dot(q, e2), dot(q, e1)) * (uHoles[i].w + 2.2);
-    edge = max(edge, smoothstep(2.0, 0.6, d) * step(0.0, d));
-    stitch = max(stitch, smoothstep(0.45, 0.15, abs(d - 2.3)) * step(0.5, fract(ang / 2.4)));
+    float ang = atan(dot(q, e2), dot(q, e1)) * (r + 1.2);
+    float sd = i < 4 ? 1.1 : 0.0;
+    edge = max(edge, smoothstep(0.9, 0.0, abs(d - sd * 0.3)) * (i < 4 ? 1.0 : 0.6));
+    stitch = max(stitch, smoothstep(0.42, 0.12, abs(d - sd - 0.9)) * step(0.5, fract(ang / 2.2)));
+    if (i < 4) {
+      float pk = smoothstep(0.4, -1.4, d);
+      pad = max(pad, pk);
+      rib = max(rib, pk * pow(0.5 + 0.5 * cos(dot(q, e2) * 6.2832 / 2.6), 2.0));
+    }
   }
-  // the wrist strap and its stitching
+  // the wrist strap, its stitching, and the accent stripe across the closure
   float along = vArm.x;
   float strap = smoothstep(4.0, 5.0, along) * smoothstep(17.0, 16.0, along) * smoothstep(0.55, 0.3, palmar);
   float sline = (smoothstep(0.35, 0.1, abs(along - 6.2)) + smoothstep(0.35, 0.1, abs(along - 14.8))) * step(0.5, fract(dot(hp, vec3(0.31, 0.6, 0.73)) / 2.3)) * strap;
+  float stripe = smoothstep(1.7, 1.2, abs(along - 10.5)) * strap * smoothstep(1.6, 0.6, pix);
   // each finger is sewn from a back and a palm piece: a raised seam with its stitching runs down both sides of the
   // finger (where the back turns into the palm side) and round the tip
   float onF = smoothstep(0.15, 0.4, thin);
@@ -244,9 +271,12 @@ leather = smoothstep(0.35, 0.65, vLeather);
   lc = mix(lc, lc * 0.55, edge);
   lc = mix(lc, vec3(0.16, 0.15, 0.14), stitch * 0.85);
   lc = mix(lc, lc * 0.6, sline * 0.8);
+  lc *= 1.0 + 0.25 * pad - 0.3 * rib * mid;                 // the pads: a smoother, slightly shinier leather, ribbed
+  lc = mix(lc, uAccent * 0.75, stripe);
   diffuseColor.rgb = mix(diffuseColor.rgb, lc, leather);
-  H = mix(H, -gH - 0.22 * fold * mid + 0.12 * stitch * mid + 0.25 * strap * mid - 0.1 * sline + 0.18 * fseam * mid, leather);
-  rough = mix(rough, 0.48 - 0.12 * smoothstep(0.3, 0.9, red) * dorsal + 0.1 * fold + 0.1 * edge, leather);
+  H = mix(H, -gH * (1.0 - pad) - 0.22 * fold * mid * (1.0 - pad) + 0.12 * stitch * mid + 0.25 * strap * mid - 0.1 * sline + 0.18 * fseam * mid
+           + 0.35 * pad * mid - 0.12 * rib * mid - 0.2 * edge * mid + 0.06 * stripe, leather);
+  rough = mix(rough, 0.48 - 0.12 * smoothstep(0.3, 0.9, red) * dorsal + 0.1 * fold + 0.1 * edge - 0.1 * pad + 0.12 * stripe, leather);
   thin *= 1.0 - leather; ao = mix(ao, ao * 0.95, leather);
 }
 #endif
