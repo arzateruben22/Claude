@@ -1630,6 +1630,57 @@ export const SCENES = {
       if (i === 3) { const b = 0.5 + 0.5 * Math.sin(lt * 2.6); set($("#s7"), { o: Math.min(1, seg(lt, 0.4, 1.0) * 2.5), x: -12 * (1 - E.out(seg(lt, 0.4, 1.0))), s: lt > 1 ? 1 + 0.012 * b : 1 }); }
     }
   },
+  "7-3": {
+    id: "7-3", kicker: "Skin through the seasons", title: `The Valley has more weather <span class="grad">than people think.</span>`, dur: 22, poster: 3,
+    shots: [
+      { at: 0, name: "summer", cap: "Hot summers: a lighter gel moisturizer, sunscreen reapplied more often, and blotting papers instead of more powder." },
+      { at: 6, name: "winter", cap: "Santa Ana winds and dry winters: a richer moisturizer, fewer acid nights, and a humidifier by the bed." },
+      { at: 12, name: "travel", cap: "Travel and flights: skip new actives, and pack your barrier basics." },
+      { at: 17, name: "check", cap: "Plan a skin check with Evelyn at every change of season." }
+    ],
+    css: `
+.se { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.ring { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vmin; }
+.season { position: relative; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.4vmin 2.2vmin; opacity: .35; overflow: hidden; }
+.season.on { opacity: 1; border-color: var(--c); }
+.season .ico { position: relative; width: 12vmin; height: 12vmin; margin: 0 auto 1.6vmin; border-radius: 50%; }
+.season.sum .ico { background: radial-gradient(circle, #ffe9a8, #ffd27a 55%, rgba(255,210,122,0) 58%); box-shadow: 0 0 3vmin rgba(255,210,122,.5); }
+.season.win .ico { background: radial-gradient(circle, #e8f1ff, #8fd3ff 55%, rgba(143,211,255,0) 58%); }
+.season.win .ico i { position: absolute; left: -4vmin; top: 50%; width: 20vmin; height: .5vmin; margin-top: -.25vmin; border-radius: 1vmin; background: rgba(255,255,255,.55); transform-origin: 0 50%; }
+.season.tra .ico { background: #1a1a1d; border: .4vmin solid #c9b6ff; } .season.tra .ico i { position: absolute; left: 50%; top: 50%; width: 7vmin; height: 2.2vmin; margin: -1.1vmin 0 0 -3.5vmin; border-radius: 1.1vmin 2vmin 2vmin 1.1vmin; background: #c9b6ff; }
+.season.chk .ico { background: #f4c9d6; } .season.chk .ico b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 5vmin; color: #1a1210; }
+.season .nm { display: block; text-align: center; font-size: 3.2vmin; font-weight: 700; }
+.season .tips { display: flex; flex-direction: column; gap: .8vmin; margin-top: 1.4vmin; }
+.season .tip { padding: 1vmin 1.6vmin; border-radius: 1.2vmin; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); font-size: 2.4vmin; font-weight: 600; line-height: 1.25; opacity: 0; }
+.season.on .tip.swap { border-color: var(--c); }
+@media (orientation: portrait) { .ring { grid-template-columns: 1fr 1fr; } .season .ico { width: 10vmin; height: 10vmin; } .season .nm { font-size: 2.9vmin; } .season .tip { font-size: 2.2vmin; } }`,
+    html: `
+<div class="se">
+  <div class="ring" id="ring">
+    <div class="season sum" id="q0" style="--c:#ffd27a"><div class="ico"></div><b class="nm">Hot summer</b><div class="tips"><span class="tip swap">lighter gel moisturizer</span><span class="tip">sunscreen reapplied more often</span><span class="tip">blotting papers, not more powder</span></div></div>
+    <div class="season win" id="q1" style="--c:#8fd3ff"><div class="ico"><i></i><i style="top:35%"></i><i style="top:65%"></i></div><b class="nm">Santa Anas and dry winter</b><div class="tips"><span class="tip swap">richer moisturizer</span><span class="tip">fewer acid nights</span><span class="tip">a humidifier by the bed</span></div></div>
+    <div class="season tra" id="q2" style="--c:#c9b6ff"><div class="ico"><i></i></div><b class="nm">Travel and flights</b><div class="tips"><span class="tip">skip new actives</span><span class="tip swap">pack the barrier basics</span></div></div>
+    <div class="season chk" id="q3" style="--c:#f4c9d6"><div class="ico"><b>✦</b></div><b class="nm">Every change of season</b><div class="tips"><span class="tip swap">a skin check with Evelyn</span><span class="tip">the routine shifts with the weather</span></div></div>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      const b = 0.5 + 0.5 * Math.sin(lt * 2.4);
+      [0, 1, 2, 3].forEach((k) => {
+        const q = $("#q" + k); const on = k === i;
+        q.classList.toggle("on", on);
+        if (i === 0) enter(q, lt, 0.2 + k * 0.3, { y: 12 }); else set(q, { o: on ? 1 : k < i ? 0.55 : 0.35, s: on && lt > 0.6 ? 1 + 0.01 * b : 1 });
+        q.querySelectorAll(".tip").forEach((tp, n) => { if (on) enter(tp, lt, (i === 0 ? 1.6 : 0.6) + n * 0.6, { y: 8 }); else set(tp, { o: k < i ? 0.8 : 0 }); });
+      });
+      // the sun pulses, the wind blows, the plane flies, the check mark breathes
+      set($("#q0 .ico"), { s: i === 0 ? 1 + 0.08 * b : 1 });
+      $$("#q1 .ico i").forEach((w, n) => { const p = i === 1 ? ((lt * 0.9 + n * 0.33) % 1) : 0.5; w.style.transform = "translateX(" + (-6 + 14 * p) + "vmin) scaleX(" + (0.4 + 0.6 * Math.sin(Math.PI * p)) + ")"; w.style.opacity = i === 1 ? Math.sin(Math.PI * p) : 0.35; });
+      set($("#q2 .ico i"), { x: i === 2 ? -10 + 20 * ((lt * 0.35) % 1) : 0, y: i === 2 ? -3 * Math.sin(((lt * 0.35) % 1) * Math.PI) : 0 });
+      set($("#q3 .ico"), { s: i === 3 ? 1 + 0.08 * b : 1, r: i === 3 ? 10 * b : 0 });
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
