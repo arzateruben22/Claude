@@ -7854,5 +7854,58 @@
    "renderedAt": "2026-10-21",
    "quick": false
   }
+ },
+ "12-1": {
+  "16x9": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "e4013ceb4cc721d2e56d57fae570926c21a0b520",
+   "samples": [
+    [
+     0,
+     "151b9dfa5da70c9799de4f3da67c619289ce20ca"
+    ],
+    [
+     15,
+     "aa234f292d4bf4f7c750013036fcc85f7877d596"
+    ],
+    [
+     30,
+     "519c90734fb78d0866c23acbe708527126553d9b"
+    ],
+    [
+     45,
+     "ed9b69234df096e9855b1c568debddbc97a4fa95"
+    ],
+    [
+     60,
+     "082935d81fa1f5a6393f9d7d6a3422639a67d0c9"
+    ],
+    [
+     75,
+     "e977983e913444245b58a1ed254421faee278604"
+    ],
+    [
+     90,
+     "6518ff25e2cb17493328d5151b7504a7d4847aae"
+    ],
+    [
+     105,
+     "fa78ea81486c664dd7b2dd8f12318b7d0aee82ca"
+    ],
+    [
+     120,
+     "fadfa8f4b99feb3b71d9d6eebc33c53d5d300e8b"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 14.8,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
  }
 }

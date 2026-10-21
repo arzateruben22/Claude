@@ -728,7 +728,7 @@ export const SCENES = {
   <div class="days" id="days">
     ${[-7, -6, -5, -4, -3, -2, -1, 0, 2].map((d) => `<div class="day${d === 0 ? " visit" : ""}" data-d="${d}"><span class="d">${d === 0 ? "visit" : d > 0 ? "day +" + d : "day " + d}</span><span class="n">${d === 0 ? "✦" : Math.abs(d)}</span><i class="mark m-rx" style="background:#e2b08c"></i><i class="mark m-act" style="background:#f4c9d6"></i><i class="mark m-sun" style="background:#ffd27a"></i><i class="mark m-wax" style="background:#8fd3ff"></i><i class="mark m-trip" style="background:#6e6e73"></i></div>`).join("")}
   </div>
-  <div class="legend" id="legend"><span id="lg-rx"><i style="background:#e2b08c"></i>prescription retinoid off</span><span id="lg-act"><i style="background:#f4c9d6"></i>retinol and acids off</span><span id="lg-sun"><i style="background:#ffd27a"></i>no sunburn or fresh tan</span><span id="lg-wax"><i style="background:#8fd3ff"></i>no waxing or shaving the face</span><span id="lg-trip"><i style="background:#6e6e73"></i>no trip right after</span></div>
+  <div class="legend" id="legend"><span id="lg-rx"><i style="background:#e2b08c"></i>prescription retinoid off</span><span id="lg-act"><i style="background:#f4c9d6"></i>retinol and acids off</span><span id="lg-sun"><i style="background:#ffd27a"></i>no sunburn or fresh tan</span><span id="lg-wax"><i style="background:#8fd3ff"></i>no waxing or shaving the face</span><span id="lg-trip"><i style="background:#6e6e73"></i>no trip right after</span><span id="lg-tell"><i style="background:#f4c9d6"></i>on a prescription? tell Evelyn</span></div>
   <div class="note12"><div class="card12 go" id="c-go"><b>Breaking out? Come in.</b><span>It's a reason to come, not to cancel.</span></div><div class="card12 wait" id="c-wait"><b>Open, raw or infected skin waits.</b><span>The one thing that does. Tell her about medications, pregnancy or a recent procedure, every time: the pre-visit form is where it goes.</span></div></div>
 </div>
 <section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
@@ -745,6 +745,8 @@ export const SCENES = {
       on(".m-trip", 1, (d) => d === 2, 3.8);
       const lg = (id, from, at) => { const el = $("#" + id); if (i > from) set(el, { o: 1 }); else if (i === from) enter(el, lt, at, { y: 8 }); else set(el, { o: 0, y: 8 }); };
       lg("lg-rx", 0, 1.8); lg("lg-act", 0, 3.0); lg("lg-sun", 1, 1.2); lg("lg-wax", 1, 2.6); lg("lg-trip", 1, 4.0);
+      const tell = $("#lg-tell"); if (i === 0) enter(tell, lt, 4.6, { y: 8 }); else set(tell, { o: 0, y: 8 });
+      const visit = $(".day.visit"); if (lt > 1.6) set(visit, { o: 1, s: 1 + 0.05 * Math.sin(Math.PI * seg(lt, i === 0 ? 5.6 : i === 1 ? 5.4 : 4.6, (i === 0 ? 5.6 : i === 1 ? 5.4 : 4.6) + 0.9)) });   // the visit tile breathes once a shot
       if (i === 2) { enter($("#c-go"), lt, 0.6, { y: 12 }); enter($("#c-wait"), lt, 2.2, { y: 12 }); } else { set($("#c-go"), { o: 0, y: 12 }); set($("#c-wait"), { o: 0, y: 12 }); }
       $(".note12").style.display = i === 2 ? "" : "none";
     }
