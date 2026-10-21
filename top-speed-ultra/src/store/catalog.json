@@ -150,6 +150,17 @@
     "available": true
   },
   {
+    "sku": "graphics-ultra",
+    "name": "Ultra Graphics",
+    "kind": "graphics",
+    "price_cents": 500,
+    "currency": "usd",
+    "mode": "payment",
+    "grants": ["graphics-ultra"],
+    "description": "The maximum graphics tier. Low and HD are free.",
+    "available": true
+  },
+  {
     "sku": "tip-fuel-the-build",
     "name": "Fuel the Build",
     "kind": "tip",
