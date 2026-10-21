@@ -12401,110 +12401,370 @@
  },
  "11-2": {
   "16x9": {
-   "frames": 126,
-   "fps": 6,
+   "frames": 630,
+   "fps": 30,
    "dur": 21,
    "w": 1280,
    "h": 720,
-   "bytes": 0,
-   "hash": "cf5b5ab3342a5824ba5c66fee7e6216c78b5f51b",
+   "bytes": 1166804,
+   "hash": "b5236744209594001494ac205731cfa20d5d8056",
    "samples": [
     [
      0,
-     "a755ba4457316209344ef3c9d155f4e444c2c459"
+     "c290bc914919ada8053d30bd305e4b431e12d69b"
     ],
     [
      15,
-     "fa68682ea734c32008a125091de6edf53e94dbc2"
+     "5aa2fec7145955f5c902ba9d375bdc976d7b6b36"
     ],
     [
      30,
-     "a7ed703ce9f71bdc1d54c000a8bf5c8735cd603d"
+     "797f9caedc03c0b4e7b9adba96501991739f1420"
     ],
     [
      45,
-     "51b7bfdfa22b4f3edfb1116e447ad46213286e19"
+     "cc68c54427fbf99204263d8d998d406ca1f602e9"
     ],
     [
      60,
-     "2306a1c80d6e87d85e96f5e8741a4bafd27941d9"
+     "3ac3da921f018e0dd1e5927526df55588a3caacd"
     ],
     [
      75,
-     "f4f85d63669b8b5ca2a364ea4d90dd831e3ef4aa"
+     "c09805ac80e336c2b1ef4431d4b21cca178b00ca"
     ],
     [
      90,
-     "1fed1fea54a533430fc79ea57b41bf2b4580dbd1"
+     "4b2c6499020b61fc4caca3a56c27962ea0b1fb03"
     ],
     [
      105,
-     "d3fa4efc3297de10b20476f4f951c558ad8b5209"
+     "81fa4c8809c1071df3a19c9edd45a744d6563e4f"
     ],
     [
      120,
-     "ae387be47976029aa3c3dbfb90781a0925298ad0"
+     "989d4dde1310f3228004afe0eeb3f4f2e710dbfe"
+    ],
+    [
+     135,
+     "cfd9f77388758fbda728abafa8c2861177f968ab"
+    ],
+    [
+     150,
+     "a133d651c5900b4c3685c95b1694340a88c16f2f"
+    ],
+    [
+     165,
+     "c27872c2d0a027ec72756714f00d3d420446af86"
+    ],
+    [
+     180,
+     "5e1ea0aa916107af62cae855a874b9119a8793da"
+    ],
+    [
+     195,
+     "2e1fd5fadf421c86160e1a8bcf5e37d0de69ae01"
+    ],
+    [
+     210,
+     "49d263a0abb70ddd96a1b2ea8cc1b543ab713008"
+    ],
+    [
+     225,
+     "7efc659c51959f09915adf3947d7b33a1692778a"
+    ],
+    [
+     240,
+     "5f41fa4c4b5eb907431ee53d3a346e1b30d4c253"
+    ],
+    [
+     255,
+     "9f1ad474075a8ba4e8136cecd5a0027e586d91a7"
+    ],
+    [
+     270,
+     "62b0acfec7f5711184a0696ff019128fd5f0ca6a"
+    ],
+    [
+     285,
+     "0fa28c89fc3c3d4d5c1446fc24399ef482e3f73a"
+    ],
+    [
+     300,
+     "4cf85322358da86143c9820690547c14c9d6813d"
+    ],
+    [
+     315,
+     "dee88db081ad2ad7932fe1c12043d7e7f1813b49"
+    ],
+    [
+     330,
+     "5b6eb0be641aad062c40f9faedfa36ce9dd2c174"
+    ],
+    [
+     345,
+     "7230c09cb76e308e1a7b7db7bd5066980905887e"
+    ],
+    [
+     360,
+     "081c8f3c85c86370261ea2946705ed1c08ce6c99"
+    ],
+    [
+     375,
+     "e98fc51f8f3da6f9a262babcf60abfd9b7aa8023"
+    ],
+    [
+     390,
+     "7f4e1df8531f0dd163091347bd6c014d37ddff3a"
+    ],
+    [
+     405,
+     "fbe7fc85bb2d1de2372d7a94f7ad4089a30d7618"
+    ],
+    [
+     420,
+     "70238b177ae518cdd52189daea1ac5d2d4d6d19f"
+    ],
+    [
+     435,
+     "a15e37448b9d80f8b929086e287d31e004b2d06a"
+    ],
+    [
+     450,
+     "afb6098147348d039ef1b893503eaa32a5d414e2"
+    ],
+    [
+     465,
+     "b81897954156f222e61ef4ddad4c9be01608d967"
+    ],
+    [
+     480,
+     "94fb2b64946f94188ee56d34f34441af95c28f44"
+    ],
+    [
+     495,
+     "0c2253f8913151e9d9950c3ebb59510441498628"
+    ],
+    [
+     510,
+     "03a1418f002c29c93ecd8aab79aaa89f6c9c15ac"
+    ],
+    [
+     525,
+     "c27888aa677ea065abb2720b5fbda64ff68f951e"
+    ],
+    [
+     540,
+     "46499e0a4d157d4793f5bb06f84b1e7d0d7961fc"
+    ],
+    [
+     555,
+     "f4b732af7e6c257dd218da0fa1b014c1f625b24b"
+    ],
+    [
+     570,
+     "d706b6ddc80d608b2b400a917a35858148bc6dc3"
+    ],
+    [
+     585,
+     "815e8e9299b2b138f83dd94e921a0fb6cf24ad46"
+    ],
+    [
+     600,
+     "3b82d690be9aa7dbd6da8223c7431b67f01f6e85"
+    ],
+    [
+     615,
+     "f8ec7edca39ff21b7ec0d2f9c2e8d087f22f732e"
     ]
    ],
-   "warnings": [
-    "still for 3.0s ending at 12.0s"
-   ],
-   "renderSec": 17.1,
+   "warnings": [],
+   "renderSec": 194.5,
    "renderedAt": "2026-10-21",
-   "quick": true
+   "quick": false
   },
   "9x16": {
-   "frames": 126,
-   "fps": 6,
+   "frames": 630,
+   "fps": 30,
    "dur": 21,
    "w": 720,
    "h": 1280,
-   "bytes": 0,
-   "hash": "bd61e5241142deafeecfe755f69db0000f5349d7",
+   "bytes": 1158801,
+   "hash": "ce66e0b1bf87f4884a89126836a4b5a76501fa5e",
    "samples": [
     [
      0,
-     "ab72cfc7d5dea55581837643bc773c0f435374f1"
+     "6d95e7753e7a59bb49e539caef2237e16b0d9c39"
     ],
     [
      15,
-     "2c6fdcf8a61009acdfcdd8b4057ccf1349637d6b"
+     "1176f751dbe61fe4bee56bca6a06bda560f49034"
     ],
     [
      30,
-     "8a85cdf6ff8274ced5480b247d30f86138e7be9f"
+     "442f6cb467bcc5b982971cea6605119a539e2387"
     ],
     [
      45,
-     "e64c85202f4587b2fc5b060fae2d67ebd84d3e45"
+     "9a4df8054140eb9b827ebd8311edc2cc1fdf1ce9"
     ],
     [
      60,
-     "946f809621f685cbe73845f49ec652d73b668839"
+     "1b8a1cc21b21805d9cf19953214fd1c58eb7d1db"
     ],
     [
      75,
-     "99a4c7cb88517a9e671bf8e2a59e7578152f5029"
+     "799948a7458553b59e60875afd6a2bc13413aa08"
     ],
     [
      90,
-     "7816512ed75840a3d1dcdb6b804bc13390ffb3b9"
+     "3eb2f3e0d79619a81a35035b29eb28cf8ba63ecb"
     ],
     [
      105,
-     "6cce5f5d6a6cdf68c59c9406e76fb2fe46f890dc"
+     "7b049faefcea4f3b43c21851c253ec468be6eeb6"
     ],
     [
      120,
-     "240785ba0587c3ed3283bfe7bae21f9434e150c5"
+     "40897d3487cef5dd59f8d0560f202c2677052739"
+    ],
+    [
+     135,
+     "cc94dc1f54fb9efb1cd4c16f6ec7ed4fda563a68"
+    ],
+    [
+     150,
+     "c9cf03914d181f69de8b401c8ee8e97c7510a7d3"
+    ],
+    [
+     165,
+     "6c73d5a91e3f2280d7d847585c1c76785f8339f6"
+    ],
+    [
+     180,
+     "2426ec73a2329f7dd714cecf33fb8fbda27f36f4"
+    ],
+    [
+     195,
+     "2e48b5ba395b029460643b7a78e331526576243d"
+    ],
+    [
+     210,
+     "b5cc1753f48721277a10cfe2d871ac1c608888f3"
+    ],
+    [
+     225,
+     "6c60a23411e3cd24e079ec573b8638bce33ae9d8"
+    ],
+    [
+     240,
+     "72784f015edbbd60babe6a0b8a491bfb183014c3"
+    ],
+    [
+     255,
+     "76851a02af40d787a12ce30720797d8c3ddd1b16"
+    ],
+    [
+     270,
+     "585e798a6c24968946e8d5dd05fc8054ebb72f0c"
+    ],
+    [
+     285,
+     "1b4a6c9af260af34b81e8eac0b629c8123fe9985"
+    ],
+    [
+     300,
+     "c7b9133154aa74c26806042ddc885012f593ce94"
+    ],
+    [
+     315,
+     "23a8e5380905ae2351a30090a1478eae291ca04b"
+    ],
+    [
+     330,
+     "71f599ae106d488baddfba3b89ec6f3cd33e17e7"
+    ],
+    [
+     345,
+     "9c3d36799e0930e8f31a8df5bf8c99caf6e33261"
+    ],
+    [
+     360,
+     "4274552780f8bf0ee58b7dfb68d576f3d18b4e7c"
+    ],
+    [
+     375,
+     "8ad109525a168897f59a7f9de8624eb0487e54d5"
+    ],
+    [
+     390,
+     "f950772ae65197f5b8d0efdbfc69dde418e22950"
+    ],
+    [
+     405,
+     "c3227e66ff17e4d307286a6038f81291ac44121f"
+    ],
+    [
+     420,
+     "3be2dacdc69fe7e0b12e2ae7ff818fb1c378686f"
+    ],
+    [
+     435,
+     "209dce43bda6cf0ef038d618fac3b7f1ed98721b"
+    ],
+    [
+     450,
+     "37a8097e3b769a7616d1215a411740cf77423e33"
+    ],
+    [
+     465,
+     "00778ee697ffc17b118eac6d435fa35b916bb10e"
+    ],
+    [
+     480,
+     "276853b5d6140a8c00d596cd160af05d8819f0b7"
+    ],
+    [
+     495,
+     "aec45da2d2901058df63147b39acee4302ce865c"
+    ],
+    [
+     510,
+     "fd3687e2e51e4407d22c72f1bd7ec87b0ccad40a"
+    ],
+    [
+     525,
+     "ac8709163cefc6996586ac865cfed2786704ea0d"
+    ],
+    [
+     540,
+     "d141b38d5dfb0e31b77282e99c758049dbe5a133"
+    ],
+    [
+     555,
+     "972ea4825b8dcebc917c1a330c95f199283912df"
+    ],
+    [
+     570,
+     "97798891e19abd7cd86c32ab468891b0f3f55e97"
+    ],
+    [
+     585,
+     "6dc555453b54ae69423998a35955a6281274dd26"
+    ],
+    [
+     600,
+     "417565764f11671f026872177842ca5917323b1f"
+    ],
+    [
+     615,
+     "c7585dd3064451f7c8d1a5dea978db1e361b2c9c"
     ]
    ],
-   "warnings": [
-    "still for 3.0s ending at 12.0s"
-   ],
-   "renderSec": 16.1,
+   "warnings": [],
+   "renderSec": 172.8,
    "renderedAt": "2026-10-21",
-   "quick": true
+   "quick": false
   }
  },
  "7-1": {

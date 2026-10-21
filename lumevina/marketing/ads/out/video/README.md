@@ -36,7 +36,7 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 30 | `8-1-9x16.mp4` | How acne really forms | Acne is four things going wrong at once. | 22 s |
 | 31 | `5-3-9x16.mp4` | The supporting cast | Four quiet ingredients that make everything else work better. | 24 s |
 | 32 | `9-2-9x16.mp4` | Brighteners that work | Two brighteners beat one. Sunscreen beats both. | 23 s |
-| 33 | *rendering* | Pregnancy and breastfeeding | Pregnant? Here's what to pause, what's commonly fine, and the one rule. |  |
+| 33 | `11-2-9x16.mp4` | Pregnancy and breastfeeding | Pregnant? Here's what to pause, what's commonly fine, and the one rule. | 21 s |
 | 34 | *rendering* | The Sunday ritual | A 20-minute facial at home, step by step, minute by minute. |  |
 | 35 | *rendering* | Skin through the seasons | The Valley has more weather than people think. Your routine should too. |  |
 
