@@ -1205,31 +1205,31 @@ export const SCENES = {
     css: `
 .fr { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
 .ampm { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; }
-.half { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.8vmin; opacity: 0; }
-.half .t { display: flex; align-items: center; gap: 1.4vmin; font-size: 2.6vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.6vmin; }
+.half { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
+.half .t { display: flex; align-items: center; gap: 1.4vmin; font-size: 2.9vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.6vmin; }
 .half .t i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; } .half.am .t i { background: #ffd27a; box-shadow: 0 0 1.6vmin rgba(255,210,122,.6); } .half.pm .t i { background: #c9b6ff; box-shadow: 0 0 1.6vmin rgba(201,182,255,.5); }
-.steps3 { display: flex; flex-direction: column; gap: 1.2vmin; }
-.s3 { display: flex; align-items: center; gap: 1.6vmin; padding: 1.4vmin 2vmin; border-radius: 1.6vmin; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); opacity: 0; }
-.s3 b { flex: none; width: 4.2vmin; height: 4.2vmin; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.4vmin; font-weight: 700; background: #f4c9d6; color: #1a1210; }
-.s3 span { font-size: 3vmin; font-weight: 650; } .s3 small { font-size: 2.3vmin; color: #a1a1a6; margin-left: auto; white-space: nowrap; }
+.steps3 { display: flex; flex-direction: column; gap: 1.4vmin; }
+.s3 { display: flex; align-items: center; gap: 2vmin; padding: 1.8vmin 2.4vmin; border-radius: 1.6vmin; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); opacity: 0; }
+.s3 b { flex: none; width: 5.2vmin; height: 5.2vmin; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.9vmin; font-weight: 700; background: #f4c9d6; color: #1a1210; }
+.s3 span { font-size: 3.8vmin; font-weight: 650; } .s3 small { font-size: 2.6vmin; color: #a1a1a6; margin-left: auto; white-space: nowrap; }
 .s3.later { border-style: dashed; } .s3.later b { background: rgba(255,255,255,.14); color: #d9d9de; }
 .wk2 { display: grid; grid-template-columns: repeat(14, 1fr); gap: .8vmin; }
-.dd { position: relative; border-radius: 1.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); min-height: 11vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1vmin .4vmin .8vmin; gap: .6vmin; opacity: 0; }
-.dd .n { font-size: 2.4vmin; font-weight: 700; } .dd .m { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; opacity: 0; }
+.dd { position: relative; border-radius: 1.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); min-height: 15vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1vmin .4vmin .8vmin; gap: .6vmin; opacity: 0; }
+.dd .n { font-size: 3.4vmin; font-weight: 700; } .dd .m { width: 3vmin; height: 3vmin; border-radius: 50%; opacity: 0; }
 .dd.add { background: #f4c9d6; border-color: #f4c9d6; } .dd.add .n { color: #1a1210; }
 .lg32 { display: flex; flex-wrap: wrap; gap: 1.2vmin 1.8vmin; }
-.lg32 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1.1vmin 2vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.6vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.lg32 span { display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
 .lg32 i { width: 2vmin; height: 2vmin; border-radius: 50%; } .lg32 span.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; }
 .patch { display: flex; align-items: center; gap: 4vmin; }
-.jaw { position: relative; flex: none; width: 30vmin; height: 30vmin; border-radius: 15vmin 15vmin 12vmin 12vmin / 17vmin 17vmin 13vmin 13vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: 0; }
-.jaw .sq { position: absolute; left: 20%; top: 66%; width: 6vmin; height: 6vmin; border-radius: 1vmin; border: .4vmin dashed #e2b08c; background: rgba(226,176,140,.25); opacity: 0; }
-.jaw .lip { position: absolute; left: 50%; bottom: 7vmin; width: 9vmin; height: 1.4vmin; margin-left: -4.5vmin; border-radius: 1vmin; background: #b9786b; }
-.jaw .nose { position: absolute; left: 50%; top: 10vmin; width: 3.6vmin; height: 9vmin; margin-left: -1.8vmin; border-radius: 1.8vmin; background: rgba(0,0,0,.08); }
+.jaw { position: relative; flex: none; width: 40vmin; height: 40vmin; border-radius: 20vmin 20vmin 16vmin 16vmin / 23vmin 23vmin 17vmin 17vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: 0; }
+.jaw .sq { position: absolute; left: 18%; top: 64%; width: 9vmin; height: 9vmin; border-radius: 1.4vmin; border: .5vmin dashed #1a1210; background: rgba(255,255,255,.4); opacity: 0; }
+.jaw .lip { position: absolute; left: 50%; bottom: 9vmin; width: 12vmin; height: 1.8vmin; margin-left: -6vmin; border-radius: 1vmin; background: #b9786b; }
+.jaw .nose { position: absolute; left: 50%; top: 13vmin; width: 4.6vmin; height: 12vmin; margin-left: -2.3vmin; border-radius: 1.8vmin; background: rgba(0,0,0,.08); }
 .pt { flex: 1; display: flex; flex-direction: column; gap: 1.6vmin; }
-.pt .cnt { font-size: 9vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; opacity: 0; } .pt .cnt small { font-size: 3vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-left: 1.2vmin; }
-.pt .rule { display: inline-flex; align-self: flex-start; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; opacity: 0; }
+.pt .cnt { font-size: 12vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; opacity: 0; } .pt .cnt small { font-size: 3.4vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-left: 1.2vmin; }
+.pt .rule { display: inline-flex; align-self: flex-start; padding: 1.5vmin 2.8vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; opacity: 0; }
 .pt .rule.ok { border-color: rgba(50,215,75,.6); color: #7fe39a; } .pt .rule.no { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
-@media (orientation: portrait) { .ampm { grid-template-columns: 1fr; gap: 2.4vmin; } .s3 span { font-size: 2.9vmin; } .wk2 { grid-template-columns: repeat(7, 1fr); } .dd { min-height: 10vmin; } .patch { flex-direction: column; gap: 3vmin; } .jaw { width: 34vmin; height: 34vmin; } .pt { align-items: center; } .pt .rule { align-self: center; } }`,
+@media (orientation: portrait) { .ampm { grid-template-columns: 1fr; gap: 2.4vmin; } .s3 span { font-size: 3.2vmin; } .s3 small { font-size: 2.3vmin; } .wk2 { grid-template-columns: repeat(7, 1fr); } .dd { min-height: 12vmin; } .lg32 span { font-size: 2.7vmin; } .patch { flex-direction: column; gap: 3vmin; } .jaw { width: 40vmin; height: 40vmin; } .pt { align-items: center; } .pt .cnt { font-size: 10vmin; } .pt .rule { align-self: center; font-size: 2.8vmin; } }`,
     html: `
 <div class="fr">
   <div class="ampm" id="ampm">
@@ -1290,15 +1290,19 @@ export const SCENES = {
 .kind .sk i { position: absolute; border-radius: 50%; }
 .kind b { display: block; font-size: 3vmin; font-weight: 700; } .kind span { display: block; font-size: 2.3vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.3; }
 .kind.derm { border-color: rgba(255,122,107,.6); } .kind.derm b { color: #ff9a8b; }
-.tl8 { position: relative; height: 18vmin; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; opacity: 0; }
-.tl8 .line { position: absolute; left: 6vmin; right: 6vmin; top: 9vmin; height: .6vmin; background: #2a2a2d; border-radius: 1vmin; }
-.tl8 .fill { position: absolute; left: 6vmin; top: 9vmin; height: .6vmin; width: 0; background: linear-gradient(90deg, #f4c9d6, #e2b08c); border-radius: 1vmin; }
-.tl8 .pt { position: absolute; top: 9.3vmin; width: 2.6vmin; height: 2.6vmin; margin: -1.3vmin 0 0 -1.3vmin; border-radius: 50%; background: #2a2a2d; border: .4vmin solid #111113; }
-.tl8 .pt.on { background: #e2b08c; }
-.tl8 .lb { position: absolute; top: 12.6vmin; font-size: 2.3vmin; color: #a1a1a6; white-space: nowrap; transform: translateX(-50%); font-weight: 600; }
-.tl8 .tag8 { position: absolute; top: 2.6vmin; padding: .8vmin 1.8vmin; border-radius: 999px; background: #1a1a1d; border: 1.5px solid #f4c9d6; color: #f4c9d6; font-size: 2.4vmin; font-weight: 650; white-space: nowrap; transform: translateX(-50%); opacity: 0; }
+.wk8 { display: flex; align-items: center; gap: 4vmin; }
+.res8 { flex: none; font-size: 11vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; opacity: 0; } .res8 small { display: block; font-size: 2.8vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-top: 1vmin; }
+.tl8 { flex: 1; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 3vmin 2.2vmin; display: flex; flex-direction: column; gap: 2.4vmin; opacity: 0; }
+.tags8 { display: flex; flex-wrap: wrap; gap: 1.2vmin; }
+.tl8 .tag8 { padding: 1vmin 2vmin; border-radius: 999px; background: #1a1a1d; border: 1.5px solid #f4c9d6; color: #f4c9d6; font-size: 2.6vmin; font-weight: 650; white-space: nowrap; opacity: 0; }
 .tl8 .tag8.amber { border-color: #e2b08c; color: #e2b08c; }
-@media (orientation: portrait) { .four { grid-template-columns: 1fr 1fr; } .cause .ring { width: 14vmin; height: 14vmin; } .kinds { grid-template-columns: 1fr; gap: 1.6vmin; } .kind { display: flex; align-items: center; gap: 2.4vmin; padding: 1.8vmin 2.2vmin; } .kind .sk { flex: none; width: 16vmin; height: 12vmin; margin: 0; } .tl8 { height: 22vmin; } .tl8 .lb { font-size: 2vmin; } .tl8 .tag8 { font-size: 2.1vmin; } }`,
+.line8 { position: relative; height: 9vmin; margin: 0 6vmin; }
+.line8 .line { position: absolute; left: 0; right: 0; top: 2vmin; height: .7vmin; background: #2a2a2d; border-radius: 1vmin; }
+.line8 .fill { position: absolute; left: 0; top: 2vmin; height: .7vmin; width: 0; background: linear-gradient(90deg, #f4c9d6, #e2b08c); border-radius: 1vmin; }
+.line8 .pt { position: absolute; top: 2.35vmin; width: 3vmin; height: 3vmin; margin: -1.5vmin 0 0 -1.5vmin; border-radius: 50%; background: #2a2a2d; border: .5vmin solid #111113; }
+.line8 .pt.on { background: #e2b08c; }
+.line8 .lb { position: absolute; top: 5.4vmin; font-size: 2.5vmin; color: #a1a1a6; white-space: nowrap; transform: translateX(-50%); font-weight: 600; }
+@media (orientation: portrait) { .four { grid-template-columns: 1fr 1fr; } .cause .ring { width: 14vmin; height: 14vmin; } .kinds { grid-template-columns: 1fr; gap: 1.6vmin; } .kind { display: flex; align-items: center; gap: 2.4vmin; padding: 1.8vmin 2.2vmin; } .kind .sk { flex: none; width: 16vmin; height: 12vmin; margin: 0; } .wk8 { flex-direction: column; gap: 3vmin; } .res8 { font-size: 10vmin; text-align: center; } .tl8 { width: 100%; } .line8 { margin: 0 5vmin; } .line8 .lb { font-size: 2.1vmin; } .tl8 .tag8 { font-size: 2.4vmin; } }`,
     html: `
 <div class="ac8">
   <div class="four" id="four">
@@ -1313,10 +1317,10 @@ export const SCENES = {
     <div class="kind" id="k2"><div class="sk"><i style="left:24%;top:30%;width:5vmin;height:5vmin;background:#d7585a"></i><i style="left:56%;top:44%;width:5vmin;height:5vmin;background:#d7585a"></i><i style="left:57.6%;top:47%;width:2.6vmin;height:2.6vmin;background:#f3e2a8"></i></div><b>Inflamed pores</b><span>red bumps and pus-filled pimples</span></div>
     <div class="kind derm" id="k3"><div class="sk"><i style="left:30%;top:22%;width:9vmin;height:9vmin;background:#b23a3f;box-shadow:0 0 0 1.4vmin rgba(215,88,90,.45)"></i></div><b>Cysts and nodules</b><span>deep and painful; they can scar: a dermatologist, not just a facial</span></div>
   </div>
-  <div class="tl8" id="tl8"><div class="line"></div><div class="fill" id="fill"></div>
-    ${[0, 0.25, 0.5, 0.75, 1].map((p, k) => `<i class="pt" id="pt${k}" style="left:calc(6vmin + ${p} * (100% - 12vmin))"></i><span class="lb" style="left:calc(6vmin + ${p} * (100% - 12vmin))">${["today", "week 3", "week 6", "week 9", "week 12"][k]}</span>`).join("")}
-    <span class="tag8" id="t-form" style="left:calc(6vmin + 0.12 * (100% - 12vmin))">forming under the skin for weeks</span><span class="tag8 amber" id="t-see" style="left:calc(6vmin + 0.5 * (100% - 12vmin))">what you see today started weeks ago</span><span class="tag8" id="t-res" style="left:calc(6vmin + 0.86 * (100% - 12vmin))">results: two to three months</span>
-  </div>
+  <div class="wk8" id="wk8"><div class="res8" id="res8">2 to 3<small>months to results</small></div>
+  <div class="tl8" id="tl8"><div class="tags8"><span class="tag8" id="t-form">forming under the skin for weeks</span><span class="tag8 amber" id="t-see">what you see today started weeks ago</span><span class="tag8" id="t-res">results: two to three months</span></div>
+    <div class="line8"><div class="line"></div><div class="fill" id="fill"></div>${[0, 0.25, 0.5, 0.75, 1].map((p, k) => `<i class="pt" id="pt${k}" style="left:${100 * p}%"></i><span class="lb" style="left:${100 * p}%">${["today", "week 3", "week 6", "week 9", "week 12"][k]}</span>`).join("")}</div>
+  </div></div>
 </div>
 <section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
     setup: (M) => {},
@@ -1333,10 +1337,10 @@ export const SCENES = {
       $("#kinds").style.display = i === 1 ? "" : "none";
       if (i === 1) { ["k1", "k2", "k3"].forEach((id, k) => enter($("#" + id), lt, 0.3 + k * 0.9, { y: 12 })); const b = 0.5 + 0.5 * Math.sin(lt * 2.6); set($("#k3 .sk i"), { s: lt > 2.6 ? 1 + 0.06 * b : 1 }); }
       // shot 2: the timeline fills from today to week 12
-      $("#tl8").style.display = i === 2 ? "" : "none";
+      $("#wk8").style.display = i === 2 ? "" : "none";
       if (i === 2) {
-        enter($("#tl8"), lt, 0.2, { y: 10 });
-        const p = E.out(seg(lt, 0.8, 4.4)); $("#fill").style.width = "calc(" + p + " * (100% - 12vmin))";
+        enter($("#tl8"), lt, 0.2, { y: 10 }); enter($("#res8"), lt, 3.8, { y: 10, s: 0.8 });
+        const p = E.out(seg(lt, 0.8, 4.4)); $("#fill").style.width = (100 * p) + "%";
         [0, 0.25, 0.5, 0.75, 1].forEach((q, k) => $("#pt" + k).classList.toggle("on", p >= q - 0.001));
         enter($("#t-form"), lt, 1.0, { y: 6 }); enter($("#t-see"), lt, 2.4, { y: 6 }); enter($("#t-res"), lt, 4.0, { y: 6 });
       }
