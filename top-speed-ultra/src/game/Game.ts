@@ -33,6 +33,7 @@ import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestT
 import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
 import { onStoreChange } from '../store/bus';
+import { syncGarage } from '../store/entitlements';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free', 'cinematic'];
@@ -199,8 +200,11 @@ export class Game {
     this.scene.add(this.chevrons.mesh);
     this.driving = this.carId;
     this.applyDriver();
+    syncGarage(this.profile);                                     // a car from the store, outside the slot count
     this.applyCarChoice();
-    this.offStore = onStoreChange(() => this.configureCar());     // a store paint equipped, or no longer owned
+    // a store paint equipped or no longer owned; a store car bought, restored on sign-in, refunded or signed out (the
+    // car you drive changes on the menu at once, and mid-run at the next start, like the garage)
+    this.offStore = onStoreChange(() => { if (syncGarage(this.profile) && this.attract) this.applyCarChoice(); else this.configureCar(); });
     this.syncAtmosphere(true);         // the menu opens in the car's atmosphere, no fade from the settings' sky
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });

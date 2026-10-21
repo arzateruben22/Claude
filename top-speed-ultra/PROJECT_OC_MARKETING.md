@@ -804,10 +804,12 @@ real run.**
   - 12.5–14 s: end card.
 - *Text:* "Free to play. Thursday."
 - *Caption:* If the store stays in test mode: "Free. Nothing to buy. Open to everyone Thursday." If it goes live:
-  "Free to play. Optional cosmetics, never power. Open to everyone Thursday." Then: "A game. Drive the real ones at
-  the limit." ("Nothing to buy" is true in test mode, but if the public build shows the test-mode store with its
-  prices, a viewer may read it as a contradiction: either hide the store in that build, or say "Free. The store is
-  a test demo; nothing can be bought.")
+  "Free to play. Optional cosmetics, never pay-to-win. Open to everyone Thursday." (Once the OC Hypercar Founder
+  Edition is on sale, name its exception: "...never pay-to-win; the one paid car is faster in Free Drive only."
+  The exception is `PROJECT_OC_MONETIZATION.md` rule 3a; the owner's edit of the rule in `CLAUDE.md` is still to come.)
+  Then: "A game. Drive the real ones at the limit." ("Nothing to buy" is true in test mode, but if the public build
+  shows the test-mode store with its prices, a viewer may read it as a contradiction: either hide the store in that
+  build, or say "Free. The store is a test demo; nothing can be bought.")
 - *Tags:* #OCUltra #OrangeCounty #webgame #indiegame #405
 
 **1.2 Three days** (Mon 30 Nov) · 15 s
@@ -1023,8 +1025,10 @@ expelled from the program), but not the §3.2.2 text: verify the wording and num
 
 ## 7. Templates (edit the brackets, keep them short)
 
-If the store is live when a template goes out, keep "free" but add "optional cosmetics, never power" where the
-template describes the game (90-day plan B9). While it's in test mode, "free" alone is true.
+If the store is live when a template goes out, keep "free" but add "optional cosmetics, never pay-to-win" where the
+template describes the game (90-day plan B9). Once the OC Hypercar Founder Edition is on sale, name its exception
+too: "the one paid car is faster in Free Drive only" (`PROJECT_OC_MONETIZATION.md` rule 3a; the owner's edit of the
+rule in `CLAUDE.md` is still to come). While it's in test mode, "free" alone is true.
 
 ### 7.1 Press pitch (email)
 
@@ -1090,7 +1094,9 @@ titles at 80, so don't lengthen it)
 > Traffic uses the Intelligent Driver Model and is simulated; there's no live data and no multiplayer. Physics runs at
 > 120 Hz with a floating origin. Scores stay on your device. I'd most like to hear how it runs on your phone: Pause →
 > Feedback copies a report. [If the store is live: "There's an optional cosmetics store; nothing in it changes how a
-> car drives."]
+> car drives." Once the OC Hypercar Founder Edition is on sale: "There's an optional store: looks that change nothing
+> about how a car drives, and one founder car that's faster in Free Drive only." (Rule 3a's exception; the owner's
+> edit of the rule in `CLAUDE.md` is still to come.)]
 
 ### 7.7 Product Hunt maker comment (Day 51)
 
@@ -1176,8 +1182,10 @@ titles at 80, so don't lengthen it)
 
 **Launch week (W−1)**
 - [ ] Copy updated to the store's true state ("Free. Nothing to buy" or "Free to play. Optional cosmetics, never
-      power") everywhere: bio, launch kit, press kit, store copy (90-day plan B9). If the public build shows the
-      test-mode store, see clip 1.1's note on "Nothing to buy".
+      pay-to-win", naming the OC Hypercar's Free Drive exception once it is on sale; that exception still waits for
+      the owner's edit of the rule in `CLAUDE.md`) everywhere: bio, launch kit,
+      press kit, store copy (90-day plan B9). If the public build shows the test-mode store, see clip 1.1's note on
+      "Nothing to buy".
 - [ ] Press pitches out on Mon 30 Nov, one per outlet, embargo to Thu 3 Dec (§7.1).
 - [ ] Show HN title and first comment drafted (§7.6). Product Hunt page drafted (§7.7).
 - [ ] One Reddit post per community drafted, each to that community's rules, read that morning.
