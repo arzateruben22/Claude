@@ -648,6 +648,68 @@ await group('render', async (use) => {
     expect(r.roofs.length === 3 && r.tints >= 6, `roof rows used ${r.roofs.join(',')}, ${r.tints} stucco tints`);
     return `${plans.map((n) => `${n} ${r.kinds[n].inst} in ${r.kinds[n].meshes} meshes, ${r.kinds[n].tris} tris`).join('; ')}; ${offices.map((n) => `${n} ${r.kinds[n].inst}`).join(', ')}; roofs ${r.roofs.join(',')}, office styles ${r.styles.join(',')}, ${r.tints} stucco tints; mask ${(100 * r.mask.a0 / r.mask.all).toFixed(1)}% untinted`;
   });
+  // freeway surfaces (W3): the wheel paths only ease the roughness a little (a low sun's glare spreads, not streaks),
+  // the asphalt tile is two lane lengths long, the paint wears (a texture over the lines' colours, on uvs) and the
+  // block sound wall's u is its height with a slow tone wander in vertex colours; nothing adds a mesh
+  await check('freeway surfaces: soft wheel-path roughness, worn paint, a weathered sound wall', async () => {
+    const r = await game(page, () => {
+      const R = window.__game.roads, m = R.m;
+      // the roughness down a column of the tile, averaged: the wheel paths (u 0.28, 0.72) against the lane between
+      const bands = (t) => {
+        const c = t.image, w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data;
+        const col = (u) => { let s = 0; const x = Math.round(u * (w - 1)); for (let y = 0; y < h; y++) s += d[(y * w + x) * 4]; return s / h / 255; };
+        return { path: (col(0.28) + col(0.72)) / 2, lane: (col(0.14) + col(0.42) + col(0.58) + col(0.86)) / 4 };
+      };
+      const pcc = bands(m.pcc.roughnessMap), asphalt = bands(m.asphalt.roughnessMap);
+      let walls = 0, tinted = 0, lo = 9, hi = 0, footU = 0, paint = 0, paintUv = 0;
+      R.group.traverse((o) => {
+        if (o.material === m.paint) { paint++; if (o.geometry.attributes.uv) paintUv++; }
+        if (o.material !== m.wall) return;
+        walls++;
+        const c = o.geometry.attributes.color, uv = o.geometry.attributes.uv;
+        if (!c) return;
+        tinted++; footU = Math.max(footU, Math.abs(uv.getX(0)));
+        for (let i = 0; i < c.count; i++) { lo = Math.min(lo, c.getX(i)); hi = Math.max(hi, c.getX(i)); }
+      });
+      return { pcc, asphalt, rep: m.asphalt.map.repeat.y, paintMap: !!m.paint.map, paint, paintUv, wallVC: m.wall.vertexColors, walls, tinted, lo, hi, footU };
+    });
+    for (const k of ['pcc', 'asphalt']) expect(Math.abs(r[k].lane - r[k].path) < 0.07, `${k}: wheel-path roughness ${fmt(r[k].path)} against ${fmt(r[k].lane)} between them (a band that sharp streaks a low sun's glare)`);
+    expect(r.rep === 0.5, `the asphalt tile repeats ${r.rep} along v (two lane lengths is 0.5)`);
+    expect(r.paintMap && r.paint > 0 && r.paintUv === r.paint, `paint wear map ${r.paintMap}, ${r.paintUv} of ${r.paint} paint meshes have uvs`);
+    expect(r.wallVC && r.tinted === r.walls && r.footU === 0, `sound wall: vertex colours ${r.wallVC}, ${r.tinted} of ${r.walls} walls tinted, foot u ${r.footU}`);
+    if (r.walls) expect(r.hi - r.lo > 0.04, `the walls' tone runs only ${fmt(r.lo)} to ${fmt(r.hi)}`);
+    return `roughness path/lane: pcc ${fmt(r.pcc.path)}/${fmt(r.pcc.lane)}, asphalt ${fmt(r.asphalt.path)}/${fmt(r.asphalt.lane)}; asphalt repeat.y ${r.rep}; ${r.paint} paint meshes with uvs and the wear map; ${r.walls} sound walls${r.walls ? `, tone ${fmt(r.lo)} to ${fmt(r.hi)}` : ' in reach here (material checked only)'}`;
+  });
+  // freeway details (FW1): the shoulders' u is metres from the lanes' edge, in the rumble-strip half on a freeway and
+  // the plain half beside a ramp; the Jersey barrier's u is its height; the lane lines' dots and markers are flagged by
+  // their u (roadShading.ts cuts them round or square and makes the markers shine in the headlights); gores get their
+  // edge line and chevrons; the lanes' shaders carry the per-slab and per-stretch variety. Nothing adds a mesh.
+  await check('freeway details: rumble strips that stop at ramps, a weathered barrier, shaped markers, gore chevrons', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, R = g.roads, m = R.m;
+      const sh = { rumble: 0, plain: 0, bad: 0 }, bar = { meshes: 0, lo: 9, hi: -9 }, mk = { line: 0, rpm: 0, amber: 0, dot: 0 };
+      R.group.traverse((o) => {
+        if (!o.isMesh) return;
+        const uv = o.geometry.attributes.uv;
+        if (o.material === m.shoulder) for (let i = 0; i < uv.count; i++) { const u = uv.getX(i); if (u < 0 || u > 0.95) sh.bad++; else if (u < 0.5) sh.rumble++; else sh.plain++; }
+        if (o.material === m.concrete) { bar.meshes++; for (let i = 0; i < uv.count; i++) { bar.lo = Math.min(bar.lo, uv.getX(i)); bar.hi = Math.max(bar.hi, uv.getX(i)); } }
+        if (o.material === m.paint) for (let i = 0; i < uv.count; i += 4) { const k = Math.floor(uv.getX(i) * 0.5 + 0.25); if (k === 0) mk.line++; else if (k === 1) { if (o.geometry.attributes.color.getZ(i) < 0.5) mk.amber++; else mk.rpm++; } else mk.dot++; }
+      });
+      let gores = 0, crossing = 0;
+      for (const v of R.gores.values()) if (v) { gores++; const d = v.pts.map((q) => q[1]); if (Math.max(...d) - Math.min(...d) > 3) crossing++; }
+      const keys = [m.pcc, m.asphalt, m.paint].map((x) => x.customProgramCacheKey());
+      g.weatherTick(0.1);
+      return { sh, bar, mk, gores, crossing, keys, beam: R.beam.value, day: g.env.daylight };
+    });
+    expect(r.sh.rumble > 0 && r.sh.plain > 0 && r.sh.bad === 0, `shoulder uvs: ${r.sh.rumble} in the rumble half, ${r.sh.plain} in the plain half, ${r.sh.bad} outside both`);
+    expect(r.bar.meshes > 0 && Math.abs(r.bar.hi - 0.82) < 0.01 && Math.abs(r.bar.lo + 1.4) < 0.01, `barrier u runs ${fmt(r.bar.lo)} to ${fmt(r.bar.hi)} over ${r.bar.meshes} meshes (the profile's heights are -1.4 to 0.82)`);
+    expect(r.mk.dot > 0 && r.mk.rpm > 0 && Math.abs(r.mk.dot / r.mk.rpm - 4) < 0.5, `markers: ${r.mk.dot} dots, ${r.mk.rpm} white reflective markers (four dots to a marker)`);
+    expect(r.mk.amber > 0, `${r.mk.amber} yellow reflectors on the left edge lines`);
+    expect(r.crossing > 0, `${r.gores} gores worked out, ${r.crossing} reach across the shoulder`);
+    expect(r.keys[0].startsWith('rs-slab') && r.keys[1].startsWith('rs-asphalt') && r.keys[2] === 'rs-markers', `shader keys ${r.keys.join(', ')}`);
+    expect(r.day < 0.5 || r.beam === 0, `the markers' beam level is ${r.beam} in daylight ${fmt(r.day)}`);
+    return `shoulder uvs ${r.sh.rumble} rumble / ${r.sh.plain} plain; barrier u ${fmt(r.bar.lo)} to ${fmt(r.bar.hi)} on ${r.bar.meshes} meshes; ${r.mk.line} line quads, ${r.mk.dot} dots, ${r.mk.rpm} white and ${r.mk.amber} yellow markers; ${r.crossing} of ${r.gores} gores across the shoulder; ${r.keys.join(', ')}`;
+  });
   await check('Live time follows the real sun over OC', async () => {
     await page.clock.setFixedTime(new Date('2026-10-12T09:13:00Z'));        // 02:13 Pacific
     const night = await sky('live', 'clear');
