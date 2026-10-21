@@ -1079,7 +1079,7 @@ await group('livephone', async (use) => {
   const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '25', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db }, stdio: ['ignore', 'pipe', 'inherit'] });
   await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
   const signup = async (name) => (await (await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) })).json()).token;
-  let peer = null, ticker = null;
+  let peer = null, ticker = null, me = null;
   try {
     const [tPhone, tPeer] = [await signup('phone_me'), await signup('Westbound_GT')];
     void tPhone;
@@ -1114,7 +1114,7 @@ await group('livephone', async (use) => {
       await drive(page, 'Free Drive');
       await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
       // the scripted peer: online, 60 m ahead on the same road, sending poses at 10 Hz
-      const me = await game(page, () => { const g = window.__game, p = g.path.at(g.phys.s + 60, g.path.laneCenter(1)); return { x: p.x, y: p.y, z: p.z, h: p.h }; });
+      me = await game(page, () => { const g = window.__game, p = g.path.at(g.phys.s + 60, g.path.laneCenter(1)); return { x: p.x, y: p.y, z: p.z, h: p.h }; });
       peer = new WebSocket(base.replace('http', 'ws') + '/ws');
       await new Promise((r) => peer.addEventListener('open', r));
       peer.send(JSON.stringify({ t: 'hello', token: tPeer, car: 'rossini-gt', paint: 0x1d4f9c }));
@@ -1131,6 +1131,19 @@ await group('livephone', async (use) => {
       const text = (await page.locator('.livewho').innerText()).replace(/\s+/g, ' ');
       expect(/Westbound_GT/.test(text), text);
       return `top bar ${Math.round(bar.right - bar.left)} px of ${bar.w}, ${bar.n} items, no overlap; list "${text.slice(0, 80)}"`;
+    });
+    await check('phone: at night a ghost car shows its lamps, and its tail lamps brighten when that driver brakes', async () => {
+      await page.locator('.livechip').click().catch(() => {});                       // close the who's-on list
+      await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, time: 'night' }); g.setCam('chase'); });
+      clearInterval(ticker);
+      ticker = setInterval(() => peer.send(JSON.stringify({ t: 's', x: me.x, y: me.y, z: me.z, h: me.h, v: 0, b: 1 })), 100);
+      await page.waitForFunction(() => window.__game.liveCars.tail.instanceColor.getX(0) > 3, null, { timeout: 30000 });
+      await frames(page, 3);
+      await page.screenshot({ path: path.join(OUT, 'livephone-night-ghost.png') });
+      const r = await game(page, () => { const lc = window.__game.liveCars; return { head: lc.head.count, tail: lc.tail.count, brake: lc.tail.instanceColor.getX(0) }; });
+      expect(r.head === 1 && r.tail === 1 && r.brake > 3, JSON.stringify(r));
+      await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, time: 'day' }); g.setCam('cockpit'); });
+      return `1 ghost with head and tail lamps; brake lamp ${r.brake}`;
     });
     await check('phone: a crew code hides drivers outside the crew, and the invite carries it', async () => {
       await game(page, () => window.__game.setPaused(true));

@@ -13,6 +13,7 @@ const X_AXIS = new THREE.Vector3(1, 0, 0);
 export class LiveCars {
   readonly group = new THREE.Group();
   private body: THREE.InstancedMesh; private glass: THREE.InstancedMesh; private trim: THREE.InstancedMesh | null; private wheels: THREE.InstancedMesh;
+  private head: THREE.InstancedMesh; private tail: THREE.InstancedMesh;       // the lamps, as the traffic's: tails brighten on the brake
   private m4 = new THREE.Matrix4(); private w4 = new THREE.Matrix4(); private q = new THREE.Quaternion(); private wq = new THREE.Quaternion();
   private e = new THREE.Euler(); private p3 = new THREE.Vector3(); private one = new THREE.Vector3(1, 1, 1); private ws = new THREE.Vector3(); private wv = new THREE.Vector3();
   private color = new THREE.Color();
@@ -37,6 +38,10 @@ export class LiveCars {
     this.glass = mk(cls.glass, glassM, capacity);
     this.trim = cls.trim ? mk(cls.trim, trimM, capacity) : null;
     this.wheels = mk(wheel, wheelM, capacity * cls.wheels.length);
+    const lightM = new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
+    this.head = mk(cls.head, lightM, capacity); this.head.castShadow = false;
+    this.tail = mk(cls.tail, lightM, capacity); this.tail.castShadow = false;
+    this.tail.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 3), 3);
     this.group.name = 'live';
   }
 
@@ -58,6 +63,9 @@ export class LiveCars {
         const g = Math.min(1, (now - this.born.get(p.id)!) / 600), e = g * g * (3 - 2 * g);
         this.m4.compose(this.p3, this.q, e >= 1 ? this.one : this.sc.set(e, e, e));
         this.body.setMatrixAt(i, this.m4); this.glass.setMatrixAt(i, this.m4); this.trim?.setMatrixAt(i, this.m4);
+        this.head.setMatrixAt(i, this.m4); this.tail.setMatrixAt(i, this.m4);
+        const brake = pose.b ? 3.2 : 1;
+        this.tail.instanceColor!.setXYZ(i, brake, brake, brake);
         this.body.setColorAt(i, this.color.setHex(p.paint));
         const spin = (this.spins.get(p.id) ?? 0) + (pose.v / this.cls.wheelR) * dt;
         this.spins.set(p.id, spin % (Math.PI * 2));
@@ -79,9 +87,10 @@ export class LiveCars {
       this.group.remove(pl.sprite); pl.sprite.material.map?.dispose(); pl.sprite.material.dispose(); this.plates.delete(id);
     }
     this.count = i;
-    this.body.count = this.glass.count = i; if (this.trim) this.trim.count = i;
+    this.body.count = this.glass.count = this.head.count = this.tail.count = i; if (this.trim) this.trim.count = i;
     this.wheels.count = i * this.cls.wheels.length;
-    for (const im of [this.body, this.glass, this.trim, this.wheels]) if (im) im.instanceMatrix.needsUpdate = true;
+    for (const im of [this.body, this.glass, this.trim, this.wheels, this.head, this.tail]) if (im) im.instanceMatrix.needsUpdate = true;
+    if (this.tail.instanceColor) this.tail.instanceColor.needsUpdate = true;
     if (this.body.instanceColor) this.body.instanceColor.needsUpdate = true;
   }
 
