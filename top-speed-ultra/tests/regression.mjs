@@ -677,17 +677,18 @@ await group('render', async (use) => {
     await sky('day', 'clear');
     return `02:13 Pacific: daylight ${fmt(night.day)}; 13:00: ${fmt(noon)}`;
   });
-  // the OC Hypercar's lights and cockpit (PROJECT_OC_HYPERCAR.md M2). It has no CarDef until M3, so its body,
-  // wheels and cockpit go on the player's car directly (the GT's physics), then back to the profile's car.
-  await check('OC Hypercar: seat, beams from the blades, brake bar, turn signals, reversing lamps (M2)', async () => {
+  // the OC Hypercar's lights and cockpit (PROJECT_OC_HYPERCAR.md M2). The check needs no owner mode or garage pick:
+  // its body, wheels and cockpit go on the player's car directly (the profile car's physics stay), then back again.
+  await check('OC Hypercar: seat, beams from the blades, brake bar and haze, turn signals, reversing lamps (M2)', async () => {
     const r = await game(page, () => {
       const g = window.__game, c = g.car, cfg = c.config;
       g.fastForward(3, {}, 30);
+      const v0 = g.phys.vx;
       c.configure({ ...cfg, car: 'oc-hyper', paint: 0xc8d3e8 });
-      const ext = c.exterior, lamps = ['sigL', 'sigR', 'reverse'].map((k) => ext.getObjectByName(k));
+      const ext = c.exterior, lamps = ['sigL', 'sigR', 'reverse', 'brakeGlow'].map((k) => ext.getObjectByName(k));
       const out = { eye: c.eye.position.toArray(), beam: c.beams[1].position.toArray(), built: lamps.every(Boolean), hidden: lamps.every((m) => m && !m.visible) };
-      c.update(0, 1, g.phys, true, g.time); out.brake = c.mats.tail.emissiveIntensity;
-      c.update(0, 1, g.phys, false, g.time); out.free = c.mats.tail.emissiveIntensity;
+      c.update(0, 1, g.phys, true, g.time); out.brake = c.mats.tail.emissiveIntensity; out.glow = lamps[3].visible;
+      c.update(0, 1, g.phys, false, g.time); out.free = c.mats.tail.emissiveIntensity; out.levels = c.mats.tail.userData.levels; out.glowOff = !lamps[3].visible;
       const d0 = g.phys.d;
       for (let k = 0; k < 40 && !out.lane; k++) {
         g.fastForward(0.05, { steer: k < 12 ? 0.22 : 0, throttle: 0.3, brake: 0 });
@@ -695,23 +696,48 @@ await group('render', async (use) => {
         const s = c.lightState;
         if (s.signal > 0 && s.blink) out.lane = { t: (k + 1) * 0.05, dd: g.phys.d - d0, R: lamps[1].visible, L: lamps[0].visible };
       }
+      // a turn at walking pace each way: brake to a stop, creep, steer hard; the signal on the side it turns to
+      out.turn = [];
+      for (const steer of [-1, 1]) {
+        for (let k = 0; k < 400 && g.phys.vx > 0.3; k++) g.fastForward(0.05, { steer: 0, throttle: 0, brake: 1 });
+        g.fastForward(1.2, { steer: 0, throttle: 0.2, brake: 0 });
+        g.fastForward(0.6, { steer, throttle: 0.1, brake: 0 });
+        c.update(0, 1, g.phys, false, g.time);
+        out.turn.push({ steer, v: +g.phys.vx.toFixed(2), signal: c.lightState.signal });
+      }
       g.fastForward(5, { steer: 0, throttle: 0, brake: 1 }); g.fastForward(1.5, { steer: 0, throttle: 0, brake: 1 });
       c.update(0, 1, g.phys, false, g.time);
-      out.rev = { gear: g.phys.gear, vx: g.phys.vx, on: lamps[2].visible };
+      out.rev = { gear: g.phys.gear, vx: g.phys.vx, on: lamps[2].visible, signal: c.lightState.signal };
+      // leave the car as the next checks expect it: driving forward in the nearest lane at the speed it came in at.
+      // Backing up for the reversing lamps left it rolling backwards at about 8 m/s, which the pause and reset checks'
+      // autopilot did not always undo in their few seconds (on a loaded machine they failed: s went backwards on resume)
       Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0 });
+      let lane = 0;
+      for (let l = 1; l < g.path.lanes; l++) if (Math.abs(g.path.laneCenter(l) - g.phys.d) < Math.abs(g.path.laneCenter(lane) - g.phys.d)) lane = l;
+      g.placeCar(g.path, g.phys.s, lane, v0);
+      out.after = { gear: g.phys.gear, vx: g.phys.vx };
       out.gauge = !!c.interior.gaugeAt; out.rearView = !!c.interior.group.getObjectByName('rear-view-mirror');
       c.configure({ ...cfg });
       out.back = c.config.car; out.was = cfg.car;
       return out;
     });
+    // the car was rebuilt twice: draw a few frames here (compiling its materials' shaders again on a slow machine), so
+    // the checks after this one don't pay for it inside their own frame timeouts
+    const tw = Date.now();
+    await frames(page, 3, 240000);
+    const warm = (Date.now() - tw) / 1000;
     expect(r.built && r.hidden, `switched lamps built ${r.built}, hidden until lit ${r.hidden}`);
     expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 0.96) < 0.005, `the hypercar's eye at ${r.eye.map(fmt)} (want -0.27, 0.96)`);
     expect(r.beam[2] < -2.2 && r.beam[1] < 0.5 && r.beam[0] > 0.3, `beam at ${r.beam.map(fmt)}: not from the blade`);
-    expect(r.brake === 5 && r.free === 1.6, `red bar ${r.free} → ${r.brake} on the brakes`);
+    // (its thin bar: a dim tail light and a bright stop, lampMaterials' 'blade' levels; every other car keeps 1.6 → 5)
+    expect(r.free === 0.5 && r.brake === 6 && r.levels?.[0] === 0.5, `red bar ${r.free} → ${r.brake} on the brakes (levels ${JSON.stringify(r.levels)})`);
+    expect(r.glow && r.glowOff, `the stop light's haze: on the brakes ${r.glow}, off without ${r.glowOff}`);
     expect(r.lane && r.lane.R && !r.lane.L, `lane change right: ${JSON.stringify(r.lane)}`);
-    expect(r.rev.gear < 0 && r.rev.on, `reversing: ${JSON.stringify(r.rev)}`);
+    expect(r.turn.every((t) => t.v > 0.5 && t.v < 12 && t.signal === t.steer), `low-speed turns: ${JSON.stringify(r.turn)} (steer -1 is left, signal -1 left)`);
+    expect(r.rev.gear < 0 && r.rev.on && r.rev.signal === 0, `reversing (lamps on, no signal): ${JSON.stringify(r.rev)}`);
     expect(r.gauge && !r.rearView && r.back === r.was, `gauge pod ${r.gauge}, rear-view ${r.rearView}, back to ${r.back} (was ${r.was})`);
-    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)}; bar ${r.free} → ${r.brake}; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); reverse lamps on in gear ${r.rev.gear}`;
+    expect(r.after.gear > 0 && r.after.vx > 20, `left driving forward: ${JSON.stringify(r.after)}`);
+    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)}; bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
   });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
