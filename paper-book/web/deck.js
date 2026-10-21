@@ -275,11 +275,11 @@
     const subY = cy + (phone() ? 14 : compact ? 8 : 10);
     ctx.fillText(sub, rx, subY);
     if (T >= t1 && d.week && d.week.green_week) {
-      const subW = ctx.measureText(sub).width;
+      const subW = ctx.measureText(sub).width, badge = 'GREEN WEEK' + (d.week.streak > 1 ? ' ×' + d.week.streak : '');
       ctx.font = `600 7.5px ${DISPLAY}`; ctx.fillStyle = C.win;
-      if (phone()) ctx.fillText('GREEN WEEK', rx, top + 8);
-      else if (compact) ctx.fillText('GREEN WEEK', rx - subW - 12, subY);
-      else ctx.fillText('GREEN WEEK', rx, cy + 22);
+      if (phone()) ctx.fillText(badge, rx, top + 8);
+      else if (compact) ctx.fillText(badge, rx - subW - 12, subY);
+      else ctx.fillText(badge, rx, cy + 22);
     }
     if (T >= t1 && d.open.n && !phone()) {   // a pulse per open position
       const pulse = REDUCE ? 1 : 0.6 + 0.4 * Math.sin(now / 500 + l.i);
@@ -416,7 +416,7 @@
     rule.textContent = '';
     const b = document.createElement('b');
     b.textContent = checks ? `Read on: ${checks}.` : 'Read at the end of each desk’s month.';
-    rule.append(b, ` After that the bar is a green week: traded on 3 or more of the last ${m.week_days || 7} days, net up over the ${m.week_days || 7}, and no single day's loss bigger than the week's gain. Paper money only; nothing here is a forecast.`);
+    rule.append(b, ` After that the bar is a green week: traded on 3 or more of the last ${m.week_days || 7} days, net up over the ${m.week_days || 7}, and no single day's loss bigger than the week's gain. ×2 means two such weeks in a row. Paper money only; nothing here is a forecast.`);
     body.textContent = '';
     const rows = visible().slice().sort((a, b2) => returnAt(b2.d, t1) - returnAt(a.d, t1) || a.i - b2.i);
     if (!rows.length) {
@@ -445,7 +445,10 @@
       wk.append(small(w.traded ? `${w.green} green · ${w.red} red · ${w.traded} of ${m.week_days || 7} days` : 'no trades this week'));
       cell(tr, 'n', String(d.trades));
       const v = cell(tr, 'verdict', d.verdict);
-      if (w.green_week) { const g = document.createElement('b'); g.className = 'gw'; g.textContent = 'green week'; v.appendChild(g); }
+      if (w.green_week) {
+        const g = document.createElement('b'); g.className = 'gw';
+        g.textContent = 'green week' + (w.streak > 1 ? ' ×' + w.streak : ''); v.appendChild(g);
+      }
       body.appendChild(tr);
     });
   }

@@ -18,8 +18,8 @@ A desk is in the book when book.toml has a section for it.
   python paperbook.py --demo        the same, from the desks' demo markets
   python paperbook.py --standings   every desk ranked, with its last seven days; nothing written
 
-Writes output/ledger.csv (one row per closed paper trade) and output/paper-book.html,
-plus the Trading Deck (output/deck.html, the home page), the Trade Crawler (output/crawler.html) and the
+Writes output/ledger.csv (one row per closed paper trade), output/standings.txt (every desk ranked, with its
+last seven days; also served at /standings) and output/paper-book.html, plus the Trading Deck (output/deck.html, the home page), the Trade Crawler (output/crawler.html) and the
 Paper Galaxy (output/galaxy.html).
 Paper money only. Nothing here can place a real order.
 
@@ -421,13 +421,13 @@ def render_standings(book: Book) -> str:
     for k, (ret, d, s, day, w) in enumerate(rows, 1):
         since = f"{_usd(s['net']):>11} {ret:+8.1f}%" if day else f"{'—':>20}"
         week = f"{_usd(w['net']):>10} {w['green']}g {w['red']}r" if w["traded"] else f"{'—':>16}"
-        so_far = deck.verdict(s["trades"], s) + (" · GREEN WEEK" if w["green_week"] else "")
+        so_far = deck.verdict(s["trades"], s) + (" · GREEN WEEK" + (f" ×{w['streak']}" if w["streak"] > 1 else "") if w["green_week"] else "")
         lines.append(f"  {k:>2}  {book.label(d).lower():<21} {book.market(d):<9} {f'{day}/{deck.MONTH_DAYS}' if day else '—':>5}  "
                      f"{since:>24}  {week:>20}  {s['trades']:>6}  {so_far}")
     all_s = stats(book.all_trades, book.bank_total)
     lines.append(f"  {'':>2}  {'all desks':<21} {'':<9} {'':>5}  {_usd(all_s['net']):>11} {all_s['return_pct']:+8.1f}%  "
                  f"{'':>20}  {all_s['trades']:>6}")
-    green = [book.label(d) for _, d, _, _, w in rows if w["green_week"]]
+    green = [book.label(d) + (f" ×{w['streak']}" if w["streak"] > 1 else "") for _, d, _, _, w in rows if w["green_week"]]
     lines.append("  green week: " + (", ".join(green) if green else "none yet") +
                  "  (traded 3+ of the last 7 days, net up, no day's loss bigger than the week's gain)")
     if book.benchmark:
@@ -797,6 +797,7 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     out.mkdir(parents=True, exist_ok=True)
     book.benchmark = benchmark.load(out, book)
     write_ledger(book, out / "ledger.csv")
+    (out / "standings.txt").write_text(render_standings(book) + "\n", encoding="utf-8")
     frag = render_html(book)
     (out / "paper-book.fragment.html").write_text(frag, encoding="utf-8")
     (out / "paper-book.html").write_text(page(frag), encoding="utf-8")
@@ -813,8 +814,10 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
 SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/deck.json": "deck.json",
           "/crawler": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
           "/galaxy": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
-          "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv"}
-TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8"}
+          "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv",
+          "/standings": "standings.txt", "/standings.txt": "standings.txt"}
+TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8",
+         ".txt": "text/plain; charset=utf-8"}
 
 
 def serve(out: Path, host: str = "127.0.0.1", port: int = 8790):

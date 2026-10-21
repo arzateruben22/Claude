@@ -36,7 +36,11 @@ week are what count.
 ```bash
 python paper-book/paperbook.py             # the ledger and the report, now
 python paper-book/paperbook.py --watch 15  # ...every 15 minutes
+python paper-book/paperbook.py --standings # every desk ranked, with its last seven days and the green weeks
 ```
+
+Every build also writes `output/standings.txt` (served at `/standings`), and the watchdog pushes to your phone the
+moment a desk has a green week, then again for each week it keeps the streak (×2, ×3...).
 
 It writes `paper-book/output/ledger.csv` (one row per closed paper trade, every desk) and
 `paper-book/output/paper-book.html`: net profit and loss overall and per desk, the curve since

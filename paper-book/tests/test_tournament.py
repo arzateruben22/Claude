@@ -108,7 +108,7 @@ def test_a_green_week_needs_three_days_of_trading_a_net_gain_and_no_day_that_wip
     b = small_book(["memecoins"], {"memecoins": [trade("memecoins", 4.0, day(0)), trade("memecoins", 3.0, day(2)),
                                                  trade("memecoins", -2.0, day(4)), trade("memecoins", 9.0, day(9))]})
     w = deck.week(b, "memecoins", today)
-    assert w == {"net": 5.0, "traded": 3, "green": 2, "red": 1, "worst_day": -2.0, "green_week": True}   # day 9 is out
+    assert w == {"net": 5.0, "traded": 3, "green": 2, "red": 1, "worst_day": -2.0, "green_week": True, "streak": 1}   # day 9 is out
     b = small_book(["memecoins"], {"memecoins": [trade("memecoins", 4.0, day(0)), trade("memecoins", 3.0, day(2))]})
     assert deck.week(b, "memecoins", today)["green_week"] is False                       # only two days traded
     b = small_book(["memecoins"], {"memecoins": [trade("memecoins", 9.0, day(0)), trade("memecoins", -8.0, day(1)),
@@ -198,3 +198,38 @@ def test_on_a_read_date_the_evening_push_carries_the_ranking():
     assert lines[2].startswith("Today: 2 of 7 desks traded")
     plain = wd.summary(b, today - timedelta(days=1))                     # any other evening: the usual push
     assert plain.title.startswith("Paper book · Mon 19 Oct")
+
+
+def test_a_streak_counts_green_weeks_back_to_back():
+    today = NOW.astimezone(LA).date()
+    ts = [trade("memecoins", 2.0, day(n)) for n in (0, 2, 4, 7, 9, 11, 14, 16, 18)] + [trade("memecoins", -30.0, day(21))]
+    b = small_book(["memecoins"], {"memecoins": ts})
+    w = deck.week(b, "memecoins", today)
+    assert w["green_week"] and w["streak"] == 3                          # this week, last week, the week before; then a red one
+    b = small_book(["memecoins"], {"memecoins": ts[:6]})
+    assert deck.week(b, "memecoins", today)["streak"] == 2
+    assert deck.week(small_book(["memecoins"]), "memecoins", today)["streak"] == 0
+    assert pb.render_standings(small_book(["memecoins"], {"memecoins": ts[:6]})).count("GREEN WEEK ×2") == 1
+
+
+def test_a_green_week_is_pushed_once_a_week():
+    ts = [trade("memecoins_sniper", 2.0, day(n)) for n in (0, 2, 4)]
+    b = small_book(["memecoins_sniper", "memecoins_whale"], {"memecoins_sniper": ts})
+    state = {}
+    pushes = wd.check_green(NOW, state, b)
+    assert [p.title for p in pushes] == ["Memecoins Sniper has a green week"]
+    assert pushes[0].body.startswith("+$6.00 over the last 7 days: 3 green days, 0 red, traded on 3 of 7")
+    assert wd.check_green(NOW + timedelta(days=1), state, b) == []        # not again tomorrow
+    later = NOW + timedelta(days=7, hours=1)
+    ts += [trade("memecoins_sniper", 1.0, day(-7 + n)) for n in (1, 3, 5)]
+    b = small_book(["memecoins_sniper"], {"memecoins_sniper": ts}, now=later)
+    assert [p.title for p in wd.check_green(later, state, b)] == ["Memecoins Sniper has a green week, 2 weeks in a row"]
+
+
+def test_every_build_writes_the_standings_and_serves_them(tmp_path):
+    c = cfg()
+    b = pb.build(c, True, tmp_path / "out", NOW)
+    text = (tmp_path / "out" / "standings.txt").read_text()
+    assert text.startswith("STANDINGS (DEMO markets)") and len([ln for ln in text.splitlines() if ln.strip()[:2].strip().isdigit()]) == 30
+    assert pb.SERVED["/standings"] == "standings.txt" and pb.TYPES[".txt"].startswith("text/plain")
+    assert len(b.desks) == 30

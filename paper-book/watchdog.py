@@ -6,7 +6,8 @@
   python watchdog.py --dry-run    print what it would send, send nothing
 
 You hear about it when a desk stops or keeps crashing, goes quiet (running but saving nothing, usually
-no prices), loses a lot in a day, or the nightly backup stops happening. Pushes go through ntfy (free app,
+no prices), loses a lot in a day, has a green week (the bar the tournament waits for), or the nightly backup
+stops happening. Pushes go through ntfy (free app,
 no account) to the topic in ../server/.alerts, made by server/alerts.sh. Without a topic it does nothing.
 It only reads: paper money only, and it never changes a desk.
 """
@@ -185,6 +186,26 @@ def check_losses(now: datetime, state: dict, book: pb.Book, limit_pct: float, ni
     return out
 
 
+def check_green(now: datetime, state: dict, book: pb.Book) -> List[Push]:
+    """The push the whole tournament waits for: a desk has a green week (deck.week). Once per desk per week."""
+    import deck
+
+    out: List[Push] = []
+    sent = state.setdefault("sent", {})
+    today = now.astimezone(book.tz).date()
+    for d in book.desks:
+        w = deck.week(book, d, today)
+        if not w["green_week"] or not _ago(now, sent.get(f"green:{d}"), 24 * 7):
+            continue
+        sent[f"green:{d}"] = now.isoformat()
+        times = f", {w['streak']} weeks in a row" if w["streak"] > 1 else ""
+        out.append(Push(f"{book.label(d)} has a green week{times}",
+                        f"{_usd(w['net'])} over the last 7 days: {w['green']} green day{'s' if w['green'] != 1 else ''}, "
+                        f"{w['red']} red, traded on {w['traded']} of 7, and no day lost more than the week made. "
+                        "Paper money only: one green week is a start, not proof.", 3, ("seedling",)))
+    return out
+
+
 def check_backup(now: datetime, state: dict, newest: Optional[datetime], folder_exists: bool) -> List[Push]:
     sent = state.setdefault("sent", {})
     if not folder_exists or (newest and now - newest < timedelta(hours=50)) or not _ago(now, sent.get("backup"), 24):
@@ -222,7 +243,7 @@ def summary(book: pb.Book, day: date) -> Push:
             best, worst = max(weekly, key=lambda r: r[4]["net"]), min(weekly, key=lambda r: r[4]["net"])
             lines.append(f"Last 7 days: best {book.label(best[0])} {_usd(best[4]['net'])} · worst {book.label(worst[0])} "
                          f"{_usd(worst[4]['net'])}")
-        green = [book.label(d) for d, _, _, _, w in rows if w["green_week"]]
+        green = [book.label(d) + (f" ×{w['streak']}" if w["streak"] > 1 else "") for d, _, _, _, w in rows if w["green_week"]]
         lines.append("Green week: " + (", ".join(green) if green else "none yet"))
     held = [h for d in book.desks for h in book.held[d]]
     bank = book.bank_total
@@ -281,7 +302,7 @@ def run_once(now: datetime, state: dict, *, units=unit_state, mtime_of=mtime, bo
             sent["book"] = now.isoformat()
             pushes.append(Push("Couldn't read the paper results", f"{type(exc).__name__}: {exc}", 3, ("warning",)))
         return pushes
-    pushes += check_losses(now, state, book, limit, night)
+    pushes += check_losses(now, state, book, limit, night) + check_green(now, state, book)
     if backups is None:
         backups = (newest_backup(), BACKUPS.is_dir())
     pushes += check_backup(now, state, *backups)

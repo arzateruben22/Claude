@@ -54,6 +54,17 @@ Already set up? One update adds them all and keeps every paper trade so far:
 fixed for the month: changing a desk mid-test, or keeping only the one that got lucky, is how people fool
 themselves. A winner has to pass its scorecard, then do it again on other months, before anyone trusts it.
 
+**To read the standings at any time:** `bash server/status.sh` ranks all thirty with their last seven days, and the
+same table is at `http://127.0.0.1:8790/standings` next to the deck. Your phone gets a push the moment any desk has a
+green week, and again if it keeps the streak (×2, ×3...).
+
+**To cut a desk after the month-end read:** take its name out of the server's lists and restart. A memecoin
+desk is one `--with <name>` in `server/systemd/nightdesk.service` (and one `ExecStart` line in
+`nightdesk-review.service`); a big-coin desk is one `--with <name>` in `majors.service`; a stock desk comes out of
+`--books all` by renaming its `premarket-scanner/criteria-<name>.toml` (say, to `criteria-<name>.toml.off`). Then
+delete its section from `paper-book/book.toml` and run `sudo bash server/setup.sh`. Its paper records stay on disk;
+nothing is deleted. Don't cut before the read: a desk that looks dead on day 10 can be the one standing on day 28.
+
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
 everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.
 

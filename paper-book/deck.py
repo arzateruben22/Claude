@@ -90,17 +90,30 @@ def verdict(n: int, s: dict) -> str:
     return "about even"
 
 
-def week(book: pb.Book, d: str, today: date) -> dict:
-    """The desk's last seven days (today included): net paper profit, days it traded, green and red days, the worst
-    day, and whether that makes a green week: traded on three or more of the seven days, net up, and no single day's
-    loss bigger than the week's gain. The bar one desk has to clear, a week at a time, after the month-end read."""
-    first = today - timedelta(days=WEEK_DAYS - 1)
-    by_day = pb.daily([t for t in book.trades[d] if first <= t.closed.astimezone(book.tz).date() <= today], book.tz)
+def _week(book: pb.Book, d: str, end: date) -> dict:
+    first = end - timedelta(days=WEEK_DAYS - 1)
+    by_day = pb.daily([t for t in book.trades[d] if first <= t.closed.astimezone(book.tz).date() <= end], book.tz)
     net = round(sum(by_day.values()), 2)
     worst = round(min(by_day.values()), 2) if by_day else 0.0
     green, red = sum(1 for v in by_day.values() if v > 0), sum(1 for v in by_day.values() if v < 0)
     return {"net": net, "traded": len(by_day), "green": green, "red": red, "worst_day": worst,
             "green_week": len(by_day) >= 3 and net > 0 and -worst < net}
+
+
+MAX_STREAK = 8
+
+
+def week(book: pb.Book, d: str, today: date) -> dict:
+    """The desk's last seven days (today included): net paper profit, days it traded, green and red days, the worst
+    day, and whether that makes a green week: traded on three or more of the seven days, net up, and no single day's
+    loss bigger than the week's gain. The bar one desk has to clear, a week at a time, after the month-end read.
+    `streak` counts how many weeks in a row (this one, the seven days before it, and so on) have been green."""
+    out = _week(book, d, today)
+    streak, end = 0, today
+    while streak < MAX_STREAK and _week(book, d, end)["green_week"]:
+        streak, end = streak + 1, end - timedelta(days=WEEK_DAYS)
+    out["streak"] = streak
+    return out
 
 
 def _as_date(day) -> Optional[date]:
