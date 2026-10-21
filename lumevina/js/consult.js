@@ -194,6 +194,11 @@
 
   window.LumevinaConsult = { approved: approved, waiting: waiting, open: open, refresh: refresh, email: email };
 
+  /* the link in Evelyn's email carries the email she approved, so a new phone knows who this is */
+  try {
+    var fromLink = norm(new URLSearchParams(location.search).get("consult") || "");
+    if (EMAIL.test(fromLink)) { state.email = fromLink; save(); }
+  } catch (e) { /* no URL API */ }
   /* the decision arrives: live, on load and when they sign in; demo, the dashboard's tab writes it */
   refresh();
   window.addEventListener("storage", function (e) { if (e.key === DEMO) refresh(); });

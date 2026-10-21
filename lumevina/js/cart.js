@@ -577,6 +577,9 @@
     }
     var SH = window.LumevinaShip, acct = window.LumevinaAccount && window.LumevinaAccount.current();
     if (SH) SH.fillAddress(modal, "co", SH.lastAddress(memberEmail() || (acct && acct.email)));
+    /* the email Evelyn approved an active for (js/consult.js): the one to buy with */
+    var CS = window.LumevinaConsult;
+    if (CS && CS.email() && checkoutForm.elements.email && !checkoutForm.elements.email.value) checkoutForm.elements.email.value = CS.email();
   };
   var coEmail = document.getElementById("co-email");
   /* a returning buyer who isn't signed in: their last shipping address
@@ -792,7 +795,7 @@
       checkoutStatus.textContent =
         j.reason === "stock" ? (j.left ? "Only " + j.left + " of " + (j.name || "one item") + " left. Lower the amount in your cart and try again." : (j.name || "One item") + " just sold out. Take it out of your cart and try again.")
         : j.reason === "unavailable" ? "One item isn't available any more. Take it out of your cart and try again."
-        : j.reason === "consult_needed" ? (j.name || "One item") + " needs a quick consult first. Tap \u201cNeeds a quick consult\u201d on it in the shop and Evelyn unlocks it for this email, usually within a day."
+        : j.reason === "consult_needed" ? (j.name || "One item") + " needs a quick consult first." + (window.LumevinaConsult && window.LumevinaConsult.email() && window.LumevinaConsult.email() !== checkoutForm.elements.email.value.trim().toLowerCase() ? " Evelyn\u2019s yes is for " + window.LumevinaConsult.email() + ": use that email here." : " Tap \u201cNeeds a quick consult\u201d on it in the shop and Evelyn unlocks it for this email, usually within a day.")
         : j.reason === "email" ? "Check your email address."
         : j.reason === "gift_email" ? "Check the recipient's email address."
         : "Payments aren't available right now. Please try again in a few minutes.";

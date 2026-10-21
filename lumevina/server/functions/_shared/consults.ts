@@ -79,7 +79,8 @@ export async function decideConsult(db: any, body: any, names: Map<string, strin
   const list: string[] = c.products ?? [];
   const what = list.map((p) => names.get(p) ?? p);
   const shop = site() ? `${site()}/` : "";
-  const links = list.map((p) => shop ? `<li><a href="${esc(shop)}?product=${esc(p)}#shop" style="color:#161412">${esc(names.get(p) ?? p)}</a></li>` : `<li>${esc(names.get(p) ?? p)}</li>`).join("");
+  const who = encodeURIComponent(c.email);
+  const links = list.map((p) => shop ? `<li><a href="${esc(shop)}?product=${esc(p)}&consult=${esc(who)}#shop" style="color:#161412">${esc(names.get(p) ?? p)}</a></li>` : `<li>${esc(names.get(p) ?? p)}</li>`).join("");
   const body2 = status === "approved"
     ? `<p style="font-size:15px;line-height:1.55">Evelyn looked at what you wrote${what.length ? ` and unlocked <strong>${esc(what.join(", "))}</strong>` : " and unlocked the actives"} for you. Use this email address at checkout and it goes straight through.</p>` +
       (links ? `<ul style="font-size:15px;line-height:1.7">${links}</ul>` : "") +
@@ -118,7 +119,7 @@ export async function consultDone(db: any, id: string) {
     await db.from("consults").update({ credit_code: code }).eq("id", id);
     await db.from("gift_cards").update({ delivered_at: new Date().toISOString() }).eq("code", code);
   } catch (e) { console.error("consult credit", e); }
-  const shop = site() ? `${site()}/#shop` : "";
+  const shop = site() ? `${site()}/?consult=${encodeURIComponent(c.email)}#shop` : "";
   await sendEmail(c.email, "Your routine, and your $35", page(c.name ? `Hi ${esc(first(c.name))},` : "Hi,",
     `<p style="font-size:15px;line-height:1.55">Thank you for the consult. The actives Evelyn recommended are unlocked for this email address${shop ? ` in <a href="${esc(shop)}" style="color:#161412">the shop</a>` : ""}.</p>` +
     (code ? `<p style="font-size:15px;line-height:1.55">Your ${money(CONSULT_CREDIT_CENTS)} is this code, good on anything: <strong style="letter-spacing:.06em">${esc(code)}</strong>. Enter it at checkout.</p>` : "") +
