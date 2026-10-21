@@ -48,6 +48,13 @@ or merges it.
   live_ui you live_b I-405 North Drive with"), Drive with (A 79.96 m behind B on I-405 North), realistic mode and the
   billboards passed. The waiting-line check timed out loading C's page while a review agent and the server tests were
   using the CPU; the rerun is below.
+- **Browser, after the security fixes** (the `live` group, every check in it at the time): **10 of 10**. Two drivers
+  online, one ghost drawn, one name plate, chip LIVE 2/2. The who's-on list read "Driving now · 2 of 2 live_ui you
+  live_b I-405 North Drive with". Drive with put A 79.96 m behind B on I-405 North, and A heard B honk. C waited at #1
+  and got in when B left (peak 2, admitted 3, 824 poses in, 0 dropped). Two bad poses were dropped through a real
+  socket. Realistic mode and the 12 billboards passed. The account panel changed the password and deleted the
+  account, and the server agreed. The pause screen showed its live line. No page errors. The menu count, the reset
+  check and the grow-in came after this run.
 
 ## 2026-10-21: the live server (alpha), the realistic mode, the talk bank and billboards
 

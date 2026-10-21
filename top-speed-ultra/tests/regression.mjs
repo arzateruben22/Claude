@@ -3,7 +3,7 @@
 //
 //   npm run build && npm test             every group
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
-//                                         progression, render, phone, launch, live)
+//                                         progression, render, phone, launch, live, livephone)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
@@ -1052,6 +1052,69 @@ await group('live', async (use) => {
     });
   } finally {
     for (const h of extra) await h.ctx.close();
+    server.kill('SIGTERM');
+  }
+});
+
+// the live UI at phone size (390 × 844): the menu's Live section, the account panel, the top bar with the chip and the
+// horn, and the who's-on list, with a scripted peer (a plain socket, no second browser) driving nearby
+await group('livephone', async (use) => {
+  const { spawn } = await import('node:child_process');
+  const { rmSync } = await import('node:fs');
+  const port = 31000 + Math.floor(Math.random() * 5000), base = `http://127.0.0.1:${port}`;
+  const db = path.join(OUT, 'livephone-test.db');
+  for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '25', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db }, stdio: ['ignore', 'pipe', 'inherit'] });
+  await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
+  const signup = async (name) => (await (await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) })).json()).token;
+  let peer = null, ticker = null;
+  try {
+    const [tPhone, tPeer] = [await signup('phone_me'), await signup('Westbound_GT')];
+    const { page } = await use({ phone: true, settings: { live: true, liveUrl: base, start: 'I-405 North', density: 'none' } });
+    await page.evaluate(([t]) => { localStorage.setItem('tsu.live.token', t); localStorage.setItem('tsu.live.name', 'phone_me'); }, [tPhone]);
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+    const fits = async (sel) => page.evaluate((s) => { const els = [...document.querySelectorAll(s)]; return els.every((e) => { const r = e.getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1; }); }, sel);
+    await check('phone: the Live section fits and shows the count', async () => {
+      await page.locator('.live-sec').scrollIntoViewIfNeeded();
+      await page.waitForFunction(() => /driving now/.test(document.querySelector('.live-sec .sect')?.textContent || ''), null, { timeout: 40000 });
+      await page.screenshot({ path: path.join(OUT, 'livephone-menu.png') });
+      expect(await fits('.live-sec, .live-sec *'), 'something in the Live section runs off the screen');
+      return (await page.locator('.live-sec .sect').innerText()).replace(/\s+/g, ' ');
+    });
+    await check('phone: the account panel fits', async () => {
+      await page.locator('.pick', { hasText: 'Account' }).click();
+      await page.waitForSelector('.name-static');
+      await page.locator('summary', { hasText: 'Email for password reset' }).click();
+      await page.screenshot({ path: path.join(OUT, 'livephone-account.png'), fullPage: false });
+      expect(await fits('.panel input, .panel .btn, .acct-more'), 'the account panel runs off the screen');
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      return 'signed in, the email setting open, nothing off screen';
+    });
+    await check('phone: the top bar holds the chip and the horn without crowding; the who\'s-on list fits', async () => {
+      await drive(page, 'Free Drive');
+      await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
+      // the scripted peer: online, 60 m ahead on the same road, sending poses at 10 Hz
+      const me = await game(page, () => { const g = window.__game, p = g.path.at(g.phys.s + 60, g.path.laneCenter(1)); return { x: p.x, y: p.y, z: p.z, h: p.h }; });
+      peer = new WebSocket(base.replace('http', 'ws') + '/ws');
+      await new Promise((r) => peer.addEventListener('open', r));
+      peer.send(JSON.stringify({ t: 'hello', token: tPeer, car: 'rossini-gt', paint: 0x1d4f9c }));
+      ticker = setInterval(() => peer.send(JSON.stringify({ t: 's', x: me.x, y: me.y, z: me.z, h: me.h, v: 0 })), 100);
+      await page.waitForFunction(() => window.__game.stats.liveDrawn === 1, null, { timeout: 60000 });
+      await frames(page, 3);
+      const bar = await page.evaluate(() => { const b = document.querySelector('.tbar').getBoundingClientRect(), kids = [...document.querySelectorAll('.tbar > *')].map((e) => e.getBoundingClientRect()); return { left: b.left, right: b.right, w: innerWidth, overlap: kids.some((a, i) => kids.some((c, j) => j > i && a.right > c.left + 1 && a.left < c.right - 1 && a.bottom > c.top && a.top < c.bottom)), n: kids.length }; });
+      await page.screenshot({ path: path.join(OUT, 'livephone-drive.png') });
+      expect(bar.left >= 0 && bar.right <= bar.w + 1 && !bar.overlap, JSON.stringify(bar));
+      await page.locator('.livechip').click();
+      await page.waitForSelector('.livewho');
+      await page.screenshot({ path: path.join(OUT, 'livephone-who.png') });
+      expect(await fits('.livewho, .livewho *'), 'the who\'s-on list runs off the screen');
+      const text = (await page.locator('.livewho').innerText()).replace(/\s+/g, ' ');
+      expect(/Westbound_GT/.test(text), text);
+      return `top bar ${Math.round(bar.right - bar.left)} px of ${bar.w}, ${bar.n} items, no overlap; list "${text.slice(0, 80)}"`;
+    });
+  } finally {
+    clearInterval(ticker); try { peer?.close(); } catch { /* gone */ }
     server.kill('SIGTERM');
   }
 });
