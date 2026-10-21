@@ -467,6 +467,9 @@
   var openCheckout = function () {
     if (checkoutBtn.disabled) return;
     closeDrawer();
+    /* the email Evelyn approved an active for (js/consult.js): the one to buy with */
+    var CS = window.LumevinaConsult;
+    if (CS && CS.email() && checkoutForm.elements.email && !checkoutForm.elements.email.value.trim()) checkoutForm.elements.email.value = CS.email();
 
     linesList.textContent = "";
     Object.keys(cart).forEach(function (id) {
@@ -577,9 +580,6 @@
     }
     var SH = window.LumevinaShip, acct = window.LumevinaAccount && window.LumevinaAccount.current();
     if (SH) SH.fillAddress(modal, "co", SH.lastAddress(memberEmail() || (acct && acct.email)));
-    /* the email Evelyn approved an active for (js/consult.js): the one to buy with */
-    var CS = window.LumevinaConsult;
-    if (CS && CS.email() && checkoutForm.elements.email && !checkoutForm.elements.email.value) checkoutForm.elements.email.value = CS.email();
   };
   var coEmail = document.getElementById("co-email");
   /* a returning buyer who isn't signed in: their last shipping address
