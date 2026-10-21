@@ -13,6 +13,7 @@ Chromium, captured through Playwright and encoded with ffmpeg. It has two tiers:
 | `cinema3d.js` | The finish. One file, three.js r160+ core only, no build step |
 | `keys.js` | Keyed camera, handheld micro-motion and focus keys for `window.CINEMA_FOCUS`. A plain ES module with no imports, so it works with any three.js version |
 | `liquid2d.js` | Liquid-chrome text morph for canvas 2D: a blob pinches into one bead per glyph and each bead swells into its letter (a metaball field shaded as chrome). Deterministic; `res` for density-scaled canvases, `palette` for the environment. Used for OPUS 5.5 in `films/made-with-claude` |
+| `metaballs.js` | Liquid that beads, necks and merges in 3D: three.js's marching cubes, built from the THREE you pass (any version), with a world-space `liquid(THREE, {material, center, size, resolution}).set([{p, r}, …])`. Real geometry, so it gets the scene's light, shadows, depth of field and motion blur. Used for the serum drops in `films/skin-school-pilot` |
 | `README.md` | This file |
 
 The studio process that uses the kit is the `cinema-kit` skill (`.claude/skills/cinema-kit/SKILL.md`).

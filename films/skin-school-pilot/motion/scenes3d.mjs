@@ -32,6 +32,8 @@ export const SCENES = {
 <section class="shot"><span class="lab3" id="l-mand" style="left:22%;top:8%"><i style="background:#f4c9d6"></i>mandelic acid</span><span class="lab3" id="l-bp" style="left:58%;top:8%"><i style="background:#ffffff"></i>benzoyl peroxide</span><div class="dayc" id="dayc"><b id="dayn">0</b><span>days</span></div></section>`,
     module: `
 import * as THREE from "../vendor/three.module.min.js";
+import { liquid } from "../../../../kits/cinema/metaballs.js";   // directed: liquid beads (served from the repo's kit)
+const tmpV = new THREE.Vector3();
 const W = window.W, H = window.H, M = window.M;
 const { seg, tw, E, enter } = M;
 const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
@@ -104,6 +106,42 @@ dropMand.visible = dropBP.visible = false; dropMand.castShadow = dropBP.castShad
 const ring = (col) => { const m = new THREE.Mesh(new THREE.RingGeometry(0.86, 1, 64), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(1.6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); m.rotation.x = -Math.PI / 2; m.visible = false; scene.add(m); return m; };
 const splashMand = ring(0xf4c9d6), splashBP = ring(0xffffff);
 const SURF = 13.5;   // the skin's top surface
+// directed: on impact each drop hands over to liquid that beads, rolls and merges (kits/cinema/metaballs.js,
+// three's marching cubes): mandelic puddles, pinches into beads that roll back and sink down the pore;
+// benzoyl peroxide spreads over the inflamed ring and its beads soak in where they sit
+const LQ = {
+  mand: liquid(THREE, { material: dropMand.material, center: [0, SURF - 0.6, PZ - 0.6], size: 7.6, resolution: 64 }),
+  bp: liquid(THREE, { material: dropBP.material, center: [0.6, SURF - 0.4, PZ - 0.4], size: 8.4, resolution: 64 })
+};
+scene.add(LQ.mand.mesh, LQ.bp.mesh);
+const lqEmpty = { mand: false, bp: false };
+const setLiquid = (key, balls) => { if (!balls.length && lqEmpty[key]) return; LQ[key].set(balls); lqEmpty[key] = !balls.length; };
+setLiquid("mand", []); setLiquid("bp", []);
+const lh = (k) => hash(k + 700);
+const mandBalls = (q, R) => {
+  const x0 = 0, z0 = PZ, B = [];
+  const spread = E.out(seg(q, 0, 0.24)), back = E.inout(seg(q, 0.95, 1.45)), sink = seg(q, 1.45, 2.6), gone = 1 - sink;
+  const core = R * (1 - 0.45 * spread + 0.25 * back) * gone;
+  B.push({ p: [x0, SURF + core * 0.6 - 2.6 * sink, z0], r: core });
+  for (let k = 0; k < 6; k++) {                      // beads on the skin behind the slot (never off the block's front edge)
+    const a = Math.PI + (k / 5) * Math.PI, d = 1.95 * R * spread * (1 - back);
+    const rb = R * 0.42 * (0.85 + 0.3 * lh(k)) * (1 - back * 0.6) * gone;
+    const bob = 0.05 * Math.sin(q * 9 + k * 1.3) * (1 - back);
+    B.push({ p: [x0 + Math.cos(a) * d, SURF + rb * 0.75 + bob - 2.6 * sink, z0 + Math.sin(a) * d * 0.85], r: rb });
+  }
+  return B;
+};
+const bpBalls = (q, R) => {
+  const x0 = 0.6, z0 = PZ + 0.4, B = [];
+  const spread = E.out(seg(q, 0, 0.3)), soak = E.inout(seg(q, 0.9, 2.0)), gone = 1 - soak;
+  B.push({ p: [x0, SURF + R * 0.5 * gone, z0], r: R * (1 - 0.5 * spread) * gone });
+  for (let k = 0; k < 7; k++) {
+    const a = Math.PI + (k / 6) * Math.PI, d = 2.4 * R * spread;
+    const rb = R * 0.38 * (0.8 + 0.4 * lh(k + 20)) * gone;
+    B.push({ p: [x0 + Math.cos(a) * d, SURF + rb * 0.7, z0 + Math.sin(a) * d * 0.9], r: rb });
+  }
+  return B;
+};
 const splash = (m, x, z, q) => { m.visible = q >= 0 && q < 0.7; if (!m.visible) return; const k = 1 - Math.pow(1 - q / 0.7, 3); m.position.set(x, SURF + 0.03, z); m.scale.setScalar(0.6 + 2.8 * k); m.material.opacity = 0.75 * Math.pow(1 - q / 0.7, 1.6); };
 
 const RED = new THREE.Color(0xe0574a), BLACK = new THREE.Color(0x1a1210);
@@ -137,8 +175,10 @@ const CAM = [
   { t: 13.3, pos: [7.8, 16.8, 18.6], look: [0.0, 12.8, 3.0], fov: 32, ease: "p3" },
   { t: 17.9, pos: [5.0, 15.8, 14.8], look: [0.0, 12.8, 3.5], fov: 30, ease: "sine" },
   { t: 18.9, pos: [3.6, 19.6, 17.6], look: [0.0, 16.4, 3.5], fov: 34, ease: "p3" },
-  { t: 21.5, pos: [4.2, 18.8, 18.4], look: [0.2, 15.8, 3.5], fov: 34, ease: "sine" },
-  { t: 22.8, pos: [4.0, 19.2, 18.0], look: [0.4, 16.0, 3.6], fov: 34, ease: "sine" },
+  { t: 19.7, pos: [2.4, 16.8, 10.8], look: [0.0, 13.9, 3.2], fov: 30, ease: "p3" },     // directed: push in on the beads
+  { t: 20.9, pos: [1.6, 16.2, 10.2], look: [0.0, 13.2, 3.4], fov: 30, ease: "sine" },   // follow the merge and the sink
+  { t: 21.5, pos: [4.2, 18.8, 18.4], look: [0.2, 15.8, 3.5], fov: 34, ease: "p2" },     // back out for the second drop's fall
+  { t: 22.9, pos: [2.6, 16.9, 11.6], look: [0.5, 13.9, 3.3], fov: 31, ease: "p3" },     // and in on its beads
   { t: 24.4, pos: [10.4, 14.6, 29.0], look: [0.3, 10.4, 1.6], pl: [0.3, 7.4, 1.6], fov: 32, ease: "p3" },
   { t: 26.0, pos: [9.8, 14.2, 27.8], look: [0.3, 10.4, 1.6], pl: [0.3, 7.4, 1.6], fov: 32, ease: "sine" }
 ];
@@ -214,10 +254,18 @@ window.seek = function (t) {
   paint(redP);
   // the drops in shot 3
   // directed: each drop stretches as it falls, lands with a sprung squash and a splash ring
-  const drop = (m, x, z, r, t0, t1, fadeA, fadeB, flatMax, ringM) => {
+  const drop = (m, x, z, r, t0, t1, fadeA, fadeB, flatMax, ringM, key, balls) => {
     m.visible = i === 3 && lt > t0 && lt < fadeB;
     const q = lt - t1;
     splash(ringM, x, z, i === 3 ? q : -1);
+    // after impact the liquid takes over from the sphere
+    if (m.visible && q >= 0) {
+      m.visible = false;
+      m.material.opacity = (m === dropMand ? 0.85 : 0.9) * (1 - seg(lt, fadeA, fadeB));
+      setLiquid(key, balls(q, r));
+      return tmpV.set(x, SURF + 0.3, z);
+    }
+    setLiquid(key, []);
     if (!m.visible) return null;
     const u = seg(lt, t0, t1), f = u * u * u, speed = 3 * u * u;
     let sy, sxz;
@@ -228,8 +276,8 @@ window.seek = function (t) {
     m.material.opacity = (m === dropMand ? 0.85 : 0.9) * (1 - seg(lt, fadeA, fadeB));
     return m.position;
   };
-  const pm = drop(dropMand, 0, PZ, 0.9, 0.1, 1.0, 3.8, 5, 0.65, splashMand); if (pm) DROP.mand.copy(pm); else if (i === 3 && lt <= 0.1) DROP.mand.set(0, 22, PZ);
-  const pb = drop(dropBP, 0.6, PZ + 0.4, 0.8, 3.6, 4.4, 6.2, 7.2, 0.6, splashBP); if (pb) DROP.bp.copy(pb); else if (i === 3 && lt <= 3.6) DROP.bp.set(0.6, 22, PZ + 0.4);
+  const pm = drop(dropMand, 0, PZ, 0.9, 0.1, 1.0, 3.8, 5, 0.65, splashMand, "mand", mandBalls); if (pm) DROP.mand.copy(pm); else if (i === 3 && lt <= 0.1) DROP.mand.set(0, 22, PZ);
+  const pb = drop(dropBP, 0.6, PZ + 0.4, 0.8, 3.6, 4.4, 6.2, 7.2, 0.6, splashBP, "bp", bpBalls); if (pb) DROP.bp.copy(pb); else if (i === 3 && lt <= 3.6) DROP.bp.set(0.6, 22, PZ + 0.4);
   // labels and the day counter (DOM)
   const $ = M.$;
   if (i === 0) { enter($("#l-hair"), lt, 0.8, { y: 8 }); enter($("#l-gland"), lt, 1.8, { y: 8 }); enter($("#l-oil"), lt, 3.0, { y: 8 }); }

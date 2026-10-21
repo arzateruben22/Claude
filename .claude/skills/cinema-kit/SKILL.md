@@ -20,6 +20,7 @@ The kit is `kits/cinema/` (read `kits/cinema/README.md` first):
 | `kits/cinema/cinema3d.js` | One-file finish for any three.js r160+ scene that exposes `window.seek(t)`: probe → K jittered sub-frames over a 180° shutter → centre depth → bokeh DOF focused by `window.CINEMA_FOCUS(t)` → bloom → ACES, premultiplied for DOM pages. `cinemaRenderer()` replaces `new THREE.WebGLRenderer()` (r160 `render()` is an instance method, so prototype patches never run). `window.cinemaFrame(t)` renders one frame. |
 | `kits/cinema/keys.js` | Keyed camera (per-key eases, portrait scale/lens overrides) and focus keys racked over ~0.45 s. |
 | `kits/cinema/liquid2d.js` | Liquid-chrome text morph (blob → beads → letters) for canvas 2D; the film's OPUS 5.5. |
+| `kits/cinema/metaballs.js` | 3D liquid (marching cubes): drops that bead, roll and merge; real geometry in any three.js version. |
 
 ## Step 0 — Where does it live?
 
