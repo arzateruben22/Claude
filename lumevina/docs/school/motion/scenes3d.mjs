@@ -254,6 +254,129 @@ window.seek = function (t) {
 };
 `
   },
+  /* ───────── 2-1 Cleansing, done right: the day off, without stripping ───────── */
+  "2-1": {
+    id: "2-1", kicker: "Cleansing, done right", title: `Take the day off <span class="grad">without stripping the skin.</span>`, dur: 22, poster: 13,
+    shots: [
+      { at: 0, name: "day", cap: "By evening your face carries the day: sunscreen, makeup, oil, and what the air left on it. Water alone doesn't move it." },
+      { at: 7, name: "melt", cap: "At night, cleanse twice: an oil or balm first. It melts sunscreen and makeup, and rinses off with lukewarm water, not hot." },
+      { at: 14, name: "wash", cap: "Then your cleanser, a gel for oily skin, a cream or milk for dry, massaged for a full 60 seconds. Rinse. Not tight, not squeaky: that's clean." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.clock3 { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
+.clock3 b { font-size: 7vmin; font-weight: 700; letter-spacing: -.03em; } .clock3 span { font-size: 2.6vmin; color: #a1a1a6; }
+.note3 { position: absolute; left: 0; bottom: 2vmin; max-width: 64vmin; font-size: 2.5vmin; line-height: 1.4; color: #ff7a6b; opacity: 0; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-spf"><i style="background:#f6f0e8"></i>sunscreen, makeup</span><span class="lab3" id="l-oil"><i style="background:#f1d57a"></i>your own oil</span><span class="lab3" id="l-city"><i style="background:#6e6e73"></i>what the air left</span></section>
+<section class="shot"><span class="lab3" id="l-balm"><i style="background:#f5c98a"></i>oil or balm first</span><span class="lab3" id="l-melt"><i style="background:#f5c98a"></i>sunscreen and makeup, melting</span><span class="lab3" id="l-warm"><i style="background:#8fd3ff"></i>lukewarm, not hot</span></section>
+<section class="shot"><span class="lab3" id="l-gel"><i style="background:#dff3ff"></i>your cleanser, massaged</span><span class="lab3" id="l-clean"><i style="background:#e9c4b4"></i>clean, barrier still there</span><div class="clock3" id="clock3"><b id="clockn">0:00</b><span>massage</span></div><p class="note3" id="note3">Tight and squeaky afterward means the cleanser is too strong. Switch to a gentler one.</p></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(10, 20, 12); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0xf4c9d6, 0.45); fill2.position.set(-12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block of skin
+const NY = 12, NZ = 9, cells = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = x * 1000 + y * 20 + z, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 9) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v + (y === 11 ? 0.04 : 0));
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  cells.push({ x, y, z, c, base: c.clone(), wx: x + 0.5, wz: z + 0.5 - NZ / 2 });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.wx, c.y, c.wz); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+// the day: a sunscreen-and-makeup film, oil beads, grit
+const dayFilm = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.34, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf2e4d2, roughness: 0.55, opacity: 0.0, transparent: true }));
+dayFilm.position.set(0, 11.7, 0); dayFilm.castShadow = true; scene.add(dayFilm);
+const beadGeo = new THREE.SphereGeometry(0.26, 12, 10);
+const oilMat = new THREE.MeshStandardMaterial({ color: 0xf1d57a, emissive: 0x5a4410, emissiveIntensity: 0.5, roughness: 0.3, transparent: true, opacity: 1 });
+const beads = Array.from({ length: 16 }, (_, k) => { const m = new THREE.Mesh(beadGeo, oilMat); m.position.set(-7 + hash(k + 20) * 14, 12.0, -3.8 + hash(k + 21) * 7.6); m.scale.set(1.3, 0.55, 1.3); m.visible = false; scene.add(m); return m; });
+const gritGeo = new THREE.BoxGeometry(0.22, 0.22, 0.22);
+const gritMat = new THREE.MeshStandardMaterial({ color: 0x6e6e73, roughness: 0.9, transparent: true, opacity: 1 });
+const grit = Array.from({ length: 36 }, (_, k) => { const m = new THREE.Mesh(gritGeo, gritMat); m.position.set(-7.6 + hash(k + 40) * 15.2, 12.0, -4 + hash(k + 41) * 8); m.rotation.set(hash(k + 42) * 2, hash(k + 43) * 2, 0); m.visible = false; scene.add(m); return m; });
+// the balm: a drop that spreads into a warm amber pool, then rinses away in a lukewarm sheet
+const balm = new THREE.Mesh(new THREE.SphereGeometry(0.9, 24, 18), new THREE.MeshPhysicalMaterial({ color: 0xf5c98a, roughness: 0.2, transmission: 0.2, opacity: 0.95, transparent: true }));
+balm.position.set(0, 24, 0); balm.visible = false; balm.castShadow = true; scene.add(balm);
+const pool = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.5, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf5c98a, roughness: 0.15, clearcoat: 0.9, transmission: 0.25, opacity: 0.0, transparent: true }));
+pool.position.set(0, 11.9, 0); scene.add(pool);
+const rinse = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.5, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0x8fd3ff, roughness: 0.1, transmission: 0.5, opacity: 0.0, transparent: true }));
+rinse.position.set(0, 12.1, 0); scene.add(rinse);
+const dropGeo = new THREE.SphereGeometry(0.18, 10, 8);
+const rinseDrops = Array.from({ length: 24 }, (_, k) => { const m = new THREE.Mesh(dropGeo, new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0.5, transparent: true, opacity: 0.9 })); m.visible = false; scene.add(m); return { m, k, x: -7 + hash(k + 70) * 14, z: NZ / 2 + 0.5 }; });
+// the cleanser: a soft foam of spheres over the surface, moving in small circles (the massage)
+const foamGeo = new THREE.SphereGeometry(0.55, 14, 12);
+const foamMat = new THREE.MeshStandardMaterial({ color: 0xdff3ff, roughness: 0.65, transparent: true, opacity: 0.0 });
+const foam = Array.from({ length: 70 }, (_, k) => { const m = new THREE.Mesh(foamGeo, foamMat); m.userData = { x: -7.2 + hash(k + 100) * 14.4, z: -3.6 + hash(k + 101) * 7.2, s: 0.6 + hash(k + 102) * 0.7, ph: hash(k + 103) * 6.28 }; m.visible = false; m.castShadow = true; scene.add(m); return m; });
+const look = new THREE.Vector3(0, 8, 0);
+const place = (t) => {
+  const a = 0.42 - t * 0.012, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-spf": [7.5, 12.6, 1.5], "l-oil": [-4, 12.6, 3.5], "l-city": [2, 12.6, -3], "l-balm": [-1, 16, 0], "l-melt": [7.5, 12.8, 1.5], "l-warm": [-5, 13, 4], "l-gel": [7.5, 13.2, 1.5], "l-clean": [-4.5, 12.4, 4] };
+const OFF = { "l-spf": [-1, -1], "l-oil": [-1, -1], "l-city": [1, -1], "l-balm": [1, -1], "l-melt": [-1, -1], "l-warm": [-1, -1], "l-gel": [-1, -1], "l-clean": [-1, -1] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // the day lands in shot 0 and stays until the balm melts it (shot 1), the grit until the wash (shot 2)
+  const dayOn = i === 0 ? E.out(seg(lt, 0.6, 2.2)) : 1;
+  const melt = i === 1 ? E.inout(seg(lt, 2.0, 4.6)) : i > 1 ? 1 : 0;
+  const rinsed = i === 1 ? E.out(seg(lt, 4.8, 6.4)) : i > 1 ? 1 : 0;
+  const wash = i === 2 ? E.inout(seg(lt, 3.6, 6.4)) : 0;
+  dayFilm.material.opacity = 0.9 * dayOn * (1 - melt);
+  dayFilm.scale.set(1, Math.max(0.05, 1 - 0.9 * melt), 1);
+  beads.forEach((b, k) => { const on = i === 0 ? lt > 1.0 + k * 0.08 : true; b.visible = on && (1 - melt) > 0.02; b.scale.set(1.3 * (1 - 0.8 * melt), 0.55 * (1 - 0.8 * melt), 1.3 * (1 - 0.8 * melt)); });
+  grit.forEach((g, k) => { const on = i === 0 ? lt > 1.4 + k * 0.03 : true; const gone = i === 2 ? seg(lt, 3.8 + k * 0.03, 4.6 + k * 0.03) : 0; g.visible = on && gone < 0.98; g.material.opacity = 1 - gone; g.position.y = 12.0 + (i === 1 ? 0.35 * melt : 0); });
+  // the balm drop lands and spreads into the pool, lifting the film; the lukewarm rinse carries the pool off
+  balm.visible = i === 1 && lt > 0.3 && lt < 2.4;
+  if (balm.visible) { const f = E.in(seg(lt, 0.3, 1.2)), sp = seg(lt, 1.2, 2.4); balm.position.set(0, 24 - 12 * f, 0); balm.scale.set(1 + 2.5 * sp, 1 - 0.7 * sp, 1 + 2.5 * sp); balm.material.opacity = 0.95 * (1 - sp); }
+  const poolOn = i === 1 ? E.out(seg(lt, 1.6, 2.8)) * (1 - rinsed) : 0;
+  pool.material.opacity = 0.85 * poolOn; pool.position.y = 11.95;
+  const rinseOn = i === 1 ? Math.sin(Math.PI * seg(lt, 4.6, 6.6)) : i === 2 ? Math.sin(Math.PI * seg(lt, 6.2, 7.6)) : 0;
+  rinse.material.opacity = 0.55 * rinseOn; rinse.position.x = -16 + 32 * (i === 1 ? seg(lt, 4.6, 6.6) : seg(lt, 6.2, 7.6)); rinse.visible = rinseOn > 0.02;
+  rinseDrops.forEach((d) => { const on = rinseOn > 0.05; d.m.visible = on; if (!on) return; const ph = (t * 0.9 + d.k * 0.041) % 1; d.m.position.set(d.x, 12.2 - ph * 7, d.z); d.m.material.opacity = 0.9 * (1 - ph) * rinseOn; });
+  // the cleanser: foam appears, circles for the minute, then rinses
+  const foamOn = i === 2 ? E.out(seg(lt, 0.4, 1.4)) * (1 - seg(lt, 6.2, 7.2)) : 0;
+  foamMat.opacity = 0.92 * foamOn;
+  foam.forEach((m) => { const u = m.userData; m.visible = foamOn > 0.02; const r = 0.5, ang = u.ph + t * 2.2; m.position.set(u.x + Math.cos(ang) * r, 12.3 + Math.sin(ang * 0.5) * 0.08, u.z + Math.sin(ang) * r); m.scale.setScalar(u.s * (0.6 + 0.4 * foamOn)); });
+  // labels, the clock and the note (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-spf"), lt, 1.2, { y: 8 }); enter($("#l-oil"), lt, 2.4, { y: 8 }); enter($("#l-city"), lt, 3.6, { y: 8 }); }
+  if (i === 1) { enter($("#l-balm"), lt, 0.5, { y: 8 }); if (lt > 2.6) $("#l-balm").style.opacity = 1 - seg(lt, 2.6, 3.1); enter($("#l-melt"), lt, 2.4, { y: 8 }); if (lt > 4.8) $("#l-melt").style.opacity = 1 - seg(lt, 4.8, 5.3); enter($("#l-warm"), lt, 4.8, { y: 8 }); }
+  if (i === 2) { enter($("#l-gel"), lt, 0.8, { y: 8 }); if (lt > 6.2) $("#l-gel").style.opacity = 1 - seg(lt, 6.2, 6.7); enter($("#clock3"), lt, 0.6, { y: 10 }); const secs = Math.round(60 * E.lin(seg(lt, 0.8, 6.0))); $("#clockn").textContent = Math.floor(secs / 60) + ":" + String(secs % 60).padStart(2, "0"); enter($("#l-clean"), lt, 7.0, { y: 8 }); enter($("#note3"), lt, 6.4, { y: 10 }); }
+  renderer.render(scene, camera);
+};
+`
+  },
+
   /* ───────── 2-2 Moisturizer, decoded: the three kinds of ingredients ───────── */
   "2-2": {
     id: "2-2", kicker: "Moisturizer, decoded", title: `Every moisturizer is <span class="grad">three kinds of ingredients.</span>`, dur: 22, poster: 12,
