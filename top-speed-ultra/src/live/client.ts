@@ -123,6 +123,7 @@ export class LiveClient {
           const s: Sample = { t: now, x, y, z, h, v, b };
           // a pose that moved: the previous latest becomes the blend's start (a repeat keeps the pair as it was)
           if (!p.b || p.b.x !== x || p.b.z !== z || p.b.h !== h) { p.a = p.b; p.b = s; }
+          else { p.b.b = b; p.b.v = v; }            // standing still: the blend keeps its pair, the brake light and speed still change
           p.seen = now;
         }
         if (typeof m.online === 'number' && (m.online !== this.info.online || m.cap !== this.info.cap)) this.set({ online: m.online, cap: m.cap as number });
