@@ -19,14 +19,15 @@ brief ──▶ shot list ──▶ scene (seek(t)) ──▶ render ──▶ r
 | File | What it is |
 |---|---|
 | `motion.js` | The runtime inlined into every scene page: easing, `tw`, `enter`, `type`, `count`, and `M.stage(t)`, which runs the shot list (which shot is up, the slide between shots, the caption bar). |
-| `scenes.mjs` | The scenes. Each one is a shot list (`at`, `name`, `cap`), markup, CSS, an optional `setup()` and `seek(t, st, M, C)`. `seek` sets everything on screen from time alone. |
+| `scenes.mjs` | The flat scenes. Each one is a shot list (`at`, `name`, `cap`), markup, CSS, an optional `setup()` and `seek(t, st, M, C)`. `seek` sets everything on screen from time alone. |
+| `scenes3d.mjs` | The solid scenes: the same contract, but the picture is a lit three-dimensional set drawn with three.js (`vendor/three.module.min.js`, MIT) into a canvas behind the header and caption. A scene carries `module`, an ES module that defines `window.seek` itself. Today: a voxel block of skin with a pore that clogs, inflames and clears (8-2), and ninety dominoes falling one night at a time, four skipped, then a restart (3-3). |
 | `render.mjs` | The frame engine. Opens each scene at the frame size, calls `seek(i / fps)` for every frame, captures it and pipes it into ffmpeg. Writes the clip, the poster, a review sheet, the log and `docs/school/videos.js`. |
 | `render-log.json` | Evidence: frames, bytes, a hash of every frame, sampled frame hashes, the warnings, when it rendered. |
 | `review/` | Contact sheets (one frame every 1.5 s) for the eye. Not committed. |
 
 ## Determinism
 
-A clip is a pure function of time. The runtime never uses timers,
+A clip is a pure function of time. The solid scenes hash every variation from an index and render through SwiftShader, so they are reproducible too; they just take longer (a frame of the pore is about half a second). The runtime never uses timers,
 `requestAnimationFrame`, CSS transitions or animations, `Date` or
 `Math.random`; the renderer freezes all of them in the page before the scene
 loads, and the film grain is an SVG turbulence with a fixed seed. So the same
@@ -80,3 +81,12 @@ the explainer as the main video when it exists.
    from `st.lt` with `M.enter`, `M.tw`, `M.seg`. Nothing fades in without a
    reason; the motion is the explanation.
 4. `--quick` it, read the warnings and the sheet, fix, render for real.
+
+For a solid scene, build the set once at module load (geometry, lights, the
+camera), and in `seek` set every position, rotation, color and the camera from
+`t`, then `renderer.render`. Labels that name a part of the set project the
+part's 3D point to the screen each frame, so they follow the camera.
+
+The look the solid scenes chase is the one in the reference Ruben sent: a toy
+set under studio light, blocks and dominoes with real shadows, a camera that
+moves slowly and with intent, the explanation carried by what the objects do.

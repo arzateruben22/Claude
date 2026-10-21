@@ -338,3 +338,9 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 - **Where they show:** the lesson's video box plays the explainer (poster, tap to play) until Evelyn records her own lesson video; the 9:16 cut of each clip sits in `marketing/ads/out/video/` for Reels and TikTok, captions carrying every line with the sound off.
 - **What's not in them:** stock footage, music, a fake voice. Her voiceover can be laid over any clip when she records.
 - **Reference:** the "code-rendered motion studio" idea (brief → shot list → frame engine → review → deliver) that Ruben sent; this is that pipeline, with the lesson notes as the brief.
+
+## Solid scenes and the storefront plan (Oct 21, later)
+
+- **Two clips in three dimensions**, after the reference Ruben sent (a toy set under studio light, blocks and dominoes with real shadows): *Inside a pore* (lesson 8-2: a voxel block of skin, the pore clogs with dead cells and oil, oxidizes dark, inflames red, then mandelic acid and benzoyl peroxide clear it, day counter to 90) and *Ninety nights* (lesson 3-3: ninety dominoes, one per night, four skipped, the chain picks up again, lands on Day 90). Same engine, three.js vendored, every frame still a pure function of time.
+- **Every explainer now has a WebM copy** beside the mp4 so it plays in browsers without H.264; the lesson box plays the clip on tap and the placeholder stays where there's none.
+- **STOREFRONT.md** is the step-by-step for selling to people who aren't her clients yet: ask the four brands first (email drafted), the paperwork, a consult gate on the actives, an online consult that credits toward the first order, the channels in order, and the TikTok Shop / Shopify call. The one thing only she can do this week: send the three brand emails.
