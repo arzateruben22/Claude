@@ -124,9 +124,12 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
     : consult ? "Evelyn messages you within two business days to set your 15-minute call; the details are in the next email."
     : order.gifts.some((g: any) => !g.to_buyer) ? "Each certificate is emailed to its recipient (on the date you chose, if you picked one)." : "";
   const track = order.items.length ? ` Ask Lumevina on the website${site() ? ` (<a href="${esc(site())}" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>)` : ""} can tell you where it is any time with this number and your email.` : "";
+  // the shelf products, back in the bag in one tap next time (js/cart.js reads ?reorder=; Buy again in My Lumevina does the same signed in)
+  const shelfIds = order.items.map((i: any) => i.id).filter((id: string) => !isConsultItem(id));
+  const again = shelfIds.length && site() ? `<p style="font-size:14px;line-height:1.5;margin-top:14px;color:#4A342A">Running low later? <a href="${esc(site())}/?reorder=${encodeURIComponent(shelfIds.join(","))}#shop" style="color:#161412">Put these back in your bag</a> in one tap, or sign in and open Buy again under My Lumevina.</p>` : "";
   await sendEmail(order.email, `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
     `<p style="margin:0 0 12px;font-size:13px;color:#7D5A44">Order number <strong style="color:#161412;letter-spacing:.04em">${esc(order.ref)}</strong></p>` + table +
-    (next || track ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}${track}</p>` : "")));
+    (next || track ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}${track}</p>` : "") + again));
 
   // Glow Points on the products and gift certificates (not shipping or tax), and her client list
   await upsertContact(db, { email: order.email, name: name || undefined });
