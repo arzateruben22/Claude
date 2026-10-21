@@ -6712,7 +6712,7 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 
 /* ── Skin science in twenty seconds: the rendered explainers (#watch) ── */
 .section-watch .section-inner { max-width: 1120px; margin: 0 auto; }
-.watch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 1.6rem; }
+.watch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 1.6rem; margin-top: 1.6rem; }
 .watch-item { margin: 0; }
 .watch-item video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; background: #000; object-fit: cover; box-shadow: 0 10px 30px rgba(22,20,18,.12); }
 .watch-item.no-src video { pointer-events: none; opacity: .85; }
