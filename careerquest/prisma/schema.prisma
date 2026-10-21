@@ -1,0 +1,1307 @@
+// CareerQuest — canonical data model.
+// Every table that stores user data carries a userId and is scoped by it in every query.
+// Inferred data (email parsing, extension captures) never silently overwrites user-confirmed data:
+// see ApplicationStatusHistory.source / .verified and ApplicationEvent.dedupeKey.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Auth & identity
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  passwordHash    String
+  name            String
+  role            UserRole  @default(USER)
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  profile          UserProfile?
+  stats            PlayerStats?
+  sessions         Session[]
+  apiTokens        ApiToken[]
+  employers        Employer[]
+  applications     Application[]
+  events           ApplicationEvent[]
+  evidence         Evidence[]
+  contacts         Contact[]
+  resumeVersions   ResumeVersion[]
+  coverLetters     CoverLetterVersion[]
+  duplicates       DuplicateCandidate[]
+  integrations     IntegrationConnection[]
+  emailMessages    EmailMessage[]
+  importBatches    ImportBatch[]
+  xpLedger         XpLedger[]
+  achievements     UserAchievement[]
+  missions         Mission[]
+  skills           UserSkill[]
+  careerNodes      UserCareerNode[]
+  dailyActivity    DailyActivity[]
+  campaigns        CampaignState[]
+  lessonProgress   LessonProgress[]
+  quizAttempts     QuizAttempt[]
+  programInterests UserProgramInterest[]
+  workHours        WorkHourEntry[]
+  documents        Document[]
+  certifications   CertificationStatus[]
+  weeklyReports    WeeklyReport[]
+  coachMessages    CoachMessage[]
+  notifications    Notification[]
+  pushSubs         PushSubscription[]
+  auditLogs        AuditLog[]
+  jobLeads         JobLead[]
+  targetCompanies  TargetCompany[]
+  salaryScenarios  SalaryScenario[]
+  captures         ExtensionCapture[]
+  interviews       Interview[]
+  offers           Offer[]
+}
+
+model Session {
+  id         String   @id // sha256 of the opaque cookie token
+  userId     String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  userAgent  String?
+  ipAddress  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Bearer tokens used by the browser extension / mobile capture / CSV tooling.
+model ApiToken {
+  id         String    @id @default(uuid())
+  userId     String
+  tokenHash  String    @unique
+  name       String
+  scopes     String[]  @default(["capture:write", "applications:read"])
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  captures ExtensionCapture[]
+
+  @@index([userId])
+}
+
+enum UiTheme {
+  CLASSIC
+  CYBER
+  ULTRA
+}
+
+enum PrimaryTrade {
+  ELECTRICIAN
+  ELEVATOR_MECHANIC
+  COMMERCIAL_HVAC
+  INDUSTRIAL_MAINTENANCE
+  BUILDING_ENGINEER
+  CONSTRUCTION_PROJECT_COORDINATOR
+  CONSTRUCTION_ESTIMATOR
+  ASSISTANT_PROJECT_MANAGER
+  COMMERCIAL_PLUMBING_PIPEFITTING
+  OTHER
+}
+
+model UserProfile {
+  userId                    String       @id
+  regions                   String[]     @default(["Los Angeles County, CA", "Orange County, CA"])
+  timezone                  String       @default("America/Los_Angeles")
+  immediateSalaryTarget     Int          @default(80000)
+  longTermSalaryTarget      Int          @default(150000)
+  openToApprenticeships     Boolean      @default(true)
+  apprenticeshipMinHourly   Decimal?     @db.Decimal(8, 2)
+  primaryTrade              PrimaryTrade @default(ELECTRICIAN)
+  careerInterests           String[]     @default([])
+  campaignLengthDays        Int          @default(90)
+  dailyApplicationTarget    Int          @default(5)
+  workdaysPerWeek           Int          @default(5)
+  weeklyApplicationTarget   Int          @default(25)
+  // Private eligibility filters (stored as booleans only; no license details are stored)
+  excludeCompanyVehicleJobs Boolean      @default(false)
+  excludeDrivingRecordJobs  Boolean      @default(false)
+  excludeCdlJobs            Boolean      @default(false)
+  theme                     UiTheme      @default(CYBER)
+  reducedMotion             Boolean      @default(false)
+  notificationPrefs         Json         @default("{}")
+  onboardingCompletedAt     DateTime?
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Applications
+// ---------------------------------------------------------------------------
+
+enum ApplicationStatus {
+  SAVED
+  PREPARING
+  SUBMITTED
+  CONFIRMED
+  SCREENING
+  INTERVIEWING
+  OFFER
+  ACCEPTED
+  HIRED
+  REJECTED
+  WITHDRAWN
+  NO_RESPONSE
+  CLOSED
+}
+
+enum ApplicationSource {
+  INDEED
+  GLASSDOOR
+  LINKEDIN
+  ZIPRECRUITER
+  WORKDAY
+  GREENHOUSE
+  LEVER
+  SMARTRECRUITERS
+  ICIMS
+  ADP
+  GOVERNMENTJOBS
+  USAJOBS
+  COMPANY_SITE
+  UNION_PORTAL
+  REFERRAL
+  OTHER
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  APPRENTICESHIP
+  INTERNSHIP
+  UNKNOWN
+}
+
+enum SalaryPeriod {
+  HOURLY
+  ANNUAL
+}
+
+enum RecordOrigin {
+  MANUAL
+  EMAIL
+  EXTENSION
+  CSV_IMPORT
+  URL_IMPORT
+  PLATFORM_API
+  MOBILE
+  SYSTEM
+}
+
+/// Attribution for any status change or event.
+enum EventSource {
+  USER
+  EMAIL
+  EXTENSION
+  IMPORT
+  PLATFORM_API
+  SYSTEM
+}
+
+model Employer {
+  id             String   @id @default(uuid())
+  userId         String
+  name           String
+  normalizedName String
+  domain         String?
+  website        String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@unique([userId, normalizedName])
+  @@index([userId])
+}
+
+model Application {
+  id                     String            @id @default(uuid())
+  userId                 String
+  employerId             String?
+  companyName            String
+  normalizedCompany      String
+  positionTitle          String
+  normalizedTitle        String
+  jobCategory            String?
+  jobDescription         String?
+  postingUrl             String?
+  normalizedUrl          String?
+  requisitionNumber      String?
+  source                 ApplicationSource @default(OTHER)
+  submissionDestination  ApplicationSource?
+  location               String?
+  remote                 Boolean           @default(false)
+  salaryMin              Decimal?          @db.Decimal(12, 2)
+  salaryMax              Decimal?          @db.Decimal(12, 2)
+  salaryPeriod           SalaryPeriod?
+  employmentType         EmploymentType    @default(UNKNOWN)
+  appliedAt              DateTime?
+  status                 ApplicationStatus @default(SAVED)
+  statusUpdatedAt        DateTime          @default(now())
+  statusVerified         Boolean           @default(false)
+  isQualified            Boolean           @default(true)
+  requiresCompanyVehicle Boolean           @default(false)
+  requiresDrivingRecord  Boolean           @default(false)
+  requiresCdl            Boolean           @default(false)
+  resumeVersionId        String?
+  coverLetterVersionId   String?
+  recruiterContactId     String?
+  followUpAt             DateTime?
+  notes                  String?
+  detectionConfidence    Float             @default(1)
+  createdVia             RecordOrigin      @default(MANUAL)
+  lastSyncedAt           DateTime?
+  archivedAt             DateTime?
+  mergedIntoId           String?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+
+  user             User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  employer         Employer?                  @relation(fields: [employerId], references: [id], onDelete: SetNull)
+  resumeVersion    ResumeVersion?             @relation(fields: [resumeVersionId], references: [id], onDelete: SetNull)
+  coverLetter      CoverLetterVersion?        @relation(fields: [coverLetterVersionId], references: [id], onDelete: SetNull)
+  recruiterContact Contact?                   @relation(fields: [recruiterContactId], references: [id], onDelete: SetNull)
+  mergedInto       Application?               @relation("MergedApplications", fields: [mergedIntoId], references: [id], onDelete: SetNull)
+  mergedFrom       Application[]              @relation("MergedApplications")
+  statusHistory    ApplicationStatusHistory[]
+  events           ApplicationEvent[]
+  interviews       Interview[]
+  evidence         Evidence[]
+  sourceLinks      ApplicationSourceLink[]
+  offers           Offer[]
+  emailMessages    EmailMessage[]
+  captures         ExtensionCapture[]
+  duplicateA       DuplicateCandidate[]       @relation("DuplicateA")
+  duplicateB       DuplicateCandidate[]       @relation("DuplicateB")
+  leads            JobLead[]
+
+  @@index([userId, status])
+  @@index([userId, appliedAt])
+  @@index([userId, normalizedCompany])
+  @@index([userId, normalizedUrl])
+  @@index([userId, requisitionNumber])
+  @@index([userId, followUpAt])
+}
+
+model ApplicationStatusHistory {
+  id            String             @id @default(uuid())
+  applicationId String
+  fromStatus    ApplicationStatus?
+  toStatus      ApplicationStatus
+  occurredAt    DateTime           @default(now())
+  source        EventSource        @default(USER)
+  verified      Boolean            @default(false)
+  note          String?
+  evidenceId    String?
+  createdAt     DateTime           @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  evidence    Evidence?   @relation(fields: [evidenceId], references: [id], onDelete: SetNull)
+
+  @@index([applicationId, occurredAt])
+}
+
+enum ApplicationEventType {
+  SAVED
+  APPLIED
+  CONFIRMATION_RECEIVED
+  RECRUITER_RESPONSE
+  SCREENING_SCHEDULED
+  ASSESSMENT_INVITED
+  INTERVIEW_SCHEDULED
+  INTERVIEW_COMPLETED
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+  OFFER_DECLINED
+  REJECTED
+  WITHDRAWN
+  FOLLOW_UP_SENT
+  NOTE_ADDED
+  STATUS_CHANGED
+  MERGED
+  ONBOARDING_RECEIVED
+}
+
+/// Immutable event log. `dedupeKey` is unique per user so re-imports and repeated syncs cannot
+/// create the same event twice (and therefore cannot award XP twice).
+model ApplicationEvent {
+  id            String               @id @default(uuid())
+  userId        String
+  applicationId String
+  type          ApplicationEventType
+  occurredAt    DateTime             @default(now())
+  source        EventSource          @default(USER)
+  verified      Boolean              @default(false)
+  dedupeKey     String
+  payload       Json                 @default("{}")
+  evidenceId    String?
+  createdAt     DateTime             @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  evidence    Evidence?   @relation(fields: [evidenceId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, dedupeKey])
+  @@index([applicationId, occurredAt])
+  @@index([userId, type, occurredAt])
+}
+
+enum InterviewType {
+  PHONE_SCREEN
+  VIDEO
+  ONSITE
+  PANEL
+  TECHNICAL
+  APPRENTICESHIP_INTERVIEW
+  OTHER
+}
+
+enum InterviewOutcome {
+  PENDING
+  ADVANCED
+  REJECTED
+  OFFER
+  NO_SHOW
+  CANCELLED
+}
+
+model Interview {
+  id              String           @id @default(uuid())
+  userId          String
+  applicationId   String
+  type            InterviewType    @default(PHONE_SCREEN)
+  scheduledAt     DateTime
+  durationMinutes Int?
+  interviewer     String?
+  location        String?
+  outcome         InterviewOutcome @default(PENDING)
+  prepCompletedAt DateTime?
+  attendedAt      DateTime?
+  notes           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, scheduledAt])
+  @@index([applicationId])
+}
+
+enum OfferStatus {
+  RECEIVED
+  NEGOTIATING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  RESCINDED
+}
+
+model Offer {
+  id             String       @id @default(uuid())
+  userId         String
+  applicationId  String
+  baseAmount     Decimal      @db.Decimal(12, 2)
+  period         SalaryPeriod @default(ANNUAL)
+  hoursPerWeek   Int          @default(40)
+  overtimeHours  Int          @default(0)
+  signingBonus   Decimal?     @db.Decimal(12, 2)
+  annualBonus    Decimal?     @db.Decimal(12, 2)
+  benefitsValue  Decimal?     @db.Decimal(12, 2)
+  benefits       Json         @default("{}")
+  startDate      DateTime?
+  decisionDue    DateTime?
+  status         OfferStatus  @default(RECEIVED)
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum EvidenceKind {
+  EMAIL
+  EXTENSION_CAPTURE
+  SCREENSHOT
+  CSV_ROW
+  URL
+  MANUAL_NOTE
+  DOCUMENT
+}
+
+/// Supporting evidence for a record or event. `sourceRef` is the external identifier (Gmail
+/// message id, capture id, CSV row hash) so the same evidence cannot be attached twice.
+model Evidence {
+  id            String       @id @default(uuid())
+  userId        String
+  applicationId String?
+  kind          EvidenceKind
+  sourceRef     String
+  title         String?
+  snippet       String?
+  capturedAt    DateTime     @default(now())
+  data          Json         @default("{}")
+  contentHash   String?
+  createdAt     DateTime     @default(now())
+
+  user          User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application   Application?               @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  statusHistory ApplicationStatusHistory[]
+  events        ApplicationEvent[]
+
+  @@unique([userId, kind, sourceRef])
+  @@index([applicationId])
+}
+
+/// Keeps every platform/URL a record was ever seen on (survives merges).
+model ApplicationSourceLink {
+  id            String            @id @default(uuid())
+  applicationId String
+  platform      ApplicationSource
+  url           String?
+  externalId    String?
+  origin        RecordOrigin      @default(MANUAL)
+  createdAt     DateTime          @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+}
+
+enum DuplicateStatus {
+  PENDING
+  MERGED
+  DISMISSED
+}
+
+model DuplicateCandidate {
+  id             String          @id @default(uuid())
+  userId         String
+  applicationAId String
+  applicationBId String
+  score          Float
+  signals        Json            @default("{}")
+  status         DuplicateStatus @default(PENDING)
+  createdAt      DateTime        @default(now())
+  resolvedAt     DateTime?
+
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationA Application @relation("DuplicateA", fields: [applicationAId], references: [id], onDelete: Cascade)
+  applicationB Application @relation("DuplicateB", fields: [applicationBId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationAId, applicationBId])
+  @@index([userId, status])
+}
+
+model Contact {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  email       String?
+  phone       String?
+  company     String?
+  title       String?
+  linkedinUrl String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([userId])
+}
+
+model ResumeVersion {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  content   String
+  fileName  String?
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([userId])
+}
+
+model CoverLetterVersion {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Job discovery
+// ---------------------------------------------------------------------------
+
+enum LeadStatus {
+  NEW
+  SAVED
+  DISMISSED
+  CONVERTED
+}
+
+model JobLead {
+  id                     String            @id @default(uuid())
+  userId                 String
+  title                  String
+  company                String
+  url                    String?
+  normalizedUrl          String?
+  source                 ApplicationSource @default(OTHER)
+  location               String?
+  salaryText             String?
+  category               String?
+  requiresCompanyVehicle Boolean           @default(false)
+  requiresDrivingRecord  Boolean           @default(false)
+  requiresCdl            Boolean           @default(false)
+  matchScore             Int?
+  notes                  String?
+  status                 LeadStatus        @default(NEW)
+  convertedApplicationId String?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  convertedApplication Application? @relation(fields: [convertedApplicationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+}
+
+model TargetCompany {
+  id         String   @id @default(uuid())
+  userId     String
+  name       String
+  website    String?
+  careersUrl String?
+  category   String?
+  priority   Int      @default(2)
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Integrations & email intelligence
+// ---------------------------------------------------------------------------
+
+enum IntegrationProvider {
+  GMAIL
+  OUTLOOK
+  CHROME_EXTENSION
+  INDEED
+  GLASSDOOR
+  LINKEDIN
+  ZIPRECRUITER
+  WORKDAY
+  GREENHOUSE
+  LEVER
+  SMARTRECRUITERS
+  ICIMS
+  ADP
+  GOVERNMENTJOBS
+  USAJOBS
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  NEEDS_REAUTH
+  ERROR
+}
+
+model IntegrationConnection {
+  id              String              @id @default(uuid())
+  userId          String
+  provider        IntegrationProvider
+  accountEmail    String?
+  status          IntegrationStatus   @default(DISCONNECTED)
+  accessTokenEnc  String?
+  refreshTokenEnc String?
+  tokenExpiresAt  DateTime?
+  scopes          String[]            @default([])
+  syncEnabled     Boolean             @default(true)
+  lastSyncAt      DateTime?
+  syncCursor      String?
+  settings        Json                @default("{}")
+  lastError       String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncRuns SyncRun[]
+  emails   EmailMessage[]
+
+  @@unique([userId, provider, accountEmail])
+  @@index([userId])
+}
+
+enum SyncStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+  PARTIAL
+}
+
+model SyncRun {
+  id           String     @id @default(uuid())
+  connectionId String
+  startedAt    DateTime   @default(now())
+  finishedAt   DateTime?
+  status       SyncStatus @default(RUNNING)
+  itemsScanned Int        @default(0)
+  itemsMatched Int        @default(0)
+  itemsCreated Int        @default(0)
+  itemsUpdated Int        @default(0)
+  errors       Json       @default("[]")
+
+  connection IntegrationConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@index([connectionId, startedAt])
+}
+
+enum EmailClassification {
+  APPLICATION_SUBMITTED
+  EMPLOYER_ACKNOWLEDGMENT
+  RECRUITER_MESSAGE
+  INTERVIEW_INVITATION
+  ASSESSMENT_INVITATION
+  REJECTION
+  OFFER
+  ONBOARDING
+  JOB_ALERT
+  INCOMPLETE_APPLICATION
+  APPLICATION_INVITATION
+  UNRELATED
+  UNKNOWN
+}
+
+enum ReviewStatus {
+  AUTO_ACCEPTED
+  NEEDS_REVIEW
+  CONFIRMED
+  DISMISSED
+}
+
+model EmailMessage {
+  id             String              @id @default(uuid())
+  userId         String
+  connectionId   String?
+  provider       String // GMAIL | OUTLOOK | EML | MBOX | PASTE
+  externalId     String
+  threadId       String?
+  fromAddress    String?
+  fromName       String?
+  toAddress      String?
+  subject        String?
+  receivedAt     DateTime?
+  snippet        String?
+  bodyText       String?
+  classification EmailClassification @default(UNKNOWN)
+  confidence     Float               @default(0)
+  extracted      Json                @default("{}")
+  reviewStatus   ReviewStatus        @default(NEEDS_REVIEW)
+  applicationId  String?
+  importBatchId  String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  user        User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connection  IntegrationConnection? @relation(fields: [connectionId], references: [id], onDelete: SetNull)
+  application Application?           @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  importBatch ImportBatch?           @relation(fields: [importBatchId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, provider, externalId])
+  @@index([userId, reviewStatus])
+  @@index([userId, classification])
+}
+
+enum ImportKind {
+  CSV
+  EML
+  MBOX
+  GMAIL_HISTORY
+  OUTLOOK_HISTORY
+  URL_LIST
+  PLATFORM_EXPORT
+}
+
+model ImportBatch {
+  id        String     @id @default(uuid())
+  userId    String
+  kind      ImportKind
+  fileName  String?
+  status    SyncStatus @default(RUNNING)
+  totals    Json       @default("{}")
+  errors    Json       @default("[]")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emails EmailMessage[]
+
+  @@index([userId])
+}
+
+enum CaptureKind {
+  JOB_PAGE
+  APPLY_STARTED
+  CONFIRMATION_PAGE
+  MANUAL_CONFIRMATION
+  SHARED_URL
+}
+
+enum CaptureStatus {
+  PENDING_CONFIRMATION
+  ACCEPTED
+  DISMISSED
+  DUPLICATE
+}
+
+model ExtensionCapture {
+  id            String            @id @default(uuid())
+  userId        String
+  tokenId       String?
+  applicationId String?
+  kind          CaptureKind
+  url           String
+  normalizedUrl String?
+  platform      ApplicationSource @default(OTHER)
+  company       String?
+  title         String?
+  location      String?
+  salaryText    String?
+  requisitionId String?
+  confidence    Float             @default(0)
+  evidence      Json              @default("{}")
+  status        CaptureStatus     @default(PENDING_CONFIRMATION)
+  createdAt     DateTime          @default(now())
+  resolvedAt    DateTime?
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token       ApiToken?    @relation(fields: [tokenId], references: [id], onDelete: SetNull)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([userId, normalizedUrl])
+}
+
+// ---------------------------------------------------------------------------
+// Gamification
+// ---------------------------------------------------------------------------
+
+/// Append-only XP ledger. (userId, dedupeKey) is unique so each real-world action is rewarded once.
+model XpLedger {
+  id         String   @id @default(uuid())
+  userId     String
+  amount     Int
+  reason     String
+  track      String   @default("CAREER") // CAREER | JOB_HUNTER | ELECTRICIAN
+  dedupeKey  String
+  sourceType String?
+  sourceId   String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, createdAt])
+}
+
+model PlayerStats {
+  userId             String    @id
+  totalXp            Int       @default(0)
+  jobHunterXp        Int       @default(0)
+  electricianXp      Int       @default(0)
+  interviewSkill     Int       @default(0)
+  technicalKnowledge Int       @default(0)
+  resumeStrength     Int       @default(0)
+  networking         Int       @default(0)
+  trainingProgress   Int       @default(0)
+  currentStreak      Int       @default(0)
+  longestStreak      Int       @default(0)
+  lastActiveDate     DateTime? @db.Date
+  missionsCompleted  Int       @default(0)
+  currentSalary      Decimal?  @db.Decimal(12, 2)
+  careerEarnings     Decimal   @default(0) @db.Decimal(14, 2)
+  updatedAt          DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserAchievement {
+  id             String   @id @default(uuid())
+  userId         String
+  achievementKey String
+  unlockedAt     DateTime @default(now())
+  seenAt         DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementKey])
+}
+
+enum MissionType {
+  DAILY
+  WEEKLY
+  CAMPAIGN
+  ONE_TIME
+}
+
+enum Campaign {
+  GET_HIRED
+  ELECTRICIAN_150K
+}
+
+enum MissionStatus {
+  ACTIVE
+  COMPLETED
+  SKIPPED
+  EXPIRED
+}
+
+model Mission {
+  id          String        @id @default(uuid())
+  userId      String
+  key         String
+  title       String
+  description String
+  type        MissionType
+  campaign    Campaign
+  periodStart DateTime      @db.Date
+  periodEnd   DateTime      @db.Date
+  target      Int           @default(1)
+  progress    Int           @default(0)
+  xpReward    Int           @default(0)
+  status      MissionStatus @default(ACTIVE)
+  completedAt DateTime?
+  metadata    Json          @default("{}")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key, periodStart])
+  @@index([userId, status, periodEnd])
+}
+
+model UserSkill {
+  userId     String
+  skillKey   String
+  level      Int       @default(0)
+  xp         Int       @default(0)
+  unlockedAt DateTime?
+  updatedAt  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, skillKey])
+}
+
+enum NodeStatus {
+  LOCKED
+  AVAILABLE
+  IN_PROGRESS
+  COMPLETED
+}
+
+model UserCareerNode {
+  userId      String
+  nodeKey     String
+  status      NodeStatus @default(LOCKED)
+  startedAt   DateTime?
+  completedAt DateTime?
+  notes       String?
+  updatedAt   DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, nodeKey])
+}
+
+model DailyActivity {
+  userId                String
+  date                  DateTime @db.Date
+  applicationsSubmitted Int      @default(0)
+  followUps             Int      @default(0)
+  lessonsCompleted      Int      @default(0)
+  missionsCompleted     Int      @default(0)
+  xpEarned              Int      @default(0)
+  trainingHours         Decimal  @default(0) @db.Decimal(6, 2)
+  restDay               Boolean  @default(false)
+  updatedAt             DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, date])
+}
+
+enum CampaignStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+}
+
+model CampaignState {
+  userId      String
+  campaign    Campaign
+  startedAt   DateTime       @db.Date
+  targetEndAt DateTime?      @db.Date
+  status      CampaignStatus @default(ACTIVE)
+  completedAt DateTime?
+  metadata    Json           @default("{}")
+  updatedAt   DateTime       @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, campaign])
+}
+
+// ---------------------------------------------------------------------------
+// Electrician Academy
+// ---------------------------------------------------------------------------
+
+enum LessonStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model LessonProgress {
+  userId      String
+  lessonKey   String
+  status      LessonStatus @default(NOT_STARTED)
+  bestScore   Int?
+  attempts    Int          @default(0)
+  startedAt   DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, lessonKey])
+}
+
+model QuizAttempt {
+  id        String   @id @default(uuid())
+  userId    String
+  quizKey   String
+  score     Int
+  maxScore  Int
+  passed    Boolean
+  answers   Json     @default("[]")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, quizKey])
+}
+
+enum RecruitmentStatus {
+  OPEN
+  CLOSED
+  UNVERIFIED
+}
+
+/// Global (not per-user) seeded directory. Facts carry `verifiedOn` + `sourceUrls`.
+model ApprenticeshipProgram {
+  id                   String            @id @default(uuid())
+  slug                 String            @unique
+  name                 String
+  sponsor              String
+  region               String
+  isUnion              Boolean           @default(false)
+  website              String?
+  applyUrl             String?
+  eligibility          Json              @default("[]")
+  processSteps         Json              @default("[]")
+  durationYears        Float?
+  classroomHours       String?
+  startingWage         String?
+  startingWageVerified Boolean           @default(false)
+  fees                 String?
+  contact              Json              @default("{}")
+  recruitmentStatus    RecruitmentStatus @default(UNVERIFIED)
+  recruitmentNote      String?
+  sourceUrls           Json              @default("[]")
+  verifiedOn           DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  interests UserProgramInterest[]
+  workHours WorkHourEntry[]
+}
+
+enum ProgramInterestStatus {
+  INTERESTED
+  APPLIED
+  TESTING
+  INTERVIEWING
+  WAITLISTED
+  ACCEPTED
+  DECLINED
+}
+
+model UserProgramInterest {
+  id        String                @id @default(uuid())
+  userId    String
+  programId String
+  status    ProgramInterestStatus @default(INTERESTED)
+  appliedAt DateTime?
+  checklist Json                  @default("[]")
+  notes     String?
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+
+  user    User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program ApprenticeshipProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, programId])
+}
+
+/// Seeded reference facts for California DIR electrician certification classifications.
+model CertificationRequirement {
+  id            String    @id @default(uuid())
+  code          String    @unique // GENERAL | RESIDENTIAL | FIRE_LIFE_SAFETY | VOICE_DATA_VIDEO | NON_RESIDENTIAL_LIGHTING
+  name          String
+  hoursRequired Int
+  notes         String?
+  sourceUrl     String?
+  verifiedOn    DateTime?
+  updatedAt     DateTime  @updatedAt
+}
+
+enum WorkType {
+  COMMERCIAL
+  RESIDENTIAL
+  INDUSTRIAL
+  FIRE_LIFE_SAFETY
+  VOICE_DATA_VIDEO
+  LIGHTING
+  SOLAR_PV
+  MAINTENANCE
+  CLASSROOM
+  OTHER
+}
+
+enum HourVerification {
+  SELF_REPORTED
+  EMPLOYER_VERIFIED
+  OFFICIAL_RECORD
+}
+
+model WorkHourEntry {
+  id           String           @id @default(uuid())
+  userId       String
+  programId    String?
+  employer     String
+  supervisor   String?
+  dateWorked   DateTime         @db.Date
+  hours        Decimal          @db.Decimal(5, 2)
+  workType     WorkType         @default(COMMERCIAL)
+  description  String?
+  verification HourVerification @default(SELF_REPORTED)
+  documentId   String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  user     User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program  ApprenticeshipProgram? @relation(fields: [programId], references: [id], onDelete: SetNull)
+  document Document?              @relation(fields: [documentId], references: [id], onDelete: SetNull)
+
+  @@index([userId, dateWorked])
+}
+
+enum DocumentKind {
+  RESUME
+  CERTIFICATE
+  PAY_STUB
+  HOURS_VERIFICATION
+  TRAINEE_CARD
+  OFFER_LETTER
+  OTHER
+}
+
+model Document {
+  id          String       @id @default(uuid())
+  userId      String
+  kind        DocumentKind @default(OTHER)
+  fileName    String
+  mimeType    String
+  sizeBytes   Int
+  storagePath String
+  sha256      String
+  createdAt   DateTime     @default(now())
+
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workHours WorkHourEntry[]
+
+  @@index([userId])
+}
+
+model CertificationStatus {
+  id                   String    @id @default(uuid())
+  userId               String
+  classification       String // matches CertificationRequirement.code
+  traineeRegisteredAt  DateTime?
+  traineeExpiresAt     DateTime?
+  schoolEnrolled       String?
+  examApplicationAt    DateTime?
+  examEligibleAt       DateTime?
+  examScheduledAt      DateTime?
+  examPassedAt         DateTime?
+  certifiedAt          DateTime?
+  certificateExpiresAt DateTime?
+  notes                String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, classification])
+}
+
+// ---------------------------------------------------------------------------
+// Analytics, coaching, notifications, audit
+// ---------------------------------------------------------------------------
+
+model WeeklyReport {
+  id        String   @id @default(uuid())
+  userId    String
+  weekStart DateTime @db.Date
+  data      Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekStart])
+}
+
+enum CoachRole {
+  USER
+  ASSISTANT
+}
+
+model CoachMessage {
+  id        String    @id @default(uuid())
+  userId    String
+  role      CoachRole
+  content   String
+  metrics   Json      @default("{}")
+  provider  String    @default("RULES") // RULES | ANTHROPIC
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model SalaryScenario {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  inputs    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Notification {
+  id           String    @id @default(uuid())
+  userId       String
+  type         String
+  title        String
+  body         String?
+  link         String?
+  scheduledFor DateTime?
+  sentAt       DateTime?
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([userId, scheduledFor])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String   @unique
+  keys      Json
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  action     String
+  entityType String?
+  entityId   String?
+  metadata   Json     @default("{}")
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}

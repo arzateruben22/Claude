@@ -1,0 +1,287 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   CareerQuest design tokens. Three visual themes share one semantic
+   vocabulary so components never reference raw colors.
+   ------------------------------------------------------------------ */
+
+:root,
+:root[data-theme="cyber"] {
+  color-scheme: dark;
+  --bg: #0b0e14;
+  --bg-elevated: #10141c;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.07);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --fg: #e8eef7;
+  --fg-muted: #9aa6b8;
+  --fg-subtle: #6b7686;
+  --accent: #4cc9ff;
+  --accent-strong: #2bb0ec;
+  --accent-fg: #06121c;
+  --accent-soft: rgba(76, 201, 255, 0.14);
+  --gold: #f3c75b;
+  --gold-soft: rgba(243, 199, 91, 0.14);
+  --success: #3ddc97;
+  --success-soft: rgba(61, 220, 151, 0.14);
+  --warning: #f5a524;
+  --warning-soft: rgba(245, 165, 36, 0.14);
+  --danger: #ff6b6b;
+  --danger-soft: rgba(255, 107, 107, 0.14);
+  --info: #7aa2ff;
+  --info-soft: rgba(122, 162, 255, 0.14);
+  --glow: 0 0 0 1px rgba(76, 201, 255, 0.25), 0 8px 32px -8px rgba(76, 201, 255, 0.35);
+  --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --blur: 14px;
+  --chart-1: #4cc9ff;
+  --chart-2: #f3c75b;
+  --chart-3: #3ddc97;
+  --chart-4: #7aa2ff;
+  --chart-5: #ff8ba7;
+  --chart-6: #b58cff;
+}
+
+:root[data-theme="ultra"] {
+  color-scheme: dark;
+  --bg: #05070b;
+  --bg-elevated: #0a0e16;
+  --surface: rgba(205, 225, 255, 0.045);
+  --surface-strong: rgba(205, 225, 255, 0.08);
+  --surface-hover: rgba(205, 225, 255, 0.1);
+  --line: rgba(205, 225, 255, 0.12);
+  --line-strong: rgba(205, 225, 255, 0.22);
+  --fg: #f2f6ff;
+  --fg-muted: #a7b4c9;
+  --fg-subtle: #74809a;
+  --accent: #9fe1ff;
+  --accent-strong: #67ccf7;
+  --accent-fg: #03111b;
+  --accent-soft: rgba(159, 225, 255, 0.16);
+  --gold: #e9d9a8;
+  --gold-soft: rgba(233, 217, 168, 0.16);
+  --success: #5ef0b2;
+  --success-soft: rgba(94, 240, 178, 0.14);
+  --warning: #ffbd59;
+  --warning-soft: rgba(255, 189, 89, 0.14);
+  --danger: #ff7d8a;
+  --danger-soft: rgba(255, 125, 138, 0.14);
+  --info: #a9c4ff;
+  --info-soft: rgba(169, 196, 255, 0.14);
+  --glow: 0 0 0 1px rgba(159, 225, 255, 0.35), 0 12px 48px -10px rgba(159, 225, 255, 0.45);
+  --shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.8);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --blur: 22px;
+  --chart-1: #9fe1ff;
+  --chart-2: #e9d9a8;
+  --chart-3: #5ef0b2;
+  --chart-4: #a9c4ff;
+  --chart-5: #ff9fb6;
+  --chart-6: #c9b1ff;
+}
+
+:root[data-theme="classic"] {
+  color-scheme: light;
+  --bg: #f6f8fb;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-strong: #f1f4f9;
+  --surface-hover: #eef2f8;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --fg: #0f172a;
+  --fg-muted: #475569;
+  --fg-subtle: #94a3b8;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-fg: #ffffff;
+  --accent-soft: rgba(37, 99, 235, 0.1);
+  --gold: #b7791f;
+  --gold-soft: rgba(183, 121, 31, 0.12);
+  --success: #15803d;
+  --success-soft: rgba(21, 128, 61, 0.12);
+  --warning: #b45309;
+  --warning-soft: rgba(180, 83, 9, 0.12);
+  --danger: #b91c1c;
+  --danger-soft: rgba(185, 28, 28, 0.12);
+  --info: #1d4ed8;
+  --info-soft: rgba(29, 78, 216, 0.12);
+  --glow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 6px 20px -8px rgba(37, 99, 235, 0.25);
+  --shadow: 0 6px 20px -10px rgba(15, 23, 42, 0.2);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --blur: 0px;
+  --chart-1: #2563eb;
+  --chart-2: #b7791f;
+  --chart-3: #15803d;
+  --chart-4: #7c3aed;
+  --chart-5: #db2777;
+  --chart-6: #0891b2;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-surface-hover: var(--surface-hover);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --radius-card: var(--radius);
+  --radius-ctl: var(--radius-sm);
+  --shadow-card: var(--shadow);
+  --shadow-glow: var(--glow);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:root[data-theme="cyber"] body {
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(76, 201, 255, 0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(243, 199, 91, 0.06), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+:root[data-theme="ultra"] body {
+  background:
+    radial-gradient(1400px 700px at 70% -20%, rgba(159, 225, 255, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 0% 100%, rgba(233, 217, 168, 0.07), transparent 60%),
+    linear-gradient(180deg, #05070b 0%, #070a11 100%);
+  background-attachment: fixed;
+}
+
+/* Glass surface used by cards, nav, modals */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+}
+
+.glass-strong {
+  background: var(--surface-strong);
+  border: 1px solid var(--line-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+}
+
+/* Focus ring (keyboard users) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Scrollbars that match dark themes */
+:root[data-theme="cyber"] *,
+:root[data-theme="ultra"] * {
+  scrollbar-color: var(--line-strong) transparent;
+  scrollbar-width: thin;
+}
+
+/* Subtle entrance animation; disabled for reduced motion */
+@keyframes cq-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: cq-rise 0.35s ease-out both;
+}
+
+@keyframes cq-pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 201, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(76, 201, 255, 0.12);
+  }
+}
+.animate-pulse-glow {
+  animation: cq-pulse-glow 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+:root[data-reduced-motion="true"] *,
+:root[data-reduced-motion="true"] *::before,
+:root[data-reduced-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* Number tabular alignment in stat tiles */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide scrollbars for horizontal chip rows while keeping scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe-area padding for iPhone bottom nav */
+.pb-safe {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
