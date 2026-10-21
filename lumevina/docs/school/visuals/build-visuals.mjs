@@ -166,6 +166,48 @@ const V = {
         .map(([a, b]) => `<div class="card" style="border-color:rgba(255,122,107,.35)"><div style="font-size:24px;font-weight:650;color:${RED}">${esc(a)}</div><p class="lbl" style="margin-top:6px">${esc(b)}</p></div>`).join("")}
     </div>
     <p class="lbl" style="margin-top:18px;font-size:22px">Trouble breathing, or swelling of the lips, tongue or throat: 911. An esthetician works on the surface; a referral is the right answer, not a treatment.</p>`),
+  "3-2": base(`Three steps, <span class="grad">morning and night.</span>`, "Build your first routine", `
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      <div class="card"><div class="k" style="font-size:22px">Morning</div><div style="margin-top:14px">${steps(["Cleanse (or just rinse, if you're dry)", "Moisturize", "Sunscreen"])}</div></div>
+      <div class="card"><div class="k" style="font-size:22px;color:${GOLD}">Night</div><div style="margin-top:14px">${steps(["Cleanse", "Treat (once your skin is calm)", "Moisturize"], GOLD)}</div></div>
+    </div>
+    <div class="row" style="grid-template-columns:1fr 1fr;margin-top:24px">
+      <div class="card"><div style="font-size:24px;font-weight:650">One new product at a time</div><p class="lbl" style="margin-top:6px">Wait two weeks before adding another, so you know what's working and what isn't.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">Patch test anything new</div><p class="lbl" style="margin-top:6px">Twice a day on a small spot along the jaw or inner arm, for 7 to 10 days.</p></div>
+    </div>`),
+  "10-2": base(`The short list, <span class="grad">every day.</span>`, "An anti-aging routine that works", `
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      <div class="card"><div class="k" style="font-size:22px">Morning</div><div style="margin-top:14px">${steps(["Vitamin C", "Moisturizer", "Sunscreen"])}</div></div>
+      <div class="card"><div class="k" style="font-size:22px;color:${GOLD}">Night</div><div style="margin-top:14px">${steps(["Retinoid, built up slowly", "Peptides", "A rich moisturizer"], GOLD)}</div></div>
+    </div>
+    <div class="row" style="grid-template-columns:1fr 1fr;margin-top:24px">
+      <div class="card"><div style="font-size:24px;font-weight:650">Neck, chest and hands too</div><p class="lbl" style="margin-top:6px">They show age early. The same products, carried down and out.</p></div>
+      <div class="card" style="border-color:rgba(244,201,214,.5)"><div style="font-size:24px;font-weight:650;color:${ROSE}">Consistency beats strength</div><p class="lbl" style="margin-top:6px">A gentle retinoid every night beats a strong one once a week.</p></div>
+    </div>`),
+  "7-3": base(`Your routine changes <span class="grad">with the weather.</span>`, "Skin through the seasons", `
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      ${[["Hot summers", GOLD, ["Lighter gel moisturizer", "Sunscreen reapplied more often", "Blotting papers, not more powder"]], ["Santa Ana winds, dry winters", ROSE, ["Richer moisturizer", "Fewer acid nights", "A humidifier by the bed"]], ["Travel and flights", T2, ["Skip new actives", "Pack your barrier basics", "Sunscreen in the window seat"]]]
+        .map(([h, c, items]) => `<div class="card"><div style="font-size:26px;font-weight:650;color:${c}">${esc(h)}</div><ul class="lbl" style="margin-top:12px;padding-left:22px;line-height:1.6">${items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}
+    </div>
+    <p class="lbl" style="margin-top:22px;font-size:22px">A skin check with Evelyn at every change of season: the Valley has more weather than people think.</p>`),
+  "5-3": base(`The quiet ones that <span class="grad">make everything else work.</span>`, "The supporting cast", `
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      ${[["Niacinamide, 2 to 5%", "Calms redness, balances oil, strengthens the barrier. Works with almost everything."], ["Hyaluronic acid", "Holds water. On damp skin, sealed with moisturizer."], ["Azelaic acid", "Calms redness and fades marks; gentle enough for sensitive skin."], ["Benzoyl peroxide", "Kills acne bacteria. Bleaches towels and pillowcases: use white ones."]]
+        .map(([a, b]) => `<div class="card"><div style="font-size:26px;font-weight:650">${esc(a)}</div><p class="lbl" style="margin-top:8px">${esc(b)}</p></div>`).join("")}
+    </div>`),
+  "9-2": base(`Brighteners with evidence, <span class="grad">two at a time.</span>`, "Brighteners that work", `
+    <div style="margin-bottom:18px">${pill("vitamin C")}${pill("niacinamide")}${pill("azelaic acid")}${pill("tranexamic acid")}${pill("a retinoid: faster turnover", GOLD)}</div>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card"><div style="font-size:24px;font-weight:650">Two together</div><p class="lbl" style="margin-top:6px">They fade spots in different ways, so a pair often works better than one: vitamin C by day, azelaic acid or a retinoid at night.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">Hydroquinone</div><p class="lbl" style="margin-top:6px">Prescription-only in the US since 2020. A conversation for your doctor, not the shelf.</p></div>
+      <div class="card" style="border-color:rgba(255,122,107,.5)"><div style="font-size:24px;font-weight:650;color:${RED}">Nothing works without sunscreen</div><p class="lbl" style="margin-top:6px">One unprotected afternoon can undo a month of fading.</p></div>
+    </div>`),
+  "11-2": base(`Pause some, keep some, <span class="grad">and ask your doctor.</span>`, "Pregnancy and breastfeeding", `
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      <div class="card" style="border-color:rgba(255,122,107,.5)"><div class="k" style="font-size:22px;color:${RED}">Pause</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>Retinoids of every kind, including retinol</li><li>High-strength salicylic peels</li></ul></div>
+      <div class="card" style="border-color:rgba(50,215,75,.45)"><div class="k" style="font-size:22px;color:${GREEN}">Commonly considered fine</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>Azelaic acid, vitamin C, niacinamide</li><li>Gentle lactic acid</li><li>Mineral sunscreen (tinted, for melasma)</li></ul></div>
+    </div>
+    <p class="lbl" style="margin-top:22px;font-size:22px">Melasma often shows up in pregnancy; tinted mineral sunscreen is your best friend. Tell your esthetician every time: some treatments change. The one rule: ask your doctor.</p>`)
 };
 
 const { chromium } = createRequire(path.join(process.env.PLAYWRIGHT_DIR || root, "x.js"))("playwright");
