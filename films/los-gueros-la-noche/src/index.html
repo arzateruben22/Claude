@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Noche — film composition</title>
+  <link rel="stylesheet" href="film.css">
+</head>
+<body>
+  <!-- One composition, two formats: ?format=16x9 | 9x16. ?render=1 is set by the renderer. -->
+  <div id="viewport">
+    <div id="stage" aria-label="Taqueria Los Güeros — La Noche">
+
+      <div class="plate" id="plate"><img id="plate-img" alt=""></div>
+      <div class="scrim top" id="scrim-top"></div>
+      <div class="scrim bottom" id="scrim-bottom"></div>
+      <div id="dim"></div>
+      <div id="vignette"></div>
+
+      <section class="card" id="hook">
+        <h1 class="display">
+          <span class="l1"><span class="w">The</span> <span class="w">night</span></span>
+          <span class="l2"><span class="w">tastes</span> <span class="w">better.</span></span>
+        </h1>
+      </section>
+
+      <section class="card" id="reveal">
+        <p class="es">La noche sabe mejor.</p>
+        <p class="eyebrow"><span>Taqueria Los Güeros</span><span class="sep"> · </span><span>Anaheim, California</span></p>
+      </section>
+
+      <section class="card" id="tortillas">
+        <h2 class="display">
+          <span class="l1"><span class="w">Handmade</span> <span class="w">tortillas,</span></span>
+        </h2>
+      </section>
+
+      <section class="card" id="pastor">
+        <h2 class="display"><span class="l1"><span class="w">Al</span> <span class="w">Pastor</span></span></h2>
+        <p class="body">marinated pork, pineapple</p>
+      </section>
+
+      <section class="card" id="carta">
+        <p class="eyebrow">The Menu · La Carta</p>
+        <h2 class="display">
+          <span class="l1"><span class="w">From</span> <span class="w">the</span> <span class="w">fire</span></span>
+          <span class="l2"><span class="w">to</span> <span class="w">your</span> <span class="w">table.</span></span>
+        </h2>
+        <p class="ribbon"><span>Tacos</span><span>Burritos</span><span>Mulitas</span><span>Horchata</span></p>
+      </section>
+
+      <div id="curtain"></div>
+
+      <section class="card" id="lockup">
+        <div class="mono"><span class="glow"></span><img src="../../../icons/icon-512.png" alt="Los Güeros monogram"></div>
+        <p class="eyebrow">Taqueria · Anaheim</p>
+        <h2 class="word">Los Güeros</h2>
+        <p class="tag">The night tastes better.</p>
+        <p class="addr">628 W La Palma Ave</p>
+        <p class="cta">Order now <span>— Ordena ahora</span></p>
+      </section>
+
+      <canvas id="embers"></canvas>
+      <div id="bloom"></div>
+      <canvas id="grain"></canvas>
+    </div>
+  </div>
+
+  <div id="transport" hidden>
+    <button type="button" id="play">Play</button>
+    <input type="range" id="scrub" min="0" max="479" value="0" aria-label="Frame">
+    <output id="clock">0.00 s · f0</output>
+    <a id="swap" href="#">Switch format</a>
+  </div>
+
+  <script src="../../../js/vendor/gsap.min.js"></script>
+  <script src="film.js"></script>
+</body>
+</html>

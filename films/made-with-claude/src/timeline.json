@@ -1,0 +1,146 @@
+{
+  "title": "Made with Claude — Breakout",
+  "fps": 30,
+  "duration": 12,
+  "bpm": 120,
+  "formats": {
+    "16x9": {
+      "width": 1920,
+      "height": 1080
+    },
+    "9x16": {
+      "width": 1080,
+      "height": 1920
+    }
+  },
+  "ui": {
+    "width": 2400,
+    "height": 1350,
+    "unitsPerWorld": 100,
+    "playhead": {
+      "u0": 1080,
+      "pxPerSecond": 107.5
+    },
+    "toolbar": {
+      "u0": 330,
+      "step": 62,
+      "v": 61
+    }
+  },
+  "shots": [
+    { "id": "S1", "name": "Establish", "start": 0.0, "end": 1.5 },
+    { "id": "S2", "name": "Breakout", "start": 1.5, "end": 2.5 },
+    { "id": "S3", "name": "Menu-bar hops", "start": 2.5, "end": 4.0 },
+    { "id": "S4", "name": "Glow", "start": 4.0, "end": 5.5 },
+    { "id": "S5", "name": "Keyframes", "start": 5.5, "end": 9.5 },
+    { "id": "S6", "name": "Made with Claude", "start": 9.5, "end": 12.0 }
+  ],
+  "camera": {
+    "16x9": [
+      { "t": 0.0, "pos": [ 0.0, 11.8, 15.6 ], "look": [ 0.0, -0.9, 0.9 ], "fov": 34, "focus": "look", "fstop": 0.12 },
+      { "t": 1.5, "pos": [ -0.7, 7.0, 4.6 ], "look": [ -0.7, 0.0, -2.3 ], "fov": 32, "focus": "look", "fstop": 0.45, "ease": "power2.inOut" },
+      { "t": 1.95, "pos": [ -0.7, 2.3, 1.7 ], "look": [ -0.7, 0.55, -2.0 ], "fov": 34, "focus": "look", "fstop": 0.75, "ease": "sine.inOut" },
+      { "t": 2.25, "pos": [ -1.2, 3.5, 1.9 ], "look": [ -2.6, 1.7, -3.6 ], "fov": 36, "focus": "mascot", "fstop": 0.8, "ease": "power2.out", "aim": 0.85 },
+      { "t": 2.55, "rel": true, "pos": [ -2.4, 1.6, 4.6 ], "look": [ 0.4, 0.5, -0.1 ], "fov": 32, "focus": "mascot", "fstop": 1.0, "ease": "power2.inOut" },
+      { "t": 3.25, "rel": true, "pos": [ -1.9, 1.5, 4.5 ], "look": [ 0.6, 0.5, -0.1 ], "fov": 32, "focus": "mascot", "fstop": 1.0, "ease": "sine.inOut", "aim": 0.6 },
+      { "t": 3.62, "rel": true, "pos": [ -1.9, 2.4, 3.4 ], "look": [ 0.0, 0.6, -0.5 ], "fov": 36, "focus": "mascot", "fstop": 0.9, "ease": "sine.inOut", "aim": 0.8 },
+      { "t": 4.0, "rel": true, "pos": [ -2.4, 3.6, 3.0 ], "look": [ -1.2, 0.0, -0.95 ], "fov": 34, "focus": "mascot", "fstop": 0.85, "ease": "power3.inOut", "aim": 0.3 },
+      { "t": 4.5, "rel": true, "pos": [ -1.2, 3.0, 2.8 ], "look": [ -0.4, 0.0, -0.2 ], "fov": 34, "focus": "mascot", "fstop": 0.85, "ease": "sine.inOut" },
+      { "t": 5.1, "pos": [ 4.6, 3.8, 1.8 ], "look": [ -0.2, 0.2, -2.4 ], "fov": 36, "focus": "viewer", "fstop": 0.6, "ease": "power2.inOut" },
+      { "t": 5.62, "rel": true, "pos": [ -1.6, 2.6, 3.9 ], "look": [ 0.3, 0.6, -0.5 ], "fov": 34, "focus": "mascot", "fstop": 0.9, "ease": "sine.inOut", "aim": 0.8 },
+      { "t": 6.0, "rel": true, "pos": [ -1.4, 1.35, 4.6 ], "look": [ 0.5, 0.45, -0.4 ], "fov": 30, "focus": "mascot", "fstop": 1.0, "ease": "power3.inOut", "aim": 0.3 },
+      { "t": 9.25, "rel": true, "pos": [ -0.8, 1.3, 4.5 ], "look": [ 0.6, 0.45, -0.4 ], "fov": 30, "focus": "mascot", "fstop": 1.0, "ease": "sine.inOut", "aim": 0.3 },
+      { "t": 9.95, "pos": [ -1.9, 7.6, 6.9 ], "look": [ -0.6, 0.0, -2.3 ], "fov": 32, "focus": "viewer", "fstop": 0.4, "ease": "power3.inOut" },
+      { "t": 12.0, "pos": [ -1.7, 7.0, 6.2 ], "look": [ -0.6, 0.0, -2.3 ], "fov": 32, "focus": "viewer", "fstop": 0.4, "ease": "sine.out" }
+    ],
+    "9x16": [
+      { "t": 0.0, "pos": [ -0.6, 9.4, 7.0 ], "look": [ -0.6, -0.2, -1.9 ], "fov": 52, "focus": "look", "fstop": 0.12 },
+      { "t": 1.5, "pos": [ -0.7, 6.2, 1.7 ], "look": [ -0.7, 0.0, -2.4 ], "fov": 50, "focus": "look", "fstop": 0.45, "ease": "power2.inOut" },
+      { "t": 1.95, "pos": [ -0.7, 3.1, 1.5 ], "look": [ -0.7, 0.55, -2.0 ], "fov": 50, "focus": "look", "fstop": 0.75, "ease": "sine.inOut" },
+      { "t": 2.25, "pos": [ -1.2, 5.2, 1.6 ], "look": [ -2.6, 1.5, -3.8 ], "fov": 52, "focus": "mascot", "fstop": 0.8, "ease": "power2.out", "aim": 0.85 },
+      { "t": 2.55, "rel": true, "pos": [ -1.5, 1.9, 4.0 ], "look": [ 0.3, 0.55, -0.2 ], "fov": 50, "focus": "mascot", "fstop": 1.0, "ease": "power2.inOut" },
+      { "t": 3.25, "rel": true, "pos": [ -1.1, 1.8, 3.9 ], "look": [ 0.4, 0.55, -0.2 ], "fov": 50, "focus": "mascot", "fstop": 1.0, "ease": "sine.inOut", "aim": 0.6 },
+      { "t": 3.62, "rel": true, "pos": [ -1.6, 3.6, 3.6 ], "look": [ 0.0, 0.6, -0.5 ], "fov": 52, "focus": "mascot", "fstop": 0.9, "ease": "sine.inOut", "aim": 0.8 },
+      { "t": 4.0, "rel": true, "pos": [ -1.4, 4.8, 2.6 ], "look": [ -0.6, 0.0, -0.8 ], "fov": 50, "focus": "mascot", "fstop": 0.85, "ease": "power3.inOut", "aim": 0.3 },
+      { "t": 4.5, "rel": true, "pos": [ -0.8, 4.6, 2.8 ], "look": [ -0.3, 0.0, -0.3 ], "fov": 50, "focus": "mascot", "fstop": 0.85, "ease": "sine.inOut" },
+      { "t": 5.1, "pos": [ 3.2, 7.4, 2.4 ], "look": [ -0.4, 0.2, -2.4 ], "fov": 50, "focus": "viewer", "fstop": 0.6, "ease": "power2.inOut" },
+      { "t": 5.62, "rel": true, "pos": [ -1.2, 3.8, 4.2 ], "look": [ 0.3, 0.6, -0.5 ], "fov": 50, "focus": "mascot", "fstop": 0.9, "ease": "sine.inOut", "aim": 0.8 },
+      { "t": 6.0, "rel": true, "pos": [ -0.6, 2.3, 4.2 ], "look": [ 0.3, 0.45, -0.3 ], "fov": 48, "focus": "mascot", "fstop": 1.0, "ease": "power3.inOut", "aim": 0.3 },
+      { "t": 9.25, "rel": true, "pos": [ -0.3, 2.2, 4.1 ], "look": [ 0.35, 0.45, -0.3 ], "fov": 48, "focus": "mascot", "fstop": 1.0, "ease": "sine.inOut", "aim": 0.3 },
+      { "t": 9.95, "pos": [ -0.7, 14.6, 5.6 ], "look": [ -0.7, 0.0, -2.1 ], "fov": 56, "focus": "viewer", "fstop": 0.4, "ease": "power3.inOut" },
+      { "t": 12.0, "pos": [ -0.7, 13.6, 5.1 ], "look": [ -0.7, 0.0, -2.1 ], "fov": 56, "focus": "viewer", "fstop": 0.4, "ease": "sine.out" }
+    ]
+  },
+  "mascot": [
+    { "type": "sprite", "t0": 0.0, "t1": 1.5, "at": [ 1130, 422.5 ], "wiggle": [ 0.5, 1.0 ] },
+    { "type": "extrude", "t0": 1.5, "t1": 2.0, "at": [ 1130, 422.5 ] },
+    { "type": "jump", "t0": 2.0, "t1": 2.5, "to": [ 702, 61 ], "apex": 2.4, "face": "camera" },
+    { "type": "hop", "t0": 2.5, "t1": 3.0, "to": [ 888, 61 ], "apex": 0.75 },
+    { "type": "hop", "t0": 3.0, "t1": 3.25, "to": [ 1012, 61 ], "apex": 0.35 },
+    { "type": "jump", "t0": 3.25, "t1": 4.0, "to": [ 1980, 640 ], "apex": 3.0 },
+    { "type": "idle", "t0": 4.0, "t1": 4.25, "face": "panel", "bounce": [ 4.0, 4.125, 4.25, 4.375 ] },
+    { "type": "hop", "t0": 4.25, "t1": 4.5, "to": [ 1965, 566 ], "apex": 0.5, "stomp": true },
+    { "type": "idle", "t0": 4.5, "t1": 5.25, "face": "viewer" },
+    { "type": "jump", "t0": 5.25, "t1": 6.0, "to": [ "playhead", 812 ], "apex": 3.0 },
+    { "type": "trot", "t0": 6.0, "t1": 9.25, "v": 812, "step": 0.25, "apex": 0.13 },
+    { "type": "jump", "t0": 9.25, "t1": 10.0, "to": [ 1400, 700 ], "apex": 3.6 },
+    { "type": "idle", "t0": 10.0, "t1": 12.0, "face": "camera", "happy": 10.5, "breathe": true }
+  ],
+  "blinks": [1.2, 3.6, 5.6, 8.2],
+  "viewer": {
+    "spriteUntil": 1.5,
+    "crack": 2.0,
+    "typeStart": 2.6,
+    "typeEnd": 3.6,
+    "glow": 5.0,
+    "settle": 6.5,
+    "spark": 7.0,
+    "scalePop": 7.5,
+    "swoosh": 8.0,
+    "bgWarm": 8.5,
+    "opus": 9.0
+  },
+  "search": {
+    "text": "glow",
+    "keys": [4.0, 4.125, 4.25, 4.375],
+    "highlight": 4.5
+  },
+  "toolbarPress": [
+    { "t": 2.5, "u": 702 },
+    { "t": 3.0, "u": 888 },
+    { "t": 3.25, "u": 1012 }
+  ],
+  "streak": {
+    "t0": 4.5,
+    "t1": 5.0,
+    "from": [1965, 566],
+    "to": [1130, 400],
+    "arc": 2.2
+  },
+  "keyframes": [
+    { "t": 6.5, "row": "position", "note": "D5" },
+    { "t": 7.0, "row": "spark", "note": "E5" },
+    { "t": 7.5, "row": "scale", "note": "F#5" },
+    { "t": 8.0, "row": "swoosh", "note": "A5" },
+    { "t": 8.5, "row": "clawd", "note": "B5" },
+    { "t": 9.0, "row": "title", "note": "D6" }
+  ],
+  "shards": { "t": 2.0, "count": 70, "seed": 7 },
+  "music": {
+    "key": "D",
+    "intro": [0.0, 2.0],
+    "drop": 2.0,
+    "outro": 10.0,
+    "chords": [
+      { "t": 0.0, "notes": [ "B2", "F#3", "A3", "D4" ] },
+      { "t": 2.0, "notes": [ "B2", "F#3", "A3", "D4" ] },
+      { "t": 4.0, "notes": [ "G2", "D3", "F#3", "B3" ] },
+      { "t": 6.0, "notes": [ "D3", "A3", "C#4", "F#4" ] },
+      { "t": 8.0, "notes": [ "A2", "E3", "G3", "C#4" ] },
+      { "t": 10.0, "notes": [ "G2", "D3", "F#3", "A3", "B3" ] },
+      { "t": 11.0, "notes": [ "D3", "A3", "D4", "F#4" ] }
+    ],
+    "loudness": -14,
+    "truePeak": -1.0
+  }
+}

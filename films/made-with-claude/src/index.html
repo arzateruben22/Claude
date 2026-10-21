@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Made with Claude — Breakout</title>
+  <!-- ?format=16x9|9x16 · ?t=seconds · ?scale=0.5 (draft size) · ?q=final · ?render=1 (set by the renderer) -->
+  <script type="importmap">
+    { "imports": { "three": "../vendor/three/three.module.js", "three/addons/": "../vendor/three/addons/" } }
+  </script>
+  <style>
+    html, body { margin: 0; background: #000; overflow: hidden; }
+    #stage canvas { display: block; }
+    #transport { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px; background: #1d1d20; color: #ddd; font: 14px/1.2 system-ui, sans-serif; }
+    #transport[hidden] { display: none; }
+    #transport input { flex: 1; accent-color: #d97757; }
+    #transport a { color: #111; background: #d97757; border-radius: 4px; padding: 6px 12px; text-decoration: none; }
+    #transport output { min-width: 13em; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="transport" hidden>
+    <input type="range" id="scrub" min="0" max="359" value="0" aria-label="Frame">
+    <output id="clock">0.00 s</output>
+    <a id="swap" href="#">Switch format</a>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

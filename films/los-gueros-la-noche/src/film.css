@@ -1,0 +1,308 @@
+/* ═══════════════════════════════════════════════════════════
+   La Noche — film composition
+   Tokens are the live site's (css/styles.css); see film/style-guide.md
+   ═══════════════════════════════════════════════════════════ */
+
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 500; src: url("../../../fonts/cormorant-garamond-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-style: normal; font-weight: 600; src: url("../../../fonts/cormorant-garamond-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cormorant Garamond"; font-style: italic; font-weight: 500; src: url("../../../fonts/cormorant-garamond-latin-500-italic.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 300; src: url("../../../fonts/jost-latin-300-normal.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 400; src: url("../../../fonts/jost-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 500; src: url("../../../fonts/jost-latin-500-normal.woff2") format("woff2"); }
+
+:root {
+  --ink: #100c09;
+  --cream: #f3e9d7;
+  --cream-60: rgba(243, 233, 215, 0.62);
+  --flame: #e8a356;
+  --chile: #b3402f;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Jost", "Avenir Next", sans-serif;
+
+  /* 16:9 defaults; 9:16 overrides below */
+  --w: 1920px;
+  --h: 1080px;
+  --display: 128px;
+  --es: 92px;
+  --eyebrow: 22px;
+  --body: 34px;
+  --word: 150px;
+  --tag: 50px;
+  --addr: 32px;
+  --cta: 30px;
+}
+
+:root[data-format="9x16"] {
+  --w: 1080px;
+  --h: 1920px;
+  --display: 136px;
+  --es: 82px;
+  --eyebrow: 26px;
+  --body: 36px;
+  --word: 184px;
+  --tag: 62px;
+  --addr: 40px;
+  --cta: 38px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; background: #000; }
+body { overflow: hidden; }
+
+#viewport { width: var(--w); height: var(--h); transform-origin: 0 0; }
+
+#stage {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* ─── Footage plate (virtual camera moves #plate-img) ─── */
+
+.plate { position: absolute; overflow: hidden; inset: 0; }
+#plate-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  /* the site's warm grade: a touch of contrast, keep blacks espresso not grey */
+  filter: contrast(1.06) saturate(1.04);
+}
+
+:root[data-format="16x9"] .plate {
+  left: 760px;
+  width: 1160px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 340px);
+          mask-image: linear-gradient(90deg, transparent 0, #000 340px);
+}
+
+.scrim { position: absolute; left: 0; right: 0; opacity: 0; pointer-events: none; }
+.scrim.top {
+  top: 0;
+  opacity: 1;   /* the hook opens on it at frame 0 */
+  height: 62%;
+  background: linear-gradient(180deg, rgba(16, 12, 9, 0.9) 0%, rgba(16, 12, 9, 0.74) 42%, rgba(16, 12, 9, 0) 100%);
+}
+.scrim.bottom {
+  bottom: 0;
+  height: 62%;
+  background: linear-gradient(0deg, rgba(16, 12, 9, 0.92) 0%, rgba(16, 12, 9, 0.76) 42%, rgba(16, 12, 9, 0) 100%);
+}
+:root[data-format="16x9"] .scrim { display: none; }
+
+#dim { position: absolute; inset: 0; background: var(--ink); opacity: 0; }
+
+#vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 95% at 55% 45%, transparent 52%, rgba(16, 12, 9, 0.6) 100%);
+}
+
+/* ─── Copy cards ─── */
+
+.card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+}
+
+:root[data-format="16x9"] .card { padding: 0 1060px 30px 120px; }
+:root[data-format="16x9"] #lockup { padding: 0 0 20px; align-items: center; text-align: center; }
+
+:root[data-format="9x16"] .card { padding: 250px 110px 420px; align-items: center; text-align: center; }
+:root[data-format="9x16"] #hook,
+:root[data-format="9x16"] #tortillas { justify-content: flex-start; padding-top: 300px; }
+:root[data-format="9x16"] #reveal,
+:root[data-format="9x16"] #pastor { justify-content: flex-end; }
+:root[data-format="9x16"] #lockup { padding: 200px 90px 380px; }
+
+.display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--display);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  text-shadow: 0 0 50px rgba(232, 163, 86, 0.35), 0 2px 26px rgba(16, 12, 9, 0.55);
+}
+.display .l1, .display .l2 { display: block; }
+.display .w { display: inline-block; }
+
+.es {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--es);
+  line-height: 1.05;
+  color: var(--flame);
+  text-shadow: 0 2px 26px rgba(16, 12, 9, 0.7);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--eyebrow);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+#reveal .eyebrow { margin-top: 1.6em; line-height: 1.9; }
+#reveal .eyebrow span { display: block; }
+#reveal .eyebrow .sep { display: none; }
+#carta .eyebrow { margin-bottom: 1.4em; }
+
+.body {
+  margin: 0.9em 0 0;
+  font-size: var(--body);
+  font-weight: 300;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+}
+
+.ribbon {
+  margin: 1.3em 0 0;
+  font-family: var(--font-body);
+  font-size: var(--body);
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: 0.06em;
+}
+.ribbon span { display: inline-block; }
+.ribbon span + span::before { content: "·"; color: var(--flame); margin: 0 0.55em; }
+:root[data-format="9x16"] .ribbon { max-width: 760px; line-height: 1.7; }
+
+/* ─── Ember curtain (site intro) ─── */
+
+#curtain {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 118%, rgba(232, 163, 86, 0.28), transparent 55%),
+    radial-gradient(90% 60% at 50% 120%, rgba(179, 64, 47, 0.35), transparent 60%),
+    linear-gradient(180deg, #0a0705 0%, #0d0907 55%, #140d08 100%);
+  box-shadow: 0 -24px 70px rgba(232, 163, 86, 0.22);
+  will-change: transform;
+}
+
+/* ─── Lockup ─── */
+
+.mono { position: relative; width: 330px; height: 330px; margin: -50px 0 -24px; }
+.mono img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: lighten;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 34%, transparent 60%);
+          mask-image: radial-gradient(circle at 50% 50%, #000 34%, transparent 60%);
+}
+.mono .glow {
+  position: absolute;
+  inset: -60%;
+  background: radial-gradient(circle, rgba(232, 163, 86, 0.32), transparent 62%);
+}
+:root[data-format="9x16"] .mono { width: 400px; height: 400px; margin: -60px 0 -30px; }
+
+#lockup .eyebrow { margin-bottom: 0.5em; }
+
+.word {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--word);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  text-shadow: 0 0 50px rgba(232, 163, 86, 0.35);
+}
+.word .ch { display: inline-block; white-space: pre; }
+
+.tag {
+  margin: 0.35em 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--tag);
+  color: var(--flame);
+}
+
+.addr {
+  margin: 1.1em 0 0;
+  font-size: var(--addr);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--cream);
+}
+
+.cta {
+  margin: 1.1em 0 0;
+  padding: 0.55em 1.3em;
+  border: 1.5px solid var(--flame);
+  border-radius: 999px;
+  font-size: var(--cta);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--flame);
+}
+.cta span { font-weight: 300; color: var(--cream); }
+
+/* ─── Atmosphere ─── */
+
+#embers, #grain { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#embers { mix-blend-mode: screen; opacity: 0.7; }
+#grain { mix-blend-mode: overlay; opacity: 0.09; }
+
+#bloom {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(70% 60% at 62% 58%, rgba(255, 196, 120, 0.95), rgba(232, 163, 86, 0.55) 40%, rgba(179, 64, 47, 0) 78%);
+}
+:root[data-format="9x16"] #bloom {
+  background: radial-gradient(90% 55% at 50% 56%, rgba(255, 196, 120, 0.95), rgba(232, 163, 86, 0.55) 40%, rgba(179, 64, 47, 0) 78%);
+}
+
+/* QA: hide copy to sample the background it sits on */
+.hide-text :is(.display, .es, .eyebrow, .body, .ribbon, .word, .tag, .addr, .cta) { visibility: hidden; }
+
+/* ─── Preview transport (never rendered) ─── */
+
+#transport {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 16px;
+  background: #1a1410;
+  color: var(--cream);
+  font: 14px/1.2 var(--font-body);
+}
+#transport[hidden] { display: none; }
+#transport input { flex: 1; accent-color: var(--flame); }
+#transport button, #transport a {
+  font: inherit;
+  color: var(--ink);
+  background: var(--flame);
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 12px;
+  text-decoration: none;
+}
+#transport output { min-width: 9em; font-variant-numeric: tabular-nums; }
