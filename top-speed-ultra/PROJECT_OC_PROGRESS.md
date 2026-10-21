@@ -4,6 +4,33 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (17:00 UTC): characters and story on the phone (Messages, Contacts)
+
+- **Story** (`src/game/story.ts`): five fictional OC characters, ours, written for 13+ (no romance, no real people
+  or businesses):
+  - Mara Ortiz, who runs the tyre shop under the Orangewood studio;
+  - Jun Park, an Irvine aero engineer;
+  - Sal Reyes, a courier who knows every exit;
+  - Dee Okafor, who organises a Saturday car meet ("no street racing, just cars and coffee");
+  - Nina Hale, a Vela test driver.
+- **Messages and jobs.** Twelve messages in threads, opened by level, homes owned, races won and the message before.
+  Eleven carry a job built only from what the game has: a Survival score, Time Trial miles, a race placing on a named
+  course, miles of Free Drive on a named freeway, or a top speed. Each pays 600 to 10,000 credits and XP, paid when a
+  run meets it (`Game.settleJobs` at the end of every run and race; not on a "Too far behind" race).
+- **On the phone.** Messages (threads, unread badges, the job's goal and pay, Set it up) and Contacts (the people
+  you've heard from, labelled fictional) replace the two Roadmap icons.
+  - Set it up goes back to the menu with the job's mode chosen, plus its course or freeway.
+  - The menu rail has a Phone row with "N new".
+  - The results screen lists "Job done for …" with the pay.
+  - Nothing is sent or received over a network. Profile: `story { done, read }`, defaulted for older saves.
+- **Checked** (new launch check, `npm test -- --only=launch` **10/10**):
+  - a fresh story shows 1 unread; Mara's thread reads "Reach 120 mph · 600 credits";
+  - Set it up chose Free Drive;
+  - a drive ending at 134 mph paid the job (+600 credits on top of the drive's own), and the results said "Job done
+    for Mara Ortiz";
+  - her next message then showed as unread.
+  - Screenshot: `tests/out/launch-story-thread.png`.
+
 ## 2026-10-21 (16:30 UTC): Lifestyle: homes (the life half's first piece); every panel's Done bar fixed
 
 The owner asked for the life half and the online side toward 95 %, with homes and walk-in interiors first, online

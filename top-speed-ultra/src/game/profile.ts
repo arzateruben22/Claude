@@ -28,6 +28,7 @@ export interface Profile {
   car: string;                       // the one you drive
   homes: string[];                   // homes owned (homes.ts), bought with credits
   home: string;                      // the one you live in ('' for none yet)
+  story: { done: string[]; read: string[] };   // story.ts: jobs done and messages read
   achievements: string[];
   created: number;
 }
@@ -57,7 +58,7 @@ export function levelOf(xp: number) { let l = 1; while (xpFor(l + 1) <= xp) l++;
 
 function fresh(): Profile {
   return { v: PROFILE_VERSION, username: 'Driver', avatar: 0, xp: 0, credits: 0, timeDriven: 0, distance: 0, topSpeed: 0, bestStreak: 0,
-    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', homes: [], home: '', achievements: [], created: Date.now() };
+    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', homes: [], home: '', story: { done: [], read: [] }, achievements: [], created: Date.now() };
 }
 
 // older saves come in through here, one version at a time
@@ -76,6 +77,8 @@ function migrate(raw: Record<string, unknown>): Profile {
   // homes arrived after v1 shipped: a save without them simply owns none (no version bump needed, the field defaults)
   p.homes = Array.isArray(p.homes) ? p.homes.filter((h): h is string => typeof h === 'string' && !!homeById(h)) : [];
   if (typeof p.home !== 'string' || !p.homes.includes(p.home)) p.home = p.homes[0] ?? '';
+  const st = (p.story ?? {}) as { done?: unknown; read?: unknown }, strs = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
+  p.story = { done: strs(st.done), read: strs(st.read) };
   p.username = String(p.username || 'Driver').slice(0, 20);
   p.avatar = Math.max(0, Math.min(AVATARS.length - 1, Number(p.avatar) || 0));
   return p;

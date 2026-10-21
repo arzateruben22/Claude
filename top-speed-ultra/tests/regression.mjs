@@ -953,6 +953,41 @@ await group('launch', async (use) => {
     expect(/^oc-ultra-free-\d+\.png$/.test(dl.suggestedFilename()), `the card is called ${dl.suggestedFilename()}`);
     return `${dl.suggestedFilename()}, ${w} × ${h}, ${Math.round(buf.length / 1024)} KB`;
   });
+  // characters and story (the phone's Messages): a message with a job arrives, Set it up picks the mode, a run that
+  // meets it is paid and the results say so, and the thread's next message opens
+  await check("story: Mara's job is set up from the phone, a run meets it, it's paid and her next message opens", async () => {
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.waitForSelector('.overlay.menu');
+    const keep = await game(page, () => { const p = window.__game.profile.p; const k = { story: JSON.parse(JSON.stringify(p.story)), credits: p.credits, xp: p.xp }; p.story = { done: [], read: [] }; return k; });
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    const badge = await page.locator('.ph-app', { hasText: 'Messages' }).locator('.ph-badge').innerText();
+    await page.getByRole('button', { name: /^Messages/ }).click();
+    await page.locator('.ph-row', { hasText: 'Mara Ortiz' }).click();
+    const job = await page.locator('.ph-job').first().innerText();
+    await page.screenshot({ path: path.join(OUT, 'launch-story-thread.png') });
+    expect(badge === '1', `the Messages badge reads ${badge}`);
+    expect(/Reach 120 mph/.test(job) && /600 credits/.test(job), `the job reads "${job.replace(/\s+/g, ' ')}"`);
+    await page.locator('.ph-job').first().getByRole('button', { name: 'Set it up' }).click();
+    await page.waitForSelector('.overlay.menu');
+    const picked = await page.getByRole('radio', { name: /Free Drive/ }).getAttribute('aria-checked');
+    expect(picked === 'true', `Free Drive chosen: ${picked}`);
+    await drive(page, 'Free Drive');
+    const c0 = await game(page, () => window.__game.profile.p.credits);
+    await game(page, () => { const g = window.__game; g.fastForward(5, {}, 30); g.top = 60; g.endFreeDrive(); });
+    await page.waitForSelector('.result', { timeout: 10000 });
+    const text = (await page.locator('.result').innerText()).replace(/\s+/g, ' ');
+    const after = await game(page, () => { const p = window.__game.profile.p; return { done: p.story.done, credits: p.credits }; });
+    await page.screenshot({ path: path.join(OUT, 'launch-story-done.png') });
+    expect(/Job done for Mara Ortiz/i.test(text), `the results say: ${text.slice(0, 200)}`);
+    expect(after.done.includes('mara-1') && after.credits - c0 >= 600, `done ${after.done}, credits +${Math.round(after.credits - c0)}`);
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    const next = await page.locator('.ph-app', { hasText: 'Messages' }).locator('.ph-badge').innerText().catch(() => '0');
+    expect(next === '1', `after the job, ${next} unread (Mara's next)`);
+    await page.locator('.ph-home').click();
+    await game(page, (k) => { const g = window.__game, p = g.profile.p; p.story = k.story; p.credits = k.credits; p.xp = k.xp; g.profile.save(); }, keep);
+    return `badge 1; "${job.split('\n')[0]}"; Set it up chose Free Drive; paid +${Math.round(after.credits - c0)} credits (with the drive's own); next message unread`;
+  });
 });
 
 await browser.close();

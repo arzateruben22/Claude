@@ -80,14 +80,15 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
 - 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
 - 06:55 App.tsx, styles.css: the radial quick menu (`RadialMenu.tsx`): hold Pause or Tab for 300 ms while driving; a tap on Pause still pauses.
+- 17:00 App.tsx, styles.css, Phone.tsx, Game.ts: the story (`story.ts`): the phone's Messages and Contacts, a Phone row on the menu rail, jobs paid at run end (`Result.jobs`), listed on the results screen.
 - 16:30 App.tsx, styles.css, WorldMap.tsx, Phone.tsx: Lifestyle (homes): the rail's Lifestyle row opens `Homes.tsx`; a Homes phone app; homes on the World Map; the garage's slots include homes; `.panel > .row:last-child` sticks to the screen's real bottom edge.
 - 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
 Next here (updated 16:30 UTC; the owner, about 15:45: the life half and online toward 95 %; homes and walk-in
 interiors first; online on a free-tier backend; the map OC-only; no real-phone test for now):
-- done: homes (Lifestyle), the panels' Done bar;
+- done: homes (Lifestyle), the panels' Done bar, characters and story (phone Messages, Contacts, jobs);
 - next: walk-in interiors for owned homes, waiting on the always-on session's answer on how to reuse its on-foot engine
-  (`src/onfoot/lot57`); then, in the life half, characters and story on the phone (Messages, Contacts), and activities;
+  (`src/onfoot/lot57`); activities (meets, photo spots) after that;
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 

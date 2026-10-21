@@ -28,6 +28,7 @@ import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
+import { settle, characterById, jobText, type RunFacts } from './story';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
@@ -75,6 +76,7 @@ export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
+  jobs?: { from: string; job: string; credits: number }[];   // story jobs this run completed (story.ts), already paid
 }
 interface RaceState {
   course: Course; path: Path; s0: number; L: number; cps: number[]; next: number; t: number; go: boolean;
@@ -441,8 +443,9 @@ export class Game {
     const best = bestTime(r.course.id);
     const ordinal = ['1st', '2nd', '3rd', '4th'][Math.min(position, 4) - 1];
     if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    const jobs = why ? undefined : this.settleJobs({ mode: 'race', score: credits, distance: r.progress, top: this.top, road: r.course.road, courseId: r.course.id, position });
     setTimeout(() => this.ev.over({
-      mode: 'race', score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
+      mode: 'race', jobs, score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
       road: r.course.road, best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
       board: { mode: 'race', runs: [], rank: 0 },
       race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
@@ -1064,6 +1067,18 @@ export class Game {
     }
   }
 
+  // story jobs (the phone's Messages): what this run met is paid now, and the results screen lists it
+  private settleJobs(r: RunFacts): Result['jobs'] {
+    if (this.attract) return undefined;
+    const paid = settle(this.profile.p, this.profile.level, r);
+    if (!paid.length) return undefined;
+    let lvl: number | null = null;
+    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} credits`, 'good'); }
+    this.profile.save();
+    if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    return paid.map((m) => ({ from: characterById(m.from)?.name ?? m.from, job: m.job ? jobText(m.job) : '', credits: m.credits ?? 0 }));
+  }
+
   // level-ups and achievements, as they happen
   private earned(e: Earned) {
     if (this.attract) return;
@@ -1079,7 +1094,8 @@ export class Game {
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const board = recordRun(run);
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board }), 1200);
+    const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road });
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs }), 1200);
   }
 
   // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary

@@ -17,6 +17,7 @@ import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
 import { Ico } from './Icons';
 import { Homes } from './Homes';
+import { unread } from '../game/story';
 import { garageSlots } from '../game/homes';
 import { ModeArt } from './ModeArt';
 import { WorldMap } from './WorldMap';
@@ -244,6 +245,8 @@ export function App() {
               <button className="rail-btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}><Ico name="bests" />Bests</button>
               <button className="rail-btn" onClick={() => setPanel('settings')}><Ico name="settings" />Settings</button>
               <button className="rail-btn" onClick={() => setPanel('homes')}><Ico name="home" />Lifestyle</button>
+              {(() => { const n = game.current ? unread(game.current.profile.p, levelOf(game.current.profile.p.xp)) : 0;
+                return <button className="rail-btn" onClick={() => setPanel('phone')}><Ico name="phone" />Phone{n > 0 && <small className="new">{n} new</small>}</button>; })()}
               <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
             </nav>
             <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
@@ -319,6 +322,11 @@ export function App() {
                 <div><dt>Collisions</dt><dd>{result.collisions}</dd></div>
               </>}
             </dl>
+            {result.jobs && result.jobs.length > 0 && (
+              <ul className="jobs-done" aria-label="Jobs done">
+                {result.jobs.map((j) => <li key={j.from + j.job}><b>Job done for {j.from}</b><span>{j.job} · +{j.credits.toLocaleString()} credits</span></li>)}
+              </ul>
+            )}
             {!result.race && <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />}
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
@@ -400,7 +408,14 @@ export function App() {
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
 
       {panel === 'phone' && game.current && (
-        <Phone name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} onClose={() => setPanel(null)}
+        <Phone name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
+          onJob={(j) => {
+            // a story job: back to the menu with its mode (and course or freeway) chosen, ready to Drive
+            if (j.kind === 'race') update({ course: j.course });
+            if (j.kind === 'drive') update({ start: j.road, exit: '' });
+            setMode(j.kind === 'survival' ? 'survival' : j.kind === 'time' ? 'time' : j.kind === 'race' ? 'race' : 'free');
+            toMenu();
+          }}
           onOpen={(a: PhoneApp) => {
             if (a === 'radio') { resume(); setRadioOpen(true); return; }
             if (a === 'feedback') { openFeedback(); return; }
