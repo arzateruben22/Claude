@@ -4,6 +4,15 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (11:10 UTC): the full suite on this session's work
+
+- `npm test` (all groups) on the branch at 06:55 (World Map, paint, radio, phone, settings rail, radial menu; before
+  the clothing merge): **61/62**. The one failure: "reset puts the car back on the road, stopped" (`7.92 → 0.54 m/s`:
+  the car never reached the 30 m/s the check drives up to before resetting).
+- Rerun of the `render` group alone, side by side: the current code **14/14** (reset `40 → 0.01 m/s`) and this
+  session's starting commit (07f46ac) **14/14** (`40.02 → 0.02 m/s`). Intermittent and not reproduced on either; the
+  cause is not known (the check's speed-up is simulated time, so machine load should not matter). Watch it.
+
 ## 2026-10-21 (11:00 UTC): the drivers' clothes, a black-frame bug fixed
 
 A lane on this session (worktree, merged as one commit) finished the drivers' clothing pass from the parked work,
