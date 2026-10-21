@@ -254,6 +254,145 @@ window.seek = function (t) {
 };
 `
   },
+  /* ───────── 2-2 Moisturizer, decoded: the three kinds of ingredients ───────── */
+  "2-2": {
+    id: "2-2", kicker: "Moisturizer, decoded", title: `Every moisturizer is <span class="grad">three kinds of ingredients.</span>`, dur: 22, poster: 12,
+    shots: [
+      { at: 0, name: "pull", cap: "Humectants pull water in: glycerin, hyaluronic acid, urea. Dry, tight skin is skin that's short of water in the top layers." },
+      { at: 7, name: "smooth", cap: "Emollients smooth and soften: squalane, ceramides, plant oils. They fill the gaps between the cells, so the surface stops looking rough." },
+      { at: 14, name: "seal", cap: "Occlusives seal it in: petrolatum, dimethicone, shea butter. A thin film on top, so the water stays. Everyone needs a moisturizer." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.pick3 { position: absolute; right: 0; bottom: 2vmin; display: grid; gap: .8vmin; justify-items: end; opacity: 0; }
+.pick3 span { padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); font-size: 2.3vmin; font-weight: 600; }
+.pick3 b { color: #8fd3ff; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-dry"><i style="background:#c9a090"></i>dry: short of water</span><span class="lab3" id="l-hum"><i style="background:#8fd3ff"></i>humectants: glycerin, hyaluronic acid, urea</span><span class="lab3" id="l-water"><i style="background:#8fd3ff"></i>water, pulled up</span></section>
+<section class="shot"><span class="lab3" id="l-emo"><i style="background:#f1c98a"></i>emollients: squalane, ceramides, oils</span><span class="lab3" id="l-gap"><i style="background:#f1c98a"></i>gaps filled, surface smooth</span></section>
+<section class="shot"><span class="lab3" id="l-occ"><i style="background:#f3e6da"></i>occlusives: petrolatum, dimethicone, shea</span><span class="lab3" id="l-stay"><i style="background:#8fd3ff"></i>water stays in</span><div class="pick3" id="pick3"><span><b>Oily skin:</b> a light gel, humectants first</span><span><b>Dry skin:</b> a cream, all three</span></div></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(10, 20, 12); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0x8fd3ff, 0.35); fill2.position.set(-12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block below the surface, and the surface cells on their own (they move, plump and go glossy)
+const NY = 12, NZ = 9, cells = [], tops = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = x * 1000 + y * 20 + z, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 9) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v);
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  const cell = { x, y, z, c, base: c.clone(), wx: x + 0.5, wz: z + 0.5 - NZ / 2, j: hash(i + 7), k: hash(i + 11) };
+  (y === 11 ? tops : cells).push(cell);
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.wx, c.y, c.wz); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+const topMat = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.02 });
+const top = new THREE.InstancedMesh(geo, topMat, tops.length);
+top.castShadow = true; top.receiveShadow = true; scene.add(top);
+tops.forEach((c, i) => top.setColorAt(i, c.c));
+// dry: the surface cells sit askew with their edges lifted; hydrated: plump; smooth: straight
+const DRY = new THREE.Color(0xd9ad9c), WET = new THREE.Color(0xf0cfc0), tmp = new THREE.Color();
+const layTop = (hyd, smooth) => {
+  tops.forEach((c, i) => {
+    const rough = 1 - smooth;
+    dummy.position.set(c.wx, c.y + 0.12 * hyd + 0.18 * rough * c.j, c.wz);
+    dummy.rotation.set(0.22 * rough * (c.j - 0.5), 0, 0.22 * rough * (c.k - 0.5));
+    dummy.scale.set(1, 1 + 0.12 * hyd, 1); dummy.updateMatrix(); top.setMatrixAt(i, dummy.matrix);
+    tmp.copy(DRY).lerp(WET, hyd).lerp(c.base, 0.5); top.setColorAt(i, tmp);
+  });
+  top.instanceMatrix.needsUpdate = true; top.instanceColor.needsUpdate = true;
+  topMat.roughness = 0.85 - 0.55 * smooth;
+  // the rows under the surface plump a little too
+  cells.forEach((c, i) => { if (c.y < 9) return; dummy.position.set(c.wx, c.y + 0.06 * hyd * (c.y - 8), c.wz); dummy.scale.set(1, 1 + 0.06 * hyd, 1); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); });
+  block.instanceMatrix.needsUpdate = true;
+};
+// the humectant sponges, in the top rows; water rises to them
+const SP = Array.from({ length: 8 }, (_, k) => new THREE.Vector3(-6 + hash(k + 60) * 12, 10.3 + hash(k + 61) * 0.9, -2.5 + hash(k + 62) * 6));
+const spongeMat = new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0, roughness: 0.4, transparent: true, opacity: 0 });
+const sponges = SP.map((p) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.62, 0.62), spongeMat); m.position.copy(p); m.rotation.set(0.4, 0.6, 0.2); scene.add(m); return m; });
+const dropGeo = new THREE.SphereGeometry(0.2, 12, 10);
+const drops = Array.from({ length: 22 }, (_, k) => { const m = new THREE.Mesh(dropGeo, new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0.5, roughness: 0.3, transparent: true, opacity: 0.9 })); m.visible = false; scene.add(m); return { m, k, sp: SP[k % SP.length], ox: hash(k + 80) * 2 - 1, oz: hash(k + 81) * 2 - 1 }; });
+// the emollient: a glossy amber fill in the seams between the surface cells
+const seams = [];
+for (let x = -7; x < 8; x++) for (let z = 0; z < NZ; z++) seams.push({ p: [x, 11, z + 0.5 - NZ / 2], s: [0.14, 0.7, 0.96] });
+for (let x = -8; x < 8; x++) for (let z = 1; z < NZ; z++) seams.push({ p: [x + 0.5, 11, z - NZ / 2], s: [0.96, 0.7, 0.14] });
+const seamMat = new THREE.MeshPhysicalMaterial({ color: 0xf1c98a, roughness: 0.15, clearcoat: 0.8, emissive: 0x5a3a10, emissiveIntensity: 0.25 });
+const seam = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), seamMat, seams.length);
+seam.visible = false; scene.add(seam);
+const laySeams = (f) => {
+  seams.forEach((q, i) => { dummy.position.set(q.p[0], q.p[1] + 0.1, q.p[2]); dummy.rotation.set(0, 0, 0); dummy.scale.set(q.s[0], q.s[1] * f, q.s[2]); dummy.updateMatrix(); seam.setMatrixAt(i, dummy.matrix); });
+  seam.instanceMatrix.needsUpdate = true; seam.visible = f > 0.01;
+};
+// the occlusive film: thin, a little glossy, lowered onto the surface
+const film = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.26, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf3e6da, roughness: 0.12, clearcoat: 1, transmission: 0.45, opacity: 0.85, transparent: true }));
+film.position.set(0, 12.4, 0); film.castShadow = true; film.visible = false; scene.add(film);
+const look = new THREE.Vector3(0, 8, 0);
+const place = (t) => {
+  const a = -0.45 + t * 0.013, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-dry": [-5, 12.6, 4.5], "l-hum": [4.5, 11.2, 4.6], "l-water": [-2, 8.5, 4.6], "l-emo": [5, 12.6, 4.5], "l-gap": [-4, 12.3, 3], "l-occ": [5.5, 13.4, 4.5], "l-stay": [-3.5, 10.6, 4.6] };
+const OFF = { "l-dry": [-1, -1], "l-hum": [1, 0], "l-water": [-1, 0], "l-emo": [1, -1], "l-gap": [-1, -1], "l-occ": [1, -1], "l-stay": [-1, 0] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // hydration builds through shot 0; smoothing through shot 1; the film lands in shot 2
+  const hyd = i === 0 ? E.inout(seg(lt, 2.2, 6.2)) : 1;
+  const smooth = i === 1 ? E.inout(seg(lt, 1.4, 5.4)) : i > 1 ? 1 : 0;
+  layTop(hyd, smooth);
+  laySeams(i === 1 ? E.out(seg(lt, 1.0, 4.6)) : i > 1 ? 1 : 0);
+  const spOn = i === 0 ? E.out(seg(lt, 1.6, 2.6)) : i === 1 ? 1 - seg(lt, 0, 0.8) : 0;
+  spongeMat.opacity = 0.95 * spOn; spongeMat.emissiveIntensity = 1.2 * spOn * (0.6 + 0.4 * hyd);
+  const filmOn = i === 2 ? E.out(seg(lt, 0.6, 1.8)) : 0;
+  film.visible = filmOn > 0.01; film.position.y = 14.5 - 2.1 * filmOn; film.material.opacity = 0.85 * filmOn;
+  // water: rising toward the sponges (shot 0), kept under the film (shot 2); between, resting in the top rows
+  drops.forEach((d) => {
+    const ph = (t * 0.3 + d.k * 0.0455) % 1;
+    const on = i === 0 ? lt > 2.0 : i === 2 ? lt > 2.4 : false;
+    d.m.visible = on;
+    if (!on) return;
+    if (i === 0) { const y0 = 4.5, p = E.inout(ph); d.m.position.set(d.sp.x + d.ox * (1 - p) * 1.5, y0 + (d.sp.y - y0) * p, d.sp.z + d.oz * (1 - p) * 1.5); d.m.scale.setScalar(1 - 0.75 * seg(ph, 0.85, 1)); d.m.material.opacity = 0.9; }
+    else { const y = 9.6 + 3.2 * ph, capY = 12.0; const under = y < capY; d.m.position.set(d.sp.x + d.ox * 1.2, under ? y : capY - (y - capY) * 0.6, d.sp.z + d.oz * 1.2); d.m.scale.setScalar(0.8); d.m.material.opacity = under ? 0.9 : 0.9 * Math.max(0, 1 - (y - capY) * 1.4); }
+  });
+  // labels (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-dry"), lt, 0.4, { y: 8 }); if (lt > 3.6) $("#l-dry").style.opacity = 1 - seg(lt, 3.6, 4.1); enter($("#l-hum"), lt, 1.8, { y: 8 }); enter($("#l-water"), lt, 2.8, { y: 8 }); }
+  if (i === 1) { enter($("#l-emo"), lt, 0.8, { y: 8 }); enter($("#l-gap"), lt, 3.6, { y: 8 }); }
+  if (i === 2) { enter($("#l-occ"), lt, 1.2, { y: 8 }); enter($("#l-stay"), lt, 3.0, { y: 8 }); enter($("#pick3"), lt, 4.6, { y: 10 }); }
+  renderer.render(scene, camera);
+};
+`
+  },
+
   /* ───────── 9-3 Heat, light and patience: why a dark spot is slow ───────── */
   "9-3": {
     id: "9-3", kicker: "Heat, light and patience", title: `Why a dark spot takes <span class="grad">months, not weeks.</span>`, dur: 24, poster: 9,
