@@ -13,14 +13,12 @@ there, under our own name, with no real business's name, menu or look, and only 
   slice, places and freeway link from OpenStreetMap via Overture. A reviewer re-ran both pipelines in scratch copies:
   Lot 57's outputs are byte-identical to before (verify 12 of 12), and the bar's outputs reproduce byte for byte
   (verify 13 of 13).
-- **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress after a sixth
-  repair. This round fixed all twelve items the round-5 review listed (the faces rule, the frame-rate check, how the
-  I-5 is drawn, and what changing the graphics setting does to people already on screen among them). The reviewer
-  re-ran both check scripts cleanly (12 plus 14 zones, 73 plus 30 slots, every stand point reachable, 60 nearby street
-  pieces, every crossing clear) and re-added the changed HD and Ultra budgets by hand; all match, and the people
-  details match Lot 57's code. The design review still rejects it: one of the plan's own checks cannot be passed as
-  written, the repairs opened two new gaps in what the plan specifies, and there are three small errors. It needs
-  another pass before building starts.
+- **Kept: the design plan** (`PROJECT_OC_SPORTS_BAR.md`), after a seventh pass. This round fixed all twelve items the
+  round-6 review listed and added an "Open items for the builders" section near the top: every known gap or unchecked
+  claim, with how and in which phase it gets resolved. Lot 57's parts are now described as contracts (names and what
+  they promise), and every number read from Lot 57's code is marked with when it was measured; the first build step
+  re-measures them. A reviewer checked the plan's three.js claims line by line against the installed library and re-ran
+  both check scripts with matching results. Both reviewers accepted the plan; building phases S1 to S4 comes next.
 
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 

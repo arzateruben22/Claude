@@ -22,7 +22,50 @@ their constants. Every number this plan takes from Lot 57's code is in one table
 says when it was measured; the S1 builder's first step is to re-measure that table and update it, and anything that
 depends on it, before building. This doc doesn't report on either; check `PROJECT_OC_PROGRESS.md` for what's built and
 verified. Facts about the site come from that data. Each number is either measured (the method is at the end) or
-marked as **ours** (a design choice), **an estimate** or **an assumption**.
+marked as **ours** (a design choice), **an estimate** or **an assumption**. Everything still approximate, unverified or
+open is listed in one place, next, with how and when it's resolved.
+
+## Open items for the builders
+
+Every known gap, approximation and unverified claim in this plan, each with its resolution path and the phase that
+resolves it. An item listed here with its path is a known open item, not a defect of the plan; the phase's builder
+closes it, logs the result in `PROJECT_OC_PROGRESS.md`, and updates this table and every place in the plan that cites it.
+
+| # | Open item | What it rests on now | How it's resolved | Phase |
+| --- | --- | --- | --- | --- |
+| O1 | Lot 57's numbers (L1 to L21) and its contracts move while this plan waits | Measured at the `tsu-foot` worktree over `022f988` on 2026-10-21, about 06:00 UTC (L14, L20 and L21 about 10:33). Since then `main.ts` has moved again (3ab822eb73 at 11:09 UTC, where your avatar's LOD 0 is now built at High as well as Ultra), `style.ts` too (e606208d78, 10:53), and `lot57/wheels.ts` is new | The S1 builder's first step: re-measure every row, the contracts table and the Retro API; update this plan wherever a moved row is cited; re-run the sums and both scripts; log the changes | S1 (and S4 for `PRESET`) |
+| O2 | The `people/` internals the bar relies on, which aren't API: the `lod1` and `lod2` mesh names, `setLod` hiding the other levels with `visible = false`, one shared skeleton, `frustumCulled = false` and `castShadow` per level (`person.ts` lines 447 and 538), the hair meshes' names and program keys | Read in `person.ts` on 2026-10-21 | S1's re-measure reads them again. If they've moved, `visibility.ts` follows them; if a hidden caster can't be made, the costed fallback under "Shadows in three.js 0.160.1" applies | S1 |
+| O3 | The people builder's costs and build times | Lot 57's plan's desktop measurements of 14 October; HD's LOD 2 cost (1.5k) and build time (0.4 s) are **assumed** | S1 builds a person at each level and quality, reads `stats()` and times each build; the costs, the sums, the fill table and owner question 2 follow | S1 |
+| O4 | The allocations: the venue, the streets, HD's and Ultra's sky, the six item models, Ultra's pool tables and lamps | Allocations with headroom; the streets stand on the script's cost model | S1 measures the venue, streets, trees and sky with `breakdown()`; S2a and S2b the items; S4 the pool spots; an overrun takes its preset's listed fallbacks in order | S1, S2a, S2b, S4 |
+| O5 | The street triangles | `sportsbar_sets.py`'s cost model: near 9,850, far 23,522 simple and 61,630 full. It counts every pier, the ones the pier rule leaves out included, so it's high by 32 triangles a skipped pier (the script prints how many) | S1's `breakdown()` of the built near and far sets | S1 |
+| O6 | The post quads (bloom 13, output 1, GTAO 3 besides its normal pass) | Read from three.js 0.160.1's passes, not measured | S4 measures the final post chains | S4 |
+| O7 | Frame rates here: about 2 fps at Low and 0.3 fps at HD and Ultra under SwiftShader, and the 3 slow warm-up frames after a load or a switch (108 s for three frames on High, 271 s on Ultra) | The game's figures in `PROJECT_OC_PROGRESS.md`, **assumed** for the bar's page, which isn't built | S1 logs the page's own rates and warm-up at each preset; S3a's marks are taken from its own logged frames, never from these figures | S1, S3a |
+| O8 | The fill times (about 46 s, 2.5 min and 5.9 min at 30 fps) and any phone's | Arithmetic and a frame-by-frame simulation from the desktop build times, with the casters' LOD 1 builds at their most (HD 5, Ultra 35); a phone is slower by an amount nobody has measured | S3a's build log records the real times on this machine; no phone run is possible here, and none is claimed | S3a |
+| O9 | The hidden casters and the per-light members ("Shadows in three.js 0.160.1") | Read from three.js 0.160.1's source in `node_modules/three` (`WebGLRenderer.js`, `WebGLShadowMap.js`, `GTAOPass.js`); not yet run on a page | S1: your avatar's shadow in first and third person at HD and Ultra, in screenshots and in `stats().maps`; S3a: each pool spot's members in `vis()` and its calls and triangles in `stats().maps`. If the hooks fail, the costed fallback (your avatar's LOD 0 casts itself; in first person no avatar shadow, logged) | S1, S3a |
+| O10 | The empty calls the per-light members and the hidden casters cost, and their CPU | Upper bounds: every mesh with `castShadow` on counted as tested in each pool spot's map (165 empty a map inside, 175 overhead), and every caster but your avatar counted as drawn at LOD 2 (a hidden LOD 1 in each colour pass: HD 5, Ultra up to 35); the CPU of an empty call (a program bind and its uniforms) is unmeasured | S3a and S4 measure each map at `door` and `overhead` against the sums and log the frame's CPU ms; if it runs over, Ultra's fourth fallback turns the pool spots' maps off | S3a, S4 |
+| O11 | The shadow maps drawn once a frame | three.js 0.160.1 redraws them in every `renderer.render`, and GTAO's normal pass is one; the bar's page turns `shadowMap.autoUpdate` off and asks for one update a frame | S1's check that a frame's `renderer.info` is the pass, each map once, GTAO's normal pass and the post | S1 |
+| O12 | S3a's span bound (1.7) for the background builds | Exact for frames at their median non-build time (a build, its gap and the frames it waits for are at most 5/3 of the reference); a frame-by-frame simulation gives 1.0 to 1.4 at a steady 30, 2 and 0.3 fps. The gap and "never idle" marks are exact at any frame rate | S3a runs the marks on its logs. If a run that passes the gap and never-idle marks still exceeds 1.7 only because its frames were irregular, the builder replays the rule on the logged frames, records the replayed ratio as that run's bound and says so in the progress log | S3a |
+| O13 | The run time of S3a's "A change of graphics" here | Six switches, each with 3 slow warm-up frames (O7), about 15 to 30 min under SwiftShader, an estimate | S3a logs it; the timed builds start after each switch's warm-up frames | S3a |
+| O14 | Held guests and staff going off shift (the live cap on a switch, under "People are slow to build" and "Fillers") | New design in this plan; Lot 57's spec has nothing like it | S3a builds them and checks them (the crowd, filler and change-of-graphics checks) | S3a |
+| O15 | The Retro style module (RS1) | Uncommitted on `claude/modes`; its API read at about 10:35 UTC (`style.ts` 5a1598bdd2), changed since (e606208d78, 10:53) | S1 re-reads the API; S4 turns Retro on after `claude/modes` merges, or ships Low with standard materials at full resolution and says so in the handoff | S1, S4 |
+| O16 | The hair finding: a LOD 0's toon hair cap and hair cards wouldn't compile, so they're `retroSkip` | The hooks' text read and resolved against the toon shader; no GLSL compiled | S3a's forced LOD 0 run at Low fails on any shader error; the handoff asks RS1 to make the hook-fit test catch such a hook | S3a |
+| O17 | No NPC's face moves (no NPC LOD 0) | A LOD 0 is one synchronous build of 4.6 s or 7 to 9.5 s | Owner question 2 | The owner; S3a applies the answer |
+| O18 | Low draws no sun shadows, unlike the game's `RETRO` preset and decision 15's "hard shadows" | The plan's choice, for Low's budget | Owner question 1 | The owner; S4 applies the answer |
+| O19 | Our unit's extent (the arm's east 36 m) and the patio on unmapped paving | **Assumptions**: the data doesn't divide the building, and nothing is mapped on the strip | They stay ours and are built as planned; only the owner or new open data can change them | (stays an assumption) |
+| O20 | The lot: S0-data's derived lot, 55 to 62 stalls, and the 0.84 fill bias | The derived lot, our stall layout and L6's fill rule as measured | S1 lays out the stalls, counts them and recomputes 0.84 from the re-measured rule | S1 |
+| O21 | The walk grid, the lane path and the front's clearances | `sportsbar_zones.py`'s model of L12's grid, and shapely on the plan's numbers | S1 runs the same tests on the built colliders and Lot 57's real grid at the page's offset, and the front's from `layout()` | S1 |
+| O22 | The I-5's drawing: the bridge rule, piers left out over drawn ribbons, the Katella slab under the decks, and the ground the ramps meet (the 60 m terrain cells smear the embankments) | The script's rule on the slice | S1's "The I-5 is drawn" check on the built sets, and its street and door screenshots from the patio and Katella | S1 |
+| O23 | Simulation CPU (2.5, 3 and 4 ms), the 6 decisions' 0.4 ms, the code size (180 KB), the first walkable frame (under 6 s) | Targets and estimates | S1 times the first frame; S3a reports simulation and decision ms; S4 the code size | S1, S3a, S4 |
+| O24 | The utility arithmetic (about 99% choose a drink when thirsty) | The formulas as written | S3a's "needs drive choices" check, at 70% | S3a |
+| O25 | Lot 57's P1b and P1c (Order, Join, Leave, held items; NPCs, groups, the crowd, staff) | Not written yet | If they haven't landed by S2a and S3a, the bar writes them in `engine/` from Lot 57's spec and says so in the handoff | S2a, S3a |
+| O26 | E0, the move into `engine/` | Waits for Lot 57's P1d to be committed | S4, or whoever next touches both venues | S4 or later |
+| O27 | The names: "Stoppage Time" and the fictional leagues and teams | One web search each, not a trademark search; the blocklist | Searched again before anything ships; the blocklist test runs in every phase | S4, before release |
+| O28 | Lot 57's own shadow flaws: its first-person body on layer 1 casts nothing, and at Ultra its maps are drawn twice a frame (GTAO's normal pass draws them again) | Its `main.ts` as read (3ab822eb73, 11:09 UTC) and three.js 0.160.1 | Not the bar's to change before E0: the handoff carries both to Lot 57's owners | S1 writes the handoff note |
+| O29 | Ultra's entitlement (RS2) | Not landed; test hooks set Ultra in test builds | S4 reads the shared entitlement, with no price and no purchase path | S4 |
+| O30 | Phones | Nothing in this plan has run on a phone | The budgets stay targets until the owner runs one; the handoff asks for it | (the owner) |
+| O31 | The exits and routes ("Joining the game later") | S0-data's `sportsbar-freeway-link.json`, still being refined when this was written | The file is authoritative; J1, in the game's workflow, reads it as it then stands | J1 (after S4) |
+| O32 | Cards (fillers, held guests and unbuilt people) reading as people through the glazing and from above | A design claim, unseen | S3a's `door`, `stall`, `patio` and overhead screenshots are looked at; the mitigations are under "Risks" (8 directions, three poses, the promotion radius) | S3a |
+| O33 | The bar's new clips (drink, eat, dances, cheer, groan, clap, the game clips) looking right on a rig built for talking, walking and sitting | Procedural, unmade | S2a and S2b ship the clips that read well and write any that don't up in the handoff for the design review queue | S2a, S2b |
 
 ## Ground rules
 
@@ -400,7 +443,7 @@ promise. The numbers are in the next table, not here.
 | --- | --- | --- |
 | `lot57/geom.ts` | `Batch`, `Kit` (batches by name and material, `kit.get(name, mat, opts)`, `kit.light(...)`, `Kit.finish` running `Batch.bake`, the baked vertex light), `Emitter`; `offsetLine`, `polyLen`, `along`, `pointInPoly`, `rand`, `canvasTex` | No |
 | `lot57/collide.ts` | Colliders (`seg`, `box`, `boxMM`, `circ`, `poly`, each with a tag and an on/dynamic flag); `ColliderSet` with `add`, `rebuild` and `ray` | No |
-| `lot57/walkgrid.ts` | `WalkGrid(x0, z0, x1, z1)`, world-aligned, with `CELL` and `RADIUS`; the `region`, `raised` and `road` layers; `computeFree(set, dynamicOnly?)`, which frees the region's cells clear of every collider by a margin; `isFree`, `nearestFree`, `clear`; and `path(ax, az, bx, bz)`, A* over free cells with the path pulled tight, which snaps an end that isn't free to a free cell near it | No |
+| `lot57/walkgrid.ts` | `WalkGrid(x0, z0, x1, z1)`, world-aligned, with `CELL` and `RADIUS`; the `region`, `raised` and `road` layers (public `Uint8Array`s) and the methods that paint them, `fillPoly(layer, ring, v = 1)`, `stroke(layer, pts, w, v = 1, clip?)`, `rect(layer, x0, z0, x1, z1, v = 1)` and `clipRegion(x0, z0, x1, z1)`, where a value of 0 cuts cells out (S1 paints the region over the walls and the patio fence with `fillPoly`, and cuts the lane and the flap out of it with `fillPoly(grid.region, ring, 0)`); `inRegion`, `height` and `isRoad`; `computeFree(set, dynamicOnly?)`, which frees the region's cells clear of every collider by a margin; `isFree`, `nearestFree`, `clear`; and `path(ax, az, bx, bz)`, A* over free cells with the path pulled tight, which snaps an end that isn't free to a free cell near it | No |
 | `lot57/driver.ts` | `readDriver`, `driverPerson`, `eyeHeight`: your driver, from the game's own settings | No |
 | `lot57/player.ts` | `Player`, constructed as `(set: ColliderSet, grid: WalkGrid, roadAt)`; public `x`, `z`, `yaw`, `pitch`, `eye`, `view`, `seat`, `person`; walking and jogging with push-out; `goTo(x, z, goal?)` (a path on the grid, then `sit(seat)` on arrival when the goal is a seat); `sit(seat)`, which puts the body on the seat; `stand()`, which puts it back at the seat's stand point or the nearest free cell; `place`; `look`; and `camera(cam)`, which places the first- or third-person camera and returns `{ dist, hide }`. `View = 'first' \| 'third'`. Also `WALK`, `JOG`, `STEP` and `Stick`. | Yes: `get indoors()` calls Lot 57's `inShed(x, z)` |
 | `lot57/input.ts` | `Input`: the floating stick, the look drag, taps, keys and the gamepad, with an `enabled` switch and a fixed `Action` union (L18) | The key map and the action union are fixed |
@@ -441,8 +484,9 @@ Files as measured (`git hash-object`, first 10 characters): `main.ts` d777b7de58
 `lot.ts` (556c325abd), `data.ts` (59611bda6d), `mats.ts` (34b6f0824d), `player.ts` (7e31264c0f), `venue.ts`
 (09318d85aa), `input.ts` (7a330e13fe), `coords.ts` (e806ec2e74), `geom.ts` (4e40776caa), `collide.ts` (4b9c998737)
 and `tex.ts` (d13a6672c5); `walkgrid.ts`, `hud.ts`, `clock.ts` and `driver.ts` hadn't. Only L14, L20 and L21 were
-measured again for this revision. Under the drift rule the rest stay as measured, and the S1 builder's re-measure
-covers every row.
+measured again for the round-6 revision. For this one, `main.ts` was re-read at 3ab822eb73 (11:09 UTC) for L9's
+first-person layer only, and `walkgrid.ts` (still 671715d7a0) for its painting methods in the contracts table. Under the
+drift rule the rest stay as measured, and the S1 builder's re-measure covers every row.
 
 | Row | What | As measured | Where the plan uses it |
 | --- | --- | --- | --- |
@@ -454,7 +498,7 @@ covers every row.
 | L6 | `fill(share, seed)` (`lot.ts`) | A stall fills when a seeded draw is under `share × (0.75 + 0.5 × max(0, 1 - d / 90))`, d the distance to Lot 57's gate at local (-5, 20); each car is pulled toward its wheel stop along world z by `(stallD - car length) / 2 - 0.2`, with `stallD` 5.5 from `coords.ts`. `main.ts` passes share `0.12 + 0.92 × crowd share` (at most 0.96; 0.05 when closed) and seed `day × 100 + hour`. | The bar's stalls face 0 or π, 5.5 m deep, and it passes `min(1, share / 0.84)` (module map, `lot.ts` row); the poses' fill seed 621 |
 | L7 | `yourCar` (`lot.ts`) | The car at (x, z - 0.15), turned by the stall's `face`, every mesh casting | The bar's door and spawn (module map, `lot.ts` row) |
 | L8 | The door and the spawn (`lot.ts` `buildLot`, `main.ts`) | The driver-door point at (x - 1.25, z + 0.6) from your stall; the page places you at (door.x, door.z - 0.2) | The same |
-| L9 | Your avatar's level of detail (`main.ts`) | Built at LOD 1 at the preset's people quality; LOD 0 only on Ultra, set 800 ms after you switch to third person (one synchronous build in the loop); leaving Ultra sets LOD 1; a change of people quality rebuilds the avatar. In first person the body is on layer 1, which the sun's shadow camera sees and the main camera doesn't. | "Who is at which LOD": the bar builds it differently, on purpose |
+| L9 | Your avatar's level of detail (`main.ts`) | Built at LOD 1 at the preset's people quality; LOD 0 only on Ultra, set 800 ms after you switch to third person (one synchronous build in the loop); leaving Ultra sets LOD 1; a change of people quality rebuilds the avatar. In first person it puts the body on layer 1 alone, and at setup it enables layer 1 on the sun's shadow camera (`env.sun.shadow.camera.layers.enable(1)`). That records **Lot 57's intent**, a body the main camera doesn't draw that still casts, not what happens: in three.js 0.160.1 the shadow pass tests layers against the main camera, so the body casts into no map (see "Shadows in three.js 0.160.1"). Re-read at `main.ts` 3ab822eb73 (11:09 UTC), that part is unchanged. | "Who is at which LOD": the bar builds it differently, on purpose, and casts with a hidden caster instead |
 | L10 | Casting (`main.ts` `applyQuality`) | Each mesh's first `castShadow` is kept in `userData.cast`; `applyQuality` puts every mesh back from it when there's a map (Lot 57's `venue-plants` only on Ultra) | `visibility.ts`'s casting rule |
 | L11 | `plantTrees` (`main.ts`) | Up to 4 `InstancedMesh`es (palm trunks, palm crowns, tree canopies, tree trunks) from the game's `Props`: `palmCrown(low ? 0 : 1)`, `treeCanopy(low ? 1 : 3)`, `palmTrunk()`, `treeTrunk()`; all cast; the bounding sphere computed once after placing. Rebuilt on a change of people quality. | Our street trees |
 | L12 | The walk grid (`walkgrid.ts`) | `CELL` 0.5 m, world-aligned; `RADIUS` 0.3 m; a cell is free when it and its four neighbours are in the region and its centre is at least `RADIUS + 0.02` from every collider; A* is 8-connected with no corner cutting; `path()` snaps an end that isn't free to the nearest free cell within 3 m; two heights, 0 and 0.15 m (`raised`) | The bartenders' lane path, the patio, the front's ramp, S1's walk checks, `sportsbar_zones.py` |
@@ -493,14 +537,14 @@ Before E0 the bar never edits `lot57/`, `main.ts`, Lot 57's page or `people/`. I
 | `mats.ts`, `tex.ts` | The bar doesn't call `makeMats`: it would build Lot 57's sign atlas, reader board and a dozen textures the bar doesn't use. `venues/sportsbar/mats.ts` builds the bar's own materials from `tex.ts`'s generic texture functions and from `mats.ts`'s `glowify` and `GLOW` channels: a is the venue's own lights, b the street and lot lights, c the interior. It has its own `setNight`. | A shared base in `engine/mats.ts`, plus each venue's own set. |
 | `clock.ts` | `engine/clock.ts` re-exports the generic part: `DAYS`, `ClockState`, `CrowdLevel`, `anaheimDate`, `pacificOffset`, `liveClock`, `fmtClock` and `parseDay`. New `engine/schedule.ts` has `isOpen`, `closesAt`, `opensAt`, `crowdShare` and `crowdLevel`. Each takes a `Schedule` and an optional `extra(day, hour)` factor (below). The bar never calls Lot 57's own `isOpen` or `crowdShare`. | `lot57/clock.ts`'s functions become wrappers over Lot 57's `Schedule`. A unit test compares the old and new functions at every half hour of a week. |
 | `coords.ts` | Not imported: it's Lot 57's `ORIGIN` and `PLAN`. New `engine/frame.ts`: `makeFrame(originGame, axisU, axisV)` returns `toLocal` and `toGame`, `toFrame` and `fromFrame`, `dirToLocal` and `yawFromFrame`. `toLocal` and `toGame` convert between game and local coordinates; local is world-aligned with its origin at the frame's origin, so the game's sun and sky stay right. `toFrame` and `fromFrame` convert between local and (u, v). The bar's origin is O. | Lot 57's coords use a world-aligned frame from `engine/frame.ts`. |
-| `data.ts` | Never imported, directly or through a re-export, because it statically imports Lot 57's `slice.json`. New `engine/streets.ts`: `buildStreets(kit, mats, slice, frame, opts)`, written for the bar on `data.ts`'s approach. It handles sidewalks, crosswalks, buildings and land use, and copies the class road widths (`ROAD_W`, L14, marked as a copy). **Motorways and bridges (ours; `data.ts` draws no motorway but its own CA-57 bridge and reads no `br`, `lv` or `tn`: L14).** Motorway carriageways are drawn 14 m wide one-way (28 m otherwise; every I-5 piece here is one-way), the width the trees' rule already uses, and motorway links 8 m one-way (16 m otherwise); other links take their class's width. Every drivable piece lies on the ground, as `data.ts` lays its ribbons, except in three cases. (1) Over its `br` spans it's a deck: a 1 m slab whose top is 7.6 m up, its ribbon on top, with a round pier every 28 m (the deck `data.ts` gives its CA-57, L14, and the piers `sportsbar_sets.py`'s cost model counts). (2) Between ground and deck it ramps at 5%, so over 152 m, along the drivable network: a point's height is 7.6 × max(0, 1 − D / 152) m, D being its distance along the network to the nearest `br` span, so every piece that meets at a connector has the same height there; a ramp's sides run down to the ground as an embankment. (3) Its `tn` spans aren't drawn (the underpasses of Disney Way, seg 221, and of link 562). On this slice the rule raises no street but motorway pieces (the I-5's 183, 244 and 362 and link 591 ramp between bridges), and every crossing without a junction is at least 5.5 m apart in height (a 1 m deck over 4.5 m of headroom) or in a tunnel span (5 of them); `sportsbar_sets.py` checks both. The Katella bridge polygon (infra 92) is a slab under the decks, from 6.6 to 7.55 m, so its top never fights theirs. So the I-5's five near carriageway pieces (560, 362, 222, 358, 438) and seven near links (360, 361, 365, 424, 425, 561, 562) are all drawn in the near set, and the light streams run on the carriageways at their drawn height. `opts` are the view box, the glazed sectors and the near radius (210 m) that pick the near set, `dropSegs`, `dropBld`, `keepHost`, the kerb rules, the far set's detail (`'simple'` at Low and HD, `'full'` at Ultra; switching to or from Ultra rebuilds the far batches) and an `extras(slice, frame)` hook. It builds two sets of batches, and both are drawn in every state: **the near set** in detail, every feature on every layer with any part in the glazed sectors within 210 m of the unit's centre; and **the far set**, the rest of the slice, simple (untextured, in vertex colour, merged into 4 batches) at Low and HD, full at Ultra (see "The allocations"). They're built apart because they're drawn at different detail. `tools/anaheim/sportsbar_sets.py` counts both from the slice, and S1 checks the built sets against that count. | `data.ts` becomes Lot 57's call to `engine/streets.ts`, with its extras: the Dupont block ring, the construction fence and the light towers. |
+| `data.ts` | Never imported, directly or through a re-export, because it statically imports Lot 57's `slice.json`. New `engine/streets.ts`: `buildStreets(kit, mats, slice, frame, opts)`, written for the bar on `data.ts`'s approach. It handles sidewalks, crosswalks, buildings and land use, and copies the class road widths (`ROAD_W`, L14, marked as a copy). **Motorways and bridges (ours; `data.ts` draws no motorway but its own CA-57 bridge and reads no `br`, `lv` or `tn`: L14).** Motorway carriageways are drawn 14 m wide one-way (28 m otherwise; every I-5 piece here is one-way), the width the trees' rule already uses, and motorway links 8 m one-way (16 m otherwise); other links take their class's width. Every drivable piece lies on the ground, as `data.ts` lays its ribbons, except in three cases. (1) Over its `br` spans it's a deck: a 1 m slab whose top is 7.6 m up, its ribbon on top, on round piers (the deck `data.ts` gives its CA-57, L14). The piers stand every 28 m along a span, the first 14 m in, 0.9 m in radius, as `data.ts` places its CA-57's (`along(pts, 28)`, a 0.9 m cylinder), except that a pier whose footprint meets the ribbon of a piece drawn beneath the deck there (lower by at least the 5.5 m clearance, Katella's 24 m carriageway among them) is left out. (2) Between ground and deck it ramps at 5%, so over 152 m, along the drivable network: a point's height is 7.6 × max(0, 1 − D / 152) m, D being its distance along the network to the nearest `br` span, so every piece that meets at a connector has the same height there; a ramp's sides run down to the ground as an embankment. (3) Its `tn` spans aren't drawn (the underpasses of Disney Way, seg 221, and of link 562). On this slice 29 drivable pieces have `br` spans and are drawn as decks over them: 21 motorway pieces and links (the I-5's carriageways 222, 232, 358, 438 and 560 among them), and 8 tertiary pieces of East Gene Autry Way (447, 470, 566, 574, 576, 578, 598 and 600), all 8 in the far set, beyond 210 m. A ramp raises only four pieces without a span of their own, all motorway: the I-5's 183, 244 and 362 and link 591. Every crossing without a junction is at least 5.5 m apart in height (a 1 m deck over 4.5 m of headroom) or in a tunnel span (5 of them). `sportsbar_sets.py` checks both and counts the piers the rule leaves out. The Katella bridge polygon (infra 92) is a slab under the decks, from 6.5 to 7.55 m: its top is 5 cm under the decks' tops (7.6 m) and its underside 0.1 m under theirs (6.6 m), so neither face fights a deck's where they overlap. So the I-5's five near carriageway pieces (560, 362, 222, 358, 438) and seven near links (360, 361, 365, 424, 425, 561, 562) are all drawn in the near set, and the light streams run on the carriageways at their drawn height. `opts` are the view box, the glazed sectors and the near radius (210 m) that pick the near set, `dropSegs`, `dropBld`, `keepHost`, the kerb rules, the far set's detail (`'simple'` at Low and HD, `'full'` at Ultra; switching to or from Ultra rebuilds the far batches) and an `extras(slice, frame)` hook. It builds two sets of batches, and both are drawn in every state: **the near set** in detail, every feature on every layer with any part in the glazed sectors within 210 m of the unit's centre; and **the far set**, the rest of the slice, simple (untextured, in vertex colour, merged into 4 batches) at Low and HD, full at Ultra (see "The allocations"). They're built apart because they're drawn at different detail. `tools/anaheim/sportsbar_sets.py` counts both from the slice, and S1 checks the built sets against that count. | `data.ts` becomes Lot 57's call to `engine/streets.ts`, with its extras: the Dupont block ring, the construction fence and the light towers. |
 | `venue.ts` | `import type { Seat, Spot, Tree }` only. Types are erased, so no code comes with them. `Seat` and `Spot` are the base of the smart objects' slots. The bar's seats use Lot 57's seat kinds (L19: booth benches `'bench'`; the patio's bench tables `'picnic'`; bar, window-rail and patio-rail stools `'stool'`; high-top stools `'hightop'`), so `Player.sit()` and `goTo()` take them unchanged. Its standing spots widen `Spot.kind` in the bar's own `Slot` type. | The types move to `engine/venue-types.ts`. |
 | `main.ts` | Can't be imported. `venues/sportsbar/quality.ts` holds a copy of `PRESET`, marked `// COPY of lot57 main.ts PRESET: E0 replaces it with engine/quality.ts`, and is re-synced at S4. Its High and Ultra rows are L1 as measured, re-synced by S1's re-measure and again at S4; its Low row differs from L1 on purpose, per decision 15 (below the table). The bar's `venues/sportsbar/main.ts` follows `main.ts`'s structure for `applyQuality` and the loop, under the same marker, but its choices (the parked cars' quality and count, your avatar's level of detail, the trees, and what a change of people quality does to the crowd: every body rebuilt at the new quality on the time budget, under "People are slow to build") are its own and are stated in this plan, not inherited. The game modules Lot 57's page imports from `src/game/` (`Environment`, `configureTextures`, `Props`, the records board) are the game's, so the bar imports them directly. | `engine/quality.ts` (`PRESET` and `applyQuality`) and `engine/page.ts` (the loop and hooks), shared by both pages. |
 | `index.html`, `vite.config.ts` | The bar has its own `src/onfoot/sportsbar.html` and `src/onfoot/vite.sportsbar.config.ts`, with a copy of the single-file plugin. It writes `dist/sportsbar/sportsbar.html`, a different folder from Lot 57's `dist/onfoot/`, so neither build empties the other's. Its root is `src/onfoot/`, like Lot 57's, so it sets `build.rollupOptions.input` to `sportsbar.html` (the default input would be Lot 57's `index.html`), and its dev server uses port 5758 (Lot 57's is 5757: L20). It keeps `json: { stringify: true }`, so the slice is embedded as one JSON string. | The plugin moves to `engine/`. |
 | `people/` | Not edited before E0: see "Who changes `src/onfoot/people/`". | The bar's clips join `people/anim.ts`. |
 | (not written yet) P1b: Order, Join, Leave, held items. P1c: NPCs, groups, the crowd, staff. | If they exist when S2a and S3a start, the bar imports them through the facade like the rest. If not, it writes them in `engine/` (`actions.ts`, `held.ts`, `groups.ts`, `crowd.ts`, `staff.ts`) from `PROJECT_OC_ON_FOOT.md`'s spec, and says so in `PROJECT_OC_HANDOFF.md`. | One copy survives: Lot 57's if it landed first, otherwise the bar's. |
 | (new) | `engine/sim/`: needs, moods, personality, smart objects, the action queue, utility AI, interactions, relationships and memory, the TV leagues, tokens, saving, fillers and the clip layer. Written engine-first; the bar turns it on. | Unchanged. |
-| (new: what's drawn inside and outside) | `venues/sportsbar/visibility.ts`, the bar's own, written in S1 (cars and streets) and extended in S3a (people). It owns the rule in "Inside, outside and overhead": once a frame, after the camera moves, it works out the state from the camera and the view, and sets `parked.near`, swaps your car and its stand-in, picks each live person's draw mode (LOD 0 for your avatar at Ultra only, LOD 1 or 2, a card, or hidden) and whether they cast, and freezes or frees the Ultra pool spots' shadow maps. **The street sets and the street trees don't change with the state:** both street sets and all ten trees are drawn inside, outside and overhead, so no street feature can appear or vanish at a door. Two more duties: (1) **What casts doesn't change with the state either.** At HD and Ultra, in every state, the sun's map takes the venue's casting batches, both street sets, the trees, the parked cars and your car as they're drawn (detailed, or as stand-ins), the item meshes, and `castPeople` people (HD 6, Ultra 20): your avatar, wherever it is, and the others outside the unit nearest the camera (the overhead's target in overhead), with LOD 1 bodies. Nobody else inside the unit casts: the roof's shadow covers them, and their contact shadows are the blobs. So stepping through a door changes no shadow; the only shadows that change there are those of the swapped objects themselves (a stand-in's for a detailed car's), which are among the listed swaps. A guest who walks out to the patio joins the casting set as they cross, wherever the camera is. Lot 57's stand-ins cast and its `applyQuality` puts every mesh's `castShadow` back from `userData.cast` (L5, L10), and the people builder casts LOD 0 and LOD 1 bodies and not LOD 2 ones (the contract); so after `applyQuality`, and whenever the casting set changes, `visibility.ts` sets people's casting itself, on for the set and off for everyone else, and keeps your avatar's shadow body (under "Who is at which LOD"). `vis()` reports what casts. Keeping the cars, the items and the people casting while you're inside costs HD's inside frame 18 calls and 93.1k and Ultra's 57 calls and 376.5k (the sums), both inside their margins. (2) **Restyling at Low.** `RetroStyle` styles each scene child once, by its epoch marker, so a mesh that appears later under an already-styled group would render with its standard material under `RetroPass`. With the Retro style attached, it calls `retro.restyle(group)` after every change it makes to a subtree: each person's LOD swap or body rebuild, each card-to-mesh swap, and each swap of your car and its stand-in. `restyle()` is idempotent, so a repeat costs one traverse. A LOD 0 body's `hair-cap` and `hair-cards` are marked `retroSkip` before that restyle (see "Who is at which LOD"). It reads `def.budgets`. Nothing in `lot57/` changes. | `engine/visibility.ts`; Lot 57 can use it for the Shed. |
+| (new: what's drawn inside and outside) | `venues/sportsbar/visibility.ts`, the bar's own, written in S1 (cars and streets) and extended in S3a (people). It owns the rule in "Inside, outside and overhead": once a frame, after the camera moves, it works out the state from the camera and the view, and sets `parked.near`, swaps your car and its stand-in, picks each live person's draw mode (LOD 0 for your avatar at Ultra only, LOD 1 or 2, a card, or hidden) and whether they cast, and freezes or frees the Ultra pool spots' shadow maps. **The street sets and the street trees don't change with the state:** both street sets and all ten trees are drawn inside, outside and overhead, so no street feature can appear or vanish at a door. Two more duties: (1) **What casts into the sun's map doesn't change with the state either.** At HD and Ultra, in every state, the sun's map takes the venue's casting batches, both street sets, the trees, the parked cars and your car as they're drawn (detailed, or as stand-ins), the item meshes, and `castPeople` people (HD 6, Ultra 20): your avatar, wherever it is, and the others outside the unit nearest the camera (the overhead's target in overhead), **each casting with its LOD 1 body**: a caster drawn at LOD 1 casts as drawn, and one drawn at LOD 2 keeps its LOD 1 under it as a hidden caster, the LOD 2 not casting; the build queue builds every caster's LOD 1 (see "People are slow to build"), and until it lands that person isn't in the casting set. Outside, the people drawn as meshes always include the casting people, so no caster is a card on one side of a door and a mesh on the other; inside and overhead everyone built is a mesh. Nobody else inside the unit casts into the sun's map: the roof's shadow covers them, and their contact shadows are the blobs. At Ultra the people at a pool table's slots cast into that table's spot map alone (see "Shadows in three.js 0.160.1"). So stepping through a door changes no shadow in the sun's map; the only shadows that change there are those of the swapped objects themselves (a stand-in's for a detailed car's), which are among the listed swaps; a caster's drawn LOD can change at a door, but it casts with the same LOD 1 body on both sides. A guest who walks out to the patio joins the casting set as they cross, wherever the camera is. Lot 57's stand-ins cast and its `applyQuality` puts every mesh's `castShadow` back from `userData.cast` (L5, L10), and the people builder casts LOD 0 and LOD 1 bodies and not LOD 2 ones (the contract); so after `applyQuality`, and whenever the casting set or a caster's level changes, `visibility.ts` sets casting itself: on for the `lod1` of each person in the set (shown, or hidden under its LOD 2), off for everyone else and for every LOD 0 and LOD 2 mesh, and it sets up the hidden casters and each mesh's map membership ("Shadows in three.js 0.160.1"). `vis()` reports each map's members. Keeping the cars, the items and the people casting while you're inside costs HD's inside frame 23 calls (18 drawn into the sun's map and 5 empty ones for the casters' hidden LOD 1s in the pass) and 93.1k, and Ultra's 209 calls (57 drawn into the sun's map, 114 empty ones in the two pool spots' maps and 38 for the casters' hidden LOD 1s in the pass and GTAO's) and 376.5k (the sums), both inside their margins. (2) **Restyling at Low.** `RetroStyle` styles each scene child once, by its epoch marker, so a mesh that appears later under an already-styled group would render with its standard material under `RetroPass`. With the Retro style attached, it calls `retro.restyle(group)` after every change it makes to a subtree: each person's LOD swap or body rebuild, each card-to-mesh swap, and each swap of your car and its stand-in. `restyle()` is idempotent, so a repeat costs one traverse. A LOD 0 body's `hair-cap` and `hair-cards` are marked `retroSkip` before that restyle (see "Who is at which LOD"). It reads `def.budgets`. Nothing in `lot57/` changes. | `engine/visibility.ts`; Lot 57 can use it for the Shed. |
 | (the game's Retro style, `src/game/render/style.ts`, on `claude/modes`) | Imported directly, like `Environment`, once `claude/modes` has merged into `claude/sports-bar`: it's a game module, not Lot 57's. At Low the bar's page makes one `RetroStyle(renderer)`, calls `attach(scene, roots)`, and each frame `render(scene, camera, world)` in place of `renderer.render`, with `world` from the game's `Environment`: its `RetroWorld` fields are the sun direction (`sunDir`), `daylight`, `saturation`, the realistic `sky` to hide, the hemisphere light (`hemi`), the cloud deck (`clouds`), which it alpha-cuts to hard edges while it shows, and the lens `flare`, which it hides. The bar passes all seven. Leaving Low calls `detach()`. The module also has `restyle(o)`, `unstyle(o)` and `watch(roots)`; `stylizer.isMine(m)` says whether a material is one of its toon materials; a mesh with `userData.retroSkip` is left alone; and a material with its own shader hook is converted only if the hook fits a toon shader (the hook-fit rule: a hook that writes a physically based identifier, such as `computeSpecularOcclusion`, keeps its own material). The rule doesn't catch a hook that sets a variable only the physical shader declares: the LOD 0 hair cap's and hair cards' hooks pass it, but their toon versions wouldn't compile, so the bar marks those two meshes `retroSkip` (see "Who is at which LOD"). As read again on 2026-10-21 at about 10:35 UTC (`style.ts` blob 5a1598bdd2, changed at 09:52 and 10:19 since the 05:53 read of d4209454c5; the API above is unchanged), uncommitted in the `tsu-modes` worktree (RS1); S1's re-measure reads it again. | Unchanged: Lot 57's P1d uses the same module. |
 
 The `PRESET` values (L1, as measured; S1 re-measures them):
@@ -617,13 +661,14 @@ export interface Budget {
   frameCalls: number; frameTris: number;      // the whole frame: the pass plus shadow maps, GTAO's pass and post
   live: number; staff: number;  // simulated people in the room, and how many of them may be staff
   drawn: Record<VisState, { lod0: number; lod1: number; atLod: number }>;
-                                // atLod: how many live people are drawn as meshes (the nearest the camera, or the
-                                // overhead's target); the first lod0 and lod1 of them at those LODs, the rest LOD 2;
-                                // everyone else a card. Inside and overhead it's the live cap. lod0 is 0 or 1:
+                                // atLod: how many live people are drawn as meshes (outside: the casting people first,
+                                // then the nearest the camera); the lod0 and lod1 nearest the camera (the overhead's
+                                // target) at those LODs, the rest LOD 2; everyone else a card. Inside and overhead
+                                // it's the live cap. lod0 is 0 or 1:
                                 // only your avatar, at Ultra (no NPC LOD 0; see "Who is at which LOD")
   cars: Record<VisState, { near: number; yours: 'detailed' | 'standin' }>;   // parked.near and your car
   castPeople: number;           // who casts into the sun's map, in every state: your avatar and the others outside the
-                                // unit nearest the camera (the overhead's target), with LOD 1 bodies
+                                // unit nearest the camera (the overhead's target), each with its LOD 1 body
   fillerMinM: number;           // no filler stands or sits closer to the player than this
 }
 export interface Schedule {
@@ -1408,8 +1453,9 @@ The `Schedule` writes it that way: Friday and Saturday's hours are `[11, 26]` an
   packed on a phone too. They come in two tiers:
   - **Live people:** simulated and animated, up to the preset's cap, staff included. The cap is 36 at Low (at most 5
     staff), 70 at HD and 100 at Ultra. All of them are simulated wherever the camera is; how they're drawn depends on
-    where the camera is (see "Inside, outside and overhead"): from outside the unit, only the nearest 12, 24 or 40 are
-    meshes and the rest are cards.
+    where the camera is (see "Inside, outside and overhead"): from outside the unit, 12, 24 or 40 are meshes (the
+    casting people first, then the nearest the camera) and the rest are cards. A change of graphics moves the live count
+    to the new cap on its frame (see "People are slow to build").
   - **Fillers** make up the rest (next).
 - **On screen:** the chip, always visible, reads "Simulated crowd · Lively" (Quiet, Easy, Lively, Packed). Tapping it
   says: "Stoppage Time is a fictional sports bar. The crowd, the matches on the screens and the people here are
@@ -1425,20 +1471,28 @@ Fillers are guests with no simulation. Lot 57's plan uses 40 impostors on Low fo
   - They're never regulars and never anyone the player has met.
 - **How they're drawn.** One `InstancedMesh` of camera-facing quads (2 triangles each), with blob shadows in the shared
   instanced blob mesh.
-  - **The atlas.** Its cells come from 8 seeded people at LOD 2, each in 3 poses (seated, standing, cheering), rendered
-    from 8 directions at load (192 cells).
+  - **The atlas.** Its cells come from **the atlas eight**, the one name for the 8 bodies it's drawn from: the 8 live
+    people nearest the camera (at load, nearest the spawn) when it's rendered, each at LOD 2, in 3 poses (seated,
+    standing, cheering), from 8 directions (192 cells).
   - **Atlas size.** At Low it's a 1024 × 1024 render target with 48 × 96 px cells. At HD and Ultra it's 2048 × 2048
     with 96 × 192 px cells.
   - **Per instance:** the position, the facing, the look and the pose. The shader picks the direction cell from the
     camera's bearing.
   - **The cost** is 1 draw call for all of them, 2 triangles each, plus their blobs.
-  - **Building it.** The atlas is rendered before the first frame, behind the loading screen, from the 8 LOD 2 bodies
-    built then (see "People are slow to build"), in the preset's own look. At Low those bodies are toon-styled first (`retro.restyle()` on them, under the same lights), so the cards
+  - **Building it.** The atlas is rendered before the first frame, behind the loading screen, from the atlas eight's
+    LOD 2 bodies, built then (see "People are slow to build"), in the preset's own look. At Low those bodies are toon-styled first (`retro.restyle()` on them, under the same lights), so the cards
     match the toon people; the cards' own material is a shader material, which the Stylizer leaves as it is, and
     `RetroPass` then grades cards and people alike. At HD and Ultra the bodies keep their standard materials. A change of
-    people quality (Low to or from HD or Ultra) renders the atlas again behind the switch sheet, from the same 8 nearest
-    bodies rebuilt at the new quality, in the new mode's look, at the new size (see "People are slow to build"). Between
-    HD and Ultra the people quality doesn't change, and the atlas is kept.
+    people quality (Low to or from HD or Ultra) renders the atlas again behind the switch sheet, from a new atlas eight
+    (chosen once the live count is at the new cap) rebuilt at the new quality, in the new mode's look, at the new size
+    (see "People are slow to build"). Between HD and Ultra the people quality doesn't change, and the atlas is kept.
+- **Held guests.** A change of graphics to a lower cap holds the live people over it (the rule is under "People are
+  slow to build"). A held guest is drawn and placed exactly like a filler, a card in this mesh with no simulation, but
+  keeps their identity, frozen needs, relationships and memories, so a regular, or someone you've met, stays that
+  person. Held guests count as guests: live, held and fillers together make the target. When you come near a held
+  guest's table or spot, or tap them, they come back as themselves through the hand-over below, not as a new walk-in,
+  and a switch to a higher cap brings held guests back before any filler. The crowd model sends them home off screen,
+  as it removes fillers when the target falls.
 - **Cards for live people.** From outside the unit, live people past the preset's mesh count (see "Inside, outside and
   overhead"), and anyone whose body isn't built yet, in any state, are drawn as cards in this same mesh, each with the atlas look nearest its colours, posed by what it's
   doing. They keep their simulation. Through the glazing at a distance, a card reads as a person.
@@ -1446,13 +1500,15 @@ Fillers are guests with no simulation. Lot 57's plan uses 40 impostors on Low fo
   budget's `fillerMinM`). In the overhead view, that distance is measured from the camera's target.
   - A table is all live or all fillers, never mixed.
   - No fillers go on the patio when it's closed for rain.
-  - How many: `fillers = min(target guests - live guests, free eligible slots)`.
+  - How many: `fillers = min(target guests - live guests - held guests, free eligible slots)`.
 - **When you come near.** When the player comes within that distance of a filler's table or spot, or taps a filler,
   that table or spot is handed to live guests. A booth, high-top or patio table moves as one unit of 4; a stool or a
   standing spot moves on its own.
   - **The new guests** are walk-ins, made in the same frame from a pool of 6 pre-built spare bodies (LOD 2).
   - **If that would pass the live cap,** the farthest table of live walk-ins is demoted to fillers first, and their
-    bodies join the pool. That table must be seated and idle, with no regulars and nobody the player has met.
+    bodies join the pool. That table must be seated and idle, with no regulars and nobody the player has met. (This is
+    the in-play rule for one table at a time. A change of graphics can shed up to 64 people at once, so it holds them
+    by its own, wider rule.)
   - **The swap** happens on a frame when the slot is off screen, or at the distance if it's still on screen.
   - A tapped filler's menu opens once the swap is done.
 - **Reactions.** On a goal or a touchdown, each filler who can see a screen on that channel switches to the cheering
@@ -1640,17 +1696,23 @@ The bar meets the maximum-graphics standard Lot 57's P1d sets, in each mode's ow
 each. The shadow, post and light settings are the bar's `PRESET` copy (see the module map): Lot 57's High and Ultra
 (L1), and Low per decision 15. If P1d changes them, the copy follows at S4. Low's look needs the Retro module. Until
 `claude/modes` merges into `claude/sports-bar`, Low draws with the standard materials at full resolution; S4 turns the
-Retro style on. **What a switch does to people.** Low draws people at phone quality, HD and Ultra at high quality, so
-going between Low and either of the others rebuilds every body in the room, in this order: your avatar, the 8 bodies
-the filler atlas is drawn from and the atlas, behind a paused switch sheet; then every other live body and the 6
-spares on the time budget, with cards standing in meanwhile (see "People are slow to build"). So HD and Ultra are always drawn, and measured, with their own
-high-quality people. Between HD and Ultra no body is rebuilt; only the LOD counts change.
+Retro style on. **What a switch does to people** (the full rule is under "People are slow to build"). Two things, in
+this order, behind a paused switch sheet:
+1. **The live count moves to the new cap** (36, 70 or 100) on the switch frame. Going up, held guests and then fillers
+   become live, nearest the camera first, drawn as cards and queued. Going down, the live people over the cap are held,
+   farthest first; never the person you're talking to or your party.
+2. **Bodies at the new quality.** Low draws people at phone quality, HD and Ultra at high quality, so going between Low
+   and either of the others rebuilds every body in the room: your avatar, the atlas eight and the atlas behind the
+   sheet; then every other live body and the 6 spares on the time budget, with cards standing in meanwhile.
+
+So HD and Ultra are always drawn, and measured, with their own high-quality people. Between HD and Ultra no body is
+rebuilt; only the cap and the LOD counts change.
 
 | | Low (Retro, the phone default) | HD | Ultra (an entitlement) |
 | --- | --- | --- | --- |
 | Resolution | Full: render scale 1, pixel ratio up to 2 and never under 1 | Render scale 1, pixel ratio up to 2 | The same |
 | Look | Retro: toon materials, ink outlines, a limited palette with dither, a banded sky | Realistic | Realistic, the maximum |
-| Interior light | All fixtures baked into vertex colour from `Emitter`s (pendants, neon, screens, back bar, LED strip), then lit in two tones by the toon materials. Emissive surfaces. No real-time lights indoors. | Plus 4 real lights: the two pool pendants as spot lights, a TV-wall fill and the back bar | Plus a rect-area light for the TV wall glow and the back bar. The pool spots cast shadows. Up to 8 real lights. |
+| Interior light | All fixtures baked into vertex colour from `Emitter`s (pendants, neon, screens, back bar, LED strip), then lit in two tones by the toon materials. Emissive surfaces. No real-time lights indoors. | Plus 4 real lights: the two pool pendants as spot lights, a TV-wall fill and the back bar | Plus a rect-area light for the TV wall glow and the back bar. The pool spots cast shadows, of their own table, lamp and players only (see "Shadows in three.js 0.160.1"). Up to 8 real lights. |
 | Outdoor light | The sun and the Retro sky. Hard-edged blob shadows; no shadow map (see the budgets, and "Owner questions") | Sun shadows, 2048 map | 4096 map, soft PCF |
 | Post | `RetroPass` only: one full-screen draw. No composer, no bloom, no MSAA | Bloom, and 4× MSAA on the render target | Plus GTAO |
 | Materials | Toon versions of the standard materials. 512 px textures: near-uniform ones flattened to their average colour, the rest posterized (the module's `'auto'`) | 1024 px. A reflection cube baked once at load from the interior, for wood, brass and glass. | Clearcoat on the bar top and pool rails. Sheen on booth vinyl and cloth. 16× anisotropic filtering. |
@@ -1740,7 +1802,9 @@ servers' trays, the pool balls and cues, the darts and the shuffleboard pucks.
   6 calls.
 - **Who shows them.** Items in hands are drawn only for people drawn as meshes; a card shows none.
 - **Shadows.** At HD and Ultra they cast into the sun's map in every state, as the cars do, so no item's shadow
-  changes at a door (`visibility.ts`'s casting rule). They aren't in the pool spots' maps.
+  changes at a door (`visibility.ts`'s casting rule). They're members of the sun's map only. Being
+  `frustumCulled = false`, all six are tested in every map, so at Ultra each pool spot's map draws them as six empty
+  calls with 0 triangles (see "Shadows in three.js 0.160.1").
 - **The sums** count every model at its cap, since an instanced mesh is drawn whole when its bounding sphere is in
   view.
 - **Never culled by a stale sphere.** three.js 0.160 computes an `InstancedMesh`'s bounding sphere once, from the
@@ -1792,22 +1856,22 @@ same in every state (the table's casting row), so the only shadows that change t
 
 | | Inside | Outside | Overhead |
 | --- | --- | --- | --- |
-| Live people drawn as meshes | All of them (the live cap), at their LODs | The nearest to the camera, inside the unit or out: Low 12, HD 24, Ultra 40. Everyone else is a card (see "Fillers"). | All of them, at their LODs |
+| Live people drawn as meshes | All of them (the live cap), at their LODs | Low 12, HD 24, Ultra 40: first the casting people (HD 6, Ultra 20), so no caster is ever a card, then the nearest to the camera, inside the unit or out. Everyone else is a card (see "Fillers"). | All of them, at their LODs |
 | LOD 0 | **No NPC at LOD 0 on any preset,** so no NPC's face moves (see "Who is at which LOD"). Ultra 1: your avatar in third person. Low and HD none. | As inside: Ultra 1, your avatar; Low and HD none | None: the camera is 8 to 35 m away |
 | LOD 1 (the nearest, after LOD 0; the person you talk to is always one of them) | Low 7, HD 17, Ultra 41 | Low 7, HD 7, Ultra 19 | Low 6, HD 16, Ultra 40, nearest the target |
 | Parked cars (`parked.near`) | All stand-ins (0) | Detailed: Low 4, HD 12, Ultra 36; the rest stand-ins | Low 0; HD 12; Ultra 36 |
 | Your car | Its stand-in, except at Ultra (detailed) | Detailed | Its stand-in at Low; detailed at HD and Ultra |
 | Streets and street trees | All: the near set in detail, the far set simple (full at Ultra), the 10 trees | The same | The same |
-| What casts into the sun's map (HD and Ultra; Low has no map) | The same as outside, so no shadow changes at a door: the venue's casting batches, all the streets, the trees, the parked cars and your car as they're drawn here (stand-ins; your car detailed at Ultra), the items, and HD 6 or Ultra 20 people: your avatar and the others outside the unit nearest the camera, with LOD 1 bodies | The venue, all streets, the trees, your car, the parked cars, the items, and HD 6 or Ultra 20 people: your avatar and the others outside the unit nearest the camera, with LOD 1 bodies | As outside, with the people nearest the target |
-| Ultra's pool spots | They update: their table, its lamp, and the people within 2 m (with LOD 1 bodies) | Frozen (`shadow.autoUpdate = false`): the room is seen only through glass | They update |
+| What casts into the sun's map (HD and Ultra; Low has no map) | The same as outside, so no shadow changes at a door: the venue's casting batches, all the streets, the trees, the parked cars and your car as they're drawn here (stand-ins; your car detailed at Ultra), the items, and HD 6 or Ultra 20 people: your avatar and the others outside the unit nearest the camera, each with its LOD 1 body (a hidden caster under a LOD 2) | The venue, all streets, the trees, your car, the parked cars, the items, and HD 6 or Ultra 20 people: your avatar and the others outside the unit nearest the camera, each with its LOD 1 body | As outside, with the people nearest the target |
+| Ultra's pool spots | They update. Each map draws only its members: its table, its lamp and the people at its 8 slots (4 players, 4 watchers; your avatar among them when you play or watch there), each with its LOD 1 body. Every other caster is an empty call there (see "Shadows in three.js 0.160.1") | Frozen (`shadow.autoUpdate = false`): the room is seen only through glass. The pool slots' people don't cast | They update, as inside |
 
-- **Your avatar's LOD 0 casts with its LOD 1 body.** The LOD 1 is kept on layer 1, which the sun's shadow camera sees
-  and the main camera doesn't, as Lot 57's page does for your first-person body (L9). So a LOD 0 is never drawn into a
-  shadow map. `setLod(0)` hides the LOD 1, so the bar shows it again after every `setLod` (see "Who is at which LOD":
-  your avatar's shadow body).
-- **Your avatar in third person** counts as one of the people at LOD 0 (Ultra) or LOD 1. In first person it's on layer
-  1: at HD and Ultra it casts in every state, inside included, so its shadow doesn't change at a door, and at Low
-  there's no map for it to cast into.
+- **Your avatar's shadow.** At HD and Ultra your avatar casts in every state, inside included, so its shadow doesn't
+  change at a door; at Low there's no map. Which body casts: in third person at HD, its LOD 1 as drawn; in third
+  person at Ultra, where its LOD 0 shows, its LOD 1 kept under the LOD 0 as a hidden caster, with no LOD 0 mesh
+  casting; in first person (and whenever Lot 57's `hide` hides it in third person), its shown body as a hidden caster.
+  A hidden caster is drawn into the shadow maps and into no colour pass (see "Shadows in three.js 0.160.1"). Lot 57's
+  layer-1 body (L9) casts into no map in three.js 0.160.1, so the bar doesn't use layers for shadows.
+- **Your avatar in third person** counts as one of the people at LOD 0 (Ultra) or LOD 1.
 - **No LOD 0 at Low or HD.** No NPC gets a LOD 0 until the people builder can build one without freezing the page, and
   your avatar's LOD 0 is Ultra's only (see "Who is at which LOD"). That also keeps Low's outside column clear of the
   71k a phone LOD 0 would add beside your car's 65.6k.
@@ -1818,6 +1882,87 @@ as the module map's `lot.ts` row computes it for stalls facing 0 or π, from L8)
 unit's north-east corner, where the walk to the door turns. That's Lot 57's spawn, with the bar's stall. It's the
 outside state, so the first frame falls under the outside column, and the `stall` pose below is its worst case. The
 URL's `at`, `yaw`, `pitch` and `view` work as on Lot 57's page.
+
+### Shadows in three.js 0.160.1
+
+Three facts about three.js 0.160.1's shadow pass (read in `node_modules/three`, version 0.160.1) shape every casting
+rule above:
+- **Layers don't pick casters.** `WebGLRenderer.render` passes the main camera to `shadowMap.render`
+  (`WebGLRenderer.js`:1201), and `WebGLShadowMap`'s `renderObject` tests `object.layers.test(camera.layers)` with that
+  main camera (`WebGLShadowMap.js`:335). A shadow camera's layers are never read. So a mesh on a layer the main camera
+  doesn't see casts into no map, and enabling a layer on a shadow camera does nothing. The bar never uses layers for
+  shadows.
+- **One `castShadow` for every light.** Each map draws every `castShadow` mesh whose bounding sphere meets its light's
+  frustum, and every `castShadow` mesh with `frustumCulled = false` wherever it is (`WebGLShadowMap.js`:339). The
+  people builder's meshes (`person.ts` lines 447 and 538), the six item meshes, the cards and the blobs are
+  `frustumCulled = false`, and the venue's and the streets' batches have spheres as wide as the site. An object
+  hidden by `visible = false`, on itself or an ancestor, is skipped whole (`WebGLShadowMap.js`:333), so a level that
+  `setLod` hid costs no map anything.
+- **Every `renderer.render` redraws the maps,** unless `shadowMap.autoUpdate` and `shadowMap.needsUpdate` are both
+  false (`WebGLShadowMap.js`:75). At Ultra GTAO's normal pass is a second `renderer.render` of the scene each frame
+  (`GTAOPass.js`:471), and each of the filler atlas's 192 renders is another.
+
+So the bar's page does four things:
+1. **The maps are drawn once a frame.** It sets `renderer.shadowMap.autoUpdate = false` and, once a frame, just before
+   the composer runs (or `RetroStyle.render` at Low under owner question 1), `renderer.shadowMap.needsUpdate = true`.
+   The frame's first render draws the maps and clears the flag (`WebGLShadowMap.js`:197), so GTAO's normal pass, the
+   atlas renders and `stats().pass`'s measuring render draw none. The sums count each map once a frame on that basis.
+   A frozen pool spot also has `shadow.autoUpdate = false` and is skipped (`WebGLShadowMap.js`:110).
+2. **Hidden casters.** A body that should cast but not be seen stays visible, on layer 0, with `castShadow` on, and a
+   pair of hooks on its mesh hides it from every colour pass: `onBeforeRender` saves its geometry's `drawRange.count`
+   and sets it to 0, and `onAfterRender` puts it back. three.js 0.160.1 calls them around each colour draw
+   (`WebGLRenderer.js`:1563 and 1588), GTAO's normal pass included (its override material goes through the same
+   `renderObject`), and still issues the empty draw (`renderBufferDirect` returns early only for a negative or infinite
+   count, `WebGLRenderer.js`:834). So a hidden caster costs one empty call, 0 triangles in `renderer.info`, in each
+   colour pass. The shadow pass calls `onBeforeShadow`, not `onBeforeRender` (`WebGLShadowMap.js`:359 and 373), so it
+   casts in full. (A material with `colorWrite` and `depthWrite` off wouldn't do: its triangles would still be counted,
+   and GTAO's override material would draw it into the normal and depth target.) The hidden casters:
+   - **Your avatar's LOD 1 under its LOD 0** (Ultra, third person). After every `setLod(0)` on your avatar,
+     `visibility.ts` sets the LOD 1 group (the parent of the mesh named `lod1`) `visible = true`, gives `lod1` the
+     hooks and `castShadow`, and turns `castShadow` off on every LOD 0 mesh; before LOD 1 shows again, it takes the
+     hooks off. Every level is bound to the one skeleton, so the hidden LOD 1 takes every pose the LOD 0 does. Cost: one
+     empty call in the pass and one in GTAO's normal pass, in Ultra's inside and outside sums.
+   - **Your avatar's body in first person,** and in third person whenever Lot 57's `hide` hides it (HD and Ultra):
+     the bar shows its LOD 1 then, at every preset, and gives `lod1` the hooks and `castShadow`. Cost: one empty call
+     in the pass where the sums count a drawn body (a LOD 1, or at Ultra the LOD 0's 20 calls and 210k), so no column
+     grows. At Low, with no map, the body is simply `visible = false`.
+   - **A caster's LOD 1 under its LOD 2** (HD and Ultra). Every caster casts with a LOD 1 body: the sun's casting
+     people and, at Ultra, the pool-slot people. One drawn at LOD 2 keeps its LOD 1 group visible under it, `lod1` with
+     the hooks and `castShadow`, and its `lod2` not casting. The build queue builds every caster's LOD 1 ("People are
+     slow to build"); until it lands, that person isn't a caster. Cost: one empty call per such person in each colour
+     pass, at most HD 5, and Ultra 19 outside and 35 inside and overhead (19 sun casters besides your avatar, and 16
+     pool-slot people), in the sums.
+   - **Only under owner question 1** (a Low sun map): your car's stand-in under the detailed car, and a casting
+     person's LOD 2 under their LOD 1.
+3. **Per-light members.** Every mesh with `castShadow` on (`visibility.ts` sets them all after `applyQuality`, L10)
+   carries `userData.maps`, a bit mask (1 the sun, 2 and 4 the two pool spots), and one shared pair of hooks: `onBeforeShadow(renderer, object, camera, shadowCamera,
+   geometry)` looks the light up by its `shadowCamera` and, if the mesh isn't a member of that map, saves
+   `geometry.drawRange.count` and sets it to 0; `onAfterShadow` puts it back. three.js 0.160.1 calls both around each
+   shadow draw (`WebGLShadowMap.js`:359 to 377), so a non-member costs that map one empty call and 0 triangles. A
+   geometry shared between meshes is safe, since each count is restored right after its draw, and a mesh that already
+   has one of these hooks has it chained, not replaced (`people/` sets none, as read). The members:
+   - **The sun's map:** the casting row of the table above.
+   - **Each pool spot's map** (Ultra, inside and overhead): its table's and lamp's meshes, and the people at its 8 slots
+     (4 players and 4 watchers, your avatar's caster among them when you play or watch there), each with its LOD 1
+     body. Those people, at most 16 for both tables and all inside the unit, have `castShadow` on only while the
+     spots update, and they're members of their own spot's map alone: in the sun's map and in the other spot's they're
+     empty calls. So nobody inside the unit but your avatar casts into the sun's map.
+   - **The cost, counted as an upper bound:** every mesh with `castShadow` on is taken as tested in each pool spot's
+     map. At Ultra inside that's 177 meshes a map (the sun's 161 casters and the 16 pool people), 12 of them drawn
+     (98.8k) and 165 empty; overhead 187, 175 of them empty. The sun's map takes the 16 pool people as empty calls too.
+     With the hidden casters, Ultra's frame grows by 418 calls inside (330 in the pool spots, 16 in the sun's map, and
+     in each of its two colour passes your avatar's hidden LOD 1 and up to 35 casters' hidden LOD 1s), 40 outside and
+     436 overhead, and by no triangles. Outside, the spots are frozen and the pool people don't cast. HD has only the
+     sun's map, so nothing there is a non-member; its frame grows by the casters' 5 hidden LOD 1s.
+4. **The fallback, if the hooks can't be used** (S1's re-measure finds the internals they rest on changed, or S1's
+   shadow checks fail): your avatar's LOD 0 casts itself at Ultra, its 20 meshes in the sun's map and empty calls in
+   the pool spots' maps (never a member there, so it casts no pool-lamp shadow), and in first person your avatar casts
+   no shadow, which is logged. Ultra's frame is then 700 calls and 3,210.3k outside and 1,210 calls and 3,457.6k inside,
+   both inside 1,400 and 3.6M.
+
+**What's checked:** S1 checks your avatar's shadow in first and third person at HD and Ultra, in screenshots and in
+`stats().maps`, and that each map is drawn once a frame; S3a checks each map's calls and triangles at `door` and
+`overhead` against the sums, and each map's members in `vis()`.
 
 ### The budget poses
 
@@ -1839,15 +1984,18 @@ game (x, z), in metres. The eye height is your driver's (Lot 57's `eyeHeight`), 
   match.
 - **Seeds.** `setWeek(43)` for the TV schedule, `seed(1)` for the crowd and the regulars, and the parked cars' fill seed
   621 (Lot 57's page seeds the fill with day × 100 + hour, L6; the bar does the same).
-- **The live cap reached.** `fastForward(30)`, then `people().live` equals the preset's cap. `fastForward()` and
+- **The live cap reached.** `fastForward(30)`, then `people().live` equals the preset's cap. A change of graphics moves
+  the live count to the new cap on its frame, holding or bringing back guests (see "People are slow to build"), so this
+  holds whatever order the presets are reached in on one page. `fastForward()` and
   `pose()` first build every pending body synchronously, at the level each needs and at the preset's people quality
   (a body built at the other quality counts as pending), up to the live cap (see "People are slow to build"), so every
   pose measures the full room, at its own quality, whatever the background builds have reached. For `stall` and `patio`,
   `crowdAt('outside', n)` then seats walk-ins on the patio and the front walk until the preset's outside mesh count (12,
   24 or 40) are outside the unit.
 - **Screen sizes.** 844 × 390; also 390 × 844 for `door` and `overhead`, because portrait's 78° field of view sees more.
-- **Presets.** Low, HD and Ultra, through `setQuality` on one page; a switch between Low and HD or Ultra rebuilds
-  every body at the new quality before the pose measures it (the bullet above).
+- **Presets.** Low, HD and Ultra, through `setQuality` on one page, in any order. A switch first moves the live count
+  to the new cap, and a switch between Low and HD or Ultra rebuilds every body at the new quality before the pose
+  measures it (the bullet above).
 
 A state's column below is the worst case over its poses. Any pose that measures over its column fails the check.
 
@@ -1893,13 +2041,14 @@ and 1.1M.
 | Streets (near and far) | 30, 60k | 30, 60k | 30, 60k |
 | Street trees | 4, 10k | 4, 10k | 4, 10k |
 | Sky | 4, 5k | 4, 5k | 4, 5k |
-| **Pass** | **172 calls, 465.7k** | **171 calls, 449.5k** | **217 calls, 609.4k** |
+| The casters' hidden LOD 1s, under LOD 2 bodies ("Shadows in three.js 0.160.1"; at most 5) | 5 empty calls, 0 | 5, 0 | 5, 0 |
+| **Pass** | **177 calls, 465.7k** | **176 calls, 449.5k** | **222 calls, 609.4k** |
 | Without people or items (S1's check) | 94 calls, 174.4k | 139 calls, 328.2k | 139 calls, 328.2k |
-| Margin against 350 and 700k | 178 calls, 234.3k (33.5%) | 179 calls, 250.5k (35.8%) | 133 calls, 90.6k (12.9%) |
+| Margin against 350 and 700k | 173 calls, 234.3k (33.5%) | 174 calls, 250.5k (35.8%) | 128 calls, 90.6k (12.9%) |
 | The sun's 2048 map | The venue (50, 90k), the streets (30, 60k), the trees (4, 10k), your car's stand-in (1, 0.2k), the parked stand-ins (5, 9.3k), 6 people (6, 69.6k) and the items (6, 14.1k): 102, 253.1k | The venue (50, 90k), the streets (30, 60k), the trees (4, 10k), your car (26, 121.1k), the parked cars (15, 40.3k), 6 people (6, 69.6k) and the items (6, 14.1k): 137, 405.1k | As outside: 137, 405.1k |
 | Post (bloom and the output pass) | About 15 calls | 15 | 15 |
-| **Frame** | **289 calls, 718.9k** | **323 calls, 854.6k** | **369 calls, 1,014.5k** |
-| Margin against 500 and 1.1M | 211 calls, 381.1k (34.6%) | 177 calls, 245.4k (22.3%) | 131 calls, 85.5k (7.8%) |
+| **Frame** | **294 calls, 718.9k** | **328 calls, 854.6k** | **374 calls, 1,014.5k** |
+| Margin against 500 and 1.1M | 206 calls, 381.1k (34.6%) | 172 calls, 245.4k (22.3%) | 126 calls, 85.5k (7.8%) |
 
 **Ultra** (high quality, parked cars at high quality). The pass has 600 calls and 1.5M triangles; the frame 1,400 calls
 and 3.6M.
@@ -1915,15 +2064,34 @@ and 3.6M.
 | Streets (near and far) | 40, 120k | 40, 120k | 40, 120k |
 | Street trees | 4, 10k | 4, 10k | 4, 10k |
 | Sky | 4, 5k | 4, 5k | 4, 5k |
-| **Pass** | **266 calls, 1,202.6k** | **226 calls, 1,086.4k** | **267 calls, 1,180.0k** |
+| Hidden LOD 1s ("Shadows in three.js 0.160.1"): your avatar's under its LOD 0, and the casters' under LOD 2 bodies (at most 19 sun casters, and inside and overhead 16 pool-slot people) | 1 + 35 = 36 empty calls, 0 | 1 + 19 = 20, 0 | 35, 0 (no LOD 0 overhead) |
+| **Pass** | **302 calls, 1,202.6k** | **246 calls, 1,086.4k** | **302 calls, 1,180.0k** |
 | Without people or items (S1's check) | 139 calls, 415.4k | 159 calls, 611.4k | 159 calls, 611.4k |
-| Margin against 600 and 1.5M | 334 calls, 297.4k (19.8%) | 374 calls, 413.6k (27.6%) | 333 calls, 320.0k (21.3%) |
-| The sun's 4096 map | The venue (60, 150k), the streets (40, 120k), the trees (4, 10k), your car (26, 121.1k), the parked stand-ins (5, 9.3k), 20 people (20, 232k) and the items (6, 14.1k): 161, 656.5k | The venue (60, 150k), the streets (40, 120k), the trees (4, 10k), your car (26, 121.1k), the parked cars (15, 192.0k), 20 people (20, 232k) and the items (6, 14.1k): 171, 839.2k | As outside: 171, 839.2k |
-| The two pool spots | Each: its table and lamp (4, 6k) and up to 8 people's LOD 1 bodies (8, 92.8k). Both: 24, 197.6k | Frozen: 0 | 24, 197.6k |
-| GTAO's normal pass (the pass again) | 266, 1,202.6k | 226, 1,086.4k | 267, 1,180.0k |
+| Margin against 600 and 1.5M | 298 calls, 297.4k (19.8%) | 354 calls, 413.6k (27.6%) | 298 calls, 320.0k (21.3%) |
+| The sun's 4096 map | The venue (60, 150k), the streets (40, 120k), the trees (4, 10k), your car (26, 121.1k), the parked stand-ins (5, 9.3k), 20 people (20, 232k) and the items (6, 14.1k): 161, 656.5k drawn; and the 16 pool-slot people as empty calls (16, 0): 177, 656.5k | The venue (60, 150k), the streets (40, 120k), the trees (4, 10k), your car (26, 121.1k), the parked cars (15, 192.0k), 20 people (20, 232k) and the items (6, 14.1k): 171, 839.2k | As outside, and the 16 pool-slot people as empty calls: 187, 839.2k |
+| The two pool spots (per-light members) | Each draws its table and lamp (4, 6k) and the people at its 8 slots (8, 92.8k as LOD 1s), and takes every other caster as an empty call (165, 0): 177, 98.8k. Both: 354, 197.6k | Frozen: 0 | Each: its members (12, 98.8k) and 175 empty calls: 187, 98.8k. Both: 374, 197.6k |
+| GTAO's normal pass (the pass again; it redraws no shadow map) | 302, 1,202.6k | 246, 1,086.4k | 302, 1,180.0k |
 | Post (bloom, GTAO's three passes, output) | About 20 calls | 20 | 20 |
-| **Frame** | **737 calls, 3,259.2k** | **643 calls, 3,011.9k** | **749 calls, 3,396.7k** |
-| Margin against 1,400 and 3.6M | 663 calls, 340.8k (9.5%) | 757 calls, 588.1k (16.3%) | 651 calls, 203.3k (5.6%) |
+| **Frame** | **1,155 calls, 3,259.2k** | **683 calls, 3,011.9k** | **1,185 calls, 3,396.7k** |
+| Margin against 1,400 and 3.6M | 245 calls, 340.8k (9.5%) | 717 calls, 588.1k (16.3%) | 215 calls, 203.3k (5.6%) |
+
+**The inside column, re-added by hand** (triangles from the unrounded figures, so adding the rounded ones can come out
+0.1k off):
+- **The pass:** people 119 (20 + 41 + 58), fillers 2, items 6, parked stand-ins 5, your car 26, the venue 60, the
+  streets 40, the trees 4, the sky 4 and the hidden LOD 1s 36: 302 calls. Triangles 772.6k (210k + 475.6k + 87k) +
+  0.5k + 14.1k + 9.3k + 121.1k + 150k + 120k + 10k + 5k + 0 = 1,202.6k (1,202,559).
+- **The sun's map:** 60 + 40 + 4 + 26 + 5 + 20 + 6 = 161 drawn, and 16 empty: 177 calls. Triangles 150k + 120k + 10k
+  + 121.1k + 9.3k + 232k + 14.1k = 656.5k (656,459).
+- **The pool spots:** each 12 drawn (4 + 8) and 165 empty, 177 calls and 98.8k (6k + 92.8k); both 354 calls and 197.6k.
+- **GTAO's normal pass** 302 calls and 1,202.6k; **post** 20 calls.
+- **The frame:** 302 + 177 + 354 + 302 + 20 = 1,155 calls, under 1,400; 1,202.6k + 656.5k + 197.6k + 1,202.6k =
+  3,259.2k (3,259,177), under 3.6M by 340.8k.
+
+Outside: 246 + 171 + 0 + 246 + 20 = 683 calls and 3,011.9k. Overhead: 302 + 187 + 374 + 302 + 20 = 1,185 calls and
+3,396.7k. The calls grew this round by the empty calls ("Shadows in three.js 0.160.1"): 418 inside, 40 outside and 436
+overhead at Ultra, and 5 in every HD column; no triangles changed. The empty-call counts are upper bounds (every
+caster taken as tested in each pool spot's map, and every caster but your avatar taken as drawn at LOD 2), and S3a and
+S4 measure them.
 
 The post quads are an estimate from three.js 0.160's passes; S4 measures them. They're 2 triangles each.
 
@@ -1954,17 +2122,17 @@ The post quads are an estimate from three.js 0.160's passes; S4 measures them. T
   avatar at phone quality, and then "Preparing Ultra…" shows again. At HD your avatar stays at LOD 1: the bar's
   choice, which L9 as measured matched. Your avatar's LOD 0 is the only face in the bar that moves: at Ultra in third
   person its expressions follow your mood.
-- **Your avatar's shadow body.** A LOD 0 is never drawn into a shadow map: at HD and Ultra your avatar casts with its
-  LOD 1 body, in every state, on layer 1, which the sun's shadow camera sees and the main camera doesn't (as Lot 57's
-  page does for your first-person body, L9). `setLod(0)` hides the LOD 1 group (the internals in the `people/` row),
-  so after every `setLod` on your avatar `visibility.ts` puts the shadow body back. With LOD 0 showing, it sets the LOD
-  1 group (the parent of the mesh named `lod1`) `visible = true`, puts that mesh on layer 1 alone with `castShadow` on,
-  and turns `castShadow` off on the LOD 0 group's meshes; before LOD 1 shows again, it puts `lod1` back on layer 0.
-  Every level is bound to the one skeleton, so the shadow body takes every pose the LOD 0 does. `vis()` names your
-  avatar's caster, S1 checks it, and S1's re-measure checks the internals it rests on. If they've changed, the LOD 0
-  casts itself instead: about 19 calls and 198.4k more in Ultra's sun map wherever your avatar shows at LOD 0, which
-  makes Ultra's outside frame 662 calls and 3,210.3k and its inside frame 756 calls and 3,457.6k, both still inside
-  1,400 and 3.6M.
+- **Your avatar's shadow.** A LOD 0 is never drawn into a shadow map. At HD and Ultra your avatar casts with a LOD 1
+  body, in every state: the one it's drawn with at HD in third person, and otherwise a hidden caster ("Shadows in
+  three.js 0.160.1"), drawn into the maps and into no colour pass, under the LOD 0 at Ultra in third person and as
+  the shown body in first person. `setLod(0)` hides the LOD 1 group (the internals in the `people/` row), so after
+  every `setLod` on your avatar `visibility.ts` shows it again, with the hooks. Every level is bound to the one
+  skeleton, so the hidden LOD 1 takes every pose the LOD 0 does. Lot 57's layer-1 body (L9) isn't copied: in three.js
+  0.160.1 it casts into no map. `vis()` names your avatar's caster, S1 checks its shadow in first and third person,
+  and S1's re-measure checks the internals the hooks rest on. If they've changed, the fallback there applies: the LOD 0
+  casts itself at Ultra (19 calls and 198.4k more in the sun's map, its 20 meshes empty calls in the pool spots'),
+  which makes Ultra's outside frame 700 calls and 3,210.3k and its inside frame 1,210 calls and 3,457.6k, both still
+  inside 1,400 and 3.6M; in first person your avatar then casts no shadow.
 - **Phone LOD 0.** Lot 57's plan records it as 18% over its 60k target. It isn't drawn at Low while the rule above
   holds.
 - **Low stays Retro.** At Low nothing is at LOD 0, and a LOD 1 or LOD 2 body is one mesh in `lodMaterial`, which
@@ -2020,10 +2188,14 @@ order. The change goes into the def's budgets and into this plan.
      of the frame);
   2. LOD 1 outside from 19 to 10 (90.9k in the pass, 181.8k of the frame);
   3. the parked cars at `'phone'` quality at Ultra too, a deliberate difference from L2 (97.6k in the pass and 89.6k in
-     the sun's map: 284.8k of the frame).
+     the sun's map: 284.8k of the frame);
+  4. the pool spots' shadow maps off, their lamps kept as unshadowed spot lights, and the pool-slot people no longer
+     casting: 354 calls and 197.6k of the frame inside (374 and 197.6k overhead), plus the sun's 16 empty calls and the
+     pool-slot people's 32 hidden-LOD 1 calls in the two colour passes, and up to 16 LOD 1 builds in the fill.
 
 **What casts shadows** is the table's row under "Inside, outside and overhead". Indoors, people's contact shadows are the
-blobs. Ultra's pool spots render only their table, its lamp and the people within 2 m of it.
+blobs. Ultra's pool spots draw only their members, their table, its lamp and the people at its 8 slots; every other
+caster costs them an empty call (see "Shadows in three.js 0.160.1").
 
 ### Everything else
 
@@ -2039,25 +2211,35 @@ blobs. Ultra's pool spots render only their table, its lamp and the people withi
 | Audio voices | 12 | 24 | 32 |
 | Street data in the page | `sportsbar-slice.json`, 47 KB gzipped (measured) | Same | Same |
 | Code added (the bar and `engine/sim/`) | Under 180 KB minified | Same | Same |
-| First frame you can walk | Under 6 s on desktop (an estimate; the 8 LOD 2 people before it are 2.3 s), then the room fills in the background (about 46 s: below) | The same (8 × 0.4 s); the room fills in about 2.3 min | The same, plus your avatar's LOD 0 during loading (7 to 9.5 s); the room fills in about 4.1 min |
+| First frame you can walk | Under 6 s on desktop (an estimate; the 8 LOD 2 people before it are 2.3 s), then the room fills in the background (about 46 s: below) | The same (8 × 0.4 s); the room fills in about 2.5 min | The same, plus your avatar's LOD 0 during loading (7 to 9.5 s); the room fills in about 5.9 min |
 
 **People are slow to build.** Lot 57 measured 30 people at about 15 s on a desktop CPU. Each build is one synchronous
 call: 0.29 s at LOD 2 and 0.71 s at LOD 1 at phone quality, 1.0 s at LOD 1 at high quality, and 4.6 s and 7 to 9.5 s
 for a LOD 0 (Lot 57's plan, 14 October, desktop CPU). LOD 2 at high quality wasn't measured: **assumed** 0.4 s, the
 phone figure scaled by the LOD 1 ratio.
-- **Before the first frame,** behind the loading screen: the 8 live people nearest the spawn at LOD 2, then the filler
-  atlas, rendered from those 8 bodies (192 small renders), and at Ultra your avatar's LOD 0 (above).
+- **Before the first frame,** behind the loading screen: the atlas eight (the 8 live people nearest the spawn) at LOD 2,
+  then the filler atlas, rendered from their bodies (192 small renders), and at Ultra your avatar's LOD 0 (above).
 - **After it, a time budget instead of a frame-time gate.** At most one build per frame, and a build may start only
   when the wall-clock time since the last build ended is at least twice the last build's own duration. Builds then
-  take at most a third of the time at any frame rate, and no build waits for a fast frame. Under SwiftShader here,
+  take at most a third of the time at any frame rate, and no build waits for a fast frame. **The check and the build
+  are at the same point in the frame:** the scheduler runs once a frame at the top of its update, before the render,
+  and there it checks the gap and, if the gap is met and the queue has work, starts the build at once. (S3a's span
+  bound depends on it: with the check at the frame's start and the build after the render, a correct rule would
+  measure about 1.76 at Low at 2 fps and about 2.1 at 0.3 fps, by a frame-by-frame simulation.) The scheduler logs
+  every frame's check, its time, the gap needed, the time since the last build ended and whether the queue had work,
+  and every build (`builds()`, S3a). Under SwiftShader here,
   `PROJECT_OC_PROGRESS.md` records the game at about 2 fps on Low and about 0.3 fps on High and Ultra; the bar's page
   isn't built, so the plan **assumes** the same. At about 2 fps a 0.29 s build is followed by the next 2 frames later,
   and at 30 fps 18 frames later: either way at least 0.58 s of ordinary frames runs between two 0.29 s builds. At
   about 0.3 fps every frame (3.3 s) is longer than twice any build (2.0 s at most), so the gap never binds and a build
   lands on every frame.
 - **The order:** every live person not yet built, at LOD 2, nearest the camera first; then the LOD 1 builds for the
-  drawn LOD 1 count, nearest first (re-sorted as the camera moves); then the 6 spare bodies for the fillers' hand-over.
-  Tapping a person puts their LOD 1 at the front. No LOD 0 is ever queued (see "Who is at which LOD").
+  casters, so that every caster casts with a LOD 1 body (HD's 5 and Ultra's 19 sun casters besides your avatar, and at
+  Ultra the people at the pool tables' 16 slots), nearest first; then the LOD 1 builds for the drawn LOD 1 count,
+  nearest first (re-sorted as the camera moves; a caster already built counts); then the 6 spare bodies for the
+  fillers' hand-over. Tapping a person puts their LOD 1 at the front. No LOD 0 is ever queued (see "Who is at which
+  LOD"). The fill table counts the casters' LOD 1 builds at their most, as if none of them were in the drawn LOD 1
+  count.
 - **What you see meanwhile.** Everyone not yet built is drawn as a card from the filler atlas, in the cards' instanced
   mesh, posed by what they're doing, so the room reads at its crowd from the first frame. A card becomes a body on the
   frame its build lands; up close that's a visible change, and S3a's log records each one.
@@ -2067,29 +2249,58 @@ phone figure scaled by the LOD 1 ratio.
   | | Builds after the first frame | Building time | Full at 30 fps | Full under SwiftShader here (assumed rates) |
   | --- | --- | --- | --- | --- |
   | Low (cap 36) | 28 at LOD 2, 7 at LOD 1, 6 spares | 14.8 s | about 46 s | about 1 min, at about 2 fps |
-  | HD (cap 70) | 62 at LOD 2, 17 at LOD 1, 6 spares | 44.2 s (LOD 2 assumed) | about 2.3 min | about 5.5 min, at about 0.3 fps: 85 frames of 3.3 s plus 44 s of builds |
-  | Ultra (cap 100) | 92 at LOD 2, 41 at LOD 1, 6 spares | 80.2 s (LOD 2 assumed) | about 4.1 min | about 9 min, at about 0.3 fps: 139 × 3.3 s plus 80 s |
+  | HD (cap 70) | 62 at LOD 2, 22 at LOD 1 (the 17 drawn and up to 5 casters), 6 spares | 49.2 s (LOD 2 assumed) | about 2.5 min | about 5.8 min, at about 0.3 fps: 90 frames of 3.3 s plus 49 s of builds |
+  | Ultra (cap 100) | 92 at LOD 2, 76 at LOD 1 (the 41 drawn, up to 19 sun casters and up to 16 pool-slot people), 6 spares | 115.2 s (LOD 2 assumed) | about 5.9 min | about 11.5 min, at about 0.3 fps: 174 × 3.3 s plus 115 s |
 
   At about 2 fps each wait rounds up to whole frames of about 0.5 s; at about 0.3 fps the fill is one build a frame,
-  the frames plus the builds. A frame-by-frame simulation of the rule agrees: 45 s, 2.2 min and 4.0 min at 30 fps, 59 s
-  for Low at 2 fps, and 5.5 and 9.1 min for HD and Ultra at 0.3 fps. A phone builds more slowly, by an amount nobody
+  the frames plus the builds. A frame-by-frame simulation of the rule agrees: 45 s, 2.5 min and 5.8 min at 30 fps, 58 s
+  for Low at 2 fps, and 5.8 and 11.5 min for HD and Ultra at 0.3 fps. Without the casters' LOD 1 builds (round 6's
+  queue) HD and Ultra were 2.3 and 4.1 min at 30 fps. The SwiftShader column leaves out the 3 slow
+  warm-up frames after the load, which compile the shaders (`PROJECT_OC_PROGRESS.md` records 108 s for the first three
+  frames after a switch on High and 271 s on Ultra, at 640 × 360); each of them lands a build too, and they'd add up to
+  about 2 min at HD and 4.5 min at Ultra here. S3a logs them and times nothing in them. A phone builds more slowly, by an amount nobody
   has measured, and its fill time grows with it. These are estimates from the build times; S3a logs the real ones.
-- **A change of people quality** (Low to or from HD or Ultra: the people builder's `'phone'` and `'high'`) leaves every
-  body in the room at the wrong quality. The bar treats it as a new load, in this order:
-  1. The pause sheet shows "Switching to HD…" (or Low, or Ultra), painted first, with the game paused behind it.
-  2. Behind it, synchronously: your avatar at LOD 1 at the new quality (0.71 s or 1.0 s); the 8 live people nearest
-     the camera at LOD 2 (2.3 s at phone quality, 3.2 s at high); the filler atlas rendered again from those 8, in the
-     new mode's look and at its size (192 small renders, toon-styled first at Low); and, going to Ultra, your avatar's
-     LOD 0 (7 to 9.5 s). On a desktop CPU that's about 3.0 s to Low, 4.2 s to HD and 11 to 14 s to Ultra.
-  3. Every other live body and the 6 spares are disposed and queued at the new quality, and each of those live people
-     is drawn as a card from the new atlas until their body lands. No body of the old quality is drawn after the
-     switch.
-  4. The queue runs on the same time budget and in the same order as after the first frame, so the room refills in
-     the fill table's times: about 46 s at Low, 2.3 min at HD and 4.1 min at Ultra at 30 fps.
+- **A change of graphics** (any switch between Low, HD and Ultra). The pause sheet shows "Switching to HD…" (or Low,
+  or Ultra), painted first, with the game paused behind it. Behind it, in this order:
+  1. **The live count moves to the new cap** (Low 36, HD 70, Ultra 100) on the switch frame, so "the live count never
+     passes the preset's cap" holds from that frame on.
+     - **Going down** (Ultra to HD or Low, HD to Low), the live people over the new cap are **held** (see "Fillers": a
+       card with no simulation that keeps its identity). First the staff over the new preset's drawn staff (Low draws
+       at most 5) go off shift, their jobs re-queued to the others. Then guests, by units, farthest from the camera
+       first (from the overhead's target in overhead): a table with all its live guests (booth, high-top or patio
+       table; a table is never split), or one person on a stool or a standing spot; someone walking is held at the slot
+       they're walking to, and the sheet hides the move. Standing people and regulars are held like anyone else. Never
+       held: the person you're talking to, anyone in an interaction with you, and your party (your group and the other
+       players in your game): at most 9 people, well under every cap. When the next unit is larger than what's left
+       over the cap, only that many of its guests are held, from its seats farthest from the camera (a held guest can
+       sit at a live table, as a card, until they come back; held guests aren't fillers, so no table mixes fillers and
+       live people), so the live count lands on the cap exactly.
+     - **Going up** (Low to HD or Ultra, HD to Ultra), held guests come back as themselves first, then fillers become
+       live walk-ins in their slots, nearest the camera first, a whole unit at a time, until the live count reaches the
+       new cap or nobody is left; the staff plan adds staff back to its count for the share. If the last unit
+       overshoots, the going-down rule holds the excess. All of this happens behind the sheet, before the switch frame
+       is drawn. Each new live person is drawn as a card and queued.
+     - So straight after a switch `people().live` is the new cap, or every guest in the room if there are fewer; at the
+       poses (111 to 130 guests) it's the cap, whatever order the presets come in on one page.
+  2. **Bodies at the new quality,** when the people quality changes (Low to or from HD or Ultra: the people builder's
+     `'phone'` and `'high'`), which leaves every body at the wrong quality. Synchronously: your avatar at LOD 1 at the
+     new quality (0.71 s or 1.0 s); a new atlas eight (the 8 live people nearest the camera, after step 1) at LOD 2
+     (2.3 s at phone quality, 3.2 s at high); the filler atlas rendered again from them, in the new mode's look and at
+     its size (192 small renders, toon-styled first at Low); and, going to Ultra, your avatar's LOD 0 (7 to 9.5 s). On
+     a desktop CPU that's about 3.0 s to Low, 4.2 s to HD and 11 to 14 s to Ultra. Every other live body and the 6
+     spares are disposed and queued at the new quality, and each of those live people is drawn as a card from the new
+     atlas until their body lands. No body of the old quality is drawn after the switch.
+  3. **The queue** runs on the same time budget and in the same order as after the first frame. From Low that's the
+     fill table's builds exactly (to HD: 62 at LOD 2, the 34 people brought in at step 1 among them, 22 at LOD 1 and 6
+     spares; to Ultra: 92, 76 and 6), and to Low from either it's Low's (28, 7 and 6), so the room refills in the fill
+     table's times: about 46 s at Low, 2.5 min at HD and 5.9 min at Ultra at 30 fps.
 
-  Between HD and Ultra the people quality is the same, so no body is rebuilt: Ultra's larger LOD 1 count joins the
-  queue, and your avatar's LOD 0 is built behind "Preparing Ultra…" if it doesn't exist yet (see "Who is at which
-  LOD"). `fastForward()`, `pose()` and `buildAll()` count a body at the other quality as pending and rebuild it
+  Between HD and Ultra the people quality is the same, so no body is rebuilt and the atlas is kept. Going up, the 30
+  people brought in are queued at LOD 2, and Ultra's extra LOD 1 bodies join the queue: 24 more drawn, up to 14 more
+  sun casters and up to 16 pool-slot people, at most 54 (about 3.3 min at 30 fps by the same arithmetic: 30 × 1.2 s and
+  54 × 3.0 s); your avatar's LOD 0 is built behind "Preparing Ultra…" if it doesn't exist yet (see "Who is at which
+  LOD"). Going down, 30 are held, and the LOD 1 bodies past HD's count are
+  kept and set to LOD 2. `fastForward()`, `pose()` and `buildAll()` count a body at the other quality as pending and rebuild it
   synchronously, so a budget pose reached through `setQuality` measures every body at its preset's own quality (a
   high-quality LOD 1 is 11.6k, never a 7.5k phone one). `builds()` logs each rebuild with its quality and its reason,
   `switch`.
@@ -2244,9 +2455,15 @@ module from `claude/modes` merged in.
   - **Your driver as the avatar,** spawned by your car's driver door (see "Where the page starts you"). Walking, tap to
     go and Sit on every seat.
   - **The visibility rule** for cars and streets (`venues/sportsbar/visibility.ts`; see "Inside, outside and
-    overhead"): `parked.near` by state, your car and its stand-in, the casting rule (the same casters in every state,
-    and your avatar's shadow body), and `engine/streets.ts` building the near and far street sets, both drawn in every
-    state, with the motorway widths and the bridge rule (the module map's `data.ts` row). S3a adds the people rules.
+    overhead"): `parked.near` by state, your car and its stand-in, the casting rule (the same casters in the sun's map
+    in every state), the shadow mechanics under "Shadows in three.js 0.160.1" (the maps drawn once a frame, your
+    avatar's hidden casters and the per-light members), and `engine/streets.ts` building the near and far street sets,
+    both drawn in every state, with the motorway widths, the bridge rule and the pier rule (the module map's `data.ts`
+    row). S3a adds the people rules and the pool spots' members.
+  - **The handoff note** to Lot 57's owners, in `PROJECT_OC_HANDOFF.md` (open item O28): in three.js 0.160.1 a mesh on
+    layer 1 casts into no map, so Lot 57's first-person body casts no shadow (and nor does its LOD 1 kept on layer 1
+    under a LOD 0), and at Ultra its shadow maps are drawn twice a frame, once more in GTAO's normal pass, unless
+    `shadowMap.autoUpdate` is managed; with the bar's two remedies.
   - **The three cameras,** the overhead with wall cutaway.
   - **Collisions and the walk grid**, with the 0.15 m slab, the raised front walk, its ramp and the patio (its layout
     as under "The patio's layout"). The walls are 0.25 m thick, and the party wall is 0.2 m. The grid's region is
@@ -2259,7 +2476,8 @@ module from `claude/modes` merged in.
   - **Test hooks** on `window.__onfoot`:
     - `setClock(day, hour)` and `setQuality('low' | 'high' | 'ultra')` (`'high'` is HD). The hour is calendar time, 0 to 23.99, as on
       Lot 57's page; the engine maps 00:00 to 02:00 to the previous business day;
-    - `stats()`, with `pass` and `frame` as in the budgets;
+    - `stats()`, with `pass` and `frame` as in the budgets, and `maps`: each shadow map's calls and triangles, from one
+      render with only that light's map updating, less the pass;
     - `go(x, z)` and `tap(x, z)`, in game coordinates;
     - `act()`, `view(mode)` and `frames`;
     - `frame()`, the building frame's O, A and B;
@@ -2309,12 +2527,17 @@ module from `claude/modes` merged in.
     searches are plain text. It does find the bar slice's own `what` text.
   - **The scene budgets without people or items.** At every budget pose (`door`, `tv-east`, `stall`, `patio`, `overhead`), under
     the poses' conditions (Saturday 21:00, week 43, the fill seed 621, 844 × 390 and the portrait pair), at Low, HD and
-    Ultra: `stats().pass` is within the "Without people or items" row of that state's column. `breakdown()` is
-    logged, grouped as the venue, the near streets, the far streets, the trees, the sky, `your-car` and its stand-in,
-    and `parked-*`. The bar's `breakdown()` counts only what's drawn: it skips objects hidden by `visible` on themselves
+    Ultra: `stats().pass`, less your avatar's own body (which the row leaves out with the other people, and which
+    `breakdown()` names), is within the "Without people or items" row of that state's column; your avatar's body is
+    within its own place in the people row (a LOD 1, or at Ultra in third person the LOD 0's 20 calls and 210k, plus a
+    hidden LOD 1's empty call). `breakdown()` is logged, grouped as the venue, the near streets, the far streets, the
+    trees, the sky, your avatar, `your-car` and its stand-in, and `parked-*`. The bar's `breakdown()` counts only what's drawn: it skips objects hidden by `visible` on themselves
     or an ancestor (your car or its stand-in, an instanced mesh with no instances) and applies three.js's frustum test
-    as the renderer does (none for a mesh with `frustumCulled = false`), so its total agrees with `stats().pass` within
-    1% at every pose.
+    as the renderer does (none for a mesh with `frustumCulled = false`), and counts a hidden caster as 1 call and 0
+    triangles, so its total agrees with `stats().pass` within 1% at every pose. `stats().maps` is logged at every pose:
+    at HD and Ultra the sun's map is within its row of the sums less the items and the people other than your avatar
+    (5 at HD, 19 at Ultra), and at Ultra each pool
+    spot's map draws only its table and lamp, every other caster an empty call.
   - **The street sets.** The built near set holds exactly the features `tools/anaheim/sportsbar_sets.py` lists as near
     (60 street pieces, 8 buildings, 33 infrastructure shapes, 38 points, no land use or water; the I-5's northbound
     560 and 362 and southbound 222, 358 and 438, Katella 136, Anaheim Way 137, the railway's 141 and buildings 24, 26
@@ -2324,9 +2547,11 @@ module from `claude/modes` merged in.
     drawn height.
   - **The I-5 is drawn.** In the built near set, each of the I-5's five near carriageway pieces (560, 362,
     222, 358, 438) and seven near links (360, 361, 365, 424, 425, 561, 562) is drawn with nonzero area, 14 m and 8 m
-    wide. Over every `br` span the piece is at the deck's 7.6 m with a pier every 28 m; every connector has one drawn
-    height; no `tn` span is drawn; and the Katella bridge polygon (infra 92) is a slab under the decks. Every crossing
-    without a junction clears 5.5 m or is in a tunnel span, as `sportsbar_sets.py` reports.
+    wide. Over every `br` span the piece is at the deck's 7.6 m, with a pier every 28 m except where a pier's footprint
+    would meet a ribbon drawn beneath the deck; no built pier meets a drawn ribbon, and the number left out is the one
+    `sportsbar_sets.py` prints (33 on this slice, 19 of them near). Every connector has one drawn height; no `tn` span is drawn; and the Katella bridge
+    polygon (infra 92) is a slab from 6.5 to 7.55 m, under the decks' tops and undersides. Every crossing without a
+    junction clears 5.5 m or is in a tunnel span, as `sportsbar_sets.py` reports.
   - **The trees.** 10 trees (6 palms, 4 shade trees) at the script's spots, each in the near set, at least 1.0 m from
     every road and aisle edge and 1.5 m from every power pole, in at most 4 calls and within the trees' row.
   - **The cars as measured.** `your-car` is 62.2k triangles at Low and 118.3k at HD and Ultra for the default car
@@ -2342,7 +2567,14 @@ module from `claude/modes` merged in.
     - **No shadow changes at a door.** At HD and Ultra, `vis()` on both sides of each door lists the same casters
       into the sun's map (the venue's batches, the street batches, the trees, the parked cars, your car, the item
       meshes and the same people), differing only where a listed swap changes an object's own body. Whenever your
-      avatar's LOD 0 shows, its caster is its `lod1` mesh on layer 1 and none of the LOD 0 meshes casts.
+      avatar's LOD 0 shows, its caster is its hidden `lod1` and no LOD 0 mesh casts.
+  - **Your avatar's shadow.** At HD and Ultra, in first and in third person: the shadow is in screenshots outside
+    (noon, the sun behind the camera, in the lot and on the front walk), and at every pose, inside included, `stats().maps`
+    counts your avatar's caster in the sun's map: its triangles drop by that caster's own when the test turns its
+    `castShadow` off for one frame (`vis()` names the caster). In first person, and under the LOD 0, the caster draws
+    nothing in the pass (`breakdown()`: 1 call, 0 triangles).
+  - **The maps are drawn once a frame.** At HD and Ultra, at every pose, one frame's `stats().frame` equals the pass,
+    each map once (`stats().maps`), GTAO's normal pass at Ultra and the post, within 1%.
     - **What may change is level of detail, and it's listed.** `vis()` on the two sides differs only in `parked.near`
       (stand-ins to detailed models), your car (its stand-in to the full car at Low and HD) and, from S3a, people
       (cards to meshes, and their LODs). Those are swaps of objects drawn on both sides, never an object appearing or
@@ -2468,17 +2700,22 @@ ends with its own checks and its own budget run at the poses.
   - **How people are drawn:** people's LODs and the visibility rule for people (meshes, cards, LODs and shadow casters
     by state; see "Inside, outside and overhead"), with `visibility.ts`'s restyle at Low; no NPC LOD 0, and your
     avatar's LOD 0 at Ultra built during loading or behind "Preparing Ultra…" (see "Who is at which LOD"); and the
-    background builds on the time budget, with cards standing in until each body lands, and the rebuilds after a
-    change of people quality (see "People are slow to build"); your avatar's shadow body, and `retroSkip` on any LOD 0
-    body's hair at Low (see "Who is at which LOD").
+    background builds on the time budget, with cards standing in until each body lands, and a change of graphics: the
+    live count moved to the new cap with held guests, and the rebuilds after a change of people quality (see "People
+    are slow to build"); the casting people in the outside mesh set, each casting with its LOD 1 body (built by the queue, hidden under a
+    LOD 2 where it's drawn at LOD 2), and at
+    Ultra the pool spots' members ("Shadows in three.js 0.160.1"); and `retroSkip` on any LOD 0 body's hair at Low (see
+    "Who is at which LOD").
   - **Moods and emotions on bodies,** not faces: the clips, posture, walk speed, the talk gestures, head turns, the
     captions, the sparks and the card's mood face. No NPC is at LOD 0, so no NPC's face moves; faces follow mood only on
     your avatar's LOD 0 at Ultra (see "Moods, moodlets and emotions").
   - **Crowd reactions** to the screens, with the dance chance at the featured final whistle.
-  - **Hooks:** `people()`, `decisions(n)`, `seed(n)`, `crowdAt(zone, n)` (seats walk-ins in a zone, for the budget
-    poses), `buildAll()` (builds every pending body now, up to the live cap; `fastForward()` and `pose()` call it
-    first) and `builds()` (the build log: each build's person, level, quality, reason (`fill`, `tap` or `switch`),
-    start, duration and the frame it landed in, with the frame times).
+  - **Hooks:** `people()` (live, held and fillers counted, and each person's draw mode), `decisions(n)`, `seed(n)`,
+    `crowdAt(zone, n)` (seats walk-ins in a zone, for the budget poses), `buildAll()` (builds every pending body now, up
+    to the live cap; `fastForward()` and `pose()` call it first) and `builds()` (the build log: each build's person,
+    level, quality, reason (`fill`, `tap` or `switch`), start, duration and the frame it landed in; and each frame's
+    start, length, the build in it if any, and the scheduler's check: its time, the gap needed, the time since the last
+    build ended and whether the queue had work; the loads and switches are marked).
 - **Checks.**
   - **Needs drive choices.** The population is NPCs with thirst under 30 who aren't holding a drink or waiting on one.
     At least 70% of them choose a drink-tagged action (a bar drink, table service or water) within their next two
@@ -2503,10 +2740,13 @@ ends with its own checks and its own budget run at the poses.
     - Tuesday 15:00 has fewer people than Saturday 21:00.
     - Closed hours have nobody inside.
     - Staff counts follow the share, and Low never draws more than 5.
-    - The live count never passes the preset's cap.
+    - The live count never passes the preset's cap, at any frame, the switch frames of "A change of graphics" (below)
+      included.
   - **Fillers.**
-    - At each preset, at Saturday 21:00 and Tuesday 15:00, live guests plus fillers equal the target guest count, or
-      live guests plus every free eligible slot if that's fewer.
+    - At each preset, at Saturday 21:00 and Tuesday 15:00, live guests plus held guests plus fillers equal the target
+      guest count, or live and held guests plus every free eligible slot if that's fewer.
+    - No filler is a regular (and from S3b, nobody the player has met); a held guest, tapped, comes back as the same
+      person.
     - No filler is nearer the player than the preset's minimum distance.
     - No table mixes fillers and live people.
     - Tapping a filler gives a live person, and their menu opens.
@@ -2522,32 +2762,64 @@ ends with its own checks and its own budget run at the poses.
     included, is toon. The run also watches for shader errors (three.js's `renderer.debug.onShaderError` and the
     console's `THREE.WebGLProgram` errors) and fails on any, so a material that passes the hook-fit rule but can't
     compile is caught even where the toon check would pass.
-  - **The background builds run and are logged.** Runs with no fast-forward, from the first frame. The pass marks hold
-    at any frame rate, from the run's own `builds()` log: no two builds in one frame; every gap between builds at least
-    twice the last build's duration; and the time the builds take within 1.7 × the sum, over the logged builds, of the
-    larger of the run's median frame time (frames without a build) and three times the build's own duration. (Under
-    the rule a build, its gap and the frames it waits for never take longer than 5/3 of that larger figure, so 1.7
-    holds at any frame rate, while a scheduler that sits idle well past the gaps fails it.) At Low the run goes on until the room reaches
-    its live cap (every live person built at the level they're drawn at, and the 6 spares): about 1 min here at about
-    2 fps. At HD and Ultra, where the whole fill would take about 5.5 and 9 min here at about 0.3 fps (see "People are
-    slow to build"), the run stops after the first 30 builds, about 2 min, and checks the same marks over them; the
-    full room at HD and Ultra is measured through `buildAll()` at the poses. Until each person's build lands they're a
-    card. No LOD 0 build happens in play at any preset. The longest frame, the
-    number of frames over 50 ms and the builds that caused them are logged too: a record, not a pass mark, since
-    SwiftShader here says nothing about a phone (see "Owner questions").
-  - **A change of graphics.** From a full room at Low (after `buildAll()`), `setQuality('high')` with no fast-forward:
-    the switch sheet shows, and behind it your avatar, the 8 nearest bodies and the atlas are rebuilt at high
-    quality. From the next frame no phone-quality body is drawn (`vis()` lists every live person as a high-quality
-    mesh or as a card), and the rebuilds keep the time budget's marks over 30 builds and are logged with the reason
-    `switch`. `buildAll()` then leaves no body at phone quality, and `stats()` at `door` counts high-quality LOD 1
-    bodies (11.6k each). Back to Low the same, with the atlas toon-styled. Between HD and Ultra no body is rebuilt and
-    the atlas is kept.
+  - **The background builds run and are logged.** Runs with no fast-forward, from the load. **The timed span** starts
+    at the first build after the first 3 frames that follow the load (or a switch, below) and ends when the last
+    counted build ends; those 3 warm-up frames, which compile shaders and can take minutes here (open item O7), are
+    logged with any builds in them and timed for nothing. The marks are taken from the run's own `builds()` log, from
+    the time budget itself, so they hold at any frame rate, 0.3 fps under SwiftShader included:
+    1. **One at most:** no frame has two builds.
+    2. **The gap:** at each counted build's check, the time since the last build ended is at least twice that last
+       build's duration.
+    3. **Never idle:** every frame in the span whose check found work queued and the gap met started a build there (the
+       test works the gap out from the logged times itself, not from the scheduler's own verdict). At
+       0.3 fps, where every frame (about 3.3 s) is longer than twice any build, that's a build on every frame; at 30 fps
+       it's a build on the first frame after each gap.
+    4. **The span:** its length is within 1.7 × Σ max(F, 3 d), summed over the counted builds, where d is a build's
+       duration and F is the median, over the span's frames, of each frame's length less the build in it (if any). F
+       is defined at every frame rate, since every frame has a non-build part. (With the check and the build at the
+       same point in the frame, a build, its gap and the frames it waits for take at most 5/3 of max(F, 3 d) when the
+       frames run at F, so 1.7 holds; a frame-by-frame simulation gives 1.0 to 1.4 at a steady 30, 2 and 0.3 fps.
+       A scheduler that sits a frame idle after each gap fails mark 3 at once, and at 0.3 fps this mark too.)
+
+    Recorded, not marks: the sum of the counted builds' durations beside the fill table's building time for the same
+    builds (the table's are desktop figures; this machine is shared); the 3 warm-up frames; the longest frame, the
+    number of frames over 50 ms and the builds that caused them, since SwiftShader here says nothing about a phone (see
+    "Owner questions"). At Low the run goes on until the room reaches its live cap (every live person built at the
+    level they're drawn at, and the 6 spares): about 1 min of span here at about 2 fps. At HD and Ultra, where the
+    whole fill would take about 5.8 and 11.5 min of span at about 0.3 fps (see "People are slow to build"), the run stops
+    after the first 30 counted builds, about 2 min of span after the warm-up frames, and checks the same marks over
+    them; the full room at HD and Ultra is measured through `buildAll()` at the poses. Until each person's build lands
+    they're a card. No LOD 0 build happens in play at any preset.
+  - **A change of graphics, both ways.** One page at Saturday 21:00, from a full room at Low (after `buildAll()`), with
+    you joined to a talking group of three (Lot 57's Join, from P1b): Low to HD, HD to Ultra, Ultra to Low, Low to Ultra, Ultra to HD and
+    HD to Low, every ordered pair once.
+    - **At every switch:** the switch sheet shows; from the switch frame `people().live` is the new cap (36, 70 or 100)
+      and never more, the rest of the guests held or fillers; your group's members are live after every switch; no
+      regular or held guest is ever a filler (a held regular comes back as the same person). Going down, the held are
+      the farthest units first, the standing and the regulars among them; going up, held guests come back before
+      fillers.
+    - **When the people quality changes** (Low to or from HD or Ultra): behind the sheet your avatar, the atlas eight
+      and the atlas are rebuilt at the new quality (toon-styled first at Low), and from the next frame no body of the
+      old quality is drawn (`vis()` lists every live person as a mesh at the new quality or as a card). The rebuilds
+      are logged with the reason `switch`.
+    - **Timed at Low to HD only,** since the scheduler is the same at every switch: the 3 warm-up frames are logged and
+      not timed, and then the next 30 counted builds pass the background builds' four marks. At about 0.3 fps that's
+      30 LOD 2 builds of about 0.4 s, one a frame: about 2 min of span against the 1.7 rule's 2.8 min (30 × 3.3 s ×
+      1.7), by the same simulation.
+    - **After each switch,** `buildAll()` leaves no body at the old quality, and `stats()` at `door` counts LOD 1 bodies
+      at the preset's own cost (11.6k each at HD and Ultra, 7.5k at Low), with `people().live` at the cap. Between HD and
+      Ultra no body is rebuilt and the atlas is kept.
   - **Budgets.** At every budget pose and preset, under the poses' conditions (Saturday 21:00, week 43, `seed(1)`, the
     fill seed 621, the caps reached as the poses say, every body at its preset's own quality after the `setQuality`
     that reached it, and every item model at its cap): `stats().pass` is within its
-    column's pass row and budget, and `stats().frame` within its frame row. Outdoors, `vis()` shows no more meshes than
-    the outside counts, and no person drawn as a card holds an item. Simulation ms and the 6 decisions' ms are
-    reported.
+    column's pass row and budget, and `stats().frame` within its frame row. **Each shadow map** at every pose, `door`
+    and `overhead` among them: `stats().maps` has the sun's map within its row and, at Ultra, each pool spot's map
+    within its row (its drawn triangles at most 98.8k, and its calls at most the row's), and `vis()` lists each map's
+    members as the rule says (the sun's: the venue, the streets, the trees, the cars, the items and the casting
+    people; a pool spot's: its table, its lamp and the people at its slots), every person member by their `lod1` and
+    no `lod2` or LOD 0 mesh casting (your avatar's LOD 0 under the fallback excepted). Outdoors, `vis()` shows no more meshes than
+    the outside counts, every casting person among them, and no person drawn as a card holds an item. Simulation ms,
+    the 6 decisions' ms and the frame's CPU ms are reported.
 - **Screenshots.**
   - A Saturday 21:00 goal, before and after (1280 × 720 and 390 × 844).
   - The overhead view of a packed Friday.
@@ -2607,8 +2879,9 @@ ends with its own checks and its own budget run at the poses.
   - **Screenshots** at 1280 × 720 and 390 × 844 at noon, golden hour and Saturday 21:00, at Low, HD and Ultra: inside
     at the TV wall, the bar, the pool tables, the patio toward the freeway, and the exterior from the lot.
   - **Before and after** against S3a's and S3b's shots.
-  - **`stats()`** at every budget pose and preset, under the poses' conditions: `pass` within its column's pass row and
-    `frame` within its frame row, now with the final materials, the Retro pass at Low and the post chains measured.
+  - **`stats()`** at every budget pose and preset, under the poses' conditions: `pass` within its column's pass row,
+    `frame` within its frame row and each shadow map (`maps`) within its row, now with the final materials, the Retro
+    pass at Low and the post chains measured; the pool spots' empty calls measured replace the plan's upper bounds.
   - **Low is Retro.** At Low, `RetroStyle` is attached, the render scale is 1 and the pixel ratio is at least 1; at HD
     and Ultra it's detached. A locked Ultra shows "Ultra · locked" and no price.
   - **The `PRESET` copy** matches Lot 57's `main.ts` at the time (L1 re-measured), or the difference is written up;
@@ -2630,15 +2903,20 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
      frame is already at 140 of its 150 calls and 244.3k of its 250k (see the sums).
    - **If the owner, or RS3's style guide, asks for hard sun shadows at Low,** the bar turns on the 1024
      `BasicShadowMap` with a short caster list, the same in every state so that no shadow changes at a door (as at HD
-     and Ultra): the venue's own casting batches, your car's 152-triangle stand-in (on the shadow layer while the
-     detailed car shows, the way your avatar's LOD 0 casts with its LOD 1 body), and 4 people with LOD 2 bodies on the
-     shadow layer: your avatar and the 3 others outside the unit nearest the camera. No streets, trees, parked cars or
-     items cast at Low. **An estimate:** that adds about 15 calls and 30k for the venue's batches (an allocation; the
-     venue isn't built), 1 call for the stand-in and 4 calls and 6k for the 4 people: 20 calls and 36.2k in every
-     state. Inside and overhead it fits Low's margins (31 calls and 46.1k, 31 and 52.1k), leaving 11 calls and 9.9k,
-     and 11 and 15.9k. Outside it doesn't (20 calls and 36.2k against 10 and 5.7k) without the first three outside fallbacks
-     (`parked.near` 4 to 0, LOD 1 from 7 to 4, the far props: 21 calls and 34.0k back, leaving 11 calls and 3.5k), so
-     Low outside would show no detailed parked cars and fewer LOD 1 people.
+     and Ultra): the venue's own casting batches, your car's 152-triangle stand-in, and 4 people with LOD 2 bodies:
+     your avatar and the 3 others outside the unit nearest the camera. No streets, trees, parked cars or items cast at
+     Low. Where the detailed car shows, the stand-in stays under it as a hidden caster, and where one of the 4 is drawn
+     at LOD 1, their LOD 2 stays under it as a hidden caster (every built person has a LOD 2, since the queue builds it
+     first; your avatar's is built at load, and again behind a switch sheet to Low, 0.29 s); neither the detailed car
+     nor a LOD 1 casts. These are the hidden casters of "Shadows in three.js 0.160.1"; a shadow layer can't do it,
+     since three.js 0.160.1's shadow pass never reads a shadow camera's layers. **An estimate:** the map takes
+     about 15 calls and 30k for the venue's batches (an allocation; the venue isn't built), 1 call for the stand-in and
+     4 calls and 6k for the 4 people: 20 calls and 36.2k in every state; and the hidden casters add up to 5 empty calls
+     to the pass (the stand-in outside, and up to 4 LOD 2s). Inside and overhead, at most 24 calls and 36.2k, it fits
+     Low's margins (31 calls and 46.1k, 31 and 52.1k), leaving 7 calls and 9.9k, and 7 and 15.9k. Outside, at most 25
+     calls and 36.2k against 10 and 5.7k, it doesn't without the first three outside fallbacks (`parked.near` 4 to 0,
+     LOD 1 from 7 to 4, the far props: 21 calls and 34.1k back, leaving 6 calls and 3.7k), so Low outside would show no
+     detailed parked cars and fewer LOD 1 people.
    - **The question:** keep Low without a sun map, as planned, or turn it on and take those fallbacks?
 2. **Person builds stall the page, worst on a phone.**
    - Each person build is one synchronous call to the people builder, on a desktop CPU: 0.29 s at LOD 2 and 0.71 s at
@@ -2646,8 +2924,8 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
      high-quality LOD 0 (Lot 57's plan, 14 October). A phone is slower, by an amount nobody has measured.
    - **What the plan does meanwhile, at every preset:**
      - the room fills on a time budget that works at any frame rate (one build a frame at most, builds taking at most a
-       third of the time), with cards standing in for anyone not yet built; it's full in about 46 s at Low, 2.3 min at
-       HD and 4.1 min at Ultra on a desktop CPU;
+       third of the time), with cards standing in for anyone not yet built; it's full in about 46 s at Low, 2.5 min at
+       HD and 5.9 min at Ultra on a desktop CPU;
      - **no NPC is ever built at LOD 0, at Low, HD or Ultra,** so starting a conversation never freezes the page: the
        person you talk to stays at LOD 1. At Low that saves a 4.6 s freeze; at HD and Ultra a 7 to 9.5 s one, for each
        new person you talk to. **The cost is faces.** Only LOD 0 has a face that moves, so no NPC smiles, laughs with
@@ -2667,7 +2945,9 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
      LOD 0 for an 11.6k LOD 1) and 19 calls, and twice that in Ultra's frame, where GTAO draws the pass again; overhead
      has no LOD 0. At HD it fits inside and outside (frame margins 381.1k and 245.4k). At Ultra it fits outside
      (588.1k); inside, where everything outside the unit now casts, the frame's 340.8k margin is short by about 56k, so
-     it needs Ultra's inside LOD 1 count cut from 41 to 36 (58.0k in the pass, 116.0k of the frame). At Low it fits
+     it needs Ultra's inside LOD 1 count cut from 41 to 36: 5 people moved to LOD 2 save 5 × (11.6k − 1.5k) = 50.5k in
+     the pass and 101.0k of the frame, which covers the 56k (38 would also do, at 60.6k of the frame). The calls fit
+     either way: 38 more in Ultra's inside frame make 1,193 of its 1,400. At Low it fits
      inside only with Low's first inside fallback (LOD 1 from 7 to 4), and outdoors at Low it stays off beside your
      car.
 
@@ -2736,6 +3016,10 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
   body's skin and hair stay physically lit (the skin under the hook-fit rule; the hair by `retroSkip`, since its toon
   version wouldn't compile); Low draws no LOD 0, so it's a future item for RS3, RS1 and `people/`. S4 looks at
   every Low screenshot, and the RS3 style guide is the reference.
+- **Shadow hooks.** Your avatar's shadow and Ultra's pool-lamp shadows rest on three.js 0.160.1's `onBeforeRender`,
+  `onBeforeShadow` and zero-count draws, read in its source and not yet run (open item O9). S1 and S3a check them on
+  the page; a three.js upgrade checks them again; the fallback (your avatar's LOD 0 casting itself) and Ultra's fourth
+  fallback (no pool-spot maps) are costed.
 - **The visibility rule can show.** Cars swap from stand-ins to detailed models at the doors, your car swaps at Low and
   HD, and people beyond the outdoor count are cards through the glass. The street world can't pop: both street sets
   and the trees are drawn in every state, so everything the glazing shows, at any distance, is drawn on both sides of
@@ -2841,11 +3125,27 @@ Every measurement was taken on 2026-10-21.
 - **The budget sums** are arithmetic. They add Lot 57's plan's measured people costs (quoted in the budgets section),
   the car costs below, Low's sky as counted from the code (below), and our allocations for the venue, the streets, the
   trees, the items, HD's and Ultra's sky and the pool spots. The street and tree allocations stand on the estimate
-  below. For this revision every column was re-added from the quoted costs by a short script; all nine match the
-  tables.
+  below. For this revision every column was re-added from the quoted costs by a short script, and Ultra's inside
+  column by hand as well (shown under the Ultra table); all nine match the tables. Only Ultra's calls changed this
+  round: the empty calls of the hidden casters and the per-light members, counted as upper bounds ("Shadows in
+  three.js 0.160.1").
   - HD's LOD 2 cost is an assumption, since only the phone's was measured.
   - The post-quad counts were read from three.js 0.160.1's `UnrealBloomPass` (13 full-screen draws), `OutputPass` (1)
     and `GTAOPass` (3 besides its normal pass).
+  - **The shadow pass** was read in `node_modules/three` (0.160.1) on 2026-10-21: `WebGLRenderer.render` calls
+    `shadowMap.render(shadowsArray, scene, camera)` with the main camera (`WebGLRenderer.js`:1201);
+    `WebGLShadowMap.render` returns at once only when `autoUpdate` and `needsUpdate` are both false (:75), skips a light
+    whose shadow has both false (:110) and clears `needsUpdate` at the end (:197); its `renderObject` returns for an
+    invisible object (:333), tests `object.layers.test(camera.layers)` with the main camera (:335), takes a mesh when
+    `castShadow` is on and it's `frustumCulled = false` or meets the light's frustum (:339), and calls `onBeforeShadow`
+    and `onAfterShadow` around each draw (:359 to :377). `WebGLRenderer`'s own `renderObject` calls `onBeforeRender`
+    and `onAfterRender` around each colour draw (:1563, :1588), and `renderBufferDirect` returns early only for a
+    negative or infinite draw count (:834), so a zero count is still an (empty) call that `WebGLInfo` counts.
+    `GTAOPass.renderOverride` draws its normal pass with `renderer.render(this.scene, this.camera)` under an override
+    material (`GTAOPass.js`:471). In `src/onfoot/people/person.ts`, LOD 0's meshes are set `castShadow`,
+    `receiveShadow` and `frustumCulled = false` with the lashes and brows not casting (lines 447 and 448), and each coarse level's
+    mesh `frustumCulled = false` with `castShadow` on LOD 1 only (line 538); `setLod` sets every built level's
+    `visible` (line 583). Nothing here has run on a page: S1 and S3a check it (open item O9).
   - `RetroPass`'s one full-screen draw and `RetroSky`'s 32 × 16 sphere were read from `src/game/render/style.ts` in the
     `tsu-modes` worktree (`claude/modes`, uncommitted) at about 02:20 UTC.
   - **Low's sky** was counted from the same worktree at about 05:30 UTC. `RetroStyle.render()` hides only the world's
@@ -2925,10 +3225,15 @@ Every measurement was taken on 2026-10-21.
   - **The bridge rule** (the module map's `data.ts` row) is checked by the same script on the slice: 29 drivable
     pieces have `br` spans; each connector's height comes from its distance along the drivable network to the
     nearest span (a shortest-path search in which a span counts as distance 0), so it has one height whichever piece
-    is asked; the ramps raise no street but motorway pieces (183, 244 and 362 of the I-5, and link 591); and every
-    crossing without a junction is at least 5.5 m apart in height or in a tunnel span (5 are, all on the `tn` spans of
-    Disney Way, seg 221, and of link 562). It also prints the near I-5's drawn widths and lengths: the five
-    carriageway pieces 14 m wide over their whole length, the seven links 8 m, 562 less its tunnel.
+    is asked. Of the 29, 21 are motorway pieces and links and 8 are tertiary pieces of East Gene Autry Way (447, 470,
+    566, 574, 576, 578, 598 and 600), all in the far set, which the rule draws as decks like the rest; the ramps
+    raise only four pieces without a span of their own, all motorway (183, 244 and 362 of the I-5, and link 591); and
+    every crossing without a junction is at least 5.5 m apart in height or in a tunnel span (5 are, all on the `tn`
+    spans of Disney Way, seg 221, and of link 562). **The piers:** placed every 28 m along each span, the first 14 m
+    in, 0.9 m in radius, there are 131 (83 on near pieces); 33 of them (19 near) have footprints on the ribbon of a
+    piece drawn beneath the deck (at least 5.5 m lower) and are left out, under Katella's 355 and 423 among others. The
+    estimate counts every pier, so it's high by about 1.1k (33 × 32). It also prints the near I-5's drawn widths and
+    lengths: the five carriageway pieces 14 m wide over their whole length, the seven links 8 m, 562 less its tunnel.
   - **The trees** are placed by the plan's rule (palms every 6 m at d 10.1 from s -6 to 24; shade trees every 6 m at
     v -19 from u -2 to 22), each dropped if it's within 1.0 m of a road or aisle edge (the widths `engine/streets.ts`
     draws: `ROAD_W` as measured, L14; our aisle 416 at 4.5 m; motorways at 14 m and motorway links at 8 m, ours), 1.5
@@ -2943,7 +3248,11 @@ Every measurement was taken on 2026-10-21.
   06:00 read are listed under the table. Earlier reads that day (about 01:00, 01:45, 02:20 and 05:30 UTC) are
   superseded by it; between 05:30 and
   06:00, `main.ts` changed at 05:41 to build Ultra's parked cars at high quality, detail 12 cars on Low, and rebuild the
-  parked cars on a quality change (L2, L3), which this revision follows. The S1 builder re-measures the table first.
+  parked cars on a quality change (L2, L3), which this revision follows. For this revision `main.ts` was read again at
+  3ab822eb73 (11:09 UTC), for L9's first-person layer only (unchanged there: the body on layer 1, and
+  `env.sun.shadow.camera.layers.enable(1)` at setup; it also builds your avatar's LOD 0 at High now, a drift S1's
+  re-measure takes up), and `walkgrid.ts` (671715d7a0, unchanged since 00:20) for its painting methods. The S1 builder
+  re-measures the table first.
 - **The railway's distance** is the nearest rail piece in the slice to the bar's point.
 - **Exits and routes** come from `src/data/anaheim/sportsbar-freeway-link.json`.
   - The signals on each route are the slice's `transportation:traffic_signals` points within 20 m of the decoded route
@@ -2956,7 +3265,15 @@ Every measurement was taken on 2026-10-21.
 - **The fill times** under "People are slow to build" are arithmetic: each build plus twice its duration, plus the
   frame it lands in (33 ms at 30 fps; at 2 fps each wait rounded up to whole 0.5 s frames; at 0.3 fps, whose 3.3 s
   frames are longer than twice any build, one build a frame, so the frames plus the builds), summed over the builds
-  listed there. A frame-by-frame simulation of the rule gives 45 s, 2.2 min and 4.0 min at 30 fps, 59 s for Low at
-  2 fps, and 5.5 and 9.1 min for HD and Ultra at 0.3 fps. The SwiftShader rates are the game's, as
+  listed there. A frame-by-frame simulation of the rule gives 45 s, 2.5 min and 5.8 min at 30 fps, 58 s for Low at
+  2 fps, and 5.8 and 11.5 min for HD and Ultra at 0.3 fps. The SwiftShader rates are the game's, as
   `PROJECT_OC_PROGRESS.md` records them ("Frame rates here are low": Low about 1.6 to 2.3 fps, High and Ultra about
-  0.3 fps), assumed for the bar's page, which isn't built.
+  0.3 fps, and "the first three frames after a switch took 108 s on High and 271 s on Ultra" at 640 × 360), assumed
+  for the bar's page, which isn't built.
+- **S3a's span bound** (1.7) is arithmetic on the rule, checked by a frame-by-frame simulation: frames of a steady
+  non-build length F, the scheduler at the top of each frame checking the gap and starting a build there, over the
+  fill table's builds. The span came to 1.00 to 1.31 times Σ max(F, 3 d) at 30, 2 and 0.3 fps for Low, HD and Ultra, and
+  1.09 for 30 LOD 2 builds at 0.3 fps (108 s of span against 168 s allowed). With the check at the frame's start and
+  the build after the render, the same simulation gives 1.76 for Low at 2 fps and 2.06 to 2.19 at 0.3 fps: that's why
+  the plan fixes the check and the build at one point in the frame. The round-6 review's own simulation gave 1.08 to
+  1.36.

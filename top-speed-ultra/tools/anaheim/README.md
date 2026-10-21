@@ -107,7 +107,7 @@ python3 city.py          # city limits, streets-city.json, city-wide cost -> dat
 python3 link.py          # -> src/data/anaheim/freeway-link.json
 python3 verify.py        # spot checks -> data/verify.json
 python3 render.py        # -> tests/out/onfoot/data-overview.png, data-venue.png, data-city.png
-python3 sportsbar_sets.py    # the sports bar's near and far street sets, bridge rule, light streams and street trees (prints only)
+python3 sportsbar_sets.py    # the sports bar's near and far street sets, bridge and pier rules, light streams and street trees (prints only)
 python3 sportsbar_zones.py   # the sports bar's interior and patio layout, walk-grid model, lane path (prints only)
 ```
 
