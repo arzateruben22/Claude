@@ -512,6 +512,7 @@ export function App() {
                   <div className="field"><label>Look</label><Seg value={settings.look} options={['ultra', 'hd'] as Look[]} labels={(l) => (l === 'ultra' ? 'Futuristic' : 'Realistic')} onChange={(l) => update({ look: l })} /></div>
                   <div className="field"><label>Graphics</label><Seg value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
                   <p className="fine">{qualityNote(settings.quality)}</p>
+                  {settings.quality === 'low' && <Toggle label="Style: Retro (preview of the new Low)" value={settings.style === 'retro'} onChange={(v) => update({ style: v ? 'retro' : 'standard' })} />}
                   <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
                   <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
                   <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
