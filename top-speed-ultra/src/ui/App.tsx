@@ -21,6 +21,7 @@ import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
 import { AccountPanel, LiveChip } from './Live';
 import { OnlineBoard } from './OnlineBoard';
+import { fetchBoard, fmtValue, type BoardSnapshot } from '../live/board';
 import { LiveClient, LiveInfo, liveBase, loadToken, loadName, liveApi } from '../live/client';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
@@ -169,6 +170,14 @@ export function App() {
     c.connect(base, token, car.id, car.paint, s.crew);
   };
   const liveInfoRef = useRef<LiveInfo>(LIVE_OFF);
+  // where you stand on today's online board, fetched when you pause a live drive (the server's view, not this device's)
+  const [myBoard, setMyBoard] = useState<BoardSnapshot['you'] | null>(null);
+  useEffect(() => {
+    if (screen !== 'paused' || liveInfo.status !== 'online' || !liveToken) { setMyBoard(null); return; }
+    const ac = new AbortController();
+    void fetchBoard(liveBase(settings.liveUrl), { token: liveToken, limit: 1, signal: ac.signal }).then((r) => { if (!ac.signal.aborted && r.ok) setMyBoard(r.board.you ?? null); });
+    return () => ac.abort();
+  }, [screen, liveInfo.status, liveToken, settings.liveUrl]);
   // a first visit from the live server's own page or an invite link: a one-time welcome that says what live is
   const [welcome, setWelcome] = useState(() => {
     try {
@@ -607,6 +616,7 @@ export function App() {
               const others = [...(live.current?.peers.values() ?? [])].map((p) => p.name).filter(Boolean).sort();
               return <p className="fine live-line">Live: {liveInfo.online} of {liveInfo.cap} driving{others.length ? ` · ${others.slice(0, 3).join(', ')}${others.length > 3 ? ` and ${others.length - 3} more` : ''}` : ' · just you so far'}. Others can't see your car while you're paused.</p>;
             })()}
+            {liveInfo.status === 'online' && myBoard?.distance && <p className="fine board-line">Today on the online board: #{myBoard.distance.rank} for distance ({fmtValue('distance', myBoard.distance.value)}){myBoard.speed ? ` · ${fmtValue('speed', myBoard.speed.value)} held` : ''}.</p>}
             {liveInfo.status === 'queued' && <p className="fine live-line">Live: you're #{liveInfo.position} in line for one of {liveInfo.cap} spots.</p>}
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>

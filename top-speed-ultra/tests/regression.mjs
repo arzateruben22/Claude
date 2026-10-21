@@ -1031,6 +1031,10 @@ await group('live', async (use) => {
       await game(A, () => window.__game.setPaused(true));
       const line = (await A.locator('.live-line').innerText()).replace(/\s+/g, ' ');
       expect(/Live: \d+ of 2 driving/.test(line), `the pause screen says "${line}"`);
+      // and where you stand on today's online board, from the server
+      await A.waitForSelector('.board-line', { timeout: 20000 });
+      const standing = (await A.locator('.board-line').innerText()).replace(/\s+/g, ' ');
+      expect(/online board: #\d+ for distance \(\d/.test(standing), standing);
       await A.getByRole('button', { name: 'Main menu', exact: true }).click();
       await A.locator('.pick', { hasText: 'Account' }).click();
       await A.locator('summary', { hasText: 'Change password' }).click();
@@ -1046,7 +1050,7 @@ await group('live', async (use) => {
       await A.getByRole('button', { name: 'Delete my account', exact: true }).click();
       await A.waitForSelector('#live-name', { timeout: 15000 });          // back to the sign-up form
       expect(await login('an even longer password') === 401, 'the account still logs in');
-      return 'password changed, then the account deleted; the panel is back to sign-up';
+      return `pause: "${standing}"; password changed, then the account deleted; the panel is back to sign-up`;
     });
     await check('the online board: the menu opens it, and it lists what the server saw (the deleted account is gone)', async () => {
       await A.getByRole('button', { name: 'Back', exact: true }).first().click();          // the signed-out account panel
