@@ -43,13 +43,18 @@ real phone, real network or real player has touched it.
     goes back to the menu (server peak 2, admitted 3, 800 poses in, 0 dropped); a 500 m/s pose and a non-number
     dropped through a real socket; no page errors. The first two runs failed only on the chip's case (CSS upper-cases
     it) and are fixed.
-  - `launch`: the existing checks pass; the new billboard check found the Lot 57 panel on the 57 ahead of the
-    Orangewood exit (screenshot `tests/out/launch-billboard.png`: the green LOT 57 panel beside the 57, facing the
-    driver, before the Orangewood guide signs).
+  - Final runs on the last build: `live` **14 of 14** with `launch` in the same run, then `launch` alone **6 of 6**
+    after the billboard check's braking fix. Realistic mode: on I-405 North the mock feed's ratio 1 gave 2.2 cars per km
+    per lane, the sky followed the feed (clear, 64°F) and the HUD read "Live traffic · simulated · typical day" (the
+    test server runs the mocks, so "simulated" is the honest label). Billboards: all 12 placed (I-5 both ways at 27 to
+    28 km south and 64 to 65 km north, CA-57 at 0 to 0.5 km and 19 to 20 km, CA-91 East 26.5 km, CA-91 West 47.4 km,
+    CA-22 East 18.0 km, CA-22 West 3.7 km). The Lot 57 panel on the 57 is drawn ahead of the Orangewood exit
+    (screenshot `tests/out/launch-billboard.png`, taken 87 m short with the car stopped).
   - Found and fixed on the way: the four 91 and 22 billboard slots had their points mirrored north to south (5 to 7
     km off those roads), so 8 of 12 placed; moved to where each road passes closest to the venues. The realistic-mode
     check read the HUD's traffic line without a route set; that line lives on the destination card, which shows only
-    with a route, so the check now sets one.
+    with a route, so the check now sets one. The billboard check braked a car that was already stopped, and the
+    automatic gearbox took that as reverse; it now brakes only while moving.
 - **Not verified:** the real NWS and TomTom feeds (this sandbox can't reach either host; the providers are tested
   with recorded answers), any real phone, a real deployment behind Caddy, and more than three browsers at once.
 
