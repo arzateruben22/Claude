@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Path, STEP, LANE_W, ORIGIN } from './Path';
-import { Network, Overpass, Sign, DIR_WORD, ROUTE_LABEL } from './Network';
+import { Network, Overpass, Sign, Hit, DIR_WORD, ROUTE_LABEL, rank, onTop, GIVE_WAY } from './Network';
 import * as P from '../road/props';
 import * as T from '../textures';
 import { fbm2, rng, clamp } from '../util';
@@ -142,12 +142,80 @@ export class Roads {
       if (ss >= s1) break;
     }
     const own = (mesh: THREE.Mesh | THREE.LineSegments, shadow = true) => { mesh.userData.own = true; mesh.receiveShadow = shadow; group.add(mesh); return mesh; };
-    // is anything else close enough to overlap? If not, skip every overlap test.
-    const crowded = rows.some((r, i) => i % 8 === 0 && net.near(r.ax, r.az, 40).some((h) => h.path !== p));
+    // is a better-ranked road close enough to take this one's place anywhere? If not, skip every overlap test (a freeway
+    // among its own ramps never gives way to them)
+    const outranked = rows.some((r, i) => i % 8 === 0 && net.near(r.ax, r.az, 40).some((h) => h.path !== p && rank(h.path) < rank(p)));
     const covered = (s: number, d: number, y: number) => {
-      if (!crowded) return false;
+      if (!outranked) return false;
       const a = p.at(s, d);
       return net.covered(a.x, a.z, y, p, -0.25, true);
+    };
+    // the same test for the surfaces, many points a row: one search a row for the better-ranked roads across it, then
+    // each point projected onto those few (from where the row's centre falls on them)
+    const across = new Map<number, Hit[]>(), PRS = { s: 0, d: 0 };
+    const coveredOnRow = (i: number, s: number, d: number, y: number, margin: number) => {
+      if (!outranked) return false;
+      let hs = across.get(i);
+      if (!hs) across.set(i, (hs = net.near(rows[i].ax, rows[i].az, Math.max(p.paveR, -p.paveL) + 1.5, []).filter((h) => h.path !== p && rank(h.path) < rank(p))));
+      if (!hs.length) return false;
+      const a = p.at(s, d);
+      for (const h of hs) {
+        const q = h.path, pr = q.project(a.x, a.z, h.s, PRS);
+        if (pr.s < 0 || pr.s > q.len || pr.d < q.paveL - margin || pr.d > q.paveR + margin) continue;
+        if (!onTop(y, q.height(pr.s))) continue;
+        return true;
+      }
+      return false;
+    };
+    // A surface across the road (points [d, lift] with the texture's u at each), less what a better-ranked road covers. A
+    // quad covered at both sides, at both ends, goes; one covered nowhere stays; one the other road's edge runs through is
+    // cut into strips about 0.6 m wide that go or stay on their own. (Quads went or stayed by their centre alone: a lane
+    // 3.7 m across, more than half covered, left the rest of its width open to the ground, a trench of dirt along the
+    // junction, and one less than half covered stayed, lying over the other road.) rowOk(i) can leave out the rows from
+    // i to i + 1 as well. A deck's soffit (hangs) also goes over any road from GIVE_WAY under this one's surface up to it,
+    // where it would hang into that road's lanes: from 2.5 m under, or nearer along this road's edges and past them (well
+    // inside this road's pavement, a worse-ranked road nearer than 2.5 m under it is left out; it shows from 0.25 m in).
+    const overRoad = (s: number, d: number, y: number, margin: number) => {
+      const a = p.at(s, d);
+      return !!net.pavedAt(a.x, a.z, y - GIVE_WAY, y - 2.5, p, margin) || ((d < p.paveL + 0.6 || d > p.paveR - 0.6) && !!net.pavedAt(a.x, a.z, y - 2.5, y + 0.3, p, margin));
+    };
+    const surface = (prof: [number, number][], u: number[], v: (row: Row) => number, rowOk = (_i: number) => true, hangs = false) => {
+      const nq = prof.length - 1, memo = new Map<number, boolean>();
+      const gone = (i: number, s: number, d: number, margin: number) => coveredOnRow(i, s, d, rows[i].y, margin) || (hangs && overRoad(s, d, rows[i].y, margin));
+      const at = (i: number, q: number, k: number) => {
+        const key = (i * 64 + q) * 2 + k;
+        let c = memo.get(key);
+        if (c === undefined) {
+          const [d0, d1] = [prof[q][0], prof[q + 1][0]], inset = Math.min(0.3, (d1 - d0) / 2);
+          c = gone(i, rows[i].s, k ? d1 - inset : d0 + inset, -0.25);
+          memo.set(key, c);
+        }
+        return c;
+      };
+      // per quad: 0 stays, 1 goes, 2 is cut
+      const state = (i: number, q: number) => {
+        let n = 0;
+        for (const r of [i, i + 1]) for (const k of [0, 1]) if (at(r, q, k)) n++;
+        return n === 0 ? 0 : n === 4 ? 1 : 2;
+      };
+      const whole = this.strip(rows, prof, (row, j) => [u[j], v(row)], (i, q) => rowOk(i) && state(i, q) === 0);
+      // the cut quads, as one strip of narrow columns (the others left out of it)
+      const fine: [number, number][] = [], fu: number[] = [], of: number[] = [];
+      for (let q = 0; q < nq; q++) {
+        const m = Math.max(1, Math.round((prof[q + 1][0] - prof[q][0]) / 0.6));
+        for (let k = 0; k < m; k++) {
+          const t = k / m;
+          fine.push([prof[q][0] + (prof[q + 1][0] - prof[q][0]) * t, prof[q][1] + (prof[q + 1][1] - prof[q][1]) * t]); fu.push(u[q] + (u[q + 1] - u[q]) * t); of.push(q);
+        }
+      }
+      fine.push(prof[nq]); fu.push(u[nq]);
+      const cut = this.strip(rows, fine, (row, j) => [fu[j], v(row)], (i, j) => {
+        if (!rowOk(i) || state(i, of[j]) !== 2) return false;
+        const half = (fine[j + 1][0] - fine[j][0]) / 2;
+        return !gone(i, (rows[i].s + rows[i + 1].s) / 2, fine[j][0] + half, -(half + 0.05));
+      });
+      const parts = [whole, cut].filter(Boolean) as THREE.BufferGeometry[];
+      return parts.length ? (parts.length > 1 ? mergeGeometries(parts)! : parts[0]) : null;
     };
 
     // -------------------------------------------------------------- surfaces: lanes and shoulders
@@ -156,10 +224,10 @@ export class Roads {
     const vRow = (row: Row, scale: number) => vOff * (LANE_W / scale) + (row.s - s0) / scale;
     // the interstates and state routes are concrete slabs; the toll roads and every ramp are asphalt
     const pcc = p.main && !TOLL.has(p.route ?? '');
-    const lanes = this.strip(rows, lanesProf.map((d) => [d, 0]), (row, j) => [j, vRow(row, pcc ? T.SLAB : LANE_W)], (i, j) => !covered((rows[i].s + rows[i + 1].s) / 2, (lanesProf[j] + lanesProf[j + 1]) / 2, rows[i].y));
+    const lanes = surface(lanesProf.map((d) => [d, 0]), lanesProf.map((_d, j) => j), (row) => vRow(row, pcc ? T.SLAB : LANE_W));
     if (lanes) own(new THREE.Mesh(lanes, pcc ? this.m.pcc : this.m.asphalt));
-    const shL = this.strip(rows, [[p.paveL - 0.4, -0.05], [p.paveL, 0], [p.edgeL, 0]], (row, j) => [j * 0.9, vRow(row, 3)], (i) => !covered((rows[i].s + rows[i + 1].s) / 2, (p.paveL + p.edgeL) / 2, rows[i].y));
-    const shR = this.strip(rows, [[p.edgeR, 0], [p.paveR, 0], [p.paveR + 0.4, -0.05]], (row, j) => [j * 1.1, vRow(row, 3)], (i) => !covered((rows[i].s + rows[i + 1].s) / 2, (p.paveR + p.edgeR) / 2, rows[i].y));
+    const shL = surface([[p.paveL - 0.4, -0.05], [p.paveL, 0], [p.edgeL, 0]], [0, 0.9, 1.8], (row) => vRow(row, 3));
+    const shR = surface([[p.edgeR, 0], [p.paveR, 0], [p.paveR + 0.4, -0.05]], [0, 1.1, 2.2], (row) => vRow(row, 3));
     const sh = [shL, shR].filter(Boolean) as THREE.BufferGeometry[];
     if (sh.length) own(new THREE.Mesh(mergeGeometries(sh)!, this.m.shoulder));
 
@@ -180,23 +248,56 @@ export class Roads {
         if (run.length < 2) continue;
         const sound = side === 'R' && p.main && this.urban(run[0].ax, run[0].az) && soundWall(run[0].ax, run[0].az);
         const w = side === 'L' ? p.wallL : p.wallR, sg = side === 'L' ? -1 : 1;
-        const prof: [number, number][] = sound
-          ? [[w, 0], [w, 4.6], [w + 0.3 * sg, 4.7], [w + 0.6 * sg, 4.6], [w + 0.6 * sg, -1.4]]
-          : [[w, 0], [w + 0.05 * sg, 0.08], [w + 0.2 * sg, 0.33], [w + 0.35 * sg, 0.82], [w + 0.53 * sg, 0.82], [w + 0.6 * sg, -1.4]];
-        const pr = side === 'L' ? prof.slice().reverse() : prof;
-        const g = this.strip(run, pr, (row, _j, acc) => [acc / (sound ? 4 : 2), (row.s - s0) / (sound ? 4 : 2)]);
-        if (g) { const mesh = own(new THREE.Mesh(g, sound ? this.m.wall : this.m.concrete)); mesh.castShadow = true; }
+        // a sound wall gives way to a Jersey barrier wherever another road passes over it lower than its top: it stood up
+        // through that road's deck (the 91 West's wall through the 241 North coming down to join it)
+        const under = (row: Row) => { const a = p.at(row.s, w + 0.3 * sg); return !!net.pavedAt(a.x, a.z, row.y + 0.9, row.y + 5.5, p, 0.3); };
+        const pieces: [Row[], boolean][] = [];
+        if (!sound) pieces.push([run, false]);
+        else {
+          let cur: Row[] = [], tall = !under(run[0]);
+          for (const row of run) {
+            const t = !under(row);
+            if (t !== tall && cur.length) { pieces.push([cur, tall]); cur = [cur[cur.length - 1]]; tall = t; }
+            cur.push(row);
+          }
+          pieces.push([cur, tall]);
+        }
+        for (const [rowsOf, tall] of pieces) {
+          if (rowsOf.length < 2) continue;
+          const prof: [number, number][] = tall
+            ? [[w, 0], [w, 4.6], [w + 0.3 * sg, 4.7], [w + 0.6 * sg, 4.6], [w + 0.6 * sg, -1.4]]
+            : [[w, 0], [w + 0.05 * sg, 0.08], [w + 0.2 * sg, 0.33], [w + 0.35 * sg, 0.82], [w + 0.53 * sg, 0.82], [w + 0.6 * sg, -1.4]];
+          const pr = side === 'L' ? prof.slice().reverse() : prof;
+          const g = this.strip(rowsOf, pr, (row, _j, acc) => [acc / (tall ? 4 : 2), (row.s - s0) / (tall ? 4 : 2)]);
+          if (g) { const mesh = own(new THREE.Mesh(g, tall ? this.m.wall : this.m.concrete)); mesh.castShadow = true; }
+        }
       }
     }
 
     // -------------------------------------------------------------- bridges: deck underside and columns
     const lifted = rows.map((r) => r.y - net.ground(r.ax, r.az));
     if (lifted.some((v) => v > 2.5)) {
-      const deckRows = rows.filter((_r, i) => lifted[i] > 2.0);
-      if (deckRows.length >= 2) {
-        const g = this.strip(deckRows, [[p.wallR + 0.6, -0.05], [p.wallR + 0.6, -1.5], [p.wallL - 0.6, -1.5], [p.wallL - 0.6, -0.05]], (row, j) => [j * 2, (row.s - s0) / 4]);
-        if (g) { const mesh = own(new THREE.Mesh(g, this.m.under)); mesh.castShadow = true; }
-      }
+      // the deck's sides and soffit, between rows that are both lifted (one strip across a dip joined the rows either
+      // side of it), and only under this road's own surface. The soffit is cut like the lanes: where a better-ranked road
+      // takes this one's place, it goes with the surface above it (a ramp climbing along the top of the I-5 North had its
+      // surface left out over the freeway's lanes but kept its soffit, a slab of concrete lying a few centimetres over
+      // them). A side goes where the edge above it has gone, and where it stands on another road (a ramp leaving or
+      // joining at the same height): it came up through that road's lanes as a kerb of concrete a few centimetres high.
+      // Both go over a road less than GIVE_WAY below (a freeway ending in another passing under its edge), where they'd
+      // hang into its lanes.
+      const deckRow = (i: number) => lifted[i] > 2.0 && lifted[i + 1] > 2.0;
+      const prof: [number, number][] = [[p.wallR + 0.6, -0.05], [p.wallR + 0.6, -1.5], [p.wallL - 0.6, -1.5], [p.wallL - 0.6, -0.05]];
+      const side = (i: number, j: number) => {
+        if (j === 1 || !deckRow(i)) return false;
+        const s = (rows[i].s + rows[i + 1].s) / 2;
+        if (coveredOnRow(i, s, j === 0 ? p.paveR : p.paveL, rows[i].y, 0)) return false;
+        const a = p.at(s, j === 0 ? p.wallR + 0.6 : p.wallL - 0.6);
+        return !net.pavedAt(a.x, a.z, a.y - GIVE_WAY, a.y + 0.3, p, 0.3);
+      };
+      const across = [p.wallL - 0.6, p.paveL, ...lanesProf, p.paveR, p.wallR + 0.6];
+      const deck = [this.strip(rows, prof, (row, j) => [j * 2, (row.s - s0) / 4], side),
+        surface(across.map((d) => [d, -1.5]), across.map((d) => (d - across[0]) / 8), (row) => (row.s - s0) / 4, deckRow, true)].filter(Boolean) as THREE.BufferGeometry[];
+      if (deck.length) { const mesh = own(new THREE.Mesh(deck.length > 1 ? mergeGeometries(deck)! : deck[0], this.m.under)); mesh.castShadow = true; }
       const cols: THREE.BufferGeometry[] = [];
       const spacing = 32;
       for (let s = Math.ceil(s0 / spacing) * spacing; s < s1; s += spacing) {
@@ -205,8 +306,10 @@ export class Roads {
         const ds = p.main ? [p.edgeL + 2, p.edgeR - 2] : [0];
         for (const d of ds) {
           const a = p.at(s, d);
-          // don't stand a column in the middle of another road
-          if (net.covered(a.x, a.z, gnd, p, 0.5)) continue;
+          // don't stand a column in another road: any road anywhere under this deck (it only looked for one at ground level,
+          // so one under the deck but above the ground got a column through its lanes, and one in a cut below the 60 m
+          // ground grid got a column stub hanging into its lanes)
+          if (net.pavedAt(a.x, a.z, -1e4, pt.y - 1.5, p, 1.5)) continue;
           const c = new THREE.CylinderGeometry(p.main ? 0.85 : 0.75, p.main ? 0.95 : 0.85, hgt + 2, 12);
           c.translate(a.x - ox, gnd - 2 + (hgt + 2) / 2, a.z - oz); cols.push(c);
           const cap = new THREE.BoxGeometry(p.main ? 3.2 : 2.4, 1.0, 1.6); cap.rotateY(pt.h); cap.translate(a.x - ox, pt.y - 2.0, a.z - oz); cols.push(cap);
@@ -222,6 +325,8 @@ export class Roads {
         const idx = Math.min(p.n - 1, Math.round(s / STEP));
         if (!net.hasWall(p, idx, 'R')) continue;
         const a = p.at(s, p.wallR + 0.9);
+        // not on another road (a ramp alongside, below or rising past): the pole would stand in its lanes
+        if (net.pavedAt(a.x, a.z, a.y - 2.5, a.y + 12.5, p, 0.4)) continue;
         poles.push(new THREE.Matrix4().compose(new THREE.Vector3(a.x - ox, a.y + 0.6, a.z - oz), new THREE.Quaternion().setFromAxisAngle(UP, a.h), ONE3));
       }
       if (poles.length) {
@@ -323,7 +428,18 @@ export class Roads {
   // an overhead sign bridge: the exit's panel over the lanes on its side, the freeway's own over the others
   private gantry(group: THREE.Group, p: Path, s: number, ox: number, oz: number, sg: Sign, sub: string) {
     const parts: THREE.BufferGeometry[] = [];
-    const left = p.wallL - 0.6, right = p.wallR + 0.6, H = 6.9;
+    const H = 6.9, net = this.net;
+    // each post stands just outside its barrier, unless that's on another road (the ramp alongside, the other carriageway
+    // across a narrow median): then it moves out past that road, and the truss spans it, as a real sign bridge does. It
+    // stood in the ramp's lanes. No clear spot within 40 m: no sign bridge here.
+    const clearAt = (d: number) => { const a = p.at(s, d); return !net.pavedAt(a.x, a.z, a.y - 2.5, a.y + H + 1.2, p, 0.3); };
+    let left = p.wallL - 0.6, right = p.wallR + 0.6;
+    while (!clearAt(left) && left > p.wallL - 40) left -= 0.5;
+    while (!clearAt(right) && right < p.wallR + 40) right += 0.5;
+    if (!clearAt(left) || !clearAt(right)) return;
+    // and no road passes through the truss or the panels (from 2.5 m up to the top of the signs): the CA-73 crossing
+    // 7 m over the 5 and the 405 went straight through two of them
+    for (let d = left; d <= right; d += 1) { const a = p.at(s, d); if (net.pavedAt(a.x, a.z, a.y + 2.5, a.y + H + 3, p, 0.5)) return; }
     for (const x of [left, right]) { const post = new THREE.BoxGeometry(0.45, H + 1.2, 0.45); post.translate(x, (H + 1.2) / 2, 0); parts.push(post); }
     for (const y of [H, H + 1.1]) { const chord = new THREE.BoxGeometry(right - left, 0.18, 0.18); chord.translate((left + right) / 2, y, 0); parts.push(chord); }
     for (let x = left + 0.6; x < right; x += 1.2) { const web = new THREE.BoxGeometry(0.08, 1.3, 0.08); web.rotateZ(((x * 10) | 0) % 2 ? 0.7 : -0.7); web.translate(x, H + 0.55, 0); parts.push(web); }
@@ -359,11 +475,13 @@ export class Roads {
     const parts: THREE.BufferGeometry[] = [];
     const deck = new THREE.BoxGeometry(o.w, 1.6, L); deck.translate(0, o.y - 0.8, 0); parts.push(deck);
     for (const x of [-o.w / 2 + 0.25, o.w / 2 - 0.25]) { const pr = new THREE.BoxGeometry(0.5, 1.1, L); pr.translate(x, o.y + 0.55, 0); parts.push(pr); }
-    // columns where they don't land on a road
+    // columns where they don't land on a road: each column's own spot, any road under the deck (it tested the bridge's
+    // centre line with a search that missed wide freeways' outer lanes, and stood columns in them)
     for (let t = -L / 2 + 6; t <= L / 2 - 6; t += 9) {
       const wx = ox + Math.sin(h) * t, wz = oz + Math.cos(h) * t, gnd = net.ground(wx, wz);
-      if (net.near(wx, wz, 2).some((hh) => hh.d > hh.path.paveL - 1.2 && hh.d < hh.path.paveR + 1.2)) continue;
-      for (const x of [-o.w / 2 + 2.5, o.w / 2 - 2.5]) { const c = new THREE.CylinderGeometry(0.7, 0.8, o.y - gnd, 12); c.translate(x, gnd + (o.y - gnd) / 2 - 1.6, t); parts.push(c); }
+      const xs = [-o.w / 2 + 2.5, o.w / 2 - 2.5].filter((x) => !net.pavedAt(wx + x * Math.cos(h), wz - x * Math.sin(h), -1e4, o.y - 1.6, null, 2));
+      if (xs.length < 2) continue;
+      for (const x of xs) { const c = new THREE.CylinderGeometry(0.7, 0.8, o.y - gnd, 12); c.translate(x, gnd + (o.y - gnd) / 2 - 1.6, t); parts.push(c); }
       t += 14;
     }
     const geo = mergeGeometries(parts)!; geo.rotateY(h);
@@ -378,7 +496,23 @@ export class Roads {
       const y = out <= 0 ? o.y : o.y + (gnd + 0.15 - o.y) * (out * out * (3 - 2 * out));
       rows.push({ x: wx - ox, y, z: wz - oz, h, s: t + L / 2 + ext, ax: wx, az: wz });
     }
-    const top = this.strip(rows, [[-o.w / 2 - 3, -2.5], [-o.w / 2, 0], [o.w / 2, 0], [o.w / 2 + 3, -2.5]], (row, j) => [j * 2, row.s / 4]);
+    // off the bridge, the approaches are left out wherever they'd pass over another road with less than 5 m to spare (or
+    // cross it at grade): they came down onto the freeway beside the one bridged (Bolsa Chica Road onto the 22, Gene
+    // Autry Way onto the 5) as slabs of street hanging over its lanes
+    const prof: [number, number][] = [[-o.w / 2 - 3, -2.5], [-o.w / 2, 0], [o.w / 2, 0], [o.w / 2 + 3, -2.5]];
+    const clearOf = (i: number, j: number) => {
+      const t = (rows[i].s + rows[i + 1].s) / 2 - L / 2 - ext;
+      if (Math.abs(t) <= L / 2) return true;
+      // the quad's centre and its corners (the street's one is as wide as the street)
+      for (const [u, w] of [[0.5, 0.5], [0, 0], [1, 0], [0, 1], [1, 1]]) {
+        const a = rows[i], b = rows[i + 1], d = prof[j][0] + (prof[j + 1][0] - prof[j][0]) * w;
+        const y = a.y + (b.y - a.y) * u + prof[j][1] + (prof[j + 1][1] - prof[j][1]) * w;
+        const x = a.ax + (b.ax - a.ax) * u - Math.cos(h) * d, z = a.az + (b.az - a.az) * u + Math.sin(h) * d;
+        if (net.pavedAt(x, z, y - 5, y + 1, null, 1)) return false;
+      }
+      return true;
+    };
+    const top = this.strip(rows, prof, (row, j) => [j * 2, row.s / 4], clearOf);
     if (top) { const m2 = new THREE.Mesh(top, this.m.asphalt); m2.receiveShadow = true; m2.userData.own = true; group.add(m2); }
     this.group.add(group);
     return { desc, group, ox, oz };
