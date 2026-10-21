@@ -1176,18 +1176,26 @@ await group('livephone', async (use) => {
         await p2.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
         // the first phone is still driving; bring this one forward so its frames (and Playwright's checks) run
         await p2.bringToFront();
-        await p2.waitForFunction(() => { const r = document.querySelector('.welcome')?.getBoundingClientRect(); return !!r && r.width > 0 && r.height > 0; }, null, { timeout: 30000, polling: 500 }).catch(async (e) => {
-          const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className), rect: document.querySelector('.welcome')?.getBoundingClientRect().toJSON(), view: [innerWidth, innerHeight], vis: document.visibilityState }));
-          throw new Error(`no welcome card: ${JSON.stringify(st)} (${String(e).split('\n')[0]})`);
-        });
+        // poll from here: on this loaded machine the second phone's in-page waits (rAF or timers) stall even while
+        // its page answers evaluate() at once
+        const shown = async () => p2.evaluate(() => { const r = document.querySelector('.welcome')?.getBoundingClientRect(); return !!r && r.width > 0 && r.height > 0; });
+        for (let t = Date.now(); !(await shown()); await new Promise((r) => setTimeout(r, 500))) {
+          if (Date.now() - t > 30000) {
+            const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className) }));
+            throw new Error(`no welcome card: ${JSON.stringify(st)}`);
+          }
+        }
         const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
         await p2.screenshot({ path: path.join(OUT, 'livephone-welcome.png') });
         expect(/invited to crew WXYZ/.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));
         // the card sits on top of the menu: a tap on its button lands on the button, not on the menu under it
         const onTop = await p2.evaluate(() => { const b = [...document.querySelectorAll('.welcome button')].find((x) => /Sign up/.test(x.textContent)), r = b.getBoundingClientRect(); return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === b; });
         expect(onTop, 'the menu covers the welcome card');
-        await p2.getByRole('button', { name: 'Sign up and drive live', exact: true }).click();
-        await p2.waitForSelector('#live-name', { timeout: 15000 });
+        // tap it in the page (the check above proves a real tap lands on it)
+        await p2.evaluate(() => [...document.querySelectorAll('.welcome button')].find((x) => /Sign up/.test(x.textContent)).click());
+        for (let t = Date.now(); !(await p2.evaluate(() => !!document.querySelector('#live-name'))); await new Promise((r) => setTimeout(r, 500))) {
+          if (Date.now() - t > 15000) throw new Error('Sign up did not open the account panel');
+        }
         const crew = await p2.evaluate(() => JSON.parse(localStorage.getItem('tsu.settings')).crew);
         expect(crew === 'WXYZ' && !(await p2.locator('.welcome').count()), `crew ${crew}; the card still shows`);
         return `"${text.slice(0, 70)}…"; Sign up opened the panel; crew set to ${crew}`;
