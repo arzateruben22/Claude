@@ -16,11 +16,17 @@ import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { Store } from './Store';
 import { storeReturnPending } from '../store/payments';
+import { gateQuality, ultraState, UltraState } from '../store/entitlements';
+import { onStoreChange } from '../store/bus';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+// The settings the game draws with: a saved Ultra draws as High while the Ultra graphics tier is locked (decision 15;
+// ultraState in src/store/entitlements.ts: locked only in a live build where Ultra is on sale and not on this account).
+// The saved choice stays Ultra, so a purchase, Restore purchases or owner mode brings it back by itself.
+const gated = (s: Settings): Settings => { const q = gateQuality(s.quality); return q === s.quality ? s : { ...s, quality: q }; };
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 
 export function App() {
@@ -47,6 +53,7 @@ export function App() {
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
+  const [ultra, setUltra] = useState<UltraState>(ultraState);
 
   const toast = useCallback((text: string, kind = 'info') => {
     const id = ++toastId.current;
@@ -56,14 +63,27 @@ export function App() {
 
   const update = (patch: Partial<Settings>) => {
     const next = { ...settingsRef.current, ...patch };
-    setSettings(next); saveSettings(next); game.current?.updateSettings(next);
+    setSettings(next); saveSettings(next); game.current?.updateSettings(gated(next));
   };
+  // what you own changed (a purchase, Restore purchases, a refund seen on the server, signing in or out) or owner mode
+  // did (#owner): Ultra may have locked or unlocked, so the picker redraws and the game draws at the quality it may use
+  const ultraOpen = useRef(ultra !== 'locked');
+  useEffect(() => {
+    const recheck = () => {
+      const st = ultraState(), open = st !== 'locked';
+      setUltra(st);
+      if (open !== ultraOpen.current) { ultraOpen.current = open; game.current?.updateSettings(gated(settingsRef.current)); }
+    };
+    const off = onStoreChange(recheck);
+    addEventListener('hashchange', recheck);
+    return () => { off(); removeEventListener('hashchange', recheck); };
+  }, []);
 
   useEffect(() => {
     if (!host.current || game.current) return;
     let g: Game;
     try {
-      g = new Game(host.current, settings, {
+      g = new Game(host.current, gated(settings), {
         hud: (h) => hud.current?.set(h),
         toast: (text, kind) => toast(text, kind),
         over: (r) => { setResult(r); setScreen('over'); },
@@ -416,8 +436,9 @@ export function App() {
               <div className="scol">
                 <section className="sgroup">
                   <h3 className="sect">Display</h3>
-                  <div className="field"><label>Graphics</label><Seg value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
-                  <p className="fine">{qualityNote(settings.quality)}</p>
+                  <div className="field"><label>Graphics</label><Seg value={gateQuality(settings.quality)} options={Object.keys(QUALITY) as Quality[]} labels={(q) => (q === 'ultra' && ultra === 'locked' ? 'Ultra · Store' : QUALITY[q].label)} onChange={(q) => (q === 'ultra' && ultra === 'locked' ? setPanel('store') : update({ quality: q }))} /></div>
+                  <p className="fine">{qualityNote(gateQuality(settings.quality))}</p>
+                  <p className="fine ultra-note" data-ultra={ultra}>{ULTRA_NOTE[ultra]}</p>
                   <div className="field"><label>Corner window</label><Seg value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>
                   <div className="field"><label>Corner size</label><Seg value={String(settings.cornerSize)} options={['0', '1', '2']} labels={(v) => ['Small', 'Medium', 'Large'][Number(v)]} onChange={(v) => update({ cornerSize: Number(v) })} /></div>
                   <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
@@ -442,6 +463,15 @@ export function App() {
     </div>
   );
 }
+
+// who has Ultra on this device, in the settings' words (the store's card says the same, src/ui/Store.tsx)
+const ULTRA_NOTE: Record<UltraState, string> = {
+  test: 'Ultra is the maximum graphics tier, and the one paid graphics setting once it goes on sale; every other setting is free. This test build unlocks it for everyone, and nothing is charged.',
+  owned: 'Ultra is the maximum graphics tier: unlocked on your account. Every other setting is free.',
+  owner: 'Ultra is the maximum graphics tier: unlocked by owner mode on this device (test builds only).',
+  free: 'Ultra is the maximum graphics tier, unlocked for everyone until it goes on sale. Every other setting is free.',
+  locked: 'Ultra is the maximum graphics tier, in the Store. Every other setting is free.',
+};
 
 function qualityNote(q: Quality) {
   return {

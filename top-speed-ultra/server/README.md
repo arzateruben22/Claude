@@ -19,6 +19,8 @@ server/
     functions/_shared/stripe-signature.ts      the webhook signature check (Web Crypto)
     functions/_shared/form.ts                  Stripe's form encoding
     tests/run-local.sh                         optional: run the migration on a throwaway local Postgres and probe its security
+    tests/serial-webhook.mjs                   optional: the Founder Edition's serial numbers through the real webhook
+    tests/ultra-entitlement.mjs                optional: the Ultra graphics tier, grant, revoke and restore, end to end
 ```
 
 The game side is `src/store/` (config, account, entitlements, payments, locker) and `src/ui/Store.tsx`. The game's
@@ -85,7 +87,14 @@ server/supabase/tests/serial-webhook.mjs` runs the real `stripe-webhook` functio
 both migrations (retried and concurrent deliveries keep one number, a refund retires it, the founder window is
 judged by when the session was created, a player can read but never write a number, a second purchase by a player
 who holds a number is refused and refunded, a refund that arrives before its completion leaves nothing granted, and a
-refund racing the numbering never leaves a live number on a refunded purchase).
+refund racing the numbering never leaves a live number on a refunded purchase). The Ultra graphics tier (the
+`graphics-ultra` sku and entitlement, decision 15) has its own end-to-end check: `node
+server/supabase/tests/ultra-entitlement.mjs`. It runs the real `create-checkout` and `stripe-webhook` against a
+throwaway database. A player's requests run under row-level security. The game's own store code, built live against
+that database, does Restore purchases. It checks the checkout line at the server's price, that live keys refuse the
+sku while it isn't `ready`, the webhook's one grant, a refund's revoke, and the restore on another device. It also
+checks the lock, owner mode, and a test-mode build with the 4242 card. Ultra needs no migration of its own: it is a
+row in 0001's `entitlements` table, which `rls-probe.sql` now probes for it too.
 
 Before live mode, two optional hardenings (not built; `PROJECT_OC_MONETIZATION.md` §12): call `restore()` at boot
 when a player is signed in, so a locally edited cache can't keep the OC Hypercar or show a made-up number past the
