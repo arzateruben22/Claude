@@ -13,6 +13,7 @@ films/skin-school-pilot/
   motion/scenes3d-original.mjs  her 8-2 as it is on the Lumevina branch, for A/B
   motion/render.mjs             her frame engine with the finish added (changes marked "cinema:")
   motion/motion.js, studio3d.js, vendor/   hers, unchanged
+  audio/score.py                the optional sound (the main cut stays silent, like hers)
   fonts/inter-var.woff2         hers (OFL)
   out/                          the pilot clips and posters
   build/                        review sheets, render log, her current clips for comparison (not committed)
@@ -88,9 +89,18 @@ roughly an hour per aspect on a 4-core container.
 
 ## Open questions
 
-- **Sound.** Her clips are silent on purpose, and the captions carry every line. The film kit can
-  score a clip from the same timeline, as a soft bed plus foley on the drops and splashes, mixed low.
-  Off unless Evelyn wants it.
+- **Sound.** Her clips are silent on purpose, and the captions carry every line. So the pilot's main
+  cut is silent too, and `out/8-2-sound.mp4` is an alternative to compare. `audio/score.py`
+  synthesizes it from the scene's own event times:
+  - a soft pad in D major that changes chord on each shot;
+  - glass ticks as each label lands;
+  - a woody tap as each plug cell settles;
+  - fizz under the bacteria;
+  - a whistle, plop and splash for each drop;
+  - counter ticks and a closing chime.
+
+  It is mixed to −18 LUFS, so it stays under any voice. It's seeded, so the same file comes out
+  every run.
 - **Portrait.** The pilot frames the same moves from 1.32× further back, with a lens 12° wider. Each
   shot still needs a pass for the 9:16 safe zones.
 - **The flat scenes** (DOM/SVG) need a different treatment: camera moves on the stage and sub-frame
