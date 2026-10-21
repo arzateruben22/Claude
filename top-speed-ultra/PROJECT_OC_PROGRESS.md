@@ -28,6 +28,14 @@ The owner uploaded their style library (branch `style-references`) and asked for
   read from the page's tokens when it is drawn (falling back to the OC sunset).
 - **A suite check** (launch group): the theme follows the car and driver, and the Look switches, re-points the base
   and is saved. Its first run is with the merged branch (below).
+- **A cinematic camera; the menu is filmed with it** (`Game.ts` `SHOTS`, `view3`): four long-lens tracking shots cut
+  hard (a low hero front three-quarter pushing in, the profile, a low rear three-quarter, a high drone), all within
+  5 m of the car so none needs to know where the walls are; "Cinematic" is last in the View cycle; the menu's attract
+  drive uses it, a run still opens in the driver's seat. Proof (`tools/atmo-shots.mjs --shot=0`): the first frames
+  (`tests/out/cine/`, hypercar and GT, no errors) put the car's lower body behind the mode cards, so the hero tilts
+  down 0.07 rad; the reshoot after the atmosphere settled (`tests/out/cine2/oc-hyper-menu.png`, no errors) shows the
+  hypercar at dusk, its ice-blue blades and splitter strip lit, clear of the cards and right of the rail, as on the
+  library's ULTRA home screens.
 
 ## 2026-10-21: the ice reference: the UI re-themed, the menu and drive HUD rebuilt, the hypercar's lights and cluster judged (branch `claude/hypercar`)
 
