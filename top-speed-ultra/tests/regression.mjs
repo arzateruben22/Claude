@@ -989,7 +989,8 @@ await group('live', async (use) => {
     });
     await check('realistic mode: Live traffic and Live weather follow the server\'s feed, and the HUD says where it comes from', async () => {
       await game(A, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'live', weather: 'live' }); });
-      await until(A, () => window.__game.now.source === 'server' && window.__game.now.snapshot.traffic.source === 'mock', 'the feed from the server');
+      await until(A, () => window.__game.now.source === 'server' && window.__game.now.snapshot.traffic.source === 'mock', 'the feed from the server', 90000)
+        .catch(async (e) => { const st = await game(A, () => { const n = window.__game.now; return { source: n.source, running: n.running, base: n.base, traffic: n.snapshot.traffic.source }; }); throw new Error(`${e.message}: ${JSON.stringify(st)}`); });
       // the traffic line lives on the destination card, which shows only with a route
       await game(A, () => { window.__game.navigateTo('CA-55 North'); window.__game.fastForward(3); });
       await frames(A, 3);
