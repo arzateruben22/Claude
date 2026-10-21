@@ -638,5 +638,59 @@ export const SCENES = {
       show("g-sym", 2, 1.6); show("g-trig", 2, 3.2);
       show("g-red", 3, 0.8);
     }
+  },
+
+  /* ───────── 10-2 An anti-aging routine that works: the short list, and why gentle every night wins ───────── */
+  "10-2": {
+    id: "10-2", kicker: "An anti-aging routine that works", title: `The short list, <span class="grad">every day.</span>`, dur: 22, poster: 15,
+    shots: [
+      { at: 0, name: "am", cap: "Morning: vitamin C, moisturizer, sunscreen. Three things, every day, and the sunscreen does most of the work." },
+      { at: 6, name: "pm", cap: "Night: a retinoid built up slowly, peptides, a rich moisturizer. Neck, chest and hands too: they show age early." },
+      { at: 12, name: "race", cap: "Consistency beats strength. A gentle retinoid every night covers more ground in two months than a strong one once a week, with none of the peeling." }
+    ],
+    css: `
+.r10 { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.4vmin; }
+.row10 { display: flex; gap: 1.6vmin; align-items: stretch; }
+.tile10 { flex: 1; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.2vmin; opacity: 0; }
+.tile10 .n { font-size: 2vmin; color: #f4c9d6; font-weight: 700; } .tile10 b { display: block; font-size: 3vmin; font-weight: 650; margin-top: .4vmin; line-height: 1.15; } .tile10 span { display: block; font-size: 2.1vmin; color: #8e8e93; margin-top: .6vmin; }
+.pm .tile10 .n { color: #e2b08c; }
+.lane { display: grid; grid-template-columns: 30vmin 1fr; align-items: center; gap: 2vmin; opacity: 0; }
+.lane .who { font-size: 2.6vmin; font-weight: 650; line-height: 1.2; } .lane .who i { display: block; font-style: normal; font-size: 2.1vmin; color: #8e8e93; font-weight: 500; }
+.lane .bar { position: relative; height: 5.2vmin; border-radius: 999px; background: rgba(255,255,255,.07); overflow: hidden; }
+.lane .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.lane.strong .fill { background: #6e6e73; }
+.lane .tick { position: absolute; top: 50%; width: 1vmin; height: 1vmin; margin: -.5vmin 0 0 -.5vmin; border-radius: 50%; background: #fff; opacity: 0; }
+.lane .flare { position: absolute; right: 2vmin; top: 50%; transform: translateY(-50%); font-size: 2.1vmin; color: #ff7a6b; font-weight: 600; opacity: 0; }
+.weeks { display: flex; justify-content: space-between; font-size: 2vmin; color: #6e6e73; padding: 0 0 0 32vmin; opacity: 0; }
+.verdict { align-self: flex-start; padding: 1.2vmin 2vmin; border-radius: 999px; background: #f4c9d6; color: #1a1210; font-size: 2.4vmin; font-weight: 700; opacity: 0; }
+@media (orientation: portrait) { .row10 { flex-direction: column; } .lane { grid-template-columns: 1fr; gap: 1vmin; } .weeks { padding-left: 0; } }`,
+    html: `
+<div class="r10">
+  <div class="row10 am" id="am"><div class="tile10"><span class="n">1</span><b>Vitamin C</b><span>on clean skin</span></div><div class="tile10"><span class="n">2</span><b>Moisturizer</b><span>then the neck and chest</span></div><div class="tile10"><span class="n">3</span><b>Sunscreen</b><span>SPF 30 or more, last</span></div></div>
+  <div class="row10 pm" id="pm"><div class="tile10"><span class="n">1</span><b>Retinoid</b><span>built up slowly</span></div><div class="tile10"><span class="n">2</span><b>Peptides</b><span>serum</span></div><div class="tile10"><span class="n">3</span><b>Rich moisturizer</b><span>hands too</span></div></div>
+  <div class="lane gentle" id="lane-g"><div class="who">Gentle, every night<i>a low strength, seven nights a week</i></div><div class="bar"><div class="fill" id="fill-g"></div></div></div>
+  <div class="lane strong" id="lane-s"><div class="who">Strong, once a week<i>peels for three days, then nothing</i></div><div class="bar"><div class="fill" id="fill-s"></div><span class="flare" id="flare">peeling</span></div></div>
+  <div class="weeks" id="weeks"><span>week 1</span><span>week 2</span><span>week 3</span><span>week 4</span><span>week 5</span><span>week 6</span><span>week 7</span><span>week 8</span></div>
+  <div class="verdict" id="verdict">Gentle and nightly: more nights on the skin, no peeling</div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      // shot 0: the morning tiles; shot 1: the night tiles join; shot 2: the tiles make room for the race
+      const amOn = i === 0 ? 1 : i === 1 ? 1 : 1 - E.inout(seg(lt, 0, 0.6));
+      $$("#am .tile10").forEach((tl, k) => { if (i === 0) enter(tl, lt, 0.3 + k * 0.35, { y: 20 }); else set(tl, { o: amOn, y: -10 * (1 - amOn) }); });
+      $$("#pm .tile10").forEach((tl, k) => { if (i === 1) enter(tl, lt, 0.3 + k * 0.35, { y: 20 }); else set(tl, { o: i === 2 ? amOn : 0, y: i === 2 ? -10 * (1 - amOn) : 20 }); });
+      $("#am").style.display = i === 2 && lt > 0.7 ? "none" : "flex"; $("#pm").style.display = i === 2 && lt > 0.7 ? "none" : "flex";
+      if (i === 2) {
+        enter($("#lane-g"), lt, 0.8, { y: 12 }); enter($("#lane-s"), lt, 1.1, { y: 12 }); enter($("#weeks"), lt, 1.3, { y: 6 });
+        const p = E.lin(seg(lt, 1.6, 7.6));                             // eight weeks pass
+        $("#fill-g").style.width = (100 * p) + "%";                       // seven nights a week, steady
+        const wk = p * 8, done = Math.floor(wk), frac = wk - done;        // once a week: a jump, then peeling, then nothing until the next one
+        $("#fill-s").style.width = (100 * (done * 0.045 + Math.min(1, frac * 4) * 0.045) ) + "%";
+        $("#flare").style.opacity = frac > 0.05 && frac < 0.45 && p > 0 && p < 1 ? 1 : 0;
+        enter($("#verdict"), lt, 8.0, { y: 8 });
+      } else { [$("#lane-g"), $("#lane-s"), $("#weeks"), $("#verdict")].forEach((el) => set(el, { o: 0, y: 12 })); }
+    }
   }
 };
