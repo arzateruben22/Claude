@@ -12398,5 +12398,321 @@
    "renderedAt": "2026-10-21",
    "quick": false
   }
+ },
+ "11-2": {
+  "16x9": {
+   "frames": 126,
+   "fps": 6,
+   "dur": 21,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "cf5b5ab3342a5824ba5c66fee7e6216c78b5f51b",
+   "samples": [
+    [
+     0,
+     "a755ba4457316209344ef3c9d155f4e444c2c459"
+    ],
+    [
+     15,
+     "fa68682ea734c32008a125091de6edf53e94dbc2"
+    ],
+    [
+     30,
+     "a7ed703ce9f71bdc1d54c000a8bf5c8735cd603d"
+    ],
+    [
+     45,
+     "51b7bfdfa22b4f3edfb1116e447ad46213286e19"
+    ],
+    [
+     60,
+     "2306a1c80d6e87d85e96f5e8741a4bafd27941d9"
+    ],
+    [
+     75,
+     "f4f85d63669b8b5ca2a364ea4d90dd831e3ef4aa"
+    ],
+    [
+     90,
+     "1fed1fea54a533430fc79ea57b41bf2b4580dbd1"
+    ],
+    [
+     105,
+     "d3fa4efc3297de10b20476f4f951c558ad8b5209"
+    ],
+    [
+     120,
+     "ae387be47976029aa3c3dbfb90781a0925298ad0"
+    ]
+   ],
+   "warnings": [
+    "still for 3.0s ending at 12.0s"
+   ],
+   "renderSec": 17.1,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  },
+  "9x16": {
+   "frames": 126,
+   "fps": 6,
+   "dur": 21,
+   "w": 720,
+   "h": 1280,
+   "bytes": 0,
+   "hash": "bd61e5241142deafeecfe755f69db0000f5349d7",
+   "samples": [
+    [
+     0,
+     "ab72cfc7d5dea55581837643bc773c0f435374f1"
+    ],
+    [
+     15,
+     "2c6fdcf8a61009acdfcdd8b4057ccf1349637d6b"
+    ],
+    [
+     30,
+     "8a85cdf6ff8274ced5480b247d30f86138e7be9f"
+    ],
+    [
+     45,
+     "e64c85202f4587b2fc5b060fae2d67ebd84d3e45"
+    ],
+    [
+     60,
+     "946f809621f685cbe73845f49ec652d73b668839"
+    ],
+    [
+     75,
+     "99a4c7cb88517a9e671bf8e2a59e7578152f5029"
+    ],
+    [
+     90,
+     "7816512ed75840a3d1dcdb6b804bc13390ffb3b9"
+    ],
+    [
+     105,
+     "6cce5f5d6a6cdf68c59c9406e76fb2fe46f890dc"
+    ],
+    [
+     120,
+     "240785ba0587c3ed3283bfe7bae21f9434e150c5"
+    ]
+   ],
+   "warnings": [
+    "still for 3.0s ending at 12.0s"
+   ],
+   "renderSec": 16.1,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
+ },
+ "7-1": {
+  "16x9": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "2bc7b2a7b165bf8021f7933d41a3a0f0e6e2d5d1",
+   "samples": [
+    [
+     0,
+     "0785eb383661fcdc172fb7b672a578ce58a61ab1"
+    ],
+    [
+     15,
+     "66886d7599f07f14793b485960a348d57767334a"
+    ],
+    [
+     30,
+     "25b5b321d029505b2b5152beb55731ba300e2353"
+    ],
+    [
+     45,
+     "ffc91fd683ad25ae05a61bbb66abb30b765181bd"
+    ],
+    [
+     60,
+     "8401386a35cd45644adb4a93cbcc63295180083d"
+    ],
+    [
+     75,
+     "f8c095f4ea9a199b892104bc6b608cb30491b570"
+    ],
+    [
+     90,
+     "1e9a8c6ace9fa6a636360f5b2155e90b69d6a60b"
+    ],
+    [
+     105,
+     "a56d209f9536cb677e3227784007390e1fd05b77"
+    ],
+    [
+     120,
+     "4c6cb158da8520cbc36830827d8908f7c6c10554"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 19.1,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  },
+  "9x16": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 720,
+   "h": 1280,
+   "bytes": 0,
+   "hash": "2404160b84bf3d8992d87b54b05bcc4a74c2f5ac",
+   "samples": [
+    [
+     0,
+     "bd3c3f9b3b6e3863985c432bf583e44841955849"
+    ],
+    [
+     15,
+     "095ef04d7e8507a11c7e85142f6fb540baa8703d"
+    ],
+    [
+     30,
+     "6370cf0753b485c0c2122fc42e28209ea121f219"
+    ],
+    [
+     45,
+     "d4796f39e0f4e5240f21db5ff46d24c2c2eff212"
+    ],
+    [
+     60,
+     "c0710e5112b5625be431cc0c3e386a2efab0aac8"
+    ],
+    [
+     75,
+     "cb78debbf6c5b9dfa4289105977a83709d271b7f"
+    ],
+    [
+     90,
+     "7f256df3ded5a7b99c068015048d7c780004681d"
+    ],
+    [
+     105,
+     "0f9fc5cd33ced4c60d55012a004812452f51d8d5"
+    ],
+    [
+     120,
+     "5d664a581363b4f3c3ad92efa814949e89384e19"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 18.8,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
+ },
+ "7-3": {
+  "16x9": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "af666b492bf7e7f875017149ceeac55dd9b68bae",
+   "samples": [
+    [
+     0,
+     "ae51b38b7503ffacbfc2bdb0f48ae54021389d63"
+    ],
+    [
+     15,
+     "991ca0ff61ac4bd1e0fe0468c9799f44f3fbf4e9"
+    ],
+    [
+     30,
+     "b29eb71e193d886951eb26b02a31d5b2ed3d06a5"
+    ],
+    [
+     45,
+     "be0d56882809f6e29bd0f7ab97f4c82e5268e6e6"
+    ],
+    [
+     60,
+     "5b074cc3d1ec7e122404b00c138ef7db23e090b7"
+    ],
+    [
+     75,
+     "4a41c790196af11f97e34660269c17f195d7e563"
+    ],
+    [
+     90,
+     "d9e48b0d28db709bf62fbb6a8b939ec0d78bf539"
+    ],
+    [
+     105,
+     "d1c21e588286d56e819b2fc4d30e63ff9d8b6d58"
+    ],
+    [
+     120,
+     "98d4296d8478b71ca9fa8ba18e406a282559a7b4"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 19.9,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  },
+  "9x16": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 720,
+   "h": 1280,
+   "bytes": 0,
+   "hash": "226973c144c2b153d1145493179fef32512f5f71",
+   "samples": [
+    [
+     0,
+     "2a597b3f72cf2425a3dcba62b0edd810c24b1570"
+    ],
+    [
+     15,
+     "3d51fdf26c72b11ef8b80d6f0ad64a7caf3b5a91"
+    ],
+    [
+     30,
+     "fdb5489e9e79ca2588b8c12b2e2603cda081d190"
+    ],
+    [
+     45,
+     "b8dab3aff53b166ee95760728d03f6a55358ef86"
+    ],
+    [
+     60,
+     "fe2dc4ffdad0adfb969aceba25068fa9c5c0622a"
+    ],
+    [
+     75,
+     "39678e3b9f7e57018ac16dc676b76b7b21865f93"
+    ],
+    [
+     90,
+     "89a1f6cff44fe64dcdbebaceb94229f109c870ed"
+    ],
+    [
+     105,
+     "3be9ec1e0709da12c6387211a0480625fa966653"
+    ],
+    [
+     120,
+     "c85c1b97672f94b92bdeca9bc41cee36098e4284"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 17.3,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
  }
 }
