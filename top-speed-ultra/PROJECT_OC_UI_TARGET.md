@@ -58,6 +58,72 @@ menus, and its theme runs through the rest where it fits without shouting:
   for danger states, amber for selection; never a full-bleed orange screen, never the wordmark stretched.
 - **Honesty**: the skyline in the mark is stylised, not a claim of any real building; nothing in it is a brand.
 
+## Owner's direction, 2026-10-21: the ice reference (menu, drive HUD, the hypercar, the colour world)
+
+The owner sent a second concept board (a generated mock, not stored in the repo; a copy sits in the session
+scratchpad only): the main menu with the OC Hypercar as its hero, and the cockpit view with its HUD. The direction was
+"keep rendering graphics for this car and HUD interface, as well as overall themes of colour". What was taken, and
+what the game now does:
+
+- **The colour world: "Ice noir".** The violet-black base becomes navy-black; the sunset family (orange, amber) as the
+  accent becomes the hypercar's LED: `--ice` for the thing to press and for focus, `--cyan` for what's selected,
+  `--ember` (tail-light red) stays for danger only. Chrome stays, a touch cooler. The tokens kept their roles; every
+  rule reads from them, so the whole UI (panels, settings, garage, results, the run card's hairline) changed in one
+  place. Contrast is in the token comments (ice 7.9:1 on the base, ice-text 5.5:1 over a HUD plate on a white sky).
+- **The OC mark in chrome.** The owner's sunset wordmark gave the letterform; its alpha (`oc-mask.png`) is now filled
+  with brushed chrome and lit from below in ice (`.oc-mark` in `styles.css`), like the chromed OC on the reference's
+  showroom wall. The 480 px sunset cut-out stays for the run card (a canvas). The 1200 and 240 px cut-outs were removed
+  from the bundle. The game's name stays **OC Ultra: Top Speed** (owner, 2026-10-16); the mock's "Project OC /
+  Orange County Freeway Simulator" is the project's working title, not a rename. If the owner wants the mock's
+  wording in the UI, that is a one-line change in `Mark.tsx` (`lockup-sub`).
+- **The main menu** (`App.tsx`, `.menu-grid`): a glass rail down the left with the brand, **Drive** (the one filled
+  row, deep ice), the loadout rows (Car, Driver, Start on or Race, with line icons), the traffic chips, then Profile,
+  Bests, Settings and an **Online** row greyed "Roadmap" (multiplayer does not exist and is not claimed); the player
+  card top right (avatar, name, level with an XP bar, credits with no currency sign); the live scene as the hero in
+  the middle; the four modes as picture cards along the bottom (`ModeArt.tsx`, four night scenes drawn in SVG, no
+  photos), the chosen one lit cyan; the Loop Lab card and the data credits under them. Phones: one column, Drive
+  pinned under the thumb. The mock's "World map", "Customization", "Career" and "Events" map to Start on, Driver +
+  Garage, Profile + Bests, and Speed Survival + Time Trial; nothing was added that does not exist.
+- **The drive HUD** (`HUD.tsx`): the mode and its numbers top left on an ice-edged plate with the small chrome OC;
+  the road as a real guide sign top centre (the route shield, then the direction) with the manoeuvre under it; the
+  controls as a rail of icons down the right (View, Go to, Radio, Pause; a strip along the top on phones); the speed
+  block bottom right with the revs as a slanted ice bar, big light numerals, the gear in an outlined box, and chips
+  for the handling profile (Arcade / Sport / Sim from the slider), ABS and TCS (the physics runs both at every
+  setting) and **Unleashed** when the hypercar runs its Free Drive tune; with a mouse, the road map is a round dial
+  bottom left. The mock's "Photo mode" and "Phone" are not built (roadmap: U6).
+- **The hypercar** (`src/preview/car-*.ts`, `cockpit.ts`, `car-gauges.ts`; judged on night renders in
+  `tests/out/preview/ice/`): the LED family re-tuned so it tone-maps to the reference's ice blue instead of blowing
+  out to white (deeper material blues under ACES), the headlamp blades as the night's main feature, the splitter and
+  sill strips, blue calipers; a driver display of its own (OC, 132, MPH, the gear in a box, hexagonal ice frame,
+  SPORT / ABS TCS on the centre screen) in place of the Vela's; ice-tinted beams and road pool at night. The body's
+  remaining gaps are M1b's queue (`PROJECT_OC_HYPERCAR.md`).
+
+- **The atmosphere follows the car** (owner, later the same day: "every specific car we choose, each one
+  representing a different atmosphere"). `App.tsx` puts the chosen car's id on `<html data-car>` and `styles.css`
+  re-points the tokens per car, so the menu's haze, the rail, the cards, the HUD plates and the panels all change
+  with the car: the **OC Hypercar** is the ice reference; the **Rossini GT** (the starter) keeps the owner's OC
+  sunset (orange and amber over violet-black, the wordmark's colours); the **Rossini Brio** is the coast at dusk
+  (aqua over deep sea green); the **Rossini Corsa** is a track day (racing yellow on graphite, black ink on its Drive
+  plate); the **Vela E** is an electric charge (violet over plum with a magenta flash). Contrast is in each block's
+  comment. The 3D clusters were already per car (the GT's amber tach, the Vela's blue display, the hypercar's ice).
+  Drivers do not change the atmosphere yet; that is the next step if wanted (a second attribute, `data-driver`).
+
+- **The driver's layer and a more futuristic language** (owner, later the same day: "do the same for each driver,
+  keep upscaling the ultra graphics, adapt to a more futuristic theme, including freeways, trees, other NPC cars,
+  fashion clothes"). The car sets the world; the driver signs the human elements with their own colour, `--drv`
+  (`<html data-driver>`): **The Closer** gold (the watch), **The Ace** a cool lavender (focus), **The Wrench**
+  a vivid green (the smart watch's grip readout). It lights the ability hexagon, the Driver row, the avatar's ring and
+  level line, and the Driver panel's choice. The futuristic details are decoration only: a hex lattice behind the
+  rail, the panels and the player card, chamfered HUD plates with faint scanlines, brackets that lock onto the speed,
+  and a slow sweep of the accent along the rail's top edge (off with reduced motion). The world itself (freeways,
+  trees, traffic, night lighting), the menu's attract drive taking each car's time and weather, an Ultra-only grade
+  (vignette, edge chromatic aberration, grain) and each driver's clothes are separate lanes, logged in
+  `PROJECT_OC_PROGRESS.md` when judged.
+
+What was not taken: the mock's car photo, fonts and icons (ours are drawn), the "$" (credits are earned), "Online"
+as a feature, and the mock's showroom floor as the menu hero (the attract drive stays the hero; a showroom stage for
+the hypercar is M6's reveal stage).
+
 ## 2026-10-21 reference
 
 The owner sent a concept image (a generated mock of a home screen over a driving view, not stored in the repo):

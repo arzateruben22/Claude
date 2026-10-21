@@ -1,5 +1,5 @@
 // The home screen at the four sizes the 2026-10-21 reference pass checks, each beside the owner's reference crop, plus
-// (with --checks) the measured text contrast of the rail labels and the tiles and a keyboard-focus frame.
+// (with --checks) the measured text contrast of the rail, the mode cards and the player card, and a keyboard-focus frame.
 //   npm run build && node tools/uiref-shots.mjs --tag=after [--ref=path/to/ui-ref-menu.png] [--game=dist/x.html]
 //                                               [--only=desktop|phone] [--checks]
 // Writes tests/out/uiref/<tag>-<w>x<h>.png, and with --ref <tag>-<w>x<h>-vs-ref.png (the reference crop on the left,
@@ -87,7 +87,7 @@ async function home(page, w, h) {
 // luminance). The worst case is reported: the background pixel nearest the text's own luminance, after dropping the
 // nearest 2 % (antialiasing at the box's edges and the odd specular sparkle).
 async function contrast(page, label) {
-  const sel = { 'rail label': '.rail-nav .rail-item span', 'rail foot': '.rail-foot', 'tile title': '.tile b', 'tile subtitle': '.tile small', 'chip name': '.pchip-name', 'chip level': '.pchip-level', 'chip credits': '.pchip-credits' };
+  const sel = { 'rail row': '.m-nav .rail-btn:not(.off)', 'loadout': '.m-nav .pick b', 'rail foot': '.m-foot', 'card title': '.mode-text b', 'card subtitle': '.mode-text > span', 'player name': '.player-main b', 'player level': '.player-main small', 'player credits': '.player-credits b' };
   const boxes = await page.evaluate((sel) => {
     const out = [];
     for (const [k, q] of Object.entries(sel)) for (const e of document.querySelectorAll(q)) {
@@ -127,10 +127,10 @@ async function contrast(page, label) {
   for (const x of r) report.contrast.push({ at: label, ...x });
 }
 
-// keyboard focus: Tab from the top of the page until a rail item (then a tile) holds focus, and shoot that region
+// keyboard focus: Tab from the top of the page until a rail row (then a mode card) holds focus, and shoot that region
 async function focusShots(page, w, h) {
   await page.evaluate(() => { document.activeElement?.blur?.(); });
-  for (const [q, name] of [['.rail-item', 'rail'], ['.tile', 'tile']]) {
+  for (const [q, name] of [['.rail-btn', 'rail'], ['.mode', 'card']]) {
     let hit = null;
     for (let i = 0; i < 40 && !hit; i++) {
       await page.keyboard.press('Tab');
