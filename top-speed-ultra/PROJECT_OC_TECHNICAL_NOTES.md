@@ -314,6 +314,18 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   metres, a side and a distance back; the panel is found by sampling the path every 40 m then every 4 m, built in
   the race gates' frame, and rebased with the floating origin in `Game.recentre`. One canvas texture per creative.
 
+- **Light traffic while live** (decision 18): `lightForLive` in `src/game/settings.ts`, applied in
+  `Game.applyDensity` whenever a `LiveClient` is set (`setLive` re-applies it). Presets cap at Light's 2.2 cars per km
+  per lane with `bold` 0; the live feed's 2.2 to 9.5 maps linearly onto 1.2 to 3.5.
+- **The online board** (`live/board.mjs`, `GET /api/board?period=today|week&limit=`): `server.mjs` calls
+  `board.record(id, pose, now, name)` for every pose the relay accepts, `flush` on leave, `forget` on account delete,
+  `close` on shutdown. Per player per Pacific day it keeps distance (displacement through a token bucket capped at
+  min(110 m/s, reported speed), 2 s of carry, nothing across a gap over 3 s), the speed held 3 s (the window's lowest
+  reported speed, capped by ground speed × 1.05 + 0.5) and the longest drive (no 3 s silence, 3 m per 3 s). One
+  `board_days` row per player per day, written at most every 5 s; the snapshot is memoised 2 s; rows kept 35 days;
+  banned players hidden by joining `players`. The game's side: `src/live/board.ts` (fetch and validate) and
+  `src/ui/OnlineBoard.tsx` (the panel); the pause screen's standing line asks with the player's token.
+
 ## Known issues
 
 - **Unresolved crossings.** 4 of 506 crossings don't fully clear (the builder prints them): a ramp clips another road
