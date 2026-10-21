@@ -316,10 +316,10 @@ const dayFilm = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.34, NZ + 0.4), new 
 dayFilm.position.set(0, 11.7, 0); dayFilm.castShadow = true; scene.add(dayFilm);
 const beadGeo = new THREE.SphereGeometry(0.26, 12, 10);
 const oilMat = new THREE.MeshStandardMaterial({ color: 0xf1d57a, emissive: 0x5a4410, emissiveIntensity: 0.5, roughness: 0.3, transparent: true, opacity: 1 });
-const beads = Array.from({ length: 16 }, (_, k) => { const m = new THREE.Mesh(beadGeo, oilMat); m.position.set(-7 + hash(k + 20) * 14, 12.0, -3.8 + hash(k + 21) * 7.6); m.scale.set(1.3, 0.55, 1.3); m.visible = false; scene.add(m); return m; });
-const gritGeo = new THREE.BoxGeometry(0.22, 0.22, 0.22);
+const beads = Array.from({ length: 16 }, (_, k) => { const m = new THREE.Mesh(beadGeo, oilMat); m.position.set(-7 + hash(k + 20) * 14, 12.05, -3.8 + hash(k + 21) * 7.6); m.scale.set(1.7, 0.7, 1.7); m.visible = false; scene.add(m); return m; });
+const gritGeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
 const gritMat = new THREE.MeshStandardMaterial({ color: 0x6e6e73, roughness: 0.9, transparent: true, opacity: 1 });
-const grit = Array.from({ length: 36 }, (_, k) => { const m = new THREE.Mesh(gritGeo, gritMat); m.position.set(-7.6 + hash(k + 40) * 15.2, 12.0, -4 + hash(k + 41) * 8); m.rotation.set(hash(k + 42) * 2, hash(k + 43) * 2, 0); m.visible = false; scene.add(m); return m; });
+const grit = Array.from({ length: 36 }, (_, k) => { const m = new THREE.Mesh(gritGeo, gritMat); m.position.set(-7.6 + hash(k + 40) * 15.2, 12.1, -4 + hash(k + 41) * 8); m.rotation.set(hash(k + 42) * 2, hash(k + 43) * 2, 0); m.visible = false; scene.add(m); return m; });
 // the balm: a drop that spreads into a warm amber pool, then rinses away in a lukewarm sheet
 const balm = new THREE.Mesh(new THREE.SphereGeometry(0.9, 24, 18), new THREE.MeshPhysicalMaterial({ color: 0xf5c98a, roughness: 0.2, transmission: 0.2, opacity: 0.95, transparent: true }));
 balm.position.set(0, 24, 0); balm.visible = false; balm.castShadow = true; scene.add(balm);
@@ -330,7 +330,7 @@ rinse.position.set(0, 12.1, 0); scene.add(rinse);
 const dropGeo = new THREE.SphereGeometry(0.18, 10, 8);
 const rinseDrops = Array.from({ length: 24 }, (_, k) => { const m = new THREE.Mesh(dropGeo, new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0.5, transparent: true, opacity: 0.9 })); m.visible = false; scene.add(m); return { m, k, x: -7 + hash(k + 70) * 14, z: NZ / 2 + 0.5 }; });
 // the cleanser: a soft foam of spheres over the surface, moving in small circles (the massage)
-const foamGeo = new THREE.SphereGeometry(0.55, 14, 12);
+const foamGeo = new THREE.SphereGeometry(0.42, 14, 12);
 const foamMat = new THREE.MeshStandardMaterial({ color: 0xdff3ff, roughness: 0.65, transparent: true, opacity: 0.0 });
 const foam = Array.from({ length: 70 }, (_, k) => { const m = new THREE.Mesh(foamGeo, foamMat); m.userData = { x: -7.2 + hash(k + 100) * 14.4, z: -3.6 + hash(k + 101) * 7.2, s: 0.6 + hash(k + 102) * 0.7, ph: hash(k + 103) * 6.28 }; m.visible = false; m.castShadow = true; scene.add(m); return m; });
 const look = new THREE.Vector3(0, 8, 0);
@@ -353,15 +353,18 @@ window.seek = function (t) {
   const wash = i === 2 ? E.inout(seg(lt, 3.6, 6.4)) : 0;
   dayFilm.material.opacity = 0.9 * dayOn * (1 - melt);
   dayFilm.scale.set(1, Math.max(0.05, 1 - 0.9 * melt), 1);
-  beads.forEach((b, k) => { const on = i === 0 ? lt > 1.0 + k * 0.08 : true; b.visible = on && (1 - melt) > 0.02; b.scale.set(1.3 * (1 - 0.8 * melt), 0.55 * (1 - 0.8 * melt), 1.3 * (1 - 0.8 * melt)); });
-  grit.forEach((g, k) => { const on = i === 0 ? lt > 1.4 + k * 0.03 : true; const gone = i === 2 ? seg(lt, 3.8 + k * 0.03, 4.6 + k * 0.03) : 0; g.visible = on && gone < 0.98; g.material.opacity = 1 - gone; g.position.y = 12.0 + (i === 1 ? 0.35 * melt : 0); });
+  beads.forEach((b, k) => { const on = i === 0 ? lt > 1.0 + k * 0.08 : true; b.visible = on && (1 - melt) > 0.02; b.scale.set(1.7 * (1 - 0.8 * melt), 0.7 * (1 - 0.8 * melt), 1.7 * (1 - 0.8 * melt)); });
+  grit.forEach((g, k) => { const on = i === 0 ? lt > 1.4 + k * 0.03 : true; const gone = i === 2 ? seg(lt, 3.8 + k * 0.03, 4.6 + k * 0.03) : 0; g.visible = on && gone < 0.98; g.material.opacity = 1 - gone; g.position.y = 12.1 + (i === 1 ? 0.35 * melt : 0); });
   // the balm drop lands and spreads into the pool, lifting the film; the lukewarm rinse carries the pool off
   balm.visible = i === 1 && lt > 0.3 && lt < 2.4;
   if (balm.visible) { const f = E.in(seg(lt, 0.3, 1.2)), sp = seg(lt, 1.2, 2.4); balm.position.set(0, 24 - 12 * f, 0); balm.scale.set(1 + 2.5 * sp, 1 - 0.7 * sp, 1 + 2.5 * sp); balm.material.opacity = 0.95 * (1 - sp); }
   const poolOn = i === 1 ? E.out(seg(lt, 1.6, 2.8)) * (1 - rinsed) : 0;
   pool.material.opacity = 0.85 * poolOn; pool.position.y = 11.95;
   const rinseOn = i === 1 ? Math.sin(Math.PI * seg(lt, 4.6, 6.6)) : i === 2 ? Math.sin(Math.PI * seg(lt, 6.2, 7.6)) : 0;
-  rinse.material.opacity = 0.55 * rinseOn; rinse.position.x = -16 + 32 * (i === 1 ? seg(lt, 4.6, 6.6) : seg(lt, 6.2, 7.6)); rinse.visible = rinseOn > 0.02;
+  const rp = i === 1 ? seg(lt, 4.6, 6.6) : i === 2 ? seg(lt, 6.2, 7.6) : 0;
+  const rs = rp < 0.5 ? rp * 2 : 1 - (rp - 0.5) * 2;
+  rinse.scale.x = Math.max(0.02, rs); rinse.position.x = rp < 0.5 ? -8.2 + 8.2 * rs : 8.2 - 8.2 * rs;
+  rinse.material.opacity = 0.6 * Math.min(1, rs * 3); rinse.visible = rp > 0 && rp < 1;
   rinseDrops.forEach((d) => { const on = rinseOn > 0.05; d.m.visible = on; if (!on) return; const ph = (t * 0.9 + d.k * 0.041) % 1; d.m.position.set(d.x, 12.2 - ph * 7, d.z); d.m.material.opacity = 0.9 * (1 - ph) * rinseOn; });
   // the cleanser: foam appears, circles for the minute, then rinses
   const foamOn = i === 2 ? E.out(seg(lt, 0.4, 1.4)) * (1 - seg(lt, 6.2, 7.2)) : 0;
