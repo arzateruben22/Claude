@@ -486,5 +486,83 @@ export const SCENES = {
         $$(".three .card").forEach((c, k) => enter(c, lt, 0.3 + k * 0.5, { y: 24 }));
       }
     }
+  },
+
+  /* ───────── 3-1 How to read a label: the front is marketing, the back is the truth ───────── */
+  "3-1": {
+    id: "3-1", kicker: "How to read a label", title: `The front is marketing. <span class="grad">The back is the truth.</span>`, dur: 21, poster: 12,
+    shots: [
+      { at: 0, name: "front", cap: "\"Clean\", \"natural\", \"hypoallergenic\", \"dermatologist tested\": none of these has a legal definition for cosmetics. Turn the bottle around." },
+      { at: 7, name: "order", cap: "Ingredients are listed from most to least, down to 1%. The first five are most of the formula. After the 1% line, any order." },
+      { at: 14, name: "star", cap: "If the star ingredient comes after the fragrance, there's very little of it. \"Fragrance\" can hide dozens of ingredients; sensitive skin often does better without." }
+    ],
+    css: `
+.lab { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; gap: 4vmin; }
+.bottle { position: relative; width: 44vmin; height: 62vmin; border-radius: 4vmin; background: #16161a; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 3vmin 8vmin rgba(0,0,0,.5); overflow: hidden; }
+.bottle .cap { position: absolute; left: 50%; top: -2.6vmin; width: 14vmin; height: 5vmin; margin-left: -7vmin; border-radius: 1.2vmin; background: #2a2a2e; }
+.front, .back { position: absolute; inset: 0; padding: 7vmin 4vmin 4vmin; display: flex; flex-direction: column; }
+.front { align-items: center; text-align: center; justify-content: center; gap: 1.6vmin; }
+.front .name { font-size: 5vmin; font-weight: 750; letter-spacing: -.02em; line-height: 1; }
+.front .sub { font-size: 2.4vmin; color: #a1a1a6; }
+.claims { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vmin; margin-top: 2vmin; }
+.claims span { position: relative; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(244,201,214,.14); border: 1px solid rgba(244,201,214,.4); color: #f4c9d6; font-size: 2.2vmin; font-weight: 600; }
+.claims span i { position: absolute; left: 1.2vmin; right: 1.2vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform: scaleX(0); transform-origin: left; }
+.nolaw { margin-top: 2.4vmin; font-size: 2.3vmin; color: #ff7a6b; font-weight: 600; opacity: 0; }
+.back { opacity: 0; }
+.back .h { font-size: 2.1vmin; letter-spacing: .12em; text-transform: uppercase; color: #a1a1a6; margin-bottom: 1.4vmin; }
+.ing { list-style: none; margin: 0; padding: 0; display: grid; gap: .5vmin; counter-reset: ing; }
+.ing li { position: relative; display: flex; align-items: center; gap: 1.2vmin; font-size: 2.35vmin; line-height: 1.2; padding: .55vmin .9vmin; border-radius: 1vmin; }
+.ing li::before { counter-increment: ing; content: counter(ing); width: 3vmin; font-size: 1.9vmin; color: #6e6e73; font-variant-numeric: tabular-nums; }
+.ing li.five { background: rgba(244,201,214,.12); }
+.ing li.frag { background: rgba(255,122,107,.16); }
+.ing li.star { background: rgba(226,176,140,.18); }
+.ing li .pct { margin-left: auto; font-size: 1.9vmin; color: #a1a1a6; }
+.oneline { position: relative; margin: .6vmin 0; height: .3vmin; background: repeating-linear-gradient(90deg, #a1a1a6 0 1.4vmin, transparent 1.4vmin 2.6vmin); opacity: 0; }
+.oneline b { position: absolute; right: 0; top: -2.6vmin; font-size: 1.9vmin; color: #a1a1a6; font-weight: 600; }
+.side { width: 44vmin; display: grid; gap: 2vmin; align-content: center; }
+.pill { padding: 1.6vmin 2.2vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); font-size: 2.6vmin; line-height: 1.3; opacity: 0; }
+.pill b { color: #f4c9d6; } .pill.warn b { color: #ff7a6b; } .pill.good b { color: #e2b08c; }
+@media (orientation: portrait) { .lab { flex-direction: column; gap: 2.5vmin; } .bottle { width: 62vmin; height: 70vmin; } .side { width: 62vmin; } }`,
+    html: `
+<section class="shot"><div class="lab">
+  <div class="bottle" id="bottle"><div class="cap"></div>
+    <div class="front" id="front"><div class="name">Glow Serum</div><div class="sub">with niacinamide</div>
+      <div class="claims"><span>clean<i></i></span><span>natural<i></i></span><span>hypoallergenic<i></i></span><span>dermatologist tested<i></i></span></div>
+      <div class="nolaw" id="nolaw">no legal definition</div></div>
+    <div class="back" id="back"><div class="h">Ingredients</div>
+      <ul class="ing" id="ing">
+        <li>Water (Aqua)<span class="pct"></span></li><li>Glycerin</li><li>Caprylic/Capric Triglyceride</li><li>Cetearyl Alcohol</li><li>Butylene Glycol</li>
+        <li>Dimethicone</li><li>Phenoxyethanol<span class="pct" id="pct1">about 1%</span></li>
+        <li id="frag">Fragrance (Parfum)</li><li id="star">Niacinamide</li><li>Tocopherol</li><li>Citric Acid</li>
+      </ul></div>
+  </div>
+  <div class="side">
+    <div class="pill" id="p-five"><b>The first five</b> are most of what's in the bottle.</div>
+    <div class="pill" id="p-one"><b>After the 1% line</b>, anything can be in any order.</div>
+    <div class="pill warn" id="p-frag"><b>Fragrance</b> is usually under 1%, and can hide dozens of ingredients.</div>
+    <div class="pill good" id="p-star"><b>Niacinamide, after it:</b> very little. The name on the front, a trace on the back.</div>
+  </div>
+</div></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, tw, seg, E, set } = M;
+      const flipAt = 4.6;                                           // the bottle turns around at the end of shot 0
+      const flip = i === 0 ? E.inout(seg(lt, flipAt, flipAt + 1.4)) : 1;
+      const sx = Math.abs(Math.cos(flip * Math.PI));
+      $("#bottle").style.transform = "scaleX(" + Math.max(0.04, sx) + ")";
+      const showBack = flip >= 0.5;
+      $("#front").style.opacity = showBack ? 0 : 1; $("#back").style.opacity = showBack ? 1 : 0;
+      if (i === 0) {
+        $$(".claims span").forEach((c, k) => { enter(c, lt, 0.4 + k * 0.25, { y: 8 }); c.querySelector("i").style.transform = "scaleX(" + E.out(seg(lt, 2.0 + k * 0.18, 2.6 + k * 0.18)) + ")"; });
+        enter($("#nolaw"), lt, 3.0, { y: 6 });
+      }
+      // the list: the first five, the 1% line, the fragrance, the star
+      const rows = $$("#ing li");
+      rows.forEach((r, k) => { r.classList.toggle("five", k < 5 && (i >= 1 && (i > 1 || lt > 0.6))); r.classList.toggle("frag", r.id === "frag" && i === 2 && lt > 0.6); r.classList.toggle("star", r.id === "star" && i === 2 && lt > 2.2); r.style.opacity = i === 0 ? (showBack ? 1 : 0) : 1; });
+      $("#pct1").style.opacity = i >= 1 ? seg(i === 1 ? lt : 9, 2.6, 3.2) : 0;
+      $$(".pill").forEach((p) => { if (!(i === 1 && (p.id === "p-five" || p.id === "p-one")) && !(i === 2 && (p.id === "p-frag" || p.id === "p-star"))) set(p, { o: 0, y: 10 }); });
+      if (i === 1) { enter($("#p-five"), lt, 0.8, { y: 10 }); enter($("#p-one"), lt, 3.0, { y: 10 }); }
+      if (i === 2) { enter($("#p-frag"), lt, 0.8, { y: 10 }); enter($("#p-star"), lt, 2.6, { y: 10 }); }
+    }
   }
 };
