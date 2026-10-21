@@ -1,0 +1,427 @@
+{
+  "key": "motors-and-controls",
+  "track": "SYSTEMS",
+  "order": 3,
+  "title": "Motors and Motor Controls",
+  "summary": "Motor types, how to read a nameplate, what a magnetic starter actually contains, why overloads and breakers protect against different things, and how to read and draw a three-wire start/stop control circuit in ladder form.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "three-phase-power",
+    "magnetism-and-induction"
+  ],
+  "objectives": [
+    "Students will be able to identify the common single-phase and three-phase motor types and match each to its typical application.",
+    "Students will be able to read a motor nameplate and explain HP, FLA, service factor, code letter, design letter, insulation class and duty.",
+    "Students will be able to explain the separate jobs of the disconnect, the branch-circuit protective device, the contactor and the overload relay in a motor circuit.",
+    "Students will be able to trace a three-wire start/stop ladder diagram, explain the seal-in contact and describe the difference between two-wire and three-wire control.",
+    "Students will be able to apply the NEC Article 430 concepts for conductor sizing (125 % of table FLC), overload sizing from nameplate FLA and branch-circuit protection from Table 430.52."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Motor types you will wire",
+      "markdown": "A motor converts electrical energy to rotation by putting current-carrying conductors in a magnetic field. The type of motor determines how it starts, how it is wired and what can go wrong.\n\n**Three-phase induction (squirrel-cage).** The workhorse of industry: no brushes, no capacitors, no start switch. The three stator windings create a rotating magnetic field; the rotor bars are dragged along slightly slower than the field (the difference is **slip**). Rugged, efficient, reversible by swapping two leads. Dual-voltage units (230/460 V) have nine leads, T1 through T9, connected in series for the high voltage or in parallel for the low voltage per the connection diagram on the nameplate.\n\n**Single-phase induction.** A single phase cannot produce a rotating field by itself, so these motors carry a second start winding displaced in the frame:\n\n- **Split-phase**: start winding with higher resistance, cut out by a centrifugal switch at about 75 % speed. Low starting torque; small fans, bench grinders.\n- **Capacitor-start**: a capacitor in the start winding gives high starting torque; compressors, pumps. The centrifugal switch is the usual failure point (motor hums, will not start, draws locked-rotor current).\n- **Permanent split capacitor (PSC)**: run capacitor stays in circuit, no switch; HVAC blowers, condenser fans. Quiet, lower torque.\n- **Capacitor-start capacitor-run**: both; the best single-phase performance for larger loads.\n- **Shaded-pole**: tiny, inefficient, used in small fans and appliances.\n\n**Other types.** **Universal** motors (brushes, run on AC or DC) power hand tools and vacuums. **Synchronous** motors run at exactly synchronous speed for clocks and some large industrial drives. **DC** motors (shunt, series, compound) give precise speed control in older equipment and traction. **ECM** (electronically commutated) motors are brushless DC motors with built-in drives, now standard in high-efficiency HVAC blowers; they cannot be tested like induction motors because the electronics are in the way."
+    },
+    {
+      "type": "formula",
+      "name": "Synchronous speed and slip",
+      "expression": "N_sync = 120 × f ÷ P        slip % = (N_sync − N_rotor) ÷ N_sync × 100",
+      "variables": [
+        {
+          "symbol": "N_sync",
+          "meaning": "speed of the rotating magnetic field",
+          "unit": "revolutions per minute (rpm)"
+        },
+        {
+          "symbol": "f",
+          "meaning": "supply frequency",
+          "unit": "hertz (Hz), 60 in the US"
+        },
+        {
+          "symbol": "P",
+          "meaning": "number of magnetic poles in the stator (2, 4, 6, 8)",
+          "unit": "poles"
+        },
+        {
+          "symbol": "N_rotor",
+          "meaning": "actual shaft speed (nameplate rpm at full load)",
+          "unit": "rpm"
+        }
+      ],
+      "explanation": "At 60 Hz a 2-pole motor has a 3,600 rpm field, a 4-pole motor 1,800 rpm, a 6-pole motor 1,200 rpm and an 8-pole motor 900 rpm. An induction motor must run slower than its field so that the rotor conductors cut flux; a nameplate reading 1,750 rpm therefore tells you it is a 4-pole motor with about 2.8 % slip. Variable-frequency drives change speed by changing f."
+    },
+    {
+      "type": "table",
+      "caption": "Reading a three-phase motor nameplate (NEMA MG 1 fields)",
+      "columns": [
+        "Field",
+        "Example",
+        "What it tells you"
+      ],
+      "rows": [
+        [
+          "HP (or kW)",
+          "10 HP",
+          "Rated mechanical output at the shaft, not electrical input"
+        ],
+        [
+          "Volts",
+          "230/460",
+          "Dual-voltage; the connection diagram shows series (460) or parallel (230) lead groupings"
+        ],
+        [
+          "FLA (amps)",
+          "26/13",
+          "Full-load current at each voltage; used for OVERLOAD sizing (430.6(A)(2))"
+        ],
+        [
+          "RPM",
+          "1,750",
+          "Full-load shaft speed; reveals pole count and slip"
+        ],
+        [
+          "Service factor (SF)",
+          "1.15",
+          "Continuous overload the motor tolerates (10 HP × 1.15 = 11.5 HP) at rated voltage; SF 1.0 means no margin"
+        ],
+        [
+          "Design letter",
+          "B",
+          "NEMA torque-speed class: B normal, C high starting torque, D high slip (hoists, presses)"
+        ],
+        [
+          "Code letter",
+          "G",
+          "Locked-rotor kVA per HP (G = 5.6–6.3); used with Table 430.7(B) to estimate starting current"
+        ],
+        [
+          "Insulation class",
+          "F",
+          "Maximum winding temperature (A 105 °C, B 130 °C, F 155 °C, H 180 °C)"
+        ],
+        [
+          "Ambient / temp rise",
+          "40 °C / 80 °C",
+          "Rated ambient and allowed rise; affects the overload multiplier in 430.32"
+        ],
+        [
+          "Duty",
+          "Continuous",
+          "Can run indefinitely at rating; intermittent-duty motors are sized differently (430.22(E))"
+        ],
+        [
+          "Enclosure",
+          "TEFC",
+          "Totally enclosed fan-cooled; ODP (open drip-proof) is for clean dry spaces; washdown and explosion-proof are special"
+        ],
+        [
+          "Frame",
+          "215T",
+          "Standard mounting dimensions so motors interchange"
+        ],
+        [
+          "Efficiency / PF",
+          "91.7 % / 0.85",
+          "NEMA Premium efficiency is required for most new general-purpose motors in the US"
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "A nameplate reads 60 Hz, 1,165 rpm, 230/460 V, FLA 14.4/7.2 A, SF 1.15, Design B, Class F. How many poles does the motor have, what is its slip, and which FLA do you use for overload sizing when it is connected to 460 V?",
+      "solutionSteps": [
+        "The nearest synchronous speed above 1,165 rpm is 1,200 rpm, which is 120 × 60 ÷ P with P = 6. The motor is 6-pole.",
+        "Slip = (1,200 − 1,165) ÷ 1,200 × 100 = 2.9 %.",
+        "At 460 V the leads are connected in series and the nameplate FLA is 7.2 A. Overload sizing uses the nameplate FLA for the connected voltage, never the 230 V value.",
+        "With SF 1.15, 430.32(A)(1) allows the overload to be set or selected at up to 125 % of 7.2 A = 9.0 A."
+      ],
+      "answer": "6 poles, 2.9 % slip, overload based on 7.2 A (maximum 9.0 A trip setting)."
+    },
+    {
+      "type": "diagram",
+      "title": "Power circuit of a full-voltage magnetic starter",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 310\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><g fill=\"currentColor\" stroke=\"none\" font-weight=\"bold\"><text x=\"270\" y=\"22\" text-anchor=\"middle\">L1</text><text x=\"320\" y=\"22\" text-anchor=\"middle\">L2</text><text x=\"370\" y=\"22\" text-anchor=\"middle\">L3</text></g><path d=\"M270 28 v22 M320 28 v22 M370 28 v22\"/><path d=\"M270 78 l-12 -24 M320 78 l-12 -24 M370 78 l-12 -24\" stroke=\"#4cc9ff\"/><path d=\"M270 78 v18 M320 78 v18 M370 78 v18\"/><g stroke=\"#ff6b6b\"><rect x=\"264\" y=\"96\" width=\"12\" height=\"28\"/><rect x=\"314\" y=\"96\" width=\"12\" height=\"28\"/><rect x=\"364\" y=\"96\" width=\"12\" height=\"28\"/></g><path d=\"M270 124 v22 M320 124 v22 M370 124 v22\"/><path d=\"M270 174 l-12 -24 M320 174 l-12 -24 M370 174 l-12 -24\" stroke=\"#f3c75b\"/><path d=\"M270 174 v16 M320 174 v16 M370 174 v16\"/><g stroke=\"#3ddc97\"><path d=\"M270 190 h-8 v24 h16 v-24 h-8 M320 190 h-8 v24 h16 v-24 h-8 M370 190 h-8 v24 h16 v-24 h-8\"/></g><path d=\"M270 214 v16 M320 214 v16 M370 214 v16\"/><path d=\"M270 230 L308 262 M370 230 L332 262 M320 230 v18\"/><circle cx=\"320\" cy=\"272\" r=\"24\"/><text x=\"320\" y=\"277\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\">M 3~</text><g fill=\"currentColor\" stroke=\"none\" font-size=\"11\"><text x=\"240\" y=\"68\" text-anchor=\"end\" fill=\"#4cc9ff\">Disconnect, in sight (430.102)</text><text x=\"240\" y=\"108\" text-anchor=\"end\" fill=\"#ff6b6b\">Fuses or breaker: short-circuit and</text><text x=\"240\" y=\"121\" text-anchor=\"end\" fill=\"#ff6b6b\">ground-fault protection (430.52)</text><text x=\"240\" y=\"165\" text-anchor=\"end\" fill=\"#f3c75b\">Contactor M, power contacts</text><text x=\"240\" y=\"206\" text-anchor=\"end\" fill=\"#3ddc97\">Overload relay heaters (430.32)</text><text x=\"400\" y=\"248\">T1  T2  T3</text><text x=\"400\" y=\"276\">Motor, FLC from</text><text x=\"400\" y=\"290\">Table 430.250</text><text x=\"400\" y=\"68\">Conductors sized</text><text x=\"400\" y=\"82\">at 125 % FLC (430.22)</text></g></svg>",
+      "caption": "Each element has a separate job: the disconnect isolates, the fuses or breaker clear short circuits and ground faults, the contactor switches the motor on and off, and the overload relay heaters sense sustained overcurrent. NEC Article 430 sizes every one of them differently."
+    },
+    {
+      "type": "text",
+      "heading": "Starters, contactors and overloads",
+      "markdown": "A **manual starter** is a heavy-duty switch with built-in overload elements, used on small motors (usually 1 HP or less single-phase, or up to about 10 HP three-phase with a manual three-pole starter). A **magnetic starter** is a **contactor** plus an **overload relay** in one assembly; it is what you find on most motors because it can be controlled remotely by pushbuttons, float switches, thermostats, PLCs and safety devices.\n\n**Contactor.** An electromagnet (the coil, rated for the control voltage, usually 120 V or 24 V) pulls in an armature that closes heavy power contacts. It also carries one or more small **auxiliary contacts** used in the control circuit. Contactors are sized by **NEMA size** (00, 0, 1, 2, 3 …) with generous ratings for any duty, or by **IEC** ratings matched to a specific application category; an IEC contactor is smaller for the same nominal HP but has less reserve. A contactor by itself has no overload protection, which is why a lighting or heating contactor is not a motor starter.\n\n**Overload relay.** Motors draw six to eight times rated current for a few seconds while starting, so the breaker protecting the branch circuit cannot be set tight enough to catch a 20 % overload that would cook the windings in minutes. The overload relay is the device that does: a **thermal** relay uses heaters (melting-alloy or bimetal elements selected from a chart for the nameplate FLA) that trip a normally closed contact in the control circuit; an **electronic** relay measures current and has an adjustable dial, selectable trip class (Class 10, 20 or 30 seconds at 600 % current) and phase-loss detection. The overload relay opens the **control circuit**, dropping out the contactor; it does not interrupt the power contacts directly. Reset is manual or automatic; automatic reset on a three-wire circuit is safe (the motor will not restart until Start is pressed again), but on a two-wire circuit it can restart a motor unexpectedly.\n\n**Reduced-voltage and electronic starting.** Large motors are started on wye-delta, autotransformer or part-winding starters, or on **soft starters** and **variable-frequency drives (VFDs)** to limit inrush and mechanical shock. A VFD varies both voltage and frequency and provides its own overload protection (430 Part X); motors on VFDs should be inverter-duty rated and the drive output cable kept short or shielded to protect the bearings and windings."
+    },
+    {
+      "type": "diagram",
+      "title": "Three-wire start/stop control with a seal-in contact",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 560 290\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M50 60 V270 M510 40 V270\"/><rect x=\"44\" y=\"40\" width=\"12\" height=\"20\" stroke=\"#ff6b6b\"/><g fill=\"currentColor\" stroke=\"none\" font-size=\"11\"><text x=\"20\" y=\"30\">L1 (120 V from X1, fused)</text><text x=\"510\" y=\"30\" text-anchor=\"middle\">L2 (grounded X2)</text><text x=\"28\" y=\"114\">1</text><text x=\"28\" y=\"224\">2</text></g><path d=\"M50 110 H92\"/><circle cx=\"96\" cy=\"110\" r=\"3\"/><circle cx=\"124\" cy=\"110\" r=\"3\"/><path d=\"M90 104 H130 M110 104 V92 M100 92 H120\" stroke=\"#ff6b6b\"/><path d=\"M128 110 H160 M160 110 H182\"/><circle cx=\"160\" cy=\"110\" r=\"3\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"186\" cy=\"110\" r=\"3\"/><circle cx=\"214\" cy=\"110\" r=\"3\"/><path d=\"M180 99 H220 M200 99 V88 M190 88 H210\" stroke=\"#3ddc97\"/><path d=\"M218 110 H250 M250 110 H282\"/><circle cx=\"250\" cy=\"110\" r=\"3\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M282 110 h6 v-10 h24 v10 h6\" stroke=\"#f3c75b\"/><path d=\"M318 110 H366\"/><circle cx=\"380\" cy=\"110\" r=\"14\" stroke=\"#4cc9ff\"/><text x=\"380\" y=\"115\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-weight=\"bold\">M</text><path d=\"M394 110 H510\"/><path d=\"M160 110 V160 H190 M210 160 H250 V110\"/><path d=\"M192 150 V170 M208 150 V170\" stroke=\"#4cc9ff\"/><path d=\"M50 220 H190 M210 220 H366\"/><path d=\"M192 210 V230 M208 210 V230\" stroke=\"#4cc9ff\"/><circle cx=\"380\" cy=\"220\" r=\"14\" stroke=\"#ff6b6b\"/><path d=\"M370 210 L390 230 M390 210 L370 230\" stroke=\"#ff6b6b\"/><path d=\"M394 220 H510\"/><g fill=\"currentColor\" stroke=\"none\" font-size=\"11\"><text x=\"110\" y=\"132\" text-anchor=\"middle\">STOP (NC)</text><text x=\"200\" y=\"132\" text-anchor=\"middle\">START (NO)</text><text x=\"300\" y=\"92\" text-anchor=\"middle\" fill=\"#f3c75b\">OL (NC)</text><text x=\"380\" y=\"142\" text-anchor=\"middle\">M coil</text><text x=\"200\" y=\"186\" text-anchor=\"middle\" fill=\"#4cc9ff\">M aux (seal-in, NO)</text><text x=\"200\" y=\"246\" text-anchor=\"middle\" fill=\"#4cc9ff\">M aux (NO)</text><text x=\"380\" y=\"252\" text-anchor=\"middle\" fill=\"#ff6b6b\">RUN pilot light</text><text x=\"455\" y=\"92\" text-anchor=\"middle\" fill=\"#9aa6b8\">loads on the L2 side</text></g></svg>",
+      "caption": "Rung 1: pressing START energizes coil M through the closed STOP and OL contacts; the M auxiliary contact in parallel with START closes and keeps the coil energized when START is released. Pressing STOP, or a trip of the overload, breaks the seal and the motor stops. Rung 2: a second M auxiliary contact lights the RUN pilot."
+    },
+    {
+      "type": "text",
+      "heading": "Reading and drawing ladder diagrams",
+      "markdown": "A **ladder diagram** shows the control logic, not the physical layout. The conventions make any starter panel readable:\n\n- The two vertical **rails** are the control power source, L1 (ungrounded) on the left and L2 (grounded) on the right, usually 120 V from the X1/X2 terminals of a fused control transformer.\n- Each horizontal **rung** holds one load (coil, pilot light, timer coil, solenoid) on the **right**, connected directly to L2, with the control devices on the left. Two loads are never placed in series on one rung: they would share the voltage and neither would operate correctly.\n- Devices are drawn in their **de-energized, shelf** state. NC means normally closed (STOP, OL contact); NO means normally open (START, M auxiliary). Rungs are numbered down the left side, and a coil carries small cross-reference numbers listing the rungs where its contacts appear.\n- Wire numbers change only when the circuit passes through a device; every conductor connected together carries the same wire number.\n\n**Two-wire control** uses a maintained contact (thermostat, float switch, pressure switch) directly in series with the coil. If power fails and returns, the motor restarts on its own. That is called **low-voltage release** and is acceptable for a sump pump, dangerous for a saw.\n\n**Three-wire control** uses momentary pushbuttons and a seal-in (holding) contact. After a power failure the seal-in contact is open, so the motor stays off until someone presses START: **low-voltage protection**. Multiple STOP buttons go in series; multiple START buttons go in parallel. A **jog** circuit bypasses the seal-in so the motor runs only while the button is held.\n\n**Interlocks.** A reversing starter has two contactors, F and R. The NC auxiliary of each is wired in series with the other's coil (electrical interlock) and the two are mechanically interlocked so both can never close and short L1 to L2 through the swapped leads. Safety devices (guards, e-stops, limit switches) go in series with the STOP button so that any one of them drops the coil."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "A motor that has stopped because its overload tripped, its thermostat opened or its float dropped is not de-energized; it is waiting to restart. Before touching belts, couplings or terminal boxes, open and lock out the disconnect in sight of the motor (NEC 430.102, Cal/OSHA Title 8 §3314) and verify the absence of voltage at the motor leads. Pressing STOP is not lockout."
+    },
+    {
+      "type": "text",
+      "heading": "NEC Article 430 in five sizing rules",
+      "markdown": "Article 430 is long because a motor circuit has several parts that are sized by different rules. The core concepts:\n\n1. **Use the table current, not the nameplate, for conductors and branch-circuit protection.** 430.6(A)(1) sends you to Tables 430.247 (DC), 430.248 (single-phase) and 430.250 (three-phase) for full-load current (FLC) by horsepower and voltage. The nameplate FLA is used only for the overload relay (430.6(A)(2)).\n2. **Branch-circuit conductors: at least 125 % of FLC** (430.22) for a single continuous-duty motor. For several motors on one feeder, 125 % of the largest plus 100 % of the rest (430.24).\n3. **Overload protection: 125 % of nameplate FLA** when the service factor is 1.15 or more or the temperature rise is 40 °C or less; otherwise 115 % (430.32(A)(1)). If that setting will not carry the motor through starting, 430.32(C) allows up to 140 % or 130 % respectively.\n4. **Branch-circuit short-circuit and ground-fault protection: Table 430.52** gives maximum percentages of FLC by device type: 300 % for non-time-delay fuses, 175 % for dual-element time-delay fuses, 250 % for inverse-time breakers and 800 % (up to 1,100 % under conditions) for instantaneous-trip breakers in listed combination starters. If the result is not a standard size, the next standard size up is allowed (430.52(C)(1) Exception No. 1).\n5. **Disconnecting means: within sight of the motor and controller** (430.102), rated at least 115 % of FLC when it is a switch (430.110), and lockable if the controller disconnect is out of sight of the motor.\n\nThe branch-circuit device is therefore allowed to be much larger than the conductor ampacity, which is the opposite of the usual rule in 240.4. That is legal only because the overload relay is protecting the conductors against overload; 240.4(G) points to Article 430 for exactly this reason."
+    },
+    {
+      "type": "example",
+      "problem": "Size the branch circuit for a 10 HP, 460 V, three-phase, Design B, continuous-duty motor with nameplate FLA 12.6 A and SF 1.15, protected by an inverse-time circuit breaker, using 75 °C copper conductors.",
+      "solutionSteps": [
+        "Table 430.250 FLC for 10 HP at 460 V = 14 A (use this, not 12.6 A).",
+        "Conductors: 14 A × 1.25 = 17.5 A minimum. From Table 310.16 at 75 °C, 14 AWG copper (20 A) would satisfy the ampacity, and 240.4(D) does not limit motor circuits (240.4(G)); many contractors still use 12 AWG for mechanical strength and voltage drop.",
+        "Breaker: Table 430.52 inverse-time breaker = 250 % × 14 A = 35 A, which is a standard size (240.6), so a 35 A three-pole breaker is the maximum. A smaller breaker is allowed if it holds through starting.",
+        "Overload: nameplate FLA 12.6 A × 1.25 (SF 1.15) = 15.75 A maximum trip setting; select heaters or set the dial accordingly.",
+        "Disconnect: a 30 A non-fused safety switch is rated 30 A ≥ 1.15 × 14 = 16.1 A and must be in sight of the motor."
+      ],
+      "answer": "Conductors ≥ 17.5 A (12 AWG Cu typical), 35 A inverse-time breaker maximum, overload set at 15.75 A or below, 30 A disconnect in sight of the motor."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "When a starter keeps tripping on overload, measure before you replace anything: all three line currents with a clamp meter (compare to nameplate FLA), all three line-to-line voltages (unbalance above 1 % multiplies current unbalance), and the mechanical load (a seized bearing or a closed damper is an electrical symptom with a mechanical cause). An overload that trips is doing its job; bypassing it or installing larger heaters burns up the motor."
+    }
+  ],
+  "practice": [
+    {
+      "id": "motors-and-controls-p1",
+      "type": "numeric",
+      "prompt": "What is the synchronous speed of a 4-pole motor on 60 Hz?",
+      "answer": 1800,
+      "unit": "rpm",
+      "tolerance": 1,
+      "explanation": "N = 120 × 60 ÷ 4 = 1,800 rpm. A nameplate of 1,750 rpm is typical, showing about 2.8 % slip."
+    },
+    {
+      "id": "motors-and-controls-p2",
+      "type": "numeric",
+      "prompt": "A 5 HP, 460 V three-phase motor has a Table 430.250 FLC of 7.6 A. What is the minimum ampacity of its branch-circuit conductors?",
+      "answer": 9.5,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "430.22: 125 % of the table FLC = 7.6 × 1.25 = 9.5 A."
+    },
+    {
+      "id": "motors-and-controls-p3",
+      "type": "numeric",
+      "prompt": "A motor nameplate shows FLA 21 A and service factor 1.15. What is the maximum overload relay setting under 430.32(A)(1)?",
+      "answer": 26.25,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "With SF 1.15, overload = 125 % of nameplate FLA = 21 × 1.25 = 26.25 A."
+    },
+    {
+      "id": "motors-and-controls-p4",
+      "type": "numeric",
+      "prompt": "Using Table 430.52, what is the maximum inverse-time circuit breaker rating for a three-phase motor with a table FLC of 28 A, before any next-size-up allowance?",
+      "answer": 70,
+      "unit": "A",
+      "tolerance": 0.5,
+      "explanation": "250 % × 28 A = 70 A, which is a standard size in 240.6(A), so no rounding is needed."
+    },
+    {
+      "id": "motors-and-controls-p5",
+      "type": "multiple_choice",
+      "prompt": "In a three-wire start/stop circuit, what keeps the contactor coil energized after the START button is released?",
+      "choices": [
+        "The overload relay contact",
+        "A normally open auxiliary contact of the contactor wired in parallel with START",
+        "The STOP button, which is normally open",
+        "A capacitor across the coil"
+      ],
+      "correctIndex": 1,
+      "explanation": "The seal-in (holding) contact closes when the coil pulls in and provides a path around the momentary START button."
+    },
+    {
+      "id": "motors-and-controls-p6",
+      "type": "multiple_choice",
+      "prompt": "Why can the branch-circuit breaker for a motor be rated far above the conductor ampacity?",
+      "choices": [
+        "Because motor conductors never overheat",
+        "Because the overload relay protects the conductors and motor against overload, so the breaker only needs to clear short circuits and ground faults",
+        "Because 240.4(D) requires it",
+        "Because the disconnect switch provides overload protection"
+      ],
+      "correctIndex": 1,
+      "explanation": "Article 430 splits the protection: overload relay for overloads, breaker or fuses for short circuits and ground faults. 240.4(G) refers motor circuits to Article 430."
+    },
+    {
+      "id": "motors-and-controls-p7",
+      "type": "multiple_choice",
+      "prompt": "A capacitor-start motor hums loudly, will not turn, and draws very high current. The most likely cause is:",
+      "choices": [
+        "a failed start capacitor or centrifugal switch, so the start winding never energizes",
+        "the motor is connected for the wrong rotation",
+        "the overload heaters are too small",
+        "the run winding is too large"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without the start winding a single-phase motor has no rotating field; it sits at locked rotor drawing six or more times rated current until the overload trips."
+    },
+    {
+      "id": "motors-and-controls-p8",
+      "type": "multiple_choice",
+      "prompt": "Which control arrangement will restart a motor automatically when power returns after an outage?",
+      "choices": [
+        "Three-wire control with momentary pushbuttons",
+        "Two-wire control with a maintained-contact switch",
+        "A jog circuit",
+        "A reversing starter with electrical interlocks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Two-wire control provides low-voltage release: if the maintained contact is still closed when power returns, the coil re-energizes. Three-wire control gives low-voltage protection."
+    }
+  ],
+  "quiz": {
+    "key": "motors-and-controls-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "motors-and-controls-q1",
+        "type": "numeric",
+        "prompt": "A motor nameplate reads 3,450 rpm on 60 Hz. What is its synchronous speed?",
+        "answer": 3600,
+        "unit": "rpm",
+        "tolerance": 1,
+        "explanation": "The next synchronous speed above 3,450 is 3,600 rpm (2 poles). Slip is about 4.2 %."
+      },
+      {
+        "id": "motors-and-controls-q2",
+        "type": "numeric",
+        "prompt": "A 7.5 HP, 230 V three-phase motor has a Table 430.250 FLC of 22 A. Minimum branch-circuit conductor ampacity?",
+        "answer": 27.5,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "22 × 1.25 = 27.5 A (430.22). From Table 310.16, 10 AWG copper at 75 °C (35 A) is the usual choice."
+      },
+      {
+        "id": "motors-and-controls-q3",
+        "type": "numeric",
+        "prompt": "A feeder supplies a 10 HP motor (FLC 14 A) and a 5 HP motor (FLC 7.6 A), both 460 V three-phase. Minimum feeder conductor ampacity per 430.24?",
+        "answer": 25.1,
+        "unit": "A",
+        "tolerance": 0.2,
+        "explanation": "125 % of the largest plus 100 % of the others: 14 × 1.25 + 7.6 = 17.5 + 7.6 = 25.1 A."
+      },
+      {
+        "id": "motors-and-controls-q4",
+        "type": "multiple_choice",
+        "prompt": "Which current value is used to select motor overload heaters?",
+        "choices": [
+          "Table 430.250 FLC",
+          "The nameplate FLA",
+          "The locked-rotor current",
+          "The breaker rating"
+        ],
+        "correctIndex": 1,
+        "explanation": "430.6(A)(2): overload protection is based on the motor nameplate current rating; conductors and branch-circuit protection use the table values."
+      },
+      {
+        "id": "motors-and-controls-q5",
+        "type": "multiple_choice",
+        "prompt": "A service factor of 1.15 on a 20 HP motor means:",
+        "choices": [
+          "the motor must be derated to 17.4 HP",
+          "the motor can carry a continuous 15 % overload (23 HP) at rated voltage and frequency",
+          "the motor draws 15 % less current than a standard motor",
+          "the motor needs 15 % larger conductors"
+        ],
+        "correctIndex": 1,
+        "explanation": "Service factor is a continuous overload allowance. It also sets the overload multiplier to 125 % in 430.32(A)(1)."
+      },
+      {
+        "id": "motors-and-controls-q6",
+        "type": "multiple_choice",
+        "prompt": "In a ladder diagram, where is the coil placed on its rung?",
+        "choices": [
+          "On the left, next to L1",
+          "On the right, connected directly to L2, with control contacts to its left",
+          "In the middle, between two STOP buttons",
+          "In series with another coil to share the voltage"
+        ],
+        "correctIndex": 1,
+        "explanation": "Loads sit on the grounded side of the rung so that a ground fault in the control wiring cannot energize the coil and start the motor unexpectedly (430.73 concept)."
+      },
+      {
+        "id": "motors-and-controls-q7",
+        "type": "multiple_choice",
+        "prompt": "The electrical interlock on a reversing starter consists of:",
+        "choices": [
+          "a fuse in each coil circuit",
+          "the NC auxiliary contact of each contactor wired in series with the opposite coil",
+          "a timer that delays reversing by 5 seconds",
+          "a single-pole disconnect"
+        ],
+        "correctIndex": 1,
+        "explanation": "If F is energized, its NC auxiliary contact opens the R coil circuit, and vice versa, so both contactors cannot pull in together and short the line."
+      },
+      {
+        "id": "motors-and-controls-q8",
+        "type": "multiple_choice",
+        "prompt": "The disconnecting means for a motor must generally be:",
+        "choices": [
+          "at the service entrance only",
+          "within sight of the motor and its controller, or lockable where permitted",
+          "inside the motor terminal box",
+          "at least 50 ft from the motor"
+        ],
+        "correctIndex": 1,
+        "explanation": "430.102 requires a disconnect in sight of the controller and of the motor, with lockable exceptions. \"In sight\" means visible and not more than 50 ft away."
+      },
+      {
+        "id": "motors-and-controls-q9",
+        "type": "multiple_choice",
+        "prompt": "A NEMA Design D motor is chosen for:",
+        "choices": [
+          "fans and pumps needing normal torque",
+          "high-slip applications with heavy shock loads, such as punch presses and hoists",
+          "the highest efficiency at constant load",
+          "explosive atmospheres"
+        ],
+        "correctIndex": 1,
+        "explanation": "Design D motors have very high starting torque and high slip (5–13 %), letting a flywheel deliver the energy for shock loads."
+      },
+      {
+        "id": "motors-and-controls-q10",
+        "type": "multiple_choice",
+        "prompt": "An electronic overload relay set to Class 20 will:",
+        "choices": [
+          "trip in about 20 seconds at 600 % of its current setting",
+          "trip at 20 A regardless of setting",
+          "allow 20 % overvoltage",
+          "reset automatically after 20 minutes"
+        ],
+        "correctIndex": 0,
+        "explanation": "Trip class is the maximum time to trip at 600 % of set current. Class 10 protects fast-heating motors; Class 30 is for high-inertia loads with long starts."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Article 430 (Motors, Motor Circuits and Controllers), 240.4(G), Tables 430.52 and 430.250 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "NEMA MG 1 — Motors and Generators (nameplate, design letters, service factor)",
+      "url": "https://www.nema.org/standards/view/motors-and-generators"
+    },
+    {
+      "title": "Rockis & Mazur, Electrical Motor Controls for Integrated Systems (ATP)",
+      "url": "https://www.atplearning.com/"
+    },
+    {
+      "title": "Cal/OSHA Title 8 §3314 — The Control of Hazardous Energy (lockout/tagout)",
+      "url": "https://www.dir.ca.gov/title8/3314.html"
+    },
+    {
+      "title": "U.S. Department of Energy — Premium Efficiency Motor Selection and Application Guide",
+      "url": "https://www.energy.gov/eere/amo/motor-systems"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}
