@@ -9,7 +9,8 @@
   const tok = (n, d) => css.getPropertyValue(n).trim() || d;
   // Each desk keeps its own hue, whichever desks are in the book; a desk without one takes the next spare.
   const HUE_OF = { memecoins: tok("--meme", "#6f9bff"), majors: tok("--major", "#f2c45c"), stocks: tok("--stock", "#c895f5"),
-    memecoins_wild: "#ff9a4d", stocks_wild: "#d7f25f", stocks_fade: "#7fe3e0" };
+    memecoins_wild: "#ff9a4d", memecoins_strict: "#b0b8ff", majors_4h: "#ffe28a", stocks_wild: "#d7f25f",
+    stocks_fade: "#7fe3e0", stocks_quick: "#ff8c8c", stocks_early: "#c48a5a" };
   const SPARE = ["#ff9de2", "#9ef07a", "#b9c2ff"];
   const WIN = tok("--win", "#5fe0a0"), LOSS = tok("--loss", "#ff6f61"), INK = tok("--ink", "#e9ecff"), DIM = tok("--dim", "#a7add0");
   const WARM = "#fff3cf", SILK = "#dfe6ff";
@@ -54,10 +55,14 @@
     const maxR = Math.max(110, ...galR);
     const ring = D <= 1 ? 0 : (2 * maxR + 170) / (2 * Math.sin(Math.PI / D));
     // On a phone held upright, a ring of many galaxies puts their names side by side, on top of each other.
-    // There, zigzag down the screen instead: one galaxy per row, alternating sides.
+    // There, zigzag down the screen instead: one galaxy per row, alternating sides, each row as tall as its
+    // own galaxy and the next one need (one huge galaxy mustn't space every row out).
     const column = window.innerHeight > window.innerWidth * 1.2 && D > 3;
+    const rows = [];
+    for (let i = 0; i < D; i++) rows.push(i ? rows[i - 1] + (galR[i - 1] + galR[i]) * 0.75 + 90 : 0);
+    const mid = (rows[0] + rows[D - 1]) / 2;
     const place = (i) => {
-      if (column) return [(i % 2 ? 1 : -1) * (maxR + 40), (i - (D - 1) / 2) * (2 * maxR + 120) * 0.75];
+      if (column) return [(i % 2 ? 1 : -1) * (galR[i] + 60), rows[i] - mid];
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(1, D);
       return [Math.cos(a) * ring, Math.sin(a) * ring * 0.86];
     };
@@ -158,12 +163,14 @@
       x0 = Math.min(x0, g.x - R); x1 = Math.max(x1, g.x + R);
       y0 = Math.min(y0, g.y - R * TILT); y1 = Math.max(y1, g.y + R * TILT + 70);
     });
-    // label: half a galaxy name's width, in pixels; on a phone the timeline and buttons take more of the bottom
-    const top = VW < 700 ? 118 : 86, bottom = VW < 700 ? 175 : 70, side = 24, label = 95;
+    // label: half a galaxy name's width, in pixels; on a phone the timeline and buttons take more of the bottom,
+    // and a column of many galaxies needs the top one clear of the header
+    const many = VW < 520 && W.gals.length > 6;
+    const top = VW < 700 ? (many ? 150 : 118) : 86, bottom = VW < 700 ? 175 : 70, side = 24, label = 95;
     let z = Math.min((VW - 2 * side) / (x1 - x0), (VH - top - bottom) / (y1 - y0));
     z = Math.min((VW - 2 * side) / (x1 - x0 + (2 * label) / z), (VH - top - bottom) / (y1 - y0));
     cam.tx = (x0 + x1) / 2; cam.ty = (y0 + y1) / 2 - (top - bottom) / 2 / Math.max(z, 1e-3);
-    cam.tz = Math.max(0.04, Math.min(2.4, z));
+    cam.tz = Math.max(0.012, Math.min(2.4, z));      // low enough for a phone to hold ten galaxies in one column
     if (follow && spider) {                 // ride along with the spider, a few times closer
       cam.tz = Math.max(0.06, Math.min(3, z * 3.2));
       cam.tx = spider.x; cam.ty = spider.y - (top - bottom) / 2 / cam.tz;
@@ -345,18 +352,21 @@
     }
     if (spider) drawSpider(spider);
 
-    // galaxy names
+    // galaxy names. A phone holding many galaxies has room for the names alone, in one line each.
+    const crowded = VW < 520 && W.gals.length > 6;
     for (const g of W.gals) {
       const has = S.deskBorn[g.i] > 0;
-      const y = sy(g.y + (galRadiusNow(g) + 20) * TILT) + 18, x = sx(g.x);
+      const y = sy(g.y + (galRadiusNow(g) + 20) * TILT) + (crowded ? 12 : 18), x = sx(g.x);
       ctx.textAlign = "center";
       ctx.fillStyle = g.color;
-      ctx.font = `700 ${Math.round(Math.max(12, Math.min(18, 15 * Math.sqrt(z * 3))))}px Unbounded, "Arial Black", sans-serif`;
+      ctx.font = `700 ${crowded ? 10 : Math.round(Math.max(12, Math.min(18, 15 * Math.sqrt(z * 3))))}px Unbounded, "Arial Black", sans-serif`;
       ctx.fillText(g.label.toUpperCase(), x, y);
-      ctx.font = `500 12px "IBM Plex Mono", monospace`;
-      ctx.fillStyle = has ? (S.deskNet[g.i] >= 0 ? WIN : LOSS) : DIM;
-      ctx.fillText(has ? `${usd(S.deskNet[g.i])} · ${S.deskN[g.i]} trades` : VW < 520 ? "no trades yet" : "waiting for its first trade",
-        x, y + 17);
+      if (!crowded) {
+        ctx.font = `500 12px "IBM Plex Mono", monospace`;
+        ctx.fillStyle = has ? (S.deskNet[g.i] >= 0 ? WIN : LOSS) : DIM;
+        ctx.fillText(has ? `${usd(S.deskNet[g.i])} · ${S.deskN[g.i]} trades` : VW < 520 ? "no trades yet" : "waiting for its first trade",
+          x, y + 17);
+      }
       ctx.textAlign = "left";
     }
 
@@ -766,6 +776,8 @@
   build();
   resize();
   window.addEventListener("resize", resize);
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(cv);   // the stage can change size with no window resize
+  window.__galaxy = { cam, size: () => [VW, VH], gals: () => W.gals.map((g) => [g.key, g.x, g.y, galRadiusNow(g)]) };  // for the tests
   const autoplay = !REDUCE && G.trades.length > 0;
   setTime(autoplay ? 0 : 1000);
   S = stateAt(T());

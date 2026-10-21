@@ -27,12 +27,14 @@ BIG_LOSS = -50.0       # % of the stake: a trade that lost half or more gets fla
 TRUST = 30             # trades before a desk's win rate means much
 STREAK = 6             # losses in a row worth a flag
 DRAWDOWN = 20.0        # % below the desk's high worth a flag
-COLORS = {"memecoins": "#3cc3f2", "majors": "#f2bd4f", "stocks": "#a08cff", "memecoins_wild": "#ff9a4d",
-          "stocks_wild": "#d7f25f", "stocks_fade": "#3fd3c0", "open": "#5fe3a1", "patterns": "#e98bff"}
-NAMES = {"memecoins": "memecoins", "majors": "big coins", "stocks": "stocks", "memecoins_wild": "wild memecoins",
-         "stocks_wild": "wild stocks", "stocks_fade": "fade stocks"}
-ABBR = {"memecoins": "MEM", "majors": "BIG", "stocks": "STK", "memecoins_wild": "WMEM", "stocks_wild": "WSTK",
-        "stocks_fade": "FADE", "open": "OPN", "patterns": "PAT"}
+COLORS = {"memecoins": "#3cc3f2", "memecoins_wild": "#ff9a4d", "memecoins_strict": "#6b7cff",
+          "majors": "#f2bd4f", "majors_4h": "#ffe28a",
+          "stocks": "#a08cff", "stocks_wild": "#d7f25f", "stocks_fade": "#3fd3c0", "stocks_quick": "#ff8c8c",
+          "stocks_early": "#c48a5a", "open": "#5fe3a1", "patterns": "#e98bff"}
+NAMES = {d: pb.LABEL[d].lower() for d in pb.DESKS}
+ABBR = {"memecoins": "MEM", "memecoins_wild": "WMEM", "memecoins_strict": "SMEM", "majors": "BIG", "majors_4h": "BIG4",
+        "stocks": "STK", "stocks_wild": "WSTK", "stocks_fade": "FADE", "stocks_quick": "QSTK", "stocks_early": "ESTK",
+        "open": "OPN", "patterns": "PAT"}
 
 
 def is_flag(t: pb.Trade) -> bool:
@@ -126,14 +128,16 @@ def flags(book: pb.Book) -> List[dict]:
             add(ups, d, "holding up", f"{label}: {_rate(s['win_rate'])} wins, {pf_txt}, "
                                       f"{_usd(s['net'])} over {n} trades.")
     b = book.benchmark
-    if b and (book.trades["majors"] or book.held["majors"]):
-        mine, n = benchmark.desk_return(book, "majors"), len(book.trades["majors"])
+    for d in [x for x in book.desks if x.startswith("majors")]:
+        if not (b and (book.trades[d] or book.held[d])):
+            continue
+        mine, n = benchmark.desk_return(book, d), len(book.trades[d])
         since = datetime.fromisoformat(b["since"]).astimezone(book.tz)
-        text = f"Big coins {_pct(mine)} against BTC bought and held {_pct(b['pct'])} since {since:%a %d %b}."
+        text = f"{pb.LABEL[d]} {_pct(mine)} against BTC bought and held {_pct(b['pct'])} since {since:%a %d %b}."
         if mine < b["pct"]:
-            add(found if n >= 20 else notes, "majors", "vs BTC", text + " So far, just holding BTC did better.")
+            add(found if n >= 20 else notes, d, "vs BTC", text + " So far, just holding BTC did better.")
         else:
-            add(ups if n >= 20 else notes, "majors", "vs BTC", text + " Ahead of just holding, so far.")
+            add(ups if n >= 20 else notes, d, "vs BTC", text + " Ahead of just holding, so far.")
     for d in book.desks:
         for h in book.held[d]:
             if h.value is not None and h.cost > 0 and h.value < 0.8 * h.cost:

@@ -37,12 +37,15 @@ ALERTS = ROOT / "server" / ".alerts"
 STATE = HERE / "output" / "watchdog.json"
 BACKUPS = Path("/var/backups/desks")
 NTFY = "https://ntfy.sh"
-UNITS = {"nightdesk": "Memecoin desk", "majors": "Big-coin desk", "paperbook": "Paper book and crawler",
+UNITS = {"nightdesk": "Memecoin desk", "majors": "Big-coin desk", "majors-4h": "Big-coin 4h desk",
+         "paperbook": "Paper book and crawler",
          "postdesk": "Post Desk"}
 # What should keep saving while its service runs: name -> (service, file, minutes, label)
 QUIET = {"nightdesk": ("nightdesk", "night-desk/output/live/state.json", 20, "Memecoin desk"),     # every minute
          "nightdesk-wild": ("nightdesk", "night-desk/output/wild/live/state.json", 20, "Wild memecoin desk"),
-         "majors": ("majors", "majors-desk/output/live/state.json", 150, "Big-coin desk")}         # every hour
+         "nightdesk-strict": ("nightdesk", "night-desk/output/strict/live/state.json", 20, "Strict memecoin desk"),
+         "majors": ("majors", "majors-desk/output/live/state.json", 150, "Big-coin desk"),         # every hour
+         "majors-4h": ("majors-4h", "majors-desk/output/4h/live/state.json", 330, "Big-coin 4h desk")}  # every 4 hours
 
 
 @dataclass

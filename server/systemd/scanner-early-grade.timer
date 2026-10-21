@@ -1,0 +1,8 @@
+[Unit]
+Description=Grade the early-rules stock picks once the close is in
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 13:53:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

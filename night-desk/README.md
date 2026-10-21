@@ -159,15 +159,22 @@ The point is to find out faster whether taking more risk pays, without touching 
 | Judge | Claude if there's a key, else rules | rules only, so it never costs anything |
 | Fees, slippage, scorecard (`[gates]`) | | **identical** |
 
+## The strict rulebook: `desk-strict.toml`
+
+The opposite of wild, on its own $100: only coins past their first 30 minutes with real money behind them
+(twice the main desk's pool, volume and trade-count minimums), half-size bets (5% of the bank), at most two at
+once, profit taken at +25%, losses cut at −12%, and nothing held past an hour. Rug checks, fees and the
+scorecard are identical to the main desk's.
+
 ```bash
-python -m nightdesk run --with wild        # both desks, one shared price feed; wild at http://127.0.0.1:8787/wild/
-python -m nightdesk report --book wild     # every command takes --book wild
-python -m nightdesk sim --days 30 --book wild
+python -m nightdesk run --with wild --with strict   # all three, one shared feed; /wild/ and /strict/ dashboards
+python -m nightdesk report --book wild              # every command takes --book wild or --book strict
+python -m nightdesk sim --days 30 --book strict
 ```
 
-Both desks share one feed (`sources/shared.py`): a sweep, a price or a safety report fetched for one is reused
-by the other, so the free APIs see about the same traffic as one desk. The wild desk's results live in
-`output/wild/`, and the paper book shows it as **Wild memecoins**.
+All the desks in one process share one feed (`sources/shared.py`): a sweep, a price or a safety report fetched
+for one is reused by the others, so the free APIs see about the same traffic as one desk. Each rulebook's
+results live in `output/<name>/`, and the paper book shows them as **Wild memecoins** and **Strict memecoins**.
 
 ## How the paper fills work
 

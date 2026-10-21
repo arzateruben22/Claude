@@ -7,7 +7,8 @@ stop — pessimistic on purpose. Every trade is then charged `cost_pct` for the
 spread and slippage you'd really pay.
 
 A short book (side = "short") sells at the open instead: the target is below and
-the stop above, and a bar that opens beyond the stop fills where it opened.
+the stop above, and a bar that opens beyond the stop fills where it opened. A book
+with exit_by = "10:30" closes whatever is still open at that time ("timed").
 """
 from __future__ import annotations
 
@@ -80,8 +81,15 @@ def record(res: ScanResult, path: Path = JOURNAL, rules: str = "") -> int:
     return added
 
 
-def simulate(rth: List[Bar], target_pct: float, stop_pct: float, side: str = "long") -> Tuple[str, float]:
+def simulate(rth: List[Bar], target_pct: float, stop_pct: float, side: str = "long",
+             exit_by: str = "") -> Tuple[str, float]:
     entry = rth[0].open
+    done = "close"
+    if exit_by:
+        cutoff = time.fromisoformat(exit_by)
+        early = [b for b in rth if b.start.astimezone(ET).time() < cutoff]
+        if len(early) < len(rth):
+            rth, done = early or rth[:1], "timed"      # whatever is still open goes at the last bar before exit_by
     if side == "short":
         # Sold short at the open: it makes money as the price falls. A stock that jumps the stop
         # (a gap or a halt) is bought back where it reopened, which can be far worse than the stop.
@@ -91,14 +99,14 @@ def simulate(rth: List[Bar], target_pct: float, stop_pct: float, side: str = "lo
                 return "stop", -(max(stop, b.open) / entry - 1) * 100
             if b.low <= target:
                 return "target", target_pct
-        return "close", (1 - rth[-1].close / entry) * 100
+        return done, (1 - rth[-1].close / entry) * 100
     target, stop = entry * (1 + target_pct / 100), entry * (1 - stop_pct / 100)
     for b in rth:
         if b.low <= stop:
             return "stop", -stop_pct
         if b.high >= target:
             return "target", target_pct
-    return "close", (rth[-1].close / entry - 1) * 100
+    return done, (rth[-1].close / entry - 1) * 100
 
 
 def outcome(bars: List[Bar], day: date, scan_price: float, crit: Criteria) -> Optional[dict]:
@@ -106,7 +114,7 @@ def outcome(bars: List[Bar], day: date, scan_price: float, crit: Criteria) -> Op
     if not rth:
         return None
     o, hi, lo, cl = rth[0].open, max(b.high for b in rth), min(b.low for b in rth), rth[-1].close
-    exit_, pnl = simulate(rth, crit.target_pct, crit.stop_pct, crit.side)
+    exit_, pnl = simulate(rth, crit.target_pct, crit.stop_pct, crit.side, crit.exit_by)
     r = lambda x: round(x, 2)  # noqa: E731
     return {
         "open": round(o, 4), "high": round(hi, 4), "low": round(lo, 4), "close": round(cl, 4),
@@ -230,8 +238,8 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
     out = [f"Paper results: {len(rows)} graded picks over {len(days)} trade days ({days[0]} → {days[-1]})",
            (f"Sim: short the 9:30 ET open, cover at -{crit.target_pct:g}% (target) / +{crit.stop_pct:g}% (stop), "
             f"else at the close; {crit.cost_pct:g}% cost per trade" if crit.side == "short" else
-            f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at close;"
-            f" {crit.cost_pct:g}% cost per trade"),
+            f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at "
+            f"{'the ' + crit.exit_by + ' ET exit' if crit.exit_by else 'close'}; {crit.cost_pct:g}% cost per trade"),
            "", block("All", rows)]
     out += [block(sess, rs) for sess in ("premarket", "afterhours", "regular")
             if (rs := [r for r in rows if r["session"] == sess]) and len(rs) != len(rows)]

@@ -6,6 +6,10 @@
   memecoins_wild  Night Desk's wild rulebook (desk-wild.toml): the same coins, more risk, its own bank
   stocks_wild     the scanner's wild rules (criteria-wild.toml): more picks, wider exits, its own bank
   stocks_fade     the scanner's fade rules (criteria-fade.toml): the stock desk's picks, sold short
+  memecoins_strict  Night Desk's strict rulebook (desk-strict.toml): older coins, smaller bets, quicker exits
+  majors_4h       Majors Desk's 4-hour rulebook (majors-4h.toml): the same trend following, four times slower
+  stocks_quick    the scanner's quick rules (criteria-quick.toml): the stock desk's picks, +5% / -3%
+  stocks_early    the scanner's early rules (criteria-early.toml): the stock desk's picks, sold by 10:30 ET
 
 A desk is in the book when book.toml has a section for it.
 
@@ -39,15 +43,19 @@ except ModuleNotFoundError:  # Python 3.10
 
 HERE = Path(__file__).resolve().parent
 ET = ZoneInfo("America/New_York")
-# every desk the book knows, in order
-DESKS = ("memecoins", "majors", "stocks", "memecoins_wild", "stocks_wild", "stocks_fade")
-LABEL = {"memecoins": "Memecoins", "majors": "Big coins", "stocks": "Stocks",
-         "memecoins_wild": "Wild memecoins", "stocks_wild": "Wild stocks", "stocks_fade": "Fade stocks"}
-KIND = {"memecoins": "coins", "majors": "coins", "stocks": "stocks", "memecoins_wild": "coins", "stocks_wild": "stocks",
-        "stocks_fade": "stocks"}
-VARIANT_OF = {"memecoins_wild": "memecoins", "stocks_wild": "stocks", "stocks_fade": "stocks"}   # copies of another desk
+# every desk the book knows, in order: each market, then its variants
+DESKS = ("memecoins", "memecoins_wild", "memecoins_strict", "majors", "majors_4h",
+         "stocks", "stocks_wild", "stocks_fade", "stocks_quick", "stocks_early")
+LABEL = {"memecoins": "Memecoins", "memecoins_wild": "Wild memecoins", "memecoins_strict": "Strict memecoins",
+         "majors": "Big coins", "majors_4h": "Big coins 4h",
+         "stocks": "Stocks", "stocks_wild": "Wild stocks", "stocks_fade": "Fade stocks", "stocks_quick": "Quick stocks",
+         "stocks_early": "Early-out stocks"}
+KIND = {d: ("stocks" if d.startswith("stocks") else "coins") for d in DESKS}
+VARIANT_OF = {d: d.split("_")[0] for d in DESKS if "_" in d}         # copies of another desk, and which
 STOCK_RULES = {"stocks": "../premarket-scanner/criteria.toml", "stocks_wild": "../premarket-scanner/criteria-wild.toml",
-               "stocks_fade": "../premarket-scanner/criteria-fade.toml"}
+               "stocks_fade": "../premarket-scanner/criteria-fade.toml",
+               "stocks_quick": "../premarket-scanner/criteria-quick.toml",
+               "stocks_early": "../premarket-scanner/criteria-early.toml"}
 
 
 @dataclass
@@ -181,8 +189,9 @@ class Book:
     ticket: float = 100.0
     share_bank: bool = False                                        # each day's stock picks split the stock bank
     benchmark: Optional[dict] = None                                # BTC bought at the start and held (benchmark.py)
-    # target %, stop %, cost % from each stock desk's own rules
+    # target %, stop %, cost % from each stock desk's own rules, and the time it's out by ("" = the close)
     stock_rules: Dict[str, Tuple[float, float, float]] = field(default_factory=lambda: {"stocks": (10.0, 5.0, 0.5)})
+    stock_exit: Dict[str, str] = field(default_factory=dict)
 
     @property
     def desks(self) -> Tuple[str, ...]:
@@ -211,6 +220,7 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
     banks: Dict[str, float] = {}
     sources: Dict[str, str] = {}
     rules: Dict[str, Tuple[float, float, float]] = {}
+    exits: Dict[str, str] = {}
     first_stocks = next((cfg[d] for d in DESKS if KIND[d] == "stocks" and d in cfg), {})
     for d in DESKS:
         c = cfg.get(d)
@@ -219,7 +229,7 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
         banks[d] = float(c["start_bank"])
         if KIND[d] == "coins":
             folder = (HERE / (c["demo_folder"] if demo else c["folder"])).resolve()
-            trades[d], held[d] = load_coins(folder, d, "" if d == "majors" else "$")
+            trades[d], held[d] = load_coins(folder, d, "" if d.startswith("majors") else "$")
             sources[d] = str(folder)
             continue
         live = (HERE / c["journal"]).resolve()
@@ -229,9 +239,10 @@ def load(cfg: dict, demo: bool, now: Optional[datetime] = None) -> Book:
         trades[d], held[d] = load_stocks(journal, float(c["ticket_usd"]), banks[d] if share else None, desk=d)
         sources[d] = str(journal)
         rules[d] = stock_rules(HERE / c.get("rules", STOCK_RULES[d]))
+        exits[d] = stock_exit_by(HERE / c.get("rules", STOCK_RULES[d]))
     return Book(trades, held, banks, sources, demo, now or datetime.now(timezone.utc),
                 ZoneInfo(cfg["report"]["timezone"]), float(first_stocks.get("ticket_usd", 100.0)),
-                bool(first_stocks.get("share_bank", False)), stock_rules=rules)
+                bool(first_stocks.get("share_bank", False)), stock_rules=rules, stock_exit=exits)
 
 
 def stock_rules(path: Path) -> Tuple[float, float, float]:
@@ -241,6 +252,14 @@ def stock_rules(path: Path) -> Tuple[float, float, float]:
     with open(path, "rb") as fh:
         p = tomllib.load(fh).get("paper", {})
     return (float(p.get("target_pct", 10.0)), float(p.get("stop_pct", 5.0)), float(p.get("cost_pct", 0.5)))
+
+
+def stock_exit_by(path: Path) -> str:
+    """The New York time a stock desk is out by, or "" for the 4pm close."""
+    if not path.exists():
+        return ""
+    with open(path, "rb") as fh:
+        return str(tomllib.load(fh).get("paper", {}).get("exit_by", "") or "")
 
 
 # -- outputs ----------------------------------------------------------------------------------------
@@ -271,10 +290,10 @@ def render_text(book: Book) -> str:
              f"{book.now.astimezone(book.tz):%a %d %b %H:%M %Z}", ""]
     for d in book.desks:
         s = stats(book.trades[d], book.banks[d])
-        lines.append(f"  {LABEL[d].lower():<14} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
+        lines.append(f"  {LABEL[d].lower():<17} {s['trades']:>4} trades  net {_usd(s['net']):>12}  ({s['return_pct']:+.1f}% of "
                      f"${book.banks[d]:,.0f})  won {s['win_rate']:.0f}%  profit factor {_pf(s['profit_factor'])}  "
                      f"worst drawdown {s['max_drawdown_pct']:.1f}%")
-    lines.append(f"  {'total':<14} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
+    lines.append(f"  {'total':<17} {all_s['trades']:>4} trades  net {_usd(all_s['net']):>12}  "
                  f"({all_s['return_pct']:+.1f}% of ${total_start:,.0f})")
     open_coins = [h for d in book.kind("coins") for h in book.held[d]]
     waiting = [h for d in book.kind("stocks") for h in book.held[d]]
@@ -328,7 +347,10 @@ h2 { font: 700 13px/1.2 var(--display); letter-spacing: .14em; text-transform: u
 .stamp b { color: var(--down); font-weight: 500; }
 .tiles { display: grid; grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr)); gap: 1px; margin: 18px 0 26px;
   background: var(--rule); border: 1px solid var(--rule); }
-.tiles.wide-first .tile:first-child { grid-column: span 2; }
+.tiles.wide-first .tile:first-child, .tiles.many .tile:first-child, .tiles.fill-last .tile:last-child { grid-column: span 2; }
+.tiles.many .tile { padding: 10px 11px; }
+.tiles.many .tile b { font-size: clamp(17px, 1.9vw, 23px); }
+.tiles.many .tile span { font-size: 10.5px; }
 .tile { padding: 12px 14px; min-width: 0; background: var(--paper); }
 .tile span { display: block; font: 600 11.5px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .tile b { display: block; font: 500 clamp(19px, 3.2vw, 27px)/1.2 var(--mono); font-variant-numeric: tabular-nums; margin-top: 4px; }
@@ -347,12 +369,20 @@ section { margin-bottom: 28px; min-width: 0; }
 .chart .l-memecoins_wild { stroke: var(--ribbon); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
 .chart .l-stocks_wild { stroke: var(--plum); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
 .chart .l-stocks_fade { stroke: var(--plum); stroke-width: 2; stroke-dasharray: 1.5 3.5; stroke-linecap: round; fill: none; }
+.chart .l-memecoins_strict { stroke: var(--ribbon); stroke-width: 2; stroke-dasharray: 1.5 3.5; stroke-linecap: round; fill: none; }
+.chart .l-majors_4h { stroke: var(--gold); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
+.chart .l-stocks_quick { stroke: var(--plum); stroke-width: 1.6; stroke-dasharray: 10 3 2 3; fill: none; }
+.chart .l-stocks_early { stroke: var(--plum); stroke-width: 2.6; stroke-dasharray: 14 6; fill: none; }
 .chart .b-up { fill: var(--up); } .chart .b-down { fill: var(--down); }
 .key .k-total { color: var(--ink); } .key .k-memecoins { color: var(--ribbon); } .key .k-majors { color: var(--gold); }
 .key .k-stocks { color: var(--plum); }
 .key .k-memecoins_wild { color: var(--ribbon); } .key .k-stocks_wild { color: var(--plum); }
 .key .k-memecoins_wild i, .key .k-stocks_wild i { border-top-style: dashed; }
 .key .k-stocks_fade { color: var(--plum); } .key .k-stocks_fade i { border-top-style: dotted; }
+.key .k-memecoins_strict { color: var(--ribbon); } .key .k-memecoins_strict i { border-top-style: dotted; }
+.key .k-majors_4h { color: var(--gold); } .key .k-majors_4h i { border-top-style: dashed; }
+.key .k-stocks_quick { color: var(--plum); } .key .k-stocks_quick i { border-top-style: double; }
+.key .k-stocks_early { color: var(--plum); } .key .k-stocks_early i { border-top-width: 5px; }
 .key { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 400 12.5px var(--mono); color: var(--muted); margin: 0 0 6px; }
 .key i { display: inline-block; width: 18px; height: 0; border-top: 3px solid currentColor; vertical-align: middle; margin-right: 6px; }
 .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
@@ -368,8 +398,9 @@ td.n, th.n { text-align: right; }
 @media (max-width: 760px) {
   .sheet { padding-inline: 16px; background-image: none; }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tile:first-child, .tiles.wide-first .tile:first-child { grid-column: 1 / -1; }
-  .tiles.lone-last .tile:last-child { grid-column: 1 / -1; }
+  .tile:first-child, .tiles.wide-first .tile:first-child, .tiles.many .tile:first-child { grid-column: 1 / -1; }
+  .tiles.lone-last .tile:last-child, .tiles.fill-last .tile:last-child { grid-column: 1 / -1; }
+  .tiles.many .tile b { font-size: clamp(19px, 5.5vw, 24px); }
   .two { grid-template-columns: minmax(0, 1fr); }
 }
 """
@@ -486,9 +517,18 @@ def render_html(book: Book) -> str:
            f'<small>{coins_held} coins held · {picks_waiting} stock picks waiting</small></div>']
         + ([bench_tile] if bench_tile else []))
     n = len(tile_list)
-    # One or two full rows on a wide screen: the first tile takes two cells when the count is odd.
-    cols = n if n <= 5 else (n + 1) // 2
-    tile_cls = "tiles" + (" wide-first" if n > 5 and n % 2 else "") + (" lone-last" if n % 2 == 0 else "")
+    # One or two full rows on a wide screen. Up to seven tiles: the first takes two cells when the count is odd.
+    # Eight or more: the first (the total, with the biggest number) always takes two, and so does the last when
+    # that's what fills the second row.
+    if n <= 5:
+        cols, tile_cls = n, "tiles"
+    elif n <= 7:
+        cols = (n + 1) // 2
+        tile_cls = "tiles" + (" wide-first" if n % 2 else "") + (" lone-last" if n % 2 == 0 else "")
+    else:
+        cells = n + 1 + (n + 1) % 2
+        cols = cells // 2
+        tile_cls = "tiles many" + (" fill-last" if (n + 1) % 2 else "")
     tiles = f'<div class="{tile_cls}" style="--cols:{cols}">' + "".join(tile_list) + "</div>"
 
     rows = "".join(
@@ -559,7 +599,8 @@ def render_html(book: Book) -> str:
 """
 
 
-NOTE_ORDER = ("majors", "memecoins", "stocks", "memecoins_wild", "stocks_wild", "stocks_fade")
+NOTE_ORDER = ("majors", "majors_4h", "memecoins", "memecoins_wild", "memecoins_strict",
+              "stocks", "stocks_wild", "stocks_fade", "stocks_quick", "stocks_early")
 
 
 def _note(book: Book, d: str) -> str:
@@ -572,6 +613,14 @@ def _note(book: Book, d: str) -> str:
         return (f"<p><b>Memecoins</b> (Night Desk): {bank} of paper money. Buys and sells are priced from the pool's\n"
                 "      live price with fees and price impact included, so they're close to what a real swap would get, "
                 "but no order\n      ever reaches the market.</p>")
+    if d == "majors_4h":
+        return (f"<p><b>Big coins 4h</b> (Majors Desk, 4-hour rules): its own {bank} of paper money on the same coins, "
+                "prices and fees as Big coins,\n      but deciding once per finished 4-hour candle instead of every "
+                "hour (majors-desk/majors-4h.toml). Fewer trades,\n      longer holds, less paid in fees.</p>")
+    if d == "memecoins_strict":
+        return (f"<p><b>Strict memecoins</b> (Night Desk, strict rules): its own {bank} of paper money on the same coins, "
+                "prices, fees and\n      rug checks as Memecoins, but only coins past their first half hour with real money "
+                "behind them, half-size bets,\n      at most two at once, and quicker exits (night-desk/desk-strict.toml).</p>")
     if d == "memecoins_wild":
         return (f"<p><b>Wild memecoins</b> (Night Desk, wild rules): its own {bank} of paper money on the same coins, "
                 "prices, fees and\n      rug checks as Memecoins, with looser entry rules and bigger, longer bets "
@@ -585,10 +634,14 @@ def _note(book: Book, d: str) -> str:
                 f"Bought back at −{target:g}% (the target),\n      +{stop:g}% (the stop, or wherever the stock "
                 f"reopens if it jumps the stop) or the close, minus {cost:g}% for spread,\n      slippage and "
                 "borrowing the shares. Real shorting needs a margin account and shares a broker can lend.</p>")
-    name = ("<b>Stocks</b> (premarket scanner)" if d == "stocks" else
-            "<b>Wild stocks</b> (premarket scanner, wild rules: smaller gaps, no news needed)")
+    name = {"stocks": "<b>Stocks</b> (premarket scanner)",
+            "stocks_wild": "<b>Wild stocks</b> (premarket scanner, wild rules: smaller gaps, no news needed)",
+            "stocks_quick": "<b>Quick stocks</b> (premarket scanner, quick rules: the same picks, profit taken fast)",
+            "stocks_early": "<b>Early-out stocks</b> (premarket scanner, early rules: the same picks, out of the "
+                            "market early)"}[d]
+    end = f"by {book.stock_exit[d]} ET" if book.stock_exit.get(d) else "the\n      close"
     return (f"<p>{name}: {stake}.\n      Each pick is bought at the 9:30 ET open and sold at +{target:g}%, −{stop:g}% "
-            f"or the\n      close, whichever comes first, minus {cost:g}% for spread and slippage. When one five-minute bar\n"
+            f"or {end}, whichever comes first, minus {cost:g}% for spread and slippage. When one five-minute bar\n"
             "      touches both, it counts as the stop.</p>")
 
 

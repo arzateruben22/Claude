@@ -11,9 +11,14 @@ nothing in this repo can place a real order.
 | **Wild memecoins**: Night Desk's wild rulebook (`night-desk/desk-wild.toml`) | the same coins and rug checks, with looser entry rules and bigger, longer bets | its own $100 bank | alongside the memecoin desk |
 | **Wild stocks**: the scanner's wild rules (`premarket-scanner/criteria-wild.toml`) | smaller gaps, no news needed, +20% / −8% exits | its own $100 bank | a minute after each stock scan |
 | **Fade stocks**: the scanner's fade rules (`premarket-scanner/criteria-fade.toml`) | the stock desk's picks, sold short at the open: gains when they fall | its own $100 bank | two minutes after each stock scan |
+| **Strict memecoins**: Night Desk's strict rulebook (`night-desk/desk-strict.toml`) | older coins with real money behind them, half-size bets, quicker exits | its own $100 bank | alongside the memecoin desk |
+| **Big coins 4h**: Majors Desk's 4-hour rulebook (`majors-desk/majors-4h.toml`) | the same coins and rules on 4-hour candles: fewer trades, less in fees | its own $100 bank | once per finished 4-hour candle |
+| **Quick stocks**: the scanner's quick rules (`premarket-scanner/criteria-quick.toml`) | the stock desk's picks, +5% / −3% | its own $100 bank | with the stock scans |
+| **Early-out stocks**: the scanner's early rules (`premarket-scanner/criteria-early.toml`) | the stock desk's picks, sold by 10:30 New York time | its own $100 bank | with the stock scans |
 
-The wild desks are riskier copies run side by side, so the book shows whether taking more risk pays. The fade
-desk takes the opposite side of the stock desk, because most of its early picks fell after the open. They don't
+Ten desks, one scoreboard: each is a different idea on the same markets over the same weeks, so the book shows
+which ideas make paper money and which don't. The wild desks take more risk, strict takes less, fade takes the
+other side of the stock desk, quick and early sell the same stock picks sooner, and 4h trades the big coins slower. They don't
 change the original desks or their four-week test. A desk is in the book when `book.toml` has a section for it.
 
 ```bash

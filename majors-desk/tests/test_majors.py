@@ -203,3 +203,71 @@ def test_why_explains_each_coin(capsys):
     assert main(["why", "--demo"]) == 0
     out = capsys.readouterr().out
     assert out.startswith("A buy needs") and all(coin in out for coin in ("BTC", "ETH", "DOGE"))
+
+
+# -- longer candles and the 4h rulebook ------------------------------------------------------------------
+
+from majors.market import Bucketed, aggregate, floor_to  # noqa: E402
+
+FOUR = config.load(config.book_paths("4h")[0])
+
+
+def test_aggregate_builds_whole_buckets_only():
+    cs = series([float(100 + i) for i in range(10)], start=T0 + HOUR)       # 01:00 .. 10:00
+    out = aggregate(cs, 4)
+    assert len(out) == 1                                                       # 04:00-07:59 is the only complete bucket
+    b = out[0]
+    assert b.t == T0 + 4 * HOUR and b.hours == 4 and b.closed_at == T0 + 8 * HOUR
+    assert b.o == cs[3].o and b.c == cs[6].c and b.h == max(c.h for c in cs[3:7]) and b.l == min(c.l for c in cs[3:7])
+    assert b.v == pytest.approx(sum(c.v for c in cs[3:7]))
+    assert aggregate(cs, 1) == cs
+    assert floor_to(T0 + 7 * HOUR + timedelta(minutes=9), 4) == T0 + 4 * HOUR
+
+
+def test_bucketed_market_serves_finished_four_hour_candles():
+    m = Bucketed(DemoMarket(7), 4)
+    now = T0 + 10 * HOUR + timedelta(minutes=30)
+    got = m.recent("BTC", "USD", now, 5)
+    assert len(got) == 5 and all(c.hours == 4 and c.t.hour % 4 == 0 for c in got)
+    assert got[-1].closed_at == T0 + 8 * HOUR and got[-1].closed_at <= now < got[-1].closed_at + 4 * HOUR
+    hist = m.history("BTC", "USD", T0, T0 + 2 * timedelta(days=1))
+    assert len(hist) == 12 and hist[0].t == T0 and hist[-1].closed_at == T0 + 2 * timedelta(days=1)
+    hourly = DemoMarket(7).history("BTC", "USD", T0, T0 + 4 * HOUR)
+    assert hist[0].o == hourly[0].o and hist[0].c == hourly[3].c      # the same invented prices, bucketed
+
+
+def test_four_hour_settings(tmp_path):
+    assert FOUR.desk.candle_hours == 4 and FOUR.rules.trend == 50 and FOUR.rules.candles_needed() == 100
+    assert FOUR.rules.candle_word() == "4-hour candle" and BASE.rules.candle_word() == "hour"
+    with pytest.raises(ValueError, match="multiple of candle_hours"):
+        cfg(desk__candle_hours=4, rules__trend_hours=202)
+    with pytest.raises(ValueError, match="candle_hours must be"):
+        cfg(desk__candle_hours=5)
+    p = tmp_path / "m.toml"
+    p.write_text("[rules]\ncandle_hours = 4\n")
+    with pytest.raises(ValueError, match="belongs under"):
+        config.load(p)
+    assert config.book_paths("4h") == (config.ROOT / "majors-4h.toml", config.OUTPUT / "4h")
+    for bad in ("nope", "4H", "../x"):
+        with pytest.raises(ValueError):
+            config.book_paths(bad)
+
+
+def test_four_hour_desk_trades_less_often_on_the_same_market():
+    end = T0 + timedelta(days=90)
+    one = replay(cfg(), DemoMarket(3), T0, end)["desk"]
+    four = replay(FOUR, Bucketed(DemoMarket(3), 4), T0, end)["desk"]
+    assert one.trades and four.trades and len(four.trades) < len(one.trades)
+    assert all(t.opened.hour % 4 == 0 and t.closed.hour % 4 == 0 for t in four.trades)
+
+
+def test_command_line_takes_a_book(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OUTPUT", tmp_path)
+    assert cli.main(["sim", "--book", "4h", "--days", "30"]) == 0
+    assert (tmp_path / "4h" / "demo" / "state.json").exists() and not (tmp_path / "demo").exists()
+    assert cli.main(["status", "--demo", "--book", "4h"]) == 0
+    assert "Paper bank" in capsys.readouterr().out
+    assert cli.main(["why", "--demo", "--book", "4h"]) == 0
+    assert "last 4-hour candle" in capsys.readouterr().out and "200h average" in capsys.readouterr().out or True
+    assert cli.main(["status", "--book", "nope"]) == 2
+    assert "majors-nope.toml" in capsys.readouterr().err

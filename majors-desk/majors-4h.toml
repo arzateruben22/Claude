@@ -1,0 +1,31 @@
+# Majors Desk, 4-HOUR rulebook: the same trend following on 4-hour candles, run next to the hourly desk on
+# its own paper bank.
+#
+# Hourly trading pays the exchange fee both ways many times a week, and hourly breakouts are often noise.
+# This desk decides once per finished 4-hour candle (built from Coinbase's hourly prices, aligned to
+# midnight UTC), so it trades far less often, holds longer, and gives fees a much smaller bite.
+# Every window below is in hours, like majors.toml; on 4-hour candles, 200 hours is 50 candles.
+#
+# Run it: python -m majors run --book 4h. Its results live in output/4h/; the paper book shows it as
+# "Big coins 4h". Paper money only. Nothing here can place a real order.
+
+[desk]
+start_bank = 100.0                                   # paper dollars
+coins = ["BTC", "ETH", "SOL", "XRP", "ADA", "DOGE"]  # traded against US dollars on Coinbase
+quote = "USD"
+candle_hours = 4                                     # main: 1
+
+[rules]
+trend_hours = 200          # 50 candles, about 8 days (main: 100 hours, about 4 days)
+breakout_hours = 72        # the close must beat the high of the previous 3 days (main: 48 hours)
+exit_hours = 48            # sell when a candle closes below the lowest price of the previous 2 days (main: 24 hours)
+atr_hours = 56             # 14 candles, the usual ATR length (main: 14 hours)
+stop_atr = 3.0
+risk_pct = 1.5             # each trade risks 1.5% of the bank between the buy and the stop (main: 1.0)
+max_position_pct = 30.0    # main: 25
+max_positions = 4
+cooldown_hours = 12        # main: 6
+
+[costs]                    # charged on every paper buy and sell, same as the hourly desk
+fee_pct = 0.40
+slippage_pct = 0.05

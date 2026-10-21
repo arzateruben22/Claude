@@ -1,0 +1,10 @@
+[Unit]
+Description=Quick-rules scanner runs, a few minutes after the main scans so they don't hit Alpaca at once
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 17:05:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 05:38:00 America/Los_Angeles
+OnCalendar=Mon..Fri *-*-* 06:05:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target

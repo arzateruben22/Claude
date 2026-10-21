@@ -77,12 +77,28 @@ echo "WILD MEMECOINS (same coins, riskier rules, own \$100)"
 memecoins "$DIR/night-desk/output/wild/live/state.json"
 
 echo
+echo "STRICT MEMECOINS (same coins, pickier rules and smaller bets, own \$100)"
+memecoins "$DIR/night-desk/output/strict/live/state.json"
+
+echo
 echo "BIG COINS"
 (cd "$DIR/majors-desk" && "$PY" -m majors why | sed 's/^/  /')
 
 echo
+echo "BIG COINS 4H (same rules on 4-hour candles, own \$100)"
+(cd "$DIR/majors-desk" && "$PY" -m majors why --book 4h | sed 's/^/  /')
+
+echo
 echo "STOCKS"
 stocks "$DIR/premarket-scanner/output/journal.csv"
+
+echo
+echo "QUICK STOCKS (the same picks, sold at +5% or -3%, own \$100)"
+stocks "$DIR/premarket-scanner/output/quick/journal.csv"
+
+echo
+echo "EARLY-OUT STOCKS (the same picks, out by 10:30 New York time, own \$100)"
+stocks "$DIR/premarket-scanner/output/early/journal.csv"
 
 echo
 echo "WILD STOCKS (smaller gaps, no news needed, own \$100)"

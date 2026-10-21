@@ -69,6 +69,7 @@ button { font: inherit; }
 
 /* section tabs */
 .tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 4px; }
+.tabs.many { grid-template-columns: repeat(7, minmax(0, 1fr)); }   /* more than eight: two rows, whole names */
 .tabs button {
   background: #111418; color: var(--dim); border: 0; border-radius: 1px;
   height: 22px; font-size: 11px; cursor: pointer; white-space: nowrap;

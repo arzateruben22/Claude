@@ -121,6 +121,20 @@ python -m scanner lookback --book fade      # the fade rules on the main book's 
 book got. It's **hindsight**: those picks falling is why the fade book exists, so it explains, it can't prove.
 Only the fade book's own picks, made after it starts, count toward its scorecard.
 
+### The quick and early rules (`criteria-quick.toml`, `criteria-early.toml`)
+
+Two more books that keep the main book's picks and only change how they're sold, each on its own $100:
+
+- **quick:** +5% target, −3% stop. Gap-ups often jump right after the open and fade later; this takes the
+  smaller gain fast.
+- **early:** the main book's +10% / −5%, but whatever is still open is sold at **10:30 New York time** instead
+  of being held to the 4pm close ("timed" in the journal).
+
+```bash
+python -m scanner scan --book quick     # journal in output/quick/
+python -m scanner scan --book early     # journal in output/early/
+```
+
 ## 4. Daily routine (Pacific time)
 
 | When | Command | Why |
@@ -299,7 +313,7 @@ python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premar
                            [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
 python -m scanner scorecard | risk | lessons | nightly [--demo] [--ai]    # nightly also takes --window
-# every command also takes --book wild or --book fade (criteria-<book>.toml, results in output/<book>/)
+# every command also takes --book wild, fade, quick or early (criteria-<book>.toml, results in output/<book>/)
 python -m scanner lookback --book fade [--against main] [--demo]   # one book's rules on another's graded picks
 ```
 

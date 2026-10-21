@@ -38,6 +38,7 @@ class Criteria:
     show_near_misses: bool = True
 
     side: str = "long"           # long buys at the open; short sells at the open and buys back later
+    exit_by: str = ""            # "10:30" closes whatever is still open at that New York time; "" = the 4pm close
     target_pct: float = 10.0
     stop_pct: float = 5.0
     cost_pct: float = 0.5
@@ -60,6 +61,8 @@ class Criteria:
             parts.append("news catalyst")
         if self.side == "short":
             parts.append("SOLD SHORT at the open")
+        if self.exit_by:
+            parts.append(f"out by {self.exit_by} ET")
         return " · ".join(parts)
 
 
@@ -96,6 +99,15 @@ def load_criteria(path: Path | None = None) -> Criteria:
         raise ValueError("sort_by must be gap, rvol or volume")
     if c.side not in ("long", "short"):
         raise ValueError("side must be long or short")
+    if c.exit_by:
+        from datetime import time as _time
+
+        try:
+            t = _time.fromisoformat(c.exit_by)
+        except ValueError:
+            raise ValueError('exit_by must look like "10:30" (New York time) or be empty') from None
+        if not _time(9, 35) <= t <= _time(16, 0) or t.minute % 5:
+            raise ValueError("exit_by must be on a 5-minute mark between 09:35 and 16:00")
     return c
 
 
