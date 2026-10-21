@@ -88,3 +88,10 @@ Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep
 - [ ] The rest of the playbook whenever she likes (Claude picks, or a topic).
 - [ ] After that it grows by itself, with her approval: every everyday question she answers becomes a suggested answer in **Teach the chat**, and each signed-in client's skin profile and notes make answers specific to them.
 
+## 8. Getting found: feeds, listings, ads (MARKETING.md)
+
+1. **Google Business Profile, Nextdoor, Yelp, Apple Maps:** claim them with the copy in `marketing/local-listings.md`; the booking link with its UTM tag.
+2. **Product feeds:** `node scripts/build-feed.mjs --site https://<her domain>` → `feed/google.xml` (Google Merchant Center: free Shopping listings and Maps) and `feed/meta.csv` (Meta Commerce Manager: Instagram and Facebook Shop, checkout on the website). Publish the `feed/` folder with the site and point each platform's scheduled fetch at it. Add barcodes to `scripts/gtins.json` as she reads them off the boxes.
+3. **The welcome code:** Stripe → Coupons → 10% once → Promotion code WELCOME10, first-time order only (`marketing/welcome-offer.md`). Checkout already accepts codes.
+4. **Ads, when she's ready:** a Meta ad account and a Google Ads account in her name, her card; the Meta pixel and Google conversion tags on the site (Ruben); then the campaigns in `marketing/campaigns.md`, starting at $10/day each, 20 miles around Woodland Hills. Creatives: `node marketing/ads/build-ads.mjs` → `marketing/ads/out/`.
+5. **Every Monday** Claude drafts the week's posts and ad variants into `marketing/weekly/`; she posts what she likes.

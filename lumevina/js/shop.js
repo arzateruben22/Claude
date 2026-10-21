@@ -649,4 +649,12 @@
   INV.onChange(paintAll);
   if (shop) shop.classList.add("is-live");
   paintAll();
+
+  /* a product's own link (?product=<id>, the one the Google and Instagram
+     feeds use: scripts/build-feed.mjs) opens its detail view on arrival */
+  var wanted = (function () { try { return new URLSearchParams(location.search).get("product") || ""; } catch (e) { return ""; } })();
+  if (wanted) {
+    var target = INV.get(wanted);
+    if (target && !target.hidden && !target.draft) setTimeout(function () { showDetail(target, null); }, 400);
+  }
 })();

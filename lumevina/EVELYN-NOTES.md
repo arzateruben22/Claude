@@ -316,3 +316,10 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 - **Today**, the first card after Lumevina Studio: what needs her, in order. Right now (urgent or medical questions, questions past the promised reply time, a failed membership payment, an order overdue to ship, today's clients without a pre-visit form), Today (appointments, orders to ship, pickups, questions due, sold-out products), This week (running low, members cancelling, the waitlist, chat answers to approve, regulars overdue to rebook), Housekeeping (the shelf count, her Skin Playbook). Each line opens the card that handles it. PRIORITIES.md is the list in plain words.
 - **Her phone:** everything in Right now arrives the moment it happens; "Still waiting: Maya" once when a question passes its reply time; and every morning "Today at Lumevina" with the top three, even if that's daily. Nothing waiting, nothing sent.
 - **Restocking** is on the list as sold out (today) and running low (this week); what to order and how many stays her call.
+
+## Getting customers without the conversation (Oct 21)
+
+- **Not Etsy.** Etsy only allows handmade and vintage, and the brands she carries (Face Reality, GlyMed Plus) generally forbid third-party marketplaces and advertising under their set prices; check her reseller agreements. Her website is the store; Google Shopping's free listings and the Instagram shop are the "marketplaces" that point to it.
+- **Not a loss.** Professional skincare retails at about double wholesale (she should confirm), so she earns at the shelf price. First orders get a perk instead: free pickup, 100 Glow Points on a first booking, and WELCOME10 at checkout, never in an ad.
+- **Local first:** 20 miles around Woodland Hills, then LA County, then OC. A local client is a facial and a membership, not a $8 shipment.
+- **Built:** MARKETING.md, the campaigns and local listings, the welcome offer, a 30-day Instagram calendar in her voice, 12 ad creatives, the product feeds, a free-pickup line in the shop, and a Monday task that drafts the week. Ads still need her ad accounts, her card and her yes.

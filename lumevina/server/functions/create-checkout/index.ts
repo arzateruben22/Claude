@@ -141,6 +141,7 @@ Deno.serve(async (req) => {
   }
   if (delivery === "pickup") f.set("custom_text[submit][message]", "Pick up at your next visit to the studio in Woodland Hills.");
 
+  f.set("allow_promotion_codes", "true");       // WELCOME10 and the like, set up in Stripe (marketing/welcome-offer.md); never in an ad
   const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
     headers: { Authorization: `Bearer ${Deno.env.get("STRIPE_SECRET_KEY")}`, "Content-Type": "application/x-www-form-urlencoded" },
