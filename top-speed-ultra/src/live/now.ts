@@ -12,17 +12,24 @@ export interface NowSnapshot {
 const POLL_MS = 5 * 60 * 1000;
 const DEFAULT_TRENDS = ['the marine layer', 'the Coastal League', 'the stadium traffic on game nights', 'sunset at 6:15 now', 'a taco truck on every corner'];
 
-// the simulated day: the same curves as the server's mocks (live/now.mjs), so the two agree
+// the simulated day: the same curves as the server's mocks (live/now.mjs), so the two agree, on Orange County's clock
+// (Pacific time) wherever the player is: rush hour is OC's rush hour
+function pacific(date: Date) {
+  try {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', weekday: 'short', hour: 'numeric', month: 'numeric', hour12: false }).formatToParts(date).map((x) => [x.type, x.value]));
+    return { h: Number(p.hour) % 24, d: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday), m: Number(p.month) - 1 };
+  } catch { return { h: date.getHours(), d: date.getDay(), m: date.getMonth() }; }
+}
 const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
 export function simulatedWeather(date = new Date()): NowSnapshot['weather'] {
-  const h = date.getHours(), m = date.getMonth();
+  const { h, m } = pacific(date);
   const marine = h >= 5 && h < (m >= 4 && m <= 7 ? 11 : 9);
   const kind: SkyKind = marine ? (h < 7 ? 'mist' : 'cloudy') : 'clear';
   const tempF = Math.round(58 + 16 * Math.max(0, Math.sin(((h - 6) / 14) * Math.PI)) + (m >= 5 && m <= 9 ? 6 : 0));
   return { source: 'simulated', updated: date.getTime(), kind, text: kind === 'clear' ? 'Clear' : kind === 'cloudy' ? 'Cloudy' : 'Mist', tempF };
 }
 export function simulatedRatio(label: string, date = new Date()): number {
-  const h = date.getHours(), d = date.getDay(), weekend = d === 0 || d === 6;
+  const { h, d } = pacific(date), weekend = d === 0 || d === 6;
   const j = (hash(label) - 0.5) * 0.1;
   let r = 1;
   if (!weekend) { if (h >= 6 && h < 10) r = 0.55; else if (h >= 15 && h < 19) r = 0.45; else if (h >= 10 && h < 15) r = 0.85; else if (h >= 19 && h < 21) r = 0.8; }

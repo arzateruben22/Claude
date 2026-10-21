@@ -996,6 +996,9 @@ await group('live', async (use) => {
       const r = await game(A, () => { const g = window.__game; const road = g.path.main ? g.path.label : g.settings.start; return { road, ratio: g.now.ratioFor(road), level: g.traffic.level, weather: g.now.snapshot.weather, note: document.querySelector('.dest-traffic em')?.textContent, label: document.querySelector('.dest-traffic b')?.textContent, roads: Object.keys(g.now.snapshot.traffic.roads).length }; });
       expect(r.roads === 20, `${r.roads} roads in the feed`);
       expect(r.ratio > 0 && r.ratio <= 1 && r.level.perKmLane >= 2.2 && r.level.perKmLane <= 9.5, JSON.stringify(r));
+      // the density follows this road's ratio exactly (the mapping in src/live/now.ts)
+      const want = r.ratio >= 0.95 ? 2.2 : r.ratio >= 0.8 ? 2.2 + ((0.95 - r.ratio) / 0.15) * 2.8 : r.ratio >= 0.6 ? 5 + ((0.8 - r.ratio) / 0.2) * 4 : r.ratio >= 0.45 ? 9 + ((0.6 - r.ratio) / 0.15) * 0.5 : 9.5;
+      expect(Math.abs(r.level.perKmLane - Math.round(want * 10) / 10) < 0.11, `ratio ${r.ratio} should give ${want.toFixed(1)} cars/km/lane, got ${r.level.perKmLane}`);
       // the mock feed stands in for a real one on the server; the player is told it is simulated
       expect(/simulated/.test(r.note || '') && /Live/.test(r.label || ''), `HUD says "${r.label} / ${r.note}"`);
       expect(['clear', 'cloudy', 'rain', 'fog', 'mist'].includes(r.weather.kind), JSON.stringify(r.weather));

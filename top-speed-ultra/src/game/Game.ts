@@ -205,6 +205,7 @@ export class Game {
     try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch { /* fonts are optional */ }
     this.net = await Network.load();
     this.now.setLabels(this.net.mains.map((m) => m.label));
+    this.now.onChange = () => { if (this.traffic) this.applyNow(); };   // a fresh feed applies at once
     this.buildWorld();
     this.applyQuality();
     this.onResize();
