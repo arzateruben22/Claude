@@ -1872,6 +1872,74 @@ export const SCENES = {
       });
     }
   },
+  "11-3": {
+    id: "11-3", kicker: "Your skin plan for life", title: `A base, one or two actives, <span class="grad">and a look every season.</span>`, dur: 22, poster: 4.5,
+    shots: [
+      { at: 0, name: "plan", cap: "Your routine is a base plus one or two actives for your concern. Nothing more." },
+      { at: 6, name: "again", cap: "Look again every season, after big life changes, or when something stops working." },
+      { at: 11.5, name: "derm", cap: "See a dermatologist for changing moles, cysts, sudden rashes, or anything that bleeds or won't heal." },
+      { at: 17, name: "check", cap: "Book a skin check with Evelyn so she can fine-tune the plan with your skin in front of her." }
+    ],
+    css: `
+.plan { position: absolute; left: 10vmin; top: 50%; width: 82vmin; margin-top: -19vmin; display: grid; grid-template-columns: 1fr 1fr; column-gap: 2.4vmin; align-items: start; padding: 2.6vmin 2.8vmin 2.8vmin; border-radius: 4.6vmin; background: #1d1618; border: 1px solid rgba(255,255,255,.14); }
+.plan h3 { grid-column: 1 / -1; margin: 0 0 1.8vmin; font-size: 3.6vmin; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+.plan h3 svg { width: 4.4vmin; height: 4.4vmin; opacity: 0; }
+.grp { position: relative; display: flex; flex-direction: column; gap: 1vmin; }
+.grp + .grp { margin-top: 0; }
+.grp > em { font-style: normal; font-size: 2.2vmin; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #a89a94; opacity: 0; }
+.row { display: flex; align-items: center; gap: 1.4vmin; padding: 1.2vmin 1.8vmin; border-radius: 2.6vmin; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); font-size: 3vmin; font-weight: 600; opacity: 0; }
+.row i { width: 2vmin; height: 2vmin; border-radius: 50%; background: var(--c); flex: none; }
+.row.opt { border-style: dashed; color: #cbbab3; }
+.row.no { position: absolute; left: 0; right: 0; top: 100%; margin-top: 1vmin; border-color: rgba(255,122,107,.6); color: #ffb3a8; }
+.row.no::after { content: ""; position: absolute; left: 1.4vmin; right: 1.4vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(var(--k, 0)); }
+.sweep { position: absolute; inset: 0; border-radius: 4.6vmin; overflow: hidden; pointer-events: none; }
+.sweep i { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(90deg, rgba(244,201,214,0), rgba(244,201,214,.18), rgba(244,201,214,0)); opacity: 0; }
+.stamp { position: absolute; right: 2vmin; bottom: -7.6vmin; padding: 1.2vmin 2.4vmin; border-radius: 3vmin; background: #f4c9d6; color: #1a1210; font-size: 2.7vmin; font-weight: 800; transform: rotate(-6deg); opacity: 0; }
+.pn { position: absolute; left: 98vmin; right: 5vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 2vmin; }
+.hd { font-size: 4.2vmin; font-weight: 700; opacity: 0; }
+.tr3 { display: flex; align-items: center; gap: 1.6vmin; padding: 1.5vmin 2.4vmin; border-radius: 3vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 3.2vmin; font-weight: 600; opacity: 0; }
+.tr3 b { width: 4.4vmin; height: 4.4vmin; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(244,201,214,.16); color: #f4c9d6; font-size: 2.6vmin; flex: none; }
+.tr3.red { border-color: rgba(255,122,107,.55); } .tr3.red b { background: rgba(255,122,107,.16); color: #ff9a8e; }
+.go { align-self: flex-start; display: flex; align-items: center; gap: 1.4vmin; padding: 1.5vmin 2.8vmin; border-radius: 3vmin; background: #8fd3ff; color: #0f1a22; font-size: 3.3vmin; font-weight: 800; opacity: 0; }
+.bk { padding: 3vmin 3.4vmin; border-radius: 4.4vmin; background: linear-gradient(160deg, #f6dbe3, #eab9c8); color: #1a1210; opacity: 0; display: flex; gap: 2.4vmin; align-items: center; }
+.bk .cal { width: 10vmin; height: 10vmin; border-radius: 2.4vmin; background: #fff8f4; flex: none; overflow: hidden; display: flex; flex-direction: column; }
+.bk .cal i { height: 2.8vmin; background: #1a1210; display: block; }
+.bk .cal b { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 4.6vmin; color: #1a1210; }
+.bk strong { display: block; font-size: 3.8vmin; line-height: 1.15; }
+.bk span { display: block; margin-top: .8vmin; font-size: 2.7vmin; font-weight: 500; line-height: 1.3; }
+@media (orientation: portrait) { .plan { display: block; width: 48vmin; left: 50%; top: 3%; margin: 0 0 0 -24vmin; } .grp + .grp { margin-top: 1.8vmin; } .pn { left: 5vmin; right: 5vmin; top: 58%; bottom: 2%; justify-content: flex-start; } }`,
+    html: `
+<div class="plan" id="plan">
+  <h3>My skin plan<svg id="ref" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5" fill="none" stroke="#f4c9d6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></h3>
+  <div class="grp" id="gb"><em>the base</em><span class="row" style="--c:#e3b48f"><i></i>cleanser</span><span class="row" style="--c:#e3b48f"><i></i>moisturizer</span><span class="row" style="--c:#ffd27a"><i></i>SPF</span></div>
+  <div class="grp" id="ga"><em>for your concern</em><span class="row" style="--c:#f4c9d6"><i></i>one active</span><span class="row opt" style="--c:rgba(244,201,214,.45)"><i></i>a second, if needed</span><span class="row no" id="more" style="--c:#ff7a6b"><i></i>three more serums</span></div>
+  <div class="sweep"><i id="sw"></i></div>
+  <span class="stamp" id="stamp">fine-tuned with Evelyn</span>
+</div>
+<section class="shot"></section>
+<section class="shot"><div class="pn"><div class="hd">Look again:</div><span class="tr3"><b>❋</b>every season</span><span class="tr3"><b>↻</b>after big life changes</span><span class="tr3"><b>!</b>when something stops working</span></div></section>
+<section class="shot"><div class="pn"><div class="hd">See a dermatologist for:</div><span class="tr3 red"><b>●</b>changing moles</span><span class="tr3 red"><b>●</b>cysts</span><span class="tr3 red"><b>●</b>sudden rashes</span><span class="tr3 red"><b>●</b>anything that bleeds or won't heal</span><span class="go">→ a dermatologist, soon</span></div></section>
+<section class="shot"><div class="pn"><div class="bk" id="bk"><div class="cal"><i></i><b>✦</b></div><div><strong>A skin check with Evelyn</strong><span>She fine-tunes the plan with your skin in front of her.</span></div></div></div></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      // the plan writes itself: the base, then one active, a second if needed, and nothing more
+      const plan = $("#plan");
+      enter(plan, t, 0.1, { y: 20 });
+      plan.style.opacity = (i === 2 ? 1 - 0.55 * seg(lt, 0, 0.6) : i === 3 ? 0.45 + 0.55 * seg(lt, 0, 0.6) : 1) * Math.min(1, seg(t, 0.1, 0.6) * 2.5);
+      $$("#gb em, #gb .row").forEach((el, n) => enter(el, t, 0.5 + n * 0.4, { x: -14, y: 0 }));
+      $$("#ga em, #ga .row:not(.no)").forEach((el, n) => enter(el, t, 2.3 + n * 0.5, { x: -14, y: 0 }));
+      const more = $("#more"), mIn = seg(t, 3.9, 4.3), mX = seg(t, 4.5, 5.0), mOut = seg(t, 5.2, 5.7);
+      more.style.opacity = i === 0 ? Math.min(mIn * 2, 1 - mOut) : 0; more.style.transform = `translateY(${(1 - E.out(mIn)) * 10 + mOut * 6}px)`; more.style.setProperty("--k", E.out(mX));
+      // looking again: the plan turns over once, a light passes along it
+      const rf = $("#ref"); rf.style.opacity = i === 1 ? seg(lt, 0.3, 0.7) : 0; rf.style.transform = `rotate(${i === 1 ? 360 * E.inout(seg(lt, 0.6, 2.2)) + 360 * E.inout(seg(lt, 3.0, 4.6)) : 0}deg)`;
+      const sw = $("#sw"), sp = i === 1 ? (lt * 0.42) % 1 : 0; sw.style.opacity = i === 1 ? Math.sin(Math.PI * sp) : 0; sw.style.transform = `translateX(${-100 + 440 * sp}%)`;
+      // a stamp when Evelyn has seen it
+      const sm = $("#stamp"), sk = i === 3 ? seg(lt, 2.0, 2.5) : 0; sm.style.opacity = sk; sm.style.transform = `rotate(-6deg) scale(${sk ? 1.5 - 0.5 * E.back(sk) : 1})`;
+      if (!sec) return;
+      [...sec.querySelectorAll(".hd, .tr3, .go, .bk")].forEach((el, n) => enter(el, lt, (i === 3 ? 0.4 : 0.3) + n * (i === 2 ? 0.55 : 0.6) + (el.classList.contains("go") ? 0.4 : 0), { y: 14 }));
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
