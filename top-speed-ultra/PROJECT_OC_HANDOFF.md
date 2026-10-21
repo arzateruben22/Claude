@@ -85,7 +85,7 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 16:30 App.tsx, styles.css, WorldMap.tsx, Phone.tsx: Lifestyle (homes): the rail's Lifestyle row opens `Homes.tsx`; a Homes phone app; homes on the World Map; the garage's slots include homes; `.panel > .row:last-child` sticks to the screen's real bottom edge.
 - 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
-**In flight here (from about 18:20 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
+**In flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
 (audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
 the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
 the physics (`src/game/vehicle/Physics.ts`, against `PROJECT_OC_DYNAMICS.md`). Branches `fable/<area>`, merged here only
@@ -99,13 +99,18 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
   (`src/onfoot/lot57`). The always-on session (16:00): no stable API yet; home interiors will be venue defs on
   `src/onfoot/engine/` (the sports-bar plan's S1, `PROJECT_OC_SPORTS_BAR.md` on `claude/sports-bar`); it will message
   this session with the commit when S1 is kept;
-- online: `claude/live-server` belongs to session_014twwPd83rJxBkHT9T8yEiQ (not the always-on session); asked it at
-  16:40 which gaps it wants handed over;
+- online: `claude/live-server` belongs to session_014twwPd83rJxBkHT9T8yEiQ (not the always-on session). Agreed with it
+  (16:35): this session builds the online board as NEW files only (live/board.mjs, live/test/board.test.mjs,
+  src/live/board.ts, src/ui/OnlineBoard.tsx) on `claude/live-board` cut from `claude/live-server`, from server-observed
+  poses only (distance, 3 s sustained top speed, longest unbroken drive per Pacific day; no client-submitted scores, no
+  Survival streaks or near misses); that session wires server.mjs and the menu. A Fable agent is building it (anti-cheat
+  is Fable-class). Chat stays out (13+); races against people are an owner decision for later;
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
 ### Decisions waiting (the owner's)
 
+- Online, for later: races against real people on the live server (the live-server session's view: a design question for the owner); chat stays out for a 13+ audience unless the owner decides on moderation.
 - Art direction LOW (retro) as a third Look; renaming Profile to Career; the paid image pilot; the root `CLAUDE.md`
   replaced on the `style-references` branch (see the style guide's "Decisions for the owner").
 
