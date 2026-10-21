@@ -143,10 +143,10 @@
 /* The driver's layer (owner, 2026-10-21: "the same for each driver"): the car sets the world (base and accent); the
    driver signs the human elements with their own colour, --drv: the ability ring, the Driver row, the avatar's ring,
    the Driver panel's choice and the level line. App.tsx sets <html data-driver>. Contrast on the darkest base
-   (#04070d): gold 13:1, lavender 16:1, green 15:1. */
+   (#04070d): gold 13:1, lavender 9.6:1, green 15:1. */
 :root { --drv: var(--cyan); --drv-line: var(--cyan-line); --drv-wash: var(--cyan-wash); --drv-glow: var(--cyan-glow); }
 :root[data-driver="closer"] { --drv: #ffd166; --drv-line: rgba(255, 209, 102, 0.6); --drv-wash: rgba(255, 209, 102, 0.13); --drv-glow: rgba(255, 209, 102, 0.35); }   /* the gold watch */
-:root[data-driver="ace"] { --drv: #d4dbff; --drv-line: rgba(212, 219, 255, 0.6); --drv-wash: rgba(212, 219, 255, 0.13); --drv-glow: rgba(212, 219, 255, 0.35); }      /* focus: cool, clear */
+:root[data-driver="ace"] { --drv: #b9a6ff; --drv-line: rgba(185, 166, 255, 0.6); --drv-wash: rgba(185, 166, 255, 0.13); --drv-glow: rgba(185, 166, 255, 0.35); }      /* focus: a cool lavender (the first lavender-white read as plain ink) */
 :root[data-driver="wrench"] { --drv: #7dffa8; --drv-line: rgba(125, 255, 168, 0.6); --drv-wash: rgba(125, 255, 168, 0.13); --drv-glow: rgba(125, 255, 168, 0.35); }   /* grip: the smart watch's green */
 
 /* ------------------------------------------------------------------ futuristic details (owner, 2026-10-21)

@@ -111,7 +111,7 @@ what the game now does:
 - **The driver's layer and a more futuristic language** (owner, later the same day: "do the same for each driver,
   keep upscaling the ultra graphics, adapt to a more futuristic theme, including freeways, trees, other NPC cars,
   fashion clothes"). The car sets the world; the driver signs the human elements with their own colour, `--drv`
-  (`<html data-driver>`): **The Closer** gold (the watch), **The Ace** a cool lavender-white (focus), **The Wrench**
+  (`<html data-driver>`): **The Closer** gold (the watch), **The Ace** a cool lavender (focus), **The Wrench**
   a vivid green (the smart watch's grip readout). It lights the ability hexagon, the Driver row, the avatar's ring and
   level line, and the Driver panel's choice. The futuristic details are decoration only: a hex lattice behind the
   rail, the panels and the player card, chamfered HUD plates with faint scanlines, brackets that lock onto the speed,

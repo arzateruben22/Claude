@@ -59,6 +59,23 @@ once: the UI (theme, menu, HUD) and the hypercar's lights and cluster (M2, judge
   flash. The Drive plate's fill and ink come from tokens (`--ice-deep-2`, `--on-deep`). Contrast per block is in the
   stylesheet. Proof: `tools/atmo-shots.mjs` (new) picks each car through the garage and shoots the menu and a drive
   frame into `tests/out/atmo/`; on the final build it shot all five cars with no errors (`tests/out/atmo/<car>-menu.png` and `<car>-drive.png`, 1280 × 720), each read by eye: the rail, the player card, the cards and the HUD take each car's colours, the Drive plate keeps its ink readable on every fill, and the hypercar's drive frame shows the Unleashed chip. Known and by design: the hypercar's cluster is a static texture (it reads 132 while the HUD reads the live speed), like the GT's digital window; a live cluster is a later step. The first run of the tool timed out on screenshots while the suite ran beside it; the tool now waits up to 180 s for a frame and returns to the menu after a failure.
+- **The driver's layer, the futuristic details, the menu's atmosphere per car, an Ultra grade** (owner, later the same
+  day: "do the same for each driver ... keep upscaling the ultra graphics ... a more futuristic theme"). The driver
+  signs the human elements with `--drv` (`<html data-driver>`): The Closer gold #ffd166, The Ace lavender #b9a6ff
+  (the first lavender-white, #d4dbff, read as plain ink in the shot and was changed; 9.6:1 on the darkest base), The
+  Wrench green #7dffa8. Decoration: a hex lattice behind the glass, chamfered HUD plates with scanlines, brackets on
+  the speed block, a slow accent sweep on the rail (off with reduced motion). The menu's attract drive takes the car's
+  atmosphere (`CarDef.atmosphere`, `Game.syncAtmosphere`): hypercar night, GT sunset, Brio cloudy sunset, Corsa clear
+  day, Vela E misty sunrise; a run uses the player's settings; the car's atmosphere holds on the menu only until the
+  player changes time or weather that session and never reaches the saved settings. Ultra only
+  (`QualityPreset.grade`): a grade pass (vignette, radial chromatic aberration about 1.5 px at the corners, a grain
+  proportional to the pixel so the night's blacks stay black; the lane's first version added the grain linearly,
+  which would lift black by about 28 levels, and was changed before any render) and a bloom at threshold 0.85,
+  strength 0.3. Proof: `tools/atmo-shots.mjs` on a clean worktree (HEAD plus only these files, since two other lanes
+  had unbuilt work in the tree): all five cars and all three drivers shot with no errors (`tests/out/atmo3/`), each
+  read by eye: the GT at sunset with its flare, the Vela in a hazy dawn, the hypercar at night with its beams on the
+  road (its first menu shot caught the sky mid-ease, by design a few seconds), the Corsa in daylight; the Closer's
+  gold and the Wrench's green on the Driver row and the avatar ring. ULTRA_LINE
 - **Checked:** `npx tsc --noEmit` (both configs) clean. `npm run build` clean. `tools/ui-shots.mjs` at 390 × 844 and
   1280 × 720 (`tests/out/ui-ice2/`), every screen read by eye: the rail, the player card, the cards, the sign plate,
   the icon rail, the speed block and the round map all read; one layout bug found and fixed on the first pass (the
