@@ -1681,6 +1681,106 @@ export const SCENES = {
       set($("#q3 .ico"), { s: i === 3 ? 1 + 0.08 * b : 1, r: i === 3 ? 10 * b : 0 });
     }
   },
+  "4-3": {
+    id: "4-3", kicker: "Scrubs, brushes and dermaplaning", title: `Kind or harsh: <span class="grad">it's the tool and the pressure.</span>`, dur: 22, poster: 14.5,
+    shots: [
+      { at: 0, name: "scrub", cap: "Skip scrubs with jagged bits like crushed shells or pits. They can leave tiny tears in the skin." },
+      { at: 6, name: "gentle", cap: "A soft washcloth or a gentle enzyme mask gives a physical polish without the damage." },
+      { at: 12, name: "plane", cap: "Dermaplaning removes dead skin and peach fuzz. Done professionally, makeup goes on flawlessly afterward." },
+      { at: 17, name: "home", cap: "At home: clean, dry skin, a fresh blade and light strokes, once a month at most, and never over active breakouts." }
+    ],
+    css: `
+.surf, .tool { position: absolute; left: 50%; top: 58%; }
+.surf { width: 100vmin; height: 16vmin; margin: -8vmin 0 0 -50vmin; transform-origin: 50% 50%; }
+.surf .base { position: absolute; inset: 0; border-radius: 4.4vmin 4.4vmin 3.4vmin 3.4vmin; overflow: hidden; background: linear-gradient(180deg, #ecc8b1 0%, #d6a68c 38%, #b57f68 100%); }
+.surf .base::before { content: ""; position: absolute; left: 4vmin; right: 4vmin; top: 4.4vmin; height: .35vmin; border-radius: 1vmin; background: rgba(255,240,230,.28); }
+.surf .base::after { content: ""; position: absolute; left: 7vmin; right: 7vmin; top: 9.4vmin; height: .3vmin; border-radius: 1vmin; background: rgba(120,60,40,.22); }
+.sheen { position: absolute; top: -2vmin; bottom: -2vmin; left: 0; width: 14vmin; background: linear-gradient(90deg, rgba(255,250,244,0), rgba(255,250,244,.55), rgba(255,250,244,0)); opacity: 0; }
+.fl { position: absolute; top: -1.3vmin; width: 4.8vmin; height: 1.8vmin; margin-left: -2.4vmin; border-radius: .9vmin; background: #f8ebe1; box-shadow: 0 .3vmin .6vmin rgba(60,30,20,.35); z-index: 1; }
+.fl.b { width: 3.8vmin; height: 1.4vmin; margin-left: -1.9vmin; top: -1.1vmin; background: #efdccf; }
+.fz { position: absolute; top: -3.8vmin; width: .45vmin; height: 3.8vmin; margin-left: -.22vmin; border-radius: .3vmin; background: rgba(252,238,228,.8); transform-origin: 50% 100%; }
+.tr { position: absolute; top: -.3vmin; width: 4vmin; height: 4vmin; margin-left: -2vmin; filter: drop-shadow(0 0 .8vmin rgba(255,122,107,.55)); transform-origin: 50% 0; opacity: 0; z-index: 1; }
+.tr svg, .shards svg, .blade svg { display: block; width: 100%; height: 100%; }
+.mask { position: absolute; left: 1vmin; right: 1vmin; top: -2.6vmin; height: 5.4vmin; border-radius: 2.2vmin; background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.35) 0 .5vmin, transparent .6vmin) 0 0 / 5vmin 4.4vmin, rgba(244,201,214,.62); opacity: 0; z-index: 2; }
+.tool { width: 0; height: 0; z-index: 3; }
+.tool > div { position: absolute; opacity: 0; }
+.shards { left: -14vmin; top: -21.6vmin; width: 28vmin; height: 14vmin; }
+.cloth { left: -15vmin; top: -20.4vmin; width: 30vmin; height: 12vmin; border-radius: 4.4vmin 4.4vmin 2.6vmin 2.6vmin; background: repeating-linear-gradient(90deg, #f6efe8 0 .9vmin, #e9ded4 .9vmin 1.8vmin); }
+.blade { left: -3.4vmin; top: -28.4vmin; width: 24vmin; height: 20vmin; transform-origin: 3.4vmin 19.6vmin; }
+.tgs { position: absolute; left: 0; right: 0; top: 2%; display: flex; justify-content: center; flex-wrap: wrap; gap: 1.6vmin; }
+.tgs.lo { top: auto; bottom: 4%; }
+.tg { padding: 1vmin 2.2vmin; border-radius: 2.6vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.16); font-size: 2.7vmin; font-weight: 600; opacity: 0; }
+.tg.bad { border-color: rgba(255,122,107,.7); color: #ffc2b8; }
+.tg.good { border-color: rgba(50,215,75,.6); }
+.rules { position: absolute; left: 4vmin; right: 4vmin; top: 54%; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.6vmin; }
+.ru { display: flex; align-items: center; gap: 1.2vmin; padding: 1.3vmin 2.4vmin 1.3vmin 1.8vmin; border-radius: 3vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; opacity: 0; }
+.ru svg { width: 3.2vmin; height: 3.2vmin; flex: none; }
+.ru.no { border-color: rgba(255,122,107,.6); }
+@media (orientation: portrait) { .surf, .tool { top: 50%; } .surf { width: 84vmin; margin-left: -42vmin; } .tgs { top: 24%; } .tgs.lo { bottom: 26%; } .rules { top: 44%; left: 6vmin; right: 6vmin; flex-direction: column; align-items: stretch; } .ru { font-size: 3vmin; } }`,
+    html: `
+<div class="surf" id="surf"><div class="base"><i class="sheen" id="sheen"></i></div><i class="mask" id="mask"></i></div>
+<div class="tool" id="tool">
+  <div class="shards" id="shards"><svg viewBox="0 0 180 90" aria-hidden="true"><g stroke="rgba(30,15,10,.35)" stroke-width="1.5" stroke-linejoin="round"><path d="M18 88 L30 58 L44 74 L40 88 Z" fill="#e8dacd"/><path d="M50 88 L62 50 L80 62 L76 88 Z" fill="#9b6a4a"/><path d="M84 88 L94 54 L112 66 L108 88 Z" fill="#e8dacd"/><path d="M116 88 L132 52 L148 70 L142 88 Z" fill="#9b6a4a"/><path d="M148 88 L158 64 L170 76 L166 88 Z" fill="#e8dacd"/></g></svg></div>
+  <div class="cloth" id="cloth"></div>
+  <div class="blade" id="blade"><svg viewBox="0 0 120 100" aria-hidden="true"><path d="M24 80 L108 10" stroke="#f4c9d6" stroke-width="13" stroke-linecap="round"/><path d="M14 88 L28 76" stroke="#c9c9ce" stroke-width="6" stroke-linecap="round"/><path d="M2 98 L30 98 L30 86 L8 84 Z" fill="#dfe4ea" stroke="#9aa3ad" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 98 L30 98" stroke="#ffffff" stroke-width="1.6"/></svg></div>
+</div>
+<section class="shot"><div class="tgs"><span class="tg bad" id="a0">jagged bits: crushed shells, pits</span></div><div class="tgs lo"><span class="tg bad" id="a1">tiny tears</span></div></section>
+<section class="shot"><div class="tgs"><span class="tg good" id="b0">a soft washcloth</span><span class="tg good" id="b1">a gentle enzyme mask</span></div></section>
+<section class="shot"><div class="tgs"><span class="tg" id="c0">dead skin and peach fuzz</span></div><div class="tgs lo"><span class="tg good" id="c1">makeup goes on flawlessly</span></div></section>
+<section class="shot"><div class="rules"><span class="ru">${CHECK}clean, dry skin</span><span class="ru">${CHECK}a fresh blade</span><span class="ru">${CHECK}light strokes</span><span class="ru">${CHECK}once a month at most</span><span class="ru no">${CROSS}never over active breakouts</span></div></section>`,
+    setup: (M) => {
+      const s = M.$("#surf"), mask = M.$("#mask");
+      const fl = Array.from({ length: 12 }, (_, k) => { const x = 5 + k * 8 + ((k * 37) % 5) - 2; return `<i class="fl${k % 3 === 1 ? " b" : ""}" data-x="${x}" data-g="${k % 3 === 1 ? "b" : (k % 2 ? "e" : "c")}" data-r="${((k * 53) % 13) - 6}" style="left:${x}%"></i>`; }).join("");
+      const fz = Array.from({ length: 17 }, (_, k) => { const x = 3 + k * 5.7 + ((k * 29) % 3); return `<i class="fz" data-x="${x}" data-r="${((k * 41) % 17) - 8}" style="left:${x}%"></i>`; }).join("");
+      const tr = [12, 29, 47, 63, 81].map((x) => `<i class="tr" data-x="${x}" style="left:${x}%"><svg viewBox="0 0 20 20"><path d="M2 1 L10 17 L18 1" fill="#6e2a24" stroke="#ff7a6b" stroke-width="1.8" stroke-linejoin="round"/></svg></i>`).join("");
+      mask.insertAdjacentHTML("beforebegin", fz + tr + fl);
+    },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, clamp } = M;
+      const surf = $("#surf"), W = surf.offsetWidth, port = innerHeight > innerWidth, vm = Math.min(innerWidth, innerHeight) / 100;
+      // the strip of skin arrives once, then lifts out of the way for the rules
+      const sIn = E.out(seg(t, 0.1, 0.8)), lift = i === 3 ? E.inout(seg(lt, 0, 0.8)) : 0;
+      surf.style.transform = `translateY(${(1 - sIn) * 3 - lift * (port ? 22 : 17)}vmin) scale(${1 - lift * 0.32})`;
+      surf.style.opacity = Math.min(1, sIn * 1.5) * (1 - lift * 0.3);
+      // the tool on the skin: the scrub grinds back and forth, the cloth and the blade glide
+      const ends = [5, 3, 3.6][i] || 0, starts = [0.7, 0.4, 0.5][i] || 0;
+      const base = (-0.68 + 1.36 * E.inout(seg(lt, starts, ends))) * W;
+      const wob = i === 0 && lt > starts && lt < ends ? Math.sin((lt - starts) * 11) * 3.2 * vm : 0;
+      const x = i < 3 ? base + wob : 0;
+      $("#tool").style.transform = `translate(${x}px, ${i === 0 ? -Math.abs(Math.sin(lt * 22)) * 0.5 * vm : 0}px) rotate(${i === 0 ? Math.sin(lt * 11) * 4 : 0}deg)`;
+      ["#shards", "#cloth", "#blade"].forEach((s, k) => { $(s).style.opacity = k === i ? Math.min(seg(lt, starts - 0.4, starts), 1 - seg(lt, ends, ends + 0.4)) : 0; });
+      $("#blade").style.transform = `rotate(${i === 2 ? -4 + 2 * Math.sin(lt * 3) : 0}deg)`;
+      const past = (el, reach, w) => clamp((reach - (el.dataset.x / 100 - 0.5) * W) / (w * W));
+      // tiny tears open where the grit has been
+      $$(".tr").forEach((el) => { const p = i === 0 ? past(el, base + 3.2 * vm, 0.03) : i === 1 ? 1 - seg(lt, 0, 0.5) : 0; const q = i === 0 ? E.back(p) : 1; el.style.opacity = p; el.style.transform = `scaleY(${i === 1 ? 1 : q})`; });
+      // dead skin: the cloth lifts some, the enzyme melts the rest, the blade takes the last
+      $$(".fl").forEach((el, n) => {
+        const g = el.dataset.g, rot = +el.dataset.r;
+        let o = 1, dx = 0, dy = 0, s = 1, r = rot;
+        if (i === 1 && g === "c") { const p = past(el, x, 0.05); o = 1 - p; dx = 2.4 * p; dy = -3.2 * p; r = rot + 40 * p; }
+        if (i === 1 && g === "e") { const d = seg(lt, 3.5 + n * 0.08, 4.3 + n * 0.08); o = 1 - d; s = 1 - 0.7 * d; }
+        if (i === 2) { if (g === "b") { const p = past(el, x + 2 * vm, 0.03); o = 1 - p; dx = 4 * p; dy = -1.4 * p; r = rot - 20 * p; } else o = 0; }
+        if (i === 3) o = 0;
+        el.style.transform = `translate(${dx}vmin, ${dy}vmin) rotate(${r}deg) scale(${s})`;
+        el.style.opacity = o;
+      });
+      $("#mask").style.opacity = i === 1 ? 0.95 * Math.min(seg(lt, 3.0, 3.5), 1 - seg(lt, 4.9, 5.5)) : 0;
+      // peach fuzz sways, then falls ahead of the blade
+      $$(".fz").forEach((el, k) => {
+        const r = +el.dataset.r + Math.sin(t * 1.3 + k) * 4;
+        if (i < 2) { el.style.opacity = 1; el.style.transform = `rotate(${r}deg)`; return; }
+        const p = i === 2 ? past(el, x + 1.6 * vm, 0.03) : 1;
+        el.style.opacity = 1 - p; el.style.transform = `translate(${2.2 * p}vmin, ${0.6 * p}vmin) rotate(${r + 74 * p}deg)`;
+      });
+      // smooth after: a light passes over the skin
+      const sh = i === 2 ? seg(lt, 3.8, 4.9) : 0;
+      $("#sheen").style.opacity = Math.sin(Math.PI * sh); $("#sheen").style.transform = `translateX(${-16 * vm + sh * (W + 22 * vm)}px) skewX(-18deg)`;
+      enter($("#a0"), lt, 0.4); enter($("#a1"), lt, 2.4, { y: -12 });
+      enter($("#b0"), lt, 0.4); enter($("#b1"), lt, 3.1);
+      enter($("#c0"), lt, 0.5); enter($("#c1"), lt, 3.9, { y: -12 });
+      $$(".ru").forEach((el, n) => { enter(el, lt, 0.7 + n * 0.45, { y: 14 }); if (n === 4 && lt > 2.5) { const k = seg(lt, 2.6, 3.4); el.style.transform += ` translateX(${Math.sin(lt * 34) * 5 * (1 - k)}px)`; } });
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
