@@ -75,7 +75,7 @@ once: the UI (theme, menu, HUD) and the hypercar's lights and cluster (M2, judge
   had unbuilt work in the tree): all five cars and all three drivers shot with no errors (`tests/out/atmo3/`), each
   read by eye: the GT at sunset with its flare, the Vela in a hazy dawn, the hypercar at night with its beams on the
   road (its first menu shot caught the sky mid-ease, by design a few seconds), the Corsa in daylight; the Closer's
-  gold and the Wrench's green on the Driver row and the avatar ring. ULTRA_LINE
+  gold and the Wrench's green on the Driver row and the avatar ring. The hypercar at night in a run (`tools/grade-shot.mjs`, 640 × 360, `tests/out/attract/ultra-night.png` and `high-night.png`, no page errors): the two frames read close to identical at this size, the grade is subtle by design (a slightly darker rim on Ultra, no visible fringing or grain at 640 px, no lifted blacks), and the bloom change does not blow out the sky. At 640 × 360 the HUD covers much of the frame; a larger frame is the better judge once the world lane lands.
 - **Checked:** `npx tsc --noEmit` (both configs) clean. `npm run build` clean. `tools/ui-shots.mjs` at 390 × 844 and
   1280 × 720 (`tests/out/ui-ice2/`), every screen read by eye: the rail, the player card, the cards, the sign plate,
   the icon rail, the speed block and the round map all read; one layout bug found and fixed on the first pass (the
