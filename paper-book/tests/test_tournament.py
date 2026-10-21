@@ -257,3 +257,24 @@ def test_a_checkpoint_can_be_a_quoted_date_and_a_cut_desk_is_not_watched():
     pushes = wd.check_quiet(NOW, state, old, Path("/nowhere"), desks={"memecoins", "majors", "majors_fast"})
     assert [p.title for p in pushes] == ["Memecoin desk has gone quiet", "2 big-coin desks have gone quiet"]
     assert "Big-coin desk, Big-coin fast desk" in pushes[1].body
+
+
+def test_a_line_still_being_written_is_skipped_not_fatal(tmp_path, capsys):
+    folder = tmp_path / "coins"
+    folder.mkdir()
+    (folder / "trades.csv").write_text(
+        "opened,closed,symbol,pnl,pnl_pct,exit\n"
+        "2026-10-14T10:00:00+00:00,2026-10-14T11:00:00+00:00,AAA,5.00,5.0,target\n"
+        "2026-10-14T12:00:00+00:00,2026-10-14T13:00:00+00:00,BBB,-2.00,-2\n"          # no exit yet: torn line
+        "2026-10-14T14:00:00+00:00,2026-10-14T15:\n")                                     # cut mid-timestamp
+    trades, _ = pb.load_coins(folder, "memecoins_sniper")
+    assert [t.symbol for t in trades] == ["$AAA"] and pb.SKIPPED[str(folder / "trades.csv")] == 2
+    journal = tmp_path / "journal.csv"
+    journal.write_text("scan_date,trade_date,symbol,sim_pnl_pct,sim_exit\n"
+                       "2026-10-05,2026-10-05,S0,9.5,target\n2026-10-06,2026-10-0\n")
+    trades, held = pb.load_stocks(journal, 100.0, 100.0, "stocks_hold")
+    assert [t.symbol for t in trades] == ["S0"] and trades[0].pnl == 9.5 and not held
+    assert pb.SKIPPED[str(journal)] == 1
+    (folder / "trades.csv").write_text("opened,closed,symbol,pnl,pnl_pct,exit\n")
+    pb.load_coins(folder)
+    assert str(folder / "trades.csv") not in pb.SKIPPED                                 # a clean read clears the note

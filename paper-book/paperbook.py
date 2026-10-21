@@ -137,11 +137,29 @@ def _dt(s: str) -> datetime:
     return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
 
 
+SKIPPED: Dict[str, int] = {}          # file -> rows that couldn't be read (a line still being written, usually)
+
+
+def _rows(path: Path, make) -> list:
+    """Every row of a CSV that parses. A desk appends to its file while the book reads it, so the last line can be
+    half there: that row is skipped (and counted in SKIPPED) rather than failing the whole book."""
+    out, bad = [], 0
+    for r in _read_csv(path):
+        try:
+            out.append(make(r))
+        except (KeyError, ValueError, TypeError, AttributeError):
+            bad += 1
+    if bad:
+        SKIPPED[str(path)] = bad
+    else:
+        SKIPPED.pop(str(path), None)
+    return out
+
+
 def load_coins(folder: Path, desk: str = "memecoins", prefix: str = "$") -> Tuple[List[Trade], List[Holding]]:
     """Night Desk and Majors Desk write the same files: trades.csv and state.json."""
-    trades = [Trade(desk, prefix + r["symbol"], _dt(r["opened"]), _dt(r["closed"]), float(r["pnl"]),
-                    float(r["pnl_pct"]), r["exit"].split(":")[0])
-              for r in _read_csv(folder / "trades.csv")]
+    trades = _rows(folder / "trades.csv", lambda r: Trade(desk, prefix + r["symbol"], _dt(r["opened"]), _dt(r["closed"]),
+                                                           float(r["pnl"]), float(r["pnl_pct"]), r["exit"].split(":")[0]))
     held: List[Holding] = []
     state = folder / "state.json"
     if state.exists():
@@ -156,22 +174,21 @@ def load_stocks(journal: Path, ticket: float, share: Optional[float] = None,
     """Each pick gets `ticket` paper dollars, or with `share` set, each day's picks split that much equally."""
     trades: List[Trade] = []
     held: List[Holding] = []
-    rows = _read_csv(journal)
+    rows = _rows(journal, lambda r: (date.fromisoformat(r["trade_date"]), r["symbol"] or "", r))   # a torn last line is skipped
     per_day: Dict[str, int] = defaultdict(int)
-    for r in rows:
-        per_day[r["trade_date"]] += 1
-    for r in rows:
+    for day, _, _ in rows:
+        per_day[day] += 1
+    for day, symbol, r in rows:
         if share is not None:
-            ticket = share / per_day[r["trade_date"]]
-        day = date.fromisoformat(r["trade_date"])
+            ticket = share / per_day[day]
         opened = datetime.combine(day, time(9, 30), tzinfo=ET)
-        if r.get("sim_pnl_pct", "") != "":
+        if (r.get("sim_pnl_pct") or "") != "":
             pct = float(r["sim_pnl_pct"])
-            trades.append(Trade(desk, r["symbol"], opened, datetime.combine(day, time(16, 0), tzinfo=ET),
+            trades.append(Trade(desk, symbol, opened, datetime.combine(day, time(16, 0), tzinfo=ET),
                                 round(ticket * pct / 100, 2), pct, r.get("sim_exit", "") or "close"))
         else:
-            held.append(Holding(desk, r["symbol"], opened, round(ticket, 2), None,
-                                f"picked {r['scan_date']}; buys at the {day:%a %d %b} open, graded after the close"))
+            held.append(Holding(desk, symbol, opened, round(ticket, 2), None,
+                                f"picked {r.get('scan_date') or '?'}; buys at the {day:%a %d %b} open, graded after the close"))
     return trades, held
 
 
@@ -902,11 +919,25 @@ def main(argv=None) -> int:
         return 0
     out = HERE / "output" / ("demo" if args.demo else "")
     server = None
+    first = True
     while True:
-        book = build(cfg, args.demo, out)
-        print(render_text(book))
-        print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}\n"
-              f"Deck: {out / 'deck.html'}\nCrawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
+        if first:
+            book = build(cfg, args.demo, out)             # the first build says plainly what's wrong with the setup
+        else:
+            try:                                            # later ones keep the last good pages up and try again
+                book = build(cfg, args.demo, out)
+            except Exception as exc:  # noqa: BLE001 - a desk mid-write, a full disk: say so, keep going
+                print(f"{datetime.now(timezone.utc):%Y-%m-%d %H:%M} couldn't rebuild the book ({type(exc).__name__}: {exc}); "
+                      f"trying again in {args.watch:g} minutes.", file=sys.stderr)
+                book = None
+        first = False
+        if book is not None:
+            print(render_text(book))
+            if SKIPPED:
+                print("  skipped " + ", ".join(f"{n} row{'s' if n != 1 else ''} of {Path(f).parent.name}/{Path(f).name}"
+                                              for f, n in SKIPPED.items()) + " (still being written)")
+            print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}\n"
+                  f"Deck: {out / 'deck.html'}\nCrawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
         if args.serve and server is None:
             server = serve(out, args.host, args.serve)
             print(f"Showing the deck at http://{args.host}:{args.serve}/  (crawler: /crawler, galaxy: /galaxy, book: /book)")
