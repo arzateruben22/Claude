@@ -654,6 +654,8 @@ export const SCENES = {
 .tile10 { flex: 1; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.2vmin; opacity: 0; }
 .tile10 .n { font-size: 2vmin; color: #f4c9d6; font-weight: 700; } .tile10 b { display: block; font-size: 3vmin; font-weight: 650; margin-top: .4vmin; line-height: 1.15; } .tile10 span { display: block; font-size: 2.1vmin; color: #8e8e93; margin-top: .6vmin; }
 .pm .tile10 .n { color: #e2b08c; }
+.badge10 { position: absolute; top: -1.6vmin; right: 1.4vmin; padding: .7vmin 1.4vmin; border-radius: 999px; background: #e2b08c; color: #1a1210; font-size: 1.9vmin; font-weight: 700; white-space: nowrap; opacity: 0; }
+.tile10 { position: relative; }
 .lane { display: grid; grid-template-columns: 30vmin 1fr; align-items: center; gap: 2vmin; opacity: 0; }
 .lane .who { font-size: 2.6vmin; font-weight: 650; line-height: 1.2; } .lane .who i { display: block; font-style: normal; font-size: 2.1vmin; color: #8e8e93; font-weight: 500; }
 .lane .bar { position: relative; height: 5.2vmin; border-radius: 999px; background: rgba(255,255,255,.07); overflow: hidden; }
@@ -666,8 +668,8 @@ export const SCENES = {
 @media (orientation: portrait) { .row10 { flex-direction: column; } .lane { grid-template-columns: 1fr; gap: 1vmin; } .weeks { padding-left: 0; } }`,
     html: `
 <div class="r10">
-  <div class="row10 am" id="am"><div class="tile10"><span class="n">1</span><b>Vitamin C</b><span>on clean skin</span></div><div class="tile10"><span class="n">2</span><b>Moisturizer</b><span>then the neck and chest</span></div><div class="tile10"><span class="n">3</span><b>Sunscreen</b><span>SPF 30 or more, last</span></div></div>
-  <div class="row10 pm" id="pm"><div class="tile10"><span class="n">1</span><b>Retinoid</b><span>built up slowly</span></div><div class="tile10"><span class="n">2</span><b>Peptides</b><span>serum</span></div><div class="tile10"><span class="n">3</span><b>Rich moisturizer</b><span>hands too</span></div></div>
+  <div class="row10 am" id="am"><div class="tile10"><span class="n">1</span><b>Vitamin C</b><span>on clean skin</span></div><div class="tile10"><span class="n">2</span><b>Moisturizer</b><span>then the neck and chest</span></div><div class="tile10"><span class="n">3</span><b>Sunscreen</b><span>SPF 30 or more, last</span><em class="badge10" id="b-spf">does most of the work</em></div></div>
+  <div class="row10 pm" id="pm"><div class="tile10"><span class="n">1</span><b>Retinoid</b><span>built up slowly</span><em class="badge10" id="b-slow">two nights a week to start</em></div><div class="tile10"><span class="n">2</span><b>Peptides</b><span>serum</span></div><div class="tile10"><span class="n">3</span><b>Rich moisturizer</b><span>hands too</span><em class="badge10" id="b-neck">neck · chest · hands</em></div></div>
   <div class="lane gentle" id="lane-g"><div class="who">Gentle, every night<i>a low strength, seven nights a week</i></div><div class="bar"><div class="fill" id="fill-g"></div></div></div>
   <div class="lane strong" id="lane-s"><div class="who">Strong, once a week<i>peels for three days, then nothing</i></div><div class="bar"><div class="fill" id="fill-s"></div><span class="flare" id="flare">peeling</span></div></div>
   <div class="weeks" id="weeks"><span>week 1</span><span>week 2</span><span>week 3</span><span>week 4</span><span>week 5</span><span>week 6</span><span>week 7</span><span>week 8</span></div>
@@ -679,8 +681,11 @@ export const SCENES = {
       const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
       // shot 0: the morning tiles; shot 1: the night tiles join; shot 2: the tiles make room for the race
       const amOn = i === 0 ? 1 : i === 1 ? 1 : 1 - E.inout(seg(lt, 0, 0.6));
-      $$("#am .tile10").forEach((tl, k) => { if (i === 0) enter(tl, lt, 0.3 + k * 0.35, { y: 20 }); else set(tl, { o: amOn, y: -10 * (1 - amOn) }); });
-      $$("#pm .tile10").forEach((tl, k) => { if (i === 1) enter(tl, lt, 0.3 + k * 0.35, { y: 20 }); else set(tl, { o: i === 2 ? amOn : 0, y: i === 2 ? -10 * (1 - amOn) : 20 }); });
+      const pulse = (k, t0) => 1 + 0.04 * Math.sin(Math.PI * seg(lt, t0, t0 + 0.9));
+      $$("#am .tile10").forEach((tl, k) => { if (i === 0) { enter(tl, lt, 0.3 + k * 0.35, { y: 20 }); if (lt > 1.6) set(tl, { o: 1, s: k === 2 ? pulse(k, 3.0) : pulse(k, 4.6 + k * 0.3) }); } else set(tl, { o: amOn, y: -10 * (1 - amOn) }); });
+      $$("#pm .tile10").forEach((tl, k) => { if (i === 1) { enter(tl, lt, 0.3 + k * 0.35, { y: 20 }); if (lt > 1.6) set(tl, { o: 1, s: k === 0 ? pulse(k, 2.6) : pulse(k, 4.2 + k * 0.4) }); } else set(tl, { o: i === 2 ? amOn : 0, y: i === 2 ? -10 * (1 - amOn) : 20 }); });
+      if (i === 0) enter($("#b-spf"), lt, 3.2, { y: 0, s: 0.6, d: 0.5 }); else set($("#b-spf"), { o: 0 });
+      if (i === 1) { enter($("#b-slow"), lt, 2.8, { y: 0, s: 0.6, d: 0.5 }); enter($("#b-neck"), lt, 4.4, { y: 0, s: 0.6, d: 0.5 }); } else { set($("#b-slow"), { o: 0 }); set($("#b-neck"), { o: 0 }); }
       $("#am").style.display = i === 2 && lt > 0.7 ? "none" : "flex"; $("#pm").style.display = i === 2 && lt > 0.7 ? "none" : "flex";
       if (i === 2) {
         enter($("#lane-g"), lt, 0.8, { y: 12 }); enter($("#lane-s"), lt, 1.1, { y: 12 }); enter($("#weeks"), lt, 1.3, { y: 6 });

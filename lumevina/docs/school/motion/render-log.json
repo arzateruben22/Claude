@@ -7470,5 +7470,58 @@
    "renderedAt": "2026-10-21",
    "quick": false
   }
+ },
+ "10-2": {
+  "16x9": {
+   "frames": 132,
+   "fps": 6,
+   "dur": 22,
+   "w": 1280,
+   "h": 720,
+   "bytes": 0,
+   "hash": "f4b02e1c4adbcf0145a20815cc63ab4107cfd39c",
+   "samples": [
+    [
+     0,
+     "f62345c46b3b54c2c6a56a8a50cf20e4733f5de2"
+    ],
+    [
+     15,
+     "5b7116e4189789187bbd83cdb60c893ed6c80248"
+    ],
+    [
+     30,
+     "5a532b72c92117dee4154911b4ac5cd66b8d7c06"
+    ],
+    [
+     45,
+     "73fa3f7ec1e8ef75eefd9b75cf5ddedc0f32e360"
+    ],
+    [
+     60,
+     "85f1c3a37fa7cd44704e4f3b5a37b357fdc3bb7b"
+    ],
+    [
+     75,
+     "a8ab56d8353f2f4867706de8c5e5803579ab2fec"
+    ],
+    [
+     90,
+     "4d8d2e30a09a93d0ea724354692119cceff31cd3"
+    ],
+    [
+     105,
+     "acd2c4e893475e7638f8d5b8a52c7280c19c4e6f"
+    ],
+    [
+     120,
+     "d26a1e07162fa55500b9ab3e69ee7b0eac4641b2"
+    ]
+   ],
+   "warnings": [],
+   "renderSec": 17.6,
+   "renderedAt": "2026-10-21",
+   "quick": true
+  }
  }
 }
