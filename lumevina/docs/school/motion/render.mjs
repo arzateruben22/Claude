@@ -48,6 +48,15 @@ fs.mkdirSync(review, { recursive: true });
 const log = fs.existsSync(logFile) ? JSON.parse(fs.readFileSync(logFile, "utf8")) : {};
 const font = "file://" + path.join(root, "docs/blueprint/inter-var.woff2");
 const runtime = fs.readFileSync(path.join(here, "motion.js"), "utf8");
+// the solid scenes share one studio set (studio3d.js): rounded blocks, a warm floor, a drifting camera.
+// Every box a scene makes becomes a SoftBox, then the set goes in right after the three.js import.
+const studio3d = fs.readFileSync(path.join(here, "studio3d.js"), "utf8");
+const studioModule = (src) => {
+  const imp = 'import * as THREE from "../vendor/three.module.min.js";';
+  const body = src.split("new THREE.BoxGeometry(").join("new SoftBox(");
+  const at = body.indexOf(imp);
+  return at < 0 ? body : body.slice(0, at + imp.length) + "\n" + studio3d + "\n" + body.slice(at + imp.length);
+};
 
 if (opt("list", false) === true) {
   for (const s of Object.values(SCENES)) console.log(`${s.id}  ${s.dur}s  ${s.shots.length} shots  ${s.title.replace(/<[^>]+>/g, "")}`);
@@ -64,6 +73,11 @@ const page = (scene, W, H) => `<!doctype html><html><head><meta charset="utf-8">
 html, body { width: ${W}px; height: ${H}px; overflow: hidden; background: #000; color: #f5f5f7; font-family: "InterV", -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 .stage { position: relative; width: ${W}px; height: ${H}px; padding: 6vmin 6.5vmin 5vmin; display: flex; flex-direction: column; gap: 3.5vmin; background: radial-gradient(90vmax 60vmax at 85% -5%, #1b1316 0%, #000 60%); overflow: hidden; }
 .grain { position: absolute; inset: 0; background: url("${grain}"); pointer-events: none; }
+.amb { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.amb i { position: absolute; width: 120vmax; height: 120vmax; border-radius: 50%; }
+.amb i:first-child { right: -55vmax; top: -70vmax; background: radial-gradient(closest-side, rgba(234,185,200,.13), rgba(234,185,200,0)); }
+.amb i:last-child { left: -60vmax; bottom: -75vmax; background: radial-gradient(closest-side, rgba(226,176,140,.10), rgba(226,176,140,0)); }
+.dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 header { position: relative; z-index: 2; }
 .k { font-size: 2.5vmin; font-weight: 600; color: ${PALETTE.rose}; letter-spacing: .02em; }
 h1 { font-size: 6vmin; font-weight: 700; letter-spacing: -.035em; line-height: 1.04; margin-top: 1vmin; max-width: 125vmin; text-wrap: balance; }
@@ -72,9 +86,9 @@ main.canvas { position: relative; flex: 1; min-height: 0; z-index: 1; }
 .shot { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
 footer { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 4vmin; min-height: 9vmin; }
 .capwrap { flex: 1; opacity: 0; }
-.cap { display: inline-block; font-size: 3vmin; line-height: 1.35; font-weight: 500; padding: 1.4vmin 2.2vmin; border-radius: 2vmin; background: rgba(17,17,19,.92); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); max-width: 110vmin; }
+.cap { display: inline-block; font-size: 3vmin; line-height: 1.35; font-weight: 500; padding: 1.4vmin 2.4vmin; border-radius: 3.2vmin; background: rgba(17,17,19,.92); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); max-width: 110vmin; }
 .foot { font-size: 2.1vmin; color: ${PALETTE.t3}; white-space: nowrap; }
-.card { background: #111113; border: 1px solid rgba(255,255,255,.1); border-radius: 3vmin; padding: 2.6vmin 3vmin; }
+.card { background: #111113; border: 1px solid rgba(255,255,255,.1); border-radius: 4.6vmin; padding: 2.6vmin 3vmin; }
 .chip { display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.3vmin 2.4vmin; border-radius: 999px; border: 1.5px solid ${PALETTE.rose2}; color: ${PALETTE.rose2}; font-size: 2.6vmin; font-weight: 600; white-space: nowrap; }
 .lbl { font-size: 2.5vmin; color: ${PALETTE.t2}; line-height: 1.4; }
 .big { font-size: 5vmin; font-weight: 700; letter-spacing: -.03em; }
@@ -82,6 +96,7 @@ svg text { font-family: "InterV", system-ui, sans-serif; }
 @media (orientation: portrait) { .stage { padding: 7vmin 6vmin 5vmin; } h1 { font-size: 6.4vmin; } .foot { display: none; } .cap { max-width: 100%; } }
 ${scene.css}
 </style></head><body><div class="stage">
+<div class="amb" aria-hidden="true"><i></i><i></i></div><canvas class="dust" width="${W}" height="${H}" aria-hidden="true"></canvas>
 <header><p class="k">${esc(scene.kicker)}</p><h1>${scene.title}</h1></header>
 <main class="canvas">${scene.html}</main>
 <footer><div class="capwrap"><span class="cap" id="cap"></span></div><p class="foot">Lumevina Skin School · Evelyn Romero</p></footer>
@@ -94,7 +109,7 @@ window.SCENE = ${JSON.stringify({ id: scene.id, dur: scene.dur, poster: scene.po
 window.W = ${W}; window.H = ${H};
 ${scene.setup ? `(${scene.setup.toString()})(M, window.C);` : ""}
 ${scene.seek ? `window.seek = function (t) { var st = M.stage(t); (${scene.seek.toString()})(t, st, M, window.C); };` : ""}
-</script>${scene.module ? `<script type="module">${scene.module}</script>` : ""}</body></html>`;
+</script>${scene.module ? `<script type="module">${studioModule(scene.module)}</script>` : ""}</body></html>`;
 
 const sha = (b) => crypto.createHash("sha1").update(b).digest("hex");
 const AUDIT = `(() => {

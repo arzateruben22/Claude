@@ -30,16 +30,25 @@ window.M = (function () {
     if (p.o != null) el.style.opacity = p.o;
   };
   // an element arriving at local time t0: slides from dy/dx, fades over the first part, optional scale-up with a little overshoot
+  // soft focus while something moves in or out: a blur that clears as it lands (only ours: an
+  // element's own inline filter is left alone once the entrance is over)
+  var soft = function (el, amount) {
+    if (!el || !el.style) return;
+    if (amount > 0.01) { el.style.filter = "blur(" + amount.toFixed(2) + "vmin)"; el.dataset.soft = "1"; }
+    else if (el.dataset && el.dataset.soft) { el.style.filter = ""; delete el.dataset.soft; }
+  };
   var enter = function (el, lt, t0, o) {
     o = o || {};
     var d = o.d || 0.6, dy = o.y == null ? 28 : o.y, dx = o.x || 0, p = seg(lt, t0, t0 + d), q = E.out(p);
-    set(el, { x: dx * (1 - q), y: dy * (1 - q), o: Math.min(1, p * 2.5), s: o.s ? tw(lt, t0, t0 + d, o.s, 1, E.back) : 1 });
+    set(el, { x: dx * (1 - q), y: dy * (1 - q), o: Math.min(1, p * 2.5), s: o.s ? tw(lt, t0, t0 + d, o.s, 1, E.back) : 0.965 + 0.035 * q });
+    soft(el, (1 - q) * (o.blur == null ? 0.9 : o.blur));
     return p;
   };
   var leave = function (el, lt, t0, o) {
     o = o || {};
     var d = o.d || 0.5, p = seg(lt, t0, t0 + d), q = E.in(p);
     set(el, { x: (o.x || 0) * q, y: (o.y == null ? 40 : o.y) * q, o: 1 - p });
+    soft(el, q * 0.9);
     return p;
   };
   var type = function (el, text, lt, t0, cps) {
@@ -51,10 +60,29 @@ window.M = (function () {
   var count = function (el, lt, a, b, from, to, fmt) { if (el) el.textContent = (fmt || Math.round)(tw(lt, a, b, from, to, E.out)); };
   var lerpColor = function (a, b, p) { return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * p) + "," + Math.round(a[1] + (b[1] - a[1]) * p) + "," + Math.round(a[2] + (b[2] - a[2]) * p) + ")"; };
 
-  var SHOTS = [], shotEls = [], capWrap = null, capEl = null;
-  var init = function () { SHOTS = (window.SCENE && window.SCENE.shots) || []; shotEls = $$(".shot"); capEl = $("#cap"); capWrap = capEl && capEl.parentElement; };
+  var SHOTS = [], shotEls = [], capWrap = null, capEl = null, amb = [], dust = null;
+  var init = function () { SHOTS = (window.SCENE && window.SCENE.shots) || []; shotEls = $$(".shot"); capEl = $("#cap"); capWrap = capEl && capEl.parentElement; amb = $$(".amb i"); dust = $(".dust"); };
+  var hash = function (i) { var x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
+  // the room the lesson sits in: two soft pools of warm light drifting very slowly, and fine dust
+  // rising through them, like the light behind the dominoes and the particles in the line art
+  var ambient = function (t) {
+    if (amb[0]) amb[0].style.transform = "translate(" + (Math.sin(t * 0.11) * 7).toFixed(2) + "vmin," + (Math.cos(t * 0.09) * 5).toFixed(2) + "vmin)";
+    if (amb[1]) amb[1].style.transform = "translate(" + (Math.cos(t * 0.08 + 1) * 8).toFixed(2) + "vmin," + (Math.sin(t * 0.12 + 2) * 6).toFixed(2) + "vmin)";
+    if (!dust || !dust.getContext) return;
+    var c = dust.getContext("2d"), W = dust.width, H = dust.height, u = Math.min(W, H) / 720;
+    c.clearRect(0, 0, W, H);
+    for (var k = 0; k < 70; k++) {
+      var sp = 0.006 + hash(k + 31) * 0.014, y = (((hash(k + 97) - t * sp) % 1) + 1) % 1;
+      var x = hash(k) * W + Math.sin(t * 0.35 + k) * W * 0.012;
+      var a = (0.08 + 0.22 * (0.5 + 0.5 * Math.sin(t * 1.3 + k * 2.1))) * Math.min(1, y * 4, (1 - y) * 4);
+      c.fillStyle = "rgba(246,218,196," + a.toFixed(3) + ")";
+      c.beginPath(); c.arc(x, y * H, (0.6 + hash(k + 53) * 1.5) * u, 0, 6.2832); c.fill();
+    }
+  };
   var stage = function (t) {
     if (!shotEls.length) init();
+    if (window.M) window.M.t = t;
+    ambient(t);
     var i = 0, k;
     for (k = 0; k < SHOTS.length; k++) if (t >= SHOTS[k].at) i = k;
     var at = SHOTS[i] ? SHOTS[i].at : 0, lt = t - at;
@@ -70,5 +98,5 @@ window.M = (function () {
     }
     return { i: i, lt: lt, at: at };
   };
-  return { clamp: clamp, seg: seg, E: E, tw: tw, $: $, $$: $$, set: set, enter: enter, leave: leave, type: type, count: count, lerpColor: lerpColor, stage: stage };
+  return { clamp: clamp, seg: seg, E: E, tw: tw, $: $, $$: $$, set: set, enter: enter, leave: leave, soft: soft, type: type, count: count, lerpColor: lerpColor, stage: stage, t: 0 };
 })();
