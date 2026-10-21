@@ -23,14 +23,18 @@ model: routine work to `opus`, hard reasoning to `fable`.
   over ghost cars, the 2 s roster (map dots, who's on and where, Drive with), the horn (G, 500 m, panned), change
   password and delete account, the measured ladder (`/api/ladder`), the DJ every three minutes, readable long toasts,
   Invite a friend.
+- **Also done this round:** the security review's 15 findings fixed with tests (`live/test/hardening.test.mjs`); the
+  service runs as `oclive` from /opt/oc-live with a hardened unit; password reset by email (Resend, off until
+  `RESEND_KEY`/`MAIL_FROM`), the account email setting, the menu's "N of 25 driving now", the pause screen's live
+  line, Invite a friend, and a watchdog alert if `oc-live` stops. `cd live && npm test`: 45 of 45.
 - **Next** (in order; Opus-class unless marked):
-  1. Run the `live` suite group on the latest build (plates, list, Drive with, honk, account panel checks were added)
-     and log it; a phone-size screenshot of the Live section and the top bar with the chip and the horn.
-  2. Fixes from the security review of the live server (an agent's report; apply the confirmed ones, with tests).
-  3. Email verification and password reset with Resend (free tier) once the owner has a sending domain.
-  4. Binary poses (12 bytes a row) before the cap passes 100 (Fable-class: the format and its proof).
-  5. A "who's driving" line on the pause screen; ghosts that fade in and out instead of popping at 3 km.
-  6. The talk bank in the on-foot scenes once Lot 57 is in the game.
+  1. The `live` suite group on the latest build: the honk, account, pause-line, menu-count and reset checks were added
+     after its last full run. Log the results.
+  2. A phone-size pass (390 × 844) of the Live section, the account panel, the top bar with the chip and the horn, and
+     the who's-on list; fix anything that crowds.
+  3. Binary poses (12 bytes a row) before the cap passes 100 (Fable-class: the format and its proof).
+  4. Ghosts that fade in and out instead of popping at the edge of the relay's 3 km.
+  5. The talk bank in the on-foot scenes once Lot 57 is in the game.
 - Everything below this line is the state from 2026-10-18 and still applies to the other lanes.
 
 ## State at the update before (2026-10-18, 22:00 UTC, an Opus session)
