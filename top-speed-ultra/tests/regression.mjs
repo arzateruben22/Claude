@@ -867,6 +867,31 @@ await group('launch', async (use) => {
     await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
     return `2 styles; Cross Lace fitted and saved, 4 wheels, root ${a.root} children throughout; back to Forged Twin`;
   });
+  // Lifestyle (homes): bought with earned credits, adds garage slots, starts a drive at the nearest real exit, sells for 60 %
+  await check('Lifestyle: a home is bought with credits, adds a garage slot, sets the start to its exit, and sells back', async () => {
+    const before = await game(page, () => { const p = window.__game.profile.p; const keep = { credits: p.credits, homes: [...p.homes], home: p.home }; p.credits = 10000; p.homes = []; p.home = ''; return keep; });
+    await page.getByRole('button', { name: 'Lifestyle', exact: true }).click();
+    const cards = await page.locator('.home-card').count();
+    const slots0 = await game(page, () => window.__game.profile.slots);
+    await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Buy/ }).click();
+    const a = await game(page, () => { const g = window.__game; return { credits: g.profile.p.credits, homes: g.profile.p.homes, home: g.profile.p.home, slots: g.profile.slots }; });
+    const locked = await page.locator('.home-card', { hasText: 'Clifftop House' }).getByRole('button', { name: /^Buy/ }).isDisabled();
+    await page.screenshot({ path: path.join(OUT, 'launch-homes.png') });
+    expect(cards === 9, `${cards} homes listed`);
+    expect(a.credits === 2000 && a.homes.join() === 'orangewood' && a.home === 'orangewood', `after buying: ${JSON.stringify(a)}`);
+    expect(a.slots === slots0 + 1, `garage slots ${slots0} → ${a.slots}`);
+    expect(locked, 'the level-15 home can be bought at level 1');
+    await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: 'Start here' }).click();
+    const pick = (await page.locator('.pick', { hasText: 'Start on' }).first().innerText()).replace(/\s+/g, ' ');
+    expect(/Orangewood Avenue/.test(pick), `the Start pick says "${pick}"`);
+    await page.getByRole('button', { name: 'Lifestyle', exact: true }).click();
+    await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Sell/ }).click();
+    const b = await game(page, () => { const p = window.__game.profile.p; return { credits: p.credits, homes: p.homes.length }; });
+    expect(b.credits === 2000 + 4800 && b.homes === 0, `after selling: ${JSON.stringify(b)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await game(page, (k) => { const g = window.__game, p = g.profile.p; p.credits = k.credits; p.homes = k.homes; p.home = k.home; g.profile.save(); }, before);
+    return `9 homes; bought Orangewood for 8,000 (slots ${slots0} → ${a.slots}); Start pick "${pick.slice(0, 60)}"; sold for 4,800`;
+  });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);

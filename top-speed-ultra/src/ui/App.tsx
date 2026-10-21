@@ -11,11 +11,13 @@ import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
-import { carById, figures, slotsFor, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
+import { carById, figures, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
 import { Ico } from './Icons';
+import { Homes } from './Homes';
+import { garageSlots } from '../game/homes';
 import { ModeArt } from './ModeArt';
 import { WorldMap } from './WorldMap';
 import { RadioCard } from './RadioCard';
@@ -23,7 +25,7 @@ import { Phone, PhoneApp } from './Phone';
 import { RadialMenu, RadialPick } from './RadialMenu';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map' | 'phone';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map' | 'phone' | 'homes';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,6 +42,7 @@ export function App() {
   const mapRef = useRef<HTMLCanvasElement>(null);
   const [screen, setScreen] = useState<Screen>('loading');
   const [panel, setPanel] = useState<Panel>(null);
+  const [mapHome, setMapHome] = useState<string | undefined>(undefined);   // the World Map opened from Lifestyle, on a home
   const [busy, setBusy] = useState(true);
   const [loadingText, setLoadingText] = useState('Starting the engine');
   const [settings, setSettings] = useState<Settings>(loadSettings);
@@ -240,7 +243,7 @@ export function App() {
               <button className="rail-btn" onClick={() => setPanel('profile')}><Ico name="career" />Profile</button>
               <button className="rail-btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}><Ico name="bests" />Bests</button>
               <button className="rail-btn" onClick={() => setPanel('settings')}><Ico name="settings" />Settings</button>
-              <span className="rail-btn off" aria-disabled="true"><Ico name="driver" />Lifestyle<small>Roadmap</small></span>
+              <button className="rail-btn" onClick={() => setPanel('homes')}><Ico name="home" />Lifestyle</button>
               <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
             </nav>
             <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
@@ -407,11 +410,17 @@ export function App() {
       )}
 
       {panel === 'map' && game.current && (
-        <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} onClose={() => setPanel(null)}
+        <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} focusHome={mapHome} onClose={() => { setMapHome(undefined); setPanel(null); }}
           onNavigate={(l) => navigate(l)}
           onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
-          onStartExit={(k) => { update({ exit: k }); setPanel(null); }}
+          onStartExit={(k) => { update({ exit: k }); setMapHome(undefined); setPanel(null); }}
           onRace={(id) => { update({ course: id }); setMode('race'); setPanel(null); }} />
+      )}
+
+      {panel === 'homes' && game.current && (
+        <Homes game={game.current} onClose={() => setPanel(null)}
+          onStart={(k) => { update({ exit: k }); setPanel(null); }}
+          onMap={(h) => { setMapHome(h.id); setPanel('map'); }} />
       )}
 
       {panel === 'course' && (
@@ -605,13 +614,13 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
-  const p = book.p, level = levelOf(p.xp), slots = slotsFor(level), owner = game.ownerMode;
+  const p = book.p, level = levelOf(p.xp), slots = garageSlots(level, p.homes), owner = game.ownerMode;
   const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
   return (
     <div className="overlay center">
       <div className="panel profile">
         <h2>Garage{owner && <span className="chip">Owner mode</span>}</h2>
-        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
+        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels, and with each home). Credits come from driving; nothing here costs real money.</p>
         {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only). Your saved garage doesn't change; turn it off in Settings.</p>}
         {msg && <p className="good" role="status">{msg}</p>}
         <Seg value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />

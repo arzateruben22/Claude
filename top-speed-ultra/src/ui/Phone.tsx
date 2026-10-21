@@ -5,13 +5,13 @@
 import { useEffect, useState } from 'react';
 import { Ico } from './Icons';
 
-export type PhoneApp = 'map' | 'garage' | 'course' | 'radio' | 'board' | 'profile' | 'settings' | 'feedback';
+export type PhoneApp = 'map' | 'garage' | 'course' | 'radio' | 'board' | 'profile' | 'settings' | 'feedback' | 'homes';
 interface App { id: PhoneApp | 'credits' | 'messages' | 'contacts'; name: string; icon: Parameters<typeof Ico>[0]['name']; off?: boolean }
 const APPS: App[] = [
   { id: 'map', name: 'Map', icon: 'map' }, { id: 'garage', name: 'Garage', icon: 'garage' }, { id: 'course', name: 'Races', icon: 'drive' },
   { id: 'radio', name: 'Radio', icon: 'radio' }, { id: 'credits', name: 'Credits', icon: 'career' }, { id: 'board', name: 'Bests', icon: 'bests' },
   { id: 'profile', name: 'Profile', icon: 'driver' }, { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'feedback', name: 'Feedback', icon: 'nav' },
-  { id: 'messages', name: 'Messages', icon: 'phone', off: true }, { id: 'contacts', name: 'Contacts', icon: 'online', off: true },
+  { id: 'homes', name: 'Homes', icon: 'home' }, { id: 'messages', name: 'Messages', icon: 'phone', off: true }, { id: 'contacts', name: 'Contacts', icon: 'online', off: true },
 ];
 
 export function Phone({ name, credits, level, onOpen, onClose }: { name: string; credits: number; level: number; onOpen: (a: PhoneApp) => void; onClose: () => void }) {

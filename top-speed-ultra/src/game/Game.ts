@@ -60,6 +60,8 @@ export interface Hud {
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
 }
+// signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
+const NOT_AN_EXIT = /weigh|inspection|rest area|vista point|scales?\b/i;
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
 // what a feedback report says about the device and this drive: nothing personal, nothing sent by the game
@@ -245,6 +247,21 @@ export class Game {
       out.push({ key, text: g.text.join(' / '), s: g.s, mi: g.s / 1609.344, side: g.side });
     }
     return out.sort((a, b) => a.s - b.s);
+  }
+  // the real exit nearest a place (a home, homes.ts): its carriageway, its Settings.exit key, and how far its sign is
+  // from the place in metres. Every direction is considered; the nearest sign wins.
+  nearestExit(x: number, z: number): { label: string; exit: Exit; dist: number } | null {
+    let best: { label: string; exit: Exit; dist: number } | null = null;
+    const p = { x: 0, y: 0, z: 0, h: 0 };
+    for (const g of this.net.signs) {
+      if (!g.path.main || NOT_AN_EXIT.test(g.text.join(' '))) continue;
+      g.path.at(g.s, 0, p);
+      const d = Math.hypot(p.x - x, p.z - z);
+      if (best && d >= best.dist) continue;
+      const label = g.path.label;
+      best = { label, dist: d, exit: { key: `${label} @ ${Math.round(g.s)}`, text: g.text.join(' / '), s: g.s, mi: g.s / 1609.344, side: g.side } };
+    }
+    return best;
   }
   // the sign a Settings.exit key names, if the data still has it
   private resolveExit(key: string): Sign | null {

@@ -4,6 +4,43 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (16:30 UTC): Lifestyle: homes (the life half's first piece); every panel's Done bar fixed
+
+The owner asked for the life half and the online side toward 95 %, with homes and walk-in interiors first, online
+on a free-tier backend, and the map OC-only. The online side is already the always-on session's `claude/live-server`
+lane (accounts, lobby, relay, ghosts, crews, $0 on the owner's machine), so this session does not build it; it asked
+that session which of its open gaps (online board, races against people) it wants handed over, and how interiors
+should reuse its on-foot engine.
+
+- **Homes** (`src/game/homes.ts`, `src/ui/Homes.tsx`): nine fictional homes in real OC neighbourhoods (Anaheim, Orange,
+  Tustin, Huntington Beach, Irvine, Anaheim Hills, Laguna Canyon, Newport Beach, Dana Point), our own names, no real
+  address or listing.
+  - Each costs 8,000 to 240,000 credits (earned only) and opens from level 1 to 15.
+  - Each owned home adds 1 to 3 garage slots (`garageSlots`, at most 12).
+  - The first one bought is where you live. Homes sell back for 60 %, never if your cars would no longer fit.
+  - The menu's Lifestyle row (greyed until now) and a Homes app on the phone open the panel.
+  - **Start here** sets the start to the real exit nearest the home (`Game.nearestExit`; weigh stations, rest areas
+    and vista points are skipped).
+  - The World Map draws every home as a small house (yours filled, the one you live in ringed), lists them under
+    Places, and opens on a home from the panel's "On the map", with "Start from" for one you own.
+  - Profile: `homes`, `home`, defaulted for older saves without a version bump.
+- **Checked.**
+  - Each home's nearest exit, read from the built page: Orangewood Avenue on the 57 (0.1 mi), Glassell/Grand on the
+    22, Edinger on the 55, Brookhurst on the 405 (3.9 mi: Huntington Beach is far from a freeway), Jeffrey/University on
+    the 405, Imperial Highway on the 91, Glenwood on the 73, Bison on the 73, Camino Las Ramblas on the 5.
+  - Found and fixed on the way: Orangewood first resolved to the 5 (its point was 1 km west), and the Hills Ranch to
+    a weigh station.
+  - New launch check: 9 homes; buy Orangewood for 8,000; slots 1 → 2; the level-15 home locked; Start here makes the
+    Start pick read "Orangewood Avenue exit"; selling returns 4,800.
+  - `npm test -- --only=launch,boot` **15/15**.
+- **Every panel's Done bar** stopped 20 px above the screen's edge (the overlay's padding), and content scrolled
+  visibly beneath it (seen on Profile). It now sticks to the real bottom edge with the safe area inside it.
+  `tools/panel-shots.mjs` (new): Profile and Lifestyle at 1280 × 720 and 390 × 844, top and bottom, no errors, no
+  sideways scroll.
+- **Not a bug: panels shot at opacity 0.** In software rendering the panel's 0.3 s fade-in clock stayed at 0 for about
+  1.6 s, because no frame was produced while the 3D scene rendered; the element was never remounted. The shot tool now
+  waits for the animation to finish.
+
 ## 2026-10-21 (12:00 UTC): the garage's Wheels tab (U5 done); the run card saves in the viewer; the aero cover's streaks
 
 - **Wheels tab (U5).** Two rim styles per car (`cars.ts` `WHEELS`, our own names), fitted live to the car behind the

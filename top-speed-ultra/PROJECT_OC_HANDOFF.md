@@ -80,14 +80,16 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
 - 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
 - 06:55 App.tsx, styles.css: the radial quick menu (`RadialMenu.tsx`): hold Pause or Tab for 300 ms while driving; a tap on Pause still pauses.
+- 16:30 App.tsx, styles.css, WorldMap.tsx, Phone.tsx: Lifestyle (homes): the rail's Lifestyle row opens `Homes.tsx`; a Homes phone app; homes on the World Map; the garage's slots include homes; `.panel > .row:last-child` sticks to the screen's real bottom edge.
 - 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
-Next here, all outside the lanes above (updated 12:00 UTC): done: the World Map (U4), the garage's Paint and Wheels
-tabs (U5), the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes, the
-run card's save in the viewer, the glove stripe from the driver's accent. Phone-size checks of the new panels done (12:10).
-The queue here is empty of unowned items: traffic, trees and the world are touched by six lanes' branches
-(`wip-ref`, `wip-gfx`, `wip-modes`, `wip-ui`, `wip-hx`, `wip-fix-sky`), so this session leaves them. Next: what the
-owner asks, or what the lanes hand over.
+Next here (updated 16:30 UTC; the owner, about 15:45: the life half and online toward 95 %; homes and walk-in
+interiors first; online on a free-tier backend; the map OC-only; no real-phone test for now):
+- done: homes (Lifestyle), the panels' Done bar;
+- next: walk-in interiors for owned homes, waiting on the always-on session's answer on how to reuse its on-foot engine
+  (`src/onfoot/lot57`); then, in the life half, characters and story on the phone (Messages, Contacts), and activities;
+- online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
+  (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
 ### Decisions waiting (the owner's)
 
