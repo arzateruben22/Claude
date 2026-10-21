@@ -207,7 +207,84 @@ const V = {
       <div class="card" style="border-color:rgba(255,122,107,.5)"><div class="k" style="font-size:22px;color:${RED}">Pause</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>Retinoids of every kind, including retinol</li><li>High-strength salicylic peels</li></ul></div>
       <div class="card" style="border-color:rgba(50,215,75,.45)"><div class="k" style="font-size:22px;color:${GREEN}">Commonly considered fine</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>Azelaic acid, vitamin C, niacinamide</li><li>Gentle lactic acid</li><li>Mineral sunscreen (tinted, for melasma)</li></ul></div>
     </div>
-    <p class="lbl" style="margin-top:22px;font-size:22px">Melasma often shows up in pregnancy; tinted mineral sunscreen is your best friend. Tell your esthetician every time: some treatments change. The one rule: ask your doctor.</p>`)
+    <p class="lbl" style="margin-top:22px;font-size:22px">Melasma often shows up in pregnancy; tinted mineral sunscreen is your best friend. Tell your esthetician every time: some treatments change. The one rule: ask your doctor.</p>`),
+  "4-3": base(`Kind or harsh: <span class="grad">it's the tool and the pressure.</span>`, "Scrubs, brushes and dermaplaning", `
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card" style="border-color:rgba(255,122,107,.5)"><div style="font-size:24px;font-weight:650;color:${RED}">Skip</div><p class="lbl" style="margin-top:6px">Scrubs with jagged bits, crushed shells or pits: tiny tears in the skin.</p></div>
+      <div class="card" style="border-color:rgba(50,215,75,.45)"><div style="font-size:24px;font-weight:650;color:${GREEN}">Kind</div><p class="lbl" style="margin-top:6px">A soft washcloth, or a gentle enzyme mask: a physical polish without the damage.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">Dermaplaning</div><p class="lbl" style="margin-top:6px">Dead skin and peach fuzz off; done professionally it's smooth and safe, and makeup goes on flawlessly.</p></div>
+    </div>
+    <div class="card" style="margin-top:24px"><div style="font-size:24px;font-weight:650">At home, if you do</div><p class="lbl" style="margin-top:6px">Clean, dry skin, a fresh blade, light strokes, once a month at most, and never over active breakouts.</p></div>`),
+  "7-1": base(`Twenty minutes, <span class="grad">once a week.</span>`, "The Sunday ritual", `
+    <div style="margin-bottom:22px">${steps(["Double cleanse", "Warm towel, one minute", "Exfoliate (not on an acid night)", "Mask for your skin", "Serum, with massage", "Moisturize"])}</div>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card"><div style="font-size:24px;font-weight:650">The mask</div><p class="lbl" style="margin-top:6px">Clay for oily skin, cream or gel for dry.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">The steam</div><p class="lbl" style="margin-top:6px">Skip it if you have redness or rosacea.</p></div>
+      <div class="card" style="border-color:rgba(255,122,107,.5)"><div style="font-size:24px;font-weight:650;color:${RED}">No extractions at home</div><p class="lbl" style="margin-top:6px">That's what the treatment room is for.</p></div>
+    </div>`),
+  "7-2": base(`Slip, direction, <span class="grad">light pressure.</span>`, "Facial massage and gua sha", `
+    <div class="row" style="grid-template-columns:1.1fr 1fr">
+      <div class="card"><svg viewBox="0 0 640 420" width="640" height="420">
+        <ellipse cx="320" cy="190" rx="150" ry="180" fill="#2a1f22" stroke="rgba(255,255,255,.12)"/>
+        <g fill="none" stroke="${ROSE2}" stroke-width="5" stroke-linecap="round">
+          <path d="M320 150 C 360 150, 400 160, 440 190"/><path d="M320 150 C 280 150, 240 160, 200 190"/>
+          <path d="M320 230 C 360 230, 400 250, 430 280"/><path d="M320 230 C 280 230, 240 250, 210 280"/>
+          <path d="M320 300 C 350 320, 370 350, 380 400"/><path d="M320 300 C 290 320, 270 350, 260 400"/>
+        </g>
+        <g fill="${ROSE2}"><polygon points="440,190 426,176 422,196"/><polygon points="200,190 214,176 218,196"/><polygon points="430,280 416,268 414,288"/><polygon points="210,280 224,268 226,288"/><polygon points="380,400 364,390 372,408"/><polygon points="260,400 276,390 268,408"/></g>
+        <text x="320" y="60" fill="${T2}" font-size="22" text-anchor="middle">from the centre, outward</text>
+        <text x="320" y="410" fill="${T2}" font-size="22" text-anchor="middle">then down the neck, toward the lymph nodes</text>
+      </svg></div>
+      <div style="display:grid;gap:20px;align-content:start">
+        <div class="card"><div style="font-size:24px;font-weight:650">Always slip</div><p class="lbl" style="margin-top:6px">A face oil or a rich serum. Never drag dry skin.</p></div>
+        <div class="card"><div style="font-size:24px;font-weight:650">Light pressure</div><p class="lbl" style="margin-top:6px">It should feel good, never hurt, and never leave marks.</p></div>
+        <div class="card" style="border-color:rgba(255,122,107,.5)"><div style="font-size:24px;font-weight:650;color:${RED}">Skip over</div><p class="lbl" style="margin-top:6px">Active breakouts, broken skin, and the days right after a peel.</p></div>
+      </div>
+    </div>`),
+  "8-1": base(`Four things, <span class="grad">at once.</span>`, "How acne really forms", `
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      ${[["1", "Too much oil"], ["2", "Dead cells clogging the pore"], ["3", "Acne bacteria"], ["4", "Inflammation"]].map(([n, t]) => `<div class="card" style="text-align:center"><div style="font-size:40px;font-weight:700;color:${ROSE}">${n}</div><div style="font-size:24px;font-weight:650;margin-top:6px">${esc(t)}</div></div>`).join("")}
+    </div>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr;margin-top:24px">
+      <div class="card"><div style="font-size:24px;font-weight:650">Clogged</div><p class="lbl" style="margin-top:6px">Blackheads and whiteheads: a pore that's blocked.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">Inflamed</div><p class="lbl" style="margin-top:6px">Red bumps and pus-filled pimples: a blocked pore the body is fighting.</p></div>
+      <div class="card" style="border-color:rgba(255,122,107,.5)"><div style="font-size:24px;font-weight:650;color:${RED}">Deep, painful</div><p class="lbl" style="margin-top:6px">Cysts and nodules can scar: a dermatologist, not just a facial.</p></div>
+    </div>
+    <p class="lbl" style="margin-top:20px;font-size:22px">Acne starts forming weeks before you see it. That's why results take two to three months.</p>`),
+  "10-3": base(`Who does what, <span class="grad">in California.</span>`, "Professional treatments, explained", `
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      <div class="card" style="border-color:rgba(244,201,214,.5)"><div class="k" style="font-size:22px">With an esthetician: the surface</div><div style="margin-top:12px">${pill("facials")}${pill("light peels")}${pill("dermaplaning")}${pill("LED")}${pill("extractions")}</div><p class="lbl" style="margin-top:10px">Evelyn's room.</p></div>
+      <div class="card" style="border-color:rgba(227,180,143,.6)"><div class="k" style="font-size:22px;color:${GOLD}">With a nurse or doctor: medical</div><div style="margin-top:12px">${pill("microneedling", GOLD)}${pill("lasers", GOLD)}${pill("Botox", GOLD)}${pill("fillers", GOLD)}</div><p class="lbl" style="margin-top:10px">Ask anyone offering injectables who their supervising physician is; look for a licensed nurse, PA or doctor.</p></div>
+    </div>
+    <p class="lbl" style="margin-top:22px;font-size:22px">Most of what makes a treatment work comes before and after: prep, aftercare and sunscreen.</p>`),
+  "12-1": base(`A few days of prep <span class="grad">make the difference.</span>`, "Before your facial, peel or wax", `
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      <div class="card"><div style="font-size:24px;font-weight:650">Pause, three to five days before</div><p class="lbl" style="margin-top:6px">Retinol and acids, before a facial, peel, dermaplaning or wax. A prescription retinoid: about a week, and tell Evelyn.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">No sunburn, no fresh tan</div><p class="lbl" style="margin-top:6px">No treatment on burned or freshly tanned skin, and plan a trip for at least two or three days after.</p></div>
+      <div class="card" style="border-color:rgba(50,215,75,.45)"><div style="font-size:24px;font-weight:650;color:${GREEN}">Breaking out? Come in</div><p class="lbl" style="margin-top:6px">A reason to come, not to cancel. Open, raw or infected skin is the one thing that waits.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">Tell her every time</div><p class="lbl" style="margin-top:6px">Medications, pregnancy, a recent procedure, a named condition. The pre-visit form is where it goes.</p></div>
+    </div>`),
+  "13-2": base(`Two days of care, <span class="grad">then keep it smooth.</span>`, "After a wax", `
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card"><div class="k" style="font-size:22px">The first 24 to 48 hours</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>No heat or sweat, no sun</li><li>No tight clothes, nothing scented</li><li>Brazilian: loose cotton, no sex for a day</li></ul></div>
+      <div class="card"><div class="k" style="font-size:22px;color:${GOLD}">From day two or three</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>Exfoliate gently, two or three times a week</li><li>Keep it moisturized</li><li>Don't dig at an ingrown</li></ul></div>
+      <div class="card" style="border-color:rgba(255,122,107,.5)"><div class="k" style="font-size:22px;color:${RED}">Normal, and not</div><ul class="lbl" style="margin-top:10px;padding-left:22px;line-height:1.6"><li>Small red bumps for a few hours to a day: normal</li><li>Spreading pus-filled bumps, lifted skin or a burn: message Evelyn</li></ul></div>
+    </div>
+    <p class="lbl" style="margin-top:22px;font-size:22px">Every four to six weeks (brows, lip and underarms three to four). Regular waxing thins the hair; shaving in between undoes it.</p>`),
+  "14-1": base(`Which one to book, <span class="grad">first time and after.</span>`, "What happens at a visit", `
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card" style="border-color:rgba(244,201,214,.5)"><div class="k" style="font-size:22px">New, no acne concern</div><div style="font-size:24px;font-weight:650;margin-top:8px">New Clients Start Here</div><p class="lbl" style="margin-top:6px">A consultation, a review of your routine, and a customized facial: double cleanse, enzyme exfoliation, extractions, mask, massage, LED, cryo globes.</p></div>
+      <div class="card" style="border-color:rgba(227,180,143,.6)"><div class="k" style="font-size:22px;color:${GOLD}">New, with acne</div><div style="font-size:24px;font-weight:650;margin-top:8px">Acne Bootcamp consultation + treatment</div><p class="lbl" style="margin-top:6px">Then monthly treatments, or every two weeks for severe acne.</p></div>
+      <div class="card"><div class="k" style="font-size:22px;color:${T2}">Returning</div><div style="font-size:24px;font-weight:650;margin-top:8px">Lumevina Custom Facial</div><p class="lbl" style="margin-top:6px">Or the Monthly Acne Treatment when acne is the work.</p></div>
+    </div>
+    <p class="lbl" style="margin-top:22px;font-size:22px">Come with a clean face if you can, hair you don't mind getting damp, and your product list or photos of it. The address comes with the confirmation; parking is free.</p>`),
+  "14-2": base(`A routine from her shelf, <span class="grad">in four moves.</span>`, "Her shelf: how the products fit together", `
+    <div style="margin-bottom:22px">${steps(["Cleanser", "Moisturizer", "SPF", "One treatment product, for the main concern"])}</div>
+    <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="card"><div style="font-size:24px;font-weight:650">Mandelic, lowest first</div><p class="lbl" style="margin-top:6px">A few nights a week; moving up a strength is her call, after a few weeks without stinging.</p></div>
+      <div class="card"><div style="font-size:24px;font-weight:650">Texture by skin</div><p class="lbl" style="margin-top:6px">Gels for oily and combination skin, creams for dry; a hydrating toner adds water under either.</p></div>
+      <div class="card" style="border-color:rgba(244,201,214,.5)"><div style="font-size:24px;font-weight:650;color:${ROSE}">Her picks come after a visit</div><p class="lbl" style="margin-top:6px">The chat on the website can tell you what's in stock and put it in your bag for pickup.</p></div>
+    </div>`)
 };
 
 const { chromium } = createRequire(path.join(process.env.PLAYWRIGHT_DIR || root, "x.js"))("playwright");
