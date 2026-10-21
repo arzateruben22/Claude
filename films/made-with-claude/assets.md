@@ -25,9 +25,15 @@
 
 | File | Spec |
 |------|------|
-| `made-with-claude-16x9.mp4` | 1920×1080 · 30 fps · H.264 High CRF 15 · BT.709 · AAC 256k 48 kHz · 12.0 s · −14 LUFS |
+| `made-with-claude-16x9.mp4` | 1920×1080 · 30 fps · H.264 high, CRF 19, grain-tuned · AAC 256k 48 kHz · −13.7 LUFS integrated, −4.7 dBTP true peak (CRF 15 masters in `build/`, not committed) |
 | `made-with-claude-9x16.mp4` | 1080×1920 · same spec |
-| `poster-<fmt>-hook.jpg` | Frame at 2.6 s (mascot on the toolbar, right after the breakout) |
+| `poster-<fmt>-hook.jpg` | Frame 68 (2.27 s): the mascot centred mid-breakout, shards and shockwave |
 | `poster-<fmt>-final.jpg` | Last frame: the title card with the mascot |
 | `contact-<fmt>-prerender.jpg` | Gate 2 sheet (rendered before the full render) |
 | `contact-<fmt>-final.jpg` | Sheet from the final frames |
+
+## Code written for this film, shared through the kit
+
+| Asset | Origin | License |
+|---|---|---|
+| `vendor/cinema/liquid2d.js` | A copy of `kits/cinema/liquid2d.js`, written for this repo: the liquid-chrome OPUS 5.5 morph, after Ruben's chrome-blob reference (studied for its motion only, no footage used) | Repo's own |
