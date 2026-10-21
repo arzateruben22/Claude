@@ -9,6 +9,7 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 - [x] **Dashboard Inventory** on her real 43 products (built Oct 20).
 - [x] **Lumevina Studio** (built Oct 20): the dashboard on her phone, with notifications and a morning email.
 - [x] **v3** (built Oct 20): booking on the website (deposits, a card on file, reminders by email and text, moving and cancelling online, a waitlist), Glow Membership and Glow Points for real, and her GlossGenius jobs in the dashboard (Appointments: checkout with tips, fees, booking for a client; the GlossGenius client import and invitation). Off until `version: "v3"` in `js/site-config.js`; try it any time with `?preview=v3`. Section 6 is the switch-over.
+- [x] **Selling past the client list** (built Oct 21, STOREFRONT.md): the consult gate on the actives, the online Skin Consult ($35, credited), Buy again in My Lumevina, structured data and share tags for search, the Skin School clips (twelve flat and solid explainers, each cut 9:16 for TikTok), and the course's own structured data and lesson links. Waiting on Evelyn: the three brand emails (step 0 there).
 
 ## 2. Create the accounts (about 30 minutes, in Evelyn's name)
 
