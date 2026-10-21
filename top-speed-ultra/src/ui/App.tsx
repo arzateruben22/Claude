@@ -607,7 +607,8 @@ function qualityNote(q: Quality) {
     low: 'For phones: no shadows or post-processing, 0.9 km of road.',
     medium: 'Sun shadows around the car, 1.3 km of road.',
     high: 'Sharper shadows, bloom, 4x MSAA, 1.8 km of road.',
-    ultra: 'Everything: ambient occlusion, 4K shadow map, denser scenery, 2.4 km of road.',
+    veryhigh: 'Ambient occlusion, 4K shadow map, denser scenery, 2.4 km of road.',
+    ultra: 'For desktop graphics cards: ambient occlusion, bloom on the lights only, up to 8x MSAA, an 8K shadow map ahead of you, the clouds in the reflections, 2.8 km of road.',
   }[q];
 }
 

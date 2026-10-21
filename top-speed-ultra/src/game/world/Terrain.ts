@@ -45,7 +45,7 @@ export class Terrain {
     for (let tx = t0x; tx <= t1x; tx++) for (let tz = t0z; tz <= t1z; tz++) {
       const cx = (tx + 0.5) * TILE, cz = (tz + 0.5) * TILE, d = Math.max(0, Math.hypot(cx - x, cz - z) - TILE * 0.71);
       if (d > R) continue;
-      const lod = d < 520 ? 0 : 1;
+      const lod = d < (this.q.ultra?.lodNear ?? 520) ? 0 : 1;      // full detail within 520 m (Ultra: further)
       const have = this.tiles.get(tKey(tx, tz));
       if (have && have.lod <= lod) continue;
       want.push([d, tx, tz, lod]);
