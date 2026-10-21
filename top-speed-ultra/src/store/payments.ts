@@ -187,6 +187,12 @@ export async function confirmReturn(onState: (s: ReturnState) => void): Promise<
       try {
         const r = await fetch(`${CONFIG.supabaseUrl}/rest/v1/purchases?select=sku,amount_cents,currency,status,created_at&stripe_session_id=eq.${encodeURIComponent(sessionId)}`, { headers: sbHeaders(token, false) });
         const rows = r.ok ? await r.json() as { sku: string; amount_cents: number; currency: string; status: string; created_at: string }[] : [];
+        if (rows[0]?.status === 'refused') {
+          // the webhook refused it: the founder window had closed before this checkout started, or this account
+          // already holds an OC Hypercar Founder Edition number (two checkouts opened side by side)
+          onState({ kind: 'slow', message: 'This purchase could not be completed (the founder window had closed before this checkout started, or this account already has the OC Hypercar Founder Edition), so nothing new was added and your payment is being refunded in full. Stripe emails you when it is.' });
+          return;
+        }
         if (rows[0]?.status === 'paid') {
           await restore();
           const item = skuById(rows[0].sku);

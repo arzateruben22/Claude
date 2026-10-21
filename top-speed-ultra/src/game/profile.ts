@@ -127,12 +127,31 @@ export class ProfileBook {
     return got;
   }
 
+  // Cars the store grants (src/store/entitlements.ts syncGarage): in the garage while the signed-in account owns
+  // them, outside the slot count, and never sold back for credits (that would turn dollars into credits). `all` are
+  // the vehicles only the store gives, so one that isn't owned (refunded, signed out) leaves the garage. Returns
+  // whether the garage changed.
+  private storeOnly = new Set<string>();
+  setStoreCars(owned: string[], all: string[]): boolean {
+    this.storeOnly = new Set(all);
+    const p = this.p, before = p.vehicles.join();
+    p.vehicles = p.vehicles.filter((v) => !this.storeOnly.has(v) || owned.includes(v));
+    for (const v of owned) if (this.storeOnly.has(v) && !p.vehicles.includes(v)) p.vehicles.push(v);
+    if (!p.vehicles.includes(p.car)) p.car = p.vehicles[0];
+    const changed = p.vehicles.join() !== before;
+    if (changed) this.save();
+    return changed;
+  }
+  // the garage slots in use: every car but the store's
+  get slotsUsed() { return this.p.vehicles.filter((v) => !this.storeOnly.has(v)).length; }
+
   // the showroom: credits only, a free garage slot, and the level it asks for. Returns why not, or null.
   buy(id: string, price: number, level: number, slots: number): string | null {
     const p = this.p;
     if (p.vehicles.includes(id)) return 'Already in your garage';
+    if (this.storeOnly.has(id)) return 'Only from the store';
     if (this.level < level) return `Opens at level ${level}`;
-    if (p.vehicles.length >= slots) return `Garage full (${slots} slots at your level)`;
+    if (this.slotsUsed >= slots) return `Garage full (${slots} slots at your level)`;
     if (p.credits < price) return `${Math.ceil(price - p.credits).toLocaleString()} more credits needed`;
     p.credits -= price; p.vehicles.push(id); p.car = id; this.save();
     return null;
@@ -140,6 +159,7 @@ export class ProfileBook {
   sell(id: string, price: number): string | null {
     const p = this.p;
     if (id === 'rossini-gt') return 'Your first car stays';
+    if (this.storeOnly.has(id)) return 'Bought in the store: it can\'t be sold for credits';
     if (!p.vehicles.includes(id)) return 'Not yours';
     p.vehicles = p.vehicles.filter((v) => v !== id); p.credits += Math.round(price * 0.6);
     if (p.car === id) p.car = 'rossini-gt';

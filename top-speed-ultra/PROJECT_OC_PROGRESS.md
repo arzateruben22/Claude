@@ -4,6 +4,160 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-19 (later): the hypercar store change, repaired after two reviews (branch `claude/store`, not committed)
+
+Two reviews of the entry below (integrity and business) rejected it. The server, serial, entitlement and checker
+work stood; three serial cases broke "a refunded number is retired", the checker had gaps, and some copy wasn't
+true. This pass fixes each point as the reviews asked. Still not committed or merged; the SKU stays `available:
+false`.
+
+**Server (migration 0002, `stripe-webhook`).**
+
+- **A refund racing the numbering (P3).** `assign_serial` now locks the purchase row (`select ... for update`)
+  before it reads the status. A refund written at that moment either commits first, and `assign_serial` refuses
+  ("refunded, not paid"; the webhook answers 500 and Stripe retries), or it waits until the number is issued and
+  its trigger then retires it. A completion that reads back a refunded purchase now also takes back what a racing
+  delivery granted.
+- **A retired number on the plaque (P1).** The refund trigger now resets the player's entitlement rows for that sku
+  to their lowest live number, or to none. A second paid purchase by a player who already holds a live number (two
+  checkouts opened side by side) is refused inside `assign_serial`: marked `refused`, never numbered, and refunded
+  in full (idempotency key `founder-duplicate-<session>`; a retry re-asks with the same key). The client's
+  "refused" message now names both reasons.
+- **A refund delivered before its completion (P2).** `charge.refunded` with no matching purchase no longer answers
+  "ignored". It looks up the Checkout Session at Stripe (`GET /v1/checkout/sessions?payment_intent=`) and records
+  the purchase as `refunded`, so the completion that follows reads `refunded` and grants nothing. A charge with no
+  Checkout Session is still ignored (200); a failed lookup is a 500, so Stripe retries.
+- **Not built, noted for the owner** (`PROJECT_OC_MONETIZATION.md` §12, `server/README.md`): `restore()` at boot in
+  live mode, and treating a lost dispute like a refund.
+
+**Checker** (`tools/store-check-catalog.mjs`): an entitlement marked `exclusive: X` may be granted by sku X only; a
+sku that grants a car (a `vehicle`) or a server-numbered item (`serial: 'server'`) must be `serial: true` and in the
+founder window.
+
+**Copy.**
+
+- **Free Drive.** It has a score (the distance), a saved best, a device-only board and a shareable run card, so
+  "where nothing is scored, timed or ranked" is gone everywhere: the catalog description, the store's two-tune line,
+  intro line and terms, rule 3a and the catalog row, `cosmetics.json`, and the deck's store page. The new words:
+  no clock and no rivals, your Free Drive bests stay on your device, and Unleashed runs and run cards are marked.
+  The marking isn't built (the car isn't in the game), so it is now a condition for `available: true` in rule 3a and
+  in the car's `needs`.
+- **"Then never again"** is off the car's copy (catalog, the deck's chip and card, the doc's catalog row, the
+  marketing callout) until the owner decides what it covers. "Sold until December 31, 2026" stays, and so does the
+  open decision in §12. The Founder Pack's own "then never again" is unchanged.
+- **"Never power"** now reads "never pay-to-win" with the exception named, in `launch-kit/index.html`, `plan.html`,
+  `marketing.html` and `store.html`, `PROJECT_OC_MARKETING.md` (the four places) and `PROJECT_OC_LAUNCH_90.md`. Each
+  notes that the exception still waits for the owner's edit of `CLAUDE.md`. `CLAUDE.md` itself is not edited.
+- **"Every freeway, mode and car stays free"** now says "every car you can earn": the store intro (which no longer
+  calls everything "Optional looks" while the car's card shows), the under-13 lines, the main-menu tile, the
+  ambassador answer in `PROJECT_OC_MONETIZATION.md` and the deck's under-13 line.
+- **The Founder Ice swatch** sits right beside the paint's swatch, not on its own at the end of the line, where at
+  1440 it read as a fourth item.
+
+**Verified** (2026-10-19, load average 3 to 8 from other passes; logs in `tests/out/`, `-r2` names):
+
+- `node server/supabase/tests/serial-webhook.mjs`: **24/24** (`store-hypercar-webhook-r2.log`). The 17 earlier
+  checks plus 7 new: a second purchase refused and refunded with one key, never numbered; its refund leaves the
+  first number on the plaque; two live numbers (planted as the old webhook issued them) go back to the lowest, then
+  to none; a refund before its completion leaves nothing granted or numbered; a charge with no session is ignored
+  and a failed lookup is a 500; a refund held open while `assign_serial` runs (it waits 2.0 s, then refuses); an
+  `assign_serial` held open while the refund arrives (the refund waits 2.0 s, then retires the number). The earlier
+  refund check now expects the row's number cleared. The same file against the **pre-repair** migration and webhook
+  (a scratch copy): **16/24**, failing exactly on P1, P2 and P3 (`store-hypercar-webhook-oldcode-r2.log`).
+- `server/supabase/tests/run-local.sh`, as the postgres user: both migrations twice; `rls-probe.sql` now probes 0002
+  too. A player reads only their own number; as that player, 8 writes and calls on `serials`, `serial_counters`,
+  `entitlements.serial`, `assign_serial` and `retire_serial` are refused, and as an anonymous visitor 6 are; a
+  refund retires the number and clears it from the row (`store-rls-r2.log`).
+- The checker on planted catalogs in a scratch copy of the files it reads (`store-hypercar-check-r2.log`): with
+  `oc-hyper` simulated in a scratch `cars.ts` and its grants `ready`, dropping `serial`, a new $3 sku with no window
+  granting `car-oc-hyper`, the Coast Paint Pack granting it, a second numbered sku granting it, and the Coast Paint
+  Pack granting the plaque each exit 1; the simulated car alone exits 0. A 498-cent hypercar, a 499-cent Coast Paint
+  Pack and `available: true` without the car also exit 1. `npm run store:check` passes on the real files.
+- `npx tsc --noEmit` and `npm run build` clean (`store-hypercar-tsc-r2.log`, `store-hypercar-build-r2.log`). Both
+  Edge Functions also typecheck strictly with a Deno shim (outside the repo). The bundles hold no `sk_`/`rk_`/
+  `whsec_` key, no service-role name and no "nothing is scored".
+- `npm test -- --only=store`: **16/16** in 796 s (`store-hypercar-suite-r2.log`). It ran on the build before two
+  later edits that change no UI (a note in `cosmetics.json`, a deck stat); the build above is from the final files.
+  Screenshots: `store-hypercar-1440x900-r2.png`, `store-hypercar-390x844-r2.png`, `store-hypercar-card-1440-r2.png`
+  (the Founder Ice swatch beside the paint), `store-hypercar-card-390-r2.png`, `store-lede-390-r2.png`.
+- The deck (Playwright, `deck-store-hypercar-r2.log`): no sideways scroll on the store page at 1440 or 390, or on
+  the index, plan, marketing and go-live pages at 390; no page errors; the card's ice line sweeps in on reveal, is
+  there at once with reduced motion and steady without JavaScript. Screenshots: `deck-store-hypercar-1440-r2.png`,
+  `deck-store-hypercar-390-r2.png`, `deck-store-rules-1440-r2.png`, `deck-store-rules-390-r2.png`,
+  `deck-index-rules-1440-r2.png`.
+- `npm test -- --only=render` once more (`store-hypercar-render-r2.log`, load 5.0 to 6.6 at the start): **12 of 13**
+  passed; "High and Ultra presets rebuild mid-drive" failed with "Target page, context or browser has been closed"
+  (the browser went away under it), and the run then ended on an uncaught `browserContext.close`. Not re-run since;
+  this line was left as a placeholder by that session and is filled in from its log on 2026-10-21 (entry above).
+
+## 2026-10-19: the OC Hypercar Founder Edition in the store, "Coming soon" (branch `claude/store`, not committed)
+
+The owner's decisions of 2026-10-16, as `PROJECT_OC_HYPERCAR.md` §11 on `claude/hypercar` specifies them: the car is
+sold for $4.99, one time, in the founder window to December 31, 2026. It is still being built on that branch, so the
+store shows it as **Coming soon** and nothing can buy it, in test mode or live. Built in two sessions (the first was
+stopped by a usage limit part-way; the second finished it and ran every check again). Not committed or merged.
+
+**What changed.**
+
+- **Catalog.** `hypercar-founder` in `src/store/catalog.json`: 499 cents, one time, `serial: true`, `available:
+  false` with a plain `unavailable_reason`. Both founder items name the window as `"FOUNDER_UNTIL"`, one constant in
+  `src/store/founder.json` (`2026-12-31T23:59:59-08:00`, the last second of the 31st in Pacific time; a bare
+  `2026-12-31` would end at 4 pm Pacific on the 30th). The store (`catalog.ts`), the server's copy (`npm run
+  store:sync` writes the date and `founder_until`) and the checker all read that file.
+- **Checker** (`tools/store-check-catalog.mjs`): $4.99 is accepted for that sku only; the founder window must be the
+  constant; the two founder offers may share no grant and no name; a store car is sold only once it is in
+  `src/game/cars.ts`, takes no slot and is never sold back; a numbered sku needs a migration that seeds its counter.
+- **Entitlement.** `car-oc-hyper`, `plaque-founder-edition` and `paint-oc-founder-silver` (with Founder Ice LEDs) in
+  `cosmetics.json`. `entitlements.ts` `storeCars()`/`syncGarage()` and `profile.ts` `setStoreCars()` put `oc-hyper`
+  in the garage outside the slot count while the account owns it, refuse to sell it for credits, take it out on
+  sign-out or refund and put it back on sign-in.
+- **Serials** (server only). Migration `0002_founder_serials.sql`: a per-sku counter, a `serials` ledger, a `serial`
+  column on `entitlements`, `assign_serial()` (service role only), a trigger that retires a refunded number, and
+  RLS (a player reads their own number, never writes it). `stripe-webhook` asks for the number when the payment
+  succeeds; `create-checkout` and the webhook both check the window (the webhook by the session's creation time).
+- **Store panel** (`Store.tsx`, `styles.css`): the card in silver and Founder Ice, "Founder Edition · sold until Dec
+  31, 2026", $4.99, the plaque and paint, "The $10 Founder Pack does not include this car", "Coming soon" and "No
+  pre-orders".
+- **Docs and deck.** `PROJECT_OC_MONETIZATION.md`: the $4.99 exception and its fees ($0.44, $4.55 kept, $4.47 on an
+  international card), rule 3a (the two-tune rule, with the race-tune numbers from the plan's §5.3), the two founder
+  offers kept apart, the Vela E Wheel Set caveat (also a `caveat` in the catalog), and a note that the forecast
+  doesn't count the car. `launch-kit/store.html` (the card, the price row, the rules, the forecast note), `index.html`,
+  `plan.html` (the $4.99 calculator preset), `marketing.html` and `golive.html` (migration 0002).
+
+**Verified** (2026-10-19, load average 0 to 9 from other passes):
+
+- `npm run store:check`: fails on a planted 498-cent hypercar and on a planted 499-cent Coast Paint Pack, and on a
+  planted `available: true` (the car isn't in `cars.ts`); passes once restored (`tests/out/store-hypercar-check.log`).
+- `npx tsc --noEmit` and `npm run build` clean (`store-hypercar-tsc.log`, `store-hypercar-build.log`).
+- `node server/supabase/tests/serial-webhook.mjs`, the real `stripe-webhook` against a throwaway Postgres 16 with
+  both migrations: **17/17** (`store-hypercar-webhook.log`). A retried delivery (3 concurrent, 1 later) and the
+  session's second success event all keep No. 0001; a refund retires No. 0001 and the next sale is No. 0003; a
+  session created a minute before the deadline and paid an hour after is honoured; one created after it is refused
+  and refunded once; No. 0000 can't be issued; a player can't write, issue or reset a number.
+- `server/supabase/tests/run-local.sh` (run as the postgres user): both migrations twice, every probe refused.
+  **Corrected after review:** `rls-probe.sql` then probed the 0001 tables only, so "every probe refused" covered
+  none of 0002's objects. The player probes of `serials`, `serial_counters` and `assign_serial` were in
+  `serial-webhook.mjs` alone, and nothing probed them as an anonymous visitor or probed `retire_serial`. The repair
+  below adds them to `rls-probe.sql`.
+- `npm test -- --only=store`: **16/16** in 811 s (`store-hypercar-suite.log`), including the hypercar card, the
+  garage grant and the webhook test. Screenshots: `store-hypercar-1440x900.png`, `store-hypercar-390x844.png`,
+  `store-hypercar-card-1440.png`, `store-hypercar-card-390.png`.
+- The deck (Playwright, `tests/out/deck-store-hypercar.log`): no sideways scroll at 1440 or 390; the card's top line
+  sweeps in when the section is revealed, is there at once with reduced motion, and is steady without JavaScript;
+  the plan's $4.99 preset reads "Stripe keeps $0.44 of $4.99". Screenshots: `deck-store-hypercar-1440.png`,
+  `deck-store-hypercar-390.png`, `deck-store-prices-1440.png`, `deck-store-money-1440.png`.
+- `npm test -- --only=render` once, at a load average of 6 to 9: **13/13** in 949 s (`store-hypercar-render.log`).
+  "pause stops the simulation, resume carries on" passed in 94.1 s. This tree gives each 5-frame wait 240 s instead
+  of 60 s (`FRAMES_MS` in `tests/regression.mjs`, set by the first session after 5 frames took up to 58.7 s under
+  SwiftShader at a load of 15 to 19). No assertion changed.
+
+**Open, for the owner.**
+
+- `CLAUDE.md` still says "Never sell power: no faster-than-earnable cars" without rule 3a's two-tune exception. It
+  wasn't edited by an agent; the suggested line is in `PROJECT_OC_MONETIZATION.md` §11.
+- What "never sold again" covers (the Founder Edition's exclusives, or the car itself), owner mode in public builds,
+  and the Vela E Wheel Set once the Vela E is hidden (`PROJECT_OC_MONETIZATION.md` §12).
+
 ## 2026-10-16: the launch kit: the plan, the marketing, the store in test mode and the presentation, committed
 
 The owner's ask (2026-10-16): a 30–90 day launch plan at minimum up-front cost, free marketing to start before

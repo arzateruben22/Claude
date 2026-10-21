@@ -1,4 +1,4 @@
--- Row-level security probe for 0001_oc_ultra_store.sql (run-local.sh). Each refused write below is expected.
+-- Row-level security probe for 0001_oc_ultra_store.sql and 0002_founder_serials.sql (run-local.sh). Each refused write below is expected.
 \set ON_ERROR_STOP 0
 \set A '11111111-1111-1111-1111-111111111111'
 \set B '22222222-2222-2222-2222-222222222222'
@@ -43,3 +43,45 @@ update entitlements set revoked_at = now() where user_id = :'A' and entitlement 
 reset role;
 set role authenticated; set request.jwt.claims = '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';
 select 'A live entitlements after refund: ' || count(*) from entitlements where revoked_at is null;
+-- ------------------------------------------------------------------------------------------- 0002: serial numbers
+-- the webhook (service role) records an OC Hypercar Founder Edition purchase for A and one for B, grants the car and
+-- numbers each through assign_serial (a second call for the same purchase gets the same number)
+set role service_role;
+insert into purchases (user_id, sku, stripe_session_id, stripe_payment_intent, amount_cents, currency) values (:'A', 'hypercar-founder', 'cs_test_A2', 'pi_A2', 499, 'usd'), (:'B', 'hypercar-founder', 'cs_test_B2', 'pi_B2', 499, 'usd');
+insert into entitlements (user_id, entitlement, sku) values (:'A', 'car-oc-hyper', 'hypercar-founder'), (:'B', 'car-oc-hyper', 'hypercar-founder');
+select 'service: assign_serial for A = ' || assign_serial((select id from purchases where stripe_session_id = 'cs_test_A2'));
+select 'service: assign_serial for B = ' || assign_serial((select id from purchases where stripe_session_id = 'cs_test_B2'));
+select 'service: assign_serial for A again = ' || assign_serial((select id from purchases where stripe_session_id = 'cs_test_A2'));
+reset role;
+-- player A: reads their own number (in serials and on the entitlement row) and nothing else; every write and call is refused
+set role authenticated; set request.jwt.claims = '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';
+select 'A sees serials: ' || coalesce(string_agg(serial::text, ','), 'none') from serials;
+select 'A sees the number on the car row: ' || coalesce(serial::text, 'none') from entitlements where entitlement = 'car-oc-hyper';
+select 'A reads serial_counters: ' || count(*) from serial_counters;
+insert into serials (sku, serial, user_id) values ('hypercar-founder', 99, :'A');
+update serials set retired_at = now() where true;
+delete from serials where true;
+update serial_counters set next = 1 where true;
+update entitlements set serial = 1 where entitlement = 'car-oc-hyper';
+select assign_serial((select id from purchases where stripe_session_id = 'cs_test_A2'));
+select retire_serial();
+select 'A serials after write attempts: ' || coalesce(string_agg(serial || case when retired_at is null then ' live' else ' retired' end, ','), 'none') from serials;
+reset role;
+-- an anonymous visitor: nothing at all
+set role anon; reset request.jwt.claims;
+select 'anon reads serials: ' || count(*) from serials;
+select 'anon reads serial_counters: ' || count(*) from serial_counters;
+insert into serials (sku, serial, user_id) values ('hypercar-founder', 98, :'A');
+update serial_counters set next = 1 where true;
+select assign_serial('00000000-0000-0000-0000-000000000000');
+select retire_serial();
+reset role;
+-- a refund (service role) retires A's number and clears it from A's car row; B's stays
+set role service_role;
+update purchases set status = 'refunded', refunded_at = now() where stripe_session_id = 'cs_test_A2';
+reset role;
+set role authenticated; set request.jwt.claims = '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';
+select 'A serials after refund: ' || string_agg(serial || case when retired_at is null then ' live' else ' retired' end, ',') from serials;
+select 'A car row after refund: ' || coalesce(serial::text, 'no number') from entitlements where entitlement = 'car-oc-hyper';
+reset role;
+select 'ledger (owner view): ' || string_agg(serial || case when retired_at is null then ' live' else ' retired' end, ', ' order by serial) || '; counter next ' || (select next from serial_counters where sku = 'hypercar-founder') from serials;

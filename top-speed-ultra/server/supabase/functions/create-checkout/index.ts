@@ -6,7 +6,9 @@
 //
 // The page sends a sku, never a price: the price, the grants, the mode and the window all come from this server's
 // copy of the catalog (_shared/catalog.json). Checks, in order: a valid sign-in; the item exists, is available, is
-// inside its window and, with live Stripe keys, is built and in the game; the player's profile says 13 or over;
+// inside its window (FOUNDER_UNTIL for the two founder offers, checked here with the server's clock, never the
+// device's; the webhook checks it again against the session's creation time) and, with live Stripe keys, is built
+// and in the game; the player's profile says 13 or over;
 // the 18-or-guardian box was ticked (and, for a subscription, the renewal terms); the player doesn't already own
 // everything it grants. Then a Checkout Session: client_reference_id = the user's id, metadata.sku, success and
 // cancel URLs from SITE_URL. Deploy with --no-verify-jwt (the function checks the token itself; see README).
@@ -26,7 +28,7 @@ Deno.serve(async (req: Request) => {
   let body: { sku?: unknown; roll_name?: unknown; adult_or_guardian?: unknown; renewal_agreed?: unknown };
   try { body = await req.json(); } catch { return json(req, 400, { error: 'Bad request.' }); }
   const item = skuById(body.sku);
-  const sale = sellable(item);
+  const sale = sellable(item, Date.now());                    // the founder window, on the server's clock
   if (!sale.ok || !item) return json(req, 409, { error: sale.ok ? 'That item is not in the store.' : sale.why });
   if (body.adult_or_guardian !== true) return json(req, 400, { error: 'Tick the box to say you are 18 or over, or that a parent or guardian has said yes.' });
   if (item.mode === 'subscription' && body.renewal_agreed !== true) return json(req, 400, { error: 'Tick the box to agree to the renewal terms.' });
