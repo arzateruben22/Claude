@@ -1,9 +1,14 @@
 // Menus, settings, pause and results around the game, plus the HUD, the corner map and the touch controls.
 // Phone first: big targets, one column, no keyboard needed anywhere.
 //
-// The main menu is one persistent glass sheet (owner, 2026-10-16: "more seamless, a finer luxury feel"): the sheet,
-// the wordmark and the Drive dock stay put, and only what the sheet shows changes, the old content fading out where it
+// The main menu is one persistent sheet (owner, 2026-10-16: "more seamless, a finer luxury feel"): the sheet, the
+// wordmark and the Drive dock stay put, and only what the sheet shows changes, the old content fading out where it
 // stood while the new fades in. Opened from the pause screen, the same panels show as a card over the paused drive.
+// Its look and layout follow the owner's reference of 2026-10-21 in the OC sunset colourway (PROJECT_OC_UI_TARGET.md,
+// "2026-10-21 reference"): a glass rail on the left (the wordmark, then Drive, World Map, Garage, Customization,
+// Career, Settings with line icons; the Drive dock is this rail), your car in a night garage in the middle (the
+// game's own showroom scene, src/game/Showroom.ts), the profile chip top right, and four picture tiles along the foot.
+// On a phone held upright the rail's items become the dock at the bottom and the tiles a row you swipe.
 
 import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
 import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } from 'react';
@@ -21,14 +26,21 @@ import { Touch } from './Touch';
 import { Store } from './Store';
 import { storeReturnPending } from '../store/payments';
 import { OcLockup, OcWatermark } from './Mark';
+import { RailIcon, ProfileChip, Tile, WorldMap } from './Home';
+import type { IconName } from './Home';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store' | 'events';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 const MODE_LIST = Object.keys(MODES) as Mode[];
+// the rail under Drive: its label, line icon and the screen it opens (Career is your profile; its bests are a tap in)
+const RAIL: [string, IconName, Exclude<Panel, null>][] = [
+  ['World Map', 'map', 'start'], ['Garage', 'garage', 'garage'], ['Customization', 'custom', 'driver'], ['Career', 'career', 'profile'], ['Settings', 'settings', 'settings'],
+];
+const RAIL_OF: Partial<Record<Exclude<Panel, null>, Exclude<Panel, null>>> = { board: 'profile' };
 const LEAVE_MS = 380;      // the loading screen's fade into the menu (styles.css: .loading-screen.leaving)
 const GHOST_MS = 260;      // how long the outgoing content of the sheet lingers while it fades (styles.css: sheet-out)
 const IDLE_MS = 4000;      // the Minimal HUD tucks the top bar and the corner window away after this long without input
@@ -131,6 +143,8 @@ export function App() {
 
   const inMenu = screen === 'menu' && !busy && !error;
   useEffect(() => { if (!inMenu) setEntering(false); }, [inMenu]);
+  // the showroom (your car in the garage) is what the game draws while the main menu is up
+  useEffect(() => { game.current?.setShowroom(inMenu); }, [inMenu]);
   // a switch starts at the top of the sheet; if the control that made it went with the old content, focus moves to
   // the new content so the keyboard carries on from there
   const view = (panel ?? 'home') + (panel === 'start' ? ':' + (exitRoad ?? '') : '');
@@ -142,6 +156,29 @@ export function App() {
     if (!a || a === document.body) sheetBody.current?.focus({ preventScroll: true });
   }, [view]);
   useEffect(() => () => clearTimeout(ghostTimer.current), []);
+  // Where the car sits: in the home screen's hero space (its middle, as wide as fits its height), or, behind a screen
+  // that leaves room beside it, in that room; otherwise it stays put behind the glass. Measured after every switch, on
+  // resize and as the home screen scrolls on a phone.
+  const frameCar = useCallback(() => {
+    const g = game.current;
+    if (!g) return;
+    const W = innerWidth, H = innerHeight;
+    const hero = document.querySelector<HTMLElement>('.sheet-scroll .hero');
+    if (hero) {
+      const r = hero.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) g.frameShowroom((r.left + r.width / 2) / W, (r.top + r.height * 0.56) / H, Math.min(r.width * 0.86, r.height * 2.7) / W);
+      return;
+    }
+    const body = document.querySelector<HTMLElement>('.sheet-scroll .sheet-body.card');
+    if (body) {
+      const r = body.getBoundingClientRect(), free = W - r.right - 40;
+      if (free >= 300) g.frameShowroom((r.right + 20 + free / 2) / W, 0.52, (free * 0.86) / W);
+    }
+  }, []);
+  const frameQueued = useRef(0);
+  const queueFrame = useCallback(() => { cancelAnimationFrame(frameQueued.current); frameQueued.current = requestAnimationFrame(frameCar); }, [frameCar]);
+  useLayoutEffect(() => { if (inMenu) frameCar(); }, [inMenu, view, frameCar]);
+  useEffect(() => { addEventListener('resize', queueFrame); return () => { removeEventListener('resize', queueFrame); cancelAnimationFrame(frameQueued.current); }; }, [queueFrame]);
 
   const drive = (m: Mode = mode) => {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
@@ -209,7 +246,10 @@ export function App() {
           </div>
           <div className="row"><button className="btn" onClick={() => setExitRoad(null)}>Back</button></div>
         </> : <>
-          <h2>Start on</h2>
+          <h2>World Map</h2>
+          {game.current && <WorldMap lines={game.current.mapLines()} hot={myExit ? exitRoadOf : start.label} />}
+          <p className="fine">The ten freeways in the map data, both directions, north up. Where you start is in orange.</p>
+          <h3>Start on</h3>
           <div className="grid">
             {STARTS.map((s) => (
               <button key={s.label} className={'gcell' + (!settings.exit && s.label === settings.start ? ' on' : '')} onClick={() => { update({ start: s.label, exit: '' }); setPanel(null); }}>
@@ -253,7 +293,7 @@ export function App() {
           </div>
         </>,
       };
-      case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
+      case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} onBests={openBoard} /> } : null;
       case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
       case 'course': return {
         cls: '', body: <>
@@ -272,9 +312,28 @@ export function App() {
           <div className="row"><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
         </>,
       };
+      case 'events': return {
+        cls: '', body: <>
+          <h2>Events</h2>
+          <p className="fine">The two challenges with a score: pick one and you're on the freeway.</p>
+          <div className="drivers">
+            {(['survival', 'time'] as Mode[]).map((m) => (
+              <button key={m} type="button" className="gcell driver" onClick={() => drive(m)}>
+                <b>{MODES[m].label}</b><small>{modeStat(m)}</small><span>{MODES[m].blurb}</span><em>Start it now</em>
+              </button>
+            ))}
+          </div>
+          <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
+            <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span>
+            <i aria-hidden="true"><svg viewBox="0 0 14 14" width="14" height="14"><path d="M4 2.5h7.5V10M11.5 2.5L2.5 11.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></i>
+          </a>
+          <div className="row"><button className="btn" onClick={openBoard}>Personal bests</button><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
+        </>,
+      };
       case 'driver': return {
         cls: '', body: <>
-          <h2>Driver</h2>
+          <h2>Customization</h2>
+          <h3 className="sect">Driver</h3>
           <div className="drivers">
             {DRIVERS.map((d) => {
               const a = ABILITIES[d.ability];
@@ -286,11 +345,12 @@ export function App() {
               );
             })}
           </div>
+          <h3 className="sect">Look</h3>
           <div className="field"><label>Presentation</label><Seg label="Presentation" value={settings.presentation} options={['m', 'f']} labels={(v) => (v === 'm' ? 'Male' : 'Female')} onChange={(v) => update({ presentation: v })} /></div>
           <div className="field"><label>Skin tone</label>
             <div className="swatches" role="group" aria-label="Skin tone">{SKINS.map((c, i) => <button key={i} aria-pressed={settings.skin === i} style={{ background: '#' + c.toString(16).padStart(6, '0') }} onClick={() => update({ skin: i })} aria-label={`Tone ${i + 1}`} />)}</div>
           </div>
-          <p className="fine">Looks are cosmetic. Use the ability with the round button (or F). Abilities change the traffic or the grip, never the scoring rules.</p>
+          <p className="fine">Looks are cosmetic. Use the ability with the round button (or F). Abilities change the traffic or the grip, never the scoring rules. Paints and wheels for your car are in the Garage and the Store.</p>
           <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button><button className="btn" onClick={openFeedback}>Feedback</button></div>
         </>,
       };
@@ -311,6 +371,7 @@ export function App() {
                 <h3 className="sect">World</h3>
                 <div className="field"><label>Time of day</label><Seg label="Time of day" value={settings.time} options={['live', 'sunrise', 'day', 'sunset', 'night'] as TimeOfDay[]} labels={(t) => ({ live: 'Live', sunrise: 'Sunrise', day: 'Day', sunset: 'Sunset', night: 'Night' })[t]} onChange={(t) => update({ time: t })} /></div>
                 <div className="field"><label>Weather</label><Seg label="Weather" value={settings.weather} options={['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as Weather[]} labels={(w) => ({ clear: 'Clear', cloudy: 'Cloudy', rain: 'Rain', fog: 'Fog', mist: 'Mist', changing: 'Changing' })[w]} onChange={(w) => update({ weather: w })} /></div>
+                <div className="field"><label>Traffic</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
                 <p className="fine">Live puts the sun where it is over Orange County right now, from this device's clock. Weather is simulated here (no live weather feed). Rain cuts grip by about a fifth.</p>
               </section>
               <section className="sgroup">
@@ -372,11 +433,14 @@ export function App() {
   };
   const pv = panelView();
 
-  // the main menu's own content: the lede, the mode, the loadout, the traffic, then the extras
+  // The home screen (the reference's main screen): the hero space your car stands in, the mode's line, the setup bar
+  // (the mode, then the loadout: driver, car, where you start or which race), the four picture tiles, and on a phone the
+  // Store card (on a wider screen the Store is in the rail). The map data's credit closes it.
+  const tiles = game.current?.tiles ?? {};
   const home = <>
-    <p className="lede">Orange County's real freeways (the 5, 405, 55, 57, 22, 91, 73, 133, 241 and 261) and every interchange between them, from the driver's seat of a 711 hp coupe.</p>
-    <section className="menu-sec">
-      <p className="sect" aria-hidden="true">Mode</p>
+    <div className="hero" aria-hidden="true" />
+    <p className="mode-brief" id="mode-brief">{MODES[mode].blurb}</p>
+    <section className="setup" aria-label="Your drive">
       <div className="modes" role="radiogroup" aria-label="Mode" onKeyDown={modeKeys}>
         {MODE_LIST.map((m) => (
           <button key={m} type="button" className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} tabIndex={mode === m ? 0 : -1}
@@ -385,10 +449,6 @@ export function App() {
           </button>
         ))}
       </div>
-      <p className="mode-brief" id="mode-brief">{MODES[mode].blurb}</p>
-    </section>
-    <section className="menu-sec">
-      <p className="sect" aria-hidden="true">Loadout</p>
       <div className="picks">
         <button className="pick" onClick={() => setPanel('driver')}>
           <small>Driver</small><b>{driver.name}</b><span>{ABILITIES[driver.ability].name}</span><Chevron />
@@ -408,18 +468,25 @@ export function App() {
         )}
       </div>
     </section>
-    <section className="menu-sec">
-      <div className="field"><label>Traffic</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
-    </section>
-    <div className="menu-aside">
-      <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, mode and car stays free.</span><i aria-hidden="true">›</i></button>
-      <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
-        <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span>
-        <i aria-hidden="true"><svg viewBox="0 0 14 14" width="14" height="14"><path d="M4 2.5h7.5V10M11.5 2.5L2.5 11.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg></i>
-      </a>
-      <p className="fine">Freeway geometry: OpenStreetMap contributors via Overture Maps (ODbL). Elevation: USGS via AWS Terrain Tiles. The car, its badge and everything you see are our own, made in code.</p>
-    </div>
+    <ul className="tiles" aria-label="Ways to play">
+      <Tile img={tiles.free} title="Free Drive" sub="Explore Orange County" onClick={() => drive('free')} />
+      <Tile img={tiles.race} title="Races" sub="Sprint / Checkpoint / Endurance" onClick={() => { setMode('race'); setPanel('course'); }} />
+      <Tile img={tiles.events} title="Events" sub="Speed Survival / Time Trial" onClick={() => setPanel('events')} />
+      <Tile img={tiles.garage} title="Garage" sub="Your cars / Showroom" onClick={() => setPanel('garage')} />
+    </ul>
+    <button type="button" className="soon store-open home-store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>Paints and looks for your car and driver. Every freeway, mode and car stays free.</span><i aria-hidden="true">›</i></button>
+    <p className="fine credit">Freeway geometry: OpenStreetMap contributors via Overture Maps (ODbL). Elevation: USGS via AWS Terrain Tiles. The car, its badge and everything you see are our own, made in code.</p>
   </>;
+  // which rail item is where you are: Drive on the home screen and the screens its tiles open, else the item that
+  // opens this screen (Career for the bests too)
+  const railAt = (p: Exclude<Panel, null>) => panel === p || (panel !== null && RAIL_OF[panel as Exclude<Panel, null>] === p);
+  const driveHere = !pv || panel === 'course' || panel === 'events';
+  // a rail item opens its screen, and closes it again when it is the one open (the World Map starts at the freeways)
+  const toggle = (p: Exclude<Panel, null>) => {
+    if (railAt(p)) { setPanel(null); return; }
+    if (p === 'start') { setExitRoadState(null); roadNow.current = null; }
+    setPanel(p);
+  };
 
   return (
     <div className={'app' + (idle ? ' hud-idle' : '')} style={{ '--cw': settings.corner === 'off' ? '0px' : `${cornerPx + 6}px` } as CSSProperties}>
@@ -456,10 +523,27 @@ export function App() {
       {inMenu && (
         <div className="overlay menu">
           <div className={'sheet ' + (pv ? 'sub' : 'home')}>
+            {/* the rail: the wordmark, then the Drive dock (Drive and the five screens, line icons; on a phone held
+                upright, the bar along the bottom), the Store, and where this is */}
+            <nav className="rail" aria-label="Main menu">
+              <Brand hero />
+              <div className="dock rail-nav">
+                {/* Drive: on the home screen it drives; from another screen it brings you back to the home screen */}
+                <button type="button" className={'btn go rail-item' + (driveHere ? ' on' : '')} aria-current={driveHere ? 'page' : undefined} onClick={() => (pv ? setPanel(null) : drive())}>
+                  <RailIcon name="drive" /><span>Drive</span><Chevron />
+                </button>
+                {RAIL.map(([label, icon, p]) => (
+                  <button key={label} type="button" className={'btn rail-item' + (railAt(p) ? ' on' : '')} aria-current={railAt(p) ? 'page' : undefined} onClick={() => toggle(p)}>
+                    <RailIcon name={icon} /><span>{label}</span>
+                  </button>
+                ))}
+              </div>
+              <button type="button" className="rail-item rail-store store-open" onClick={() => setPanel('store')}><RailIcon name="store" /><span>Store</span></button>
+              <p className="rail-foot">Orange County<br />California</p>
+            </nav>
             <div className="sheet-main" ref={sheetMain}>
-              <div className="sheet-scroll" ref={sheetScroll}>
-                <Brand hero />
-                <div className={'sheet-body' + (entering ? ' enter' : '')} key={view} ref={sheetBody} tabIndex={-1}
+              <div className="sheet-scroll" ref={sheetScroll} onScroll={queueFrame}>
+                <div className={'sheet-body' + (pv ? ' card' : ' homebody') + (entering ? ' enter' : '')} key={view} ref={sheetBody} tabIndex={-1}
                   onAnimationEnd={(e) => { if (e.target === e.currentTarget) setEntering(false); }}>
                   {pv ? <>
                     <button type="button" className="back" onClick={() => setPanel(null)}><Chevron left />Menu</button>
@@ -468,12 +552,7 @@ export function App() {
                 </div>
               </div>
               <div className="sheet-ghost" ref={ghost} aria-hidden="true" />
-            </div>
-            <div className="dock">
-              <button className="btn primary go" onClick={() => drive()}>Drive</button>
-              <button className="btn" aria-current={panel === 'settings' ? 'page' : undefined} onClick={() => (panel === 'settings' ? setPanel(null) : setPanel('settings'))}>Settings</button>
-              <button className="btn" aria-current={panel === 'board' ? 'page' : undefined} onClick={() => (panel === 'board' ? setPanel(null) : openBoard())}>Bests</button>
-              <button className="btn" aria-current={panel === 'profile' ? 'page' : undefined} onClick={() => (panel === 'profile' ? setPanel(null) : setPanel('profile'))}>Profile</button>
+              {game.current && <ProfileChip p={game.current.profile.p} current={railAt('profile')} onOpen={() => toggle('profile')} />}
             </div>
           </div>
         </div>
@@ -554,7 +633,7 @@ function crossFade(main: HTMLElement | null, body: HTMLElement | null, layer: HT
   if (!main || !body || !layer || reducedMotion()) return false;
   const m = main.getBoundingClientRect(), b = body.getBoundingClientRect();
   const old = body.cloneNode(true) as HTMLElement;
-  old.className = 'sheet-body';
+  old.classList.remove('enter');            // it keeps its own look (a screen's card, or the home screen)
   old.removeAttribute('tabindex');
   for (const el of old.querySelectorAll('[id]')) el.removeAttribute('id');
   Object.assign(old.style, { position: 'absolute', left: `${b.left - m.left}px`, top: `${b.top - m.top}px`, width: `${b.width}px` });
@@ -679,7 +758,7 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
 }
 
 // your profile: who you are, how far you've come, what you've driven
-function ProfilePanel({ game, onClose }: { game: Game; onClose: () => void }) {
+function ProfilePanel({ game, onClose, onBests }: { game: Game; onClose: () => void; onBests: () => void }) {
   const book = game.profile;
   const [, bump] = useState(0);
   const p = book.p, level = levelOf(p.xp), lo = xpFor(level), hi = xpFor(level + 1);
@@ -719,7 +798,7 @@ function ProfilePanel({ game, onClose }: { game: Game; onClose: () => void }) {
     <p className="eyebrow">Achievements · {p.achievements.length} of {ACHIEVEMENTS.length}</p>
     <ul className="ach">{ACHIEVEMENTS.map((a) => <li key={a.id} className={p.achievements.includes(a.id) ? 'got' : ''}><b>{a.name}</b><span>{a.how}</span></li>)}</ul>
     <p className="fine">Saved on this device only (profile v{PROFILE_VERSION}).</p>
-    <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
+    <div className="row"><button className="btn primary" onClick={onClose}>Done</button><button className="btn" onClick={onBests}>Personal bests</button></div>
   </>;
 }
 

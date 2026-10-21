@@ -207,6 +207,10 @@ export class Environment {
     this.envDirty = true;
   }
 
+  // the conditions now, and the sky's reflections rebuilt at once rather than on the next update (the main menu's tile
+  // pictures are taken at night in one go at load: Game.captureTiles)
+  settle() { this.apply(); this.rebuildEnv(); this.envDirty = false; }
+
   // the weather that's in force now ("Changing" moves through a cycle on the clock, about 4 minutes a step)
   private currentWeather(now: Date): Sky5 {
     if (this.weather !== 'changing') return this.weather;
