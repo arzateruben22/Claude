@@ -809,3 +809,11 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 @media (max-width: 520px) { .livechip { padding: 0 8px; font-size: 11px; } }
 .live-line { margin: -4px 0 12px; color: var(--dim); }
 .btn.linkish { background: none; box-shadow: none; color: var(--dim); text-decoration: underline; text-underline-offset: 3px; padding: 0 8px; }
+/* the top bar stays one row on a phone: labels never wrap, and the live chip is a dot and the count */
+.tbar .tbtn { white-space: nowrap; }
+.livechip.online::after { content: ""; width: 7px; height: 7px; margin-left: 6px; border-radius: 50%; background: var(--good); display: inline-block; vertical-align: middle; }
+@media (max-width: 520px) {
+  .tbar .tbtn { padding: 0 9px; letter-spacing: 0.06em; font-size: 11px; }
+  .livechip .lc-word { display: none; }
+  .livechip.online::after { margin-left: 5px; }
+}

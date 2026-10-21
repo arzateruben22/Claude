@@ -1109,9 +1109,9 @@ await group('livephone', async (use) => {
       ticker = setInterval(() => peer.send(JSON.stringify({ t: 's', x: me.x, y: me.y, z: me.z, h: me.h, v: 0 })), 100);
       await page.waitForFunction(() => window.__game.stats.liveDrawn === 1, null, { timeout: 60000 });
       await frames(page, 3);
-      const bar = await page.evaluate(() => { const b = document.querySelector('.tbar').getBoundingClientRect(), kids = [...document.querySelectorAll('.tbar > *')].map((e) => e.getBoundingClientRect()); return { left: b.left, right: b.right, w: innerWidth, overlap: kids.some((a, i) => kids.some((c, j) => j > i && a.right > c.left + 1 && a.left < c.right - 1 && a.bottom > c.top && a.top < c.bottom)), n: kids.length }; });
+      const bar = await page.evaluate(() => { const b = document.querySelector('.tbar').getBoundingClientRect(), kids = [...document.querySelectorAll('.tbar > *')].map((e) => e.getBoundingClientRect()), map = document.querySelector('.corner')?.getBoundingClientRect(); return { left: b.left, right: b.right, bottom: b.bottom, mapTop: map ? map.top : 9999, w: innerWidth, tall: kids.some((k) => k.height > 46), overlap: kids.some((a, i) => kids.some((c, j) => j > i && a.right > c.left + 1 && a.left < c.right - 1 && a.bottom > c.top && a.top < c.bottom)), n: kids.length }; });
       await page.screenshot({ path: path.join(OUT, 'livephone-drive.png') });
-      expect(bar.left >= 0 && bar.right <= bar.w + 1 && !bar.overlap, JSON.stringify(bar));
+      expect(bar.left >= 0 && bar.right <= bar.w + 1 && !bar.overlap && !bar.tall && bar.bottom <= bar.mapTop + 1, JSON.stringify(bar));
       await page.locator('.livechip').click();
       await page.waitForSelector('.livewho');
       await page.screenshot({ path: path.join(OUT, 'livephone-who.png') });

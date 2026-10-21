@@ -151,11 +151,13 @@ export interface Who { id: number; name: string; road: string }
 export function LiveChip({ info, me, people, canJoin, onJoin }: { info: LiveInfo; me: string; people: () => Who[]; canJoin: boolean; onJoin: (id: number) => void }) {
   const [open, setOpen] = useState(false);
   const text = info.status === 'online' ? `Live ${info.online}/${info.cap}` : info.status === 'queued' ? `In line #${info.position}` : info.status === 'connecting' ? 'Live…' : info.status === 'error' ? 'Live off' : '';
+  // on a phone the chip is a green dot and the count (the word "Live" comes back on wider screens)
+  const short = info.status === 'online' ? <><span className="lc-word">Live </span>{info.online}/{info.cap}</> : text;
   if (!text) return null;
   if (info.status !== 'online') return <div className={'tbtn livechip ' + info.status} role="status" aria-live="polite" title={info.error || undefined}>{text}</div>;
   const list = open ? people().filter((w) => w.name && w.name !== me).sort((a, b) => a.name.localeCompare(b.name)) : [];
   return <div className="livewrap">
-    <button type="button" className={'tbtn livechip ' + info.status} aria-expanded={open} aria-label={`${text}. Who's driving`} onClick={() => setOpen((o) => !o)}>{text}</button>
+    <button type="button" className={'tbtn livechip ' + info.status} aria-expanded={open} aria-label={`${text}. Who's driving`} onClick={() => setOpen((o) => !o)}>{short}</button>
     {open && <div className="livewho" role="dialog" aria-label="Who's driving">
       <p className="eyebrow">Driving now · {info.online} of {info.cap}</p>
       <ul>
