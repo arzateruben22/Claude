@@ -35,6 +35,15 @@ Some treatments take a non-refundable deposit when you book (the menu shows each
 It holds your spot, goes toward your total, and with 48 hours' notice moves to a new date in the same month.
 Pay the rest at your visit: cash preferred, card with a fee, or Klarna, Affirm or Afterpay.
 
+## Shipping, returns & the actives
+- Shipping is $8, free on orders over $75, or pick up free at your visit. Orders ship from Woodland Hills within two business days by USPS Ground Advantage, with tracking by email.
+
+- Returns: unopened products within 14 days for a refund. Opened skincare can't be returned. Anything damaged in transit is replaced: email a photo within a few days of delivery.
+
+- Some products need a quick consult first (the Acne Med, the 11% and 15% mandelic serums, the retinoids, Hydroxi). Tap Needs a quick consult on the product, tell Evelyn about your skin, and she unlocks it for your email, usually within a day, at no charge.
+
+- Not local? The online Skin Consult (15 minutes, $35) builds your routine and unlocks what you need; the $35 comes back as a code on your first order.
+
 ## Cancelling & rescheduling
 - Change or cancel at least 48 hours ahead, from the link in your confirmation.
 

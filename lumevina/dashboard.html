@@ -2220,7 +2220,7 @@
       var monthKey = now.getFullYear() + "-" + (mm < 10 ? "0" + mm : mm);
 
       var shelf = function () {
-        return INV.all().filter(function (p) { return !p.draft; }).slice().sort(function (a, b) {
+        return INV.all().filter(function (p) { return !p.draft && p.kind !== "consult"; }).slice().sort(function (a, b) {
           return (a.cat || "").localeCompare(b.cat || "") || a.name.localeCompare(b.name);
         });
       };

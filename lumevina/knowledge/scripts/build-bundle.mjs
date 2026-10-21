@@ -136,7 +136,7 @@ const GENERAL = general.length ? [
 ].join("\n\n") : "";
 
 // ── the shelf ──
-const shelf = CAT.products.filter((p) => !p.draft).map((p) => ({
+const shelf = CAT.products.filter((p) => !p.draft && p.kind !== "consult").map((p) => ({
   id: p.id, name: p.name, brand: p.brand, type: p.cat, size: p.size || "", price: p.price, stock: p.stock == null ? null : p.stock, about: p.about || ""
 }));
 
