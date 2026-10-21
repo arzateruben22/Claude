@@ -84,10 +84,73 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   - Elevated sections (more than 2 m above ground) get a deck underside and columns. Columns are never placed on
     another road.
 - **Road surfaces.** `Roads` picks the lane material per path: `pcc` (concrete slabs, `textures.ts` `pcc()`, tiled one
-  lane wide by `SLAB` = 4.57 m along, so `vRow` uses `SLAB` for those paths) for mains that are not toll roads
+  lane wide by `SLAB` = 4.57 m along, so `vRow` uses `SLAB` for those paths; `vRow` is the chunk's start in tiles,
+  wrapped by 1024 whole tiles, plus the row's distance from it, so slabs, the asphalt's two-tile repeat and its
+  eight-tile overlays carry on across chunks and the wrap; it used to wrap by 1000 lane widths, which cut the concrete's
+  slabs off short every 3.68 km) for mains that are not toll roads
   (`TOLL` set), `asphalt` otherwise. `setWet` darkens and glosses both. Lane lines are Botts' dots: four 0.11 m
   quads per dash period at 0.45 + k × 0.92 m, lifted 0.02 m, plus the reflector in the gap. Sound walls use
   `blockWall()` (courses along the strip's u, which runs up the face; blocks along v, the road).
+  Since W3 (2026-10-17): the wheel paths in `pcc()` and `asphalt()` only ease the roughness by 0.04 to 0.05 (it was
+  0.14 and 0.18), in broad bands (sigma 0.09 to 0.11 of the lane) whose strength wanders, plus a medium-scale
+  roughness mottle, so a low sun's glare spreads as a sheen instead of drawing bright rays down every wheel path. The
+  rubber darkening stays (a little cooler than the slab on `pcc`). `pcc()` adds grit along the joints, five spalls at
+  the transverse joint and keeps one faint hairline crack (every slab repeats the tile, so nothing loud). `asphalt()`
+  is now one lane wide by two lane lengths (the canvas's y is squeezed 2:1 and all three maps repeat 0.5 along v; the
+  normal map's y slopes are halved to match), with tar snakes painted from a mask: the joint beside each lane's left
+  line sealed its whole length and three meandering ones (one forked), 3 to 5 cm wide, near black dusted with grit,
+  roughness 0.66 and a little proud; six unsealed hairline cracks. Every mark is drawn wrapped across the tile's
+  edges. The paint material carries `paintWear()` (64 × up to 1024, linear, a tile per `PAINT_V` = 6 m along the line,
+  u across it) over its vertex colours: about 7% chipped and 8% lost off the edges, tyre-polished streaks;
+  `markings()` gives the paint uvs and scales each vertex's colour by about 0.77 to 0.99 from world-position noise
+  (stretches tens of metres long worn thinner). `blockWall()` is now `WALL_U` = 4.8 m up by `WALL_V` = 8 m along (512
+  × 1024 at texture size 1024 and up, 256 × 512 below; clamped across u), and the wall strip's u is the profile
+  point's height / 4.8 on both faces, so the texture's foot grime (about 0.3 to 0.5 m high, flecked above), the
+  precast cap course (4.4 to 4.6 m, 1.6 m units, a shadow line under the lip, dirt on the sloped top) and the rain
+  streaks under it (most from the cap's joints, about 0.9 to 1.9 m long) land where they belong. `wallTone()` in
+  `Roads.ts` adds a colour attribute to each sound-wall strip (the material has `vertexColors`): a tone wander over
+  tens of metres (`fbm2` of the row's world position; 0.78 to 1.03 across the 21 walls the suite's drive builds, the
+  foot included), a warmer or greyer cast on a slower scale, and the foot 6% darker. No meshes or draw calls added.
+  The new broad fields (the wheel paths' wear, the roughness mottle, the wall's tone) are painted on a coarse grid
+  (`coarse()`, 32 to 128 cells a side) and read back bilinearly rather than costing noise calls at every texel.
+  Since FW1 (2026-10-21), the details seen up close at driving speed:
+  - `pcc()` is tined lengthways, as Caltrans finishes its slabs: 192 grooves 19 mm apart across the lane, stopping 8 cm
+    short of its edge (half depth on Low). The old tining ran across the lane.
+  - `world/roadShading.ts` patches three materials' shaders (no meshes, draw calls or textures; each sets its own
+    `customProgramCacheKey`). `slabVariety` on `pcc`: the lanes' u is the lane index and v counts slabs, so
+    `floor(vMapUv)` names a slab; each is tinted ±5.5% in brightness and a little warmer or greyer from a hash of
+    it, 3.5% are replaced slabs (whiter), and on High and Ultra (`props >= 1`) 17% carry a wandering mid-slab crack,
+    one in three of them lengthways. `asphaltVariety` on `asphalt`: each lane's run of eight tiles (about 58 m) is
+    ±6.5% (overlays of different ages, with a seam where they meet), and on High and Ultra one tile in five has a
+    patch, fresh black or old and faded, with a sealed seam. The cracks and seams fade out once they're narrower than a
+    pixel (`rsLine`, from `fwidth`) instead of crawling. `markerShading` on `paint`: `markings()` gives a Botts' dot u
+    and v of 4..5 across its quad and a raised reflective marker 2..3 (lines keep 0..1 and the wear texture), and the
+    left edge line of a freeway gets one-way yellow reflectors (the CA MUTCD's Type G) level with the lane lines'; the
+    shader cuts dots round and shades them as domes, cuts markers square, and adds an emissive return to the markers
+    while the headlights are on: `Roads.setBeams()` gets the beams' level from `Game.weatherTick`, and the return is
+    the marker's colour × level × 3 in the beams' cone (smoothstep 0.82 to 0.97 of the view direction's cosine),
+    falling off as 1 / (1 + (d / 50 m)²).
+  - Shoulders (`shoulder()`): two textures side by side, each `SHOULDER_U` = 4 m wide by `SHOULDER_V` = 6 m along
+    (1024 × 512 at texture size 1024 and up, 512 × 256 below; clamped across u). The strip's u is the distance out
+    from the lanes' edge / 8, in the left half on a freeway and from 0.5 on a ramp. Both are older asphalt than the
+    lanes, browner, with dust gathering outward, two sealed transverse cracks and oil drips; the freeways' half adds
+    the sealed joint against the concrete lane and a ground-in rumble strip (0.18 m dips every 0.3 m, a 0.4 m band
+    from 0.3 m out). A freeway's shoulder takes the plain half wherever its barrier is open (`hasWall` false: a ramp
+    alongside), so the rumble strip stops at every exit and entrance; the strip is built in runs split there and
+    merged into the one shoulder mesh.
+  - The Jersey barrier (`barrier()`, on the `concrete` material, which only the barriers use; `under` keeps
+    `concrete()`): u is the profile point's height / `BARRIER_U` (1 m, clamped), v is `BARRIER_V` = 6.1 m along, with a
+    weakened-plane joint at the tile's start (v counts tiles from a whole tile before the chunk, so the joints and scuffs
+    carry on across chunks). Road grime at the foot (9 to 24 cm, flecked), nine black tyre scuffs a
+    tile on the lip and lower slope, rain streaks under the top edge, dust on top, a blotchy tone. 256 × 1024 (128 × 512
+    on Low).
+  - Gores (`markings()`, `gore()`): for each diverge in `p.out` and merge in `p.inc` of a freeway, the ramp's near
+    edge is walked 2 m at a time from the junction and projected into the freeway's (s, d) (cached per junction). Where
+    it crosses the shoulder a 0.15 m white line is drawn along it, and every 6 m (on a global grid) where the wedge
+    between it and the freeway's edge line is over 0.8 m wide and the freeway's barrier is still open (before the
+    nose), a 0.45 m white chevron runs at 45 degrees from the edge line out to the ramp's line or the pavement's edge,
+    downstream at an exit and upstream at an entrance. They are quads in the chunk's paint mesh (`quad4`, wound as
+    `quad()`), so no draw calls are added.
 - **Terrain (`world/Terrain.ts`).** Tiles are 480 m. LOD 0 has a 12 m grid within about 520 m; LOD 1 has a 40 m
   grid.
   - Heights are the 60 m elevation grid plus noise. Every road sample then pulls nearby vertices toward the road's
