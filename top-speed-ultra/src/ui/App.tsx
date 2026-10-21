@@ -168,6 +168,20 @@ export function App() {
     c.connect(base, token, car.id, car.paint, s.crew);
   };
   const liveInfoRef = useRef<LiveInfo>(LIVE_OFF);
+  // a first visit from the live server's own page or an invite link: a one-time welcome that says what live is
+  const [welcome, setWelcome] = useState(() => {
+    try {
+      if (loadName() || localStorage.getItem('tsu.live.welcomed')) return '';
+      const crew = new URLSearchParams(location.search).get('crew');
+      if (crew && /^[A-Za-z0-9]{4,8}$/.test(crew)) return crew.toUpperCase();
+      return liveBase('') ? '-' : '';             // served by the live server itself (not a file, not the artifact)
+    } catch { return ''; }
+  });
+  const closeWelcome = (signUp: boolean) => {
+    try { localStorage.setItem('tsu.live.welcomed', '1'); } catch { /* a convenience */ }
+    setWelcome('');
+    if (signUp) setPanel('account');
+  };
   // the crew field while it's being typed (the setting takes it once it's a whole code); an invite link's ?crew= wins
   const [crewDraft, setCrewDraft] = useState(settings.crew);
   useEffect(() => {
@@ -216,6 +230,7 @@ export function App() {
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
+      if (welcome) { if (e.code === 'Escape') { closeWelcome(false); e.stopPropagation(); } if (e.code === 'Enter') return; }
       if (e.code === 'Escape' && panel) { setPanel(null); e.stopPropagation(); }
       // Enter drives from the menu, unless it is pressing a focused control (that control gets it)
       const t = e.target as HTMLElement | null;
@@ -313,7 +328,7 @@ export function App() {
       case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
       case 'account': return {
         cls: 'narrow', body: <AccountPanel settings={settings} update={update} name={liveName} token={liveToken} toast={toast}
-          onLogin={(t, n) => { setLiveToken(t); setLiveName(n); }} onLogout={() => { setLiveToken(''); setLiveName(''); update({ live: false }); }} onClose={() => setPanel(null)} />,
+          onLogin={(t, n) => { setLiveToken(t); setLiveName(n); if (!settingsRef.current.live) update({ live: true }); }} onLogout={() => { setLiveToken(''); setLiveName(''); update({ live: false }); }} onClose={() => setPanel(null)} />,
       };
       case 'course': return {
         cls: '', body: <>
@@ -531,6 +546,23 @@ export function App() {
       )}
 
       {error && <div className="overlay center"><div className="panel narrow"><Brand /><p>{error}</p></div></div>}
+      {welcome && screen === 'menu' && !busy && !panel && (
+        <div className="overlay center welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+          <div className="panel narrow">
+            <p className="eyebrow">Live · alpha</p>
+            <h2 id="welcome-title">{welcome !== '-' ? `You're invited to crew ${welcome}` : 'Drive OC with other people'}</h2>
+            <ul className="welcome-list">
+              <li>Orange County's real freeways, from the driver's seat.</li>
+              <li>{welcome !== '-' ? 'Your crew drives together: you see, hear and honk at each other.' : 'Other drivers appear as ghost cars with their names. No collisions, no chat.'}</li>
+              <li>A free account is a name and a password. Up to 25 drive at once to start; past that you wait in line.</li>
+            </ul>
+            <div className="row">
+              <button className="btn primary" onClick={() => closeWelcome(true)}>Sign up and drive live</button>
+              <button className="btn" onClick={() => closeWelcome(false)}>Just drive</button>
+            </div>
+          </div>
+        </div>
+      )}
       {lost && <div className="overlay center"><div className="panel narrow"><h2>Graphics reset</h2><p>The browser dropped the 3D context for a moment. It's coming back on its own; press Resume when it does.</p><button className="btn primary" onClick={resume}>Resume</button></div></div>}
 
       {inMenu && (

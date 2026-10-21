@@ -1162,6 +1162,22 @@ await group('livephone', async (use) => {
       expect(/Crew OC405 · 1 here · 2 of 25 live/i.test(head), head);
       return `"${head}"; the outside peer is hidden`;
     });
+    await check('phone: an invite link greets a first-time player once, and Sign up opens the account panel', async () => {
+      const { ctx: c2, page: p2 } = await open({ phone: true, settings: { liveUrl: base } });
+      try {
+        await p2.goto(pathToFileURL(GAME).href + '?crew=wxyz');
+        await p2.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+        await p2.waitForSelector('.welcome', { timeout: 30000 });
+        const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
+        await p2.screenshot({ path: path.join(OUT, 'livephone-welcome.png') });
+        expect(/invited to crew WXYZ/.test(text) && /No collisions|ghost|honk/.test(text), text.slice(0, 160));
+        await p2.getByRole('button', { name: 'Sign up and drive live', exact: true }).click();
+        await p2.waitForSelector('#live-name', { timeout: 15000 });
+        const crew = await p2.evaluate(() => JSON.parse(localStorage.getItem('tsu.settings')).crew);
+        expect(crew === 'WXYZ' && !(await p2.locator('.welcome').count()), `crew ${crew}; the card still shows`);
+        return `"${text.slice(0, 70)}…"; Sign up opened the panel; crew set to ${crew}`;
+      } finally { await c2.close(); }
+    });
   } finally {
     clearInterval(ticker); try { peer?.close(); } catch { /* gone */ }
     server.kill('SIGTERM');
