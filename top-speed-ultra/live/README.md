@@ -19,12 +19,22 @@ What it does today:
   between two poses, a non-number) and disconnects a client that keeps sending it. Ten times a second it sends each
   driver the poses of the drivers within 3 km. Nothing scored leaves the device: scores, credits, levels and the
   garage stay in the player's browser as before.
-- **In the game.** The other drivers are ghosts drawn with the coupe body in each driver's paint. No collisions
-  (nothing to grief), no sound, no chat, no names over the cars yet.
+- **In the game.** The other drivers are ghosts drawn with the coupe body in each driver's paint, each with its
+  driver's name on a plate (readable to about 350 m). No collisions (nothing to grief) and no chat.
+- **Finding each other.** Every 2 s the server sends a roster (where every driver is, to the metre, nearest 200), so
+  the corner map shows live drivers as orange dots, and tapping the Live chip lists who's on and on which freeway.
+  **Drive with** (Free Drive only) puts you 80 m behind that driver on their carriageway.
+- **The horn.** G or the horn button: you hear yours, and drivers within 500 m hear it panned to where you are, with
+  "Name honked". One honk every 1.5 s at most.
+- **Accounts you control.** Change your password, or delete your account (name, email and password hash) from the
+  Account panel. Names with slurs, profanity or staff-like names are refused; the owner can suspend a driver.
+- **The ladder, measured.** The server records every hour (peak, line, CPU, memory, dropped poses, bytes) and says
+  when the cap can go up a rung (`/api/ladder`, `server/live-status.sh`).
+- **Restarts are painless.** A restart (an update, a reboot) closes sockets with a code the game reconnects on.
 
 What it doesn't do yet (honest list): email verification and password reset (needs an email sender; Resend's
-free tier covers it), name moderation, chat, names over cars, races against real people, an online leaderboard
-(that needs anti-cheat, and the relay has none worth the name), and more than one lobby.
+free tier covers it), chat, races against real people, an online leaderboard (that needs anti-cheat, and the relay
+has none worth the name), and more than one lobby.
 
 ## The realistic mode's feeds (`now.mjs`)
 
@@ -45,7 +55,7 @@ live busyness is not available to anyone (no API; scraping is against its terms)
 cd top-speed-ultra/live
 npm install
 MAX_PLAYERS=25 NOW_WEATHER=mock NOW_TRAFFIC=mock node server.mjs    # http://127.0.0.1:8791/health, /api/now
-npm test                                # 6 tests: accounts, the cap and the line, the relay, what it refuses
+npm test                                # accounts, the cap and the line, the relay, the roster, honks, names, bans, the ladder, the page
 node test/load.mjs 100 20               # 100 pretend drivers for 20 s: CPU, bandwidth, snapshots per second
 ```
 
