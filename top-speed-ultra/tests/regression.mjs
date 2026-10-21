@@ -865,7 +865,9 @@ await group('live', async (use) => {
   const port = 21000 + Math.floor(Math.random() * 10000), base = `http://127.0.0.1:${port}`;
   const db = path.join(OUT, 'live-test.db');
   for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
-  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db, NOW_WEATHER: 'mock', NOW_TRAFFIC: 'mock' }, stdio: ['ignore', 'pipe', 'inherit'] });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db, NOW_WEATHER: 'mock', NOW_TRAFFIC: 'mock', MAIL_MODE: 'log' }, stdio: ['ignore', 'pipe', 'inherit'] });
+  let serverLog = '';
+  server.stdout.on('data', (d) => { serverLog += d; });
   await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
   const signup = async (name) => { const r = await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) }); expect(r.ok, `sign-up ${r.status}`); return (await r.json()).token; };
   const extra = [];
@@ -1024,6 +1026,25 @@ await group('live', async (use) => {
       await A.waitForSelector('#live-name', { timeout: 15000 });          // back to the sign-up form
       expect(await login('an even longer password') === 401, 'the account still logs in');
       return 'password changed, then the account deleted; the panel is back to sign-up';
+    });
+    await check('forgot password: the panel asks for a code, the emailed code sets a new password and signs in', async () => {
+      await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'live_reset', password: 'the first password', email: 'reset@example.com', over13: true }) });
+      await A.getByRole('button', { name: 'Log in', exact: true }).first().click();
+      await A.getByRole('button', { name: 'Forgot password?', exact: true }).click();
+      await A.locator('#live-rname').fill('live_reset');
+      await A.getByRole('button', { name: 'Email me a code', exact: true }).click();
+      await A.waitForSelector('#live-code', { timeout: 15000 });
+      const code = [...serverLog.matchAll(/"ev":"mail".*?is (\d{6})\./g)].at(-1)?.[1];
+      expect(/^\d{6}$/.test(code || ''), 'no code in the server log');
+      await A.locator('#live-code').fill(code);
+      await A.locator('#live-npw').fill('the second password');
+      await A.screenshot({ path: path.join(OUT, 'live-reset.png') });
+      await A.getByRole('button', { name: 'Set new password', exact: true }).click();
+      await A.waitForSelector('.name-static', { timeout: 15000 });
+      const who = await A.locator('.name-static').innerText();
+      const login = (await fetch(base + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'live_reset', password: 'the second password' }) })).status;
+      expect(who === 'live_reset' && login === 200, `${who}, log-in ${login}`);
+      return `code ${code.replace(/\d/g, '•')} from the mail log; signed in as ${who}; the new password logs in`;
     });
   } finally {
     for (const h of extra) await h.ctx.close();

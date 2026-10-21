@@ -53,6 +53,17 @@ if [ -t 0 ]; then
   fi
 fi
 
+# password reset by email (optional): a free Resend key and a sender on a domain you verified with Resend
+if [ -t 0 ] && ! grep -q '^RESEND_KEY=.\+' /etc/oc-live.env; then
+  read -r -p "Resend API key for password-reset emails (Enter to skip; needs your own domain): " RKEY
+  if [ -n "$RKEY" ]; then
+    [[ "$RKEY" =~ ^re_[A-Za-z0-9_]{8,128}$ ]] || { echo "Resend keys start with re_."; exit 1; }
+    read -r -p "Send from (an address on a domain verified with Resend, e.g. OC Ultra <noreply@yourdomain.com>): " RFROM
+    [[ "$RFROM" == *@*.* && "$RFROM" != *$'\n'* ]] || { echo "That doesn't look like an email address."; exit 1; }
+    set_env RESEND_KEY "$RKEY"; set_env MAIL_FROM "$RFROM"; systemctl restart oc-live; sleep 2
+  fi
+fi
+
 echo "Checking $URL end to end..."
 ok=1
 for i in $(seq 1 30); do curl -fs "$URL/health" > /dev/null && break; sleep 2; done
@@ -66,6 +77,7 @@ if node -e '
   ws.onerror = () => { clearTimeout(t); console.log("  the socket failed to connect"); process.exit(1); };
 ' "$URL"; then :; else ok=0; fi
 grep -q '^TOMTOM_KEY=.\+' /etc/oc-live.env && echo "  live traffic: on (TomTom)" || echo "  live traffic: off (simulated typical day); run this again with a TomTom key to turn it on"
+grep -q '^RESEND_KEY=.\+' /etc/oc-live.env && echo "  password reset by email: on" || echo "  password reset by email: off (players can still change their password while signed in)"
 echo
 if [ "$ok" = 1 ]; then
   cat <<MSG

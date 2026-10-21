@@ -808,3 +808,4 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 .tbtn.honk { display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; }
 @media (max-width: 520px) { .livechip { padding: 0 8px; font-size: 11px; } }
 .live-line { margin: -4px 0 12px; color: var(--dim); }
+.btn.linkish { background: none; box-shadow: none; color: var(--dim); text-decoration: underline; text-underline-offset: 3px; padding: 0 8px; }

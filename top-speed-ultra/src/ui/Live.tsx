@@ -30,6 +30,35 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
     toast(mode === 'signup' ? `Welcome, ${n}` : `Signed in as ${n}`, 'good');
   };
   const [pw2, setPw2] = useState(''), [pw3, setPw3] = useState('');
+  // forgot password: 1 asks for the name, 2 takes the emailed code and the new password
+  const [reset, setReset] = useState(0), [code, setCode] = useState(''), [note, setNote] = useState('');
+  const [mail, setMail] = useState(''), [pw4, setPw4] = useState('');
+  const askCode = async (e: FormEvent) => {
+    e.preventDefault(); if (!base) { setError('Enter the server address first.'); return; }
+    setBusy(true); setError(''); setNote('');
+    const r = await liveApi.resetRequest(base, user.trim());
+    setBusy(false);
+    if (r.data.mail === false || !r.ok) { setError(String(r.data.error || 'That didn\'t work.')); return; }
+    setNote(String(r.data.message || 'A code is on its way.')); setReset(2);
+  };
+  const useCode = async (e: FormEvent) => {
+    e.preventDefault(); if (!base) return;
+    setBusy(true); setError('');
+    const r = await liveApi.resetConfirm(base, user.trim(), code.trim(), pw);
+    setBusy(false);
+    if (!r.ok) { setError(String(r.data.error || 'That didn\'t work.')); return; }
+    const t = String(r.data.token), n = String((r.data.player as { name: string }).name);
+    saveLogin(t, n); onLogin(t, n); setPw(''); setCode(''); setReset(0); setNote('');
+    toast(`New password set. Signed in as ${n}`, 'good');
+  };
+  const saveMail = async (e: FormEvent) => {
+    e.preventDefault(); if (!base) return;
+    setBusy(true); setError('');
+    const r = await liveApi.email(base, token, mail.trim(), pw4);
+    setBusy(false);
+    if (!r.ok) { setError(String(r.data.error || 'That didn\'t work.')); return; }
+    setPw4(''); toast(r.data.email ? 'Email saved' : 'Email removed', 'good');
+  };
   const changePw = async (e: FormEvent) => {
     e.preventDefault(); if (!base) return;
     setBusy(true); setError('');
@@ -64,6 +93,15 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
       <div className="who"><span className="avatar" aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span><div className="who-main"><b className="name-static">{name}</b><p>Signed in on this device</p></div></div>
       <div className="row"><button className="btn primary" onClick={onClose}>Done</button><button className="btn" onClick={() => void logout()}>Log out</button></div>
       <details className="acct-more">
+        <summary>Email for password reset</summary>
+        <form className="stack form" onSubmit={(e) => void saveMail(e)}>
+          <p className="fine">If you forget your password, a code goes here (when this server sends email). Leave it empty to remove it.</p>
+          <div className="field"><label htmlFor="live-mail">Email</label><input id="live-mail" className="text" type="email" autoComplete="email" value={mail} onChange={(e) => setMail(e.target.value)} /></div>
+          <div className="field"><label htmlFor="live-mailpw">Password</label><input id="live-mailpw" className="text" type="password" autoComplete="current-password" required value={pw4} onChange={(e) => setPw4(e.target.value)} /></div>
+          <div className="row"><button className="btn" type="submit" disabled={busy}>Save email</button></div>
+        </form>
+      </details>
+      <details className="acct-more">
         <summary>Change password</summary>
         <form className="stack form" onSubmit={(e) => void changePw(e)}>
           <div className="field"><label htmlFor="live-cur">Current password</label><input id="live-cur" className="text" type="password" autoComplete="current-password" required value={pw} onChange={(e) => setPw(e.target.value)} /></div>
@@ -80,7 +118,17 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
         </form>
       </details>
       {error && <p className="fine bad" role="alert">{error}</p>}
-    </> : <form className="stack form" onSubmit={(e) => void submit(e)}>
+    </> : reset ? <form className="stack form" onSubmit={(e) => void (reset === 1 ? askCode(e) : useCode(e))}>
+      <h3 className="sect">Forgot your password</h3>
+      <div className="field"><label htmlFor="live-rname">Driver name</label><input id="live-rname" className="text" autoComplete="username" autoCapitalize="off" maxLength={16} required value={user} onChange={(e) => setUser(e.target.value)} readOnly={reset === 2} /></div>
+      {reset === 2 && <>
+        {note && <p className="fine" role="status">{note}</p>}
+        <div className="field"><label htmlFor="live-code">Code from the email</label><input id="live-code" className="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required value={code} onChange={(e) => setCode(e.target.value)} /></div>
+        <div className="field"><label htmlFor="live-npw">New password</label><input id="live-npw" className="text" type="password" autoComplete="new-password" minLength={8} required value={pw} onChange={(e) => setPw(e.target.value)} /></div>
+      </>}
+      {error && <p className="fine bad" role="alert">{error}</p>}
+      <div className="row"><button className="btn primary" type="submit" disabled={busy}>{busy ? 'One moment' : reset === 1 ? 'Email me a code' : 'Set new password'}</button><button className="btn" type="button" onClick={() => { setReset(0); setError(''); setNote(''); }}>Back</button></div>
+    </form> : <form className="stack form" onSubmit={(e) => void submit(e)}>
       <div className="seg" role="group" aria-label="Sign up or log in" data-n={2} style={{ '--n': 2 } as Record<string, number>}>
         <button type="button" aria-pressed={mode === 'login'} onClick={() => { setMode('login'); setError(''); }}>Log in</button>
         <button type="button" aria-pressed={mode === 'signup'} onClick={() => { setMode('signup'); setError(''); }}>Sign up</button>
@@ -88,11 +136,12 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
       <div className="field"><label htmlFor="live-name">Driver name</label><input id="live-name" className="text" autoComplete="username" autoCapitalize="off" maxLength={16} pattern="[A-Za-z0-9_]{3,16}" title="3 to 16 letters, numbers or underscores" required value={user} onChange={(e) => setUser(e.target.value)} /></div>
       <div className="field"><label htmlFor="live-pw">Password</label><input id="live-pw" className="text" type="password" autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} minLength={8} required value={pw} onChange={(e) => setPw(e.target.value)} /></div>
       {mode === 'signup' && <>
-        <div className="field"><label htmlFor="live-email">Email <span className="muted">optional</span></label><input id="live-email" className="text" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} /><p className="fine">Only for getting back in if you forget the password (password reset isn't built yet). Nothing is sent to it today.</p></div>
+        <div className="field"><label htmlFor="live-email">Email <span className="muted">optional</span></label><input id="live-email" className="text" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} /><p className="fine">Only for a code if you forget your password (when this server sends email). Nothing else is ever sent to it.</p></div>
         <label className="toggle check"><input type="checkbox" checked={over13} onChange={(e) => setOver13(e.target.checked)} required /><span>I'm 13 or older</span></label>
       </>}
       {error && <p className="fine bad" role="alert">{error}</p>}
-      <div className="row"><button className="btn primary" type="submit" disabled={busy}>{busy ? 'One moment' : mode === 'signup' ? 'Create account' : 'Log in'}</button><button className="btn" type="button" onClick={onClose}>Back</button></div>
+      <div className="row"><button className="btn primary" type="submit" disabled={busy}>{busy ? 'One moment' : mode === 'signup' ? 'Create account' : 'Log in'}</button><button className="btn" type="button" onClick={onClose}>Back</button>
+        {mode === 'login' && <button className="btn linkish" type="button" onClick={() => { setReset(1); setError(''); }}>Forgot password?</button>}</div>
     </form>}
   </>;
 }

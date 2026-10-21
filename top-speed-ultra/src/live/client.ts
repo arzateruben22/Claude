@@ -47,6 +47,9 @@ export const liveApi = {
   me: (base: string, token: string) => call(base, '/api/me', undefined, token),
   password: (base: string, token: string, current: string, next: string) => call(base, '/api/password', { current, next }, token),
   remove: (base: string, token: string, password: string) => call(base, '/api/delete', { password }, token),
+  resetRequest: (base: string, name: string) => call(base, '/api/reset/request', { name }),
+  resetConfirm: (base: string, name: string, code: string, next: string) => call(base, '/api/reset/confirm', { name, code, next }),
+  email: (base: string, token: string, email: string, password: string) => call(base, '/api/email', { email, password }, token),
   health: (base: string) => call(base, '/health'),
 };
 
