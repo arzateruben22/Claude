@@ -992,6 +992,94 @@ export const SCENES = {
       pill("p-skip", 2, 3.6);
     }
   },
+  "13-2": {
+    id: "13-2", kicker: "After a wax: bumps, ingrowns, how often", title: `Two days of calm, <span class="grad">then keep it clear.</span>`, dur: 21, poster: 10,
+    shots: [
+      { at: 0, name: "48 hours", cap: "For 24 to 48 hours: no heat or sweat, no sun, no tight clothes, nothing scented. After a Brazilian, loose cotton and no sex for a day." },
+      { at: 7, name: "normal", cap: "Small red bumps for a few hours to a day are normal. Pus-filled bumps that spread, lifted skin or a burn are not: message Evelyn." },
+      { at: 14, name: "rhythm", cap: "From day two or three, exfoliate the area gently two or three times a week and keep it moisturized. Don't dig at an ingrown. Every four to six weeks; shaving in between undoes it." }
+    ],
+    css: `
+.aw { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.aw .d1 { display: flex; align-items: stretch; gap: 3vmin; }
+.aw .big1 { flex: none; width: 26vmin; border-radius: 2.4vmin; background: #f4c9d6; color: #1a1210; padding: 2.4vmin; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; }
+.aw .big1 b { font-size: 7vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .aw .big1 span { font-size: 2.4vmin; font-weight: 600; margin-top: 1vmin; }
+.aw .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2vmin; }
+.aw .lab { font-size: 2.3vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
+.aw .chips { display: flex; flex-wrap: wrap; gap: 1.4vmin; }
+.aw .ch { position: relative; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.7vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.aw .ch.no { border-color: rgba(255,122,107,.6); } .aw .ch.no i { position: absolute; left: 1.6vmin; right: 1.6vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(0); border-radius: 1vmin; }
+.aw .ch.yes { border-color: rgba(50,215,75,.6); color: #7fe39a; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4vmin; }
+.vs { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.6vmin; display: flex; gap: 2.4vmin; align-items: center; opacity: 0; }
+.vs .patch { position: relative; flex: none; width: 16vmin; height: 16vmin; border-radius: 2vmin; background: #d9b5a0; overflow: hidden; }
+.vs .patch i { position: absolute; border-radius: 50%; background: #d7585a; width: 2vmin; height: 2vmin; margin: -1vmin 0 0 -1vmin; }
+.vs .patch i.pus { background: #f3e2a8; box-shadow: 0 0 0 .6vmin #d7585a; }
+.vs .patch .lift { position: absolute; left: 20%; top: 55%; width: 60%; height: 20%; border-radius: 1vmin; background: #c48a7a; opacity: 0; }
+.vs b { display: block; font-size: 3vmin; font-weight: 700; line-height: 1.12; } .vs span { display: block; font-size: 2.3vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
+.vs.ok b { color: #32d74b; } .vs.bad b { color: #ff7a6b; }
+.rh { display: flex; align-items: center; gap: 3vmin; }
+.wk7 { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 1vmin; }
+.wd { border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.4vmin .8vmin 1.2vmin; text-align: center; opacity: 0; display: flex; flex-direction: column; align-items: center; gap: .7vmin; min-height: 14vmin; }
+.wd .d { font-size: 2vmin; color: #8e8e93; font-weight: 600; } .wd .n { font-size: 3.2vmin; font-weight: 700; line-height: 1; }
+.wd .mark { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; opacity: 0; }
+.dial { flex: none; width: 24vmin; height: 24vmin; border-radius: 50%; position: relative; background: conic-gradient(#f4c9d6 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); opacity: 0; }
+.dial::after { content: ""; position: absolute; inset: 3vmin; border-radius: 50%; background: #0d0d0f; }
+.dial b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 3.2vmin; font-weight: 700; line-height: 1.05; z-index: 1; } .dial b small { display: block; font-size: 2vmin; color: #a1a1a6; font-weight: 600; margin-top: .6vmin; }
+.lg13 { display: flex; flex-wrap: wrap; gap: 1vmin 1.6vmin; }
+.lg13 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.lg13 i { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; } .lg13 span.warn { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
+@media (orientation: portrait) { .aw { gap: 2.4vmin; } .aw .d1 { flex-direction: column; gap: 2.4vmin; } .aw .big1 { width: 100%; flex-direction: row; gap: 2.4vmin; padding: 2vmin; } .aw .big1 b { font-size: 6vmin; } .aw .big1 span { margin-top: 0; text-align: left; } .aw .ch { font-size: 2.5vmin; } .two { grid-template-columns: 1fr; } .vs .patch { width: 13vmin; height: 13vmin; } .rh { flex-direction: column; } .wk7 { width: 100%; } .wd { min-height: 11vmin; padding: 1vmin .4vmin .8vmin; } .wd .n { font-size: 2.8vmin; } .lg13 span { font-size: 2.1vmin; padding: .7vmin 1.3vmin; } }`,
+    html: `
+<div class="aw">
+  <div class="d1" id="w-d1">
+    <div class="big1" id="w-big"><b>48h</b><span>the first two days: heat and friction off</span></div>
+    <div class="rows">
+      <div><p class="lab" id="w-labno">Keep off it</p><div class="chips"><span class="ch no" id="w1">heat and sweat<i></i></span><span class="ch no" id="w2">sun<i></i></span><span class="ch no" id="w3">tight clothes<i></i></span><span class="ch no" id="w4">anything scented<i></i></span></div></div>
+      <div><p class="lab" id="w-labbr">After a Brazilian</p><div class="chips"><span class="ch yes" id="w5">loose cotton</span><span class="ch yes" id="w6">no sex for a day</span></div></div>
+    </div>
+  </div>
+  <div class="two" id="w-two">
+    <div class="vs ok" id="v-ok"><div class="patch" id="pt-ok"><i style="left:30%;top:35%"></i><i style="left:62%;top:28%"></i><i style="left:48%;top:66%"></i><i style="left:76%;top:70%"></i></div><div><b>Normal</b><span>Small red bumps for a few hours to a day. They settle on their own.</span></div></div>
+    <div class="vs bad" id="v-bad"><div class="patch" id="pt-bad"><i style="left:30%;top:35%"></i><i style="left:62%;top:28%"></i><i style="left:48%;top:66%"></i><i style="left:76%;top:70%"></i><div class="lift"></div></div><div><b>Message Evelyn</b><span>Pus-filled bumps that spread, lifted skin or a burn. Send a photo in daylight.</span></div></div>
+  </div>
+  <div class="rh" id="w-rh">
+    <div class="wk7" id="wk7">${[1, 2, 3, 4, 5, 6, 7].map((d) => `<div class="wd" data-d="${d}"><span class="d">day</span><span class="n">${d}</span><i class="mark m-ex" style="background:#f4c9d6"></i><i class="mark m-mo" style="background:#8fd3ff"></i></div>`).join("")}</div>
+    <div class="dial" id="dial"><b><span id="dial-n">4 to 6</span><small>weeks between waxes</small></b></div>
+  </div>
+  <div class="lg13" id="lg13"><span id="l-ex"><i style="background:#f4c9d6"></i>exfoliate gently, 2 or 3 times a week</span><span id="l-mo"><i style="background:#8fd3ff"></i>moisturized every day</span><span class="warn" id="l-dig">don't dig at an ingrown</span><span id="l-brow">brows, lip and underarms: 3 to 4</span><span class="warn" id="l-shave">shaving in between undoes it</span></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      $("#w-d1").style.display = i === 0 ? "" : "none";
+      if (i === 0) {
+        enter($("#w-big"), lt, 0.2, { y: 14, s: 0.9 }); enter($("#w-labno"), lt, 0.6, { y: 6 });
+        ["w1", "w2", "w3", "w4"].forEach((id, k) => { const el = $("#" + id); enter(el, lt, 0.9 + k * 0.45, { y: 10 }); el.querySelector("i").style.transform = "scaleX(" + E.out(seg(lt, 1.4 + k * 0.45, 1.8 + k * 0.45)) + ")"; });
+        enter($("#w-labbr"), lt, 3.4, { y: 6 }); ["w5", "w6"].forEach((id, k) => enter($("#" + id), lt, 3.7 + k * 0.5, { y: 10 }));
+        set($("#w-big"), { o: 1, s: 1 + 0.04 * Math.sin(Math.PI * seg(lt, 5.4, 6.3)) });
+      }
+      // shot 1: two patches; the normal bumps fade over the day, the other ones turn to pus and spread, the skin lifts
+      $("#w-two").style.display = i === 1 ? "" : "none";
+      if (i === 1) {
+        enter($("#v-ok"), lt, 0.3, { y: 12 }); enter($("#v-bad"), lt, 1.2, { y: 12 });
+        const fade = E.out(seg(lt, 2.0, 5.0)); $$("#pt-ok i").forEach((d) => { d.style.opacity = 1 - 0.85 * fade; d.style.transform = "scale(" + (1 - 0.4 * fade) + ")"; });
+        const grow = E.out(seg(lt, 2.6, 5.4)); $$("#pt-bad i").forEach((d, n) => { d.classList.toggle("pus", grow > 0.3); d.style.transform = "scale(" + (1 + 0.9 * grow) + ")"; });
+        $(".lift").style.opacity = E.out(seg(lt, 4.6, 5.4));
+      }
+      // shot 2: the week with its marks, the dial filling to the next wax
+      const rh = i === 2; $("#w-rh").style.display = rh ? "" : "none"; $("#lg13").style.display = rh ? "" : "none";
+      if (rh) {
+        $$(".wd").forEach((d, k) => enter(d, lt, 0.2 + k * 0.1, { y: 14 }));
+        $$(".m-ex").forEach((m) => { const d = +m.parentElement.dataset.d; const on = d === 3 || d === 5 || d === 7; set(m, { o: on ? E.out(seg(lt, 1.2 + d * 0.1, 1.7 + d * 0.1)) : 0 }); });
+        $$(".m-mo").forEach((m) => { const d = +m.parentElement.dataset.d; set(m, { o: d >= 2 ? E.out(seg(lt, 2.4 + d * 0.08, 2.9 + d * 0.08)) : 0 }); });
+        const dial = $("#dial"); enter(dial, lt, 3.4, { y: 8, s: 0.85 }); dial.style.setProperty("--p", (100 * E.out(seg(lt, 3.8, 5.6))) + "%");
+        const lg = (id, at) => enter($("#" + id), lt, at, { y: 8 });
+        lg("l-ex", 1.4); lg("l-mo", 2.6); lg("l-dig", 3.2); lg("l-brow", 4.2); lg("l-shave", 5.2);
+      }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
