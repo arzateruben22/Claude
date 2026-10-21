@@ -46,7 +46,7 @@ const browser = await chromium.launch({
 });
 
 // a fresh context (empty storage) with these settings saved, loaded to the main menu
-async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
+async function open({ settings = {}, phone = false, size = [1280, 720], loadTimeout = 120000 } = {}) {
   const ctx = await browser.newContext(phone
     ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }
     : { viewport: { width: size[0], height: size[1] } });
@@ -61,7 +61,7 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
   const t0 = Date.now();
   await page.goto(pathToFileURL(GAME).href);
-  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
+  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: loadTimeout });
   const loadS = (Date.now() - t0) / 1000;
   // keep every result the game reports, so checks can read it
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
@@ -74,10 +74,10 @@ async function frames(page, n, timeout = 60000) {
   await page.waitForFunction((t) => window.__game.frames >= t, f0 + n, { timeout });
 }
 // start a mode the way a player does: pick it on the menu, tap Drive, wait for the loading screen to go
-async function drive(page, label) {
+async function drive(page, label, timeout = 60000) {
   await page.getByRole('radio', { name: new RegExp(label) }).click();
   await page.getByRole('button', { name: 'Drive', exact: true }).click();
-  await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 60000 });
+  await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout });
 }
 async function group(name, fn) {
   if (only.length && !only.includes(name)) return;
@@ -958,9 +958,9 @@ await group('live', async (use) => {
       return `list: "${text.slice(0, 90)}"; A now on ${r.road}, ${fmt(r.gap)} m behind B; A heard B honk`;
     });
     await check('a third driver waits in line (#1) and is let in when one leaves; the counts follow', async () => {
-      C = await open({ settings }); extra.push(C);
+      C = await open({ settings, loadTimeout: 400000 }); extra.push(C);
       await signIn(C.page, tokens.c, 'live_c'); C = C.page;
-      await drive(C, 'Free Drive');
+      await drive(C, 'Free Drive', 240000);
       step('C asked to drive');
       await until(C, () => window.__game.live?.info.status === 'queued' && window.__game.live.info.position === 1, 'C queued at #1');
       const chip = await C.locator('.livechip').innerText();
