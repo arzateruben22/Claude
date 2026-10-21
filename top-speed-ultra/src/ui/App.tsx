@@ -178,13 +178,13 @@ export function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // on the menu, how many are driving live right now (the public health check, every 30 s)
-  const [lobby, setLobby] = useState<{ online: number; cap: number; queued: number } | null>(null);
+  const [lobby, setLobby] = useState<{ online: number; cap: number; queued: number; cruise: { at: string; live: boolean } | null } | null>(null);
   const menuNow = screen === 'menu';
   useEffect(() => {
     const base = liveBase(settings.liveUrl);
     if (!menuNow || !base) { setLobby(null); return; }
     let stop = false;
-    const look = () => void liveApi.health(base).then((r) => { if (!stop) setLobby(r.ok ? { online: Number(r.data.online), cap: Number(r.data.cap), queued: Number(r.data.queued) } : null); });
+    const look = () => void liveApi.health(base).then((r) => { if (!stop) setLobby(r.ok ? { online: Number(r.data.online), cap: Number(r.data.cap), queued: Number(r.data.queued), cruise: (r.data.cruise as { at: string; live: boolean } | null) ?? null } : null); });
     look();
     const t = setInterval(look, 30000);
     return () => { stop = true; clearInterval(t); };
@@ -484,6 +484,7 @@ export function App() {
         <p className="fine">{settings.crew ? `In crew ${settings.crew}: you'll only see, hear and list drivers with the same code.` : 'Leave it empty to drive with everyone. Friends who share a code see only each other.'}</p>
       </div>
       {liveBase(settings.liveUrl) && <div className="row"><button type="button" className="btn invite" onClick={() => void invite()}>{settings.crew ? 'Invite to your crew' : 'Invite a friend'}</button></div>}
+      {lobby?.cruise && <p className="cruise">{lobby.cruise.live ? 'OC cruise night is on now. Jump in.' : `Next OC cruise night: ${new Date(lobby.cruise.at).toLocaleString(undefined, { weekday: 'long', hour: 'numeric', minute: '2-digit' })}`}</p>}
       <p className="fine">One small server, a limited number of drivers at a time; past that you wait in line. Other drivers are ghosts: no collisions, nothing scored. Your progress stays on this device.</p>
     </section>
     <div className="menu-aside">

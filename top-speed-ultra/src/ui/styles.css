@@ -819,3 +819,4 @@ input[type="range"]:focus-visible { outline-offset: 2px; }
 }
 .field.crew .row { flex-wrap: nowrap; }
 .field.crew input.text { flex: 1; min-width: 0; letter-spacing: 0.12em; text-transform: uppercase; }
+.cruise { margin: 0; color: var(--sunset); font: 500 14px/1.35 var(--f-text); }

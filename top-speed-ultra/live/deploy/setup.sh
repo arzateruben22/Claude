@@ -28,7 +28,7 @@ fi
 echo "== user and files"
 id oclive >/dev/null 2>&1 || useradd --system --home /opt/oc-live --shell /usr/sbin/nologin oclive
 mkdir -p /opt/oc-live/data /opt/oc-live/public
-for f in server.mjs now.mjs names.mjs ladder.mjs package.json package-lock.json trends.json traffic-points.json; do
+for f in server.mjs now.mjs names.mjs ladder.mjs cruise.mjs package.json package-lock.json trends.json traffic-points.json; do
   [ -f "$HERE/$f" ] && install -m 644 "$HERE/$f" "/opt/oc-live/$f"
 done
 (cd /opt/oc-live && npm install --omit=dev --no-audit --no-fund)

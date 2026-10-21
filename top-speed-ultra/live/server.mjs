@@ -22,6 +22,8 @@ import { WebSocketServer } from 'ws';
 import { createNow } from './now.mjs';
 import { nameProblem } from './names.mjs';
 import { verdict } from './ladder.mjs';
+import { nextCruise } from './cruise.mjs';
+const CRUISE = process.env.CRUISE || '';   // cruise nights, Pacific time: "Fri 20:00, Sun 18:00"
 
 // ------------------------------------------------------------------------------------------------ configuration
 const PORT = Number(process.env.PORT || 8791);
@@ -249,7 +251,7 @@ async function sendMail(to, subject, text) {
   if (!r.ok) { log('mail-error', { status: r.status }); return false; }
   return true;
 }
-const health = () => ({ ok: true, feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length, mail: mailOn() }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
+const health = () => ({ ok: true, cruise: nextCruise(CRUISE), feeds: { weather: now.state.weather.source, traffic: now.state.traffic.source, trends: now.state.trends.list.length, mail: mailOn() }, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
 
 // a static file, gzipped once per version (the game page is about 3.7 MB, 1.2 MB gzipped), with an ETag so a phone
 // that has it already gets a 304

@@ -131,6 +131,8 @@ use **Invite to your crew**. Only drivers with that code see each other.
 - **Password-reset emails** (optional, free on Resend's free tier): they need your own domain verified at
   **resend.com**. Run `sudo bash server/live.sh` again and paste the key and the sender when asked. Without them,
   players can still change their password while signed in.
+- **Cruise nights:** the menu shows the next one (Friday 8 pm to start). Change them with
+  `sudo bash server/live-env.sh CRUISE 'Fri 20:00, Sun 18:00'` and `sudo systemctl restart oc-live`.
 - **Someone misbehaving:** `sudo bash server/live-ban.sh TheirName` takes them off the road and out of their account
   (`... TheirName off` lifts it). Names with slurs, profanity or "admin"-style names are refused at sign-up.
 

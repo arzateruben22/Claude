@@ -42,7 +42,7 @@ echo "Live server: installing it in /opt/oc-live (user oclive)..."
 id oclive > /dev/null 2>&1 || useradd --system --home-dir /opt/oc-live --no-create-home --shell /usr/sbin/nologin oclive
 OPT=/opt/oc-live
 mkdir -p "$OPT/public" "$OPT/data"
-for f in server.mjs now.mjs names.mjs ladder.mjs package.json package-lock.json trends.json traffic-points.json; do
+for f in server.mjs now.mjs names.mjs ladder.mjs cruise.mjs package.json package-lock.json trends.json traffic-points.json; do
   [ -f "$GAME/live/$f" ] && install -m 644 "$GAME/live/$f" "$OPT/$f"
 done
 install -m 644 "$GAME/dist/top-speed-ultra.html" "$OPT/public/top-speed-ultra.html"
@@ -66,6 +66,8 @@ ADMIN_TOKEN=$(head -c 24 /dev/urandom | base64 | tr -d '/+=')
 NOW_WEATHER=nws
 NOW_TRAFFIC=off
 TOMTOM_KEY=
+# cruise nights the menu shows (Pacific time); empty for none
+CRUISE="Fri 20:00"
 ENV
   chmod 600 /etc/oc-live.env
 fi
