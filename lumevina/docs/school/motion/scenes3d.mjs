@@ -254,6 +254,162 @@ window.seek = function (t) {
 };
 `
   },
+  /* ───────── 9-3 Heat, light and patience: why a dark spot is slow ───────── */
+  "9-3": {
+    id: "9-3", kicker: "Heat, light and patience", title: `Why a dark spot takes <span class="grad">months, not weeks.</span>`, dur: 24, poster: 9,
+    shots: [
+      { at: 0, name: "made", cap: "A dark spot starts at the bottom of the epidermis: UV, heat or a breakout tells the pigment cells there to make more melanin and hand it up." },
+      { at: 7, name: "rises", cap: "The cells holding it take about a month to climb to the surface and shed. Each cycle carries a little out. Fading is measured in months." },
+      { at: 15, name: "guard", cap: "SPF every morning (tinted mineral for melasma) and no heat keep it from restarting. Vitamin C by day, azelaic acid or a retinoid at night, speed the fade." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.dayc { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
+.dayc b { font-size: 7vmin; font-weight: 700; letter-spacing: -.03em; } .dayc span { font-size: 2.6vmin; color: #a1a1a6; }
+.note3 { position: absolute; left: 0; bottom: 2vmin; max-width: 64vmin; font-size: 2.5vmin; line-height: 1.4; color: #d9d9de; opacity: 0; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-uv"><i style="background:#ffd27a"></i>UV, heat, a breakout</span><span class="lab3" id="l-mel"><i style="background:#4a2a1c"></i>pigment cells, at the bottom</span><span class="lab3" id="l-gran"><i style="background:#3b2418"></i>melanin, handed up</span><span class="lab3" id="l-spot"><i style="background:#6b3f2e"></i>the spot you see</span></section>
+<section class="shot"><span class="lab3" id="l-shed"><i style="background:#e9c4b4"></i>about a month per cycle</span><span class="lab3" id="l-less"><i style="background:#8f6a5c"></i>a little lighter each time</span><div class="dayc" id="dayc"><b id="dayn">0</b><span>days</span></div></section>
+<section class="shot"><span class="lab3" id="l-spf"><i style="background:#f6f0e8"></i>SPF every morning, tinted mineral</span><span class="lab3" id="l-heat"><i style="background:#ffb067"></i>no saunas, hot yoga, hot stove</span><span class="lab3" id="l-bright"><i style="background:#ffc46b"></i>vitamin C · azelaic acid · retinoid</span><div class="dayc" id="dayc2"><b id="dayn2">56</b><span>days</span></div><p class="note3" id="note3">Same spot, same light, a photo every four weeks: that's how you see it move.</p></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(-14, 20, 10); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0xf4c9d6, 0.45); fill2.position.set(12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block: epidermis is the top three rows (9, 10, 11); the pigment cells sit in row 9, on the cut face
+const NY = 12, NZ = 9, cells = [];
+const CX = -1.5, CZ = NZ / 2 - 0.5;            // the spot's centre, on the face toward the camera
+const MEL = [[-3, 8], [-2, 8], [-1, 8], [-2, 7]];   // pigment cells: (x, z) in row 9
+const isMel = (x, y, z) => y === 9 && MEL.some(([a, b]) => a === x && b === z);
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = cells.length, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (isMel(x, y, z)) c = new THREE.Color(0x4a2a1c);
+  else if (y >= 9) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v + (y === 11 ? 0.04 : 0));
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  const wx = x + 0.5, wz = z + 0.5 - NZ / 2;
+  cells.push({ x, y, z, c, base: c.clone(), wx, wz, mel: isMel(x, y, z), d: Math.hypot(wx - CX, wz - CZ) });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.wx, c.y, c.wz); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+// the pigment cells glow when they're told to make more
+const melGeo = new THREE.BoxGeometry(1.0, 1.0, 1.0);
+const melMat = new THREE.MeshStandardMaterial({ color: 0x4a2a1c, emissive: 0x9a5a2c, emissiveIntensity: 0, roughness: 0.5 });
+const mels = MEL.map(([x, z]) => { const m = new THREE.Mesh(melGeo, melMat); m.position.set(x + 0.5, 9, z + 0.5 - NZ / 2); m.castShadow = true; scene.add(m); return m; });
+// melanin, handed up: little grains that ride from a pigment cell to the cells above it
+const grainGeo = new THREE.SphereGeometry(0.15, 10, 8), grainMat = new THREE.MeshStandardMaterial({ color: 0x3b2418, roughness: 0.5 });
+const grains = Array.from({ length: 14 }, (_, k) => {
+  const m = new THREE.Mesh(grainGeo, grainMat); m.visible = false; scene.add(m);
+  const [mx, mz] = MEL[k % MEL.length];
+  return { m, k, from: new THREE.Vector3(mx + 0.5, 9.3, mz + 0.5 - NZ / 2 + 0.35), to: new THREE.Vector3(CX + (hash(k + 40) - 0.5) * 3.6, 10.6 + hash(k + 41) * 1.2, CZ + 0.45 - hash(k + 42) * 1.4) };
+});
+// the sun, its ray, the shield (shot 2) and the two drops
+const sun = new THREE.Mesh(new THREE.SphereGeometry(1.4, 24, 18), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+const SUN = new THREE.Vector3(-12.5, 19, 3); sun.position.copy(SUN); scene.add(sun);
+const sunGlow = new THREE.PointLight(0xffd27a, 50, 60, 1.6); sunGlow.position.copy(SUN); scene.add(sunGlow);
+const HIT = new THREE.Vector3(CX, 11.5, CZ - 1.2);
+const rayGeo = new THREE.CylinderGeometry(0.16, 0.16, 3.2, 8);
+const up = new THREE.Vector3(0, 1, 0);
+const mkRay = (dir) => { const m = new THREE.Mesh(rayGeo, new THREE.MeshBasicMaterial({ color: 0xffdd8a, transparent: true, opacity: 1 })); m.quaternion.setFromUnitVectors(up, dir); m.visible = false; scene.add(m); return m; };
+const dir = HIT.clone().sub(SUN), len = dir.length(); dir.normalize();
+const refl = dir.clone().reflect(up);
+const ray = mkRay(dir), rayIn = mkRay(dir), rayOut = mkRay(refl); rayIn.scale.set(0.7, 1, 0.7);
+const shield = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.7, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf1e2d2, roughness: 0.3, transmission: 0.3, opacity: 0.85, transparent: true }));
+shield.position.set(0, 12.2, 0); shield.castShadow = true; shield.visible = false; scene.add(shield);
+const dropC = new THREE.Mesh(new THREE.SphereGeometry(0.85, 24, 18), new THREE.MeshPhysicalMaterial({ color: 0xffc46b, roughness: 0.2, opacity: 0.9, transparent: true }));
+const dropN = new THREE.Mesh(new THREE.SphereGeometry(0.8, 24, 18), new THREE.MeshPhysicalMaterial({ color: 0xf4c9d6, roughness: 0.2, opacity: 0.9, transparent: true }));
+dropC.visible = dropN.visible = false; dropC.castShadow = dropN.castShadow = true; scene.add(dropC, dropN);
+// heat: a warm haze that is shown, then crossed out by the label (shot 2 only names it)
+const BROWN = new THREE.Color(0x5a3324), tmp = new THREE.Color();
+// stain per cell: how much melanin it holds; rows fill from the bottom up as it is handed up
+const paint = (amt, rise, ph, shedK) => {
+  cells.forEach((c, i) => {
+    const top = c.y === 11;
+    let changed = false;
+    if (c.y >= 9 && !c.mel && c.d < 2.6) {
+      const rowGate = seg(rise, (c.y - 9) / 3, (c.y - 9) / 3 + 0.34);
+      const k = amt * rowGate * Math.max(0, 1 - 0.55 * c.d / 2.6) * (top ? 1 : c.y === 10 ? 0.85 : 0.55);
+      tmp.copy(c.base).lerp(BROWN, Math.min(1, k)); block.setColorAt(i, tmp); changed = true;
+    } else if (c.y >= 9) { block.setColorAt(i, c.base); }
+    if (top) {
+      // the surface sheds: late in each cycle the top row lifts and thins away
+      const lift = 0.9 * E.in(seg(ph, 0.55, 1)) * shedK, sc = 1 - 0.95 * E.in(seg(ph, 0.72, 1)) * shedK;
+      dummy.position.set(c.wx, c.y + lift, c.wz); dummy.scale.set(1, Math.max(0.05, sc), 1); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); changed = true;
+    }
+  });
+  block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
+};
+const look = new THREE.Vector3(0, 8, 0);
+const place = (t) => {
+  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-mel": [-1.2, 9, 4.6], "l-gran": [0.6, 10.6, 4.6], "l-spot": [-1.5, 12.3, 2.4], "l-shed": [5, 13.2, 0], "l-less": [-2.5, 12.4, 4.2], "l-spf": [6.5, 12.7, 4.5], "l-heat": [-7, 14.8, 3], "l-bright": [0.5, 15.6, 1.5] };
+const OFF = { "l-uv": [1, -1], "l-mel": [1, 0], "l-gran": [1, -1], "l-spot": [-1, -1], "l-shed": [1, -1], "l-less": [-1, 0], "l-spf": [1, 0], "l-heat": [1, -1], "l-bright": [1, -1] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // shot 0: the ray lands, the pigment cells light up, the grains rise, the spot shows
+  const made = i === 0 ? E.out(seg(lt, 1.0, 1.8)) : 1;
+  const making = i === 0 ? made : i === 1 ? 0.45 : 0.45 * (1 - E.out(seg(lt, 0.4, 1.4)));
+  melMat.emissiveIntensity = 1.6 * making;
+  const rise = i === 0 ? E.lin(seg(lt, 1.6, 5.6)) : 1;
+  // cycles of turnover: two in shot 1 (a month each), three more in shot 2, faster with the brighteners
+  const cycles = i === 0 ? 0 : i === 1 ? lt / 4 : 2 + lt / 3;
+  const ph = cycles % 1, shedK = i === 0 ? 0 : 1;
+  const bright = i === 2 ? 0.5 * seg(lt, 3.6, 8.5) : 0;
+  const amt = (i === 0 ? 1 : Math.pow(0.85, cycles)) * (1 - bright);
+  paint(amt, rise, ph, shedK);
+  grains.forEach((g) => { const on = making > 0.05 && (i > 0 || lt > 1.5); const p = (t * 0.36 + g.k * 0.071) % 1; g.m.visible = on && p < 0.92; g.m.position.lerpVectors(g.from, g.to, E.inout(p)); g.m.scale.setScalar(0.6 + 0.6 * Math.sin(p * Math.PI) * Math.min(1, making * 2)); });
+  // the ray: once in shot 0 (it goes in), on repeat in shot 2 (it bounces off the shield)
+  const shieldOn = i === 2 ? E.out(seg(lt, 0.3, 1.2)) : 0;
+  shield.visible = shieldOn > 0.01; shield.scale.set(1, Math.max(0.02, shieldOn), 1); shield.position.y = 12.0 + 0.35 * shieldOn; shield.material.opacity = 0.85 * shieldOn;
+  const rayPh = i === 0 ? seg(lt, 0.2, 1.1) : i === 2 ? (t * 0.42) % 1 : 2;
+  const hitPh = 0.86;
+  ray.visible = rayPh < hitPh; ray.position.copy(SUN).addScaledVector(dir, len * rayPh);
+  const past = (rayPh - hitPh) / (1 - hitPh);
+  rayIn.visible = i === 0 && rayPh >= hitPh && rayPh <= 1; if (rayIn.visible) { rayIn.position.copy(HIT).addScaledVector(dir, past * 5); rayIn.material.opacity = 0.95 * (1 - past); }
+  rayOut.visible = i === 2 && rayPh >= hitPh && shieldOn > 0.45; if (rayOut.visible) { rayOut.position.copy(HIT).addScaledVector(refl, past * 7); rayOut.material.opacity = 0.95 * (1 - past * 0.7); }
+  // the drops, shot 2: vitamin C by day, the night one after
+  const drop = (m, t0) => { m.visible = i === 2 && lt > t0 && lt < t0 + 2.6; if (m.visible) { const f = E.in(seg(lt, t0, t0 + 0.8)), s = seg(lt, t0 + 0.8, t0 + 1.5), fade = seg(lt, t0 + 1.8, t0 + 2.6); m.position.set(CX + (m === dropN ? 1.6 : -0.6), 22.5 - 9.6 * f, CZ - 1.5); m.scale.set(1 + 0.8 * s, 1 - 0.6 * s, 1 + 0.8 * s); m.material.opacity = 0.9 * (1 - fade); } };
+  drop(dropC, 3.4); drop(dropN, 5.0);
+  // labels and the day counter (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-uv"), lt, 0.4, { y: 8 }); if (lt > 3.2) $("#l-uv").style.opacity = 1 - seg(lt, 3.2, 3.7); enter($("#l-mel"), lt, 1.6, { y: 8 }); enter($("#l-gran"), lt, 2.8, { y: 8 }); enter($("#l-spot"), lt, 5.0, { y: 8 }); }
+  if (i === 1) { enter($("#l-shed"), lt, 1.2, { y: 8 }); enter($("#l-less"), lt, 4.6, { y: 8 }); enter($("#dayc"), lt, 0.3, { y: 10 }); $("#dayn").textContent = Math.round(56 * E.lin(seg(lt, 0.4, 7.6))); }
+  if (i === 2) { enter($("#l-spf"), lt, 1.3, { y: 8 }); enter($("#l-heat"), lt, 2.4, { y: 8 }); enter($("#l-bright"), lt, 4.2, { y: 8 }); enter($("#dayc2"), lt, 0.2, { y: 10 }); $("#dayn2").textContent = Math.round(56 + 64 * E.lin(seg(lt, 0.3, 6.8))); enter($("#note3"), lt, 6.6, { y: 10 }); }
+  renderer.render(scene, camera);
+};
+`
+  },
+
   /* ───────── 10-1 The sun, and the shield ───────── */
   "10-1": {
     id: "10-1", kicker: "What actually ages skin", title: `The sun does most of it. <span class="grad">SPF is the shield.</span>`, dur: 22, poster: 12,
