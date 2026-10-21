@@ -251,12 +251,28 @@ export class Game {
   private nowTick(dt: number) {
     if (this.radio.current && !this.attract && !this.paused) {
       this.djT -= dt;
-      if (this.djT <= 0) { this.djT = 160 + Math.random() * 60; this.ev.toast(djLine(Math.random, this.talkNow(), this.radio.current.call), 'info'); }
+      if (this.djT <= 0) { this.djT = 160 + Math.random() * 60; this.djSay(); }
     }
     this.nowT -= dt;
     if (this.nowT > 0) return;
     this.nowT = 2;
     this.applyNow();
+  }
+  // the DJ's line: now and then, with real drivers out, the live lobby itself (the count and the busiest freeway, both
+  // from the server); otherwise the talk bank's line about the weather, the freeways, the league or the week
+  private djSay() {
+    const call = this.radio.current?.call;
+    if (!call) return;
+    const peers = this.live?.info.status === 'online' ? [...this.live.peers.keys()] : [];
+    if (peers.length && Math.random() < 0.35) {
+      const roads = new Map<string, number>();
+      for (const id of peers) { const r = this.liveRoad(id); if (r && r !== 'off the freeway' && r !== 'a ramp') roads.set(r, (roads.get(r) ?? 0) + 1); }
+      const busiest = [...roads.entries()].sort((a, b) => b[1] - a[1])[0];
+      const n = peers.length + 1;
+      this.ev.toast(`${call}: ${n} drivers out live right now${busiest ? `, ${busiest[1]} on the ${busiest[0]}` : ''}. Give 'em a honk.`, 'info');
+      return;
+    }
+    this.ev.toast(djLine(Math.random, this.talkNow(), call), 'info');
   }
   // what the talk bank needs to know about right now (the radio's DJs; the on-foot NPCs later)
   talkNow(): TalkNow {
@@ -370,7 +386,7 @@ export class Game {
     this.audio.start(); this.audio.setMusicVolume(this.settings.music);
     this.ev.toast(this.radio.cycle(), 'info');
     // the DJ says something about right now (the weather, the freeways, the Coastal League, the week's talk)
-    if (this.radio.current) { this.djT = 180; this.ev.toast(djLine(Math.random, this.talkNow(), this.radio.current.call), 'info'); }
+    if (this.radio.current) { this.djT = 180; this.djSay(); }
   }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }
