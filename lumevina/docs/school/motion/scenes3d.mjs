@@ -340,7 +340,7 @@ const place = (t) => {
   camera.lookAt(look);
 };
 const ANCHOR = { "l-spf": [7.5, 12.6, 1.5], "l-oil": [-4, 12.6, 3.5], "l-city": [2, 12.6, -3], "l-balm": [-1, 16, 0], "l-melt": [7.5, 12.8, 1.5], "l-warm": [-5, 13, 4], "l-gel": [7.5, 13.2, 1.5], "l-clean": [-4.5, 12.4, 4] };
-const OFF = { "l-spf": [-1, -1], "l-oil": [-1, -1], "l-city": [1, -1], "l-balm": [1, -1], "l-melt": [-1, -1], "l-warm": [-1, -1], "l-gel": [-1, -1], "l-clean": [-1, -1] };
+const OFF = { "l-spf": [-1, -1], "l-oil": [-1, -1], "l-city": portrait ? [-1, -1] : [1, -1], "l-balm": [1, -1], "l-melt": [-1, -1], "l-warm": [-1, -1], "l-gel": [-1, -1], "l-clean": [-1, -1] };   // on a phone the block fills the width: "what the air left" goes to the left of its point, clear of "sunscreen, makeup"
 const v3 = new THREE.Vector3();
 const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
 window.seek = function (t) {
