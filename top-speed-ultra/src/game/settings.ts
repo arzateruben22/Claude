@@ -11,6 +11,7 @@ export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
 export type HudStyle = 'modern' | 'minimal';
 
+export type Look = 'ultra' | 'hd';
 export interface Settings {
   quality: Quality;
   adaptive: boolean;        // scale resolution to hold the frame rate
@@ -40,6 +41,11 @@ export interface Settings {
   ultraMuffle: boolean;
   hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
   owner: boolean;           // owner mode: every car in the garage to drive, for test builds only (a local switch, not security)
+  // the art direction of the interface (the owner's style library, PROJECT_OC_STYLE_GUIDE.md): 'ultra' futuristic
+  // luxury (the default), 'hd' modern realistic. The car still sets the accent; the look sets the surfaces and shapes
+  look: Look;
+  paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
+  radioFavs: string[];      // starred stations on the radio card (station ids)
 }
 
 export interface QualityPreset {
@@ -54,13 +60,14 @@ export interface QualityPreset {
   drawDistance: number;     // metres of road built ahead
   props: number;            // scenery density multiplier
   texture: number;          // procedural texture size
+  grade: boolean;           // the Ultra grade pass: a soft vignette, edge chromatic aberration and faint film grain
 }
 
 export const QUALITY: Record<Quality, QualityPreset> = {
-  low:    { label: 'Low',    renderScale: 0.75, maxPixelRatio: 1,   shadows: 0,    post: false, bloom: false, ao: false, msaa: 0, drawDistance: 900,  props: 0.45, texture: 512 },
-  medium: { label: 'Medium', renderScale: 1,    maxPixelRatio: 1.5, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0, drawDistance: 1300, props: 0.75, texture: 1024 },
-  high:   { label: 'High',   renderScale: 1,    maxPixelRatio: 2,   shadows: 2048, post: true,  bloom: true,  ao: false, msaa: 4, drawDistance: 1800, props: 1,    texture: 1024 },
-  ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048 },
+  low:    { label: 'Low',    renderScale: 0.75, maxPixelRatio: 1,   shadows: 0,    post: false, bloom: false, ao: false, msaa: 0, drawDistance: 900,  props: 0.45, texture: 512,  grade: false },
+  medium: { label: 'Medium', renderScale: 1,    maxPixelRatio: 1.5, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0, drawDistance: 1300, props: 0.75, texture: 1024, grade: false },
+  high:   { label: 'High',   renderScale: 1,    maxPixelRatio: 2,   shadows: 2048, post: true,  bloom: true,  ao: false, msaa: 4, drawDistance: 1800, props: 1,    texture: 1024, grade: false },
+  ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048, grade: true },
 };
 
 // cars per kilometre per lane, and the share of aggressive drivers
@@ -108,7 +115,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: 'modern', owner: false,
+    hudStyle: 'modern', owner: false, look: 'ultra', paints: {}, radioFavs: [],
   };
 }
 
@@ -150,6 +157,9 @@ function readSettings(): Settings {
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       hudStyle: v.hudStyle === 'minimal' ? 'minimal' : 'modern',
       owner: v.owner === true,
+      look: v.look === 'hd' ? 'hd' : 'ultra',
+      paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
+      radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
     };
   } catch { return d; }
 }

@@ -1,10 +1,9 @@
 // Test page for the main menu's showroom (src/game/Showroom.ts) without booting the game: the car from the preview's
 // buildCar, the scene at the window's size, framed as the menu frames it.
 //   node tools/preview-shoot.mjs tools/showroom-page.ts tests/out/uiref/showroom.png --size=1440x900 \
-//        --query="car=rossini-gt&cx=0.6&cy=0.42&span=0.5"        (&tile=free|race|events|garage: a tile's picture; &t=seconds of drift)
+//        --query="car=rossini-gt&cx=0.6&cy=0.42&span=0.5"        (&t=seconds of drift)
 import * as THREE from 'three';
 import { Showroom } from '../src/game/Showroom';
-import type { TileKind } from '../src/game/Showroom';
 import { buildCar } from '../src/preview/car';
 import type { CarId } from '../src/preview/car-shape';
 
@@ -28,17 +27,7 @@ setTimeout(() => { try {
   s.resize(w, h, 1);
   s.setFrame(num('cx', 0.6), num('cy', 0.42), num('span', 0.5));
   const t1 = performance.now();
-  if (q.get('tile') === 'all') {
-    // the four tiles in a row of pictures, each rendered at 480 x 270 as the game takes them
-    renderer.setSize(480, 270);
-    const row = document.createElement('div');
-    row.style.cssText = 'position:fixed;inset:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#000;padding:8px';
-    for (const k of ['free', 'race', 'events', 'garage'] as TileKind[]) {
-      s.renderTile(renderer, k, 480 / 270);
-      const img = new Image(); img.src = renderer.domElement.toDataURL('image/jpeg', 0.9); img.style.width = '100%'; row.appendChild(img);
-    }
-    document.body.appendChild(row);
-  } else if (q.get('tile')) s.renderTile(renderer, q.get('tile') as TileKind, w / h); else s.render(renderer, num('t', 0), num('t', 0) > 0);
+  s.render(renderer, num('t', 0), num('t', 0) > 0);
   const info = { buildMs: Math.round(t1 - t0), renderMs: Math.round(performance.now() - t1), calls: renderer.info.render.calls, tris: renderer.info.render.triangles };
   console.warn(JSON.stringify(info));
   (window as unknown as { __stage: unknown }).__stage = { info: () => info };

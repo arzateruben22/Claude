@@ -25,14 +25,6 @@ const TARGET = new THREE.Vector3(0, 0.6, 0.15);
 const BACKDROP = 95;                       // how far behind the car the city sits
 const SKY_TOP = 72, SKY_FOOT = -12;        // the backdrop's top and foot (metres); its horizon sits at the eye's height
 
-export type TileKind = 'free' | 'race' | 'events' | 'garage';
-// each tile's camera: where it stands, what it looks at (world metres), its field of view and exposure
-const TILE_VIEWS: Record<TileKind, { pos: [number, number, number]; look: [number, number, number]; fov: number; exposure: number }> = {
-  free: { pos: [6.13, 1.1, -3.37], look: [85.3, 6, 54.1], fov: 44, exposure: 1.6 },
-  race: { pos: [-1.82, 0.32, -4.78], look: [0.28, 0.6, 0.19], fov: 50, exposure: 1.25 },
-  events: { pos: [-1.6, 6.2, -3.6], look: [0.05, 0.3, 0.2], fov: 40, exposure: 1.5 },
-  garage: { pos: [-3.4, 0.55, -2.9], look: [-0.8, 0.42, -1.25], fov: 36, exposure: 1.2 },
-};
 
 const rnd = (() => { let s = 20261021; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })();
 function canvas(w: number, h: number) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
@@ -287,7 +279,6 @@ export class Showroom {
   private t = 0;
   private w = 1; private h = 1; private pr = 1;
   private frame = { cx: 0.5, cy: 0.5, span: 0.6 };
-  private thumbCam = new THREE.PerspectiveCamera(34, 16 / 9, 0.1, 400);
 
   // the set, the lights and the reflection probe; needs the renderer (the probe and the floor's render target)
   build(renderer: THREE.WebGLRenderer) {
@@ -455,29 +446,6 @@ export class Showroom {
     renderer.setRenderTarget(null);
     renderer.render(this.scene, this.camera);
     renderer.toneMappingExposure = exp;
-  }
-
-  // The home screen's four tile pictures, taken once at load from this set at night (Game.captureTiles), each framed
-  // for what its tile opens. The car's nose points down -z; the city lies behind it from the hero's side (bearings
-  // between about 6 and 97 degrees from +x toward +z), so every view looks that way.
-  //   free:   no car: the palms, the basin's lights and the freeway's light streams over the wet floor
-  //   race:   on the floor in front of the car, wide and low, its lamps on and the city behind (a starting grid)
-  //   events: high over the car, looking down on it, the floor's reflections of the sunset strips round it
-  //   garage: close on the front wheel and the nose, from low on the left, the OC sign behind
-  renderTile(renderer: THREE.WebGLRenderer, kind: TileKind, aspect: number) {
-    if (!this.built) return;
-    const c = this.thumbCam;
-    const v = TILE_VIEWS[kind];
-    c.position.set(...v.pos); c.lookAt(new THREE.Vector3(...v.look));
-    c.fov = v.fov; c.aspect = aspect; c.clearViewOffset(); c.updateProjectionMatrix();
-    const shown = this.car?.visible ?? false;
-    if (this.car) this.car.visible = kind !== 'free';
-    const exp = renderer.toneMappingExposure;
-    renderer.toneMappingExposure = v.exposure;
-    renderer.setRenderTarget(null);
-    renderer.render(this.scene, c);
-    renderer.toneMappingExposure = exp;
-    if (this.car) this.car.visible = shown;
   }
 
   dispose() {
