@@ -1506,6 +1506,75 @@ export const SCENES = {
       }
     }
   },
+  "11-2": {
+    id: "11-2", kicker: "Pregnancy and breastfeeding", title: `What to pause, what's commonly fine, <span class="grad">and the one rule.</span>`, dur: 21, poster: 8,
+    shots: [
+      { at: 0, name: "pause", cap: "Pause retinoids of every kind, including retinol, and skip high-strength salicylic peels." },
+      { at: 6, name: "fine", cap: "Commonly considered fine: azelaic acid, vitamin C, niacinamide, gentle lactic acid and mineral sunscreen." },
+      { at: 12, name: "melasma", cap: "Melasma often shows up in pregnancy. Tinted mineral sunscreen is your best friend." },
+      { at: 16.5, name: "tell", cap: "Tell your esthetician every time; some treatments change when you're pregnant. And the one rule: ask your doctor." }
+    ],
+    css: `
+.pg { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; }
+.col { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.6vmin 2.8vmin; opacity: 0; }
+.col .t { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.2vmin; font-weight: 700; margin-bottom: 1.8vmin; } .col.no .t { color: #ff9a8b; } .col.ok .t { color: #7fe39a; }
+.col .t i { width: 3.2vmin; height: 3.2vmin; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2vmin; font-weight: 800; color: #1a1210; } .col.no .t i { background: #ff7a6b; } .col.ok .t i { background: #32d74b; }
+.col .list { display: flex; flex-wrap: wrap; gap: 1.2vmin; }
+.col .li { position: relative; padding: 1.3vmin 2.2vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.col.no .li i { position: absolute; left: 1.4vmin; right: 1.4vmin; top: 50%; height: .35vmin; background: #ff7a6b; border-radius: 1vmin; transform-origin: 0 50%; transform: scaleX(0); }
+.col.dim { opacity: .4 !important; }
+.mel { display: flex; align-items: center; gap: 4vmin; }
+.mel .face11 { position: relative; flex: none; width: 34vmin; height: 42vmin; border-radius: 17vmin 17vmin 14vmin 14vmin / 19vmin 19vmin 15vmin 15vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: 0; overflow: hidden; }
+.mel .face11 .nose { position: absolute; left: 50%; top: 15vmin; width: 4vmin; height: 10vmin; margin-left: -2vmin; border-radius: 2vmin; background: rgba(0,0,0,.08); }
+.mel .face11 .lip { position: absolute; left: 50%; bottom: 8vmin; width: 10vmin; height: 1.6vmin; margin-left: -5vmin; border-radius: 1vmin; background: #b9786b; }
+.mel .face11 i { position: absolute; border-radius: 50%; background: #6b3f2e; filter: blur(.6vmin); opacity: 0; }
+.mel .face11 .tint { position: absolute; inset: 0; background: linear-gradient(rgba(226,176,140,.0), rgba(226,176,140,.0)); opacity: 0; }
+.mel .face11 .tint.on { background: linear-gradient(rgba(240,200,170,.55), rgba(240,200,170,.55)); }
+.mel .side11 { display: flex; flex-direction: column; gap: 1.8vmin; }
+.mel .pill11 { display: inline-flex; align-self: flex-start; padding: 1.4vmin 2.6vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 3vmin; font-weight: 650; opacity: 0; }
+.mel .pill11.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; } .mel .pill11.amber { border-color: rgba(255,210,122,.6); color: #ffd27a; }
+.rule11 { display: flex; align-items: center; gap: 3vmin; }
+.rule11 .card11 { flex: 1; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
+.rule11 .card11 b { display: block; font-size: 3.6vmin; font-weight: 700; letter-spacing: -.02em; } .rule11 .card11 span { display: block; font-size: 2.6vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
+.rule11 .card11.doc { border-color: #f4c9d6; background: #f4c9d6; } .rule11 .card11.doc b, .rule11 .card11.doc span { color: #1a1210; }
+@media (orientation: portrait) { .cols { grid-template-columns: 1fr; } .col .li { font-size: 2.6vmin; } .mel { flex-direction: column; gap: 3vmin; } .mel .face11 { width: 36vmin; height: 44vmin; } .mel .side11 { align-items: center; } .mel .pill11 { align-self: center; font-size: 2.7vmin; } .rule11 { flex-direction: column; } .rule11 .card11 { width: 100%; } }`,
+    html: `
+<div class="pg">
+  <div class="cols" id="cols">
+    <div class="col no" id="c-no"><div class="t"><i>–</i>Pause</div><div class="list"><span class="li" id="n1">retinoids, every kind<i></i></span><span class="li" id="n2">retinol too<i></i></span><span class="li" id="n3">high-strength salicylic peels<i></i></span></div></div>
+    <div class="col ok" id="c-ok"><div class="t"><i>✓</i>Commonly considered fine</div><div class="list"><span class="li" id="o1">azelaic acid</span><span class="li" id="o2">vitamin C</span><span class="li" id="o3">niacinamide</span><span class="li" id="o4">gentle lactic acid</span><span class="li" id="o5">mineral sunscreen</span></div></div>
+  </div>
+  <div class="mel" id="mel"><div class="face11" id="face11"><div class="nose"></div><div class="lip"></div><i style="left:12%;top:40%;width:32%;height:20%"></i><i style="left:58%;top:40%;width:32%;height:20%"></i><i style="left:34%;top:70%;width:32%;height:8%"></i><div class="tint" id="tint11"></div></div><div class="side11"><span class="pill11 rose" id="m1">melasma often shows up in pregnancy</span><span class="pill11 amber" id="m2">tinted mineral sunscreen, every morning</span></div></div>
+  <div class="rule11" id="rule11"><div class="card11" id="r-tell"><b>Tell your esthetician, every time</b><span>Some treatments change when you're pregnant or breastfeeding.</span></div><div class="card11 doc" id="r-doc"><b>The one rule: ask your doctor</b><span>Anything on this list is a conversation with them first.</span></div></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      const b = 0.5 + 0.5 * Math.sin(lt * 2.4);
+      // shots 0 and 1: the two columns; pause first with its strikes, then the fine list
+      const cols = i <= 1; $("#cols").style.display = cols ? "" : "none";
+      if (cols) {
+        const slt = i === 0 ? lt : lt + 6;
+        enter($("#c-no"), slt, 0.2, { y: 12 }); $("#c-no").classList.toggle("dim", i === 1 && lt > 0.3);
+        ["n1", "n2", "n3"].forEach((id, k) => { const el = $("#" + id); enter(el, slt, 0.8 + k * 0.5, { y: 8 }); el.querySelector("i").style.transform = "scaleX(" + E.out(seg(slt, 1.3 + k * 0.5, 1.7 + k * 0.5)) + ")"; });
+        if (i === 1) { enter($("#c-ok"), lt, 0.2, { y: 12 }); ["o1", "o2", "o3", "o4", "o5"].forEach((id, k) => enter($("#" + id), lt, 0.8 + k * 0.4, { y: 8 })); } else { set($("#c-ok"), { o: 0.25 }); ["o1", "o2", "o3", "o4", "o5"].forEach((id) => set($("#" + id), { o: 0 })); }
+        set($("#c-no"), { o: i === 1 && lt > 0.3 ? 0.4 : Math.min(1, seg(slt, 0.2, 0.8) * 1.5), s: i === 0 && lt > 3 ? 1 + 0.01 * b : 1 });
+      }
+      // shot 2: the melasma patches rise on the face, then the tinted sunscreen veils them
+      $("#mel").style.display = i === 2 ? "" : "none";
+      if (i === 2) {
+        enter($("#face11"), lt, 0.2, { y: 12, s: 0.9 });
+        $$("#face11 i").forEach((m, k) => { m.style.opacity = 0.85 * E.out(seg(lt, 0.8 + k * 0.3, 1.6 + k * 0.3)); });
+        const veil = E.out(seg(lt, 2.8, 3.8)); const tint = $("#tint11"); tint.classList.toggle("on", veil > 0); tint.style.opacity = veil * (0.9 + 0.1 * b);
+        enter($("#m1"), lt, 1.0, { y: 8 }); enter($("#m2"), lt, 2.8, { y: 8 });
+      }
+      // shot 3: tell her, and the one rule
+      $("#rule11").style.display = i === 3 ? "" : "none";
+      if (i === 3) { enter($("#r-tell"), lt, 0.2, { y: 12 }); enter($("#r-doc"), lt, 1.6, { y: 12, s: 0.9 }); set($("#r-doc"), { o: Math.min(1, seg(lt, 1.6, 2.2) * 2.5), s: lt > 2.2 ? 1 + 0.015 * b : 0.9 + 0.1 * E.out(seg(lt, 1.6, 2.2)) }); }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
