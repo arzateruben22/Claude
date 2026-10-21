@@ -741,6 +741,42 @@ await group('render', async (use) => {
     await sky('day', 'clear');
     return `02:13 Pacific: daylight ${fmt(night.day)}; 13:00: ${fmt(noon)}`;
   });
+  // the OC Hypercar's lights and cockpit (PROJECT_OC_HYPERCAR.md M2). It has no CarDef until M3, so its body,
+  // wheels and cockpit go on the player's car directly (the GT's physics), then back to the profile's car.
+  await check('OC Hypercar: seat, beams from the blades, brake bar, turn signals, reversing lamps (M2)', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, c = g.car, cfg = c.config;
+      g.fastForward(3, {}, 30);
+      c.configure({ ...cfg, car: 'oc-hyper', paint: 0xc8d3e8 });
+      const ext = c.exterior, lamps = ['sigL', 'sigR', 'reverse'].map((k) => ext.getObjectByName(k));
+      const out = { eye: c.eye.position.toArray(), beam: c.beams[1].position.toArray(), built: lamps.every(Boolean), hidden: lamps.every((m) => m && !m.visible) };
+      c.update(0, 1, g.phys, true, g.time); out.brake = c.mats.tail.emissiveIntensity;
+      c.update(0, 1, g.phys, false, g.time); out.free = c.mats.tail.emissiveIntensity;
+      const d0 = g.phys.d;
+      for (let k = 0; k < 40 && !out.lane; k++) {
+        g.fastForward(0.05, { steer: k < 12 ? 0.22 : 0, throttle: 0.3, brake: 0 });
+        c.update(0, 1, g.phys, false, g.time);
+        const s = c.lightState;
+        if (s.signal > 0 && s.blink) out.lane = { t: (k + 1) * 0.05, dd: g.phys.d - d0, R: lamps[1].visible, L: lamps[0].visible };
+      }
+      g.fastForward(5, { steer: 0, throttle: 0, brake: 1 }); g.fastForward(1.5, { steer: 0, throttle: 0, brake: 1 });
+      c.update(0, 1, g.phys, false, g.time);
+      out.rev = { gear: g.phys.gear, vx: g.phys.vx, on: lamps[2].visible };
+      Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0 });
+      out.gauge = !!c.interior.gaugeAt; out.rearView = !!c.interior.group.getObjectByName('rear-view-mirror');
+      c.configure({ ...cfg });
+      out.back = c.config.car; out.was = cfg.car;
+      return out;
+    });
+    expect(r.built && r.hidden, `switched lamps built ${r.built}, hidden until lit ${r.hidden}`);
+    expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 0.96) < 0.005, `the hypercar's eye at ${r.eye.map(fmt)} (want -0.27, 0.96)`);
+    expect(r.beam[2] < -2.2 && r.beam[1] < 0.5 && r.beam[0] > 0.3, `beam at ${r.beam.map(fmt)}: not from the blade`);
+    expect(r.brake === 5 && r.free === 1.6, `red bar ${r.free} → ${r.brake} on the brakes`);
+    expect(r.lane && r.lane.R && !r.lane.L, `lane change right: ${JSON.stringify(r.lane)}`);
+    expect(r.rev.gear < 0 && r.rev.on, `reversing: ${JSON.stringify(r.rev)}`);
+    expect(r.gauge && !r.rearView && r.back === r.was, `gauge pod ${r.gauge}, rear-view ${r.rearView}, back to ${r.back} (was ${r.was})`);
+    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)}; bar ${r.free} → ${r.brake}; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); reverse lamps on in gear ${r.rev.gear}`;
+  });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
     await frames(page, 5);
@@ -810,13 +846,14 @@ await group('phone', async (use) => {
     expect(await noSideScroll(), 'the page scrolls sideways');
   });
   // the main menu is one persistent glass sheet (owner, 2026-10-16: "more seamless"): opening a screen changes what the
-  // sheet shows, the sheet and the Drive dock stay, and the dock marks where you are
+  // sheet shows, the sheet and the Drive dock stay, and the dock marks where you are. Since the reference's menu
+  // (2026-10-21) the dock is the rail and Drive is its filled row (.go), not a pill button (.btn).
   await check('menu: one sheet; the Drive dock stays while its screens change', async () => {
     await game(page, () => { document.querySelector('.sheet').dataset.k = 'first'; });
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await page.waitForTimeout(400);
     const r = await game(page, () => ({ same: document.querySelector('.sheet')?.dataset.k === 'first', title: document.querySelector('.sheet-body .panel h2')?.textContent,
-      go: !!document.querySelector('.dock .btn.go'), here: document.querySelector('.dock [aria-current="page"]')?.textContent }));
+      go: !!document.querySelector('.dock .go'), here: document.querySelector('.dock [aria-current="page"]')?.textContent }));
     const drives = await page.getByRole('button', { name: 'Drive', exact: true }).count();
     expect(r.same && r.title === 'Settings' && r.go && r.here === 'Settings', JSON.stringify(r));
     expect(drives === 1, `${drives} Drive buttons`);
@@ -923,6 +960,38 @@ await group('launch', async (use) => {
   const { page } = await use({ settings: { start: 'I-405 North' } });
   const road = 'CA-57 North';
   let want = null;
+  // the theme follows the car and the driver, and the Look setting switches the art direction (owner, 2026-10-21;
+  // PROJECT_OC_STYLE_GUIDE.md): <html data-car>, data-driver and data-look re-point the tokens in styles.css
+  await check('the theme follows the car and the driver; the Look setting switches the art direction and is saved', async () => {
+    const attrs = () => game(page, () => { const d = document.documentElement; return { car: d.dataset.car, driver: d.dataset.driver, look: d.dataset.look, carId: window.__game.carId, base: getComputedStyle(d).getPropertyValue('--void').trim() }; });
+    const a = await attrs();
+    expect(a.car === a.carId && a.driver === 'closer' && a.look === 'ultra', JSON.stringify(a));
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.getByRole('button', { name: 'Realistic', exact: true }).click();
+    const b = await attrs();
+    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings') || '{}').look);
+    expect(b.look === 'hd' && b.base === '#0a111d' && saved === 'hd', `after Realistic: ${JSON.stringify(b)}, saved ${saved}`);
+    await page.getByRole('button', { name: 'Futuristic', exact: true }).click();
+    const c = await attrs();
+    expect(c.look === 'ultra' && c.base !== '#0a111d', `after Futuristic: ${JSON.stringify(c)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    return `car ${a.car}, driver ${a.driver}; Realistic base ${b.base}, saved; back to Futuristic`;
+  });
+  // the garage's Paint tab (U5): six paints per car, applied live to the car and kept for that car
+  await check("the garage's Paint tab repaints the car live and keeps the choice", async () => {
+    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.getByRole('button', { name: 'Paint', exact: true }).click();
+    await page.getByRole('radio', { name: 'Sunset Orange' }).click();
+    await frames(page, 2);
+    const r = await game(page, () => ({ paint: window.__game.car.config.paint, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').paints?.['rossini-gt'] }));
+    await page.screenshot({ path: path.join(OUT, 'launch-paint.png') });
+    expect(r.paint === 0xe5620b && r.saved === 0xe5620b, `car wears ${r.paint?.toString(16)}, saved ${r.saved?.toString(16)}`);
+    await page.getByRole('radio', { name: 'Rossini Red' }).click();
+    const back = await game(page, () => window.__game.car.config.paint);
+    expect(back === 0xa80d10, `back to ${back?.toString(16)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    return 'Sunset Orange on the car and saved; back to Rossini Red';
+  });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);

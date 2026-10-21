@@ -13,7 +13,8 @@
 //                  full-width red tail bar. 4.72 x 2.02 m, 3.00 m wheelbase, staggered 0.70 / 0.74 m tyres.
 //
 // Every car shares the driver's frame (spec.ts EYE, WHEEL_AT): the cabin stays where the driver sits; the body
-// changes round it. Lengths in metres, car frame (x right, y up, the car faces -z, origin under the middle).
+// changes round it. The hypercar alone moves its driver lower and inboard (seatOffset below: seatDrop, seatX), so the
+// eye sits under its 1.12 m roof. Lengths in metres, car frame (x right, y up, the car faces -z, origin under the middle).
 import type { PaintMask } from './car-mats';
 export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper';
 export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'];
@@ -44,6 +45,10 @@ export interface ShapeParams {
   head: [number, number][];              // headlamp patch on the fender top (x, z): inner-front, outer-front, outer-rear, inner-rear
   bladeSweep?: number;                   // the blade's outer end sweeps this much further back (z += sweep * u^3 along it), so it climbs the fender's corner
   headStyle: 'twin' | 'round' | 'slim' | 'blade';
+  // the hypercar's blade (headStyle 'blade'): a lit face h tall standing on the nose from x0 off the centre out to the
+  // fender's corner, under a dark lamp socket (the lens) that runs back up the surface socket[0] (inner end) to
+  // socket[1] (outer end) metres; its outer end follows the head quad's front edge (and bladeSweep)
+  blade?: { x0: number; y0: number; h: number; socket: [number, number] };
   noseStyle: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   tailStyle: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   noseIntake: [number, number][];        // the main front opening (x, y), convex; inside the nose face's outline
@@ -61,13 +66,14 @@ export interface ShapeParams {
   cabinW: number;                        // inner door-card half-width
   wheel: 'twin5' | 'five' | 'cl10' | 'aero' | 'multi';
   rimColor: number; caliper: number;
-  interior: 'gt' | 'brio' | 'corsa' | 'vela';
+  interior: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   // the OC Hypercar's own pieces (absent on the other cars, which then build exactly as before)
   sidewall?: number;                     // tyre sidewall height as a share of the standard one (a low profile, a bigger rim)
   seatDrop?: number;                     // how far this car's driver sits below the shared frame (spec.ts EYE): the
-                                         // exterior's cabin silhouette uses it now; the cockpit and camera wait for the
-                                         // owner's decision on the seat drop (PROJECT_OC_HYPERCAR.md section 12, item 1)
-  led?: { color: number; halo: number };  // ice-blue LED strips: splitter edge, front corners, sills, diffuser, wing plates
+                                         // eye, the wheel, the hands, the seats and the dash move down by it (seatOffset)
+  led?: { color: number; halo: number; edge?: number };   // ice-blue LED strips: splitter edge, front corners, sills, diffuser, wing plates
+                                         // (color: the hot centre, halo: the strip's body, edge: its outer glow; material values, picked so
+                                         // the tone-mapped strip reads as the reference's ice blue, not white)
   bar?: { len: number; h: number };      // the full-width red tail bar
   fins?: { x: [number, number]; z: [number, number]; h: number };   // twin fins on the rear deck, front to back
   bonnetVents?: { x: [number, number]; z: [number, number]; n: number };   // a louvred vent each side of the bonnet's centre
@@ -81,7 +87,8 @@ export interface ShapeParams {
   paintFinish?: { metal: number; rough: number };
   tyreTint?: number; discTint?: number;  // darker rubber, a dark grey carbon-ceramic disc
   ventsQ?: [number, number][][];         // louvred vents as quads on the top surface (x, z: inner-front, outer-front, outer-rear, inner-rear; mirrored)
-  seatX?: number;                        // the outside view's cabin silhouette: the seats' |x| (0.37, the shared driver's frame)
+  hoodY?: number;                        // the game's hood camera's height (1.0 m; the hypercar's bonnet sits lower)
+  seatX?: number;                        // the seats' |x| (0.37, the shared driver's frame): the driver, the wheel and both seats move to it
   deckRibs?: { x: [number, number]; z: number[] };   // silver ribs across the rear deck's openings (the structure seen under the wing)
 }
 
@@ -257,6 +264,10 @@ const HYPER: ShapeParams = {
   // bends back up the fender's corner (bladeSweep), so in the FRONT view it climbs from 0.38 m at the inner end to
   // about 0.52 m at the outer end (the sheet: about 0.30 to 0.48 m), where a straight blade turned down over the corner
   head: [[0.45, -2.335], [0.9, -2.185], [0.915, -2.13], [0.47, -2.285]], headStyle: 'blade', bladeSweep: 0.125,
+  // M2 (M1b item 2): the blade is the face's main feature, about 0.8 m a side from 0.14 m off the centre (its foot at
+  // 0.362 m, just under the black lower nose's top edge, rising to the head quad's front edge) out round the corner:
+  // a lit face 25 mm tall under a dark socket that shows 12 mm (inner end) to 40 mm (outer end) above it from ahead
+  blade: { x0: 0.14, y0: 0.362, h: 0.025, socket: [0.012, 0.04] },
   noseStyle: 'hyper', tailStyle: 'hyper',
   noseIntake: [[-0.48, 0.09], [0.48, 0.09], [0.43, 0.26], [-0.43, 0.26]],
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
@@ -271,9 +282,19 @@ const HYPER: ShapeParams = {
   scoop: true, bonnetVent: false, fenderVents: false, handles: 'hidden',
   mirrorAt: [0.98, 0.86, -0.92], cabinW: 0.8,
   wheel: 'multi', rimColor: 0x101318, caliper: 0x1f4fd8,
-  interior: 'corsa',
-  sidewall: 0.75, seatDrop: 0.15, seatX: 0.27,
-  led: { color: 0xa6dcff, halo: 0x2f8fe8 },
+  // the Corsa's carbon buckets, harnesses and roll hoop with the hypercar's own trim (cockpit.ts 'hyper')
+  interior: 'hyper',
+  // the driver sits 0.20 m lower and 0.10 m further in than the shared frame (eye 0.96 m, x -0.27): under this roof
+  // the windscreen's header is 1.03-1.05 m at the driver's x, which at the plan's 0.15 m drop lies 2-6 degrees above
+  // the eye line, across the road at the horizon; at 0.20 m it is 8-13 degrees up, with 0.12 m of headroom
+  sidewall: 0.75, seatDrop: 0.2, seatX: 0.27,
+  // its bonnet is 0.25 m lower than the others': the hood camera comes down 0.15 m so its crests and V stay in frame
+  hoodY: 0.85,
+  // the LED family, as material colours: under ACES at the strip's 2.8x emissive a pale ice (the old 0xa6dcff) tone-maps
+  // to white, so the strip's body is a deeper blue (0x1e6fd8 reads about (121,188,241) on screen), its outer glow
+  // deeper still (0x0c4fb8, about (65,140,234)) and only a narrow hot centre is the pale ice (0x5eb8ff, about
+  // (205,233,245)): the reference's strips sample about (122,152,190) with a (176,219,245) core
+  led: { color: 0x5eb8ff, halo: 0x1e6fd8, edge: 0x0c4fb8 },
   bar: { len: 1.66, h: 0.02 },
   fins: { x: [0.68, 0.62], z: [0.95, 2.08], h: 0.08 },
   // two long vents along the front fenders' inner walls, by the cowl
@@ -334,6 +355,9 @@ export const SHAPES: Record<CarId, ShapeParams> = {
   // the hypercar keeps its nose low (the sheet's nose is about 0.40-0.45 m at the tip): a token lift only
   'oc-hyper': liftNose(HYPER, 0.02),
 };
+// the driver's frame for this car, as an offset from the shared one (spec.ts EYE, WHEEL_AT, GRIP): [x, y, z] for
+// the driver's side (the passenger's seat mirrors x). Zero for every car but the hypercar.
+export const seatOffset = (P: ShapeParams): [number, number, number] => [P.seatX !== undefined ? 0.37 - P.seatX : 0, -(P.seatDrop ?? 0), 0];
 // the rear tyre's radius (the hypercar's are bigger than its fronts)
 export const rearR = (P: ShapeParams) => P.axle.rR ?? P.axle.r;
 export const shapeFor = (id: CarId = 'rossini-gt') => SHAPES[id] ?? GT;
