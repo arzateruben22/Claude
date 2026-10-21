@@ -81,6 +81,15 @@ const BOOKING = {
 /* membership and points, from what the website shows (js/membership.js, js/rewards.js) */
 const MEMBERSHIP_V3 = "Glow Membership (the Membership section; join online, billed monthly). Glow, $185 a month: one facial a month, the Lumevina Custom Facial or the Monthly Acne Treatment (a $200 value); 10% off skincare from her shelf and free shipping; 15% off add-ons and anything else booked the same visit; no deposits; a home routine from Evelyn each season; and Ask Evelyn any time, with her own reply within 24 hours. Ageless, $235 a month: any of the facials up to the Ageless Grace Facial (a $240 value), everything in Glow, plus dermaplaning every other visit and 15% off skincare. Founding members (the first 25) pay $175 and $225 instead, kept for as long as they stay, and the first five also get a skincare kit; the Membership section shows how many founding spots are left. Unused facials bank, up to two, and with two waiting they aren't billed until they book one. A banked facial can be sent to a friend as a gift certificate. One month a year can be skipped at no charge. Three-month minimum, then cancel online any time from My Lumevina.";
 const POINTS_V3 = "Glow Points (for everyone who books here, member or not; shown in My Lumevina): 1 point for every $1 paid on visits, products and gift certificates, on the website or at the studio, and double on a Wednesday or a Wax Wednesday. 100 points take $10 off, and points can cover up to half of a deposit. 100 points for the first booking on this website, whether they're new or have been seeing Evelyn for years. When a friend books their first visit with a client's code, the friend gets $15 off and the client gets 150 points. 50 more in their birthday month (they set it in My Lumevina). Non-members also get 25 when their next visit is within five weeks of the last.";
+/* Skin School, only when the site switches it on (js/site-config.js → features: ["school"]); counts and prices from the curriculum itself */
+const cfgText = fs.readFileSync(path.join(root, "js/site-config.js"), "utf8");
+const FEATURES = ((/features:\s*\[([^\]]*)\]/.exec(cfgText) || [])[1] || "").split(",").map((x) => x.trim().replace(/['"]/g, "")).filter(Boolean);
+const SCHOOL_ON = FEATURES.includes("school");
+await import(path.join(root, "docs/school/curriculum.js"));
+const SCH = globalThis.window.SCHOOL;
+const lessonCount = SCH ? SCH.levels.reduce((n, l) => n + l.modules.reduce((a, m) => a + m.lessons.length, 0), 0) : 0;
+const tierLine = SCH ? SCH.tiers.map((t) => `${t.name} $${t.price}`).join(", ") + (SCH.starter ? `, ${SCH.starter.name} alone $${SCH.starter.price}` : "") : "";
+const SCHOOL = `Skin School: Evelyn's online course on this website (school.html), ${lessonCount} short lessons in three levels, from your first cleanser to acne, dark spots and aging. The first two lessons are free (school.html#learn-1-1); the tiers: ${tierLine}. The short "Skin science" clips on the home page come from it. Point to a lesson when a question is really a lesson.`;
 const factsFor = (v) => [
   "# The studio",
   "Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.",
@@ -88,8 +97,8 @@ const factsFor = (v) => [
   "Her menu: every treatment, with prices, times and her own descriptions, is under \"Her treatments, in her words\" below. " + NOT_OFFERED,
   "Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
-  ...(v === "v3" ? [MEMBERSHIP_V3, POINTS_V3, "Not offered: lashes, brows, nails, or an online course."]
-    : ["Not offered: lashes, brows, nails, memberships, an online course or a rewards program (those are paused)."]),
+  ...(v === "v3" ? [MEMBERSHIP_V3, POINTS_V3, ...(SCHOOL_ON ? [SCHOOL, "Not offered: lashes, brows or nails."] : ["Not offered: lashes, brows, nails, or an online course."])]
+    : [...(SCHOOL_ON ? [SCHOOL] : []), "Not offered: lashes, brows, nails, memberships" + (SCHOOL_ON ? "" : ", an online course") + " or a rewards program (those are paused)."]),
   "",
   "# FAQ & Policies",
   ...policies.map((p) => `## ${p.q}\n${p.a}`),
