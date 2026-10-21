@@ -2012,6 +2012,113 @@ export const SCENES = {
       if (i === 1) { $$("#m1 b").forEach((d, n) => { const p = seg(lt, 2.2 + n * 0.28, 2.5 + n * 0.28); d.style.opacity = p; d.style.transform = `scale(${0.4 + 0.6 * E.back(p)})`; }); $$("#m2 b").forEach((d, n) => { const p = seg(lt, 3.4 + n * 0.14, 3.7 + n * 0.14); d.style.opacity = p; d.style.transform = `scale(${0.4 + 0.6 * E.back(p)})`; }); }
     }
   },
+  "14-2": {
+    id: "14-2", kicker: "Her shelf", title: `How the products <span class="grad">fit together.</span>`, dur: 24, poster: 4.5,
+    shots: [
+      { at: 0, name: "base", cap: "The base is a cleanser, a moisturizer and SPF. One treatment product for the main concern is the first addition." },
+      { at: 6, name: "mandelic", cap: "Mandelic serums come in strengths: the lowest first, a few nights a week. Moving up is Evelyn's call, after a few weeks without stinging." },
+      { at: 12.5, name: "texture", cap: "Gel textures for oily and combination skin, creams for dry. A hydrating toner adds water under either." },
+      { at: 18, name: "picks", cap: "Her morning and night picks for your skin come after a visit, and the website chat can check stock and put it in your bag for pickup." }
+    ],
+    css: `
+.plank { position: absolute; left: 8vmin; width: 94vmin; top: 64%; height: 2.6vmin; border-radius: 1.3vmin; background: linear-gradient(180deg, #6b4a3a, #4a3127); box-shadow: 0 1.6vmin 3vmin rgba(0,0,0,.45); }
+.sh { position: absolute; left: 8vmin; width: 94vmin; bottom: 36%; display: flex; justify-content: space-evenly; align-items: flex-end; }
+.it { position: relative; display: flex; flex-direction: column; align-items: center; opacity: 0; }
+.it > em { position: absolute; top: calc(100% + 4vmin); left: 50%; transform: translateX(-50%); white-space: nowrap; font-style: normal; font-size: 2.6vmin; font-weight: 600; color: #e6d5cd; text-align: center; line-height: 1.2; }
+.it > em small { display: block; font-size: 2.1vmin; font-weight: 500; color: #a89a94; }
+.it.hi::before { content: ""; position: absolute; left: 50%; bottom: 0; width: 18vmin; height: 18vmin; margin-left: -9vmin; border-radius: 50%; background: radial-gradient(circle, rgba(244,201,214,.4), rgba(244,201,214,0) 70%); opacity: var(--g, 0); }
+.pump { width: 3vmin; height: 2.6vmin; background: #d9cfc8; border-radius: .6vmin .6vmin 0 0; position: relative; }
+.pump::before { content: ""; position: absolute; left: -1.6vmin; top: -1.6vmin; width: 6.2vmin; height: 1.6vmin; border-radius: .8vmin; background: #d9cfc8; }
+.body { border-radius: 2.6vmin; position: relative; overflow: hidden; }
+.body::after { content: ""; position: absolute; left: 18%; top: 10%; width: 14%; height: 60%; border-radius: 1vmin; background: rgba(255,255,255,.35); }
+.lid { border-radius: 1.2vmin 1.2vmin .4vmin .4vmin; }
+.drop { width: 3.6vmin; height: 3.6vmin; border-radius: 50% 50% 1vmin 1vmin; background: #3a3134; }
+.neck { width: 2.2vmin; height: 2.4vmin; background: #3a3134; }
+.ccap { width: 5vmin; height: 3vmin; border-radius: .6vmin .6vmin 1.2vmin 1.2vmin; background: #3a3134; }
+.pn { position: absolute; left: 110vmin; right: 5vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.8vmin; }
+.hd { font-size: 3.6vmin; font-weight: 700; opacity: 0; line-height: 1.2; }
+.hd em { font-style: normal; color: #f4c9d6; }
+.wk { display: flex; gap: .9vmin; opacity: 0; }
+.wk b { flex: 1; height: 7vmin; border-radius: 1.8vmin; display: flex; align-items: center; justify-content: center; font-size: 2.4vmin; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: #8f817b; }
+.wk b.on { background: rgba(232,192,143,.25); border-color: #e8c08f; color: #fff; }
+.nt { display: flex; align-items: center; gap: 1.4vmin; padding: 1.3vmin 2.2vmin; border-radius: 2.8vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; line-height: 1.25; opacity: 0; }
+.nt svg { width: 3.4vmin; height: 3.4vmin; flex: none; }
+.nt.up { border-color: rgba(232,192,143,.6); }
+.ampm { display: flex; gap: 1.4vmin; }
+.ampm .nt { flex: 1; flex-direction: column; align-items: flex-start; gap: .8vmin; }
+.bub { align-self: flex-start; padding: 1.6vmin 2.4vmin; border-radius: 3vmin 3vmin 3vmin 1vmin; background: #f4eae4; color: #1a1210; font-size: 2.9vmin; font-weight: 600; opacity: 0; }
+.bub.me { align-self: flex-end; border-radius: 3vmin 3vmin 1vmin 3vmin; background: #2c2124; color: #fff; border: 1px solid rgba(244,201,214,.4); }
+.bag { width: 12vmin; height: 11vmin; border-radius: 1.6vmin 1.6vmin 2.6vmin 2.6vmin; background: #e8d6c9; position: relative; }
+.bag::before { content: ""; position: absolute; left: 3vmin; right: 3vmin; top: -3.2vmin; height: 4.4vmin; border: .6vmin solid #c9b2a3; border-bottom: 0; border-radius: 3vmin 3vmin 0 0; }
+.bag b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2.2vmin; font-weight: 800; color: #6b4a3a; letter-spacing: .06em; }
+.fly { position: absolute; z-index: 2; }
+.dr { position: absolute; width: 1.8vmin; height: 2.4vmin; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #9fd8ff; box-shadow: 0 0 1.2vmin rgba(143,211,255,.8); opacity: 0; }
+@media (orientation: portrait) { .plank { left: 6vmin; width: 88vmin; top: 40%; } .sh { left: 6vmin; width: 88vmin; bottom: 60%; } .pn { left: 6vmin; right: 6vmin; top: 52%; bottom: 2%; justify-content: flex-start; } .it > em { font-size: 2.4vmin; } }`,
+    html: `
+<div class="plank" id="plank"></div>
+<section class="shot"><div class="sh">
+  <div class="it"><div class="pump"></div><div class="body" style="width:9vmin;height:15vmin;background:#efe3d9"></div><em>cleanser</em></div>
+  <div class="it"><div class="lid" style="width:13vmin;height:2.8vmin;background:#cdb7a8"></div><div class="body" style="width:12vmin;height:8vmin;background:#f6eee8;border-radius:1.4vmin 1.4vmin 2.6vmin 2.6vmin"></div><em>moisturizer</em></div>
+  <div class="it"><div class="body" style="width:7vmin;height:14vmin;background:#ffd27a;border-radius:3vmin 3vmin 1vmin 1vmin"></div><div class="ccap"></div><em>SPF</em></div>
+  <div class="it hi" id="add"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#f4c9d6;border-radius:2vmin"></div><em>one treatment<small>for the main concern</small></em></div>
+</div></section>
+<section class="shot"><div class="sh">
+  <div class="it hi" id="lo"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#f6e2c8;border-radius:2vmin"></div><em>mandelic<small>lowest first</small></em></div>
+  <div class="it"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#e8c08f;border-radius:2vmin"></div><em>next<small>strength</small></em></div>
+  <div class="it"><div class="drop"></div><div class="neck"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#d9984f;border-radius:2vmin"></div><em>stronger<small>strength</small></em></div>
+</div></section>
+<section class="shot"><div class="sh" id="tex">
+  <div class="it"><div class="lid" style="width:13vmin;height:2.8vmin;background:#7fb6d9"></div><div class="body" style="width:12vmin;height:8vmin;background:rgba(159,216,255,.45);border:1px solid rgba(159,216,255,.7);border-radius:1.4vmin 1.4vmin 2.6vmin 2.6vmin"></div><em>gel<small>oily and combination</small></em></div>
+  <div class="it" id="toner"><div class="ccap" style="width:4vmin;height:3.4vmin"></div><div class="body" style="width:8vmin;height:17vmin;background:linear-gradient(180deg, rgba(255,255,255,.18) 30%, rgba(143,211,255,.55) 30%);border:1px solid rgba(255,255,255,.3);border-radius:2.4vmin"></div><em>hydrating toner<small>water under either</small></em></div>
+  <div class="it"><div class="lid" style="width:13vmin;height:2.8vmin;background:#cdb7a8"></div><div class="body" style="width:12vmin;height:8vmin;background:#fbf6f1;border-radius:1.4vmin 1.4vmin 2.6vmin 2.6vmin"></div><em>cream<small>dry</small></em></div>
+  <i class="dr" id="d0"></i><i class="dr" id="d1"></i>
+</div></section>
+<section class="shot"><div class="sh">
+  <div class="it"><div class="pump"></div><div class="body" style="width:9vmin;height:15vmin;background:#efe3d9"></div><em>&nbsp;</em></div>
+  <div class="it" id="bagit"><div class="bag"><b>PICKUP</b></div><em>your bag</em></div>
+  <div class="it"><div class="body" style="width:7vmin;height:14vmin;background:#ffd27a;border-radius:3vmin 3vmin 1vmin 1vmin"></div><div class="ccap"></div><em>&nbsp;</em></div>
+  <div class="fly" id="fly"><div class="drop" style="margin:0 auto"></div><div class="neck" style="margin:0 auto"></div><div class="body" style="width:7.4vmin;height:10vmin;background:#f4c9d6;border-radius:2vmin"></div></div>
+</div></section>
+<div class="pn" id="p0"><div class="hd">The base, <em>then one addition.</em></div><span class="nt">${CHECK}cleanser · moisturizer · SPF</span><span class="nt up">+ one treatment product for the main concern</span></div>
+<div class="pn" id="p1"><div class="hd">The lowest strength first, <em>a few nights a week.</em></div><div class="wk"><b class="on">M</b><b>T</b><b class="on">W</b><b>T</b><b class="on">F</b><b>S</b><b>S</b></div><span class="nt up">↑ moving up: Evelyn's call, after a few weeks without stinging</span></div>
+<div class="pn" id="p2"><div class="hd">Texture by skin type, <em>water under either.</em></div><span class="nt">gel: oily and combination skin</span><span class="nt">cream: dry skin</span><span class="nt up">hydrating toner: under either</span></div>
+<div class="pn" id="p3"><div class="ampm"><span class="nt">${SUN}<span>Morning picks<br><small style="font-size:2.2vmin;color:#b9aaa3">after a visit</small></span></span><span class="nt">${MOON}<span>Night picks<br><small style="font-size:2.2vmin;color:#b9aaa3">after a visit</small></span></span></div><span class="bub me">Is it in stock?</span><span class="bub">Yes. It's in your bag for pickup.</span></div>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      enter($("#plank"), t, 0.1, { y: 0, s: 0.9 });
+      // this shot's shelf: things land one at a time, with a small settle
+      if (sec) [...sec.querySelectorAll(".it")].forEach((el, n) => enter(el, lt, 0.3 + n * 0.45 + (el.id === "add" ? 1.0 : 0), { y: -30, d: 0.7 }));
+      [["#add", 0, 2.4], ["#lo", 1, 1.6]].forEach(([s, k, a]) => { const el = $(s); if (el) el.style.setProperty("--g", i === k ? seg(lt, a, a + 0.6) * (0.75 + 0.25 * Math.sin(lt * 3)) : 0); });
+      // the panel for this shot (outside the shot sections, so it can share the right side)
+      [0, 1, 2, 3].forEach((k) => {
+        const p = $("#p" + k), on = k === i;
+        p.style.visibility = on ? "visible" : "hidden";
+        if (!on) return;
+        [...p.querySelectorAll(".hd, .nt, .wk, .bub")].forEach((el, n) => enter(el, lt, 0.9 + n * 0.55 + (el.classList.contains("bub") ? 0.8 : 0), { y: 12 }));
+      });
+      // the week strip: the nights light in turn
+      $$("#p1 .wk b.on").forEach((b, n) => { b.style.opacity = i === 1 ? 0.35 + 0.65 * seg(lt, 2.0 + n * 0.35, 2.3 + n * 0.35) : 1; });
+      // the toner's water falls into the gel and the cream
+      if (i === 2) {
+        const tx = $("#tex"), tn = $("#toner"), W = tx.offsetWidth, cx = tn.offsetLeft + tn.offsetWidth / 2;
+        [["#d0", -1, 2.6], ["#d1", 1, 3.4]].forEach(([s, dir, a]) => {
+          const d = $(s), p = seg(lt, a, a + 0.9), vm = Math.min(innerWidth, innerHeight) / 100;
+          d.style.opacity = p > 0 && p < 1 ? 1 : 0;
+          d.style.left = (cx + dir * p * W * 0.3) + "px"; d.style.bottom = (19 * vm - 16 * vm * p * p + 6 * vm * Math.sin(Math.PI * p)) + "px";
+        });
+      }
+      // a pick hops into the bag
+      if (i === 3) {
+        const f = $("#fly"), bg = $("#bagit"), vm = Math.min(innerWidth, innerHeight) / 100, p = E.inout(seg(lt, 2.0, 3.0));
+        const x1 = bg.offsetLeft + bg.offsetWidth / 2 - 3.7 * vm, x0 = x1 + 22 * vm;
+        f.style.left = (x0 + (x1 - x0) * p) + "px"; f.style.bottom = (Math.sin(Math.PI * p) * 14 * vm + p * 2 * vm) + "px";
+        f.style.opacity = seg(lt, 0.8, 1.2) * (1 - seg(lt, 2.8, 3.0)); f.style.transform = `rotate(${-20 * Math.sin(Math.PI * p)}deg) scale(${1 - 0.3 * p})`;
+        set0(bg, lt);
+      }
+      function set0(el, lt) { if (lt > 2.9) el.style.transform = `translateY(${-1.2 * Math.sin(Math.min(1, (lt - 2.9) / 0.4) * Math.PI)}vmin)`; }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
