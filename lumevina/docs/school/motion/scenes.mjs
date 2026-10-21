@@ -1781,6 +1781,97 @@ export const SCENES = {
       $$(".ru").forEach((el, n) => { enter(el, lt, 0.7 + n * 0.45, { y: 14 }); if (n === 4 && lt > 2.5) { const k = seg(lt, 2.6, 3.4); el.style.transform += ` translateX(${Math.sin(lt * 34) * 5 * (1 - k)}px)`; } });
     }
   },
+  "10-3": {
+    id: "10-3", kicker: "Professional treatments, explained", title: `Who does what, <span class="grad">and what makes it work.</span>`, dur: 23, poster: 8.5,
+    shots: [
+      { at: 0, name: "esthetician", cap: "With an esthetician: facials, light peels, dermaplaning, LED and extractions. That's the surface of the skin, and it's Evelyn's room." },
+      { at: 6, name: "medical", cap: "With a nurse or doctor: microneedling, lasers, Botox and fillers. In California these are medical treatments." },
+      { at: 12, name: "ask", cap: "Ask anyone offering injectables who their supervising physician is, and look for a licensed nurse, PA or doctor." },
+      { at: 17.5, name: "work", cap: "Most of what makes a treatment work comes before and after: prep, aftercare and sunscreen." }
+    ],
+    css: `
+.skn { position: absolute; left: 14vmin; top: 50%; width: 44vmin; height: 36vmin; margin-top: -15vmin; }
+.lay { position: absolute; left: 0; right: 0; overflow: hidden; }
+.lay b { position: absolute; left: 2.4vmin; top: 50%; margin-top: -1.5vmin; font-size: 2.3vmin; line-height: 3vmin; font-weight: 700; color: rgba(40,18,12,.75); opacity: 0; }
+.L0 { top: 0; height: 7vmin; border-radius: 4.4vmin 4.4vmin 0 0; background: #f1cfba; }
+.L1 { top: 7vmin; height: 14vmin; background: #d9a189; }
+.L2 { top: 21vmin; height: 15vmin; border-radius: 0 0 4.4vmin 4.4vmin; background: #b9775f; }
+.lay svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.glw { position: absolute; left: -1vmin; right: -1vmin; border-radius: 5vmin; opacity: 0; pointer-events: none; }
+.glw.g0 { top: -1vmin; height: 9vmin; box-shadow: 0 0 4vmin 1vmin rgba(244,201,214,.75), inset 0 0 0 .4vmin rgba(244,201,214,.95); }
+.glw.g1 { top: 7vmin; height: 30vmin; box-shadow: 0 0 4vmin 1vmin rgba(143,211,255,.5), inset 0 0 0 .4vmin rgba(143,211,255,.9); }
+.led { position: absolute; left: 6vmin; right: 6vmin; top: -14vmin; height: 4vmin; border-radius: 2vmin; background: #2a2224; display: flex; justify-content: space-around; align-items: center; opacity: 0; }
+.led i { width: 2vmin; height: 2vmin; border-radius: 50%; background: #ff8e86; box-shadow: 0 0 1.6vmin #ff6b60; }
+.rays { position: absolute; left: 7vmin; right: 7vmin; top: -10vmin; height: 17vmin; background: linear-gradient(180deg, rgba(255,120,110,.5), rgba(255,120,110,.18)); clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%); opacity: 0; }
+.pins { position: absolute; left: 6vmin; width: 14vmin; top: -12vmin; height: 10vmin; display: flex; justify-content: space-between; opacity: 0; }
+.pins i { width: .5vmin; height: 100%; border-radius: .3vmin; background: linear-gradient(180deg, #c9c9ce, #ffffff); }
+.pins::before { content: ""; position: absolute; left: -1vmin; right: -1vmin; top: -3vmin; height: 3.4vmin; border-radius: 1.6vmin; background: #3a3436; }
+.beam { position: absolute; left: 31vmin; width: .8vmin; margin-left: -.4vmin; top: -14vmin; height: 43vmin; border-radius: .4vmin; background: linear-gradient(180deg, rgba(143,211,255,.2), #bfe8ff 30%, #8fd3ff); box-shadow: 0 0 2vmin #8fd3ff; transform-origin: 50% 0; opacity: 0; }
+.beam::after { content: ""; position: absolute; left: 50%; bottom: -1.8vmin; width: 4vmin; height: 4vmin; margin-left: -2vmin; border-radius: 50%; background: radial-gradient(circle, #e8f6ff, rgba(143,211,255,0) 70%); }
+.spf { position: absolute; left: -1vmin; top: -2.4vmin; height: 3.4vmin; width: 46vmin; border-radius: 1.8vmin; background: linear-gradient(90deg, rgba(255,236,190,.92), rgba(255,214,150,.85)); box-shadow: 0 0 2.4vmin rgba(255,210,122,.6); transform-origin: 0 50%; opacity: 0; display: flex; align-items: center; padding-left: 2vmin; font-size: 2.2vmin; font-weight: 800; color: #4a2e10; letter-spacing: .08em; }
+.pn { position: absolute; left: 68vmin; right: 8vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 2.2vmin; }
+.hd { display: flex; align-items: center; gap: 1.4vmin; font-size: 4.4vmin; font-weight: 700; opacity: 0; }
+.hd i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); box-shadow: 0 0 1.6vmin var(--c); flex: none; }
+.chs { display: flex; flex-wrap: wrap; gap: 1.3vmin; }
+.ch { display: inline-flex; align-items: center; gap: 1vmin; padding: 1.2vmin 2.3vmin; border-radius: 2.8vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.15); font-size: 3.3vmin; font-weight: 600; opacity: 0; }
+.ch svg { width: 3vmin; height: 3vmin; }
+.ft { font-size: 3.1vmin; font-weight: 500; color: #d9c6bd; opacity: 0; }
+.ft b { color: var(--c); font-weight: 700; }
+.bd { align-self: flex-start; padding: 1.2vmin 2.4vmin; border-radius: 2.8vmin; border: .3vmin dashed rgba(143,211,255,.75); font-size: 3.1vmin; font-weight: 700; color: #cdebff; opacity: 0; }
+.bb { position: relative; align-self: flex-start; padding: 2.2vmin 3.2vmin; border-radius: 4vmin 4vmin 4vmin 1.2vmin; background: #f4eae4; color: #1a1210; font-size: 4vmin; font-weight: 700; line-height: 1.25; opacity: 0; }
+.tl { display: flex; gap: 1.2vmin; height: 17vmin; }
+.tb { position: relative; border-radius: 3.4vmin; display: flex; flex-direction: column; justify-content: center; padding: 0 2.2vmin; font-size: 3.1vmin; font-weight: 700; line-height: 1.25; opacity: 0; }
+.tb small { display: block; font-size: 2.5vmin; font-weight: 500; opacity: .8; }
+.tb.pre { flex: 3.4; background: #2c2124; border: 1px solid rgba(244,201,214,.5); }
+.tb.mid { flex: 2.2; background: #1c1517; border: 1px solid rgba(255,255,255,.14); color: #b9aaa3; }
+.tb.post { flex: 4.4; background: #2c2124; border: 1px solid rgba(255,210,122,.55); }
+.brk { font-size: 3.6vmin; font-weight: 700; opacity: 0; }
+.brk em { font-style: normal; color: #f4c9d6; }
+@media (orientation: portrait) { .skn { left: 50%; top: 9%; margin: 0 0 0 -22vmin; } .pn { left: 4vmin; right: 4vmin; top: 52%; bottom: 2%; justify-content: flex-start; } .tl { height: 21vmin; } }`,
+    html: `
+<div class="skn" id="skn">
+  <div class="rays" id="rays"></div><div class="led" id="led"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="lay L0"><b id="lb0">the surface</b></div>
+  <div class="lay L1"><svg viewBox="0 0 440 140" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C60 10 120 70 180 40 S300 10 360 40 S420 60 440 40 M0 100 C70 70 140 130 210 100 S330 70 440 100" fill="none" stroke="rgba(255,240,230,.3)" stroke-width="4"/></svg></div>
+  <div class="lay L2"><svg viewBox="0 0 440 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 50 C80 20 150 90 230 50 S360 20 440 55 M0 115 C60 90 150 140 240 112 S380 92 440 118" fill="none" stroke="rgba(255,230,220,.25)" stroke-width="4"/></svg><b id="lb1" style="color:rgba(255,240,232,.85)">deeper</b></div>
+  <i class="glw g0" id="g0"></i><i class="glw g1" id="g1"></i>
+  <div class="pins" id="pins"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="beam" id="beam"></div>
+  <div class="spf" id="spf">SPF</div>
+</div>
+<section class="shot"><div class="pn" style="--c:#f4c9d6"><div class="hd" id="h0"><i></i>With an esthetician</div><div class="chs"><span class="ch">facials</span><span class="ch">light peels</span><span class="ch">dermaplaning</span><span class="ch">LED</span><span class="ch">extractions</span></div><p class="ft" id="f0">The surface of the skin: <b>Evelyn's room.</b></p></div></section>
+<section class="shot"><div class="pn" style="--c:#8fd3ff"><div class="hd" id="h1"><i></i>With a nurse or doctor</div><div class="chs"><span class="ch">microneedling</span><span class="ch">lasers</span><span class="ch">Botox</span><span class="ch">fillers</span></div><span class="bd" id="f1">In California: medical treatments</span></div></section>
+<section class="shot"><div class="pn" style="--c:#8fd3ff"><div class="hd" id="h2"><i></i>Offered injectables? Ask:</div><div class="bb" id="bb">“Who is your supervising physician?”</div><div class="chs"><span class="ch">${CHECK}licensed nurse</span><span class="ch">${CHECK}PA</span><span class="ch">${CHECK}doctor</span></div></div></section>
+<section class="shot"><div class="pn" style="--c:#ffd27a"><div class="brk" id="brk">Most of what makes it work: <em>before and after.</em></div><div class="tl"><div class="tb pre">before<small>prep</small></div><div class="tb mid">the treatment</div><div class="tb post">after<small>aftercare and sunscreen</small></div></div></div></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      const b = 0.5 + 0.5 * Math.sin(lt * 3);
+      // the skin arrives once and stays; each shot lights the part of it the treatments reach
+      enter($("#skn"), t, 0.1, { y: 20 });
+      $("#skn").style.opacity = (i === 2 ? 1 - 0.55 * seg(lt, 0, 0.6) : i === 3 ? 0.45 + 0.55 * seg(lt, 0, 0.6) : 1) * Math.min(1, seg(t, 0.1, 0.6) * 2.5);
+      const on0 = i === 0 ? seg(lt, 0.4, 1.0) : i === 1 ? 1 - seg(lt, 0, 0.4) : 0, on1 = i === 1 ? seg(lt, 0.6, 1.2) : i === 2 ? 1 - seg(lt, 0, 0.4) : 0;
+      $("#g0").style.opacity = on0 * (0.7 + 0.3 * b); $("#g1").style.opacity = on1 * (0.7 + 0.3 * b);
+      $("#lb0").style.opacity = on0; $("#lb1").style.opacity = on1;
+      $("#led").style.opacity = on0; $("#rays").style.opacity = on0 * (0.55 + 0.45 * b);
+      // microneedling pins stamp into the dermis; a laser reaches deeper
+      const stamp = i === 1 ? Math.max(0, Math.sin((lt - 0.8) * 4.2)) * seg(lt, 0.8, 1.2) : 0;
+      $("#pins").style.opacity = i === 1 ? seg(lt, 0.5, 0.9) * (1 - seg(lt, 5.4, 5.9)) : 0;
+      $("#pins").style.transform = `translateY(${stamp * 15}vmin)`;
+      const bm = i === 1 ? seg(lt, 2.2, 2.8) * (1 - seg(lt, 5.4, 5.9)) : 0;
+      $("#beam").style.opacity = bm * (0.75 + 0.25 * Math.sin(lt * 23)); $("#beam").style.transform = `scaleY(${E.out(seg(lt, 2.2, 2.8))})`;
+      // sunscreen seals the surface after
+      const sp = i === 3 ? E.out(seg(lt, 2.4, 3.2)) : 0;
+      $("#spf").style.opacity = sp > 0 ? Math.min(1, sp * 2) : 0; $("#spf").style.transform = `scaleX(${sp})`;
+      // the panel for this shot, line by line
+      if (!sec) return;
+      const parts = [...sec.querySelectorAll(".hd, .ch, .ft, .bd, .bb, .brk, .tb")];
+      const at = [[0.3, 0.9, 1.2, 1.5, 1.8, 2.1, 3.2], [0.3, 0.9, 1.3, 1.7, 2.1, 3.2], [0.3, 0.9, 2.2, 2.6, 3.0], [1.6, 0.3, 0.7, 1.1]][i];
+      parts.forEach((el, n) => {
+        if (i === 3) { const k = el.classList.contains("brk") ? 0 : el.classList.contains("pre") ? 1 : el.classList.contains("mid") ? 2 : 3; enter(el, lt, at[k], { y: 14 }); if (k === 2) el.style.opacity = Math.min(+el.style.opacity, 1 - 0.5 * seg(lt, 2.0, 2.8)); else if (k !== 0 && lt > 2.0) el.style.boxShadow = `0 0 ${2.4 * seg(lt, 2.0, 2.8)}vmin ${k === 1 ? "rgba(244,201,214,.45)" : k === 3 ? "rgba(255,210,122,.45)" : "transparent"}`; return; }
+        enter(el, lt, at[n] == null ? 2.4 : at[n], { y: 14, s: el.classList.contains("bb") ? 0.85 : 0 });
+      });
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
