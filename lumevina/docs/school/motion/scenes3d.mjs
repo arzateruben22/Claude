@@ -374,7 +374,7 @@ window.seek = function (t) {
   const $ = M.$;
   if (i === 0) { enter($("#l-spf"), lt, 1.2, { y: 8 }); enter($("#l-oil"), lt, 2.4, { y: 8 }); enter($("#l-city"), lt, 3.6, { y: 8 }); }
   if (i === 1) { enter($("#l-balm"), lt, 0.5, { y: 8 }); if (lt > 2.6) $("#l-balm").style.opacity = 1 - seg(lt, 2.6, 3.1); enter($("#l-melt"), lt, 2.4, { y: 8 }); if (lt > 4.8) $("#l-melt").style.opacity = 1 - seg(lt, 4.8, 5.3); enter($("#l-warm"), lt, 4.8, { y: 8 }); }
-  if (i === 2) { enter($("#l-gel"), lt, 0.8, { y: 8 }); if (lt > 6.2) $("#l-gel").style.opacity = 1 - seg(lt, 6.2, 6.7); enter($("#clock3"), lt, 0.6, { y: 10 }); const secs = Math.round(60 * E.lin(seg(lt, 0.8, 6.0))); $("#clockn").textContent = Math.floor(secs / 60) + ":" + String(secs % 60).padStart(2, "0"); enter($("#l-clean"), lt, 7.0, { y: 8 }); enter($("#note3"), lt, 6.4, { y: 10 }); }
+  if (i === 2) { enter($("#l-gel"), lt, 0.8, { y: 8 }); if (lt > 6.2) $("#l-gel").style.opacity = 1 - seg(lt, 6.2, 6.7); enter($("#clock3"), lt, 0.6, { y: 10 }); const secs = Math.round(60 * E.lin(seg(lt, 0.8, 6.0))); $("#clockn").textContent = Math.floor(secs / 60) + ":" + String(secs % 60).padStart(2, "0"); enter($("#l-clean"), lt, 7.0, { y: 8 }); enter($("#note3"), lt, 6.4, { y: 10 }); if (lt > 6.2) $("#clock3").style.opacity = 1 - seg(lt, 6.2, 6.6); }   // the clock leaves as the note arrives (they share the bottom on a phone)
   renderer.render(scene, camera);
 };
 `
