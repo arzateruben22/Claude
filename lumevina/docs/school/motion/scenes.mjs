@@ -1422,6 +1422,90 @@ export const SCENES = {
       [["i-nia", 0], ["i-ha", 1], ["i-az", 2], ["i-bpo", 3]].forEach(([id, k]) => { const el = $("#" + id); el.classList.toggle("on", i === k); if (i === k) enter(el, lt, 0.3, { y: 8, d: 0.5 }); else set(el, { o: i > k ? 0.55 : 0.3 }); });
     }
   },
+  "9-2": {
+    id: "9-2", kicker: "Brighteners that work", title: `Two brighteners beat one. <span class="grad">Sunscreen beats both.</span>`, dur: 23, poster: 5,
+    shots: [
+      { at: 0, name: "four", cap: "Vitamin C, niacinamide, azelaic acid and tranexamic acid all fade spots in different ways. Two together often work better than one." },
+      { at: 7, name: "retinoids", cap: "Retinoids speed up turnover, so pigment leaves faster." },
+      { at: 12, name: "rx", cap: "Hydroquinone is prescription-only in the US since 2020, so it's a conversation for your doctor." },
+      { at: 16.5, name: "sun", cap: "Nothing works without sunscreen. One unprotected afternoon can undo a month of fading." }
+    ],
+    css: `
+.br { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.four9 { display: flex; flex-wrap: wrap; gap: 1.6vmin; justify-content: center; }
+.b9 { display: inline-flex; align-items: center; gap: 1.2vmin; padding: 1.4vmin 2.6vmin; border-radius: 999px; background: #111113; border: 1.5px solid var(--c); color: #f5f5f7; font-size: 3vmin; font-weight: 650; white-space: nowrap; opacity: 0; } .b9 i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); }
+.race { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4vmin; }
+.lane { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; display: flex; align-items: center; gap: 2.6vmin; opacity: 0; }
+.lane .pt9 { position: relative; flex: none; width: 18vmin; height: 18vmin; border-radius: 2vmin; background: #d9b5a0; overflow: hidden; }
+.lane .pt9 i { position: absolute; left: 50%; top: 50%; width: 9vmin; height: 9vmin; margin: -4.5vmin 0 0 -4.5vmin; border-radius: 50%; background: #6b3f2e; filter: blur(.4vmin); }
+.lane b { display: block; font-size: 3.2vmin; font-weight: 700; } .lane span { display: block; font-size: 2.5vmin; color: #a1a1a6; margin-top: .6vmin; }
+.lane .bar9 { position: relative; height: 1.6vmin; border-radius: 999px; background: rgba(255,255,255,.08); margin-top: 1.4vmin; overflow: hidden; } .lane .bar9 i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.lane.two { border-color: rgba(244,201,214,.6); }
+.belt { position: relative; height: 24vmin; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); overflow: hidden; opacity: 0; }
+.belt .skin9 { position: absolute; left: 0; right: 0; bottom: 0; height: 14vmin; background: linear-gradient(#d9b5a0, #c98f7a); }
+.belt .cell { position: absolute; bottom: 6vmin; width: 7vmin; height: 5vmin; border-radius: 1vmin; background: #f3dccd; border: 1px solid rgba(0,0,0,.15); }
+.belt .cell.pig { background: #8a5a46; }
+.belt .lbl9 { position: absolute; left: 2.4vmin; top: 2vmin; font-size: 2.6vmin; font-weight: 650; color: #f4c9d6; letter-spacing: .04em; text-transform: uppercase; }
+.belt .spd { position: absolute; right: 2.4vmin; top: 2vmin; font-size: 2.6vmin; font-weight: 650; color: #a1a1a6; }
+.rx { display: flex; align-items: center; gap: 3vmin; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin; opacity: 0; }
+.rx .pad { flex: none; width: 16vmin; height: 20vmin; border-radius: 1.6vmin; background: #f5f0ec; color: #1a1210; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1vmin; }
+.rx .pad b { font-size: 6vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .rx .pad span { font-size: 2vmin; font-weight: 650; text-align: center; line-height: 1.2; }
+.rx h3 { font-size: 3.6vmin; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; } .rx p { font-size: 2.6vmin; color: #a1a1a6; margin-top: 1vmin; line-height: 1.35; }
+.month { position: relative; border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 3vmin 3.2vmin 3.4vmin; opacity: 0; }
+.month .row { display: flex; align-items: center; gap: 2.6vmin; }
+.month .pt9 { position: relative; flex: none; width: 16vmin; height: 16vmin; border-radius: 2vmin; background: #d9b5a0; overflow: hidden; } .month .pt9 i { position: absolute; left: 50%; top: 50%; width: 8vmin; height: 8vmin; margin: -4vmin 0 0 -4vmin; border-radius: 50%; background: #6b3f2e; filter: blur(.4vmin); }
+.month .track { flex: 1; } .month .track b { display: block; font-size: 3vmin; font-weight: 700; margin-bottom: 1.2vmin; }
+.month .bar9 { position: relative; height: 2.2vmin; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; } .month .bar9 i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 999px; background: linear-gradient(90deg, #f4c9d6, #e2b08c); }
+.month .days { display: flex; justify-content: space-between; margin-top: .8vmin; font-size: 2.2vmin; color: #8e8e93; font-weight: 600; }
+.month .sun9 { position: absolute; right: 3vmin; top: -3vmin; width: 9vmin; height: 9vmin; border-radius: 50%; background: radial-gradient(circle, #ffe9a8, #ffd27a 60%, rgba(255,210,122,0) 62%); box-shadow: 0 0 4vmin rgba(255,210,122,.6); opacity: 0; }
+.month .undo { position: absolute; left: 50%; bottom: -2.6vmin; transform: translateX(-50%); padding: 1vmin 2.2vmin; border-radius: 999px; background: #1a1a1d; border: 1.5px solid #ff7a6b; color: #ff9a8b; font-size: 2.6vmin; font-weight: 650; white-space: nowrap; opacity: 0; }
+@media (orientation: portrait) { .b9 { font-size: 2.7vmin; } .race { grid-template-columns: 1fr; } .lane .pt9 { width: 15vmin; height: 15vmin; } .belt { height: 26vmin; } .rx { flex-direction: column; text-align: center; } .rx h3 { font-size: 3.3vmin; } .month .pt9 { width: 14vmin; height: 14vmin; } .month .undo { font-size: 2.3vmin; } }`,
+    html: `
+<div class="br">
+  <div class="four9" id="four9"><span class="b9" style="--c:#e2b08c" id="b-c"><i></i>vitamin C</span><span class="b9" style="--c:#7fe39a" id="b-n"><i></i>niacinamide</span><span class="b9" style="--c:#f4c9d6" id="b-a"><i></i>azelaic acid</span><span class="b9" style="--c:#8fd3ff" id="b-t"><i></i>tranexamic acid</span></div>
+  <div class="race" id="race">
+    <div class="lane" id="l1"><div class="pt9"><i id="sp1"></i></div><div style="flex:1"><b>One brightener</b><span>fades, slowly</span><div class="bar9"><i id="br1"></i></div></div></div>
+    <div class="lane two" id="l2"><div class="pt9"><i id="sp2"></i></div><div style="flex:1"><b>Two together</b><span>different routes, faster</span><div class="bar9"><i id="br2"></i></div></div></div>
+  </div>
+  <div class="belt" id="belt"><span class="lbl9">turnover</span><span class="spd" id="spd">normal speed</span><div class="skin9"></div>${Array.from({ length: 12 }, (_, k) => `<div class="cell${k % 4 === 1 ? " pig" : ""}" id="cl${k}"></div>`).join("")}</div>
+  <div class="rx" id="rx"><div class="pad"><b>Rx</b><span>hydroquinone<br>US, since 2020</span></div><div><h3>Prescription only</h3><p>So it's a conversation for your doctor, not a bottle off a shelf.</p></div></div>
+  <div class="month" id="month"><div class="sun9" id="sun9"></div><div class="row"><div class="pt9"><i id="sp3"></i></div><div class="track"><b id="mb">A month of fading</b><div class="bar9"><i id="br3"></i></div><div class="days"><span>day 1</span><span>day 30</span></div></div></div><span class="undo" id="undo">one unprotected afternoon</span></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      const b = 0.5 + 0.5 * Math.sin(lt * 2.4);
+      // shot 0: four chips, then the race: one brightener against two
+      $("#four9").style.display = i === 0 ? "" : "none"; $("#race").style.display = i === 0 ? "" : "none";
+      if (i === 0) {
+        ["b-c", "b-n", "b-a", "b-t"].forEach((id, k) => enter($("#" + id), lt, 0.2 + k * 0.35, { y: 8 }));
+        enter($("#l1"), lt, 1.8, { y: 12 }); enter($("#l2"), lt, 2.2, { y: 12 });
+        const p1 = E.out(seg(lt, 2.6, 6.6)) * 0.45, p2 = E.out(seg(lt, 2.8, 6.0));
+        $("#br1").style.width = (100 * p1) + "%"; $("#br2").style.width = (100 * p2) + "%";
+        $("#sp1").style.opacity = 1 - 0.5 * p1; $("#sp2").style.opacity = 1 - 0.92 * p2;
+      }
+      // shot 1: the belt; cells slide off faster, the pigmented ones with them
+      $("#belt").style.display = i === 1 ? "" : "none";
+      if (i === 1) {
+        enter($("#belt"), lt, 0.2, { y: 10 });
+        const fast = seg(lt, 1.6, 2.6); const speed = 6 + 18 * fast; const off = (lt * speed) % 9;
+        $$(".cell").forEach((c, k) => { const x = (k * 9 - off + 9) % 108 - 9; c.style.left = x + "vmin"; c.style.opacity = x < -2 || x > 100 ? 0 : 1; });
+        $("#spd").textContent = fast < 0.5 ? "normal speed" : "with a retinoid: faster"; $("#spd").style.color = fast < 0.5 ? "#a1a1a6" : "#f4c9d6";
+      }
+      // shot 2: the prescription pad
+      $("#rx").style.display = i === 2 ? "" : "none"; if (i === 2) { enter($("#rx"), lt, 0.2, { y: 10 }); set($("#rx .pad"), { s: 1 + 0.03 * b, r: -3 }); }
+      // shot 3: a month of fading, then one unprotected afternoon undoes it
+      $("#month").style.display = i === 3 ? "" : "none";
+      if (i === 3) {
+        enter($("#month"), lt, 0.2, { y: 10 });
+        const fade = E.out(seg(lt, 0.8, 3.4)); const undo = E.in(seg(lt, 4.2, 5.2));
+        const p = fade * (1 - undo); $("#br3").style.width = (100 * p) + "%"; $("#sp3").style.opacity = 1 - 0.85 * p;
+        enter($("#sun9"), lt, 3.8, { y: 6, s: 0.6 }); enter($("#undo"), lt, 4.4, { y: 6 });
+        $("#mb").textContent = undo > 0.5 ? "Back to day one" : "A month of fading";
+      }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
