@@ -49,8 +49,13 @@ builds the board as new files; that session wires it into `server.mjs` and the m
     none below their level);
   - Cars & Coffee pays once this week, not again, and again next week;
   - a race job needs both its course and its place.
-- **Not yet checked in the browser:** the events are typechecked and unit-tested only; the build and a launch-group
-  run come next.
+- **In the browser** (17:50, the build after ec321ad; Playwright with the page's clock set to Saturday 24 October 2026,
+  9:15 PDT, `timezoneId: America/Los_Angeles`, a level-3 profile):
+  - the menu rail read "Phone · 3 new";
+  - Messages listed Dee's "Cars & Coffee" first, then Sal and Mara;
+  - her thread's job read "Errand: the Glenwood Drive exit off the CA-73 South, within 15:00 · 2,000 credits, 500 XP";
+  - no page errors.
+  - Not yet in the regression suite: the launch group isn't re-run while the Fable workflow renders.
 - **Full suite on the build before the events** (25eb3f2: homes, the story, errands, the panels' Done bar): `npm test`,
   all groups, **66/66** (run 16:40 to 17:15 UTC, slow beside other renders).
 
