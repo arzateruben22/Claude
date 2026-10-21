@@ -1168,6 +1168,8 @@ await group('livephone', async (use) => {
       return `"${head}"; the outside peer is hidden`;
     });
     await check('phone: an invite link greets a first-time player once, and Sign up opens the account panel', async () => {
+      // the last check here: the first phone is still driving, so stop it (its page errors are already collected)
+      await page.goto('about:blank');
       const { ctx: c2, page: p2 } = await open({ phone: true, settings: { liveUrl: base } });
       try {
         await p2.goto(pathToFileURL(GAME).href + '?crew=wxyz');
@@ -1175,7 +1177,7 @@ await group('livephone', async (use) => {
         // the first phone is still driving; bring this one forward so its frames (and Playwright's checks) run
         await p2.bringToFront();
         await p2.waitForFunction(() => { const r = document.querySelector('.welcome')?.getBoundingClientRect(); return !!r && r.width > 0 && r.height > 0; }, null, { timeout: 30000, polling: 500 }).catch(async (e) => {
-          const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className) }));
+          const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className), rect: document.querySelector('.welcome')?.getBoundingClientRect().toJSON(), view: [innerWidth, innerHeight], vis: document.visibilityState }));
           throw new Error(`no welcome card: ${JSON.stringify(st)} (${String(e).split('\n')[0]})`);
         });
         const text = (await p2.locator('.welcome').innerText()).replace(/\s+/g, ' ');
