@@ -625,6 +625,7 @@ export class Game {
       if (a === 'corner') this.cycleCorner();
       if (a === 'ability') this.useAbility();
       if (a === 'radio') this.cycleRadio();
+      if (a === 'horn') this.honk();
       if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
         if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
@@ -1333,7 +1334,29 @@ export class Game {
     }
     this.liveCars?.render(this.live, now, dt, this.camera);
   }
-  setLive(c: LiveClient | null) { this.live = c; }
+  setLive(c: LiveClient | null) {
+    this.live = c;
+    if (c) c.onHonk = (peer) => this.heardHonk(peer);
+  }
+  honks = 0;                          // honks heard (for tests)
+  // your horn: you hear it, and so does every live driver within 500 m
+  honk() {
+    if (this.attract) return;
+    this.audio.start();
+    this.audio.horn(0.55);
+    this.live?.honk(performance.now());
+  }
+  private heardHonk(peer: { name: string; id: number }) {
+    const p = this.live?.peers.get(peer.id), at = p && this.live!.whereIs(p, performance.now());
+    if (!at || this.attract) return;
+    const dx = at.x - this.phys.x, dz = at.z - this.phys.z, d = Math.hypot(dx, dz);
+    if (d > 500) return;
+    // left or right of where you're facing: the car points along (sin psi, cos psi), its right is (-cos psi, sin psi)
+    const right = (dx * -Math.cos(this.phys.psi) + dz * Math.sin(this.phys.psi)) / Math.max(1, d);
+    this.audio.horn(0.6 * (1 - d / 500) + 0.05, right);
+    this.honks++;
+    this.ev.toast(`${peer.name || 'Someone'} honked`, 'info');
+  }
   // which freeway a live driver is on, for the who's-on list ('' when unknown)
   liveRoad(id: number): string {
     const p = this.live?.peers.get(id), at = p && this.live!.whereIs(p, performance.now());

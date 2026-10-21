@@ -249,3 +249,17 @@ test('delete account: the password is needed, the driver is kicked, the data and
   assert.equal((await post('/api/login', { name: 'to_delete', password: 'correct horse battery' })).status, 401);
   assert.equal((await post('/api/signup', { name: 'to_delete', password: 'another good one', over13: true })).status, 200, 'the name is free again');
 });
+
+test('a honk reaches drivers within 500 m, once per 1.5 s', async () => {
+  const [a, near, far] = [connect(await signup('honk_a')), connect(await signup('honk_near')), connect(await signup('honk_far'))];
+  await Promise.all([a.ready, near.ready, far.ready]); await Promise.all([a.until('welcome'), near.until('welcome'), far.until('welcome')]);
+  a.send({ t: 's', x: 0, y: 10, z: 0, h: 0, v: 30 }); near.send({ t: 's', x: 300, y: 10, z: 0, h: 0, v: 30 }); far.send({ t: 's', x: 900, y: 10, z: 0, h: 0, v: 30 });
+  await sleep(100);
+  a.send({ t: 'e', k: 'honk' }); a.send({ t: 'e', k: 'honk' });      // the second is too soon
+  await sleep(250);
+  const heard = near.all.filter((m) => m.t === 'e');
+  assert.equal(heard.length, 1); assert.deepEqual(heard[0], { t: 'e', k: 'honk', id: a.got.welcome.id });
+  assert.equal(far.all.filter((m) => m.t === 'e').length, 0, '900 m is too far');
+  assert.equal(a.all.filter((m) => m.t === 'e').length, 0, 'you don\'t get your own');
+  for (const c of [a, near, far]) c.sock.close();
+});

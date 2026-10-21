@@ -389,7 +389,7 @@ export function App() {
               </section>
             </div>
           </div>
-          {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause.</p>}
+          {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, G horn, V look back, R reset, P pause.</p>}
           <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
         </>,
       };
@@ -473,6 +473,9 @@ export function App() {
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
           <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
+          {liveInfo.status === 'online' && <button type="button" className="tbtn honk" onClick={() => game.current?.honk()} aria-label="Honk (G)" title="Honk (G)">
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2 6.2h2.6L9.5 3v10L4.6 9.8H2z" fill="currentColor" /><path d="M11.6 5.4a3.4 3.4 0 0 1 0 5.2M13.3 3.8a5.6 5.6 0 0 1 0 8.4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
+          </button>}
           <LiveChip info={liveInfo} me={liveName} canJoin={mode === 'free'} onJoin={(id) => { if (!game.current?.joinDriver(id)) toast('Can\'t find them right now', 'info'); }}
             people={() => [...(live.current?.peers.values() ?? [])].map((p) => ({ id: p.id, name: p.name, road: game.current?.liveRoad(p.id) ?? '' }))} />
           {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round

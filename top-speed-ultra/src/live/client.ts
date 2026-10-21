@@ -55,6 +55,8 @@ export class LiveClient {
   info: LiveInfo = { status: 'off', online: 0, cap: 0, position: 0, error: '' };
   me: Player | null = null;
   onInfo: ((i: LiveInfo) => void) | null = null;
+  onHonk: ((p: Peer) => void) | null = null;          // a nearby driver honked
+  private honkAt = 0;
   private ws: WebSocket | null = null;
   private base = ''; private token = ''; private car = ''; private paint = 0;
   private lastSend = 0; private stopped = true; private retry = 0; private timer = 0;
@@ -102,6 +104,7 @@ export class LiveClient {
       case 'join': this.peer(m.id as number, m as unknown as { name: string; car: string; paint: number }); this.set({ online: m.online as number }); break;
       case 'leave': this.peers.delete(m.id as number); this.set({ online: m.online as number }); break;
       case 'bye': if (!m.retry) this.set({ error: String(m.why || '') }); break;     // a restart's bye: the game reconnects on its own
+      case 'e': { const p = this.peers.get(m.id as number); if (p && m.k === 'honk') this.onHonk?.(p); break; }
       case 'r': {                                 // the roster: where everyone is, every 2 s
         for (const [id, x, z] of m.n as number[][]) { const p = this.peers.get(id); if (p) p.far = { x, z, t: now }; }
         break;
@@ -149,6 +152,10 @@ export class LiveClient {
     }
     out.v = b.v; out.b = b.b === 1;
     return out;
+  }
+  honk(now: number) {
+    if (!this.ws || this.ws.readyState !== 1 || this.info.status !== 'online' || now - this.honkAt < 1500) return false;
+    this.honkAt = now; this.ws.send(JSON.stringify({ t: 'e', k: 'honk' })); return true;
   }
   // where a peer is on the map now: the live pose when near, otherwise the roster's (null when unknown)
   whereIs(p: Peer, now: number): { x: number; z: number; v: number; h: number } | null {

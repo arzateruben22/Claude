@@ -945,7 +945,11 @@ await group('live', async (use) => {
       await A.getByRole('button', { name: 'Drive with', exact: true }).click();
       const r = await game(A, () => { const g = window.__game, id = [...g.live.peers.keys()][0], p = g.live.peers.get(id), at = g.live.whereIs(p, performance.now()); return { road: g.path.label, gap: Math.hypot(at.x - g.phys.x, at.z - g.phys.z) }; });
       expect(r.road === bRoad && r.gap > 50 && r.gap < 130, JSON.stringify(r));
-      return `list: "${text.slice(0, 90)}"; A now on ${r.road}, ${fmt(r.gap)} m behind B`;
+      // B honks: A, 80 m behind, hears it
+      const h0 = await game(A, () => window.__game.honks);
+      await B.getByRole('button', { name: 'Honk (G)' }).click();
+      await A.waitForFunction((n) => window.__game.honks > n, h0, { timeout: 20000 }).catch(() => { throw new Error('A never heard B honk'); });
+      return `list: "${text.slice(0, 90)}"; A now on ${r.road}, ${fmt(r.gap)} m behind B; A heard B honk`;
     });
     await check('a third driver waits in line (#1) and is let in when one leaves; the counts follow', async () => {
       C = await open({ settings }); extra.push(C);

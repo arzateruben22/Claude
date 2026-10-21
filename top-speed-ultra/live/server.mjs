@@ -382,6 +382,15 @@ function onPose(c, m) {
   c.poseAt = now;
 }
 
+// a honk: heard by the drivers within HONK_M of the one honking, at most one every HONK_MS each
+const HONK_M = 500, HONK_MS = 1500;
+function onHonk(c) {
+  const now = Date.now();
+  if (!c.pose || now - (c.honkAt || 0) < HONK_MS) return;
+  c.honkAt = now;
+  for (const o of online.values()) if (o !== c && o.pose && Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) <= HONK_M) sendTo(o, { t: 'e', k: 'honk', id: c.player.id });
+}
+
 // the relay: every TICK_MS, each driver gets the poses of the drivers near them: within NEAR_M, the nearest NEAR_MAX
 // at most, so a snapshot never grows past a fixed size however full the lobby gets. Rows are built once a tick.
 function tick() {
@@ -427,6 +436,7 @@ wss.on('connection', (ws, req) => {
     if (m.t === 'hello') { if (!c.player) { clearTimeout(helloTimer); onHello(c, m); } return; }
     if (!c.admitted) return;
     if (m.t === 's') onPose(c, m);
+    else if (m.t === 'e' && m.k === 'honk') onHonk(c);
     else if (m.t === 'leave') kick(c, 'Left');
   });
   ws.on('pong', () => { c.lastPing = Date.now(); });

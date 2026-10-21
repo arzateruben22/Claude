@@ -4,7 +4,7 @@
 import { clamp } from './util';
 
 export type Action =
-  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio';
+  | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio' | 'horn';
 
 export interface Controls {
   throttle: number;   // 0..1, smoothed
@@ -24,7 +24,7 @@ const KEYS: Record<string, string> = {
 // the pad's driving buttons (standard mapping): handbrake (A, X), shifts (bumpers), brake and throttle (triggers)
 const DRIVING_PAD = new Set([0, 2, 4, 5, 6, 7]);
 const ACTIONS: Record<string, Action> = {
-  KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability', KeyB: 'radio',
+  KeyE: 'shiftUp', KeyQ: 'shiftDown', KeyC: 'camera', KeyR: 'reset', KeyP: 'pause', Escape: 'pause', KeyM: 'transmission', KeyH: 'hud', KeyN: 'corner', KeyF: 'ability', KeyB: 'radio', KeyG: 'horn',
 };
 
 export class Input {
