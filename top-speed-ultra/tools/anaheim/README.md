@@ -107,7 +107,13 @@ python3 city.py          # city limits, streets-city.json, city-wide cost -> dat
 python3 link.py          # -> src/data/anaheim/freeway-link.json
 python3 verify.py        # spot checks -> data/verify.json
 python3 render.py        # -> tests/out/onfoot/data-overview.png, data-venue.png, data-city.png
+python3 sportsbar_sets.py    # the sports bar's near and far street sets, light streams and street trees (prints only)
+python3 sportsbar_zones.py   # the sports bar's interior and patio layout, walk-grid model, lane path (prints only)
 ```
+
+The last two are read-only checks for `PROJECT_OC_SPORTS_BAR.md`: they read `src/data/anaheim/sportsbar-slice.json`
+(or a slice path given as their argument), write nothing, and re-run that plan's counts (about 2 s and 15 s). Run them
+from the game folder or from here.
 
 `venue.py`, `fetch_slice.py`, `build_slice.py`, `link.py`, `verify.py` and `render.py` take a venue key from
 `ana.VENUES` as their argument. No argument means Lot 57, whose files keep their names. Run the same six with
