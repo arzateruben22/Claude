@@ -1,7 +1,9 @@
 // The player's car: the garage cars from the realism preview (src/preview: four of our own designs with clearcoat
 // paint, a real dashboard and tachometer per car, and the driver's anatomical hands on the wheel), on a sprung body
 // that pitches under acceleration and braking, rolls in corners and buzzes with the engine, with wheels that spin
-// and steer, headlight beams, tail lights that brighten on the brakes, and the game's camera anchors.
+// and steer, headlight beams, tail lights that brighten on the brakes, and the game's camera anchors. The OC Hypercar
+// also blinks its turn signals (lane changes, and hard steering at low speed) and lights its reversing lamps; its
+// driver sits lower and further in (car-shape seatOffset), so its eye and hands move with the seat.
 //
 // configure() builds or rebuilds only what changed: the car and its cockpit (car id, quality or mirrors), the paint,
 // the hands (driver look, presentation, nails). Quality 'phone' is the lighter build, 'high' the full desktop look.
@@ -12,7 +14,7 @@
 // traffic behind filling the glass. The door mirror keeps the car's flank in view.
 
 import * as THREE from 'three';
-import { buildCar, carPaint } from '../../preview/car';
+import { buildCar, carPaint, SWITCHED_LAMPS } from '../../preview/car';
 import type { PaintFinish } from '../../preview/car';
 import { buildCockpit, Cockpit } from '../../preview/cockpit';
 import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
@@ -20,7 +22,7 @@ import { addWheel } from '../../preview/car-wheel';
 import { Kit } from '../../preview/car-kit';
 import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
-import { CarId, shapeFor, rearR } from '../../preview/car-shape';
+import { CarId, shapeFor, rearR, seatOffset } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
 const HYPER_EYE = new THREE.Vector3(0.07, -0.13, -0.02);
 import { CarPhysics, SPEC } from './Physics';
@@ -41,6 +43,10 @@ const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
 // the beam pool strip: rows along its length (the road's profile is sampled at each), its height above the road,
 // and the light it adds at full (linear, before the tone map: the night road sits near 0.003, a lit lane near 0.2)
 const POOL_ROWS = 14, POOL_LIFT = 0.025, POOL_LEVEL = 0.18;
+// turn signals: 90 flashes a minute (1.5 Hz, lit for half of each), on while the car crosses toward the next lane
+// (sideways along the road faster than SIG_RATE m/s for SIG_ARM s, above SIG_MIN m/s) and SIG_HOLD s after; and
+// while steering hard (the front wheels past SIG_LOCK rad) below SIG_SLOW m/s, as for a turn
+const SIG_HZ = 1.5, SIG_RATE = 0.6, SIG_ARM = 0.2, SIG_HOLD = 1.0, SIG_MIN = 6, SIG_LOCK = 0.12, SIG_SLOW = 12;
 
 function disposeGeometry(o: THREE.Object3D) {
   o.traverse((c) => { const m = c as THREE.Mesh; if (m.isMesh) m.geometry.dispose(); });   // materials are shared caches
@@ -54,6 +60,7 @@ export class PlayerCar {
   readonly hood = new THREE.Object3D();
   readonly rear = new THREE.Object3D();
   readonly beams: THREE.SpotLight[] = [];     // two headlamp beams, off by day: they light the traffic and the walls
+  private armsAt = new THREE.Vector3();       // where the driver's arms sit (the seat's offset from the shared frame)
   readonly pool: THREE.Mesh;                  // the painted low-beam pool on the road ahead, laid on the road's profile
   stats = { buildMs: 0, carMs: 0, cockpitMs: 0, handsMs: 0 };
 
@@ -66,6 +73,12 @@ export class PlayerCar {
   private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean }[] = [];
   private wheelAngle = 0;
   private sus = { p: 0, pv: 0, r: 0, rv: 0, h: 0, hv: 0 };
+  // the switched lamps (the hypercar's): its turn signals and reversing lamps, shown only while lit
+  private lamps: { L: THREE.Object3D | null; R: THREE.Object3D | null; rev: THREE.Object3D | null } = { L: null, R: null, rev: null };
+  // the signals, stepped with the physics (snapshot): the simulation's clock, the lateral rate along the road, how
+  // long it has pointed one way, which side is signalling (-1 left, 1 right) and until when, the flash phase's start
+  private sig = { t: 0, d: 0, s: 0, rate: 0, arm: 0, armSide: 0, side: 0, until: 0, t0: 0 };
+  private lit = { signal: 0, blink: false, reverse: false, brake: false };
   private lastJoint = 0;
   // previous and current physics poses, for interpolation
   private prev = { x: 0, y: 0, z: 0, psi: 0 };
@@ -151,6 +164,18 @@ export class PlayerCar {
     // fronts steer. The calipers stay on the hub (the non-spinning kit); the tyre, rim and disc turn.
     const B = bodyFor(c.car), P = shapeFor(c.car), A = B.AXLE;
     this.buildSunOccluder(B, ck);
+    // the driver's eye (the hypercar's sits lower and further in), and the headlamp beams from this car's lamps
+    this.eye.position.copy(B.eye); this.hood.position.set(0, P.hoodY ?? 1.0, -1.45);
+    this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
+    // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
+    // throw a cool white-blue, and their pool on the road takes the same cast (the other cars' stays as it was)
+    const beamC = P.led ? 0xd4e8ff : 0xfff4e6, poolC = P.led ? [0.86, 0.94, 1.0] : [1, 1, 1];
+    for (const b of this.beams) b.color.setHex(beamC);
+    (this.pool.material as THREE.MeshBasicMaterial).color.setRGB(POOL_LEVEL * poolC[0], POOL_LEVEL * poolC[1], POOL_LEVEL * poolC[2]);
+    this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null };
+    for (const k of SWITCHED_LAMPS) { const m = ext.getObjectByName(k); if (m) m.visible = false; }
+    this.armsAt.set(...seatOffset(P));
+    if (this.arms) this.arms.group.position.copy(this.armsAt);
     for (const [z, track, front] of [[A.zF, A.trackF, true], [A.zR, A.trackR, false]] as [number, number, boolean][]) {
       const r = front ? A.r : rearR(P), k = r / 0.345, scale = new THREE.Matrix4().makeScale(1, k, k);
       for (const out of [1, -1] as const) {
@@ -172,6 +197,7 @@ export class PlayerCar {
     this.arms = buildDriverArms({ look: c.look, presentation: c.presentation, nails: c.nails, quality: c.quality });
     this.stats.handsMs = Math.round(performance.now() - t);
     this.body.add(this.arms.group);
+    this.arms.group.position.copy(this.armsAt);
     this.arms.setWheelAngle(this.wheelAngle);
   }
 
@@ -271,8 +297,37 @@ export class PlayerCar {
     if (lamp) lamp.emissiveIntensity = 2.4 + on * 3;
   }
 
-  snapshot(p: CarPhysics) { this.prev.x = this.cur.x; this.prev.y = this.cur.y; this.prev.z = this.cur.z; this.prev.psi = this.cur.psi; this.cur.x = p.x; this.cur.y = p.y; this.cur.z = p.z; this.cur.psi = p.psi; }
-  teleport(p: CarPhysics) { this.snapshot(p); this.snapshot(p); }
+  snapshot(p: CarPhysics, dt = 1 / 120) {
+    this.prev.x = this.cur.x; this.prev.y = this.cur.y; this.prev.z = this.cur.z; this.prev.psi = this.cur.psi; this.cur.x = p.x; this.cur.y = p.y; this.cur.z = p.z; this.cur.psi = p.psi;
+    this.stepSignals(p, dt);
+  }
+  teleport(p: CarPhysics) { this.snapshot(p); this.snapshot(p); Object.assign(this.sig, { d: p.d, s: p.s, rate: 0, arm: 0, armSide: 0, side: 0, until: 0 }); }
+
+  // The turn signals, with the physics: the car's sideways speed along the road (from its offset d; a jump of
+  // more than a metre in one step is a change of road, not a move) smoothed over about 0.15 s. Crossing toward the
+  // next lane lights the side it moves to; full lock at low speed lights the side it turns to.
+  private stepSignals(p: CarPhysics, dt: number) {
+    const g = this.sig;
+    g.t += dt;
+    const dd = p.d - g.d, jump = Math.abs(dd) > 1 || Math.abs(p.s - g.s) > 5;
+    g.d = p.d; g.s = p.s;
+    if (!jump && dt > 0) g.rate += (dd / dt - g.rate) * Math.min(1, dt / 0.15);
+    const v = Math.abs(p.vx);
+    let want = 0, hold = 0;
+    const side = Math.sign(g.rate);
+    if (v > SIG_MIN && Math.abs(g.rate) > SIG_RATE) {
+      if (g.armSide !== side) { g.armSide = side; g.arm = 0; }
+      g.arm += dt;
+      if (g.arm >= SIG_ARM) { want = side; hold = SIG_HOLD; }
+    } else { g.arm = 0; g.armSide = 0; }
+    if (!want && v < SIG_SLOW && v > 0.5 && Math.abs(p.delta) > SIG_LOCK) { want = p.delta > 0 ? -1 : 1; hold = 0.4; }   // delta + is left
+    if (want) {
+      if (g.side !== want || g.t > g.until) g.t0 = g.t;            // a new signal starts lit
+      g.side = want; g.until = g.t + hold;
+    } else if (g.t > g.until) g.side = 0;
+  }
+  // what the lamps show this frame (for the tests): the signalling side, whether it is lit now, reversing, braking
+  get lightState() { return { ...this.lit }; }
 
   // the steering wheel, the hands on it, and the tachometer
   updateCockpit(dt: number, s: CockpitState) {
@@ -280,7 +335,11 @@ export class PlayerCar {
     this.wheelAngle = damp(this.wheelAngle, target, 30, dt);
     if (this.interior) {
       this.interior.wheel.rotation.z = this.wheelAngle;
-      this.interior.setInstruments?.({ rpm: s.rpm });
+      // the tach's needle, and (the hypercar's live display only) the speed, the gear, the power in use (the throttle's
+      // share of the power the engine makes at these revs, a display figure) and the tune: Unleashed above 1 MW
+      const kwMax = SPEC.power / 1000, kw = s.throttle * kwMax * clamp((s.rpm / SPEC.redline) * 1.25, 0.15, 1);
+      this.interior.setInstruments?.({ rpm: s.rpm, mph: s.speed * 2.236936, gear: s.gear < 0 ? 'R' : s.gear === 0 ? 'N' : String(s.gear),
+        kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE' });
       this.interior.update?.(dt);
     }
     this.arms?.setWheelAngle(this.wheelAngle);
@@ -318,6 +377,12 @@ export class PlayerCar {
     }
     const tail = this.mats.tail as THREE.MeshPhysicalMaterial | undefined;
     if (tail) tail.emissiveIntensity = braking ? 5 : 1.6;
+    // the hypercar's switched lamps: the signals flash from the moment they start; reverse while backing up
+    const g = this.sig, L = this.lit;
+    L.signal = g.side; L.blink = g.side !== 0 && ((g.t - g.t0) * SIG_HZ) % 1 < 0.5; L.reverse = p.gear < 0 || p.vx < -0.3; L.brake = braking;
+    if (this.lamps.L) this.lamps.L.visible = L.blink && g.side < 0;
+    if (this.lamps.R) this.lamps.R.visible = L.blink && g.side > 0;
+    if (this.lamps.rev) this.lamps.rev.visible = L.reverse;
     void now;
   }
 
