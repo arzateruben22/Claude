@@ -1080,6 +1080,76 @@ export const SCENES = {
       }
     }
   },
+  "4-1": {
+    id: "4-1", kicker: "AHAs, BHAs and PHAs", title: `Three acid families, <span class="grad">three different jobs.</span>`, dur: 22, poster: 10,
+    shots: [
+      { at: 0, name: "aha", cap: "AHAs (glycolic, lactic, mandelic) work on the surface for glow and even tone. Glycolic is the strongest; mandelic and lactic are gentler." },
+      { at: 7, name: "bha", cap: "BHA (salicylic acid) dissolves in oil, so it gets inside the pore. It's the one for blackheads and oily skin." },
+      { at: 14, name: "pha", cap: "PHAs (gluconolactone) are the gentlest and suit sensitive skin." },
+      { at: 18.5, name: "sun", cap: "Acids make skin more sensitive to the sun. Sunscreen every morning, no exceptions." }
+    ],
+    css: `
+.ac { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 5vmin; }
+.skin { position: relative; flex: none; width: 74vmin; height: 34vmin; border-radius: 2.4vmin; overflow: hidden; background: linear-gradient(#d9b5a0 0, #d9b5a0 58%, #c98f7a 58%, #b9786b 100%); border: 1px solid rgba(255,255,255,.12); }
+.skin .pl { position: absolute; top: 1vmin; width: 4.6vmin; height: 2.4vmin; border-radius: .6vmin; background: #e9cdbc; border: 1px solid rgba(0,0,0,.08); }
+.skin .pore { position: absolute; left: 44%; top: 0; width: 7vmin; height: 22vmin; background: #3a2520; border-radius: 0 0 3.5vmin 3.5vmin; overflow: hidden; }
+.skin .oil { position: absolute; left: 1vmin; right: 1vmin; top: 1.2vmin; bottom: 1.4vmin; border-radius: 2.5vmin; background: #e2b08c; }
+.skin .plug { position: absolute; left: 1.4vmin; right: 1.4vmin; top: .6vmin; height: 3vmin; border-radius: 1.5vmin; background: #2a1a14; }
+.skin .hair { position: absolute; left: 50%; top: -1vmin; width: .9vmin; height: 24vmin; margin-left: -.45vmin; background: #2a1a14; border-radius: 1vmin; }
+.skin .drop { position: absolute; width: 5vmin; height: 7vmin; opacity: 0; }
+.skin .drop::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
+.skin .drop::after { content: ""; position: absolute; left: 50%; top: 0; width: 0; height: 0; margin-left: -2.5vmin; border-left: 2.5vmin solid transparent; border-right: 2.5vmin solid transparent; border-bottom: 3vmin solid var(--c, #f4c9d6); }
+.skin .glow { position: absolute; left: 0; right: 0; top: 0; height: 10vmin; background: linear-gradient(rgba(255,255,255,.55), rgba(255,255,255,0)); opacity: 0; }
+.skin .soft { position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 20%, rgba(244,201,214,.55), rgba(244,201,214,0) 70%); opacity: 0; }
+.skin .lbl { position: absolute; left: 2vmin; bottom: 1.6vmin; font-size: 2.3vmin; color: rgba(26,18,16,.75); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+.fam { display: flex; flex-direction: column; gap: 1.8vmin; width: 66vmin; }
+.fcard { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.6vmin; opacity: .35; }
+.fcard.on { opacity: 1; border-color: var(--c, #f4c9d6); }
+.fcard b { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.4vmin; font-weight: 700; letter-spacing: -.02em; } .fcard b i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; background: var(--c, #f4c9d6); }
+.fcard span { display: block; font-size: 2.4vmin; color: #a1a1a6; margin-top: .6vmin; line-height: 1.35; }
+.fcard.on span { color: #f5f5f7; }
+.sunrow { display: flex; align-items: center; gap: 2.4vmin; border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,210,122,.5); padding: 2vmin 2.6vmin; opacity: 0; }
+.sunrow .sun { flex: none; width: 7vmin; height: 7vmin; border-radius: 50%; background: radial-gradient(circle, #ffe9a8, #ffd27a 60%, rgba(255,210,122,0) 62%); box-shadow: 0 0 3vmin rgba(255,210,122,.5); }
+.sunrow b { display: block; font-size: 3vmin; font-weight: 700; } .sunrow span { display: block; font-size: 2.4vmin; color: #a1a1a6; margin-top: .4vmin; }
+@media (orientation: portrait) { .ac { flex-direction: column; gap: 3vmin; } .skin { width: 100%; height: 36vmin; } .skin .pl { width: 5vmin; } .fam { width: 100%; } .fcard { padding: 2vmin 2.4vmin; } .fcard b { font-size: 3.2vmin; } .fcard span { font-size: 2.4vmin; } }`,
+    html: `
+<div class="ac">
+  <div class="skin" id="skin">
+    ${Array.from({ length: 15 }, (_, k) => `<i class="pl" style="left:calc(1vmin + ${k} * 5vmin)"></i>`).join("")}
+    <div class="pore"><div class="oil" id="oil"></div><div class="plug" id="plug"></div></div><div class="hair"></div>
+    <div class="glow" id="glow"></div><div class="soft" id="soft"></div>
+    <div class="drop" id="d-aha" style="--c:#f4c9d6; left: 12vmin"></div><div class="drop" id="d-bha" style="--c:#8fd3ff; left: calc(44% + 1vmin)"></div><div class="drop" id="d-pha" style="--c:#c9b6ff; left: 58vmin"></div>
+    <span class="lbl" id="skl">the surface, and a pore</span>
+  </div>
+  <div class="fam">
+    <div class="fcard" id="c-aha" style="--c:#f4c9d6"><b><i></i>AHAs</b><span>glycolic (the strongest), lactic, mandelic (gentler) · on the surface: glow and even tone</span></div>
+    <div class="fcard" id="c-bha" style="--c:#8fd3ff"><b><i></i>BHA</b><span>salicylic acid · dissolves in oil, so it gets inside the pore · blackheads and oily skin</span></div>
+    <div class="fcard" id="c-pha" style="--c:#c9b6ff"><b><i></i>PHAs</b><span>gluconolactone · the gentlest · sensitive skin</span></div>
+    <div class="sunrow" id="sunrow"><div class="sun"></div><div><b>Sunscreen every morning</b><span>Acids make skin more sensitive to the sun.</span></div></div>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      set($("#skin"), { o: Math.min(1, seg(t, 0, 0.6) * 1.5), y: 10 * (1 - E.out(seg(t, 0, 0.6))) });
+      const fall = (id, at, toY) => { const d = $("#" + id); const p = E.in(seg(lt, at, at + 0.7)); const on = lt >= at && lt < at + 0.75; set(d, { o: on ? 1 : 0, y: -16 + (toY + 16) * p }); return lt >= at + 0.7; };
+      // shot 0: the AHA drop lands; the loose plates lift off the surface and a glow is left
+      const plates = $$(".pl");
+      const ahaDone = i === 0 ? fall("d-aha", 0.8, 0) : (set($("#d-aha"), { o: 0 }), i > 0);
+      plates.forEach((pl, k) => { const p = i > 0 ? 1 : i === 0 && lt >= 1.5 ? E.out(seg(lt, 1.5 + (k % 5) * 0.25, 2.6 + (k % 5) * 0.25)) : 0; const lifts = k % 3 !== 1; set(pl, { o: lifts ? 1 - p : 1, y: lifts ? -10 * p : 0, r: lifts ? 12 * p * (k % 2 ? 1 : -1) : 0 }); });
+      $("#glow").style.opacity = i > 0 ? 0.5 : E.out(seg(lt, 2.6, 4.0)) * 0.9;
+      // shot 1: the BHA drop sinks down the pore and the oil plug clears
+      if (i === 1) { const d = $("#d-bha"); const p = seg(lt, 0.8, 2.6); set(d, { o: lt >= 0.8 && lt < 2.7 ? 1 : 0, y: -16 + 30 * E.in(seg(lt, 0.8, 1.5)) + 60 * seg(lt, 1.5, 2.6), s: 1 - 0.3 * seg(lt, 1.5, 2.6) }); const clear = E.out(seg(lt, 2.4, 4.4)); $("#oil").style.opacity = 1 - clear; $("#plug").style.opacity = 1 - clear; $("#oil").style.transform = "scaleY(" + (1 - 0.6 * clear) + ")"; $("#oil").style.transformOrigin = "50% 100%"; }
+      else { set($("#d-bha"), { o: 0 }); const c = i > 1 ? 0 : 1; $("#oil").style.opacity = c; $("#plug").style.opacity = c; $("#oil").style.transform = i > 1 ? "scaleY(.4)" : ""; }
+      // shot 2: the PHA drop spreads into a soft tint, nothing lifts
+      if (i === 2) { fall("d-pha", 0.8, 0); $("#soft").style.opacity = E.out(seg(lt, 1.5, 3.2)); } else { set($("#d-pha"), { o: 0 }); $("#soft").style.opacity = i > 2 ? 1 : 0; }
+      // the cards light with their shot; the sun row takes the last one
+      [["c-aha", 0], ["c-bha", 1], ["c-pha", 2]].forEach(([id, k]) => { const el = $("#" + id); el.classList.toggle("on", i === k || (i === 3)); if (i === k) enter(el, lt, 0.3, { y: 8, d: 0.5 }); else set(el, { o: i === 3 ? 0.9 : i > k ? 0.55 : 0.3 }); });
+      const sun = $("#sunrow"); sun.style.display = i === 3 ? "" : "none"; if (i === 3) enter(sun, lt, 0.3, { y: 10 });
+      $("#skl").textContent = i === 0 ? "the surface: loose cells lift" : i === 1 ? "inside the pore: the oil clears" : i === 2 ? "the surface, gently" : "every morning: sunscreen on top";
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
