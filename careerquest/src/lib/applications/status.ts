@@ -13,7 +13,12 @@ export const PIPELINE: ApplicationStatus[] = [
   "HIRED",
 ];
 
-export const TERMINAL: ApplicationStatus[] = ["REJECTED", "WITHDRAWN", "NO_RESPONSE", "CLOSED"];
+export const TERMINAL: ApplicationStatus[] = [
+  "REJECTED",
+  "WITHDRAWN",
+  "NO_RESPONSE",
+  "CLOSED",
+];
 
 export const ALL_STATUSES: ApplicationStatus[] = [...PIPELINE, ...TERMINAL];
 
@@ -34,7 +39,10 @@ export const STATUS_LABELS: Record<ApplicationStatus, string> = {
 };
 
 /** Semantic color token name used by <StatusBadge>. */
-export const STATUS_TONE: Record<ApplicationStatus, "neutral" | "info" | "accent" | "success" | "warning" | "danger" | "gold"> = {
+export const STATUS_TONE: Record<
+  ApplicationStatus,
+  "neutral" | "info" | "accent" | "success" | "warning" | "danger" | "gold"
+> = {
   SAVED: "neutral",
   PREPARING: "neutral",
   SUBMITTED: "info",
@@ -57,11 +65,19 @@ export function statusRank(status: ApplicationStatus): number {
 
 /** "Submitted or later" — counts as a real application for metrics. */
 export function isSubmittedStatus(status: ApplicationStatus): boolean {
-  return statusRank(status) >= statusRank("SUBMITTED") || status === "REJECTED" || status === "NO_RESPONSE" || status === "WITHDRAWN" || status === "CLOSED";
+  return (
+    statusRank(status) >= statusRank("SUBMITTED") ||
+    status === "REJECTED" ||
+    status === "NO_RESPONSE" ||
+    status === "WITHDRAWN" ||
+    status === "CLOSED"
+  );
 }
 
 export function isActiveStatus(status: ApplicationStatus): boolean {
-  return !TERMINAL.includes(status) && status !== "HIRED" && status !== "ACCEPTED";
+  return (
+    !TERMINAL.includes(status) && status !== "HIRED" && status !== "ACCEPTED"
+  );
 }
 
 export function isTerminalStatus(status: ApplicationStatus): boolean {
@@ -70,7 +86,14 @@ export function isTerminalStatus(status: ApplicationStatus): boolean {
 
 /** Did the employer respond at some point (for response-rate metrics)? */
 export function impliesEmployerResponse(status: ApplicationStatus): boolean {
-  return ["SCREENING", "INTERVIEWING", "OFFER", "ACCEPTED", "HIRED", "REJECTED"].includes(status);
+  return [
+    "SCREENING",
+    "INTERVIEWING",
+    "OFFER",
+    "ACCEPTED",
+    "HIRED",
+    "REJECTED",
+  ].includes(status);
 }
 
 /**

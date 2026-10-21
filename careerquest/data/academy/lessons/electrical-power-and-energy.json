@@ -1,0 +1,398 @@
+{
+  "key": "electrical-power-and-energy",
+  "track": "FUNDAMENTALS",
+  "order": 6,
+  "title": "Electrical Power and Energy",
+  "summary": "Watts, kilowatt-hours and dollars. Learn the three power formulas, why conductor heating follows I²R, how utilities bill energy, and how to turn a nameplate into a current for sizing circuits.",
+  "estimatedMinutes": 30,
+  "prerequisites": [
+    "ohms-law",
+    "series-parallel-circuits"
+  ],
+  "objectives": [
+    "Students will be able to calculate power from any two of voltage, current and resistance using P = V × I, P = I² × R and P = V² ÷ R.",
+    "Students will be able to distinguish power (kW) from energy (kWh) and compute the energy and cost of running a load for a given time.",
+    "Students will be able to convert horsepower to watts and account for efficiency when finding input power.",
+    "Students will be able to apply the 80% continuous-load limit to find the maximum wattage on a branch circuit."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Power: how fast energy is used",
+      "markdown": "**Power** is the rate at which electrical energy is converted into something else: heat, light, motion. Its unit is the **watt (W)**: one joule of energy per second. One thousand watts is a **kilowatt (kW)**.\n\nPower is what a nameplate tells you (a 1,500 W heater, a 100 W lamp, a 5 hp motor) and what determines how much current a load draws at a given voltage. From current you size conductors and overcurrent devices, so converting between watts, volts and amps is daily work.\n\nFor resistive loads on DC or AC, power is simply voltage times current. Combine that with Ohm's law and you get three equivalent formulas; which one you use depends on which two quantities you know. The **I²R** form is the one to burn into memory: it says the heat produced in a resistance grows with the **square** of the current. Double the current, four times the heat. That single fact explains conductor ampacity, loose-connection fires and why utilities transmit at high voltage.\n\n(For AC loads with motors or electronics, the product V × I is *apparent power* in volt-amperes (VA), and the real power in watts is a bit less because of power factor. The SYSTEMS track covers that; everything in this lesson is for resistive loads, where VA and W are the same.)"
+    },
+    {
+      "type": "formula",
+      "name": "The three power formulas (resistive loads)",
+      "expression": "P = V × I = I² × R = V² ÷ R",
+      "variables": [
+        {
+          "symbol": "P",
+          "meaning": "power",
+          "unit": "watts (W)"
+        },
+        {
+          "symbol": "V",
+          "meaning": "voltage across the load",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I",
+          "meaning": "current through the load",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "R",
+          "meaning": "resistance of the load",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "All three come from P = V × I with Ohm's law substituted. Use P = V × I when you know the nameplate volts and amps; I² × R to find heat in a conductor or element of known resistance carrying a known current; V² ÷ R when you know the voltage and the element resistance. Rearranged: I = P ÷ V is the formula you use most, turning nameplate watts into amps."
+    },
+    {
+      "type": "diagram",
+      "title": "The power wheel",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 305\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"220\" cy=\"150\" r=\"138\" stroke=\"#9aa6b8\"/><circle cx=\"220\" cy=\"150\" r=\"48\" stroke=\"#9aa6b8\"/><line x1=\"253.9\" y1=\"183.9\" x2=\"317.6\" y2=\"247.6\" stroke=\"#9aa6b8\"/><line x1=\"186.1\" y1=\"183.9\" x2=\"122.4\" y2=\"247.6\" stroke=\"#9aa6b8\"/><line x1=\"186.1\" y1=\"116.1\" x2=\"122.4\" y2=\"52.4\" stroke=\"#9aa6b8\"/><line x1=\"253.9\" y1=\"116.1\" x2=\"317.6\" y2=\"52.4\" stroke=\"#9aa6b8\"/><text x=\"220.0\" y=\"131.0\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"20\" font-weight=\"600\">P</text><text x=\"176.9\" y=\"69.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">V × I</text><text x=\"220.0\" y=\"59.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I² × R</text><text x=\"263.1\" y=\"69.4\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">V² ÷ R</text><text x=\"246.0\" y=\"157.0\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"20\" font-weight=\"600\">V</text><text x=\"304.6\" y=\"110.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I × R</text><text x=\"315.0\" y=\"154.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">P ÷ I</text><text x=\"304.6\" y=\"197.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">√(P × R)</text><text x=\"220.0\" y=\"183.0\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"20\" font-weight=\"600\">R</text><text x=\"263.1\" y=\"238.6\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">V ÷ I</text><text x=\"220.0\" y=\"249.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">V² ÷ P</text><text x=\"176.9\" y=\"238.6\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">P ÷ I²</text><text x=\"194.0\" y=\"157.0\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"20\" font-weight=\"600\">I</text><text x=\"135.4\" y=\"197.1\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">V ÷ R</text><text x=\"125.0\" y=\"154.0\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">P ÷ V</text><text x=\"135.4\" y=\"110.9\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">√(P ÷ R)</text><text x=\"220\" y=\"296\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Find the quantity in the center of a quadrant from any two others.</text></svg>",
+      "caption": "Each quadrant lists three ways to find that quantity from two others. Together with Ohm's law these twelve formulas solve any resistive DC problem."
+    },
+    {
+      "type": "example",
+      "problem": "(a) A portable heater is rated 1,500 W at 120 V. Find the current it draws and the resistance of its element. How many of these heaters can safely run on one 20 A circuit? (b) A feeder carries 20 A through conductors whose total resistance is 0.3 Ω. How much power is wasted as heat in the conductors, and what happens if the load grows to 40 A?",
+      "solutionSteps": [
+        "(a) Current: I = P ÷ V = 1,500 ÷ 120 = 12.5 A.",
+        "(a) Resistance: R = V² ÷ P = 120² ÷ 1,500 = 14,400 ÷ 1,500 = 9.6 Ω. (Check: V ÷ I = 120 ÷ 12.5 = 9.6 Ω.)",
+        "(a) A heater is a continuous load. The maximum continuous load on a 20 A breaker is 80% × 20 = 16 A (NEC 210.20(A)). One heater (12.5 A) fits; two would be 25 A, over the breaker rating outright.",
+        "(b) P_loss = I² × R = 20² × 0.3 = 400 × 0.3 = 120 W.",
+        "(b) At 40 A: P_loss = 40² × 0.3 = 1,600 × 0.3 = 480 W. Doubling the current quadrupled the heat. That 480 W is spread along the run, heating the insulation, and it is energy the customer pays for without getting any use from it."
+      ],
+      "answer": "(a) 12.5 A and 9.6 Ω; only one heater per 20 A circuit. (b) 120 W at 20 A; 480 W at 40 A, four times as much."
+    },
+    {
+      "type": "diagram",
+      "title": "Why higher voltage means lower losses",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 240\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><text x=\"240\" y=\"22\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">Same 2,400 W delivered two ways through a 0.5 Ω line</text><rect x=\"20\" y=\"40\" width=\"215\" height=\"170\" stroke=\"#9aa6b8\"/><text x=\"127\" y=\"60\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">120 V, 20 A</text><line x1=\"45\" y1=\"115\" x2=\"45\" y2=\"126\"/><line x1=\"31\" y1=\"126\" x2=\"59\" y2=\"126\"/><line x1=\"38\" y1=\"131\" x2=\"52\" y2=\"131\"/><line x1=\"31\" y1=\"137\" x2=\"59\" y2=\"137\"/><line x1=\"38\" y1=\"142\" x2=\"52\" y2=\"142\"/><line x1=\"45\" y1=\"142\" x2=\"45\" y2=\"155\"/><text x=\"65\" y=\"127\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"65\" y=\"147\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"45\" y1=\"115\" x2=\"45\" y2=\"85\"/><line x1=\"45\" y1=\"85\" x2=\"80\" y2=\"85\"/><polyline points=\"80,85 89,85 92.5,77 99.5,93 106.5,77 113.5,93 120.5,77 127.5,93 131,85 140,85\" stroke=\"#ff6b6b\"/><line x1=\"140\" y1=\"85\" x2=\"200\" y2=\"85\"/><line x1=\"200\" y1=\"85\" x2=\"200\" y2=\"115\"/><polyline points=\"200,115 200,122.5 192,125.4 208,131.3 192,137.1 208,142.9 192,148.8 208,154.6 200,157.5 200,165\"/><line x1=\"200\" y1=\"165\" x2=\"200\" y2=\"185\"/><line x1=\"45\" y1=\"185\" x2=\"200\" y2=\"185\"/><line x1=\"45\" y1=\"185\" x2=\"45\" y2=\"155\"/><text x=\"110\" y=\"72\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">0.5 Ω line</text><text x=\"212\" y=\"145\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">load</text><text x=\"127\" y=\"205\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Loss = I²R = 20² × 0.5 = 200 W</text><rect x=\"245\" y=\"40\" width=\"215\" height=\"170\" stroke=\"#9aa6b8\"/><text x=\"352\" y=\"60\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">240 V, 10 A</text><line x1=\"270\" y1=\"115\" x2=\"270\" y2=\"126\"/><line x1=\"256\" y1=\"126\" x2=\"284\" y2=\"126\"/><line x1=\"263\" y1=\"131\" x2=\"277\" y2=\"131\"/><line x1=\"256\" y1=\"137\" x2=\"284\" y2=\"137\"/><line x1=\"263\" y1=\"142\" x2=\"277\" y2=\"142\"/><line x1=\"270\" y1=\"142\" x2=\"270\" y2=\"155\"/><text x=\"290\" y=\"127\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"290\" y=\"147\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"270\" y1=\"115\" x2=\"270\" y2=\"85\"/><line x1=\"270\" y1=\"85\" x2=\"305\" y2=\"85\"/><polyline points=\"305,85 314,85 317.5,77 324.5,93 331.5,77 338.5,93 345.5,77 352.5,93 356,85 365,85\" stroke=\"#ff6b6b\"/><line x1=\"365\" y1=\"85\" x2=\"425\" y2=\"85\"/><line x1=\"425\" y1=\"85\" x2=\"425\" y2=\"115\"/><polyline points=\"425,115 425,122.5 417,125.4 433,131.3 417,137.1 433,142.9 417,148.8 433,154.6 425,157.5 425,165\"/><line x1=\"425\" y1=\"165\" x2=\"425\" y2=\"185\"/><line x1=\"270\" y1=\"185\" x2=\"425\" y2=\"185\"/><line x1=\"270\" y1=\"185\" x2=\"270\" y2=\"155\"/><text x=\"335\" y=\"72\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">0.5 Ω line</text><text x=\"437\" y=\"145\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">load</text><text x=\"352\" y=\"205\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Loss = I²R = 10² × 0.5 = 50 W</text><text x=\"240\" y=\"232\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Halving the current cuts the heat in the conductors to one quarter.</text></svg>",
+      "caption": "To deliver the same 2,400 W, a 240 V circuit needs half the current of a 120 V circuit. Because line loss is I²R, the 240 V circuit wastes one quarter as much power in the same conductors. This is why large loads are run at 240 V or 480 V and why utilities transmit at thousands of volts."
+    },
+    {
+      "type": "text",
+      "heading": "Energy: power over time",
+      "markdown": "Power is a rate. **Energy** is power multiplied by how long it is used. The utility sells energy, not power, and the unit on your bill is the **kilowatt-hour (kWh)**: one kilowatt used for one hour.\n\n- A 1 kW heater running for 1 hour uses 1 kWh.\n- A 100 W (0.1 kW) lamp running for 10 hours also uses 1 kWh.\n- A 10 kW load for 6 minutes (0.1 h) uses 1 kWh.\n\nThe meter at the service entrance totals kWh continuously. Many commercial customers also pay a **demand charge** based on their highest 15-minute average kW during the month, which is why facility managers care about staggering big loads.\n\nTo convert: energy in kWh = power in **kW** (not W) × time in **hours** (not minutes). The most common error is leaving the power in watts and getting an answer 1,000 times too large.\n\nOther common mistakes:\n\n- **Confusing kW and kWh.** A 2 kW heater is a *rate*; it uses 2 kWh *every hour* it runs. Bills are in kWh.\n- **Using minutes instead of hours.** 20 minutes is 0.333 h.\n- **Assuming nameplate watts are drawn continuously.** A thermostat-controlled heater cycles; use its duty cycle for energy estimates (but its full wattage for sizing the circuit)."
+    },
+    {
+      "type": "formula",
+      "name": "Energy and cost",
+      "expression": "E = P × t ; Cost = E × rate",
+      "variables": [
+        {
+          "symbol": "E",
+          "meaning": "energy used",
+          "unit": "kilowatt-hours (kWh)"
+        },
+        {
+          "symbol": "P",
+          "meaning": "power",
+          "unit": "kilowatts (kW); divide watts by 1,000"
+        },
+        {
+          "symbol": "t",
+          "meaning": "time the load runs",
+          "unit": "hours (h); divide minutes by 60"
+        },
+        {
+          "symbol": "rate",
+          "meaning": "utility price",
+          "unit": "dollars per kWh ($/kWh)"
+        }
+      ],
+      "explanation": "Energy is the area under the power-versus-time line. For a steady load it is just the product. For a load that cycles (a thermostat-controlled heater), multiply by the fraction of time it is actually on."
+    },
+    {
+      "type": "example",
+      "problem": "The 1,500 W heater from the first example runs 5 hours a day for 30 days. At a California residential rate of $0.32 per kWh, what does it cost for the month?",
+      "solutionSteps": [
+        "Convert to kW: 1,500 W ÷ 1,000 = 1.5 kW.",
+        "Hours per month: 5 h/day × 30 days = 150 h.",
+        "Energy: E = 1.5 kW × 150 h = 225 kWh.",
+        "Cost: 225 kWh × $0.32/kWh = $72.00."
+      ],
+      "answer": "225 kWh, about $72.00 for the month."
+    },
+    {
+      "type": "table",
+      "caption": "Typical loads: power, current at 120 V, and monthly energy at a sample duty",
+      "columns": [
+        "Load",
+        "Power",
+        "Current at 120 V",
+        "Sample use",
+        "Energy per month"
+      ],
+      "rows": [
+        [
+          "LED lamp",
+          "10 W",
+          "0.08 A",
+          "5 h/day",
+          "1.5 kWh"
+        ],
+        [
+          "Incandescent lamp",
+          "100 W",
+          "0.83 A",
+          "5 h/day",
+          "15 kWh"
+        ],
+        [
+          "Refrigerator (running)",
+          "150 W",
+          "1.25 A",
+          "about 8 h/day of compressor time",
+          "36 kWh"
+        ],
+        [
+          "Microwave",
+          "1,200 W",
+          "10 A",
+          "20 min/day",
+          "12 kWh"
+        ],
+        [
+          "Portable heater",
+          "1,500 W",
+          "12.5 A",
+          "5 h/day",
+          "225 kWh"
+        ],
+        [
+          "Electric water heater (240 V)",
+          "4,500 W",
+          "18.75 A at 240 V",
+          "3 h/day",
+          "405 kWh"
+        ],
+        [
+          "Level 2 EV charger (240 V)",
+          "7,200 W",
+          "30 A at 240 V",
+          "2 h/day",
+          "432 kWh"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Horsepower, efficiency and motor loads",
+      "markdown": "Mechanical power is still quoted in **horsepower**: **1 hp = 746 W**. A motor nameplate's horsepower is its *output*; the electrical *input* is higher because no machine is 100% efficient:\n\n**P_in = P_out ÷ efficiency**\n\nA 1 hp motor at 85% efficiency draws 746 ÷ 0.85 = 878 W of electrical input. At 120 V and a power factor of 1 that would be 7.3 A; real single-phase motors draw more because of power factor, which is why a 1 hp, 120 V motor is listed at 16 A in the NEC's full-load current table.\n\nThat brings up the key code rule for motors: for sizing conductors and the disconnect, you use the **table** values in Article 430 (Tables 430.248 and 430.250), not the nameplate amps (430.6(A)(1)). Nameplate amps are used for the overload protection (430.32). The tables are conservative on purpose.\n\nEfficiency also tells you where the heat goes. A 10 hp motor at 90% efficiency wastes 10% of its input, about 830 W, as heat inside the motor: the reason motors have fans and ventilation requirements.\n\n**Continuous loads: the 80% rule.** Anything expected to run 3 hours or more (lighting, heating, EV charging) may not exceed 80% of the overcurrent device rating, because the device must be rated at 125% of the continuous load (NEC 210.20(A), 215.3). On a 20 A, 120 V circuit that is 16 A or 1,920 W of continuous load; on a 30 A, 240 V circuit it is 24 A or 5,760 W. Forgetting this is a common exam and field error. A related trap: motor and electronic loads draw more amps than P ÷ V predicts (apparent versus real power), so use the NEC motor tables and the nameplate VA for those."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Heat follows I²R, so a loose or corroded terminal, which may add only a fraction of an ohm, becomes a hot spot when a large current passes through it: 30 A through 0.1 Ω of bad connection is 90 W concentrated in a spot the size of a screw head. That is how overheated receptacles, discolored breaker lugs and melted wirenuts start. Torque terminations to the manufacturer's value (NEC 110.14(D)) and use an infrared thermometer or thermal camera to find bad connections under load."
+    },
+    {
+      "type": "callout",
+      "tone": "simulation",
+      "text": "In any bench exercise, after solving for voltages and currents, compute the power in each resistor (I × V) and add them. The sum must equal the total power from the source (V_source × I_T). This conservation-of-energy check catches arithmetic errors that KVL and KCL alone can miss."
+    }
+  ],
+  "practice": [
+    {
+      "id": "electrical-power-and-energy-p1",
+      "type": "numeric",
+      "prompt": "A load on a 120 V circuit draws 10 A. What power does it consume?",
+      "answer": 1200,
+      "unit": "W",
+      "tolerance": 1,
+      "explanation": "P = V × I = 120 × 10 = 1,200 W."
+    },
+    {
+      "id": "electrical-power-and-energy-p2",
+      "type": "numeric",
+      "prompt": "A 1,800 W toaster oven operates at 120 V. What current does it draw?",
+      "answer": 15,
+      "unit": "A",
+      "tolerance": 0.05,
+      "explanation": "I = P ÷ V = 1,800 ÷ 120 = 15 A. (It would fully load a 15 A circuit by itself.)"
+    },
+    {
+      "id": "electrical-power-and-energy-p3",
+      "type": "numeric",
+      "prompt": "A current of 5 A flows through an 8 Ω resistor. How much power is dissipated as heat?",
+      "answer": 200,
+      "unit": "W",
+      "tolerance": 0.5,
+      "explanation": "P = I² × R = 25 × 8 = 200 W."
+    },
+    {
+      "id": "electrical-power-and-energy-p4",
+      "type": "numeric",
+      "prompt": "A 2 kW load runs for 3 hours. How much energy does it use?",
+      "answer": 6,
+      "unit": "kWh",
+      "tolerance": 0.01,
+      "explanation": "E = 2 kW × 3 h = 6 kWh."
+    },
+    {
+      "id": "electrical-power-and-energy-p5",
+      "type": "numeric",
+      "prompt": "What does that 6 kWh cost at $0.30 per kWh? Answer in dollars.",
+      "answer": 1.8,
+      "unit": "$",
+      "tolerance": 0.01,
+      "explanation": "6 × 0.30 = $1.80."
+    },
+    {
+      "id": "electrical-power-and-energy-p6",
+      "type": "multiple_choice",
+      "prompt": "One horsepower is equal to approximately:",
+      "choices": [
+        "100 W",
+        "746 W",
+        "1,000 W",
+        "1,500 W"
+      ],
+      "correctIndex": 1,
+      "explanation": "1 hp = 746 W. A 5 hp motor delivers 3,730 W of mechanical output."
+    },
+    {
+      "id": "electrical-power-and-energy-p7",
+      "type": "numeric",
+      "prompt": "What is the maximum continuous load, in watts, allowed on a 20 A, 120 V branch circuit?",
+      "answer": 1920,
+      "unit": "W",
+      "tolerance": 1,
+      "explanation": "80% × 20 A = 16 A. 16 A × 120 V = 1,920 W."
+    }
+  ],
+  "quiz": {
+    "key": "electrical-power-and-energy-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "electrical-power-and-energy-q1",
+        "type": "numeric",
+        "prompt": "A 240 V dryer element draws 25 A. What is its power?",
+        "answer": 6000,
+        "unit": "W",
+        "tolerance": 1,
+        "explanation": "P = 240 × 25 = 6,000 W (6 kW)."
+      },
+      {
+        "id": "electrical-power-and-energy-q2",
+        "type": "numeric",
+        "prompt": "A 60 W lamp operates at 120 V. What current does it draw?",
+        "answer": 0.5,
+        "unit": "A",
+        "tolerance": 0.005,
+        "explanation": "I = P ÷ V = 60 ÷ 120 = 0.5 A."
+      },
+      {
+        "id": "electrical-power-and-energy-q3",
+        "type": "numeric",
+        "prompt": "A 240 Ω heating element is connected to 120 V. What power does it produce?",
+        "answer": 60,
+        "unit": "W",
+        "tolerance": 0.5,
+        "explanation": "P = V² ÷ R = 14,400 ÷ 240 = 60 W."
+      },
+      {
+        "id": "electrical-power-and-energy-q4",
+        "type": "numeric",
+        "prompt": "A 100 W lamp burns 10 hours a day for 30 days. How many kWh does it use?",
+        "answer": 30,
+        "unit": "kWh",
+        "tolerance": 0.1,
+        "explanation": "0.1 kW × 300 h = 30 kWh."
+      },
+      {
+        "id": "electrical-power-and-energy-q5",
+        "type": "numeric",
+        "prompt": "At $0.25 per kWh, what does that 30 kWh cost? Answer in dollars.",
+        "answer": 7.5,
+        "unit": "$",
+        "tolerance": 0.01,
+        "explanation": "30 × 0.25 = $7.50."
+      },
+      {
+        "id": "electrical-power-and-energy-q6",
+        "type": "multiple_choice",
+        "prompt": "The current through a conductor doubles. The heat produced in the conductor:",
+        "choices": [
+          "doubles",
+          "stays the same",
+          "quadruples",
+          "is cut in half"
+        ],
+        "correctIndex": 2,
+        "explanation": "P = I² × R. Twice the current means 2² = 4 times the heat."
+      },
+      {
+        "id": "electrical-power-and-energy-q7",
+        "type": "numeric",
+        "prompt": "A 3 hp motor delivers how many watts of mechanical output?",
+        "answer": 2238,
+        "unit": "W",
+        "tolerance": 2,
+        "explanation": "3 × 746 = 2,238 W."
+      },
+      {
+        "id": "electrical-power-and-energy-q8",
+        "type": "multiple_choice",
+        "prompt": "Which statement is correct?",
+        "choices": [
+          "The kilowatt is a unit of energy and the kilowatt-hour is a unit of power",
+          "The kilowatt is a unit of power and the kilowatt-hour is a unit of energy",
+          "Both are units of power",
+          "Both are units of energy"
+        ],
+        "correctIndex": 1,
+        "explanation": "Power (kW) is a rate; energy (kWh) is that rate multiplied by time. Utilities bill for energy."
+      },
+      {
+        "id": "electrical-power-and-energy-q9",
+        "type": "numeric",
+        "prompt": "A 5,000 W resistive load operates at 240 V. What current does it draw?",
+        "answer": 20.83,
+        "unit": "A",
+        "tolerance": 0.05,
+        "explanation": "I = 5,000 ÷ 240 = 20.83 A."
+      },
+      {
+        "id": "electrical-power-and-energy-q10",
+        "type": "multiple_choice",
+        "prompt": "A loose terminal on a 30 A circuit becomes hot enough to discolor the insulation. The best explanation is:",
+        "choices": [
+          "the voltage at the terminal increased",
+          "the added resistance of the poor connection dissipates I²R heat in a small area",
+          "the breaker is undersized",
+          "the conductor is too large for the terminal"
+        ],
+        "correctIndex": 1,
+        "explanation": "A fraction of an ohm at 30 A produces tens of watts concentrated at the joint. Proper torque and clean terminations prevent it."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 110.14(D) torque; 210.20(A) and 215.3 continuous loads; 430.6(A)(1), 430.32, Tables 430.248 and 430.250 motor currents (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "U.S. Energy Information Administration, Electric Power Monthly, average retail price of electricity by state",
+      "url": "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a"
+    },
+    {
+      "title": "U.S. Department of Energy, Estimating appliance and home electronic energy use",
+      "url": "https://www.energy.gov/energysaver/estimating-appliance-and-home-electronic-energy-use"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity, chapters on electrical power and energy",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "NIST, SI units: the watt and the joule",
+      "url": "https://www.nist.gov/pml/owm/metric-si/si-units"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

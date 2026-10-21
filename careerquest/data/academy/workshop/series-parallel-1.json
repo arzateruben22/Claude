@@ -1,0 +1,94 @@
+{
+  "key": "series-parallel-1",
+  "title": "Series-Parallel 1: A Series Resistor Feeding a Parallel Pair",
+  "description": "R1 (100 Ω) in series with R2 and R3 (200 Ω each) in parallel, across 12 V. Reduce the parallel pair, add the series resistor, find the total current, then work back out to every element.",
+  "difficulty": 2,
+  "estimatedMinutes": 15,
+  "relatedLessons": [
+    "series-parallel-circuits"
+  ],
+  "circuit": {
+    "sourceVolts": 12,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 100
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "resistor",
+              "id": "R2",
+              "ohms": 200
+            },
+            {
+              "type": "resistor",
+              "id": "R3",
+              "ohms": 200
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "series-parallel-1-t1",
+      "question": "What is the total resistance seen by the source?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-1-t2",
+      "question": "What is the total current?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-1-t3",
+      "question": "What is the voltage across R1?",
+      "quantity": "V_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-1-t4",
+      "question": "What is the voltage across R2 (and therefore across R3)?",
+      "quantity": "V_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-1-t5",
+      "question": "What current flows through R3?",
+      "quantity": "I_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-1-t6",
+      "question": "What power is dissipated in R1?",
+      "quantity": "P_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    }
+  ],
+  "hints": [
+    "Reduce first: two equal 200 Ω resistors in parallel are 100 Ω. Redraw the circuit as R1 in series with that 100 Ω equivalent.",
+    "R_total = R1 + equivalent. I_total = 12 V ÷ R_total.",
+    "R1 carries the whole current, so V_R1 = I_total × 100. By KVL the parallel group gets 12 V minus V_R1.",
+    "Each parallel branch current is the group voltage divided by 200 Ω; the two branch currents must add back to I_total."
+  ],
+  "learningGoals": [
+    "Identify series and parallel sections of a combination circuit.",
+    "Use reduce-and-redraw to find total resistance and current.",
+    "Expand the solution to individual element voltages and currents and verify with KVL and KCL."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

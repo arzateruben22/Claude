@@ -1,0 +1,343 @@
+{
+  "key": "parallel-circuits",
+  "track": "FUNDAMENTALS",
+  "order": 4,
+  "title": "Parallel Circuits",
+  "summary": "How building wiring actually works: every load gets the full voltage, currents add, and total resistance shrinks with every branch. Learn the reciprocal and product-over-sum formulas, Kirchhoff's current law, and why plugging in one more heater trips the breaker.",
+  "estimatedMinutes": 30,
+  "prerequisites": [
+    "series-circuits"
+  ],
+  "objectives": [
+    "Students will be able to identify a parallel circuit and state its rules for voltage, current and resistance.",
+    "Students will be able to compute total resistance using the reciprocal formula, the product-over-sum shortcut and the equal-resistor shortcut.",
+    "Students will be able to apply Kirchhoff's current law to find branch and total currents.",
+    "Students will be able to explain the effect of an open branch and of a shorted branch and relate overloads to branch-circuit ratings."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "What makes a circuit \"parallel\"",
+      "markdown": "In a **parallel circuit** the components are connected across the same two points, so each one has its own path from the source and back. The defining feature: **every branch has the same voltage across it.**\n\nThis is how buildings are wired. Every receptacle on a 20 A kitchen circuit, every luminaire on a lighting circuit, every appliance you plug in is a branch connected between the hot and the neutral. That design gives three things you want:\n\n- Each load receives full voltage (120 V or 240 V) no matter what else is on.\n- Loads operate independently: turning one lamp off does not affect the others.\n- A failed (open) load drops out without killing the circuit.\n\nThe cost is that **currents add**. Each additional branch draws its own current from the same source and through the same breaker and conductors. When the sum exceeds the breaker rating, the breaker opens. That is the familiar \"too many things on one circuit\" trip."
+    },
+    {
+      "type": "formula",
+      "name": "Total resistance of parallel resistors (reciprocal formula)",
+      "expression": "1 ÷ R_T = 1 ÷ R1 + 1 ÷ R2 + 1 ÷ R3 + …",
+      "variables": [
+        {
+          "symbol": "R_T",
+          "meaning": "total (equivalent) resistance seen by the source",
+          "unit": "ohms (Ω)"
+        },
+        {
+          "symbol": "R1, R2, R3",
+          "meaning": "resistance of each branch",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "Add the reciprocals (the conductances), then take the reciprocal of the sum. The result is always smaller than the smallest branch. Two shortcuts: for exactly two resistors, R_T = (R1 × R2) ÷ (R1 + R2) (product over sum); for n equal resistors, R_T = R ÷ n. The product-over-sum shortcut works only for two at a time; for three resistors use the reciprocal formula or apply product-over-sum twice."
+    },
+    {
+      "type": "diagram",
+      "title": "A 120 V source feeding three parallel branches",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 260\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"60\" y1=\"110\" x2=\"60\" y2=\"121\"/><line x1=\"46\" y1=\"121\" x2=\"74\" y2=\"121\"/><line x1=\"53\" y1=\"126\" x2=\"67\" y2=\"126\"/><line x1=\"46\" y1=\"132\" x2=\"74\" y2=\"132\"/><line x1=\"53\" y1=\"137\" x2=\"67\" y2=\"137\"/><line x1=\"60\" y1=\"137\" x2=\"60\" y2=\"150\"/><text x=\"80\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"80\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"60\" y1=\"110\" x2=\"60\" y2=\"60\"/><line x1=\"60\" y1=\"60\" x2=\"420\" y2=\"60\"/><line x1=\"60\" y1=\"200\" x2=\"60\" y2=\"150\"/><line x1=\"60\" y1=\"200\" x2=\"420\" y2=\"200\"/><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"95\"/><polyline points=\"180,95 180,105.5 172,109.6 188,117.8 172,125.9 188,134.1 172,142.3 188,150.4 180,154.5 180,165\"/><line x1=\"180\" y1=\"165\" x2=\"180\" y2=\"200\"/><line x1=\"300\" y1=\"60\" x2=\"300\" y2=\"95\"/><polyline points=\"300,95 300,105.5 292,109.6 308,117.8 292,125.9 308,134.1 292,142.3 308,150.4 300,154.5 300,165\"/><line x1=\"300\" y1=\"165\" x2=\"300\" y2=\"200\"/><line x1=\"420\" y1=\"60\" x2=\"420\" y2=\"95\"/><polyline points=\"420,95 420,105.5 412,109.6 428,117.8 412,125.9 428,134.1 412,142.3 428,150.4 420,154.5 420,165\"/><line x1=\"420\" y1=\"165\" x2=\"420\" y2=\"200\"/><circle cx=\"180\" cy=\"60\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"300\" cy=\"60\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"180\" cy=\"200\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"300\" cy=\"200\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><text x=\"195\" y=\"124\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R1</text><text x=\"195\" y=\"140\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\">60 Ω</text><text x=\"315\" y=\"124\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R2</text><text x=\"315\" y=\"140\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\">40 Ω</text><text x=\"435\" y=\"124\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R3</text><text x=\"435\" y=\"140\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\">24 Ω</text><text x=\"20\" y=\"100\" fill=\"currentColor\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">120 V</text><line x1=\"100\" y1=\"48\" x2=\"140.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"150,48 140.0,53.0 140.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"125\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I_T = 10 A</text><line x1=\"210\" y1=\"48\" x2=\"260.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"270,48 260.0,53.0 260.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"240\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">8 A</text><line x1=\"330\" y1=\"48\" x2=\"380.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"390,48 380.0,53.0 380.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"360\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">5 A</text><text x=\"160\" y=\"185\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">2 A</text><text x=\"280\" y=\"185\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">3 A</text><text x=\"400\" y=\"185\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">5 A</text><text x=\"240\" y=\"228\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">Every branch sees the full 120 V. Branch currents: 2 A + 3 A + 5 A = 10 A total (KCL).</text><text x=\"240\" y=\"246\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">R_T = 120 V ÷ 10 A = 12 Ω, smaller than the smallest branch (24 Ω).</text></svg>",
+      "caption": "Each branch is connected directly across the source, so each sees 120 V. The branch currents follow Ohm's law individually (120 ÷ 60 = 2 A, 120 ÷ 40 = 3 A, 120 ÷ 24 = 5 A) and add to a 10 A total in the source conductors. The current in the top conductor drops as it passes each junction."
+    },
+    {
+      "type": "text",
+      "heading": "Kirchhoff's current law (KCL)",
+      "markdown": "Kirchhoff's second rule is charge conservation: **the current flowing into any junction (node) equals the current flowing out.** Charge cannot pile up at a splice.\n\nIn a parallel circuit that means the source current splits at the first junction into the branch currents, and those branch currents recombine on the way back. So the total current is simply the sum of the branch currents:\n\n**I_T = I1 + I2 + I3 + …**\n\nEach branch current comes from Ohm's law using the **full source voltage** and that branch's resistance: I1 = V ÷ R1, and so on. The lowest-resistance branch carries the most current.\n\nOnce you have I_T you can also get the total resistance the easy way: **R_T = V ÷ I_T**. Many electricians find this quicker than the reciprocal formula.\n\nField meaning: if a clamp meter on the feed to a junction box reads 14 A and you can account for only 9 A on the branches you know about, 5 A is going somewhere else: an extra load, or a fault path. KCL is your bookkeeping tool."
+    },
+    {
+      "type": "example",
+      "problem": "Three heaters with resistances of 60 Ω, 40 Ω and 24 Ω are plugged into the same 120 V circuit. Find each branch current, the total current and the total resistance. Will a 15 A breaker hold?",
+      "solutionSteps": [
+        "Each branch sees the full 120 V.",
+        "I1 = 120 ÷ 60 = 2 A. I2 = 120 ÷ 40 = 3 A. I3 = 120 ÷ 24 = 5 A.",
+        "I_T = 2 + 3 + 5 = 10 A (KCL).",
+        "R_T = V ÷ I_T = 120 ÷ 10 = 12 Ω.",
+        "Check with the reciprocal formula: 1/60 + 1/40 + 1/24 = 0.01667 + 0.025 + 0.04167 = 0.08333; 1 ÷ 0.08333 = 12 Ω. Matches.",
+        "A 15 A breaker holds a 10 A load. But heaters are continuous loads, limited to 80% of the breaker (12 A on a 15 A circuit, NEC 210.20(A)); adding one more 3 A heater would bring it to 13 A, over the continuous limit even though it is under 15 A."
+      ],
+      "answer": "Branch currents 2 A, 3 A and 5 A; total 10 A; R_T = 12 Ω. A 15 A breaker holds, with 2 A of continuous-load headroom."
+    },
+    {
+      "type": "example",
+      "problem": "Find the total resistance of a 30 Ω resistor in parallel with a 60 Ω resistor using product over sum, then check with the reciprocal formula.",
+      "solutionSteps": [
+        "Product over sum: R_T = (30 × 60) ÷ (30 + 60) = 1,800 ÷ 90 = 20 Ω.",
+        "Reciprocal check: 1/30 + 1/60 = 2/60 + 1/60 = 3/60. R_T = 60 ÷ 3 = 20 Ω.",
+        "Sanity check: 20 Ω is less than 30 Ω, the smaller branch, as it must be."
+      ],
+      "answer": "20 Ω"
+    },
+    {
+      "type": "table",
+      "caption": "Parallel circuit rules at a glance",
+      "columns": [
+        "Quantity",
+        "Rule",
+        "Formula"
+      ],
+      "rows": [
+        [
+          "Voltage",
+          "Same across every branch",
+          "V_T = V1 = V2 = V3"
+        ],
+        [
+          "Current",
+          "Branch currents add; lowest resistance carries the most",
+          "I_T = I1 + I2 + I3"
+        ],
+        [
+          "Resistance",
+          "Reciprocals add; total is less than the smallest branch",
+          "1/R_T = 1/R1 + 1/R2 + 1/R3"
+        ],
+        [
+          "Two resistors",
+          "Product over sum",
+          "R_T = (R1 × R2) ÷ (R1 + R2)"
+        ],
+        [
+          "n equal resistors",
+          "Divide by the count",
+          "R_T = R ÷ n"
+        ],
+        [
+          "Open branch",
+          "That branch stops; others unaffected; I_T decreases",
+          "—"
+        ],
+        [
+          "Shorted branch",
+          "Near-zero resistance; I_T rises to fault level; OCPD must open",
+          "—"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "An open branch versus a shorted branch",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><text x=\"120\" y=\"20\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">Open branch</text><line x1=\"30\" y1=\"100\" x2=\"30\" y2=\"111\"/><line x1=\"16\" y1=\"111\" x2=\"44\" y2=\"111\"/><line x1=\"23\" y1=\"116\" x2=\"37\" y2=\"116\"/><line x1=\"16\" y1=\"122\" x2=\"44\" y2=\"122\"/><line x1=\"23\" y1=\"127\" x2=\"37\" y2=\"127\"/><line x1=\"30\" y1=\"127\" x2=\"30\" y2=\"140\"/><text x=\"50\" y=\"112\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"50\" y=\"132\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"30\" y1=\"100\" x2=\"30\" y2=\"50\"/><line x1=\"30\" y1=\"50\" x2=\"210\" y2=\"50\"/><line x1=\"30\" y1=\"190\" x2=\"30\" y2=\"140\"/><line x1=\"30\" y1=\"190\" x2=\"210\" y2=\"190\"/><line x1=\"110\" y1=\"50\" x2=\"110\" y2=\"85\"/><polyline points=\"110,85 110,95.5 102,99.6 118,107.8 102,115.9 118,124.1 102,132.3 118,140.4 110,144.5 110,155\"/><line x1=\"110\" y1=\"155\" x2=\"110\" y2=\"190\"/><line x1=\"210\" y1=\"50\" x2=\"210\" y2=\"85\"/><circle cx=\"210\" cy=\"92\" r=\"3\" stroke=\"#ff6b6b\"/><circle cx=\"210\" cy=\"118\" r=\"3\" stroke=\"#ff6b6b\"/><line x1=\"210\" y1=\"125\" x2=\"210\" y2=\"190\"/><circle cx=\"110\" cy=\"50\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"110\" cy=\"190\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><text x=\"225\" y=\"110\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"11\">open</text><text x=\"120\" y=\"215\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Other branches keep working;</text><text x=\"120\" y=\"230\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">total current drops.</text><text x=\"365\" y=\"20\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">Shorted branch</text><line x1=\"275\" y1=\"100\" x2=\"275\" y2=\"111\"/><line x1=\"261\" y1=\"111\" x2=\"289\" y2=\"111\"/><line x1=\"268\" y1=\"116\" x2=\"282\" y2=\"116\"/><line x1=\"261\" y1=\"122\" x2=\"289\" y2=\"122\"/><line x1=\"268\" y1=\"127\" x2=\"282\" y2=\"127\"/><line x1=\"275\" y1=\"127\" x2=\"275\" y2=\"140\"/><text x=\"295\" y=\"112\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"295\" y=\"132\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"275\" y1=\"100\" x2=\"275\" y2=\"50\"/><line x1=\"275\" y1=\"50\" x2=\"455\" y2=\"50\"/><line x1=\"275\" y1=\"190\" x2=\"275\" y2=\"140\"/><line x1=\"275\" y1=\"190\" x2=\"455\" y2=\"190\"/><line x1=\"355\" y1=\"50\" x2=\"355\" y2=\"85\"/><polyline points=\"355,85 355,95.5 347,99.6 363,107.8 347,115.9 363,124.1 347,132.3 363,140.4 355,144.5 355,155\"/><line x1=\"355\" y1=\"155\" x2=\"355\" y2=\"190\"/><line x1=\"455\" y1=\"50\" x2=\"455\" y2=\"190\" stroke=\"#ff6b6b\"/><circle cx=\"355\" cy=\"50\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"355\" cy=\"190\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><text x=\"462\" y=\"125\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"11\">0 Ω</text><line x1=\"300\" y1=\"38\" x2=\"430.0\" y2=\"38.0\" stroke=\"#ff6b6b\"/><polygon points=\"440,38 430.0,43.0 430.0,33.0\" fill=\"#ff6b6b\" stroke=\"none\"/><text x=\"370\" y=\"32\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">very high current</text><text x=\"365\" y=\"215\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Source voltage collapses, conductors</text><text x=\"365\" y=\"230\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">overheat: the breaker must open.</text></svg>",
+      "caption": "An open in one branch removes only that branch; the remaining branches still see full voltage and keep running, and total current falls. A short across one branch bypasses every branch with a near-zero path, so current is limited only by the source and conductor resistance. That is a fault, and the breaker or fuse must clear it."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "A short in a parallel circuit is a short across the source. Fault current on a residential service can reach thousands of amperes, enough to vaporize a screwdriver tip and cause an arc flash. This is why overcurrent devices must have an interrupting rating at least equal to the available fault current (NEC 110.9) and why you never bypass a tripping breaker to \"see what happens.\""
+    },
+    {
+      "type": "text",
+      "heading": "Field applications",
+      "markdown": "- **Branch-circuit loading.** Count the loads on a circuit as parallel branches and add their currents. A 20 A circuit with a 12.5 A heater (1,500 W) and a 10 A hair dryer is already at 22.5 A: it trips. Every added branch raises total current.\n- **Continuous loads.** Lighting, heating and anything that runs 3 hours or more is continuous; the breaker must be sized at 125% of the continuous load (so the load is at most 80% of the breaker rating, NEC 210.20(A)).\n- **Parallel conductors.** For very large feeders, the NEC permits two or more conductors per phase connected in parallel (310.10(G)), generally 1/0 AWG and larger, with identical length, material, size and termination so they share current equally. Unequal lengths mean unequal resistance and unequal current, which overheats the shorter conductor.\n- **Multiple grounding paths.** Equipment grounding conductors, metal raceways and bonding jumpers form parallel paths for fault current. More parallel paths mean lower impedance and faster breaker tripping, which is the whole point of bonding.\n- **Troubleshooting.** When one receptacle on a circuit is dead but the rest work, you are looking for an open in that branch (or in the daisy-chained connection feeding it), not a problem with the source."
+    },
+    {
+      "type": "text",
+      "heading": "Common mistakes",
+      "markdown": "**Quick sanity check** for two unequal resistors in parallel: the total is a bit less than the smaller one. For 24 Ω in parallel with 240 Ω, the answer is 21.8 Ω, close to 24. If your calculator says 264 (you added) or 132 (you averaged), you know you slipped.\n\n- **Forgetting the final reciprocal.** 1/60 + 1/40 + 1/24 = 0.0833 is 1/R_T, not R_T. Flip it: R_T = 12 Ω.\n- **Using product over sum on three resistors.** It only works on two. Do two at a time, or use reciprocals.\n- **Adding resistances.** Series resistances add; parallel resistances combine to something smaller than any one of them.\n- **Using the wrong voltage for a branch.** In a pure parallel circuit every branch gets the full source voltage. (In the next lesson, series-parallel circuits, a parallel group may see less.)\n- **Expecting the total current to fall when you add a load.** Adding a branch always increases total current."
+    },
+    {
+      "type": "callout",
+      "tone": "simulation",
+      "text": "Open the \"Parallel basics\" bench exercise. Add a fourth branch and watch total current climb while the total resistance falls. Then set one branch to open and confirm the others are unaffected."
+    }
+  ],
+  "practice": [
+    {
+      "id": "parallel-circuits-p1",
+      "type": "numeric",
+      "prompt": "Two 20 Ω resistors are connected in parallel. What is the total resistance?",
+      "answer": 10,
+      "unit": "Ω",
+      "tolerance": 0.05,
+      "explanation": "Equal resistors: R ÷ n = 20 ÷ 2 = 10 Ω."
+    },
+    {
+      "id": "parallel-circuits-p2",
+      "type": "numeric",
+      "prompt": "A 30 Ω resistor is in parallel with a 60 Ω resistor. Find the total resistance.",
+      "answer": 20,
+      "unit": "Ω",
+      "tolerance": 0.05,
+      "explanation": "Product over sum: (30 × 60) ÷ (30 + 60) = 1,800 ÷ 90 = 20 Ω."
+    },
+    {
+      "id": "parallel-circuits-p3",
+      "type": "numeric",
+      "prompt": "A 120 V circuit has two branches: 20 Ω and 30 Ω. What is the total current?",
+      "answer": 10,
+      "unit": "A",
+      "tolerance": 0.05,
+      "explanation": "I1 = 120 ÷ 20 = 6 A; I2 = 120 ÷ 30 = 4 A; I_T = 6 + 4 = 10 A."
+    },
+    {
+      "id": "parallel-circuits-p4",
+      "type": "multiple_choice",
+      "prompt": "In a parallel circuit, which quantity is the same for every branch?",
+      "choices": [
+        "Current",
+        "Resistance",
+        "Voltage",
+        "Power"
+      ],
+      "correctIndex": 2,
+      "explanation": "All branches are connected across the same two points, so they share the same voltage. Currents depend on each branch's resistance."
+    },
+    {
+      "id": "parallel-circuits-p5",
+      "type": "numeric",
+      "prompt": "Four 100 Ω resistors are connected in parallel. What is the total resistance?",
+      "answer": 25,
+      "unit": "Ω",
+      "tolerance": 0.05,
+      "explanation": "Equal resistors: 100 ÷ 4 = 25 Ω."
+    },
+    {
+      "id": "parallel-circuits-p6",
+      "type": "numeric",
+      "prompt": "Resistors of 10 Ω, 20 Ω and 20 Ω are connected in parallel. What is the total resistance?",
+      "answer": 5,
+      "unit": "Ω",
+      "tolerance": 0.05,
+      "explanation": "1/10 + 1/20 + 1/20 = 2/20 + 1/20 + 1/20 = 4/20, so R_T = 20 ÷ 4 = 5 Ω."
+    },
+    {
+      "id": "parallel-circuits-p7",
+      "type": "multiple_choice",
+      "prompt": "One lamp on a parallel lighting circuit burns out (opens). What happens to the other lamps on that circuit?",
+      "choices": [
+        "They all go out",
+        "They dim noticeably",
+        "They keep operating at full voltage",
+        "They get brighter"
+      ],
+      "correctIndex": 2,
+      "explanation": "Each lamp has its own path across the source. Removing one branch does not change the voltage on the others; total current simply drops."
+    }
+  ],
+  "quiz": {
+    "key": "parallel-circuits-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "parallel-circuits-q1",
+        "type": "numeric",
+        "prompt": "A 12 Ω resistor is in parallel with a 6 Ω resistor. What is the total resistance?",
+        "answer": 4,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "(12 × 6) ÷ (12 + 6) = 72 ÷ 18 = 4 Ω."
+      },
+      {
+        "id": "parallel-circuits-q2",
+        "type": "numeric",
+        "prompt": "A 24 V source feeds an 8 Ω branch and a 12 Ω branch in parallel. What is the total current?",
+        "answer": 5,
+        "unit": "A",
+        "tolerance": 0.05,
+        "explanation": "24 ÷ 8 = 3 A and 24 ÷ 12 = 2 A; total 5 A."
+      },
+      {
+        "id": "parallel-circuits-q3",
+        "type": "multiple_choice",
+        "prompt": "The total resistance of a parallel circuit is always:",
+        "choices": [
+          "greater than the largest branch resistance",
+          "equal to the sum of the branch resistances",
+          "less than the smallest branch resistance",
+          "the average of the branch resistances"
+        ],
+        "correctIndex": 2,
+        "explanation": "Each added branch provides another path, so the combination conducts better (lower resistance) than any single branch."
+      },
+      {
+        "id": "parallel-circuits-q4",
+        "type": "numeric",
+        "prompt": "Three 90 Ω heating elements are connected in parallel. What is the total resistance?",
+        "answer": 30,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "Equal resistors: 90 ÷ 3 = 30 Ω."
+      },
+      {
+        "id": "parallel-circuits-q5",
+        "type": "multiple_choice",
+        "prompt": "Kirchhoff's current law states that:",
+        "choices": [
+          "the sum of voltage drops around a loop equals the source voltage",
+          "current into a junction equals current out of the junction",
+          "current is the same in every branch of a parallel circuit",
+          "resistance is inversely proportional to current"
+        ],
+        "correctIndex": 1,
+        "explanation": "KCL is charge conservation at a node. In a parallel circuit it gives I_T = I1 + I2 + I3."
+      },
+      {
+        "id": "parallel-circuits-q6",
+        "type": "numeric",
+        "prompt": "A 120 V circuit has branch currents of 3 A, 4.5 A and 2.5 A. What is the total resistance of the circuit?",
+        "answer": 12,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "I_T = 3 + 4.5 + 2.5 = 10 A. R_T = 120 ÷ 10 = 12 Ω."
+      },
+      {
+        "id": "parallel-circuits-q7",
+        "type": "multiple_choice",
+        "prompt": "Another load is plugged into a parallel branch circuit. The total current drawn from the source:",
+        "choices": [
+          "increases",
+          "decreases",
+          "stays the same",
+          "drops to zero"
+        ],
+        "correctIndex": 0,
+        "explanation": "A new branch draws its own current in addition to the existing branches. Total resistance falls and total current rises."
+      },
+      {
+        "id": "parallel-circuits-q8",
+        "type": "numeric",
+        "prompt": "Two resistors in parallel across 120 V draw a total of 6 A. One of them is 40 Ω. What is the other resistance?",
+        "answer": 40,
+        "unit": "Ω",
+        "tolerance": 0.1,
+        "explanation": "The 40 Ω branch draws 120 ÷ 40 = 3 A, leaving 3 A for the other branch: R = 120 ÷ 3 = 40 Ω."
+      },
+      {
+        "id": "parallel-circuits-q9",
+        "type": "multiple_choice",
+        "prompt": "Which of these is connected in parallel with the others on a typical 120 V branch circuit?",
+        "choices": [
+          "The circuit breaker",
+          "The receptacles",
+          "The hot conductor",
+          "The neutral conductor"
+        ],
+        "correctIndex": 1,
+        "explanation": "Receptacles (and the loads plugged into them) are branches across hot and neutral. The breaker and conductors are in series with the whole circuit."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 110.9 interrupting rating; 210.20(A) continuous loads; 310.10(G) conductors in parallel (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity, chapters on parallel circuits and Kirchhoff's current law",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "All About Circuits, Lessons in Electric Circuits, Volume I (DC), Parallel circuits",
+      "url": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-5/simple-parallel-circuits/"
+    },
+    {
+      "title": "OSHA, Electrical: Overcurrent protection and the hazards of short circuits (construction eTool)",
+      "url": "https://www.osha.gov/etools/construction/electrical-incidents"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

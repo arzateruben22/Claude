@@ -1,0 +1,113 @@
+{
+  "key": "series-parallel-2",
+  "title": "Series-Parallel 2: A Line Resistor and a Nested Branch",
+  "description": "A 48 V source feeds R1 (4 Ω) in series with a parallel group: one branch is R2 (6 Ω) and R3 (6 Ω) in series, the other branch is R4 (12 Ω). Two levels of reduction are needed.",
+  "difficulty": 3,
+  "estimatedMinutes": 20,
+  "relatedLessons": [
+    "series-parallel-circuits",
+    "electrical-power-and-energy"
+  ],
+  "circuit": {
+    "sourceVolts": 48,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 4
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "series",
+              "items": [
+                {
+                  "type": "resistor",
+                  "id": "R2",
+                  "ohms": 6
+                },
+                {
+                  "type": "resistor",
+                  "id": "R3",
+                  "ohms": 6
+                }
+              ]
+            },
+            {
+              "type": "resistor",
+              "id": "R4",
+              "ohms": 12
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "series-parallel-2-t1",
+      "question": "What is the total resistance of the circuit?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-2-t2",
+      "question": "What is the total current from the 48 V source?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-2-t3",
+      "question": "What is the voltage across R1 (the line resistor)?",
+      "quantity": "V_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-2-t4",
+      "question": "What voltage appears across R4?",
+      "quantity": "V_R4",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-2-t5",
+      "question": "What current flows through R2?",
+      "quantity": "I_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-2-t6",
+      "question": "What is the voltage across R3?",
+      "quantity": "V_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-parallel-2-t7",
+      "question": "What total power does the source deliver?",
+      "quantity": "P_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    }
+  ],
+  "hints": [
+    "Work from the inside out. R2 and R3 are in series with each other: combine them first (6 + 6 = 12 Ω).",
+    "That 12 Ω branch is in parallel with R4 (12 Ω): two equal resistors in parallel give half, 6 Ω.",
+    "Now the circuit is R1 (4 Ω) in series with 6 Ω. R_total = 10 Ω and I_total = 48 ÷ 10.",
+    "V_R1 = I_total × 4. The parallel group gets the rest. The two 12 Ω branches split the group current equally, and inside the R2-R3 branch that branch current flows through both resistors.",
+    "Check: the power in all four resistors should add to V_source × I_total."
+  ],
+  "learningGoals": [
+    "Reduce a circuit with series elements nested inside a parallel group.",
+    "Track which voltage applies to each level of the circuit.",
+    "Use power conservation as a final check."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

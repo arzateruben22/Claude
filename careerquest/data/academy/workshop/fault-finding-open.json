@@ -1,0 +1,112 @@
+{
+  "key": "fault-finding-open",
+  "title": "Fault Finding: An Open Branch",
+  "description": "The same circuit as Series-Parallel 1 (12 V, R1 = 100 Ω in series with R2 ∥ R3 = 200 Ω each), but R3 has failed open. Healthy, the circuit draws 60 mA with 6 V across the group. Measure the faulted circuit and identify the readings that give the open away.",
+  "difficulty": 3,
+  "estimatedMinutes": 15,
+  "relatedLessons": [
+    "series-circuits",
+    "parallel-circuits",
+    "series-parallel-circuits"
+  ],
+  "circuit": {
+    "sourceVolts": 12,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 100
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "resistor",
+              "id": "R2",
+              "ohms": 200
+            },
+            {
+              "type": "resistor",
+              "id": "R3",
+              "ohms": 200
+            }
+          ]
+        }
+      ]
+    },
+    "faults": [
+      {
+        "id": "R3",
+        "fault": "open"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "fault-finding-open-t1",
+      "question": "With R3 open, what total current does the source supply?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-finding-open-t2",
+      "question": "With R3 open, what is the voltage across R2?",
+      "quantity": "V_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-finding-open-t3",
+      "question": "What current flows through the open R3?",
+      "quantity": "I_R3",
+      "tolerance": 0.001,
+      "toleranceType": "absolute"
+    },
+    {
+      "id": "fault-finding-open-t4",
+      "question": "What voltage does a voltmeter read across the open R3?",
+      "quantity": "V_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-finding-open-t5",
+      "type": "multiple_choice",
+      "question": "Which measurement most clearly indicates that R3 is open?",
+      "choices": [
+        "R3 has the full parallel-group voltage across it but carries zero current",
+        "R3 has zero volts across it",
+        "The total current is higher than in the healthy circuit",
+        "The voltage across R1 is higher than in the healthy circuit"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "id": "fault-finding-open-t6",
+      "type": "multiple_choice",
+      "question": "Compared with the healthy circuit (60 mA total, 6 V across the group), how did the open change the circuit?",
+      "choices": [
+        "Total current rose and the group voltage fell",
+        "Total current fell and the group voltage rose",
+        "Nothing changed because the other branch still works",
+        "The source voltage dropped to zero"
+      ],
+      "correctIndex": 1
+    }
+  ],
+  "hints": [
+    "An open has infinite resistance. Remove R3 from the drawing: the circuit is now just R1 (100 Ω) in series with R2 (200 Ω).",
+    "R_total rises from 200 Ω to 300 Ω, so the total current falls. V_R1 falls with it, and by KVL the group voltage rises.",
+    "An open branch still has voltage across it (the same as the group) but no current. An open element in a parallel group does not show source voltage, unlike an open in a pure series loop.",
+    "In the field: a branch that reads normal voltage but zero current (clamp meter) is open somewhere in that branch."
+  ],
+  "learningGoals": [
+    "Predict how an open branch changes total resistance, total current and the voltage distribution.",
+    "Distinguish the signature of an open in a parallel branch from an open in a series path.",
+    "Use voltage and current measurements together to localize a fault."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

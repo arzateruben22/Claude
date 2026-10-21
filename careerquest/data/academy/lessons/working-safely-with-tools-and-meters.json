@@ -1,0 +1,346 @@
+{
+  "key": "working-safely-with-tools-and-meters",
+  "track": "SAFETY",
+  "order": 3,
+  "title": "Working Safely with Tools and Meters",
+  "summary": "How to choose and use a digital multimeter, clamp meter and non-contact tester without getting hurt or fooled by the reading, what the CAT ratings on a meter really mean, and the hand and power tool habits that separate professionals from statistics.",
+  "estimatedMinutes": 30,
+  "prerequisites": [
+    "electrical-safety-fundamentals"
+  ],
+  "objectives": [
+    "Students will be able to explain the IEC 61010 measurement categories (CAT I through CAT IV) and select a meter and leads rated for the location being measured.",
+    "Students will be able to connect a multimeter correctly for voltage, current, resistance and continuity, and list the connections that destroy meters or injure users.",
+    "Students will be able to use a clamp meter on a single conductor, explain why clamping both conductors reads zero, and multiply sensitivity with wrapped turns.",
+    "Students will be able to describe the limits of non-contact voltage testers and recognize ghost (phantom) voltage readings.",
+    "Students will be able to apply basic inspection and use rules for insulated hand tools, power tools and extension cords on a jobsite."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Measurement categories: what the CAT rating means",
+      "markdown": "A meter that says **600 V** on the front is only telling you half the story. The other half is the **measurement category**, defined in IEC 61010-1, which tells you how large a **transient** (a lightning or switching spike riding on top of the normal voltage) the meter can survive without flashing over inside the case and in your hand.\n\n- **CAT IV**: the origin of the installation. Utility service drops, meter bases, service-entrance conductors, outdoor conductors, anything between the utility and the main breaker. Transients here are limited only by the utility.\n- **CAT III**: fixed distribution. Panelboards, feeders, bus ducts, motor control centers, disconnects, three-phase motors, lighting circuits in commercial buildings. Most of a commercial electrician's day is CAT III.\n- **CAT II**: receptacle-connected loads. Cord-and-plug appliances, portable tools, outlets more than 30 ft from a CAT III source.\n- **CAT I**: electronics isolated from the mains by a transformer or power supply, such as a circuit board inside a device.\n\nA CAT III 600 V meter is built to withstand a 6,000 V transient; a CAT III 1000 V or CAT IV 600 V meter withstands 8,000 V. The practical rules:\n\n- Choose the category for the **location**, not the voltage you expect to read. Reading 120 V at a meter base is a CAT IV measurement.\n- The **lowest-rated part** of the system sets the rating: a CAT IV meter with CAT II leads is a CAT II setup.\n- A higher category at the same voltage beats a higher voltage at a lower category. CAT IV 600 V is safer in a panel than CAT II 1000 V.\n- Look for the mark of an independent testing lab (UL, CSA, TUV) next to the CAT rating; a self-declared rating on a bargain meter is worth nothing."
+    },
+    {
+      "type": "diagram",
+      "title": "Measurement categories by location",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 220\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M20 60 H460\"/>\n<path d=\"M40 20 V60\"/>\n<path d=\"M20 30 H60\"/>\n<circle cx=\"110\" cy=\"60\" r=\"16\"/>\n<rect x=\"180\" y=\"40\" width=\"50\" height=\"60\" rx=\"3\"/>\n<path d=\"M190 50 h30 M190 62 h30 M190 74 h30 M190 86 h30\"/>\n<rect x=\"300\" y=\"46\" width=\"30\" height=\"40\" rx=\"3\"/>\n<path d=\"M308 56 v8 M322 56 v8 M315 72 a4 4 0 1 0 0.1 0\"/>\n<rect x=\"400\" y=\"40\" width=\"50\" height=\"40\" rx=\"3\"/>\n<path d=\"M410 50 h30 M410 60 h30 M410 70 h30\"/>\n<path d=\"M330 66 H400\"/>\n</g>\n<g font-size=\"12\" font-weight=\"bold\">\n<text x=\"26\" y=\"130\" fill=\"#ff6b6b\">CAT IV</text>\n<text x=\"176\" y=\"130\" fill=\"#f3c75b\">CAT III</text>\n<text x=\"296\" y=\"130\" fill=\"#4cc9ff\">CAT II</text>\n<text x=\"404\" y=\"130\" fill=\"#3ddc97\">CAT I</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"16\" y=\"146\">utility drop,</text>\n<text x=\"16\" y=\"158\">meter base,</text>\n<text x=\"16\" y=\"170\">service entrance</text>\n<text x=\"166\" y=\"146\">panels, feeders,</text>\n<text x=\"166\" y=\"158\">motors, bus,</text>\n<text x=\"166\" y=\"170\">fixed 3-phase</text>\n<text x=\"286\" y=\"146\">receptacles,</text>\n<text x=\"286\" y=\"158\">cords, portable</text>\n<text x=\"286\" y=\"170\">tools, appliances</text>\n<text x=\"396\" y=\"146\">electronics</text>\n<text x=\"396\" y=\"158\">behind a</text>\n<text x=\"396\" y=\"170\">transformer</text>\n<text x=\"92\" y=\"92\">meter</text>\n<text x=\"176\" y=\"112\">panel</text>\n<text x=\"396\" y=\"94\">circuit board</text>\n<text x=\"16\" y=\"208\">Transient energy is highest at the source and falls as impedance increases toward the load</text>\n</g>\n</svg>",
+      "caption": "The category is set by where the probes go. Transient energy is greatest near the utility connection and decreases as the impedance of the wiring between the source and the point of measurement increases."
+    },
+    {
+      "type": "text",
+      "heading": "Using a digital multimeter without hurting yourself or the meter",
+      "markdown": "A modern DMM measures AC and DC volts, resistance, continuity, and usually current through separate jacks. Before every use: inspect the leads for cracked insulation and exposed metal, check that the lead shrouds and finger guards are intact, confirm the meter's fuse by checking continuity on the amp jack if the model allows it, and **verify the meter on a known live source** before trusting any absence-of-voltage reading.\n\n**Voltage** is measured **in parallel**: touch the probes across the two points without opening the circuit. The meter has very high input impedance (about 10 MΩ) so it draws almost nothing. Always start on the highest range or use autorange, and keep your fingers behind the finger guards.\n\n**Current** is measured **in series**: the circuit is opened and the meter completes it through the amp jack. Inside the meter that path is a low-value shunt, which is almost a short circuit. The single most common way to destroy a meter and burn a hand is to leave the leads in the amp jacks and then touch them across a voltage source: the meter becomes a dead short across the panel. Use the clamp meter for anything larger than a few amps.\n\n**Resistance and continuity** must only be measured on a **de-energized** circuit. The meter supplies its own small test current; external voltage drives the reading to nonsense and can damage the meter. Isolate the component you are testing, because parallel paths (a motor winding, a lamp, another branch) will read through it.\n\n**Ghost voltage.** A high-impedance DMM can show 40 to 90 V on a conductor that is not connected to anything, because the unused conductor picks up voltage capacitively from live conductors in the same raceway. The reading is real but the source has no current capability. A meter with a **low-impedance (LoZ)** mode, or a solenoid-type tester, loads the circuit slightly and makes the ghost disappear. Treat an unexplained reading as live until you have checked it with a LoZ function, and never use a LoZ mode on circuits where the extra load could trip sensitive electronics."
+    },
+    {
+      "type": "diagram",
+      "title": "Voltmeter in parallel, ammeter in series",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 220\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M40 70 V150\"/>\n<path d=\"M30 94 h20 M36 104 h8 M30 114 h20 M36 124 h8\"/>\n<path d=\"M40 70 V40 H180\"/>\n<path d=\"M40 150 V180 H330 V150\"/>\n<circle cx=\"200\" cy=\"40\" r=\"14\"/>\n<path d=\"M214 40 H330 V70\"/>\n<path d=\"M330 70 l-8 8 h16 l-8 8 l-8 8 h16 l-8 8 l-8 8 h16 l-8 8 V150\"/>\n<circle cx=\"400\" cy=\"110\" r=\"14\"/>\n<path d=\"M330 70 H400 V96 M400 124 V150 H330\" stroke=\"#4cc9ff\" stroke-dasharray=\"5 3\"/>\n</g>\n<g fill=\"currentColor\" font-weight=\"bold\" font-size=\"14\">\n<text x=\"195\" y=\"45\">A</text>\n<text x=\"395\" y=\"115\" fill=\"#4cc9ff\">V</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"56\" y=\"112\">12 V</text>\n<text x=\"150\" y=\"26\">ammeter IN SERIES</text>\n<text x=\"150\" y=\"68\">(circuit opened, meter closes it)</text>\n<text x=\"340\" y=\"110\">load</text>\n<text x=\"262\" y=\"200\" fill=\"#4cc9ff\">voltmeter IN PARALLEL</text>\n<text x=\"262\" y=\"214\" fill=\"#4cc9ff\">(across the load, circuit intact)</text>\n<text x=\"20\" y=\"206\">Never put the ammeter across the source:</text>\n<text x=\"20\" y=\"218\">it is nearly a short circuit.</text>\n</g>\n</svg>",
+      "caption": "The voltmeter (blue, dashed) is placed across the load and reads the potential difference without disturbing the circuit. The ammeter is inserted in the broken circuit so all the current flows through it. Swap the two and the ammeter becomes a short circuit across the source."
+    },
+    {
+      "type": "table",
+      "caption": "Connections that end careers (and meters)",
+      "columns": [
+        "Mistake",
+        "What happens",
+        "Prevention"
+      ],
+      "rows": [
+        [
+          "Leads in amp jacks, probes touched across a voltage source",
+          "Dead short through the meter; fuse blows or meter explodes; arc flash at the probe tips",
+          "Return leads to the volt jacks after every current reading; meters with jack alerts help"
+        ],
+        [
+          "Measuring ohms or continuity on a live circuit",
+          "Meter damaged, false readings, possible arc",
+          "Lock out and test for absence of voltage first"
+        ],
+        [
+          "Using CAT II leads on a CAT III/IV meter in a panel",
+          "A transient flashes over the lead insulation into your hand",
+          "Match leads to the meter and location; discard damaged leads"
+        ],
+        [
+          "Hands in front of the finger guards, probe tips exposed more than 4 mm",
+          "Probe slips and bridges two phases; arc flash",
+          "Use shrouded or retractable tips; one hand in pocket where practical"
+        ],
+        [
+          "Meter rated 300 V used on a 480 V system",
+          "Internal flashover",
+          "Use 600 V or 1000 V CAT III/IV meters for commercial work"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Clamp meters",
+      "markdown": "A **clamp meter** measures current without breaking the circuit by sensing the magnetic field around a conductor. AC-only clamps use a current transformer in the jaws; AC/DC clamps use a Hall-effect sensor. Because it never puts you in series with the load, the clamp is the safest way to measure current and the first tool for troubleshooting an overloaded circuit.\n\nRules for a good reading:\n\n- Clamp around **one** conductor. Hot and neutral together carry equal and opposite currents; their fields cancel and the meter reads near zero. A reading near zero on a cord means you clamped the whole cord, not that the appliance is off. Use a **line splitter** to separate the conductors of a cord.\n- A leakage reading is the exception: clamping all conductors of a circuit together deliberately measures the imbalance, which is exactly what a leakage clamp does to find a ground fault.\n- Center the conductor in the jaws and close them fully; a gap in the jaws reads low.\n- **Multiply sensitivity by wrapping turns.** If the current is too small for the meter's lowest range, pass the conductor through the jaws N times; the meter reads N times the actual current, so divide the reading by N.\n- Choose **true-RMS** for anything with electronics in it: LED drivers, variable-frequency drives, computer power supplies and dimmers draw non-sinusoidal current, and an average-responding meter reads them low by 10 to 40 percent.\n- Use the **inrush** function to capture motor starting current, which can be six to eight times running current.\n\nAlways cross-check a clamp reading with expectations. A 1,500 W heater at 120 V should draw about 12.5 A; a reading of 1.2 A means a range or setting mistake, and a reading of 25 A means a problem."
+    },
+    {
+      "type": "diagram",
+      "title": "Clamp around one conductor, not two",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 210\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M20 60 H200 M20 120 H200\"/>\n<ellipse cx=\"110\" cy=\"60\" rx=\"34\" ry=\"24\" stroke=\"#4cc9ff\" stroke-width=\"4\"/>\n<rect x=\"88\" y=\"84\" width=\"44\" height=\"40\" rx=\"4\" stroke=\"#4cc9ff\"/>\n<path d=\"M240 60 H420 M240 120 H420\"/>\n<ellipse cx=\"330\" cy=\"90\" rx=\"34\" ry=\"52\" stroke=\"#ff6b6b\" stroke-width=\"4\"/>\n<rect x=\"308\" y=\"142\" width=\"44\" height=\"30\" rx=\"4\" stroke=\"#ff6b6b\"/>\n</g>\n<path d=\"M30 54 l10 6 l-10 6\" fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"2\"/>\n<path d=\"M190 126 l-10 -6 l10 -6\" fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"2\"/>\n<path d=\"M250 54 l10 6 l-10 6\" fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"2\"/>\n<path d=\"M410 126 l-10 -6 l10 -6\" fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"2\"/>\n<g fill=\"currentColor\">\n<text x=\"94\" y=\"110\" fill=\"#4cc9ff\">12.5 A</text>\n<text x=\"314\" y=\"162\" fill=\"#ff6b6b\">0.0 A</text>\n<text x=\"20\" y=\"40\">hot</text>\n<text x=\"20\" y=\"140\">neutral</text>\n<text x=\"240\" y=\"40\">hot</text>\n<text x=\"240\" y=\"140\">neutral</text>\n<text x=\"20\" y=\"190\">One conductor: field is measured</text>\n<text x=\"240\" y=\"190\">Both conductors: equal and opposite</text>\n<text x=\"240\" y=\"204\">fields cancel, reading is zero</text>\n</g>\n</svg>",
+      "caption": "Left: the jaws enclose only the hot conductor and read the load current. Right: the jaws enclose both hot and neutral; the fields cancel and the meter reads zero even though 12.5 A is flowing."
+    },
+    {
+      "type": "formula",
+      "name": "Clamp meter with wrapped turns",
+      "expression": "I_actual = I_reading ÷ N",
+      "variables": [
+        {
+          "symbol": "I_actual",
+          "meaning": "true current in the conductor",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "I_reading",
+          "meaning": "current displayed by the clamp meter",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "N",
+          "meaning": "number of times the conductor passes through the jaws",
+          "unit": "turns"
+        }
+      ],
+      "explanation": "Each pass through the jaws adds the same magnetic field again, so the meter sees N times the current. Wrapping five turns of a control wire that carries 0.4 A makes the meter display 2.0 A, which is easier to read accurately on a 40 A range. Divide by the turns to recover the real value."
+    },
+    {
+      "type": "example",
+      "problem": "A technician needs to verify the current drawn by a 120 V, 1,500 W portable heater and then measure a small 24 V control circuit. (a) What current should the clamp read on the heater's hot conductor? (b) The control wire is wrapped through the jaws 5 times and the meter displays 2.5 A. What is the actual control current?",
+      "solutionSteps": [
+        "(a) For a resistive heater, I = P ÷ V = 1,500 W ÷ 120 V = 12.5 A. If the clamp reads near 0 A, the technician has clamped the whole cord; use a line splitter.",
+        "(b) With 5 turns the meter reads 5 times the actual current: I_actual = 2.5 A ÷ 5 = 0.5 A.",
+        "Sanity check: 0.5 A at 24 V is 12 VA, a reasonable load for a few control relays."
+      ],
+      "answer": "(a) About 12.5 A. (b) 0.5 A."
+    },
+    {
+      "type": "text",
+      "heading": "Non-contact testers and contact testers",
+      "markdown": "A **non-contact voltage tester** (NCVT, the pen-style tester) senses the electric field around an energized conductor by capacitive coupling and lights or beeps near AC voltage. It is a quick screening tool: fast, one-handed, and it finds the hot side of a switch leg in seconds. It is also the most misunderstood tool on the belt.\n\nWhat it cannot do:\n\n- It cannot prove a circuit is dead. Shielded cable, metal conduit, deep boxes, a low battery or a tester in the wrong sensitivity mode all produce a false \"dead\" indication. Many fatal shocks began with \"the pen did not beep.\"\n- It cannot detect DC, so it is useless on solar strings, battery banks and control circuits.\n- It gives false \"live\" indications from static electricity, ghost voltage and nearby conductors.\n\nUse it the right way: check it on a known live source, screen the circuit, then confirm absence of voltage with a **contact tester** (a DMM or a solenoid tester) rated for the circuit, then recheck the tester. A **proving unit** is a small battery-powered source that lets you verify a tester when no known live circuit is handy.\n\n**Solenoid testers** (the classic \"wiggy\" style) use a plunger pulled by a coil. They draw real current, so they are immune to ghost voltage and work on AC and DC, but they load the circuit, heat up with long use and typically carry only a CAT III rating; many are not suitable for GFCI-protected circuits because their test current trips the device. **Receptacle testers** with three lights check for open ground, open neutral and reversed polarity in seconds but cannot detect a bootleg ground (a neutral jumpered to the ground screw), which is exactly the dangerous defect you most want to find."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Before every absence-of-voltage test: verify the tester on a known live source or proving unit. After the test: verify it again. A non-contact tester alone never establishes an electrically safe work condition. If your meter reads 0 V on a circuit that was just working, suspect the meter before you trust the reading."
+    },
+    {
+      "type": "text",
+      "heading": "Hand tools, power tools and cords",
+      "markdown": "**Insulated hand tools** rated 1,000 V (ASTM F1505 / IEC 60900, marked with a double-triangle symbol) are required for work inside the restricted approach boundary and are a good idea anywhere near energized parts. The insulation only works if it is intact: inspect for cuts, cracks and worn-through spots before each use, and retire any tool where the inner contrasting color shows through. Ordinary pliers with dipped grips are **not** insulated tools; the grips are for comfort.\n\nTool habits that prevent injury:\n\n- Cut away from your body with knives and strippers; a cable stripping knife that slips opens a tendon.\n- Use the right tool: screwdrivers are not chisels or pry bars, and linesman pliers are not hammers.\n- Keep fingers out of the line of cut on cable cutters and knockout punches.\n- Fish tapes are conductive; use nonconductive tape near energized panels and never fish into a live enclosure.\n\n**Power tools** on a jobsite must be either double-insulated (marked with a square-within-a-square) or have an intact three-prong grounded cord, and all 120 V receptacles used by the crew must be GFCI-protected (OSHA 1926.404). Never remove or bypass a ground pin. Wear safety glasses for every drilling, cutting or chipping task, hearing protection for hammer drills and saws, and keep gloves, loose sleeves and long hair away from rotating hole saws and drill bits (a hole saw that binds will break a wrist). Unplug or remove the battery before changing bits or blades. Use a hydraulic knockout punch instead of a hole saw on panels where practical, and always de-energize the panel first: metal chips in a live panel start fires.\n\n**Extension cords** must be rated for hard usage (type S, SJ, SO and similar), sized for the load and length, and inspected daily. A cord with a missing ground pin, a cut jacket or a tape repair comes off the site. Keep cords out of water, out of doorways where they will be crushed, and off sharp edges. Protect cords from vehicles with cord bridges, and never plug one cord into another to reach across a building: voltage drop will starve the tool and the connections overheat.\n\n**Ladders and lifts** used with tools: fiberglass only, and keep both hands free by using a tool belt or hoist line. A drill dropped from a ladder onto a co-worker is a serious injury.\n\n**Meter kit for a first-year trainee:** a CAT III 600 V (or better, CAT IV 600 V) true-RMS DMM with LoZ mode, a true-RMS clamp meter with inrush, a non-contact tester with adjustable sensitivity, a three-light receptacle tester, spare fuses for the DMM, and a proving unit if your employer supplies one. Label your leads with the date you put them in service and replace them yearly."
+    }
+  ],
+  "practice": [
+    {
+      "id": "working-safely-with-tools-and-meters-p1",
+      "type": "multiple_choice",
+      "prompt": "You are measuring the voltage at the line side of a residential meter base. Which measurement category applies?",
+      "choices": [
+        "CAT I",
+        "CAT II",
+        "CAT III",
+        "CAT IV"
+      ],
+      "correctIndex": 3,
+      "explanation": "The meter base and service entrance are the origin of the installation, where transients are largest: CAT IV."
+    },
+    {
+      "id": "working-safely-with-tools-and-meters-p2",
+      "type": "numeric",
+      "prompt": "A control conductor is wrapped through a clamp meter's jaws 4 times and the meter displays 1.8 A. What is the actual current, in amperes?",
+      "answer": 0.45,
+      "unit": "A",
+      "tolerance": 0.01,
+      "explanation": "I_actual = reading ÷ turns = 1.8 ÷ 4 = 0.45 A."
+    },
+    {
+      "id": "working-safely-with-tools-and-meters-p3",
+      "type": "multiple_choice",
+      "prompt": "A clamp meter placed around a two-conductor appliance cord reads 0.0 A while the appliance is obviously running. The most likely explanation is:",
+      "choices": [
+        "The appliance is drawing DC current",
+        "Hot and neutral currents are equal and opposite, so their fields cancel; the jaws must enclose only one conductor",
+        "The clamp meter needs a new battery",
+        "The appliance is double-insulated and draws no current through the cord"
+      ],
+      "correctIndex": 1,
+      "explanation": "The clamp sums the fields of everything inside the jaws. Equal and opposite currents sum to zero. Use a line splitter to separate the conductors."
+    },
+    {
+      "id": "working-safely-with-tools-and-meters-p4",
+      "type": "numeric",
+      "prompt": "What current should a clamp meter read on the hot conductor of a 240 V, 4,800 W resistive water heater element?",
+      "answer": 20,
+      "unit": "A",
+      "tolerance": 0.2,
+      "explanation": "I = P ÷ V = 4,800 ÷ 240 = 20 A. Knowing the expected value lets you catch a wrong range or a failed element."
+    },
+    {
+      "id": "working-safely-with-tools-and-meters-p5",
+      "type": "multiple_choice",
+      "prompt": "A high-impedance DMM shows 62 V on a conductor that you believe is disconnected at both ends. Which action is correct?",
+      "choices": [
+        "Assume it is dead because 62 V is not a standard voltage",
+        "Treat it as live until checked with a low-impedance (LoZ) function or solenoid tester; if the reading collapses to zero it was ghost voltage",
+        "Touch it briefly to see if you feel anything",
+        "Measure it on the ohms scale to confirm"
+      ],
+      "correctIndex": 1,
+      "explanation": "Capacitive coupling from nearby live conductors produces ghost voltage that a 10 MΩ meter displays. A LoZ reading loads the circuit and drops the reading to zero if there is no real source. Never measure ohms on anything that might be live."
+    },
+    {
+      "id": "working-safely-with-tools-and-meters-p6",
+      "type": "multiple_choice",
+      "prompt": "Which tool combination is acceptable for proving a 277 V lighting circuit is de-energized before work?",
+      "choices": [
+        "A non-contact pen tester only",
+        "A three-light receptacle tester",
+        "A non-contact tester to screen, followed by a CAT III-rated contact meter verified on a known live source before and after",
+        "Listening for the ballast hum to stop"
+      ],
+      "correctIndex": 2,
+      "explanation": "Absence of voltage must be proven with a contact tester rated for the location using the live-dead-live method. Pen testers and receptacle testers are screening tools."
+    }
+  ],
+  "quiz": {
+    "key": "working-safely-with-tools-and-meters-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "working-safely-with-tools-and-meters-q1",
+        "type": "multiple_choice",
+        "prompt": "A meter is rated CAT IV 600 V but the test leads are marked CAT II 1000 V. What is the rating of the combination when used in a panelboard?",
+        "choices": [
+          "CAT IV 600 V",
+          "CAT II 1000 V, which is inadequate for a panelboard",
+          "CAT III 600 V",
+          "CAT IV 1000 V"
+        ],
+        "correctIndex": 1,
+        "explanation": "The lowest-rated component sets the rating. CAT II leads are rated for receptacle-level transients only, so the setup is not suitable for CAT III panel work."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q2",
+        "type": "multiple_choice",
+        "prompt": "How is a voltmeter connected to measure the voltage across a motor?",
+        "choices": [
+          "In series with the motor, after opening a conductor",
+          "In parallel, across the motor terminals, with the circuit intact",
+          "Between the motor frame and the ohms jack",
+          "In series with the equipment grounding conductor"
+        ],
+        "correctIndex": 1,
+        "explanation": "Voltage is a difference between two points, so the voltmeter goes across them. Its high input impedance means it does not disturb the circuit."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q3",
+        "type": "multiple_choice",
+        "prompt": "What is the consequence of touching the probes across a 480 V bus while the leads are plugged into the 10 A current jacks?",
+        "choices": [
+          "The meter reads 480 V normally",
+          "The meter's internal shunt forms a near short circuit across the bus; the fuse blows at best, and an arc flash at the probes is likely",
+          "The meter autoranges to the correct function",
+          "Nothing, because the meter is CAT III rated"
+        ],
+        "correctIndex": 1,
+        "explanation": "The amp function is a low-resistance path by design. Across a stiff 480 V source it draws thousands of amps for the instant before the fuse opens."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q4",
+        "type": "numeric",
+        "prompt": "A clamp meter's lowest useful range is 1 A. To measure a 0.2 A control current more accurately, the conductor is wrapped through the jaws 10 times. What should the meter display, in amperes?",
+        "answer": 2,
+        "unit": "A",
+        "tolerance": 0.05,
+        "explanation": "The meter reads N times the actual current: 10 × 0.2 A = 2.0 A."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q5",
+        "type": "multiple_choice",
+        "prompt": "Why should a true-RMS meter be used to measure current on a lighting circuit full of LED drivers?",
+        "choices": [
+          "LED drivers run on DC, so an AC meter reads zero",
+          "LED drivers draw non-sinusoidal current; an average-responding meter reads it low, while true-RMS reports the real heating value",
+          "True-RMS meters have higher CAT ratings",
+          "LED circuits run at 277 V, which average-responding meters cannot read"
+        ],
+        "correctIndex": 1,
+        "explanation": "Average-responding meters are calibrated for sine waves. Distorted waveforms from electronic loads read low by 10 to 40 percent, hiding overloads."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q6",
+        "type": "multiple_choice",
+        "prompt": "A three-light receptacle tester shows 'correct' on a receptacle. Which defect could still be present?",
+        "choices": [
+          "Reversed hot and neutral",
+          "An open equipment ground",
+          "A bootleg ground (neutral jumpered to the ground terminal)",
+          "An open neutral"
+        ],
+        "correctIndex": 2,
+        "explanation": "The tester checks voltage between the three slots. A neutral wired to the ground screw makes the ground slot look normal, so the tester passes a dangerous installation."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q7",
+        "type": "multiple_choice",
+        "prompt": "Which marking identifies a hand tool as insulated for work near energized parts up to 1,000 V?",
+        "choices": [
+          "Soft rubber comfort grips",
+          "The double-triangle symbol with a 1000 V rating (ASTM F1505 / IEC 60900)",
+          "A green handle",
+          "The letters 'VDE' stamped anywhere on the tool"
+        ],
+        "correctIndex": 1,
+        "explanation": "Only tools tested to ASTM F1505 or IEC 60900 and marked with the double triangle are insulated tools. Dipped grips are for comfort and give no rated protection."
+      },
+      {
+        "id": "working-safely-with-tools-and-meters-q8",
+        "type": "multiple_choice",
+        "prompt": "A corded drill has a damaged ground pin. The correct action is to:",
+        "choices": [
+          "Cut off the remaining pins and use a two-prong adapter",
+          "Tape the plug and keep using it until the job is done",
+          "Remove the tool from service and tag it until the cord cap is replaced",
+          "Use it only on a GFCI-protected circuit, which makes the ground unnecessary"
+        ],
+        "correctIndex": 2,
+        "explanation": "OSHA 1926.403 and 1926.404 require defective equipment to be removed from service. GFCI protection is required in addition to, not instead of, an intact equipment ground on a grounded tool."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "IEC 61010-1, Safety requirements for electrical equipment for measurement, control and laboratory use (measurement categories; by number only)",
+      "url": "https://webstore.iec.ch/publication/26826"
+    },
+    {
+      "title": "OSHA 29 CFR 1926 Subpart K, 1926.403 General requirements and 1926.404 Wiring design and protection (GFCI / assured equipment grounding)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.404"
+    },
+    {
+      "title": "OSHA 29 CFR 1926 Subpart I, Tools - Hand and Power (1926.300 through 1926.307)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.300"
+    },
+    {
+      "title": "OSHA 29 CFR 1910.335, Safeguards for personnel protection (insulated tools and test instruments)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.335"
+    },
+    {
+      "title": "NFPA 70E, Standard for Electrical Safety in the Workplace, 110.6 Test instruments and equipment and 130.7(D) insulated tools (by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70e-standard-development/70e"
+    },
+    {
+      "title": "ASTM F1505, Standard Specification for Insulated and Insulating Hand Tools (by number only)",
+      "url": "https://www.astm.org/f1505-20.html"
+    },
+    {
+      "title": "Cal/OSHA Title 8, Section 2320.2 Work on Energized Equipment and Section 2340.16 Work Space About Electric Equipment",
+      "url": "https://www.dir.ca.gov/title8/2320_2.html"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

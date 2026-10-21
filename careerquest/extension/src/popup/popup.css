@@ -1,0 +1,258 @@
+:root {
+  --bg: #0b0e14;
+  --surface: #121722;
+  --surface-2: #1a2130;
+  --border: #243043;
+  --text: #e6edf7;
+  --muted: #8b98ad;
+  --blue: #4cc9ff;
+  --blue-ink: #06202c;
+  --gold: #f3c75b;
+  --gold-ink: #2b2003;
+  --green: #35d07f;
+  --red: #ff6b6b;
+  --radius: 10px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.popup {
+  width: 340px;
+  max-width: 360px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.pill {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+}
+.pill--ok {
+  color: var(--green);
+  border-color: rgba(53, 208, 127, 0.4);
+}
+.pill--warn {
+  color: var(--gold);
+  border-color: rgba(243, 199, 91, 0.4);
+}
+.pill--bad {
+  color: var(--red);
+  border-color: rgba(255, 107, 107, 0.4);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+.card--notice {
+  border-color: rgba(76, 201, 255, 0.35);
+}
+.card--prompt {
+  border-color: rgba(243, 199, 91, 0.5);
+  background: linear-gradient(180deg, rgba(243, 199, 91, 0.08), transparent);
+}
+.card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.card__title {
+  margin: 0 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--blue);
+  white-space: nowrap;
+}
+.chip--gold {
+  color: var(--gold);
+}
+.chip--green {
+  color: var(--green);
+}
+
+.fields {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.fields div {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 8px;
+}
+.fields dt {
+  color: var(--muted);
+}
+.fields dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+#f-title {
+  font-weight: 600;
+}
+meter {
+  width: 90px;
+  height: 10px;
+  vertical-align: middle;
+}
+
+.matches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.match {
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+.match__line {
+  overflow-wrap: anywhere;
+}
+.match__meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.actions,
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row {
+  flex-direction: row;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+  background: var(--surface-2);
+  text-align: center;
+}
+.btn--primary {
+  background: var(--blue);
+  color: var(--blue-ink);
+}
+.btn--gold {
+  background: var(--gold);
+  color: var(--gold-ink);
+}
+.btn--ghost {
+  border-color: var(--border);
+  background: transparent;
+}
+.btn--small {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn:focus-visible,
+.pill:focus-visible,
+.link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.message {
+  margin: 0;
+  min-height: 1.2em;
+  overflow-wrap: anywhere;
+}
+.message--ok {
+  color: var(--green);
+}
+.message--error {
+  color: var(--red);
+}
+.message--warn {
+  color: var(--gold);
+}
+.message a {
+  color: var(--blue);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  font-size: 12px;
+}
+.link {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--blue);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.muted {
+  color: var(--muted);
+}
+.muted p {
+  margin: 0 0 8px;
+}
+[hidden] {
+  display: none !important;
+}

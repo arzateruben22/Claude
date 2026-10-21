@@ -1,0 +1,90 @@
+{
+  "key": "parallel-basics",
+  "title": "Parallel Basics: Same Voltage, Currents Add",
+  "description": "Three branches of 12 Ω, 24 Ω and 8 Ω across a 24 V source. Find each branch current, the total current, the total resistance and the total power, and confirm the branch currents add to the total (KCL).",
+  "difficulty": 1,
+  "estimatedMinutes": 10,
+  "relatedLessons": [
+    "ohms-law",
+    "parallel-circuits"
+  ],
+  "circuit": {
+    "sourceVolts": 24,
+    "network": {
+      "type": "parallel",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 12
+        },
+        {
+          "type": "resistor",
+          "id": "R2",
+          "ohms": 24
+        },
+        {
+          "type": "resistor",
+          "id": "R3",
+          "ohms": 8
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "parallel-basics-t1",
+      "question": "What is the current through R1 (12 Ω)?",
+      "quantity": "I_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "parallel-basics-t2",
+      "question": "What is the current through R3 (8 Ω)?",
+      "quantity": "I_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "parallel-basics-t3",
+      "question": "What total current does the source supply?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "parallel-basics-t4",
+      "question": "What is the total (equivalent) resistance of the three branches?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "parallel-basics-t5",
+      "question": "What is the voltage across R2? (Think before you calculate.)",
+      "quantity": "V_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "parallel-basics-t6",
+      "question": "What power is dissipated in R3?",
+      "quantity": "P_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    }
+  ],
+  "hints": [
+    "Every branch is connected directly across the source, so every branch sees the full 24 V.",
+    "Each branch current is 24 V ÷ that branch's resistance. The lowest resistance carries the most current.",
+    "Total current is the sum of the branch currents. The quickest route to R_total is then V_source ÷ I_total; check it against 1/R_total = 1/12 + 1/24 + 1/8.",
+    "The total must be smaller than the smallest branch (8 Ω). If your answer is larger, you added instead of combining reciprocals."
+  ],
+  "learningGoals": [
+    "Apply the parallel voltage rule and Kirchhoff's current law.",
+    "Compute equivalent resistance by the reciprocal method and by V ÷ I_total.",
+    "Recognize that adding branches lowers total resistance and raises total current."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

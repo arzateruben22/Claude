@@ -1,0 +1,341 @@
+{
+  "key": "jobsite-first-aid-and-emergency-response",
+  "track": "SAFETY",
+  "order": 4,
+  "title": "Jobsite First Aid and Emergency Response",
+  "summary": "What to do in the first ten minutes after an electrical injury: making the scene safe, calling for help, CPR and AED use, burns, bleeding and falls, plus the OSHA and Cal/OSHA rules that put a first-aid kit and a trained responder on every crew.",
+  "estimatedMinutes": 30,
+  "prerequisites": [
+    "electrical-safety-fundamentals"
+  ],
+  "objectives": [
+    "Students will be able to describe the injuries an electrical contact or arc flash causes and why a victim who looks fine still needs medical evaluation.",
+    "Students will be able to perform the correct first steps at an electrical injury scene: secure the scene, remove the power, call 911 and assess the victim.",
+    "Students will be able to describe hands-only and conventional CPR for adults and the steps for using an AED, including the special precautions for a shock victim.",
+    "Students will be able to give appropriate first aid for electrical and arc burns, serious bleeding and falls while awaiting EMS.",
+    "Students will be able to state the employer's first-aid, emergency action plan and Cal/OSHA reporting obligations on a California jobsite."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "What electricity does to the body",
+      "markdown": "An electrical injury is rarely a single injury. Current through the chest can throw the heart into **ventricular fibrillation**, a useless quivering that stops blood flow within seconds; it can also paralyze the breathing muscles. Current heats tissue along its entire path, so a small entry wound at the hand may hide cooked muscle and blood vessels all the way to the exit point at the foot. **Internal burns** cause swelling, kidney damage from destroyed muscle, and nerve injuries that appear hours or days later.\n\n**Arc flash** adds surface burns from radiant heat (often worse where clothing melted), eye injury from the intense light, ruptured eardrums and lung damage from the pressure wave, and inhalation of vaporized metal. **Secondary injuries** finish the list: a shock on a ladder becomes a fall, a startle at a saw becomes a laceration.\n\nTwo facts drive every response decision:\n\n- A victim in cardiac arrest from fibrillation has the best chance of survival if a **defibrillator** reaches them within minutes. Survival drops by roughly 7 to 10 percent for every minute without it.\n- **Every** person who receives a shock, even one who feels fine, should be medically evaluated. Heart rhythm problems can show up hours later, and the extent of internal burns cannot be judged from the skin.\n\nThe response sequence below follows a simple rule: keep the number of victims at one."
+    },
+    {
+      "type": "diagram",
+      "title": "Electrical injury response sequence",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 300\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<rect x=\"20\" y=\"20\" width=\"130\" height=\"44\" rx=\"6\" stroke=\"#ff6b6b\"/>\n<rect x=\"175\" y=\"20\" width=\"130\" height=\"44\" rx=\"6\" stroke=\"#ff6b6b\"/>\n<rect x=\"330\" y=\"20\" width=\"130\" height=\"44\" rx=\"6\" stroke=\"#f3c75b\"/>\n<rect x=\"330\" y=\"100\" width=\"130\" height=\"44\" rx=\"6\"/>\n<rect x=\"175\" y=\"100\" width=\"130\" height=\"44\" rx=\"6\" stroke=\"#ff6b6b\"/>\n<rect x=\"20\" y=\"100\" width=\"130\" height=\"44\" rx=\"6\" stroke=\"#3ddc97\"/>\n<rect x=\"20\" y=\"180\" width=\"130\" height=\"44\" rx=\"6\"/>\n<rect x=\"175\" y=\"180\" width=\"130\" height=\"44\" rx=\"6\"/>\n<rect x=\"330\" y=\"180\" width=\"130\" height=\"44\" rx=\"6\" stroke=\"#4cc9ff\"/>\n<path d=\"M150 42 H175 M305 42 H330\"/>\n<path d=\"M395 64 V100\"/>\n<path d=\"M330 122 H305 M175 122 H150\"/>\n<path d=\"M85 144 V180\"/>\n<path d=\"M150 202 H175 M305 202 H330\"/>\n</g>\n<g fill=\"currentColor\" text-anchor=\"middle\">\n<text x=\"85\" y=\"38\">1. SCENE SAFE?</text>\n<text x=\"85\" y=\"52\">do not touch the victim</text>\n<text x=\"240\" y=\"38\">2. KILL THE POWER</text>\n<text x=\"240\" y=\"52\">breaker, disconnect, unplug</text>\n<text x=\"395\" y=\"38\">3. CALL 911</text>\n<text x=\"395\" y=\"52\">send someone for the AED</text>\n<text x=\"395\" y=\"118\">4. RESPONSIVE?</text>\n<text x=\"395\" y=\"132\">tap and shout</text>\n<text x=\"240\" y=\"118\">5. NOT BREATHING?</text>\n<text x=\"240\" y=\"132\">start CPR 30:2, 100-120/min</text>\n<text x=\"85\" y=\"118\">6. AED ARRIVES</text>\n<text x=\"85\" y=\"132\">turn on, follow prompts</text>\n<text x=\"85\" y=\"198\">7. BLEEDING / BURNS</text>\n<text x=\"85\" y=\"212\">pressure; cool, cover</text>\n<text x=\"240\" y=\"198\">8. DO NOT MOVE</text>\n<text x=\"240\" y=\"212\">if fall or spine injury</text>\n<text x=\"395\" y=\"198\">9. HAND OFF TO EMS</text>\n<text x=\"395\" y=\"212\">every shock gets evaluated</text>\n<text x=\"240\" y=\"262\">Breathing and responsive? Keep them still and warm, monitor,</text>\n<text x=\"240\" y=\"276\">and still send them for medical evaluation.</text>\n</g>\n</svg>",
+      "caption": "The order is deliberate. Making the scene safe and removing the power come before touching the victim, and calling 911 comes before CPR so that the AED and EMS are on their way while you work."
+    },
+    {
+      "type": "text",
+      "heading": "Step one: make the scene safe",
+      "markdown": "Rescuers become victims when they grab a co-worker who is still in contact with a live conductor. The body in front of you is a conductor until the circuit is dead.\n\n- **Do not touch the victim** until you have confirmed the power is off or the victim is clear of the source.\n- **Remove the power**: open the breaker or disconnect, pull the plug, shut off the generator. Shout for someone to do it while you look for the source. Know where the disconnects are before the job starts; this is part of the pre-task briefing.\n- If the power cannot be removed quickly and the voltage is low (ordinary 120/240 V building circuits), you may try to separate the victim from the source with something **dry and non-conductive**: a fiberglass ladder section, a dry wooden handle, a dry rope. Do not use anything metal, wet or damp, and do not use your hands even with gloves on unless they are tested rubber insulating gloves rated for the voltage.\n- **High voltage** (utility lines, transformer vaults, anything over 600 V): do not approach. Stay back and keep others back at least 35 ft (about the length of a bus), call 911 and the utility, and wait. If the victim is in contact with a downed line, nothing you own will protect you.\n- **Downed lines and step potential**: current flowing into the earth around a downed conductor creates a voltage gradient. With your feet apart, each foot stands on a different voltage and current flows up one leg and down the other. If you must leave the area, keep your feet together and shuffle, never run. If a line falls on a vehicle, stay inside unless it is on fire, and if you must exit, jump clear with both feet together and never touch the vehicle and the ground at the same time.\n- Look for other hazards before you kneel: energized tools in puddles, a cut cable still live, a panel that may arc again, traffic, an unstable ladder."
+    },
+    {
+      "type": "diagram",
+      "title": "Step potential around a downed conductor",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 230\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke-width=\"2\">\n<path d=\"M40 30 L120 150\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M120 150 l-6 -14 M120 150 l12 -8\" stroke=\"#f3c75b\"/>\n<ellipse cx=\"120\" cy=\"160\" rx=\"30\" ry=\"9\" stroke=\"#ff6b6b\"/>\n<ellipse cx=\"120\" cy=\"160\" rx=\"70\" ry=\"20\" stroke=\"#ff6b6b\" stroke-dasharray=\"4 3\"/>\n<ellipse cx=\"120\" cy=\"160\" rx=\"120\" ry=\"34\" stroke=\"#f3c75b\" stroke-dasharray=\"4 3\"/>\n<ellipse cx=\"120\" cy=\"160\" rx=\"180\" ry=\"50\" stroke=\"#3ddc97\" stroke-dasharray=\"4 3\"/>\n<path d=\"M20 190 H440\" stroke=\"#9aa6b8\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"250\" cy=\"110\" r=\"8\"/>\n<path d=\"M250 118 V150 M250 128 l-12 14 M250 128 l12 14 M250 150 l-16 36 M250 150 l16 36\"/>\n<circle cx=\"380\" cy=\"110\" r=\"8\"/>\n<path d=\"M380 118 V150 M380 128 l-12 14 M380 128 l12 14 M380 150 l-3 36 M380 150 l3 36\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"30\" y=\"24\">downed conductor</text>\n<text x=\"154\" y=\"160\" fill=\"#ff6b6b\">highest voltage</text>\n<text x=\"236\" y=\"206\" fill=\"#ff6b6b\">feet apart: large</text>\n<text x=\"236\" y=\"218\" fill=\"#ff6b6b\">step voltage</text>\n<text x=\"352\" y=\"206\" fill=\"#3ddc97\">feet together,</text>\n<text x=\"352\" y=\"218\" fill=\"#3ddc97\">shuffle away</text>\n<text x=\"300\" y=\"66\">Voltage falls with distance from the</text>\n<text x=\"300\" y=\"80\">contact point. Each ring is a</text>\n<text x=\"300\" y=\"94\">different potential.</text>\n</g>\n</svg>",
+      "caption": "The ground near the contact point is at nearly line voltage and the potential falls off with distance. A person with feet apart bridges two rings and current flows through the legs; shuffling with the feet together keeps both feet on nearly the same potential."
+    },
+    {
+      "type": "text",
+      "heading": "Step two: call 911 and start the clock",
+      "markdown": "Call **911** (on a construction site, also alert the superintendent and the site safety officer) for any of the following: the victim is unresponsive or not breathing normally, has any burn from an electrical contact or arc, received a shock across the chest, was thrown or fell, has chest pain, confusion, difficulty breathing or an irregular pulse, or was in contact with anything above 50 V and you are not certain of the circumstances. When in doubt, call. Point the caller at the exact location (gate number, building, floor) and have someone meet the ambulance.\n\nWhile the call is being made, send another person for the **AED** and the **first-aid kit**. If you are alone with a cell phone, put it on speaker, call 911 and start CPR while the dispatcher talks you through it.\n\n**Assess the victim** once the scene is safe:\n\n1. Tap the shoulders and shout. No response?\n2. Look at the chest for 5 to 10 seconds. Not breathing, or only gasping? Gasping is not breathing.\n3. If unresponsive and not breathing normally, begin **CPR immediately**. Do not waste time searching for a pulse; lay rescuers are not expected to find one reliably.\n4. If the person is breathing and responsive, keep them still, lying down, and warm. Do not let them stand up and walk it off."
+    },
+    {
+      "type": "text",
+      "heading": "CPR and the AED",
+      "markdown": "**Chest compressions** are the part that keeps the brain alive. For an adult: heel of one hand on the center of the chest, other hand on top, arms straight, push hard and fast at **100 to 120 compressions per minute**, to a depth of **at least 2 inches (5 cm) but not more than 2.4 inches**, and let the chest fully recoil between pushes. If you are trained and willing, give **30 compressions then 2 breaths** (each breath about one second, just enough to see the chest rise). If you are not trained in rescue breaths, do **hands-only CPR**: continuous compressions without stopping. Switch rescuers every two minutes because compressions get shallow when you tire. Do not stop except to use the AED, when the victim shows obvious signs of life, or when EMS takes over.\n\nThe **AED** (automated external defibrillator) analyzes the heart rhythm and delivers a shock only if it finds a shockable rhythm such as ventricular fibrillation. It is designed for people with no medical training:\n\n1. Turn it on. It talks you through everything that follows.\n2. Bare the chest. **Dry it** if wet; a victim pulled from a puddle or a sweating worker must be wiped down. Shave or push aside dense hair where the pads go.\n3. Attach the pads where the pictures show: upper right chest below the collarbone and lower left side below the armpit. Do not put a pad over a medication patch or an implanted device bump.\n4. Stop compressions while the unit analyzes. **Nobody touches the victim** during analysis or during the shock; say \"clear\" and look.\n5. Press the shock button if told to, then **resume compressions immediately**. The AED will re-analyze every two minutes.\n6. Move the victim off standing water or a metal deck before using the AED when practical, but do not delay the shock while you search for a perfect location.\n\nAn electrical shock victim is the textbook case for an AED, because fibrillation caused by current is often a healthy heart that was interrupted, and early defibrillation has an excellent success rate."
+    },
+    {
+      "type": "example",
+      "problem": "A co-worker is found collapsed and unresponsive beside an open 277 V lighting panel at 9:02 a.m. You confirm the breaker is open, and a second worker runs for the AED stored at the job trailer, about a three-minute round trip. Using the rule of thumb that survival from a shockable cardiac arrest falls about 10 percent for each minute without defibrillation (and that CPR roughly halves that rate of decline), estimate the difference between starting CPR at once versus waiting for the AED with no CPR.",
+      "solutionSteps": [
+        "Without CPR, survival falls about 10 percent per minute. The AED arrives at about 9:05 (3 minutes) and is attached and analyzing by 9:06 (4 minutes): roughly 100 - 4 × 10 = 60 percent of the baseline chance remains.",
+        "With immediate CPR, the decline is roughly halved to 5 percent per minute: 100 - 4 × 5 = 80 percent remains at 9:06.",
+        "If the AED were instead 10 minutes away: without CPR, 100 - 10 × 10 = 0 percent; with CPR, 100 - 10 × 5 = 50 percent.",
+        "The lesson: CPR does not restart the heart, but it buys time until the AED can. Start compressions the moment the scene is safe, and keep the AED close to where the work is."
+      ],
+      "answer": "At four minutes, about 80 percent of the baseline survival chance remains with immediate CPR versus about 60 percent without it; at ten minutes the gap is roughly 50 percent versus near zero. (These are planning estimates from public-health guidance, not predictions for an individual.)"
+    },
+    {
+      "type": "text",
+      "heading": "Burns, bleeding and falls",
+      "markdown": "**Electrical and arc burns.** Once the power is off: cool the burned area with cool (not ice-cold) running water for 10 to 20 minutes if the burn is small enough that cooling will not chill the victim; do not apply ice, butter, ointment or sprays; cover with a dry, clean, non-stick dressing; do not break blisters; do not pull away clothing that is stuck to the skin, cut around it; remove rings, watches and belts before swelling starts. Look for the **exit wound**, usually on the feet or the other hand, because an electrical burn is at least two burns. Any electrical burn, any burn to the face, hands, feet or genitals, and any burn larger than the victim's palm gets EMS.\n\n**Arc flash victims** may have burns under clothing that looked intact, singed airways (hoarse voice, soot around the nose, difficulty breathing is an emergency) and eye injuries. Do not rub the eyes; cover both eyes lightly and get the person to care.\n\n**Serious bleeding.** Put on gloves from the kit if available. Apply firm, direct pressure with a clean dressing and do not lift it to check; add more on top. For life-threatening bleeding from an arm or leg that pressure will not control, apply a commercial tourniquet 2 to 3 inches above the wound, tighten until the bleeding stops, note the time, and leave it for EMS to remove. The \"Stop the Bleed\" program teaches this in about an hour and many contractors require it.\n\n**Falls.** A worker who fell after a shock may have a spinal injury. If they are breathing and not in immediate danger, **do not move them** and keep the head still; tell them not to move. Move a victim only if the scene is unsafe (fire, re-energizing, traffic), and then drag them in a straight line by the shoulders or clothing, supporting the head.\n\n**Heat illness** is a California jobsite reality and is covered by Cal/OSHA's heat illness prevention standard (Title 8, section 3395): water, rest and shade are required, and a confused, hot, dry or collapsed worker in the heat is a 911 emergency; cool them aggressively with water and shade while you wait."
+    },
+    {
+      "type": "table",
+      "caption": "Do and do not: quick reference for the first responder on an electrical jobsite",
+      "columns": [
+        "Situation",
+        "Do",
+        "Do not"
+      ],
+      "rows": [
+        [
+          "Victim in contact with low-voltage source",
+          "Kill the power; separate with a dry non-conductive object if power cannot be removed",
+          "Touch the victim with bare hands or a metal object"
+        ],
+        [
+          "Victim near downed utility line",
+          "Stay back 35 ft, keep others back, call 911 and utility",
+          "Approach, even with insulated tools; run from the area with long strides"
+        ],
+        [
+          "Unresponsive, not breathing",
+          "Call 911, start compressions, get AED, dry the chest",
+          "Wait for EMS before starting CPR; search for a pulse for a long time"
+        ],
+        [
+          "Electrical burn",
+          "Cool with water, cover with dry dressing, look for exit wound, call EMS",
+          "Apply ice, ointments, or remove stuck clothing"
+        ],
+        [
+          "Fall after shock",
+          "Keep the person still, support the head, monitor breathing",
+          "Sit them up, let them walk it off"
+        ],
+        [
+          "Shock with no visible injury",
+          "Insist on medical evaluation; document the event",
+          "Let the person drive home or return to work on the same day without clearance"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "What the rules require from the employer and from you",
+      "markdown": "**First aid.** OSHA 29 CFR 1926.50 (construction) and 1910.151 (general industry) require that when a clinic or hospital is not reasonably close, a person trained in first aid be available at the worksite, and that adequate first-aid supplies be on hand. Cal/OSHA Title 8, section 3400 adds that the supplies must be approved by a physician and inspected regularly, and that the employer must ensure emergency medical services are available. Crews working on energized lines and equipment under OSHA 1910.269 must have members trained in first aid and CPR, and most California electrical contractors and apprenticeship programs require current CPR/AED and first-aid cards for every worker.\n\n**Emergency action plan.** OSHA 1910.38 and Cal/OSHA section 3220 require an emergency action plan covering evacuation routes, rescue and medical duties, and how to report emergencies. Every worker must know the site address, the assembly point, where the AED and kit are, and who the designated first-aid responders are. Ask on day one.\n\n**Injury and Illness Prevention Program.** California's section 3203 requires every employer to have a written IIPP that includes hazard communication, training and accident investigation.\n\n**Reporting.** A California employer must report any work-related death, or any serious injury or illness (one requiring inpatient hospitalization beyond observation, an amputation, loss of an eye or serious disfigurement) to Cal/OSHA **immediately, and no later than 8 hours** after learning of it (Title 8, section 342). Federal OSHA requires reporting a death within 8 hours and a hospitalization, amputation or eye loss within 24 hours. Workers' compensation claim forms (DWC-1) must be given to the injured worker within one working day.\n\n**Your part.** Keep your CPR/AED and first-aid certification current (most cards are valid for two years), know where the kit and AED live on every site, report every shock and every near miss, and never let a co-worker who was shocked wave it off."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "The first rule of rescue is that you do not become the second victim. If you cannot confirm the power is off and the voltage is unknown or high, your job is to keep everyone back and get the professionals coming. A rescuer who dies reaching for a co-worker has saved no one."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Before the first tool comes off the truck, do a two-minute emergency brief: site address, nearest disconnects for the circuits you will touch, where the AED and kit are, who is CPR trained, and who calls 911. Crews that do this respond in seconds instead of minutes."
+    }
+  ],
+  "practice": [
+    {
+      "id": "jobsite-first-aid-and-emergency-response-p1",
+      "type": "multiple_choice",
+      "prompt": "You find a co-worker slumped against a 480 V motor control center with one hand inside the cabinet. What is your first action?",
+      "choices": [
+        "Pull the worker away by the shoulders",
+        "Begin chest compressions immediately",
+        "Make the scene safe: open the disconnect or main breaker (or have someone do it) and confirm the power is off before touching the worker",
+        "Spray the cabinet with a fire extinguisher"
+      ],
+      "correctIndex": 2,
+      "explanation": "The victim may still be part of the circuit. Removing the power comes before contact; otherwise there will be two victims."
+    },
+    {
+      "id": "jobsite-first-aid-and-emergency-response-p2",
+      "type": "numeric",
+      "prompt": "At the recommended adult CPR rate of 110 compressions per minute, how many compressions are delivered during a 2-minute cycle before the AED re-analyzes?",
+      "answer": 220,
+      "unit": "compressions",
+      "tolerance": 1,
+      "explanation": "110 per minute × 2 minutes = 220 compressions. Counting out loud helps keep the rate between 100 and 120."
+    },
+    {
+      "id": "jobsite-first-aid-and-emergency-response-p3",
+      "type": "multiple_choice",
+      "prompt": "A worker received a brief shock from a 120 V receptacle, says he feels fine and wants to keep working. The correct response is:",
+      "choices": [
+        "Let him continue; 120 V is low voltage",
+        "Have him sit for ten minutes and then continue",
+        "Stop work, report it, and send him for medical evaluation because cardiac rhythm problems can appear hours later",
+        "Give him aspirin and send him home to rest"
+      ],
+      "correctIndex": 2,
+      "explanation": "Any shock across the body can cause delayed arrhythmias and hidden internal burns. Evaluation and documentation are required, and he should not drive himself."
+    },
+    {
+      "id": "jobsite-first-aid-and-emergency-response-p4",
+      "type": "multiple_choice",
+      "prompt": "An unresponsive shock victim was pulled from a flooded trench. Before attaching AED pads you should:",
+      "choices": [
+        "Wait for the fire department; AEDs cannot be used on wet victims",
+        "Dry the chest, move the victim out of standing water if practical, then attach the pads and follow the prompts",
+        "Attach the pads directly over the wet shirt to save time",
+        "Give two rescue breaths and skip the AED"
+      ],
+      "correctIndex": 1,
+      "explanation": "Water on the chest can let the shock travel across the skin instead of through the heart and can conduct to rescuers. Dry the chest and get the victim off standing water, but do not delay the shock looking for a perfect spot."
+    },
+    {
+      "id": "jobsite-first-aid-and-emergency-response-p5",
+      "type": "numeric",
+      "prompt": "Most utilities and safety agencies tell workers to stay how many feet away from a downed power line?",
+      "answer": 35,
+      "unit": "ft",
+      "tolerance": 0.5,
+      "explanation": "35 ft (about a bus length) is the common guidance; farther is better for high-voltage transmission lines. Only the utility can confirm a line is dead."
+    },
+    {
+      "id": "jobsite-first-aid-and-emergency-response-p6",
+      "type": "multiple_choice",
+      "prompt": "Which first-aid step is correct for an electrical burn on the hand once the power is off?",
+      "choices": [
+        "Apply ice directly to the burn and wrap it tightly",
+        "Cool with cool running water, cover with a dry clean dressing, remove rings, and check for an exit wound elsewhere on the body",
+        "Apply antibiotic ointment and pull off any stuck clothing",
+        "Pop blisters so the burn can drain"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cool water, a dry dressing and removal of jewelry are standard. Ice, ointments and removing stuck clothing cause more damage, and electrical burns always have at least two wounds."
+    }
+  ],
+  "quiz": {
+    "key": "jobsite-first-aid-and-emergency-response-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q1",
+        "type": "multiple_choice",
+        "prompt": "Why is survival from an electrical cardiac arrest so dependent on time?",
+        "choices": [
+          "Because burns worsen every minute",
+          "Because the chance of defibrillating a fibrillating heart successfully falls roughly 7 to 10 percent for every minute without a shock",
+          "Because the victim's body resistance increases over time",
+          "Because the AED battery drains while waiting"
+        ],
+        "correctIndex": 1,
+        "explanation": "Ventricular fibrillation deteriorates into a non-shockable rhythm within minutes. CPR slows the decline; only defibrillation reverses it."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q2",
+        "type": "multiple_choice",
+        "prompt": "The correct order of actions when you discover an unresponsive electrical shock victim is:",
+        "choices": [
+          "CPR, then call 911, then turn off the power",
+          "Make the scene safe and remove the power, call 911 and send for the AED, check responsiveness and breathing, start CPR",
+          "Call 911, pull the victim clear by hand, start CPR",
+          "Check for a pulse for two minutes, then call 911"
+        ],
+        "correctIndex": 1,
+        "explanation": "Scene safety protects the rescuer, calling early gets the AED and EMS moving, and CPR starts as soon as the victim is confirmed unresponsive and not breathing normally."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q3",
+        "type": "numeric",
+        "prompt": "What is the recommended minimum compression depth for adult CPR, in inches?",
+        "answer": 2,
+        "unit": "in",
+        "tolerance": 0.05,
+        "explanation": "At least 2 inches (5 cm) and not more than 2.4 inches, at 100 to 120 compressions per minute with full recoil."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q4",
+        "type": "multiple_choice",
+        "prompt": "During AED rhythm analysis and shock delivery, rescuers must:",
+        "choices": [
+          "Continue compressions so no time is lost",
+          "Hold the victim's hand for reassurance",
+          "Stop touching the victim entirely and make sure everyone is clear",
+          "Remove the pads and reposition them"
+        ],
+        "correctIndex": 2,
+        "explanation": "Movement during analysis causes misreads, and contact during the shock can injure the rescuer. Resume compressions immediately after the shock."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q5",
+        "type": "multiple_choice",
+        "prompt": "A conductor falls from a pole onto the ground 20 ft from you. The safest way to leave the area is to:",
+        "choices": [
+          "Run directly away as fast as possible",
+          "Walk away with long strides to cover ground quickly",
+          "Keep your feet together and shuffle away without lifting either foot",
+          "Lie flat and crawl"
+        ],
+        "correctIndex": 2,
+        "explanation": "Step potential puts a voltage between your feet when they are apart. Shuffling keeps both feet at nearly the same potential; lying down maximizes the distance between contact points."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q6",
+        "type": "multiple_choice",
+        "prompt": "Within what time must a California employer report a work-related death or serious injury to Cal/OSHA?",
+        "choices": [
+          "Immediately, and no later than 8 hours",
+          "Within 24 hours",
+          "Within 7 days",
+          "On the next OSHA 300 log filing"
+        ],
+        "correctIndex": 0,
+        "explanation": "Title 8, section 342 requires immediate reporting, not more than 8 hours after the employer knows. Federal OSHA allows 24 hours for hospitalizations but California is stricter."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q7",
+        "type": "multiple_choice",
+        "prompt": "A worker who fell from a ladder after a shock is awake, breathing, and complaining of neck pain. You should:",
+        "choices": [
+          "Help him stand up and walk to the truck",
+          "Keep him still, support his head, monitor breathing and wait for EMS",
+          "Roll him onto his side and prop him up with a jacket",
+          "Drive him to urgent care in the company van"
+        ],
+        "correctIndex": 1,
+        "explanation": "Neck pain after a fall means a possible spinal injury. Movement can convert a fracture into paralysis; only move a victim if the scene is unsafe."
+      },
+      {
+        "id": "jobsite-first-aid-and-emergency-response-q8",
+        "type": "multiple_choice",
+        "prompt": "Which OSHA requirement applies when a jobsite is not within reasonable proximity of a clinic or hospital?",
+        "choices": [
+          "A registered nurse must be on site at all times",
+          "A person with a valid first-aid training certificate must be available on site, along with adequate first-aid supplies (29 CFR 1926.50)",
+          "Workers must carry personal first-aid kits",
+          "No requirement applies to sites with fewer than ten workers"
+        ],
+        "correctIndex": 1,
+        "explanation": "1926.50 for construction and 1910.151 for general industry both require a trained person and supplies when professional care is not close by; Cal/OSHA section 3400 mirrors this."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "OSHA 29 CFR 1926.50, Medical services and first aid (construction)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.50"
+    },
+    {
+      "title": "OSHA 29 CFR 1910.151, Medical services and first aid (general industry)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.151"
+    },
+    {
+      "title": "OSHA Best Practices Guide: Fundamentals of a Workplace First-Aid Program (Publication 3317)",
+      "url": "https://www.osha.gov/sites/default/files/publications/OSHA3317first-aid.pdf"
+    },
+    {
+      "title": "OSHA Fact Sheet, Working Safely around Downed Electrical Wires",
+      "url": "https://www.osha.gov/sites/default/files/publications/downed_electrical_wires.pdf"
+    },
+    {
+      "title": "American Heart Association CPR and ECC Guidelines (adult basic life support; AED use)",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines"
+    },
+    {
+      "title": "Cal/OSHA Title 8, Section 342, Reporting Work-Connected Fatalities and Serious Injuries",
+      "url": "https://www.dir.ca.gov/title8/342.html"
+    },
+    {
+      "title": "Cal/OSHA Title 8, Section 3400, Medical Services and First Aid",
+      "url": "https://www.dir.ca.gov/title8/3400.html"
+    },
+    {
+      "title": "Cal/OSHA Title 8, Section 3395, Heat Illness Prevention in Outdoor Places of Employment",
+      "url": "https://www.dir.ca.gov/title8/3395.html"
+    },
+    {
+      "title": "NIOSH Publication 2009-113, Electrical Safety: Safety and Health for Electrical Trades Student Manual (first aid chapter)",
+      "url": "https://www.cdc.gov/niosh/docs/2009-113/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

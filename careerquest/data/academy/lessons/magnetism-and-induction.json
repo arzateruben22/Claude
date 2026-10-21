@@ -1,0 +1,386 @@
+{
+  "key": "magnetism-and-induction",
+  "track": "FUNDAMENTALS",
+  "order": 8,
+  "title": "Magnetism and Induction",
+  "summary": "Current makes magnetism and changing magnetism makes voltage. Those two facts give you relays, contactors, breakers, transformers, generators, motors and clamp meters. Learn the rules and the numbers behind each.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "ac-and-dc"
+  ],
+  "objectives": [
+    "Students will be able to describe the magnetic field around a conductor and a coil and use the right-hand rule to find its direction.",
+    "Students will be able to state Faraday's and Lenz's laws in plain language and explain why transformers work only on changing current.",
+    "Students will be able to compute transformer secondary voltage and current from the turns ratio and kVA rating.",
+    "Students will be able to compute the synchronous speed of an AC motor and identify common devices that depend on magnetism."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Magnetism and electromagnetism",
+      "markdown": "A magnet has a **north** and a **south** pole, and an invisible **magnetic field** surrounds it. We picture that field as **flux lines** that leave the north pole, loop around and re-enter at the south pole. The lines never cross, they take the easiest path, and the closer together they are, the stronger the field.\n\n- Like poles repel, unlike poles attract.\n- **Ferromagnetic** materials (iron, steel, nickel, cobalt) concentrate flux lines and are strongly attracted. Copper, aluminum, plastic and air are essentially transparent to magnetism, which is why a magnet does not stick to a copper bus bar but does stick to a steel enclosure.\n- A **permanent magnet** keeps its field. A **temporary magnet** (soft iron) is magnetized only while an external field is present; this is the material in relay armatures and transformer cores, because it releases quickly.\n- Total flux is measured in **webers (Wb)**; flux density (flux per unit area) in **teslas (T)**. You will rarely calculate these; what matters is that more flux means more force or more induced voltage.\n\n**Electromagnetism: current makes a field.** In 1820 Hans Christian Ørsted noticed that a compass needle moved when current flowed in a nearby wire. **Every current-carrying conductor is surrounded by a magnetic field.** The field forms circles around the wire, grows stronger with more current and weaker with distance.\n\nThe **right-hand rule for a conductor:** grasp the wire with your right hand, thumb pointing in the direction of conventional current; your fingers curl in the direction of the field.\n\nWind the wire into a **coil** and the little circular fields add up to one strong field through the center, just like a bar magnet. The **right-hand rule for a coil:** curl your fingers in the direction of current through the turns; your thumb points to the north pole.\n\nThe strength of a coil's field depends on its **magnetomotive force (mmf)**, measured in **ampere-turns**: the number of turns multiplied by the current. 200 turns carrying 0.5 A is 100 ampere-turns; so is 50 turns carrying 2 A. Put an iron core inside and the flux multiplies hundreds of times because iron is a far better path for flux than air.\n\nThis is the **electromagnet**, and it is inside more devices than any other electrical component: relays, contactors, solenoid valves, door strikes, the magnetic-trip element of a circuit breaker, loudspeakers and the stators of every motor."
+    },
+    {
+      "type": "diagram",
+      "title": "An electromagnet",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 280\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"200\" y=\"50\" width=\"60\" height=\"150\" stroke=\"#9aa6b8\"/><text x=\"230\" y=\"130\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">iron</text><text x=\"230\" y=\"144\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">core</text><line x1=\"196\" y1=\"70\" x2=\"264\" y2=\"62\" stroke=\"#f3c75b\"/><line x1=\"196\" y1=\"88\" x2=\"264\" y2=\"80\" stroke=\"#f3c75b\"/><line x1=\"196\" y1=\"106\" x2=\"264\" y2=\"98\" stroke=\"#f3c75b\"/><line x1=\"196\" y1=\"124\" x2=\"264\" y2=\"116\" stroke=\"#f3c75b\"/><line x1=\"196\" y1=\"142\" x2=\"264\" y2=\"134\" stroke=\"#f3c75b\"/><line x1=\"196\" y1=\"160\" x2=\"264\" y2=\"152\" stroke=\"#f3c75b\"/><line x1=\"196\" y1=\"178\" x2=\"264\" y2=\"170\" stroke=\"#f3c75b\"/><line x1=\"264\" y1=\"80\" x2=\"196\" y2=\"80\" stroke=\"#9aa6b8\"/><line x1=\"264\" y1=\"98\" x2=\"196\" y2=\"98\" stroke=\"#9aa6b8\"/><line x1=\"264\" y1=\"116\" x2=\"196\" y2=\"116\" stroke=\"#9aa6b8\"/><line x1=\"264\" y1=\"134\" x2=\"196\" y2=\"134\" stroke=\"#9aa6b8\"/><line x1=\"264\" y1=\"152\" x2=\"196\" y2=\"152\" stroke=\"#9aa6b8\"/><line x1=\"264\" y1=\"170\" x2=\"196\" y2=\"170\" stroke=\"#9aa6b8\"/><line x1=\"196\" y1=\"70\" x2=\"120\" y2=\"70\"/><line x1=\"120\" y1=\"70\" x2=\"120\" y2=\"110\"/><line x1=\"120\" y1=\"110\" x2=\"120\" y2=\"121\"/><line x1=\"106\" y1=\"121\" x2=\"134\" y2=\"121\"/><line x1=\"113\" y1=\"126\" x2=\"127\" y2=\"126\"/><line x1=\"106\" y1=\"132\" x2=\"134\" y2=\"132\"/><line x1=\"113\" y1=\"137\" x2=\"127\" y2=\"137\"/><line x1=\"120\" y1=\"137\" x2=\"120\" y2=\"150\"/><text x=\"140\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"140\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"120\" y1=\"150\" x2=\"120\" y2=\"190\"/><line x1=\"120\" y1=\"190\" x2=\"196\" y2=\"190\"/><line x1=\"130\" y1=\"58\" x2=\"170.0\" y2=\"58.0\" stroke=\"#4cc9ff\"/><polygon points=\"180,58 170.0,63.0 170.0,53.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"155\" y=\"50\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I</text><ellipse cx=\"230\" cy=\"125\" rx=\"90\" ry=\"110\" stroke=\"#3ddc97\" stroke-dasharray=\"5 4\"/><ellipse cx=\"230\" cy=\"125\" rx=\"125\" ry=\"128\" stroke=\"#3ddc97\" stroke-dasharray=\"5 4\"/><text x=\"230\" y=\"38\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"600\">N</text><text x=\"230\" y=\"226\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"18\" font-weight=\"600\">S</text><line x1=\"320\" y1=\"140\" x2=\"320.0\" y2=\"120.0\" stroke=\"#3ddc97\"/><polygon points=\"320,110 325.0,120.0 315.0,120.0\" fill=\"#3ddc97\" stroke=\"none\"/><line x1=\"140\" y1=\"110\" x2=\"140.0\" y2=\"130.0\" stroke=\"#3ddc97\"/><polygon points=\"140,140 135.0,130.0 145.0,130.0\" fill=\"#3ddc97\" stroke=\"none\"/><text x=\"368\" y=\"90\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"11\">flux lines leave N,</text><text x=\"368\" y=\"104\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"11\">return to S</text><text x=\"368\" y=\"170\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">strength grows with</text><text x=\"368\" y=\"184\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">turns × amps (N × I)</text><text x=\"260\" y=\"272\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Right-hand rule: fingers curl with conventional current, thumb points to N.</text></svg>",
+      "caption": "Current through the coil magnetizes the iron core. The field strength is set by ampere-turns (N × I) and by the core material. Reverse the current and the poles swap; interrupt the current and the field collapses."
+    },
+    {
+      "type": "text",
+      "heading": "Induction: a changing field makes voltage",
+      "markdown": "Eleven years after Ørsted, Michael Faraday found the reverse effect. Move a magnet through a coil, or move a conductor through a field, and a voltage appears across the conductor. This is **electromagnetic induction**, and it only happens while the flux through the coil is **changing**. Hold the magnet still and the voltage disappears.\n\n**Faraday's law:** the induced voltage is proportional to the number of turns and to how fast the flux changes: **V = N × (ΔΦ ÷ Δt)**, with N the number of turns and ΔΦ ÷ Δt the rate of change of flux in webers per second. A single turn with flux changing at 1 Wb/s has 1 V induced; 100 turns give 100 V. More turns, faster change or a stronger field all mean more volts, and the formula says nothing about the size of the flux itself, only its rate of change.\n\n**Lenz's law:** the induced current flows in the direction that **opposes** the change that created it. Push a magnet into a coil and the coil's induced field pushes back; pull it out and the coil pulls it back. This is why a generator gets harder to turn as you draw more current from it, and why a motor draws less current once it is spinning (its own induced \"back-EMF\" opposes the supply).\n\nThree things can make flux change through a conductor: the magnet moves (generator), the conductor moves (also a generator, or a motor's back-EMF), or the current in a nearby coil changes (transformer). A steady DC current in a nearby coil induces nothing, because nothing is changing; that is why transformers need AC."
+    },
+    {
+      "type": "diagram",
+      "title": "A step-down transformer",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"190\" y=\"40\" width=\"100\" height=\"160\" stroke=\"#9aa6b8\"/><rect x=\"215\" y=\"65\" width=\"50\" height=\"110\" stroke=\"#9aa6b8\"/><text x=\"240\" y=\"32\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">laminated steel core</text><path d=\"M185 70 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12 a6 6 0 0 1 0 12\" stroke=\"#f3c75b\"/><text x=\"150\" y=\"48\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">primary</text><text x=\"150\" y=\"62\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">N_p = 400</text><line x1=\"185\" y1=\"70\" x2=\"110\" y2=\"70\" stroke=\"#f3c75b\"/><line x1=\"185\" y1=\"166\" x2=\"110\" y2=\"166\" stroke=\"#f3c75b\"/><text x=\"60\" y=\"100\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">480 V</text><text x=\"60\" y=\"118\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">AC in</text><text x=\"60\" y=\"150\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">I_p = 10.4 A</text><path d=\"M295 94 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14\" stroke=\"#3ddc97\"/><text x=\"330\" y=\"60\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">secondary</text><text x=\"330\" y=\"76\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">N_s = 100</text><line x1=\"295\" y1=\"94\" x2=\"370\" y2=\"94\" stroke=\"#3ddc97\"/><line x1=\"295\" y1=\"150\" x2=\"370\" y2=\"150\" stroke=\"#3ddc97\"/><polyline points=\"400,100 400,106.6 392,109.2 408,114.3 392,119.4 408,124.6 392,129.7 408,134.8 400,137.4 400,144\"/><line x1=\"370\" y1=\"94\" x2=\"400\" y2=\"94\"/><line x1=\"400\" y1=\"94\" x2=\"400\" y2=\"100\"/><line x1=\"400\" y1=\"144\" x2=\"400\" y2=\"150\"/><line x1=\"400\" y1=\"150\" x2=\"370\" y2=\"150\"/><text x=\"420\" y=\"100\" fill=\"currentColor\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">120 V</text><text x=\"420\" y=\"118\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">to load</text><text x=\"420\" y=\"150\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">I_s = 41.7 A</text><line x1=\"205\" y1=\"150\" x2=\"205.0\" y2=\"100.0\" stroke=\"#4cc9ff\"/><polygon points=\"205,90 210.0,100.0 200.0,100.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"240\" y=\"222\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">changing flux Φ links both coils</text><text x=\"240\" y=\"242\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">V_p ÷ V_s = N_p ÷ N_s = 4 : 1.  Power in ≈ power out, so current steps the other way.</text></svg>",
+      "caption": "AC in the primary makes a changing flux in the core; that flux links the secondary and induces a voltage proportional to its turns. With four times the turns on the primary, the secondary voltage is one quarter and its current is four times as large."
+    },
+    {
+      "type": "formula",
+      "name": "Transformer turns ratio",
+      "expression": "V_p ÷ V_s = N_p ÷ N_s = I_s ÷ I_p",
+      "variables": [
+        {
+          "symbol": "V_p, V_s",
+          "meaning": "primary and secondary voltage",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "N_p, N_s",
+          "meaning": "primary and secondary turns",
+          "unit": "turns"
+        },
+        {
+          "symbol": "I_p, I_s",
+          "meaning": "primary and secondary current",
+          "unit": "amperes (A)"
+        }
+      ],
+      "explanation": "Voltage follows the turns; current goes the opposite way, because an ideal transformer passes power unchanged (V_p × I_p = V_s × I_s). A transformer is rated in kVA; divide the kVA by the voltage of either winding to get that winding's full-load current. Real transformers lose a few percent as heat in the windings (I²R, called copper loss) and in the core (eddy currents and hysteresis, called iron loss); the laminated core limits eddy currents."
+    },
+    {
+      "type": "example",
+      "problem": "A 5 kVA single-phase transformer steps 480 V down to 120 V. The primary has 400 turns. Find the secondary turns, the full-load secondary current and the full-load primary current.",
+      "solutionSteps": [
+        "Turns ratio equals voltage ratio: N_p ÷ N_s = 480 ÷ 120 = 4. So N_s = 400 ÷ 4 = 100 turns.",
+        "Secondary full-load current: I_s = 5,000 VA ÷ 120 V = 41.7 A.",
+        "Primary full-load current: I_p = 5,000 VA ÷ 480 V = 10.4 A. (Check with the ratio: 41.7 ÷ 4 = 10.4 A.)",
+        "Code note: the primary overcurrent device for this transformer is sized from the primary current using the percentages in NEC 450.3(B), and the secondary conductors are sized for 41.7 A plus any continuous-load factor."
+      ],
+      "answer": "100 secondary turns; 41.7 A secondary; 10.4 A primary."
+    },
+    {
+      "type": "text",
+      "heading": "Motors: a field pushing on a current",
+      "markdown": "A current-carrying conductor placed in a magnetic field feels a **force** at right angles to both the current and the field. (Some texts teach a left-hand rule for motors; the physics is the same as the right-hand rule for generators with the roles of cause and effect swapped.) Put a loop of wire in a field, pass current through it, and it tries to rotate: that is a motor.\n\nThe workhorse **three-phase induction motor** has no brushes and no electrical connection to the rotor. The three stator windings, fed by three phases 120° apart, create a magnetic field that **rotates** around the stator at a fixed speed set by the line frequency and the number of magnetic poles. That rotating field sweeps past the rotor bars, induces current in them (Faraday), and the induced current's field is dragged along behind (Lenz). The rotor must turn a little slower than the field so that flux keeps changing through it; the difference is called **slip**, typically 2 to 5% at full load.\n\nSingle-phase motors have no rotating field on their own, so they need a start winding and often a capacitor to get moving. That is why they have a centrifugal switch or a start relay, and why those parts fail.\n\nA **variable-frequency drive** changes the motor's speed by changing the frequency it feeds the stator, exactly as the synchronous-speed formula predicts."
+    },
+    {
+      "type": "formula",
+      "name": "Synchronous speed of an AC motor",
+      "expression": "n_sync = (120 × f) ÷ P",
+      "variables": [
+        {
+          "symbol": "n_sync",
+          "meaning": "speed of the rotating magnetic field",
+          "unit": "revolutions per minute (rpm)"
+        },
+        {
+          "symbol": "f",
+          "meaning": "supply frequency",
+          "unit": "hertz (Hz)"
+        },
+        {
+          "symbol": "P",
+          "meaning": "number of magnetic poles (always even)",
+          "unit": "poles"
+        }
+      ],
+      "explanation": "At 60 Hz: 2 poles give 3,600 rpm, 4 poles 1,800 rpm, 6 poles 1,200 rpm and 8 poles 900 rpm. An induction motor runs slightly below synchronous speed; a nameplate reading 1,750 rpm tells you it is a 4-pole motor with about 2.8% slip. Slip = (n_sync − n_actual) ÷ n_sync."
+    },
+    {
+      "type": "example",
+      "problem": "A motor nameplate reads 60 Hz, 1,750 rpm. How many poles does it have, and what is its slip at full load? What would its speed be on a VFD set to 45 Hz?",
+      "solutionSteps": [
+        "Try 4 poles: n_sync = 120 × 60 ÷ 4 = 1,800 rpm. 1,750 is just below 1,800, so it is a 4-pole motor. (A 2-pole motor would run near 3,600 and a 6-pole near 1,200.)",
+        "Slip = (1,800 − 1,750) ÷ 1,800 = 50 ÷ 1,800 = 0.0278 = 2.8%.",
+        "At 45 Hz: n_sync = 120 × 45 ÷ 4 = 1,350 rpm; with about the same slip the shaft turns near 1,312 rpm."
+      ],
+      "answer": "4 poles; 2.8% slip; about 1,310 rpm at 45 Hz."
+    },
+    {
+      "type": "text",
+      "heading": "Inductance: coils resist change",
+      "markdown": "A coil's own changing current induces a voltage in itself that opposes the change (Lenz again). This property is **inductance**, measured in **henrys (H)**. A coil does not mind steady DC, but it fights any change in current:\n\n- When you energize a coil, current ramps up gradually instead of jumping.\n- When you **open** a coil circuit, the collapsing field tries to keep the current flowing and generates a large voltage spike, the **inductive kick**. This is what arcs across switch contacts and relay contacts and shortens their life, and what can destroy the transistor driving a relay unless a diode or snubber is fitted. It is also how an ignition coil makes a spark from 12 V.\n- On AC, the coil's opposition is continuous and is called **inductive reactance**. Motors and transformers are inductive, which makes their current lag the voltage and gives rise to **power factor** (SYSTEMS track).\n- Motor **inrush**: at the instant of starting there is no back-EMF, so a motor can draw 5 to 8 times its full-load current (locked-rotor current) until it spins up. That is why motor circuits use time-delay fuses or inverse-time breakers sized well above the running current (NEC 430.52).\n\n**Common mistakes across this lesson:** expecting a transformer to work on DC or to change frequency (it changes neither); reading a transformer's kVA as kW; mixing up the turns ratio direction (a step-down transformer has MORE turns on the primary); calculating motor speed from voltage instead of frequency; and forgetting that a de-energized motor spinning down, or being turned by its load, is a generator with live terminals."
+    },
+    {
+      "type": "table",
+      "caption": "Everyday devices that depend on magnetism and induction",
+      "columns": [
+        "Device",
+        "Principle",
+        "What to know in the field"
+      ],
+      "rows": [
+        [
+          "Relay / contactor",
+          "Electromagnet pulls an armature to close or open contacts",
+          "Coil voltage must match the control circuit (24 V AC/DC, 120 V); a chattering contactor usually has low coil voltage or a dirty pole face"
+        ],
+        [
+          "Solenoid valve, door strike",
+          "Electromagnet moves a plunger",
+          "Continuous-duty vs intermittent-duty coils; inductive kick on release"
+        ],
+        [
+          "Circuit breaker (thermal-magnetic)",
+          "Bimetal strip for overloads; electromagnet for instantaneous trip on short circuits",
+          "Magnetic trip acts in milliseconds at several times the rating"
+        ],
+        [
+          "Transformer",
+          "Mutual induction between two windings on one core",
+          "Works only on AC; rated in kVA; NEC Article 450"
+        ],
+        [
+          "Generator / alternator",
+          "Conductor moved through a field",
+          "Output voltage depends on speed and field strength"
+        ],
+        [
+          "Induction motor",
+          "Rotating stator field induces rotor current",
+          "Speed set by frequency and poles; NEC Article 430"
+        ],
+        [
+          "GFCI",
+          "Current transformer senses imbalance between hot and neutral",
+          "Trips at about 5 mA of leakage; clamp a meter around ALL of a circuit's conductors together to find leakage the same way (a healthy circuit reads zero)"
+        ],
+        [
+          "Clamp meter",
+          "Current transformer around one conductor",
+          "Reads zero around a cable with both conductors; loop the conductor through the jaw several times and divide the reading by the number of turns to resolve small currents (5 turns reading 10 A means 2 A)"
+        ],
+        [
+          "Magnetic ballast / LED driver inductor",
+          "Inductance limits current",
+          "Replaced increasingly by electronic drivers"
+        ]
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Never open the secondary circuit of a current transformer (CT) while current flows in the primary. With the secondary open, the CT tries to drive the same current through infinite resistance and produces a voltage high enough to arc, destroy the CT and kill. Short the secondary terminals with the shorting block before working on metering circuits. Likewise, de-energize and discharge large coils and never assume a control circuit is \"only 24 volts\": the inductive kick from a big contactor coil can be hundreds of volts."
+    }
+  ],
+  "practice": [
+    {
+      "id": "magnetism-and-induction-p1",
+      "type": "numeric",
+      "prompt": "A transformer has a 2:1 turns ratio (primary to secondary). The primary is connected to 240 V. What is the secondary voltage?",
+      "answer": 120,
+      "unit": "V",
+      "tolerance": 0.5,
+      "explanation": "V_s = V_p × (N_s ÷ N_p) = 240 × (1 ÷ 2) = 120 V."
+    },
+    {
+      "id": "magnetism-and-induction-p2",
+      "type": "numeric",
+      "prompt": "What is the synchronous speed of a 2-pole motor on 60 Hz?",
+      "answer": 3600,
+      "unit": "rpm",
+      "tolerance": 1,
+      "explanation": "n_sync = 120 × 60 ÷ 2 = 3,600 rpm."
+    },
+    {
+      "id": "magnetism-and-induction-p3",
+      "type": "multiple_choice",
+      "prompt": "A magnetic field is produced by:",
+      "choices": [
+        "any conductor carrying current",
+        "only conductors carrying AC",
+        "only coils with iron cores",
+        "only permanent magnets"
+      ],
+      "correctIndex": 0,
+      "explanation": "Every current, AC or DC, produces a magnetic field around its conductor. Coils and iron cores concentrate it; they are not required to create it."
+    },
+    {
+      "id": "magnetism-and-induction-p4",
+      "type": "numeric",
+      "prompt": "A 480 V to 120 V transformer delivers 20 A on the secondary. Ignoring losses, what is the primary current?",
+      "answer": 5,
+      "unit": "A",
+      "tolerance": 0.05,
+      "explanation": "Power in equals power out: 120 × 20 = 2,400 VA; I_p = 2,400 ÷ 480 = 5 A. Equivalently, current steps down by the 4:1 ratio."
+    },
+    {
+      "id": "magnetism-and-induction-p5",
+      "type": "multiple_choice",
+      "prompt": "Lenz's law states that an induced current:",
+      "choices": [
+        "flows in the direction that aids the change that produced it",
+        "flows in the direction that opposes the change that produced it",
+        "is always equal to the primary current",
+        "exists only in DC circuits"
+      ],
+      "correctIndex": 1,
+      "explanation": "Induced effects oppose their cause. This is why generators get harder to turn under load and why coils produce an inductive kick when opened."
+    },
+    {
+      "id": "magnetism-and-induction-p6",
+      "type": "numeric",
+      "prompt": "A relay coil has 200 turns and carries 0.5 A. What is its magnetomotive force in ampere-turns?",
+      "answer": 100,
+      "unit": "A·t",
+      "tolerance": 0.5,
+      "explanation": "mmf = N × I = 200 × 0.5 = 100 ampere-turns."
+    },
+    {
+      "id": "magnetism-and-induction-p7",
+      "type": "multiple_choice",
+      "prompt": "A clamp meter placed around a two-conductor appliance cord reads zero even though the appliance is running because:",
+      "choices": [
+        "the cord is DC",
+        "the meter is broken",
+        "the hot and neutral currents are equal and opposite, so their magnetic fields cancel",
+        "the cord insulation blocks the magnetic field"
+      ],
+      "correctIndex": 2,
+      "explanation": "A clamp meter is a current transformer; it responds only to the net current inside the jaw. Clamp around a single conductor."
+    }
+  ],
+  "quiz": {
+    "key": "magnetism-and-induction-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "magnetism-and-induction-q1",
+        "type": "multiple_choice",
+        "prompt": "According to Faraday's law, a voltage is induced in a coil when:",
+        "choices": [
+          "a steady current flows in a nearby coil",
+          "the magnetic flux through the coil is changing",
+          "the coil is made of iron",
+          "the coil is connected to a battery"
+        ],
+        "correctIndex": 1,
+        "explanation": "Only changing flux induces voltage. A steady field, however strong, induces nothing."
+      },
+      {
+        "id": "magnetism-and-induction-q2",
+        "type": "numeric",
+        "prompt": "What is the synchronous speed of a 6-pole motor on 60 Hz?",
+        "answer": 1200,
+        "unit": "rpm",
+        "tolerance": 1,
+        "explanation": "120 × 60 ÷ 6 = 1,200 rpm."
+      },
+      {
+        "id": "magnetism-and-induction-q3",
+        "type": "numeric",
+        "prompt": "A transformer primary with 50 turns is connected to 120 V. The secondary has 600 turns. What is the secondary voltage?",
+        "answer": 1440,
+        "unit": "V",
+        "tolerance": 2,
+        "explanation": "V_s = 120 × (600 ÷ 50) = 120 × 12 = 1,440 V. A step-up transformer (this is the kind found in neon sign and ignition circuits)."
+      },
+      {
+        "id": "magnetism-and-induction-q4",
+        "type": "multiple_choice",
+        "prompt": "A transformer will not work on steady DC because:",
+        "choices": [
+          "DC has too much current",
+          "DC cannot flow through copper windings",
+          "with no change in current there is no change in flux, so no voltage is induced in the secondary",
+          "the core would become permanently magnetized"
+        ],
+        "correctIndex": 2,
+        "explanation": "Induction needs changing flux. On DC the primary just acts as a low-resistance coil, often overheating, and the secondary produces nothing."
+      },
+      {
+        "id": "magnetism-and-induction-q5",
+        "type": "numeric",
+        "prompt": "A 10 kVA transformer has a 240 V secondary. What is its full-load secondary current?",
+        "answer": 41.67,
+        "unit": "A",
+        "tolerance": 0.05,
+        "explanation": "I = 10,000 VA ÷ 240 V = 41.67 A."
+      },
+      {
+        "id": "magnetism-and-induction-q6",
+        "type": "multiple_choice",
+        "prompt": "Which device uses an electromagnet to close heavy power contacts when a control circuit is energized?",
+        "choices": [
+          "A fuse",
+          "A contactor",
+          "A transformer",
+          "A GFCI receptacle"
+        ],
+        "correctIndex": 1,
+        "explanation": "A contactor is a large relay: a coil pulls an armature that closes the main contacts feeding a motor or heater."
+      },
+      {
+        "id": "magnetism-and-induction-q7",
+        "type": "multiple_choice",
+        "prompt": "Opening the secondary of a current transformer while its primary carries current is dangerous because:",
+        "choices": [
+          "the primary current will double",
+          "the secondary will develop a very high voltage and may arc",
+          "the CT core will demagnetize",
+          "the meter will read zero"
+        ],
+        "correctIndex": 1,
+        "explanation": "The CT acts as a current source. With no path, it produces whatever voltage it can, which can be thousands of volts. Short the secondary first."
+      },
+      {
+        "id": "magnetism-and-induction-q8",
+        "type": "numeric",
+        "prompt": "A 4-pole motor runs at 1,746 rpm on 60 Hz. What is its slip, in percent?",
+        "answer": 3,
+        "unit": "%",
+        "tolerance": 0.05,
+        "explanation": "n_sync = 1,800 rpm. Slip = (1,800 − 1,746) ÷ 1,800 = 54 ÷ 1,800 = 0.03 = 3%."
+      },
+      {
+        "id": "magnetism-and-induction-q9",
+        "type": "multiple_choice",
+        "prompt": "Using the right-hand rule for a coil, if your fingers curl in the direction of conventional current through the turns, your thumb points toward:",
+        "choices": [
+          "the south pole",
+          "the north pole",
+          "the direction of electron flow",
+          "the center of the core"
+        ],
+        "correctIndex": 1,
+        "explanation": "Fingers follow the current; the thumb gives the north pole of the resulting electromagnet."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: Article 430 (motors, including 430.52 branch-circuit protection), Article 450 (transformers, including 450.3), Article 250 (grounding and bonding) (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "OSHA, Electrical safety: current transformers and stored energy (29 CFR 1910.333 and 1910.147 lockout/tagout)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.333"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity, chapters on magnetism, magnetic induction, transformers and motors",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "All About Circuits, Lessons in Electric Circuits, Volume I (DC), Magnetism and electromagnetism",
+      "url": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-14/permanent-magnets/"
+    },
+    {
+      "title": "NEMA MG 1, Motors and Generators (motor speed, slip and nameplate conventions)",
+      "url": "https://www.nema.org/standards/view/motors-and-generators"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

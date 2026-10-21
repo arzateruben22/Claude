@@ -1,0 +1,375 @@
+{
+  "key": "ac-and-dc",
+  "track": "FUNDAMENTALS",
+  "order": 7,
+  "title": "AC and DC",
+  "summary": "Direct current flows one way; alternating current reverses 60 times a second. Learn waveform terms, RMS versus peak, frequency and period, the 120/240 V system, three-phase basics, and why the grid runs on AC.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "electrical-power-and-energy"
+  ],
+  "objectives": [
+    "Students will be able to describe a sine wave in terms of cycle, period, frequency, peak, peak-to-peak and RMS values.",
+    "Students will be able to convert between RMS and peak voltage and between frequency and period.",
+    "Students will be able to explain the 120/240 V single-phase system and the origin of 208 V and 277/480 V three-phase voltages.",
+    "Students will be able to explain, with an I²R calculation, why high-voltage AC is used for power distribution, and list where DC appears in modern electrical work."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Two kinds of current",
+      "markdown": "**Direct current (DC)** flows in one direction with a steady polarity: one terminal is always positive, the other always negative. Batteries, photovoltaic modules, fuel cells and the output of rectifiers (chargers, power supplies) are DC sources.\n\n**Alternating current (AC)** reverses direction periodically. The voltage rises from zero to a positive peak, falls through zero to a negative peak and returns, over and over. Generators naturally produce AC, and the utility grid is AC. In North America the reversal happens **60 times per second (60 Hz)**; most of the rest of the world uses 50 Hz.\n\nEverything you learned about Ohm's law, series and parallel circuits and power applies to AC with resistive loads, provided you use the right kind of voltage number (RMS, explained below). Inductive and capacitive loads add the ideas of reactance and power factor, which the SYSTEMS track covers."
+    },
+    {
+      "type": "diagram",
+      "title": "DC versus a 60 Hz sine wave",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 265\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"210\" stroke=\"#9aa6b8\"/><line x1=\"40\" y1=\"120\" x2=\"345\" y2=\"120\" stroke=\"#9aa6b8\"/><text x=\"28\" y=\"36\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">V</text><text x=\"347\" y=\"124\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"12\">t</text><text x=\"28\" y=\"124\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"end\" font-size=\"11\">0</text><polyline points=\"40.0,120.0 43.0,115.6 46.0,111.2 49.0,106.9 52.0,102.6 55.0,98.4 58.0,94.2 61.0,90.2 64.0,86.3 67.0,82.5 70.0,78.9 73.0,75.4 76.0,72.1 79.0,69.0 82.0,66.1 85.0,63.4 88.0,60.9 91.0,58.7 94.0,56.7 97.0,54.9 100.0,53.4 103.0,52.2 106.0,51.2 109.0,50.6 112.0,50.1 115.0,50.0 118.0,50.1 121.0,50.6 124.0,51.2 127.0,52.2 130.0,53.4 133.0,54.9 136.0,56.7 139.0,58.7 142.0,60.9 145.0,63.4 148.0,66.1 151.0,69.0 154.0,72.1 157.0,75.4 160.0,78.9 163.0,82.5 166.0,86.3 169.0,90.2 172.0,94.2 175.0,98.4 178.0,102.6 181.0,106.9 184.0,111.2 187.0,115.6 190.0,120.0 193.0,124.4 196.0,128.8 199.0,133.1 202.0,137.4 205.0,141.6 208.0,145.8 211.0,149.8 214.0,153.7 217.0,157.5 220.0,161.1 223.0,164.6 226.0,167.9 229.0,171.0 232.0,173.9 235.0,176.6 238.0,179.1 241.0,181.3 244.0,183.3 247.0,185.1 250.0,186.6 253.0,187.8 256.0,188.8 259.0,189.4 262.0,189.9 265.0,190.0 268.0,189.9 271.0,189.4 274.0,188.8 277.0,187.8 280.0,186.6 283.0,185.1 286.0,183.3 289.0,181.3 292.0,179.1 295.0,176.6 298.0,173.9 301.0,171.0 304.0,167.9 307.0,164.6 310.0,161.1 313.0,157.5 316.0,153.7 319.0,149.8 322.0,145.8 325.0,141.6 328.0,137.4 331.0,133.1 334.0,128.8 337.0,124.4 340.0,120.0\" stroke=\"#4cc9ff\"/><line x1=\"115\" y1=\"120\" x2=\"115\" y2=\"50\" stroke=\"#f3c75b\"/><line x1=\"115\" y1=\"50\" x2=\"346\" y2=\"50\" stroke=\"#f3c75b\" stroke-dasharray=\"3 4\"/><text x=\"352\" y=\"54\" fill=\"#f3c75b\" stroke=\"none\" font-size=\"12\">peak 170 V</text><line x1=\"40\" y1=\"70.51\" x2=\"346\" y2=\"70.51\" stroke=\"#f3c75b\" stroke-dasharray=\"3 4\"/><text x=\"352\" y=\"74.51\" fill=\"#f3c75b\" stroke=\"none\" font-size=\"12\">RMS 120 V</text><line x1=\"40\" y1=\"95\" x2=\"346\" y2=\"95\" stroke=\"#3ddc97\" stroke-dasharray=\"8 4\"/><text x=\"352\" y=\"99\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"12\">DC: constant</text><line x1=\"290\" y1=\"50\" x2=\"290\" y2=\"190\" stroke=\"#ff6b6b\"/><line x1=\"284\" y1=\"50\" x2=\"296\" y2=\"50\" stroke=\"#ff6b6b\"/><line x1=\"284\" y1=\"190\" x2=\"296\" y2=\"190\" stroke=\"#ff6b6b\"/><text x=\"352\" y=\"144\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"12\">peak-to-peak</text><text x=\"352\" y=\"158\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"12\">340 V</text><text x=\"160\" y=\"208\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">AC reverses direction every half cycle</text><line x1=\"40\" y1=\"228\" x2=\"340\" y2=\"228\" stroke=\"#4cc9ff\"/><line x1=\"40\" y1=\"222\" x2=\"40\" y2=\"234\" stroke=\"#4cc9ff\"/><line x1=\"340\" y1=\"222\" x2=\"340\" y2=\"234\" stroke=\"#4cc9ff\"/><text x=\"190\" y=\"252\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">one cycle: period T = 1/60 s = 16.7 ms at 60 Hz</text></svg>",
+      "caption": "A 120 V AC circuit actually swings between +170 V and −170 V. The RMS value, 120 V, is the DC voltage that would produce the same heating in a resistor. Meters and nameplates always use RMS unless they say otherwise."
+    },
+    {
+      "type": "text",
+      "heading": "Sine wave vocabulary",
+      "markdown": "- **Cycle:** one complete positive and negative swing.\n- **Period (T):** the time one cycle takes. At 60 Hz, T = 1 ÷ 60 = 0.01667 s = 16.7 ms.\n- **Frequency (f):** cycles per second, in **hertz (Hz)**. f = 1 ÷ T.\n- **Peak (maximum) value:** the highest instantaneous voltage or current in the cycle.\n- **Peak-to-peak value:** from the positive peak to the negative peak; twice the peak.\n- **Instantaneous value:** the value at one particular moment; it changes continuously.\n- **RMS (root-mean-square) or effective value:** the steady DC value that would deliver the same power to a resistor. For a sine wave, RMS = 0.707 × peak. When someone says \"120 volts\" they mean 120 V RMS; the peak is 170 V.\n- **Average value:** for a full sine wave it is zero (the halves cancel), which is why cheap \"average-responding\" meters are calibrated to display RMS assuming a clean sine wave.\n\nWhy RMS? Because heating depends on I², and the square of a sine wave averages to half the peak squared. Taking the square root gives peak ÷ √2 = 0.707 × peak. The practical consequence: a 120 V RMS circuit stresses insulation to 170 V, and a 480 V circuit to 679 V, on every cycle."
+    },
+    {
+      "type": "formula",
+      "name": "Frequency, period, RMS and peak",
+      "expression": "f = 1 ÷ T ; V_rms = 0.707 × V_peak ; V_peak = 1.414 × V_rms",
+      "variables": [
+        {
+          "symbol": "f",
+          "meaning": "frequency",
+          "unit": "hertz (Hz, cycles per second)"
+        },
+        {
+          "symbol": "T",
+          "meaning": "period, the time for one cycle",
+          "unit": "seconds (s)"
+        },
+        {
+          "symbol": "V_rms",
+          "meaning": "effective (RMS) voltage, the value meters and nameplates use",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "V_peak",
+          "meaning": "maximum instantaneous voltage",
+          "unit": "volts (V)"
+        }
+      ],
+      "explanation": "60 Hz means 60 cycles each second, so each cycle lasts 1/60 s (16.7 ms) and each half cycle 8.3 ms; a 50 Hz system has a 20 ms period. Variable-frequency drives change the frequency delivered to a motor to change its speed. The RMS ratios apply to current as well as voltage: 0.707 is 1 ÷ √2 and 1.414 is √2, and peak-to-peak is 2 × V_peak = 2.828 × V_rms. Use RMS values in Ohm's law and the power formulas; peak values matter for insulation ratings, surge protection and electronics."
+    },
+    {
+      "type": "example",
+      "problem": "(a) A 120 V RMS circuit and a 240 V RMS circuit are compared. Find the peak and peak-to-peak voltage of each. (b) An oscilloscope shows a waveform with a period of 20 ms. What is its frequency? Then find the period of a 400 Hz aircraft power system.",
+      "solutionSteps": [
+        "(a) 120 V: V_peak = 1.414 × 120 = 169.7 V; peak-to-peak = 2 × 169.7 = 339.4 V.",
+        "(a) 240 V: V_peak = 1.414 × 240 = 339.4 V; peak-to-peak = 678.8 V. The peak of the 240 V circuit equals the peak-to-peak of the 120 V circuit, as expected since the two 120 V halves of a 240 V service add.",
+        "(b) Convert: 20 ms = 0.020 s. f = 1 ÷ 0.020 = 50 Hz (a European-style system).",
+        "(b) 400 Hz: T = 1 ÷ 400 = 0.0025 s = 2.5 ms."
+      ],
+      "answer": "(a) 120 V RMS: 170 V peak, 339 V peak-to-peak; 240 V RMS: 339 V peak, 679 V peak-to-peak. (b) 50 Hz; 2.5 ms."
+    },
+    {
+      "type": "text",
+      "heading": "Why the grid is AC: transformers and I²R",
+      "markdown": "Power is V × I. To move a given amount of power you can use high voltage and low current, or low voltage and high current. Conductor losses are **I²R**, so low current wins overwhelmingly. Work the numbers for 10 kW sent through a line with 1 Ω of resistance:\n\n- At 240 V: I = 10,000 ÷ 240 = 41.7 A. Loss = 41.7² × 1 = 1,736 W, about 17% of the power.\n- At 12,000 V (a typical distribution voltage): I = 10,000 ÷ 12,000 = 0.833 A. Loss = 0.833² × 1 = 0.69 W, essentially nothing.\n\nHigh voltage is not safe or practical inside buildings, so the voltage must be stepped up for transmission and stepped back down for use. The device that does that, the **transformer**, works only on a *changing* current, which means AC. That single fact decided the \"war of the currents\" in the 1890s and is still why utilities generate and distribute AC: 500 kV transmission, 12 kV to 35 kV distribution, and 120/240 V or 277/480 V at the building.\n\nModern power electronics can convert DC voltages efficiently too, so long-distance **HVDC** lines and DC data centers exist, but the grid you will work on is AC."
+    },
+    {
+      "type": "table",
+      "caption": "Common nominal system voltages in the United States",
+      "columns": [
+        "System",
+        "Voltages available",
+        "Where you see it",
+        "Notes"
+      ],
+      "rows": [
+        [
+          "Single-phase, 3-wire",
+          "120/240 V",
+          "Houses, small commercial",
+          "Center-tapped transformer; neutral grounded; 120 V hot-to-neutral, 240 V hot-to-hot"
+        ],
+        [
+          "Three-phase wye, 4-wire",
+          "120/208 V",
+          "Apartments, offices, retail",
+          "120 V phase-to-neutral, 208 V phase-to-phase (120 × √3)"
+        ],
+        [
+          "Three-phase wye, 4-wire",
+          "277/480 V",
+          "Commercial and industrial",
+          "277 V lighting, 480 V motors; 480 = 277 × √3"
+        ],
+        [
+          "Three-phase delta, 4-wire",
+          "120/240 V with a high leg",
+          "Older commercial",
+          "One phase is 208 V to neutral (the \"high leg\", marked orange, NEC 110.15)"
+        ],
+        [
+          "DC, low voltage",
+          "12, 24, 48 V",
+          "Controls, telecom, battery systems",
+          "24 V DC is the standard for PLC inputs and control relays"
+        ],
+        [
+          "DC, PV / storage",
+          "up to 600 V (dwellings), 1,000 V and 1,500 V (commercial)",
+          "Solar arrays, battery energy storage",
+          "NEC Articles 690 and 706; energized whenever the sun shines"
+        ],
+        [
+          "DC fast charging",
+          "400 to 1,000 V",
+          "EV charging stations",
+          "NEC Article 625"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "The 120/240 V single-phase system",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 520 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><text x=\"260\" y=\"22\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">Single-phase 120/240 V service (transformer secondary)</text><line x1=\"170\" y1=\"50\" x2=\"170\" y2=\"200\" stroke=\"#9aa6b8\"/><line x1=\"178\" y1=\"50\" x2=\"178\" y2=\"200\" stroke=\"#9aa6b8\"/><path d=\"M150 70 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14\" stroke=\"#9aa6b8\"/><text x=\"120\" y=\"130\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">from</text><text x=\"120\" y=\"144\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">utility</text><line x1=\"150\" y1=\"70\" x2=\"100\" y2=\"70\" stroke=\"#9aa6b8\"/><line x1=\"150\" y1=\"182\" x2=\"100\" y2=\"182\" stroke=\"#9aa6b8\"/><path d=\"M200 70 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14 a7 7 0 0 1 0 14\" stroke=\"#f3c75b\"/><line x1=\"200\" y1=\"70\" x2=\"300\" y2=\"70\" stroke=\"#f3c75b\"/><line x1=\"200\" y1=\"126\" x2=\"300\" y2=\"126\"/><line x1=\"200\" y1=\"182\" x2=\"300\" y2=\"182\" stroke=\"#f3c75b\"/><circle cx=\"200\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"300\" cy=\"70\" r=\"3.5\" fill=\"#f3c75b\" stroke=\"none\"/><circle cx=\"300\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"300\" cy=\"182\" r=\"3.5\" fill=\"#f3c75b\" stroke=\"none\"/><text x=\"310\" y=\"74\" fill=\"#f3c75b\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">L1 (hot)</text><text x=\"310\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">N (neutral)</text><text x=\"310\" y=\"136\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"10\">grounded center tap</text><text x=\"310\" y=\"186\" fill=\"#f3c75b\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">L2 (hot)</text><line x1=\"420\" y1=\"80\" x2=\"420\" y2=\"116\" stroke=\"#4cc9ff\"/><text x=\"428\" y=\"102\" fill=\"#4cc9ff\" stroke=\"none\" font-size=\"12\">120 V</text><line x1=\"420\" y1=\"136\" x2=\"420\" y2=\"172\" stroke=\"#4cc9ff\"/><text x=\"428\" y=\"158\" fill=\"#4cc9ff\" stroke=\"none\" font-size=\"12\">120 V</text><line x1=\"475\" y1=\"80\" x2=\"475\" y2=\"172\" stroke=\"#3ddc97\"/><text x=\"481\" y=\"130\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"12\">240 V</text><text x=\"260\" y=\"222\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Hot to neutral = 120 V; hot to hot = 240 V (the two hots are 180° apart, so the halves add).</text><text x=\"260\" y=\"240\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">With balanced loads the neutral carries only the difference between the two hot currents.</text></svg>",
+      "caption": "The utility transformer secondary is one winding with a grounded center tap. Each end of the winding is a hot leg 120 V from the neutral; because the two legs are opposite in polarity at every instant, the voltage between them is 240 V. Large loads (ranges, dryers, water heaters, EV chargers) use the 240 V; general lighting and receptacles use 120 V."
+    },
+    {
+      "type": "text",
+      "heading": "Three-phase in two paragraphs",
+      "markdown": "A three-phase generator produces three sine waves of equal size, each shifted one-third of a cycle (120°) from the next. Three-phase is used for anything large because it delivers smooth, constant power (the three waves never all cross zero at once), it makes simple, self-starting motors with a naturally rotating magnetic field, and it moves the same power with less conductor material than single-phase.\n\nThe voltages come in **phase-to-neutral** and **phase-to-phase** pairs related by the square root of three (1.732): 120 V phase-to-neutral gives 208 V phase-to-phase, and 277 V gives 480 V. A 208 V or 480 V load connects across two phases (or all three); a 120 V or 277 V load connects phase-to-neutral. You will meet the math in detail in the SYSTEMS track; for now, remember that \"208\" and \"277\" are not arbitrary: they are 120 and 480 divided or multiplied by 1.732."
+    },
+    {
+      "type": "text",
+      "heading": "Where DC shows up in electrical work",
+      "markdown": "DC is far from obsolete. Expect to work with it in:\n\n- **Photovoltaic systems.** Modules produce DC; strings can reach 600 V in dwellings and 1,000 V or 1,500 V in commercial arrays. An inverter converts to AC. The DC side is energized whenever light hits the array and cannot be switched off at the source.\n- **Battery energy storage** (home batteries, UPS systems): 48 V to several hundred volts DC with very high available fault current.\n- **EV charging.** Level 2 chargers deliver AC; DC fast chargers deliver 400 to 1,000 V DC directly to the vehicle battery.\n- **Control systems.** 24 V DC is the standard for PLC I/O, sensors, relays and HVAC controls.\n- **LED lighting.** LEDs are DC devices; every LED fixture contains a driver that rectifies the AC.\n- **Telecommunications.** Central offices and cell sites run on −48 V DC battery plants.\n- **Variable-frequency drives.** A VFD rectifies incoming AC to a DC bus, then synthesizes new AC at whatever frequency the motor needs. The DC bus capacitors hold a lethal charge for minutes after power is removed."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Both AC and DC can kill. 60 Hz AC is especially effective at causing ventricular fibrillation and at freezing muscles so a victim cannot let go. DC at the same current tends to cause a single strong contraction (the \"throw\" effect) and severe burns, and because a DC arc has no zero crossing it is harder to extinguish. Stored energy is a separate hazard: capacitors in drives and inverters and battery banks stay dangerous after the disconnect is opened. Follow lockout/tagout, wait the manufacturer's discharge time and verify with a meter rated for the system (DC volts on DC systems). A non-contact voltage tester responds to the changing field of AC and will NOT reliably detect DC: on PV, battery and VFD bus work use a contact meter on the DC range, and treat every conductor as live until you have measured it."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Common mistakes: (1) using peak voltage in Ohm's law or power formulas: use RMS; (2) assuming every meter reads true RMS: average-responding meters misread the chopped waveforms from VFDs, dimmers and LED drivers, sometimes by 20% or more; buy a true-RMS meter; (3) confusing 60 Hz with 60 cycles per minute; (4) measuring a DC circuit on the AC volts range (reads near zero and hides a live circuit)."
+    }
+  ],
+  "practice": [
+    {
+      "id": "ac-and-dc-p1",
+      "type": "numeric",
+      "prompt": "What is the period of a 60 Hz sine wave in milliseconds?",
+      "answer": 16.67,
+      "unit": "ms",
+      "tolerance": 0.05,
+      "explanation": "T = 1 ÷ 60 = 0.01667 s = 16.67 ms."
+    },
+    {
+      "id": "ac-and-dc-p2",
+      "type": "numeric",
+      "prompt": "A circuit is 120 V RMS. What is the peak voltage?",
+      "answer": 169.7,
+      "unit": "V",
+      "tolerance": 0.5,
+      "explanation": "V_peak = 1.414 × 120 = 169.7 V."
+    },
+    {
+      "id": "ac-and-dc-p3",
+      "type": "numeric",
+      "prompt": "An oscilloscope shows a sine wave with a peak of 340 V. What is the RMS voltage?",
+      "answer": 240.4,
+      "unit": "V",
+      "tolerance": 1,
+      "explanation": "V_rms = 0.707 × 340 = 240.4 V, a 240 V circuit."
+    },
+    {
+      "id": "ac-and-dc-p4",
+      "type": "multiple_choice",
+      "prompt": "The main reason utilities distribute power as AC rather than DC is that:",
+      "choices": [
+        "AC is safer to touch than DC",
+        "AC voltage can be stepped up and down efficiently with transformers, reducing I²R losses",
+        "DC cannot carry large amounts of power",
+        "AC generators are the only kind that exist"
+      ],
+      "correctIndex": 1,
+      "explanation": "Transformers need a changing current. High transmission voltage lowers current and therefore I²R losses; the voltage is stepped back down near the load."
+    },
+    {
+      "id": "ac-and-dc-p5",
+      "type": "numeric",
+      "prompt": "A waveform has a period of 20 ms. What is its frequency?",
+      "answer": 50,
+      "unit": "Hz",
+      "tolerance": 0.1,
+      "explanation": "f = 1 ÷ 0.020 s = 50 Hz."
+    },
+    {
+      "id": "ac-and-dc-p6",
+      "type": "multiple_choice",
+      "prompt": "A 277 V lighting circuit is obtained from which system?",
+      "choices": [
+        "120/240 V single-phase, hot to hot",
+        "120/208 V three-phase wye, phase to phase",
+        "277/480 V three-phase wye, phase to neutral",
+        "A 24 V DC control transformer"
+      ],
+      "correctIndex": 2,
+      "explanation": "On a 480 V wye system each phase measures 480 ÷ 1.732 = 277 V to the neutral."
+    },
+    {
+      "id": "ac-and-dc-p7",
+      "type": "numeric",
+      "prompt": "On a 120/240 V single-phase service, what voltage is measured between the two hot legs?",
+      "answer": 240,
+      "unit": "V",
+      "tolerance": 0.5,
+      "explanation": "The two hots are at opposite ends of the center-tapped winding and are 180° apart, so their 120 V halves add to 240 V."
+    }
+  ],
+  "quiz": {
+    "key": "ac-and-dc-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "ac-and-dc-q1",
+        "type": "multiple_choice",
+        "prompt": "The RMS value of an AC voltage is:",
+        "choices": [
+          "the highest value the voltage reaches",
+          "the DC voltage that would produce the same heating in a resistor",
+          "the average of the positive and negative peaks",
+          "twice the peak value"
+        ],
+        "correctIndex": 1,
+        "explanation": "RMS is the effective value. For a sine wave it is 0.707 of the peak, and it is what meters and nameplates report."
+      },
+      {
+        "id": "ac-and-dc-q2",
+        "type": "numeric",
+        "prompt": "What is the peak voltage of a 240 V RMS circuit?",
+        "answer": 339.4,
+        "unit": "V",
+        "tolerance": 1,
+        "explanation": "1.414 × 240 = 339.4 V."
+      },
+      {
+        "id": "ac-and-dc-q3",
+        "type": "numeric",
+        "prompt": "How many complete cycles does a 60 Hz supply go through in half a second?",
+        "answer": 30,
+        "unit": "cycles",
+        "tolerance": 0.1,
+        "explanation": "60 cycles per second × 0.5 s = 30 cycles."
+      },
+      {
+        "id": "ac-and-dc-q4",
+        "type": "multiple_choice",
+        "prompt": "The period of a 50 Hz waveform is:",
+        "choices": [
+          "50 ms",
+          "20 ms",
+          "16.7 ms",
+          "2 ms"
+        ],
+        "correctIndex": 1,
+        "explanation": "T = 1 ÷ 50 = 0.02 s = 20 ms."
+      },
+      {
+        "id": "ac-and-dc-q5",
+        "type": "numeric",
+        "prompt": "What is the peak-to-peak voltage of a 120 V RMS sine wave?",
+        "answer": 339.4,
+        "unit": "V",
+        "tolerance": 1,
+        "explanation": "Peak = 169.7 V; peak-to-peak = 2 × 169.7 = 339.4 V."
+      },
+      {
+        "id": "ac-and-dc-q6",
+        "type": "multiple_choice",
+        "prompt": "Which of the following is a DC source?",
+        "choices": [
+          "A utility pole transformer",
+          "A photovoltaic module",
+          "A 480 V motor control center",
+          "A 277 V lighting panel"
+        ],
+        "correctIndex": 1,
+        "explanation": "Solar modules produce DC. The others are AC equipment."
+      },
+      {
+        "id": "ac-and-dc-q7",
+        "type": "numeric",
+        "prompt": "On a 208 V three-phase wye system, what is the phase-to-neutral voltage?",
+        "answer": 120,
+        "unit": "V",
+        "tolerance": 1,
+        "explanation": "208 ÷ 1.732 = 120 V."
+      },
+      {
+        "id": "ac-and-dc-q8",
+        "type": "multiple_choice",
+        "prompt": "Transmitting the same power at a higher voltage reduces line losses because:",
+        "choices": [
+          "the conductors have less resistance at higher voltage",
+          "less current is needed, and loss is proportional to the square of the current",
+          "transformers absorb the losses",
+          "high voltage travels faster"
+        ],
+        "correctIndex": 1,
+        "explanation": "P = V × I, so higher V means lower I for the same power, and conductor loss is I²R."
+      },
+      {
+        "id": "ac-and-dc-q9",
+        "type": "numeric",
+        "prompt": "A 10 kW load is supplied at 12,000 V. What current flows in the line?",
+        "answer": 0.833,
+        "unit": "A",
+        "tolerance": 0.01,
+        "explanation": "I = 10,000 ÷ 12,000 = 0.833 A."
+      },
+      {
+        "id": "ac-and-dc-q10",
+        "type": "multiple_choice",
+        "prompt": "A true-RMS meter is needed rather than an average-responding meter when measuring:",
+        "choices": [
+          "a clean 60 Hz sine wave from the utility",
+          "a 12 V car battery",
+          "the chopped output of a variable-frequency drive or LED driver",
+          "the resistance of a heating element"
+        ],
+        "correctIndex": 2,
+        "explanation": "Average-responding meters assume a sine wave. Non-sinusoidal waveforms from electronic loads and drives are misread unless the meter computes true RMS."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 110.15 high-leg marking; Articles 625 (EV charging), 690 (PV) and 706 (energy storage) (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "ANSI C84.1, Electric Power Systems and Equipment: Voltage Ratings (60 Hz), nominal system voltages",
+      "url": "https://webstore.ansi.org/standards/nema/ansic842020"
+    },
+    {
+      "title": "OSHA Publication 3075, Controlling Electrical Hazards (AC and DC shock effects)",
+      "url": "https://www.osha.gov/sites/default/files/publications/osha3075.pdf"
+    },
+    {
+      "title": "Fluke, True-RMS versus average-responding meters",
+      "url": "https://www.fluke.com/en-us/learn/blog/digital-multimeters/what-is-true-rms"
+    },
+    {
+      "title": "U.S. Energy Information Administration, Electricity explained: how electricity is delivered to consumers",
+      "url": "https://www.eia.gov/energyexplained/electricity/delivery-to-consumers.php"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity, chapters on alternating current and three-phase circuits",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

@@ -1,0 +1,382 @@
+{
+  "key": "electrical-safety-fundamentals",
+  "track": "SAFETY",
+  "order": 1,
+  "title": "Electrical Safety Fundamentals",
+  "summary": "How electricity injures people, how the OSHA, Cal/OSHA and NFPA 70E rules fit together, and the habits (lockout/tagout, test before touch, the right ladder) that keep electricians alive on California jobsites.",
+  "estimatedMinutes": 35,
+  "prerequisites": [],
+  "objectives": [
+    "Students will be able to explain why current, path and duration (not voltage alone) decide the severity of an electric shock, and estimate shock current with Ohm's law.",
+    "Students will be able to describe arc flash and arc blast hazards and read the boundaries and PPE category on an equipment label.",
+    "Students will be able to name the OSHA, Cal/OSHA and NFPA 70E documents that govern electrical work and state what each one covers.",
+    "Students will be able to list the steps for establishing an electrically safe work condition, including lockout/tagout and the test-before-touch verification.",
+    "Students will be able to apply basic ladder, PPE and jobsite rules when working near energized equipment."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "It is the current that hurts you",
+      "markdown": "Electricity injures people three ways: **shock** (current through the body), **arc flash** (intense heat and light from an electric arc) and **arc blast** (the pressure wave, molten metal and shrapnel that an arc throws). Falls and burns caused by those three events add to the toll.\n\nFor shock, the amount of **current** flowing through the body matters far more than the voltage printed on the equipment. Voltage only pushes; the current that actually flows depends on the voltage divided by the resistance of the path. Dry, calloused skin can measure more than 100,000 ohms. Sweaty or wet skin can fall to about 1,000 ohms, and once the skin breaks down the body's internal resistance is only a few hundred ohms. That is why a 120 V circuit that merely stings a dry hand can stop the heart of a worker standing in water.\n\nThree things decide how bad a shock is:\n\n- **Magnitude** of current (milliamps, mA).\n- **Path** through the body. Hand-to-hand and hand-to-foot paths cross the chest and heart.\n- **Duration**. Muscles clamp onto an energized conductor at roughly 10 to 20 mA (the \"let-go\" threshold), so the shock continues until something interrupts it.\n\nCalifornia's Low-Voltage Electrical Safety Orders and NFPA 70E treat **50 volts and above** as a shock hazard that must be controlled. Treat any circuit that could be above 50 V as live until you have proved otherwise."
+    },
+    {
+      "type": "formula",
+      "name": "Shock current (Ohm's law applied to the body)",
+      "expression": "I = V ÷ (R_body + R_contact)",
+      "variables": [
+        {
+          "symbol": "I",
+          "meaning": "current through the body",
+          "unit": "amperes (A); 0.001 A = 1 mA"
+        },
+        {
+          "symbol": "V",
+          "meaning": "voltage between the two points touched",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "R_body",
+          "meaning": "resistance of skin and tissue along the path",
+          "unit": "ohms (Ω)"
+        },
+        {
+          "symbol": "R_contact",
+          "meaning": "resistance of footwear, flooring, gloves or anything else in series",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "The body is just another resistor in the circuit. Anything that lowers resistance (sweat, standing water, a cut, a metal tool held in the hand) raises the current for the same voltage. Anything that adds resistance (insulating gloves, a fiberglass ladder, dry rubber-soled boots, an insulating mat) lowers it. Safety gear works by raising R_contact so much that the current stays below the perception level."
+    },
+    {
+      "type": "example",
+      "problem": "An apprentice brushes a 120 V hot conductor with a dry hand while standing on dry concrete. The total resistance of the path is about 100,000 Ω. Later that day, with sweaty hands and standing in a damp crawl space, the path resistance has dropped to 1,500 Ω. Estimate the current in each case and describe the likely effect.",
+      "solutionSteps": [
+        "Dry case: I = 120 V ÷ 100,000 Ω = 0.0012 A = 1.2 mA. This is at the threshold of perception: a tingle, unpleasant but not dangerous.",
+        "Wet case: I = 120 V ÷ 1,500 Ω = 0.080 A = 80 mA.",
+        "Compare with the effects table below: 80 mA is in the range that causes extreme pain, respiratory arrest and possible ventricular fibrillation within seconds.",
+        "Same voltage, same circuit, roughly 67 times more current. The only thing that changed was resistance."
+      ],
+      "answer": "About 1.2 mA when dry (a tingle); about 80 mA when wet (potentially fatal)."
+    },
+    {
+      "type": "diagram",
+      "title": "Hand-to-foot shock path",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 420 240\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"60\" cy=\"120\" r=\"18\"/>\n<path d=\"M50 120 q5 -8 10 0 t10 0\"/>\n<path d=\"M60 102 V40 H250\"/>\n<path d=\"M60 138 V200 H330\"/>\n<path d=\"M250 40 V60\"/>\n<path d=\"M250 60 l-10 8 h20 l-10 8\"/>\n<circle cx=\"300\" cy=\"78\" r=\"12\"/>\n<path d=\"M300 90 V150\"/>\n<path d=\"M300 100 L270 125 L250 68\"/>\n<path d=\"M300 100 L330 125\"/>\n<path d=\"M300 150 L280 190\"/>\n<path d=\"M300 150 L320 190\"/>\n<path d=\"M330 200 V210\"/>\n<path d=\"M318 210 H342 M322 216 H338 M326 222 H334\"/>\n<path d=\"M190 200 V210\"/>\n<path d=\"M178 210 H202 M182 216 H198 M186 222 H194\"/>\n</g>\n<g fill=\"none\" stroke=\"#ff6b6b\" stroke-width=\"2\" stroke-dasharray=\"4 3\">\n<path d=\"M250 68 L270 125 L300 100 L300 150 L300 190\"/>\n</g>\n<rect x=\"296\" y=\"108\" width=\"8\" height=\"34\" fill=\"#f3c75b\" stroke=\"currentColor\"/>\n<g fill=\"currentColor\">\n<text x=\"22\" y=\"90\">120 V</text>\n<text x=\"22\" y=\"104\">source</text>\n<text x=\"200\" y=\"32\">hot conductor</text>\n<text x=\"226\" y=\"86\" fill=\"#ff6b6b\">contact</text>\n<text x=\"312\" y=\"128\" fill=\"#f3c75b\">R body</text>\n<text x=\"312\" y=\"142\" fill=\"#f3c75b\">~1 kΩ wet</text>\n<text x=\"246\" y=\"236\">return path through earth / grounded parts</text>\n<text x=\"40\" y=\"226\">source</text>\n<text x=\"40\" y=\"238\">ground</text>\n</g>\n</svg>",
+      "caption": "Current leaves the source on the hot conductor, enters at the hand, crosses the chest, exits through the feet and returns to the source through the earth and grounded metal. The body resistance (gold) and everything else in series set the current."
+    },
+    {
+      "type": "table",
+      "caption": "Approximate effects of 60 Hz current through the body (values summarized from OSHA and NIOSH guidance; individuals vary)",
+      "columns": [
+        "Current",
+        "Typical effect"
+      ],
+      "rows": [
+        [
+          "Below 1 mA",
+          "Generally not perceptible"
+        ],
+        [
+          "1 mA",
+          "Faint tingle; threshold of perception"
+        ],
+        [
+          "5 mA",
+          "Slight shock, startling; a person may jerk and fall from a ladder. Class A GFCIs trip in this range (4 to 6 mA)"
+        ],
+        [
+          "6 to 30 mA",
+          "Painful shock; loss of muscular control (\"can't let go\")"
+        ],
+        [
+          "50 to 150 mA",
+          "Extreme pain, respiratory arrest, severe muscle contractions, possible death"
+        ],
+        [
+          "1 to 4 A",
+          "Ventricular fibrillation (heart quivers instead of pumping); nerve damage; death likely without defibrillation"
+        ],
+        [
+          "10 A and above",
+          "Cardiac arrest, severe internal and external burns"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Arc flash and arc blast",
+      "markdown": "An **arc flash** happens when current jumps through the air between conductors or from a conductor to ground, often because a dropped tool, a slipped screwdriver or a failed insulator starts the arc. Air in the arc reaches temperatures far hotter than the surface of the sun (on the order of 35,000 °F), copper expands tens of thousands of times as it vaporizes, and the result is a fireball, a pressure wave (**arc blast**), molten metal spray and a sound loud enough to damage hearing. Most arc flash victims are experienced workers doing routine tasks on energized panels.\n\nThe energy a worker would receive is called **incident energy** and is measured in calories per square centimeter (cal/cm²). About **1.2 cal/cm²** is enough to cause a second-degree burn on bare skin, so the **arc flash boundary** is the distance at which incident energy falls to 1.2 cal/cm². Inside that distance you need arc-rated clothing and face protection.\n\nNFPA 70E also defines two shock boundaries measured from exposed energized conductors:\n\n- **Limited approach boundary**: unqualified persons stop here unless escorted. For common 120 to 480 V equipment this is 3 ft 6 in.\n- **Restricted approach boundary**: only qualified persons with shock PPE and an approved plan may cross it. For 151 to 750 V this is 1 ft 0 in.\n\nNEC 110.16 requires equipment that is likely to be worked on while energized (switchboards, panelboards, industrial control panels, motor control centers) to carry an **arc flash warning label**. The label, prepared under NFPA 70E 130.5, tells you the arc flash boundary and either the incident energy at the working distance or the PPE category. Read the label before you open the cover."
+    },
+    {
+      "type": "diagram",
+      "title": "Shock and arc flash boundaries around a panel",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 240\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke-width=\"2\">\n<path d=\"M60 20 A200 200 0 0 1 60 220\" stroke=\"#ff6b6b\" stroke-dasharray=\"6 4\"/>\n<path d=\"M60 60 A140 140 0 0 1 60 180\" stroke=\"#f3c75b\"/>\n<path d=\"M60 90 A80 80 0 0 1 60 150\" stroke=\"#4cc9ff\"/>\n<rect x=\"20\" y=\"80\" width=\"40\" height=\"80\" stroke=\"currentColor\" fill=\"#9aa6b8\" fill-opacity=\"0.25\"/>\n<path d=\"M30 92 h20 M30 104 h20 M30 116 h20 M30 128 h20 M30 140 h20\" stroke=\"currentColor\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"14\" y=\"176\">panel</text>\n<text x=\"14\" y=\"190\">(exposed</text>\n<text x=\"14\" y=\"204\">live parts)</text>\n<text x=\"150\" y=\"124\" fill=\"#4cc9ff\">restricted</text>\n<text x=\"150\" y=\"138\" fill=\"#4cc9ff\">approach</text>\n<text x=\"212\" y=\"100\" fill=\"#f3c75b\">limited approach</text>\n<text x=\"212\" y=\"114\" fill=\"#f3c75b\">(unqualified stop here)</text>\n<text x=\"270\" y=\"40\" fill=\"#ff6b6b\">arc flash boundary</text>\n<text x=\"270\" y=\"54\" fill=\"#ff6b6b\">1.2 cal/cm² = onset of</text>\n<text x=\"270\" y=\"68\" fill=\"#ff6b6b\">2nd-degree burn</text>\n<text x=\"150\" y=\"232\">Distances come from the shock and arc flash risk assessments</text>\n</g>\n</svg>",
+      "caption": "The arc flash boundary (red, dashed) is set by incident energy. The limited (gold) and restricted (blue) approach boundaries are set by voltage. The arc flash boundary is often the largest of the three."
+    },
+    {
+      "type": "table",
+      "caption": "PPE categories from the NFPA 70E category method (Table 130.7(C)(15)) and the minimum arc rating each requires",
+      "columns": [
+        "PPE category",
+        "Minimum arc rating of clothing system",
+        "Typical outfit"
+      ],
+      "rows": [
+        [
+          "1",
+          "4 cal/cm²",
+          "Arc-rated long-sleeve shirt and pants (or coverall), arc-rated face shield or hood, hard hat, safety glasses, hearing protection, leather or arc-rated gloves, leather work shoes"
+        ],
+        [
+          "2",
+          "8 cal/cm²",
+          "Same as category 1 but with an arc-rated flash suit hood or face shield with balaclava; 8 cal/cm² minimum"
+        ],
+        [
+          "3",
+          "25 cal/cm²",
+          "Arc-rated flash suit (jacket, pants, hood) over arc-rated base layer, rubber insulating gloves with leather protectors"
+        ],
+        [
+          "4",
+          "40 cal/cm²",
+          "40 cal/cm² flash suit system; same accessories as category 3"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "The rulebook: OSHA, Cal/OSHA and NFPA 70E",
+      "markdown": "Several documents overlap, and a California electrician needs to know which one applies where:\n\n- **OSHA 29 CFR 1910 Subpart S** (general industry) requires that live parts above 50 V be de-energized before work unless de-energizing creates a greater hazard or is infeasible (1910.333), and requires PPE, insulated tools and barriers for the work that must be done live (1910.335). **1910.147** is the general lockout/tagout standard for machinery; **1910.137** covers rubber insulating gloves and sleeves (tested every six months).\n- **OSHA 29 CFR 1926 Subpart K** (construction) covers temporary power, GFCI protection or an assured equipment grounding conductor program for receptacles on the site (1926.404), lockout and tagging of circuits (1926.417) and the rule that no employee may work close enough to contact an energized circuit unless it is de-energized and grounded or guarded (1926.416).\n- **Cal/OSHA Title 8** applies to every workplace in California and is at least as strict as federal OSHA. The Low-Voltage Electrical Safety Orders (sections 2300 to 2599, especially 2320.1 through 2320.7 on working on energized equipment), the High-Voltage Electrical Safety Orders (sections 2700 and up), the lockout/tagout rule in section 3314, portable ladders in section 3276, and the Injury and Illness Prevention Program in section 3203 are the ones electricians meet most often.\n- **NFPA 70E, Standard for Electrical Safety in the Workplace** is not a law by itself, but OSHA and Cal/OSHA cite it as the recognized way to meet their performance rules. It defines the electrically safe work condition (Article 120), the energized electrical work permit (130.2), the shock and arc flash risk assessments (130.4 and 130.5) and the PPE tables (130.7).\n- **NEC / California Electrical Code (Title 24, Part 3)** is an installation code. It makes the installation safe; 70E makes the worker safe.\n\n**Qualified person** is a legal term: someone with the skills and knowledge of the equipment and the training to recognize and avoid its hazards. An apprentice or trainee becomes qualified for a task only through documented training and supervised experience on that task, and only a qualified person may cross the limited approach boundary."
+    },
+    {
+      "type": "text",
+      "heading": "Lockout/tagout and the electrically safe work condition",
+      "markdown": "The safest circuit is a dead one. NFPA 70E Article 120 and Cal/OSHA 3314 spell out how to get there. The sequence matters:\n\n1. **Identify every source.** Check the one-line diagram, panel directory and labels. Remember alternate sources: generators, UPS units, solar inverters, control transformers fed from another panel, capacitors and stored mechanical energy.\n2. **Notify** everyone affected that the equipment will be shut down.\n3. **Shut down** the load with its normal controls, then **open the disconnecting means** (breaker or disconnect). Opening a breaker under heavy load can itself cause an arc, so unload first.\n4. **Visually verify** the disconnect is open where the design allows (draw-out breaker racked out, blades visibly open).\n5. **Apply your own lock and tag** on each disconnecting means. One lock per worker: if three people work on the circuit, there are three locks and the circuit stays locked until the last one is removed. Tag-only is allowed only when a lock cannot physically be applied, and then extra measures are required.\n6. **Release stored energy.** Discharge capacitors, block springs and elevated parts, bleed hydraulic or pneumatic pressure.\n7. **Test for absence of voltage** on every conductor, phase-to-phase and phase-to-ground, using the live-dead-live method in the callout below.\n8. Where induced voltage or re-energizing is possible (long lines, parallel circuits, backfeed), **apply temporary protective grounds**.\n\nNever remove another person's lock. If the owner has left the site, only a supervisor following the written lock-removal procedure may remove it, and only after confirming the owner is clear.\n\n**Energized work** is permitted only when de-energizing introduces additional or increased hazards (for example, shutting down a hospital life-support system) or is infeasible because of equipment design or operating limits (such as troubleshooting that requires voltage present). It requires an **energized electrical work permit** signed by management, a documented risk assessment, PPE, insulated tools and, usually, a second person. \"The customer did not want to lose power\" is not a justification."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "TEST BEFORE TOUCH (live-dead-live): 1) Prove your tester on a known live source so you know it works. 2) Test every conductor you will touch: each phase to ground and each phase to each other phase. 3) Prove the tester again on the known live source so you know it did not fail during the test. A non-contact tester is a screening tool only; absence of voltage is proven with a contact tester rated for the circuit. If any step fails, the circuit is live until proven otherwise."
+    },
+    {
+      "type": "text",
+      "heading": "Ladders, PPE and everyday jobsite rules",
+      "markdown": "**Ladders.** Electricians use **fiberglass** ladders. Aluminum ladders are prohibited near energized conductors and most contractors ban them from the site entirely. Set an extension ladder at a 4:1 angle (one foot out from the wall for every four feet of working length), extend it at least 3 ft above the landing and tie it off. Keep three points of contact, keep your belt buckle between the rails (no leaning), and never stand on the top cap or the step just below it on a stepladder. Check the duty rating: Type IA is rated for 300 lb, Type IAA for 375 lb, and that includes your tools and material. Keep ladders, lifts and material at least 10 ft from overhead power lines up to 50 kV, more for higher voltages.\n\n**Head, eye and hand protection.** Wear a Class E hard hat (tested to 20,000 V) and never a vented or conductive one around electrical work. Safety glasses are the minimum; an arc-rated face shield or hood is required inside the arc flash boundary. Rubber insulating gloves are classed by voltage (Class 00 for up to 500 V AC, Class 0 for up to 1,000 V AC) and must be worn with leather protectors, air-tested before each use and electrically tested every six months.\n\n**Cords and temporary power.** Every 120 V receptacle used on a construction site must be GFCI-protected or covered by an assured equipment grounding conductor program. Inspect cords daily; a cord with a missing ground pin or a nicked jacket is taken out of service, not taped.\n\n**Housekeeping and falls.** Falls are the leading cause of construction deaths; fall protection is required at 6 ft in construction. Close panel covers and knockouts when you walk away, cap unused conductors, and keep metal fish tape away from energized panels.\n\n**Report and speak up.** California employers must report any serious injury to Cal/OSHA within 8 hours. More importantly, every worker has the right and the duty to stop a task that is not safe. A good foreman would rather lose an hour than a crew member."
+    }
+  ],
+  "practice": [
+    {
+      "id": "electrical-safety-fundamentals-p1",
+      "type": "numeric",
+      "prompt": "A worker contacts a 120 V conductor. The total resistance of the current path through the body and boots is 1,500 Ω. What current flows, in amperes?",
+      "answer": 0.08,
+      "unit": "A",
+      "tolerance": 0.005,
+      "explanation": "I = V ÷ R = 120 ÷ 1,500 = 0.080 A, which is 80 mA: enough to cause respiratory arrest or fibrillation."
+    },
+    {
+      "id": "electrical-safety-fundamentals-p2",
+      "type": "multiple_choice",
+      "prompt": "Which sequence correctly describes the test-before-touch (live-dead-live) method?",
+      "choices": [
+        "Test the circuit once with a non-contact tester; if it does not beep, begin work",
+        "Prove the tester on a known live source, test each conductor phase-to-phase and phase-to-ground, then prove the tester again on the live source",
+        "Turn off the breaker, wait five minutes for capacitors to discharge, then begin work",
+        "Test the circuit with the meter on the ohms scale to confirm continuity to ground"
+      ],
+      "correctIndex": 1,
+      "explanation": "Live-dead-live proves the tester works before and after the absence-of-voltage test, so a dead tester cannot be mistaken for a dead circuit. Non-contact testers are screening tools only, and ohms should never be measured on a possibly live circuit."
+    },
+    {
+      "id": "electrical-safety-fundamentals-p3",
+      "type": "multiple_choice",
+      "prompt": "You need a ladder to reach a lighting circuit junction box in a ceiling that also contains exposed energized bus duct. Which ladder is acceptable?",
+      "choices": [
+        "A lightweight aluminum extension ladder because it is easy to carry",
+        "A fiberglass ladder with the correct duty rating",
+        "A wooden ladder that has been painted to seal the wood",
+        "Any ladder, as long as you wear rubber-soled boots"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fiberglass is non-conductive when clean and dry. Aluminum ladders are prohibited near energized parts, and paint can hide defects in wooden ladders, which is why OSHA prohibits opaque coatings on them."
+    },
+    {
+      "id": "electrical-safety-fundamentals-p4",
+      "type": "numeric",
+      "prompt": "An arc flash label lists the task as PPE category 2. What is the minimum arc rating of your clothing system, in cal/cm²?",
+      "answer": 8,
+      "unit": "cal/cm²",
+      "tolerance": 0.1,
+      "explanation": "The category method assigns minimum arc ratings of 4, 8, 25 and 40 cal/cm² to PPE categories 1 through 4."
+    },
+    {
+      "id": "electrical-safety-fundamentals-p5",
+      "type": "multiple_choice",
+      "prompt": "You have opened the disconnect and applied your lock and tag. What must happen before you touch any conductor?",
+      "choices": [
+        "Nothing more; a locked disconnect guarantees the circuit is dead",
+        "Release any stored energy and test for absence of voltage on every conductor with a tester that was proved on a live source",
+        "Ask the customer to confirm the panel directory is accurate",
+        "Have a second worker remove your lock to make sure it operates"
+      ],
+      "correctIndex": 1,
+      "explanation": "Locks control the disconnect, but backfeeds, mislabeled breakers and stored energy are common. The circuit is not proven dead until you test it."
+    },
+    {
+      "id": "electrical-safety-fundamentals-p6",
+      "type": "numeric",
+      "prompt": "A commercial lighting circuit operates at 277 V. If a worker's shock path measures 2,000 Ω, what current flows, in amperes? (Round to three decimal places.)",
+      "answer": 0.139,
+      "unit": "A",
+      "tolerance": 0.003,
+      "explanation": "I = 277 ÷ 2,000 = 0.1385 A, about 139 mA. 277 V lighting circuits are among the most common sources of fatal shocks in commercial work."
+    }
+  ],
+  "quiz": {
+    "key": "electrical-safety-fundamentals-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "electrical-safety-fundamentals-q1",
+        "type": "multiple_choice",
+        "prompt": "Which combination of factors most directly determines how severe an electric shock is?",
+        "choices": [
+          "The brand of the equipment and the age of the wiring",
+          "The magnitude of current, the path through the body and how long it flows",
+          "The color of the conductor insulation",
+          "The size of the breaker protecting the circuit"
+        ],
+        "correctIndex": 1,
+        "explanation": "Current magnitude, path (especially across the chest) and duration decide the injury. Voltage matters only because it drives current through the body's resistance."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q2",
+        "type": "numeric",
+        "prompt": "With dry skin the shock path resistance is 100,000 Ω. What current flows from a 120 V contact, in amperes?",
+        "answer": 0.0012,
+        "unit": "A",
+        "tolerance": 0.0001,
+        "explanation": "120 ÷ 100,000 = 0.0012 A (1.2 mA): about the threshold of perception. Dry skin is the only reason many 120 V contacts are survivable."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q3",
+        "type": "multiple_choice",
+        "prompt": "The arc flash boundary is the distance from an arc source at which the incident energy drops to:",
+        "choices": [
+          "0.5 cal/cm²",
+          "1.2 cal/cm²",
+          "8 cal/cm²",
+          "40 cal/cm²"
+        ],
+        "correctIndex": 1,
+        "explanation": "1.2 cal/cm² is the energy at which bare skin receives a just-curable second-degree burn, so that is where the boundary is drawn."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q4",
+        "type": "multiple_choice",
+        "prompt": "At what voltage do NFPA 70E and the Cal/OSHA Low-Voltage Electrical Safety Orders begin treating a circuit as a shock hazard requiring controls?",
+        "choices": [
+          "12 V",
+          "24 V",
+          "50 V",
+          "120 V"
+        ],
+        "correctIndex": 2,
+        "explanation": "Fifty volts is the threshold used by OSHA 1910.333, Cal/OSHA and NFPA 70E for exposed energized parts."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q5",
+        "type": "multiple_choice",
+        "prompt": "Under NFPA 70E, when is working on energized conductors permitted?",
+        "choices": [
+          "Whenever the customer does not want a power interruption",
+          "Only when de-energizing would create a greater hazard or is infeasible due to equipment design or operating limits, and an energized work permit is in place",
+          "Whenever the worker has more than five years of experience",
+          "Whenever the voltage is below 480 V"
+        ],
+        "correctIndex": 1,
+        "explanation": "Convenience and schedule are never justifications. The permit documents the justification, the risk assessment and the PPE."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q6",
+        "type": "multiple_choice",
+        "prompt": "Which hard hat class is tested to 20,000 V and is the correct choice for electrical work?",
+        "choices": [
+          "Class C",
+          "Class G",
+          "Class E",
+          "Class V"
+        ],
+        "correctIndex": 2,
+        "explanation": "Class E (electrical) hard hats are tested to 20,000 V. Class G is tested to 2,200 V and Class C offers no electrical protection."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q7",
+        "type": "numeric",
+        "prompt": "An extension ladder has a working length of 16 ft from the base to the point where it rests on the wall. Using the 4:1 rule, how many feet from the wall should the base be placed?",
+        "answer": 4,
+        "unit": "ft",
+        "tolerance": 0.1,
+        "explanation": "One foot out for every four feet of working length: 16 ÷ 4 = 4 ft."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q8",
+        "type": "multiple_choice",
+        "prompt": "Which agency enforces workplace electrical safety rules on a construction site in Orange County, California?",
+        "choices": [
+          "Federal OSHA only",
+          "Cal/OSHA (the Division of Occupational Safety and Health in the Department of Industrial Relations), under Title 8",
+          "The National Fire Protection Association",
+          "The local electric utility"
+        ],
+        "correctIndex": 1,
+        "explanation": "California operates its own OSHA-approved state plan. Cal/OSHA enforces Title 8, which must be at least as protective as federal OSHA. NFPA writes standards but has no enforcement power."
+      },
+      {
+        "id": "electrical-safety-fundamentals-q9",
+        "type": "numeric",
+        "prompt": "An extension ladder used to reach a roof must extend how many feet above the landing surface?",
+        "answer": 3,
+        "unit": "ft",
+        "tolerance": 0.1,
+        "explanation": "OSHA 1926.1053 and Cal/OSHA require the side rails to extend at least 3 ft above the upper landing so you have something to hold while stepping off."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "OSHA 29 CFR 1910 Subpart S, Electrical (1910.333 Selection and use of work practices)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.333"
+    },
+    {
+      "title": "OSHA 29 CFR 1926 Subpart K, Electrical (1926.417 Lockout and tagging of circuits)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.417"
+    },
+    {
+      "title": "OSHA Publication 3075, Controlling Electrical Hazards",
+      "url": "https://www.osha.gov/sites/default/files/publications/osha3075.pdf"
+    },
+    {
+      "title": "NIOSH Publication 2009-113, Electrical Safety: Safety and Health for Electrical Trades Student Manual",
+      "url": "https://www.cdc.gov/niosh/docs/2009-113/"
+    },
+    {
+      "title": "NFPA 70E, Standard for Electrical Safety in the Workplace (Articles 110, 120 and 130; cited by section number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70e-standard-development/70e"
+    },
+    {
+      "title": "Cal/OSHA Title 8, Low-Voltage Electrical Safety Orders, Section 2320.2 Work on Energized Equipment",
+      "url": "https://www.dir.ca.gov/title8/2320_2.html"
+    },
+    {
+      "title": "Cal/OSHA Title 8, Section 3314, Control of Hazardous Energy (Lockout/Tagout)",
+      "url": "https://www.dir.ca.gov/title8/3314.html"
+    },
+    {
+      "title": "OSHA 29 CFR 1926.1053, Ladders",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.1053"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CareerQuest Job Tracker</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup" aria-busy="true">
+      <header class="header">
+        <div class="brand">
+          <img src="../../icons/icon32.png" width="20" height="20" alt="" />
+          <span>CareerQuest</span>
+        </div>
+        <button id="status-pill" class="pill pill--muted" type="button" aria-live="polite" title="Connection status">Checking…</button>
+      </header>
+
+      <section id="connect-section" class="card card--notice" hidden>
+        <p id="connect-text">Connect the extension to CareerQuest to start saving jobs.</p>
+        <button id="connect-button" class="btn btn--primary" type="button">Connect</button>
+      </section>
+
+      <section id="pending-section" class="card card--prompt" hidden aria-labelledby="pending-title">
+        <h2 id="pending-title" class="card__title">Did you submit this application?</h2>
+        <p id="pending-text" class="muted"></p>
+        <div class="row">
+          <button id="pending-yes" class="btn btn--primary" type="button">Yes, I submitted it</button>
+          <button id="pending-no" class="btn btn--ghost" type="button">No</button>
+        </div>
+      </section>
+
+      <section id="detection-section" class="card" aria-labelledby="detection-title">
+        <div class="card__head">
+          <h2 id="detection-title" class="card__title">This page</h2>
+          <span id="kind-chip" class="chip" hidden></span>
+        </div>
+        <div id="no-detection" class="muted">
+          <p id="no-detection-text">No job detected on this page yet.</p>
+          <button id="manual-detect" class="btn btn--ghost" type="button">Capture this page</button>
+        </div>
+        <dl id="detection-fields" class="fields" hidden>
+          <div><dt>Title</dt><dd id="f-title">—</dd></div>
+          <div><dt>Company</dt><dd id="f-company">—</dd></div>
+          <div><dt>Location</dt><dd id="f-location">—</dd></div>
+          <div><dt>Salary</dt><dd id="f-salary">—</dd></div>
+          <div><dt>Req. ID</dt><dd id="f-req">—</dd></div>
+          <div><dt>Platform</dt><dd id="f-platform">—</dd></div>
+          <div><dt>Confidence</dt><dd><meter id="f-confidence" min="0" max="1" low="0.5" high="0.8" optimum="1" value="0"></meter> <span id="f-confidence-text"></span></dd></div>
+        </dl>
+      </section>
+
+      <section id="matches-section" class="card" hidden aria-labelledby="matches-title">
+        <h2 id="matches-title" class="card__title">Already tracked</h2>
+        <ul id="matches-list" class="matches"></ul>
+      </section>
+
+      <section id="actions-section" class="actions" hidden>
+        <button id="save-job" class="btn btn--primary" type="button">Save to CareerQuest</button>
+        <button id="confirm-submitted" class="btn btn--gold" type="button">I submitted this application</button>
+      </section>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+
+      <footer class="footer">
+        <span id="queue-status" class="muted" hidden></span>
+        <button id="retry-queue" class="link" type="button" hidden>Retry now</button>
+        <a id="options-link" class="link" href="#">Settings</a>
+      </footer>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

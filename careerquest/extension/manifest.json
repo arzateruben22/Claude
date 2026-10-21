@@ -1,0 +1,118 @@
+{
+  "manifest_version": 3,
+  "name": "CareerQuest Job Tracker",
+  "version": "0.1.0",
+  "description": "Save job postings and record submitted applications in CareerQuest. Nothing is recorded without your confirmation.",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "CareerQuest Job Tracker",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "activeTab", "scripting", "alarms"],
+  "optional_host_permissions": ["http://localhost/*", "http://127.0.0.1/*", "https://*/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.indeed.com/viewjob*",
+        "https://*.indeed.com/jobs*",
+        "https://*.indeed.com/q-*",
+        "https://*.indeed.com/rc/clk*",
+        "https://*.indeed.com/applystart*",
+        "https://*.indeed.com/m/*",
+        "https://smartapply.indeed.com/*",
+        "https://*.apply.indeed.com/*"
+      ],
+      "js": ["src/content/common.js", "src/content/indeed.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.linkedin.com/jobs/*"],
+      "js": ["src/content/common.js", "src/content/linkedin.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.glassdoor.com/job-listing/*",
+        "https://*.glassdoor.com/Job/*",
+        "https://*.glassdoor.com/job/*",
+        "https://*.glassdoor.com/partner/*",
+        "https://*.glassdoor.com/apply/*"
+      ],
+      "js": ["src/content/common.js", "src/content/glassdoor.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.ziprecruiter.com/*"],
+      "js": ["src/content/common.js", "src/content/ziprecruiter.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.myworkdayjobs.com/*"],
+      "js": ["src/content/common.js", "src/content/workday.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://boards.greenhouse.io/*", "https://job-boards.greenhouse.io/*"],
+      "js": ["src/content/common.js", "src/content/greenhouse.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://jobs.lever.co/*"],
+      "js": ["src/content/common.js", "src/content/lever.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://jobs.smartrecruiters.com/*", "https://careers.smartrecruiters.com/*"],
+      "js": ["src/content/common.js", "src/content/smartrecruiters.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.icims.com/*"],
+      "js": ["src/content/common.js", "src/content/icims.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://workforcenow.adp.com/*",
+        "https://recruiting.adp.com/*",
+        "https://*.adp.com/*recruitment*",
+        "https://*.adp.com/*careers*"
+      ],
+      "js": ["src/content/common.js", "src/content/adp.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.governmentjobs.com/*"],
+      "js": ["src/content/common.js", "src/content/governmentjobs.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*.usajobs.gov/*"],
+      "js": ["src/content/common.js", "src/content/usajobs.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

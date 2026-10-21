@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CareerQuest Job Tracker — Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <img src="../../icons/icon48.png" width="32" height="32" alt="" />
+        <div>
+          <h1>CareerQuest Job Tracker</h1>
+          <p class="muted">Connect this extension to your CareerQuest account.</p>
+        </div>
+      </header>
+
+      <form id="settings-form" class="card" novalidate>
+        <div class="field">
+          <label for="apiBaseUrl">CareerQuest URL</label>
+          <input id="apiBaseUrl" name="apiBaseUrl" type="url" inputmode="url" placeholder="http://localhost:3000" autocomplete="off" spellcheck="false" />
+          <p class="hint">Where CareerQuest runs. The extension asks for permission to talk to this site only.</p>
+        </div>
+        <div class="field">
+          <label for="token">Developer token</label>
+          <input id="token" name="token" type="password" placeholder="cqt_…" autocomplete="off" spellcheck="false" />
+          <p class="hint">Create a token in CareerQuest → Settings → Developer tokens. It is stored only in this browser profile and never logged.</p>
+        </div>
+        <div class="row">
+          <button id="save" class="btn btn--primary" type="submit">Save</button>
+          <button id="test" class="btn btn--ghost" type="button">Test connection</button>
+          <button id="forget" class="btn btn--ghost" type="button">Forget token</button>
+        </div>
+        <p id="form-message" class="message" role="status" aria-live="polite"></p>
+      </form>
+
+      <section class="card" aria-labelledby="perm-title">
+        <h2 id="perm-title">Site permission</h2>
+        <p class="muted">Chrome asks you once to let the extension contact your CareerQuest URL. Job-board pages are read by the extension's built-in content scripts; no other site is accessed.</p>
+        <p id="perm-state" class="state">Not requested yet.</p>
+      </section>
+
+      <section class="card" aria-labelledby="queue-title">
+        <h2 id="queue-title">Local queue</h2>
+        <p class="muted">Captures that could not be sent (offline, rate limited, server error) wait here and retry automatically.</p>
+        <p id="queue-state" class="state">0 captures waiting.</p>
+        <div class="row">
+          <button id="flush" class="btn btn--ghost" type="button">Retry now</button>
+          <button id="clear-queue" class="btn btn--danger" type="button">Clear local queue</button>
+        </div>
+      </section>
+
+      <footer class="muted small">
+        Privacy: the extension reads only job-posting details and confirmation sentences on supported job boards. See PRIVACY.md in the extension folder.
+      </footer>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+{
+  "key": "voltage-divider",
+  "title": "Voltage Divider Under Load",
+  "description": "A 24 V source feeds R1 (1 kΩ) in series with R2 (2 kΩ). Unloaded, the divider would put 16 V across R2. A 2 kΩ load (RL) is connected across R2. Find what the output voltage actually becomes and why.",
+  "difficulty": 2,
+  "estimatedMinutes": 15,
+  "relatedLessons": [
+    "series-circuits",
+    "series-parallel-circuits"
+  ],
+  "circuit": {
+    "sourceVolts": 24,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 1000
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "resistor",
+              "id": "R2",
+              "ohms": 2000
+            },
+            {
+              "type": "resistor",
+              "id": "RL",
+              "ohms": 2000
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "voltage-divider-t1",
+      "question": "What is the total resistance of the loaded divider?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "voltage-divider-t2",
+      "question": "What current does the source supply?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "voltage-divider-t3",
+      "question": "What is the voltage across R1?",
+      "quantity": "V_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "voltage-divider-t4",
+      "question": "What is the loaded output voltage, measured across R2 (and the load)?",
+      "quantity": "V_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "voltage-divider-t5",
+      "question": "What current flows through the load RL?",
+      "quantity": "I_RL",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "voltage-divider-t6",
+      "question": "What power does the load RL dissipate?",
+      "quantity": "P_RL",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    }
+  ],
+  "hints": [
+    "Unloaded, the divider rule gives V_R2 = 24 × (2000 ÷ 3000) = 16 V. The load changes that.",
+    "RL is in parallel with R2: 2 kΩ ∥ 2 kΩ = 1 kΩ. Now the circuit is 1 kΩ in series with 1 kΩ, a 50/50 split.",
+    "Half of 24 V is the loaded output. The drop across R1 doubled compared with the unloaded case because the current doubled.",
+    "A divider only holds its voltage if the load resistance is much larger than R2 (ten times or more is a common rule of thumb). This is the same loading effect that makes conductor voltage drop worse as loads are added."
+  ],
+  "learningGoals": [
+    "Apply the voltage divider rule and see its limits.",
+    "Quantify the loading effect when a load is placed across a divider output.",
+    "Connect the loaded divider to real-world voltage drop on conductors."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

@@ -1,0 +1,421 @@
+{
+  "key": "electrical-basics",
+  "track": "FUNDAMENTALS",
+  "order": 1,
+  "title": "Electrical Basics: Charge, Voltage, Current and Resistance",
+  "summary": "The four ideas every other lesson builds on: electric charge, the pressure that pushes it (voltage), the flow itself (current) and what opposes it (resistance), plus the units, prefixes and meters you will use every day.",
+  "estimatedMinutes": 25,
+  "prerequisites": [],
+  "objectives": [
+    "Students will be able to define charge, voltage, current and resistance in their own words and name the unit and symbol for each.",
+    "Students will be able to convert between base units and metric prefixes (kilo, milli, micro, mega).",
+    "Students will be able to explain what makes a material a conductor or an insulator and how length, cross-section and temperature change a conductor's resistance.",
+    "Students will be able to state how a voltmeter, ammeter, clamp meter and ohmmeter are connected and the basic safety rule for each."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Where electricity comes from: charge",
+      "markdown": "Everything around you is built from atoms, and every atom has a positively charged nucleus surrounded by negatively charged **electrons**. In most materials the outer electrons are held loosely enough that they can wander from atom to atom. Electricity, for an electrician, is simply the organized movement of those loose electrons through a conductor.\n\n- **Charge** is the basic electrical quantity. Its unit is the **coulomb (C)**. One coulomb is a staggering number of electrons (about 6.24 × 10¹⁸), so you will never count electrons; you will measure charge indirectly through current.\n- **Conductors** (copper, aluminum, silver, gold) have one or two loosely held outer electrons per atom, so charge moves through them easily. Copper is the workhorse of building wiring; aluminum is common for large feeders and service conductors.\n- **Insulators** (rubber, PVC, glass, porcelain, dry air) hold their electrons tightly. Wire insulation, tool handles and the housing of a receptacle are insulators.\n- **Semiconductors** (silicon) sit in between and are the basis of LEDs, solar cells and electronic drives, which you will meet in later tracks.\n\nTwo facts to keep in your pocket: like charges repel and unlike charges attract, and charge is never created or destroyed, only moved. A circuit does not \"use up\" electrons; it uses up the **energy** the source gave them."
+    },
+    {
+      "type": "text",
+      "heading": "Voltage: the pressure that pushes charge",
+      "markdown": "**Voltage** (symbol **V**, sometimes **E** for electromotive force) is the difference in electrical potential between two points. Think of it as pressure in a water pipe: pressure alone moves nothing until there is a path, but without pressure nothing moves at all. The unit is the **volt (V)**.\n\nThree things about voltage that beginners get wrong:\n\n1. Voltage always exists **between two points**. \"The voltage at this terminal\" really means \"the voltage between this terminal and some reference,\" usually ground or neutral. A bird on a single bare line is not shocked because both feet are at the same potential.\n2. A voltage can be present with **no current flowing**. An open switch has full source voltage across its contacts. That is exactly why an open circuit is still dangerous.\n3. A source does not \"push\" a fixed current. It holds a voltage; the circuit's resistance decides how much current results (next lesson, Ohm's law).\n\nTypical values you will see: 1.5 V (AA cell), 12 V (vehicle battery), 24 V (control circuits and thermostats), 120 V and 240 V (homes), 277 V and 480 V (commercial lighting and motors), and thousands of volts on utility lines. California's electrician certification exam and the NEC both treat anything at **50 V or more** as a shock hazard that requires guarding and PPE decisions."
+    },
+    {
+      "type": "text",
+      "heading": "Current: the flow itself",
+      "markdown": "**Current** (symbol **I**, for the French word *intensité*) is the rate at which charge passes a point. The unit is the **ampere (A)**, usually shortened to \"amp.\" One ampere is one coulomb of charge passing a point every second.\n\nTwo conventions describe the direction of flow and you will see both:\n\n- **Conventional current** flows from the positive terminal through the circuit to the negative terminal. Nearly all diagrams, textbooks and code references assume this.\n- **Electron flow** is the physical direction electrons actually move: negative to positive. Some older trade texts use it.\n\nThe math is identical either way; just stay consistent on one drawing.\n\nCurrent comes in two flavors you will study in a later lesson: **DC (direct current)** always flows the same direction, like the current from a battery or solar panel. **AC (alternating current)** reverses direction many times per second (60 times per second in the United States); it is what the utility delivers to buildings.\n\nA current of a few **milliamps** is enough to injure a person, while branch circuits in a home carry 15 or 20 A and a large motor feeder may carry hundreds of amps. Keeping the scale in mind is part of thinking like an electrician."
+    },
+    {
+      "type": "formula",
+      "name": "Current as charge per unit time",
+      "expression": "I = Q ÷ t",
+      "variables": [
+        {
+          "symbol": "I",
+          "meaning": "current",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "Q",
+          "meaning": "charge that passes a point",
+          "unit": "coulombs (C)"
+        },
+        {
+          "symbol": "t",
+          "meaning": "time",
+          "unit": "seconds (s)"
+        }
+      ],
+      "explanation": "One ampere equals one coulomb per second. Rearranged, Q = I × t tells you how much charge has moved: a 2 A current for 30 s moves 60 C. You will rarely compute coulombs on the job, but this definition is why current is the quantity that heats conductors and trips breakers: it is the rate of flow, not the pressure."
+    },
+    {
+      "type": "text",
+      "heading": "Resistance: what opposes the flow",
+      "markdown": "**Resistance** (symbol **R**) is the opposition a material offers to current. The unit is the **ohm (Ω)**. A heater element, a lamp filament and even a long run of wire all have resistance, and pushing current through resistance converts electrical energy into heat (or light).\n\nFor a conductor, resistance depends on four things:\n\n- **Material.** Copper has lower resistance than aluminum of the same size; aluminum needs roughly one size larger to carry the same current. Nichrome (used in heating elements) has far higher resistance on purpose.\n- **Length.** Resistance is directly proportional to length. Double the run, double the resistance. This is why long branch circuits suffer **voltage drop**.\n- **Cross-sectional area.** Resistance is inversely proportional to area. A bigger wire (smaller AWG number) has less resistance. For reference, 12 AWG copper has roughly 2 Ω per 1,000 ft of conductor; 14 AWG about 3 Ω; 10 AWG about 1.2 Ω (NEC Chapter 9, Table 8 lists exact values).\n- **Temperature.** Metals increase in resistance as they heat up. A cold incandescent filament has far lower resistance than a hot one, which is why lamps draw a surge of current at switch-on. This same effect is why conductor ampacity tables are rated by temperature (NEC 310.16).\n\nThe opposite of resistance is **conductance** (symbol G, unit siemens, S): G = 1 ÷ R. You will mostly see it in parallel-circuit math."
+    },
+    {
+      "type": "table",
+      "caption": "The four basic quantities, their symbols, units and the instrument that measures each",
+      "columns": [
+        "Quantity",
+        "Symbol",
+        "Unit",
+        "Unit symbol",
+        "Measured with"
+      ],
+      "rows": [
+        [
+          "Charge",
+          "Q",
+          "coulomb",
+          "C",
+          "Not measured directly in the field"
+        ],
+        [
+          "Voltage (potential difference)",
+          "V or E",
+          "volt",
+          "V",
+          "Voltmeter, connected across (parallel)"
+        ],
+        [
+          "Current",
+          "I",
+          "ampere",
+          "A",
+          "Ammeter in series, or clamp meter around one conductor"
+        ],
+        [
+          "Resistance",
+          "R",
+          "ohm",
+          "Ω",
+          "Ohmmeter on a de-energized component"
+        ],
+        [
+          "Conductance",
+          "G",
+          "siemens",
+          "S",
+          "Calculated as 1 ÷ R"
+        ],
+        [
+          "Power (next lessons)",
+          "P",
+          "watt",
+          "W",
+          "Wattmeter or calculated from V and I"
+        ],
+        [
+          "Energy (next lessons)",
+          "W or E",
+          "watt-hour / kilowatt-hour",
+          "Wh / kWh",
+          "Utility meter"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "A complete circuit: pressure, flow and opposition",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"110\" y1=\"110\" x2=\"110\" y2=\"121\"/><line x1=\"96\" y1=\"121\" x2=\"124\" y2=\"121\"/><line x1=\"103\" y1=\"126\" x2=\"117\" y2=\"126\"/><line x1=\"96\" y1=\"132\" x2=\"124\" y2=\"132\"/><line x1=\"103\" y1=\"137\" x2=\"117\" y2=\"137\"/><line x1=\"110\" y1=\"137\" x2=\"110\" y2=\"150\"/><text x=\"130\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"130\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"110\" y1=\"110\" x2=\"110\" y2=\"60\"/><line x1=\"110\" y1=\"60\" x2=\"150\" y2=\"60\"/><line x1=\"150\" y1=\"60\" x2=\"158\" y2=\"60\"/><line x1=\"202\" y1=\"60\" x2=\"210\" y2=\"60\"/><circle cx=\"158\" cy=\"60\" r=\"3\"/><circle cx=\"202\" cy=\"60\" r=\"3\"/><line x1=\"158\" y1=\"60\" x2=\"202\" y2=\"60\"/><line x1=\"210\" y1=\"60\" x2=\"340\" y2=\"60\"/><line x1=\"340\" y1=\"60\" x2=\"340\" y2=\"118\"/><circle cx=\"340\" cy=\"130\" r=\"12\"/><line x1=\"331.5148\" y1=\"121.51480000000001\" x2=\"348.4852\" y2=\"138.4852\"/><line x1=\"331.5148\" y1=\"138.4852\" x2=\"348.4852\" y2=\"121.51480000000001\"/><line x1=\"340\" y1=\"142\" x2=\"340\" y2=\"200\"/><line x1=\"340\" y1=\"200\" x2=\"110\" y2=\"200\"/><line x1=\"110\" y1=\"200\" x2=\"110\" y2=\"150\"/><circle cx=\"110\" cy=\"60\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"340\" cy=\"200\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><line x1=\"230\" y1=\"48\" x2=\"290.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"300,48 290.0,53.0 290.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"265\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I (current)</text><line x1=\"300\" y1=\"214\" x2=\"240.0\" y2=\"214.0\" stroke=\"#4cc9ff\"/><polygon points=\"230,214 240.0,209.0 240.0,219.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"14\" y=\"112\" fill=\"#f3c75b\" stroke=\"none\" font-size=\"12\">Source</text><text x=\"14\" y=\"127\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">(voltage =</text><text x=\"14\" y=\"140\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">pressure)</text><text x=\"180\" y=\"90\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">Switch (closed)</text><text x=\"362\" y=\"126\" fill=\"#f3c75b\" stroke=\"none\" font-size=\"12\">Lamp</text><text x=\"362\" y=\"141\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">(resistance =</text><text x=\"362\" y=\"154\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">opposition)</text><text x=\"220\" y=\"235\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">Charge flows only when the loop is complete</text></svg>",
+      "caption": "The source provides voltage (pressure). When the switch closes, the loop is complete and current (flow) circulates through the lamp, whose resistance (opposition) converts electrical energy into light and heat. Conventional current is drawn leaving the positive terminal."
+    },
+    {
+      "type": "table",
+      "caption": "Metric prefixes you must convert fluently",
+      "columns": [
+        "Prefix",
+        "Symbol",
+        "Multiplier",
+        "Example"
+      ],
+      "rows": [
+        [
+          "mega",
+          "M",
+          "× 1,000,000",
+          "2.5 MΩ insulation resistance = 2,500,000 Ω"
+        ],
+        [
+          "kilo",
+          "k",
+          "× 1,000",
+          "4.7 kΩ = 4,700 Ω; 12.47 kV = 12,470 V"
+        ],
+        [
+          "(none)",
+          "",
+          "× 1",
+          "120 V, 15 A, 10 Ω"
+        ],
+        [
+          "milli",
+          "m",
+          "× 0.001",
+          "500 mA = 0.5 A; 5 mA GFCI trip = 0.005 A"
+        ],
+        [
+          "micro",
+          "µ",
+          "× 0.000001",
+          "250 µA = 0.00025 A; 47 µF capacitor"
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "A control circuit draws 250 mA. A motor starter coil is rated at 0.35 A. Express both in the same unit and state which draws more current. Then find how much charge the 250 mA load moves in 2 minutes.",
+      "solutionSteps": [
+        "Convert milliamps to amps: 250 mA × 0.001 = 0.25 A.",
+        "Compare: 0.35 A (starter coil) is larger than 0.25 A (control load).",
+        "Charge moved: Q = I × t. Time must be in seconds: 2 min × 60 = 120 s.",
+        "Q = 0.25 A × 120 s = 30 C."
+      ],
+      "answer": "The starter coil draws more (0.35 A vs 0.25 A). The 250 mA load moves 30 coulombs in 2 minutes."
+    },
+    {
+      "type": "text",
+      "heading": "Meters: how each one connects",
+      "markdown": "A digital multimeter (DMM) and a clamp meter are the two instruments you will use most. Each function has one correct way to connect, and connecting it the wrong way can destroy the meter or injure you.\n\n- **Voltmeter (V):** Connect **across** the two points of interest (in parallel). A voltmeter has very high internal resistance, so it draws almost no current and does not disturb the circuit. Select AC or DC volts to match the source. Always start on a range higher than you expect if the meter is not auto-ranging.\n- **Ammeter (A):** Connect **in series**: you open the circuit and insert the meter so all current passes through it. An ammeter has very low internal resistance. If you connect an ammeter across a source like a voltmeter, you create a short circuit through the meter. Most DMMs have a fused 10 A jack for this reason.\n- **Clamp meter:** Measures current by sensing the magnetic field around **one** conductor, no circuit opening needed. Clamp around a single hot or neutral; clamping a whole cord (hot and neutral together) reads zero because the fields cancel. Most clamps read AC only; DC clamps use a Hall-effect sensor.\n- **Ohmmeter (Ω):** The meter supplies its own small test current, so the component must be **de-energized and isolated** from the rest of the circuit. Measuring resistance on a live circuit can blow the meter and give a false reading; parallel paths in a connected circuit also give readings lower than the component's true value.\n- **Continuity:** An ohmmeter mode that beeps below a few ohms. Great for checking fuses, ringing out conductors and confirming a switch opens and closes. Same rule: power off.\n\nMeter leads have **category ratings** (CAT II, III, IV) that describe how much transient energy the meter can safely absorb. Use at least **CAT III** meters and leads at panels and feeders and **CAT IV** at the service entrance. Inspect leads for cracked insulation before every use."
+    },
+    {
+      "type": "diagram",
+      "title": "Voltmeter in parallel, ammeter in series",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 275\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"70\" y1=\"110\" x2=\"70\" y2=\"121\"/><line x1=\"56\" y1=\"121\" x2=\"84\" y2=\"121\"/><line x1=\"63\" y1=\"126\" x2=\"77\" y2=\"126\"/><line x1=\"56\" y1=\"132\" x2=\"84\" y2=\"132\"/><line x1=\"63\" y1=\"137\" x2=\"77\" y2=\"137\"/><line x1=\"70\" y1=\"137\" x2=\"70\" y2=\"150\"/><text x=\"90\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"90\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"70\" y1=\"110\" x2=\"70\" y2=\"60\"/><line x1=\"70\" y1=\"60\" x2=\"180\" y2=\"60\"/><circle cx=\"200\" cy=\"60\" r=\"14\" stroke=\"#f3c75b\"/><text x=\"200\" y=\"65\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\">A</text><line x1=\"220\" y1=\"60\" x2=\"340\" y2=\"60\"/><line x1=\"340\" y1=\"60\" x2=\"340\" y2=\"118\"/><circle cx=\"340\" cy=\"130\" r=\"12\"/><line x1=\"331.5148\" y1=\"121.51480000000001\" x2=\"348.4852\" y2=\"138.4852\"/><line x1=\"331.5148\" y1=\"138.4852\" x2=\"348.4852\" y2=\"121.51480000000001\"/><line x1=\"340\" y1=\"142\" x2=\"340\" y2=\"200\"/><line x1=\"340\" y1=\"200\" x2=\"70\" y2=\"200\"/><line x1=\"70\" y1=\"200\" x2=\"70\" y2=\"150\"/><circle cx=\"340\" cy=\"100\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"340\" cy=\"160\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><line x1=\"340\" y1=\"100\" x2=\"400\" y2=\"100\"/><line x1=\"400\" y1=\"100\" x2=\"400\" y2=\"116\"/><circle cx=\"400\" cy=\"130\" r=\"14\" stroke=\"#3ddc97\"/><text x=\"400\" y=\"135\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\">V</text><line x1=\"400\" y1=\"144\" x2=\"400\" y2=\"160\"/><line x1=\"400\" y1=\"160\" x2=\"340\" y2=\"160\"/><text x=\"200\" y=\"36\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">Ammeter: IN SERIES</text><text x=\"200\" y=\"92\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">(circuit opened, meter inserted in the path)</text><text x=\"372\" y=\"228\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">Voltmeter: IN PARALLEL</text><text x=\"372\" y=\"242\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">(across the two points)</text><text x=\"16\" y=\"266\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"11\">Ohmmeter: only on a de-energized, isolated part, never on a live circuit.</text></svg>",
+      "caption": "The ammeter is inserted into the path so the whole circuit current flows through it. The voltmeter is connected across the lamp and reads the voltage between those two points without changing the circuit."
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "Test before you touch, every time. Verify your voltage tester on a known live source, test the circuit, then verify the tester again on the known source (the live-dead-live check). A meter with a dead battery or an open fuse reads zero volts on an energized conductor. In California a registered electrician trainee may only work under the direct on-site supervision of a certified electrician; never open a panel or test live parts without that supervision. And remember that current, not voltage, is what injures: OSHA's shock chart puts the threshold of feeling at about 1 mA, loss of muscular control (the \"can't let go\" range) at roughly 6 to 30 mA, and possible ventricular fibrillation above about 50 to 150 mA. A GFCI trips at about 5 mA for exactly this reason. Respect every milliamp."
+    }
+  ],
+  "practice": [
+    {
+      "id": "electrical-basics-p1",
+      "type": "numeric",
+      "prompt": "A heater draws 1,500 mA. Express this current in amperes.",
+      "answer": 1.5,
+      "unit": "A",
+      "tolerance": 0.01,
+      "explanation": "Milli means one-thousandth: 1,500 mA × 0.001 = 1.5 A."
+    },
+    {
+      "id": "electrical-basics-p2",
+      "type": "numeric",
+      "prompt": "A steady current of 6 A flows for 10 seconds. How much charge passed through the conductor?",
+      "answer": 60,
+      "unit": "C",
+      "tolerance": 0.5,
+      "explanation": "Q = I × t = 6 A × 10 s = 60 coulombs."
+    },
+    {
+      "id": "electrical-basics-p3",
+      "type": "multiple_choice",
+      "prompt": "Which instrument must be connected in series with the load so that all of the circuit current passes through it?",
+      "choices": [
+        "Voltmeter",
+        "Ammeter",
+        "Ohmmeter",
+        "Megohmmeter"
+      ],
+      "correctIndex": 1,
+      "explanation": "An ammeter measures current, which is a flow, so the flow must pass through the meter. Voltmeters go across (parallel); ohmmeters are used only on de-energized parts."
+    },
+    {
+      "id": "electrical-basics-p4",
+      "type": "numeric",
+      "prompt": "A resistor is marked 4.7 kΩ. What is its resistance in ohms?",
+      "answer": 4700,
+      "unit": "Ω",
+      "tolerance": 1,
+      "explanation": "Kilo means one thousand: 4.7 × 1,000 = 4,700 Ω."
+    },
+    {
+      "id": "electrical-basics-p5",
+      "type": "multiple_choice",
+      "prompt": "Four copper conductors are compared. Which one has the LOWEST resistance?",
+      "choices": [
+        "Long and thin",
+        "Long and thick",
+        "Short and thin",
+        "Short and thick"
+      ],
+      "correctIndex": 3,
+      "explanation": "Resistance rises with length and falls with cross-sectional area, so the shortest, thickest conductor has the least resistance."
+    },
+    {
+      "id": "electrical-basics-p6",
+      "type": "numeric",
+      "prompt": "A current of 0.025 A is measured in a control circuit. Express it in milliamps.",
+      "answer": 25,
+      "unit": "mA",
+      "tolerance": 0.1,
+      "explanation": "0.025 A × 1,000 = 25 mA."
+    },
+    {
+      "id": "electrical-basics-p7",
+      "type": "multiple_choice",
+      "prompt": "A switch in a 120 V circuit is open. A voltmeter is connected across the open switch contacts. What does it read?",
+      "choices": [
+        "0 V, because no current is flowing",
+        "About 120 V, because the full source voltage appears across the open",
+        "60 V, half the source voltage",
+        "It cannot be measured safely"
+      ],
+      "correctIndex": 1,
+      "explanation": "Voltage exists between two points whether or not current flows. With the rest of the loop intact, the open switch is the only break, so the whole source voltage appears across it. This is also why open contacts are still dangerous."
+    }
+  ],
+  "quiz": {
+    "key": "electrical-basics-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "electrical-basics-q1",
+        "type": "multiple_choice",
+        "prompt": "The unit of electrical resistance is the:",
+        "choices": [
+          "volt",
+          "ampere",
+          "ohm",
+          "coulomb"
+        ],
+        "correctIndex": 2,
+        "explanation": "Resistance is measured in ohms (Ω). Volts measure potential difference, amperes measure current and coulombs measure charge."
+      },
+      {
+        "id": "electrical-basics-q2",
+        "type": "numeric",
+        "prompt": "A utility distribution line operates at 12.47 kV. Express this in volts.",
+        "answer": 12470,
+        "unit": "V",
+        "tolerance": 1,
+        "explanation": "12.47 × 1,000 = 12,470 V."
+      },
+      {
+        "id": "electrical-basics-q3",
+        "type": "multiple_choice",
+        "prompt": "Which of the following is a good electrical insulator?",
+        "choices": [
+          "Copper",
+          "Aluminum",
+          "PVC",
+          "Silver"
+        ],
+        "correctIndex": 2,
+        "explanation": "PVC (polyvinyl chloride) holds its electrons tightly and is widely used for wire insulation and conduit. The other three are metals and excellent conductors."
+      },
+      {
+        "id": "electrical-basics-q4",
+        "type": "multiple_choice",
+        "prompt": "Before measuring the resistance of a motor winding with an ohmmeter you must:",
+        "choices": [
+          "Set the meter to AC volts first",
+          "De-energize the circuit, verify it is dead and isolate the winding",
+          "Connect the meter in series with the winding while running",
+          "Increase the supply voltage so the reading is accurate"
+        ],
+        "correctIndex": 1,
+        "explanation": "An ohmmeter uses its own small test current. Any external voltage can damage the meter and produces a meaningless reading, and parallel paths in a connected circuit distort the result."
+      },
+      {
+        "id": "electrical-basics-q5",
+        "type": "numeric",
+        "prompt": "12 coulombs of charge pass a point in 4 seconds. What is the current?",
+        "answer": 3,
+        "unit": "A",
+        "tolerance": 0.05,
+        "explanation": "I = Q ÷ t = 12 C ÷ 4 s = 3 A."
+      },
+      {
+        "id": "electrical-basics-q6",
+        "type": "multiple_choice",
+        "prompt": "If the length of a copper conductor is doubled and nothing else changes, its resistance:",
+        "choices": [
+          "stays the same",
+          "is cut in half",
+          "doubles",
+          "quadruples"
+        ],
+        "correctIndex": 2,
+        "explanation": "Resistance is directly proportional to length. Twice the length means twice the resistance, which is why long runs cause voltage drop."
+      },
+      {
+        "id": "electrical-basics-q7",
+        "type": "multiple_choice",
+        "prompt": "A voltmeter is connected:",
+        "choices": [
+          "in series with the load",
+          "across (in parallel with) the two points being measured",
+          "only to the grounding conductor",
+          "in series with the breaker"
+        ],
+        "correctIndex": 1,
+        "explanation": "Voltage is a difference between two points, so the meter is placed across those points. Its high internal resistance means it barely affects the circuit."
+      },
+      {
+        "id": "electrical-basics-q8",
+        "type": "numeric",
+        "prompt": "A load draws 0.75 A. Express this in milliamps.",
+        "answer": 750,
+        "unit": "mA",
+        "tolerance": 1,
+        "explanation": "0.75 A × 1,000 = 750 mA."
+      },
+      {
+        "id": "electrical-basics-q9",
+        "type": "multiple_choice",
+        "prompt": "You clamp an AC clamp meter around an entire two-conductor appliance cord (hot and neutral together). The appliance is running. The meter reads:",
+        "choices": [
+          "the full appliance current",
+          "twice the appliance current",
+          "approximately zero",
+          "the voltage of the cord"
+        ],
+        "correctIndex": 2,
+        "explanation": "The hot and neutral carry equal currents in opposite directions, so their magnetic fields cancel. Clamp around one conductor only."
+      },
+      {
+        "id": "electrical-basics-q10",
+        "type": "multiple_choice",
+        "prompt": "As a copper conductor heats up, its resistance:",
+        "choices": [
+          "increases",
+          "decreases",
+          "stays exactly the same",
+          "drops to zero"
+        ],
+        "correctIndex": 0,
+        "explanation": "Metals have a positive temperature coefficient: resistance rises with temperature. This is one reason ampacity tables are organized by temperature rating."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "OSHA Publication 3075, Controlling Electrical Hazards (effects of electric current on the body)",
+      "url": "https://www.osha.gov/sites/default/files/publications/osha3075.pdf"
+    },
+    {
+      "title": "NFPA 70, National Electrical Code: Article 100 (definitions), 310.16 (ampacity), Chapter 9 Table 8 (conductor properties), cited by section number only",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California DIR, Electrician Certification Unit: electrician trainee requirements and supervision",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrainee.htm"
+    },
+    {
+      "title": "NIST SI units reference (ampere, volt, ohm, coulomb)",
+      "url": "https://www.nist.gov/pml/owm/metric-si/si-units"
+    },
+    {
+      "title": "Fluke, Understanding multimeter CAT ratings (IEC 61010 measurement categories)",
+      "url": "https://www.fluke.com/en-us/learn/blog/safety/abcs-of-multimeter-safety"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

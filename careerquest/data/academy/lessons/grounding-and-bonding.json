@@ -1,0 +1,357 @@
+{
+  "key": "grounding-and-bonding",
+  "track": "SAFETY",
+  "order": 2,
+  "title": "Grounding and Bonding",
+  "summary": "Why grounding and bonding are two different jobs, how the grounding electrode system, equipment grounding conductors and bonding jumpers work together to clear faults, why the neutral is bonded to ground only at the service, and how a GFCI detects a leak.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "electrical-safety-fundamentals"
+  ],
+  "objectives": [
+    "Students will be able to distinguish grounding (connection to earth) from bonding (connecting metal parts together) and state the purpose of each.",
+    "Students will be able to name the electrodes that make up a grounding electrode system and size a grounding electrode conductor from the service conductor size.",
+    "Students will be able to trace an effective ground-fault current path and explain, with numbers, why the earth cannot replace an equipment grounding conductor.",
+    "Students will be able to size an equipment grounding conductor from the circuit's overcurrent device rating.",
+    "Students will be able to explain why the neutral-to-ground bond is made only at the service disconnect and what goes wrong when it is duplicated in a subpanel.",
+    "Students will be able to describe how a Class A GFCI senses a ground fault and what it does and does not protect against."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Two different jobs with two different names",
+      "markdown": "Electricians say \"ground\" for everything green, but NEC Article 100 defines two separate ideas, and mixing them up leads to installations that look fine and kill people.\n\n**Grounding** means connecting a system or equipment to the **earth**. The reasons, listed in NEC 250.4(A)(1) and (2), are to limit the voltage imposed by lightning, utility line surges and accidental contact with higher-voltage lines, and to stabilize the voltage to earth during normal operation. Grounding is about the earth.\n\n**Bonding** means connecting metal parts **together** so they are electrically continuous and can carry any current likely to be imposed on them. Bonding puts every metal enclosure, raceway, box and equipment frame at the same potential and, through the main bonding jumper, ties them back to the source. Bonding is about the fault current path.\n\nHere is the key point: NEC 250.4(A)(5) says the **earth shall not be considered an effective ground-fault current path**. Dirt is a terrible conductor. The thing that trips a breaker when a hot wire touches a metal box is not the ground rod; it is the low-impedance metal path (the **equipment grounding conductor**, EGC) that runs from that box all the way back to the neutral at the service. The ground rod handles lightning and surges; the EGC and bonding jumpers handle faults.\n\nThree conductors you must keep straight:\n\n- **Grounded conductor** (the neutral, white or gray): a normally current-carrying conductor that is intentionally connected to earth at the service.\n- **Equipment grounding conductor** (EGC, green, green/yellow or bare): carries current only during a fault; connects metal parts to the system grounded conductor at the service.\n- **Grounding electrode conductor** (GEC): connects the service neutral and enclosure to the grounding electrode system (rods, rebar, water pipe)."
+    },
+    {
+      "type": "diagram",
+      "title": "Effective ground-fault current path versus the earth",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 250\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M40 70 q8 -10 16 0 t16 0 t16 0\"/>\n<path d=\"M40 70 V150\"/>\n<path d=\"M88 70 H300\"/>\n<rect x=\"300\" y=\"55\" width=\"110\" height=\"110\" rx=\"6\"/>\n<path d=\"M300 70 H340\"/>\n<path d=\"M340 70 V95 l-8 6 h16 l-8 6 V128\"/>\n<path d=\"M40 150 H210 V190 H300 V165\"/>\n<path d=\"M40 150 V210\"/>\n<path d=\"M28 210 H52 M32 216 H48 M36 222 H44\"/>\n<path d=\"M120 150 V210\"/>\n<path d=\"M108 210 H132 M112 216 H128 M116 222 H124\"/>\n</g>\n<path d=\"M340 95 L380 85 L364 108 L392 112\" fill=\"none\" stroke=\"#ff6b6b\" stroke-width=\"2.5\"/>\n<g fill=\"none\" stroke=\"#3ddc97\" stroke-width=\"3\" stroke-dasharray=\"7 4\">\n<path d=\"M410 110 V200 H60 V156\"/>\n</g>\n<g fill=\"none\" stroke=\"#9aa6b8\" stroke-width=\"2\" stroke-dasharray=\"3 3\">\n<path d=\"M410 110 H440 V232 H120 V222\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"14\" y=\"52\">transformer</text>\n<text x=\"14\" y=\"64\">(source)</text>\n<text x=\"150\" y=\"62\">hot (ungrounded)</text>\n<text x=\"150\" y=\"144\">neutral (grounded)</text>\n<text x=\"346\" y=\"48\">metal tool case</text>\n<text x=\"354\" y=\"138\" fill=\"#ff6b6b\">fault</text>\n<text x=\"190\" y=\"214\" fill=\"#3ddc97\">EGC path ~0.2 Ω → about 600 A → breaker trips</text>\n<text x=\"130\" y=\"246\" fill=\"#9aa6b8\">earth path 25 Ω + 25 Ω → under 3 A → breaker never trips</text>\n<text x=\"56\" y=\"236\">service</text>\n<text x=\"56\" y=\"248\">electrode</text>\n</g>\n</svg>",
+      "caption": "When the hot conductor faults to a metal tool case, the EGC (green) returns the current to the neutral at the source through a fraction of an ohm, so hundreds of amps flow and the breaker trips in a cycle or two. A path through the earth (gray) sees the resistance of two ground rods and only a few amps flow: the case stays energized at 120 V and the breaker never knows."
+    },
+    {
+      "type": "example",
+      "problem": "A 120 V, 20 A branch circuit feeds a metal-cased drill press. The hot conductor chafes and touches the case. Case A: the case is bonded by an EGC, and the complete loop (hot conductor, fault, EGC, bonding jumper, transformer winding) totals 0.2 Ω. Case B: someone replaced the EGC with a separate ground rod at the machine (25 Ω) and relies on the service rod (also 25 Ω). What current flows in each case, and does the 20 A breaker clear the fault?",
+      "solutionSteps": [
+        "Case A: I = 120 V ÷ 0.2 Ω = 600 A. A typical 20 A breaker's instantaneous magnetic trip operates at roughly 5 to 10 times its rating (100 to 200 A), so 600 A opens it in less than a cycle. The case is energized for a few milliseconds.",
+        "Case B: the earth path has 25 Ω at the machine rod plus 25 Ω at the service rod = 50 Ω. I = 120 V ÷ 50 Ω = 2.4 A.",
+        "2.4 A is far below the 20 A trip point. The breaker stays closed, the drill press case sits at close to 120 V indefinitely, and the next worker who touches it while standing on a damp floor becomes the better path.",
+        "Conclusion: an electrode at the equipment does not replace the EGC. NEC 250.4(A)(5) and 250.54 allow supplementary electrodes, but only in addition to the EGC."
+      ],
+      "answer": "Case A: about 600 A, breaker trips almost instantly. Case B: about 2.4 A, breaker never trips and the case stays energized."
+    },
+    {
+      "type": "text",
+      "heading": "The grounding electrode system",
+      "markdown": "NEC 250.50 requires that every electrode that is **present** at a building be bonded together into one grounding electrode system. You do not get to pick just one. The electrodes recognized in 250.52(A) are:\n\n- **Metal underground water pipe** in direct contact with earth for 10 ft or more. Because pipe can be replaced with plastic, it must always be supplemented by another electrode (250.53(D)(2)).\n- **Metal in-ground support structure** (building steel) that is in contact with earth for 10 ft or more, directly or through concrete.\n- **Concrete-encased electrode** (often called a \"Ufer\" ground): at least 20 ft of 1/2 in or larger rebar, or 20 ft of bare 4 AWG copper, near the bottom of a footing in contact with the earth. Any new building with a footing has this electrode and it must be used (250.50).\n- **Ground ring**: at least 20 ft of bare 2 AWG or larger copper buried at least 30 in deep.\n- **Rod and pipe electrodes**: 8 ft minimum length, at least 5/8 in diameter for a listed rod, driven so that 8 ft is in contact with soil. A single rod must measure 25 Ω or less to earth; if it does not, add a second electrode at least 6 ft away (250.53(A)). In practice almost everyone drives two rods and skips the test.\n- **Plate electrodes**: at least 2 square feet of surface, buried at least 30 in.\n\nThe **grounding electrode conductor** is sized from Table 250.66 by the size of the service-entrance conductors, with two exceptions that make life easier: where the GEC runs only to rod, pipe or plate electrodes it never needs to be larger than 6 AWG copper (250.66(A)), and where it runs only to a concrete-encased electrode it never needs to be larger than 4 AWG copper (250.66(B)). The GEC must be continuous or spliced only with irreversible compression connectors or exothermic welds (250.64(C)), and ferrous metal raceways enclosing it must be bonded at both ends (250.64(E)) so they do not choke the surge current.\n\nRemember what the electrode system is for: lightning, surges and stabilizing the system voltage to earth. It is **not** part of the fault-clearing path."
+    },
+    {
+      "type": "table",
+      "caption": "Grounding electrode conductor sizes for copper service conductors (summarized from NEC Table 250.66; always check the adopted edition)",
+      "columns": [
+        "Largest copper service-entrance conductor",
+        "Copper GEC",
+        "Aluminum GEC"
+      ],
+      "rows": [
+        [
+          "2 AWG or smaller",
+          "8 AWG",
+          "6 AWG"
+        ],
+        [
+          "1 AWG or 1/0 AWG",
+          "6 AWG",
+          "4 AWG"
+        ],
+        [
+          "2/0 or 3/0 AWG",
+          "4 AWG",
+          "2 AWG"
+        ],
+        [
+          "Over 3/0 AWG through 350 kcmil",
+          "2 AWG",
+          "1/0 AWG"
+        ],
+        [
+          "Over 350 through 600 kcmil",
+          "1/0 AWG",
+          "3/0 AWG"
+        ],
+        [
+          "Over 600 through 1100 kcmil",
+          "2/0 AWG",
+          "4/0 AWG"
+        ],
+        [
+          "Rod, pipe or plate electrode only (250.66(A))",
+          "6 AWG maximum required",
+          "4 AWG maximum required"
+        ],
+        [
+          "Concrete-encased electrode only (250.66(B))",
+          "4 AWG maximum required",
+          "n/a (copper is used)"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Equipment grounding conductors and bonding jumpers",
+      "markdown": "The EGC is the hero of the fault path. NEC 250.118 lists what may serve as one: a copper or aluminum wire (green, green with yellow stripe, or bare), rigid metal conduit, intermediate metal conduit, electrical metallic tubing, listed flexible metal conduit (limited to 6 ft and 20 A circuits unless the fittings are listed for grounding), the armor of Type AC cable, and the armor of MC cable only when the cable is listed and identified for that purpose. When a metal raceway is the EGC, every coupling, connector and locknut is part of the circuit, which is why loose set-screw connectors are a safety defect and not just sloppy work.\n\n**Sizing a wire-type EGC** uses Table 250.122 and is based on the rating of the overcurrent device ahead of the circuit, not on the conductor size:\n\n- 15 A: 14 AWG copper\n- 20 A: 12 AWG copper\n- 30, 40 or 60 A: 10 AWG copper\n- 100 A: 8 AWG copper\n- 200 A: 6 AWG copper\n- 300 A: 4 AWG copper; 400 A: 3 AWG copper; 500 A: 2 AWG copper; 600 A: 1 AWG copper\n\nIf the circuit conductors are increased in size for voltage drop, the EGC must be increased proportionally (250.122(B)).\n\n**Bonding jumpers** fill the gaps in the metal path:\n\n- The **main bonding jumper** (250.24(B), 250.28) connects the neutral bar to the service enclosure. It is usually a green screw or strap shipped with the panel.\n- The **system bonding jumper** does the same job at a separately derived system such as a transformer secondary or a generator with a switched neutral (250.30).\n- **Equipment bonding jumpers** bridge expansion fittings, reducing washers, and concentric or eccentric knockouts at services, where NEC 250.92 requires bonding bushings or jumpers because the punched rings cannot be trusted to carry fault current. Standard locknuts are acceptable on the load side of the service but not at the service itself.\n- The **intersystem bonding termination** (250.94) is the little terminal bar outside the service where the telephone, cable TV and satellite installers bond their systems.\n- **Metal water piping** that is likely to become energized must be bonded to the service with a jumper sized from Table 250.66 (250.104(A)). Gas piping and other metal piping systems are bonded by the circuit EGC that could energize them (250.104(B)); the gas utility and CSST manufacturers have additional bonding rules."
+    },
+    {
+      "type": "example",
+      "problem": "A 40 A, 240 V branch circuit for an air-conditioning condenser runs 90 ft in PVC conduit with 8 AWG THHN copper conductors. The designer later increases the conductors to 6 AWG because of voltage drop. What size copper EGC is required before and after the change?",
+      "solutionSteps": [
+        "Find the overcurrent device rating: 40 A. In Table 250.122, 40 A falls under the 60 A row, so the EGC is 10 AWG copper.",
+        "The ungrounded conductors were upsized from 8 AWG (16,510 circular mils) to 6 AWG (26,240 circular mils) for voltage drop.",
+        "NEC 250.122(B) requires the EGC to increase by at least the same ratio: 26,240 ÷ 16,510 = 1.59.",
+        "10 AWG is 10,380 circular mils; 10,380 × 1.59 = 16,500 circular mils minimum, which is an 8 AWG copper conductor (16,510 cmil).",
+        "Because PVC is nonmetallic, the wire EGC is the only fault path, so getting this right matters."
+      ],
+      "answer": "10 AWG copper EGC for the original 8 AWG circuit; 8 AWG copper EGC after upsizing to 6 AWG."
+    },
+    {
+      "type": "diagram",
+      "title": "Service panel versus subpanel: where the neutral-to-ground bond lives",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 260\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<rect x=\"30\" y=\"30\" width=\"170\" height=\"180\" rx=\"4\"/>\n<rect x=\"290\" y=\"30\" width=\"170\" height=\"180\" rx=\"4\"/>\n<rect x=\"60\" y=\"60\" width=\"40\" height=\"18\"/>\n<rect x=\"60\" y=\"120\" width=\"110\" height=\"14\" fill=\"#9aa6b8\" fill-opacity=\"0.3\"/>\n<rect x=\"320\" y=\"120\" width=\"110\" height=\"14\" fill=\"#9aa6b8\" fill-opacity=\"0.3\"/>\n<rect x=\"320\" y=\"170\" width=\"110\" height=\"14\" fill=\"#3ddc97\" fill-opacity=\"0.3\"/>\n<path d=\"M80 100 V120\"/>\n<path d=\"M10 70 H60 M10 66 H60\"/>\n<path d=\"M200 68 H290 M200 74 H290\"/>\n<path d=\"M200 127 H320\"/>\n<path d=\"M200 177 H320\" stroke=\"#3ddc97\"/>\n<path d=\"M115 134 V177 H200\" stroke=\"#3ddc97\"/>\n<path d=\"M115 177 V240\" stroke=\"#3ddc97\"/>\n<path d=\"M103 240 H127 M107 246 H123 M111 252 H119\" stroke=\"#3ddc97\"/>\n<path d=\"M430 177 V202\" stroke=\"#3ddc97\"/>\n<path d=\"M430 202 h18 M430 196 h18\" stroke=\"#3ddc97\"/>\n</g>\n<path d=\"M170 127 L190 127 L190 200\" fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"3\"/>\n<path d=\"M186 200 h8\" stroke=\"#f3c75b\" stroke-width=\"3\"/>\n<g fill=\"currentColor\">\n<text x=\"40\" y=\"24\">SERVICE PANEL</text>\n<text x=\"300\" y=\"24\">SUBPANEL</text>\n<text x=\"104\" y=\"74\">main</text>\n<text x=\"12\" y=\"60\">from meter</text>\n<text x=\"66\" y=\"131\">neutral bar</text>\n<text x=\"326\" y=\"131\">neutral bar (isolated)</text>\n<text x=\"326\" y=\"181\">ground bar (bonded)</text>\n<text x=\"216\" y=\"60\">L1, L2</text>\n<text x=\"216\" y=\"121\">neutral</text>\n<text x=\"216\" y=\"171\" fill=\"#3ddc97\">EGC</text>\n<text x=\"200\" y=\"222\" fill=\"#f3c75b\">MBJ: the ONLY</text>\n<text x=\"200\" y=\"234\" fill=\"#f3c75b\">N-G bond</text>\n<text x=\"40\" y=\"236\" fill=\"#3ddc97\">GEC</text>\n<text x=\"40\" y=\"248\" fill=\"#3ddc97\">to electrode</text>\n<text x=\"300\" y=\"226\" fill=\"#ff6b6b\">no bonding screw here</text>\n</g>\n</svg>",
+      "caption": "At the service the main bonding jumper (gold) ties the neutral bar to the enclosure, and the GEC runs to the electrode. The subpanel receives a four-wire feeder: its neutral bar floats on insulators and only the separate ground bar is bonded to the can. The green bonding screw stays in the parts bag."
+    },
+    {
+      "type": "text",
+      "heading": "Why the neutral and ground are bonded only once",
+      "markdown": "At the service disconnect (and at the source of a separately derived system) the neutral is bonded to the enclosure and to the grounding electrode. Everywhere downstream, NEC 250.24(A)(5) and 250.142(B) prohibit connecting the neutral to the EGC or to any enclosure. Why does one bond make the system safe while a second one makes it dangerous?\n\n**With a single bond**, normal load current has exactly one path back to the transformer: the neutral. The EGC and all the metal it is attached to carry zero current and sit at earth potential. During a fault the EGC provides the low-impedance path back to that single bond point and the breaker trips.\n\n**With a second bond in a subpanel**, the neutral and the EGC are connected at both ends, so they are in parallel. Normal load current now splits between the neutral wire and the EGC, the conduit, the water pipe, the building steel and anything else that is bonded. That is the **objectionable current** NEC 250.6 is talking about. Consequences:\n\n- Metal enclosures, conduit and water pipes carry current continuously. If the feeder neutral ever opens (a corroded lug is enough), the EGC becomes the neutral and every bonded surface rises toward 120 V.\n- The parallel return current creates a net magnetic field around the feeder, which induces heating in metal raceways and causes nuisance tripping of GFCI and AFCI devices upstream.\n- Current on water piping corrodes it and can shock plumbers.\n\nThe practical rules that follow:\n\n- Feeders to subpanels are **four-wire**: two hots, a neutral and an EGC (three hots, neutral and EGC for three-phase).\n- In a subpanel, the neutral bar is isolated from the enclosure and the EGCs land on a separate ground bar bonded to the can.\n- A separate building fed by a feeder gets a four-wire feeder **and** its own grounding electrode system, but the neutral still stays isolated there (250.32(B)).\n- Three-wire ranges and dryers that used the neutral as a ground were allowed only in existing installations; new circuits use four-wire cords and receptacles (250.140).\n- A transformer secondary is a new system, so it gets its own system bonding jumper and grounding electrode conductor (250.30)."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Most common field mistakes: (1) leaving the green bonding screw installed in a subpanel; (2) landing EGCs and neutrals on the same bar in a subpanel because the panel shipped with only one bar; (3) using a standard locknut instead of a bonding bushing on a concentric knockout at the service; (4) running a three-wire feeder to a detached garage and \"grounding\" it with a rod; (5) counting on a ground rod to trip a breaker. Each one leaves metal energized while the breaker stays on."
+    },
+    {
+      "type": "diagram",
+      "title": "How a GFCI senses a ground fault",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 230\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M20 70 H120\"/>\n<path d=\"M20 150 H120\"/>\n<path d=\"M120 70 l14 -12 M136 70 H200\"/>\n<path d=\"M120 150 l14 -12 M136 150 H200\"/>\n<path d=\"M200 70 H330\"/>\n<path d=\"M200 150 H330\"/>\n<circle cx=\"230\" cy=\"110\" r=\"42\" stroke=\"#4cc9ff\" stroke-width=\"6\"/>\n<path d=\"M272 110 h30 v-20 h-6 l12 -6 l-12 -6 h6\" stroke=\"#4cc9ff\"/>\n<rect x=\"296\" y=\"96\" width=\"30\" height=\"28\" stroke=\"#4cc9ff\"/>\n<path d=\"M311 96 V40 H127\" stroke=\"#4cc9ff\" stroke-dasharray=\"4 3\"/>\n<path d=\"M127 40 V58 M127 162 V180 M311 124 V180 H127\" stroke=\"#4cc9ff\" stroke-dasharray=\"4 3\"/>\n<rect x=\"330\" y=\"60\" width=\"40\" height=\"100\" rx=\"4\"/>\n<path d=\"M330 70 H340 M330 150 H340\"/>\n<path d=\"M350 80 l-6 8 h12 l-6 8 l-6 8 h12 l-6 8 V140\"/>\n</g>\n<path d=\"M370 110 L420 110 V200 H410\" fill=\"none\" stroke=\"#ff6b6b\" stroke-width=\"2\" stroke-dasharray=\"5 3\"/>\n<path d=\"M398 200 H422 M402 206 H418 M406 212 H414\" stroke=\"#ff6b6b\" stroke-width=\"2\"/>\n<g fill=\"currentColor\">\n<text x=\"20\" y=\"62\">hot</text>\n<text x=\"20\" y=\"142\">neutral</text>\n<text x=\"124\" y=\"32\" fill=\"#4cc9ff\">trip solenoid opens both contacts</text>\n<text x=\"196\" y=\"118\" fill=\"#4cc9ff\">CT</text>\n<text x=\"298\" y=\"90\" fill=\"#4cc9ff\">sense</text>\n<text x=\"332\" y=\"52\">load</text>\n<text x=\"300\" y=\"224\" fill=\"#ff6b6b\">leak to ground</text>\n<text x=\"20\" y=\"206\">Normal: current in = current out, fields cancel, CT output = 0</text>\n<text x=\"20\" y=\"222\">Fault: 5 mA leaks to ground, CT sees the difference, trip</text>\n</g>\n</svg>",
+      "caption": "Both the hot and the neutral pass through a current transformer (the blue ring). Normally the two currents are equal and opposite, their magnetic fields cancel, and the sense winding sees nothing. If 5 mA leaks to ground through a person or a wet appliance, the currents no longer match, the sense circuit detects the difference and the solenoid opens both contacts."
+    },
+    {
+      "type": "text",
+      "heading": "GFCI protection: what it does and does not do",
+      "markdown": "A **Class A ground-fault circuit interrupter** (UL 943) trips when the current leaving on the hot differs from the current returning on the neutral by more than about 4 to 6 mA. It does not measure current to ground; it measures the **imbalance**. That means a GFCI works even on a two-wire circuit with no EGC at all, which is why NEC 406.4(D)(2) allows a GFCI receptacle to replace an ungrounded two-prong receptacle (marked \"No Equipment Ground\").\n\nThe trip point is chosen because 5 mA is below the let-go threshold: a shock may still be felt, but the muscles do not lock and the heart is not driven into fibrillation. Trip time depends on the fault current; at small faults near 6 mA the device may take a few seconds, while at 30 mA or more it opens in well under a second.\n\nWhat a GFCI does **not** do:\n\n- It does not protect against hand-to-hand contact between hot and neutral, because that current flows through the device normally and returns on the neutral. The imbalance is zero.\n- It does not protect against overload or short circuit. That is the breaker's job.\n- A **GFPE** (ground-fault protection of equipment) device, such as a 30 mA breaker on a heat-trace circuit, protects wiring and equipment, not people.\n- An **AFCI** is a different device that looks for the signature of arcing to prevent fires, covered in the residential circuit layout lesson.\n\nGFCI devices must be tested monthly with the built-in button, and a receptacle that will not reset has done its job: replace it. NEC 210.8 lists the dwelling and commercial locations that require GFCI protection; the list grows with every edition.\n\n**Field tip for a mystery GFCI trip:** unplug everything, reset, then plug loads back in one at a time. A load that trips it immediately usually has a leak (wet cord cap, failed heating element). If the GFCI trips with nothing plugged in, look for a shared neutral with another circuit or a neutral touching a box downstream: both put current on a path the GFCI does not see returning."
+    }
+  ],
+  "practice": [
+    {
+      "id": "grounding-and-bonding-p1",
+      "type": "numeric",
+      "prompt": "A hot conductor faults to a motor frame. The complete fault loop through the EGC and bonding jumper measures 0.15 Ω on a 120 V circuit. What fault current flows, in amperes?",
+      "answer": 800,
+      "unit": "A",
+      "tolerance": 5,
+      "explanation": "I = 120 ÷ 0.15 = 800 A. The low-impedance EGC path is what produces enough current to open the breaker instantly."
+    },
+    {
+      "id": "grounding-and-bonding-p2",
+      "type": "numeric",
+      "prompt": "The same fault, but the only return path is through two 25 Ω ground rods in series (50 Ω total). What current flows, in amperes?",
+      "answer": 2.4,
+      "unit": "A",
+      "tolerance": 0.05,
+      "explanation": "I = 120 ÷ 50 = 2.4 A. Far below any breaker's trip point, so the frame stays energized. This is why NEC 250.4(A)(5) says the earth is not an effective fault current path."
+    },
+    {
+      "id": "grounding-and-bonding-p3",
+      "type": "multiple_choice",
+      "prompt": "A 200 A residential service uses 2/0 AWG copper service-entrance conductors. The grounding electrode system is building rebar (concrete-encased electrode) plus a metal water pipe. What is the minimum copper GEC to the concrete-encased electrode?",
+      "choices": [
+        "8 AWG",
+        "6 AWG",
+        "4 AWG",
+        "2 AWG"
+      ],
+      "correctIndex": 2,
+      "explanation": "Table 250.66 gives 4 AWG copper for 2/0 service conductors, and 250.66(B) says the GEC to a concrete-encased electrode never needs to exceed 4 AWG. Both rules land on 4 AWG."
+    },
+    {
+      "id": "grounding-and-bonding-p4",
+      "type": "multiple_choice",
+      "prompt": "What size copper equipment grounding conductor is required for a branch circuit protected by a 30 A breaker?",
+      "choices": [
+        "14 AWG",
+        "12 AWG",
+        "10 AWG",
+        "8 AWG"
+      ],
+      "correctIndex": 2,
+      "explanation": "Table 250.122 groups 30 A circuits under the 60 A row: 10 AWG copper."
+    },
+    {
+      "id": "grounding-and-bonding-p5",
+      "type": "multiple_choice",
+      "prompt": "In a subpanel fed by a four-wire feeder, how should the neutral and equipment grounding conductors be terminated?",
+      "choices": [
+        "Neutrals and EGCs share one bar that is bonded to the enclosure, just like the service panel",
+        "Neutrals on an isolated neutral bar; EGCs on a separate ground bar bonded to the enclosure; no bonding screw",
+        "Neutrals on an isolated bar; EGCs cut off, since the conduit grounds the panel",
+        "Neutrals bonded to the enclosure with the green screw; EGCs on an isolated bar"
+      ],
+      "correctIndex": 1,
+      "explanation": "The neutral-to-ground bond exists only at the service (250.24(A)(5), 250.142(B)). A second bond puts load current on the EGC and all bonded metal."
+    },
+    {
+      "id": "grounding-and-bonding-p6",
+      "type": "multiple_choice",
+      "prompt": "A Class A GFCI trips when:",
+      "choices": [
+        "The current on the hot conductor exceeds the breaker rating",
+        "The current leaving on the hot differs from the current returning on the neutral by roughly 4 to 6 mA",
+        "The voltage between hot and neutral drops below 110 V",
+        "Current is detected on the equipment grounding conductor of 20 A or more"
+      ],
+      "correctIndex": 1,
+      "explanation": "The GFCI compares hot and neutral current through a current transformer. An imbalance means current is leaking somewhere else, probably through a person."
+    }
+  ],
+  "quiz": {
+    "key": "grounding-and-bonding-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "grounding-and-bonding-q1",
+        "type": "multiple_choice",
+        "prompt": "Which statement best describes the difference between grounding and bonding?",
+        "choices": [
+          "Grounding uses green wire; bonding uses bare wire",
+          "Grounding connects the system or equipment to the earth; bonding connects metal parts together to create a continuous low-impedance path",
+          "Grounding is required only on commercial jobs; bonding only on residential jobs",
+          "They are two words for the same connection"
+        ],
+        "correctIndex": 1,
+        "explanation": "Grounding (to earth) handles surges, lightning and voltage stabilization. Bonding (metal to metal, back to the source) provides the fault current path that trips the breaker."
+      },
+      {
+        "id": "grounding-and-bonding-q2",
+        "type": "multiple_choice",
+        "prompt": "According to NEC 250.4(A)(5), which of the following may NOT be used as the effective ground-fault current path?",
+        "choices": [
+          "Rigid metal conduit",
+          "A copper equipment grounding conductor",
+          "The earth",
+          "Electrical metallic tubing with listed fittings"
+        ],
+        "correctIndex": 2,
+        "explanation": "The earth's resistance is far too high to carry enough current to open an overcurrent device. Metal raceways and wire EGCs listed in 250.118 are acceptable."
+      },
+      {
+        "id": "grounding-and-bonding-q3",
+        "type": "numeric",
+        "prompt": "A single ground rod must have a resistance to earth of no more than how many ohms, or a second electrode must be added?",
+        "answer": 25,
+        "unit": "Ω",
+        "tolerance": 0.1,
+        "explanation": "NEC 250.53(A)(2) sets 25 Ω; above that, a supplemental electrode is required at least 6 ft away."
+      },
+      {
+        "id": "grounding-and-bonding-q4",
+        "type": "numeric",
+        "prompt": "A concrete-encased electrode must consist of at least how many feet of 1/2 in rebar or bare 4 AWG copper?",
+        "answer": 20,
+        "unit": "ft",
+        "tolerance": 0.1,
+        "explanation": "NEC 250.52(A)(3) requires at least 20 ft of electrically continuous rebar or bare copper conductor encased in at least 2 in of concrete in contact with the earth."
+      },
+      {
+        "id": "grounding-and-bonding-q5",
+        "type": "multiple_choice",
+        "prompt": "What size copper EGC is required for a feeder protected by a 100 A breaker?",
+        "choices": [
+          "10 AWG",
+          "8 AWG",
+          "6 AWG",
+          "4 AWG"
+        ],
+        "correctIndex": 1,
+        "explanation": "Table 250.122: 100 A requires 8 AWG copper (6 AWG aluminum)."
+      },
+      {
+        "id": "grounding-and-bonding-q6",
+        "type": "multiple_choice",
+        "prompt": "A homeowner's detached workshop is fed by a three-wire feeder (two hots and a neutral) with the neutral bonded to the subpanel enclosure and a ground rod at the workshop. Which hazard does this create?",
+        "choices": [
+          "None; this was the standard method and is still permitted for new work",
+          "Normal load current flows on the enclosure, conduit and any bonded metal, and if the feeder neutral opens, every metal surface in the workshop rises toward line voltage",
+          "The ground rod will overheat because it carries all the neutral current",
+          "The breaker in the house will trip constantly from the extra load"
+        ],
+        "correctIndex": 1,
+        "explanation": "A downstream neutral-to-ground bond parallels the neutral with the EGC and all bonded metal. Since 2008 the NEC (250.32) requires a four-wire feeder with the neutral isolated at the separate building."
+      },
+      {
+        "id": "grounding-and-bonding-q7",
+        "type": "multiple_choice",
+        "prompt": "At a service, a 2 in conduit enters the enclosure through a concentric knockout. What does NEC 250.92 require?",
+        "choices": [
+          "A standard locknut inside and outside is sufficient",
+          "A bonding bushing or bonding jumper, because the punched rings cannot be relied on to carry fault current",
+          "Nothing special, since the GEC handles all fault current",
+          "The conduit must be PVC to avoid the problem"
+        ],
+        "correctIndex": 1,
+        "explanation": "Service bonding must be done with bonding bushings, bonding locknuts or jumpers around concentric and eccentric knockouts because the rings may have paint or poor contact."
+      },
+      {
+        "id": "grounding-and-bonding-q8",
+        "type": "multiple_choice",
+        "prompt": "Which hazard is a GFCI unable to protect against?",
+        "choices": [
+          "A worker holding a drill with a damaged cord that leaks current to the metal case while standing on a wet floor",
+          "A hair dryer dropped into a sink",
+          "A person touching the hot conductor with one hand and the neutral with the other while insulated from ground",
+          "A leak of 8 mA to ground through a damp extension cord"
+        ],
+        "correctIndex": 2,
+        "explanation": "Hand-to-hand contact between hot and neutral looks exactly like a normal load to the GFCI: current leaves on the hot and returns on the neutral, so there is no imbalance."
+      },
+      {
+        "id": "grounding-and-bonding-q9",
+        "type": "multiple_choice",
+        "prompt": "Why may a GFCI receptacle replace a two-prong receptacle on a circuit with no equipment grounding conductor?",
+        "choices": [
+          "Because the GFCI creates its own ground through the neutral",
+          "Because the GFCI detects the imbalance between hot and neutral current and does not need an EGC to operate",
+          "Because two-prong receptacles are no longer manufactured",
+          "It may not; the circuit must be rewired first"
+        ],
+        "correctIndex": 1,
+        "explanation": "NEC 406.4(D)(2) permits it, with a 'No Equipment Ground' label, because GFCI sensing works on the current imbalance alone."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code, Article 250 Grounding and Bonding (sections 250.4, 250.24, 250.28, 250.30, 250.32, 250.50 through 250.66, 250.92 through 250.122, 250.142; cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Electrical Code, Title 24 Part 3 (adopts NFPA 70 with California amendments)",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "OSHA 29 CFR 1926.404(b)(1), Ground-fault protection on construction sites",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.404"
+    },
+    {
+      "title": "OSHA 29 CFR 1910.304(g), Grounding (general industry)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.304"
+    },
+    {
+      "title": "UL 943, Standard for Ground-Fault Circuit-Interrupters (Class A trip characteristics; by number only)",
+      "url": "https://www.shopulstandards.com/ProductDetail.aspx?productId=UL943"
+    },
+    {
+      "title": "NIOSH Publication 2009-113, Electrical Safety: Safety and Health for Electrical Trades Student Manual (grounding chapter)",
+      "url": "https://www.cdc.gov/niosh/docs/2009-113/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

@@ -1,0 +1,90 @@
+{
+  "key": "series-basics",
+  "title": "Series Basics: One Path, One Current",
+  "description": "Three resistors in a single loop across a 12 V source. Find the total resistance, the one circuit current, the drop across each resistor and the total power, then confirm that the drops add up to the source (KVL).",
+  "difficulty": 1,
+  "estimatedMinutes": 10,
+  "relatedLessons": [
+    "ohms-law",
+    "series-circuits"
+  ],
+  "circuit": {
+    "sourceVolts": 12,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 100
+        },
+        {
+          "type": "resistor",
+          "id": "R2",
+          "ohms": 200
+        },
+        {
+          "type": "resistor",
+          "id": "R3",
+          "ohms": 300
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "series-basics-t1",
+      "question": "What is the total resistance of the circuit?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-basics-t2",
+      "question": "What current does the 12 V source deliver?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-basics-t3",
+      "question": "What is the voltage across R2 (200 Ω)?",
+      "quantity": "V_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-basics-t4",
+      "question": "What is the voltage across R3 (300 Ω)?",
+      "quantity": "V_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-basics-t5",
+      "question": "What is the current through R1? (Think before you calculate.)",
+      "quantity": "I_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "series-basics-t6",
+      "question": "What total power does the source supply?",
+      "quantity": "P_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    }
+  ],
+  "hints": [
+    "Series resistances add: R_total = R1 + R2 + R3.",
+    "There is only one path, so the current through every resistor equals the source current, I = V_source ÷ R_total.",
+    "Each drop is I × R for that resistor. The largest resistor drops the most voltage. The three drops must add to 12 V.",
+    "Total power is V_source × I_total. You can also add the three I² × R values and get the same number."
+  ],
+  "learningGoals": [
+    "Apply the series resistance rule and Ohm's law together.",
+    "Recognize that current is identical in every element of a series circuit.",
+    "Verify a solution with Kirchhoff's voltage law."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

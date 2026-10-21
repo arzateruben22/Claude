@@ -1,0 +1,140 @@
+:root {
+  --bg: #0b0e14;
+  --surface: #121722;
+  --surface-2: #1a2130;
+  --border: #243043;
+  --text: #e6edf7;
+  --muted: #8b98ad;
+  --blue: #4cc9ff;
+  --blue-ink: #06202c;
+  --gold: #f3c75b;
+  --green: #35d07f;
+  --red: #ff6b6b;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  display: grid;
+  gap: 16px;
+}
+.header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+h1 {
+  margin: 0;
+  font-size: 20px;
+}
+h2 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+p {
+  margin: 0 0 8px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.field {
+  display: grid;
+  gap: 4px;
+}
+label {
+  font-weight: 600;
+}
+input {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+input:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+  background: var(--surface-2);
+}
+.btn--primary {
+  background: var(--blue);
+  color: var(--blue-ink);
+}
+.btn--ghost {
+  border-color: var(--border);
+  background: transparent;
+}
+.btn--danger {
+  border-color: rgba(255, 107, 107, 0.5);
+  color: var(--red);
+  background: transparent;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.message,
+.state {
+  margin: 0;
+  min-height: 1.3em;
+}
+.message--ok,
+.state--ok {
+  color: var(--green);
+}
+.message--error,
+.state--bad {
+  color: var(--red);
+}
+.message--warn,
+.state--warn {
+  color: var(--gold);
+}
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: 12px;
+}

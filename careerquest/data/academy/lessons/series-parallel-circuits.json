@@ -1,0 +1,340 @@
+{
+  "key": "series-parallel-circuits",
+  "track": "FUNDAMENTALS",
+  "order": 5,
+  "title": "Series-Parallel Circuits",
+  "summary": "Real circuits mix both connections: a feeder in series with a bank of parallel loads. Learn the reduce-and-redraw method, work two complete combination circuits, and see how line resistance turns a simple divider into a voltage-drop problem.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "series-circuits",
+    "parallel-circuits"
+  ],
+  "objectives": [
+    "Students will be able to identify which elements of a combination circuit are in series and which are in parallel.",
+    "Students will be able to reduce a series-parallel circuit to a single equivalent resistance and solve for the total current.",
+    "Students will be able to expand the solution back out to find the voltage across and current through every element, and verify with KVL and KCL.",
+    "Students will be able to calculate the voltage delivered to parallel loads at the end of a run with known conductor resistance."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Why combination circuits matter",
+      "markdown": "Almost nothing in the field is purely series or purely parallel. A branch circuit is a set of parallel loads fed through conductors that are in series with the group. A control panel has series safety contacts feeding parallel pilot lights and coils. A long feeder supplies a subpanel full of parallel branch circuits.\n\nSolving these is not a new skill; it is the series and parallel rules applied in the right order. The method is always the same:\n\n1. **Identify** the series parts and the parallel groups. Ask of any two elements: \"Does all the current that leaves one have to enter the other?\" If yes, they are in series. \"Are both ends of one connected to both ends of the other?\" If yes, they are in parallel.\n2. **Reduce** each parallel group to one equivalent resistor, then add the series resistors, repeating until one resistor remains. Redraw the circuit after each step.\n3. **Solve** the single-resistor circuit for total current with Ohm's law.\n4. **Expand** back out, one step at a time, applying \"same current\" to series elements and \"same voltage\" to parallel groups, until every element has its own V and I.\n5. **Check** with KVL (drops around a loop sum to the source) and KCL (branch currents sum to the total).\n\nThe most common error is skipping the redraw. Draw every step; it takes thirty seconds and prevents most mistakes."
+    },
+    {
+      "type": "diagram",
+      "title": "R1 in series with a parallel pair",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"60\" y1=\"110\" x2=\"60\" y2=\"121\"/><line x1=\"46\" y1=\"121\" x2=\"74\" y2=\"121\"/><line x1=\"53\" y1=\"126\" x2=\"67\" y2=\"126\"/><line x1=\"46\" y1=\"132\" x2=\"74\" y2=\"132\"/><line x1=\"53\" y1=\"137\" x2=\"67\" y2=\"137\"/><line x1=\"60\" y1=\"137\" x2=\"60\" y2=\"150\"/><text x=\"80\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"80\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"60\" y1=\"110\" x2=\"60\" y2=\"60\"/><line x1=\"60\" y1=\"60\" x2=\"110\" y2=\"60\"/><polyline points=\"110,60 120.5,60 124.6,52 132.8,68 140.9,52 149.1,68 157.3,52 165.4,68 169.5,60 180,60\"/><text x=\"145\" y=\"42\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">R1 = 100 Ω</text><line x1=\"180\" y1=\"60\" x2=\"400\" y2=\"60\"/><line x1=\"280\" y1=\"60\" x2=\"280\" y2=\"95\"/><polyline points=\"280,95 280,105.5 272,109.6 288,117.8 272,125.9 288,134.1 272,142.3 288,150.4 280,154.5 280,165\"/><line x1=\"280\" y1=\"165\" x2=\"280\" y2=\"200\"/><line x1=\"400\" y1=\"60\" x2=\"400\" y2=\"95\"/><polyline points=\"400,95 400,105.5 392,109.6 408,117.8 392,125.9 408,134.1 392,142.3 408,150.4 400,154.5 400,165\"/><line x1=\"400\" y1=\"165\" x2=\"400\" y2=\"200\"/><line x1=\"60\" y1=\"200\" x2=\"60\" y2=\"150\"/><line x1=\"60\" y1=\"200\" x2=\"400\" y2=\"200\"/><circle cx=\"280\" cy=\"60\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"280\" cy=\"200\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><text x=\"295\" y=\"124\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R2</text><text x=\"295\" y=\"140\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\">200 Ω</text><text x=\"415\" y=\"124\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R3</text><text x=\"415\" y=\"140\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\">200 Ω</text><text x=\"20\" y=\"100\" fill=\"currentColor\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">12 V</text><line x1=\"200\" y1=\"48\" x2=\"240.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"250,48 240.0,53.0 240.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"225\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I_T = 0.06 A</text><line x1=\"310\" y1=\"48\" x2=\"360.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"370,48 360.0,53.0 360.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"340\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">0.03 A</text><text x=\"145\" y=\"84\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">6 V</text><text x=\"260\" y=\"185\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">0.03 A</text><text x=\"345\" y=\"100\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">6 V across</text><text x=\"345\" y=\"115\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">the group</text><text x=\"240\" y=\"228\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">R2 ∥ R3 = 100 Ω.  R_T = 100 + 100 = 200 Ω.  I_T = 12 ÷ 200 = 0.06 A.</text><text x=\"240\" y=\"246\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">V_R1 = 0.06 × 100 = 6 V; the group gets 6 V; each branch 6 ÷ 200 = 0.03 A.</text></svg>",
+      "caption": "R1 carries the whole circuit current, so it is in series with the group. R2 and R3 share both nodes, so they are in parallel with each other and share the same voltage. The group's equivalent (100 Ω) adds to R1 for the total."
+    },
+    {
+      "type": "text",
+      "heading": "Reduce and redraw",
+      "markdown": "Take the circuit above: a 12 V source, R1 = 100 Ω in series with R2 = 200 Ω and R3 = 200 Ω in parallel.\n\n**Reduce.** R2 and R3 are equal, so the group is 200 ÷ 2 = 100 Ω. Redraw with one 100 Ω resistor in place of the pair. Now R1 and the group are two resistors in series: R_T = 100 + 100 = 200 Ω.\n\n**Solve.** I_T = 12 V ÷ 200 Ω = 0.06 A (60 mA).\n\n**Expand.** R1 is in series with the source, so it carries the full 0.06 A: V_R1 = 0.06 × 100 = 6 V. By KVL the parallel group must have the remaining 12 − 6 = 6 V across it (or 0.06 A × 100 Ω equivalent = 6 V, same thing). Each 200 Ω branch then carries 6 ÷ 200 = 0.03 A.\n\n**Check.** KCL: 0.03 + 0.03 = 0.06 A total. KVL: 6 V (R1) + 6 V (group) = 12 V source. Both agree."
+    },
+    {
+      "type": "diagram",
+      "title": "The reduce-and-redraw method",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 200\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><text x=\"80\" y=\"22\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">Step 1: original</text><rect x=\"20\" y=\"40\" width=\"120\" height=\"130\" stroke=\"#9aa6b8\"/><polyline points=\"30,60 37.5,60 40.4,52 46.3,68 52.1,52 57.9,68 63.8,52 69.6,68 72.5,60 80,60\"/><text x=\"55\" y=\"52\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">R1</text><line x1=\"80\" y1=\"60\" x2=\"120\" y2=\"60\"/><line x1=\"100\" y1=\"60\" x2=\"100\" y2=\"75\"/><polyline points=\"100,75 100,82.5 92,85.4 108,91.3 92,97.1 108,102.9 92,108.8 108,114.6 100,117.5 100,125\"/><line x1=\"100\" y1=\"125\" x2=\"100\" y2=\"150\"/><line x1=\"120\" y1=\"60\" x2=\"120\" y2=\"75\"/><polyline points=\"120,75 120,82.5 112,85.4 128,91.3 112,97.1 128,102.9 112,108.8 128,114.6 120,117.5 120,125\"/><line x1=\"120\" y1=\"125\" x2=\"120\" y2=\"150\"/><line x1=\"30\" y1=\"150\" x2=\"120\" y2=\"150\"/><line x1=\"30\" y1=\"60\" x2=\"30\" y2=\"150\"/><text x=\"88\" y=\"103\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-size=\"10\">R2</text><text x=\"130\" y=\"103\" fill=\"currentColor\" stroke=\"none\" font-size=\"10\">R3</text><line x1=\"150\" y1=\"105\" x2=\"170.0\" y2=\"105.0\" stroke=\"#4cc9ff\"/><polygon points=\"180,105 170.0,110.0 170.0,100.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"250\" y=\"22\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">Step 2: combine parallel</text><rect x=\"190\" y=\"40\" width=\"120\" height=\"130\" stroke=\"#9aa6b8\"/><polyline points=\"200,60 207.5,60 210.4,52 216.3,68 222.1,52 227.9,68 233.8,52 239.6,68 242.5,60 250,60\"/><text x=\"225\" y=\"52\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">R1</text><line x1=\"250\" y1=\"60\" x2=\"290\" y2=\"60\"/><line x1=\"290\" y1=\"60\" x2=\"290\" y2=\"75\"/><polyline points=\"290,75 290,82.5 282,85.4 298,91.3 282,97.1 298,102.9 282,108.8 298,114.6 290,117.5 290,125\" stroke=\"#f3c75b\"/><line x1=\"290\" y1=\"125\" x2=\"290\" y2=\"150\"/><line x1=\"200\" y1=\"150\" x2=\"290\" y2=\"150\"/><line x1=\"200\" y1=\"60\" x2=\"200\" y2=\"150\"/><text x=\"240\" y=\"103\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">R2∥R3</text><text x=\"240\" y=\"116\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"10\">= 100 Ω</text><line x1=\"320\" y1=\"105\" x2=\"340.0\" y2=\"105.0\" stroke=\"#4cc9ff\"/><polygon points=\"350,105 340.0,110.0 340.0,100.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"420\" y=\"22\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">Step 3: combine series</text><rect x=\"360\" y=\"40\" width=\"110\" height=\"130\" stroke=\"#9aa6b8\"/><line x1=\"370\" y1=\"60\" x2=\"415\" y2=\"60\"/><line x1=\"415\" y1=\"60\" x2=\"415\" y2=\"75\"/><polyline points=\"415,75 415,82.5 407,85.4 423,91.3 407,97.1 423,102.9 407,108.8 423,114.6 415,117.5 415,125\" stroke=\"#3ddc97\"/><line x1=\"415\" y1=\"125\" x2=\"415\" y2=\"150\"/><line x1=\"370\" y1=\"150\" x2=\"415\" y2=\"150\"/><line x1=\"370\" y1=\"60\" x2=\"370\" y2=\"150\"/><text x=\"445\" y=\"103\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"11\">R_T</text><text x=\"445\" y=\"116\" fill=\"#3ddc97\" stroke=\"none\" font-size=\"10\">200 Ω</text><text x=\"250\" y=\"190\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Solve for I_T with the single resistor, then expand back out step by step.</text></svg>",
+      "caption": "Collapse the parallel pair into one equivalent resistor, then add the series resistors. Work backward through the same drawings to distribute voltage and current."
+    },
+    {
+      "type": "example",
+      "problem": "A 60 V source feeds two branches in parallel. Branch A is R1 = 10 Ω in series with R2 = 20 Ω. Branch B is R3 = 60 Ω alone. Find the total resistance, the total current, the current in each branch and the voltage across R1 and R2.",
+      "solutionSteps": [
+        "Identify: R1 and R2 are in series with each other (branch A). Branch A and R3 are in parallel because both connect directly across the source.",
+        "Reduce branch A: 10 + 20 = 30 Ω.",
+        "Combine 30 Ω in parallel with 60 Ω: (30 × 60) ÷ (30 + 60) = 20 Ω. So R_T = 20 Ω.",
+        "Solve: I_T = 60 V ÷ 20 Ω = 3 A.",
+        "Expand: both branches see the full 60 V. I_A = 60 ÷ 30 = 2 A. I_B = 60 ÷ 60 = 1 A. KCL check: 2 + 1 = 3 A.",
+        "Within branch A the 2 A flows through both R1 and R2: V_R1 = 2 × 10 = 20 V; V_R2 = 2 × 20 = 40 V. KVL check: 20 + 40 = 60 V."
+      ],
+      "answer": "R_T = 20 Ω, I_T = 3 A, branch A carries 2 A (20 V across R1, 40 V across R2), branch B carries 1 A."
+    },
+    {
+      "type": "text",
+      "heading": "The loaded voltage divider: conductors in series with parallel loads",
+      "markdown": "Here is the combination circuit you will meet on every job. A source feeds a run of conductors; at the far end, several loads hang in parallel. The conductor resistance is in **series** with the parallel **group**, so the conductors take their share of the voltage first and the loads get the remainder.\n\nThe lower the combined resistance of the loads (the more of them, or the bigger they are), the more current flows, the more voltage the conductors drop, and the less the loads receive. This \"loading effect\" is why:\n\n- a heater at the end of a long circuit runs cooler than its rating;\n- lights dim when a motor starts on the same circuit (the motor's inrush briefly drops the conductor voltage for everyone);\n- voltage must be measured **at the load, under load** to judge a voltage-drop complaint.\n\nThe arithmetic is the same reduce-and-redraw: combine the loads into one equivalent, add the conductor resistance, find total current, then compute the conductor drop and subtract it from the source."
+    },
+    {
+      "type": "formula",
+      "name": "Voltage delivered to loads at the end of a run",
+      "expression": "V_load = V_source − (I_T × R_line)",
+      "variables": [
+        {
+          "symbol": "V_load",
+          "meaning": "voltage across the parallel load group",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "V_source",
+          "meaning": "voltage at the source (panel)",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I_T",
+          "meaning": "total current, equal to V_source ÷ (R_line + R_loads)",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "R_line",
+          "meaning": "resistance of the conductors, out and back",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "This is KVL applied to the series loop formed by the conductors and the load group. R_loads is the parallel equivalent of everything connected at the far end, so adding loads lowers R_loads, raises I_T, and increases the line drop. Percent drop is (V_source − V_load) ÷ V_source × 100."
+    },
+    {
+      "type": "example",
+      "problem": "A 24 V DC supply feeds two loads at the end of a cable whose conductors total 2 Ω (out and back). The loads, in parallel, are 12 Ω and 24 Ω. What voltage do the loads actually receive, and what percentage is lost in the cable?",
+      "solutionSteps": [
+        "Combine the parallel loads: (12 × 24) ÷ (12 + 24) = 288 ÷ 36 = 8 Ω.",
+        "The cable (2 Ω) is in series with the 8 Ω group: R_T = 2 + 8 = 10 Ω.",
+        "I_T = 24 V ÷ 10 Ω = 2.4 A.",
+        "Cable drop = 2.4 A × 2 Ω = 4.8 V.",
+        "Load voltage = 24 − 4.8 = 19.2 V (or 2.4 A × 8 Ω = 19.2 V).",
+        "Percent lost = 4.8 ÷ 24 = 20%. Unacceptable: the fix is a heavier cable or a shorter run. Had the 12 Ω load been switched off, the group would be 24 Ω, R_T = 26 Ω, I = 0.923 A, drop only 1.85 V, and the remaining load would see 22.2 V. The drop changes with the load."
+      ],
+      "answer": "The loads receive 19.2 V; 4.8 V (20%) is lost in the cable."
+    },
+    {
+      "type": "table",
+      "caption": "Solving checklist for combination circuits",
+      "columns": [
+        "Step",
+        "What to do",
+        "Rule you are using"
+      ],
+      "rows": [
+        [
+          "1",
+          "Label every resistor and mark the nodes (junctions)",
+          "A node is any point where three or more paths meet"
+        ],
+        [
+          "2",
+          "Combine innermost parallel groups first, then series strings, redrawing each time",
+          "Reciprocal / product-over-sum; series addition"
+        ],
+        [
+          "3",
+          "Find I_T from the source voltage and R_T",
+          "Ohm's law"
+        ],
+        [
+          "4",
+          "Series elements: same current. Compute each V = I × R",
+          "Series rule"
+        ],
+        [
+          "5",
+          "Parallel groups: same voltage. Compute each branch I = V ÷ R",
+          "Parallel rule"
+        ],
+        [
+          "6",
+          "Verify: drops around every loop sum to the source; currents at every node balance",
+          "KVL and KCL"
+        ]
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Common mistakes: applying the full source voltage to a parallel group that sits behind a series resistor (the group gets what is left after the series drop); combining a series resistor with a parallel group before reducing the group; forgetting that a current entering a parallel group splits (so the branch current is not the total current); and skipping the KVL/KCL check that would have caught all three."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Field tip: if a parallel group behaves strangely, isolate branches one at a time. Lift one branch and remeasure; the group voltage should rise slightly (less current, less series drop) and the remaining branch currents should be unchanged. A branch whose removal changes the others more than expected is the one with the problem, often a bad connection adding unwanted series resistance."
+    },
+    {
+      "type": "callout",
+      "tone": "simulation",
+      "text": "Work the bench exercises \"Series-parallel 1\", \"Series-parallel 2\" and \"Voltage divider\". For each one, write your predicted R_T and I_T on paper before the solver reveals them; then expand to every element and confirm with KVL and KCL."
+    }
+  ],
+  "practice": [
+    {
+      "id": "series-parallel-circuits-p1",
+      "type": "numeric",
+      "prompt": "R1 = 100 Ω is in series with a parallel pair R2 = 200 Ω and R3 = 200 Ω. What is the total resistance?",
+      "answer": 200,
+      "unit": "Ω",
+      "tolerance": 0.5,
+      "explanation": "The parallel pair is 200 ÷ 2 = 100 Ω; in series with R1: 100 + 100 = 200 Ω."
+    },
+    {
+      "id": "series-parallel-circuits-p2",
+      "type": "numeric",
+      "prompt": "That 200 Ω circuit is connected to 12 V. What is the total current?",
+      "answer": 0.06,
+      "unit": "A",
+      "tolerance": 0.001,
+      "explanation": "I_T = 12 ÷ 200 = 0.06 A (60 mA)."
+    },
+    {
+      "id": "series-parallel-circuits-p3",
+      "type": "numeric",
+      "prompt": "In that circuit (12 V, R1 = 100 Ω in series with 200 Ω ∥ 200 Ω), what is the voltage across the parallel group?",
+      "answer": 6,
+      "unit": "V",
+      "tolerance": 0.05,
+      "explanation": "R1 drops 0.06 × 100 = 6 V; KVL leaves 12 − 6 = 6 V for the group."
+    },
+    {
+      "id": "series-parallel-circuits-p4",
+      "type": "numeric",
+      "prompt": "A branch made of 10 Ω and 20 Ω in series is placed in parallel with a 60 Ω resistor. What is the total resistance?",
+      "answer": 20,
+      "unit": "Ω",
+      "tolerance": 0.1,
+      "explanation": "Series branch = 30 Ω. 30 ∥ 60 = (30 × 60) ÷ 90 = 20 Ω."
+    },
+    {
+      "id": "series-parallel-circuits-p5",
+      "type": "multiple_choice",
+      "prompt": "What is the correct first step when solving a series-parallel circuit?",
+      "choices": [
+        "Add every resistance together",
+        "Apply the source voltage to each resistor",
+        "Identify the parallel groups and reduce each to a single equivalent resistance",
+        "Measure the current in each branch with the circuit energized"
+      ],
+      "correctIndex": 2,
+      "explanation": "Reduce innermost parallel groups first, redraw, then combine series resistances until one equivalent resistor remains."
+    },
+    {
+      "id": "series-parallel-circuits-p6",
+      "type": "numeric",
+      "prompt": "A 24 V supply feeds 12 Ω and 24 Ω loads in parallel through a cable with 2 Ω total resistance. What voltage reaches the loads?",
+      "answer": 19.2,
+      "unit": "V",
+      "tolerance": 0.1,
+      "explanation": "Loads combine to 8 Ω; R_T = 10 Ω; I = 2.4 A; cable drop 4.8 V; loads see 24 − 4.8 = 19.2 V."
+    },
+    {
+      "id": "series-parallel-circuits-p7",
+      "type": "multiple_choice",
+      "prompt": "In a circuit where R1 is in series with the source and feeds a parallel group of R2 and R3, which element carries the total circuit current?",
+      "choices": [
+        "R2 only",
+        "R3 only",
+        "R1",
+        "None of them; the current is divided three ways"
+      ],
+      "correctIndex": 2,
+      "explanation": "All current must pass through R1 before splitting between R2 and R3, so R1 carries I_T."
+    }
+  ],
+  "quiz": {
+    "key": "series-parallel-circuits-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "series-parallel-circuits-q1",
+        "type": "numeric",
+        "prompt": "R1 = 50 Ω is in series with a parallel pair R2 = 100 Ω and R3 = 100 Ω. Find the total resistance.",
+        "answer": 100,
+        "unit": "Ω",
+        "tolerance": 0.5,
+        "explanation": "100 ∥ 100 = 50 Ω; 50 + 50 = 100 Ω."
+      },
+      {
+        "id": "series-parallel-circuits-q2",
+        "type": "numeric",
+        "prompt": "That 100 Ω circuit is connected to 20 V. What is the total current?",
+        "answer": 0.2,
+        "unit": "A",
+        "tolerance": 0.002,
+        "explanation": "I_T = 20 ÷ 100 = 0.2 A."
+      },
+      {
+        "id": "series-parallel-circuits-q3",
+        "type": "numeric",
+        "prompt": "In that circuit (20 V, R1 = 50 Ω series with 100 Ω ∥ 100 Ω), what is the voltage across R1?",
+        "answer": 10,
+        "unit": "V",
+        "tolerance": 0.05,
+        "explanation": "V_R1 = I_T × R1 = 0.2 × 50 = 10 V."
+      },
+      {
+        "id": "series-parallel-circuits-q4",
+        "type": "numeric",
+        "prompt": "In that same circuit, what is the current through R2?",
+        "answer": 0.1,
+        "unit": "A",
+        "tolerance": 0.002,
+        "explanation": "The group has 20 − 10 = 10 V across it; I_R2 = 10 ÷ 100 = 0.1 A."
+      },
+      {
+        "id": "series-parallel-circuits-q5",
+        "type": "multiple_choice",
+        "prompt": "Two elements are in series with each other if:",
+        "choices": [
+          "they have the same resistance",
+          "all the current leaving one must enter the other",
+          "both ends of one connect to both ends of the other",
+          "they are drawn next to each other"
+        ],
+        "correctIndex": 1,
+        "explanation": "Series means a single shared path. The third choice describes a parallel connection."
+      },
+      {
+        "id": "series-parallel-circuits-q6",
+        "type": "numeric",
+        "prompt": "A branch of R1 = 30 Ω and R2 = 30 Ω in series is in parallel with R3 = 60 Ω. What is the total resistance?",
+        "answer": 30,
+        "unit": "Ω",
+        "tolerance": 0.1,
+        "explanation": "Series branch = 60 Ω. 60 ∥ 60 = 30 Ω."
+      },
+      {
+        "id": "series-parallel-circuits-q7",
+        "type": "numeric",
+        "prompt": "That 30 Ω circuit is connected to 120 V. What total current flows?",
+        "answer": 4,
+        "unit": "A",
+        "tolerance": 0.02,
+        "explanation": "I_T = 120 ÷ 30 = 4 A (2 A in each 60 Ω branch)."
+      },
+      {
+        "id": "series-parallel-circuits-q8",
+        "type": "multiple_choice",
+        "prompt": "R1 is in series with a parallel group of R2 and R3. If R3 opens, the total circuit resistance:",
+        "choices": [
+          "decreases and total current increases",
+          "increases and total current decreases",
+          "does not change",
+          "becomes zero"
+        ],
+        "correctIndex": 1,
+        "explanation": "Losing a parallel branch raises the group's resistance (only R2 remains), so R_T rises and I_T falls. The voltage across the group rises slightly because R1 drops less."
+      },
+      {
+        "id": "series-parallel-circuits-q9",
+        "type": "numeric",
+        "prompt": "A 48 V supply feeds a 6 Ω load and a 12 Ω load in parallel through a line with 1 Ω total resistance. What voltage do the loads receive?",
+        "answer": 38.4,
+        "unit": "V",
+        "tolerance": 0.1,
+        "explanation": "Loads: 6 ∥ 12 = 4 Ω. R_T = 5 Ω. I = 9.6 A. Line drop = 9.6 V. Load voltage = 48 − 9.6 = 38.4 V."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity, chapter on combination (series-parallel) circuits",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "All About Circuits, Lessons in Electric Circuits, Volume I (DC), Series-parallel combination circuits",
+      "url": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-7/what-is-a-series-parallel-circuit/"
+    },
+    {
+      "title": "NFPA 70, National Electrical Code: 210.19(A) and 215.2(A) informational notes on voltage drop (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

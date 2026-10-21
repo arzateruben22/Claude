@@ -1,0 +1,353 @@
+{
+  "key": "series-circuits",
+  "track": "FUNDAMENTALS",
+  "order": 3,
+  "title": "Series Circuits",
+  "summary": "One path, one current. Learn the series rules, Kirchhoff's voltage law and the voltage divider, then use them to troubleshoot an open and to understand why long conductor runs rob your loads of voltage.",
+  "estimatedMinutes": 30,
+  "prerequisites": [
+    "ohms-law"
+  ],
+  "objectives": [
+    "Students will be able to identify a series circuit and state its three rules for resistance, current and voltage.",
+    "Students will be able to calculate total resistance, circuit current and the voltage drop across each element of a series circuit.",
+    "Students will be able to apply Kirchhoff's voltage law and the voltage divider formula.",
+    "Students will be able to predict voltmeter readings in a series circuit that has an open, and explain why."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "What makes a circuit \"series\"",
+      "markdown": "A **series circuit** has exactly one path for current. Every component is connected end to end, like beads on a string, and the same current flows through each one. If any single element opens (a blown fuse, a broken wire, an open switch), the path is broken and **everything** stops.\n\nYou already use series connections constantly, even in circuits you think of as parallel:\n\n- A breaker, a switch and a load are always in series with each other; that is how the switch controls the load and how the breaker protects it.\n- A fuse is in series with whatever it protects.\n- The conductors feeding a load are in series with the load, which is why their resistance causes voltage drop.\n- Control circuits are chains of series contacts: a stop button, an overload contact and a limit switch all in series with a contactor coil, so that opening any one de-energizes the coil.\n- Old-style holiday light strings are series lamps on 120 V: one burned-out lamp darkened the whole string.\n\nLoads such as receptacles and light fixtures are **not** wired in series with each other in buildings, because each load would then only get part of the voltage and each would depend on all the others. Those are wired in parallel (next lesson)."
+    },
+    {
+      "type": "formula",
+      "name": "Total resistance of a series circuit",
+      "expression": "R_T = R1 + R2 + R3 + …",
+      "variables": [
+        {
+          "symbol": "R_T",
+          "meaning": "total (equivalent) resistance seen by the source",
+          "unit": "ohms (Ω)"
+        },
+        {
+          "symbol": "R1, R2, R3",
+          "meaning": "resistance of each element in the single path",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "Resistances in series simply add, because current must push through each one in turn. The total is always larger than the largest single resistance. Adding an element in series always reduces the circuit current."
+    },
+    {
+      "type": "diagram",
+      "title": "A 24 V series circuit with 2 Ω, 4 Ω and 6 Ω",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"70\" y1=\"110\" x2=\"70\" y2=\"121\"/><line x1=\"56\" y1=\"121\" x2=\"84\" y2=\"121\"/><line x1=\"63\" y1=\"126\" x2=\"77\" y2=\"126\"/><line x1=\"56\" y1=\"132\" x2=\"84\" y2=\"132\"/><line x1=\"63\" y1=\"137\" x2=\"77\" y2=\"137\"/><line x1=\"70\" y1=\"137\" x2=\"70\" y2=\"150\"/><text x=\"90\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"90\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"70\" y1=\"110\" x2=\"70\" y2=\"60\"/><line x1=\"70\" y1=\"60\" x2=\"120\" y2=\"60\"/><polyline points=\"120,60 130.5,60 134.6,52 142.8,68 150.9,52 159.1,68 167.3,52 175.4,68 179.5,60 190,60\"/><text x=\"155\" y=\"42\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">R1 = 2 Ω</text><line x1=\"190\" y1=\"60\" x2=\"240\" y2=\"60\"/><polyline points=\"240,60 250.5,60 254.6,52 262.8,68 270.9,52 279.1,68 287.3,52 295.4,68 299.5,60 310,60\"/><text x=\"275\" y=\"42\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">R2 = 4 Ω</text><line x1=\"310\" y1=\"60\" x2=\"390\" y2=\"60\"/><line x1=\"390\" y1=\"60\" x2=\"390\" y2=\"95\"/><polyline points=\"390,95 390,105.5 382,109.6 398,117.8 382,125.9 398,134.1 382,142.3 398,150.4 390,154.5 390,165\"/><text x=\"405\" y=\"134\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R3 = 6 Ω</text><line x1=\"390\" y1=\"165\" x2=\"390\" y2=\"200\"/><line x1=\"390\" y1=\"200\" x2=\"70\" y2=\"200\"/><line x1=\"70\" y1=\"200\" x2=\"70\" y2=\"150\"/><text x=\"30\" y=\"100\" fill=\"currentColor\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">24 V</text><line x1=\"330\" y1=\"48\" x2=\"360.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"370,48 360.0,53.0 360.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"350\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I = 2 A</text><line x1=\"250\" y1=\"214\" x2=\"190.0\" y2=\"214.0\" stroke=\"#4cc9ff\"/><polygon points=\"180,214 190.0,209.0 190.0,219.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"215\" y=\"230\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">same 2 A everywhere in the loop</text><text x=\"155\" y=\"84\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">4 V</text><text x=\"275\" y=\"84\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">8 V</text><text x=\"370\" y=\"134\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">12 V</text><text x=\"230\" y=\"120\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">R_T = 2 + 4 + 6 = 12 Ω</text><text x=\"230\" y=\"140\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\">I = 24 V ÷ 12 Ω = 2 A</text><text x=\"230\" y=\"160\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\">4 V + 8 V + 12 V = 24 V  (KVL)</text></svg>",
+      "caption": "The total resistance is the sum of the three resistors. The one current (2 A) flows through each resistor, so each drops I × R: 4 V, 8 V and 12 V. Those drops add back up to the 24 V source."
+    },
+    {
+      "type": "text",
+      "heading": "Kirchhoff's voltage law (KVL)",
+      "markdown": "Gustav Kirchhoff stated a rule that is really just energy conservation: **around any closed loop, the sum of the voltage rises equals the sum of the voltage drops.** In a simple series circuit that means the voltage drops across the resistors add up to the source voltage. Nothing is lost and nothing is left over.\n\nWritten as a formula for a series circuit: **V_source = V1 + V2 + V3 + …**, where each drop is I × R for that element. Because the same current flows through every element, each drop is proportional to that element's resistance: the largest resistor drops the most voltage.\n\nKVL gives you two powerful checks:\n\n1. **Finding an unknown drop.** If a 120 V circuit has three series elements and you measure 30 V and 50 V across two of them, the third must be dropping 40 V.\n2. **Verifying your arithmetic.** After you compute the drops with Ohm's law, add them. If they do not equal the source, you made an error.\n\nKVL also explains the biggest troubleshooting fact in the trade: **the voltage appears across the opposition.** A good conductor drops almost nothing; a loose, corroded or burned connection drops a lot. A voltmeter across a connection that should read 0 V but reads several volts has found a bad connection, and I × R heating is cooking that spot."
+    },
+    {
+      "type": "example",
+      "problem": "Three resistors of 2 Ω, 4 Ω and 6 Ω are connected in series across 24 V. Find the total resistance, the current and the voltage across each resistor, then verify with KVL.",
+      "solutionSteps": [
+        "R_T = 2 + 4 + 6 = 12 Ω.",
+        "I = V ÷ R_T = 24 V ÷ 12 Ω = 2 A. This 2 A flows through every resistor.",
+        "V1 = I × R1 = 2 A × 2 Ω = 4 V.",
+        "V2 = 2 A × 4 Ω = 8 V.",
+        "V3 = 2 A × 6 Ω = 12 V.",
+        "KVL check: 4 + 8 + 12 = 24 V, which equals the source. Correct."
+      ],
+      "answer": "R_T = 12 Ω, I = 2 A, drops of 4 V, 8 V and 12 V."
+    },
+    {
+      "type": "formula",
+      "name": "Voltage divider rule",
+      "expression": "V_x = V_source × (R_x ÷ R_T)",
+      "variables": [
+        {
+          "symbol": "V_x",
+          "meaning": "voltage across the resistor of interest",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "V_source",
+          "meaning": "applied voltage",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "R_x",
+          "meaning": "resistance of the element of interest",
+          "unit": "ohms (Ω)"
+        },
+        {
+          "symbol": "R_T",
+          "meaning": "total series resistance",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "A shortcut that skips the current step. Each series resistor takes a share of the source voltage equal to its share of the total resistance. If one resistor is half of the total resistance, it drops half of the voltage. Two equal resistors split the voltage equally."
+    },
+    {
+      "type": "example",
+      "problem": "A 120 V source feeds a 20 Ω resistor in series with a 40 Ω resistor. Use the voltage divider rule to find the voltage across each.",
+      "solutionSteps": [
+        "R_T = 20 + 40 = 60 Ω.",
+        "V across 20 Ω = 120 V × (20 ÷ 60) = 120 × 0.333 = 40 V.",
+        "V across 40 Ω = 120 V × (40 ÷ 60) = 120 × 0.667 = 80 V.",
+        "Check: 40 + 80 = 120 V. The larger resistor drops twice the voltage because it has twice the resistance."
+      ],
+      "answer": "40 V across the 20 Ω resistor and 80 V across the 40 Ω resistor."
+    },
+    {
+      "type": "table",
+      "caption": "Series circuit rules at a glance",
+      "columns": [
+        "Quantity",
+        "Rule",
+        "Formula"
+      ],
+      "rows": [
+        [
+          "Current",
+          "Same through every element",
+          "I_T = I1 = I2 = I3"
+        ],
+        [
+          "Resistance",
+          "Adds up; total is larger than any one element",
+          "R_T = R1 + R2 + R3"
+        ],
+        [
+          "Voltage",
+          "Divides among elements in proportion to resistance; drops sum to the source",
+          "V_T = V1 + V2 + V3"
+        ],
+        [
+          "Power (next lessons)",
+          "Adds up",
+          "P_T = P1 + P2 + P3"
+        ],
+        [
+          "Open anywhere",
+          "Current stops everywhere; the open shows full source voltage",
+          "V_open = V_source, I = 0"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "Troubleshooting an open in a series circuit",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"70\" y1=\"110\" x2=\"70\" y2=\"121\"/><line x1=\"56\" y1=\"121\" x2=\"84\" y2=\"121\"/><line x1=\"63\" y1=\"126\" x2=\"77\" y2=\"126\"/><line x1=\"56\" y1=\"132\" x2=\"84\" y2=\"132\"/><line x1=\"63\" y1=\"137\" x2=\"77\" y2=\"137\"/><line x1=\"70\" y1=\"137\" x2=\"70\" y2=\"150\"/><text x=\"90\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"90\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"70\" y1=\"110\" x2=\"70\" y2=\"60\"/><line x1=\"70\" y1=\"60\" x2=\"120\" y2=\"60\"/><polyline points=\"120,60 130.5,60 134.6,52 142.8,68 150.9,52 159.1,68 167.3,52 175.4,68 179.5,60 190,60\"/><text x=\"155\" y=\"42\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">R1</text><line x1=\"190\" y1=\"60\" x2=\"230\" y2=\"60\"/><circle cx=\"236\" cy=\"60\" r=\"3\" stroke=\"#ff6b6b\"/><circle cx=\"284\" cy=\"60\" r=\"3\" stroke=\"#ff6b6b\"/><text x=\"260\" y=\"42\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\" font-weight=\"600\">OPEN</text><line x1=\"290\" y1=\"60\" x2=\"390\" y2=\"60\"/><line x1=\"390\" y1=\"60\" x2=\"390\" y2=\"95\"/><polyline points=\"390,95 390,105.5 382,109.6 398,117.8 382,125.9 398,134.1 382,142.3 398,150.4 390,154.5 390,165\"/><text x=\"405\" y=\"134\" fill=\"currentColor\" stroke=\"none\" font-size=\"12\" font-weight=\"600\">R3</text><line x1=\"390\" y1=\"165\" x2=\"390\" y2=\"200\"/><line x1=\"390\" y1=\"200\" x2=\"70\" y2=\"200\"/><line x1=\"70\" y1=\"200\" x2=\"70\" y2=\"150\"/><line x1=\"236\" y1=\"60\" x2=\"236\" y2=\"100\"/><line x1=\"236\" y1=\"100\" x2=\"246\" y2=\"100\"/><circle cx=\"260\" cy=\"100\" r=\"14\" stroke=\"#3ddc97\"/><text x=\"260\" y=\"105\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\">V</text><line x1=\"274\" y1=\"100\" x2=\"284\" y2=\"100\"/><line x1=\"284\" y1=\"100\" x2=\"284\" y2=\"60\"/><text x=\"260\" y=\"128\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">reads 120 V</text><text x=\"30\" y=\"100\" fill=\"currentColor\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">120 V</text><text x=\"230\" y=\"165\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I = 0 A, so no drop across R1 or R3 (0 × R = 0).</text><text x=\"230\" y=\"183\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">All of the source voltage appears across the open.</text><text x=\"230\" y=\"230\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Voltmeter across a good element reads 0 V; across the open it reads the source.</text></svg>",
+      "caption": "With the path broken there is no current, so the good elements drop 0 V (0 A × R = 0). KVL then requires the entire source voltage to appear across the open. Reading source voltage across a fuse, switch or splice that should be closed means that element is open."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "An open circuit is not a dead circuit. The wire on the source side of the open is energized, and the full source voltage sits across the break, waiting for a path. A blown fuse in a disconnect still has line voltage on its line-side clip, and an open neutral on a 120/240 V multiwire circuit can push 240 V onto 120 V loads. Verify absence of voltage with a tester; never assume because a load is off."
+    },
+    {
+      "type": "text",
+      "heading": "Field application and common mistakes",
+      "markdown": "**Field application:** a long branch circuit is a series circuit made of conductor resistance plus the load. The conductors take their share of the voltage first; the load gets what is left. If a 120 V heater at the end of a long run only measures 108 V while running, 12 V is being dropped (and wasted as heat) in the wire. Measure voltage at the load under load, not at the panel with the load off.\n\n**Common mistakes:**\n\n- **Adding currents.** In series there is one current. If you find yourself adding amps, you are thinking of a parallel circuit.\n- **Using the source voltage on one resistor.** Each resistor sees only its own drop. Use I × R for that element, or the voltage divider rule.\n- **Assuming the biggest load gets the most voltage.** In series the element with the **highest resistance** drops the most. Two 120 V heaters in series on 240 V works only because they are identical; put a 500 W and a 1,500 W heater in series and the small (higher-resistance) heater takes most of the voltage and burns out.\n- **Forgetting the round trip.** For conductor resistance, count hot and neutral (both directions) in a single-phase circuit.\n- **Mixing units.** 1.5 kΩ in series with 500 Ω is 2,000 Ω, not 501.5."
+    },
+    {
+      "type": "callout",
+      "tone": "simulation",
+      "text": "Try the \"Series basics\" and \"Voltage divider\" bench exercises. Build the 2 Ω / 4 Ω / 6 Ω circuit from this lesson, then swap the 6 Ω resistor for 60 Ω and predict, before solving, how the drops redistribute."
+    }
+  ],
+  "practice": [
+    {
+      "id": "series-circuits-p1",
+      "type": "numeric",
+      "prompt": "Resistors of 10 Ω, 20 Ω and 30 Ω are connected in series. What is the total resistance?",
+      "answer": 60,
+      "unit": "Ω",
+      "tolerance": 0.1,
+      "explanation": "Series resistances add: 10 + 20 + 30 = 60 Ω."
+    },
+    {
+      "id": "series-circuits-p2",
+      "type": "numeric",
+      "prompt": "The 60 Ω series circuit from the previous question is connected to 60 V. What current flows?",
+      "answer": 1,
+      "unit": "A",
+      "tolerance": 0.01,
+      "explanation": "I = V ÷ R_T = 60 ÷ 60 = 1 A, and that 1 A flows through all three resistors."
+    },
+    {
+      "id": "series-circuits-p3",
+      "type": "numeric",
+      "prompt": "In that same circuit (60 V, 10 Ω + 20 Ω + 30 Ω), what is the voltage across the 30 Ω resistor?",
+      "answer": 30,
+      "unit": "V",
+      "tolerance": 0.1,
+      "explanation": "V = I × R = 1 A × 30 Ω = 30 V. Equivalently, 30 Ω is half of the 60 Ω total, so it drops half of the 60 V."
+    },
+    {
+      "id": "series-circuits-p4",
+      "type": "multiple_choice",
+      "prompt": "In a series circuit, which quantity is the same for every element?",
+      "choices": [
+        "Voltage drop",
+        "Current",
+        "Resistance",
+        "Power"
+      ],
+      "correctIndex": 1,
+      "explanation": "There is only one path, so the same current flows through every element. Voltage and power divide according to each element's resistance."
+    },
+    {
+      "id": "series-circuits-p5",
+      "type": "numeric",
+      "prompt": "A 12 V source feeds a 100 Ω resistor in series with a 200 Ω resistor. What is the voltage across the 200 Ω resistor?",
+      "answer": 8,
+      "unit": "V",
+      "tolerance": 0.05,
+      "explanation": "Voltage divider: 12 V × (200 ÷ 300) = 8 V. The 100 Ω resistor drops the other 4 V."
+    },
+    {
+      "id": "series-circuits-p6",
+      "type": "multiple_choice",
+      "prompt": "A series circuit has stopped working. You measure across each element with a voltmeter. The element that is open will read:",
+      "choices": [
+        "0 V",
+        "the full source voltage",
+        "half the source voltage",
+        "a negative voltage"
+      ],
+      "correctIndex": 1,
+      "explanation": "With no current, the good elements drop 0 V. KVL requires the whole source voltage to appear across the one break in the path."
+    },
+    {
+      "id": "series-circuits-p7",
+      "type": "numeric",
+      "prompt": "Three identical 50 Ω lamps are wired in series across 150 V. What is the voltage across each lamp?",
+      "answer": 50,
+      "unit": "V",
+      "tolerance": 0.1,
+      "explanation": "R_T = 150 Ω, I = 1 A, each lamp drops 1 A × 50 Ω = 50 V. Equal resistances split the voltage equally."
+    }
+  ],
+  "quiz": {
+    "key": "series-circuits-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "series-circuits-q1",
+        "type": "numeric",
+        "prompt": "What is the total resistance of 5 Ω, 15 Ω and 30 Ω in series?",
+        "answer": 50,
+        "unit": "Ω",
+        "tolerance": 0.1,
+        "explanation": "5 + 15 + 30 = 50 Ω."
+      },
+      {
+        "id": "series-circuits-q2",
+        "type": "numeric",
+        "prompt": "A series circuit with a total resistance of 50 Ω is connected to 100 V. What is the circuit current?",
+        "answer": 2,
+        "unit": "A",
+        "tolerance": 0.01,
+        "explanation": "I = 100 ÷ 50 = 2 A."
+      },
+      {
+        "id": "series-circuits-q3",
+        "type": "numeric",
+        "prompt": "In that 100 V circuit (5 Ω + 15 Ω + 30 Ω, 2 A), what is the voltage across the 15 Ω resistor?",
+        "answer": 30,
+        "unit": "V",
+        "tolerance": 0.1,
+        "explanation": "V = I × R = 2 A × 15 Ω = 30 V."
+      },
+      {
+        "id": "series-circuits-q4",
+        "type": "multiple_choice",
+        "prompt": "Kirchhoff's voltage law says that around a closed loop:",
+        "choices": [
+          "the current into a node equals the current out",
+          "the sum of the voltage drops equals the applied voltage",
+          "resistance equals voltage times current",
+          "power is always conserved as heat"
+        ],
+        "correctIndex": 1,
+        "explanation": "KVL: the voltage rises (sources) equal the voltage drops (loads and conductors) around any loop. The first choice describes Kirchhoff's current law."
+      },
+      {
+        "id": "series-circuits-q5",
+        "type": "numeric",
+        "prompt": "A 10 Ω resistor is in series with an unknown resistor across 24 V. The circuit current is 1.2 A. What is the unknown resistance?",
+        "answer": 10,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "R_T = 24 ÷ 1.2 = 20 Ω. Unknown = 20 − 10 = 10 Ω."
+      },
+      {
+        "id": "series-circuits-q6",
+        "type": "multiple_choice",
+        "prompt": "A fourth resistor is added in series to a three-resistor circuit with the same source. The total current:",
+        "choices": [
+          "increases",
+          "decreases",
+          "stays the same",
+          "becomes zero"
+        ],
+        "correctIndex": 1,
+        "explanation": "Adding series resistance raises R_T, and I = V ÷ R_T falls."
+      },
+      {
+        "id": "series-circuits-q7",
+        "type": "numeric",
+        "prompt": "Two identical 1,000 Ω resistors are in series across 240 V. What is the voltage across each one?",
+        "answer": 120,
+        "unit": "V",
+        "tolerance": 0.1,
+        "explanation": "Equal resistors split the voltage equally: 240 ÷ 2 = 120 V each."
+      },
+      {
+        "id": "series-circuits-q8",
+        "type": "multiple_choice",
+        "prompt": "In a series circuit, the element with the highest resistance:",
+        "choices": [
+          "carries the most current",
+          "drops the most voltage",
+          "drops the least voltage",
+          "carries the least current"
+        ],
+        "correctIndex": 1,
+        "explanation": "Current is the same everywhere, so V = I × R is largest where R is largest. This is why a loose, high-resistance connection gets hot and drops voltage."
+      },
+      {
+        "id": "series-circuits-q9",
+        "type": "numeric",
+        "prompt": "A 9 V battery feeds a 1 kΩ resistor in series with a 2 kΩ resistor. What is the current in milliamps?",
+        "answer": 3,
+        "unit": "mA",
+        "tolerance": 0.02,
+        "explanation": "R_T = 3,000 Ω. I = 9 ÷ 3,000 = 0.003 A = 3 mA."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 210.19(A) informational note on voltage drop; 240.4 overcurrent protection of conductors (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity, chapters on series circuits and Kirchhoff's laws",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "OSHA 29 CFR 1910.333, Selection and use of work practices (verifying de-energized state before work)",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.333"
+    },
+    {
+      "title": "All About Circuits, Lessons in Electric Circuits, Volume I (DC), Series circuits",
+      "url": "https://www.allaboutcircuits.com/textbook/direct-current/chpt-5/simple-series-circuits/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

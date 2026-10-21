@@ -1,0 +1,350 @@
+{
+  "key": "ohms-law",
+  "track": "FUNDAMENTALS",
+  "order": 2,
+  "title": "Ohm's Law",
+  "summary": "The single most used relationship in the trade: voltage equals current times resistance. Learn all three forms, work real 120 V and 240 V problems, and see how Ohm's law explains voltage drop and lamp inrush.",
+  "estimatedMinutes": 25,
+  "prerequisites": [
+    "electrical-basics"
+  ],
+  "objectives": [
+    "Students will be able to state Ohm's law in its three forms and pick the correct form for an unknown.",
+    "Students will be able to solve for voltage, current or resistance with mixed units (mA, kΩ) by converting to base units first.",
+    "Students will be able to compute the voltage drop across a conductor of known resistance carrying a known current.",
+    "Students will be able to explain why Ohm's law gives different answers for a hot and a cold lamp filament and where the law does and does not apply."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "What Ohm discovered",
+      "markdown": "In 1827 Georg Ohm measured how much current flowed through wires of different lengths and thicknesses when connected to a source. He found a simple, fixed relationship: for a given conductor, **current is directly proportional to voltage and inversely proportional to resistance**. Double the voltage and the current doubles; double the resistance and the current halves.\n\nThat relationship, **V = I × R**, is Ohm's law. You will use it to:\n\n- predict how much current a load will draw (so you can size breakers, conductors and overload devices);\n- find the resistance of a load from its nameplate ratings;\n- calculate voltage drop on long runs;\n- make sense of meter readings while troubleshooting (\"I have 120 V here but only 2 A: the load must be about 60 Ω, so this heater element is probably open\").\n\nOhm's law holds exactly for **resistive** loads (heaters, incandescent lamps once warm, long conductors) on DC and on AC. Motors, transformers and electronic drives add another kind of opposition called reactance; for those, a later lesson introduces impedance (Z), which slides into the same formula as V = I × Z."
+    },
+    {
+      "type": "formula",
+      "name": "Ohm's law",
+      "expression": "V = I × R",
+      "variables": [
+        {
+          "symbol": "V",
+          "meaning": "voltage across the component (also written E)",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I",
+          "meaning": "current through the component",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "R",
+          "meaning": "resistance of the component",
+          "unit": "ohms (Ω)"
+        }
+      ],
+      "explanation": "The three quantities must describe the same component or the same section of circuit. Rearranged: I = V ÷ R gives the current a voltage will push through a resistance; R = V ÷ I gives the resistance from measured volts and amps. Convert prefixes before you calculate: 250 mA is 0.25 A and 4.7 kΩ is 4,700 Ω."
+    },
+    {
+      "type": "diagram",
+      "title": "The Ohm's law triangle",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"220,20 60,200 380,200\" stroke=\"#4cc9ff\" fill=\"none\"/><line x1=\"130\" y1=\"120\" x2=\"310\" y2=\"120\" stroke=\"#4cc9ff\"/><line x1=\"220\" y1=\"120\" x2=\"220\" y2=\"200\" stroke=\"#4cc9ff\"/><text x=\"220\" y=\"100\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"40\" font-weight=\"600\">V</text><text x=\"175\" y=\"175\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"40\" font-weight=\"600\">I</text><text x=\"268\" y=\"175\" fill=\"#ff6b6b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"40\" font-weight=\"600\">R</text><text x=\"400\" y=\"60\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"end\" font-size=\"12\">Cover the one you want:</text><text x=\"400\" y=\"80\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-size=\"13\" font-weight=\"600\">V = I × R</text><text x=\"400\" y=\"98\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-size=\"13\" font-weight=\"600\">I = V ÷ R</text><text x=\"400\" y=\"116\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"end\" font-size=\"13\" font-weight=\"600\">R = V ÷ I</text><text x=\"220\" y=\"222\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">volts = amperes × ohms</text><text x=\"220\" y=\"242\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Side by side means multiply; one above another means divide.</text></svg>",
+      "caption": "A memory aid: cover the quantity you want, and what remains shows the formula. V on top over I and R side by side means V = I × R, I = V ÷ R and R = V ÷ I."
+    },
+    {
+      "type": "text",
+      "heading": "Using the three forms",
+      "markdown": "Pick the form that isolates the unknown:\n\n- **Unknown current:** I = V ÷ R. \"How many amps will this 20 Ω heater draw at 240 V?\" (240 ÷ 20 = 12 A)\n- **Unknown resistance:** R = V ÷ I. \"The nameplate says 120 V, 8 A: what is the element resistance?\" (120 ÷ 8 = 15 Ω)\n- **Unknown voltage:** V = I × R. \"What is the voltage drop across 0.2 Ω of wire carrying 15 A?\" (15 × 0.2 = 3 V)\n\nA reliable habit: **write the formula, write each value with its unit, convert to base units, then calculate.** Most wrong answers on exams come from plugging 250 mA into a formula as \"250\" instead of 0.25.\n\nThe three quantities must belong together. The voltage must be the voltage **across** the resistance you are using, and the current must be the current **through** it. In the series and parallel lessons you will see why this matters: a series resistor sees the full circuit current but only part of the source voltage."
+    },
+    {
+      "type": "diagram",
+      "title": "A 12 V source and a 6 Ω load",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 250\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"90\" y1=\"110\" x2=\"90\" y2=\"121\"/><line x1=\"76\" y1=\"121\" x2=\"104\" y2=\"121\"/><line x1=\"83\" y1=\"126\" x2=\"97\" y2=\"126\"/><line x1=\"76\" y1=\"132\" x2=\"104\" y2=\"132\"/><line x1=\"83\" y1=\"137\" x2=\"97\" y2=\"137\"/><line x1=\"90\" y1=\"137\" x2=\"90\" y2=\"150\"/><text x=\"110\" y=\"122\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">+</text><text x=\"110\" y=\"142\" fill=\"currentColor\" stroke=\"none\" font-size=\"14\" font-weight=\"600\">−</text><line x1=\"90\" y1=\"110\" x2=\"90\" y2=\"60\"/><line x1=\"90\" y1=\"60\" x2=\"180\" y2=\"60\"/><circle cx=\"200\" cy=\"60\" r=\"14\" stroke=\"#f3c75b\"/><text x=\"200\" y=\"65\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\">A</text><line x1=\"220\" y1=\"60\" x2=\"330\" y2=\"60\"/><line x1=\"330\" y1=\"60\" x2=\"330\" y2=\"95\"/><polyline points=\"330,95 330,105.5 322,109.6 338,117.8 322,125.9 338,134.1 322,142.3 338,150.4 330,154.5 330,165\"/><line x1=\"330\" y1=\"165\" x2=\"330\" y2=\"200\"/><line x1=\"330\" y1=\"200\" x2=\"90\" y2=\"200\"/><line x1=\"90\" y1=\"200\" x2=\"90\" y2=\"150\"/><circle cx=\"330\" cy=\"85\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"330\" cy=\"175\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><line x1=\"330\" y1=\"85\" x2=\"395\" y2=\"85\"/><line x1=\"395\" y1=\"85\" x2=\"395\" y2=\"116\"/><circle cx=\"395\" cy=\"130\" r=\"14\" stroke=\"#3ddc97\"/><text x=\"395\" y=\"135\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"600\">V</text><line x1=\"395\" y1=\"144\" x2=\"395\" y2=\"175\"/><line x1=\"395\" y1=\"175\" x2=\"330\" y2=\"175\"/><text x=\"200\" y=\"36\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">reads 2 A</text><text x=\"395\" y=\"205\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">reads 12 V</text><text x=\"40\" y=\"100\" fill=\"currentColor\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">12 V</text><text x=\"40\" y=\"170\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">source</text><text x=\"270\" y=\"125\" fill=\"#ff6b6b\" stroke=\"none\" font-size=\"13\" font-weight=\"600\">R = 6 Ω</text><text x=\"255\" y=\"142\" fill=\"#9aa6b8\" stroke=\"none\" font-size=\"11\">(load)</text><line x1=\"240\" y1=\"48\" x2=\"290.0\" y2=\"48.0\" stroke=\"#4cc9ff\"/><polygon points=\"300,48 290.0,53.0 290.0,43.0\" fill=\"#4cc9ff\" stroke=\"none\"/><text x=\"270\" y=\"40\" fill=\"#4cc9ff\" stroke=\"none\" text-anchor=\"middle\" font-size=\"12\">I</text><text x=\"220\" y=\"236\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"600\">I = V ÷ R = 12 V ÷ 6 Ω = 2 A</text></svg>",
+      "caption": "The ammeter in the loop reads the circuit current; the voltmeter across the resistor reads the voltage. The values obey Ohm's law: 12 V ÷ 6 Ω = 2 A, and the resistor could have been found from the meters as 12 V ÷ 2 A = 6 Ω."
+    },
+    {
+      "type": "example",
+      "problem": "(a) A baseboard heater element measures 24 Ω with an ohmmeter (circuit de-energized). How much current will it draw when connected to 120 V? (b) A 240 V water heater draws 20 A at full output. What is the resistance of its heating element?",
+      "solutionSteps": [
+        "(a) Unknown is current, so use I = V ÷ R: I = 120 V ÷ 24 Ω = 5 A.",
+        "(a) Sanity check: a 15 A branch circuit could supply this one heater; three of them (15 A) would load a 15 A circuit to 100%, which is not allowed for a continuous load (NEC 210.20(A) limits continuous loads to 80% of the breaker rating).",
+        "(b) Unknown is resistance, so use R = V ÷ I: R = 240 V ÷ 20 A = 12 Ω.",
+        "(b) Field note: if your ohmmeter read 12 Ω on a de-energized element you would know it is intact. An open (burned-out) element reads OL or infinity; a shorted one reads near 0 Ω."
+      ],
+      "answer": "(a) 5 A. (b) 12 Ω."
+    },
+    {
+      "type": "example",
+      "problem": "A 120 V circuit feeds a 15 A load through 150 ft of 12 AWG copper (300 ft of conductor out and back). The conductor resistance is about 2 Ω per 1,000 ft. How much voltage is lost in the wire, and what does the load actually receive?",
+      "solutionSteps": [
+        "Total conductor length = 150 ft × 2 = 300 ft.",
+        "Conductor resistance R = 300 ft × (2 Ω ÷ 1,000 ft) = 0.6 Ω.",
+        "Voltage drop V = I × R = 15 A × 0.6 Ω = 9 V.",
+        "Load voltage = 120 V − 9 V = 111 V.",
+        "Percent drop = 9 ÷ 120 = 7.5%, well above the 3% that the NEC informational notes (210.19 and 215.2) recommend for a branch circuit. The fix is a larger conductor (10 AWG has about 1.2 Ω per 1,000 ft, giving 0.36 Ω, a 5.4 V or 4.5% drop; 8 AWG does better still)."
+      ],
+      "answer": "9 V dropped in the conductors; the load sees about 111 V (7.5% drop), so upsize the conductors."
+    },
+    {
+      "type": "text",
+      "heading": "Voltage drop is Ohm's law on a wire",
+      "markdown": "Every conductor is a resistor. Its resistance is small, but at 15, 20 or 100 A even a fraction of an ohm drops real voltage. Ohm's law on the wire alone, **V_drop = I × R_wire**, tells you how much.\n\nWhy you care:\n\n- Motors run hot and draw more current at reduced voltage; lighting dims; electronics misbehave.\n- The NEC recommends (in informational notes to 210.19(A) and 215.2(A)) keeping branch-circuit drop to about 3% and the combined feeder plus branch circuit to about 5%. California's Building Energy Efficiency Standards (Title 24, Part 6) go further and make voltage-drop limits mandatory for many nonresidential feeders and branch circuits, so check the current edition on commercial work.\n- Remember to count the conductor length **both ways** (out on the hot, back on the neutral) for single-phase circuits.\n\nThe cure for excessive drop is always lower resistance: a larger conductor, a shorter run, or a higher system voltage so the same power needs less current (the next lessons explain why)."
+    },
+    {
+      "type": "table",
+      "caption": "What Ohm's law predicts for common 120 V loads (resistance measured hot, at operating temperature)",
+      "columns": [
+        "Load",
+        "Approx. hot resistance",
+        "Current at 120 V (I = V ÷ R)",
+        "Notes"
+      ],
+      "rows": [
+        [
+          "60 W incandescent lamp",
+          "240 Ω",
+          "0.5 A",
+          "Cold filament is only about 20 Ω, so switch-on inrush is many times the running current"
+        ],
+        [
+          "100 W incandescent lamp",
+          "144 Ω",
+          "0.83 A",
+          "Same inrush behavior"
+        ],
+        [
+          "1,500 W portable heater",
+          "9.6 Ω",
+          "12.5 A",
+          "A continuous load this size uses most of a 15 A circuit"
+        ],
+        [
+          "1,200 W hair dryer",
+          "12 Ω",
+          "10 A",
+          "Plus a small motor"
+        ],
+        [
+          "Toaster, 900 W",
+          "16 Ω",
+          "7.5 A",
+          "Nichrome element"
+        ],
+        [
+          "10 ft 16 AWG extension cord (both conductors)",
+          "0.08 Ω",
+          "drops 1 V at 12.5 A",
+          "Why a long cord feeding a heater gets warm"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Where Ohm's law bends: temperature and nonlinear loads",
+      "markdown": "Ohm's law assumes resistance is constant. In the real world:\n\n- **Incandescent filaments** start cold at perhaps one-tenth to one-fifteenth of their hot resistance. At the instant of switch-on a 100 W lamp can draw 10 A or more for a few milliseconds, then settle to 0.83 A as the filament heats. That inrush is why lamp circuits pit switch contacts over time.\n- **Motors** at standstill draw locked-rotor current, often 5 to 8 times their running current, because at zero speed there is no back-EMF to oppose the supply. Ohm's law still holds at every instant, but the effective opposition changes with speed.\n- **LED drivers, variable-frequency drives and chargers** are electronic loads. Their current does not scale linearly with voltage; some draw *more* current when voltage sags because they regulate their output power.\n- **Semiconductors** (diodes, transistors) conduct only above a threshold voltage. Ohm's law describes the resistive parts around them, not the device itself.\n\nFor sizing conductors and overcurrent protection the NEC gives you tables that already account for these behaviors (for example motor full-load current tables in Article 430 are used instead of nameplate amps). Ohm's law is the tool for the resistive parts: heaters, conductors, lamps and troubleshooting arithmetic.\n\n**Field tip:** before measuring a low resistance, touch your meter leads together. A reading of 0.2 to 0.5 Ω is normal lead resistance; subtract it (or use the meter's relative/zero function) when you measure elements, motor windings or conductors. A cheap lead problem looks exactly like a bad element if you skip this."
+    },
+    {
+      "type": "callout",
+      "tone": "warning",
+      "text": "Common mistakes: (1) forgetting to convert mA to A or kΩ to Ω before multiplying; (2) using the source voltage with a resistor that only sees part of it (series circuits); (3) measuring resistance on a live circuit or through parallel paths; (4) treating nameplate watts as if they were ohms. Write the formula with units every time until it is automatic."
+    },
+    {
+      "type": "callout",
+      "tone": "simulation",
+      "text": "Open the virtual bench exercise \"Series basics\" after this lesson. Change the source voltage and watch the current update; then change a resistor value. Predict the new reading with Ohm's law before you look at the solver's answer."
+    }
+  ],
+  "practice": [
+    {
+      "id": "ohms-law-p1",
+      "type": "numeric",
+      "prompt": "A 24 V control transformer feeds a coil whose resistance is 8 Ω. What current flows?",
+      "answer": 3,
+      "unit": "A",
+      "tolerance": 0.02,
+      "explanation": "I = V ÷ R = 24 V ÷ 8 Ω = 3 A."
+    },
+    {
+      "id": "ohms-law-p2",
+      "type": "numeric",
+      "prompt": "A load on a 120 V circuit draws 10 A. What is its resistance?",
+      "answer": 12,
+      "unit": "Ω",
+      "tolerance": 0.05,
+      "explanation": "R = V ÷ I = 120 V ÷ 10 A = 12 Ω."
+    },
+    {
+      "id": "ohms-law-p3",
+      "type": "numeric",
+      "prompt": "A current of 2 A flows through a 30 Ω resistor. What voltage is across the resistor?",
+      "answer": 60,
+      "unit": "V",
+      "tolerance": 0.1,
+      "explanation": "V = I × R = 2 A × 30 Ω = 60 V."
+    },
+    {
+      "id": "ohms-law-p4",
+      "type": "numeric",
+      "prompt": "A 9 V battery is connected across a 4.7 kΩ resistor. Find the current in milliamps.",
+      "answer": 1.915,
+      "unit": "mA",
+      "tolerance": 0.02,
+      "explanation": "Convert first: 4.7 kΩ = 4,700 Ω. I = 9 ÷ 4,700 = 0.001915 A = 1.915 mA."
+    },
+    {
+      "id": "ohms-law-p5",
+      "type": "multiple_choice",
+      "prompt": "The voltage across a fixed resistor is doubled. The current through it:",
+      "choices": [
+        "stays the same",
+        "doubles",
+        "is cut in half",
+        "quadruples"
+      ],
+      "correctIndex": 1,
+      "explanation": "I = V ÷ R. With R fixed, current is directly proportional to voltage, so doubling V doubles I."
+    },
+    {
+      "id": "ohms-law-p6",
+      "type": "numeric",
+      "prompt": "A 240 V heating element has a resistance of 48 Ω. What current does it draw?",
+      "answer": 5,
+      "unit": "A",
+      "tolerance": 0.02,
+      "explanation": "I = 240 V ÷ 48 Ω = 5 A."
+    },
+    {
+      "id": "ohms-law-p7",
+      "type": "multiple_choice",
+      "prompt": "A current of 250 mA flows through a 480 Ω resistor. The voltage across the resistor is:",
+      "choices": [
+        "1.92 V",
+        "12 V",
+        "120 V",
+        "120,000 V"
+      ],
+      "correctIndex": 2,
+      "explanation": "Convert 250 mA to 0.25 A, then V = 0.25 A × 480 Ω = 120 V. The 120,000 V answer is what you get by forgetting the conversion."
+    }
+  ],
+  "quiz": {
+    "key": "ohms-law-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "ohms-law-q1",
+        "type": "numeric",
+        "prompt": "A 16 Ω load is connected to 120 V. What current flows?",
+        "answer": 7.5,
+        "unit": "A",
+        "tolerance": 0.02,
+        "explanation": "I = V ÷ R = 120 ÷ 16 = 7.5 A."
+      },
+      {
+        "id": "ohms-law-q2",
+        "type": "numeric",
+        "prompt": "A current of 0.5 A flows through a 220 Ω resistor. What is the voltage across it?",
+        "answer": 110,
+        "unit": "V",
+        "tolerance": 0.1,
+        "explanation": "V = I × R = 0.5 × 220 = 110 V."
+      },
+      {
+        "id": "ohms-law-q3",
+        "type": "numeric",
+        "prompt": "A 12 V source pushes 0.5 A through a lamp. What is the lamp's hot resistance?",
+        "answer": 24,
+        "unit": "Ω",
+        "tolerance": 0.05,
+        "explanation": "R = V ÷ I = 12 ÷ 0.5 = 24 Ω."
+      },
+      {
+        "id": "ohms-law-q4",
+        "type": "multiple_choice",
+        "prompt": "What current flows through a 1 kΩ resistor connected to 5 V?",
+        "choices": [
+          "5 A",
+          "0.2 A",
+          "5 mA",
+          "200 mA"
+        ],
+        "correctIndex": 2,
+        "explanation": "1 kΩ = 1,000 Ω. I = 5 ÷ 1,000 = 0.005 A = 5 mA."
+      },
+      {
+        "id": "ohms-law-q5",
+        "type": "multiple_choice",
+        "prompt": "Which rearrangement of Ohm's law is correct?",
+        "choices": [
+          "R = I × V",
+          "R = V ÷ I",
+          "I = R ÷ V",
+          "V = R ÷ I"
+        ],
+        "correctIndex": 1,
+        "explanation": "From V = I × R, dividing both sides by I gives R = V ÷ I."
+      },
+      {
+        "id": "ohms-law-q6",
+        "type": "numeric",
+        "prompt": "A feeder carries 20 A through conductors with a total resistance of 0.15 Ω. What is the voltage drop in the conductors?",
+        "answer": 3,
+        "unit": "V",
+        "tolerance": 0.02,
+        "explanation": "V_drop = I × R = 20 A × 0.15 Ω = 3 V."
+      },
+      {
+        "id": "ohms-law-q7",
+        "type": "multiple_choice",
+        "prompt": "Which statement about an incandescent lamp is TRUE?",
+        "choices": [
+          "Its filament resistance is highest when cold, so inrush current is small",
+          "Its filament resistance is lowest when cold, so switch-on current is much higher than running current",
+          "Its resistance never changes, so Ohm's law gives the same current at all times",
+          "It has no resistance once lit"
+        ],
+        "correctIndex": 1,
+        "explanation": "Metal filaments have a positive temperature coefficient. Cold resistance is a small fraction of hot resistance, so inrush is many times the steady current."
+      },
+      {
+        "id": "ohms-law-q8",
+        "type": "numeric",
+        "prompt": "A 480 V resistive process heater has a resistance of 40 Ω. What current does it draw?",
+        "answer": 12,
+        "unit": "A",
+        "tolerance": 0.02,
+        "explanation": "I = 480 ÷ 40 = 12 A."
+      },
+      {
+        "id": "ohms-law-q9",
+        "type": "multiple_choice",
+        "prompt": "With the source voltage held constant, the resistance of a circuit is doubled. The current:",
+        "choices": [
+          "doubles",
+          "is cut in half",
+          "stays the same",
+          "drops to zero"
+        ],
+        "correctIndex": 1,
+        "explanation": "Current is inversely proportional to resistance. Twice the ohms, half the amps."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code: 210.19(A) and 215.2(A) informational notes on voltage drop; 210.20(A) continuous loads; Article 430 motor tables; Chapter 9 Table 8 conductor resistance (cited by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Energy Commission, Building Energy Efficiency Standards (Title 24, Part 6), voltage drop requirements for nonresidential buildings",
+      "url": "https://www.energy.ca.gov/programs-and-topics/programs/building-energy-efficiency-standards"
+    },
+    {
+      "title": "Herman, Stephen L., Delmar's Standard Textbook of Electricity (Ohm's law, resistance and temperature)",
+      "url": "https://www.cengage.com/c/delmar-s-standard-textbook-of-electricity-7e-herman/"
+    },
+    {
+      "title": "Fluke, How to measure resistance with a digital multimeter",
+      "url": "https://www.fluke.com/en-us/learn/blog/digital-multimeters/how-to-measure-resistance"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}
