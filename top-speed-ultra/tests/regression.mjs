@@ -1064,7 +1064,10 @@ await group('live', async (use) => {
         const shown = await A.evaluate(() => [...document.querySelectorAll('.board ol li span')].map((e) => e.textContent));
         await A.screenshot({ path: path.join(OUT, 'live-online-board.png') });
         expect(api.distance.every((r) => shown.includes(r.name)) && shown.length >= 1, `panel ${JSON.stringify(shown)} vs server ${JSON.stringify(api.distance)}`);
-      } finally { await A.getByRole('button', { name: 'Done', exact: true }).first().click(); }
+      } finally {
+        await A.getByRole('button', { name: 'Done', exact: true }).first().click();
+        await A.locator('.pick', { hasText: 'Account' }).click();            // the next check starts on the account panel
+      }
       return `distance today: ${api.distance.map((r) => `${r.name} ${r.value} m`).join(', ')}; top speed: ${api.speed.map((r) => `${r.name} ${r.value} m/s`).join(', ') || 'none held 3 s'}`;
     });
     await check('forgot password: the panel asks for a code, the emailed code sets a new password and signs in', async () => {
