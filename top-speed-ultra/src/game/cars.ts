@@ -4,6 +4,7 @@
 
 import { SPEC } from './vehicle/Physics';
 import type { TimeOfDay, Weather } from './settings';
+import type { WheelStyle } from '../preview/car-wheel';
 
 export interface CarDef {
   id: string; name: string; blurb: string; price: number; level: number;
@@ -56,6 +57,22 @@ export const PAINTS: Record<string, Paint[]> = {
 export function paintFor(c: CarDef, saved?: Record<string, number>) {
   const h = saved?.[c.id];
   return h !== undefined && (PAINTS[c.id] ?? []).some((p) => p.hex === h) ? h : c.paint;
+}
+
+// Wheels (U5, the garage's Wheels tab): two rim styles per car, the first the car's own (car-shape.ts), the second a
+// style that suits it (car-wheel.ts builds all seven). Our own names.
+export interface WheelOpt { name: string; style: WheelStyle; note: string }
+export const WHEELS: Record<string, WheelOpt[]> = {
+  'rossini-gt': [{ name: 'Forged Twin', style: 'twin5', note: 'twin five-spoke, machined faces' }, { name: 'Cross Lace', style: 'mesh', note: 'twenty spokes laced in pairs' }],
+  'rossini-brio': [{ name: 'Classic Five', style: 'five', note: 'five-spoke, painted silver' }, { name: 'Cross Lace', style: 'mesh', note: 'twenty spokes laced in pairs' }],
+  'rossini-corsa': [{ name: 'Centre Lock Ten', style: 'cl10', note: 'ten spokes, centre-lock hub' }, { name: 'Turbine Blade', style: 'blade', note: 'seven swept blades' }],
+  'vela-e': [{ name: 'Aero Disc', style: 'aero', note: 'a dished cover with turbine slots' }, { name: 'Turbine Blade', style: 'blade', note: 'seven swept blades' }],
+  'oc-hyper': [{ name: 'Split Five', style: 'multi', note: 'five spokes forking to ten' }, { name: 'Aero Disc', style: 'aero', note: 'a dished cover with turbine slots' }],
+};
+// the rim a car wears: the saved choice if it is one of that car's, else its own (undefined: the car-shape default)
+export function wheelFor(c: CarDef, saved?: Record<string, string>): WheelStyle | undefined {
+  const list = WHEELS[c.id] ?? [], h = saved?.[c.id];
+  return list.find((w) => w.style === h)?.style ?? list[0]?.style;
 }
 
 const BASE = { ...SPEC };

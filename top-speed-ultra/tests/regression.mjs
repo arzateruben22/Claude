@@ -846,6 +846,27 @@ await group('launch', async (use) => {
     await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
     return 'Sunset Orange on the car and saved; back to Rossini Red';
   });
+  // the garage's Wheels tab (U5): two rim styles per car, fitted live (only the wheels rebuilt, never stacked) and kept
+  await check("the garage's Wheels tab fits the second rim style live and keeps the choice", async () => {
+    const count = () => game(page, () => { const c = window.__game.car; return { wheels: c.wheels.length, inScene: c.wheels.filter((w) => !!w.steer.parent).length, root: c.root.children.length, style: c.config.wheel }; });
+    const a = await count();
+    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.getByRole('button', { name: 'Wheels', exact: true }).click();
+    const chips = await page.locator('.wheel-chip').count();
+    await page.getByRole('radio', { name: /Cross Lace/ }).click();
+    await frames(page, 2);
+    const b = await count();
+    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings') || '{}').wheels?.['rossini-gt']);
+    await page.screenshot({ path: path.join(OUT, 'launch-wheels.png') });
+    expect(chips === 2, `${chips} rim styles listed`);
+    expect(b.style === 'mesh' && saved === 'mesh', `car wears ${b.style}, saved ${saved}`);
+    expect(b.wheels === 4 && b.inScene === 4 && b.root === a.root, `wheels ${b.wheels} (${b.inScene} in the scene), root children ${a.root} → ${b.root}`);
+    await page.getByRole('radio', { name: /Forged Twin/ }).click();
+    const c = await count();
+    expect(c.style === 'twin5' && c.root === a.root, `back to ${c.style}, root children ${c.root}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    return `2 styles; Cross Lace fitted and saved, 4 wheels, root ${a.root} children throughout; back to Forged Twin`;
+  });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);

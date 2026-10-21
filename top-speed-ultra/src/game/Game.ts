@@ -27,7 +27,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar, paintFor } from './cars';
+import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
@@ -447,13 +447,14 @@ export class Game {
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
-    const repaint = paintFor(carById(this.driving), s.paints) !== paintFor(carById(this.driving), this.settings.paints);
+    const cur = carById(this.driving);
+    const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
     this.settings = s;
     // the player touched time or weather: from now on the menu shows their choice, not the car's atmosphere (the
     // settings themselves never take the car's atmosphere; it lives only in the environment)
     if (atmo) { this.attractAtmo = false; this.syncAtmosphere(); }
     if (who) this.applyDriver();
-    else if (repaint) this.configureCar();   // the garage's Paint tab: the car is repainted live
+    else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
@@ -511,7 +512,7 @@ export class Game {
     const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
-      car: c.id as CarId, paint: paintFor(c, s.paints), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      car: c.id as CarId, paint: paintFor(c, s.paints), wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
   }

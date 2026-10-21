@@ -11,7 +11,7 @@ import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
-import { carById, figures, slotsFor, garageCars, PAINTS, paintFor } from '../game/cars';
+import { carById, figures, slotsFor, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
@@ -579,9 +579,29 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
   );
 }
 
+// a rim style as a small face-on drawing for the Wheels tab (the 3D wheel is on the car behind the panel)
+function RimIcon({ style }: { style: string }) {
+  const n = style === 'five' ? 5 : style === 'blade' ? 7 : style === 'cl10' ? 10 : style === 'mesh' ? 20 : 10;
+  const spokes = style === 'aero' ? [] : Array.from({ length: n }, (_, k) => {
+    const pair = style === 'twin5' || style === 'multi' || style === 'mesh', base = (pair ? Math.floor(k / 2) / (n / 2) : k / n) * Math.PI * 2, s = k % 2 ? 1 : -1;
+    const a0 = base + (style === 'mesh' ? s * 0.15 : pair ? s * 0.05 : 0), a1 = base + (style === 'mesh' ? -s * 0.15 : style === 'blade' ? 0.6 : pair ? s * (style === 'multi' ? 0.17 : 0.14) : 0);
+    const p = (a: number, r: number) => `${(20 + Math.sin(a) * r).toFixed(2)} ${(20 - Math.cos(a) * r).toFixed(2)}`;
+    return style === 'blade' ? `M${p(a0, 6)} Q${p(base + 0.15, 11)} ${p(a1, 15.5)}` : `M${p(a0, 6)} L${p(a1, 15.5)}`;
+  });
+  const w = style === 'five' ? 2.6 : style === 'blade' ? 2.2 : style === 'mesh' ? 0.9 : 1.4;
+  return (
+    <svg className="rim-ico" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" className="tyre" /><circle cx="20" cy="20" r="16" className="lip" />
+      {style === 'aero' && <><circle cx="20" cy="20" r="15" className="disc" />{[0, 1, 2, 3, 4].map((k) => { const a = k / 5 * Math.PI * 2 + 0.3; return <path key={k} className="slot" d={`M${20 + Math.sin(a) * 7} ${20 - Math.cos(a) * 7} Q${20 + Math.sin(a + 0.3) * 11} ${20 - Math.cos(a + 0.3) * 11} ${20 + Math.sin(a + 0.55) * 13.5} ${20 - Math.cos(a + 0.55) * 13.5}`} />; })}</>}
+      {spokes.map((d, k) => <path key={k} d={d} className="spoke" strokeWidth={w} />)}
+      <circle cx="20" cy="20" r={style === 'multi' ? 5 : 4} className="hub" />
+    </svg>
+  );
+}
+
 // the garage (what you own, pick one) and the showroom (what credits can buy, by level)
 function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; settings: Settings; update: (p: Partial<Settings>) => void; onClose: () => void; onPick: () => void }) {
-  const [tab, setTab] = useState<'cars' | 'paint' | 'wheels' | 'upgrades'>('cars');
+  const [tab, setTab] = useState<'cars' | 'paint' | 'wheels' | 'upgrades' | 'custom'>('cars');
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
@@ -594,7 +614,7 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
         <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
         {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only). Your saved garage doesn't change; turn it off in Settings.</p>}
         {msg && <p className="good" role="status">{msg}</p>}
-        <Seg value={tab} options={['cars', 'paint', 'wheels', 'upgrades']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades' })[t]} onChange={setTab} />
+        <Seg value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />
         {tab === 'paint' && (() => {
           // the car you drive: its six paints, applied live to the car behind the panel and kept for that car
           const car = carById(game.carId), now = paintFor(car, settings.paints), list = PAINTS[car.id] ?? [];
@@ -612,7 +632,25 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
             </div>
           );
         })()}
-        {(tab === 'wheels' || tab === 'upgrades') && <p className="fine soon-note">{tab === 'wheels' ? 'Wheels: a second rim style per car is coming later.' : 'Upgrades (engine, tyres, aero) bought with credits are coming later.'} Nothing here costs real money.</p>}
+        {tab === 'wheels' && (() => {
+          // the car you drive: its own rims and a second style, fitted live to the car behind the panel and kept for that car
+          const car = carById(game.carId), now = wheelFor(car, settings.wheels), list = WHEELS[car.id] ?? [];
+          return (
+            <div className="paints">
+              <p className="fine">{car.name}: {list.find((x) => x.style === now)?.name ?? 'its own rims'}. The car behind this panel wears them now.</p>
+              <div className="paint-grid wheel-grid" role="radiogroup" aria-label={`Wheels for the ${car.name}`}>
+                {list.map((x, i) => (
+                  <button key={x.style} type="button" role="radio" aria-checked={x.style === now} className={'paint-chip wheel-chip' + (x.style === now ? ' on' : '')}
+                    onClick={() => { update({ wheels: { ...settings.wheels, [car.id]: x.style } }); onPick(); }}>
+                    <RimIcon style={x.style} /><b>{x.name}</b><small>{i === 0 ? 'Factory · ' : ''}{x.note}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+        {tab === 'upgrades' && <p className="fine soon-note">Upgrades (engine, tyres, aero) bought with credits are coming later. Nothing here costs real money.</p>}
+        {tab === 'custom' && <p className="fine soon-note">Customize (calipers, tint, liveries in our own designs) is coming later. Nothing here costs real money.</p>}
         {tab === 'cars' && <div className="drivers">
           {garageCars(owner, p.vehicles).map((c) => {
             const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;

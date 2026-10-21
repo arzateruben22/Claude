@@ -18,13 +18,13 @@ import * as THREE from 'three';
 import { Kit, V3, v3, clamp, sstep, withAO } from './car-kit';
 import * as M from './car-mats';
 import { bodyFor, lampMaterials, CarBody } from './car-body';
-import { addWheel, TREAD_V } from './car-wheel';
+import { addWheel, TREAD_V, type WheelStyle } from './car-wheel';
 import { badgeTex, wordmarkTex, ocMarkTex, plateTex, contactShadow, once } from './car-tex';
 import { CarId, shapeFor, rearR } from './car-shape';
 
 export type Quality = 'phone' | 'high';
 export type { CarId } from './car-shape';
-export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; cabin?: 'full' | 'shell'; caliper?: number; contactShadow?: boolean; wheels?: boolean }
+export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; cabin?: 'full' | 'shell'; caliper?: number; contactShadow?: boolean; wheels?: boolean; rim?: WheelStyle }   // rim: a garage style in place of the car's own
 
 // the colours each interior shows through the glass from outside
 const SIL: Record<string, [number, number]> = { gt: [0x161618, 0x5c2c12], brio: [0x161618, 0x1b2233], corsa: [0x141416, 0x1a1a1c], vela: [0x1a1a1c, 0x8e8981], hyper: [0x141416, 0x1a1a1c] };
@@ -89,14 +89,14 @@ export function aoFor(B: CarBody) {
 export const carAO = aoFor(bodyFor('rossini-gt'));
 
 // the four wheels, rigid (outside the body's warp), into a kit
-export function addWheels(kit: Kit, B: CarBody, q: Quality) {
+export function addWheels(kit: Kit, B: CarBody, q: Quality, rim?: WheelStyle) {
   const P = B.P, A = B.AXLE;
   kit.rigid(() => {
     for (const [z, track, front] of [[A.zF, A.trackF, true], [A.zR, A.trackR, false]] as [number, number, boolean][]) {
       const r = front ? A.r : rearR(P), k = r / 0.345;
       for (const out of [1, -1] as const) {
         const m = new THREE.Matrix4().compose(v3(out * track, r, z), new THREE.Quaternion(), v3(1, k, k));
-        addWheel(kit, { q, front, style: P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall }, m, out);
+        addWheel(kit, { q, front, style: rim ?? P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall }, m, out);
       }
     }
   });
@@ -112,7 +112,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   const full = (o.cabin ?? 'full') === 'full';
   B.buildBody(kit, { q, glass: full });
   if (full) B.cabinSilhouette(kit);
-  if (o.wheels ?? true) addWheels(kit, B, q);          // false: the game adds its own wheels, which spin and steer
+  if (o.wheels ?? true) addWheels(kit, B, q, o.rim);          // false: the game adds its own wheels, which spin and steer
   const mats = carMaterials(o.paint ?? P.paint, q, o.caliper ?? P.caliper, id);
   kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
   for (const k of SWITCHED_LAMPS) { const m = g.getObjectByName(k); if (m) m.visible = false; }

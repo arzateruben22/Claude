@@ -77,7 +77,7 @@ export interface SkinOptions {
   veins: number[];              // segments in the hand frame (mm): x0 y0 z0 x1 y1 z1 r, then the skin's up there
   holes: number[];              // glove openings (mm): x y z r (4 knuckles, then the back)
   holeNormals: number[];        // their outward normals
-  accent?: number;              // the glove's stripe at the wrist closure (hex; default the Ace's lavender, #b9a6ff: hands.ts doesn't pass it)
+  accent?: number;              // the glove's stripe at the wrist closure (hex; the driver's accent, which hands.ts passes; default the Ace's lavender, #b9a6ff)
 }
 
 /** where the Wrench's rolled sleeve ends, mm from the wrist (hands-acc.ts rolls it there; the skin's tan line sits

@@ -876,11 +876,24 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* ------------------------------------------------------------------ the garage's Paint tab (U5) */
 .paints { display: grid; gap: 12px; }
 .paint-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.paint-grid.wheel-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 .paint-chip { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 12px 6px 8px; border: 0; cursor: pointer; text-align: left; color: var(--ink); background: var(--cell); box-shadow: inset 0 0 0 1px var(--line); }
 .paint-chip .sw { flex: none; width: 30px; height: 30px; border-radius: 50%; box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.35), inset 0 4px 8px rgba(255, 255, 255, 0.25), 0 0 0 1px var(--line-2); }
 .paint-chip b { font: 600 14px/1.2 var(--f-ui); }
 .paint-chip.on { background: var(--cyan-wash); box-shadow: inset 0 0 0 1px var(--cyan-line), inset 3px 0 0 var(--cyan); }
 @media (hover: hover) { .paint-chip:not(.on):hover { box-shadow: inset 0 0 0 1px var(--line-3); } }
+/* the Wheels tab: a face-on rim drawing, the name and a short note (U5) */
+.wheel-chip { display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 12px; padding: 8px 12px 8px 8px; }
+.wheel-chip .rim-ico { grid-row: 1 / 3; width: 44px; height: 44px; }
+.wheel-chip b { align-self: end; }
+.wheel-chip small { align-self: start; font: 500 12px/1.3 var(--f-ui); color: var(--dim); }
+.rim-ico .tyre { fill: #0b0d10; }
+.rim-ico .lip { fill: none; stroke: var(--chrome); stroke-width: 1.2; opacity: 0.85; }
+.rim-ico .disc { fill: #2a2d33; }
+.rim-ico .slot { fill: none; stroke: #0b0d10; stroke-width: 2.4; stroke-linecap: round; }
+.rim-ico .spoke { stroke: var(--chrome); stroke-linecap: round; fill: none; }
+.rim-ico .hub { fill: var(--chrome); }
+.wheel-chip.on .rim-ico .lip, .wheel-chip.on .rim-ico .hub { stroke: var(--cyan); }
 .soon-note { padding: 14px; box-shadow: inset 0 0 0 1px var(--line); }
 
 /* ------------------------------------------------------------------ the radio card (U7, RadioCard.tsx): beside the controls */

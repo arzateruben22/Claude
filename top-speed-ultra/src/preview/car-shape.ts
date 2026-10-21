@@ -16,6 +16,7 @@
 // changes round it. The hypercar alone moves its driver lower and inboard (seatOffset below: seatDrop, seatX), so the
 // eye sits under its 1.12 m roof. Lengths in metres, car frame (x right, y up, the car faces -z, origin under the middle).
 import type { PaintMask } from './car-mats';
+import type { WheelStyle } from './car-wheel';
 export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper';
 export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'];
 type K = [number, number][];
@@ -64,7 +65,7 @@ export interface ShapeParams {
   handles: 'hidden' | 'flush';
   mirrorAt: [number, number, number];
   cabinW: number;                        // inner door-card half-width
-  wheel: 'twin5' | 'five' | 'cl10' | 'aero' | 'multi';
+  wheel: WheelStyle;
   rimColor: number; caliper: number;
   interior: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   // the OC Hypercar's own pieces (absent on the other cars, which then build exactly as before)

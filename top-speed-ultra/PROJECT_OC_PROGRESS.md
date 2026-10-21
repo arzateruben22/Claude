@@ -4,6 +4,36 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (12:00 UTC): the garage's Wheels tab (U5 done); the run card saves in the viewer; the aero cover's streaks
+
+- **Wheels tab (U5).** Two rim styles per car (`cars.ts` `WHEELS`, our own names), fitted live to the car behind the
+  panel and kept per car in `settings.wheels` (validated in `readSettings`). Only the four wheels are rebuilt
+  (`PlayerCar.buildWheels`); the body, cockpit and hands stay. Two new rim designs in `car-wheel.ts`:
+  - **Cross Lace** (`mesh`): twenty slim spokes in crossing pairs, machined faces. Second style for the GT and the Brio.
+  - **Turbine Blade** (`blade`): seven blades swept toward the rim, mirrored on the left. Second style for the Corsa and
+    the Vela E.
+  - The hypercar's second style is the **Aero Disc** cover.
+  - Each choice has a small face-on rim drawing (SVG, `RimIcon` in `App.tsx`).
+- **Checked.** Close-up renders (`tools/preview-shoot.mjs src/preview/test-car.ts`, `view=wheel-side`, new `rim=`
+  query; `tests/out/wheels/`): GT Cross Lace, Corsa Turbine Blade, hypercar and Vela E Aero Disc. New launch check:
+  the tab lists 2 styles; Cross Lace is fitted and saved; 4 wheels in the scene; the car's root keeps 11 children
+  through both changes. `npm test -- --only=launch` **8/8**.
+- **Found and fixed: the Aero Disc cover was shaded in heavy streaks** (pre-existing on the Vela E's own wheels; the
+  hypercar render showed it). The dished cover's normals were averaged over the cap's long sliver triangles; they now
+  come from the dish's formula. The heavy faceting is gone; faint vertical streaks remain on the cover in the debug
+  view, not yet explained.
+- **Not a bug: old wheels on a car change.** The old code disposed of the previous wheels without removing them; a
+  check on the previous build (GT, hypercar, Corsa, GT in owner mode) found the root at 11 children throughout, so
+  nothing was left behind. `buildWheels` removes them explicitly anyway.
+- **Run card in the viewer.** The save through the viewer's prompt was already in `runCard.ts` (fd7c0c3); the test
+  artifact had never declared it. Republished with `downloads` declared (version 3); the publish no longer warns.
+  Not yet tried by a person inside the viewer.
+- **Customize tab** added to the garage as "coming later" (U5's last tab). `tools/garage-shot.mjs` (new,
+  `tests/out/garage/`): every tab at 1280 × 720 and 390 × 844, no page errors, no sideways scroll; on a phone the five
+  tabs wrap to two rows. `npm test -- --only=render` **14/14**; launch rerun on the final build **8/8**.
+- **Glove stripe.** `hands.ts` now passes the driver's accent to the glove's wrist stripe. No visible change today:
+  the Ace is the only gloved driver and its accent equals the old default.
+
 ## 2026-10-21 (11:45 UTC): the full suite green on the merged branch; the test build republished
 
 - `npm test` (all groups) after the clothing merge: **62/62**. The intermittent reset check passed this time.

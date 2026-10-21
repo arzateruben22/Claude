@@ -80,12 +80,12 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 - 06:45 App.tsx, styles.css: the phone (`Phone.tsx`, panel 'phone') from the pause screen; the radio card's stars centred.
 - 06:50 App.tsx, styles.css: Settings regrouped into six sections (Graphics, HUD and map, World, Driving, Sound, Testing) with a sticky jump rail; every control keeps its label.
 - 06:55 App.tsx, styles.css: the radial quick menu (`RadialMenu.tsx`): hold Pause or Tab for 300 ms while driving; a tap on Pause still pauses.
+- 12:00 App.tsx, styles.css: the garage's Wheels tab (`RimIcon`, `.wheel-chip`); `settings.wheels`; PlayerCar rebuilds only the wheels on a change (`buildWheels`); two rim styles in `car-wheel.ts` (`mesh`, `blade`); the aero cover's normals; a Customize tab ("coming later").
 
-Next here, all outside the lanes above (updated 11:45 UTC): done: the World Map (U4), the garage's Paint tab (U5),
-the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes; the full suite
-62/62 and the test build republished. Then, in order: the run card's save inside the artifact viewer (the viewer's
-downloads capability, falling back to today's download and share sheet outside it); the garage's second wheel style
-per car (the rest of U5); the glove stripe in each driver's colour (hands.ts passes the accent); polish passes.
+Next here, all outside the lanes above (updated 12:00 UTC): done: the World Map (U4), the garage's Paint and Wheels
+tabs (U5), the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes, the
+run card's save in the viewer, the glove stripe from the driver's accent. Then: polish passes (the aero cover's faint
+streaks; phone-size checks of the other new panels).
 
 ### Decisions waiting (the owner's)
 
