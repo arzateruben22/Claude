@@ -38,7 +38,7 @@ const rows = (q: any): Promise<any[]> => Promise.resolve(q).then((r: any) => r?.
 export async function priorities(db: any, now = Date.now()): Promise<Priority[]> {
   const today = dayOf(now), nowIso = new Date(now).toISOString();
   const endOfToday = today + "T23:59:59.999Z";
-  const [questions, bookingsToday, intakes, shipments, pickups, products, members, lessons, waitlist, regulars, ahead] = await Promise.all([
+  const [questions, bookingsToday, intakes, shipments, pickups, products, members, lessons, waitlist, regulars, ahead, consults] = await Promise.all([
     rows(db.from("questions").select("name, kind, due_at, member").eq("status", "waiting")),
     rows(db.from("bookings").select("guest_name, guest_email, start_min").eq("date", today).in("status", ["pending", "held"])),
     rows(db.from("intake_forms").select("email")),
@@ -50,6 +50,7 @@ export async function priorities(db: any, now = Date.now()): Promise<Priority[]>
     rows(db.from("waitlist").select("name, date").eq("status", "waiting").gte("date", today).lte("date", dayOf(now + 7 * DAY))),
     rows(db.from("contacts").select("name, email, last_visit, visits").gte("visits", 2).gte("last_visit", dayOf(now - 120 * DAY)).lte("last_visit", dayOf(now - 35 * DAY))),
     rows(db.from("bookings").select("guest_email").gte("date", today).in("status", ["pending", "held"])),
+    rows(db.from("consults").select("name, email, kind, status, products, created_at").in("status", ["waiting", "paid"])),
   ]);
   const out: Priority[] = [];
   const add = (tier: 1 | 2 | 3 | 4, kind: string, n: number, title: string, body: string, url: string) => { if (n > 0) out.push({ tier, kind, n, title, body, url }); };
@@ -69,6 +70,9 @@ export async function priorities(db: any, now = Date.now()): Promise<Priority[]>
   const lateShip = shipments.filter((s) => String(s.ship_by) < today);
   add(1, "ship_overdue", lateShip.length, `Overdue to ship: ${names(lateShip)}`,
     "Promised within two business days of the order. Pack it, buy the label, mark it shipped.", "dashboard.html#shipping");
+  const gate = consults.filter((c) => c.kind === "gate" && c.status === "waiting");
+  add(1, "consult_waiting", gate.length, `Waiting to buy: ${names(gate)}`,
+    "They asked for an active and told you about their skin. Approve or decline in a tap; the product unlocks for them by email.", "dashboard.html#consults");
   const signed = new Set(intakes.map((i) => String(i.email ?? "").toLowerCase()));
   const noForm = bookingsToday.filter((b) => b.guest_email && !signed.has(String(b.guest_email).toLowerCase()));
   add(1, "intake_missing", noForm.length, `Pre-visit form missing today: ${names(noForm, "guest_name")}`,
@@ -86,6 +90,9 @@ export async function priorities(db: any, now = Date.now()): Promise<Priority[]>
   const dueToday = questions.filter((q) => !MEDICAL.has(q.kind) && String(q.due_at) >= nowIso && String(q.due_at) <= endOfToday);
   add(2, "question_today", dueToday.length, `${plural(dueToday.length, "question")} to answer today: ${names(dueToday)}`,
     "A reply is drafted for each; check it, make it yours, send.", Q);
+  const paidConsults = consults.filter((c) => c.kind === "online" && c.status === "paid");
+  add(2, "consult_paid", paidConsults.length, `${plural(paidConsults.length, "online consult")} to schedule: ${names(paidConsults)}`,
+    "Paid on the website. Message them to set the 15-minute call, then mark it done and the $35 certificate goes out by itself.", "dashboard.html#consults");
   const soldOut = products.filter((p) => Number(p.stock) === 0);
   add(2, "sold_out", soldOut.length, `Sold out: ${soldOut.map((p) => p.name).slice(0, 3).join(", ")}${soldOut.length > 3 ? ` and ${soldOut.length - 3} more` : ""}`,
     "Clients can request these from the shop. Restock, or hide them until you can.", "dashboard.html#inventory");

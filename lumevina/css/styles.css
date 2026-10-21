@@ -6669,3 +6669,26 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .mg-note { margin: 0.4rem 0 0; padding: 0.6rem 0.8rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.45; background: rgba(var(--accent-rgb), 0.08); }
 .mg-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
 .mg-actions:empty { display: none; }
+
+/* ── the consult gate (js/consult.js): an active Evelyn checks first ── */
+.sh-consult { border-style: dashed; }
+.sh-consult.is-waiting { opacity: .72; cursor: default; }
+.sh-consult-card { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; margin: 0 0 1.2rem; padding: 1.1rem 1.3rem; border-radius: 18px;
+  background: linear-gradient(135deg, #f7f1e8, #efe3d2); border: 1px solid rgba(22,20,18,.08); }
+.sh-consult-text { min-width: 0; }
+.sh-consult-k { margin: 0 0 .2rem; font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #7d5a44; }
+.sh-consult-card h3 { margin: 0 0 .3rem; font-size: 1.1rem; line-height: 1.2; }
+.sh-consult-card p:last-child { margin: 0; font-size: .92rem; line-height: 1.45; color: #4a433d; max-width: 54ch; }
+.sh-consult-card .btn { flex: 0 0 auto; white-space: nowrap; }
+@media (max-width: 640px) { .sh-consult-card { flex-direction: column; align-items: stretch; } .sh-consult-card .btn { width: 100%; } }
+.cs .pd-inner { display: block; max-width: 560px; }
+.cs-inner { padding: 1.4rem 1.4rem 1.6rem; }
+.cs-kicker { margin: 0 0 .3rem; }
+.cs-lead { margin: .4rem 0 .9rem; font-size: .98rem; line-height: 1.5; }
+.cs-form label, .cs-lab { display: block; margin: .8rem 0 .3rem; font-size: .88rem; font-weight: 600; }
+.cs-form input, .cs-form textarea { width: 100%; padding: .72rem .85rem; border: 1px solid rgba(22,20,18,.18); border-radius: 12px; font: inherit; font-size: 1rem; background: #fff; color: inherit; }
+.cs-form input:focus, .cs-form textarea:focus { outline: 2px solid #161412; outline-offset: 1px; }
+.cs-hint { margin: .5rem 0 0; font-size: .82rem; line-height: 1.4; color: #7d5a44; }
+.cs-status { min-height: 1.2em; margin: .6rem 0 0; font-size: .9rem; color: #7d5a44; }
+.cs-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.cs-actions .btn { flex: 1 1 auto; }

@@ -526,11 +526,13 @@ create table products (
   stock int check (stock is null or stock >= 0),  -- null: not counted
   low_at int not null default 3,                  -- tell Evelyn when it gets this low
   hidden boolean not null default false,          -- off the website (drafts, discontinued)
+  kind text not null default 'product' check (kind in ('product', 'consult')),   -- 'consult': the online Skin Consult, a service
+  consult boolean not null default false,         -- an active: needs Evelyn's yes before it sells (the consult gate)
   updated_at timestamptz not null default now()
 );
 alter table products enable row level security;  -- no policies: the view below is the public part
 
-create view shelf as select id, stock, price_cents, hidden from products;
+create view shelf as select id, stock, price_cents, hidden, kind, consult from products;
 grant select on shelf to anon, authenticated;
 
 -- take stock off for a list of [{ "id", "qty" }], in one step, never below
@@ -582,6 +584,34 @@ create index orders_ref on orders (ref);
 alter table orders enable row level security;
 create policy "clients read their own orders" on orders
   for select using (lower(email) = lower(auth.jwt() ->> 'email'));
+
+-- ── Consults: the gate on the actives, and the online Skin Consult ────
+-- gate:   a client asked to buy an active (functions/consult → request);
+--         Evelyn approves (that email may buy those products, [] = every
+--         active) or declines, with a line (functions/studio → consult_decide)
+-- online: a paid Skin Consult (the shop's svc-online-consult); done = every
+--         active unlocked for that email and a $35 certificate sent
+--         (functions/studio → consult_done)
+create table consults (
+  id uuid primary key default gen_random_uuid(),
+  kind text not null check (kind in ('gate', 'online')),
+  status text not null default 'waiting' check (status in ('waiting', 'approved', 'declined', 'paid', 'done')),
+  email text not null,
+  name text,
+  products text[] not null default '{}',          -- the product ids asked for / approved; [] with approved = every active
+  note text,                                      -- what they wrote about their skin
+  answers jsonb,                                  -- their skin profile or intake at the time, if the website sent it
+  reply text,                                     -- Evelyn's line, emailed with the decision
+  order_id uuid references orders (id) on delete set null,   -- online: the order that paid for it
+  credit_code text,                               -- online, done: the $35 certificate
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  decided_at timestamptz
+);
+create index consults_email on consults (email, status);
+create index consults_open on consults (created_at desc) where status in ('waiting', 'paid');
+alter table consults enable row level security;   -- no policies: the functions use the service key
+
 
 -- ─────────────────────────────────────────────────────────────
 -- Lumevina Studio: what Evelyn's phone is told (functions/_shared/notify.ts)

@@ -97,6 +97,7 @@
 
   /* "in" (plenty), "low" (3 or fewer), "out", or "ask" (count unknown) */
   var status = function (p) {
+    if (p.kind === "consult") return "in";
     if (p.stock == null) return "ask";
     if (num(p.stock) <= 0) return "out";
     return num(p.stock) <= LOW ? "low" : "in";

@@ -6,6 +6,7 @@
 
 // deno-lint-ignore-file no-explicit-any
 import { issueGift } from "./gifts.ts";
+import { consultPaid, isConsultItem } from "./consults.ts";
 import { esc, money, page, sendEmail } from "./mail.ts";
 import { notifyOwner } from "./notify.ts";
 import { earn } from "./points.ts";
@@ -90,6 +91,10 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
   }
   if (codes.length) await db.from("orders").update({ gift_codes: codes }).eq("id", id);
 
+  // the online Skin Consult: its row, the client's "what happens next", Evelyn's phone
+  const consult = order.items.some((i: any) => isConsultItem(i.id));
+  if (consult) await consultPaid(db, order, name).catch((e: unknown) => console.error("consult", e));
+
   // shipping list (dashboard → Shipping)
   if (order.delivery === "ship" && address) {
     const count = order.items.reduce((s: number, i: any) => s + i.qty, 0);
@@ -116,6 +121,7 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
     `<tr><td style="padding:10px 0;font-weight:700">Total</td><td style="padding:10px 0;font-weight:700;text-align:right">${money(total)}</td></tr></table>`;
   const next = order.delivery === "ship" ? "It ships within two business days, and the tracking number comes by email."
     : order.delivery === "pickup" ? "It will be waiting for you at your next visit."
+    : consult ? "Evelyn messages you within two business days to set your 15-minute call; the details are in the next email."
     : order.gifts.some((g: any) => !g.to_buyer) ? "Each certificate is emailed to its recipient (on the date you chose, if you picked one)." : "";
   const track = order.items.length ? ` Ask Lumevina on the website${site() ? ` (<a href="${esc(site())}" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>)` : ""} can tell you where it is any time with this number and your email.` : "";
   await sendEmail(order.email, `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,

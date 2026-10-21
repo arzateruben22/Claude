@@ -611,3 +611,29 @@ alter table questions add column owner_nudged_at timestamptz;
 alter table memberships add column billing_failed_at timestamptz;
 ```
 
+## The consult gate, and the online Skin Consult
+
+Some products need Evelyn's yes before they sell: benzoyl peroxide (Acne Med), the 11% and 15% mandelic serums, Retinal B3, Retinol Peptide, Hydroxi (`js/catalog.js` → `consult: true`; the list follows what the brands answer, STOREFRONT.md step 0). On the shelf they show **Needs a quick consult** instead of Add to cart. The client writes a few lines about their skin (`js/consult.js`); Evelyn approves or declines in the dashboard (Consults); approval is by email, so the same address checks out normally afterwards, signed in or not. `create-checkout` checks the same approval, so the gate can't be skipped by the chat or a crafted request.
+
+The **online Skin Consult** is a line in the catalog (`svc-online-consult`, `kind: "consult"`, $35): the shop shows it as a card above the shelf, it checks out like a product (no shipping, services tax code), and on payment the client gets "what happens next", Evelyn gets a notification, and a row lands in Consults. **Done** unlocks every active for that email and issues a $35 gift certificate (`gift_cards`, source `studio`), emailed with the code.
+
+```
+functions/consult        request (a client asks; "got it" email; her phone), status (what this email may buy)
+functions/studio         consults, consult_decide { id, status, reply?, products? }, consult_done { id }
+_shared/consults.ts      approvedFor / mayBuy (the check), requestConsult, decideConsult, consultPaid, consultDone
+_shared/priorities.ts    "Waiting to buy" (right now), "online consults to schedule" (today)
+```
+
+Deploy and migrate:
+
+```
+supabase functions deploy consult --no-verify-jwt
+supabase functions deploy create-checkout studio stripe-webhook studio-digest client-reminders --no-verify-jwt
+```
+
+```sql
+alter table products add column if not exists kind text not null default 'product' check (kind in ('product', 'consult'));
+alter table products add column if not exists consult boolean not null default false;
+create or replace view shelf as select id, stock, price_cents, hidden, kind, consult from products;
+-- then the consults table from schema.sql, and: node scripts/seed-products.mjs (it carries kind and consult)
+```

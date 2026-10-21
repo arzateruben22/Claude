@@ -36,7 +36,7 @@ const image = (p) => p.photo ? `${site}/${p.photo}` : "";
 const availability = (p) => p.stock == null ? "in_stock" : p.stock > 0 ? "in_stock" : "out_of_stock";
 const description = (p) => [p.about, p.size ? `${p.size}.` : "", `Professional skincare from Evelyn Romero's treatment room at Lumevina Aesthetics Spa, Woodland Hills. Free pickup at your visit, or shipped.`].filter(Boolean).join(" ");
 
-const live = CAT.products.filter((p) => !p.draft && !p.hidden);
+const live = CAT.products.filter((p) => !p.draft && !p.hidden && p.kind !== "consult");
 const items = live.map((p) => `  <item>
     <g:id>${esc(p.id)}</g:id>
     <g:title>${esc(`${p.name} · ${p.brand}`)}</g:title>

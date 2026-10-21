@@ -46,3 +46,5 @@ A client is waiting on her, or money is at risk.
 ## Not on the list, on purpose
 
 Restocking decisions beyond the count (what to order, how many) are hers; the list only says what's out or low. Money reports, taxes and payouts stay in Stripe and her accountant's hands. Anything about a client's skin stays between her and the client.
+
+**Added October 21:** *Waiting to buy* (right now): a client asked for an active and told her about their skin; approve or decline in Consults. *Online consults to schedule* (today): paid Skin Consults waiting for the 15-minute call.

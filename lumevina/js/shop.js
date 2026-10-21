@@ -62,6 +62,17 @@
 
   var buyButton = function (p, compact) {
     var s = INV.status(p);
+    var CS = window.LumevinaConsult;
+    /* an active Evelyn checks first: "Needs a quick consult" until she approves this client's email */
+    if (p.consult && CS && !CS.approved(p.id) && (s === "in" || s === "low")) {
+      var w = CS.waiting(p.id);
+      var g = el("button", "btn btn-ghost sh-consult" + (w ? " is-waiting" : ""));
+      g.type = "button";
+      g.textContent = w ? "Waiting on Evelyn" : compact ? "Consult first" : "Needs a quick consult";
+      g.setAttribute("aria-label", (w ? "Evelyn is reviewing " : "Ask Evelyn about ") + p.name);
+      g.addEventListener("click", function () { CS.open(p); });
+      return g;
+    }
     var b = el("button", "btn " + (s === "in" || s === "low" ? "btn-solid add-to-cart" : "btn-ghost sh-request"));
     b.type = "button";
     if (s === "in" || s === "low") {
@@ -135,6 +146,7 @@
           '<div class="pd-buy"><span class="pd-price"></span><span class="pd-stock"></span></div>' +
           '<div class="pd-action"></div>' +
           '<ul class="pd-notes" role="list">' +
+            '<li class="pd-consult" hidden>Evelyn checks this one with you first: a two-minute note about your skin, and she unlocks it for you, usually within a day.</li>' +
             '<li>Ships in a few days, or pick it up free at your next visit.</li>' +
             '<li>Not sure it suits your skin? <button class="linklike pd-ask" type="button">Ask Evelyn</button></li>' +
           '</ul>' +
@@ -177,6 +189,8 @@
     st.className = "pd-stock sh-stock is-" + s;
     var act = sheet.querySelector(".pd-action");
     act.textContent = "";
+    var pc = sheet.querySelector(".pd-consult");
+    if (pc) pc.hidden = !(p.consult && window.LumevinaConsult && !window.LumevinaConsult.approved(p.id));
     var b = buyButton(p, false);
     if (b.classList.contains("sh-request")) b.addEventListener("click", function () { sheet.close(); });
     act.appendChild(b);
@@ -202,6 +216,9 @@
     show: function (id) { var p = INV.get(id); if (p) showDetail(p); }
   };
 
+  /* the shelf: every live product that is a product (the online consult is a service, shown above the shelf) */
+  var shelf = function () { return INV.live().filter(function (p) { return p.kind !== "consult"; }); };
+
   var sorted = function (list) {
     var bi = function (b) { var i = INV.brands.indexOf(b); return i === -1 ? 99 : i; };
     return list.slice().sort(function (a, b) {
@@ -215,7 +232,7 @@
   var paintRail = function () {
     if (!rail) return;
     rail.textContent = "";
-    var now = sorted(INV.live()).filter(function (p) { var s = INV.status(p); return s === "in" || s === "low"; }).slice(0, 8);
+    var now = sorted(shelf()).filter(function (p) { var s = INV.status(p); return s === "in" || s === "low"; }).slice(0, 8);
     now.forEach(function (p) { var li = el("li"); li.appendChild(card(p, true)); rail.appendChild(li); });
     var wrap = rail.closest(".hero-shelf");
     if (wrap) wrap.hidden = !now.length;
@@ -249,7 +266,7 @@
   var thumb = null;
   var buildChips = function () {
     if (!brandsEl) return;
-    var list = INV.live();
+    var list = shelf();
     brandsEl.textContent = "";
     thumb = el("span", "sh-seg-thumb");
     thumb.setAttribute("aria-hidden", "true");
@@ -453,7 +470,7 @@
 
   var paintGrid = function () {
     if (!grid) return;
-    var list = sorted(INV.live().filter(matches));
+    var list = sorted(shelf().filter(matches));
     var groups = INV.categories.map(function (c) {
       return { cat: c, items: list.filter(function (p) { return p.cat === c; }) };
     }).filter(function (g) { return g.items.length; });
@@ -548,7 +565,7 @@
     var paintPop = function () {
       var query = q.value.trim();
       if (norm(query).length < 2) { closePop(); return; }
-      var ranked = INV.live().map(function (p) { return { p: p, s: score(p, query) }; })
+      var ranked = shelf().map(function (p) { return { p: p, s: score(p, query) }; })
         .filter(function (x) { return x.s > 0; })
         .sort(function (a, b) { return (b.s - a.s) || (STATUS_ORDER[INV.status(a.p)] - STATUS_ORDER[INV.status(b.p)]) || a.p.name.localeCompare(b.p.name); });
       picks = ranked.slice(0, 6).map(function (x) { return x.p; });
@@ -647,6 +664,15 @@
 
   var paintAll = function () { buildChips(); paintChips(); paintGrid(); paintRail(); };
   INV.onChange(paintAll);
+  /* Evelyn approved an active for this client: its button turns into Add to cart */
+  document.addEventListener("lumevina:consult-changed", function () { paintGrid(); paintRail(); });
+  /* the online consult card above the shelf: one tap puts it in the bag */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-consult-add]");
+    if (!b || !window.LumevinaCart) return;
+    var r = window.LumevinaCart.add("svc-online-consult");
+    if (r.ok || r.reason === "max") window.LumevinaCart.open();
+  });
   if (shop) shop.classList.add("is-live");
   paintAll();
 

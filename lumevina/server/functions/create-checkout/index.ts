@@ -24,11 +24,12 @@
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { isLive, memberFor, PLANS } from "../_shared/membership.ts";
+import { approvedFor, mayBuy } from "../_shared/consults.ts";
 
 const SHIP_CENTS = 800, FREE_OVER_CENTS = 7500;           // same rule as js/cart.js
 const GIFT_MIN = 25, GIFT_MAX = 1000;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const TAX_GOODS = "txcd_99999999", TAX_NONE = "txcd_00000000", TAX_SHIPPING = "txcd_92010001";
+const TAX_GOODS = "txcd_99999999", TAX_NONE = "txcd_00000000", TAX_SHIPPING = "txcd_92010001", TAX_SERVICES = "txcd_20030000";   // services: the online consult
 
 const clip = (v: unknown, n: number) => String(v ?? "").trim().slice(0, n);
 
@@ -61,15 +62,22 @@ Deno.serve(async (req) => {
     if (id && qty > 0 && qty <= 20) want.set(id, (want.get(id) ?? 0) + qty);
   }
   const items: { id: string; name: string; qty: number; price_cents: number }[] = [];
+  const services = new Set<string>();
   if (want.size) {
-    const { data: rows } = await db.from("products").select("id, name, price_cents, stock, hidden").in("id", [...want.keys()]);
+    const { data: rows } = await db.from("products").select("id, name, price_cents, stock, hidden, kind, consult").in("id", [...want.keys()]);
+    const gated = (rows ?? []).filter((r: any) => r.consult && want.has(r.id));
+    const approval = gated.length ? await approvedFor(db, email) : null;
     for (const [id, qty] of want) {
       const p = (rows ?? []).find((r: any) => r.id === id);
       if (!p || p.hidden) return json({ reason: "unavailable", id }, 409);
       if (p.stock != null && qty > p.stock) return json({ reason: "stock", id, left: p.stock, name: p.name }, 409);
-      items.push({ id, name: p.name, qty, price_cents: rate ? Math.round(p.price_cents * (1 - rate)) : p.price_cents });
+      // an active Evelyn checks first: only with her yes for this email (the shop asks before it gets here)
+      if (p.consult && approval && !mayBuy(approval, id)) return json({ reason: "consult_needed", id, name: p.name }, 409);
+      if (p.kind === "consult") services.add(id);
+      items.push({ id, name: p.name, qty: p.kind === "consult" ? 1 : qty, price_cents: p.kind === "consult" || !rate ? p.price_cents : Math.round(p.price_cents * (1 - rate)) });
     }
   }
+  const physical = items.filter((i) => !services.has(i.id));
   const gifts: any[] = [];
   for (const g of Array.isArray(body.gifts) ? body.gifts.slice(0, 10) : []) {
     const amount = Math.round(Number(g?.amount));
@@ -88,8 +96,9 @@ Deno.serve(async (req) => {
   if (!items.length && !gifts.length) return json({ reason: "empty" }, 400);
 
   const retailCents = items.reduce((s, i) => s + i.price_cents * i.qty, 0);
-  const delivery = !items.length ? "none" : body.delivery === "pickup" ? "pickup" : "ship";
-  const shippingCents = delivery === "ship" && !rate && retailCents < FREE_OVER_CENTS ? SHIP_CENTS : 0;
+  const physicalCents = physical.reduce((s, i) => s + i.price_cents * i.qty, 0);
+  const delivery = !physical.length ? "none" : body.delivery === "pickup" ? "pickup" : "ship";
+  const shippingCents = delivery === "ship" && !rate && physicalCents < FREE_OVER_CENTS ? SHIP_CENTS : 0;
   const subtotal = retailCents + gifts.reduce((s, g) => s + g.amount_cents, 0);
 
   // ── the pending order ──
@@ -122,7 +131,7 @@ Deno.serve(async (req) => {
     if (tax) f.set(`line_items[${n}][price_data][tax_behavior]`, "exclusive");
     n++;
   };
-  items.forEach((i) => line(i.name + (rate ? ` (member ${Math.round(rate * 100)}% off)` : ""), i.price_cents, i.qty, TAX_GOODS));
+  items.forEach((i) => services.has(i.id) ? line(i.name, i.price_cents, i.qty, TAX_SERVICES) : line(i.name + (rate ? ` (member ${Math.round(rate * 100)}% off)` : ""), i.price_cents, i.qty, TAX_GOODS));
   gifts.forEach((g) => line(`Lumevina e-gift certificate · $${g.amount_cents / 100}` + (g.recipient_name ? ` for ${g.recipient_name}` : ""), g.amount_cents, 1, TAX_NONE));
   if (delivery === "ship") {
     f.set("shipping_address_collection[allowed_countries][0]", "US");

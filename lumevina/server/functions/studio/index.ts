@@ -30,6 +30,10 @@
 // POST { action: "lessons" }                       → { lessons }  suggested and approved answers (Teach the chat)
 // POST { action: "lesson_save", id, question?, answer?, status? }   edit, approve ("approved") or dismiss ("dismissed")
 // POST { action: "lesson_add", question, answer }  one of her own, approved
+// the consult gate and the online consult (../_shared/consults.ts):
+// POST { action: "consults" }                      → { consults }  waiting and paid first, then the last 30 days decided
+// POST { action: "consult_decide", id, status: "approved" | "declined", reply?, products? }   emailed to the client
+// POST { action: "consult_done", id }              → { code }  every active unlocked for that email; the $35 certificate sent
 // "answer" also suggests a general answer from her reply (teach: false to skip): ../_shared/learn.ts
 //
 // Deploy:  supabase functions deploy studio --no-verify-jwt
@@ -49,6 +53,7 @@ import { PLANS } from "../_shared/membership.ts";
 import { getProfile, memories } from "../_shared/profiles.ts";
 import { suggestLesson } from "../_shared/learn.ts";
 import { site } from "../_shared/bookings.ts";
+import { consultDone, decideConsult } from "../_shared/consults.ts";
 
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 /** "May 14", "05/14/1990", "1990-05-14" → 4 (May), or null */
@@ -173,6 +178,27 @@ Deno.serve(async (req) => {
       /* a general answer for the chat, from her reply, for her to approve */
       const lesson = reply && body.teach !== false ? await suggestLesson(db, q, reply) : null;
       return json({ ok: true, emailed, lesson });
+    }
+    case "consults": {
+      const since = new Date(Date.now() - 30 * 864e5).toISOString();
+      const { data } = await db.from("consults").select("*").or(`status.in.(waiting,paid),decided_at.gte."${since}"`)
+        .order("created_at", { ascending: false }).limit(limit);
+      const ids = [...new Set((data ?? []).flatMap((c: any) => c.products ?? []))];
+      const { data: prods } = ids.length ? await db.from("products").select("id, name, brand").in("id", ids) : { data: [] };
+      const names = new Map<string, string>((prods ?? []).map((p: any) => [p.id, `${p.brand ? p.brand + " " : ""}${p.name}`]));
+      return json({ consults: (data ?? []).map((c: any) => ({ ...c, product_names: (c.products ?? []).map((p: string) => names.get(p) ?? p) })) });
+    }
+    case "consult_decide": {
+      const { data: prods } = await db.from("products").select("id, name, brand").eq("consult", true);
+      const names = new Map<string, string>((prods ?? []).map((p: any) => [p.id, `${p.brand ? p.brand + " " : ""}${p.name}`]));
+      const r = await decideConsult(db, body, names);
+      if (!r) return json({ reason: "not_found" }, 404);
+      return json({ ok: true, status: r.consult.status, emailed: r.emailed });
+    }
+    case "consult_done": {
+      const r = await consultDone(db, String(body.id ?? ""));
+      if (!r) return json({ reason: "not_found" }, 404);
+      return json({ ok: true, code: r.code });
     }
     case "contacts": {
       const q = String(body.q ?? "").trim().toLowerCase().replace(/[%,()]/g, "");

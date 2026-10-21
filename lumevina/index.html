@@ -147,6 +147,15 @@
           <div class="sh-tabs sh-cats"></div>
           <p class="sh-count" aria-live="polite"></p>
         </nav>
+        <!-- the online Skin Consult: a service above the shelf (js/shop.js adds it to the bag; js/consult.js runs the gate on the actives) -->
+        <div class="sh-consult-card" id="sh-consult" data-reveal>
+          <div class="sh-consult-text">
+            <p class="sh-consult-k">Not sure what your skin needs?</p>
+            <h3>Skin Consult, online &middot; 15 minutes</h3>
+            <p>Evelyn looks at your skin and what you use, builds the routine, and unlocks the actives you need. $35, and it comes back as a code on your first order.</p>
+          </div>
+          <button type="button" class="btn btn-solid" data-consult-add>Book it &middot; $35</button>
+        </div>
         <div class="sh-grid" id="retail-grid"></div>
         <p class="sh-fallback">The shop loads here. To order now, email
           <a class="inline-link" href="mailto:Lumevina.aesthetics@gmail.com">Lumevina.aesthetics@gmail.com</a>
@@ -1935,6 +1944,7 @@
   <script src="js/member-nudge.js"></script>
   <script src="js/routine.js"></script>
   <script src="js/intake.js"></script>
+  <script src="js/consult.js"></script>
   <script src="js/liquid-metal.js"></script>
   <script src="js/morphing-light.js"></script>
   <script src="js/moving-border.js"></script>

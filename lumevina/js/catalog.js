@@ -23,8 +23,17 @@
  * Not in the list on purpose: "Shipping Fee - $6.00" (a checkout setting,
  * not a product; see EVELYN-NOTES.md) and anything not in her inventory.
  *
+ *   consult: true An active that needs Evelyn's yes first (benzoyl peroxide,
+ *                 the stronger mandelic serums, retinoids, Hydroxi): the shop
+ *                 shows "Needs a quick consult" until she approves that email
+ *                 (js/consult.js; server: functions/consult). The list follows
+ *                 what the brands answer (STOREFRONT.md, step 0).
+ *   kind: "consult"  The online Skin Consult: a service in the shop, not on
+ *                 the shelf. Paid like a product; done = the actives unlock
+ *                 and the $35 comes back as a certificate.
+ *
  * TODO (Evelyn): photos, a short description and directions for each
- * product; which products need a consultation before purchase.
+ * product; the consult list, once the brands answer.
  */
 (function () {
   "use strict";
@@ -34,7 +43,7 @@
   var P = function (brand, name, price, stock, cat, extra) {
     var p = { brand: brand, name: name, price: price, stock: stock, cat: cat };
     if (extra) Object.keys(extra).forEach(function (k) { p[k] = extra[k]; });
-    var pre = { "Face Reality": "fr", "GlyMed Plus": "gm", "Mixi Skincare": "mx", "Circadia": "ci" }[brand];
+    var pre = { "Face Reality": "fr", "GlyMed Plus": "gm", "Mixi Skincare": "mx", "Circadia": "ci", "Lumevina": "svc" }[brand];
     p.id = pre + "-" + (extra && extra.slug || name).toLowerCase().replace(/%/g, "pct").replace(/\+/g, "plus")
       .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     return p;
@@ -42,10 +51,10 @@
 
   var LIST = [
     /* ── Face Reality: 30 entries ── */
-    P(FR, "11% L-Mandelic Serum", 46, 0, "Serums", { inv: "11% Mandelic Serum", slug: "11pct-mandelic-serum", photo: "img/products/face-reality-11-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
-    P(FR, "15% L-Mandelic Serum", 48, 0, "Serums", { inv: "15% Mandelic Serum", slug: "15pct-mandelic-serum", photo: "img/products/face-reality-15-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
-    P(FR, "2.5% Advanced Acne Med", 29, 1, "Acne & spot care", { inv: "2.5% ADV Acne Med", slug: "2-5pct-adv-acne-med", photo: "img/products/face-reality-2-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
-    P(FR, "5% Advanced Acne Med", 30, 0, "Acne & spot care", { inv: "5% ADV Acne Med", slug: "5pct-adv-acne-med", photo: "img/products/face-reality-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
+    P(FR, "11% L-Mandelic Serum", 46, 0, "Serums", { consult: true, inv: "11% Mandelic Serum", slug: "11pct-mandelic-serum", photo: "img/products/face-reality-11-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "15% L-Mandelic Serum", 48, 0, "Serums", { consult: true, inv: "15% Mandelic Serum", slug: "15pct-mandelic-serum", photo: "img/products/face-reality-15-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "2.5% Advanced Acne Med", 29, 1, "Acne & spot care", { consult: true, inv: "2.5% ADV Acne Med", slug: "2-5pct-adv-acne-med", photo: "img/products/face-reality-2-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
+    P(FR, "5% Advanced Acne Med", 30, 0, "Acne & spot care", { consult: true, inv: "5% ADV Acne Med", slug: "5pct-adv-acne-med", photo: "img/products/face-reality-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
     P(FR, "5% L-Mandelic Serum", 42, 0, "Serums", { inv: "5% Mandelic Serum", slug: "5pct-mandelic-serum", photo: "img/products/face-reality-5-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
     P(FR, "8% L-Mandelic Serum", 44, 1, "Serums", { inv: "8% Mandelic Serum", slug: "8pct-mandelic-serum", photo: "img/products/face-reality-8-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
     P(FR, "Antioxidant Peptide Eye Gel", 48, 1, "Eye care", { inv: "Antioxidant Eye Gel", slug: "antioxidant-eye-gel", photo: "img/products/face-reality-antioxidant-peptide-eye-gel.webp", size: "0.4 fl oz / 12 ml", about: "Smooths and visibly depuffs." }),
@@ -67,8 +76,8 @@
     P(FR, "Moisture Balance Toner (2 fl oz)", 14, 1, "Toners & mists", { inv: "Moisture Balance Toner…", slug: "moisture-balance-toner-14", photo: "img/products/face-reality-moisture-balance-toner-2oz.webp", size: "2 fl oz / 60 ml", about: "Hydrates and replenishes.", resolved: "Flag [7] answered by the label photo: the $14 entry is the 2 fl oz / 60 ml bottle." }),
     P(FR, "Omni Clear Mist", 40, 4, "Toners & mists", { photo: "img/products/face-reality-omni-clear-mist.webp", size: "3.4 fl oz / 100 ml", about: "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested." }),
     P(FR, "PowerMineral SPF 50", 42, 3, "Sun care", { inv: "PowderMineral SPF 50", slug: "powdermineral-spf-50", photo: "img/products/face-reality-powermineral-spf-50.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe." }),
-    P(FR, "Retinal B3 Serum", 54, null, "Serums", { photo: "img/products/face-reality-retinal-b3-serum.webp", size: "1 fl oz / 30 ml", about: "Gently corrects and renews. Acne-safe.", check: "Confirm the quantity on hand (not visible in the screenshot).", resolved: "Flag [8] answered by the label photo: a Face Reality serum, 1 fl oz / 30 ml." }),
-    P(FR, "Retinol Peptide Serum", 60, 0, "Serums", { photo: "img/products/face-reality-retinol-peptide-serum.webp", size: "1 fl oz / 30 ml", about: "Intensely corrects and renews." }),
+    P(FR, "Retinal B3 Serum", 54, null, "Serums", { consult: true, photo: "img/products/face-reality-retinal-b3-serum.webp", size: "1 fl oz / 30 ml", about: "Gently corrects and renews. Acne-safe.", check: "Confirm the quantity on hand (not visible in the screenshot).", resolved: "Flag [8] answered by the label photo: a Face Reality serum, 1 fl oz / 30 ml." }),
+    P(FR, "Retinol Peptide Serum", 60, 0, "Serums", { consult: true, photo: "img/products/face-reality-retinol-peptide-serum.webp", size: "1 fl oz / 30 ml", about: "Intensely corrects and renews." }),
     P(FR, "Soothing Radiance Toner", 32, 0, "Toners & mists", { photo: "img/products/face-reality-soothing-radiance-toner.webp", size: "6 fl oz / 180 ml", about: "Calms and nourishes." }),
     P(FR, "Sulfur Spot Treatment", 35, 0, "Acne & spot care", { photo: "img/products/face-reality-sulfur-spot-treatment.webp", size: "1.5 fl oz / 44 ml", about: "A 6% sulfur acne treatment." }),
     P(FR, "Ultra Gentle Gel Cleanser", 33, 0, "Cleansers", { inv: "Ultra Gentle Cleanser", slug: "ultra-gentle-cleanser", photo: "img/products/face-reality-ultra-gentle-gel-cleanser-6oz.webp", size: "6 fl oz / 180 ml", about: "A daily antioxidant wash. Acne-safe." }),
@@ -86,11 +95,14 @@
 
     /* ── Mixi Skincare: 3 entries ── */
     P(MX, "Dew Drop", 56, 0, "Serums", { inv: "Dew Drops", slug: "dew-drops", photo: "img/products/mixi-dew-drop.webp", size: "1 fl oz", about: "Silky smooth hydration with beta-glucan. Non-pore-clogging." }),
-    P(MX, "Hydroxi", 40, 2, "Acne & spot care", { photo: "img/products/mixi-hydroxi.webp", size: "1.7 fl oz", about: "Hydrogen peroxide acne cream." }),
+    P(MX, "Hydroxi", 40, 2, "Acne & spot care", { consult: true, photo: "img/products/mixi-hydroxi.webp", size: "1.7 fl oz", about: "Hydrogen peroxide acne cream." }),
     P(MX, "Mineral SPF 50", 65, 1, "Sun care", { inv: "SPF 50 Mineral SPF", slug: "spf-50-mineral-spf", photo: "img/products/mixi-mineral-spf-50.webp", size: "2 fl oz", about: "UVA/UVB protection. Medical-grade sunscreen.", resolved: "Flag [10] answered by the label photo: Mixi Skincare mineral SPF 50, 2 fl oz. No tint named on the tube." }),
 
     /* ── Circadia: 1 entry ── */
     P(CI, "Vitamin Veil Cleansing Oil", 40, 1, "Cleansers", { inv: "Vitamin Veil Cleanser", slug: "vitamin-veil-cleanser", photo: "img/products/circadia-vitamin-veil-cleansing-oil.webp", size: "6.7 fl oz / 198 ml", about: "A cleansing oil." }),
+
+    /* ── Lumevina: the online Skin Consult (a service; the shop shows it above the shelf, not in it) ── */
+    P("Lumevina", "Skin Consult, online", 35, null, "Consults", { slug: "online-consult", kind: "consult", size: "15 minutes, by video or phone", about: "Evelyn looks at your skin and what you use, builds the routine, and unlocks the actives you need. The $35 comes back as a code on your first order." }),
   ];
 
   window.LUMEVINA_CATALOG = {

@@ -122,7 +122,8 @@
       return id.indexOf("retail-") === 0 ? sum + cart[id].price * cart[id].qty : sum;
     }, 0);
   };
-  var cartHasRetail = function () { return Object.keys(cart).some(function (id) { return id.indexOf("retail-") === 0; }); };
+  /* shelf products need shipping or pickup; the online consult (retail-svc-…) doesn't */
+  var cartHasRetail = function () { return Object.keys(cart).some(function (id) { return id.indexOf("retail-") === 0 && id.indexOf("retail-svc-") !== 0; }); };
   var shipDetails = modal.querySelector(".ship-details");
   var shipAddress = modal.querySelector(".ship-address");
   var delivery = function () {
@@ -440,6 +441,7 @@
       var s = INV.status(p);
       var name = p.brand + " " + p.name;
       if (p.hidden || p.draft || (s !== "in" && s !== "low")) return { ok: false, name: name, reason: "unavailable" };
+      if (p.consult && window.LumevinaConsult && !window.LumevinaConsult.approved(p.id)) return { ok: false, name: name, reason: "consult" };
       if (!addItem("retail-" + p.id, name, Number(p.price))) return { ok: false, name: name, reason: "max" };
       bump();
       return { ok: true, name: name };
@@ -790,6 +792,7 @@
       checkoutStatus.textContent =
         j.reason === "stock" ? (j.left ? "Only " + j.left + " of " + (j.name || "one item") + " left. Lower the amount in your cart and try again." : (j.name || "One item") + " just sold out. Take it out of your cart and try again.")
         : j.reason === "unavailable" ? "One item isn't available any more. Take it out of your cart and try again."
+        : j.reason === "consult_needed" ? (j.name || "One item") + " needs a quick consult first. Tap \u201cNeeds a quick consult\u201d on it in the shop and Evelyn unlocks it for this email, usually within a day."
         : j.reason === "email" ? "Check your email address."
         : j.reason === "gift_email" ? "Check the recipient's email address."
         : "Payments aren't available right now. Please try again in a few minutes.";

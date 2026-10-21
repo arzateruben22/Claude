@@ -1082,16 +1082,17 @@
   var addToBag = function (ids, all) {
     var C = window.LumevinaCart;
     if (!C) return;
-    var added = [], full = [], gone = [];
+    var added = [], full = [], gone = [], gated = [];
     ids.forEach(function (id) {
       if (all && C.has(id)) return;
       var r = C.add(id);
-      (r.ok ? added : r.reason === "max" ? full : gone).push(r.name || "That product");
+      (r.ok ? added : r.reason === "max" ? full : r.reason === "consult" ? gated : gone).push(r.name || "That product");
     });
     var words = function (l) { return l.length > 2 ? l.slice(0, -1).join(", ") + " and " + l[l.length - 1] : l.join(" and "); };
     var text = (added.length ? "Added " + words(added) + " to your bag." : all && !full.length && !gone.length ? "Those are already in your bag." : "") +
       (full.length ? " That’s all Evelyn has of " + words(full) + " on the shelf." : "") +
-      (gone.length ? " " + words(gone) + " just sold out; you can request " + (gone.length === 1 ? "it" : "them") + " from the shop." : "");
+      (gone.length ? " " + words(gone) + " just sold out; you can request " + (gone.length === 1 ? "it" : "them") + " from the shop." : "") +
+      (gated.length ? " " + words(gated) + (gated.length === 1 ? " needs" : " need") + " a quick consult first: tap it in the shop, tell Evelyn about your skin, and she unlocks it, usually within a day." : "");
     state.pending = null;
     push({ who: "bot", text: text.trim(), acts: C.count() ? [["Check out", "bag"]] : [] });
     render();

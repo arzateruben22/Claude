@@ -10,7 +10,7 @@
 import webpush from "npm:web-push@3.6.7";
 import { esc, page, sendEmail } from "./mail.ts";
 
-export type Alert = { kind: "order" | "question" | "low_stock" | "gift" | "test" | "booking" | "cancel" | "member" | "waitlist"; title: string; body?: string; url?: string; email?: boolean };
+export type Alert = { kind: "order" | "question" | "low_stock" | "gift" | "test" | "booking" | "cancel" | "member" | "waitlist" | "consult"; title: string; body?: string; url?: string; email?: boolean };
 
 let vapidSet = false;
 const vapid = () => {
