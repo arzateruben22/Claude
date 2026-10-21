@@ -84,8 +84,8 @@ Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, s
 
 Next here, all outside the lanes above (updated 12:00 UTC): done: the World Map (U4), the garage's Paint and Wheels
 tabs (U5), the radio card (U7), the phone (U6), the Settings rail (U8), the radial menu (U3), the drivers' clothes, the
-run card's save in the viewer, the glove stripe from the driver's accent. Then: polish passes (the aero cover's faint
-streaks; phone-size checks of the other new panels).
+run card's save in the viewer, the glove stripe from the driver's accent. Then: polish passes (phone-size checks of the
+other new panels; the aero cover's close-up shadow edge is the shadow map's resolution, logged, left as is).
 
 ### Decisions waiting (the owner's)
 

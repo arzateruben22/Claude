@@ -20,8 +20,9 @@ available, so frame rates on real hardware are **not** measured.
   through both changes. `npm test -- --only=launch` **8/8**.
 - **Found and fixed: the Aero Disc cover was shaded in heavy streaks** (pre-existing on the Vela E's own wheels; the
   hypercar render showed it). The dished cover's normals were averaged over the cap's long sliver triangles; they now
-  come from the dish's formula. The heavy faceting is gone; faint vertical streaks remain on the cover in the debug
-  view, not yet explained.
+  come from the dish's formula. The heavy faceting is gone. Faint streaks remain in the 0.5 m close-up only. A matte
+  cover kept them (not reflections); a high sun made them worse; at the garage line-up's distance they don't show. So
+  they are the shadow map's resolution where the tyre's bulge shadows the cover, not the cover's shape.
 - **Not a bug: old wheels on a car change.** The old code disposed of the previous wheels without removing them; a
   check on the previous build (GT, hypercar, Corsa, GT in owner mode) found the root at 11 children throughout, so
   nothing was left behind. `buildWheels` removes them explicitly anyway.
