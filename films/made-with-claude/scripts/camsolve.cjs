@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* Camera key sweep without rendering: try candidate values for one key and score the framing.
-   node films/made-with-claude/scripts/camsolve.cjs FMT CANDIDATES.json
+   node films/made-with-claude/scripts/camsolve.cjs FMT CANDIDATES.json [copy keys, default title,opus]
    CANDIDATES.json: { "times": [6.0, 7.0, ...], "variants": [ { "keys": { "6.0": {pos, look, fov, fstop}, ... } }, ... ] }
    Prints, per variant and time: mascot box, title/opus boxes, CoC. */
 "use strict";
@@ -8,7 +8,8 @@ const fs = require("fs"), path = require("path"), http = require("http");
 const { execFileSync } = require("child_process");
 const FILM = path.resolve(__dirname, "..");
 const pw = (() => { try { return require("playwright"); } catch (e) { return require(path.join(execFileSync("npm", ["root", "-g"], { encoding: "utf8" }).trim(), "playwright")); } })();
-const [fmt, candPath] = process.argv.slice(2);
+const [fmt, candPath, keyArg] = process.argv.slice(2);
+const COPYKEYS = (keyArg || "title,opus").split(",");
 const cand = JSON.parse(fs.readFileSync(candPath, "utf8"));
 const srv = http.createServer((q, r) => {
   const p = path.join(FILM, new URL(q.url, "http://x").pathname);
@@ -38,7 +39,7 @@ const srv = http.createServer((q, r) => {
     for (const r of v.rows) {
       const f = r.framing, c = r.copy;
       const m = f.visible ? `m c(${f.cx.toFixed(2)},${f.cy.toFixed(2)}) x[${f.x0.toFixed(2)},${f.x1.toFixed(2)}] y[${f.y0.toFixed(2)},${f.y1.toFixed(2)}] h${(f.y1 - f.y0).toFixed(2)}` : "m -";
-      const cs = ["title", "opus"].map((k) => `${k} ${c[k].inFrame ? "IN " : "out"} x${c[k].x0.toFixed(0)}..${c[k].x1.toFixed(0)} y${c[k].y0.toFixed(0)} h${c[k].h.toFixed(0)} coc${c[k].coc.toFixed(1)}`).join(" | ");
+      const cs = COPYKEYS.map((k) => `${k} ${c[k].inFrame ? "IN " : "out"} x${c[k].x0.toFixed(0)}..${c[k].x1.toFixed(0)} y${c[k].y0.toFixed(0)} h${c[k].h.toFixed(0)} coc${c[k].coc.toFixed(1)}`).join(" | ");
       console.log(`  ${(r.frame / 30).toFixed(2)} ${m} | ${cs}`);
     }
   }

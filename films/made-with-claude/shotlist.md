@@ -37,5 +37,22 @@ every sound cue are read from it.
 - `scripts/framing.cjs` reports where the mascot sits on screen in every frame. The only
   flagged frames are the three whip jumps (3.25–4.0, 5.25–6.0, 9.25–10.0) and the
   deliberate pan to the viewer (4.6–5.3).
-- 9:16 has its own keys: higher vantage points and a 50–56° portrait lens. The end card
-  pulls back so the title fills about 85% of the width, above the platform-UI zone.
+- 9:16 has its own keys: higher vantage points and a 50–62° portrait lens.
+
+## Pass 3 changes (after the review panel)
+
+- **S1**: the opening push starts moving on frame 0 (power2.out), and the 16:9 frame 0 is wide
+  enough to show the layer name. The sprite has a warm glow and a bigger squash on the blips.
+- **S2**: the pop flash fires on the voxel collapse and is gone by the downbeat, so 2.00 shows a
+  solid mascot. The voxels start at the sprite's color, and the sprite crossfades into them.
+- **S3**: the 2.55 key is absolute, so the camera settles on the first landing instead of
+  reversing. The toolbar hop is higher (apex 1.0).
+- **S4**: focus pulls to the typed word, then the Glow row. A hold on the stomp, then a longer
+  move to the viewer. The stomp hangs, then slams, and every keystroke bounces the mascot.
+- **S5**: the camera pulls back and up (16:9 rel [-1.0, 5.2, 6.2] → [-2.2, 5.6, 7.2], fov 40–42).
+  The title builds in the background: spark at 7.0, swoosh at 8.0, OPUS at 9.0, all in frame.
+  9:16 sits ahead of the mascot, looking back. The look target ignores the trot bounce (no 4 Hz
+  shake).
+- **S6**: a mid-jump key (9.62) keeps the mascot in frame on the final leap. **9:16 stacks the
+  title** (MADE WITH / CLAUDE, OPUS below), so the end card is framed 1.5× closer. The mascot
+  lands under OPUS (`to9x16`) and leans back to look up at the lens.

@@ -117,12 +117,15 @@ function makeAudio() {
   return out;
 }
 function encode(fmt, dir, audio) {
+  // two encodes from the same frames: a near-lossless master (build/, not committed) and the delivery file (out/)
   const file = path.join(OUT, `made-with-claude-${fmt}.mp4`);
-  run("ffmpeg", ["-v", "error", "-y", "-framerate", String(FPS), "-i", path.join(dir, "%04d.png"), "-i", audio,
-    "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
+  const v = (crf, tune, dst) => run("ffmpeg", ["-v", "error", "-y", "-framerate", String(FPS), "-i", path.join(dir, "%04d.png"), "-i", audio,
+    "-c:v", "libx264", "-preset", "slow", "-crf", String(crf), ...(tune ? ["-tune", tune] : []), "-profile:v", "high", "-pix_fmt", "yuv420p",
     "-vf", "scale=in_range=full:out_range=tv:out_color_matrix=bt709",
     "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv",
-    "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-shortest", "-movflags", "+faststart", file]);
+    "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-shortest", "-movflags", "+faststart", dst]);
+  v(15, null, path.join(BUILD, `master-${fmt}.mp4`));
+  v(19, "grain", file);
   for (const [name, f] of [["hook", 68], ["final", FRAMES - 1]]) {
     run("ffmpeg", ["-v", "error", "-y", "-i", path.join(dir, String(f).padStart(4, "0") + ".png"), "-q:v", "2", path.join(OUT, `poster-${fmt}-${name}.jpg`)]);
   }
