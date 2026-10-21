@@ -20,7 +20,10 @@ export type Job =
   | { kind: 'time'; miles: number }
   | { kind: 'race'; course: string; place: number }
   | { kind: 'drive'; road: string; miles: number }          // Free Drive, ending on that freeway, this far in the run
-  | { kind: 'top'; mph: number };                             // any mode
+  | { kind: 'top'; mph: number }                              // any mode
+  // an errand (the life half's activities): Free Drive from the start of `road`, take the real exit whose sign reads
+  // `exit` within `seconds` (game time; it stops while paused). key names it; what is the errand in a few words
+  | { kind: 'errand'; key: string; road: string; exit: string; seconds: number; what: string };
 // when a message shows: every condition listed must hold (and the message before it in the thread must be done or read)
 export interface Unlock { level?: number; homes?: number; racesWon?: number; after?: string }
 export interface Message { id: string; from: string; text: string; unlock?: Unlock; job?: Job; credits?: number; xp?: number; done?: string }
@@ -49,6 +52,19 @@ export const MESSAGES: Message[] = [
     job: { kind: 'top', mph: 200 }, credits: 8000, xp: 1500, done: '200! The numbers check out. You just made my whole month.' },
   { id: 'dee-2', from: 'dee', unlock: { after: 'dee-1', racesWon: 5 }, text: 'Five wins and counting. The meet wants a demo: Survival, 25,000. Clean passes only, people are watching.',
     job: { kind: 'survival', score: 25000 }, credits: 10000, xp: 2000, done: 'They\'re still talking about it. You\'re a regular now.' },
+  // errands: real exits, the clock set for about 50 mph on average (traffic allowing)
+  { id: 'sal-e1', from: 'sal', unlock: { after: 'sal-1' }, text: 'Got a parcel for a print shop in Brea that has to be there before they close. 57 North, off at Imperial Highway. Six minutes.',
+    job: { kind: 'errand', key: 'brea-print', road: 'CA-57 North', exit: 'Imperial Highway', seconds: 360, what: 'a parcel for a print shop in Brea' }, credits: 1400, xp: 350, done: 'Signed for. They said you were early. Nobody\'s ever early.' },
+  { id: 'mara-e1', from: 'mara', unlock: { after: 'mara-2' }, text: 'A customer\'s stuck on Dyer Road with a flat and the wrong spare. 55 South, Dyer Road exit, four and a half minutes. The tyre\'s in your trunk, don\'t ask how.',
+    job: { kind: 'errand', key: 'dyer-tyre', road: 'CA-55 South', exit: 'Dyer Road', seconds: 270, what: 'a tyre for a customer on Dyer Road' }, credits: 1600, xp: 400, done: 'She sent a photo of the car rolling again. You\'re a hero on the shop\'s group chat.' },
+  { id: 'jun-e1', from: 'jun', unlock: { after: 'jun-1' }, text: 'I left the sensor kit at home and the tunnel slot is in five and a half minutes. 405 South, Jamboree Road. Please.',
+    job: { kind: 'errand', key: 'jamboree-kit', road: 'I-405 South', exit: 'Jamboree Road', seconds: 330, what: 'a sensor kit for the wind tunnel' }, credits: 2200, xp: 500, done: 'Made the slot with a minute to spare. The data is gorgeous.' },
+  { id: 'sal-e2', from: 'sal', unlock: { after: 'sal-2' }, text: 'Florist\'s van broke down in Irvine and there\'s a wedding at noon. Flowers are in the back. 5 North to Jamboree Road, seven minutes. Smooth on the brakes.',
+    job: { kind: 'errand', key: 'jamboree-flowers', road: 'I-5 North', exit: 'Jamboree Road', seconds: 420, what: 'flowers for a wedding' }, credits: 2600, xp: 600, done: 'Not one petal on the floor. The bride\'s mother wants your number. I said no.' },
+  { id: 'dee-e1', from: 'dee', unlock: { after: 'dee-1' }, text: 'Coffee run for the meet! The urns are full and they\'re waiting in Laguna. 73 South, Glenwood Drive, eight minutes.',
+    job: { kind: 'errand', key: 'glenwood-coffee', road: 'CA-73 South', exit: 'Glenwood Drive', seconds: 480, what: 'coffee for the meet' }, credits: 3000, xp: 700, done: 'Hot coffee, happy people. You\'re on coffee duty for life.' },
+  { id: 'nina-e1', from: 'nina', unlock: { after: 'nina-1' }, text: 'Our test rig\'s charger is at Gypsum Canyon and the E is sitting at four percent. 91 East, eight minutes, Gypsum Canyon Road.',
+    job: { kind: 'errand', key: 'gypsum-charger', road: 'CA-91 East', exit: 'Gypsum Canyon Road', seconds: 480, what: 'a charger for the test rig' }, credits: 4500, xp: 900, done: 'Plugged in at three percent. Cutting it fine is a skill. Don\'t make it a habit.' },
   { id: 'mara-3', from: 'mara', unlock: { after: 'mara-2', homes: 3 }, text: 'Three homes? Look at you. Don\'t forget where you started: the studio\'s still yours, and my door\'s still open.' },
 ];
 
@@ -77,11 +93,12 @@ export function jobText(j: Job) {
     case 'race': return `Race: ${j.place === 1 ? 'win' : `top ${j.place}`}`;
     case 'drive': return `Free Drive: ${j.miles} miles on the ${j.road}`;
     case 'top': return `Reach ${j.mph} mph`;
+    case 'errand': return `Errand: the ${j.exit} exit off the ${j.road}, within ${Math.floor(j.seconds / 60)}:${String(j.seconds % 60).padStart(2, '0')}`;
   }
 }
 
 // what a finished run settles: every open job in the inbox that it meets is done and paid. Returns the messages paid.
-export interface RunFacts { mode: string; score: number; distance: number; top: number; road: string; courseId?: string; position?: number }
+export interface RunFacts { mode: string; score: number; distance: number; top: number; road: string; courseId?: string; position?: number; errands?: string[] }
 const MPH = 2.236936, MI = 1609.344;
 export function meets(j: Job, r: RunFacts) {
   switch (j.kind) {
@@ -90,6 +107,7 @@ export function meets(j: Job, r: RunFacts) {
     case 'race': return r.mode === 'race' && r.courseId === j.course && !!r.position && r.position <= j.place;
     case 'drive': return r.mode === 'free' && r.road === j.road && r.distance / MI >= j.miles;
     case 'top': return r.top * MPH >= j.mph;
+    case 'errand': return !!r.errands?.includes(j.key);
   }
 }
 export function settle(p: Profile, level: number, r: RunFacts): Message[] {

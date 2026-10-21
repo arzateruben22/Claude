@@ -28,7 +28,9 @@ import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
-import { settle, characterById, jobText, type RunFacts } from './story';
+import { settle, characterById, jobText, type RunFacts, type Job } from './story';
+type ErrandJob = Extract<Job, { kind: 'errand' }>;
+const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
@@ -60,6 +62,7 @@ export interface Hud {
   ability: string; abilityOn: number; abilityCool: number;
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
+  errand: { exit: string; left: number; dist: number } | null;   // a story errand: its exit, seconds left, metres to its sign (-1 off its road)
 }
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
 const NOT_AN_EXIT = /weigh|inspection|rest area|vista point|scales?\b/i;
@@ -158,6 +161,9 @@ export class Game {
   private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
   private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
   race: RaceState | null = null;
+  // a story errand (story.ts): set from the phone before a Free Drive, live during it (the sign, the time left)
+  private pendingErrand: ErrandJob | null = null;
+  errand: { job: ErrandJob; sign: Sign; t: number; done: boolean } | null = null;
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
@@ -325,6 +331,7 @@ export class Game {
     const m = exit ? exit.path : this.findMain(st.label);
     const s0 = exit ? clamp(exit.s - 450, 40, Math.max(40, m.len - 200)) : m.len * st.at;
     this.placeCar(m, s0, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
+    if (mode === 'free') this.startErrand(m, s0); else { this.errand = null; this.pendingErrand = null; }
     this.earned(this.profile.add({ freeway: m.label }));
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
@@ -342,7 +349,7 @@ export class Game {
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
   // tune a station directly (the radio card), -1 for off
   tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
@@ -1059,12 +1066,32 @@ export class Game {
         const band = p.vx > FAST ? 1 + (p.vx - FAST) / 22 : 0.2;
         this.score += fwd * 0.1 * band * (1 + Math.min(this.streak, 60) / 30);
       }
+      if (this.mode === 'free') this.errandTick(dt);
       if (this.mode === 'time') {
         this.timeLeft -= dt;
         if (this.distance >= this.nextCheckpoint) { this.nextCheckpoint += 2000; this.timeLeft += 25; this.ev.toast('Checkpoint +25 s', 'good'); }
         if (this.timeLeft <= 0) { this.timeLeft = 0; this.endRun('Out of time'); }
       }
     }
+  }
+
+  // the phone's "Set it up" on an errand: the next Free Drive on its freeway carries it
+  setErrand(job: ErrandJob | null) { this.pendingErrand = job; }
+  // at a Free Drive's start: the errand's sign is the first ahead on this carriageway whose text names its exit
+  private startErrand(m: Path, s0: number) {
+    const j = this.pendingErrand; this.pendingErrand = null; this.errand = null;
+    if (!j || j.road !== m.label) return;
+    const want = j.exit.toLowerCase();
+    const sign = this.net.signs.filter((g) => g.path === m && g.s > s0 + 200 && g.text.join(' / ').toLowerCase().includes(want)).sort((a, b) => a.s - b.s)[0];
+    if (!sign) { this.ev.toast(`No ${j.exit} exit ahead on ${m.label}`, 'bad'); return; }
+    this.errand = { job: j, sign, t: j.seconds, done: false };
+    this.ev.toast(`Errand: ${j.what}. Take the ${j.exit} exit · ${fmtClock(j.seconds)}`, 'info');
+  }
+  private errandTick(dt: number) {
+    const e = this.errand; if (!e || e.done) return;
+    e.t -= dt;
+    if (this.path === e.sign.ramp) { e.done = true; this.ev.toast(`Delivered with ${fmtClock(e.t)} to spare`, 'good'); this.endRun('Delivered'); return; }
+    if (e.t <= 0) { this.errand = null; this.ev.toast('Too late: the errand is off. Keep driving, or try it again from the phone.', 'bad'); }
   }
 
   // story jobs (the phone's Messages): what this run met is paid now, and the results screen lists it
@@ -1094,7 +1121,8 @@ export class Game {
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const board = recordRun(run);
-    const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road });
+    const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
+    this.errand = null;
     setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs }), 1200);
   }
 
@@ -1309,6 +1337,7 @@ export class Game {
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
+      errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }
 

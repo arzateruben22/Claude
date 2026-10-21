@@ -412,7 +412,8 @@ export function App() {
           onJob={(j) => {
             // a story job: back to the menu with its mode (and course or freeway) chosen, ready to Drive
             if (j.kind === 'race') update({ course: j.course });
-            if (j.kind === 'drive') update({ start: j.road, exit: '' });
+            if (j.kind === 'drive' || j.kind === 'errand') update({ start: j.road, exit: '' });
+            game.current?.setErrand(j.kind === 'errand' ? j : null);   // an errand rides on the next Free Drive
             setMode(j.kind === 'survival' ? 'survival' : j.kind === 'time' ? 'time' : j.kind === 'race' ? 'race' : 'free');
             toMenu();
           }}

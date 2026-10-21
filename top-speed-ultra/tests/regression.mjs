@@ -988,6 +988,41 @@ await group('launch', async (use) => {
     await game(page, (k) => { const g = window.__game, p = g.profile.p; p.story = k.story; p.credits = k.credits; p.xp = k.xp; g.profile.save(); }, keep);
     return `badge 1; "${job.split('\n')[0]}"; Set it up chose Free Drive; paid +${Math.round(after.credits - c0)} credits (with the drive's own); next message unread`;
   });
+  // activities (errands): a real exit within a time limit; taking its ramp delivers, running out of time calls it off
+  await check("errand: Sal's parcel sets up 57 North, the HUD shows the exit and clock, time-out calls it off, the exit ramp delivers it", async () => {
+    const keep = await game(page, () => { const p = window.__game.profile.p; const k = { story: JSON.parse(JSON.stringify(p.story)), credits: p.credits, xp: p.xp }; p.story = { done: ['sal-1'], read: [] }; p.xp = Math.max(p.xp, 400); return k; });
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    await page.getByRole('button', { name: /^Messages/ }).click();
+    await page.locator('.ph-row', { hasText: 'Sal Reyes' }).click();
+    const card = page.locator('.ph-job', { hasText: 'Imperial Highway' });
+    const job = (await card.innerText()).replace(/\s+/g, ' ');
+    await card.getByRole('button', { name: 'Set it up' }).click();
+    await page.waitForSelector('.overlay.menu');
+    const pick = (await page.locator('.pick', { hasText: 'Start on' }).first().innerText()).replace(/\s+/g, ' ');
+    expect(/Errand: the Imperial Highway exit off the CA-57 North, within 6:00/.test(job), `the job reads "${job}"`);
+    expect(/57/.test(pick) && /North/.test(pick), `the Start pick says "${pick}"`);
+    await drive(page, 'Free Drive');
+    await frames(page, 3);
+    const e = await game(page, () => { const g = window.__game, x = g.errand; return x && { text: x.sign.text.join(' / '), ahead: Math.round(x.sign.s - g.phys.s), t: x.t, road: g.path.label }; });
+    const hudNext = await page.locator('.hud-next').innerText();
+    await page.screenshot({ path: path.join(OUT, 'launch-errand-hud.png') });
+    expect(e && /Imperial Highway/.test(e.text) && e.ahead > 7000 && e.road === 'CA-57 North', `errand ${JSON.stringify(e)}`);
+    expect(/Errand: Imperial Highway exit/.test(hudNext), `the HUD's guidance reads "${hudNext}"`);
+    // time-out, on a copy of the live errand: ticking past its clock calls it off
+    const off = await game(page, () => { const g = window.__game, live = g.errand; g.errand = { ...live, t: 0.05 }; g.errandTick(0.1); const gone = g.errand === null; g.errand = live; return gone; });
+    expect(off, 'an errand past its clock is still live');
+    // delivered: onto the exit's own ramp
+    const c0 = await game(page, () => window.__game.profile.p.credits);
+    await game(page, () => { const g = window.__game, r = g.errand.sign.ramp; g.enterPath(r, 20, r.laneCenter(0)); g.fastForward(0.5, {}, 30); });
+    await page.waitForSelector('.result', { timeout: 10000 });
+    const text = (await page.locator('.result').innerText()).replace(/\s+/g, ' ');
+    const after = await game(page, () => { const p = window.__game.profile.p; return { done: p.story.done, credits: p.credits, errand: window.__game.errand }; });
+    expect(/Delivered/i.test(text) && /Job done for Sal Reyes/i.test(text), `the results say: ${text.slice(0, 160)}`);
+    expect(after.done.includes('sal-e1') && after.credits - c0 >= 1400 && after.errand === null, `done ${after.done}, +${Math.round(after.credits - c0)}, errand ${JSON.stringify(after.errand)}`);
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await game(page, (k) => { const g = window.__game, p = g.profile.p; p.story = k.story; p.credits = k.credits; p.xp = k.xp; g.profile.save(); }, keep);
+    return `"${job}"; sign ${e.text} ${(e.ahead / 1609.344).toFixed(1)} mi ahead; HUD "${hudNext}"; time-out calls it off; the ramp delivered it, +${Math.round(after.credits - c0)} credits`;
+  });
 });
 
 await browser.close();

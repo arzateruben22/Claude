@@ -4,6 +4,29 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (17:30 UTC): activities: timed errands to real exits
+
+- **Errands** (story job kind `errand`): six errands from five of the characters.
+  - Each starts a Free Drive at the start of a real carriageway. Take the named real exit within a time limit set for
+    about 50 mph on average.
+  - The six: a parcel to Imperial Highway off the 57 North (5.0 mi, 6:00); a tyre to Dyer Road off the 55 South
+    (4:30); a sensor kit to Jamboree Road off the 405 South (5:30); wedding flowers to Jamboree Road off the 5 North
+    (7:00); coffee for the meet to Glenwood Drive off the 73 South (8:00); a charger to Gypsum Canyon Road off the 91
+    East (8:00). Exits and distances were read from the data first.
+  - **Delivered** is exact: the car's path becomes that sign's own exit ramp (`Game.errandTick`). The clock is game
+    time, so it stops while paused. At zero the errand is called off and the drive goes on.
+  - The HUD shows the clock in Free Drive's empty third slot, and "Errand: <exit> exit · <distance>" on the guidance
+    line when no route manoeuvre is due.
+  - Set it up from the phone chooses Free Drive and the errand's freeway.
+- **Checked** (new launch check; `npm test -- --only=launch` **11/11**):
+  - Sal's errand read "the Imperial Highway exit off the CA-57 North, within 6:00", and the Start pick became the 57
+    North.
+  - In the drive, the errand's sign was "CA 90 / Imperial Highway", 5.0 mi ahead. The HUD read "Errand: Imperial
+    Highway exit · 5.0 mi" (`tests/out/launch-errand-hud.png`).
+  - A copy past its clock was called off.
+  - Putting the car on that sign's ramp ended the drive "Delivered" and paid 1,400 credits with "Job done for Sal Reyes".
+  - Not proven: a driven approach to the ramp; the test places the car on it.
+
 ## 2026-10-21 (17:00 UTC): characters and story on the phone (Messages, Contacts)
 
 - **Story** (`src/game/story.ts`): five fictional OC characters, ours, written for 13+ (no romance, no real people
