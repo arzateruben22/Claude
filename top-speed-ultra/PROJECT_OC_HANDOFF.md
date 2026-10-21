@@ -71,6 +71,12 @@ Stopped here because another session's lane owns the work (their branches have t
 - the Ultra world pass (road wear, lamp pools, lit windows, houses, chain-link, skids, our-brand billboards, skyline,
   night env map): `claude/wip-c-world` (unjudged) for the `realism-2` and `gfx` lanes to take from or drop.
 
+Shared-file changes from this session since the lanes table (App.tsx, HUD.tsx, styles.css), one line each:
+- 06:00 App.tsx, styles.css: the World Map (`WorldMap.tsx`, panel 'map'), a World Map row on the menu rail and the pause screen.
+- 06:20 App.tsx, styles.css: the garage's tabs (Vehicles, Paint, Wheels, Upgrades); paint per car in `settings.paints`.
+- 06:25 App.tsx, styles.css: the radio card (`RadioCard.tsx`); the top bar's Radio toggles it instead of cycling (B still cycles).
+- Commits from this session carry no model names from here on (the Co-Authored-By line names only Claude).
+
 Next here, all outside the lanes above: the garage tabs (U5: paint and wheels applied live), the radio panel (U7), the
 in-game phone (U6), the driver clothing lane (running), the suite and the test build at
 https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS. The UI-to-reference lane (`claude/ui-ref`) and this branch touch the
