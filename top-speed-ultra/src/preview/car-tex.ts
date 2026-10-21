@@ -479,6 +479,22 @@ export function plateTex(w = 1024, h = 216): THREE.Texture {
     return canvasTex(c, true);
   });
 }
+// a soft glow for an additive quad (the hypercar's brake haze round its tail bar): bright along the middle row,
+// falling off across it (a tight core and a wider skirt) and toward both ends; grey, so the material's colour tints it
+export function glowTex(): THREE.Texture {
+  return once('glow', () => {
+    const W = 128, H = 32, [c, g] = canvas(W, H), im = g.createImageData(W, H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const v = (y + 0.5) / H * 2 - 1, u = (x + 0.5) / W * 2 - 1;
+      const across = 0.8 * Math.exp(-((v / 0.3) ** 2)) + 0.2 * Math.exp(-((v / 0.75) ** 2));
+      const along = Math.min(1, (1 - Math.abs(u)) / 0.12);
+      const a = Math.round(255 * across * along * along), i = (y * W + x) * 4;
+      im.data[i] = im.data[i + 1] = im.data[i + 2] = a; im.data[i + 3] = 255;
+    }
+    g.putImageData(im, 0, 0);
+    return canvasTex(c, false);
+  });
+}
 // an LED strip's light across its width (v): a white-blue core and a blue halo either side, on black (an emissive map)
 export function ledTex(core: number, halo: number): THREE.Texture {
   return once('led' + core + halo, () => {
