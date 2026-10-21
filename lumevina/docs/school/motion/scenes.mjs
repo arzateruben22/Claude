@@ -1195,6 +1195,79 @@ export const SCENES = {
       });
     }
   },
+  "3-2": {
+    id: "3-2", kicker: "Build your first routine", title: `Three steps, twice a day. <span class="grad">Add the rest one at a time.</span>`, dur: 22, poster: 5,
+    shots: [
+      { at: 0, name: "routine", cap: "Morning: cleanse (or just rinse, if you're dry), moisturize, sunscreen. Night: cleanse, treat (only once your skin is calm), moisturize." },
+      { at: 8, name: "one at a time", cap: "Add one new product at a time and wait two weeks before adding another, so you know what's working and what isn't." },
+      { at: 15.5, name: "patch", cap: "Patch test anything new: twice a day on a small spot along the jaw or inner arm, for seven to ten days." }
+    ],
+    css: `
+.fr { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.ampm { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; }
+.half { border-radius: 2.4vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.4vmin 2.8vmin; opacity: 0; }
+.half .t { display: flex; align-items: center; gap: 1.4vmin; font-size: 2.6vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 1.6vmin; }
+.half .t i { width: 2.4vmin; height: 2.4vmin; border-radius: 50%; } .half.am .t i { background: #ffd27a; box-shadow: 0 0 1.6vmin rgba(255,210,122,.6); } .half.pm .t i { background: #c9b6ff; box-shadow: 0 0 1.6vmin rgba(201,182,255,.5); }
+.steps3 { display: flex; flex-direction: column; gap: 1.2vmin; }
+.s3 { display: flex; align-items: center; gap: 1.6vmin; padding: 1.4vmin 2vmin; border-radius: 1.6vmin; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); opacity: 0; }
+.s3 b { flex: none; width: 4.2vmin; height: 4.2vmin; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.4vmin; font-weight: 700; background: #f4c9d6; color: #1a1210; }
+.s3 span { font-size: 3vmin; font-weight: 650; } .s3 small { font-size: 2.3vmin; color: #a1a1a6; margin-left: auto; white-space: nowrap; }
+.s3.later { border-style: dashed; } .s3.later b { background: rgba(255,255,255,.14); color: #d9d9de; }
+.wk2 { display: grid; grid-template-columns: repeat(14, 1fr); gap: .8vmin; }
+.dd { position: relative; border-radius: 1.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); min-height: 11vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1vmin .4vmin .8vmin; gap: .6vmin; opacity: 0; }
+.dd .n { font-size: 2.4vmin; font-weight: 700; } .dd .m { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; opacity: 0; }
+.dd.add { background: #f4c9d6; border-color: #f4c9d6; } .dd.add .n { color: #1a1210; }
+.lg32 { display: flex; flex-wrap: wrap; gap: 1.2vmin 1.8vmin; }
+.lg32 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1.1vmin 2vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.6vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.lg32 i { width: 2vmin; height: 2vmin; border-radius: 50%; } .lg32 span.rose { border-color: rgba(244,201,214,.6); color: #f4c9d6; }
+.patch { display: flex; align-items: center; gap: 4vmin; }
+.jaw { position: relative; flex: none; width: 30vmin; height: 30vmin; border-radius: 15vmin 15vmin 12vmin 12vmin / 17vmin 17vmin 13vmin 13vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: 0; }
+.jaw .sq { position: absolute; left: 20%; top: 66%; width: 6vmin; height: 6vmin; border-radius: 1vmin; border: .4vmin dashed #e2b08c; background: rgba(226,176,140,.25); opacity: 0; }
+.jaw .lip { position: absolute; left: 50%; bottom: 7vmin; width: 9vmin; height: 1.4vmin; margin-left: -4.5vmin; border-radius: 1vmin; background: #b9786b; }
+.jaw .nose { position: absolute; left: 50%; top: 10vmin; width: 3.6vmin; height: 9vmin; margin-left: -1.8vmin; border-radius: 1.8vmin; background: rgba(0,0,0,.08); }
+.pt { flex: 1; display: flex; flex-direction: column; gap: 1.6vmin; }
+.pt .cnt { font-size: 9vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; opacity: 0; } .pt .cnt small { font-size: 3vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-left: 1.2vmin; }
+.pt .rule { display: inline-flex; align-self: flex-start; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; opacity: 0; }
+.pt .rule.ok { border-color: rgba(50,215,75,.6); color: #7fe39a; } .pt .rule.no { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
+@media (orientation: portrait) { .ampm { grid-template-columns: 1fr; gap: 2.4vmin; } .s3 span { font-size: 2.9vmin; } .wk2 { grid-template-columns: repeat(7, 1fr); } .dd { min-height: 10vmin; } .patch { flex-direction: column; gap: 3vmin; } .jaw { width: 34vmin; height: 34vmin; } .pt { align-items: center; } .pt .rule { align-self: center; } }`,
+    html: `
+<div class="fr">
+  <div class="ampm" id="ampm">
+    <div class="half am" id="am"><div class="t"><i></i>Morning</div><div class="steps3"><div class="s3" id="a1"><b>1</b><span>Cleanse</span><small>or just rinse, if you're dry</small></div><div class="s3" id="a2"><b>2</b><span>Moisturize</span></div><div class="s3" id="a3"><b>3</b><span>Sunscreen</span><small>every morning</small></div></div></div>
+    <div class="half pm" id="pm"><div class="t"><i></i>Night</div><div class="steps3"><div class="s3" id="p1"><b>1</b><span>Cleanse</span></div><div class="s3 later" id="p2"><b>2</b><span>Treat</span><small>only once your skin is calm</small></div><div class="s3" id="p3"><b>3</b><span>Moisturize</span></div></div></div>
+  </div>
+  <div class="wk2" id="wk2">${Array.from({ length: 14 }, (_, k) => `<div class="dd" data-d="${k + 1}"><span class="n">${k + 1}</span><i class="m" style="background:#f4c9d6"></i></div>`).join("")}</div>
+  <div class="lg32" id="lg32"><span class="rose" id="g-one"><i style="background:#f4c9d6"></i>day 1: one new product</span><span id="g-wait">then two weeks, nothing else new</span><span class="rose" id="g-next">day 15: the next one</span></div>
+  <div class="patch" id="patch"><div class="jaw" id="jaw"><div class="nose"></div><div class="lip"></div><div class="sq" id="sq"></div></div><div class="pt"><div class="cnt" id="cnt">0<small>of 7 to 10 days</small></div><span class="rule ok" id="r-ok">twice a day, a small spot on the jaw or inner arm</span><span class="rule no" id="r-no">burning, itching or a rash: it's not for you</span></div></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      // shot 0: morning and night, three steps each
+      $("#ampm").style.display = i === 0 ? "" : "none";
+      if (i === 0) {
+        enter($("#am"), lt, 0.2, { y: 12 }); enter($("#pm"), lt, 2.8, { y: 12 });
+        ["a1", "a2", "a3"].forEach((id, k) => enter($("#" + id), lt, 0.8 + k * 0.55, { y: 8, x: -10 }));
+        ["p1", "p2", "p3"].forEach((id, k) => enter($("#" + id), lt, 3.4 + k * 0.55, { y: 8, x: -10 }));
+        const b = 0.5 + 0.5 * Math.sin(lt * 2.4); set($("#a3 b"), { s: lt > 2.2 ? 1 + 0.08 * b : 1 });
+      }
+      // shot 1: fourteen days; day 1 lights as the new product, the wait runs, day 15 is the next
+      const two = i === 1; $("#wk2").style.display = two ? "" : "none"; $("#lg32").style.display = two ? "" : "none";
+      if (two) {
+        $$(".dd").forEach((d, k) => { enter(d, lt, 0.2 + k * 0.07, { y: 10 }); const on = lt >= 1.6 + k * 0.28; d.querySelector(".m").style.opacity = on ? 1 : 0; d.classList.toggle("add", k === 0 && lt >= 1.2); });
+        enter($("#g-one"), lt, 1.2, { y: 8 }); enter($("#g-wait"), lt, 2.4, { y: 8 }); enter($("#g-next"), lt, 5.8, { y: 8 });
+      }
+      // shot 2: the patch square on the jaw, the day counter runs to 10
+      $("#patch").style.display = i === 2 ? "" : "none";
+      if (i === 2) {
+        enter($("#jaw"), lt, 0.2, { y: 12, s: 0.9 }); enter($("#sq"), lt, 0.9, { y: 0, s: 0.6, d: 0.5 });
+        const b = 0.5 + 0.5 * Math.sin(lt * 3.2); $("#sq").style.opacity = lt > 1.4 ? 0.7 + 0.3 * b : $("#sq").style.opacity;
+        const n = Math.round(10 * E.out(seg(lt, 1.2, 4.6))); $("#cnt").firstChild.textContent = n; enter($("#cnt"), lt, 1.0, { y: 8 });
+        enter($("#r-ok"), lt, 2.0, { y: 8 }); enter($("#r-no"), lt, 4.2, { y: 8 });
+      }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
