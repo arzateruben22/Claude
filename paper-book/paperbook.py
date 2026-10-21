@@ -656,14 +656,30 @@ def render_html(book: Book) -> str:
         cols, tile_cls = 8, "tiles many crowd"
     tiles = f'<div class="{tile_cls}" style="--cols:{cols}">' + "".join(tile_list) + "</div>"
 
+    import deck
+
+    today = book.now.astimezone(book.tz).date()
+    weeks = {d: deck.week(book, d, today) for d in book.desks}
+    ranked = sorted(book.desks, key=lambda d: (-per[d]["return_pct"], book.desks.index(d)))
+
+    def week_cell(w: dict) -> str:
+        if not w["traded"]:
+            return "<td class=n>—</td><td>—</td>"
+        badge = (f' <b class="gw">green week{" ×" + str(w["streak"]) if w["streak"] > 1 else ""}</b>' if w["green_week"] else "")
+        return (f"<td class=\"n {_cls(w['net'])}\">{e(_usd(w['net']))}</td>"
+                f"<td>{w['green']} green · {w['red']} red{badge}</td>")
+
     rows = "".join(
-        f"<tr><th scope=\"row\">{e(book.label(d))}</th><td class=n>{per[d]['trades']}</td><td class=n>{per[d]['win_rate']:.0f}%</td>"
+        f"<tr><td class=n>{k}</td><th scope=\"row\">{e(book.label(d))}</th><td class=n>{per[d]['trades']}</td>"
+        f"<td class=n>{per[d]['win_rate']:.0f}%</td>"
         f"<td class=n>{e(_usd(per[d]['avg_win']))}</td><td class=n>{e(_usd(per[d]['avg_loss']))}</td>"
         f"<td class=n>{_pf(per[d]['profit_factor'])}</td><td class=n>{per[d]['max_drawdown_pct']:.1f}%</td>"
-        f"<td class=\"n {_cls(per[d]['net'])}\">{e(_usd(per[d]['net']))}</td></tr>" for d in book.desks)
-    desk_table = (f'<div class="scroll"><table><thead><tr><th>Desk</th><th class=n>Trades</th><th class=n>Won</th>'
-                  f'<th class=n>Avg win</th><th class=n>Avg loss</th><th class=n>Profit factor</th>'
-                  f'<th class=n>Worst drop</th><th class=n>Net</th></tr></thead><tbody>{rows}</tbody></table></div>')
+        f"<td class=\"n {_cls(per[d]['net'])}\">{e(_usd(per[d]['net']))}</td>{week_cell(weeks[d])}</tr>"
+        for k, d in enumerate(ranked, 1))
+    desk_table = (f'<div class="scroll"><table><thead><tr><th class=n>#</th><th>Desk</th><th class=n>Trades</th>'
+                  f'<th class=n>Won</th><th class=n>Avg win</th><th class=n>Avg loss</th><th class=n>Profit factor</th>'
+                  f'<th class=n>Worst drop</th><th class=n>Net</th><th class=n>Last 7 days</th><th>Days</th></tr></thead>'
+                  f'<tbody>{rows}</tbody></table></div>')
 
     held = [h for d in book.desks for h in book.held[d]]
     if held:
@@ -700,6 +716,9 @@ def render_html(book: Book) -> str:
 <style>{CSS}
 .chart .l-any {{ stroke-width: 1.4; fill: none; }}
 .key span[style] {{ color: var(--c); }}
+.gw {{ display: inline-block; padding: 0 5px; border: 1px solid var(--up); color: var(--up); border-radius: 3px;
+  font: 700 10px/1.6 var(--display); letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; }}
+p.small {{ color: var(--muted); font-size: 13px; }}
 {swatches}</style>
 <main class="sheet">
   <header class="top">
@@ -716,7 +735,9 @@ def render_html(book: Book) -> str:
     <h2 id="h-day">Each day, last 30 days</h2>
     <div class="chart">{_daily_svg(book)}</div>
   </section>
-  <section aria-labelledby="h-desk"><h2 id="h-desk">By desk</h2>{desk_table}</section>
+  <section aria-labelledby="h-desk"><h2 id="h-desk">By desk, best first</h2>{desk_table}
+  <p class="small">A <b class="gw">green week</b> is three or more trading days in the last seven, net up, and no single
+  day's loss bigger than the week's gain; ×2 means two such weeks in a row.</p></section>
   <section aria-labelledby="h-open"><h2 id="h-open">Open and waiting</h2>{held_html}</section>
   <section aria-labelledby="h-tr"><h2 id="h-tr">Latest closed trades</h2>{trades_html}</section>
   <section class="notes" aria-labelledby="h-n">

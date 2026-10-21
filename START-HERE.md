@@ -53,7 +53,9 @@ None of this adds to a Claude bill: only the main memecoin and stock desks use C
 and only if you gave them a key. The other twenty-eight desks judge and review by rules alone.
 
 Already set up? One update adds them all and keeps every paper trade so far:
-`cd ~/desks && git pull && sudo bash server/setup.sh`. The rules of every desk were set before it started and stay
+`cd ~/desks && git pull && sudo bash server/setup.sh`. The new desks start on the day you update, so they're
+behind the originals on the calendar: read them by their own day count and by their last seven days, not by
+the total alone. The rules of every desk were set before it started and stay
 fixed for the month: changing a desk mid-test, or keeping only the one that got lucky, is how people fool
 themselves. A winner has to pass its scorecard, then do it again on other months, before anyone trusts it.
 
