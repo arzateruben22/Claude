@@ -37,6 +37,8 @@ The owner's standing order is to keep improving until they say stop. A scheduled
 - **Rerun** (the `live` group): **12 of 12**. Realistic mode on I-405 North: ratio 1 gave 2.2 cars per km per lane,
   bold 0, matching the mapping exactly. C waited at #1 and got in (831 poses, 0 dropped). The reset and account checks
   passed, with no page errors.
+- **The rest of the suite on the same build** (boot, interchanges, survival, race, abilities, progression, render,
+  phone, launch): **62 of 62**. With `live` (12 of 12) and `livephone` (5 of 5), every group passes.
 
 ## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
 

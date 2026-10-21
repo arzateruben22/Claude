@@ -28,8 +28,8 @@ model: routine work to `opus`, hard reasoning to `fable`.
   `RESEND_KEY`/`MAIL_FROM`), the account email setting, the menu's "N of 25 driving now", the pause screen's live
   line, Invite a friend, and a watchdog alert if `oc-live` stops. `cd live && npm test`: 45 of 45.
 - **Next** (in order; Opus-class unless marked):
-  1. The `live` suite group once more on the latest build (the menu count and the reset check were added after its
-     last full run, 10 of 10); `livephone` and `phone` pass.
+  1. Done: every suite group passes on the latest build (core 62 of 62, `live` 12 of 12, `livephone` 5 of 5). Crews,
+     cruise nights, password reset and the realistic-mode fixes are in (progress log, the morning entry).
   2. Binary poses (F7 in the Fable queue) before the cap passes 100.
   3. The talk bank in the on-foot scenes once Lot 57 is in the game.
   4. Ideas worth weighing with the owner: a private lobby code for friends (a second lobby keyed by a short code),
