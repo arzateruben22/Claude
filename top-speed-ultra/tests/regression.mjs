@@ -1172,7 +1172,9 @@ await group('livephone', async (use) => {
       try {
         await p2.goto(pathToFileURL(GAME).href + '?crew=wxyz');
         await p2.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 120000 });
-        await p2.waitForSelector('.welcome', { timeout: 30000 }).catch(async (e) => {
+        // the first phone is still driving; bring this one forward so its frames (and Playwright's checks) run
+        await p2.bringToFront();
+        await p2.waitForFunction(() => { const r = document.querySelector('.welcome')?.getBoundingClientRect(); return !!r && r.width > 0 && r.height > 0; }, null, { timeout: 30000, polling: 500 }).catch(async (e) => {
           const st = await p2.evaluate(() => ({ href: location.href, keys: Object.keys(localStorage), overlays: [...document.querySelectorAll('.overlay')].map((o) => o.className) }));
           throw new Error(`no welcome card: ${JSON.stringify(st)} (${String(e).split('\n')[0]})`);
         });
