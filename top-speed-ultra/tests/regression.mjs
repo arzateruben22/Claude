@@ -1049,7 +1049,7 @@ await group('live', async (use) => {
       return 'password changed, then the account deleted; the panel is back to sign-up';
     });
     await check('the online board: the menu opens it, and it lists what the server saw (the deleted account is gone)', async () => {
-      await A.getByRole('button', { name: 'Done', exact: true }).first().click();
+      await A.getByRole('button', { name: 'Back', exact: true }).first().click();          // the signed-out account panel
       await A.locator('.pick', { hasText: 'Online board' }).click();
       await A.waitForSelector('.board ol li, .board .muted, .board .bad', { timeout: 30000 });
       const api = await (await fetch(base + '/api/board')).json();
