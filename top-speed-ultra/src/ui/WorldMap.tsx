@@ -54,7 +54,7 @@ function bounds(paths: Path[]) {
   return { x0, x1, z0, z1 };
 }
 // the part of the screen the map is seen in: left of the side list on a wide screen, above the sheet on a phone
-function region(w: number, h: number) { return w > 760 ? { x: 0, y: 0, w: w - 360, h } : { x: 0, y: 0, w, h: h * 0.54 }; }
+function region(w: number, h: number) { const top = 84; return w > 760 ? { x: 70, y: top, w: w - 360 - 70, h: h - top } : { x: 0, y: top, w, h: h * 0.54 - top }; }   // clear of the title, the zoom buttons and the list
 // a view that fits the bounds into that part of the screen, centred in it
 function fit(b: { x0: number; x1: number; z0: number; z1: number }, w: number, h: number, pad = 48): View {
   const r = region(w, h), mpp = Math.max((b.x1 - b.x0) / Math.max(1, r.w - pad * 2), (b.z1 - b.z0) / Math.max(1, r.h - pad * 2), 2);

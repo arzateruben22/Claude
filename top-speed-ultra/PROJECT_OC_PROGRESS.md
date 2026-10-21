@@ -4,6 +4,26 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (06:30 UTC): the World Map, the garage's paint, the radio card; the two sessions coordinated
+
+- **Two sessions.** Another session (the always-on one) runs lanes for the seat view, body fidelity, the freeways,
+  Ultra graphics, the UI to the reference, the graphics modes and the store (`PROJECT_OC_HANDOFF.md`). This session
+  stopped its overlapping lanes and pushed their unjudged work as `claude/wip-c-seat` and `claude/wip-c-world`; the
+  other session agreed to build on this branch's UI and to bind the Look tokens to its three graphics modes.
+- **World Map (U4)** (`WorldMap.tsx`, `tools/map-shots.mjs`): proven at 1280 × 720 and 390 × 844 in three rounds
+  (`tests/out/map`, `map2`, `map3`), no errors. Round one showed labels over each other and phone views framed behind
+  the sheet; labels now take boxes (shields, the race's markers and our places first, then cities from the largest)
+  and every fit frames the visible part of the screen; a picked race frames its own stretch.
+  Round three (`map3`, read by eye) framed the Santa Ana course clear of the sheet and the shields, and showed a real
+  bug: **Santa Ana Checkpoints** ("12 km of the 5 through Santa Ana") ran between Mission Viejo and Lake Forest. I-5
+  North passes Santa Ana at 0.629 of its length (measured in the game: 1.6 km from the city centre), so the course
+  now starts at 0.565 instead of 0.38 (`race.ts`); old best times on it stay under the same id. Fits now also keep
+  clear of the map's title (the Finish label sat under it).
+- **The garage's Paint tab (U5)**: `npm test -- --only=launch` **7/7 passed**, including the new check (Sunset Orange
+  reaches the car, `car.config.paint` 0xe5620b, and the saved settings; back to Rossini Red) and the theme/Look check;
+  `tests/out/launch-paint.png` shows the GT behind the panel in Sunset Orange. Wheels and Upgrades say "coming later".
+- **The radio card (U7)** (`RadioCard.tsx`): type-checked; its frame is below when shot.
+
 ## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
 
 The owner uploaded their style library (branch `style-references`) and asked for continuous improvement. Logged here:
