@@ -575,5 +575,68 @@ export const SCENES = {
       if (i === 1) { enter($("#p-five"), lt, 1.4, { y: 10 }); enter($("#p-one"), lt, 3.4, { y: 10 }); }
       if (i === 2) { enter($("#p-frag"), lt, 0.8, { y: 10 }); enter($("#p-star"), lt, 2.6, { y: 10 }); }
     }
+  },
+
+  /* ───────── 9-1 Three kinds of dark spots: which one is yours ───────── */
+  "9-1": {
+    id: "9-1", kicker: "Three kinds of dark spots", title: `Three kinds of dark spots. <span class="grad">They look alike, they aren't.</span>`, dur: 22, poster: 11,
+    shots: [
+      { at: 0, name: "sun", cap: "Sun spots: years of UV, scattered where the light lands most, the cheeks, the forehead, the backs of the hands." },
+      { at: 6, name: "marks", cap: "Post-inflammatory marks: the brown left behind where a pimple or an irritation was. More common, and slower to fade, in deeper skin tones." },
+      { at: 12, name: "melasma", cap: "Melasma: patchy and symmetrical, both cheeks, the upper lip. Set off by sun, heat, visible light and hormones. Different plan, same sunscreen." },
+      { at: 18, name: "red", cap: "Red marks after acne are something else: blood vessels, not pigment. Those fade on their own." }
+    ],
+    css: `
+.faces { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 4vmin; }
+.face { position: relative; width: 26vmin; height: 34vmin; border-radius: 13vmin 13vmin 11vmin 11vmin / 15vmin 15vmin 12vmin 12vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: .35; transition: none; }
+.face.on { opacity: 1; }
+.face .t { position: absolute; left: 50%; bottom: -5.2vmin; transform: translateX(-50%); white-space: nowrap; font-size: 2.3vmin; font-weight: 650; color: #8e8e93; }
+.face.on .t { color: #fff; }
+.face i { position: absolute; border-radius: 50%; background: #6b3f2e; opacity: 0; }
+.face .lip { position: absolute; left: 50%; bottom: 6.2vmin; width: 8vmin; height: 1.4vmin; margin-left: -4vmin; border-radius: 1vmin; background: #b9786b; }
+.face .nose { position: absolute; left: 50%; top: 12vmin; width: 3.2vmin; height: 8vmin; margin-left: -1.6vmin; border-radius: 2vmin; background: rgba(0,0,0,.08); }
+.face.red i { background: #d7585a; }
+.tag9 { position: absolute; left: 0; right: 0; bottom: 2vmin; display: flex; gap: 1vmin; justify-content: center; flex-wrap: wrap; }
+.tag9 span { padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.2vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.tag9 span.hot { background: rgba(255,122,107,.18); border-color: rgba(255,122,107,.5); color: #ff9a8b; }
+@media (orientation: portrait) { .faces { flex-direction: column; gap: 7vmin; } .face { width: 30vmin; height: 36vmin; } .face .t { bottom: -4.6vmin; } }`,
+    html: `
+<div class="faces" id="faces">
+  <div class="face" id="f-sun"><div class="nose"></div><div class="lip"></div><span class="t">sun spots</span></div>
+  <div class="face" id="f-pih"><div class="nose"></div><div class="lip"></div><span class="t">post-breakout marks</span></div>
+  <div class="face" id="f-mel"><div class="nose"></div><div class="lip"></div><span class="t">melasma</span></div>
+</div>
+<div class="tag9" id="tags"><span id="g-uv">years of UV</span><span id="g-where">cheeks · forehead · hands</span><span id="g-pimple">where a pimple was</span><span id="g-tone">deeper tones: slower to fade</span><span id="g-sym">symmetrical patches</span><span class="hot" id="g-trig">sun · heat · visible light · hormones</span><span id="g-red">red, not brown: blood vessels</span></div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {
+      const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
+      const dot = (face, x, y, s) => { const i = document.createElement("i"); i.style.left = x + "%"; i.style.top = y + "%"; i.style.width = s + "vmin"; i.style.height = s + "vmin"; face.appendChild(i); return i; };
+      // sun: small, scattered high on the face (cheeks and forehead), as if the light landed there
+      const sun = M.$("#f-sun"); for (let k = 0; k < 22; k++) dot(sun, 12 + hash(k + 10) * 72, 10 + hash(k + 11) * 50, 0.7 + hash(k + 12) * 0.9);
+      // post-inflammatory: a few larger marks where breakouts sit, the jaw and the cheeks
+      const pih = M.$("#f-pih"); [[22, 55], [70, 58], [40, 72], [62, 74], [30, 40], [74, 42], [50, 84]].forEach(([x, y], k) => dot(pih, x, y, 1.9 + hash(k + 30) * 0.8));
+      // melasma: two mirrored patches on the cheeks and one on the upper lip
+      const mel = M.$("#f-mel");
+      const patch = (x, y, w, h) => { const i = document.createElement("i"); i.style.left = x + "%"; i.style.top = y + "%"; i.style.width = w + "%"; i.style.height = h + "%"; i.style.borderRadius = "50%"; i.style.filter = "blur(.5vmin)"; mel.appendChild(i); return i; };
+      patch(10, 44, 30, 18); patch(60, 44, 30, 18); patch(34, 74, 32, 7);
+    },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      set($("#faces"), { o: Math.min(1, seg(t, 0, 0.6) * 1.5), y: 10 * (1 - E.out(seg(t, 0, 0.6))) });
+      const faces = [$("#f-sun"), $("#f-pih"), $("#f-mel")];
+      faces.forEach((f, k) => { f.classList.toggle("on", i === k || (i === 3 && k === 1)); f.classList.toggle("red", i === 3 && k === 1); });
+      // the spots come in as their face is named; in the last shot the breakout face's marks turn red (vessels, not pigment)
+      faces.forEach((f, k) => {
+        const dots = f.querySelectorAll("i");
+        const active = i === k || (i === 3 && k === 1);
+        dots.forEach((d, n) => { const p = active ? E.out(seg(i === 3 ? 9 : lt, 0.6 + n * 0.12, 1.4 + n * 0.12)) : (i > k ? 1 : 0); d.style.opacity = (k === 2 ? 0.85 : 1) * (i === 3 && k !== 1 ? 0.35 : 1) * (active && i !== 3 ? p : (i > k || i === 3 ? 1 : 0)); d.style.transform = "scale(" + (active && i !== 3 ? 0.6 + 0.4 * p : 1) + ")"; });
+      });
+      // the chips
+      const show = (id, from, at) => { const el = $("#" + id); if (i === from) enter(el, lt, at, { y: 10 }); else set(el, { o: 0, y: 10 }); };
+      show("g-uv", 0, 1.6); show("g-where", 0, 3.0);
+      show("g-pimple", 1, 1.6); show("g-tone", 1, 3.2);
+      show("g-sym", 2, 1.6); show("g-trig", 2, 3.2);
+      show("g-red", 3, 0.8);
+    }
   }
 };
