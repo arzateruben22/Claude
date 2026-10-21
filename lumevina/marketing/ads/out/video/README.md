@@ -34,7 +34,10 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 28 | `12-3-9x16.mp4` | After a treatment: what's normal, what isn't | Pink and tight is the treatment working. Spreading and hot is not. | 22 s |
 | 29 | `3-2-9x16.mp4` | Build your first routine | Three steps, twice a day. Everything else, one at a time. | 22 s |
 | 30 | `8-1-9x16.mp4` | How acne really forms | Acne is four things going wrong at once. | 22 s |
-| 31 | *rendering* | The supporting cast | Four quiet ingredients that make everything else work better. |  |
-| 32 | *rendering* | Brighteners that work | Two brighteners beat one. Sunscreen beats both. |  |
+| 31 | `5-3-9x16.mp4` | The supporting cast | Four quiet ingredients that make everything else work better. | 24 s |
+| 32 | `9-2-9x16.mp4` | Brighteners that work | Two brighteners beat one. Sunscreen beats both. | 23 s |
+| 33 | *rendering* | Pregnancy and breastfeeding | Pregnant? Here's what to pause, what's commonly fine, and the one rule. |  |
+| 34 | *rendering* | The Sunday ritual | A 20-minute facial at home, step by step, minute by minute. |  |
+| 35 | *rendering* | Skin through the seasons | The Valley has more weather than people think. Your routine should too. |  |
 
 Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
