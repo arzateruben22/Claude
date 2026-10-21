@@ -26,12 +26,16 @@ them. S1 measures the real figures with breakdown().
 
 Bridges, ramps and tunnels, the plan's drawing rule for engine/streets.ts (ours; Lot 57's data.ts has no general one,
 L14): every
-drivable piece lies on the ground except over its br spans, where it's a deck (top TOP m up, a 1 m slab, piers every
-28 m), and its tn spans, which aren't drawn. Between ground and deck it ramps at GRADE along the drivable network: a
-point's height is TOP * max(0, 1 - D / (TOP / GRADE)), D its distance along the network to the nearest br span, so
-every piece meeting at a connector has the same height there. The script prints the pieces a ramp raises without a br
-span of their own, and every crossing without a junction that isn't 5.5 m apart in height (a 1 m deck over 4.5 m of
-headroom) or in a tunnel span. The cost model adds the decks' and the ramps' sides (4 per edge) and the piers (32 each).
+drivable piece lies on the ground except over its br spans, where it's a deck (top TOP m up, a 1 m slab, on piers
+every 28 m, the first 14 m in, 0.9 m in radius, as Lot 57's data.ts places its CA-57's; a pier whose footprint meets
+the ribbon of a piece drawn beneath the deck, lower by CLEAR or more, is left out), and its tn spans, which aren't
+drawn. Between ground and deck it ramps at GRADE along the drivable network: a point's height is
+TOP * max(0, 1 - D / (TOP / GRADE)), D its distance along the network to the nearest br span, so every piece meeting at
+a connector has the same height there. The script prints the pieces with br spans that aren't motorway (and their
+set), the pieces a ramp raises without a br span of their own, every crossing without a junction that isn't 5.5 m
+apart in height (a 1 m deck over 4.5 m of headroom) or in a tunnel span, and the piers the pier rule leaves out. The
+cost model adds the decks' and the ramps' sides (4 per edge) and the piers (32 each, every pier counted, so it's high by
+32 triangles for each pier left out).
 """
 import json, math, os, sys
 from collections import Counter, defaultdict
@@ -205,6 +209,7 @@ print('Land use and water near: ' + (', '.join(lab for ly, i, lab, *_ in F if ly
 
 seg = {i: (f, g, r) for ly, i, lab, f, g, r in F if ly == 'streets'}
 def at(i): return which[('streets', i)]
+def at_set(i): return 'near' if at(i) == 'near' else 'far' 
 print('\nNamed in the plan (set, nearest point from frame (18, 8)):')
 NAMED = {'I-5 northbound carriageway': [560, 362], 'I-5 southbound carriageway': [222, 358, 438],
          'East Katella Avenue': [135, 136, 355, 423, 426], 'Anaheim Way': [137, 412, 420, 421, 427],
@@ -249,6 +254,10 @@ print(f"\nBridges (the plan's rule: deck top {TOP} m, ramps at {GRADE:.0%}, so {
       f"{', '.join(f'{i} {seg_cls(d["seg"][i])}' for i in raised) or 'none'} without one of its own; every connector has "
       f"one height. Crossings without a junction: {'all' if not tight else 'NOT all'} at least {CLEAR} m apart in height "
       f"or in a tunnel span ({tunnelled} in tunnels){'' if not tight else ': ' + str(tight)}.")
+notmoto = [i for i in sorted(info) if info[i][3] and seg_cls(d['seg'][i]) != 'motorway']
+print('  Of the pieces with br spans, not motorway: ' + (', '.join(
+    f"{i} {seg_cls(d['seg'][i])}{' ' + DI['name'][d['seg'][i]['n']] if 'n' in d['seg'][i] else ''} ({at_set(i)})"
+    for i in notmoto) or 'none') + '; they are decks under the rule like the rest.')
 
 # ------------------------------------------------------------------ our street trees (ours: nothing is mapped)
 ROAD_W = {'primary': (12, 24), 'secondary': (11.5, 30), 'tertiary': (14, 14), 'residential': (11, 11),
@@ -271,6 +280,34 @@ print('  Drawn I-5 (width x length less any tunnel, so the area): ' + ', '.join(
     f"{i} {drawn_w(seg[i][2])} m x {seg[i][1].length * (1 - seg[i][2].get('_tn', 0)):.0f} m" for i in
     NAMED['I-5 northbound carriageway'] + NAMED['I-5 southbound carriageway'] + [360, 361, 365, 424, 425, 561, 562]))
 roads = unary_union(ribbons)
+PIER_R, PIER_STEP = 0.9, 28.0           # Lot 57's data.ts CA-57 piers: along(pts, 28) (the first 14 m in), radius 0.9
+def point_at(pts, t):
+    for a, b in zip(pts, pts[1:]):
+        l = math.dist(a, b)
+        if t <= l or b is pts[-1]: k = min(1.0, t / l) if l else 0.0; return (a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k)
+        t -= l
+wid = {j: drawn_w(d['seg'][j]) for j in info}
+bnd = {j: lines[j].bounds for j in info if wid[j]}
+piers, left_out, under = Counter(), Counter(), set()
+for i, (p, L, marks, br) in info.items():
+    for a, b in br:
+        t = a * L + PIER_STEP / 2
+        while t <= b * L + 1e-6:
+            q = Point(point_at(p, t)); piers[at_set(i)] += 1; hit = None
+            for j, (x0, z0, x1, z1) in bnd.items():
+                r = wid[j] / 2 + PIER_R
+                if j == i or q.x < x0 - r or q.x > x1 + r or q.y < z0 - r or q.y > z1 + r: continue
+                if lines[j].distance(q) >= r: continue
+                tj = lines[j].project(q)
+                if any(u * info[j][1] <= tj <= v * info[j][1] for u, v in spans(d['seg'][j], 'tn')): continue
+                if height(j, tj) <= TOP - CLEAR: hit = j; break
+            if hit is not None: left_out[at_set(i)] += 1; under.add(hit)
+            t += PIER_STEP
+print(f"  Piers (every {PIER_STEP:.0f} m along a br span, the first {PIER_STEP / 2:.0f} m in, {PIER_R} m in radius): "
+      f"{sum(piers.values())} placed ({piers['near']} on near pieces); the pier rule leaves out {sum(left_out.values())} "
+      f"({left_out['near']} near), whose footprints meet the ribbons of pieces drawn beneath: "
+      + (', '.join(f"{j} {seg_cls(d['seg'][j])}{' ' + DI['name'][d['seg'][j]['n']] if 'n' in d['seg'][j] else ''}" for j in sorted(under)) or 'none')
+      + ". The estimate counts every pier.")
 poles = [Point(f[0]) for ly, i, lab, f, g, r in F if ly == 'infrastructure points' and r == 'power:power_pole']
 host = Polygon([fr(q) for q in dec(d['bld'][HOST_BLD]['p'])]); patio = box(2.0, -5.5, 24.0, 0.0)
 cands = [('palm', dfr(10.1, s)) for s in range(-6, 25, 6)] + [('shade tree', (u, -19.0)) for u in range(-2, 23, 6)]
