@@ -4,6 +4,53 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-17: freeway surfaces and sound walls up close: a low sun's glare spreads, the roads wear, the walls weather (realism pass, W3)
+
+Before, with the sun ahead the glare on the concrete broke into bright rays converging on the vanishing point: the
+wheel paths and the oil line were narrow bands of much lower roughness (0.14 to 0.18 below the lane in `pcc()` and
+`asphalt()`). The asphalt ramps had hardly any rubber in the wheel paths, and their dark cracks were cut off at the
+tile's edge. The paint was pristine, and the block sound wall was one flat tan of identical 0.4 m blocks to the top,
+with no cap. Now:
+- The wheel paths ease the roughness by only 0.04 to 0.05, in broad bands whose strength wanders, over a
+  medium-scale roughness mottle, so the glare is a soft sheen across the lanes. The rubber darkening stays: broader
+  and patchier on both surfaces, and a little cooler than the slab on concrete. Concrete gets grit along its joints,
+  a few spalls at the transverse joint, and one faint hairline crack instead of a dark one in every slab.
+- Asphalt is one lane wide by two lane lengths, so it repeats every 7.3 m instead of 3.7 m. It gets tar snakes: the
+  joint beside each lane line is sealed its whole length, plus three meandering seals (one forked), 3 to 5 cm wide,
+  near black, dusted with grit and a little glossier. It also has six thin unsealed cracks, all drawn across the
+  tile's edges.
+- Lane paint wears: a wear texture over the lines' colours chips about 7% and ragged-edges about 8% of each line,
+  and stretches tens of metres long run thinner than others.
+- The sound wall's texture is mapped by height. Road grime and spray at the foot, a smooth precast cap course in
+  1.6 m units with a shadow line under its lip, rain streaks running down from the cap (most from its joints), and a
+  softer per-block tint. A slower tone wander along the wall in vertex colours breaks the 8 m repeat.
+Details in `PROJECT_OC_TECHNICAL_NOTES.md` (road surfaces).
+
+- Draw calls: no meshes added. The roads group holds 649 meshes and 278,094 triangles before and after, on the same
+  seeded drive with everything in reach built first. One plain render (scene and shadow pass, no post, no mirrors):
+  hood 547 → 547 calls and 1,456,405 → 1,458,205 triangles; chase 624 → 625 and 1,563,510 → 1,565,598. Whole
+  frames at 960x540 High (two-frame average): day hood 550 → 561 calls and 1,456,043 → 1,458,423 triangles; wall
+  close-up 708 → 719 and 1,767,100 → 1,769,480; asphalt close-up 523 → 534 and 1,409,511 → 1,411,891; sunset
+  sun-ahead chase 642 → 653 and 1,551,752 → 1,554,132. The 11-call step is frame-to-frame jitter in the extra
+  passes, not the change: in unseeded runs the old build gave 561 on the day hood and the first new build gave 550.
+  Traffic still differs between runs (a car sits in the old wall frame that isn't in the new one), and that
+  accounts for the triangle differences.
+- Texture memory: asphalt and concrete are unchanged in size. The wall goes from 512² to 512 × 1024 on High and up
+  (+2 MB for the colour and normal maps, before mipmaps) and to 256 × 512 on Low (−1 MB). The paint wear adds 256 KB
+  (High) or 128 KB (Low).
+- Painting time, headless Chromium at load average 15 to 17, one run in each order, so noisy: at texture size 1024
+  the road and wall set took 3.6 and 4.5 s before and 3.7 and 5.4 s after (about +0.5 s, mostly the wall's doubled
+  texels). At 512 (Low) it took 1.8 and 1.2 s before and 1.3 and 1.4 s after, so no measurable increase. The new
+  broad fields are sampled on a coarse grid (`coarse()`), not a noise call a texel.
+- Checked by eye at 960x540 High (headless Chromium, SwiftShader), same seeded drive (I-405 North, 30 s of
+  autopilot), before from the HEAD build and after from the final build: `tests/out/w3/w3-before-*.png` and
+  `w3-after-*.png` (`day-hood`, `wall`, `asphalt`, `ahead-chase`), side by side in `tests/out/w3/cmp-*.png`, with
+  crops in `crop-cmp-*.png` (`ahead-glare` at 4x shows the rays gone; `wall-close`, `wall-foot`, `asphalt-near`,
+  `paint-near`, `hood-far`). The textures laid flat: `tests/out/w3/tex-after-v3.png`. Scripts:
+  `tests/out/w3/w3-shot.mjs`, `w3-calls.mjs`, `tex-preview.ts`, `tex-time.ts`.
+- Suite: SUITE_PLACEHOLDER
+- Not measured on a real phone or GPU.
+
 ## 2026-10-16: traffic cars get door seams, mirrors and pillars; the player's door mirror loses its dark band (realism pass, W2)
 
 Before, traffic bodies were smooth soap bars: no door cut lines, handles, pillars or plates, and a bare black box beside

@@ -39,9 +39,9 @@ export class Roads {
       shoulder: off(new THREE.MeshStandardMaterial({ map: sh.map, normalMap: sh.normalMap, roughness: 0.95, color: 0xa8a49c }), -1),
       pcc: off(new THREE.MeshStandardMaterial({ map: pc.map, normalMap: pc.normalMap, roughnessMap: pc.roughnessMap, normalScale: new THREE.Vector2(0.5, 0.5), color: 0xd8d4cc }), -1),
       concrete: new THREE.MeshStandardMaterial({ map: c.map, normalMap: c.normalMap, roughness: 0.9, color: 0xe0dcd3, side: THREE.DoubleSide }),
-      wall: new THREE.MeshStandardMaterial({ map: bw.map, normalMap: bw.normalMap, roughness: 0.95, color: 0xf0e8da, side: THREE.DoubleSide }),
+      wall: new THREE.MeshStandardMaterial({ map: bw.map, normalMap: bw.normalMap, roughness: 0.95, color: 0xf0e8da, side: THREE.DoubleSide, vertexColors: true }),
       under: new THREE.MeshStandardMaterial({ map: c.map, roughness: 0.95, color: 0x9d988f, side: THREE.DoubleSide }),
-      paint: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
+      paint: new THREE.MeshStandardMaterial({ vertexColors: true, map: T.paintWear(), roughness: 0.55, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
       cushion: new THREE.MeshStandardMaterial({ color: 0xf2c21b, roughness: 0.6 }),
     };
     this.group.name = 'roads';
@@ -184,7 +184,9 @@ export class Roads {
           ? [[w, 0], [w, 4.6], [w + 0.3 * sg, 4.7], [w + 0.6 * sg, 4.6], [w + 0.6 * sg, -1.4]]
           : [[w, 0], [w + 0.05 * sg, 0.08], [w + 0.2 * sg, 0.33], [w + 0.35 * sg, 0.82], [w + 0.53 * sg, 0.82], [w + 0.6 * sg, -1.4]];
         const pr = side === 'L' ? prof.slice().reverse() : prof;
-        const g = this.strip(run, pr, (row, _j, acc) => [acc / (sound ? 4 : 2), (row.s - s0) / (sound ? 4 : 2)]);
+        // a sound wall's u is its height (the texture's grime at the foot, streaks under the cap), on both faces
+        const g = this.strip(run, pr, (row, j, acc) => (sound ? [pr[j][1] / T.WALL_U, (row.s - s0) / T.WALL_V] : [acc / 2, (row.s - s0) / 2]));
+        if (g && sound) wallTone(g, run, pr);
         if (g) { const mesh = own(new THREE.Mesh(g, sound ? this.m.wall : this.m.concrete)); mesh.castShadow = true; }
       }
     }
@@ -283,15 +285,22 @@ export class Roads {
 
   // dashed lane lines, a yellow line on the left edge, a white one on the right, raised reflectors in the gaps
   private markings(p: Path, s0: number, s1: number, ox: number, oz: number, covered: (s: number, d: number, y: number) => boolean) {
-    const pos: number[] = [], col: number[] = [], idx: number[] = [];
+    const pos: number[] = [], col: number[] = [], uvs: number[] = [], idx: number[] = [];
     const white = [0.93, 0.93, 0.9], yellow = [0.95, 0.74, 0.12];
+    // the wear texture runs along the line from a whole tile before the chunk, so it carries on into the next chunk
+    const v0 = Math.floor(s0 / T.PAINT_V) * T.PAINT_V;
     const quad = (sa: number, sb: number, d: number, w: number, c: number[], lift = 0.015) => {
       const a = p.at(sa, d), ax = a.x, ay = a.y, az = a.z, ah = a.h;
       if (covered((sa + sb) / 2, d, ay)) return;
       const b = p.at(sb, d);
       const base = pos.length / 3;
-      for (const [x, y, z, h] of [[ax, ay, az, ah], [b.x, b.y, b.z, b.h]]) for (const e of [-w / 2, w / 2]) {
-        pos.push(x - Math.cos(h) * e - ox, y + lift, z + Math.sin(h) * e - oz); col.push(c[0], c[1], c[2]);
+      for (const [x, y, z, h, s] of [[ax, ay, az, ah, sa], [b.x, b.y, b.z, b.h, sb]]) {
+        // stretches of line worn thinner than others, tens of metres long
+        const f = 0.7 + 0.36 * fbm2(x * 0.035, z * 0.035, 2, 77);
+        for (const e of [-w / 2, w / 2]) {
+          pos.push(x - Math.cos(h) * e - ox, y + lift, z + Math.sin(h) * e - oz); col.push(c[0] * f, c[1] * f, c[2] * f);
+          uvs.push(e < 0 ? 0 : 1, (s - v0) / T.PAINT_V);
+        }
       }
       idx.push(base, base + 1, base + 2, base + 1, base + 3, base + 2);
     };
@@ -316,6 +325,7 @@ export class Roads {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     g.setIndex(idx); g.computeVertexNormals();
     return g;
   }
@@ -403,5 +413,19 @@ export function signText(text: string[]) {
 }
 
 const soundWall = (x: number, z: number) => fbm2(x * 0.0021, z * 0.0021, 2, 13) > 0.45;
+// A sound wall's slow tone wander, as vertex colours on its strip (rows along the wall, the profile across): stretches
+// tens of metres long a little lighter or darker, warmer or greyer (block batches, sun and age), and the foot a shade
+// darker than the top. The texture repeats every 8 m; this doesn't.
+function wallTone(g: THREE.BufferGeometry, run: Row[], prof: [number, number][]) {
+  const cols = prof.length, col = new Float32Array(run.length * cols * 3);
+  run.forEach((row, i) => {
+    const t = fbm2(row.ax * 0.02, row.az * 0.02, 3, 61), hue = fbm2(row.ax * 0.008, row.az * 0.008, 2, 62) - 0.5;
+    for (let j = 0; j < cols; j++) {
+      const k = (0.8 + 0.28 * t) * (prof[j][1] < 1 ? 0.94 : 1), o = (i * cols + j) * 3;
+      col[o] = k; col[o + 1] = k * (1 + hue * 0.04); col[o + 2] = k * (1 + hue * 0.14);
+    }
+  });
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+}
 const UP = new THREE.Vector3(0, 1, 0), ONE3 = new THREE.Vector3(1, 1, 1);
 void rng; void clamp;

@@ -648,6 +648,38 @@ await group('render', async (use) => {
     expect(r.roofs.length === 3 && r.tints >= 6, `roof rows used ${r.roofs.join(',')}, ${r.tints} stucco tints`);
     return `${plans.map((n) => `${n} ${r.kinds[n].inst} in ${r.kinds[n].meshes} meshes, ${r.kinds[n].tris} tris`).join('; ')}; ${offices.map((n) => `${n} ${r.kinds[n].inst}`).join(', ')}; roofs ${r.roofs.join(',')}, office styles ${r.styles.join(',')}, ${r.tints} stucco tints; mask ${(100 * r.mask.a0 / r.mask.all).toFixed(1)}% untinted`;
   });
+  // freeway surfaces (W3): the wheel paths only ease the roughness a little (a low sun's glare spreads, not streaks),
+  // the asphalt tile is two lane lengths long, the paint wears (a texture over the lines' colours, on uvs) and the
+  // block sound wall's u is its height with a slow tone wander in vertex colours; nothing adds a mesh
+  await check('freeway surfaces: soft wheel-path roughness, worn paint, a weathered sound wall', async () => {
+    const r = await game(page, () => {
+      const R = window.__game.roads, m = R.m;
+      // the roughness down a column of the tile, averaged: the wheel paths (u 0.28, 0.72) against the lane between
+      const bands = (t) => {
+        const c = t.image, w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data;
+        const col = (u) => { let s = 0; const x = Math.round(u * (w - 1)); for (let y = 0; y < h; y++) s += d[(y * w + x) * 4]; return s / h / 255; };
+        return { path: (col(0.28) + col(0.72)) / 2, lane: (col(0.14) + col(0.42) + col(0.58) + col(0.86)) / 4 };
+      };
+      const pcc = bands(m.pcc.roughnessMap), asphalt = bands(m.asphalt.roughnessMap);
+      let walls = 0, tinted = 0, lo = 9, hi = 0, footU = 0, paint = 0, paintUv = 0;
+      R.group.traverse((o) => {
+        if (o.material === m.paint) { paint++; if (o.geometry.attributes.uv) paintUv++; }
+        if (o.material !== m.wall) return;
+        walls++;
+        const c = o.geometry.attributes.color, uv = o.geometry.attributes.uv;
+        if (!c) return;
+        tinted++; footU = Math.max(footU, Math.abs(uv.getX(0)));
+        for (let i = 0; i < c.count; i++) { lo = Math.min(lo, c.getX(i)); hi = Math.max(hi, c.getX(i)); }
+      });
+      return { pcc, asphalt, rep: m.asphalt.map.repeat.y, paintMap: !!m.paint.map, paint, paintUv, wallVC: m.wall.vertexColors, walls, tinted, lo, hi, footU };
+    });
+    for (const k of ['pcc', 'asphalt']) expect(Math.abs(r[k].lane - r[k].path) < 0.07, `${k}: wheel-path roughness ${fmt(r[k].path)} against ${fmt(r[k].lane)} between them (a band that sharp streaks a low sun's glare)`);
+    expect(r.rep === 0.5, `the asphalt tile repeats ${r.rep} along v (two lane lengths is 0.5)`);
+    expect(r.paintMap && r.paint > 0 && r.paintUv === r.paint, `paint wear map ${r.paintMap}, ${r.paintUv} of ${r.paint} paint meshes have uvs`);
+    expect(r.wallVC && r.tinted === r.walls && r.footU === 0, `sound wall: vertex colours ${r.wallVC}, ${r.tinted} of ${r.walls} walls tinted, foot u ${r.footU}`);
+    if (r.walls) expect(r.hi - r.lo > 0.04, `the walls' tone runs only ${fmt(r.lo)} to ${fmt(r.hi)}`);
+    return `roughness path/lane: pcc ${fmt(r.pcc.path)}/${fmt(r.pcc.lane)}, asphalt ${fmt(r.asphalt.path)}/${fmt(r.asphalt.lane)}; asphalt repeat.y ${r.rep}; ${r.paint} paint meshes with uvs and the wear map; ${r.walls} sound walls${r.walls ? `, tone ${fmt(r.lo)} to ${fmt(r.hi)}` : ' in reach here (material checked only)'}`;
+  });
   await check('Live time follows the real sun over OC', async () => {
     await page.clock.setFixedTime(new Date('2026-10-12T09:13:00Z'));        // 02:13 Pacific
     const night = await sky('live', 'clear');

@@ -20,13 +20,14 @@ function tex(c: HTMLCanvasElement, srgb: boolean, rx = 1, ry = 1) {
   t.anisotropy = ANISO;
   return t;
 }
-// a tangent-space normal map from a height field (wraps at the edges)
-function normalMap(h: Float32Array, w: number, hh: number, strength: number) {
+// a tangent-space normal map from a height field (wraps at the edges); sy scales the slopes along y for a texture
+// whose texels are longer than they are wide
+function normalMap(h: Float32Array, w: number, hh: number, strength: number, sy = strength) {
   const [c, g] = mk(w, hh), img = g.createImageData(w, hh), d = img.data;
   for (let y = 0; y < hh; y++) for (let x = 0; x < w; x++) {
     const l = h[y * w + ((x - 1 + w) % w)], r = h[y * w + ((x + 1) % w)];
     const u = h[((y - 1 + hh) % hh) * w + x], dn = h[((y + 1) % hh) * w + x];
-    let nx = (l - r) * strength, ny = (dn - u) * strength, nz = 1;
+    let nx = (l - r) * strength, ny = (dn - u) * sy, nz = 1;
     const len = Math.hypot(nx, ny, nz); nx /= len; ny /= len; nz /= len;
     const i = (y * w + x) * 4;
     d[i] = (nx * 0.5 + 0.5) * 255; d[i + 1] = (ny * 0.5 + 0.5) * 255; d[i + 2] = (nz * 0.5 + 0.5) * 255; d[i + 3] = 255;
@@ -43,39 +44,97 @@ function once<T>(key: string, make: () => T): T {
 
 export interface PBR { map: THREE.Texture; normalMap: THREE.Texture; roughnessMap?: THREE.Texture }
 
-// Freeway asphalt, one lane wide: aggregate, darker polished wheel paths, tar-sealed cracks, oil down the middle.
+// a broad, tileable field (wear, mottle) sampled on a coarse cu x cv grid and read back bilinearly, so it costs a few
+// operations a texel instead of a noise call per octave (a 1024 texture has a million texels)
+function coarse(cu: number, cv: number, f: (u: number, v: number) => number) {
+  const g = new Float32Array(cu * cv);
+  for (let j = 0; j < cv; j++) for (let i = 0; i < cu; i++) g[j * cu + i] = f(i / cu, j / cv);
+  return (u: number, v: number) => {
+    const x = u * cu, y = v * cv, i0 = Math.floor(x), j0 = Math.floor(y), fx = x - i0, fy = y - j0;
+    const i = ((i0 % cu) + cu) % cu, j = ((j0 % cv) + cv) % cv, i1 = (i + 1) % cu, j1 = (j + 1) % cv;
+    const a = g[j * cu + i] + (g[j * cu + i1] - g[j * cu + i]) * fx, b = g[j1 * cu + i] + (g[j1 * cu + i1] - g[j1 * cu + i]) * fx;
+    return a + (b - a) * fy;
+  };
+}
+
+// strokes or fills what draw() paints nine times, a tile over each way, so a mark leaving one edge comes back at the
+// opposite one (w and h in the context's current units)
+function wrapped(g: Ctx, w: number, h: number, draw: () => void) {
+  for (const ox of [-w, 0, w]) for (const oy of [-h, 0, h]) { g.save(); g.translate(ox, oy); draw(); g.restore(); }
+}
+
+// Freeway asphalt, one lane wide and two lane-widths long (the textures repeat 0.5 along v, so a texel is 3.6 mm
+// across and 7.2 mm along; the marks are drawn with the y axis at half scale): aggregate, tyre rubber darkening the
+// two wheel paths, an oil line, hairline cracks and tar snakes (crack sealant: the joint beside the lane line sealed
+// its whole length, and a few meandering ones). The roughness eases only a little in the wheel paths, broad and
+// patchy, so a low sun's glare spreads over the lane instead of drawing a bright line down each wheel path.
 export function asphalt(): PBR {
   return once('asphalt', () => {
-    const n = Math.min(SIZE, 1024), r = rng(11);
+    const n = Math.min(SIZE, 1024), r = rng(11), k = n / 1024;
     const [c, g] = mk(n, n), [rc, rg] = mk(n, n);
+    // the tar snakes first, as a mask on a CPU canvas (it's read back once)
+    const mc = document.createElement('canvas'); mc.width = mc.height = n;
+    const mg = mc.getContext('2d', { willReadFrequently: true })!;
+    mg.fillStyle = '#000'; mg.fillRect(0, 0, n, n);
+    mg.setTransform(1, 0, 0, 0.5, 0, 0); mg.strokeStyle = '#fff'; mg.lineCap = mg.lineJoin = 'round';
+    const snake = (pts: [number, number][], w0: number) => wrapped(mg, n, 2 * n, () => {
+      for (let s = 1; s < pts.length; s++) {
+        mg.lineWidth = w0 * (0.75 + 0.5 * Math.abs(Math.sin(s * 0.7 + w0)));
+        mg.beginPath(); mg.moveTo(pts[s - 1][0], pts[s - 1][1]); mg.lineTo(pts[s][0], pts[s][1]); mg.stroke();
+      }
+    });
+    const seal: [number, number][] = [];
+    for (let Y = 0; Y <= 2 * n; Y += 16 * k) seal.push([n * 0.028 + 5 * k * Math.sin((Y / n) * Math.PI * 2 + 1.3) + 3 * k * Math.sin((Y / n) * Math.PI * 7 + 0.4), Y]);
+    snake(seal, 11 * k);
+    for (let m = 0; m < 3; m++) {
+      let x = r() * n, Y = r() * 2 * n, a = (m === 0 ? Math.PI / 2 : 0) + (r() - 0.5) * 0.8;
+      const pts: [number, number][] = [[x, Y]], steps = (m === 0 ? 40 : 18) + Math.floor(r() * 14), w0 = (9 + r() * 5) * k;
+      let fork: [number, number, number] | null = null;
+      for (let s = 0; s < steps; s++) {
+        a += (r() - 0.5) * 0.5; x += Math.cos(a) * 10 * k; Y += Math.sin(a) * 10 * k; pts.push([x, Y]);
+        if (m === 1 && s === 12) fork = [x, Y, a + 0.9];
+      }
+      snake(pts, w0);
+      if (fork) {
+        let [fx, fY, fa] = fork; const br: [number, number][] = [[fx, fY]];
+        for (let s = 0; s < 16; s++) { fa += (r() - 0.5) * 0.5; fx += Math.cos(fa) * 10 * k; fY += Math.sin(fa) * 10 * k; br.push([fx, fY]); }
+        snake(br, w0 * 0.75);
+      }
+    }
+    const md = mg.getImageData(0, 0, n, n).data; mc.width = 1;
     const img = g.createImageData(n, n), d = img.data, rimg = rg.createImageData(n, n), rd = rimg.data;
     const height = new Float32Array(n * n);
+    const wearF = coarse(64, 128, (u, v) => tfbm(u * 3, v * 12, 3, 3, 6)), patchF = coarse(64, 128, (u, v) => tfbm(u * 6, v * 12, 6, 3, 8));
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-      const u = x / n, v = y / n;
-      const grain = tnoise(x * 0.9, y * 0.9, n * 0.9, 3);
-      const coarse = tfbm(u * 8, v * 8, 8, 4, 5);
-      const path = Math.exp(-Math.pow((u - 0.28) / 0.07, 2)) + Math.exp(-Math.pow((u - 0.72) / 0.07, 2));
-      const oil = Math.exp(-Math.pow((u - 0.5) / 0.05, 2)) * (0.5 + 0.5 * tfbm(u * 4, v * 16, 4, 3, 9));
-      let lum = 0.36 + (coarse - 0.5) * 0.12 + (grain - 0.5) * 0.16 - path * 0.05 - oil * 0.06;
-      const stone = grain > 0.86 ? (grain - 0.86) * 2.2 : 0;
-      lum += stone;
-      const i = (y * n + x) * 4;
-      d[i] = clamp(lum * 255 * 1.0, 0, 255); d[i + 1] = clamp(lum * 255 * 0.99, 0, 255); d[i + 2] = clamp(lum * 255 * 0.97, 0, 255); d[i + 3] = 255;
-      const rough = clamp(0.92 - path * 0.18 - oil * 0.2 + (grain - 0.5) * 0.1, 0.35, 1);
+      const u = x / n, v = y / n, i = (y * n + x) * 4;
+      const grain = tnoise(x * 0.9, y * 1.8, n * 0.9, 3);
+      const coarse = tfbm(u * 8, v * 16, 8, 4, 5);
+      // tyre rubber: two broad, soft bands, heavier in places
+      const wear = 0.65 + 0.7 * wearF(u, v);
+      const path = (Math.exp(-(((u - 0.28) / 0.09) ** 2)) + Math.exp(-(((u - 0.72) / 0.09) ** 2))) * wear;
+      const oil = Math.exp(-(((u - 0.5) / 0.06) ** 2)) * (0.4 + 0.6 * tfbm(u * 4, v * 32, 4, 3, 9));
+      const patch = patchF(u, v);
+      const tar = md[i] / 255, stone = grain > 0.86 ? (grain - 0.86) * 2.2 : 0;
+      let lum = 0.36 + (coarse - 0.5) * 0.12 + (grain - 0.5) * 0.16 - path * 0.06 - oil * 0.06 + stone;
+      lum = lum * (1 - tar) + (0.16 + (grain - 0.5) * 0.1 + (coarse - 0.5) * 0.04) * tar;      // sealant, dusted with grit
+      d[i] = clamp(lum * 255, 0, 255); d[i + 1] = clamp(lum * 255 * 0.99, 0, 255); d[i + 2] = clamp(lum * 255 * (0.97 + path * 0.015), 0, 255); d[i + 3] = 255;
+      const rough = clamp(0.92 - path * 0.05 - oil * 0.05 + (grain - 0.5) * 0.1 + (patch - 0.5) * 0.16, 0.6, 1) * (1 - tar) + 0.66 * tar;
       rd[i] = rd[i + 1] = rd[i + 2] = rough * 255; rd[i + 3] = 255;
-      height[y * n + x] = grain * 0.7 + coarse * 0.3 + stone;
+      height[y * n + x] = (grain * 0.7 + coarse * 0.3 + stone) * (1 - tar) + 0.62 * tar;
     }
     g.putImageData(img, 0, 0); rg.putImageData(rimg, 0, 0);
-    // tar-sealed cracks: dark, smooth, wandering lines
-    for (let k = 0; k < 9; k++) {
-      let x = r() * n, y = r() * n, a = r() * Math.PI * 2;
-      g.strokeStyle = 'rgba(18,18,20,0.75)'; rg.strokeStyle = 'rgba(90,90,90,1)';
-      g.lineWidth = rg.lineWidth = 2 + r() * 4;
-      g.beginPath(); rg.beginPath(); g.moveTo(x, y); rg.moveTo(x, y);
-      for (let s = 0; s < 40; s++) { a += (r() - 0.5) * 0.6; x += Math.cos(a) * 8; y += Math.sin(a) * 8; g.lineTo(x, y); rg.lineTo(x, y); }
-      g.stroke(); rg.stroke();
+    // hairline cracks not yet sealed: thin, dark, and a little rougher with the grit in them
+    g.setTransform(1, 0, 0, 0.5, 0, 0); rg.setTransform(1, 0, 0, 0.5, 0, 0);
+    g.strokeStyle = 'rgba(22,22,24,0.5)'; rg.strokeStyle = 'rgba(255,255,255,0.3)';
+    for (let m = 0; m < 6; m++) {
+      let x = r() * n, Y = r() * 2 * n, a = r() * Math.PI * 2;
+      const pts: [number, number][] = [[x, Y]];
+      for (let s = 0; s < 30; s++) { a += (r() - 0.5) * 0.7; x += Math.cos(a) * 8 * k; Y += Math.sin(a) * 8 * k; pts.push([x, Y]); }
+      g.lineWidth = rg.lineWidth = (1.5 + r() * 1.5) * k;
+      for (const cx of [g, rg]) wrapped(cx, n, 2 * n, () => { cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for (const p of pts) cx.lineTo(p[0], p[1]); cx.stroke(); });
     }
-    return { map: tex(c, true), normalMap: normalMap(height, n, n, 2.2), roughnessMap: tex(rc, false) };
+    const nm = normalMap(height, n, n, 2.2, 1.1); nm.repeat.set(1, 0.5);
+    return { map: tex(c, true, 1, 0.5), normalMap: nm, roughnessMap: tex(rc, false, 1, 0.5) };
   });
 }
 
@@ -115,64 +174,144 @@ export function concrete(): PBR {
 
 // Portland cement concrete lanes (the 405, the 5, the 55, the 57, the 91, the 22): one lane wide by one slab long.
 // Light grey-beige slabs with a sealed, slightly skewed transverse joint, the longitudinal joint at the lane edge,
-// diamond-ground tining, darker polished wheel paths, an oil line, hairline cracks and a patch.
+// diamond-ground tining, tyre rubber in two broad wheel paths (heavier in places, and a little cooler than the
+// slab), an oil line, grit packed into the joints with a few spalls broken out of the slab's edge, and a hairline
+// crack. Every slab shows the same tile, so the wear is kept to soft, low-contrast marks that don't read as copies.
+// The roughness eases only a little in the wheel paths, broad and patchy, so a low sun's glare spreads instead of
+// streaking down each wheel path.
 export const SLAB = 4.57;
 export function pcc(): PBR {
   return once('pcc', () => {
-    const n = Math.min(SIZE, 1024), r = rng(41);
+    const n = Math.min(SIZE, 1024), r = rng(41), k = n / 1024;
     const [c, g] = mk(n, n), [rc, rg] = mk(n, n);
     const img = g.createImageData(n, n), d = img.data, rimg = rg.createImageData(n, n), rd = rimg.data;
     const height = new Float32Array(n * n);
     const skew = 0.06 * n;                                 // the joints run a little off square, as Caltrans saws them
+    const wearF = coarse(64, 64, (u, v) => tfbm(u * 3, v * 6, 3, 3, 46)), patchF = coarse(64, 64, (u, v) => tfbm(u * 6, v * 6, 6, 3, 47));
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
       const u = x / n, v = y / n;
       const grain = tnoise(x * 1.1, y * 1.1, n * 1.1, 42);
       const coarse = tfbm(u * 5, v * 5, 5, 4, 43);
       const mottle = tfbm(u * 2, v * 2, 2, 3, 44);
       const tine = 0.5 + 0.5 * Math.sin((y / 4.5) * Math.PI * 2);        // grooves about 2 cm apart
-      const path = Math.exp(-(((u - 0.28) / 0.08) ** 2)) + Math.exp(-(((u - 0.72) / 0.08) ** 2));
-      const oil = Math.exp(-(((u - 0.5) / 0.04) ** 2)) * (0.4 + 0.6 * tfbm(u * 4, v * 8, 4, 3, 45));
+      const wear = 0.65 + 0.7 * wearF(u, v);
+      const path = (Math.exp(-(((u - 0.28) / 0.11) ** 2)) + Math.exp(-(((u - 0.72) / 0.11) ** 2))) * wear;
+      const oil = Math.exp(-(((u - 0.5) / 0.06) ** 2)) * (0.3 + 0.7 * tfbm(u * 4, v * 8, 4, 3, 45));
+      const patch = patchF(u, v);
       const jy = (((y - u * skew) % n) + n) % n, tj = Math.min(jy, n - jy), lj = Math.min(x, n - x);
       const joint = Math.max(tj < 3 ? 1 : tj < 7 ? 0.35 : 0, lj < 2 ? 1 : lj < 5 ? 0.3 : 0);
-      let lum = 0.58 + (mottle - 0.5) * 0.08 + (coarse - 0.5) * 0.07 + (grain - 0.5) * 0.09 - path * 0.05 - oil * 0.05 - tine * 0.015;
+      // grit packs into the joints and stains a hand's width either side of them
+      const grime = Math.exp(-((tj / (16 * k)) ** 2)) * 0.7 + Math.exp(-((lj / (10 * k)) ** 2)) * 0.4;
+      let lum = 0.58 + (mottle - 0.5) * 0.08 + (coarse - 0.5) * 0.07 + (grain - 0.5) * 0.09 - path * 0.055 - oil * 0.05 - tine * 0.015 - grime * 0.035;
       lum -= joint * 0.26;
+      const warm = 1 - Math.min(1, path) * 0.5;            // rubber is neutral, so the wheel paths lose a little warmth
       const i = (y * n + x) * 4;
-      d[i] = clamp(lum * 255 * 1.02, 0, 255); d[i + 1] = clamp(lum * 255, 0, 255); d[i + 2] = clamp(lum * 255 * 0.94, 0, 255); d[i + 3] = 255;
-      const rough = clamp(0.86 - path * 0.14 - oil * 0.12 + (grain - 0.5) * 0.08 + joint * 0.1, 0.4, 1);
+      d[i] = clamp(lum * 255 * (1 + 0.02 * warm), 0, 255); d[i + 1] = clamp(lum * 255, 0, 255); d[i + 2] = clamp(lum * 255 * (1 - 0.06 * warm), 0, 255); d[i + 3] = 255;
+      const rough = clamp(0.86 - path * 0.04 - oil * 0.04 + (grain - 0.5) * 0.08 + (patch - 0.5) * 0.16 + joint * 0.1 + grime * 0.02, 0.55, 1);
       rd[i] = rd[i + 1] = rd[i + 2] = rough * 255; rd[i + 3] = 255;
       height[y * n + x] = grain * 0.35 + coarse * 0.25 + tine * 0.25 - joint * 0.8;
     }
     g.putImageData(img, 0, 0); rg.putImageData(rimg, 0, 0);
-    g.strokeStyle = 'rgba(40,38,36,0.45)'; g.lineWidth = 1.5;
-    for (let k = 0; k < 2; k++) {
+    // spalls: shallow chips broken out of the slab's edge along the transverse joint, darker and rougher
+    for (let m = 0; m < 5; m++) {
+      const x0 = r() * n, y0 = (x0 / n) * skew + (r() < 0.5 ? -1 : 1) * (4 + r() * 5) * k, rad = (5 + r() * 8) * k;
+      const pts: [number, number][] = [];
+      for (let a = 0; a < 7; a++) { const ang = (a / 7) * Math.PI * 2, rr = rad * (0.6 + 0.5 * r()); pts.push([x0 + Math.cos(ang) * rr * 1.4, y0 + Math.sin(ang) * rr * 0.7]); }
+      for (const [cx, col] of [[g, 'rgba(84,80,74,0.5)'], [rg, 'rgba(255,255,255,0.3)']] as const) wrapped(cx, n, n, () => {
+        cx.fillStyle = col; cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]); for (const p of pts) cx.lineTo(p[0], p[1]); cx.closePath(); cx.fill();
+      });
+    }
+    // a hairline crack, faint (every slab repeats it)
+    g.strokeStyle = 'rgba(40,38,36,0.3)'; g.lineWidth = 1.5 * k;
+    {
       let x = r() * n, y = r() * n, a = r() * Math.PI * 2;
-      g.beginPath(); g.moveTo(x, y);
-      for (let s = 0; s < 30; s++) { a += (r() - 0.5) * 0.8; x += Math.cos(a) * 6; y += Math.sin(a) * 6; g.lineTo(x, y); }
-      g.stroke();
+      const pts: [number, number][] = [[x, y]];
+      for (let s = 0; s < 30; s++) { a += (r() - 0.5) * 0.8; x += Math.cos(a) * 6 * k; y += Math.sin(a) * 6 * k; pts.push([x, y]); }
+      wrapped(g, n, n, () => { g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (const p of pts) g.lineTo(p[0], p[1]); g.stroke(); });
     }
     return { map: tex(c, true), normalMap: normalMap(height, n, n, 1.6), roughnessMap: tex(rc, false) };
   });
 }
 
-// a masonry sound wall: split-face block in running bond, tan, 0.2 m courses of 0.4 m blocks; one tile is 4 m by
-// 4 m with the height along u (the wall strip's u runs up the face) and the road along v
+// A masonry sound wall: split-face block in running bond, tan, 0.2 m courses of 0.4 m blocks under a smooth precast
+// cap course. One tile is WALL_U up the face (u, from the wall's foot) by WALL_V along the road (v); Roads.ts maps u
+// from the height on both faces, so the weathering sits where it belongs: road grime and spray at the foot, rain
+// streaks running down from the cap (most of them from its joints), the cap's shadow line, and a broad wander in the
+// blocks' tone. Roads.ts adds a slower wander along the wall, tens of metres long, in vertex colours.
+export const WALL_U = 4.8, WALL_V = 8;
 export function blockWall(): PBR {
   return once('blockWall', () => {
-    const n = 512, [c, g] = mk(n, n), img = g.createImageData(n, n), d = img.data, height = new Float32Array(n * n);
-    const bh = n / 20, bw = n / 10;
-    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-      const course = Math.floor(x / bh), xx = x - course * bh;
-      const yo = (y + (course % 2) * (bw / 2)) % n, by = Math.floor(yo / bw), yy = yo - by * bw;
-      const mortar = xx < 2 || yy < 2;
-      const face = tnoise(x * 1.3, y * 1.3, n * 1.3, 51), split = tfbm((x / n) * 10, (y / n) * 10, 10, 4, 52);
-      const tint = tfbm((by * 0.37 + course * 0.11) % 1, (course * 0.23) % 1, 1, 1, 53);
-      const lum = mortar ? 0.72 : 0.62 + (tint - 0.5) * 0.14 + (split - 0.5) * 0.14 + (face - 0.5) * 0.1;
-      const i = (y * n + x) * 4;
-      d[i] = clamp(lum * 255, 0, 255); d[i + 1] = clamp(lum * 255 * 0.9, 0, 255); d[i + 2] = clamp(lum * 255 * 0.74, 0, 255); d[i + 3] = 255;
-      height[y * n + x] = mortar ? 0 : 0.5 + (split - 0.5) * 0.8 + (face - 0.5) * 0.3;
+    const W = SIZE >= 1024 ? 512 : 256, H = 2 * W;               // x runs up the face (W px over 4.8 m), y along it (H over 8 m)
+    const [c, g] = mk(W, H), img = g.createImageData(W, H), d = img.data, height = new Float32Array(W * H);
+    const pu = W / WALL_U, pv = H / WALL_V, s = W / 512;
+    const bh = 0.2 * pu, bw = 0.4 * pv, capAt = 4.4 * pu, capLen = 1.6 * pv, mo = Math.max(1, 1.6 * s);
+    const broadF = coarse(32, 64, (u, v) => tfbm(u * 2, v * 4, 2, 3, 54));
+    for (let y = 0; y < H; y++) {
+      const yv = y / W;
+      // along the wall: where the streaks run and how far down, and how high the grime reaches
+      const capJ = Math.min(y % capLen, capLen - (y % capLen));
+      const streak = smoothstep(0.52, 0.68, tfbm(0.37, (y / H) * 40, 40, 3, 55)) * 0.8 + Math.exp(-((capJ / (0.07 * pv)) ** 2)) * 0.7;
+      const runLen = 0.5 + 1.8 * tfbm(1.7, (y / H) * 20, 20, 2, 56);
+      const grimeH = 0.22 + 0.32 * tfbm(2.3, (y / H) * 16, 16, 3, 57);
+      for (let x = 0; x < W; x++) {
+        const hm = x / pu, i = (y * W + x) * 4;
+        const face = tnoise(x * 1.25, y * 1.25, W * 1.25, 51), split = tfbm((x / W) * 10, yv * 10, 10, 4, 52);
+        const broad = broadF(x / W, y / H);
+        let lum: number, ht: number, gg = 0.9, bb = 0.74;
+        if (x >= capAt) {
+          // the cap: precast, smoother and greyer, in 1.6 m units, a shadow line under its lip, dirt settled on top
+          const cj = capJ < mo * 1.2;
+          lum = cj ? 0.5 : 0.71 + (split - 0.5) * 0.06 + (face - 0.5) * 0.05 + (broad - 0.5) * 0.06;
+          if (x - capAt < 2.5 * s) lum *= 0.6;
+          if (hm > 4.6) lum -= 0.06;
+          gg = 0.94; bb = 0.84;
+          ht = cj ? 0.6 : 0.9 + (face - 0.5) * 0.08;
+        } else {
+          const course = Math.floor(x / bh), xx = x - course * bh;
+          const yo = (y + (course % 2) * (bw / 2)) % H, by = Math.floor(yo / bw), yy = yo - by * bw;
+          const mortar = xx < mo || yy < mo;
+          lum = mortar ? 0.7 : 0.62 + (hashT(by, course, 53) - 0.5) * 0.06 + (split - 0.5) * 0.14 + (face - 0.5) * 0.1;
+          lum += (broad - 0.5) * 0.1;
+          ht = mortar ? 0 : 0.5 + (split - 0.5) * 0.8 + (face - 0.5) * 0.3;
+          // rain streaks: darker, greyer runs from the cap down, fading as they go, over a band of drip right under it
+          const below = (capAt - x) / pu;
+          const run = streak * Math.max(0, 1 - below / runLen) ** 1.5 + Math.max(0, 1 - below / 0.3) * 0.3;
+          lum -= run * 0.13; gg += run * 0.03; bb += run * 0.07;
+        }
+        // road grime at the foot: tyre spray and dust, higher in patches, flecked along its top edge
+        const fleck = hm < grimeH * 1.7 && tnoise(x * 0.5, y * 0.5, W * 0.5, 58) > 0.78 ? 0.4 : 0;
+        const grime = Math.min(1, 1 - smoothstep(grimeH * 0.3, grimeH, hm) + fleck);
+        lum *= 1 - 0.34 * grime; gg += grime * 0.02; bb += grime * 0.06;
+        d[i] = clamp(lum * 255, 0, 255); d[i + 1] = clamp(lum * 255 * gg, 0, 255); d[i + 2] = clamp(lum * 255 * bb, 0, 255); d[i + 3] = 255;
+        height[y * W + x] = ht;
+      }
     }
     g.putImageData(img, 0, 0);
-    return { map: tex(c, true), normalMap: normalMap(height, n, n, 2.4) };
+    const map = tex(c, true), normal = normalMap(height, W, H, 2.4);
+    map.wrapS = normal.wrapS = THREE.ClampToEdgeWrapping;           // the face's foot and its cap don't wrap into each other
+    return { map, normalMap: normal };
+  });
+}
+
+// Worn road paint, a linear multiplier on the line's colour: u across the line, v along it (a tile is PAINT_V
+// metres). Tyre-polished streaks run along it, its edges are ragged and chips show the road through.
+export const PAINT_V = 6;
+export function paintWear(): THREE.Texture {
+  return once('paintWear', () => {
+    const w = 64, h = Math.min(SIZE, 1024), [c, g] = mk(w, h), img = g.createImageData(w, h), d = img.data;
+    for (let y = 0; y < h; y++) {
+      // about 7% chipped (more in some stretches than others) and 8% lost off the edges
+      const v = y / h, e0 = 0.01 + 0.07 * tfbm(0.3, v * 256, 16, 2, 73), e1 = 0.01 + 0.07 * tfbm(0.6, v * 256, 16, 2, 74), thr = 0.68 + 0.14 * tfbm(0.9, v * 16, 16, 2, 75);
+      for (let x = 0; x < w; x++) {
+        const u = x / w, i = (y * w + x) * 4;
+        const streak = tfbm(u * 8, v * 8, 8, 3, 71), chip = tfbm(u * 16, v * 512, 16, 3, 72);
+        let f = 0.78 + 0.3 * streak;
+        if (chip > thr || u < e0 || 1 - u < e1) f = 0.22 + 0.12 * chip;
+        d[i] = d[i + 1] = d[i + 2] = clamp(f * 255, 0, 255); d[i + 3] = 255;
+      }
+    }
+    g.putImageData(img, 0, 0);
+    return tex(c, false);
   });
 }
 

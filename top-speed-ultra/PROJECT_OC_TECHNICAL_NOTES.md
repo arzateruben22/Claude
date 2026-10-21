@@ -88,6 +88,28 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   (`TOLL` set), `asphalt` otherwise. `setWet` darkens and glosses both. Lane lines are Botts' dots: four 0.11 m
   quads per dash period at 0.45 + k × 0.92 m, lifted 0.02 m, plus the reflector in the gap. Sound walls use
   `blockWall()` (courses along the strip's u, which runs up the face; blocks along v, the road).
+  Since W3 (2026-10-17): the wheel paths in `pcc()` and `asphalt()` only ease the roughness by 0.04 to 0.05 (it was
+  0.14 and 0.18), in broad bands (sigma 0.09 to 0.11 of the lane) whose strength wanders, plus a medium-scale
+  roughness mottle, so a low sun's glare spreads as a sheen instead of drawing bright rays down every wheel path. The
+  rubber darkening stays (a little cooler than the slab on `pcc`). `pcc()` adds grit along the joints, five spalls at
+  the transverse joint and keeps one faint hairline crack (every slab repeats the tile, so nothing loud). `asphalt()`
+  is now one lane wide by two lane lengths (the canvas's y is squeezed 2:1 and all three maps repeat 0.5 along v; the
+  normal map's y slopes are halved to match), with tar snakes painted from a mask: the joint beside each lane's left
+  line sealed its whole length and three meandering ones (one forked), 3 to 5 cm wide, near black dusted with grit,
+  roughness 0.66 and a little proud; six unsealed hairline cracks. Every mark is drawn wrapped across the tile's
+  edges. The paint material carries `paintWear()` (64 × up to 1024, linear, a tile per `PAINT_V` = 6 m along the line,
+  u across it) over its vertex colours: about 7% chipped and 8% lost off the edges, tyre-polished streaks;
+  `markings()` gives the paint uvs and scales each vertex's colour by about 0.77 to 0.99 from world-position noise
+  (stretches tens of metres long worn thinner). `blockWall()` is now `WALL_U` = 4.8 m up by `WALL_V` = 8 m along (512
+  × 1024 at texture size 1024 and up, 256 × 512 below; clamped across u), and the wall strip's u is the profile
+  point's height / 4.8 on both faces, so the texture's foot grime (about 0.3 to 0.5 m high, flecked above), the
+  precast cap course (4.4 to 4.6 m, 1.6 m units, a shadow line under the lip, dirt on the sloped top) and the rain
+  streaks under it (most from the cap's joints, about 0.9 to 1.9 m long) land where they belong. `wallTone()` in
+  `Roads.ts` adds a colour attribute to each sound-wall strip (the material has `vertexColors`): a tone wander over
+  tens of metres (`fbm2` of the row's world position; 0.78 to 1.03 across the 21 walls the suite's drive builds, the
+  foot included), a warmer or greyer cast on a slower scale, and the foot 6% darker. No meshes or draw calls added.
+  The new broad fields (the wheel paths' wear, the roughness mottle, the wall's tone) are painted on a coarse grid
+  (`coarse()`, 32 to 128 cells a side) and read back bilinearly rather than costing noise calls at every texel.
 - **Terrain (`world/Terrain.ts`).** Tiles are 480 m. LOD 0 has a 12 m grid within about 520 m; LOD 1 has a 40 m
   grid.
   - Heights are the 60 m elevation grid plus noise. Every road sample then pulls nearby vertices toward the road's
