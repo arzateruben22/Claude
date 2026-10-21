@@ -6,6 +6,10 @@
    Every draw is a pure function of the per-frame UI state.
    ═══════════════════════════════════════════════════════════ */
 
+import { liquidText } from "../vendor/cinema/liquid2d.js";   // kits/cinema liquid-chrome morph (copied: the film serves only its own folder)
+// OPUS 5.5 forms from liquid chrome (after the chrome-blob reference): warm silver for the dark comp
+const CHROME = { face: [176, 170, 165], sky: [255, 249, 243], floor: [204, 192, 182], band: [46, 36, 33], rim: [232, 97, 60] };
+
 export const C = {
   slab: "#161618", panel: "#232326", header: "#1d1d20", inset: "#141416", line: "#2e2e33", line2: "#38383e",
   text: "#c6c6ca", dim: "#8a8a91", faint: "#5e5e66", blue: "#2d8ceb", blueText: "#4da3ff", blueDeep: "#1d5fa8",
@@ -72,8 +76,8 @@ export function titleMetrics() {
   const ws = LAYOUT.lines.map((L) => lineWidth(ctx, L) - 2);
   const top = Math.min(...LAYOUT.lines.map((L) => L.y - L.size * 0.35)), bot = Math.max(...LAYOUT.lines.map((L) => L.y + L.size * 0.35));
   const small = LAYOUT.lines.reduce((a, L, i) => (L.size < LAYOUT.lines[a].size ? i : a), 0);
-  font(ctx, LAYOUT.opusSize, 600, "Montserrat"); ctx.letterSpacing = "16px";
-  const ow = ctx.measureText("OPUS 5.5").width - 16;
+  font(ctx, LAYOUT.opusSize, 700, "Montserrat"); ctx.letterSpacing = "14px";
+  const ow = ctx.measureText("OPUS 5.5").width - 14;
   return {
     title: { cx, cy: cy + (top + bot) / 2, w: Math.max(...ws), cap: bot - top },
     titleCap: { cx, cy: cy + LAYOUT.lines[small].y, w: ws[small], cap: LAYOUT.lines[small].size * 0.7 },
@@ -364,15 +368,12 @@ function drawViewer(ctx, P, s) {
       ctx.stroke(); ctx.restore();
     }
     // opus
-    if (T.opus > 0) {
+    if (T.opusForm > 0) {
+      // a bead of liquid chrome squashes, pinches into one bead per glyph, and each swells into its letter
       ctx.save();
-      ctx.globalAlpha = T.opus;
-      font(ctx, LAYOUT.opusSize, 600, "Montserrat");
-      ctx.letterSpacing = `${16 + 14 * (1 - T.opus)}px`;
-      ctx.textAlign = "center";
-      ctx.shadowColor = `rgba(255,214,190,${0.6 * glowA})`; ctx.shadowBlur = 12;
-      ctx.fillStyle = "#f6f1ec";
-      ctx.fillText("OPUS 5.5", 8, LAYOUT.opusY);
+      ctx.shadowColor = `rgba(255,214,190,${0.35 * glowA})`; ctx.shadowBlur = 10;
+      liquidText(ctx, { text: "OPUS 5.5", font: `700 ${LAYOUT.opusSize}px "Montserrat"`, spacing: 14, x: 8, y: LAYOUT.opusY,
+        form: T.opusForm, settle: T.opusSettle, t: T.opusT, res: 2.5, palette: CHROME });
       ctx.restore();
     }
     ctx.restore();
@@ -584,6 +585,9 @@ export function uiState(t, J) {
   T.swoosh = clamp01((t - V.swoosh) / 0.4);
   T.swoosh = T.swoosh > 0 ? easeOut(T.swoosh) : 0;
   T.opus = easeOut((t - V.opus) / 0.5);
+  T.opusForm = clamp01((t - V.opus) / 0.75);
+  T.opusSettle = clamp01((t - V.opus - 0.55) / 0.7);
+  T.opusT = T.opusForm > 0 && T.opusSettle < 1 ? +t.toFixed(4) : 0;   // ripple phase, frozen once still (no needless redraws)
   T.breathe = t > 10 ? Math.sin((t - 10) * Math.PI) * 0.5 + 0.5 : 0;
   return s;
 }
