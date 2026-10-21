@@ -43,6 +43,11 @@ function tokens() {
 const hexA = (hex: string, a: number) => (/^#[0-9a-f]{6}$/i.test(hex) ? `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})` : hex);
 const routeNo = (label: string) => /^(?:I|CA)-(\d+)/.exec(label)?.[1] ?? label;
 
+// a course's stretch of its road: the sample indices from its start to its finish
+function courseSpan(c: { at: number; length: number }, p: Path) {
+  const s0 = p.len * c.at, s1 = Math.min(p.len, s0 + c.length);
+  return [Math.floor((s0 / p.len) * (p.n - 1)), Math.floor((s1 / p.len) * (p.n - 1))] as const;
+}
 function bounds(paths: Path[]) {
   let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
   for (const p of paths) { x0 = Math.min(x0, p.minX); x1 = Math.max(x1, p.maxX); z0 = Math.min(z0, p.minZ); z1 = Math.max(z1, p.maxZ); }
@@ -103,7 +108,15 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
   // pick a freeway or a course: select it and frame it
   const frame = (paths: Path[]) => { const el = wrap.current; if (el && paths.length) setView(fit(bounds(paths), el.clientWidth, el.clientHeight, 40)); };
   const pickFreeway = (label: string) => { setSel(label); setCourse(null); frame(mains.filter((m) => m.label === label)); };
-  const pickCourse = (id: string) => { setCourse(id); const c = COURSES.find((x) => x.id === id); if (c) { setSel(c.road); frame(mains.filter((m) => m.label === c.road)); } };
+  const pickCourse = (id: string) => {
+    setCourse(id); const c = COURSES.find((x) => x.id === id), p = c && mains.find((m) => m.label === c.road), el = wrap.current;
+    if (!c || !p || !el) return;
+    setSel(c.road);
+    // frame the race's own stretch, not the whole freeway
+    const [i0, i1] = courseSpan(c, p); let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
+    for (let i = i0; i <= i1; i += 4) { x0 = Math.min(x0, p.xs[i]); x1 = Math.max(x1, p.xs[i]); z0 = Math.min(z0, p.zs[i]); z1 = Math.max(z1, p.zs[i]); }
+    setView(fit({ x0, x1, z0, z1 }, el.clientWidth, el.clientHeight, 70));
+  };
 
   // draw whenever the view, the selection or the size changes
   useEffect(() => {
@@ -138,13 +151,6 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
     g.strokeStyle = hexA(T.hi, 0.85); g.lineWidth = width; for (const p of mains) if (vis(p)) line(p);
     // the selected freeway in the selection colour
     if (sel) { g.strokeStyle = T.cyan; g.lineWidth = width + 2; for (const p of mains) if (p.label === sel && vis(p)) line(p); }
-    // a race course: its stretch of road, bright, with a start and a finish
-    const cs = course ? COURSES.find((x) => x.id === course) : null, cp = cs ? mains.find((m) => m.label === cs.road) : null;
-    if (cs && cp) {
-      const s0 = cp.len * cs.at, s1 = Math.min(cp.len, s0 + cs.length), i0 = Math.floor((s0 / cp.len) * (cp.n - 1)), i1 = Math.floor((s1 / cp.len) * (cp.n - 1));
-      g.strokeStyle = T.ember; g.lineWidth = width + 3; line(cp, i0, i1);
-      for (const [i, txt] of [[i0, 'Start'], [i1, 'Finish']] as [number, string][]) { g.fillStyle = T.ink; g.beginPath(); g.arc(sx(cp.xs[i]), sy(cp.zs[i]), 5, 0, Math.PI * 2); g.fill(); g.font = '600 11px var(--f-mono, monospace)'; g.fillText(txt, sx(cp.xs[i]) + 8, sy(cp.zs[i]) - 6); }
-    }
     // your route while driving: the path you are on and every hand-off still to make
     if (driving) {
       g.strokeStyle = T.ice; g.lineWidth = width + 3; g.globalAlpha = 0.95;
@@ -161,6 +167,22 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
     const boxes: [number, number, number, number][] = [];
     const free = (x0: number, y0: number, x1: number, y1: number) => { if (boxes.some(([a, b, c, d]) => x0 < c && x1 > a && y0 < d && y1 > b)) return false; boxes.push([x0, y0, x1, y1]); return true; };
     g.textAlign = 'center'; g.textBaseline = 'middle';
+    // a race course: its stretch of road, bright, with a start and a finish (drawn before the shields so its labels
+    // keep their place)
+    const cs = course ? COURSES.find((x) => x.id === course) : null, cp = cs ? mains.find((m) => m.label === cs.road) : null;
+    if (cs && cp) {
+      const [i0, i1] = courseSpan(cs, cp);
+      g.strokeStyle = T.ember; g.lineWidth = width + 3; line(cp, i0, i1);
+      g.font = '600 11px var(--f-mono, monospace)'; g.textAlign = 'left';
+      for (const [i, txt] of [[i0, 'Start'], [i1, 'Finish']] as [number, string][]) {
+        const X = sx(cp.xs[i]), Y = sy(cp.zs[i]), tw = g.measureText(txt).width;
+        g.fillStyle = T.ink; g.beginPath(); g.arc(X, Y, 5, 0, Math.PI * 2); g.fill();
+        free(X - 6, Y - 6, X + 6, Y + 6);
+        if (free(X + 7, Y - 14, X + 11 + tw, Y)) g.fillText(txt, X + 8, Y - 7);
+      }
+      g.textAlign = 'center';
+    }
+    for (const pl of PLACES) { const X = sx(pl.x), Y = sy(pl.z); free(X - 9, Y - 9, X + 9, Y + 9); }
     // route shields: one per route, at the point of it nearest the middle of the view
     const done = new Set<string>();
     for (const p of mains) {
