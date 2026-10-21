@@ -11,7 +11,9 @@
 export function normalizeBaseUrl(input) {
   const raw = String(input ?? "").trim();
   if (!raw) return null;
-  const withScheme = /^https?:\/\//i.test(raw) ? raw : `http://${raw}`;
+  const scheme = raw.match(/^([a-z][a-z0-9+.-]*):\/\//i);
+  if (scheme && !/^https?$/i.test(scheme[1])) return null;
+  const withScheme = scheme ? raw : `http://${raw}`;
   try {
     const u = new URL(withScheme);
     if (u.protocol !== "http:" && u.protocol !== "https:") return null;

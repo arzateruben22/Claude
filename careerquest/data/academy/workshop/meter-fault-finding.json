@@ -1,0 +1,122 @@
+{
+  "key": "meter-fault-finding",
+  "title": "Find the Open with a Meter",
+  "description": "A 12 V bench circuit: R1 (100 Ω) feeds a parallel pair R2 and R3 (200 Ω each), followed by R4 (50 Ω) back to the source. With everything healthy the parallel pair acts like 100 Ω and the circuit draws 48 mA. Today the circuit draws less than it should and the lamp across R3 is brighter than normal. R2 has failed open. Use the voltmeter in parallel and the ammeter in series, the way the tools-and-meters lesson taught, to prove where the open is.",
+  "difficulty": 3,
+  "estimatedMinutes": 15,
+  "relatedLessons": [
+    "working-safely-with-tools-and-meters"
+  ],
+  "circuit": {
+    "sourceVolts": 12,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 100
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "resistor",
+              "id": "R2",
+              "ohms": 200
+            },
+            {
+              "type": "resistor",
+              "id": "R3",
+              "ohms": 200
+            }
+          ]
+        },
+        {
+          "type": "resistor",
+          "id": "R4",
+          "ohms": 50
+        }
+      ]
+    },
+    "faults": [
+      {
+        "id": "R2",
+        "fault": "open"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "meter-fault-finding-t1",
+      "question": "With R2 open, what total resistance does the source see?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "meter-fault-finding-t2",
+      "question": "What total current flows (compare it with the healthy value of 48 mA)?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "meter-fault-finding-t3",
+      "question": "What voltage does a voltmeter read across R3 (the healthy reading would be 4.8 V)?",
+      "quantity": "V_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "meter-fault-finding-t4",
+      "question": "What voltage appears across R1?",
+      "quantity": "V_R1",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "meter-fault-finding-t5",
+      "question": "What current flows through R2?",
+      "quantity": "I_R2",
+      "tolerance": 0.001
+    },
+    {
+      "id": "meter-fault-finding-t6",
+      "type": "multiple_choice",
+      "question": "Which combination of readings proves that R2 is open rather than R3?",
+      "choices": [
+        "Full parallel-branch voltage appears across R2, but an ammeter in series with R2 reads 0 A, while R3 carries all the branch current",
+        "0 V across R2 and 0 V across R3",
+        "The source voltage reads 0 V",
+        "R1 carries no current"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "id": "meter-fault-finding-t7",
+      "type": "multiple_choice",
+      "question": "Why did the voltage across R3 go UP when its neighbor R2 opened?",
+      "choices": [
+        "Because the source voltage increased",
+        "Because the parallel pair's resistance doubled from 100 Ω to 200 Ω, so a larger share of the 12 V is dropped across that part of the series circuit",
+        "Because R3 also failed",
+        "Because the meter was set to the wrong range"
+      ],
+      "correctIndex": 1
+    }
+  ],
+  "hints": [
+    "An open resistor is infinite ohms: the parallel pair becomes just R3, 200 Ω.",
+    "Total resistance in series adds: R1 + (parallel pair) + R4.",
+    "In a series circuit the voltage across each part is proportional to its resistance (voltage divider).",
+    "Measure voltage in parallel without opening the circuit; measure current in series by opening the branch. Never put the ammeter across the source.",
+    "A symptom that points the wrong way is common: the bright lamp on R3 is the healthy part, and the dark branch is the open one."
+  ],
+  "learningGoals": [
+    "Apply series and parallel rules to predict meter readings in a circuit with an open component.",
+    "Practice using voltage (parallel) and current (series) measurements to localize a fault.",
+    "Explain why an open in one parallel branch raises the voltage across the remaining branch in a series-parallel circuit."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

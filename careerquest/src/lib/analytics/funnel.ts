@@ -187,7 +187,11 @@ export function conversionBy(applications: FunnelApplication[], dimension: Conve
       lowSample: g.applied < LOW_SAMPLE_N,
     });
   }
-  rows.sort((a, b) => b.applied - a.applied || b.total - a.total || (a.key ?? "~").localeCompare(b.key ?? "~"));
+  // Most applied first; real values before the "none" bucket; then by volume, then alphabetically.
+  rows.sort(
+    (a, b) =>
+      b.applied - a.applied || Number(a.key === null) - Number(b.key === null) || b.total - a.total || (a.key ?? "").localeCompare(b.key ?? ""),
+  );
   return rows;
 }
 

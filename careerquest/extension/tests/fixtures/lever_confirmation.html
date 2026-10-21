@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><title>Acme Electric - Apprentice Electrician</title></head>
+<body>
+  <div class="main-header"><div class="main-header-logo"><a href="/acme-electric"><img alt="Acme Electric logo" src="/logo.png" /></a></div></div>
+  <div class="posting-page">
+    <div class="posting-headline"><h2>Apprentice Electrician</h2><div class="posting-categories"><div class="posting-category location">Irvine, CA</div></div></div>
+    <div class="thanks-page" data-qa="thanks">
+      <h3>Application submitted</h3>
+      <p>Thank you for applying to Acme Electric — we'll review your application and get back to you soon.</p>
+    </div>
+    <form id="applicant-form" action="/submit" method="post">
+      <label>Full name <input name="fullName" value="Jane Q. Applicant" /></label>
+      <label>SSN <input name="ssn" value="123-45-6789" /></label>
+      <label>Password <input type="password" name="password" value="hunter2-secret" /></label>
+      <label>Card <input name="cardNumber" value="4111 1111 1111 1111" /></label>
+      <label>Cover letter <textarea name="coverLetter">SECRET-COVER-LETTER-TEXT about my background.</textarea></label>
+      <select name="referral"><option selected>REFERRAL-SECRET-OPTION</option></select>
+    </form>
+  </div>
+</body>
+</html>

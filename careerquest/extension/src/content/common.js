@@ -46,8 +46,8 @@
   ];
 
   const REQ_ID_PATTERNS = [
-    /\b(?:req(?:uisition)?|job|posting|position|vacancy)\s*(?:id|number|no\.?|#)\s*[:#-]?\s*([A-Z]{0,6}-?\d{3,}[A-Z0-9-]*)/i,
-    /\b(?:req(?:uisition)?)\s*[:#-]?\s*([A-Z]{0,6}-?\d{3,}[A-Z0-9-]*)/i,
+    /\b(?:req(?:uisition)?|job|posting|position|vacancy|announcement)\s*(?:id|number|no\.?|#)\s*[:#-]?\s*([A-Z]{0,6}-?\d{2,}[A-Z0-9-]*)/i,
+    /\b(?:req(?:uisition)?)\s*[:#-]?\s*([A-Z]{0,6}-?\d{2,}[A-Z0-9-]*)/i,
     /\b(R-?\d{4,})\b/,
     /\b(JR-?\d{4,})\b/i,
     /\b(REQ-?\d{3,})\b/i,
@@ -390,15 +390,24 @@
     };
   }
 
+  const SITE_NAME_RE = /^(indeed(\.com)?|linkedin|glassdoor|ziprecruiter|workday|greenhouse|lever|smartrecruiters|icims|adp|governmentjobs|usajobs|careers?|jobs?|career pages|job details tab)$/i;
+
   /**
    * Splits "Electrician - Acme Corp - Irvine, CA | Indeed.com"-style titles.
+   * Leading "(3) " notification counters and trailing site names are dropped.
    * @param {string} pageTitle
    * @returns {{ title: string, company: string, location: string }}
    */
   function splitTitle(pageTitle) {
-    const cleaned = sanitize(pageTitle, LIMITS.pageTitle).replace(/\s*[|·]\s*[^|·]*$/, "");
-    const parts = cleaned.split(/\s+[-–—]\s+/).map((p) => p.trim()).filter(Boolean);
+    const cleaned = sanitize(pageTitle, LIMITS.pageTitle).replace(/^\(\d+\)\s*/, "");
+    const parts = cleaned.split(/\s+[-–—|·]\s+/).map((p) => p.trim()).filter(Boolean);
+    while (parts.length > 1 && SITE_NAME_RE.test(parts[parts.length - 1])) parts.pop();
     return { title: parts[0] || "", company: parts[1] || "", location: parts[2] || "" };
+  }
+
+  /** Strips "Req ID:" / "Job Number -" style labels from a requisition value. */
+  function stripRequisitionLabel(text) {
+    return sanitize(text, 200).replace(/^(?:(?:req(?:uisition)?|job|posting|position|vacancy|announcement)\s*)?(?:id|number|no\.?|#)?\s*[:#–-]?\s*/i, "").trim();
   }
 
   /* ------------------------------------------------------------------ */
@@ -438,46 +447,6 @@
     };
     if (partial.confirmationText) r.confirmationText = sanitize(partial.confirmationText, LIMITS.confirmationText);
     return r;
-  }
-
-  /**
-   * Generic job-page extraction shared by every platform: JSON-LD → meta/title.
-   * Platform scripts call this first and then fill gaps with their own selectors.
-   * @param {Document} doc
-   * @param {string} url
-   * @returns {{ fields: { company: string, title: string, location: string, salaryText: string, requisitionId: string }, detectedBy: string[], confidence: number }}
-   */
-  function extractGenericJob(doc, url) {
-    const detectedBy = [];
-    const fields = { company: "", title: "", location: "", salaryText: "", requisitionId: "" };
-    let confidence = 0;
-    const ld = parseJsonLdJobPosting(doc);
-    if (ld && (ld.title || ld.company)) {
-      Object.assign(fields, { company: ld.company, title: ld.title, location: ld.location, salaryText: ld.salaryText, requisitionId: ld.requisitionId });
-      detectedBy.push("jsonld");
-      confidence = 0.9;
-    }
-    const m = metaFallbacks(doc);
-    if (!fields.title && m.title) {
-      const split = splitTitle(m.title);
-      fields.title = split.title;
-      if (!fields.company && split.company) fields.company = split.company;
-      if (!fields.location && split.location) fields.location = split.location;
-      detectedBy.push("meta");
-      confidence = Math.max(confidence, 0.5);
-    }
-    if (!fields.company && m.siteName) {
-      fields.company = m.siteName;
-      detectedBy.push("og:site_name");
-    }
-    if (!fields.requisitionId) {
-      const fromUrl = extractRequisitionId(decodeURIComponent(url));
-      if (fromUrl) {
-        fields.requisitionId = fromUrl;
-        detectedBy.push("url:requisition");
-      }
-    }
-    return { fields, detectedBy, confidence };
   }
 
   /* ------------------------------------------------------------------ */
@@ -632,6 +601,8 @@
 
   /**
    * Builds a detect(doc, url) function from declarative config.
+   * Field precedence: JSON-LD → platform selectors → custom hook → og:site_name →
+   * URL/text scans → fallback hook → (job pages only) <title>/og:title split.
    * @param {DetectorConfig} config
    */
   function createDetector(config) {
@@ -640,20 +611,30 @@
       const pageTitle = doc.title;
       const detectedBy = [];
       const text = visibleText(doc);
+      const fields = { company: "", title: "", location: "", salaryText: "", requisitionId: "" };
 
-      // 1. Job fields: JSON-LD → meta → platform selectors → custom hook → text scans.
-      const generic = extractGenericJob(doc, url);
-      const fields = generic.fields;
-      detectedBy.push(...generic.detectedBy);
+      // 1. JSON-LD JobPosting.
+      const ld = parseJsonLdJobPosting(doc);
+      const hasJsonLd = !!(ld && (ld.title || ld.company));
+      if (hasJsonLd) {
+        Object.assign(fields, { company: ld.company, title: ld.title, location: ld.location, salaryText: ld.salaryText, requisitionId: ld.requisitionId });
+        detectedBy.push("jsonld");
+      }
+
+      // 2. Platform selectors fill the gaps.
       let selectorHits = 0;
       for (const key of ["title", "company", "location", "salaryText", "requisitionId"]) {
         if (fields[key] || !sel[key]) continue;
         const hit = firstText(doc, sel[key]);
-        if (hit) {
-          fields[key] = key === "requisitionId" ? extractRequisitionId(hit.text) || hit.text : hit.text;
-          detectedBy.push(`selector:${key}`);
-          selectorHits++;
+        if (!hit) continue;
+        if (key === "requisitionId") {
+          const bare = stripRequisitionLabel(hit.text);
+          fields.requisitionId = /^\S{2,64}$/.test(bare) ? bare : extractRequisitionId(hit.text) || bare.slice(0, LIMITS.requisitionId);
+        } else {
+          fields[key] = hit.text;
         }
+        detectedBy.push(`selector:${key}`);
+        selectorHits++;
       }
       if (!fields.company && config.companyAttrs) {
         const hit = firstAttr(doc, config.companyAttrs);
@@ -663,7 +644,23 @@
           selectorHits++;
         }
       }
+
+      // 3. Platform-specific logic, then cheap generic sources.
       if (config.custom) config.custom(doc, url, fields, detectedBy);
+      if (!fields.company) {
+        const site = meta(doc, "og:site_name");
+        if (site) {
+          fields.company = site;
+          detectedBy.push("og:site_name");
+        }
+      }
+      if (!fields.requisitionId) {
+        const fromUrl = extractRequisitionId(decodeURIComponent(url));
+        if (fromUrl) {
+          fields.requisitionId = fromUrl;
+          detectedBy.push("url:requisition");
+        }
+      }
       if (!fields.requisitionId && config.scanTextForRequisition !== false) {
         const id = extractRequisitionId(text.slice(0, 20000));
         if (id) {
@@ -678,13 +675,15 @@
           detectedBy.push("text:salary");
         }
       }
+      if (config.fallback) config.fallback(doc, url, fields, detectedBy);
       if (fields.requisitionId) fields.requisitionId = fields.requisitionId.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9]+$/g, "");
-      // A page title alone is a weak job signal; strip the trailing site name.
       if (fields.title && /\s[|·]\s/.test(fields.title)) fields.title = splitTitle(fields.title).title;
 
       const base = { platform: config.platform, url: canonicalUrl(doc, url), pageTitle, ...fields };
 
-      // 2. Confirmation signals.
+      // 4. Confirmation signals. (No <title> fallback here: on apply/confirmation
+      //    pages the title is usually the site name; the background pre-fills
+      //    missing job details from the job page seen earlier in the tab.)
       const strong = findPhrase(text, config.confirmationPhrases || []);
       const weak = strong ? null : findPhrase(text, config.weakPhrases || []);
       const found = strong || weak;
@@ -702,7 +701,7 @@
         }
       }
 
-      // 3. Apply flow (never recorded as submitted).
+      // 5. Apply flow (never recorded as submitted).
       const applyRoute = urlHasAny(url, config.applyRoutes || []);
       const applyEl = firstVisible(doc, config.applySelectors || []);
       if (applyRoute || applyEl) {
@@ -712,12 +711,22 @@
         return makeResult({ ...base, kind: "APPLY_STARTED", confidence: 0.5, detectedBy: by });
       }
 
-      // 4. Job page.
-      if (fields.title && (fields.company || selectorHits > 0 || generic.confidence >= 0.9)) {
-        const confidence = generic.detectedBy.includes("jsonld") ? 0.9 : selectorHits > 0 ? 0.7 : 0.5;
-        return makeResult({ ...base, kind: "JOB_PAGE", confidence, detectedBy });
+      // 6. Job page: last resort is the page title / Open Graph title.
+      if (!fields.title) {
+        const m = metaFallbacks(doc);
+        if (m.title) {
+          const split = splitTitle(m.title);
+          fields.title = split.title;
+          if (!fields.company && split.company) fields.company = split.company;
+          if (!fields.location && split.location) fields.location = split.location;
+          detectedBy.push("meta");
+        }
       }
-      return makeResult({ ...base, kind: null, confidence: 0, detectedBy });
+      if (fields.title && (fields.company || selectorHits > 0 || hasJsonLd)) {
+        const confidence = hasJsonLd ? 0.9 : selectorHits > 0 ? 0.7 : 0.5;
+        return makeResult({ ...base, ...fields, kind: "JOB_PAGE", confidence, detectedBy });
+      }
+      return makeResult({ ...base, ...fields, kind: null, confidence: 0, detectedBy });
     };
   }
 
@@ -744,9 +753,9 @@
     parseJsonLdJobPosting,
     metaFallbacks,
     splitTitle,
+    stripRequisitionLabel,
     scoreConfirmation,
     makeResult,
-    extractGenericJob,
     watchPage,
     registerDetector,
     createDetector,

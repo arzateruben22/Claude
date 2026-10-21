@@ -146,7 +146,7 @@
     {
       "type": "callout",
       "tone": "warning",
-      "text": "An open circuit is not a dead circuit. The wire on the source side of the open is energized, and the full source voltage sits across the break, waiting for a path. A blown fuse in a disconnect still has line voltage on its line-side clip, and an open neutral on a 120/240 V multiwire circuit can push 240 V onto 120 V loads. Verify absence of voltage with a tester; never assume because a load is off."
+      "text": "An open circuit is not a dead circuit. The wire on the source side of the open is energized, and the full source voltage sits across the break, waiting for a path. A blown fuse in a disconnect still has line voltage on its line-side clip, and an open neutral on a 120/240 V multiwire branch circuit can expose 120 V loads to as much as 240 V. Verify absence of voltage with a tester; never assume because a load is off."
     },
     {
       "type": "text",

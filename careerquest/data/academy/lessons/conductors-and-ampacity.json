@@ -1,0 +1,484 @@
+{
+  "key": "conductors-and-ampacity",
+  "track": "INSTALLATION",
+  "order": 3,
+  "title": "Conductors and Ampacity",
+  "summary": "How wire sizes, insulation types and ampacity tables work, how to apply adjustment and correction factors and the termination temperature rule, and how to calculate voltage drop and size a conductor to control it.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "wiring-methods-and-boxes"
+  ],
+  "objectives": [
+    "Students will be able to interpret AWG and kcmil conductor sizes, circular mils, and the difference between copper and aluminum conductors.",
+    "Students will be able to decode conductor insulation designations such as THHN, THWN-2 and XHHW-2 and select an insulation for the location.",
+    "Students will be able to read an ampacity from NEC Table 310.16 and apply the termination temperature rule and the small-conductor rule.",
+    "Students will be able to apply ambient temperature correction and conductor-count adjustment factors and the 125 percent continuous load rule.",
+    "Students will be able to calculate voltage drop for single-phase and three-phase circuits and size conductors to stay within the recommended limits."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Wire sizes: AWG, kcmil and circular mils",
+      "markdown": "Conductors in the United States are sized by the **American Wire Gauge** from 18 AWG (small) up through 1 AWG, then 1/0, 2/0, 3/0 and 4/0 (\"one-aught\" through \"four-aught\"), and above that by cross-sectional area in **kcmil** (thousands of circular mils): 250, 300, 350, 500 kcmil and so on. The gauge numbers run backward: a smaller number is a bigger wire.\n\nA **circular mil** is the area of a circle 0.001 in in diameter, so a conductor's area in circular mils is simply its diameter in mils squared. Three useful facts: every decrease of **three** gauge numbers roughly **doubles** the area (and halves the resistance), every decrease of **six** gauge numbers doubles the diameter, and 10 AWG copper is close to 0.1 in in diameter with about 1 ohm per 1,000 ft, which makes a handy mental anchor.\n\nCommon areas from NEC Chapter 9, Table 8: 14 AWG 4,110 cmil; 12 AWG 6,530; 10 AWG 10,380; 8 AWG 16,510; 6 AWG 26,240; 4 AWG 41,740; 3 AWG 52,620; 2 AWG 66,360; 1 AWG 83,690; 1/0 105,600; 2/0 133,100; 3/0 167,800; 4/0 211,600.\n\nBranch circuits of 15, 20 and 30 A use solid conductors in cable and either solid or stranded in conduit; 8 AWG and larger must be stranded when installed in raceways (310.3(C)). **Aluminum** has about 61 percent of copper's conductivity, so an aluminum conductor must be roughly two sizes larger for the same ampacity (4/0 aluminum carries about what 2/0 copper carries). Aluminum is standard for services and large feeders because of cost and weight, but terminations must be listed for aluminum (marked AL or CU-AL), properly torqued, and in many cases coated with an oxide inhibitor. Copper is the rule for branch circuits."
+    },
+    {
+      "type": "diagram",
+      "title": "Conductor sizes compared",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 200\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"#f3c75b\" fill-opacity=\"0.5\" stroke=\"#f3c75b\" stroke-width=\"1.5\">\n<circle cx=\"40\" cy=\"90\" r=\"8\"/>\n<circle cx=\"95\" cy=\"90\" r=\"10\"/>\n<circle cx=\"155\" cy=\"90\" r=\"13\"/>\n<circle cx=\"225\" cy=\"90\" r=\"16\"/>\n<circle cx=\"305\" cy=\"90\" r=\"21\"/>\n<circle cx=\"400\" cy=\"90\" r=\"26\"/>\n</g>\n<g fill=\"currentColor\" text-anchor=\"middle\">\n<text x=\"40\" y=\"130\">14 AWG</text>\n<text x=\"40\" y=\"144\">4,110 cmil</text>\n<text x=\"95\" y=\"130\">12 AWG</text>\n<text x=\"95\" y=\"144\">6,530</text>\n<text x=\"155\" y=\"130\">10 AWG</text>\n<text x=\"155\" y=\"144\">10,380</text>\n<text x=\"225\" y=\"130\">8 AWG</text>\n<text x=\"225\" y=\"144\">16,510</text>\n<text x=\"305\" y=\"130\">6 AWG</text>\n<text x=\"305\" y=\"144\">26,240</text>\n<text x=\"400\" y=\"130\">4 AWG</text>\n<text x=\"400\" y=\"144\">41,740</text>\n<text x=\"230\" y=\"30\">Bare copper conductor diameters to scale (circular mils below)</text>\n<text x=\"230\" y=\"184\">Every three sizes smaller in number, the area roughly doubles</text>\n</g>\n</svg>",
+      "caption": "Diameters of bare copper conductors from 14 AWG to 4 AWG drawn to the same scale, with their areas in circular mils. The area, not the diameter, sets ampacity and resistance."
+    },
+    {
+      "type": "text",
+      "heading": "Insulation types: reading the letters",
+      "markdown": "The letters printed on a conductor describe its insulation, and the insulation sets the conductor's temperature rating and where it may be used (Table 310.4 lists them all). Decode them piece by piece:\n\n- **T** = thermoplastic (PVC). **X** = cross-linked synthetic polymer (XLPE), tougher and more heat resistant. **R** = thermoset rubber.\n- **H** = heat resistant, rated 75 °C. **HH** = high heat resistant, rated 90 °C.\n- **W** = moisture resistant, suitable for wet locations (the rating in a wet location is often lower than in a dry one).\n- **N** = nylon jacket over the insulation, which makes the conductor slick for pulling and resistant to gasoline and oil.\n- **-2** = rated 90 °C in both wet and dry locations.\n- **U** = underground; **SE** = service entrance.\n\nThe workhorse is **THHN/THWN-2**, which is dual rated: 90 °C dry (THHN) and 90 °C wet (THWN-2), in a thin nylon-jacketed PVC that packs more conductors into a conduit. **XHHW-2** is the choice for larger feeders and solar circuits because of its heat and abrasion resistance. **USE-2** and **RHW-2** are common for underground service laterals. Any conductor in a wet location, which includes every underground raceway and any conduit outdoors, must carry a W rating.\n\nColor rules: a **white or gray** conductor is reserved for the grounded conductor (neutral) and **green** (or green with yellow stripes, or bare) for the equipment grounding conductor (200.6, 250.119). Ungrounded conductors may be any other color; in 120/208 V systems the trade convention is black, red and blue, and in 277/480 V systems brown, orange and yellow. Where both systems are in a building, 210.5(C) requires the identification scheme to be posted at the panel. A white conductor in a cable may be re-identified as a hot with tape or paint at both ends for switch loops and 240 V circuits (200.7(C)), but a white conductor in a raceway may not."
+    },
+    {
+      "type": "table",
+      "caption": "Common conductor insulations (summarized from NEC Table 310.4)",
+      "columns": [
+        "Type",
+        "Insulation",
+        "Dry rating",
+        "Wet rating",
+        "Typical use"
+      ],
+      "rows": [
+        [
+          "TW",
+          "PVC",
+          "60 °C",
+          "60 °C",
+          "Older installations; rarely specified now"
+        ],
+        [
+          "THW",
+          "PVC",
+          "75 °C",
+          "75 °C",
+          "General wet or dry"
+        ],
+        [
+          "THHN",
+          "PVC with nylon jacket",
+          "90 °C",
+          "not rated wet (unless also marked THWN)",
+          "Dry and damp interior raceways"
+        ],
+        [
+          "THWN-2",
+          "PVC with nylon jacket",
+          "90 °C",
+          "90 °C",
+          "Universal; usually dual-marked with THHN"
+        ],
+        [
+          "XHHW",
+          "XLPE",
+          "90 °C",
+          "75 °C",
+          "Feeders, services"
+        ],
+        [
+          "XHHW-2",
+          "XLPE",
+          "90 °C",
+          "90 °C",
+          "Feeders, solar, high-temperature locations"
+        ],
+        [
+          "USE-2",
+          "XLPE",
+          "90 °C",
+          "90 °C, direct burial",
+          "Underground service laterals"
+        ],
+        [
+          "NM-B cable conductors",
+          "PVC with nylon",
+          "90 °C conductor, cable limited to 60 °C ampacity",
+          "not permitted wet",
+          "Dwelling branch circuits"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Ampacity: how much current a conductor may carry",
+      "markdown": "**Ampacity** is the maximum current a conductor can carry continuously without exceeding its insulation temperature rating. It is not a property of the copper alone: it depends on the insulation rating, the ambient temperature, how many heat-producing conductors share the raceway, and what the conductor is terminated on.\n\nStart with **Table 310.16** (numbered 310.15(B)(16) in the 2014 and 2017 editions), which lists ampacities for up to three current-carrying conductors in a raceway or cable at 30 °C ambient, in three columns: 60 °C, 75 °C and 90 °C. The conductor's insulation decides which column you may start from (THHN starts in the 90 °C column), but two rules usually pull the final answer down:\n\n1. **Termination temperature rule (110.14(C)).** The lugs on breakers, receptacles and equipment have their own ratings, and the conductor may not be used at an ampacity higher than the termination allows. For circuits of 100 A or less, or conductors 14 through 1 AWG, use the **60 °C column** unless the equipment is marked 75 °C; most modern breakers and panels are marked 60/75 °C, so the 75 °C column is usually available. For circuits over 100 A, use the 75 °C column. The 90 °C column is used only as the starting point for adjustment and correction, never as the final ampacity at a 75 °C lug.\n2. **Small conductor rule (240.4(D)).** Regardless of the table, the overcurrent device for 14 AWG copper may not exceed 15 A, for 12 AWG copper 20 A, and for 10 AWG copper 30 A (12 AWG aluminum 15 A, 10 AWG aluminum 25 A), unless a specific rule such as motor or air-conditioning circuits allows otherwise.\n\nOnce you have the adjusted ampacity, pick the breaker: 240.4(B) permits rounding **up** to the next standard size in 240.6(A) (15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 110, 125, 150, 175, 200 A and so on) when the conductor ampacity does not match a standard size, the device is 800 A or less, and the circuit does not supply receptacles for cord-and-plug loads.\n\n**Continuous loads** (expected to run 3 hours or more, such as most lighting, electric heat and EV charging) must be served by conductors and an overcurrent device rated at least **125 percent** of the continuous load plus 100 percent of the noncontinuous load (210.19(A)(1), 210.20(A)). A 16 A continuous lighting load needs 20 A conductors and a 20 A breaker; a 40 A EV charger needs a 50 A circuit."
+    },
+    {
+      "type": "table",
+      "caption": "Allowable ampacities of insulated copper conductors, not more than three current-carrying in a raceway or cable, 30 °C ambient (summarized from NEC Table 310.16)",
+      "columns": [
+        "Size",
+        "60 °C (TW)",
+        "75 °C (THW, THWN)",
+        "90 °C (THHN, XHHW-2)"
+      ],
+      "rows": [
+        [
+          "14 AWG",
+          "15 A",
+          "20 A",
+          "25 A"
+        ],
+        [
+          "12 AWG",
+          "20 A",
+          "25 A",
+          "30 A"
+        ],
+        [
+          "10 AWG",
+          "30 A",
+          "35 A",
+          "40 A"
+        ],
+        [
+          "8 AWG",
+          "40 A",
+          "50 A",
+          "55 A"
+        ],
+        [
+          "6 AWG",
+          "55 A",
+          "65 A",
+          "75 A"
+        ],
+        [
+          "4 AWG",
+          "70 A",
+          "85 A",
+          "95 A"
+        ],
+        [
+          "3 AWG",
+          "85 A",
+          "100 A",
+          "115 A"
+        ],
+        [
+          "2 AWG",
+          "95 A",
+          "115 A",
+          "130 A"
+        ],
+        [
+          "1 AWG",
+          "110 A",
+          "130 A",
+          "145 A"
+        ],
+        [
+          "1/0 AWG",
+          "125 A",
+          "150 A",
+          "170 A"
+        ],
+        [
+          "2/0 AWG",
+          "145 A",
+          "175 A",
+          "195 A"
+        ],
+        [
+          "3/0 AWG",
+          "165 A",
+          "200 A",
+          "225 A"
+        ],
+        [
+          "4/0 AWG",
+          "195 A",
+          "230 A",
+          "260 A"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Adjustment and correction factors",
+      "markdown": "The table assumes three current-carrying conductors at 30 °C (86 °F). Anything hotter or more crowded means the conductor cannot shed heat as fast, so its ampacity is reduced.\n\n**Ambient temperature correction (Table 310.15(B)(1)).** Multiply the table ampacity by a factor for the ambient temperature where the conductor runs. For 90 °C conductors: 31 to 35 °C: 0.96; 36 to 40 °C: 0.91; 41 to 45 °C: 0.87; 46 to 50 °C: 0.82; 51 to 55 °C: 0.76; 56 to 60 °C: 0.71. For 75 °C conductors the factors fall faster (0.94, 0.88, 0.82, 0.75, 0.67, 0.58). A conduit on a Riverside rooftop in August easily sees 50 °C, and 310.15(B)(2) adds a temperature adder for raceways within 7/8 in of a roof.\n\n**Conductor count adjustment (Table 310.15(C)(1)).** When more than three current-carrying conductors are bundled longer than 24 in in a raceway or cable: 4 to 6 conductors: 80 percent; 7 to 9: 70 percent; 10 to 20: 50 percent; 21 to 30: 45 percent; 31 to 40: 40 percent; 41 and over: 35 percent. The EGC never counts. A neutral that carries only the unbalanced current of a 120/240 V single-phase or a 3-wire circuit from a wye system does not count (310.15(E)); a neutral in a 4-wire three-phase circuit feeding nonlinear loads (LED drivers, computers, drives) **does** count because it carries harmonic current.\n\n**Putting it together.** Start with the ampacity from the column matching the conductor's insulation (usually 90 °C for THHN), multiply by both factors, and then compare the result to the termination limit from 110.14(C) and to 240.4(D). The **lowest** of those numbers is the conductor's ampacity. This is the whole reason THHN is specified: its 90 °C starting point absorbs the derating that would otherwise force a bigger wire."
+    },
+    {
+      "type": "example",
+      "problem": "Eight 12 AWG THHN copper conductors (four 120 V, 20 A receptacle circuits, each with its own neutral) plus a 12 AWG EGC run in one EMT conduit through an attic where the ambient temperature is 40 °C. The breakers and receptacles are rated 75 °C. What is the ampacity of each conductor, and may the circuits be protected at 20 A?",
+      "solutionSteps": [
+        "Count current-carrying conductors: each neutral carries the full current of its own hot, so all 8 conductors count. The EGC does not. Eight conductors: adjustment factor 0.70 (7 to 9 conductors).",
+        "Ambient 40 °C with 90 °C insulation: correction factor 0.91.",
+        "Start from the 90 °C column for 12 AWG THHN: 30 A. Adjusted ampacity = 30 × 0.70 × 0.91 = 19.1 A.",
+        "Compare with the limits: the 75 °C termination column gives 25 A and 240.4(D) caps 12 AWG at 20 A. The lowest number wins, so the conductor ampacity is 19.1 A.",
+        "A 20 A breaker exceeds 19.1 A. The round-up allowance of 240.4(B) does not apply to circuits supplying more than one receptacle, so these circuits may only be protected at 15 A (210.3 limits multi-outlet branch circuits to 15, 20, 30, 40 or 50 A ratings).",
+        "Better design: split the circuits into two conduits (4 current-carrying conductors each: 30 × 0.80 × 0.91 = 21.8 A, so 20 A is fine); or run two multiwire branch circuits so each neutral carries only unbalanced current and does not count (again 4 conductors, 21.8 A); or upsize to 10 AWG (40 × 0.70 × 0.91 = 25.5 A, 20 A breaker permitted)."
+      ],
+      "answer": "19.1 A per conductor; as wired, the receptacle circuits must be protected at 15 A. Splitting the raceway, using multiwire branch circuits or upsizing to 10 AWG restores 20 A circuits."
+    },
+    {
+      "type": "formula",
+      "name": "Voltage drop (resistance method)",
+      "expression": "VD = 2 × K × I × L ÷ CM   (single-phase)      VD = 1.732 × K × I × L ÷ CM   (three-phase)",
+      "variables": [
+        {
+          "symbol": "VD",
+          "meaning": "voltage drop along the circuit",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "K",
+          "meaning": "resistivity constant: about 12.9 for copper, 21.2 for aluminum at 75 °C",
+          "unit": "ohm-circular-mils per foot"
+        },
+        {
+          "symbol": "I",
+          "meaning": "load current",
+          "unit": "amperes (A)"
+        },
+        {
+          "symbol": "L",
+          "meaning": "one-way length of the circuit from source to load",
+          "unit": "feet (ft)"
+        },
+        {
+          "symbol": "CM",
+          "meaning": "conductor area",
+          "unit": "circular mils"
+        }
+      ],
+      "explanation": "The factor 2 accounts for current flowing out on the hot and back on the neutral (two conductor lengths); 1.732 (the square root of 3) does the same job for balanced three-phase circuits. Rearranging gives the conductor size needed for a target drop: CM = 2 × K × I × L ÷ VD. The NEC recommends (Informational Notes to 210.19(A) and 215.2(A)) limiting drop to 3 percent on a branch circuit and 5 percent total for feeder plus branch circuit; California's Title 24 energy code makes a similar limit mandatory for many commercial feeders and branch circuits."
+    },
+    {
+      "type": "diagram",
+      "title": "Where the voltage goes on a long circuit",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 230\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"50\" cy=\"115\" r=\"18\"/>\n<path d=\"M40 115 q5 -8 10 0 t10 0\"/>\n<path d=\"M50 97 V50 H130\"/>\n</g>\n<g fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"2\">\n<path d=\"M130 50 l10 -8 l10 8 l10 -8 l10 8 l10 -8 l10 8 l10 -8 l10 8\"/>\n<path d=\"M130 180 l10 -8 l10 8 l10 -8 l10 8 l10 -8 l10 8 l10 -8 l10 8\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M210 50 H360 V85\"/>\n<rect x=\"340\" y=\"85\" width=\"40\" height=\"60\" rx=\"4\"/>\n<path d=\"M360 145 V180 H210\"/>\n<path d=\"M130 180 H50 V133\"/>\n</g>\n<g fill=\"none\" stroke=\"#4cc9ff\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\">\n<path d=\"M400 85 H420 M400 145 H420 M420 85 V145\"/>\n<path d=\"M130 30 V22 M210 30 V22 M130 26 H210\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"14\" y=\"160\">120 V</text>\n<text x=\"14\" y=\"174\">at panel</text>\n<text x=\"100\" y=\"18\" fill=\"#4cc9ff\">R of one conductor</text>\n<text x=\"226\" y=\"42\" fill=\"#f3c75b\">hot: I × R dropped here</text>\n<text x=\"226\" y=\"200\" fill=\"#f3c75b\">neutral: I × R dropped again</text>\n<text x=\"345\" y=\"120\">load</text>\n<text x=\"400\" y=\"70\" fill=\"#4cc9ff\">voltage</text>\n<text x=\"400\" y=\"164\" fill=\"#4cc9ff\">at load</text>\n<text x=\"20\" y=\"222\">Single-phase: both conductors carry the full current, so total drop = 2 × I × R per conductor</text>\n</g>\n</svg>",
+      "caption": "Each conductor has resistance, so the current drops I × R volts on the way out and I × R again on the way back. The load sees the panel voltage minus both drops. Long runs, high current and small wire all make it worse."
+    },
+    {
+      "type": "example",
+      "problem": "A 120 V, 20 A branch circuit feeds a detached shop 100 ft from the panel (one-way) and carries a 16 A load. (a) What is the voltage drop and percentage with 12 AWG copper? (b) What is the smallest copper conductor that keeps the drop at or below 3 percent?",
+      "solutionSteps": [
+        "(a) VD = 2 × K × I × L ÷ CM = 2 × 12.9 × 16 × 100 ÷ 6,530 = 41,280 ÷ 6,530 = 6.32 V. As a percentage: 6.32 ÷ 120 = 5.3 percent. The shop sees about 113.7 V, more than the 3 percent recommendation.",
+        "(b) Target drop: 3 percent of 120 V = 3.6 V. Required CM = 2 × 12.9 × 16 × 100 ÷ 3.6 = 41,280 ÷ 3.6 = 11,467 cmil.",
+        "10 AWG is 10,380 cmil (too small, drop would be 41,280 ÷ 10,380 = 3.98 V = 3.3 percent). 8 AWG is 16,510 cmil: drop = 41,280 ÷ 16,510 = 2.50 V = 2.1 percent.",
+        "Use 8 AWG copper for the long run, landed on a 20 A breaker (the breaker protects the load, and 8 AWG is more than adequate for 20 A). Because the circuit conductors were upsized for voltage drop, 250.122(B) requires the EGC to be upsized in proportion too: 12 AWG × (16,510 ÷ 6,530) = 16,510 cmil, so an 8 AWG EGC. Many electricians would accept 10 AWG at 3.3 percent as close enough for a shop; the 3 percent figure is a recommendation, not a mandatory NEC rule."
+      ],
+      "answer": "(a) About 6.3 V, 5.3 percent. (b) 8 AWG copper keeps the drop at about 2.1 percent (10 AWG gives 3.3 percent)."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Terminations fail more often than conductors. Torque every lug to the value marked on the equipment with a torque screwdriver or wrench (110.14(D) requires it), use only CU-AL rated lugs for aluminum, strip to the gauge on the device so no insulation is under the screw and no bare copper is exposed, and never put two conductors under one screw unless the terminal is listed for it. A loose lug on a 200 A service is the most common cause of the burned meter sockets you will see on service calls."
+    }
+  ],
+  "practice": [
+    {
+      "id": "conductors-and-ampacity-p1",
+      "type": "multiple_choice",
+      "prompt": "Which conductor has the larger cross-sectional area?",
+      "choices": [
+        "12 AWG",
+        "8 AWG",
+        "14 AWG",
+        "They are equal"
+      ],
+      "correctIndex": 1,
+      "explanation": "AWG numbers run backward: 8 AWG (16,510 cmil) is larger than 12 AWG (6,530 cmil) and 14 AWG (4,110 cmil)."
+    },
+    {
+      "id": "conductors-and-ampacity-p2",
+      "type": "multiple_choice",
+      "prompt": "A conductor is marked THWN-2. Which statement is true?",
+      "choices": [
+        "It is rated 60 °C in dry locations only",
+        "It is rated 90 °C in both wet and dry locations and has a nylon jacket",
+        "It may only be installed underground",
+        "It is a bare conductor"
+      ],
+      "correctIndex": 1,
+      "explanation": "T = thermoplastic, H = heat resistant, W = wet location, N = nylon jacket, -2 = 90 °C wet or dry."
+    },
+    {
+      "id": "conductors-and-ampacity-p3",
+      "type": "numeric",
+      "prompt": "Six 12 AWG THHN copper current-carrying conductors share a conduit at 30 °C ambient. Starting from the 90 °C column (30 A) and applying the adjustment factor, what is the adjusted ampacity in amperes?",
+      "answer": 24,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "4 to 6 current-carrying conductors: 80 percent. 30 × 0.80 = 24 A. The small-conductor rule still limits the breaker to 20 A, so this circuit is fine."
+    },
+    {
+      "id": "conductors-and-ampacity-p4",
+      "type": "numeric",
+      "prompt": "A 240 V single-phase circuit carries 24 A over 10 AWG copper (10,380 cmil) for a one-way distance of 150 ft. Using K = 12.9, what is the voltage drop in volts?",
+      "answer": 8.95,
+      "unit": "V",
+      "tolerance": 0.1,
+      "explanation": "VD = 2 × 12.9 × 24 × 150 ÷ 10,380 = 92,880 ÷ 10,380 = 8.95 V, which is 3.7 percent of 240 V."
+    },
+    {
+      "id": "conductors-and-ampacity-p5",
+      "type": "multiple_choice",
+      "prompt": "What is the largest standard breaker permitted on a 12 AWG copper branch circuit feeding general-purpose receptacles?",
+      "choices": [
+        "15 A",
+        "20 A",
+        "25 A",
+        "30 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "240.4(D) caps 12 AWG copper at 20 A regardless of the ampacity table."
+    },
+    {
+      "id": "conductors-and-ampacity-p6",
+      "type": "numeric",
+      "prompt": "A continuous lighting load draws 28 A. What is the minimum conductor ampacity and breaker rating required, in amperes, before any derating?",
+      "answer": 35,
+      "unit": "A",
+      "tolerance": 0.1,
+      "explanation": "Continuous loads require 125 percent: 28 × 1.25 = 35 A. A 35 A breaker with conductors rated at least 35 A (8 AWG copper at 75 °C is 50 A; 10 AWG at 75 °C is 35 A but 240.4(D) limits 10 AWG to 30 A, so 8 AWG is needed)."
+    },
+    {
+      "id": "conductors-and-ampacity-p7",
+      "type": "multiple_choice",
+      "prompt": "A 60 A feeder uses 6 AWG THHN copper landed on breaker terminals marked 75 °C. What ampacity may be used for the conductor?",
+      "choices": [
+        "55 A (60 °C column)",
+        "65 A (75 °C column)",
+        "75 A (90 °C column)",
+        "80 A"
+      ],
+      "correctIndex": 1,
+      "explanation": "110.14(C): the termination rating limits the usable ampacity. With 75 °C terminations, 6 AWG copper is 65 A; the 90 °C value may only be used as a starting point for derating."
+    }
+  ],
+  "quiz": {
+    "key": "conductors-and-ampacity-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "conductors-and-ampacity-q1",
+        "type": "numeric",
+        "prompt": "What is the cross-sectional area of 10 AWG copper in circular mils (Chapter 9, Table 8)?",
+        "answer": 10380,
+        "unit": "cmil",
+        "tolerance": 10,
+        "explanation": "10 AWG is 10,380 circular mils; 12 AWG is 6,530 and 8 AWG is 16,510."
+      },
+      {
+        "id": "conductors-and-ampacity-q2",
+        "type": "multiple_choice",
+        "prompt": "Why is aluminum wire typically two sizes larger than copper for the same load?",
+        "choices": [
+          "Aluminum insulation is thicker",
+          "Aluminum has about 61 percent of copper's conductivity, so more area is needed for the same resistance and ampacity",
+          "The NEC prohibits aluminum smaller than 6 AWG",
+          "Aluminum expands when it carries current"
+        ],
+        "correctIndex": 1,
+        "explanation": "Lower conductivity means higher resistance per unit area, so aluminum needs more cross-section to match copper's ampacity."
+      },
+      {
+        "id": "conductors-and-ampacity-q3",
+        "type": "multiple_choice",
+        "prompt": "Which conductor color is reserved for the grounded (neutral) conductor?",
+        "choices": [
+          "Green",
+          "Black",
+          "White or gray",
+          "Red"
+        ],
+        "correctIndex": 2,
+        "explanation": "200.6 reserves white or gray (or three white stripes) for the grounded conductor; green and bare are reserved for the EGC."
+      },
+      {
+        "id": "conductors-and-ampacity-q4",
+        "type": "numeric",
+        "prompt": "Twelve 12 AWG THHN current-carrying conductors are in one conduit at 30 °C. What is the adjusted ampacity of each, in amperes?",
+        "answer": 15,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "10 to 20 conductors: 50 percent. 30 A × 0.50 = 15 A, which means the circuits can only be protected at 15 A. This is why packing many circuits into one conduit backfires."
+      },
+      {
+        "id": "conductors-and-ampacity-q5",
+        "type": "numeric",
+        "prompt": "What ampacity does Table 310.16 give for 8 AWG copper in the 75 °C column?",
+        "answer": 50,
+        "unit": "A",
+        "tolerance": 0.1,
+        "explanation": "8 AWG copper: 40 A at 60 °C, 50 A at 75 °C, 55 A at 90 °C."
+      },
+      {
+        "id": "conductors-and-ampacity-q6",
+        "type": "multiple_choice",
+        "prompt": "In a 120/240 V single-phase multiwire branch circuit (two hots sharing one neutral), how is the neutral counted for ampacity adjustment?",
+        "choices": [
+          "It always counts as a current-carrying conductor",
+          "It does not count, because it carries only the unbalanced current between the two hots",
+          "It counts as two conductors",
+          "It counts only if it is white"
+        ],
+        "correctIndex": 1,
+        "explanation": "310.15(E)(1): a neutral carrying only the unbalanced current of a multiwire circuit is not counted. A neutral serving a single hot carries the full current and does count."
+      },
+      {
+        "id": "conductors-and-ampacity-q7",
+        "type": "numeric",
+        "prompt": "A 208 V three-phase motor draws 30 A through 8 AWG copper (16,510 cmil) over a one-way distance of 200 ft. Using K = 12.9, what is the voltage drop in volts?",
+        "answer": 8.12,
+        "unit": "V",
+        "tolerance": 0.1,
+        "explanation": "VD = 1.732 × K × I × L ÷ CM = 1.732 × 12.9 × 30 × 200 ÷ 16,510 = 134,057 ÷ 16,510 = 8.12 V, which is 3.9 percent of 208 V. Upsizing to 6 AWG (26,240 cmil) brings it to 5.1 V (2.5 percent)."
+      },
+      {
+        "id": "conductors-and-ampacity-q8",
+        "type": "multiple_choice",
+        "prompt": "The NEC Informational Notes recommend limiting voltage drop on a branch circuit to what percentage?",
+        "choices": [
+          "1 percent",
+          "3 percent",
+          "5 percent",
+          "10 percent"
+        ],
+        "correctIndex": 1,
+        "explanation": "3 percent for the branch circuit, and 5 percent total for feeder plus branch circuit, to keep equipment operating efficiently."
+      },
+      {
+        "id": "conductors-and-ampacity-q9",
+        "type": "multiple_choice",
+        "prompt": "A circuit's conductors are upsized from 10 AWG to 6 AWG for voltage drop. What does 250.122(B) require?",
+        "choices": [
+          "Nothing; the EGC is sized only by the breaker",
+          "The equipment grounding conductor must be increased in size proportionally to the increase in the circuit conductors",
+          "The breaker must be increased to match the new conductor",
+          "The EGC must match the circuit conductor size exactly"
+        ],
+        "correctIndex": 1,
+        "explanation": "When ungrounded conductors are increased for any reason other than ampacity adjustment, the wire-type EGC is increased by at least the same ratio of circular mil area."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code, 110.14(C) and (D), 200.6, 200.7, 210.19(A), 215.2(A), 240.4(B) and (D), 240.6(A), 250.122(B), Table 310.4, Table 310.16, 310.15(B), (C) and (E), Chapter 9 Table 8 (by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Electrical Code, Title 24 Part 3",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California Energy Commission, Title 24 Part 6 Building Energy Efficiency Standards (voltage drop requirements for commercial circuits)",
+      "url": "https://www.energy.ca.gov/programs-and-topics/programs/building-energy-efficiency-standards"
+    },
+    {
+      "title": "Southwire, Voltage Drop Calculator and conductor technical data",
+      "url": "https://www.southwire.com/calculator-vdrop"
+    },
+    {
+      "title": "Copper Development Association, Building wire ampacity and termination guidance",
+      "url": "https://www.copper.org/applications/electrical/building/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

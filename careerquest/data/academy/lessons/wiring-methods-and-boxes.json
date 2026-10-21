@@ -1,0 +1,422 @@
+{
+  "key": "wiring-methods-and-boxes",
+  "track": "INSTALLATION",
+  "order": 2,
+  "title": "Wiring Methods and Boxes",
+  "summary": "Cable wiring methods (NM, MC, AC, UF and SE), the rules for securing and protecting them, how to choose and mount outlet and device boxes, and how to do the box fill calculation inspectors check on every rough-in.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "conduit-fundamentals"
+  ],
+  "objectives": [
+    "Students will be able to identify NM, MC, AC, UF and SE cables, state where each is permitted, and list their securing and support intervals.",
+    "Students will be able to install cable through framing with the required protection from physical damage and the required free conductor length at boxes.",
+    "Students will be able to select an appropriate box type and read its volume from the marking or from NEC Table 314.16(A).",
+    "Students will be able to apply the NEC 314.16(B) counting rules to compute box fill for conductors, clamps, devices and equipment grounding conductors.",
+    "Students will be able to recognize common rough-in defects: overfilled boxes, missing protection plates, unsupported cable and inaccessible junction boxes."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Cable wiring methods",
+      "markdown": "A **cable** is a factory assembly of conductors inside a common jacket or armor. Unlike conduit, the conductors cannot be changed later, but cable installs fast and needs no bending skill. Each type has an NEC article in the 3xx series.\n\n- **Type NM (Article 334), \"Romex.\"** Nonmetallic-sheathed cable: two or three insulated conductors plus a bare equipment grounding conductor in a flat PVC jacket. NM-B has 90 °C conductors, but 334.80 limits its ampacity to the **60 °C column** (14 AWG: 15 A, 12 AWG: 20 A, 10 AWG: 30 A). Permitted in one- and two-family dwellings and in multifamily and other structures of Types III, IV and V construction (334.10); not permitted in Type I and II buildings, in commercial garages with hazardous locations, exposed in dropped ceilings used for environmental air, where subject to physical damage, or in wet locations. Jacket colors are a manufacturer convention: white 14 AWG, yellow 12 AWG, orange 10 AWG, black 8 and 6 AWG.\n- **Type MC (Article 330), metal-clad cable.** Insulated conductors (usually THHN) with a green insulated EGC inside interlocked steel or aluminum armor. Permitted in almost every occupancy, including commercial and Type I/II buildings, in cable trays and, when listed, in wet locations and direct burial. The armor of standard interlocked MC is **not** an EGC; the green wire is. A variant (often called MC-AP or MCI-A) has an aluminum bonding strip under the armor and is listed so that the armor plus strip serve as the EGC.\n- **Type AC (Article 320), armored cable, \"BX.\"** Looks like MC but has a thin aluminum bonding strip and no green wire; the armor plus strip is the EGC. An insulating **anti-short bushing** (the red \"redhead\") is required at every termination (320.40). AC is limited to dry locations.\n- **Type UF (Article 340), underground feeder.** Solid gray jacket molded around the conductors; sunlight resistant and listed for direct burial (typically 24 in deep for ordinary circuits per Table 300.5). Used for outdoor and underground branch circuits in residential work.\n- **Type SE/SER/SEU (Article 338), service-entrance cable.** SEU (unarmored, flat, with a concentric bare neutral) feeds meters and panels; SER (round, with an insulated neutral and a bare EGC) is used for feeders to subpanels and large appliances.\n\nOne cable type an apprentice must recognize but never install new: **knob-and-tube** (Article 394), open single conductors on porcelain insulators, still found in older California homes and a frequent reason for a service upgrade."
+    },
+    {
+      "type": "diagram",
+      "title": "NM-B and MC cable in cross-section",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 230\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<rect x=\"30\" y=\"70\" width=\"170\" height=\"80\" rx=\"40\"/>\n<circle cx=\"80\" cy=\"110\" r=\"22\"/>\n<circle cx=\"150\" cy=\"110\" r=\"22\"/>\n<circle cx=\"115\" cy=\"110\" r=\"9\" fill=\"#f3c75b\" stroke=\"#f3c75b\"/>\n<circle cx=\"80\" cy=\"110\" r=\"9\" fill=\"currentColor\"/>\n<circle cx=\"150\" cy=\"110\" r=\"9\" fill=\"#9aa6b8\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"340\" cy=\"110\" r=\"70\"/>\n<path d=\"M340 40 l6 8 l-6 8 l6 8 l-6 8 l6 8 l-6 8 l6 8 l-6 8 l6 8 l-6 8 l6 8 l-6 8 l6 8\" transform=\"rotate(90 340 110)\" stroke=\"#9aa6b8\"/>\n<circle cx=\"340\" cy=\"110\" r=\"58\" stroke=\"#9aa6b8\" stroke-dasharray=\"3 3\"/>\n<circle cx=\"318\" cy=\"92\" r=\"17\"/>\n<circle cx=\"362\" cy=\"92\" r=\"17\"/>\n<circle cx=\"340\" cy=\"130\" r=\"17\"/>\n<circle cx=\"318\" cy=\"92\" r=\"7\" fill=\"currentColor\"/>\n<circle cx=\"362\" cy=\"92\" r=\"7\" fill=\"#ff6b6b\"/>\n<circle cx=\"340\" cy=\"130\" r=\"7\" fill=\"#9aa6b8\"/>\n<circle cx=\"372\" cy=\"132\" r=\"9\" fill=\"#3ddc97\" stroke=\"#3ddc97\"/>\n<path d=\"M300 150 q20 -8 40 0\" stroke=\"#4cc9ff\" stroke-width=\"3\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"54\" y=\"40\">Type NM-B (Romex)</text>\n<text x=\"40\" y=\"180\">flat PVC jacket, paper wrap,</text>\n<text x=\"40\" y=\"194\">black + white insulated, bare EGC</text>\n<text x=\"300\" y=\"24\">Type MC</text>\n<text x=\"256\" y=\"200\">interlocked steel or aluminum armor,</text>\n<text x=\"256\" y=\"214\">insulated conductors + green EGC,</text>\n<text x=\"256\" y=\"228\">anti-short bushing (blue) at terminations</text>\n</g>\n</svg>",
+      "caption": "NM-B is a flat assembly with a bare ground and no armor. MC carries insulated conductors and a green EGC inside interlocked armor, with an anti-short bushing at each fitting to protect the insulation from the cut armor edge."
+    },
+    {
+      "type": "table",
+      "caption": "Securing and support rules for common cables (summarized from the cable articles; check the adopted edition and the listing)",
+      "columns": [
+        "Cable",
+        "Secure within",
+        "Support interval",
+        "Notes"
+      ],
+      "rows": [
+        [
+          "NM (334.30)",
+          "12 in of every box or fitting (8 in for nonmetallic boxes without clamps)",
+          "4-1/2 ft",
+          "Flat cables must not be stapled on edge; bend radius at least 5 times the cable diameter (334.24)"
+        ],
+        [
+          "MC (330.30)",
+          "12 in of every termination",
+          "6 ft",
+          "Listed fittings; bend radius about 7 times diameter for interlocked armor"
+        ],
+        [
+          "AC (320.30)",
+          "12 in of every termination",
+          "4-1/2 ft",
+          "Anti-short bushing required at terminations (320.40)"
+        ],
+        [
+          "UF (340.10, 300.5)",
+          "Follows NM rules above ground",
+          "4-1/2 ft above ground",
+          "Burial depth from Table 300.5: usually 24 in; 12 in for GFCI-protected 20 A residential circuits"
+        ],
+        [
+          "SE (338.10)",
+          "Follows NM rules indoors; 30 in intervals as service cable outdoors (230.51)",
+          "see notes",
+          "SER feeders to a subpanel must carry an insulated neutral and separate EGC"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Installing cable through framing",
+      "markdown": "**Protection from physical damage (300.4).** Cable run through bored holes in studs, joists or plates must be at least **1-1/4 in** from the nearest edge of the framing member; where it cannot be, a **steel nail plate** at least 1/16 in thick must cover the cable. The same applies to cable laid in notches. Cable run parallel to framing must be kept 1-1/4 in back from the face. Cable passing through metal framing must be protected by listed grommets or bushings at every hole. In attics, cable run across the tops of joists within 6 ft of the scuttle hole needs running boards or guard strips (334.23 and 320.23).\n\n**Securing (334.30 and 330.30).** Staple or strap NM within 12 in of every box and every 4-1/2 ft; MC within 12 in and every 6 ft. Staples must fit the cable: one 12/2 per staple, or use stacker-type fasteners for multiple cables. Staples driven so hard that they crush the jacket are a defect. Cable run through holes in framing counts as supported at the holes. Cable that is \"fished\" into finished walls is exempt from the support rules but not from box clamping.\n\n**Bundling and heat.** Where more than two NM cables containing two or more current-carrying conductors pass through the same hole in a draft-stopped or fire-stopped opening, or are bundled for more than 24 in without spacing, the ampacity adjustment factors of 310.15(C)(1) apply (334.80). Spread cables out; do not run six home runs through one 1 in hole packed with foam.\n\n**At the box (300.14).** Leave at least **6 in of free conductor** measured from the point where the conductor enters the box, and at least **3 in extending outside** the box opening when the opening is smaller than 8 in in any dimension. Strip the NM jacket so that at least 1/4 in of sheath remains inside the box (314.17); stripping it outside the box exposes the conductors to damage and fails inspection.\n\n**Bends.** NM may not be bent tighter than a radius of five times its diameter (334.24); MC with interlocked armor needs about seven times. A sharp bend that creases the jacket can crack the insulation underneath."
+    },
+    {
+      "type": "text",
+      "heading": "Boxes: choosing and mounting",
+      "markdown": "Every splice, every device and every point where a cable or raceway ends must be in a **box** or listed enclosure (300.15). NEC Article 314 covers boxes.\n\n**Types.** Metal device boxes (3 × 2 in, in depths from 1-1/2 to 3-1/2 in), 4 in square boxes (1-1/2 or 2-1/8 in deep, usually with a mud ring or plaster ring for the device), 4-11/16 in square boxes for larger fills, octagon boxes for ceiling fixtures, and a huge family of nonmetallic (PVC, fiberglass) boxes for NM cable. A nonmetallic box is marked with its volume in cubic inches; a standard metal box's volume is read from **Table 314.16(A)** unless it is also marked.\n\n**Mounting (314.23).** Boxes must be rigidly and securely fastened. Nail-on boxes go to a stud; old-work boxes grip the drywall with ears or wings; boxes for ceiling fans must be listed for fan support (314.27(C)) and a box supporting a luminaire over 50 lb needs independent support. In walls of noncombustible material (drywall, plaster) the box front may be set back no more than **1/4 in** from the finished surface; in combustible material (wood paneling) it must be flush (314.20). Gaps around the box in the wall surface may not exceed **1/8 in** (314.21); use a box extender or caulking plates to fix an oversize cutout.\n\n**Accessibility (314.29).** Every box containing a splice must remain accessible without removing part of the building: no junction boxes buried behind drywall, above a hard ceiling or under a cabinet with no access. A box in a suspended ceiling is accessible; a box behind a sheet of drywall is not.\n\n**Unused openings** must be closed with knockout seals (110.12). Metal boxes must be bonded to the EGC (250.148), usually with a green grounding screw or a listed clip; nonmetallic boxes need the EGCs spliced together with a pigtail to the device."
+    },
+    {
+      "type": "table",
+      "caption": "Volumes of common metal boxes (summarized from NEC Table 314.16(A))",
+      "columns": [
+        "Box (trade size)",
+        "Volume"
+      ],
+      "rows": [
+        [
+          "4 × 1-1/4 in round or octagon",
+          "12.5 in³"
+        ],
+        [
+          "4 × 1-1/2 in round or octagon",
+          "15.5 in³"
+        ],
+        [
+          "4 × 2-1/8 in round or octagon",
+          "21.5 in³"
+        ],
+        [
+          "4 × 1-1/4 in square",
+          "18.0 in³"
+        ],
+        [
+          "4 × 1-1/2 in square",
+          "21.0 in³"
+        ],
+        [
+          "4 × 2-1/8 in square",
+          "30.3 in³"
+        ],
+        [
+          "4-11/16 × 1-1/2 in square",
+          "29.5 in³"
+        ],
+        [
+          "4-11/16 × 2-1/8 in square",
+          "42.0 in³"
+        ],
+        [
+          "3 × 2 × 2-1/2 in device box",
+          "12.5 in³"
+        ],
+        [
+          "3 × 2 × 3-1/2 in device box",
+          "18.0 in³"
+        ],
+        [
+          "4 × 2-1/8 × 1-7/8 in device box",
+          "13.0 in³"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Box fill: the counting rules",
+      "markdown": "Overfilled boxes overheat, crush insulation and make bad splices. NEC 314.16 requires that the total **volume allowance** of everything in the box not exceed the box volume (plus the volume of any raised cover or extension ring that is marked or listed in the table). Each item is converted to an allowance based on conductor size using Table 314.16(B), and the allowances are added up.\n\nThe counting rules of 314.16(B):\n\n1. **Conductors.** Each insulated conductor that originates outside the box and terminates or is spliced inside counts as **one**. A conductor that passes through the box unbroken counts as **one**; if it is looped and the loop is at least twice the required free length (12 in or more), it counts as **two**. Conductors that originate inside the box and do not leave (pigtails, fixture leads) count as **zero**. Conductors 16 and 18 AWG that supply a luminaire from a domed fixture canopy are exempt.\n2. **Clamps.** If the box has one or more **internal** cable clamps, add **one** allowance based on the largest conductor in the box. External clamps (connectors in knockouts) count as zero.\n3. **Support fittings.** Each fixture stud or hickey adds **one** allowance based on the largest conductor.\n4. **Devices.** Each yoke or strap (receptacle, switch, dimmer) adds **two** allowances based on the largest conductor connected to that device. A device wider than a single gang counts two allowances for each gang it occupies.\n5. **Equipment grounding conductors.** All the EGCs together add **one** allowance based on the largest EGC in the box. In the 2020 and later editions, where more than four EGCs enter, each additional EGC adds a quarter allowance.\n\nFor a box containing mixed sizes, each conductor is counted at its own size; clamps, studs and EGCs use the largest conductor present, and the device uses the largest conductor landed on it."
+    },
+    {
+      "type": "table",
+      "caption": "Volume allowance per conductor (NEC Table 314.16(B))",
+      "columns": [
+        "Conductor size",
+        "Volume allowance"
+      ],
+      "rows": [
+        [
+          "18 AWG",
+          "1.50 in³"
+        ],
+        [
+          "16 AWG",
+          "1.75 in³"
+        ],
+        [
+          "14 AWG",
+          "2.00 in³"
+        ],
+        [
+          "12 AWG",
+          "2.25 in³"
+        ],
+        [
+          "10 AWG",
+          "2.50 in³"
+        ],
+        [
+          "8 AWG",
+          "3.00 in³"
+        ],
+        [
+          "6 AWG",
+          "5.00 in³"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "Counting the fill in a receptacle box",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 260\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<rect x=\"120\" y=\"40\" width=\"220\" height=\"180\" rx=\"4\"/>\n<rect x=\"140\" y=\"60\" width=\"180\" height=\"140\" rx=\"2\" stroke=\"#9aa6b8\" stroke-dasharray=\"3 3\"/>\n<path d=\"M20 90 H120 M20 100 H120 M20 110 H120\" />\n<path d=\"M340 90 H440 M340 100 H440 M340 110 H440\"/>\n<rect x=\"110\" y=\"84\" width=\"20\" height=\"32\" fill=\"#9aa6b8\" fill-opacity=\"0.4\"/>\n<rect x=\"330\" y=\"84\" width=\"20\" height=\"32\" fill=\"#9aa6b8\" fill-opacity=\"0.4\"/>\n</g>\n<g fill=\"none\" stroke-width=\"2\">\n<path d=\"M130 92 C180 92 180 150 230 150\" stroke=\"currentColor\"/>\n<path d=\"M330 92 C280 92 280 150 230 150\" stroke=\"currentColor\"/>\n<path d=\"M130 102 C200 102 200 180 230 180\" stroke=\"#9aa6b8\"/>\n<path d=\"M330 102 C260 102 260 180 230 180\" stroke=\"#9aa6b8\"/>\n<path d=\"M130 112 C170 112 170 120 200 120\" stroke=\"#3ddc97\"/>\n<path d=\"M330 112 C290 112 290 120 260 120\" stroke=\"#3ddc97\"/>\n<path d=\"M200 120 L230 120\" stroke=\"#3ddc97\"/>\n</g>\n<g fill=\"#3ddc97\"><circle cx=\"230\" cy=\"120\" r=\"5\"/></g>\n<rect x=\"212\" y=\"140\" width=\"36\" height=\"52\" rx=\"4\" fill=\"#4cc9ff\" fill-opacity=\"0.35\" stroke=\"#4cc9ff\" stroke-width=\"2\"/>\n<g fill=\"currentColor\">\n<text x=\"22\" y=\"80\">12/2 NM in</text>\n<text x=\"352\" y=\"80\">12/2 NM in</text>\n<text x=\"128\" y=\"36\">4 in square, 1-1/2 in deep = 21.0 in³</text>\n<text x=\"20\" y=\"150\">clamps:</text>\n<text x=\"20\" y=\"162\">1 allowance</text>\n<text x=\"20\" y=\"174\">(largest wire)</text>\n<text x=\"372\" y=\"150\">EGCs:</text>\n<text x=\"372\" y=\"162\">1 allowance</text>\n<text x=\"372\" y=\"174\">total</text>\n<text x=\"168\" y=\"214\" fill=\"#4cc9ff\">receptacle: 2 allowances</text>\n<text x=\"20\" y=\"244\">4 circuit conductors × 2.25 + EGC 2.25 + clamp 2.25 + device 4.50 = 18.0 in³ ≤ 21.0 in³</text>\n</g>\n</svg>",
+      "caption": "Two 12/2 NM cables enter a 4 in square box with internal clamps and feed a duplex receptacle. Four circuit conductors, one allowance for all the EGCs, one for the clamps and two for the device total 18.0 in³, which fits in the 21.0 in³ box."
+    },
+    {
+      "type": "example",
+      "problem": "A 4 × 1-1/2 in square metal box with internal clamps receives two 12/2 NM-B cables (each with two insulated 12 AWG conductors and one bare 12 AWG EGC). One cable feeds a duplex receptacle on a single-gang mud ring and the other continues to the next outlet. Is the box fill acceptable?",
+      "solutionSteps": [
+        "Box volume from Table 314.16(A): 21.0 in³ (ignore the mud ring unless it is marked with a volume).",
+        "Circuit conductors: 2 cables × 2 insulated conductors = 4 conductors × 2.25 in³ = 9.00 in³.",
+        "Equipment grounding conductors: two bare 12 AWG EGCs, one allowance total = 2.25 in³.",
+        "Internal clamps: one allowance at the largest conductor (12 AWG) = 2.25 in³.",
+        "Device: one duplex receptacle = two allowances × 2.25 in³ = 4.50 in³.",
+        "Pigtails from the splice to the receptacle originate inside the box: 0 in³.",
+        "Total = 9.00 + 2.25 + 2.25 + 4.50 = 18.00 in³. 18.00 ≤ 21.0, so the box is acceptable."
+      ],
+      "answer": "Yes: 18.0 in³ of fill in a 21.0 in³ box."
+    },
+    {
+      "type": "example",
+      "problem": "A single-gang nonmetallic box marked 18.0 in³ (no internal clamps counted, because the cable entry is a listed integral clamp that the manufacturer excludes) will hold a single-pole switch fed by three 14/2 NM-B cables. (a) Does it fit? (b) Would it fit if the circuit were wired with 12/2 instead?",
+      "solutionSteps": [
+        "(a) Conductors: 3 cables × 2 insulated 14 AWG = 6 × 2.00 = 12.00 in³. EGCs: one allowance = 2.00 in³. Device: 2 × 2.00 = 4.00 in³. Total = 18.00 in³, exactly the box volume. It is permitted; the rule is 'shall not exceed.'",
+        "(b) With 12 AWG: 6 × 2.25 = 13.50 in³; EGC allowance 2.25 in³; device 2 × 2.25 = 4.50 in³. Total = 20.25 in³.",
+        "20.25 in³ exceeds 18.0 in³, so the box is overfilled. Use a deeper single-gang box (20.3 in³ or 22.5 in³ boxes are common) or a two-gang box.",
+        "Field note: the two 'extra' 12 AWG conductors for the switch legs make this a common failure at three-way switch locations where an additional traveler cable enters; count before you cut in the box."
+      ],
+      "answer": "(a) Yes, exactly 18.0 in³. (b) No, 20.25 in³ requires a larger box."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Rough-in habits that pass inspection the first time: nail plates wherever a hole is closer than 1-1/4 in to the edge of a stud; a staple within 12 in of every box; at least 1/4 in of jacket inside the box and 6 in of free conductor; EGCs pigtailed to the metal box with a green screw; box fronts within 1/4 in of the finished surface; and a box one size bigger than the arithmetic needs whenever a dimmer, GFCI or smart switch is planned, because those devices are deep and the volume table does not account for their bodies."
+    }
+  ],
+  "practice": [
+    {
+      "id": "wiring-methods-and-boxes-p1",
+      "type": "numeric",
+      "prompt": "Three 12/2 NM-B cables (each with two insulated conductors and one EGC) enter a metal box with internal clamps and feed a single duplex receptacle. What is the total volume allowance in cubic inches?",
+      "answer": 22.5,
+      "unit": "in³",
+      "tolerance": 0.05,
+      "explanation": "Conductors 6 × 2.25 = 13.5; EGCs 2.25; clamps 2.25; device 2 × 2.25 = 4.5. Total 22.5 in³, which needs at least a 4 × 2-1/8 in square box (30.3 in³) or a 4-11/16 box."
+    },
+    {
+      "id": "wiring-methods-and-boxes-p2",
+      "type": "numeric",
+      "prompt": "A box contains four 14 AWG insulated conductors, two 14 AWG EGCs, no internal clamps, and one single-pole switch. What is the minimum box volume required, in cubic inches?",
+      "answer": 14,
+      "unit": "in³",
+      "tolerance": 0.05,
+      "explanation": "4 × 2.00 = 8.00; EGCs 2.00; switch 2 × 2.00 = 4.00. Total 14.0 in³."
+    },
+    {
+      "id": "wiring-methods-and-boxes-p3",
+      "type": "multiple_choice",
+      "prompt": "A 12/2 NM cable passes through a bored hole whose edge is 3/4 in from the face of the stud. What does NEC 300.4 require?",
+      "choices": [
+        "Nothing; 3/4 in is sufficient",
+        "A steel plate at least 1/16 in thick covering the cable at that location",
+        "Replacing the NM cable with MC cable",
+        "Moving the cable to a notch instead of a hole"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cables closer than 1-1/4 in to the edge of a framing member must be protected by a steel plate (nail plate) at least 1/16 in thick, or a listed equivalent."
+    },
+    {
+      "id": "wiring-methods-and-boxes-p4",
+      "type": "multiple_choice",
+      "prompt": "Which cable type may NOT be installed in a Type II (noncombustible) commercial office building?",
+      "choices": [
+        "Type MC",
+        "Type AC",
+        "Type NM",
+        "Type MC-AP with listed EGC armor"
+      ],
+      "correctIndex": 2,
+      "explanation": "NEC 334.12 prohibits NM in Type I and Type II construction (with limited exceptions). MC and AC are permitted."
+    },
+    {
+      "id": "wiring-methods-and-boxes-p5",
+      "type": "numeric",
+      "prompt": "What is the minimum length of free conductor, in inches, that must be left at each box for splices or device connections (NEC 300.14)?",
+      "answer": 6,
+      "unit": "in",
+      "tolerance": 0.1,
+      "explanation": "At least 6 in measured from where the conductor enters the box, with at least 3 in extending outside a box opening smaller than 8 in."
+    },
+    {
+      "id": "wiring-methods-and-boxes-p6",
+      "type": "multiple_choice",
+      "prompt": "NM cable must be secured within what distance of a metal box with a cable connector, and at what maximum interval along the run?",
+      "choices": [
+        "6 in and 3 ft",
+        "12 in and 4-1/2 ft",
+        "12 in and 6 ft",
+        "3 ft and 10 ft"
+      ],
+      "correctIndex": 1,
+      "explanation": "334.30: within 12 in of every box, cabinet or fitting and at intervals not exceeding 4-1/2 ft. (MC is 12 in and 6 ft; EMT is 3 ft and 10 ft.)"
+    },
+    {
+      "id": "wiring-methods-and-boxes-p7",
+      "type": "multiple_choice",
+      "prompt": "A junction box with a splice is installed above a new hard-lid drywall ceiling with no access panel. This violates:",
+      "choices": [
+        "314.16 (box fill)",
+        "314.29 (boxes must remain accessible)",
+        "334.30 (cable support)",
+        "300.4 (protection from physical damage)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Every box containing splices must be accessible without removing part of the building finish. An access panel or relocating the box fixes it."
+    }
+  ],
+  "quiz": {
+    "key": "wiring-methods-and-boxes-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "wiring-methods-and-boxes-q1",
+        "type": "multiple_choice",
+        "prompt": "What ampacity does NEC 334.80 assign to 12 AWG copper NM-B cable?",
+        "choices": [
+          "15 A",
+          "20 A",
+          "25 A",
+          "30 A"
+        ],
+        "correctIndex": 1,
+        "explanation": "NM-B conductors are rated 90 °C, but the cable's ampacity is limited to the 60 °C column: 20 A for 12 AWG copper."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q2",
+        "type": "multiple_choice",
+        "prompt": "What serves as the equipment grounding conductor in standard interlocked-armor Type MC cable?",
+        "choices": [
+          "The armor alone",
+          "The green insulated conductor inside the cable",
+          "The aluminum bonding strip",
+          "The paper filler"
+        ],
+        "correctIndex": 1,
+        "explanation": "Ordinary MC armor is not listed as an EGC; the internal green conductor is. Only MC with a bonding strip that is listed for the purpose (MC-AP type) uses the armor."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q3",
+        "type": "numeric",
+        "prompt": "What is the volume allowance, in cubic inches, for a single 10 AWG conductor under Table 314.16(B)?",
+        "answer": 2.5,
+        "unit": "in³",
+        "tolerance": 0.01,
+        "explanation": "14 AWG is 2.00, 12 AWG is 2.25, 10 AWG is 2.50, 8 AWG is 3.00 and 6 AWG is 5.00 in³."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q4",
+        "type": "numeric",
+        "prompt": "A 4 × 2-1/8 in square box (30.3 in³) with internal clamps contains two 10/2 NM cables (two insulated 10 AWG and one 10 AWG EGC each) feeding a 30 A receptacle, plus one 12/2 NM cable (two 12 AWG and one EGC) that is spliced to pigtails for a nearby light. What is the total fill in cubic inches?",
+        "answer": 24.5,
+        "unit": "in³",
+        "tolerance": 0.05,
+        "explanation": "10 AWG conductors: 4 × 2.50 = 10.0; 12 AWG conductors: 2 × 2.25 = 4.5; EGCs: one allowance at the largest EGC (10 AWG) = 2.5; clamps: 2.5; device: 2 × 2.50 = 5.0 (largest conductor on the device is 10 AWG). Total 10.0 + 4.5 + 2.5 + 2.5 + 5.0 = 24.5 in³, which fits in the 30.3 in³ box."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q5",
+        "type": "multiple_choice",
+        "prompt": "How are pigtails that originate and end inside the box counted for box fill?",
+        "choices": [
+          "One allowance each",
+          "Two allowances each",
+          "Zero; they are not counted",
+          "One allowance for all of them together"
+        ],
+        "correctIndex": 2,
+        "explanation": "314.16(B)(1): conductors that originate inside the box and do not leave it (pigtails, fixture leads) are not counted."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q6",
+        "type": "multiple_choice",
+        "prompt": "A box in a drywall wall is set back 1/2 in from the finished surface. Which statement is correct?",
+        "choices": [
+          "This is acceptable because drywall is noncombustible",
+          "It violates 314.20, which allows a maximum 1/4 in setback in noncombustible walls; add a box extender",
+          "It is acceptable if the device has long screws",
+          "It is acceptable only for switches, not receptacles"
+        ],
+        "correctIndex": 1,
+        "explanation": "314.20 allows no more than 1/4 in setback in noncombustible surfaces and requires the box to be flush in combustible surfaces. Listed box extenders correct the condition."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q7",
+        "type": "multiple_choice",
+        "prompt": "Why is an anti-short bushing required at every termination of Type AC cable?",
+        "choices": [
+          "To hold the conductors in the connector",
+          "To protect the conductor insulation from the sharp cut edge of the armor",
+          "To provide the equipment ground",
+          "To seal the cable against moisture"
+        ],
+        "correctIndex": 1,
+        "explanation": "320.40 requires an insulating bushing between the conductors and the armor. The cut armor edge is sharp enough to slice insulation and cause a ground fault."
+      },
+      {
+        "id": "wiring-methods-and-boxes-q8",
+        "type": "multiple_choice",
+        "prompt": "Which installation of NM cable in an attic requires guard strips or running boards?",
+        "choices": [
+          "Cable run through bored holes in the joists",
+          "Cable run across the top of the joists within 6 ft of the attic scuttle hole",
+          "Cable run along the side of a rafter",
+          "Cable run inside a conduit sleeve"
+        ],
+        "correctIndex": 1,
+        "explanation": "334.23 (via 320.23) protects cable where people are likely to crawl: across the tops of joists or within 7 ft of the floor near the access, guard strips or boards are required."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code, Articles 300 (300.4, 300.14, 300.15), 314 (314.16 through 314.29), 320, 330, 334, 338 and 340 (by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Electrical Code, Title 24 Part 3",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "NECA 1, Standard for Good Workmanship in Electrical Construction (by number only)",
+      "url": "https://www.necanet.org/about-us/neca-standards"
+    },
+    {
+      "title": "Southwire, Building Wire product guides for NM-B, MC and UF cable (jacket colors, bend radius, listings)",
+      "url": "https://www.southwire.com/building-wire"
+    },
+    {
+      "title": "California Department of Industrial Relations, Electrician Trainee program (Approved Curriculum requirements)",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

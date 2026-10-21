@@ -1,0 +1,410 @@
+{
+  "key": "blueprint-and-plan-reading",
+  "track": "INSTALLATION",
+  "order": 4,
+  "title": "Blueprint and Plan Reading",
+  "summary": "How to find your way around a set of construction drawings, read electrical symbols and line types, measure with an architect's scale, interpret panel schedules and one-line diagrams, and turn all of it into a material list and a layout on the floor.",
+  "estimatedMinutes": 35,
+  "prerequisites": [
+    "conductors-and-ampacity"
+  ],
+  "objectives": [
+    "Students will be able to navigate a drawing set by sheet number, title block, revision markers and the Division 26 specifications.",
+    "Students will be able to identify common electrical plan symbols and line types and read a home run with its circuit designation and conductor count.",
+    "Students will be able to convert measurements taken with an architect's scale into real dimensions at 1/8 in and 1/4 in scales, and recognize when a print cannot be scaled.",
+    "Students will be able to read a panel schedule, identify phase assignments, and compute connected load and line current.",
+    "Students will be able to trace power from the utility to a branch panel on a one-line diagram and read conductor and raceway call-outs."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Anatomy of a drawing set",
+      "markdown": "A commercial drawing set is organized by discipline, and the letter at the front of each sheet number tells you whose sheet it is: **A** architectural (floor plans, elevations, reflected ceiling plans, finish schedules), **S** structural, **M** mechanical, **P** plumbing, **FP** fire protection, **T** or **TC** telecommunications, and **E** electrical. Within the E series most firms follow a pattern: **E-001** symbols, abbreviations and general notes; **E-100** site plan; **E-200** lighting plans; **E-300** power plans; **E-400** one-line (single-line) diagram and riser; **E-500** panel schedules; **E-600** details. Residential sets usually compress all of this onto one or two electrical sheets.\n\nEvery sheet has a **title block** with the project name, sheet number and title, scale, date, the designer's seal, and a **revision** table. Changes after the set is issued are shown with a **revision cloud** around the changed area and a numbered triangle (a **delta**) that matches the revision table. Before you build anything, confirm you have the latest revision; building from a superseded sheet is the most expensive mistake an apprentice can make.\n\nThe drawings tell you **where**; the **specifications** tell you **what and how**. Specifications follow the CSI MasterFormat numbering: **Division 26** is Electrical (26 05 19 conductors and cables, 26 05 33 raceways and boxes, 26 24 16 panelboards, 26 27 26 wiring devices, and so on), **Division 27** Communications and **Division 28** Electronic Safety and Security. When the plans and specs conflict, the specs usually govern, and the contract documents say which.\n\nQuestions go through the **RFI** (request for information) process in writing; product choices go through **submittals** that the engineer reviews; and the changes you make in the field are marked on the **as-built** (record) set that the owner receives at the end. Keep your own marked-up set from day one."
+    },
+    {
+      "type": "text",
+      "heading": "Symbols, lines and home runs",
+      "markdown": "Electrical plans are drawn on top of the architectural background with symbols for every device and lines for the wiring. The symbols broadly follow ANSI/IEEE 315 and the NECA 100 standard, but every firm has variations, so the **legend** on E-001 is the authority for that set.\n\nDevice symbols you will see on every job: a circle with two parallel lines is a **duplex receptacle**; add a third line for a **quad**; **GFCI**, **WP** (weatherproof) or **TR** next to it modifies it. A circle with a triangle is a **special-purpose outlet** (range, dryer, EV charger) that is usually keyed to a schedule. The letter **S** is a single-pole switch, **S3** a three-way, **S4** a four-way, **SD** a dimmer, **SM** a motion or occupancy sensor. Luminaires are circles, squares or rectangles with a letter that keys to the **luminaire schedule**; a circle inside a square is a recessed downlight. **J** in a circle is a junction box. A filled rectangle is a surface-mounted panel and an open one is flush. Mounting heights are either in the legend or shown as a plus-dimension next to the device, such as +42 in for a counter receptacle.\n\n**Lines.** A solid line is wiring concealed in the ceiling or wall above; a dashed line is wiring concealed in or below the floor; a dash-dot or heavier line is exposed. A dashed line from a switch to a luminaire is the **switch leg**. Short **tick marks** across a wire show the number of conductors; no ticks means two conductors; a longer tick often marks the neutral. The EGC is normally not drawn.\n\nA **home run** is the arrow that points toward the panel. It carries the panel name and circuit numbers, for example **LP-1 / 3, 5, 7**, which tells you three circuits from panel LP-1 share that raceway back to the panel. From the home run you can infer the conductor count (three hots, a shared or separate neutral depending on the specs, and an EGC) and therefore the conduit size and the derating that the conductors lesson covered.\n\nThe electrical plans show what goes **in** the room. For where the walls are, which way doors swing, where casework sits and what the ceiling height is, you need the A sheets. A receptacle drawn on the power plan at the wrong side of a door only becomes obvious when you check the architectural plan."
+    },
+    {
+      "type": "diagram",
+      "title": "Common electrical plan symbols",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 300\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"40\" cy=\"40\" r=\"10\"/><path d=\"M28 36 H52 M28 44 H52\"/>\n<circle cx=\"40\" cy=\"90\" r=\"10\"/><path d=\"M28 86 H52 M28 94 H52\"/>\n<circle cx=\"40\" cy=\"140\" r=\"10\"/><path d=\"M30 134 H50 M30 140 H50 M30 146 H50\"/>\n<circle cx=\"40\" cy=\"190\" r=\"10\"/><path d=\"M40 180 L30 196 H50 Z\"/>\n<circle cx=\"40\" cy=\"240\" r=\"10\"/><path d=\"M33 233 L47 247 M47 233 L33 247\"/>\n<circle cx=\"200\" cy=\"40\" r=\"10\"/><rect x=\"186\" y=\"26\" width=\"28\" height=\"28\"/>\n<circle cx=\"200\" cy=\"90\" r=\"10\"/>\n<path d=\"M190 130 H210 V150 H190 Z\"/>\n<rect x=\"186\" y=\"180\" width=\"28\" height=\"18\" fill=\"currentColor\"/>\n<rect x=\"186\" y=\"230\" width=\"28\" height=\"18\"/>\n<path d=\"M340 40 H420 M420 40 l-8 -5 m8 5 l-8 5\"/>\n<path d=\"M362 34 l4 12 M372 34 l4 12 M382 34 l4 12\"/>\n<path d=\"M340 90 H420\"/>\n<path d=\"M340 140 H420\" stroke-dasharray=\"6 4\"/>\n<path d=\"M340 190 H420\" stroke-dasharray=\"10 3 2 3\"/>\n<path d=\"M340 240 H420\"/>\n<path d=\"M352 234 l4 12 M372 230 l4 20\"/>\n</g>\n<g fill=\"currentColor\" font-weight=\"bold\">\n<text x=\"194\" y=\"94\" font-size=\"10\">J</text>\n<text x=\"100\" y=\"94\">S</text>\n<text x=\"100\" y=\"144\">S3</text>\n<text x=\"100\" y=\"194\">SD</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"60\" y=\"44\">duplex receptacle</text>\n<text x=\"60\" y=\"94\">GFCI receptacle (often marked GFI / WP)</text>\n<text x=\"60\" y=\"144\">quad (double duplex) receptacle</text>\n<text x=\"60\" y=\"194\">special-purpose outlet</text>\n<text x=\"60\" y=\"244\">floor receptacle</text>\n<text x=\"115\" y=\"94\">single-pole switch</text>\n<text x=\"118\" y=\"144\">three-way switch</text>\n<text x=\"118\" y=\"194\">dimmer switch</text>\n<text x=\"220\" y=\"44\">recessed luminaire</text>\n<text x=\"220\" y=\"94\">junction box</text>\n<text x=\"220\" y=\"144\">surface luminaire</text>\n<text x=\"220\" y=\"194\">panelboard, flush</text>\n<text x=\"220\" y=\"244\">panelboard, surface</text>\n<text x=\"340\" y=\"66\">home run to panel, 3 conductors</text>\n<text x=\"340\" y=\"112\">conduit concealed in ceiling or wall</text>\n<text x=\"340\" y=\"162\">conduit concealed in floor or below</text>\n<text x=\"340\" y=\"212\">conduit exposed</text>\n<text x=\"340\" y=\"266\">long tick = neutral, short = hot</text>\n<text x=\"20\" y=\"290\">Symbols vary by firm: always read the legend sheet (E-001) before the plan sheets.</text>\n</g>\n</svg>",
+      "caption": "A representative legend. Symbols for receptacles, switches, luminaires, panels and wiring lines, with the home-run arrow and conductor tick marks. Always confirm against the project's own legend sheet."
+    },
+    {
+      "type": "diagram",
+      "title": "A small power and lighting plan",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 280\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\">\n<path d=\"M60 40 H300 V220 H60 Z\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M100 220 A40 40 0 0 1 140 180\" stroke-dasharray=\"3 3\"/>\n<path d=\"M100 220 V180\"/>\n<circle cx=\"60\" cy=\"100\" r=\"7\"/><path d=\"M50 97 H70 M50 103 H70\"/>\n<circle cx=\"60\" cy=\"170\" r=\"7\"/><path d=\"M50 167 H70 M50 173 H70\"/>\n<circle cx=\"200\" cy=\"40\" r=\"7\"/><path d=\"M190 37 H210 M190 43 H210\"/>\n<circle cx=\"300\" cy=\"90\" r=\"7\"/><path d=\"M290 87 H310 M290 93 H310\"/>\n<circle cx=\"300\" cy=\"180\" r=\"7\"/><path d=\"M290 177 H310 M290 183 H310\"/>\n<circle cx=\"180\" cy=\"130\" r=\"9\"/><path d=\"M174 124 L186 136 M186 124 L174 136\"/>\n</g>\n<g fill=\"none\" stroke=\"#4cc9ff\" stroke-width=\"1.5\">\n<path d=\"M150 214 C170 190 170 150 180 139\" stroke-dasharray=\"4 3\"/>\n<path d=\"M60 100 C100 60 150 60 193 42\"/>\n<path d=\"M200 47 C220 70 260 80 293 88\"/>\n<path d=\"M300 97 V173\"/>\n<path d=\"M60 107 V163\"/>\n<path d=\"M60 170 C120 240 200 240 290 184\"/>\n<path d=\"M189 130 C230 130 280 110 340 100\"/>\n<path d=\"M340 100 l-8 -5 m8 5 l-8 5\"/>\n<path d=\"M240 118 l3 10 M250 115 l3 10 M260 113 l3 10\"/>\n</g>\n<rect x=\"340\" y=\"60\" width=\"26\" height=\"60\" fill=\"currentColor\"/>\n<g fill=\"currentColor\" font-weight=\"bold\">\n<text x=\"146\" y=\"222\">S</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"372\" y=\"96\">LP-1</text>\n<text x=\"300\" y=\"134\" fill=\"#4cc9ff\">LP-1 / 3</text>\n<text x=\"118\" y=\"258\">OFFICE 101</text>\n<text x=\"20\" y=\"270\">Dashed blue: switch leg. Solid blue: branch circuit wiring. Arrow with ticks: home run to panel LP-1, circuit 3, 3 conductors (hot, neutral, EGC not shown).</text>\n</g>\n</svg>",
+      "caption": "Office 101 with five receptacles, a ceiling luminaire controlled by a switch at the door (dashed switch leg), and a home run to panel LP-1 circuit 3 carrying three conductors. The panel is the filled rectangle on the corridor wall."
+    },
+    {
+      "type": "text",
+      "heading": "Scale: turning paper into feet",
+      "markdown": "Floor plans are drawn to **scale**: a fixed ratio between the drawing and the building. Architectural plans in the United States most often use **1/4 in = 1 ft-0 in** (1:48) for residential and small spaces and **1/8 in = 1 ft-0 in** (1:96) for commercial floor plans; details are drawn at 1/2 in, 3/4 in or larger. Site plans use an **engineer's scale** such as 1 in = 20 ft.\n\nThe triangular **architect's scale** has a different scale on each edge. Pick the edge marked with the drawing's scale, put the zero at one end of the wall, and read the feet directly; inches are read in the subdivided section past the zero. Without a scale rule you can convert with arithmetic: at 1/8 in = 1 ft, every inch on the paper is **8 ft**; at 1/4 in = 1 ft, every inch is **4 ft**.\n\nRules that keep you out of trouble:\n\n- **Do not scale drawings** for anything a written dimension covers. Written dimensions govern; scaling is for rough quantities and layout checks.\n- **Half-size prints** are common on tablets and 11 × 17 sets. A 1/4 in drawing printed at half size reads as 1/8 in. Check the title block for the original sheet size (24 × 36 or 30 × 42) and compare to what you are holding, or measure the graphic scale bar printed on the sheet.\n- PDFs on a phone are not to scale at all unless you calibrate the measuring tool against a known dimension.\n- Add vertical runs. A plan shows horizontal distance; the conduit also rises from the panel to the ceiling and drops to each box. Mounting heights and ceiling heights come from the A sheets and the legend."
+    },
+    {
+      "type": "example",
+      "problem": "On a power plan drawn at 1/8 in = 1 ft-0 in, the home run from panel LP-1 to the first junction box measures 4-1/2 in on the paper, and the branch from that box to the far receptacle measures 2-3/4 in. The panel top is at 6 ft above the floor, the conduit runs in a ceiling space 12 ft above the floor, and the receptacle is at 18 in. Estimate the total conduit length to order, allowing 10 percent extra.",
+      "solutionSteps": [
+        "At 1/8 in = 1 ft, 1 in on paper = 8 ft. Home run: 4.5 × 8 = 36 ft. Branch: 2.75 × 8 = 22 ft. Horizontal total = 58 ft.",
+        "Vertical at the panel: from the panel top at 6 ft up to the 12 ft ceiling space = 6 ft.",
+        "Vertical drop at the receptacle: from 12 ft down to 18 in (1.5 ft) = 10.5 ft.",
+        "Total = 58 + 6 + 10.5 = 74.5 ft. Add 10 percent for bends, offsets and waste: 74.5 × 1.1 = 82 ft.",
+        "EMT comes in 10 ft lengths, so order 9 sticks (90 ft). If the same plan were a half-size print, the true scale would be 1/16 in = 1 ft and every length would double; check the title block before ordering."
+      ],
+      "answer": "About 82 ft of conduit, ordered as nine 10 ft lengths."
+    },
+    {
+      "type": "text",
+      "heading": "Panel schedules",
+      "markdown": "A **panel schedule** is the inventory of a panelboard: what feeds it, what each breaker serves, and how much load is on each phase. NEC 408.4 requires a legible circuit directory on every panel in the field, and the schedule on the drawings is where that directory comes from.\n\nThe header gives the panel name (LP-1, HP-2, MDP), its voltage and phases (120/208 V 3Ø 4W; 277/480 V 3Ø 4W; 120/240 V 1Ø 3W), bus rating (225 A), main device (MCB for main circuit breaker, MLO for main lugs only), AIC or short-circuit rating, mounting (flush/surface) and the source that feeds it.\n\nThe body lists circuits. Odd numbers run down the left column and even numbers down the right, which matches the physical breaker positions in nearly every panel. In a three-phase panel the phases rotate down each column: circuits 1 and 2 are on phase A, 3 and 4 on B, 5 and 6 on C, 7 and 8 back on A, and so on. A two-pole breaker occupies two adjacent positions in the same column (for example 8 and 10) and therefore lands on two different phases; a three-pole breaker takes three. In a single-phase 120/240 V panel the positions alternate between the two legs, L1 and L2.\n\nEach row shows the breaker trip and poles, the conductor size, the description, and the load in volt-amperes assigned to the phase (or phases) the circuit uses. The bottom of the schedule totals the VA per phase and converts to amperes. For a wye system the line current on each phase is that phase's VA divided by the **line-to-neutral** voltage (120 V in a 208Y/120 V panel, 277 V in a 480Y/277 V panel). The total three-phase load in amperes is total VA divided by (line-to-line voltage × 1.732). Designers try to balance the phases within about 10 percent; when you add circuits in the field, put them where they keep the balance.\n\nThe schedule's totals are **connected** load. The **demand** load after NEC Article 220 factors is what the feeder is sized for, and it appears on the one-line or a separate load calculation."
+    },
+    {
+      "type": "table",
+      "caption": "Panel LP-1, 120/208 V 3Ø 4W, 225 A MCB, 42 circuits (partial schedule used in the example below)",
+      "columns": [
+        "Ckt",
+        "Description",
+        "Breaker",
+        "Wire",
+        "Load (VA)",
+        "Phase"
+      ],
+      "rows": [
+        [
+          "1",
+          "Receptacles, Office 101",
+          "20 A / 1P",
+          "12 AWG",
+          "720",
+          "A"
+        ],
+        [
+          "3",
+          "Receptacles, Office 102",
+          "20 A / 1P",
+          "12 AWG",
+          "540",
+          "B"
+        ],
+        [
+          "5",
+          "Receptacles, Office 103",
+          "20 A / 1P",
+          "12 AWG",
+          "900",
+          "C"
+        ],
+        [
+          "7",
+          "Lighting, corridor",
+          "20 A / 1P",
+          "12 AWG",
+          "1,200",
+          "A"
+        ],
+        [
+          "9",
+          "Copier",
+          "20 A / 1P",
+          "12 AWG",
+          "1,500",
+          "B"
+        ],
+        [
+          "11",
+          "Water cooler",
+          "20 A / 1P",
+          "12 AWG",
+          "600",
+          "C"
+        ],
+        [
+          "2",
+          "Receptacles, break room",
+          "20 A / 1P",
+          "12 AWG",
+          "1,080",
+          "A"
+        ],
+        [
+          "4",
+          "Microwave",
+          "20 A / 1P",
+          "12 AWG",
+          "1,500",
+          "B"
+        ],
+        [
+          "6",
+          "Refrigerator",
+          "20 A / 1P",
+          "12 AWG",
+          "1,200",
+          "C"
+        ],
+        [
+          "8, 10",
+          "Water heater, 208 V",
+          "30 A / 2P",
+          "10 AWG",
+          "4,500 (2,250 per phase)",
+          "A, B"
+        ],
+        [
+          "12",
+          "Spare",
+          "20 A / 1P",
+          "-",
+          "0",
+          "C"
+        ]
+      ]
+    },
+    {
+      "type": "example",
+      "problem": "Using the LP-1 schedule above, find the connected load on each phase, the line current on each phase, and the total three-phase load in amperes. Which phase should receive the next 1,200 VA circuit?",
+      "solutionSteps": [
+        "Phase A: 720 + 1,200 + 1,080 + 2,250 = 5,250 VA.",
+        "Phase B: 540 + 1,500 + 1,500 + 2,250 = 5,790 VA.",
+        "Phase C: 900 + 600 + 1,200 + 0 = 2,700 VA.",
+        "Line current per phase = VA ÷ 120 V (line-to-neutral in a 208Y/120 V system): A = 5,250 ÷ 120 = 43.8 A; B = 5,790 ÷ 120 = 48.3 A; C = 2,700 ÷ 120 = 22.5 A.",
+        "Total connected load = 5,250 + 5,790 + 2,700 = 13,740 VA. Three-phase amperes = 13,740 ÷ (208 × 1.732) = 13,740 ÷ 360.3 = 38.1 A (an average that hides the imbalance).",
+        "Phase C is carrying less than half of phase B. The next single-pole circuit goes on a phase C position: circuit 12 is already a spare on C, and positions 17-18, 23-24 and so on also land on C in the rotation."
+      ],
+      "answer": "A: 5,250 VA (43.8 A); B: 5,790 VA (48.3 A); C: 2,700 VA (22.5 A); total 13,740 VA, about 38 A three-phase. Add the new circuit on phase C."
+    },
+    {
+      "type": "text",
+      "heading": "One-line diagrams and risers",
+      "markdown": "The **one-line diagram** (single-line) shows the power distribution system from the utility to every panel using one line to represent all the conductors of a circuit. It ignores physical location and shows electrical relationships: what feeds what, the rating of every device, and the size of every feeder. A **riser diagram** is the same idea drawn vertically, floor by floor, and is common on multi-story buildings and for telecommunications.\n\nRead a one-line from the top down. Typical symbols: the utility source as a circle or a transformer symbol (two overlapping circles or two coils); the meter as a circle with **M**; a circuit breaker as a short diagonal line (sometimes with a small box), labeled with its frame and trip, such as **800 A MCB** or **225 A/3P**; a fuse as a rectangle on the line; a disconnect switch as a diagonal line with a gap; a bus as a heavy horizontal line; a transformer as two circles with its kVA and voltages (**75 kVA, 480-208Y/120 V**); a generator as a circle with **G**; an automatic transfer switch as a box labeled **ATS**; and the ground symbol at the service and at each separately derived system.\n\n**Conductor and raceway call-outs** are written next to each feeder, for example **(4) 500 kcmil + (1) #3 G in 3-1/2 in C** or **4#3/0, 1#6G, 2 in C**. That reads as four 500 kcmil phase and neutral conductors plus one 3 AWG equipment grounding conductor in a 3-1/2 in conduit. The specs tell you the conductor material and insulation (typically copper THHN/THWN-2 or aluminum XHHW-2 for large feeders) and the raceway type.\n\nWhen you look at a one-line, check three things for every feeder: that the breaker protecting it matches the conductor ampacity from Table 310.16 at the 75 °C column, that the EGC matches Table 250.122 for that breaker, and that the raceway size is large enough for the fill. Engineers make mistakes, and the apprentice who catches a 400 A breaker on 3/0 copper before it is installed has earned a reputation."
+    },
+    {
+      "type": "diagram",
+      "title": "Reading a one-line diagram",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 300\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"60\" cy=\"40\" r=\"16\"/>\n<path d=\"M76 40 H120\"/>\n<circle cx=\"136\" cy=\"40\" r=\"16\"/>\n<path d=\"M152 40 H200\"/>\n<path d=\"M200 40 l26 -14\"/>\n<path d=\"M226 40 H280\"/>\n<path d=\"M280 20 V60\" stroke-width=\"6\"/>\n<path d=\"M280 40 H330\"/>\n<path d=\"M330 40 l26 -14\"/>\n<path d=\"M356 40 H420\"/>\n<path d=\"M280 60 V120\"/>\n<path d=\"M280 120 l26 -14\"/>\n<path d=\"M306 120 H330\"/>\n<circle cx=\"350\" cy=\"120\" r=\"14\"/>\n<circle cx=\"372\" cy=\"120\" r=\"14\"/>\n<path d=\"M386 120 H420\"/>\n<path d=\"M280 60 V200\"/>\n<path d=\"M280 200 l26 -14\"/>\n<path d=\"M306 200 H420\"/>\n<path d=\"M280 200 V240\"/>\n<path d=\"M268 240 H292 M272 246 H288 M276 252 H284\"/>\n</g>\n<g fill=\"currentColor\" font-weight=\"bold\">\n<text x=\"48\" y=\"44\" font-size=\"10\">UTIL</text>\n<text x=\"130\" y=\"44\">M</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"20\" y=\"76\">utility</text>\n<text x=\"20\" y=\"88\">transformer</text>\n<text x=\"112\" y=\"76\">meter</text>\n<text x=\"176\" y=\"16\">800 A MCB</text>\n<text x=\"176\" y=\"28\">480Y/277 V 3Ø 4W</text>\n<text x=\"264\" y=\"82\">MDP</text>\n<text x=\"330\" y=\"16\">225 A/3P</text>\n<text x=\"362\" y=\"60\">to HP-1 (277 V lighting)</text>\n<text x=\"300\" y=\"100\">125 A/3P</text>\n<text x=\"334\" y=\"150\">T-1 75 kVA</text>\n<text x=\"334\" y=\"162\">480-208Y/120 V</text>\n<text x=\"400\" y=\"100\">LP-1</text>\n<text x=\"400\" y=\"112\">225 A MCB</text>\n<text x=\"300\" y=\"186\">400 A/3P</text>\n<text x=\"310\" y=\"222\">(4) 500 kcmil + (1) #3 G</text>\n<text x=\"310\" y=\"234\">in 3-1/2 in C to MCC-1</text>\n<text x=\"300\" y=\"258\">GEC to building</text>\n<text x=\"300\" y=\"270\">steel and Ufer</text>\n<text x=\"20\" y=\"292\">Read a one-line from the utility down: each device, its rating, and the conductors between them.</text>\n</g>\n</svg>",
+      "caption": "Utility transformer, meter, 800 A main breaker, the main distribution panel bus, a 225 A feeder to a 277 V lighting panel, a 125 A feeder through a 75 kVA step-down transformer to LP-1 (whose 225 A main breaker also serves as the transformer secondary protection), and a 400 A feeder with its conductor call-out to a motor control center. The grounding electrode conductor leaves the MDP."
+    },
+    {
+      "type": "callout",
+      "tone": "tip",
+      "text": "Before layout on a new floor: pull the latest revision of the A, E and M sheets; read E-001 end to end; walk the floor with the plan and the architect's dimensions to find column lines and control points; mark the panel locations first, then home runs, then devices; note every conflict with ductwork or plumbing and write an RFI the same day. A conflict found on paper costs a question; the same conflict found after the conduit is in costs a day."
+    }
+  ],
+  "practice": [
+    {
+      "id": "blueprint-and-plan-reading-p1",
+      "type": "numeric",
+      "prompt": "A corridor on a plan drawn at 1/8 in = 1 ft-0 in measures 6-1/4 in on the paper. How long is the corridor in feet?",
+      "answer": 50,
+      "unit": "ft",
+      "tolerance": 0.1,
+      "explanation": "At 1/8 in scale, 1 in = 8 ft; 6.25 × 8 = 50 ft."
+    },
+    {
+      "id": "blueprint-and-plan-reading-p2",
+      "type": "numeric",
+      "prompt": "A bedroom wall on a residential plan at 1/4 in = 1 ft-0 in measures 3-1/2 in. What is the wall length in feet?",
+      "answer": 14,
+      "unit": "ft",
+      "tolerance": 0.1,
+      "explanation": "At 1/4 in scale, 1 in = 4 ft; 3.5 × 4 = 14 ft."
+    },
+    {
+      "id": "blueprint-and-plan-reading-p3",
+      "type": "multiple_choice",
+      "prompt": "A home run arrow is labeled 'LP-2 / 14, 16, 18' with three short tick marks and one long tick mark across the line. What does this tell you?",
+      "choices": [
+        "Three circuits from panel LP-2 share the raceway: three hot conductors and one neutral (plus the EGC, which is not drawn)",
+        "One circuit with four conductors feeds panel LP-2",
+        "Circuit 14 is a three-phase motor circuit",
+        "The raceway contains 18 conductors"
+      ],
+      "correctIndex": 0,
+      "explanation": "The circuit numbers identify the panel and breakers; tick marks count conductors, with the long tick conventionally marking the neutral. Even-numbered circuits 14, 16, 18 sit in one column of a three-phase panel and land on phases A, B and C, so one shared neutral is common."
+    },
+    {
+      "id": "blueprint-and-plan-reading-p4",
+      "type": "numeric",
+      "prompt": "Phase B of a 208Y/120 V panel carries 7,200 VA of connected load. What is the phase B line current in amperes?",
+      "answer": 60,
+      "unit": "A",
+      "tolerance": 0.5,
+      "explanation": "Line current on one phase of a wye system = phase VA ÷ line-to-neutral voltage = 7,200 ÷ 120 = 60 A."
+    },
+    {
+      "id": "blueprint-and-plan-reading-p5",
+      "type": "multiple_choice",
+      "prompt": "In a standard 42-circuit, three-phase panel, which phase does circuit 9 land on?",
+      "choices": [
+        "Phase A",
+        "Phase B",
+        "Phase C",
+        "It depends on the breaker size"
+      ],
+      "correctIndex": 1,
+      "explanation": "The phases rotate down the columns in pairs: positions 1-2 are A, 3-4 are B, 5-6 are C, 7-8 are A, 9-10 are B, 11-12 are C. Circuit 9 is therefore on phase B."
+    },
+    {
+      "id": "blueprint-and-plan-reading-p6",
+      "type": "multiple_choice",
+      "prompt": "A feeder call-out reads '(4) #3/0 + (1) #6 G, 2 in C'. Which statement is correct?",
+      "choices": [
+        "Four 3/0 AWG phase and neutral conductors with one 6 AWG equipment grounding conductor in a 2 in conduit",
+        "Four 6 AWG conductors with a 3/0 AWG ground in a 2 in conduit",
+        "Three conductors and one ground, all 2 AWG",
+        "Four conductors, each 2 in in diameter"
+      ],
+      "correctIndex": 0,
+      "explanation": "The count in parentheses is the number of conductors, the size follows, G marks the equipment grounding conductor and C is the conduit trade size."
+    },
+    {
+      "id": "blueprint-and-plan-reading-p7",
+      "type": "multiple_choice",
+      "prompt": "Which specification division covers electrical work under CSI MasterFormat?",
+      "choices": [
+        "Division 16",
+        "Division 22",
+        "Division 26",
+        "Division 33"
+      ],
+      "correctIndex": 2,
+      "explanation": "Division 26 is Electrical in the current MasterFormat (it was Division 16 before 2004; Division 22 is Plumbing and Division 33 is Utilities)."
+    }
+  ],
+  "quiz": {
+    "key": "blueprint-and-plan-reading-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "blueprint-and-plan-reading-q1",
+        "type": "multiple_choice",
+        "prompt": "Which sheet should you read first when you open a new electrical drawing set?",
+        "choices": [
+          "The one-line diagram",
+          "The symbols, abbreviations and general notes sheet (E-001)",
+          "The lighting plan for the top floor",
+          "The structural foundation plan"
+        ],
+        "correctIndex": 1,
+        "explanation": "The legend defines every symbol and note used on the other sheets. Reading plans before the legend leads to guessing."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q2",
+        "type": "multiple_choice",
+        "prompt": "What does a revision cloud with a numbered triangle indicate?",
+        "choices": [
+          "An area to be demolished",
+          "An area changed in a numbered revision; check the title block revision table",
+          "A hazardous location",
+          "An area where conduit is exposed"
+        ],
+        "correctIndex": 1,
+        "explanation": "The cloud outlines the change and the delta number matches the revision table, so you can tell whether your print includes it."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q3",
+        "type": "numeric",
+        "prompt": "A plan is drawn at 1/4 in = 1 ft-0 in but printed at half size. A dimension that measures 2 in on this print represents how many feet?",
+        "answer": 16,
+        "unit": "ft",
+        "tolerance": 0.1,
+        "explanation": "Half size turns 1/4 in scale into 1/8 in scale, so 1 in = 8 ft and 2 in = 16 ft. Measuring at the printed 1/4 in scale would give 8 ft, half the true length."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q4",
+        "type": "numeric",
+        "prompt": "A 208Y/120 V three-phase panel has a total connected load of 36,000 VA. What is the total three-phase current in amperes?",
+        "answer": 100,
+        "unit": "A",
+        "tolerance": 1,
+        "explanation": "I = VA ÷ (V × 1.732) = 36,000 ÷ (208 × 1.732) = 36,000 ÷ 360.3 = 99.9 A."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q5",
+        "type": "numeric",
+        "prompt": "A 120/240 V single-phase panel has 9,600 VA on L1 and 8,400 VA on L2. What is the current on L1 in amperes?",
+        "answer": 80,
+        "unit": "A",
+        "tolerance": 0.5,
+        "explanation": "Each leg's current is its VA divided by 120 V: 9,600 ÷ 120 = 80 A (L2 carries 70 A)."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q6",
+        "type": "multiple_choice",
+        "prompt": "On a plan, a dashed line runs from the symbol 'S3' near a door to a ceiling luminaire. What is it?",
+        "choices": [
+          "A conduit in the floor slab",
+          "The switch leg from a three-way switch to the luminaire",
+          "A home run to the panel",
+          "A fire alarm circuit"
+        ],
+        "correctIndex": 1,
+        "explanation": "Dashed lines from switches to luminaires are switch legs; S3 is a three-way switch, so a matching S3 will be elsewhere in the room."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q7",
+        "type": "multiple_choice",
+        "prompt": "The one-line shows a 400 A/3P breaker feeding a panel with '(4) #3/0 Cu + (1) #3 G in 2-1/2 in C'. What should you flag?",
+        "choices": [
+          "Nothing; this is a standard feeder",
+          "3/0 copper is rated 200 A at 75 °C, so a 400 A breaker does not protect it; write an RFI before installing",
+          "The EGC is too large",
+          "The conduit should be PVC"
+        ],
+        "correctIndex": 1,
+        "explanation": "Table 310.16 gives 200 A for 3/0 copper at 75 °C. A 400 A feeder needs 500 kcmil copper (380 A at 75 °C, which 240.4(B) allows to be protected at the next standard size, 400 A) or parallel sets of smaller conductors. The EGC of 3 AWG is correct for 400 A, which suggests the conductor size is the typo."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q8",
+        "type": "multiple_choice",
+        "prompt": "The panel schedule says HP-1 is '225 A MLO'. What does MLO mean?",
+        "choices": [
+          "Main lugs only: the panel has no main breaker and is protected by the feeder breaker upstream",
+          "Motor load only",
+          "Main lighting outlet",
+          "Maximum load output"
+        ],
+        "correctIndex": 0,
+        "explanation": "MLO panels rely on the upstream feeder breaker for protection and disconnect; MCB panels have a built-in main circuit breaker."
+      },
+      {
+        "id": "blueprint-and-plan-reading-q9",
+        "type": "multiple_choice",
+        "prompt": "A receptacle symbol on the power plan has '+42' next to it. What does that mean?",
+        "choices": [
+          "Circuit 42",
+          "Mounted 42 in above the finished floor, typically to serve a counter",
+          "42 VA load",
+          "42 ft from the panel"
+        ],
+        "correctIndex": 1,
+        "explanation": "A plus-dimension next to a device is a mounting height above finished floor (AFF) that overrides the default height in the legend."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NECA 100, Symbols for Electrical Construction Drawings (by number only)",
+      "url": "https://www.necanet.org/about-us/neca-standards"
+    },
+    {
+      "title": "ANSI/IEEE 315, Graphic Symbols for Electrical and Electronics Diagrams (by number only)",
+      "url": "https://standards.ieee.org/ieee/315/1046/"
+    },
+    {
+      "title": "Construction Specifications Institute, MasterFormat (Division 26 Electrical)",
+      "url": "https://www.csiresources.org/standards/masterformat"
+    },
+    {
+      "title": "NFPA 70, National Electrical Code, 408.4 Field identification required (circuit directories) and Article 220 load calculations (by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "National Institute of Building Sciences, United States National CAD Standard (sheet identification)",
+      "url": "https://www.nationalcadstandard.org/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

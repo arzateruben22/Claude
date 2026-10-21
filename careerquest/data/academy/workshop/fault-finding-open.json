@@ -67,8 +67,8 @@
     },
     {
       "id": "fault-finding-open-t4",
-      "question": "What voltage does a voltmeter read across the open R3?",
-      "quantity": "V_R3",
+      "question": "With R3 open, what is the voltage across R1? (Healthy it was 6 V.)",
+      "quantity": "V_R1",
       "tolerance": 0.02,
       "toleranceType": "relative"
     },
@@ -100,7 +100,7 @@
   "hints": [
     "An open has infinite resistance. Remove R3 from the drawing: the circuit is now just R1 (100 Ω) in series with R2 (200 Ω).",
     "R_total rises from 200 Ω to 300 Ω, so the total current falls. V_R1 falls with it, and by KVL the group voltage rises.",
-    "An open branch still has voltage across it (the same as the group) but no current. An open element in a parallel group does not show source voltage, unlike an open in a pure series loop.",
+    "An open branch still has voltage across it (the same 8 V as the rest of the group) but no current. An open element in a parallel group does not show source voltage, unlike an open in a pure series loop.",
     "In the field: a branch that reads normal voltage but zero current (clamp meter) is open somewhere in that branch."
   ],
   "learningGoals": [

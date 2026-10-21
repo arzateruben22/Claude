@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Indeed Apply</title>
+</head>
+<body>
+  <div id="ia-container" class="ia-BasePage">
+    <aside class="ia-JobInfoCard">
+      <div data-testid="ia-JobInfoCard-title">Apprentice Electrician</div>
+      <div data-testid="ia-JobInfoCard-company">Acme Electric Inc.</div>
+    </aside>
+    <section data-testid="post-apply-confirmation" class="ia-PostApply">
+      <h1>Your application has been submitted!</h1>
+      <p>Your application has been submitted to Acme Electric Inc. We'll let you know when they respond. Track all of your applications on the My jobs page, and keep your profile up to date so employers can reach you quickly about next steps and interview availability over the coming days.</p>
+      <p>Applicant: <span class="applicant-name">Jane Q. Applicant</span></p>
+    </section>
+    <form id="applicant-form" action="/submit" method="post">
+      <label>Full name <input name="fullName" value="Jane Q. Applicant" /></label>
+      <label>SSN <input name="ssn" value="123-45-6789" /></label>
+      <label>Password <input type="password" name="password" value="hunter2-secret" /></label>
+      <label>Card <input name="cardNumber" value="4111 1111 1111 1111" /></label>
+      <label>Cover letter <textarea name="coverLetter">SECRET-COVER-LETTER-TEXT about my background.</textarea></label>
+      <select name="referral"><option selected>REFERRAL-SECRET-OPTION</option></select>
+    </form>
+  </div>
+</body>
+</html>

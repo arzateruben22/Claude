@@ -1,0 +1,445 @@
+{
+  "key": "residential-circuit-layout",
+  "track": "INSTALLATION",
+  "order": 5,
+  "title": "Residential Circuit Layout",
+  "summary": "How to plan the branch circuits of a California house: general lighting and receptacle circuits, the required 20 A circuits, receptacle spacing rules, where GFCI and AFCI protection is required, and how lighting circuits and three-way switching are wired.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "blueprint-and-plan-reading",
+    "grounding-and-bonding"
+  ],
+  "objectives": [
+    "Students will be able to compute the minimum number of general lighting and receptacle circuits for a dwelling from its floor area.",
+    "Students will be able to list the branch circuits the NEC requires in every dwelling and the dedicated circuits typically provided for appliances.",
+    "Students will be able to apply the receptacle spacing rules for walls, kitchen countertops, bathrooms, garages, outdoors and hallways.",
+    "Students will be able to identify the locations in a dwelling that require GFCI protection, AFCI protection or both, and choose the device that provides it.",
+    "Students will be able to lay out switch-controlled lighting outlets and wire single-pole, three-way and four-way switching, including the neutral-at-switch rule and California lighting control requirements."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Branch circuits in a dwelling",
+      "markdown": "A **branch circuit** is the wiring between the last overcurrent device and the outlets it serves. Its rating is the rating of the breaker (210.3), and for circuits serving more than one outlet that rating must be 15, 20, 30, 40 or 50 A. A house is mostly 15 A and 20 A circuits at 120 V, a handful of 240 V circuits for large appliances, and the service that feeds them all.\n\n**General lighting and receptacle circuits.** NEC Article 220 assigns a general lighting load of **3 VA per square foot** of floor area to dwellings (Table 220.12 in the 2020 edition; the dwelling rule moved to 220.41 in the 2023 edition). This load covers all the general-purpose receptacles and lighting in bedrooms, living areas, hallways and similar spaces; it does not cover the kitchen small-appliance circuits, laundry, bathroom receptacles or fixed appliances, which are added separately. The **minimum number** of general circuits is the total VA divided by the VA each circuit can carry: 1,800 VA for a 15 A circuit (15 × 120) or 2,400 VA for a 20 A circuit (210.11(A)). The minimum is rarely enough for a modern house; good practice puts bedrooms, living areas and lighting on separate circuits so a tripped receptacle circuit does not leave the room dark.\n\n**15 A or 20 A?** 15 A circuits use 14 AWG copper and 15 A receptacles; 20 A circuits use 12 AWG and may use either 15 A or 20 A receptacles (Table 210.21(B)(3)). Many California contractors wire all receptacle circuits at 20 A and lighting at 15 A. Either is code-compliant; the required kitchen, laundry, bathroom and garage circuits must be 20 A.\n\n**Multiwire branch circuits** (two hots on opposite legs sharing one neutral) save wire but must originate on a two-pole breaker or handle-tied breakers so both hots disconnect together (210.4(B)), and the neutral must be pigtailed, never carried through a device terminal (300.13(B)), because an open neutral puts 240 V across 120 V loads.\n\nEvery 120 V, 15 and 20 A receptacle in a dwelling must be **tamper-resistant** (406.12), and receptacles in damp and wet locations must be **weather-resistant** with the appropriate cover (406.9)."
+    },
+    {
+      "type": "example",
+      "problem": "A single-family home has 2,100 square feet of living area (measured from the outside dimensions, excluding the garage and open porches). What is the minimum number of general lighting and receptacle circuits if they are wired at 15 A? At 20 A?",
+      "solutionSteps": [
+        "General lighting load = 2,100 ft² × 3 VA/ft² = 6,300 VA.",
+        "15 A circuits carry 15 A × 120 V = 1,800 VA each: 6,300 ÷ 1,800 = 3.5, round up to 4 circuits.",
+        "20 A circuits carry 20 A × 120 V = 2,400 VA each: 6,300 ÷ 2,400 = 2.6, round up to 3 circuits.",
+        "These minimums do not include the two small-appliance circuits, the laundry circuit, the bathroom circuit, the garage circuit or any appliance circuits. A realistic plan for this house would have 8 to 12 general circuits plus those required circuits."
+      ],
+      "answer": "Minimum 4 general circuits at 15 A, or 3 at 20 A; in practice considerably more."
+    },
+    {
+      "type": "text",
+      "heading": "Required and dedicated circuits",
+      "markdown": "NEC 210.11(C) requires every dwelling to have, in addition to the general circuits:\n\n- **Two or more 20 A small-appliance branch circuits** serving the receptacles in the kitchen, pantry, breakfast room and dining room, including the refrigerator (210.52(B)). These circuits may serve no other outlets (no lighting, no outdoor receptacle), with narrow exceptions for a clock receptacle and gas-range ignition. All countertop receptacles must be split between at least two of them.\n- **One 20 A laundry circuit** for the laundry receptacle(s), serving nothing else.\n- **One 20 A bathroom circuit** for bathroom receptacles. It may serve receptacles in several bathrooms, or, if it serves only one bathroom, it may also supply that bathroom's lights and fan.\n- **One 20 A garage circuit** for the garage receptacles (attached garages and detached garages with power), serving nothing else except readily accessible outdoor receptacles (added in 2017).\n\n**Individual (dedicated) circuits** are required where the appliance's load or the manufacturer's instructions call for it, and are standard practice for anything with a motor or heating element. Fastened-in-place appliances on a general circuit may not exceed 50 percent of the circuit rating if the circuit also serves lighting or other loads (210.23(A)(2)). Common sizes are in the table below; always confirm with the nameplate and the installation instructions, which are enforceable under 110.3(B).\n\n**California additions.** Title 24 Part 11 (CALGreen) requires new one- and two-family dwellings to be **EV ready**: a dedicated 208/240 V branch circuit (commonly 40 A) terminating in a receptacle or junction box in the garage for a future Level 2 charger. Title 24 Part 6 (the Energy Code) requires high-efficacy lighting throughout and drives most new homes toward all-electric appliances, so plan for 240 V circuits to the range, dryer, water heater and heat pump locations even where gas is installed today. Check the current edition and the local amendments; these requirements change every three years."
+    },
+    {
+      "type": "table",
+      "caption": "Typical dwelling circuits (NEC minimums plus common practice; verify nameplates and local amendments)",
+      "columns": [
+        "Load",
+        "Circuit",
+        "Conductor (copper)",
+        "Notes"
+      ],
+      "rows": [
+        [
+          "Small-appliance (kitchen/dining), two minimum",
+          "20 A, 120 V",
+          "12 AWG",
+          "Required by 210.11(C)(1); GFCI for countertop receptacles; AFCI"
+        ],
+        [
+          "Laundry receptacle",
+          "20 A, 120 V",
+          "12 AWG",
+          "Required by 210.11(C)(2); GFCI and AFCI"
+        ],
+        [
+          "Bathroom receptacles",
+          "20 A, 120 V",
+          "12 AWG",
+          "Required by 210.11(C)(3); GFCI; receptacle within 3 ft of each basin"
+        ],
+        [
+          "Garage receptacles",
+          "20 A, 120 V",
+          "12 AWG",
+          "Required by 210.11(C)(4); GFCI; one per vehicle bay"
+        ],
+        [
+          "Dishwasher",
+          "15 or 20 A, 120 V individual",
+          "14 or 12 AWG",
+          "GFCI required (210.8(D)); AFCI in kitchen"
+        ],
+        [
+          "Garbage disposal",
+          "15 or 20 A, 120 V individual",
+          "14 or 12 AWG",
+          "Switched; GFCI if cord-and-plug within 6 ft of sink"
+        ],
+        [
+          "Microwave (built-in)",
+          "20 A, 120 V individual",
+          "12 AWG",
+          "Per manufacturer; GFCI in 2023 edition"
+        ],
+        [
+          "Electric range",
+          "40 or 50 A, 120/240 V",
+          "8 or 6 AWG",
+          "4-wire NEMA 14-50; per nameplate"
+        ],
+        [
+          "Electric dryer",
+          "30 A, 120/240 V",
+          "10 AWG",
+          "4-wire NEMA 14-30; GFCI in 2023 edition"
+        ],
+        [
+          "Electric water heater (4,500 W)",
+          "30 A, 240 V",
+          "10 AWG",
+          "Continuous load: 4,500 ÷ 240 = 18.75 A × 1.25 = 23.4 A, so 25 or 30 A"
+        ],
+        [
+          "Air conditioner / heat pump condenser",
+          "Per nameplate (often 20 to 40 A), 240 V",
+          "Per nameplate",
+          "Use the nameplate minimum circuit ampacity and maximum overcurrent protection; disconnect within sight"
+        ],
+        [
+          "EV charger (Level 2)",
+          "40 or 50 A, 240 V",
+          "8 or 6 AWG",
+          "Continuous load: 32 A charger needs a 40 A circuit; CALGreen EV-ready"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Where the receptacles go",
+      "markdown": "NEC 210.52 sets minimum receptacle locations so that cords do not have to stretch across rooms. The rules, with the numbers you must remember:\n\n- **Wall spaces (210.52(A)).** In every kitchen, family room, dining room, living room, bedroom, den, sunroom and similar room, receptacles must be placed so that **no point along the floor line of any wall space is more than 6 ft** from a receptacle. A wall space is any wall **2 ft or wider**, measured around corners but interrupted by doorways, fireplaces and fixed cabinets. In practice: a receptacle within 6 ft of each side of a door and no more than 12 ft between receptacles along a wall. Fixed glass counts as wall; a floor receptacle counts only if it is within 18 in of the wall.\n- **Kitchen countertops (210.52(C)).** Every wall countertop space **12 in or wider** gets at least one receptacle, placed so that **no point along the wall line is more than 24 in** from one (so receptacles no more than 4 ft apart), mounted no more than 20 in above the counter. Island and peninsula rules have changed in every recent edition (2020 required one per island; 2023 makes them optional but regulates where they go); check the adopted edition. Receptacles may not be installed face-up in a countertop.\n- **Bathrooms (210.52(D)).** At least one receptacle **within 3 ft of the outside edge of each basin**, on the wall or partition beside it, or on the side or face of the cabinet no more than 12 in below the counter.\n- **Outdoors (210.52(E)).** At least one receptacle at the **front and one at the back** of the house, no more than **6-1/2 ft above grade**, and one on any balcony, deck or porch accessible from inside the dwelling.\n- **Laundry (210.52(F)).** At least one receptacle for the laundry equipment.\n- **Garages, basements and accessory buildings (210.52(G)).** At least one receptacle in each attached garage and each detached garage with power, **one for each car space**, plus one in each separate unfinished basement area.\n- **Hallways (210.52(H))** 10 ft or longer get at least one receptacle; **foyers (210.52(I))** over 60 ft² get receptacles in wall spaces 3 ft or wider.\n- **HVAC equipment (210.63)** needs a service receptacle within 25 ft and on the same level as the equipment.\n\nThe rules are minimums; the customer decides how many more. Bedside, desk and television locations always want more than the code requires."
+    },
+    {
+      "type": "diagram",
+      "title": "The 6-foot rule in a bedroom",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 300\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\">\n<path d=\"M60 40 H400 V250 H120 M60 250 V40\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M120 250 A60 60 0 0 1 60 190\" stroke-dasharray=\"3 3\"/>\n<path d=\"M200 40 H280\" stroke=\"#9aa6b8\" stroke-width=\"6\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"60\" cy=\"120\" r=\"7\"/><path d=\"M50 117 H70 M50 123 H70\"/>\n<circle cx=\"130\" cy=\"40\" r=\"7\"/><path d=\"M120 37 H140 M120 43 H140\"/>\n<circle cx=\"340\" cy=\"40\" r=\"7\"/><path d=\"M330 37 H340 M330 43 H350\"/>\n<circle cx=\"400\" cy=\"110\" r=\"7\"/><path d=\"M390 107 H410 M390 113 H410\"/>\n<circle cx=\"400\" cy=\"210\" r=\"7\"/><path d=\"M390 207 H410 M390 213 H410\"/>\n<circle cx=\"230\" cy=\"250\" r=\"7\"/><path d=\"M220 247 H240 M220 253 H240\"/>\n</g>\n<g fill=\"none\" stroke=\"#4cc9ff\" stroke-width=\"1.5\">\n<path d=\"M60 60 V120 M55 60 h10\"/>\n<path d=\"M60 120 V180 M55 180 h10\"/>\n<path d=\"M130 58 H60\" stroke-dasharray=\"3 3\"/>\n<path d=\"M400 50 V110 M395 50 h10\"/>\n<path d=\"M400 110 V210 M395 160 h10\"/>\n<path d=\"M400 210 V250 M395 250 h10\"/>\n<path d=\"M230 240 H130 M230 240 H330\"/>\n</g>\n<g fill=\"#4cc9ff\">\n<text x=\"66\" y=\"92\">≤ 6 ft</text>\n<text x=\"66\" y=\"156\">≤ 6 ft</text>\n<text x=\"330\" y=\"84\">≤ 6 ft</text>\n<text x=\"330\" y=\"166\">≤ 12 ft between</text>\n<text x=\"330\" y=\"236\">≤ 6 ft</text>\n<text x=\"150\" y=\"236\">≤ 6 ft from the door</text>\n<text x=\"250\" y=\"236\">≤ 6 ft</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"206\" y=\"30\">closet opening (not wall space)</text>\n<text x=\"100\" y=\"140\">BEDROOM 14 ft × 12 ft</text>\n<text x=\"100\" y=\"156\">AFCI, tamper-resistant,</text>\n<text x=\"100\" y=\"172\">15 A or 20 A circuit</text>\n<text x=\"20\" y=\"282\">No point along the floor line of any wall space 2 ft or wider may be more than 6 ft from a receptacle (210.52(A)).</text>\n<text x=\"20\" y=\"296\">Measurement follows the wall around corners but stops at doorways, fireplaces and fixed cabinets.</text>\n</g>\n</svg>",
+      "caption": "Receptacles are placed so that no point along any wall space is more than 6 ft from one. The closet opening and the door are not wall space, so the measurement stops there; the measurement continues around the room's corners."
+    },
+    {
+      "type": "diagram",
+      "title": "Countertop receptacle spacing",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 220\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<rect x=\"20\" y=\"80\" width=\"440\" height=\"50\" rx=\"3\" fill=\"#9aa6b8\" fill-opacity=\"0.2\"/>\n<rect x=\"200\" y=\"88\" width=\"80\" height=\"34\" rx=\"6\"/>\n<circle cx=\"240\" cy=\"105\" r=\"4\"/>\n<rect x=\"380\" y=\"76\" width=\"60\" height=\"58\" stroke=\"#f3c75b\"/>\n<circle cx=\"395\" cy=\"92\" r=\"6\" stroke=\"#f3c75b\"/><circle cx=\"425\" cy=\"92\" r=\"6\" stroke=\"#f3c75b\"/>\n<circle cx=\"395\" cy=\"118\" r=\"6\" stroke=\"#f3c75b\"/><circle cx=\"425\" cy=\"118\" r=\"6\" stroke=\"#f3c75b\"/>\n</g>\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<circle cx=\"60\" cy=\"60\" r=\"7\"/><path d=\"M50 57 H70 M50 63 H70\"/>\n<circle cx=\"150\" cy=\"60\" r=\"7\"/><path d=\"M140 57 H160 M140 63 H160\"/>\n<circle cx=\"190\" cy=\"60\" r=\"7\"/><path d=\"M180 57 H200 M180 63 H200\"/>\n<circle cx=\"300\" cy=\"60\" r=\"7\"/><path d=\"M290 57 H310 M290 63 H310\"/>\n<circle cx=\"350\" cy=\"60\" r=\"7\"/><path d=\"M340 57 H360 M340 63 H360\"/>\n</g>\n<g fill=\"none\" stroke=\"#4cc9ff\" stroke-width=\"1.5\">\n<path d=\"M20 150 V165 M60 150 V165 M20 158 H60\"/>\n<path d=\"M60 150 V165 M150 150 V165 M60 158 H150\"/>\n<path d=\"M300 150 V165 M350 150 V165 M300 158 H350\"/>\n<path d=\"M350 150 V165 M380 150 V165 M350 158 H380\"/>\n</g>\n<g fill=\"#4cc9ff\">\n<text x=\"22\" y=\"180\">≤ 24 in</text>\n<text x=\"80\" y=\"180\">≤ 48 in apart</text>\n<text x=\"300\" y=\"180\">≤ 48 in</text>\n<text x=\"350\" y=\"196\">≤ 24 in</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"214\" y=\"84\">sink</text>\n<text x=\"392\" y=\"150\" fill=\"#f3c75b\">range</text>\n<text x=\"44\" y=\"40\">GFCI</text>\n<text x=\"134\" y=\"40\">GFCI</text>\n<text x=\"284\" y=\"40\">GFCI</text>\n<text x=\"20\" y=\"214\">Each wall counter 12 in or wider gets a receptacle; no point along the wall line more than 24 in from one; all 20 A small-appliance circuits.</text>\n</g>\n</svg>",
+      "caption": "Along a kitchen wall counter, a receptacle within 24 in of each end of a counter segment and no more than 48 in apart means no point is more than 24 in from a receptacle. The sink divides the counter into two spaces, each with its own receptacles, all GFCI-protected and on the 20 A small-appliance circuits."
+    },
+    {
+      "type": "text",
+      "heading": "GFCI and AFCI protection",
+      "markdown": "**GFCI** protection guards people against shock by tripping on a 5 mA imbalance; **AFCI** protection guards the building against fire by recognizing the electrical signature of arcing in damaged cords, loose terminals or pierced cable. They solve different problems, and many rooms need both.\n\n**GFCI (210.8(A), 2020 edition)** is required for all 125 through 250 V receptacles in dwelling units in: bathrooms; garages and accessory buildings; outdoors; crawl spaces; basements (finished or not); kitchens, for receptacles serving countertop surfaces (the 2023 edition expands this to all kitchen receptacles); within **6 ft** of the top inside edge of any sink; boathouses; within 6 ft of a bathtub or shower stall; laundry areas; and indoor damp and wet locations. **210.8(D)** adds specific appliances regardless of location: dishwashers in 2020, and in 2023 also ranges, wall ovens, cooktops, dryers, microwaves and sump pumps. GFCI protection can come from a GFCI breaker, a GFCI receptacle protecting itself and the outlets wired to its LOAD terminals, or a blank-face GFCI device; whichever is used, the reset must be **readily accessible**, which rules out hiding a GFCI receptacle behind the refrigerator.\n\n**AFCI (210.12(A))** is required for all 120 V, 15 and 20 A branch circuits supplying outlets or devices in dwelling **kitchens, family rooms, dining rooms, living rooms, parlors, libraries, dens, bedrooms, sunrooms, recreation rooms, closets, hallways, laundry areas and similar rooms**. In short: everywhere inside the living space. Bathrooms, garages, unfinished basements and outdoors are the usual exceptions. A **combination-type AFCI breaker** is the standard method; a listed outlet-branch-circuit AFCI receptacle may be used with restrictions on the home run. Where a circuit needs both protections, use a **dual-function breaker** (AFCI/GFCI) or an AFCI breaker with GFCI receptacles.\n\nCalifornia enforces these rules through the California Electrical Code, which adopts each NEC edition on the state's three-year cycle (the 2022 CEC is based on the 2020 NEC; the 2025 CEC on the 2023 NEC). Confirm which edition your jurisdiction has adopted before you buy breakers.\n\n**Smoke and CO alarms** are not an electrical-code item but every California dwelling needs them: 120 V interconnected smoke alarms with battery backup in each bedroom, outside each sleeping area and on every level, and carbon monoxide alarms outside sleeping areas on each level of homes with fuel-burning appliances or attached garages (California Residential Code R314 and R315). Keep them on a lighting circuit, not a receptacle circuit, so that a tripped GFCI does not silence them."
+    },
+    {
+      "type": "table",
+      "caption": "Protection by location in a dwelling (based on the 2020 NEC; the 2023 edition expands GFCI coverage)",
+      "columns": [
+        "Location",
+        "GFCI",
+        "AFCI",
+        "Typical device"
+      ],
+      "rows": [
+        [
+          "Bedroom, living room, den, hallway, closet",
+          "No (unless within 6 ft of a sink)",
+          "Yes",
+          "AFCI breaker"
+        ],
+        [
+          "Kitchen countertop receptacles",
+          "Yes",
+          "Yes",
+          "Dual-function breaker, or AFCI breaker + GFCI receptacles"
+        ],
+        [
+          "Dishwasher",
+          "Yes (210.8(D))",
+          "Yes",
+          "Dual-function breaker"
+        ],
+        [
+          "Laundry area",
+          "Yes",
+          "Yes",
+          "Dual-function breaker"
+        ],
+        [
+          "Bathroom",
+          "Yes",
+          "No",
+          "GFCI receptacle or breaker"
+        ],
+        [
+          "Garage, outdoors, crawl space, unfinished basement",
+          "Yes",
+          "No",
+          "GFCI receptacle or breaker; weather-resistant devices outdoors"
+        ],
+        [
+          "Finished basement family room",
+          "Yes (all basement receptacles, 2020)",
+          "Yes",
+          "Dual-function breaker"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Lighting circuits and switching",
+      "markdown": "**Required lighting outlets (210.70).** Every habitable room, kitchen and bathroom needs at least one **wall-switch-controlled lighting outlet**; in rooms other than kitchens and bathrooms, a switched receptacle may serve instead. Hallways, stairways, attached garages, detached garages with power, and every outdoor entrance with grade-level access need a switch-controlled light. Stairways with **six or more risers** need a switch at each floor level (three-way switching). Lighting outlets are also required in attics, crawl spaces, utility rooms and basements that contain equipment requiring service, with the switch at the entry.\n\n**Switch wiring.** A single-pole switch opens the **hot** conductor only; the neutral is never switched (404.2(B)). Since the 2011 edition, 404.2(C) requires a **grounded (neutral) conductor at nearly every switch box** so that occupancy sensors and smart switches have a return path; the old two-wire switch loop with the white re-identified as a hot is allowed only where the box is accessible for adding a neutral later. When a cable's white conductor is used as a hot in a switch loop it must be re-identified with black tape or paint at every termination (200.7(C)), and it must be the supply to the switch, not the switched leg to the light.\n\n**Three-way and four-way switches** control one light from two or more places. A three-way switch has a **common** terminal (darker screw) and two **traveler** terminals. The hot connects to the common of the first switch, the two travelers run between the switches, and the common of the second switch feeds the light. Any number of **four-way** switches between the three-ways swap the travelers to add more control points. Travelers are typically red and black (or a re-identified white in cable), and the neutral runs straight through to the light with a pigtail at each box.\n\n**Closet lighting (410.16).** Incandescent fixtures with open lamps are prohibited in closets. Surface-mounted fixtures with an enclosed light source need 12 in of clearance from the storage space and recessed fixtures 6 in; only LED fixtures specifically identified for use within closet storage spaces may go closer. Keep lights out of the storage zone entirely where you can.\n\n**California Title 24 Part 6 lighting rules.** All permanently installed lighting must be high-efficacy (LED meeting Joint Appendix JA8 for most fixtures). Bathrooms, garages, laundry rooms and utility rooms need at least one luminaire controlled by a **vacancy sensor** (manual on, automatic off). Most other rooms need dimmers or vacancy sensors on the controls; recessed fixtures must be airtight and IC-rated; and outdoor lighting attached to the building must be controlled by a photocell plus a motion sensor, or an astronomical time clock. These rules are enforced by the building inspector along with the CEC, and they change with every code cycle."
+    },
+    {
+      "type": "diagram",
+      "title": "Three-way switch circuit",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 220\" font-family=\"system-ui,sans-serif\" font-size=\"11\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M20 70 H110\"/>\n<path d=\"M20 170 H370\"/>\n<circle cx=\"112\" cy=\"70\" r=\"3\"/>\n<path d=\"M112 70 L150 52\"/>\n<circle cx=\"152\" cy=\"50\" r=\"3\"/><circle cx=\"152\" cy=\"90\" r=\"3\"/>\n<path d=\"M152 50 H290\" stroke=\"#f3c75b\"/>\n<path d=\"M152 90 H290\" stroke=\"#f3c75b\"/>\n<circle cx=\"292\" cy=\"50\" r=\"3\"/><circle cx=\"292\" cy=\"90\" r=\"3\"/>\n<path d=\"M292 50 L330 70\"/>\n<circle cx=\"332\" cy=\"70\" r=\"3\"/>\n<path d=\"M332 70 H370\"/>\n<circle cx=\"370\" cy=\"120\" r=\"20\"/>\n<path d=\"M356 106 L384 134 M384 106 L356 134\"/>\n<path d=\"M370 70 V100 M370 140 V170\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"20\" y=\"60\">hot (black)</text>\n<text x=\"20\" y=\"186\">neutral (white)</text>\n<text x=\"96\" y=\"110\">S1 common</text>\n<text x=\"200\" y=\"44\" fill=\"#f3c75b\">travelers (red and re-identified white, or two reds)</text>\n<text x=\"200\" y=\"106\" fill=\"#f3c75b\">either traveler can carry the hot</text>\n<text x=\"300\" y=\"110\">S2 common</text>\n<text x=\"404\" y=\"124\">lamp</text>\n<text x=\"20\" y=\"210\">Each three-way switch connects its common to one of two travelers. Both switches on the same traveler = light on; different travelers = light off.</text>\n</g>\n</svg>",
+      "caption": "The hot lands on the common of the first switch, two travelers connect the switches, and the second switch's common feeds the lamp. When both switches select the same traveler the circuit is complete; flipping either switch breaks it."
+    },
+    {
+      "type": "example",
+      "problem": "Lay out the receptacles for a 14 ft × 12 ft bedroom. The 3 ft entry door is at the corner of one 12 ft wall (wall A) adjacent to wall D, and a 6 ft closet opening is centered on the opposite 12 ft wall (wall C). Walls B and D are the 14 ft walls. How many receptacles does the code require, what circuit and protection apply, and what would a practical layout look like?",
+      "solutionSteps": [
+        "Identify the wall spaces. The door and the closet opening break the floor line, so there are two continuous wall spaces measured around the corners: Space 1 runs from the door edge along wall A (12 − 3 = 9 ft), around the corner along wall B (14 ft), and along wall C to the closet (3 ft): 26 ft. Space 2 runs from the other side of the closet along wall C (3 ft), around the corner along wall D (14 ft), and ends at the door: 17 ft.",
+        "Each receptacle covers 6 ft in each direction along the floor line, so one receptacle covers at most 12 ft of continuous wall space. Space 1 (26 ft) needs at least 3 receptacles (3 × 12 = 36 ft ≥ 26 ft), with the first within 6 ft of the door and the last within 6 ft of the closet. Space 2 (17 ft) needs at least 2.",
+        "Code minimum: 5 receptacles. Each 3 ft section of wall C beside the closet is 2 ft or wider, so it counts as wall space and must be within 6 ft of a receptacle; placing the end receptacles on wall B and wall D near the wall C corners covers them.",
+        "Practical layout: 6 or 7 receptacles, with a pair on either side of the likely bed location on wall B, one on each side of the window, and one near the door for a lamp, so cords never cross a walkway. Every one is tamper-resistant.",
+        "Circuit and protection: a 15 A (14 AWG) or 20 A (12 AWG) general circuit on a combination-type AFCI breaker (210.12). No GFCI is required unless a sink is within 6 ft. Add a wall-switch-controlled lighting outlet (210.70(A)(1)); in California the fixture must be high-efficacy on a dimmer or vacancy sensor, and the switch box needs a neutral (404.2(C)).",
+        "Interconnected smoke alarm in the bedroom, on the lighting circuit."
+      ],
+      "answer": "Code minimum 5 receptacles (3 in the 26 ft wall space, 2 in the 17 ft wall space); a practical plan uses 6 or 7; AFCI-protected 15 or 20 A circuit, tamper-resistant receptacles, switch-controlled high-efficacy light with a neutral at the switch."
+    }
+  ],
+  "practice": [
+    {
+      "id": "residential-circuit-layout-p1",
+      "type": "numeric",
+      "prompt": "A 1,500 ft² house will have its general lighting and receptacle circuits wired at 15 A. What is the minimum number of general circuits required?",
+      "answer": 3,
+      "unit": "circuits",
+      "tolerance": 0.1,
+      "explanation": "1,500 × 3 VA = 4,500 VA; 4,500 ÷ 1,800 VA per 15 A circuit = 2.5, rounded up to 3."
+    },
+    {
+      "id": "residential-circuit-layout-p2",
+      "type": "numeric",
+      "prompt": "How many 20 A small-appliance branch circuits does NEC 210.11(C)(1) require, at minimum, for the kitchen and dining area receptacles?",
+      "answer": 2,
+      "unit": "circuits",
+      "tolerance": 0.1,
+      "explanation": "Two or more 20 A small-appliance circuits, and the countertop receptacles must be split between at least two of them."
+    },
+    {
+      "id": "residential-circuit-layout-p3",
+      "type": "numeric",
+      "prompt": "A continuous 8 ft wall countertop has no sink or range. What is the minimum number of receptacles required along it under the 24 in rule?",
+      "answer": 2,
+      "unit": "receptacles",
+      "tolerance": 0.1,
+      "explanation": "Each receptacle covers 24 in in each direction (48 in total). An 8 ft (96 in) counter needs 2 receptacles, placed within 24 in of each end and no more than 48 in apart."
+    },
+    {
+      "id": "residential-circuit-layout-p4",
+      "type": "multiple_choice",
+      "prompt": "Which location requires BOTH AFCI and GFCI protection for its receptacles under the 2020 NEC?",
+      "choices": [
+        "Bathroom",
+        "Attached garage",
+        "Kitchen countertop",
+        "Outdoor patio"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kitchens are on the AFCI list in 210.12(A) and countertop receptacles are on the GFCI list in 210.8(A)(6). Bathrooms, garages and outdoors require GFCI but not AFCI."
+    },
+    {
+      "id": "residential-circuit-layout-p5",
+      "type": "multiple_choice",
+      "prompt": "A stairway between two floors has nine risers. What does 210.70(A)(2) require for its lighting?",
+      "choices": [
+        "A single switch at the bottom",
+        "A wall switch at each floor level, so three-way switching",
+        "A pull-chain fixture at the landing",
+        "Nothing, if the hallway lights illuminate the stairs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Stairways with six or more risers between floor levels must have a switch at each level to control the lighting."
+    },
+    {
+      "id": "residential-circuit-layout-p6",
+      "type": "multiple_choice",
+      "prompt": "On a three-way switch, which terminal does the incoming hot conductor connect to at the first switch?",
+      "choices": [
+        "Either traveler terminal",
+        "The common terminal (the darker screw)",
+        "The green grounding screw",
+        "The neutral terminal"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hot to the common of the first switch, travelers between switches, common of the second switch to the light."
+    },
+    {
+      "id": "residential-circuit-layout-p7",
+      "type": "multiple_choice",
+      "prompt": "Which dwelling receptacle outlet rule is stated correctly?",
+      "choices": [
+        "Bathroom receptacles must be within 6 ft of the basin",
+        "Outdoor receptacles are required only at the front of the house",
+        "A receptacle is required within 3 ft of the outside edge of each bathroom basin",
+        "Hallways need a receptacle only if they are 20 ft or longer"
+      ],
+      "correctIndex": 2,
+      "explanation": "210.52(D): within 3 ft of each basin. Outdoor receptacles are required front and back (210.52(E)); hallways 10 ft or longer need one (210.52(H))."
+    }
+  ],
+  "quiz": {
+    "key": "residential-circuit-layout-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "residential-circuit-layout-q1",
+        "type": "numeric",
+        "prompt": "What general lighting load, in VA, does the NEC assign to a 2,400 ft² dwelling at 3 VA per square foot?",
+        "answer": 7200,
+        "unit": "VA",
+        "tolerance": 1,
+        "explanation": "2,400 × 3 = 7,200 VA, before adding small-appliance, laundry and fixed-appliance loads."
+      },
+      {
+        "id": "residential-circuit-layout-q2",
+        "type": "numeric",
+        "prompt": "Using 20 A circuits, what is the minimum number of general lighting and receptacle circuits for that 2,400 ft² dwelling?",
+        "answer": 3,
+        "unit": "circuits",
+        "tolerance": 0.1,
+        "explanation": "7,200 ÷ 2,400 VA per 20 A circuit = 3 circuits exactly."
+      },
+      {
+        "id": "residential-circuit-layout-q3",
+        "type": "multiple_choice",
+        "prompt": "Which of these may be connected to a kitchen small-appliance branch circuit?",
+        "choices": [
+          "The kitchen ceiling lights",
+          "The refrigerator receptacle",
+          "An outdoor patio receptacle",
+          "The garbage disposal switch and motor"
+        ],
+        "correctIndex": 1,
+        "explanation": "210.52(B) limits small-appliance circuits to receptacles in the kitchen, pantry, dining and breakfast areas; the refrigerator may be on one (or on its own individual 15 A circuit). Lighting and other outlets are not permitted."
+      },
+      {
+        "id": "residential-circuit-layout-q4",
+        "type": "numeric",
+        "prompt": "Along a wall space, what is the maximum distance in feet between two adjacent receptacles that still satisfies the 6 ft rule?",
+        "answer": 12,
+        "unit": "ft",
+        "tolerance": 0.1,
+        "explanation": "Each receptacle covers 6 ft in both directions, so receptacles may be up to 12 ft apart along a continuous wall."
+      },
+      {
+        "id": "residential-circuit-layout-q5",
+        "type": "multiple_choice",
+        "prompt": "A GFCI receptacle is installed behind the refrigerator to protect the countertop receptacles downstream. What is wrong?",
+        "choices": [
+          "Nothing; this is a common and accepted practice",
+          "GFCI reset devices must be readily accessible, and the refrigerator should not be on a GFCI-protected countertop circuit arrangement that the customer cannot reset",
+          "Refrigerators may not be on 20 A circuits",
+          "GFCI receptacles may not feed other receptacles"
+        ],
+        "correctIndex": 1,
+        "explanation": "210.8 requires GFCI protection to be readily accessible. A device behind an appliance fails that test, and a tripped device would spoil the food before anyone found it."
+      },
+      {
+        "id": "residential-circuit-layout-q6",
+        "type": "multiple_choice",
+        "prompt": "Which rooms are NOT on the AFCI list in 210.12(A)?",
+        "choices": [
+          "Bedrooms and closets",
+          "Kitchens and laundry areas",
+          "Bathrooms and garages",
+          "Living rooms and hallways"
+        ],
+        "correctIndex": 2,
+        "explanation": "AFCI is required in essentially all living spaces; bathrooms, garages, unfinished basements and outdoor circuits are the usual exceptions (they need GFCI instead)."
+      },
+      {
+        "id": "residential-circuit-layout-q7",
+        "type": "multiple_choice",
+        "prompt": "What does NEC 404.2(C) require at most switch locations in a dwelling?",
+        "choices": [
+          "A grounded (neutral) conductor in the switch box",
+          "A 20 A circuit",
+          "A dimmer",
+          "Two switches per room"
+        ],
+        "correctIndex": 0,
+        "explanation": "A neutral must be provided at switch boxes so that electronic controls have a return path, with limited exceptions where a neutral can be added later."
+      },
+      {
+        "id": "residential-circuit-layout-q8",
+        "type": "multiple_choice",
+        "prompt": "In a cable-wired switch loop, the white conductor is used as the hot supply to the switch. What does 200.7(C) require?",
+        "choices": [
+          "Nothing; white may be a hot in any cable assembly",
+          "Re-identify the white conductor as a hot with tape or paint at every termination, and use it for the supply to the switch, not the switched leg",
+          "Replace the cable with conduit and a black conductor",
+          "Use the white conductor as the switched leg to the light"
+        ],
+        "correctIndex": 1,
+        "explanation": "Re-identification is required at each visible point, and the re-identified conductor must be the supply to the switch so the switched leg is a colored conductor."
+      },
+      {
+        "id": "residential-circuit-layout-q9",
+        "type": "multiple_choice",
+        "prompt": "Under California Title 24 Part 6, which rooms must have at least one luminaire controlled by a vacancy sensor?",
+        "choices": [
+          "Bedrooms only",
+          "Bathrooms, garages, laundry rooms and utility rooms",
+          "Living rooms and dining rooms",
+          "No rooms; sensors are optional in dwellings"
+        ],
+        "correctIndex": 1,
+        "explanation": "The residential lighting controls in section 150.0(k) require vacancy sensors in bathrooms, garages, laundry rooms and utility rooms, plus dimmers or sensors in most other spaces."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code, 210.3, 210.4, 210.8, 210.11, 210.12, 210.21, 210.23, 210.52, 210.63, 210.70, 220.12/220.41, 300.13, 404.2, 406.9, 406.12, 410.16 (by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Electrical Code, Title 24 Part 3 (California amendments to the NEC)",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "California Energy Commission, Title 24 Part 6 Residential Lighting requirements (section 150.0(k)) and Residential Compliance Manual",
+      "url": "https://www.energy.ca.gov/programs-and-topics/programs/building-energy-efficiency-standards"
+    },
+    {
+      "title": "California Green Building Standards Code (CALGreen), Title 24 Part 11, section 4.106.4 Electric vehicle charging",
+      "url": "https://www.dgs.ca.gov/BSC/CALGreen"
+    },
+    {
+      "title": "California Residential Code, Title 24 Part 2.5, R314 Smoke alarms and R315 Carbon monoxide alarms",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "OSHA / NIOSH Electrical Safety student manual (residential wiring hazards chapter)",
+      "url": "https://www.cdc.gov/niosh/docs/2009-113/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

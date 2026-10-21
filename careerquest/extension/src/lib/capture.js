@@ -102,14 +102,16 @@ export function decideAction(detection) {
 export function mergeWithLastJob(detection, lastJob) {
   if (!lastJob) return detection;
   const merged = { ...detection };
+  let filled = false;
   for (const key of ["company", "title", "location", "salaryText", "requisitionId"]) {
-    if (!merged[key] && lastJob[key]) merged[key] = lastJob[key];
+    if (!merged[key] && lastJob[key]) {
+      merged[key] = lastJob[key];
+      filled = true;
+    }
   }
-  if (!merged.detectedBy?.length) merged.detectedBy = [];
-  if (merged !== detection && lastJob.url && lastJob.url !== detection.url) {
-    merged.detectedBy = [...merged.detectedBy, "prefilled-from-job-page"];
-    merged.jobPageUrl = lastJob.url;
-  }
+  if (!filled) return detection;
+  merged.detectedBy = [...(Array.isArray(merged.detectedBy) ? merged.detectedBy : []), "prefilled-from-job-page"];
+  if (lastJob.url) merged.jobPageUrl = lastJob.url;
   return merged;
 }
 

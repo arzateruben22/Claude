@@ -1,0 +1,392 @@
+{
+  "key": "transformers-basics",
+  "track": "SYSTEMS",
+  "order": 1,
+  "title": "Transformers: Basics",
+  "summary": "How a transformer changes AC voltage with no moving parts, how the turns ratio sets voltage and current, and how electricians read a nameplate, size primary protection and treat the secondary as a new, separately derived system.",
+  "estimatedMinutes": 30,
+  "prerequisites": [
+    "magnetism-and-induction",
+    "ac-and-dc"
+  ],
+  "objectives": [
+    "Students will be able to explain, in terms of mutual induction, why a transformer works only on AC.",
+    "Students will be able to use the turns ratio to find secondary voltage, and the kVA rating to find rated primary and secondary current for single-phase and three-phase units.",
+    "Students will be able to read the key fields on a transformer nameplate, including kVA, voltages, impedance and taps, and explain why impedance matters for available fault current.",
+    "Students will be able to identify common transformer types on a job (control, dry-type distribution, buck-boost, current transformer) and state the one rule that keeps a current transformer from becoming a hazard.",
+    "Students will be able to describe where NEC Article 450 and 250.30 apply when a transformer creates a new separately derived system."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "What a transformer does",
+      "markdown": "A transformer moves electrical energy from one circuit to another through a shared magnetic field, changing the voltage on the way. It has no moving parts, needs no maintenance beyond keeping it cool and clean, and is one of the most efficient machines ever built (large units run at 98–99 % efficiency).\n\nIn the field you meet transformers everywhere:\n\n- **Utility transformers** on poles or pads step 12 kV distribution down to 120/240 V or 480Y/277 V for a building.\n- **Dry-type distribution transformers** in an electrical room step 480 V down to 208Y/120 V for receptacles and lighting.\n- **Control transformers** inside motor starters make 120 V or 24 V for the control circuit from a 480 V supply.\n- **Doorbell, thermostat and irrigation transformers** make 16–24 V Class 2 circuits.\n- **Current transformers (CTs)** scale hundreds of amps down to 5 A or a millivolt signal for meters.\n\nThe side connected to the source is the **primary**; the side feeding the load is the **secondary**. A transformer that lowers voltage is **step-down**; one that raises it is **step-up**. The same unit can do either, which is why the nameplate names windings by voltage and terminal letters (H for high, X for low) rather than by which side is the source."
+    },
+    {
+      "type": "text",
+      "heading": "Why it needs AC: mutual induction",
+      "markdown": "Current in the primary coil magnetizes the steel core. Because the supply is AC, that magnetic flux rises, falls and reverses 60 times a second. A changing flux passing through the secondary coil induces a voltage in it (Faraday's law, the same effect you met in the lesson on magnetism and induction). Steady DC would magnetize the core once and then induce nothing; worse, with no changing flux the primary has almost no opposition to current, so a DC-connected transformer winding simply overheats.\n\nTwo details explain most transformer behavior:\n\n1. **Every turn of wire on the core sees the same volts per turn.** If the primary has 400 turns across 480 V, each turn sees 1.2 V. A 100-turn secondary therefore produces 120 V. This is the turns ratio.\n2. **Power in equals power out (minus small losses).** If the secondary delivers 120 V at 16 A (1,920 VA), the primary must draw 1,920 VA from the 480 V source, which is 4 A. Step the voltage down four times and the current goes up four times.\n\nThe core is built from thin, insulated steel laminations rather than a solid block. The laminations break up circulating **eddy currents** that would otherwise heat the core, and the particular steel is chosen to minimize **hysteresis** loss (the energy spent re-magnetizing the core each half cycle). Together those two are the **core losses**, present whenever the transformer is energized, even with no load. The resistance of the windings causes **copper losses** (I²R), which rise with load."
+    },
+    {
+      "type": "diagram",
+      "title": "The ideal transformer",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 270\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"50\" cy=\"135\" r=\"18\"/><path d=\"M38 135 q6 -12 12 0 t12 0\" stroke=\"#4cc9ff\"/><path d=\"M50 117 V60 H160 V85\"/><path d=\"M50 153 V210 H160 V185\"/><path d=\"M160 85 a9 10 0 0 1 0 20 a9 10 0 0 1 0 20 a9 10 0 0 1 0 20 a9 10 0 0 1 0 20 a9 10 0 0 1 0 20\" stroke=\"#f3c75b\"/><rect x=\"178\" y=\"60\" width=\"8\" height=\"150\" fill=\"#9aa6b8\" stroke=\"none\"/><rect x=\"194\" y=\"60\" width=\"8\" height=\"150\" fill=\"#9aa6b8\" stroke=\"none\"/><path d=\"M220 105 a9 10 0 0 0 0 20 a9 10 0 0 0 0 20 a9 10 0 0 0 0 20\" stroke=\"#3ddc97\"/><path d=\"M220 105 V60 H340 V110\"/><path d=\"M220 165 V210 H340 V160\"/><rect x=\"330\" y=\"110\" width=\"20\" height=\"50\"/><text x=\"40\" y=\"190\" fill=\"currentColor\" stroke=\"none\" font-size=\"11\">AC source</text><text x=\"92\" y=\"52\" fill=\"currentColor\" stroke=\"none\">Ip</text><path d=\"M100 70 h20\" stroke=\"#4cc9ff\"/><path d=\"M116 66 l4 4 -4 4\" stroke=\"#4cc9ff\"/><text x=\"262\" y=\"52\" fill=\"currentColor\" stroke=\"none\">Is</text><path d=\"M270 70 h20\" stroke=\"#4cc9ff\"/><path d=\"M286 66 l4 4 -4 4\" stroke=\"#4cc9ff\"/><text x=\"110\" y=\"140\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\">Vp</text><text x=\"112\" y=\"156\" fill=\"#f3c75b\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Np turns</text><text x=\"290\" y=\"140\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\">Vs</text><text x=\"290\" y=\"156\" fill=\"#3ddc97\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">Ns turns</text><text x=\"190\" y=\"232\" fill=\"#9aa6b8\" stroke=\"none\" text-anchor=\"middle\" font-size=\"11\">laminated steel core</text><text x=\"372\" y=\"140\" fill=\"currentColor\" stroke=\"none\">Load</text><text x=\"240\" y=\"258\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"13\">Vp / Vs = Np / Ns = Is / Ip   (ideal transformer)</text></svg>",
+      "caption": "Primary winding (gold) with Np turns, laminated core (gray), secondary winding (green) with Ns turns feeding a load. Voltage scales with the turns ratio; current scales the opposite way, so the volt-amperes on each side are equal."
+    },
+    {
+      "type": "formula",
+      "name": "Turns ratio and current ratio",
+      "expression": "Vp / Vs = Np / Ns = Is / Ip",
+      "variables": [
+        {
+          "symbol": "Vp, Vs",
+          "meaning": "primary and secondary voltage",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "Np, Ns",
+          "meaning": "number of turns on the primary and secondary windings",
+          "unit": "turns"
+        },
+        {
+          "symbol": "Ip, Is",
+          "meaning": "primary and secondary current",
+          "unit": "amperes (A)"
+        }
+      ],
+      "explanation": "Voltage is proportional to turns; current is inversely proportional to turns. A 4:1 ratio (480 V to 120 V) means the secondary current is four times the primary current. You rarely know the turn counts, but you always know the voltages, so in practice the ratio is simply Vp ÷ Vs."
+    },
+    {
+      "type": "formula",
+      "name": "Rated current from kVA",
+      "expression": "I = kVA × 1000 ÷ V   (single-phase)        I = kVA × 1000 ÷ (1.732 × V_line)   (three-phase)",
+      "variables": [
+        {
+          "symbol": "kVA",
+          "meaning": "nameplate apparent-power rating",
+          "unit": "kilovolt-amperes (kVA)"
+        },
+        {
+          "symbol": "V",
+          "meaning": "nameplate voltage of the winding you are solving for (line-to-line for three-phase)",
+          "unit": "volts (V)"
+        },
+        {
+          "symbol": "I",
+          "meaning": "rated full-load current of that winding",
+          "unit": "amperes (A)"
+        }
+      ],
+      "explanation": "Transformers are rated in kVA, not kW, because the transformer heats according to the current it carries regardless of the load's power factor. Use the primary voltage to get rated primary current and the secondary voltage to get rated secondary current. The 1.732 (√3) factor for three-phase units is explained in the three-phase lesson."
+    },
+    {
+      "type": "example",
+      "problem": "A 2 kVA single-phase control transformer is rated 480 V primary, 120 V secondary. Find the turns ratio, the rated primary current and the rated secondary current.",
+      "solutionSteps": [
+        "Turns ratio = Vp ÷ Vs = 480 ÷ 120 = 4:1 (step-down).",
+        "Rated primary current: Ip = 2,000 VA ÷ 480 V = 4.17 A.",
+        "Rated secondary current: Is = 2,000 VA ÷ 120 V = 16.7 A.",
+        "Check with the ratio: 16.7 A ÷ 4.17 A = 4, matching the 4:1 turns ratio."
+      ],
+      "answer": "Ratio 4:1; primary 4.17 A; secondary 16.7 A. A 20 A secondary fuse and a 5 A primary fuse would be typical starting points, with the NEC Article 450 and 430.72 limits checked before installation."
+    },
+    {
+      "type": "example",
+      "problem": "A 75 kVA dry-type transformer is 480 V delta primary to 208Y/120 V secondary, three-phase, with 3.6 % impedance. Find rated primary and secondary current, and estimate the maximum fault current available at the secondary terminals.",
+      "solutionSteps": [
+        "Primary current: 75,000 ÷ (1.732 × 480) = 75,000 ÷ 831.4 = 90.2 A.",
+        "Secondary current: 75,000 ÷ (1.732 × 208) = 75,000 ÷ 360.3 = 208.2 A.",
+        "Percent impedance is the fraction of rated primary voltage needed to push rated current through a bolted short on the secondary. With full voltage applied, the fault current is roughly rated current ÷ (%Z ÷ 100).",
+        "Isc ≈ 208.2 A ÷ 0.036 = 5,783 A (assuming an infinite source on the primary; a real utility source makes it a little lower).",
+        "Primary overcurrent protection on the primary side only: 450.3(B) allows up to 125 % of 90.2 A = 112.8 A; the next standard size up (125 A) is permitted by the table note."
+      ],
+      "answer": "Primary 90.2 A, secondary 208.2 A, available secondary fault current about 5,800 A. Downstream panels and breakers must have an interrupting rating at least that high (NEC 110.9)."
+    },
+    {
+      "type": "diagram",
+      "title": "Reading a distribution transformer nameplate",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 480 230\" font-family=\"ui-sans-serif, system-ui, sans-serif\" font-size=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"20\" y=\"15\" width=\"440\" height=\"200\" rx=\"6\"/><text x=\"240\" y=\"40\" fill=\"currentColor\" stroke=\"none\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\">DRY-TYPE TRANSFORMER  —  3 PHASE  60 Hz</text><line x1=\"20\" y1=\"50\" x2=\"460\" y2=\"50\" stroke=\"#9aa6b8\"/><g fill=\"currentColor\" stroke=\"none\"><text x=\"35\" y=\"75\">kVA: <tspan fill=\"#f3c75b\">75</tspan></text><text x=\"35\" y=\"100\">PRIMARY: <tspan fill=\"#f3c75b\">480 V DELTA</tspan></text><text x=\"35\" y=\"125\">SECONDARY: <tspan fill=\"#3ddc97\">208Y/120 V</tspan></text><text x=\"35\" y=\"150\">IMPEDANCE: <tspan fill=\"#ff6b6b\">3.6 %</tspan></text><text x=\"35\" y=\"175\">TEMP RISE: 150 °C   CLASS: 220 °C</text><text x=\"35\" y=\"200\">TAPS: 2 above / 4 below, 2.5 % each</text><text x=\"260\" y=\"75\">PRIMARY AMPS: <tspan fill=\"#f3c75b\">90.2</tspan></text><text x=\"260\" y=\"100\">SECONDARY AMPS: <tspan fill=\"#3ddc97\">208.2</tspan></text><text x=\"260\" y=\"125\">H1 H2 H3  —  X0 X1 X2 X3</text><text x=\"260\" y=\"150\">WEIGHT: 650 lb   TYPE: AA</text><text x=\"260\" y=\"175\">ENCLOSURE: NEMA 1</text><text x=\"260\" y=\"200\" fill=\"#4cc9ff\">K-FACTOR: K-1   Listed</text></g></svg>",
+      "caption": "A typical nameplate. kVA, winding voltages, impedance and tap information are the fields electricians use most. H terminals are the high-voltage winding; X terminals are the low-voltage winding, with X0 the neutral of a wye secondary."
+    },
+    {
+      "type": "table",
+      "caption": "Transformer types you will meet on the job",
+      "columns": [
+        "Type",
+        "Typical ratings",
+        "Where used",
+        "Field notes"
+      ],
+      "rows": [
+        [
+          "Dry-type distribution",
+          "15–500 kVA, 480 Δ to 208Y/120",
+          "Electrical rooms, commercial buildings",
+          "Needs ventilation clearance per nameplate; wall- or floor-mounted; NEC Article 450"
+        ],
+        [
+          "Control transformer",
+          "50 VA–5 kVA, 480 or 240 to 120 or 24 V",
+          "Motor control panels, HVAC",
+          "Secondary fused and usually grounded on one side; feeds coils, pilot lights, PLC inputs"
+        ],
+        [
+          "Buck-boost",
+          "0.25–10 kVA, 12/24 or 16/32 V secondary",
+          "Correcting 208 V to 230 V or 240 V to 208 V",
+          "Wired as an autotransformer; secondary kVA is small but it handles the whole load current"
+        ],
+        [
+          "Autotransformer",
+          "Any",
+          "Motor reduced-voltage starters, some lighting",
+          "Single tapped winding; cheaper and smaller but provides no isolation between circuits"
+        ],
+        [
+          "Current transformer (CT)",
+          "100:5 to 4000:5; or 333 mV output",
+          "Metering, relaying, monitoring",
+          "Never leave the secondary open while the primary carries current; short the terminals first"
+        ],
+        [
+          "Isolation transformer",
+          "1:1 ratio",
+          "Hospitals (Article 517), sensitive equipment",
+          "Separates the secondary from the supply ground reference to limit leakage current"
+        ],
+        [
+          "Class 2 low-voltage",
+          "16–24 V, under 100 VA",
+          "Doorbells, thermostats, irrigation, LED tape",
+          "Output limited so Class 2 wiring methods are allowed on the secondary"
+        ]
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "safety",
+      "text": "A current transformer with its primary energized and its secondary open-circuited can develop thousands of volts across the secondary terminals: the full primary ampere-turns try to magnetize the core with nothing to oppose them. People have been killed removing a meter from a CT circuit. Always close the shorting block or jumper the secondary before disconnecting anything, and treat CT secondaries as live even though they are \"only 5 A.\""
+    },
+    {
+      "type": "text",
+      "heading": "Taps, polarity, inrush and regulation",
+      "markdown": "**Taps.** Most distribution transformers have primary taps, typically two 2.5 % taps above and four below nominal. If the 480 V supply actually measures 492 V, moving to the +2.5 % tap (492 V nominal) brings the secondary back to 208/120. Taps are changed only with the transformer de-energized and locked out.\n\n**Polarity and terminal marking.** H1 and X1 have the same instantaneous polarity. This matters when you parallel transformers or wire a buck-boost; connecting X1 to the wrong H terminal subtracts voltage instead of adding it, and connecting two units in parallel with opposite polarity produces a dead short.\n\n**Inrush.** When a transformer is first energized, the core may saturate for a few cycles and draw 10 to 25 times rated current. That is why Table 450.3(B) allows primary protection well above 100 % of rated current, and why a breaker sized too tightly to the rated primary current nuisance-trips at switch-on. Time-delay fuses and inverse-time breakers are chosen with inrush in mind.\n\n**Voltage regulation.** As load increases, the secondary voltage sags slightly because of winding resistance and leakage reactance (the same %Z from the nameplate). Regulation = (no-load voltage − full-load voltage) ÷ full-load voltage. A 3.6 %Z unit will drop a few percent at full load with a lagging power factor, which is one reason 208 V nominal systems often read 203–206 V under load.\n\n**Noise and heat.** The hum you hear is magnetostriction of the core at 120 Hz. Louder-than-usual hum or a rise in temperature can mean overvoltage, harmonic loading or loose laminations. A K-rated transformer (K-4, K-13) is built with extra neutral capacity and a core that tolerates harmonic currents from electronic loads."
+    },
+    {
+      "type": "text",
+      "heading": "The secondary is a new system: NEC Article 450 and 250.30",
+      "markdown": "From the Code's point of view, a transformer secondary with no direct electrical connection to the service conductors is a **separately derived system**. That triggers several requirements you must plan for before pulling wire:\n\n- **Overcurrent protection** for the transformer itself follows Article 450 (Table 450.3(B) for units 1,000 V and below), and the **secondary conductors** are protected according to 240.21(C), which has specific length-limited rules (10 ft and 25 ft secondary conductor rules) because the secondary conductors are not protected by the primary device alone.\n- **Grounding** follows 250.30. A system bonding jumper connects the secondary neutral (X0) to the transformer enclosure and equipment grounding conductor at one point only, and a grounding electrode conductor from that point runs to the nearest available building electrode (structural steel or metal water pipe). The size comes from Table 250.66 based on the secondary conductor size, and a supply-side bonding jumper of the right size runs with the secondary conductors.\n- **Disconnecting means** (450.14) must be in sight of the transformer or lockable, and the transformer needs **working space** and ventilation clearances (110.26 and the nameplate).\n- **Location rules** in 450.21 and 450.22 govern dry-type transformers above 112.5 kVA (fire-rated rooms unless the unit is of a lower temperature class) and oil-filled units (vaults, Article 450 Part III).\n\nThe most common field error is bonding the secondary neutral to ground in two places (at the transformer and again at the first panel). That puts normal neutral current on the equipment grounding conductors and conduit. Bond once, at the transformer or at the first disconnect, never both.\n\n**Field tip.** When you energize a new dry-type transformer, measure all three secondary line-to-line voltages and all three line-to-neutral voltages before connecting load. Expect them within about 1 % of each other. A phase-to-neutral reading that is far off means X0 is not landed correctly or a winding is miswired; find it now, not after someone plugs in a computer."
+    }
+  ],
+  "practice": [
+    {
+      "id": "transformers-basics-p1",
+      "type": "numeric",
+      "prompt": "A transformer has 600 primary turns and 50 secondary turns. The primary is connected to 240 V. What is the secondary voltage?",
+      "answer": 20,
+      "unit": "V",
+      "tolerance": 0.2,
+      "explanation": "Vs = Vp × Ns ÷ Np = 240 × 50 ÷ 600 = 20 V. Volts per turn is 0.4 V; 50 turns gives 20 V."
+    },
+    {
+      "id": "transformers-basics-p2",
+      "type": "numeric",
+      "prompt": "A 5 kVA single-phase transformer is rated 240 V to 120 V. What is its rated secondary current?",
+      "answer": 41.7,
+      "unit": "A",
+      "tolerance": 0.5,
+      "explanation": "I = 5,000 VA ÷ 120 V = 41.7 A. The primary would carry half that, 20.8 A."
+    },
+    {
+      "id": "transformers-basics-p3",
+      "type": "numeric",
+      "prompt": "A 45 kVA three-phase transformer has a 480 V primary. Find the rated primary line current.",
+      "answer": 54.1,
+      "unit": "A",
+      "tolerance": 0.6,
+      "explanation": "I = 45,000 ÷ (1.732 × 480) = 45,000 ÷ 831.4 = 54.1 A."
+    },
+    {
+      "id": "transformers-basics-p4",
+      "type": "multiple_choice",
+      "prompt": "Why will a transformer not work on steady DC?",
+      "choices": [
+        "DC produces a constant magnetic flux, and only a changing flux induces voltage in the secondary",
+        "DC cannot flow through copper windings",
+        "The laminated core blocks DC",
+        "DC voltage is always too low to magnetize the core"
+      ],
+      "correctIndex": 0,
+      "explanation": "Induction requires changing flux. Steady DC magnetizes the core once and then induces nothing, while the winding, with little opposition to DC, overheats."
+    },
+    {
+      "id": "transformers-basics-p5",
+      "type": "multiple_choice",
+      "prompt": "A transformer nameplate reads 4.0 % impedance and the rated secondary current is 300 A. Approximately what fault current is available at the secondary terminals with a stiff source?",
+      "choices": [
+        "1,200 A",
+        "3,000 A",
+        "7,500 A",
+        "12,000 A"
+      ],
+      "correctIndex": 2,
+      "explanation": "Isc ≈ 300 A ÷ 0.04 = 7,500 A. Downstream equipment must be rated to interrupt at least this current (NEC 110.9)."
+    },
+    {
+      "id": "transformers-basics-p6",
+      "type": "multiple_choice",
+      "prompt": "Which statement about a transformer secondary that has no electrical connection to the service is correct?",
+      "choices": [
+        "It must be bonded to ground at the transformer and again at every downstream panel",
+        "It is a separately derived system; the neutral is bonded to the grounding system at one point only, per 250.30",
+        "It needs no grounding because the transformer isolates it",
+        "Its conductors are automatically protected by the primary breaker, so no secondary protection is ever needed"
+      ],
+      "correctIndex": 1,
+      "explanation": "A separately derived system is bonded once, with a grounding electrode conductor from that point. Bonding twice puts neutral current on equipment grounds. Secondary conductor protection follows 240.21(C)."
+    },
+    {
+      "id": "transformers-basics-p7",
+      "type": "numeric",
+      "prompt": "The secondary of a 10 kVA, 480 V to 120 V transformer delivers 60 A to a resistive load. Ignoring losses, what current does the primary draw?",
+      "answer": 15,
+      "unit": "A",
+      "tolerance": 0.3,
+      "explanation": "Power is conserved: 120 V × 60 A = 7,200 VA; 7,200 ÷ 480 = 15 A. Equivalently, the 4:1 ratio divides the current by 4."
+    }
+  ],
+  "quiz": {
+    "key": "transformers-basics-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "transformers-basics-q1",
+        "type": "numeric",
+        "prompt": "A step-down transformer has a 10:1 turns ratio and 277 V applied to the primary. What is the secondary voltage?",
+        "answer": 27.7,
+        "unit": "V",
+        "tolerance": 0.3,
+        "explanation": "Vs = 277 ÷ 10 = 27.7 V."
+      },
+      {
+        "id": "transformers-basics-q2",
+        "type": "numeric",
+        "prompt": "A 3 kVA control transformer has a 120 V secondary. What is the rated secondary current?",
+        "answer": 25,
+        "unit": "A",
+        "tolerance": 0.3,
+        "explanation": "3,000 VA ÷ 120 V = 25 A."
+      },
+      {
+        "id": "transformers-basics-q3",
+        "type": "numeric",
+        "prompt": "A 112.5 kVA three-phase transformer has a 208 V secondary. Find the rated secondary line current.",
+        "answer": 312,
+        "unit": "A",
+        "tolerance": 4,
+        "explanation": "112,500 ÷ (1.732 × 208) = 112,500 ÷ 360.3 = 312 A."
+      },
+      {
+        "id": "transformers-basics-q4",
+        "type": "multiple_choice",
+        "prompt": "Transformers are rated in kVA rather than kW because:",
+        "choices": [
+          "kVA is simply a larger unit than kW",
+          "the transformer heats according to current regardless of the load power factor",
+          "kW applies only to DC equipment",
+          "the utility bills in kVA"
+        ],
+        "correctIndex": 1,
+        "explanation": "Winding heating depends on current (I²R) and core heating on voltage; neither depends on the load's power factor, so apparent power is the honest rating."
+      },
+      {
+        "id": "transformers-basics-q5",
+        "type": "multiple_choice",
+        "prompt": "Before removing a meter from the secondary circuit of a current transformer that is carrying load current, you must:",
+        "choices": [
+          "open the secondary circuit quickly to limit arcing",
+          "short the CT secondary terminals with the shorting block or a jumper",
+          "ground the primary conductor",
+          "increase the meter range to its maximum"
+        ],
+        "correctIndex": 1,
+        "explanation": "An open CT secondary under load develops dangerously high voltage. Shorting the secondary first keeps it safe."
+      },
+      {
+        "id": "transformers-basics-q6",
+        "type": "multiple_choice",
+        "prompt": "Core losses in a transformer are made up of:",
+        "choices": [
+          "hysteresis and eddy-current losses, present whenever the unit is energized",
+          "I²R losses in the windings, present only under load",
+          "friction losses in the cooling fans",
+          "losses caused by the load power factor"
+        ],
+        "correctIndex": 0,
+        "explanation": "Core losses come from re-magnetizing the steel (hysteresis) and circulating currents in it (eddy currents). Laminating the core reduces eddy currents. Copper losses are the I²R losses in the windings."
+      },
+      {
+        "id": "transformers-basics-q7",
+        "type": "multiple_choice",
+        "prompt": "A dry-type transformer's 480 V supply measures 494 V and the 208 V secondary runs high. The best correction is to:",
+        "choices": [
+          "add a resistor in series with the primary",
+          "de-energize, lock out and move the primary connection to the +2.5 % tap",
+          "move to the −2.5 % tap while energized",
+          "reduce the secondary load"
+        ],
+        "correctIndex": 1,
+        "explanation": "Taps compensate for a supply that is off nominal. A higher primary tap (more turns) lowers the volts per turn and brings the secondary down. Taps are only changed de-energized."
+      },
+      {
+        "id": "transformers-basics-q8",
+        "type": "multiple_choice",
+        "prompt": "Which NEC section governs grounding and bonding of the secondary of a transformer that forms a separately derived system?",
+        "choices": [
+          "240.4(D)",
+          "250.30",
+          "310.16",
+          "430.52"
+        ],
+        "correctIndex": 1,
+        "explanation": "250.30 covers separately derived systems: the system bonding jumper, the grounding electrode conductor and the supply-side bonding jumper."
+      },
+      {
+        "id": "transformers-basics-q9",
+        "type": "multiple_choice",
+        "prompt": "Why can a properly sized primary breaker still trip the instant a large transformer is switched on?",
+        "choices": [
+          "The secondary is always shorted at start-up",
+          "Magnetizing inrush can briefly reach 10–25 times rated current",
+          "The core is still cold",
+          "The taps reset at every energization"
+        ],
+        "correctIndex": 1,
+        "explanation": "Inrush at energization is a normal transient. Time-delay fuses or inverse-time breakers sized within Table 450.3(B) ride through it."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code — Article 450 (Transformers), 240.21(C), 250.30, 110.9 (section numbers only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California DIR Electrician Certification Unit — Candidate Information Bulletin",
+      "url": "https://www.dir.ca.gov/dlse/ecu/electricaltrade.html"
+    },
+    {
+      "title": "Herman, Delmar's Standard Textbook of Electricity (transformer chapters)",
+      "url": "https://www.cengage.com/"
+    },
+    {
+      "title": "OSHA 29 CFR 1910 Subpart S — Electrical",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.303"
+    },
+    {
+      "title": "IEEE C57.12.01 — Standard for dry-type distribution and power transformers (overview)",
+      "url": "https://standards.ieee.org/"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

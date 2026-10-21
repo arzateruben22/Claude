@@ -20,7 +20,6 @@ export const MSG = Object.freeze({
   FLUSH_QUEUE: "cq:flush-queue",
   CLEAR_QUEUE: "cq:clear-queue",
   DISCONNECT: "cq:disconnect",
-  RECORD_HOST_PERMISSION: "cq:record-host-permission",
 });
 
 /** Capture kinds accepted by POST /api/extension/captures. */

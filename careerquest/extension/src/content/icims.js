@@ -17,7 +17,8 @@
         location: ['[class*="iCIMS_JobLocation"]', ".iCIMS_JobHeaderGroup .iCIMS_JobHeaderData", '[class*="location"]'],
         requisitionId: ['[class*="iCIMS_JobHeaderData"][class*="id"]', '[class*="JobId"]'],
       },
-      custom(doc, url, fields, detectedBy) {
+      fallback(doc, url, fields, detectedBy) {
+        // The numeric path segment is iCIMS' internal id; prefer the visible "Job ID".
         if (!fields.requisitionId) {
           const m = url.match(/\/jobs\/(\d{3,})\b/i);
           if (m) {
@@ -25,6 +26,8 @@
             detectedBy.push("url:requisition");
           }
         }
+      },
+      custom(doc, url, fields, detectedBy) {
         if (!fields.company) {
           const site = C.meta(doc, "og:site_name");
           if (site) {

@@ -159,13 +159,17 @@ async function getQueue() {
   return (await local.get(STORAGE.QUEUE)) || [];
 }
 
-/** @param {object} payload @param {string} reason */
-async function enqueueCapture(payload, reason) {
+/**
+ * @param {object} payload
+ * @param {{ code?: string, message?: string, retryAfterSeconds?: number }} err why the direct send failed
+ */
+async function enqueueCapture(payload, err) {
   const { queue, item } = enqueue(await getQueue(), payload);
-  const scheduled = replaceItem(queue, markFailed(item, { error: reason }));
+  const retryAfterMs = err?.retryAfterSeconds ? err.retryAfterSeconds * 1000 : undefined;
+  const scheduled = replaceItem(queue, markFailed(item, { retryAfterMs, error: err?.message || err?.code }));
   await local.set(STORAGE.QUEUE, scheduled);
   await scheduleRetry(scheduled);
-  log("queued capture", { kind: payload.kind, reason, size: scheduled.length });
+  log("queued capture", { kind: payload.kind, reason: err?.code, size: scheduled.length });
   return scheduled;
 }
 
@@ -232,7 +236,7 @@ async function sendCapture(payload) {
   } catch (err) {
     await noteApiError(err);
     if (isRetryable(err) || err.code === "unauthorized" || err.code === "not_configured") {
-      const queue = await enqueueCapture(payload, err.code);
+      const queue = await enqueueCapture(payload, err);
       return { ok: false, queued: true, error: err.message, code: err.code, queueLength: queue.length };
     }
     return { ok: false, queued: false, error: err.message, code: err.code };

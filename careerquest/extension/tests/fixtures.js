@@ -35,17 +35,17 @@ const CHROMIUM_PATH = process.env.PLAYWRIGHT_CHROMIUM_PATH || "/opt/pw-browsers/
  * @property {(page: import("@playwright/test").Page) => Promise<number>} tabIdOf
  * @property {(tabId: number, opts?: { predicate?: (d: any) => boolean, timeoutMs?: number }) => Promise<any>} waitForDetection
  * @property {(tabId: number) => Promise<string>} badge
+ * @property {import("@playwright/test").Page[]} opened
  * @property {(tabId: number) => Promise<import("@playwright/test").Page>} openPopup
  * @property {() => Promise<import("@playwright/test").Page>} openOptions
  */
 
 const test = base.extend({
   servers: [
-    // eslint-disable-next-line no-empty-pattern
-    async ({}, use) => {
+    async ({}, provide) => {
       const fixture = await startFixtureServer();
       const mock = await startMockApi();
-      await use({ fixture, mock });
+      await provide({ fixture, mock });
       await mock.close();
       await fixture.close();
     },
@@ -53,7 +53,7 @@ const test = base.extend({
   ],
 
   extContext: [
-    async ({ servers }, use) => {
+    async ({ servers }, provide) => {
       const hostRules = FIXTURE_HOSTS.map((h) => `MAP ${h} 127.0.0.1:${servers.fixture.port}`).join(", ");
       const context = await chromium.launchPersistentContext("", {
         executablePath: fs.existsSync(CHROMIUM_PATH) ? CHROMIUM_PATH : undefined,
@@ -68,14 +68,14 @@ const test = base.extend({
           "--no-first-run",
         ],
       });
-      await use(context);
+      await provide(context);
       await context.close();
     },
     { scope: "worker" },
   ],
 
   extension: [
-    async ({ extContext, servers }, use) => {
+    async ({ extContext, servers }, provide) => {
       let [worker] = extContext.serviceWorkers();
       if (!worker) worker = await extContext.waitForEvent("serviceworker", { timeout: 20_000 });
       const id = new URL(worker.url()).host;
@@ -133,39 +133,43 @@ const test = base.extend({
           throw new Error(`timed out waiting for detection on tab ${tabId}; last=${JSON.stringify(last)}`);
         },
         badge: (tabId) => helper.evaluate((t) => chrome.action.getBadgeText({ tabId: t }), tabId),
+        opened: [],
         async openPopup(tabId) {
           const p = await extContext.newPage();
+          helper.opened.push(p);
           await p.goto(`chrome-extension://${id}/src/popup/popup.html?tabId=${tabId}`);
           await p.waitForSelector('main[aria-busy="false"]');
           return p;
         },
         async openOptions() {
           const p = await extContext.newPage();
+          helper.opened.push(p);
           await p.goto(`chrome-extension://${id}/src/options/options.html`);
           return p;
         },
       };
-      await use(helper);
+      await provide(helper);
     },
     { scope: "worker" },
   ],
 
   // Pages come from the persistent extension context, not Playwright's default browser.
-  page: async ({ extContext }, use) => {
+  page: async ({ extContext }, provide) => {
     const page = await extContext.newPage();
-    await use(page);
+    await provide(page);
     await page.close().catch(() => {});
   },
 
-  mockApi: async ({ servers }, use) => {
+  mockApi: async ({ servers }, provide) => {
     servers.mock.reset();
-    await use(servers.mock);
+    await provide(servers.mock);
   },
 
-  ext: async ({ extension, mockApi }, use) => {
+  ext: async ({ extension, mockApi }, provide) => {
     void mockApi;
     await extension.reset();
-    await use(extension);
+    await provide(extension);
+    for (const p of extension.opened.splice(0)) await p.close().catch(() => {});
   },
 });
 

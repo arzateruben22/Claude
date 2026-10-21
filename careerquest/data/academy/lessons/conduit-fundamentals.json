@@ -1,0 +1,380 @@
+{
+  "key": "conduit-fundamentals",
+  "track": "INSTALLATION",
+  "order": 1,
+  "title": "Conduit Fundamentals",
+  "summary": "The raceway types an apprentice meets every day (EMT, IMC, RMC, PVC, FMC and their cousins), how to bend EMT with a hand bender using take-up, offset multipliers and shrink, and how conduit fill is calculated.",
+  "estimatedMinutes": 40,
+  "prerequisites": [
+    "electrical-safety-fundamentals"
+  ],
+  "objectives": [
+    "Students will be able to identify the common raceway types, their NEC articles, where each is permitted, and their support and bend-count rules.",
+    "Students will be able to lay out and bend a 90° stub using the bender's take-up (deduct) value.",
+    "Students will be able to calculate the distance between bends and the shrink for an offset at 10°, 22.5°, 30°, 45° and 60°.",
+    "Students will be able to lay out a three-point saddle over a round obstruction.",
+    "Students will be able to apply the 40 percent fill rule using NEC Chapter 9 Tables 1, 4 and 5 to size a raceway for a group of conductors."
+  ],
+  "sections": [
+    {
+      "type": "text",
+      "heading": "Raceway types and where they belong",
+      "markdown": "A **raceway** is an enclosed channel for conductors. Conduit protects the wire from damage, provides an equipment grounding path when it is metal, and lets you pull new conductors later without opening walls. Each type has its own NEC article (the 3xx series), and the articles follow a common layout: uses permitted, uses not permitted, installation, construction.\n\n- **EMT, electrical metallic tubing (Article 358).** Thin-wall galvanized steel (or aluminum), joined with set-screw or compression fittings rather than threads. Cheap, light, fast, and the raceway you will bend most. Not for severe physical damage, not for direct burial without listing, and corrosion protection is required in wet locations and concrete. Trade sizes 1/2 in through 4 in.\n- **IMC, intermediate metal conduit (Article 342).** Threaded steel conduit, thinner and lighter than RMC but permitted in all the same places, including severe-damage areas and hazardous locations.\n- **RMC, rigid metal conduit (Article 344).** The heavy threaded steel pipe. Maximum protection; used for service masts, exposed exterior runs, hazardous locations and anywhere it can be hit. Threads are tapered 3/4 in per foot (NPT), so a field-cut thread must be cut with a die, reamed, and the cut end coated against corrosion. Both IMC and RMC can serve as the equipment grounding conductor.\n- **PVC, rigid polyvinyl chloride conduit (Article 352).** Nonmetallic, solvent-cemented, Schedule 40 (general) or Schedule 80 (where subject to damage). The standard choice for underground and corrosive locations. Because it is an insulator it never serves as an EGC: a wire EGC is always pulled. PVC expands and contracts with temperature: Table 352.44 gives about 3.38 in per 100 ft for every 100 °F change, and an expansion fitting is required where the expected movement is 1/4 in or more. Bent with a heat box or blanket, never a torch.\n- **FMC, flexible metal conduit (Article 348),** the spiral \"Greenfield\" used for short connections to motors, transformers and equipment that vibrates. It can serve as the EGC only in 6 ft runs on circuits of 20 A or less with listed fittings; otherwise pull a wire EGC. **LFMC** (Article 350, \"Sealtite\") adds a plastic jacket for wet locations; **LFNC** (Article 356) is the nonmetallic version.\n- **ENT, electrical nonmetallic tubing (Article 362),** the blue corrugated \"smurf tube\" used inside walls and in concrete where the building type permits it.\n\nTrade sizes are nominal. Half-inch EMT is actually about 0.70 in outside diameter. Since 2002 the NEC also lists **metric designators**: 16 (1/2 in), 21 (3/4 in), 27 (1 in), 35 (1-1/4 in), 41 (1-1/2 in), 53 (2 in), 63 (2-1/2 in), 78 (3 in), 91 (3-1/2 in), 103 (4 in)."
+    },
+    {
+      "type": "table",
+      "caption": "Installation rules that inspectors check first (summarized from the raceway articles; verify in the adopted edition)",
+      "columns": [
+        "Raceway",
+        "Secure within",
+        "Maximum support spacing",
+        "Other rules"
+      ],
+      "rows": [
+        [
+          "EMT (358.30)",
+          "3 ft of each box, cabinet or fitting",
+          "10 ft",
+          "Ream cut ends (358.28); max 360° of bends between pull points (358.26); listed fittings, compression type in wet locations"
+        ],
+        [
+          "IMC / RMC (342.30, 344.30)",
+          "3 ft of each termination",
+          "10 ft for 1/2 and 3/4 in; 12 ft for 1 in; 14 ft for 1-1/4 and 1-1/2 in; 16 ft for 2 and 2-1/2 in; 20 ft for 3 in and larger",
+          "Thread with a die, ream, bushings on ends; max 360° between pull points"
+        ],
+        [
+          "PVC (352.30)",
+          "3 ft of each termination",
+          "3 ft for 1/2 to 1 in; 5 ft for 1-1/4 to 2 in; 6 ft for 2-1/2 to 3 in; 7 ft for 3-1/2 to 5 in; 8 ft for 6 in",
+          "Expansion fittings where movement is 1/4 in or more (352.44); wire EGC required; max 360° between pull points"
+        ],
+        [
+          "FMC (348.30)",
+          "12 in of each termination",
+          "4-1/2 ft",
+          "Unsupported lengths allowed where flexibility is needed (3 ft at equipment); EGC rules in 348.60"
+        ],
+        [
+          "ENT (362.30)",
+          "3 ft of each termination",
+          "3 ft",
+          "Not permitted exposed in most occupancies; check building height and fire rating limits"
+        ]
+      ]
+    },
+    {
+      "type": "text",
+      "heading": "Bending EMT: the hand bender and the 90° stub",
+      "markdown": "A hand bender for 1/2 in or 3/4 in EMT is a shoe on a handle. The shoe is cast with a hook, a bending groove with a fixed radius, and several reference marks: the **arrow** (front of the shoe, used for stubs and offsets), the **star** or rim notch at the back of the 90° (used for back-to-back bends), and angle marks for 10°, 22.5°, 30°, 45° and 60°. Keep the tubing on the floor, foot on the heel of the shoe, and use foot pressure plus a steady pull on the handle; jerking the handle kinks the tube.\n\nThe most common bend is a **90° stub-up**: a straight length that turns 90° and rises to a box. You cannot simply mark the stub height on the tube, because the bend has a radius and the tube \"gains\" distance around the curve. Every bender has a **take-up** (also called deduct) stamped on it:\n\n- 1/2 in EMT: 5 in\n- 3/4 in EMT: 6 in\n- 1 in EMT: 8 in\n- 1-1/4 in EMT: 11 in\n\nLayout: measure the desired stub height from the end of the tube, **subtract the take-up**, and make your mark there. Place the bender's arrow on the mark with the hook toward the short end (the stub), and bend to 90°, checking with a level or the bender's built-in bubble. The stub measured from the floor to the end of the tube will land on the desired height.\n\nFor a **back-to-back** bend (two 90° bends with a fixed distance between the backs of the bends, like a U around a column), make the first 90°, measure from its back to the desired distance, mark, align the **star** mark with that mark, and bend with the hook facing away from the first bend.\n\n**Worked example.** You need a 1/2 in EMT stub that rises 14 in from the floor to the end of the conduit. Take-up is 5 in, so 14 − 5 = 9 in: measure 9 in from the end, mark, put the arrow on the mark with the hook toward the 9 in end, and bend to 90°. A 22 in stub on the same tubing is marked at 22 − 5 = 17 in. If the finished stub comes up short, the mark was too close to the end or the bend went past 90°.\n\nField checklist: measure twice and mark with a fine line all the way around the tube; write the angle next to the mark; confirm the hook direction before every bend; always bend on the floor with foot pressure, not against a wall or in the air; overbend a degree or two and relax, because tubing springs back; and sight down the tube after every bend for **dog legs** (twist out of plane). The NEC (358.24) requires bends that do not reduce the internal diameter, which rules out kinks and flattened curves. A practice bend on scrap before a visible run is never wasted."
+    },
+    {
+      "type": "diagram",
+      "title": "90° stub layout with take-up",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 240\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n<path d=\"M20 190 H300 A40 40 0 0 1 340 150 V40\"/>\n<path d=\"M20 206 H300 A56 56 0 0 1 356 150 V40\"/>\n<path d=\"M20 190 V206 M340 40 H356\"/>\n</g>\n<g fill=\"none\" stroke=\"#4cc9ff\" stroke-width=\"1.5\">\n<path d=\"M400 40 V206\"/>\n<path d=\"M394 40 h12 M394 206 h12\"/>\n<path d=\"M20 226 V236 M300 226 V236 M20 231 H300\"/>\n<path d=\"M300 160 V236\" stroke-dasharray=\"4 3\"/>\n</g>\n<path d=\"M140 165 l8 20 h-16 z\" fill=\"#f3c75b\"/>\n<path d=\"M140 150 V165\" stroke=\"#f3c75b\" stroke-width=\"2\"/>\n<path d=\"M140 190 V206\" stroke=\"#f3c75b\" stroke-width=\"3\"/>\n<g fill=\"none\" stroke=\"#3ddc97\" stroke-width=\"1.5\">\n<path d=\"M140 120 H300 M140 114 v12 M300 114 v12\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"24\" y=\"182\">conduit lying flat on floor</text>\n<text x=\"362\" y=\"128\" fill=\"#4cc9ff\">stub</text>\n<text x=\"362\" y=\"142\" fill=\"#4cc9ff\">height</text>\n<text x=\"362\" y=\"156\" fill=\"#4cc9ff\">(to end)</text>\n<text x=\"96\" y=\"232\" fill=\"#4cc9ff\">end of conduit to pencil mark</text>\n<text x=\"100\" y=\"142\" fill=\"#f3c75b\">mark = stub − take-up</text>\n<text x=\"150\" y=\"110\" fill=\"#3ddc97\">take-up (5 in for 1/2 in EMT)</text>\n<text x=\"120\" y=\"60\">bender arrow lines up with the mark;</text>\n<text x=\"120\" y=\"74\">bend toward the short end</text>\n</g>\n</svg>",
+      "caption": "The mark is placed at the stub height minus the take-up. The bender's arrow sits on the mark with the hook toward the short end; after bending to 90°, the stub measures the desired height from the floor to the end of the tube."
+    },
+    {
+      "type": "text",
+      "heading": "Offsets: multipliers and shrink",
+      "markdown": "An **offset** is a pair of equal, opposite bends that moves the run sideways to clear an obstruction or enter a box that is not in line with the conduit. The two numbers you need are the **offset depth** (how far the run must move) and the **bend angle**. Shallow angles (10° to 22.5°) are easier to pull wire through and look better; steep angles (45° to 60°) save space.\n\nTwo things happen in an offset:\n\n- The **distance between the two marks** must be longer than the depth, because the tube travels diagonally. Distance = depth × **multiplier**, where the multiplier is 1 divided by the sine of the angle.\n- The tube **shrinks**: a run with an offset ends up shorter than the same tube straight, because part of its length is used up moving sideways. Shrink = depth × **shrink per inch**. You add the shrink to the measurement for the first mark so the offset lands where you want it.\n\nProcedure for an offset that must start a measured distance from the end of the tube: measure to the obstruction, add the shrink, make the first mark; add the distance between bends, make the second mark. Bend the first mark to the chosen angle with the arrow on the mark; slide the tube, roll it 180° so the hook faces the same direction relative to the tube, align the arrow on the second mark, and bend to the same angle. Sight down the tube to confirm both bends are in one plane.\n\nA **kick** is a single bend of a few degrees that moves the end of a stub sideways, usually made right at the end of a 90°. A **four-point (four-bend) saddle** is two offsets back to back for clearing a box-shaped obstruction: the inside two bends are separated by the width of the obstruction plus a little clearance, and each pair uses the offset math above.\n\n**Three-point saddles.** To hop over a round obstruction such as a pipe, use a three-point saddle: one center bend of 45° and two side bends of 22.5° in the opposite direction. The side marks go **2.5 in per inch of obstruction height** on each side of the center mark, and the saddle shrinks the run by **3/16 in per inch of height**. Mark the center at the distance to the center of the obstruction plus the shrink, then measure out to the side marks. Bend the center mark to 45° with the arrow on the mark, rotate the tube 180°, and bend each side mark to 22.5° using the bender's 22.5° line, checking that all three bends stay in one plane."
+    },
+    {
+      "type": "table",
+      "caption": "Offset multipliers and shrink by bend angle, plus the three-point saddle constants (standard values used with hand benders)",
+      "columns": [
+        "Bend angle",
+        "Multiplier (distance between bends per inch of depth)",
+        "Shrink per inch of depth"
+      ],
+      "rows": [
+        [
+          "10°",
+          "6.0",
+          "1/16 in"
+        ],
+        [
+          "22.5°",
+          "2.6",
+          "3/16 in"
+        ],
+        [
+          "30°",
+          "2.0",
+          "1/4 in"
+        ],
+        [
+          "45°",
+          "1.4",
+          "3/8 in"
+        ],
+        [
+          "60°",
+          "1.2",
+          "1/2 in"
+        ],
+        [
+          "Three-point saddle (45° center, 22.5° sides)",
+          "2.5 (center mark to each side mark, per inch of obstruction height)",
+          "3/16 in"
+        ]
+      ]
+    },
+    {
+      "type": "diagram",
+      "title": "Offset and three-point saddle geometry",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 460 420\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"7\" stroke-linecap=\"round\">\n<path d=\"M20 150 H150 L254 90 H440\"/>\n<path d=\"M20 370 H130 L190 310 H270 L330 370 H440\"/>\n</g>\n<g fill=\"none\" stroke=\"#4cc9ff\" stroke-width=\"1.5\">\n<path d=\"M150 165 V185 M254 165 V185 M150 180 H254\"/>\n<path d=\"M300 90 V150 M292 90 h16 M292 150 h16\"/>\n<path d=\"M150 150 H230\" stroke-dasharray=\"4 3\"/>\n<path d=\"M130 260 V295 M230 260 V295 M330 260 V295\"/>\n<path d=\"M130 270 H230 M230 270 H330\"/>\n<path d=\"M370 310 V370 M362 310 h16 M362 370 h16\"/>\n</g>\n<path d=\"M190 150 A40 40 0 0 0 185 130\" fill=\"none\" stroke=\"#f3c75b\" stroke-width=\"1.5\"/>\n<circle cx=\"230\" cy=\"390\" r=\"22\" fill=\"none\" stroke=\"#9aa6b8\" stroke-width=\"3\"/>\n<g fill=\"#f3c75b\" font-size=\"11\">\n<text x=\"196\" y=\"140\">angle</text>\n<text x=\"118\" y=\"390\">22.5°</text>\n<text x=\"212\" y=\"300\">45°</text>\n<text x=\"322\" y=\"390\">22.5°</text>\n</g>\n<g fill=\"currentColor\">\n<text x=\"20\" y=\"28\">OFFSET: 30° uses multiplier 2.0 and 1/4 in shrink per inch of depth;</text>\n<text x=\"20\" y=\"44\">45° uses 1.4 and 3/8 in. Both bends same direction, tube rolled 180°.</text>\n<text x=\"26\" y=\"140\">first mark</text>\n<text x=\"244\" y=\"78\">second mark</text>\n<text x=\"310\" y=\"125\" fill=\"#4cc9ff\">offset depth</text>\n<text x=\"110\" y=\"202\" fill=\"#4cc9ff\">distance between bends = depth × multiplier</text>\n<text x=\"20\" y=\"240\">THREE-POINT SADDLE: center 45°, sides 22.5°, shrink 3/16 in per inch of height</text>\n<text x=\"100\" y=\"256\" fill=\"#4cc9ff\">2.5 × height</text>\n<text x=\"246\" y=\"256\" fill=\"#4cc9ff\">2.5 × height</text>\n<text x=\"380\" y=\"345\" fill=\"#4cc9ff\">height</text>\n<text x=\"262\" y=\"412\">obstruction</text>\n</g>\n</svg>",
+      "caption": "Top: an offset moves the run sideways by the depth between two equal and opposite bends; the marks are separated by depth × multiplier and the run shrinks. Bottom: a three-point saddle uses a 45° center bend and two 22.5° side bends placed 2.5 in per inch of obstruction height from the center."
+    },
+    {
+      "type": "example",
+      "problem": "A 3/4 in EMT run along a wall must rise 6 in to pass over a steel beam whose near edge is 40 in from the end of the tube. Use 30° bends. Where are the two marks, and how much shorter does the run become?",
+      "solutionSteps": [
+        "Depth = 6 in, angle = 30°: multiplier 2.0, shrink 1/4 in per inch.",
+        "Distance between bends: D = 6 × 2.0 = 12 in.",
+        "Shrink: S = 6 × 1/4 = 1.5 in.",
+        "First mark: 40 in + 1.5 in = 41.5 in from the end of the tube (adding the shrink keeps the finished offset from landing short of the beam).",
+        "Second mark: 41.5 + 12 = 53.5 in from the end.",
+        "Bend the first mark to 30°, roll the tube 180°, bend the second mark to 30° in the opposite direction. The run is 1.5 in shorter than the straight tube, so if the far end must hit a box, add 1.5 in to the overall length before cutting."
+      ],
+      "answer": "Marks at 41.5 in and 53.5 in from the end; the offset shrinks the run by 1.5 in."
+    },
+    {
+      "type": "example",
+      "problem": "A 1/2 in EMT run must cross a 3 in diameter sprinkler pipe (treat the required height as 3 in) whose center is 30 in from the end of the tube, using a three-point saddle. Lay out the marks.",
+      "solutionSteps": [
+        "Three-point saddle constants: center bend 45°, side bends 22.5°, side marks at 2.5 in per inch of height, shrink 3/16 in per inch of height.",
+        "Shrink = 3 × 3/16 = 9/16 in. Center mark = 30 + 9/16 = 30-9/16 in from the end (the shrink moves the saddle toward the far end, so adding it keeps the center over the pipe).",
+        "Side marks: 2.5 × 3 = 7.5 in each side of the center: 30-9/16 − 7-1/2 = 23-1/16 in and 30-9/16 + 7-1/2 = 38-1/16 in.",
+        "Bend the center mark to 45° with the arrow on the mark. Rotate the tube 180°, bend each side mark to 22.5° using the bender's 22.5° line. Check that the three bends are in one plane and that the saddle clears the pipe with a little room for the pipe's hangers."
+      ],
+      "answer": "Center mark at 30-9/16 in; side marks at about 23-1/16 in and 38-1/16 in; shrink 9/16 in."
+    },
+    {
+      "type": "diagram",
+      "title": "Conduit fill: how much of the bore the conductors may occupy",
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 440 220\" font-family=\"system-ui,sans-serif\" font-size=\"12\">\n<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\">\n<circle cx=\"110\" cy=\"110\" r=\"80\"/>\n<circle cx=\"110\" cy=\"110\" r=\"88\" stroke-width=\"2\" stroke=\"#9aa6b8\"/>\n</g>\n<g fill=\"#4cc9ff\" fill-opacity=\"0.35\" stroke=\"#4cc9ff\" stroke-width=\"1.5\">\n<circle cx=\"110\" cy=\"110\" r=\"22\"/>\n<circle cx=\"110\" cy=\"66\" r=\"22\"/>\n<circle cx=\"148\" cy=\"88\" r=\"22\"/>\n<circle cx=\"148\" cy=\"132\" r=\"22\"/>\n<circle cx=\"110\" cy=\"154\" r=\"22\"/>\n<circle cx=\"72\" cy=\"132\" r=\"22\"/>\n<circle cx=\"72\" cy=\"88\" r=\"22\"/>\n</g>\n<g fill=\"currentColor\">\n<text x=\"220\" y=\"50\">Chapter 9, Table 1 fill limits:</text>\n<text x=\"220\" y=\"74\">1 conductor: 53% of raceway area</text>\n<text x=\"220\" y=\"94\">2 conductors: 31%</text>\n<text x=\"220\" y=\"114\">3 or more: 40%</text>\n<text x=\"220\" y=\"134\">nipple 24 in or shorter: 60%</text>\n<text x=\"220\" y=\"166\">Conductor areas: Table 5</text>\n<text x=\"220\" y=\"184\">Raceway areas: Table 4</text>\n<text x=\"220\" y=\"202\">Annex C: ready-made lookup</text>\n<text x=\"40\" y=\"214\">seven conductors, about 40% of the bore</text>\n</g>\n</svg>",
+      "caption": "NEC Chapter 9, Table 1 limits the total conductor cross-sectional area to a percentage of the raceway's internal area. The 40 percent limit for three or more conductors leaves room to pull without damaging insulation and for the heat the conductors produce."
+    },
+    {
+      "type": "text",
+      "heading": "Conduit fill",
+      "markdown": "NEC 300.17 says a raceway must be large enough to let conductors be installed and withdrawn without damage, and Chapter 9 turns that into arithmetic. **Table 1** sets the maximum percentage of the raceway's internal area that conductors may fill: 53 percent for one conductor, 31 percent for two, and **40 percent for three or more**. A nipple no longer than 24 in between enclosures may be filled to 60 percent. **Table 4** lists the internal area of each raceway type and size and already does the percentage math for you; **Table 5** lists the area of each insulated conductor type and size. Bare conductors use Table 8.\n\nHandy Table 4 values for EMT (40 percent column): 1/2 in: 0.122 in²; 3/4 in: 0.213 in²; 1 in: 0.346 in²; 1-1/4 in: 0.598 in²; 1-1/2 in: 0.814 in²; 2 in: 1.342 in².\n\nHandy Table 5 values for THHN/THWN: 14 AWG: 0.0097 in²; 12 AWG: 0.0133 in²; 10 AWG: 0.0211 in²; 8 AWG: 0.0366 in²; 6 AWG: 0.0507 in²; 4 AWG: 0.0824 in²; 3 AWG: 0.0973 in²; 2 AWG: 0.1158 in²; 1 AWG: 0.1562 in²; 1/0 AWG: 0.1855 in².\n\nProcedure: add up the areas of all conductors (including the EGC and any neutral), then pick the smallest raceway whose 40 percent area is at least that total. When all conductors are the same size and type, **Informative Annex C** has already done it: for example, Table C.1 shows that 3/4 in EMT holds up to sixteen 12 AWG THHN conductors and 1/2 in EMT holds nine.\n\nTwo cautions. Fill is only about the physical space; the number of **current-carrying** conductors also triggers ampacity adjustment (covered in the conductors lesson), so a raceway stuffed to 40 percent with 12 AWG conductors may need those conductors upsized. And the fill tables assume straight pulls; a run with four 90s needs pulling lubricant, a proper pull rope and often a bigger pipe than the arithmetic requires."
+    },
+    {
+      "type": "example",
+      "problem": "A feeder uses three 8 AWG THHN copper conductors plus a 10 AWG THHN equipment grounding conductor. What is the smallest EMT trade size permitted by the 40 percent rule?",
+      "solutionSteps": [
+        "Conductor areas from Table 5: 8 AWG THHN = 0.0366 in² each; 10 AWG THHN = 0.0211 in².",
+        "Total area: 3 × 0.0366 + 0.0211 = 0.1098 + 0.0211 = 0.1309 in².",
+        "Four conductors, so the 40 percent column of Table 4 applies. 1/2 in EMT allows 0.122 in², which is less than 0.1309 in², so it is too small.",
+        "3/4 in EMT allows 0.213 in², which is more than 0.1309 in². It fits with room to spare.",
+        "Answer: 3/4 in EMT. (If the run were a 24 in nipple, the 60 percent rule would allow 0.182 in² in 1/2 in EMT and the nipple could be 1/2 in.)"
+      ],
+      "answer": "3/4 in EMT (trade size 21)."
+    }
+  ],
+  "practice": [
+    {
+      "id": "conduit-fundamentals-p1",
+      "type": "numeric",
+      "prompt": "Using a 3/4 in EMT hand bender (take-up 6 in), where do you mark the tube for a 90° stub with a finished height of 18 in? Give the distance from the end of the tube in inches.",
+      "answer": 12,
+      "unit": "in",
+      "tolerance": 0.1,
+      "explanation": "Mark = stub height − take-up = 18 − 6 = 12 in."
+    },
+    {
+      "id": "conduit-fundamentals-p2",
+      "type": "numeric",
+      "prompt": "An 8 in offset is bent with 45° bends. What is the distance between the two bend marks, in inches?",
+      "answer": 11.2,
+      "unit": "in",
+      "tolerance": 0.1,
+      "explanation": "Distance = depth × multiplier = 8 × 1.4 = 11.2 in."
+    },
+    {
+      "id": "conduit-fundamentals-p3",
+      "type": "numeric",
+      "prompt": "How much shrink does the same 8 in, 45° offset produce, in inches?",
+      "answer": 3,
+      "unit": "in",
+      "tolerance": 0.05,
+      "explanation": "Shrink = 8 in × 3/8 in per inch = 3 in."
+    },
+    {
+      "id": "conduit-fundamentals-p4",
+      "type": "multiple_choice",
+      "prompt": "Which raceway may NOT serve as the equipment grounding conductor and therefore always requires a wire EGC to be pulled?",
+      "choices": [
+        "EMT with listed fittings",
+        "Rigid metal conduit",
+        "Schedule 40 PVC",
+        "Intermediate metal conduit"
+      ],
+      "correctIndex": 2,
+      "explanation": "PVC is an insulator. NEC 250.118 lists EMT, IMC and RMC as acceptable EGCs; PVC runs always carry a wire EGC sized from Table 250.122."
+    },
+    {
+      "id": "conduit-fundamentals-p5",
+      "type": "numeric",
+      "prompt": "Six 12 AWG THHN conductors (0.0133 in² each) and one 12 AWG THHN EGC will be pulled in EMT. What is the total conductor area in square inches?",
+      "answer": 0.0931,
+      "unit": "in²",
+      "tolerance": 0.0005,
+      "explanation": "7 × 0.0133 = 0.0931 in². This is under the 0.122 in² allowed in 1/2 in EMT at 40 percent, so 1/2 in EMT works for fill (ampacity adjustment for six current-carrying conductors is a separate question)."
+    },
+    {
+      "id": "conduit-fundamentals-p6",
+      "type": "multiple_choice",
+      "prompt": "An EMT run is supported every 12 ft with the first strap 4 ft from the panel. Which statement is correct?",
+      "choices": [
+        "This complies with NEC 358.30",
+        "It fails both rules: EMT must be secured within 3 ft of each termination and at intervals not exceeding 10 ft",
+        "It complies as long as the EMT is 1 in or larger",
+        "It complies if compression fittings are used"
+      ],
+      "correctIndex": 1,
+      "explanation": "358.30 requires support within 3 ft of every box, cabinet or fitting and at least every 10 ft regardless of trade size."
+    },
+    {
+      "id": "conduit-fundamentals-p7",
+      "type": "numeric",
+      "prompt": "A three-point saddle must clear a pipe requiring 4 in of height. How far from the center mark is each side mark, in inches?",
+      "answer": 10,
+      "unit": "in",
+      "tolerance": 0.1,
+      "explanation": "Side marks are 2.5 in per inch of height: 2.5 × 4 = 10 in each side of the center."
+    }
+  ],
+  "quiz": {
+    "key": "conduit-fundamentals-quiz",
+    "passingScore": 80,
+    "questions": [
+      {
+        "id": "conduit-fundamentals-q1",
+        "type": "multiple_choice",
+        "prompt": "Which raceway is threaded, lighter than rigid metal conduit, and permitted in the same locations as RMC?",
+        "choices": [
+          "EMT (Article 358)",
+          "IMC (Article 342)",
+          "ENT (Article 362)",
+          "FMC (Article 348)"
+        ],
+        "correctIndex": 1,
+        "explanation": "Intermediate metal conduit has thinner walls than RMC but the same uses permitted, including hazardous locations and severe physical damage."
+      },
+      {
+        "id": "conduit-fundamentals-q2",
+        "type": "numeric",
+        "prompt": "What is the maximum total degrees of bends permitted between pull points in a run of EMT?",
+        "answer": 360,
+        "unit": "degrees",
+        "tolerance": 0.5,
+        "explanation": "NEC 358.26 (and the matching sections for RMC, IMC and PVC) limit a run to the equivalent of four quarter bends, 360° total, between pull points."
+      },
+      {
+        "id": "conduit-fundamentals-q3",
+        "type": "numeric",
+        "prompt": "A 1/2 in EMT 90° stub must be 11 in tall. Using a take-up of 5 in, how far from the end of the tube is the mark, in inches?",
+        "answer": 6,
+        "unit": "in",
+        "tolerance": 0.1,
+        "explanation": "11 − 5 = 6 in from the end."
+      },
+      {
+        "id": "conduit-fundamentals-q4",
+        "type": "numeric",
+        "prompt": "A 5 in offset is made with 30° bends. What is the distance between the bend marks, in inches?",
+        "answer": 10,
+        "unit": "in",
+        "tolerance": 0.1,
+        "explanation": "5 × 2.0 = 10 in."
+      },
+      {
+        "id": "conduit-fundamentals-q5",
+        "type": "numeric",
+        "prompt": "A 6 in offset at 22.5° shrinks the run by how many inches?",
+        "answer": 1.125,
+        "unit": "in",
+        "tolerance": 0.01,
+        "explanation": "6 × 3/16 = 18/16 = 1-1/8 in (1.125 in)."
+      },
+      {
+        "id": "conduit-fundamentals-q6",
+        "type": "multiple_choice",
+        "prompt": "Three or more conductors in a raceway may fill what percentage of the raceway's internal area?",
+        "choices": [
+          "31 percent",
+          "40 percent",
+          "53 percent",
+          "60 percent"
+        ],
+        "correctIndex": 1,
+        "explanation": "Chapter 9, Table 1: 53 percent for one conductor, 31 percent for two, 40 percent for three or more; 60 percent is allowed only in nipples 24 in or shorter."
+      },
+      {
+        "id": "conduit-fundamentals-q7",
+        "type": "multiple_choice",
+        "prompt": "Three 6 AWG THHN conductors (0.0507 in² each) and one 10 AWG THHN EGC (0.0211 in²) total 0.1732 in². Using the 40 percent values 1/2 in = 0.122 in², 3/4 in = 0.213 in², 1 in = 0.346 in², what is the smallest EMT size?",
+        "choices": [
+          "1/2 in",
+          "3/4 in",
+          "1 in",
+          "1-1/4 in"
+        ],
+        "correctIndex": 1,
+        "explanation": "0.1732 in² exceeds the 0.122 in² allowed in 1/2 in but fits within the 0.213 in² allowed in 3/4 in EMT."
+      },
+      {
+        "id": "conduit-fundamentals-q8",
+        "type": "multiple_choice",
+        "prompt": "A 150 ft exposed run of Schedule 40 PVC on a rooftop will see an 80 °F swing between winter nights and summer afternoons. Using 3.38 in per 100 ft per 100 °F, what is required?",
+        "choices": [
+          "Nothing; PVC does not move",
+          "An expansion fitting, because the expected movement (about 4 in) exceeds 1/4 in",
+          "Replacing the PVC with EMT, which does not expand",
+          "Solvent-cementing every joint twice"
+        ],
+        "correctIndex": 1,
+        "explanation": "Movement = 3.38 × 1.5 × 0.8 = 4.06 in. NEC 352.44 requires expansion fittings wherever the expected change is 1/4 in or more."
+      },
+      {
+        "id": "conduit-fundamentals-q9",
+        "type": "multiple_choice",
+        "prompt": "After cutting EMT with a tubing cutter or hacksaw, what must be done before installing a fitting?",
+        "choices": [
+          "Paint the cut end",
+          "Ream the end to remove the sharp burr that would damage conductor insulation (358.28)",
+          "Thread the end with a die",
+          "Nothing; EMT fittings are self-cleaning"
+        ],
+        "correctIndex": 1,
+        "explanation": "Reaming is required by 358.28. A tubing cutter leaves an especially sharp inward burr that will skin a conductor during the pull."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "NFPA 70, National Electrical Code, Articles 342, 344, 348, 350, 352, 356, 358 and 362 (raceways), 300.17, and Chapter 9 Tables 1, 4 and 5 with Informative Annex C (by number only)",
+      "url": "https://www.nfpa.org/codes-and-standards/nfpa-70-standard-development/70"
+    },
+    {
+      "title": "California Electrical Code, Title 24 Part 3",
+      "url": "https://www.dgs.ca.gov/BSC/Codes"
+    },
+    {
+      "title": "NECA 101, Standard for Installing Steel Conduits (Rigid, IMC, EMT) (by number only)",
+      "url": "https://www.necanet.org/about-us/neca-standards"
+    },
+    {
+      "title": "Steel Tube Institute, Guide to EMT and steel conduit installation practice",
+      "url": "https://steeltubeinstitute.org/conduit/"
+    },
+    {
+      "title": "Klein Tools conduit bending reference (take-up, multipliers and shrink for hand benders)",
+      "url": "https://www.kleintools.com/catalog/conduit-benders"
+    }
+  ],
+  "disclaimer": "Educational simulation. Completing this lesson is not qualifying work experience, a certification or a license."
+}

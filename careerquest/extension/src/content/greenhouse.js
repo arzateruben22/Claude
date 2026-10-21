@@ -9,8 +9,10 @@
       confirmationPhrases: ["Thank you for applying", "Your application has been submitted"],
       confirmationRoutes: ["/confirmation", "/thank-you", "/thanks"],
       confirmationSelectors: ["#application_confirmation", ".application--confirmation", '[class*="application-confirmation"]', '[data-testid="confirmation"]', ".confirmation-message"],
-      applyRoutes: ["#app", "/apply"],
-      applySelectors: ["#application_form", "form#application-form", ".application--form", "#app_body form", 'form[action*="/applications"]'],
+      // Greenhouse renders the application form on the posting page itself, so a
+      // visible form is not evidence that the user started applying: only the
+      // dedicated apply route counts.
+      applyRoutes: ["/apply", "#app"],
       selectors: {
         title: [".app-title", "h1.section-header", ".job__title h1", ".job__header h1", "h1"],
         company: [".company-name", '[class*="company-name"]', ".job__company", '[class*="job__company"]'],

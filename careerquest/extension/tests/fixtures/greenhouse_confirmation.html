@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><title>Job Application for Apprentice Electrician at Acme Electric</title></head>
+<body>
+  <div id="header"><div class="company-name">at Acme Electric</div></div>
+  <div id="content">
+    <h1 class="app-title">Apprentice Electrician</h1>
+    <div id="application_confirmation">
+      <h2>Thank you for applying to Acme Electric!</h2>
+      <p>Your application has been submitted. We appreciate your interest and will be in touch if there's a fit.</p>
+    </div>
+    <form id="applicant-form" action="/submit" method="post">
+      <label>Full name <input name="fullName" value="Jane Q. Applicant" /></label>
+      <label>SSN <input name="ssn" value="123-45-6789" /></label>
+      <label>Password <input type="password" name="password" value="hunter2-secret" /></label>
+      <label>Card <input name="cardNumber" value="4111 1111 1111 1111" /></label>
+      <label>Cover letter <textarea name="coverLetter">SECRET-COVER-LETTER-TEXT about my background.</textarea></label>
+      <select name="referral"><option selected>REFERRAL-SECRET-OPTION</option></select>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+{
+  "key": "fault-current-path",
+  "title": "Where Does the Fault Current Go?",
+  "description": "A DC model of a ground fault on a 120 V circuit. R1 is the resistance of the fault itself (the hot conductor rubbing on a metal tool case). From the case, the current has two parallel ways back to the source: R2 is the equipment grounding conductor and bonding jumper path (0.2 Ω), and R3 is the path through the earth between the ground rod at the equipment and the ground rod at the service (50 Ω). Use the solver to see which path carries the current and whether a 20 A breaker would ever notice the earth path.",
+  "difficulty": 2,
+  "estimatedMinutes": 12,
+  "relatedLessons": [
+    "grounding-and-bonding",
+    "electrical-safety-fundamentals"
+  ],
+  "circuit": {
+    "sourceVolts": 120,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 0.1
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "resistor",
+              "id": "R2",
+              "ohms": 0.2
+            },
+            {
+              "type": "resistor",
+              "id": "R3",
+              "ohms": 50
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "fault-current-path-t1",
+      "question": "What is the total resistance of the fault loop (R1 in series with R2 and R3 in parallel)?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-current-path-t2",
+      "question": "What total fault current flows from the 120 V source?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-current-path-t3",
+      "question": "How much of that current returns on the equipment grounding conductor path (R2)?",
+      "quantity": "I_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-current-path-t4",
+      "question": "How much current returns through the earth path (R3)?",
+      "quantity": "I_R3",
+      "tolerance": 0.05,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "fault-current-path-t5",
+      "question": "What is the voltage across the parallel paths, which is the voltage on the metal case relative to the source ground while the fault exists?",
+      "quantity": "V_R2",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    }
+  ],
+  "hints": [
+    "Two resistors in parallel combine as (R2 × R3) ÷ (R2 + R3); when one is tiny and the other is large, the result is just under the tiny one.",
+    "Current divides in inverse proportion to resistance: the 0.2 Ω path carries 250 times the current of the 50 Ω path.",
+    "A 20 A breaker's magnetic trip operates around 100 to 200 A. Compare that to the current in each path.",
+    "The voltage on the case during the fault is the same as the voltage across R2 (and R3). Even with a good EGC the case is briefly energized, which is why the breaker must clear the fault fast."
+  ],
+  "learningGoals": [
+    "Recognize that the equipment grounding conductor, not the earth, is the effective ground-fault current path (NEC 250.4(A)(5)).",
+    "Quantify how a low-impedance fault path produces enough current to open an overcurrent device within a cycle or two.",
+    "See that a parallel earth path carries a negligible share of the fault current and cannot replace the EGC."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}

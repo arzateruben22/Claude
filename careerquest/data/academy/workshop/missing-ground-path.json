@@ -1,0 +1,104 @@
+{
+  "key": "missing-ground-path",
+  "title": "The Ground Rod That Could Not Trip the Breaker",
+  "description": "The same ground fault as the fault-current-path exercise, but someone has cut the equipment grounding conductor (R2 is open) and is relying on the ground rod at the equipment. R1 is the fault contact resistance (0.1 Ω), R2 is the open EGC path, and R3 is the earth path between the two ground rods (50 Ω). The circuit is protected by a 20 A breaker. Find out how much current flows and whether anything protects the next person who touches the case.",
+  "difficulty": 2,
+  "estimatedMinutes": 10,
+  "relatedLessons": [
+    "grounding-and-bonding",
+    "electrical-safety-fundamentals"
+  ],
+  "circuit": {
+    "sourceVolts": 120,
+    "network": {
+      "type": "series",
+      "items": [
+        {
+          "type": "resistor",
+          "id": "R1",
+          "ohms": 0.1
+        },
+        {
+          "type": "parallel",
+          "items": [
+            {
+              "type": "resistor",
+              "id": "R2",
+              "ohms": 0.2
+            },
+            {
+              "type": "resistor",
+              "id": "R3",
+              "ohms": 50
+            }
+          ]
+        }
+      ]
+    },
+    "faults": [
+      {
+        "id": "R2",
+        "fault": "open"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "missing-ground-path-t1",
+      "question": "With the EGC path open, what is the total resistance of the fault loop?",
+      "quantity": "R_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "missing-ground-path-t2",
+      "question": "What fault current now flows through the earth path?",
+      "quantity": "I_total",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "missing-ground-path-t3",
+      "question": "What is the voltage on the metal case (the voltage across R3) while the fault persists?",
+      "quantity": "V_R3",
+      "tolerance": 0.02,
+      "toleranceType": "relative"
+    },
+    {
+      "id": "missing-ground-path-t4",
+      "type": "multiple_choice",
+      "question": "The circuit is protected by a 20 A breaker. What happens with the EGC open?",
+      "choices": [
+        "The breaker trips instantly because any ground fault trips a breaker",
+        "The breaker never trips: the earth path limits the current to a few amperes, and the case stays energized at close to 120 V until someone becomes a better path",
+        "The ground rod melts and clears the fault",
+        "The breaker trips after about 10 minutes of thermal heating"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "id": "missing-ground-path-t5",
+      "type": "multiple_choice",
+      "question": "Which measurement at the bench would reveal that R2 is open rather than carrying the fault current?",
+      "choices": [
+        "Current through R2 reads 0 A while full source voltage appears across it",
+        "Current through R2 reads the same as the total current",
+        "Voltage across R2 reads 0 V",
+        "The source voltage reads 0 V"
+      ],
+      "correctIndex": 0
+    }
+  ],
+  "hints": [
+    "An open resistor behaves like infinite resistance: the parallel combination collapses to the other branch alone.",
+    "I = V ÷ R with R = R1 + R3 when R2 is open.",
+    "Compare the current to the 20 A breaker rating. If it is smaller, the breaker sees a normal load, not a fault.",
+    "Nearly all of the 120 V appears across the 50 Ω earth path, which means it appears on the equipment case."
+  ],
+  "learningGoals": [
+    "Show numerically why NEC 250.4(A)(5) prohibits using the earth as the sole equipment grounding path.",
+    "Connect an open equipment grounding conductor to a persistent shock hazard on metal enclosures.",
+    "Practice interpreting current and voltage readings to locate an open in a parallel path."
+  ],
+  "disclaimer": "Simulated bench exercise; not field experience."
+}
