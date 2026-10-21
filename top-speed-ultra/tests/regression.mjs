@@ -1078,7 +1078,7 @@ await group('livephone', async (use) => {
     await page.getByRole('button', { name: 'Log in', exact: true }).first().click();
     await page.locator('#live-name').fill('phone_me');
     await page.locator('#live-pw').fill('correct horse battery');
-    await page.locator('form').getByRole('button', { name: 'Log in', exact: true }).click();
+    await page.locator('form button[type="submit"]').click();
     await page.waitForSelector('.name-static', { timeout: 30000 });
     await page.getByRole('button', { name: 'Done', exact: true }).click();
     const fits = async (sel) => page.evaluate((s) => { const els = [...document.querySelectorAll(s)]; return els.every((e) => { const r = e.getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1; }); }, sel);
