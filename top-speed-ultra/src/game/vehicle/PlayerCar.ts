@@ -196,6 +196,25 @@ export class PlayerCar {
     this.mats = { ...this.mats, paint: next, ...(nextM ? { mirrorPaint: nextM } : {}) };
   }
 
+  // The car as the main menu's showroom shows it (src/game/Showroom.ts): a copy that shares this car's geometry and
+  // materials (no second build), with the tinted glass and the cabin silhouette in, the wheels at rest and the soft
+  // contact shadow under it. Taken again whenever the car or its paint changes (Game.configureCar).
+  showroomModel(): THREE.Group | null {
+    if (!this.exterior) return null;
+    const g = new THREE.Group();
+    g.name = 'showroom-car';
+    const ext = this.exterior.clone();
+    for (const k of OUTSIDE_ONLY) { const o = ext.getObjectByName(k); if (o) o.visible = true; }
+    g.add(ext);
+    for (const w of this.wheels) {
+      const c = w.steer.clone();
+      c.position.copy(w.steer.position); c.rotation.set(0, 0, 0);
+      for (const ch of c.children) ch.rotation.set(0, 0, 0);
+      g.add(c);
+    }
+    return g;
+  }
+
   // the driver's look (sleeves, gloves, watch, ring, bracelet, skin) without rebuilding the car
   setLook(look: DriverLook) { if (this.cfg) this.configure({ ...this.cfg, look }); }
   // the ability's hand animation: the left hand waves (Clear Path), the left wrist comes up for a watch check (Focus
