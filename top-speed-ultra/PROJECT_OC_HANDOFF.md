@@ -251,3 +251,16 @@ If Fable is unavailable, run it on Opus with a design judge pair before any buil
 - From the audits, not yet taken: night lighting (cabin lit as daylight, freeway lamps light nothing), the
   Monopoly houses, the paper mountains, flat clear-day light, traffic bodies' door seams and mirrors, the chase
   camera's hovering rear wheels; teeth, mouth corners, brows and beards on the people.
+
+## Owner questions (open)
+
+- **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
+  "hard shadows" for Low, and the game's `RETRO` preset has a 1024 sun map; the bar's Low plans none (hard-edged blobs
+  and baked light) to stay inside Low's 150-call, 250k frame. If the owner or RS3's style guide asks for hard sun
+  shadows, the bar turns on a 1024 `BasicShadowMap` with a short caster list and takes Low's fallbacks (fewer detailed
+  parked cars and LOD 1 people, no LOD 0). Not settled.
+- **Person builds stall the page** (same section, 2). Each build is one synchronous call (0.29 s to 0.71 s on a
+  desktop, 4.6 s for a phone LOD 0), so filling the room, and the LOD 0 of the person you talk to, freeze frames, worse
+  on a phone. A fix needs a worker or step-wise build in `people/` (F5's builders and Lot 57's P1d own it). Not
+  settled: accept the stalls for now or ask for that build before the bar's S3a, and whether the bar skips LOD 0 at
+  Low meanwhile.
