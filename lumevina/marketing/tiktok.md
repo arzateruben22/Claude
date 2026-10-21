@@ -1,4 +1,4 @@
-# TikTok, the first ten weeks: one explainer a week, with its caption
+# TikTok, the first eleven weeks: one explainer a week, with its caption
 
 The clips are in `marketing/ads/out/video/` (9:16, 720×1280, silent, captions on screen). Post one a week on the same weekday, Evelyn's face for the other posts. Each caption below is the first line (the hook, shown before "more"), the body, and five hashtags. Nothing claims a result; the facts are the lesson's. The link in bio is the shop; the call to action is the free lesson or the online consult, never a discount.
 
@@ -16,6 +16,7 @@ How to post: upload the mp4, keep the sound off or add TikTok's library music lo
 | 8 | `6-1-9x16.mp4` The order of things | Thin to thick, SPF last. The whole order in 22 seconds. | Morning: cleanser, toner, vitamin C, moisturizer, sunscreen last, always. Night: cleanse (twice if you wore makeup or SPF), treat, moisturize. The active goes on clean, dry skin. | #skincareroutine #skincare101 #spf #esthetician #skinschool |
 | 9 | `6-3-9x16.mp4` Purging vs. a breakout | Purging or a reaction? Here's how you tell. | Purging: your usual spots, two to six weeks after a new active, then gone. A reaction: new places, itchy or stinging, and it keeps going. One means keep going, the other means stop. Not sure? A photo in daylight, no filter, through the site. | #purging #acne #skincareeducation #esthetician #skinschool |
 | 10 | `8-3-9x16.mp4` Acne clears on a calendar | I tell everyone: give it 90 days. | In her words, from her playbook. Purging is common in weeks two to six, real results start around day 90, mostly clear by three to six months with consistency. A visit every two to four weeks, home care that decides it, and a doctor too when it's cystic or scarring. | #acnejourney #acne #esthetician #woodlandhills #skinschool |
+| 11 | `10-1-9x16.mp4` The sun, and the shield | What actually ages skin, in 22 seconds. | UV goes past the surface to the dermis, where collagen lives; the spots and the lines add up over years. Sunscreen is a shield on top: enough of it, every morning, SPF 30 or more. It wears off: outside, reapply every two hours. | #antiaging #sunscreen #skinscience #esthetician #skinschool |
 
 ## Between the clips (her face, 20 to 40 seconds, phone in hand)
 

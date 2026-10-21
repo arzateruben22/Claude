@@ -253,5 +253,148 @@ window.seek = function (t) {
   renderer.render(scene, camera);
 };
 `
+  },
+  /* ───────── 10-1 The sun, and the shield ───────── */
+  "10-1": {
+    id: "10-1", kicker: "What actually ages skin", title: `The sun does most of it. <span class="grad">SPF is the shield.</span>`, dur: 22, poster: 12,
+    shots: [
+      { at: 0, name: "bare", cap: "UV goes past the surface to the dermis, where collagen lives. The dark spots and the lines add up over years." },
+      { at: 7, name: "shield", cap: "Sunscreen is a shield on top. Enough of it, every morning, broad spectrum, SPF 30 or more, and most of the UV never gets in." },
+      { at: 14, name: "wears", cap: "It wears off. Outside, reapply every two hours, sooner after sweat or water. Makeup with SPF is a top-up, not the base." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.clock3 { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
+.clock3 b { font-size: 7vmin; font-weight: 700; letter-spacing: -.03em; } .clock3 span { font-size: 2.6vmin; color: #a1a1a6; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-uv"><i style="background:#ffd27a"></i>UV</span><span class="lab3" id="l-col"><i style="background:#b77a80"></i>collagen, in the dermis</span><span class="lab3" id="l-spot"><i style="background:#6b3f2e"></i>a dark spot, years later</span></section>
+<section class="shot"><span class="lab3" id="l-spf"><i style="background:#f6f0e8"></i>sunscreen, enough of it</span><span class="lab3" id="l-bounce"><i style="background:#ffd27a"></i>reflected and absorbed</span></section>
+<section class="shot"><span class="lab3" id="l-thin"><i style="background:#f6f0e8"></i>two hours in: thinning</span><span class="lab3" id="l-re"><i style="background:#f4c9d6"></i>reapply</span><div class="clock3" id="clock3"><b id="clockn">0:00</b><span>outside</span></div></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(-14, 20, 10); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0xf4c9d6, 0.45); fill2.position.set(12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block of skin: epidermis on top, dermis (collagen) below, fat at the base
+const NY = 12, NZ = 9, cells = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = cells.length, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 9) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v + (y === 11 ? 0.04 : 0));
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  cells.push({ x, y, z, c, base: c.clone() });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.x + 0.5, c.y, c.z + 0.5 - NZ / 2); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+// the sun, up and to the left; the rays land on the surface at these spots
+const sun = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 18), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+const SUN = new THREE.Vector3(-12.5, 18.5, 2); sun.position.copy(SUN); scene.add(sun);
+const sunGlow = new THREE.PointLight(0xffd27a, 60, 60, 1.6); sunGlow.position.copy(SUN); scene.add(sunGlow);
+const HITS = [[-4.5, 2.5], [-1.5, -1.5], [1.5, 3.0], [4.0, 0.5], [-3.0, -2.8], [3.5, -3.0], [0.5, 0.8]].map(([x, z]) => new THREE.Vector3(x, 11.5, z));
+const rayGeo = new THREE.CylinderGeometry(0.16, 0.16, 3.2, 8);
+const rayMat = new THREE.MeshBasicMaterial({ color: 0xffdd8a, transparent: true, opacity: 1 });
+const up = new THREE.Vector3(0, 1, 0);
+const rays = HITS.map((hit, k) => {
+  const dir = hit.clone().sub(SUN), len = dir.length(); dir.normalize();
+  const m = new THREE.Mesh(rayGeo, rayMat.clone()); m.quaternion.setFromUnitVectors(up, dir); scene.add(m);
+  const refl = dir.clone().reflect(up);   // off the shield, back up
+  const inner = new THREE.Mesh(rayGeo, rayMat.clone()); inner.quaternion.setFromUnitVectors(up, dir); inner.scale.set(0.7, 1, 0.7); scene.add(inner);
+  const bounce = new THREE.Mesh(rayGeo, rayMat.clone()); bounce.quaternion.setFromUnitVectors(up, refl); scene.add(bounce);
+  return { hit, dir, len, refl, m, inner, bounce, k };
+});
+// the shield: a thin translucent slab over the surface
+const shield = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.7, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf6f0e8, roughness: 0.25, transmission: 0.35, opacity: 0.8, transparent: true }));
+shield.position.set(0, 12.2, 0); shield.castShadow = true; shield.visible = false; scene.add(shield);
+// damage: a dark spot on the surface and tired collagen under each hit
+const BROWN = new THREE.Color(0x6b3f2e), TIRED = new THREE.Color(0x6e4348);
+const tmp = new THREE.Color();
+const near = cells.map((c) => HITS.map((h) => Math.hypot(c.x + 0.5 - h.x, c.z + 0.5 - NZ / 2 - h.z)));
+let damage = HITS.map(() => 0);
+const paint = () => {
+  cells.forEach((c, i) => {
+    if (c.y < 3) return;
+    let k = 0;
+    near[i].forEach((d, j) => { const r = c.y === 11 ? 1.7 : 2.1; if (d < r) k = Math.max(k, damage[j] * (1 - 0.6 * d / r)); });
+    if (k <= 0) return;
+    tmp.copy(c.base).lerp(c.y >= 9 ? BROWN : TIRED, Math.min(1, k * (c.y >= 9 ? 1.0 : 0.6)));
+    block.setColorAt(i, tmp);
+    if (c.y < 9) { dummy.position.set(c.x + 0.5, c.y, c.z + 0.5 - NZ / 2); dummy.scale.setScalar(1 - 0.12 * k); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); }
+  });
+  block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
+};
+const look = new THREE.Vector3(0, 8, 0);
+const place = (t) => {
+  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-uv": [-9, 16.5, 4], "l-col": [5.5, 6, 4.5], "l-spot": [-4.5, 12.4, 3], "l-spf": [6.5, 12.6, 4.5], "l-bounce": [-3, 15.5, 4], "l-thin": [6.5, 12.6, 4.5], "l-re": [-5, 13.2, 4.5] };
+const OFF = { "l-uv": [1, -1], "l-col": [1, 0], "l-spot": [1, -1], "l-spf": [1, 0], "l-bounce": [1, -1], "l-thin": [1, 0], "l-re": [1, -1] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // the shield: on in shot 1, thinning then refilled in shot 2
+  const on = i >= 1 ? E.out(seg(i === 1 ? lt : 99, 0.3, 1.2)) : 0;
+  let thick = i === 2 ? 1 - 0.85 * E.inout(seg(lt, 0.6, 3.6)) + 0.85 * E.out(seg(lt, 5.4, 6.4)) : i === 1 ? on : 0;
+  shield.visible = thick > 0.01;
+  shield.scale.set(1, Math.max(0.02, thick), 1); shield.position.y = 12.0 + 0.35 * thick;
+  shield.material.opacity = 0.8 * Math.min(1, thick * 1.4);
+  const guarded = thick > 0.45;
+  // the rays travel from the sun; without the shield they go in, with it they bounce
+  rays.forEach((r) => {
+    const speed = 0.42, ph = (t * speed + r.k * 0.17) % 1, hitPh = 0.86;
+    const p = r.len * ph;
+    r.m.visible = ph < hitPh;
+    r.m.position.copy(SUN).addScaledVector(r.dir, p);
+    const past = (ph - hitPh) / (1 - hitPh);
+    r.inner.visible = ph >= hitPh && !guarded;
+    r.inner.position.copy(r.hit).addScaledVector(r.dir, past * 6);
+    r.inner.material.opacity = 0.95 * (1 - past);
+    r.bounce.visible = ph >= hitPh && guarded;
+    r.bounce.position.copy(r.hit).addScaledVector(r.refl, past * 7);
+    r.bounce.material.opacity = 0.95 * (1 - past * 0.7);
+  });
+  // damage lands in shot 0 and stays; a little more during the thin stretch of shot 2
+  damage = HITS.map((_, j) => Math.min(1, E.out(seg(i === 0 ? lt : 99, 1.2 + j * 0.55, 5.2 + j * 0.55)) + (i > 0 ? 1 : 0) * (0.65 + 0.07 * j) + (i === 2 ? 0.25 * seg(lt, 2.4, 5.2) : 0)));
+  paint();
+  // labels and the clock (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-uv"), lt, 0.6, { y: 8 }); enter($("#l-col"), lt, 2.2, { y: 8 }); enter($("#l-spot"), lt, 4.6, { y: 8 }); }
+  if (i === 1) { enter($("#l-spf"), lt, 1.4, { y: 8 }); enter($("#l-bounce"), lt, 2.8, { y: 8 }); }
+  if (i === 2) {
+    enter($("#l-thin"), lt, 1.4, { y: 8 }); if (lt > 5.2) $("#l-thin").style.opacity = 1 - seg(lt, 5.2, 5.8);
+    enter($("#l-re"), lt, 5.4, { y: 0, s: 0.6, d: 0.5 });
+    enter($("#clock3"), lt, 0.2, { y: 10 });
+    const mins = Math.round(120 * E.lin(seg(lt, 0.4, 3.6))); $("#clockn").textContent = Math.floor(mins / 60) + ":" + String(mins % 60).padStart(2, "0");
+  }
+  renderer.render(scene, camera);
+};
+`
   }
 };
