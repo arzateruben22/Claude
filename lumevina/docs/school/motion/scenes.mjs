@@ -783,7 +783,7 @@ export const SCENES = {
     html: `
 <div class="wx">
   <div class="ruler" id="ruler"><div class="line"></div>
-    ${[0, 1, 2, 3, 4].map((k) => `<i class="tk" style="left:calc(6vmin + ${k} * 22%)"></i><span class="tl" style="left:calc(6vmin + ${k} * 22%)">${k === 0 ? "0" : k + "/4\\""}</span>`).join("")}
+    ${[0, 1, 2, 3, 4].map((k) => `<i class="tk" style="left:calc(6vmin + ${k} * 22%)"></i><span class="tl" style="left:calc(6vmin + ${k} * 22%)">${k === 0 ? "0" : k + '/4\u2033'}</span>`).join("")}
     <div class="hair" id="hair"></div><span class="rice" id="rice">a grain of rice</span>
     <div class="zone" id="zone" style="left:calc(6vmin + 0.8 * 22%);width:calc(0.5 * 22%)"></div><span class="zl" id="zl" style="left:calc(6vmin + 1.05 * 22%)">about ¼ inch: the wax can grip</span>
   </div>
