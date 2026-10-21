@@ -277,7 +277,7 @@ window.seek = function (t) {
 import * as THREE from "../vendor/three.module.min.js";
 const W = window.W, H = window.H, M = window.M;
 const { seg, tw, E, enter } = M;
-const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };   // always in [0, 1)
 const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
 document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
@@ -333,20 +333,20 @@ const layTop = (hyd, smooth) => {
   block.instanceMatrix.needsUpdate = true;
 };
 // the humectant sponges, in the top rows; water rises to them
-const SP = Array.from({ length: 8 }, (_, k) => new THREE.Vector3(-6 + hash(k + 60) * 12, 10.3 + hash(k + 61) * 0.9, -2.5 + hash(k + 62) * 6));
+const SP = Array.from({ length: 8 }, (_, k) => new THREE.Vector3(-6 + hash(k + 60) * 12, 10.2 + hash(k + 61) * 1.0, NZ / 2 - 0.2));   // on the face toward the camera
 const spongeMat = new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0, roughness: 0.4, transparent: true, opacity: 0 });
 const sponges = SP.map((p) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.62, 0.62), spongeMat); m.position.copy(p); m.rotation.set(0.4, 0.6, 0.2); scene.add(m); return m; });
 const dropGeo = new THREE.SphereGeometry(0.2, 12, 10);
-const drops = Array.from({ length: 22 }, (_, k) => { const m = new THREE.Mesh(dropGeo, new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0.5, roughness: 0.3, transparent: true, opacity: 0.9 })); m.visible = false; scene.add(m); return { m, k, sp: SP[k % SP.length], ox: hash(k + 80) * 2 - 1, oz: hash(k + 81) * 2 - 1 }; });
+const drops = Array.from({ length: 22 }, (_, k) => { const m = new THREE.Mesh(dropGeo, new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fb8, emissiveIntensity: 0.5, roughness: 0.3, transparent: true, opacity: 0.9 })); m.visible = false; scene.add(m); return { m, k, sp: SP[k % SP.length], ox: hash(k + 80) * 2 - 1, oz: 0 }; });
 // the emollient: a glossy amber fill in the seams between the surface cells
 const seams = [];
 for (let x = -7; x < 8; x++) for (let z = 0; z < NZ; z++) seams.push({ p: [x, 11, z + 0.5 - NZ / 2], s: [0.14, 0.7, 0.96] });
 for (let x = -8; x < 8; x++) for (let z = 1; z < NZ; z++) seams.push({ p: [x + 0.5, 11, z - NZ / 2], s: [0.96, 0.7, 0.14] });
-const seamMat = new THREE.MeshPhysicalMaterial({ color: 0xf1c98a, roughness: 0.15, clearcoat: 0.8, emissive: 0x5a3a10, emissiveIntensity: 0.25 });
+const seamMat = new THREE.MeshPhysicalMaterial({ color: 0xf1c98a, roughness: 0.15, clearcoat: 0.8, emissive: 0x7a4a10, emissiveIntensity: 0.45 });
 const seam = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), seamMat, seams.length);
 seam.visible = false; scene.add(seam);
 const laySeams = (f) => {
-  seams.forEach((q, i) => { dummy.position.set(q.p[0], q.p[1] + 0.1, q.p[2]); dummy.rotation.set(0, 0, 0); dummy.scale.set(q.s[0], q.s[1] * f, q.s[2]); dummy.updateMatrix(); seam.setMatrixAt(i, dummy.matrix); });
+  seams.forEach((q, i) => { dummy.position.set(q.p[0], q.p[1] + 0.3, q.p[2]); dummy.rotation.set(0, 0, 0); dummy.scale.set(q.s[0], q.s[1] * f, q.s[2]); dummy.updateMatrix(); seam.setMatrixAt(i, dummy.matrix); });
   seam.instanceMatrix.needsUpdate = true; seam.visible = f > 0.01;
 };
 // the occlusive film: thin, a little glossy, lowered onto the surface
@@ -358,8 +358,8 @@ const place = (t) => {
   camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
   camera.lookAt(look);
 };
-const ANCHOR = { "l-dry": [-5, 12.6, 4.5], "l-hum": [4.5, 11.2, 4.6], "l-water": [-2, 8.5, 4.6], "l-emo": [5, 12.6, 4.5], "l-gap": [-4, 12.3, 3], "l-occ": [5.5, 13.4, 4.5], "l-stay": [-3.5, 10.6, 4.6] };
-const OFF = { "l-dry": [-1, -1], "l-hum": [1, 0], "l-water": [-1, 0], "l-emo": [1, -1], "l-gap": [-1, -1], "l-occ": [1, -1], "l-stay": [-1, 0] };
+const ANCHOR = { "l-dry": [-5, 12.6, 4.5], "l-hum": [8, 12.6, 1.5], "l-water": [-2.5, 7.5, 4.6], "l-emo": [8, 12.8, 1.5], "l-gap": [-4, 12.3, 3], "l-occ": [8, 13.3, 1.5], "l-stay": [-3.5, 10.4, 4.6] };
+const OFF = { "l-dry": [-1, -1], "l-hum": [-1, -1], "l-water": [-1, 0], "l-emo": [-1, -1], "l-gap": [-1, -1], "l-occ": [-1, -1], "l-stay": [-1, 0] };
 const v3 = new THREE.Vector3();
 const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
 window.seek = function (t) {
@@ -373,15 +373,15 @@ window.seek = function (t) {
   const spOn = i === 0 ? E.out(seg(lt, 1.6, 2.6)) : i === 1 ? 1 - seg(lt, 0, 0.8) : 0;
   spongeMat.opacity = 0.95 * spOn; spongeMat.emissiveIntensity = 1.2 * spOn * (0.6 + 0.4 * hyd);
   const filmOn = i === 2 ? E.out(seg(lt, 0.6, 1.8)) : 0;
-  film.visible = filmOn > 0.01; film.position.y = 14.5 - 2.1 * filmOn; film.material.opacity = 0.85 * filmOn;
+  film.visible = filmOn > 0.01; film.position.y = 14.3 - 2.35 * filmOn; film.material.opacity = 0.85 * filmOn;
   // water: rising toward the sponges (shot 0), kept under the film (shot 2); between, resting in the top rows
   drops.forEach((d) => {
     const ph = (t * 0.3 + d.k * 0.0455) % 1;
     const on = i === 0 ? lt > 2.0 : i === 2 ? lt > 2.4 : false;
     d.m.visible = on;
     if (!on) return;
-    if (i === 0) { const y0 = 4.5, p = E.inout(ph); d.m.position.set(d.sp.x + d.ox * (1 - p) * 1.5, y0 + (d.sp.y - y0) * p, d.sp.z + d.oz * (1 - p) * 1.5); d.m.scale.setScalar(1 - 0.75 * seg(ph, 0.85, 1)); d.m.material.opacity = 0.9; }
-    else { const y = 9.6 + 3.2 * ph, capY = 12.0; const under = y < capY; d.m.position.set(d.sp.x + d.ox * 1.2, under ? y : capY - (y - capY) * 0.6, d.sp.z + d.oz * 1.2); d.m.scale.setScalar(0.8); d.m.material.opacity = under ? 0.9 : 0.9 * Math.max(0, 1 - (y - capY) * 1.4); }
+    if (i === 0) { const y0 = 4.5, p = E.inout(ph); d.m.position.set(d.sp.x + d.ox * (1 - p) * 1.5, y0 + (d.sp.y - y0) * p, NZ / 2 + 0.45); d.m.scale.setScalar(1 - 0.75 * seg(ph, 0.85, 1)); d.m.material.opacity = 0.9; }
+    else { const y = 9.4 + 3.0 * ph, capY = 11.75; const under = y < capY; d.m.position.set(d.sp.x + d.ox * 1.2, under ? y : capY - (y - capY) * 0.6, NZ / 2 + 0.45); d.m.scale.setScalar(0.8); d.m.material.opacity = under ? 0.9 : 0.9 * Math.max(0, 1 - (y - capY) * 1.4); }
   });
   // labels (DOM)
   const $ = M.$;
