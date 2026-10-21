@@ -752,7 +752,8 @@ await group('phone', async (use) => {
     // the Day preset is 12:30 on OC's clock: the chip agrees with the sky, not with this device
     expect(/12:30 PM/.test(row.clock), `the Day preset's clock chip says "${row.clock}"`);
     // Live weather with the real feed: the chip shows the observed temperature and names its source
-    await game(page, () => { const g = window.__game; g.now.snapshot = { ...g.now.snapshot, weather: { source: 'NWS', updated: Date.now(), kind: 'cloudy', text: 'Cloudy', tempF: 61 } }; g.updateSettings({ ...g.settings, weather: 'live' }); });
+    // (the setting first: with no server, turning it on loads the simulated day, which the reading then replaces)
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, weather: 'live' }); g.now.snapshot = { ...g.now.snapshot, weather: { source: 'NWS', updated: Date.now(), kind: 'cloudy', text: 'Cloudy', tempF: 61 } }; });
     await page.waitForFunction(() => /61° · NWS KSNA/.test(document.querySelector('.hud-clock')?.textContent || ''), null, { timeout: 30000 })
       .catch(async () => { throw new Error('the chip says ' + await page.locator('.hud-clock').innerText()); });
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, weather: 'clear' }); });
