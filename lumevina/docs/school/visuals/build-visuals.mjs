@@ -229,10 +229,10 @@ const V = {
         <g fill="none" stroke="${ROSE2}" stroke-width="5" stroke-linecap="round">
           <path d="M320 150 C 360 150, 400 160, 440 190"/><path d="M320 150 C 280 150, 240 160, 200 190"/>
           <path d="M320 230 C 360 230, 400 250, 430 280"/><path d="M320 230 C 280 230, 240 250, 210 280"/>
-          <path d="M320 300 C 350 320, 370 350, 380 400"/><path d="M320 300 C 290 320, 270 350, 260 400"/>
+          <path d="M320 290 C 348 306, 366 330, 374 362"/><path d="M320 290 C 292 306, 274 330, 266 362"/>
         </g>
-        <g fill="${ROSE2}"><polygon points="440,190 426,176 422,196"/><polygon points="200,190 214,176 218,196"/><polygon points="430,280 416,268 414,288"/><polygon points="210,280 224,268 226,288"/><polygon points="380,400 364,390 372,408"/><polygon points="260,400 276,390 268,408"/></g>
-        <text x="320" y="60" fill="${T2}" font-size="22" text-anchor="middle">from the centre, outward</text>
+        <g fill="${ROSE2}"><polygon points="440,190 426,176 422,196"/><polygon points="200,190 214,176 218,196"/><polygon points="430,280 416,268 414,288"/><polygon points="210,280 224,268 226,288"/><polygon points="374,362 360,352 366,370"/><polygon points="266,362 280,352 274,370"/></g>
+        <text x="320" y="60" fill="${T2}" font-size="22" text-anchor="middle">from the center, outward</text>
         <text x="320" y="410" fill="${T2}" font-size="22" text-anchor="middle">then down the neck, toward the lymph nodes</text>
       </svg></div>
       <div style="display:grid;gap:20px;align-content:start">
