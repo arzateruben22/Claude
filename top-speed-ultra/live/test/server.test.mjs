@@ -225,3 +225,27 @@ test('/api/ladder reports this hour and a verdict', async () => {
   assert.ok(v.days.length >= 1 && v.days.at(-1).peak >= 1, JSON.stringify(v.days.at(-1)));
   assert.ok(v.reasons.length > 0, 'a brand-new server is never ready');
 });
+
+test('change password: the old one is needed, other sessions end, the new one works', async () => {
+  const t1 = await signup('pw_change');
+  const t2 = (await post('/api/login', { name: 'pw_change', password: 'correct horse battery' })).body.token;
+  assert.equal((await post('/api/password', { current: 'wrong one!', next: 'brand new password' }, t1)).status, 401);
+  assert.equal((await post('/api/password', { current: 'correct horse battery', next: 'short' }, t1)).status, 400);
+  const r = await post('/api/password', { current: 'correct horse battery', next: 'brand new password' }, t1);
+  assert.equal(r.status, 200);
+  assert.equal((await get('/api/me', t2)).status, 401, 'the other session ended');
+  assert.equal((await get('/api/me', r.body.token)).status, 200, 'the fresh token works');
+  assert.equal((await post('/api/login', { name: 'pw_change', password: 'correct horse battery' })).status, 401);
+  assert.equal((await post('/api/login', { name: 'pw_change', password: 'brand new password' })).status, 200);
+});
+
+test('delete account: the password is needed, the driver is kicked, the data and the name are gone', async () => {
+  const t = await signup('to_delete');
+  const c = connect(t); await c.ready; await c.until('welcome');
+  assert.equal((await post('/api/delete', { password: 'nope nope nope' }, t)).status, 401);
+  assert.equal((await post('/api/delete', { password: 'correct horse battery' }, t)).status, 200);
+  await c.until('bye'); assert.equal(c.got.bye.why, 'Account deleted');
+  assert.equal((await get('/api/me', t)).status, 401);
+  assert.equal((await post('/api/login', { name: 'to_delete', password: 'correct horse battery' })).status, 401);
+  assert.equal((await post('/api/signup', { name: 'to_delete', password: 'another good one', over13: true })).status, 200, 'the name is free again');
+});

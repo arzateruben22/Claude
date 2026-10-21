@@ -1000,6 +1000,25 @@ await group('live', async (use) => {
       expect(b.every((x) => x.creative === 'lot57' || x.creative === 'dugout'), 'only our own creatives');
       return b.map((x) => `${x.road} @ ${(x.s / 1000).toFixed(1)} km ${x.creative}`).join('; ');
     });
+    await check('the account panel changes the password and deletes the account, and the server agrees', async () => {
+      await game(A, () => window.__game.setPaused(true));
+      await A.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await A.locator('.pick', { hasText: 'Account' }).click();
+      await A.locator('summary', { hasText: 'Change password' }).click();
+      await A.locator('#live-cur').fill('a long enough password');
+      await A.locator('#live-new').fill('an even longer password');
+      await A.getByRole('button', { name: 'Change password', exact: true }).click();
+      await A.waitForFunction(() => !document.querySelector('.acct-more form button[disabled]'), null, { timeout: 15000 });
+      const login = async (pw) => (await fetch(base + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'live_ui', password: pw }) })).status;
+      expect(await login('an even longer password') === 200 && await login('a long enough password') === 401, 'the new password works and the old one doesn\'t');
+      await A.locator('summary', { hasText: 'Delete account' }).click();
+      await A.locator('#live-del').fill('an even longer password');
+      await A.screenshot({ path: path.join(OUT, 'live-account-signed-in.png') });
+      await A.getByRole('button', { name: 'Delete my account', exact: true }).click();
+      await A.waitForSelector('#live-name', { timeout: 15000 });          // back to the sign-up form
+      expect(await login('an even longer password') === 401, 'the account still logs in');
+      return 'password changed, then the account deleted; the panel is back to sign-up';
+    });
   } finally {
     for (const h of extra) await h.ctx.close();
     server.kill('SIGTERM');

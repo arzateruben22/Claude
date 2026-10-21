@@ -45,6 +45,8 @@ export const liveApi = {
   login: (base: string, name: string, password: string) => call(base, '/api/login', { name, password }),
   logout: (base: string, token: string) => call(base, '/api/logout', {}, token),
   me: (base: string, token: string) => call(base, '/api/me', undefined, token),
+  password: (base: string, token: string, current: string, next: string) => call(base, '/api/password', { current, next }, token),
+  remove: (base: string, token: string, password: string) => call(base, '/api/delete', { password }, token),
   health: (base: string) => call(base, '/health'),
 };
 

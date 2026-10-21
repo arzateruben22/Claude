@@ -86,6 +86,9 @@ const q = {
   byName: db.prepare('SELECT id, name, pass, banned FROM players WHERE name_key = ?'),
   ban: db.prepare('UPDATE players SET banned = ? WHERE name_key = ?'),
   dropAll: db.prepare('DELETE FROM sessions WHERE player = ?'),
+  byId: db.prepare('SELECT id, name, pass FROM players WHERE id = ?'),
+  setPass: db.prepare('UPDATE players SET pass = ? WHERE id = ?'),
+  remove: db.prepare('DELETE FROM players WHERE id = ?'),
   insert: db.prepare('INSERT INTO players (name, name_key, email, pass, created) VALUES (?, ?, ?, ?, ?)'),
   seen: db.prepare('UPDATE players SET last_seen = ? WHERE id = ?'),
   newSession: db.prepare('INSERT INTO sessions (hash, player, created, expires) VALUES (?, ?, ?, ?)'),
@@ -235,6 +238,31 @@ async function handle(req, res) {
     if (path === '/api/logout' && req.method === 'POST') {
       const s = sessionFor(bearer(req));
       if (s) q.drop.run(s.hash);
+      return send(res, 200, { ok: true });
+    }
+    // change the password (the old one is needed); every other session ends, this one gets a fresh token
+    if (path === '/api/password' && req.method === 'POST') {
+      const s = sessionFor(bearer(req));
+      if (!s) return send(res, 401, { error: 'Not logged in.' });
+      if (limited('pw:' + s.id)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      const b = await readJson(req), p = q.byId.get(s.id), next = String(b.next || '');
+      if (!checkPassword(String(b.current || ''), p.pass)) return send(res, 401, { error: 'The current password is wrong.' });
+      if (next.length < 8 || next.length > 128) return send(res, 400, { error: 'A password is at least 8 characters.' });
+      q.setPass.run(hashPassword(next), s.id); q.dropAll.run(s.id);
+      log('password', { id: s.id });
+      return send(res, 200, { token: issueSession(s.id), player: { id: s.id, name: s.name } });
+    }
+    // delete the account and everything stored about it (the password is needed); the name becomes free again
+    if (path === '/api/delete' && req.method === 'POST') {
+      const s = sessionFor(bearer(req));
+      if (!s) return send(res, 401, { error: 'Not logged in.' });
+      if (limited('pw:' + s.id)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      const b = await readJson(req), p = q.byId.get(s.id);
+      if (!checkPassword(String(b.password || ''), p.pass)) return send(res, 401, { error: 'The password is wrong.' });
+      const c = online.get(s.id) || queue.find((o) => o.player && o.player.id === s.id);
+      if (c) kick(c, 'Account deleted');
+      q.remove.run(s.id);                                     // sessions go with it (ON DELETE CASCADE)
+      log('deleted', { id: s.id });
       return send(res, 200, { ok: true });
     }
     if (path === '/api/me') {

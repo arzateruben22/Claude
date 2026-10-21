@@ -29,6 +29,25 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
     saveLogin(t, n); onLogin(t, n); setPw('');
     toast(mode === 'signup' ? `Welcome, ${n}` : `Signed in as ${n}`, 'good');
   };
+  const [pw2, setPw2] = useState(''), [pw3, setPw3] = useState('');
+  const changePw = async (e: FormEvent) => {
+    e.preventDefault(); if (!base) return;
+    setBusy(true); setError('');
+    const r = await liveApi.password(base, token, pw, pw2);
+    setBusy(false);
+    if (!r.ok) { setError(String(r.data.error || 'That didn\'t work.')); return; }
+    const t = String(r.data.token); saveLogin(t, name); onLogin(t, name); setPw(''); setPw2('');
+    toast('Password changed', 'good');
+  };
+  const remove = async (e: FormEvent) => {
+    e.preventDefault(); if (!base) return;
+    setBusy(true); setError('');
+    const r = await liveApi.remove(base, token, pw3);
+    setBusy(false);
+    if (!r.ok) { setError(String(r.data.error || 'That didn\'t work.')); return; }
+    saveLogin('', ''); onLogout(); setPw3('');
+    toast('Account deleted', 'info');
+  };
   const logout = async () => {
     if (base && token) void liveApi.logout(base, token);
     saveLogin('', ''); onLogout(); toast('Signed out', 'info');
@@ -44,6 +63,23 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
     {name ? <>
       <div className="who"><span className="avatar" aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span><div className="who-main"><b className="name-static">{name}</b><p>Signed in on this device</p></div></div>
       <div className="row"><button className="btn primary" onClick={onClose}>Done</button><button className="btn" onClick={() => void logout()}>Log out</button></div>
+      <details className="acct-more">
+        <summary>Change password</summary>
+        <form className="stack form" onSubmit={(e) => void changePw(e)}>
+          <div className="field"><label htmlFor="live-cur">Current password</label><input id="live-cur" className="text" type="password" autoComplete="current-password" required value={pw} onChange={(e) => setPw(e.target.value)} /></div>
+          <div className="field"><label htmlFor="live-new">New password</label><input id="live-new" className="text" type="password" autoComplete="new-password" minLength={8} required value={pw2} onChange={(e) => setPw2(e.target.value)} /></div>
+          <div className="row"><button className="btn" type="submit" disabled={busy}>Change password</button></div>
+        </form>
+      </details>
+      <details className="acct-more">
+        <summary>Delete account</summary>
+        <form className="stack form" onSubmit={(e) => void remove(e)}>
+          <p className="fine">This deletes your account from the live server: your name, the optional email and the password. Your progress on this device stays. It can't be undone.</p>
+          <div className="field"><label htmlFor="live-del">Password</label><input id="live-del" className="text" type="password" autoComplete="current-password" required value={pw3} onChange={(e) => setPw3(e.target.value)} /></div>
+          <div className="row"><button className="btn danger" type="submit" disabled={busy}>Delete my account</button></div>
+        </form>
+      </details>
+      {error && <p className="fine bad" role="alert">{error}</p>}
     </> : <form className="stack form" onSubmit={(e) => void submit(e)}>
       <div className="seg" role="group" aria-label="Sign up or log in" data-n={2} style={{ '--n': 2 } as Record<string, number>}>
         <button type="button" aria-pressed={mode === 'login'} onClick={() => { setMode('login'); setError(''); }}>Log in</button>
