@@ -6719,4 +6719,5 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .watch-item figcaption { margin-top: .6rem; font-size: .92rem; line-height: 1.4; }
 .watch-item figcaption b { display: block; font-weight: 650; }
 .watch-item figcaption span { color: #7d5a44; font-size: .82rem; }
+.watch-more { margin: 1.6rem 0 0; max-width: 42rem; font-size: 0.98rem; line-height: 1.5; color: var(--ink-60); }
 @media (max-width: 760px) { .watch-grid { grid-template-columns: 1fr; gap: 1.4rem; } }
