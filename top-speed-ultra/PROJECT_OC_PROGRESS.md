@@ -13,15 +13,15 @@ there, under our own name, with no real business's name, menu or look, and only 
   slice, places and freeway link from OpenStreetMap via Overture. A reviewer re-ran both pipelines in scratch copies:
   Lot 57's outputs are byte-identical to before (verify 12 of 12), and the bar's outputs reproduce byte for byte
   (verify 13 of 13).
-- **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress after a fourth
-  repair. This round fixed every item the round-3 review listed, including the nearby street set that wrongly pulled
-  in far pieces. Two short check scripts now sit in `tools/anaheim/` (`sportsbar_zones.py`, `sportsbar_sets.py`); the
-  reviewer re-ran both cleanly (12 zones, 73 slots, 61 seats inside; 34 nearby street pieces at about 6,650
-  triangles in 11 batches). The reviewer also re-added every Low, HD and Ultra frame budget by hand (none was raised),
-  reproduced the needs, door and spawn arithmetic, and confirmed the Lot 57 code and Retro module claims hold. Two
-  open owner questions (Low's sun shadows, and person builds that stall the page) went into the handoff. The design
-  review still rejects it over four new, small defects: a street that the windows show is still hidden from inside,
-  and three checks or behaviours that cannot work as written. It needs another pass before building starts.
+- **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress after a fifth
+  repair. This round fixed every item the round-4 review listed, and it now describes Lot 57's code as contracts
+  (names, signatures, promises) because that code is still changing: every number taken from it is marked with the
+  commit and date it was measured at, and the first building step is to re-measure them. The reviewer re-ran both
+  check scripts cleanly (12 plus 14 zones, 73 plus 30 slots, 60 nearby street pieces, both I-5 directions covered)
+  and re-added every Low, HD and Ultra budget by hand; all match. The design review still rejects it over four short
+  gaps: a rule that no person gets the most detailed model contradicts what the plan promises about faces; one check
+  relies on a frame rate our own records contradict; and the plan never says how the I-5 is drawn or what changing
+  the graphics setting does to the people already on screen. It needs another pass before building starts.
 
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
