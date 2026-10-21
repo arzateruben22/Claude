@@ -846,6 +846,79 @@ export const SCENES = {
       } else { $("#again").style.display = "none"; $("#sb-oily").classList.remove("hot"); fcs.forEach((f) => f.classList.remove("dim")); conds.forEach((c) => c.classList.remove("hot")); set($("#again"), { o: 0 }); }
     }
   },
+  "12-2": {
+    id: "12-2", kicker: "After your facial, peel or wax", title: `The first day, <span class="grad">then the first week.</span>`, dur: 21, poster: 10,
+    shots: [
+      { at: 0, name: "day one", cap: "The first day: no makeup, no touching, no heat or sweat, no sun. A gentle cleanse that night or the next morning, moisturizer, SPF." },
+      { at: 7, name: "actives", cap: "No actives for two or three days after a facial; five to seven after a peel, dermaplaning or microchanneling, or until the skin feels normal." },
+      { at: 14, name: "week", cap: "Let flaking fall by itself; pulled skin leaves marks. Change the pillowcase, clean the phone, and skip waxing, threading and new products for a week." }
+    ],
+    css: `
+.aft { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 3vmin; }
+.d1 { display: flex; align-items: stretch; gap: 3vmin; }
+.d1 .big1 { flex: none; width: 26vmin; border-radius: 2.4vmin; background: #f4c9d6; color: #1a1210; padding: 2.4vmin; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; opacity: 0; }
+.d1 .big1 b { font-size: 7vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .d1 .big1 span { font-size: 2.4vmin; font-weight: 600; margin-top: 1vmin; }
+.d1 .rows { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2vmin; }
+.d1 .lab { font-size: 2.3vmin; font-weight: 650; color: #8e8e93; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .8vmin; opacity: 0; }
+.d1 .chips { display: flex; flex-wrap: wrap; gap: 1.4vmin; }
+.d1 .ch { position: relative; padding: 1.3vmin 2.4vmin; border-radius: 999px; background: #111113; border: 1.5px solid rgba(255,255,255,.14); font-size: 2.7vmin; font-weight: 600; color: #f5f5f7; white-space: nowrap; opacity: 0; }
+.d1 .ch.no { border-color: rgba(255,122,107,.6); } .d1 .ch.no i { position: absolute; left: 1.6vmin; right: 1.6vmin; top: 50%; height: .35vmin; background: #ff7a6b; transform-origin: 0 50%; transform: scaleX(0); border-radius: 1vmin; }
+.d1 .ch.yes { border-color: rgba(50,215,75,.6); color: #7fe39a; }
+.days2 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1vmin; }
+.day2 { position: relative; border-radius: 1.6vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 1.6vmin 1vmin 1.4vmin; text-align: center; opacity: 0; min-height: 17vmin; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .8vmin; }
+.day2 .d { font-size: 2.1vmin; color: #8e8e93; font-weight: 600; } .day2 .n { font-size: 3.6vmin; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+.day2.visit { background: #f4c9d6; border-color: #f4c9d6; } .day2.visit .d, .day2.visit .n { color: #1a1210; }
+.day2 .mark { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; margin-top: .4vmin; opacity: 0; }
+.legend2 { display: flex; flex-wrap: wrap; gap: 1vmin 1.6vmin; }
+.legend2 span { display: inline-flex; align-items: center; gap: 1vmin; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.3vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.legend2 i { width: 1.8vmin; height: 1.8vmin; border-radius: 50%; }
+.legend2 span.warn { border-color: rgba(255,122,107,.6); color: #ff9a8b; }
+@media (orientation: portrait) { .aft { gap: 2.4vmin; } .d1 { flex-direction: column; gap: 2.4vmin; } .d1 .big1 { width: 100%; flex-direction: row; gap: 2.4vmin; padding: 2vmin; } .d1 .big1 b { font-size: 6vmin; } .d1 .big1 span { margin-top: 0; text-align: left; } .d1 .ch { font-size: 2.5vmin; } .days2 { grid-template-columns: repeat(4, 1fr); } .day2 { min-height: 11vmin; padding: 1vmin .6vmin .8vmin; gap: .4vmin; } .day2 .n { font-size: 3vmin; } .day2 .mark { width: 1.6vmin; height: 1.6vmin; margin-top: .2vmin; } .legend2 span { font-size: 2.1vmin; padding: .7vmin 1.3vmin; } }`,
+    html: `
+<div class="aft">
+  <div class="d1" id="d1">
+    <div class="big1" id="big1"><b>24h</b><span>the first day: a thinner barrier, open follicles</span></div>
+    <div class="rows">
+      <div><p class="lab" id="lab-no">Keep off it</p><div class="chips"><span class="ch no" id="n1">makeup<i></i></span><span class="ch no" id="n2">touching<i></i></span><span class="ch no" id="n3">heat and sweat: gym, sauna, hot yoga, pools<i></i></span><span class="ch no" id="n4">sun<i></i></span></div></div>
+      <div><p class="lab" id="lab-yes">That night or the next morning</p><div class="chips"><span class="ch yes" id="y1">a gentle cleanse</span><span class="ch yes" id="y2">moisturizer</span><span class="ch yes" id="y3">SPF</span></div></div>
+    </div>
+  </div>
+  <div class="days2" id="days2">
+    ${[0, 1, 2, 3, 4, 5, 6, 7].map((d) => `<div class="day2${d === 0 ? " visit" : ""}" data-d="${d}"><span class="d">${d === 0 ? "visit" : "day +" + d}</span><span class="n">${d === 0 ? "✦" : d}</span><i class="mark m-fac" style="background:#f4c9d6"></i><i class="mark m-peel" style="background:#e2b08c"></i><i class="mark m-flake" style="background:#f1dccf"></i><i class="mark m-new" style="background:#8fd3ff"></i></div>`).join("")}
+  </div>
+  <div class="legend2" id="legend2"><span id="lg-fac"><i style="background:#f4c9d6"></i>after a facial: actives off 2 to 3 days</span><span id="lg-peel"><i style="background:#e2b08c"></i>peel, dermaplaning, microchanneling: 5 to 7</span><span id="lg-feel">or until the skin feels normal</span><span id="lg-flake"><i style="background:#f1dccf"></i>flaking, days 2 to 5: let it fall</span><span class="warn" id="lg-pull">pulled skin leaves marks</span><span id="lg-new"><i style="background:#8fd3ff"></i>no waxing, threading or new products all week</span><span id="lg-house">new pillowcase, clean phone</span></div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      // shot 0: the first-day panel; the four "no" chips enter and get struck through, then the three "yes" chips
+      $("#d1").style.display = i === 0 ? "" : "none";
+      if (i === 0) {
+        enter($("#big1"), lt, 0.2, { y: 14, s: 0.9 });
+        enter($("#lab-no"), lt, 0.6, { y: 6 });
+        ["n1", "n2", "n3", "n4"].forEach((id, k) => { const el = $("#" + id); enter(el, lt, 0.9 + k * 0.45, { y: 10 }); el.querySelector("i").style.transform = "scaleX(" + E.out(seg(lt, 1.4 + k * 0.45, 1.8 + k * 0.45)) + ")"; });
+        enter($("#lab-yes"), lt, 3.4, { y: 6 });
+        ["y1", "y2", "y3"].forEach((id, k) => enter($("#" + id), lt, 3.7 + k * 0.45, { y: 10 }));
+        set($("#big1"), { o: 1, s: 1 + 0.04 * Math.sin(Math.PI * seg(lt, 5.6, 6.5)) });
+      }
+      // shots 1 and 2: the week strip with its marks
+      const strip = i >= 1; $("#days2").style.display = strip ? "" : "none"; $("#legend2").style.display = strip ? "" : "none";
+      if (strip) {
+        const slt = i === 1 ? lt : lt + 9;
+        $$(".day2").forEach((d, k) => enter(d, slt, 0.2 + k * 0.1, { y: 14 }));
+        const on = (sel, from, pred, at) => { $$(sel).forEach((m) => { const d = +m.parentElement.dataset.d; const show = pred(d); set(m, { o: show ? (i > from ? 1 : i === from ? E.out(seg(lt, at, at + 0.5)) : 0) : 0, s: show && i === from ? 0.6 + 0.4 * E.out(seg(lt, at, at + 0.5)) : 1 }); }); };
+        on(".m-fac", 1, (d) => d >= 1 && d <= 3, 1.4);
+        on(".m-peel", 1, (d) => d >= 1 && d <= 7, 2.8);
+        on(".m-flake", 2, (d) => d >= 2 && d <= 5, 0.8);
+        on(".m-new", 2, (d) => d >= 1 && d <= 7, 2.6);
+        const lg = (id, from, at, hideAfter) => { const el = $("#" + id); if (hideAfter && i > from) { set(el, { o: 0 }); el.style.display = "none"; return; } el.style.display = ""; if (i > from) set(el, { o: 1 }); else if (i === from) enter(el, lt, at, { y: 8 }); else { set(el, { o: 0, y: 8 }); el.style.display = "none"; } };
+        lg("lg-fac", 1, 1.6, true); lg("lg-peel", 1, 3.0, true); lg("lg-feel", 1, 4.4, true);
+        lg("lg-flake", 2, 1.0); lg("lg-pull", 2, 2.0); lg("lg-new", 2, 2.8); lg("lg-house", 2, 4.0);
+        const visit = $(".day2.visit"); if (slt > 1) set(visit, { o: 1, s: 1 + 0.05 * Math.sin(Math.PI * seg(lt, i === 1 ? 5.6 : 5.2, (i === 1 ? 5.6 : 5.2) + 0.9)) });
+      }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
