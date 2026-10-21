@@ -4,6 +4,136 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21: ST2, the Ultra graphics tier as a test-mode entitlement SKU (branch `claude/store`, not committed)
+
+Built on ST1 (`7a5a856`). Decision 15 makes Ultra the paid graphics tier, as an entitlement flag only; Low and HD are
+free. This pass sells it as the sku `graphics-ultra` in test mode. Nothing in this branch can charge anyone:
+- The store is in test mode, so it takes only the 4242 test card.
+- Live Stripe keys refuse the sku while its grant is `hook`, and the server test proves it.
+- No live keys exist.
+
+`claude/modes` (read at `1af99e2` with its uncommitted RS1 edits) still has no Ultra flag, so the flag stays in
+`src/store/entitlements.ts`. The Opus queue line in `PROJECT_OC_HANDOFF.md` says how RS2 picks it up.
+
+**What it is.**
+- **Catalog.** `catalog.json` gains `graphics-ultra` "Ultra Graphics": kind `graphics`, $5 (a proposal, TODO
+  owner), one-time, no window, no number. Its copy is one line: "The maximum graphics tier. Low and HD are free."
+- **Entitlement.** `cosmetics.json` gains the entitlement `graphics-ultra`: type `graphics`, tier `ultra`, free tiers
+  Low and HD, status `hook`. The free baseline now lists every graphics setting but Ultra.
+- **Server.** `npm run store:sync` copied the sku to the server. Nothing else changed there:
+  - `create-checkout` sends it as a `price_data` line at the server's price.
+  - `stripe-webhook` grants it, and a refund revokes it, like any sku.
+  - It's a row in 0001's `entitlements` table, under the same row-level security, so it needs no migration.
+    `rls-probe.sql` now probes it.
+- **Who has Ultra** (`ultraState()` in `entitlements.ts`):
+  - `test`: any test-mode build, for everyone, bought or not.
+  - `owned`: the account holds the grant.
+  - `owner`: owner mode is on. `ownerMode()` reads `#owner` and the saved `owner` setting, the switch
+    claude/hypercar adds; this branch's settings don't have it yet.
+  - `free`: a live build where the sku can't be bought yet. It needs to be available and `ready`, the server's
+    live-key rule. A tier is never locked before it can be bought.
+  - `locked`: anything else.
+  - ST1's `ultraUnlocked()` would have locked Ultra in a live build with no way to buy it. This rule replaces it.
+- **The gate.** `gateQuality()` and `App.tsx`'s `gated()` draw a saved Ultra as High while it's locked, and keep the
+  saved choice. A purchase, Restore purchases, a refund, signing out or `#owner` re-checks it on the store's change
+  event. The picker's Ultra button opens the Store while Ultra is locked. In a test build the gate changes nothing.
+- **Restore at boot.** A signed-in live build reads the account's rows once at boot. That was §12's optional
+  hardening; Ultra needs it because it works outside the Store.
+- **Store and settings copy.** The store shows an Ultra card under "Graphics", with the test-mode notice under its
+  price. A state line says who has Ultra on this device. The checkout sheet says "Graphics only: it changes nothing
+  about how any car drives, scores or earns. Low and HD are free." The receipt points to Settings → Display →
+  Graphics. The settings screen has one line under the picker for each state.
+- **Checker.** `tools/store-check-catalog.mjs` adds the Ultra rules: one graphics entitlement, tier `ultra` with
+  free tiers Low and HD, its id equal to `ULTRA_ENTITLEMENT`, granted by the Ultra sku alone, and copy that says
+  "Low and HD are free".
+
+**Verified** (2026-10-21, load average 40 to 48 from the other lanes; logs in `tests/out/`, names `store-st2-*`):
+
+- `npx tsc --noEmit` is clean (`store-st2-tsc.log`). `npm run build` is clean (`store-st2-build.log`): its own
+  `tsc -p tsconfig.game.json`, Vite and the single file. The bundle holds no `sk_`, `rk_live`, `whsec_` or
+  `service_role`, and no "nothing is scored".
+- `npm run store:check`: 23 skus, 12 available, 46 entitlements, and the server copy in sync, with 0 skus whose
+  grants are all ready. On scratch copies, 12 of 12 planted catalogs came out as expected
+  (`store-st2-check-planted.log`):
+  - This branch passes.
+  - These fail: Ultra as tier `hd`; free tiers without HD; the Founder Pack also granting Ultra; the Ultra sku also
+    granting a paint; the sku as a subscription; the sku in the founder window; copy without "Low and HD are free";
+    the flag renamed in `entitlements.ts`; a second, paid HD tier; Ultra at $4.99; and Ultra marked `build` while
+    available.
+- The entitlement test, `node server/supabase/tests/ultra-entitlement.mjs`, passed **17/17**
+  (`store-st2-ultra-entitlement.log`). It runs the real `create-checkout` and `stripe-webhook` against Postgres 16
+  with both migrations. A stand-in for PostgREST runs a player's requests as `authenticated` under row-level
+  security. The game's own `src/store` code is bundled live, against that stand-in, and in test mode. It shows:
+  - Test keys put it on sale. Live keys refuse it (409) with no Stripe call.
+  - The checkout line is the server's $5.00, with the page's price fields ignored, `mode=payment` and the player's
+    id.
+  - No sign-in, an under-13 profile and an unticked 18-or-guardian box are refused.
+  - The webhook grants it once across redeliveries, with no serial. A second checkout is refused: "already have
+    everything".
+  - **Restore**: the boot read and Restore purchases on a second device bring it back. Another account restores
+    nothing of it.
+  - **Revoke**: a refund revokes the row, and Restore takes it off the device. A player can't undo the revoke or
+    grant it to themselves, and an anonymous visitor reads nothing.
+  - **Grant again**: buying it again restores the row, and refunding the Coast Paint Pack leaves Ultra in place.
+  - With the go-ahead (the bundle patched to `ready`), an account without it is `locked` and draws High.
+  - Owner mode grants it through `#owner`, the saved setting or `{ owner: true }`, and `#owner=0` doesn't.
+  - As the catalog is (`hook`), a live build keeps it `free`.
+  - In test mode, 4242 grants it at $5.00 with a test receipt. A declined card and a real card grant nothing.
+    Signing out and in restores it, the card number isn't stored, and no request goes to Supabase or Stripe.
+  - A planted bug (the `locked` state removed) failed 3 of the 17 checks, as it should. The file was restored from
+    a copy.
+- `server/supabase/tests/run-local.sh` ran as the postgres user (`store-st2-rls.log`). Both migrations ran twice,
+  and every earlier probe answered as before. For `graphics-ultra`:
+  - A sees none of B's rows. A's insert, their attempt to take B's row, and a fake purchase are refused. B
+    restores theirs.
+  - After the refund, B's attempt to clear `revoked_at` is refused, and 0 live rows remain.
+  - An anonymous read is refused.
+- `node server/supabase/tests/serial-webhook.mjs`: 24/24 (`store-st2-webhook.log`).
+- `npm test -- --only=boot,progression,store` on the final build passed **31/31** (`store-st2-suite.log`): boot
+  6/6, progression 5/5, store 20/20. The new store checks:
+  - The Ultra card: $5, the notice, the one line, the test-build line, and the lede.
+  - Buying Ultra with 4242: a $5.00 test receipt, "Owned", and Restore purchases keeps it.
+  - Settings at 1280 × 720: the picker reads Low / Medium / High / Ultra, with the `owned` line.
+  - The phone check, extended: the Ultra card and the settings screen at 390 × 844 (`test` line), with no
+    sideways scroll.
+  - The 1280 notice check now includes the Ultra card.
+- `npm test -- --only=store-live`, against a live build (`VITE_PAYMENTS_LIVE=true`) and a mocked project:
+  - The first run (`store-st2-suite-live.log`) passed 3/8. After the first check, every check waited past 120 s for
+    the store panel or a click while the game drew behind it in SwiftShader, at a load of 47 to 48. Then the
+    checkout redirect landed mid-check.
+  - That is what ST1 found for the store group. This pass gives the group the same test-only remedy: `loaded()` holds
+    the game's frame loop once each page is up (`holdGame`). No assertion changed.
+  - The re-run passed **8/8** (`store-st2-suite-live2.log`), including the new check. Ultra is `free` (unlocked for
+    everyone) while it is `hook`. Restore purchases with a `graphics-ultra` row makes it "Owned", and settings say
+    `owned`. After a refund, Restore makes it `free` again. Only the mock project and Stripe's page were contacted.
+    Screenshot: `store-live-ultra-1280.png`, looked at.
+- Screenshots, each one looked at:
+  - `store-ultra-1440x900.png` and `store-ultra-card-1440.png`.
+  - `store-ultra-1280x720.png` and `settings-ultra-1280x720.png`.
+  - `store-ultra-390x844.png`, `store-ultra-card-390.png` and `settings-ultra-390x844.png`.
+  - On every one, the price has "Test mode · nothing is charged" right under it. The settings line sits under the
+    Graphics picker, and nothing overflows at 390.
+
+**Not run here.** Anything that needs the owner's accounts: a real Supabase project (its Auth, PostgREST and
+row-level security under Supabase's own roles), the functions deployed on Deno, and Stripe test-mode Checkout with
+real webhook deliveries. The entitlement test runs the real function code under Node with its types stripped,
+against a stand-in for PostgREST and a stub of Supabase's roles and `auth.uid()`.
+
+**For the owner, before Ultra is sold live** (`PROJECT_OC_MONETIZATION.md` §12):
+- The price ($5 is a proposal).
+- The edit to `CLAUDE.md`'s "everything the game has today stays free", which covers today's Ultra preset.
+- Whether earlier Ultra users keep it.
+- Whether Ultra's longer draw distance in the scored modes is acceptable (§3): 2.4 km against High's 1.8 km.
+
+Then `graphics-ultra` goes to `ready`.
+
+**For the merge.**
+- This branch's settings still show Low, Medium, High and Ultra. The store's "Low and HD are free" matches once
+  RS2's three modes land.
+- `App.tsx` will conflict with the live preview and with `claude/modes`. Keep `gated()` where settings reach the
+  game, the picker's Ultra lock and the `.ultra-note` line.
+- `launch-kit/store.html` still lists the 11 launch items without Ultra: a follow-up.
+
 ## 2026-10-21: ST1, the Founder Edition SKU finished in test mode, and the catalog check accepts a car's own wheel (branch `claude/store`, committed)
 
 This pass continues from the edits on disk (the two entries below, 33 changed files) and from an ST1 attempt earlier
