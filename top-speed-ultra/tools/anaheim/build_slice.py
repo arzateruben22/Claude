@@ -1,14 +1,17 @@
-# Build src/data/anaheim/slice.json: the walkable stadium-district slice around our venue spot.
-# Input: data/slice-*.parquet (fetch_slice.py) and data/venue.json (venue.py).
+# Build src/data/anaheim/<prefix>slice.json: the walkable slice around one of our venue spots.
+#   python3 build_slice.py [venue]     (default lot57 -> slice.json; sportsbar -> sportsbar-slice.json; see ana.VENUES)
+# Input: data/<prefix>slice-*.parquet (fetch_slice.py) and the venue's point (venue.py).
 # Coordinates: game metres (x east, z south from 33.72 N, 117.83 W), stored as decimetre integers, delta-coded per
 # geometry (first point absolute). No business names are written; street names are kept.
 import json, math, os, sys, collections as C
 import shapely, pyarrow.parquet as pq
 from shapely.geometry import box as sbox, Point
-from ana import DATA, OUT, RELEASE, jload, slice_box, to_xz, qpts, delta, Dict, street_name
+from shapely.ops import unary_union
+from ana import DATA, OUT, RELEASE, jload, slice_box, to_xz, qpts, delta, Dict, street_name, venue, STREET_CLASSES
 
-v = jload(f'{DATA}/venue.json')
-X0, Z0, X1, Z1 = slice_box()
+V = venue()
+v = jload(V['json'])
+X0, Z0, X1, Z1 = slice_box(V)
 BOX = sbox(X0, Z0, X1, Z1)
 D = {k: Dict() for k in ('seg', 'sub', 'name', 'bcls', 'btype', 'roof', 'lu', 'water', 'infra', 'cover', 'surf')}
 DP = Dict()  # place categories (separate file)
@@ -16,7 +19,7 @@ stats = C.Counter()
 
 LIC = C.defaultdict(C.Counter)  # theme/type -> (dataset, licence as Overture lists it) -> records used
 def rd(t):
-    rows = pq.read_table(f'{DATA}/slice-{t}.parquet').to_pylist()
+    rows = pq.read_table(V['raw'](t)).to_pylist()
     for r in rows:
         for s_ in r.get('sources') or []: LIC[t][f"{s_['dataset']} | {s_['license'] or 'no licence string'}"] += 1
     return rows
@@ -56,6 +59,7 @@ def rng_or_whole(rs):
     return rs
 
 segs = []
+seg_geo = []  # each piece as a shapely line in metres (for the venue's site block)
 conn_miss = 0
 for r in rd('segment'):
     G = to_xz(shapely.from_wkb(r['geometry']))
@@ -118,7 +122,7 @@ for r in rd('segment'):
             if x: s[key] = x
         for sf in r['road_surface'] or []:
             if sf['value'] and sf['value'] != 'paved' and not sf['between']: s['sf'] = D['surf'](sf['value'])
-        segs.append(s)
+        segs.append(s); seg_geo.append(piece)
         stats['seg:' + (r['class'] if r['subtype'] == 'road' else r['subtype'])] += 1
         if sub: stats['sub:' + sub] += 1
 
@@ -171,13 +175,14 @@ for r in rd('building_part'):
 
 # ------------------------------------------------------------------ places: category and point only (no names)
 vx, vz = v['x'], v['z']
+DROP_IDS = set(v.get('drop_place_ids', []))  # every record at the venue's address or under its real name (venue.py)
 places = []
 pl_cats = C.Counter()
 for r in rd('place'):
     p = to_xz(shapely.from_wkb(r['geometry']))
     if not (X0 <= p.x <= X1 and Z0 <= p.y <= Z1): continue
     addr = ' '.join((a.get('freeform') or '') for a in (r['addresses'] or [])).lower()
-    if '2210' in addr and 'orangewood' in addr: stats['place_at_venue_dropped'] += 1; continue
+    if (V['addr'][0] in addr and V['addr'][1] in addr) or r['id'] in DROP_IDS: stats['place_at_venue_dropped'] += 1; continue
     if (r['operating_status'] or 'open') != 'open': stats['place_not_open'] += 1; continue
     if (r['confidence'] or 0) < 0.5: stats['place_lowconf'] += 1; continue
     cat = r['basic_category'] or (r['taxonomy'] or {}).get('primary') or 'unknown'
