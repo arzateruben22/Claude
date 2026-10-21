@@ -587,19 +587,19 @@ export const SCENES = {
       { at: 18, name: "red", cap: "Red marks after acne are something else: blood vessels, not pigment. Those fade on their own." }
     ],
     css: `
-.faces { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 4vmin; }
-.face { position: relative; width: 26vmin; height: 34vmin; border-radius: 13vmin 13vmin 11vmin 11vmin / 15vmin 15vmin 12vmin 12vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: .35; transition: none; }
+.faces { position: absolute; inset: 0; padding-top: 8vmin; display: flex; align-items: flex-start; justify-content: center; gap: 5vmin; }
+.face { position: relative; width: 34vmin; height: 44vmin; border-radius: 17vmin 17vmin 14vmin 14vmin / 19vmin 19vmin 15vmin 15vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); opacity: .35; transition: none; }
 .face.on { opacity: 1; }
-.face .t { position: absolute; left: 50%; bottom: -5.2vmin; transform: translateX(-50%); white-space: nowrap; font-size: 2.3vmin; font-weight: 650; color: #8e8e93; }
+.face .t { position: absolute; left: 50%; bottom: -5.6vmin; transform: translateX(-50%); white-space: nowrap; font-size: 2.6vmin; font-weight: 650; color: #8e8e93; }
 .face.on .t { color: #fff; }
 .face i { position: absolute; border-radius: 50%; background: #6b3f2e; opacity: 0; }
-.face .lip { position: absolute; left: 50%; bottom: 6.2vmin; width: 8vmin; height: 1.4vmin; margin-left: -4vmin; border-radius: 1vmin; background: #b9786b; }
-.face .nose { position: absolute; left: 50%; top: 12vmin; width: 3.2vmin; height: 8vmin; margin-left: -1.6vmin; border-radius: 2vmin; background: rgba(0,0,0,.08); }
+.face .lip { position: absolute; left: 50%; bottom: 8vmin; width: 10vmin; height: 1.6vmin; margin-left: -5vmin; border-radius: 1vmin; background: #b9786b; }
+.face .nose { position: absolute; left: 50%; top: 15vmin; width: 4vmin; height: 10vmin; margin-left: -2vmin; border-radius: 2vmin; background: rgba(0,0,0,.08); }
 .face.red i { background: #d7585a; }
-.tag9 { position: absolute; left: 0; right: 0; bottom: 2vmin; display: flex; gap: 1vmin; justify-content: center; flex-wrap: wrap; }
-.tag9 span { padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.2vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
+.tag9 { position: absolute; left: 0; right: 0; top: 0; display: flex; gap: 1vmin; justify-content: center; flex-wrap: wrap; }
+.tag9 span { padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 2.4vmin; font-weight: 600; color: #d9d9de; opacity: 0; }
 .tag9 span.hot { background: rgba(255,122,107,.18); border-color: rgba(255,122,107,.5); color: #ff9a8b; }
-@media (orientation: portrait) { .faces { flex-direction: column; gap: 7vmin; } .face { width: 30vmin; height: 36vmin; } .face .t { bottom: -4.6vmin; } }`,
+@media (orientation: portrait) { .faces { gap: 3vmin; padding-top: 16vmin; } .face { width: 29vmin; height: 38vmin; } .face .t { bottom: -5vmin; font-size: 2.3vmin; } .face .lip { bottom: 7vmin; width: 8vmin; margin-left: -4vmin; } .face .nose { top: 12vmin; width: 3.2vmin; height: 8vmin; margin-left: -1.6vmin; } }`,
     html: `
 <div class="faces" id="faces">
   <div class="face" id="f-sun"><div class="nose"></div><div class="lip"></div><span class="t">sun spots</span></div>
