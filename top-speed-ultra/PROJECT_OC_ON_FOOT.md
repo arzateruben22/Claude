@@ -355,7 +355,7 @@ isn't connected to the real venue, real stadium events, real hours, or any websi
 
 - **Weather (simulated by the game):** rain cuts the crowd by about 25% and moves people inside and under cover;
   fog by about 10%.
-- **The live feeds (decision 16, 2026-10-21):** with the realistic mode on, the weather above is the real one (the
+- **The live feeds (decision 17, 2026-10-21):** with the realistic mode on, the weather above is the real one (the
   NWS at KSNA) and the nearby freeway's live flow nudges the target (a jammed 57 on a Friday evening reads as a
   busier venue, ±10%). The crowd is still simulated and still says so: nobody can get a venue's live busyness
   (Google offers no API and forbids scraping). The talk bank (`src/talk/`) gives the groups their lines, matched to the

@@ -18,7 +18,8 @@ A desk is in the book when book.toml has a section for it.
   python paperbook.py --demo        the same, from the desks' demo markets
 
 Writes output/ledger.csv (one row per closed paper trade) and output/paper-book.html,
-plus the Trade Crawler (output/crawler.html) and the Paper Galaxy (output/galaxy.html).
+plus the Trading Deck (output/deck.html, the home page), the Trade Crawler (output/crawler.html) and the
+Paper Galaxy (output/galaxy.html).
 Paper money only. Nothing here can place a real order.
 """
 from __future__ import annotations
@@ -664,21 +665,25 @@ def build(cfg: dict, demo: bool, out: Path, now: Optional[datetime] = None) -> B
     (out / "paper-book.fragment.html").write_text(frag, encoding="utf-8")
     (out / "paper-book.html").write_text(page(frag), encoding="utf-8")
     import crawler                                 # the same numbers, crawled trade by trade
+    import deck                                    # ...as lanes of light on one time axis (the home page)
     import galaxy                                  # ...and drawn as a universe
 
     crawler.write(book, out)
     galaxy.write(book, out)
+    deck.write(book, out)
     return book
 
 
-SERVED = {"/": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
+SERVED = {"/": "deck.html", "/deck": "deck.html", "/deck.html": "deck.html", "/deck.json": "deck.json",
+          "/crawler": "crawler.html", "/crawler.html": "crawler.html", "/crawler.json": "crawler.json",
           "/galaxy": "galaxy.html", "/galaxy.html": "galaxy.html", "/galaxy.json": "galaxy.json",
           "/book": "paper-book.html", "/paper-book.html": "paper-book.html", "/ledger.csv": "ledger.csv"}
 TYPES = {".html": "text/html; charset=utf-8", ".json": "application/json", ".csv": "text/csv; charset=utf-8"}
 
 
 def serve(out: Path, host: str = "127.0.0.1", port: int = 8790):
-    """Read-only: the crawler, the galaxy, the paper book and the ledger, nothing else. Answers only to its own address."""
+    """Read-only: the deck, the crawler, the galaxy, the paper book and the ledger, nothing else. Answers only to its
+    own address."""
     import threading
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -714,7 +719,7 @@ def main(argv=None) -> int:
     ap.add_argument("--demo", action="store_true", help="read the desks' demo results instead of live ones")
     ap.add_argument("--watch", type=float, metavar="MINUTES", help="keep updating every few minutes")
     ap.add_argument("--print", action="store_true", dest="print_only", help="just print the totals; write nothing")
-    ap.add_argument("--serve", type=int, metavar="PORT", help="also show the crawler, galaxy and book at http://HOST:PORT")
+    ap.add_argument("--serve", type=int, metavar="PORT", help="also show the deck, crawler, galaxy and book at http://HOST:PORT")
     ap.add_argument("--host", default="127.0.0.1", help="with --serve: the address to answer on (default this machine only)")
     ap.add_argument("--config", default=str(HERE / "book.toml"))
     args = ap.parse_args(argv)
@@ -733,10 +738,10 @@ def main(argv=None) -> int:
         book = build(cfg, args.demo, out)
         print(render_text(book))
         print(f"\nLedger: {out / 'ledger.csv'}\nReport: {out / 'paper-book.html'}\n"
-              f"Crawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
+              f"Deck: {out / 'deck.html'}\nCrawler: {out / 'crawler.html'}\nGalaxy: {out / 'galaxy.html'}")
         if args.serve and server is None:
             server = serve(out, args.host, args.serve)
-            print(f"Showing the crawler at http://{args.host}:{args.serve}/  (the galaxy: /galaxy, the book: /book)")
+            print(f"Showing the deck at http://{args.host}:{args.serve}/  (crawler: /crawler, galaxy: /galaxy, book: /book)")
             if not args.watch:
                 args.watch = 15                     # serving means staying up, so keep the numbers fresh
         if not args.watch:

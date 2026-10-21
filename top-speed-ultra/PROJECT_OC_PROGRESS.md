@@ -6,7 +6,7 @@ available, so frame rates on real hardware are **not** measured.
 
 ## 2026-10-21: the live server (alpha), the realistic mode, the talk bank and billboards
 
-Decisions 15 and 16. Branch `claude/live-server`. Everything below was run in this sandbox; nothing is deployed, so no
+Decisions 16 and 17. Branch `claude/live-server`. Everything below was run in this sandbox; nothing is deployed, so no
 real phone, real network or real player has touched it.
 
 - **Server tests** (`cd live && npm test`, Node 22.22): 11 of 11 pass. Accounts: the name, password and age rules,

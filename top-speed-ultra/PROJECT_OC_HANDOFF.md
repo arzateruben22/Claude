@@ -7,12 +7,12 @@ model: routine work to `opus`, hard reasoning to `fable`.
 
 ## State at the last update (2026-10-21, a Fable session: the live server)
 
-- **The live server exists** (owner's decision 15): `top-speed-ultra/live/` (server.mjs, its tests, deploy scripts,
+- **The live server exists** (owner's decision 16): `top-speed-ultra/live/` (server.mjs, its tests, deploy scripts,
   README with the costs and the capacity ladder), `src/live/client.ts`, `src/game/live/LiveCars.ts`, `src/ui/Live.tsx`,
   hooks in Game.ts and App.tsx, settings `live` and `liveUrl`, and the suite's `live` group. Branch
   `claude/live-server` off `claude/always-on`, pushed as a backup (decision 14). Not deployed: it needs a domain and
   a box (README, "Put it on the internet"). The cap starts at 25; `deploy/cap.sh` raises it.
-- **Also built (decision 16):** the realistic mode (live weather from the NWS and live freeway flow from TomTom via
+- **Also built (decision 17):** the realistic mode (live weather from the NWS and live freeway flow from TomTom via
   the server's `/api/now`, simulated when there is no feed; the Realistic preset in Settings), the talk bank and the
   Coastal League (`src/talk/`, `tests/talk.mjs`), the radio DJ lines, and twelve billboards near the venues
   (`src/data/ads.json`, `src/game/road/billboards.ts`). To turn the feeds on: `NOW_WEATHER=nws NOW_TRAFFIC=tomtom

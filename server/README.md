@@ -15,7 +15,7 @@ Everything on one small Linux machine that never sleeps:
 | `scanner-fade-scan` / `scanner-fade-grade` | the stock picks sold short on paper (the fade rules), two minutes later, on their own $100 | with the stock scans |
 | `scanner-quick-scan` / `scanner-quick-grade` | the same picks sold at +5% or −3% (the quick rules), on their own $100 | with the stock scans |
 | `scanner-early-scan` / `scanner-early-grade` | the same picks, out by 10:30 New York time (the early rules), on their own $100 | with the stock scans |
-| `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Trade Crawler and Paper Galaxy on port 8790 | right away |
+| `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Trading Deck, Trade Crawler and Paper Galaxy on port 8790 | right away |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for all three rulebooks | right away |
 
 Paper money only for coins and stocks: nothing here can place a real order.
@@ -98,7 +98,8 @@ ssh -L 8788:127.0.0.1:8788 -L 8787:127.0.0.1:8787 -L 8790:127.0.0.1:8790 you@you
 ```
 
 - http://127.0.0.1:8788: **Post Desk**. Approve drafts here, ideally once in the morning.
-- http://127.0.0.1:8790: **Trade Crawler**, which crawls every paper trade and ends with the flags to
+- http://127.0.0.1:8790: the **Trading Deck**, every desk as a lane on one time axis, sorted live by return.
+  `/crawler` is the **Trade Crawler**, which crawls every paper trade and ends with the flags to
   check. The galaxy is at `/galaxy` and the paper book at `/book`.
 - http://127.0.0.1:8787: **Night Desk**, the memecoin desk.
 - Paper book: `bash server/status.sh` prints the totals. The full report is

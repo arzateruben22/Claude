@@ -73,11 +73,12 @@ $1.20 a month on the $6 plan).
 bash server/status.sh
 ```
 
-**To watch it:** the **Trade Crawler** sends a sixteen-legged crawler through every paper trade,
-one desk at a time. Wins light up, big losses get flagged in pink, and it finishes with a list of
-**flags to check** before any real money. The **Paper Galaxy** (`/galaxy`) draws the same trades as
-a universe that grows. Open both on your phone after step 6 of Part 3
-(`sudo bash server/phone.sh`), at the address it prints, port 8790.
+**To watch it:** the **Trading Deck** is one screen with every desk as a lane of light: its paper profit
+since day one, every trade as a spark, its own day-28 finish line, sorted live so the order is the
+scoreboard. It replays from day one when it opens. From there, the **Trade Crawler** (`/crawler`) walks
+every paper trade and finishes with a list of **flags to check** before any real money, and the **Paper
+Galaxy** (`/galaxy`) draws the same trades as a universe that grows. Open them on your phone after step 6
+of Part 3 (`sudo bash server/phone.sh`), at the address it prints, port 8790.
 
 ## Part 3: Start posting on X (about 30 minutes, once)
 
@@ -98,7 +99,7 @@ a universe that grows. Open both on your phone after step 6 of Part 3
    - Copy the whole address from the address bar, paste it back into the server, and press Enter.
 6. **Approve from your phone (optional):** run `sudo bash server/phone.sh` and follow what it
    prints. Install the Tailscale app, sign in, and open the addresses it gives you: Post Desk
-   on port 8788, and the Trade Crawler on port 8790.
+   on port 8788, and the Trading Deck on port 8790.
 7. **On X:** turn on the **Automated** label (Settings → Your account → Account information →
    Automation).
 
