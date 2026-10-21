@@ -58,7 +58,7 @@ once: the UI (theme, menu, HUD) and the hypercar's lights and cluster (M2, judge
   yellow on graphite (its Drive plate takes black ink, `--on-deep`); the Vela E violet over plum with a magenta
   flash. The Drive plate's fill and ink come from tokens (`--ice-deep-2`, `--on-deep`). Contrast per block is in the
   stylesheet. Proof: `tools/atmo-shots.mjs` (new) picks each car through the garage and shoots the menu and a drive
-  frame into `tests/out/atmo/`; ATMO_LINE
+  frame into `tests/out/atmo/`; on the final build it shot all five cars with no errors (`tests/out/atmo/<car>-menu.png` and `<car>-drive.png`, 1280 × 720), each read by eye: the rail, the player card, the cards and the HUD take each car's colours, the Drive plate keeps its ink readable on every fill, and the hypercar's drive frame shows the Unleashed chip. Known and by design: the hypercar's cluster is a static texture (it reads 132 while the HUD reads the live speed), like the GT's digital window; a live cluster is a later step. The first run of the tool timed out on screenshots while the suite ran beside it; the tool now waits up to 180 s for a frame and returns to the menu after a failure.
 - **Checked:** `npx tsc --noEmit` (both configs) clean. `npm run build` clean. `tools/ui-shots.mjs` at 390 × 844 and
   1280 × 720 (`tests/out/ui-ice2/`), every screen read by eye: the rail, the player card, the cards, the sign plate,
   the icon rail, the speed block and the round map all read; one layout bug found and fixed on the first pass (the
