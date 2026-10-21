@@ -280,3 +280,32 @@ test('crews: friends with a code see, hear and list only each other; the cap is 
   assert.ok(out.got.p.online >= 3, 'everyone counts toward the one cap');
   for (const c of [a, b, out]) c.sock.close();
 });
+
+test('the online board: a live drive shows on GET /api/board; a ban hides it, deleting the account removes it', async () => {
+  const t = await signup('board_driver');
+  const c = connect(t); await c.ready; await c.until('welcome');
+  // 30 m/s along x for 4.5 s, a pose every 100 ms: 135 m, held 30 m/s for 3 s
+  for (let i = 0; i <= 45; i++) { c.send({ t: 's', x: 2000 + i * 3, y: 20, z: -800, h: Math.PI / 2, v: 30 }); await sleep(100); }
+  c.sock.close();                                                    // leaving writes the row at once
+  await sleep(300);
+  const pub = await get('/api/board');
+  assert.equal(pub.status, 200);
+  const row = pub.body.distance.find((r) => r.name === 'board_driver');
+  assert.ok(row && row.value > 110 && row.value <= 140, `distance ${JSON.stringify(pub.body.distance)}`);
+  assert.equal(pub.body.you, undefined, 'no "you" without a token');
+  assert.deepEqual(Object.keys(pub.body.distance[0]).sort(), ['name', 'rank', 'value'], 'names and numbers only');
+  await sleep(2100);                                                 // past the 2 s memo
+  const mine = await get('/api/board?period=week', t);
+  const sp = mine.body.speed.find((r) => r.name === 'board_driver');
+  assert.ok(sp && sp.value >= 25 && sp.value <= 31.5, `speed ${JSON.stringify(mine.body.speed)}`);
+  assert.equal(mine.body.period, 'week');
+  assert.ok(mine.body.you?.distance?.rank >= 1, JSON.stringify(mine.body.you));
+  await post('/admin/ban', { name: 'board_driver' }, 'admin-secret');
+  await sleep(2100);
+  assert.ok(!(await get('/api/board')).body.distance.some((r) => r.name === 'board_driver'), 'a banned driver is hidden');
+  await post('/admin/ban', { name: 'board_driver', banned: false }, 'admin-secret');
+  const t2 = (await post('/api/login', { name: 'board_driver', password: 'correct horse battery' })).body.token;
+  assert.equal((await post('/api/delete', { password: 'correct horse battery' }, t2)).status, 200);
+  await sleep(2100);
+  assert.ok(!(await get('/api/board?period=week')).body.distance.some((r) => r.name === 'board_driver'), 'a deleted account is gone');
+});

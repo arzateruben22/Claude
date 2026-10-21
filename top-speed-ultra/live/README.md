@@ -39,10 +39,17 @@ What it does today:
 - **The ladder, measured.** The server records every hour (peak, line, CPU, memory, dropped poses, bytes) and says
   when the cap can go up a rung (`/api/ladder`, `server/live-status.sh`).
 - **Restarts are painless.** A restart (an update, a reboot) closes sockets with a code the game reconnects on.
+- **The online board** (`board.mjs`, `GET /api/board?period=today|week`): built only from the poses the relay
+  accepted, on the server's clock. Per driver per Pacific day: distance driven while connected, the best speed held
+  for 3 s, and the longest unbroken drive. Nothing the phone scores is used, so Speed Survival streaks and near
+  misses stay off it. Ceilings: 110 m/s and 3,000 km a day. Banned drivers are hidden, deleted accounts removed, and
+  rows kept 35 days. It answers names and numbers only, plus "you" with a token. Its honest gap: a modified client
+  driving a perfect line within the ceilings can't be told apart by poses alone; the cap, the visible name and a ban
+  bound it. Built by the hypercar lane (a Fable agent); this lane wired and reviewed it.
 
 What it doesn't do yet (honest list): email verification (an email is optional and only used for password reset),
-chat, races against real people, an online leaderboard (that needs anti-cheat, and the relay
-has none worth the name), and more than one lobby.
+chat, races against real people, a board for scores the phone keeps (Survival streaks, race times), and more than
+one lobby.
 
 ## The realistic mode's feeds (`now.mjs`)
 

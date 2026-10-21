@@ -23,6 +23,7 @@ import { createNow } from './now.mjs';
 import { nameProblem } from './names.mjs';
 import { verdict } from './ladder.mjs';
 import { nextCruise } from './cruise.mjs';
+import { createBoard } from './board.mjs';
 const CRUISE = process.env.CRUISE || '';   // cruise nights, Pacific time: "Fri 20:00, Sun 18:00"
 
 // ------------------------------------------------------------------------------------------------ configuration
@@ -91,6 +92,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS hourly (
   poses_in INTEGER, poses_dropped INTEGER, bytes_out INTEGER, cpu_ms INTEGER, rss_mb INTEGER)`);
 // added after the first release: an older database gets the column
 try { db.exec('ALTER TABLE players ADD COLUMN banned INTEGER NOT NULL DEFAULT 0'); } catch { /* already there */ }
+// the online board: built only from the poses the relay accepts, on this server's clock (board.mjs)
+const board = createBoard(db);
 const q = {
   byName: db.prepare('SELECT id, name, pass, banned FROM players WHERE name_key = ?'),
   ban: db.prepare('UPDATE players SET banned = ? WHERE name_key = ?'),
@@ -279,6 +282,10 @@ async function handle(req, res) {
     if (path === '/api/now') return send(res, 200, now.snapshot());
     if (path === '/api/ladder') { if (!isLocal(req)) return send(res, 404, 'not found'); recordHour(); return send(res, 200, verdict([...hoursSince(8).filter((h) => h.hour !== hourly.key), hourRow()], MAX_PLAYERS)); }
     if (path === '/api/traffic') return send(res, 200, now.snapshot().traffic);
+    if (path === '/api/board') {
+      if (limited('board:' + ipOf(req), 600)) return send(res, 429, { error: 'Too many requests. Wait a few minutes.' });
+      return send(res, 200, board.snapshot({ period: url.searchParams.get('period') === 'week' ? 'week' : 'today', limit: clampInt(url.searchParams.get('limit'), 1, 100, 10), me: sessionFor(bearer(req))?.id || 0 }));
+    }
     if (path === '/api/signup' && req.method === 'POST') {
       if (unknownIp(req)) return send(res, 400, { error: 'Bad request.' });
       if (limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
@@ -336,6 +343,7 @@ async function handle(req, res) {
       if (!(await checkPassword(String(b.password || ''), p.pass))) { hit('pw:' + s.id); return send(res, 401, { error: 'The password is wrong.' }); }
       dropSockets(s.id, 'Account deleted');
       q.remove.run(s.id);                                     // sessions go with it (ON DELETE CASCADE)
+      board.forget(s.id);                                     // and every board row
       log('deleted', { id: s.id });
       return send(res, 200, { ok: true });
     }
@@ -453,6 +461,7 @@ function leave(c, why) {
   const qi = queue.indexOf(c);
   if (qi >= 0) queue.splice(qi, 1);
   if (c.admitted && online.get(c.player.id) === c) {
+    board.flush(c.player.id);
     online.delete(c.player.id);
     broadcast({ t: 'leave', id: c.player.id, online: online.size }, c);
     log('leave', { id: c.player.id, name: c.name, why, online: online.size });
@@ -506,6 +515,7 @@ function onPose(c, m) {
   c.strikes = Math.max(0, c.strikes - 1);
   c.pose = { x: m.x, y: m.y, z: m.z, h: m.h, v: m.v, b: m.b ? 1 : 0 };
   c.poseAt = now;
+  board.record(c.player.id, c.pose, now, c.name);
 }
 
 // a honk: heard by the drivers within HONK_M of the one honking, at most one every HONK_MS each
@@ -609,4 +619,4 @@ setInterval(recordHour, 5000).unref();
 function log(ev, data) { console.log(JSON.stringify({ at: new Date().toISOString(), ev, ...data })); }
 now.start();
 server.listen(PORT, HOST, () => log('listen', { host: HOST, port: PORT, cap: MAX_PLAYERS, db: DB_PATH, players: Number(q.count.get().n) }));
-for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); try { recordHour(); writeHour(); } catch { /* best effort */ } for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting', 4001); server.close(); db.close(); process.exit(0); });
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); try { recordHour(); writeHour(); board.close(); } catch { /* best effort */ } for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting', 4001); server.close(); db.close(); process.exit(0); });

@@ -36,9 +36,10 @@ here, then read:
   - The Coastal League is made up. Trends come from `live/trends.json`, by hand, never from a news feed; nothing
     political. Billboards carry only our own venues until a business signs a deal.
   - Live driving is an **alpha** (2026-10-21): `live/` is a real server with accounts and a capped lobby (25 to
-    start) that relays where each car is, and the game draws other drivers as ghosts. Say exactly that: no races
-    against people, no online leaderboard, no chat, and it only works where a server is running. Never call it
-    "multiplayer" without "alpha" and the cap.
+    start) that relays where each car is, and the game draws other drivers as ghosts. Its online board ranks only
+    what the server saw (distance, speed held 3 s, longest drive), never phone-kept scores. Say exactly that: no
+    races against people, no chat, and it only works where a server is running. Never call it "multiplayer"
+    without "alpha" and the cap.
 - **Radio.** Original or licensed audio only. Never scrape streams.
 - **Map data.** Never copy Google Maps data.
 - **Other projects.** Don't modify Trade Crawler or other projects in this repo.

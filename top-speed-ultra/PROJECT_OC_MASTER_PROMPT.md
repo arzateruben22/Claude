@@ -103,8 +103,8 @@ Built items are marked ✅. Everything else is still to do.
 - **Map data.** Use only OpenStreetMap or Overture data (credit them). Never copy Google Maps.
 - **Honest claims.**
   - Never claim live data, live weather, multiplayer or live occupancy that doesn't exist. The live server is an
-    alpha with a cap: say "alpha", say the cap, and say what it doesn't do (no races against people, no online
-    leaderboard, no chat).
+    alpha with a cap: say "alpha", say the cap, and say what it doesn't do (no races against people, no chat; the
+    online board ranks only what the server saw while you drove live).
   - Be honest about limits, including what a browser on a phone can do.
 - **Other projects.** Don't modify Trade Crawler, the Los Güeros website at the repo root, or other projects.
 - **Verify everything.**

@@ -20,10 +20,11 @@ import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
 import { AccountPanel, LiveChip } from './Live';
+import { OnlineBoard } from './OnlineBoard';
 import { LiveClient, LiveInfo, liveBase, loadToken, loadName, liveApi } from '../live/client';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'account';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'account' | 'online';
 const LIVE_OFF: LiveInfo = { status: 'off', online: 0, cap: 0, position: 0, error: '' };
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -330,6 +331,7 @@ export function App() {
         cls: 'narrow', body: <AccountPanel settings={settings} update={update} name={liveName} token={liveToken} toast={toast}
           onLogin={(t, n) => { setLiveToken(t); setLiveName(n); if (!settingsRef.current.live) update({ live: true }); }} onLogout={() => { setLiveToken(''); setLiveName(''); update({ live: false }); }} onClose={() => setPanel(null)} />,
       };
+      case 'online': return { cls: 'narrow', body: <OnlineBoard base={liveBase(settings.liveUrl)} me={liveName} token={liveToken} onClose={() => setPanel(null)} /> };
       case 'course': return {
         cls: '', body: <>
           <h2>Races</h2>
@@ -488,6 +490,9 @@ export function App() {
         <button className="pick" onClick={() => setPanel('account')}>
           <small>Account</small><b>{liveName || 'Not signed in'}</b><span>{liveName ? 'Signed in on this device' : 'Sign up or log in to drive live'}</span><Chevron />
         </button>
+        {liveBase(settings.liveUrl) && <button className="pick" onClick={() => setPanel('online')}>
+          <small>Online board</small><b>Today and this week</b><span>Distance, top speed and longest drive, as the server saw them</span><Chevron />
+        </button>}
       </div>
       <Toggle label="Drive live: other drivers' cars appear on the freeway" value={settings.live} onChange={(v) => { if (v && !liveName) { setPanel('account'); return; } update({ live: v }); }} />
       <div className="field crew"><label htmlFor="crew">Crew code <span className="muted">optional</span></label>
