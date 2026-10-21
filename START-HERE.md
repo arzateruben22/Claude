@@ -118,7 +118,8 @@ sudo bash server/live.sh
 It gives the game a free public https address through Tailscale (the same app as Part 3, step 6), checks it end to
 end, and prints the link. The first time, Tailscale may ask you to turn on **Funnel** for this machine; the script
 says how. Open the link on your phone, tap **Account** under "Live · alpha", sign up, turn on **Drive live**, and drive.
-Send the same link to anyone.
+Send the same link to anyone. For a private drive with friends, make a **crew code** in the Live section and
+use **Invite to your crew**. Only drivers with that code see each other.
 
 - **Live freeway traffic** (optional, free): sign up at **developer.tomtom.com**, copy the API key, run
   `sudo bash server/live.sh` again and paste it when asked.

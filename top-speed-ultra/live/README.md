@@ -24,6 +24,9 @@ What it does today:
 - **Finding each other.** Every 2 s the server sends a roster (where every driver is, to the metre, nearest 200), so
   the corner map shows live drivers as orange dots, and tapping the Live chip lists who's on and on which freeway.
   **Drive with** (Free Drive only) puts you 80 m behind that driver on their carriageway.
+- **Crews.** A code of 4 to 8 letters or numbers puts friends in a room of their own: they see, hear and list only
+  each other, while everyone shares the one cap and line. New code makes one; Invite sends a link with `?crew=CODE`,
+  and opening it joins the crew.
 - **The horn.** G or the horn button: you hear yours, and drivers within 500 m hear it panned to where you are, with
   "Name honked". One honk every 1.5 s at most.
 - **Accounts you control.** Change your password, set or remove the email used for resets, or delete your account
