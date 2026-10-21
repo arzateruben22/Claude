@@ -37,6 +37,7 @@ const SESSION_DAYS = 30;
 const TICK_MS = 100;                 // the relay's snapshot period (10 Hz)
 const STATE_MAX_HZ = 15;             // a client may send poses up to this often; more are dropped
 const NEAR_M = 3000;                 // a driver hears about drivers within this many metres
+const NEAR_MAX = 32;                 // and about this many at most, the nearest first (keeps each snapshot's size flat)
 const WORLD_M = 120000;              // OC fits well inside ±120 km of the map origin
 const SPEED_MAX = 200;               // m/s: nothing here does 447 mph
 const JUMP_MAX = 240;                // m/s implied by two consecutive poses: beyond this the pose is a teleport
@@ -268,7 +269,9 @@ function leave(c, why) {
   c.admitted = false;
   admitFromQueue();
 }
-function kick(c, why) { stats.kicked++; sendTo(c, { t: 'bye', why }); leave(c, why); try { c.ws.close(4000, why); } catch { /* closing */ } }
+// close codes: 4000 means don't come back on your own (logged out, signed in elsewhere, bad data); 4001 means the
+// server is restarting, so the game reconnects by itself a few seconds later
+function kick(c, why, code = 4000) { stats.kicked++; sendTo(c, { t: 'bye', why, retry: code === 4001 }); leave(c, why); try { c.ws.close(code, why); } catch { /* closing */ } }
 
 function onHello(c, m) {
   const s = sessionFor(m.token);
@@ -307,19 +310,24 @@ function onPose(c, m) {
   c.poseAt = now;
 }
 
-// the relay: every TICK_MS, each driver gets the poses of the drivers near them (ids they haven't met yet come with
-// a name, car and paint, so a late joiner can draw them)
+// the relay: every TICK_MS, each driver gets the poses of the drivers near them: within NEAR_M, the nearest NEAR_MAX
+// at most, so a snapshot never grows past a fixed size however full the lobby gets. Rows are built once a tick.
 function tick() {
-  const now = Date.now();
+  const now = Date.now(), fresh = [];
+  for (const o of online.values()) {
+    if (!o.pose || now - o.poseAt > 3000) continue;
+    const p = o.pose;
+    fresh.push({ o, x: p.x, z: p.z, row: [o.player.id, r1(p.x), r1(p.y), r1(p.z), r3(p.h), r1(p.v), p.b] });
+  }
   for (const c of online.values()) {
-    const near = [];
-    for (const o of online.values()) {
-      if (o === c || !o.pose || now - o.poseAt > 3000) continue;
-      if (c.pose && Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) > NEAR_M) continue;
-      const p = o.pose;
-      near.push([o.player.id, r1(p.x), r1(p.y), r1(p.z), r3(p.h), r1(p.v), p.b]);
+    let near = [];
+    for (const f of fresh) {
+      if (f.o === c) continue;
+      const d = c.pose ? Math.hypot(f.x - c.pose.x, f.z - c.pose.z) : 0;
+      if (d <= NEAR_M) near.push({ d, row: f.row });
     }
-    sendTo(c, { t: 'p', n: near, online: online.size, cap: MAX_PLAYERS });
+    if (near.length > NEAR_MAX) near = near.sort((a, b) => a.d - b.d).slice(0, NEAR_MAX);
+    sendTo(c, { t: 'p', n: near.map((n) => n.row), online: online.size, cap: MAX_PLAYERS });
   }
 }
 const r1 = (v) => Math.round(v * 10) / 10, r3 = (v) => Math.round(v * 1000) / 1000;
@@ -355,4 +363,4 @@ setInterval(tick, TICK_MS).unref();
 function log(ev, data) { console.log(JSON.stringify({ at: new Date().toISOString(), ev, ...data })); }
 now.start();
 server.listen(PORT, HOST, () => log('listen', { host: HOST, port: PORT, cap: MAX_PLAYERS, db: DB_PATH, players: Number(q.count.get().n) }));
-for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting'); server.close(); db.close(); process.exit(0); });
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting', 4001); server.close(); db.close(); process.exit(0); });

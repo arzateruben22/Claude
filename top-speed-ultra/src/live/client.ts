@@ -77,6 +77,7 @@ export class LiveClient {
       this.ws = null; this.peers.clear();
       if (this.stopped) { this.set({ status: 'off', position: 0 }); return; }
       if (e.code === 4000) { this.stopped = true; this.set({ status: 'error', error: e.reason || 'Disconnected' }); return; }   // the server's own reasons: no retry
+      if (e.code === 4001) this.retry = 1;          // the server is restarting: back in about 2 s, not after a long backoff
       this.retry = Math.min(5, this.retry + 1);
       this.set({ status: 'connecting', error: 'Reconnecting' });
       this.timer = window.setTimeout(() => this.open(), 1000 * 2 ** (this.retry - 1));

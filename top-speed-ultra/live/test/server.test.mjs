@@ -143,3 +143,46 @@ test('behind a local proxy with no client address, sign-ups are not throttled as
   // loopback counted as one client
   for (let i = 0; i < 12; i++) assert.equal((await post('/api/signup', { name: 'proxy_' + i, password: 'correct horse battery', over13: true })).status, 200);
 });
+
+test('a snapshot carries the nearest 32 drivers at most, nearest first', async () => {
+  await post('/admin/cap', { cap: 60 }, 'admin-secret');
+  const me = connect(await signup('crowd_me')); await me.ready; await me.until('welcome');
+  me.send({ t: 's', x: 0, y: 10, z: 0, h: 0, v: 30 });
+  const crowd = [];
+  for (let i = 0; i < 40; i++) {
+    const c = connect(await signup('crowd_' + i)); await c.ready; await c.until('welcome');
+    c.send({ t: 's', x: 10 + i * 20, y: 10, z: 0, h: 0, v: 30 });      // 10 m, 30 m, ... 790 m away
+    crowd.push(c);
+  }
+  // signing 40 up takes a few seconds (scrypt), longer than a pose stays fresh: everyone sends again
+  me.send({ t: 's', x: 0, y: 10, z: 0, h: 0, v: 30 });
+  crowd.forEach((c, i) => c.send({ t: 's', x: 10 + i * 20, y: 10, z: 0, h: 0, v: 30 }));
+  await sleep(350);
+  const last = me.all.filter((m) => m.t === 'p').at(-1);
+  assert.equal(last.n.length, 32, `${last.n.length} rows`);
+  const xs = last.n.map((r) => r[1]).sort((a, b) => a - b);
+  assert.equal(xs[0], 10); assert.equal(xs[31], 10 + 31 * 20, 'the 32 nearest, the 8 farthest left out');
+  for (const c of [me, ...crowd]) c.sock.close();
+  await sleep(200);
+  await post('/admin/cap', { cap: 25 }, 'admin-secret');
+});
+
+test('a restart closes sockets with a code the game reconnects on', async () => {
+  // a second server of its own, so stopping it doesn't touch the others' tests
+  const dir2 = mkdtempSync(join(tmpdir(), 'oc-live-r-')), port = 26000 + Math.floor(Math.random() * 4000);
+  const p2 = spawn(process.execPath, [new URL('../server.mjs', import.meta.url).pathname], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', DB_PATH: join(dir2, 'r.db') }, stdio: ['ignore', 'pipe', 'inherit'] });
+  await new Promise((r) => p2.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) r(); }));
+  const r = await fetch(`http://127.0.0.1:${port}/api/signup`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'restart_me', password: 'correct horse battery', over13: true }) });
+  const { token } = await r.json();
+  const sock = new WebSocket(`ws://127.0.0.1:${port}/ws`);
+  const got = [];
+  const closed = new Promise((res) => sock.addEventListener('close', (e) => res(e.code)));
+  sock.addEventListener('message', (e) => got.push(JSON.parse(e.data)));
+  await new Promise((res) => sock.addEventListener('open', res));
+  sock.send(JSON.stringify({ t: 'hello', token }));
+  while (!got.some((m) => m.t === 'welcome')) await sleep(20);
+  p2.kill('SIGTERM');
+  assert.equal(await closed, 4001);
+  assert.deepEqual(got.find((m) => m.t === 'bye'), { t: 'bye', why: 'Server restarting', retry: true });
+  rmSync(dir2, { recursive: true, force: true });
+});
