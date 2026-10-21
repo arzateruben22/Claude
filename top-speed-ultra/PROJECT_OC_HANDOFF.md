@@ -38,6 +38,8 @@ model: routine work to `opus`, hard reasoning to `fable`.
   speed held 3 s, longest drive), never from client-submitted scores; that session writes `live/board.mjs`,
   `live/test/board.test.mjs`, `src/live/board.ts`, `src/ui/Board.tsx`; this lane wires `server.mjs` and the menu and
   reviews. Anti-cheat rules are Fable-class: have a Fable session review them before the board goes public.
+  **Merged and wired (17:55 UTC).** Owner questions it raises: raise the speed ceiling (110 m/s) when the hypercar
+  ships; is 3,000 km a day right; an all-time board; public board or signed-in only (public now, names only).
 - **Next** (in order; Opus-class unless marked):
   1. Done: every suite group passes on the latest build (core 62 of 62, `live` 12 of 12, `livephone` 5 of 5). Crews,
      cruise nights, password reset and the realistic-mode fixes are in (progress log, the morning entry).

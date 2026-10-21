@@ -4,6 +4,29 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (afternoon): light traffic while live, the welcome card's real bug, and the online board
+
+The owner resumed the loop ("keep going til everything is finished") with a 75% usage checkpoint (pause, assess, ask).
+
+- **Computer traffic stays light while driving live** (decision 18). Presets are capped at Light with no aggressive
+  drivers; Live traffic keeps its rush hour scaled into 1.2 to 3.5 cars per km per lane; the HUD says "light while
+  live". Browser (`live` group, realistic-mode check): I-405 North at a flow ratio of 0.89 gave 1.5 cars/km/lane,
+  bold 0, HUD "Live traffic · simulated · typical day · light while live"; Heavy while live 2.2, live off 9, back on
+  2.2.
+- **The welcome card was under the menu.** The invite-link greeting rendered before the menu, so the menu's buttons
+  took the taps: a new player saw the card but couldn't use it. Found by the `livephone` check (Playwright: "Settings
+  from the menu intercepts pointer events"); the card now renders after the menu, and the check asserts the Sign up
+  button is the topmost element where a tap lands. The check's earlier timeouts were the test's own in-page waits
+  stalling on a second loaded phone; it now polls from the test side. `livephone` 7 of 7.
+- **The online board** (built by the hypercar lane's Fable agent on `claude/live-board`, reviewed, merged and wired
+  here): `live/board.mjs` ranks distance, the speed held for 3 s and the longest unbroken drive per Pacific day from
+  relay-accepted poses only; `GET /api/board`; the menu's Online board panel. Server test: a 4.5 s drive at 30 m/s
+  read ~135 m and ~30 m/s held; a ban hid it; a delete removed it. `cd live && npm test`: 58 of 58 (board module 9,
+  the wiring 1). The hardening file failed 3 of its timing tests once while a browser group loaded the machine, and
+  passed 9 of 9 alone and in the full run after.
+- `live` group: 12 of 12 before the board (this afternoon's run); the rerun with the board check is logged below
+  when it finishes.
+
 ## 2026-10-21 (morning, the scheduled continuation): crews, cruise nights, password reset, and two realistic-mode fixes
 
 The owner's standing order is to keep improving until they say stop. A scheduled task wakes the session every 2 hours.
