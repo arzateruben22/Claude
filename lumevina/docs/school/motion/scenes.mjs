@@ -1940,6 +1940,78 @@ export const SCENES = {
       [...sec.querySelectorAll(".hd, .tr3, .go, .bk")].forEach((el, n) => enter(el, lt, (i === 3 ? 0.4 : 0.3) + n * (i === 2 ? 0.55 : 0.6) + (el.classList.contains("go") ? 0.4 : 0), { y: 14 }));
     }
   },
+  "14-1": {
+    id: "14-1", kicker: "Your first visit at Lumevina", title: `Which one to book: <span class="grad">two questions.</span>`, dur: 24, poster: 4,
+    shots: [
+      { at: 0, name: "new", cap: "New, without acne concerns: New Clients Start Here. A consultation, a review of your routine, and a customized facial." },
+      { at: 6.5, name: "acne", cap: "New, with acne concerns: the Acne Bootcamp consultation and treatment, then monthly, or every two weeks for severe acne." },
+      { at: 12.5, name: "back", cap: "Returning: the Lumevina Custom Facial, or the Monthly Acne Treatment when acne is the work." },
+      { at: 18, name: "bring", cap: "Bring a clean face if you can, hair you don't mind getting damp, and your product list or photos of it. Parking is free." }
+    ],
+    css: `
+.mx { position: absolute; left: 6vmin; top: 50%; width: 94vmin; margin-top: -17vmin; display: grid; grid-template-columns: 19vmin 1fr 1fr; grid-template-rows: 5vmin 13vmin 13vmin; gap: 1.4vmin; }
+.mx .h { display: flex; align-items: center; justify-content: center; text-align: center; font-size: 2.6vmin; font-weight: 700; color: #a89a94; letter-spacing: .02em; border-radius: 2.4vmin; opacity: 0; }
+.mx .h.r { justify-content: flex-start; padding-left: 1.6vmin; font-size: 3vmin; }
+.mx .h.on { color: #fff; background: rgba(244,201,214,.14); }
+.cell { position: relative; display: flex; align-items: center; padding: 0 2.4vmin; border-radius: 3.4vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.13); font-size: 3vmin; font-weight: 700; line-height: 1.2; opacity: 0; }
+.cell small { display: block; font-size: 2.2vmin; font-weight: 500; color: #b9aaa3; margin-top: .5vmin; }
+.cell.on { border-color: #f4c9d6; background: #2c2124; box-shadow: 0 0 3vmin rgba(244,201,214,.35); }
+.cell.acn.on { border-color: #ffb38a; box-shadow: 0 0 3vmin rgba(255,179,138,.35); }
+.pn { position: absolute; left: 108vmin; right: 5vmin; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.6vmin; }
+.hd { font-size: 3.4vmin; font-weight: 700; opacity: 0; }
+.hd em { font-style: normal; color: #f4c9d6; }
+.chs { display: flex; flex-wrap: wrap; gap: 1vmin; }
+.ch { padding: 1vmin 1.9vmin; border-radius: 2.4vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.8vmin; font-weight: 600; opacity: 0; }
+.ch.lit { border-color: #f4c9d6; background: #2c2124; }
+.dots { display: flex; flex-direction: column; gap: 1.2vmin; opacity: 0; }
+.dl { display: flex; align-items: center; gap: 1.4vmin; font-size: 2.4vmin; line-height: 1.2; font-weight: 600; color: #cdbdb6; }
+.dl span { width: 20vmin; flex: none; }
+.dl i { flex: 1; height: 3vmin; position: relative; border-radius: 1.5vmin; background: rgba(255,255,255,.05); }
+.dl i b { position: absolute; top: 50%; width: 1.5vmin; height: 1.5vmin; margin: -.75vmin 0 0 -.75vmin; border-radius: 50%; background: #ffb38a; opacity: 0; }
+.br { display: flex; align-items: center; gap: 1.4vmin; padding: 1.3vmin 2.2vmin; border-radius: 2.8vmin; background: #1c1517; border: 1px solid rgba(255,255,255,.14); font-size: 2.9vmin; font-weight: 600; opacity: 0; }
+.br svg { width: 3vmin; height: 3vmin; flex: none; }
+.br.info { border-style: dashed; color: #d9c6bd; }
+@media (orientation: portrait) { .mx { left: 50%; top: 2%; width: 88vmin; margin: 0 0 0 -44vmin; grid-template-columns: 17vmin 1fr 1fr; grid-template-rows: 5vmin 15vmin 15vmin; } .cell { font-size: 2.8vmin; padding: 0 1.8vmin; } .pn { left: 5vmin; right: 5vmin; top: 44%; bottom: 2%; justify-content: flex-start; } .ch { font-size: 2.8vmin; } }`,
+    html: `
+<div class="mx" id="mx">
+  <span></span><span class="h" id="c0">no acne concerns</span><span class="h" id="c1">acne concerns</span>
+  <span class="h r" id="r0">New client</span>
+  <div class="cell" id="x00">New Clients Start Here</div>
+  <div class="cell acn" id="x01"><span>Acne Bootcamp<small>consultation + treatment</small></span></div>
+  <span class="h r" id="r1">Returning</span>
+  <div class="cell" id="x10">Lumevina Custom Facial</div>
+  <div class="cell acn" id="x11">Monthly Acne Treatment</div>
+</div>
+<section class="shot"><div class="pn"><div class="hd">New Clients Start Here:</div><div class="chs" id="steps"><span class="ch">a consultation</span><span class="ch">a review of your routine</span><span class="ch">double cleanse</span><span class="ch">enzyme exfoliation</span><span class="ch">extractions</span><span class="ch">mask</span><span class="ch">massage</span><span class="ch">LED</span><span class="ch">cryo globes</span></div></div></section>
+<section class="shot"><div class="pn"><div class="hd">Acne Bootcamp, <em>then:</em></div><div class="dots" id="dots"><div class="dl"><span>monthly</span><i id="m1"></i></div><div class="dl"><span>severe acne: every two weeks</span><i id="m2"></i></div></div></div></section>
+<section class="shot"><div class="pn"><div class="hd">Returning clients:</div><div class="chs"><span class="ch lit">the Lumevina Custom Facial</span><span class="ch">or the Monthly Acne Treatment, when acne is the work</span></div></div></section>
+<section class="shot"><div class="pn"><div class="hd">Bring:</div><span class="br">${CHECK}a clean face, if you can</span><span class="br">${CHECK}hair you don't mind getting damp</span><span class="br">${CHECK}your product list, or photos of it</span><span class="br info">the address comes with the confirmation</span><span class="br info">parking is free</span></div></section>`,
+    setup: (M) => {
+      M.$("#m1").innerHTML = Array.from({ length: 6 }, (_, k) => `<b style="left:${6 + k * 17.6}%"></b>`).join("");
+      M.$("#m2").innerHTML = Array.from({ length: 12 }, (_, k) => `<b style="left:${6 + k * 8}%;background:#ff8e6b"></b>`).join("");
+    },
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E } = M, sec = $$(".shot")[i];
+      // the matrix: two questions, four answers. Each shot finds its row and column, then its cell
+      $$(".mx .h, .mx .cell").forEach((el, n) => enter(el, t, 0.1 + n * 0.12, { y: 10 }));
+      const pick = [["r0", "c0", "x00"], ["r0", "c1", "x01"], ["r1", null, "x10", "x11"], []][i];
+      const k = seg(lt, 0.5, 1.0);
+      ["r0", "r1", "c0", "c1"].forEach((id) => $("#" + id).classList.toggle("on", pick.includes(id) && k > 0.5));
+      ["x00", "x01", "x10", "x11"].forEach((id) => {
+        const el = $("#" + id), on = pick.includes(id) && lt > 1.0;
+        el.classList.toggle("on", on);
+        if (t > 1.4) el.style.opacity = i === 3 ? 0.5 + 0.5 * (1 - seg(lt, 0, 0.6)) : on ? 1 : 1 - 0.45 * seg(lt, 0.6, 1.0);
+      });
+      $("#mx").style.opacity = i === 3 ? 1 - 0.4 * seg(lt, 0, 0.6) : 1;
+      if (!sec) return;
+      const items = [...sec.querySelectorAll(".hd, .ch, .br, .dots")];
+      items.forEach((el, n) => enter(el, lt, 1.2 + n * (i === 0 ? 0.32 : 0.45), { y: 12 }));
+      // the facial, step by step: a light walks the list
+      if (i === 0) $$("#steps .ch").forEach((el, n) => el.classList.toggle("lit", lt > 4.3 + n * 0.12 && lt < 4.3 + n * 0.12 + 0.9));
+      // then monthly, or every two weeks: the dots land along a year
+      if (i === 1) { $$("#m1 b").forEach((d, n) => { const p = seg(lt, 2.2 + n * 0.28, 2.5 + n * 0.28); d.style.opacity = p; d.style.transform = `scale(${0.4 + 0.6 * E.back(p)})`; }); $$("#m2 b").forEach((d, n) => { const p = seg(lt, 3.4 + n * 0.14, 3.7 + n * 0.14); d.style.opacity = p; d.style.transform = `scale(${0.4 + 0.6 * E.back(p)})`; }); }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
