@@ -29,8 +29,16 @@ builds the board as new files; that session wires it into `server.mjs` and the m
     and deletions; `forget()`; a bot at 199 m/s for an hour capped at 110 m/s; and 24 writes for 1,200 poses.
   - The agent's run of the live server's `npm test` was **57/57**, and `tsc` was clean.
   - The agent also proved the wiring snippet end to end on a scratch copy of `server.mjs`.
-- **Not done here:** the wiring (that session's), and an independent adversarial review of the rules before the board
-  goes public.
+- **Wired (17:49, that session's report):** reviewed and merged onto `claude/live-server` (merge af33cc8).
+  - `/api/board` has its own rate limit, and `board.close()` runs on shutdown.
+  - A new server test shows a 4.5 s drive at 30 m/s giving about 135 m and 30 m/s held; "you" appears only with a token;
+    rows carry names and numbers only; a ban hides the driver and a delete removes them. The live `npm test` was
+    **58/58** on a quiet machine.
+  - The menu has an "Online board" pick in the Live section when a server is set; that session's browser check was
+    running.
+  - These are that session's results, not re-run here.
+- **Still open:** an independent adversarial review of the rules before the board goes public (the owner's decision,
+  queued).
 - **Honest gap:** a modified client driving a perfect straight line at the ceiling can't be told apart by poses alone.
   It is bounded by the ceiling, shows under its name in a lobby slot, and a ban removes it.
 

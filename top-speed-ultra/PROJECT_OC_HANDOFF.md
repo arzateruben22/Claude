@@ -104,7 +104,8 @@ interiors first; online on a free-tier backend; the map OC-only; no real-phone t
   src/live/board.ts, src/ui/OnlineBoard.tsx) on `claude/live-board` cut from `claude/live-server`, from server-observed
   poses only (distance, 3 s sustained top speed, longest unbroken drive per Pacific day; no client-submitted scores, no
   Survival streaks or near misses); that session wires server.mjs and the menu. Built and pushed (17:45): `claude/live-board`
-  9c76011, 99c5fd4, board tests 9/9; the wiring snippet and API sent to that session for its wiring and review. Chat stays out (13+); races against people are an owner decision for later;
+  9c76011, 99c5fd4, board tests 9/9; reviewed, merged and wired by that session (17:49, merge af33cc8 on
+  `claude/live-server`, live tests 58/58, an "Online board" pick in the menu's Live section). Chat stays out (13+); races against people are an owner decision for later;
 - online: the always-on session's `claude/live-server` already covers it; this session asked which of its open gaps
   (online board with plausibility checks, races against people) it wants handed over, and builds none until it answers.
 
