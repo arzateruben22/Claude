@@ -22,6 +22,7 @@ for p in night-desk/output/live night-desk/output/archive night-desk/output/wild
          majors-desk/output/live majors-desk/output/archive \
          premarket-scanner/output/journal.csv premarket-scanner/output/archive \
          premarket-scanner/output/wild/journal.csv premarket-scanner/output/wild/archive \
+         premarket-scanner/output/fade/journal.csv premarket-scanner/output/fade/archive \
          paper-book/output/ledger.csv paper-book/output/benchmark.json paper-book/output/archive; do
   if [ -e "$p" ]; then
     cp -a --parents "$p" "$WORK/"

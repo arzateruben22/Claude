@@ -20,7 +20,7 @@ for base in night-desk/output night-desk/output/wild majors-desk/output; do
     echo "archived $base/live -> $base/archive/live-$STAMP"
   fi
 done
-for base in premarket-scanner/output premarket-scanner/output/wild; do
+for base in premarket-scanner/output premarket-scanner/output/wild premarket-scanner/output/fade; do
   if [ -f "$DIR/$base/journal.csv" ]; then
     mkdir -p "$DIR/$base/archive"
     mv "$DIR/$base/journal.csv" "$DIR/$base/archive/journal-$STAMP.csv"

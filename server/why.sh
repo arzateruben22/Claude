@@ -12,7 +12,8 @@ memecoins() {   # $1: the desk's state.json
 import json, os, sys, time
 path = sys.argv[1]
 if not os.path.exists(path):
-    print("  Nothing saved yet. Is it running? bash server/status.sh")
+    print("  Nothing saved yet. A desk saves within a minute of starting, so if it was just updated, look again")
+    print("  in a minute. Still nothing after a few minutes? journalctl -u nightdesk -n 30 --no-pager")
     sys.exit()
 s = json.load(open(path))
 c = s.get("counts", {})
@@ -58,6 +59,9 @@ else:
     print(f"  {len(graded)} picks graded so far")
     if waiting:
         print("  bought at the open on their trade day: " + ", ".join(f"{r['symbol']} ({r['trade_date']})" for r in waiting[:8]))
+    pnl = [float(r["sim_pnl_pct"]) for r in graded]
+    if pnl:
+        print(f"  won {sum(p > 0 for p in pnl)} of {len(pnl)} · average {sum(pnl) / len(pnl):+.1f}% a pick after costs")
     moves = [float(r["close_vs_open_pct"]) for r in graded if r.get("close_vs_open_pct")]
     if moves:
         down = sum(m < 0 for m in moves)
@@ -83,6 +87,10 @@ stocks "$DIR/premarket-scanner/output/journal.csv"
 echo
 echo "WILD STOCKS (smaller gaps, no news needed, own \$100)"
 stocks "$DIR/premarket-scanner/output/wild/journal.csv"
+
+echo
+echo "FADE STOCKS (the stock picks, sold short at the open, own \$100: it wins when they fall)"
+stocks "$DIR/premarket-scanner/output/fade/journal.csv"
 last="$(pacific "$(systemctl show scanner-scan.service -p ExecMainExitTimestamp --value 2>/dev/null)")"
 next="$(pacific "$(systemctl show scanner-scan.timer -p NextElapseUSecRealtime --value 2>/dev/null)")"
 [ -n "$last" ] && echo "  last scan: $last"

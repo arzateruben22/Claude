@@ -5,6 +5,7 @@
   stocks          Premarket scanner (../premarket-scanner): gap-up picks, graded after the close
   memecoins_wild  Night Desk's wild rulebook (desk-wild.toml): the same coins, more risk, its own bank
   stocks_wild     the scanner's wild rules (criteria-wild.toml): more picks, wider exits, its own bank
+  stocks_fade     the scanner's fade rules (criteria-fade.toml): the stock desk's picks, sold short
 
 A desk is in the book when book.toml has a section for it.
 
@@ -38,11 +39,15 @@ except ModuleNotFoundError:  # Python 3.10
 
 HERE = Path(__file__).resolve().parent
 ET = ZoneInfo("America/New_York")
-DESKS = ("memecoins", "majors", "stocks", "memecoins_wild", "stocks_wild")     # every desk the book knows, in order
+# every desk the book knows, in order
+DESKS = ("memecoins", "majors", "stocks", "memecoins_wild", "stocks_wild", "stocks_fade")
 LABEL = {"memecoins": "Memecoins", "majors": "Big coins", "stocks": "Stocks",
-         "memecoins_wild": "Wild memecoins", "stocks_wild": "Wild stocks"}
-KIND = {"memecoins": "coins", "majors": "coins", "stocks": "stocks", "memecoins_wild": "coins", "stocks_wild": "stocks"}
-STOCK_RULES = {"stocks": "../premarket-scanner/criteria.toml", "stocks_wild": "../premarket-scanner/criteria-wild.toml"}
+         "memecoins_wild": "Wild memecoins", "stocks_wild": "Wild stocks", "stocks_fade": "Fade stocks"}
+KIND = {"memecoins": "coins", "majors": "coins", "stocks": "stocks", "memecoins_wild": "coins", "stocks_wild": "stocks",
+        "stocks_fade": "stocks"}
+VARIANT_OF = {"memecoins_wild": "memecoins", "stocks_wild": "stocks", "stocks_fade": "stocks"}   # copies of another desk
+STOCK_RULES = {"stocks": "../premarket-scanner/criteria.toml", "stocks_wild": "../premarket-scanner/criteria-wild.toml",
+               "stocks_fade": "../premarket-scanner/criteria-fade.toml"}
 
 
 @dataclass
@@ -341,11 +346,13 @@ section { margin-bottom: 28px; min-width: 0; }
 .chart .l-stocks { stroke: var(--plum); stroke-width: 1.6; fill: none; }
 .chart .l-memecoins_wild { stroke: var(--ribbon); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
 .chart .l-stocks_wild { stroke: var(--plum); stroke-width: 1.6; stroke-dasharray: 6 4; fill: none; }
+.chart .l-stocks_fade { stroke: var(--plum); stroke-width: 2; stroke-dasharray: 1.5 3.5; stroke-linecap: round; fill: none; }
 .chart .b-up { fill: var(--up); } .chart .b-down { fill: var(--down); }
 .key .k-total { color: var(--ink); } .key .k-memecoins { color: var(--ribbon); } .key .k-majors { color: var(--gold); }
 .key .k-stocks { color: var(--plum); }
 .key .k-memecoins_wild { color: var(--ribbon); } .key .k-stocks_wild { color: var(--plum); }
 .key .k-memecoins_wild i, .key .k-stocks_wild i { border-top-style: dashed; }
+.key .k-stocks_fade { color: var(--plum); } .key .k-stocks_fade i { border-top-style: dotted; }
 .key { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 400 12.5px var(--mono); color: var(--muted); margin: 0 0 6px; }
 .key i { display: inline-block; width: 18px; height: 0; border-top: 3px solid currentColor; vertical-align: middle; margin-right: 6px; }
 .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
@@ -552,7 +559,7 @@ def render_html(book: Book) -> str:
 """
 
 
-NOTE_ORDER = ("majors", "memecoins", "stocks", "memecoins_wild", "stocks_wild")
+NOTE_ORDER = ("majors", "memecoins", "stocks", "memecoins_wild", "stocks_wild", "stocks_fade")
 
 
 def _note(book: Book, d: str) -> str:
@@ -572,6 +579,12 @@ def _note(book: Book, d: str) -> str:
     stake = (f"each weekday's picks split {bank} of paper money equally" if book.share_bank else
              f"${book.ticket:,.0f} of paper money per pick, out of {bank}")
     target, stop, cost = book.stock_rules.get(d, (10.0, 5.0, 0.5))
+    if d == "stocks_fade":
+        return (f"<p><b>Fade stocks</b> (premarket scanner, fade rules): {stake}. The same picks as Stocks, "
+                "but sold short at the\n      9:30 ET open instead of bought, so it gains when the price falls. "
+                f"Bought back at −{target:g}% (the target),\n      +{stop:g}% (the stop, or wherever the stock "
+                f"reopens if it jumps the stop) or the close, minus {cost:g}% for spread,\n      slippage and "
+                "borrowing the shares. Real shorting needs a margin account and shares a broker can lend.</p>")
     name = ("<b>Stocks</b> (premarket scanner)" if d == "stocks" else
             "<b>Wild stocks</b> (premarket scanner, wild rules: smaller gaps, no news needed)")
     return (f"<p>{name}: {stake}.\n      Each pick is bought at the 9:30 ET open and sold at +{target:g}%, −{stop:g}% "

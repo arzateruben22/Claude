@@ -11,6 +11,7 @@ Everything on one small Linux machine that never sleeps:
 | `majors` | big coins (BTC, ETH, SOL, XRP, ADA, DOGE), paper money, Coinbase prices, hourly | right away |
 | `scanner-scan` / `scanner-grade` | stocks, paper picks before the open, graded after the close | once your Alpaca paper keys are in (step 6) |
 | `scanner-wild-scan` / `scanner-wild-grade` | the same with the wild stock rules, a minute later, on their own $100 | with the stock scans |
+| `scanner-fade-scan` / `scanner-fade-grade` | the stock picks sold short on paper (the fade rules), two minutes later, on their own $100 | with the stock scans |
 | `paperbook` | one ledger of every paper trade, refreshed every 15 minutes, plus the Trade Crawler and Paper Galaxy on port 8790 | right away |
 | `nightdesk-review` | Night Desk's daily lessons, risk officer and scorecard, for both rulebooks | right away |
 

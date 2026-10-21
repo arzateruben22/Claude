@@ -96,8 +96,30 @@ python -m scanner grade --book wild
 python -m scanner stats --book wild       # ends with the fade check: how often picks closed below their open
 ```
 
-The **fade check** at the end of `stats` (both books) counts how often a pick closed below its 9:30 open.
+The **fade check** at the end of `stats` (every book) counts how often a pick closed below its 9:30 open.
 Professionals often bet against gap-ups; this only measures how often that side would have been right.
+
+### The fade rules (`criteria-fade.toml`)
+
+The main book's first weeks found most of its picks closed *below* their open (18 of the first 23). The fade
+book takes the other side: the very same filters, but each pick is **sold short** at the 9:30 open on paper, so
+it gains when the price falls. It's bought back at −10% (the target), +10% (the stop) or the close.
+
+- **Shorting is riskier.** A stock can rise without limit. A stock that jumps the stop (a gap, or a halt that
+  reopens higher) is bought back where it reopened, not at the stop, so one squeeze can cost far more than 10%.
+- **It costs more:** 1% a trade for spread, slippage and borrowing the shares, against 0.5% for the main book.
+- **Real shorting needs things this doesn't have:** a margin account, and shares a broker can lend. Small, hot
+  stocks often can't be borrowed at all. Paper only.
+
+```bash
+python -m scanner scan --book fade          # same picks as main, journal in output/fade/
+python -m scanner grade --book fade
+python -m scanner lookback --book fade      # the fade rules on the main book's graded picks so far
+```
+
+`lookback` re-grades picks the main book already made with the fade rules, side by side with what the main
+book got. It's **hindsight**: those picks falling is why the fade book exists, so it explains, it can't prove.
+Only the fade book's own picks, made after it starts, count toward its scorecard.
 
 ## 4. Daily routine (Pacific time)
 
@@ -277,7 +299,8 @@ python -m scanner backtest --from YYYY-MM-DD [--to YYYY-MM-DD] [--session premar
                            [--time 05:45] [--demo]
 python -m scanner grade | stats | journal | doctor
 python -m scanner scorecard | risk | lessons | nightly [--demo] [--ai]    # nightly also takes --window
-# every command also takes --book wild (criteria-wild.toml, results in output/wild/)
+# every command also takes --book wild or --book fade (criteria-<book>.toml, results in output/<book>/)
+python -m scanner lookback --book fade [--against main] [--demo]   # one book's rules on another's graded picks
 ```
 
 `--window` makes a scheduled run exit quietly outside a Pacific-time window.

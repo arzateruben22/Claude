@@ -5,6 +5,9 @@ trade the next morning) and exits at whichever comes first: the +target, the
 -stop, or the 4pm close. If one 5-minute bar touches both, it counts as the
 stop — pessimistic on purpose. Every trade is then charged `cost_pct` for the
 spread and slippage you'd really pay.
+
+A short book (side = "short") sells at the open instead: the target is below and
+the stop above, and a bar that opens beyond the stop fills where it opened.
 """
 from __future__ import annotations
 
@@ -77,8 +80,18 @@ def record(res: ScanResult, path: Path = JOURNAL, rules: str = "") -> int:
     return added
 
 
-def simulate(rth: List[Bar], target_pct: float, stop_pct: float) -> Tuple[str, float]:
+def simulate(rth: List[Bar], target_pct: float, stop_pct: float, side: str = "long") -> Tuple[str, float]:
     entry = rth[0].open
+    if side == "short":
+        # Sold short at the open: it makes money as the price falls. A stock that jumps the stop
+        # (a gap or a halt) is bought back where it reopened, which can be far worse than the stop.
+        target, stop = entry * (1 - target_pct / 100), entry * (1 + stop_pct / 100)
+        for b in rth:
+            if b.high >= stop:
+                return "stop", -(max(stop, b.open) / entry - 1) * 100
+            if b.low <= target:
+                return "target", target_pct
+        return "close", (1 - rth[-1].close / entry) * 100
     target, stop = entry * (1 + target_pct / 100), entry * (1 - stop_pct / 100)
     for b in rth:
         if b.low <= stop:
@@ -93,7 +106,7 @@ def outcome(bars: List[Bar], day: date, scan_price: float, crit: Criteria) -> Op
     if not rth:
         return None
     o, hi, lo, cl = rth[0].open, max(b.high for b in rth), min(b.low for b in rth), rth[-1].close
-    exit_, pnl = simulate(rth, crit.target_pct, crit.stop_pct)
+    exit_, pnl = simulate(rth, crit.target_pct, crit.stop_pct, crit.side)
     r = lambda x: round(x, 2)  # noqa: E731
     return {
         "open": round(o, 4), "high": round(hi, 4), "low": round(lo, 4), "close": round(cl, 4),
@@ -215,8 +228,10 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
     days = sorted({r["trade_date"] for r in rows})
     pnl = [float(r["sim_pnl_pct"]) for r in rows]
     out = [f"Paper results: {len(rows)} graded picks over {len(days)} trade days ({days[0]} → {days[-1]})",
-           f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at close;"
-           f" {crit.cost_pct:g}% cost per trade",
+           (f"Sim: short the 9:30 ET open, cover at -{crit.target_pct:g}% (target) / +{crit.stop_pct:g}% (stop), "
+            f"else at the close; {crit.cost_pct:g}% cost per trade" if crit.side == "short" else
+            f"Sim: buy the 9:30 ET open, +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop, else sell at close;"
+            f" {crit.cost_pct:g}% cost per trade"),
            "", block("All", rows)]
     out += [block(sess, rs) for sess in ("premarket", "afterhours", "regular")
             if (rs := [r for r in rows if r["session"] == sess]) and len(rs) != len(rows)]
@@ -233,6 +248,59 @@ def stats(crit: Criteria, path: Path = JOURNAL) -> str:
             f"* fewer than {SMALL_SAMPLE} picks: noise, not a pattern."]
     if len(days) < 15:
         out.append(f"Only {len(days)} trade days so far: too few to trust. Aim for 15-20+.")
+    return "\n".join(out)
+
+
+def _paper_dollars(results: List[Tuple[dict, float]], bank: float = 100.0) -> float:
+    """Paper dollars, the way the paper book counts them: each trade day's picks split `bank` equally."""
+    per_day: Dict[str, int] = defaultdict(int)
+    for r, _ in results:
+        per_day[r["trade_date"]] += 1
+    return sum(bank / per_day[r["trade_date"]] * pct / 100 for r, pct in results)
+
+
+def lookback(provider: Provider, crit: Criteria, path: Path, book: str, against: str) -> str:
+    """`crit` applied to another book's picks that were already graded: what those same picks would have
+    done under these rules. In-sample by construction, so it explains, it never proves."""
+    rows = [r for r in _read(path) if r.get("graded_at") and r.get("sim_pnl_pct") not in (None, "")]
+    if not rows:
+        return f"No graded picks in {path} yet, so there's nothing to look back on."
+    mine: List[Tuple[dict, dict]] = []
+    days = sorted({r["trade_date"] for r in rows})
+    for day_s in days:
+        day = date.fromisoformat(day_s)
+        day_rows = [r for r in rows if r["trade_date"] == day_s]
+        start = datetime.combine(day, time(4, 0), tzinfo=ET)
+        bars = provider.intraday_bars(sorted({r["symbol"] for r in day_rows}), start, start + timedelta(hours=16))
+        for r in day_rows:
+            res = outcome(bars.get(r["symbol"], []), day, float(r["scan_price"]), crit)
+            if res:
+                mine.append((r, res))
+    if not mine:
+        return "No price bars came back for those days, so there's nothing to compare yet."
+    verb = "sold short" if crit.side == "short" else "bought"
+    out = [f"LOOK-BACK · the {book} rules on the {against} book's {len(mine)} graded picks "
+           f"({days[0]} → {days[-1]})",
+           f"Each pick {verb} at the 9:30 open: -{crit.target_pct:g}% target / +{crit.stop_pct:g}% stop "
+           f"or the close, minus {crit.cost_pct:g}%." if crit.side == "short" else
+           f"Each pick {verb} at the 9:30 open: +{crit.target_pct:g}% target / -{crit.stop_pct:g}% stop "
+           f"or the close, minus {crit.cost_pct:g}%.", "",
+           f"  {'day':<10} {'symbol':<6} {'gap':>7}   {against:<16} {book}"]
+    for r, res in mine:
+        out.append(f"  {r['trade_date']:<10} {r['symbol']:<6} {fmt.pct(float(r['gap_pct'] or 0)):>7}   "
+                   f"{r['sim_exit']:<6} {float(r['sim_pnl_pct']):+6.1f}%   {res['sim_exit']:<6} {res['sim_pnl_pct']:+6.1f}%")
+
+    def line(name: str, pcts: List[Tuple[dict, float]]) -> str:
+        p = [x for _, x in pcts]
+        won, lost = sum(x for x in p if x > 0), -sum(x for x in p if x < 0)
+        pf = "no losses" if not lost else f"{won / lost:.2f}"
+        return (f"  {name:<8} won {sum(x > 0 for x in p)}/{len(p)} · average {mean(p):+.2f}% · profit factor {pf} · "
+                f"paper ${_paper_dollars(pcts):+,.2f} on $100")
+
+    out += ["", line(against, [(r, float(r["sim_pnl_pct"])) for r, _ in mine]),
+            line(book, [(r, res["sim_pnl_pct"]) for r, res in mine]), "",
+            "Hindsight, not evidence: these are picks you have already seen, and what they did is the reason to",
+            f"try the {book} rules at all. Only the {book} book's own picks, made from now on, count toward its scorecard."]
     return "\n".join(out)
 
 

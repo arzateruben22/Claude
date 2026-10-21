@@ -80,7 +80,8 @@ def load_settings(path: Optional[Path] = None) -> Settings:
 
 def rules_id(crit: Criteria) -> str:
     """Short fingerprint of every setting that changes which stocks get picked, or how they're graded."""
-    data = {k: v for k, v in asdict(crit).items() if k not in DISPLAY_ONLY}
+    # A long book leaves `side` out, so the fingerprints of rules written before it existed don't change.
+    data = {k: v for k, v in asdict(crit).items() if k not in DISPLAY_ONLY and not (k == "side" and v == "long")}
     return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()[:8]
 
 

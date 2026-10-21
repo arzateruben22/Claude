@@ -38,6 +38,11 @@ bigger bets, smaller stock gaps, wider exits), each on its own $100 of paper mon
 taking more risk pays, without changing the original desks. Already set up? One update adds them:
 `cd ~/desks && git pull && sudo bash server/setup.sh` (it keeps every paper trade so far).
 
+**The fade desk** takes the opposite side of the stock desk: the same picks, sold short at the open on paper, so
+it gains when they fall. It exists because most of the stock desk's early picks closed below their open. See how
+fading would have done on the picks so far (hindsight only): `cd ~/desks/premarket-scanner && ../.venv/bin/python
+-m scanner lookback --book fade`.
+
 **To start counting from zero on a day you choose:** `sudo bash server/fresh-start.sh`. It moves
 everything so far into an archive folder (nothing is deleted) and restarts every desk at $100.
 

@@ -1,0 +1,13 @@
+[Unit]
+Description=Premarket scanner, fade rules: grade today's paper shorts, then the nightly review
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=@DIR@/premarket-scanner/.env
+
+[Service]
+Environment=PYTHONUNBUFFERED=1
+Type=oneshot
+User=@USER@
+WorkingDirectory=@DIR@/premarket-scanner
+ExecStart=@DIR@/.venv/bin/python -m scanner grade --book fade
+ExecStart=@DIR@/.venv/bin/python -m scanner nightly --book fade

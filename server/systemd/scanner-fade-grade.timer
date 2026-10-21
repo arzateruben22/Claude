@@ -1,0 +1,8 @@
+[Unit]
+Description=Grade the fade-rules paper shorts once the close is in
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 13:49:00 America/Los_Angeles
+
+[Install]
+WantedBy=timers.target
