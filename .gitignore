@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 los-gueros-preview.html
 films/*/build/
+films/*/motion/.tmp/

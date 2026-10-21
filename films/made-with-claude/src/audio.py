@@ -356,7 +356,7 @@ def main(path):
             drums.add(clap(), t, -7, 0.05)
         for h in range(4):                                 # 16th hats, offbeat accent
             th = t + h * BEAT / 4
-            acc = -12 if h == 2 else -19
+            acc = -15 if h == 2 else -22                  # hats sit under the bells (the mix ran bright)
             open_ = (h == 2 and beat_in_bar == 3)
             drums.add(hat(open_, seed=k * 4 + h), th, acc + (2 if open_ else 0), pan=0.3 if h % 2 else -0.2)
         t += BEAT; k += 1
@@ -390,8 +390,8 @@ def main(path):
 
     # ── outro: landing hit, breakdown, final chord + bells
     drums.add(kick(big=True), outro, 0); kicks.append(outro)
-    drums.add(hat(True, seed=99), outro, -6)
-    sfx.add(fft_filter(rng("crash").standard_normal(int(1.8 * SR)), lo=4000) * np.exp(-tvec(1.8) / 0.6) * 0.35, outro, -10)
+    drums.add(hat(True, seed=99), outro, -10)
+    sfx.add(fft_filter(rng("crash").standard_normal(int(1.8 * SR)), lo=4000) * np.exp(-tvec(1.8) / 0.6) * 0.35, outro, -14)   # a soft crash: the bells carry the end
     for c in M["chords"]:
         if c["t"] >= outro:
             nxt = min([x["t"] for x in M["chords"] if x["t"] > c["t"]] + [DUR])
@@ -455,7 +455,18 @@ def main(path):
     music_wet = reverb(music.x, 2.2, 0.28, "hall")
     sfx_wet = reverb(sfx.x, 1.1, 0.16, "room")
     drums_wet = reverb(drums.x, 0.8, 0.08, "kit")
-    mix = drums_wet + bassb.x + music_wet + sfx_wet
+    # the outro resolves: the band eases back ~3 dB into the end card while the bells and the coo carry it
+    arc = np.ones(N)
+    o0, o1 = J["shots"][-1]["start"], J["shots"][-1]["start"] + 1.2
+    ramp = np.clip((tt - o0) / (o1 - o0), 0, 1)
+    arc *= db(-3.0) ** (ramp * ramp * (3 - 2 * ramp))
+    mix = (drums_wet + bassb.x) * arc[None, :] + music_wet * (0.5 + 0.5 * arc)[None, :] + sfx_wet
+    # tilt: a gentle high shelf (−3.5 dB above ~7 kHz) — hats, shimmer and the shatter ran hot
+    F = np.fft.rfft(mix, axis=-1)
+    fr = np.fft.rfftfreq(mix.shape[-1], 1 / SR)
+    sh = np.clip((np.log2(np.maximum(fr, 1)) - np.log2(4500)) / (np.log2(9000) - np.log2(4500)), 0, 1)
+    F *= (db(-3.5) ** (sh * sh * (3 - 2 * sh)))[None, :]
+    mix = np.fft.irfft(F, n=mix.shape[-1], axis=-1)
     # gentle glue: soft knee saturation on the bus
     mix = np.tanh(mix * 1.15) / 1.15
     tail = int(0.12 * SR)
