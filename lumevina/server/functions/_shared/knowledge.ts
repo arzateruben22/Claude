@@ -112,7 +112,7 @@ then wait in your car and text before coming up.
 
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 (free over $75), or pick up at your visit.
-Virtual consultations are $55, Mondays only; reach out first.
+Virtual consultations by video are $50, Mondays only; reach out first. The quick online Skin Consult (15 minutes, $35, credited to your first order) books from the shop and unlocks the actives that need Evelyn's yes.
 Gift certificates never expire, and anything left after a visit stays on them.
 
 
@@ -338,7 +338,7 @@ then wait in your car and text before coming up.
 
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 (free over $75), or pick up at your visit.
-Virtual consultations are $55, Mondays only; reach out first.
+Virtual consultations by video are $50, Mondays only; reach out first. The quick online Skin Consult (15 minutes, $35, credited to your first order) books from the shop and unlocks the actives that need Evelyn's yes.
 Gift certificates never expire, and anything left after a visit stays on them.
 
 
