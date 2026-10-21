@@ -131,7 +131,10 @@ const AUDIT = `(() => {
 const encode = (file, fpsOut) => spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(fpsOut), "-i", "pipe:0",
   "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22", "-preset", "medium", "-profile:v", "high", "-level", "4.0", "-movflags", "+faststart", file], { stdio: ["pipe", "inherit", "inherit"] });
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined, args: ["--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--ignore-gpu-blocklist", "--allow-file-access-from-files"] });
+// the last two flags make the compositor finish every raster before it draws a frame: without them a
+// capture can show a tile (a frame-wide band 256 px tall) at low resolution while something in it
+// is still changing, a lighter stripe across the frame for a frame or two
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined, args: ["--enable-unsafe-swiftshader", "--use-angle=swiftshader", "--ignore-gpu-blocklist", "--allow-file-access-from-files", "--run-all-compositor-stages-before-draw", "--disable-checker-imaging"] });
 const tmp = path.join(here, ".tmp"); fs.mkdirSync(tmp, { recursive: true });
 let videos = {};
 const sheetFrames = [];
