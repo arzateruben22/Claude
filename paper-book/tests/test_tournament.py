@@ -161,3 +161,40 @@ def test_the_paper_book_page_seats_thirty_desks():
         assert b.label(d) in page, d
     assert "Sniper memecoins" in page and "night-desk/desk-sniper.toml" in page
     assert "Hold stocks" in page and "premarket-scanner/criteria-hold.toml" in page
+
+
+def test_the_standings_printout_ranks_every_desk_and_names_the_green_weeks():
+    desks = ["memecoins", "memecoins_sniper", "majors", "stocks"]
+    trades = {"memecoins_sniper": [trade("memecoins_sniper", 6.0, day(0, 9)), trade("memecoins_sniper", 2.0, day(1)),
+                                   trade("memecoins_sniper", 1.0, day(3))],
+              "majors": [trade("majors", -3.0, day(2))]}
+    b = small_book(desks, trades)
+    b.checkpoints = {"first look": date(2026, 10, 23)}
+    text = pb.render_standings(b)
+    lines = text.splitlines()
+    assert lines[0].startswith("STANDINGS · paper money only · Tue 20 Oct 18:00 PDT · first look Fri 23 Oct")
+    assert lines[2].split()[:3] == ["1", "memecoins", "sniper"] and "+$9.00" in lines[2] and "GREEN WEEK" in lines[2]
+    assert "3g 0r" in lines[2] and lines[2].rstrip().endswith("3 trades · too few to judge · GREEN WEEK")
+    assert lines[-3].split()[0] == "4" and "big coins" in lines[-3] and "−$3.00" in lines[-3]   # the loser is last
+    assert "all desks" in lines[-2] and "+$6.00" in lines[-2]
+    assert lines[-1].startswith("  green week: Memecoins Sniper")
+    assert "no trades yet" in text and "—" in text
+
+
+def test_on_a_read_date_the_evening_push_carries_the_ranking():
+    desks = [f"memecoins_{b}" for b in ("sniper", "momentum", "patient", "scalper", "whale", "runner", "tiny")]
+    trades = {"memecoins_sniper": [trade("memecoins_sniper", 6.0, day(0, 9))],
+              "memecoins_whale": [trade("memecoins_whale", -4.0, day(0, 9))],
+              "memecoins_tiny": [trade("memecoins_tiny", 0.5, day(1))]}
+    b = small_book(desks, trades)
+    today = NOW.astimezone(LA).date()
+    b.checkpoints = {"first look": today, "month end": date(2026, 10, 31)}
+    p = wd.summary(b, today)
+    assert p.title == "First look · Tue 20 Oct: +$2.50 since the start"
+    lines = p.body.splitlines()
+    assert lines[0] == ("First look, day 20 Oct. Top 3: Memecoins Sniper +$6.00 (+6.0%); Memecoins Tiny +$0.50 (+0.5%); "
+                        "Memecoins Momentum $0.00 (+0.0%).")
+    assert lines[1] == "Bottom 3: Memecoins Scalper $0.00 (+0.0%); Memecoins Runner $0.00 (+0.0%); Memecoins Whale −$4.00 (−4.0%)."
+    assert lines[2].startswith("Today: 2 of 7 desks traded")
+    plain = wd.summary(b, today - timedelta(days=1))                     # any other evening: the usual push
+    assert plain.title.startswith("Paper book · Mon 19 Oct")

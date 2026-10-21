@@ -103,13 +103,18 @@ def week(book: pb.Book, d: str, today: date) -> dict:
             "green_week": len(by_day) >= 3 and net > 0 and -worst < net}
 
 
+def _as_date(day) -> Optional[date]:
+    if isinstance(day, datetime):
+        return day.date()
+    return day if isinstance(day, date) else None
+
+
 def checkpoints(book: pb.Book) -> List[dict]:
     """The dates the book is read on, from book.toml: [report] checkpoints = { "first look" = 2026-10-23, ... }."""
     out = []
     for label, day in (book.checkpoints or {}).items():
-        if isinstance(day, datetime):
-            day = day.date()
-        if not isinstance(day, date):
+        day = _as_date(day)
+        if day is None:
             continue
         at = datetime.combine(day, time(hour=23, minute=59), tzinfo=book.tz)
         out.append({"label": str(label), "date": day.isoformat(), "at": int(at.timestamp()),

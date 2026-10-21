@@ -16,6 +16,7 @@ A desk is in the book when book.toml has a section for it.
   python paperbook.py               update the ledger and the report once
   python paperbook.py --watch 15    ...every 15 minutes, while the desks run
   python paperbook.py --demo        the same, from the desks' demo markets
+  python paperbook.py --standings   every desk ranked, with its last seven days; nothing written
 
 Writes output/ledger.csv (one row per closed paper trade) and output/paper-book.html,
 plus the Trading Deck (output/deck.html, the home page), the Trade Crawler (output/crawler.html) and the
@@ -394,6 +395,43 @@ def render_text(book: Book) -> str:
         lines.append("  No closed paper trades yet. Each one shows up here as soon as a desk closes it.")
     elif all_s["trades"] < 50:
         lines.append(f"  Only {all_s['trades']} trades: far too few to judge anything yet.")
+    return "\n".join(lines)
+
+
+def render_standings(book: Book) -> str:
+    """Every desk ranked by paper return, with its last seven days and whether that's a green week. The same
+    numbers as the deck's standings table, for a terminal (server/status.sh)."""
+    import benchmark
+    import deck
+
+    today = book.now.astimezone(book.tz).date()
+    checks = " · ".join(f"{label} {deck._as_date(day):%a %d %b}" for label, day in (book.checkpoints or {}).items()
+                        if deck._as_date(day))
+    lines = [f"STANDINGS{' (DEMO markets)' if book.demo else ''} · paper money only · "
+             f"{book.now.astimezone(book.tz):%a %d %b %H:%M %Z}" + (f" · {checks}" if checks else ""),
+             f"  {'#':>2}  {'desk':<21} {'market':<9} {'day':>5}  {'since day one':>24}  {'last 7 days':>20}  "
+             f"{'trades':>6}  so far"]
+    rows = []
+    for d in book.desks:
+        s = stats(book.trades[d], book.banks[d])
+        start = deck.started(book, d)
+        day = min(deck.MONTH_DAYS, (book.now - start).days + 1) if start else 0
+        rows.append((s["return_pct"], d, s, day, deck.week(book, d, today)))
+    rows.sort(key=lambda r: (-r[0], book.desks.index(r[1])))
+    for k, (ret, d, s, day, w) in enumerate(rows, 1):
+        since = f"{_usd(s['net']):>11} {ret:+8.1f}%" if day else f"{'—':>20}"
+        week = f"{_usd(w['net']):>10} {w['green']}g {w['red']}r" if w["traded"] else f"{'—':>16}"
+        so_far = deck.verdict(s["trades"], s) + (" · GREEN WEEK" if w["green_week"] else "")
+        lines.append(f"  {k:>2}  {book.label(d).lower():<21} {book.market(d):<9} {f'{day}/{deck.MONTH_DAYS}' if day else '—':>5}  "
+                     f"{since:>24}  {week:>20}  {s['trades']:>6}  {so_far}")
+    all_s = stats(book.all_trades, book.bank_total)
+    lines.append(f"  {'':>2}  {'all desks':<21} {'':<9} {'':>5}  {_usd(all_s['net']):>11} {all_s['return_pct']:+8.1f}%  "
+                 f"{'':>20}  {all_s['trades']:>6}")
+    green = [book.label(d) for _, d, _, _, w in rows if w["green_week"]]
+    lines.append("  green week: " + (", ".join(green) if green else "none yet") +
+                 "  (traded 3+ of the last 7 days, net up, no day's loss bigger than the week's gain)")
+    if book.benchmark:
+        lines.append("  " + benchmark.line(book))
     return "\n".join(lines)
 
 
@@ -817,18 +855,19 @@ def main(argv=None) -> int:
     ap.add_argument("--demo", action="store_true", help="read the desks' demo results instead of live ones")
     ap.add_argument("--watch", type=float, metavar="MINUTES", help="keep updating every few minutes")
     ap.add_argument("--print", action="store_true", dest="print_only", help="just print the totals; write nothing")
+    ap.add_argument("--standings", action="store_true", help="just print every desk ranked, with its last 7 days")
     ap.add_argument("--serve", type=int, metavar="PORT", help="also show the deck, crawler, galaxy and book at http://HOST:PORT")
     ap.add_argument("--host", default="127.0.0.1", help="with --serve: the address to answer on (default this machine only)")
     ap.add_argument("--config", default=str(HERE / "book.toml"))
     args = ap.parse_args(argv)
     with open(args.config, "rb") as fh:
         cfg = tomllib.load(fh)
-    if args.print_only:
+    if args.print_only or args.standings:
         import benchmark
 
         book = load(cfg, args.demo)
         book.benchmark = benchmark.load(HERE / "output" / ("demo" if args.demo else ""), book)
-        print(render_text(book))
+        print(render_standings(book) if args.standings else render_text(book))
         return 0
     out = HERE / "output" / ("demo" if args.demo else "")
     server = None

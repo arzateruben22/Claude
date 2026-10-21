@@ -230,7 +230,17 @@ def summary(book: pb.Book, day: date) -> Push:
                  + (f" · {len(held)} open, {_usd(book.unrealized)} not banked" if held else ""))
     if book.benchmark:
         lines.append(benchmark.line(book))
-    return Push(f"Paper book · {day:%a %d %b}: {_usd(today_total)} today", "\n".join(lines), 2, ("spider",))
+    # on a date the book is read (first look, month end): the ranking, top and bottom, in the same push
+    reads = {deck._as_date(when): label for label, when in (book.checkpoints or {}).items() if deck._as_date(when)}
+    title = f"Paper book · {day:%a %d %b}: {_usd(today_total)} today"
+    if day in reads and len(rows) > 1:
+        ranked = sorted(rows, key=lambda r: (-(r[3] / book.banks[r[0]]), book.desks.index(r[0])))
+        line = lambda r: f"{book.label(r[0])} {_usd(r[3])} ({r[3] / book.banks[r[0]] * 100:+.1f}%)".replace("(-", "(−")  # noqa: E731
+        n = min(5, len(ranked) // 2)
+        lines.insert(0, f"{reads[day].capitalize()}, day {day:%d %b}. Top {n}: " + "; ".join(line(r) for r in ranked[:n]) + ".")
+        lines.insert(1, f"Bottom {n}: " + "; ".join(line(r) for r in ranked[-n:]) + ".")
+        title = f"{reads[day].capitalize()} · {day:%a %d %b}: {_usd(since_total)} since the start"
+    return Push(title, "\n".join(lines), 2, ("spider",))
 
 
 def check_summary(now: datetime, state: dict, book: pb.Book, at: time) -> List[Push]:

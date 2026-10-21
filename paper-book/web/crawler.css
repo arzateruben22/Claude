@@ -69,7 +69,10 @@ button { font: inherit; }
 
 /* section tabs */
 .tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 4px; }
-.tabs.many { grid-template-columns: repeat(7, minmax(0, 1fr)); }   /* more than eight: two rows, whole names */
+/* more than eight (thirty desks): one row that scrolls sideways, the current tab kept in view */
+.tabs.many { display: flex; overflow-x: auto; scrollbar-width: none; scroll-behavior: smooth; }
+.tabs.many::-webkit-scrollbar { display: none; }
+.tabs.many button { flex: 0 0 auto; min-width: 96px; padding-inline: 10px; }
 .tabs button {
   background: #111418; color: var(--dim); border: 0; border-radius: 1px;
   height: 22px; font-size: 11px; cursor: pointer; white-space: nowrap;
