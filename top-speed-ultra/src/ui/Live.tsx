@@ -90,7 +90,7 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
       <p className="fine">{settings.liveUrl ? '' : base ? `Using this page's own host (${base}).` : 'Needed when the game is opened from disk or from another host. Ask whoever runs the server.'}</p>
     </div>
     {name ? <>
-      <div className="who"><span className="avatar" aria-hidden="true">{name.slice(0, 1).toUpperCase()}</span><div className="who-main"><b className="name-static">{name}</b><p>Signed in on this device</p></div></div>
+      <div className="who"><span className="avatar" aria-hidden="true" style={{ background: 'var(--sunset)', color: 'var(--night)' }}>{name.slice(0, 1).toUpperCase()}</span><div className="who-main"><b className="name-static">{name}</b><p>Signed in on this device</p></div></div>
       <div className="row"><button className="btn primary" onClick={onClose}>Done</button><button className="btn" onClick={() => void logout()}>Log out</button></div>
       <details className="acct-more">
         <summary>Email for password reset</summary>
