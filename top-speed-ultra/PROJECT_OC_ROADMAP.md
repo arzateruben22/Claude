@@ -71,6 +71,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | OC streets (every street in Orange County) | Next after the hypercar (owner, 2026-10-20) | All of Anaheim's streets are pulled (about 10,000 named segments and their intersections). Driving them needs a tiled street model, intersections, signals and stop signs, roundabouts, surface traffic and pedestrians; malls and parking structures from Overture buildings. First slice: the drive from the 57 into the Lot 57 spot. Design first (PROJECT_OC_HANDOFF.md, Fable prompt "OC streets"). |
 | Golden Road vertical slice on foot | Roadmap | Simulated crowds. It must never claim live occupancy. |
 | On foot: Lot 57, our own hangout on Orangewood Ave, Anaheim | Planned (prototype in progress) | Plan in `PROJECT_OC_ON_FOOT.md`. A fictional taproom and yard (no real business's name or look) at the real spot, on the real streets from OpenStreetMap via Overture. Get out of the car, walk, sit, order, talk to NPCs. Crowds are simulated by time and day and labelled so. No live occupancy, events or multiplayer. |
+| Sports bar (Sims-like world at the Lopez & Lefty's site, our own name) | Planned (site data done; design plan in review) | Our own fictional sports bar, under a swappable name constant, at the real site on S Claudina Way, Anaheim, from OpenStreetMap via Overture. Fictional league and teams on the TVs; any crowd simulated by time and day and labelled. Plan in `PROJECT_OC_SPORTS_BAR.md` (work in progress). |
 
 ## P5: later
 

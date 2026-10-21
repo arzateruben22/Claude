@@ -4,6 +4,19 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21: the sports bar's site data and plan (Phase 0)
+
+The owner asked for a playable Sims-like world at the Lopez & Lefty's site in Anaheim. We build our own sports bar
+there, under our own name, with no real business's name, menu or look, and only fictional leagues and teams on the TVs.
+
+- **Kept: the site data.** The Anaheim tools now take a `sportsbar` venue next to Lot 57 and produce the bar's street
+  slice, places and freeway link from OpenStreetMap via Overture. A reviewer re-ran both pipelines in scratch copies:
+  Lot 57's outputs are byte-identical to before (verify 12 of 12), and the bar's outputs reproduce byte for byte
+  (verify 13 of 13).
+- **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress. The latest repair
+  fixed the earlier review's budget, mood and module-map items, but the design review still rejected it, so it needs
+  another pass before building starts.
+
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
 Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set

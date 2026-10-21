@@ -1,14 +1,17 @@
-# Build src/data/anaheim/slice.json: the walkable stadium-district slice around our venue spot.
-# Input: data/slice-*.parquet (fetch_slice.py) and data/venue.json (venue.py).
+# Build src/data/anaheim/<prefix>slice.json: the walkable slice around one of our venue spots.
+#   python3 build_slice.py [venue]     (default lot57 -> slice.json; sportsbar -> sportsbar-slice.json; see ana.VENUES)
+# Input: data/<prefix>slice-*.parquet (fetch_slice.py) and the venue's point (venue.py).
 # Coordinates: game metres (x east, z south from 33.72 N, 117.83 W), stored as decimetre integers, delta-coded per
 # geometry (first point absolute). No business names are written; street names are kept.
 import json, math, os, sys, collections as C
 import shapely, pyarrow.parquet as pq
 from shapely.geometry import box as sbox, Point
-from ana import DATA, OUT, RELEASE, jload, slice_box, to_xz, qpts, delta, Dict, street_name
+from shapely.ops import unary_union
+from ana import DATA, OUT, RELEASE, jload, slice_box, to_xz, qpts, delta, Dict, street_name, venue, STREET_CLASSES
 
-v = jload(f'{DATA}/venue.json')
-X0, Z0, X1, Z1 = slice_box()
+V = venue()
+v = jload(V['json'])
+X0, Z0, X1, Z1 = slice_box(V)
 BOX = sbox(X0, Z0, X1, Z1)
 D = {k: Dict() for k in ('seg', 'sub', 'name', 'bcls', 'btype', 'roof', 'lu', 'water', 'infra', 'cover', 'surf')}
 DP = Dict()  # place categories (separate file)
@@ -16,7 +19,7 @@ stats = C.Counter()
 
 LIC = C.defaultdict(C.Counter)  # theme/type -> (dataset, licence as Overture lists it) -> records used
 def rd(t):
-    rows = pq.read_table(f'{DATA}/slice-{t}.parquet').to_pylist()
+    rows = pq.read_table(V['raw'](t)).to_pylist()
     for r in rows:
         for s_ in r.get('sources') or []: LIC[t][f"{s_['dataset']} | {s_['license'] or 'no licence string'}"] += 1
     return rows
@@ -56,6 +59,7 @@ def rng_or_whole(rs):
     return rs
 
 segs = []
+seg_geo = []  # each piece as a shapely line in metres (for the venue's site block)
 conn_miss = 0
 for r in rd('segment'):
     G = to_xz(shapely.from_wkb(r['geometry']))
@@ -118,7 +122,7 @@ for r in rd('segment'):
             if x: s[key] = x
         for sf in r['road_surface'] or []:
             if sf['value'] and sf['value'] != 'paved' and not sf['between']: s['sf'] = D['surf'](sf['value'])
-        segs.append(s)
+        segs.append(s); seg_geo.append(piece)
         stats['seg:' + (r['class'] if r['subtype'] == 'road' else r['subtype'])] += 1
         if sub: stats['sub:' + sub] += 1
 
@@ -171,13 +175,14 @@ for r in rd('building_part'):
 
 # ------------------------------------------------------------------ places: category and point only (no names)
 vx, vz = v['x'], v['z']
+DROP_IDS = set(v.get('drop_place_ids', []))  # every record at the venue's address or under its real name (venue.py)
 places = []
 pl_cats = C.Counter()
 for r in rd('place'):
     p = to_xz(shapely.from_wkb(r['geometry']))
     if not (X0 <= p.x <= X1 and Z0 <= p.y <= Z1): continue
     addr = ' '.join((a.get('freeform') or '') for a in (r['addresses'] or [])).lower()
-    if '2210' in addr and 'orangewood' in addr: stats['place_at_venue_dropped'] += 1; continue
+    if (V['addr'][0] in addr and V['addr'][1] in addr) or r['id'] in DROP_IDS: stats['place_at_venue_dropped'] += 1; continue
     if (r['operating_status'] or 'open') != 'open': stats['place_not_open'] += 1; continue
     if (r['confidence'] or 0) < 0.5: stats['place_lowconf'] += 1; continue
     cat = r['basic_category'] or (r['taxonomy'] or {}).get('primary') or 'unknown'
@@ -216,10 +221,70 @@ v_bld = next((i for i, b in enumerate(bld) if poly(b).buffer(0).contains(VP)), N
 lots = [(poly(e).distance(VP), i) for i, e in enumerate(infra) if 'p' in e and D['infra'].items[e['c']] == 'transit:parking']
 v_lot = min(lots)[1] if lots else None
 
+# The site block (venues with V['site']): the venue's footprint and its parking lot, identified and marked.
+#   Footprint: the building the point stands in, else the nearest one.
+#   Lot: a mapped parking area within 15 m of the footprint; when none is mapped there, the open ground the footprint
+#   wraps round (its convex hull less the footprint), widened along the mapped service ways that cross it by 9 m
+#   either side (an aisle and a row of stalls) up to 12 m out of it, and stopped at the street kerbs and the footprint;
+#   strips under 6 m wide are dropped.
+#   Kerbs use the class half-widths of PROJECT_OC_ON_FOOT.md (primary 22 m, secondary 18 m, tertiary 14 m,
+#   residential 11 m wide), since widths are rarely mapped.
+KERB = {'motorway': 12, 'trunk': 11, 'primary': 11, 'secondary': 9, 'tertiary': 7, 'residential': 5.5,
+        'unclassified': 5.5, 'living_street': 5.5}
+def seg_cls(i): return D['seg'].items[segs[i]['c']]
+def seg_conns(i): return set(segs[i].get('k', [])[1::2])
+def site_block():
+    b_i = v_bld
+    if b_i is None: b_i = min(range(len(bld)), key=lambda i: poly(bld[i]).buffer(0).distance(VP))
+    B = poly(bld[b_i]).buffer(0)
+    st = {'bld_how': 'contains' if B.contains(VP) else 'nearest', 'bld_m': round(B.distance(VP), 1),
+          'bld_area_m2': round(B.area), 'bld_h': bld[b_i].get('h')}
+    st['bld_places'] = sum(B.contains(Point(places[i + 1] / 10, places[i + 2] / 10)) for i in range(0, len(places), 3))
+    near = min((poly(infra[i]).distance(B), i) for _, i in lots) if lots else None
+    if near: st['nearest_mapped_parking'] = {'infra': near[1], 'm_from_bld': round(near[0], 1)}
+    if near and near[0] <= 15:
+        lot = poly(infra[near[1]]).buffer(0); st['lot_how'] = 'mapped'; st['lot_infra'] = near[1]
+        ais = [i for i, g in enumerate(seg_geo) if seg_cls(i) == 'service' and g.intersection(lot.buffer(2)).length >= 5]
+    else:
+        C = B.convex_hull.difference(B)
+        C = max(parts(C), key=lambda g: g.area) if not C.is_empty else B.buffer(12).difference(B)
+        ais = [i for i, g in enumerate(seg_geo) if seg_cls(i) == 'service' and g.intersection(C.buffer(2)).length >= 5]
+        A = unary_union([seg_geo[i] for i in ais]).intersection(C.buffer(12))
+        road = unary_union([g.buffer(KERB[seg_cls(i)]) for i, g in enumerate(seg_geo) if seg_cls(i) in KERB and g.distance(B) < 100])
+        lot = unary_union([C, A.buffer(9).intersection(unary_union([C, A]).convex_hull)])
+        lot = max(parts(lot.difference(B.buffer(0.3)).difference(road)), key=lambda g: g.area)
+        # close gaps under 3 m, then open: drop strips under 6 m wide (a lane curling round the building is not lot)
+        lot = lot.buffer(1.5).buffer(-1.5).buffer(-3).buffer(3, join_style='mitre')
+        lot = max(parts(lot.difference(B.buffer(0.3)).difference(road)), key=lambda g: g.area)
+        st['lot_how'] = 'derived'
+    e = enc_poly(lot, 0.3)
+    st['lot_p'] = e['p']; st['lot_area_m2'] = round(lot.area)
+    st['lot_aisles'] = ais
+    # entries: where a lot aisle meets a public street, directly or by one short service way (a driveway, <= 40 m)
+    street = set().union(*[seg_conns(i) for i in range(len(segs)) if seg_cls(i) in STREET_CLASSES]) if segs else set()
+    ac = set().union(*[seg_conns(i) for i in ais]) if ais else set()
+    ent = ac & street
+    for i, g in enumerate(seg_geo):
+        if seg_cls(i) == 'service' and i not in ais and g.length <= 40 and seg_conns(i) & ac: ent |= seg_conns(i) & street
+    st['lot_entries'] = sorted(ent)
+    names = set()
+    for i in range(len(segs)):
+        if seg_cls(i) in STREET_CLASSES and seg_conns(i) & ent and 'n' in segs[i]: names.add(D['name'].items[segs[i]['n']])
+    st['lot_entry_streets'] = sorted(names)
+    return b_i, st
+SITE = site_block() if V.get('site') else None
+if SITE: v_bld, v_lot = SITE[0], SITE[1].get('lot_infra')
+
 # ------------------------------------------------------------------ write
+WHAT = {'lot57': 'Anaheim stadium-district slice for the on-foot mode: streets, footways, buildings, land use, water, infrastructure.',
+        'sportsbar': 'Anaheim slice (1.2 km box) round our own sports bar\'s spot on South Claudina Way, for the on-foot mode: '
+                     'streets, footways, buildings, land use, water, infrastructure.'}[V['key']]
+NOTE = {'lot57': 'Our own fictional hangout. The spot was located in Overture places (see tools/anaheim/README.md); no real name, sign or trade dress is used.',
+        'sportsbar': 'Our own fictional sports bar. The spot was located in Overture places (see tools/anaheim/README.md); no real '
+                     'name, logo, sign, menu or trade dress is used.'}[V['key']]
 out = {
     'v': 1,
-    'what': 'Anaheim stadium-district slice for the on-foot mode: streets, footways, buildings, land use, water, infrastructure.',
+    'what': WHAT,
     'attribution': 'Overture Maps Foundation (release ' + RELEASE + '). Streets, connectors, buildings, land use, water and '
                    'infrastructure derived from OpenStreetMap contributors (ODbL 1.0; a few street records also list TomTom, '
                    'under ODbL 1.0); some buildings from Microsoft ML '
@@ -229,7 +294,7 @@ out = {
     'origin': [33.72, -117.83], 'units': 'decimetres; x east, z south (game coordinates); each geometry delta-coded, first point absolute',
     'box': [X0, Z0, X1, Z1],
     'venue': {'x': vx, 'z': vz, 'lon': round(v['lon'], 7), 'lat': round(v['lat'], 7), 'bld': v_bld, 'lot': v_lot,
-              'note': 'Our own fictional hangout. The spot was located in Overture places (see tools/anaheim/README.md); no real name, sign or trade dress is used.'},
+              'note': NOTE, **({'site': SITE[1]} if SITE else {})},
     'dict': {k: d.items for k, d in D.items()},
     'conn': delta(conn_pts),
     'seg': segs,
@@ -243,14 +308,24 @@ out = {
         'bld': 'p outer ring (counter-clockwise in x,z), hl holes, h height m, mh min height m, f floors, c class (dict.bcls), '
                't subtype (dict.btype), r roof shape (dict.roof), ug underground, lid 1 when Overture took the height from USGS lidar',
         'bpart': 'building parts: b index into bld, p, h, mh, r, rh roof height',
-        'venue': 'x, z metres; bld index of the building it stands in; lot index into infra of the nearest mapped parking area',
+        'venue': 'x, z metres; bld index of the building it stands in; lot index into infra of the nearest mapped parking area'
+                 if not SITE else
+                 'x, z metres; bld index of the venue\'s building (the one the point stands in, else the nearest); lot index into '
+                 'infra of its mapped parking area, null when none is mapped at the building; site: bld_how contains|nearest, '
+                 'bld_m metres from the point, bld_area_m2, bld_h, bld_places other open place records inside the footprint '
+                 '(it is shared), nearest_mapped_parking {infra, m_from_bld}, lot_how mapped|derived (derived: no parking area '
+                 'is mapped there; the open ground the footprint wraps round, widened 9 m along the mapped service ways that '
+                 'cross it, kept off the kerbs and the footprint; see tools/anaheim/build_slice.py), lot_p the lot ring '
+                 '(delta-coded dm, counter-clockwise), lot_area_m2, lot_aisles seg indices of the service ways in it, '
+                 'lot_entries conn indices where they meet a public street (directly or by a driveway up to 40 m), '
+                 'lot_entry_streets those streets\' names',
         'licences': 'per Overture type: "dataset | licence" as listed in each record\'s sources, with record counts (fetched rows, before clipping)',
         'landuse/water/infra/cover': 'c class (dict.lu / dict.water / dict.infra "subtype:class" / dict.cover), p polygon ring (+hl) or l line',
         'infra_pts': 'flat [class (dict.infra), x, z, ...] for point features (crossings, signals, stops, benches, lamps...)',
     },
 }
 os.makedirs(OUT, exist_ok=True)
-fn = os.path.join(OUT, 'slice.json')
+fn = V['slice']
 with open(fn, 'w') as f: json.dump(out, f, separators=(',', ':'))
 sz = {k: len(json.dumps(out[k], separators=(',', ':'))) for k in ('conn', 'seg', 'bld', 'bpart', 'landuse', 'water', 'infra', 'infra_pts', 'cover', 'dict')}
 counts = {
@@ -265,8 +340,9 @@ pl = {'v': 1, 'what': 'Places in the slice box: category and point only (no name
       'attribution': 'Overture Maps Foundation (release ' + RELEASE + ') places: CDLA Permissive 2.0 (Foursquare records Apache 2.0, AllThePlaces CC0 1.0).',
       'licences': dict(LIC['place']), 'origin': [33.72, -117.83], 'units': 'decimetres; x east, z south (game coordinates), absolute',
       'dict': DP.items, 'place': places, 'keys': {'place': 'flat [category (dict), x, z, ...]'}}
-fp = os.path.join(OUT, 'slice-places.json')
+fp = V['places']
 with open(fp, 'w') as f: json.dump(pl, f, separators=(',', ':'))
 counts['places_bytes'] = os.path.getsize(fp)
-with open(f'{DATA}/slice-counts.json', 'w') as f: json.dump(counts, f, indent=1)
+if SITE: counts['site'] = {k: x for k, x in SITE[1].items() if k != 'lot_p'} | {'bld': v_bld}
+with open(V['counts'], 'w') as f: json.dump(counts, f, indent=1)
 print(json.dumps(counts, indent=1))
