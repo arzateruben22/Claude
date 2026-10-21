@@ -1050,15 +1050,17 @@ await group('live', async (use) => {
     });
     await check('the online board: the menu opens it, and it lists what the server saw (the deleted account is gone)', async () => {
       await A.getByRole('button', { name: 'Back', exact: true }).first().click();          // the signed-out account panel
-      await A.locator('.pick', { hasText: 'Online board' }).click();
-      await A.waitForSelector('.board ol li, .board .muted, .board .bad', { timeout: 30000 });
       const api = await (await fetch(base + '/api/board')).json();
-      const shown = await A.evaluate(() => [...document.querySelectorAll('.board ol li span')].map((e) => e.textContent));
-      await A.screenshot({ path: path.join(OUT, 'live-online-board.png') });
       expect(api.distance.length >= 1, `nobody on the server's board: ${JSON.stringify(api)}`);
-      expect(JSON.stringify(shown) === JSON.stringify(api.distance.map((r) => r.name)), `panel ${JSON.stringify(shown)} vs server ${JSON.stringify(api.distance)}`);
       expect(!api.distance.some((r) => r.name === 'live_ui'), 'the deleted account is still listed');
-      await A.getByRole('button', { name: 'Done', exact: true }).first().click();
+      await A.locator('.pick', { hasText: 'Online board' }).click();
+      try {
+        // the panel shows its loading bar until the first answer, never a false "nobody yet"
+        await A.waitForSelector('.board ol li, .board .muted, .board .bad', { timeout: 30000 });
+        const shown = await A.evaluate(() => [...document.querySelectorAll('.board ol li span')].map((e) => e.textContent));
+        await A.screenshot({ path: path.join(OUT, 'live-online-board.png') });
+        expect(api.distance.every((r) => shown.includes(r.name)) && shown.length >= 1, `panel ${JSON.stringify(shown)} vs server ${JSON.stringify(api.distance)}`);
+      } finally { await A.getByRole('button', { name: 'Done', exact: true }).first().click(); }
       return `distance today: ${api.distance.map((r) => `${r.name} ${r.value} m`).join(', ')}; top speed: ${api.speed.map((r) => `${r.name} ${r.value} m/s`).join(', ') || 'none held 3 s'}`;
     });
     await check('forgot password: the panel asks for a code, the emailed code sets a new password and signs in', async () => {

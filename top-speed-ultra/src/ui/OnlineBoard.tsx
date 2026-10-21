@@ -51,7 +51,7 @@ export function OnlineBoard({ base, me, token = '', onClose }: { base: string; m
       <div className="board">
         <p className="eyebrow">{KIND_LABEL[kind]} · {PERIOD_LABEL[period].toLowerCase()}{when ? ` · ${when}` : ''}</p>
         {error ? <p className="fine bad" role="alert">{error}</p>
-          : loading && !board ? <div className="loadbar" role="status" aria-label="Loading the board"><i /></div>
+          : !board || board.period !== period ? <div className="loadbar" role="status" aria-label="Loading the board"><i /></div>
           : rows.length === 0 ? <p className="muted">Nobody on the board {period === 'today' ? 'today' : 'this week'} yet. Drive live and you're on it.</p>
           : <ol>{rows.map((r) => <li key={r.name} className={isMe(r.name) ? 'me' : ''}><b>{fmtValue(kind, r.value)}</b><span>{r.name}</span></li>)}</ol>}
         {you && !rows.some((r) => isMe(r.name)) && <p className="fine">You: #{you.rank} · {fmtValue(kind, you.value)}</p>}
