@@ -10,12 +10,14 @@ import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
-import { Network, Hit, Sign } from './world/Network';
+import { Network, Hit, Sign, Overpass, GANTRY_AHEAD, GANTRY_MIN_S } from './world/Network';
 import { Path, Junction, ORIGIN } from './world/Path';
 import { Roads } from './world/Roads';
 import { Terrain } from './world/Terrain';
 import { CarPhysics, SPEC } from './vehicle/Physics';
 import { PlayerCar } from './vehicle/PlayerCar';
+import { HyperAbility, planHop, HOP, TANK, HopVehicle } from './vehicle/HyperAbility';
+import { ThrustJets } from './vehicle/ThrustJets';
 import type { CarId } from '../preview/car-shape';
 import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
@@ -26,7 +28,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar } from './cars';
+import { CARS, carById, applyCar, tuneFor } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
@@ -47,6 +49,9 @@ export interface Hud {
   ability: string; abilityOn: number; abilityCool: number;
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
+  // the OC Hypercar: which tune runs ('' for another car), and its own systems (live only on the Unleashed tune in
+  // Free Drive): the tank (0..1), the valve and the fans (0..1), and the hop's state in a word or two
+  tune: string; thrustLive: boolean; tank: number; thrustOn: number; groundLock: boolean; hop: string;
 }
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
@@ -133,8 +138,21 @@ export class Game {
   readonly profile = new ProfileBook();
   ability = new Ability(ABILITIES.clear);
   private worldScale = 1;            // Focus Time slows the world (not you)
+  // the driver's ability never changes the world's pace while the car is in a hop: the hop's arc is planned for the
+  // traffic at the pace it took off in, so a Focus Time that runs out in the air holds the world at 0.7x until
+  // touchdown (abilityEndHeld), and one asked for in the air starts on touchdown (focusOnLand)
+  private abilityEndHeld = false;
+  private focusOnLand = false;
   private gripBoost = 1;
   private carGrip = 1;
+  // the OC Hypercar's own systems (Cold Thrust, Ground Lock, Thrust Hop) and their jets; a camera dip on a landing
+  readonly hyper = new HyperAbility();
+  private jets!: ThrustJets;
+  private dip = { a: 0, t: 1 };
+  private fulls = 0;
+  // the last hop, for the HUD and the tests: its arc, what it went over, the apex and the air time seen, the landing
+  // (`short`: a plain hop that came down short of a vehicle too far ahead to clear)
+  hopLog = { n: 0, peak: 0, T: 0, over: '' as string | null, short: null as string | null, apex: 0, air: 0, landV: 0, landMph: 0, refused: '', refusedN: 0 };
   private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
   private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
   race: RaceState | null = null;
@@ -163,6 +181,8 @@ export class Game {
     this.env.set(settings.time, settings.weather, true);
     this.car = new PlayerCar();
     this.scene.add(this.car.root);
+    this.jets = new ThrustJets(settings.quality === 'high' || settings.quality === 'ultra' ? 24 : 12);
+    this.scene.add(this.jets.mesh);
     this.driving = this.carId;
     this.applyDriver();
     this.applyCarChoice();
@@ -243,6 +263,9 @@ export class Game {
     this.path = path;
     if (path.main) { this.lastMain = path; this.visited.add(path.label); }
     this.phys.placeAt(path, s, path.laneCenter(clamp(lane, 0, path.lanes - 1)), speed);
+    this.phys.ext.fx = 0; this.phys.ext.fz = 0;
+    this.jets?.clear();
+    this.focusOnLand = false;                                   // a Focus Time queued in a hop is dropped by a reset
     this.phys.auto = this.settings.transmission === 'auto' || this.attract;
     this.phys.handling = this.settings.handling;
     this.car.teleport(this.phys);
@@ -262,6 +285,7 @@ export class Game {
 
   private startAttract() {
     this.attract = true; this.over = false; this.mode = 'free';
+    this.setHyper(false);
     const m = this.findMain('I-405 North');
     this.placeCar(m, m.len * 0.12, 1, 28);
     this.apLane = 1;
@@ -275,6 +299,9 @@ export class Game {
   async start(mode: Mode, startLabel = this.settings.start, courseId = this.settings.course) {
     this.endRace();
     this.applyCarChoice(mode);
+    // the car's own ability comes with its tune (tuneFor): the hypercar's Unleashed tune in Free Drive has it, its race
+    // tune in Races, Time Trial and Survival does not
+    this.setHyper(tuneFor(carById(this.driving), mode).ability === 'hyper');
     if (mode === 'race') return this.startRace(COURSES.find((c) => c.id === courseId) ?? COURSES[0]);
     this.audio.start();
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
@@ -458,6 +485,8 @@ export class Game {
     const c = carById(this.carId);
     this.driving = c.id;
     this.carGrip = applyCar(c, mode);
+    // a car whose tune has no ability of its own never keeps the hypercar's (it is latched again at the next start)
+    if (this.hyper.live && tuneFor(c, mode).ability !== 'hyper') this.setHyper(false);
     this.configureCar();
     return c;
   }
@@ -468,6 +497,7 @@ export class Game {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
     const high = s.quality === 'high' || s.quality === 'ultra';
+    this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
     this.car.configure({
       car: c.id as CarId, paint: c.paint, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
@@ -482,7 +512,16 @@ export class Game {
     this.ability = new Ability(ABILITIES[d.ability]);
   }
   useAbility() {
-    if (this.attract || this.over || this.paused || this.countdown > 0 || !this.ability.ready) return false;
+    return !this.paused && this.tryAbility();
+  }
+  // the ability's own rules (the pause is the caller's: a simulation step never runs paused)
+  private tryAbility() {
+    if (this.attract || this.over || this.countdown > 0 || !this.ability.ready) return false;
+    // Focus Time asked for in a hop waits for the touchdown (the arc was planned at the world's pace when it took off)
+    if (this.ability.def.id === 'focus' && this.phys.airborne) {
+      if (!this.focusOnLand) { this.focusOnLand = true; this.ev.toast('Focus Time on landing', 'info'); }
+      return false;
+    }
     // with no traffic there is nothing to clear: say so and keep the charge
     if (this.ability.def.id === 'clear' && this.traffic.level.perKmLane === 0 && this.traffic.cars.length === 0) { this.ev.toast('No traffic to clear', 'info'); return false; }
     if (!this.ability.trigger()) return false;
@@ -503,10 +542,103 @@ export class Game {
     this.ev.toast(this.ability.def.name, 'good');
     return true;
   }
+  // the hypercar's systems for this run (latched at its start, like the tune)
+  private setHyper(live: boolean) {
+    this.hyper.reset(live);
+    this.input.thrustLive = live;
+    this.input.thrustInstantBelow = live ? HOP.minV : 0;          // a standing launch: no double-tap to wait for
+    this.fulls = this.hyper.fulls;
+    this.phys.ext.fx = 0; this.phys.ext.fz = 0;
+    this.jets?.clear();
+  }
+  // Thrust Hop (double-tap THRUST): plans an arc over the vehicles ahead in your lane and launches it, or says why not.
+  // Returns 'ok' or the reason. Refused while it isn't live, in the air, with under 40 % in the tank, under 5 m/s,
+  // when no arc clears the vehicle ahead, with no room to land on this road, or under a structure (an overpass, another
+  // road's deck, a sign gantry) anywhere over the hop's ground track.
+  thrustHop(): string {
+    const p = this.phys, h = this.hyper;
+    if (!h.live || this.attract || this.over || this.paused || this.countdown > 0) return 'off';
+    if (p.airborne) return 'in the air';
+    const no = (why: string) => { this.hopLog.refused = why; this.hopLog.refusedN++; this.ev.toast(why, 'info'); return why; };
+    if (h.tank < TANK.hopNeed) return no('Thrust Hop: tank low');
+    if (p.vx < HOP.minV) return no('Need more speed');
+    // every vehicle on this road, out to the longest hop's landing and its room, in this road's frame: one on another
+    // carriageway that shares these lanes at this level (a co-signed stretch, a merge) is projected onto it, so it
+    // counts. The level is read against this road's own height where the vehicle is (a grade climbs metres over the
+    // distance a hop looks ahead), not against the height under the car
+    const cars: HopVehicle[] = [];
+    const fx = Math.sin(p.psi), fz = Math.cos(p.psi), reach = p.vx * (HOP.maxT + HOP.landGap) + 40;
+    for (const t of this.traffic.cars) {
+      const dx = t.x - p.x, dz = t.z - p.z, along = dx * fx + dz * fz;
+      if (along < -40 || along > reach + 20 || Math.abs(dx * fz - dz * fx) > 60) continue;
+      let ds = t.s - p.s, dd = t.d - p.d, v = t.v;
+      if (t.path === this.path) {
+        // one changing lanes counts in the lane it is moving to, when that is nearer the car's
+        if (t.t >= 0) { const dTo = this.path.laneCenter(t.to) - p.d; if (Math.abs(dTo) < Math.abs(dd)) dd = dTo; }
+      } else {
+        const pr = this.path.project(t.x, t.z, p.s + along, this.hopProj), sc = clamp(pr.s, 0, this.path.len);
+        if (Math.abs(t.y - this.path.height(sc)) > 2.5) continue;      // a deck above or a road below
+        ds = pr.s - p.s; dd = pr.d - p.d;
+        v = t.v * Math.cos(t.h - this.path.heading(sc));
+      }
+      if (ds < -30 || ds > reach) continue;
+      const cl = this.traffic.classes[t.cls];
+      cars.push({ ds, v: v * this.worldScale, dd, len: cl.len, wid: cl.wid, height: cl.height, kind: cl.id });
+    }
+    const plan = planHop(p.vx, SPEC.halfL, SPEC.halfW, cars);
+    if (plan.refuse) return no(plan.refuse);
+    const track = p.vx * plan.T + 20;
+    if (p.s + track > this.path.len - 5 && !this.path.next) return no('No room to land');
+    if (p.s + track > this.path.len - 5) return no('Junction ahead: no hop');
+    const over = this.structureOver(this.path, p.s, p.d, track);
+    if (over) return no(over === 'overpass' ? 'No hop: overpass ahead' : over === 'sign gantry' ? 'No hop: sign gantry ahead' : 'No hop: bridge overhead');
+    if (!p.hop(plan.peak, plan.T)) return no('No hop');
+    h.spendHop(p);                                               // and the valve shuts: the arc is planned at this speed
+    const L = this.hopLog;
+    L.n++; L.peak = plan.peak; L.T = plan.T; L.over = plan.over; L.short = plan.short ?? null; L.apex = 0; L.air = 0; L.landV = 0; L.landMph = 0;
+    this.jets.puff(0.35);
+    if (!this.attract) this.audio.hop();
+    const name = (k: string) => (k === 'semi' ? 'big rig' : k === 'truck' ? 'box truck' : k);
+    this.ev.toast(plan.over ? `Thrust Hop · over the ${name(plan.over)}` : plan.short ? `Thrust Hop · short of the ${name(plan.short)}` : 'Thrust Hop', 'good');
+    return 'ok';
+  }
+  // what stands over a stretch of road (this road from s for len metres at offset d): a sign gantry on it, a street
+  // overpass, or another road's deck. The clearance check for the hop; it runs once per request.
+  private hopBuf: Hit[] = [];
+  private hopProj = { s: 0, d: 0 };
+  private hopAt = { x: 0, y: 0, z: 0, h: 0 };
+  structureOver(path: Path, s0: number, d: number, len: number): string | null {
+    // the guide-sign gantries (where Roads.ts draws them: GANTRY_AHEAD before each exit), across the whole carriageway
+    for (const g of this.net.signs) {
+      if (g.path !== path) continue;
+      for (const ahead of GANTRY_AHEAD) { const gs = g.s - ahead; if (gs >= GANTRY_MIN_S && gs > s0 - 6 && gs < s0 + len + 6) return 'sign gantry'; }
+    }
+    const a0 = path.at(clamp(s0, 0, path.len), d), reach = len + 60;
+    const near: Overpass[] = [];
+    for (const o of this.net.overpasses) if (Math.abs((o.ax + o.bx) / 2 - a0.x) < reach + 80 && Math.abs((o.az + o.bz) / 2 - a0.z) < reach + 80) near.push(o);
+    for (let s = s0; s <= s0 + len + 0.01; s += 4) {
+      const a = path.at(clamp(s, 0, path.len), d, this.hopAt);
+      for (const o of near) {
+        const ex = o.bx - o.ax, ez = o.bz - o.az, L2 = ex * ex + ez * ez || 1;
+        const t = clamp(((a.x - o.ax) * ex + (a.z - o.az) * ez) / L2, 0, 1);
+        const dist = Math.hypot(a.x - (o.ax + ex * t), a.z - (o.az + ez * t));
+        const under = o.y - 1.6 - a.y;
+        if (dist < o.w / 2 + 2 && under > 0.5 && under < 30) return 'overpass';
+      }
+      for (const hit of this.net.near(a.x, a.z, 14, this.hopBuf)) {
+        const q = hit.path;
+        if (q === path || hit.s < 0 || hit.s > q.len || hit.d < q.paveL - 1.5 || hit.d > q.paveR + 1.5) continue;
+        const up = q.height(hit.s) - a.y;
+        if (up > 2.5 && up < 30) return 'bridge deck';
+      }
+    }
+    return null;
+  }
   private poseT = 0;
   private endAbility() {
     this.traffic && (this.traffic.scale = 1);
     this.worldScale = 1; this.gripBoost = 1;
+    this.abilityEndHeld = false; this.focusOnLand = false;
     this.car.setPose(null); this.poseT = 0;
   }
 
@@ -581,6 +713,7 @@ export class Game {
       if (a === 'hud') { this.hudOn = !this.hudOn; this.ev.hudToggle(this.hudOn); }
       if (a === 'corner') this.cycleCorner();
       if (a === 'ability') this.useAbility();
+      if (a === 'hop') this.thrustHop();
       if (a === 'radio') this.cycleRadio();
       if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
@@ -825,6 +958,12 @@ export class Game {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
     });
+    {
+      const h = this.hyper, p = this.phys;
+      this.car.setThrustGauge(h.live, h.tank, h.thrust, h.fan > 0.3, p.airborne, this.cam === 'cockpit' || this.cam === 'free', dt, h.charging);
+      const fx = Math.sin(p.psi), fz = Math.cos(p.psi);
+      this.jets.update(this.paused ? 0 : dt, h.thrust, h.live ? this.car.nozzleWorld() : null, fx, fz, fx * p.vx + fz * p.vy, fz * p.vx - fx * p.vy, this.env.daylight);
+    }
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
     this.weatherTick(dt);
@@ -837,6 +976,9 @@ export class Game {
     this.renderCorner(dt);
     if (!this.attract) {
       this.audio.update(dt, { rpm: this.phys.rpm, throttle: this.phys.throttleOut, speed: Math.abs(this.phys.vx), slip: Math.max(this.phys.slipR, this.phys.slipF) + (this.input.c.handbrake ? 0.2 : 0), limiter: this.phys.limiter, scrape: this.scrape, cockpit: this.cam === 'cockpit' || this.cam === 'free' });
+      const h = this.hyper;
+      this.audio.setThrust(h.thrust, h.fan, h.live && h.charging);
+      if (h.fulls !== this.fulls) { this.fulls = h.fulls; if (h.live) this.audio.tankFull(); }
       this.scrape = Math.max(0, this.scrape - dt * 3);
     }
     this.hudT -= dt;
@@ -879,6 +1021,7 @@ export class Game {
       const before = Math.ceil(this.countdown);
       this.countdown -= dt;
       p.hold = true;
+      this.hyper.step(dt, p, this.input.c, false);                // no thrust, no fans on the line
       p.step(dt, { ...this.input.c, brake: 1, handbrake: true }, this.path, this.net);
       p.hold = false;
       if (Math.ceil(this.countdown) !== before) this.ev.toast(this.countdown > 0 ? String(Math.ceil(this.countdown)) : 'GO', 'info');
@@ -888,7 +1031,9 @@ export class Game {
     }
     const c = this.input.c;
     p.grip = this.env.grip * this.gripBoost * this.carGrip;
+    this.hyper.step(dt, p, c, !this.attract && !this.over);       // writes p.ext (thrust, fan suction); zero for every other car
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
+    if (p.airborne) { this.hopLog.apex = Math.max(this.hopLog.apex, p.altitude); this.hopLog.air += dt; }
     if (!p.airborne) this.trackPath();                            // a hop always lands on the road it left
     // the end of the road: turned around or put back on, and the route planned again from there
     if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
@@ -896,7 +1041,15 @@ export class Game {
     const playing = !this.attract && !this.over;
     // walls
     for (const im of p.impacts) {
-      if (im.kind === 'land') { this.audio.thump(im.speed); this.shake = Math.max(this.shake, Math.min(1, im.speed / 10)); continue; }
+      if (im.kind === 'land') {
+        // the landing: the springs compress, the camera dips, a thump and a chirp from the tyres; never a crash
+        this.car.land(im.speed);
+        this.dip.a = Math.min(0.12, 0.016 * im.speed); this.dip.t = 0;
+        this.shake = Math.max(this.shake, Math.min(0.6, im.speed / 14));
+        if (!this.attract) this.audio.land(im.speed, Math.abs(p.vx));
+        this.hopLog.landV = im.speed; this.hopLog.landMph = Math.abs(p.vx) * MPH;
+        continue;
+      }
       if (im.speed > 1.2) { this.scrape = Math.min(1, this.scrape + im.speed * 0.08); this.shake = Math.max(this.shake, Math.min(1, im.speed / 14)); }
       if (im.speed > 3) this.streak = 0;
       if (im.speed > 6) { this.audio.thump(im.speed); this.combo = 1; if (playing) this.collisions++; }
@@ -905,13 +1058,23 @@ export class Game {
     p.impacts.length = 0;
     // traffic
     const view = this.view();
-    if (this.ability.update(dt) === 'end') this.endAbility();
+    // the ability's end in the air holds until touchdown, and a Focus Time asked for in the air starts there
+    if (this.ability.update(dt) === 'end') { if (p.airborne) this.abilityEndHeld = true; else this.endAbility(); }
+    if (!p.airborne && this.abilityEndHeld) this.endAbility();
+    if (!p.airborne && this.focusOnLand) { this.focusOnLand = false; this.tryAbility(); }
     if (this.poseT > 0) { this.poseT -= dt; if (this.poseT <= 0) this.car.setPose(null); }
     const passes = this.traffic.step(dt * this.worldScale, view, this.time);
     const nContacts = this.traffic.collide(view, dt, dt * this.worldScale);
     for (let ci = 0; ci < nContacts; ci++) {
       const contact = this.traffic.contacts[ci];
       p.x += contact.nx * contact.depth; p.z += contact.nz * contact.depth;
+      if (p.airborne) {
+        // in a hop the car is bound to its road (the air step rebuilds x and z from s and d), so the shove out of the
+        // other vehicle moves it back along and across the road instead
+        const rh = this.path.heading(clamp(p.s, 0, this.path.len)), sinH = Math.sin(rh), cosH = Math.cos(rh);
+        p.s = clamp(p.s + (contact.nx * sinH + contact.nz * cosH) * contact.depth, 0, this.path.len);
+        p.d += (-contact.nx * cosH + contact.nz * sinH) * contact.depth;
+      }
       if (contact.speed <= 0) continue;
       const cl = this.traffic.classes[contact.car.cls];
       const J = (1.2 * contact.speed) / (1 / SPEC.mass + 1 / cl.mass);
@@ -1040,6 +1203,12 @@ export class Game {
     if (this.ultraOn() && this.settings.ultraShake && !lookBack && !REDUCED_MOTION) {
       const b = smoothstep(30, 90, Math.abs(p.vx)) * 0.0032;
       this.wantP.x += (Math.random() - 0.5) * b; this.wantP.y += (Math.random() - 0.5) * b * 1.4 + Math.sin(this.time * 23) * b * 0.4;
+    }
+    if (this.dip.t < 0.8) {
+      // a hop's landing: the view drops with the body and comes back (peak at 80 ms, gone in about half a second)
+      const x = this.dip.t / 0.08;
+      this.wantP.y -= this.dip.a * x * Math.exp(1 - x) * (lookBack ? 0.5 : 1);
+      this.dip.t += dt;
     }
     if (this.shake > 0) {
       this.wantP.x += (Math.random() - 0.5) * this.shake * 0.06; this.wantP.y += (Math.random() - 0.5) * this.shake * 0.05;
@@ -1182,10 +1351,13 @@ export class Game {
       best: loadBest(this.mode), overtakes: this.overtakes,
       road: this.path.main ? this.path.label : (this.path.label ? 'To ' + this.path.label : 'Ramp'),
       next, nextDist, wrongWay: this.wrongWay, streak: this.streak, bestStreak: this.bestStreak, nearMisses: this.nearMisses, top: Math.round(this.top * MPH),
-      ability: this.ability.def.name, abilityOn: this.ability.active / this.ability.def.duration, abilityCool: this.ability.coolFrac,
+      ability: this.ability.def.name, abilityOn: this.abilityEndHeld ? 0.01 : this.ability.active / this.ability.def.duration, abilityCool: this.ability.coolFrac,
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
+      tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
+      thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, thrustOn: this.hyper.thrust, groundLock: this.hyper.fan > 0.3,
+      hop: !this.hyper.live ? '' : p.airborne ? 'Airborne' : this.hyper.tank >= TANK.hopNeed ? 'Hop ready' : this.hyper.charging ? 'Hop: charging' : 'Hop: tank low',
     });
   }
 
