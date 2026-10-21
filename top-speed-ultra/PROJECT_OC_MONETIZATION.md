@@ -18,14 +18,19 @@ refuses stripe.com), so Stripe's figures come from Stripe's own pages as indexed
 ## The short version
 
 - **The rule.** Payments are built but in test mode. Nothing is charged until the owner connects Stripe and Supabase
-  and turns live mode on. We sell cosmetics, expansions and support. We never sell power, never sell credits, never
-  sell random rewards, and have no premium currency. Everything the game has today stays free.
+  and turns live mode on. We sell cosmetics, expansions and support. We never sell power (one exception, the owner's:
+  the OC Hypercar Founder Edition, faster in Free Drive only; rule 3a), never sell credits, never sell random
+  rewards, and have no premium currency. Everything the game has today stays free.
 - **The launch catalog (first 90 days).** A Founder Pack ($10, sold only until December 31, 2026). Two paint packs
   ($3 each). A wheel set for each of the four cars ($3 each). Three driver style sets ($3 each). A pay-what-you-want
   "Fuel the build" tip (from $2). That's 11 items. A livery pack ($5) is in the catalog but can't be sold until the
   livery layer exists in the game.
 - **Prices.** Whole dollars, $2 at the least, because Stripe's fixed 30¢ takes a third of a $0.99 sale. At $3 we keep
-  $2.61. At $10 we keep $9.41.
+  $2.61. At $10 we keep $9.41. **One exception, the owner's (2026-10-16):** the OC Hypercar Founder Edition is $4.99.
+  Stripe takes $0.44 and we keep $4.55 ($4.47 on an international card).
+- **The OC Hypercar Founder Edition** ($4.99, one time, sold until December 31, 2026). A numbered car, being built on
+  another branch, so it's `available: false` until it's in the game. It's the one car faster than anything you can
+  earn, and only in Free Drive, which has no clock and no rivals (rule 3a). The $10 Founder Pack doesn't include it.
 - **Where people buy.** On the web, through Stripe's hosted Checkout page. The phone apps restore your items when
   you sign in. Whether the iOS and Android apps may show a store button is a launch-time decision, because the court
   cases and both stores' fees are still moving.
@@ -53,6 +58,43 @@ The game's old rule was "no real money anywhere". The owner decided on 2026-10-1
    - No paid abilities and no shorter cooldowns.
    - No paid weather that changes grip.
    - A wheel or a body kit changes how the car looks, never how it drives.
+
+   **3a. The owner's two-tune rule (2026-10-16).** The OC Hypercar Founder Edition is the one car that is faster
+   than anything you can earn, and only in Free Drive. Free Drive has no clock and no rivals, but it isn't free of
+   scores: ending a drive files it with the distance as its score, saves a best and ranks it on a board kept on the
+   device only (`endFreeDrive` in `src/game/Game.ts`, the Free Drive tab of Personal bests in `src/ui/App.tsx`), and
+   its run card can be shared. So the store never says "nothing is scored" there. It says: no clock and no rivals,
+   your Free Drive bests stay on your device, and Unleashed runs and run cards are marked.
+   - **In Free Drive it runs Unleashed:** the highest top speed, the quickest launch and the most grip, downforce
+     and braking in the game, and its own ability (Cold Thrust, Ground Lock, Thrust Hop).
+   - **In every other mode** (Speed Survival, Races, Time Trial) **it runs the race tune**, with its ability off.
+     The race tune is at or under the best car you can earn, the Rossini Corsa, on every measured number
+     (`PROJECT_OC_HYPERCAR.md` §5.3, arcade handling 0.35):
+
+     | Measured | Race tune | Rossini Corsa |
+     | --- | --- | --- |
+     | Top speed | 231 mph | 232 mph |
+     | 0-60 / 0-100 mph | 3.12 s / 5.36 s | 3.12 s / 5.35 s |
+     | ¼ mile | 10.13 s @ 155 mph | 10.12 s @ 156 mph |
+     | 100-0 mph | 84.6 m | 84.3 m |
+     | Lateral grip at 25 / 40 / 80 m/s | 1.07 / 1.20 / 0.77 g | 1.25 / 1.21 / 0.79 g |
+     | Simulation handling (1.0): 0-60, 100-0, lateral g at 40 / 80 m/s | 4.19 s, 90.8 m, 1.07 / 1.18 g | 4.18 s, 90.6 m, 1.10 / 1.19 g |
+
+     Those are the plan's measurements: the tune run through the game's `CarPhysics.step` at 120 Hz, outside the
+     game. A physics test checks them in the game at both handling extremes (milestone M3 on the hypercar branch; it
+     isn't built yet). If any measurement in the game puts the race tune over the Corsa, the race tune becomes the
+     Corsa's numbers. Races set rivals against your car's own top speed, so a race in the race tune is the same race
+     as in a Corsa.
+   - **Free Drive's distance earnings are capped at the race tune's top speed** (231 mph), so the paid car doesn't
+     earn credits or XP faster.
+   - Its Free Drive runs and run cards are marked "Unleashed". **Before `available: true`:** the Free Drive board
+     must show that mark on every Unleashed run (or keep those runs off the board), and so must the run card. It
+     isn't built yet (the car isn't in the game), so it is written into the car's `needs` in `cosmetics.json`, next
+     to the tunes, the earnings cap and the physics test.
+
+   So the no-pay-to-win rule holds in Speed Survival, Races and Time Trial, and the one board an Unleashed run can reach
+   (Free Drive's, on your own device) says which runs were Unleashed. The car is sold only once both tunes, the
+   earnings cap, the marking and the physics test are in the game (`available: false` until then).
 4. **Never sell credits.** OC Credits are earned by driving only. There are no credit packs, no doublers, and no
    club bonus. This also keeps the store out of Stripe's rules on virtual currency and stored value
    ([Stripe restricted businesses][s-restricted]).
@@ -62,7 +104,9 @@ The game's old rule was "no real money anywhere". The owner decided on 2026-10-1
 7. **Everything the game has today stays free** (§2).
 8. **No ads at launch.**
 
-This rule is now in `CLAUDE.md`.
+This rule is now in `CLAUDE.md`, except rule 3a: its "Never sell power" line doesn't name the two-tune exception
+yet (§11). Until the owner makes that edit, public copy says "never pay-to-win" and names the exception wherever it
+would otherwise say "never power".
 
 ## 2. What stays free
 
@@ -98,12 +142,13 @@ Lean on purpose: 11 items you can buy, all small, all cosmetic, all built from p
 | **Rossini GT Wheel Set** | $3 | $2.61 | Irvine Silver five-spoke, Fullerton Black centre-lock, Tustin Graphite aero, each with its own calipers | Hook |
 | **Rossini Brio Wheel Set** | $3 | $2.61 | Santa Ana Bronze twin-five, Fullerton Black centre-lock, Laguna Pearl aero | Hook |
 | **Rossini Corsa Wheel Set** | $3 | $2.61 | Santa Ana Bronze twin-five, Laguna Pearl five-spoke, Anaheim Gunmetal aero | Hook |
-| **Vela E Wheel Set** | $3 | $2.61 | Irvine Silver twin-five, Fullerton Black five-spoke, Laguna Pearl centre-lock | Hook |
+| **Vela E Wheel Set** | $3 | $2.61 | Irvine Silver twin-five, Fullerton Black five-spoke, Laguna Pearl centre-lock | Hook. **Caveat:** the hypercar branch hides the Vela E from new players, which makes this set unsellable to them (below) |
 | **Night Shift** driver style | $3 | $2.61 | Black perforated gloves, the **Rossini Notte** steel watch (midnight-blue dial), charcoal bomber cuffs, plum nails | Hook |
 | **Golden Hour** driver style | $3 | $2.61 | Bare hands, the **Rossini Ora** gold watch (champagne sunburst dial), cream linen jacket cuffs, sunset-coral nails | Hook |
 | **Canyon Run** driver style | $3 | $2.61 | Canyon suede gloves, the **Vela Pulse** smart watch (sunset face), olive field jacket cuffs, sandstone nails | Hook |
 | **Fuel the Build** (tip) | pay what you want, from $2 (suggested $5) | $1.64 at $2, $4.55 at $5 | A small "Fuelled the build" badge, the same at any amount. Unlocks nothing else | Badge: to build (small) |
 | *Stripes and Roundels Livery Pack* | $5 | $4.55 | Twin 405 Stripes, Coast Side Stripe, Two-Tone Roof, Door Roundel with your number | **Not sellable yet**: needs a livery layer in the paint (`available: false`) |
+| *OC Hypercar Founder Edition* | $4.99 | $4.55 | The OC Hypercar, numbered by the server (No. 0001 up); a **Founder Edition** plaque with the number on the sill and console; **OC Founder Silver** paint with Founder Ice lights, on this car only. Unleashed in Free Drive only (rule 3a). No garage slot; can't be sold for credits. Sold until **Dec 31, 2026** (whether it is ever sold again is the owner's open decision, §12). Not in the Founder Pack | **Not sellable yet**: the car is being built on another branch (`claude/hypercar`) and isn't in the game this store ships from (`available: false`) |
 
 **Ready** means it works today: it needs only the entitlement check and the picker. **Hook** means the renderer
 already has the parameter but the player can't choose it yet. Examples: `buildCar` takes a caliper colour, and
@@ -144,6 +189,16 @@ and has been checked in renders (§9).
     on Day 46 (Thursday, December 3) at the earliest, so the pack sells for about four weeks, to Day 74
     (December 31). If Day 1 moves, the owner decides before sales start: keep December 31 (a shorter window, and
     the '26 on the badge stays true) or move the end with the calendar (TODO, owner).
+- **Two founder offers, kept apart.** The $10 Founder Pack and the $4.99 OC Hypercar Founder Edition sell in the same
+  window (one constant, `FOUNDER_UNTIL` in `src/store/founder.json`). Neither includes the other, and the store says
+  so on the car's card. Their names and looks don't overlap: the pack has the **Founder '26** badge and
+  **Founders Sunset** pearl in the sunset colours; the car has the **Founder Edition** plaque and **OC Founder Silver**
+  in silver and ice. The catalog checker fails if they ever share a grant or a name.
+- **The hidden Vela E makes its wheel set unsellable to new players.** The hypercar branch hides the Vela E from
+  new players (`PROJECT_OC_HYPERCAR.md` §1). After that merge, a new player can never earn the Vela E, so the store's
+  "Earn the Vela E first" lock refuses them the Vela E Wheel Set, and it sells only to players who already own a
+  Vela E. The catalog marks it (`caveat` on `wheels-vela-e`). Decide before that merge: retire the set, or keep it for
+  Vela E owners and reword "Earn the Vela E by driving to buy it" (TODO, owner).
 - **A tip, not a "VIP"**: some people want to pay for a free local game. Pay-what-you-want lets them. One badge at
   any amount, so there's no ladder to climb.
 - **No subscription, battle pass or ads in the first 90 days.** Each of them needs a steady flow of new content, or
@@ -162,7 +217,28 @@ the catalog as `available: false`, so the paywall can be tested against them.
   It's also in the showroom for credits. Paying skips the credits, never the level gate.
 - A car bought with money can't be sold back in the garage for credits. Today the garage pays 60 % of a car's
   credit price when you sell it (`sell` in `src/game/profile.ts`), which would turn dollars into credits.
-- A car that is faster, grippier or quicker off the line than what you can earn at your level is never sold.
+- A car that is faster, grippier or quicker off the line than what you can earn at your level is never sold. The
+  one exception is the owner's: the OC Hypercar Founder Edition, faster only in Free Drive, which has no clock and no
+  rivals and marks its Unleashed runs (rule 3a). It's never earnable, takes no garage slot, and can't be sold back
+  for credits (`profile.setStoreCars` and `sell` in `src/game/profile.ts`). It's restored on sign-in like every
+  other item.
+- **The OC Hypercar Founder Edition** ($4.99, `hypercar-founder`). The server numbers each sale, never the device:
+  - A per-sku counter in the database (`server/supabase/migrations/0002_founder_serials.sql`). The `stripe-webhook`
+    function asks for the number when the payment succeeds, and it's written to the buyer's entitlement rows.
+  - One number per Checkout Session: a retried webhook delivery gets the same number back.
+  - One live number per player. Two checkouts opened side by side both pass the "already own" check; the second one
+    paid is refused (status `refused`), never numbered and refunded in full.
+  - Numbers start at **No. 0001** and are never reused. A refunded number is retired, not reissued, and the player's
+    entitlement rows go back to their lowest live number, or to none, so the plaque never shows a retired number.
+  - A refund never races the numbering: `assign_serial` locks the purchase row before it reads the status, so a
+    refund written at the same moment either makes it refuse or waits and then retires the number.
+  - Stripe doesn't promise the order of events. A refund that arrives before its `checkout.session.completed`
+    looks up the Checkout Session at Stripe and records the purchase as refunded, so the completion grants nothing.
+  - **No. 0000** is reserved for owner-mode tests and can never be issued.
+  - A player reads their own number and can never write it.
+  - The window is checked twice: when the checkout is created, and in the webhook against the time Stripe created
+    the Checkout Session. A checkout created before the deadline and paid after it is honoured. A session created
+    after it grants nothing and is refunded in full.
 
 ### Body kits ("custom kits")
 
@@ -237,6 +313,7 @@ The 30¢ is what decides our prices:
 | $0.99 | $0.33 | **$0.66** | 67 % | $0.84 |
 | $2 | $0.36 | $1.64 | 82 % | $1.70 |
 | $3 | $0.39 | **$2.61** | 87 % | $2.55 |
+| $4.99 (the hypercar; the owner's exception) | $0.44 | **$4.55** | 91 % | $4.24 |
 | $5 | $0.45 | $4.55 | 91 % | $4.25 |
 | $10 | $0.59 | **$9.41** | 94 % | $8.50 |
 | $3 a month (plus Billing's 0.7 %) | $0.41 | $2.59 | 86 % | — |
@@ -248,6 +325,10 @@ What that means:
 - **$2 is the floor** (the tip's minimum). **$3 is the standard item.** $5 is a bigger pack. $10 is the Founder Pack.
 - **Whole dollars.** $3 reads as honest, and Apple has allowed rounded prices such as $3.00 since its 2023 pricing
   change, so the same prices would work in an app later ([Apple, Dec 2022][apple-prices]).
+- **The one exception: $4.99 for the OC Hypercar Founder Edition** (the owner's choice, 2026-10-16). Stripe's 2.9 %
+  + 30¢ takes $0.44, so we keep **$4.55**, the same as at $5. An international card costs 1.5 % more (7¢): we keep
+  $4.47. A refund loses the $0.44; a dispute costs $15 plus the sale. The catalog checker accepts this price for this
+  sku only, so any other price that isn't whole dollars still fails.
 - **Below about $2.48**, a 15 % store cut costs less than Stripe's fee. Above it, Stripe keeps less. The break-even
   is 0.30 / (0.15 − 0.029) = $2.48.
 - **A cart helps.** Three $3 packs in one checkout pay one 30¢: we keep $8.44 instead of $7.84 from three separate
@@ -388,6 +469,8 @@ pressure, so **3 % is optimistic**.
 - 30 % of buyers come back for one more $3 item.
 - 1 player in 400 tips $5.
 - A few refunds, and one card dispute in the high case.
+- The $4.99 OC Hypercar Founder Edition isn't counted. It isn't on sale until the car is in the game, and nothing
+  is forecast for an item before then.
 
 | | Low | Middle | High |
 | --- | --- | --- | --- |
@@ -573,9 +656,17 @@ An array of items:
 
 ```
 { sku, name, kind: 'pack'|'livery'|'kit'|'style'|'tip'|'club', price_cents, currency: 'usd',
-  mode: 'payment'|'subscription', interval?: 'month'|'year', window?: { until: ISO date },
-  grants: [entitlement ids], description, available: true|false }
+  mode: 'payment'|'subscription', interval?: 'month'|'year', window?: { until: 'FOUNDER_UNTIL' },
+  serial?: true, grants: [entitlement ids], description, available: true|false,
+  unavailable_reason?: 'why, in words', caveat?: 'a note for the owner' }
 ```
+
+- **The founder window is one constant.** `FOUNDER_UNTIL` in `src/store/founder.json` is
+  `2026-12-31T23:59:59-08:00`, the last second of December 31 in Pacific time. A bare `2026-12-31` would mean
+  midnight UTC, which is 4 pm Pacific on December 30. The two founder items name it, and every reader resolves it
+  from that file: the store (`catalog.ts`), the server's copy (`npm run store:sync` writes the date and
+  `founder_until`) and the checker.
+- **`serial: true`** (the OC Hypercar Founder Edition): the server numbers each sale (migration 0002).
 
 - **Paint packs** use `kind: 'livery'`. There is no separate paint kind.
 - **The tip** adds `custom_amount: { minimum_cents, preset_cents, maximum_cents }`, which maps to Stripe's
@@ -609,11 +700,20 @@ and exits 1 on any problem. It checks that:
 
 - every grant resolves, and every entitlement is granted by some sku;
 - kinds, modes and intervals fit the schema;
-- prices are whole dollars of at least $2;
-- only the Founder Pack has a window, and its date parses;
+- prices are whole dollars of at least $2, except the owner's $4.99 for `hypercar-founder` (that sku, that price);
+- only the two founder offers have a window, it is `FOUNDER_UNTIL`, and that ends at 23:59:59 Pacific;
+- the two founder offers share no grant and no name;
+- a car the store grants is sold only once it's in `src/game/cars.ts`, takes no slot and is never sold back;
+- a numbered sku is a one-time payment whose counter a migration seeds;
+- an entitlement marked `exclusive: X` is granted by sku X only;
+- a sku that grants a car (a `vehicle`) or a server-numbered item (`serial: 'server'`) is numbered (`serial: true`)
+  and sold in the founder window only;
 - no available item grants something still to be built, except the badges, the frame and the roll, which are
   built with the store (it doesn't check `hook` grants; the live-mode rule above covers those);
-- the wheel styles match `WheelStyle` in `car-wheel.ts`, and no paid wheel setup repeats a factory one;
+- every store wheel style (`cosmetics.json` `wheel_styles`) is in `WheelStyle` in `car-wheel.ts` (`src/preview/`, or
+  `src/game/vehicle/` if it moves). A style that type holds and the store doesn't list is valid only as a car's own
+  factory wheel (a `wheel:` in `car-shape.ts`, like the OC Hypercar's car-only `multi`) and no paid setup may use it;
+  a style no car wears and the store doesn't list fails. No paid wheel setup repeats a factory one;
 - the tip stays above Stripe's $0.50 minimum;
 - no real brand word appears.
 
@@ -663,8 +763,14 @@ checks the server's copy, and the store group of the regression suite now runs b
 - `profiles`: user id, display name, `is_13_plus` (never the birth date), created at. The 18-or-guardian tick is
   recorded in each Checkout Session's metadata, not on the profile.
 - `purchases`: id, user id, sku, the Stripe session, payment intent and subscription ids, amount, currency, status
-  (paid, refunded or ended), the Founders roll name, timestamps.
-- `entitlements`: user id, entitlement id, the sku that granted it, granted at, revoked at.
+  (paid, refunded or ended; 0002 adds refused, for a founder purchase the webhook refunds), the Founders roll name,
+  timestamps.
+- `entitlements`: user id, entitlement id, the sku that granted it, granted at, revoked at, and (0002) the serial.
+- `serial_counters` and `serials` (0002): the next number per numbered sku, and every number ever issued, with its
+  purchase, its owner and when it was retired. Players read their own rows; only the webhook writes, through
+  `assign_serial`. The webhook's numbering is tested end to end by `server/supabase/tests/serial-webhook.mjs`, and
+  `server/supabase/tests/rls-probe.sql` (run by `run-local.sh`) probes both tables and both functions as a player and
+  as an anonymous visitor.
 - `waitlist` and `invite_codes`, for the launch plan.
 - Still to build: refund requests (no table yet; the support email until then), and, before the club,
   `club_consents`: what was shown, when it was ticked, kept three years.
@@ -697,8 +803,9 @@ The build (routine, Opus-class, each checked in renders and the suite):
 - [ ] Account: sign in, your items, restore, request a refund, and (later) manage the club.
 - [ ] Update `PROJECT_OC_LAUNCH_KIT.md`:
   - Store copy: "Free to play. Optional cosmetics."
-  - The ambassador answer to "Is it free?": "Yes. Every freeway, mode and car is free. There are optional looks you
-    can buy."
+  - The ambassador answer to "Is it free?": "Yes. Every freeway, every mode and every car you can earn is free. There
+    are optional looks you can buy." Once the OC Hypercar Founder Edition is on sale, add: "and one founder car for
+    $4.99, faster in Free Drive only."
   - The privacy and terms sections (§8.7).
 - [ ] Regression checks: `tools/store-check-catalog.mjs`; a test-mode purchase with 4242 granting the right items; a
   refund removing them; an under-13 answer blocking the store; nothing in the store changing a car's `SPEC` or the
@@ -706,7 +813,13 @@ The build (routine, Opus-class, each checked in renders and the suite):
 
 ## 11. What this changes elsewhere
 
-- `CLAUDE.md`: "No real money" is replaced by the store rule (done in this pass).
+- `CLAUDE.md`: "No real money" is replaced by the store rule (done in this pass). Rule 3a still needs adding to its
+  "Never sell power" line (2026-10-17: not there yet; an edit for the owner to approve), for example: "One exception
+  (owner, 2026-10-16): the OC Hypercar Founder Edition runs Unleashed in Free Drive only (no clock, no rivals; its
+  Unleashed runs marked on the device-only board and run cards); in Races, Time Trial and Speed Survival it runs a
+  race tune at or under the best earnable car with its ability off, and its Free Drive earnings are capped at the
+  race tune's top speed (`PROJECT_OC_MONETIZATION.md` rule 3a)."
+
 - `PROJECT_OC_ROADMAP.md`:
   - "Payments stay out entirely" (P5) and the design-only weather pass (P3) are now superseded by this document.
   - The weather pass stays out, for the reason in §4.
@@ -733,7 +846,8 @@ findings with file and line, the fixes for severity 4–5, and the store's regre
 ## 12. Placeholders (TODO)
 
 - Every price in `catalog.json` is a proposal for the owner to approve.
-- The Founder window end, `2026-12-31T23:59:59-08:00` (Day 74 on the 90-day calendar, about four weeks after the
+- The Founder window end, `FOUNDER_UNTIL` = `2026-12-31T23:59:59-08:00` in `src/store/founder.json`, shared by both
+  founder offers (Day 74 on the 90-day calendar, about four weeks after the
   store can first open on Day 46): if Day 1 moves, decide before sales start whether the date or the window moves
   (§3); never extend it once sales start.
 - The support email for refunds and receipts.
@@ -742,6 +856,25 @@ findings with file and line, the fixes for severity 4–5, and the store's regre
 - The domain, if any.
 - The lawyer's review of the terms, refund policy, privacy policy and (later) the club terms.
 - The club's opening threshold (about 50 buyers) is an estimate to set, not a forecast.
+- The OC Hypercar Founder Edition's promise: is it the Founder Edition and its exclusives that are never sold again,
+  or the car itself (`PROJECT_OC_HYPERCAR.md` §7)? Until the owner decides, the car's copy says only "Sold until
+  December 31, 2026" (the store card, the catalog, the deck), with no "never again"; the owner decides before sales
+  start, and the copy then says exactly that.
+- Ultra graphics as the paid tier (decision 15, 2026-10-21; `PROJECT_OC_DECISIONS.md` in the main checkout): only
+  the flag exists, `ultraUnlocked()` and `ULTRA_ENTITLEMENT = 'graphics-ultra'` in `src/store/entitlements.ts`, with
+  no sku, no price and no entry in `catalog.json` or `cosmetics.json`. A test-mode build unlocks it for everyone and
+  owner mode unlocks it anywhere. The Ultra preset is in the game for free today, so `CLAUDE.md`'s "everything the
+  game has today stays free" needs the owner's edit before Ultra is ever sold, as rule 3a does for "never sell
+  power"; the price, and whether players who had Ultra before keep it, are the owner's.
+- Optional hardening before live mode (from the 2026-10-19 review, not built):
+  - In live mode, call `restore()` at boot when a player is signed in. Today a locally edited entitlement cache can
+    keep `oc-hyper`, or show a made-up number, on that device until the next Restore (the server's rows are right;
+    only that device's display is wrong).
+  - A lost card dispute (`charge.dispute.closed` with status `lost`) should retire the number and take the car back,
+    as a refund does. The webhook ignores dispute events today.
+- Owner mode (`#owner` on the hypercar branch) unlocks the car on any test build. Before any real sale it must be
+  compiled out of public builds or tied to the owner's account (`PROJECT_OC_HYPERCAR.md` §8, M0).
+- The Vela E Wheel Set once the Vela E is hidden: retire it, or keep it for Vela E owners (§3).
 
 ---
 

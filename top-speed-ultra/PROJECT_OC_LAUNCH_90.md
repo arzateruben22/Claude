@@ -25,9 +25,12 @@ whole calendar slides as a block, and no marketing happens before the game runs 
   the owner bought them all. Say so to anyone who asks.
 - **The money rule (owner, 2026-10-16).** Payments are built but stay in **test mode**. Nothing is charged until the
   owner connects Stripe and Supabase and turns live mode on. The store sells cosmetics, expansions and support
-  only. It never sells power: no cars faster than earnable ones, no grip or score boosts. It never sells the earned
-  credits. There are no random paid rewards (no loot boxes) and no paid premium currency. Everything the game has
-  today stays free. No ads at launch, purchases are 13+, and nothing is sold or pre-sold before it's in the game.
+  only. It never sells pay-to-win: no cars faster than earnable ones, no grip or score boosts. One exception, the
+  owner's (2026-10-16): the OC Hypercar Founder Edition is faster in Free Drive only, and at or under the best
+  earnable car in every other mode (`PROJECT_OC_MONETIZATION.md` rule 3a; the owner's edit of the rule in
+  `CLAUDE.md` is still to come). It never sells the earned credits. There are no random paid rewards (no loot
+  boxes) and no paid premium currency. Everything the game has today stays free. No ads at launch, purchases are
+  13+, and nothing is sold or pre-sold before it's in the game.
   *(`CLAUDE.md` on this branch now carries this rule in place of the old "No real money" line: the paywall pass's
   edit, committed with the launch kit on `claude/store`. This plan doesn't change `CLAUDE.md`.)*
 - **Who does what.** **Claude** builds: code, pages, copy drafts, clips, triage, reports. The **owner** handles
