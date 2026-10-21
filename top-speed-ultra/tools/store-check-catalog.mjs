@@ -19,6 +19,10 @@
 //     src/game/vehicle/ if it moves); a style in that type the store doesn't list is valid only as a car's own factory
 //     wheel (a `wheel:` in car-shape.ts, like the OC Hypercar's 'multi'), and no paid setup uses it; no paid setup
 //     repeats a factory wheel
+//   - the Ultra graphics tier (decision 15: Low and HD free, Ultra the paid tier as an entitlement flag only): the one
+//     graphics entitlement is tier 'ultra' with Low and HD as its free tiers, its id is ULTRA_ENTITLEMENT in
+//     src/store/entitlements.ts, it is granted by one sku alone (kind 'graphics', a one-time payment, no window, no
+//     number) that grants nothing else, and that sku's copy says Low and HD are free
 //   - the tip's custom amount sits above Stripe's $0.50 minimum
 //   - no real brand word appears anywhere in either file
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -44,7 +48,7 @@ else {
 const ents = new Map(cosmetics.entitlements.map((e) => [e.id, e]));
 if (ents.size !== cosmetics.entitlements.length) errs.push('duplicate entitlement ids');
 
-const KINDS = new Set(['pack', 'livery', 'kit', 'style', 'tip', 'club']);
+const KINDS = new Set(['pack', 'livery', 'kit', 'style', 'graphics', 'tip', 'club']);
 const FIELDS = ['sku', 'name', 'kind', 'price_cents', 'currency', 'mode', 'grants', 'description', 'available'];
 const BADGES = new Set(['badge', 'frame', 'credits-roll']);
 const used = new Set();
@@ -139,6 +143,26 @@ for (const e of ents.values()) {
   if (e.type === 'paint' && !(e.finish in cosmetics.paint_finishes)) errs.push(`${e.id}: unknown finish ${e.finish}`);
   for (const hex of JSON.stringify(e).match(/#[0-9A-Za-z]+/g) ?? []) if (!/^#[0-9A-Fa-f]{6}$/.test(hex)) errs.push(`${e.id}: bad hex ${hex}`);
 }
+
+// The Ultra graphics tier (decision 15, PROJECT_OC_DECISIONS.md in the main checkout): Ultra is the only paid graphics
+// tier, as an entitlement flag, and the store's copy says the free tiers wherever it is sold
+const graphics = cosmetics.entitlements.filter((e) => e.type === 'graphics');
+const flag = read('src/store/entitlements.ts').match(/export const ULTRA_ENTITLEMENT = '([\w-]+)'/)?.[1];
+if (!flag) errs.push('src/store/entitlements.ts: no ULTRA_ENTITLEMENT');
+if (graphics.length > 1) errs.push(`graphics entitlements: ${graphics.map((e) => e.id).join(', ')}; decision 15 has one paid tier, Ultra`);
+for (const e of graphics) {
+  if (e.tier !== 'ultra') errs.push(`${e.id}: a graphics entitlement is the Ultra tier only (tier 'ultra'), not ${e.tier}: Low and HD are free`);
+  if (JSON.stringify(e.free_tiers) !== JSON.stringify(['low', 'hd'])) errs.push(`${e.id}: free_tiers must be ["low","hd"] (decision 15)`);
+  if (flag && e.id !== flag) errs.push(`${e.id}: the Ultra entitlement must be ULTRA_ENTITLEMENT in src/store/entitlements.ts (${flag})`);
+  const by = catalog.filter((c) => c.grants.includes(e.id));
+  if (by.length !== 1) errs.push(`${e.id}: granted by ${by.length} skus (${by.map((c) => c.sku).join(', ')}); the Ultra Graphics sku alone grants it`);
+  for (const c of by) {
+    if (c.kind !== 'graphics' || c.mode !== 'payment' || c.window || c.serial || c.grants.length !== 1)
+      errs.push(`${c.sku}: the Ultra sku is kind 'graphics', a one-time payment with no window and no number, granting ${e.id} alone`);
+    if (!/\bLow and HD are free\b/.test(c.description)) errs.push(`${c.sku}: its copy must say "Low and HD are free"`);
+  }
+}
+for (const c of catalog) if (c.kind === 'graphics' && !c.grants.every((g) => ents.get(g)?.type === 'graphics')) errs.push(`${c.sku}: a graphics sku grants a graphics tier only`);
 
 const BANNED = ['ferrari', 'porsche', 'lamborghini', 'mclaren', 'bmw', 'mercedes', 'rolex', 'omega', 'hot wheels',
   'golden road', 'crush', 'brembo', 'bbs', 'recaro', 'nike', 'supreme'];
