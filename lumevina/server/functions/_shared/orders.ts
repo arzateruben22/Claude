@@ -39,9 +39,12 @@ export async function emailGift(card: { code: string; amount_cents: number; reci
     `<p style="font-size:15px;line-height:1.5">${hi}</p>` +
     `<p style="font-size:15px;line-height:1.5">${card.deliver_to_buyer ? "Here's the gift certificate you bought, ready to give." : `${esc(fromName || "Someone")} sent you a gift of glow.`}</p>` +
     (card.message ? `<p style="font-size:15px;line-height:1.5;padding:12px 14px;background:#fff;border-left:2px solid #B2967D;border-radius:0 8px 8px 0">${esc(card.message)}</p>` : "") +
-    `<p style="margin:18px 0 6px;font-size:13px;color:#7D5A44">Certificate</p>` +
+    // the certificate itself: the same beach sand as the one on the website
+    `<div style="margin:18px 0 16px;padding:18px 20px;background:#E8D5AE;border:1px solid #D9BE90;border-radius:16px">` +
+    `<p style="margin:0 0 6px;font-size:13px;color:#4A342A">Certificate</p>` +
     `<p style="margin:0;font-size:24px;font-weight:700;letter-spacing:.06em">${esc(card.code)}</p>` +
-    `<p style="margin:4px 0 16px;font-size:15px">${card.kind === "service" ? `One ${esc(card.label ?? "treatment")}, on the house` : `${money(card.amount_cents)} toward any treatment`}, and it never expires.</p>` +
+    `<p style="margin:4px 0 0;font-size:15px">${card.kind === "service" ? `One ${esc(card.label ?? "treatment")}, on the house` : `${money(card.amount_cents)} toward any treatment`}, and it never expires.</p>` +
+    `</div>` +
     `<p style="font-size:14px;line-height:1.5;color:#4A342A">Book with Evelyn${site() ? ` at <a href="${esc(site())}#services" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>` : ""}, and show this code at your visit. Anything left stays on it for next time; if the visit costs more, you pay only the difference.</p>`;
   return sendEmail(to, card.deliver_to_buyer ? "Your Lumevina gift certificate" : "A gift for you from Lumevina", page("A gift of glow", body));
 }
