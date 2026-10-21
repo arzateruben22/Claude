@@ -722,7 +722,7 @@ export const SCENES = {
 .card12 { border-radius: 2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2.2vmin 2.4vmin; opacity: 0; }
 .card12 b { display: block; font-size: 2.9vmin; font-weight: 650; line-height: 1.15; } .card12 span { display: block; font-size: 2.2vmin; color: #a1a1a6; margin-top: .8vmin; line-height: 1.35; }
 .card12.go b { color: #32d74b; } .card12.wait b { color: #ff7a6b; }
-@media (orientation: portrait) { .days { grid-template-columns: repeat(3, 1fr); } .day { min-height: 13vmin; } .note12 { grid-template-columns: 1fr; } }`,
+@media (orientation: portrait) { .cal { gap: 2vmin; } .days { grid-template-columns: repeat(3, 1fr); } .day { min-height: 9.5vmin; padding: 1vmin .6vmin .8vmin; gap: .4vmin; } .day .n { font-size: 3vmin; } .day .mark { width: 1.6vmin; height: 1.6vmin; margin-top: .2vmin; } .legend span { font-size: 2vmin; padding: .7vmin 1.3vmin; } .note12 { grid-template-columns: 1fr; } .card12 { padding: 1.6vmin 2vmin; } .card12 b { font-size: 2.6vmin; } .card12 span { font-size: 2vmin; } }`,
     html: `
 <div class="cal">
   <div class="days" id="days">
@@ -749,6 +749,7 @@ export const SCENES = {
       const visit = $(".day.visit"); if (lt > 1.6) set(visit, { o: 1, s: 1 + 0.05 * Math.sin(Math.PI * seg(lt, i === 0 ? 5.6 : i === 1 ? 5.4 : 4.6, (i === 0 ? 5.6 : i === 1 ? 5.4 : 4.6) + 0.9)) });   // the visit tile breathes once a shot
       if (i === 2) { enter($("#c-go"), lt, 0.6, { y: 12 }); enter($("#c-wait"), lt, 2.2, { y: 12 }); } else { set($("#c-go"), { o: 0, y: 12 }); set($("#c-wait"), { o: 0, y: 12 }); }
       $(".note12").style.display = i === 2 ? "" : "none";
+      $("#legend").style.display = i === 2 && lt > 0.4 ? "none" : "";   // the cards take the legend's place, so the whole thing fits a phone
     }
   }
 };
