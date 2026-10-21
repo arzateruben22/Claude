@@ -90,6 +90,20 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
   return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
+// the Retro style's palette (src/game/render/style.ts: 32/64/32 levels, written out as 8 bits): the share of the drawing
+// buffer's pixels whose three channels all sit on a 5/6/5-bit step, read straight after a frame drawn for it (so no
+// HUD and no compositing in the way). A Retro frame is nearly all of them; a standard one about 1 in 2000 by chance
+const onPalette = (page) => game(page, () => {
+  const g = window.__game, gl = g.renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, d = new Uint8Array(w * h * 4);
+  g.draw(performance.now(), 0);
+  g.renderer.setRenderTarget(null);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, d);
+  const on = (v, n) => v === Math.round(Math.round((v * (n - 1)) / 255) * (255 / (n - 1)));
+  let k = 0, n = 0;
+  for (let i = 0; i < d.length; i += 4 * 7) { n++; if (on(d[i], 32) && on(d[i + 1], 64) && on(d[i + 2], 32)) k++; }
+  return k / Math.max(1, n);
+});
+const pc = (f) => (f * 100).toFixed(1) + '%';
 // after a page load: keep every result the game reports, so checks can read it; and the stopped-car helper below
 async function hook(page) {
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
@@ -2422,6 +2436,61 @@ await group('render', async (use) => {
     await shot('after-context-loss');
     return `paused while lost, rendering again after Resume (${after.roads} road chunks)`;
   });
+  // RS1, the Retro style (src/game/render/style.ts) on Low: cel-shaded toon materials everywhere the world was lit,
+  // the road chunks and tiles built while it's on styled too, hard one-step shadows, its banded sky in place of the
+  // realistic one, its own pass at the screen's full resolution; switched back, every original material returns
+  await check('Retro style on Low: toon materials, hard shadows, banded sky, full resolution; switching back restores it all', async () => {
+    const census = () => game(page, () => {
+      const g = window.__game, c = { toon: 0, lit: 0, marks: 0, films: 0 };
+      g.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        if (o.geometry?.getAttribute('retroU')) c.marks++;
+        for (const m of [].concat(o.material)) {
+          if (m.isMeshToonMaterial) c.toon++; else if (m.isMeshStandardMaterial) c.lit++;
+          if (m.isMeshBasicMaterial && m.blending === 2 && !m.polygonOffset && m.depthTest && !m.depthWrite && !m.visible) c.films++;   // 2: additive
+        }
+      });
+      return { ...c, shadow: g.renderer.shadowMap.type, sky: g.env.sky.visible, retroSky: !!g.scene.getObjectByName('retro-sky'), style: !!g.style, pr: g.renderer.getPixelRatio(), dpr: devicePixelRatio,
+        retroProgs: g.renderer.info.programs.filter((p) => /retro/.test(p.cacheKey)).length };
+    });
+    const before = await census();
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, quality: 'low', style: 'retro' }); g.fastForward(6, {}, 30); });
+    await frames(page, 3, 400000);
+    const on = await census();
+    const extra = await game(page, () => { const g = window.__game, st = g.style.stylizer.counts, t = g.style.pass.target; return { ...st, target: `${t.width}x${t.height}`, buffer: `${g.renderer.domElement.width}x${g.renderer.domElement.height}` }; });
+    await shot('retro-day-clear');
+    // the palette on screen (32/64/32 levels and a dither): every channel of a canvas pixel on its 5/6/5-bit step
+    const share = await onPalette(page);
+    // the context lost and restored with Retro on (Game's webglcontextrestored runs applyQuality, which keeps the
+    // style): it draws through its pass again, at the canvas's size, still in the palette
+    await game(page, () => { window.__lose = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lose.loseContext(); });
+    await page.getByText('Graphics reset').waitFor({ timeout: 10000 });
+    await game(page, () => window.__lose.restoreContext());
+    await page.waitForFunction(() => !window.__game.renderer.getContext().isContextLost(), null, { timeout: 15000 });
+    await page.getByRole('button', { name: 'Resume' }).first().click();
+    await frames(page, 4, 400000);
+    await game(page, () => window.__game.setPaused(true));
+    await frames(page, 1, 400000);
+    const back = await game(page, () => { const g = window.__game, t = g.style?.pass.target, el = g.renderer.domElement; return { style: !!g.style, target: t ? `${t.width}x${t.height}` : '', buffer: `${el.width}x${el.height}` }; });
+    const shareBack = await onPalette(page);
+    await shot('retro-after-context-loss');
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); });
+    await frames(page, 2, 400000);
+    const off = await census();
+    const shareOff = await onPalette(page);
+    expect(on.style && on.toon > 0 && on.lit < before.lit / 4, `Retro on: ${on.toon} toon, ${on.lit} still lit (before: ${before.lit} lit)`);
+    expect(on.shadow === 0 && !on.sky && on.retroSky, `Retro on: shadow type ${on.shadow} (0 is one-step), realistic sky ${on.sky ? 'shown' : 'hidden'}, banded sky ${on.retroSky ? 'in' : 'missing'}`);
+    expect(on.pr >= Math.min(1, on.dpr) && extra.target === extra.buffer, `Retro on: pixel ratio ${on.pr} on a ${on.dpr}x screen, pass ${extra.target} for a ${extra.buffer} canvas`);
+    expect(share > 0.9 && shareOff < 0.2, `pixels on the 5/6/5 palette: ${pc(share)} with Retro, ${pc(shareOff)} after switching back`);
+    expect(back.style && back.target === back.buffer && shareBack > 0.9, `after a lost context: ${JSON.stringify(back)}, ${pc(shareBack)} on the palette`);
+    expect(!off.style && off.toon === 0 && off.lit >= before.lit && off.shadow === before.shadow && off.sky && !off.retroSky, `switched back: ${JSON.stringify(off)} (before ${JSON.stringify(before)})`);
+    expect(on.retroProgs > 0 && off.retroProgs === 0, `Retro's shader programs: ${on.retroProgs} while on, ${off.retroProgs} left after switching back`);
+    // the lane markings' least size (their quads' half extents, added while on) and the films on the glass (put away
+    // while on), both undone on the way back
+    expect(on.marks > 0 && off.marks === 0 && before.marks === 0, `marking geometries with Retro's extents: ${before.marks} before, ${on.marks} on, ${off.marks} back`);
+    expect(on.films > 0 && off.films === 0 && before.films === 0, `glass films put away: ${before.films} before, ${on.films} on, ${off.films} back`);
+    return `on: ${on.toon} toon materials on meshes (${extra.materials} made: ${extra.flat} flat, ${extra.poster} posterized maps), ${on.lit} left lit, one-step shadows, pass ${extra.target}, ${pc(share)} on the palette, ${on.retroProgs} programs, ${on.marks} marking meshes, ${on.films} films put away; after a lost context ${pc(shareBack)}; back: ${off.lit} lit, 0 toon, ${off.retroProgs} programs, ${pc(shareOff)} on the palette`;
+  });
   // last, because the first frames after a switch compile new shaders and take minutes here
   await check(`High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
     const out = [];
@@ -3037,6 +3106,34 @@ await group('phone', async (use) => {
     expect(st.mode === 'direct' && st.canvas === 'hidden' && /rgba\(0, 0, 0, 0\)|transparent/.test(st.bg) && st.radius === '0px', `the frame in the fallback: ${JSON.stringify(st)}`);
     expect(dDirect < 14 && dDirect < dBehind / 2, `inside the frame the screen is ${fmt(dDirect)} levels from the sky view (the road behind: ${fmt(dBehind)})`);
     return `the screen inside the frame is ${fmt(dDirect)} levels from the copy's picture (the road behind it: ${fmt(dBehind)}); frame ${st.bg}, radius ${st.radius}`;
+  });
+  // RS1, the Retro style on a phone, switched on where a player would (Settings, under Low): it draws at the screen's
+  // full resolution (a render scale of 1, the pixel ratio never under 1) through its own pass, and the HUD (the page
+  // over the canvas) still shows the speed on top of it. Switched back, it is gone and saved so.
+  await check('Retro on a phone: the switch under Low turns it on at full resolution, the speed readout over it', async () => {
+    await game(page, () => window.__game.setPaused(true));
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    const sw = page.getByRole('checkbox', { name: /Style: Retro/ });
+    const low = await game(page, () => window.__game.settings.quality === 'low');
+    expect(low && await sw.count() === 1, `the switch: ${await sw.count()} under quality "${await game(page, () => window.__game.settings.quality)}"`);
+    await sw.check();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    await frames(page, 4, 400000);
+    const r = await game(page, () => {
+      const g = window.__game, el = g.renderer.domElement, t = g.style?.pass.target, sp = document.querySelector('.hud-speed');
+      return { on: !!g.style, scale: g.renderScale, pr: g.renderer.getPixelRatio(), dpr: devicePixelRatio, buf: `${el.width}x${el.height}`, target: t ? `${t.width}x${t.height}` : '',
+        speed: !!sp && getComputedStyle(sp).visibility !== 'hidden' && sp.getBoundingClientRect().height > 0, mph: document.querySelector('.hud-mph')?.textContent ?? '' };
+    });
+    await page.screenshot({ path: path.join(OUT, 'phone-retro.png') });
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); });
+    await frames(page, 2, 400000);
+    const offState = await game(page, () => ({ style: !!window.__game.style, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').style }));
+    expect(r.on && r.scale === 1 && r.pr >= Math.min(1, r.dpr) && r.target === r.buf, `Retro ${r.on ? 'on' : 'off'}, render scale ${r.scale}, pixel ratio ${r.pr} on a ${r.dpr}x screen, pass ${r.target} for a ${r.buf} canvas`);
+    expect(r.speed && /\d/.test(r.mph), `the speed readout: ${r.speed ? 'shown' : 'hidden'}, "${r.mph}"`);
+    expect(!offState.style, `switched back: ${JSON.stringify(offState)}`);
+    return `pixel ratio ${r.pr} on a ${r.dpr}x screen, ${r.buf}; speed "${r.mph}" over it`;
   });
   await page.keyboard.press('Escape');
   await check('OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop', async () => {
