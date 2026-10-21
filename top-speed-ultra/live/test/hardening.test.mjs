@@ -40,6 +40,8 @@ function sock(token, ip) {
   c.until = async (t, ms = 4000) => { const t0 = Date.now(); while (!c.all.some((m) => m.t === t)) { if (Date.now() - t0 > ms) throw new Error('no ' + t + ' (saw ' + c.all.map((m) => m.t) + ', code ' + c.code + ')'); await sleep(20); } return c.all.find((m) => m.t === t); };
   return c;
 }
+// wait for a condition instead of a fixed sleep: a loaded machine (a browser suite alongside) stretches every step
+const until = async (ok, ms = 6000) => { const t0 = Date.now(); while (!ok()) { if (Date.now() - t0 > ms) return false; await sleep(20); } return true; };
 const raw = (line) => new Promise((resolve) => { const s = tcp(port, '127.0.0.1', () => s.write(line + '\r\nHost: x\r\n\r\n')); let out = ''; s.on('data', (d) => (out += d)); s.on('close', () => resolve(out)); s.on('error', () => resolve(out)); setTimeout(() => { s.destroy(); resolve(out); }, 1500); });
 
 test('1. malformed request targets get a 400 and the server stays up', async () => {
@@ -73,15 +75,18 @@ test('4. the address is the proxy\'s last X-Forwarded-For entry; none means refu
 test('5. a driver who sits still loses the spot to someone waiting; one address holds 3 sockets at most', async () => {
   await empty();
   const [ta, tb] = [await signup('idle_a', '10.6.0.1'), await signup('idle_b', '10.6.0.2')];
-  const a = sock(ta, '10.6.0.1'); await a.open; await a.until('welcome');
-  const b = sock(tb, '10.6.0.2'); await b.open; await b.until('queued');
-  await b.until('welcome', 8000);
-  assert.equal(a.code, 4002);
-  const many = [sock(null, '10.7.0.1'), sock(null, '10.7.0.1'), sock(null, '10.7.0.1'), sock(null, '10.7.0.1')];
-  await Promise.all(many.map((m) => m.open));
-  await sleep(300);
-  assert.deepEqual(many.map((m) => m.code), [0, 0, 0, 4000]);
-  for (const m of [b, ...many]) m.ws.close();
+  const a = sock(ta, '10.6.0.1'), b = sock(tb, '10.6.0.2'), many = [];
+  try {
+    await a.open; await a.until('welcome');
+    await b.open; await b.until('queued');
+    await b.until('welcome', 8000);
+    await until(() => a.code !== 0, 3000);
+    assert.equal(a.code, 4002);
+    for (let i = 0; i < 4; i++) many.push(sock(null, '10.7.0.1'));
+    await Promise.all(many.map((m) => m.open));
+    await until(() => many[3].code !== 0);
+    assert.deepEqual(many.map((m) => m.code), [0, 0, 0, 4000]);
+  } finally { for (const m of [a, b, ...many]) m.ws.close(); }
 });
 test('8. admin endpoints refuse anything that came through the proxy, even with the token', async () => {
   assert.equal((await post('/admin/cap', { cap: 5 }, { token: 'tok', xff: '1.2.3.4' })).status, 404);
@@ -93,19 +98,23 @@ test('11. the line has a length; past it, "full"', async () => {
   await empty();
   const toks = [];
   for (let i = 0; i < 4; i++) toks.push(await signup('line_' + i, '10.8.0.' + i));
-  const cs = toks.map((t, i) => sock(t, '10.8.0.' + i));
-  for (const c of cs) { await c.open; await sleep(80); }
-  await sleep(400);
-  const states = cs.map((c) => c.all.find((m) => m.t === 'welcome') ? 'online' : c.all.find((m) => m.t === 'queued') ? 'queued' : c.all.find((m) => m.t === 'bye')?.why);
-  assert.deepEqual(states, ['online', 'queued', 'queued', 'The line is full. Try again soon.']);
-  for (const c of cs) c.ws.close();
+  const cs = [];
+  try {
+    // one at a time, each answered before the next, so the order is the order they arrived
+    for (const [i, t] of toks.entries()) { const c = sock(t, '10.8.0.' + i); cs.push(c); await c.open; await until(() => c.all.some((m) => ['welcome', 'queued', 'bye'].includes(m.t))); }
+    const states = cs.map((c) => c.all.find((m) => m.t === 'welcome') ? 'online' : c.all.find((m) => m.t === 'queued') ? 'queued' : c.all.find((m) => m.t === 'bye')?.why);
+    assert.deepEqual(states, ['online', 'queued', 'queued', 'The line is full. Try again soon.']);
+  } finally { for (const c of cs) c.ws.close(); }
 });
 test('12. logging out ends the live socket', async () => {
   await empty();
   const t = await signup('logout_live', '10.9.0.1');
-  const c = sock(t, '10.9.0.1'); await c.open; await c.until('welcome', 6000).catch(() => c.until('queued'));
-  await post('/api/logout', {}, { token: t, ip: '10.9.0.1' });
-  const bye = await c.until('bye'); assert.equal(bye.why, 'Logged out');
+  const c = sock(t, '10.9.0.1');
+  try {
+    await c.open; await c.until('welcome', 6000).catch(() => c.until('queued'));
+    await post('/api/logout', {}, { token: t, ip: '10.9.0.1' });
+    const bye = await c.until('bye', 8000); assert.equal(bye.why, 'Logged out');
+  } finally { c.ws.close(); }
 });
 test('15. a symlink out of the public folder is not served', async () => {
   assert.equal((await fetch(base + '/link.json')).status, 404);
