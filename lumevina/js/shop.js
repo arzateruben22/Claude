@@ -147,6 +147,7 @@
           '<div class="pd-action"></div>' +
           '<ul class="pd-notes" role="list">' +
             '<li class="pd-consult" hidden>Evelyn checks this one with you first: a two-minute note about your skin, and she unlocks it for you, usually within a day.</li>' +
+            '<li class="pd-lesson" hidden>From Skin School: <a class="inline-link pd-lesson-link" href="school.html"></a></li>' +
             '<li>Ships in a few days, or pick it up free at your next visit.</li>' +
             '<li>Not sure it suits your skin? <button class="linklike pd-ask" type="button">Ask Evelyn</button></li>' +
           '</ul>' +
@@ -194,6 +195,9 @@
     var b = buyButton(p, false);
     if (b.classList.contains("sh-request")) b.addEventListener("click", function () { sheet.close(); });
     act.appendChild(b);
+    /* the lesson behind it (js/shop-lessons.js), only while Skin School is switched on */
+    var pl = sheet.querySelector(".pd-lesson"), LS = window.LumevinaLessons, lesson = LS && LS.on() ? LS.for(p) : null;
+    if (pl) { pl.hidden = !lesson; if (lesson) { var a = pl.querySelector(".pd-lesson-link"); a.textContent = lesson.title; a.href = lesson.href; } }
     sheet.querySelector(".pd-ask").onclick = function () {
       sheet.close();
       var form = document.querySelector(".contact-form");
