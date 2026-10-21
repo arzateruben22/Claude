@@ -6692,3 +6692,14 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .cs-status { min-height: 1.2em; margin: .6rem 0 0; font-size: .9rem; color: #7d5a44; }
 .cs-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
 .cs-actions .btn { flex: 1 1 auto; }
+
+/* ── Skin science in twenty seconds: the rendered explainers (#watch) ── */
+.section-watch .section-inner { max-width: 1120px; margin: 0 auto; }
+.watch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; margin-top: 1.6rem; }
+.watch-item { margin: 0; }
+.watch-item video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 16px; background: #000; object-fit: cover; box-shadow: 0 10px 30px rgba(22,20,18,.12); }
+.watch-item.no-src video { pointer-events: none; opacity: .85; }
+.watch-item figcaption { margin-top: .6rem; font-size: .92rem; line-height: 1.4; }
+.watch-item figcaption b { display: block; font-weight: 650; }
+.watch-item figcaption span { color: #7d5a44; font-size: .82rem; }
+@media (max-width: 760px) { .watch-grid { grid-template-columns: 1fr; gap: 1.4rem; } }
