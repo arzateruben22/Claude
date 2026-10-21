@@ -17,7 +17,9 @@ const DASH = 3.66, GAP = 10.97, PERIOD = DASH + GAP;
 const TOLL = new Set(['SR-73', 'SR-133', 'SR-241', 'SR-261']);
 
 interface Desc { key: number; path: Path | null; k: number; over: Overpass | null; x: number; z: number; r: number }
-interface Built { desc: Desc; group: THREE.Group; ox: number; oz: number }
+// pools: the lamps' pools on the road (x, y, z, heading, in world metres) for the shared decal; near: small things
+// shown only within a range of the car (chain-link, skid marks: beyond it they are under a pixel)
+interface Built { desc: Desc; group: THREE.Group; ox: number; oz: number; pools?: number[]; near?: [THREE.Object3D, number][] }
 interface Row { x: number; y: number; z: number; h: number; s: number; ax: number; az: number }
 
 const DCELL = 400;
@@ -30,8 +32,18 @@ export class Roads {
   private built = new Map<number, Built>();
   private m: Record<string, THREE.Material>;
   private signsBy = new Map<number, Sign[]>();
+  // High and Ultra (tier 1 and 2, from the preset's shadow size): the lamps' pools on the road at night, as one
+  // instanced additive decal for every chunk in reach (one draw call), refilled when the chunks or the origin change
+  // or the car has moved on; billboards, chain-link and skid marks are built into the chunks
+  private tier: number;
+  private pools: THREE.InstancedMesh | null = null;
+  private poolsDirty = true;
+  private poolAt = { x: 1e9, z: 1e9 };
 
   constructor(private net: Network, private q: QualityPreset) {
+    // the tier first: it sets the texture detail the asphalt below is painted with, and the lit-window maps
+    P.setTier(P.tierOf(q));
+    this.tier = P.glow.tier;
     const a = T.asphalt(), sh = T.shoulder(), c = T.concrete(), pc = T.pcc(), bw = T.blockWall();
     const off = (m: THREE.MeshStandardMaterial, f: number) => { m.polygonOffset = true; m.polygonOffsetFactor = f; m.polygonOffsetUnits = f; return m; };
     this.m = {
@@ -45,6 +57,13 @@ export class Roads {
       cushion: new THREE.MeshStandardMaterial({ color: 0xf2c21b, roughness: 0.6 }),
     };
     this.group.name = 'roads';
+    if (this.tier >= 1) {
+      const g = new THREE.PlaneGeometry(1, 1); g.rotateX(-Math.PI / 2);
+      this.pools = new THREE.InstancedMesh(g, P.mats.lampPool(), POOL_MAX);
+      this.pools.count = 0; this.pools.frustumCulled = false; this.pools.visible = false; this.pools.renderOrder = 1;
+      this.pools.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      this.group.add(this.pools);
+    }
     for (const p of net.paths) {
       const n = Math.max(1, Math.ceil(p.len / CHUNK));
       for (let k = 0; k < n; k++) {
@@ -82,7 +101,8 @@ export class Roads {
     const R = this.q.drawDistance;
     for (const [k, b] of this.built) {
       const d = b.desc;
-      if (Math.hypot(d.x - x, d.z - z) - d.r > R + 250) { this.drop(b); this.built.delete(k); }
+      if (Math.hypot(d.x - x, d.z - z) - d.r > R + 250) { this.drop(b); this.built.delete(k); this.poolsDirty = true; continue; }
+      if (b.near) { const dist = Math.hypot(d.x - x, d.z - z) - d.r; for (const [o, r] of b.near) o.visible = dist < r; }
     }
     const want: [number, Desc][] = [];
     const c0 = Math.floor((x - R) / DCELL), c1 = Math.floor((x + R) / DCELL), r0 = Math.floor((z - R) / DCELL), r1 = Math.floor((z + R) / DCELL);
@@ -107,7 +127,32 @@ export class Roads {
       this.built.set(d.key, d.path ? this.buildChunk(d) : this.buildOverpass(d));
       n++;
     }
+    if (n) this.poolsDirty = true;
+    this.updatePools(x, z);
     return n;
+  }
+
+  // the pools under the lamps within POOL_R of the car, at night only
+  private updatePools(x: number, z: number) {
+    const im = this.pools;
+    if (!im) return;
+    const on = P.glow.dark > 0.3;
+    im.visible = on && im.count > 0;
+    if (!on || (!this.poolsDirty && Math.hypot(x - this.poolAt.x, z - this.poolAt.z) < 40)) return;
+    this.poolsDirty = false; this.poolAt.x = x; this.poolAt.z = z;
+    let n = 0;
+    for (const b of this.built.values()) {
+      const pl = b.pools;
+      if (!pl || Math.hypot(b.desc.x - x, b.desc.z - z) - b.desc.r > POOL_R) continue;
+      for (let i = 0; i < pl.length && n < POOL_MAX; i += 4) {
+        if (Math.hypot(pl[i] - x, pl[i + 2] - z) > POOL_R) continue;
+        PQ.setFromAxisAngle(UP, pl[i + 3]);
+        PM.compose(PV.set(pl[i] - ORIGIN.x, pl[i + 1], pl[i + 2] - ORIGIN.z), PQ, POOL_SCALE);
+        im.setMatrixAt(n++, PM);
+      }
+    }
+    im.count = n; im.instanceMatrix.needsUpdate = true;
+    im.visible = n > 0;
   }
   pending(x: number, z: number) {
     const R = this.q.drawDistance; let n = 0;
@@ -115,7 +160,7 @@ export class Roads {
     return n;
   }
 
-  rebase() { for (const b of this.built.values()) b.group.position.set(b.ox - ORIGIN.x, 0, b.oz - ORIGIN.z); }
+  rebase() { for (const b of this.built.values()) b.group.position.set(b.ox - ORIGIN.x, 0, b.oz - ORIGIN.z); this.poolsDirty = true; }
   clear() { for (const b of this.built.values()) this.drop(b); this.built.clear(); }
 
   private drop(b: Built) {
@@ -169,6 +214,8 @@ export class Roads {
 
     // -------------------------------------------------------------- barriers: Jersey, or a block sound wall in town
     const i0 = Math.round(s0 / STEP);
+    const near: [THREE.Object3D, number][] = [];
+    const fence: THREE.BufferGeometry[] = [], posts: THREE.BufferGeometry[] = [];
     for (const side of ['L', 'R'] as const) {
       const runs: Row[][] = [];
       let cur: Row[] | null = null;
@@ -186,7 +233,23 @@ export class Roads {
         const pr = side === 'L' ? prof.slice().reverse() : prof;
         const g = this.strip(run, pr, (row, _j, acc) => [acc / (sound ? 4 : 2), (row.s - s0) / (sound ? 4 : 2)]);
         if (g) { const mesh = own(new THREE.Mesh(g, sound ? this.m.wall : this.m.concrete)); mesh.castShadow = true; }
+        // High and Ultra: a 1.8 m chain-link fence on posts along the top of some town Jersey barriers on the right,
+        // where there's no block wall (the right-of-way fence)
+        if (this.tier >= 1 && !sound && side === 'R' && p.main && this.urban(run[0].ax, run[0].az) && chainLinkHere(run[0].ax, run[0].az)) {
+          const fd = w + 0.44;
+          const f = this.strip(run, [[fd, 0.8], [fd, 2.6]], (row, _j, acc) => [acc, row.s - s0]);
+          if (f) fence.push(f);
+          for (let k = 0; k < run.length; k += 1) {
+            if (Math.round(run[k].s) % 3 !== 0 && k !== run.length - 1) continue;
+            const a = p.at(run[k].s, fd), c = new THREE.CylinderGeometry(0.035, 0.035, 1.95, 5);
+            c.translate(a.x - ox, a.y + 0.8 + 0.97, a.z - oz); posts.push(c);
+          }
+        }
       }
+    }
+    if (fence.length) {
+      const fm = own(new THREE.Mesh(mergeGeometries(fence)!, P.mats.chainLink()), false); near.push([fm, 450]);
+      const pm = own(new THREE.Mesh(mergeGeometries(posts)!, P.mats.metal()), false); near.push([pm, 450]);
     }
 
     // -------------------------------------------------------------- bridges: deck underside and columns
@@ -216,6 +279,7 @@ export class Roads {
     }
 
     // -------------------------------------------------------------- light standards on the outside, every 66 m
+    const pools: number[] = [];
     if (p.main) {
       const poles: THREE.Matrix4[] = [];
       for (let s = Math.ceil(s0 / 66) * 66; s < s1; s += 66) {
@@ -223,6 +287,8 @@ export class Roads {
         if (!net.hasWall(p, idx, 'R')) continue;
         const a = p.at(s, p.wallR + 0.9);
         poles.push(new THREE.Matrix4().compose(new THREE.Vector3(a.x - ox, a.y + 0.6, a.z - oz), new THREE.Quaternion().setFromAxisAngle(UP, a.h), ONE3));
+        // the head hangs 3.45 m in over the lanes; its pool is centred a little further in, on the road's surface
+        if (this.tier >= 1) { const c = p.at(s, p.wallR + 0.9 - 4.6); pools.push(c.x, c.y + 0.03, c.z, c.h); }
       }
       if (poles.length) {
         const im = new THREE.InstancedMesh(P.lightPoleSingle(), P.mats.metal(), poles.length);
@@ -241,6 +307,19 @@ export class Roads {
       }
     }
 
+    // -------------------------------------------------------------- High and Ultra: billboards and skid marks
+    if (this.tier >= 1 && p.main) {
+      const hb = hash2(p.id, desc.k);
+      if (hb % 9 === 0) this.billboard(group, p, Math.min(s1 - 1, s0 + 70), ox, oz, T.BRANDS[(hb >>> 5) % T.BRANDS.length]);
+      const skids: THREE.BufferGeometry[] = [];
+      for (const j of p.out) {
+        if (j.kind !== 'diverge' || j.to.main || j.s < s0 || j.s >= s1 || hash2(p.id, Math.round(j.s)) % 3 === 0) continue;
+        const sk = this.skidMark(p, j.s, ox, oz, hash2(Math.round(j.s), p.id));
+        if (sk) skids.push(sk);
+      }
+      if (skids.length) { const m = own(new THREE.Mesh(mergeGeometries(skids)!, P.mats.skid()), true); m.renderOrder = 1; near.push([m, 350]); }
+    }
+
     // -------------------------------------------------------------- a crash cushion where a road just stops
     if (s1 >= p.len - 0.1 && net.hasEndWall(p)) {
       const e = p.at(p.len - 1.5, 0);
@@ -249,7 +328,47 @@ export class Roads {
     }
 
     this.group.add(group);
-    return { desc, group, ox, oz };
+    return { desc, group, ox, oz, pools: pools.length ? pools : undefined, near: near.length ? near : undefined };
+  }
+
+  // A billboard for one of our own brands (T.BRANDS: nothing real goes on a board), on a steel monopole behind the
+  // right-hand barrier: a 12.8 x 4.8 m face toed 20 degrees in toward the oncoming lanes, its frame, a catwalk and
+  // three lamp arms. Lit at night through its own texture (props.setNight). Only where the spot is clear of every
+  // road and off the bridges.
+  private billboard(group: THREE.Group, p: Path, s: number, ox: number, oz: number, brand: T.Brand) {
+    const net = this.net, a = p.at(s, p.wallR + 10);
+    if (!this.urban(a.x, a.z) || a.y - net.ground(a.x, a.z) > 2.5) return;
+    for (const h of net.near(a.x, a.z, 11)) if (h.d > h.path.paveL - 9 && h.d < h.path.paveR + 9 && h.s > -9 && h.s < h.path.len + 9) return;
+    const gy = net.ground(a.x, a.z), yb = Math.max(gy + 8, a.y + 5.5), W = 12.8, H = 4.8;
+    const parts: THREE.BufferGeometry[] = [];
+    const pole = new THREE.CylinderGeometry(0.34, 0.45, yb - gy + 1.2, 10); pole.translate(0, (gy - 0.6 + yb + 0.6) / 2, -0.9); parts.push(pole);
+    const frame = new THREE.BoxGeometry(W + 0.4, H + 0.4, 0.4); frame.translate(0, yb + H / 2, -0.28); parts.push(frame);
+    const truss = new THREE.BoxGeometry(W * 0.7, 0.3, 0.3); truss.translate(0, yb + H / 2, -0.75); parts.push(truss);
+    const walk = new THREE.BoxGeometry(W, 0.08, 1.0); walk.translate(0, yb - 0.25, 0.45); parts.push(walk);
+    for (const x of [-W / 3, 0, W / 3]) { const arm = new THREE.BoxGeometry(0.08, 0.08, 1.3); arm.translate(x, yb - 0.1, 0.9); parts.push(arm); const hd = new THREE.BoxGeometry(0.5, 0.14, 0.3); hd.translate(x, yb - 0.02, 1.5); parts.push(hd); }
+    const m = new THREE.Matrix4().makeRotationY(a.h + Math.PI - 0.35);
+    m.setPosition(a.x - ox, 0, a.z - oz);
+    const st = new THREE.Mesh(mergeGeometries(parts.map((g) => g.toNonIndexed()))!, P.mats.darkMetal()); st.applyMatrix4(m); st.castShadow = true; st.receiveShadow = true; st.userData.own = true; group.add(st);
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(W, H), P.mats.billboard(brand)); face.position.set(0, yb + H / 2, -0.06); face.applyMatrix4(m); face.userData.own = true; group.add(face);
+  }
+
+  // two tyres' skid near a gore point: from the right lane toward the gore over the 45 m before a ramp leaves, a
+  // 2.1 m strip that drifts right (someone who nearly missed the exit), laid just over the surface
+  private skidMark(p: Path, sj: number, ox: number, oz: number, h: number) {
+    const sa = Math.max(0, sj - 45 - (h % 10)), se = Math.min(p.len, sj + 4);
+    if (se - sa < 12) return null;
+    const d0 = p.laneCenter(p.lanes - 1) - 0.6 + ((h >>> 4) % 10) * 0.06, d1 = p.edgeR + 0.5;
+    const pos: number[] = [], uv: number[] = [], idx: number[] = [];
+    const n = Math.ceil((se - sa) / 3);
+    for (let i = 0; i <= n; i++) {
+      const t = i / n, s = sa + (se - sa) * t, dc = d0 + (d1 - d0) * t * t * (3 - 2 * t);
+      for (const [e, u] of [[-1.05, 0], [1.05, 1]] as const) { const a = p.at(s, dc + e); pos.push(a.x - ox, a.y + 0.025, a.z - oz); uv.push(u, t); }
+      if (i < n) { const k = i * 2; idx.push(k, k + 2, k + 1, k + 1, k + 2, k + 3); }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx); g.computeVertexNormals();
+    return g;
   }
 
   // a run of quads across the road, rows along it; keep(i, j) can drop a quad
@@ -403,5 +522,10 @@ export function signText(text: string[]) {
 }
 
 const soundWall = (x: number, z: number) => fbm2(x * 0.0021, z * 0.0021, 2, 13) > 0.45;
+const chainLinkHere = (x: number, z: number) => fbm2(x * 0.003, z * 0.003, 2, 41) > 0.5;
+const hash2 = (a: number, b: number) => (Math.imul(a + 0x9e37, 0x85ebca6b) ^ Math.imul(b + 0x632b, 0xc2b2ae35)) >>> 0;
 const UP = new THREE.Vector3(0, 1, 0), ONE3 = new THREE.Vector3(1, 1, 1);
+// the lamps' pools: at most this many, within POOL_R of the car, each 16 m across the road by 22 m along it
+const POOL_MAX = 400, POOL_R = 650, POOL_SCALE = new THREE.Vector3(16, 1, 22);
+const PM = new THREE.Matrix4(), PQ = new THREE.Quaternion(), PV = new THREE.Vector3();
 void rng; void clamp;

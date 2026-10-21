@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import * as T from '../textures';
-import { rng, noise2 } from '../util';
+import { rng, noise2, smoothstep } from '../util';
 
 const memo = new Map<string, unknown>();
 function once<V>(key: string, make: () => V): V { if (!memo.has(key)) memo.set(key, make()); return memo.get(key) as V; }
@@ -42,7 +42,45 @@ export const mats = {
   facade: (k: 0 | 1 | 2) => once('m.facade' + k, () => new THREE.MeshStandardMaterial({ map: T.facade(k), roughness: k === 2 ? 0.25 : 0.85, metalness: k === 2 ? 0.4 : 0 })),
   roof: () => once('m.roof', () => new THREE.MeshStandardMaterial({ color: 0x8b8680, roughness: 0.95 })),
   signFace: () => once('m.signback', () => new THREE.MeshStandardMaterial({ color: 0x8c9096, metalness: 0.6, roughness: 0.5 })),
+  // High and Ultra only (see glow): the house's stucco with its lit windows, its tile roof, the lamps' pools on the
+  // road, the billboards, chain-link, skid marks, the eucalyptus's pale bark
+  houseWall: () => once('m.housewall', () => { const t = T.houseWall(); return new THREE.MeshStandardMaterial({ map: t.map, emissiveMap: t.lit, emissive: 0xffffff, emissiveIntensity: 0, roughness: 0.92 }); }),
+  roofTile: () => once('m.rooftile', () => { const t = T.roofTile(); return new THREE.MeshStandardMaterial({ map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.8, 0.8), roughness: 0.78 }); }),
+  lampPool: () => once('m.lamppool', () => new THREE.MeshBasicMaterial({ map: T.lampPool(), color: 0x000000, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -8 })),
+  billboard: (b: T.Brand) => once('m.billboard' + b, () => { const t = T.billboard(b); return new THREE.MeshStandardMaterial({ map: t, emissiveMap: t, emissive: 0xffffff, emissiveIntensity: 0.06, roughness: 0.55 }); }),
+  chainLink: () => once('m.chainlink', () => { const t = T.chainLink(); return new THREE.MeshStandardMaterial({ map: t, alphaTest: 0.5, side: THREE.DoubleSide, metalness: 0.5, roughness: 0.5 }); }),
+  skid: () => once('m.skid', () => new THREE.MeshStandardMaterial({ map: T.skid(), transparent: true, depthWrite: false, roughness: 0.75, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 })),
+  euBark: () => once('m.eubark', () => new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85 })),
 };
+
+// ---------------------------------------------------------------- High and Ultra: the tier and the night
+// One shared state for the scenery that only High and Ultra get. The tier comes from the quality preset's shadow
+// size (0 Low/Medium, 1 High, 2 Ultra), set by Roads when the world is built for a preset (before any road texture
+// is painted, so the asphalt's wear follows it); the dark (0 day, 1 night) comes from Environment.apply. Low and
+// Medium leave every material exactly as it was: the lit maps are only attached at tier 1 and up.
+export const glow = { tier: 0, dark: 0 };
+export const tierOf = (q: { shadows: number }) => (q.shadows >= 4096 ? 2 : q.shadows >= 2048 ? 1 : 0);
+export function setTier(t: number) {
+  T.setTextureDetail(t ? 1 : 0);
+  if (t === glow.tier) return;
+  glow.tier = t;
+  for (const k of [0, 1, 2] as const) {
+    const m = mats.facade(k), lit = t ? T.facadeLit(k) : null;
+    if (m.emissiveMap !== lit) { m.emissiveMap = lit; m.emissive.setHex(lit ? 0xffffff : 0x000000); m.needsUpdate = true; }
+  }
+  setNight(glow.dark);
+}
+export function setNight(dark: number) {
+  glow.dark = dark;
+  if (!glow.tier) return;
+  // the windows come on through dusk: offices brighter than homes, and a little over the Ultra bloom's threshold so
+  // the brightest panes glow
+  const lit = smoothstep(0.3, 0.85, dark);
+  for (const k of [0, 1, 2] as const) mats.facade(k).emissiveIntensity = 1.35 * lit;
+  mats.houseWall().emissiveIntensity = 1.1 * lit;
+  for (const b of T.BRANDS) mats.billboard(b).emissiveIntensity = 0.06 + 0.8 * lit;
+  (mats.lampPool().color as THREE.Color).setRGB(1, 1, 1).multiplyScalar(0.55 * smoothstep(0.4, 0.9, dark));
+}
 
 // ---------------------------------------------------------------- trees and plants
 // A palm: a tall bare trunk ringed with leaf scars, and a crown of pinnate fronds. Each frond is one card folded
@@ -125,6 +163,32 @@ export const cypress = () => once('g.cypress', () => {
   for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), n = 1 + (noise2(y * 1.5, Math.atan2(z, x) * 2, 9) - 0.5) * 0.35; p.setXYZ(i, x * n, y, z * n); }
   g.computeVertexNormals();
   return paint(g, (_x, y) => [0.06 + y * 0.003, 0.13 + y * 0.004, 0.07]);
+});
+// Ultra's second tree: a blue-gum eucalyptus, the OC windbreak tree along the freeways. A tall pale trunk that forks
+// into three leaning limbs, and an open, ragged crown of grey-green clumps hung high on them (gaps between, unlike
+// the round street tree). Two instanced geometries: the crown (foliage material, 6 clumps of 80 triangles) and the
+// wood (trunk and limbs by vertex colour, pale with darker streaks).
+export const eucalyptusCrown = () => once('g.eucrown', () => {
+  const r = rng(29), parts: THREE.BufferGeometry[] = [];
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + r() * 0.8, rad = 1.2 + r() * 2.4;
+    const g = lumpy(1.5 + r() * 1.1, 1, 40 + i * 5, 0.75);
+    g.scale(1, 0.75 + r() * 0.5, 1);
+    g.translate(Math.cos(a) * rad, 10.5 + r() * 5.5 + (i === 0 ? 2 : 0), Math.sin(a) * rad);
+    parts.push(g);
+  }
+  const g = mergeGeometries(parts)!;
+  return paint(g, (x, y, z) => { const n = noise2(x * 0.7 + 4, z * 0.7 + y, 8), k = 0.6 + 0.5 * n; return [0.2 * k, 0.26 * k + y * 0.002, 0.19 * k]; });
+});
+export const eucalyptusWood = () => once('g.euwood', () => {
+  const parts: THREE.BufferGeometry[] = [];
+  const trunk = new THREE.CylinderGeometry(0.22, 0.42, 8, 7); trunk.translate(0, 4, 0); parts.push(trunk);
+  for (let i = 0; i < 3; i++) {
+    const a = (i / 3) * Math.PI * 2 + 0.4, limb = new THREE.CylinderGeometry(0.1, 0.2, 7, 5);
+    limb.translate(0, 3.5, 0); limb.rotateZ(0.32 + 0.1 * i); limb.rotateY(a); limb.translate(0, 7.6, 0); parts.push(limb);
+  }
+  const g = mergeGeometries(parts.map((p) => p.toNonIndexed()))!;
+  return paint(g, (x, y, z) => { const s = noise2(Math.atan2(z, x) * 3, y * 0.6, 12), k = 0.62 + 0.38 * s; return [0.86 * k, 0.83 * k, 0.76 * k]; });
 });
 export const shrub = () => once('g.shrub', () => {
   const g = lumpy(1, 1, 5, 0.6); g.scale(1.4, 0.9, 1.4); g.translate(0, 0.7, 0);
