@@ -32,8 +32,10 @@ model: routine work to `opus`, hard reasoning to `fable`.
      cruise nights, password reset and the realistic-mode fixes are in (progress log, the morning entry).
   2. Binary poses (F7 in the Fable queue) before the cap passes 100.
   3. The talk bank in the on-foot scenes once Lot 57 is in the game.
-  4. Ideas worth weighing with the owner: a private lobby code for friends (a second lobby keyed by a short code),
-     spectating a friend's drive, and a daily "OC cruise" time when the lobby is busiest.
+  4. Done since: crews (private rooms by code), cruise nights, ghost lamps, OC's clock on the HUD, the observed
+     temperature, lit billboards at night, the Live line in the Feedback report. Still to weigh with the owner:
+     spectating a friend's drive. Night lighting (the road reads bright at night) is in the Opus queue, but the graphics
+     lanes touch the same files: take it there, not here.
 - Everything below this line is the state from 2026-10-18 and still applies to the other lanes.
 
 ## State at the update before (2026-10-18, 22:00 UTC, an Opus session)

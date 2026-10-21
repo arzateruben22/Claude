@@ -54,6 +54,8 @@ The owner's standing order is to keep improving until they say stop. A scheduled
   with 1 ghost, both lamps, brake lamp 3.2 after the sky darkened (`tests/out/livephone-night-ghost.png`; the ghost is
   60 m ahead, so small at phone size). The night road still reads bright; that is the night-lighting item in the Opus
   queue, not this change.
+- **The Feedback report** gains a Live line: off, or the state, lobby, crew, ghosts known and drawn, and the feed's
+  source, with no names. `launch`: 6 of 6.
 
 ## 2026-10-21 (later): the live server on the desks' machine, social features, and a security review fixed
 

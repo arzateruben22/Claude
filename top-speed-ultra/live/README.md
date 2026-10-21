@@ -20,7 +20,10 @@ What it does today:
   driver the poses of the drivers within 3 km. Nothing scored leaves the device: scores, credits, levels and the
   garage stay in the player's browser as before.
 - **In the game.** The other drivers are ghosts drawn with the coupe body in each driver's paint, each with its
-  driver's name on a plate (readable to about 350 m). No collisions (nothing to grief) and no chat.
+  driver's name on a plate (readable to about 350 m), head and tail lamps (the tails brighten on the brake), growing
+  in over 0.6 s when they appear. No collisions (nothing to grief) and no chat.
+- **Cruise nights.** `CRUISE="Fri 20:00, Sun 18:00"` (Pacific time); the menu shows the next one, or that one is on.
+- **The menu and the pause screen** say how many are driving now (and waiting); Invite a friend shares the address.
 - **Finding each other.** Every 2 s the server sends a roster (where every driver is, to the metre, nearest 200), so
   the corner map shows live drivers as orange dots, and tapping the Live chip lists who's on and on which freeway.
   **Drive with** (Free Drive only) puts you 80 m behind that driver on their carriageway.
