@@ -811,6 +811,24 @@
     });
   }
 
+  function renderBooks(d) {                 // links to the other rulebooks' dashboards (/wild/, /sniper/ ...)
+    var nav = $("books");
+    if (!d || !d.books || d.books.length < 2) return;
+    nav.textContent = "";
+    var label = document.createElement("span"); label.textContent = "rulebooks"; nav.appendChild(label);
+    d.books.forEach(function (b) {
+      var a = document.createElement("a");
+      a.href = "/" + (b === "main" ? "" : b + "/");
+      a.textContent = b;
+      if (b === d.current) a.setAttribute("aria-current", "page");
+      nav.appendChild(a);
+    });
+    nav.hidden = false;
+  }
+  if (!replay) {
+    fetch("api/books", { cache: "no-store" }).then(function (r) { return r.json(); }).then(renderBooks).catch(function () {});
+  }
+
   readColors(); buildTabs(); resize(); buildDust();
   window.addEventListener("resize", function () { resize(); if (last) render(last); });
   tick();

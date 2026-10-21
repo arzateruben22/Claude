@@ -185,7 +185,8 @@ python -m nightdesk sim --days 30 --book strict
 ```
 
 All the desks in one process share one feed (`sources/shared.py`): a sweep, a price or a safety report fetched
-for one is reused by the others, so the free APIs see about the same traffic as one desk. Each rulebook's
+for one is reused by the others, so the free APIs see about the same traffic as one desk. Each dashboard links
+to the others' under its header (`/wild/`, `/sniper/`...). Each rulebook's
 results live in `output/<name>/`, and the paper book shows them as **Wild memecoins** and **Strict memecoins**.
 
 ## How the paper fills work

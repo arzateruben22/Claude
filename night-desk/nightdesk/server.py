@@ -4,6 +4,7 @@
   GET /api/state        the main desk's latest state as JSON (the page polls this)
   GET /<book>/          the same dashboard for another rulebook running alongside (e.g. /wild/)
   GET /<book>/api/state ...and its state
+  GET /api/books        every rulebook in this process (the dashboard links them under its header)
 """
 from __future__ import annotations
 
@@ -91,6 +92,9 @@ def make_server(runner: Runner, host: str = "127.0.0.1", port: int = 8787) -> Th
             if path == "/api/state":
                 with runner.lock:
                     body = runner.states[book].encode()
+                return self._send(200, "application/json", body)
+            if path == "/api/books":                     # every rulebook in this process, for the dashboard's links
+                body = json.dumps({"books": list(runner.states), "current": book}).encode()
                 return self._send(200, "application/json", body)
             name = "index.html" if path in ("/", "/index.html") else path.lstrip("/")
             file = (WEB / name).resolve()

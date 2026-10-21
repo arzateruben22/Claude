@@ -48,6 +48,11 @@ button { font: inherit; }
 .stats dt { color: var(--ink-dim); text-transform: uppercase; letter-spacing: .06em; }
 .stats dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 .status .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+.books { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 0 0 6px; font-size: 12px; }
+.books span { opacity: .6; }
+.books a { color: inherit; opacity: .75; text-decoration: none; }
+.books a:hover { opacity: 1; text-decoration: underline; }
+.books a[aria-current="page"] { color: var(--pink); opacity: 1; font-weight: 700; }
 .badge { font: 400 10px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; padding: 5px 8px;
          border-radius: 3px; border: 1px solid rgba(255, 211, 110, .5); color: var(--gold); }
 .utc { border: 1px solid var(--cyan); border-radius: 4px; padding: 4px 8px; font: 600 15px/1 var(--f-data);

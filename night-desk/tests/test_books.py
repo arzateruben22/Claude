@@ -113,7 +113,10 @@ def test_server_shows_each_book():
     try:
         assert json.loads(urllib.request.urlopen(base + "/api/state").read())["book"] == "main"
         assert json.loads(urllib.request.urlopen(base + "/wild/api/state").read())["book"] == "wild"
+        assert json.loads(urllib.request.urlopen(base + "/api/books").read()) == {"books": ["main", "wild"], "current": "main"}
+        assert json.loads(urllib.request.urlopen(base + "/wild/api/books").read())["current"] == "wild"
         page = urllib.request.urlopen(base + "/wild").read().decode()          # redirects to /wild/
+        assert 'id="books"' in page
         assert "<title>Night Desk</title>" in page
         assert urllib.request.urlopen(base + "/wild/desk.js").status == 200
         for bad in ("/wild/../desk-wild.toml", "/wild/%2e%2e/desk.toml", "/main/api/state", "/other/"):
