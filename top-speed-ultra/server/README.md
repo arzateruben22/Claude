@@ -11,6 +11,7 @@ server/
     config.toml                                function settings for the Supabase CLI (both functions check their own auth)
     .env.example                               the function secrets to set (copy to .env, never commit .env)
     migrations/0001_oc_ultra_store.sql         the tables and their row-level security
+    migrations/0002_founder_serials.sql        the OC Hypercar Founder Edition's serial numbers
     functions/create-checkout/index.ts         starts a purchase: checks the player and the item, opens Stripe Checkout
     functions/stripe-webhook/index.ts          Stripe tells us what was paid, refunded or cancelled; this writes it down
     functions/_shared/catalog.json             the server's own copy of the catalog (npm run store:sync; never by hand)
@@ -66,13 +67,30 @@ URL are your **project ref**. Write the URL and the ref down; you need them belo
 1. In the Supabase dashboard, open **SQL Editor** → **New query**.
 2. Open `server/supabase/migrations/0001_oc_ultra_store.sql` in a text editor, copy all of it, paste it in, and
    click **Run**. It is safe to run twice.
+3. Then the same with `server/supabase/migrations/0002_founder_serials.sql`: the OC Hypercar Founder Edition's
+   serial numbers (a counter per numbered sku, the `serials` ledger, a `serial` column on `entitlements`, the
+   `assign_serial` function only the webhook may call, and a trigger that retires a refunded number). Also safe to
+   run twice.
 
 **It worked when** the editor says "Success. No rows returned", and **Table Editor** lists `profiles`, `purchases`,
-`entitlements`, `waitlist` and `invite_codes`, each marked **RLS enabled** (no "RLS disabled" warning).
+`entitlements`, `waitlist`, `invite_codes`, `serial_counters` and `serials`, each marked **RLS enabled** (no "RLS
+disabled" warning).
 
-Optional check (if you have Postgres on your computer): `server/supabase/tests/run-local.sh` runs the migration on a
-throwaway local database and tries every write a player or a stranger must not be able to make. Each one should
-print as `refused`. (On 2026-10-16 it did; the output is in `tests/out/store-rls.log`.)
+Optional check (if you have Postgres on your computer): `server/supabase/tests/run-local.sh` runs the migrations on a
+throwaway local database and tries every write a player or a stranger must not be able to make, on the 0001 tables
+and on 0002's `serials`, `serial_counters`, `assign_serial` and `retire_serial`. Each one should print as `refused`.
+(On 2026-10-16 it did for 0001, in `tests/out/store-rls.log`; on 2026-10-19 for both, in
+`tests/out/store-rls-r2.log`.) The serial numbers have their own end-to-end check: `node
+server/supabase/tests/serial-webhook.mjs` runs the real `stripe-webhook` function against a throwaway database with
+both migrations (retried and concurrent deliveries keep one number, a refund retires it, the founder window is
+judged by when the session was created, a player can read but never write a number, a second purchase by a player
+who holds a number is refused and refunded, a refund that arrives before its completion leaves nothing granted, and a
+refund racing the numbering never leaves a live number on a refunded purchase).
+
+Before live mode, two optional hardenings (not built; `PROJECT_OC_MONETIZATION.md` §12): call `restore()` at boot
+when a player is signed in, so a locally edited cache can't keep the OC Hypercar or show a made-up number past the
+next launch; and handle `charge.dispute.closed` with status `lost` like a refund (retire the number, take the car
+back). The webhook ignores dispute events today.
 
 ## 3. Sign-in email: settings and a mail sender
 

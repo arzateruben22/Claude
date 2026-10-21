@@ -3,20 +3,27 @@
 // test cards and nothing is charged; live, it hands you to Stripe's own checkout page (src/store/payments.ts).
 // The rules it shows, from PROJECT_OC_MONETIZATION.md: looks only; a licence, not ownership (California AB 2426);
 // 13+ with a neutral age question, and a parent's or guardian's OK under 18; a subscription's terms before its
-// checkbox (California's automatic renewal law); the Founder Pack's fixed end date, with no countdown.
+// checkbox (California's automatic renewal law); the Founder Pack's fixed end date, with no countdown. The OC Hypercar
+// Founder Edition has its own card: its price, the founder window, the plaque and paint it comes with, that the
+// Founder Pack doesn't include it, its two tunes, and "Coming soon" until the car is in the game (catalog.json).
 // Styles: `.store` in styles.css. Opened from the main menu and the pause menu (App.tsx).
 import { cloneElement, useEffect, useId, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { Game } from '../game/Game';
 import { CONFIG } from '../store/config';
-import { CATALOG, KINDS, FOUNDER_SKU, Sku, Entitlement, saleState, priceLine, money, carFor, CAR_NAMES, entById, skuById, grantLine, windowDate } from '../store/catalog';
+import { CATALOG, KINDS, FOUNDER_SKU, HYPERCAR_SKU, Sku, Entitlement, saleState, priceLine, money, carFor, CAR_NAMES, entById, skuById, grantLine, windowDate } from '../store/catalog';
 import * as account from '../store/account';
-import { has, ownsSku, receipts, restore, list, Receipt } from '../store/entitlements';
+import { has, ownsSku, receipts, restore, list, serialOf, serialLabel, Receipt } from '../store/entitlements';
 import { checkout, formatCard, formatExpiry, confirmReturn, onSaleFromServer, cleanRollName, ReturnState } from '../store/payments';
 import { ownedPaints, equippedPaintId, equipPaint, inGame } from '../store/locker';
 import { onStoreChange } from '../store/bus';
 
 const LOOKS_ONLY = 'Looks only: it changes nothing about how any car drives or scores.';
+// the owner's two-tune rule (PROJECT_OC_MONETIZATION.md rule 3a), in the store's words. Free Drive has no clock and
+// no rivals, but it does keep a score (the distance), a best and a device-only board: hence "stay on your device" and
+// "marked", which the car must do before it is sold (its `needs` in cosmetics.json)
+const FREE_DRIVE_ONLY = 'no clock and no rivals, your Free Drive bests stay on your device, and its Unleashed runs and run cards are marked';
+const TWO_TUNE = `Unleashed in Free Drive only: ${FREE_DRIVE_ONLY}. In Races, Time Trial and Speed Survival it runs a race tune at or under the Rossini Corsa, with its ability off.`;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 interface StoreHooks { open: (sku: string) => void; preview: (sku: string) => void; close: () => void }
@@ -55,6 +62,12 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
   const s = account.current(), age = account.ageState(), garage = game.profile.p.vehicles;
   const founder = skuById(FOUNDER_SKU);
   const founderOn = !!founder && saleState(founder).ok;
+  // the hypercar's card: on sale, "Coming soon" until it is, and after the window only for the people who own it
+  const hyper = skuById(HYPERCAR_SKU);
+  const hyperOn = !!hyper && saleState(hyper).ok;
+  const hyperSale = hyper ? saleState(hyper) : null;
+  const hyperSoon = !!hyper && !hyperOn && !ownsSku(hyper.sku);
+  const hyperShown = !!hyper && (!hyper.window || Date.now() <= Date.parse(hyper.window.until) || ownsSku(hyper.sku));
   const lockedWhy = (it: Sku): string | null => {
     if (age === 'under13') return 'For players 13 and over';
     const car = carFor(it);
@@ -80,7 +93,9 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
           {CONFIG.live
             ? <div className="store-mode live" role="note"><b>Secure checkout</b><span>Stripe's own page takes your card, Apple Pay or Google Pay. We never see your card.</span></div>
             : <div className="store-mode" role="note"><b>Test mode</b><span>Nothing is charged. Use 4242 4242 4242 4242.</span></div>}
-          <p className="store-lede">Optional looks for your car and your driver. Nothing here changes how any car drives or scores. Every freeway, mode and car stays free, and credits are earned by driving only.</p>
+          {hyperShown
+            ? <p className="store-lede">Optional looks for your car and your driver, and one founder car. The looks change nothing about how any car drives or scores. The OC Hypercar Founder Edition is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}); everywhere else it runs at or under the Rossini Corsa. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>
+            : <p className="store-lede">Optional looks for your car and your driver. Nothing here changes how any car drives or scores. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>}
 
           <Account signin={signin} setSignin={setSignin} busy={busy} onRestore={() => void doRestore()} />
           {note && <p className={'store-note ' + note.kind} role="status">{note.text}</p>}
@@ -94,7 +109,7 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
               <p className="store-founder-when">For launch players · sold until {windowDate(founder)}, then never again</p>
               <div className="store-founder-head">
                 <h3 id="store-founder-h">{founder.name}</h3>
-                <p className="store-price">{priceLine(founder)}</p>
+                <Price item={founder} />
               </div>
               <p className="store-desc">{founder.description}</p>
               <Grants item={founder} />
@@ -102,8 +117,25 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
             </section>
           )}
 
+          {hyper && hyperShown && (
+            // not the class 'soon': that is the main menu's coming-soon tile (styles.css), a two-column grid
+            <section className={'store-founder store-hyper' + (hyperSoon ? ' is-soon' : '')} data-sku={hyper.sku} data-soon={hyperSoon ? 'true' : undefined} aria-labelledby="store-hyper-h">
+              <p className="store-founder-when">Founder Edition · sold until {windowDate(hyper, 'short')}</p>
+              <div className="store-founder-head">
+                <h3 id="store-hyper-h">{hyper.name}</h3>
+                <Price item={hyper} />
+              </div>
+              <p className="store-desc">{hyper.description}</p>
+              <p className="store-q small">Comes with</p>
+              <Grants item={hyper} shows={false} />
+              <p className="store-hyper-not">The $10 Founder Pack does not include this car, and this car does not include the pack's Founder '26 badge or Founders Sunset paint.</p>
+              {!hyperSoon ? <Action item={hyper} locked={lockedWhy(hyper)} onBuy={buy} />
+                : <><p className="store-act"><em className="store-soon">Coming soon</em></p><p className="fine store-soon-why">{hyperSale && !hyperSale.ok ? hyperSale.why + ' ' : ''}No pre-orders.</p></>}
+            </section>
+          )}
+
           {KINDS.map(({ kind, label, blurb }) => {
-            const items = CATALOG.filter((it) => it.kind === kind && it.sku !== FOUNDER_SKU && saleState(it).ok);
+            const items = CATALOG.filter((it) => it.kind === kind && it.sku !== FOUNDER_SKU && it.sku !== HYPERCAR_SKU && saleState(it).ok);
             if (!items.length) return null;
             return (
               <section key={kind} className="store-group" aria-labelledby={'store-g-' + kind}>
@@ -112,7 +144,7 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
                 <div className="store-items">
                   {items.map((it) => (
                     <article key={it.sku} className={'store-item' + (ownsSku(it.sku) ? ' owned' : '')} data-sku={it.sku}>
-                      <div className="store-item-head"><h4>{it.name}</h4><p className={'store-price' + (it.kind === 'tip' ? ' small' : '')}>{priceLine(it)}</p></div>
+                      <div className="store-item-head"><h4>{it.name}</h4><Price item={it} small={it.kind === 'tip'} /></div>
                       <p className="store-desc">{it.description}</p>
                       <Grants item={it} />
                       <Action item={it} locked={lockedWhy(it)} onBuy={buy} />
@@ -140,24 +172,36 @@ function Field({ label, children }: { label: string; children: ReactElement }) {
 }
 
 // ------------------------------------------------------------------------------------------- item parts
-function Swatch({ hex, label, mark }: { hex?: string; label?: string; mark?: 'sunset' | 'blank' }) {
+// Every price carries the test-mode notice right under it, not only the banner at the top of the store, so a price is
+// never on screen without it (CLAUDE.md: test mode until the owner connects Stripe and says live; nothing is charged).
+const TEST_TAG = 'Test mode · nothing is charged';
+function Price({ item, small = false }: { item: Sku; small?: boolean }) {
+  return (
+    <div className="store-pricebox">
+      <p className={'store-price' + (small ? ' small' : '')}>{priceLine(item)}</p>
+      {!CONFIG.live && <p className="store-test-tag">{TEST_TAG}</p>}
+    </div>
+  );
+}
+function Swatch({ hex, label, mark }: { hex?: string; label?: string; mark?: 'sunset' | 'silver' | 'blank' }) {
   if (hex) return <i className="store-sw" style={{ background: hex }} aria-hidden={label ? undefined : true} title={label} />;
   return mark ? <i className={'store-sw ' + mark} aria-hidden="true" /> : null;
 }
-// badges, frames and the roll have no colour of their own: a sunset mark for the Founder exclusives, a blank otherwise
-const markOf = (e: Entitlement) => (e.exclusive ? 'sunset' as const : 'blank' as const);
+// badges, frames, plaques and cars have no colour of their own: a sunset mark for the Founder Pack's exclusives, a
+// silver one for the Founder Edition's (the two founder offers never share a look), a blank otherwise
+const markOf = (e: Entitlement) => (e.exclusive === FOUNDER_SKU ? 'sunset' as const : e.exclusive ? 'silver' as const : 'blank' as const);
 function swatchOf(e: Entitlement) {
   return e.hex ?? e.rim?.hex ?? e.sleeve?.hex ?? e.watch?.dial.hex;
 }
-function Grants({ item }: { item: Sku }) {
+function Grants({ item, shows = true }: { item: Sku; shows?: boolean }) {
   const ents = item.grants.map(entById).filter((e): e is Entitlement => !!e);
   const shown = ents.filter((e) => inGame(e.id)).length;
   return (
     <>
       <ul className="store-grants">
-        {ents.map((e) => <li key={e.id} className={has(e.id) ? 'got' : ''}><Swatch hex={swatchOf(e)} mark={markOf(e)} />{grantLine(e)}{e.caliper && <Swatch hex={e.caliper.hex} label={e.caliper.name + ' calipers'} />}</li>)}
+        {ents.map((e) => <li key={e.id} className={has(e.id) ? 'got' : ''}><Swatch hex={swatchOf(e)} mark={markOf(e)} />{e.leds && <Swatch hex={e.leds.hex} label={e.leds.name + ' lights'} />}{grantLine(e)}{e.caliper && <Swatch hex={e.caliper.hex} label={e.caliper.name + ' calipers'} />}</li>)}
       </ul>
-      <p className="store-shows">{shown === ents.length ? 'Shows in the game now.' : shown ? `In the game now: the paints${ents.some((e) => e.id === 'badge-founder-26') ? ' and the run-card badge and frame' : ''}. The rest is saved to your account and shows once the game can fit it.` : 'Saved to your account; it shows in the game once the game can fit it (test mode only until then).'}</p>
+      {shows && <p className="store-shows">{shown === ents.length ? 'Shows in the game now.' : shown ? `In the game now: the paints${ents.some((e) => e.id === 'badge-founder-26') ? ' and the run-card badge and frame' : ''}. The rest is saved to your account and shows once the game can fit it.` : 'Saved to your account; it shows in the game once the game can fit it (test mode only until then).'}</p>}
     </>
   );
 }
@@ -172,7 +216,7 @@ function Action({ item, locked, onBuy }: { item: Sku; locked: string | null; onB
 function Account({ signin, setSignin, busy, onRestore }: { signin: boolean; setSignin: (v: boolean) => void; busy: boolean; onRestore: () => void }) {
   const s = account.current(), age = account.ageState();
   const badges = ['badge-founder-26', 'badge-supporter', 'badge-club'].filter(has).map((id) => entById(id)!);
-  if (age === 'under13') return <div className="store-account"><p>The store is for players 13 and over. Every freeway, mode and car in the game stays free to play.</p></div>;
+  if (age === 'under13') return <div className="store-account"><p>The store is for players 13 and over. Every freeway, every mode and every car you can earn stays free to play.</p></div>;
   return (
     <div className="store-account" aria-label="Account">
       {s ? <>
@@ -218,7 +262,7 @@ function AgeGate() {
 function SignIn({ onDone }: { onDone?: () => void }) {
   const [email, setEmail] = useState(''), [state, setState] = useState<'idle' | 'busy' | 'sent'>('idle'), [err, setErr] = useState('');
   if (account.ageState() === 'unknown') return <AgeGate />;
-  if (account.ageState() === 'under13') return <p>The store is for players 13 and over. Every freeway, mode and car in the game stays free to play.</p>;
+  if (account.ageState() === 'under13') return <p>The store is for players 13 and over. Every freeway, every mode and every car you can earn stays free to play.</p>;
   if (state === 'sent') return <p className="store-note good" role="status">Check your email for the sign-in link and open it on this device. The store opens again when you come back.</p>;
   const send = async () => {
     setErr(''); setState('busy');
@@ -254,6 +298,7 @@ function Locker({ game }: { game: Game }) {
         <p className="fine">On the car you drive. Change cars in the Garage; each car keeps its own paint.</p>
       </>}
       {badgeLike.length > 0 && <p className="fine">On your run cards: {badgeLike.map((b) => b.name).join(', ')}.</p>}
+      {has('car-oc-hyper') && <p className="fine store-serial">{serialOf('car-oc-hyper') !== null ? `Your OC Hypercar Founder Edition: ${serialLabel(serialOf('car-oc-hyper')!)}, assigned by the server when your payment went through.` : 'Your OC Hypercar Founder Edition has no number here: only the server numbers a sale, when a live payment succeeds, and test purchases have none.'}</p>}
       {others.length > 0 && <p className="fine">Saved to your account, and shown in the game once it can fit them: {others.map((e) => e.name).join(', ')}.</p>}
       {receipts().length > 0 && (
         <details className="store-receipts"><summary>Test receipts ({receipts().length})</summary>
@@ -295,7 +340,7 @@ function Terms() {
       <summary>Store terms (draft)</summary>
       <ul>
         <li>You get a licence to use the items in OC Ultra, not ownership of them. A refund takes the items back, and the game can change.</li>
-        <li>Looks only: no item changes speed, grip, handling, score, credits or XP. Credits are never sold. No loot boxes and no premium currency.</li>
+        <li>Looks only: no item changes speed, grip, handling, score, credits or XP. The one exception is the OC Hypercar Founder Edition: it is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}). In Races, Time Trial and Speed Survival it runs a race tune at or under the best car you can earn, with its ability off, and its Free Drive earnings are capped at that tune's top speed. Credits are never sold. No loot boxes and no premium currency.</li>
         <li>For players 13 and over. Under 18, a parent or guardian must say yes first.</li>
         <li>Refunds: ask within 14 days if you haven't used the item in a drive. An accidental purchase, or a minor's purchase without permission, is refunded any time. Email (TODO: support email).</li>
         <li>Your items are saved to your account: sign in with the same email on any device and tap Restore purchases.</li>
@@ -326,7 +371,8 @@ function Checkout({ sku, preview, game, garage, onClose }: { sku: string; previe
   const tipCents = Math.round(Number(tip) * 100);
   const amount = isTip ? tipCents : it.price_cents;
   const per = it.interval === 'year' ? 'year' : 'month';
-  const paint = it.grants.map(entById).find((e) => e?.type === 'paint' && (e.exclusive || it.grants.length === 1)) ?? it.grants.map(entById).find((e) => e?.type === 'paint');
+  const car = game.profile.p.car, fitsCar = (e: Entitlement | null) => !!e && e.type === 'paint' && (e.cars === 'all' || e.cars === car);
+  const paint = it.grants.map(entById).find((e) => fitsCar(e) && (e!.exclusive || it.grants.length === 1)) ?? it.grants.map(entById).find(fitsCar);
   const pay = async () => {
     setErr(''); setState('paying');
     const r = await checkout({ sku, tipCents: isTip ? tipCents : undefined, adultOrGuardian: adult, renewalAgreed: renew, rollName: roll ? cleanRollName(rollName) : null, garage },
@@ -352,13 +398,14 @@ function Checkout({ sku, preview, game, garage, onClose }: { sku: string; previe
           <p className="eyebrow">{CONFIG.live ? 'Checkout' : 'Checkout · test mode'}</p>
           <h2 id="store-sheet-h" ref={head} tabIndex={-1}>{it.name}</h2>
           <p className="store-sheet-price">{isTip ? (CONFIG.live ? `From ${money(a!.minimum_cents)}, you choose` : money(Math.max(0, amount || 0), true)) : sub ? `${money(it.price_cents, true)} a ${per}` : money(it.price_cents, true)}</p>
+          {!CONFIG.live && <p className="store-test-tag">{TEST_TAG}</p>}
           <ul className="store-grants">{it.grants.map(entById).filter((e): e is Entitlement => !!e).map((e) => <li key={e.id}><Swatch hex={swatchOf(e)} mark={markOf(e)} />{grantLine(e)}</li>)}</ul>
-          <p className="store-q small">{isTip ? 'It unlocks nothing else, and the badge is the same at any amount.' : LOOKS_ONLY}</p>
+          <p className="store-q small">{isTip ? 'It unlocks nothing else, and the badge is the same at any amount.' : sku === HYPERCAR_SKU ? TWO_TUNE : LOOKS_ONLY}</p>
 
           {preview && !sale.ok && <p className="store-note info" role="status">Preview only. {sale.why}</p>}
           {!sale.ok && !preview && <p className="store-note bad" role="alert">{sale.why}</p>}
 
-          {age === 'unknown' ? <AgeGate /> : age === 'under13' ? <p className="store-note info">The store is for players 13 and over. Every freeway, mode and car stays free to play.</p>
+          {age === 'unknown' ? <AgeGate /> : age === 'under13' ? <p className="store-note info">The store is for players 13 and over. Every freeway, every mode and every car you can earn stays free to play.</p>
             : !s ? <><p className="store-q">Sign in, so your items are saved to your account.</p><SignIn /></> : <>
               <p className="fine">Signed in as {s.email}{s.test ? ' (test account)' : ''}.</p>
 
