@@ -1346,6 +1346,82 @@ export const SCENES = {
       }
     }
   },
+  "5-3": {
+    id: "5-3", kicker: "The supporting cast", title: `The quiet ingredients <span class="grad">that make the rest work.</span>`, dur: 24, poster: 3,
+    shots: [
+      { at: 0, name: "niacinamide", cap: "Niacinamide (2 to 5%) calms redness, balances oil and strengthens the barrier. It works well with almost everything." },
+      { at: 6, name: "ha", cap: "Hyaluronic acid holds water. Apply it to damp skin and seal it with moisturizer." },
+      { at: 12, name: "azelaic", cap: "Azelaic acid calms redness and fades marks, and it's gentle enough for sensitive skin." },
+      { at: 18, name: "bpo", cap: "Benzoyl peroxide kills acne bacteria. It bleaches towels and pillowcases, so use white ones." }
+    ],
+    css: `
+.sc { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 5vmin; }
+.sc .stage5 { position: relative; flex: none; width: 60vmin; height: 44vmin; border-radius: 3vmin; background: #d9b5a0; border: 1px solid rgba(255,255,255,.12); overflow: hidden; opacity: 0; }
+.sc .red { position: absolute; border-radius: 50%; background: #d7585a; filter: blur(.8vmin); opacity: 0; }
+.sc .oil { position: absolute; border-radius: 50%; background: rgba(255,255,255,.55); opacity: 0; }
+.sc .wall { position: absolute; left: 0; right: 0; bottom: 0; height: 6vmin; display: flex; gap: .6vmin; padding: 0 .6vmin; }
+.sc .wall i { flex: 1; border-radius: .8vmin .8vmin 0 0; background: #c98f7a; transform-origin: 50% 100%; opacity: 0; }
+.sc .wdrop { position: absolute; width: 4.4vmin; height: 4.4vmin; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #8fd3ff; opacity: 0; }
+.sc .film { position: absolute; left: 0; right: 0; top: 0; height: 0; background: linear-gradient(rgba(143,211,255,.45), rgba(143,211,255,0)); }
+.sc .seal { position: absolute; left: 0; right: 0; top: 0; height: 5vmin; background: linear-gradient(rgba(255,255,255,.7), rgba(255,255,255,0)); opacity: 0; }
+.sc .mark { position: absolute; border-radius: 50%; background: #6b3f2e; opacity: 0; }
+.sc .bug { position: absolute; width: 2.4vmin; height: 1.4vmin; border-radius: 50%; background: #7c5cff; opacity: 0; }
+.sc .towel { position: absolute; left: 50%; top: 50%; width: 30vmin; height: 20vmin; margin: -10vmin 0 0 -15vmin; border-radius: 2vmin; background: #b07aa6; opacity: 0; }
+.sc .towel::after { content: ""; position: absolute; inset: 2vmin; border-radius: 1.4vmin; border: .4vmin dashed rgba(255,255,255,.5); }
+.sc .towel b { position: absolute; left: 50%; bottom: -5vmin; transform: translateX(-50%); font-size: 2.6vmin; font-weight: 650; color: #1a1210; white-space: nowrap; }
+.sc .side5 { display: flex; flex-direction: column; gap: 1.8vmin; width: 70vmin; }
+.sc .ing { border-radius: 2.2vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); padding: 2vmin 2.6vmin; opacity: .3; }
+.sc .ing.on { opacity: 1; border-color: var(--c); }
+.sc .ing b { display: flex; align-items: center; gap: 1.4vmin; font-size: 3.4vmin; font-weight: 700; } .sc .ing b i { width: 2.2vmin; height: 2.2vmin; border-radius: 50%; background: var(--c); }
+.sc .ing span { display: block; font-size: 2.5vmin; color: #a1a1a6; margin-top: .5vmin; line-height: 1.35; } .sc .ing.on span { color: #f5f5f7; }
+@media (orientation: portrait) { .sc { flex-direction: column; gap: 3vmin; } .sc .stage5 { width: 100%; height: 40vmin; } .sc .side5 { width: 100%; gap: 1.4vmin; } .sc .ing { padding: 1.6vmin 2.2vmin; } .sc .ing b { font-size: 3.1vmin; } .sc .ing span { font-size: 2.4vmin; } }`,
+    html: `
+<div class="sc">
+  <div class="stage5" id="stage5">
+    <div class="red" id="rd1" style="left:14%;top:22%;width:14vmin;height:14vmin"></div><div class="red" id="rd2" style="left:58%;top:40%;width:12vmin;height:12vmin"></div>
+    <div class="oil" id="ol1" style="left:30%;top:20%;width:7vmin;height:7vmin"></div><div class="oil" id="ol2" style="left:62%;top:14%;width:9vmin;height:9vmin"></div>
+    <div class="wall" id="wall">${Array.from({ length: 10 }, () => "<i></i>").join("")}</div>
+    <div class="film" id="film"></div><div class="seal" id="seal"></div>
+    ${[[18, 30], [40, 20], [62, 36], [30, 58], [68, 60], [50, 46]].map(([x, y], k) => `<div class="wdrop" id="wd${k}" style="left:${x}%;top:${y}%"></div>`).join("")}
+    ${[[22, 50, 5], [46, 34, 4], [66, 56, 5.5], [36, 72, 3.6]].map(([x, y, s], k) => `<div class="mark" id="mk${k}" style="left:${x}%;top:${y}%;width:${s}vmin;height:${s}vmin"></div>`).join("")}
+    ${[[20, 26], [44, 18], [60, 34], [30, 54], [70, 58], [48, 70], [78, 20]].map(([x, y], k) => `<div class="bug" id="bg${k}" style="left:${x}%;top:${y}%;transform:rotate(${(k * 37) % 90}deg)"></div>`).join("")}
+    <div class="towel" id="towel"><b id="towel-b">a colored towel</b></div>
+  </div>
+  <div class="side5">
+    <div class="ing" id="i-nia" style="--c:#7fe39a"><b><i></i>Niacinamide, 2 to 5%</b><span>calms redness, balances oil, strengthens the barrier · plays well with almost everything</span></div>
+    <div class="ing" id="i-ha" style="--c:#8fd3ff"><b><i></i>Hyaluronic acid</b><span>holds water · on damp skin, then sealed with moisturizer</span></div>
+    <div class="ing" id="i-az" style="--c:#e2b08c"><b><i></i>Azelaic acid</b><span>calms redness and fades marks · gentle enough for sensitive skin</span></div>
+    <div class="ing" id="i-bpo" style="--c:#c9b6ff"><b><i></i>Benzoyl peroxide</b><span>kills acne bacteria · bleaches towels and pillowcases: use white ones</span></div>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      set($("#stage5"), { o: Math.min(1, seg(t, 0, 0.6) * 1.5), y: 10 * (1 - E.out(seg(t, 0, 0.6))) });
+      const b = 0.5 + 0.5 * Math.sin(lt * 2.4);
+      // shot 0: redness fades, oil beads shrink, the barrier wall stands up
+      const nia = i === 0; const calm = nia ? E.out(seg(lt, 1.2, 4.0)) : 0;
+      [$("#rd1"), $("#rd2")].forEach((r) => { r.style.opacity = nia ? (lt < 0.4 ? E.out(seg(lt, 0, 0.4)) * 0.8 : 0.8 * (1 - calm)) : 0; });
+      [$("#ol1"), $("#ol2")].forEach((o, k) => { o.style.opacity = nia ? 0.9 * (1 - calm) : 0; set(o, { s: 1 - 0.5 * calm + (nia ? 0.04 * b : 0) }); });
+      $$("#wall i").forEach((w, k) => { const p = nia ? E.back(seg(lt, 2.4 + k * 0.12, 3.2 + k * 0.12)) : 0; set(w, { o: nia ? Math.min(1, p * 2) : 0, s: 1 }); w.style.transform = "scaleY(" + Math.max(0.01, p) + ")"; });
+      // shot 1: water drops land on damp skin, a film forms, then the moisturizer seals it
+      const ha = i === 1;
+      $$(".wdrop").forEach((d, k) => { const p = ha ? E.out(seg(lt, 0.6 + k * 0.3, 1.2 + k * 0.3)) : 0; set(d, { o: ha ? Math.min(1, p * 2) * (1 - 0.4 * seg(lt, 3.6, 4.4)) : 0, y: -10 * (1 - p), r: -45, s: 0.6 + 0.4 * p + (ha ? 0.05 * b : 0) }); });
+      $("#film").style.height = ha ? (100 * E.out(seg(lt, 2.0, 3.6))) + "%" : "0";
+      $("#seal").style.opacity = ha ? E.out(seg(lt, 3.8, 4.8)) : 0;
+      // shot 2: dark marks fade as the azelaic acid works
+      const az = i === 2; const fade = az ? E.out(seg(lt, 1.4, 4.6)) : 0;
+      $$(".mark").forEach((m) => { m.style.opacity = az ? (lt < 0.5 ? E.out(seg(lt, 0, 0.5)) * 0.85 : 0.85 * (1 - 0.9 * fade)) : 0; set(m, { s: 1 - 0.3 * fade }); });
+      if (az) [$("#rd1")].forEach((r) => { r.style.opacity = 0.6 * (1 - fade) * E.out(seg(lt, 0, 0.5)); });
+      // shot 3: the bacteria vanish one by one; the towel goes from colored to bleached
+      const bp = i === 3;
+      $$(".bug").forEach((g, k) => { const gone = bp ? E.in(seg(lt, 1.2 + k * 0.3, 1.7 + k * 0.3)) : 1; g.style.opacity = bp ? E.out(seg(lt, 0, 0.5)) * (1 - gone) : 0; });
+      const tw = $("#towel"); if (bp) { enter(tw, lt, 3.4, { y: 10, s: 0.8 }); const bl = E.out(seg(lt, 4.2, 5.4)); tw.style.background = M.lerpColor([176, 122, 166], [245, 240, 236], bl); $("#towel-b").textContent = bl > 0.5 ? "bleached: so use white ones" : "a colored towel"; } else set(tw, { o: 0 });
+      // the cards light with their shot
+      [["i-nia", 0], ["i-ha", 1], ["i-az", 2], ["i-bpo", 3]].forEach(([id, k]) => { const el = $("#" + id); el.classList.toggle("on", i === k); if (i === k) enter(el, lt, 0.3, { y: 8, d: 0.5 }); else set(el, { o: i > k ? 0.55 : 0.3 }); });
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
