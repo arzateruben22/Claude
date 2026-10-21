@@ -50,6 +50,12 @@
   --sunset-edge: linear-gradient(90deg, #f96d09 0%, #fc6231 50%, #ee1e0a 100%);   /* hairlines; never under text */
   --alarm: #c81a0a;                         /* wrong way: a deeper tail-light red, --ink on it 5.23:1 */
   --good: #5effb4;
+  /* the OC Hypercar's own systems (Cold Thrust, Ground Lock, Thrust Hop): its LED ice blue. --ice on a HUD plate over a
+     white sky is 6.2:1 */
+  --ice: #8fd0ff;
+  --ice-line: rgba(143, 208, 255, 0.6);
+  --ice-wash: rgba(143, 208, 255, 0.14);
+  --ice-glow: rgba(89, 184, 255, 0.45);
   --bad: #ff6a4f;                           /* danger text, tail-light red: 7.02:1 on the base */
   /* brushed chrome */
   --chrome-hi: #ffffff;
@@ -495,6 +501,35 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-ability:focus-visible { outline: none; }
 .hud-ability:focus-visible::before { background: var(--night-3); }
 
+/* the OC Hypercar: its tune chip over the speed, the tank panel above it (the tank bar with the hop's 40 % mark, Ground
+   Lock's light, the hop's state) and the THRUST button beside the driver's ability, its ring the tank. Free Drive only
+   (the scored modes run the race tune with no THRUST control) */
+.hud-tune { display: inline-block; margin: 0 0 7px; padding: 3px 7px 2px; font: 700 9.5px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ice); background: var(--ice-wash); box-shadow: inset 0 0 0 1px var(--ice-line); }
+.hud-tune.race { color: var(--dim); background: var(--clear); box-shadow: inset 0 0 0 1px var(--line-2); }
+.hud-thrust { position: absolute; right: 18px; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 136px); width: 190px; padding: 8px 12px 8px; display: grid; gap: 6px;
+  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice-line); }
+.hud-thrust-top { display: flex; justify-content: space-between; align-items: baseline; }
+.hud-thrust-top b { font: 600 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ice); }
+.hud-thrust-top em { font: 700 17px/1 var(--f-mono); font-style: normal; font-variant-numeric: tabular-nums; }
+.hud-thrust-bar { position: relative; height: 7px; background: var(--line-2); overflow: hidden; }
+.hud-thrust-bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--ice-line), var(--ice)); transform-origin: left; transform: scaleX(1); }
+.hud-thrust-bar s { position: absolute; top: 0; bottom: 0; left: 40%; width: 2px; background: var(--ink); opacity: 0.7; }
+.hud-thrust.low .hud-thrust-bar i { background: var(--ember); }
+.hud-thrust.on { box-shadow: inset 0 0 0 1px var(--ice-line), inset 0 2px 0 var(--ice), 0 0 18px var(--ice-glow); }
+.hud-thrust-low { display: flex; justify-content: space-between; gap: 8px; font: 600 9.5px/1.1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.hud-lock.on { color: var(--ice); text-shadow: 0 0 8px var(--ice-glow); }
+.hud-hop.ready { color: var(--ink); }
+.hud-thrustbtn { --p: 1; position: absolute; right: 308px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none;
+  display: grid; place-items: center; color: var(--ice); font: 700 11px/1.1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--ice) calc(var(--p) * 1turn), var(--line-2) 0); }
+.hud-thrustbtn::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
+.hud-thrustbtn.on { color: var(--night); }
+.hud-thrustbtn.on::before { background: var(--ice); }
+.hud-thrustbtn.low { color: var(--dim); background: conic-gradient(var(--ember) calc(var(--p) * 1turn), var(--line) 0); }
+.hud-thrustbtn:focus-visible { outline: none; }
+.hud-thrustbtn:focus-visible::before { background: var(--night-3); }
+
 /* ------------------------------------------------------------------ touch: a steering rail and two pedals */
 
 /* start at your exit, the feedback report */
@@ -600,6 +635,23 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .toasts { top: 40%; }
   .seg button { min-height: 44px; }
   .hud-ability { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
+  /* the tune chip rides on the speed box's top edge, so the box keeps its height and clears the numbers under it */
+  .hud-tune, .hud-tune.race { position: absolute; top: -8px; right: 10px; margin: 0; background: var(--night); }
+  /* THRUST sits beside the ability, over BRAKE; the tank panel over the two of them */
+  .hud-thrustbtn { right: 96px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 152px); width: 70px; height: 64px; }
+  .hud-thrust { right: 16px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 226px); width: 150px; padding: 6px 10px 7px; gap: 5px; }
+  .hud-thrust-top em { font-size: 15px; }
+  .hud-thrust-low { font-size: 8.5px; letter-spacing: 0.08em; }
+}
+/* a phone held sideways (844 × 390 and the like): the corner map takes the right edge under the top buttons, where the
+   portrait layout stacks the ability, THRUST and the tank panel. Here they sit together low in the middle, between the
+   steering rail and the pedals (clear of the shift buttons in manual), and the road plate moves up under the top
+   buttons to make the room */
+@media (pointer: coarse) and (max-height: 500px) {
+  .hud-ability { right: 262px; bottom: max(14px, env(safe-area-inset-bottom)); }
+  .hud-thrustbtn { right: 342px; bottom: max(14px, env(safe-area-inset-bottom)); }
+  .hud-thrust { right: 262px; bottom: calc(max(14px, env(safe-area-inset-bottom)) + 72px); }
+  .hud-road, .hud:has(.hud-race:not([hidden])) .hud-road { top: calc(max(10px, env(safe-area-inset-top)) + 54px); max-width: 44vw; }
 }
 @media (max-width: 700px) and (pointer: fine) { .hud-road { top: max(236px, calc(env(safe-area-inset-top) + 226px)); max-width: 92vw; } }
 
