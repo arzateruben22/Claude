@@ -38,6 +38,17 @@ public prices, no key). The paper book, `server/status.sh`, the crawler's result
 all show it beside the big-coin desk. If a desk can't beat just holding, it isn't earning its keep. The
 start is saved in `output/benchmark.json`; `server/fresh-start.sh` resets it with everything else.
 
+## The Trading Deck
+
+The home page on port 8790 (`output/deck.html`): every desk as a lane of light on one time axis, from day one to
+now. Each lane's ribbon is that desk's paper profit over time, every closed trade is a spark (up for a win, down for
+a loss, pink when flagged), and each lane carries its own **day 28** flag, the end of its four-week test. The lanes
+sort themselves by return, so the order *is* the scoreboard, and a replay runs from day one to now when the page
+opens (drag across the lanes or use the arrow keys to scrub; space pauses). All lanes share one scale, so a desk
+up 0.5% looks flat next to one down 60%, which is the truth. A gold thread shows BTC bought and held across the
+coin lanes once the coin desks have cached its prices. The ticker at the foot is the latest closed trades. The page
+checks for new trades every two minutes.
+
 ## The Trade Crawler
 
 Every refresh also writes `output/crawler.html`, a sixteen-legged crawler that reads the paper book
@@ -81,8 +92,8 @@ Every refresh also writes `output/galaxy.html`: the same trades drawn as a unive
   Each one stays locked, showing a progress bar, until there are enough trades to say anything.
   They describe what happened, not what will happen.
 
-`python paperbook.py --serve 8790` serves the crawler at http://127.0.0.1:8790, the galaxy at `/galaxy`
-and the paper book at `/book`. Both pages check for new trades every two minutes. The crawler
+`python paperbook.py --serve 8790` serves the deck at http://127.0.0.1:8790, the crawler at `/crawler`, the
+galaxy at `/galaxy` and the paper book at `/book`. Both pages check for new trades every two minutes. The crawler
 finishes its pass and shows the flags, then crawls again with the new trades a minute later (or
 right away with **Crawl new trades**). On the always-on machine, `server/phone.sh` puts all three on
 your phone.

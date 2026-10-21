@@ -1,0 +1,139 @@
+/* Trading Deck: one dark screen. A thin header, ten lanes of light that fill the height, a ticker at the foot.
+   One look only, on purpose: it's a piece to leave open, not a form. */
+:root {
+  --void: #05070d;
+  --void-2: #090d16;
+  --rail: #1b2230;
+  --rail-2: #26304a;
+  --ink: #e6ecf5;
+  --ink-2: #aab4c6;
+  --dim: #6f7a8c;
+  --loss: #ff5f6d;
+  --win: #5fe3a1;
+  --gold: #f2bd4f;
+  --display: "Michroma", "Eurostile", "Bank Gothic", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--ink);
+  font: 12px/1.4 var(--mono);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.deck {
+  box-sizing: border-box;
+  height: 100vh; height: 100dvh;
+  max-width: 100vw;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* -- header ------------------------------------------------------------------------------------------- */
+.top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: 8px 24px;
+  padding: 14px 20px 10px;
+  min-width: 0;
+  border-bottom: 1px solid var(--rail);
+  background: linear-gradient(180deg, var(--void-2), var(--void));
+}
+.brand h1 {
+  margin: 0;
+  font: 400 15px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.brand .sub { margin: 7px 0 0; color: var(--dim); font-size: 11px; display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+.brand .when::before { content: "·"; color: var(--rail-2); margin-right: 8px; }
+.badge { color: var(--gold); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 10px; }
+
+.totals { display: flex; gap: 24px; margin: 0; min-width: 0; overflow: hidden; }
+.totals div { display: flex; flex-direction: column; gap: 4px; }
+.totals dt { font: 400 8.5px/1 var(--display); letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); }
+.totals dd { margin: 0; font: 500 16px/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.totals dd small { font-size: 11px; color: var(--dim); font-weight: 400; }
+.totals .up { color: var(--win); } .totals .down { color: var(--loss); }
+.totals .clock dd { color: var(--ink-2); min-width: 22ch; }   /* the clock's text changes; the header's height mustn't */
+
+.controls { display: flex; align-items: center; gap: 6px; }
+.ctl {
+  background: transparent; color: var(--ink-2); border: 1px solid var(--rail-2); border-radius: 2px;
+  padding: 0 11px; height: 28px; font: 500 11px var(--mono); letter-spacing: 0.04em; cursor: pointer;
+}
+.ctl:hover { color: var(--ink); border-color: var(--ink-2); }
+.ctl[aria-pressed="true"] { color: var(--ink); border-color: var(--ink-2); }
+.ctl:focus-visible, .more a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.more { display: flex; gap: 2px; margin-left: 10px; }
+.more a { color: var(--dim); text-decoration: none; padding: 6px 7px; font-size: 11px; border-radius: 2px; }
+.more a:hover { color: var(--ink); }
+
+/* -- lanes -------------------------------------------------------------------------------------------- */
+.lanes { position: relative; min-height: 0; overflow: hidden; background: var(--void); }
+#lanes { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; cursor: ew-resize; }
+#lanes.scrubbing { cursor: grabbing; }
+#scrub {
+  position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 22px; margin: 0;
+  opacity: 0; cursor: ew-resize;
+}
+#scrub:focus-visible { opacity: 1; accent-color: var(--gold); outline: 2px solid var(--gold); outline-offset: -2px; }
+
+/* -- the tape ----------------------------------------------------------------------------------------- */
+.tape {
+  border-top: 1px solid var(--rail);
+  background: var(--void-2);
+  overflow: hidden;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.tape::before, .tape::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 1; pointer-events: none;
+}
+.tape::before { left: 0; background: linear-gradient(90deg, var(--void-2), transparent); }
+.tape::after { right: 0; background: linear-gradient(270deg, var(--void-2), transparent); }
+.tape-track { display: flex; gap: 34px; white-space: nowrap; padding-left: 20px; will-change: transform; }
+.tape-track.run { animation: tape var(--tape-s, 60s) linear infinite; }
+.tape:hover .tape-track.run { animation-play-state: paused; }
+@keyframes tape { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tape-track span { color: var(--ink-2); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.tape-track i { font-style: normal; color: var(--dim); }
+.tape-track b { font-weight: 500; }
+.tape-track .up { color: var(--win); } .tape-track .down { color: var(--loss); } .tape-track .flag { color: var(--loss); font-weight: 600; }
+.tape-track .desk { font: 400 8.5px var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--c, var(--ink-2)); }
+.tape .empty { color: var(--dim); padding-left: 20px; }
+
+/* -- phones ------------------------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+  .top { grid-template-columns: 1fr auto; gap: 8px 12px; padding: 10px 14px 8px; }
+  .brand h1 { font-size: 11px; letter-spacing: 0.16em; }
+  .brand .sub { margin-top: 5px; font-size: 10.5px; }
+  .brand .when { display: none; }
+  .totals { grid-column: 1 / -1; gap: 18px; }
+  .totals dd { font-size: 13.5px; }
+  .totals dd small { display: none; }
+  .totals .clock { display: none; }
+  .controls { grid-row: 1; grid-column: 2; }
+  .more { display: none; }
+  .ctl { padding: 0 8px; height: 30px; font-size: 10.5px; }
+  .controls { gap: 4px; }
+  .tape-track span { font-size: 11px; }
+}
+@media (pointer: coarse) { .ctl { min-height: 34px; } }
+@media (prefers-reduced-motion: reduce) {
+  .tape-track.run { animation: none; }
+  .tape { overflow-x: auto; }
+}
