@@ -1120,6 +1120,21 @@ await group('livephone', async (use) => {
       expect(/Westbound_GT/.test(text), text);
       return `top bar ${Math.round(bar.right - bar.left)} px of ${bar.w}, ${bar.n} items, no overlap; list "${text.slice(0, 80)}"`;
     });
+    await check('phone: a crew code hides drivers outside the crew, and the invite carries it', async () => {
+      await game(page, () => window.__game.setPaused(true));
+      await page.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await page.locator('#crew').fill('oc405');
+      expect(await game(page, () => window.__game.settings?.crew ?? JSON.parse(localStorage.getItem('tsu.settings')).crew) === 'OC405', 'the crew setting');
+      await drive(page, 'Free Drive');
+      await page.waitForFunction(() => window.__game.live?.info.status === 'online', null, { timeout: 60000 });
+      await page.waitForTimeout(2500);
+      const seen = await game(page, () => ({ peers: window.__game.stats.livePeers, drawn: window.__game.stats.liveDrawn }));
+      expect(seen.peers === 0 && seen.drawn === 0, `the peer outside the crew is still seen: ${JSON.stringify(seen)}`);
+      await page.locator('.livechip').click();
+      const head = (await page.locator('.livewho .eyebrow').innerText()).replace(/\s+/g, ' ');
+      expect(/Crew OC405 · 1 here · 2 of 25 live/i.test(head), head);
+      return `"${head}"; the outside peer is hidden`;
+    });
   } finally {
     clearInterval(ticker); try { peer?.close(); } catch { /* gone */ }
     server.kill('SIGTERM');

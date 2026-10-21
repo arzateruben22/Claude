@@ -41,6 +41,7 @@ export interface Settings {
   hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
   live: boolean;            // drive on the live server (other drivers' cars appear; the server caps how many at once)
   liveUrl: string;          // the live server's address; '' means the page's own host when the server serves the page
+  crew: string;             // a crew code (4 to 8 letters or numbers): drive live with friends in a room of your own; '' is everyone
 }
 
 export interface QualityPreset {
@@ -110,7 +111,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: 'modern', live: false, liveUrl: '',
+    hudStyle: 'modern', live: false, liveUrl: '', crew: '',
   };
 }
 
@@ -137,6 +138,7 @@ export function loadSettings(): Settings {
       hudStyle: v.hudStyle === 'minimal' ? 'minimal' : 'modern',
       live: v.live === true,
       liveUrl: typeof v.liveUrl === 'string' ? v.liveUrl.slice(0, 200) : '',
+      crew: typeof v.crew === 'string' && /^[A-Za-z0-9]{4,8}$/.test(v.crew) ? v.crew.toUpperCase() : '',
     };
   } catch { return d; }
 }

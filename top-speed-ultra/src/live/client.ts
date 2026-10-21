@@ -65,7 +65,9 @@ export class LiveClient {
   private lastSend = 0; private stopped = true; private retry = 0; private timer = 0;
   messages = 0;                                 // snapshots received (for tests)
 
-  connect(base: string, token: string, car: string, paint: number) {
+  crew = '';                                    // a crew code: drive with friends in a room of your own ('' is everyone)
+  connect(base: string, token: string, car: string, paint: number, crew = '') {
+    this.crew = crew;
     this.base = base; this.token = token; this.car = car; this.paint = paint; this.stopped = false; this.retry = 0;
     this.open();
   }
@@ -77,7 +79,7 @@ export class LiveClient {
     let ws: WebSocket;
     try { ws = new WebSocket(url); } catch { this.set({ status: 'error', error: 'Bad server address.' }); return; }
     this.ws = ws;
-    ws.onopen = () => { ws.send(JSON.stringify({ t: 'hello', token: this.token, car: this.car, paint: this.paint, v: 1 })); };
+    ws.onopen = () => { ws.send(JSON.stringify({ t: 'hello', token: this.token, car: this.car, paint: this.paint, crew: this.crew || undefined, v: 1 })); };
     ws.onmessage = (e) => this.onMessage(String(e.data));
     ws.onclose = (e) => {
       if (this.ws !== ws) return;

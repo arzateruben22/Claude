@@ -263,3 +263,20 @@ test('a honk reaches drivers within 500 m, once per 1.5 s', async () => {
   assert.equal(a.all.filter((m) => m.t === 'e').length, 0, 'you don\'t get your own');
   for (const c of [a, near, far]) c.sock.close();
 });
+
+test('crews: friends with a code see, hear and list only each other; the cap is shared', async () => {
+  const [a, b, out] = [connect(await signup('crew_a'), { crew: 'oc405' }), connect(await signup('crew_b'), { crew: 'OC405' }), connect(await signup('crew_out'))];
+  await Promise.all([a.ready, b.ready, out.ready]); await Promise.all([a.until('welcome'), b.until('welcome'), out.until('welcome')]);
+  assert.equal(b.got.welcome.crew, 'OC405');
+  assert.ok(b.got.welcome.peers.some((p) => p.name === 'crew_a') && !b.got.welcome.peers.some((p) => p.name === 'crew_out'), 'the welcome lists the crew only');
+  for (const [c, x] of [[a, 0], [b, 50], [out, 100]]) c.send({ t: 's', x, y: 10, z: 0, h: 0, v: 30 });
+  await sleep(350);
+  const ids = (c) => new Set(c.all.filter((m) => m.t === 'p').flatMap((m) => m.n.map((r) => r[0])));
+  const idA = a.got.welcome.id, idOut = out.got.welcome.id;
+  assert.ok(ids(b).has(idA) && !ids(b).has(idOut), 'B sees A, not the outsider 50 m away');
+  assert.ok(!ids(out).has(idA), 'the outsider doesn\'t see the crew');
+  a.send({ t: 'e', k: 'honk' }); await sleep(200);
+  assert.equal(b.all.filter((m) => m.t === 'e').length, 1); assert.equal(out.all.filter((m) => m.t === 'e').length, 0);
+  assert.ok(out.got.p.online >= 3, 'everyone counts toward the one cap');
+  for (const c of [a, b, out]) c.sock.close();
+});

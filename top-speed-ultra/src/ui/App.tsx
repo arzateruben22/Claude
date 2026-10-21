@@ -165,9 +165,18 @@ export function App() {
     };
     live.current = c; g.setLive(c);
     const car = carById(g.profile.p.car);
-    c.connect(base, token, car.id, car.paint);
+    c.connect(base, token, car.id, car.paint, s.crew);
   };
   const liveInfoRef = useRef<LiveInfo>(LIVE_OFF);
+  // the crew field while it's being typed (the setting takes it once it's a whole code); an invite link's ?crew= wins
+  const [crewDraft, setCrewDraft] = useState(settings.crew);
+  useEffect(() => {
+    try {
+      const c = new URLSearchParams(location.search).get('crew');
+      if (c && /^[A-Za-z0-9]{4,8}$/.test(c)) { const v = c.toUpperCase(); setCrewDraft(v); update({ crew: v }); toast(`Crew ${v}: sign in and drive live to join`, 'good'); }
+    } catch { /* no query */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // on the menu, how many are driving live right now (the public health check, every 30 s)
   const [lobby, setLobby] = useState<{ online: number; cap: number; queued: number } | null>(null);
   const menuNow = screen === 'menu';
@@ -182,8 +191,9 @@ export function App() {
   }, [menuNow, settings.liveUrl]);
   // the live address to a friend: the phone's share sheet, or the clipboard
   const invite = async () => {
-    const url = liveBase(settingsRef.current.liveUrl) + '/';
-    const text = `Drive Orange County's freeways with me in OC Ultra (live alpha): ${url}`;
+    const crew = settingsRef.current.crew;
+    const url = liveBase(settingsRef.current.liveUrl) + '/' + (crew ? `?crew=${crew}` : '');
+    const text = crew ? `Join my OC Ultra crew ${crew} on Orange County's freeways (live alpha): ${url}` : `Drive Orange County's freeways with me in OC Ultra (live alpha): ${url}`;
     if (typeof navigator.share === 'function') { try { await navigator.share({ title: 'OC Ultra', text, url }); return; } catch { /* cancelled, or not allowed: copy instead */ } }
     toast((await copyText(text, null)) ? 'Invite copied' : url, 'good');
   };
@@ -465,7 +475,15 @@ export function App() {
         </button>
       </div>
       <Toggle label="Drive live: other drivers' cars appear on the freeway" value={settings.live} onChange={(v) => { if (v && !liveName) { setPanel('account'); return; } update({ live: v }); }} />
-      {liveBase(settings.liveUrl) && <div className="row"><button type="button" className="btn invite" onClick={() => void invite()}>Invite a friend</button></div>}
+      <div className="field crew"><label htmlFor="crew">Crew code <span className="muted">optional</span></label>
+        <div className="row">
+          <input id="crew" className="text" autoCapitalize="characters" autoComplete="off" spellCheck={false} maxLength={8} placeholder="Everyone" value={crewDraft}
+            onChange={(e) => { const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); setCrewDraft(v); if (!v || /^[A-Z0-9]{4,8}$/.test(v)) update({ crew: v }); }} />
+          <button type="button" className="btn" onClick={() => { const v = newCrew(); setCrewDraft(v); update({ crew: v }); }}>New code</button>
+        </div>
+        <p className="fine">{settings.crew ? `In crew ${settings.crew}: you'll only see, hear and list drivers with the same code.` : 'Leave it empty to drive with everyone. Friends who share a code see only each other.'}</p>
+      </div>
+      {liveBase(settings.liveUrl) && <div className="row"><button type="button" className="btn invite" onClick={() => void invite()}>{settings.crew ? 'Invite to your crew' : 'Invite a friend'}</button></div>}
       <p className="fine">One small server, a limited number of drivers at a time; past that you wait in line. Other drivers are ghosts: no collisions, nothing scored. Your progress stays on this device.</p>
     </section>
     <div className="menu-aside">
@@ -497,7 +515,7 @@ export function App() {
           {liveInfo.status === 'online' && <button type="button" className="tbtn honk" onClick={() => game.current?.honk()} aria-label="Honk (G)" title="Honk (G)">
             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2 6.2h2.6L9.5 3v10L4.6 9.8H2z" fill="currentColor" /><path d="M11.6 5.4a3.4 3.4 0 0 1 0 5.2M13.3 3.8a5.6 5.6 0 0 1 0 8.4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
           </button>}
-          <LiveChip info={liveInfo} me={liveName} canJoin={mode === 'free'} onJoin={(id) => { if (!game.current?.joinDriver(id)) toast('Can\'t find them right now', 'info'); }}
+          <LiveChip info={liveInfo} me={liveName} crew={settings.crew} canJoin={mode === 'free'} onJoin={(id) => { if (!game.current?.joinDriver(id)) toast('Can\'t find them right now', 'info'); }}
             people={() => [...(live.current?.peers.values() ?? [])].map((p) => ({ id: p.id, name: p.name, road: game.current?.liveRoad(p.id) ?? '' }))} />
           {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
               pause button in the corner (styles.css). Its name stays "Pause" either way. */}
@@ -811,3 +829,6 @@ function Range({ label, min, max, step, value, fmt, onChange }: { label: string;
   const id = 'r-' + label.replace(/\W+/g, '');
   return <div className="field"><label htmlFor={id}>{label} <output>{fmt(value)}</output></label><input id={id} type="range" min={min} max={max} step={step} value={value} style={fill(value, min, max)} onChange={(e) => onChange(Number(e.target.value))} /></div>;
 }
+
+// a crew code nobody will guess by accident: five letters and numbers, no look-alikes (0/O, 1/I)
+function newCrew() { const a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; const r = new Uint32Array(5); crypto.getRandomValues(r); for (const v of r) s += a[v % a.length]; return s; }

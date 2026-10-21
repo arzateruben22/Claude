@@ -425,18 +425,21 @@ const queue = [];
 let nextClientId = 1;
 
 function makeClient(ws, ip) {
-  return { ws, ip, cid: nextClientId++, player: null, name: '', car: 'rossini-gt', paint: 0xa80d10, admitted: false, admittedAt: 0, alive: true, lastPing: Date.now(),
+  return { ws, ip, cid: nextClientId++, player: null, name: '', car: 'rossini-gt', paint: 0xa80d10, crew: '', admitted: false, admittedAt: 0, alive: true, lastPing: Date.now(),
     pose: null, poseAt: 0, poseTimes: [], strikes: 0, seen: new Set() };
 }
 const sendTo = (c, msg) => { if (c.ws.readyState === 1) { const s = JSON.stringify(msg); stats.bytesOut += s.length; c.ws.send(s); } };
-const broadcast = (msg, except) => { for (const c of online.values()) if (c !== except) sendTo(c, msg); };
+// crews: friends who share a code drive in a room of their own (they see, hear and list only each other); '' is
+// everyone not in a crew. The cap and the line are shared by all.
+const sameCrew = (a, b) => a.crew === b.crew;
+const broadcast = (msg, except) => { for (const c of online.values()) if (c !== except && (!except || sameCrew(c, except))) sendTo(c, msg); };
 const roster = (c) => ({ id: c.player.id, name: c.name, car: c.car, paint: c.paint });
 
 function admit(c) {
   c.admitted = true; c.admittedAt = Date.now();
   online.set(c.player.id, c);
   stats.admitted++; stats.peak = Math.max(stats.peak, online.size); hourly.peak = Math.max(hourly.peak, online.size);
-  sendTo(c, { t: 'welcome', id: c.player.id, name: c.name, cap: MAX_PLAYERS, online: online.size, peers: [...online.values()].filter((o) => o !== c).map(roster) });
+  sendTo(c, { t: 'welcome', id: c.player.id, name: c.name, cap: MAX_PLAYERS, online: online.size, crew: c.crew, peers: [...online.values()].filter((o) => o !== c && sameCrew(o, c)).map(roster) });
   broadcast({ t: 'join', ...roster(c), online: online.size }, c);
   log('join', { id: c.player.id, name: c.name, online: online.size });
 }
@@ -449,7 +452,7 @@ function leave(c, why) {
   if (qi >= 0) queue.splice(qi, 1);
   if (c.admitted && online.get(c.player.id) === c) {
     online.delete(c.player.id);
-    broadcast({ t: 'leave', id: c.player.id, online: online.size });
+    broadcast({ t: 'leave', id: c.player.id, online: online.size }, c);
     log('leave', { id: c.player.id, name: c.name, why, online: online.size });
   }
   c.admitted = false;
@@ -470,6 +473,7 @@ function onHello(c, m) {
   c.player = s; c.name = s.name;
   if (typeof m.car === 'string' && /^[a-z0-9-]{1,24}$/.test(m.car)) c.car = m.car;
   if (Number.isInteger(m.paint) && m.paint >= 0 && m.paint <= 0xffffff) c.paint = m.paint;
+  if (typeof m.crew === 'string' && /^[A-Za-z0-9]{4,8}$/.test(m.crew)) c.crew = m.crew.toUpperCase();
   const other = online.get(s.id);
   if (other && other !== c) kick(other, 'Signed in somewhere else');     // one car per account
   const qd = queue.find((o) => o.player && o.player.id === s.id);
@@ -508,7 +512,7 @@ function onHonk(c) {
   const now = Date.now();
   if (!c.pose || now - (c.honkAt || 0) < HONK_MS) return;
   c.honkAt = now;
-  for (const o of online.values()) if (o !== c && o.pose && Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) <= HONK_M) sendTo(o, { t: 'e', k: 'honk', id: c.player.id });
+  for (const o of online.values()) if (o !== c && sameCrew(o, c) && o.pose && Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) <= HONK_M) sendTo(o, { t: 'e', k: 'honk', id: c.player.id });
 }
 
 // the relay: every TICK_MS, each driver gets the poses of the drivers near them: within NEAR_M, the nearest NEAR_MAX
@@ -523,7 +527,7 @@ function tick() {
   for (const c of online.values()) {
     let near = [];
     for (const f of fresh) {
-      if (f.o === c) continue;
+      if (f.o === c || !sameCrew(f.o, c)) continue;
       const d = c.pose ? Math.hypot(f.x - c.pose.x, f.z - c.pose.z) : 0;
       if (d <= NEAR_M) near.push({ d, row: f.row });
     }
@@ -536,7 +540,7 @@ function rosterTick() {
   const now = Date.now(), fresh = [];
   for (const o of online.values()) if (o.pose && now - o.poseAt < 10000) fresh.push(o);
   for (const c of online.values()) {
-    let rows = fresh.filter((o) => o !== c).map((o) => ({ d: c.pose ? Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) : 0, row: [o.player.id, Math.round(o.pose.x), Math.round(o.pose.z)] }));
+    let rows = fresh.filter((o) => o !== c && sameCrew(o, c)).map((o) => ({ d: c.pose ? Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) : 0, row: [o.player.id, Math.round(o.pose.x), Math.round(o.pose.z)] }));
     if (rows.length > ROSTER_MAX) rows = rows.sort((a, b) => a.d - b.d).slice(0, ROSTER_MAX);
     sendTo(c, { t: 'r', n: rows.map((r) => r.row) });
   }

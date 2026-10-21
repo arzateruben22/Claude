@@ -148,7 +148,7 @@ export function AccountPanel({ settings, update, name, token, onLogin, onLogout,
 
 // the chip in the top bar while driving live; tapped while online, it lists who's on (names only)
 export interface Who { id: number; name: string; road: string }
-export function LiveChip({ info, me, people, canJoin, onJoin }: { info: LiveInfo; me: string; people: () => Who[]; canJoin: boolean; onJoin: (id: number) => void }) {
+export function LiveChip({ info, me, people, canJoin, onJoin, crew = '' }: { info: LiveInfo; me: string; people: () => Who[]; canJoin: boolean; onJoin: (id: number) => void; crew?: string }) {
   const [open, setOpen] = useState(false);
   const text = info.status === 'online' ? `Live ${info.online}/${info.cap}` : info.status === 'queued' ? `In line #${info.position}` : info.status === 'connecting' ? 'Live…' : info.status === 'error' ? 'Live off' : '';
   // on a phone the chip is a green dot and the count (the word "Live" comes back on wider screens)
@@ -159,7 +159,7 @@ export function LiveChip({ info, me, people, canJoin, onJoin }: { info: LiveInfo
   return <div className="livewrap">
     <button type="button" className={'tbtn livechip ' + info.status} aria-expanded={open} aria-label={`${text}. Who's driving`} onClick={() => setOpen((o) => !o)}>{short}</button>
     {open && <div className="livewho" role="dialog" aria-label="Who's driving">
-      <p className="eyebrow">Driving now · {info.online} of {info.cap}</p>
+      <p className="eyebrow">{crew ? `Crew ${crew} · ${list.length + 1} here · ${info.online} of ${info.cap} live` : `Driving now · ${info.online} of ${info.cap}`}</p>
       <ul>
         <li><span><b>{me}</b><em> you</em></span></li>
         {list.map((w) => <li key={w.id}><span><b>{w.name}</b><small>{w.road || 'getting going'}</small></span>
