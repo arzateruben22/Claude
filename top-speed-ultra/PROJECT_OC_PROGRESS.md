@@ -14,8 +14,12 @@ there, under our own name, with no real business's name, menu or look, and only 
   Lot 57's outputs are byte-identical to before (verify 12 of 12), and the bar's outputs reproduce byte for byte
   (verify 13 of 13).
 - **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress. The latest repair
-  fixed the earlier review's budget, mood and module-map items, but the design review still rejected it, so it needs
-  another pass before building starts.
+  fixed the earlier review's budget, mood and module-map items. Round 3 then fixed everything the two re-reviews
+  asked for: the reviewer re-checked the Low, HD and Ultra frame budgets, the needs arithmetic, the object catalogue,
+  the match schedule, the seat positions and the Lot 57 code claims, and they all hold. The design review still
+  rejects it, because three of the plan's own checks cannot pass as written. For example, the nearby street set is
+  picked by each piece's midpoint, which wrongly pulls in far pieces such as both I-5 carriageways (about 100 m away)
+  and every pole, lamp, tree and land-use shape. It needs another pass before building starts.
 
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
