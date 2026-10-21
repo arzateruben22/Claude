@@ -42,6 +42,7 @@ export interface Settings {
   // the art direction of the interface (the owner's style library, PROJECT_OC_STYLE_GUIDE.md): 'ultra' futuristic
   // luxury (the default), 'hd' modern realistic. The car still sets the accent; the look sets the surfaces and shapes
   look: Look;
+  paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
 }
 
 export interface QualityPreset {
@@ -110,7 +111,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false, look: 'ultra',
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false, look: 'ultra', paints: {},
   };
 }
 
@@ -152,6 +153,7 @@ function readSettings(): Settings {
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       owner: v.owner === true,
       look: v.look === 'hd' ? 'hd' : 'ultra',
+      paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
     };
   } catch { return d; }
 }

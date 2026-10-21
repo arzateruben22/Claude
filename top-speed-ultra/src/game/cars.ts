@@ -42,6 +42,22 @@ export const CARS: CarDef[] = [
       Cf: undefined, Cr: undefined, steerGain: undefined, brakeG: undefined, driveFront: undefined, vector: undefined } },
 ];
 
+// Paints (U5, the garage's Paint tab): six per car, our own names (no carmaker's colour names), the first the car's own.
+// A paint is only ever applied to a car whose list has it, so the hypercar's Founder Silver never reaches another car.
+export interface Paint { name: string; hex: number }
+export const PAINTS: Record<string, Paint[]> = {
+  'rossini-gt': [{ name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Sunset Orange', hex: 0xe5620b }, { name: 'Laguna Blue', hex: 0x1d4f9c }, { name: 'Canyon Bronze', hex: 0x8a5a2b }, { name: 'Bianco', hex: 0xf1f0ec }, { name: 'Nero', hex: 0x111214 }],
+  'rossini-brio': [{ name: 'Coast Blue', hex: 0x1d4f9c }, { name: 'Seafoam', hex: 0x2fa99a }, { name: 'Dune', hex: 0xd8c7a0 }, { name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Pearl', hex: 0xeeeae2 }, { name: 'Nero', hex: 0x111214 }],
+  'rossini-corsa': [{ name: 'Track Yellow', hex: 0xf5c518 }, { name: 'Pit Orange', hex: 0xff6a13 }, { name: 'Graphite', hex: 0x3a3d42 }, { name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Bianco', hex: 0xf1f0ec }, { name: 'Matte Black', hex: 0x161616 }],
+  'vela-e': [{ name: 'Glacier White', hex: 0xf3f1ec }, { name: 'Volt Violet', hex: 0x6a3fcf }, { name: 'Electric Blue', hex: 0x2a6fdc }, { name: 'Silver', hex: 0xb9bfc8 }, { name: 'Graphite', hex: 0x3a3d42 }, { name: 'Nero', hex: 0x111214 }],
+  'oc-hyper': [{ name: 'Founder Silver', hex: 0xc8d3e8 }, { name: 'Ice Blue', hex: 0x9cc8ff }, { name: 'Platinum', hex: 0xe6e8ea }, { name: 'Titanium', hex: 0x7d828a }, { name: 'Midnight', hex: 0x111a33 }, { name: 'Obsidian', hex: 0x0e1116 }],
+};
+// the paint a car wears: the saved choice if it is one of that car's paints, else the car's own
+export function paintFor(c: CarDef, saved?: Record<string, number>) {
+  const h = saved?.[c.id];
+  return h !== undefined && (PAINTS[c.id] ?? []).some((p) => p.hex === h) ? h : c.paint;
+}
+
 const BASE = { ...SPEC };
 export function carById(id: string) { return CARS.find((c) => c.id === id) ?? CARS[0]; }
 export const slotsFor = (level: number) => Math.min(6, 1 + Math.floor(level / 4));

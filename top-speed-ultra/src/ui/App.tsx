@@ -11,7 +11,7 @@ import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
-import { carById, figures, slotsFor, garageCars } from '../game/cars';
+import { carById, figures, slotsFor, garageCars, PAINTS, paintFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
@@ -392,7 +392,7 @@ export function App() {
         </div>
       )}
 
-      {panel === 'garage' && game.current && <GaragePanel game={game.current} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} />}
+      {panel === 'garage' && game.current && <GaragePanel game={game.current} settings={settings} update={update} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} />}
 
       {panel === 'driver' && (
         <div className="overlay center">
@@ -530,7 +530,8 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
 }
 
 // the garage (what you own, pick one) and the showroom (what credits can buy, by level)
-function GaragePanel({ game, onClose, onPick }: { game: Game; onClose: () => void; onPick: () => void }) {
+function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; settings: Settings; update: (p: Partial<Settings>) => void; onClose: () => void; onPick: () => void }) {
+  const [tab, setTab] = useState<'cars' | 'paint' | 'wheels' | 'upgrades'>('cars');
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
@@ -543,12 +544,31 @@ function GaragePanel({ game, onClose, onPick }: { game: Game; onClose: () => voi
         <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
         {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only). Your saved garage doesn't change; turn it off in Settings.</p>}
         {msg && <p className="good" role="status">{msg}</p>}
-        <div className="drivers">
+        <Seg value={tab} options={['cars', 'paint', 'wheels', 'upgrades']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades' })[t]} onChange={setTab} />
+        {tab === 'paint' && (() => {
+          // the car you drive: its six paints, applied live to the car behind the panel and kept for that car
+          const car = carById(game.carId), now = paintFor(car, settings.paints), list = PAINTS[car.id] ?? [];
+          return (
+            <div className="paints">
+              <p className="fine">{car.name}: {list.find((x) => x.hex === now)?.name ?? 'its own paint'}. The car behind this panel takes it now.</p>
+              <div className="paint-grid" role="radiogroup" aria-label={`Paint for the ${car.name}`}>
+                {list.map((x) => (
+                  <button key={x.hex} type="button" role="radio" aria-checked={x.hex === now} className={'paint-chip' + (x.hex === now ? ' on' : '')}
+                    onClick={() => { update({ paints: { ...settings.paints, [car.id]: x.hex } }); onPick(); }}>
+                    <span className="sw" style={{ background: '#' + x.hex.toString(16).padStart(6, '0') }} /><b>{x.name}</b>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+        {(tab === 'wheels' || tab === 'upgrades') && <p className="fine soon-note">{tab === 'wheels' ? 'Wheels: a second rim style per car is coming later.' : 'Upgrades (engine, tyres, aero) bought with credits are coming later.'} Nothing here costs real money.</p>}
+        {tab === 'cars' && <div className="drivers">
           {garageCars(owner, p.vehicles).map((c) => {
             const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;
             return (
               <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '')}>
-                <div className="carhead"><span className="paint" style={{ background: '#' + c.paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
+                <div className="carhead"><span className="paint" style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
                 <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
                 <span>{c.blurb}</span>
                 <div className="row">
@@ -562,7 +582,7 @@ function GaragePanel({ game, onClose, onPick }: { game: Game; onClose: () => voi
               </div>
             );
           })}
-        </div>
+        </div>}
         <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
         <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
       </div>
