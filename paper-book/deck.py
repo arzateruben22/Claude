@@ -76,18 +76,30 @@ def idea(book: pb.Book, d: str) -> str:
     return out
 
 
+ONE_TRADE = 0.6            # when one winner is this much of all the gains, the result is that trade, not the rules
+
+
+def one_trade_share(s: dict) -> float:
+    """How much of a desk's gross gains its single best trade is (0 when it hasn't won anything)."""
+    best, wins, avg_win = s.get("best"), s.get("wins") or 0, s.get("avg_win") or 0.0
+    gains = wins * avg_win
+    return round(best.pnl / gains, 2) if best is not None and gains > 0 and best.pnl > 0 else 0.0
+
+
 def verdict(n: int, s: dict) -> str:
-    """What the numbers say so far, in plain words. Never a forecast."""
+    """What the numbers say so far, in plain words. Never a forecast. A result that is mostly one lucky trade
+    says so: that's the thing to know before Friday's first look."""
     pf = s["profit_factor"]
     if n == 0:
         return "no trades yet"
+    lucky = " · one trade is most of it" if n >= 5 and s["net"] > 0 and one_trade_share(s) >= ONE_TRADE else ""
     if n < 10:
-        return f"{n} trade{'s' if n > 1 else ''} · too few to judge"
+        return f"{n} trade{'s' if n > 1 else ''} · too few to judge" + lucky
     if pf is not None and pf < 1:
         return "loses more than it wins"
     if s["net"] > 0 and pf is not None and pf >= 1.3:
-        return "holding up" if n >= 30 else "ahead, so far"
-    return "about even"
+        return ("holding up" if n >= 30 else "ahead, so far") + lucky
+    return "about even" + lucky
 
 
 def _week(book: pb.Book, d: str, end: date) -> dict:
@@ -185,7 +197,7 @@ def data(book: pb.Book) -> dict:
             "trades": len(ts), "net": s["net"], "win_rate": s["win_rate"],
             "pf": None if pf is None else (99.0 if pf == float("inf") else round(pf, 2)), "dd": s["max_drawdown_pct"],
             "open": {"n": len(book.held[d]), "value": round(sum(h.value - h.cost for h in held), 2)},
-            "verdict": verdict(len(ts), s), "week": week(book, d, today),
+            "verdict": verdict(len(ts), s), "week": week(book, d, today), "one_trade": one_trade_share(s),
             "steps": steps,
             # closed (unix), % move, paper $, flagged
             "marks": [[int(t.closed.timestamp()), round(t.pnl_pct, 1), round(t.pnl, 2), int(crawler.is_flag(t))]

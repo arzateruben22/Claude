@@ -66,6 +66,17 @@ def test_verdicts_are_plain_and_never_forecasts():
     assert deck.verdict(40, s(1, 1.1)) == "about even"
 
 
+def test_a_result_that_is_mostly_one_trade_says_so():
+    big = [trade("stocks", 28.0, 28.0, NOW - timedelta(days=1), "LUCK")] + [trade("stocks", 1.0, 1.0, NOW - timedelta(days=i), f"S{i}") for i in range(2, 8)]
+    s = pb.stats(big, 100.0)
+    assert deck.one_trade_share(s) == 0.82 and deck.verdict(len(big), s) == "7 trades · too few to judge · one trade is most of it"
+    spread = [trade("stocks", 3.0, 3.0, NOW - timedelta(days=i), f"S{i}") for i in range(1, 13)] + [trade("stocks", -2.0, -2.0, NOW, "L", "stop")]
+    s = pb.stats(spread, 100.0)
+    assert deck.one_trade_share(s) == 0.08 and deck.verdict(len(spread), s) == "ahead, so far"
+    assert deck.one_trade_share(pb.stats([trade("stocks", -4.0, -4.0, NOW, "L", "stop")], 100.0)) == 0.0
+    assert deck.one_trade_share(pb.stats([], 100.0)) == 0.0
+
+
 def test_btc_thread_comes_from_the_coin_desks_price_cache(tmp_path):
     since = NOW - timedelta(days=2)
     bench = {"since": since.isoformat(), "btc_start": 100000.0, "btc_now": 102500.0, "pct": 2.5}
