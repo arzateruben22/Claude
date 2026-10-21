@@ -74,8 +74,13 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
-// wait for this many rendered frames
-async function frames(page, n, timeout = 60000) {
+// wait for this many rendered frames. The wait is not what a check asserts, so it gets the same load allowance as
+// the boot and the actions above: software rendering shares these 4 cores with other passes, and at a load average of
+// 15 to 19 single frames have blocked for 8 to 32 s on SwiftShader (2026-10-17: 5 frames took 35.7, 54.7 and 58.7 s
+// in the render group's pause and reset steps, with 10 to 30 ms of the game's own work a frame), so the old 60 s for
+// 5 frames failed those checks at random. 240 s is what the context-loss check already allowed for 5 frames.
+const FRAMES_MS = 240000;
+async function frames(page, n, timeout = FRAMES_MS) {
   const f0 = await game(page, () => window.__game.frames);
   await page.waitForFunction((t) => window.__game.frames >= t, f0 + n, { timeout });
 }
@@ -768,12 +773,18 @@ await group('launch', async (use) => {
 // ------------------------------------------------------------------------------------------- the store (test mode)
 // The paywall in TEST MODE (the build has no VITE_ store settings): the catalog on show with its prices, a declined
 // test card, the Founder Pack bought with 4242, a reload, the paint on the car, the tip's floor, a subscription's
-// terms, the run-card badge, the phone layout, and no request to Supabase or Stripe. Plus, in Node, the server's
-// webhook signature check against known vectors and its Stripe form encoding.
+// terms, the run-card badge, the phone layout, and no request to Supabase or Stripe. The OC Hypercar Founder
+// Edition's card ("Coming soon" until the car is in the game) and its garage grant (outside the slot count, never
+// sold for credits, out on sign-out and back on sign-in). Plus, in Node, the server's webhook signature check against
+// known vectors, its Stripe form encoding, and the Founder Edition's serial numbers through the real webhook on a
+// throwaway Postgres (server/supabase/tests/serial-webhook.mjs; reported as not run where Postgres isn't installed).
 const STORE_HOSTS = /(^|\.)(supabase\.(co|in|com)|stripe\.(com|network)|stripecdn\.com)$/i;
 const storeMoney = (c) => '$' + (c % 100 ? (c / 100).toFixed(2) : String(c / 100));
 const storePrice = (s) => (s.kind === 'tip' && s.custom_amount ? `From ${storeMoney(s.custom_amount.minimum_cents)}, pay what you want` : s.mode === 'subscription' ? `${storeMoney(s.price_cents)} a ${s.interval}` : storeMoney(s.price_cents));
-const storeOnSale = (s) => s.available && (!s.window || Date.now() <= Date.parse(s.window.until));
+// the one founder window (src/store/founder.json), which catalog.json's founder items name as "FOUNDER_UNTIL"
+const FOUNDER_UNTIL = JSON.parse(readFileSync(path.join(ROOT, 'src/store/founder.json'), 'utf8')).FOUNDER_UNTIL;
+const storeUntil = (s) => (s.window?.until === 'FOUNDER_UNTIL' ? FOUNDER_UNTIL : s.window?.until);
+const storeOnSale = (s) => s.available && (!s.window || Date.now() <= Date.parse(storeUntil(s)));
 // a server module (TypeScript for Deno) as an ES module Node can import: types stripped by the TypeScript compiler
 // the project already has, no new dependency
 async function importServerTs(rel) {
@@ -797,8 +808,41 @@ async function storeSignIn(sheet, email) {
 async function storeShot(page, name) {
   await page.waitForTimeout(350);
   await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== 'running' || a.effect?.getTiming().iterations === Infinity), null, { timeout: 60000 }).catch(() => {});
-  await page.screenshot({ path: path.join(OUT, name) });
+  // the capture waits for a frame of the game drawing behind the store; under load that has taken over 120 s
+  // (2026-10-21, load average 35 to 40), so it gets the frames' allowance: the picture is not what a check asserts
+  await page.screenshot({ path: path.join(OUT, name), timeout: FRAMES_MS });
 }
+// a crop of one element as it sits in the viewport. Not locator.screenshot(): that first waits for the element to hold
+// still over two animation frames, and with the game rendering behind the store in software under load that wait
+// alone has run past two minutes (2026-10-18). The page is already settled by storeShot.
+async function storeCrop(page, locator, name) {
+  const r = await locator.evaluate((el) => { const b = el.getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height, vw: innerWidth, vh: innerHeight }; });
+  const x = Math.max(0, r.x), y = Math.max(0, r.y), w = Math.min(r.vw, r.x + r.w) - x, h = Math.min(r.vh, r.y + r.h) - y;
+  if (w > 0 && h > 0) await page.screenshot({ path: path.join(OUT, name), clip: { x, y, width: w, height: h }, timeout: FRAMES_MS });
+}
+// in the page: every price on the store (or the checkout sheet) and the test-mode notice that must sit right under it,
+// drawn and readable: a price with no notice, a hidden notice or one more than 12 px from its price is a problem
+const storePriceTags = (page, scope = '.store-panel') => page.evaluate((sel) => {
+  const shown = (el) => { if (!el) return false; const b = el.getBoundingClientRect(), cs = getComputedStyle(el); return b.width > 0 && b.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none' && Number(cs.opacity) > 0.5; };
+  const prices = [...document.querySelectorAll(`${sel} .store-price, ${sel} .store-sheet-price`)];
+  const bad = [];
+  for (const p of prices) {
+    const tag = p.classList.contains('store-sheet-price') ? p.nextElementSibling : p.closest('.store-pricebox')?.querySelector('.store-test-tag');
+    const gap = tag ? tag.getBoundingClientRect().top - p.getBoundingClientRect().bottom : Infinity;
+    const ok = !!tag && tag.classList.contains('store-test-tag') && shown(tag) && /^Test mode · nothing is charged$/.test(tag.textContent.trim()) && gap >= -1 && gap <= 12;
+    if (!ok) bad.push(`${p.closest('[data-sku]')?.getAttribute('data-sku') ?? '?'} ${p.textContent.trim()}: ${tag ? `notice "${tag.textContent.trim()}" ${shown(tag) ? 'shown' : 'hidden'}, ${Math.round(gap)} px below` : 'no notice'}`);
+  }
+  const inView = prices.filter((p) => { const b = p.getBoundingClientRect(); return b.bottom > 0 && b.top < innerHeight; }).length;
+  return { prices: prices.length, inView, bad };
+}, scope);
+// The game draws its scene behind the store on every frame. In software rendering on a shared machine that frame can
+// take minutes (2026-10-21: nine headless browsers on these 4 cores, load average 45 to 50), and then a screenshot ran
+// past 240 s and a click past 120 s, though nothing the store does was wrong. The store's checks are about its UI, so
+// while they run the game's frame loop is held (its last frame stays behind the panel) and it resumes before anything
+// that drives or renders (the Founders Sunset run). Test-only: it cancels the game's requestAnimationFrame and starts
+// it again, through window.__game, and changes nothing in the game.
+const holdGame = (page) => game(page, () => { const g = window.__game; if (!g.__held) { cancelAnimationFrame(g.raf); g.__held = true; } });
+const resumeGame = (page) => game(page, () => { const g = window.__game; if (g.__held) { g.__held = false; g.raf = requestAnimationFrame(g.frame); } });
 async function storeCard(sheet, number) {
   await sheet.getByLabel('Card number', { exact: true }).fill(number);
   await sheet.getByLabel('Expiry', { exact: true }).fill('12/30');
@@ -808,7 +852,7 @@ async function storeCard(sheet, number) {
 await group('store', async (use) => {
   const { page, requests } = await use({ size: [1440, 900] });
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
-  const sale = cat.filter(storeOnSale), founder = cat.find((s) => s.sku === 'founder-pack-2026');
+  const sale = cat.filter(storeOnSale), founder = cat.find((s) => s.sku === 'founder-pack-2026'), hyper = cat.find((s) => s.sku === 'hypercar-founder');
   const sheet = page.locator('.store-sheet .panel');
 
   await check('catalog: the two files agree with each other, the code and the server copy', () => {
@@ -845,11 +889,13 @@ await group('store', async (use) => {
   });
 
   await check('the store opens from the menu with every available item and its price', async () => {
+    await holdGame(page);
     await page.getByRole('button', { name: 'Store', exact: true }).click();
     await page.waitForSelector('.store-panel');
     const banner = (await page.locator('.store-panel .store-mode').innerText()).replace(/\s+/g, ' ');
     expect(/test mode/i.test(banner) && banner.includes('Nothing is charged. Use 4242 4242 4242 4242.'), `banner: ${banner}`);
-    const shown = await page.$$eval('.store-panel [data-sku]', (els) => els.map((e) => ({ sku: e.getAttribute('data-sku'), price: e.querySelector('.store-price')?.textContent?.trim() })));
+    // "Coming soon" cards (data-soon) are shown but not sold; the hypercar's has its own check below
+    const shown = await page.$$eval('.store-panel [data-sku]:not([data-soon])', (els) => els.map((e) => ({ sku: e.getAttribute('data-sku'), price: e.querySelector('.store-price')?.textContent?.trim() })));
     for (const s of sale) {
       const x = shown.find((y) => y.sku === s.sku);
       expect(x, `${s.sku} is not shown`);
@@ -862,9 +908,57 @@ await group('store', async (use) => {
     expect(/Earn the Rossini Brio first/.test(brio), `Brio wheel set: "${brio}"`);
     const paintBefore = await page.locator('[data-paint="paint-founders-sunset"]').count();
     expect(paintBefore === 0, 'Founders Sunset is offered before it is bought');
-    const when = await page.locator('.store-founder-when').innerText();
+    const when = await page.locator('[data-sku="founder-pack-2026"] .store-founder-when').innerText();
     expect(/December 31, 2026/i.test(when), `Founder window: ${when}`);
     return `${shown.length} items with their prices (${sale.length} on sale; ${cat.length - sale.length} not offered); "${banner}"; Brio wheels: "${brio}"`;
+  });
+
+  await check('the OC Hypercar Founder Edition card: $4.99, the founder window, its plaque and paint, not in the Founder Pack, "Coming soon"', async () => {
+    const card = page.locator('.store-panel [data-sku="hypercar-founder"]');
+    await card.waitFor();
+    const r = await card.evaluate((el) => ({
+      // textContent: the words as written (innerText would apply the card's uppercase styling)
+      soon: el.getAttribute('data-soon'), text: [...el.querySelectorAll('p, h3, li, em')].map((n) => n.textContent).join(' ').replace(/\s+/g, ' '), buttons: el.querySelectorAll('button').length,
+      grants: [...el.querySelectorAll('.store-grants li')].map((li) => li.textContent.trim()),
+      frame: getComputedStyle(el, '::before').backgroundImage,
+      // one column, like the Founder Pack's card (a stray class once made it a two-column grid with a hole in it)
+      tracks: getComputedStyle(el).gridTemplateColumns.split(' ').length,
+    }));
+    expect(r.tracks === 1, `the card's grid has ${r.tracks} columns`);
+    expect(!hyper.available && r.soon === 'true' && r.buttons === 0, `available ${hyper.available}, data-soon ${r.soon}, ${r.buttons} buttons`);
+    for (const k of ['OC Hypercar Founder Edition', '$4.99', 'Founder Edition · sold until Dec 31, 2026', 'Coming soon', 'The $10 Founder Pack does not include this car', 'No pre-orders'])
+      expect(r.text.includes(k), `the card lacks "${k}": ${r.text.slice(0, 300)}`);
+    expect(r.grants.some((g) => /Founder Edition plaque/.test(g)) && r.grants.some((g) => /OC Founder Silver paint/.test(g) && /Founder Ice lights/.test(g)), `grants: ${r.grants.join(' | ')}`);
+    // the two founder offers keep apart: none of the pack's names on this card's grants, and no sunset look
+    expect(!r.grants.some((g) => /Founders Sunset|Founder '26|run-card frame/.test(g)), `grants: ${r.grants.join(' | ')}`);
+    expect(!/253, 145, 35|232, 98, 44/.test(r.frame), `the card's frame uses the Founder Pack's sunset: ${r.frame}`);
+    await card.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+    await storeShot(page, 'store-hypercar-1440x900.png');
+    await storeCrop(page, card, 'store-hypercar-card-1440.png');
+    return `"${r.text.slice(0, 160)}…"; grants: ${r.grants.join(' | ')}`;
+  });
+
+  await check('every price carries the test-mode notice right under it, at 1440 × 900 and 1280 × 720', async () => {
+    const wide = await storePriceTags(page);
+    expect(wide.prices >= sale.length + 1 && !wide.bad.length, `1440: ${wide.prices} prices; ${wide.bad.join(' | ')}`);
+    await page.setViewportSize({ width: 1280, height: 720 });
+    try {
+      await page.locator('.store-panel').evaluate((el) => el.closest('.overlay')?.scrollTo(0, 0));
+      await storeShot(page, 'store-1280x720.png');
+      const top = await storePriceTags(page);
+      const card = page.locator('.store-panel [data-sku="hypercar-founder"]');
+      await card.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await storeShot(page, 'store-hypercar-1280x720.png');
+      await page.locator('.store-panel .store-group').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await storeShot(page, 'store-items-1280x720.png');
+      const items = await storePriceTags(page);
+      const sideways = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
+      expect(!top.bad.length && !items.bad.length && items.inView > 0 && !sideways, `1280: ${[...top.bad, ...items.bad].join(' | ')}; ${items.inView} prices in view; sideways scroll ${sideways}`);
+      return `${wide.prices} prices, each with "Test mode · nothing is charged" under it at 1440 and 1280 (${items.inView} in view on the items screen)`;
+    } finally {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.locator('.store-panel').evaluate((el) => el.closest('.overlay')?.scrollTo(0, 0));
+    }
   });
 
   await check('4000 0000 0000 0002 is declined and grants nothing', async () => {
@@ -892,6 +986,8 @@ await group('store', async (use) => {
     await sheet.getByLabel(/Founders roll/).check();
     await sheet.getByLabel(/Name on the roll/).fill('Test Founder');
     await storeCard(sheet, '4242 4242 4242 4242');
+    const sheetTags = await storePriceTags(page, '.store-sheet');
+    expect(sheetTags.prices === 1 && !sheetTags.bad.length, `checkout price: ${sheetTags.prices} prices; ${sheetTags.bad.join(' | ')}`);
     await sheet.getByRole('button', { name: /^Pay \$10\.00/ }).scrollIntoViewIfNeeded();
     await storeShot(page, 'store-checkout-1440.png');
     await sheet.getByRole('button', { name: /^Pay \$10\.00/ }).click();
@@ -962,6 +1058,7 @@ await group('store', async (use) => {
   await check('the purchase survives a reload', async () => {
     await page.reload();
     await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await holdGame(page);
     const paint = await game(page, () => window.__game.car.config.paint);
     await page.getByRole('button', { name: 'Store', exact: true }).click();
     await page.waitForSelector('.store-panel');
@@ -976,13 +1073,21 @@ await group('store', async (use) => {
   });
 
   await check('the car in Founders Sunset, and the Founder badge and frame on the run card', async () => {
-    await drive(page, 'Free Drive');
+    // this one drives and renders: the menu's two clicks with the loop still held, then the loop runs until the chase
+    // camera has drawn six frames, and is held again for the shot and the run card (a 2D canvas of its own)
+    await page.getByRole('radio', { name: /Free Drive/ }).click();
+    await page.getByRole('button', { name: 'Drive', exact: true }).click();
+    await resumeGame(page);
+    await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: FRAMES_MS });
     await game(page, () => { const g = window.__game; g.fastForward(6, {}, 30); g.cycleCam(); g.cycleCam(); });
     await frames(page, 6);
+    await holdGame(page);
     await storeShot(page, 'store-founders-sunset-chase.png');
     await game(page, () => { const g = window.__game; g.fastForward(10, {}, 40); g.endFreeDrive(); });
-    await page.waitForSelector('.result', { timeout: 30000 });
-    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 90000 }), page.getByRole('button', { name: 'Share run' }).click()]);
+    await page.waitForSelector('.result', { timeout: 60000 });
+    // the card is drawn from the game's canvas: under load (2026-10-21, load average 45 to 50) that took over 90 s, so
+    // the download gets the frames' allowance; the pixels below are what the check asserts
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: FRAMES_MS }), page.getByRole('button', { name: 'Share run' }).click()]);
     const file = path.join(OUT, 'store-run-card-founder.png');
     await dl.saveAs(file);
     const px = await page.evaluate(async (b64) => {
@@ -998,17 +1103,75 @@ await group('store', async (use) => {
     return `chase shot saved; run card frame pixel rgb(${px.frame}), outside it rgb(${px.corner})`;
   });
 
+  await check('the hypercar grant: oc-hyper joins the garage outside the slot count, is never sold for credits, leaves on sign-out and comes back on sign-in', async () => {
+    // a test-mode ledger entry for the signed-in account, as a purchase would write it (the sku can't be bought yet)
+    await game(page, (grants) => {
+      const sess = JSON.parse(localStorage.getItem('ocu.store.session')), book = JSON.parse(localStorage.getItem('ocu.store.owned') || '{}');
+      const mine = book[sess.userId] ?? { items: [], at: 0 };
+      mine.items.push(...grants.map((g) => ({ entitlement: g, sku: 'hypercar-founder', granted_at: new Date().toISOString() })));
+      book[sess.userId] = mine; localStorage.setItem('ocu.store.owned', JSON.stringify(book));
+    }, hyper.grants);
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await holdGame(page);
+    const garage = () => game(page, () => { const b = window.__game.profile; return { vehicles: b.p.vehicles.slice(), used: b.slotsUsed, car: b.p.car, credits: b.p.credits }; });
+    const a = await garage();
+    const sold = await game(page, () => window.__game.profile.sell('oc-hyper', 100000));
+    const after = await garage();
+    expect(a.vehicles.includes('oc-hyper') && a.used === a.vehicles.length - 1, `garage ${JSON.stringify(a)}`);
+    expect(/can't be sold for credits/.test(sold ?? '') && after.vehicles.includes('oc-hyper') && after.credits === a.credits, `sell: "${sold}", after ${JSON.stringify(after)}`);
+    await page.getByRole('button', { name: 'Store', exact: true }).click();
+    await page.waitForSelector('.store-panel');
+    const serial = await page.locator('.store-locker .store-serial').innerText();
+    expect(/no number here: only the server numbers a sale/.test(serial), `serial line: ${serial}`);
+    await page.locator('.store-account').getByRole('button', { name: 'Sign out' }).click();
+    await page.waitForFunction(() => !window.__game.profile.p.vehicles.includes('oc-hyper'));
+    const out = await garage();
+    await page.locator('.store-account').getByRole('button', { name: 'Sign in' }).click();
+    await page.locator('.store-account').getByLabel('Email', { exact: true }).fill('founder@example.com');
+    await page.locator('.store-account').getByRole('button', { name: 'Send my sign-in link' }).click();
+    await page.waitForFunction(() => window.__game.profile.p.vehicles.includes('oc-hyper'), null, { timeout: 30000 });
+    const back = await garage();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    expect(out.vehicles.join() === 'rossini-gt' && out.car === 'rossini-gt' && back.vehicles.includes('oc-hyper'), `signed out ${JSON.stringify(out)}, back ${JSON.stringify(back)}`);
+    return `granted: ${a.vehicles.join(', ')} with ${a.used} slot used; sell: "${sold}"; signed out: ${out.vehicles.join(', ')}; signed in again: ${back.vehicles.join(', ')}; "${serial.slice(0, 70)}…"`;
+  });
+
+  await check('webhook: the Founder Edition serial, one per Checkout Session across retries, a refunded number retired, the founder window (real webhook, throwaway Postgres)', () => {
+    let out = '', code = 0;
+    try { out = execFileSync(process.execPath, [path.join(ROOT, 'server/supabase/tests/serial-webhook.mjs')], { encoding: 'utf8', stdio: 'pipe', timeout: 300000 }); }
+    catch (e) { out = String(e.stdout ?? '') + String(e.stderr ?? ''); code = e.status ?? 1; }
+    if (code === 3) return 'not run here: ' + out.trim();
+    const last = out.trim().split('\n').pop();
+    expect(code === 0, `exit ${code}: ${out.split('\n').filter((l) => /FAIL/.test(l)).join(' | ') || out.slice(-400)}`);
+    return last;
+  });
+
   await check('phone: the store and the checkout fit a 390 × 844 screen', async () => {
     await page.close();                      // the 1440 page's renders would starve this one's load in software rendering
     const ph = await open({ phone: true });
     try {
       const p = ph.page, sh = p.locator('.store-sheet .panel');
+      await holdGame(p);
       const noSide = () => p.evaluate(() => document.documentElement.scrollWidth <= innerWidth && [...document.querySelectorAll('.overlay')].every((o) => o.scrollWidth <= o.clientWidth + 1));
       await p.getByRole('button', { name: 'Store', exact: true }).click();
       await p.waitForSelector('.store-panel');
       await p.waitForTimeout(500);
       await storeShot(p, 'store-390.png');
       const a = await noSide();
+      const phoneTags = await storePriceTags(p);
+      expect(!phoneTags.bad.length && phoneTags.inView > 0, `phone prices: ${phoneTags.bad.join(' | ')}; ${phoneTags.inView} in view`);
+      const hc = p.locator('.store-panel [data-sku="hypercar-founder"]');
+      await hc.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await storeShot(p, 'store-hypercar-390x844.png');
+      await storeCrop(p, hc, 'store-hypercar-card-390.png');
+      const hcText = (await hc.textContent()).replace(/\s+/g, ' ');
+      expect(hcText.includes('Coming soon') && hcText.includes('$4.99') && hcText.includes('Test mode · nothing is charged'), `phone hypercar card: ${hcText.slice(0, 200)}`);
+      await p.locator('.store-panel .store-group').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await storeShot(p, 'store-items-390x844.png');
+      const itemTags = await storePriceTags(p);
+      expect(!itemTags.bad.length && itemTags.inView > 0, `phone item prices: ${itemTags.bad.join(' | ')}; ${itemTags.inView} in view`);
+      await p.locator('.store-panel').evaluate((el) => el.closest('.overlay')?.scrollTo(0, 0));
       await p.getByRole('button', { name: /^Buy Founder Pack/ }).click();
       await storeSignIn(sh, 'phone@example.com');
       await sh.getByLabel(/18 or over/).check();
@@ -1024,7 +1187,7 @@ await group('store', async (use) => {
       expect(ph.errors.length === 0, ph.errors.slice(0, 2).join(' | '));
       const bad = ph.requests.filter((u) => { try { return STORE_HOSTS.test(new URL(u).hostname); } catch { return false; } });
       expect(!bad.length, bad.slice(0, 3).join(' '));
-      return 'store, checkout and receipt at 390 × 844 with no sideways scroll';
+      return `store, checkout and receipt at 390 × 844 with no sideways scroll; ${phoneTags.prices} prices, each with the test-mode notice under it`;
     } finally { await ph.ctx.close(); }
   });
 

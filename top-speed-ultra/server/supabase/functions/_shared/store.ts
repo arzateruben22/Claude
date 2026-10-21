@@ -13,6 +13,7 @@ export interface ServerSku {
   mode: 'payment' | 'subscription';
   interval?: 'month' | 'year';
   window?: { until: string };
+  serial?: boolean;                 // the webhook numbers each sale (migration 0002's assign_serial)
   custom_amount?: { minimum_cents: number; preset_cents: number; maximum_cents: number };
   grants: string[];
   available: boolean;
@@ -20,6 +21,8 @@ export interface ServerSku {
   while_subscribed: string[];
 }
 export const SKUS: ServerSku[] = (catalogFile as { skus: ServerSku[] }).skus;
+// the one founder window (src/store/founder.json, copied here by `npm run store:sync`): the founder items' windows
+export const FOUNDER_UNTIL: string = (catalogFile as { founder_until: string }).founder_until;
 export const skuById = (id: unknown) => (typeof id === 'string' ? SKUS.find((s) => s.sku === id) ?? null : null);
 
 export const env = (k: string) => Deno.env.get(k) ?? '';
@@ -33,10 +36,14 @@ export const stripeLive = () => /^(sk|rk)_live_/.test(stripeKey());
 export function sellable(s: ServerSku | null, now = Date.now()): { ok: true } | { ok: false; why: string } {
   if (!s) return { ok: false, why: 'That item is not in the store.' };
   if (!s.available) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
-  if (s.window && now > Date.parse(s.window.until)) return { ok: false, why: `${s.name} is no longer sold.` };
+  if (!inWindow(s, now)) return { ok: false, why: `${s.name} is no longer sold.` };
   if (stripeLive() && !s.grants_ready) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
   return { ok: true };
 }
+
+// Inside the item's sales window at this moment? create-checkout asks with the time now; the webhook asks with the
+// time Stripe created the Checkout Session, so a checkout started before the deadline and paid after it is honoured.
+export const inWindow = (s: ServerSku, atMs: number) => !s.window || atMs <= Date.parse(s.window.until);
 
 // ------------------------------------------------------------------------------------------- HTTP
 const allowed = () => {
@@ -89,9 +96,11 @@ export async function userFrom(req: Request): Promise<{ id: string; email: strin
 }
 
 // ------------------------------------------------------------------------------------------- Stripe
-export async function stripe<T = Record<string, unknown>>(method: 'GET' | 'POST', path: string, params: Record<string, unknown> = {}): Promise<{ ok: boolean; status: number; data: T & { error?: { message?: string } } }> {
+// idempotencyKey: Stripe performs a POST with the same key once, however often it is sent (a webhook retry)
+export async function stripe<T = Record<string, unknown>>(method: 'GET' | 'POST', path: string, params: Record<string, unknown> = {}, idempotencyKey?: string): Promise<{ ok: boolean; status: number; data: T & { error?: { message?: string } } }> {
   const qs = formEncode(params);
   const headers: Record<string, string> = { Authorization: `Bearer ${stripeKey()}` };
+  if (idempotencyKey) headers['Idempotency-Key'] = idempotencyKey;
   if (env('STRIPE_API_VERSION')) headers['Stripe-Version'] = env('STRIPE_API_VERSION');
   if (method === 'POST') headers['Content-Type'] = 'application/x-www-form-urlencoded';
   const r = await fetch(`https://api.stripe.com/v1/${path}${method === 'GET' && qs ? '?' + qs : ''}`, { method, headers, body: method === 'POST' ? qs : undefined });
