@@ -7,7 +7,9 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION, atLeast } from './settings';
+import type { QualityPreset } from './settings';
+import { msaaSamples, ultraShadowSize, depthAO, bindAO, sceneOnlyMSAA, lightsOnlyBloom, carAnisotropy } from './gfx/ultra';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -112,6 +114,8 @@ export class Game {
   private bloom: UnrealBloomPass | null = null;
   private gtao: GTAOPass | null = null;
   private outputSat: THREE.IUniform<number> | null = null;   // the output pass's saturation, under cloud
+  private ultraAO = false;            // the Ultra tier's AO reads the composer's depth (bound each frame)
+  private gfx = { samples: 0, shadow: 0, aniso: 0, passes: [] as string[] };
   private settings: Settings;
   private raf = 0;
   private last = 0;
@@ -215,10 +219,12 @@ export class Game {
     this.roads = new Roads(this.net, q); this.scene.add(this.roads.group);
     this.terrain = new Terrain(this.net, q); this.scene.add(this.terrain.group);
     if (!this.traffic) { this.traffic = new Traffic(this.net); this.scene.add(this.traffic.group); }
-    this.traffic.viewAhead = q.drawDistance * 0.95;
+    this.traffic.viewAhead = this.trafficView(q);
     this.env.setFlareOccluders([this.roads.group, this.traffic.group], [this.terrain.group], (o, d) => this.car.sunBlocked(o, d));
     this.applyDensity();
   }
+  // how far ahead traffic is kept: just inside the road's draw distance (Ultra draws further, but keeps Very High's traffic)
+  private trafficView(q: QualityPreset) { return Math.min(q.drawDistance * 0.95, q.ultra?.trafficView ?? Infinity); }
   private applyDensity() {
     const d = DENSITY[this.settings.density];
     this.traffic.level = { perKmLane: d.perKmLane, bold: d.bold };
@@ -487,11 +493,18 @@ export class Game {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
-    const high = s.quality === 'high' || s.quality === 'ultra';
+    const high = atLeast(s.quality, 'high');
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? c.paint, finish: store?.finish ?? null, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
+    this.applyAniso();
+  }
+  // Ultra: the car's maps (and the cockpit's, the hands', the wheels') and the traffic's at the GPU's maximum
+  // anisotropy; elsewhere as built. The road's, the walls' and the terrain's are at it on every preset (textures.ts).
+  private applyAniso() {
+    const max = QUALITY[this.settings.quality].ultra?.aniso ? this.renderer.capabilities.getMaxAnisotropy() : null;
+    this.gfx.aniso = carAnisotropy(this.car.root, max) + (this.traffic ? carAnisotropy(this.traffic.group, max) : 0);
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -549,33 +562,59 @@ export class Game {
     const q = QUALITY[this.settings.quality];
     this.renderScale = q.renderScale;
     this.renderer.shadowMap.enabled = q.shadows > 0;
-    const far = q.drawDistance * 1.15;
+    const far = q.drawDistance * 1.15, u = q.ultra;
     this.camera.far = far; this.camera.updateProjectionMatrix();
-    this.env.setQuality(q.shadows, far);
-    if (this.traffic) this.traffic.viewAhead = q.drawDistance * 0.95;
+    this.gfx.shadow = u ? ultraShadowSize(this.renderer, q.shadows) : q.shadows;
+    this.env.setQuality(this.gfx.shadow, far, u ? { half: u.shadowHalf, ahead: u.shadowAhead, bias: u.shadowBias, normalBias: u.shadowNormalBias } : null);
+    this.env.setEnvDetail(!!u?.envDetail);
+    this.renderer.toneMapping = u?.toneMapping === 'agx' ? THREE.AgXToneMapping : THREE.ACESFilmicToneMapping;
+    if (this.traffic) this.traffic.viewAhead = this.trafficView(q);
     if (rebuild && this.net) {
       this.configureCar();                 // the car's own quality tier may have changed
       this.buildWorld();
       const p = this.phys;
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
     }
-    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null;
-    if (q.post) {
+    // the passes' own targets too (the AO's, the bloom's mips): EffectComposer.dispose() frees only its two buffers, so
+    // every preset switch used to leave them behind (the leak in the technical notes' known issues)
+    if (this.composer) { for (const p of this.composer.passes) p.dispose(); this.composer.dispose(); }
+    this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null; this.ultraAO = false;
+    this.gfx.samples = 0; this.gfx.passes = [];
+    if (q.post && u) {
+      // Ultra (src/game/gfx/ultra.ts): the scene's depth kept for the AO, as many MSAA samples as the GPU takes (up to
+      // 8) on the scene's target only, AO from that depth, then bloom for the lights only (keyed on the brightest
+      // channel, over a threshold above the sky's)
+      const size = this.renderer.getDrawingBufferSize(new THREE.Vector2()), w = Math.max(1, size.x), h = Math.max(1, size.y);
+      this.gfx.samples = msaaSamples(this.renderer, q.msaa);
+      const depth = new THREE.DepthTexture(w, h);
+      const rt = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, samples: this.gfx.samples, depthTexture: depth });
+      const c = new EffectComposer(this.renderer, rt);
+      sceneOnlyMSAA(c);
+      c.addPass(new RenderPass(this.scene, this.camera));
+      this.gtao = depthAO(this.scene, this.camera, w, h, u, depth); c.addPass(this.gtao); this.ultraAO = true;
+      this.bloom = lightsOnlyBloom(w, h, u); c.addPass(this.bloom);
+      this.composer = c; this.gfx.passes = ['render', 'ao-depth', 'bloom'];
+    } else if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
+      this.gfx.samples = q.msaa;
       const rt = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, samples: q.msaa });
       const c = new EffectComposer(this.renderer, rt);
       c.addPass(new RenderPass(this.scene, this.camera));
       if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
       if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.22, 0.45, 0.92); c.addPass(this.bloom); }
+      this.composer = c; this.gfx.passes = ['render', ...(q.ao ? ['ao-normal-pass'] : []), ...(q.bloom ? ['bloom'] : [])];
+    }
+    if (this.composer) {
+      const c = this.composer;
       // the output pass with a saturation control folded into its shader (no extra pass): the grade under cloud
       const out = new OutputPass(), sat: THREE.IUniform<number> = { value: 1 };
       (out.uniforms as Record<string, THREE.IUniform>).saturation = sat;
       out.material.fragmentShader = out.material.fragmentShader
         .replace('uniform sampler2D tDiffuse;', 'uniform sampler2D tDiffuse;\n\t\tuniform float saturation;')
         .replace('// tone mapping', 'gl_FragColor.rgb = mix(vec3(dot(gl_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722))), gl_FragColor.rgb, saturation);\n\t\t\t// tone mapping');
-      c.addPass(out); this.outputSat = sat;
-      this.composer = c;
+      c.addPass(out); this.outputSat = sat; this.gfx.passes.push('output');
     }
+    this.applyAniso();
     this.onResize();
   }
 
@@ -853,7 +892,7 @@ export class Game {
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
-    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
+    if (this.composer) { if (this.ultraAO && this.gtao) bindAO(this.gtao, this.composer); this.composer.render(dt); } else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderCorner(dt);
     if (!this.attract) {
@@ -1289,6 +1328,20 @@ export class Game {
       this.simulate(DT);
       if (this.steps % 24 === 0) this.stream(1);
     }
+  }
+  // what the graphics pipeline is doing (for tests and the G1 measurements): the preset, its passes, the MSAA samples
+  // the GPU took, the shadow map, the environment map, the car's anisotropy and the tone mapping
+  gfxInfo() {
+    const q = QUALITY[this.settings.quality], sh = this.env.sun.shadow, cam = sh.camera as THREE.OrthographicCamera;
+    return {
+      quality: this.settings.quality, passes: this.gfx.passes, samples: this.gfx.samples,
+      aoFromDepth: this.ultraAO, bloom: this.bloom ? { strength: this.bloom.strength, radius: this.bloom.radius, threshold: this.bloom.threshold,
+        key: this.bloom.materialHighPassFilter.uniforms.bloomClamp ? 'max' : 'luma', knee: q.ultra?.bloomKnee ?? 0, clamp: q.ultra?.bloomClamp ?? null } : null,
+      shadow: { size: this.renderer.shadowMap.enabled ? sh.mapSize.x : 0, half: cam.right, bias: sh.bias, normalBias: sh.normalBias },
+      env: this.env.envInfo, carTextures: this.gfx.aniso, maxAniso: this.renderer.capabilities.getMaxAnisotropy(),
+      toneMapping: this.renderer.toneMapping === THREE.AgXToneMapping ? 'agx' : this.renderer.toneMapping === THREE.ACESFilmicToneMapping ? 'aces' : String(this.renderer.toneMapping),
+      far: this.camera.far, drawDistance: q.drawDistance, lodNear: q.ultra?.lodNear ?? 520, trafficView: this.traffic?.viewAhead ?? 0,
+    };
   }
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,

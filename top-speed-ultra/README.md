@@ -104,9 +104,11 @@ mode on this device only, and the leaderboard says so.
 | Low | off | none | 0.9 km | phones; lighter trees |
 | Medium | 1024 | none | 1.3 km | lighter trees |
 | High | 2048 | bloom, 4× MSAA | 1.8 km | |
-| Ultra | 4096 | ambient occlusion, bloom, 4× MSAA | 2.4 km | denser scenery |
+| Very High | 4096 | ambient occlusion, bloom, 4× MSAA | 2.4 km | denser scenery; the preset called Ultra before 2026-10-21 |
+| Ultra | 8192, fitted ahead of the camera | ambient occlusion from the scene's depth, bloom on the lights only, up to 8× MSAA, the clouds and mountains in the reflections, every car texture at the GPU's maximum anisotropy | 2.8 km | desktop graphics cards; never a default |
 
-Adaptive resolution (on by default) scales between 50% and 100% to hold the frame rate.
+Adaptive resolution (on by default) scales between 50% and 100% to hold the frame rate. Phones start on Low and
+desktops on Medium or High; Very High and Ultra are only ever chosen by hand.
 
 ## Limits, said plainly
 

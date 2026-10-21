@@ -4,6 +4,75 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21: the Ultra render tier (G1); the old top preset lives on as Very High, unchanged
+
+The owner asked for maximum graphics for the hypercar. The presets are now Low, Medium, High, Very High and Ultra
+(`settings.ts` `QUALITY`, the Settings segmented control, `updateSettings({ quality })` through the hooks). **Very
+High is the preset that was called Ultra**, byte for byte the same settings; a saved profile with `quality: 'ultra'`
+and no `tiers: 2` loads as Very High, so nobody's picture changed under them. **Ultra** is for desktop graphics cards
+and is never a default: phones guess Low, desktops Medium or High (`guessQuality`), and adaptive resolution only moves
+the render scale. On a 390 × 844 phone the five presets fit the Settings sheet on one row with nothing clipped
+(`tests/out/phone-settings-graphics.png`).
+
+What Ultra adds (`src/game/gfx/ultra.ts`, `QualityPreset.ultra`; the technical notes have the mechanics):
+
+- **Ambient occlusion from the scene's own depth.** `GTAOPass` through its `setGBuffer(depth)`: radius 1.2 m, 16
+  samples, blended at 0.85, faded in past the cockpit (0.9–2.2 m) and out at 70–160 m. No second scene render with a
+  normal material, which is what the old Ultra's GTAO does and which drew the sky box, the cloud dome and the glass as
+  solid: by day it darkened the mountains to slate, at night it painted a black box on the road ahead of the car
+  (`before-ultra-night-chase.png`). Both are gone (`after-ultra-night-chase.png`), and the draw calls fell by about
+  45% at a longer draw distance (day chase 1,513 → 829; cockpit 1,618 → 987; hood 1,355 → 749) because every mesh is
+  drawn once. The AO itself is subtle by design: a contact shadow under the car and the diffuser
+  (`after-ultra-day-chase.png` against `-noao.png`), nothing on open road.
+- **Bloom for the lights only.** `UnrealBloomPass` with its high pass keyed on the brightest channel, a 0.4 soft
+  knee, only the light over the threshold, capped at 2 per pixel; threshold 1.6 linear before exposure, strength 0.8,
+  radius 0.4. Measured on the bloom's input (`--hdr`): the day sky's brightest channel peaks at 0.99 (hood 0.986,
+  chase 0.991), so no sky pixel passes; by day 0.05–0.2% of pixels pass (sun glints on chrome and glass); at night
+  the street lamps (3.2) pass and glow (`after-ultra-night-chase.png` against `-nobloom.png`); by day the frames with
+  and without bloom are indistinguishable except the sun's disc.
+- **MSAA** on the scene target only, at the most samples the GPU takes for RGBA16F and DEPTH_COMPONENT24, up to 8
+  (SwiftShader here: 4). The composer's second buffer has no samples and no depth.
+- **Sun shadows** from an 8192 map (clamped to the GPU's limits) in a 100 m box whose centre sits 25 m ahead of the
+  camera, snapped to the light's texel grid; bias −0.00012, normal bias 0.024; PCF soft. The old Ultra: 4096 in a 68 m
+  box on the car. Texels 1.2 cm against 1.7 cm, over 47% more road. Close crops (`tests/out/gfx/cmp/`): no acne on the
+  road or the car and no peter-panning in any frame, the golden-hour shadow a touch crisper. Cost: about 400 MB of
+  GPU memory by arithmetic, which is why Ultra is for desktop cards.
+- **Anisotropy**: 65 car, cockpit, hand, wheel and traffic textures raised from 8 to the GPU's maximum (16 here);
+  the road, wall and terrain textures were already at the maximum on every preset. Leaving Ultra restores each.
+- **The environment map** carries the cloud deck and the mountain ring and follows the sun (rebuilt after 0.006 rad
+  of sun or 0.04 rad of cloud, at most once a second; 31 rebuilds over the day-golden-night sweep). The probes
+  (`after-ultra-{day,golden,night}-probe.png`: the map behind a mirror sphere, a white clear-coated sphere and a black
+  gloss sphere) show the sky gradient, the clouds and the mountain haze in the reflections, the sunset glow at golden
+  hour. The night probe showed the map's tan ground lighting the spheres from below, so on Ultra the ground now goes
+  dark with the night (6% at full night, the hemisphere light's ratio); other presets keep the tan.
+- **Distances**: 2.8 km of road (2.4), full-detail terrain within 760 m (520), traffic kept to 2.28 km. Streaming at
+  130 m/s for 40 s along I-405 North, as the 60 fps loop streams it (one chunk and one tile a frame): no road chunk or
+  terrain tile ever pending inside the draw distance; per-frame build time p50 0.1 ms, p95 5 ms, p99 34 ms, max 318 ms
+  (CPU, SwiftShader, the machine shared with five other workflows).
+- **Tone mapping stays ACES.** AgX was rendered on the same nine frames (`after-ultra-*-agx.png`): it lifts the
+  blacks and flattens the midtones here (the night road goes mid-grey, the day sky grey, the sunset's warmth
+  drains), so it would need its own grade before it could replace ACES.
+- **Preset switches no longer leak** the passes' render targets (each pass is disposed before the composer).
+  Low → Ultra → Low twice: textures 84 → 127 → 129, geometries 339 → 329 → 331 (the first trip builds the high-tier
+  car and the live mirrors; the second adds two textures).
+
+Measured with `tools/gfx-shots.mjs` (new): one pinned Free Drive in the OC Hypercar on I-405 North (s = 5,717 m,
+67 mph, seed 4242, 1280 × 720, SwiftShader), the same frame at every preset, from the cockpit, hood and chase cameras
+at day, golden hour and night, with variants on the same frame (no AO, no bloom, AgX), the bloom input's HDR
+statistics, the environment probes, per-frame times, a pass-by-pass cost breakdown and the streaming test. Shots:
+`tests/out/gfx/before-ultra-*.png` (the old Ultra, the drive one metre earlier: the tool had no `--pin` yet) and
+`after-ultra-*.png` (Ultra), nine each; the JSON numbers next to them.
+
+- **Ultra frame cost here** (day, medians, SwiftShader, only comparable between runs on this machine): cockpit 61.7 s,
+  hood 30.0 s, chase 40.4 s a frame. Pass by pass on the day chase: the scene 24.3 s, +4.9 s for the 8K shadow map
+  (the same +4.9 s at 4K: SwiftShader is fill-bound either way), MSAA 7.9 s, AO 9.6 s, bloom 4.0 s, output 0.7 s; an
+  environment rebuild 11.9 s with the clouds and mountains against 11.8 s plain.
+- **Low is unchanged.** The same pinned frames before and after: chase identical (28 of 921,600 pixels differ by more
+  than 2 levels, at the driver's hands), cockpit mean difference 0.5 levels, all of it thin edges along the hands,
+  the wheel and the horizon (a sub-pixel head shift between runs; the heat map is `tests/out/gfx/cmp/low-cockpit-diff.png`).
+  Draw calls 372 / 395 and triangles 627,500 / 652,034 (cockpit / chase) before and after. Frame times 27.0 / 10.1 s
+  before and 14.8 / 8.3 s after: the machine's load, not the code (same calls, same triangles).
+
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
 Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set

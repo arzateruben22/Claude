@@ -51,6 +51,12 @@ const WX: Record<Sky5,{ turb: number; sun: number; sky: number; cloud: number; c
 // a touch above green in each: the asphalt and concrete maps lean green and went cyan under a plain cool light.
 const OVERCAST_SKY = new THREE.Color(0.88, 0.86, 0.93), OVERCAST_GROUND = new THREE.Color(0.44, 0.42, 0.45), OVERCAST_SUN = new THREE.Color(0.93, 0.93, 1);
 
+// the Ultra tier's shadow fit: the box's half size (m), how far ahead of the camera its centre sits (a share of half),
+// and the biases for its finer texels
+export interface ShadowFit { half: number; ahead: number; bias: number; normalBias: number }
+// the ground under the environment map's sky (a warm grey: sand, concrete and asphalt seen from the car)
+const ENV_GROUND = 0x8a8070;
+
 interface State { alt: number; az: number; turb: number; sun: number; sky: number; cloud: number; cloudDark: number; fogNear: number; fogFar: number; haze: THREE.Color; wet: number; grip: number }
 
 export class Environment {
@@ -79,14 +85,23 @@ export class Environment {
   readonly flareStats = { k: 0, ndc: [0, 0], open: 1, ridge: 1, rayMs: 0, hit: '' };
   private rain: THREE.LineSegments | null = null;
   private drops = new Float32Array(0);
-  private shadowSize = 0;
   private farPlane = 2000;
   private renderer: THREE.WebGLRenderer;
   private envSky: Sky;
+  private envGround: THREE.Mesh<THREE.CircleGeometry, THREE.MeshBasicMaterial>;
   private envScene = new THREE.Scene();
   private envT = 0;
   private envDirty = true;
   private envTex: THREE.Texture | null = null;
+  // the Ultra tier (G1): the shadow box fitted ahead of the camera on the light's own texel grid, and an environment
+  // map with the cloud deck and the mountain ring in it that is rebuilt as the sun moves (null / false elsewhere)
+  private fit: ShadowFit | null = null;
+  private shadowKey = '';
+  private envDetail = false;
+  private envExtra: THREE.Mesh[] = [];
+  private envSun = new THREE.Vector3();
+  private envCloud = 0;
+  envBuilds = 0;
   time: TimeOfDay = 'day';
   weather: Weather = 'clear';
   private cur: State; private tgt: State;
@@ -102,8 +117,9 @@ export class Environment {
     scene.add(this.sky);
     this.envSky = new Sky(); this.envSky.scale.setScalar(900); tameSky(this.envSky, 0.36);
     this.envScene.add(this.envSky);
-    const ground = new THREE.Mesh(new THREE.CircleGeometry(800, 32), new THREE.MeshBasicMaterial({ color: 0x8a8070 }));
+    const ground = new THREE.Mesh(new THREE.CircleGeometry(800, 32), new THREE.MeshBasicMaterial({ color: ENV_GROUND }));
     ground.rotation.x = -Math.PI / 2; ground.position.y = -2; this.envScene.add(ground);
+    this.envGround = ground;
 
     this.sun = new THREE.DirectionalLight(0xfff1dc, 3.1);
     scene.add(this.sun, this.sun.target);
@@ -247,13 +263,19 @@ export class Environment {
     let daz = t.az - c.az; daz = Math.atan2(Math.sin(daz), Math.cos(daz)); c.az += daz * k; moved += Math.abs(daz);
     c.haze.lerp(t.haze, k);
     if (moved > 1e-4) { this.apply(); if (moved > 0.02) this.envDirty = true; }
+    // Ultra: the sky's reflection follows the sun's slow drift ('Live' time) and the clouds' turning, not only the
+    // big changes, at most once a second
+    if (this.envDetail && !this.envDirty && (this.sunDir.angleTo(this.envSun) > 0.006 || Math.abs(this.clouds.rotation.y - this.envCloud) > 0.04)) this.envDirty = true;
     this.envT -= dt;
-    if (this.envDirty && this.envT <= 0) { this.envT = 4; this.envDirty = false; this.rebuildEnv(); }
+    if (this.envDirty && this.envT <= 0) { this.envT = this.envDetail ? 1 : 4; this.envDirty = false; this.rebuildEnv(); }
   }
 
   private apply() {
     const c = this.cur, day = this.daylight;
     dirFrom(c.alt, c.az, this.sunDir);
+    // Ultra: the ground under the environment map's sky goes dark with the night, as the hemisphere light's ground
+    // does (the G1 night probe showed the paint lit from below by a daytime tan); other presets keep it as it was
+    this.envGround.material.color.setHex(ENV_GROUND).multiplyScalar(this.envDetail ? lerp(0.06, 1, day) : 1);
     const u = this.sky.material.uniforms;
     for (const uu of [u, this.envSky.material.uniforms]) {
       uu.turbidity.value = c.turb; uu.rayleigh.value = lerp(1.2, 3.0, smoothstep(0, 0.5, c.alt));
@@ -310,32 +332,59 @@ export class Environment {
 
   private rebuildEnv() {
     const pm = new THREE.PMREMGenerator(this.renderer);
-    const tex = pm.fromScene(this.envScene, 0.02).texture;
+    let tex: THREE.Texture;
+    if (this.envDetail) {
+      // the cloud deck and the mountain ring as the camera sees them, shrunk to sit inside the cube camera's 2 km:
+      // they share the visible ones' materials, so they carry the same colours, cover and haze
+      const k = 1200 / (this.farPlane * 0.86), [cl, mt] = this.envExtra;
+      cl.scale.copy(this.clouds.scale).multiplyScalar(k); cl.position.set(0, -this.farPlane * 0.08 * k, 0); cl.rotation.copy(this.clouds.rotation);
+      mt.scale.copy(this.mountains.scale).multiplyScalar(k); mt.position.set(0, -this.farPlane * 0.01 * k, 0); mt.visible = this.mountains.visible;
+      tex = pm.fromScene(this.envScene, 0.02, 0.1, 2000).texture;
+      this.envSun.copy(this.sunDir); this.envCloud = this.clouds.rotation.y;
+    } else tex = pm.fromScene(this.envScene, 0.02).texture;
     pm.dispose();
+    this.envBuilds++;
     this.scene.environment = tex;
     this.envTex?.dispose();
     this.envTex = tex;
   }
 
-  // far: the camera's far plane. The background layers are sized to sit inside it.
-  setQuality(shadowSize: number, far: number) {
+  // Ultra: the clouds and the mountains in the environment map, rebuilt as the sun moves; off, the plain sky and ground
+  setEnvDetail(on: boolean) {
+    if (on === this.envDetail) return;
+    this.envDetail = on;
+    if (on && !this.envExtra.length) {
+      const cl = new THREE.Mesh(this.clouds.geometry, this.clouds.material); cl.renderOrder = -2;
+      const mt = new THREE.Mesh(this.mountains.geometry, this.mountains.material); mt.renderOrder = -1;
+      this.envExtra = [cl, mt];
+    }
+    for (const m of this.envExtra) { if (on) this.envScene.add(m); else this.envScene.remove(m); }
+    this.apply();                      // the ground's night level follows this switch
+    this.envDirty = true; this.envT = 0;
+  }
+  get envInfo() { return { detail: this.envDetail, builds: this.envBuilds, layers: this.envScene.children.length }; }
+
+  // far: the camera's far plane. The background layers are sized to sit inside it. fit (Ultra only): the shadow box
+  // fitted ahead of the camera; without it, the box is centred on the car as it always was.
+  setQuality(shadowSize: number, far: number, fit: ShadowFit | null = null) {
     this.sky.scale.setScalar(far * 0.9);
     this.clouds.scale.setScalar((far * 0.86) / 5200);
     this.mountains.scale.setScalar((far * 0.8) / 4200);
     this.stars.scale.setScalar(far * 0.85);
     this.farPlane = far;
     this.apply();
-    if (shadowSize === this.shadowSize) return;
-    this.shadowSize = shadowSize;
+    const key = JSON.stringify([shadowSize, fit]);
+    if (key === this.shadowKey) return;
+    this.shadowKey = key; this.fit = shadowSize > 0 ? fit : null;
     this.sun.castShadow = shadowSize > 0;
     if (shadowSize > 0) {
       const s = this.sun.shadow;
       s.mapSize.set(shadowSize, shadowSize);
-      const half = shadowSize >= 4096 ? 34 : shadowSize >= 2048 ? 28 : 22;
+      const half = fit ? fit.half : shadowSize >= 4096 ? 34 : shadowSize >= 2048 ? 28 : 22;
       const cam = s.camera as THREE.OrthographicCamera;
       cam.left = -half; cam.right = half; cam.top = half; cam.bottom = -half; cam.near = 1; cam.far = 260;
       cam.updateProjectionMatrix();
-      s.bias = -0.00025; s.normalBias = 0.035; s.radius = 3;
+      s.bias = fit ? fit.bias : -0.00025; s.normalBias = fit ? fit.normalBias : 0.035; s.radius = 3;
       if (s.map) { s.map.dispose(); (s as unknown as { map: THREE.WebGLRenderTarget | null }).map = null; }
     }
   }
@@ -347,7 +396,8 @@ export class Environment {
     const cam = s.shadow.camera as THREE.OrthographicCamera;
     const texel = (cam.right - cam.left) / Math.max(1, s.shadow.mapSize.x);
     const snap = (v: number) => Math.round(v / texel) * texel;
-    s.target.position.set(snap(target.x), target.y, snap(target.z));
+    if (this.fit) this.fitShadow(target, camera, texel);
+    else s.target.position.set(snap(target.x), target.y, snap(target.z));
     s.position.copy(s.target.position).addScaledVector(this.sunDir, 120);
     s.target.updateMatrixWorld();
     const cp = camera.position;
@@ -359,6 +409,23 @@ export class Environment {
     (this.stars.material as THREE.ShaderMaterial).uniforms.uPR.value = this.renderer.getPixelRatio();
     this.updateFlare(camera);
     this.updateRain(dt, cp, carVel);
+  }
+
+  // Ultra: the box's centre ahead of the camera along its view (on the ground plane, at the car's height), so the
+  // map's texels go to what's in front, then moved onto the shadow camera's own texel grid (its right and up axes, as
+  // lookAt builds them from the sun's direction), which keeps the shadow edges still as the car moves
+  private fitX = new THREE.Vector3(); private fitY = new THREE.Vector3(); private fitF = new THREE.Vector3();
+  private fitShadow(target: THREE.Vector3, camera: THREE.Camera, texel: number) {
+    const f = this.fit!, fwd = this.fitF.set(0, 0, -1).applyQuaternion(camera.quaternion);     // this frame's view (the camera sits at the scene's root)
+    fwd.y = 0;
+    const len = fwd.length();
+    const c = this.sun.target.position.set(camera.position.x, target.y, camera.position.z);
+    if (len > 0.1) c.addScaledVector(fwd, (f.ahead * f.half) / len);
+    const z = this.sunDir, x = this.fitX.set(0, 1, 0).cross(z);
+    if (x.lengthSq() < 1e-6) x.set(1, 0, 0); else x.normalize();
+    const y = this.fitY.copy(z).cross(x);
+    const cx = c.dot(x), cy = c.dot(y);
+    c.addScaledVector(x, Math.round(cx / texel) * texel - cx).addScaledVector(y, Math.round(cy / texel) * texel - cy);
   }
 
   // what can hide the sun from the camera: whole groups (the roads with their walls and bridges, the traffic),

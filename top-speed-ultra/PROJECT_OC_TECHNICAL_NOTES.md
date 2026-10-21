@@ -137,7 +137,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   presentation, nails })` rebuilds only what changed: car id or quality → the exterior (`cabin: 'full'`, no wheels),
   the cockpit (`body: false`, `mirrors: 'env'`) and four wheel groups (hub kit on a steering group, spinning kit
   inside it, placed from `bodyFor(id).AXLE`); paint → the shared paint material's colour; look, presentation or
-  nails → the hands. Quality tiers: Low and Medium → 'phone', High and Ultra → 'high'. From the seat the exterior's
+  nails → the hands. Quality tiers: Low and Medium → 'phone', High, Very High and Ultra → 'high'. From the seat the exterior's
   glass, frit and cabin silhouette are hidden (`setOutsideView`). `updateCockpit()` steers the wheel mount
   (`delta × steerRatio`, clamped to ±2.2 rad), the hands follow it, and the tach needle takes the rpm. Build cost in
   SwiftShader: about 0.4 s car, 0.6 s cockpit, 1 s hands (the hands' SDF is meshed at load and cached per
@@ -187,6 +187,51 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   dimmer and warmer than day, which the regression suite's sunset check requires.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
   a camera 150 m above the car.
+- **Quality presets (`settings.ts` `QUALITY`).** Low, Medium, High, Very High and Ultra. Very High is the preset that
+  was called Ultra until 2026-10-21 (G1), unchanged; a saved `quality: 'ultra'` without `tiers: 2` (a profile from
+  before) loads as Very High, so nobody's picture changes under them. `atLeast(q, 'high')` is how code asks for "High
+  or better" (the car's high tier, live mirrors). Phones guess Low and desktops Medium or High (`guessQuality`); no
+  device starts on Very High or Ultra, and adaptive resolution only moves the render scale, never the preset.
+  `window.__game.gfxInfo()` reports what the current preset built (passes, MSAA samples, shadow map and box, bloom
+  key, environment map, anisotropy, tone mapping, distances).
+- **The Ultra tier (G1, `src/game/gfx/ultra.ts`, `QualityPreset.ultra`).** For desktop graphics cards. Every other
+  preset keeps the plain path in `Game.applyQuality`; Ultra builds its own:
+  - *Scene target*: half float with a `DepthTexture`, MSAA at the most samples (up to 8) the GPU reports for both
+    RGBA16F and DEPTH_COMPONENT24 (`msaaSamples`; SwiftShader here takes 4). Only this target is multisampled: the
+    composer's second buffer, written by full-screen passes, has no samples and no depth (`sceneOnlyMSAA`).
+    `bindAO` keeps the scene rendering into the first buffer each frame.
+  - *AO*: three's `GTAOPass` fed the scene target's own depth through its `setGBuffer(depth)` (normals rebuilt from
+    depth; its unused normal target is disposed), so there is no second
+    scene render with a normal material. That second render is what Very High's GTAO does, and it draws the glass,
+    the sky box and the cloud dome as solid, which darkens the mountains by day and paints a dark box ahead of the car
+    at night (Very High keeps it, unchanged). Radius 1.2 m, 16 samples, blended at 0.85, faded in from 0.9 to 2.2 m
+    (the cockpit has baked AO) and out from 70 to 160 m (24-bit depth gets too coarse out there).
+  - *Bloom for the lights only* (`lightsOnlyBloom`): `UnrealBloomPass` with its high pass keyed on the brightest
+    channel instead of luminance (a red or blue lamp blooms like a white one of the same power), a soft knee (0.4),
+    only the light over the threshold going in, and each pixel's share capped (2), so the sun's disc glows rather than
+    flooding the frame. Threshold 1.6, linear, before exposure: over the day sky's brightest channel (0.99 measured)
+    and under a lit street lamp's (3.2). Strength 0.8, radius 0.4.
+  - *Sun shadows*: the map at 8192 (clamped to the GPU's texture and renderbuffer limits, `ultraShadowSize`), a box
+    100 m across whose centre sits 25 m ahead of the camera along its view (`Environment.fitShadow`), snapped to the
+    light's own texel grid so edges don't crawl; bias −0.00012, normal bias 0.024 for the 1.2 cm texels. PCF soft
+    filtering as everywhere. By arithmetic it takes about 400 MB of GPU memory (three keeps the shadow map as RGBA8
+    packed depth plus a 16-bit depth renderbuffer: 6 bytes × 8192², or 512 MB on a driver that pads the depth to 32
+    bits), against about 100 MB at Very High's 4096; not measured on a GPU. That is why Ultra is for desktop cards.
+  - *Anisotropy*: the car's, the cockpit's, the hands', the wheels' and the traffic's textures at the GPU's maximum
+    (`carAnisotropy`; they're built at 8). The road's, the walls' and the terrain's are at the maximum on every preset
+    (`textures.ts` `ANISO`). Leaving Ultra puts each texture back to what it had.
+  - *Environment map*: the PMREM of the sky now also carries the cloud deck and the mountain ring (the visible ones'
+    meshes and materials, shrunk to fit the cube camera), and is rebuilt when the sun has moved 0.006 rad or the
+    clouds have turned 0.04 rad, at most once a second (other presets: the plain sky, on 0.02 rad, every 4 s). The
+    paint, the glass and the chrome reflect it (they use `scene.environment`). Its ground disc goes dark with the
+    night (to 6 %, the hemisphere light's ratio) on Ultra only; on the other presets it stays the daytime tan it always
+    was, which lights the paint from below at night.
+  - *Distances*: 2.8 km of road (Very High 2.4), full-detail terrain tiles (12 m grid and scenery) within 760 m (520),
+    traffic kept to Very High's 2.28 km. The per-frame streaming budget is unchanged (one road chunk and one tile).
+  - *Tone mapping*: ACES, as every preset; AgX was compared on the same frames (`UltraPipeline.toneMapping`).
+  - `tools/gfx-shots.mjs` renders a pinned drive at any preset from each camera and time of day, with the variants
+    on the same frame (other tone maps, without the AO or the bloom, other bloom settings, the environment map's view),
+    the bloom input's HDR statistics, per-frame times and draw calls, and a pass-by-pass cost breakdown.
 
 ## UI
 
@@ -299,7 +344,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
 - Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`, `store`,
   `store-live`. Run some with
-  `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
+  `npm test -- --only=race,survival`. Add `--slow` to render the High, Very High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
   (git-ignored).
