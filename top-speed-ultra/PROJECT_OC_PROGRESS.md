@@ -4,6 +4,31 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
+
+The owner uploaded their style library (branch `style-references`) and asked for continuous improvement. Logged here:
+
+- **The style guide.** `PROJECT_OC_STYLE_GUIDE.md` reads the library (three art directions, tokens, cameras,
+  navigation) against the game; its text files are copied to `style-references/`. The default and hypercar
+  atmosphere uses the library's ULTRA tokens exactly (background #030915, accent #408CFF 6.1:1, secondary #8BD6FF,
+  primary #DDE9F3, foreground #F6FBFF, success #6FF7DE).
+- **The hypercar's display is live** (`car-gauges.ts` `hyperScreen`, `cockpit.ts`, `PlayerCar.ts`): a base drawn once,
+  the speed, gear, power in use, revs and tune repainted at most 15 times a second, only when they change. The right
+  pod (a battery charge and a range, meaningless on a combustion car) is the rev bar. Proof: an in-game frame at
+  1280 × 720, High, day (`tests/out/cluster/hyper-live-day.png`, `tools/grade-shot.mjs`): the display reads 66 MPH in
+  3rd while the HUD reads 66 and 3; no page errors. The previews keep the 132-in-sixth still.
+- **Look: Futuristic or Realistic** (Settings, Display; `settings.look`, `<html data-look>`): Realistic takes the
+  library's HD tokens for the surfaces, ink and shapes (graphite #0a111d, HUD plates at 86 %, 8 px corners, no skew,
+  hex lattice or scanlines, a contemporary display sans); the car keeps its accent, and on the hypercar the accent is
+  HD's muted blue with champagne for what's selected (contrast in the stylesheet: ink 17.3:1, blue 8.3:1, champagne
+  6.9:1). Proof: `tools/atmo-shots.mjs --look=hd` on the hypercar and the GT, menu and drive (`tests/out/look-hd/`),
+  no errors, read by eye: flat rounded controls, a steel-blue Drive plate, champagne selection, the GT's orange
+  accent inside the Realistic shapes. A greyed Lifestyle row ("Roadmap") joins Online, from the library's navigation.
+- **The run card takes the atmosphere** (`runCard.ts`): its background, glow, lane lines, hairline and accents are
+  read from the page's tokens when it is drawn (falling back to the OC sunset).
+- **A suite check** (launch group): the theme follows the car and driver, and the Look switches, re-points the base
+  and is saved. Its first run is with the merged branch (below).
+
 ## 2026-10-21: the ice reference: the UI re-themed, the menu and drive HUD rebuilt, the hypercar's lights and cluster judged (branch `claude/hypercar`)
 
 The owner sent a second concept board (the menu with the hypercar as its hero, and the cockpit HUD, in a navy and
