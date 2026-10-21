@@ -604,6 +604,7 @@ create table consults (
   reply text,                                     -- Evelyn's line, emailed with the decision
   order_id uuid references orders (id) on delete set null,   -- online: the order that paid for it
   credit_code text,                               -- online, done: the $35 certificate
+  owner_nudged_at timestamptz,                    -- client-reminders told Evelyn once that it's past a day
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   decided_at timestamptz

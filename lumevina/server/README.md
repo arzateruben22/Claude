@@ -82,7 +82,7 @@ site's address (that browser only); the dashboard follows the same switch.
 3. **Deploy.**
 
    ```sh
-   for f in book membership rewards studio-book studio client-reminders client-prefs availability stripe-webhook ask profile; do
+   for f in book membership rewards studio-book studio client-reminders client-prefs availability stripe-webhook ask profile consult create-checkout studio-digest; do
      supabase functions deploy $f --no-verify-jwt
    done
    ```
@@ -635,5 +635,5 @@ supabase functions deploy create-checkout studio stripe-webhook studio-digest cl
 alter table products add column if not exists kind text not null default 'product' check (kind in ('product', 'consult'));
 alter table products add column if not exists consult boolean not null default false;
 create or replace view shelf as select id, stock, price_cents, hidden, kind, consult from products;
--- then the consults table from schema.sql, and: node scripts/seed-products.mjs (it carries kind and consult)
+-- then the consults table from schema.sql (it has owner_nudged_at), and: node scripts/seed-products.mjs (it carries kind and consult)
 ```

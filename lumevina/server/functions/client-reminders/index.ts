@@ -15,7 +15,8 @@
 //                  for your next facial" (members are skipped: theirs is monthly)
 //   restock        about two months after a shop order: "running low?"
 //                  with a link that puts the same products back in the bag
-//   owner_nudge    to Evelyn, not a client: "Still waiting: Maya" once a
+//   owner_nudge    to Evelyn, not a client: "Still waiting: Maya" once a question passes its reply time, and
+//                  "Still waiting to buy: Maya" once a consult request is a day old; each once
 //                  question passes its promised reply time, once per question
 //
 // POST {} + x-studio-key → { reminder, text_reminder, review, rebook, restock }
@@ -120,6 +121,13 @@ Deno.serve(async (req) => {
     await pushAll(db, { title: `Still waiting: ${q.name}`, body: q.member ? "A member was promised a reply within 24 hours. A reply is drafted for you." : "They were promised a reply within 2 days. A reply is drafted for you.",
       url: "dashboard.html#client-questions", tag: "question-overdue" }).catch((e: unknown) => console.error("push", e));
     await db.from("questions").update({ owner_nudged_at: new Date().toISOString() }).eq("id", q.id);
+    sent.owner_nudge++;
+  }
+  // a consult request past a day: she promised a reply within one
+  const { data: oldAsks } = await db.from("consults").select("id, name, email").eq("kind", "gate").eq("status", "waiting").is("owner_nudged_at", null).lte("created_at", new Date(Date.now() - 24 * 36e5).toISOString());
+  for (const c of oldAsks ?? []) {
+    await pushAll(db, { title: `Still waiting to buy: ${c.name || c.email}`, body: "They asked for an active a day ago. Approve or decline in Consults; the product unlocks for them by email.", url: "dashboard.html#consults", tag: "consult" });
+    await db.from("consults").update({ owner_nudged_at: new Date().toISOString() }).eq("id", c.id);
     sent.owner_nudge++;
   }
 

@@ -1055,6 +1055,12 @@
     if (act.indexOf("unshot:") === 0) { shots.splice(Number(act.slice(7)), 1); sendErr = ""; return render(); }
     if (act.indexOf("add:") === 0 || act.indexOf("addall:") === 0) return addToBag(act.slice(act.indexOf(":") + 1).split(","), act.indexOf("addall:") === 0);
     if (act === "bag") { close(); if (window.LumevinaCart) window.LumevinaCart.open(); return; }
+    if (act.indexOf("consult:") === 0) {            /* an active Evelyn checks first: the consult sheet (js/consult.js) */
+      close();
+      var gp = window.LumevinaInventory && window.LumevinaInventory.get(act.slice(8));
+      if (gp && window.LumevinaConsult) window.LumevinaConsult.open(gp);
+      return;
+    }
     if (act === "book") { close(); if (window.LumevinaBooking) window.LumevinaBooking.open(); return; }
     if (act === "move") { close(); if (window.LumevinaBooking) window.LumevinaBooking.startReschedule(); return; }
     if (act === "account") { close(); if (window.LumevinaAccount) window.LumevinaAccount.open(); return; }
@@ -1082,10 +1088,11 @@
   var addToBag = function (ids, all) {
     var C = window.LumevinaCart;
     if (!C) return;
-    var added = [], full = [], gone = [], gated = [];
+    var added = [], full = [], gone = [], gated = [], gatedIds = [];
     ids.forEach(function (id) {
       if (all && C.has(id)) return;
       var r = C.add(id);
+      if (r.reason === "consult") gatedIds.push(id);
       (r.ok ? added : r.reason === "max" ? full : r.reason === "consult" ? gated : gone).push(r.name || "That product");
     });
     var words = function (l) { return l.length > 2 ? l.slice(0, -1).join(", ") + " and " + l[l.length - 1] : l.join(" and "); };
@@ -1094,7 +1101,9 @@
       (gone.length ? " " + words(gone) + " just sold out; you can request " + (gone.length === 1 ? "it" : "them") + " from the shop." : "") +
       (gated.length ? " " + words(gated) + (gated.length === 1 ? " needs" : " need") + " a quick consult first: tap it in the shop, tell Evelyn about your skin, and she unlocks it, usually within a day." : "");
     state.pending = null;
-    push({ who: "bot", text: text.trim(), acts: C.count() ? [["Check out", "bag"]] : [] });
+    var acts = C.count() ? [["Check out", "bag"]] : [];
+    if (gatedIds.length) acts.push(["Ask Evelyn to unlock " + (gatedIds.length === 1 ? "it" : "them"), "consult:" + gatedIds[0]]);
+    push({ who: "bot", text: text.trim(), acts: acts });
     render();
   };
 
