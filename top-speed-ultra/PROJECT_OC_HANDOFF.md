@@ -93,7 +93,7 @@ the snapshot is a mid-edit state that never reached a judge, so merge only if ts
 pass on the ported branch; the lane's later judged RS1 takes precedence over the port in its merge, so the file set stays
 small. RS2/RS3 (Low = Retro, the LOW UI tokens, the Look row's removal) stay that lane's.
 
-**In flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
+**Paused 23:02 UTC by the owner (see the progress log's 23:02 entry for each branch's state); was in flight here (from about 17:05 UTC, the owner: "run full fable for maximum overdrive"):** a Fable workflow
 (audit, implement in its own worktree, adversarial judge, one repair round) on the driver's hands (`src/preview/hands*`),
 the people builder's faces and eyes, hair and bodies (`src/onfoot/people/*`), the wheels (`src/preview/car-wheel.ts`) and
 the physics (`src/game/vehicle/Physics.ts`, against `PROJECT_OC_DYNAMICS.md`). Branches `fable/<area>`, merged here only

@@ -4,6 +4,27 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-21 (23:02 UTC): paused by the owner
+
+The owner said "Pause". Both workflows were stopped and the hourly task switched off. The 00:20 stop-and-ask check-in was
+deleted. Nothing was merged: no branch had reached a judge. Where each piece stands (all committed, no uncommitted
+scraps; both workflows resume from their journals):
+
+- **Hands, `fable/hands`** (worktree `.claude/worktrees/wf_ba9f2603-ef8-8`), unjudged:
+  - c285d6e: the thumbs lie along the rim, nails to the driver, the web open (the owner's "fix the thumbs");
+  - cfeee35: the pose allocates nothing per frame; blend and wave run on the game's dt, so they stop while paused;
+  - 2a52270: the test page frames the seat view like the game (`?frame=game`).
+  - Its proof renders, suite groups and judge had not run.
+- **Wheels, `fable/wheels`** (worktree `-10`), unjudged:
+  - c2350ef: the Aero Disc cover re-meshed as polar grids (no banding);
+  - e5ea194: crowned, forged-width spoke faces;
+  - 8ff6257: round drill holes, the caliper wordmark, chamfered nuts, a valve stem;
+  - 7599805: a plain tread band on the phone tier.
+- **Retro, `retro/port`**: the three port commits plus a merge of `claude/hypercar` (960dc12). Its verification against
+  the merge bar had not finished.
+- **Audits done** for hands, signs, wheels, face, physics, hair and body; the signs spec delivered (bdc9b47).
+- **Not started:** the face, physics, hair and body implementations; the critic.
+
 ## 2026-10-21 (21:55 UTC): both workflows cut off by the usage limit; resumed
 
 - **What the limit cut off.** At about 18:30 UTC the session's five-hour usage limit stopped every running agent; it
