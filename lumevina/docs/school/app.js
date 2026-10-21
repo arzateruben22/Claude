@@ -320,6 +320,30 @@
   };
   var SPARK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg>';
   var tryHtml = function (ls) { return '<div class="ls-try"><b>' + SPARK + 'Try this at home</b><p>' + esc(ls.try) + '</p></div>'; };
+  /* under the lesson: a diagram (visuals.js), Evelyn's own words, the general layer and her shelf (notes.js) */
+  var NOTES = window.SCHOOL_NOTES || {}, VISUALS = window.SCHOOL_VISUALS || [];
+  var figHtml = function (ls) {
+    if (VISUALS.indexOf(ls.id) === -1) return "";
+    var src = "img/school/" + esc(ls.id) + ".jpg";
+    return '<figure class="ls-fig"><a href="' + src + '" target="_blank" rel="noopener" aria-label="Open the diagram full size"><img src="' + src + '" alt="" loading="lazy" decoding="async"></a><figcaption>Tap to open full size</figcaption></figure>';
+  };
+  var evelynHtml = function (ls) {
+    var n = NOTES[ls.id];
+    if (!n || !n.evelyn || !n.evelyn.length) return "";
+    return '<div class="ls-ev"><b>Evelyn says</b><ul>' + n.evelyn.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="ls-k">In her own words, from her Skin Playbook.</p></div>';
+  };
+  var moreHtml = function (ls) {
+    var n = NOTES[ls.id];
+    if (!n || !n.general || !n.general.length) return "";
+    return '<details class="ls-more"><summary>The general picture</summary><ul>' + n.general.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul><p class="ls-k">Standard esthetics practice, in general terms. Your own skin is a question for Evelyn.</p></details>';
+  };
+  var shelfHtml = function (ls) {
+    var n = NOTES[ls.id];
+    if (!n || !n.shelf || !n.shelf.length) return "";
+    return '<div class="ls-shelf"><b>On Evelyn&rsquo;s shelf</b><ul>' + n.shelf.map(function (p) {
+      return '<li><span>' + esc(p.name) + ' <small>' + esc(p.brand) + ' · $' + p.price + '</small></span>' + (p.about ? '<em>' + esc(p.about) + '</em>' : "") + '</li>';
+    }).join("") + '</ul><a class="ls-shop" href="index.html#shop">See the shop</a></div>';
+  };
   var checkHtml = function (ls) {
     return '<div class="ls-check" data-check="' + ls.id + '"><span class="lbl">Quick check</span><p class="qq">' + esc(ls.q.ask) + '</p><div class="ck-opts">' +
       ls.q.opts.map(function (o, i) { return '<button type="button" class="ck-opt" data-i="' + i + '">' + esc(o) + '</button>'; }).join("") +
@@ -720,7 +744,7 @@
         form.hidden = true; done.hidden = false;
         var first = name.split(" ")[0];
         done.innerHTML = '<p class="kicker">You&rsquo;re in</p><p class="big">Welcome to Skin School, <span class="grad">' + esc(first) + '.</span></p>' +
-          '<p>' + (tier.id === "basics" ? "Level 1 is open: nine lessons, about an hour and a half." : "All three levels are open: 33 lessons.") +
+          '<p>' + (tier.id === "basics" ? "Level 1 is open: nine lessons, about an hour and a half." : "All three levels are open: " + ALL.length + " lessons.") +
           (kit ? " Your kit " + (ship === "ship" ? "ships free in 1–2 business days, with tracking by email." : "will be waiting at the front at your next visit.") : "") +
           (order ? " Order " + esc(order) + "." : "") + '</p>' +
           (tier.id === "evelyn" ? '<p><b>Pick a time for your call with Evelyn:</b></p><div class="slots" id="slots">' +
@@ -842,8 +866,8 @@
       main.innerHTML = '<article class="lesson' + (first ? "" : " enter") + '">' +
         '<div><p class="kicker">Level ' + lv.n + ' · ' + esc(md.name) + ' · Lesson ' + (row.i + 1) + ' of ' + ALL.length + '</p>' +
         '<h2 class="ls-h">' + esc(ls.t) + '</h2><p class="ls-sum">' + esc(ls.sum) + '</p></div>' +
-        (has ? videoHtml(ls) +
-          '<div><p class="ls-sec">What you&rsquo;ll learn</p>' + learnHtml(ls, true) + '</div>' + tryHtml(ls) +
+        (has ? videoHtml(ls) + figHtml(ls) +
+          '<div><p class="ls-sec">What you&rsquo;ll learn</p>' + learnHtml(ls, true) + '</div>' + evelynHtml(ls) + tryHtml(ls) + moreHtml(ls) + shelfHtml(ls) +
           (ls.builder ? '<div><p class="ls-sec">Your routine builder</p>' + builderHtml() + '</div>' : "") + checkHtml(ls) +
           '<div class="ls-nav">' + (prev ? '<button type="button" class="btn btn-ghost" data-go="' + prev.ls.id + '">&larr; Back</button>' : "<span></span>") +
           '<button type="button" class="btn btn-dark ls-done' + (done ? " is-done" : "") + '" id="ls-done">' + (done ? "&#10003; Completed" : "Mark complete") + '</button>' +
@@ -881,7 +905,7 @@
     };
     var certificate = function () {
       var d = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-      party('<p class="kicker">All 33 lessons</p><p class="big">You finished <span class="grad">Skin School.</span></p>' +
+      party('<p class="kicker">All ' + ALL.length + ' lessons</p><p class="big">You finished <span class="grad">Skin School.</span></p>' +
         '<div class="cert"><p class="c-k">Lumevina Skin School · Certificate of completion</p><p class="c-n">' + esc(st.name || "Skin School student") + '</p>' +
         '<p class="c-t">completed all three levels: Skin Basics, Actives &amp; Routines, and Treat Your Concern.</p>' +
         '<div class="c-s"><span>Evelyn Romero, Licensed Esthetician</span><span>' + d + '</span></div></div>' +

@@ -6,7 +6,9 @@ Run:  python3 build.py              (writes the site's school.html, linked from 
 Sources, all in this folder:
   page.html       the page, with __PLACEHOLDERS__
   style.css       its styles (the Inter font is inlined from ../blueprint)
-  curriculum.js   the three levels, 33 lessons and the tiers
+  curriculum.js   the three levels, 40 lessons and the tiers
+  notes.js        per lesson: Evelyn's answers, the general layer, her shelf (knowledge/scripts/build-course-notes.mjs)
+  visuals.js      which lessons have a diagram in ../../img/school (visuals/build-visuals.mjs)
   hero.js         the opening animation (a living cross-section of skin)
   scenes.js       one animation per level
   app.js          quiz, lesson preview, checkout, course player
@@ -37,6 +39,8 @@ for key, val in [
     ("__CSS__", read(HERE, "style.css").replace("__FONT__", font)),
     ("__MONTH__", month),
     ("__CURRICULUM__", script(read(HERE, "curriculum.js"))),
+    ("__NOTES__", script(read(HERE, "notes.js")) if os.path.exists(os.path.join(HERE, "notes.js")) else "window.SCHOOL_NOTES = {};"),
+    ("__VISUALS__", script(read(HERE, "visuals.js")) if os.path.exists(os.path.join(HERE, "visuals.js")) else "window.SCHOOL_VISUALS = [];"),
     ("__PAYMENTS__", script(read(SITE, "js", "payments.js"))),
     ("__SHIPPING__", script(read(SITE, "js", "shipping.js"))),
     ("__HERO__", script(read(HERE, "hero.js"))),

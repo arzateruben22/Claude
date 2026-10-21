@@ -323,3 +323,10 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 - **Not a loss.** Professional skincare retails at about double wholesale (she should confirm), so she earns at the shelf price. First orders get a perk instead: free pickup, 100 Glow Points on a first booking, and WELCOME10 at checkout, never in an ad.
 - **Local first:** 20 miles around Woodland Hills, then LA County, then OC. A local client is a facial and a membership, not a $8 shipment.
 - **Built:** MARKETING.md, the campaigns and local listings, the welcome offer, a 30-day Instagram calendar in her voice, 12 ad creatives, the product feeds, a free-pickup line in the shop, and a Monday task that drafts the week. Ads still need her ad accounts, her card and her yes.
+
+## Skin School, bulked from her answers and the general layer (Oct 21)
+
+- **Forty lessons now** (three new modules in Level 3: before and after a treatment, waxing done well, your first visit at Lumevina), drafted from the general esthetics layer and her own menu descriptions.
+- **Under every lesson:** "Evelyn says" in her own words wherever she has answered that question in her playbook (grows as she answers; nothing invented), "The general picture" from the general layer, hedged, and "On Evelyn's shelf" with the products that belong to that lesson and their label lines. Rebuilt from the same files the chat uses, so one import feeds both.
+- **Thirteen diagrams drawn in code**, in the course's own style: skin layers, type vs. condition, the barrier, SPF amount, the exfoliant ladder, the retinoid ramp, the order of steps, what not to mix, purging vs. a reaction, the 90-day acne calendar, aftercare timeline, what's normal, the waxing ruler, red flags. No borrowed photos, no invented anatomy. The style can change to match a reference once Ruben sends it.
+- Skin School stays held back on the live site (`site-config.js` → school) until she has reviewed the lessons.

@@ -1,6 +1,6 @@
 /* Lumevina Skin School — the curriculum.
  *
- * Three levels, eleven modules, thirty-three lessons. Each lesson is what
+ * Three levels, fourteen modules, forty lessons. Each lesson is what
  * Evelyn covers on camera (about 6 to 12 minutes), written out as notes:
  *   sum    what the lesson is about, in a sentence or two
  *   learn  the points it teaches
@@ -9,8 +9,12 @@
  *
  * Drafted from mainstream dermatology guidance (AAD, FDA) and the way
  * Lumevina already works (Face Reality for acne, GlyMed+ and Le Mieux on the
- * shelf, California esthetics scope). Evelyn reviews every lesson before she
- * records it: anything medical points to a dermatologist or doctor.
+ * shelf, California esthetics scope). Under each lesson the player adds
+ * notes.js (knowledge/scripts/build-course-notes.mjs): Evelyn's own playbook
+ * answers where she has them, the general esthetics layer, and her shelf;
+ * and a diagram from visuals.js where one exists. Evelyn reviews every
+ * lesson before she records it: anything medical points to a dermatologist
+ * or doctor.
  */
 window.SCHOOL = {
   levels: [
@@ -453,6 +457,97 @@ window.SCHOOL = {
               builder: true,
               q: { ask: "A mole that's changing shape or color needs:", opts: ["A dermatologist, soon", "A stronger serum", "Nothing"], a: 0,
                 why: "Changing moles need a doctor to look at them. That's outside any facial or course." } }
+          ]        },
+        {
+          name: "Before and after a treatment", art: "calm",
+          lessons: [
+            { id: "12-1", t: "Before your facial, peel or wax", min: 8,
+              sum: "A few days of preparation make the difference between a treatment that works and one that stings.",
+              learn: [
+                "Pause retinol and acids for three to five days before a facial, peel, dermaplaning or wax; a prescription retinoid, about a week, and tell Evelyn.",
+                "No treatment on sunburned or freshly tanned skin, and plan a trip for at least two or three days after.",
+                "Breaking out is a reason to come in, not to cancel; open, raw or infected skin is the one thing that waits.",
+                "Tell her every time about medications, pregnancy, a recent procedure or a named condition. The pre-visit form is where it goes."
+              ],
+              try: "Open your bathroom cabinet and list every product with an acid or a retinoid. That's your pause list for the week before a visit.",
+              q: { ask: "How long before a peel should you pause over-the-counter retinol?", opts: ["The morning of", "Three to five days", "A month"], a: 1,
+                why: "Three to five days for retinol and acids; about a week for a prescription retinoid, with Evelyn told." } },
+            { id: "12-2", t: "The first 24 hours, and the first week", min: 9,
+              sum: "Treated skin has a thinner barrier and open follicles for a day or two. What you keep off it then decides the result.",
+              learn: [
+                "The first day: no makeup, no touching, no heat or sweat (gym, sauna, hot yoga, pools), no sun. A gentle cleanse that night or the next morning, moisturizer, SPF.",
+                "No actives for two or three days after a facial; five to seven after a peel, dermaplaning or microchanneling, or until the skin feels normal.",
+                "Let flaking fall by itself. Pulled skin leaves marks.",
+                "Change the pillowcase, clean the phone, skip waxing, threading and new products for a week."
+              ],
+              try: "Before your next visit, book nothing sweaty for the day after, and put a clean pillowcase on that night.",
+              q: { ask: "Your skin is flaking on day three after a peel. You should:", opts: ["Exfoliate it off", "Moisturize and let it fall", "Skip sunscreen so it can breathe"], a: 1,
+                why: "Peeling skin comes off on its own; pulling it leaves dark marks, and SPF matters more than ever." } },
+            { id: "12-3", t: "What's normal, what isn't", min: 8,
+              sum: "Pink, tight and a little flaky is the treatment working. Spreading, swelling and heat are not.",
+              learn: [
+                "Normal: pink for a few hours, tightness for a day or two, light flaking on days two to five, a few small bumps after extractions.",
+                "Message Evelyn: redness that spreads or worsens after the first day, burning that doesn't settle, bumps turning into pus-filled spots. Send a photo in daylight.",
+                "A doctor, today: swelling around the eyes or lips, hives, blistering, pus with heat or fever, a cold sore starting.",
+                "Trouble breathing or a swelling throat is 911, not a text."
+              ],
+              try: "Save Evelyn's contact and the Lumevina chat where you can find them in a hurry; the chat hands a reaction to her straight away.",
+              q: { ask: "Which of these means a doctor today, not a message?", opts: ["Pink skin an hour after a facial", "Swelling around the eyes and hives", "A few whiteheads after extractions"], a: 1,
+                why: "Swelling and hives are a reaction that needs a doctor the same day." } }
+          ]
+        },
+        {
+          name: "Waxing, done well", art: "routine",
+          lessons: [
+            { id: "13-1", t: "Before a wax: length, shaving, timing", min: 7,
+              sum: "A quarter inch of hair, no shaving in between, and the right week: most of a good wax happens before you arrive.",
+              learn: [
+                "About a quarter inch, the length of a grain of rice: two to three weeks after shaving, four to six after a wax.",
+                "No shaving between waxes. It resets the growth cycle and makes the next wax patchier and more uncomfortable.",
+                "Exfoliate gently two or three days before, not the day of; arrive with clean, dry skin, no lotion or deodorant, in loose cotton.",
+                "Not waxed: sunburned, broken or irritated skin, a prescription retinoid on the area, and during or for months after Accutane. Tell Evelyn first."
+              ],
+              try: "Measure a grain of rice against your hair before you book. If it's shorter, give it another week.",
+              q: { ask: "You shaved a week ago. Your wax should be:", opts: ["Tomorrow", "In one to two more weeks", "Never"], a: 1,
+                why: "The wax needs about a quarter inch to grip: two to three weeks after shaving." } },
+            { id: "13-2", t: "After a wax: bumps, ingrowns, how often", min: 8,
+              sum: "The first two days are about keeping heat and friction off; after that, exfoliation keeps ingrowns away.",
+              learn: [
+                "For 24 to 48 hours: no heat or sweat, no sun, no tight clothes, nothing scented; for a Brazilian, loose cotton and no sex for a day.",
+                "Small red bumps for a few hours to a day are normal; pus-filled bumps that spread, lifted skin or a burn are not.",
+                "From day two or three, exfoliate the area gently two or three times a week and keep it moisturized. Don't dig at an ingrown.",
+                "Every four to six weeks (brows, lip and underarms three to four). Regular waxing thins the hair; shaving in between undoes it."
+              ],
+              try: "Put a gentle exfoliating pad or mitt where you'll see it on day three after your wax.",
+              q: { ask: "The best way to prevent ingrown hairs after a wax is:", opts: ["Tweezing anything you see", "Gentle exfoliation from day two or three, and moisture", "Tight leggings to keep the area smooth"], a: 1,
+                why: "Dead skin traps new hair; exfoliation and no friction are the fix." } }
+          ]
+        },
+        {
+          name: "Your first visit at Lumevina", art: "layers",
+          lessons: [
+            { id: "14-1", t: "What happens, and which treatment to book", min: 9,
+              sum: "A first visit is a conversation, a close look, and a fully customized facial. Knowing which one to book saves a message.",
+              learn: [
+                "New clients without acne concerns book New Clients Start Here: a consultation, a review of your current routine, and a customized facial (double cleanse, enzyme exfoliation, extractions, mask, massage, LED, cryo globes).",
+                "New clients with acne concerns book the Acne Bootcamp consultation and treatment, then monthly treatments, or every two weeks for severe acne.",
+                "Returning clients book the Lumevina Custom Facial, or the Monthly Acne Treatment when acne is the work.",
+                "Come with a clean face if you can, hair you don't mind getting damp, and your product list or photos of it. The address comes with the confirmation; parking is free."
+              ],
+              try: "Photograph the front of every product you use and keep the album; it's the first thing Evelyn asks to see.",
+              q: { ask: "You're new, with breakouts. You book:", opts: ["New Clients Start Here", "The Acne Bootcamp consultation + treatment", "A peel"], a: 1,
+                why: "New clients with acne concerns start with the Acne Bootcamp consultation and treatment." } },
+            { id: "14-2", t: "Her shelf: how the products fit together", min: 10,
+              sum: "Every product on the website is one Evelyn stocks for her clients. Here's how a routine is built from it, in general, and where her own picks come in.",
+              learn: [
+                "The base is a cleanser, a moisturizer and SPF; one treatment product for the main concern is the first addition.",
+                "Mandelic serums come in strengths; the lowest first, a few nights a week, and moving up is her call after a few weeks without stinging.",
+                "Gel textures for oily and combination skin, creams for dry; a hydrating toner adds water under either.",
+                "Her own morning and night picks for your skin come after a visit, and the chat on the website can tell you what's in stock and put it in your bag for pickup."
+              ],
+              try: "Open the shop, filter by your skin's category, and read the label line on three products. That's the vocabulary for your next visit.",
+              q: { ask: "The first product to add to a base routine is:", opts: ["Three serums at once", "One treatment product for your main concern", "A scrub"], a: 1,
+                why: "One active at a time, so a reaction has a clear cause and progress can be judged." } }
           ]
         }
       ]
@@ -463,7 +558,7 @@ window.SCHOOL = {
   tiers: [
     { id: "course", name: "The Course", price: 149, tag: "Self-paced",
       line: "All three levels, at your own pace.",
-      has: ["All 33 lessons, Beginner to Advanced", "The routine builder and a printable plan", "Lifetime access, with new lessons as they're added", "$25 off your first visit at Lumevina"] },
+      has: ["All 40 lessons, Beginner to Advanced", "The routine builder and a printable plan", "Lifetime access, with new lessons as they're added", "$25 off your first visit at Lumevina"] },
     { id: "kit", name: "Course + Kit", price: 229, tag: "Most popular", hl: true,
       line: "The course, plus the products to start right away.",
       has: ["Everything in The Course", "A starter kit chosen for your skin: cleanser and SPF 30 from our shelf, a $75 value", "Ships free, or pick it up at your visit"] },
