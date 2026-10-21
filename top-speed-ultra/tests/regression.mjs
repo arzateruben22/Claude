@@ -865,7 +865,7 @@ await group('live', async (use) => {
   const port = 21000 + Math.floor(Math.random() * 10000), base = `http://127.0.0.1:${port}`;
   const db = path.join(OUT, 'live-test.db');
   for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
-  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', DB_PATH: db, NOW_WEATHER: 'mock', NOW_TRAFFIC: 'mock' }, stdio: ['ignore', 'pipe', 'inherit'] });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', SOCKETS_PER_IP: '50', DB_PATH: db, NOW_WEATHER: 'mock', NOW_TRAFFIC: 'mock' }, stdio: ['ignore', 'pipe', 'inherit'] });
   await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
   const signup = async (name) => { const r = await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) }); expect(r.ok, `sign-up ${r.status}`); return (await r.json()).token; };
   const extra = [];
