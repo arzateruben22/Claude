@@ -7,7 +7,7 @@
    chrome (Mark.tsx) and uses the cut-outs only on the run card. */
 :root {
   /* night: navy-black surfaces */
-  --void: #04070d;
+  --void: #030915;                           /* the style library's ULTRA background (06_DESIGN_TOKENS) */
   --night-1: #070c16;
   --night-2: #0c1320;
   --night-3: #131d2e;
@@ -21,41 +21,41 @@
   --scrim-2: rgba(4, 7, 13, 0.84);
   --scrim-3: rgba(4, 7, 13, 0.93);
   --scrim-0: rgba(4, 7, 13, 0);
-  --haze-ice: rgba(79, 168, 255, 0.14);      /* the LED glow at the edge of the menu */
+  --haze-ice: rgba(64, 140, 255, 0.14);      /* the LED glow at the edge of the menu */
   --haze-deep: rgba(31, 111, 214, 0.12);
   --shadow: rgba(0, 0, 0, 0.55);
   /* ink */
-  --ink: #f2f6fc;
+  --ink: #f6fbff;                            /* ULTRA foreground: 19:1 on the base */
   --dim: #b9c6d8;
   --faint: #8c9bb2;
   --line: rgba(190, 212, 240, 0.16);
   --line-2: rgba(190, 212, 240, 0.32);
   --line-3: rgba(240, 246, 252, 0.62);
-  /* signals: the hypercar's LED family. Contrast is WCAG 2.x on the navy-black base #070b14: ice 7.9:1, ice-text 11.1:1,
-     cyan 12:1, ember 4.6:1 (so ember is for fills, hairlines and large type only). Over a HUD plate on a white sky
+  /* signals: the hypercar's LED family, the style library's ULTRA tokens (style-references branch, 06_DESIGN_TOKENS).
+     Contrast is WCAG 2.x on the base #030915: ice 6.1:1, ice-text 11.2:1, cyan 12.5:1, ember 4.6:1 (so ember is for fills, hairlines and large type only). Over a HUD plate on a white sky
      (the plate composites to about #434650) --ice falls to 3.9:1, so small text there uses --ice-text (5.5:1). */
-  --ice: #4fa8ff;                            /* the LED blue: Drive, focus, the accent */
+  --ice: #408cff;                            /* ULTRA accent, the LED blue: Drive, focus */
   --ice-text: #8cc8ff;                       /* small ice text: 11.1:1 on the base, 5.5:1 on a HUD plate over white */
   --ice-hi: #bfe4ff;
   --ice-deep: #1f6fd6;
-  --ice-line: rgba(79, 168, 255, 0.55);
-  --ice-wash: rgba(79, 168, 255, 0.1);
-  --ice-glow: rgba(79, 168, 255, 0.35);
-  --cyan: #7fd4ff;                           /* the LED's hot centre: what's selected */
-  --cyan-line: rgba(127, 212, 255, 0.6);
-  --cyan-wash: rgba(127, 212, 255, 0.13);
-  --cyan-glow: rgba(127, 212, 255, 0.35);
+  --ice-line: rgba(64, 140, 255, 0.55);
+  --ice-wash: rgba(64, 140, 255, 0.1);
+  --ice-glow: rgba(64, 140, 255, 0.35);
+  --cyan: #8bd6ff;                           /* the LED's hot centre: what's selected */
+  --cyan-line: rgba(139, 214, 255, 0.6);
+  --cyan-wash: rgba(139, 214, 255, 0.13);
+  --cyan-glow: rgba(139, 214, 255, 0.35);
   --ember: #ee1e0a;                          /* the tail-light bar: danger */
   --ember-line: rgba(238, 30, 10, 0.6);
   --ember-glow: rgba(238, 30, 10, 0.4);
   --night: #000000;                          /* ink on ice 8.4:1, on cyan 12.8:1 */
-  --ice-edge: linear-gradient(90deg, #bfe4ff 0%, #4fa8ff 50%, #1f6fd6 100%);   /* hairlines; never under text */
+  --ice-edge: linear-gradient(90deg, #bfe4ff 0%, #408cff 50%, #1f6fd6 100%);   /* hairlines; never under text */
   --alarm: #c81a0a;                          /* wrong way: a deeper tail-light red, --ink on it 5.23:1 */
-  --good: #5effb4;
+  --good: #6ff7de;                          /* ULTRA success */
   --bad: #ff6a4f;                            /* danger text, tail-light red: 7:1 on the base */
   /* brushed chrome, cool */
   --chrome-hi: #ffffff;
-  --chrome: #d6dde9;
+  --chrome: #dde9f3;                         /* ULTRA primary: liquid silver */
   --chrome-lo: #6b7689;
   --chrome-deep: #26303f;
   --sheen: rgba(255, 255, 255, 0.07);

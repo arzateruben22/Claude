@@ -1,0 +1,82 @@
+{
+  "package": "Project_OC_Visual_Library_v2",
+  "project": "Project OC",
+  "world": "Orange County-inspired open-world driving and life simulation",
+  "mode_summary": {
+    "LOW": "Nostalgic 16/32-bit arcade: saturated, clean pixel art, cheerful punchy UI, gameplay legibility first",
+    "HD": "Naturalistic contemporary luxury: physically grounded materials, sunset/day/night, elegant restrained UX",
+    "ULTRA": "Near-future premium sci-fi: silver/ice-blue signature OC hypercar, blue-white light accents, cinematic glass/metal UI"
+  },
+  "shared_navigation": [
+    "Drive",
+    "World Map",
+    "Garage",
+    "Lifestyle",
+    "Career",
+    "Online",
+    "Settings"
+  ],
+  "shared_features": [
+    "First-person cockpit driving",
+    "Third-person chase driving",
+    "First-person walking and interaction",
+    "Third-person character follow",
+    "Isometric dollhouse house editing",
+    "Orbit camera for interiors",
+    "Overhead neighborhood maps"
+  ],
+  "asset_naming": "{MODE}-{SECTOR_2DIGITS}-{SHOT_4DIGITS}; generated files only if approved and validated",
+  "themes": {
+    "LOW": {
+      "palette": {
+        "background": "#18235D",
+        "primary": "#FFBD3D",
+        "secondary": "#51DAE8",
+        "accent": "#F164A4",
+        "foreground": "#FFF9EC",
+        "success": "#6EE68B"
+      },
+      "font_direction": "blocky 8/16-bit pixel display headings with readable modern fallback for dense UI",
+      "style": "pixel-art-inspired, hard step edges, simple high-contrast silhouettes",
+      "corner_radius_px": 4,
+      "hud_opacity": 1
+    },
+    "HD": {
+      "palette": {
+        "background": "#0A111D",
+        "primary": "#E8ECEF",
+        "secondary": "#CB904E",
+        "accent": "#61B4E8",
+        "foreground": "#F3F5F7",
+        "success": "#6AC7AE"
+      },
+      "font_direction": "humanist/squared contemporary sans, restrained uppercase navigation",
+      "style": "natural glass/metal materials; believable asphalt, palm-lined streets, environmental light",
+      "corner_radius_px": 8,
+      "hud_opacity": 0.86
+    },
+    "ULTRA": {
+      "palette": {
+        "background": "#030915",
+        "primary": "#DDE9F3",
+        "secondary": "#8BD6FF",
+        "accent": "#408CFF",
+        "foreground": "#F6FBFF",
+        "success": "#6FF7DE"
+      },
+      "font_direction": "custom extended geometric sans, hairline tracking, strong information hierarchy",
+      "style": "silver titanium, optical glass, micro-detail, refined icy-blue emissive accents",
+      "corner_radius_px": 10,
+      "hud_opacity": 0.78
+    }
+  },
+  "interface_guidelines": {
+    "safe_area": "minimum 5% horizontal and 6% vertical for vital gameplay readouts",
+    "hierarchy": "world/vehicle remains dominant; UI at edges; legible at 1080p",
+    "dynamic_text": "render headings/buttons in engine; do not depend on image-generator text",
+    "interaction": "all controls require keyboard/controller mapping, focus, selected/hover states, accessibility",
+    "performance": "avoid bloom washing out road signs and mirrors",
+    "readability": "test at 1080p and 4K; adjust HUD scale"
+  },
+  "original_reference_resolution_warning": "Generated boards are 1536 x 1024 and individual crops are lower-resolution. These are not native 4K assets."
+}
