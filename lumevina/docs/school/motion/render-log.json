@@ -5733,8 +5733,8 @@
    "dur": 22,
    "w": 720,
    "h": 1280,
-   "bytes": 2640520,
-   "hash": "006b956616b4a8a2c5ed879562c3af92abd844d2",
+   "bytes": 2642864,
+   "hash": "4cde187386900baeeb13f79e21042fc953df89f2",
    "samples": [
     [
      0,
@@ -5902,21 +5902,19 @@
     ],
     [
      615,
-     "89c381db7263280878f43270095a92e3cb24e4b7"
+     "182780b710800eb1c0d6d356f6433567fda71767"
     ],
     [
      630,
-     "c16e63d82502275075a12b29ef16cb29fdc7cc9d"
+     "86a9a365d091d3e9a12f77d98227de3e19daa2d7"
     ],
     [
      645,
-     "1251a084703673c4f4f9a7d8f8142785a552fda2"
+     "0189846755905059eb577afc9eaa9644ee7a7de2"
     ]
    ],
-   "warnings": [
-    "wash @21.8s overlap: 1:00 / Tight and squeaky afterw"
-   ],
-   "renderSec": 550.5,
+   "warnings": [],
+   "renderSec": 573.8,
    "renderedAt": "2026-10-21",
    "quick": false
   }
