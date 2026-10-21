@@ -247,7 +247,12 @@ export class Game {
     if (s.density === 'live') this.applyDensity();
     if (s.weather === 'live') this.env.setLiveWeather(this.now.snapshot.weather.kind);
   }
+  private djT = 180;                  // seconds to the DJ's next line while a station is on
   private nowTick(dt: number) {
+    if (this.radio.current && !this.attract && !this.paused) {
+      this.djT -= dt;
+      if (this.djT <= 0) { this.djT = 160 + Math.random() * 60; this.ev.toast(djLine(Math.random, this.talkNow(), this.radio.current.call), 'info'); }
+    }
     this.nowT -= dt;
     if (this.nowT > 0) return;
     this.nowT = 2;
@@ -365,7 +370,7 @@ export class Game {
     this.audio.start(); this.audio.setMusicVolume(this.settings.music);
     this.ev.toast(this.radio.cycle(), 'info');
     // the DJ says something about right now (the weather, the freeways, the Coastal League, the week's talk)
-    if (this.radio.current) this.ev.toast(djLine(Math.random, this.talkNow(), this.radio.current.call), 'info');
+    if (this.radio.current) { this.djT = 180; this.ev.toast(djLine(Math.random, this.talkNow(), this.radio.current.call), 'info'); }
   }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }

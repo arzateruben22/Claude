@@ -86,7 +86,8 @@ export function App() {
   const toast = useCallback((text: string, kind = 'info') => {
     const id = ++toastId.current;
     setToasts((t) => [...t.slice(-2), { id, text, kind }]);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 1800);
+    // long enough to read: 1.8 s for a short one, about a fifth of a second more per word past five, 6 s at most
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), Math.min(6000, 1800 + Math.max(0, text.length - 30) * 45));
   }, []);
 
   const update = (patch: Partial<Settings>) => {
