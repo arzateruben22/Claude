@@ -133,7 +133,8 @@ export function makePose(J, world) {
       out.pos.lerpVectors(seg.p0, seg.p1, p);
       out.pos.y = 4 * seg.apex * p * (1 - p);
       out.vy = (4 * seg.apex * (1 - 2 * p)) / (seg.t1 - seg.t0);
-      const st = Math.min(1, Math.abs(out.vy) / 14);
+      // stretch with speed, but relax to 1 at lift-off and contact so the shutter never straddles a shape snap
+      const st = Math.min(1, Math.abs(out.vy) / 14) * smooth(clamp01(p / 0.12)) * smooth(clamp01((1 - p) / 0.12));
       out.sy = 1 + 0.16 * st; out.sxz = 1 / Math.sqrt(out.sy);
       out.yaw = angleLerp(seg.yaw0, seg.yaw1, smooth(clamp01(p / 0.3)));
       if (seg.face === "camera" && camPos) {
@@ -182,15 +183,18 @@ export function makePose(J, world) {
       const q = (t - seg.t0) / 0.16;
       if (q < 1) out.scale = 1 + 0.16 * Math.sin(Math.PI * q) * (1 - q);
     }
-    // anticipation crouch before take-offs
+    // anticipation crouch before take-offs: dips and returns to 1 at t0 (no snap into the stretch);
+    // skipped when the take-off is also a landing (chained hops) — the landing squash carries it
     for (const t0 of takeoffs) {
-      if (t >= t0 - 0.1 && t < t0) { const q = (t - (t0 - 0.1)) / 0.1; out.sy *= 1 - 0.2 * Math.sin((Math.PI / 2) * q); }
+      if (landings.some((L) => Math.abs(L.t - t0) < 1e-6)) continue;
+      if (t >= t0 - 0.1 && t < t0) { const q = (t - (t0 - 0.1)) / 0.1; out.sy *= 1 - 0.2 * Math.sin(Math.PI * q); }
     }
-    // landing squash with a damped spring
+    // landing squash: a 40 ms attack after contact, then a damped spring (no instant stretch→squash flip)
     for (const L of landings) {
-      if (t >= L.t && t < L.t + 0.45) {
-        const q = t - L.t, a = L.big ? 0.26 : 0.16;
-        out.sy *= 1 - a * Math.exp(-q * 11) * Math.cos(q * 34);
+      if (t >= L.t && t < L.t + 0.5) {
+        const q = t - L.t, a = L.big ? 0.34 : 0.22;
+        const env = Math.min(1, q / 0.04);
+        out.sy *= 1 - a * env * Math.exp(-q * 9) * Math.cos(34 * Math.max(0, q - 0.04));
       }
     }
     out.sxz = 1 / Math.sqrt(out.sy);

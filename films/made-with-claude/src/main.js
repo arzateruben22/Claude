@@ -238,10 +238,19 @@ function camAt(t) {
     fov: a.fov + (b.fov - a.fov) * e, fstop: a.fstop + (b.fstop - a.fstop) * e, a, b, e
   };
 }
+const FOCUS_UI = { search: [1787, 450], glowrow: [1830, 566] };   // the typed word, the Glow row label (UI px)
 function focusPoint(kind, look, P) {
   if (kind === "mascot" && P.visible) return P.pos.clone().add(new THREE.Vector3(0, (LEG_H + BODY.h / 2) * (P.sy || 1), 0));
   if (kind === "viewer") return viewerPos.clone();
+  if (FOCUS_UI[kind]) { const w = world(...FOCUS_UI[kind]); return new THREE.Vector3(w.x, 0.01, w.z); }
   return look.clone();
+}
+// focus distance + CoC scale at the centre time (shared by seek, the QA probe and the frame signature)
+function focusFor(t) {
+  const C = camAt(t);
+  const Pc = pose(t, C.pos, viewerPos);
+  const fa = focusPoint(C.a.focus, C.look, Pc), fb = focusPoint(C.b.focus, C.look, Pc);
+  return { C, fd: C.pos.distanceTo(fa) * (1 - C.e) + C.pos.distanceTo(fb) * C.e, cocScale: C.fstop * H * 0.034 };
 }
 
 /* ─── scene state at time ts (pure) ─── */
@@ -448,11 +457,24 @@ function screenOf(pt, ts) {
   return new THREE.Vector2((probe.x * 0.5 + 0.5) * W, (probe.y * -0.5 + 0.5) * H);
 }
 const STATIC_PTS = [[-11, 0, -6], [11, 0, -6], [-11, 0, 6], [11, 0, 6], [0, 0, 0], [-0.7, 0, -2.5], [9.5, 0, -1], [7, 0, 2]].map((a) => new THREE.Vector3(...a));
-function samplesFor(t) {
+// near-field probes: where the screen corners and centre hit the slab plane at time t
+const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), ray = new THREE.Raycaster();
+function nearField(t) {
+  const C = camAt(t);
+  const cam = new THREE.PerspectiveCamera(C.fov, W / H, 0.05, 220);
+  cam.position.copy(C.pos); cam.lookAt(C.look); cam.updateMatrixWorld(); cam.updateProjectionMatrix();
+  const pts = [];
+  for (const [x, y] of [[-0.95, -0.95], [0.95, -0.95], [-0.95, 0.95], [0.95, 0.95], [0, 0], [0, -0.95]]) {
+    ray.setFromCamera(new THREE.Vector2(x, y), cam);
+    const hit = ray.ray.intersectPlane(groundPlane, new THREE.Vector3());
+    if (hit && hit.distanceTo(C.pos) < 60) pts.push(hit);
+  }
+  return pts;
+}
+function rawSamples(t) {
   const sh = 0.5 / FPS, a = t - sh / 2, b = t + sh / 2;
   let maxPx = 0;
-  const C = camAt(t);
-  for (const p of STATIC_PTS) {
+  for (const p of STATIC_PTS.concat(nearField(t))) {
     const s0 = screenOf(p, a), s1 = screenOf(p, b);
     // only count points that are on screen at the centre time
     const sc = screenOf(p, t);
@@ -461,8 +483,50 @@ function samplesFor(t) {
   }
   const pa = pose(a, camAt(a).pos, viewerPos), pb = pose(b, camAt(b).pos, viewerPos);
   if (pa.visible && pb.visible) maxPx = Math.max(maxPx, screenOf(pa.pos, a).distanceTo(screenOf(pb.pos, b)));
-  const minK = QUALITY === "final" ? 3 : 1, maxK = QUALITY === "final" ? 16 : 6;
-  return { K: Math.max(minK, Math.min(maxK, Math.ceil(maxPx / 3))), px: maxPx, C };
+  return maxPx;
+}
+function samplesFor(t) {
+  const final = QUALITY === "final";
+  const minK = final ? 3 : 1, capOld = final ? 16 : 6, maxK = final ? 64 : 6;
+  // temporal max over neighbouring frames: no single-frame dips in the blur
+  const px = Math.max(rawSamples(t), rawSamples(t - 1 / FPS), rawSamples(t + 1 / FPS));
+  let K = Math.max(minK, Math.min(capOld, Math.ceil(px / 3)));      // the pass-1 rule, unchanged below 72 px
+  K = Math.min(maxK, Math.max(K, Math.ceil(px / 4.5)));             // fast moves: ≤ 4.5 px between sub-frames
+  if (final) {
+    const sh = J.shards.t;
+    if (t >= sh - 0.04 && t < sh + 0.6) K = Math.max(K, 40);        // shards, sparks, shockwave
+    if (t >= J.streak.t0 && t < J.streak.t1 + 0.25) K = Math.max(K, 24);   // the Glow streak
+  }
+  return { K, px, C: camAt(t) };
+}
+
+// Frame signature: a hash of everything a frame's pixels depend on (sub-frame times, camera,
+// every visible object's transform/material, UI state, focus). Equal signatures → equal pixels,
+// so after an edit only the frames whose signature changed need re-rendering.
+function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); }
+const r6 = (v) => (Math.abs(v) < 5e-7 ? 0 : +v.toPrecision(6));
+function signature(frame) {
+  const t = frame / FPS;
+  const S = samplesFor(t), K = S.K, shutter = 0.5 / FPS;
+  const parts = [K, JSON.stringify(uiState(t, J))];
+  for (let s = 0; s < K; s++) {
+    const ts = Math.min(Math.max(t + (K > 1 ? ((s + 0.5) / K - 0.5) * shutter : 0), 0), J.duration - 1e-4);
+    apply(ts, K > 1 ? [halton(s + 1, 2) - 0.5, halton(s + 1, 3) - 0.5] : null);
+    scene.updateMatrixWorld(true);
+    const acc = [Array.from(camera.projectionMatrix.elements, r6).join(","), Array.from(camera.matrixWorld.elements, r6).join(",")];
+    scene.traverseVisible((o) => {
+      if (!(o.isMesh || o.isSprite || o.isPoints || o.isLine)) return;
+      acc.push(o.id + ":" + Array.from(o.matrixWorld.elements, r6).join(","));
+      if (o.isInstancedMesh) acc.push(o.count + "|" + fnv(Array.from(o.instanceMatrix.array.subarray(0, o.count * 16), r6).join(",")));
+      const m = o.material;
+      if (m) acc.push([r6(m.opacity), r6(m.emissiveIntensity ?? 0), m.color ? m.color.getHexString() : ""].join("/"));
+    });
+    parts.push(fnv(acc.join(";")));
+  }
+  apply(t, null);
+  const F = focusFor(t);
+  parts.push(r6(F.fd), r6(F.cocScale));
+  return fnv(parts.join("#"));
 }
 
 /* ─── public API ─── */
@@ -476,13 +540,10 @@ function seek(frame) {
   const S = samplesFor(t);
   accum.t = t; accum.K = S.K;
   // focus + aperture at the centre time
-  const C = S.C;
-  const Pc = pose(t, C.pos, viewerPos);
-  const fa = focusPoint(C.a.focus, C.look, Pc), fb = focusPoint(C.b.focus, C.look, Pc);
-  const fd = C.pos.distanceTo(fa) * (1 - C.e) + C.pos.distanceTo(fb) * C.e;
+  const { fd, cocScale } = focusFor(t);
   const u = dof.blur.material.uniforms;
   u.focusDist.value = fd;
-  u.cocScale.value = C.fstop * H * 0.034;
+  u.cocScale.value = cocScale;
   u.maxCoc.value = Math.min(H * 0.04, 46 * SCALE);
   u.radScale.value = QUALITY === "final" ? 1.25 : 2.2;
   grade.uniforms.seed.value = (frame * 0.618034) % 1;
@@ -533,7 +594,7 @@ function probeFrame(frame) {
 }
 function project(frame, xyz) { const t = frame / FPS; return screenOf(new THREE.Vector3(...xyz), t).toArray(); }
 
-window.film = { ready: Promise.resolve(info()), seek, info, mascotAt, project, framing, probeFrame };
+window.film = { ready: Promise.resolve(info()), seek, info, mascotAt, project, framing, probeFrame, signature };
 window.__dbg = { renderer, sheen, shadowCatcher, slab, desk, key, rim, panelMeshes, M, scene, accum, dof, bloom, output, grade, rtAccum, rtDOF, rtOut };
 document.documentElement.dataset.ready = "1";
 
