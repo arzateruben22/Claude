@@ -396,5 +396,143 @@ window.seek = function (t) {
   renderer.render(scene, camera);
 };
 `
+  },
+  /* ───────── 11-1 A tired barrier ───────── */
+  "11-1": {
+    id: "11-1", kicker: "Sensitive and rosacea-prone skin", title: `"My skin suddenly hates everything" <span class="grad">is a tired barrier.</span>`, dur: 24, poster: 10,
+    shots: [
+      { at: 0, name: "healthy", cap: "The barrier: skin cells are the bricks, your own oils the mortar. Water stays in, irritants stay out." },
+      { at: 6, name: "wear", cap: "Too many actives, harsh cleansing, hot water, scrubbing: the mortar wears. Water leaks out, irritants get in, it stings and goes red." },
+      { at: 13, name: "subtract", cap: "The fix is subtraction: a gentle fragrance-free cleanser, a moisturizer with barrier lipids, mineral SPF, actives paused. Days to weeks, it seals." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.dayc { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
+.dayc b { font-size: 7vmin; font-weight: 700; letter-spacing: -.03em; } .dayc span { font-size: 2.6vmin; color: #a1a1a6; }
+.note3 { position: absolute; left: 0; bottom: 2vmin; max-width: 70vmin; font-size: 2.5vmin; line-height: 1.4; color: #ff7a6b; opacity: 0; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-brick"><i style="background:#e9c4b4"></i>bricks: skin cells</span><span class="lab3" id="l-mortar"><i style="background:#eab9c8"></i>mortar: your oils</span><span class="lab3" id="l-water"><i style="background:#8fd3ff"></i>water, kept in</span></section>
+<section class="shot"><span class="lab3" id="l-scrub"><i style="background:#9a9a9f"></i>scrubbing</span><span class="lab3" id="l-hot"><i style="background:#ffb067"></i>hot water</span><span class="lab3" id="l-acid"><i style="background:#8fe38f"></i>one active too many</span><span class="lab3" id="l-leak"><i style="background:#8fd3ff"></i>water leaking out</span><span class="lab3" id="l-red"><i style="background:#e0574a"></i>red, stinging</span></section>
+<section class="shot"><span class="lab3" id="l-cream"><i style="background:#f3e6da"></i>barrier lipids, mineral SPF</span><span class="lab3" id="l-pause"><i style="background:#8fe38f"></i>actives paused</span><div class="dayc" id="dayc"><b id="dayn">0</b><span>days</span></div><p class="note3" id="note3">Flushing with bumps across the cheeks and nose, or redness that comes with heat, alcohol or spicy food, can be rosacea: a doctor's diagnosis.</p></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((x >>> 16) ^ x) / 4294967296 % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(10, 20, 12); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0xf4c9d6, 0.45); fill2.position.set(-12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block: the top two rows are the bricks of the barrier, set a little apart so the mortar shows between them
+const NY = 12, NZ = 9, cells = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = cells.length, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 10) c = new THREE.Color(0xe9c4b4).offsetHSL(0, 0, v + (y === 11 ? 0.04 : 0));
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  cells.push({ x, y, z, c, base: c.clone(), top: y === 11 });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+const BRICK = 0.84;
+cells.forEach((c, i) => { dummy.position.set(c.x + 0.5, c.y, c.z + 0.5 - NZ / 2); dummy.scale.setScalar(c.top ? BRICK : 1); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+// the mortar: a glowing slab the bricks sit in
+const mortarMat = new THREE.MeshStandardMaterial({ color: 0xeab9c8, emissive: 0xeab9c8, emissiveIntensity: 0.55, roughness: 0.5 });
+const mortar = new THREE.Mesh(new THREE.BoxGeometry(16.2, 0.14, NZ + 0.2), mortarMat); mortar.position.set(0, 10.56, 0); scene.add(mortar);
+// where it wears: the bricks over these spots shrink, the gaps let water out and irritants in
+const GAPS = [[-5, 2.5], [-1, -1.5], [2.5, 3], [5, -0.5], [-3, -3], [1, 0.5]].map(([x, z]) => new THREE.Vector3(x, 11, z));
+const gapCells = GAPS.map((g) => cells.map((c, i) => ({ c, i })).filter(({ c }) => c.top && Math.hypot(c.x + 0.5 - g.x, c.z + 0.5 - NZ / 2 - g.z) < 1.2).map(({ i }) => i));
+const dropGeo = new THREE.SphereGeometry(0.24, 10, 8);
+const drops = GAPS.map((g, k) => { const m = new THREE.Mesh(dropGeo, new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x1b4a66, roughness: 0.3, transparent: true })); m.visible = false; scene.add(m); return m; });
+const irrGeo = new THREE.IcosahedronGeometry(0.22, 0);
+const irritants = GAPS.map((g, k) => { const m = new THREE.Mesh(irrGeo, new THREE.MeshStandardMaterial({ color: 0x8e8e93, roughness: 0.9, transparent: true })); m.visible = false; scene.add(m); return m; });
+// the aggressors
+const scrub = new THREE.Mesh(new THREE.IcosahedronGeometry(1.1, 1), new THREE.MeshStandardMaterial({ color: 0x9a9a9f, roughness: 0.95, flatShading: true })); scrub.castShadow = true; scrub.visible = false; scene.add(scrub);
+const hot = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.7, 8, 12, 1, true), new THREE.MeshPhysicalMaterial({ color: 0xffb067, transmission: 0.4, opacity: 0.55, transparent: true, roughness: 0.2, side: THREE.DoubleSide })); hot.visible = false; scene.add(hot);
+const acid = new THREE.Mesh(new THREE.SphereGeometry(0.7, 18, 14), new THREE.MeshPhysicalMaterial({ color: 0x8fe38f, transmission: 0.3, opacity: 0.85, transparent: true, roughness: 0.2 })); acid.castShadow = true; acid.visible = false; scene.add(acid);
+// the cream: barrier lipids and mineral SPF laid on top
+const cream = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.6, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf3e6da, roughness: 0.4, opacity: 0.85, transparent: true })); cream.position.set(0, 12.0, 0); cream.visible = false; cream.castShadow = true; scene.add(cream);
+
+const RED = new THREE.Color(0xe0574a);
+const tmp = new THREE.Color();
+const paint = (wear) => {
+  // wear: 0..1 per gap
+  cells.forEach((c, i) => { if (c.top) { block.setColorAt(i, c.base); dummy.position.set(c.x + 0.5, c.y, c.z + 0.5 - NZ / 2); dummy.scale.setScalar(BRICK); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); } });
+  GAPS.forEach((g, k) => {
+    const w = wear[k];
+    if (w <= 0) return;
+    gapCells[k].forEach((i) => {
+      const c = cells[i], d = Math.hypot(c.x + 0.5 - g.x, c.z + 0.5 - NZ / 2 - g.z), f = w * (1 - d / 1.4);
+      tmp.copy(c.base).lerp(RED, Math.min(1, f * 1.1)); block.setColorAt(i, tmp);
+      dummy.position.set(c.x + 0.5, c.y, c.z + 0.5 - NZ / 2); dummy.scale.setScalar(BRICK - 0.3 * f); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix);
+    });
+  });
+  block.instanceColor.needsUpdate = true; block.instanceMatrix.needsUpdate = true;
+};
+const look = new THREE.Vector3(0, 8.5, 0);
+const place = (t) => {
+  const a = -0.45 + t * 0.012, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 17.5 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-brick": [-6, 12.4, 4.5], "l-mortar": [3, 10.6, 4.6], "l-water": [-3, 9.2, 4.5], "l-scrub": [-5, 13.6, 4], "l-hot": [2, 16, 2], "l-acid": [-1, 15.5, 4], "l-leak": [5.5, 14.5, 3], "l-red": [-4, 12.3, 4.5], "l-cream": [6.5, 12.6, 4.5], "l-pause": [-6, 13.4, 4] };
+const OFF = { "l-brick": [1, -1], "l-mortar": [1, 0], "l-water": [1, 0], "l-scrub": [-1, -1], "l-hot": [1, -1], "l-acid": [1, -1], "l-leak": [1, -1], "l-red": [-1, -1], "l-cream": [1, 0], "l-pause": [-1, -1] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // wear per gap: builds through shot 1 (each aggressor opens two gaps), heals through shot 2
+  const T = [0.6, 2.6, 4.4];
+  const wear = GAPS.map((_, k) => {
+    const t0 = T[Math.floor(k / 2)] + 0.5 + (k % 2) * 0.3;
+    const up = i === 1 ? E.out(seg(lt, t0, t0 + 1.4)) : i >= 2 ? 1 : 0;
+    const heal = i === 2 ? E.inout(seg(lt, 1.6 + k * 0.25, 5.2 + k * 0.25)) : 0;
+    return up * (1 - heal);
+  });
+  paint(wear);
+  const worn = wear.reduce((a, b) => a + b, 0) / wear.length;
+  mortarMat.emissiveIntensity = 0.55 * (1 - 0.85 * worn) + (i === 2 ? 0.25 * E.out(seg(lt, 5.5, 7.5)) : 0);
+  mortarMat.color.set(0xeab9c8).lerp(new THREE.Color(0x6e5055), worn * 0.8);
+  // water inside: still when the barrier holds; rising out through the gaps when it doesn't
+  drops.forEach((d, k) => { const w = wear[k]; const ph = (t * 0.45 + k * 0.19) % 1; d.visible = w > 0.3; const g = GAPS[k]; d.position.set(g.x, 11.6 + ph * 7, g.z); d.material.opacity = Math.sin(ph * Math.PI) * w; d.scale.setScalar(0.6 + 0.5 * ph); });
+  irritants.forEach((m, k) => { const w = wear[k]; const ph = (t * 0.4 + k * 0.23) % 1; m.visible = w > 0.3; const g = GAPS[k]; m.position.set(g.x + 0.3, 18 - ph * 7.5, g.z - 0.3); m.rotation.set(ph * 6, k, ph * 4); m.material.opacity = Math.min(1, w * (1 - ph * 0.6)); });
+  // the aggressors, shot 1: a scrub rolls across, hot water pours, an active lands
+  scrub.visible = i === 1 && lt > 0.2 && lt < 3.4;
+  if (scrub.visible) { const p = E.inout(seg(lt, 0.3, 2.6)); scrub.position.set(-8 + 16 * p, 12.9, 1); scrub.rotation.set(p * 9, 0, p * 7); scrub.scale.setScalar(1 - seg(lt, 2.8, 3.4)); }
+  hot.visible = i === 1 && lt > 2.2 && lt < 5.2;
+  if (hot.visible) { const p = E.out(seg(lt, 2.3, 3.0)), f = seg(lt, 4.4, 5.2); hot.position.set(2, 16, -1); hot.scale.set(1 - f, p, 1 - f); hot.material.opacity = 0.55 * (1 - f); }
+  acid.visible = i === 1 && lt > 4.0 && lt < 6.6;
+  if (acid.visible) { const f = E.in(seg(lt, 4.0, 4.8)), s = seg(lt, 4.8, 5.5), fade = seg(lt, 5.8, 6.6); acid.position.set(-1, 22 - 10 * f, -1.5); acid.scale.set(1 + 0.8 * s, 1 - 0.6 * s, 1 + 0.8 * s); acid.material.opacity = 0.85 * (1 - fade); }
+  // the cream, shot 2
+  cream.visible = i === 2 && lt > 0.3;
+  if (cream.visible) { const p = E.out(seg(lt, 0.3, 1.3)); cream.position.y = 14 - 1.9 * p; cream.material.opacity = 0.85 * Math.min(1, p * 1.5); }
+  // labels and the day counter (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-brick"), lt, 0.6, { y: 8 }); enter($("#l-mortar"), lt, 1.8, { y: 8 }); enter($("#l-water"), lt, 3.2, { y: 8 }); }
+  if (i === 1) { enter($("#l-scrub"), lt, 0.6, { y: 8 }); if (lt > 3) $("#l-scrub").style.opacity = 1 - seg(lt, 3, 3.5); enter($("#l-hot"), lt, 2.5, { y: 8 }); if (lt > 5) $("#l-hot").style.opacity = 1 - seg(lt, 5, 5.5); enter($("#l-acid"), lt, 4.4, { y: 8 }); enter($("#l-leak"), lt, 3.6, { y: 8 }); enter($("#l-red"), lt, 5.2, { y: 8 }); }
+  if (i === 2) { enter($("#l-cream"), lt, 1.2, { y: 8 }); enter($("#l-pause"), lt, 2.2, { y: 8 }); enter($("#dayc"), lt, 1.8, { y: 10 }); $("#dayn").textContent = Math.round(14 * E.out(seg(lt, 2.0, 6.5))); enter($("#note3"), lt, 7.2, { y: 10 }); }
+  renderer.render(scene, camera);
+};
+`
   }
 };
