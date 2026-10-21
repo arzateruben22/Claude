@@ -1575,6 +1575,61 @@ export const SCENES = {
       if (i === 3) { enter($("#r-tell"), lt, 0.2, { y: 12 }); enter($("#r-doc"), lt, 1.6, { y: 12, s: 0.9 }); set($("#r-doc"), { o: Math.min(1, seg(lt, 1.6, 2.2) * 2.5), s: lt > 2.2 ? 1 + 0.015 * b : 0.9 + 0.1 * E.out(seg(lt, 1.6, 2.2)) }); }
     }
   },
+  "7-1": {
+    id: "7-1", kicker: "The Sunday ritual", title: `Twenty minutes, <span class="grad">once a week.</span>`, dur: 22, poster: 9,
+    shots: [
+      { at: 0, name: "cleanse", cap: "Double cleanse, then steam gently with a warm towel for one minute. Skip the steam if you have redness or rosacea." },
+      { at: 6.5, name: "mask", cap: "Exfoliate (only if it isn't already an acid night), then a mask for your skin: clay for oily, cream or gel for dry." },
+      { at: 13, name: "massage", cap: "Massage while the serum goes on, then moisturize." },
+      { at: 17.5, name: "no", cap: "No extractions at home. That's what the treatment room is for." }
+    ],
+    css: `
+.sr { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 5vmin; }
+.clock20 { position: relative; flex: none; width: 36vmin; height: 36vmin; border-radius: 50%; background: conic-gradient(#f4c9d6 0 var(--p, 0%), rgba(255,255,255,.08) var(--p, 0%) 100%); opacity: 0; }
+.clock20::after { content: ""; position: absolute; inset: 3.2vmin; border-radius: 50%; background: #0d0d0f; }
+.clock20 b { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1; font-size: 9vmin; font-weight: 700; letter-spacing: -.04em; line-height: 1; } .clock20 b small { font-size: 2.6vmin; font-weight: 600; color: #a1a1a6; letter-spacing: 0; margin-top: .8vmin; }
+.steps7 { display: flex; flex-direction: column; gap: 1.4vmin; width: 84vmin; }
+.st7 { display: flex; align-items: center; gap: 2vmin; padding: 1.6vmin 2.4vmin; border-radius: 1.8vmin; background: #111113; border: 1px solid rgba(255,255,255,.12); opacity: 0; }
+.st7 .min { flex: none; width: 9vmin; font-size: 2.4vmin; font-weight: 700; color: #f4c9d6; letter-spacing: .02em; }
+.st7 .nm { font-size: 3.2vmin; font-weight: 650; } .st7 .nt { font-size: 2.3vmin; color: #a1a1a6; margin-left: auto; white-space: nowrap; }
+.st7.on { border-color: #f4c9d6; } .st7.done { opacity: .55 !important; }
+.st7.skip .nt { color: #ff9a8b; }
+.st7.no { border-color: rgba(255,122,107,.7); background: rgba(255,122,107,.08); } .st7.no .min { color: #ff7a6b; } .st7.no .nm { color: #ff9a8b; }
+.st7 .nm s { text-decoration-color: #ff7a6b; text-decoration-thickness: .4vmin; }
+.pick { display: flex; gap: 1.2vmin; margin-left: 1.6vmin; } .pick span { padding: .7vmin 1.6vmin; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14); font-size: 2.2vmin; font-weight: 600; color: #d9d9de; white-space: nowrap; }
+@media (orientation: portrait) { .sr { flex-direction: column; gap: 3vmin; } .clock20 { width: 30vmin; height: 30vmin; } .clock20 b { font-size: 7.5vmin; } .steps7 { width: 100%; } .st7 { padding: 1.4vmin 2vmin; gap: 1.4vmin; flex-wrap: wrap; } .st7 .min { width: 7vmin; font-size: 2.1vmin; } .st7 .nm { font-size: 2.8vmin; } .st7 .nt { font-size: 2.1vmin; } .pick { margin-left: 0; width: 100%; } }`,
+    html: `
+<div class="sr">
+  <div class="clock20" id="clock20"><b><span id="mins20">0</span><small>of 20 minutes</small></b></div>
+  <div class="steps7">
+    <div class="st7" id="s1"><span class="min">0–4</span><span class="nm">Double cleanse</span><span class="nt">balm or oil, then foam</span></div>
+    <div class="st7 skip" id="s2"><span class="min">4–5</span><span class="nm">Warm-towel steam</span><span class="nt">one minute · skip it with redness or rosacea</span></div>
+    <div class="st7" id="s3"><span class="min">5–8</span><span class="nm">Exfoliate</span><span class="nt">only if it isn't an acid night</span></div>
+    <div class="st7" id="s4"><span class="min">8–15</span><span class="nm">Mask</span><span class="pick" id="pick"><span>clay · oily</span><span>cream or gel · dry</span></span></div>
+    <div class="st7" id="s5"><span class="min">15–19</span><span class="nm">Massage with the serum</span><span class="nt">slip, center outward, light</span></div>
+    <div class="st7" id="s6"><span class="min">19–20</span><span class="nm">Moisturize</span><span class="nt">done</span></div>
+    <div class="st7 no" id="s7"><span class="min">never</span><span class="nm"><s>Extractions</s> at home</span><span class="nt">that's what the treatment room is for</span></div>
+  </div>
+</div>
+<section class="shot"></section><section class="shot"></section><section class="shot"></section><section class="shot"></section>`,
+    setup: (M) => {},
+    seek: (t, st, M) => {
+      const { lt, i } = st, { $, $$, enter, seg, E, set } = M;
+      // the clock fills shot by shot: 0-5 min, 5-15, 15-20, then holds
+      const target = i === 0 ? 5 * E.out(seg(lt, 0.8, 5.5)) : i === 1 ? 5 + 10 * E.out(seg(lt, 0.6, 5.5)) : i === 2 ? 15 + 5 * E.out(seg(lt, 0.6, 3.6)) : 20;
+      const clock = $("#clock20"); set(clock, { o: Math.min(1, seg(t, 0, 0.6) * 1.5), s: 0.9 + 0.1 * E.out(seg(t, 0, 0.6)) }); clock.style.setProperty("--p", (100 * target / 20) + "%"); $("#mins20").textContent = Math.round(target);
+      // the steps belong to shots: 1-2 in shot 0, 3-4 in shot 1, 5-6 in shot 2, 7 in shot 3
+      const own = { s1: 0, s2: 0, s3: 1, s4: 1, s5: 2, s6: 2, s7: 3 }, at = { s1: 0.3, s2: 2.6, s3: 0.3, s4: 2.4, s5: 0.3, s6: 2.0, s7: 0.4 };
+      Object.keys(own).forEach((id) => {
+        const el = $("#" + id), k = own[id];
+        if (k === i) { enter(el, lt, at[id], { y: 10, x: -12 }); el.classList.toggle("on", lt >= at[id]); el.classList.remove("done"); }
+        else if (k < i) { set(el, { o: 1 }); el.classList.remove("on"); el.classList.add("done"); }
+        else { set(el, { o: 0 }); el.classList.remove("on", "done"); }
+      });
+      // the last step is the only one on the screen's attention in the final shot: it pulses
+      if (i === 3) { const b = 0.5 + 0.5 * Math.sin(lt * 2.6); set($("#s7"), { o: Math.min(1, seg(lt, 0.4, 1.0) * 2.5), x: -12 * (1 - E.out(seg(lt, 0.4, 1.0))), s: lt > 1 ? 1 + 0.012 * b : 1 }); }
+    }
+  },
   "13-1": {
     id: "13-1", kicker: "Before a wax: length, shaving, timing", title: `A quarter inch: <span class="grad">a grain of rice.</span>`, dur: 20, poster: 4,
     shots: [
