@@ -391,6 +391,7 @@ export function App() {
                   <div className="field"><label>Graphics</label><Seg label="Graphics" value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
                   <p className="fine">{qualityNote(settings.quality)}</p>
                   <div className="toggles">
+                    {settings.quality === 'low' && <Toggle label="Style: Retro (preview of the new Low)" value={settings.style === 'retro'} onChange={(v) => update({ style: v ? 'retro' : 'standard' })} />}
                     <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
                     <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
                   </div>

@@ -9,6 +9,8 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
+import { presetFor, retroOn } from './settings';
+import { RetroStyle } from './render/style';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign, Overpass, GANTRY_AHEAD, GANTRY_MIN_S } from './world/Network';
@@ -462,7 +464,7 @@ export class Game {
   get isPaused() { return this.paused; }
 
   updateSettings(s: Settings) {
-    const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
+    const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density, st = this.settings.style !== s.style;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
@@ -481,6 +483,7 @@ export class Game {
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
+    else if (st) this.applyQuality();
     this.onResize();
   }
 
@@ -640,10 +643,12 @@ export class Game {
     const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
+    this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
+    this.style?.restyle(this.car.root);
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -889,7 +894,7 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- graphics quality
   private applyQuality(rebuild = false) {
-    const q = QUALITY[this.settings.quality];
+    const q = presetFor(this.settings);
     this.renderScale = q.renderScale;
     this.renderer.shadowMap.enabled = q.shadows > 0;
     const far = q.drawDistance * 1.15;
@@ -946,7 +951,18 @@ export class Game {
       c.addPass(out); this.outputSat = sat;
       this.composer = c;
     }
+    this.applyStyle();
     this.resize(true);                     // a new composer (and grade pass) takes the size even when the canvas kept it
+  }
+  // RS1: the Retro style (src/game/render/style.ts) on Low while Settings.style says so: attached with the tier, its
+  // materials, sky and pass all undone when it goes. The road chunks and terrain tiles are styled as they're built.
+  // Low has no composer (post is off), so the frame takes the style's own pass in place of renderer.render (draw).
+  private style: RetroStyle | null = null;
+  private applyStyle() {
+    const on = retroOn(this.settings), roots = this.roads ? [this.roads.group, this.terrain.group] : [];
+    if (!on && this.style) { this.style.detach(); this.style = null; }
+    if (on && !this.style) { this.style = new RetroStyle(this.renderer); this.style.attach(this.scene, roots); }
+    this.style?.watch(roots);
   }
 
   // Fit the drawing buffer to the stage. setPixelRatio and setSize reassign canvas.width and height, which clears the
@@ -956,8 +972,9 @@ export class Game {
   private applied = { w: 0, h: 0, pr: 0 };
   private resize(force = false): boolean {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
-    const q = QUALITY[this.settings.quality];
-    const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, q.maxPixelRatio);
+    const q = presetFor(this.settings), dpr = window.devicePixelRatio || 1;
+    // the floor: 0.5 as always, or the preset's own (Retro: the screen's CSS pixels, never more than the device has)
+    const pr = clamp(dpr * this.renderScale, q.minPixelRatio !== undefined ? Math.min(q.minPixelRatio, dpr) : 0.5, q.maxPixelRatio);
     const cv = this.renderer.domElement, a = this.applied;
     if (!force && w === a.w && h === a.h && pr === a.pr && cv.width === Math.floor(w * pr) && cv.height === Math.floor(h * pr)) return false;
     a.w = w; a.h = h; a.pr = pr;
@@ -1283,7 +1300,7 @@ export class Game {
     if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     this.renderReveal(dt);                              // the garage's reveal stage, under this frame's own render
-    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
+    if (this.composer) this.composer.render(dt); else if (this.style) this.style.render(this.scene, this.camera, this.env); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderSkyDirect();                             // the sky camera's fallback, over the finished frame
   }
@@ -1886,7 +1903,7 @@ export class Game {
     this.scaleT += dt;
     if (this.scaleT < 1.2) return;
     this.scaleT = 0;
-    const q = QUALITY[this.settings.quality];
+    const q = presetFor(this.settings);
     let next = this.renderScale;
     if (this.frameAvg > 20) next = Math.max(0.5, this.renderScale - 0.08);
     else if (this.frameAvg < 14.5) next = Math.min(q.renderScale, this.renderScale + 0.05);
@@ -2007,7 +2024,7 @@ export class Game {
       pointer: typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'touch' : 'mouse',
       cores: navigator.hardwareConcurrency || 0, memoryGB: nav.deviceMemory ?? null,
       gpu: dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'not reported',
-      quality: QUALITY[this.settings.quality].label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
+      quality: presetFor(this.settings).label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
       buffer: `${el.width}×${el.height}`, fps: this.fps, calls: info.render.calls, tris: info.render.triangles, textures: info.memory.textures,
       mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
@@ -2159,6 +2176,7 @@ export class Game {
     this.resizeObs?.disconnect();
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();
+    this.style?.detach(); this.style = null;
     this.renderer.dispose();
   }
 }
