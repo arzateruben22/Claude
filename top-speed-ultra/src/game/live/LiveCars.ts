@@ -18,6 +18,8 @@ export class LiveCars {
   private color = new THREE.Color();
   private pose: Pose = { x: 0, y: 0, z: 0, h: 0, v: 0, b: false };
   private spins = new Map<number, number>();
+  private born = new Map<number, number>();      // when each ghost appeared, for its 0.6 s grow-in
+  private sc = new THREE.Vector3();
   private plates = new Map<number, { sprite: THREE.Sprite; name: string }>();
   private eye = new THREE.Vector3();
   count = 0;                                  // peers drawn in the last frame (for tests)
@@ -51,7 +53,10 @@ export class LiveCars {
         this.e.set(0, pose.h + Math.PI, 0);
         this.q.setFromEuler(this.e);
         this.p3.set(pose.x - ORIGIN.x, pose.y, pose.z - ORIGIN.z);
-        this.m4.compose(this.p3, this.q, this.one);
+        // a ghost that just appeared (a driver joining or jumping next to you) grows in rather than popping
+        if (!this.born.has(p.id)) this.born.set(p.id, now);
+        const g = Math.min(1, (now - this.born.get(p.id)!) / 600), e = g * g * (3 - 2 * g);
+        this.m4.compose(this.p3, this.q, e >= 1 ? this.one : this.sc.set(e, e, e));
         this.body.setMatrixAt(i, this.m4); this.glass.setMatrixAt(i, this.m4); this.trim?.setMatrixAt(i, this.m4);
         this.body.setColorAt(i, this.color.setHex(p.paint));
         const spin = (this.spins.get(p.id) ?? 0) + (pose.v / this.cls.wheelR) * dt;
@@ -66,6 +71,7 @@ export class LiveCars {
         i++;
       }
       for (const id of this.spins.keys()) if (!client.peers.has(id)) this.spins.delete(id);
+      for (const id of this.born.keys()) if (!seen.has(id)) this.born.delete(id);
     }
     for (const [id, pl] of this.plates) {
       if (seen.has(id)) continue;
