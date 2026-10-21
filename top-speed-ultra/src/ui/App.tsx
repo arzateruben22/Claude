@@ -458,7 +458,7 @@ export function App() {
       <div className="field"><label>Traffic</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
     </section>
     <section className="menu-sec live-sec">
-      <p className="sect" aria-hidden="true">Live · alpha{lobby ? ` · ${lobby.online} of ${lobby.cap} driving now${lobby.queued ? `, ${lobby.queued} waiting` : ''}` : ''}</p>
+      <p className="sect"><span aria-hidden="true">Live · alpha</span>{lobby && <span aria-live="polite">{` · ${lobby.online} of ${lobby.cap} driving now${lobby.queued ? `, ${lobby.queued} waiting` : ''}`}</span>}</p>
       <div className="picks">
         <button className="pick" onClick={() => setPanel('account')}>
           <small>Account</small><b>{liveName || 'Not signed in'}</b><span>{liveName ? 'Signed in on this device' : 'Sign up or log in to drive live'}</span><Chevron />
