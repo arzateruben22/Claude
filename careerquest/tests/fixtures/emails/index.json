@@ -1,0 +1,602 @@
+[
+  {
+    "file": "001-indeed-application-submitted.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Acme Electric",
+      "positionTitle": "Apprentice Electrician",
+      "requisitionNumber": null,
+      "platform": "INDEED",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "HTML-only Indeed template. The \"Keep applying\" block lists three other employer/title pairs with \"Apply now\" links; extraction must take employer and title from the confirmation card (Acme Electric / Apprentice Electrician), not from the recommendations. No requisition id anywhere."
+  },
+  {
+    "file": "002-linkedin-application-sent.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Pacific Coast Mechanical",
+      "positionTitle": "HVAC Technician",
+      "requisitionNumber": null,
+      "platform": "LINKEDIN",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "multipart/alternative with BOTH parts quoted-printable encoded (soft line breaks inside URLs). The footer line \"intended for Ruben Test (Electrician Trainee | Orange County, CA)\" carries the user's own headline, which must not be read as the position. Two similar jobs are listed below the confirmation."
+  },
+  {
+    "file": "003-workday-application-submitted.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Harbor Line Elevator Co.",
+      "positionTitle": "Elevator Mechanic Helper",
+      "requisitionNumber": "R-2026-01844",
+      "platform": "WORKDAY",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.95
+    },
+    "notes": "Canonical Workday confirmation. Employer appears only in the display name and body (sender domain is myworkday.com). Compare with 038, which uses the same template family for an unfinished application."
+  },
+  {
+    "file": "004-greenhouse-thank-you-for-applying.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Golden State Builders",
+      "positionTitle": "Construction Project Coordinator",
+      "requisitionNumber": null,
+      "platform": "GREENHOUSE",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "Sender domain is greenhouse.io but Reply-To and body carry the employer. Position title is embedded mid-sentence with the location in parentheses. No requisition id."
+  },
+  {
+    "file": "005-lever-application-received.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Sunbelt HVAC Services",
+      "positionTitle": "HVAC Technician",
+      "requisitionNumber": null,
+      "platform": "LEVER",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "Lever confirmation; the sender domain is hire.lever.co (not lever.co). Title is bolded inside a sentence. Short HTML-only body."
+  },
+  {
+    "file": "006-smartrecruiters-application-received.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Southland Realty Partners",
+      "positionTitle": "Building Engineer",
+      "requisitionNumber": "REF4471W",
+      "platform": "SMARTRECRUITERS",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "Requisition is labeled \"Job Reference\" in SmartRecruiters REF-style (REF4471W) and also appears inside the status URL. Says \"now under review\" - still a submission confirmation."
+  },
+  {
+    "file": "007-icims-application-received.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Sunrise Aerospace Components",
+      "positionTitle": "Industrial Maintenance Technician",
+      "requisitionNumber": "REQ-55102",
+      "platform": "ICIMS",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.95
+    },
+    "notes": "iCIMS style with aligned \"label:   value\" columns. The body mentions \"contacted for an interview\" hypothetically - not an interview invitation."
+  },
+  {
+    "file": "008-adp-thank-you-for-applying.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Pacific Coast Mechanical",
+      "positionTitle": "Pipefitter",
+      "requisitionNumber": "9087123",
+      "platform": "ADP",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "ADP Workforce Now template; the requisition is labeled \"Job ID\" and is all digits (expected value is the bare id \"9087123\", not \"Job ID 9087123\"). HTML-only."
+  },
+  {
+    "file": "009-governmentjobs-application-received.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "City of Fictionville",
+      "positionTitle": "Electrician Trainee",
+      "requisitionNumber": "2026-BR-114",
+      "platform": "GOVERNMENTJOBS",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.95
+    },
+    "notes": "Two identifiers: \"Job Number\" (the requisition, 2026-BR-114) and \"Application ID\" (15488723, NOT the requisition). Public-sector employer."
+  },
+  {
+    "file": "010-usajobs-application-received.eml",
+    "expected": {
+      "classification": "APPLICATION_SUBMITTED",
+      "employer": "Federal Facilities Administration",
+      "positionTitle": "Electrician Helper",
+      "requisitionNumber": "FFA-26-LB-0417-DE",
+      "platform": "USAJOBS",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.9
+    },
+    "notes": "USAJOBS labels the requisition \"Announcement number\". The employer is a (fictional) federal agency, not a company. \"Application status: Received\" line is an easy anchor."
+  },
+  {
+    "file": "011-acme-electric-employer-acknowledgment.eml",
+    "expected": {
+      "classification": "EMPLOYER_ACKNOWLEDGMENT",
+      "employer": "Acme Electric",
+      "positionTitle": "Apprentice Electrician",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Leslie Park",
+      "countsAsSubmission": true,
+      "minConfidence": 0.8
+    },
+    "notes": "Human-written acknowledgment from the employer, one day after the Indeed confirmation in 001 for the same job (duplicate/merge scenario). Describes a future phone conversation but schedules nothing."
+  },
+  {
+    "file": "012-union-jatc-application-acknowledgment.eml",
+    "expected": {
+      "classification": "EMPLOYER_ACKNOWLEDGMENT",
+      "employer": "Southland Electrical JATC",
+      "positionTitle": "Inside Wireman Apprentice",
+      "requisitionNumber": null,
+      "platform": "OTHER",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.75
+    },
+    "notes": "Union apprenticeship office, addressed \"Dear Applicant\" with no name. \"Applicant number A-26-0392\" is NOT a requisition number. Mentions a future aptitude test without scheduling it. Position title is normalized from \"Inside Wireman Apprenticeship Program\"."
+  },
+  {
+    "file": "013-golden-state-recruiter-acknowledgment.eml",
+    "expected": {
+      "classification": "EMPLOYER_ACKNOWLEDGMENT",
+      "employer": "Golden State Builders",
+      "positionTitle": "Assistant Project Manager",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Dana Whitfield",
+      "countsAsSubmission": true,
+      "minConfidence": 0.65
+    },
+    "notes": "Conversational Gmail-style reply (In-Reply-To/References set) with the user's own quoted message below. No boilerplate phrases (\"has been received\"); the signal is \"I've got your resume ... forwarded ... for review\". \"Mike\" is mentioned but is not the recruiter. Quoted text contains a mention of attachments that are not present."
+  },
+  {
+    "file": "014-harbor-line-status-under-review.eml",
+    "expected": {
+      "classification": "EMPLOYER_ACKNOWLEDGMENT",
+      "employer": "Harbor Line Elevator Co.",
+      "positionTitle": "Elevator Mechanic Helper",
+      "requisitionNumber": "R-2026-01844",
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": true,
+      "minConfidence": 0.65
+    },
+    "notes": "Subject \"Application status update\" mirrors Workday status-change emails (see 029) but the status is \"Under Review\", which is a positive acknowledgment, not a rejection. Sent from the employer domain, not Workday, for the same requisition as 003 (merge scenario)."
+  },
+  {
+    "file": "015-sunbelt-recruiter-followup.eml",
+    "expected": {
+      "classification": "RECRUITER_MESSAGE",
+      "employer": "Sunbelt HVAC Services",
+      "positionTitle": "HVAC Technician",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Marcus Delgado",
+      "countsAsSubmission": false,
+      "minConfidence": 0.75
+    },
+    "notes": "Recruiter asks about availability for a call but explicitly says \"No need to schedule anything yet\" - must not be INTERVIEW_INVITATION. Also says \"came across your application\" which is not a submission confirmation."
+  },
+  {
+    "file": "016-linkedin-inmail-recruiter.eml",
+    "expected": {
+      "classification": "RECRUITER_MESSAGE",
+      "employer": "Pacific Coast Mechanical",
+      "positionTitle": "Pipefitter",
+      "requisitionNumber": null,
+      "platform": "LINKEDIN",
+      "interviewAt": null,
+      "recruiterName": "Priya Natarajan",
+      "countsAsSubmission": false,
+      "minConfidence": 0.7
+    },
+    "notes": "LinkedIn InMail notification (quoted-printable HTML with UTF-8 ellipsis/middle-dot characters). Cold outreach not tied to any application. The display name is \"Priya Natarajan via LinkedIn\" - recruiter name must be split from the \"via LinkedIn\" suffix. Title is loose (\"Pipefitter and Mechanical Helper positions\"); label uses Pipefitter."
+  },
+  {
+    "file": "017-staffing-agency-recruiter.eml",
+    "expected": {
+      "classification": "RECRUITER_MESSAGE",
+      "employer": "TradeForce Staffing",
+      "positionTitle": "Industrial Maintenance Technician",
+      "requisitionNumber": null,
+      "platform": "OTHER",
+      "interviewAt": null,
+      "recruiterName": "Kelly Ruiz",
+      "countsAsSubmission": false,
+      "minConfidence": 0.7
+    },
+    "notes": "Staffing agency mass mail. The end client is unnamed, so the labeled employer is the agency. Mentions \"applied to last fall\" - must not count as a submission. The From display name includes the agency after a pipe (\"Kelly Ruiz | TradeForce Staffing\"); recruiterName is just \"Kelly Ruiz\"."
+  },
+  {
+    "file": "018-harbor-line-recruiter-availability.eml",
+    "expected": {
+      "classification": "RECRUITER_MESSAGE",
+      "employer": "Harbor Line Elevator Co.",
+      "positionTitle": "Elevator Mechanic Helper",
+      "requisitionNumber": "R-2026-01844",
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Tom Agbaje",
+      "countsAsSubmission": false,
+      "minConfidence": 0.65
+    },
+    "notes": "Boundary case with INTERVIEW_INVITATION: the words \"formal interview\" and \"calendar invite\" appear, but no time is proposed or booked - the recruiter is asking for availability. interviewAt must be null."
+  },
+  {
+    "file": "019-acme-phone-screen-scheduling-link.eml",
+    "expected": {
+      "classification": "INTERVIEW_INVITATION",
+      "employer": "Acme Electric",
+      "positionTitle": "Apprentice Electrician",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Leslie Park",
+      "countsAsSubmission": false,
+      "minConfidence": 0.8
+    },
+    "notes": "Self-scheduling (Calendly-style) phone screen: it IS an interview invitation but no fixed time exists yet, so interviewAt is null. Contrast with 018 where availability is requested conversationally."
+  },
+  {
+    "file": "020-golden-state-onsite-interview.eml",
+    "expected": {
+      "classification": "INTERVIEW_INVITATION",
+      "employer": "Golden State Builders",
+      "positionTitle": "Assistant Project Manager",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": "2026-03-10T10:00:00-07:00",
+      "recruiterName": "Dana Whitfield",
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Outlook/Word-generated HTML (MsoNormal, o:p tags, &#8211; dash). The date is after the 2026 US DST switch (March 8), so 10:00 AM Pacific is -07:00. Two interviewers are listed; recruiterName is the Talent Acquisition contact. Time is a range - interviewAt uses the start."
+  },
+  {
+    "file": "021-pacific-coast-video-interview.eml",
+    "expected": {
+      "classification": "INTERVIEW_INVITATION",
+      "employer": "Pacific Coast Mechanical",
+      "positionTitle": "Pipefitter",
+      "requisitionNumber": "9087123",
+      "platform": "COMPANY_SITE",
+      "interviewAt": "2026-04-16T14:30:00-07:00",
+      "recruiterName": "Gloria Esparza",
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Video interview with a Zoom-style join link, meeting id and passcode. The subject carries an abbreviated date (\"Thu 4/16 2:30 PM PT\") and the body the full one. Second interviewer (Ray Holloway) is not the recruiter. Follows the ADP submission in 008."
+  },
+  {
+    "file": "022-union-jatc-interview-appointment.eml",
+    "expected": {
+      "classification": "INTERVIEW_INVITATION",
+      "employer": "Southland Electrical JATC",
+      "positionTitle": "Inside Wireman Apprentice",
+      "requisitionNumber": null,
+      "platform": "OTHER",
+      "interviewAt": "2026-02-21T08:00:00-08:00",
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.85
+    },
+    "notes": "Apprenticeship committee interview in formal notice style, no personal greeting. Two times appear (report 8:00 AM vs interviews begin 8:30 AM) - the label uses the report time. Mentions the aptitude test in the past tense; must not be ASSESSMENT_INVITATION. Date is before DST (-08:00)."
+  },
+  {
+    "file": "023-hirevue-assessment-invitation.eml",
+    "expected": {
+      "classification": "ASSESSMENT_INVITATION",
+      "employer": "Sunrise Aerospace Components",
+      "positionTitle": "Industrial Maintenance Technician",
+      "requisitionNumber": "REQ-55102",
+      "platform": "OTHER",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.8
+    },
+    "notes": "Calls itself an \"on-demand video interview\" - must NOT be classified as INTERVIEW_INVITATION; there is a deadline, not an appointment. Sender is a third-party assessment vendor (hirevue.com) with the employer in the display name and Reply-To. Follows the iCIMS submission in 007."
+  },
+  {
+    "file": "024-union-jatc-aptitude-test-invitation.eml",
+    "expected": {
+      "classification": "ASSESSMENT_INVITATION",
+      "employer": "Southland Electrical JATC",
+      "positionTitle": "Inside Wireman Apprentice",
+      "requisitionNumber": null,
+      "platform": "OTHER",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.8
+    },
+    "notes": "In-person proctored aptitude test with a fixed appointment (2026-01-24T08:30:00-08:00). Under the corpus convention interviewAt stays null because it is a test, not an interview. Says \"accepted for testing\" and mentions the later \"interview stage\" - neither makes it an interview invitation."
+  },
+  {
+    "file": "025-acme-polite-rejection.eml",
+    "expected": {
+      "classification": "REJECTION",
+      "employer": "Acme Electric",
+      "positionTitle": "Apprentice Electrician",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Leslie Park",
+      "countsAsSubmission": false,
+      "minConfidence": 0.75
+    },
+    "notes": "Warm, personal rejection after an interview. The decisive sentence contains the word \"offer\" (\"decided to offer the ... position to another candidate\") - a keyword classifier must not flip this to OFFER. Neutral subject line."
+  },
+  {
+    "file": "026-lever-position-filled.eml",
+    "expected": {
+      "classification": "REJECTION",
+      "employer": "Sunbelt HVAC Services",
+      "positionTitle": "HVAC Technician",
+      "requisitionNumber": null,
+      "platform": "LEVER",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.85
+    },
+    "notes": "\"Position has been filled\" rejection with no \"unfortunately\"/\"regret\"/\"other candidates\" phrasing. Subject is a neutral \"Update on ...\". Same Lever template family as the confirmation in 005."
+  },
+  {
+    "file": "027-greenhouse-automated-rejection.eml",
+    "expected": {
+      "classification": "REJECTION",
+      "employer": "Golden State Builders",
+      "positionTitle": "Construction Project Coordinator",
+      "requisitionNumber": null,
+      "platform": "GREENHOUSE",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Body is base64-encoded text/html; the subject (\"Your application to Golden State Builders\") carries no signal, so the classifier must decode the body to find \"move forward with other candidates\". Same sender/Reply-To as the confirmation in 004."
+  },
+  {
+    "file": "028-southland-subtle-rejection.eml",
+    "expected": {
+      "classification": "REJECTION",
+      "employer": "Southland Realty Partners",
+      "positionTitle": "Building Engineer",
+      "requisitionNumber": "REF4471W",
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.6
+    },
+    "notes": "Subtly worded: no \"unfortunately\", \"regret\", \"other candidates\" or \"filled\". The only decisive phrase is \"we won't be moving your application forward\"; the positive framing (\"impressed\", \"shared your resume\") can fool keyword/sentiment approaches. Subject gives no signal. Sent from the employer domain, not SmartRecruiters, for the application in 006."
+  },
+  {
+    "file": "029-workday-status-change-rejection.eml",
+    "expected": {
+      "classification": "REJECTION",
+      "employer": "Pacific Rim Cold Storage",
+      "positionTitle": "Industrial Maintenance Technician",
+      "requisitionNumber": "JR118223",
+      "platform": "WORKDAY",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.75
+    },
+    "notes": "Workday status-change notification with a generic subject. The only rejection signal is the status value \"No Longer Under Consideration\". Contrast with 014, where a status update means \"Under Review\". Requisition in JR-style."
+  },
+  {
+    "file": "030-harbor-line-formal-offer.eml",
+    "expected": {
+      "classification": "OFFER",
+      "employer": "Harbor Line Elevator Co.",
+      "positionTitle": "Elevator Mechanic Helper",
+      "requisitionNumber": "R-2026-01844",
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Tom Agbaje",
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Formal offer with pay ($28.50/hr), start date (2026-06-01) and an e-signature link. Mentions \"pre-employment screening\" and \"onboarding\" - still an OFFER, not ONBOARDING. Completes the Harbor Line thread (003, 014, 018)."
+  },
+  {
+    "file": "031-pacific-coast-conditional-offer.eml",
+    "expected": {
+      "classification": "OFFER",
+      "employer": "Pacific Coast Mechanical",
+      "positionTitle": "Pipefitter",
+      "requisitionNumber": "9087123",
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Gloria Esparza",
+      "countsAsSubmission": false,
+      "minConfidence": 0.85
+    },
+    "notes": "Conditional offer pending background check and drug screen; \"a formal offer letter will follow\" - still OFFER. Mentions Form I-9, which also appears in ONBOARDING emails. Follows 008 and 021."
+  },
+  {
+    "file": "032-workday-onboarding-tasks.eml",
+    "expected": {
+      "classification": "ONBOARDING",
+      "employer": "Harbor Line Elevator Co.",
+      "positionTitle": "Elevator Mechanic Helper",
+      "requisitionNumber": null,
+      "platform": "WORKDAY",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.85
+    },
+    "notes": "Workday onboarding task list (I-9 Section 1, W-4/DE 4, direct deposit). Same sender as the submission (003) and incomplete-application (038) emails; the word \"offer\" appears in \"accepting your offer\" - not an OFFER."
+  },
+  {
+    "file": "033-pacific-coast-first-day.eml",
+    "expected": {
+      "classification": "ONBOARDING",
+      "employer": "Pacific Coast Mechanical",
+      "positionTitle": "Pipefitter",
+      "requisitionNumber": null,
+      "platform": "COMPANY_SITE",
+      "interviewAt": null,
+      "recruiterName": "Gloria Esparza",
+      "countsAsSubmission": false,
+      "minConfidence": 0.8
+    },
+    "notes": "First-day logistics with I-9 document list; has a date/time (July 13, 8:00 AM) that is a start date, NOT an interview. The body contains a line beginning with \"From \" (mbox escaping test: it must round-trip as \">From \" in all.mbox)."
+  },
+  {
+    "file": "034-indeed-job-alert.eml",
+    "expected": {
+      "classification": "JOB_ALERT",
+      "employer": null,
+      "positionTitle": null,
+      "requisitionNumber": null,
+      "platform": "INDEED",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Daily Indeed alert (quoted-printable HTML with curly quotes). Five employer/title cards, each with \"Apply now\"/\"Easily apply\" links, and the same Indeed branding as the confirmation in 001 - but from alert@indeed.com, not noreply@. Employer and title must stay null. One card names Pacific Rim Cold Storage, an employer that also appears in 029."
+  },
+  {
+    "file": "035-linkedin-job-alert.eml",
+    "expected": {
+      "classification": "JOB_ALERT",
+      "employer": null,
+      "positionTitle": null,
+      "requisitionNumber": null,
+      "platform": "LINKEDIN",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "LinkedIn digest whose SUBJECT names a title and two employers (\"HVAC Technician: Sunbelt HVAC Services, Coastline Air & Heat and 6 more jobs\") - a subject-only extractor would wrongly produce employer/title. Lists employers that appear elsewhere in the corpus (Pacific Coast Mechanical, Southland Realty Partners). Non-ASCII middle dots and curly quotes, 8bit."
+  },
+  {
+    "file": "036-ziprecruiter-job-alert.eml",
+    "expected": {
+      "classification": "JOB_ALERT",
+      "employer": null,
+      "positionTitle": null,
+      "requisitionNumber": null,
+      "platform": "ZIPRECRUITER",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Plain-text alert. \"1-Click Apply\" and \"Apply\" appear six times; a numbered list of employers including Harbor Line Elevator Co. (an employer the user actually has an application with) must not be extracted. Platform must be detected from ziprecruiter.com with no other hint."
+  },
+  {
+    "file": "037-indeed-incomplete-application.eml",
+    "expected": {
+      "classification": "INCOMPLETE_APPLICATION",
+      "employer": "Golden State Builders",
+      "positionTitle": "Estimator",
+      "requisitionNumber": null,
+      "platform": "INDEED",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Same Indeed sender and job-card layout as the confirmation in 001, with employer + title + the word \"application\" - but nothing was submitted. Follows the invitation in 039."
+  },
+  {
+    "file": "038-workday-incomplete-application.eml",
+    "expected": {
+      "classification": "INCOMPLETE_APPLICATION",
+      "employer": "Harbor Line Elevator Co.",
+      "positionTitle": "Building Engineer",
+      "requisitionNumber": "R-2026-02210",
+      "platform": "WORKDAY",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.9
+    },
+    "notes": "Same Workday sender, employer, template wording and Candidate Home link as 003; differs only by \"have not yet submitted\". A second requisition (R-2026-02210) at an employer the user already has an open application with."
+  },
+  {
+    "file": "039-indeed-invited-to-apply.eml",
+    "expected": {
+      "classification": "APPLICATION_INVITATION",
+      "employer": "Golden State Builders",
+      "positionTitle": "Estimator",
+      "requisitionNumber": null,
+      "platform": "INDEED",
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.85
+    },
+    "notes": "\"Invited you to apply\" / \"your profile matches\": employer and title are real and extractable, but no application exists. Contains \"Apply now\" and a quoted employer message that says \"see your application\". Precedes 037."
+  },
+  {
+    "file": "040-unrelated-trade-school-newsletter.eml",
+    "expected": {
+      "classification": "UNRELATED",
+      "employer": null,
+      "positionTitle": null,
+      "requisitionNumber": null,
+      "platform": null,
+      "interviewAt": null,
+      "recruiterName": null,
+      "countsAsSubmission": false,
+      "minConfidence": 0.7
+    },
+    "notes": "Trade-school marketing newsletter: mentions Electrician, HVAC, pipefitting, \"Apply now\", \"apprenticeship aptitude tests\" and \"employer partners who hire\" - it looks job-adjacent but is not about any application or job posting. Must be UNRELATED (not JOB_ALERT or APPLICATION_INVITATION)."
+  }
+]

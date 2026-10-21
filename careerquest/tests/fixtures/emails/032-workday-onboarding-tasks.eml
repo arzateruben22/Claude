@@ -1,0 +1,43 @@
+From: "Harbor Line Elevator Co." <no-reply@myworkday.com>
+To: Ruben Test <ruben.test@example.com>
+Subject: Welcome to Harbor Line Elevator Co. - complete your onboarding tasks
+Date: Mon, 18 May 2026 07:00:00 -0700
+Message-ID: <wd-notification-6b5a4c3d-2e1f-4a0b-9c8d-7e6f5a4b3c2d@myworkday.com>
+MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Auto-Submitted: auto-generated
+X-Workday-Tenant: harborline
+
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Complete your onboarding tasks</title></head>
+<body style="margin:0;padding:0;background-color:#f0f0f0;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f0f0;">
+<tr><td align="center" style="padding:24px 0;">
+<table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#333333;">
+<tr><td style="padding:20px 32px;background-color:#0875e1;color:#ffffff;font-size:18px;font-weight:bold;">Harbor Line Elevator Co.</td></tr>
+<tr><td style="padding:28px 32px 8px 32px;">
+<p style="margin:0 0 14px 0;">Hi Ruben,</p>
+<p style="margin:0 0 14px 0;">Congratulations on accepting your offer for <strong>Elevator Mechanic Helper</strong>! We're glad you're joining us. To get you ready for your first day on <strong>Monday, June 1, 2026</strong>, please complete the following onboarding tasks in Workday by <strong>Friday, May 29, 2026</strong>:</p>
+<table width="100%" cellpadding="8" cellspacing="0" border="0" style="border-collapse:collapse;border:1px solid #dcdcdc;margin:0 0 18px 0;font-size:13px;">
+<tr style="background-color:#f7f7f7;"><th align="left" style="border-bottom:1px solid #dcdcdc;">Task</th><th align="left" style="border-bottom:1px solid #dcdcdc;">Due</th></tr>
+<tr><td style="border-bottom:1px solid #eeeeee;">Complete Form I-9, Section 1</td><td style="border-bottom:1px solid #eeeeee;">05/29/2026</td></tr>
+<tr><td style="border-bottom:1px solid #eeeeee;">Federal W-4 and California DE 4 withholding elections</td><td style="border-bottom:1px solid #eeeeee;">05/29/2026</td></tr>
+<tr><td style="border-bottom:1px solid #eeeeee;">Direct deposit setup</td><td style="border-bottom:1px solid #eeeeee;">05/29/2026</td></tr>
+<tr><td style="border-bottom:1px solid #eeeeee;">Emergency contacts</td><td style="border-bottom:1px solid #eeeeee;">05/29/2026</td></tr>
+<tr><td style="border-bottom:1px solid #eeeeee;">Review and acknowledge the Employee Handbook and Safety Policy</td><td style="border-bottom:1px solid #eeeeee;">05/29/2026</td></tr>
+<tr><td>Upload a copy of your driver's license</td><td>05/29/2026</td></tr>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px 0;"><tr><td style="background-color:#0875e1;border-radius:3px;">
+<a href="https://harborline.wd5.myworkday.com/harborline/d/inst/1$17188/9925$3141.htmld" style="display:inline-block;padding:10px 22px;color:#ffffff;font-weight:bold;text-decoration:none;">Go to my onboarding tasks</a>
+</td></tr></table>
+<p style="margin:0 0 14px 0;">On your first day, please bring original documents for Form I-9, Section 2 (for example, a U.S. passport, or a driver's license together with a Social Security card). Your supervisor, Andre Kimball, will meet you at the Long Beach branch at 6:30 AM.</p>
+<p style="margin:0 0 14px 0;">Questions? Contact onboarding@harborlineelevator.example.</p>
+<p style="margin:0;">Harbor Line Elevator Co. People Operations</p>
+</td></tr>
+<tr><td style="padding:16px 32px;border-top:1px solid #e5e5e5;font-size:11px;color:#888888;">This is an automated notification from Workday. Please do not reply to this message.</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
