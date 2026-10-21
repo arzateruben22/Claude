@@ -37,6 +37,9 @@ The owner resumed the loop ("keep going til everything is finished") with a 75% 
     close their sockets: `npm test` 58 of 58 twice with the browser suite running, the hardening file 9 of 9 three
     times.
   - A Fable prompt is queued in the handoff for an adversarial review of the board's rules before it goes public.
+  - **Measured on the final build:** `live` 13 of 13 (the pause screen read "Today on the online board: #2 for
+    distance (0.1 mi)."; the board panel listed "live_b 194 m" as the server did, without the deleted account),
+    `livephone` 7 of 7, `cd live && npm test` 58 of 58.
 
 ## 2026-10-21 (morning, the scheduled continuation): crews, cruise nights, password reset, and two realistic-mode fixes
 
