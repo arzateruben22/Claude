@@ -325,6 +325,8 @@ export class Game {
 
   quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
+  // tune a station directly (the radio card), -1 for off
+  tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }
   private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }

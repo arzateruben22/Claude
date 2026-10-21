@@ -882,3 +882,36 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .paint-chip.on { background: var(--cyan-wash); box-shadow: inset 0 0 0 1px var(--cyan-line), inset 3px 0 0 var(--cyan); }
 @media (hover: hover) { .paint-chip:not(.on):hover { box-shadow: inset 0 0 0 1px var(--line-3); } }
 .soon-note { padding: 14px; box-shadow: inset 0 0 0 1px var(--line); }
+
+/* ------------------------------------------------------------------ the radio card (U7, RadioCard.tsx): beside the controls */
+.radio-card { position: absolute; right: 170px; top: 50%; transform: translateY(-50%); width: 300px; display: grid; gap: 12px; padding: 14px; pointer-events: auto;
+  background: var(--hex) left top / 56px 97px, var(--glass-2); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice); clip-path: var(--chamfer); animation: pop 0.22s var(--ease); }
+.rc-now { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: center; }
+.rc-art { position: relative; display: grid; align-content: center; justify-items: center; gap: 2px; width: 84px; height: 84px; overflow: hidden;
+  background: radial-gradient(circle at 30% 25%, var(--ice-hi), var(--ice) 45%, var(--ice-deep)); color: var(--night); }
+.rc-now.synthwave .rc-art { background: linear-gradient(160deg, var(--cyan), var(--ice-deep) 60%, var(--night-3)); color: var(--ink); }
+.rc-now.lofi .rc-art { background: linear-gradient(200deg, var(--ice-hi), var(--chrome-lo)); }
+.rc-now.off .rc-art { background: var(--cell); color: var(--faint); box-shadow: inset 0 0 0 1px var(--line); }
+.rc-art b { font: 800 24px/1 var(--f-display); letter-spacing: 0.06em; }
+.rc-art span { font: 600 12px/1 var(--f-mono); }
+.rc-eq { position: absolute; left: 10px; right: 10px; bottom: 8px; display: flex; gap: 3px; align-items: flex-end; height: 14px; }
+.rc-eq em { flex: 1; height: 30%; background: currentColor; opacity: 0.7; animation: eq 0.9s ease-in-out infinite alternate; }
+.rc-eq em:nth-child(2) { animation-delay: -0.3s; } .rc-eq em:nth-child(3) { animation-delay: -0.6s; } .rc-eq em:nth-child(4) { animation-delay: -0.15s; }
+@keyframes eq { to { height: 100%; } }
+.rc-meta { display: grid; gap: 3px; min-width: 0; }
+.rc-meta small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--ice-text); }
+.rc-meta b { font: 700 18px/1.15 var(--f-ui); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rc-meta span { font-size: 12.5px; color: var(--dim); }
+.rc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.rc-list li { display: grid; grid-template-columns: 1fr 44px; box-shadow: inset 0 -1px 0 var(--line); }
+.rc-list li.on { background: var(--cyan-wash); box-shadow: inset 3px 0 0 var(--cyan), inset 0 -1px 0 var(--line); }
+.rc-tune { display: grid; grid-template-columns: 52px 46px 1fr; align-items: baseline; gap: 8px; min-height: 44px; padding: 0 10px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); }
+.rc-tune b { font: 700 15px/1 var(--f-ui); letter-spacing: 0.06em; } .rc-tune span { font: 500 12px/1 var(--f-mono); color: var(--dim); } .rc-tune em { font-style: normal; font-size: 13px; color: var(--dim); }
+.rc-star { border: 0; cursor: pointer; background: var(--clear); color: var(--faint); font-size: 18px; }
+.rc-star.on { color: var(--drv); }
+.rc-vol { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; font: 500 11px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.rc-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rc-foot .btn { min-height: 40px; }
+.radio-card .fine { font-size: 11px; }
+@media (pointer: coarse), (max-width: 760px) { .radio-card { right: 8px; left: 8px; top: calc(max(12px, env(safe-area-inset-top)) + 58px); transform: none; width: auto; } }
+@media (prefers-reduced-motion: reduce) { .rc-eq em, .radio-card { animation: none !important; } }

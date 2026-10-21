@@ -18,6 +18,7 @@ import { OcLockup, OcWatermark } from './Mark';
 import { Ico } from './Icons';
 import { ModeArt } from './ModeArt';
 import { WorldMap } from './WorldMap';
+import { RadioCard } from './RadioCard';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map';
@@ -46,6 +47,7 @@ export function App() {
   const [boardMode, setBoardMode] = useState<Mode>('survival');
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoad] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
+  const [radioOpen, setRadioOpen] = useState(false);              // the radio card beside the controls while driving
   const [report, setReport] = useState('');                           // the Feedback panel's text
   const [, rerender] = useState(0);                                   // the garage changed the car: the atmosphere follows
   const reportRef = useRef<HTMLTextAreaElement>(null);
@@ -153,10 +155,11 @@ export function App() {
           <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" />View</button>
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" />Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" />Go to</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station"><Ico name="radio" />Radio</button>
+          <button type="button" className={'tbtn' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" />Radio</button>
           <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}><Ico name="pause" />Pause</button>
         </div>
       )}
+      {playing && radioOpen && game.current && <RadioCard game={game.current} settings={settings} update={update} onClose={() => setRadioOpen(false)} />}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
       {playing && (coarse || settings.showTouch) && game.current && (
         <Touch input={game.current.input} manual={settings.transmission === 'manual'} onShift={(d) => game.current?.pushAction(d > 0 ? 'shiftUp' : 'shiftDown')} />
