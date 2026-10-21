@@ -152,6 +152,102 @@ await group('boot', async (use) => {
     expect(first && again.segs === first.segs && again.long === first.long, `first look: ${first?.segs} segments, ${first?.long} over 3 m; second: ${again.segs}, ${again.long}`);
     return `${again.segs.toLocaleString()} segments both times, ${again.long} over 3 m both times`;
   });
+  // Debris (owner, 2026-10-20: "there seems to be debris in some parts of the freeway"). Big oleanders, palm trunks and
+  // street trees stood on the lanes and shoulders, houses on ramps: scenery is placed "clear of the roads" with
+  // near(x, z, r), which searched only the grid cells within r while it accepts any road whose centreline is r + its
+  // paved half-width away, so on a wide freeway's outer lanes the road was missed whenever its centreline was in the
+  // next cell (and a ramp that curls back into a cell wasn't in that cell's list at all). First the query itself, on
+  // points across every road's pavement and 1.5 m past each edge.
+  await check('near() finds the road under any point on or beside its pavement', async () => {
+    const r = await game(page, () => {
+      const net = window.__game.net, ex = [];
+      let n = 0, miss = 0, nMain = 0, missMain = 0;
+      for (const p of net.paths) for (let s = 10; s < p.len - 10; s += 100) for (const d of [p.paveL - 1.5, p.edgeL, 0, p.edgeR, p.paveR + 1.5]) {
+        const a = p.at(s, d); n++; if (p.main) nMain++;
+        if (net.near(a.x, a.z, 2).some((h) => h.path === p)) continue;
+        miss++; if (p.main) missMain++;
+        if (ex.length < 4) ex.push(`${p.label || 'ramp ' + p.id} at ${Math.round(s)} m, ${d.toFixed(1)} m across`);
+      }
+      return { n, miss, nMain, missMain, ex };
+    });
+    // a few points on the tightest loop ramps (23 to 54 m radius) still don't project in six steps; none on the mains
+    expect(r.missMain === 0 && r.miss <= r.n * 0.0005, `missed the road at ${r.miss} of ${r.n} points (${r.missMain} of ${r.nMain} on the mains), such as ${r.ex.join('; ')}`);
+    return `${r.n.toLocaleString()} points, the road found at all but ${r.miss} (mains: all ${r.nMain.toLocaleString()})`;
+  });
+  // then what's built: the terrain tiles along all 20 carriageways (every third), at both levels of detail. No plant or
+  // building may stand on any road's pavement, and the ground may not come up through it (a 12 m triangle, or a 40 m
+  // one on a far tile, with a corner up a cut's slope leaned up through the shoulder and the lanes)
+  await check('no scenery on the pavement and no ground through it, along all 20 carriageways', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, net = g.net, terrain = g.terrain, T = 480, seen = new Set(), list = [];
+      for (const m of net.mains) for (let i = 0; i < m.n; i += 10) {
+        const k = `${Math.floor(m.xs[i] / T)},${Math.floor(m.zs[i] / T)}`;
+        if (!seen.has(k)) { seen.add(k); if (seen.size % 3 === 1) list.push(k.split(',').map(Number)); }
+      }
+      const PR = { s: 0, d: 0 }, AT = { x: 0, y: 0, z: 0, h: 0 };
+      // the road and offset under (x, z), checked: the projection has to land back on the point
+      const onto = (p, x, z, guess) => {
+        let s = guess;
+        for (let k = 0; k < 4; k++) {
+          p.project(x, z, s, PR);
+          if (PR.s < 0 || PR.s > p.len) return null;
+          p.at(PR.s, PR.d, AT);
+          if (Math.hypot(AT.x - x, AT.z - z) < 0.25) return { s: PR.s, d: PR.d };
+          s = PR.s;
+        }
+        return null;
+      };
+      const objects = [], ground = [];
+      let inst = 0, pts = 0;
+      for (const [tx, tz] of list) {
+        const x0 = tx * T, z0 = tz * T, roads = [...new Set(net.near(x0 + T / 2, z0 + T / 2, T * 0.75).map((h) => h.path))];
+        for (const lod of [0, 1]) {
+          const t = terrain.build(tx, tz, lod), sp = lod ? 40 : 12, n = T / sp + 1;
+          const mesh = t.group.children.find((o) => o.isMesh && !o.isInstancedMesh), pos = mesh.geometry.attributes.position;
+          const H = (x, z) => {
+            const fx = (x - x0) / sp, fz = (z - z0) / sp, i = Math.floor(fx), j = Math.floor(fz);
+            if (i < 0 || j < 0 || i >= n - 1 || j >= n - 1) return null;
+            const u = fx - i, v = fz - j, a = pos.getY(j * n + i), b = pos.getY(j * n + i + 1), c = pos.getY((j + 1) * n + i), d = pos.getY((j + 1) * n + i + 1);
+            return u + v <= 1 ? a + (b - a) * u + (c - a) * v : d + (c - d) * (1 - u) + (b - d) * (1 - v);
+          };
+          for (const p of roads) for (let s = 1; s < p.len - 1; s += 2) {
+            const c = p.at(s, 0);
+            if (c.x < x0 || c.x > x0 + T || c.z < z0 || c.z > z0 + T) continue;
+            for (let d = p.paveL + 0.1; d <= p.paveR - 0.1; d += 0.5) {
+              const a = p.at(s, d), h = H(a.x, a.z);
+              if (h === null) continue;
+              pts++;
+              if (h - a.y > 0.02 && !net.covered(a.x, a.z, a.y, p, -0.25, true) && ground.length < 400) ground.push(`${lod ? 'far' : 'near'} tile: ${p.label || 'ramp ' + p.id} at ${Math.round(s)} m, ${d.toFixed(1)} m across, ${(h - a.y).toFixed(2)} m up`);
+            }
+          }
+          if (lod === 0) for (const o of t.group.children) {
+            if (!o.isInstancedMesh) continue;
+            const mt = o.material, bb = (o.geometry.computeBoundingBox(), o.geometry.boundingBox);
+            const kind = Array.isArray(mt) ? 'office' : mt.alphaTest > 0 ? null : mt.map && !mt.vertexColors ? 'palm' : mt.vertexColors && mt.envMapIntensity === 0.35 ? (o.castShadow ? 'tree' : 'shrub') : mt.vertexColors ? 'house' : null;
+            if (!kind) continue;                      // palm crowns are 12 m up; tree trunks are inside their canopies
+            const building = kind === 'house' || kind === 'office';
+            const r0 = building ? Math.hypot(Math.max(-bb.min.x, bb.max.x), Math.max(-bb.min.z, bb.max.z)) : Math.max(-bb.min.x, bb.max.x, -bb.min.z, bb.max.z);
+            const M = new mesh.matrix.constructor();
+            for (let k = 0; k < o.count; k++) {
+              o.getMatrixAt(k, M); inst++;
+              const e = M.elements, x = e[12] + x0, y = e[13], z = e[14] + z0, R = r0 * Math.hypot(e[0], e[1], e[2]);
+              for (const h of net.near(x, z, 40)) {
+                const at = onto(h.path, x, z, h.s), p = h.path;
+                if (!at || Math.abs(p.height(at.s) - y) > 3) continue;
+                const gap = Math.max(p.paveL - at.d, at.d - p.paveR);
+                if (gap < R) { objects.push(`${kind} ${(R - Math.max(0, gap)).toFixed(1)} m onto ${p.label || 'ramp ' + p.id} at ${Math.round(at.s)} m (${gap < 0 ? 'its centre on the pavement' : 'its edge'})`); break; }
+              }
+            }
+          }
+          terrain.drop(t);
+        }
+      }
+      return { tiles: list.length, inst, pts, objects, ground };
+    });
+    expect(r.objects.length === 0, `${r.objects.length} plants or buildings on the pavement, such as ${r.objects.slice(0, 5).join('; ')}`);
+    expect(r.ground.length === 0, `the ground comes up through the pavement at ${r.ground.length}${r.ground.length >= 400 ? '+' : ''} points, such as ${r.ground.slice(0, 4).join('; ')}`);
+    return `${r.tiles} tiles: ${r.inst.toLocaleString()} plants and buildings clear of every road; ${r.pts.toLocaleString()} pavement points over the ground at both levels of detail`;
+  });
   await check('menu credits the map data and has no Controls screen', async () => {
     const text = await page.locator('.overlay.menu').innerText();
     expect(/OpenStreetMap contributors via Overture Maps \(ODbL\)/.test(text), 'no OSM/Overture credit');
