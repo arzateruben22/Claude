@@ -4,7 +4,7 @@
 //   npm run build && npm test             every group
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
 //                                         progression, render, phone, launch, store, store-live)
-//   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
+//   npm test -- --slow                    also render the High, Very High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
 // rendering) and real frames are used only where rendering is the point. Screenshots go to tests/out/.
@@ -773,20 +773,20 @@ await group('render', async (use) => {
     return `paused while lost, rendering again after Resume (${after.roads} road chunks)`;
   });
   // last, because the first frames after a switch compile new shaders and take minutes here
-  await check(`High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
+  await check(`High, Very High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
     const out = [];
     let crownHigh = 0;
-    for (const q of ['high', 'ultra', 'low']) {
+    for (const q of ['high', 'veryhigh', 'ultra', 'low']) {
       const t0 = Date.now();
       const s = await game(page, (qq) => {
         const g = window.__game; g.updateSettings({ ...g.settings, quality: qq });
-        // the live rear-view (a render target on the glass) comes with High and Ultra on a desktop; Low keeps the environment map
+        // the live rear-view (a render target on the glass) comes with High and up on a desktop; Low keeps the environment map
         let live = false; g.scene.traverse((o) => { if (o.name === 'rear-view-mirror' && o.target) live = true; });
         // the palm crowns' triangles at this tier (alpha-tested frond cards; fewer fronds below High)
         let crown = 0; g.terrain.group.traverse((o) => { if (o.isInstancedMesh && o.material.alphaTest > 0) crown = (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
-        // the house plans built (W1): four on High and Ultra, two on Low
+        // the house plans built (W1): four on High and up, two on Low
         const plans = new Set(); g.terrain.group.traverse((o) => { if (o.isInstancedMesh && /^house-/.test(o.geometry.name)) plans.add(o.geometry.name); });
-        return { ...g.stats, post: !!g.composer, live, crown, plans: plans.size };
+        return { ...g.stats, post: !!g.composer, live, crown, plans: plans.size, gfx: g.gfxInfo() };
       }, q);
       crownHigh ||= s.crown;
       expect(s.crown > 0 && s.crown <= 448 && (q === 'low') === (s.crown < crownHigh), `${q}: palm crowns of ${s.crown} triangles (High ${crownHigh})`);
@@ -794,9 +794,27 @@ await group('render', async (use) => {
       expect(s.plans === (q === 'low' ? 2 : 4), `${q}: ${s.plans} house plans built`);
       expect(s.post === (q !== 'low'), `${q}: post-processing ${s.post ? 'on' : 'off'}`);
       expect(s.live === (q !== 'low'), `${q}: live mirrors ${s.live ? 'on' : 'off'}`);
+      // the pipeline each preset builds (G1): Ultra's AO reads the scene's depth (no normal pass), its bloom threshold
+      // sits over the sky, its shadow box is fitted ahead of the camera and its environment map carries the clouds;
+      // Very High is the old Ultra, unchanged; leaving Ultra puts the car's texture filtering back
+      const x = s.gfx, want = {
+        low: { passes: '', shadow: 0, env: false, aniso: 0 },
+        high: { passes: 'render,bloom,output', shadow: 2048, half: 28, samples: 4, threshold: 0.92, env: false, aniso: 0 },
+        veryhigh: { passes: 'render,ao-normal-pass,bloom,output', shadow: 4096, half: 34, samples: 4, threshold: 0.92, env: false, aniso: 0 },
+        ultra: { passes: 'render,ao-depth,bloom,output', half: 50, env: true },
+      }[q];
+      expect(x.passes.join() === want.passes && x.env.detail === want.env && x.toneMapping === 'aces', `${q}: passes ${x.passes.join()}, environment detail ${x.env.detail}, tone mapping ${x.toneMapping}`);
+      if (want.shadow !== undefined) expect(x.shadow.size === want.shadow, `${q}: shadow map ${x.shadow.size}`);
+      if (want.half) expect(x.shadow.half === want.half, `${q}: shadow box half ${x.shadow.half} m`);
+      if (want.samples) expect(x.samples === want.samples && Math.abs(x.bloom.threshold - want.threshold) < 1e-6, `${q}: ${x.samples} samples, bloom threshold ${x.bloom?.threshold}`);
+      if (want.aniso !== undefined) expect(x.carTextures === want.aniso, `${q}: ${x.carTextures} car textures raised to max anisotropy`);
+      if (q === 'ultra') {
+        expect(x.aoFromDepth && x.samples >= 4 && x.bloom.threshold > 1.5 && x.shadow.size >= 4096 && x.carTextures > 0 && x.lodNear > 520 && x.drawDistance > 2400 && x.trafficView <= 2280,
+          `ultra: ${JSON.stringify(x)}`);
+      }
       if (slow || q === 'low') await frames(page, 3, 400000);
       if (slow && q !== 'low') await shot(`quality-${q}`);
-      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles, ${s.plans} house plans${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
+      out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}${x.passes.length ? ` (${x.passes.join('+')}, ${x.samples}x MSAA)` : ''}, shadow ${x.shadow.size}${x.shadow.size ? `/${x.shadow.half} m` : ''}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles, ${s.plans} house plans${q === 'ultra' ? `, ${x.carTextures} car textures at ${x.maxAniso}x, env map with clouds` : ''}${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
     }
     return out.join('; ');
   });
@@ -824,6 +842,35 @@ await group('phone', async (use) => {
     await page.waitForTimeout(400);
     expect(await page.locator('.sheet.home .modes').count() === 1, 'not back on the menu');
     return `same sheet, dock marks ${r.here}, one Drive button`;
+  });
+  // the five graphics presets (G1 put Ultra above Very High, the old Ultra) fit the phone's Settings: no label clipped,
+  // nothing past the screen's edge; and a phone with nothing saved starts on Low, never on Ultra (it's for desktops)
+  await check('Settings: the five graphics presets fit a 390 × 844 phone', async () => {
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.waitForTimeout(400);
+    await page.getByRole('group', { name: 'Graphics' }).scrollIntoViewIfNeeded();
+    const r = await game(page, () => {
+      const g = document.querySelector('[role="group"][aria-label="Graphics"]'), b = g.getBoundingClientRect();
+      const btns = [...g.querySelectorAll('button')].map((x) => { const bb = x.getBoundingClientRect(); return { t: x.textContent, l: Math.round(bb.left), r: Math.round(bb.right), h: Math.round(bb.height), clip: x.scrollWidth > x.clientWidth + 1 || x.scrollHeight > x.clientHeight + 1 }; });
+      return { btns, l: Math.round(b.left), r: Math.round(b.right), w: innerWidth, side: document.documentElement.scrollWidth > innerWidth, quality: window.__game.settings.quality };
+    });
+    await page.screenshot({ path: path.join(OUT, 'phone-settings-graphics.png') });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();   // back to the menu
+    await page.waitForTimeout(400);
+    const names = r.btns.map((x) => x.t).join(', ');
+    expect(names === 'Low, Medium, High, Very High, Ultra', names);
+    expect(!r.side && r.l >= 0 && r.r <= r.w && r.btns.every((x) => x.l >= 0 && x.r <= r.w && x.h >= 36 && !x.clip), JSON.stringify(r));
+    // a phone with nothing saved starts on its own guess: Low, never Ultra
+    const fresh = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
+    let guess = '';
+    try {
+      const fp = await fresh.newPage();
+      await fp.goto(pathToFileURL(GAME).href);
+      await fp.waitForFunction(() => window.__game?.settings, null, { timeout: BOOT_MS });
+      guess = await fp.evaluate(() => window.__game.settings.quality);
+    } finally { await fresh.close(); }
+    expect(guess === 'low', `a fresh phone starts on ${guess}`);
+    return `${names} across ${r.r - r.l} px of ${r.w}; buttons ${r.btns.map((x) => `${x.r - x.l}x${x.h}`).join(' ')}; a fresh phone starts on ${guess}`;
   });
   await check('profile screen renders', async () => {
     await page.getByRole('button', { name: 'Profile', exact: true }).click();
