@@ -19,7 +19,7 @@ import { Kit, V3, v3, clamp, sstep, withAO } from './car-kit';
 import * as M from './car-mats';
 import { bodyFor, lampMaterials, CarBody } from './car-body';
 import { addWheel, TREAD_V } from './car-wheel';
-import { badgeTex, wordmarkTex, ocMarkTex, plateTex, contactShadow, once } from './car-tex';
+import { badgeTex, wordmarkTex, ocMarkTex, plateTex, contactShadow, glowTex, once } from './car-tex';
 import { CarId, shapeFor, rearR } from './car-shape';
 
 export type Quality = 'phone' | 'high';
@@ -28,9 +28,10 @@ export interface CarOptions { car?: CarId; paint?: number; quality?: Quality; ca
 
 // the colours each interior shows through the glass from outside
 const SIL: Record<string, [number, number]> = { gt: [0x161618, 0x5c2c12], brio: [0x161618, 0x1b2233], corsa: [0x141416, 0x1a1a1c], vela: [0x1a1a1c, 0x8e8981], hyper: [0x141416, 0x1a1a1c] };
-// the lamps that are off until the player's car lights them (PlayerCar): the turn signals' amber overlays and the
-// reversing lamps. Built hidden, so they cost nothing until lit.
-export const SWITCHED_LAMPS = ['sigL', 'sigR', 'reverse'];
+// the lamps that are off until the player's car lights them (PlayerCar): the turn signals' amber overlays, the
+// reversing lamps and the red haze round the hypercar's tail bar on the brakes. Built hidden, so they cost nothing
+// until lit.
+export const SWITCHED_LAMPS = ['sigL', 'sigR', 'reverse', 'brakeGlow'];
 
 // every material the car's kit can file geometry under
 export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: CarId = 'rossini-gt'): Record<string, THREE.Material> {
@@ -51,6 +52,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     extra.sigL = sig; extra.sigR = sig;
     extra.reverse = once('m.reverse', () => Object.assign(new THREE.MeshStandardMaterial({ color: 0x202224, emissive: 0xf4f7ff, emissiveIntensity: 2.6, roughness: 0.3 }), { name: 'reverse' }));
   }
+  // the tail bar's haze on the brakes (additive, unlit): the bar is 2 cm tall, a pixel or two from the chase camera, so
+  // its own brake level hardly shows there; the haze spreads the stop light over the black channel round it
+  if (P.bar) extra.brakeGlow = once('m.brakeGlow', () => Object.assign(new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 0.07, 0.05).multiplyScalar(1.1), map: glowTex(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }), { name: 'brakeGlow' }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
   return {
     ...extra,

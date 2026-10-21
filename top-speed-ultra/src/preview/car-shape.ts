@@ -45,10 +45,12 @@ export interface ShapeParams {
   head: [number, number][];              // headlamp patch on the fender top (x, z): inner-front, outer-front, outer-rear, inner-rear
   bladeSweep?: number;                   // the blade's outer end sweeps this much further back (z += sweep * u^3 along it), so it climbs the fender's corner
   headStyle: 'twin' | 'round' | 'slim' | 'blade';
-  // the hypercar's blade (headStyle 'blade'): a lit face h tall standing on the nose from x0 off the centre out to the
-  // fender's corner, under a dark lamp socket (the lens) that runs back up the surface socket[0] (inner end) to
-  // socket[1] (outer end) metres; its outer end follows the head quad's front edge (and bladeSweep)
-  blade?: { x0: number; y0: number; h: number; socket: [number, number] };
+  // the hypercar's blade (headStyle 'blade'): a lit face h tall standing on the nose along the head quad's front edge
+  // (and bladeSweep) out round the fender's corner, narrowing to a point over its inner `tip` share, under a dark lamp
+  // socket (the lens) that runs back up the surface until it stands socket[0] (inner end) to socket[1] (outer end)
+  // metres over the face, or as far back as its taper allows (2 cm deep at the tip to 24 cm at the outer end, in
+  // plan). x0, y0: start further in, at x0 off the centre and y0 high, along the lower nose's top edge
+  blade?: { h: number; socket: [number, number]; tip?: number; x0?: number; y0?: number };
   noseStyle: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   tailStyle: 'gt' | 'brio' | 'corsa' | 'vela' | 'hyper';
   noseIntake: [number, number][];        // the main front opening (x, y), convex; inside the nose face's outline
@@ -262,10 +264,12 @@ const HYPER: ShapeParams = {
   // bends back up the fender's corner (bladeSweep), so in the FRONT view it climbs from 0.38 m at the inner end to
   // about 0.52 m at the outer end (the sheet: about 0.30 to 0.48 m), where a straight blade turned down over the corner
   head: [[0.45, -2.335], [0.9, -2.185], [0.915, -2.13], [0.47, -2.285]], headStyle: 'blade', bladeSweep: 0.125,
-  // M2 (M1b item 2): the blade is the face's main feature, about 0.8 m a side from 0.14 m off the centre (its foot at
-  // 0.362 m, just under the black lower nose's top edge, rising to the head quad's front edge) out round the corner:
-  // a lit face 25 mm tall under a dark socket that shows 12 mm (inner end) to 40 mm (outer end) above it from ahead
-  blade: { x0: 0.14, y0: 0.362, h: 0.025, socket: [0.012, 0.04] },
+  // M2 (M1b item 2): the blade is the face's main feature. The sheet's FRONT puts each blade's inner tip 0.47 m off the
+  // centre and its outer end on the fender's corner (0.93 m), a straight slash under a smoked socket that is about
+  // 70 mm deep at the outer end and tapers to nothing at the tip (HEADLIGHT DETAIL), with silver nose between the two
+  // tips: so the blade runs the head quad's front edge from 0.45 m out round the corner, a lit face 25 mm tall that
+  // narrows to a point over its inner eighth, under a socket that stands 6 mm (tip) to 70 mm (outer end) over it
+  blade: { h: 0.025, socket: [0.006, 0.07], tip: 0.12 },
   noseStyle: 'hyper', tailStyle: 'hyper',
   noseIntake: [[-0.48, 0.09], [0.48, 0.09], [0.43, 0.26], [-0.43, 0.26]],
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter

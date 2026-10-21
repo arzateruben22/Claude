@@ -8,8 +8,8 @@
 //   &cy=metres (front and back-ortho: the camera's height, default 0.75)
 //   &paint=hex   &s=metres from the stretch start   &mirrors=live|env   &hands=1 (the hands part on the rim)
 //   &portrait=1 (the game's portrait-phone camera numbers)   &cam=x,y,z&at=x,y,z&fov=deg (any camera, car's frame)
-//   &lit=1 (outside views: every switched lamp on, as PlayerCar lights them: the brake level on the tail lamps, the
-//          turn signals and the reversing lamps; &head=night the headlamps at the game's night level)
+//   &lit=1 (outside views: every switched lamp on, as PlayerCar lights them: the brake level on the tail lamps (and the
+//          hypercar's brake haze), the turn signals and the reversing lamps; &head=night the headlamps at the game's night level)
 // The interior views follow the car's driver (car-shape seatOffset: the hypercar's sits lower and further in).
 // The game's cameras (src/game/Game.ts updateCamera), in the car's frame:
 //   seat: EYE, pitched -0.085 rad (portrait -0.27), FOV 58 (portrait 96); free: the same eye, FOV 66
@@ -20,7 +20,7 @@
 // with the part shown minus with it hidden, shadow passes included.
 import * as THREE from 'three';
 import { makeStage, Stage } from './stage';
-import { buildCar } from './car';
+import { buildCar, SWITCHED_LAMPS } from './car';
 import { CAR_IDS, CarId, shapeFor, seatOffset } from './car-shape';
 import { EYE } from './spec';
 import { carProbe } from './car-probe';
@@ -130,8 +130,8 @@ if (interior) {
   frame.add(c); part = c;
   if (q.get('lit') === '1') {
     const m = c.userData.materials as Record<string, THREE.MeshStandardMaterial>;
-    if (m.tail) m.tail.emissiveIntensity = 5;
-    for (const k of ['sigL', 'sigR', 'reverse']) { const o = c.getObjectByName(k); if (o) o.visible = true; }
+    if (m.tail) m.tail.emissiveIntensity = (m.tail.userData.levels as [number, number] | undefined)?.[1] ?? 5;
+    for (const k of SWITCHED_LAMPS) { const o = c.getObjectByName(k); if (o) o.visible = true; }
     log.lit = true;
   }
   if (q.get('head') === 'night') { const m = c.userData.materials as Record<string, THREE.MeshStandardMaterial>; if (m.lamp) m.lamp.emissiveIntensity = 5.4; log.head = 'night'; }
@@ -171,6 +171,8 @@ if (q.get('cam') && q.get('at')) {
   look(L(cx, cy2, cz), L(ax, ay, az));
   if (q.get('fov')) camera.fov = Number(q.get('fov'));
 }
+// &hide=key,key: hide the part's meshes filed under these keys (which piece is which, in a debug shot)
+for (const k of (q.get('hide') ?? '').split(',').filter(Boolean)) part.traverse((o) => { if (o.name === k) o.visible = false; });
 camera.updateProjectionMatrix();
 // the sun's shadow box follows what we're looking at
 env.follow(frame.getWorldPosition(new THREE.Vector3()), camera, 0, 0);
