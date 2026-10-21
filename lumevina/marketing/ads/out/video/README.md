@@ -22,6 +22,6 @@ Rendered from `docs/school/motion/` (see the README there). Week numbers follow 
 | 16 | `4-2-9x16.mp4` | More exfoliation isn't better | Acids: two nights a week, not seven. | 24 s |
 | 17 | `3-1-9x16.mp4` | How to read a label | The front of the bottle is marketing. Turn it around. | 21 s |
 | 18 | `5-1-9x16.mp4` | Vitamin C, in the morning | Your vitamin C turned brown? It's past its best. | 22 s |
-| 19 | *rendering* | Three kinds of dark spots | Sun spots, post-breakout marks or melasma? They look alike. |  |
+| 19 | `9-1-9x16.mp4` | Three kinds of dark spots | Sun spots, post-breakout marks or melasma? They look alike. | 22 s |
 
 Post the pore clip first (skin science travels), then one a week in this order. Each is silent with the words on screen; the caption's first line is the hook.
