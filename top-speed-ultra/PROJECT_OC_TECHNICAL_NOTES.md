@@ -137,7 +137,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   presentation, nails })` rebuilds only what changed: car id or quality → the exterior (`cabin: 'full'`, no wheels),
   the cockpit (`body: false`, `mirrors: 'env'`) and four wheel groups (hub kit on a steering group, spinning kit
   inside it, placed from `bodyFor(id).AXLE`); paint → the shared paint material's colour; look, presentation or
-  nails → the hands. Quality tiers: Low and Medium → 'phone', High and Ultra → 'high'. From the seat the exterior's
+  nails → the hands. Quality tiers: Low and Medium → 'phone', High, Very High and Ultra → 'high'. From the seat the exterior's
   glass, frit and cabin silhouette are hidden (`setOutsideView`). `updateCockpit()` steers the wheel mount
   (`delta × steerRatio`, clamped to ±2.2 rad), the hands follow it, and the tach needle takes the rpm. Build cost in
   SwiftShader: about 0.4 s car, 0.6 s cockpit, 1 s hands (the hands' SDF is meshed at load and cached per
@@ -299,7 +299,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
 - Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`, `store`,
   `store-live`. Run some with
-  `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
+  `npm test -- --only=race,survival`. Add `--slow` to render the High, Very High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
   (git-ignored).

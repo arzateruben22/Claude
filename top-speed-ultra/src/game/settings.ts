@@ -2,7 +2,7 @@
 
 export const VERSION = '0.1.0';   // keep in step with package.json; shown in feedback reports
 
-export type Quality = 'low' | 'medium' | 'high' | 'ultra';
+export type Quality = 'low' | 'medium' | 'high' | 'veryhigh' | 'ultra';
 export type Mode = 'free' | 'survival' | 'race' | 'time';
 export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';
 export type Corner = 'map' | 'sky' | 'off';
@@ -40,6 +40,7 @@ export interface Settings {
   ultraMuffle: boolean;
   hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
   owner: boolean;           // owner mode: every car in the garage to drive, for test builds only (a local switch, not security)
+  tiers: number;            // the presets' version: 2 since the Ultra tier (G1). A saved 'ultra' without it is the old Ultra, now Very High
 }
 
 export interface QualityPreset {
@@ -54,13 +55,40 @@ export interface QualityPreset {
   drawDistance: number;     // metres of road built ahead
   props: number;            // scenery density multiplier
   texture: number;          // procedural texture size
+  // the Ultra tier's render pipeline (src/game/gfx/ultra.ts); absent on every other preset, which keep the plain path
+  ultra?: UltraPipeline;
 }
+export interface UltraPipeline {
+  aoRadius: number;         // GTAO from the scene's own depth (no second scene render): radius in metres
+  aoIntensity: number;      // how much of it is blended in
+  aoFade: [number, number, number, number];   // view distance (m) where it fades in from the cockpit, and out far away
+  bloom: [number, number, number];            // UnrealBloomPass strength, radius, threshold (linear, before exposure)
+  shadowHalf: number;       // the sun's shadow box: half its size (m), fitted ahead of the camera
+  shadowAhead: number;      // how far ahead of the car the box's centre sits, as a share of shadowHalf
+  shadowBias: number; shadowNormalBias: number;
+  lodNear: number;          // terrain tiles get full detail (12 m grid and scenery) within this many metres
+  trafficView: number;      // traffic is kept to this far ahead (m), whatever the draw distance
+  toneMapping: 'aces' | 'agx';
+  envDetail: boolean;       // the sky's environment map gets the clouds and the mountains, and follows the sun
+  aniso: boolean;           // every car texture at the GPU's maximum anisotropy (the world's already are)
+}
+// how the presets rank: 'veryhigh' and 'ultra' get everything 'high' does
+export const QUALITY_RANK: Record<Quality, number> = { low: 0, medium: 1, high: 2, veryhigh: 3, ultra: 4 };
+export const atLeast = (q: Quality, min: Quality) => QUALITY_RANK[q] >= QUALITY_RANK[min];
 
 export const QUALITY: Record<Quality, QualityPreset> = {
   low:    { label: 'Low',    renderScale: 0.75, maxPixelRatio: 1,   shadows: 0,    post: false, bloom: false, ao: false, msaa: 0, drawDistance: 900,  props: 0.45, texture: 512 },
   medium: { label: 'Medium', renderScale: 1,    maxPixelRatio: 1.5, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0, drawDistance: 1300, props: 0.75, texture: 1024 },
   high:   { label: 'High',   renderScale: 1,    maxPixelRatio: 2,   shadows: 2048, post: true,  bloom: true,  ao: false, msaa: 4, drawDistance: 1800, props: 1,    texture: 1024 },
-  ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048 },
+  // Very High is the preset that was called Ultra until the Ultra tier below (G1): its output is unchanged
+  veryhigh: { label: 'Very High', renderScale: 1, maxPixelRatio: 2, shadows: 4096, post: true, bloom: true, ao: true, msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048 },
+  // Ultra (G1), for desktop GPUs, never a default: AO from the scene's depth, bloom for lights only, 8x MSAA where the
+  // GPU takes it, an 8K sun shadow map fitted ahead of the camera, every car texture at the GPU's maximum anisotropy,
+  // an environment map with the clouds and the mountains that follows the sun, 2.8 km of road and wider full-detail
+  // terrain (see src/game/gfx/ultra.ts; the numbers are in PROJECT_OC_PROGRESS.md)
+  ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 8192, post: true,  bloom: true,  ao: true,  msaa: 8, drawDistance: 2800, props: 1.25, texture: 2048,
+    ultra: { aoRadius: 1.2, aoIntensity: 0.85, aoFade: [0.9, 2.2, 70, 160], bloom: [0.3, 0.4, 2.2], shadowHalf: 50, shadowAhead: 0.5, shadowBias: -0.00012, shadowNormalBias: 0.024,
+      lodNear: 760, trafficView: 2280, toneMapping: 'aces', envDetail: true, aniso: true } },
 };
 
 // cars per kilometre per lane, and the share of aggressive drivers
@@ -108,7 +136,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: 'modern', owner: false,
+    hudStyle: 'modern', owner: false, tiers: 2,
   };
 }
 
@@ -136,7 +164,8 @@ function readSettings(): Settings {
     const v = JSON.parse(raw) as Partial<Settings>;
     return {
       ...d, ...v,
-      quality: v.quality && v.quality in QUALITY ? v.quality : d.quality,
+      // the old Ultra became Very High (G1): a phone or laptop that picked it keeps the same picture, not the new tier
+      quality: v.quality === 'ultra' && v.tiers !== 2 ? 'veryhigh' : v.quality && v.quality in QUALITY ? v.quality : d.quality, tiers: 2,
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
