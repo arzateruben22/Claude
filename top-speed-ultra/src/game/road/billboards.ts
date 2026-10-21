@@ -14,6 +14,12 @@ export interface Ads { creatives: Record<string, Creative>; slots: Slot[] }
 
 const W = 12, H = 4, POST_H = 5.5, STEP = 40;
 
+// the panels' materials, so the game can light them at dusk (a lit sign, not a dim one): 0.35 by day to 2.2 at night
+const lit: THREE.MeshStandardMaterial[] = [];
+export function lightBillboards(dark: number) {
+  const k = 0.35 + Math.max(0, Math.min(1, dark)) * 1.85;
+  for (const m of lit) if (Math.abs(m.emissiveIntensity - k) > 0.01) m.emissiveIntensity = k;
+}
 export function buildBillboards(net: Network, ads: Ads): THREE.Group {
   const group = new THREE.Group();
   group.name = 'billboards';
@@ -44,6 +50,7 @@ export function buildBillboards(net: Network, ads: Ads): THREE.Group {
         c.fillStyle = cr.fg; c.globalAlpha = 0.75; c.font = `500 ${h * 0.1}px "Chakra Petch", Arial, sans-serif`; c.fillText(cr.tag, w * 0.05, h * 0.86); c.globalAlpha = 1;
       });
       mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.55, emissive: new THREE.Color(0xffffff), emissiveMap: tex, emissiveIntensity: 0.35 });
+      lit.push(mat as THREE.MeshStandardMaterial);
       panels.set(slot.creative, mat);
     }
     const g = new THREE.Group();

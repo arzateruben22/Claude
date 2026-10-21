@@ -220,8 +220,21 @@ export class Environment {
   // the air temperature on the HUD's clock chip, °F (U1). Simulated, and the chip says so: Orange County's mild coast
   // by the hour (58° at 3 am up to 74° at 3 pm; "Live" uses this device's clock, the presets their own hour) less a few
   // degrees for the weather in force. A clear day reads 72°. Nothing live is fed in.
+  // the hour on Orange County's clock: Pacific time for "Live" wherever the player is, the preset's own hour otherwise
+  hourOC(now = new Date()): number {
+    if (this.time !== 'live') return TEMP_HOUR[this.time];
+    try {
+      const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(now).map((x) => [x.type, x.value]));
+      return (Number(p.hour) % 24) + Number(p.minute) / 60;
+    } catch { return now.getHours() + now.getMinutes() / 60; }
+  }
+  // the clock chip's text: OC's time ("Live") or the preset's hour, so the clock always agrees with the sky
+  clockText(now = new Date()): string {
+    const h = this.hourOC(now), hh = Math.floor(h), mm = Math.round((h - hh) * 60) % 60;
+    return `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, '0')} ${hh < 12 ? 'AM' : 'PM'}`;
+  }
   tempF(now = new Date()): number {
-    const hour = this.time === 'live' ? now.getHours() + now.getMinutes() / 60 : TEMP_HOUR[this.time];
+    const hour = this.hourOC(now);
     return Math.round(66 + 8 * Math.cos(((hour - 15) / 24) * Math.PI * 2) + TEMP_WX[this.currentWeather(now)]);
   }
 

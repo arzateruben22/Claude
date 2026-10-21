@@ -37,7 +37,7 @@ import { liveBase } from '../live/client';
 import { NowFeed, densityForRatio } from '../live/now';
 import { djLine, TalkNow } from '../talk/bank';
 import { leagueDay } from '../talk/league';
-import { buildBillboards, Ads } from './road/billboards';
+import { buildBillboards, lightBillboards, Ads } from './road/billboards';
 import ADS from '../data/ads.json';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
@@ -59,6 +59,7 @@ export interface Hud {
   // the adaptive HUD (U1): the compass bearing the car points along (degrees from north, clockwise), the simulated air
   // temperature (°F) for the clock chip, and which way the next manoeuvre goes for the nav bubble ('' with no route)
   heading: number; tempF: number; turn: Turn;
+  clock: string;                     // OC's time (Pacific) in Live, the preset's hour otherwise: the clock agrees with the sky
   // the navigation card (U2): what to do ('Keep right') and the road it leads to; the next exit along this road with its
   // real sign text, and whether it's the one the route takes (on a ramp, with no exits along it, the sign it was taken
   // from); and the destination card: the destination road, how far it
@@ -928,6 +929,7 @@ export class Game {
     const dark = 1 - e.daylight, gloom = Math.max(dark, e.visibility < 0.3 ? 0.6 : 0, e.wet > 0.5 ? 0.5 : 0);
     // a ramp, not a switch: the beams stay off through sunset, come up faintly through dusk and reach full at night
     this.car.setHeadlights(smoothstep(0.35, 0.8, gloom), dark);
+    lightBillboards(smoothstep(0.3, 0.85, dark));
     const lamp = P.mats.lampHead() as THREE.MeshStandardMaterial;
     lamp.emissive.setRGB(1, 0.86, 0.62); lamp.emissiveIntensity = dark > 0.4 ? 3.2 * dark : 0.05;
     if (!this.attract) this.audio.setRain(e.wet > 0.5 && e.visibility > 0.3 ? e.wet : 0);
@@ -1311,7 +1313,7 @@ export class Game {
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
-      heading, tempF: this.env.tempF(), turn,
+      heading, tempF: this.env.tempF(), turn, clock: this.env.clockText(),
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,

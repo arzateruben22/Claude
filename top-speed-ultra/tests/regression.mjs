@@ -749,6 +749,8 @@ await group('phone', async (use) => {
     // the drive starts on I-405 North through Irvine, which runs northwest
     expect(row.h > 270 && row.h < 340, `the compass reads ${row.h}° on I-405 North in Irvine`);
     expect(/\d+° · simulated/.test(row.clock), `the clock chip says "${row.clock}"`);
+    // the Day preset is 12:30 on OC's clock: the chip agrees with the sky, not with this device
+    expect(/12:30 PM/.test(row.clock), `the Day preset's clock chip says "${row.clock}"`);
     await game(page, () => window.__game.setPaused(true));
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await page.getByRole('group', { name: 'HUD style' }).getByRole('button', { name: 'Minimal' }).click();

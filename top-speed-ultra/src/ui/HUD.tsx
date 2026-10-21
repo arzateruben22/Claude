@@ -135,9 +135,9 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; b
       put(bubDist.current, 'bub', h.next ? toGo(h.nextDist) : '');
       const hd = h.heading.toFixed(1);
       if (tape.current && last.hd !== hd) { last.hd = hd; tape.current.style.setProperty('--h', hd); }
-      // the device clock, re-read when the minute turns; the temperature is the game's own (simulated)
-      const now = new Date(), minute = String(now.getHours() * 60 + now.getMinutes());
-      if (last.minute !== minute) { last.minute = minute; put(clock.current, 'clock', now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })); }
+      // OC's clock (Pacific time in Live, the preset's hour otherwise), so the chip agrees with the sky wherever the
+      // player is; the temperature is the game's own (simulated)
+      put(clock.current, 'clock', h.clock);
       put(temp.current, 'temp', `${h.tempF}°`);
       if (wrong.current) wrong.current.hidden = !h.wrongWay;
       put(fps.current, 'fps', h.fps + ' fps');
