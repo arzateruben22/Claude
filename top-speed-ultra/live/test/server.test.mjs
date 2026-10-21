@@ -186,3 +186,23 @@ test('a restart closes sockets with a code the game reconnects on', async () => 
   assert.deepEqual(got.find((m) => m.t === 'bye'), { t: 'bye', why: 'Server restarting', retry: true });
   rmSync(dir2, { recursive: true, force: true });
 });
+
+test('sign-up refuses a bad or reserved name', async () => {
+  assert.deepEqual((await post('/api/signup', { name: 'Big_Ass', password: 'correct horse battery', over13: true })).body, { error: 'Pick a different name.' });
+  assert.deepEqual((await post('/api/signup', { name: 'Admin', password: 'correct horse battery', over13: true })).body, { error: 'That name is reserved.' });
+  assert.equal((await post('/api/signup', { name: 'Cockpit_Cam', password: 'correct horse battery', over13: true })).status, 200);
+});
+
+test('a ban kicks the driver off, ends every session, refuses log-in; an unban lets them back', async () => {
+  const token = await signup('banned_one');
+  const c = connect(token); await c.ready; await c.until('welcome');
+  assert.equal((await post('/admin/ban', { name: 'banned_one' }, 'wrong')).status, 404);
+  const r = await post('/admin/ban', { name: 'Banned_One' }, 'admin-secret');
+  assert.deepEqual(r.body, { name: 'banned_one', banned: true });
+  await c.until('bye');
+  assert.equal(c.got.bye.why, 'Account suspended');
+  assert.equal((await get('/api/me', token)).status, 401, 'the old token is dead');
+  assert.equal((await post('/api/login', { name: 'banned_one', password: 'correct horse battery' })).status, 403);
+  await post('/admin/ban', { name: 'banned_one', banned: false }, 'admin-secret');
+  assert.equal((await post('/api/login', { name: 'banned_one', password: 'correct horse battery' })).status, 200);
+});

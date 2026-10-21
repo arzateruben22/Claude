@@ -127,6 +127,8 @@ Send the same link to anyone.
 - **More drivers at once:** `sudo bash server/live-cap.sh 50`. Raise it a rung at a time (25, 50, 100); the ladder
   and when to climb it are in `top-speed-ultra/live/README.md`.
 - `bash server/live-status.sh` shows who's driving, who's waiting, and the public address.
+- **Someone misbehaving:** `sudo bash server/live-ban.sh TheirName` takes them off the road and out of their account
+  (`... TheirName off` lifts it). Names with slurs, profanity or "admin"-style names are refused at sign-up.
 
 ## Every day (10–20 minutes)
 

@@ -20,6 +20,7 @@ import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypt
 import { DatabaseSync } from 'node:sqlite';
 import { WebSocketServer } from 'ws';
 import { createNow } from './now.mjs';
+import { nameProblem } from './names.mjs';
 
 // ------------------------------------------------------------------------------------------------ configuration
 const PORT = Number(process.env.PORT || 8791);
@@ -74,12 +75,16 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS sessions_player ON sessions(player);
 `);
+// added after the first release: an older database gets the column
+try { db.exec('ALTER TABLE players ADD COLUMN banned INTEGER NOT NULL DEFAULT 0'); } catch { /* already there */ }
 const q = {
-  byName: db.prepare('SELECT id, name, pass FROM players WHERE name_key = ?'),
+  byName: db.prepare('SELECT id, name, pass, banned FROM players WHERE name_key = ?'),
+  ban: db.prepare('UPDATE players SET banned = ? WHERE name_key = ?'),
+  dropAll: db.prepare('DELETE FROM sessions WHERE player = ?'),
   insert: db.prepare('INSERT INTO players (name, name_key, email, pass, created) VALUES (?, ?, ?, ?, ?)'),
   seen: db.prepare('UPDATE players SET last_seen = ? WHERE id = ?'),
   newSession: db.prepare('INSERT INTO sessions (hash, player, created, expires) VALUES (?, ?, ?, ?)'),
-  session: db.prepare('SELECT s.player AS id, p.name AS name, s.expires AS expires FROM sessions s JOIN players p ON p.id = s.player WHERE s.hash = ?'),
+  session: db.prepare('SELECT s.player AS id, p.name AS name, s.expires AS expires, p.banned AS banned FROM sessions s JOIN players p ON p.id = s.player WHERE s.hash = ?'),
   touch: db.prepare('UPDATE sessions SET last_seen = ? WHERE hash = ?'),
   drop: db.prepare('DELETE FROM sessions WHERE hash = ?'),
   sweep: db.prepare('DELETE FROM sessions WHERE expires < ?'),
@@ -112,7 +117,7 @@ function sessionFor(token) {
   if (typeof token !== 'string' || token.length < 20 || token.length > 100) return null;
   const h = tokenHash(token), s = q.session.get(h);
   if (!s) return null;
-  if (s.expires < Date.now()) { q.drop.run(h); return null; }
+  if (s.expires < Date.now() || s.banned) { q.drop.run(h); return null; }
   q.touch.run(Date.now(), h);
   return { id: Number(s.id), name: s.name, hash: h };
 }
@@ -184,6 +189,8 @@ async function handle(req, res) {
       const b = await readJson(req);
       const name = String(b.name || '').trim(), pw = String(b.password || ''), email = b.email ? String(b.email).trim().toLowerCase() : null;
       if (!NAME_RE.test(name)) return send(res, 400, { error: 'A name is 3 to 16 letters, numbers or underscores.' });
+      const bad = nameProblem(name);
+      if (bad) return send(res, 400, { error: bad });
       if (pw.length < 8 || pw.length > 128) return send(res, 400, { error: 'A password is at least 8 characters.' });
       if (email && !EMAIL_RE.test(email)) return send(res, 400, { error: 'That email address doesn\'t look right.' });
       if (b.over13 !== true) return send(res, 400, { error: 'You must be 13 or older to make an account.' });
@@ -199,6 +206,7 @@ async function handle(req, res) {
       const p = q.byName.get(name.toLowerCase());
       const ok = checkPassword(pw, p ? p.pass : DUMMY) && !!p;
       if (!ok) return send(res, 401, { error: 'Wrong name or password.' });
+      if (p.banned) return send(res, 403, { error: 'This account is suspended.' });
       q.seen.run(Date.now(), p.id);
       return send(res, 200, { token: issueSession(Number(p.id)), player: { id: Number(p.id), name: p.name } });
     }
@@ -211,6 +219,20 @@ async function handle(req, res) {
       const s = sessionFor(bearer(req));
       if (!s) return send(res, 401, { error: 'Not logged in.' });
       return send(res, 200, { player: { id: s.id, name: s.name }, online: online.size, cap: MAX_PLAYERS, queued: queue.length });
+    }
+    if (path === '/admin/ban' && req.method === 'POST') {
+      if (!ADMIN_TOKEN || bearer(req) !== ADMIN_TOKEN) return send(res, 404, 'not found');
+      const b = await readJson(req), key = String(b.name || '').trim().toLowerCase(), on = b.banned !== false;
+      const p = q.byName.get(key);
+      if (!p) return send(res, 404, { error: 'No such driver.' });
+      q.ban.run(on ? 1 : 0, key);
+      if (on) {
+        q.dropAll.run(p.id);                                     // signed out everywhere
+        const c = online.get(Number(p.id)) || queue.find((o) => o.player && o.player.id === Number(p.id));
+        if (c) kick(c, 'Account suspended');
+      }
+      log(on ? 'ban' : 'unban', { id: Number(p.id), name: p.name });
+      return send(res, 200, { name: p.name, banned: on });
     }
     if (path === '/admin/cap' && req.method === 'POST') {
       if (!ADMIN_TOKEN || bearer(req) !== ADMIN_TOKEN) return send(res, 404, 'not found');

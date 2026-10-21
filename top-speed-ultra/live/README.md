@@ -195,8 +195,11 @@ CPU and memory are not the limit; bandwidth is. Run the same test on the real ma
   dropped after 45 s without a pong.
 - The admin endpoint only exists when `ADMIN_TOKEN` is set, and then only answers to it (a wrong token gets a 404).
 - The service runs as its own user with a read-only system and can write only its data folder (the unit file).
-- Not done: email verification, password reset, name moderation, abuse reports, per-account bans (a `banned`
-  column and a check in `sessionFor` is all it takes), and any anti-cheat beyond plausibility (the relay never
-  scores, so there is nothing to cheat for yet).
+- Names: `names.mjs` refuses slurs, profanity (with number-for-letter spellings) and names that pass for staff; short
+  words count only as a whole part of a name, so "cockpit" and "Assassin" are fine ("Scunthorpe" is the known miss).
+- Bans: `POST /admin/ban {name, banned}` (or `server/live-ban.sh`) kicks the driver, ends every session and refuses
+  log-in until lifted.
+- Not done: email verification, password reset, abuse reports from players, and any anti-cheat beyond plausibility
+  (the relay never scores, so there is nothing to cheat for yet).
 - Privacy: the server stores the name, the optional email, the password hash and the times of sign-up and last
   log-in. It logs joins and leaves with the account id and name. It never sees scores, the garage or the device.
