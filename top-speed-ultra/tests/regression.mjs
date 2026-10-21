@@ -73,6 +73,17 @@ async function frames(page, n, timeout = 60000) {
   const f0 = await game(page, () => window.__game.frames);
   await page.waitForFunction((t) => window.__game.frames >= t, f0 + n, { timeout });
 }
+// hold the page's animation frames (the game's loop among them) while fn runs: the canvas keeps the frame it just
+// drew, so a screenshot of a heavy preset doesn't queue behind more software-rendered frames
+async function still(page, fn) {
+  await game(page, () => { const w = window; w.__raf = w.requestAnimationFrame; w.__held = []; w.requestAnimationFrame = (cb) => { w.__held.push(cb); return 0; }; });
+  try {
+    await page.waitForFunction(() => window.__held.includes(window.__game.frame), null, { timeout: 600000, polling: 100 });
+    return await fn();
+  } finally {
+    await game(page, () => { const w = window; w.requestAnimationFrame = w.__raf; for (const cb of w.__held.splice(0)) w.__raf(cb); });
+  }
+}
 // start a mode the way a player does: pick it on the menu, tap Drive, wait for the loading screen to go
 async function drive(page, label) {
   await page.getByRole('radio', { name: new RegExp(label) }).click();
@@ -770,6 +781,71 @@ await group('phone', async (use) => {
     await pause.tap();                                                             // the round chip pauses
     await page.waitForSelector('.panel.paused', { timeout: 30000 });
     return `compass ${row.h}°, "${row.clock}"; tucked away ${fmt(s)} s after Resume; a tap brought it back; the chip paused`;
+  });
+  // the corner's sky camera (owner, 2026-10-20: it drew "right next to the car instead of in the corner"): it must land
+  // exactly inside the frame the HUD draws whatever the render scale. Medium on this 2x phone at render scale 0.75 draws
+  // 1.5 buffer pixels per CSS pixel (where the old code put the picture 2.25x too far from the bottom left, off the
+  // screen); Low (the phone tier) at 0.5 draws the sky camera every other frame into a buffer of its own and copies it
+  // in. The game clears the sky camera's box to a probe colour (skyProbe), so the screenshot shows exactly where it
+  // lands: its box must match the frame's inner box to 2 px on every side and fill it, and none of it may land anywhere
+  // else.
+  await check('sky camera fills the corner frame at a non-1 render scale (Medium 0.75: 1.5 buffer px per CSS px; Low 0.5, copied)', async () => {
+    const seg = (g, b) => page.getByRole('group', { name: g }).getByRole('button', { name: b, exact: true }).click();
+    const measure = async (quality, scale) => {
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      await seg('Graphics', quality);
+      await seg('Corner window', 'Sky camera');
+      await seg('HUD style', 'Modern');                                            // Minimal would tuck the window away
+      await page.getByRole('button', { name: 'Done', exact: true }).click();
+      await page.getByRole('button', { name: 'Resume', exact: true }).click();
+      await game(page, (k) => { const g = window.__game; g.renderScale = k; g.onResize(); g.skyProbe = 0xff00ff; }, scale);
+      await frames(page, 3, 600000);
+      const st = await game(page, () => {
+        const el = document.querySelector('.corner.sky'), r = el?.getBoundingClientRect(), b = el?.clientLeft ?? 0, g = window.__game;
+        return { frame: r ? { l: r.left + b, t: r.top + b, r: r.right - b, b: r.bottom - b } : null, tag: el?.querySelector('.corner-tag')?.textContent ?? '',
+          pr: g.renderer.getPixelRatio(), scale: g.stats.scale, sky: g.stats.sky };
+      });
+      expect(st.frame, `${quality}: no sky camera frame on screen`);
+      // a frame of Medium at 1.5x takes minutes in software when the machine is busy: the frames and the screenshot
+      // get 10 minutes each
+      const shot = await still(page, () => page.screenshot({ timeout: 600000 }));
+      const px = await game(page, async ({ b64, f, dpr }) => {
+        const im = new Image(); im.src = 'data:image/png;base64,' + b64; await im.decode();
+        const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
+        const g = c.getContext('2d'); g.drawImage(im, 0, 0);
+        const d = g.getImageData(0, 0, c.width, c.height).data;
+        let l = 1e9, t = 1e9, r = -1, b = -1, n = 0, away = 0;
+        for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) {
+          const i = (y * c.width + x) * 4;
+          if (!(d[i] > 200 && d[i + 1] < 70 && d[i + 2] > 200)) continue;
+          n++; l = Math.min(l, x); r = Math.max(r, x + 1); t = Math.min(t, y); b = Math.max(b, y + 1);
+          const cx = x / dpr, cy = y / dpr;
+          if (cx < f.l - 3 || cx > f.r + 3 || cy < f.t - 3 || cy > f.b + 3) away++;
+        }
+        return n ? { l: l / dpr, t: t / dpr, r: r / dpr, b: b / dpr, fill: n / ((f.r - f.l) * (f.b - f.t) * dpr * dpr), away } : null;
+      }, { b64: shot.toString('base64'), f: st.frame, dpr: 2 });
+      await game(page, () => { window.__game.skyProbe = null; });
+      if (quality === 'Low') {
+        // the real view, for the record (the phone tier only: Medium's is in the sky camera's own screenshots)
+        await frames(page, 3, 600000);
+        await still(page, () => page.screenshot({ path: path.join(OUT, 'phone-sky-low.png'), timeout: 600000 }));
+      }
+      expect(px, `${quality}: the sky camera drew nothing on screen (frame ${JSON.stringify(st.frame)})`);
+      const off = { l: px.l - st.frame.l, t: px.t - st.frame.t, r: px.r - st.frame.r, b: px.b - st.frame.b };
+      const worst = Math.max(...Object.values(off).map(Math.abs));
+      expect(worst <= 2, `${quality}: off the frame by ${JSON.stringify(Object.fromEntries(Object.entries(off).map(([k, v]) => [k, fmt(v)])))} px`);
+      expect(px.fill > 0.85 && px.away === 0, `${quality}: fills ${fmt(px.fill * 100)} % of the frame, ${px.away} px of it elsewhere`);
+      expect(st.tag === 'Sky', `${quality}: the frame's label says "${st.tag}"`);
+      await page.getByRole('button', { name: 'Pause', exact: true }).click();
+      await page.waitForSelector('.panel.paused', { timeout: 30000 });
+      return `${quality} pixel ratio ${st.pr}, scale ${st.scale}, every ${st.sky.every} frame(s): frame ${fmt(st.frame.r - st.frame.l)} px at (${fmt(st.frame.l)}, ${fmt(st.frame.t)}), `
+        + `sky box within ${fmt(worst)} px of it, ${fmt(px.fill * 100)} % filled, 0 px elsewhere, ${st.sky.w}x${st.sky.h} buffer px`;
+    };
+    const medium = await measure('Medium', 0.75);
+    const m = await game(page, () => window.__game.renderer.getPixelRatio());
+    expect(m !== 1, `Medium at 0.75: pixel ratio ${m}, not a non-1 case`);
+    const low = await measure('Low', 0.5);
+    return `${medium}; ${low}`;
   });
 });
 
