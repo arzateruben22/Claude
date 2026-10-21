@@ -26,6 +26,16 @@ export const ROUTE_LABEL: Record<string, string> = {
 export const DIR_WORD: Record<string, string> = { N: 'North', S: 'South', E: 'East', W: 'West' };
 
 const CELL = 50;
+// How far a road can be over another's pavement and still count as on it (no barrier, crash cushion or deck side there;
+// its surface left out there if the other is better ranked). Below, 2.5 m. Above, GIVE_WAY for what hangs under a road: its
+// deck hangs 1.5 m under its surface and a Jersey barrier's back 1.4 m, so at 2.5 to 4 m up they stood in the lanes
+// underneath, 1 to 2.5 m above them: where the map's heights have a ramp climbing away alongside a freeway or settling
+// onto it, its deck and barriers hung across the freeway's lanes as slabs and pieces of barrier at windscreen height.
+// From 4 m its deck clears 2.5 m. Its surface (and paint) gives way only up to LEVEL: a sheet with nothing under it, seen
+// from below it isn't drawn at all, so 2.5 m up it's clear of the lanes underneath, and leaving it out too cut holes in
+// the ramp under the feet of anyone driving it.
+export const GIVE_WAY = 4.0, LEVEL = 2.5;
+export const onTop = (y: number, oy: number, above = GIVE_WAY) => y - oy >= -2.5 && y - oy <= above;
 const cellKey = (cx: number, cz: number) => (cx + 4096) * 8192 + (cz + 4096);
 
 export class Network {
@@ -36,6 +46,9 @@ export class Network {
   readonly attribution: string;
   readonly origin: [number, number];
   private grid = new Map<number, number[]>();
+  // the widest paved half-width of any path: how much further than r a centreline can be from (x, z) when the path's
+  // pavement is still within r (near() adds half the grid's 8 m sample spacing on top)
+  private reach = 0;
   // terrain grid
   readonly tx0: number; readonly tz0: number; readonly tdx: number; readonly tnx: number; readonly tnz: number;
   heights!: Float32Array;
@@ -81,13 +94,15 @@ export class Network {
     for (const p of this.paths) if (p.next && !p.next.prev) p.next.prev = p;
     // ramp labels: where it leads
     for (const p of this.paths) if (!p.main) p.label = this.leadsTo(p);
-    // spatial grid: every 8 m of every path
+    // spatial grid: every 8 m of every path, an entry each time the path enters a cell (not just the first: a ramp that
+    // curls out of a cell and back into it was missing from it the second time, and near() never saw it there)
     for (const p of this.paths) {
-      const seen = new Set<number>();
+      this.reach = Math.max(this.reach, p.paveR, -p.paveL);
+      let last = -1;
       for (let i = 0; i < p.n; i += 4) {
         const k = cellKey(Math.floor(p.xs[i] / CELL), Math.floor(p.zs[i] / CELL));
-        if (seen.has(k)) continue;
-        seen.add(k);
+        if (k === last) continue;
+        last = k;
         let a = this.grid.get(k); if (!a) this.grid.set(k, (a = []));
         a.push(p.id, i);
       }
@@ -132,10 +147,16 @@ export class Network {
     return (a + (b - a) * u) * (1 - v) + (c + (d - c) * u) * v;
   }
 
-  // roads whose centreline passes within r of (x, z): one hit per path (per stretch of it)
+  // roads near (x, z): every path whose centreline (its ends included) comes within r + its paved half-width, so whose
+  // pavement comes within about r; one hit per path (per 400 m stretch of it), with s unclamped past an end. The grid
+  // keeps every 8th metre of each centreline, so the cells searched reach the widest pavement and half a sample spacing
+  // past r: a search for what's within 2 m of a shrub has to find the freeway whose centreline is 14 m away in the next
+  // cell. (It searched only r, and scenery placed "clear of the roads" came up on the outer lanes and shoulders wherever
+  // the centreline was in another cell.)
   near(x: number, z: number, r: number, out: Hit[] = []): Hit[] {
     out.length = 0;
-    const c0 = Math.floor((x - r) / CELL), c1 = Math.floor((x + r) / CELL), r0 = Math.floor((z - r) / CELL), r1 = Math.floor((z + r) / CELL);
+    const R = r + this.reach + STEP * 2 + 1;
+    const c0 = Math.floor((x - R) / CELL), c1 = Math.floor((x + R) / CELL), r0 = Math.floor((z - R) / CELL), r1 = Math.floor((z + R) / CELL);
     const best = new Map<number, Hit>();
     for (let cx = c0; cx <= c1; cx++) for (let cz = r0; cz <= r1; cz++) {
       const a = this.grid.get(cellKey(cx, cz));
@@ -143,10 +164,21 @@ export class Network {
       for (let k = 0; k < a.length; k += 2) {
         const p = this.paths[a[k]], i = a[k + 1];
         const pr = p.project(x, z, i * STEP, PR);
-        if (pr.s < -2 || pr.s > p.len + 2) continue;
-        const key = p.id * 4096 + Math.floor(pr.s / 400);
-        const dist = Math.abs(pr.d);
+        // a projection from a guess far along a curling ramp may not have converged: its (s, d) leads somewhere else, and
+        // was taken as that road being here (a hole in a lane, a barrier missing). Step it on; if it still doesn't lead
+        // back to the point, keep the road at its true distance from the point of it reached, which can only overstate
+        // how far it is (a far search, a terrain tile's, still learns the road is there)
+        for (let t = 0; t < 2 && !lands(p, x, z, pr); t++) p.project(x, z, pr.s, pr);
+        if (!lands(p, x, z, pr)) {
+          const sc = clamp(pr.s, 0, p.len), a = p.at(sc, 0, AT_NEAR);
+          pr.d = (pr.d < 0 ? -1 : 1) * Math.hypot(a.x - x, a.z - z); pr.s = sc;
+        }
+        // past an end, the distance is to the end (it dropped every road that ends near the point and not across from
+        // it: a terrain tile whose centre was past a ramp's end never knew the ramp crossed it, and buried it)
+        const over = pr.s < 0 ? -pr.s : pr.s > p.len ? pr.s - p.len : 0;
+        const dist = over ? Math.hypot(over, pr.d) : Math.abs(pr.d);
         if (dist > r + p.paveR) continue;
+        const key = p.id * 4096 + Math.floor(pr.s / 400);
         const prev = best.get(key);
         if (!prev || dist < prev.dist) best.set(key, { path: p, s: pr.s, d: pr.d, dist });
       }
@@ -158,7 +190,9 @@ export class Network {
 
   // the paved surfaces under (x, z) at about height y (bridges above or below don't count)
   surfaces(x: number, z: number, y: number, margin = 0, out: Hit[] = []) {
-    const hits = this.near(x, z, 30, HITS);
+    // near() reaches every road whose pavement comes within its r, so r is just the margin (it was 30 m, a guess wide
+    // enough for the old search's blind spots; the wider search made that guess twice as slow)
+    const hits = this.near(x, z, Math.max(1, margin + 1), HITS);
     out.length = 0;
     for (const h of hits) {
       const p = h.path;
@@ -170,19 +204,33 @@ export class Network {
     return out;
   }
 
-  // is (x, z, y) on some road other than `self` (and better ranked, if asked)?
-  covered(x: number, z: number, y: number, self: Path, margin: number, rankedAbove = false) {
-    const hits = this.near(x, z, 28, HITS2);
+  // is (x, z, y) on some road other than `self` (and better ranked, if asked): over its pavement, from 2.5 m below its
+  // surface to `above` over it (GIVE_WAY; LEVEL for a road's surface)?
+  covered(x: number, z: number, y: number, self: Path, margin: number, rankedAbove = false, above = GIVE_WAY) {
+    const hits = this.near(x, z, Math.max(1, margin + 1), HITS2);
     for (const h of hits) {
       const p = h.path;
       if (p === self) continue;
       if (rankedAbove && rank(p) > rank(self)) continue;
       if (h.s < 0 || h.s > p.len) continue;
       if (h.d < p.paveL - margin || h.d > p.paveR + margin) continue;
-      if (Math.abs(p.height(h.s) - y) > 2.5) continue;
+      if (!onTop(y, p.height(h.s), above)) continue;
       return true;
     }
     return false;
+  }
+
+  // the road (other than `self`) whose pavement, widened by margin, is under (x, z) with its surface between heights y0
+  // and y1, if any: where a post, a column or a pole must not stand
+  pavedAt(x: number, z: number, y0: number, y1: number, self: Path | null, margin: number) {
+    for (const h of this.near(x, z, margin + 1, HITS4)) {
+      const p = h.path;
+      if (p === self || h.s < -margin || h.s > p.len + margin) continue;
+      if (h.d < p.paveL - margin || h.d > p.paveR + margin) continue;
+      const y = p.height(clamp(h.s, 0, p.len));
+      if (y >= y0 && y <= y1) return p;
+    }
+    return null;
   }
 
   // barriers: a path has one along each paved edge wherever that edge isn't running into another road
@@ -209,12 +257,16 @@ export class Network {
   }
 
   // a wall across the end of a road that stops, unless it stops on another road (a ramp cut off at the edge of the map
-  // inside a freeway, say)
+  // inside a freeway, say). The whole width counts: a ramp ending with an edge on another road's shoulder had its crash
+  // cushion standing on that road.
   hasEndWall(p: Path) {
     let e = this.ends.get(p.id);
     if (e === undefined) {
-      const at = p.at(p.len - 0.5, 0, AT);
-      e = !p.next && !this.covered(at.x, at.z, at.y, p, 0.6);
+      e = !p.next;
+      for (const d of [p.paveL, 0, p.paveR]) {
+        const at = p.at(p.len - 0.5, d, AT);
+        if (e && this.covered(at.x, at.z, at.y, p, 0.6)) e = false;
+      }
       this.ends.set(p.id, e);
     }
     return e;
@@ -223,7 +275,8 @@ export class Network {
   // barrier segments within r of (x, z), near height y, for the physics
   wallsNear(x: number, z: number, y: number, r: number, out: Wall[]) {
     out.length = 0;
-    const hits = this.near(x, z, r + 25, HITS3);
+    // a barrier's back is 0.95 m past the pavement
+    const hits = this.near(x, z, r + 1.5, HITS3);
     for (const h of hits) {
       const p = h.path;
       if (Math.abs(p.height(clamp(h.s, 0, p.len)) - y) > 3.5) continue;
@@ -294,5 +347,11 @@ export class Network {
 export const rank = (p: Path) => (p.main ? 0 : 1e6) + p.id;
 
 const PR = { s: 0, d: 0 };
-const HITS: Hit[] = [], HITS2: Hit[] = [], HITS3: Hit[] = [];
+// does (s, d) on p lead back to (x, z)? (past an end, the point is that far beyond it)
+const AT_NEAR = { x: 0, y: 0, z: 0, h: 0 };
+function lands(p: Path, x: number, z: number, pr: { s: number; d: number }) {
+  const sc = clamp(pr.s, 0, p.len), a = p.at(sc, pr.d, AT_NEAR);
+  return Math.abs(Math.hypot(a.x - x, a.z - z) - Math.abs(pr.s - sc)) < 0.5;
+}
+const HITS: Hit[] = [], HITS2: Hit[] = [], HITS3: Hit[] = [], HITS4: Hit[] = [];
 const AT = { x: 0, y: 0, z: 0, h: 0 };
