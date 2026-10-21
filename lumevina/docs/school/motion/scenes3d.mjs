@@ -516,6 +516,141 @@ window.seek = function (t) {
 `
   },
 
+  /* ───────── 4-2 How often, and how much: the dose, the overdose, the rest ───────── */
+  "4-2": {
+    id: "4-2", kicker: "How often, and how much", title: `More exfoliation <span class="grad">isn't better.</span>`, dur: 24, poster: 11,
+    shots: [
+      { at: 0, name: "dose", cap: "An exfoliating acid loosens the dead cells on top so fresh skin shows. Two nights a week is the dose for most skin; some tops out at three." },
+      { at: 7, name: "overdose", cap: "Every night is the most common way people wreck their barrier: a shine like plastic, stinging, redness, flaking." },
+      { at: 15, name: "rest", cap: "Stop and rest: a gentle cleanser, moisturizer, SPF, no acids for a week or two. And never an acid and a retinoid on the same night until your skin has settled into both." }
+    ],
+    css: `
+#gl { position: absolute; inset: 0; z-index: 0; }
+.lab3 { position: absolute; z-index: 2; padding: 1vmin 1.8vmin; border-radius: 999px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.14); font-size: 2.3vmin; font-weight: 600; white-space: nowrap; opacity: 0; }
+.lab3 i { display: inline-block; width: 1.6vmin; height: 1.6vmin; border-radius: 50%; margin-right: 1vmin; vertical-align: -.1vmin; }
+.week3 { position: absolute; right: 0; bottom: 2vmin; display: flex; gap: .7vmin; opacity: 0; }
+.week3 span { width: 5.2vmin; height: 5.2vmin; border-radius: 1.2vmin; display: grid; place-items: center; font-size: 2.1vmin; font-weight: 700; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); color: #a1a1a6; }
+.week3 span.on { background: #f4c9d6; color: #1a1210; border-color: #f4c9d6; }
+.week3 span.bad { background: #e0574a; color: #fff; border-color: #e0574a; }
+.dayc { position: absolute; right: 0; bottom: 2vmin; display: flex; align-items: baseline; gap: 1.2vmin; opacity: 0; }
+.dayc b { font-size: 7vmin; font-weight: 700; letter-spacing: -.03em; } .dayc span { font-size: 2.6vmin; color: #a1a1a6; }
+.note3 { position: absolute; left: 0; bottom: 2vmin; max-width: 64vmin; font-size: 2.5vmin; line-height: 1.4; color: #ff7a6b; opacity: 0; }`,
+    html: `
+<section class="shot"><span class="lab3" id="l-dead"><i style="background:#e9d5c8"></i>dead cells on top</span><span class="lab3" id="l-acid"><i style="background:#f4c9d6"></i>the acid, loosening them</span><span class="lab3" id="l-fresh"><i style="background:#f0cfc0"></i>fresh skin showing</span><div class="week3" id="week3"><span>M</span><span id="w-tu">T</span><span>W</span><span>T</span><span id="w-fr">F</span><span>S</span><span>S</span></div></section>
+<section class="shot"><span class="lab3" id="l-shine"><i style="background:#fff3ea"></i>shine like plastic</span><span class="lab3" id="l-sting"><i style="background:#e0574a"></i>stinging, red, flaking</span><div class="week3" id="week3b"><span class="bad">M</span><span class="bad">T</span><span class="bad">W</span><span class="bad">T</span><span class="bad">F</span><span class="bad">S</span><span class="bad">S</span></div></section>
+<section class="shot"><span class="lab3" id="l-cream"><i style="background:#f3e6da"></i>gentle cleanser, moisturizer, SPF</span><span class="lab3" id="l-grow"><i style="background:#e9d5c8"></i>the top layer grows back</span><div class="dayc" id="dayc"><b id="dayn">0</b><span>days of rest</span></div><p class="note3" id="note3">The week before and after a professional peel: no home acids.</p></section>`,
+    module: `
+import * as THREE from "../vendor/three.module.min.js";
+const W = window.W, H = window.H, M = window.M;
+const { seg, tw, E, enter } = M;
+const hash = (i) => { let x = (i + 1) * 2654435761 % 4294967296; x = ((x >>> 13) ^ x) * 1274126177 % 4294967296; return ((((x >>> 16) ^ x) / 4294967296) % 1 + 1) % 1; };
+const canvas = document.createElement("canvas"); canvas.id = "gl"; canvas.width = W; canvas.height = H;
+document.querySelector(".stage").insertBefore(canvas, document.querySelector("header"));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const portrait = H > W;
+const camera = new THREE.PerspectiveCamera(portrait ? 46 : 34, W / H, 0.1, 200);
+scene.add(new THREE.HemisphereLight(0xfff0e8, 0x2a1418, 0.85));
+const key = new THREE.DirectionalLight(0xfff4ea, 2.0); key.position.set(-10, 20, 12); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -18; key.shadow.camera.right = 18; key.shadow.camera.top = 18; key.shadow.camera.bottom = -18; key.shadow.camera.near = 1; key.shadow.camera.far = 70; key.shadow.bias = -0.0008;
+scene.add(key);
+const fill2 = new THREE.DirectionalLight(0xf4c9d6, 0.45); fill2.position.set(12, 6, -8); scene.add(fill2);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -0.52; ground.receiveShadow = true; scene.add(ground);
+
+// the block (rows 0 to 10) and, on top, the dead-cell plates (the stratum corneum) that an acid loosens
+const NY = 11, NZ = 9, cells = [];
+for (let x = -8; x < 8; x++) for (let y = 0; y < NY; y++) for (let z = 0; z < NZ; z++) {
+  const i = x * 1000 + y * 20 + z, v = hash(i) * 0.08 - 0.04;
+  let c;
+  if (y >= 9) c = new THREE.Color(0xf0cfc0).offsetHSL(0, 0, v);
+  else if (y >= 3) c = new THREE.Color(0xb77a80).offsetHSL(0, 0, v);
+  else c = new THREE.Color(0xe6d49a).offsetHSL(0, 0, v);
+  cells.push({ x, y, z, c, base: c.clone(), wx: x + 0.5, wz: z + 0.5 - NZ / 2 });
+}
+const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+const block = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.02 }), cells.length);
+block.castShadow = true; block.receiveShadow = true;
+const dummy = new THREE.Object3D();
+cells.forEach((c, i) => { dummy.position.set(c.wx, c.y, c.wz); dummy.updateMatrix(); block.setMatrixAt(i, dummy.matrix); block.setColorAt(i, c.c); });
+scene.add(block);
+const plates = [];
+for (let x = -8; x < 8; x++) for (let z = 0; z < NZ; z++) plates.push({ wx: x + 0.5, wz: z + 0.5 - NZ / 2, j: hash(x * 50 + z + 300), k: hash(x * 50 + z + 400) });
+const plateMat = new THREE.MeshStandardMaterial({ color: 0xe9d5c8, roughness: 0.85, metalness: 0.0 });
+const plate = new THREE.InstancedMesh(new THREE.BoxGeometry(0.92, 0.34, 0.92), plateMat, plates.length);
+plate.castShadow = true; plate.receiveShadow = true; scene.add(plate);
+const PLATE = new THREE.Color(0xe9d5c8), RED = new THREE.Color(0xe0574a), FRESH = new THREE.Color(0xf0cfc0), tmp = new THREE.Color();
+// a plate's thickness: full (1) → shed (0); the top of the block tints red when the plates are gone
+const layPlates = (thick, red) => {
+  plates.forEach((p, i) => {
+    const th = thick(p, i);
+    dummy.position.set(p.wx, 11.0 + 0.17 * th - 0.17 * (1 - th) * 0.5, p.wz);
+    dummy.scale.set(0.6 + 0.4 * th, Math.max(0.03, th), 0.6 + 0.4 * th); dummy.updateMatrix(); plate.setMatrixAt(i, dummy.matrix);
+    tmp.copy(PLATE).lerp(RED, red * 0.45); plate.setColorAt(i, tmp);
+  });
+  plate.instanceMatrix.needsUpdate = true; plate.instanceColor.needsUpdate = true;
+  cells.forEach((c, i) => { if (c.y < 9) return; tmp.copy(c.base).lerp(RED, red * (c.y === 10 ? 0.55 : 0.3)); block.setColorAt(i, tmp); });
+  block.instanceColor.needsUpdate = true;
+};
+// the acid drops (pink), the cream slab, the sting sparks
+const dropGeo = new THREE.SphereGeometry(0.7, 20, 16), dropMat = new THREE.MeshPhysicalMaterial({ color: 0xf4c9d6, roughness: 0.15, transmission: 0.3, opacity: 0.9, transparent: true });
+const drops = Array.from({ length: 8 }, (_, k) => { const m = new THREE.Mesh(dropGeo, dropMat.clone()); m.visible = false; m.castShadow = true; scene.add(m); return { m, k, x: -6 + hash(k + 500) * 12, z: -3 + hash(k + 501) * 6 }; });
+const cream = new THREE.Mesh(new THREE.BoxGeometry(16.4, 0.6, NZ + 0.4), new THREE.MeshPhysicalMaterial({ color: 0xf3e6da, roughness: 0.35, opacity: 0.85, transparent: true }));
+cream.position.set(0, 14, 0); cream.visible = false; cream.castShadow = true; scene.add(cream);
+const sparkGeo = new THREE.OctahedronGeometry(0.22), sparkMat = new THREE.MeshBasicMaterial({ color: 0xff6a5a, transparent: true, opacity: 1 });
+const sparks = Array.from({ length: 18 }, (_, k) => { const m = new THREE.Mesh(sparkGeo, sparkMat.clone()); m.visible = false; scene.add(m); return { m, k, x: -7 + hash(k + 600) * 14, z: -3.5 + hash(k + 601) * 7 }; });
+const look = new THREE.Vector3(0, 8, 0);
+const place = (t) => {
+  const a = 0.5 - t * 0.012, r = portrait ? 44 : 34;
+  camera.position.set(Math.sin(a) * r, 18 + Math.sin(t * 0.07) * 0.6, Math.cos(a) * r);
+  camera.lookAt(look);
+};
+const ANCHOR = { "l-dead": [-7.5, 12.4, 3.5], "l-acid": [2.5, 14.5, 1], "l-fresh": [-3.5, 11.6, 4.2], "l-shine": [-6.5, 12.6, 3.5], "l-sting": [3, 12.8, 4], "l-cream": [7.5, 13.6, 1.5], "l-grow": [-5, 12.4, 4] };
+const OFF = { "l-dead": [1, -1], "l-acid": [1, -1], "l-fresh": [-1, -1], "l-shine": [1, -1], "l-sting": [1, -1], "l-cream": [-1, -1], "l-grow": [-1, -1] };
+const v3 = new THREE.Vector3();
+const pin = () => { for (const id in ANCHOR) { const el = document.getElementById(id); if (!el) continue; v3.set(...ANCHOR[id]).project(camera); const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H, [ox, oy] = OFF[id], w = el.offsetWidth, h = el.offsetHeight; el.style.left = (x + (ox > 0 ? 14 : -w - 14)) + "px"; el.style.top = (y + (oy < 0 ? -h - 10 : -h / 2)) + "px"; } };
+window.seek = function (t) {
+  const st = M.stage(t), { i, lt } = st;
+  place(t); pin();
+  // shot 0: one drop, a few loosest plates shed (the dose). shot 1: a drop every 0.9 s, the plates go, shine and red build. shot 2: rest, they grow back.
+  const dose = i === 0 ? E.out(seg(lt, 1.6, 4.0)) : 1;
+  const over = i === 1 ? E.lin(seg(lt, 0.6, 6.4)) : i === 2 ? 1 : 0;
+  const rest = i === 2 ? E.inout(seg(lt, 1.6, 7.0)) : 0;
+  const red = i === 1 ? E.out(seg(lt, 2.4, 6.0)) : i === 2 ? 1 - E.inout(seg(lt, 1.2, 6.0)) : 0;
+  const thick = (p) => {
+    const shedDose = p.j < 0.22 ? dose : 0;                                   // the loosest fifth, at the dose
+    const shedOver = seg(over, p.k * 0.8, p.k * 0.8 + 0.2);                   // then all of them, in order
+    const gone = Math.max(shedDose, shedOver);
+    const back = rest * (0.7 + 0.3 * p.j);
+    return Math.max(0, Math.min(1, 1 - gone + back));
+  };
+  layPlates(thick, red);
+  plateMat.roughness = 0.85 - 0.7 * over * (1 - rest) ;                      // plastic shine, then matte again
+  plateMat.color.set(0xe9d5c8).lerp(new THREE.Color(0xfff3ea), over * (1 - rest) * 0.6);
+  // drops: one in shot 0, a run of them in shot 1
+  drops.forEach((d) => {
+    let on = false, f = 0, sp = 0, fade = 0;
+    if (i === 0 && d.k === 0) { on = lt > 0.6 && lt < 3.0; f = E.in(seg(lt, 0.6, 1.4)); sp = seg(lt, 1.4, 2.1); fade = seg(lt, 2.3, 3.0); }
+    if (i === 1 && d.k > 0) { const t0 = 0.2 + (d.k - 1) * 0.85; on = lt > t0 && lt < t0 + 2.2; f = E.in(seg(lt, t0, t0 + 0.7)); sp = seg(lt, t0 + 0.7, t0 + 1.3); fade = seg(lt, t0 + 1.5, t0 + 2.2); }
+    d.m.visible = on; if (!on) return;
+    d.m.position.set(d.x, 22 - 10.2 * f, d.z); d.m.scale.set(1 + 1.2 * sp, 1 - 0.65 * sp, 1 + 1.2 * sp); d.m.material.opacity = 0.9 * (1 - fade);
+  });
+  sparks.forEach((sk) => { const on = red > 0.35 && (i === 1 || (i === 2 && lt < 2.5)); sk.m.visible = on; if (!on) return; const ph = (t * 0.7 + sk.k * 0.055) % 1; sk.m.position.set(sk.x, 11.6 + ph * 2.4, sk.z); sk.m.rotation.set(ph * 5, sk.k, ph * 3); sk.m.material.opacity = Math.sin(ph * Math.PI) * red; sk.m.scale.setScalar(0.6 + 0.6 * ph); });
+  cream.visible = i === 2 && lt > 0.3;
+  if (cream.visible) { const p = E.out(seg(lt, 0.3, 1.3)); cream.position.y = 14 - 1.75 * p; cream.material.opacity = 0.85 * Math.min(1, p * 1.5) * (1 - 0.5 * seg(lt, 6.5, 8.5)); }
+  // labels, the week chips, the day counter (DOM)
+  const $ = M.$;
+  if (i === 0) { enter($("#l-dead"), lt, 0.3, { y: 8 }); enter($("#l-acid"), lt, 1.0, { y: 8 }); if (lt > 3.4) $("#l-acid").style.opacity = 1 - seg(lt, 3.4, 3.9); enter($("#l-fresh"), lt, 3.6, { y: 8 }); enter($("#week3"), lt, 4.2, { y: 10 }); $("#w-tu").classList.toggle("on", lt > 4.6); $("#w-fr").classList.toggle("on", lt > 5.1); }
+  if (i === 1) { enter($("#week3b"), lt, 0.2, { y: 10 }); enter($("#l-shine"), lt, 3.0, { y: 8 }); enter($("#l-sting"), lt, 4.4, { y: 8 }); }
+  if (i === 2) { enter($("#l-cream"), lt, 1.2, { y: 8 }); enter($("#l-grow"), lt, 3.8, { y: 8 }); enter($("#dayc"), lt, 1.6, { y: 10 }); $("#dayn").textContent = Math.round(14 * E.lin(seg(lt, 1.8, 7.0))); enter($("#note3"), lt, 7.2, { y: 10 }); }
+  renderer.render(scene, camera);
+};
+`
+  },
+
   /* ───────── 9-3 Heat, light and patience: why a dark spot is slow ───────── */
   "9-3": {
     id: "9-3", kicker: "Heat, light and patience", title: `Why a dark spot takes <span class="grad">months, not weeks.</span>`, dur: 24, poster: 9,
