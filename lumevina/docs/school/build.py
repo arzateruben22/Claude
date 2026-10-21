@@ -39,6 +39,7 @@ for key, val in [
     ("__CSS__", read(HERE, "style.css").replace("__FONT__", font)),
     ("__MONTH__", month),
     ("__CURRICULUM__", script(read(HERE, "curriculum.js"))),
+    ("__SEO__", script(read(HERE, "seo.js"))),
     ("__NOTES__", script(read(HERE, "notes.js")) if os.path.exists(os.path.join(HERE, "notes.js")) else "window.SCHOOL_NOTES = {};"),
     ("__VISUALS__", script(read(HERE, "visuals.js")) if os.path.exists(os.path.join(HERE, "visuals.js")) else "window.SCHOOL_VISUALS = [];"),
     ("__VIDEOS__", script(read(HERE, "videos.js")) if os.path.exists(os.path.join(HERE, "videos.js")) else "window.SCHOOL_VIDEOS = {};"),

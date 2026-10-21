@@ -20,6 +20,8 @@ How to post: upload the mp4, keep the sound off or add TikTok's library music lo
 | 12 | `11-1-9x16.mp4` A tired barrier | "My skin suddenly hates everything" has a cause. | Skin cells are the bricks, your own oils the mortar. Too many actives, harsh cleansing, hot water and scrubbing wear it: water leaks out, irritants get in, it stings and goes red. The fix is subtraction: a gentle cleanser, barrier lipids, mineral SPF, actives paused. Days to weeks. Flushing with bumps can be rosacea: a doctor's call. | #sensitiveskin #skinbarrier #rosacea #esthetician #skinschool |
 | 13 | `9-3-9x16.mp4` Why a dark spot is slow | Why your dark spot takes months, not weeks. | A spot starts at the bottom of the epidermis: UV, heat or a breakout tells the pigment cells to make more melanin and hand it up. The cells holding it take about a month to reach the surface and shed, a little out each cycle. Sunscreen every morning (tinted mineral for melasma) and no heat keep it from restarting; vitamin C by day, azelaic acid or a retinoid at night, speed it up. A photo in the same light every four weeks. | #darkspots #hyperpigmentation #melasma #esthetician #skinschool |
 
+**The link in bio:** `school.html#learn-1-1` opens the free lesson straight away (any lesson: `#learn-<id>`); the shop is `/#shop`, a product is `/?product=<id>#shop`.
+
 ## Between the clips (her face, 20 to 40 seconds, phone in hand)
 
 - "Three things in every facial here" (the room, the lamp, the LED).

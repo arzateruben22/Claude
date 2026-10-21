@@ -595,6 +595,8 @@ To go live:
 The lessons in `docs/school/curriculum.js` are drafts: Evelyn reviews each one
 before recording, and anything medical points to a dermatologist or doctor.
 
+`school.html#learn-1-2` opens that lesson straight away (the links in the TikTok captions and the free lessons in the page's structured data); plain `#learn` opens where they left off. `docs/school/seo.js` writes the course as structured data from the curriculum itself: the three levels with their lesson counts, the hours, the tiers as offers and the two free lessons, so search engines see the course without a hand-kept copy.
+
 ## Flash openings → push notifications
 
 When a cancellation frees a slot, insert a row into `flash_slots` and send a

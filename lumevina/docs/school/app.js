@@ -1024,5 +1024,7 @@
     st = { done: {} }; save(); paintAll();
     toast("Started over: no course, no progress.");
   });
-  if (/^#learn/.test(location.hash)) player.open();
+  /* #learn opens where they left off; #learn-1-2 opens that lesson (the links in the TikTok captions, the course's structured data) */
+  var deep = /^#learn-(\d+-\d+)$/.exec(location.hash);
+  if (deep) player.open(deep[1]); else if (/^#learn/.test(location.hash)) player.open();
 })();
