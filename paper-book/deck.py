@@ -173,6 +173,7 @@ def data(book: pb.Book) -> dict:
         pf = s["profit_factor"]
         desks.append({
             "key": d, "label": book.label(d), "color": book.color(d), "kind": book.kind(d), "market": book.market(d),
+            "of": book.variant_of(d) if book.variant_of(d) in book.desks else None,
             "bank": book.banks[d], "idea": idea(book, d), "start": int(start.timestamp()) if start else None,
             "day": (min(MONTH_DAYS, (book.now - start).days + 1) if start else 0),
             "trades": len(ts), "net": s["net"], "win_rate": s["win_rate"],

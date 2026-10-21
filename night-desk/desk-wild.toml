@@ -79,7 +79,7 @@ cost_multiplier = 2.0
 recent_share = 0.33
 
 [review]
-use_ai = true                # needs ANTHROPIC_API_KEY; otherwise rule-based
+use_ai = false               # rules only: the main book's nightly review is the one that uses Claude
 model = "claude-opus-5-5"
 effort = "high"
 lookback_days = 7

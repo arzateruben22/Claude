@@ -49,6 +49,9 @@ time axis, its **standings** button ranks every desk with its last seven days, a
 week's best, worst and any green weeks. With thirty variations, a few will look good by Friday from luck alone;
 the month-end read and the green week are what count.
 
+None of this adds to a Claude bill: only the main memecoin and stock desks use Claude for their nightly review,
+and only if you gave them a key. The other twenty-eight desks judge and review by rules alone.
+
 Already set up? One update adds them all and keeps every paper trade so far:
 `cd ~/desks && git pull && sudo bash server/setup.sh`. The rules of every desk were set before it started and stay
 fixed for the month: changing a desk mid-test, or keeping only the one that got lucky, is how people fool

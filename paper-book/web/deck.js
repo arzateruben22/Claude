@@ -418,6 +418,7 @@
     b.textContent = checks ? `Read on: ${checks}.` : 'Read at the end of each desk’s month.';
     rule.append(b, ` After that the bar is a green week: traded on 3 or more of the last ${m.week_days || 7} days, net up over the ${m.week_days || 7}, and no single day's loss bigger than the week's gain. ×2 means two such weeks in a row. Paper money only; nothing here is a forecast.`);
     body.textContent = '';
+    const byKey = {}; D.desks.forEach((d) => { byKey[d.key] = d; });
     const rows = visible().slice().sort((a, b2) => returnAt(b2.d, t1) - returnAt(a.d, t1) || a.i - b2.i);
     if (!rows.length) {
       const tr = document.createElement('tr'), td = document.createElement('td');
@@ -441,6 +442,11 @@
       cell(tr, 'n day', d.start ? `${d.day} / ${m.month_days}` : '—');
       const since = cell(tr, 'n ' + (ret > 0 ? 'up' : ret < 0 ? 'down' : ''), d.start ? pct(ret) : '—');
       since.append(small(d.start ? usd(val) + (d.open.n ? ` · ${d.open.n} open` : '') : 'no trades yet'));
+      const base = d.of && byKey[d.of];
+      if (base && d.start && base.start) {                      // a variation: how far ahead of, or behind, the desk it varies
+        const diff = ret - returnAt(base, t1);
+        since.append(small(`${diff >= 0 ? '+' : '−'}${Math.abs(diff).toFixed(1)} pts vs ${base.label.toLowerCase()}`));
+      }
       const wk = cell(tr, 'n ' + (w.net > 0 ? 'up' : w.net < 0 ? 'down' : ''), w.traded ? usd(w.net) : '—');
       wk.append(small(w.traded ? `${w.green} green · ${w.red} red · ${w.traded} of ${m.week_days || 7} days` : 'no trades this week'));
       cell(tr, 'n', String(d.trades));
