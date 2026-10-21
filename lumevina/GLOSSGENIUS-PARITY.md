@@ -67,7 +67,7 @@ Everything GlossGenius does (from its own feature pages and review listings, Oct
 
 | GlossGenius | Website | Notes |
 |---|---|---|
-| Owner mobile app with notifications | ✅ | "Lumevina Studio": the dashboard on her home screen; notifications for bookings, cancellations, members, orders, client questions and low stock, plus a morning email. |
+| Owner mobile app with notifications | ✅ more on the website | "Lumevina Studio": the dashboard on her home screen, opening on Today, her priorities ranked (PRIORITIES.md); notifications for bookings, cancellations, members, failed payments, orders, client questions and low stock the moment they happen, a nudge when a question passes its reply time, and a morning push with the day's top three. |
 | Hours, days off, blocks | ✅ | Dashboard hours, with extra Mondays for members (v3). |
 | Team, payroll, commissions | ➖ | Solo studio. |
 

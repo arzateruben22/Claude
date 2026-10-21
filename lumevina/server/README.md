@@ -26,7 +26,7 @@ below is the checklist.
 | `functions/client-plans/` | Skin plans: Evelyn writes each client's routine (studio key); the signed-in client reads theirs |
 | `functions/create-checkout/` | The shop's real checkout: prices the cart from the products table and opens Stripe Checkout (cards, Apple/Google Pay, pay-over-time, Stripe Tax, shipping or pickup, gift certificates) |
 | `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices, client questions; in v3 also her hours and extra Mondays, the GlossGenius client import and invitation, the members list, each client's skin profile, and Teach the chat (studio key) |
-| `functions/studio-digest/` | Her morning email and notification; sends gift certificates dated for today (run daily by cron) |
+| `functions/studio-digest/` | Her morning email and notification, led by her priorities for the day (`_shared/priorities.ts`, PRIORITIES.md); sends gift certificates dated for today (run daily by cron) |
 | `functions/_shared/orders.ts`, `notify.ts`, `mail.ts`, `sms.ts` | Finishing a paid order; alerting Evelyn (feed, push, email); sending email and texts |
 | `functions/_shared/bookings.ts`, `visits.ts`, `membership.ts`, `points.ts`, `contacts.ts`, `hours.ts`, `stripe.ts` | (v3) Pricing and confirming a booking, cancelling, the policy; checking out a visit; membership credits and billing hold; Glow Points; client records; her hours and extra Mondays; Stripe calls |
 | `functions/_shared/catalog.ts` | Generated price/duration catalog — the server's source of truth |
@@ -90,7 +90,7 @@ site's address (that browser only); the dashboard follows the same switch.
 4. **Stripe.** Webhook endpoint: the `stripe-webhook` function's URL, with
    `checkout.session.completed`, `checkout.session.expired`,
    `checkout.session.async_payment_succeeded`,
-   `checkout.session.async_payment_failed`, `invoice.paid`,
+   `checkout.session.async_payment_failed`, `invoice.paid`, `invoice.payment_failed`,
    `customer.subscription.updated` and `customer.subscription.deleted`.
    Turn on the **customer portal** (Settings → Billing → Customer portal,
    with "update payment method") so Change billing card works. Nothing to
@@ -601,3 +601,13 @@ When a cancellation frees a slot, insert a row into `flash_slots` and send a
 push to the tokens in `push_tokens` via APNs (an edge function with an APNs
 key, or a service like OneSignal). The app registers tokens through
 Capacitor's push plugin — see `app/` and `APP.md`.
+
+## Evelyn's priorities (Lumevina Studio → Today)
+
+One ranking (`_shared/priorities.ts`; PRIORITIES.md in plain words) feeds the dashboard's Today card (`studio` → `priorities`), the morning push and email (`studio-digest`: the push carries the top three from "right now" and "today" and goes whenever there is anything in those tiers), and the hourly run (`client-reminders` → `owner_nudge`: "Still waiting: Maya" once a question passes its promised reply time). A failed membership invoice (`invoice.payment_failed`) sets `memberships.billing_failed_at`, tells her, and the next paid invoice clears it. On a database created before Oct 21, 2026:
+
+```sql
+alter table questions add column owner_nudged_at timestamptz;
+alter table memberships add column billing_failed_at timestamptz;
+```
+

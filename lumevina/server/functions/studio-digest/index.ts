@@ -1,9 +1,12 @@
 // Lumevina — Supabase Edge Function: studio-digest
 //
-// Evelyn's morning email (and a notification on her phone): orders from the
-// last day, what's waiting to ship, client questions waiting for her, and
-// what's running low. It also sends gift certificates dated for today.
-// Nothing to report: nothing is sent.
+// Evelyn's morning email (and a notification on her phone): her priorities
+// for the day, ranked (_shared/priorities.ts; PRIORITIES.md), then orders
+// from the last day, what's waiting to ship, client questions waiting for
+// her, and what's running low. It also sends gift certificates dated for
+// today. The push carries the top three from "right now" and "today", and
+// goes whenever there is anything in those two tiers, even if that's every
+// day. Nothing to report: nothing is sent.
 //
 // Run it every morning with Supabase cron (server/README.md → Lumevina Studio):
 //   POST with the header x-studio-key: <STUDIO_KEY>
@@ -14,6 +17,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { esc, money, page, sendEmail } from "../_shared/mail.ts";
 import { pushAll } from "../_shared/notify.ts";
+import { priorities, pushBody, TIER_NAMES } from "../_shared/priorities.ts";
 import { emailGift } from "../_shared/orders.ts";
 import { studioOk } from "../_shared/studio.ts";
 
@@ -34,6 +38,8 @@ Deno.serve(async (req) => {
     db.from("gift_cards").select("*").is("delivered_at", null).lte("send_date", today).eq("status", "active").then((r: any) => r.data ?? []),
   ]);
   const low = products.filter((p: any) => p.stock <= p.low_at);
+  const items = await priorities(db).catch((e: unknown) => { console.error("priorities", e); return []; });
+  const urgent = items.filter((i) => i.tier <= 2);
 
   // gift certificates dated for today (or a day the email was missed)
   let giftsSent = 0;
@@ -46,6 +52,12 @@ Deno.serve(async (req) => {
 
   const parts: string[] = [];
   const bits: string[] = [];
+  if (items.length) {
+    let tier = 0;
+    parts.push(`<h2 style="font-size:16px;margin:18px 0 6px">What needs you first</h2><ol style="padding-left:18px;margin:0">` +
+      items.map((i) => (i.tier !== tier ? ((tier = i.tier), `<li style="list-style:none;margin:10px 0 4px -18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5C564F">${TIER_NAMES[i.tier]}</li>`) : "") +
+        `<li><strong>${esc(i.title)}</strong>${i.body ? ` <span style="color:#5C564F">${esc(i.body)}</span>` : ""}</li>`).join("") + "</ol>");
+  }
   if (orders.length) {
     const sum = orders.reduce((s: number, o: any) => s + (o.total_cents ?? 0), 0);
     bits.push(plural(orders.length, "new order"));
@@ -68,13 +80,13 @@ Deno.serve(async (req) => {
       low.map((p: any) => `<li>${esc(p.name)} · ${p.stock === 0 ? "sold out" : p.stock + " left"}</li>`).join("") + "</ul>");
   }
   if (giftsSent) parts.push(`<p style="font-size:14px;margin-top:16px">${plural(giftsSent, "dated gift certificate")} went out this morning.</p>`);
-  if (!bits.length) return new Response(giftsSent ? `gifts ${giftsSent}` : "nothing to report", { status: 200 });
+  if (!bits.length && !urgent.length) return new Response(giftsSent ? `gifts ${giftsSent}` : "nothing to report", { status: 200 });
 
   const site = (Deno.env.get("SITE_URL") ?? "").replace(/\/$/, "");
-  const subject = "Today at Lumevina: " + bits.join(", ");
+  const subject = "Today at Lumevina: " + (urgent.length ? pushBody(items) : bits.join(", "));
   const owner = Deno.env.get("OWNER_EMAIL");
   if (owner) await sendEmail(owner, subject, page("Good morning, Evelyn", parts.join("") +
     (site ? `<p style="margin-top:18px"><a href="${esc(site)}/dashboard.html" style="color:#161412">Open Lumevina Studio</a></p>` : "")));
-  await pushAll(db, { title: "Good morning ✨", body: bits.join(" · "), url: "dashboard.html", tag: "digest" });
+  await pushAll(db, { title: urgent.length ? "Today at Lumevina" : "Good morning ✨", body: urgent.length ? pushBody(items) : bits.join(" · "), url: "dashboard.html#priorities", tag: "digest" });
   return new Response("sent", { status: 200 });
 });

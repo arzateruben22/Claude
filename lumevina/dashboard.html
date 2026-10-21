@@ -319,6 +319,26 @@
     .crm-ans .k { color: var(--ink-45); }
     .crm-ans .v { color: var(--ink); }
     .crm-none { color: var(--ink-45); font-style: normal; font-size: 0.9rem; padding: 1rem 0; }
+    /* Today: her priorities, ranked */
+    .pr-card { --pr-urgent: #f0a08a; }
+    .pr-card .crm-head h2 { display: flex; align-items: center; gap: 0.5rem; }
+    .pr-sample { font-size: 0.66rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-45); padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid var(--edge); }
+    .pr-msg, .pr-empty { margin: 0.4rem 0 0; font-size: 0.9rem; color: var(--ink-70); }
+    .pr-groups { display: grid; gap: 1.1rem; margin-top: 0.9rem; }
+    .pr-group { display: grid; gap: 0.45rem; }
+    .pr-tier { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-45); }
+    .pr-n { font-size: 0.7rem; font-weight: 600; letter-spacing: 0; padding: 0.05rem 0.5rem; border-radius: 999px; border: 1px solid var(--edge); color: var(--ink-70); }
+    .pr-group.is-t1 .pr-tier { color: var(--pr-urgent); }
+    .pr-group.is-t1 .pr-n { border-color: rgba(240, 160, 138, 0.45); color: var(--pr-urgent); }
+    .pr-group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+    .pr-item a { display: grid; gap: 0.2rem; padding: 0.75rem 0.9rem; border-radius: 14px; border: 1px solid var(--edge); background: var(--panel); color: var(--ink); text-decoration: none; }
+    .pr-item a:hover, .pr-item a:focus-visible { border-color: var(--ink-45); outline: none; }
+    .pr-item b { font-size: 0.95rem; font-weight: 600; line-height: 1.3; }
+    .pr-item small { font-size: 0.82rem; color: var(--ink-70); line-height: 1.4; }
+    .pr-group.is-t1 .pr-item a { border-left: 3px solid var(--pr-urgent); }
+    .pr-how { margin-top: 1rem; font-size: 0.84rem; color: var(--ink-70); }
+    .pr-how summary { cursor: pointer; font-weight: 500; color: var(--ink); }
+    .pr-how ol { margin: 0.5rem 0 0; padding-left: 1.2rem; display: grid; gap: 0.3rem; }
     /* Lumevina Studio: notifications on her phone */
     .studio-card { margin-bottom: 1.4rem; }
     .st-steps { margin: 0.2rem 0 1rem 1.1rem; padding: 0; display: grid; gap: 0.3rem; font-size: 0.86rem; color: var(--ink-70); }
@@ -604,7 +624,7 @@
     <!-- ── Lumevina Studio: this dashboard as an app on her phone ── -->
     <div class="card studio-card" id="studio">
       <h2>Lumevina Studio</h2>
-      <p class="sub" id="st-sub">This dashboard, as an app on your phone: new orders, client questions and low stock arrive as notifications, and a short email comes each morning with what's waiting.</p>
+      <p class="sub" id="st-sub">This dashboard, as an app on your phone: new orders, client questions and low stock arrive as notifications, your priorities for the day every morning, and a short email comes each morning with what's waiting.</p>
       <ol class="st-steps" id="st-steps">
         <li>On your iPhone, open this page in Safari, tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>.</li>
         <li>Open <strong>Studio</strong> from your home screen.</li>
@@ -622,6 +642,9 @@
       <h3 style="font-size:0.95rem;margin:0.6rem 0 0.2rem">Recent</h3>
       <ul class="st-feed" id="st-feed"></ul>
     </div>
+
+    <!-- ── Today: her priorities, ranked (js/studio-priorities.js; PRIORITIES.md) ── -->
+    <div class="card pr-card" id="priorities"></div>
 
     <!-- ── Appointments (v3): today, checkout with tips, fees, book for a
          client, waitlist (js/studio-appointments.js). In v2 it stays hidden
@@ -955,6 +978,7 @@
   <script src="js/payments.js"></script>
   <script src="js/studio-appointments.js"></script>
   <script src="js/studio-learn.js"></script>
+  <script src="js/studio-priorities.js"></script>
   <script src="js/giftcards.js"></script>
   <script src="js/save-file.js"></script>
   <script src="js/extra-days.js"></script>

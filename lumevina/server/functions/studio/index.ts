@@ -38,6 +38,7 @@
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { notifyOwner, pushAll } from "../_shared/notify.ts";
+import { priorities } from "../_shared/priorities.ts";
 import { studioOk } from "../_shared/studio.ts";
 import { BUCKET } from "../_shared/photos.ts";
 import { esc, page, sendEmail } from "../_shared/mail.ts";
@@ -98,6 +99,9 @@ Deno.serve(async (req) => {
     case "push_test": {
       const sent = await pushAll(db, { title: "Lumevina Studio", body: "Notifications are on for this phone. ✨", url: "dashboard.html" });
       return json({ sent });
+    }
+    case "priorities": {                          // the Today card: what needs her, ranked (_shared/priorities.ts)
+      return json({ items: await priorities(db) });
     }
     case "alerts": {
       const { data } = await db.from("studio_alerts").select("*").order("created_at", { ascending: false }).limit(limit);

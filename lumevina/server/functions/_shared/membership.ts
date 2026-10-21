@@ -89,7 +89,7 @@ export async function creditInvoice(db: any, invoice: any) {
   if (error) return m;                                    // this invoice was already counted
   const credits = m.credits + 1;
   const periodEnd = invoice.lines?.data?.[0]?.period?.end;
-  const patch: Record<string, unknown> = { credits, next_bill_at: iso(periodEnd) ?? m.next_bill_at, paused_bill_at: null };
+  const patch: Record<string, unknown> = { credits, next_bill_at: iso(periodEnd) ?? m.next_bill_at, paused_bill_at: null, billing_failed_at: null };
   if (credits >= BANK_CAP && !m.on_hold) {
     patch.on_hold = true;
     await stripeApi(`subscriptions/${subId}`, { pause_collection: { behavior: "void" } });

@@ -224,6 +224,7 @@ create table memberships (
   started_at timestamptz not null default now(),
   min_ends_at timestamptz not null,         -- started_at + 3 months
   next_bill_at timestamptz not null,
+  billing_failed_at timestamptz,            -- the last failed invoice (stripe-webhook); the next paid one clears it
   paused_bill_at timestamptz,               -- the one billing date being skipped
   on_hold boolean not null default false,   -- 2 facials waiting: billing held until one is used
   last_pause_at timestamptz,                -- one pause per 12 months
@@ -280,6 +281,7 @@ create table questions (
   draft text,                                     -- written by the assistant, never sent as is
   status text not null default 'waiting' check (status in ('waiting', 'answered')),
   due_at timestamptz not null,
+  owner_nudged_at timestamptz,                    -- the "still waiting" push to Evelyn once due_at passed (client-reminders), once
   why text,                                       -- the assistant's one line on what they need
   photos text[] not null default '{}',            -- paths in the private question-photos bucket
   photo_note text,                                -- what the photos show, in plain words (never a diagnosis)

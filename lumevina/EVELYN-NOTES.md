@@ -310,3 +310,9 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 
 - **Shorthand and typos:** wdym, idk, ty, thx, pls, u, ur, b4, tmrw, appt, rn, lmk, nvm, w/, "heyyy", "facail", "brazillian", "pregnent" all read as what the client meant, on the website and on the server, before the safety rules run. The chat never points a typo out. "wdym?" after an answer gets the same thing again, shorter.
 - **How it sounds:** a real person at the front desk: warm, quick, plain, a little playful when the client is, calm when they're worried; matches their length and energy; no "Great question!", no exclamation-mark pile-ups. Emoji only when the client used one first or the moment is clearly light, never on anything medical or a hand-off. Evelyn's own voice notes, once she writes them, win over all of it.
+
+## Her priorities, ranked, and on her phone (Oct 21)
+
+- **Today**, the first card after Lumevina Studio: what needs her, in order. Right now (urgent or medical questions, questions past the promised reply time, a failed membership payment, an order overdue to ship, today's clients without a pre-visit form), Today (appointments, orders to ship, pickups, questions due, sold-out products), This week (running low, members cancelling, the waitlist, chat answers to approve, regulars overdue to rebook), Housekeeping (the shelf count, her Skin Playbook). Each line opens the card that handles it. PRIORITIES.md is the list in plain words.
+- **Her phone:** everything in Right now arrives the moment it happens; "Still waiting: Maya" once when a question passes its reply time; and every morning "Today at Lumevina" with the top three, even if that's daily. Nothing waiting, nothing sent.
+- **Restocking** is on the list as sold out (today) and running low (this week); what to order and how many stays her call.

@@ -23,7 +23,8 @@
 // Then point a Stripe webhook at this function's URL with the events
 // checkout.session.completed, checkout.session.async_payment_succeeded,
 // checkout.session.async_payment_failed, checkout.session.expired,
-// invoice.paid, customer.subscription.updated and customer.subscription.deleted.
+// invoice.paid, invoice.payment_failed, customer.subscription.updated and
+// customer.subscription.deleted.
 
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -97,6 +98,17 @@ Deno.serve(async (req) => {
   if (event.type === "invoice.paid") {
     const m = await creditInvoice(db, o);
     return done(m ? "credited" : "ignored");
+  }
+  if (event.type === "invoice.payment_failed") {
+    // the card didn't go through: Stripe retries on its own; Evelyn hears so she can reach out (PRIORITIES.md)
+    const subId = typeof o.subscription === "string" ? o.subscription : o.subscription?.id ?? o.parent?.subscription_details?.subscription ?? null;
+    if (!subId) return done("ignored");
+    const { data: m } = await db.from("memberships").select("id, name, email").eq("stripe_subscription_id", subId).maybeSingle();
+    if (!m) return done("ignored");
+    await db.from("memberships").update({ billing_failed_at: new Date().toISOString() }).eq("id", m.id);
+    await notifyOwner(db, { kind: "member", email: true, url: "dashboard.html#members", title: `Payment failed: ${m.name || m.email}`,
+      body: "Their membership card didn't go through. Stripe tries again on its own; a quick message asking them to update the card in My Lumevina keeps the membership going." }).catch(() => {});
+    return done();
   }
   if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
     await syncSubscription(db, o, event.type === "customer.subscription.deleted");

@@ -15,6 +15,8 @@
 //                  for your next facial" (members are skipped: theirs is monthly)
 //   restock        about two months after a shop order: "running low?"
 //                  with a link that puts the same products back in the bag
+//   owner_nudge    to Evelyn, not a client: "Still waiting: Maya" once a
+//                  question passes its promised reply time, once per question
 //
 // POST {} + x-studio-key → { reminder, text_reminder, review, rebook, restock }
 // Deploy:  supabase functions deploy client-reminders --no-verify-jwt
@@ -23,6 +25,7 @@
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { studioOk } from "../_shared/studio.ts";
+import { pushAll } from "../_shared/notify.ts";
 import { esc, page, sendEmail } from "../_shared/mail.ts";
 import { sendSMS } from "../_shared/sms.ts";
 import { norm, unsubscribeUrl } from "../_shared/contacts.ts";
@@ -38,7 +41,7 @@ const btn = (href: string, label: string) =>
 Deno.serve(async (req) => {
   if (!studioOk(req)) return new Response(JSON.stringify({ reason: "studio_key" }), { status: 401 });
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-  const sent: Record<string, number> = { reminder: 0, text_reminder: 0, review: 0, rebook: 0, restock: 0 };
+  const sent: Record<string, number> = { reminder: 0, text_reminder: 0, review: 0, rebook: 0, restock: 0, owner_nudge: 0 };
 
   /** claims a message (kind + ref) before sending it; false when it already went */
   const claim = async (kind: string, ref: string, email: string) => {
@@ -109,6 +112,15 @@ Deno.serve(async (req) => {
       `<p style="font-size:15px;line-height:1.55">It's been about two months since your order, so you may be close to the bottom of:</p>` +
       `<ul style="font-size:15px;line-height:1.6">${items.map((i) => `<li>${esc(i.name)}</li>`).join("")}</ul>` +
       btn(link, "Put them back in my bag") + `<p style="font-size:14px;line-height:1.5">Shipping is free over $75, or pick up free at your next visit.</p>` + await footer(o.email)))) sent.restock++;
+  }
+
+  // ── Evelyn: a client question past its promised reply time (24 h members, 48 h others), nudged once ──
+  const { data: overdue } = await db.from("questions").select("id, name, member").eq("status", "waiting").is("owner_nudged_at", null).lte("due_at", new Date().toISOString());
+  for (const q of overdue ?? []) {
+    await pushAll(db, { title: `Still waiting: ${q.name}`, body: q.member ? "A member was promised a reply within 24 hours. A reply is drafted for you." : "They were promised a reply within 2 days. A reply is drafted for you.",
+      url: "dashboard.html#client-questions", tag: "question-overdue" }).catch((e: unknown) => console.error("push", e));
+    await db.from("questions").update({ owner_nudged_at: new Date().toISOString() }).eq("id", q.id);
+    sent.owner_nudge++;
   }
 
   return new Response(JSON.stringify(sent), { headers: { "Content-Type": "application/json" } });
