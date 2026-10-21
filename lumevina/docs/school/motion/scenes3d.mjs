@@ -725,7 +725,7 @@ shield.position.set(0, 12.1, 0); shield.castShadow = true; shield.visible = fals
 // free radicals: spiky red bits that fly in from the light and chip at the collagen on the cut face
 const radGeo = new THREE.OctahedronGeometry(0.3), radMat = new THREE.MeshStandardMaterial({ color: 0xff6a5a, emissive: 0x8a1a12, emissiveIntensity: 0.8, roughness: 0.4, transparent: true, opacity: 1 });
 const CZ = NZ / 2 + 0.4;
-const rads = Array.from({ length: 16 }, (_, k) => { const m = new THREE.Mesh(radGeo, radMat.clone()); m.visible = false; scene.add(m); return { m, k, x: -6.5 + hash(k + 20) * 13, y0: 16 + hash(k + 21) * 4, y1: 3.5 + hash(k + 22) * 5, ph: hash(k + 23) }; });
+const rads = Array.from({ length: 16 }, (_, k) => { const m = new THREE.Mesh(radGeo, radMat.clone()); m.visible = false; scene.add(m); return { m, k, x: -6.5 + hash(k + 20) * 13, y0: 13.8 + hash(k + 21) * 2.2, y1: 3.5 + hash(k + 22) * 5, ph: hash(k + 23) }; });   // they start just above the block, under the title
 // chipped collagen: cells on the cut face near where radicals landed go dark and shrink a little
 const hits = rads.map((r) => ({ x: r.x, y: r.y1 }));
 const TIRED = new THREE.Color(0x6e4348), tmp = new THREE.Color();
