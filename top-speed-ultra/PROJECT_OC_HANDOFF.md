@@ -257,10 +257,18 @@ If Fable is unavailable, run it on Opus with a design judge pair before any buil
 - **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
   "hard shadows" for Low, and the game's `RETRO` preset has a 1024 sun map; the bar's Low plans none (hard-edged blobs
   and baked light) to stay inside Low's 150-call, 250k frame. If the owner or RS3's style guide asks for hard sun
-  shadows, the bar turns on a 1024 `BasicShadowMap` with a short caster list and takes Low's fallbacks (fewer detailed
-  parked cars and LOD 1 people, no LOD 0). Not settled.
-- **Person builds stall the page** (same section, 2). Each build is one synchronous call (0.29 s to 0.71 s on a
-  desktop, 4.6 s for a phone LOD 0), so filling the room, and the LOD 0 of the person you talk to, freeze frames, worse
-  on a phone. A fix needs a worker or step-wise build in `people/` (F5's builders and Lot 57's P1d own it). Not
-  settled: accept the stalls for now or ask for that build before the bar's S3a, and whether the bar skips LOD 0 at
-  Low meanwhile.
+  shadows, the bar turns on a 1024 `BasicShadowMap` with a short caster list: inside and overhead it fits, but outside
+  Low takes its first three fallbacks (no detailed parked cars, fewer LOD 1 people, no far street props). Not settled.
+- **Person builds stall the page** (same section, 2). Each build is one synchronous call on a desktop CPU: 0.29 s to
+  1.0 s for LOD 2 and LOD 1, 4.6 s for a phone LOD 0 and 7 to 9.5 s for a high-quality one. The plan now fills the room
+  on a time budget that works at any frame rate (full in about 46 s at Low, 2.3 min at HD, 4.1 min at Ultra, cards
+  standing in), builds **no NPC LOD 0 at Low, HD or Ultra** (the person you talk to stays at LOD 1, so a conversation
+  never freezes the page: 4.6 s saved at Low, 7 to 9.5 s at HD and Ultra), and builds your avatar's Ultra-only LOD 0
+  during loading or behind a paused "Preparing Ultra…" sheet. Each LOD 1 or LOD 2 build is still a stalled frame. A
+  fix needs a worker or step-wise build in `people/` (F5's builders and Lot 57's P1d own it). Not settled: accept the
+  fill's stalls and LOD 1 for the person you talk to, or ask for that build before the bar's S3a (with it, NPC LOD 0
+  comes back; at Low inside it needs Low's first fallback).
+- **For RS3 and `people/`'s owners (from the sports bar plan):** a toon path for the people builder's skin. Under the
+  Retro Stylizer's hook-fit rule `skinMaterial` stays physically lit (its hook adds `computeSpecularOcclusion`), so a
+  LOD 0 body in view at Low would have toon clothes and physical skin. The bar draws no LOD 0 at Low, so nothing shows
+  it yet.

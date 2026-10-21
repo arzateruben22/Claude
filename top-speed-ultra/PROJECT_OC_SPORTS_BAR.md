@@ -13,14 +13,16 @@ shipped data.
 
 **Status (2026-10-21): planned.** The site data was built by S0-data. It added `src/data/anaheim/sportsbar-slice.json`
 and `sportsbar-freeway-link.json`, extending `tools/anaheim/`. This plan uses their numbers. Two scripts there re-run
-this plan's own counts against that data: `sportsbar_sets.py` (the near and far street sets) and `sportsbar_zones.py`
-(the interior layout). The engine it builds on is
-Lot 57's Phase 1, which is being built right now in `src/onfoot/lot57/` on `claude/onfoot`. Its code is uncommitted in
-the `tsu-foot` worktree; this plan was checked against it as read on 2026-10-21 at about 01:00 UTC and re-checked at
-about 01:45 UTC; its `hud.ts`, `lot.ts` and `main.ts` were read again at about 02:20 UTC, and this revision re-read
-`lot.ts`, `main.ts`, `data.ts` and `geom.ts` at about 05:30 UTC. It is still changing. This doc doesn't report on either; check `PROJECT_OC_PROGRESS.md` for what's built and verified. Facts about
-the site come from that data. Each number is either measured (the method is at the end) or marked as **ours** (a design
-choice), **an estimate** or **an assumption**.
+this plan's own counts against that data: `sportsbar_sets.py` (the street sets and our street trees) and
+`sportsbar_zones.py` (the interior and patio layout, walking on Lot 57's grid, and the bartenders' lane path). The
+engine it builds on is Lot 57's Phase 1, which is being built right now in `src/onfoot/lot57/` on `claude/onfoot`. Its
+code is uncommitted in the `tsu-foot` worktree and changes hour to hour. So this plan describes Lot 57's modules as
+**contracts** (names, signatures and what they promise; see "Lot 57's modules: the contracts"), not as snapshots of
+their constants. Every number this plan takes from Lot 57's code is in one table, "Lot 57's numbers, as measured", which
+says when it was measured; the S1 builder's first step is to re-measure that table and update it, and anything that
+depends on it, before building. This doc doesn't report on either; check `PROJECT_OC_PROGRESS.md` for what's built and
+verified. Facts about the site come from that data. Each number is either measured (the method is at the end) or
+marked as **ours** (a design choice), **an estimate** or **an assumption**.
 
 ## Ground rules
 
@@ -137,7 +139,7 @@ Measured from S0-data's outputs and the Overture cache; how is at the end.
 | Its shape | see "Site plan" | A hook opening to the east. A north wing (77 m × 18 m) and a west spine (19 m wide) wrap a courtyard. A diagonal arm runs 75 m from the spine's south end, 24.5° south of east, to a tip at x ≈ -6616. The arm is 15.2 to 16.5 m deep. The point is near the tip. |
 | Ground height | 44.5 m at the point | The game's own terrain. 44.4 to 45.1 m over the whole building and the derived lot: flat. Outside it, the grid rises about 3 m toward the freeway to the south-west; the 60 m terrain cells smear the embankments. |
 | The lot | courtyard plus the drive round the tip | **No parking area is mapped here.** The nearest mapped parking area is 216 m from the building. S0-data derived the lot, about 3,000 m² (3,018 to 3,031 m² across its runs), from the building's courtyard faces, the kerb of S Claudina Way and the mapped aisles. No stalls are mapped. |
-| Lot aisles (slice `seg` 415, 416) | 415 loops through the courtyard; 416 wraps the tip | Both are class `service` with no subclass and no one-way tag. 415 enters from S Claudina Way at z ≈ -9395 and z ≈ -9375. 416 runs north-north-east in front of the tip's east face (x ≈ -6613). Its centreline is 4.4 m out from the wall's outer face at the south-east corner, 3.7 m at the door's centre and 3.0 m at the north-east corner. It curves round the tip about 11 m south of it and ends at a driveway (`seg` 418, one-way, entry only) that joins Anaheim Way at (-6656, -9316), so cars leave by Claudina Way. Lot 57's street builder draws an unsubclassed service way 6 m wide. That would put 416's edge 1.4 m from the wall at the south-east corner and on the wall line at the north-east corner, so we redraw it (see "The front"). |
+| Lot aisles (slice `seg` 415, 416) | 415 loops through the courtyard; 416 wraps the tip | Both are class `service` with no subclass and no one-way tag. 415 enters from S Claudina Way at z ≈ -9395 and z ≈ -9375. 416 runs north-north-east in front of the tip's east face (x ≈ -6613). Its centreline is 4.4 m out from the wall's outer face at the south-east corner, 3.7 m at the door's centre and 3.0 m at the north-east corner. It curves round the tip about 11 m south of it and ends at a driveway (`seg` 418, one-way, entry only) that joins Anaheim Way at (-6656, -9316), so cars leave by Claudina Way. Lot 57's street builder draws an unsubclassed service way 6 m wide (L14 in "Lot 57's numbers, as measured"). That would put 416's edge 1.4 m from the wall at the south-east corner and on the wall line at the north-east corner, so we redraw it (see "The front"). |
 | South Claudina Way | centreline x ≈ -6596 east of the building | Residential. Runs north to z ≈ -9745. At (-6595.5, -9351.7) a leg bends south-west to Anaheim Way at (-6654, -9314); the main leg continues south to Anaheim Way near Katella at (-6596.5, -9259). A footway runs along its east side. No sidewalk is mapped on its west (our) side. |
 | Anaheim Way | 43 m south-west of the point | Primary, 40 mph in the data. A frontage road running north-west to south-east beside the I-5. |
 | I-5, Santa Ana Freeway | about 100 m south-west | Motorway, 65 mph (55 for heavy goods vehicles). Where it crosses Katella there's a bridge polygon of about 6,350 m², about 105 m south. |
@@ -216,9 +218,10 @@ North is up. Schematic, not to scale. The coordinates in the table are exact.
 | Stoppage Time | building frame u 0–36 | See "Inside". Floor slab 0.15 m up, level with the raised front walk; the kerb ramp is on the walk (see "The front"). Ceiling 3.6 m inside the 4.3 m building (the lidar height). The parapet sign band on our unit rises to 5.4 m (ours). |
 | Front walk | along the east face | A raised walk 3.3 m deep with a 1.5 m clear path along the glazing, then the door ramp, a bike rack and two planters. See "The front" below. |
 | Aisle 416 | round the tip and along the front | Mapped centreline, but drawn by us: 4.5 m wide, one-way, and moved out to 6.0 m from the front wall in front of the unit. See "The front". |
-| Patio | u 2–20, v -5.5–0 (outside the south wall) | 99 m², on the strip between the arm and aisle 416. **Assumption:** the strip is open paving; nothing is mapped on it, and S0-data's derived lot covers its east quarter (25 m²). Its outer edge is 4.17 m from aisle 416's centreline at the closest point (u 20), so 1.9 m from our 4.5 m aisle's edge. Details are under "Inside". It's entered only from inside. |
+| Patio | u 2–24, v -5.5–0 (outside the south wall) | 121 m², on the strip between the arm and aisle 416 and, west of u 20, the driveway from Anaheim Way (seg 418). **Assumption:** the strip is open paving; nothing is mapped on it, and S0-data's derived lot covers its east end (25 m²). Its outer edge is 4.17 m from aisle 416's centreline at the closest point (u 20, where 416 meets 418), so 1.9 m from our 4.5 m aisle's edge and 1.2 m from 418's 6 m ribbon. It runs to u 24, not u 20 as in earlier rounds, so that its six tables and rail have walkable passages (see "Inside"). It's entered only from inside. |
 | Courtyard lot | the derived lot polygon | Stalls are ours, 2.75 m × 5.5 m, in four rows on aisle 415's two east-west legs, all facing north or south (the module map's `lot.ts` row says why). **Estimate:** 55 to 62 stalls. "Your" stall is the courtyard stall nearest the routes' end at (-6613.2, -9374.9), about 30 m from the door. 6 m pole lights (ours; no lamps are mapped here). |
 | Perimeter | aisle 416 round the arm and spine | A drive aisle (mapped) with landscape strips (ours) between it and Anaheim Way. |
+| Street trees (ours; nothing is mapped) | the strips in front of and south of the unit | **10 trees:** 6 palms on the strip between our aisle 416 and Claudina's south-west leg, 10.1 m out from the front wall, every 6 m from s -6 to s 24 (frame (-11.6, -1.9) to (-0.7, 26.0)); 4 shade trees on the strip south of the arm, between aisle 416 and the south-west leg, at v -19, every 6 m from u -2 to u 16. The rule drops any spot within 1.0 m of a road or aisle edge, 1.5 m of a power pole, or 1.0 m of the building or patio: a fifth shade tree at u 22 falls on the driveway's ribbon. All 10 stand in the glazed sectors within 210 m, so they're in the near set (see "The allocations"). `tools/anaheim/sportsbar_sets.py` places and checks them. |
 | The rest of the frame | the slice | Streets, the I-5 and its Katella bridge, the substation behind a chain-link fence with its transformers and power poles, the railway and buildings, from the data. Building colours by class, as at Lot 57. |
 
 ### The front (ours)
@@ -239,8 +242,8 @@ centre is at s 8.95, and the door spans s 8.05 to 9.85.
 **What stands in the furniture strip:**
 - **The door ramp:** a kerb ramp 1.8 m wide (s 8.05 to 9.85). It rises 0.15 m over the strip's 1.8 m (1:12), with 0.5 m
   flares (s 7.55 to 10.35), and lands on the clear path at the door. Lot 57's walk grid has two heights, 0 and 0.15 m
-  (its `raised` layer), so the ramp is a sloped mesh that the body walks as one step at its midline, as at Lot 57's
-  kerbs.
+  (its `raised` layer; L12), so the ramp is a sloped mesh that the body walks as one step at its midline, as at Lot
+  57's kerbs.
 - **Two planters with agave,** 1.2 m × 0.6 m, at d 2.1 to 2.7: one at s 2.5 to 3.7, one at s 16.4 to 17.6.
 - **A four-hoop bike rack** along the kerb. Parked bikes take d 1.9 to 2.9, s 12.5 to 15.5.
 - **The blade sign** hangs from the wall at the south-east corner, 2.8 to 4.0 m up, so it's over the walk, not in it.
@@ -281,9 +284,11 @@ runs 24.5° off east-west. Schematic; the table is exact.
   u = 36 party wall          u = 27                       u = 14             u = 6.6   front wall, glazed, slanted
   +-----------+--------+-------------------------------------+---------------+
   |  KITCHEN  | REST-  |  back bar · taps · 4 screens above  |  DARTS        \
-  | (doors    | ROOMS  |================ BAR, 13 m ===========|  3 boards      \
-  |  only)    | 2 doors| P  g g g  o  o  o  o  o  o  o  o  o |  oche  ::::::   \
-  |      PASS +--d--d--+   (9 stools o, 4 gaps g, pick-up P) |                  \
+  | (doors    | ROOMS  |f- - - - - lane path (staff) - - - - |  3 boards      \
+  |  only)    | 2 doors|f=============== BAR, 12.8 m =======|  oche  ::::::   \
+  |           |        | P  g g g  o  o  o  o  o  o  o  o  o |                 \
+  |      PASS +--d--d--+H  (9 stools o, 4 gaps g, pick-up P, |                  \
+  |                        staff flap f, hand-off H)         |                   \
   |      PASS    w                                                     host h     > ENTRY (east face,
   +--d--------+         HT       HT       HT            POOL 2   POOL 1          /   double door, ramp)
   T standing  |                                          [##]     [##]          /
@@ -291,9 +296,9 @@ runs 24.5° off east-west. Schematic; the table is exact.
   T spot      |                                                              /
   T BIG SCREEN|  [B]  [B]  [B]  [B]  [B]                   %%% SHUFFLEBOARD %%/
   +--J--------+---------------------------------------[door]------------------+  south wall, windows
-                                                 PATIO u 2-20, 5.5 m deep: 6 tables, 2 heaters,
-                                                 a rail on the fence facing Anaheim Way and the I-5,
-                                                 2 screens on the wall
+                                             PATIO u 2-24, 5.5 m deep: 6 bench tables along the wall, a
+                                             passage, a 6-stool rail on the fence facing Anaheim Way and
+                                             the I-5, 2 heaters, 4 planters, 2 screens on the wall
 ```
 
 | Zone | u | v | Contents |
@@ -304,7 +309,7 @@ runs 24.5° off east-west. Schematic; the table is exact.
 | Darts | 7.6–12.6 | 11.5–15.8 | Three boards at u 8.4, 10.1 and 11.8, bullseye 1.73 m up, on an oak dart surround (backboards and cabinets) fixed to the north wall, its face at v 15.75 (the wall's inner face is at about v 16.2 here). Oche line at v 13.38 (2.37 m). A code-drawn chalk scoreboard beside each board. |
 | Pool | 8.9–17.4 | 4.3–9.5 | Two 7 ft tables, long axis along v, centres (11.0, 6.9) and (15.3, 6.9). 1.45 m cue clearance all round. A pendant lamp over each. |
 | Shuffleboard | 3.2–9.9 | 1.15–1.75 | One 22 ft (6.7 m) table along the south wall, scored at the west end. Players stand at the east end (u 2.2–3.2; the thrower's spot at (2.7, 1.45) is 1.59 m from the south rail's first stool) and along its north side (v 1.75–2.5, spots at (5.0, 2.1) and (7.0, 2.1), 1.8 m clear of the pool cue zone at v 4.3). |
-| Bar | 14.0–27.0 | 13.3–15.8 | 13 m oak counter. Customer edge at v 13.3, counter to 14.05, bartenders' lane to 15.2, back bar to 15.8. 9 stools at v 12.85, every 1.05 m from u 14.6 to 23.0. 4 standing gaps at v 12.95, where standing guests order: one at the counter's east end (u 13.75) and three west of the stools (u 23.8, 24.45 and 25.1). Brass foot rail. Server pick-up at the west end (u 25.5–26.8), its spot at (26.15, 12.95). Staff flap at u 27.0–27.6. Four 65-inch screens above the back bar at u 15.5, 18.7, 21.9 and 25.1. A tap wall with plain coloured handles and no marks. |
+| Bar | 14.0–27.6 | 13.3–15.8 | A 12.8 m oak counter, u 14.0 to 26.8, with a return at its east end (u 14.0–14.15) that closes the lane. Customer edge at v 13.3, counter to 14.05, bartenders' lane to 15.2 (u 14.15 to 27.6), back bar to 15.8 (u 14.0 to 27.6). 9 stools at v 12.85, every 1.05 m from u 14.6 to 23.0. 4 standing gaps at v 12.95, where standing guests order: one at the counter's east end (u 13.75) and three west of the stools (u 23.8, 24.45 and 25.1). Brass foot rail. Server pick-up at the west end (u 25.5–26.8), its spot at (26.15, 12.95). **The staff flap** is the 0.8 m gap at u 26.8–27.6 between the counter's west end and the restroom block, closed at v 13.3 by a waist-high swing gate. Four 65-inch screens above the back bar at u 15.5, 18.7, 21.9 and 25.1. A tap wall with plain coloured handles and no marks. **The lane is staff only:** see "The bartenders' lane path" below. |
 | Restrooms | 27.6–31.0 | 11.6–15.8 | A block with two doors on its south face at u 28.4 and 30.2, each with our own "Restroom" pictogram. **Doors only:** not enterable. A water station between them, against the block's south face (u 29.0–29.6, v 11.2–11.6), its standing spot at (29.3, 10.85). |
 | Kitchen | 31.0–35.8 | 9.0–15.8 | **Doors only.** A 2 m pass window on its east face (v 9.3–11.3): stainless shelf, heat lamps, ticket rail and bell, with the lit kitchen visible behind. Two server spots in front of it, at (30.6, 10.35) and (30.6, 11.0), north of the high-tops. A staff swing door on its south face at u 33–34. |
 | TV wall | on the party wall's inner face, u 35.6–35.8 | 0.8–9.0 | The big screen, 3.2 m × 1.8 m, centred at v 4.75, 1.3 to 3.1 m up. Four 50-inch screens, two stacked each side, so the screens span about v 1.9 to 7.6. A lime LED score ticker below the big screen. |
@@ -312,7 +317,7 @@ runs 24.5° off east-west. Schematic; the table is exact.
 | Booths | 20.5–31.3 | 0.75–2.35 | 5 coral booths of 4 seats along the south windows, 2.15 m apart. Their backs stand 0.15 m (at u 31.3) to 0.27 m (at u 20.5) off the south wall's inner face. Table across the booth, a bench each side: half the seats face the TV wall. Two seats to a bench, at v 1.15 and 1.95, each 0.35 m in from its booth's end; neighbouring booths' benches stand back to back on one backrest. |
 | High-tops | 19.5–31.0 | 3.0–10.0 | 6 round oak high-tops with 4 stools each, centred at (21.0, 4.6), (24.6, 4.6), (28.2, 4.6), (21.0, 8.6), (24.6, 8.6) and (28.2, 8.6). The stools stand 0.7 m from each table's centre along u and v, so they reach v 9.75; the zone stops at v 10.0, south of the water station's and the pass's spots. |
 | Patio door | south wall, u 18.0–19.8 | | Glass double door. |
-| Patio | 2–20 | -5.5–0 | A steel pergola with louvres and warm linear lights. 6 four-top tables, 2 patio heaters, a drink rail on the south fence with 6 stools facing the freeway, planters with agave and grasses, and a 1.1 m glass and steel fence. Two outdoor screens on the building wall at u 6 and u 14. |
+| Patio | 2–24 | -5.5–0 | A steel pergola with louvres and warm linear lights, its posts in the fence line, and a 1.1 m glass and steel fence (inner faces at u 2.05, u 23.95 and v -5.45). The layout is below the table. Two outdoor screens on the building wall at u 6 and u 14. |
 
 **Seats:**
 - Bar 9, booths 20, high-tops 24 and window rails 8: 61 inside.
@@ -327,6 +332,49 @@ places. Capacity is never shown as a number.
 **Screens:** 12 in all: the big screen, 4 beside it, 4 over the bar, 2 on the patio and 1 above the darts. They show
 three channels (see "The games on the screens").
 
+### The patio's layout (ours)
+
+Frame metres, outside the south wall. From the wall south: the tables, then a passage, then the rail on the fence.
+
+| Piece | u | v | Details |
+| --- | --- | --- | --- |
+| 6 bench tables | centred at 4.2, 7.1, 10.0, 12.9, 15.8 and 20.95 | -2.1 to -0.5 | Each a 0.75 m × 1.6 m table, long axis along v (out from the wall), with a bench each side (east and west), 1.5 m across benches and table. Two seats a bench, at (u ± 0.6, -0.9) and (u ± 0.6, -1.7), Lot 57's `'picnic'` seat kind. You stand to sit 0.55 m outside the bench, at (u ± 1.3, the seat's v). Between neighbouring tables a 1.4 m slot runs from the passage to the wall. |
+| The door's approach | 18.0–19.8 | -1.5–0 | Kept clear: the patio door opens into the 3.65 m gap between the fifth and sixth tables. |
+| The passage | 2.05–23.95 | -4.3 to -2.15 | 2.15 m wide, along the whole patio. The two heaters stand in its south half. |
+| Drink rail | 3.0–9.5 | -5.45 to -5.15 | A 0.3 m shelf on the fence. 6 stools at v -4.75, every 1.05 m from u 3.6 to 8.85, facing the freeway. You stand to sit at v -3.95. |
+| 2 heaters | (12.9, -3.95) and (20.95, -3.95) | | Tall patio heaters, 0.6 m across. Their +2 night mood reaches 2.5 m, so the south seats of tables 4 and 6. |
+| 4 planters (agave and grasses) | 2.1–2.9; 9.9–11.7; 14.1–15.9; 22.0–23.9 | against the fence: -5.4 to -4.4 (the first), -5.45 to -4.95 (the rest) | |
+
+**Checked** by `tools/anaheim/sportsbar_zones.py`: 14 patio zones and 30 seats, none overlapping (the rule under S1's
+checks), every one inside the fence, and every stand point reached on Lot 57's walk grid (next).
+
+### The bartenders' lane path (ours)
+
+Lot 57's walk grid (L12 in "Lot 57's numbers, as measured") is world-aligned, 24.5° off the bar's frame, and a cell is
+free only 0.32 m from every collider. A 1.15 m lane or a narrow flap doesn't hold a connected run of free cells on it:
+the round-4 review found the lane split into 6 to 9 pieces, and this plan's own grid model gives 7 to 10. So staff
+don't walk the lane on the grid. They walk **a bar-aligned lane path**, a polyline in frame coordinates that the bar's
+`venues/sportsbar/staff.ts` moves them along directly, with no collision test:
+- **The path:** from (14.6, 14.625) west along the lane's centre line, v 14.625, to (27.2, 14.625); then south through
+  the flap's centre, u 27.2, to the hand-off point **H (27.2, 10.9)** on the floor. It's 16.3 m long.
+- **Clearance.** The 0.3 m body on it clears the counter, its return, the back bar, the restroom block and the stools
+  by at least 0.10 m: 0.275 m each side in the lane, 0.1 m each side in the 0.8 m flap.
+- **The hand-off.** H is 0.81 m from every wall and collider. That's more than 0.32 m plus half a cell's diagonal
+  (0.35 m), so at any grid offset the cell under H is free; staff step off the path there and walk the floor on the
+  walk grid like anyone else (to the pass, the tables, the empties). Coming back, they walk to H and take the path.
+- **Posts and passing.** The four bartenders' posts are on the path under the four bar screens, at u 15.5, 18.7, 21.9
+  and 25.1. The lane is too narrow for two bodies side by side, so bartenders never pass each other: each serves a
+  section of the counter, in order along u, and the sections are re-cut when the count changes. Only the westmost
+  bartender leaves by the flap; while they're out, the next one covers their section.
+- **Closed to guests and the player.** The lane and the flap are outside the walk grid's region, and the swing gate
+  is a collider across the flap at v 13.3, so the player's body and every guest's path stop at the counter. Staff on
+  the path ignore colliders, so the gate opens for them (a 0.3 s swing).
+- **Checked** by `tools/anaheim/sportsbar_zones.py` on a model of Lot 57's walk grid (L12) at 25 grid offsets: the
+  path clears every collider; from just inside the front door, H and all 103 stand points of the modelled seats and
+  spots, inside and on the patio, are reached within 0.45 m at every offset; and no reached cell lies in the lane or
+  the flap.
+  S1 builds the path and runs the same test on the built colliders and the real grid (see S1's checks).
+
 ## One engine with Lot 57
 
 The bar is built on the on-foot machinery that Lot 57's Phase 1 is building, not on a fork of it. There is one engine,
@@ -336,35 +384,77 @@ adopt it later. Until the move (E0, below):
 - it adds its own pieces beside them;
 - it copies three small things, each marked for E0: the quality presets, the page loop and the single-file plugin.
 
-### What exists now (read-only, `claude/onfoot`, uncommitted)
+### Lot 57's modules: the contracts (read-only, `claude/onfoot`, uncommitted)
 
-As read in the `tsu-foot` worktree on 2026-10-21 at about 01:00 UTC, and re-read at about 01:45 UTC after `lot.ts`,
-`main.ts`, `player.ts`, `mats.ts`, `data.ts` and `venue.ts` had changed again. `hud.ts`, `lot.ts` and `main.ts` were read
-once more at about 02:20 UTC, and `lot.ts`, `main.ts`, `data.ts` and `geom.ts` at about 05:30 UTC for this revision.
-It's still changing.
+Lot 57's code is uncommitted in the `tsu-foot` worktree and its builder is still editing it, so its constants move
+from hour to hour. This table says only what the bar relies on: each module's names, signatures and what they
+promise. The numbers are in the next table, not here.
 
-| File | What it holds | Tied to Lot 57? |
+| File | The contract the bar relies on | Tied to Lot 57? |
 | --- | --- | --- |
-| `lot57/geom.ts` | `Batch`, `Kit`, `Emitter`, baked vertex light (`Batch.bake`, run by `Kit.finish`); `offsetLine`, `polyLen`, `along`, `pointInPoly`, `rand`, `canvasTex` | No |
-| `lot57/collide.ts` | Colliders (`seg`, `box`, `boxMM`, `circ`, `poly`); `ColliderSet` with its 4 m hash and `ray` | No |
-| `lot57/walkgrid.ts` | 0.5 m cells (`CELL`, `RADIUS`), the free and raised layers, A* and string pulling | No |
+| `lot57/geom.ts` | `Batch`, `Kit` (batches by name and material, `kit.get(name, mat, opts)`, `kit.light(...)`, `Kit.finish` running `Batch.bake`, the baked vertex light), `Emitter`; `offsetLine`, `polyLen`, `along`, `pointInPoly`, `rand`, `canvasTex` | No |
+| `lot57/collide.ts` | Colliders (`seg`, `box`, `boxMM`, `circ`, `poly`, each with a tag and an on/dynamic flag); `ColliderSet` with `add`, `rebuild` and `ray` | No |
+| `lot57/walkgrid.ts` | `WalkGrid(x0, z0, x1, z1)`, world-aligned, with `CELL` and `RADIUS`; the `region`, `raised` and `road` layers; `computeFree(set, dynamicOnly?)`, which frees the region's cells clear of every collider by a margin; `isFree`, `nearestFree`, `clear`; and `path(ax, az, bx, bz)`, A* over free cells with the path pulled tight, which snaps an end that isn't free to a free cell near it | No |
 | `lot57/driver.ts` | `readDriver`, `driverPerson`, `eyeHeight`: your driver, from the game's own settings | No |
-| `lot57/player.ts` | `Player`: the 0.3 m body, walking and jogging, push-out, tap-to-go paths (`goTo`), `sit(seat)` and `stand()`, the look, and the first- and third-person camera as `Player.camera(cam)`, which returns `{ dist, hide }` (hide the avatar under 0.7 m). Constructor `(set: ColliderSet, grid: WalkGrid, roadAt)`. `View = 'first' \| 'third'`. Also `WALK`, `JOG`, `ACCEL`, `DECEL`, `STEP` and `Stick`. | Yes: `get indoors()` calls Lot 57's `inShed(x, z)` |
-| `lot57/input.ts` | `Input`: the floating stick, the look drag, taps, keys and the gamepad. `Action = 'act' \| 'act2' \| 'view' \| 'car' \| 'carSkip' \| 'pause' \| 'stand'`. | The key map and the action union are fixed |
-| `lot57/hud.ts` | `Hud`: the action buttons, toasts, the hint, the pause sheet (quality, clock and motion controls) and the crowd chip; `loading`. `onView: (v?: View) => void`: the `viewBtn` click calls `onView()` with no argument (cycle), and the `segView` listener calls `onView(v)` with the clicked button's `data-v` (the buttons hold plain text, so the target is the button). | It binds fixed element ids in Lot 57's `index.html`; `setView(View)` |
-| `lot57/lot.ts` | `Stall` (`x, z, face, row, mine, ada`); `ParkedCars`: constructor `(stalls, quality: 'phone' \| 'high', nearCount)`, `fill(share, seed)`, `update(x, z, force?)`, and public `near`, `count` and `colliders`; `yourCar(stall, car, paint, quality)`, which returns `{ group, collider }`; `buildLot`, `LotInfo`, `MEDIAN`, `WALK_GAP` | It reads Lot 57's `PLAN` at load (from `coords.ts`, which holds no data). `buildLot` builds Lot 57's rows. `fill()` favours stalls within 90 m of Lot 57's gate, at local (-5, 20), and pulls each car toward its wheel stop along world z by `(PLAN.lot.stallD - car length) / 2 - 0.2`, which assumes stalls 5.5 m deep facing 0 or π. `yourCar()` puts the car 0.15 m off the stall's centre along world z. The parked cars are instanced: per traffic kind (5), one `InstancedMesh` for each of 4 parts (paint, glass, trim, lamps) for the nearest `near` cars, and one for 152-triangle stand-ins (a private `proxyGeometry`: two boxes and four 8-sided wheels) for the rest. three.js culls each instanced mesh as a whole, by one bounding sphere round all its instances. |
-| `lot57/mats.ts` | `Quality`, the `GLOW` channels, `glowify`, `makeMats(board)`, `setNight` | `makeMats` also builds Lot 57's sign atlas, reader board and surfaces |
+| `lot57/player.ts` | `Player`, constructed as `(set: ColliderSet, grid: WalkGrid, roadAt)`; public `x`, `z`, `yaw`, `pitch`, `eye`, `view`, `seat`, `person`; walking and jogging with push-out; `goTo(x, z, goal?)` (a path on the grid, then `sit(seat)` on arrival when the goal is a seat); `sit(seat)`, which puts the body on the seat; `stand()`, which puts it back at the seat's stand point or the nearest free cell; `place`; `look`; and `camera(cam)`, which places the first- or third-person camera and returns `{ dist, hide }`. `View = 'first' \| 'third'`. Also `WALK`, `JOG`, `STEP` and `Stick`. | Yes: `get indoors()` calls Lot 57's `inShed(x, z)` |
+| `lot57/input.ts` | `Input`: the floating stick, the look drag, taps, keys and the gamepad, with an `enabled` switch and a fixed `Action` union (L18) | The key map and the action union are fixed |
+| `lot57/hud.ts` | `Hud`: the action buttons, toasts, the hint, the pause sheet (quality, clock and motion controls) and the crowd chip; `loading()` and `doneLoading()`; `setView(View)`; `setQuality`; `onView: (v?: View) => void`, called with no argument by the view button (cycle) and with the clicked button's `data-v` by the view segment | It binds fixed element ids in Lot 57's `index.html` (L17) |
+| `lot57/lot.ts` | `Stall` (`x, z, face, row, mine, ada`); `ParkedCars`, constructed as `(stalls, quality: 'phone' \| 'high', nearCount)`, with `fill(share, seed)`, `update(x, z, force?)` (the nearest `near` cars detailed, the rest stand-ins, every instanced mesh's bounding sphere recomputed), `dispose()`, and public `near`, `count`, `colliders`, `group` and read-only `quality`. Per traffic kind, one `InstancedMesh` for each detailed part and one for the stand-ins, so three.js culls each as a whole. `yourCar(stall, car, paint, quality)` returns `{ group, collider }`. `buildLot`, `LotInfo` (with `door`), `MEDIAN`, `WALK_GAP`. | It reads Lot 57's `PLAN` (from `coords.ts`). `buildLot` builds Lot 57's rows; `fill()` biases toward Lot 57's gate and pulls cars along world z (L6) |
+| `lot57/mats.ts` | `Quality` (`'low' \| 'high' \| 'ultra'`), the `GLOW` channels, `glowify`, `makeMats(board)`, `setNight` | `makeMats` also builds Lot 57's sign atlas, reader board and surfaces |
 | `lot57/tex.ts` | Code-painted surfaces (asphalt, concrete, pavers, turf, dirt, wood, brick, glow, blob, picket, chain); Lot 57's `PAL`, `tiltupTex`, `rollDoorTex`, `ATLAS`, `labelsAtlas`, `readerTex` | In part |
-| `lot57/clock.ts` | `DAYS`, `ClockState`, `CrowdLevel`, `anaheimDate`, `pacificOffset`, `liveClock`, `fmtClock`, `parseDay`; `CAPACITY` (220), `isOpen`, `closesAt`, `opensAt`, `crowdShare`, `crowdLevel`; a private ±10% `noise()` that hashes the calendar weekday and whole hour | The hours, curve and capacity are Lot 57's, hard-coded |
+| `lot57/clock.ts` | `DAYS`, `ClockState`, `CrowdLevel`, `anaheimDate`, `pacificOffset`, `liveClock`, `fmtClock`, `parseDay`; `CAPACITY`, `isOpen`, `closesAt`, `opensAt`, `crowdShare`, `crowdLevel`; a private seeded noise on the weekday and hour (L15) | The hours, curve and capacity are Lot 57's |
 | `lot57/coords.ts` | `ORIGIN`, `ANCHOR`, `GROUND_M`, `toLocal`, `toGame`, `SITE`, `PLAN`, `inShed`, `inVenue`, `EDGE` | All of it |
-| `lot57/data.ts` | `buildStreets`, `decode`, `DATA_ATTRIBUTION`, the class road widths (`ROAD_W`) | It statically imports Lot 57's 672 KB `slice.json` |
-| `lot57/venue.ts` | The `Seat`, `Spot`, `Venue` and `Tree` types; `buildVenue`. `Seat` is `{ id, x, z, y, face, kind, at, ax, az }`, with `kind` one of `'bench'`, `'stool'`, `'hightop'`, `'picnic'` and `'lawn'`; `Spot.kind` is `'bar'`, `'truck'` or `'game'`. | `buildVenue` is Lot 57's |
-| `main.ts` | The page: the `PRESET` table (Low, High, Ultra), `applyQuality` (the composer, bloom, GTAO, the real lights, `parked.near` 16 on Low and 36 otherwise), the loop, tap handling, `window.__onfoot`. It imports the game's own `Environment` (sun, sky, shadows, flare), `configureTextures`, road `Props` and the records board from `src/game/`. It builds the parked cars at `'phone'` quality on every preset (`new ParkedCars(lot.stalls, 'phone', quality === 'low' ? 16 : 36)`) and your car at the preset's people quality (`yourCar(lot.mine, carId, undefined, PRESET[quality].people)`). It spawns you by your car's driver door (`lot.door`, 0.2 m out), looking toward the gate, unless the URL's `at`, `yaw`, `pitch` or `view` say otherwise. Its hooks include `look(yawDeg, pitchDeg)`, `camera(p)` (a fixed camera from a position to a target, in game coordinates), `tapScreen`, `actions`, `clock`, `liveClock`, `hint` and `breakdown()` (triangles by mesh, instances counted). | Module-local; importing it would run Lot 57's page |
+| `lot57/data.ts` | `buildStreets`, `decode`, `DATA_ATTRIBUTION`, the class road widths (`ROAD_W`, L14) | It statically imports Lot 57's `slice.json` |
+| `lot57/venue.ts` | The `Seat`, `Spot`, `Venue` and `Tree` types; `buildVenue`. `Seat` is `{ id, x, z, y, face, kind, at, ax, az }` (`ax, az`: where you stand to sit); the kinds are in L19. | `buildVenue` is Lot 57's |
+| `main.ts` | The page: the `PRESET` table (L1), `applyQuality` (the composer, bloom, GTAO, the real lights, the parked cars' quality and count, the avatar's level of detail, every mesh's `castShadow` put back from `userData.cast`: L2, L3, L9, L10), the loop, tap handling, `plantTrees` (L11), `window.__onfoot`. It imports the game's own `Environment` (sun, sky, shadows, flare), `configureTextures`, road `Props` and the records board from `src/game/`. Its hooks include `look(yawDeg, pitchDeg)`, `camera(p)`, `tapScreen`, `actions`, `clock`, `liveClock`, `hint` and `breakdown()` (triangles by mesh, instances counted). | Module-local; importing it would run Lot 57's page |
 | `index.html`, `vite.config.ts` | The HUD's elements; the single-file build to `dist/onfoot/` | Lot 57's |
+| `src/onfoot/people/` (committed, shared) | `buildPerson(opts)` returns a `Person` with `group`, `update(dt)`, `setLod(0 \| 1 \| 2)` (builds a level the first time it's asked for, in one synchronous call, and keeps it), `stats()` and `dispose()`. `skinMaterial`, `clothMaterial`, `hairCapMaterial`, `eyeMaterial`, `accMaterial` and `lodMaterial` make its materials; LOD 1 and 2 bodies wear `lodMaterial`. | Not Lot 57's: F5's builders and Lot 57's P1d own it |
 
-Not written yet:
-- P1b: Order, Join, Leave and held items;
-- P1c: NPCs, groups, the crowd and staff.
+Not written yet: P1b (Order, Join, Leave and held items) and P1c (NPCs, groups, the crowd and staff).
+
+### Lot 57's numbers, as measured
+
+**Measured at the `tsu-foot` worktree's uncommitted files over commit `022f988` on 2026-10-21 at about 06:00 UTC (the
+blob ids below, unchanged when re-hashed at about 06:45 UTC); the S1 builder re-measures and updates this table before
+building.** Every number in this plan that
+comes from Lot 57's code is here, and wherever the text uses one it cites the row (L1, L2…), so it reads as a
+measurement that may move, not as a fixed fact. If a row has
+moved by S1, the builder updates it and every place that cites it, re-runs the sums, and records the change in
+`PROJECT_OC_PROGRESS.md` before writing code. A row that moves is not a defect in this plan; a plan sentence that
+can't hold whatever the row says is.
+
+Files as measured (`git hash-object`, first 10 characters): `main.ts` d777b7de58 (05:41 UTC), `lot57/lot.ts`
+0012f65fc2 (05:09), `lot57/data.ts` 27e7a09ada (05:21), `lot57/mats.ts` dcfd363a78 (05:21), `lot57/player.ts`
+11471a2675 (04:53), `lot57/venue.ts` 9a7757f46b (04:49), `lot57/walkgrid.ts` 671715d7a0 (00:20), `lot57/hud.ts`
+7778cc9519 (01:42), `lot57/input.ts` 23e35f1df7 (00:17), `lot57/clock.ts` d0acb2b759 (04:30), `lot57/coords.ts`
+426faea169 (04:29), `lot57/geom.ts` 719747b603 (00:07), `lot57/collide.ts` cba030dc06 (04:32), `lot57/driver.ts`
+80a76cf51f (00:17), `lot57/tex.ts` c5f8a7d2ba (02:21).
+
+| Row | What | As measured | Where the plan uses it |
+| --- | --- | --- | --- |
+| L1 | `PRESET` (`main.ts`) | Low: no shadow map, no post, no bloom, no GTAO, MSAA 0, pixel ratio up to 1, render scale 0.85, 0 point lights, people `'phone'`, textures 512. High: 2048 map, post, bloom, no GTAO, MSAA 4, pixel ratio up to 2, scale 1, 4 lights, people `'high'`, 1024. Ultra: as High with a 4096 map, GTAO and 8 lights. | The bar's `PRESET` copy (module map, `main.ts` row) |
+| L2 | Parked cars' quality (`main.ts`, `carQuality`) | `'phone'` on Low and High, `'high'` on Ultra; when the quality changes, `applyQuality` disposes the `ParkedCars` and builds a new one, refills it with the same share and seed, and refreshes the colliders | The bar's own choice, which matches it (module map, `lot.ts` row) |
+| L3 | Detailed parked cars (`main.ts`, `nearCars`) | 12 on Low, 36 on High and Ultra, set in `applyQuality` | Not used: the bar sets `near` per state |
+| L4 | `NEAR_CAP` (`lot.ts`) | At most 40 detailed cars, whatever `near` says | The bar's `near` never passes 36 |
+| L5 | The stand-in (`lot.ts`, private `proxyGeometry`) | Two boxes and four 8-sided wheels: 152 triangles. Stand-ins cast (`castShadow = true`), and of the detailed parts only paint and trim do | "What things cost"; `visibility.ts`'s casting duty |
+| L6 | `fill(share, seed)` (`lot.ts`) | A stall fills when a seeded draw is under `share × (0.75 + 0.5 × max(0, 1 - d / 90))`, d the distance to Lot 57's gate at local (-5, 20); each car is pulled toward its wheel stop along world z by `(stallD - car length) / 2 - 0.2`, with `stallD` 5.5 from `coords.ts`. `main.ts` passes share `0.12 + 0.92 × crowd share` (at most 0.96; 0.05 when closed) and seed `day × 100 + hour`. | The bar's stalls face 0 or π, 5.5 m deep, and it passes `min(1, share / 0.84)` (module map, `lot.ts` row); the poses' fill seed 621 |
+| L7 | `yourCar` (`lot.ts`) | The car at (x, z - 0.15), turned by the stall's `face`, every mesh casting | The bar's door and spawn (module map, `lot.ts` row) |
+| L8 | The door and the spawn (`lot.ts` `buildLot`, `main.ts`) | The driver-door point at (x - 1.25, z + 0.6) from your stall; the page places you at (door.x, door.z - 0.2) | The same |
+| L9 | Your avatar's level of detail (`main.ts`) | Built at LOD 1 at the preset's people quality; LOD 0 only on Ultra, set 800 ms after you switch to third person (one synchronous build in the loop); leaving Ultra sets LOD 1; a change of people quality rebuilds the avatar. In first person the body is on layer 1, which the sun's shadow camera sees and the main camera doesn't. | "Who is at which LOD": the bar builds it differently, on purpose |
+| L10 | Casting (`main.ts` `applyQuality`) | Each mesh's first `castShadow` is kept in `userData.cast`; `applyQuality` puts every mesh back from it when there's a map (Lot 57's `venue-plants` only on Ultra) | `visibility.ts`'s casting duty |
+| L11 | `plantTrees` (`main.ts`) | Up to 4 `InstancedMesh`es (palm trunks, palm crowns, tree canopies, tree trunks) from the game's `Props`: `palmCrown(low ? 0 : 1)`, `treeCanopy(low ? 1 : 3)`, `palmTrunk()`, `treeTrunk()`; all cast; the bounding sphere computed once after placing. Rebuilt on a change of people quality. | Our street trees |
+| L12 | The walk grid (`walkgrid.ts`) | `CELL` 0.5 m, world-aligned; `RADIUS` 0.3 m; a cell is free when it and its four neighbours are in the region and its centre is at least `RADIUS + 0.02` from every collider; A* is 8-connected with no corner cutting; `path()` snaps an end that isn't free to the nearest free cell within 3 m; two heights, 0 and 0.15 m (`raised`) | The bartenders' lane path, the patio, the front's ramp, S1's walk checks, `sportsbar_zones.py` |
+| L13 | The camera and seating (`player.ts`) | Third person 2.4 m behind, 0.45 m right, 1.75 m up, pulled in by walls; `hide` under 0.7 m; pitch -55° to 45°; seated, the look turns at most 100° either side of the seat's facing; seated eye `seat.y + 0.68` | "Camera"; `BarPlayer` |
+| L14 | `ROAD_W` (`data.ts`) | Primary 12 m one-way, 24 m otherwise; secondary 11.5 and 30; tertiary 14; residential, unclassified and living street 11; service 6 (parking aisle 7, driveway 6, alley 5); 0 for other classes | `engine/streets.ts` copies it; the front's clearances; the trees' rule |
+| L15 | `clock.ts` | `CAPACITY` 220; the noise is ±10%, hashed from the calendar weekday and whole hour | The bar's `Schedule` (its own capacity and `noiseSeed`) |
+| L16 | `coords.ts` | `ORIGIN` (-5100, -8350); `PLAN.lot` stalls 2.75 m × 5.5 m | E0's Lot 57 def; L6 |
+| L17 | The ids `Hud` binds (`hud.ts`) | `hud`, `act`, `act2`, `car`, `stick`, `knob`, `toast`, `hint`, `viewBtn`, `viewLabel`, `menu`, `crowd`, `crowdText`, `about`, `pause`, `segView`, `segQ`, `segClock`, `segMotion`, `day`, `hour`, `hourOut`, `clock`, `hours`, `loading`, `status` and the canvas `view`; a `[data-close]` button inside `about` and inside `pause`, bound without a null check; `data-v`, `data-q`, `data-c` and `data-m` buttons in the segments; `bar` with an `i` inside for the loading bar | `sportsbar.html` (module map, `hud.ts` row) |
+| L18 | `Action` (`input.ts`) | `'act' \| 'act2' \| 'view' \| 'car' \| 'carSkip' \| 'pause' \| 'stand'` | `BarAction` |
+| L19 | Seat and spot kinds (`venue.ts`) | `Seat.kind`: `'bench'`, `'stool'`, `'hightop'`, `'picnic'`, `'lawn'`; `Spot.kind`: `'bar'`, `'truck'`, `'game'` | The bar's seats; `Slot` |
+
+The people builder's costs and build times (the LOD rows under "What things cost") aren't from Lot 57's code: they're
+Lot 57's plan's measurements of `people/` (`PROJECT_OC_ON_FOOT.md`, 14 October), quoted with that date. S1's
+re-measure covers them too, with `stats()` on a person built at each level.
 
 Sit works, and the crowd chip shows the level from `clock.ts`. `src/onfoot/people/` (the people builder) is committed
 and shared.
@@ -382,22 +472,22 @@ Before E0 the bar never edits `lot57/`, `main.ts`, Lot 57's page or `people/`. I
 | `player.ts` | `engine/player.ts` re-exports `Player`, `STEP`, `WALK`, `JOG`, `Stick` and `View`. `venues/sportsbar/player.ts` declares `class BarPlayer extends Player`, which overrides two members. (1) `get indoors()`: `def.indoor(u, v)` at the player's frame position, so walking-only applies inside the bar. (2) `camera(cam)`: it calls `super.camera(cam)`; indoors in third person it then pulls the camera toward the head, along the same line, until it's at most 3.3 m above the floor (0.3 m under the ceiling), keeping Lot 57's look target, and returns Lot 57's `{ dist, hide }` with `dist` measured after the pull. Its constructor takes Lot 57's three arguments (`set`, `grid`, `roadAt`), passes them to `super`, and then takes the venue def and frame. `View` stays `'first' \| 'third'`; the overhead view isn't a `Player` view (next row). | `Player` takes an `indoor(x, z)` predicate and a ceiling height; `BarPlayer` goes. |
 | (the camera, on `Player`) | New `engine/overhead.ts`, written by the bar: an `OverheadCamera` with a target, yaw, pitch (35° to 75°), distance (8 to 35 m), the clamp box and the wall cutaway. The bar's `BarView = View \| 'overhead'` lives in `venues/sportsbar/views.ts`. In overhead the page calls `overhead.update(cam)` instead of `player.camera(cam)`. `player.view` keeps the last person view, so V goes back to it. | `engine/camera.ts` holds all three views, and Lot 57 can use the overhead too. |
 | `input.ts` | `engine/input.ts` re-exports `Input` and `Action`. `venues/sportsbar/input.ts` defines `BarAction = Action \| 'overhead' \| 'needs' \| 'guide' \| 'radial' \| 'menu1'` … `'menu6' \| 'rotL' \| 'rotR'`. It also defines a `BarInput`, which holds one Lot 57 `Input` and adds its own listeners: O, Tab, G, 1 to 6, the wheel and the gamepad's LB (button 4). In overhead view it sets `input.enabled = false`, so Lot 57's stick and look stop, and handles pointers itself: one-finger pan, pinch zoom, two-finger twist, tap. E and Q still arrive as Lot 57's `'act'` and `'act2'`; in overhead the bar treats them as rotate ±45°. While the radial menu is open, `Input` is disabled and the right stick picks. | `Input` takes a key map and extra actions; `BarInput` goes. |
-| `hud.ts` | Used as it is. `sportsbar.html` carries every element id that Lot 57's `Hud` binds, with the bar's own text: `hud`, `act`, `act2`, `car`, `stick`, `knob`, `toast`, `hint`, `viewBtn`, `menu`, `crowd`, `about`, `pause`, `segView`, `segQ`, `segClock`, `day`, `hour`, `hourOut`, `segMotion`, `clock`, `hours`, `crowdText` and `viewLabel`. It also needs the canvas `view`, which `sheet()` focuses on close; a `[data-close]` button inside `about` and one inside `pause`, which the constructor binds without a null check; the `data-v`, `data-q`, `data-c` and `data-m` buttons inside the four segments; and `loading`, `bar` (with an `i` inside) and `status`, for `loading()` and `doneLoading()`. So the toasts, hint, pause sheet, quality and clock controls, action buttons and crowd chip work unchanged. The bar's `venues/sportsbar/hud.ts` (`BarHud`) adds the needs strip and panel, the mood face, the queue icons, the radial menu, the person card, the TV chip and guide, the Cheer button and the three-way view control. `Hud.setView()` is only ever called with `'first'` or `'third'`; for overhead, `BarHud` sets `viewLabel` and the three buttons' `aria-pressed` itself. No extra listener is needed: Lot 57's `segView` listener already passes the clicked button's `data-v` to `onView(v)`, so the bar's third button, `data-v="overhead"`, arrives as `onView('overhead')` (typed `View` by Lot 57, a string at run time). The bar's `hud.onView` widens its argument to `BarView` and goes to that view; called with no argument, from `viewBtn`, it cycles first, third, overhead. The quality segment's labels read Low, HD and Ultra over Lot 57's `data-q` values `low`, `high` and `ultra` (see "Graphics: Low, HD, Ultra"). | `Hud` takes its ids and views as options. |
-| `lot.ts` | `engine/lot.ts` re-exports `Stall`, `ParkedCars` and `yourCar`; the bar never calls `buildLot`. `venues/sportsbar/lot.ts` builds the bar's asphalt, aisle 416 (see "The front"), the stall striping and wheel stops along aisle 415, the pole lights and the front walk. Its stalls are data, `def.parking.stalls`, in Lot 57's `Stall` shape (local metres). They're passed to `new ParkedCars(stalls, 'phone', near)` on every preset, as Lot 57's page builds them (`main.ts`: `new ParkedCars(lot.stalls, 'phone', …)`), so a detailed parked car costs its phone-quality 2.87k triangles at HD and Ultra too (measured; see the budgets). `fill(share, seed)` runs when the clock changes and `update(x, z)` each frame. `near` isn't fixed per preset as on Lot 57's page: the bar's visibility rule sets it by preset and by inside, outside or overhead (0 to 36; see "Inside, outside and overhead"), then calls `update(x, z, true)`. Your car is `yourCar(stall, car, paint, quality)` at the preset's people quality, as Lot 57's page does (`'phone'` on Low, `'high'` on HD and Ultra), plus the bar's own 152-triangle stand-in of it, built the way Lot 57's private `proxyGeometry` builds a parked car's, in your paint. Lot 57's code sets three rules until E0. (1) **Every stall faces 0 or π and is 5.5 m deep,** because `fill()` pulls cars in along world z by Lot 57's stall depth. The courtyard allows it: all the bar's stalls stand perpendicular to aisle 415's two east-west legs (58.8 m at z ≈ -9395 and 42.7 m at z ≈ -9375), none on its 13 m north-south leg or its 18 m diagonal. (2) **The courtyard would fill at about 0.84 of the share** (0.75 to 0.94 by stall), because `fill()` favours stalls within 90 m of Lot 57's gate point, local (-5, 20). For the bar that's game (-6621.5, -9313.8), south of the tip and 55 to 92 m from the stalls. So the bar passes `min(1, share / 0.84)`. (3) **Your car sits 0.15 m off its stall's centre** along the stall's axis, as at Lot 57. **Your door and the spawn.** Lot 57's `buildLot` puts the driver-door point at fixed world offsets from your stall, (x - 1.25, z + 0.6), which suits only its own row facing 0, and the bar never calls `buildLot`. So the bar's `lot.ts` turns the offset with the stall: the door point is your car's centre, (x, z - 0.15) where `yourCar` puts it, plus the offset (-1.25, +0.75) turned by the stall's `face` f as three.js turns the car (an offset (a, b) turns to (a cos f + b sin f, -a sin f + b cos f)). Facing 0 that's Lot 57's (x - 1.25, z + 0.6); facing π it's (x + 1.25, z - 0.9). The spawn is 0.2 m from the door point along the same turned axis, as Lot 57's page places you at (door.x, door.z - 0.2): (x - 1.25, z + 0.4) facing 0, and (x + 1.25, z - 0.7) facing π. The `yourCar()` hook returns your stall and the door point, as on Lot 57's page. | `fill()` takes a "near" point and offsets along each stall's own axis. |
+| `hud.ts` | Used as it is. `sportsbar.html` carries every element id, close button and segment button that Lot 57's `Hud` binds (L17 as measured; S1's re-measure lists them again from `hud.ts`), with the bar's own text. So the toasts, hint, pause sheet, quality and clock controls, action buttons and crowd chip work unchanged. The bar's `venues/sportsbar/hud.ts` (`BarHud`) adds the needs strip and panel, the mood face, the queue icons, the radial menu, the person card, the TV chip and guide, the Cheer button and the three-way view control. `Hud.setView()` is only ever called with `'first'` or `'third'`; for overhead, `BarHud` sets `viewLabel` and the three buttons' `aria-pressed` itself. No extra listener is needed: Lot 57's `segView` listener already passes the clicked button's `data-v` to `onView(v)`, so the bar's third button, `data-v="overhead"`, arrives as `onView('overhead')` (typed `View` by Lot 57, a string at run time). The bar's `hud.onView` widens its argument to `BarView` and goes to that view; called with no argument, from `viewBtn`, it cycles first, third, overhead. The quality segment's labels read Low, HD and Ultra over Lot 57's `data-q` values `low`, `high` and `ultra` (see "Graphics: Low, HD, Ultra"). | `Hud` takes its ids and views as options. |
+| `lot.ts` | `engine/lot.ts` re-exports `Stall`, `ParkedCars` and `yourCar`; the bar never calls `buildLot`. `venues/sportsbar/lot.ts` builds the bar's asphalt, aisle 416 (see "The front"), the stall striping and wheel stops along aisle 415, the pole lights and the front walk. Its stalls are data, `def.parking.stalls`, in Lot 57's `Stall` shape (local metres). **The parked cars' quality is the bar's own choice per preset:** `'phone'` at Low and HD and `'high'` at Ultra, the same as Lot 57's page as measured (L2), so Ultra's detailed parked cars are the game's high-quality traffic models (5.58k to 5.60k triangles each; see "What things cost"). Like Lot 57's page, when the quality changes between those two the bar disposes the `ParkedCars`, builds a new one at the new quality, refills it with the same share and seed, and refreshes the colliders. `fill(share, seed)` runs when the clock changes and `update(x, z)` each frame. `near` is the bar's visibility rule's, by preset and by inside, outside or overhead (0 to 36; see "Inside, outside and overhead"), never Lot 57's own per-preset count (L3), and under `NEAR_CAP` (L4); then `update(x, z, true)`. Your car is `yourCar(stall, car, paint, quality)` at the preset's people quality (`'phone'` on Low, `'high'` on HD and Ultra), plus the bar's own 152-triangle stand-in of it, built the way Lot 57's stand-in is built (L5), in your paint. **What `fill()` and `yourCar()` do as measured (L6, L7) shapes the bar's stalls until E0;** S1 re-checks these three after its re-measure. (1) **Every stall faces 0 or π and is 5.5 m deep,** because `fill()` pulls cars in along world z by Lot 57's stall depth. The courtyard allows it: all the bar's stalls stand perpendicular to aisle 415's two east-west legs (58.8 m at z ≈ -9395 and 42.7 m at z ≈ -9375), none on its 13 m north-south leg or its 18 m diagonal. (2) **The courtyard would fill at about 0.84 of the share** (0.75 to 0.94 by stall), because `fill()` favours stalls near Lot 57's gate point (L6). For the bar that point is game (-6621.5, -9313.8), south of the tip and 55 to 92 m from the stalls. So the bar passes `min(1, share / 0.84)`, with 0.84 recomputed from the re-measured rule. (3) **Your car sits 0.15 m off its stall's centre** along the stall's axis (L7). **Your door and the spawn.** Lot 57's `buildLot` puts the driver-door point at a fixed world offset from your stall (L8), which suits only its own row facing 0, and the bar never calls `buildLot`. So the bar's `lot.ts` turns the offset with the stall: the door point is your car's centre, (x, z - 0.15) where `yourCar` puts it, plus the offset (-1.25, +0.75) turned by the stall's `face` f as three.js turns the car (an offset (a, b) turns to (a cos f + b sin f, -a sin f + b cos f)). Facing 0 that's L8's (x - 1.25, z + 0.6); facing π it's (x + 1.25, z - 0.9). The spawn is 0.2 m from the door point along the same turned axis, as Lot 57's page places you (L8): (x - 1.25, z + 0.4) facing 0, and (x + 1.25, z - 0.7) facing π. If the re-measure moves L7 or L8, these follow it. The `yourCar()` hook returns your stall and the door point, as on Lot 57's page. | `fill()` takes a "near" point and offsets along each stall's own axis. |
 | `mats.ts`, `tex.ts` | The bar doesn't call `makeMats`: it would build Lot 57's sign atlas, reader board and a dozen textures the bar doesn't use. `venues/sportsbar/mats.ts` builds the bar's own materials from `tex.ts`'s generic texture functions and from `mats.ts`'s `glowify` and `GLOW` channels: a is the venue's own lights, b the street and lot lights, c the interior. It has its own `setNight`. | A shared base in `engine/mats.ts`, plus each venue's own set. |
 | `clock.ts` | `engine/clock.ts` re-exports the generic part: `DAYS`, `ClockState`, `CrowdLevel`, `anaheimDate`, `pacificOffset`, `liveClock`, `fmtClock` and `parseDay`. New `engine/schedule.ts` has `isOpen`, `closesAt`, `opensAt`, `crowdShare` and `crowdLevel`. Each takes a `Schedule` and an optional `extra(day, hour)` factor (below). The bar never calls Lot 57's own `isOpen` or `crowdShare`. | `lot57/clock.ts`'s functions become wrappers over Lot 57's `Schedule`. A unit test compares the old and new functions at every half hour of a week. |
 | `coords.ts` | Not imported: it's Lot 57's `ORIGIN` and `PLAN`. New `engine/frame.ts`: `makeFrame(originGame, axisU, axisV)` returns `toLocal` and `toGame`, `toFrame` and `fromFrame`, `dirToLocal` and `yawFromFrame`. `toLocal` and `toGame` convert between game and local coordinates; local is world-aligned with its origin at the frame's origin, so the game's sun and sky stay right. `toFrame` and `fromFrame` convert between local and (u, v). The bar's origin is O. | Lot 57's coords use a world-aligned frame from `engine/frame.ts`. |
-| `data.ts` | Never imported, directly or through a re-export, because it statically imports Lot 57's `slice.json`. New `engine/streets.ts`: `buildStreets(kit, mats, slice, frame, opts)`, written for the bar on `data.ts`'s approach. It handles sidewalks, crosswalks, buildings and land use, and copies the class road widths (`ROAD_W`, marked as a copy). `opts` are the view box, the glazed sectors and radius that pick the near set, `dropSegs`, `dropBld`, `keepHost`, the kerb rules, the far set's detail (`'simple'` at Low and HD, `'full'` at Ultra; switching to or from Ultra rebuilds the far batches) and an `extras(slice, frame)` hook. It batches the near set and the far set separately, so the visibility rule can hide the far set from inside. The near set is every feature, on every layer, with any part in the glazed sectors within 150 m (see "The allocations"); `tools/anaheim/sportsbar_sets.py` counts it from the slice, and S1 checks the built sets against that count. | `data.ts` becomes Lot 57's call to `engine/streets.ts`, with its extras: the Dupont block ring, the construction fence and the light towers. |
-| `venue.ts` | `import type { Seat, Spot, Tree }` only. Types are erased, so no code comes with them. `Seat` and `Spot` are the base of the smart objects' slots. The bar's seats use Lot 57's seat kinds (booth benches and patio chairs `'bench'`; bar, window-rail and patio-rail stools `'stool'`; high-top stools `'hightop'`), so `Player.sit()` and `goTo()` take them unchanged. Its standing spots widen `Spot.kind` in the bar's own `Slot` type. | The types move to `engine/venue-types.ts`. |
-| `main.ts` | Can't be imported. `venues/sportsbar/quality.ts` holds a copy of `PRESET`, marked `// COPY of lot57 main.ts PRESET: E0 replaces it with engine/quality.ts`, and is re-synced at S4. Its Low row differs from Lot 57's as read, per decision 15 (below the table). The bar's `venues/sportsbar/main.ts` follows `main.ts`'s structure for `applyQuality` and the loop, under the same marker. The game modules Lot 57's page imports from `src/game/` (`Environment`, `configureTextures`, `Props`, the records board) are the game's, so the bar imports them directly. The values as read are below the table. | `engine/quality.ts` (`PRESET` and `applyQuality`) and `engine/page.ts` (the loop and hooks), shared by both pages. |
-| `index.html`, `vite.config.ts` | The bar has its own `src/onfoot/sportsbar.html` and `src/onfoot/vite.sportsbar.config.ts`, with a copy of the single-file plugin. It writes `dist/sportsbar/sportsbar.html`, a different folder from Lot 57's `dist/onfoot/`, so neither build empties the other's. Its root is `src/onfoot/`, like Lot 57's, so it sets `build.rollupOptions.input` to `sportsbar.html` (the default input would be Lot 57's `index.html`), and its dev server uses port 5758 (Lot 57's is 5757). It keeps `json: { stringify: true }`, so the slice is embedded as one JSON string. | The plugin moves to `engine/`. |
+| `data.ts` | Never imported, directly or through a re-export, because it statically imports Lot 57's `slice.json`. New `engine/streets.ts`: `buildStreets(kit, mats, slice, frame, opts)`, written for the bar on `data.ts`'s approach. It handles sidewalks, crosswalks, buildings and land use, and copies the class road widths (`ROAD_W`, L14, marked as a copy). `opts` are the view box, the glazed sectors and the near radius (210 m) that pick the near set, `dropSegs`, `dropBld`, `keepHost`, the kerb rules, the far set's detail (`'simple'` at Low and HD, `'full'` at Ultra; switching to or from Ultra rebuilds the far batches) and an `extras(slice, frame)` hook. It builds two sets of batches, and both are drawn in every state: **the near set** in detail, every feature on every layer with any part in the glazed sectors within 210 m of the unit's centre; and **the far set**, the rest of the slice, simple (untextured, in vertex colour, merged into 4 batches) at Low and HD, full at Ultra (see "The allocations"). They're built apart because they're drawn at different detail, and so that Low inside's last fallback can split the far set further. `tools/anaheim/sportsbar_sets.py` counts both from the slice, and S1 checks the built sets against that count. | `data.ts` becomes Lot 57's call to `engine/streets.ts`, with its extras: the Dupont block ring, the construction fence and the light towers. |
+| `venue.ts` | `import type { Seat, Spot, Tree }` only. Types are erased, so no code comes with them. `Seat` and `Spot` are the base of the smart objects' slots. The bar's seats use Lot 57's seat kinds (L19: booth benches `'bench'`; the patio's bench tables `'picnic'`; bar, window-rail and patio-rail stools `'stool'`; high-top stools `'hightop'`), so `Player.sit()` and `goTo()` take them unchanged. Its standing spots widen `Spot.kind` in the bar's own `Slot` type. | The types move to `engine/venue-types.ts`. |
+| `main.ts` | Can't be imported. `venues/sportsbar/quality.ts` holds a copy of `PRESET`, marked `// COPY of lot57 main.ts PRESET: E0 replaces it with engine/quality.ts`, and is re-synced at S4. Its High and Ultra rows are L1 as measured, re-synced by S1's re-measure and again at S4; its Low row differs from L1 on purpose, per decision 15 (below the table). The bar's `venues/sportsbar/main.ts` follows `main.ts`'s structure for `applyQuality` and the loop, under the same marker, but its choices (the parked cars' quality and count, your avatar's level of detail, the trees) are its own and are stated in this plan, not inherited. The game modules Lot 57's page imports from `src/game/` (`Environment`, `configureTextures`, `Props`, the records board) are the game's, so the bar imports them directly. | `engine/quality.ts` (`PRESET` and `applyQuality`) and `engine/page.ts` (the loop and hooks), shared by both pages. |
+| `index.html`, `vite.config.ts` | The bar has its own `src/onfoot/sportsbar.html` and `src/onfoot/vite.sportsbar.config.ts`, with a copy of the single-file plugin. It writes `dist/sportsbar/sportsbar.html`, a different folder from Lot 57's `dist/onfoot/`, so neither build empties the other's. Its root is `src/onfoot/`, like Lot 57's, so it sets `build.rollupOptions.input` to `sportsbar.html` (the default input would be Lot 57's `index.html`), and its dev server uses port 5758 (Lot 57's, as measured in its `vite.config.ts`, is 5757; S1's re-measure checks it). It keeps `json: { stringify: true }`, so the slice is embedded as one JSON string. | The plugin moves to `engine/`. |
 | `people/` | Not edited before E0: see "Who changes `src/onfoot/people/`". | The bar's clips join `people/anim.ts`. |
 | (not written yet) P1b: Order, Join, Leave, held items. P1c: NPCs, groups, the crowd, staff. | If they exist when S2a and S3a start, the bar imports them through the facade like the rest. If not, it writes them in `engine/` (`actions.ts`, `held.ts`, `groups.ts`, `crowd.ts`, `staff.ts`) from `PROJECT_OC_ON_FOOT.md`'s spec, and says so in `PROJECT_OC_HANDOFF.md`. | One copy survives: Lot 57's if it landed first, otherwise the bar's. |
 | (new) | `engine/sim/`: needs, moods, personality, smart objects, the action queue, utility AI, interactions, relationships and memory, the TV leagues, tokens, saving, fillers and the clip layer. Written engine-first; the bar turns it on. | Unchanged. |
-| (new: what's drawn inside and outside) | `venues/sportsbar/visibility.ts`, the bar's own, written in S1 (cars and streets) and extended in S3a (people). It owns the rule in "Inside, outside and overhead": once a frame, after the camera moves, it works out the state from the camera and the view, and sets `parked.near`, swaps your car and its stand-in, shows or hides the far street set (`engine/streets.ts` builds near and far batches), picks each live person's draw mode (LOD 0, 1 or 2, a card, or hidden) and their `castShadow`, and freezes or frees the Ultra pool spots' shadow maps. Two more duties: (1) **Cars and items don't cast indoors.** Lot 57's `ParkedCars` sets its stand-ins' `castShadow = true`, and `applyQuality` puts every mesh's `castShadow` back from `userData.cast`. So after `applyQuality`, and on every change of state, inside at HD and Ultra it sets `castShadow = false` on the parked stand-ins (`parked-*-far`), your car's stand-in, your car itself at Ultra (where it stays detailed indoors) and the item meshes (see "Held items, table items and game pieces"); outside and overhead it puts them back from `userData.cast`. Without it the inside sun-map rows gain about 6 calls and 9.4k from the stand-ins, and 26 calls and 121.1k from your car at Ultra. (2) **Restyling at Low.** `RetroStyle` styles each scene child once, by its epoch marker, so a mesh that appears later under an already-styled group would render with its standard material under `RetroPass`. With the Retro style attached, it calls `retro.restyle(group)` after every change it makes to a subtree: each person's LOD swap or body rebuild, each card-to-mesh swap, and each swap of your car and its stand-in. `restyle()` is idempotent, so a repeat costs one traverse. It reads `def.budgets`. Nothing in `lot57/` changes. | `engine/visibility.ts`; Lot 57 can use it for the Shed. |
-| (the game's Retro style, `src/game/render/style.ts`, on `claude/modes`) | Imported directly, like `Environment`, once `claude/modes` has merged into `claude/sports-bar`: it's a game module, not Lot 57's. At Low the bar's page makes one `RetroStyle(renderer)`, calls `attach(scene, roots)`, and each frame `render(scene, camera, world)` in place of `renderer.render`, with `world` from the game's `Environment` (sun direction, daylight, saturation, its sky to hide, its hemisphere light). Leaving Low calls `detach()`. As read on 2026-10-21 at about 02:20 UTC it was uncommitted in the `tsu-modes` worktree (RS1). | Unchanged: Lot 57's P1d uses the same module. |
+| (new: what's drawn inside and outside) | `venues/sportsbar/visibility.ts`, the bar's own, written in S1 (cars and streets) and extended in S3a (people). It owns the rule in "Inside, outside and overhead": once a frame, after the camera moves, it works out the state from the camera and the view, and sets `parked.near`, swaps your car and its stand-in, picks each live person's draw mode (LOD 0 for your avatar at Ultra only, LOD 1 or 2, a card, or hidden) and their `castShadow`, and freezes or frees the Ultra pool spots' shadow maps. **The street sets and the street trees don't change with the state:** both street sets and all ten trees are drawn inside, outside and overhead, so no street feature can appear or vanish at a door. Two more duties: (1) **Cars and items don't cast indoors.** Lot 57's stand-ins cast, and its `applyQuality` puts every mesh's `castShadow` back from `userData.cast` (L5, L10). So after `applyQuality`, and on every change of state, inside at HD and Ultra it sets `castShadow = false` on the parked stand-ins (`parked-*-far`), your car's stand-in, your car itself at Ultra (where it stays detailed indoors) and the item meshes (see "Held items, table items and game pieces"); outside and overhead it puts them back from `userData.cast`. The streets and the trees keep casting in every state, so their shadows (a long one at a low sun included) don't change at a door. Without the duty the inside sun-map rows gain about 6 calls and 9.4k from the stand-ins, and 26 calls and 121.1k from your car at Ultra. (2) **Restyling at Low.** `RetroStyle` styles each scene child once, by its epoch marker, so a mesh that appears later under an already-styled group would render with its standard material under `RetroPass`. With the Retro style attached, it calls `retro.restyle(group)` after every change it makes to a subtree: each person's LOD swap or body rebuild, each card-to-mesh swap, and each swap of your car and its stand-in. `restyle()` is idempotent, so a repeat costs one traverse. It reads `def.budgets`. Nothing in `lot57/` changes. | `engine/visibility.ts`; Lot 57 can use it for the Shed. |
+| (the game's Retro style, `src/game/render/style.ts`, on `claude/modes`) | Imported directly, like `Environment`, once `claude/modes` has merged into `claude/sports-bar`: it's a game module, not Lot 57's. At Low the bar's page makes one `RetroStyle(renderer)`, calls `attach(scene, roots)`, and each frame `render(scene, camera, world)` in place of `renderer.render`, with `world` from the game's `Environment`: its `RetroWorld` fields are the sun direction (`sunDir`), `daylight`, `saturation`, the realistic `sky` to hide, the hemisphere light (`hemi`), the cloud deck (`clouds`), which it alpha-cuts to hard edges while it shows, and the lens `flare`, which it hides. The bar passes all seven. Leaving Low calls `detach()`. The module also has `restyle(o)`, `unstyle(o)` and `watch(roots)`; `stylizer.isMine(m)` says whether a material is one of its toon materials; a mesh with `userData.retroSkip` is left alone; and a material with its own shader hook is converted only if the hook fits a toon shader (the hook-fit rule: a hook that writes a physically based identifier, such as `computeSpecularOcclusion`, keeps its own material). As read on 2026-10-21 at about 05:53 UTC (`style.ts` blob d4209454c5), uncommitted in the `tsu-modes` worktree (RS1); S1's re-measure reads it again. | Unchanged: Lot 57's P1d uses the same module. |
 
-The `PRESET` values as read:
+The `PRESET` values (L1, as measured; S1 re-measures them):
 
 | | Low | High (the bar's HD) | Ultra |
 | --- | --- | --- | --- |
@@ -423,7 +513,7 @@ the change under the copy's marker:
   decision 15's "hard shadows", so it's recorded as an open question for the owner, not settled here (see "Owner
   questions").
 
-The other two rows are Lot 57's High and Ultra as read; decision 15 calls High "HD". Lot 57's P1d brings the same three
+The other two rows are Lot 57's High and Ultra (L1); decision 15 calls High "HD". Lot 57's P1d brings the same three
 modes, and when it lands the copy is re-synced to it (S4).
 
 **When the move happens (E0).** Lot 57's files belong to the `claude/onfoot` workflow and are being edited now. So:
@@ -497,6 +587,8 @@ export interface VenueDef {
   screens?: ScreenPlacement[];  // { id, at, rot, w, h, channel: 'featured' | 1 | 2 | 3 }
   lights: Emitter[];            // baked at Low, a budgeted subset real at HD and Ultra
   staff: StaffPlan;             // counts by crowd share, capped by the budget; posts (bar lane, pass, host stand)
+  staffPath?: [number, number][];               // the bar: the bartenders' lane path in frame (u, v), ending at H
+  trees: Tree[];                // our street trees (Lot 57's Tree type, local metres); the bar's 10
   parking: { stalls: Stall[]; yours: number };  // Lot 57's Stall type, in local metres
   lines: string[];              // line-set ids
   sim: 'light' | 'full';        // Lot 57: 'light' (Phase 1 behaviour). The bar: 'full'.
@@ -511,7 +603,8 @@ export interface Budget {
   drawn: Record<VisState, { lod0: number; lod1: number; atLod: number }>;
                                 // atLod: how many live people are drawn as meshes (the nearest the camera, or the
                                 // overhead's target); the first lod0 and lod1 of them at those LODs, the rest LOD 2;
-                                // everyone else a card. Inside and overhead it's the live cap.
+                                // everyone else a card. Inside and overhead it's the live cap. lod0 is 0 or 1:
+                                // only your avatar, at Ultra (no NPC LOD 0; see "Who is at which LOD")
   cars: Record<VisState, { near: number; yours: 'detailed' | 'standin' }>;   // parked.near and your car
   castPeople: number;           // people outside the unit casting into the sun's map, nearest first, LOD 1 bodies
   fillerMinM: number;           // no filler stands or sits closer to the player than this
@@ -537,8 +630,9 @@ from a fixed weekly event. The bar passes `tv.featuredFactor`, which returns 1.2
 featured kick-off to its final whistle, and 1 otherwise (the times are under "The featured match"). It multiplies with
 the listed events. Lot 57 passes nothing.
 
-At E0, Lot 57's def is written from its `PLAN`: a world-aligned frame, origin (-5100, -8350), `sim: 'light'`. Its
-schedule reproduces `lot57/clock.ts` exactly: `[11, 25]` on Friday and Saturday, and a 24-to-25 band for its 00–01 hour.
+At E0, Lot 57's def is written from its `PLAN`: a world-aligned frame at its `ORIGIN` (L16), `sim: 'light'`. Its
+schedule reproduces `lot57/clock.ts` exactly as it stands at E0 (as measured, `[11, 25]` on Friday and Saturday, and a
+24-to-25 band for its 00–01 hour; E0's unit test compares the two at every half hour).
 
 **`sim: 'light'` versus `'full'`.** Lot 57's plan says "no needs meters". With `'light'`, the engine runs Lot 57's
 Phase 1 behaviour: sit, order, join and leave, talking groups and the crowd. With `'full'` it adds everything in the
@@ -702,7 +796,7 @@ interface SmartObjectType { type: string; colliders: Shape[]; slots: Slot[]; adv
 
 | Object (count) | Slots | Adverts: deltas over the action |
 | --- | --- | --- |
-| Bar counter (1) | 9 stools, 4 standing gaps, the server pick-up, 4 bartenders' spots | Order a drink: thirst +42, social +3; wait 4–8 s, then sip for about 6 min. Order food: hunger +45, energy +5; wait 60–180 s (the kitchen). Both require `notHolding`. Both are overlays for someone already on a stool or in a gap. Lean and chat: social +12 over 5 min. Watch the bar screens: continuous, as Watch the game. |
+| Bar counter (1) | 9 stools, 4 standing gaps, the server pick-up, and 4 bartenders' posts on the lane path (staff only, off the walk grid) | Order a drink: thirst +42, social +3; wait 4–8 s, then sip for about 6 min. Order food: hunger +45, energy +5; wait 60–180 s (the kitchen). Both require `notHolding`. Both are overlays for someone already on a stool or in a gap. Lean and chat: social +12 over 5 min. Watch the bar screens: continuous, as Watch the game. |
 | Booth (5) | 4 seats | Sit: continuous, energy +0.8 a minute (+4 in the window). Eat (needs food), Chat with the table, Watch (2 of 4 seats face the TV wall). Order (table service, below). |
 | High-top (6) | 4 stools | Sit, Eat, Chat, Watch, Order (table service) |
 | Window rail (2) | 4 stools each | Sit, Eat, People-watch: continuous, fun +0.8 a minute (+4 in the window) |
@@ -715,7 +809,7 @@ interface SmartObjectType { type: string; colliders: Shape[]; slots: Slot[]; adv
 | Water station (1) | 1 | Get water: thirst +20, 15 s |
 | Restroom doors (2) | 1 each, hidden | NPC only: bladder set to 100 over 1–2 min, out of sight |
 | Dance spot (1, game nights) | 12 of the standing floor's spots | Dance: fun +35, social +10, energy -12, over 3–5 min. Requires `gameNight` (defined under "The featured match"). |
-| Patio table (6), patio rail (1), heaters (2) | 4 / 6 / area | Sit, Eat, Chat, Watch (the two patio screens), Order (table service, at the tables). Watch the freeway: continuous, fun +1 and energy +0.8 a minute (+5 and +4 in the window). Heaters: +2 mood at night within 2.5 m. |
+| Patio bench table (6), patio rail (1), heaters (2) | 4 / 6 / area | Sit, Eat, Chat, Watch (the two patio screens), Order (table service, at the tables). Watch the freeway: continuous, fun +1 and energy +0.8 a minute (+5 and +4 in the window). Heaters: +2 mood at night within 2.5 m. |
 | Kitchen pass (1), host stand (1) | staff | Staff jobs only |
 
 **Table service** is the Order advert at booths, high-tops and patio tables. It's an overlay and requires `seated` and
@@ -1240,7 +1334,7 @@ A few:
 
   | Staff | Count | What they do |
   | --- | --- | --- |
-  | Bartenders | 2 when s < 0.35, 3 under 0.7, else 4 | Serve the counter first come first served: make 4–8 s, hand over. Idles: wipe and polish. |
+  | Bartenders | 2 when s < 0.35, 3 under 0.7, else 4 | Work the lane path behind the counter (see "The bartenders' lane path"), each with a section of the counter, and serve it first come first served: make 4–8 s, hand over. Idles: wipe and polish. |
   | Servers | 1 when s < 0.3, 2 under 0.65, else 3 | Visit tables seated more than 4 min without an order: take the order (8 s), send the ticket, pick up at the pass or the bar, deliver, bus empties. |
   | Host | at the door when s ≥ 0.6, from the start of the featured match's ×1.25 window to its end, and through `gameNight` (all three under "The featured match") | Greets at the door. |
   | Barback | when s ≥ 0.5 | Collects empties. |
@@ -1248,12 +1342,13 @@ A few:
 
   - **Budgets, not the crowd.** Staff count toward the render budgets, not the crowd.
   - **Up to 9 are seen** at HD and Ultra.
-  - **On Low, at most 5 are drawn:** 2 bartenders, 2 servers and the host. There's no barback; the bartenders collect
-    the empties. Service keeps its timings, so the counter's queue just runs longer.
+  - **On Low, at most 5 are drawn:** 2 bartenders, 2 servers and the host. There's no barback; the westmost bartender
+    leaves the lane by the staff flap, steps onto the walk grid at H and collects the empties, while the other covers
+    the whole counter. Service keeps its timings, so the counter's queue just runs longer.
 
 ### The simulated crowd
 
-Target crowd = capacity (130) × the curve below × events × weather × seeded noise (±10%, from the venue's seed, the
+Target crowd = capacity (130) × the curve below × events × weather × seeded noise (±10% as L15 measures it, from the venue's seed, the
 weekday and the hour, as Lot 57's clock computes it). Capped at 1.0. Parties arrive at random (Poisson), stay, and leave, so the room converges on the target.
 
 | Hours | Mon–Thu | Fri | Sat | Sun |
@@ -1312,13 +1407,13 @@ Fillers are guests with no simulation. Lot 57's plan uses 40 impostors on Low fo
   - **Per instance:** the position, the facing, the look and the pose. The shader picks the direction cell from the
     camera's bearing.
   - **The cost** is 1 draw call for all of them, 2 triangles each, plus their blobs.
-  - **Building it.** The atlas is rendered in idle slices after the first frame, from bodies in the preset's own look.
-    At Low its 8 LOD 2 bodies are toon-styled first (`retro.restyle()` on them, under the same lights), so the cards
+  - **Building it.** The atlas is rendered before the first frame, behind the loading screen, from the 8 LOD 2 bodies
+    built then (see "People are slow to build"), in the preset's own look. At Low those bodies are toon-styled first (`retro.restyle()` on them, under the same lights), so the cards
     match the toon people; the cards' own material is a shader material, which the Stylizer leaves as it is, and
     `RetroPass` then grades cards and people alike. At HD and Ultra the bodies keep their standard materials. Switching
-    to or from Low renders the atlas again. Until it exists, fillers aren't shown.
+    to or from Low renders the atlas again (192 small renders, in the frame of the switch).
 - **Cards for live people.** From outside the unit, live people past the preset's mesh count (see "Inside, outside and
-  overhead") are drawn as cards in this same mesh, each with the atlas look nearest its colours, posed by what it's
+  overhead"), and anyone whose body isn't built yet, in any state, are drawn as cards in this same mesh, each with the atlas look nearest its colours, posed by what it's
   doing. They keep their simulation. Through the glazing at a distance, a card reads as a person.
 - **Where they go.** Fillers take free slots at least 6 m from the player at Low and 9 m at HD and Ultra (the
   budget's `fillerMinM`). In the overhead view, that distance is measured from the camera's target.
@@ -1437,9 +1532,10 @@ Any input takes back control.
 ## Camera
 
 - **First person** is the default, exactly as at Lot 57: eye height from your driver, a 1.5 cm head bob (off with
-  reduced motion), seated eye 1.15 m. Pitch is limited to about 55° down and 45° up. It's wider in portrait.
-- **Third person** is Lot 57's `Player.camera()`, unchanged: 2.4 m behind, 0.45 m right, 1.75 m up. Tall colliders
-  pull it in, and the avatar fades within 0.7 m. Indoors, `BarPlayer.camera()` then keeps it under the 3.6 m ceiling:
+  reduced motion), the seated eye from the seat's height, and Lot 57's pitch limits (L13 as measured: 55° down and 45°
+  up). It's wider in portrait.
+- **Third person** is Lot 57's `Player.camera()`, unchanged: as measured (L13) 2.4 m behind, 0.45 m right and 1.75 m
+  up, pulled in by tall colliders, with the avatar hidden within 0.7 m. Indoors, `BarPlayer.camera()` then keeps it under the 3.6 m ceiling:
   it pulls the camera toward the head, along the same line, until it's at most 3.3 m up. The look target doesn't
   change.
 - **Overhead (the build view).** The classic life-sim camera, in the bar's own `engine/overhead.ts`. Lot 57's camera
@@ -1496,9 +1592,10 @@ and the bar alike. Low and HD are free; Ultra is an entitlement. In code they ke
 
   Low is the default on a phone (a coarse pointer), the way Lot 57's page picks it. When RS3's style guide exists, the
   bar's Low follows it, and S4 checks against it.
-- **HD: realistic.** This is Lot 57's High preset as read, renamed: realistic materials, bloom, the 2048 sun shadow map
-  and 4 real lights.
-- **Ultra: the maximum.** This is Lot 57's Ultra as read, plus whatever the Ultra graphics lane (`claude/gfx`) lands
+- **HD: realistic.** This is Lot 57's High preset (L1), renamed: realistic materials, bloom, the 2048 sun shadow map
+  and 4 real lights. "Realistic" covers what you see up close and through the glazing; the far set beyond the near set
+  is drawn simple at HD as at Low (the table's "Streets" row).
+- **Ultra: the maximum.** This is Lot 57's Ultra (L1), plus whatever the Ultra graphics lane (`claude/gfx`) lands
   when it merges. It's an entitlement flag only, from RS2's shared entitlement: owner mode and the test build unlock it,
   as decision 15 says.
   - There's no real money anywhere: the page has no price and no purchase path.
@@ -1513,8 +1610,8 @@ The bar meets the maximum-graphics standard Lot 57's P1d sets, in each mode's ow
 - people lit with rim and fill at HD and Ultra, and toon-shaded at Low.
 
 **Switching.** The modes switch through `setQuality` and the pause sheet, with frame ms and draw calls measured at
-each. The shadow, post and light settings are the bar's `PRESET` copy (see the module map): Lot 57's High and Ultra as
-read, and Low per decision 15. If P1d changes them, the copy follows at S4. Low's look needs the Retro module. Until
+each. The shadow, post and light settings are the bar's `PRESET` copy (see the module map): Lot 57's High and Ultra
+(L1), and Low per decision 15. If P1d changes them, the copy follows at S4. Low's look needs the Retro module. Until
 `claude/modes` merges into `claude/sports-bar`, Low draws with the standard materials at full resolution; S4 turns the
 Retro style on.
 
@@ -1528,6 +1625,8 @@ Retro style on.
 | Materials | Toon versions of the standard materials. 512 px textures: near-uniform ones flattened to their average colour, the rest posterized (the module's `'auto'`) | 1024 px. A reflection cube baked once at load from the interior, for wood, brass and glass. | Clearcoat on the bar top and pool rails. Sheen on booth vinyl and cloth. 16× anisotropic filtering. |
 | Screens | 512 × 288 at 8 Hz, then through the palette like everything else | 1024 × 576 at 15 Hz | 1024 × 576 at 30 Hz |
 | People | Toon-shaded, at the LODs in "Inside, outside and overhead" | The same rule, at high quality | The same rule, at high quality |
+| Streets | The near set (within 210 m, in the glazed sectors) in detail: markings, crosswalks, tilt-up bands and glazing, fence posts, every prop. The far set simple: buildings as plain walls and roofs, flat sidewalks, no markings or crosswalks, fences without posts, only the poles, towers, signals and lamps, untextured in vertex colour (4 batches) | As Low: the near set in detail, the far set simple. The far set is what the glazing can't show within 210 m: beyond 210 m in the glazed sectors, or behind the building, where the nearest far feature (a power pole) is 56 m from the unit and building 62 is 62 m from your stall | Both sets in full |
+| Street trees | The 10 trees at the game's low detail (palm crowns at detail 0, canopies at 1) | At the game's high detail (crowns 1, canopies 3) | As HD |
 | Details | Neon as emissive tubes | Plus soft light cones under the pool pendants | Plus dust in the pendant cones, and the freeway's light streams in full |
 
 **Lighting design.**
@@ -1535,8 +1634,11 @@ Retro style on.
   coral neon "+3", and the TV wall's moving light washing the standing area.
 - **Outside.** The patio pergola's warm linear lights and the night-violet facade, with the lime halo on the letters.
 - **Beyond.** From the patio at night, the I-5's traffic: instanced headlight and tail-light pairs moving along the
-  freeway's centrelines from the slice. They're cheap, the best backdrop the site has, and they say "driving game"
-  without a word.
+  freeway's centrelines from the slice. **Their extent:** they run only on the I-5's two carriageways, on the near
+  set's pieces of them: the northbound 560 into 362 and the southbound 222 into 358 into 438, 2.0 km of carriageway
+  reaching 670 m from the unit (counted by `tools/anaheim/sportsbar_sets.py`). The near set is drawn in every state, so
+  no stream ever runs over a road that isn't drawn; the ramps (360, 361, 365, 424, 425, 561, 562) carry none. They're
+  cheap, the best backdrop the site has, and they say "driving game" without a word.
 
 **Materials.**
 - **Floors and wood:** polished concrete with faint aggregate and the chalk inlay; oak with grain.
@@ -1562,22 +1664,24 @@ Lot 57.
 
 ### What things cost
 
-These are measured unless they're marked. The people rows are Lot 57's measurements (`PROJECT_OC_ON_FOOT.md`, 14
-October). The car rows were measured on 2026-10-21 (see "How these numbers were measured"). NPCs aren't instanced:
-each LOD 1 or LOD 2 person is its own draw call, and a LOD 0 person is 17 to 20.
+These are measured unless they're marked. The people rows are Lot 57's plan's measurements of the people builder
+(`PROJECT_OC_ON_FOOT.md`, 14 October). The car and tree rows were measured on 2026-10-21 from the game's own builders
+(see "How these numbers were measured"); which quality the bar asks for at each preset is the bar's choice, stated in
+each row. NPCs aren't instanced: each LOD 1 or LOD 2 person is its own draw call, and a LOD 0 person is 17 to 20.
 
 | | Low (phone quality) | HD and Ultra (high quality) |
 | --- | --- | --- |
-| A person at LOD 0 | 71k triangles, 17 calls | 150k to 210k, 17 to 20 calls; budgeted at 210k and 20 |
+| A person at LOD 0 | 71k triangles, 17 calls | 150k to 210k, 17 to 20 calls; budgeted at 210k and 20. **Used only for your avatar at Ultra** (see "Who is at which LOD") |
 | LOD 1 | 7.5k, 1 call | 11.6k, 1 call |
 | LOD 2 | 1.5k, 1 call | Not measured. **Assumed** 1.5k and 1 call, as on phone |
 | Fillers, cards for live people, and every blob shadow | 2 triangles each, in 2 calls for all; budgeted at 0.5k | The same |
-| Your car: `yourCar`, `buildCar` with the full cabin, at the preset's people quality, as Lot 57's page builds it | The GT (the default) is 62.2k in 25 meshes. The heaviest of the four drivable cars, the Corsa, is 65.6k in 26. **Budgeted at 65.6k and 26 calls.** A shell cabin would save only 7.0k. | The GT is 118.3k in 25; the Corsa 121.1k in 26. **Budgeted at 121.1k and 26 calls.** |
+| Your car: `yourCar`, `buildCar` with the full cabin, at the preset's people quality | The GT (the default) is 62.2k in 25 meshes. The heaviest of the four drivable cars, the Corsa, is 65.6k in 26. **Budgeted at 65.6k and 26 calls.** A shell cabin would save only 7.0k. | The GT is 118.3k in 25; the Corsa 121.1k in 26. **Budgeted at 121.1k and 26 calls.** |
 | Your car's stand-in (ours) | 152 triangles, 1 call | The same |
-| A detailed parked car: `ParkedCars`, built at `'phone'` on every preset, as Lot 57's page builds it | 2.87k (2.88k for the pickup), in 4 instanced parts. Up to 20 calls for the 5 kinds, however many cars there are. | The same, because Lot 57 builds them at phone quality on every preset. At high quality one would be 5.58k. |
+| A detailed parked car: `ParkedCars` at `'phone'` at Low and HD, `'high'` at Ultra (the bar's choice; L2 is the same) | 2.87k (2.88k for the pickup), in 4 instanced parts. Up to 20 calls for the 5 kinds, however many cars there are. HD uses these too. | At Ultra 5.58k (5.60k for the pickup), in the same 4 parts and 20 calls. **Budgeted at 2.88k at Low and HD and 5.60k at Ultra.** |
 | A parked stand-in | 152 triangles; 1 call per kind, up to 5 | The same |
 | Parked cars in all | At most 61: the stall estimate's 62, less yours | The same |
-| What a car puts into the sun's map | No map at Low | A detailed parked car's paint and trim, 2.69k (budgeted 2.70k); your car whole; a stand-in whole |
+| What a car puts into the sun's map | No map at Low | A detailed parked car's paint and trim: at `'phone'` (HD) 2.31k to 2.74k by kind, budgeted at the pickup's 2.74k; at `'high'` (Ultra) 4.03k to 5.23k, budgeted at 5.23k. Your car whole; a stand-in whole |
+| A street tree (ours, the game's `Props`, as Lot 57 plants them: L11) | A palm 330 (crown 222, trunk 108); a shade tree 428 (canopy 400, trunk 28) | A palm 490 (crown 382, trunk 108); a shade tree 1,628 (canopy 1,600, trunk 28) |
 
 **The allocations (ours; S1 measures them).** The bar's own building and the streets aren't built yet, so they're
 allocations. The street rows stand on `tools/anaheim/sportsbar_sets.py`'s estimate, with headroom; Low's sky row is
@@ -1586,8 +1690,9 @@ counted from the code:
 | | Low | HD | Ultra |
 | --- | --- | --- | --- |
 | The venue: our unit inside and out, the rest of building 61 as massing, the patio, the front walk, the lot's surface and stall paint, the pole lights and the signs | 40 calls, 50k | 50 calls, 90k | 60 calls, 150k |
-| The near streets: what the glazing can show. Every feature, on every layer, with any part in the glazed sectors (beyond the line of the front wall or of the south wall) within 150 m of the unit's centre, frame (18, 8). Counted by `tools/anaheim/sportsbar_sets.py`: 34 of the 614 street pieces left once `dropSegs` drops seg 416, 5 of the 425 buildings besides building 61, 25 of the 205 infrastructure shapes, 26 of the 536 infrastructure points, and none of the 67 land-use or 18 water areas. Among them: both I-5 carriageways (seg 362 and 560, 99 m and 105 m away at their nearest) and the I-5 links 360, 361, 425, 561 and 562; the Katella bridge (infra 92, 6,350 m²); East Katella (135, 355, 423, 426) and Anaheim Way; South Claudina Way (391, its main leg, 411 and 417); the substation across the street (infra 167, 7,272 m²) with its two transformers and the power lines; and 12 power poles, the four along Claudina Way at x -6605 among them. Plus the I-5 light streams: two instanced quad meshes, a quad per car's head or tail lights, for 100 cars at Low, 200 at HD and 400 at Ultra (0.4k, 0.8k and 1.6k; ours). The script estimates the rest at 6.7k triangles in 11 batches, so 13 calls with the streams. | 14 calls, 10k | 14 calls, 15k | 15 calls, 25k |
-| All the streets: the near set and the far set, which is the rest of the slice (580 street pieces, 420 buildings, 180 infrastructure shapes, 510 points, and all the land use and water), plus our own street trees. At Low and HD the far set is drawn simple: buildings as plain walls and roofs, flat sidewalks, no markings or crosswalk paint, fences without posts, and of the point props only the poles, towers, signals and lamps. At Ultra it's drawn in full. The script estimates the far set at 24.9k in 11 batches simple and 63.9k in 14 in full, so all the streets at 31.9k at Low, 32.3k at HD and 72.2k at Ultra, with the streams. | 25 calls, 35k | 30 calls, 60k | 40 calls, 120k |
+| The near streets (a part of the next row, not added to it; S1 checks it on its own): every feature, on every layer, with any part in the glazed sectors (beyond the line of the front wall or of the south wall: any ray from inside through the glazing ends there) within **210 m** of the unit's centre, frame (18, 8). Counted by `tools/anaheim/sportsbar_sets.py`: 60 of the 614 street pieces left once `dropSegs` drops seg 416, 8 of the 425 buildings besides building 61, 33 of the 205 infrastructure shapes, 38 of the 536 infrastructure points, and none of the 67 land-use or 18 water areas. **Named:** the I-5's **northbound** carriageway, seg 560 running into 362 (105 m and 98 m away at their nearest), and its **southbound** carriageway, 222 into 358 into 438 (202, 164 and 171 m), each one-way and one chain; the I-5 links 360, 361, 365, 424, 425, 561 and 562; the Katella bridge (infra 92, 6,350 m², 110 m), which carries both carriageways; East Katella (135, **136** at 162 m, 355, 423, 426); Anaheim Way (**137** at 162 m, 412, 420, 421, 427); South Claudina Way (391, its main leg, 411 and 417); **the railway** (141 at 157 m, and 125, 126, 142 to 145, 152 and 168); **buildings 24, 26 and 411** (5.9 to 9.1 m tall, 196 to 204 m east, in the front half-plane); the substation across the street (infra 167, 7,272 m²) with its two transformers and the power lines; and 14 power poles, the four along Claudina Way at x -6605 among them. Plus the I-5 light streams (see "Lighting design"): two instanced quad meshes, a quad per car's head or tail lights, for 100 cars at Low, 200 at HD and 400 at Ultra (0.4k, 0.8k and 1.6k; ours). The script estimates the rest at 9.7k triangles in 12 batches (5.6k of it road markings and crosswalk paint), so 14 calls and 10.1k with the streams at Low. | 14 calls, 11k | 14 calls, 15k | 15 calls, 25k |
+| All the streets: the near set and the far set, the rest of the slice (554 street pieces, 417 buildings, 172 infrastructure shapes, 498 points, and all the land use and water), **both drawn in every state**, inside included. At Low and HD the far set is drawn simple: buildings as plain walls and roofs, flat sidewalks, no markings or crosswalk paint, fences without posts, of the point props only the poles, towers, signals and lamps, untextured in vertex colour so its batches merge into 4 (opaque, lamp heads, chain-link, wires). At Ultra it's drawn in full. The script estimates the far set at 23.4k in 4 batches simple and 61.5k in 14 in full, so all the streets at 18 calls and 33.5k at Low, 18 and 33.9k at HD and 28 and 72.8k at Ultra, with the streams. Of the far set, the part wholly outside the glazed sectors (behind the building) is 3.8k simple and 10.9k full: what hiding it from inside would save (Low inside's fallback 3). | 20 calls, 35k | 30 calls, 60k | 40 calls, 120k |
+| Our street trees: the 10 under "Site plan" (6 palms, 4 shade trees), all in the near set and drawn in every state, in up to 4 instanced meshes as Lot 57's `plantTrees` draws them (L11). The script gives 3.7k at Low and 9.5k at HD and Ultra. | 4 calls, 4k | 4 calls, 10k | 4 calls, 10k |
 | The sky | `RetroSky` (a 32 × 16 sphere, 960 triangles, the sun disc in its shader) and what the game's `Environment` keeps under `RetroStyle`: the cloud deck (1,488 triangles, alpha-cut), the mountain ring (512) and the stars (points). 4 calls, 3.0k (2,960) | The game's sky, sun and flare: 4 calls, 5k | 4 calls, 5k |
 | Each of Ultra's two pool spots: its table and lamp | | | 4 calls, 6k |
 
@@ -1605,6 +1710,13 @@ servers' trays, the pool balls and cues, the darts and the shuffleboard pucks.
   `castShadow` off, as it does the cars'. They aren't in the pool spots' maps.
 - **The sums** count every model at its cap, since an instanced mesh is drawn whole when its bounding sphere is in
   view.
+- **Never culled by a stale sphere.** three.js 0.160 computes an `InstancedMesh`'s bounding sphere once, from the
+  instances in use the first time it's tested, and keeps it. A mesh first tested at `count` 0 gets an empty sphere and
+  is culled for good, and one first tested with a few cups on one table is culled when the camera turns away from that
+  table. So the six item meshes set `frustumCulled = false`: they're drawn whole every frame, which is what the sums
+  already count. The same goes for the bar's other instanced meshes whose instances move or change count: the fillers'
+  cards and the blob shadows. The ones whose instances are placed once (the trees) compute their sphere after
+  placing, as Lot 57's `plantTrees` does (L11), and `ParkedCars.update` recomputes its own (the contract).
 
 | Model (ours: the triangles are allocations, measured in S2a and S2b) | Cap | Low | HD and Ultra |
 | --- | --- | --- | --- |
@@ -1620,7 +1732,7 @@ servers' trays, the pool balls and cues, the darts and the shuffleboard pucks.
 
 three.js skips only what's outside the camera's view, and only object by object. That leaves three problems:
 - the parked cars are instanced meshes with one bounding sphere round the whole lot;
-- the street batches span the slice;
+- the street batches span the slice, so they're drawn whole whenever any of them is in view;
 - Lot 57's page starts you at your car's door.
 
 Without a rule, whenever the lot is in view every car is drawn, and from outside every live person in the room is drawn
@@ -1631,33 +1743,44 @@ at E0). It works from three states:
 - **Outside:** first or third person anywhere else.
 - **Overhead:** the overhead view, wherever its target is.
 
-The state changes on the frame the camera crosses the front door's line or the patio door's. A swap there is a
-one-frame change at a distance. S1 takes screenshots on both sides of each door to look for it.
+The state changes on the frame the camera crosses the front door's line or the patio door's.
+
+**What the glazing shows is always drawn.** Any ray from a point inside the unit through its glazing (the front wall,
+the south windows, both doors) ends beyond the line of the front wall or of the south wall: in the glazed sectors. So
+the street sets aren't switched by state at all. The near set (any part in the glazed sectors within 210 m) is drawn in
+detail, and the far set (the rest, at any distance) in its cheap simple form at Low and HD and in full at Ultra, in
+every state; so are our 10 street trees, all in the near set. Nothing in the street world appears or vanishes at a
+door: not the I-5's two carriageways (the northbound 560 and 362, the southbound 222, 358 and 438), not Katella 136,
+Anaheim Way 137, the railway (141 and the rest) or buildings 24, 26 and 411, and nothing farther out. What changes at a
+door is level of detail, by design: the parked cars and your car (rows below) and, from S3a, people from cards to
+meshes. Those are swaps of objects drawn on both sides, never an object appearing or vanishing; S1 and S3a look at
+them in the door screenshots and log them.
 
 | | Inside | Outside | Overhead |
 | --- | --- | --- | --- |
 | Live people drawn as meshes | All of them (the live cap), at their LODs | The nearest to the camera, inside the unit or out: Low 12, HD 24, Ultra 40. Everyone else is a card (see "Fillers"). | All of them, at their LODs |
-| LOD 0 | Low 1 (the person you talk to); HD 1 (that person, else your avatar in third person); Ultra 2 (both) | Low none: the person you talk to stays at LOD 1, as while their LOD 0 builds. HD 1, Ultra 2, as inside. | None: the camera is 8 to 35 m away, and the person you talk to stays at LOD 1 |
-| LOD 1 (the nearest, after LOD 0) | Low 6, HD 16, Ultra 40 | Low 7 (the person you talk to and 6 more), HD 6, Ultra 18 | Low 6, HD 16, Ultra 40, nearest the target |
+| LOD 0 | **No NPC at LOD 0 on any preset** (see "Who is at which LOD"). Ultra 1: your avatar in third person. Low and HD none. | As inside: Ultra 1, your avatar; Low and HD none | None: the camera is 8 to 35 m away |
+| LOD 1 (the nearest, after LOD 0; the person you talk to is always one of them) | Low 7, HD 17, Ultra 41 | Low 7, HD 7, Ultra 19 | Low 6, HD 16, Ultra 40, nearest the target |
 | Parked cars (`parked.near`) | All stand-ins (0) | Detailed: Low 4, HD 12, Ultra 36; the rest stand-ins | Low 0; HD 12; Ultra 36 |
 | Your car | Its stand-in, except at Ultra (detailed) | Detailed | Its stand-in at Low; detailed at HD and Ultra |
-| Streets | The near set only | All | All |
-| What casts into the sun's map (HD and Ultra; Low has no map) | The venue's casting batches and the near streets. No cars, no items, and no people, your avatar included (`visibility.ts` turns the cars' and items' `castShadow` off). | The venue, all streets, your car, the parked cars, the items, and the people outside the unit nearest the camera: HD 6, Ultra 20, with their LOD 1 bodies | As outside, with the people nearest the target |
+| Streets and street trees | All: the near set in detail, the far set simple (full at Ultra), the 10 trees | The same | The same |
+| What casts into the sun's map (HD and Ultra; Low has no map) | The venue's casting batches, all the streets and the trees, as outside. No cars, no items, and no people, your avatar included (`visibility.ts` turns the cars' and items' `castShadow` off). | The venue, all streets, the trees, your car, the parked cars, the items, and the people outside the unit nearest the camera: HD 6, Ultra 20, with their LOD 1 bodies | As outside, with the people nearest the target |
 | Ultra's pool spots | They update: their table, its lamp, and the people within 2 m (with LOD 1 bodies) | Frozen (`shadow.autoUpdate = false`): the room is seen only through glass | They update |
 
-- **A LOD 0 person casts with their LOD 1 body.** It's kept on layer 1, which the sun's shadow camera sees and the main
-  camera doesn't. Lot 57's page already does this for your first-person body. So a LOD 0 is never drawn into a shadow
-  map.
-- **Your avatar in third person** counts as one of the people at LOD 0 or LOD 1. In first person it's on layer 1: at HD
-  and Ultra it casts only outdoors, and at Low there's no map for it to cast into.
-- **No LOD 0 outdoors at Low** is the price of your car on screen: the two don't fit Low's budget together (71k plus
-  65.6k). Indoors, your car is a stand-in, and the person you talk to gets their LOD 0.
+- **Your avatar's LOD 0 casts with its LOD 1 body.** The LOD 1 is kept on layer 1, which the sun's shadow camera sees
+  and the main camera doesn't, as Lot 57's page does for your first-person body (L9). So a LOD 0 is never drawn into a
+  shadow map.
+- **Your avatar in third person** counts as one of the people at LOD 0 (Ultra) or LOD 1. In first person it's on layer
+  1: at HD and Ultra it casts only outdoors, and at Low there's no map for it to cast into.
+- **No LOD 0 at Low or HD.** No NPC gets a LOD 0 until the people builder can build one without freezing the page, and
+  your avatar's LOD 0 is Ultra's only (see "Who is at which LOD"). That also keeps Low's outside column clear of the
+  71k a phone LOD 0 would add beside your car's 65.6k.
 - **`def.budgets`** holds these numbers (`drawn`, `cars` and `castPeople` in `Budget`).
 
 **Where the page starts you.** By your car's driver door in your courtyard stall, 0.2 m out (turned with the stall,
-as the module map's `lot.ts` row computes it for stalls facing 0 or π), in first person, looking
-toward the unit's north-east corner, where the walk to the door turns. That's Lot 57's spawn, with the bar's stall. It's
-the outside state, so the first frame falls under the outside column, and the `stall` pose below is its worst case. The
+as the module map's `lot.ts` row computes it for stalls facing 0 or π, from L8), in first person, looking toward the
+unit's north-east corner, where the walk to the door turns. That's Lot 57's spawn, with the bar's stall. It's the
+outside state, so the first frame falls under the outside column, and the `stall` pose below is its worst case. The
 URL's `at`, `yaw`, `pitch` and `view` work as on Lot 57's page.
 
 ### The budget poses
@@ -1679,8 +1802,10 @@ game (x, z), in metres. The eye height is your driver's (Lot 57's `eyeHeight`), 
   (0.9 to 1.1), capped at 130: 111 to 130 guests, over every preset's live cap. It's in `gameNight`, after the featured
   match.
 - **Seeds.** `setWeek(43)` for the TV schedule, `seed(1)` for the crowd and the regulars, and the parked cars' fill seed
-  621 (Lot 57's day × 100 + hour).
-- **The live cap reached.** `fastForward(30)`, then `people().live` equals the preset's cap. For `stall` and `patio`,
+  621 (Lot 57's page seeds the fill with day × 100 + hour, L6; the bar does the same).
+- **The live cap reached.** `fastForward(30)`, then `people().live` equals the preset's cap. `fastForward()` and
+  `pose()` first build every pending body synchronously, at the level each needs, up to the live cap (see "People are
+  slow to build"), so every pose measures the full room whatever the background builds have reached. For `stall` and `patio`,
   `crowdAt('outside', n)` then seats walk-ins on the patio and the front walk until the preset's outside mesh count (12,
   24 or 40) are outside the unit.
 - **Screen sizes.** 844 × 390; also 390 × 844 for `door` and `overhead`, because portrait's 78° field of view sees more.
@@ -1691,103 +1816,138 @@ A state's column below is the worst case over its poses. Any pose that measures 
 ### The sums
 
 Each sum assumes every live person in the state's count is in view, every stall is full and every item model is at its
-cap. Every column passes its own
-budget. The sums add the unrounded figures (61 stand-ins are 9,272 triangles, for instance), so re-adding the rounded
-ones can come out 0.1k higher.
+cap. Every column passes its own budget. The sums add the unrounded figures (61 stand-ins are 9,272 triangles, for
+instance), so re-adding the rounded ones can come out 0.1k higher. The streets and trees rows are the same in every
+state, because both street sets and the trees are drawn in every state.
 
 **Low** (Retro, phone quality). The pass and the frame both have 150 calls and 250k triangles.
 
 | | Inside (`door`, `tv-east`) | Outside (`stall`, `patio`) | Overhead (`overhead`) |
 | --- | --- | --- | --- |
-| People as meshes | 36: LOD 0 1 (17 calls, 71k); LOD 1 6 (6, 45k); LOD 2 29 (29, 43.5k) | 12: LOD 1 7 (7, 52.5k); LOD 2 5 (5, 7.5k) | 36: LOD 1 6 (6, 45k); LOD 2 30 (30, 45k) |
+| People as meshes | 36: LOD 1 7 (7, 52.5k); LOD 2 29 (29, 43.5k) | 12: LOD 1 7 (7, 52.5k); LOD 2 5 (5, 7.5k) | 36: LOD 1 6 (6, 45k); LOD 2 30 (30, 45k) |
 | Fillers, cards and blobs | 2, 0.5k | 2, 0.5k | 2, 0.5k |
 | Held items, table items and game pieces | 6, 6.0k | 6, 6.0k | 6, 6.0k |
 | Parked cars (61) | 61 stand-ins: 5, 9.3k | 4 detailed (11.5k) and 57 stand-ins (8.7k): 25, 20.2k | 61 stand-ins: 5, 9.3k |
 | Your car | Stand-in: 1, 0.2k | 26, 65.6k | Stand-in: 1, 0.2k |
 | The venue | 40, 50k | 40, 50k | 40, 50k |
-| Streets | Near: 14, 10k | All: 25, 35k | All: 25, 35k |
+| Streets (near and far) | 20, 35k | 20, 35k | 20, 35k |
+| Street trees | 4, 4k | 4, 4k | 4, 4k |
 | Sky | 4, 3.0k | 4, 3.0k | 4, 3.0k |
-| **Pass** | **124 calls, 238.4k** | **140 calls, 240.3k** | **119 calls, 193.9k** |
-| Without people or items (S1's check) | 64 calls, 72.4k | 120 calls, 173.8k | 75 calls, 97.4k |
-| Margin against 150 and 250k | 26 calls, 11.6k (4.6%) | 10 calls, 9.7k (3.9%) | 31 calls, 56.1k (22.4%) |
+| **Pass** | **118 calls, 203.9k** | **139 calls, 244.3k** | **118 calls, 197.9k** |
+| Without people or items (S1's check) | 74 calls, 101.4k | 119 calls, 177.8k | 74 calls, 101.4k |
+| Margin against 150 and 250k | 32 calls, 46.1k (18.4%) | 11 calls, 5.7k (2.3%) | 32 calls, 52.1k (20.8%) |
 | `RetroPass`'s full-screen draw | 1 call | 1 call | 1 call |
 | Shadow maps | None (an owner question: see "Owner questions") | None | None |
-| **Frame** | **125 calls, 238.4k** | **141 calls, 240.3k** | **120 calls, 193.9k** |
-| Margin against 150 and 250k | 25 calls, 11.6k (4.6%) | 9 calls, 9.7k (3.9%) | 30 calls, 56.1k (22.4%) |
+| **Frame** | **119 calls, 203.9k** | **140 calls, 244.3k** | **119 calls, 197.9k** |
+| Margin against 150 and 250k | 31 calls, 46.1k (18.4%) | 10 calls, 5.7k (2.3%) | 31 calls, 52.1k (20.8%) |
 
-**HD** (high quality). The pass has 350 calls and 700k triangles; the frame 500 calls and 1.1M.
+**HD** (high quality, parked cars at phone quality). The pass has 350 calls and 700k triangles; the frame 500 calls
+and 1.1M.
 
 | | Inside | Outside | Overhead |
 | --- | --- | --- | --- |
-| People as meshes | 70: LOD 0 1 (20, 210k); LOD 1 16 (16, 185.6k); LOD 2 53 (53, 79.5k) | 24: LOD 0 1 (20, 210k); LOD 1 6 (6, 69.6k); LOD 2 17 (17, 25.5k) | 70: LOD 1 16 (16, 185.6k); LOD 2 54 (54, 81k) |
+| People as meshes | 70: LOD 1 17 (17, 197.2k); LOD 2 53 (53, 79.5k) | 24: LOD 1 7 (7, 81.2k); LOD 2 17 (17, 25.5k) | 70: LOD 1 16 (16, 185.6k); LOD 2 54 (54, 81k) |
 | Fillers, cards and blobs | 2, 0.5k | 2, 0.5k | 2, 0.5k |
 | Held items, table items and game pieces | 6, 14.1k | 6, 14.1k | 6, 14.1k |
 | Parked cars | 61 stand-ins: 5, 9.3k | 12 detailed (34.6k) and 49 stand-ins (7.4k): 25, 42.1k | As outside: 25, 42.1k |
 | Your car | Stand-in: 1, 0.2k | 26, 121.1k | 26, 121.1k |
 | The venue | 50, 90k | 50, 90k | 50, 90k |
-| Streets | Near: 14, 15k | All: 30, 60k | All: 30, 60k |
+| Streets (near and far) | 30, 60k | 30, 60k | 30, 60k |
+| Street trees | 4, 10k | 4, 10k | 4, 10k |
 | Sky | 4, 5k | 4, 5k | 4, 5k |
-| **Pass** | **171 calls, 609.1k** | **186 calls, 637.9k** | **213 calls, 599.4k** |
-| Without people or items (S1's check) | 74 calls, 119.4k | 135 calls, 318.2k | 135 calls, 318.2k |
-| Margin against 350 and 700k | 179 calls, 90.9k (13.0%) | 164 calls, 62.1k (8.9%) | 137 calls, 100.6k (14.4%) |
-| The sun's 2048 map | The venue (50, 90k) and the near streets (14, 15k): 64, 105k | The venue (50, 90k), the streets (30, 60k), your car (26, 121.1k), the parked cars (15, 39.8k), 6 people (6, 69.6k) and the items (6, 14.1k): 133, 394.6k | As outside: 133, 394.6k |
+| **Pass** | **172 calls, 465.7k** | **171 calls, 449.5k** | **217 calls, 609.4k** |
+| Without people or items (S1's check) | 94 calls, 174.4k | 139 calls, 328.2k | 139 calls, 328.2k |
+| Margin against 350 and 700k | 178 calls, 234.3k (33.5%) | 179 calls, 250.5k (35.8%) | 133 calls, 90.6k (12.9%) |
+| The sun's 2048 map | The venue (50, 90k), the streets (30, 60k) and the trees (4, 10k): 84, 160k | The venue (50, 90k), the streets (30, 60k), the trees (4, 10k), your car (26, 121.1k), the parked cars (15, 40.3k), 6 people (6, 69.6k) and the items (6, 14.1k): 137, 405.1k | As outside: 137, 405.1k |
 | Post (bloom and the output pass) | About 15 calls | 15 | 15 |
-| **Frame** | **250 calls, 714.2k** | **334 calls, 1,032.5k** | **361 calls, 994.0k** |
-| Margin against 500 and 1.1M | 250 calls, 385.9k (35.1%) | 166 calls, 67.5k (6.1%) | 139 calls, 106.0k (9.6%) |
+| **Frame** | **271 calls, 625.8k** | **323 calls, 854.6k** | **369 calls, 1,014.5k** |
+| Margin against 500 and 1.1M | 229 calls, 474.2k (43.1%) | 177 calls, 245.4k (22.3%) | 131 calls, 85.5k (7.8%) |
 
-**Ultra** (high quality). The pass has 600 calls and 1.5M triangles; the frame 1,400 calls and 3.6M.
+**Ultra** (high quality, parked cars at high quality). The pass has 600 calls and 1.5M triangles; the frame 1,400 calls
+and 3.6M.
 
 | | Inside | Outside | Overhead |
 | --- | --- | --- | --- |
-| People as meshes | 100: LOD 0 2 (40, 420k); LOD 1 40 (40, 464k); LOD 2 58 (58, 87k) | 40: LOD 0 2 (40, 420k); LOD 1 18 (18, 208.8k); LOD 2 20 (20, 30k) | 100: LOD 1 40 (40, 464k); LOD 2 60 (60, 90k) |
+| People as meshes | 100: LOD 0 1, your avatar (20, 210k); LOD 1 41 (41, 475.6k); LOD 2 58 (58, 87k) | 40: LOD 0 1, your avatar (20, 210k); LOD 1 19 (19, 220.4k); LOD 2 20 (20, 30k) | 100: LOD 1 40 (40, 464k); LOD 2 60 (60, 90k) |
 | Fillers, cards and blobs | 2, 0.5k | 2, 0.5k | 2, 0.5k |
 | Held items, table items and game pieces | 6, 14.1k | 6, 14.1k | 6, 14.1k |
-| Parked cars | 61 stand-ins: 5, 9.3k | 36 detailed (103.8k) and 25 stand-ins (3.8k): 25, 107.6k | As outside: 25, 107.6k |
+| Parked cars | 61 stand-ins: 5, 9.3k | 36 detailed at high quality (201.5k) and 25 stand-ins (3.8k): 25, 205.3k | As outside: 25, 205.3k |
 | Your car | Detailed: 26, 121.1k | 26, 121.1k | 26, 121.1k |
 | The venue | 60, 150k | 60, 150k | 60, 150k |
-| Streets | Near: 15, 25k | All: 40, 120k | All: 40, 120k |
+| Streets (near and far) | 40, 120k | 40, 120k | 40, 120k |
+| Street trees | 4, 10k | 4, 10k | 4, 10k |
 | Sky | 4, 5k | 4, 5k | 4, 5k |
-| **Pass** | **256 calls, 1,296.0k** | **241 calls, 1,177.1k** | **263 calls, 1,072.3k** |
-| Without people or items (S1's check) | 110 calls, 310.4k | 155 calls, 503.7k | 155 calls, 503.7k |
-| Margin against 600 and 1.5M | 344 calls, 204.0k (13.6%) | 359 calls, 322.9k (21.5%) | 337 calls, 427.7k (28.5%) |
-| The sun's 4096 map | The venue and the near streets: 75, 175k | The venue (60, 150k), the streets (40, 120k), your car (26, 121.1k), the parked cars (15, 101.0k), 20 people (20, 232k) and the items (6, 14.1k): 167, 738.2k | As outside: 167, 738.2k |
+| **Pass** | **266 calls, 1,202.6k** | **226 calls, 1,086.4k** | **267 calls, 1,180.0k** |
+| Without people or items (S1's check) | 139 calls, 415.4k | 159 calls, 611.4k | 159 calls, 611.4k |
+| Margin against 600 and 1.5M | 334 calls, 297.4k (19.8%) | 374 calls, 413.6k (27.6%) | 333 calls, 320.0k (21.3%) |
+| The sun's 4096 map | The venue (60, 150k), the streets (40, 120k) and the trees (4, 10k): 104, 280k | The venue (60, 150k), the streets (40, 120k), the trees (4, 10k), your car (26, 121.1k), the parked cars (15, 192.0k), 20 people (20, 232k) and the items (6, 14.1k): 171, 839.2k | As outside: 171, 839.2k |
 | The two pool spots | Each: its table and lamp (4, 6k) and up to 8 people's LOD 1 bodies (8, 92.8k). Both: 24, 197.6k | Frozen: 0 | 24, 197.6k |
-| GTAO's normal pass (the pass again) | 256, 1,296.0k | 241, 1,177.1k | 263, 1,072.3k |
+| GTAO's normal pass (the pass again) | 266, 1,202.6k | 226, 1,086.4k | 267, 1,180.0k |
 | Post (bloom, GTAO's three passes, output) | About 20 calls | 20 | 20 |
-| **Frame** | **631 calls, 2,964.6k** | **669 calls, 3,092.5k** | **737 calls, 3,080.5k** |
-| Margin against 1,400 and 3.6M | 769 calls, 635.4k (17.7%) | 731 calls, 507.5k (14.1%) | 663 calls, 519.5k (14.4%) |
+| **Frame** | **680 calls, 2,882.8k** | **643 calls, 3,011.9k** | **749 calls, 3,396.7k** |
+| Margin against 1,400 and 3.6M | 720 calls, 717.2k (19.9%) | 757 calls, 588.1k (16.3%) | 651 calls, 203.3k (5.6%) |
 
 The post quads are an estimate from three.js 0.160's passes; S4 measures them. They're 2 triangles each.
 
 **Who is at which LOD:**
-- **The person you start talking to** stays at LOD 1 until their LOD 0 is ready. A LOD 0 build takes seconds: 4.6 s at
-  phone quality and 7 to 9.5 s at high quality, on a desktop CPU, in one synchronous call, so as the builder stands it
-  stalls the page for that long (see "Owner questions").
-- **Your avatar's LOD 0** at HD and Ultra is built when you first switch to third person, as Lot 57's page does.
-- **Phone LOD 0.** Lot 57's plan records it as 18% over its 60k target. If the people builder reaches that target,
-  Low's inside column gains 11k.
+- **No NPC is drawn at LOD 0, on any preset, until the people builder can build one without freezing the page.** A
+  LOD 0 build is one synchronous `setLod(0)`: 4.6 s at phone quality and 7 to 9.5 s at high quality on a desktop CPU
+  (Lot 57's plan, 14 October), longer on a phone. Building one for the person you start talking to would freeze the
+  page that long at Low, HD and Ultra alike. So the person you talk to is drawn at LOD 1 (7.5k at Low, 11.6k at HD and
+  Ultra) and is always one of the LOD 1 count. If they're still a card or at LOD 2 when you tap them, their LOD 1 build
+  goes to the front of the queue (below), and the card or the LOD 2 body shows until it lands. NPC LOD 0 comes back
+  when owner question 2 is settled with a worker or step-wise build.
+- **Your avatar's LOD 0, at Ultra only,** is built once and never during play. That's the bar's choice. Lot 57's page
+  as measured (L9) builds it in its loop 800 ms after you switch to third person, a 7 to 9.5 s freeze mid-walk; the bar
+  doesn't copy that. If the page opens at Ultra, it's built during loading, after the first 8 people and before the
+  first frame: the loading bar holds and its status line reads "Building your driver's close-up" (7 to 9.5 s more on a
+  desktop CPU). If you pick Ultra later in the pause sheet, the sheet shows "Preparing Ultra…", is painted first, and
+  stays until the build is done; the game is paused behind it, so the freeze is a still, labelled sheet that the
+  player asked for, not a frozen walk. The level is kept (`setLod` keeps every level it has built), so changing views
+  never builds it again. Leaving Ultra sets LOD 1; coming back sets LOD 0 at once, unless a visit to Low rebuilt your
+  avatar at phone quality, and then "Preparing Ultra…" shows again. At HD your avatar stays at LOD 1, as on Lot 57's
+  page (L9).
+- **Phone LOD 0.** Lot 57's plan records it as 18% over its 60k target. It isn't drawn at Low while the rule above
+  holds.
+- **Low stays Retro.** At Low nothing is at LOD 0, and every material on a LOD 1 or LOD 2 body passes the Stylizer's
+  hook-fit rule (the module map's Retro row): `lodMaterial`, and the cloth, hair cap, eye and accessory materials where
+  a body has them, all convert to toon. **The LOD 0 skin** is the one exception, for the day a LOD 0 body is in view at
+  Low (NPC LOD 0 back, or a test forcing `setLod(0)`): its face and body keep the people builder's physical
+  `skinMaterial`, because the skin's own shader hook adds `computeSpecularOcclusion`, which the rule keeps off toon
+  shaders. (Checked by running the rule on the builder's materials with three.js 0.160.1: skin face and body, phone and
+  high, are kept; cloth, hair cap, eyes, accessories and `lodMaterial` convert.) A plain toon swap would lose the skin
+  altogether: its material's colour is white, and its tone, lips, brows and beard are painted by that hook. So the bar
+  makes no skin variant of its own before E0. `RetroPass` still grades those pixels (palette, dither, ink), so the skin
+  sits in the Retro image, lit by the physical model instead of in two tones. S3a's "Low stays Retro" check exempts
+  exactly those meshes (visible meshes under a LOD 0 body wearing the builder's skin, whose program key starts
+  `pskin-`) and logs them, and the handoff carries "a toon path for skin" to RS3's style guide and to `people/`'s owners.
 
 **If a measurement comes in over** (S1 for the allocations, S3a, S3b and S4 with people), each preset gives back in this
 order. The change goes into the def's budgets and into this plan.
 - **Low, inside:**
-  1. LOD 1 from 6 to 4 (12k);
-  2. the near set's road markings and crosswalk paint dropped (4.0k, by the script's estimate);
-  3. the person you talk to stays at LOD 1, as outside (63.5k and 16 calls).
+  1. LOD 1 from 7 to 4 (18k);
+  2. the near set's road markings and crosswalk paint dropped (5.6k, by the script's estimate);
+  3. the far set's part wholly behind the glazed sectors hidden from inside (3.8k, by the script). It costs 4 calls in
+     every state, because the far set is then built in two parts, so it comes last.
 
-  Together they free about 79.5k and 16 calls beyond the column's 11.6k margin.
-- **Low, outside:**
+  Together they free about 27.4k beyond the column's 46.1k margin.
+- **Low, outside** (the tightest column):
   1. `parked.near` from 4 to 0 (10.9k and up to 20 calls);
   2. LOD 1 from 7 to 4 (18k);
-  3. the far set's poles, towers, signals and lamps dropped (5.3k, by the script's estimate);
+  3. the far set's poles, towers, signals and lamps dropped (5.1k by the script's estimate, and the lamp-head batch's
+     call);
   4. your car as its stand-in when the camera is over 15 m from it (65.4k and 25 calls). This doesn't help at
      `stall`.
 - **HD:**
-  1. `parked.near` from 12 to 6 (16.4k in the pass, 15.3k in the sun's map);
-  2. LOD 1 outside from 6 to 4 (20.2k);
+  1. `parked.near` from 12 to 6 (16.4k in the pass, 15.5k in the sun's map);
+  2. LOD 1 outside from 7 to 4 (30.3k), and overhead from 16 to 10 (60.6k);
   3. the people casting into the sun's map from 6 to 3 (34.8k of the frame).
-- **Ultra:**
-  1. `parked.near` from 36 to 16 (54.6k in the pass, 51.0k in the sun's map);
-  2. LOD 1 outside from 18 to 10 (80.8k).
+- **Ultra** (the tightest is overhead's frame):
+  1. `parked.near` from 36 to 16 (108.9k in the pass, which GTAO's pass draws again, and 101.5k in the sun's map: 319.3k
+     of the frame);
+  2. LOD 1 outside from 19 to 10 (90.9k in the pass, 181.8k of the frame);
+  3. the parked cars at `'phone'` quality at Ultra too, a deliberate difference from L2 (97.6k in the pass and 89.6k in
+     the sun's map: 284.8k of the frame).
 
 **What casts shadows** is the table's row under "Inside, outside and overhead". Indoors, people's contact shadows are the
 blobs. Ultra's pool spots render only their table, its lamp and the people within 2 m of it.
@@ -1806,18 +1966,42 @@ blobs. Ultra's pool spots render only their table, its lamp and the people withi
 | Audio voices | 12 | 24 | 32 |
 | Street data in the page | `sportsbar-slice.json`, 47 KB gzipped (measured) | Same | Same |
 | Code added (the bar and `engine/sim/`) | Under 180 KB minified | Same | Same |
-| First frame you can walk | Under 6 s on desktop (an estimate), then people build in the background | Same | Same |
+| First frame you can walk | Under 6 s on desktop (an estimate; the 8 LOD 2 people before it are 2.3 s), then the room fills in the background (about 46 s: below) | The same (8 × 0.4 s); the room fills in about 2.3 min | The same, plus your avatar's LOD 0 during loading (7 to 9.5 s); the room fills in about 4.1 min |
 
 **People are slow to build.** Lot 57 measured 30 people at about 15 s on a desktop CPU. Each build is one synchronous
-call: 0.29 s at LOD 2 and 0.71 s at LOD 1 at phone quality, and 4.6 s for a phone LOD 0, on a desktop CPU.
-- The page builds 8 people before the first frame. After it, one person per idle callback (`requestIdleCallback`, or a
-  0 ms timeout where that's missing), never two in one callback, and only after a frame that took under 20 ms, so
-  builds never run back to back. LOD 2 first, upgrading as people come near. The 6 spare bodies that fillers hand
-  over to come from the same queue.
-- That limits how often a build lands, not how long it takes: each is still a stalled frame of 0.29 s or more on a
-  desktop, and longer on a phone. S3a logs the longest frame while the room fills. Removing the stall needs a build
-  in a worker, or a builder that yields between steps, in `people/`, which the bar doesn't edit before E0; it's an
-  owner question (see "Owner questions").
+call: 0.29 s at LOD 2 and 0.71 s at LOD 1 at phone quality, 1.0 s at LOD 1 at high quality, and 4.6 s and 7 to 9.5 s
+for a LOD 0 (Lot 57's plan, 14 October, desktop CPU). LOD 2 at high quality wasn't measured: **assumed** 0.4 s, the
+phone figure scaled by the LOD 1 ratio.
+- **Before the first frame,** behind the loading screen: the 8 live people nearest the spawn at LOD 2, then the filler
+  atlas, rendered from those 8 bodies (192 small renders), and at Ultra your avatar's LOD 0 (above).
+- **After it, a time budget instead of a frame-time gate.** At most one build per frame, and a build may start only
+  when the wall-clock time since the last build ended is at least twice the last build's own duration. Builds then
+  take at most a third of the time at any frame rate, and no build waits for a fast frame. Under SwiftShader at about
+  2 fps, a 0.29 s build is followed by the next 2 frames later; at 30 fps, 18 frames later. Either way at least 0.58 s
+  of ordinary frames runs between two 0.29 s builds.
+- **The order:** every live person not yet built, at LOD 2, nearest the camera first; then the LOD 1 builds for the
+  drawn LOD 1 count, nearest first (re-sorted as the camera moves); then the 6 spare bodies for the fillers' hand-over.
+  Tapping a person puts their LOD 1 at the front. No LOD 0 is ever queued (see "Who is at which LOD").
+- **What you see meanwhile.** Everyone not yet built is drawn as a card from the filler atlas, in the cards' instanced
+  mesh, posed by what they're doing, so the room reads at its crowd from the first frame. A card becomes a body on the
+  frame its build lands; up close that's a visible change, and S3a's log records each one.
+- **How long the room takes to fill** from the first frame, on a desktop CPU (each build plus twice its time, plus
+  the frame it lands in):
+
+  | | Builds after the first frame | Building time | Full at 30 fps | Full at about 2 fps (SwiftShader here) |
+  | --- | --- | --- | --- | --- |
+  | Low (cap 36) | 28 at LOD 2, 7 at LOD 1, 6 spares | 14.8 s | about 46 s | about 1 min |
+  | HD (cap 70) | 62 at LOD 2, 17 at LOD 1, 6 spares | 44.2 s (LOD 2 assumed) | about 2.3 min | about 2.4 min |
+  | Ultra (cap 100) | 92 at LOD 2, 41 at LOD 1, 6 spares | 80.2 s (LOD 2 assumed) | about 4.1 min | about 4.3 min |
+
+  At 2 fps each wait rounds up to whole frames of about 0.5 s. A phone builds more slowly, by an amount nobody has
+  measured, and its fill time grows with it. These are estimates from the build times; S3a logs the real ones.
+- **The test hooks don't wait.** `fastForward(min)` and `pose(name)` first build every pending body synchronously, at
+  the level each needs, up to the live cap; `buildAll()` does only that. So S3a's and S3b's budget poses measure the
+  full room in the test harness, and the build log (S3a) is a separate run with no fast-forward.
+- **That limits how often a build lands, not how long it takes:** each is still a stalled frame of 0.29 s or more on a
+  desktop, and longer on a phone. Removing the stall needs a build in a worker, or a builder that yields between
+  steps, in `people/`, which the bar doesn't edit before E0; it's an owner question (see "Owner questions").
 - Leaving guests' bodies are reused for arrivals, with new colours and accessories where the builder allows.
 
 ## Honesty labels and checks
@@ -1923,6 +2107,16 @@ module from `claude/modes` merged in.
 ### S1: the venue and the avatar in it
 
 - **Brief.**
+  - **First, the re-measure.** Before writing any code, the S1 builder re-reads Lot 57's code at the latest
+    `claude/onfoot` commit merged into `claude/sports-bar` (or the `tsu-foot` worktree, if it's still uncommitted) and
+    re-measures every row of "Lot 57's numbers, as measured" (L1 to L19), the contracts table and the Retro module's
+    API. Each row that moved is updated in this plan with the new value and the commit and date it was measured at,
+    and so is every place that cites it: the module map, the costs, the sums (re-run), the fallbacks and these checks;
+    if L12 moved, `tools/anaheim/sportsbar_zones.py`'s grid model follows it and is re-run, and the people builder's
+    costs are re-measured with `stats()` on a person built at each level. The changes are logged in
+    `PROJECT_OC_PROGRESS.md`. If a contract itself broke (a signature or a promise the bar
+    relies on), the builder adapts the bar's wrapper (`BarPlayer`, `BarInput`, `BarHud`, `venues/sportsbar/lot.ts`)
+    and says so in the plan before building on it.
   - **The page.** `src/onfoot/sportsbar.html` with its own Vite config (`src/onfoot/vite.sportsbar.config.ts`), so
     neither the game's config nor Lot 57's changes. The config writes `dist/sportsbar/sportsbar.html`.
   - **The engine facade.** `src/onfoot/engine/`, exactly as the module map says:
@@ -1939,8 +2133,10 @@ module from `claude/modes` merged in.
   - **Our facade, sign and blade sign.** The patio. The courtyard stalls and your stall.
   - **The front,** as in "The front": the walk, the kerb ramp, the planters, the bike rack, and aisle 416 redrawn at
     4.5 m, one-way, with the mapped 416 dropped from the street build.
+  - **Our street trees,** the 10 under "Site plan", in up to 4 instanced meshes, from `def.trees`.
   - **The interior,** every fixture placed from the `objects` and `screens` data:
-    - the bar, booths, high-tops and window rails;
+    - the bar (its 12.8 m counter, the lane, the back bar, the staff flap and its gate), booths, high-tops and window
+      rails;
     - the pool tables, dartboards and shuffleboard, static for now;
     - the TV wall and screens, showing a still "SIMULATED" test card;
     - the restroom and kitchen doors and the pass;
@@ -1950,11 +2146,14 @@ module from `claude/modes` merged in.
   - **Your driver as the avatar,** spawned by your car's driver door (see "Where the page starts you"). Walking, tap to
     go and Sit on every seat.
   - **The visibility rule** for cars and streets (`venues/sportsbar/visibility.ts`; see "Inside, outside and
-    overhead"): `parked.near` by state, your car and its stand-in, and `engine/streets.ts` building the near and far
-    street sets. S3a adds the people rules.
+    overhead"): `parked.near` by state, your car and its stand-in, the casting duty, and `engine/streets.ts` building
+    the near and far street sets, both drawn in every state. S3a adds the people rules.
   - **The three cameras,** the overhead with wall cutaway.
-  - **Collisions and the walk grid**, with the 0.15 m slab, the raised front walk, its ramp and the patio. The walls
-    are 0.25 m thick, and the party wall is 0.2 m.
+  - **Collisions and the walk grid**, with the 0.15 m slab, the raised front walk, its ramp and the patio (its layout
+    as under "The patio's layout"). The walls are 0.25 m thick, and the party wall is 0.2 m. The lane and the flap are
+    left out of the grid's region.
+  - **The bartenders' lane path** (`def.staffPath`) and the code that moves a body along it (`venues/sportsbar/staff.ts`),
+    tested with a stand-in body: S2a and S3a put bartenders on it.
   - **The edge** is the lot, the front walk, the patio and the interior. Past it, a quiet wall and Lot 57's toast.
   - **The chip** (level from the schedule; no people yet), the clock and the credit.
   - **Test hooks** on `window.__onfoot`:
@@ -1964,7 +2163,8 @@ module from `claude/modes` merged in.
     - `go(x, z)` and `tap(x, z)`, in game coordinates;
     - `act()`, `view(mode)` and `frames`;
     - `frame()`, the building frame's O, A and B;
-    - `layout()`, the front's and the patio's polygons and aisle 416's drawn ribbon, in frame coordinates;
+    - `layout()`, the front's and the patio's polygons, aisle 416's drawn ribbon, the trees and the lane path, in frame
+      coordinates;
     - `pose(name)`, one of the budget poses; `vis()`, the visibility state and what it drew (parked near, your car,
       street sets, and from S3a the people by draw mode);
     - Lot 57's other hooks, with the same signatures: `look`, `walk`, `sim`, `pos`, `colliders`, `region`, `seats`,
@@ -1976,19 +2176,25 @@ module from `claude/modes` merged in.
   - 1,000 random walks through the hooks never end inside a collider or cross a wall, the patio fence or the party
     wall.
   - Tap to go reaches every one of the 91 seats. Sit and stand work on each kind.
+  - **Walking on the real grid.** `tools/anaheim/sportsbar_zones.py`'s walk test, run on the built colliders and
+    Lot 57's grid at the page's own offset: from just inside the front door, every seat's and spot's stand point has a
+    reachable free cell within 0.6 m, H is reached, and no reachable cell lies in the lane or the flap. A body moved
+    along the lane path from end to end, through the flap to H, never comes within 0.3 m of a collider other than the
+    gate, and the player walking at the gate, the counter's ends and the flap never gets into the lane.
   - Closed hours: the door is locked; the lot is walkable.
   - **The front fits.** From `layout()`, none of these overlaps aisle 416's drawn ribbon, and each is at least 0.4 m
     from it: the front walk, the door ramp and its flares, the bike rack with its bikes, the planters, the patio and
     its fence. The ribbon is at least 3.5 m from building 61.
-  - **Every interior zone** in the "Inside" table, and every slot, lies inside the walls' inner faces.
+  - **Every interior zone** in the "Inside" table, and every slot, lies inside the walls' inner faces, and every patio
+    zone and seat ("The patio's layout") inside the patio fence's inner faces.
   - **Nothing overlaps.** No two zones overlap. No two slots overlap, and no slot or object collider lies in another
     zone; a zone's own slots and colliders are exempt from it.
     - **The circles are radii.** A seat is a circle of radius 0.45 m; a standing, staff or player spot is a circle of
-      radius 0.3 m, as the player's body is (Lot 57's `RADIUS`). Touching is allowed; overlapping by more than 1 mm
+      radius 0.3 m, as the player's body is (Lot 57's `RADIUS`, L12). Touching is allowed; overlapping by more than 1 mm
       isn't.
     - **Slots of one object** are exempt from each other only where one piece of furniture spaces them: the booth run's
       seats (two to a bench, and neighbouring booths' benches back to back on one backrest), one high-top's four
-      stools and one patio table's four chairs. Other slots of one object aren't: the bar's stools, standing gaps and
+      stools and one patio bench table's four seats. Other slots of one object aren't: the bar's stools, standing gaps and
       pick-up must clear each other.
     - The shuffleboard's thrower spot clears the south window rail's first stool (1.59 m apart, centre to centre).
     - `tools/anaheim/sportsbar_zones.py` runs the same test on the plan's numbers; S1 runs it on the built `objects`
@@ -2003,19 +2209,38 @@ module from `claude/modes` merged in.
   - **The scene budgets without people or items.** At every budget pose (`door`, `tv-east`, `stall`, `patio`, `overhead`), under
     the poses' conditions (Saturday 21:00, week 43, the fill seed 621, 844 × 390 and the portrait pair), at Low, HD and
     Ultra: `stats().pass` is within the "Without people or items" row of that state's column. `breakdown()` is
-    logged, grouped as the venue, the near streets, the far streets, the sky, `your-car` and its stand-in, and
-    `parked-*`. The bar's `breakdown()` counts only what's drawn: it skips objects hidden by `visible` on themselves or
-    an ancestor (the far streets from inside, your car or its stand-in, an instanced mesh with no instances) and
-    applies three.js's frustum test as the renderer does, so its total agrees with `stats().pass` within 1% at every
-    pose.
+    logged, grouped as the venue, the near streets, the far streets, the trees, the sky, `your-car` and its stand-in,
+    and `parked-*`. The bar's `breakdown()` counts only what's drawn: it skips objects hidden by `visible` on themselves
+    or an ancestor (your car or its stand-in, an instanced mesh with no instances) and applies three.js's frustum test
+    as the renderer does (none for a mesh with `frustumCulled = false`), so its total agrees with `stats().pass` within
+    1% at every pose.
   - **The street sets.** The built near set holds exactly the features `tools/anaheim/sportsbar_sets.py` lists as near
-    (34 street pieces, 5 buildings, 25 infrastructure shapes, 26 points), and the far set the rest. The near batches
-    come to at most 14 calls at Low and HD and 15 at Ultra, and all the streets within their row.
+    (60 street pieces, 8 buildings, 33 infrastructure shapes, 38 points, no land use or water; the I-5's northbound
+    560 and 362 and southbound 222, 358 and 438, Katella 136, Anaheim Way 137, the railway's 141 and buildings 24, 26
+    and 411 among them), and the far set the rest (554, 417, 172 and 498, and all 67 land-use and 18 water areas). The
+    near batches come to at most 14 calls at Low and HD and 15 at Ultra, the far set's simple batches to 4, and all the
+    streets within their row. The light streams' instances lie only on the five near carriageway pieces.
+  - **The trees.** 10 trees (6 palms, 4 shade trees) at the script's spots, each in the near set, at least 1.0 m from
+    every road and aisle edge and 1.5 m from every power pole, in at most 4 calls and within the trees' row.
   - **The cars as measured.** `your-car` is 62.2k triangles at Low and 118.3k at HD and Ultra for the default car
-    (±2%), and never over 65.6k and 121.1k for any of the four. At each pose, `parked-*` is `near` × at most 2.88k plus
-    the stand-ins × 152, in at most 25 calls, with `near` as the visibility table says for that state.
-  - **The visibility states.** Walking in and out of both doors switches the state on the crossing frame (`vis()`), and
-    screenshots on each side of each door show no car or street popping in view, the I-5 and Claudina Way included.
+    (±2%), and never over 65.6k and 121.1k for any of the four. At each pose, `parked-*` is `near` × at most 2.88k at
+    Low and HD, or 5.60k at Ultra, plus the stand-ins × 152, in at most 25 calls, with `near` as the visibility table
+    says for that state. Switching between HD and Ultra rebuilds the parked cars at the other quality with the same
+    cars in the same stalls (same count, kinds and colours).
+  - **The visibility states.** Walking in and out of both doors switches the state on the crossing frame (`vis()`).
+    - **Nothing in the street world changes at a door.** On both sides of each door, `vis()` lists the same street
+      batches and the same 4 tree meshes as drawn, with the same instance counts, at every preset. That's the whole
+      street world, so nothing in it can appear or vanish at a crossing: the I-5's two carriageways, Katella, Anaheim
+      Way, Claudina Way, the railway and buildings 24, 26 and 411 included.
+    - **What may change is level of detail, and it's listed.** `vis()` on the two sides differs only in `parked.near`
+      (stand-ins to detailed models), your car (its stand-in to the full car at Low and HD) and, from S3a, people
+      (cards to meshes, and their LODs). Those are swaps of objects drawn on both sides, never an object appearing or
+      vanishing, so they don't fail the check; any other difference does. Your stall, by the routes' end at about frame
+      (14, 39), lies just inside the front half-plane, at a grazing angle past the north-east corner, so the arm's
+      north wall hides it from almost all of the room.
+    - **Screenshots** on both sides of each door (inside looking out through the glazing, and outside 0.5 m past the
+      door at the same yaw and pitch; 1280 × 720, noon and Saturday 21:00, at each preset) are looked at for the listed
+      swaps, and each is logged.
   - **Lot 57 is unaffected.** Its page still builds, and its checks pass unchanged.
 - **Screenshots.**
   - 1280 × 720, 844 × 390 and 390 × 844.
@@ -2031,10 +2256,11 @@ module from `claude/modes` merged in.
 
 - **Brief.**
   - **`engine/sim/`:** needs, moods and moodlets, personality (with the trait scalings), the smart-object catalogue and
-    adverts, reservations, the action queue, held items (instanced: see "Held items, table items and game pieces").
+    adverts, reservations, the action queue, held items (instanced, with `frustumCulled = false`: see "Held items,
+    table items and game pieces").
   - **The player's UI:** the needs strip and panel, the mood face, the queue icons, the radial menu for objects.
-  - **Ordering:** at the counter, and table service with one bartender and one server as scripted staff (full staff
-    in S3a). Our menu, eating and drinking.
+  - **Ordering:** at the counter, and table service with one bartender (on the lane path) and one server as scripted
+    staff (full staff in S3a). Our menu, eating and drinking.
   - **The screens:** the TV system (leagues, the schedule's slots, the featured match and `gameNight`, match models,
     broadcast canvases, highlights, the guide card, "Pick a side").
   - **Watching** for fun.
@@ -2124,16 +2350,20 @@ ends with its own checks and its own budget run at the poses.
   - **Autonomy over objects.** The utility AI over the objects' adverts (under "NPC autonomy"): the need, urgency,
     affinity, emotion, event, walk, occupancy and wait terms, overlays, hysteresis, the top-three sampling,
     reservations, the watchdog and the decision log. People's own adverts come in S3b.
-  - **Staff:** bartenders, servers, host and barback on the job queue; the cooks' hands at the pass. Restroom visits.
+  - **Staff:** bartenders on the lane path (sections of the counter, the westmost one leaving by the flap and H),
+    servers, host and barback on the job queue; the cooks' hands at the pass. Restroom visits.
   - **Fillers:** the filler atlas (at Low from toon-styled bodies; see "Fillers"), the one instanced mesh of cards,
     where fillers go, the hand-over to live guests with the 6 spare bodies, and their reactions.
   - **How people are drawn:** people's LODs and the visibility rule for people (meshes, cards, LODs and shadow casters
-    by state; see "Inside, outside and overhead"), with `visibility.ts`'s restyle at Low, and the background builds,
-    one person per idle callback (see "People are slow to build").
+    by state; see "Inside, outside and overhead"), with `visibility.ts`'s restyle at Low; no NPC LOD 0, and your
+    avatar's LOD 0 at Ultra built during loading or behind "Preparing Ultra…" (see "Who is at which LOD"); and the
+    background builds on the time budget, with cards standing in until each body lands (see "People are slow to
+    build").
   - **Moods and emotions** on faces and bodies.
   - **Crowd reactions** to the screens, with the dance chance at the featured final whistle.
-  - **Hooks:** `people()`, `decisions(n)`, `seed(n)`, and `crowdAt(zone, n)` (seats walk-ins in a zone, for the budget
-    poses).
+  - **Hooks:** `people()`, `decisions(n)`, `seed(n)`, `crowdAt(zone, n)` (seats walk-ins in a zone, for the budget
+    poses), `buildAll()` (builds every pending body now, up to the live cap; `fastForward()` and `pose()` call it
+    first) and `builds()` (the build log: each build's person, level, start, duration and the frame it landed in).
 - **Checks.**
   - **Needs drive choices.** The population is NPCs with thirst under 30 who aren't holding a drink or waiting on one.
     At least 70% of them choose a drink-tagged action (a bar drink, table service or water) within their next two
@@ -2141,8 +2371,12 @@ ends with its own checks and its own budget run at the poses.
     needs" predicts about 99%.
   - **Mood.** At Saturday 21:00, after a 30 sim-minute fast-forward, the median NPC mood is Fine or better, and under
     15% of NPCs are Low.
-  - **No stuck people.** No NPC stuck over 60 sim s across a 30 sim-minute fast-forward at Saturday 21:00. No slot is
-    ever over capacity.
+  - **No stuck people.** No NPC stuck over 60 sim s across a 30 sim-minute fast-forward at Saturday 21:00, staff
+    included. No slot is ever over capacity.
+  - **Bartenders serve the whole counter.** Across the same run, at each preset: every stool and standing gap is
+    served by a bartender on the lane path, bartenders never overlap on it (centres at least 0.6 m apart along u), and
+    at Low the westmost bartender leaves by the flap, reaches H, collects empties on the walk grid and comes back. No
+    guest or player position is ever inside the lane or the flap.
   - **Reactions.** Over 10 seeded goals, the share of the scoring team's live supporters who can see a screen and react
     within 1 s is within 12 points of their mean p (0.3 + 0.7·fan; about 150 samples, so 12 points is about 3 standard
     deviations). Nobody who can't see a screen reacts. At the featured final whistle on Friday and Saturday, only
@@ -2159,12 +2393,21 @@ ends with its own checks and its own budget run at the poses.
     - No table mixes fillers and live people.
     - Tapping a filler gives a live person, and their menu opens.
   - **Low stays Retro.** At Low, after a 30 sim-minute fast-forward at Saturday 21:00 with the camera walked through
-    every pose, every mesh under every live person, your car and its stand-in wears a toon material
+    every pose, every visible mesh (visible on itself and every ancestor; the hidden LOD meshes kept under a person's
+    group don't count) under every live person, your avatar, your car and its stand-in wears a toon material
     (`retro.stylizer.isMine`), and the cards wear their own shader material: no standard material reaches `RetroPass`
-    after the LOD swaps, rebuilds and swaps.
-  - **The background build is logged.** From the first frame until the room reaches its live cap, at each preset, the
-    longest frame, the number of frames over 50 ms and the builds that caused them are logged. It's a record, not a
-    pass mark: SwiftShader here says nothing about a phone (see "Owner questions").
+    after the LOD swaps, rebuilds and swaps. Low draws no LOD 0, so the check has no exemption in normal play. A
+    second run forces one NPC to `setLod(0)` in view: then the only meshes allowed outside the rule are that body's
+    skin meshes (its builder's `skinMaterial`, program key `pskin-`, kept by the hook-fit rule: see "Who is at which
+    LOD"), and they're logged; everything else on that body is toon.
+  - **The background builds run and are logged.** A run with no fast-forward, from the first frame, at each preset:
+    the room reaches its live cap (every live person built at the level they're drawn at, and the 6 spares), with no
+    two builds in one frame and every gap between builds at least twice the last build's duration (from `builds()`).
+    Under SwiftShader at about 2 fps the cap is reached in about 1 min at Low, 2.4 min at HD and 4.3 min at Ultra, by
+    the estimate under "People are slow to build"; the run allows twice that, and the real times are logged. Until
+    each person's build lands they're a card. No LOD 0 build happens in play at any preset. The longest frame, the
+    number of frames over 50 ms and the builds that caused them are logged too: a record, not a pass mark, since
+    SwiftShader here says nothing about a phone (see "Owner questions").
   - **Budgets.** At every budget pose and preset, under the poses' conditions (Saturday 21:00, week 43, `seed(1)`, the
     fill seed 621, the caps reached as the poses say, and every item model at its cap): `stats().pass` is within its
     column's pass row and budget, and `stats().frame` within its frame row. Outdoors, `vis()` shows no more meshes than
@@ -2215,8 +2458,8 @@ ends with its own checks and its own budget run at the poses.
   - **The graphics table:** Low, HD and Ultra (above), on the P1d standard and decision 15. Low turns on the shared
     Retro style module once `claude/modes` has merged (if RS1 hasn't landed by S4, Low ships at full resolution with
     the standard materials, and the handoff says so). Ultra reads the shared entitlement from RS2, with no price or
-    purchase path. Before E0 the settings are the bar's marked `PRESET` copy, re-synced with Lot 57's `main.ts`; after
-    it, the shared `engine/quality.ts`. The lighting design and the
+    purchase path. Before E0 the settings are the bar's marked `PRESET` copy, re-synced with Lot 57's `main.ts` by
+    re-measuring "Lot 57's numbers, as measured" again (as S1 did first); after it, the shared `engine/quality.ts`. The lighting design and the
     code-made materials. The I-5 light streams. The night exterior and the neon. People lit with rim and fill.
   - **Then polish:**
     - the transitions, the audio mix and the dance-night lighting;
@@ -2233,7 +2476,10 @@ ends with its own checks and its own budget run at the poses.
     `frame` within its frame row, now with the final materials, the Retro pass at Low and the post chains measured.
   - **Low is Retro.** At Low, `RetroStyle` is attached, the render scale is 1 and the pixel ratio is at least 1; at HD
     and Ultra it's detached. A locked Ultra shows "Ultra · locked" and no price.
-  - **The `PRESET` copy** matches Lot 57's `main.ts` at the time, or the difference is written up.
+  - **The `PRESET` copy** matches Lot 57's `main.ts` at the time (L1 re-measured), or the difference is written up;
+    the bar's own choices that L2 and L9 sit beside (Ultra's high-quality parked cars, your avatar's LOD 0 built only
+    during loading or behind "Preparing Ultra…") are checked against the re-measured rows and any new difference is
+    written up too.
   - No console errors, and the honesty checks.
   - **If E0 ran,** Lot 57's checks are unchanged after it.
 - **Look at every screenshot:** would a player stop and take a photo of it?
@@ -2246,30 +2492,39 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
    - Decision 15 lists "hard shadows" in Low's look, and the game's `RETRO` preset (on `claude/modes`) turns on a 1024
      sun map, which `RetroStyle.attach()` switches to three.js's hard-edged `BasicShadowMap`.
    - The bar's Low, as planned, draws no map: its shadows are the hard-edged blobs and the baked light. Outside, Low's
-     frame is already at 141 of its 150 calls and 240.3k of its 250k (see the sums).
+     frame is already at 140 of its 150 calls and 244.3k of its 250k (see the sums).
    - **If the owner, or RS3's style guide, asks for hard sun shadows at Low,** the bar turns on the 1024
      `BasicShadowMap` with a short caster list: the venue's own casting batches, and, outside, your car's 152-triangle
-     stand-in on the shadow layer (the way a LOD 0 person casts with their LOD 1 body) and the people outside the unit
-     with LOD 2 bodies. No streets, parked cars or items cast at Low. **An estimate:** that adds about 15 calls and 30k
-     for the venue's batches (an allocation; the venue isn't built), plus outside 1 call for the stand-in and 4 calls
-     and 6k for 4 people. Low can't absorb it without its fallbacks: outside the first three (`parked.near` 4 to 0, LOD
-     1 from 7 to 4, the far props: 20 calls and 34.2k back), inside all three (16 calls and 79.5k back), so Low would
-     show fewer detailed parked cars, fewer LOD 1 people and no LOD 0.
+     stand-in on the shadow layer (the way your avatar's LOD 0 casts with its LOD 1 body) and the people outside the
+     unit with LOD 2 bodies. No streets, trees, parked cars or items cast at Low. **An estimate:** that adds about 15
+     calls and 30k for the venue's batches (an allocation; the venue isn't built), plus outside 1 call for the stand-in
+     and 4 calls and 6k for 4 people. Inside and overhead it fits Low's margins (31 calls and 46.1k, 31 and 52.1k).
+     Outside it doesn't (20 calls and 36.2k against 10 and 5.7k) without the first three outside fallbacks
+     (`parked.near` 4 to 0, LOD 1 from 7 to 4, the far props: 21 calls and 34.0k back, leaving 11 calls and 3.5k), so
+     Low outside would show no detailed parked cars and fewer LOD 1 people.
    - **The question:** keep Low without a sun map, as planned, or turn it on and take those fallbacks?
 2. **Person builds stall the page, worst on a phone.**
-   - Each person build is one synchronous call to the people builder: 0.29 s at LOD 2 and 0.71 s at LOD 1 at phone
-     quality, and 4.6 s for a phone LOD 0, measured on a desktop CPU (Lot 57, 14 October). A phone is slower, by an
-     amount nobody has measured.
-   - The plan builds one person per idle callback, never two together and never back to back, and S3a logs the
-     longest frame. That spreads the stalls out, but each is still a frozen frame of 0.29 s or more while the room
-     fills (36 people at Low, 70 at HD, 100 at Ultra, plus 6 spares), and a 4.6 s freeze when you start talking to
-     someone at Low and their LOD 0 builds.
+   - Each person build is one synchronous call to the people builder, on a desktop CPU: 0.29 s at LOD 2 and 0.71 s at
+     LOD 1 at phone quality, 1.0 s at LOD 1 at high quality, 4.6 s for a phone LOD 0 and 7 to 9.5 s for a
+     high-quality LOD 0 (Lot 57's plan, 14 October). A phone is slower, by an amount nobody has measured.
+   - **What the plan does meanwhile, at every preset:**
+     - the room fills on a time budget that works at any frame rate (one build a frame at most, builds taking at most a
+       third of the time), with cards standing in for anyone not yet built; it's full in about 46 s at Low, 2.3 min at
+       HD and 4.1 min at Ultra on a desktop CPU;
+     - **no NPC is ever built at LOD 0, at Low, HD or Ultra,** so starting a conversation never freezes the page: the
+       person you talk to stays at LOD 1. At Low that saves a 4.6 s freeze; at HD and Ultra a 7 to 9.5 s one, for each
+       new person you talk to;
+     - your avatar's LOD 0 exists only at Ultra and is built once, during loading or behind the paused "Preparing
+       Ultra…" sheet, never mid-walk (Lot 57's page, as measured, builds it in play: L9).
+     Each LOD 1 or LOD 2 build is still a frozen frame of 0.29 s to 1.0 s on a desktop while the room fills.
    - Removing the stalls needs the people builder to build in a worker, or to yield between steps. That's in
      `people/`, which the bar doesn't edit before E0 (F5's builders and Lot 57's P1d own it), and it would serve Lot 57
      too.
-   - **The question:** accept the stalls for now, with S3a's log as the record, or ask `people/`'s owners for a worker
-     or step-wise build before S3a? And meanwhile, should the bar skip LOD 0 at Low (the person you talk to stays at LOD
-     1, as outside), which removes the 4.6 s freeze and frees 63.5k inside?
+   - **The question:** accept the fill's stalls and LOD 1 for the person you talk to, with S3a's log as the record, or
+     ask `people/`'s owners for a worker or step-wise build before S3a? With one, NPC LOD 0 comes back for the person
+     you talk to: at HD and Ultra it fits every column's margins (about 198k more in the pass, twice that in Ultra's
+     frame); at Low it fits inside only with Low's first inside fallback (LOD 1 from 7 to 4), and outdoors at Low it
+     stays off beside your car.
 
 ## Risks
 
@@ -2284,8 +2539,9 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
     `BarInput`, `BarHud`). They copy only the marked `PRESET`, the page loop and the build plugin. E0 is one mechanical
     move after P1d, checked by Lot 57's own tests.
   - If Lot 57's APIs change before E0, the bar adapts; Lot 57 doesn't.
-  - The S1 builder re-reads the module map's "What exists now" against the code of the day and corrects the plan first
-    if it has drifted.
+  - The plan describes Lot 57's modules as contracts and keeps every number from Lot 57's code in one measured table
+    (L1 to L19). The S1 builder's first step is to re-measure that table and update the plan, so a constant that moves
+    under the bar costs a table row and a re-run of the sums, not a broken design.
 - **Three writers on `people/`.**
   - F5's builders, Lot 57's P1d and the bar's clips all want to change the people builder.
   - The guard: the merge order under "Who changes `src/onfoot/people/`". The bar's clips stay outside `people/` until
@@ -2295,9 +2551,10 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
   - The mitigations: 8 directions, three poses, the cheer, and the promotion radius.
   - In the overhead view the distance is measured from the camera's target, so what you're looking at is live.
 - **People are slow to build and costly indoors.** At about 0.5 s per person on a desktop CPU, phones are slower, and
-  each build is one synchronous call, so each is a stalled frame (an owner question). Progressive building, reused
-  bodies and the LOD caps are the plan. Low's triangle margins are 4.6% inside and 3.9% outside (see the sums), and
-  the venue, street and item rows are allocations or estimates until S1 and S2a measure them.
+  each build is one synchronous call, so each is a stalled frame (an owner question). Building on a time budget with
+  cards standing in, reused bodies, no NPC LOD 0 and the LOD caps are the plan. Low's triangle margins are 18.4%
+  inside and 2.3% outside (see the sums); outside is the tightest column in the plan, with four fallbacks behind it,
+  and the venue, street, tree and item rows are allocations or estimates until S1 and S2a measure them.
 - **New animations.**
   - Cheering, dancing, pool and darts are new clips on a rig built for talking, walking and sitting.
   - Procedural clips can look stiff. The mitigation is timing variety.
@@ -2329,13 +2586,16 @@ Two questions this plan records and doesn't settle. They're also listed in `PROJ
 - **Honesty drift.** Broadcast graphics invite "LIVE" in the corner. Check 3 reads every string drawn on a canvas on
   every screenshot run.
 - **The Retro look on people and screens.** The toon swap keeps skinning and colours, but the people builder's own
-  shaders (eyes, strand hair) and the broadcast canvases under the palette and dither may not read well. S4 looks at
+  shaders (eyes, strand hair) and the broadcast canvases under the palette and dither may not read well. A LOD 0 skin
+  stays physically lit under the hook-fit rule; Low draws no LOD 0, so it's a future item for RS3 and `people/`. S4 looks at
   every Low screenshot, and the RS3 style guide is the reference.
-- **The visibility rule can show.** Cars swap at the doors, people beyond the outdoor count are cards through the glass,
-  and the far streets are hidden from inside. The near set is chosen by any part in the glazed sectors, so nothing
-  the glazing shows within 150 m is hidden; beyond 150 m it can be. The door screenshots in S1 and the card
-  screenshots in S3a look for it.
-  If a swap reads badly, the fallbacks under the sums say what to give back instead.
+- **The visibility rule can show.** Cars swap from stand-ins to detailed models at the doors, your car swaps at Low and
+  HD, and people beyond the outdoor count are cards through the glass. The street world can't pop: both street sets
+  and the trees are drawn in every state, so everything the glazing shows, at any distance, is drawn on both sides of
+  each door. The far set (beyond 210 m in the glazed sectors, or behind the building) is simple at Low and HD; S1's
+  door screenshots look at that and at the swaps,
+  and S3a's card screenshots at the people. If a swap reads badly, the fallbacks under the sums say what to give back
+  instead.
 
 ## Data sources and licences
 
@@ -2379,8 +2639,10 @@ Every measurement was taken on 2026-10-21.
 - **Our unit and the patio** were tested against building 61 with shapely:
   - The unit (u 0 to 36) has an area of 529 m², all of it inside the footprint, and so does every interior zone in the
     "Inside" table.
-  - The patio has an area of 99 m² and doesn't overlap the building. 25 m² of it lies in the derived lot, and it's
-    4.17 m from aisle 416's centreline at the closest point.
+  - The patio (u 2 to 24, v -5.5 to 0) has an area of 121 m² and doesn't overlap the building or any mapped land use,
+    infrastructure shape or other building. 25 m² of it lies in the derived lot, and it's 4.17 m from aisle 416's
+    centreline at the closest point, which is also where the driveway (seg 418) meets 416. Its earlier extent, u 2 to
+    20 (99 m²), had the same closest point.
   - The walls: the footprint was shrunk 0.25 m and cut at u 35.8, giving 505 m² inside. The old booth line (v 0.5)
     was 0.46 m² inside the south wall.
   - **The layout** was checked in shapely by `tools/anaheim/sportsbar_zones.py`, which holds the "Inside" table's
@@ -2395,7 +2657,20 @@ Every measurement was taken on 2026-10-21.
     - the front wall's inner face is u = 0.388·v + 0.27, and the window-rail stools stand 0.6 m in from it, so the
       first south rail stool's centre is (2.04, 2.9), 1.59 m from the shuffleboard thrower's spot at (2.7, 1.45);
     - run against the round-3 layout (the TV wall from v 0.5, the high-tops to v 11.5, 12 stools), it reports the
-      faults the review found.
+      faults the review found;
+    - the patio's 14 zones (rail, door approach, heaters, planters, six tables) and 30 seats pass the same rule inside
+      the fence's inner faces;
+    - **walking:** it models Lot 57's walk grid as measured (L12): world-aligned 0.5 m cells, a cell free when its
+      centre is at least 0.32 m from every wall and collider, 8-connected with no corner cutting. The colliders are our
+      furniture sizes: the counter, its return and the back bar; the flap's gate; the restroom block, the kitchen and
+      the water station; the dart surround, the shuffleboard, the booth run, the host stand, the TV wall and the
+      jukebox; two 1.25 m × 2.24 m pool tables; 0.35 m high-top tables and 0.2 m stools; the window rails' 0.3 m
+      shelves; and on the patio the six bench tables, the rail's shelf and stools, the heaters and the planters. At 25
+      grid offsets (0.1 m steps in x and z), a flood fill from just inside the front door reaches a free cell within
+      0.45 m of H and of each of the 103 stand points, and none in the lane or the flap. On the same model, the
+      round-4 lane (1.15 m, open at a 0.6 m flap) breaks into 7 to 10 pieces of free cells, as the review found;
+    - **the lane path:** the 0.3 m body along it clears every collider but the gate by at least 0.10 m, and H is 0.81 m
+      from every wall and collider.
 - **The front** was laid out in a front-wall frame (d out from the wall's outer face, s along it) and tested with
   shapely against the slice:
   - aisle 416's mapped centreline is 4.44 m out at the south-east corner, 3.69 m at the door's centre and 2.95 m at
@@ -2407,9 +2682,11 @@ Every measurement was taken on 2026-10-21.
   - it clears the front walk and the ramp by 0.45 m, the bike rack by 0.85 m and the planters by 1.05 m;
   - S0-data's derived lot's east edge in front of the unit is at d 5.47 at the south-east corner and d 9.44 at the
     north-east corner.
-- **The budget sums** are arithmetic. They add Lot 57's measured people costs (quoted in the budgets section), the car
-  costs below, Low's sky as counted from the code (below), and our allocations for the venue, the streets, the items,
-  HD's and Ultra's sky and the pool spots. The street allocations stand on the estimate below.
+- **The budget sums** are arithmetic. They add Lot 57's plan's measured people costs (quoted in the budgets section),
+  the car costs below, Low's sky as counted from the code (below), and our allocations for the venue, the streets, the
+  trees, the items, HD's and Ultra's sky and the pool spots. The street and tree allocations stand on the estimate
+  below. For this revision every column was re-added from the quoted costs by a short script; all nine match the
+  tables.
   - HD's LOD 2 cost is an assumption, since only the phone's was measured.
   - The post-quad counts were read from three.js 0.160.1's `UnrealBloomPass` (13 full-screen draws), `OutputPass` (1)
     and `GTAOPass` (3 besides its normal pass).
@@ -2418,12 +2695,17 @@ Every measurement was taken on 2026-10-21.
   - **Low's sky** was counted from the same worktree at about 05:30 UTC. `RetroStyle.render()` hides only the world's
     realistic `sky` and its `flare`. `src/game/env/Environment.ts` keeps its cloud deck (a part sphere, 48 × 16
     segments to 0.42π: 1,488 triangles, which `RetroStyle` alpha-cuts), its mountain ring (256 quads: 512 triangles)
-    and its stars (1,400 points). With `RetroSky`'s 960 that's 4 calls and 2,960 triangles. This plan's code review
-    measured the same 4 calls and about 3.0k at the 21:00 poses.
+    and its stars (1,400 points). With `RetroSky`'s 960 that's 4 calls and 2,960 triangles. The round-3 code review
+    counted the same 4 calls and about 3.0k from the code; nothing has measured it on a page yet, and S1's budget run
+    is the first measurement.
+  - **The hook-fit rule** was re-run on 2026-10-21 at about 06:00 UTC: the Stylizer's own test, bundled with three.js
+    0.160.1 and the shared `people/` materials (`skinMaterial` face and body at phone and high quality,
+    `clothMaterial`, `hairCapMaterial`, `eyeMaterial`, `accMaterial`, `lodMaterial`). The three skin materials are
+    kept (their hook adds `computeSpecularOcclusion`); the other six convert.
   - The crowd at the budget poses: 130 × 0.95 (Saturday 20–23) × 0.9 to 1.1, capped at 130.
   - The poses' game coordinates come from the building frame's O, A and B.
-- **The car costs** were measured on 2026-10-21 by building each model in Node from the game's own builders, the ones
-  Lot 57's `lot.ts` imports:
+- **The car and tree costs** were measured on 2026-10-21 by building each model in Node from the game's own builders,
+  the ones Lot 57's `lot.ts` and `main.ts` import:
   - **How.** `src/preview/car.ts`'s `buildCar` with `cabin: 'full'`, and `src/preview/traffic.ts`'s `trafficParts` with
     wheels, with a stub canvas for their textures. Each mesh's index count over 3 was summed, with three.js 0.160.1.
     Those files are the same in this worktree and in `tsu-foot`.
@@ -2434,42 +2716,58 @@ Every measurement was taken on 2026-10-21.
     - Vela E: 56,776 and 108,978.
     - The GT's shell cabin: 55,152 and 111,298, 7,006 less.
   - **Parked cars.** Each traffic kind's 4 parts total 2,872 triangles (sedan, SUV, coupe, van) or 2,884 (pickup) at
-    phone quality, and 5,584 to 5,596 at high. The sedan's paint and trim, the parts Lot 57 lets cast, are 1,442 and
-    1,246.
+    phone quality, and 5,584 (sedan, SUV, coupe, van) or 5,596 (pickup) at high. Paint and trim, the parts that cast
+    (L5), are at phone quality 2,688 (sedan), 2,520 (SUV), 2,716 (coupe), 2,308 (van) and 2,740 (pickup), and at high
+    5,108, 4,668, 5,216, 4,032 and 5,228. The budgets take the most of each: 2.88k and 2.74k at phone, 5.60k and 5.23k
+    at high.
+  - **Trees.** The game's `Props` (`src/game/road/props.ts`, the same file in this worktree and in `tsu-foot`):
+    `treeCanopy(1)` 400 and `treeCanopy(3)` 1,600, `treeTrunk()` 28, `palmCrown(0)` 222 and `palmCrown(1)` 382,
+    `palmTrunk()` 108.
   - **A stand-in** is 152, counted from Lot 57's `proxyGeometry`: two 12-triangle boxes and four 8-sided, 32-triangle
     cylinders.
   - `renderer.info` counts the same triangles for each mesh it draws. The S0 code review measured the same figures for
     the GT and the parked cars.
-- **The near and far street sets** were counted from `sportsbar-slice.json` by `tools/anaheim/sportsbar_sets.py`,
+- **The street sets and the trees** were counted from `sportsbar-slice.json` by `tools/anaheim/sportsbar_sets.py`,
   which a reviewer can re-run:
-  - **The rule.** A feature, on any layer, is near if any part of it (shapely's `intersects`, so a piece crossing the
-    region with no vertex in it counts) lies in the glazed sectors within 150 m of frame (18, 8). The glazed sectors are
-    the half-planes beyond the line of the front wall's outer face (-0.932 u + 0.362 v ≥ 0) and beyond the line of the
-    arm's south wall (v ≤ 0.012 u). Building 61 is left to the venue, and seg 416 is dropped (`site.dropSegs`).
-  - **The count.** 34 of 614 street pieces, 5 of 425 buildings, 25 of 205 infrastructure shapes, 26 of 536 points, and
-    none of the 67 land-use or 18 water areas. Earlier rounds counted by middle point and centroid in the sectors
-    u ≤ 7 or v ≤ 0: 19 pieces once seg 416 is left out (the plan said 20, with 416). Any vertex in those sectors adds 13
-    pieces, among them Claudina's main leg (391), the I-5 pieces 362, 425 and 560 to 562 and Katella's 135 and 355; the
-    true glazed sectors add two service ways (385 and 407), a gate, and the three Claudina poles north of the front
-    (x -6605, z -9388 to -9461) that u ≤ 7 missed.
+  - **The rule.** A feature, on any layer, is in the near set if any part of it (shapely's `intersects`, so a piece
+    crossing the region with no vertex in it counts) lies in the glazed sectors within 210 m of frame (18, 8). The
+    glazed sectors are the half-planes beyond the line of the front wall's outer face (-0.932 u + 0.362 v ≥ 0) and
+    beyond the line of the arm's south wall (v ≤ 0.012 u). Everything else is the far set. Both are drawn in every
+    state. Building 61 is left to the venue, and seg 416 is dropped (`site.dropSegs`).
+  - **The count.** Near: 60 of 614 street pieces, 8 of 425 buildings, 33 of 205 infrastructure shapes, 38 of 536
+    points, and none of the 67 land-use or 18 water areas. Far: 554, 417, 172 and 498, all 67 and all 18. Of the far
+    set, 94 pieces, 38 buildings, 22 shapes, 115 points, 11 land-use and 2 water areas lie wholly outside the glazed
+    sectors (behind the building); the rest reach them beyond 210 m.
+  - **Why 210 m, not 150.** At 150 m (round 4) the near set held only the I-5's northbound carriageway: seg 560 runs
+    into 362, one-way, sharing connector 603. The southbound carriageway, 222 into 358 into 438 (connectors 423 and
+    598), is 164 to 202 m away, and Katella 136, Anaheim Way 137, the railway's 141 and buildings 24, 26 and 411 are 157
+    to 204 m away, all in the glazed sectors, so round 4 hid them from inside. At 210 m they're all near; and since the
+    far set is now drawn from inside too, nothing in the sectors is hidden at any distance.
   - **Which set.** The substation across the street (infra 167, its fence, its two transformers and the power lines
-    over it) is near; the two other substations in the slice (infra 48 and 126, 469 m and 545 m away) are far. 12
-    power poles are near, the four along Claudina Way at x -6605 among them; the rest are far. No land use or water is
-    near: none of it reaches the glazed sectors within 150 m.
+    over it) is near; the two other substations in the slice (infra 48 and 126, 469 m and 545 m away) are far. 14
+    power poles are near, the four along Claudina Way at x -6605 among them. Within 400 m, every I-5 carriageway piece
+    is near except 232, the northbound carriageway's continuation past 362, which lies wholly behind the building.
+  - **The light streams** run on the five near carriageway pieces (560, 362, 222, 358, 438): 2,013 m of carriageway,
+    reaching 670 m from frame (18, 8).
   - **The triangles are an estimate,** not a measurement: a cost model of `engine/streets.ts` drawing as Lot 57's
     `data.ts` does, from its `Batch` primitives (ribbon 2 triangles per edge, slab 6, walls 2, cap n - 2, a cylinder 4
     per segment), with our own small props for the point features (a pole 36, a signal 68, a lamp 50). It gives the near
-    set 6.7k in 11 batches (4.0k of it road markings and crosswalk paint), and the far set 24.9k in 11 batches drawn
-    simple (5.3k of that its poles, towers, signals and lamps) or 63.9k in 14 in full. S1 measures the real figures.
+    set 9.7k in 12 batches (5.6k of it road markings and crosswalk paint), and the far set 23.4k drawn simple (5.1k of
+    that its poles, towers, signals and lamps; 11 batches by material, merged into 4 untextured ones) or 61.5k in 14
+    batches in full. The far set's part wholly behind the glazed sectors is 3.8k simple and 10.9k full. S1 measures
+    the real figures.
+  - **The trees** are placed by the plan's rule (palms every 6 m at d 10.1 from s -6 to 24; shade trees every 6 m at
+    v -19 from u -2 to 22), each dropped if it's within 1.0 m of a road or aisle edge (`ROAD_W` as measured, L14; our
+    aisle 416 at 4.5 m; motorways at 14 m, ours), 1.5 m of a power pole or 1.0 m of building 61 or the patio, or
+    outside the near set. 10 stand: 6 palms and 4 shade trees; the shade tree at u 22 falls on seg 418's ribbon. None
+    stands in a mapped land-use or infrastructure shape: 3.7k at Low and 9.5k at HD and Ultra.
 - **The utility arithmetic** under "Urgent needs" was computed from the formulas as written, with the traits, needs,
   distances and occupancy stated there.
-- **Lot 57's code** was read in the `tsu-foot` worktree (`claude/onfoot`, uncommitted) on 2026-10-21 at about
-  01:00 UTC, and re-read at about 01:45 UTC: `lot57/*.ts`, `main.ts`, `index.html`, `vite.config.ts` and `people/`
-  (`index.ts`, `anim.ts`, `person.ts`, `skeleton.ts`, `body.ts`). `hud.ts`, `lot.ts`, `main.ts`, `clock.ts`'s `DAYS`,
-  `geom.ts`'s `Kit` and `tests/onfoot.mjs`'s budget views were read again at about 02:20 UTC. This revision re-read
-  `lot.ts` (`buildLot`'s door offset, `ParkedCars`' stand-ins with `castShadow = true`, `yourCar`'s placement),
-  `main.ts` (`applyQuality` restoring `castShadow` from `userData.cast`, the spawn at `lot.door` less 0.2 m in z),
-  `data.ts` and `geom.ts`'s `Batch` primitives at about 05:30 UTC. Files there were still changing as it was read.
+- **Lot 57's code:** every number this plan takes from it is in "Lot 57's numbers, as measured" (L1 to L19), with the
+  files' blob ids, measured at the `tsu-foot` worktree's uncommitted state over `022f988` on 2026-10-21 at about
+  06:00 UTC. Earlier reads that day (about 01:00, 01:45, 02:20 and 05:30 UTC) are superseded by it; between 05:30 and
+  06:00, `main.ts` changed at 05:41 to build Ultra's parked cars at high quality, detail 12 cars on Low, and rebuild the
+  parked cars on a quality change (L2, L3), which this revision follows. The S1 builder re-measures the table first.
 - **The railway's distance** is the nearest rail piece in the slice to the bar's point.
 - **Exits and routes** come from `src/data/anaheim/sportsbar-freeway-link.json`.
   - The signals on each route are the slice's `transportation:traffic_signals` points within 20 m of the decoded route
@@ -2477,5 +2775,8 @@ Every measurement was taken on 2026-10-21.
   - The route turns were read from the decoded polyline of the I-5 North route.
 - **Sizes:** `sportsbar-slice.json` is 133,400 bytes, 47,177 gzipped at level 9, in its latest run.
 - **The name searches** were one web search per candidate on 2026-10-21. Their results are in "The name".
-- **Lot 57's figures** (people LOD costs, build times, the phone LOD 0 triangle count) are quoted from
-  `PROJECT_OC_ON_FOOT.md`, measured there on 2026-10-14.
+- **Lot 57's plan's figures** (people LOD costs, build times, the phone LOD 0 triangle count) are quoted from
+  `PROJECT_OC_ON_FOOT.md`, measured there on 2026-10-14. High-quality LOD 2's build time (0.4 s) is an assumption.
+- **The fill times** under "People are slow to build" are arithmetic: each build plus twice its duration, plus the
+  frame it lands in (33 ms at 30 fps; at 2 fps each wait rounded up to whole 0.5 s frames), summed over the builds
+  listed there.
