@@ -30,6 +30,9 @@ import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { carById, applyCar } from './cars';
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
+import { LiveCars } from './live/LiveCars';
+import { wheelGeometry } from './traffic/carModels';
+import type { LiveClient } from '../live/client';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
@@ -99,6 +102,8 @@ export class Game {
   private roads!: Roads;
   private terrain!: Terrain;
   private traffic!: Traffic;
+  private liveCars!: LiveCars;        // the other drivers on the live server, drawn as ghosts
+  live: LiveClient | null = null;     // set by the UI while a live drive is on
   private car: PlayerCar;
   readonly phys = new CarPhysics();
   path!: Path;                       // the road you're on
@@ -207,6 +212,7 @@ export class Game {
     this.roads = new Roads(this.net, q); this.scene.add(this.roads.group);
     this.terrain = new Terrain(this.net, q); this.scene.add(this.terrain.group);
     if (!this.traffic) { this.traffic = new Traffic(this.net); this.scene.add(this.traffic.group); }
+    if (!this.liveCars) { this.liveCars = new LiveCars(this.traffic.classes.find((c) => c.id === 'sports') ?? this.traffic.classes[0], wheelGeometry()); this.scene.add(this.liveCars.group); }
     this.traffic.viewAhead = q.drawDistance * 0.95;
     this.env.setFlareOccluders([this.roads.group, this.traffic.group], [this.terrain.group], (o, d) => this.car.sunBlocked(o, d));
     this.applyDensity();
@@ -817,6 +823,7 @@ export class Game {
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
     });
     this.traffic.render(alpha, this.time);
+    this.liveTick(dt);
     this.updateCamera(dt);
     this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract && !this.race);
     this.weatherTick(dt);
@@ -1258,9 +1265,20 @@ export class Game {
       if (this.steps % 24 === 0) this.stream(1);
     }
   }
+  // the live server: send where we are (ten times a second, inside the client) and draw the others where they are
+  private liveTick(dt: number) {
+    const now = performance.now();
+    if (this.live && !this.attract && !this.paused) {
+      const p = this.phys;
+      this.live.send({ x: p.x, y: p.y, z: p.z, h: p.psi, v: p.vx, b: this.input.c.brake > 0.05 }, now);
+    }
+    this.liveCars?.render(this.live, now, dt);
+  }
+  setLive(c: LiveClient | null) { this.live = c; }
+
   get stats() {
     return { roads: this.roads.count, tiles: this.terrain.count, traffic: this.traffic.cars.length, path: this.path.label, main: this.path.main, id: this.path.id, s: this.phys.s, d: this.phys.d, v: this.phys.vx,
-      x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches,
+      x: this.phys.x, z: this.phys.z, y: this.phys.y, scale: this.renderScale, calls: this.renderer.info.render.calls, tris: this.renderer.info.render.triangles, switches: this.switches, livePeers: this.live?.peers.size ?? 0, liveDrawn: this.liveCars?.count ?? 0,
       visited: [...this.visited], route: this.route.map((j) => j.to.label), score: this.score, streak: this.streak, wrongWay: this.wrongWay };
   }
 

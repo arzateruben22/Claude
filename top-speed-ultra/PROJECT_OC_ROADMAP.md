@@ -76,7 +76,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 
 | Item | Status | Notes |
 | --- | --- | --- |
-| Multiplayer | Roadmap only | It doesn't exist and isn't claimed. It needs a server, accounts and anti-cheat. |
+| Live server (the first rung of multiplayer) | Alpha, built; not yet deployed | `live/`: accounts (scrypt passwords, 30-day sessions, rate limits), a lobby capped at 25 drivers at a time with a waiting line that moves up in order, and a relay that shows each driver the others within 3 km as ghost cars (no collisions, nothing scored, no chat). The cap is raised one rung at a time (25, 50, 100, 200, 500) on measured numbers; `live/README.md` has the ladder, the costs (about $7 a month on its own $6 server plus a domain, about $1 sharing the desks' box) and the deploy steps. Needs a domain and a server to go public. Not built: races against people, an online leaderboard, chat, names over cars, email verification and password reset. |
 | Arcade track | Coming soon (shown) | A "Coming soon" card in the menu links to the Loop Lab preview: loop-the-loop, banking, boost pads. |
 | Housing, commercial features | Roadmap | Not started. Payments stay out entirely. |
 | LA County and beyond | Stopped (owner, 2026-10-20) | The map is Orange County only, done deeply (decision 11 in PROJECT_OC_DECISIONS.md). The OC freeway gaps to add: I-605 at Seal Beach and Los Alamitos, and the SR-90 Imperial Highway expressway. |

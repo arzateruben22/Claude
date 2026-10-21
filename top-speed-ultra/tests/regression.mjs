@@ -3,7 +3,7 @@
 //
 //   npm run build && npm test             every group
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
-//                                         progression, render, phone, launch)
+//                                         progression, render, phone, launch, live)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
@@ -839,6 +839,115 @@ await group('launch', async (use) => {
     expect(/^oc-ultra-free-\d+\.png$/.test(dl.suggestedFilename()), `the card is called ${dl.suggestedFilename()}`);
     return `${dl.suggestedFilename()}, ${w} × ${h}, ${Math.round(buf.length / 1024)} KB`;
   });
+});
+
+// the live server (live/server.mjs): three signed-in browsers against a cap of two. The third waits in line and is
+// let in when one leaves; the first sees the second's car on the road.
+await group('live', async (use) => {
+  const { spawn } = await import('node:child_process');
+  const { rmSync } = await import('node:fs');
+  const port = 21000 + Math.floor(Math.random() * 10000), base = `http://127.0.0.1:${port}`;
+  const db = path.join(OUT, 'live-test.db');
+  for (const f of [db, db + '-wal', db + '-shm']) rmSync(f, { force: true });
+  const server = spawn(process.execPath, [path.join(ROOT, 'live', 'server.mjs')], { env: { ...process.env, PORT: String(port), HOST: '127.0.0.1', MAX_PLAYERS: '2', IP_MAX: '1000', DB_PATH: db }, stdio: ['ignore', 'pipe', 'inherit'] });
+  await new Promise((resolve, reject) => { server.stdout.on('data', (d) => { if (String(d).includes('"ev":"listen"')) resolve(); }); server.on('exit', () => reject(new Error('the live server did not start'))); });
+  const signup = async (name) => { const r = await fetch(base + '/api/signup', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, password: 'correct horse battery', over13: true }) }); expect(r.ok, `sign-up ${r.status}`); return (await r.json()).token; };
+  const extra = [];
+  try {
+    const tokens = { a: await signup('live_a'), b: await signup('live_b'), c: await signup('live_c') };
+    const settings = { live: true, liveUrl: base, start: 'I-405 North', density: 'none' };
+    const { page: A } = await use({ settings });
+    const step = (m) => process.stderr.write(`    · ${m} (${((Date.now() - t0) / 1000).toFixed(0)} s)\n`), t0 = Date.now();
+    // the second and third browsers open only when their checks need them: three software-rendered pages at once
+    // starve each other here
+    let B, C;
+    const signIn = (page, t, name) => page.evaluate(([t, n]) => { localStorage.setItem('tsu.live.token', t); localStorage.setItem('tsu.live.name', n); }, [t, name]);
+    const status = (page) => game(page, () => ({ ...window.__game.live?.info, peers: window.__game.stats.livePeers, drawn: window.__game.stats.liveDrawn }));
+    const until = async (page, fn, what, timeout = 30000) => { await page.waitForFunction(fn, null, { timeout }).catch(() => { throw new Error(`timed out waiting for ${what}`); }); };
+    await check('the menu shows the Live section with the account and the toggle; the account panel has the form', async () => {
+      const sec = await A.locator('.live-sec').innerText();
+      expect(/Not signed in/.test(sec) && /Drive live/.test(sec), sec.replace(/\s+/g, ' ').slice(0, 120));
+      step('menu read');
+      await A.locator('.pick', { hasText: 'Account' }).click();
+      await A.waitForSelector('#live-name');
+      step('account panel open');
+      await A.screenshot({ path: path.join(OUT, 'live-account.png') });
+      step('screenshot taken');
+      const names = await A.locator('input').evaluateAll((els) => els.map((e) => e.id));
+      expect(names.includes('live-name') && names.includes('live-pw') && names.includes('live-email'), names.join(','));
+      await A.getByRole('button', { name: 'Back', exact: true }).click();
+      return 'account panel: sign up form with name, password, email, age gate';
+    });
+    await check('signing up from the page itself works and the menu shows the name', async () => {
+      await A.locator('.pick', { hasText: 'Account' }).click();
+      await A.locator('#live-name').fill('live_ui');
+      await A.locator('#live-pw').fill('a long enough password');
+      await A.locator('label.check input').check();
+      await A.getByRole('button', { name: 'Create account', exact: true }).click();
+      await A.waitForSelector('.name-static', { timeout: 15000 });
+      await A.getByRole('button', { name: 'Done', exact: true }).click();
+      const sec = await A.locator('.live-sec').innerText();
+      expect(/live_ui/.test(sec), sec.replace(/\s+/g, ' ').slice(0, 120));
+      return 'signed up as live_ui from the panel';
+    });
+    await check('two drivers are online under the cap of 2, and each sees the other', async () => {
+      await drive(A, 'Free Drive');
+      await until(A, () => window.__game.live?.info.status === 'online', 'A online');
+      step('A is driving live');
+      B = await open({ settings }); extra.push(B);
+      await signIn(B.page, tokens.b, 'live_b'); B = B.page;
+      await drive(B, 'Free Drive');
+      await until(B, () => window.__game.live?.info.status === 'online', 'B online');
+      step('B is driving live');
+      await until(A, () => window.__game.live?.info.online === 2 && window.__game.stats.livePeers === 1, 'A to see 2 online and 1 peer');
+      // B's poses go out from its frame loop at 10 Hz; A draws B once a pose arrived
+      await game(B, () => window.__game.fastForward(2, { throttle: 1 }));
+      await frames(B, 3);
+      await until(A, () => window.__game.stats.liveDrawn === 1, 'A to draw B\'s car', 60000);
+      step('A draws B');
+      const sa = await status(A), sb = await status(B);
+      expect(sa.cap === 2 && sb.cap === 2 && sb.peers === 1, JSON.stringify({ sa, sb }));
+      const chip = await A.locator('.livechip').innerText();
+      expect(chip === 'Live 2/2', `the chip says "${chip}"`);
+      await game(A, () => window.__game.setCam('chase'));
+      await frames(A, 2);
+      await A.screenshot({ path: path.join(OUT, 'live-ghost.png') });
+      return `A: ${sa.online}/${sa.cap} online, ${sa.peers} peer, ${sa.drawn} drawn; chip "${chip}"`;
+    });
+    await check('a third driver waits in line (#1) and is let in when one leaves; the counts follow', async () => {
+      C = await open({ settings }); extra.push(C);
+      await signIn(C.page, tokens.c, 'live_c'); C = C.page;
+      await drive(C, 'Free Drive');
+      step('C asked to drive');
+      await until(C, () => window.__game.live?.info.status === 'queued' && window.__game.live.info.position === 1, 'C queued at #1');
+      const chip = await C.locator('.livechip').innerText();
+      expect(chip === 'In line #1', `the chip says "${chip}"`);
+      const h1 = await (await fetch(base + '/health')).json();
+      expect(h1.online === 2 && h1.queued === 1, JSON.stringify(h1));
+      // B goes back to the main menu: its slot frees and C is let in
+      await B.getByRole('button', { name: 'Pause', exact: true }).click();
+      await B.getByRole('button', { name: 'Main menu', exact: true }).click();
+      await until(C, () => window.__game.live?.info.status === 'online', 'C online after B left');
+      await until(A, () => window.__game.live?.info.online === 2, 'A to still count 2 online');
+      const h2 = await (await fetch(base + '/health')).json();
+      expect(h2.online === 2 && h2.queued === 0 && h2.peak === 2, JSON.stringify(h2));
+      const sb = await game(B, () => window.__game.live);
+      expect(sb === null, 'B still holds a live client at the menu');
+      return `C was #${1} in line, then online; server peak ${h2.peak}, admitted ${h2.admitted}, poses in ${h2.posesIn}, dropped ${h2.posesDropped}`;
+    });
+    await check('the server refuses a pose faster than any car and keeps the last good one', async () => {
+      const h0 = await (await fetch(base + '/health')).json();
+      // straight at the socket, past the client's own rounding: 1,118 mph and a NaN
+      await game(A, () => { const ws = window.__game.live['ws']; ws.send(JSON.stringify({ t: 's', x: 0, y: 0, z: 0, h: 0, v: 500 })); ws.send(JSON.stringify({ t: 's', x: 'no', y: 0, z: 0, h: 0, v: 1 })); });
+      await new Promise((r) => setTimeout(r, 300));
+      const h1 = await (await fetch(base + '/health')).json();
+      expect(h1.posesDropped - h0.posesDropped === 2, `${h1.posesDropped - h0.posesDropped} dropped`);
+      return `2 bad poses dropped (${h1.posesDropped} in all)`;
+    });
+  } finally {
+    for (const h of extra) await h.ctx.close();
+    server.kill('SIGTERM');
+  }
 });
 
 await browser.close();

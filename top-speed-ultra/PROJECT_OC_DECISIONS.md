@@ -151,3 +151,30 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   claude/gfx, claude/sports-bar, claude/ui-ref, local/live-preview; snapshots claude/wip-hyper, -hx, -fix-road, -foot,
   -ref, -bar, -main. The sky-camera and Ultra-tier snapshots (wip-fix-sky, wip-gfx) were refused by the session's
   permission check three times; their branches are pushed, and their edits land in the next milestone push.
+
+## 2026-10-21: the live server
+
+### 15. A live server now, with log-ins, 25 drivers at a time, the cap raised slowly
+
+- **Decision** (the owner in chat, 2026-10-21 about 01:50 UTC): "Let's start building a live server and tell me all
+  the costs into running a live server if any and let's make it where people can be logged and let's start off
+  with a limit at first of 25 at a time and slowly build the lobby capacity's up."
+- **What was built** (this session, a Fable one; security and the server's design are Fable-class under the
+  triage rule): `top-speed-ultra/live/`, one Node 22 process with one dependency: accounts (sign up, log in, log
+  out; scrypt, hashed session tokens, rate limits, a 13+ gate), a lobby capped by `MAX_PLAYERS` (25) with a
+  waiting line that moves up in order and a cap that can be raised while it runs, and a 10 Hz relay of car poses
+  with plausibility checks. In the game: a Live · alpha section on the menu, an account panel, a "Drive live"
+  switch, a chip in the top bar (Live 3/25, In line #2), and other drivers drawn as ghost coupes in their paint.
+- **The ladder** (`live/README.md`): 25 → 50 → 100 → 200 → 500, one rung at a time after a week in which the peak
+  reached the cap, CPU stayed under 50%, dropped poses under 1%, and bandwidth inside the allowance. Rung 3 needs
+  binary poses first; rung 4 a bigger box or two lobbies.
+- **The costs** (prices found 2026-10-21): about $7 to $8 a month on its own $6 DigitalOcean Droplet with backups
+  and a domain (about $10 a year, needed because browsers only open sockets to HTTPS), or about $1 a month if it
+  shares the trading desks' existing box. Nothing else is required; email for password reset is free at the
+  volumes involved.
+- **Honest claims.** It is an alpha and is labelled so; the rules in CLAUDE.md and the master prompt now say what
+  it does and doesn't do. Races against people and an online leaderboard stay roadmap (they need anti-cheat).
+- **Open for the owner.** The domain name; own box or shared; whether email verification should be required
+  before the first public rung; a name-moderation list; when the artifact link should point at the server-served
+  page (the artifact page itself can't reach a server, so live play is from the served page or the downloaded
+  file with the address typed in).

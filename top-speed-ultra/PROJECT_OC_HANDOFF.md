@@ -5,7 +5,20 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## State at the last update (2026-10-18, 22:00 UTC, an Opus session)
+## State at the last update (2026-10-21, a Fable session: the live server)
+
+- **The live server exists** (owner's decision 15): `top-speed-ultra/live/` (server.mjs, its tests, deploy scripts,
+  README with the costs and the capacity ladder), `src/live/client.ts`, `src/game/live/LiveCars.ts`, `src/ui/Live.tsx`,
+  hooks in Game.ts and App.tsx, settings `live` and `liveUrl`, and the suite's `live` group. Branch
+  `claude/live-server` off `claude/always-on`, pushed as a backup (decision 14). Not deployed: it needs a domain and
+  a box (README, "Put it on the internet"). The cap starts at 25; `deploy/cap.sh` raises it.
+- **Next for the live server** (Opus-class unless marked): names over the ghost cars; binary poses and the
+  nearest-32 rule before the cap passes 50 (Fable-class: the relay's format and its proof); email verification and
+  password reset with Resend; a name-moderation list and a `banned` column; a "who's driving" list on the pause
+  screen; the artifact link's page can't reach a server, so the served page at the domain is the public way in.
+- Everything below this line is the state from 2026-10-18 and still applies to the other lanes.
+
+## State at the update before (2026-10-18, 22:00 UTC, an Opus session)
 
 - **Pushes are paused by the owner** (2026-10-17: "without pushing anything til further command"). Everything since
   is committed locally only. Run Fable in this same Claude Code session (`/model`), not a fresh one: a fresh

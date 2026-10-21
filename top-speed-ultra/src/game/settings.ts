@@ -39,6 +39,8 @@ export interface Settings {
   ultraShake: boolean;
   ultraMuffle: boolean;
   hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
+  live: boolean;            // drive on the live server (other drivers' cars appear; the server caps how many at once)
+  liveUrl: string;          // the live server's address; '' means the page's own host when the server serves the page
 }
 
 export interface QualityPreset {
@@ -107,7 +109,7 @@ export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: 'modern',
+    hudStyle: 'modern', live: false, liveUrl: '',
   };
 }
 
@@ -132,6 +134,8 @@ export function loadSettings(): Settings {
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       hudStyle: v.hudStyle === 'minimal' ? 'minimal' : 'modern',
+      live: v.live === true,
+      liveUrl: typeof v.liveUrl === 'string' ? v.liveUrl.slice(0, 200) : '',
     };
   } catch { return d; }
 }

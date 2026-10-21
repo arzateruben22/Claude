@@ -19,9 +19,12 @@ import { CARS, carById, figures, slotsFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
+import { AccountPanel, LiveChip } from './Live';
+import { LiveClient, LiveInfo, liveBase, loadToken, loadName } from '../live/client';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'account';
+const LIVE_OFF: LiveInfo = { status: 'off', online: 0, cap: 0, position: 0, error: '' };
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -55,6 +58,12 @@ export function App() {
   const [report, setReport] = useState('');                           // the Feedback panel's text
   const [entering, setEntering] = useState(false);                    // the sheet's new content is fading in
   const [loadShown, setLoadShown] = useState(true);                   // the loading screen, kept up while it fades out
+  // the live server: the client while a live drive is on, what it reports, and who is signed in on this device
+  const live = useRef<LiveClient | null>(null);
+  const [liveInfo, setLiveInfo] = useState<LiveInfo>(LIVE_OFF);
+  const [liveName, setLiveName] = useState(loadName);
+  const [liveToken, setLiveToken] = useState(loadToken);
+  const liveStatus = useRef('off');
   const reportRef = useRef<HTMLTextAreaElement>(null);
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
@@ -106,7 +115,7 @@ export function App() {
     game.current = g;
     (window as unknown as { __game: Game }).__game = g;
     g.init().then(() => setScreen('menu'), (e) => setError(String(e)));
-    return () => { g.dispose(); game.current = null; };
+    return () => { live.current?.close(); live.current = null; g.dispose(); game.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,14 +143,40 @@ export function App() {
   }, [view]);
   useEffect(() => () => clearTimeout(ghostTimer.current), []);
 
+  // a live drive: connect when the drive starts (signed in, the setting on, a server address known), drop it back at
+  // the menu. Status changes read out as toasts: in line, let in, disconnected.
+  const startLive = () => {
+    const s = settingsRef.current, g = game.current;
+    if (!s.live || !g || live.current) return;
+    const base = liveBase(s.liveUrl), token = loadToken();
+    if (!token) { toast('Sign in to drive live', 'info'); return; }
+    if (!base) { toast('Set the live server address', 'info'); return; }
+    const c = new LiveClient();
+    c.onInfo = (i) => {
+      setLiveInfo(i);
+      if (i.status !== liveStatus.current) {
+        liveStatus.current = i.status;
+        if (i.status === 'online') toast(`Live: ${i.online} of ${i.cap} driving`, 'good');
+        else if (i.status === 'queued') toast(`Server full: you're #${i.position} in line`, 'info');
+        else if (i.status === 'error') toast(i.error || 'Live server unavailable', 'bad');
+      } else if (i.status === 'queued' && i.position !== liveInfoRef.current.position) toast(`In line: #${i.position}`, 'info');
+      liveInfoRef.current = i;
+    };
+    live.current = c; g.setLive(c);
+    const car = carById(g.profile.p.car);
+    c.connect(base, token, car.id, car.paint);
+  };
+  const liveInfoRef = useRef<LiveInfo>(LIVE_OFF);
+  const stopLive = () => { live.current?.close(); live.current = null; game.current?.setLive(null); liveStatus.current = 'off'; setLiveInfo(LIVE_OFF); };
   const drive = (m: Mode = mode) => {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
     setScreen('playing');
     void game.current?.start(m, settings.start, settings.course);
+    startLive();
   };
   const resume = () => { setPanel(null); game.current?.setPaused(false); setScreen('playing'); };
   const openFeedback = () => { if (game.current) setReport(formatReport(game.current.report())); setPanel('feedback'); };
-  const toMenu = () => { setPanel(null); setResult(null); game.current?.quitToMenu(); setScreen('menu'); };
+  const toMenu = () => { setPanel(null); setResult(null); stopLive(); game.current?.quitToMenu(); setScreen('menu'); };
   const navigate = (label: string | null) => {
     if (game.current?.navigateTo(label)) setNavTarget(label);
     setPanel(null);
@@ -246,6 +281,10 @@ export function App() {
       };
       case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
       case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
+      case 'account': return {
+        cls: 'narrow', body: <AccountPanel settings={settings} update={update} name={liveName} token={liveToken} toast={toast}
+          onLogin={(t, n) => { setLiveToken(t); setLiveName(n); }} onLogout={() => { setLiveToken(''); setLiveName(''); update({ live: false }); }} onClose={() => setPanel(null)} />,
+      };
       case 'course': return {
         cls: '', body: <>
           <h2>Races</h2>
@@ -397,6 +436,16 @@ export function App() {
     <section className="menu-sec">
       <div className="field"><label>Traffic</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
     </section>
+    <section className="menu-sec live-sec">
+      <p className="sect" aria-hidden="true">Live · alpha</p>
+      <div className="picks">
+        <button className="pick" onClick={() => setPanel('account')}>
+          <small>Account</small><b>{liveName || 'Not signed in'}</b><span>{liveName ? 'Signed in on this device' : 'Sign up or log in to drive live'}</span><Chevron />
+        </button>
+      </div>
+      <Toggle label="Drive live: other drivers' cars appear on the freeway" value={settings.live} onChange={(v) => { if (v && !liveName) { setPanel('account'); return; } update({ live: v }); }} />
+      <p className="fine">One small server, a limited number of drivers at a time; past that you wait in line. Other drivers are ghosts: no collisions, nothing scored. Your progress stays on this device.</p>
+    </section>
     <div className="menu-aside">
       <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
         <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span>
@@ -423,6 +472,7 @@ export function App() {
           {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
           <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
+          <LiveChip info={liveInfo} />
           {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
               pause button in the corner (styles.css). Its name stays "Pause" either way. */}
           <button type="button" className="tbtn menu" onClick={() => game.current?.setPaused(true)}>

@@ -233,7 +233,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 - `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
-- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`. Run some with
+- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`, `live` (starts the live server on a free port and drives three signed-in browsers against a cap of two). Run some with
   `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`

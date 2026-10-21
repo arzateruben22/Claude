@@ -30,7 +30,10 @@ here, then read:
 - **Honest claims.**
   - No live weather is fed in; it's simulated.
   - No live occupancy for the future Golden Road area.
-  - Multiplayer is roadmap only. Don't claim it exists.
+  - Live driving is an **alpha** (2026-10-21): `live/` is a real server with accounts and a capped lobby (25 to
+    start) that relays where each car is, and the game draws other drivers as ghosts. Say exactly that: no races
+    against people, no online leaderboard, no chat, and it only works where a server is running. Never call it
+    "multiplayer" without "alpha" and the cap.
 - **Radio.** Original or licensed audio only. Never scrape streams.
 - **Map data.** Never copy Google Maps data.
 - **Other projects.** Don't modify Trade Crawler or other projects in this repo.
@@ -38,7 +41,7 @@ here, then read:
   - Run the regression suite before and after a change: `npm run build && npm test` (about 10 minutes here; `--only=`
     for some groups). Add a check for anything new you build. The technical notes explain the suite.
   - Test in Playwright (headless Chromium with `--use-angle=swiftshader`), using the `window.__game` hooks
-    (`fastForward`, `navigateTo`, `stats`).
+    (`fastForward`, `navigateTo`, `stats`). The live server has its own tests: `cd live && npm test`.
   - Log results in `PROJECT_OC_PROGRESS.md`. Never invent results.
 - **Commits** go on branch `claude/always-on`.
 

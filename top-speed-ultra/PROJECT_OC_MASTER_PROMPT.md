@@ -70,7 +70,9 @@ Built items are marked ✅. Everything else is still to do.
   - Still to do: the "4K hyper-realistic" visual tier, meaning licensed or scanned models, photo textures, HDRI skies
     and real building footprints.
 - ✅ Races against AI bots: sprint, checkpoint, endurance, time trial, with a countdown, standings and rewards.
-  - Racing real people is roadmap only. It needs a server and anti-cheat; never claim it exists.
+  - Racing real people is roadmap only. It needs anti-cheat; never claim it exists. Since 2026-10-21 there is a
+    live server (`live/`, alpha): accounts, a lobby capped at 25 drivers at a time that grows rung by rung, and
+    other drivers' cars shown as ghosts. That is all it does, and the game says so.
 - ✅ Fake money only (credits earned by driving) to buy cars. More cars and garage slots open with level. One car
   to start.
 - ⬜ Buy houses and park your car there. Fake money, roadmap.
@@ -91,7 +93,9 @@ Built items are marked ✅. Everything else is still to do.
 - **Our own brands only.** No Ferrari, Honda, Rolex or Hot Wheels branding, logos or copied designs.
 - **Map data.** Use only OpenStreetMap or Overture data (credit them). Never copy Google Maps.
 - **Honest claims.**
-  - Never claim live data, live weather, multiplayer or live occupancy that doesn't exist.
+  - Never claim live data, live weather, multiplayer or live occupancy that doesn't exist. The live server is an
+    alpha with a cap: say "alpha", say the cap, and say what it doesn't do (no races against people, no online
+    leaderboard, no chat).
   - Be honest about limits, including what a browser on a phone can do.
 - **Other projects.** Don't modify Trade Crawler, the Los Güeros website at the repo root, or other projects.
 - **Verify everything.**
@@ -107,7 +111,8 @@ Built items are marked ✅. Everything else is still to do.
 - **P2:** difficulty, mini camera, survival scoring, profiles, saves.
 - **P3:** weather, characters, abilities, races, progression, garage.
 - **P4:** Ultra mode, radio, city slice, on foot.
-- **P5:** multiplayer, housing, arcade track, commercial features.
+- **P5:** multiplayer (the live server's first rung is built: accounts, the capped lobby, ghosts), housing,
+  arcade track, commercial features.
 
 P0–P4 core systems are built (see the progress log). Good next steps:
 - performance on real phones

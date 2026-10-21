@@ -1,0 +1,330 @@
+// OC Ultra: the live server.
+//
+// One Node process, no build step, one dependency (ws). It does three things:
+//   1. Accounts: sign up, log in, log out. Passwords are hashed with scrypt; sessions are random tokens stored hashed.
+//   2. The lobby: at most MAX_PLAYERS drivers online at once (25 to start). Everyone past that waits in line, in
+//      order, and is let in as slots free up. The cap can be raised while it runs (POST /admin/cap).
+//   3. The relay: each driver sends their car's pose about ten times a second; the server checks it is sane and
+//      sends every driver the poses of the drivers near them, ten times a second.
+//
+// It never scores anything: scores, credits and progress stay on the player's device, as before. A pose the server
+// doesn't believe (off the map, faster than any car here, a jump) is dropped, and a player who keeps sending them is
+// disconnected. There is no chat.
+//
+// Run:  MAX_PLAYERS=25 PORT=8791 node server.mjs      (see README.md and deploy/ for the real thing, behind Caddy)
+
+import { createServer } from 'node:http';
+import { readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { randomBytes, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
+import { DatabaseSync } from 'node:sqlite';
+import { WebSocketServer } from 'ws';
+
+// ------------------------------------------------------------------------------------------------ configuration
+const PORT = Number(process.env.PORT || 8791);
+const HOST = process.env.HOST || '127.0.0.1';          // Caddy sits in front; bind to 0.0.0.0 only without it
+const DB_PATH = process.env.DB_PATH || new URL('./data/live.db', import.meta.url).pathname;
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';      // empty: the admin endpoints are off
+const PUBLIC_DIR = process.env.PUBLIC_DIR || '';        // serve the built game from here at / (optional)
+const CAP_MIN = 1, CAP_MAX = 500;
+let MAX_PLAYERS = clampInt(process.env.MAX_PLAYERS, CAP_MIN, CAP_MAX, 25);
+
+const SESSION_DAYS = 30;
+const TICK_MS = 100;                 // the relay's snapshot period (10 Hz)
+const STATE_MAX_HZ = 15;             // a client may send poses up to this often; more are dropped
+const NEAR_M = 3000;                 // a driver hears about drivers within this many metres
+const WORLD_M = 120000;              // OC fits well inside ±120 km of the map origin
+const SPEED_MAX = 200;               // m/s: nothing here does 447 mph
+const JUMP_MAX = 240;                // m/s implied by two consecutive poses: beyond this the pose is a teleport
+const STRIKES_MAX = 40;              // bad poses before a disconnect
+const HELLO_MS = 8000;               // a socket must identify itself this fast
+const PING_MS = 20000, DEAD_MS = 45000;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000, LOGIN_MAX = 10;   // wrong passwords per name
+const IP_MAX = clampInt(process.env.IP_MAX, 1, 1e6, 40);  // sign-ups or log-ins per IP in that window (a shared phone network needs room)
+const BODY_MAX = 4096;
+
+function clampInt(v, lo, hi, dflt) { const n = Math.round(Number(v)); return Number.isFinite(n) ? Math.max(lo, Math.min(hi, n)) : dflt; }
+
+// ------------------------------------------------------------------------------------------------ the database
+mkdirSync(new URL('.', 'file://' + DB_PATH).pathname, { recursive: true });
+const db = new DatabaseSync(DB_PATH);
+db.exec(`
+  PRAGMA journal_mode = WAL;
+  PRAGMA foreign_keys = ON;
+  CREATE TABLE IF NOT EXISTS players (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    name_key TEXT NOT NULL UNIQUE,          -- lower-cased, for uniqueness and log-in
+    email TEXT,                             -- optional; for password resets once email sending exists (TODO)
+    pass TEXT NOT NULL,                     -- scrypt$N$salt$hash, base64url
+    created INTEGER NOT NULL,
+    last_seen INTEGER
+  );
+  CREATE TABLE IF NOT EXISTS sessions (
+    hash TEXT PRIMARY KEY,                  -- sha256 of the token the client holds
+    player INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    created INTEGER NOT NULL,
+    expires INTEGER NOT NULL,
+    last_seen INTEGER
+  );
+  CREATE INDEX IF NOT EXISTS sessions_player ON sessions(player);
+`);
+const q = {
+  byName: db.prepare('SELECT id, name, pass FROM players WHERE name_key = ?'),
+  insert: db.prepare('INSERT INTO players (name, name_key, email, pass, created) VALUES (?, ?, ?, ?, ?)'),
+  seen: db.prepare('UPDATE players SET last_seen = ? WHERE id = ?'),
+  newSession: db.prepare('INSERT INTO sessions (hash, player, created, expires) VALUES (?, ?, ?, ?)'),
+  session: db.prepare('SELECT s.player AS id, p.name AS name, s.expires AS expires FROM sessions s JOIN players p ON p.id = s.player WHERE s.hash = ?'),
+  touch: db.prepare('UPDATE sessions SET last_seen = ? WHERE hash = ?'),
+  drop: db.prepare('DELETE FROM sessions WHERE hash = ?'),
+  sweep: db.prepare('DELETE FROM sessions WHERE expires < ?'),
+  count: db.prepare('SELECT COUNT(*) AS n FROM players'),
+};
+
+// ------------------------------------------------------------------------------------------------ passwords and tokens
+const SCRYPT = { N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
+const b64 = (buf) => Buffer.from(buf).toString('base64url');
+function hashPassword(pw) {
+  const salt = randomBytes(16);
+  return `scrypt$${SCRYPT.N}$${b64(salt)}$${b64(scryptSync(pw, salt, 32, SCRYPT))}`;
+}
+// a hash of a password nobody has: a failed log-in for an unknown name costs the same time as a wrong password
+const DUMMY = hashPassword(b64(randomBytes(12)));
+function checkPassword(pw, stored) {
+  const [kind, N, salt, hash] = String(stored).split('$');
+  if (kind !== 'scrypt') return false;
+  const want = Buffer.from(hash, 'base64url');
+  const got = scryptSync(pw, Buffer.from(salt, 'base64url'), want.length, { ...SCRYPT, N: Number(N) });
+  return want.length === got.length && timingSafeEqual(want, got);
+}
+const tokenHash = (t) => createHash('sha256').update(String(t)).digest('base64url');
+function issueSession(playerId) {
+  const token = b64(randomBytes(32)), now = Date.now();
+  q.newSession.run(tokenHash(token), playerId, now, now + SESSION_DAYS * 86400000);
+  return token;
+}
+function sessionFor(token) {
+  if (typeof token !== 'string' || token.length < 20 || token.length > 100) return null;
+  const h = tokenHash(token), s = q.session.get(h);
+  if (!s) return null;
+  if (s.expires < Date.now()) { q.drop.run(h); return null; }
+  q.touch.run(Date.now(), h);
+  return { id: Number(s.id), name: s.name, hash: h };
+}
+const NAME_RE = /^[A-Za-z0-9_]{3,16}$/;
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}$/;
+
+// ------------------------------------------------------------------------------------------------ rate limits
+const attempts = new Map();          // key -> [timestamps]
+function limited(key, max = LOGIN_MAX) {
+  const now = Date.now(), list = (attempts.get(key) || []).filter((t) => now - t < LOGIN_WINDOW_MS);
+  attempts.set(key, list);
+  if (list.length >= max) return true;
+  list.push(now);
+  return false;
+}
+setInterval(() => { const now = Date.now(); for (const [k, l] of attempts) if (!l.some((t) => now - t < LOGIN_WINDOW_MS)) attempts.delete(k); q.sweep.run(now); }, 60000).unref();
+
+// ------------------------------------------------------------------------------------------------ HTTP
+const started = Date.now();
+const stats = { peak: 0, admitted: 0, queuedEver: 0, posesIn: 0, posesDropped: 0, bytesOut: 0, kicked: 0 };
+const PUBLIC_TYPES = { html: 'text/html; charset=utf-8', js: 'text/javascript', css: 'text/css', json: 'application/json', png: 'image/png', webp: 'image/webp', svg: 'image/svg+xml', webmanifest: 'application/manifest+json', woff2: 'font/woff2' };
+
+function send(res, code, body, extra = {}) {
+  const data = typeof body === 'string' ? body : JSON.stringify(body);
+  res.writeHead(code, { 'content-type': typeof body === 'string' ? 'text/plain; charset=utf-8' : 'application/json', 'cache-control': 'no-store', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization, content-type', 'access-control-allow-methods': 'GET, POST, OPTIONS', ...extra });
+  res.end(data);
+}
+function readJson(req) {
+  return new Promise((resolve, reject) => {
+    let size = 0; const chunks = [];
+    req.on('data', (c) => { size += c.length; if (size > BODY_MAX) { reject(new Error('too big')); req.destroy(); } else chunks.push(c); });
+    req.on('end', () => { try { resolve(chunks.length ? JSON.parse(Buffer.concat(chunks).toString('utf8')) : {}); } catch { reject(new Error('bad json')); } });
+    req.on('error', reject);
+  });
+}
+const ipOf = (req) => (process.env.TRUST_PROXY ? String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() : '') || req.socket.remoteAddress || '?';
+const bearer = (req) => { const m = /^Bearer (.+)$/.exec(String(req.headers.authorization || '')); return m ? m[1] : ''; };
+const health = () => ({ ok: true, online: online.size, cap: MAX_PLAYERS, queued: queue.length, players: Number(q.count.get().n), uptimeS: Math.round((Date.now() - started) / 1000), ...stats });
+
+async function handle(req, res) {
+  const url = new URL(req.url, 'http://x'), path = url.pathname;
+  if (req.method === 'OPTIONS') return send(res, 204, '');
+  try {
+    if (path === '/health' || path === '/api/health') return send(res, 200, health());
+    if (path === '/api/signup' && req.method === 'POST') {
+      if (limited('signup:' + ipOf(req), IP_MAX)) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      const b = await readJson(req);
+      const name = String(b.name || '').trim(), pw = String(b.password || ''), email = b.email ? String(b.email).trim().toLowerCase() : null;
+      if (!NAME_RE.test(name)) return send(res, 400, { error: 'A name is 3 to 16 letters, numbers or underscores.' });
+      if (pw.length < 8 || pw.length > 128) return send(res, 400, { error: 'A password is at least 8 characters.' });
+      if (email && !EMAIL_RE.test(email)) return send(res, 400, { error: 'That email address doesn\'t look right.' });
+      if (b.over13 !== true) return send(res, 400, { error: 'You must be 13 or older to make an account.' });
+      if (q.byName.get(name.toLowerCase())) return send(res, 409, { error: 'That name is taken.' });
+      const r = q.insert.run(name, name.toLowerCase(), email, hashPassword(pw), Date.now());
+      const id = Number(r.lastInsertRowid);
+      return send(res, 200, { token: issueSession(id), player: { id, name } });
+    }
+    if (path === '/api/login' && req.method === 'POST') {
+      const b = await readJson(req);
+      const name = String(b.name || '').trim(), pw = String(b.password || '');
+      if (limited('ip:' + ipOf(req), IP_MAX) || limited('name:' + name.toLowerCase())) return send(res, 429, { error: 'Too many tries. Wait a few minutes.' });
+      const p = q.byName.get(name.toLowerCase());
+      const ok = checkPassword(pw, p ? p.pass : DUMMY) && !!p;
+      if (!ok) return send(res, 401, { error: 'Wrong name or password.' });
+      q.seen.run(Date.now(), p.id);
+      return send(res, 200, { token: issueSession(Number(p.id)), player: { id: Number(p.id), name: p.name } });
+    }
+    if (path === '/api/logout' && req.method === 'POST') {
+      const s = sessionFor(bearer(req));
+      if (s) q.drop.run(s.hash);
+      return send(res, 200, { ok: true });
+    }
+    if (path === '/api/me') {
+      const s = sessionFor(bearer(req));
+      if (!s) return send(res, 401, { error: 'Not logged in.' });
+      return send(res, 200, { player: { id: s.id, name: s.name }, online: online.size, cap: MAX_PLAYERS, queued: queue.length });
+    }
+    if (path === '/admin/cap' && req.method === 'POST') {
+      if (!ADMIN_TOKEN || bearer(req) !== ADMIN_TOKEN) return send(res, 404, 'not found');
+      const b = await readJson(req), cap = clampInt(b.cap, CAP_MIN, CAP_MAX, NaN);
+      if (!Number.isFinite(cap)) return send(res, 400, { error: `cap must be ${CAP_MIN} to ${CAP_MAX}` });
+      MAX_PLAYERS = cap; log('cap', { cap });
+      admitFromQueue();
+      return send(res, 200, health());
+    }
+    if (PUBLIC_DIR && req.method === 'GET') {
+      const rel = path === '/' ? '/index.html' : path;
+      const file = PUBLIC_DIR + rel.replace(/\.\./g, '');
+      const ext = file.split('.').pop();
+      if (PUBLIC_TYPES[ext] && existsSync(file)) { res.writeHead(200, { 'content-type': PUBLIC_TYPES[ext], 'cache-control': 'no-cache' }); return res.end(readFileSync(file)); }
+    }
+    return send(res, 404, 'not found');
+  } catch (e) {
+    return send(res, 400, { error: e.message === 'too big' || e.message === 'bad json' ? 'Bad request.' : 'Something went wrong.' });
+  }
+}
+
+// ------------------------------------------------------------------------------------------------ the lobby
+// online: player id -> client; queue: clients waiting, oldest first
+const online = new Map();
+const queue = [];
+let nextClientId = 1;
+
+function makeClient(ws, ip) {
+  return { ws, ip, cid: nextClientId++, player: null, name: '', car: 'rossini-gt', paint: 0xa80d10, admitted: false, alive: true, lastPing: Date.now(),
+    pose: null, poseAt: 0, poseTimes: [], strikes: 0, seen: new Set() };
+}
+const sendTo = (c, msg) => { if (c.ws.readyState === 1) { const s = JSON.stringify(msg); stats.bytesOut += s.length; c.ws.send(s); } };
+const broadcast = (msg, except) => { for (const c of online.values()) if (c !== except) sendTo(c, msg); };
+const roster = (c) => ({ id: c.player.id, name: c.name, car: c.car, paint: c.paint });
+
+function admit(c) {
+  c.admitted = true;
+  online.set(c.player.id, c);
+  stats.admitted++; stats.peak = Math.max(stats.peak, online.size);
+  sendTo(c, { t: 'welcome', id: c.player.id, name: c.name, cap: MAX_PLAYERS, online: online.size, peers: [...online.values()].filter((o) => o !== c).map(roster) });
+  broadcast({ t: 'join', ...roster(c), online: online.size }, c);
+  log('join', { id: c.player.id, name: c.name, online: online.size });
+}
+function admitFromQueue() {
+  while (online.size < MAX_PLAYERS && queue.length) admit(queue.shift());
+  queue.forEach((c, i) => sendTo(c, { t: 'queued', position: i + 1, cap: MAX_PLAYERS, online: online.size }));
+}
+function leave(c, why) {
+  const qi = queue.indexOf(c);
+  if (qi >= 0) queue.splice(qi, 1);
+  if (c.admitted && online.get(c.player.id) === c) {
+    online.delete(c.player.id);
+    broadcast({ t: 'leave', id: c.player.id, online: online.size });
+    log('leave', { id: c.player.id, name: c.name, why, online: online.size });
+  }
+  c.admitted = false;
+  admitFromQueue();
+}
+function kick(c, why) { stats.kicked++; sendTo(c, { t: 'bye', why }); leave(c, why); try { c.ws.close(4000, why); } catch { /* closing */ } }
+
+function onHello(c, m) {
+  const s = sessionFor(m.token);
+  if (!s) return kick(c, 'Not logged in');
+  c.player = s; c.name = s.name;
+  if (typeof m.car === 'string' && /^[a-z0-9-]{1,24}$/.test(m.car)) c.car = m.car;
+  if (Number.isInteger(m.paint) && m.paint >= 0 && m.paint <= 0xffffff) c.paint = m.paint;
+  const other = online.get(s.id);
+  if (other && other !== c) kick(other, 'Signed in somewhere else');     // one car per account
+  const qd = queue.find((o) => o.player && o.player.id === s.id);
+  if (qd && qd !== c) kick(qd, 'Signed in somewhere else');
+  if (online.size < MAX_PLAYERS) admit(c);
+  else { queue.push(c); stats.queuedEver++; sendTo(c, { t: 'queued', position: queue.length, cap: MAX_PLAYERS, online: online.size }); log('queued', { id: s.id, name: s.name, position: queue.length }); }
+}
+const finite = (v) => typeof v === 'number' && Number.isFinite(v);
+function onPose(c, m) {
+  stats.posesIn++;
+  const now = Date.now();
+  c.poseTimes = c.poseTimes.filter((t) => now - t < 1000);
+  if (c.poseTimes.length >= STATE_MAX_HZ) { stats.posesDropped++; return; }     // too chatty: dropped, no strike
+  c.poseTimes.push(now);
+  const ok = finite(m.x) && finite(m.y) && finite(m.z) && finite(m.h) && finite(m.v)
+    && Math.abs(m.x) < WORLD_M && Math.abs(m.z) < WORLD_M && m.y > -200 && m.y < 3000 && Math.abs(m.v) <= SPEED_MAX;
+  let jump = false;
+  if (ok && c.pose) {
+    const dt = Math.max(0.05, (now - c.poseAt) / 1000);
+    jump = Math.hypot(m.x - c.pose.x, m.z - c.pose.z) / dt > JUMP_MAX && now - c.poseAt < 5000;   // after 5 s away, any place is fine (a restart)
+  }
+  if (!ok || jump) {
+    stats.posesDropped++;
+    if (++c.strikes >= STRIKES_MAX) kick(c, 'Bad data');
+    return;
+  }
+  c.strikes = Math.max(0, c.strikes - 1);
+  c.pose = { x: m.x, y: m.y, z: m.z, h: m.h, v: m.v, b: m.b ? 1 : 0 };
+  c.poseAt = now;
+}
+
+// the relay: every TICK_MS, each driver gets the poses of the drivers near them (ids they haven't met yet come with
+// a name, car and paint, so a late joiner can draw them)
+function tick() {
+  const now = Date.now();
+  for (const c of online.values()) {
+    const near = [];
+    for (const o of online.values()) {
+      if (o === c || !o.pose || now - o.poseAt > 3000) continue;
+      if (c.pose && Math.hypot(o.pose.x - c.pose.x, o.pose.z - c.pose.z) > NEAR_M) continue;
+      const p = o.pose;
+      near.push([o.player.id, r1(p.x), r1(p.y), r1(p.z), r3(p.h), r1(p.v), p.b]);
+    }
+    sendTo(c, { t: 'p', n: near, online: online.size, cap: MAX_PLAYERS });
+  }
+}
+const r1 = (v) => Math.round(v * 10) / 10, r3 = (v) => Math.round(v * 1000) / 1000;
+
+// ------------------------------------------------------------------------------------------------ sockets
+const server = createServer(handle);
+const wss = new WebSocketServer({ server, path: '/ws', maxPayload: 1024 });
+wss.on('connection', (ws, req) => {
+  const c = makeClient(ws, ipOf(req));
+  const helloTimer = setTimeout(() => { if (!c.player) kick(c, 'No hello'); }, HELLO_MS);
+  ws.on('message', (raw) => {
+    let m;
+    try { m = JSON.parse(raw.toString()); } catch { return; }
+    if (!m || typeof m !== 'object') return;
+    if (m.t === 'hello') { if (!c.player) { clearTimeout(helloTimer); onHello(c, m); } return; }
+    if (!c.admitted) return;
+    if (m.t === 's') onPose(c, m);
+    else if (m.t === 'leave') kick(c, 'Left');
+  });
+  ws.on('pong', () => { c.lastPing = Date.now(); });
+  ws.on('close', () => { clearTimeout(helloTimer); leave(c, 'closed'); });
+  ws.on('error', () => { clearTimeout(helloTimer); leave(c, 'error'); });
+});
+setInterval(() => {
+  const now = Date.now();
+  for (const c of [...online.values(), ...queue]) {
+    if (now - c.lastPing > DEAD_MS) { kick(c, 'Timed out'); continue; }
+    try { c.ws.ping(); } catch { /* closing */ }
+  }
+}, PING_MS).unref();
+setInterval(tick, TICK_MS).unref();
+
+function log(ev, data) { console.log(JSON.stringify({ at: new Date().toISOString(), ev, ...data })); }
+server.listen(PORT, HOST, () => log('listen', { host: HOST, port: PORT, cap: MAX_PLAYERS, db: DB_PATH, players: Number(q.count.get().n) }));
+for (const sig of ['SIGINT', 'SIGTERM']) process.on(sig, () => { log('stop', { sig }); for (const c of [...online.values(), ...queue]) kick(c, 'Server restarting'); server.close(); db.close(); process.exit(0); });

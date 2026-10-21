@@ -1,0 +1,15 @@
+{
+  "name": "oc-ultra-live",
+  "private": true,
+  "version": "0.1.0",
+  "description": "OC Ultra: the live server. Accounts, a capped lobby and a position relay for the freeway.",
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
