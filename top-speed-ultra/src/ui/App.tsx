@@ -17,9 +17,10 @@ import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
 import { Ico } from './Icons';
 import { ModeArt } from './ModeArt';
+import { WorldMap } from './WorldMap';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 // the mode cards' one-line subtitles (the menu)
@@ -204,6 +205,7 @@ export function App() {
                 )}
               </div>
               <div className="field traffic"><label>Traffic · simulated</label><Seg value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
+              <button className="rail-btn" onClick={() => setPanel('map')}><Ico name="map" />World Map</button>
               <button className="rail-btn" onClick={() => setPanel('profile')}><Ico name="career" />Profile</button>
               <button className="rail-btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}><Ico name="bests" />Bests</button>
               <button className="rail-btn" onClick={() => setPanel('settings')}><Ico name="settings" />Settings</button>
@@ -246,6 +248,7 @@ export function App() {
             <h2>Paused</h2>
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
+              <button className="btn" onClick={() => setPanel('map')}>World map</button>
               <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
@@ -360,6 +363,14 @@ export function App() {
       )}
 
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
+
+      {panel === 'map' && game.current && (
+        <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} onClose={() => setPanel(null)}
+          onNavigate={(l) => navigate(l)}
+          onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
+          onStartExit={(k) => { update({ exit: k }); setPanel(null); }}
+          onRace={(id) => { update({ course: id }); setMode('race'); setPanel(null); }} />
+      )}
 
       {panel === 'course' && (
         <div className="overlay center">

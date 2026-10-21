@@ -836,3 +836,39 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .loadbar i { left: 31%; }
   .tunnel { display: none; }
 }
+
+/* ------------------------------------------------------------------ the World Map (WorldMap.tsx): the canvas fills the screen,
+   the title top left, zoom bottom left, the list down the right (a sheet along the bottom on phones) */
+.overlay.worldmap { padding: 0; overflow: hidden; background: var(--void); }
+.wm-canvas { position: absolute; inset: 0; touch-action: none; cursor: grab; }
+.wm-canvas:active { cursor: grabbing; }
+.wm-canvas canvas { display: block; width: 100%; height: 100%; }
+.wm-head { position: absolute; top: max(16px, env(safe-area-inset-top)); left: 20px; display: grid; gap: 4px; pointer-events: none; }
+.wm-head h2 { margin: 0; font: 800 34px/1 var(--f-display); letter-spacing: 0.04em; text-transform: uppercase; text-shadow: 0 2px 12px var(--shadow); }
+.wm-head .fine { font-size: 11px; }
+.wm-zoom { position: absolute; left: 16px; bottom: max(16px, env(safe-area-inset-bottom)); display: grid; gap: 6px; }
+.wm-zoom .tbtn { min-width: 52px; justify-content: center; padding: 0 12px; font-size: 16px; }
+.wm-side { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); width: 330px; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px; padding: 14px;
+  background: var(--hex) left top / 56px 97px, var(--glass-2); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--ice); clip-path: var(--chamfer); }
+.wm-tabs { padding: 0; }
+.wm-tabs button { flex: 1; }
+.wm-list { display: grid; align-content: start; gap: 2px; overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+.wm-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; min-height: 40px; padding: 4px 10px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); box-shadow: inset 0 -1px 0 var(--line); }
+.wm-item.race { grid-template-columns: 1fr; gap: 2px; padding: 8px 10px; }
+.wm-item b { font: 600 14px/1.2 var(--f-ui); }
+.wm-item small { color: var(--dim); font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.04em; }
+.wm-item.on { background: var(--cyan-wash); box-shadow: inset 2px 0 0 var(--cyan), inset 0 -1px 0 var(--line); }
+.wm-item.off { cursor: default; opacity: 0.55; }
+.wm-item .shield { min-width: 34px; height: 24px; font-size: 12px; }
+@media (hover: hover) { .wm-item:not(.off):not(.on):hover { background: var(--ice-wash); } }
+.wm-act { display: grid; gap: 8px; }
+.wm-act .btn { width: 100%; }
+.wm-exits summary { cursor: pointer; padding: 6px 2px; font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ice-text); }
+.wm-exits { max-height: 30vh; overflow-y: auto; }
+.wm-exit { display: flex; justify-content: space-between; gap: 10px; width: 100%; min-height: 36px; padding: 4px 8px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); box-shadow: inset 0 -1px 0 var(--line); font: 500 13px/1.25 var(--f-ui); }
+.wm-exit small { color: var(--dim); font: 500 11px/1.3 var(--f-mono); }
+@media (max-width: 760px) {
+  .wm-side { top: auto; left: 0; right: 0; bottom: 0; width: auto; height: 46vh; padding-bottom: max(14px, env(safe-area-inset-bottom)); clip-path: none; }
+  .wm-zoom { bottom: calc(46vh + 12px); }
+  .wm-head h2 { font-size: 26px; }
+}
