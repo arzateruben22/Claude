@@ -28,7 +28,7 @@ Everything the website's assistant may say lives here: Evelyn's words, the studi
 
 | Path | What it holds |
 |---|---|
-| `prompt.md` | The assistant's instructions: how to answer, when to hand off. Stable text, cached on the server. |
+| `prompt.md` | The assistant's instructions: how to answer, how it sounds (a real person at the front desk; matches the client's energy; reads shorthand and typos without correcting them; no emoji by default), when to hand off. Stable text, cached on the server. |
 | `client-questions/<group>.md` | The exact questions clients text her (before a visit, right after, routines, results, booking), with her answers. |
 | `concerns/<concern>.md` | One per skin concern: her first questions, morning and night picks from the shelf, what to avoid, timeline, which facial, common mistakes, everyday habits, when it must come to her. |
 | `treatments/explained/<treatment>.md` | What to expect from each treatment: the steps, how it feels, how they'll look after, how often, results, who it's for, who has to wait, pairings. |
@@ -54,7 +54,7 @@ The playbook also takes voice memos per item: recorded in her phone's own record
 
 ## Rules that don't depend on her answers, or on the model
 
-`js/ask-rules.js` is plain code: reactions, pregnancy, medications, named conditions, "my skin" questions and emergencies always go to Evelyn before any AI runs, on the website and on the server alike. The bundle builder copies the same rules into the server's TypeScript and the eval.
+`js/ask-rules.js` is plain code: reactions, pregnancy, medications, named conditions, "my skin" questions and emergencies always go to Evelyn before any AI runs, on the website and on the server alike. The bundle builder copies the same rules into the server's TypeScript and the eval. Both sides run the rules on the message as typed and as the client meant it: `js/ask-typos.js` (and its server copy, `_shared/typos.ts`, fed the same word lists by the bundle) expands texting shorthand (wdym, idk, b4, appt, w/) and corrects misspelled topic words ("pregnent", "brazillian", "facail"), so "im pregnent" is still a hand-off. Nothing is ever corrected back at the client.
 
 ## What never goes in here
 

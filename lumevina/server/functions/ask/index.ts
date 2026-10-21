@@ -61,6 +61,7 @@ import {
 import { clientFile } from "../_shared/plans.ts";
 import { MEMORY_KINDS, remember } from "../_shared/profiles.ts";
 import { learnedBlock } from "../_shared/learn.ts";
+import { fixTypos } from "../_shared/typos.ts";
 import { notifyOwner } from "../_shared/notify.ts";
 import { EMAIL, giftBalance, lookUpOrder } from "../_shared/lookups.ts";
 import { readPhotos, savePhotos, type Photo } from "../_shared/photos.ts";
@@ -368,7 +369,8 @@ Deno.serve(async (req) => {
   // 1) the rules, before any AI. A "my skin" question from a client with a
   //    plan on file goes to Claude with their plan; everything else the rules
   //    catch goes to Evelyn (the website asks the client first).
-  let kind: string | null = ruleKind(q.toLowerCase());
+  //    The rules read the message as typed and as the client meant it ("pregnent", "b4 my appt").
+  let kind: string | null = ruleKind(q.toLowerCase()) ?? ruleKind(fixTypos(q));
   if (kind === "skin" && (file?.hasPlan || file?.hasProfile)) kind = null;   // their plan or profile lets Claude answer from the playbook, specific to them
   if (kind) return json({ handoff: kind, urgent: kind === "urgent" });
 

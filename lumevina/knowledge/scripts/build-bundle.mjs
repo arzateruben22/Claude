@@ -24,8 +24,10 @@ const read = (p) => fs.readFileSync(p, "utf8");
 globalThis.window = {};
 await import(path.join(root, "js/catalog.js"));
 await import(path.join(root, "js/ask-rules.js"));
+await import(path.join(root, "js/ask-typos.js"));
 const CAT = globalThis.window.LUMEVINA_CATALOG;
 const RULES = globalThis.window.LumevinaAskRules;
+const TYPOS = globalThis.window.LumevinaTypos.lists;   // shorthand and the words the chat knows, for the server's own typo fix
 const re = (r) => ({ source: r.source, flags: r.flags });
 const rules = {
   urgent: re(RULES.URGENT),
@@ -178,6 +180,9 @@ export const SHELF: ShelfItem[] = ${JSON.stringify(shelf, null, 1)};
 export type Rule = { source: string; flags: string };
 export type RuleKind = { kind: string; any: Rule[]; both?: Rule[] };
 export const RULES: { urgent: Rule; kinds: RuleKind[] } = ${JSON.stringify(rules, null, 1)};
+
+/** Texting shorthand and the chat's vocabulary (js/ask-typos.js), for _shared/typos.ts. */
+export const TYPOS: { vocab: string[]; common: string[]; short: Record<string, string> } = ${JSON.stringify(TYPOS)};
 `;
 fs.writeFileSync(path.join(root, "server/functions/_shared/knowledge.ts"), ts);
 

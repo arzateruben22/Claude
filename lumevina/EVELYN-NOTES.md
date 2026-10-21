@@ -305,3 +305,8 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 - **Signed-in clients:** the chat may point out a general rule against what they listed (two exfoliants on the same night, a retinoid before a wax) and send the decision to Evelyn; it never changes a routine itself.
 - **Quick confirm** in her playbook: 147 common answers drafted from standard practice and her own GlossGenius descriptions, one at a time: Yes, Fix it, or Not this one. About 30 minutes in all, in any number of sittings. Only what she confirms reaches the chat, as her words. Talk it through offers the same drafts.
 - **The model:** the chat asks for the model Ruben chose in both the server and the preview; in the preview, a viewer whose plan can't run it gets the quick tier instead.
+
+## The chat reads texting, and sounds like a person (Oct 21)
+
+- **Shorthand and typos:** wdym, idk, ty, thx, pls, u, ur, b4, tmrw, appt, rn, lmk, nvm, w/, "heyyy", "facail", "brazillian", "pregnent" all read as what the client meant, on the website and on the server, before the safety rules run. The chat never points a typo out. "wdym?" after an answer gets the same thing again, shorter.
+- **How it sounds:** a real person at the front desk: warm, quick, plain, a little playful when the client is, calm when they're worried; matches their length and energy; no "Great question!", no exclamation-mark pile-ups. Emoji only when the client used one first or the moment is clearly light, never on anything medical or a hand-off. Evelyn's own voice notes, once she writes them, win over all of it.

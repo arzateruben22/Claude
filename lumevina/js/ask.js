@@ -149,11 +149,21 @@
 
   /* ── everyday answers, in Evelyn's voice ── */
   var KB = [
-    { id: "hi", k: /^(hi|hey|hello|good (morning|afternoon|evening))[\s!.,]*(there)?[\s!.]*$/, a: function () {
+    { id: "hi", k: /^(hi+|hey+|hello+|helo|heyo|hiya|yo|sup|what'?s up|good (morning|afternoon|evening))[\s!.,]*(there|evelyn|lumevina)?[\s!.?]*$/, a: function () {
       return "Hi! I can help with prices, booking, prep, aftercare and memberships, any time. Anything about your own skin goes straight to Evelyn."; } },
-    { id: "thanks", k: /thank|appreciate/, a: function () { return "Anytime! Anything else I can help with?"; } },
-    { id: "ack", k: /^(ok|okay|k|kk|cool|great|got it|sounds good|perfect|nice|alright|all right|yes|yeah|yep|no|nope|nah)[\s!.]*$/, a: function () {
+    { id: "thanks", k: /thank|appreciate|\bthanks\b|you'?re the best|life ?saver/, a: function () { return "Anytime. Anything else I can help with?"; } },
+    { id: "bye", k: /^(bye+|see you|see ya|talk (later|soon)|talk to you later|good ?night|have a good (one|day|night)|ttyl|later)[\s!.]*$/, a: function () {
+      return "See you at the studio. Evelyn’s here whenever you need her."; } },
+    { id: "ack", k: /^(ok|okay|cool|great|got it|sounds good|perfect|nice|alright|all right|yes|yeah|no|sure|fine|bet|word|awesome|amazing|love it|same|true)[\s!.]*$/, a: function () {
       return "Anything else I can help with?"; } },
+    /* "wdym?" after an answer: say it again, shorter, rather than start over */
+    { id: "clarify", k: /^(what do you mean|what does that mean|huh|what|wait what|i don'?t (get|understand|follow)( it| that)?|i'?m (confused|lost)|say that again|come again|explain( that)?|in english|simpler|can you (explain|clarify)|meaning)[\s!?.]*$/, a: function () {
+      var last = null;
+      for (var i = state.log.length - 1; i >= 0; i--) if (state.log[i].who === "bot" && state.log[i].text) { last = state.log[i].text; break; }
+      if (!last) return "Ask me anything about prices, booking, prep, aftercare or products, and I’ll keep it simple.";
+      var first = (/^[\s\S]*?[.!?](?=\s|$)/.exec(last) || [last])[0];
+      return "Let me put that more simply: " + (first.length > 170 ? first.slice(0, 168).replace(/\s\S*$/, "") + "…" : first) + " Want the rest, or should I send it to Evelyn?"; },
+      acts: [["Ask Evelyn", "skin"]] },
     { id: "human", k: /real person|\bhuman\b|talk to (someone|a person|evelyn|you)|speak (to|with)|(message|ask|contact|text) evelyn/, handoff: "request" },
     { id: "live", k: /in[- ]person|group class|workshop|glow party|\bpart(y|ies)\b|girls'? night|bachelorette|pro night|skin school live|live class/, a: function () {
       return "Skin School Live is Evelyn’s in-person class: two hours at the studio with six people, a skin check under the lamp, your routine built on the spot and a kit to take home, for $129 ($109 for members). Want it just for your friends? A Glow Party is $690 for up to six, at the studio or at your place. Estheticians can join Pro Night for $249."; },
@@ -773,7 +783,7 @@
     }
     return out;
   };
-  var CHITCHAT = /^(hi|hey|hello|thanks?|thank you|ty|ok|okay|k|cool|great|got it|perfect|nice|yes|no)[\s!.]*$/;
+  var CHITCHAT = /^(hi+|hey+|hello+|helo|heyo|hiya|yo|sup|thanks?|thank you( so much| very much)?|ok|okay|cool|great|got it|perfect|nice|yes|yeah|no|bye+|see you|good ?night)[\s!.]*$/;
   var preview = function (text) {
     if (!sampler || /^about my skin:/i.test(text)) return false;
     var raw = text.toLowerCase(), t = TY ? TY.fix(text) : raw;
