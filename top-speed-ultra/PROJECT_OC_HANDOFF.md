@@ -227,6 +227,20 @@ expressions); (3) the hair silhouette fix (the updo reads as a cap from the fron
 No renders or suite runs on Fable agents.
 ```
 
+**F7. The live relay's binary format, before the cap passes 100.**
+
+```
+OC Ultra (top-speed-ultra), branch claude/live-server. Read CLAUDE.md, live/README.md (the ladder, the bandwidth
+budget) and live/server.mjs (tick, rosterTick, onPose) and src/live/client.ts (onMessage, send, poseOf). Design and
+build a binary wire format for poses and snapshots: 12 to 16 bytes a row (id, x and z as int32 decimetres from the
+map origin or int16 offsets from the receiver, y, heading quantised to 16 bits, speed, brake bit), sent as binary
+WebSocket frames, with a version byte so old clients are refused cleanly; keep JSON for everything else. Prove it:
+the same rows decode to within 0.1 m and 0.01 rad of the JSON ones (a property test over random poses across OC),
+node live/test/load.mjs 100 and 250 before and after (outbound MB a minute, CPU), `cd live && npm test` green, and
+`npm test -- --only=live,livephone` green. Log the numbers in PROJECT_OC_PROGRESS.md; update the ladder's bandwidth
+table in live/README.md.
+```
+
 **F6. Decisions, with the owner (a design conversation; Fable is best for it).**
 
 ```
