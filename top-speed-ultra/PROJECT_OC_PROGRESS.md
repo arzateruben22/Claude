@@ -13,15 +13,14 @@ there, under our own name, with no real business's name, menu or look, and only 
   slice, places and freeway link from OpenStreetMap via Overture. A reviewer re-ran both pipelines in scratch copies:
   Lot 57's outputs are byte-identical to before (verify 12 of 12), and the bar's outputs reproduce byte for byte
   (verify 13 of 13).
-- **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress after a fifth
-  repair. This round fixed every item the round-4 review listed, and it now describes Lot 57's code as contracts
-  (names, signatures, promises) because that code is still changing: every number taken from it is marked with the
-  commit and date it was measured at, and the first building step is to re-measure them. The reviewer re-ran both
-  check scripts cleanly (12 plus 14 zones, 73 plus 30 slots, 60 nearby street pieces, both I-5 directions covered)
-  and re-added every Low, HD and Ultra budget by hand; all match. The design review still rejects it over four short
-  gaps: a rule that no person gets the most detailed model contradicts what the plan promises about faces; one check
-  relies on a frame rate our own records contradict; and the plan never says how the I-5 is drawn or what changing
-  the graphics setting does to the people already on screen. It needs another pass before building starts.
+- **Not kept yet: the design plan** (`PROJECT_OC_SPORTS_BAR.md`). It is committed as work in progress after a sixth
+  repair. This round fixed all twelve items the round-5 review listed (the faces rule, the frame-rate check, how the
+  I-5 is drawn, and what changing the graphics setting does to people already on screen among them). The reviewer
+  re-ran both check scripts cleanly (12 plus 14 zones, 73 plus 30 slots, every stand point reachable, 60 nearby street
+  pieces, every crossing clear) and re-added the changed HD and Ultra budgets by hand; all match, and the people
+  details match Lot 57's code. The design review still rejects it: one of the plan's own checks cannot be passed as
+  written, the repairs opened two new gaps in what the plan specifies, and there are three small errors. It needs
+  another pass before building starts.
 
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
