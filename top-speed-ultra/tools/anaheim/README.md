@@ -1,7 +1,8 @@
 # Anaheim street and building data
 
 Builds the data for the on-foot mode: a 3 km walkable slice of Anaheim's stadium district around our own fictional
-hangout, a city-wide street layer, and the link from the game's freeway exits to the venue.
+hangout, a city-wide street layer, and the link from the game's freeway exits to the venue. A second, smaller slice
+covers our own sports bar off the I-5 (see "Second venue" below).
 
 The venue is ours. The real taproom at that spot is used only to find a point in open data. No real business name,
 sign, menu or trade dress goes into the data. Street names do, because they are public facts.
@@ -13,6 +14,9 @@ sign, menu or trade dress goes into the data. Street names do, because they are 
 | `slice.json` | 720 KB | Every transportation segment, connector, building, building part, place (category and point only), land use, water area, infrastructure feature and land-cover piece in a 3 km x 3 km box around the venue |
 | `streets-city.json` | 1.15 MB | Anaheim's street centrelines (motorway to residential) clipped to the city limits, with class, name, one-way and intersections, plus the city boundary |
 | `freeway-link.json` | 10 KB | The game freeway exits near the venue (path ids into `src/data/oc-network.json`) and the real streets from each ramp to the venue lot |
+| `sportsbar-slice.json` | 133 KB (47 KB gzip) | The same as `slice.json` for our sports bar, in a 1.2 km box, plus the bar's footprint and lot (`venue.site`) |
+| `sportsbar-slice-places.json` | 7 KB (3 KB gzip) | Places in that box, category and point only |
+| `sportsbar-freeway-link.json` | 7 KB (2 KB gzip) | The game's I-5 exits near the bar and the real streets from each ramp to the bar's lot |
 
 ### Format
 
@@ -105,6 +109,11 @@ python3 verify.py        # spot checks -> data/verify.json
 python3 render.py        # -> tests/out/onfoot/data-overview.png, data-venue.png, data-city.png
 ```
 
+`venue.py`, `fetch_slice.py`, `build_slice.py`, `link.py`, `verify.py` and `render.py` take a venue key from
+`ana.VENUES` as their argument. No argument means Lot 57, whose files keep their names. Run the same six with
+`sportsbar` to build the sports bar's files, each prefixed `sportsbar-`. `link.py sportsbar` also routes over
+`streets-city.json`, so run `city.py` before it.
+
 `ana.py` holds the shared code:
 - the game projection, loaded from `tools/oc-network`
 - `RangeFile`
@@ -113,7 +122,15 @@ python3 render.py        # -> tests/out/onfoot/data-overview.png, data-venue.png
 - the decimetre and delta encoders
 - the street-name filter
 
-`data/` is a gitignored cache, about 57 MB.
+`data/` is a gitignored cache, about 59 MB.
+
+`ana.py` also holds the venue table (`VENUES`) and `fetch_local()`. For venues other than Lot 57, `fetch_slice.py`
+calls `fetch_local()` for each type. It uses a local extract in `data/` when two things hold:
+- the extract has every column `build_slice.py` reads;
+- the extract provably covers the box. Every row of an unfiltered box read intersects that box, so the read's box
+  contains [min xmax, max xmin] x [min ymax, max ymin] over the extract's rows.
+
+Otherwise it range-reads the release, as before. Lot 57's caches stay full range reads.
 
 ## How the venue spot was found
 
@@ -247,6 +264,112 @@ checked against real turn rules.
 **Renders.** `tests/out/onfoot/data-overview.png`, `data-venue.png` and `data-city.png` have been looked at:
 - The streets, freeways, river, stadium, arena and venue sit where the checks say.
 - The Anaheim outline has its long east-west shape, with the hills to the east.
+
+## Second venue: our sports bar (South Claudina Way)
+
+The owner asked for a Sims-like world at a real sports bar in Anaheim. The owner hasn't said the bar is theirs or
+that we may use it, so we build **our own** sports bar at that spot, as with Lot 57. The real business is only the
+lookup that finds the point: its name is used in `venue.py` and nowhere else. It is not in `src/`, the shipped data,
+this README or the checks' output.
+
+**The spot.** `venue.py sportsbar` reads Overture places from the local extract `data/places-area.parquet`. It looks
+for records whose address contains "1759" and "Claudina" and confirms the record by name. It finds one record:
+- id `67ef4633-8c62-4d34-a6db-8e14044de5db`, category `sports_bar`, confidence 0.982
+- lon -117.901513, lat 33.804492
+- game x -6621.5, z -9342.6
+
+It sits just east of the I-5, about 117 m north of East Katella Ave, and 1.8 km in a straight line west-north-west of
+Lot 57.
+
+**The box** is 600 m each way round the point: game box (-7222, -9943, -6022, -8743), 1.2 km x 1.2 km. It reaches
+East Katella Ave and the I-5 Katella interchange, South Lewis St (333 m east), Disney Way and Anaheim Blvd (north-west)
+and East Gene Autry Way (south). East Cerritos Ave is 676 m north, just outside.
+
+**Where the data came from.**
+- Segments: `data/segments-5km.parquet`. It holds the same 731 rows as `city-segment.parquet` in the box, and has
+  every column.
+- Places: `data/places-area.parquet`.
+- Range-read from the same release (`2026-09-23.1`), about 25 s:
+  - connectors (the local extract has no `sources`)
+  - buildings (the city extract lacks names, sources, min_height and is_underground)
+  - building parts, land use, water, infrastructure and land cover (the local extracts cover only Lot 57's box)
+
+**Contents** (`data/sportsbar-slice-counts.json`):
+- 615 segment pieces: 252 service (48 parking aisles, 20 driveways), 189 footway (74 sidewalks, 21 crosswalks),
+  34 motorway (26 links), 29 secondary, 27 residential, 23 primary, 23 rail, 14 tertiary and a few others.
+- 904 connectors, 0 vertex misses.
+- 25 street names; 33 names on service roads, footways and rail lines were dropped.
+- 426 buildings: 342 with a height (85 from lidar), 6 with floors. No building parts in the box.
+- 67 land-use polygons, 18 water features, 205 infrastructure shapes and 536 infrastructure points, 2 land-cover pieces.
+- 307 places. The bar's own record is left out, as are 25 below confidence 0.5 and 17 not open.
+
+**The footprint and the lot (`venue.site` in `sportsbar-slice.json`).**
+- `venue.bld` is the footprint the point stands in (building 61). It is an L-shaped retail strip, 2,949 m2 and 4.3 m
+  tall (lidar). It wraps a courtyard that opens east onto South Claudina Way. The bar's point is at the strip's
+  south-east tip. The strip is **shared**: 11 other open place records sit inside it.
+- **No parking area is mapped at the strip.** The nearest mapped one is 216 m away on another property, so
+  `venue.lot` is null. `site.lot_how` is `derived` and `site.lot_p` holds a derived lot of 3,023 m2. It is built by
+  the rule in `build_slice.py`:
+  - start from the courtyard (the footprint's convex hull less the footprint);
+  - widen it 9 m along the two mapped service aisles that cross it;
+  - keep it clear of the kerbs (class half-widths) and the footprint;
+  - drop strips under 6 m wide.
+- `site.lot_aisles` lists the two aisles. `site.lot_entries` lists three entries:
+  - two from South Claudina Way;
+  - one from Anaheim Way, by a one-way driveway that is entry only.
+- Treat the derived lot as our layout's starting point, not as mapped fact.
+
+## The sports bar's freeway link (`sportsbar-freeway-link.json`)
+
+`link.py sportsbar` lists only the game's I-5 exits (`VENUES['sportsbar']['freeways']`). The slice is small, so it
+also routes over the city's main and local streets (`streets-city.json`). The two join where they share a connector:
+the same Overture connector, at the same decimetre position. A terminal must lie within 5 m of the game ramp here,
+not 40 m. The city layer has no link flags and stops at the city limits, so a looser match let the I-5 S Chapman
+exit snap to an unrelated junction on Manchester Ave. That exit's real terminal is in the city of Orange, outside
+both layers, so it is left out. Each route has `outside_slice_m`, its metres on the city layer.
+
+| Freeway | Sign | Ramp paths | Terminal on | Drive to lot | Streets |
+| --- | --- | --- | --- | --- | --- |
+| I-5 N (path 0) | Disney Way / Katella Avenue | 124 (terminal at s = 366 m) | Anaheim Way, south of Katella | 352 m | Anaheim Way, South Claudina Way, lot aisle |
+| I-5 S (path 1) | Katella Avenue / Orangewood Avenue | 791, 573 | East Katella Ave at Manchester Ave | 545 m | Manchester Ave, East Katella Ave, Anaheim Way, South Claudina Way, lot aisle |
+| I-5 S (path 1) | Anaheim Boulevard / Disney Way | 209 | Disney Way | 1,091 m | Disney Way, Manchester Ave, East Katella Ave, Anaheim Way, South Claudina Way, lot aisle |
+
+The Katella exits are the nearest in each direction. The file also lists:
+- the Gene Autry Way exits: 1,981 m from I-5 N and 1,990 m from I-5 S. Their terminals are where East Gene Autry Way
+  crosses the I-5. Both routes run 993 m outside the slice: east, then north by Union St, Meridian St, Market St and
+  Auburn Way to Katella. That routing has not been checked against real turn rules.
+- Harbor Blvd from I-5 S, 2,384 m.
+- Ball Rd / Harbor Blvd from I-5 N, 3,123 m.
+
+All routes end at the lot's aisle junction.
+
+## The sports bar's spot checks (`verify.py sportsbar`, last run: 13 of 13 pass)
+
+- **Footprint.** Building 61 contains the place point. The next building is 37 m away.
+- **Lot.** The derived lot is beside the footprint (0.1 m) with 0 m2 under any building. It holds 186 m of mapped
+  aisles and has entries from Anaheim Way and South Claudina Way.
+- **Streets.** They fit the place as described:
+  - East Katella Ave runs east-west (bearing 0 deg) 117 m south of the bar.
+  - South Claudina Way runs north-south (96 deg) and passes 24 m from it.
+  - South Lewis St runs north-south (89 deg) 333 m east.
+  - East Cerritos Ave runs east-west (1 deg) 676 m north. This one is from the city layer, outside the box.
+  - Anaheim Way (133 deg, 43 m away) runs between the bar and the I-5 (133 deg, 100 m away, to the south-west).
+- **Game freeway.** The game's I-5 paths 0 and 1 lie on the slice's Overture I-5: median 0.0 m, 95th percentile
+  0.2 m, max 0.6 m over 140 samples. That is inside the 1 m median required.
+- **Link.** I-5 N and I-5 S each have a Katella exit routed to the lot. All 7 routes start at their ramp terminals
+  (within 5 m of the game ramp) and end in the lot.
+- **The real business.**
+  - Its place record is left out of the places file: no place point lies within 1 m of the bar.
+  - Its name is not under `src/`: 0 hits in 92 text files. The check looks the name up from the raw extract by the
+    place id at run time, so the name isn't written there either.
+
+**Renders.** `tests/out/onfoot/data-sportsbar-overview.png`, `data-sportsbar-venue.png` and
+`data-sportsbar-city.png` have been looked at. The footprint, the derived lot, Katella, Claudina, Anaheim Way and the
+I-5 ramps sit where the checks say.
+
+**Re-runs.** `build_slice.py`, `link.py` and `verify.py` for Lot 57 still write byte-identical `slice.json`,
+`slice-places.json`, `freeway-link.json`, `data/slice-counts.json` and `data/verify.json`, and `venue.py` the same
+`data/venue.json`. The sports bar's three files also come out byte-identical on a re-run.
 
 ## Notes
 

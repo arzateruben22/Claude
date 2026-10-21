@@ -1,12 +1,15 @@
 # Overview render of slice.json (decoded the way the game would) with the game's freeway paths, the venue, its lot
 # and the routes from freeway-link.json. Writes tests/out/onfoot/data-overview.png and data-venue.png (zoom).
+#   python3 render.py [venue]     (default lot57; other venues write data-<venue>-overview.png, -venue.png, -city.png)
 import os, math, collections as C
 from PIL import Image, ImageDraw, ImageFont
-from ana import OUT, jload
+from ana import OUT, jload, venue
 
+V = venue()
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
 SHOTS = os.path.join(ROOT, 'tests', 'out', 'onfoot'); os.makedirs(SHOTS, exist_ok=True)
-sl = jload(os.path.join(OUT, 'slice.json')); lk = jload(os.path.join(OUT, 'freeway-link.json'))
+sl = jload(V['slice']); lk = jload(V['link'])
+TAG = '' if V['key'] == 'lot57' else V['key'] + '-'
 net = jload(os.path.join(ROOT, 'src/data/oc-network.json'))
 dic = sl['dict']
 FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
@@ -96,9 +99,11 @@ def render(fn, box, px_per_m, title, labels=True, full=True):
         d.line([P(p) for p in undelta(e['route']['p'])], fill=col + (200,), width=max(2, int(2.5 * sc)))
         tx, tz = e['terminal']['x'], e['terminal']['z']
         r = 4 * sc; d.ellipse([P((tx, tz))[0] - r, P((tx, tz))[1] - r, P((tx, tz))[0] + r, P((tx, tz))[1] + r], fill=col, outline=(0, 0, 0))
-    # venue lot and venue
-    lot = sl['infra'][lk['venue']['lot_infra']]
-    d.polygon([P(p) for p in undelta(lot['p'])], outline=(220, 0, 0), width=max(2, int(1.5 * sc)))
+    # venue lot (mapped, or derived: hatched outline) and venue
+    site = sl['venue'].get('site')
+    lot_ring = site['lot_p'] if site else sl['infra'][lk['venue']['lot_infra']]['p']
+    if site and site['lot_how'] == 'derived': d.polygon([P(p) for p in undelta(lot_ring)], fill=(255, 200, 0, 90))
+    d.polygon([P(p) for p in undelta(lot_ring)], outline=(220, 0, 0), width=max(2, int(1.5 * sc)))
     if lk['venue']['bld'] is not None:
         d.polygon([P(p) for p in undelta(sl['bld'][lk['venue']['bld']]['p'])], outline=(255, 0, 0), width=max(2, int(1.5 * sc)))
     vx, vz = P((sl['venue']['x'], sl['venue']['z'])); r = 7 * max(1, sc / 2)
@@ -139,9 +144,14 @@ def render(fn, box, px_per_m, title, labels=True, full=True):
     d.polygon([(W - 30, 20), (W - 40, 50), (W - 20, 50)], fill=(0, 0, 0)); d.text((W - 36, 52), 'N', fill=(0, 0, 0), font=f)
     img.save(fn); print('wrote', fn, img.size)
 
-render(os.path.join(SHOTS, 'data-overview.png'), sl['box'], 0.5, 'Anaheim stadium-district slice (3 x 3 km), game coordinates')
 vx, vz = sl['venue']['x'], sl['venue']['z']
-render(os.path.join(SHOTS, 'data-venue.png'), (vx - 450, vz - 350, vx + 650, vz + 350), 1.4, 'Venue zoom (1.1 x 0.7 km)', full=False)
+if V['key'] == 'lot57':
+    render(os.path.join(SHOTS, 'data-overview.png'), sl['box'], 0.5, 'Anaheim stadium-district slice (3 x 3 km), game coordinates')
+    render(os.path.join(SHOTS, 'data-venue.png'), (vx - 450, vz - 350, vx + 650, vz + 350), 1.4, 'Venue zoom (1.1 x 0.7 km)', full=False)
+else:
+    render(os.path.join(SHOTS, f'data-{TAG}overview.png'), sl['box'], 1.0, f'{V["key"]} slice (1.2 x 1.2 km), game coordinates; '
+           'yellow: derived lot (no parking area is mapped there)')
+    render(os.path.join(SHOTS, f'data-{TAG}venue.png'), (vx - 200, vz - 150, vx + 200, vz + 150), 3.0, 'Venue zoom (400 x 300 m)', full=False)
 
 # ---- city streets (streets-city.json) with the city limits, the slice box and the game freeways
 cs = jload(os.path.join(OUT, 'streets-city.json'))
@@ -166,6 +176,6 @@ d.rectangle([P((X0, Z0)), P((X1, Z1))], outline=(220, 0, 0), width=3)
 d.regular_polygon((*P((sl['venue']['x'], sl['venue']['z'])), 7), 5, fill=(255, 30, 30), outline=(0, 0, 0))
 d.rectangle([0, H, W, H + 60], fill=(255, 255, 255))
 d.text((10, H + 6), f"streets-city.json: {len(cs['seg'])} street pieces (motorway to residential) inside the Anaheim city limits (purple). "
-       'Red box: the 3 km walkable slice; star: venue; blue: game freeways.', fill=(0, 0, 0), font=font(14))
+       f"Red box: the {'3' if V['key'] == 'lot57' else '1.2'} km walkable slice; star: venue; blue: game freeways.", fill=(0, 0, 0), font=font(14))
 d.text((10, H + 30), 'Data: Overture Maps 2026-09-23.1 from OpenStreetMap (ODbL). North is up.', fill=(60, 60, 60), font=font(13))
-fn = os.path.join(SHOTS, 'data-city.png'); img.save(fn); print('wrote', fn, img.size)
+fn = os.path.join(SHOTS, f'data-{TAG}city.png'); img.save(fn); print('wrote', fn, img.size)
