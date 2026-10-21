@@ -6,7 +6,8 @@
 //   node knowledge/scripts/build-bundle.mjs      (from lumevina/)
 //
 // Sources: knowledge/prompt.md, every knowledge *.md with answers in it (her
-// screenshots' transcripts are already folded into those by import-playbook.mjs), the
+// screenshots' transcripts are already folded into those by import-playbook.mjs),
+// knowledge/general/*.md (standard esthetics knowledge, not hers), the
 // homepage's FAQ and policies (index.html), the catalog (js/catalog.js), the
 // studio facts below, and the hand-off rules (js/ask-rules.js).
 
@@ -123,6 +124,15 @@ const knowledge = [
 ].filter(Boolean).join("\n\n");
 const empty = !knowledge;
 
+// ── general esthetics knowledge (knowledge/general/*.md): not her words. It
+// explains what things are and fills gaps; her playbook always wins. ──
+const general = dir("general").map(body).filter(Boolean);
+const GENERAL = general.length ? [
+  "# General skincare and esthetics knowledge",
+  "Not Evelyn's words: standard esthetics practice, written for the assistant. Use it to explain what something is, how a kind of treatment or ingredient generally works, and why a rule exists, and to fill a gap her playbook leaves, saying \"generally\" or \"usually\" when you do. Whenever her playbook, her treatments or the FAQ say something, that wins, even where this differs. Never use it to diagnose, to name a condition, to call something normal from a description, to change a client's routine, or to decide a contraindication for a client: those stay Evelyn's, and a doctor's.",
+  general.join("\n\n---\n\n")
+].join("\n\n") : "";
+
 // ── the shelf ──
 const shelf = CAT.products.filter((p) => !p.draft).map((p) => ({
   id: p.id, name: p.name, brand: p.brand, type: p.cat, size: p.size || "", price: p.price, stock: p.stock == null ? null : p.stock, about: p.about || ""
@@ -130,7 +140,7 @@ const shelf = CAT.products.filter((p) => !p.draft).map((p) => ({
 
 const PROMPT = read(path.join(K, "prompt.md")).trim();
 const builtAt = new Date().toISOString().slice(0, 10);
-const bundle = { builtAt, prompt: PROMPT, facts: FACTS, factsV3: FACTS_V3, knowledge, knowledgeEmpty: empty, hardLines, voice, shelf, rules };
+const bundle = { builtAt, prompt: PROMPT, facts: FACTS, factsV3: FACTS_V3, knowledge, knowledgeEmpty: empty, general: GENERAL, hardLines, voice, shelf, rules };
 
 fs.mkdirSync(path.join(K, "eval"), { recursive: true });
 fs.writeFileSync(path.join(K, "eval/bundle.json"), JSON.stringify(bundle, null, 1));
@@ -153,6 +163,9 @@ export const FACTS_V3 = ${lit(FACTS_V3)};
 /** Evelyn's playbook: only the sections she has answered. Empty until she has. */
 export const KNOWLEDGE = ${lit(knowledge)};
 export const KNOWLEDGE_EMPTY = ${empty};
+
+/** General esthetics knowledge (knowledge/general): explains and fills gaps; her words win. */
+export const GENERAL = ${lit(GENERAL)};
 
 /** Her hard lines and her voice, when written. */
 export const HARD_LINES = ${lit(hardLines)};
@@ -181,6 +194,7 @@ fs.writeFileSync(path.join(root, "texting/knowledge.md"), [
   "# Evelyn's Skin Playbook",
   "",
   empty ? "_She hasn't filled her playbook in yet. Anything about skin concerns, aftercare, routines or how to use her products: draft a short holding reply and tell her it's hers to answer._" : knowledge,
+  GENERAL ? "\n" + GENERAL : "",
   hardLines ? "\n# Her hard lines\n\n" + hardLines : "",
   voice ? "\n# Her voice\n\n" + voice : "",
   "",
@@ -189,4 +203,4 @@ fs.writeFileSync(path.join(root, "texting/knowledge.md"), [
   shelfMd,
   ""
 ].join("\n"));
-console.log(`bundle: prompt ${PROMPT.length} chars, facts ${FACTS.length} (${policies.length} FAQ & policy items), playbook ${knowledge.length} chars (${empty ? "empty" : `${clientQs.length} client-question groups, ${explained.length} treatments explained, ${treatments.length} aftercare, ${concerns.length} concerns, ${products.length} product notes${visits ? ", visits" : ""}${materials ? ", materials" : ""}`}), shelf ${shelf.length}`);
+console.log(`bundle: prompt ${PROMPT.length} chars, facts ${FACTS.length} (${policies.length} FAQ & policy items), general ${GENERAL.length} chars (${general.length} files), playbook ${knowledge.length} chars (${empty ? "empty" : `${clientQs.length} client-question groups, ${explained.length} treatments explained, ${treatments.length} aftercare, ${concerns.length} concerns, ${products.length} product notes${visits ? ", visits" : ""}${materials ? ", materials" : ""}`}), shelf ${shelf.length}`);

@@ -14,7 +14,7 @@
 // deno-lint-ignore-file no-explicit-any
 import Anthropic from "npm:@anthropic-ai/sdk@0.131.0";
 
-const MODEL = "claude-opus-5-5";
+const MODEL = "claude-fable-5-1";
 export const TEACHABLE = new Set(["skin", "other"]);
 export const LEARNED_CAP = 120;   // approved answers the chat reads, newest first
 

@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as S from "./playbook-spec.mjs";
+import { DRAFTS } from "./playbook-drafts.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
@@ -35,7 +36,8 @@ const spec = {
   hardLineFields: S.HARD_LINE_FIELDS,
   voiceFields: S.VOICE_FIELDS,
   treatments: S.TREATMENTS,
-  shelf: byType.map((g) => ({ cat: g.cat, items: g.items.map(label) }))
+  shelf: byType.map((g) => ({ cat: g.cat, items: g.items.map(label) })),
+  drafts: DRAFTS   // common answers she confirms or fixes (Quick confirm, and offered in Talk it through)
 };
 
 const html = String.raw`<title>Evelyn's Skin Playbook</title>
@@ -222,6 +224,25 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
   @media (prefers-reduced-motion: reduce) { .talk-progress span { transition: none; } }
   @media (prefers-reduced-motion: reduce) { .msg.wait span { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .meter span { transition: none; } }
+  /* Quick confirm: one drafted answer at a time; yes, fix it, or skip */
+  .tab-confirm { border-color: var(--sage); color: var(--sage); font-weight: 600; }
+  .tab-confirm svg { flex: none; }
+  .tab-confirm[aria-current="true"] { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .cf-top { display: grid; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .cf-where { margin: 0; font-size: 0.84rem; color: var(--ink-soft); }
+  .cf-progress { height: 4px; border-radius: 999px; background: var(--wash); overflow: hidden; }
+  .cf-progress span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--sage); transition: width 400ms ease; }
+  .cf-card { background: var(--card); border: 1px solid var(--edge); border-radius: 16px; padding: 1rem 1.05rem 1.1rem; display: grid; gap: 0.7rem; }
+  .cf-k { margin: 0; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
+  .cf-q { margin: 0; font-weight: 600; font-size: 1.05rem; line-height: 1.35; text-wrap: balance; }
+  .cf-pick { font-size: 0.84rem; color: var(--sage); font-weight: 500; }
+  .cf-draft { margin: 0; padding: 0.8rem 0.95rem; border-left: 3px solid var(--sage); background: var(--field); border-radius: 0 12px 12px 0; font-size: 0.97rem; line-height: 1.5; white-space: pre-wrap; }
+  .cf-note { margin: 0; font-size: 0.78rem; color: var(--ink-soft); }
+  .cf-acts { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .cf-acts .linkish { margin-left: auto; }
+  .cf-done { margin: 0; padding: 1rem 1.05rem; background: var(--card); border: 1px solid var(--edge); border-radius: 16px; color: var(--ink-soft); }
+  .cf-pick[hidden], .cf-draft[hidden], .cf-edit[hidden], .cf-save[hidden], .cf-yes[hidden], .cf-fix[hidden], .cf-card[hidden], .cf-done[hidden], .cf-note[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .cf-progress span { transition: none; } }
 </style>
 
 <div class="wrap">
@@ -229,9 +250,10 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     <p class="eyebrow">Lumevina · the assistant learns from you</p>
     <h1>Evelyn's <em>Skin Playbook</em></h1>
     <p class="lede">Everything you'd tell a client, in your own words. The website's assistant answers only from
-    what you write here, and hands you anything it can't find. Fill it in over a few sittings; it saves as you go,
-    and nothing is pre-filled. Type, speak (the mic key on your keyboard), add screenshots of things you've
-    already written, or open <strong>Talk it through</strong> and let Claude interview you.</p>
+    what you write here, and hands you anything it can't find. Fill it in over a few sittings; it saves as you go.
+    The fastest way: <strong>Quick confirm</strong> shows a common answer for each question, and you say yes or fix
+    it. Or type, speak (the mic key on your keyboard), add screenshots of things you've already written, or open
+    <strong>Talk it through</strong> and let Claude interview you. Nothing reaches the assistant until you've confirmed it.</p>
   </header>
 
   <div class="bar">
@@ -701,6 +723,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     var reqDone = FIELDS.filter(function (f) { return f.sid !== "products" && answeredKey(f.sid, f.key); }).length;
     document.getElementById("meter").style.width = (reqDone / required * 100) + "%";
     document.getElementById("count").textContent = all + " answered";
+    if (typeof paintConfirm === "function") paintConfirm();
   };
 
   var current = null;
@@ -875,6 +898,8 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     if (k === "products") s += " She names products from her shelf, and how to use them.";
     if (k === "treatments") s += " She names treatments from her menu.";
     if (k === "list") s += " Real replies she has sent clients, names removed: save each one she shares as its own value.";
+    var d = SPEC.drafts[f.sid + "/" + f.key];
+    if (d) s += ' A common answer to offer her, from standard practice: "' + (typeof d === "string" ? d : [].concat(d.pick || []).join(", ") + (d.text ? ". " + d.text : "")).replace(/"/g, "\'") + '"';
     return s;
   };
   var RULES = [
@@ -883,7 +908,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     "How to talk:",
     "- Warm, brief, plain. One question at a time, with at most one short sentence before it.",
     "- Work through the questions listed below, in order, in your own natural words. If an answer is vague or incomplete for a client to act on (no timing, no product name, no amount or frequency, \"it depends\" without on what), ask one short follow-up, then move on.",
-    "- Never suggest answers, products, timings or claims, and never give skin or medical advice yourself. If she asks what she should say, ask what she tells clients now.",
+    "- When a question below comes with a common answer, offer it: say it to her in a sentence or two and ask whether that's what she tells clients, or what she'd change. If she says yes as it is, save the common answer as given; if she corrects it, save her version. When no common answer is given, never invent one, never suggest products, timings or claims, and never give skin or medical advice yourself; if she asks what she should say, ask what she tells clients now.",
     "- If she'd rather skip a question, or doesn't know, say that's fine and move on: put its id in \"skip\".",
     "- If she says she's done for now, thank her briefly, tell her everything is saved, ask nothing more, and set \"pause\" to true.",
     "",
@@ -989,6 +1014,118 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
       '<button class="linkish talk-skip" type="button">Skip this card</button><button class="linkish talk-reset" type="button">Start the conversation over</button></div>';
   main.insertBefore(talkSec, main.firstChild);
   var $t = function (sel) { return talkSec.querySelector(sel); };
+
+  /* ── Quick confirm: a common answer for each question (SPEC.drafts, from
+     standard practice and her menu). Yes saves it as her answer; Fix it saves
+     her version; Not this one skips it. Decisions are kept in playbook/confirm.
+     A draft is never shown for a question she has already answered. ── */
+  var DRAFT_SECS = 12;
+  var confirm = { skips: [], accepted: [] };
+  var confirmTab = el("button", "tab tab-confirm");
+  confirmTab.type = "button"; confirmTab.setAttribute("role", "tab"); confirmTab.dataset.sid = "confirm";
+  confirmTab.innerHTML = CHECK;
+  confirmTab.appendChild(document.createTextNode("Quick confirm"));
+  confirmTab.appendChild(el("span", "tab-n", ""));
+  tabsEl.insertBefore(confirmTab, tabsEl.firstChild);
+  var cfSec = el("section", "section confirm");
+  cfSec.id = "s-confirm";
+  cfSec.setAttribute("aria-labelledby", "h-confirm");
+  cfSec.innerHTML =
+    '<div class="section-head"><h2 id="h-confirm">Quick confirm</h2>' +
+    "<p>The fastest way through. A common answer is drafted for each question, from standard esthetics practice and your own menu. Tap <strong>Yes</strong> if it's what you tell clients, fix it if it isn't, or skip it. Only what you confirm reaches the assistant, as your answer, in your words. A few at a time is fine; it saves as you go.</p></div>" +
+    '<div class="cf-top"><p class="cf-where"></p><div class="cf-progress" role="progressbar" aria-label="Quick confirm" aria-valuemin="0" aria-valuenow="0"><span></span></div></div>' +
+    '<div class="cf-card" hidden><p class="cf-k"></p><p class="cf-q"></p><p class="cf-pick" hidden></p><blockquote class="cf-draft"></blockquote>' +
+    '<textarea class="cf-edit" rows="5" aria-label="Your version" hidden></textarea>' +
+    '<p class="cf-note" hidden>The tap choice stays as shown; change it in its tab any time.</p>' +
+    '<div class="cf-acts"><button class="btn cf-yes" type="button">Yes, that\'s what I say</button><button class="btn btn-ghost cf-fix" type="button">Fix it</button>' +
+    '<button class="btn cf-save" type="button" hidden>Save my version</button><button class="linkish cf-skip" type="button">Not this one</button></div></div>' +
+    '<p class="cf-done" hidden></p>';
+  main.insertBefore(cfSec, main.firstChild);
+  var $c = function (sel) { return cfSec.querySelector(sel); };
+  var DRAFT_KEYS = Object.keys(SPEC.drafts || {}).filter(function (k) { return BY_ID[k]; });
+  var draftText = function (k) { var d = SPEC.drafts[k]; return typeof d === "string" ? d : (d.text || ""); };
+  var draftPick = function (k) { var d = SPEC.drafts[k]; return typeof d === "string" ? null : (d.pick || null); };
+  var draftOpen = function (k) { var f = BY_ID[k]; return !!f && !answeredKey(f.sid, f.key) && confirm.skips.indexOf(k) === -1; };
+  var openDrafts = function () { return DRAFT_KEYS.filter(draftOpen); };
+  var cfWriting = false, cfAgain = false;
+  var saveConfirm = function () {
+    try { localStorage.setItem(LOCAL + "confirm", JSON.stringify(confirm)); } catch (e) { /* storage off */ }
+    if (!db || canSave === false) return;
+    if (cfWriting) { cfAgain = true; return; }
+    cfWriting = true;
+    db.doc(COLL + "/confirm").set(JSON.parse(JSON.stringify({ skips: confirm.skips, accepted: confirm.accepted, updatedAt: new Date().toISOString() })))
+      .catch(function () { /* the answers themselves save separately */ })
+      .then(function () { cfWriting = false; if (cfAgain) { cfAgain = false; saveConfirm(); } });
+  };
+  /* her yes (or her version) becomes the answer in the same place the tabs write */
+  var acceptDraft = function (k, text) {
+    var f = BY_ID[k], a = state[f.sid], kind = f.field.kind, pick = draftPick(k);
+    text = String(text || "").trim();
+    if (kind === "text") { if (!text) return false; a[f.key] = text; }
+    else {
+      if (!pick && !text) return false;
+      if (pick) a[f.key] = kind === "one" ? [].concat(pick)[0] : [].concat(pick);
+      if (text) a[f.key + ".text"] = text;
+    }
+    if (confirm.accepted.indexOf(k) === -1) confirm.accepted.push(k);
+    saveConfirm();
+    schedule(f.sid, 0);
+    return true;
+  };
+  var cfKey = null;
+  var paintConfirm = function () {
+    var open = openDrafts(), k = open[0] || null, card = $c(".cf-card"), done = $c(".cf-done");
+    var total = DRAFT_KEYS.length, left = open.length, decided = total - left;
+    confirmTab.querySelector(".tab-n").textContent = left ? String(left) : "";
+    var mins = Math.max(1, Math.round(left * DRAFT_SECS / 60));
+    $c(".cf-where").textContent = left ? decided + " of " + total + " decided · " + left + " to go, about " + mins + (mins === 1 ? " minute" : " minutes") + " in all"
+      : "All " + total + " decided.";
+    var bar = $c(".cf-progress");
+    bar.setAttribute("aria-valuemax", String(total)); bar.setAttribute("aria-valuenow", String(decided));
+    bar.querySelector("span").style.width = (total ? Math.round(decided / total * 100) : 0) + "%";
+    done.hidden = !!k;
+    done.textContent = k ? "" : "That's every drafted answer. Anything still open is in the other tabs, or in Talk it through.";
+    card.hidden = !k;
+    if (!k) { cfKey = null; return; }
+    if (k === cfKey && card.contains(document.activeElement)) return;    /* she's fixing this one */
+    cfKey = k;
+    var f = BY_ID[k], pick = draftPick(k);
+    $c(".cf-k").textContent = sectionTitle(f.sid) + " · " + itemTitle(f.sid, f.item);
+    $c(".cf-q").textContent = f.field.q.replace(/^"|"$/g, "");
+    $c(".cf-pick").textContent = pick ? "Tap choice: " + [].concat(pick).join(", ") : "";
+    $c(".cf-pick").hidden = !pick;
+    $c(".cf-note").hidden = true;
+    $c(".cf-draft").textContent = draftText(k);
+    $c(".cf-draft").hidden = false;
+    var ed = $c(".cf-edit"); ed.value = draftText(k); ed.hidden = true;
+    $c(".cf-save").hidden = true; $c(".cf-yes").hidden = false; $c(".cf-fix").hidden = false;
+  };
+  cfSec.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || !cfKey) return;
+    var k = cfKey;
+    if (b.classList.contains("cf-yes")) { cfKey = null; acceptDraft(k, draftText(k)); paintConfirm(); }
+    else if (b.classList.contains("cf-fix")) {
+      $c(".cf-draft").hidden = true; $c(".cf-yes").hidden = true; b.hidden = true;
+      var ed = $c(".cf-edit"); ed.hidden = false; $c(".cf-save").hidden = false; $c(".cf-note").hidden = !draftPick(k);
+      ed.focus();
+    }
+    else if (b.classList.contains("cf-save")) { var v = $c(".cf-edit").value.trim(); if (!v) return; cfKey = null; acceptDraft(k, v); paintConfirm(); }
+    else if (b.classList.contains("cf-skip")) { if (confirm.skips.indexOf(k) === -1) confirm.skips.push(k); saveConfirm(); cfKey = null; paintConfirm(); }
+  });
+  var union = function (a, b) { return a.concat((b || []).filter(function (x) { return a.indexOf(x) === -1; })); };
+  var startConfirm = function () {
+    try { var local = JSON.parse(localStorage.getItem(LOCAL + "confirm")); if (local) confirm = { skips: local.skips || [], accepted: local.accepted || [] }; } catch (e) { /* storage off */ }
+    paintConfirm();
+  };
+  var loadConfirm = function () {
+    if (!db) return;
+    db.doc(COLL + "/confirm").get().then(function (d) {
+      var v = d && d.exists ? d.data() : null;
+      if (v) { confirm = { skips: union(confirm.skips, v.skips), accepted: union(confirm.accepted, v.accepted) }; try { localStorage.setItem(LOCAL + "confirm", JSON.stringify(confirm)); } catch (e) { /* storage off */ } }
+      paintConfirm();
+    }, function () { /* this phone's copy stands */ });
+  };
   var logEl = $t(".talk-log"), inEl = $t(".talk-in"), sendEl = $t(".talk-send"), statusEl = $t(".talk-status"), micEl = $t(".talk-mic"), aloudEl = $t(".talk-aloud");
   var setTalkStatus = function (t, bad) { statusEl.textContent = t || ""; statusEl.className = "talk-status" + (bad ? " is-bad" : ""); };
 
@@ -1239,8 +1376,9 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
     SPEC.sections.forEach(function (s) { state[s.id] = (data && data[s.id]) || readLocal(s.id); });
     var tab = null; try { tab = localStorage.getItem(LOCAL + "tab"); } catch (e) { /* storage off */ }
     paint();
-    show(tab === "talk" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : SPEC.sections[0].id);
+    show(tab === "talk" || tab === "confirm" || SPEC.sections.some(function (s) { return s.id === tab; }) ? tab : "confirm");
     tidy();
+    startConfirm();
     startTalk();
     if (!window.claude || !window.claude.use) { setSave("Saved on this phone"); return; }
     Promise.all([window.claude.use("db"), window.claude.use("user"), window.claude.use("assets")]).then(function (r) {
@@ -1268,6 +1406,7 @@ const html = String.raw`<title>Evelyn's Skin Playbook</title>
         });
         paint();
         tidy();
+        loadConfirm();
         loadTalk();
         if (canSave !== false && !Object.keys(timers).some(function (k) { return timers[k]; })) setSave("Saved", "is-ok");
       }, function () { setSave("Saved on this phone"); });

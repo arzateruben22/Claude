@@ -50,7 +50,7 @@ const bundlePath = path.join(root, "knowledge/eval/bundle.json");
 let bundle = "";
 if (fs.existsSync(bundlePath)) {
   const b = JSON.parse(fs.readFileSync(bundlePath, "utf8"));
-  const keep = { builtAt: b.builtAt, prompt: b.prompt, facts: b.facts, factsV3: b.factsV3, knowledge: b.knowledge, knowledgeEmpty: b.knowledgeEmpty,
+  const keep = { builtAt: b.builtAt, prompt: b.prompt, facts: b.facts, factsV3: b.factsV3, knowledge: b.knowledge, knowledgeEmpty: b.knowledgeEmpty, general: b.general,
     hardLines: b.hardLines, voice: b.voice, shelf: b.shelf.map(({ id, name, brand, type, size, price, about }) => ({ id, name, brand, type, size, price, about })) };
   bundle = `<script>/* knowledge/eval/bundle.json */\nwindow.LUMEVINA_ASK_BUNDLE = ${JSON.stringify(keep).replace(/</g, "\\u003c")};\n</script>\n  `;
 }

@@ -594,7 +594,8 @@
     });
     var pending = state.pending;
     if (pending) {
-      var box = bubble("bot", esc(pending.lead) + '<span class="ask-promise">' + esc(promise(pending.member)) + "</span>");
+      /* the general rule behind the hand-off, when the assistant had one, then the lead */
+      var box = bubble("bot", esc(pending.note ? pending.note + "\n\n" + pending.lead : pending.lead) + '<span class="ask-promise">' + esc(promise(pending.member)) + "</span>");
       var who2 = me();
       var f = document.createElement("div");
       f.className = "ask-handoff";
@@ -683,7 +684,7 @@
         settle(text, { answer: answer, acts: bagActs(ids).concat(links, nextActs(answer, ids.length > 0)) });
         noted(Array.isArray(r.remembered) ? r.remembered.map(String) : []);
         if (r.remembered && window.LumevinaProfile) window.LumevinaProfile.remembered();
-      } else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "" });
+      } else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "", note: r.note ? String(r.note) : "" });
       else settle(text, classify(text));
     }, function () { settle(text, classify(text)); });
     return true;
@@ -702,6 +703,7 @@
   if (BUNDLE && window.claude && window.claude.use) {
     window.claude.use("sample").then(function (fn) { sampler = fn || null; }, function () { sampler = null; });
   }
+  var PREVIEW_MODEL = "claude-fable-5-1";   /* the viewer's plan decides; otherwise the quick tier answers */
   var KINDS = ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"];
   var MEM_KINDS = ["skin", "concern", "product", "supplement", "treatment", "sensitivity", "goal", "other"];
   var GONE = { not_granted: 1, sampling_disabled: 1, not_declared: 1, capability_disabled: 1, capability_removed: 1 };
@@ -724,7 +726,7 @@
       who.name + " is signed in" + (who.member ? ", a " + who.plan + " member" : "") + ".",
       lines.length ? "Their skin profile, in their own words:\n" + lines.join("\n") : "They haven't filled in a skin profile yet.",
       mem.length ? "What they've told you before:\n" + mem.join("\n") : "",
-      "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\")." +
+      "Use their profile and what they've told you to make an answer from Evelyn's playbook specific to them (for example, which of the products they listed to pause before a facial). Don't recommend changes to their routine yourself: adding, stopping or swapping a product goes to Evelyn (kind \"skin\"). You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax), and send the decision to Evelyn." +
         (p && p.supplements ? " They take supplements: never advise on supplements (whether to take, stop, mix or dose one); hand those to Evelyn (kind \"skin\")." : "") +
         " Use their first name now and then."
     ].filter(Boolean).join("\n\n");
@@ -737,6 +739,7 @@
       "# Evelyn's Skin Playbook\n\n" + (BUNDLE.knowledgeEmpty
         ? "Evelyn hasn't filled her playbook in yet. So there is nothing here about skin concerns, aftercare details, routines or how to use her products: every question of that kind goes to her. You can still answer from the FAQ, the policies, her treatments and the shelf list."
         : BUNDLE.knowledge),
+      BUNDLE.general || "",
       BUNDLE.hardLines ? "# Her hard lines\n\n" + BUNDLE.hardLines : "",
       BUNDLE.voice ? "# Her voice\n\n" + BUNDLE.voice : "",
       "# Her shelf (every product the website sells)\n\n" + BUNDLE.shelf.map(function (p) {
@@ -747,7 +750,7 @@
         "# How to reply here",
         "- There are no tools in this chat: where the instructions above say to call hand_to_evelyn, show_products or remember, write the matching line below instead. Order look-ups and gift balances are answered by the website itself.",
         "- This is a chat bubble on her website: plain text, no Markdown (no headings, bold or tables). A short list with \"- \" is fine for steps.",
-        "- To hand a question to Evelyn instead of answering (everything the instructions above send to her), reply with only this line: [[evelyn: <kind> | <one short line for Evelyn: what the client is asking>]], kind being one of " + KINDS.join(", ") + ".",
+        "- To hand a question to Evelyn instead of answering (everything the instructions above send to her), reply with only this line: [[evelyn: <kind> | <one short line for Evelyn: what the client is asking> | <one or two general sentences the client sees while they wait: the general rule that applies and why it's her call; nothing about their own skin, never \"that's normal\"; leave it empty when there's nothing useful>]], kind being one of " + KINDS.join(", ") + ".",
         "- When you name shelf products the client can buy right now (they asked about one, want to reorder, or want what fits the routine Evelyn described), end with a line [[products: <id>, <id>]] using ids from her shelf list, so Add to bag buttons appear. Only products in stock or with a few left.",
         who ? "- When the client tells you something lasting about themselves that isn't already above (skin type, a concern, a product they use and when, a supplement they take, a treatment they've had and roughly when, something their skin reacts to, a goal), end with a line [[remember: <one short line in the third person, in their words> | <kind: " + MEM_KINDS.join(", ") + ">]]. Never medications, prescriptions, pregnancy or health conditions, anything about someone else, or guesses." : "",
         "- The website reads the [[...]] lines and never shows them; don't mention them."
@@ -760,11 +763,11 @@
       .replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
   };
   var marks = function (t) {
-    var out = { handoff: null, why: "", ids: [], facts: [] }, m;
+    var out = { handoff: null, why: "", note: "", ids: [], facts: [] }, m;
     MARK.lastIndex = 0;
     while ((m = MARK.exec(t))) {
       var parts = m[2].split("|").map(function (x) { return x.trim(); }), what = m[1].toLowerCase();
-      if (what === "evelyn") { out.handoff = KINDS.indexOf(parts[0].toLowerCase()) !== -1 ? parts[0].toLowerCase() : "other"; out.why = parts[1] || ""; }
+      if (what === "evelyn") { out.handoff = KINDS.indexOf(parts[0].toLowerCase()) !== -1 ? parts[0].toLowerCase() : "other"; out.why = parts[1] || ""; out.note = (parts[2] || "").slice(0, 400); }
       else if (what === "products") out.ids = out.ids.concat(parts[0].split(/[\s,]+/).filter(function (id) { return BUNDLE.shelf.some(function (p) { return p.id === id; }); }));
       else if (parts[0]) out.facts.push([parts[0], MEM_KINDS.indexOf((parts[1] || "").toLowerCase()) !== -1 ? parts[1].toLowerCase() : "other"]);
     }
@@ -784,7 +787,7 @@
     if (asking) asking.abort();
     var ctl = asking = new AbortController();
     sampler([{ role: "user", content: previewRules() }].concat(history()), {
-      modelTier: "quick", cache: false, signal: ctl.signal,
+      model: PREVIEW_MODEL, effort: "low", modelTier: "quick", cache: false, signal: ctl.signal,
       onText: function (u) {
         var now = shown(u.text);
         if (!now || !live.isConnected) return;
@@ -795,7 +798,7 @@
     }).then(function (r) {
       if (asking === ctl) asking = null;
       var mk = marks(r.text), answer = shown(r.text);
-      if (mk.handoff) return settle(text, { handoff: mk.handoff, why: mk.why });
+      if (mk.handoff) return settle(text, { handoff: mk.handoff, why: mk.why, note: mk.note });
       if (!answer) return settle(text, local(text));
       settle(text, { answer: answer, acts: bagActs(mk.ids).concat(nextActs(answer, mk.ids.length > 0)) });
       var LP = window.LumevinaProfile;
@@ -886,7 +889,7 @@
       push({ who: "bot", text: r.answer, acts: (r.acts || []).concat(r.node ? [["More on this", "n:" + r.node]] : []) });
     } else {
       var who = me();
-      state.pending = { id: uuid(), text: text, kind: r.handoff, why: r.why || "", lead: (state.unclear >= 2 ? LEADS.again : LEADS[r.handoff]) || LEADS.other, member: !!(who && who.member) };
+      state.pending = { id: uuid(), text: text, kind: r.handoff, why: r.why || "", note: r.note || "", lead: (state.unclear >= 2 ? LEADS.again : LEADS[r.handoff]) || LEADS.other, member: !!(who && who.member) };
       shots = []; sendErr = ""; sending = false;
       if (state.unclear >= 2) state.unclear = 0;
       if (r.handoff === "urgent") push({ who: "bot", text: LEADS.urgent, warn: true });

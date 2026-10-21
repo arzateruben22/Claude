@@ -56,7 +56,7 @@
 import Anthropic from "npm:@anthropic-ai/sdk@0.131.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import {
-  BUILT_AT, PROMPT, FACTS, FACTS_V3, KNOWLEDGE, KNOWLEDGE_EMPTY, HARD_LINES, VOICE, SHELF, RULES, type Rule,
+  BUILT_AT, PROMPT, FACTS, FACTS_V3, KNOWLEDGE, KNOWLEDGE_EMPTY, GENERAL, HARD_LINES, VOICE, SHELF, RULES, type Rule,
 } from "../_shared/knowledge.ts";
 import { clientFile } from "../_shared/plans.ts";
 import { MEMORY_KINDS, remember } from "../_shared/profiles.ts";
@@ -65,7 +65,7 @@ import { notifyOwner } from "../_shared/notify.ts";
 import { EMAIL, giftBalance, lookUpOrder } from "../_shared/lookups.ts";
 import { readPhotos, savePhotos, type Photo } from "../_shared/photos.ts";
 
-const MODEL = "claude-opus-5-5";
+const MODEL = "claude-fable-5-1";
 const MEMBER_HOURS = 24;
 const GUEST_HOURS = 48;
 const KIND_SET = new Set(["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"]);
@@ -102,6 +102,7 @@ const stableFor = (site: Site) => [
   "# Evelyn's Skin Playbook\n\n" + (KNOWLEDGE_EMPTY
     ? "Evelyn hasn't filled her playbook in yet. So there is nothing here about skin concerns, aftercare details, routines or how to use her products: every question of that kind goes to her with hand_to_evelyn. You can still answer from the FAQ, the policies and the shelf list."
     : KNOWLEDGE),
+  GENERAL,
   HARD_LINES ? "# Her hard lines\n\n" + HARD_LINES : "",
   VOICE ? "# Her voice\n\n" + VOICE : "",
   "# Her shelf (every product the website sells)\n\n" + SHELF.map((p) => shelfLine(p) + ` [id: ${p.id}]`).join("\n"),
@@ -138,6 +139,7 @@ const fileBlock = (name: string, file: { hasPlan: boolean; hasProfile?: boolean;
   `- Never change or add to the plan. Adding, stopping or swapping a product, moving up a strength, a new concern, or anything about how their skin is reacting goes to Evelyn with hand_to_evelyn.`,
   `- If anything under "Cautions on file" bears on the question, hand it to Evelyn.`,
   `- Their skin profile and what they've told you before are in their own words. Use them to make an answer from Evelyn's playbook specific to them (for example, when they ask what to stop before a facial, name the products they listed that it applies to). Don't recommend changes to their routine yourself: that goes to Evelyn.`,
+  `- You may point out, in one sentence and as general information, a general rule that bears on what they listed (two exfoliants on the same night, a retinoid before a wax, an active on freshly treated skin), and send the decision to Evelyn with hand_to_evelyn (kind "skin"). Never tell them to add, stop or swap anything yourself.`,
   ...(file.supplements ? [`- They take supplements. Never advise on supplements (whether to take, stop, mix or dose one); hand any supplement question to Evelyn with kind "skin".`] : []),
   `- The file is theirs, so you may tell them what's in it. Keep answers as short as always.`,
 ].join("\n\n");
@@ -151,8 +153,9 @@ const HANDOFF_TOOL = {
     properties: {
       kind: { type: "string", enum: ["urgent", "reaction", "pregnancy", "medication", "condition", "skin", "request", "other"] },
       why: { type: "string", description: "One short line for Evelyn: what the client is asking for." },
+      note: { type: "string", description: "One or two short sentences the client sees while the question goes to Evelyn: the general rule that applies and why it's her call (for example, how long waxing usually waits after Accutane, or that a flare of a named condition is a doctor's). General only: nothing about this client's own skin, no diagnosis, never \"that's normal\", nothing they could take as the answer. \"\" when there's nothing useful to add." },
     },
-    required: ["kind", "why"],
+    required: ["kind", "why", "note"],
     additionalProperties: false,
   },
 } as const;
@@ -223,7 +226,7 @@ const draftFor = (site: Site) => [
   "When the client sent photos, they're attached. Look at them only to make the draft specific to what they asked about, and to judge whether they're clear enough. Never name, guess or rule out a condition from a photo, and never call it normal or fine: Evelyn decides that. If a photo is blurry, dark, filtered, too far away or doesn't show the area, the draft asks for another, close up in daylight. With a clear photo, the draft doesn't ask for one again.",
   "",
   "Reply with JSON: \"draft\" is the message to the client. \"photo_note\" is one or two plain lines for Evelyn on what the photos show (which area; colour, size, spread, texture; whether they're clear enough to judge), describing, never diagnosing; \"\" when there are no photos.",
-  "", "# Facts", factsFor(site), "", KNOWLEDGE_EMPTY ? "" : "# Her playbook\n" + KNOWLEDGE, HARD_LINES ? "# Her hard lines\n" + HARD_LINES : "", VOICE ? "# Her voice\n" + VOICE : "",
+  "", "# Facts", factsFor(site), "", KNOWLEDGE_EMPTY ? "" : "# Her playbook\n" + KNOWLEDGE, GENERAL ? GENERAL + "\n\nIn the draft, the general knowledge may inform standard aftercare and contraindication rules, hedged, and never a diagnosis; her own words come first." : "", HARD_LINES ? "# Her hard lines\n" + HARD_LINES : "", VOICE ? "# Her voice\n" + VOICE : "",
   "# Her shelf", SHELF.map(shelfLine).join("\n"),
 ].filter((s) => s !== "").join("\n");
 const DRAFT: Record<Site, string> = { v2: draftFor("v2"), v3: draftFor("v3") };
@@ -393,7 +396,7 @@ Deno.serve(async (req) => {
       if (r === "saved") remembered.push(String(input.fact).trim().slice(0, 200));
       return r === "saved" ? "Saved." : r === "known" ? "Already in their file." : r === "health" ? "Not saved: medicines and health stay with Evelyn." : "Not saved.";
     };
-    let why = "";
+    let why = "", note = "";
 
     for (let round = 0; round < ROUNDS; round++) {
       const reply = await anthropic.beta.messages.create({
@@ -413,9 +416,10 @@ Deno.serve(async (req) => {
       const calls = reply.content.filter((b): b is Anthropic.Beta.Messages.BetaToolUseBlock => b.type === "tool_use");
       const hand = calls.find((c) => c.name === "hand_to_evelyn");
       if (hand) {
-        const input = hand.input as { kind?: string; why?: string };
+        const input = hand.input as { kind?: string; why?: string; note?: string };
         kind = KIND_SET.has(String(input.kind)) ? String(input.kind) : "other";
         why = String(input.why ?? "");
+        note = String(input.note ?? "").trim().slice(0, 400);
         break;
       }
       const kept: Record<string, string> = {};
@@ -436,7 +440,7 @@ Deno.serve(async (req) => {
       for (const c of calls) results.push({ type: "tool_result" as const, tool_use_id: c.id, content: kept[c.id] ?? await runLookup(db, signedIn, c, links) });
       messages.push({ role: "user", content: results });
     }
-    return json({ handoff: kind ?? "other", ...(why ? { why } : {}), urgent: kind === "urgent" });   // nothing usable came back: Evelyn answers
+    return json({ handoff: kind ?? "other", ...(why ? { why } : {}), ...(note ? { note } : {}), urgent: kind === "urgent" });   // nothing usable came back: Evelyn answers
   } catch (err) {
     // the website falls back to its keyword answers on any 5xx
     if (err instanceof Anthropic.AuthenticationError) return json({ error: "assistant_not_configured" }, 500);

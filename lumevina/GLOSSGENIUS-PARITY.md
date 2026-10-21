@@ -31,7 +31,7 @@ Everything GlossGenius does (from its own feature pages and review listings, Oct
 | Email and SMS marketing campaigns | 🟡 | Automatic: the invitation to GlossGenius clients, rebook and "running low?" emails, each with an unsubscribe link. No campaign builder. |
 | Review requests after a visit | ✅ v3 | The day after, with her Google review link (`REVIEW_URL`), at most once in 90 days. |
 | Birthday messages | 🟡 | Birthday month in My Lumevina gives 50 Glow Points; no birthday email yet. |
-| AI receptionist (GlossGenius "Reception AI", reportedly a paid add-on; unverified) | ✅ more on the website | Ask Lumevina: answers from Evelyn's own words, hands medical and personal questions to her with a drafted reply (photos described, never diagnosed), remembers signed-in clients' skin plans, finds orders, checks gift balances, adds products to the bag. Knows v2 or v3. No phone line. |
+| AI receptionist (GlossGenius "Reception AI", reportedly a paid add-on; unverified) | ✅ more on the website | Ask Lumevina: answers from Evelyn's own words plus a general esthetics layer (ingredients, treatments, aftercare, waxing, red flags) that explains rather than guesses; hands medical and personal questions to her with a drafted reply and a one-line general note for the client (photos described, never diagnosed); remembers signed-in clients' skin profiles and plans; finds orders, checks gift balances, adds products to the bag. Knows v2 or v3. No phone line. |
 
 ## Clients
 
